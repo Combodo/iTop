@@ -1086,7 +1086,7 @@ class utils
 	 * @param string[] $aArguments
 	 * @param string $sEnvironment
 	 *
-	 * @return string the URL to a page that will execute the requested module page
+	 * @return string the URL to a page that will execute the requested module page, with query string values url encoded
 	 *
 	 * @see GetExecPageArguments can be used to submit using the GET method (see bug in N.1108)
 	 * @see GetAbsoluteUrlExecPage
@@ -1105,7 +1105,7 @@ class utils
 	 * @param string[] $aArguments
 	 * @param string $sEnvironment
 	 *
-	 * @return string[] exec.php query string arguments for the specified module
+	 * @return string[] key/value pair for the exec page query string. <b>Warning</b> : values are not url encoded !
 	 * @throws \Exception if one of the argument has a reserved name
 	 */
 	static public function GetExecPageArguments($sModule, $sPage, $aArguments = array(), $sEnvironment = null)
@@ -1121,7 +1121,7 @@ class utils
 			{
 				throw new Exception("Module page: $sName is a reserved page argument name");
 			}
-			$aArgs[$sName] = urlencode($sValue);
+			$aArgs[$sName] = $sValue;
 		}
 
 		return $aArgs;
