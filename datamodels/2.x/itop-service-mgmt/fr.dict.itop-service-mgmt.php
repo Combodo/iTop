@@ -186,6 +186,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Nom',
 	'Class:ServiceFamily/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:icon' => 'Icône',
+	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
 	'Class:ServiceFamily/Attribute:services_list+' => '',
 ));
@@ -221,6 +223,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Service/Attribute:status/Value:obsolete+' => '',
 	'Class:Service/Attribute:status/Value:production' => 'en production',
 	'Class:Service/Attribute:status/Value:production+' => '',
+	'Class:Service/Attribute:icon' => 'Icône',
+	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Contrats client',
 	'Class:Service/Attribute:customercontracts_list+' => '',
 	'Class:Service/Attribute:providercontracts_list' => 'Contrats fournisseur',

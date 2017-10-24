@@ -234,6 +234,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Name',
 	'Class:ServiceFamily/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:icon' => 'Icon',
+	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
 	'Class:ServiceFamily/Attribute:services_list+' => 'All the services in this category',
 ));
@@ -269,6 +271,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Service/Attribute:status/Value:obsolete+' => '',
 	'Class:Service/Attribute:status/Value:production' => 'production',
 	'Class:Service/Attribute:status/Value:production+' => '',
+	'Class:Service/Attribute:icon' => 'Icon',
+	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Customer contracts',
 	'Class:Service/Attribute:customercontracts_list+' => 'All the customer contracts that have purchased this service',
 	'Class:Service/Attribute:providercontracts_list' => 'Provider contracts',

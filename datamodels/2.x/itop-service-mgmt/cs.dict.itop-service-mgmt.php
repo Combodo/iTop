@@ -233,6 +233,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:ServiceFamily+' => '',
     'Class:ServiceFamily/Attribute:name' => 'Název',
     'Class:ServiceFamily/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
+	'Class:ServiceFamily/Attribute:icon+' => '',
     'Class:ServiceFamily/Attribute:services_list' => 'Služby',
     'Class:ServiceFamily/Attribute:services_list+' => 'Všechny služby v této kategorii',
 ));
@@ -268,6 +270,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:Service/Attribute:status/Value:obsolete+' => '',
     'Class:Service/Attribute:status/Value:production' => 'v produkci',
     'Class:Service/Attribute:status/Value:production+' => '',
+	'Class:Service/Attribute:icon' => 'Icon~~',
+	'Class:Service/Attribute:icon+' => '',
     'Class:Service/Attribute:customercontracts_list' => 'Smlouvy se zákazníky',
     'Class:Service/Attribute:customercontracts_list+' => 'Všechny smlouvy se zákazníky, kteří zakoupili tuto službu',
     'Class:Service/Attribute:providercontracts_list' => 'Smlouvy s poskytovateli',
