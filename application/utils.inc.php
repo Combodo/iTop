@@ -1087,9 +1087,8 @@ class utils
 	 * @param string $sEnvironment
 	 *
 	 * @return string the URL to a page that will execute the requested module page
-	 * @throws \Exception if one of the argument is a reserved one
 	 *
-	 * @see GetExecPageArguments
+	 * @see GetExecPageArguments can be used to submit using the GET method (see bug in N.1108)
 	 * @see GetAbsoluteUrlExecPage
 	 */
 	static public function GetAbsoluteUrlModulePage($sModule, $sPage, $aArguments = array(), $sEnvironment = null)
@@ -1097,7 +1096,7 @@ class utils
 		$aArgs = self::GetExecPageArguments($sModule, $sPage, $aArguments, $sEnvironment);
 		$sArgs = http_build_query($aArgs);
 
-		return self::GetAbsoluteUrlExecPage().$sArgs;
+		return self::GetAbsoluteUrlExecPage()."?".$sArgs;
 	}
 
 	/**
@@ -1107,6 +1106,7 @@ class utils
 	 * @param string $sEnvironment
 	 *
 	 * @return string[] exec.php query string arguments for the specified module
+	 * @throws \Exception if one of the argument has a reserved name
 	 */
 	static public function GetExecPageArguments($sModule, $sPage, $aArguments = array(), $sEnvironment = null)
 	{
