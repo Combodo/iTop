@@ -898,7 +898,7 @@ class RunTimeEnvironment
 	public function GetCurrentDataModelVersion()
 	{
 		$oSearch = DBObjectSearch::FromOQL("SELECT ModuleInstallation WHERE name='".DATAMODEL_MODULE."'");
-		$oSet = new DBObjectSet($oSearch, array(), array('installed' => false));
+		$oSet = new DBObjectSet($oSearch, array('installed' => false));
 		$oLatestDM = $oSet->Fetch();
 		if ($oLatestDM == null)
 		{
