@@ -243,6 +243,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Naam',
 	'Class:ServiceFamily/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
+	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Diensten',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Alle diensten in deze categorie',
 ));
@@ -278,6 +280,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Service/Attribute:status/Value:obsolete+' => '',
 	'Class:Service/Attribute:status/Value:production' => 'productie',
 	'Class:Service/Attribute:status/Value:production+' => '',
+	'Class:Service/Attribute:icon' => 'Icon~~',
+	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Klant contracten',
 	'Class:Service/Attribute:customercontracts_list+' => 'Alle klanten contracten die deze dienst hebben aangeschaft',
 	'Class:Service/Attribute:providercontracts_list' => 'Leveranciers contracten',

@@ -244,6 +244,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Nome',
 	'Class:ServiceFamily/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
+	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Serviços',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Todos os serviços para essa categoria',
 ));
@@ -279,6 +281,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Service/Attribute:status/Value:obsolete+' => '',
 	'Class:Service/Attribute:status/Value:production' => 'Produção',
 	'Class:Service/Attribute:status/Value:production+' => '',
+	'Class:Service/Attribute:icon' => 'Icon~~',
+	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Contratos clientes',
 	'Class:Service/Attribute:customercontracts_list+' => 'Todos contratos de clientes que contrataram esse serviço',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Sub-categorias serviço',
