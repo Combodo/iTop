@@ -217,24 +217,25 @@ class MFCompiler
 		$aModules = $this->oFactory->GetLoadedModules();
 		$aDataModelFiles = array();
 		$aWebservicesFiles = array();
+		$iStart = strlen(realpath(APPROOT));
+		$sRelFinalTargetDir = substr($sFinalTargetDir, strlen(APPROOT));
 		foreach($aModules as $foo => $oModule)
 		{
 			$sModuleName = $oModule->GetName();
 			$sModuleVersion = $oModule->GetVersion();
-		
+
 			$sModuleRootDir = $oModule->GetRootDir();
-			$iStart = strlen(realpath(APPROOT));
 			if ($sModuleRootDir != '')
 			{
 				$sModuleRootDir = realpath($sModuleRootDir);
 				$sRelativeDir = basename($sModuleRootDir);
 				if ($bUseSymbolicLinks)
 				{
-					$sRealRelativeDir = substr(realpath($sModuleRootDir), $iStart);
+					$sRealRelativeDir = substr($sModuleRootDir, $iStart);
 				}
 				else
 				{
-					$sRealRelativeDir = substr(realpath($sFinalTargetDir).'/'.$sRelativeDir, $iStart);
+					$sRealRelativeDir = $sRelFinalTargetDir.'/'.$sRelativeDir;
 				}
 
 				// Push the other module files
@@ -581,7 +582,9 @@ EOF
 		$sPHPFileContent .= "\nMetaModel::IncludeModule(MODULESROOT.'/core/main.php');\n";
 		$sPHPFileContent .= implode("\n", $aDataModelFiles);
 		$sPHPFileContent .= implode("\n", $aWebservicesFiles);
-		$sPHPFileContent .= "\nfunction GetModulesInfo()\n{\nreturn ".var_export($aModulesInfo, true).";\n}\n";
+		$sModulesInfo = var_export($aModulesInfo, true);
+		$sModulesInfo = str_replace("'".$sRelFinalTargetDir."/", "\$sCurrEnv.'/", $sModulesInfo);
+		$sPHPFileContent .= "\nfunction GetModulesInfo()\n{\n\$sCurrEnv = 'env-'.utils::GetCurrentEnvironment();\nreturn ".$sModulesInfo.";\n}\n";
 		file_put_contents($sPHPFile, $sPHPFileContent);
 		
 	} // DoCompile()
