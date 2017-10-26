@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4">
 	<portals>
 		<portal id="legacy_portal" _delta="delete" /> <!-- TODO: voir si opportun de renommer au lieu de delete+define -->
 		<portal id="itop-portal" _delta="define"><!-- ID must match module_design[id] -->
