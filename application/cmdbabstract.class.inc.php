@@ -625,17 +625,22 @@ EOF
 		{
 			$aDetails[$sTab] = array();
             $aTableStyles[] = 'vertical-align:top';
+            $aTableClasses = array();
 
             ksort($aCols);
 			$iColCount = count($aCols);
 			if($iColCount > 1)
             {
-                $aTableStyles[] = 'width: 100%';
+	            $aTableClasses[] = 'n-cols-details';
+	            $aTableClasses[] = $iColCount.'-cols-details';
             }
-            // Else, will size regarding the largest field of the column
+            else
+            {
+	            $aTableClasses[] = 'one-col-details';
+            }
 
 			$oPage->SetCurrentTab(Dict::S($sTab));
-			$oPage->add('<table style="'.implode('; ', $aTableStyles).'" data-mode="'.$sEditMode.'"><tr>');
+			$oPage->add('<table style="'.implode('; ', $aTableStyles).'" class="'.implode(' ', $aTableClasses).'" data-mode="'.$sEditMode.'"><tr>');
 			foreach($aCols as $sColIndex => $aFieldsets)
 			{
 				$oPage->add('<td style="vertical-align:top">');
@@ -2328,7 +2333,7 @@ EOF
 					{
 						$sSelected = ' selected';
 					}
-					$sStatesSelection .= '<option value="'.$sStateCode.'"'.$sSelected.'>'.MetaModel::GetStateLabel($sClass, $sStateCode).'</option>';
+					$sStatesSelection .= '<option value="'.$sStateCode.'" '.$sSelected.'>'.MetaModel::GetStateLabel($sClass, $sStateCode).'</option>';
 				}
 				$sStatesSelection .= '</select>';
 				$oPage->add_ready_script("$('.state_select_{$this->m_iFormId}').change( function() { oWizardHelper$sPrefix.ReloadObjectCreationForm('form_{$this->m_iFormId}', $(this).val()); } );");

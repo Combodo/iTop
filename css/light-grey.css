@@ -20,6 +20,13 @@ body.printable-version {
 .ui-layout-content {
   padding-left: 10px;
 }
+.ui-layout-content .ui-tabs-nav li {
+  /* Overriding jQuery UI theme to see active tab better */
+  margin-bottom: 2px;
+}
+.ui-layout-content .ui-tabs-nav li.ui-tabs-active {
+  padding-bottom: 3px;
+}
 .raw_output {
   font-family: Courier-New, Courier, Arial, Helvetica;
   font-size: 8pt;
@@ -46,6 +53,9 @@ h3 {
   color: #000;
   font-weight: normal;
   font-size: 10pt;
+}
+label {
+  cursor: pointer;
 }
 .hilite, .hilite a, .hilite a:visited {
   color: #e87c1e;
@@ -295,13 +305,13 @@ td a.mailto, td a.mailto:visited {
   text-decoration: none;
   color: #000;
   padding-left: 20px;
-  background: url(../images/mail.png?v=v2.4.0-beta) no-repeat left;
+  background: url(../images/mail.png?v=v2.4.0) no-repeat left;
 }
 td a.mailto:hover {
   text-decoration: underline;
   color: #e87c1e;
   padding-left: 20px;
-  background: url(../images/mail.png?v=v2.4.0-beta) no-repeat left;
+  background: url(../images/mail.png?v=v2.4.0) no-repeat left;
 }
 a.small_action {
   font-family: Tahoma, Verdana, Arial, Helvetica;
@@ -319,7 +329,7 @@ a.small_action {
   padding-left: 5px;
   padding-top: 2px;
   padding-bottom: 2px;
-  background: #e87c1e url(../images/actions_left.png?v=v2.4.0-beta) no-repeat left;
+  background: #e87c1e url(../images/actions_left.png?v=v2.4.0) no-repeat left;
 }
 .actions_details span {
   background: url(../images/actions_right.png?v=v2.4.0-beta) no-repeat right;
@@ -496,7 +506,7 @@ div.actions_menu > ul {
   nowidth: 70px;
   padding-left: 5px;
   /* Nasty work-around for IE... en attendant mieux */
-  background: #e87c1e url(../images/actions_left.png?v=v2.4.0-beta) no-repeat top left;
+  background: #e87c1e url(../images/actions_left.png?v=v2.4.0) no-repeat top left;
   cursor: pointer;
   margin: 0;
 }
@@ -651,7 +661,7 @@ td a.dp-choose-date, a.dp-choose-date, td a.dp-choose-date:hover, a.dp-choose-da
   display: block;
   text-indent: -2000px;
   overflow: hidden;
-  background: url(../images/calendar.png?v=v2.4.0-beta) no-repeat;
+  background: url(../images/calendar.png?v=v2.4.0) no-repeat;
 }
 td a.dp-choose-date.dp-disabled, a.dp-choose-date.dp-disabled {
   background-position: 0 -20px;
@@ -748,19 +758,19 @@ div.HRDrawer {
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.odd td.truncated, table.listResults tr td.truncated, .wizContainer table.listResults tr.odd td.truncated, .wizContainer table.listResults tr td.truncated {
-  background: url(../images/truncated.png?v=v2.4.0-beta) bottom repeat-x;
+  background: url(../images/truncated.png?v=v2.4.0) bottom repeat-x;
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.even td.truncated, .wizContainer table.listResults tr.even td.truncated {
-  background: #f9f9f1 url(../images/truncated.png?v=v2.4.0-beta) bottom repeat-x;
+  background: #f9f9f1 url(../images/truncated.png?v=v2.4.0) bottom repeat-x;
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.even td.hover.truncated, .wizContainer table.listResults tr.even td.hover.truncated {
-  background: #fdf5d0 url(../images/truncated.png?v=v2.4.0-beta) bottom repeat-x;
+  background: #fdf5d0 url(../images/truncated.png?v=v2.4.0) bottom repeat-x;
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.odd td.hover.truncated, table.listResults tr td.hover.truncated, .wizContainer table.listResults tr.odd td.hover.truncated, .wizContainer table.listResults tr td.hover.truncated {
-  background: #fdf5d0 url(../images/truncated.png?v=v2.4.0-beta) bottom repeat-x;
+  background: #fdf5d0 url(../images/truncated.png?v=v2.4.0) bottom repeat-x;
 }
 table.listResults.truncated {
   border-bottom: 0;
@@ -868,7 +878,7 @@ div#logo {
 div#logo div {
   height: 88px;
   width: 244px;
-  background: url(../images/itop-logo-2.png?v=v2.4.0-beta) left no-repeat;
+  background: url(../images/itop-logo-2.png?v=v2.4.0) left no-repeat;
 }
 #left-pane .ui-layout-north {
   overflow: hidden;
@@ -1155,6 +1165,17 @@ span.form_validation {
   margin-top: 0.25em;
   margin-bottom: 0.25em;
 }
+/* Helper classes for object details display. */
+.one-col-details {
+  min-width: 300px;
+  max-width: 600px;
+}
+.n-cols-details {
+  width: 100%;
+}
+.n-cols-details > tbody > tr > td {
+  min-width: 240px;
+}
 .details {
   border-collapse: collapse;
   noborder-bottom: 2px #fff solid;
@@ -1189,6 +1210,11 @@ fieldset .details > .field_container {
 .field_container.field_large > div.field_label {
   width: inherit;
   margin-bottom: 5px;
+}
+.field_container.field_large > div.field_data {
+  margin-top: 8px;
+  margin-bottom: 10px;
+  word-break: break-all;
 }
 .field_container * {
   box-sizing: border-box;
@@ -1350,6 +1376,12 @@ fieldset .details > .field_container {
 .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn > img {
   max-width: 20px;
 }
+.one-col-details .details .field_container.field_small {
+  /* On a single column, field labels can take more width but they are limited so it doesn't feel weird when all labels are short */
+}
+.one-col-details .details .field_container.field_small div.field_label {
+  width: 145px;
+}
 /* This is extracted from the ".details > .field_container ..." because of the fullscreen option (element is moved at the end of the body */
 .field_input_text {
   border: none;
@@ -1464,7 +1496,7 @@ img.prev, img.first, img.next, img.last {
 }
 div.actions_button {
   float: right;
-  background: #e87c1e url("../images/actions_left.png?v=v2.4.0-beta") no-repeat scroll left top;
+  background: #e87c1e url("../images/actions_left.png?v=v2.4.0") no-repeat scroll left top;
   padding-left: 5px;
   margin-top: 0;
   margin-right: 10px;
@@ -1472,7 +1504,7 @@ div.actions_button {
   vertical-align: middle;
 }
 div.actions_button a, .actions_button a:hover, .actions_button a:visited {
-  background: #e87c1e url(../images/actions_bkg.png?v=v2.4.0-beta) no-repeat scroll right top;
+  background: #e87c1e url(../images/actions_bkg.png?v=v2.4.0) no-repeat scroll right top;
   color: #fff;
   padding-right: 8px;
   cursor: pointer;
@@ -1496,7 +1528,7 @@ select#org_id {
   cursor: not-allowed;
 }
 .dragHover {
-  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.4.0-beta);
+  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.4.0);
 }
 .edit_mode .dashlet {
   background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.4.0-beta);
@@ -1531,7 +1563,7 @@ table.prop_table {
   top: 0;
   right: 0;
   z-index: 10;
-  background: transparent url(../images/delete.png?v=v2.4.0-beta) no-repeat center;
+  background: transparent url(../images/delete.png?v=v2.4.0) no-repeat center;
 }
 td.prop_value {
   text-align: left;
@@ -1725,17 +1757,17 @@ a.summary, a.summary:hover {
 }
 .message_info {
   border: 1px solid #993;
-  background: url(../images/info-mini.png?v=v2.4.0-beta) 1em 1em no-repeat #ffc;
+  background: url(../images/info-mini.png?v=v2.4.0) 1em 1em no-repeat #ffc;
   padding-left: 3em;
 }
 .message_ok {
   border: 1px solid #393;
-  background: url(../images/ok.png?v=v2.4.0-beta) 1em 1em no-repeat #cfc;
+  background: url(../images/ok.png?v=v2.4.0) 1em 1em no-repeat #cfc;
   padding-left: 3em;
 }
 .message_error {
   border: 1px solid #933;
-  background: url(../images/error.png?v=v2.4.0-beta) 1em 1em no-repeat #fcc;
+  background: url(../images/error.png?v=v2.4.0) 1em 1em no-repeat #fcc;
   padding-left: 3em;
 }
 .fg-menu a img {
@@ -1866,18 +1898,18 @@ div.explain-printable {
 }
 #hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter span {
   padding-left: 20px;
-  background: url(../images/eye-open-555.png?v=v2.4.0-beta) 2px center no-repeat;
+  background: url(../images/eye-open-555.png?v=v2.4.0) 2px center no-repeat;
 }
 #hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter.strikethrough span {
   text-decoration: line-through;
-  background: url(../images/eye-closed-555.png?v=v2.4.0-beta) 2px center no-repeat;
+  background: url(../images/eye-closed-555.png?v=v2.4.0) 2px center no-repeat;
 }
 .printable-version legend {
   padding-left: 26px;
-  background: #1c94c4 url(../images/eye-open-fff.png?v=v2.4.0-beta) 8px center no-repeat;
+  background: #1c94c4 url(../images/eye-open-fff.png?v=v2.4.0) 8px center no-repeat;
 }
 .printable-version .strikethrough legend {
-  background: #1c94c4 url(../images/eye-closed-fff.png?v=v2.4.0-beta) 8px center no-repeat;
+  background: #1c94c4 url(../images/eye-closed-fff.png?v=v2.4.0) 8px center no-repeat;
 }
 .printable-version fieldset.strikethrough span {
   display: none;
@@ -1896,7 +1928,7 @@ span.refresh-button {
   width: 21px;
   height: 18px;
   cursor: pointer;
-  background: transparent url(../images/refresh-fff.png?v=v2.4.0-beta) left center no-repeat;
+  background: transparent url(../images/refresh-fff.png?v=v2.4.0) left center no-repeat;
 }
 .case-log-history-entry {
   display: block;
@@ -2024,7 +2056,7 @@ span.refresh-button {
 #itop-breadcrumb .breadcrumb-item a::after {
   content: '';
   position: absolute;
-  background-image: url(../images/breadcrumb-separator.png?v=v2.4.0-beta);
+  background-image: url(../images/breadcrumb-separator.png?v=v2.4.0);
   background-repeat: no-repeat;
   width: 8px;
   height: 16px;
