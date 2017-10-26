@@ -108,11 +108,13 @@ class Dict
 
 	/**
 	 * Returns a localised string from the dictonary
+	 *
 	 * @param string $sStringCode The code identifying the dictionary entry
 	 * @param string $sDefault Default value if there is no match in the dictionary
 	 * @param bool $bUserLanguageOnly True to allow the use of the default language as a fallback, false otherwise
+	 *
 	 * @throws DictExceptionMissingString
-	 * @return unknown|Ambigous <>|string
+	 * @return string
 	 */
 	public static function S($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
 	{
