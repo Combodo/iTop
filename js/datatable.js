@@ -91,9 +91,19 @@ $(function()
 				}
 				// End of workaround
 
-				me.element.find('.datacontents').html(data);
-				// restore the sort order on columns
-				me.element.find('table.listResults').trigger('fakesorton', [aCurrentSort]);
+				try {
+					me.element.find('.datacontents').html(data);
+					// restore the sort order on columns
+					me.element.find('table.listResults').trigger('fakesorton', [aCurrentSort]);
+				} catch (e) {
+					// ugly hacks for IE 8/9 first...
+					if (!window.console) console.error = {};
+					if (!window.console.error) {
+						console.error = function () {
+						};
+					}
+					console.error("Can not inject data : "+data);
+				}
 				me.element.unblock();
 			}, 'html' );
 			

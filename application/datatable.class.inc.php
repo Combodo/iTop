@@ -606,7 +606,7 @@ EOF
 		$iPageSize = ($iDefaultPageSize < 1) ? 1 : $iDefaultPageSize;
 		$iPageIndex = 1 + floor($iStart / $iPageSize);
 		$sHtml = $this->GetPager($oPage, $iPageSize, $iDefaultPageSize, $iPageIndex);
-		$oPage->add_ready_script("$('#pager{$this->iListId}').html('".str_replace("\n", ' ', addslashes($sHtml))."');");
+		$oPage->add_ready_script("$('#pager{$this->iListId}').html('".json_encode($sHtml)."');");
 		if ($iDefaultPageSize < 1)
 		{
 			$oPage->add_ready_script("$('#pager{$this->iListId}').parent().hide()");
