@@ -331,31 +331,6 @@ EOF
 		// This selector will be reused when selecting actual tab widget A elements.
 		var tab_a_selector = 'ul.ui-tabs-nav a';
 		
-		// This helper will be used to resize tab width
-		var resizeTab = function(oElem){
-		    var iTableWidth = (oElem.children('table:first').length > 0) ? oElem.children('table:first').outerWidth() : 0;
-		    var oLayoutContentElem = oElem.closest('.ui-layout-content'); 
-		    var bEditMode = (oLayoutContentElem.find('.wizContainer').length > 0);
-		    var oContainerElem = (bEditMode) ? oLayoutContentElem.find('.wizContainer:first') : oLayoutContentElem.find('.ui-tabs:first');
-		    
-		    // Resizing wizard container
-		    oContainerElem.css('min-width', 
-                parseInt(iTableWidth) +
-                parseInt(oElem.css('margin-left'))*2 +
-                parseInt(oElem.css('padding-left'))*2 +
-                parseInt(tabs.css('margin-left'))*2 +
-                parseInt(tabs.css('padding-left'))*2
-            )
-            
-            // Resizing header according to content container
-            var iLayoutContentWidth = parseInt(oContainerElem.width());
-            if(bEditMode)
-            {
-                iLayoutContentWidth += parseInt(oContainerElem.css('margin-left'))*2 + parseInt(oContainerElem.css('padding-left'))*2
-            }
-            oLayoutContentElem.find('.page_header').css('min-width', iLayoutContentWidth);
-		};
-		  
 		// Ugly patch for a change in the behavior of jQuery UI:
 		// Before jQuery UI 1.9, tabs were always considered as "local" (opposed to Ajax)
 		// when their href was beginning by #. Starting with 1.9, a <base> tag in the page
@@ -379,9 +354,6 @@ EOF
 			event: 'change', 'show': function(event, ui) {
 				$('.resizable', ui.panel).resizable(); // Make resizable everything that claims to be resizable !
 			},
-			create: function( event, ui ) {
-			    resizeTab(ui.panel);
-			},
 			beforeLoad: function( event, ui ) {
 				if ( ui.tab.data('loaded') && (ui.tab.attr('data-cache') == 'true')) {
 					event.preventDefault();
@@ -391,9 +363,6 @@ EOF
 				ui.jqXHR.success(function() {
 					ui.tab.data( "loaded", true );
 				});
-			},
-			activate: function( event, ui ) {
-			    resizeTab(ui.newPanel);
 			}
 		});
 

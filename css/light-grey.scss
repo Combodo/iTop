@@ -35,6 +35,14 @@ body.printable-version {
 .ui-layout-content {
 	padding-left: 10px;
 }
+.ui-layout-content .ui-tabs-nav li {
+	/* Overriding jQuery UI theme to see active tab better */
+	margin-bottom: 2px;
+
+	&.ui-tabs-active{
+		padding-bottom: 3px;
+	}
+}
 
 .raw_output {
     font-family: Courier-New, Courier, Arial, Helvetica;
@@ -1256,6 +1264,18 @@ span.form_validation {
 	margin-bottom: 0.25em;
 }
 
+/* Helper classes for object details display. */
+.one-col-details {
+	min-width: 300px;
+	max-width: 600px;
+}
+.n-cols-details {
+	width: 100%;
+
+	> tbody > tr > td {
+		min-width: 240px;
+	}
+}
 .details {
   border-collapse: collapse;
   noborder-bottom: 2px #fff solid;
@@ -1280,16 +1300,22 @@ fieldset .details>.field_container {
 		margin-bottom: 0px;
 	}
 
-	&.field_large{
+	&.field_large {
 		display: inherit;
 
 		/* .field_label, .field_data */
 		> div {
 			display: inherit;
 
-			&.field_label{
+			&.field_label {
 				width: inherit;
 				margin-bottom: 5px;
+			}
+
+			&.field_data {
+				margin-top: 8px;
+				margin-bottom: 10px;
+				word-break: break-all;
 			}
 
 			/* .field_value, .field_comments, .field_infos */
@@ -1505,6 +1531,12 @@ fieldset .details>.field_container {
 				}
 			}
 		}
+	}
+}
+.one-col-details .details .field_container.field_small {
+	div.field_label {
+		/* On a single column, field labels can take more width but they are limited so it doesn't feel weird when all labels are short */
+		width: 145px;
 	}
 }
 /* This is extracted from the ".details > .field_container ..." because of the fullscreen option (element is moved at the end of the body */
