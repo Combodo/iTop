@@ -3,6 +3,10 @@
   <component name="ProjectCodeStyleSettingsManager">
     <option name="PER_PROJECT_SETTINGS">
       <value>
+        <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="html,body,thead,tbody,tfoot,style" />
+        <JSCodeStyleSettings>
+          <option name="USE_CHAINED_CALLS_GROUP_INDENTS" value="true" />
+        </JSCodeStyleSettings>
         <PHPCodeStyleSettings>
           <option name="CONCAT_SPACES" value="false" />
           <option name="PHPDOC_BLANK_LINE_BEFORE_TAGS" value="true" />
@@ -14,6 +18,12 @@
           <option name="KEEP_RPAREN_AND_LBRACE_ON_ONE_LINE" value="true" />
           <option name="PHPDOC_USE_FQCN" value="true" />
         </PHPCodeStyleSettings>
+        <codeStyleSettings language="JavaScript">
+          <option name="SPACE_AROUND_ADDITIVE_OPERATORS" value="false" />
+          <indentOptions>
+            <option name="USE_TAB_CHARACTER" value="true" />
+          </indentOptions>
+        </codeStyleSettings>
         <codeStyleSettings language="PHP">
           <option name="BLANK_LINES_AFTER_PACKAGE" value="1" />
           <option name="BRACE_STYLE" value="2" />
