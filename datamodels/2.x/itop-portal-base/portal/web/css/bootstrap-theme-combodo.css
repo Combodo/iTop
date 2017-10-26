@@ -2744,6 +2744,10 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
     /* To mask border from previous li item */
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8) inset;
   }
+  .navbar-nav > li:last-child.active > a {
+    margin-top: 0px;
+    /* Overflow hack */
+  }
   .navbar-nav > li > a {
     padding-top: 11px;
     padding-bottom: 11px;

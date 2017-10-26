@@ -3470,10 +3470,13 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 		border-right-width: 20px;
 		border-right-color: $body-bg;
 	}
-	.navbar-nav>li.active>a{
-		margin-top: -1px; /* To mask border from previous li item */
-		box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8) inset;
-	}
+    .navbar-nav>li.active>a{
+        margin-top: -1px; /* To mask border from previous li item */
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8) inset;
+    }
+    .navbar-nav>li:last-child.active>a{
+        margin-top: 0px; /* Overflow hack */
+    }
     .navbar-nav>li>a {
         padding-top: 11px;
         padding-bottom: 11px;
