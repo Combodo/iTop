@@ -6075,7 +6075,11 @@ label {
         /* Small fields */
         .form-group.form_group_small{
             /*
-            error : You may not @extend an outer selector from within @media. You may only @extend selectors within the same directive.
+            TODO : the PHPStorm file watcher throws the below error when compiling this :
+                You may not @extend an outer selector from within @media.
+                You may only @extend selectors within the same directive.
+            Install procedure on PHPStorm : https://www.jetbrains.com/help/phpstorm/compiling-sass-less-and-scss-to-css.html#d364590e140
+            */
             @extend .row;
 
             .form_field_label{
@@ -6084,7 +6088,6 @@ label {
             .form_field_control{
                 @extend .col-sm-9;
             }
-            */
         }
         /* CKEditor */
         div.cke .cke_contents{
