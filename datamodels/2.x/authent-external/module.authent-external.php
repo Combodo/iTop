@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,13 +21,13 @@
  * Authent External
  * Module definition file for the "External Authentication" module
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'authent-external/2.2.0',
+	'authent-external/2.4.0',
 	array(
 		// Identification
 		//
@@ -63,4 +63,3 @@ SetupWebPage::AddModule(
 		'settings' => array(),
 	)
 );
-?>

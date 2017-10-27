@@ -2,7 +2,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-portal/1.1.0', array(
+	'itop-portal/2.4.0', array(
 	// Identification
 	'label' => 'Enhanced Customer Portal',
 	'category' => 'Portal',
@@ -35,4 +35,3 @@ SetupWebPage::AddModule(
 	),
 	)
 );
-?>

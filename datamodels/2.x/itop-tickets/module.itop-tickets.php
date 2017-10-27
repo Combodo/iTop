@@ -70,4 +70,3 @@ class TicketsInstaller extends ModuleInstallerAPI
 		}
 	}
 }
-?>

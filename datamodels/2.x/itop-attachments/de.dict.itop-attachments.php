@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -39,4 +39,3 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Attachments:NoAttachment' => 'Kein Attachment. ',
 	'Attachments:PreviewNotAvailable' => 'Vorschau für diesen Attachment-Typ nicht verfügbar.',
 	));
-?>
