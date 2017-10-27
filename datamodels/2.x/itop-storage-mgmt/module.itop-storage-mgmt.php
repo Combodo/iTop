@@ -107,5 +107,3 @@ if (!class_exists('StorageMgmtInstaller'))
 		}
 	}
 }
-
-?>

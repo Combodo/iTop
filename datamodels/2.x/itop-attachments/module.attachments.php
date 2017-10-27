@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-attachments/2.3.0',
+	'itop-attachments/2.4.0',
 	array(
 		// Identification
 		//
@@ -145,5 +145,3 @@ if (!class_exists('AttachmentInstaller'))
 		}
 	}
 }
-
-?>

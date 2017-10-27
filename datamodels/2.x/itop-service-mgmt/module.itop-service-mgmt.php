@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-service-mgmt/2.3.0',
+	'itop-service-mgmt/2.4.0',
 	array(
 		// Identification
 		//
@@ -92,4 +92,3 @@ if (!class_exists('ServiceMgmtInstaller'))
 		}
 	}
 }
-?>
