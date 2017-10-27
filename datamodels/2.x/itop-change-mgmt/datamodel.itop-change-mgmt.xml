@@ -1,504 +1,504 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2">
-  <classes>
-    <class id="Change" _delta="define">
-      <parent>Ticket</parent>
-      <properties>
-        <comment><![CDATA[/**
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.4">
+    <classes>
+        <class id="Change" _delta="define">
+            <parent>Ticket</parent>
+            <properties>
+                <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
-        <category>bizmodel,searchable,changemgmt</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>ticket_change</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <naming>
-          <attributes>
-            <attribute id="ref"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <icon>images/change.png</icon>
-        <reconciliation>
-          <attributes>
-            <attribute id="ref"/>
-          </attributes>
-        </reconciliation>
-        <order>
-          <columns>
-            <column id="ref" ascending="false"/>
-          </columns>
-        </order>
-      </properties>
-      <fields>
-        <field id="status" xsi:type="AttributeEnum">
-          <values>
-            <value id="new">new</value>
-            <value id="assigned">assigned</value>
-            <value id="planned">planned</value>
-            <value id="approved">approved</value>
-            <value id="closed">closed</value>
-            <value id="rejected">rejected</value>
-          </values>
-          <sql>status</sql>
-          <default_value>new</default_value>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="category" xsi:type="AttributeEnum">
-          <values>
-            <value id="hardware">hardware</value>
-            <value id="software">software</value>
-            <value id="system">system</value>
-            <value id="network">network</value>
-            <value id="application">application</value>
-            <value id="other">other</value>
-          </values>
-          <sql>category</sql>
-          <default_value>hardware</default_value>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="reject_reason" xsi:type="AttributeText">
-          <sql>reject_reason</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="changemanager_id" xsi:type="AttributeExternalKey">
-          <sql>changemanager_id</sql>
-          <target_class>Person</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
-        </field>
-        <field id="changemanager_email" xsi:type="AttributeExternalField">
-          <extkey_attcode>changemanager_id</extkey_attcode>
-          <target_attcode>email</target_attcode>
-        </field>
-        <field id="parent_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Change WHERE id != :this->id]]></filter>
-          <sql>parent_id</sql>
-          <target_class>Change</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype/>
-        </field>
-        <field id="parent_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>parent_id</extkey_attcode>
-          <target_attcode>ref</target_attcode>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="creation_date" xsi:type="AttributeDateTime">
-          <sql>creation_date</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="approval_date" xsi:type="AttributeDateTime">
-          <sql>approval_date</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="fallback_plan" xsi:type="AttributeText">
-          <sql>fallback_plan</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="outage" xsi:type="AttributeEnum">
-          <values>
-            <value id="yes">yes</value>
-            <value id="no">no</value>
-          </values>
-          <sql>outage</sql>
-          <default_value>no</default_value>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="related_request_list" xsi:type="AttributeLinkedSet">
-          <linked_class>UserRequest</linked_class>
-          <ext_key_to_me>parent_change_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-        </field>
-        <field id="related_incident_list" xsi:type="AttributeLinkedSet">
-          <linked_class>Incident</linked_class>
-          <ext_key_to_me>parent_change_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-        </field>
-        <field id="related_problems_list" xsi:type="AttributeLinkedSet">
-          <linked_class>Problem</linked_class>
-          <ext_key_to_me>related_change_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-        </field>
-        <field id="child_changes_list" xsi:type="AttributeLinkedSet">
-          <linked_class>Change</linked_class>
-          <ext_key_to_me>parent_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
-          <filter><![CDATA[SELECT Change WHERE id != :this->id]]></filter>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-        </field>
-      </fields>
-      <lifecycle>
-        <highlight_scale>
-          <item id="approved">
-            <rank>1</rank>
-            <color>HIGHLIGHT_CLASS_NONE</color>
-            <icon>images/change-approved.png</icon>
-          </item>
-          <item id="rejected">
-            <rank>2</rank>
-            <color>HIGHLIGHT_CLASS_NONE</color>
-            <icon>images/change-rejected.png</icon>
-          </item>
-          <item id="closed">
-            <rank>3</rank>
-            <color>HIGHLIGHT_CLASS_NONE</color>
-            <icon>images/change-closed.png</icon>
-          </item>
-        </highlight_scale>
-        <attribute>status</attribute>
-        <stimuli>
-          <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_plan" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_reject" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_reopen" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_approve" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_finish" xsi:type="StimulusUserAction"/>
-        </stimuli>
-        <states>
-          <state id="new">
-            <flags>
-              <attribute id="ref">
-                <read_only/>
-              </attribute>
-              <attribute id="org_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="title">
-                <mandatory/>
-              </attribute>
-              <attribute id="description">
-                <mandatory/>
-              </attribute>
-              <attribute id="last_update">
-                <read_only/>
-              </attribute>
-              <attribute id="close_date">
-                <hidden/>
-              </attribute>
-              <attribute id="reject_reason">
-                <hidden/>
-              </attribute>
-              <attribute id="creation_date">
-                <read_only/>
-              </attribute>
-              <attribute id="approval_date">
-                <hidden/>
-              </attribute>
-              <attribute id="caller_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="team_id">
-                <hidden/>
-              </attribute>
-              <attribute id="agent_id">
-                <hidden/>
-              </attribute>
-              <attribute id="changemanager_id">
-                <hidden/>
-              </attribute>
-              <attribute id="outage">
-                <hidden/>
-              </attribute>
-            </flags>
-            <transitions>
-              <transition id="ev_assign">
-                <target>assigned</target>
-                <actions/>
-              </transition>
-            </transitions>
-          </state>
-          <state id="assigned">
-            <inherit_flags_from>new</inherit_flags_from>
-            <flags>
-              <attribute id="team_id">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="agent_id">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="changemanager_id">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="caller_id"/>
-            </flags>
-            <transitions>
-              <transition id="ev_plan">
-                <target>planned</target>
-                <actions/>
-              </transition>
-            </transitions>
-          </state>
-          <state id="planned">
-            <inherit_flags_from>assigned</inherit_flags_from>
-            <flags>
-              <attribute id="start_date">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="end_date">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="fallback_plan">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="caller_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="outage">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-            </flags>
-            <transitions>
-              <transition id="ev_reject">
-                <target>rejected</target>
-                <actions/>
-              </transition>
-              <transition id="ev_approve">
-                <target>approved</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">approval_date</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>Reset</verb>
-                    <params>
-                      <param xsi:type="attcode">reject_reason</param>
-                    </params>
-                  </action>
-                </actions>
-              </transition>
-            </transitions>
-          </state>
-          <state id="rejected">
-            <highlight>
-              <code>rejected</code>
-            </highlight>
-            <inherit_flags_from>assigned</inherit_flags_from>
-            <flags>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="end_date">
-                <read_only/>
-              </attribute>
-              <attribute id="private_log">
-                <read_only/>
-                <read_only/>
-              </attribute>
-              <attribute id="caller_id">
-                <read_only/>
-              </attribute>
-              <attribute id="fallback_plan">
-                <read_only/>
-              </attribute>
-              <attribute id="category">
-                <read_only/>
-              </attribute>
-              <attribute id="parent_id">
-                <read_only/>
-              </attribute>
-              <attribute id="org_id">
-                <read_only/>
-              </attribute>
-              <attribute id="title">
-                <read_only/>
-              </attribute>
-              <attribute id="description">
-                <read_only/>
-              </attribute>
-              <attribute id="reject_reason">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="approval_date">
-                <read_only/>
-              </attribute>
-              <attribute id="team_id">
-                <read_only/>
-              </attribute>
-              <attribute id="agent_id">
-                <read_only/>
-              </attribute>
-              <attribute id="changemanager_id">
-                <read_only/>
-              </attribute>
-              <attribute id="outage">
-                <read_only/>
-              </attribute>
-            </flags>
-            <transitions>
-              <transition id="ev_reopen">
-                <target>assigned</target>
-                <actions/>
-              </transition>
-            </transitions>
-          </state>
-          <state id="approved">
-            <highlight>
-              <code>approved</code>
-            </highlight>
-            <inherit_flags_from>planned</inherit_flags_from>
-            <flags>
-              <attribute id="private_log"/>
-              <attribute id="category"/>
-              <attribute id="parent_id"/>
-              <attribute id="org_id">
-                <read_only/>
-              </attribute>
-              <attribute id="title">
-                <read_only/>
-              </attribute>
-              <attribute id="description">
-                <read_only/>
-              </attribute>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="end_date">
-                <read_only/>
-              </attribute>
-              <attribute id="reject_reason">
-                <read_only/>
-              </attribute>
-              <attribute id="creation_date">
-                <hidden/>
-              </attribute>
-              <attribute id="approval_date">
-                <read_only/>
-              </attribute>
-              <attribute id="caller_id">
-                <read_only/>
-              </attribute>
-              <attribute id="team_id">
-                <read_only/>
-              </attribute>
-              <attribute id="agent_id">
-                <read_only/>
-              </attribute>
-              <attribute id="changemanager_id">
-                <read_only/>
-              </attribute>
-              <attribute id="fallback_plan"/>
-              <attribute id="outage">
-                <read_only/>
-              </attribute>
-            </flags>
-            <transitions>
-              <transition id="ev_finish">
-                <target>closed</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">close_date</param>
-                    </params>
-                  </action>
-                </actions>
-              </transition>
-            </transitions>
-          </state>
-          <state id="closed">
-            <highlight>
-              <code>closed</code>
-            </highlight>
-            <inherit_flags_from>approved</inherit_flags_from>
-            <flags>
-              <attribute id="close_date">
-                <read_only/>
-              </attribute>
-              <attribute id="creation_date">
-                <read_only/>
-              </attribute>
-              <attribute id="private_log">
-                <read_only/>
-              </attribute>
-              <attribute id="fallback_plan">
-                <read_only/>
-              </attribute>
-              <attribute id="category">
-                <read_only/>
-              </attribute>
-              <attribute id="parent_id">
-                <read_only/>
-              </attribute>
-            </flags>
-            <transitions/>
-          </state>
-        </states>
-      </lifecycle>
-      <methods>
-        <method id="SetApprovalDate">
-          <comment><![CDATA[/**
+                <category>bizmodel,searchable,changemgmt</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>ticket_change</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <naming>
+                    <attributes>
+                        <attribute id="ref"/>
+                    </attributes>
+                </naming>
+                <display_template/>
+                <icon>images/change.png</icon>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="ref"/>
+                    </attributes>
+                </reconciliation>
+                <order>
+                    <columns>
+                        <column id="ref" ascending="false"/>
+                    </columns>
+                </order>
+            </properties>
+            <fields>
+                <field id="status" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="new">new</value>
+                        <value id="assigned">assigned</value>
+                        <value id="planned">planned</value>
+                        <value id="approved">approved</value>
+                        <value id="closed">closed</value>
+                        <value id="rejected">rejected</value>
+                    </values>
+                    <sql>status</sql>
+                    <default_value>new</default_value>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="category" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="hardware">hardware</value>
+                        <value id="software">software</value>
+                        <value id="system">system</value>
+                        <value id="network">network</value>
+                        <value id="application">application</value>
+                        <value id="other">other</value>
+                    </values>
+                    <sql>category</sql>
+                    <default_value>hardware</default_value>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="reject_reason" xsi:type="AttributeText">
+                    <sql>reject_reason</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="changemanager_id" xsi:type="AttributeExternalKey">
+                    <sql>changemanager_id</sql>
+                    <target_class>Person</target_class>
+                    <is_null_allowed>true</is_null_allowed>
+                    <on_target_delete>DEL_MANUAL</on_target_delete>
+                </field>
+                <field id="changemanager_email" xsi:type="AttributeExternalField">
+                    <extkey_attcode>changemanager_id</extkey_attcode>
+                    <target_attcode>email</target_attcode>
+                </field>
+                <field id="parent_id" xsi:type="AttributeExternalKey">
+                    <filter><![CDATA[SELECT Change WHERE id != :this->id]]></filter>
+                    <sql>parent_id</sql>
+                    <target_class>Change</target_class>
+                    <is_null_allowed>true</is_null_allowed>
+                    <on_target_delete>DEL_MANUAL</on_target_delete>
+                    <jointype/>
+                </field>
+                <field id="parent_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>parent_id</extkey_attcode>
+                    <target_attcode>ref</target_attcode>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="creation_date" xsi:type="AttributeDateTime">
+                    <sql>creation_date</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="approval_date" xsi:type="AttributeDateTime">
+                    <sql>approval_date</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="fallback_plan" xsi:type="AttributeText">
+                    <sql>fallback_plan</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="outage" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="yes">yes</value>
+                        <value id="no">no</value>
+                    </values>
+                    <sql>outage</sql>
+                    <default_value>no</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <field id="related_request_list" xsi:type="AttributeLinkedSet">
+                    <linked_class>UserRequest</linked_class>
+                    <ext_key_to_me>parent_change_id</ext_key_to_me>
+                    <edit_mode>add_remove</edit_mode>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                </field>
+                <field id="related_incident_list" xsi:type="AttributeLinkedSet">
+                    <linked_class>Incident</linked_class>
+                    <ext_key_to_me>parent_change_id</ext_key_to_me>
+                    <edit_mode>add_remove</edit_mode>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                </field>
+                <field id="related_problems_list" xsi:type="AttributeLinkedSet">
+                    <linked_class>Problem</linked_class>
+                    <ext_key_to_me>related_change_id</ext_key_to_me>
+                    <edit_mode>add_remove</edit_mode>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                </field>
+                <field id="child_changes_list" xsi:type="AttributeLinkedSet">
+                    <linked_class>Change</linked_class>
+                    <ext_key_to_me>parent_id</ext_key_to_me>
+                    <edit_mode>add_remove</edit_mode>
+                    <filter><![CDATA[SELECT Change WHERE id != :this->id]]></filter>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                </field>
+            </fields>
+            <lifecycle>
+                <highlight_scale>
+                    <item id="approved">
+                        <rank>1</rank>
+                        <color>HIGHLIGHT_CLASS_NONE</color>
+                        <icon>images/change-approved.png</icon>
+                    </item>
+                    <item id="rejected">
+                        <rank>2</rank>
+                        <color>HIGHLIGHT_CLASS_NONE</color>
+                        <icon>images/change-rejected.png</icon>
+                    </item>
+                    <item id="closed">
+                        <rank>3</rank>
+                        <color>HIGHLIGHT_CLASS_NONE</color>
+                        <icon>images/change-closed.png</icon>
+                    </item>
+                </highlight_scale>
+                <attribute>status</attribute>
+                <stimuli>
+                    <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_plan" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_reject" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_reopen" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_approve" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_finish" xsi:type="StimulusUserAction"/>
+                </stimuli>
+                <states>
+                    <state id="new">
+                        <flags>
+                            <attribute id="ref">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="org_id">
+                                <mandatory/>
+                            </attribute>
+                            <attribute id="title">
+                                <mandatory/>
+                            </attribute>
+                            <attribute id="description">
+                                <mandatory/>
+                            </attribute>
+                            <attribute id="last_update">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="close_date">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="reject_reason">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="creation_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="approval_date">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="caller_id">
+                                <mandatory/>
+                            </attribute>
+                            <attribute id="team_id">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="agent_id">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="changemanager_id">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="outage">
+                                <hidden/>
+                            </attribute>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_assign">
+                                <target>assigned</target>
+                                <actions/>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="assigned">
+                        <inherit_flags_from>new</inherit_flags_from>
+                        <flags>
+                            <attribute id="team_id">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="agent_id">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="changemanager_id">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="caller_id"/>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_plan">
+                                <target>planned</target>
+                                <actions/>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="planned">
+                        <inherit_flags_from>assigned</inherit_flags_from>
+                        <flags>
+                            <attribute id="start_date">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="end_date">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="fallback_plan">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="caller_id">
+                                <mandatory/>
+                            </attribute>
+                            <attribute id="outage">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_reject">
+                                <target>rejected</target>
+                                <actions/>
+                            </transition>
+                            <transition id="ev_approve">
+                                <target>approved</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">approval_date</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>Reset</verb>
+                                        <params>
+                                            <param xsi:type="attcode">reject_reason</param>
+                                        </params>
+                                    </action>
+                                </actions>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="rejected">
+                        <highlight>
+                            <code>rejected</code>
+                        </highlight>
+                        <inherit_flags_from>assigned</inherit_flags_from>
+                        <flags>
+                            <attribute id="start_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="end_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="private_log">
+                                <read_only/>
+                                <read_only/>
+                            </attribute>
+                            <attribute id="caller_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="fallback_plan">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="category">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="parent_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="org_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="title">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="description">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="reject_reason">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="approval_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="team_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="agent_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="changemanager_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="outage">
+                                <read_only/>
+                            </attribute>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_reopen">
+                                <target>assigned</target>
+                                <actions/>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="approved">
+                        <highlight>
+                            <code>approved</code>
+                        </highlight>
+                        <inherit_flags_from>planned</inherit_flags_from>
+                        <flags>
+                            <attribute id="private_log"/>
+                            <attribute id="category"/>
+                            <attribute id="parent_id"/>
+                            <attribute id="org_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="title">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="description">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="start_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="end_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="reject_reason">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="creation_date">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="approval_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="caller_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="team_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="agent_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="changemanager_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="fallback_plan"/>
+                            <attribute id="outage">
+                                <read_only/>
+                            </attribute>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_finish">
+                                <target>closed</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">close_date</param>
+                                        </params>
+                                    </action>
+                                </actions>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="closed">
+                        <highlight>
+                            <code>closed</code>
+                        </highlight>
+                        <inherit_flags_from>approved</inherit_flags_from>
+                        <flags>
+                            <attribute id="close_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="creation_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="private_log">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="fallback_plan">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="category">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="parent_id">
+                                <read_only/>
+                            </attribute>
+                        </flags>
+                        <transitions/>
+                    </state>
+                </states>
+            </lifecycle>
+            <methods>
+                <method id="SetApprovalDate">
+                    <comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead
 	 * @return void
 	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetApprovalDate($sStimulusCode)
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[	public function SetApprovalDate($sStimulusCode)
 	{
 		$this->Set('approval_date', time());
 		return true;
 	}]]></code>
-        </method>
-        <method id="ResetRejectReason">
-          <comment><![CDATA[/**
+                </method>
+                <method id="ResetRejectReason">
+                    <comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead
 	 * @return void
 	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function ResetRejectReason($sStimulusCode)
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[	public function ResetRejectReason($sStimulusCode)
 	{
 		$this->Set('reject_reason', '');
 		return true;
 	}]]></code>
-        </method>
-        <method id="SetClosureDate">
-          <comment><![CDATA[/**
+                </method>
+                <method id="SetClosureDate">
+                    <comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead
 	 * @return void
 	 */]]></comment>
-          <static>false</static>
-          <access>public</access>
-          <type>LifecycleAction</type>
-          <code><![CDATA[	public function SetClosureDate($sStimulusCode)
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[	public function SetClosureDate($sStimulusCode)
 	{
 		$this->Set('close_date', time());
 		return true;
 	}]]></code>
-        </method>
-        <method id="OnInsert">
-          <static>false</static>
-          <access>protected</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+                </method>
+                <method id="OnInsert">
+                    <static>false</static>
+                    <access>protected</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
     protected function OnInsert()
 	{
         parent::OnInsert();
@@ -506,12 +506,12 @@
 		$this->Set('creation_date', time());
 		$this->Set('last_update', time());
 	}]]></code>
-        </method>
-        <method id="OnUpdate">
-          <static>false</static>
-          <access>protected</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+                </method>
+                <method id="OnUpdate">
+                    <static>false</static>
+                    <access>protected</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
     protected function OnUpdate()
 	{
         parent::OnUpdate();
@@ -522,408 +522,418 @@
         }
 		$this->Set('last_update', time());
 	}]]></code>
-        </method>
-      </methods>
-      <presentation>
-        <details>
-          <items>
-            <item id="functionalcis_list">
-              <rank>10</rank>
-            </item>
-            <item id="contacts_list">
-              <rank>20</rank>
-            </item>
-            <item id="workorders_list">
-              <rank>30</rank>
-            </item>
-            <item id="related_request_list">
-              <rank>40</rank>
-            </item>
-            <item id="related_incident_list">
-              <rank>50</rank>
-            </item>
-            <item id="related_problems_list">
-              <rank>60</rank>
-            </item>
-            <item id="child_changes_list">
-              <rank>70</rank>
-            </item>
-            <item id="col:col1">
-              <rank>80</rank>
-              <items>
-                <item id="fieldset:Ticket:baseinfo">
-                  <rank>10</rank>
-                  <items>
-                    <item id="ref">
-                      <rank>10</rank>
-                    </item>
-                    <item id="org_id">
-                      <rank>20</rank>
-                    </item>
-                    <item id="status">
-                      <rank>30</rank>
-                    </item>
-                    <item id="title">
-                      <rank>40</rank>
-                    </item>
-                    <item id="description">
-                      <rank>50</rank>
-                    </item>
-                  </items>
-                </item>
-                <item id="fieldset:Ticket:contact">
-                  <rank>20</rank>
-                  <items>
-                    <item id="caller_id">
-                      <rank>10</rank>
-                    </item>
-                    <item id="team_id">
-                      <rank>20</rank>
-                    </item>
-                    <item id="agent_id">
-                      <rank>30</rank>
-                    </item>
-                    <item id="changemanager_id">
-                      <rank>40</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-            <item id="col:col2">
-              <rank>90</rank>
-              <items>
-                <item id="fieldset:Ticket:resolution">
-                  <rank>10</rank>
-                  <items>
-                    <item id="category">
-                      <rank>10</rank>
-                    </item>
-                    <item id="outage">
-                      <rank>15.1</rank>
-                    </item>
-                    <item id="reject_reason">
-                      <rank>20</rank>
-                    </item>
-                    <item id="fallback_plan">
-                      <rank>30</rank>
-                    </item>
-                  </items>
-                </item>
-                <item id="fieldset:Ticket:relation">
-                  <rank>20</rank>
-                  <items>
-                    <item id="parent_id">
-                      <rank>10</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-            <item id="col:col3">
-              <rank>100</rank>
-              <items>
-                <item id="fieldset:Ticket:date">
-                  <rank>10</rank>
-                  <items>
-                    <item id="creation_date">
-                      <rank>10</rank>
-                    </item>
-                    <item id="start_date">
-                      <rank>20</rank>
-                    </item>
-                    <item id="end_date">
-                      <rank>30</rank>
-                    </item>
-                    <item id="last_update">
-                      <rank>40</rank>
-                    </item>
-                    <item id="approval_date">
-                      <rank>50</rank>
-                    </item>
-                    <item id="close_date">
-                      <rank>60</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item id="ref">
-              <rank>10</rank>
-            </item>
-            <item id="title">
-              <rank>20</rank>
-            </item>
-            <item id="org_id">
-              <rank>30</rank>
-            </item>
-            <item id="status">
-              <rank>40</rank>
-            </item>
-            <item id="operational_status">
-              <rank>45</rank>
-            </item>
-            <item id="start_date">
-              <rank>50</rank>
-            </item>
-            <item id="end_date">
-              <rank>60</rank>
-            </item>
-            <item id="creation_date">
-              <rank>70</rank>
-            </item>
-            <item id="last_update">
-              <rank>80</rank>
-            </item>
-            <item id="close_date">
-              <rank>90</rank>
-            </item>
-            <item id="team_id">
-              <rank>100</rank>
-            </item>
-            <item id="agent_id">
-              <rank>110</rank>
-            </item>
-            <item id="changemanager_id">
-              <rank>120</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="title">
-              <rank>10</rank>
-            </item>
-            <item id="org_id">
-              <rank>20</rank>
-            </item>
-            <item id="start_date">
-              <rank>30</rank>
-            </item>
-            <item id="end_date">
-              <rank>40</rank>
-            </item>
-            <item id="status">
-              <rank>50</rank>
-            </item>
-            <item id="category">
-              <rank>60</rank>
-            </item>
-            <item id="agent_id">
-              <rank>70</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-  </classes>
-  <menus>
-    <menu id="ChangeManagement" xsi:type="MenuGroup" _delta="define">
-      <rank>50</rank>
-    </menu>
-    <menu id="Change:Overview" xsi:type="DashboardMenuNode" _delta="define">
-      <rank>0</rank>
-      <parent>ChangeManagement</parent>
-      <definition>
-        <layout>DashboardLayoutTwoCols</layout>
-        <title>UI:ChangeMgmtMenuOverview:Title</title>
-        <cells>
-          <cell id="0">
+                </method>
+            </methods>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="functionalcis_list">
+                            <rank>10</rank>
+                        </item>
+                        <item id="contacts_list">
+                            <rank>20</rank>
+                        </item>
+                        <item id="workorders_list">
+                            <rank>30</rank>
+                        </item>
+                        <item id="related_request_list">
+                            <rank>40</rank>
+                        </item>
+                        <item id="related_incident_list">
+                            <rank>50</rank>
+                        </item>
+                        <item id="related_problems_list">
+                            <rank>60</rank>
+                        </item>
+                        <item id="child_changes_list">
+                            <rank>70</rank>
+                        </item>
+                        <item id="col:col1">
+                            <rank>80</rank>
+                            <items>
+                                <item id="fieldset:Ticket:baseinfo">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="ref">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="org_id">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="status">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="title">
+                                            <rank>40</rank>
+                                        </item>
+                                        <item id="description">
+                                            <rank>50</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Ticket:contact">
+                                    <rank>20</rank>
+                                    <items>
+                                        <item id="caller_id">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="team_id">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="agent_id">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="changemanager_id">
+                                            <rank>40</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="col:col2">
+                            <rank>90</rank>
+                            <items>
+                                <item id="fieldset:Ticket:resolution">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="category">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="outage">
+                                            <rank>15.1</rank>
+                                        </item>
+                                        <item id="reject_reason">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="fallback_plan">
+                                            <rank>30</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Ticket:relation">
+                                    <rank>20</rank>
+                                    <items>
+                                        <item id="parent_id">
+                                            <rank>10</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="col:col3">
+                            <rank>100</rank>
+                            <items>
+                                <item id="fieldset:Ticket:date">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="creation_date">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="start_date">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="end_date">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="last_update">
+                                            <rank>40</rank>
+                                        </item>
+                                        <item id="approval_date">
+                                            <rank>50</rank>
+                                        </item>
+                                        <item id="close_date">
+                                            <rank>60</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                    </items>
+                </details>
+                <search>
+                    <items>
+                        <item id="ref">
+                            <rank>10</rank>
+                        </item>
+                        <item id="title">
+                            <rank>20</rank>
+                        </item>
+                        <item id="org_id">
+                            <rank>30</rank>
+                        </item>
+                        <item id="status">
+                            <rank>40</rank>
+                        </item>
+                        <item id="operational_status">
+                            <rank>45</rank>
+                        </item>
+                        <item id="start_date">
+                            <rank>50</rank>
+                        </item>
+                        <item id="end_date">
+                            <rank>60</rank>
+                        </item>
+                        <item id="creation_date">
+                            <rank>70</rank>
+                        </item>
+                        <item id="last_update">
+                            <rank>80</rank>
+                        </item>
+                        <item id="close_date">
+                            <rank>90</rank>
+                        </item>
+                        <item id="team_id">
+                            <rank>100</rank>
+                        </item>
+                        <item id="agent_id">
+                            <rank>110</rank>
+                        </item>
+                        <item id="changemanager_id">
+                            <rank>120</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="title">
+                            <rank>10</rank>
+                        </item>
+                        <item id="org_id">
+                            <rank>20</rank>
+                        </item>
+                        <item id="start_date">
+                            <rank>30</rank>
+                        </item>
+                        <item id="end_date">
+                            <rank>40</rank>
+                        </item>
+                        <item id="status">
+                            <rank>50</rank>
+                        </item>
+                        <item id="category">
+                            <rank>60</rank>
+                        </item>
+                        <item id="agent_id">
+                            <rank>70</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+    </classes>
+    <menus>
+        <menu id="ChangeManagement" xsi:type="MenuGroup" _delta="define">
+            <rank>50</rank>
+        </menu>
+        <menu id="Change:Overview" xsi:type="DashboardMenuNode" _delta="define">
             <rank>0</rank>
-            <dashlets>
-              <dashlet id="1" xsi:type="DashletGroupByTable">
-                <rank>0</rank>
-                <title>UI-ChangeManagementOverview-ChangeByCategory-last-7-days</title>
-                <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
-                <group_by>category</group_by>
-                <style>table</style>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="1">
+            <parent>ChangeManagement</parent>
+            <definition>
+                <layout>DashboardLayoutTwoCols</layout>
+                <title>UI:ChangeMgmtMenuOverview:Title</title>
+                <cells>
+                    <cell id="0">
+                        <rank>0</rank>
+                        <dashlets>
+                            <dashlet id="1" xsi:type="DashletGroupByTable">
+                                <rank>0</rank>
+                                <title>UI-ChangeManagementOverview-ChangeByCategory-last-7-days</title>
+                                <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+                                <group_by>category</group_by>
+                                <style>table</style>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                    <cell id="1">
+                        <rank>1</rank>
+                        <dashlets>
+                            <dashlet id="2" xsi:type="DashletGroupByBars">
+                                <rank>0</rank>
+                                <title>UI-ChangeManagementOverview-Last-7-days</title>
+                                <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+                                <group_by>start_date:day_of_month</group_by>
+                                <style>bars</style>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                    <cell id="2">
+                        <rank>2</rank>
+                        <dashlets>
+                            <dashlet id="3" xsi:type="DashletGroupByTable">
+                                <rank>0</rank>
+                                <title>UI-ChangeManagementOverview-ChangeByDomain-last-7-days</title>
+                                <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+                                <group_by>finalclass</group_by>
+                                <style>table</style>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                    <cell id="3">
+                        <rank>3</rank>
+                        <dashlets>
+                            <dashlet id="4" xsi:type="DashletGroupByTable">
+                                <rank>0</rank>
+                                <title>UI-ChangeManagementOverview-ChangeByStatus-last-7-days</title>
+                                <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
+                                <group_by>status</group_by>
+                                <style>table</style>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                </cells>
+            </definition>
+        </menu>
+        <menu id="NewChange" xsi:type="NewObjectMenuNode" _delta="define">
             <rank>1</rank>
-            <dashlets>
-              <dashlet id="2" xsi:type="DashletGroupByBars">
-                <rank>0</rank>
-                <title>UI-ChangeManagementOverview-Last-7-days</title>
-                <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
-                <group_by>start_date:day_of_month</group_by>
-                <style>bars</style>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="2">
+            <parent>ChangeManagement</parent>
+            <class>Change</class>
+        </menu>
+        <menu id="SearchChanges" xsi:type="SearchMenuNode" _delta="define">
             <rank>2</rank>
-            <dashlets>
-              <dashlet id="3" xsi:type="DashletGroupByTable">
-                <rank>0</rank>
-                <title>UI-ChangeManagementOverview-ChangeByDomain-last-7-days</title>
-                <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
-                <group_by>finalclass</group_by>
-                <style>table</style>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="3">
+            <parent>ChangeManagement</parent>
+            <class>Change</class>
+        </menu>
+        <menu id="Change:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
             <rank>3</rank>
-            <dashlets>
-              <dashlet id="4" xsi:type="DashletGroupByTable">
-                <rank>0</rank>
-                <title>UI-ChangeManagementOverview-ChangeByStatus-last-7-days</title>
-                <query>SELECT Change WHERE creation_date &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)</query>
-                <group_by>status</group_by>
-                <style>table</style>
-              </dashlet>
-            </dashlets>
-          </cell>
-        </cells>
-      </definition>
-    </menu>
-    <menu id="NewChange" xsi:type="NewObjectMenuNode" _delta="define">
-      <rank>1</rank>
-      <parent>ChangeManagement</parent>
-      <class>Change</class>
-    </menu>
-    <menu id="SearchChanges" xsi:type="SearchMenuNode" _delta="define">
-      <rank>2</rank>
-      <parent>ChangeManagement</parent>
-      <class>Change</class>
-    </menu>
-    <menu id="Change:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
-      <rank>3</rank>
-      <parent>ChangeManagement</parent>
-      <template_file/>
-    </menu>
-    <menu id="MyChanges" xsi:type="OQLMenuNode" _delta="define">
-      <rank>1</rank>
-      <parent>Change:Shortcuts</parent>
-      <oql><![CDATA[SELECT Change WHERE agent_id = :current_contact_id AND status NOT IN ("closed")]]></oql>
-      <do_search/>
-      <auto_reload>fast</auto_reload>
-    </menu>
-    <menu id="Changes" xsi:type="OQLMenuNode" _delta="define">
-      <rank>2</rank>
-      <parent>Change:Shortcuts</parent>
-      <oql><![CDATA[SELECT Change WHERE status != "closed"]]></oql>
-      <do_search>1</do_search>
-      <auto_reload>fast</auto_reload>
-    </menu>
-    <menu id="WaitingApproval" xsi:type="OQLMenuNode" _delta="define">
-      <rank>3</rank>
-      <parent>Change:Shortcuts</parent>
-      <oql><![CDATA[SELECT Change WHERE status IN ("planned")]]></oql>
-      <do_search/>
-      <auto_reload>fast</auto_reload>
-    </menu>
-  </menus>
-  <module_parameters>
-    <parameters id="itop-tickets">
-      <relation_context>
-        <UserRequest>
-          <impacts>
-            <down>
-              <items type="array">
-                <item id="open_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
-                  <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
-                  <default>yes</default>
-                </item>
-                <item id="recent_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
-                  <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
-                  <default>no</default>
-                </item>
-              </items>
-            </down>
-          </impacts>
-        </UserRequest>
-        <Incident>
-          <impacts>
-            <down>
-              <items type="array">
-                <item id="open_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
-                  <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
-                  <default>yes</default>
-                </item>
-                <item id="recent_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
-                  <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
-                  <default>no</default>
-                </item>
-              </items>
-            </down>
-          </impacts>
-        </Incident>
-        <Change>
-          <impacts>
-            <down>
-              <items type="array">
-                <item id="open_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
-                  <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
-                  <default>yes</default>
-                </item>
-                <item id="recent_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
-                  <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
-                  <default>no</default>
-                </item>
-              </items>
-            </down>
-          </impacts>
-        </Change>
-      </relation_context>
-    </parameters>
-    <parameters id="itop-config-mgmt">
-      <relation_context>
-        <FunctionalCI>
-          <impacts>
-            <down>
-              <items type="array">
-                <item id="open_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted')]]></oql>
-                  <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
-                   <default>yes</default>
-                </item>
-                <item id="recent_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status IN ('closed')) AND (L.impact_code != 'not_impacted') AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
-                  <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
-                  <default>no</default>
-                </item>
-              </items>
-            </down>
-            <up>
-              <items type="array">
-                <item id="open_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted')]]></oql>
-                  <dict>Tickets:Related:OpenChanges</dict>
-                  <icon>itop-change-mgmt/images/change-ongoing.png</icon>
-                  <default>yes</default>
-                </item>
-                <item id="recent_changes" _delta="define">
-                  <oql><![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status IN ('closed')) AND (L.impact_code != 'not_impacted') AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
-                  <dict>Tickets:Related:RecentChanges</dict>
-                  <icon>itop-change-mgmt/images/change-done.png</icon>
-                  <default>no</default>
-                </item>
-              </items>
-            </up>
-          </impacts>
-        </FunctionalCI>
-      </relation_context>
-    </parameters>
-  </module_parameters>
+            <parent>ChangeManagement</parent>
+            <template_file/>
+        </menu>
+        <menu id="MyChanges" xsi:type="OQLMenuNode" _delta="define">
+            <rank>1</rank>
+            <parent>Change:Shortcuts</parent>
+            <oql><![CDATA[SELECT Change WHERE agent_id = :current_contact_id AND status NOT IN ("closed")]]></oql>
+            <do_search/>
+            <auto_reload>fast</auto_reload>
+        </menu>
+        <menu id="Changes" xsi:type="OQLMenuNode" _delta="define">
+            <rank>2</rank>
+            <parent>Change:Shortcuts</parent>
+            <oql><![CDATA[SELECT Change WHERE status != "closed"]]></oql>
+            <do_search>1</do_search>
+            <auto_reload>fast</auto_reload>
+        </menu>
+        <menu id="WaitingApproval" xsi:type="OQLMenuNode" _delta="define">
+            <rank>3</rank>
+            <parent>Change:Shortcuts</parent>
+            <oql><![CDATA[SELECT Change WHERE status IN ("planned")]]></oql>
+            <do_search/>
+            <auto_reload>fast</auto_reload>
+        </menu>
+    </menus>
+    <module_parameters>
+        <parameters id="itop-tickets">
+            <relation_context>
+                <UserRequest>
+                    <impacts>
+                        <down>
+                            <items type="array">
+                                <item id="open_changes" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
+                                    <dict>Tickets:Related:OpenChanges</dict>
+                                    <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                                    <default>yes</default>
+                                </item>
+                                <item id="recent_changes" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
+                                    <dict>Tickets:Related:RecentChanges</dict>
+                                    <icon>itop-change-mgmt/images/change-done.png</icon>
+                                    <default>no</default>
+                                </item>
+                            </items>
+                        </down>
+                    </impacts>
+                </UserRequest>
+                <Incident>
+                    <impacts>
+                        <down>
+                            <items type="array">
+                                <item id="open_changes" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
+                                    <dict>Tickets:Related:OpenChanges</dict>
+                                    <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                                    <default>yes</default>
+                                </item>
+                                <item id="recent_changes" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
+                                    <dict>Tickets:Related:RecentChanges</dict>
+                                    <icon>itop-change-mgmt/images/change-done.png</icon>
+                                    <default>no</default>
+                                </item>
+                            </items>
+                        </down>
+                    </impacts>
+                </Incident>
+                <Change>
+                    <impacts>
+                        <down>
+                            <items type="array">
+                                <item id="open_changes" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id)]]></oql>
+                                    <dict>Tickets:Related:OpenChanges</dict>
+                                    <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                                    <default>yes</default>
+                                </item>
+                                <item id="recent_changes" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed')) AND (L.impact_code != 'not_impacted') AND (C.id != :this->id) AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
+                                    <dict>Tickets:Related:RecentChanges</dict>
+                                    <icon>itop-change-mgmt/images/change-done.png</icon>
+                                    <default>no</default>
+                                </item>
+                            </items>
+                        </down>
+                    </impacts>
+                </Change>
+            </relation_context>
+        </parameters>
+        <parameters id="itop-config-mgmt">
+            <relation_context>
+                <FunctionalCI>
+                    <impacts>
+                        <down>
+                            <items type="array">
+                                <item id="open_changes" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted')]]></oql>
+                                    <dict>Tickets:Related:OpenChanges</dict>
+                                    <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                                    <default>yes</default>
+                                </item>
+                                <item id="recent_changes" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status IN ('closed')) AND (L.impact_code != 'not_impacted') AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
+                                    <dict>Tickets:Related:RecentChanges</dict>
+                                    <icon>itop-change-mgmt/images/change-done.png</icon>
+                                    <default>no</default>
+                                </item>
+                            </items>
+                        </down>
+                        <up>
+                            <items type="array">
+                                <item id="open_changes" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status NOT IN ('closed', 'rejected')) AND (L.impact_code != 'not_impacted')]]></oql>
+                                    <dict>Tickets:Related:OpenChanges</dict>
+                                    <icon>itop-change-mgmt/images/change-ongoing.png</icon>
+                                    <default>yes</default>
+                                </item>
+                                <item id="recent_changes" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, C FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN Change AS C ON L.ticket_id = C.id WHERE (C.outage = 'yes') AND (C.status IN ('closed')) AND (L.impact_code != 'not_impacted') AND (DATE_ADD(C.end_date, INTERVAL 3 DAY) < NOW())]]></oql>
+                                    <dict>Tickets:Related:RecentChanges</dict>
+                                    <icon>itop-change-mgmt/images/change-done.png</icon>
+                                    <default>no</default>
+                                </item>
+                            </items>
+                        </up>
+                    </impacts>
+                </FunctionalCI>
+            </relation_context>
+        </parameters>
+    </module_parameters>
 </itop_design>
