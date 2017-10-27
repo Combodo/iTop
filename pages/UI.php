@@ -232,11 +232,14 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 /**
  * Displays a form (checkboxes) to select the objects for which to apply a given action
  * Only the objects for which the action is valid can be checked. By default all valid objects are checked
- * @param $oP WebPage The page for output
- * @param $oFilter DBSearch The filter that defines the list of objects
-  * @param $sNextOperation string The next operation (code) to be executed when the form is submitted
- * @param $oChecker ActionChecker The helper class/instance used to check for which object the action is valid
- * @return none
+ *
+ * @param \WebPage $oP WebPage The page for output
+ * @param \DBSearch $oFilter DBSearch The filter that defines the list of objects
+ * @param string $sNextOperation string The next operation (code) to be executed when the form is submitted
+ * @param ActionChecker $oChecker ActionChecker The helper class/instance used to check for which object the action is valid
+ * @param array $aExtraFormParams
+ *
+ * @throws \ApplicationException
  */
 function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker, $aExtraFormParams = array())
 {

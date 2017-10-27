@@ -238,7 +238,12 @@ abstract class DBSearch
 		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
 		return base64_encode(serialize(array($sOql, $this->GetInternalParams(), $this->m_aModifierProperties)));
 	}
-	
+
+	/**
+	 * @param string $sValue Serialized OQL query
+	 *
+	 * @return \DBSearch
+	 */
 	static public function unserialize($sValue)
 	{
 		$aData = unserialize(base64_decode($sValue));
