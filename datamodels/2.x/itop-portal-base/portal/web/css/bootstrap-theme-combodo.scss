@@ -2678,22 +2678,22 @@ tbody.collapse.in {
     text-decoration: none;
     background-color: transparent;
     background-image: none;
-    filter: progid: DXImageTransform.Microsoft.gradient(enabled=false);
-    cursor: not-allowed
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    cursor: not-allowed;
 }
 .open>.dropdown-menu {
-    display: block
+    display: block;
 }
 .open>a {
-    outline: 0
+    outline: 0;
 }
 .dropdown-menu-right {
     left: auto;
-    right: 0
+    right: 0;
 }
 .dropdown-menu-left {
     left: 0;
-    right: auto
+    right: auto;
 }
 .dropdown-header {
     display: block;
@@ -2701,7 +2701,7 @@ tbody.collapse.in {
     font-size: $font-size-small;
     line-height: $line-height-base;
     color: #808080;
-    white-space: nowrap
+    white-space: nowrap;
 }
 .dropdown-backdrop {
     position: fixed;
@@ -5518,7 +5518,7 @@ button.close {
     background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.5)), to(rgba(0, 0, 0, 0.0001)));
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0, rgba(0, 0, 0, 0.0001) 100%);
     background-repeat: repeat-x;
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1)
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#80000000', endColorstr='#00000000', GradientType=1);
 }
 .carousel-control.right {
     left: auto;
@@ -5528,7 +5528,7 @@ button.close {
     background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 0, 0, 0.0001)), to(rgba(0, 0, 0, 0.5)));
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0.0001) 0, rgba(0, 0, 0, 0.5) 100%);
     background-repeat: repeat-x;
-    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1)
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#80000000', GradientType=1);
 }
 .carousel-control:hover,
 .carousel-control:focus {
@@ -5536,7 +5536,7 @@ button.close {
     color: #ffffff;
     text-decoration: none;
     opacity: 0.9;
-    filter: alpha(opacity=90)
+    filter: alpha(opacity=90);
 }
 .carousel-control .icon-prev,
 .carousel-control .icon-next,
@@ -5546,12 +5546,12 @@ button.close {
     top: 50%;
     margin-top: -10px;
     z-index: 5;
-    display: inline-block
+    display: inline-block;
 }
 .carousel-control .icon-prev,
 .carousel-control .glyphicon-chevron-left {
     left: 50%;
-    margin-left: -10px
+    margin-left: -10px;
 }
 .carousel-control .icon-next,
 .carousel-control .glyphicon-chevron-right {
@@ -5563,13 +5563,13 @@ button.close {
     width: 20px;
     height: 20px;
     line-height: 1;
-    font-family: serif
+    font-family: serif;
 }
 .carousel-control .icon-prev:before {
-    content: '\2039'
+    content: '\2039';
 }
 .carousel-control .icon-next:before {
-    content: '\203a'
+    content: '\203a';
 }
 .carousel-indicators {
     position: absolute;
@@ -5580,7 +5580,7 @@ button.close {
     margin-left: -30%;
     padding-left: 0;
     list-style: none;
-    text-align: center
+    text-align: center;
 }
 .carousel-indicators li {
     display: inline-block;
@@ -5592,13 +5592,13 @@ button.close {
     border-radius: 10px;
     cursor: pointer;
     background-color: #000 \9;
-    background-color: rgba(0, 0, 0, 0)
+    background-color: rgba(0, 0, 0, 0);
 }
 .carousel-indicators .active {
     margin: 0;
     width: 12px;
     height: 12px;
-    background-color: #ffffff
+    background-color: #ffffff;
 }
 .carousel-caption {
     position: absolute;
@@ -5610,7 +5610,7 @@ button.close {
     padding-bottom: 20px;
     color: #ffffff;
     text-align: center;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6)
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 .carousel-caption .btn {
     text-shadow: none
@@ -5623,23 +5623,23 @@ button.close {
         width: 30px;
         height: 30px;
         margin-top: -15px;
-        font-size: 30px
+        font-size: 30px;
     }
     .carousel-control .glyphicon-chevron-left,
     .carousel-control .icon-prev {
-        margin-left: -15px
+        margin-left: -15px;
     }
     .carousel-control .glyphicon-chevron-right,
     .carousel-control .icon-next {
-        margin-right: -15px
+        margin-right: -15px;
     }
     .carousel-caption {
         left: 20%;
         right: 20%;
-        padding-bottom: 30px
+        padding-bottom: 30px;
     }
     .carousel-indicators {
-        bottom: 20px
+        bottom: 20px;
     }
 }
 .clearfix:before,
@@ -5673,7 +5673,7 @@ button.close {
 .modal-footer:before,
 .modal-footer:after {
     content: " ";
-    display: table
+    display: table;
 }
 .clearfix:after,
 .dl-horizontal dd:after,
@@ -5690,49 +5690,49 @@ button.close {
 .pager:after,
 .panel-body:after,
 .modal-footer:after {
-    clear: both
+    clear: both;
 }
 .center-block {
     display: block;
     margin-left: auto;
-    margin-right: auto
+    margin-right: auto;
 }
 .pull-right {
-    float: right !important
+    float: right !important;
 }
 .pull-left {
-    float: left !important
+    float: left !important;
 }
 .hide {
-    display: none !important
+    display: none !important;
 }
 .show {
-    display: block !important
+    display: block !important;
 }
 .invisible {
-    visibility: hidden
+    visibility: hidden;
 }
 .text-hide {
     font: 0/0 a;
     color: transparent;
     text-shadow: none;
     background-color: transparent;
-    border: 0
+    border: 0;
 }
 .hidden {
-    display: none !important
+    display: none !important;
 }
 .affix {
-    position: fixed
+    position: fixed;
 }
 @-ms-viewport {
-    width: device-width
+    width: device-width;
 }
 .visible-xs,
 .visible-sm,
 .visible-md,
 .visible-lg {
-    display: none !important
+    display: none !important;
 }
 .visible-xs-block,
 .visible-xs-inline,
@@ -5746,193 +5746,193 @@ button.close {
 .visible-lg-block,
 .visible-lg-inline,
 .visible-lg-inline-block {
-    display: none !important
+    display: none !important;
 }
 @media (max-width: 767px) {
     .visible-xs {
-        display: block !important
+        display: block !important;
     }
     table.visible-xs {
-        display: table !important
+        display: table !important;
     }
     tr.visible-xs {
-        display: table-row !important
+        display: table-row !important;
     }
     th.visible-xs,
     td.visible-xs {
-        display: table-cell !important
+        display: table-cell !important;
     }
 }
 @media (max-width: 767px) {
     .visible-xs-block {
-        display: block !important
+        display: block !important;
     }
 }
 @media (max-width: 767px) {
     .visible-xs-inline {
-        display: inline !important
+        display: inline !important;
     }
 }
 @media (max-width: 767px) {
     .visible-xs-inline-block {
-        display: inline-block !important
+        display: inline-block !important;
     }
 }
 @media (min-width: 768px) and (max-width: 991px) {
     .visible-sm {
-        display: block !important
+        display: block !important;
     }
     table.visible-sm {
-        display: table !important
+        display: table !important;
     }
     tr.visible-sm {
-        display: table-row !important
+        display: table-row !important;
     }
     th.visible-sm,
     td.visible-sm {
-        display: table-cell !important
+        display: table-cell !important;
     }
 }
 @media (min-width: 768px) and (max-width: 991px) {
     .visible-sm-block {
-        display: block !important
+        display: block !important;
     }
 }
 @media (min-width: 768px) and (max-width: 991px) {
     .visible-sm-inline {
-        display: inline !important
+        display: inline !important;
     }
 }
 @media (min-width: 768px) and (max-width: 991px) {
     .visible-sm-inline-block {
-        display: inline-block !important
+        display: inline-block !important;
     }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
     .visible-md {
-        display: block !important
+        display: block !important;
     }
     table.visible-md {
-        display: table !important
+        display: table !important;
     }
     tr.visible-md {
-        display: table-row !important
+        display: table-row !important;
     }
     th.visible-md,
     td.visible-md {
-        display: table-cell !important
+        display: table-cell !important;
     }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
     .visible-md-block {
-        display: block !important
+        display: block !important;
     }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
     .visible-md-inline {
-        display: inline !important
+        display: inline !important;
     }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
     .visible-md-inline-block {
-        display: inline-block !important
+        display: inline-block !important;
     }
 }
 @media (min-width: 1200px) {
     .visible-lg {
-        display: block !important
+        display: block !important;
     }
     table.visible-lg {
-        display: table !important
+        display: table !important;
     }
     tr.visible-lg {
-        display: table-row !important
+        display: table-row !important;
     }
     th.visible-lg,
     td.visible-lg {
-        display: table-cell !important
+        display: table-cell !important;
     }
 }
 @media (min-width: 1200px) {
     .visible-lg-block {
-        display: block !important
+        display: block !important;
     }
 }
 @media (min-width: 1200px) {
     .visible-lg-inline {
-        display: inline !important
+        display: inline !important;
     }
 }
 @media (min-width: 1200px) {
     .visible-lg-inline-block {
-        display: inline-block !important
+        display: inline-block !important;
     }
 }
 @media (max-width: 767px) {
     .hidden-xs {
-        display: none !important
+        display: none !important;
     }
 }
 @media (min-width: 768px) and (max-width: 991px) {
     .hidden-sm {
-        display: none !important
+        display: none !important;
     }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
     .hidden-md {
-        display: none !important
+        display: none !important;
     }
 }
 @media (min-width: 1200px) {
     .hidden-lg {
-        display: none !important
+        display: none !important;
     }
 }
 .visible-print {
-    display: none !important
+    display: none !important;
 }
 @media print {
     .visible-print {
-        display: block !important
+        display: block !important;
     }
     table.visible-print {
-        display: table !important
+        display: table !important;
     }
     tr.visible-print {
-        display: table-row !important
+        display: table-row !important;
     }
     th.visible-print,
     td.visible-print {
-        display: table-cell !important
+        display: table-cell !important;
     }
 }
 .visible-print-block {
-    display: none !important
+    display: none !important;
 }
 @media print {
     .visible-print-block {
-        display: block !important
+        display: block !important;
     }
 }
 .visible-print-inline {
-    display: none !important
+    display: none !important;
 }
 @media print {
     .visible-print-inline {
-        display: inline !important
+        display: inline !important;
     }
 }
 .visible-print-inline-block {
-    display: none !important
+    display: none !important;
 }
 @media print {
     .visible-print-inline-block {
-        display: inline-block !important
+        display: inline-block !important;
     }
 }
 @media print {
     .hidden-print {
-        display: none !important
+        display: none !important;
     }
 }
 .navbar-inverse .badge {
@@ -5940,55 +5940,55 @@ button.close {
     color: $brand-primary
 }
 .btn {
-    font-family: $font-family-sans-serif
+    font-family: $font-family-sans-serif;
 }
 .btn-default,
 .btn-default:hover {
     color: $btn-default-color;
-    border: $btn-default-border
+    border: $btn-default-border;
 }
 .btn-primary,
 .btn-primary:hover {
-    border: 1px solid $brand-primary-dark
+    border: 1px solid $brand-primary-dark;
 }
 .btn-success,
 .btn-success:hover {
-    border: 1px solid #2f6405
+    border: 1px solid #2f6405;
 }
 .btn-info,
 .btn-info:hover {
-    border: 1px solid #02749c
+    border: 1px solid #02749c;
 }
 .btn-warning,
 .btn-warning:hover {
-    border: 1px solid #79377c
+    border: 1px solid #79377c;
 }
 .btn-danger,
 .btn-danger:hover {
-    border: 1px solid #ac6819
+    border: 1px solid #ac6819;
 }
 body {
-    font-weight: 200
+    font-weight: 200;
 }
 th {
-    color: #444444
+    color: #444444;
 }
 legend {
-    color: #444444
+    color: #444444;
 }
 label {
     font-weight: bold
 }
 .pager a {
-    color: #444444
+    color: #444444;
 }
 .pager a:hover,
 .pager .active>a {
     border-color: $brand-primary;
-    color: #fff
+    color: #fff;
 }
 .pager .disabled>a {
-    border-color: #dddddd
+    border-color: #dddddd;
 }
 
 /*
@@ -6074,6 +6074,8 @@ label {
     .form_field_compact{
         /* Small fields */
         .form-group.form_group_small{
+            /*
+            error : You may not @extend an outer selector from within @media. You may only @extend selectors within the same directive.
             @extend .row;
 
             .form_field_label{
@@ -6082,6 +6084,7 @@ label {
             .form_field_control{
                 @extend .col-sm-9;
             }
+            */
         }
         /* CKEditor */
         div.cke .cke_contents{
