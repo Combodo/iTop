@@ -245,11 +245,9 @@ function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker,
 {
 		$oAppContext = new ApplicationContext();
 		$iBulkActionAllowed = $oChecker->IsAllowed();
-		$sClass = $oFilter->GetClass();
 		$aExtraParams = array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false, 'menu' => false);
 		if ($iBulkActionAllowed == UR_ALLOWED_DEPENDS)
 		{
-			$aAllowed = array();
 			$aExtraParams['selection_enabled'] = $oChecker->GetAllowedIDs();
 		}
 		else if(UR_ALLOWED_NO)
@@ -680,7 +678,7 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
 		}
-		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
+		$oFilter = DBObjectSearch::unserialize($sFilter); //TODO : check that the filter is valid
 		// Add user filter
 		$oFilter->UpdateContextFromUser();
 		$sClass = $oFilter->GetClass();
