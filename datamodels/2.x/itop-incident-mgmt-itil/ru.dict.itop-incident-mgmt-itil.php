@@ -105,7 +105,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Incident/Attribute:servicesubcategory_id+' => 'Подкатегория услуги',
 	'Class:Incident/Attribute:servicesubcategory_name' => 'Подкатегория услуги',
 	'Class:Incident/Attribute:servicesubcategory_name+' => '',
-	'Class:Incident/Attribute:escalation_flag' => '«Флаг эскалации',
+	'Class:Incident/Attribute:escalation_flag' => 'Флаг эскалации',
 	'Class:Incident/Attribute:escalation_flag+' => 'Флаг повышенного приоритета',
 	'Class:Incident/Attribute:escalation_flag/Value:no' => 'Нет',
 	'Class:Incident/Attribute:escalation_flag/Value:no+' => 'Нет',
