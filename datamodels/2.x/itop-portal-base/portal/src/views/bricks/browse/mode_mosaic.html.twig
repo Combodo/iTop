@@ -186,6 +186,9 @@
 				var iItemFlags = 0;
                 // - Adding stub div
 				var textElem = $('<div></div>').addClass('mosaic-item-text');
+				// - Adding wrapper to textElem to easily control text's subnodes flow
+				var textWrapperElem = $('<div></div>').addClass('mosaic-item-text-wrapper');
+				textWrapperElem.appendTo(textElem);
                 // - Adding image
                 if( (item.image !== undefined) && (item.image !== '') && (item.image !== null) )
                 {
@@ -196,13 +199,13 @@
                 if( (item.name !== undefined) && (item.name !== '') )
                 {
                     iItemFlags += 1;
-                    textElem.append( $('<div></div>').addClass('mosaic-item-name').html(item.name) );
+					textWrapperElem.append( $('<div></div>').addClass('mosaic-item-name').html(item.name) );
                 }
                 // - Adding description
                 if( (item.description !== undefined) && (item.description !== '') )
                 {
                     iItemFlags += 2;
-                    textElem.append( $('<div></div>').addClass('mosaic-item-description').html(item.description) );
+					textWrapperElem.append( $('<div></div>').addClass('mosaic-item-description').html(item.description) );
 				}
                 aElem.append( textElem );
 				// - Adding CSS class to adjust the layout regarding which properties are available

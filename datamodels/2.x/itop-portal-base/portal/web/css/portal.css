@@ -758,11 +758,8 @@ table .group-actions {
     display: inline-block;
     width: 32%;
     height: 120px;
-    max-height: 120px;
-    /* Must be same as height */
     margin-right: 1.95%;
     /* We don't put 2% to keep a margin in case of a bad browser rendering */
-    overflow: hidden;
     word-break: break-word;
   }
   .mosaic-item {
@@ -772,8 +769,12 @@ table .group-actions {
     background-color: #ea7d1e;
     box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.20);
   }
-  .mosaic-item-name {
+  .mosaic-item-text .mosaic-item-text-wrapper {
     max-height: 100px;
+    /* Must be .mosaic-item absolute height (in px) */
+  }
+  .mosaic-item-name {
+    max-height: 100%;
     /* It's ok if description is pushed down and not visible; but we truncate before it flows out of the tile */
     overflow: hidden;
     font-weight: 600;
@@ -796,17 +797,12 @@ table .group-actions {
   }
 }
 @media (min-width: 992px) {
-  /* All layouts */
   /* Layout 5 & 7 */
   .mosaic-item {
     padding: 10px 15px;
   }
   .mosaic-group-back {
     font-size: 40px;
-  }
-  .mosaic-item-name {
-    max-height: 100px;
-    /* overflow hidden inherited */
   }
   .mosaic-item-layout-5 .mosaic-item-image, .mosaic-item-layout-7 .mosaic-item-image {
     display: table-cell;
@@ -827,12 +823,11 @@ table .group-actions {
   .mosaic-group-item {
     width: 24%;
     height: 140px;
-    max-height: 140px;
-    /* Must be same as height */
     margin-right: 1.3%;
   }
-  .mosaic-item-name {
+  .mosaic-item-text .mosaic-item-text-wrapper {
     max-height: 120px;
+    /* Must be .mosaic-item absolute height (in px) */
     /* overflow hidden inherited */
   }
 }
