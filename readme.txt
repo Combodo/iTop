@@ -1,7 +1,7 @@
 ﻿iTop - version 2.4.0 - 15-Nov-2017
 Readme file
 
-iTop Entry 2.4.0 is the 8th packaged release of iTop.
+iTop 2.4.0 is the 30th release of iTop.
 
 Changes since the previous version
 -------------------------------------------------------------------
