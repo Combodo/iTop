@@ -871,10 +871,14 @@ EOF
 
 	/**
 	 * Get the HTML fragment corresponding to the display of a table representing a set of objects
+	 *
 	 * @param WebPage $oPage The page object is used for out-of-band information (mostly scripts) output
 	 * @param CMDBObjectSet The set of objects to display
-	 * @param Hash $aExtraParams Some extra configuration parameters to tweak the behavior of the display
-	 * @return String The HTML fragment representing the table of objects
+	 * @param array $aExtraParams Some extra configuration parameters to tweak the behavior of the display
+	 *
+	 * @return String The HTML fragment representing the table of objects. <b>Warning</b> : no JS added to handled pagination or table sorting !
+	 *
+	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
 	 */	
 	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
