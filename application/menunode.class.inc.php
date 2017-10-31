@@ -174,7 +174,7 @@ class ApplicationMenu
 		{
 			$oMenuNode = self::GetMenuNode($aMenu['index']);
 			if (!$oMenuNode->IsEnabled()) continue; // Don't display a non-enabled menu
-			$oPage->AddToMenu('<h3 id="Menu_'.$oMenuNode->GetMenuID().'">'.$oMenuNode->GetTitle().'</h3>');
+			$oPage->AddToMenu('<h3 id="'.utils::GetSafeId('AccordionMenu_'.$oMenuNode->GetMenuID()).'">'.$oMenuNode->GetTitle().'</h3>');
 			$oPage->AddToMenu('<div>');
 			$aChildren = self::GetChildren($aMenu['index']);
 			if (count($aChildren) > 0)
@@ -217,11 +217,11 @@ EOF
 				$sHyperlink = $oMenu->GetHyperlink($aExtraParams);
 				if ($sHyperlink != '')
 				{
-					$oPage->AddToMenu('<li id="Menu_'.$oMenu->GetMenuID().'"'.$sCSSClass.'><a href="'.$oMenu->GetHyperlink($aExtraParams).'">'.$oMenu->GetTitle().'</a></li>');
+					$oPage->AddToMenu('<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'"'.$sCSSClass.'><a href="'.$oMenu->GetHyperlink($aExtraParams).'">'.$oMenu->GetTitle().'</a></li>');
 				}
 				else
 				{
-					$oPage->AddToMenu('<li id="Menu_'.$oMenu->GetMenuID().'"'.$sCSSClass.'>'.$oMenu->GetTitle().'</li>');
+					$oPage->AddToMenu('<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'"'.$sCSSClass.'>'.$oMenu->GetTitle().'</li>');
 				}
 				$aCurrentMenu = self::$aMenusIndex[$index];
 				if ($iActiveMenu == $index)
