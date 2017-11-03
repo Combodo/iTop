@@ -916,7 +916,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	<li>the "on object creation" triggers get executed when an object of the specified class is created</li>
 	<li>the "on entering a state" triggers get executed before an object of the given class enters a specified state (coming from another state)</li>
 	<li>the "on leaving a state" triggers get executed when an object of the given class is leaving a specified state</li>
-	<li>the "on threshold" triggers get executed when a threshold for TTR or TTO as been reached</li>
+	<li>the "on threshold" triggers get executed when a threshold for TTR or TTO has been reached</li>
 	<li>the "on portal update" triggers get executed when a ticket is updated from the portal</li>
 </ol>
 </p>
