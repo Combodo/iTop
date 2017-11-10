@@ -334,6 +334,10 @@ EOF;
 				foreach($aMenusToLoad as $sMenuId)
 				{
 					$oMenuNode = $aMenuNodes[$sMenuId];
+					if (is_null($oMenuNode))
+					{
+						throw new Exception("Module '{$oModule->GetId()}' (location : '$sModuleRootDir') contains an unknown menuId :  '$sMenuId'");
+					}
 					if ($oMenuNode->getAttribute("xsi:type") == 'MenuGroup')
 					{
 						// Note: this algorithm is wrong
