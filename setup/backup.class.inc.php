@@ -288,34 +288,6 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
             $this->LogInfo("Tar file: '$sTarFile'");
 			$oArchive = new PharData($sTarFile);
 
-			// Note: the file is created by tempnam and might not be writeable by another process (Windows/IIS)
-			// (delete it before spawning a process)
-			// Note: the file is created by tempnam and might not be writeable by another process (Windows/IIS)
-			// (delete it before spawning a process)
-			$sDataFile = tempnam(SetupUtils::GetTmpDir(), 'itop-');
-			$this->LogInfo("Data file: '$sDataFile'");
-			$this->DoBackup($sDataFile);
-
-			$oArchive->addFile($sDataFile, 'itop-dump.sql');
-			// todo: reduce disk space needed by the operation by piping the output of mysqldump directly into the tar
-			// tip1 : this syntax works fine (did not work with addFile)
-			//$oArchive->buildFromIterator(
-			//	new ArrayIterator(
-			//		array('production.delta.xml' => fopen(ROOTDIR.'production.delta.xml', 'rb'))
-			//	)
-			//);
-			// tip2 : use the phar stream by redirecting the output of mysqldump into
-			//        phar://var/www/itop/data/backups/manual/trunk_pro-2017-07-05_15_10.tar.gz/itop-dump.sql
-			//
-			//	new ArrayIterator(
-			//		array('production.delta.xml' => fopen(ROOTDIR.'production.delta.xml', 'rb'))
-			//	)
-			//);
-
-			// Windows/IIS: the data file has been created by the spawned process...
-			//   trying to delete it will issue a warning, itself stopping the setup abruptely
-			@unlink($sDataFile);
-
 			foreach ($this->GetAdditionalFiles($sSourceConfigFile) as $sArchiveFile => $sSourceFile)
 			{
 				if (is_dir($sSourceFile))
@@ -346,6 +318,34 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 					$oArchive->addFile($sSourceFile, $sArchiveFile);
 				};
 			}
+
+			// Note: the file is created by tempnam and might not be writeable by another process (Windows/IIS)
+			// (delete it before spawning a process)
+			// Note: the file is created by tempnam and might not be writeable by another process (Windows/IIS)
+			// (delete it before spawning a process)
+			$sDataFile = tempnam(SetupUtils::GetTmpDir(), 'itop-');
+			$this->LogInfo("Data file: '$sDataFile'");
+			$this->DoBackup($sDataFile);
+
+			$oArchive->addFile($sDataFile, 'itop-dump.sql');
+			// todo: reduce disk space needed by the operation by piping the output of mysqldump directly into the tar
+			// tip1 : this syntax works fine (did not work with addFile)
+			//$oArchive->buildFromIterator(
+			//	new ArrayIterator(
+			//		array('production.delta.xml' => fopen(ROOTDIR.'production.delta.xml', 'rb'))
+			//	)
+			//);
+			// tip2 : use the phar stream by redirecting the output of mysqldump into
+			//        phar://var/www/itop/data/backups/manual/trunk_pro-2017-07-05_15_10.tar.gz/itop-dump.sql
+			//
+			//	new ArrayIterator(
+			//		array('production.delta.xml' => fopen(ROOTDIR.'production.delta.xml', 'rb'))
+			//	)
+			//);
+
+			// Windows/IIS: the data file has been created by the spawned process...
+			//   trying to delete it will issue a warning, itself stopping the setup abruptely
+			@unlink($sDataFile);
 
 			if (file_exists($sTarFile.'.gz'))
 			{
