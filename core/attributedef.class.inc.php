@@ -1053,20 +1053,20 @@ class AttributeLinkedSet extends AttributeDefinition
 		
 		$oLinkSet = clone $value; // Workaround/Safety net for Trac #887
 		$iLimit = MetaModel::GetConfig()->Get('max_linkset_output');
-		if ($iLimit > 0)
+		$iCount = 0;
+		$aNames = array();
+		foreach($oLinkSet as $oItem)
 		{
-			$oLinkSet->SetLimit($iLimit);
-		}
-		$aNames = $oLinkSet->GetColumnAsArray($sRemoteName);
-		if ($iLimit > 0)
-		{
-			$iTotal = $oLinkSet->Count();
-			if ($iTotal > count($aNames))
+			if (($iLimit > 0) && ($iCount == $iLimit))
 			{
-				$aNames[] = '... '.Dict::Format('UI:TruncatedResults', count($aNames), $iTotal);
+				$iTotal = $oLinkSet->Count();
+				$aNames[] = '... '.Dict::Format('UI:TruncatedResults', $iCount, $iTotal);
+				break;
 			}
+			$aNames[] = $oItem->Get($sRemoteName);
+			$iCount++;
 		}
-		
+
 		switch($sVerb)
 		{
 			case '':
