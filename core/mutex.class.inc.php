@@ -45,7 +45,7 @@ class iTopMutex
 		}
 		$sDBName = $oConfig->GetDBName();
 		$sDBSubname = $oConfig->GetDBSubname();
-		$this->sName = 'itop.'.$sName;
+		$this->sName = $sName;
 		if (substr($sName, -strlen($sDBName.$sDBSubname)) != $sDBName.$sDBSubname)
 		{
 			// If the name supplied already ends with the expected suffix
@@ -53,6 +53,9 @@ class iTopMutex
 			// running cron job by its mutex, without knowing if the config already exists or not
 			$this->sName .= $sDBName.$sDBSubname;
 		}
+
+		// Limit the length of the name for MySQL > 5.7.5
+		$this->sName = 'itop.'.md5($this->sName);
 
 		$this->bLocked = false; // Not yet locked
 
