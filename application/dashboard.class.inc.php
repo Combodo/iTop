@@ -755,16 +755,21 @@ EOF
 	
 	public static function GetDashletCreationForm($sOQL = null)
 	{
+		$oAppContext = new ApplicationContext();
+		$sContextMenuId = $oAppContext->GetCurrentValue('menu', null);
+
 		$oForm = new DesignerForm();
 	
 		// Get the list of all 'dashboard' menus in which we can insert a dashlet
 		$aAllMenus = ApplicationMenu::ReflectionMenuNodes();
+		$sRootMenuId = ApplicationMenu::GetRootMenuId($sContextMenuId);
 		$aAllowedDashboards = array();
+		$sDefaultDashboard = null;
 		foreach($aAllMenus as $idx => $aMenu)
 		{
 			$oMenu = $aMenu['node'];
 			$sParentId = $aMenu['parent'];
-			if ($oMenu instanceof DashboardMenuNode)
+			if (($oMenu instanceof DashboardMenuNode) && ($oMenu->IsEnabled()))
 			{
 				$sMenuLabel = $oMenu->GetTitle();
 				$sParentLabel = Dict::S('Menu:'.$sParentId);
@@ -776,12 +781,14 @@ EOF
 				{
 					$aAllowedDashboards[$oMenu->GetMenuId()] = $sMenuLabel;
 				}
+				if (empty($sDefaultDashboard) && ($sRootMenuId == ApplicationMenu::GetRootMenuId($oMenu->GetMenuId())))
+				{
+					$sDefaultDashboard = $oMenu->GetMenuId();
+				}
 			}
 		}
 		asort($aAllowedDashboards);
 		
-		$aKeys = array_keys($aAllowedDashboards); // Select the first one by default
-		$sDefaultDashboard = $aKeys[0];
 		$oField = new DesignerComboField('menu_id', Dict::S('UI:DashletCreation:Dashboard'), $sDefaultDashboard);
 		$oField->SetAllowedValues($aAllowedDashboards);
 		$oField->SetMandatory(true);
@@ -842,7 +849,7 @@ EOF
 		$oPage->add_ready_script(
 <<<EOF
 $('#dashlet_creation_dlg').dialog({
-	width: 400,
+	width: 500,
 	modal: true,
 	title: '$sDialogTitle',
 	buttons: [

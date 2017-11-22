@@ -421,9 +421,9 @@ function FixTableSorter(table)
 	}
 }
 
-function DashletCreationDlg(sOQL)
+function DashletCreationDlg(sOQL, sContext)
 {
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'dashlet_creation_dlg', oql: sOQL}, function(data){
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, {operation: 'dashlet_creation_dlg', oql: sOQL}, function(data){
 		$('body').append(data);
 	});
 	return false;
