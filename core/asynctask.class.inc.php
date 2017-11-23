@@ -186,7 +186,7 @@ abstract class AsyncTask extends DBObject
     * @return boolean True if the task record can be deleted
     */
 	public function Process()
-   {
+	{
 		// By default: consider that the task is not completed
 		$bRet = false;
 
@@ -196,16 +196,15 @@ abstract class AsyncTask extends DBObject
 		{
 			try
 			{
-		   	$sStatus = $this->DoProcess();
-		   	if ($this->Get('event_id') != 0)
-		   	{
-		   		$oEventLog = MetaModel::GetObject('Event', $this->Get('event_id'));
-		   		$oEventLog->Set('message', $sStatus);
-		   		$oEventLog->DBUpdate();
+				$sStatus = $this->DoProcess();
+				if ($this->Get('event_id') != 0)
+				{
+					$oEventLog = MetaModel::GetObject('Event', $this->Get('event_id'));
+					$oEventLog->Set('message', $sStatus);
+					$oEventLog->DBUpdate();
 				}
 				$bRet = true;
-			}
-			catch(Exception $e)
+			} catch (Exception $e)
 			{
 				$this->HandleError($e->getMessage(), $e->getCode());
 			}
@@ -215,6 +214,7 @@ abstract class AsyncTask extends DBObject
 			// Already done or being handled by another process... skip...
 			$bRet = false;
 		}
+
 		return $bRet;
 	}
 

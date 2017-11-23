@@ -70,6 +70,14 @@ function UsageAndExit($oP)
 	exit -2;
 }
 
+/**
+ * @param iProcess $oProcess
+ * @param \BackgroundTask $oTask
+ * @param DateTime $oStartDate
+ * @param int $iTimeLimit
+ *
+ * @return string
+ */
 function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 {
 	$oNow = new DateTime();
@@ -117,6 +125,11 @@ function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 	return $sMessage;
 }
 
+/**
+ * @param CLIPage|WebPage $oP
+ * @param iProcess[] $aProcesses
+ * @param boolean $bVerbose
+ */
 function CronExec($oP, $aProcesses, $bVerbose)
 {
 	$iStarted = time();
