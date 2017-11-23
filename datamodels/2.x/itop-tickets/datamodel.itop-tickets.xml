@@ -1269,9 +1269,9 @@
 				</form>
 				<form id="servicesubcategory">
 					<class>ServiceSubcategory</class>
-					<!-- Optionnal tag to list the fields. If empty only fields from <twig> tag will be displayed, if ommited fields from zlist details will. -->
+					<!-- Optional tag to list the fields. If empty only fields from <twig> tag will be displayed, if omitted fields from zlist details will. -->
 					<fields />
-					<!-- Optionnal tag to specify the form layout. Fields that are not positionned in the layout will be placed at the end of the form -->
+					<!-- Optional tag to specify the form layout. Fields that are not positioned in the layout will be placed at the end of the form -->
 					<twig>
 						<div class="row">
 							<div class="col-sm-6">
