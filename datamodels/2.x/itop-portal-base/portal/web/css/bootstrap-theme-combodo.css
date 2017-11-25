@@ -41,11 +41,11 @@ input, button, select, textarea {
   line-height: inherit;
 }
 a {
-  color: #d46201;
+  color: #da7014;
   text-decoration: none;
 }
 a:hover, a:focus {
-  color: #bb5601;
+  color: #c36412;
   text-decoration: underline;
 }
 a:focus {
