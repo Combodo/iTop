@@ -82,7 +82,9 @@ class iTopMutex
 	}
 
 	/**
-	 *	Acquire the mutex
+	 * Acquire the mutex. Uses a MySQL lock. <b>Warn</b> : can have an abnormal behavior on MySQL clusters (see R-016204)
+	 *
+	 * @see https://dev.mysql.com/doc/refman/5.7/en/miscellaneous-functions.html#function_get-lock
 	 */	
 	public function Lock()
 	{
