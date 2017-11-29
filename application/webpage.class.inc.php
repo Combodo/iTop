@@ -165,9 +165,11 @@ class WebPage implements Page
     
 	/**
 	* Adds a tabular content to the web page
-	* @param Hash $aConfig Configuration of the table: hash array of 'column_id' => 'Column Label'
-	* @param Hash $aData Hash array. Data to display in the table: each row is made of 'column_id' => Data. A column 'pkey' is expected for each row
-	* @param Hash $aParams Hash array. Extra parameters for the table.
+	 *
+	 * @param string[] $aConfig Configuration of the table: hash array of 'column_id' => 'Column Label'
+	 * @param string[] $aData Hash array. Data to display in the table: each row is made of 'column_id' => Data. A column 'pkey' is expected for each row
+	 * @param array $aParams Hash array. Extra parameters for the table.
+	 *
 	* @return void
 	*/	  
 	public function table($aConfig, $aData, $aParams = array())

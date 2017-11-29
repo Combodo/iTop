@@ -285,7 +285,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			while($oLog = $oSetSynchroLog->Fetch())
 			{
 				$sLogTitle = Dict::Format('Core:SynchroLogTitle', $oLog->Get('status'), $oLog->GetEditValue('start_date'));
-				$oPage->add('<option value="'.$oLog->GetKey().'"'.$sSelected.'>'.$sLogTitle.'</option>');
+				$oPage->add('<option value="'.$oLog->GetKey().'" '.$sSelected.'>'.$sLogTitle.'</option>');
 				$sSelected = ''; // only the first log is selected by default
 				$aData = $this->ProcessLog($oLog);
 				$sScript .= '"'.$oLog->GetKey().'": '.json_encode($aData).",\n";
@@ -443,7 +443,7 @@ EOF
 			'obj_created_errors' => $oLastLog->Get('stats_nb_obj_created_errors'),
 			'obj_unchanged_warnings' => $oLastLog->Get('stats_nb_obj_unchanged_warnings'),
 		);
-		$iReconciledErrors = $oLastLog->Get('stats_nb_replica_reconciled_errors');
+		$oLastLog->Get('stats_nb_replica_reconciled_errors');
 		$iDisappeared = $aData['obj_disappeared_errors'] + $aData['obj_obsoleted'] + $aData['obj_deleted'] + $aData['obj_disappeared_no_action'];
 		$aData['repl_disappeared'] = $iDisappeared;
 		$iNewErrors = $aData['obj_created_errors'] + $oLastLog->Get('stats_nb_replica_reconciled_errors');
@@ -478,9 +478,14 @@ EOF
 		}
 		return $this->Get('url_icon');
 	}
-	
+
 	/**
 	 * Get the actual hyperlink to the remote application for the given replica and dest object
+	 *
+	 * @param \DBObject $oDestObj
+	 * @param \SynchroReplica $oReplica
+	 *
+	 * @return string
 	 */
 	public function GetApplicationUrl(DBObject $oDestObj, SynchroReplica $oReplica)
 	{
@@ -564,9 +569,13 @@ EOF
 		}
 		$this->Set('attribute_list', $oAttributeSet);
 	}
-	
+
 	/**
 	 * Creates a new SynchroAttXXX object in memory with the default values
+	 *
+	 * @param string $sAttCode
+	 *
+	 * @return \SynchroAttExtKey|\SynchroAttLinkSet|\SynchroAttribute
 	 */
 	protected function CreateSynchroAtt($sAttCode)
 	{
@@ -762,7 +771,6 @@ EOF
 		parent::AfterInsert();
 
 		$sTable = $this->GetDataTable();
-		$sReplicaTable = MetaModel::DBGetTable('SynchroReplica');
 
 		$aColumns = $this->GetSQLColumns();
 		
@@ -861,8 +869,11 @@ EOF
 
 	/**
 	 * Checks if the data source definition is consistent with the schema of the target class
-	 * @param $bDiagnostics boolean True to only diagnose the consistency, false to actually apply some changes
-	 * @param $bVerbose boolean True to get some information in the std output (echo)
+	 *
+	 * @param boolean $bDiagnostics boolean True to only diagnose the consistency, false to actually apply some changes
+	 * @param boolean $bVerbose boolean True to get some information in the std output (echo)
+	 * @param null $oChange //FIXME never used, should we drop this ?
+	 *
 	 * @return bool Whether or not the database needs fixing for this data source
 	 */
 	public function CheckDBConsistency($bDiagnostics, $bVerbose, $oChange = null)
@@ -1123,10 +1134,11 @@ EOF
 		return $aRet;
 	}
 
-	
+
 	/**
-	 * Get the list of SQL columns corresponding to a particular list of attribute codes
-	 * Defaults to the whole list of columns for the current class	 
+	 * @param null|string[] $aAttributeCodes attribute codes list
+	 *
+	 * @return string[] corresponding current class SQL columns, all of the table columns if null was provided
 	 */
 	public function GetSQLColumns($aAttributeCodes = null)
 	{
@@ -1302,7 +1314,7 @@ class SynchroAttExtKey extends SynchroAttribute
 		$sHtml .= "<option value=\"friendlyname\" $sSelected>".MetaModel::GetLabel($sTargetClass, 'friendlyname')."</option>\n";
 		
 		// Separator
-		$sHtml .= '<option value="" disabled=disabled">———————————</option>'; // Note: using the em-dash character which has no space between 2 characters
+		$sHtml .= '<option value="" disabled>———————————</option>'; // Note: using the em-dash character which has no space between 2 characters
 		
 		// Then add all remaining scalar attributes, sorted alphabetically
 		$aMoreOptions = array();
@@ -1437,6 +1449,8 @@ class SynchroLog extends DBObject
 
 	/**
 	 * Increments a statistics counter
+	 *
+	 * @param string $sCode
 	 */
 	function Inc($sCode)
 	{
@@ -1600,7 +1614,6 @@ class SynchroReplica extends DBObject implements iDisplay
 
 	protected function RecordWarnings()
 	{
-		$sWarningMessage = '';
 		$MAX_WARNING_LENGTH = 255;
 		switch(count($this->aWarnings))
 		{
@@ -1863,10 +1876,19 @@ class SynchroReplica extends DBObject implements iDisplay
 		}
 		$oStatLog->AddTrace("<<< End of SynchroReplica::Synchro.", $this);
 	}
-	
+
 	/**
 	 * Updates the destination object with the Extended data found in the synchro_data_XXXX table
-	 */	
+	 *
+	 * @param $oDestObj
+	 * @param string[] $aAttributes
+	 * @param $oChange
+	 * @param $oStatLog
+	 * @param string $sStatsCode
+	 * @param string $sStatsCodeError
+	 *
+	 * @return bool
+	 */
 	protected function UpdateObjectFromReplica($oDestObj, $aAttributes, $oChange, &$oStatLog, $sStatsCode, $sStatsCodeError)
 	{
 		$aValueTrace = array();
@@ -1930,8 +1952,14 @@ class SynchroReplica extends DBObject implements iDisplay
 
 	/**
 	 * Creates the destination object populating it with the Extended data found in the synchro_data_XXXX table
+	 *
+	 * @param string $sClass
+	 * @param string[] $aAttributes
+	 * @param $oChange
+	 * @param $oStatLog
+	 *
 	 * @return bool Whether or not the object was created
-	 */	
+	 */
 	protected function CreateObjectFromReplica($sClass, $aAttributes, $oChange, &$oStatLog)
 	{
 		$bCreated = false;
@@ -2047,8 +2075,12 @@ class SynchroReplica extends DBObject implements iDisplay
 
 	/**
 	 * Get the value from the 'Extended Data' located in the synchro_data_xxx table for this replica
-	 * Note: sExtAttCode could be a standard attcode, or 'primary_key'
-	 * @return mixed, or null (leave unchanged), or '' (reset)
+	 *
+	 * @param string $sExtAttCode could be a standard attcode, or 'primary_key'
+	 * @param $oSyncAtt
+	 * @param $oStatLog
+	 *
+	 * @return mixed , or null (leave unchanged), or '' (reset)
 	 */
 	protected function GetValueFromExtData($sExtAttCode, $oSyncAtt, &$oStatLog)
 	{
@@ -2259,6 +2291,7 @@ class SynchroExecution
 	protected $m_oLastFullLoadStartDate = null;
 
 	protected $m_oChange = null;
+	/** @var SynchroLog */
 	protected $m_oStatLog = null;
 
 	// Context computed one for optimization and report inconsistencies ASAP
@@ -2273,7 +2306,6 @@ class SynchroExecution
 	 * Constructor
 	 * @param SynchroDataSource $oDataSource Synchronization task
 	 * @param DateTime $oLastFullLoadStartDate Date of the last full load (start date/time), if known
-	 * @return void
 	 */
 	public function __construct($oDataSource, $oLastFullLoadStartDate = null)
 	{
@@ -2300,7 +2332,7 @@ class SynchroExecution
 		$sUserString = CMDBChange::GetCurrentUserName();
 		$this->m_oChange->Set("userinfo", $sUserString.' '.Dict::S('Core:SyncDataExchangeComment'));
 		$this->m_oChange->Set("origin", 'synchro-data-source');
-		$iChangeId = $this->m_oChange->DBInsert();
+		$this->m_oChange->DBInsert();
 
 		// Start logging this execution (stats + protection against reentrance)
 		//
@@ -2359,8 +2391,12 @@ class SynchroExecution
 	}
 
 	/**
-	* Prepare structures in memory, to speedup the processing of a given replica
-	*/	
+	 * Prepare structures in memory, to speedup the processing of a given replica
+	 *
+	 * @param bool $bFirstPass
+	 *
+	 * @throws \SynchroExceptionNotStarted
+	 */
 	public function PrepareProcessing($bFirstPass = true)
 	{
 		if ($this->m_oDataSource->Get('status') == 'obsolete')
@@ -2373,7 +2409,6 @@ class SynchroExecution
 		}
 
 		// Get the list of SQL columns
-		$sClass = $this->m_oDataSource->GetTargetClass();
 		$aAttCodesExpected = array();
 		$aAttCodesToReconcile = array();
 		$aAttCodesToUpdate = array();
@@ -2468,7 +2503,8 @@ class SynchroExecution
 	 * Perform a synchronization between the data stored in the replicas (&synchro_data_xxx_xx table)
 	 * and the iTop objects. If the lastFullLoadStartDate is NOT specified then the full_load_periodicity
 	 * is used to determine which records are obsolete.
-	 * @return void
+	 *
+	 * @return SynchroLog
 	 */
 	public function Process()
 	{
@@ -2493,7 +2529,6 @@ class SynchroExecution
 				$sIssuesOQL = "SELECT SynchroReplica WHERE sync_source_id=".$this->m_oDataSource->GetKey()." AND status_last_error!=''";
 				$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
 				$sIssuesURL = "{$sAbsoluteUrl}synchro/replica.php?operation=oql&datasource=".$this->m_oDataSource->GetKey()."&oql=".urlencode($sIssuesOQL);
-				$sSeeIssues = "<p></p>";
 
 				$sStatistics = "<h1>Statistics</h1>\n";
 				$sStatistics .= "<ul>\n";
@@ -2645,7 +2680,6 @@ class SynchroExecution
 
 		$this->m_oStatLog->AddTrace("Synchronizing chunk - curr_job:$iCurrJob, curr_pos:$iCurrPos, max_chunk_size:$iMaxChunkSize");
 
-		$bContinue = false;
 		switch ($iCurrJob)
 		{
 			case 1:

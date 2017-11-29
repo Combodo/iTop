@@ -74,8 +74,8 @@ abstract class DBObject implements iDisplay
   	private static $m_aBulkInsertCols = array(); // class => array of ('table' => array of <sql_column>)
   	private static $m_bBulkInsert = false;
 
-	private $m_bIsInDB = false; // true IIF the object is mapped to a DB record
-	private $m_iKey = null;
+	protected $m_bIsInDB = false; // true IIF the object is mapped to a DB record
+	protected $m_iKey = null;
 	private $m_aCurrValues = array();
 	protected $m_aOrigValues = array();
 
