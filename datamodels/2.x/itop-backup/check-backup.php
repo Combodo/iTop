@@ -211,7 +211,7 @@ catch(Exception $e)
 	exit;
 }
 
-$sZipArchiveFile = MakeArchiveFileName();
+$sZipArchiveFile = MakeArchiveFileName().'.tar.gz';
 echo date('Y-m-d H:i:s')." - Checking file: $sZipArchiveFile\n";
 
 if (file_exists($sZipArchiveFile))
@@ -223,7 +223,7 @@ if (file_exists($sZipArchiveFile))
 		if ($iSize > $iMIN)
 		{
 			echo "Found the archive\n";
-			$sOldArchiveFile = MakeArchiveFileName(time() - 86400); // yesterday's archive
+			$sOldArchiveFile = MakeArchiveFileName(time() - 86400).'.tar.gz'; // yesterday's archive
 			if (file_exists($sOldArchiveFile))
 			{
 				if ($aOldStat = stat($sOldArchiveFile))
