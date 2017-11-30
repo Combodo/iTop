@@ -131,7 +131,7 @@ class DBRestore extends DBBackup
 		$oArchive->extractFileTo($sDataDir, 'itop-dump.sql');
 		$sDataFile = $sDataDir.'/itop-dump.sql';
 		$this->LoadDatabase($sDataFile);
-		unlink($sDataFile);
+		SetupUtils::rrmdir($sDataDir);
 
 		// Update the code
 		//
