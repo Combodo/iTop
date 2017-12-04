@@ -91,6 +91,14 @@ class CMDBSource
 	/** @var mysqli */
 	protected static $m_oMysqli;
 
+	/**
+	 * @param string $sServer
+	 * @param string $sUser
+	 * @param string $sPwd
+	 * @param string $sSource
+	 *
+	 * @throws \MySQLException
+	 */
 	public static function Init($sServer, $sUser, $sPwd, $sSource = '')
 	{
 		self::$m_sDBHost = $sServer;
@@ -195,7 +203,12 @@ class CMDBSource
 		$aVersions = self::QueryToCol('SELECT Version() as version', 'version');
 		return $aVersions[0];
 	}
-	
+
+	/**
+	 * @param string $sSource
+	 *
+	 * @throws \MySQLException
+	 */
 	public static function SelectDB($sSource)
 	{
 		if (!((bool)self::$m_oMysqli->query("USE `$sSource`")))
@@ -205,6 +218,12 @@ class CMDBSource
 		self::$m_sDBName = $sSource;
 	}
 
+	/**
+	 * @param string $sSource
+	 *
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function CreateDB($sSource)
 	{
 		self::Query("CREATE DATABASE `$sSource` CHARACTER SET utf8 COLLATE utf8_unicode_ci");
@@ -373,6 +392,14 @@ class CMDBSource
 		self::Query($sSQLQuery);
 	}
 
+	/**
+	 * @param string $sSql
+	 *
+	 * @return string[] first line of results
+	 * @throws \MySQLException if query cannot be processed, or no result found
+	 *
+	 * @uses \mysqli_result->fetch_array
+	 */
 	public static function QueryToScalar($sSql)
 	{
 		$oKPI = new ExecutionKPI();
@@ -404,6 +431,12 @@ class CMDBSource
 		return $res;
 	}
 
+	/**
+	 * @param string $sSql
+	 *
+	 * @return array
+	 * @throws \MySQLException if query cannot be processed
+	 */
 	public static function QueryToArray($sSql)
 	{
 		$aData = array();
@@ -442,6 +475,12 @@ class CMDBSource
 		return $aColumn;
 	}
 
+	/**
+	 * @param string $sSql
+	 *
+	 * @return array
+	 * @throws \MySQLException if query cannot be processed
+	 */
 	public static function ExplainQuery($sSql)
 	{
 		$aData = array();
@@ -457,8 +496,8 @@ class CMDBSource
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
-		
-		$aNames = self::GetColumns($oResult);
+
+		$aNames = self::GetColumns($oResult, $sSql);
 
 		$aData[] = $aNames;
 		while ($aRow = $oResult->fetch_array(MYSQLI_ASSOC))
@@ -469,6 +508,12 @@ class CMDBSource
 		return $aData;
 	}
 
+	/**
+	 * @param string $sSql
+	 *
+	 * @return string
+	 * @throws \MySQLException if query cannot be processed
+	 */
 	public static function TestQuery($sSql)
 	{
 		try
@@ -506,7 +551,14 @@ class CMDBSource
 		return $oResult->fetch_array(MYSQLI_ASSOC);
 	}
 
-	public static function GetColumns($oResult)
+	/**
+	 * @param mysqli_result $oResult
+	 * @param string $sSql
+	 *
+	 * @return string[]
+	 * @throws \MySQLException
+	 */
+	public static function GetColumns($oResult, $sSql)
 	{
 		$aNames = array();
 		for ($i = 0; $i < (($___mysqli_tmp = $oResult->field_count) ? $___mysqli_tmp : 0) ; $i++)
@@ -718,6 +770,12 @@ class CMDBSource
 		//return null;
 	}
 
+	/**
+	 * @param string $sTable
+	 *
+	 * @return array
+	 * @throws \MySQLException if query cannot be processed
+	 */
 	public static function DumpTable($sTable)
 	{
 		$sSql = "SELECT * FROM `$sTable`";
@@ -773,6 +831,7 @@ class CMDBSource
 		}
 		catch(MySQLException $e)
 		{
+			$iCode = self::GetErrNo();
 			return "Current user not allowed to see his own privileges (could not access to the database 'mysql' - $iCode)";
 		}
 

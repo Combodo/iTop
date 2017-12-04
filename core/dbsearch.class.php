@@ -375,7 +375,7 @@ abstract class DBSearch
 			array_unshift($aColumns, 'id');
 		}
 
-		$aQueryCols = CMDBSource::GetColumns($resQuery);
+		$aQueryCols = CMDBSource::GetColumns($resQuery, $sSQL);
 
 		$sClassAlias = $this->GetClassAlias();
 		$aColMap = array();
