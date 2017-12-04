@@ -24,9 +24,16 @@
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 interface iProcess
 {
+	/**
+	 * @param int $iUnixTimeLimit
+	 *
+	 * @return string status message
+	 * @throws \ProcessException
+	 * @throws \ProcessFatalException
+	 * @throws MySQLHasGoneAwayException
+	 */
 	public function Process($iUnixTimeLimit);
 }
 
@@ -37,13 +44,11 @@ interface iProcess
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 interface iBackgroundProcess extends iProcess
 {
-	/*
-		Gives the repetition rate in seconds
-		@returns integer
-	*/
+	/**
+	 * @return int repetition rate in seconds
+	 */
 	public function GetPeriodicity();
 }
 
@@ -54,14 +59,30 @@ interface iBackgroundProcess extends iProcess
  * @copyright   Copyright (C) 2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 interface iScheduledProcess extends iProcess
 {
-	/*
-		Gives the exact time at which the process must be run next time
-		@returns DateTime
-	*/
+	/**
+	 * @return DateTime exact time at which the process must be run next time
+	 */
 	public function GetNextOccurrence();
 }
 
-?>
+/**
+ * Class ProcessException
+ * Exception for iProcess implementations.<br>
+ * An error happened during the processing but we can go on with the next implementations.
+ */
+class ProcessException extends CoreException
+{
+
+}
+
+/**
+ * Class ProcessFatalException
+ * Exception for iProcess implementations.<br>
+ * A big error occurred, we have to stop the iProcess processing.
+ */
+class ProcessFatalException extends CoreException
+{
+
+}

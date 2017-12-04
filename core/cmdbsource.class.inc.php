@@ -47,6 +47,34 @@ class MySQLException extends CoreException
 	}
 }
 
+/**
+ * Class MySQLHasGoneAwayException
+ *
+ * @since iTop 2.5
+ * @see itop bug 1195
+ * @see https://dev.mysql.com/doc/refman/5.7/en/gone-away.html
+ */
+class MySQLHasGoneAwayException extends MySQLException
+{
+	/**
+	 * can not be a constant before PHP 5.6 (http://php.net/manual/fr/language.oop5.constants.php)
+	 *
+	 * @return int[]
+	 */
+	public static function getErrorCodes()
+	{
+		return array(
+			2006,
+			2013
+		);
+	}
+
+	public function __construct($sIssue, $aContext)
+	{
+		parent::__construct($sIssue, $aContext, null);
+	}
+}
+
 
 /**
  * CMDBSource
@@ -60,6 +88,7 @@ class CMDBSource
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
 	protected static $m_sDBName;
+	/** @var mysqli */
 	protected static $m_oMysqli;
 
 	public static function Init($sServer, $sUser, $sPwd, $sSource = '')
@@ -275,6 +304,13 @@ class CMDBSource
 		return $value;
 	}
 
+	/**
+	 * @param string $sSQLQuery
+	 *
+	 * @return \mysqli_result
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function Query($sSQLQuery)
 	{
 		$oKPI = new ExecutionKPI();
@@ -289,7 +325,16 @@ class CMDBSource
 		$oKPI->ComputeStats('Query exec (mySQL)', $sSQLQuery);
 		if ($oResult === false)
 		{
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSQLQuery));
+			$aContext = array('query' => $sSQLQuery);
+
+			$iMySqlErrorNo = self::$m_oMysqli->errno;
+			$aMySqlHasGoneAwayErrorCodes = MySQLHasGoneAwayException::getErrorCodes();
+			if (in_array($iMySqlErrorNo, $aMySqlHasGoneAwayErrorCodes))
+			{
+				throw new MySQLHasGoneAwayException(self::GetError(), $aContext);
+			}
+
+			throw new MySQLException('Failed to issue SQL query', $aContext);
 		}
 	
 		return $oResult;

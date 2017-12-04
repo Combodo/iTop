@@ -31,11 +31,14 @@ require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/clipage.class.inc.php');
 require_once(APPROOT.'/core/background.inc.php');
 
+const EXIT_CODE_ERROR = -1;
+const EXIT_CODE_FATAL = -2;
+
 $sConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
 if (!file_exists($sConfigFile))
 {
 	echo "iTop is not yet installed. Exiting...\n";
-	exit(-1);
+	exit(EXIT_CODE_ERROR);
 }
 
 require_once(APPROOT.'/application/startup.inc.php');
@@ -50,6 +53,7 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 		$oP->p("ERROR: Missing argument '$sParam'\n");
 		UsageAndExit($oP);
 	}
+
 	return trim($sValue);
 }
 
@@ -60,14 +64,14 @@ function UsageAndExit($oP)
 	if ($bModeCLI)
 	{
 		$oP->p("USAGE:\n");
-		$oP->p("php cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1] [--debug=1] [--status_only=1]\n");		
+		$oP->p("php cron.php --auth_user=<login> --auth_pwd=<password> [--param_file=<file>] [--verbose=1] [--debug=1] [--status_only=1]\n");
 	}
 	else
 	{
-		$oP->p("Optional parameters: verbose, param_file, status_only\n");		
+		$oP->p("Optional parameters: verbose, param_file, status_only\n");
 	}
 	$oP->output();
-	exit -2;
+	exit(EXIT_CODE_FATAL);
 }
 
 /**
@@ -77,16 +81,29 @@ function UsageAndExit($oP)
  * @param int $iTimeLimit
  *
  * @return string
+ * @throws \ProcessFatalException
+ * @throws MySQLHasGoneAwayException
  */
 function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 {
 	$oNow = new DateTime();
 	$fStart = microtime(true);
+
+	$sMessage = "";
+	$oExceptionToThrow = null;
 	try
 	{
 		$sMessage = $oProcess->Process($iTimeLimit);
 	}
-	catch(Exception $e)
+	catch (MySQLHasGoneAwayException $e)
+	{
+		throw $e;
+	}
+	catch (ProcessFatalException $e)
+	{
+		$oExceptionToThrow = $e;
+	}
+	catch (Exception $e) // we shouldn't get so much exceptions... but we need to handle legacy code, and cron.php has to keep running
 	{
 		$sMessage = 'Processing failed with message: '.$e->getMessage();
 	}
@@ -122,6 +139,12 @@ function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 
 	$oTask->Set('next_run_date', $oPlannedStart->format('Y-m-d H:i:s'));
 	$oTask->DBUpdate();
+
+	if ($oExceptionToThrow)
+	{
+		throw $oExceptionToThrow;
+	}
+
 	return $sMessage;
 }
 
@@ -135,7 +158,7 @@ function CronExec($oP, $aProcesses, $bVerbose)
 	$iStarted = time();
 	$iMaxDuration = MetaModel::GetConfig()->Get('cron_max_execution_time');
 	$iTimeLimit = $iStarted + $iMaxDuration;
-	
+
 	if ($bVerbose)
 	{
 		$oP->p("Planned duration = $iMaxDuration seconds");
@@ -144,12 +167,12 @@ function CronExec($oP, $aProcesses, $bVerbose)
 	// Reset the next planned execution to take into account new settings
 	$oSearch = new DBObjectSearch('BackgroundTask');
 	$oTasks = new DBObjectSet($oSearch);
-	while($oTask = $oTasks->Fetch())
+	while ($oTask = $oTasks->Fetch())
 	{
 		$sTaskClass = $oTask->Get('class_name');
 		$oRefClass = new ReflectionClass($sTaskClass);
 		$oNow = new DateTime();
-		if($oRefClass->implementsInterface('iScheduledProcess') && (($oTask->Get('status') != 'active') || ($oTask->Get('next_run_date') > $oNow->format('Y-m-d H:i:s'))))
+		if ($oRefClass->implementsInterface('iScheduledProcess') && (($oTask->Get('status') != 'active') || ($oTask->Get('next_run_date') > $oNow->format('Y-m-d H:i:s'))))
 		{
 			if ($bVerbose)
 			{
@@ -163,13 +186,13 @@ function CronExec($oP, $aProcesses, $bVerbose)
 	}
 
 	$iCronSleep = MetaModel::GetConfig()->Get('cron_sleep');
-	
+
 	$oSearch = new DBObjectSearch('BackgroundTask');
 	while (time() < $iTimeLimit)
 	{
 		$oTasks = new DBObjectSet($oSearch);
 		$aTasks = array();
-		while($oTask = $oTasks->Fetch())
+		while ($oTask = $oTasks->Fetch())
 		{
 			$aTasks[$oTask->Get('class_name')] = $oTask;
 		}
@@ -206,17 +229,30 @@ function CronExec($oP, $aProcesses, $bVerbose)
 				$aTasks[$oTask->Get('class_name')] = $oTask;
 			}
 
-			if( ($aTasks[$sTaskClass]->Get('status') == 'active') && ($aTasks[$sTaskClass]->Get('next_run_date') <= $oNow->format('Y-m-d H:i:s')))
+			if (($aTasks[$sTaskClass]->Get('status') == 'active') && ($aTasks[$sTaskClass]->Get('next_run_date') <= $oNow->format('Y-m-d H:i:s')))
 			{
 				// Run the task and record its next run time
 				if ($bVerbose)
 				{
 					$oP->p(">> === ".$oNow->format('Y-m-d H:i:s').sprintf(" Starting:%-'=40s", ' '.$sTaskClass.' '));
 				}
-				$sMessage = RunTask($oProcess, $aTasks[$sTaskClass], $oNow, $iTimeLimit);
+				try
+				{
+					$sMessage = RunTask($oProcess, $aTasks[$sTaskClass], $oNow, $iTimeLimit);
+				}
+				catch (MySQLHasGoneAwayException $e)
+				{
+					$oP->p("ERROR : 'MySQL has gone away' thrown when processing $sTaskClass  (error_code=".$e->getCode().")");
+					exit(EXIT_CODE_FATAL);
+				}
+				catch (ProcessFatalException $e)
+				{
+					$oP->p("ERROR : an exception was thrown when processing '$sTaskClass' (".$e->getInfoLog().")");
+					IssueLog::Error("Cron.php error : an exception was thrown when processing '$sTaskClass' (".$e->getInfoLog().')');
+				}
 				if ($bVerbose)
 				{
-					if(!empty($sMessage))
+					if (!empty($sMessage))
 					{
 						$oP->p("$sTaskClass: $sMessage");
 					}
@@ -224,7 +260,7 @@ function CronExec($oP, $aProcesses, $bVerbose)
 					$oP->p("<< === ".$oEnd->format('Y-m-d H:i:s').sprintf(" End of:  %-'=40s", ' '.$sTaskClass.' '));
 				}
 			}
-			else 
+			else
 			{
 				// will run later
 				if (($aTasks[$sTaskClass]->Get('status') == 'active') && $bVerbose)
@@ -241,7 +277,7 @@ function CronExec($oP, $aProcesses, $bVerbose)
 	}
 	if ($bVerbose)
 	{
-		$oP->p("Reached normal execution time limit (exceeded by ".(time()-$iTimeLimit)."s)");
+		$oP->p("Reached normal execution time limit (exceeded by ".(time() - $iTimeLimit)."s)");
 	}
 }
 
@@ -252,7 +288,7 @@ function DisplayStatus($oP)
 	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
 	$oP->p('| Task Class                | Status  | Last Run            | Next Run            | Nb Run | Avg. Dur. |');
 	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
-	while($oTask = $oTasks->Fetch())
+	while ($oTask = $oTasks->Fetch())
 	{
 		$sTaskName = $oTask->Get('class_name');
 		$sStatus = $oTask->Get('status');
@@ -260,8 +296,9 @@ function DisplayStatus($oP)
 		$sNextRunDate = $oTask->Get('next_run_date');
 		$iNbRun = (int)$oTask->Get('total_exec_count');
 		$sAverageRunTime = $oTask->Get('average_run_duration');
-		$oP->p(sprintf('| %1$-25.25s | %2$-7s | %3$-19s | %4$-19s | %5$6d | %6$7s s |', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate, $iNbRun, $sAverageRunTime));
-	}	
+		$oP->p(sprintf('| %1$-25.25s | %2$-7s | %3$-19s | %4$-19s | %5$6d | %6$7s s |', $sTaskName, $sStatus,
+			$sLastRunDate, $sNextRunDate, $iNbRun, $sAverageRunTime));
+	}
 	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
 }
 
@@ -285,11 +322,11 @@ try
 {
 	utils::UseParamFile();
 }
-catch(Exception $e)
+catch (Exception $e)
 {
 	$oP->p("Error: ".$e->GetMessage());
 	$oP->output();
-	exit -2;
+	exit(EXIT_CODE_FATAL);
 }
 
 if (utils::IsModeCLI())
@@ -307,7 +344,7 @@ if (utils::IsModeCLI())
 	{
 		$oP->p("Access wrong credentials ('$sAuthUser')");
 		$oP->output();
-		exit -1;
+		exit(EXIT_CODE_ERROR);
 	}
 }
 else
@@ -321,13 +358,13 @@ if (!UserRights::IsAdministrator())
 {
 	$oP->p("Access restricted to administrators");
 	$oP->Output();
-	exit -1;
+	exit(EXIT_CODE_ERROR);
 }
 
 // Enumerate classes implementing BackgroundProcess
 //
 $aProcesses = array();
-foreach(get_declared_classes() as $sPHPClass)
+foreach (get_declared_classes() as $sPHPClass)
 {
 	$oRefClass = new ReflectionClass($sPHPClass);
 	$oExtensionInstance = null;
@@ -377,7 +414,7 @@ try
 		{
 			$oP->p("A database maintenance is ongoing (read-only mode even for admins).");
 			$oP->Output();
-			exit -1;
+			exit(EXIT_CODE_ERROR);
 		}
 
 		CronExec($oP, $aProcesses, $bVerbose);

@@ -69,6 +69,13 @@ class CoreException extends Exception
 		parent::__construct($sMessage, 0);
 	}
 
+	/**
+	 * @return string code and message for log purposes
+	 */
+	public function getInfoLog()
+	{
+		return 'error_code='.$this->getCode().', message="'.$this->getMessage().'"';
+	}
 	public function getHtmlDesc($sHighlightHtmlBegin = '<b>', $sHighlightHtmlEnd = '</b>')
 	{
 		return $this->getMessage();
