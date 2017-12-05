@@ -30,8 +30,8 @@ use \Combodo\iTop\Portal\Brick\PortalBrick;
  */
 class CreateBrick extends PortalBrick
 {
-	const DEFAULT_HOME_ICON_CLASS = 'fa fa-plus';
-	const DEFAULT_NAVIGATION_MENU_ICON_CLASS = 'fa fa-plus fa-2x';
+	const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-plus';
+	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-plus fa-2x';
     const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/create/modal.html.twig';
 	const DEFAULT_CLASS = '';
 
