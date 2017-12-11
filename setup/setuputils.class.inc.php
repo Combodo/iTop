@@ -85,7 +85,7 @@ class SetupUtils
 		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 		
-		$aMandatoryExtensions = array('mysqli', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom', 'phar', 'zlib', 'zip');
+		$aMandatoryExtensions = array('mysqli', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom', 'zlib', 'zip');
 		$aOptionalExtensions = array('mcrypt' => 'Strong encryption will not be used.',
 									 'ldap' => 'LDAP authentication will be disabled.',
 									 'gd' => 'PDF export will be disabled. Also, image resizing will be disabled on profile pictures (May increase database size).');
