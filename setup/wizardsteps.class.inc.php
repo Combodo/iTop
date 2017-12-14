@@ -1768,7 +1768,7 @@ EOF
 			
 			foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension)
 			{
-				if ($oExtension->sSource !== iTopExtension::SOURCE_WIZARD)
+			    if (($oExtension->sSource !== iTopExtension::SOURCE_WIZARD) && ($oExtension->bVisible))
 				{
 					$aStepDefinition['options'][] = array(
 							'extension_code' => $oExtension->sCode,
