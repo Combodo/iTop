@@ -2473,6 +2473,7 @@ class WizStepDone extends WizardStep
 		$oPage->add('</tr></table>');
 		
 		$oConfig = new Config(utils::GetConfigFilePath());
+		require_once(APPROOT.'env-production/core/main.php'); // For ModuleXMLParameters
 		$sIframeUrl = $oConfig->GetModuleSetting('itop-hub-connector', 'setup_url', '');
 		
 		if ($sIframeUrl != '')
