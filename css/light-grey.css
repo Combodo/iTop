@@ -1352,24 +1352,30 @@ fieldset .details > .field_container {
 #SiloSelection {
   padding-top: 3px;
   padding-right: 30px;
-  text-align: left; }
-  #SiloSelection * {
-    box-sizing: border-box;
-    vertical-align: middle; }
-  #SiloSelection .field_input_extkey {
-    display: table;
-    width: 100%; }
-    #SiloSelection .field_input_extkey .field_select_wrapper {
-      display: table-cell;
-      width: 100%; }
-      #SiloSelection .field_input_extkey .field_select_wrapper > select {
-        width: 100%;
-        max-width: initial; }
-    #SiloSelection .field_input_extkey .field_input_btn {
-      display: table-cell;
-      width: 20px;
-      margin-left: 0.4em; }
-
+  text-align: left;
+}
+#SiloSelection * {
+  box-sizing: border-box;
+  vertical-align: middle;
+  width: 100%;
+}
+#SiloSelection .field_input_extkey {
+  display: table;
+  width: 100%;
+}
+#SiloSelection .field_input_extkey .field_select_wrapper {
+  display: table-cell;
+  width: 100%;
+}
+#SiloSelection .field_input_extkey .field_select_wrapper > select {
+  width: 100%;
+  max-width: initial;
+}
+#SiloSelection .field_input_extkey .field_input_btn {
+  display: table-cell;
+  width: 25px;
+  padding-left: 0.4em;
+}
 .ac_dlg_loading {
   background: white url("../images/indicator.gif") right center no-repeat; }
 

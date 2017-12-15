@@ -1599,6 +1599,7 @@ fieldset .details>.field_container {
 	*{
 		box-sizing: border-box;
 		vertical-align: middle;
+		width: 100%;
 	}
 
 	.field_input_extkey{
@@ -1617,8 +1618,8 @@ fieldset .details>.field_container {
 
 		.field_input_btn{
 			display: table-cell;
-			width: 20px;
-			margin-left: 0.4em;
+			width: 25px;
+			padding-left: 0.4em;
 		}
 	}
 }
