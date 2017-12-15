@@ -1357,6 +1357,8 @@ fieldset .details > .field_container {
 #SiloSelection * {
   box-sizing: border-box;
   vertical-align: middle;
+}
+#SiloSelection .ac_input {
   width: 100%;
 }
 #SiloSelection .field_input_extkey {
