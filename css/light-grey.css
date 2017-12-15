@@ -1442,6 +1442,7 @@ fieldset .details > .field_container {
 #SiloSelection * {
   box-sizing: border-box;
   vertical-align: middle;
+  width: 100%;
 }
 #SiloSelection .field_input_extkey {
   display: table;
