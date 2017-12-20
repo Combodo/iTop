@@ -60,6 +60,13 @@ class ModuleDiscovery
 		self::$m_sModulePath = $sModulePath;
 	}
 
+	/**
+	 * @param string $sFilePath
+	 * @param string $sId
+	 * @param array $aArgs
+	 *
+	 * @throws \Exception for missing parameter
+	 */
 	public static function AddModule($sFilePath, $sId, $aArgs)
 	{
 		if (!array_key_exists('itop_version', $aArgs))
