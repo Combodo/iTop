@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2016 Combodo SARL
+// Copyright (C) 2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -25,11 +25,14 @@
 class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 {
 	/**
-	 * Generate an (absolute) URL to an object, either in view or edit mode
+	 * Generate an (absolute) URL to an object, either in view or edit mode.
+	 * Returns null if the current user is not allowed to view / edit object.
+	 *
 	 * @param string $sClass The class of the object
 	 * @param int $iId The identifier of the object
 	 * @param string $sMode edit|view
-	 * @return string
+	 *
+	 * @return string | null
 	 */
 	public static function PrepareObjectURL($sClass, $iId, $sMode)
 	{
@@ -45,30 +48,53 @@ class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 		// Initializing Silex app
 		if ($oApp === null)
 		{
+			// Retrieving portal id
+			$sPortalId = basename(__DIR__);
 			// Initializing Silex framework
 			$oApp = new Silex\Application();
 			// Registering optional silex components
 			$oApp->register(new Combodo\iTop\Portal\Provider\UrlGeneratorServiceProvider());
+			$oApp->register(new Combodo\iTop\Portal\Provider\ScopeValidatorServiceProvider(), array(
+				'scope_validator.scopes_path' => utils::GetCachePath(),
+				'scope_validator.scopes_filename' => $sPortalId . '.scopes.php',
+				'scope_validator.instance_name' => $sPortalId
+			));
 			// Registering routes
 			Combodo\iTop\Portal\Helper\ApplicationHelper::LoadRouters();
 			Combodo\iTop\Portal\Helper\ApplicationHelper::RegisterRoutes($oApp);
-			// Retrieving portal id
-			$sPortalId = basename(__DIR__);
 		}
+
 		// The object is reachable in the specified mode (edit/view)
+		$sObjectQueryString = null;
 		switch($sMode)
 		{
 			case 'view':
-			$sObjectQueryString = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+				if(Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sClass, $iId))
+				{
+					$sObjectQueryString = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+				}
 			break;
 					
 			case 'edit':
 			default:
-			$sObjectQueryString = $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+				// Checking if user is allowed to edit object, if not we check if it can at least view it.
+				if(Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sClass, $iId))
+				{
+					$sObjectQueryString = $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+				}
+				elseif(Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sClass, $iId))
+				{
+					$sObjectQueryString = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+				}
+			break;
 		}
 		
 		$sPortalAbsoluteUrl = utils::GetAbsoluteUrlModulePage($sPortalId, 'index.php');
-        if (strpos($sPortalAbsoluteUrl, '?') !== false)
+		if($sObjectQueryString === null)
+		{
+			$sUrl = null;
+		}
+        elseif (strpos($sPortalAbsoluteUrl, '?') !== false)
 		{
 		    // Removing generated url query parameters so it can be replaced with those from the absolute url
             // Mostly necessary when iTop instance has multiple portals

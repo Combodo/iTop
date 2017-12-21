@@ -20,16 +20,13 @@
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use \Exception;
-use \utils;
+use \ApplicationContext;
 use \IssueLog;
 use \Dict;
-use \UserRights;
-use \InlineImage;
-use \DBObjectSet;
 use \MetaModel;
+use \AttributeFriendlyName;
 use \Combodo\iTop\Renderer\FieldRenderer;
 use \Combodo\iTop\Renderer\RenderingOutput;
-use \Combodo\iTop\Form\Field\LinkedSetField;
 
 /**
  * Description of BsLinkedSetFieldRenderer
@@ -38,7 +35,6 @@ use \Combodo\iTop\Form\Field\LinkedSetField;
  */
 class BsLinkedSetFieldRenderer extends FieldRenderer
 {
-
 	/**
 	 * Returns a RenderingOutput for the FieldRenderer's Field
 	 *
@@ -565,10 +561,27 @@ EOF
 					if ($oAttDef->IsExternalKey())
 					{
 						$aAttProperties['value'] = $oRemoteItem->Get($sAttCode . '_friendlyname');
+
+						// Checking if user can access object's external key
+						$sObjectUrl = ApplicationContext::MakeObjectUrl($oAttDef->GetTargetClass(), $oRemoteItem->Get($sAttCode));
+						if(!empty($sObjectUrl))
+						{
+							$aAttProperties['url'] = $sObjectUrl;
+						}
 					}
 					else
 					{
 						$aAttProperties['value'] = $oAttDef->GetValueLabel($oRemoteItem->Get($sAttCode));
+
+						if ($oAttDef instanceof AttributeFriendlyName)
+						{
+							// Checking if user can access object
+							$sObjectUrl = ApplicationContext::MakeObjectUrl(get_class($oRemoteItem), $oRemoteItem->GetKey());
+							if(!empty($sObjectUrl))
+							{
+								$aAttProperties['url'] = $sObjectUrl;
+							}
+						}
 					}
 
 					$aItemProperties['attributes'][$sAttCode] = $aAttProperties;
