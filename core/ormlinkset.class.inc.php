@@ -123,7 +123,8 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	{
 		assert($oLink instanceof $this->sClass);
 		// No impact on the iteration algorithm
-		$this->aAdded[] = $oLink;
+        $iObjectId = $oLink->GetKey();
+		$this->aAdded[$iObjectId] = $oLink;
 		$this->bHasDelta = true;
 	}
 
@@ -148,6 +149,13 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			$this->aRemoved[$iObjectId] = $iObjectId;
 			$this->bHasDelta = true;
 		}
+		else
+        {
+            if (array_key_exists($iObjectId, $this->aAdded))
+            {
+                unset($this->aAdded[$iObjectId]);
+            }
+        }
 	}
 
 	/**
@@ -587,7 +595,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			$oSearch->AddCondition($sExtKeyToMe, $oHostObject->GetKey(), '=');
 			$oSearch->AddCondition($sExtKeyToRemote, $aCheckRemote, 'IN');
 			$oSet = new DBObjectSet($oSearch);
-			$aExistingRemote = $oSet->GetColumnAsArray($sExtKeyToRemote);
+			$aExistingRemote = $oSet->GetColumnAsArray($sExtKeyToRemote, true);
 		}
 
 		// Write the links according to the existing links
@@ -601,11 +609,28 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			{
 				if (count($aCheckRemote) > 0)
 				{
-					if (in_array($oLink->Get($sExtKeyToRemote), $aExistingRemote))
-					{
-						// Do not create a duplicate
-						continue;
-					}
+				    $bIsDuplicate = false;
+				    foreach($aExistingRemote as $sLinkKey => $sExtKey)
+                    {
+                        if ($sExtKey == $oLink->Get($sExtKeyToRemote))
+                        {
+                            // Do not create a duplicate
+                            // + In the case of a remove action followed by an add action
+                            // of an existing link,
+                            // the final state to consider is add action,
+                            // so suppress the entry in the removed list.
+                            if (array_key_exists($sLinkKey, $this->aRemoved))
+                            {
+                                unset($this->aRemoved[$sLinkKey]);
+                            }
+                            $bIsDuplicate = true;
+                            break;
+                        }
+                    }
+                    if ($bIsDuplicate)
+                    {
+                        continue;
+                    }
 				}
 
 			}
