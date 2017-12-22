@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -19,7 +19,7 @@
 
 /**
  * Base class for computing TTO or TTR on a ticket
- */ 
+ */
 class ResponseTicketSLT
 {
 	/**
@@ -41,11 +41,11 @@ class ResponseTicketSLT
 			{
 				$sRequestType = $oTicket->Get('request_type');
 			}
-			
+
 			$aArgs = $oTicket->ToArgs();
 			$aArgs['metric'] = $sMetric;
 			$aArgs['request_type'] = $sRequestType;
-				
+
 			//echo "<p>Managing:".$sMetric."-".$this->Get('request_type')."-".$this->Get('importance')."</p>\n";
 			$oSLTSet = new DBObjectSet(DBObjectSearch::FromOQL(RESPONSE_TICKET_SLT_QUERY),
 						array(),
@@ -54,7 +54,7 @@ class ResponseTicketSLT
 
 			$iMinDuration = PHP_INT_MAX;
 			$sSLTName = '';
-	
+
 			while($oSLT = $oSLTSet->Fetch())
 			{
 				$iDuration = (int)$oSLT->Get('value');
@@ -64,11 +64,11 @@ class ResponseTicketSLT
 					case 'days':
 					$iDuration = $iDuration * 24; // 24 hours in 1 days
 					// Fall though
-					
+
 					case 'hours':
 					$iDuration = $iDuration * 60; // 60 minutes in 1 hour
 					// Fall though
-					
+
 					case 'minutes':
 					$iDuration = $iDuration * 60;
 				}
@@ -88,14 +88,14 @@ class ResponseTicketSLT
 				$iDeadline = $iMinDuration;
 			}
 		}
-		return $iDeadline;			
+		return $iDeadline;
 
 	}
 }
 
 /**
  * Compute the TTO of a ticket - null if the class 'SLT' does not exist
- */ 
+ */
 class ResponseTicketTTO extends ResponseTicketSLT implements iMetricComputer
 {
 	public static function GetDescription()
@@ -112,7 +112,7 @@ class ResponseTicketTTO extends ResponseTicketSLT implements iMetricComputer
 
 /**
  * Compute the TTR of a ticket - null if the class 'SLT' does not exist
- */ 
+ */
 class ResponseTicketTTR extends ResponseTicketSLT implements iMetricComputer
 {
 	public static function GetDescription()
@@ -134,18 +134,19 @@ class _Ticket extends cmdbAbstractObject
 	public function UpdateImpactedItems()
 	{
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
+
+		/** @var ormLinkSet $oContactsSet */
 		$oContactsSet = $this->Get('contacts_list');
+		/** @var ormLinkSet $oCIsSet */
 		$oCIsSet = $this->Get('functionalcis_list');
 
 		$aCIsToImpactCode = array();
 		$aSources = array();
 		$aExcluded = array();
-		
-		$oCIsSet->Rewind();
-		while ($oLink = $oCIsSet->Fetch())
+    	foreach ($oCIsSet as $oLink)
 		{
 			$iKey = $oLink->Get('functionalci_id');
-			$aCIsToImpactCode[$iKey] = $oLink->Get('impact_code');
+			$aCIsToImpactCode[$iKey] = array('link' => $oLink->GetKey(), 'code' => $oLink->Get('impact_code'));
 			if ($oLink->Get('impact_code') == 'manual')
 			{
 				$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
@@ -154,44 +155,19 @@ class _Ticket extends cmdbAbstractObject
 			else if ($oLink->Get('impact_code') == 'not_impacted')
 			{
 				$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
-				$aExcluded[$iKey] = $oObj;
+				$aExcluded[] = $oObj;
 			}
 		}
-		
+
 		$aContactsToRoleCode = array();
-		$oContactsSet->Rewind();
-		while ($oLink = $oContactsSet->Fetch())
+		foreach ($oContactsSet as $oLink)
 		{
 			$iKey = $oLink->Get('contact_id');
-			$aContactsToRoleCode[$iKey] = $oLink->Get('role_code');
+            $aContactsToRoleCode[$iKey] = array('link' => $oLink->GetKey(), 'code' => $oLink->Get('role_code'));
 			if ($oLink->Get('role_code') == 'do_not_notify')
 			{
 				$oObj = MetaModel::GetObject('Contact', $iKey);
-				$aExcluded[$iKey] = $oObj;
-			}
-		}
-		
-		$oNewCIsSet = DBObjectSet::FromScratch('lnkFunctionalCIToTicket');
-		foreach($aCIsToImpactCode as $iKey => $sImpactCode)
-		{
-			if ($sImpactCode != 'computed')
-			{
-				$oNewLink = new lnkFunctionalCIToTicket();
-				$oNewLink->Set('functionalci_id', $iKey);
-				$oNewLink->Set('impact_code', $sImpactCode);
-				$oNewCIsSet->AddObject($oNewLink);				
-			}
-		}
-		
-		$oNewContactsSet = DBObjectSet::FromScratch('lnkContactToTicket');
-		foreach($aContactsToRoleCode as $iKey => $sImpactCode)
-		{
-			if ($sImpactCode != 'computed')
-			{
-				$oNewLink = new lnkContactToTicket();
-				$oNewLink->Set('contact_id', $iKey);
-				$oNewLink->Set('role_code', $sImpactCode);
-				$oNewContactsSet->AddObject($oNewLink);
+				$aExcluded[] = $oObj;
 			}
 		}
 		
@@ -207,69 +183,92 @@ class _Ticket extends cmdbAbstractObject
 			}
 		}
 		// Merge the directly impacted items with the "new" ones added by the "context" queries
-		$aGraphObjects = array();
-		$oRawGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded);
-		$oIterator = new RelationTypeIterator($oRawGraph, 'Node');
-		foreach ($oIterator as $oNode)
-		{
-			// Any object node reached AND different from a source will do
-			if ( ($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')) )
-			{
-				$oObj = $oNode->GetProperty('object');
-				$iKey = $oObj->GetKey();
-				$aGraphObjects[get_class($oObj).'::'.$iKey] = $oNode->GetProperty('object');
-			}
-		}
-		
-		if (count($aDefaultContexts) > 0)
+        $aGraphObjects = array();
+        $oRawGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded);
+        $oIterator = new RelationTypeIterator($oRawGraph, 'Node');
+        foreach ($oIterator as $oNode)
+        {
+            // Any object node reached AND different from a source will do
+            if ( ($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')) )
+            {
+                $this->StoreComputedObject($aGraphObjects, $oNode->GetProperty('object'));
+            }
+        }
+        if (count($aDefaultContexts) > 0)
 		{
 			$oAnnotatedGraph = MetaModel::GetRelatedObjectsDown('impacts', $aSources, 10, true /* bEnableRedundancy */, $aExcluded, $aDefaultContexts);
 			$oIterator = new RelationTypeIterator($oAnnotatedGraph, 'Node');
 			foreach ($oIterator as $oNode)
 			{
-				// Only pick the nodes which are NOT impacted by a context root cause, and merge them in the list
-				if ( ($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')) && ($oNode->GetProperty('context_root_causes', null) == null) )
-				{
-					$oObj = $oNode->GetProperty('object');
-					$iKey = $oObj->GetKey();
-					$aGraphObjects[get_class($oObj).'::'.$iKey] = $oNode->GetProperty('object');
-				}
+                // Only pick the nodes which are NOT impacted by a context root cause, and merge them in the list
+                if (($oNode instanceof RelationObjectNode) && ($oNode->GetProperty('is_reached')) && (!$oNode->GetProperty('source')) && ($oNode->GetProperty('context_root_causes', null) == null))
+                {
+                    $this->StoreComputedObject($aGraphObjects, $oNode->GetProperty('object'));
+                }
 			}
 		}
-		
-		foreach ($aGraphObjects as $oObj)
+
+		// Remove unnecessary "computed" CIs and Contacts
+        foreach($aCIsToImpactCode as $iKey => $aCode)
+        {
+            if (($aCode['code'] == 'computed') && (!isset($aGraphObjects['FunctionalCI']) || (!array_key_exists($iKey, $aGraphObjects['FunctionalCI']))))
+            {
+                $oCIsSet->RemoveItem($aCode['link']);
+            }
+        }
+        foreach($aContactsToRoleCode as $iKey => $aCode)
+        {
+            if (($aCode['code'] == 'computed') && (!isset($aGraphObjects['Contact']) || (!array_key_exists($iKey, $aGraphObjects['Contact']))))
+            {
+                $oContactsSet->RemoveItem($aCode['link']);
+            }
+        }
+
+        // Add new nodes
+		foreach ($aGraphObjects as $sRootClass => $aObjects)
 		{
-			$iKey = $oObj->GetKey();
-			$sRootClass = MetaModel::GetRootClass(get_class($oObj));
 			switch ($sRootClass)
 			{
 				case 'FunctionalCI':
 				// Only FunctionalCIs which are not already linked to the ticket
-				if (!array_key_exists($iKey, $aCIsToImpactCode) || ($aCIsToImpactCode[$iKey] != 'not_impacted'))
-				{
-					$oNewLink = new lnkFunctionalCIToTicket();
-					$oNewLink->Set('functionalci_id', $iKey);
-					$oNewLink->Set('impact_code', 'computed');
-					$oNewCIsSet->AddObject($oNewLink);
-				}
+                foreach($aObjects as $iKey => $oObj)
+                {
+                    if (!array_key_exists($iKey, $aCIsToImpactCode))
+                    {
+                        $oNewLink = new lnkFunctionalCIToTicket();
+                        $oNewLink->Set('functionalci_id', $iKey);
+                        $oNewLink->Set('impact_code', 'computed');
+                        $oCIsSet->AddItem($oNewLink);
+                    }
+                }
 				break;
-				
+
 				case 'Contact':
 				// Only link Contacts which are not already linked to the ticket
-				if (!array_key_exists($iKey, $aContactsToRoleCode) || ($aContactsToRoleCode[$iKey] != 'do_not_notify'))
-				{
-					$oNewLink = new lnkContactToTicket();
-					$oNewLink->Set('contact_id', $iKey);
-					$oNewLink->Set('role_code', 'computed');
-					$oNewContactsSet->AddObject($oNewLink);
-				}
+                foreach($aObjects as $iKey => $oObj)
+                {
+                    if (!array_key_exists($iKey, $aContactsToRoleCode))
+                    {
+                        $oNewLink = new lnkContactToTicket();
+                        $oNewLink->Set('contact_id', $iKey);
+                        $oNewLink->Set('role_code', 'computed');
+                        $oContactsSet->AddItem($oNewLink);
+                    }
+                }
 				break;
 			}
 		}
-		$this->Set('functionalcis_list', $oNewCIsSet);
-		$this->Set('contacts_list', $oNewContactsSet);
+		$this->Set('functionalcis_list', $oCIsSet);
+		$this->Set('contacts_list', $oContactsSet);
 	}
-	
+
+	private function StoreComputedObject(&$aGraphObjects, $oObj)
+    {
+        $iKey = $oObj->GetKey();
+        $sRootClass = MetaModel::GetRootClass(get_class($oObj));
+        $aGraphObjects[$sRootClass][$iKey] = $oObj;
+    }
+
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
