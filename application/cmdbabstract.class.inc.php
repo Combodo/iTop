@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -626,6 +626,8 @@ EOF
 			$aDetails[$sTab] = array();
             $aTableStyles[] = 'vertical-align:top';
             $aTableClasses = array();
+			$aColStyles[] = 'vertical-align:top';
+			$aColClasses = array();
 
             ksort($aCols);
 			$iColCount = count($aCols);
@@ -633,6 +635,8 @@ EOF
             {
 	            $aTableClasses[] = 'n-cols-details';
 	            $aTableClasses[] = $iColCount.'-cols-details';
+
+	            $aColStyles[] = 'width:'.floor(100/$iColCount).'%';
             }
             else
             {
@@ -643,7 +647,7 @@ EOF
 			$oPage->add('<table style="'.implode('; ', $aTableStyles).'" class="'.implode(' ', $aTableClasses).'" data-mode="'.$sEditMode.'"><tr>');
 			foreach($aCols as $sColIndex => $aFieldsets)
 			{
-				$oPage->add('<td style="vertical-align:top">');
+				$oPage->add('<td style="'.implode('; ', $aColStyles).'" class="'.implode(' ', $aColClasses).'">');
 				//$aDetails[$sTab][$sColIndex] = array();
 				$sLabel = '';
 				$sPreviousLabel = '';
@@ -745,7 +749,8 @@ EOF
 
                             // Checking how the field should be rendered
                             // Note: For view mode, this is done in cmdbAbstractObject::GetFieldAsHtml()
-                            if(in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields')))
+							// Note 2: Shouldn't this be a property of the AttDef instead an array that we have to maintain?
+                            if(in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
                             {
                                 $val['layout'] = 'large';
                             }
@@ -871,10 +876,14 @@ EOF
 
 	/**
 	 * Get the HTML fragment corresponding to the display of a table representing a set of objects
+	 *
 	 * @param WebPage $oPage The page object is used for out-of-band information (mostly scripts) output
 	 * @param CMDBObjectSet The set of objects to display
-	 * @param Hash $aExtraParams Some extra configuration parameters to tweak the behavior of the display
-	 * @return String The HTML fragment representing the table of objects
+	 * @param array $aExtraParams Some extra configuration parameters to tweak the behavior of the display
+	 *
+	 * @return String The HTML fragment representing the table of objects. <b>Warning</b> : no JS added to handled pagination or table sorting !
+	 *
+	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
 	 */	
 	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
@@ -2153,6 +2162,31 @@ EOF
 						$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><input title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 						$aEventsList[] ='keyup';
 						$aEventsList[] ='change';
+
+						// Adding tooltip so we can read the whole value when its very long (eg. URL)
+						if(!empty($sDisplayValue))
+						{
+							$oPage->add_ready_script(
+<<<EOF
+								$('#{$iId}').qtip( { content: $('#{$iId}').val(), show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'bottomLeft' }, position: { corner: { target: 'topLeft', tooltip: 'bottomLeft' }, adjust: { y: -15}} } );
+								
+								$('#{$iId}').bind('keyup', function(evt, sFormId){ 
+									var oQTipAPI = $(this).qtip('api');
+									
+									if($(this).val() === '')
+									{
+										oQTipAPI.hide();
+										oQTipAPI.disable(true); 
+									}
+									else
+									{
+										oQTipAPI.disable(false); 
+									}
+									oQTipAPI.updateContent($(this).val());
+								});
+EOF
+							);
+						}
 					}
 				break;
 			}
@@ -2821,7 +2855,8 @@ EOF
 
             // Checking how the field should be rendered
             // Note: For edit mode, this is done in self::GetBareProperties()
-            if(in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields')))
+			// Note 2: Shouldn't this be a AttDef property instead of an array to maintain?
+            if(in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
             {
                 $retVal['layout'] = 'large';
             }

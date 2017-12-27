@@ -1145,8 +1145,19 @@ span.form_validation {
 
 .caselog_entry_html p, .HTML p {
   margin-top: 0.25em;
-  margin-bottom: 0.25em; }
-
+  margin-bottom: 0.25em;
+}
+/* Helper classes for object details display. */
+.one-col-details {
+  min-width: 400px;
+  max-width: 600px;
+}
+.n-cols-details {
+  width: 100%;
+}
+.n-cols-details > tbody > tr > td {
+  min-width: 240px;
+}
 .details {
   border-collapse: collapse;
   noborder-bottom: 2px #fff solid;
@@ -1164,145 +1175,194 @@ fieldset .details > .field_container {
   margin-bottom: 5px;
   border-bottom: 2px #ddd solid;
   box-sizing: border-box;
-  /* .field_label, .field_data */ }
-  .field_container:last-child {
-    margin-bottom: 0px; }
-  .field_container.field_large {
-    display: inherit;
-    /* .field_label, .field_data */ }
-    .field_container.field_large > div {
-      display: inherit;
-      /* .field_value, .field_comments, .field_infos */ }
-      .field_container.field_large > div.field_label {
-        width: inherit;
-        margin-bottom: 5px; }
-  .field_container * {
-    box-sizing: border-box; }
-  .field_container > div {
-    display: table-cell;
-    vertical-align: top;
-    /* .field_value, .field_comments, .field_infos */ }
-    .field_container > div.field_label {
-      min-width: 100px;
-      max-width: 145px;
-      width: 30%;
-      padding-right: 10px; }
-      .field_container > div.field_label > label, .field_container > div.field_label span {
-        color: #000000;
-        font-weight: bold; }
-    .field_container > div.field_data {
-      display: table;
-      width: 100%;
-      margin-bottom: 5px; }
-    .field_container > div > div {
-      display: table-cell;
-      width: auto; }
-      .field_container > div > div.field_comments, .field_container > div > div.field_infos {
-        width: 50px; }
-      .field_container > div > div.field_value .attribute-edit {
-        display: table;
-        width: 100%;
-        /* TODO: Refactor so status icon show over mandatory icon */ }
-        .field_container > div > div.field_value .attribute-edit .form_validation, .field_container > div > div.field_value .attribute-edit .field_status {
-          display: table-cell;
-          width: 20px;
-          padding-left: 0.4em;
-          vertical-align: middle; }
-        .field_container > div > div.field_value .attribute-edit .field_input_zone {
-          width: 100%;
-          /* auto; */ }
-          .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string > select, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string input, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password > select, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password input {
-            width: 100%; }
-          .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword {
-            display: table-cell;
-            width: auto; }
-            .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword > * {
-              display: block;
-              width: 100%; }
-            .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword > span {
-              margin-bottom: 3px; }
-          .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime {
-            display: table;
-            width: 100%; }
-            .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > input, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > input {
-              display: table-cell;
-              width: 100%; }
-            .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > span, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > span {
-              display: table-cell;
-              width: 20px;
-              padding-left: 0.4em;
-              vertical-align: middle; }
-              .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > span > img, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > span > img {
-                width: 20px;
-                cursor: pointer; }
-          .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text {
-            border: none; }
-            .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header {
-              /* Inspired by .cke_top */
-              padding: 6px 8px 6px;
-              white-space: normal;
-              border-bottom: 1px solid #fff;
-              background: #f2f2f2; }
-              .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button {
-                display: block;
-                width: 15px;
-                height: 15px;
-                border: 1px #A6A6A6 solid;
-                cursor: pointer;
-                background-image: url("../images/full-screen.png");
-                background-repeat: no-repeat;
-                background-position: center center;
-                background-size: 98%; }
-              .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button:hover,
-              .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button:focus {
-                background-color: #CCCCCC; }
-            .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text textarea {
-              /* Size for default display */
-              width: 100%;
-              height: 100%;
-              padding: 5px 10px;
-              border: none;
-              resize: none; }
-            .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen {
-              z-index: 100;
-              position: fixed;
-              top: 0px;
-              left: 0px;
-              width: 100%;
-              height: 100%; }
-              .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen textarea {
-                /* Size set again here to override resize value when in fullscreen */
-                width: 100% !important;
-                height: 100% !important; }
-              .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen .fullscreen_button {
-                width: 22px;
-                height: 22px;
-                background-color: #CCCCCC; }
-          .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_document > input {
-            width: 100%; }
-          .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_document > span {
-            display: inline-block;
-            margin-bottom: 2px; }
-          .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_image input {
-            width: 100%; }
-          .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey {
-            display: table;
-            width: 100%; }
-            .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_select_wrapper {
-              display: table-cell;
-              width: auto; }
-              .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_select_wrapper > select {
-                width: 100%; }
-            .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_autocomplete {
-              display: table-cell;
-              width: 100%; }
-            .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn {
-              display: table-cell;
-              width: 25px;
-              padding-left: 0.4em; }
-              .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn > img {
-                max-width: 20px; }
-
+  /* .field_label, .field_data */
+}
+.field_container:last-child {
+  margin-bottom: 0px;
+}
+.field_container.field_large {
+  display: inherit;
+  /* .field_label, .field_data */
+}
+.field_container.field_large > div {
+  display: inherit;
+  /* .field_value, .field_comments, .field_infos */
+}
+.field_container.field_large > div.field_label {
+  width: inherit;
+  margin-bottom: 5px;
+}
+.field_container.field_large > div.field_data {
+  margin-top: 8px;
+  margin-bottom: 10px;
+  word-break: break-all;
+}
+.field_container * {
+  box-sizing: border-box;
+}
+.field_container > div {
+  display: table-cell;
+  vertical-align: top;
+  /* .field_value, .field_comments, .field_infos */
+}
+.field_container > div.field_label {
+  min-width: 100px;
+  max-width: 145px;
+  width: 30%;
+  padding-right: 10px;
+}
+.field_container > div.field_label > label, .field_container > div.field_label span {
+  color: #000;
+  font-weight: bold;
+}
+.field_container > div.field_data {
+  display: table;
+  width: 100%;
+  margin-bottom: 5px;
+}
+.field_container > div > div {
+  display: table-cell;
+  width: auto;
+}
+.field_container > div > div.field_comments, .field_container > div > div.field_infos {
+  width: 50px;
+}
+.field_container > div > div.field_value .attribute-edit {
+  display: table;
+  width: 100%;
+  /* TODO: Refactor so status icon show over mandatory icon */
+}
+.field_container > div > div.field_value .attribute-edit .form_validation, .field_container > div > div.field_value .attribute-edit .field_status {
+  display: table-cell;
+  width: 20px;
+  padding-left: 0.4em;
+  vertical-align: middle;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone {
+  width: 100%;
+  /* auto; */
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string > select, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password > select, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_string input, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_password input {
+  width: 100%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword {
+  display: table-cell;
+  width: auto;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword > * {
+  display: block;
+  width: 100%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_onewaypassword > span {
+  margin-bottom: 3px;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime {
+  display: table;
+  width: 100%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > input, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > input {
+  display: table-cell;
+  width: 100%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > span, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > span {
+  display: table-cell;
+  width: 20px;
+  padding-left: 0.4em;
+  vertical-align: middle;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_date > span > img, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_datetime > span > img {
+  width: 20px;
+  cursor: pointer;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text {
+  border: none;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header {
+  /* Inspired by .cke_top */
+  padding: 6px 8px 6px;
+  white-space: normal;
+  border-bottom: 1px solid #fff;
+  background: #f2f2f2;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button {
+  display: block;
+  width: 15px;
+  height: 15px;
+  border: 1px #a6a6a6 solid;
+  cursor: pointer;
+  background-image: url('../images/full-screen.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 98%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button:hover, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text .f_i_text_header .fullscreen_button:focus {
+  background-color: #ccc;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text textarea {
+  /* Size for default display */
+  width: 100%;
+  height: 100%;
+  padding: 5px 10px;
+  border: none;
+  resize: none;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen {
+  z-index: 100;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen textarea {
+  /* Size set again here to override resize value when in fullscreen */
+  width: 100% !important;
+  height: 100% !important;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_text.fullscreen .fullscreen_button {
+  width: 22px;
+  height: 22px;
+  background-color: #ccc;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_document > input {
+  width: 100%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_document > span {
+  display: inline-block;
+  margin-bottom: 2px;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_image input {
+  width: 100%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey {
+  display: table;
+  width: 100%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_select_wrapper {
+  display: table-cell;
+  width: auto;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_select_wrapper > select {
+  width: 100%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_autocomplete {
+  display: table-cell;
+  width: 100%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn {
+  display: table-cell;
+  width: 25px;
+  padding-left: 0.4em;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn > img {
+  max-width: 20px;
+}
+.one-col-details .details .field_container.field_small {
+  /* On a single column, field labels can take more width but they are limited so it doesn't feel weird when all labels are short */
+}
+.one-col-details .details .field_container.field_small div.field_label {
+  width: 160px;
+}
 /* This is extracted from the ".details > .field_container ..." because of the fullscreen option (element is moved at the end of the body */
 .field_input_text {
   border: none; }

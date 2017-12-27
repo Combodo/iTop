@@ -1261,7 +1261,7 @@ span.form_validation {
 
 /* Helper classes for object details display. */
 .one-col-details {
-	min-width: 300px;
+	min-width: 400px;
 	max-width: 600px;
 }
 .n-cols-details {
@@ -1531,7 +1531,7 @@ fieldset .details>.field_container {
 .one-col-details .details .field_container.field_small {
 	div.field_label {
 		/* On a single column, field labels can take more width but they are limited so it doesn't feel weird when all labels are short */
-		width: 145px;
+		width: 160px;
 	}
 }
 /* This is extracted from the ".details > .field_container ..." because of the fullscreen option (element is moved at the end of the body */
