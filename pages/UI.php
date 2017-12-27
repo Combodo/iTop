@@ -1604,15 +1604,16 @@ EOF
 		$sDirection = utils::ReadParam('direction', 'down');
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 
+		$bDirDown = ($sDirection === 'down');
 		$oObj = MetaModel::GetObject($sClass, $id);
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
 		$aSourceObjects = array($oObj);
 
-		$oP->set_title(MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName());
+		$oP->set_title(MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName());
 
 		$sPageId = "ui-relation-graph-".$sClass.'::'.$id;
-		$sLabel = $oObj->GetName().' '.MetaModel::GetRelationLabel($sRelation);
-		$sDescription = MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName();
+		$sLabel = $oObj->GetName().' '.MetaModel::GetRelationLabel($sRelation, $bDirDown);
+		$sDescription = MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName();
 		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription);
 
 			if ($sRelation == 'depends on')
