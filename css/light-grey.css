@@ -1526,8 +1526,9 @@ td.layout_cell {
 
 .dashlet-content {
   background: #fff;
-  margin: 0; }
-
+  margin: 0;
+  overflow: auto;
+}
 table.prop_table {
   border-bottom: 2px solid #F9F9F1;
   padding: 1px;
