@@ -33,7 +33,10 @@
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Relation:impacts/Description' => '被影响的元素',
 	'Relation:impacts/DownStream' => '影响...',
+	'Relation:impacts/DownStream+' => '被影响的元素',
 	'Relation:impacts/UpStream' => '依赖于...',
+	'Relation:impacts/UpStream+' => '该元素依赖的元素...',
+	// Legacy entries
 	'Relation:depends on/Description' => '该元素依赖的元素...',
 	'Relation:depends on/DownStream' => '依赖于...',
 	'Relation:depends on/UpStream' => '影响...',

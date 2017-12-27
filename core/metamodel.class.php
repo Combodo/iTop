@@ -1091,11 +1091,37 @@ abstract class MetaModel
 		return $aClassRelations;
 	}
 	
-	final static public function GetRelationDescription($sRelCode)
+	/**
+	 * @param string $sRelCode Relation code
+	 * @param bool $bDown Relation direction, is it downstream (true) or upstream (false). Default is true.
+	 *
+	 * @return string
+	 */
+	final static public function GetRelationDescription($sRelCode, $bDown = true)
 	{
-		return Dict::S("Relation:$sRelCode/Description");
+		// Legacy convention had only one description describing the relation.
+		// Now, as the relation is bidirectional, we have a description for each directions.
+		$sLegacy = Dict::S("Relation:$sRelCode/Description");
+
+		if($bDown)
+		{
+			$sKey = "Relation:$sRelCode/DownStream+";
+		}
+		else
+		{
+			$sKey = "Relation:$sRelCode/UpStream+";
+		}
+		$sRet = Dict::S($sKey, $sLegacy);
+
+		return $sRet;
 	}
 
+	/**
+	 * @param string $sRelCode Relation code
+	 * @param bool $bDown Relation direction, is it downstream (true) or upstream (false). Default is true.
+	 *
+	 * @return string
+	 */
 	final static public function GetRelationLabel($sRelCode, $bDown = true)
 	{
 		if ($bDown)

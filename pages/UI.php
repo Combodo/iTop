@@ -232,21 +232,22 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 /**
  * Displays a form (checkboxes) to select the objects for which to apply a given action
  * Only the objects for which the action is valid can be checked. By default all valid objects are checked
- * @param $oP WebPage The page for output
- * @param $oFilter DBSearch The filter that defines the list of objects
-  * @param $sNextOperation string The next operation (code) to be executed when the form is submitted
- * @param $oChecker ActionChecker The helper class/instance used to check for which object the action is valid
- * @return none
+ *
+ * @param \WebPage $oP WebPage The page for output
+ * @param \DBSearch $oFilter DBSearch The filter that defines the list of objects
+ * @param string $sNextOperation string The next operation (code) to be executed when the form is submitted
+ * @param ActionChecker $oChecker ActionChecker The helper class/instance used to check for which object the action is valid
+ * @param array $aExtraFormParams
+ *
+ * @throws \ApplicationException
  */
 function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker, $aExtraFormParams = array())
 {
 		$oAppContext = new ApplicationContext();
 		$iBulkActionAllowed = $oChecker->IsAllowed();
-		$sClass = $oFilter->GetClass();
 		$aExtraParams = array('selection_type' => 'multiple', 'selection_mode' => true, 'display_limit' => false, 'menu' => false);
 		if ($iBulkActionAllowed == UR_ALLOWED_DEPENDS)
 		{
-			$aAllowed = array();
 			$aExtraParams['selection_enabled'] = $oChecker->GetAllowedIDs();
 		}
 		else if(UR_ALLOWED_NO)
@@ -677,7 +678,7 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
 		}
-		$oFilter = DBObjectSearch::unserialize($sFilter); // TO DO : check that the filter is valid
+		$oFilter = DBObjectSearch::unserialize($sFilter); //TODO : check that the filter is valid
 		// Add user filter
 		$oFilter->UpdateContextFromUser();
 		$sClass = $oFilter->GetClass();
@@ -1603,15 +1604,16 @@ EOF
 		$sDirection = utils::ReadParam('direction', 'down');
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 
+		$bDirDown = ($sDirection === 'down');
 		$oObj = MetaModel::GetObject($sClass, $id);
 		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
 		$aSourceObjects = array($oObj);
 
-		$oP->set_title(MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName());
+		$oP->set_title(MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName());
 
 		$sPageId = "ui-relation-graph-".$sClass.'::'.$id;
-		$sLabel = $oObj->GetName().' '.MetaModel::GetRelationLabel($sRelation);
-		$sDescription = MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName();
+		$sLabel = $oObj->GetName().' '.MetaModel::GetRelationLabel($sRelation, $bDirDown);
+		$sDescription = MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName();
 		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription);
 
 			if ($sRelation == 'depends on')

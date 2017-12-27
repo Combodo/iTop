@@ -32,7 +32,10 @@
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Relation:impacts/Description' => 'Elementos impactados por',
 	'Relation:impacts/DownStream' => 'Impacto...',
+	'Relation:impacts/DownStream+' => 'Elementos impactados por',
 	'Relation:impacts/UpStream' => 'Depende de...',
+	'Relation:impacts/UpStream+' => 'Elementos estes, que dependem deste elemento',
+	// Legacy entries
 	'Relation:depends on/Description' => 'Elementos estes, que dependem deste elemento',
 	'Relation:depends on/DownStream' => 'Depende de...',
 	'Relation:depends on/UpStream' => 'Impactos...',

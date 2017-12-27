@@ -384,7 +384,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkProcessToSolution/Attribute:reason+' => 'Più informazioni tra il processo di business e la soluzione applicativa',
 	'Relation:impacts/Description' => 'Elementi impattati da...',
 	'Relation:impacts/DownStream' => 'Impatto...',
+	'Relation:impacts/DownStream+' => 'Elementi impattati da...',
 	'Relation:impacts/UpStream' => 'Dipende da...',
+	'Relation:impacts/UpStream+' => 'Elementi di questo elemento dipende da',
+	// Legacy entries
 	'Relation:depends on/Description' => 'Elementi di questo elemento dipende da',
 	'Relation:depends on/DownStream' => 'Dipende da...',
 	'Relation:depends on/UpStream' => 'Impatto...',

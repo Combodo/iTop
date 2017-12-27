@@ -35,7 +35,10 @@
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Relation:impacts/Description' => 'Elementen hebben impact op',
 	'Relation:impacts/DownStream' => 'Impact...',
+	'Relation:impacts/DownStream+' => 'Elementen hebben impact op',
 	'Relation:impacts/UpStream' => 'Is afhankelijk van...',
+	'Relation:impacts/UpStream+' => 'Elementen waarvan dit element afhankelijk van is',
+	// Legacy entries
 	'Relation:depends on/Description' => 'Elementen waarvan dit element afhankelijk van is',
 	'Relation:depends on/DownStream' => 'Is afhankelijk van...',
 	'Relation:depends on/UpStream' => 'Impacts...',

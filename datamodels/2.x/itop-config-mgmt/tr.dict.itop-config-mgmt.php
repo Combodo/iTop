@@ -33,7 +33,10 @@
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Relation:impacts/Description' => 'Etkilenen kalemler',
 	'Relation:impacts/DownStream' => 'Etkiler...',
+	'Relation:impacts/DownStream+' => 'Etkilenen kalemler',
 	'Relation:impacts/UpStream' => 'Bağımlı olanlar...',
+	'Relation:impacts/UpStream+' => 'Bu kaleme bağımlı olan kalemler',
+	// Legacy entries
 	'Relation:depends on/Description' => 'Bu kaleme bağımlı olan kalemler',
 	'Relation:depends on/DownStream' => 'Bağımlı olanlar...',
 	'Relation:depends on/UpStream' => 'Etkiledikleri...',

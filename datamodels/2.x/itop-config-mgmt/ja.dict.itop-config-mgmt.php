@@ -596,7 +596,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '',
 	'Relation:impacts/Description' => 'インパクトを受ける要素',
 	'Relation:impacts/DownStream' => 'インパクト...',
+	'Relation:impacts/DownStream+' => 'インパクトを受ける要素',
 	'Relation:impacts/UpStream' => '依存...',
+	'Relation:impacts/UpStream+' => 'この要素が依存している要素',
+	// Legacy entries
 	'Relation:depends on/Description' => 'この要素が依存している要素',
 	'Relation:depends on/DownStream' => '依存...',
 	'Relation:depends on/UpStream' => 'インパクト...',

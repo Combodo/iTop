@@ -384,7 +384,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkProcessToSolution/Attribute:reason+' => '',
 	'Relation:impacts/Description' => 'Konfigurációs elem működését befolyásolják',
 	'Relation:impacts/DownStream' => 'Hatás',
+	'Relation:impacts/DownStream+' => 'Konfigurációs elem működését befolyásolják',
 	'Relation:impacts/UpStream' => 'Függőségek',
+	'Relation:impacts/UpStream+' => 'Konfigurációs elemtől függnek',
+	// Legacy entries
 	'Relation:depends on/Description' => 'Konfigurációs elemtől függnek',
 	'Relation:depends on/DownStream' => 'Függőségek',
 	'Relation:depends on/UpStream' => 'Hatások',

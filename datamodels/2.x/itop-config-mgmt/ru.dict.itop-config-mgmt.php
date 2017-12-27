@@ -18,7 +18,10 @@
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Relation:impacts/Description' => 'Элементы, на которые влияет',
 	'Relation:impacts/DownStream' => 'Влияет на...',
+	'Relation:impacts/DownStream+' => 'Элементы, на которые влияет',
 	'Relation:impacts/UpStream' => 'Зависит от...',
+	'Relation:impacts/UpStream+' => 'Элементы, от которых зависит',
+	// Legacy entries
 	'Relation:depends on/Description' => 'Элементы, от которых зависит',
 	'Relation:depends on/DownStream' => 'Зависит от...',
 	'Relation:depends on/UpStream' => 'Влияет на...',
