@@ -1939,6 +1939,20 @@ EOF
 
 					$sHTMLValue = "<div class=\"field_input_zone field_input_caselog caselog\" $sStyle>$sHeader<textarea class=\"htmlEditor\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
 					$oPage->add_ready_script("$('#$iId').bind('keyup change validate', function(evt, sFormId) { return ValidateCaseLogField('$iId', $bMandatory, sFormId) } );"); // Custom validation function
+
+					// Replace the text area with CKEditor
+					// To change the default settings of the editor,
+					// a) edit the file /js/ckeditor/config.js
+					// b) or override some of the configuration settings, using the second parameter of ckeditor()
+					$aConfig = array();
+					$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
+					$aConfig['language'] = $sLanguage;
+					$aConfig['contentsLanguage'] = $sLanguage;
+					$aConfig['extraPlugins'] = 'disabler';
+					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
+					$sConfigJS = json_encode($aConfig);
+
+					$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
 				break;
 
 				case 'HTML':
@@ -2737,7 +2751,11 @@ EOF
 		if ($sOwnershipToken !== null)
 		{
 			$this->GetOwnershipJSHandler($oPage, $sOwnershipToken);
-		}	
+		}
+
+		// Note: This part (inline images activation) is duplicated in self::DisplayModifyForm and several other places. Maybe it should be refactored so it automatically activates when an HTML field is present, or be an option of the attribute. See bug n°1240.
+		$sTempId = session_id().'_'.$iTransactionId;
+		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
 	}
 
 	public static function ProcessZlist($aList, $aDetails, $sCurrentTab, $sCurrentCol, $sCurrentSet)
@@ -3764,21 +3782,6 @@ EOF
 				}
 				$sHTMLValue .= "<span style=\"font-family:Tahoma,Verdana,Arial,Helvetica;font-size:12px;\" id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 				$aFieldsMap[$sAttCode] = $sInputId;
-
-				// Replace the text area with CKEditor
-				// To change the default settings of the editor,
-				// a) edit the file /js/ckeditor/config.js
-				// b) or override some of the configuration settings, using the second parameter of ckeditor()
-				$aConfig = array();
-				$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
-				$aConfig['language'] = $sLanguage;
-				$aConfig['contentsLanguage'] = $sLanguage;
-				$aConfig['extraPlugins'] = 'disabler';
-				$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
-				$sConfigJS = json_encode($aConfig);
-				
-				$oPage->add_ready_script("$('#$sInputId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
-								
 			}
 			//$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
 			$oPage->add('<fieldset><legend>'.$oAttDef->GetLabel().'</legend>');
