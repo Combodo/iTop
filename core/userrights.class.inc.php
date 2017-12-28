@@ -338,6 +338,8 @@ abstract class User extends cmdbAbstractObject
 				'bulkread' => $this->GetGrantAsHtml($sClass, UR_ACTION_BULK_READ),
 				'write' => $this->GetGrantAsHtml($sClass, UR_ACTION_MODIFY),
 				'bulkwrite' => $this->GetGrantAsHtml($sClass, UR_ACTION_BULK_MODIFY),
+				'delete' => $this->GetGrantAsHtml($sClass, UR_ACTION_DELETE),
+				'bulkdelete' => $this->GetGrantAsHtml($sClass, UR_ACTION_BULK_DELETE),
 				'stimuli' => $sStimuli,
 			);
 		}
@@ -350,6 +352,8 @@ abstract class User extends cmdbAbstractObject
 		$aDisplayConfig['bulkread'] = array('label' => Dict::S('UI:UserManagement:Action:BulkRead'), 'description' => Dict::S('UI:UserManagement:Action:BulkRead+'));
 		$aDisplayConfig['write'] = array('label' => Dict::S('UI:UserManagement:Action:Modify'), 'description' => Dict::S('UI:UserManagement:Action:Modify+'));
 		$aDisplayConfig['bulkwrite'] = array('label' => Dict::S('UI:UserManagement:Action:BulkModify'), 'description' => Dict::S('UI:UserManagement:Action:BulkModify+'));
+		$aDisplayConfig['delete'] = array('label' => Dict::S('UI:UserManagement:Action:Delete'), 'description' => Dict::S('UI:UserManagement:Action:Delete+'));
+		$aDisplayConfig['bulkdelete'] = array('label' => Dict::S('UI:UserManagement:Action:BulkDelete'), 'description' => Dict::S('UI:UserManagement:Action:BulkDelete+'));
 		$aDisplayConfig['stimuli'] = array('label' => Dict::S('UI:UserManagement:Action:Stimuli'), 'description' => Dict::S('UI:UserManagement:Action:Stimuli+'));
 		$oPage->table($aDisplayConfig, $aDisplayData);
 	}
