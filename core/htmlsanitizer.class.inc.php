@@ -212,9 +212,17 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 
 	public function __construct()
 	{
+		// Building href validation pattern from url and email validation patterns as the patterns are not used the same way in HTML content than in standard attributes value.
+		// eg. "foo@bar.com" vs "mailto:foo@bar.com?subject=Title&body=Hello%20world"
 		if (!array_key_exists('href', self::$aAttrsWhiteList))
 		{
-			$sPattern = '/'.str_replace('/', '\/', utils::GetConfig()->Get('url_validation_pattern')).'/i';
+			// Regular urls
+			$sUrlPattern = utils::GetConfig()->Get('url_validation_pattern');
+			// Mailto urls
+			$sMailtoPattern = '(mailto:(' . utils::GetConfig()->Get('email_validation_pattern') . ')(?:\?(?:subject|body)=([a-zA-Z0-9+\$_.-]*)(?:&(?:subject|body)=([a-zA-Z0-9+\$_.-]*))?)?)';
+
+			$sPattern = $sUrlPattern . '|' . $sMailtoPattern;
+			$sPattern = '/'.str_replace('/', '\/', $sPattern).'/i';
 			self::$aAttrsWhiteList['href'] = $sPattern;
 		}
 	}
