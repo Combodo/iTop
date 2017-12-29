@@ -962,6 +962,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'disable_attachments_download_legacy_portal' => array(
+			'type' => 'bool',
+			'description' => 'Disable attachments download from legacy portal',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)
