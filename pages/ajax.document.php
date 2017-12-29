@@ -53,7 +53,9 @@ try
 	switch($operation)
 	{
 		case 'download_document':
-			LoginWebPage::DoLoginEx(null /* any portal */, false);
+			// Fixing security hole from bug N°1227, disabling by default attachment from legacy portal.
+			$sRequestedPortalId = (MetaModel::GetConfig()->Get('disable_attachments_download_legacy_portal') === true) ? 'backoffice' : null;
+			LoginWebPage::DoLoginEx($sRequestedPortalId, false);
 			$id = utils::ReadParam('id', '');
 			$sField = utils::ReadParam('field', '');
 			if ($sClass == 'Attachment')
