@@ -74,6 +74,10 @@ function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 {
 	$oNow = new DateTime();
 	$fStart = microtime(true);
+	$oCtx = new ContextTag('CRON:Task:'.$oTask->Get('class_name'));
+
+	$sMessage = "";
+	$oExceptionToThrow = null;
 	try
 	{
 		$sMessage = $oProcess->Process($iTimeLimit);
@@ -114,6 +118,8 @@ function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 
 	$oTask->Set('next_run_date', $oPlannedStart->format('Y-m-d H:i:s'));
 	$oTask->DBUpdate();
+	unset($oCtx);
+
 	return $sMessage;
 }
 
