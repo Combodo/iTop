@@ -567,6 +567,10 @@ abstract class DBSearch
 		return $oSQLQuery;
 	}
 
+	public abstract function GetSQLQueryStructure(
+		$aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null
+	);
+
 	////////////////////////////////////////////////////////////////////////////
 	//
 	// Cache/Trace/Log queries
