@@ -765,27 +765,52 @@ EOF
 		$sRootMenuId = ApplicationMenu::GetRootMenuId($sContextMenuId);
 		$aAllowedDashboards = array();
 		$sDefaultDashboard = null;
-		foreach($aAllMenus as $idx => $aMenu)
+
+		// Store the parent menus for acces check
+        $aParentMenus = array();
+        foreach($aAllMenus as $idx => $aMenu)
+        {
+            /** @var MenuNode $oMenu */
+            $oMenu = $aMenu['node'];
+            if (count(ApplicationMenu::GetChildren($oMenu->GetIndex())) > 0)
+            {
+                $aParentMenus[$oMenu->GetMenuId()] = $aMenu;
+            }
+        }
+
+        foreach($aAllMenus as $idx => $aMenu)
 		{
 			$oMenu = $aMenu['node'];
-			$sParentId = $aMenu['parent'];
-			if (($oMenu instanceof DashboardMenuNode) && ($oMenu->IsEnabled()))
-			{
-				$sMenuLabel = $oMenu->GetTitle();
-				$sParentLabel = Dict::S('Menu:'.$sParentId);
-				if ($sParentLabel != $sMenuLabel)
-				{
-					$aAllowedDashboards[$oMenu->GetMenuId()] = $sParentLabel.' - '.$sMenuLabel;
-				}
-				else
-				{
-					$aAllowedDashboards[$oMenu->GetMenuId()] = $sMenuLabel;
-				}
-				if (empty($sDefaultDashboard) && ($sRootMenuId == ApplicationMenu::GetRootMenuId($oMenu->GetMenuId())))
-				{
-					$sDefaultDashboard = $oMenu->GetMenuId();
-				}
-			}
+            if ($oMenu instanceof DashboardMenuNode)
+            {
+                // Get the root parent for access check
+                $sParentId = $aMenu['parent'];
+                $aParentMenu = $aParentMenus[$sParentId];
+                while (isset($aParentMenus[$aParentMenu['parent']]))
+                {
+                    // grand parent exists
+                    $sParentId = $aParentMenu['parent'];
+                    $aParentMenu = $aParentMenus[$sParentId];
+                }
+                $oParentMenu = $aParentMenu['node'];
+                if ($oMenu->IsEnabled() && $oParentMenu->IsEnabled())
+                {
+                    $sMenuLabel = $oMenu->GetTitle();
+                    $sParentLabel = Dict::S('Menu:'.$sParentId);
+                    if ($sParentLabel != $sMenuLabel)
+                    {
+                        $aAllowedDashboards[$oMenu->GetMenuId()] = $sParentLabel.' - '.$sMenuLabel;
+                    }
+                    else
+                    {
+                        $aAllowedDashboards[$oMenu->GetMenuId()] = $sMenuLabel;
+                    }
+                    if (empty($sDefaultDashboard) && ($sRootMenuId == ApplicationMenu::GetRootMenuId($oMenu->GetMenuId())))
+                    {
+                        $sDefaultDashboard = $oMenu->GetMenuId();
+                    }
+                }
+            }
 		}
 		asort($aAllowedDashboards);
 		
@@ -849,7 +874,7 @@ EOF
 		$oPage->add_ready_script(
 <<<EOF
 $('#dashlet_creation_dlg').dialog({
-	width: 500,
+	width: 600,
 	modal: true,
 	title: '$sDialogTitle',
 	buttons: [
