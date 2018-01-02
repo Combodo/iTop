@@ -43,6 +43,7 @@ require_once(APPROOT.'/application/utils.inc.php');
 class DisplayBlock
 {
 	const TAG_BLOCK = 'itopblock';
+	/** @var \DBSearch */
 	protected $m_oFilter;
 	protected $m_aConditions; // Conditions added to the filter -> avoid duplicate conditions
 	protected $m_sStyle;
@@ -74,10 +75,17 @@ class DisplayBlock
 	{
 		return $this->m_oFilter;
 	}
+
 	/**
 	 * Constructs a DisplayBlock object from a DBObjectSet already in memory
-	 * @param $oSet DBObjectSet
+	 *
+	 * @param DBObjectSet $oSet
+	 * @param string $sStyle
+	 * @param array $aParams
+	 *
 	 * @return DisplayBlock The DisplayBlock object, or null if the creation failed
+	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public static function FromObjectSet(DBObjectSet $oSet, $sStyle, $aParams = array())
 	{
@@ -1104,10 +1112,19 @@ EOF
 		}
 		return $sHtml;
 	}
-	
+
 	/**
 	 * Add a condition (restriction) to the current DBSearch on which the display block is based
 	 * taking into account the hierarchical keys for which the condition is based on the 'below' operator
+	 *
+	 * @param string $sFilterCode
+	 * @param array $condition
+	 * @param string $sOpCode
+	 * @param bool $bParseSearchString
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreWarning
+	 * @throws \Exception
 	 */
 	protected function AddCondition($sFilterCode, $condition, $sOpCode = null, $bParseSearchString = false)
 	{
@@ -1336,15 +1353,25 @@ EOF
  * For backward compatibility 'popup' is equivalent to 'list'...
  */
 class MenuBlock extends DisplayBlock
-{	
+{
 	/**
 	 * Renders the "Actions" popup menu for the given set of objects
-	 * 
+	 *
 	 * Note that the menu links containing (or ending) with a hash (#) will have their fragment
 	 * part (whatever is after the hash) dynamically replaced (by javascript) when the menu is
 	 * displayed, to correspond to the current hash/fragment in the page. This allows modifying
 	 * an object in with the same tab active by default as the tab that was active when selecting
 	 * the "Modify..." action.
+	 *
+	 * @param \WebPage $oPage
+	 * @param array $aExtraParams
+	 * @param string $sId
+	 *
+	 * @return string
+	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
 	 */
 	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), $sId)
 	{

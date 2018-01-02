@@ -283,10 +283,10 @@ abstract class OqlQuery
 	/**
 	 * Check the validity of the expression with regard to the data model
 	 * and the query in which it is used
-	 * 	 	 
-	 * @param ModelReflection $oModelReflection MetaModel to consider	 	
-	 * @throws OqlNormalizeException
-	 */	 	
+	 *
+	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 * @param string $sSourceQuery
+	 */
 	abstract public function Check(ModelReflection $oModelReflection, $sSourceQuery);
 
 	/**
