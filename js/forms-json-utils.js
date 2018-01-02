@@ -245,9 +245,10 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue, origi
 	return true; // Do not stop propagation ??
 }
 
-function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
+function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue)
 {
 	var bValid;
+	var sExplain = '';
 	var sTextContent;
 
 	if ($('#'+sFieldId).attr('disabled'))
@@ -277,10 +278,27 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 				}
 			}
 		}
+
+		// Get the original value without the tags
+		var oFormattedOriginalContents = (originalValue !== undefined) ? $('<div></div>').html(originalValue) : undefined;
+		var sTextOriginalContents = (oFormattedOriginalContents !== null) ? oFormattedOriginalContents.text() : undefined;
 	
-		if (bMandatory && (sTextContent == ''))
+		if (bMandatory && (sTextContent == nullValue))
 		{
 			bValid = false;
+			sExplain = Dict.S('UI:ValueMustBeSet');
+		}
+		else if ((sTextOriginalContents != undefined) && (sTextContent == sTextOriginalContents))
+		{
+			bValid = false;
+			if (sTextOriginalContents == nullValue)
+			{
+				sExplain = Dict.S('UI:ValueMustBeSet');
+			}
+			else
+			{
+				sExplain = Dict.S('UI:ValueMustBeChanged');
+			}
 		}
 		else
 		{
@@ -288,9 +306,9 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 		}
 	}
 
-	ReportFieldValidationStatus(sFieldId, sFormId, bValid, '');
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
 
-	setTimeout(function(){ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue);}, 500);
+	setTimeout(function(){ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);}, 500);
 }
 
 /*
