@@ -967,8 +967,8 @@ class utils
 					// PDF export requires GD
 					$aResult[] = new JSPopupMenuItem('UI:Menu:ExportPDF', Dict::S('UI:Menu:ExportPDF'), "ExportListDlg('$sOQL', '$sDataTableId', 'pdf', ".json_encode(Dict::S('UI:Menu:ExportPDF')).")");
 				}
-			}	
-			$aResult[] = new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL')");
+			}
+			$aResult[] = new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL', '$sContext')");
 			$aResult[] = new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')");
 				
 			break;

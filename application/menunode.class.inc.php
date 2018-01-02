@@ -148,6 +148,7 @@ class ApplicationMenu
 			// the menu already exists, let's combine the conditions that make it visible
 			self::$aMenusIndex[$index]['node']->AddCondition($oMenuNode);
 		}
+
 		return $index;
 	}
 
@@ -320,6 +321,21 @@ EOF
 		}
 		return $sDefaultMenuId;
 	}
+
+	static public function GetRootMenuId($sMenuId)
+	{
+		$iMenuIndex = self::GetMenuIndexById($sMenuId);
+		if ($iMenuIndex == -1)
+		{
+			return '';
+		}
+		$oMenu = ApplicationMenu::GetMenuNode($iMenuIndex);
+		while ($oMenu->GetParentIndex() != -1)
+		{
+			$oMenu = ApplicationMenu::GetMenuNode($oMenu->GetParentIndex());
+		}
+		return $oMenu->GetMenuId();
+	}
 }
 
 /**
@@ -418,7 +434,12 @@ abstract class MenuNode
 	{
 		return $this->sMenuId;
 	}
-	
+
+	public function GetParentIndex()
+	{
+		return $this->iParentIndex;
+	}
+
 	public function GetTitle()
 	{
 		return Dict::S("Menu:$this->sMenuId", str_replace('_', ' ', $this->sMenuId));
