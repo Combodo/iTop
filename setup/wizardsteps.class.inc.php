@@ -77,7 +77,7 @@ class WizStepWelcome extends WizardStep
 EOF
 		);
 		$oPage->add('<h1>'.ITOP_APPLICATION.' Installation Wizard</h1>');
-		$aResults = SetupUtils::CheckPHPVersion($oPage);
+		$aResults = SetupUtils::CheckPhpAndExtensions($oPage);
 		$this->bCanMoveForward = true;
 		$aInfo = array();
 		$aWarnings = array();

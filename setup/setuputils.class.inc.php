@@ -21,7 +21,6 @@
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 class CheckResult
 {
 	// Severity levels
@@ -42,44 +41,47 @@ class CheckResult
 }
 
 /**
- * Namespace for storing all the functions/utilities needed by both
- * the setup wizard and the installation process
+ * All of the functions/utilities needed by both the setup wizard and the installation process
+ *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 class SetupUtils
 {
+	// Minimum versions (requirements : forbids installation if not met)
 	const PHP_MIN_VERSION = '5.3.6';
 	const MYSQL_MIN_VERSION = '5.0.0';
+	// versions that will be the minimum in next iTop major release (warning if not met)
+	const PHP_NEXT_MIN_VERSION = '5.6.32';
+	const MYSQL_NEXT_MIN_VERSION = '5.6.38';
+
 	const MIN_MEMORY_LIMIT = 33554432; // = 32*1024*1024 Beware: Computations are not allowed in defining constants
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
 
 	/**
-	 * Check the version of PHP, the needed PHP extension and a number
-	 * of configuration parameters (memory_limit, max_upload_file_size, etc...)
+	 * Check configuration parameters, for example :
+	 * <ul>
+	 * <li>PHP version
+	 * <li>needed PHP extensions
+	 * <li>memory_limit
+	 * <li>max_upload_file_size
+	 * <li>...
+	 * </ul>
+	 *
      * @internal SetupPage $oP The page used only for its 'log' method
-	 * @return array An array of CheckResults objects
+	 * @return CheckResult[]
 	 */
-	static function CheckPHPVersion()
+	static function CheckPhpAndExtensions()
 	{
 		$aResult = array();
-		
+
 		// For log file(s)
 		if (!is_dir(APPROOT.'log'))
 		{
 			@mkdir(APPROOT.'log');
 		}
-		
-		SetupPage::log('Info - CheckPHPVersion');
-		if (version_compare(phpversion(), self::PHP_MIN_VERSION, '>='))
-		{
-			$aResult[] = new CheckResult(CheckResult::INFO, "The current PHP Version (".phpversion().") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
-		}
-		else
-		{
-			$aResult[] = new CheckResult(CheckResult::ERROR, "Error: The current PHP Version (".phpversion().") is lower than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
-		}
+
+		self::CheckPhpVersion($aResult);
 		
 		// Check the common directories
 		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
@@ -331,6 +333,38 @@ class SetupUtils
 		}
 		
 		return $aResult;
+	}
+
+	/**
+	 * @param CheckResult[] $aResult checks log
+	 */
+	private static function CheckPhpVersion(&$aResult)
+	{
+		SetupPage::log('Info - CheckPHPVersion');
+		$sPhpVersion = phpversion();
+
+		if (version_compare($sPhpVersion, self::PHP_MIN_VERSION, '>='))
+		{
+			$aResult[] = new CheckResult(CheckResult::INFO,
+				"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
+
+
+			if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>='))
+			{
+				$aResult[] = new CheckResult(CheckResult::INFO,
+					"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+			}
+			else
+			{
+				$aResult[] = new CheckResult(CheckResult::WARNING,
+					"Error: The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+			}
+		}
+		else
+		{
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				"Error: The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
+		}
 	}
 
     /**
@@ -973,14 +1007,16 @@ EOF
 	}
 
     /**
-     * Helper function check the connection to the database, verify a few conditions (minimum version, etc...) and (if connected)
+     * Helper function : check the connection to the database, verify a few conditions (minimum version, etc...) and (if connected)
      * enumerate the existing databases (if possible)
-     * @param $sDBServer
-     * @param $sDBUser
-     * @param $sDBPwd
+     *
+     * @param string $sDBServer
+     * @param string $sDBUser
+     * @param string $sDBPwd
+     *
      * @return mixed false if the connection failed or array('checks' => Array of CheckResult, 'databases' => Array of database names (as strings) or null if not allowed)
      */
-	static function CheckServerConnection($sDBServer, $sDBUser, $sDBPwd)
+	static function CheckDbServer($sDBServer, $sDBUser, $sDBPwd)
 	{
 		$aResult = array('checks' => array(), 'databases' => null);
 		try
@@ -990,10 +1026,10 @@ EOF
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Connection to '$sDBServer' as '$sDBUser' successful.");
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Info - User privileges: ".($oDBSource->GetRawPrivileges()));
 
-			$sDBVersion = $oDBSource->GetDBVersion();
-			if (version_compare($sDBVersion, self::MYSQL_MIN_VERSION, '>='))
+			$bHasDbVersionRequired = self::CheckDbServerVersion($aResult, $oDBSource);
+
+			if ($bHasDbVersionRequired)
 			{
-				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Current MySQL version ($sDBVersion), greater than minimum required version (".self::MYSQL_MIN_VERSION.")");
 				// Check some server variables
 				$iMaxAllowedPacket = $oDBSource->GetServerVariable('max_allowed_packet');
 				$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
@@ -1015,10 +1051,7 @@ EOF
 					$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
 				}
 			}
-			else
-			{
-				$aResult['checks'][] = new CheckResult(CheckResult::ERROR, "Error: Current MySQL version is ($sDBVersion), minimum required version (".self::MYSQL_MIN_VERSION.")");
-			}
+
 			try
 			{
 				$aResult['databases'] = $oDBSource->ListDB();
@@ -1033,6 +1066,40 @@ EOF
 			return false;
 		}
 		return $aResult;
+	}
+
+	/**
+	 * @param array $aResult two keys : 'checks' with CheckResult array, 'databases' with list of databases available
+	 * @param CMDBSource $oDBSource
+	 *
+	 * @return boolean false if DB doesn't meet the minimum version requirement
+	 */
+	private static function CheckDbServerVersion(&$aResult, $oDBSource)
+	{
+		$sDBVersion = $oDBSource->GetDBVersion();
+		if (version_compare($sDBVersion, self::MYSQL_MIN_VERSION, '>='))
+		{
+			$aResult['checks'][] = new CheckResult(CheckResult::INFO,
+				"Current MySQL version ($sDBVersion), greater than minimum required version (".self::MYSQL_MIN_VERSION.")");
+
+			if (version_compare($sDBVersion, self::MYSQL_NEXT_MIN_VERSION, '>='))
+			{
+				$aResult['checks'][] = new CheckResult(CheckResult::INFO,
+					"Current MySQL version ($sDBVersion), greater than minimum required version for next ".ITOP_APPLICATION." release (".self::MYSQL_NEXT_MIN_VERSION.")");
+			}
+			else
+			{
+				$aResult['checks'][] = new CheckResult(CheckResult::WARNING,
+					"Warning : Current MySQL version is $sDBVersion, minimum required version for next ".ITOP_APPLICATION." release will be ".self::MYSQL_NEXT_MIN_VERSION);
+			}
+
+			return true;
+		}
+
+		$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
+			"Error: Current MySQL version is $sDBVersion, minimum required version is ".self::MYSQL_MIN_VERSION);
+
+		return false;
 	}
 	
 	static public function GetMySQLVersion($sDBServer, $sDBUser, $sDBPwd)
@@ -1050,9 +1117,9 @@ EOF
 		$sDBPwd = $aParameters['db_pwd'];
 		$sDBName = $aParameters['db_name'];
 
-		$oPage->add_ready_script('oXHRCheckDB = null;'); 	
+		$oPage->add_ready_script('oXHRCheckDB = null;');
 
-		$checks = SetupUtils::CheckServerConnection($sDBServer, $sDBUser, $sDBPwd);
+		$checks = SetupUtils::CheckDbServer($sDBServer, $sDBUser, $sDBPwd);
 		if ($checks === false)
 		{
 			// Connection failed, disable the "Next" button
