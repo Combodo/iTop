@@ -39,17 +39,22 @@ class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 		require_once APPROOT . '/lib/silex/vendor/autoload.php';
 		require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/src/providers/urlgeneratorserviceprovider.class.inc.php';
 		require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/src/helpers/urlgeneratorhelper.class.inc.php';
+		require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/src/providers/scopevalidatorserviceprovider.class.inc.php';
+		require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/src/helpers/scopevalidatorhelper.class.inc.php';
+		require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/src/helpers/securityhelper.class.inc.php';
 		require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/src/helpers/applicationhelper.class.inc.php';
 	
 		// Using a static var allows to preserve the object through function calls
 		static $oApp = null;
 		static $sPortalId = null;
 	
-		// Initializing Silex app
+		// Initializing Silex app (partially for faster execution)
+		// TODO: This should be factorised with itop-portal-base/portal/web/index.php into the ApplicationHelper class.
 		if ($oApp === null)
 		{
 			// Retrieving portal id
 			$sPortalId = basename(__DIR__);
+
 			// Initializing Silex framework
 			$oApp = new Silex\Application();
 			// Registering optional silex components
@@ -59,17 +64,25 @@ class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 				'scope_validator.scopes_filename' => $sPortalId . '.scopes.php',
 				'scope_validator.instance_name' => $sPortalId
 			));
-			// Registering routes
+
+			// Preparing portal foundations (partially)
+			// ...
 			Combodo\iTop\Portal\Helper\ApplicationHelper::LoadRouters();
 			Combodo\iTop\Portal\Helper\ApplicationHelper::RegisterRoutes($oApp);
+			// ...
+
+			// Loading portal scopes from the module design
+			Combodo\iTop\Portal\Helper\ApplicationHelper::LoadScopesConfiguration($oApp, new ModuleDesign($sPortalId));
 		}
 
 		// The object is reachable in the specified mode (edit/view)
+		//
+		// Note: Scopes only apply when URL check is triggered from the portal GUI.
 		$sObjectQueryString = null;
 		switch($sMode)
 		{
 			case 'view':
-				if(Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sClass, $iId))
+				if(!ContextTag::Check('GUI:Portal') || Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sClass, $iId))
 				{
 					$sObjectQueryString = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
 				}
@@ -78,11 +91,11 @@ class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 			case 'edit':
 			default:
 				// Checking if user is allowed to edit object, if not we check if it can at least view it.
-				if(Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sClass, $iId))
+				if(!ContextTag::Check('GUI:Portal') || Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sClass, $iId))
 				{
 					$sObjectQueryString = $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
 				}
-				elseif(Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sClass, $iId))
+				elseif(!ContextTag::Check('GUI:Portal') || Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sClass, $iId))
 				{
 					$sObjectQueryString = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
 				}
@@ -112,7 +125,7 @@ class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 
 		return $sUrl;
 	}
-	
+
 	public static function MakeObjectURL($sClass, $iId)
 	{	
 		return static::PrepareObjectURL($sClass, $iId, 'edit');
