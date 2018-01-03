@@ -297,6 +297,7 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 			}
 			else
 			{
+				// Note: value change check is not working well yet as the HTML to Text conversion is not exactly the same when done from the PHP value or the CKEditor value.
 				sExplain = Dict.S('UI:ValueMustBeChanged');
 			}
 		}
@@ -308,6 +309,7 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 
 	ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
 
+	// We need to check periodically as CKEditor doesn't trigger our events. More details in UIHTMLEditorWidget::Display() @ line 92
 	setTimeout(function(){ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);}, 500);
 }
 
@@ -374,32 +376,39 @@ function ValidatePasswordField(id, sFormId)
 
 //Special validation function for case log fields, taking into account the history
 // to determine if the field is empty or not
-function ValidateCaseLogField(sFieldId, bMandatory, sFormId)
+function ValidateCaseLogField(sFieldId, bMandatory, sFormId, nullValue, originalValue)
 {
-	bValid = true;
+	var bValid = true;
+	var sExplain = '';
+	var sTextContent;
 	
 	if ($('#'+sFieldId).attr('disabled'))
 	{
 		bValid = true; // disabled fields are not checked
 	}
-	else if (!bMandatory)
-	{
-		bValid = true;
-	}
 	else
 	{
-		if (bMandatory)
+		// Get the contents (with tags)
+		// Note: For CaseLog we can't retrieve the formatted contents from CKEditor (unlike in ValidateCKEditorField() method) because of the place holder.
+		sTextContent = $('#' + sFieldId).val();
+		var count = $('#'+sFieldId+'_count').val();
+
+		if (bMandatory && (count == 0) && (sTextContent == nullValue))
 		{
-			var count = $('#'+sFieldId+'_count').val();
-			if ( (count == 0) && ($('#'+sFieldId).val() == '') )
-			{
-				// No previous entry and no content typed
-				bValid = false;
-			}
+			// No previous entry and no content typed
+			bValid = false;
+			sExplain = Dict.S('UI:ValueMustBeSet');
+		}
+		else if ((originalValue != undefined) && (sTextContent == originalValue))
+		{
+			bValid = false;
+			sExplain = Dict.S('UI:ValueMustBeChanged');
 		}
 	}
-	ReportFieldValidationStatus(sFieldId, sFormId, bValid, '');
-	return bValid;
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid, '' /* sExplain */);
+
+	// We need to check periodically as CKEditor doesn't trigger our events. More details in UIHTMLEditorWidget::Display() @ line 92
+	setTimeout(function(){ValidateCaseLogField(sFieldId, bMandatory, sFormId, nullValue, originalValue);}, 500);
 }
 
 // Validate the inputs depending on the current setting
