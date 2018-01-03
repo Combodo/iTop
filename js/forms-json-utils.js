@@ -281,7 +281,7 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 
 		// Get the original value without the tags
 		var oFormattedOriginalContents = (originalValue !== undefined) ? $('<div></div>').html(originalValue) : undefined;
-		var sTextOriginalContents = (oFormattedOriginalContents !== null) ? oFormattedOriginalContents.text() : undefined;
+		var sTextOriginalContents = (oFormattedOriginalContents !== undefined) ? oFormattedOriginalContents.text() : undefined;
 	
 		if (bMandatory && (sTextContent == nullValue))
 		{

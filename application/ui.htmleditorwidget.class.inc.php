@@ -97,7 +97,7 @@ class UIHTMLEditorWidget
 		// The most relevant solution would be to implement a plugin to CKEdit, and handle the internal events like: setData, insertHtml, insertElement, loadSnapshot, key, afterUndo, afterRedo
 
 		// Could also be bound to 'instanceReady.ckeditor'
-		$oPage->add_ready_script("$('#$iId').bind('validate', function(evt, sFormId) { return ValidateCKEditField('$iId', '', {$this->m_sMandatory}, sFormId, '', '$sValue') } );\n");
+		$oPage->add_ready_script("$('#$iId').bind('validate', function(evt, sFormId) { return ValidateCKEditField('$iId', '', {$this->m_sMandatory}, sFormId, '') } );\n");
 		$oPage->add_ready_script(
 				<<<EOF
 $('#$iId').bind('update', function(evt){
