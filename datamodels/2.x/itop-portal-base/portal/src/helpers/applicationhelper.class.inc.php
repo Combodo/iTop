@@ -61,7 +61,7 @@ class ApplicationHelper
 	 * @param string $sType Type of files to load, used only in the Exception message, can be anything
 	 * @throws \Exception
 	 */
-	static function LoadClasses($sScannedDir, $sFilePattern, $sType)
+	public static function LoadClasses($sScannedDir, $sFilePattern, $sType)
 	{
 		// Loading classes from base portal
 		foreach (scandir($sScannedDir) as $sFile)
@@ -86,7 +86,7 @@ class ApplicationHelper
 	 * @param string $sScannedDir Directory to load the controllers from
 	 * @throws \Exception
 	 */
-	static function LoadControllers($sScannedDir = null)
+	public static function LoadControllers($sScannedDir = null)
 	{
 		if ($sScannedDir === null)
 		{
@@ -103,7 +103,7 @@ class ApplicationHelper
 	 * @param string $sScannedDir Directory to load the routers from
 	 * @throws \Exception
 	 */
-	static function LoadRouters($sScannedDir = null)
+	public static function LoadRouters($sScannedDir = null)
 	{
 		if ($sScannedDir === null)
 		{
@@ -120,7 +120,7 @@ class ApplicationHelper
 	 * @param string $sScannedDir Directory to load the bricks from
 	 * @throws \Exception
 	 */
-	static function LoadBricks($sScannedDir = null)
+	public static function LoadBricks($sScannedDir = null)
 	{
 		if ($sScannedDir === null)
 		{
@@ -137,7 +137,7 @@ class ApplicationHelper
 	 * @param string $sScannedDir Directory to load the managers from
 	 * @throws \Exception
 	 */
-	static function LoadFormManagers($sScannedDir = null)
+	public static function LoadFormManagers($sScannedDir = null)
 	{
 		if ($sScannedDir === null)
 		{
@@ -154,7 +154,7 @@ class ApplicationHelper
 	 * @param \Silex\Application $oApp
 	 * @throws \Exception
 	 */
-	static function RegisterRoutes(Application $oApp)
+	public static function RegisterRoutes(Application $oApp)
 	{
 		$aAllRoutes = array();
 
@@ -190,7 +190,7 @@ class ApplicationHelper
 	 * @param boolean $bNamesOnly If set to true, function will return only the routes' names, not the objects
 	 * @return array
 	 */
-	static function GetRoutes(Application $oApp, $bNamesOnly = false)
+	public static function GetRoutes(Application $oApp, $bNamesOnly = false)
 	{
 		return ($bNamesOnly) ? array_keys($oApp['combodo.portal.instance.routes']) : $oApp['combodo.portal.instance.routes'];
 	}
@@ -201,7 +201,7 @@ class ApplicationHelper
 	 *
 	 * @param \Twig_Environment $oTwigEnv
 	 */
-	static function RegisterTwigExtensions(Twig_Environment &$oTwigEnv)
+	public static function RegisterTwigExtensions(Twig_Environment &$oTwigEnv)
 	{
 		// Filter to translate a string via the Dict::S function
 		// Usage in twig : {{ 'String:ToTranslate'|dict_s }}
@@ -270,7 +270,7 @@ class ApplicationHelper
 	 *
 	 * @param Application $oApp
 	 */
-	static function RegisterExceptionHandler(Application $oApp)
+	public static function RegisterExceptionHandler(Application $oApp)
 	{
 	    // Intercepting fatal errors and exceptions
 		ErrorHandler::register();
@@ -380,7 +380,7 @@ class ApplicationHelper
 	 * @param \Silex\Application $oApp
 	 * @throws Exception
 	 */
-	static function LoadPortalConfiguration(Application $oApp)
+	public static function LoadPortalConfiguration(Application $oApp)
 	{
 		try
 		{
@@ -580,7 +580,7 @@ class ApplicationHelper
 	 * @param \Silex\Application $oApp
 	 * @throws Exception
 	 */
-	static function LoadCurrentUser(Application $oApp)
+	public static function LoadCurrentUser(Application $oApp)
 	{
 		// User
 		$oUser = UserRights::GetUserObject();
@@ -632,7 +632,7 @@ class ApplicationHelper
 	 *
 	 * @param \Combodo\iTop\Portal\Helper\AbstractBrick $oBrick
 	 */
-	static function LoadBrickSecurity(AbstractBrick &$oBrick)
+	public static function LoadBrickSecurity(AbstractBrick &$oBrick)
 	{
 		try
 		{
@@ -672,7 +672,7 @@ class ApplicationHelper
 	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 * @throws Exception
 	 */
-	static function GetLoadedBrickFromId(Application $oApp, $sBrickId)
+	public static function GetLoadedBrickFromId(Application $oApp, $sBrickId)
 	{
 		$bFound = false;
 
@@ -704,7 +704,7 @@ class ApplicationHelper
 	 * @param string $sMode Form mode to find (view|edit|create)
 	 * @return array
 	 */
-	static function GetLoadedFormFromClass(Application $oApp, $sClass, $sMode)
+	public static function GetLoadedFormFromClass(Application $oApp, $sClass, $sMode)
 	{
 		$aForms = $oApp['combodo.portal.instance.conf']['forms'];
 
@@ -753,7 +753,7 @@ class ApplicationHelper
 	 * @param string $sList List name to find
 	 * @return array Array of attribute codes
 	 */
-	static function GetLoadedListFromClass(Application $oApp, $sClass, $sList = 'default')
+	public static function GetLoadedListFromClass(Application $oApp, $sClass, $sList = 'default')
 	{
 		$aLists = $oApp['combodo.portal.instance.conf']['lists'];
 		$aList = null;
@@ -830,7 +830,7 @@ class ApplicationHelper
 	 * @throws Exception
 	 * @throws DOMFormatException
 	 */
-	static protected function LoadBricksConfiguration(Application $oApp, ModuleDesign $oDesign)
+	protected static function LoadBricksConfiguration(Application $oApp, ModuleDesign $oDesign)
 	{
 		$aPortalConf = array(
 			'bricks' => array(),
@@ -931,7 +931,7 @@ class ApplicationHelper
 	 * @throws Exception
 	 * @throws DOMFormatException
 	 */
-	static protected function LoadFormsConfiguration(Application $oApp, ModuleDesign $oDesign)
+	protected static function LoadFormsConfiguration(Application $oApp, ModuleDesign $oDesign)
 	{
 		$aForms = array();
 
@@ -1162,7 +1162,7 @@ class ApplicationHelper
      * @param \Silex\Application $oApp
      * @param ModuleDesign $oDesign
      */
-    static protected function LoadScopesConfiguration(Application $oApp, ModuleDesign $oDesign)
+    public static function LoadScopesConfiguration(Application $oApp, ModuleDesign $oDesign)
     {
         $oApp['scope_validator']->Init($oDesign->GetNodes('/module_design/classes/class'));
     }
@@ -1173,7 +1173,7 @@ class ApplicationHelper
      * @param \Silex\Application $oApp
      * @param ModuleDesign $oDesign
      */
-    static protected function LoadLifecycleConfiguration(Application $oApp, ModuleDesign $oDesign)
+    protected static function LoadLifecycleConfiguration(Application $oApp, ModuleDesign $oDesign)
     {
         $oApp['lifecycle_validator']->Init($oDesign->GetNodes('/module_design/classes/class'));
     }
@@ -1184,7 +1184,7 @@ class ApplicationHelper
 	 * @param \Silex\Application $oApp
 	 * @param ModuleDesign $oDesign
 	 */
-	static protected function LoadActionRulesConfiguration(Application $oApp, ModuleDesign $oDesign)
+	protected static function LoadActionRulesConfiguration(Application $oApp, ModuleDesign $oDesign)
 	{
 		$oApp['context_manipulator']->Init($oDesign->GetNodes('/module_design/action_rules/action_rule'));
 	}
@@ -1196,7 +1196,7 @@ class ApplicationHelper
 	 * @param ModuleDesign $oDesign
 	 * @return array
 	 */
-	static protected function LoadListsConfiguration(Application $oApp, ModuleDesign $oDesign)
+	protected static function LoadListsConfiguration(Application $oApp, ModuleDesign $oDesign)
 	{
 		$iDefaultItemRank = 0;
 		$aClassesLists = array();
@@ -1283,7 +1283,7 @@ class ApplicationHelper
      * @param \Silex\Application $oApp
      * @return array
      */
-	static protected function LoadUIExtensions(Application $oApp)
+	protected static function LoadUIExtensions(Application $oApp)
     {
         $aUIExtensions = array(
             'css_files' => array(),
