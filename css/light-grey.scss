@@ -1310,7 +1310,6 @@ fieldset .details>.field_container {
 			&.field_data {
 				margin-top: 8px;
 				margin-bottom: 10px;
-				word-break: break-all;
 			}
 
 			/* .field_value, .field_comments, .field_infos */
@@ -1531,7 +1530,8 @@ fieldset .details>.field_container {
 .one-col-details .details .field_container.field_small {
 	div.field_label {
 		/* On a single column, field labels can take more width but they are limited so it doesn't feel weird when all labels are short */
-		width: 160px;
+		width: 175px;
+		max-width: inherit;
 	}
 }
 /* This is extracted from the ".details > .field_container ..." because of the fullscreen option (element is moved at the end of the body */
