@@ -188,7 +188,6 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'big' => array(),
 		'small' => array(),
 		'tt' => array(),
-		'code' => array(),
 		'kbd' => array(),
 		'samp' => array(),
 		'var' => array(),
