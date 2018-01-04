@@ -609,14 +609,14 @@ class ObjectFormManager extends FormManager
 					{
 						$oField->SetReadOnly(true);
 					}
-                    // - Else if it's must change (transition), we force it as not readonly and not hidden
+                    // - Else if it's must change (transition), we force it as mustchange, not readonly and not hidden
                     elseif (($iFieldFlags & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE && $this->IsTransitionForm())
                     {
 	                    $oField->SetMustChange(true);
 	                    $oField->SetReadOnly(false);
                         $oField->SetHidden(false);
                     }
-                    // - Else if it's must prompt (transition), we force it as mustchange, not readonly and not hidden
+                    // - Else if it's must prompt (transition), we force it as not readonly and not hidden
                     elseif (($iFieldFlags & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT && $this->IsTransitionForm())
                     {
                     	$oField->SetReadOnly(false);
