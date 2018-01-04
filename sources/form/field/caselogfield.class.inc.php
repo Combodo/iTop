@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,18 +19,25 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use \Closure;
-use \DBObject;
-use \Combodo\iTop\Form\Field\TextAreaField;
-
 /**
  * Description of CaseLogField
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since iTop 2.3.0
  */
 class CaseLogField extends TextAreaField
 {
 	protected $aEntries;
+
+	/**
+	 * @param bool $bMustChange
+	 * @return $this
+	 */
+	public function SetMustChange($bMustChange)
+	{
+		$this->SetMandatory($bMustChange);
+		return $this;
+	}
 
 	/**
 	 *

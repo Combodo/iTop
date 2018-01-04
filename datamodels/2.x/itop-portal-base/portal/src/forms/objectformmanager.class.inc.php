@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -49,6 +49,7 @@ use \Combodo\iTop\Portal\Helper\ApplicationHelper;
  * Description of objectformmanager
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since iTop 2.3.0
  */
 class ObjectFormManager extends FormManager
 {
@@ -611,13 +612,14 @@ class ObjectFormManager extends FormManager
                     // - Else if it's must change (transition), we force it as not readonly and not hidden
                     elseif (($iFieldFlags & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE && $this->IsTransitionForm())
                     {
-                        $oField->SetReadOnly(false);
+	                    $oField->SetMustChange(true);
+	                    $oField->SetReadOnly(false);
                         $oField->SetHidden(false);
                     }
-                    // - Else if it's must prompt (transition), we force it as not readonly and not hidden
+                    // - Else if it's must prompt (transition), we force it as mustchange, not readonly and not hidden
                     elseif (($iFieldFlags & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT && $this->IsTransitionForm())
                     {
-                        $oField->SetReadOnly(false);
+                    	$oField->SetReadOnly(false);
                         $oField->SetHidden(false);
                     }
                     // - Else if it wasn't mandatory or already had a value, and it's hidden, we force it as hidden
