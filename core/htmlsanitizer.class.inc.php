@@ -156,6 +156,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'body' => array(),
 		'a' => array('href', 'name', 'style', 'target', 'title'),
 		'p' => array('style'),
+		'blockquote' => array('style'),
 		'br' => array(),
 		'span' => array('style'),
 		'div' => array('style'),
