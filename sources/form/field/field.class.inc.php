@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -27,6 +27,7 @@ use \Combodo\iTop\Form\Validator\MandatoryValidator;
  * Description of Field
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since iTop 2.3.0
  */
 abstract class Field
 {
@@ -132,6 +133,18 @@ abstract class Field
 	public function GetReadOnly()
 	{
 		return $this->bReadOnly;
+	}
+
+	/**
+	 * Note: This not implemented yet! Just a pre-conception for CaseLogField
+	 *
+	 * @todo Implement
+	 * @return boolean
+	 */
+	public function GetMustChange()
+	{
+		// TODO
+		return false;
 	}
 
 	/**
@@ -269,6 +282,20 @@ abstract class Field
 		}
 
 		$this->bMandatory = $bMandatory;
+		return $this;
+	}
+
+	/**
+	 * Sets if the field is must change or not.
+	 * Note: This not implemented yet! Just a pre-conception for CaseLogField
+	 *
+	 * @todo Implement
+	 * @param boolean $bMustChange
+	 * @return \Combodo\iTop\Form\Field\Field
+	 */
+	public function SetMustChange($bMustChange)
+	{
+		// TODO.
 		return $this;
 	}
 
