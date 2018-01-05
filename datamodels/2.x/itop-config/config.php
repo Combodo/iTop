@@ -92,7 +92,6 @@ $oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/ace.js');
 $oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/mode-php.js');
 $oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/theme-eclipse.js');
 $oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/ext-searchbox.js');
-//$oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/ext-textarea.js');
 
 try
 {
@@ -191,31 +190,93 @@ try
 	
 		$sConfirmCancel = addslashes(Dict::S('config-confirm-cancel'));
 		$oP->add_script(
-			<<<EOF
-function UpdateConfigEditorButtonState()
-{
-    var editor = ace.edit("new_config");
-    var isSameContent = editor.getValue() == $('#prev_config').val();
-    var hasNoError = $.isEmptyObject(editor.getSession().getAnnotations());
-    $('#cancel_button').attr('disabled', isSameContent);
-    $('#submit_button').attr('disabled', isSameContent || !hasNoError);
-}
+			<<<'EOF'
+var EditorUtils = (function() {
+	var STORAGE_RANGE_KEY = 'cfgEditorRange';
+	var STORAGE_LINE_KEY = 'cfgEditorFirstline';
+	var _editorSavedRange = null;
+	var _editorSavedFirstLine = null;
+	
+	var saveEditorDisplay = function(editor) {
+		_initObjectValues(editor);
+		_persistObjectValues();
+	};
+	
+	var _initObjectValues = function(editor) {
+		_editorSavedRange = editor.getSelectionRange();
+		_editorSavedFirstLine = editor.renderer.getFirstVisibleRow();
+	};
+	
+	var _persistObjectValues = function() {
+		sessionStorage.setItem(EditorUtils.STORAGE_RANGE_KEY, JSON.stringify(_editorSavedRange));
+		sessionStorage.setItem(EditorUtils.STORAGE_LINE_KEY, _editorSavedFirstLine);
+	};
+	
+	var restoreEditorDisplay = function(editor) {
+		_restoreObjectValues();
+		_setEditorDisplay(editor);
+	};
+	
+	var _restoreObjectValues = function() {
+		if ((sessionStorage.getItem(STORAGE_RANGE_KEY) == null) 
+			|| (sessionStorage.getItem(STORAGE_LINE_KEY) == null)) {
+			return;
+		}
+		
+		_editorSavedRange = JSON.parse(sessionStorage.getItem(EditorUtils.STORAGE_RANGE_KEY));
+		_editorSavedFirstLine = sessionStorage.getItem(EditorUtils.STORAGE_LINE_KEY);
+		sessionStorage.removeItem(STORAGE_RANGE_KEY);
+		sessionStorage.removeItem(STORAGE_LINE_KEY);
+	};
+	
+	var _setEditorDisplay = function(editor) {
+		if ((_editorSavedRange == null) || (_editorSavedFirstLine == null)) {
+			return;
+		}
+
+		editor.selection.setRange(_editorSavedRange);
+		editor.renderer.scrollToRow(_editorSavedFirstLine);
+	};
+	
+	var getEditorForm = function(editor) {
+        var $editorContainer = $(editor.container);
+        var $editorForm = $editorContainer.closest("form");
+        return $editorForm;
+	};
+	
+	var updateConfigEditorButtonState = function(editor) {
+	    var isSameContent = (editor.getValue() == $('#prev_config').val());
+	    var hasNoError = $.isEmptyObject(editor.getSession().getAnnotations());
+	    $('#cancel_button').attr('disabled', isSameContent);
+	    $('#submit_button').attr('disabled', isSameContent || !hasNoError);
+	};
+	
+	return {
+		STORAGE_RANGE_KEY: STORAGE_RANGE_KEY,
+		STORAGE_LINE_KEY : STORAGE_LINE_KEY,
+		saveEditorDisplay : saveEditorDisplay,
+		restoreEditorDisplay : restoreEditorDisplay,
+		getEditorForm : getEditorForm,
+		updateConfigEditorButtonState : updateConfigEditorButtonState
+	};
+})();
 EOF
 		);
-        $oP->add_ready_script(
+		$oP->add_ready_script(
 	        <<<'EOF'
 var editor = ace.edit("new_config");
+
 var $configurationSource = $('input[name="new_config"]');
 editor.getSession().setValue($configurationSource.val());
 
 editor.getSession().on('change', function()
 {
   $configurationSource.val(editor.getSession().getValue());
-  UpdateConfigEditorButtonState();
+  EditorUtils.updateConfigEditorButtonState(editor);
 });
 editor.getSession().on("changeAnnotation", function()
 {
-  UpdateConfigEditorButtonState();
+  EditorUtils.updateConfigEditorButtonState(editor);
 });
 
 editor.setTheme("ace/theme/eclipse");
@@ -224,16 +285,23 @@ editor.commands.addCommand({
     name: 'save',
     bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
     exec: function(editor) {
-        $editorContainer = $(editor.container);
-        $editorForm = $editorContainer.closest("form");
+        $editorForm = EditorUtils.getEditorForm(editor);
         $submitButton = $('#submit_button');
         
         if ($submitButton.is(":enabled")) {
             $editorForm.submit();
         }
     }
-})
+});
 
+
+var $editorForm = EditorUtils.getEditorForm(editor);
+$editorForm.submit(function() {
+	EditorUtils.saveEditorDisplay(editor);
+});
+
+
+EditorUtils.restoreEditorDisplay(editor);
 editor.focus();
 EOF
         );
