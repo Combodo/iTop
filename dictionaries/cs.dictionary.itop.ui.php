@@ -715,7 +715,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'UI:Schema:LifeCycleAttributeMustChange' => 'Musí se změnit',
     'UI:Schema:LifeCycleAttributeMustPrompt' => 'Uživatel bude vyzván ke změně hodnoty',
     'UI:Schema:LifeCycleEmptyList' => 'prázdný seznam',
-
+	'UI:Schema:ClassFilter' => 'Class:~~',
+	'UI:Schema:DisplayLabel' => 'Display:~~',
+	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code~~',
+	'UI:Schema:DisplaySelector/Label' => 'Label~~',
+	'UI:Schema:DisplaySelector/Code' => 'Code~~',
+	'UI:Schema:Attribute/Filter' => 'Filter~~',
     'UI:LinksWidget:Autocomplete+' => 'Zadejte první tři znaky...',
     'UI:Edit:TestQuery' => 'Otestovat dotaz',
     'UI:Combo:SelectValue' => '--- vyberte hodnotu ---',

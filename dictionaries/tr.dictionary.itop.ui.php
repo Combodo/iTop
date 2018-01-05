@@ -595,7 +595,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Değiştirilmesi gereken',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'Kullanıcıdan değeri değüiştirmesi istenir',
 	'UI:Schema:LifeCycleEmptyList' => 'boş liste',
-
+	'UI:Schema:ClassFilter' => 'Class:~~',
+	'UI:Schema:DisplayLabel' => 'Display:~~',
+	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code~~',
+	'UI:Schema:DisplaySelector/Label' => 'Label~~',
+	'UI:Schema:DisplaySelector/Code' => 'Code~~',
+	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:LinksWidget:Autocomplete+' => 'İlk 3 karakteri giriniz...',
 	'UI:Combo:SelectValue' => '--- değer seçiniz ---',
 	'UI:Label:SelectedObjects' => 'Seçilen nesneler: ',

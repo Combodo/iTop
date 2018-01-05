@@ -63,9 +63,8 @@ function GraphvizLifecycle($sClass)
 		$aStates = MetaModel::EnumStates($sClass);
 		$aStimuli = MetaModel::EnumStimuli($sClass);
 		$sDotFileContent .= "digraph finite_state_machine {
-	graph [bgcolor = \"transparent\"];
+	graph [bgcolor = \"#eeeeee\"];
 	rankdir=LR;
-	size=\"12,12\"
 	node [ fontname=Verdana style=filled fillcolor=\"#ffffff\" ];
 	edge [ fontname=Verdana ];
 ";

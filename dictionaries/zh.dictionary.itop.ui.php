@@ -594,7 +594,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Schema:LifeCycleAttributeMustChange' => '必须变更',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => '用户将被提示改变值',
 	'UI:Schema:LifeCycleEmptyList' => '空列表',
-	
+	'UI:Schema:ClassFilter' => 'Class:~~',
+	'UI:Schema:DisplayLabel' => 'Display:~~',
+	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code~~',
+	'UI:Schema:DisplaySelector/Label' => 'Label~~',
+	'UI:Schema:DisplaySelector/Code' => 'Code~~',
+	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:LinksWidget:Autocomplete+' => '输入前3个字符...',
 	'UI:Combo:SelectValue' => '--- 选择一个值 ---',
 	'UI:Label:SelectedObjects' => '被选对象: ',

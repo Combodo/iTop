@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Presentation of the data model
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -39,7 +39,7 @@ LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be 
  */
 function MakeClassHLink($sClass, $sContext)
 {
-	return "<a href=\"schema.php?operation=details_class&class=$sClass{$sContext}\" title=\"".MetaModel::GetClassDescription($sClass)."\">".MetaModel::GetName($sClass)." ($sClass)</a>";
+	return "<a href=\"schema.php?operation=details_class&class=$sClass{$sContext}\" title=\"".html_entity_decode(MetaModel::GetClassDescription($sClass),ENT_QUOTES,'UTF-8')."\"><span class=\"attrLabel\">".MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" .$sClass."</span><span class=\"parenthesis\">)</span></a>";
 }
 
 /**
@@ -86,103 +86,6 @@ function DisplaySubclasses($oPage, $sClass, $sContext)
 }
 
 /**
- * Helper for the global list and the details of a given class
- */
-function DisplayReferencingClasses($oPage, $sClass, $sContext)
-{
-	$bSkipLinkingClasses = false;
-	$aRefs = MetaModel::EnumReferencingClasses($sClass, $bSkipLinkingClasses);
-	if (count($aRefs) != 0)
-	{
-		$oPage->add("<ul>\n");
-		foreach ($aRefs as $sRemoteClass => $aRemoteKeys)
-		{
-			foreach ($aRemoteKeys as $sExtKeyAttCode => $oExtKeyAttDef)
-			{
-				$oPage->add("<li>".Dict::Format('UI:Schema:Class_ReferencingClasses_From_By', $sClass, MakeClassHLink($sRemoteClass, $sContext), $sExtKeyAttCode)."</li>\n");
-			}
-		}
-		$oPage->add("</ul>\n");
-	}
-}
-
-/**
- * Helper for the global list and the details of a given class
- */
-function DisplayLinkingClasses($oPage, $sClass, $sContext)
-{
-	$bSkipLinkingClasses = false;
-	$aRefs = MetaModel::EnumLinkingClasses($sClass);
-	if (count($aRefs) != 0)
-	{
-		$oPage->add("<ul>\n");
-		foreach ($aRefs as $sLinkClass => $aRemoteClasses)
-		{
-			foreach($aRemoteClasses as $sExtKeyAttCode => $sRemoteClass)
-			{
-				$oPage->add("<li>".Dict::Format('UI:Schema:Class_IsLinkedTo_Class_Via_ClassAndAttribute', $sClass, MakeClassHLink($sRemoteClass, $sContext), MakeClassHLink($sLinkClass, $sContext), $sExtKeyAttCode));
-			}
-		}
-		$oPage->add("</ul>\n");
-	}
-}
-
-/**
- * Helper for the global list and the details of a given class
- */
-function DisplayRelatedClassesBestInClass($oPage, $sClass, $iLevels = 20, &$aVisitedClasses = array(), $bSubtree = true, $sContext)
-{
-	if ($iLevels <= 0) return;
-	$iLevels--;
-
-	if (array_key_exists($sClass, $aVisitedClasses)) return;
-	$aVisitedClasses[$sClass] = true;
-
-	if ($bSubtree) $oPage->add("<ul class=\"treeview\">\n");
-	foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass)
-	{
-		DisplayRelatedClassesBestInClass($oPage, $sParentClass, $iLevels, $aVisitedClasses, false, $sContext);
-	}
-	////$oPage->add("<div style=\"background-color:#ccc; border: 1px dashed #333;\">");
-	foreach (MetaModel::EnumReferencedClasses($sClass) as $sExtKeyAttCode => $sRemoteClass)
-	{
-		$sVisited = (array_key_exists($sRemoteClass, $aVisitedClasses)) ? " ..." : "";
-		if (MetaModel::GetAttributeOrigin($sClass, $sExtKeyAttCode) == $sClass)
-		{
-			$oPage->add("<li>$sClass| <em>$sExtKeyAttCode</em> =&gt;".MakeClassHLink($sRemoteClass, $sContext)."$sVisited</li>\n");
-			DisplayRelatedClassesBestInClass($oPage, $sRemoteClass, $iLevels, $aVisitedClasses, true, $sContext);
-		}
-	}
-	foreach (MetaModel::EnumReferencingClasses($sClass) as $sRemoteClass => $aRemoteKeys)
-	{
-		foreach ($aRemoteKeys as $sExtKeyAttCode => $oExtKeyAttDef)
-		{
-			$sVisited = (array_key_exists($sRemoteClass, $aVisitedClasses)) ? " ..." : "";
-			$oPage->add("<li>$sClass| &lt;=".MakeClassHLink($sRemoteClass, $sContext)."::<em>$sExtKeyAttCode</em>$sVisited</li>\n");
-			DisplayRelatedClassesBestInClass($oPage, $sRemoteClass, $iLevels, $aVisitedClasses, true, $sContext);
-		}
-	}
-	////$oPage->add("</div>");
-	if ($bSubtree) $oPage->add("</ul>\n");
-}
-
-/**
- * Helper for the list of classes related to the given class
- */
-function DisplayRelatedClasses($oPage, $sClass, $sContext)
-{
-	$oPage->add("<h3>".Dict::Format('UI:Schema:Links:1-n', $sClass)."</h3>\n");
-	DisplayReferencingClasses($oPage, $sClass, $sContext);
-
-	$oPage->add("<h3>".Dict::Format('UI:Schema:Links:n-n', $sClass)."</h3>\n");
-	DisplayLinkingClasses($oPage, $sClass, $sContext);
-
-	$oPage->add("<h3>".Dict::S('UI:Schema:Links:All')."</h3>\n");
-	$aEmpty = array();
-	DisplayRelatedClassesBestInClass($oPage, $sClass, 4, $aEmpty, true, $sContext);
-}
-
-/**
  * Helper for the lifecycle details of a given class
  */
 function DisplayLifecycle($oPage, $sClass)
@@ -196,15 +99,22 @@ function DisplayLifecycle($oPage, $sClass)
 	{
 		$aStates = MetaModel::EnumStates($sClass);
 		$aStimuli = MetaModel::EnumStimuli($sClass);
-		$oPage->add("<img src=\"".utils::GetAbsoluteUrlAppRoot()."pages/graphviz.php?class=$sClass\">\n");
+		$oPage->add("<img id=\"img-lifecycle\" attr=\"$sClass lifecycle graph\" src=\"".utils::GetAbsoluteUrlAppRoot()."pages/graphviz.php?class=$sClass\">\n");
+		$oPage->add_ready_script(
+			<<<EOF
+			$("#img-lifecycle").attr('href',$("#img-lifecycle").attr('src'));
+			$("#img-lifecycle").magnificPopup({type: 'image', closeOnContentClick: true});
+EOF
+
+		);
 		$oPage->add("<h3>".Dict::S('UI:Schema:LifeCycleTransitions')."</h3>\n");
-		$oPage->add("<ul>\n");
+		$oPage->add("<ul id=\"LifeCycleList\" class=\"treeview fileview\">\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
-			$oPage->add("<li title=\"code: $sStateCode\">$sStateLabel <span style=\"color:grey;\">($sStateCode) $sStateDescription</span></li>\n");
-			$oPage->add("<ul>\n");
+			$oPage->add("<li class=\"open\"><span class=\"attrLabel\">$sStateLabel </span><span style=\"color:grey;\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
+			$oPage->add("<ul class=\"open\">\n");
 			foreach(MetaModel::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef)
 			{
 				$sStimulusLabel = $aStimuli[$sStimulusCode]->GetLabel();
@@ -235,19 +145,22 @@ function DisplayLifecycle($oPage, $sClass)
 				{
 					$sActions = "";
 				}
-				$oPage->add("<li><span title=\"code: $sStimulusCode\" style=\"color:red;font-weight=bold;\">$sStimulusLabel</span> <span style=\"color:grey;\">($sStimulusCode)</span> =&gt; $sTargetStateLabel <span style=\"color:grey;\">($sTargetState)</span> $sActions</li>\n");
+
+				$oPage->add("<li class=\"open\"><span class=\"attrLabel\" title=\"code: $sStimulusCode\" style=\"color:red;font-weight:bold;\">$sStimulusLabel</span> 
+								<span style=\"color:grey;\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStimulusCode</span><span class=\"parenthesis\">)</span> </span>
+								=&gt;
+								<span class=\"attrLabel\">$sTargetStateLabel </span><span style=\"color:grey;\"><span class=\"parenthesis\">(</span> <span class=\"attrCode\">$sTargetState</span> <span class=\"parenthesis\">)</span></span> $sActions</li>\n");
 			}
-			$oPage->add("</ul>\n");
+			$oPage->add("</ul></li>\n");
 		}
 		$oPage->add("</ul>\n");
-
 		$oPage->add("<h3>".Dict::S('UI:Schema:LifeCyleAttributeOptions')."</h3>\n");
-		$oPage->add("<ul>\n");
+		$oPage->add("<ul id=\"LifeCycleAttrOptList\" class=\"treeview fileview\">\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
-			$oPage->add("<li title=\"code: $sStateCode\">$sStateLabel <span style=\"color:grey;\">($sStateCode) $sStateDescription</span></li>\n");
+            $oPage->add("<li class=\"open collapsable\"><span class=\"attrLabel\">$sStateLabel </span><span style=\"color:grey;\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
 			if (count($aStates[$sStateCode]['attribute_list']) > 0)
 			{
 				$oPage->add("<ul>\n");
@@ -271,9 +184,9 @@ function DisplayLifecycle($oPage, $sClass)
 						$sOptions = "";
 					}
 	
-					$oPage->add("<li><span style=\"color:purple;font-weight=bold;\">$sAttLabel</span> $sOptions</li>\n");
+					$oPage->add("<li class=\"open\"><span style=\"color:purple;font-weight=bold;\">$sAttLabel</span> $sOptions</li>\n");
 				}
-				$oPage->add("</ul>\n");
+				$oPage->add("</ul></li>\n");
 			}
 			else
 			{
@@ -281,7 +194,10 @@ function DisplayLifecycle($oPage, $sClass)
 			}
 		}
 		$oPage->add("</ul>\n");
-	}
+        $oPage->add_ready_script('$("#LifeCycleList").treeview();');
+        $oPage->add_ready_script('$("#LifeCycleAttrOptList").treeview();');
+
+    }
 }
 
 
@@ -303,6 +219,7 @@ function DisplayClassesList($oPage, $sContext)
 {
 	$oPage->add("<h1>".Dict::S('UI:Schema:Title')."</h1>\n");
 
+    $oPage->add("<label for='search-model'>" . Dict::S('UI:Schema:ClassFilter') ."</label><input id='search-model'/> ");
 	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
 	// Get all the "root" classes for display
 	$aRootClasses = array();
@@ -316,6 +233,15 @@ function DisplayClassesList($oPage, $sContext)
 		{
 			$aRootClasses[$sClassName] = MetaModel::GetName($sClassName);
 		}
+        $sLabelClassName = MetaModel::GetName($sClassName);
+		//Fetch classes names for autocomplete purpose
+        $oPage->add_script(
+            <<<EOF
+	autocompleteClassLabelAndCode.push("$sLabelClassName ($sClassName)");
+	autocompleteClassLabel.push("$sLabelClassName");
+	autocompleteClassCode.push("$sClassName");
+EOF
+        );
 	}
 	// Sort them alphabetically on their display name
 	asort($aRootClasses);
@@ -333,22 +259,393 @@ function DisplayClassesList($oPage, $sContext)
 		}
 	}
 	$oPage->add("</ul>\n");
-
-	$oPage->add("<h1>".Dict::S('UI:Schema:Relationships')."</h1>\n");
-
-	$oPage->add("<ul id=\"ClassesRelationships\" class=\"treeview\">\n");
-	foreach (MetaModel::EnumRelations() as $sRelCode)
-	{
-		$oPage->add("<li>".MakeRelationHLink($sRelCode, $sContext)."\n");
-		$oPage->add("<ul>\n");
-		$oPage->add("<li>Description: ".htmlentities(MetaModel::GetRelationDescription($sRelCode), ENT_QUOTES, 'UTF-8')."</li>\n");
-		$oPage->add("<li>Label: ".htmlentities(MetaModel::GetRelationLabel($sRelCode), ENT_QUOTES, 'UTF-8')."</li>\n");
-		$oPage->add("</ul>\n");
-		$oPage->add("</li>\n");
-	}
-	$oPage->add("</ul>\n");
 	$oPage->add_ready_script('$("#ClassesList").treeview();');
-	$oPage->add_ready_script('$("#ClassesRelationships").treeview();');
+}
+
+
+/**
+ * Helper for the list of classes related to the given class in a graphical way
+ */
+function DisplayRelatedClassesGraph($oPage, $sClass)
+{
+    try
+    {
+        $bOnTheLeft = true;
+        $bSkipLinkingClasses = false;
+		// 1) Fetching referencing classes data
+	    //
+        $aData = array();
+        $aOrigins = array('_' => true);
+        $aRefs = MetaModel::EnumReferencingClasses($sClass, $bSkipLinkingClasses);
+        $sSelfReference = "false";
+        if (count($aRefs) != 0)
+        {
+            foreach ($aRefs as $sRemoteClass => $aRemoteKeys)
+            {
+                foreach ($aRemoteKeys as $sExtKeyAttCode => $oExtKeyAttDef)
+                {
+                	if($sRemoteClass != $sClass)
+					{
+						// ref_prefix to avoid collision between attributes labels that refer to this class and local attributes label that references other classes
+                        $aAttribute = array('label' => 'ref_'.$sExtKeyAttCode);
+                        // Test if a distant attribut exists and if it uses a link class
+                        if(!($oExtKeyAttDef->GetMirrorLinkAttribute() == null ? false : $oExtKeyAttDef->GetMirrorLinkAttribute() instanceof AttributeLinkedSetIndirect))
+                        {
+                            $aAttribute['related'] = $sRemoteClass;
+                            $aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
+                            $aAttribute['related_position'] = $bOnTheLeft ? -1 : 1;
+                            $aAttribute['relation_type'] = 0;
+                            $bOnTheLeft = !$bOnTheLeft; // Toggle the side
+                            $sOrigin = MetaModel::GetAttributeOrigin($sRemoteClass, $sExtKeyAttCode);
+                            $aAttribute['origin'] = $sOrigin;
+                            $aOrigins[$sOrigin] = true;
+                            $aData[$sExtKeyAttCode . $sRemoteClass] = $aAttribute;
+                        }
+                    }
+                }
+            }
+        }
+        $aOrigins = array_keys($aOrigins);
+        $idx = 0;
+        foreach($aData as $sAttCode => $aAttribute)
+		{
+            $aData[$sAttCode]['origin_index'] =  $aAttribute['related_position'] == 1 ? $idx : ++$idx;
+        }
+        ksort($aData);
+        $idx = 0;
+        $aFinalDataReferencing = array();
+        foreach($aData as $sAttCode => $aAttribute)
+        {
+            $aData[$sAttCode]['alphabetical_index'] = $aAttribute['related_position'] == 1 ? ++$idx : $idx;
+            $aFinalDataReferencing[] = $aData[$sAttCode];
+        }
+        $sDataReferencing = json_encode($aFinalDataReferencing);
+        $sOriginsReferencing = json_encode(array_keys($aOrigins));
+
+        // 2) Fetching referenced classes data
+        //
+        $aData = array(array('label' => $sClass, 'icon' => MetaModel::GetClassIcon($sClass, false), 'origin_index' => 0, 'alphabetical_index' => 0, 'origin' => '_'));
+        $bOnTheLeft = true;
+        $aOrigins = array('_' => true);
+        foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+        {
+            $aAttribute = array('label' => $sAttCode);
+            if ($oAttDef->IsLinkSet())
+            {
+                if ($oAttDef->IsIndirect())
+                {
+                    $sRemoteAttDef = $oAttDef->GetExtKeyToRemote();
+                    $aAttribute['related'] = MetaModel::GetAttributeDef($oAttDef->GetLinkedClass(), $sRemoteAttDef)->GetTargetClass();
+                    $aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
+                    $aAttribute['related_position'] = $bOnTheLeft  ? 1 : -1;
+                    $aAttribute['relation_type'] = 0; //
+                    $bOnTheLeft = !$bOnTheLeft; // Toggle the side
+                }
+                else
+                {
+                    $aAttribute['related'] = $oAttDef->GetLinkedClass();
+                    $aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
+                    $aAttribute['related_position'] = $bOnTheLeft  ? 1 : -1;
+                    $aAttribute['relation_type'] = 1;
+                    $bOnTheLeft = !$bOnTheLeft; // Toggle the side
+                }
+
+            }
+            else if ($oAttDef->IsHierarchicalKey())
+            {
+                $aAttribute['related'] = $sClass;
+                $aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
+                $aAttribute['related_position'] = $bOnTheLeft  ? 1 : -1;
+                $aAttribute['relation_type'] = 2;
+                $bOnTheLeft = !$bOnTheLeft; // Toggle the side
+                $sSelfReference = "true";
+            }
+            else if ($oAttDef->IsExternalKey())
+            {
+                $aAttribute['related'] = $oAttDef->GetTargetClass();
+                $aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
+                $aAttribute['related_position'] = $bOnTheLeft  ? 1 : -1;
+                $aAttribute['relation_type'] = 0;
+
+                $bOnTheLeft = !$bOnTheLeft; // Toggle the side
+            }
+            if ($oAttDef->IsLinkSet() || $oAttDef->IsHierarchicalKey() || $oAttDef->IsExternalKey()){
+                $sOrigin = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
+
+				$aAttribute['origin'] = $sOrigin;
+				$aOrigins[$sOrigin] = true;
+				$aData[$sAttCode] = $aAttribute;
+
+			}
+
+        }
+		$idx = 1;
+        foreach($aData as $sAttCode => $aAttribute)
+        {
+            $aData[$sAttCode]['origin_index'] = $idx++;
+        }
+
+        $idx = 1;
+        $aFinalData = array();
+        foreach($aData as $sAttCode => $aAttribute)
+        {
+            $aData[$sAttCode]['alphabetical_index'] = $idx++;
+            $aFinalData[] = $aData[$sAttCode];
+        }
+
+        $sData = json_encode($aFinalData);
+
+	    // 3) Processing data and building graph
+	    //
+        $oPage->add_style(
+            <<<EOF
+.dataModelSchema g {
+	cursor: pointer;
+}
+.dataModelSchema g:hover rect:not(.liseret){
+  fill: #fdf5d0;
+}
+.dataModelSchema text {
+  fill: black;
+  font: 10px sans-serif;
+  text-anchor: middle;
+}		
+#selfreferencing:hover ~ g > .selfattr{
+  fill: #fdf5d0;
+}
+EOF
+        );
+        $oPage->add(
+            <<<EOF
+<div id="dataModelGraph">
+<svg class="dataModelSchema" width="100%" height="800">
+</svg>
+</div>
+EOF
+        );
+        $oPage->add_ready_script(
+            <<<EOF
+
+var data = $sData;
+var dataref = $sDataReferencing;
+/**
+ * sDataReferencing's data size ceil'd to the next even number
+ * in order to keep the same display if classes nb is even/not even
+ */
+var datareflen = Math.ceil(dataref.length/2)*2;
+var isSelfReferencing = $sSelfReference;
+
+//Link that will be opened when a class is clicked
+var refClassLinkpre = "?operation=details_class&class=";
+var refClassLinksuf = "&c[menu]=DataModelMenu#tabbedContent_0=1";
+			
+var aOriginsref = $sOriginsReferencing;
+		
+var margins = {top: 50, left: 100 };
+var cellHeight = 24;
+var cellWidth =  Math.max(3*48, 8*d3.max(data, function(d) { return d.label.length; }));
+var relatedCellWidth = Math.max(3*48, Math.max(8*d3.max(data, function(d) { return d.related ? d.related.length : 0; }) || 0,8*d3.max(dataref, function(d) { return d.related ? d.related.length : 0; }) ) || 0);
+var gap = 70;
+var schema = d3.select(".dataModelSchema")
+    .attr("height", cellHeight * (data.length + dataref.length + (1 + dataref.length%2)*1.5) + 2*margins.top);
+
+// 1) Horn construction (top lines used to display referencing classes which doesn't have a linkset attribute)
+//
+if(dataref.length > 1)
+{
+schema.append("path")
+		.attr("d", "M"+(margins.left + relatedCellWidth + gap + cellWidth*0.75)+" "+ (margins.top + cellHeight + cellHeight*(datareflen+1.5)) +" l 0 "+ cellHeight*-datareflen+"")
+		.attr("fill", "transparent")
+		.attr("stroke", "black")
+		.attr("stroke-linecap", "round")
+		.attr("stroke-width", 2);
+}
+if(dataref.length > 0)
+{
+schema.append("path")
+		.attr("d", "M"+(margins.left + relatedCellWidth + gap + cellWidth*0.25)+" "+ (margins.top + cellHeight + cellHeight*(datareflen+1.5)) +" l 0 "+ cellHeight*-datareflen+"")
+		.attr("fill", "transparent")
+		.attr("stroke", "black")
+		.attr("stroke-linecap", "round")
+		.attr("stroke-width", 2);
+}
+
+//loop + arrow to show that a class has a hierarchical attribute
+if(isSelfReferencing == true)
+{
+	schema.append("path")
+			.attr("d", "M"+(margins.left + relatedCellWidth + gap + cellWidth/1.9)+" "+ (margins.top  + cellHeight*(datareflen+1.5))+" a 20 20 0 1 0 20 0  m-10 0l-5 3 m5 -3 l-5 -3")
+			.attr("id", "selfreferencing")
+			.attr("fill", "transparent")
+			.attr("stroke", "black")
+			.attr("stroke-linecap", "round")
+			.attr("stroke-width", 2)
+			.attr("transform", "rotate(95, "+ (margins.left + relatedCellWidth + gap + cellWidth/1.9) + ", " + ((margins.top  + cellHeight*(datareflen+1.5))+10)+")");
+}
+
+// 2) Classes linked to horns (classes referencing us)
+//
+var fieldref = schema.selectAll("g")
+    .data(dataref, function(d) { return d.label + d.related } )
+    .enter().append("g")
+    .attr("transform", function(d, i) { return "translate(" + (margins.left + relatedCellWidth + gap + cellWidth/2) + "," + (margins.top + d.origin_index*cellHeight*2) + ")"; });
+
+
+fieldref.filter(function(d) {
+	return (d.related != null);
+}).append("a")
+	.attr("xlink:href",function(d){ return refClassLinkpre + d.related + refClassLinksuf})
+	.append("rect")
+		.attr("x", -relatedCellWidth/2)
+		.attr("width", relatedCellWidth)
+		.attr("height", cellHeight)
+		.attr("fill", "#fff")
+		.attr("stroke", "#000")
+		.attr("stroke-width", 1)
+		.attr("transform", function(d, i) { return "translate("+ d.related_position*(relatedCellWidth/2+cellWidth/2+gap) +", 0)"; });
+
+fieldref.filter(function(d) {
+	return (d.related != null);
+}).append("a")
+	.attr("xlink:href",function(d){ return refClassLinkpre + d.related + refClassLinksuf })
+	.append("text")
+		.attr("x", 0)
+		.attr("y", cellHeight / 2)
+		.attr("dy", ".35em")
+		.text(function(d) { return d.related ? d.related : ''; })
+		.attr("transform", function(d, i) { return "translate("+ (d.related_position*(relatedCellWidth/2+cellWidth/2+gap)) +", 0)"; });
+	
+fieldref.filter(function(d) {
+	return (d.related != null);
+}).append("path")
+    .attr("d", "M"+(cellWidth/2 - cellWidth*0.25)+" "+cellHeight/2+" h"+(gap-2 + cellWidth*0.25))
+	.attr("fill", "transparent")
+	.attr("stroke", "black")
+	.attr("stroke-linecap", "round")
+	.attr("stroke-width", 2)
+	.attr("transform", function(d, i) { return (d.related_position < 0) ? "rotate(180, 0, "+(cellHeight/2)+")" : ""});
+		
+fieldref.filter(function(d) {
+	return (d.related != null);
+}).append("path")
+    .attr("d", "M"+cellWidth/1.9*-1+" "+cellHeight/2+" m-10 0l-5 3 m5 -3 l-5 -3")
+	.attr("fill", "transparent")
+	.attr("stroke", "black")
+	.attr("stroke-linecap", "round")
+	.attr("stroke-width", 2)
+	.attr("transform", function(d, i) { return (d.related_position < 0) ? "rotate(360, 0, "+(cellHeight/2)+")" : "rotate(180, 0, "+(cellHeight/2)+")"});
+		
+fieldref.filter(function(d) {
+	return (d.related != null);
+}).append("svg:image")
+   .attr("x", -relatedCellWidth/2)
+   .attr("width", cellHeight)
+	.attr("height", cellHeight)
+    .attr("xlink:href", function(d, i) { return d.related_icon })
+	.attr("transform", function(d, i) { return "translate("+ (d.related_position*(relatedCellWidth/2+cellWidth/2+gap) - 12)+", -" + cellHeight/2+" )"; });	
+
+
+// 3) Main class rectangle and attributes rectangles
+//
+var field = schema.selectAll("g")
+    .data(data, function(d) { console.log(d.label); return d.label} )
+    .enter().append("g")
+    .attr("transform", function(d, i) { return "translate(" + (margins.left + relatedCellWidth + gap + cellWidth/2) + "," + (margins.top + (datareflen+1.5)*cellHeight + d.origin_index*cellHeight) + ")"; });
+
+field.append("rect")
+    .attr("x", -cellWidth/2)
+    .attr("width", cellWidth)
+    .attr("class", function(d, i){return (d.relation_type == 2 ? "selfattr" : "extattr");}) 
+	.attr("height", cellHeight)
+	.attr("fill", "#fff")
+	.attr("stroke", "#000")
+	.attr("stroke-width", 1);
+			
+field.append("text")
+    .attr("x", 0)
+    .attr("y", cellHeight / 2)
+    .attr("dy", ".35em")
+    .text(function(d) { return d.label; });
+
+// 4) Classes that our main class is refering to
+//
+field.filter(function(d) {
+	return (d.related != null);
+}).append("a")
+	.attr("xlink:href",function(d){ return refClassLinkpre + d.related + refClassLinksuf})
+	.append("rect")
+		.attr("x", -relatedCellWidth/2)
+		.attr("width", relatedCellWidth)
+		.attr("height", cellHeight)
+		.attr("fill", "#fff")
+		.attr("stroke", "#000")
+		.attr("stroke-width", 1)
+		.attr("transform", function(d, i) { return "translate("+ d.related_position*(relatedCellWidth/2+cellWidth/2+gap) +", 0)"; });
+
+field.filter(function(d) {
+	return (d.related != null);
+}).append("a")
+	.attr("xlink:href",function(d){ return refClassLinkpre + d.related + refClassLinksuf})
+	.append("text")
+		.attr("x", 0)
+		.attr("y", cellHeight / 2)
+		.attr("dy", ".35em")
+		.text(function(d) { return d.related ? d.related : ''; })
+		.attr("transform", function(d, i) { return "translate("+ (d.related_position*(relatedCellWidth/2+cellWidth/2+gap)) +", 0)"; });
+
+field.filter(function(d) {
+	return (d.related != null);
+}).append("path")
+    .attr("d", "M"+cellWidth/2+" "+cellHeight/2+" h"+(gap-2)+" m-10 0l-5 3 m5 -3 l-5 -3")
+	.attr("fill", "transparent")
+	.attr("stroke", "black")
+	.attr("stroke-linecap", "round")
+	.attr("stroke-width", 2)
+	.attr("transform", function(d, i) { return (d.related_position < 0) ? "rotate(180, 0, "+(cellHeight/2)+")" : ""});
+		
+field.filter(function(d) {
+	return (d.related != null) && (d.relation_type == 1);
+}).append("path")
+    .attr("d", "M"+cellWidth/1.9*-1+" "+cellHeight/2+" m-10 0l-5 3 m5 -3 l-5 -3")
+	.attr("fill", "transparent")
+	.attr("stroke", "black")
+	.attr("stroke-linecap", "round")
+	.attr("stroke-width", 2)
+	.attr("transform", function(d, i) { return (d.related_position < 0) ? "rotate(360, 0, "+(cellHeight/2)+")" : "rotate(180, 0, "+(cellHeight/2)+")"});				
+			
+field.filter(function(d) {
+	return (d.related != null);
+}).append("svg:image")
+   .attr("x", -relatedCellWidth/2)
+   .attr("width", cellHeight)
+	.attr("height", cellHeight)
+    .attr("xlink:href", function(d, i) { return d.related_icon })
+	.attr("transform", function(d, i) { return "translate("+ (d.related_position*(relatedCellWidth/2+cellWidth/2+gap) - 12)+", -" + cellHeight/2+" )"; });
+						
+field.append("rect")
+    .attr("x", -cellWidth/2 - 5)
+    .attr("width", 5)
+	.attr("height", cellHeight)
+	.attr("fill", function(d) { return aColors(aOrigins.indexOf(d.origin)); } )
+	.attr("stroke-width", 0)
+	.attr("class","liseret");
+			
+field.filter(function(d) {
+	return (d.icon != null);
+}).append("svg:image")
+    .attr("x", -cellWidth/2)
+    .attr("width", 36)
+	.attr("height", 36)
+    .attr("xlink:href", function(d, i) { return d.icon })
+	.attr("transform", "translate(-12, -24)");
+			
+EOF
+        );
+    }
+    catch(Exception $e)
+    {
+        $oPage->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getMessage()).'</b>');
+    }
 }
 
 /**
@@ -356,7 +653,9 @@ function DisplayClassesList($oPage, $sContext)
  */
 function DisplayClassDetails($oPage, $sClass, $sContext)
 {
-	$oPage->add("<h2>".MetaModel::GetName($sClass)." ($sClass) - ".MetaModel::GetClassDescription($sClass)."</h2>\n");
+    $oPage->add("<div id=\"dataModelClassIcon\">" . MetaModel::GetClassIcon($sClass) . "</div>");
+    $sClassDescritpion = MetaModel::GetClassDescription($sClass);
+	$oPage->add("<h2 id=\"classDetailsClassName\">".MetaModel::GetName($sClass)." ($sClass) " . ($sClassDescritpion == "" ? "" : " - " . $sClassDescritpion) . "</h2>\n");
 	if (MetaModel::IsAbstract($sClass))
 	{
 		$oPage->p(Dict::S('UI:Schema:AbstractClass'));
@@ -365,8 +664,6 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 	{
 		$oPage->p(Dict::S('UI:Schema:NonAbstractClass'));
 	}
-
-//	$oPage->p("<h3>".Dict::S('UI:Schema:ClassHierarchyTitle')."</h3>");
 
 	$aParentClasses = array();
 	foreach(MetaModel::EnumParentClasses($sClass) as $sParentClass)
@@ -398,6 +695,8 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 	// List the attributes of the object
 	$aForwardChangeTracking = MetaModel::GetTrackForwardExternalKeys($sClass);
 	$aDetails = array();
+
+	$aOrigins = array();
 	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 	{
 		if ($oAttDef->IsExternalKey())
@@ -418,9 +717,13 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		{
 		   $sValue = $oAttDef->GetDescription();
 		}
-		$sType = $oAttDef->GetType().' ('.$oAttDef->GetTypeDesc().')';
-		$sOrigin = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
-		$sAllowedValues = "";
+		$sType = get_class($oAttDef);
+		$sTypeDict = $oAttDef->GetType();
+        $sTypeDesc = $oAttDef->GetTypeDesc();
+
+        $sOrigin = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
+        $aOrigins[$sOrigin] = true;
+        $sAllowedValues = "";
 		$sMoreInfo = "";
 
 		$aCols = array();
@@ -430,15 +733,14 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		}
 		if (count($aCols) > 0)
 		{
-			$sCols = implode(', ', $aCols);
-	
+
 			$aMoreInfo = array();
-			$aMoreInfo[] = Dict::Format('UI:Schema:Columns_Description', $sCols);
-			$aMoreInfo[] =  Dict::Format('UI:Schema:Default_Description', $oAttDef->GetDefaultValue());
 			$aMoreInfo[] = $oAttDef->IsNullAllowed() ? Dict::S('UI:Schema:NullAllowed') : Dict::S('UI:Schema:NullNotAllowed');
 			$sMoreInfo .= implode(', ', $aMoreInfo);
 		}
-
+        $sAttrCode = $oAttDef->GetCode();
+        $sIsEnumValues = 'false';
+        $sAllowedValuesEscpd = '';
 		if ($oAttDef instanceof AttributeEnum)
 		{
 			// Display localized values for the enum (which depend on the localization provided by the class)
@@ -446,61 +748,97 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 			$aDescription = array();
 			foreach($aLocalizedValues as $val => $sDisplay)
 			{
-				$aDescription[] = htmlentities("$val => ", ENT_QUOTES, 'UTF-8').$sDisplay;
+				$aDescription[] = "<span class=\"attrLabel\">". $sDisplay ."</span>  <span class=\"parenthesis\">(</span><span class=\"attrCode\">" . $val . "</span><span class=\"parenthesis\">)</span>";
 			}
 			$sAllowedValues = implode(', ', $aDescription);
+            $sIsEnumValues = 'true';
 		}
 		elseif (is_object($oAllowedValuesDef = $oAttDef->GetValuesDef()))
 		{
-			$sAllowedValues = $oAllowedValuesDef->GetValuesDescription();
-		}
+			$sAllowedValues = trim( $oAllowedValuesDef->GetValuesDescription(), "Filter : ");
+            $sAllowedValuesEscpd = str_replace("'","\'",$sAllowedValues);
+
+            $sFilterURL = urlencode($sAllowedValues);
+			$sAllowedValues = "<span id=\"values" . $sAttrCode ."\"><a href=\"run_query.php?expression=" . $sFilterURL . "\">⚵</a>" . Dict::S('UI:Schema:Attribute/Filter') . "</span>";
+        }
 		else
 		{
 			$sAllowedValues = '';
 		}
+		$sAttrValueEscpd = htmlentities($sValue,ENT_QUOTES,"UTF-8");
+		$sAttrTypeDescEscpd = htmlentities($sValue,ENT_QUOTES,"UTF-8");
+		$sAttrOriginEscpd = htmlentities($sValue,ENT_QUOTES,"UTF-8");
 
-		$aDetails[] = array('code' => $oAttDef->GetCode(), 'type' => $sType, 'origin' => $sOrigin, 'label' => $oAttDef->GetLabel(), 'description' => $sValue, 'values' => $sAllowedValues, 'moreinfo' => $sMoreInfo);
-	}
+		$aDetails[] = array('code' => "<span id=\"attr". $sAttrCode."\"><span class=\"attrLabel\">". $oAttDef->GetLabel() ."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" . $oAttDef->GetCode() ."</span><span class=\"parenthesis\">)</span></span>",
+							'type' =>  "<span id=\"type". $sAttrCode."\"><span class=\"attrLabel\">". $sTypeDict ."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" . $sType ."</span><span class=\"parenthesis\">)</span></span>",
+							'origincolor' => "<span class=\"originColor" . $sOrigin ."\"></span>",
+            				'origin' => "<span id=\"origin" . $sAttrCode ."\">$sOrigin</span>",
+							'values' => $sAllowedValues,
+							'moreinfo' => $sMoreInfo);
+		//tooltip construction
+        $oPage->add_ready_script(
+            <<<EOF
+            	if('$sAttrValueEscpd' != ''){
+		       		$('#attr$sAttrCode').qtip( { content: '$sAttrValueEscpd', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+		       	}
+		       	if('$sAttrTypeDescEscpd' != ''){
+		      	  $('#type$sAttrCode').qtip( { content: '$sAttrTypeDescEscpd', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+				}
+				if('$sAttrOriginEscpd' != ''){
+					$('#originColor$sAttrCode').parent().qtip( { content: '$sAttrOriginEscpd', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+				}
+				if( !$sIsEnumValues && '$sAllowedValuesEscpd' != ''){
+					$('#values$sAttrCode').qtip( { content: '$sAllowedValuesEscpd', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+				}
+EOF
+
+		);
+
+    }
+
 	$oPage->SetCurrentTab(Dict::S('UI:Schema:Attributes'));
-	$aConfig = array( 'code' => array('label' => Dict::S('UI:Schema:AttributeCode'), 'description' => Dict::S('UI:Schema:AttributeCode+')),
-					  'label' => array('label' => Dict::S('UI:Schema:Label'), 'description' => Dict::S('UI:Schema:Label+')),
+	$aConfig = array( 'origincolor' => array('label' => "", 'description' => ""),
+        			  'code' => array('label' => Dict::S('UI:Schema:AttributeCode'), 'description' => Dict::S('UI:Schema:AttributeCode+')),
 					  'type' => array('label' => Dict::S('UI:Schema:Type'), 'description' => Dict::S('UI:Schema:Type+')),
-					  'origin' => array('label' => Dict::S('UI:Schema:Origin'), 'description' => Dict::S('UI:Schema:Origin+')),
-					  'description' => array('label' => Dict::S('UI:Schema:Description'), 'description' => Dict::S('UI:Schema:Description+')),
 					  'values' => array('label' => Dict::S('UI:Schema:AllowedValues'), 'description' => Dict::S('UI:Schema:AllowedValues+')),
 					  'moreinfo' => array('label' => Dict::S('UI:Schema:MoreInfo'), 'description' => Dict::S('UI:Schema:MoreInfo+')),
+					  'origin' => array('label' => Dict::S('UI:Schema:Origin'), 'description' => Dict::S('UI:Schema:Origin+')),
 	);
 	$oPage->table($aConfig, $aDetails);
+    $sOrigins = json_encode(array_keys($aOrigins));
 
-	// List the search criteria for this object
-	$aDetails = array();
-	foreach (MetaModel::GetClassFilterDefs($sClass) as $sFilterCode => $oFilterDef)
-	{
-		$aOpDescs = array();
-		foreach ($oFilterDef->GetOperators() as $sOpCode => $sOpDescription)
-		{
-			$sIsTheLooser = ($sOpCode == $oFilterDef->GetLooseOperator()) ? " (loose search)" : "";
-			$aOpDescs[] = "$sOpCode ($sOpDescription)$sIsTheLooser";
-		}
-		$aDetails[] = array( 'code' => $sFilterCode, 'description' => $oFilterDef->GetLabel(),'operators' => implode(" / ", $aOpDescs));	
-	}
-	$oPage->SetCurrentTab(Dict::S('UI:Schema:SearchCriteria'));
-	$aConfig = array( 'code' => array('label' => Dict::S('UI:Schema:FilterCode'), 'description' => Dict::S('UI:Schema:FilterCode+')),
-					  'description' => array('label' => Dict::S('UI:Schema:FilterDescription'), 'description' => Dict::S('UI:Schema:FilterDescription+')),
-					  'operators' => array('label' => Dict::S('UI:Schema:AvailOperators'), 'description' => Dict::S('UI:Schema:AvailOperators+'))
-	);
-	$oPage->table($aConfig, $aDetails);
+    //color calculation in order to keep 1 color for 1 extended class. Colors are interpolated and will be used for
+	// graph scheme color too
+    $oPage->add_ready_script(
+        <<< EOF
+				var aOrigins = $sOrigins;
+				var aColors = d3.scale.linear().domain([1,aOrigins.length])
+				  .interpolate(d3.interpolateHcl)
+				  .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);		
+				for(var origin of aOrigins)
+				{
+					console.log($('#originColor'+origin).parent());
+					$('.originColor'+origin).parent().css('background-color',aColors(aOrigins.indexOf(origin)));
+				}
+				console.log($(".listResults").find('td:nth-child(1),th:nth-child(1)'));
+				Array.prototype.forEach.call($(".listResults").find('td:nth-child(1),th:nth-child(1)'), e =>{
+					console.log($(e).attr("class"));
+					$(e).removeClass("header").addClass("originColor");
+					console.log($(e).attr("class"));
 
-	$oPage->SetCurrentTab(Dict::S('UI:Schema:ChildClasses'));
-	DisplaySubclasses($oPage, $sClass, $sContext);
+				}
+				);
 
-	$oPage->SetCurrentTab(Dict::S('UI:Schema:ReferencingClasses'));
-	DisplayReferencingClasses($oPage, $sClass, $sContext);
+EOF
+    );
 
-	$oPage->SetCurrentTab(Dict::S('UI:Schema:RelatedClasses'));
-	DisplayRelatedClasses($oPage, $sClass, $sContext);
+    $oPage->SetCurrentTab(Dict::S('UI:Schema:RelatedClasses'));
+    DisplayRelatedClassesGraph($oPage, $sClass);
+    $oPage->SetCurrentTab(Dict::S('UI:Schema:ChildClasses'));
 
-	$oPage->SetCurrentTab(Dict::S('UI:Schema:LifeCycle'));
+    DisplaySubclasses($oPage, $sClass, $sContext);
+
+    $oPage->SetCurrentTab(Dict::S('UI:Schema:LifeCycle'));
 	DisplayLifecycle($oPage, $sClass, $sContext);
 
 	$oPage->SetCurrentTab(Dict::S('UI:Schema:Triggers'));
@@ -511,53 +849,9 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 }
 
 
-/**
- * Display the details of a given relation (e.g. "impacts")
- */
-function DisplayRelationDetails($oPage, $sRelCode, $sContext)
-{
-	$sDesc = MetaModel::GetRelationDescription($sRelCode);
-	$sLabel = MetaModel::GetRelationLabel($sRelCode);
-	$oPage->add("<h1>".Dict::Format('UI:Schema:Relation_Code_Description', $sRelCode, $sDesc)."</h1>");
-	$oPage->p(Dict::Format('UI:Schema:RelationUp_Description', $sLabel));
-
-	$oPage->add("<ul id=\"RelationshipDetails\" class=\"treeview\">\n");
-	foreach(MetaModel::GetClasses() as $sClass)
-	{
-		$aRelQueries = MetaModel::EnumRelationQueries($sClass, $sRelCode);
-		if (count($aRelQueries) > 0)
-		{
-			$oPage->add("<li>class ".MakeClassHLink($sClass, $sContext)."\n");
-			$oPage->add("<ul>\n");
-			foreach ($aRelQueries as $sRelKey => $aQuery)
-			{
-				$sQueryDown = isset($aQuery['sQueryDown']) ? $aQuery['sQueryDown'] : '';
-				$sQueryUp = isset($aQuery['sQueryUp']) ? $aQuery['sQueryUp'] : '';
-				$sAttribute = isset($aQuery['sAttribute']) ? $aQuery['sAttribute'] : '';
-				/*
-				if ($aQuery['bPropagate'])
-				{
-					$oPage->add("<li>".Dict::Format('UI:Schema:RelationPropagates', $sRelKey, $iDistance, $sQuery)."</li>\n");
-				}
-				else
-				{
-					$oPage->add("<li>".Dict::Format('UI:Schema:RelationDoesNotPropagate', $sRelKey, $iDistance, $sQuery)."</li>\n");
-				}
-				*/
-				$sLabel = (strlen($sQueryDown) > 0) ? $sQueryDown : $sAttribute;
-				if ($aQuery['_legacy_'])
-				{
-					$sLabel .= ' (<b>Old style specification</b>: it is recommended to upgrade to XML)';
-				}
-				$oPage->add("<li>".$sLabel."</li>\n");
-			}
-			$oPage->add("</ul>\n");
-			$oPage->add("</li>\n");
-		}
-	}
-	$oPage->add_ready_script('$("#RelationshipDetails").treeview();');
-}
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                             MAIN BLOCK                                                             //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Display the menu on the left
 $oAppContext = new ApplicationContext();
@@ -572,25 +866,103 @@ $oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
 $oPage->no_cache();
 
 $oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+$oPage->add_script(
+    <<<EOF
+	var autocompleteClassLabelAndCode = [];
+	var autocompleteClassLabel = [];
+	var autocompleteClassCode = [];
+EOF
+);
 
-$operation = utils::ReadParam('operation', '');
+$oPage->add(" <div class='ui-widget'> </div><div id='split-pane'>");
+$oPage->add("<div class='ui-layout-west data-model-viewer'> ");
+DisplayClassesList($oPage, $sContext);
+$oPage->add("</div>");
+$oPage->add("<div class='ui-layout-center data-model-viewer'>");
+$oPage->add("
+		<label id=\"displaySelectorLabel\"> <h1> ". Dict::S('UI:Schema:DisplayLabel') .
+		"<select id=\"displaySelector\">
+			<option value=\"labelandcode\">" . Dict::S('UI:Schema:DisplaySelector/LabelAndCode') . "</option>
+			<option value=\"label\">" . Dict::S('UI:Schema:DisplaySelector/Label') . "</option>
+			<option value=\"code\">" . Dict::S('UI:Schema:DisplaySelector/Code') . "</option>
+		</select> </h1></label>
+		 <br/>");
+$sDisplayDropDownValue = htmlentities(appUserPreferences::GetPref('datamodel_viewer_display_granularity','labelandcode'),ENT_QUOTES,"UTF-8");
 
+$sClass = utils::ReadParam('class', 'logRealObject', false, 'class');
+
+//granularity displayer listener
+$oPage->add_ready_script(
+    <<<EOF
+        var parenthesisHider = function(){
+        	if ( ($('#labelEnabler').is(':checked') && !$('#codeEnabler').is(':checked')) || ($('#codeEnabler').is(':checked') && !$('#labelEnabler').is(':checked')))
+        	{
+        		$('.parenthesis').toggle();
+        	}
+        };
+		$('#displaySelector').on(
+		'change', function(){
+			switch($(this).val()){
+				case 'labelandcode':
+					$('.attrCode').show();
+					$('.attrLabel').show();
+					$('.parenthesis').show();
+					$("#search-model").autocomplete(autocompleteClassLabelAndCode);
+				break;
+				case 'label':
+					$('.attrCode').hide();
+					$('.attrLabel').show();
+					$('.parenthesis').hide();
+					$("#search-model").autocomplete(autocompleteClassLabel);
+				break;
+				case 'code':
+					$('.attrCode').show();
+					$('.attrLabel').hide();
+					$('.parenthesis').hide();
+					$("#search-model").autocomplete(autocompleteClassCode);
+				break;
+			}
+			SetUserPreference("datamodel_viewer_display_granularity", $('#displaySelector').val(), true);
+		});
+		$('#displaySelector').val("$sDisplayDropDownValue").trigger("change");
+EOF
+);
 switch($operation)
 {
 	case 'details_class':
 	$sClass = utils::ReadParam('class', 'logRealObject', false, 'class');
 	DisplayClassDetails($oPage, $sClass, $sContext);
 	break;
-	
-	case 'details_relation':
-	$sRelCode = utils::ReadParam('relcode', '');
-	DisplayRelationDetails($oPage, $sRelCode, $sContext);
-	break;
-	
-	case 'list':
 	default:
-	DisplayClassesList($oPage, $sContext);
 }
+$oPage->add("</div>");
+$oPage->add("</div>");
+
+//split the page in 2 panels
+$oPage->add_ready_script(
+<<<EOF
+		$('#split-pane').layout({
+		west : {size: 400, minSize : 200,paneSize : 600}
+		});
+		// Layout
+		   $("#search-model").result(function(){
+		   	$(this).trigger(jQuery.Event('input'));
+		   });
+			$("#search-model").on('input', function() {
+				$("#ClassesList").find("li").each(function(){
+					if( ! ~$(this).children("a").text().toLowerCase().indexOf($("#search-model").val().toLowerCase())){
+						$(this).hide();
+					}
+					else{
+						$(this).show();
+						$(this).parents().show();
+
+					}
+				});
+			});
+EOF
+
+);
 
 $oPage->output();
 ?>

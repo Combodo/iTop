@@ -2140,3 +2140,49 @@ span.refresh-button {
   color: #fff;
   border-radius: 4px;
 }
+#img-lifecycle {
+  width: 100%;
+}
+#img-lifecycle:hover {
+  width: 100%;
+  cursor: pointer;
+}
+#search-model {
+  width: 98%;
+}
+.mfp-figure:after {
+  background-color: #dff1ff;
+}
+#classDetailsClassName {
+  display: inline;
+}
+.qtip-content a, .qtip-content a:visited {
+  color: #1c94c4;
+  text-decoration: none;
+}
+.qtip-content a:hover, .qtip-content a:active {
+  color: #e87c1e;
+  text-decoration: none;
+}
+.data-model-viewer a, .data-model-viewer a:visited {
+  color: #1c94c4;
+  text-decoration: none;
+}
+.data-model-viewer a:hover {
+  color: #e87c1e;
+  text-decoration: none;
+}
+table.listResults .originColor {
+  width: 0px;
+  padding: 2px !important;
+}
+#displaySelectorLabel, #changeDefaultDisplay {
+  display: inline-block;
+}
+#split-pane {
+  height: 100%;
+}
+#dataModelClassIcon {
+  padding-right: 13px;
+  display: inline;
+}
