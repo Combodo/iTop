@@ -30,6 +30,7 @@ use \utils;
 use \Dict;
 use \IssueLog;
 use \MetaModel;
+use \DBObject;
 use \DBSearch;
 use \DBObjectSearch;
 use \FalseExpression;
@@ -42,6 +43,7 @@ use \DBObjectSet;
 use \cmdbAbstractObject;
 use \AttributeEnum;
 use \AttributeFinalClass;
+use \AttributeFriendlyName;
 use \UserRights;
 use \iPopupMenuExtension;
 use \URLButtonItem;
@@ -1050,40 +1052,7 @@ class ObjectController extends AbstractController
 		$aItems = array();
 		while ($oItem = $oSet->Fetch())
 		{
-			$aItemProperties = array(
-				'id' => $oItem->GetKey(),
-				'name' => $oItem->GetName(),
-				'attributes' => array()
-			);
-
-			foreach ($aAttCodes as $sAttCode)
-			{
-				if ($sAttCode !== 'id')
-				{
-					$aAttProperties = array(
-						'att_code' => $sAttCode
-					);
-
-					$oAttDef = MetaModel::GetAttributeDef($sTargetObjectClass, $sAttCode);
-					if ($oAttDef->IsExternalKey())
-					{
-						$aAttProperties['value'] = $oItem->Get($sAttCode . '_friendlyname');
-						// Checking if we can view the object
-						if ((SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $oAttDef->GetTargetClass(), $oItem->Get($sAttCode))))
-						{
-							$aAttProperties['url'] = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $oAttDef->GetTargetClass(), 'sObjectId' => $oItem->Get($sAttCode)));
-						}
-					}
-					else
-					{
-						$aAttProperties['value'] = $oAttDef->GetValueLabel($oItem->Get($sAttCode));
-					}
-
-					$aItemProperties['attributes'][$sAttCode] = $aAttProperties;
-				}
-			}
-
-			$aItems[] = $aItemProperties;
+			$aItems[] = $this->PrepareObjectInformations($oApp, $oItem, $aAttCodes);
 		}
 		
 		// Preparing response
@@ -1556,16 +1525,6 @@ class ObjectController extends AbstractController
 			$aObjectAttCodes = array_merge(array('id'), $aObjectAttCodes);
 		}
 
-		// Retrieving attributes definitions
-		$aAttDefs = array();
-		foreach ($aObjectAttCodes as $sObjectAttCode)
-		{
-			if ($sObjectAttCode === 'id')
-				continue;
-
-			$aAttDefs[$sObjectAttCode] = MetaModel::GetAttributeDef($sObjectClass, $sObjectAttCode);
-		}
-		
 		// Building the search
 		$bIgnoreSilos = $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass);
 		$oSearch = DBObjectSearch::FromOQL("SELECT " . $sObjectClass . " WHERE id IN ('" . implode("','", $aObjectIds) . "')");
@@ -1579,42 +1538,80 @@ class ObjectController extends AbstractController
 		// Retrieving objects
 		while ($oObject = $oSet->Fetch())
 		{
-			$aObjectData = array(
-				'id' => $oObject->GetKey(),
-				'attributes' => array()
-			);
-
-			foreach ($aAttDefs as $oAttDef)
-			{
-				$aAttData = array(
-					'att_code' => $oAttDef->GetCode()
-				);
-
-				if ($oAttDef->IsExternalKey())
-				{
-					$aAttData['value'] = $oObject->Get($oAttDef->GetCode() . '_friendlyname');
-					if (SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $oAttDef->GetTargetClass()))
-					{
-						$aAttData['url'] = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $oAttDef->GetTargetClass(), 'sObjectId' => $oObject->Get($oAttDef->GetCode())));
-					}
-				}
-				elseif ($oAttDef->IsLinkSet())
-				{
-					// We skip it
-					continue;
-				}
-				else
-				{
-					$aAttData['value'] = $oAttDef->GetValueLabel($oObject->Get($oAttDef->GetCode()));
-				}
-
-				$aObjectData['attributes'][$oAttDef->GetCode()] = $aAttData;
-			}
-
-			$aData['items'][] = $aObjectData;
+			$aData['items'][] = $this->PrepareObjectInformations($oApp, $oObject, $aObjectAttCodes);
 		}
 
 		return $oApp->json($aData);
+	}
+
+	/**
+	 * Prepare a DBObject informations as an array for a client side usage (typically, add a row in a table)
+	 *
+	 * @param \Silex\Application $oApp
+	 * @param \Combodo\iTop\Portal\Controller\DBObject $oObject
+	 * @param array $aAttCodes
+	 *
+	 * @return array
+	 */
+	protected function PrepareObjectInformations(Application $oApp, DBObject $oObject, $aAttCodes = array())
+	{
+		$sObjectClass = get_class($oObject);
+		$aObjectData = array(
+			'id' => $oObject->GetKey(),
+			'name' => $oObject->GetName(),
+			'attributes' => array(),
+		);
+
+		// Retrieving attributes definitions
+		$aAttDefs = array();
+		foreach ($aAttCodes as $sAttCode)
+		{
+			if ($sAttCode === 'id')
+				continue;
+
+			$aAttDefs[$sAttCode] = MetaModel::GetAttributeDef($sObjectClass, $sAttCode);
+		}
+
+		// Preparing attribute data
+		foreach ($aAttDefs as $oAttDef)
+		{
+			$aAttData = array(
+				'att_code' => $oAttDef->GetCode()
+			);
+
+			if ($oAttDef->IsExternalKey())
+			{
+				$aAttData['value'] = $oObject->Get($oAttDef->GetCode() . '_friendlyname');
+
+				// Checking if user can access object's external key
+				if (SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $oAttDef->GetTargetClass()))
+				{
+					$aAttData['url'] = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $oAttDef->GetTargetClass(), 'sObjectId' => $oObject->Get($oAttDef->GetCode())));
+				}
+			}
+			elseif ($oAttDef->IsLinkSet())
+			{
+				// We skip it
+				continue;
+			}
+			else
+			{
+				$aAttData['value'] = $oAttDef->GetValueLabel($oObject->Get($oAttDef->GetCode()));
+
+				if ($oAttDef instanceof AttributeFriendlyName)
+				{
+					// Checking if user can access object
+					if(SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sObjectClass))
+					{
+						$aAttData['url'] = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $sObjectClass, 'sObjectId' => $oObject->GetKey()));
+					}
+				}
+			}
+
+			$aObjectData['attributes'][$oAttDef->GetCode()] = $aAttData;
+		}
+
+		return $aObjectData;
 	}
 
 }
