@@ -1,12 +1,14 @@
 {# itop-portal-base/portal/src/views/bricks/object/mode_create.html.twig #}
 {# Object brick create layout #}
 
-{% set sFormId = (form.id is defined and form.id is not null) ? form.id : 'object_form' %}
-{% set sFormClass = (form.display_mode is defined and form.display_mode is not null) ? 'form_' ~ form.display_mode : '' %}
-{% set sFormIdSanitized = sFormId|replace({'-': ''}) %}
 {% set tIsModal = (tIsModal is defined and tIsModal == true) ? true : false %}
+{% set sFormId = (form.id is defined and form.id is not null) ? form.id : 'object_form' %}
+{% set sFormIdSanitized = sFormId|replace({'-': ''}) %}
+{% set sFormDisplayModeClass = (form.display_mode is defined and form.display_mode is not null) ? 'form_' ~ form.display_mode : '' %}
+{% set sFormObjectStateClass = (form.object_state is defined and form.object_state is not null) ? 'form_object_state_' ~ form.object_state : '' %}
 
-<form id="{{ sFormId }}" class="{{ sFormClass }}" method="POST" action="{{ form.renderer.GetEndpoint()|raw }}">
+<form id="{{ sFormId }}" class="{{ sFormDisplayModeClass }} {{ sFormObjectStateClass }}" method="POST" action="{{ form.renderer.GetEndpoint()|raw }}"
+	{% if form.object_state is defined and form.object_state is not null %}data-object-state="{{ form.object_state }}"{% endif %}>
 	<input type="hidden" name="transaction_id" value="{{ form.transaction_id }}" />
 	<div class="form_alerts">
 		{% block pFormAlerts %}
