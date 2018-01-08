@@ -647,6 +647,7 @@ class ObjectController extends AbstractController
 		$aFormData['formmanager_data'] = $oFormManager->ToJSON();
 		$aFormData['renderer'] = $oFormManager->GetRenderer();
 		$aFormData['object_name'] = $oFormManager->GetObject()->GetName();
+		$aFormData['object_state'] = $oFormManager->GetObject()->GetState();
 		$aFormData['fieldset'] = $aFieldSetData;
         $aFormData['display_mode'] = (isset($aFormProperties['properties'])) ? $aFormProperties['properties']['display_mode'] : ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
 
