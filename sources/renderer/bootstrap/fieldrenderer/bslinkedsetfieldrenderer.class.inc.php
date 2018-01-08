@@ -190,7 +190,7 @@ EOF
 								if(row.attributes[data].url !== undefined)
 								{
 									cellElem = $('<a></a>');
-									cellElem.attr('target', '_blank').attr('href', row.attributes[data].url);
+									cellElem.attr('href', row.attributes[data].url);
 								}
 								else
 								{
@@ -228,6 +228,33 @@ EOF
 						"select": {$sSelectionOptionHtml},
 						"rowId": "id",
 						"data": oRawDatas_{$this->oField->GetGlobalId()},
+						"rowCallback": function(oRow, oData){
+							// Opening in a new modal on click
+							$(oRow).find('a').off('click').on('click', function(oEvent){
+								// Prevents link opening.
+								oEvent.preventDefault();
+								// Prevents row selection
+								oEvent.stopPropagation();
+								
+								// Note : This could be better if we check for an existing modal first instead of always creating a new one
+								var oModalElem = $('#modal-for-all').clone();
+								oModalElem.attr('id', '').appendTo('body');
+								// Loading content
+								oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
+								oModalElem.find('.modal-content').load(
+									$(this).attr('href'),
+									{},
+			                        function(sResponseText, sStatus, oXHR){
+			                            // Hiding modal in case of error as the general AJAX error handler will display a message
+			                            if(sStatus === 'error')
+			                            {
+			                                oModalElem.modal('hide');
+			                            }
+			                        }
+								);
+								oModalElem.modal('show');
+							});
+						},
 					});
 						
 					// Handles items selection/deselection
