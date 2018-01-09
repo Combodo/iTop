@@ -88,6 +88,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 	$oRule = MetaModel::GetObject('AuditRule', $iRuleId);
 	$sOql = $oRule->Get('query');
 	$oRuleFilter = DBObjectSearch::FromOQL($sOql);
+	$oRuleFilter->UpdateContextFromUser();
 	FilterByContext($oRuleFilter, $oAppContext); // Not needed since this filter is a subset of the definition filter, but may speedup things
 
 	if ($oRule->Get('valid_flag') == 'false')
@@ -168,6 +169,7 @@ try
 	
 		$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
 		$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
+		$oDefinitionFilter->UpdateContextFromUser();
 		FilterByContext($oDefinitionFilter, $oAppContext);
 		$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
 		$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext);
@@ -232,6 +234,7 @@ try
 	
 		$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
 		$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
+		$oDefinitionFilter->UpdateContextFromUser();
 		FilterByContext($oDefinitionFilter, $oAppContext);
 		$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
 		$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext);
@@ -265,6 +268,7 @@ try
 			try
 			{
 				$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
+				$oDefinitionFilter->UpdateContextFromUser();
 				FilterByContext($oDefinitionFilter, $oAppContext);
 				
 				$aObjectsWithErrors = array();
