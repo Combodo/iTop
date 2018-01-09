@@ -2153,14 +2153,16 @@ EOF
 							case 'radio':
 							case 'radio_horizontal':
 							case 'radio_vertical':
-							$sHTMLValue = '';
-							$bVertical = ($sDisplayStyle != 'radio_horizontal');
-							$sHTMLValue = $oPage->GetRadioButtons($aAllowedValues, $value, $iId, "attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, $sValidationSpan.$sReloadSpan);
 							$aEventsList[] ='change';
+							$sHTMLValue = "<div class=\"field_input_zone field_input_{$sDisplayStyle}\">";
+							$bVertical = ($sDisplayStyle != 'radio_horizontal');
+							$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $iId, "attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, '');
+							$sHTMLValue .= "</div>{$sValidationSpan}{$sReloadSpan}\n";
 							break;
 							
 							case 'select':
 							default:
+							$aEventsList[] ='change';
 							$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
 							$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 							foreach($aAllowedValues as $key => $display_value)
@@ -2177,7 +2179,7 @@ EOF
 								$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 							}
 							$sHTMLValue .= "</select></div>{$sValidationSpan}{$sReloadSpan}\n";
-							$aEventsList[] ='change';
+							break;
 						}
 					}
 					else
