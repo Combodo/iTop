@@ -482,6 +482,7 @@ class RunTimeEnvironment
 	 *  - plus the list of modules present in the "extra" directory of the target environment: data/<target_environment>-modules/
 	 * @param string $sSourceEnv The name of the source environment to 'imitate'
 	 * @param bool $bUseSymLinks Whether to create symbolic links instead of copies
+	 * @return string[]
 	 */
 	public function CompileFrom($sSourceEnv, $bUseSymLinks = false)
 	{
@@ -492,7 +493,8 @@ class RunTimeEnvironment
 		// Do load the required modules
 		//
 		$oFactory = new ModelFactory($sSourceDirFull);
-		foreach($this->GetMFModulesToCompile($sSourceEnv, $sSourceDir) as $oModule)
+		$aModulesToCompile = $this->GetMFModulesToCompile($sSourceEnv, $sSourceDir);
+		foreach($aModulesToCompile as $oModule)
 		{
 			if ($oModule instanceof MFDeltaModule)
 			{
@@ -543,6 +545,7 @@ class RunTimeEnvironment
 
 			MetaModel::ResetCache(md5(APPROOT).'-'.$this->sTargetEnv);
 		}
+		return array_keys($aModulesToCompile);
 	}
 
 	/**
@@ -1042,4 +1045,174 @@ class RunTimeEnvironment
 			}
 		}
 	}
+	
+	/**
+	 * Call the given handler method for all selected modules having an installation handler
+	 * @param array[] $aAvailableModules
+	 * @param string[] $aSelectedModules
+	 * @param string $sHandlerName
+	 */
+	public function CallInstallerHandlers($aAvailableModules, $aSelectedModules, $sHandlerName)
+	{
+	    foreach($aAvailableModules as $sModuleId => $aModule)
+	    {
+	        if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
+	            isset($aAvailableModules[$sModuleId]['installer']) )
+	        {
+	            $sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
+	            SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
+	            $aCallSpec = array($sModuleInstallerClass, $sHandlerName);
+	            if (is_callable($aCallSpec))
+	            {
+	               call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));
+	            }
+	        }
+	    }
+	}
+	
+	/**
+	 * Load data from XML files for the selected modules (structural data and/or sample data)
+	 * @param array[] $aAvailableModules All available modules and their definition
+	 * @param string[] $aSelectedModules List of selected modules
+	 * @param bool $bSampleData Wether or not to load sample data
+	 */
+	public function LoadData($aAvailableModules, $aSelectedModules, $bSampleData)
+	{
+	    $oDataLoader = new XMLDataLoader();
+	    
+	    CMDBObject::SetTrackInfo("Initialization");
+	    $oMyChange = CMDBObject::GetCurrentChange();
+	    
+	    SetupPage::log_info("starting data load session");
+	    $oDataLoader->StartSession($oMyChange);
+	    
+	    $aFiles = array();
+	    $aPreviouslyLoadedFiles = array();
+	    foreach($aAvailableModules as $sModuleId => $aModule)
+	    {
+	        if (($sModuleId != ROOT_MODULE))
+	        {
+	            $sRelativePath = 'env-'.$this->sTargetEnv.'/'.basename($aModule['root_dir']);
+	            // Load data only for selected AND newly installed modules
+	            if (in_array($sModuleId, $aSelectedModules))
+	            {
+	                if ($aModule['version_db'] != '')
+	                {
+	                    // Simulate the load of the previously loaded XML files to get the mapping of the keys
+	                    if ($bSampleData)
+	                    {
+	                        $aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+	                        $aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
+	                    }
+	                    else
+	                    {
+	                        // Load only structural data
+	                        $aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+	                    }
+	                }
+	                else
+	                {
+	                    if ($bSampleData)
+	                    {
+	                        $aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+	                        $aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
+	                    }
+	                    else
+	                    {
+	                        // Load only structural data
+	                        $aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
+	                    }
+	                }
+	            }
+	        }
+	    }
+	    
+	    // Simulate the load of the previously loaded files, in order to initialize
+	    // the mapping between the identifiers in the XML and the actual identifiers
+	    // in the current database
+	    foreach($aPreviouslyLoadedFiles as $sFileRelativePath)
+	    {
+	        $sFileName = APPROOT.$sFileRelativePath;
+	        SetupPage::log_info("Loading file: $sFileName (just to get the keys mapping)");
+	        if (empty($sFileName) || !file_exists($sFileName))
+	        {
+	            throw(new Exception("File $sFileName does not exist"));
+	        }
+	        
+	        $oDataLoader->LoadFile($sFileName, true);
+	        $sResult = sprintf("loading of %s done.", basename($sFileName));
+	        SetupPage::log_info($sResult);
+	    }
+	    
+	    foreach($aFiles as $sFileRelativePath)
+	    {
+	        $sFileName = APPROOT.$sFileRelativePath;
+	        SetupPage::log_info("Loading file: $sFileName");
+	        if (empty($sFileName) || !file_exists($sFileName))
+	        {
+	            throw(new Exception("File $sFileName does not exist"));
+	        }
+	        
+	        $oDataLoader->LoadFile($sFileName);
+	        $sResult = sprintf("loading of %s done.", basename($sFileName));
+	        SetupPage::log_info($sResult);
+	    }
+	    
+	    $oDataLoader->EndSession();
+	    SetupPage::log_info("ending data load session");
+	}
+	
+	/**
+	 * Merge two arrays of file names, adding the relative path to the files provided in the array to merge
+	 * @param string[] $aSourceArray
+	 * @param string $sBaseDir
+	 * @param string[] $aFilesToMerge
+	 * @return string[]
+	 */
+	protected static function MergeWithRelativeDir($aSourceArray, $sBaseDir, $aFilesToMerge)
+	{
+	    $aToMerge = array();
+	    foreach($aFilesToMerge as $sFile)
+	    {
+	        $aToMerge[] = $sBaseDir.'/'.$sFile;
+	    }
+	    return array_merge($aSourceArray, $aToMerge);
+	}
+	
+	/**
+	 * Check the MetaModel for some common pitfall (class name too long, classes requiring too many joins...)
+	 * The check takes about 900 ms for 200 classes
+	 * @throws Exception
+	 * @return string
+	 */
+    public function CheckMetaModel()
+    {
+        $iCount = 0;
+        $fStart = microtime(true);
+        foreach(MetaModel::GetClasses() as $sClass)
+        {
+            $oSearch = new DBObjectSearch($sClass);
+            $oSearch->SetShowObsoleteData(false);
+            $oSQLQuery = $oSearch->GetSQLQueryStructure(null, false);
+            $sViewName = MetaModel::DBGetView($sClass);
+            if (strlen($sViewName) > 64)
+            {
+                throw new Exception("Class name too long for class: '$sClass'. The name of the corresponding view ($sViewName) would exceed MySQL's limit for the name of a table (64 characters).");
+            }
+            $sTableName = MetaModel::DBGetTable($sClass);
+            if (strlen($sTableName) > 64)
+            {
+                throw new Exception("Table name too long for class: '$sClass'. The name of the corresponding MySQL table ($sTableName) would exceed MySQL's limit for the name of a table (64 characters).");
+            }
+            $iTableCount = $oSQLQuery->CountTables();
+            if ($iTableCount > 61)
+            {
+                throw new Exception("Class requiring too many tables: '$sClass'. The structure of the class ($sClass) would require a query with more than 61 JOINS (MySQL's limitation).");
+            }
+            $iCount++;
+        }
+        $fDuration = microtime(true) - $fStart;
+        
+        return sprintf("Checked %d classes in %.1f ms. No error found.\n", $iCount, $fDuration*1000.0);
+    }
 } // End of class
