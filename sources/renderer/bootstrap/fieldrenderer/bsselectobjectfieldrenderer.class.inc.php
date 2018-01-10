@@ -19,19 +19,15 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
-use \Exception;
-use \CoreException;
-use \utils;
-use \IssueLog;
-use \Dict;
-use \UserRights;
-use \InlineImage;
-use \DBObjectSet;
-use \MetaModel;
-use \ContextTag;
-use \Combodo\iTop\Renderer\FieldRenderer;
-use \Combodo\iTop\Renderer\RenderingOutput;
-use \Combodo\iTop\Form\Field\SelectObjectField;
+use Combodo\iTop\Renderer\FieldRenderer;
+use Combodo\iTop\Renderer\RenderingOutput;
+use ContextTag;
+use CoreException;
+use DBObjectSet;
+use Dict;
+use Exception;
+use IssueLog;
+use MetaModel;
 
 /**
  * Description of BsSelectObjectFieldRenderer
@@ -155,7 +151,8 @@ EOF
 					$sNoResultText = Dict::S('Portal:Autocomplete:NoResult');
 					
 					// Retrieving field value
-					if (($this->oField->GetCurrentValue() !== null) && ($this->oField->GetCurrentValue() !== 0) && ($this->oField->GetCurrentValue() !== ''))
+                    $currentValue = $this->oField->GetCurrentValue();
+                    if (!empty($currentValue))
 					{
 						try
 						{
