@@ -24,6 +24,8 @@
  */
 /**
  * Adds the context parameters to the audit query
+ * @param DBSearch $oFilter
+ * @param ApplicationContext $oAppContext
  */
 function FilterByContext(DBSearch &$oFilter, ApplicationContext $oAppContext)
 {
@@ -41,6 +43,7 @@ function FilterByContext(DBSearch &$oFilter, ApplicationContext $oAppContext)
 				if ( ($sAttCode != null) && MetaModel::IsValidAttCode($sObjClass, $sAttCode))
 				{
 					// Check if the condition points to a hierarchical key
+                    $bConditionAdded = false;
 					if ($sAttCode == 'id')
 					{
 						// Filtering on the objects themselves
