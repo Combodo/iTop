@@ -49,7 +49,14 @@ abstract class DBSearch
 
 	public function __construct()
 	{
+		$this->Init();
+	}
+
+	protected function Init()
+	{
+		// Set the obsolete and archive modes to the default ones
 		$this->m_bArchiveMode = utils::IsArchiveMode();
+		$this->m_bShowObsoleteData = true;
 	}
 
 	/**
@@ -357,6 +364,10 @@ abstract class DBSearch
 		{
 			$oResultFilter->SetInternalParams($aParams);
 		}
+
+		// Set the default fields
+		$oResultFilter->Init();
+
 		return $oResultFilter;
 	}
 
