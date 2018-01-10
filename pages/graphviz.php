@@ -135,7 +135,7 @@ if (file_exists($sDotExecutable))
 	@fwrite($rFile, $sDotDescription);
 	@fclose($rFile);
 	$aOutput = array();
-	$CommandLine = "$sDotExecutable -v -Tpng < $sDotFilePath -o$sImageFilePath 2>&1";
+	$CommandLine = "\"$sDotExecutable\" -v -Tpng < \"$sDotFilePath\" -o \"$sImageFilePath\" 2>&1";
 	
 	exec($CommandLine, $aOutput, $iRetCode);
 	if ($iRetCode != 0)
