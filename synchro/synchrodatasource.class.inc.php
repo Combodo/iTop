@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Data Exchange - synchronization with external applications (incoming data)
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -53,7 +53,7 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values"=>new ValueSetEnum('implementation,production,obsolete'), "sql"=>"status", "default_value"=>"implementation", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("user_id", array("targetclass"=>"User", "jointype"=>null, "allowed_values"=>null, "sql"=>"user_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("notify_contact_id", array("targetclass"=>"Contact", "jointype"=>null, "allowed_values"=>null, "sql"=>"notify_contact_id", "is_null_allowed"=>true, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeClass("scope_class", array("class_category"=>"bizmodel,addon/authentication", "more_values"=>"", "sql"=>"scope_class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeClass("scope_class", array("class_category"=>"bizmodel,addon/authentication,application", "more_values"=>"", "sql"=>"scope_class", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeString("database_table_name", array("allowed_values"=>null, "sql"=>"database_table_name", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array(), "validation_pattern" => "^[A-Za-z0-9_]*$")));
 				
 		// Declared here for a future usage, but ignored so far
