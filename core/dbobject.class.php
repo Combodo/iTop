@@ -1060,12 +1060,9 @@ abstract class DBObject implements iDisplay
 		$iFlags = 0; // By default (if no life cycle) no flag at all
 
 		$aReadOnlyAtts = $this->GetReadOnlyAttributes();
-		if ($aReadOnlyAtts != null)
+		if (($aReadOnlyAtts != null) && (in_array($sAttCode, $aReadOnlyAtts)))
 		{
-			if (in_array($sAttCode, $aReadOnlyAtts))
-			{
-				return OPT_ATT_READONLY;
-			}
+			return OPT_ATT_READONLY;
 		}
 
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
@@ -1087,6 +1084,19 @@ abstract class DBObject implements iDisplay
 			$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 		}
 		return $iFlags | $iSynchroFlags; // Combine both sets of flags
+	}
+
+	/**
+	 * @param string $sAttCode
+	 * @param array $aReasons To store the reasons why the attribute is read-only (info about the synchro replicas)
+	 *
+	 * @throws \CoreException
+	 */
+	public function IsAttributeReadOnlyForCurrentState($sAttCode, &$aReasons = array())
+	{
+		$iAttFlags = $this->GetAttributeFlags($sAttCode, $aReasons);
+
+		return ($iAttFlags & OPT_ATT_READONLY);
 	}
 
     /**
