@@ -1048,13 +1048,16 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * Returns the set of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...)
-	 * for the given attribute in the current state of the object
-	 * @param $sAttCode string $sAttCode The code of the attribute
-	 * @param $aReasons array To store the reasons why the attribute is read-only (info about the synchro replicas)
-	 * @param $sTargetState string The target state in which to evalutate the flags, if empty the current state will be used
-	 * @return integer Flags: the binary combination of the flags applicable to this attribute
-	 */	 	  	 	
+	 *
+	 * @param string $sAttCode $sAttCode The code of the attribute
+	 * @param array $aReasons To store the reasons why the attribute is read-only (info about the synchro replicas)
+	 * @param string $sTargetState The target state in which to evalutate the flags, if empty the current state will be
+	 *     used
+	 *
+	 * @return integer the binary combination of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...) for the
+	 *     given attribute in the given state of the object
+	 * @throws \CoreException
+	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
 		$iFlags = 0; // By default (if no life cycle) no flag at all

@@ -270,8 +270,10 @@ abstract class AttributeDefinition
 	 */
 	static public function IsExternalField() {return false;}
 	/**
-	 * Returns true if the attribute can be written (by essence)
+	 * Returns true if the attribute can be written (by essence : metamodel field option)
+	 *
 	 * @return bool
+	 * @see \DBObject::IsAttributeReadOnlyForCurrentState() for a specific object instance (depending on its workflow)
 	 */
 	public function IsWritable() {return false;}
 	/**

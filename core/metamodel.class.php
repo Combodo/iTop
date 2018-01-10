@@ -1641,6 +1641,17 @@ abstract class MetaModel
 		return array();
 	}
 
+	/**
+	 * @param string $sClass
+	 * @param string $sState
+	 * @param string $sAttCode
+	 *
+	 * @return int the binary combination of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...) for the
+	 *     given attribute in the given state of the object
+	 * @throws \CoreException
+	 *
+	 * @see \DBObject::GetAttributeFlags()
+	 */
 	public static function GetAttributeFlags($sClass, $sState, $sAttCode)
 	{
 		$iFlags = 0; // By default (if no life cycle) no flag at all
