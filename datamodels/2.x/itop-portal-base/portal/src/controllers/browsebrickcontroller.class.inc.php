@@ -410,7 +410,7 @@ class BrowseBrickController extends BrickController
 			$oScopeSearch = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oSearch->GetClass(), UR_ACTION_READ);
 			$oSearch = ($oScopeSearch !== null) ? $oSearch->Intersect($oScopeSearch) : null;
 			// - Allowing all data if necessary
-			if ($oScopeSearch->IsAllDataAllowed())
+			if ($oScopeSearch !== null && $oScopeSearch->IsAllDataAllowed())
 			{
 				$oSearch->AllowAllData();
 			}
