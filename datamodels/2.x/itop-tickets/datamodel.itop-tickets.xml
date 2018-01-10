@@ -1404,7 +1404,7 @@
 					<fields />
 					<twig>
 						<div>
-							<div class="form_field" data-field-id="public_log" data-field-flags="must_prompt"></div>
+							<div class="form_field" data-field-id="public_log" data-field-flags="must_change"></div>
 							<div class="form_field" data-field-id="team_id" data-field-flags="hidden"></div>
 							<div class="form_field" data-field-id="agent_id" data-field-flags="hidden"></div>
 						</div>
