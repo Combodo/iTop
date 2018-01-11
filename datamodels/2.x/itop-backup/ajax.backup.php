@@ -61,6 +61,7 @@ try
 			catch (Exception $e)
 			{
 				$oPage->p('Error: '.$e->getMessage());
+				IssueLog::Error($sOperation.' - '.$e->getMessage());
 			}
 		}
 		$oPage->output();
@@ -156,6 +157,7 @@ EOF
 			{
 				$oRestoreMutex->Unlock();
 				$oPage->p('Error: '.$e->getMessage());
+				IssueLog::Error($sOperation.' - '.$e->getMessage());
 			}
 		}
 		$oPage->output();
@@ -179,6 +181,6 @@ EOF
 }
 catch (Exception $e)
 {
-	IssueLog::Error($e->getMessage());
+	IssueLog::Error($sOperation.' - '.$e->getMessage());
 }
 
