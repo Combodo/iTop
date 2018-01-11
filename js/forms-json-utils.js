@@ -245,9 +245,10 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue, origi
 	return true; // Do not stop propagation ??
 }
 
-function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
+function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue)
 {
 	var bValid;
+	var sExplain = '';
 	var sTextContent;
 
 	if ($('#'+sFieldId).attr('disabled'))
@@ -277,31 +278,36 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue)
 				}
 			}
 		}
-	
-		if (bMandatory && (sTextContent == ''))
+
+		// Get the original value without the tags
+		var oFormattedOriginalContents = (originalValue !== undefined) ? $('<div></div>').html(originalValue) : undefined;
+		var sTextOriginalContents = (oFormattedOriginalContents !== undefined) ? oFormattedOriginalContents.text() : undefined;
+
+		if (bMandatory && (sTextContent == nullValue))
 		{
 			bValid = false;
+			sExplain = Dict.S('UI:ValueMustBeSet');
 		}
-		else if ((sTextOriginalContents != undefined) && (sTextContent == sTextOriginalContents))
-		{
-			bValid = false;
-			if (sTextOriginalContents == nullValue)
-			{
-				sExplain = Dict.S('UI:ValueMustBeSet');
-			}
-			else
-			{
-				// Note: value change check is not working well yet as the HTML to Text conversion is not exactly the same when done from the PHP value or the CKEditor value.
-				sExplain = Dict.S('UI:ValueMustBeChanged');
-			}
-		}
+        else if ((sTextOriginalContents != undefined) && (sTextContent == sTextOriginalContents))
+        {
+            bValid = false;
+            if (sTextOriginalContents == nullValue)
+            {
+                sExplain = Dict.S('UI:ValueMustBeSet');
+            }
+            else
+            {
+                // Note: value change check is not working well yet as the HTML to Text conversion is not exactly the same when done from the PHP value or the CKEditor value.
+                sExplain = Dict.S('UI:ValueMustBeChanged');
+            }
+        }
 		else
 		{
 			bValid = true;
 		}
 	}
 
-	ReportFieldValidationStatus(sFieldId, sFormId, bValid, '');
+	ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
 
 	// We need to check periodically as CKEditor doesn't trigger our events. More details in UIHTMLEditorWidget::Display() @ line 92
 	setTimeout(function(){ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);}, 500);
