@@ -667,7 +667,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:DetailsPageTitle' => 'iTop - %2$s - Détails de %1$s',
 	'UI:ErrorPageTitle' => 'iTop - Erreur',
 	'UI:ObjectDoesNotExist' => 'Désolé cet objet n\'existe pas (où vous n\'êtes pas autorisé à l\'afficher).',
-	'UI:ObjectArchived' => 'Cet objet a été archivé. Veuillez activer le mode Archive, on contactez votre administrateur.',
+	'UI:ObjectArchived' => 'Cet objet a été archivé. Veuillez activer le mode Archive, ou contactez votre administrateur.',
 	'Tag:Archived' => 'Archivé',
 	'Tag:Archived+' => 'Accessible seulement dans le mode Archive',
 	'Tag:Obsolete' => 'Obsolète',
