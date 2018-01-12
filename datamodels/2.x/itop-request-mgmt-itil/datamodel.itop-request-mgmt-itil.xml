@@ -1192,7 +1192,7 @@
                         ),
                 );
                 $iPriority = 1;
-                if (isset($aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')]))
+                if (isset($aPriorities[(int)$this->Get('impact')]) && isset($aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')]))
                 {
                         $iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')];
                 }
