@@ -48,13 +48,13 @@ class CheckResult
  */
 class SetupUtils
 {
-	// Minimum versions (requirements : forbids installation if not met)
+	// -- Minimum versions (requirements : forbids installation if not met)
 	const PHP_MIN_VERSION = '5.3.6';
 	const MYSQL_MIN_VERSION = '5.0.0';
-	// versions that will be the minimum in next iTop major release (warning if not met)
-	const PHP_NEXT_MIN_VERSION = '5.6.0'; // further versions will contain only bug fixes (see http://php.net/supported-versions.php)
-	const MYSQL_NEXT_MIN_VERSION = '5.5.0'; // last 5.5 version at this time - 5.5 branch is packaged in Debian 8 Jessie for example (see N°942)
-	// First recent version that is not yet validated by Combodo (warning)
+	// -- versions that will be the minimum in next iTop major release (warning if not met)
+	const PHP_NEXT_MIN_VERSION = '5.6.0'; // 5.6 will be supported since the end of 2018 (see http://php.net/supported-versions.php)
+	const MYSQL_NEXT_MIN_VERSION = '5.5.3'; // 5.5 branch that is shipped with most distribution, and 5.5.3 to have utf8mb4 (see N°942)
+	// -- First recent version that is not yet validated by Combodo (warning)
 	const PHP_NOT_VALIDATED_VERSION = '7.1.9';
 
 	const MIN_MEMORY_LIMIT = 33554432; // = 32*1024*1024 Beware: Computations are not allowed in defining constants
@@ -363,13 +363,13 @@ class SetupUtils
 			else
 			{
 				$aResult[] = new CheckResult(CheckResult::WARNING,
-					"Error: The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+					"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
 			}
 
 			if (version_compare($sPhpVersion, self::PHP_NOT_VALIDATED_VERSION, '>='))
 			{
 				$aResult[] = new CheckResult(CheckResult::WARNING,
-					"Error: The current PHP Version (".$sPhpVersion.") is not yet validated by Combodo. You may experience some incompatibility issues.");
+					"The current PHP Version (".$sPhpVersion.") is not yet validated by Combodo. You may experience some incompatibility issues.");
 			}
 		}
 		else
