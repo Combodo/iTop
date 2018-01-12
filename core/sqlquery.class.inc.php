@@ -39,7 +39,7 @@ require_once('cmdbsource.class.inc.php');
 abstract class SQLQuery
 {
 	private $m_SourceOQL = '';
-	private $m_bBeautifulQuery = false;
+	protected $m_bBeautifulQuery = false;
 
 	public function __construct()
 	{
@@ -101,6 +101,13 @@ abstract class SQLQuery
 		return $sDelTables;
 	}
 
+	/**
+	 * @param $aFrom
+	 * @param null $sIndent
+	 * @param int $iIndentLevel
+	 * @return string
+	 * @throws CoreException
+	 */
 	protected static function ClauseFrom($aFrom, $sIndent = null, $iIndentLevel = 0)
 	{
 		$sLineBreakLong = $sIndent ? "\n".str_repeat($sIndent, $iIndentLevel + 1) : '';

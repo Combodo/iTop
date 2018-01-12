@@ -58,7 +58,7 @@ class SQLUnionQuery extends SQLQuery
 		{
 			$aQueriesHtml[] = '<p>'.$oSQLQuery->DisplayHtml().'</p>';
 		}
-		echo implode('UNION', $aQueries);
+		echo implode('UNION', $aQueriesHtml);
 	}
 
 	public function AddInnerJoin($oSQLQuery, $sLeftField, $sRightField, $sRightTable = '')
@@ -69,12 +69,21 @@ class SQLUnionQuery extends SQLQuery
 		}
 	}
 
+	/**
+	 * @param array $aArgs
+	 * @throws Exception
+	 */
 	public function RenderDelete($aArgs = array())
 	{
 		throw new Exception(__class__.'::'.__function__.'Not implemented !');
 	}
 
 	// Interface, build the SQL query
+
+	/**
+	 * @param array $aArgs
+	 * @throws Exception
+	 */
 	public function RenderUpdate($aArgs = array())
 	{
 		throw new Exception(__class__.'::'.__function__.'Not implemented !');
@@ -85,7 +94,6 @@ class SQLUnionQuery extends SQLQuery
 	{
 		$this->m_bBeautifulQuery = $bBeautifulQuery;
 		$sLineSep = $this->m_bBeautifulQuery ? "\n" : '';
-		$sIndent = $this->m_bBeautifulQuery ? "   " : null;
 
 		$aSelects = array();
 		foreach ($this->aQueries as $oSQLQuery)
@@ -102,13 +110,6 @@ class SQLUnionQuery extends SQLQuery
 		}
 		else
 		{
-			$aSelects = array();
-			foreach ($this->aQueries as $oSQLQuery)
-			{
-				// Render SELECT without orderby/limit/count
-				$aSelects[] = $oSQLQuery->RenderSelect(array(), $aArgs, 0, 0, false, $bBeautifulQuery);
-			}
-			$sSelect = $this->aQueries[0]->RenderSelectClause();
 			$sOrderBy = $this->aQueries[0]->RenderOrderByClause($aOrderBy);
 			if (!empty($sOrderBy))
 			{
@@ -132,7 +133,6 @@ class SQLUnionQuery extends SQLQuery
 	{
 		$this->m_bBeautifulQuery = $bBeautifulQuery;
 		$sLineSep = $this->m_bBeautifulQuery ? "\n" : '';
-		$sIndent = $this->m_bBeautifulQuery ? "   " : null;
 
 		$aSelects = array();
 		foreach ($this->aQueries as $oSQLQuery)

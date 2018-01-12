@@ -47,7 +47,7 @@ class SQLObjectQuery extends SQLQuery
 	private $m_aValues = array(); // Values to set in case of an update query
 	private $m_oSelectedIdField = null;
 	private $m_aJoinSelects = array();
-	private $m_bBeautifulQuery = false;
+	protected $m_bBeautifulQuery = false;
 
 	// Data set by PrepareRendering()
 	private $__aFrom;
@@ -245,6 +245,12 @@ class SQLObjectQuery extends SQLQuery
 	}
 	
 	// Interface, build the SQL query
+
+	/**
+	 * @param array $aArgs
+	 * @return string
+	 * @throws CoreException
+	 */
 	public function RenderDelete($aArgs = array())
 	{
 		$this->PrepareRendering();
@@ -270,6 +276,7 @@ class SQLObjectQuery extends SQLQuery
 			$sWhere  = self::ClauseWhere($this->m_oConditionExpr, $aArgs);
 			return "DELETE $sDelete FROM $sFrom WHERE $sWhere";
 		}
+		return '';
 	}
 
 	/**
@@ -283,7 +290,9 @@ class SQLObjectQuery extends SQLQuery
 	}
 
 	/**
-	 *	Needed for the unions
+	 *    Needed for the unions
+	 * @param $aOrderBy
+	 * @return string
 	 */
 	public function RenderOrderByClause($aOrderBy)
 	{
@@ -293,6 +302,12 @@ class SQLObjectQuery extends SQLQuery
 	}
 
 	// Interface, build the SQL query
+
+	/**
+	 * @param array $aArgs
+	 * @return string
+	 * @throws CoreException
+	 */
 	public function RenderUpdate($aArgs = array())
 	{
 		$this->PrepareRendering();
@@ -303,6 +318,17 @@ class SQLObjectQuery extends SQLQuery
 	}
 
 	// Interface, build the SQL query
+
+	/**
+	 * @param array $aOrderBy
+	 * @param array $aArgs
+	 * @param int $iLimitCount
+	 * @param int $iLimitStart
+	 * @param bool $bGetCount
+	 * @param bool $bBeautifulQuery
+	 * @return string
+	 * @throws CoreException
+	 */
 	public function RenderSelect($aOrderBy = array(), $aArgs = array(), $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulQuery = false)
 	{
 		$this->m_bBeautifulQuery = $bBeautifulQuery;
@@ -351,6 +377,13 @@ class SQLObjectQuery extends SQLQuery
 	}
 
 	// Interface, build the SQL query
+
+	/**
+	 * @param array $aArgs
+	 * @param bool $bBeautifulQuery
+	 * @return string
+	 * @throws CoreException
+	 */
 	public function RenderGroupBy($aArgs = array(), $bBeautifulQuery = false)
 	{
 		$this->m_bBeautifulQuery = $bBeautifulQuery;
@@ -385,6 +418,7 @@ class SQLObjectQuery extends SQLQuery
 	private function PrepareSingleTable(SQLObjectQuery $oRootQuery, &$aFrom, $sCallerAlias = '', $aJoinData)
 	{
 		$aTranslationTable[$this->m_sTable]['*'] = $this->m_sTableAlias;
+		$sJoinCond = '';
 
 		// Handle the various kinds of join (or first table in the list)
 		//
@@ -502,7 +536,7 @@ class SQLObjectQuery extends SQLQuery
 		{
 			$oRightSelect = $aJoinData["select"];
 
-			$sJoinTableAlias = $oRightSelect->PrepareSingleTable($oRootQuery, $aTempFrom, $this->m_sTableAlias, $aJoinData);
+			$oRightSelect->PrepareSingleTable($oRootQuery, $aTempFrom, $this->m_sTableAlias, $aJoinData);
 		}
 		$aFrom[$this->m_sTableAlias]['subfrom'] = $aTempFrom;
 
@@ -578,7 +612,7 @@ class SQLObjectQuery extends SQLQuery
 				}
 				if (isset($aJoinInfo["on_expression"]))
 				{
-					$sJoinCond = $aJoinInfo["on_expression"]->CollectUsedParents($aTables);
+					$aJoinInfo["on_expression"]->CollectUsedParents($aTables);
 				}
 			}
 		}
@@ -606,7 +640,7 @@ class SQLObjectQuery extends SQLQuery
 				}
 				if (isset($aJoinInfo["on_expression"]))
 				{
-					$sJoinCond = $aJoinInfo["on_expression"]->CollectUsedParents($aTables);
+					$aJoinInfo["on_expression"]->CollectUsedParents($aTables);
 				}
 				$bResult = true;
 			}
