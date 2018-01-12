@@ -548,7 +548,7 @@ fieldref.filter(function(d) {
 // 3) Main class rectangle and attributes rectangles
 //
 var field = schema.selectAll("g")
-    .data(data, function(d) { console.log(d.label); return d.label} )
+    .data(data, function(d) { return d.label } )
     .enter().append("g")
     .attr("transform", function(d, i) { return "translate(" + (margins.left + relatedCellWidth + gap + cellWidth/2) + "," + (margins.top + (datareflen+1.5)*cellHeight + d.origin_index*cellHeight) + ")"; });
 
@@ -653,17 +653,6 @@ EOF
  */
 function DisplayClassDetails($oPage, $sClass, $sContext)
 {
-    $oPage->add("<div id=\"dataModelClassIcon\">" . MetaModel::GetClassIcon($sClass) . "</div>");
-    $sClassDescritpion = MetaModel::GetClassDescription($sClass);
-	$oPage->add("<h2 id=\"classDetailsClassName\">".MetaModel::GetName($sClass)." ($sClass) " . ($sClassDescritpion == "" ? "" : " - " . $sClassDescritpion) . "</h2>\n");
-	if (MetaModel::IsAbstract($sClass))
-	{
-		$oPage->p(Dict::S('UI:Schema:AbstractClass'));
-	}
-	else
-	{
-		$oPage->p(Dict::S('UI:Schema:NonAbstractClass'));
-	}
 
 	$aParentClasses = array();
 	foreach(MetaModel::EnumParentClasses($sClass) as $sParentClass)
@@ -690,6 +679,8 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		$oPage->add_ready_script('$("#ClassHierarchy").treeview();');	
 	}
 	$oPage->p('');
+	$oPage->add("</div>");
+
 	$oPage->AddTabContainer('details');
 	$oPage->SetCurrentTabContainer('details');
 	// List the attributes of the object
@@ -765,9 +756,9 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		{
 			$sAllowedValues = '';
 		}
-		$sAttrValueEscpd = htmlentities($sValue,ENT_QUOTES,"UTF-8");
-		$sAttrTypeDescEscpd = htmlentities($sValue,ENT_QUOTES,"UTF-8");
-		$sAttrOriginEscpd = htmlentities($sValue,ENT_QUOTES,"UTF-8");
+		$sAttrValueEscpd = str_replace("'","\'",$sValue);
+		$sAttrTypeDescEscpd = str_replace("'", "\'",$sTypeDesc);
+		$sAttrOriginEscpd = str_replace("'", "\'", $sOrigin);
 
 		$aDetails[] = array('code' => "<span id=\"attr". $sAttrCode."\"><span class=\"attrLabel\">". $oAttDef->GetLabel() ."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" . $oAttDef->GetCode() ."</span><span class=\"parenthesis\">)</span></span>",
 							'type' =>  "<span id=\"type". $sAttrCode."\"><span class=\"attrLabel\">". $sTypeDict ."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" . $sType ."</span><span class=\"parenthesis\">)</span></span>",
@@ -817,15 +808,10 @@ EOF
 				  .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);		
 				for(var origin of aOrigins)
 				{
-					console.log($('#originColor'+origin).parent());
 					$('.originColor'+origin).parent().css('background-color',aColors(aOrigins.indexOf(origin)));
 				}
-				console.log($(".listResults").find('td:nth-child(1),th:nth-child(1)'));
 				Array.prototype.forEach.call($(".listResults").find('td:nth-child(1),th:nth-child(1)'), e =>{
-					console.log($(e).attr("class"));
 					$(e).removeClass("header").addClass("originColor");
-					console.log($(e).attr("class"));
-
 				}
 				);
 
@@ -861,6 +847,7 @@ if (!empty($sContext))
 	$sContext = '&'.$sContext;
 }
 $operation = utils::ReadParam('operation', '');
+$sClass = utils::ReadParam('class', 'logRealObject', false, 'class');
 
 $oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
 $oPage->no_cache();
@@ -874,22 +861,38 @@ $oPage->add_script(
 EOF
 );
 
-$oPage->add(" <div class='ui-widget'> </div><div id='split-pane'>");
+$oPage->add(" <div class='ui-widget'> </div><div id='dataModelSplitPane'>");
 $oPage->add("<div class='ui-layout-west data-model-viewer'> ");
 DisplayClassesList($oPage, $sContext);
 $oPage->add("</div>");
 $oPage->add("<div class='ui-layout-center data-model-viewer'>");
+
+//scrollable class name / icon
+$oPage->add("<div id=\"dataModelScrollableDiv\">");
+$oPage->add("<div id=\"dataModelScrollableClassIcon\">" . MetaModel::GetClassIcon($sClass) . "</div>");
+$oPage->add("<h2 id=\"dataModelScrollableClassName\"><span class=\"attrLabel\">" . MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" .$sClass."</span><span class=\"parenthesis\">)</span></h2>");
+$oPage->add("</div>");
+
+//content header
+$oPage->add("<div id=\"dataModelHeader\">");
 $oPage->add("
 		<label id=\"displaySelectorLabel\"> <h1> ". Dict::S('UI:Schema:DisplayLabel') .
-		"<select id=\"displaySelector\">
+	"<select id=\"displaySelector\">
 			<option value=\"labelandcode\">" . Dict::S('UI:Schema:DisplaySelector/LabelAndCode') . "</option>
 			<option value=\"label\">" . Dict::S('UI:Schema:DisplaySelector/Label') . "</option>
 			<option value=\"code\">" . Dict::S('UI:Schema:DisplaySelector/Code') . "</option>
 		</select> </h1></label>
 		 <br/>");
-$sDisplayDropDownValue = htmlentities(appUserPreferences::GetPref('datamodel_viewer_display_granularity','labelandcode'),ENT_QUOTES,"UTF-8");
+$oPage->add("<div id=\"dataModelClassIcon\">" . MetaModel::GetClassIcon($sClass) . "</div>");
+$sClassDescritpion = MetaModel::GetClassDescription($sClass);
 
-$sClass = utils::ReadParam('class', 'logRealObject', false, 'class');
+$oPage->add("<h2 id=\"classDetailsClassName\"><span class=\"attrLabel\">".MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" .$sClass."</span><span class=\"parenthesis\">)</span>" . ($sClassDescritpion == "" ? "" : " - " . $sClassDescritpion) . "</h2>\n");
+if (MetaModel::IsAbstract($sClass))
+{
+	$oPage->p(Dict::S('UI:Schema:AbstractClass'));
+}
+
+$sDisplayDropDownValue = htmlentities(appUserPreferences::GetPref('datamodel_viewer_display_granularity','labelandcode'),ENT_QUOTES,"UTF-8");
 
 //granularity displayer listener
 $oPage->add_ready_script(
@@ -941,8 +944,8 @@ $oPage->add("</div>");
 //split the page in 2 panels
 $oPage->add_ready_script(
 <<<EOF
-		$('#split-pane').layout({
-		west : {size: 400, minSize : 200,paneSize : 600}
+		$('#dataModelSplitPane').layout({
+		west : {size: "20%", minSize : 200,paneSize : 600}
 		});
 		// Layout
 		   $("#search-model").result(function(){

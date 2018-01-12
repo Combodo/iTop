@@ -2399,10 +2399,31 @@ table.listResults .originColor{
 	display :inline-block;
 }
 
-#split-pane{
+#dataModelSplitPane{
 	height:100%;
 }
-#dataModelClassIcon{
+#dataModelClassIcon, dataModelScrollableDiv > img{
 	padding-right: 13px;
 	display: inline;
+}
+
+#dataModelScrollableDiv{
+	background-color: #eee;
+	position: fixed;
+	z-index: -1;
+    width: 100%
+}
+#dataModelHeader{
+	background-color: white;
+}
+
+#dataModelSplitPane  #tabbedContent_0{
+	z-index: -2;
+}
+
+#dataModelScrollableClassName, #dataModelScrollableClassIcon{
+	display: inline;
+}
+dataModelScrollableDiv > img {
+  padding-right: 5px;
 }
