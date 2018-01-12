@@ -52,8 +52,8 @@ class SetupUtils
 	const PHP_MIN_VERSION = '5.3.6';
 	const MYSQL_MIN_VERSION = '5.0.0';
 	// versions that will be the minimum in next iTop major release (warning if not met)
-	const PHP_NEXT_MIN_VERSION = '5.6.32';
-	const MYSQL_NEXT_MIN_VERSION = '5.6.38';
+	const PHP_NEXT_MIN_VERSION = '5.6.32'; // further versions will contain only bug fixes (see http://php.net/supported-versions.php)
+	const MYSQL_NEXT_MIN_VERSION = '5.5.58'; // last 5.5 version at this time - 5.5 branch is packaged in Debian 8 Jessie for example (see N°942)
 	// First recent version that is not yet validated by Combodo (warning)
 	const PHP_NOT_VALIDATED_VERSION = '7.1.9';
 
