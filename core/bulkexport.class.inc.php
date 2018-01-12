@@ -74,7 +74,11 @@ class BulkExportResult extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeLongText("search", array("allowed_values"=>null, "sql"=>"search", "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLongText("status_info", array("allowed_values"=>null, "sql"=>"status_info", "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
 	}
-	
+
+	/**
+	 * @throws CoreUnexpectedValue
+	 * @throws Exception
+	 */
 	public function ComputeValues()
 	{
 		$this->Set('user_id', UserRights::GetUserId());
@@ -150,9 +154,9 @@ abstract class BulkExport
 		
 	/**
 	 * Find the first class capable of exporting the data in the given format
-	 * @param string $sFormat The lowercase format (e.g. html, csv, spreadsheet, xlsx, xml, json, pdf...)
+	 * @param string $sFormatCode The lowercase format (e.g. html, csv, spreadsheet, xlsx, xml, json, pdf...)
 	 * @param DBSearch $oSearch The search/filter defining the set of objects to export or null when listing the supported formats
-	 * @return iBulkExport|NULL
+	 * @return BulkExport|NULL
 	 */
 	static public function FindExporter($sFormatCode, $oSearch = null)
 	{
@@ -202,7 +206,11 @@ abstract class BulkExport
 		}
 		return $oBulkExporter;
 	}
-	
+
+	/**
+	 * @param $data
+	 * @throws Exception
+	 */
 	public function AppendToTmpFile($data)
 	{
 		if ($this->sTmpFile == '')
@@ -221,10 +229,10 @@ abstract class BulkExport
 	{
 		return $this->sTmpFile;
 	}
-	
+
 	/**
 	 * Lists all possible export formats. The output is a hash array in the form: 'format_code' => 'localized format label'
-	 * @return multitype:string
+	 * @return array :string
 	 */
 	static public function FindSupportedFormats()
 	{
@@ -288,13 +296,21 @@ abstract class BulkExport
 	{
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetHeader()
 	{
+		return '';
 	}
 	abstract public function GetNextChunk(&$aStatus);
+
+	/**
+	 * @return string
+	 */
 	public function GetFooter()
 	{
-		
+		return '';
 	}
 	
 	public function SaveState()
@@ -355,13 +371,21 @@ abstract class BulkExport
 	{
 		
 	}
+
+	/**
+	 * @return string
+	 */
 	public function GetMimeType()
 	{
-		
+		return '';
 	}
+
+	/**
+	 * @return string
+	 */
 	public function GetFileExtension()
 	{
-		
+		return '';
 	}
 	public function GetCharacterSet()
 	{
@@ -388,6 +412,11 @@ abstract class BulkExport
 		return $this->aStatusInfo;
 	}
 
+	/**
+	 * @param $sExtension
+	 * @return string
+	 * @throws Exception
+	 */
 	protected function MakeTmpFile($sExtension)
 	{
 		if(!is_dir(APPROOT."data/bulk_export"))
@@ -401,7 +430,6 @@ abstract class BulkExport
 		}
 
 		$iNum = rand();
-		$sFileName = '';
 		do
 		{
 			$iNum++;

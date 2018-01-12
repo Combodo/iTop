@@ -37,6 +37,7 @@ require_once(APPROOT.'/core/bulkexport.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
+
 function ReportErrorAndExit($sErrorMessage)
 {
 	if (utils::IsModeCLI())
@@ -44,14 +45,14 @@ function ReportErrorAndExit($sErrorMessage)
 		$oP = new CLIPage("iTop - Export");
 		$oP->p('ERROR: '.$sErrorMessage);
 		$oP->output();
-		exit -1;
+		exit(-1);
 	}
 	else
 	{
 		$oP = new WebPage("iTop - Export");
 		$oP->p('ERROR: '.$sErrorMessage);
 		$oP->output();
-		exit -1;		
+		exit(-1);
 	}
 }
 
@@ -63,7 +64,7 @@ function ReportErrorAndUsage($sErrorMessage)
 		$oP->p('ERROR: '.$sErrorMessage);
 		Usage($oP);
 		$oP->output();
-		exit -1;
+		exit(-1);
 	}
 	else
 	{
@@ -71,7 +72,7 @@ function ReportErrorAndUsage($sErrorMessage)
 		$oP->p('ERROR: '.$sErrorMessage);
 		Usage($oP);
 		$oP->output();
-		exit -1;
+		exit(-1);
 	}
 }
 
@@ -117,10 +118,10 @@ function Usage(Page $oP)
 			}
 		}
 	}
-	if (!Utils::IsModeCLI())
-	{
-		//$oP->add('</pre>');
-	}
+	//if (!Utils::IsModeCLI())
+	//{
+	//	$oP->add('</pre>');
+	//}
 }
 
 function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExceptionMessage = '')
@@ -399,7 +400,7 @@ EOF
 		{
 			if (utils::IsModeCLI())
 			{
-				Usage();
+				Usage($oP);
 				ReportErrorAndExit("No expression or query phrasebook identifier supplied.");
 			}
 			else
@@ -442,9 +443,7 @@ EOF
  * @param string $sExpression The OQL query to export or null
  * @param string $sQueryId The entry in the query phrasebook if $sExpression is null
  * @param string $sFormat The code of export format: csv, pdf, html, xlsx
- * @param boolean $bWithArchive
- * @throws MissingQueryArgument
- * @return Ambigous <iBulkExport, NULL>
+ * @return BulkExport
  */
 function CheckParameters($sExpression, $sQueryId, $sFormat)
 {
@@ -511,14 +510,17 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 	}
 	catch(MissingQueryArgument $e)
 	{
+		$oSearch = null;
 		ReportErrorAndUsage("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
 	}
 	catch(OQLException $e)
 	{
+		$oSearch = null;
 		ReportErrorAndExit("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
 	}
 	catch(Exception $e)
 	{
+		$oSearch = null;
 		ReportErrorAndExit($e->getMessage());
 	}
 	
@@ -577,7 +579,7 @@ if (utils::IsModeCLI())
 	catch(Exception $e)
 	{
 		echo "Error: ".$e->GetMessage()."<br/>\n";
-		exit -2;
+		exit(-2);
 	}
 	
 	$sAuthUser = utils::ReadParam('auth_user', null, true /* Allow CLI */, 'raw_data');
