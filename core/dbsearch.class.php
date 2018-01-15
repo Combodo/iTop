@@ -49,7 +49,14 @@ abstract class DBSearch
 
 	public function __construct()
 	{
+		$this->Init();
+	}
+
+	protected function Init()
+	{
+		// Set the obsolete and archive modes to the default ones
 		$this->m_bArchiveMode = utils::IsArchiveMode();
+		$this->m_bShowObsoleteData = true;
 	}
 
 	/**
@@ -238,7 +245,12 @@ abstract class DBSearch
 		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
 		return base64_encode(serialize(array($sOql, $this->GetInternalParams(), $this->m_aModifierProperties)));
 	}
-	
+
+	/**
+	 * @param string $sValue Serialized OQL query
+	 *
+	 * @return \DBSearch
+	 */
 	static public function unserialize($sValue)
 	{
 		$aData = unserialize(base64_decode($sValue));
@@ -289,7 +301,10 @@ abstract class DBSearch
 	 */
 	static public function FromOQL($sQuery, $aParams = null)
 	{
-		if (empty($sQuery)) return null;
+		if (empty($sQuery))
+		{
+			return null;
+		}
 
 		// Query caching
 		$sQueryId = md5($sQuery);
@@ -349,6 +364,10 @@ abstract class DBSearch
 		{
 			$oResultFilter->SetInternalParams($aParams);
 		}
+
+		// Set the default fields
+		$oResultFilter->Init();
+
 		return $oResultFilter;
 	}
 
@@ -361,7 +380,10 @@ abstract class DBSearch
 	{
 		$sSQL = $this->MakeSelectQuery($aOrderBy, $aArgs);
 		$resQuery = CMDBSource::Query($sSQL);
-		if (!$resQuery) return;
+		if (!$resQuery)
+		{
+			return;
+		}
 
 		if (count($aColumns) == 0)
 		{
@@ -562,6 +584,10 @@ abstract class DBSearch
 		return $oSQLQuery;
 	}
 
+	public abstract function GetSQLQueryStructure(
+		$aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null
+	);
+
 	////////////////////////////////////////////////////////////////////////////
 	//
 	// Cache/Trace/Log queries
@@ -673,7 +699,10 @@ abstract class DBSearch
 
 	public static function RecordQueryTrace()
 	{
-		if (!self::$m_bTraceQueries) return;
+		if (!self::$m_bTraceQueries)
+		{
+			return;
+		}
 
 		$iOqlCount = count(self::$m_aQueriesLog);
 		$iSqlCount = 0;
@@ -711,6 +740,7 @@ abstract class DBSearch
 		{
 			// Merge the new queries into the existing log
 			include($sAllQueries);
+			$aQueriesLog = array();
 			foreach (self::$m_aQueriesLog as $sQueryId => $aOqlData)
 			{
 				if (!array_key_exists($sQueryId, $aQueriesLog))
@@ -729,7 +759,10 @@ abstract class DBSearch
 
 	protected static function DbgTrace($value)
 	{
-		if (!self::$m_bDebugQuery) return;
+		if (!self::$m_bDebugQuery)
+		{
+			return;
+		}
 		$aBacktrace = debug_backtrace();
 		$iCallStackPos = count($aBacktrace) - self::$m_bDebugQuery;
 		$sIndent = ""; 
@@ -745,11 +778,7 @@ abstract class DBSearch
 		$sCallers = "Callstack: ".implode(', ', $aCallers);
 		$sFunction = "<b title=\"$sCallers\">".$aBacktrace[1]["function"]."</b>";
 
-		if (is_string($value))
-		{
-			echo "$sIndent$sFunction: $value<br/>\n";
-		}
-		else if (is_object($value))
+		if (is_object($value))
 		{
 			echo "$sIndent$sFunction:\n<pre>\n";
 			print_r($value);
@@ -805,7 +834,10 @@ abstract class DBSearch
 			$aUpdates = array();
 			foreach (MetaModel::EnumParentClasses($sFinalClass, ENUM_PARENT_CLASSES_ALL) as $sParentClass)
 			{
-				if (!MetaModel::IsValidAttCode($sParentClass, 'archive_flag')) continue;
+				if (!MetaModel::IsValidAttCode($sParentClass, 'archive_flag'))
+				{
+					continue;
+				}
 
 				$sTable = MetaModel::DBGetTable($sParentClass);
 				$aUpdates[] = "`$sTable`.`archive_flag` = $iFlag";

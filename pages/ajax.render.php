@@ -2155,6 +2155,7 @@ EOF
 				if ($sExpression === null)
 				{
 					$oQuerySearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $iQueryId));
+					$oQuerySearch->UpdateContextFromUser();
 					$oQueries = new DBObjectSet($oQuerySearch);
 					if ($oQueries->Count() > 0)
 					{
@@ -2169,6 +2170,7 @@ EOF
 				if($sExpression !== null)
 				{ 
 					$oSearch = DBObjectSearch::FromOQL($sExpression);
+					$oSearch->UpdateContextFromUser();
 					$oExporter = BulkExport::FindExporter($sFormat, $oSearch);
 					$oExporter->SetObjectList($oSearch);
 					$oExporter->SetFormat($sFormat);

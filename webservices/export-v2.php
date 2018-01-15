@@ -137,6 +137,7 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oP->add('<td><select name="query" id="select_phrasebook">');
 	$oP->add('<option value="">'.Dict::S('UI:SelectOne').'</option>');
 	$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL');
+    $oSearch->UpdateContextFromUser();
 	$oQueries = new DBObjectSet($oSearch);
 	while ($oQuery = $oQueries->Fetch())
 	{
@@ -239,6 +240,7 @@ EOF
 		try
 		{
 			$oExportSearch = DBObjectSearch::FromOQL($sExpression);
+			$oExportSearch->UpdateContextFromUser();
 		}
 		catch(OQLException $e)
 		{
@@ -257,11 +259,13 @@ EOF
 	{
 		$oP->add('<input type="hidden" name="expression" value="'.htmlentities($sExpression, ENT_QUOTES, 'UTF-8').'">');
 		$oExportSearch = DBObjectSearch::FromOQL($sExpression);
+        $oExportSearch->UpdateContextFromUser();
 	}
 	else
 	{
 		$oQuery = MetaModel::GetObject('QueryOQL', $sQueryId);
 		$oExportSearch = DBObjectSearch::FromOQL($oQuery->Get('oql'));
+        $oExportSearch->UpdateContextFromUser();
 		$oP->add('<input type="hidden" name="query" value="'.htmlentities($sQueryId, ENT_QUOTES, 'UTF-8').'">');
 	}
 	$aFormPartsByFormat = array();
@@ -379,6 +383,7 @@ EOF
 		if ($sQueryId !== null)
 		{
 			$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
+            $oSearch->UpdateContextFromUser();
 			$oQueries = new DBObjectSet($oSearch);
 			if ($oQueries->Count() > 0)
 			{
@@ -406,6 +411,7 @@ EOF
 			}
 		}
 	}
+
 	
 	if ($sFormat !== null)
 	{
@@ -458,7 +464,8 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 	if ($sExpression === null)
 	{
 		$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
-		$oQueries = new DBObjectSet($oSearch);
+        $oSearch->UpdateContextFromUser();
+        $oQueries = new DBObjectSet($oSearch);
 		if ($oQueries->Count() > 0)
 		{
 			$oQuery = $oQueries->Fetch();
@@ -478,6 +485,7 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 	try
 	{
 		$oSearch = DBObjectSearch::FromOQL($sExpression);
+        $oSearch->UpdateContextFromUser();
 		$aArgs = array();
 		foreach($oSearch->GetQueryParams() as $sParam => $foo)
 		{
@@ -608,6 +616,7 @@ if (utils::IsModeCLI())
 	if ($sExpression === null)
 	{
 		$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL WHERE id = :query_id', array('query_id' => $sQueryId));
+        $oSearch->UpdateContextFromUser();
 		$oQueries = new DBObjectSet($oSearch);
 		if ($oQueries->Count() > 0)
 		{
@@ -622,6 +631,7 @@ if (utils::IsModeCLI())
 	try
 	{
 		$oSearch = DBObjectSearch::FromOQL($sExpression);
+        $oSearch->UpdateContextFromUser();
 		$aArgs = array();
 		foreach($oSearch->GetQueryParams() as $sParam => $foo)
 		{
