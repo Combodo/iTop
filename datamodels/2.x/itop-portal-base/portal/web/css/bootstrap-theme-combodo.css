@@ -1132,7 +1132,7 @@ th {
   background-color: #fdf5d0;
 }
 .table-hover > tbody > tr:hover {
-  background-color: #f5f5f5;
+  background-color: #fdf5d0;
 }
 table col[class*="col-"] {
   position: static;
@@ -4953,6 +4953,16 @@ label {
 .input-group span.twitter-typeahead .tt-suggestion.tt-cursor, .input-group span.twitter-typeahead .tt-suggestion:hover, .input-group span.twitter-typeahead .tt-suggestion:focus {
   color: #fff;
   background-color: #ea7d1e;
+}
+/* Overriding DataTable */
+table.dataTable tbody > tr.selected, table.dataTable tbody > tr > .selected {
+  background-color: #fbeb9f;
+}
+table.dataTable tbody tr.selected, table.dataTable tbody th.selected, table.dataTable tbody td.selected {
+  color: #777;
+}
+table.dataTable tbody tr.selected a, table.dataTable tbody th.selected a, table.dataTable tbody td.selected a {
+  color: #da7014;
 }
 /* Form display modes */
 @media (min-width: 768px) {
