@@ -1497,7 +1497,12 @@ EOF
 						$aScores[$sChoiceId][$sModuleId] = true;
 					}
 				}
-				if (count($aScores[$sChoiceId]) == count($aChoice['modules']))
+				// Used for migration from 1.3.x or before
+				// Accept that the new version can have one new module than the previous version
+				// The option is still selected
+				$iSelected = count($aScores[$sChoiceId]);
+				$iNeeded = count($aChoice['modules']);
+				if (($iSelected > 0) && (($iNeeded - $iSelected) < 2))
 				{
 					// All the modules are installed, this choice is selected
 					$aDefaults[$sChoiceId] = $sChoiceId;
