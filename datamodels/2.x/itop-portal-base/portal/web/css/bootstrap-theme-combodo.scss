@@ -1361,13 +1361,13 @@ th {
     border-bottom-width: 2px
 }
 .table-striped>tbody>tr:nth-of-type(odd) {
-    background-color: #f9f9f9
+    background-color: $table-bg-accent;
 }
 .table-striped>tbody>tr:hover {
-	background-color: #fdf5d0;
+	background-color: $table-bg-hover;
 }
 .table-hover>tbody>tr:hover {
-    background-color: #f5f5f5
+    background-color: $table-bg-hover;
 }
 table col[class*="col-"] {
     position: static;
@@ -6042,6 +6042,25 @@ label {
 .input-group span.twitter-typeahead .tt-suggestion:focus{
     color: $btn-primary-color;
     background-color: $btn-primary-bg;
+}
+/* Overriding DataTable */
+table.dataTable{
+    tbody{
+        >tr.selected,
+        >tr>.selected{
+            background-color: $table-bg-active;
+        }
+
+        tr.selected,
+        th.selected,
+        td.selected {
+            color: $gray;
+
+            a {
+                color: $link-color;
+            }
+        }
+    }
 }
 /* Form display modes */
 @media (min-width: 768px) {
