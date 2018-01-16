@@ -846,8 +846,8 @@ if (!empty($sContext))
 {
 	$sContext = '&'.$sContext;
 }
-$operation = utils::ReadParam('operation', '');
-$sClass = utils::ReadParam('class', 'logRealObject', false, 'class');
+$operation = utils::ReadParam('operation', 'details_class');
+$sClass = utils::ReadParam('class', 'Organization', false, 'class');
 
 $oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
 $oPage->no_cache();
@@ -933,7 +933,7 @@ EOF
 switch($operation)
 {
 	case 'details_class':
-	$sClass = utils::ReadParam('class', 'logRealObject', false, 'class');
+	$sClass = utils::ReadParam('class', 'Organization', false, 'class');
 	DisplayClassDetails($oPage, $sClass, $sContext);
 	break;
 	default:
