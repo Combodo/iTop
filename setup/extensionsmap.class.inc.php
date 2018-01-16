@@ -667,6 +667,28 @@ class iTopExtensionsMap
 	}
 	
 	/**
+	 * Tells if the given module name is "chosen" since it is part of a "chosen" extension (in the specified source dir)
+	 * @param string $sModuleNameToFind
+	 * @param string $sInSourceOnly
+	 * @return boolean
+	 */
+	public function ModuleIsChosenAsPartOfAnExtension($sModuleNameToFind, $sInSourceOnly = iTopExtension::SOURCE_REMOTE)
+	{
+		$bChosen = false;
+		
+		foreach($this->GetAllExtensions() as $oExtension)
+		{
+			if (($oExtension->sSource == $sInSourceOnly) &&
+				($oExtension->bMarkedAsChosen == true) &&
+				(array_key_exists($sModuleNameToFind, $oExtension->aModuleVersion)))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * Replace a given set of stand-alone modules by one single "extension"
 	 * @param string[] $aModules
 	 * @param iTopExtension $oNewExtension

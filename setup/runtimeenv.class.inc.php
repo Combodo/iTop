@@ -359,6 +359,26 @@ class RunTimeEnvironment
 	}
 
 	/**
+	 * Return an array with extra directories to scan for extensions/modules to install
+	 * @return string[]
+	 */
+	protected function GetExtraDirsToScan()
+	{
+		// Do nothing, overload this method if needed
+		return array();
+	}
+	
+	/**
+	 * Decide whether or not the given extension is selected for installation
+	 * @param iTopExtension $oExtension
+	 * @return boolean
+	 */
+	protected function IsExtensionSelected(iTopExtension $oExtension)
+	{
+		return ($oExtension->sSource == iTopExtension::SOURCE_REMOTE);
+	}
+	
+	/**
 	 * Get the installed modules (only the installed ones)	
 	 */	
 	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
@@ -378,7 +398,10 @@ class RunTimeEnvironment
 		{
 			$aDirsToCompile[] = $sExtraDir;
 		}
-		
+
+		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
+		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
+				
 		$aRet = array();
 
 		// Determine the installed modules and extensions
@@ -393,10 +416,14 @@ class RunTimeEnvironment
 		// target environment (data/<target-env>-modules)
 		// The actual choices will be recorded by RecordInstallation below
 		$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv);
+		foreach($aExtraDirs as $sDir)
+		{
+			$this->oExtensionsMap->ReadDir($sDir, iTopExtension::SOURCE_REMOTE);
+		}
 		$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
 		foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension)
 		{
-			if($oExtension->sSource == iTopExtension::SOURCE_REMOTE)
+			if($this->IsExtensionSelected($oExtension))
 			{
 				$this->oExtensionsMap->MarkAsChosen($oExtension->sCode);
 			}
@@ -426,7 +453,7 @@ class RunTimeEnvironment
 		{
 			$sModule = $oModule->GetName();
 			$sModuleRootDir = $oModule->GetRootDir();
-			$bIsExtra = (strpos($sModuleRootDir, $sExtraDir) !== false);
+			$bIsExtra = $this->oExtensionsMap->ModuleIsChosenAsPartOfAnExtension($sModule, iTopExtension::SOURCE_REMOTE);
 			if (array_key_exists($sModule, $aAvailableModules)) 
 			{
 				if (($aAvailableModules[$sModule]['version_db'] != '') ||  $bIsExtra && !$oModule->IsAutoSelect()) //Extra modules are always unless they are 'AutoSelect'
