@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,20 +19,16 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
-use \Exception;
-use \Silex\Application;
-use \utils;
-use \UserRights;
-use \Dict;
-use \IssueLog;
-use \MetaModel;
-use \DBSearch;
-use \DBObjectSearch;
-use \DBObjectSet;
-use \FieldExpression;
-use \VariableExpression;
-use \BinaryExpression;
-use \Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
+use Silex\Application;
+use UserRights;
+use IssueLog;
+use MetaModel;
+use DBSearch;
+use DBObjectSearch;
+use DBObjectSet;
+use FieldExpression;
+use VariableExpression;
+use BinaryExpression;
 
 /**
  * SecurityHelper class

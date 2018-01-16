@@ -19,24 +19,21 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use \Silex\Application;
-use \Symfony\Component\HttpFoundation\Request;
-use \Exception;
-use \UserRights;
-use \Dict;
-use \MetaModel;
-use \DBSearch;
-use \DBObjectSearch;
-use \DBObjectSet;
-use \DBObject;
-use \BinaryExpression;
-use \FieldExpression;
-use \VariableExpression;
-use \Combodo\iTop\Portal\Helper\ApplicationHelper;
-use \Combodo\iTop\Portal\Helper\SecurityHelper;
-use \Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
-use \Combodo\iTop\Portal\Brick\AbstractBrick;
-use \Combodo\iTop\Portal\Brick\BrowseBrick;
+use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
+use UserRights;
+use Dict;
+use MetaModel;
+use DBSearch;
+use DBObjectSet;
+use BinaryExpression;
+use FieldExpression;
+use VariableExpression;
+use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Combodo\iTop\Portal\Helper\SecurityHelper;
+use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
+use Combodo\iTop\Portal\Brick\AbstractBrick;
+use Combodo\iTop\Portal\Brick\BrowseBrick;
 
 class BrowseBrickController extends BrickController
 {

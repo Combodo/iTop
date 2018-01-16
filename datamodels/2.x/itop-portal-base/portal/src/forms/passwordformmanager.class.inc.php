@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,14 +19,13 @@
 
 namespace Combodo\iTop\Portal\Form;
 
-use \Exception;
-use \CMDBSource;
-use \Dict;
-use \UserRights;
-use \Combodo\iTop\Form\FormManager;
-use \Combodo\iTop\Form\Form;
-use \Combodo\iTop\Form\Field\HiddenField;
-use \Combodo\iTop\Form\Field\PasswordField;
+use Exception;
+use Dict;
+use UserRights;
+use Combodo\iTop\Form\FormManager;
+use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\Field\HiddenField;
+use Combodo\iTop\Form\Field\PasswordField;
 
 /**
  * Description of passwordformmanager

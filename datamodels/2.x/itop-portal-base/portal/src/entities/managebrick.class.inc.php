@@ -19,11 +19,11 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use \Combodo\iTop\DesignElement;
-use \Combodo\iTop\Portal\Brick\PortalBrick;
 use DOMFormatException;
 use DBSearch;
 use MetaModel;
+use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Brick\PortalBrick;
 
 /**
  * Description of ManageBrick

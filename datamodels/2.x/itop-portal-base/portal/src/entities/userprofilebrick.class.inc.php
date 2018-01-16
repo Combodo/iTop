@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,9 +18,8 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use \DOMFormatException;
-use \Combodo\iTop\DesignElement;
-use \Combodo\iTop\Portal\Brick\PortalBrick;
+use DOMFormatException;
+use Combodo\iTop\DesignElement;
 
 /**
  * Description of UserProfileBrick

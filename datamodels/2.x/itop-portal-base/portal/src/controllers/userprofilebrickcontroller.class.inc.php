@@ -19,19 +19,19 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use \Exception;
-use \IssueLog;
-use \utils;
-use \MetaModel;
-use \UserRights;
-use \Silex\Application;
-use \Symfony\Component\HttpFoundation\Request;
-use \Combodo\iTop\Portal\Helper\ApplicationHelper;
-use \Combodo\iTop\Portal\Brick\UserProfileBrick;
-use \Combodo\iTop\Portal\Controller\ObjectController;
-use \Combodo\iTop\Portal\Form\PreferencesFormManager;
-use \Combodo\iTop\Portal\Form\PasswordFormManager;
-use \Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
+use Exception;
+use IssueLog;
+use utils;
+use MetaModel;
+use UserRights;
+use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
+use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Combodo\iTop\Portal\Brick\UserProfileBrick;
+use Combodo\iTop\Portal\Controller\ObjectController;
+use Combodo\iTop\Portal\Form\PreferencesFormManager;
+use Combodo\iTop\Portal\Form\PasswordFormManager;
+use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 
 class UserProfileBrickController extends BrickController
 {

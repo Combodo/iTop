@@ -19,13 +19,13 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use \Silex\Application;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpKernel\HttpKernelInterface;
-use \MetaModel;
-use \Combodo\iTop\Portal\Helper\ApplicationHelper;
-use \Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
-use \Combodo\iTop\Portal\Helper\SecurityHelper;
+use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use MetaModel;
+use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
+use Combodo\iTop\Portal\Helper\SecurityHelper;
 
 class CreateBrickController extends BrickController
 {

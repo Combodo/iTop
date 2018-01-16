@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -43,8 +43,8 @@ require_once __DIR__ . '/../src/helpers/lifecyclevalidatorhelper.class.inc.php';
 require_once __DIR__ . '/../src/helpers/securityhelper.class.inc.php';
 require_once __DIR__ . '/../src/helpers/applicationhelper.class.inc.php';
 
-use \Silex\Application;
-use \Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Silex\Application;
+use Combodo\iTop\Portal\Helper\ApplicationHelper;
 
 // Stacking context tag so it knows we are in the portal
 $oContex = new ContextTag('GUI:Portal');

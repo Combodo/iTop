@@ -19,9 +19,9 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use \DOMFormatException;
-use \Combodo\iTop\DesignElement;
-use \Combodo\iTop\Portal\Brick\PortalBrick;
+use DOMFormatException;
+use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Brick\PortalBrick;
 
 /**
  * Description of BrowseBrick

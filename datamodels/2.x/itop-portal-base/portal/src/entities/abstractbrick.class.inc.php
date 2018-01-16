@@ -22,10 +22,10 @@ namespace Combodo\iTop\Portal\Brick;
 require_once APPROOT . '/core/moduledesign.class.inc.php';
 require_once APPROOT . '/setup/compiler.class.inc.php';
 
-use \DOMXPath;
-use \DOMFormatException;
-use \ModuleDesign;
-use \Combodo\iTop\DesignElement;
+use DOMXPath;
+use DOMFormatException;
+use ModuleDesign;
+use Combodo\iTop\DesignElement;
 
 /**
  * Description of AbstractBrick

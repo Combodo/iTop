@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2018Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,31 +19,27 @@
 
 namespace Combodo\iTop\Portal\Form;
 
-use \Exception;
-use \Silex\Application;
-use \utils;
-use \Dict;
-use \IssueLog;
-use \UserRights;
-use \MetaModel;
-use \CMDBSource;
-use \DBObject;
-use \DBObjectSet;
-use \DBSearch;
-use \DBObjectSearch;
-use \BinaryExpression;
-use \FieldExpression;
-use \ScalarExpression;
-use \DBObjectSetComparator;
-use \InlineImage;
-use \AttributeDateTime;
-use \AttachmentPlugIn;
-use \Combodo\iTop\Form\FormManager;
-use \Combodo\iTop\Form\Form;
-use \Combodo\iTop\Form\Field\Field;
-use \Combodo\iTop\Form\Field\FileUploadField;
-use \Combodo\iTop\Form\Field\LabelField;
-use \Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Exception;
+use Silex\Application;
+use utils;
+use Dict;
+use IssueLog;
+use UserRights;
+use MetaModel;
+use CMDBSource;
+use DBObject;
+use DBObjectSet;
+use DBSearch;
+use DBObjectSearch;
+use InlineImage;
+use AttributeDateTime;
+use AttachmentPlugIn;
+use Combodo\iTop\Form\FormManager;
+use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\Field\Field;
+use Combodo\iTop\Form\Field\FileUploadField;
+use Combodo\iTop\Form\Field\LabelField;
+use Combodo\iTop\Portal\Helper\ApplicationHelper;
 
 /**
  * Description of objectformmanager

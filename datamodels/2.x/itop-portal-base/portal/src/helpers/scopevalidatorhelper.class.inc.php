@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,15 +19,14 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
-use \Exception;
-use \DOMNodeList;
-use \DOMFormatException;
-use \utils;
-use \ProfilesConfig;
-use \MetaModel;
-use \DBSearch;
-use \DBUnionSearch;
-use \Combodo\iTop\DesignElement;
+use Exception;
+use DOMNodeList;
+use DOMFormatException;
+use utils;
+use ProfilesConfig;
+use MetaModel;
+use DBSearch;
+use DBUnionSearch;
 
 class ScopeValidatorHelper
 {

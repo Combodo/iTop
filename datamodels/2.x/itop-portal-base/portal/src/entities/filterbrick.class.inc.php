@@ -19,9 +19,9 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use \Combodo\iTop\DesignElement;
-use \Combodo\iTop\Portal\Brick\PortalBrick;
-use \Combodo\iTop\Portal\Brick\BrowseBrick;
+use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Brick\PortalBrick;
+use Combodo\iTop\Portal\Brick\BrowseBrick;
 
 /**
  * Description of FilterBrick

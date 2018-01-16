@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,9 +19,8 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use \ModuleDesign;
-use \Combodo\iTop\DesignElement;
-use \Combodo\iTop\Portal\Brick\AbstractBrick;
+use ModuleDesign;
+use Combodo\iTop\DesignElement;
 
 /**
  * Description of PortalBrick

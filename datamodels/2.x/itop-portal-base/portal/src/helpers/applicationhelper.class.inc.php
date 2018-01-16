@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,26 +19,24 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
-use \Exception;
-use \Silex\Application;
-use \Symfony\Component\Debug\ErrorHandler;
-use \Symfony\Component\Debug\ExceptionHandler;
-use \Symfony\Component\HttpFoundation\Request;
-use \Twig_Environment;
-use \Twig_SimpleFilter;
-use \Dict;
-use \utils;
-use \IssueLog;
-use \UserRights;
-use \CMDBSource;
-use \DOMFormatException;
-use \ModuleDesign;
-use \MetaModel;
-use \DBObjectSearch;
-use \DBObjectSet;
-use \iPortalUIExtension;
-use \ApplicationContext;
-use \Combodo\iTop\Portal\Brick\AbstractBrick;
+use Exception;
+use Silex\Application;
+use Symfony\Component\Debug\ErrorHandler;
+use Symfony\Component\Debug\ExceptionHandler;
+use Twig_Environment;
+use Twig_SimpleFilter;
+use Dict;
+use utils;
+use IssueLog;
+use UserRights;
+use DOMFormatException;
+use ModuleDesign;
+use MetaModel;
+use DBObjectSearch;
+use DBObjectSet;
+use iPortalUIExtension;
+use ApplicationContext;
+use Combodo\iTop\Portal\Brick\AbstractBrick;
 
 /**
  * Contains static methods to help loading / registering classes of the application.

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,20 +19,17 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
-use \Exception;
-use \Silex\Application;
-use \DOMNodeList;
-use \DOMFormatException;
-use \UserRights;
-use \DBObject;
-use \DBSearch;
-use \DBObjectSet;
-use \BinaryExpression;
-use \FieldExpression;
-use \ScalarExpression;
-use \iTopObjectCopier;
-use \Combodo\iTop\DesignElement;
-use \Combodo\iTop\Portal\Brick\Portalbrick;
+use Exception;
+use Silex\Application;
+use DOMNodeList;
+use DOMFormatException;
+use UserRights;
+use DBObject;
+use DBSearch;
+use DBObjectSet;
+use BinaryExpression;
+use FieldExpression;
+use ScalarExpression;
 
 class ContextManipulatorHelper
 {
