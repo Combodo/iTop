@@ -1064,8 +1064,7 @@ class utils
 	}
 
     /**
-     * Returns the absolute URL to the modules root path
-     * @return string ...
+     * @return string the absolute URL to the modules root path
      */                   
 	static public function GetAbsoluteUrlModulesRoot()
 	{
@@ -1073,33 +1072,67 @@ class utils
 		return $sUrl;
 	}
 
-    /**
-     * Returns the URL to a page that will execute the requested module page
-     *      
-     * To be compatible with this mechanism, the called page must include approot
-     * with an absolute path OR not include it at all (losing the direct access to the page)
-     * if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
-     * require_once(__DIR__.'/../../approot.inc.php');
-     *      
-     * @return string ...
-     */                   
+	/**
+	 * To be compatible with this mechanism, the called page must include approot with an absolute path OR not include
+	 * it at all (losing the direct access to the page) :
+	 *
+	 * ```php
+	 * if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+	 * require_once(__DIR__.'/../../approot.inc.php');
+	 * ```
+	 *
+	 * @param string $sModule
+	 * @param string $sPage
+	 * @param string[] $aArguments
+	 * @param string $sEnvironment
+	 *
+	 * @return string the URL to a page that will execute the requested module page, with query string values url encoded
+	 *
+	 * @see GetExecPageArguments can be used to submit using the GET method (see bug in N.1108)
+	 * @see GetAbsoluteUrlExecPage
+	 */
 	static public function GetAbsoluteUrlModulePage($sModule, $sPage, $aArguments = array(), $sEnvironment = null)
+	{
+		$aArgs = self::GetExecPageArguments($sModule, $sPage, $aArguments, $sEnvironment);
+		$sArgs = http_build_query($aArgs);
+
+		return self::GetAbsoluteUrlExecPage()."?".$sArgs;
+	}
+
+	/**
+	 * @param string $sModule
+	 * @param string $sPage
+	 * @param string[] $aArguments
+	 * @param string $sEnvironment
+	 *
+	 * @return string[] key/value pair for the exec page query string. <b>Warning</b> : values are not url encoded !
+	 * @throws \Exception if one of the argument has a reserved name
+	 */
+	static public function GetExecPageArguments($sModule, $sPage, $aArguments = array(), $sEnvironment = null)
 	{
 		$sEnvironment = is_null($sEnvironment) ? self::GetCurrentEnvironment() : $sEnvironment;
 		$aArgs = array();
-		$aArgs[] = 'exec_module='.$sModule;
-		$aArgs[] = 'exec_page='.$sPage;
-		$aArgs[] = 'exec_env='.$sEnvironment;
+		$aArgs['exec_module'] = $sModule;
+		$aArgs['exec_page'] = $sPage;
+		$aArgs['exec_env'] = $sEnvironment;
 		foreach($aArguments as $sName => $sValue)
 		{
-			if (($sName == 'exec_module')||($sName == 'exec_page')||($sName == 'exec_env'))
+			if (($sName == 'exec_module') || ($sName == 'exec_page') || ($sName == 'exec_env'))
 			{
 				throw new Exception("Module page: $sName is a reserved page argument name");
 			}
-			$aArgs[] = $sName.'='.urlencode($sValue);
+			$aArgs[$sName] = $sValue;
 		}
-		$sArgs = implode('&', $aArgs);
-		return self::GetAbsoluteUrlAppRoot().'pages/exec.php?'.$sArgs;
+
+		return $aArgs;
+	}
+
+	/**
+	 * @return string
+	 */
+	static public function GetAbsoluteUrlExecPage()
+	{
+		return self::GetAbsoluteUrlAppRoot().'pages/exec.php';
 	}
 
 	/**
