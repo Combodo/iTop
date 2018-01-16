@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015-2017 Combodo SARL
+// Copyright (C) 2015-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -15,10 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+
 /**
  * Data structures (i.e. PHP classes) to build and use relation graphs
  *
- * @copyright   Copyright (C) 2015-2017 Combodo SARL
+ * @copyright   Copyright (C) 2015-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * 
  */
@@ -38,8 +40,12 @@ class RelationObjectNode extends GraphNode
 	}
 
 	/**
-	 * Make a normalized ID to ensure the uniqueness of such a node	
-	 */	
+	 * Make a normalized ID to ensure the uniqueness of such a node
+	 *
+	 * @param string $oObject
+	 *
+	 * @return string
+	 */
 	public static function MakeId($oObject)
 	{
 		return get_class($oObject).'::'.$oObject->GetKey();
@@ -47,7 +53,11 @@ class RelationObjectNode extends GraphNode
 
 	/**
 	 * Formatting for GraphViz
-	 */	 	
+	 *
+	 * @param bool $bNoLabel
+	 *
+	 * @return string
+	 */
 	public function GetDotAttributes($bNoLabel = false)
 	{
 		$sDot = parent::GetDotAttributes();
@@ -76,7 +86,10 @@ class RelationObjectNode extends GraphNode
 
 	/**
 	 * Recursively mark the objects nodes as reached, unless we get stopped by a redundancy node or a 'not allowed' node
-	 */	 	
+	 *
+	 * @param string $sProperty
+	 * @param $value
+	 */
 	public function ReachDown($sProperty, $value)
 	{
 		if (is_null($this->GetProperty($sProperty)) && ($this->GetProperty($sProperty.'_allowed') !== false))
@@ -104,8 +117,15 @@ class RelationRedundancyNode extends GraphNode
 	}
 
 	/**
-	 * Make a normalized ID to ensure the uniqueness of such a node	
-	 */	
+	 * Make a normalized ID to ensure the uniqueness of such a node
+	 *
+	 * @param string $sRelCode
+	 * @param string $sNeighbourId
+	 * @param $oSourceObject
+	 * @param \DBObject $oSinkObject
+	 *
+	 * @return string
+	 */
 	public static function MakeId($sRelCode, $sNeighbourId, $oSourceObject, $oSinkObject)
 	{
 		return 'redundancy-'.$sRelCode.'-'.$sNeighbourId.'-'.get_class($oSinkObject).'::'.$oSinkObject->GetKey();
@@ -113,7 +133,11 @@ class RelationRedundancyNode extends GraphNode
 
 	/**
 	 * Formatting for GraphViz
-	 */	 	
+	 *
+	 * @param bool $bNoLabel
+	 *
+	 * @return string
+	 */
 	public function GetDotAttributes($bNoLabel = false)
 	{
 		$sDisplayThreshold = sprintf('%.1f', $this->GetProperty('threshold'));
@@ -123,7 +147,10 @@ class RelationRedundancyNode extends GraphNode
 
 	/**
 	 * Recursively mark the objects nodes as reached, unless we get stopped by a redundancy node
-	 */	 	
+	 *
+	 * @param string $sProperty
+	 * @param $value
+	 */
 	public function ReachDown($sProperty, $value)
 	{
 		$this->SetProperty($sProperty.'_count', $this->GetProperty($sProperty.'_count', 0) + 1);
@@ -145,6 +172,16 @@ class RelationRedundancyNode extends GraphNode
  */ 
 class RelationEdge extends GraphEdge
 {
+	/**
+	 * RelationEdge constructor.
+	 *
+	 * @param \SimpleGraph $oGraph
+	 * @param \GraphNode $oSourceNode
+	 * @param \GraphNode $oSinkNode
+	 * @param bool $bMustBeUnique
+	 *
+	 * @throws \SimpleGraphException
+	 */
 	public function __construct(SimpleGraph $oGraph, GraphNode $oSourceNode, GraphNode $oSinkNode, $bMustBeUnique = false)
 	{
 		$sId = $oSourceNode->GetId().'-to-'.$oSinkNode->GetId();
@@ -182,7 +219,9 @@ class RelationGraph extends SimpleGraph
 
 	/**
 	 * Add an object that will be the starting point for building the relations downstream
-	 */	 	
+	 *
+	 * @param \DBObject $oObject
+	 */
 	public function AddSourceObject(DBObject $oObject)
 	{
 		$oSourceNode = new RelationObjectNode($this, $oObject);
@@ -192,22 +231,28 @@ class RelationGraph extends SimpleGraph
 
 	/**
 	 * Add an object that will be the starting point for building the relations uptream
-	 */	 	
+	 *
+	 * @param \DBObject $oObject
+	 */
 	public function AddSinkObject(DBObject$oObject)
 	{
 		$oSinkNode = new RelationObjectNode($this, $oObject);
 		$oSinkNode->SetProperty('sink', true);
 		$this->aSinkNodes[$oSinkNode->GetId()] = $oSinkNode;
 	}
-	
+
 	/**
 	 * Add a 'context' OQL query, specifying extra objects to be marked as 'is_reached'
 	 * even though they are not part of the sources.
-	 * @param string $sOQL The OQL query defining the context objects 
+	 *
+	 * @param string $key
+	 * @param string $sOQL The OQL query defining the context objects
+	 *
+	 * @throws \Exception
 	 */
 	public function AddContextQuery($key, $sOQL)
 	{
-		if ($sOQL === '') return;
+		if ($sOQL === '') { return;}
 		
 		$oSearch = static::MakeSearch($sOQL);
 		$aAliases = $oSearch->GetSelectedClasses();
@@ -217,7 +262,6 @@ class RelationGraph extends SimpleGraph
 			throw new Exception("Invalid context query '$sOQL'. A context query must contain at least two columns. Columns: ".implode(', ', $aAliases).'. ');
 		}
 		$aAliasNames = array_keys($aAliases);
-		$sClassAlias = $oSearch->GetClassAlias();
 		$oCondition = new BinaryExpression(new FieldExpression('id', $aAliasNames[0]), '=', new VariableExpression('id'));
 		$oSearch->AddConditionExpression($oCondition);
 		
@@ -228,11 +272,14 @@ class RelationGraph extends SimpleGraph
 		}
 		$this->aContextSearches[$sClass][] = array('key' => $key, 'search' => $oSearch);
 	}
-	
+
 	/**
 	 * Determines if the given DBObject is part of a 'context'
+	 *
 	 * @param DBObject $oObj
+	 *
 	 * @return boolean
+	 * @throws \CoreException
 	 */
 	public function IsPartOfContext(DBObject $oObj, &$aRootCauses)
 	{
@@ -271,7 +318,15 @@ class RelationGraph extends SimpleGraph
 
 	/**
 	 * Build the graph downstream, and mark the nodes that can be reached from the source node
-	 */	 	
+	 *
+	 * @param string $sRelCode
+	 * @param int $iMaxDepth
+	 * @param bool $bEnableRedundancy
+	 * @param array $aUnreachableObjects
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public function ComputeRelatedObjectsDown($sRelCode, $iMaxDepth, $bEnableRedundancy, $aUnreachableObjects = array())
 	{
 		//echo "<h5>Sources only...</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
@@ -316,7 +371,14 @@ class RelationGraph extends SimpleGraph
 
 	/**
 	 * Build the graph upstream
-	 */	 	
+	 *
+	 * @param string $sRelCode
+	 * @param int $iMaxDepth
+	 * @param bool $bEnableRedundancy
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public function ComputeRelatedObjectsUp($sRelCode, $iMaxDepth, $bEnableRedundancy)
 	{
 		//echo "<h5>Sinks only...</h5>\n".$this->DumpAsHtmlImage()."<br/>\n";
@@ -344,14 +406,14 @@ class RelationGraph extends SimpleGraph
 
 	/**
 	 * Recursively find related objects, and add them into the graph
-	 * 
+	 *
 	 * @param string $sRelCode The code of the relation to use for the computation
 	 * @param boolean $bDown The direction: downstream or upstream
-	 * @param array $oObjectNode The node from which to compute the neighbours
+	 * @param \GraphElement $oObjectNode The node from which to compute the neighbours
 	 * @param int $iMaxDepth
-	 * @param boolean $bEnableReduncancy
-	 * 
-	 * @return void
+	 * @param boolean $bEnableRedundancy
+	 *
+	 * @throws \Exception
 	 */
 	protected function AddRelatedObjects($sRelCode, $bDown, $oObjectNode, $iMaxDepth, $bEnableRedundancy)
 	{
@@ -359,7 +421,7 @@ class RelationGraph extends SimpleGraph
 		{
 			if ($oObjectNode instanceof RelationRedundancyNode)
 			{
-				// Note: this happens when recursing on an existing part of the graph 
+				// Note: this happens when recursing on an existing part of the graph
 				// Skip that redundancy node
 				$aRelatedEdges = $bDown ? $oObjectNode->GetOutgoingEdges() : $oObjectNode->GetIncomingEdges();
 				foreach ($aRelatedEdges as $oRelatedEdge)
@@ -441,8 +503,16 @@ class RelationGraph extends SimpleGraph
 	}
 
 	/**
-	 * Determine if there is a redundancy (or use the existing one) and add the corresponding nodes/edges	
-	 */	
+	 * Determine if there is a redundancy (or use the existing one) and add the corresponding nodes/edges
+	 *
+	 * @param string $sRelCode
+	 * @param array $aQueryInfo
+	 * @param GraphElement $oFromNode
+	 * @param GraphElement $oToNode
+	 *
+	 * @return \GraphNode|NULL|\RelationRedundancyNode
+	 * @throws \Exception
+	 */
 	protected function ComputeRedundancy($sRelCode, $aQueryInfo, $oFromNode, $oToNode)
 	{
 		$oRedundancyNode = null;
@@ -493,8 +563,14 @@ class RelationGraph extends SimpleGraph
 	}
 
 	/**
-	 * Helper to determine the redundancy setting on a given relation	
-	 */	
+	 * Helper to determine the redundancy setting on a given relation
+	 *
+	 * @param string $sRelCode
+	 * @param array $aQueryInfo
+	 * @param GraphElement $oToNode
+	 *
+	 * @return bool
+	 */
 	protected function IsRedundancyEnabled($sRelCode, $aQueryInfo, $oToNode)
 	{
 		$bRet = false;
@@ -509,8 +585,15 @@ class RelationGraph extends SimpleGraph
 	}
 
 	/**
-	 * Helper to determine the redundancy threshold, given the count of objects upstream 	
-	 */	
+	 * Helper to determine the redundancy threshold, given the count of objects upstream
+	 *
+	 * @param string $sRelCode
+	 * @param array $aQueryInfo
+	 * @param GraphElement $oToNode
+	 * @param int $iUpstreamObjects
+	 *
+	 * @return int
+	 */
 	protected function GetRedundancyMinUp($sRelCode, $aQueryInfo, $oToNode, $iUpstreamObjects)
 	{
 		$iMinUp = 0;
@@ -533,8 +616,14 @@ class RelationGraph extends SimpleGraph
 	}
 
 	/**
-	 * Helper to search for the redundancy attribute	
-	 */	
+	 * Helper to search for the redundancy attribute
+	 *
+	 * @param string $sRelCode
+	 * @param array $aQueryInfo
+	 * @param string $sClass
+	 *
+	 * @return \AttributeDefinition|\AttributeRedundancySettings|null
+	 */
 	protected function FindRedundancyAttribute($sRelCode, $aQueryInfo, $sClass)
 	{
 		$oRet = null;
@@ -560,7 +649,7 @@ class RelationGraph extends SimpleGraph
 	
 	/**
 	 * Get the objects referenced by the graph as a hash array: 'class' => array of objects
-	 * @return Ambigous <multitype:multitype: , unknown>
+	 * @return array Ambigous <multitype:multitype: , unknown>
 	 */
 	public function GetObjectsByClass()
 	{
@@ -580,8 +669,15 @@ class RelationGraph extends SimpleGraph
 			}
 		}
 		return $aResults;		
-	}	
+	}
 
+	/**
+	 * @param string $sOQL
+	 *
+	 * @return \DBSearch
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
 	protected static function MakeSearch($sOQL)
 	{
 		$oSearch = DBSearch::FromOQL($sOQL);
