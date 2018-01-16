@@ -85,11 +85,11 @@ abstract class Expression
 		static $aCache = array();
 		if (array_key_exists($sConditionExpr, $aCache))
 		{
-			return $aCache[$sConditionExpr];
+			return unserialize($aCache[$sConditionExpr]);
 		}
 		$oOql = new OqlInterpreter($sConditionExpr);
 		$oExpression = $oOql->ParseExpression();
-		$aCache[$sConditionExpr] = $oExpression;
+		$aCache[$sConditionExpr] = serialize($oExpression);
 
 		return $oExpression;
 	}
