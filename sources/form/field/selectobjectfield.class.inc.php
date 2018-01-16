@@ -19,8 +19,12 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use \Closure;
-use \DBSearch;
+use Closure;
+use DBSearch;
+use DBObjectSet;
+use BinaryExpression;
+use FieldExpression;
+use ScalarExpression;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 
 /**
@@ -147,5 +151,27 @@ class SelectObjectField extends Field
 	public function GetSearchEndpoint()
 	{
 		return $this->sSearchEndpoint;
+	}
+
+	/**
+	 * Resets current value is not among allowed ones.
+	 * By default, reset is done ONLY when the field is not read-only.
+	 *
+	 * @param boolean $bAlways Set to true to verify even when the field is read-only.
+	 */
+	public function VerifyCurrentValue($bAlways = false)
+	{
+		if(!$this->GetReadOnly() || $bAlways)
+		{
+			$oValuesScope = $this->GetSearch()->DeepClone();
+			$oBinaryExp = new BinaryExpression(new FieldExpression('id', $oValuesScope->GetClassAlias()), '=', new ScalarExpression($this->currentValue));
+			$oValuesScope->AddConditionExpression($oBinaryExp);
+			$oValuesSet = new DBObjectSet($oValuesScope);
+
+			if($oValuesSet->Count() === 0)
+			{
+				$this->currentValue = null;
+			}
+		}
 	}
 }

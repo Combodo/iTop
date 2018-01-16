@@ -19,7 +19,6 @@
 
 namespace Combodo\iTop\Portal\Form;
 
-use Combodo\iTop\Form\Field\Field;
 use \Exception;
 use \Silex\Application;
 use \utils;
@@ -41,6 +40,7 @@ use \AttributeDateTime;
 use \AttachmentPlugIn;
 use \Combodo\iTop\Form\FormManager;
 use \Combodo\iTop\Form\Form;
+use \Combodo\iTop\Form\Field\Field;
 use \Combodo\iTop\Form\Field\FileUploadField;
 use \Combodo\iTop\Form\Field\LabelField;
 use \Combodo\iTop\Portal\Helper\ApplicationHelper;
@@ -715,20 +715,7 @@ class ObjectFormManager extends FormManager
                     {
                         // Note: We can't do this in AttributeExternalKey::MakeFormField() in the Field::SetOnFinalizeCallback() because at this point we have no information about the portal scope and ignore_silos flag, hence it always applies silos.
                         // As a workaround we have to manually check if the field's current value is among the scope
-
-                        if(!$oField->GetReadOnly())
-                        {
-                            /** @var DBObjectSearch $oValuesScope */
-                            $oValuesScope = $oField->GetSearch()->DeepClone();
-                            $oBinaryExp = new BinaryExpression(new FieldExpression('id', $oValuesScope->GetClassAlias()), '=', new ScalarExpression($oField->GetCurrentValue()));
-                            $oValuesScope->AddConditionExpression($oBinaryExp);
-                            $oValuesSet = new DBObjectSet($oValuesScope);
-
-                            if($oValuesSet->Count() === 0)
-                            {
-                                $oField->SetCurrentValue(null);
-                            }
-                        }
+						$oField->VerifyCurrentValue();
                     }
 					// - Field that require processing on their subfields
 					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\SubFormField')))
@@ -757,6 +744,11 @@ class ObjectFormManager extends FormManager
 											));
 											$oCustomField->SetSearchEndpoint($sSearchEndpoint);
 										}
+									}
+									// - Field that require to check if the current value is among allowed ones
+									if (in_array(get_class($oCustomField), array('Combodo\\iTop\\Form\\Field\\SelectObjectField')))
+									{
+										$oCustomField->VerifyCurrentValue();
 									}
 								}
 							}
@@ -1204,5 +1196,4 @@ class ObjectFormManager extends FormManager
 			$oAttachment->DBDelete();
 		}
 	}
-
 }
