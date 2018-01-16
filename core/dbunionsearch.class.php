@@ -496,19 +496,30 @@ class DBUnionSearch extends DBSearch
 				$aSearchSelectedClasses[$sSearchAlias] = $this->aSelectedClasses[$sAlias];
 			}
 
-			if (is_null($aAttToLoad))
+			if ($bGetCount)
 			{
-				$aQueryAttToLoad = null;
+				// Select only ids for the count to allow optimization of joins
+				foreach($aSearchAliases as $sSearchAlias)
+				{
+					$aQueryAttToLoad[$sSearchAlias] = array();
+				}
 			}
 			else
 			{
-					// (Eventually) Transform the aliases
-				$aQueryAttToLoad = array();
-				foreach ($aAttToLoad as $sAlias => $aAttributes)
+				if (is_null($aAttToLoad))
 				{
-					$iColumn = array_search($sAlias, $aAliases);
-					$sQueryAlias = ($iColumn === false) ? $sAlias : $aSearchAliases[$iColumn];
-					$aQueryAttToLoad[$sQueryAlias] = $aAttributes;
+					$aQueryAttToLoad = null;
+				}
+				else
+				{
+					// (Eventually) Transform the aliases
+					$aQueryAttToLoad = array();
+					foreach($aAttToLoad as $sAlias => $aAttributes)
+					{
+						$iColumn = array_search($sAlias, $aAliases);
+						$sQueryAlias = ($iColumn === false) ? $sAlias : $aSearchAliases[$iColumn];
+						$aQueryAttToLoad[$sQueryAlias] = $aAttributes;
+					}
 				}
 			}
 

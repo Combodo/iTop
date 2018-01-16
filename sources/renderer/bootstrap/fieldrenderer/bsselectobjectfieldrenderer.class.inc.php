@@ -103,6 +103,7 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 					$oOutput->AddHtml('<option value="">')->AddHtml(Dict::S('UI:SelectOne'), false)->AddHtml('</option>');
 					// - Retrieving choices
 					$oChoicesSet = new DBObjectSet($oSearch);
+					$oChoicesSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 					while ($oChoice = $oChoicesSet->Fetch())
 					{
 						// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
