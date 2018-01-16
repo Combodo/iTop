@@ -653,7 +653,7 @@ EOF
  */
 function DisplayClassDetails($oPage, $sClass, $sContext)
 {
-
+	DisplayClassHeader($oPage, $sClass);
 	$aParentClasses = array();
 	foreach(MetaModel::EnumParentClasses($sClass) as $sParentClass)
 	{
@@ -835,68 +835,24 @@ EOF
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                             MAIN BLOCK                                                             //
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Display the dropdown that allow to select the attributes/class display granularity
+ */
+function DisplayGranularityDisplayer($oPage){
 
-// Display the menu on the left
-$oAppContext = new ApplicationContext();
-$sContext = $oAppContext->GetForLink();
-if (!empty($sContext))
-{
-	$sContext = '&'.$sContext;
-}
-$operation = utils::ReadParam('operation', 'details_class');
-$sClass = utils::ReadParam('class', 'Organization', false, 'class');
-
-$oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
-$oPage->no_cache();
-
-$oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
-$oPage->add_script(
-    <<<EOF
-	var autocompleteClassLabelAndCode = [];
-	var autocompleteClassLabel = [];
-	var autocompleteClassCode = [];
-EOF
-);
-
-$oPage->add(" <div class='ui-widget'> </div><div id='dataModelSplitPane'>");
-$oPage->add("<div class='ui-layout-west data-model-viewer'> ");
-DisplayClassesList($oPage, $sContext);
-$oPage->add("</div>");
-$oPage->add("<div class='ui-layout-center data-model-viewer'>");
-
-//scrollable class name / icon
-$oPage->add("<div id=\"dataModelScrollableDiv\">");
-$oPage->add("<div id=\"dataModelScrollableClassIcon\">" . MetaModel::GetClassIcon($sClass) . "</div>");
-$oPage->add("<h2 id=\"dataModelScrollableClassName\"><span class=\"attrLabel\">" . MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" .$sClass."</span><span class=\"parenthesis\">)</span></h2>");
-$oPage->add("</div>");
-
-//content header
-$oPage->add("<div id=\"dataModelHeader\">");
-$oPage->add("
+	$oPage->add("
 		<label id=\"displaySelectorLabel\"> <h1> ". Dict::S('UI:Schema:DisplayLabel') .
-	"<select id=\"displaySelector\">
+		"<select id=\"displaySelector\">
 			<option value=\"labelandcode\">" . Dict::S('UI:Schema:DisplaySelector/LabelAndCode') . "</option>
 			<option value=\"label\">" . Dict::S('UI:Schema:DisplaySelector/Label') . "</option>
 			<option value=\"code\">" . Dict::S('UI:Schema:DisplaySelector/Code') . "</option>
 		</select> </h1></label>
 		 <br/>");
-$oPage->add("<div id=\"dataModelClassIcon\">" . MetaModel::GetClassIcon($sClass) . "</div>");
-$sClassDescritpion = MetaModel::GetClassDescription($sClass);
-
-$oPage->add("<h2 id=\"classDetailsClassName\"><span class=\"attrLabel\">".MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" .$sClass."</span><span class=\"parenthesis\">)</span>" . ($sClassDescritpion == "" ? "" : " - " . $sClassDescritpion) . "</h2>\n");
-if (MetaModel::IsAbstract($sClass))
-{
-	$oPage->p(Dict::S('UI:Schema:AbstractClass'));
-}
-
-$sDisplayDropDownValue = htmlentities(appUserPreferences::GetPref('datamodel_viewer_display_granularity','labelandcode'),ENT_QUOTES,"UTF-8");
+	$sDisplayDropDownValue = htmlentities(appUserPreferences::GetPref('datamodel_viewer_display_granularity','labelandcode'),ENT_QUOTES,"UTF-8");
 
 //granularity displayer listener
-$oPage->add_ready_script(
-    <<<EOF
+	$oPage->add_ready_script(
+		<<<EOF
         var parenthesisHider = function(){
         	if ( ($('#labelEnabler').is(':checked') && !$('#codeEnabler').is(':checked')) || ($('#codeEnabler').is(':checked') && !$('#labelEnabler').is(':checked')))
         	{
@@ -929,14 +885,73 @@ $oPage->add_ready_script(
 		});
 		$('#displaySelector').val("$sDisplayDropDownValue").trigger("change");
 EOF
+	);
+}
+/**
+ * Display the header of the class details page
+ */
+function DisplayClassHeader($oPage, $sClass){
+	//scrollable class name / icon
+	$oPage->add("<div id=\"dataModelScrollableDiv\">");
+	$oPage->add("<div id=\"dataModelScrollableClassIcon\">" . MetaModel::GetClassIcon($sClass) . "</div>");
+	$oPage->add("<h2 id=\"dataModelScrollableClassName\"><span class=\"attrLabel\">" . MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" .$sClass."</span><span class=\"parenthesis\">)</span></h2>");
+	$oPage->add("</div>");
+
+//content header
+	$oPage->add("<div id=\"dataModelHeader\">");
+	DisplayGranularityDisplayer($oPage);
+	$oPage->add("<div id=\"dataModelClassIcon\">" . MetaModel::GetClassIcon($sClass) . "</div>");
+	$sClassDescritpion = MetaModel::GetClassDescription($sClass);
+
+	$oPage->add("<h2 id=\"classDetailsClassName\"><span class=\"attrLabel\">".MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" .$sClass."</span><span class=\"parenthesis\">)</span>" . ($sClassDescritpion == "" ? "" : " - " . $sClassDescritpion) . "</h2>\n");
+	if (MetaModel::IsAbstract($sClass))
+	{
+		$oPage->p(Dict::S('UI:Schema:AbstractClass'));
+	}
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                             MAIN BLOCK                                                             //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Display the menu on the left
+$oAppContext = new ApplicationContext();
+$sContext = $oAppContext->GetForLink();
+if (!empty($sContext))
+{
+	$sContext = '&'.$sContext;
+}
+$operation = utils::ReadParam('operation', '');
+
+$oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
+$oPage->no_cache();
+
+$oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+$oPage->add_script(
+    <<<EOF
+	var autocompleteClassLabelAndCode = [];
+	var autocompleteClassLabel = [];
+	var autocompleteClassCode = [];
+EOF
 );
+
+$oPage->add(" <div class='ui-widget'> </div><div id='dataModelSplitPane'>");
+$oPage->add("<div class='ui-layout-west data-model-viewer'> ");
+DisplayClassesList($oPage, $sContext);
+$oPage->add("</div>");
+$oPage->add("<div class='ui-layout-center data-model-viewer'>");
+
 switch($operation)
 {
 	case 'details_class':
-	$sClass = utils::ReadParam('class', 'Organization', false, 'class');
-	DisplayClassDetails($oPage, $sClass, $sContext);
-	break;
+	$sClass = utils::ReadParam('class', '', false, 'class');
+	//if we want to see class details & class is given then display it, otherwise act default (just show the class list)
+	if($sClass != '')
+	{
+		DisplayClassDetails($oPage, $sClass, $sContext);
+		break;
+	}
 	default:
+		DisplayGranularityDisplayer($oPage);
 }
 $oPage->add("</div>");
 $oPage->add("</div>");
