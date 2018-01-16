@@ -61,6 +61,8 @@ abstract class DBSearch
 
 	/**
 	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects)
+	 *
+	 * @return \DBSearch
 	 **/	 	
 	public function DeepClone()
 	{
