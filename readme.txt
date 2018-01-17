@@ -1,7 +1,7 @@
-﻿iTop - version 2.4.0 - 15-Nov-2017
+﻿iTop - version 2.4.1 - 14-Feb-2018
 Readme file
 
-iTop 2.4.0 is the 30th release of iTop.
+iTop 2.4.1 is the 31st release of iTop.
 
 Changes since the previous version
 -------------------------------------------------------------------
