@@ -1226,6 +1226,119 @@ class iTopExtensionsMap
 	                ),
 	            ),
 	        ),
+	        'combodo-user-actions-configurator' =>
+	        array (
+	            'label' => 'User actions configurator',
+	            'descripion' => 'Configure user actions to simplify and automate processes (e.g. create an incident from a CI).',
+	            'versions' =>
+	            array (
+	                '1.0.0' =>
+	                array (
+	                    0 => 'itop-object-copier/1.0.0',
+	                ),
+	                '1.0.1' =>
+	                array (
+	                    0 => 'itop-object-copier/1.0.1',
+	                ),
+	                '1.0.2' =>
+	                array (
+	                    0 => 'itop-object-copier/1.0.2',
+	                ),
+	                '1.0.3' =>
+	                array (
+	                    0 => 'itop-object-copier/1.0.3',
+	                ),
+	                '1.1.0' =>
+	                array (
+	                    0 => 'itop-object-copier/1.1.0',
+	                ),
+	                '1.1.1' =>
+	                array (
+	                    0 => 'itop-object-copier/1.1.1',
+	                ),
+	                '1.1.2' =>
+	                array (
+	                    0 => 'itop-object-copier/1.1.2',
+	                ),
+	                '1.1.3' =>
+	                array (
+	                    0 => 'itop-object-copier/1.1.3',
+	                ),
+	                '1.1.4' =>
+	                array (
+	                    0 => 'itop-object-copier/1.1.4',
+	                ),
+	                '1.1.5' =>
+	                array (
+	                    0 => 'itop-object-copier/1.1.5',
+	                ),
+	                '1.1.6' =>
+	                array (
+	                    0 => 'itop-object-copier/1.1.6',
+	                ),
+	                '1.1.7' =>
+	                array (
+	                    0 => 'itop-object-copier/1.1.7',
+	                ),
+	                '1.1.8' =>
+	                array (
+	                    0 => 'itop-object-copier/1.1.8',
+	                ),
+	            ),
+	        ),
+	        'combodo-send-updates-by-email' =>
+	        array (
+	            'label' => 'Send updates by email',
+	            'descripion' => 'Send an email to pre-configured contacts when a ticket log is updated.',
+	            'versions' =>
+	            array (
+	                '1.0.1' =>
+	                array (
+	                    0 => 'email-reply/1.0.1',
+	                ),
+	                '1.0.3' =>
+	                array (
+	                    0 => 'email-reply/1.0.3',
+	                ),
+	                '1.1.1' =>
+	                array (
+	                    0 => 'email-reply/1.1.1',
+	                ),
+	                '1.1.2' =>
+	                array (
+	                    0 => 'email-reply/1.1.2',
+	                ),
+	                '1.1.3' =>
+	                array (
+	                    0 => 'email-reply/1.1.3',
+	                ),
+	                '1.1.4' =>
+	                array (
+	                    0 => 'email-reply/1.1.4',
+	                ),
+	                '1.1.5' =>
+	                array (
+	                    0 => 'email-reply/1.1.5',
+	                ),
+	                '1.1.6' =>
+	                array (
+	                    0 => 'email-reply/1.1.6',
+	                ),
+	                '1.1.7' =>
+	                array (
+	                    0 => 'email-reply/1.1.7',
+	                ),
+	                // 1.1.8 was never released
+	                '1.1.9' =>
+	                array (
+	                    0 => 'email-reply/1.1.9',
+	                ),
+	                '1.1.10' =>
+	                array (
+	                    0 => 'email-reply/1.1.10',
+	                ),
+	            ),
+	        ),
 	    );
 	}
 }
