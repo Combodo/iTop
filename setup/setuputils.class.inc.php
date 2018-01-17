@@ -460,15 +460,17 @@ class SetupUtils
 		exec($sCommand, $aOutput, $iRetCode);
 		if ($iRetCode == 0)
 		{
-			$aResult[] = new CheckResult(CheckResult::INFO, "mysqldump is present: ".$aOutput[0]);
+			$aResult[] = new CheckResult(CheckResult::INFO, "mysqldump is present: Ok.");
 		}
 		elseif ($iRetCode == 1)
 		{
-			$aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be found: ".implode(' ', $aOutput)." - Please make sure it is installed and in the path.");
+		    // Unfortunately $aOutput is not really usable since we don't know its encoding (character set)
+			$aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be found. Please make sure it is installed and in the path.");
 		}
 		else
 		{
-			$aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path");
+		    // Unfortunately $aOutput is not really usable since we don't know its encoding (character set)
+		    $aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path");
 		}
 		foreach($aOutput as $sLine)
 		{
