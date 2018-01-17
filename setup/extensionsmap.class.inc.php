@@ -359,8 +359,14 @@ class iTopExtensionsMap
 		{
 			$aSearchDirs[] = APPROOT.'/datamodels/1.x';
 		}
-		$aSearchDirs[] = APPROOT.'/extensions';
-		$aSearchDirs[] = APPROOT.'/data/'.$sFromEnvironment.'-modules';
+		if (is_dir(APPROOT.'/extensions'))
+		{
+            $aSearchDirs[] = APPROOT.'/extensions';
+		}
+		if (is_dir(APPROOT.'/data/'.$sFromEnvironment.'-modules'))
+		{
+		    $aSearchDirs[] = APPROOT.'/data/'.$sFromEnvironment.'-modules';
+		}
 		
 		try
 		{
