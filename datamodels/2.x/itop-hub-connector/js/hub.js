@@ -68,7 +68,8 @@ $(function()
 			}
 			else
 			{
-				$('#backup_status').html(data.message);				
+				$('#backup_status').html(data.message);
+				$('#backup_checkbox').prop('checked', false);
 			}
 			if ($('#hub_start_installation').hasClass('ui-button'))
 			{
