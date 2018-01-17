@@ -2,7 +2,7 @@
 require_once(APPROOT.'/setup/parameters.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once(APPROOT.'/setup/modulediscovery.class.inc.php');
-
+require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
 /**
  * Basic helper class to describe an extension, with some characteristics and a list of modules
  */
@@ -77,6 +77,12 @@ class iTopExtension
 	 */
 	public $sSourceDir;
 	
+	/**
+	 * 
+	 * @var string[]
+	 */
+	public $aMissingDependencies;
+	
 	public function __construct()
 	{
 		$this->sCode = '';
@@ -88,9 +94,11 @@ class iTopExtension
 		$this->bMarkedAsChosen = false;
 		$this->sVersion = ITOP_VERSION;
 		$this->sInstalledVersion = '';
+		$this->aModules = array();
 		$this->aModuleVersion = array();
 		$this->sSourceDir = '';
 		$this->bVisible = true;
+		$this->aMissingDependencies = array();
 	}
 }
 
@@ -111,6 +119,7 @@ class iTopExtensionsMap
 	{
 		$this->aExtensions = array();
 		$this->ScanDisk($sFromEnvironment);
+		$this->CheckDependencies($sFromEnvironment);
 		if ($bNormalizeOldExtensions)
 		{
 			$this->NormalizeOldExtensions();
@@ -330,6 +339,57 @@ class iTopExtensionsMap
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Check if some extension contains a module with missing dependencies...
+	 * If so, populate the aMissingDepenencies array
+	 * @param string $sFromEnvironment
+	 * @return void
+	 */
+	protected function CheckDependencies($sFromEnvironment)
+	{
+		$aSearchDirs = array();
+		
+		if (is_dir(APPROOT.'/datamodels/2.x'))
+		{
+			$aSearchDirs[] = APPROOT.'/datamodels/2.x';
+		}
+		else if (is_dir(APPROOT.'/datamodels/1.x'))
+		{
+			$aSearchDirs[] = APPROOT.'/datamodels/1.x';
+		}
+		$aSearchDirs[] = APPROOT.'/extensions';
+		$aSearchDirs[] = APPROOT.'/data/'.$sFromEnvironment.'-modules';
+		
+		try
+		{
+			$aAllModules = ModuleDiscovery::GetAvailableModules($aSearchDirs, true);
+		}
+		catch(MissingDependencyException $e)
+		{
+			// Some modules have missing dependencies
+			// Let's check what is the impact at the "extensions" level
+			foreach($this->aExtensions as $sKey => $oExtension)
+			{
+				foreach($oExtension->aModules as $sModuleName)
+				{
+					if (array_key_exists($sModuleName, $oExtension->aModuleVersion))
+					{
+						// This information is not available for pseudo modules defined in the installation wizard, but let's ignore them
+						$sVersion = $oExtension->aModuleVersion[$sModuleName];
+						$sModuleId = $sModuleName.'/'.$sVersion;
+						
+						if (array_key_exists($sModuleId, $e->aModulesInfo))
+						{
+							// The extension actually contains a module which has unmet dependencies
+							$aModuleInfo = $e->aModulesInfo[$sModuleId];
+							$this->aExtensions[$sKey]->aMissingDependencies = array_merge($oExtension->aMissingDependencies, $aModuleInfo['dependencies']);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	/**
