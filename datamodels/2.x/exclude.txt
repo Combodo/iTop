@@ -1,4 +1,0 @@
-#
-# The following source files are not re-distributed with the "build" of the application
-#
-itop-hub-connector
