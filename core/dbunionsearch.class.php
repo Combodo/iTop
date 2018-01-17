@@ -474,7 +474,7 @@ class DBUnionSearch extends DBSearch
 		throw new Exception('MakeUpdateQuery is not implemented for the unions!');
 	}
 
-	protected function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null)
+	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null)
 	{
 		if (count($this->aSearches) == 1)
 		{
