@@ -84,17 +84,19 @@ $oApp->register(new Silex\Provider\HttpFragmentServiceProvider());
 $oKPI->ComputeAndReport('Initialization of the Silex application');
 
 $oApp->before(function(Symfony\Component\HttpFoundation\Request $oRequest, Silex\Application $oApp) use ($bDebug){
-    // Checking user rights and prompt if needed (401 HTTP code returned if XHR request)
+    // User pre-checks
+	// Note: At this point the Exception handler is not registered, so we can't use $oApp::abort() method, hence the die().
+	// - Checking user rights and prompt if needed (401 HTTP code returned if XHR request)
     $iExitMethod = ($oRequest->isXmlHttpRequest()) ? LoginWebPage::EXIT_RETURN : LoginWebPage::EXIT_PROMPT;
     $iLogonRes = LoginWebPage::DoLoginEx(PORTAL_ID, false, $iExitMethod);
     if( ($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0) )
     {
-        $oApp->abort(401, Dict::S('Portal:ErrorUserLoggedOut'));
+        die(Dict::S('Portal:ErrorUserLoggedOut'));
     }
-
+	// - User must be associated with a Contact
     if (UserRights::GetContactId() == 0)
     {
-        $oApp->abort(500, Dict::S('Portal:ErrorNoContactForThisUser'));
+        die(Dict::S('Portal:ErrorNoContactForThisUser'));
     }
 
 	// Enable archived data
