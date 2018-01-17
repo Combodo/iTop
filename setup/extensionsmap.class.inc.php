@@ -67,6 +67,16 @@ class iTopExtension
 	 */
 	public $aModules;
 	
+	/**
+	 * @var string[]
+	 */
+	public $aModuleVersion;
+	
+	/**
+	 * @var string
+	 */
+	public $sSourceDir;
+	
 	public function __construct()
 	{
 		$this->sCode = '';
@@ -78,6 +88,8 @@ class iTopExtension
 		$this->bMarkedAsChosen = false;
 		$this->sVersion = ITOP_VERSION;
 		$this->sInstalledVersion = '';
+		$this->aModuleVersion = array();
+		$this->sSourceDir = '';
 		$this->bVisible = true;
 	}
 }
@@ -240,6 +252,7 @@ class iTopExtensionsMap
 				$oExtension->sMoreInfoUrl = $oXml->Get('more_info_url');
 				$oExtension->sVersion = $oXml->Get('version');
 				$oExtension->sSource = $sSource;
+				$oExtension->sSourceDir = $sSearchDir;
 				
 				$sParentExtensionId = $sExtensionId = $oExtension->sCode.'/'.$oExtension->sVersion;
 				$this->AddExtension($oExtension);
@@ -274,7 +287,8 @@ class iTopExtensionsMap
 						{
 							// Already inside an extension, let's add this module the list of modules belonging to this extension
 							$this->aExtensions[$sParentExtensionId]->aModules[] = $sModuleName;
-						}
+							$this->aExtensions[$sParentExtensionId]->aModuleVersion[$sModuleName] = $sModuleVersion;
+							}
 						else
 						{
 							// Not already inside an folder containing an 'extension.xml' file
@@ -299,10 +313,10 @@ class iTopExtensionsMap
 							$oExtension->bMandatory = $aModuleInfo[2]['mandatory'];
 							$oExtension->sMoreInfoUrl = $aModuleInfo[2]['doc.more_information'];
 							$oExtension->aModules = array($sModuleName);
+							$oExtension->aModuleVersion[$sModuleName] = $sModuleVersion;
+							$oExtension->sSourceDir = $sSearchDir;
 							$oExtension->bVisible = $bVisible;
-							
-							$this->AddExtension($oExtension);
-							
+							$this->AddExtension($oExtension);							
 						}
 					}
 				}
@@ -477,6 +491,34 @@ class iTopExtensionsMap
 			$this->SetInstalledVersion($aDBInfo['code'], $aDBInfo['version']);
 		}
 		return true;
+	}
+	
+	/**
+	 * Find is a single-module extension is contained within another extension
+	 * @param iTopExtension $oExtension
+	 * @return NULL|iTopExtension
+	 */
+	public function IsExtensionObsoletedByAnother(iTopExtension $oExtension)
+	{
+		// Complex extensions (more than 1 module) are never considered as obsolete
+		if (count($oExtension->aModules) != 1) return null;
+		
+		foreach($this->GetAllExtensions() as $oOtherExtension)
+		{
+			if (($oOtherExtension->sSourceDir != $oExtension->sSourceDir) && ($oOtherExtension->sSource != iTopExtension::SOURCE_WIZARD))
+			{
+				if (array_key_exists($oExtension->sCode, $oOtherExtension->aModuleVersion) &&
+					(version_compare($oOtherExtension->aModuleVersion[$oExtension->sCode], $oExtension->sVersion, '>=')) )
+				{
+					// Found another extension containing a more recent version of the extension/module
+					return $oOtherExtension;
+				}
+			}
+		}
+		
+		// No match at all
+		return null;
+		
 	}
 	
 	/**

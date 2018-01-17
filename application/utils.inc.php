@@ -615,16 +615,20 @@ class utils
 	{
 		if (self::$oConfig == null)
 		{
-			$sConfigFile = self::GetConfigFilePath();
-			if (file_exists($sConfigFile))
-			{
-				self::$oConfig = new Config($sConfigFile);
-			}
-			else
-			{
-				// When executing the setup, the config file may be still missing
-				self::$oConfig = new Config();
-			}
+		    self::$oConfig = MetaModel::GetConfig();
+		    if (self::$oConfig == null)
+		    {
+    			$sConfigFile = self::GetConfigFilePath();
+    			if (file_exists($sConfigFile))
+    			{
+    				self::$oConfig = new Config($sConfigFile);
+    			}
+    			else
+    			{
+    				// When executing the setup, the config file may be still missing
+    				self::$oConfig = new Config();
+    			}
+		    }
 		}
 		return self::$oConfig;
 	}

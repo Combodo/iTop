@@ -1157,7 +1157,7 @@ class UserRights
 			self::$m_aAdmins = array();
 			self::$m_aPortalUsers = array();
 		}
-		if (!isset($_SESSION))
+		if (!isset($_SESSION) && !utils::IsModeCLI())
 		{
 			session_name('itop-'.md5(APPROOT));
 			session_start();

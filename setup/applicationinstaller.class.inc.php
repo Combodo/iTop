@@ -240,8 +240,9 @@ class ApplicationInstaller
 				$sDBName = $aDBParams['name'];
 				$sDBPrefix = $aDBParams['prefix'];
 				$bOldAddon = $this->oParams->Get('old_addon', false);
+				$sUrl = $this->oParams->Get('url', '');
 				
-				self::DoUpdateDBSchema($sMode, $aSelectedModules, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment, $bOldAddon);
+				self::DoUpdateDBSchema($sMode, $aSelectedModules, $sTargetDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment, $bOldAddon, $sUrl);
 				
 				$aResult = array(
 					'status' => self::OK,
@@ -555,7 +556,7 @@ class ApplicationInstaller
 		}
 	}
 	
-	protected static function DoUpdateDBSchema($sMode, $aSelectedModules, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment  = '', $bOldAddon = false)
+	protected static function DoUpdateDBSchema($sMode, $aSelectedModules, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTargetEnvironment  = '', $bOldAddon = false, $sAppRootUrl = '')
 	{
 		SetupPage::log_info("Update Database Schema for environment '$sTargetEnvironment'.");
 
@@ -568,6 +569,7 @@ class ApplicationInstaller
 			'db_pwd' => $sDBPwd,
 			'db_name' => $sDBName,
 			'db_prefix' => $sDBPrefix,
+			'application_path' => $sAppRootUrl,
 		);
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir);
 		if ($bOldAddon)
@@ -577,7 +579,7 @@ class ApplicationInstaller
 				'user rights' => 'addons/userrights/userrightsprofile.db.class.inc.php',
 			));
 		}
-		
+
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
 
@@ -636,17 +638,7 @@ class ApplicationInstaller
 		// Module specific actions (migrate the data)
 		//
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
-		foreach($aAvailableModules as $sModuleId => $aModule)
-		{
-			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
-				isset($aAvailableModules[$sModuleId]['installer']) )
-			{
-				$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-				SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::BeforeDatabaseCreation(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
-				$aCallSpec = array($sModuleInstallerClass, 'BeforeDatabaseCreation');
-				call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));								
-			}
-		}
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'BeforeDatabaseCreation');
 
 		if(!$oProductionEnv->CreateDatabaseStructure(MetaModel::GetConfig(), $sMode))
 		{
@@ -778,18 +770,7 @@ class ApplicationInstaller
 		// Perform here additional DB setup... profiles, etc...
 		//
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
-		foreach($aAvailableModules as $sModuleId => $aModule)
-		{
-			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
-				isset($aAvailableModules[$sModuleId]['installer']) )
-			{
-				$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-				SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::AfterDatabaseCreation(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
-				// The validity of the sModuleInstallerClass has been established in BuildConfig() 
-				$aCallSpec = array($sModuleInstallerClass, 'AfterDatabaseCreation');
-				call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));								
-			}
-		}
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseCreation');
 
 		$oProductionEnv->UpdatePredefinedObjects();
 		
@@ -807,18 +788,7 @@ class ApplicationInstaller
 		
 		// Perform final setup tasks here
 		//
-		foreach($aAvailableModules as $sModuleId => $aModule)
-		{
-			if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
-				isset($aAvailableModules[$sModuleId]['installer']) )
-			{
-				$sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-				SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::AfterDatabaseSetup(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
-				// The validity of the sModuleInstallerClass has been established in BuildConfig() 
-				$aCallSpec = array($sModuleInstallerClass, 'AfterDatabaseSetup');
-				call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));								
-			}
-		}
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseSetup');
 	}
 	
 	/**
@@ -860,131 +830,21 @@ class ApplicationInstaller
 			));
 		}
 		
+		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
+		
 		//Load the MetaModel if needed (asynchronous mode)
 		if (!self::$bMetaModelStarted)
 		{
-			$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 			$oProductionEnv->InitDataModel($oConfig, false);  // load data model and connect to the database
 			self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously
 		} 
 		
-		
-		$oDataLoader = new XMLDataLoader(); 
-
-		CMDBObject::SetTrackInfo("Initialization");
-		$oMyChange = CMDBObject::GetCurrentChange();
-
-		SetupPage::log_info("starting data load session");
-		$oDataLoader->StartSession($oMyChange);
-
-		$aFiles = array();		
-		$aPreviouslyLoadedFiles = array();		
-		$oProductionEnv = new RunTimeEnvironment();
 		$aAvailableModules = $oProductionEnv->AnalyzeInstallation($oConfig, APPROOT.$sModulesDir);
-		foreach($aAvailableModules as $sModuleId => $aModule)
-		{
-			if (($sModuleId != ROOT_MODULE))
-			{
-				$sRelativePath = 'env-'.$sTargetEnvironment.'/'.basename($aModule['root_dir']);
-				// Load data only for selected AND newly installed modules
-				if (in_array($sModuleId, $aSelectedModules))
-				{
-					if ($aModule['version_db'] != '')
-					{
-						// Simulate the load of the previously loaded XML files to get the mapping of the keys					
-						if ($bSampleData)
-						{
-							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
-						}
-						else
-						{
-							// Load only structural data
-							$aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-						}
-					}
-					else
-					{
-						if ($bSampleData)
-						{
-							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
-						}
-						else
-						{
-							// Load only structural data
-							$aFiles = static::MergeWithRelativeDir($aFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
-						}
-					}
-				}
-			}
-		}
+		$oProductionEnv->LoadData($aAvailableModules, $aSelectedModules, $bSampleData);
 
-		// Simulate the load of the previously loaded files, in order to initialize
-		// the mapping between the identifiers in the XML and the actual identifiers
-		// in the current database
-		foreach($aPreviouslyLoadedFiles as $sFileRelativePath)
-		{
-			$sFileName = APPROOT.$sFileRelativePath;
-			SetupPage::log_info("Loading file: $sFileName (just to get the keys mapping)");
-			if (empty($sFileName) || !file_exists($sFileName))
-			{
-				throw(new Exception("File $sFileName does not exist"));
-			}
-		
-			$oDataLoader->LoadFile($sFileName, true);
-			$sResult = sprintf("loading of %s done.", basename($sFileName));
-			SetupPage::log_info($sResult);
-		}
-		
-		foreach($aFiles as $sFileRelativePath)
-		{
-			$sFileName = APPROOT.$sFileRelativePath;
-			SetupPage::log_info("Loading file: $sFileName");
-			if (empty($sFileName) || !file_exists($sFileName))
-			{
-				throw(new Exception("File $sFileName does not exist"));
-			}
-		
-			$oDataLoader->LoadFile($sFileName);
-			$sResult = sprintf("loading of %s done.", basename($sFileName));
-			SetupPage::log_info($sResult);
-		}
-	
-	    $oDataLoader->EndSession();
-	    SetupPage::log_info("ending data load session");
-
-        // Perform after dbload setup tasks here
-        //
-        foreach($aAvailableModules as $sModuleId => $aModule)
-        {
-            if (($sModuleId != ROOT_MODULE) && in_array($sModuleId, $aSelectedModules) &&
-                isset($aAvailableModules[$sModuleId]['installer']) )
-            {
-                $sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-                SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::AfterDataLoad(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
-                // The validity of the sModuleInstallerClass has been established in BuildConfig()
-                $aCallSpec = array($sModuleInstallerClass, 'AfterDataLoad');
-                call_user_func_array($aCallSpec, array(MetaModel::GetConfig(), $aModule['version_db'], $aModule['version_code']));
-            }
-        }
-	}
-	
-	/**
-	 * Merge two arrays of file names, adding the relative path to the files provided in the array to merge
-	 * @param string[] $aSourceArray
-	 * @param string $sBaseDir
-	 * @param string[] $aFilesToMerge
-	 * @return string[]
-	 */
-	protected static function MergeWithRelativeDir($aSourceArray, $sBaseDir, $aFilesToMerge)
-	{
-		$aToMerge = array();
-		foreach($aFilesToMerge as $sFile)
-		{
-			$aToMerge[] = $sBaseDir.'/'.$sFile;
-		}
-		return array_merge($aSourceArray, $aToMerge);
+        	// Perform after dbload setup tasks here
+		//
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDataLoad');
 	}
 	
 	protected static function DoCreateConfig($sMode, $sModulesDir, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sUrl, $sLanguage, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sTargetEnvironment, $bOldAddon, $sSourceDir, $sPreviousConfigFile, $sDataModelVersion, $sGraphvizPath)

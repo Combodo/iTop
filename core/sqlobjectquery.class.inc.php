@@ -547,7 +547,7 @@ class SQLObjectQuery extends SQLQuery
 		return $iRet;
 	}
 
-	protected function CollectUsedTables(&$aTables)
+	public function CollectUsedTables(&$aTables)
 	{
 		$this->m_oConditionExpr->CollectUsedParents($aTables);
 		foreach($this->m_aFields as $sFieldAlias => $oField)
