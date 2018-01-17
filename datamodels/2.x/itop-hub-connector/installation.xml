@@ -16,7 +16,7 @@
             <module>itop-profiles-itil</module>
             <module>itop-welcome-itil</module>
             <module>itop-tickets</module>
-            <module>itop-hub-connector</module>
+           <module>itop-hub-connector</module>
           </modules>
           <mandatory>true</mandatory>
         </choice>

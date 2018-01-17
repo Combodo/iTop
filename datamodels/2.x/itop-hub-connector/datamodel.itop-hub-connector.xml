@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+  <constants>
+  </constants>
+  <classes>
+  </classes>
+  <menus>
+  </menus>
+  <user_rights>
+    <groups>
+    </groups>
+    <profiles>
+    </profiles>
+  </user_rights>
+  <module_parameters>
+  	<parameters id="itop-hub-connector" _delta="define">
+  		<url>https://www.proto2.itophub.io</url>
+ 		<route_landing>/my-instances/landing-from-remote</route_landing>
+ 		<route_landing_stateless>/stateless-remote-itop/landing-from-remote-stateless</route_landing_stateless>
+ 		<route_notifications>/api/notifications</route_notifications>
+   		<setup_url>../pages/exec.php?exec_module=itop-hub-connector&amp;exec_page=launch.php&amp;target=inform_after_setup</setup_url>
+  	</parameters>
+  </module_parameters>
+</itop_design>
