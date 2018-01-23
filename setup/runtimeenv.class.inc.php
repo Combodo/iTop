@@ -415,11 +415,7 @@ class RunTimeEnvironment
 		// mark as (automatically) chosen alll the "remote" modules present in the
 		// target environment (data/<target-env>-modules)
 		// The actual choices will be recorded by RecordInstallation below
-		$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv);
-		foreach($aExtraDirs as $sDir)
-		{
-			$this->oExtensionsMap->ReadDir($sDir, iTopExtension::SOURCE_REMOTE);
-		}
+		$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv, true, $aExtraDirs);
 		$this->oExtensionsMap->LoadChoicesFromDatabase($oSourceConfig);
 		foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension)
 		{

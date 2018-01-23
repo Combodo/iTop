@@ -115,10 +115,21 @@ class iTopExtensionsMap
 	 */
 	protected $aExtensions;
 	
-	public function __construct($sFromEnvironment = 'production', $bNormalizeOldExtensions = true)
+	/**
+	 * The list of directories browsed using the ReadDir method when building the map
+	 * @var string[]
+	 */
+	protected $aScannedDirs;
+	
+	public function __construct($sFromEnvironment = 'production', $bNormalizeOldExtensions = true, $aExtraDirs = array())
 	{
 		$this->aExtensions = array();
+		$this->aScannedDirs = array();
 		$this->ScanDisk($sFromEnvironment);
+		foreach($aExtraDirs as $sDir)
+		{
+		    $this->ReadDir($sDir, iTopExtension::SOURCE_REMOTE);
+		}
 		$this->CheckDependencies($sFromEnvironment);
 		if ($bNormalizeOldExtensions)
 		{
@@ -239,12 +250,17 @@ class iTopExtensionsMap
 	 * @param string|null $sParentExtensionId Not null if the directory is under a declared extension
 	 * @return boolean
 	 */
-	public function ReadDir($sSearchDir, $sSource, $sParentExtensionId = null)
+	protected function ReadDir($sSearchDir, $sSource, $sParentExtensionId = null)
 	{
 		if (!is_readable($sSearchDir)) return false;
 		$hDir = opendir($sSearchDir);
 		if ($hDir !== false)
 		{
+		    if ($sParentExtensionId == null)
+		    {
+		        // We're not recursing, let's add the directory to the list of scanned dirs 
+		        $this->aScannedDirs[] = $sSearchDir;
+		    }
 			$sExtensionId = null;
 			$aSubDirectories = array();
 
@@ -359,14 +375,7 @@ class iTopExtensionsMap
 		{
 			$aSearchDirs[] = APPROOT.'/datamodels/1.x';
 		}
-		if (is_dir(APPROOT.'/extensions'))
-		{
-            $aSearchDirs[] = APPROOT.'/extensions';
-		}
-		if (is_dir(APPROOT.'/data/'.$sFromEnvironment.'-modules'))
-		{
-		    $aSearchDirs[] = APPROOT.'/data/'.$sFromEnvironment.'-modules';
-		}
+		$aSearchDirs = array_merge($aSearchDirs, $this->aScannedDirs);
 		
 		try
 		{
@@ -1229,7 +1238,7 @@ class iTopExtensionsMap
 	        'combodo-user-actions-configurator' =>
 	        array (
 	            'label' => 'User actions configurator',
-	            'descripion' => 'Configure user actions to simplify and automate processes (e.g. create an incident from a CI).',
+	            'description' => 'Configure user actions to simplify and automate processes (e.g. create an incident from a CI).',
 	            'versions' =>
 	            array (
 	                '1.0.0' =>
@@ -1289,7 +1298,7 @@ class iTopExtensionsMap
 	        'combodo-send-updates-by-email' =>
 	        array (
 	            'label' => 'Send updates by email',
-	            'descripion' => 'Send an email to pre-configured contacts when a ticket log is updated.',
+	            'description' => 'Send an email to pre-configured contacts when a ticket log is updated.',
 	            'versions' =>
 	            array (
 	                '1.0.1' =>
