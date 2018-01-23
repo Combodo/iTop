@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,6 @@ namespace Combodo\iTop\Portal\Controller;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Exception;
 use FileUploadException;
@@ -40,7 +39,6 @@ use VariableExpression;
 use ListExpression;
 use ScalarExpression;
 use DBObjectSet;
-use cmdbAbstractObject;
 use AttributeEnum;
 use AttributeFinalClass;
 use AttributeFriendlyName;
