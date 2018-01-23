@@ -11,12 +11,13 @@ function DisplayStatus(WebPage $oPage)
     
     $oPage->add('<div class="module-selection-body">');
     // Now scan the extensions and display a report of the extensions brought by the hub
-    $oExtensionsMap = new iTopExtensionsMap();
     $sPath = APPROOT.'data/downloaded-extensions/';
+    $aExtraDirs = array();
     if (is_dir($sPath))
     {
-    	$oExtensionsMap->ReadDir($sPath, iTopExtension::SOURCE_REMOTE); // Also read the extra downloaded-modules directory
+        $aExtraDirs[] = $sPath; // Also read the extra downloaded-modules directory
     }
+    $oExtensionsMap = new iTopExtensionsMap('production', true, $aExtraDirs);
     $oExtensionsMap->LoadChoicesFromDatabase(MetaModel::GetConfig());
     
     foreach($oExtensionsMap->GetAllExtensions() as $oExtension)
@@ -157,10 +158,14 @@ function DoInstall(WebPage $oPage)
     
     
     // Now scan the extensions and display a report of the extensions brought by the hub
-    $oExtensionsMap = new iTopExtensionsMap();
-    $oExtensionsMap->NormalizeOldExtensions(iTopExtension::SOURCE_REMOTE);
+    // Now scan the extensions and display a report of the extensions brought by the hub
     $sPath = APPROOT.'data/downloaded-extensions/';
-    $oExtensionsMap->ReadDir($sPath, iTopExtension::SOURCE_REMOTE); // Also read the extra downloaded-extensions directory
+    $aExtraDirs = array();
+    if (is_dir($sPath))
+    {
+        $aExtraDirs[] = $sPath; // Also read the extra downloaded-modules directory
+    }
+    $oExtensionsMap = new iTopExtensionsMap('production', true, $aExtraDirs);
     $oExtensionsMap->LoadChoicesFromDatabase(MetaModel::GetConfig());
 
     foreach($oExtensionsMap->GetAllExtensions() as $oExtension)
