@@ -509,7 +509,7 @@ $pagination-disabled-border:           #ddd !default;
 
 $pager-bg:                             $pagination-bg !default;
 $pager-border:                         $pagination-border !default;
-$pager-border-radius:                  15px !default;
+$pager-border-radius:                  $border-radius-base !default;
 
 $pager-hover-bg:                       $brand-primary !default;
 
@@ -825,7 +825,7 @@ $badge-active-bg:             #fff !default;
 
 $badge-font-weight:           bold !default;
 $badge-line-height:           1 !default;
-$badge-border-radius:         10px !default;
+$badge-border-radius:         $border-radius-base !default;
 
 
 //== Breadcrumbs

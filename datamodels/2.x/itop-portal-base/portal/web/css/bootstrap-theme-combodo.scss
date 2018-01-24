@@ -527,7 +527,7 @@ pre code {
     color: inherit;
     white-space: pre-wrap;
     background-color: transparent;
-    border-radius: 0
+    border-radius: $border-radius-base
 }
 .pre-scrollable {
     max-height: 340px;
@@ -2487,7 +2487,7 @@ fieldset[disabled] .btn-danger.active {
 .btn-link {
     color: $brand-primary;
     font-weight: normal;
-    border-radius: 0
+    border-radius: $border-radius-base
 }
 .btn-link,
 .btn-link:active,
@@ -2779,34 +2779,34 @@ tbody.collapse.in {
     margin-left: 5px
 }
 .btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle) {
-    border-radius: 0
+    border-radius: $border-radius-base
 }
 .btn-group>.btn:first-child {
     margin-left: 0
 }
 .btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle) {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0
+    border-bottom-right-radius: $border-radius-base;
+    border-top-right-radius: $border-radius-base
 }
 .btn-group>.btn:last-child:not(:first-child),
 .btn-group>.dropdown-toggle:not(:first-child) {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0
+    border-bottom-left-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base
 }
 .btn-group>.btn-group {
     float: left
 }
 .btn-group>.btn-group:not(:first-child):not(:last-child)>.btn {
-    border-radius: 0
+    border-radius: $border-radius-base
 }
 .btn-group>.btn-group:first-child:not(:last-child)>.btn:last-child,
 .btn-group>.btn-group:first-child:not(:last-child)>.dropdown-toggle {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0
+    border-bottom-right-radius: $border-radius-base;
+    border-top-right-radius: $border-radius-base
 }
 .btn-group>.btn-group:last-child:not(:first-child)>.btn:first-child {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0
+    border-bottom-left-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base
 }
 .btn-group .dropdown-toggle:active,
 .btn-group.open .dropdown-toggle {
@@ -2857,29 +2857,29 @@ tbody.collapse.in {
     margin-left: 0
 }
 .btn-group-vertical>.btn:not(:first-child):not(:last-child) {
-    border-radius: 0
+    border-radius: $border-radius-base
 }
 .btn-group-vertical>.btn:first-child:not(:last-child) {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0
+    border-top-right-radius: $border-radius-base;
+    border-bottom-right-radius: $border-radius-base;
+    border-bottom-left-radius: $border-radius-base
 }
 .btn-group-vertical>.btn:last-child:not(:first-child) {
-    border-bottom-left-radius: 4px;
-    border-top-right-radius: 0;
-    border-top-left-radius: 0
+    border-bottom-left-radius: $border-radius-base;
+    border-top-right-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base
 }
 .btn-group-vertical>.btn-group:not(:first-child):not(:last-child)>.btn {
-    border-radius: 0
+    border-radius: $border-radius-base
 }
 .btn-group-vertical>.btn-group:first-child:not(:last-child)>.btn:last-child,
 .btn-group-vertical>.btn-group:first-child:not(:last-child)>.dropdown-toggle {
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0
+    border-bottom-right-radius: $border-radius-base;
+    border-bottom-left-radius: $border-radius-base
 }
 .btn-group-vertical>.btn-group:last-child:not(:first-child)>.btn:first-child {
-    border-top-right-radius: 0;
-    border-top-left-radius: 0
+    border-top-right-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base
 }
 .btn-group-justified {
     display: table;
@@ -2978,7 +2978,7 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 .input-group-addon:not(:first-child):not(:last-child),
 .input-group-btn:not(:first-child):not(:last-child),
 .input-group .form-control:not(:first-child):not(:last-child) {
-    border-radius: 0
+    border-radius: $border-radius-base
 }
 .input-group-addon,
 .input-group-btn {
@@ -3018,8 +3018,8 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 .input-group-btn:first-child>.dropdown-toggle,
 .input-group-btn:last-child>.btn:not(:last-child):not(.dropdown-toggle),
 .input-group-btn:last-child>.btn-group:not(:last-child)>.btn {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0
+    border-bottom-right-radius: $border-radius-base;
+    border-top-right-radius: $border-radius-base
 }
 .input-group-addon:first-child {
     border-right: 0
@@ -3031,8 +3031,8 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
 .input-group-btn:last-child>.dropdown-toggle,
 .input-group-btn:first-child>.btn:not(:first-child),
 .input-group-btn:first-child>.btn-group:not(:first-child)>.btn {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0
+    border-bottom-left-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base
 }
 .input-group-addon:last-child {
     border-left: 0
@@ -3906,13 +3906,13 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
 .pagination>li:first-child>a,
 .pagination>li:first-child>span {
     margin-left: 0;
-    border-bottom-left-radius: 4px;
-    border-top-left-radius: 4px
+    border-bottom-left-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base
 }
 .pagination>li:last-child>a,
 .pagination>li:last-child>span {
-    border-bottom-right-radius: 4px;
-    border-top-right-radius: 4px
+    border-bottom-right-radius: $border-radius-base;
+    border-top-right-radius: $border-radius-base
 }
 .pagination>li>a:hover,
 .pagination>li>span:hover,
@@ -4429,13 +4429,13 @@ a.thumbnail.active {
     border: 1px solid #dddddd
 }
 .list-group-item:first-child {
-    border-top-right-radius: 4px;
-    border-top-left-radius: 4px
+    border-top-right-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base
 }
 .list-group-item:last-child {
     margin-bottom: 0;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px
+    border-bottom-right-radius: $border-radius-base;
+    border-bottom-left-radius: $border-radius-base
 }
 a.list-group-item,
 button.list-group-item {
@@ -4674,7 +4674,7 @@ button.list-group-item-danger.active:focus {
 .panel>.list-group .list-group-item,
 .panel>.panel-collapse>.list-group .list-group-item {
     border-width: 1px 0;
-    border-radius: 0
+    border-radius: $border-radius-base
 }
 .panel>.list-group:first-child .list-group-item:first-child,
 .panel>.panel-collapse>.list-group:first-child .list-group-item:first-child {
@@ -4690,8 +4690,8 @@ button.list-group-item-danger.active:focus {
     border-bottom-left-radius: $border-radius-base
 }
 .panel>.panel-heading+.panel-collapse>.list-group .list-group-item:first-child {
-    border-top-right-radius: 0;
-    border-top-left-radius: 0
+    border-top-right-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base
 }
 .panel-heading+.list-group .list-group-item:first-child {
     border-top-width: 0
