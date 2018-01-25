@@ -5,14 +5,14 @@ iTop 2.4.1 is the 31st release of iTop.
 
 Changes since the previous version
 -------------------------------------------------------------------
-https://wiki.combodo.com/doku.php?id=latest:release:change_log
+https://wiki.openitop.org/doku.php?id=2_4_0:release:change_log
 
 
 New features
 -------------------------------------------------------------------
-https://wiki.combodo.com/doku.php?id=latest:release:2_4_whats_new
+https://wiki.openitop.org/doku.php?id=2_4_0:release:2_4_whats_new
 
 
 Migration notes
 -------------------------------------------------------------------
-https://wiki.combodo.com/doku.php?id=latest:install:230_to_240_migration_notes
+https://wiki.openitop.org/doku.php?id=2_4_0:install:230_to_240_migration_notes
