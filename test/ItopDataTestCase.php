@@ -29,6 +29,7 @@ use ArchivedObjectException;
 use CMDBSource;
 use Contact;
 use DBObject;
+use DBObjectSet;
 use Exception;
 use Farm;
 use FunctionalCI;
@@ -39,6 +40,7 @@ use Person;
 use PHPUnit\Framework\TestCase;
 use Server;
 use Ticket;
+use URP_UserProfile;
 use VirtualHost;
 use VirtualMachine;
 
@@ -174,6 +176,30 @@ class ItopDataTestCase extends ItopTestCase
         $this->debug("Created {$oPerson->GetName()} ({$oPerson->GetKey()})\n");
         return $oPerson;
     }
+
+	/**
+	 * @param string $sLogin
+	 * @param int $iProfileId
+	 * @return \DBObject
+	 * @throws Exception
+	 */
+	protected function CreateUser($sLogin, $iProfileId)
+    {
+	    $oUserProfile = new URP_UserProfile();
+	    $oUserProfile->Set('profileid', $iProfileId);
+	    $oUserProfile->Set('reason', 'UNIT Tests');
+	    $oSet = DBObjectSet::FromObject($oUserProfile);
+    	$oUser = self::createObject('UserLocal', array(
+		    'contactid' => 2,
+		    'login' => $sLogin,
+		    'password' => $sLogin,
+		    'language' => 'EN US',
+		    'profile_list' => $oSet,
+	    ));
+	    $this->debug("Created {$oUser->GetName()} ({$oUser->GetKey()})\n");
+	    return $oUser;
+    }
+
 
     /**
      * Create a Hypervisor in database
