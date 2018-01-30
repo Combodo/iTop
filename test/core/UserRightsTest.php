@@ -136,46 +136,46 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		return array(
 			/* Administrator (7 = UR_ACTION_CREATE)  */
-			array(1 , array('class' => 'FunctionalCI', 'action' => 7, 'res' => true)),
-			array(1 , array('class' => 'UserRequest', 'action' => 7, 'res' => true)),
-			array(1 , array('class' => 'URP_UserProfile', 'action' => 7, 'res' => true)),
-			array(1 , array('class' => 'UserLocal', 'action' => 7, 'res' => true)),
-			array(1 , array('class' => 'ModuleInstallation', 'action' => 7, 'res' => true)),
+			'Administrator FunctionalCI write' => array(1 , array('class' => 'FunctionalCI', 'action' => 7, 'res' => true)),
+			'Administrator UserRequest write' => array(1 , array('class' => 'UserRequest', 'action' => 7, 'res' => true)),
+			'Administrator URP_UserProfile write' => array(1 , array('class' => 'URP_UserProfile', 'action' => 7, 'res' => true)),
+			'Administrator UserLocal write' => array(1 , array('class' => 'UserLocal', 'action' => 7, 'res' => true)),
+			'Administrator ModuleInstallation write' => array(1 , array('class' => 'ModuleInstallation', 'action' => 7, 'res' => true)),
 
 			/* User Portal  (7 = UR_ACTION_CREATE) */
-			array(2 , array('class' => 'FunctionalCI', 'action' => 7, 'res' => false)),
-			array(2 , array('class' => 'UserRequest', 'action' => 7, 'res' => true)),
-			array(2 , array('class' => 'URP_UserProfile', 'action' => 7, 'res' => false)),
-			array(2 , array('class' => 'UserLocal', 'action' => 7, 'res' => false)),
-			array(2 , array('class' => 'ModuleInstallation', 'action' => 7, 'res' => false)),
+			'User Portal FunctionalCI write' => array(2 , array('class' => 'FunctionalCI', 'action' => 7, 'res' => false)),
+			'User Portal UserRequest write' => array(2 , array('class' => 'UserRequest', 'action' => 7, 'res' => true)),
+			'User Portal URP_UserProfile write' => array(2 , array('class' => 'URP_UserProfile', 'action' => 7, 'res' => false)),
+			'User Portal UserLocal write' => array(2 , array('class' => 'UserLocal', 'action' => 7, 'res' => false)),
+			'User Portal ModuleInstallation write' => array(2 , array('class' => 'ModuleInstallation', 'action' => 7, 'res' => false)),
 
 			/* Configuration manager (7 = UR_ACTION_CREATE) */
-			array(3 , array('class' => 'FunctionalCI', 'action' => 7, 'res' => true)),
-			array(3 , array('class' => 'UserRequest', 'action' => 7, 'res' => false)),
-			array(3 , array('class' => 'URP_UserProfile', 'action' => 7, 'res' => false)),
-			array(3 , array('class' => 'UserLocal', 'action' => 7, 'res' => false)),
-			array(3 , array('class' => 'ModuleInstallation', 'action' => 7, 'res' => false)),
+			'Configuration manager FunctionalCI write' => array(3 , array('class' => 'FunctionalCI', 'action' => 7, 'res' => true)),
+			'Configuration manager UserRequest write' => array(3 , array('class' => 'UserRequest', 'action' => 7, 'res' => false)),
+			'Configuration manager URP_UserProfile write' => array(3 , array('class' => 'URP_UserProfile', 'action' => 7, 'res' => false)),
+			'Configuration manager UserLocal write' => array(3 , array('class' => 'UserLocal', 'action' => 7, 'res' => false)),
+			'Configuration manager ModuleInstallation write' => array(3 , array('class' => 'ModuleInstallation', 'action' => 7, 'res' => false)),
 
 			/* Administrator (1 = UR_ACTION_READ)  */
-			array(1 , array('class' => 'FunctionalCI', 'action' => 1, 'res' => true)),
-			array(1 , array('class' => 'UserRequest', 'action' => 1, 'res' => true)),
-			array(1 , array('class' => 'URP_UserProfile', 'action' => 1, 'res' => true)),
-			array(1 , array('class' => 'UserLocal', 'action' => 1, 'res' => true)),
-			array(1 , array('class' => 'ModuleInstallation', 'action' => 1, 'res' => true)),
+			'Administrator FunctionalCI read' => array(1 , array('class' => 'FunctionalCI', 'action' => 1, 'res' => true)),
+			'Administrator UserRequest read' => array(1 , array('class' => 'UserRequest', 'action' => 1, 'res' => true)),
+			'Administrator URP_UserProfile read' => array(1 , array('class' => 'URP_UserProfile', 'action' => 1, 'res' => true)),
+			'Administrator UserLocal read' => array(1 , array('class' => 'UserLocal', 'action' => 1, 'res' => true)),
+			'Administrator ModuleInstallation read' => array(1 , array('class' => 'ModuleInstallation', 'action' => 1, 'res' => true)),
 
 			/* User Portal  (1 = UR_ACTION_READ) */
-			array(2 , array('class' => 'FunctionalCI', 'action' => 1, 'res' => true)),
-			array(2 , array('class' => 'UserRequest', 'action' => 1, 'res' => true)),
-			array(2 , array('class' => 'URP_UserProfile', 'action' => 1, 'res' => false)),
-			array(2 , array('class' => 'UserLocal', 'action' => 1, 'res' => false)),
-			array(2 , array('class' => 'ModuleInstallation', 'action' => 1, 'res' => true)),
+			'User Portal FunctionalCI read' => array(2 , array('class' => 'FunctionalCI', 'action' => 1, 'res' => true)),
+			'User Portal UserRequest read' => array(2 , array('class' => 'UserRequest', 'action' => 1, 'res' => true)),
+			'User Portal URP_UserProfile read' => array(2 , array('class' => 'URP_UserProfile', 'action' => 1, 'res' => false)),
+			'User Portal UserLocal read' => array(2 , array('class' => 'UserLocal', 'action' => 1, 'res' => false)),
+			'User Portal ModuleInstallation read' => array(2 , array('class' => 'ModuleInstallation', 'action' => 1, 'res' => true)),
 
 			/* Configuration manager (1 = UR_ACTION_READ) */
-			array(3 , array('class' => 'FunctionalCI', 'action' => 1, 'res' => true)),
-			array(3 , array('class' => 'UserRequest', 'action' => 1, 'res' => true)),
-			array(3 , array('class' => 'URP_UserProfile', 'action' => 1, 'res' => false)),
-			array(3 , array('class' => 'UserLocal', 'action' => 1, 'res' => false)),
-			array(3 , array('class' => 'ModuleInstallation', 'action' => 1, 'res' => true)),
+			'Configuration manager FunctionalCI read' => array(3 , array('class' => 'FunctionalCI', 'action' => 1, 'res' => true)),
+			'Configuration manager UserRequest read' => array(3 , array('class' => 'UserRequest', 'action' => 1, 'res' => true)),
+			'Configuration manager URP_UserProfile read' => array(3 , array('class' => 'URP_UserProfile', 'action' => 1, 'res' => false)),
+			'Configuration manager UserLocal read' => array(3 , array('class' => 'UserLocal', 'action' => 1, 'res' => false)),
+			'Configuration manager ModuleInstallation read' =>array(3 , array('class' => 'ModuleInstallation', 'action' => 1, 'res' => true)),
 		);
 	}
 
@@ -200,8 +200,8 @@ class UserRightsTest extends ItopDataTestCase
 	/*
 	 * FunctionalCI       => bizmodel	searchable
 	 * UserRequest        => bizmodel	searchable	requestmgmt
-	 * URP_UserProfile    => addon/userrights
-	 * UserLocal          => addon/authentication
+	 * URP_UserProfile    => addon/userrights   grant_by_profile
+	 * UserLocal          => addon/authentication   grant_by_profile
 	 * ModuleInstallation => core	view_in_gui
 	 *
 	 */
@@ -209,25 +209,25 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		$aClassActionResult = array(
 			/* Administrator (2 = UR_ACTION_MODIFY)  */
-			array(1 , array('class' => 'FunctionalCI', 'action' => 2, 'res' => true)),
-			array(1 , array('class' => 'UserRequest', 'action' => 2, 'res' => true)),
-			array(1 , array('class' => 'URP_UserProfile', 'action' => 2, 'res' => true)),
-			array(1 , array('class' => 'UserLocal', 'action' => 2, 'res' => true)),
-			array(1 , array('class' => 'ModuleInstallation', 'action' => 2, 'res' => true)),
+			'Administrator FunctionalCI' => array(1 , array('class' => 'FunctionalCI', 'action' => 2, 'res' => true)),
+			'Administrator UserRequest' => array(1 , array('class' => 'UserRequest', 'action' => 2, 'res' => true)),
+			'Administrator URP_UserProfile' => array(1 , array('class' => 'URP_UserProfile', 'action' => 2, 'res' => true)),
+			'Administrator UserLocal' => array(1 , array('class' => 'UserLocal', 'action' => 2, 'res' => true)),
+			'Administrator ModuleInstallation' => array(1 , array('class' => 'ModuleInstallation', 'action' => 2, 'res' => true)),
 
 			/* User Portal  (2 = UR_ACTION_MODIFY) */
-			array(2 , array('class' => 'FunctionalCI', 'action' => 2, 'res' => false)),
-			array(2 , array('class' => 'UserRequest', 'action' => 2, 'res' => true)),
-			array(2 , array('class' => 'URP_UserProfile', 'action' => 2, 'res' => true)),
-			array(2 , array('class' => 'UserLocal', 'action' => 2, 'res' => true)),
-			array(2 , array('class' => 'ModuleInstallation', 'action' => 2, 'res' => true)),
+			'User Portal FunctionalCI' => array(2 , array('class' => 'FunctionalCI', 'action' => 2, 'res' => false)),
+			'User Portal UserRequest' => array(2 , array('class' => 'UserRequest', 'action' => 2, 'res' => true)),
+			'User Portal URP_UserProfile' => array(2 , array('class' => 'URP_UserProfile', 'action' => 2, 'res' => false)),
+			'User Portal UserLocal' => array(2 , array('class' => 'UserLocal', 'action' => 2, 'res' => false)),
+			'User Portal ModuleInstallation' => array(2 , array('class' => 'ModuleInstallation', 'action' => 2, 'res' => true)),
 
 			/* Configuration manager (2 = UR_ACTION_MODIFY) */
-			array(3 , array('class' => 'FunctionalCI', 'action' => 2, 'res' => true)),
-			array(3 , array('class' => 'UserRequest', 'action' => 2, 'res' => false)),
-			array(3 , array('class' => 'URP_UserProfile', 'action' => 2, 'res' => true)),
-			array(3 , array('class' => 'UserLocal', 'action' => 2, 'res' => true)),
-			array(3 , array('class' => 'ModuleInstallation', 'action' => 2, 'res' => true)),
+			'Configuration manager FunctionalCI' => array(3 , array('class' => 'FunctionalCI', 'action' => 2, 'res' => true)),
+			'Configuration manager UserRequest' => array(3 , array('class' => 'UserRequest', 'action' => 2, 'res' => false)),
+			'Configuration manager URP_UserProfile' => array(3 , array('class' => 'URP_UserProfile', 'action' => 2, 'res' => false)),
+			'Configuration manager UserLocal' => array(3 , array('class' => 'UserLocal', 'action' => 2, 'res' => false)),
+			'Configuration manager ModuleInstallation' => array(3 , array('class' => 'ModuleInstallation', 'action' => 2, 'res' => true)),
 		);
 
 		return $aClassActionResult;

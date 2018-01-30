@@ -2167,16 +2167,21 @@ class ProfilesConfig
 			if (!\$bAllow) return false;
 		}
 
-		// 4 - All
+		// 4 - All (only for bizmodel)
+		// As the profiles now manage also grant_by_profile category,
+		// '*' is restricted to bizmodel to avoid openning the access for the existing profiles.
 		// 
-		\$sGrantKey = \$iProfileId.'_*_'.\$sAction;
-		if (isset(self::\$aGRANTS[\$sGrantKey]))
-		{
-			\$bAllow = self::\$aGRANTS[\$sGrantKey];
-			if (\$bLegacyBehavior) return \$bAllow;
-			if (!\$bAllow) return false;
+		if (MetaModel::HasCategory(\$sClass, 'bizmodel'))
+		{ 
+			\$sGrantKey = \$iProfileId.'_*_'.\$sAction;
+			if (isset(self::\$aGRANTS[\$sGrantKey]))
+			{
+				\$bAllow = self::\$aGRANTS[\$sGrantKey];
+				if (\$bLegacyBehavior) return \$bAllow;
+				if (!\$bAllow) return false;
+			}
 		}
-
+		
 		// null or true
 		return \$bAllow;
 	}	

@@ -1053,6 +1053,7 @@ EOF
 
 		$aExtraFieldsRaw = isset($aExtraParams['extra_fields']) ? explode(',', trim($aExtraParams['extra_fields'])) : array();
 		$aExtraFields = array();
+		$sAttCode = '';
 		foreach ($aExtraFieldsRaw as $sFieldName)
 		{
 			// Ignore attributes not of the main queried class
@@ -1077,7 +1078,7 @@ EOF
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
 		{
-			if ( (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS)) &&
+			if ( (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO) &&
 			( (count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases))) )
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
@@ -1166,7 +1167,7 @@ EOF
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
 		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO)
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
@@ -1302,7 +1303,7 @@ EOF
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
 		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO)
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
@@ -1465,7 +1466,7 @@ EOF
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
 		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO)
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}

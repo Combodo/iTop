@@ -168,7 +168,7 @@ abstract class User extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core",
+			"category" => "core,grant_by_profile",
 			"key_type" => "autoincrement",
 			"name_attcode" => "login",
 			"state_attcode" => "",
@@ -422,7 +422,7 @@ abstract class UserInternal extends User
 	{
 		$aParams = array
 		(
-			"category" => "core",
+			"category" => "core,grant_by_profile",
 			"key_type" => "autoincrement",
 			"name_attcode" => "login",
 			"state_attcode" => "",
@@ -568,7 +568,7 @@ class UserRights
 		return $bRes;
 	}
 	
-	protected static function IsLoggedIn()
+	public static function IsLoggedIn()
 	{
 		if (self::$m_oUser == null)
 		{
@@ -710,6 +710,7 @@ class UserRights
 		}
 		else
 		{
+			$oUser->AllowWrite(true);
 			return $oUser->ChangePassword($sOldPassword, $sNewPassword);
 		}
 	}
@@ -929,7 +930,7 @@ class UserRights
 
 		if (self::IsAdministrator()) return true;
 
-		if (MetaModel::HasCategory($sClass, 'bizmodel'))
+		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile'))
 		{
 			return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
 		}
@@ -939,18 +940,25 @@ class UserRights
 		}
 	}
 
-	public static function IsActionAllowed($sClass, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
+	/**
+	 * @param string $sClass
+	 * @param int $iActionCode
+	 * @param DBObjectSet $oInstanceSet
+	 * @param User $oUser
+	 * @return int (UR_ALLOWED_YES|UR_ALLOWED_NO|UR_ALLOWED_DEPENDS)
+	 */
+	public static function IsActionAllowed($sClass, $iActionCode, /*dbObjectSet*/$oInstanceSet = null, $oUser = null)
 	{
 		// When initializing, we need to let everything pass trough
-		if (!self::CheckLogin()) return true;
+		if (!self::CheckLogin()) return UR_ALLOWED_YES;
 
 		if (MetaModel::DBIsReadOnly())
 		{
-			if ($iActionCode == UR_ACTION_CREATE) return false;
-			if ($iActionCode == UR_ACTION_MODIFY) return false;
-			if ($iActionCode == UR_ACTION_BULK_MODIFY) return false;
-			if ($iActionCode == UR_ACTION_DELETE) return false;
-			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
+			if ($iActionCode == UR_ACTION_CREATE) return UR_ALLOWED_NO;
+			if ($iActionCode == UR_ACTION_MODIFY) return UR_ALLOWED_NO;
+			if ($iActionCode == UR_ACTION_BULK_MODIFY) return UR_ALLOWED_NO;
+			if ($iActionCode == UR_ACTION_DELETE) return UR_ALLOWED_NO;
+			if ($iActionCode == UR_ACTION_BULK_DELETE) return UR_ALLOWED_NO;
 		}
 
 		$aPredefinedObjects = call_user_func(array($sClass, 'GetPredefinedObjects'));
@@ -959,14 +967,14 @@ class UserRights
 			// As opposed to the read-only DB, modifying an object is allowed
 			// (the constant columns will be marked as read-only)
 			//
-			if ($iActionCode == UR_ACTION_CREATE) return false;
-			if ($iActionCode == UR_ACTION_DELETE) return false;
-			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
+			if ($iActionCode == UR_ACTION_CREATE) return UR_ALLOWED_NO;
+			if ($iActionCode == UR_ACTION_DELETE) return UR_ALLOWED_NO;
+			if ($iActionCode == UR_ACTION_BULK_DELETE) return UR_ALLOWED_NO;
 		}
 
-		if (self::IsAdministrator($oUser)) return true;
+		if (self::IsAdministrator($oUser)) return UR_ALLOWED_YES;
 
-		if (MetaModel::HasCategory($sClass, 'bizmodel'))
+		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile'))
 		{
 			if (is_null($oUser))
 			{
@@ -982,12 +990,12 @@ class UserRights
 		}
 		elseif(($iActionCode == UR_ACTION_READ) && MetaModel::HasCategory($sClass, 'view_in_gui'))
 		{
-			return true;
+			return UR_ALLOWED_YES;
 		}
 		else
 		{
 			// Other classes could be edited/listed by the administrators
-			return false;
+			return UR_ALLOWED_NO;
 		}
 	}
 
@@ -1018,32 +1026,45 @@ class UserRights
 		}
 	}
 
-	public static function IsActionAllowedOnAttribute($sClass, $sAttCode, $iActionCode, /*dbObjectSet*/ $oInstanceSet = null, $oUser = null)
+	/**
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param int $iActionCode
+	 * @param DBObjectSet $oInstanceSet
+	 * @param User $oUser
+	 * @return int (UR_ALLOWED_YES|UR_ALLOWED_NO)
+	 */
+	public static function IsActionAllowedOnAttribute($sClass, $sAttCode, $iActionCode, /*dbObjectSet*/$oInstanceSet = null, $oUser = null)
 	{
 		// When initializing, we need to let everything pass trough
-		if (!self::CheckLogin()) return true;
+		if (!self::CheckLogin()) return UR_ALLOWED_YES;
 
 		if (MetaModel::DBIsReadOnly())
 		{
-			if ($iActionCode == UR_ACTION_MODIFY) return false;
-			if ($iActionCode == UR_ACTION_DELETE) return false;
-			if ($iActionCode == UR_ACTION_BULK_MODIFY) return false;
-			if ($iActionCode == UR_ACTION_BULK_DELETE) return false;
+			if ($iActionCode == UR_ACTION_MODIFY) return UR_ALLOWED_NO;
+			if ($iActionCode == UR_ACTION_DELETE) return UR_ALLOWED_NO;
+			if ($iActionCode == UR_ACTION_BULK_MODIFY) return falUR_ALLOWED_NOse;
+			if ($iActionCode == UR_ACTION_BULK_DELETE) return UR_ALLOWED_NO;
 		}
 
-		if (self::IsAdministrator($oUser)) return true;
+		if (self::IsAdministrator($oUser)) return UR_ALLOWED_YES;
+
+		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile'))
+		{
+			if (is_null($oUser))
+			{
+				$oUser = self::$m_oUser;
+			}
+			return self::$m_oAddOn->IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet);
+		}
 
 		// this module is forbidden for non admins
-		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return false;
+		if (MetaModel::HasCategory($sClass, 'addon/userrights')) return UR_ALLOWED_NO;
 
-		// the rest is allowed (#@# to be improved)
-		if (!MetaModel::HasCategory($sClass, 'bizmodel')) return true;
+		// the rest is allowed
+		return UR_ALLOWED_YES;
 
-		if (is_null($oUser))
-		{
-			$oUser = self::$m_oUser;
-		}
-		return self::$m_oAddOn->IsActionAllowedOnAttribute($oUser, $sClass, $sAttCode, $iActionCode, $oInstanceSet);
+
 	}
 
 	protected static $m_aAdmins = array();

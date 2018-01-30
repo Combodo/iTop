@@ -462,7 +462,7 @@ class ExcelExporter
 		$this->aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
 		{
-			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO)
 			{
 				$this->aAuthorizedClasses[$sAlias] = $sClassName;
 			}

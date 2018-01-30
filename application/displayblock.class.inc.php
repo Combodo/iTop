@@ -602,7 +602,7 @@ class DisplayBlock
 				// Check the classes that can be read (i.e authorized) by this user...
 				foreach($aClasses as $sAlias => $sClassName)
 				{
-					if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ,  $this->m_oSet) && (UR_ALLOWED_YES || UR_ALLOWED_DEPENDS))
+					if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ,  $this->m_oSet) != UR_ALLOWED_NO)
 					{
 						$aAuthorizedClasses[$sAlias] = $sClassName;
 					}

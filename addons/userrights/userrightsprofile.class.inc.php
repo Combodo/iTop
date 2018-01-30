@@ -239,7 +239,7 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights",
+			"category" => "addon/userrights,grant_by_profile",
 			"key_type" => "autoincrement",
 			"name_attcode" => "userid",
 			"state_attcode" => "",
@@ -284,6 +284,34 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 		}
 		return parent::CheckToDelete($oDeletionPlan);
 	}
+
+	protected function OnInsert()
+	{
+		$this->CheckIfProfileIsAllowed(UR_ACTION_CREATE);
+	}
+
+	protected function OnUpdate()
+	{
+		$this->CheckIfProfileIsAllowed(UR_ACTION_MODIFY);
+	}
+
+	protected function OnDelete()
+	{
+		$this->CheckIfProfileIsAllowed(UR_ACTION_DELETE);
+	}
+
+	protected function CheckIfProfileIsAllowed($iActionCode)
+	{
+		if (!UserRights::IsActionAllowed(get_class($this), $iActionCode, DBObjectSet::FromObject($this)))
+		{
+			throw new SecurityException(Dict::Format('UI:Error:ObjectCannotBeUpdated'));
+		}
+		if (UserRights::IsLoggedIn() && !UserRights::IsAdministrator() && ($this->Get('profile') === ADMIN_PROFILE_NAME))
+		{
+			throw new SecurityException(Dict::Format('UI:Login:Error:AccessAdmin'));
+		}
+	}
+
 }
 
 class URP_UserOrg extends UserRightsBaseClassGUI
@@ -292,7 +320,7 @@ class URP_UserOrg extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights",
+			"category" => "addon/userrights,grant_by_profile",
 			"key_type" => "autoincrement",
 			"name_attcode" => "userid",
 			"state_attcode" => "",
