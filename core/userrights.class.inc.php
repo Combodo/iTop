@@ -930,7 +930,7 @@ class UserRights
 
 		if (self::IsAdministrator()) return true;
 
-		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile'))
+		if (MetaModel::HasCategory($sClass, 'bizmodel'))
 		{
 			return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
 		}
