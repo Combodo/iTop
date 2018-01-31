@@ -3,8 +3,8 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
- * (c) 2009 Armin Ronacher
+ * (c) Fabien Potencier
+ * (c) Armin Ronacher
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,11 +22,6 @@ class Twig_Node_BlockReference extends Twig_Node implements Twig_NodeOutputInter
         parent::__construct(array(), array('name' => $name), $lineno, $tag);
     }
 
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler $compiler A Twig_Compiler instance
-     */
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
@@ -35,3 +30,5 @@ class Twig_Node_BlockReference extends Twig_Node implements Twig_NodeOutputInter
         ;
     }
 }
+
+class_alias('Twig_Node_BlockReference', 'Twig\Node\BlockReferenceNode', false);

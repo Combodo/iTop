@@ -3,10 +3,14 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ */
+
+/**
+ * @final
  */
 class Twig_Extension_Sandbox extends Twig_Extension
 {
@@ -20,21 +24,11 @@ class Twig_Extension_Sandbox extends Twig_Extension
         $this->sandboxedGlobally = $sandboxed;
     }
 
-    /**
-     * Returns the token parser instances to add to the existing list.
-     *
-     * @return array An array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances
-     */
     public function getTokenParsers()
     {
         return array(new Twig_TokenParser_Sandbox());
     }
 
-    /**
-     * Returns the node visitor instances to add to the existing list.
-     *
-     * @return Twig_NodeVisitorInterface[] An array of Twig_NodeVisitorInterface instances
-     */
     public function getNodeVisitors()
     {
         return array(new Twig_NodeVisitor_Sandbox());
@@ -100,13 +94,10 @@ class Twig_Extension_Sandbox extends Twig_Extension
         return $obj;
     }
 
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
     public function getName()
     {
         return 'sandbox';
     }
 }
+
+class_alias('Twig_Extension_Sandbox', 'Twig\Extension\SandboxExtension', false);

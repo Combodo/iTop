@@ -11,38 +11,29 @@
 
 namespace Silex\Tests\Application;
 
-use Silex\Provider\UrlGeneratorServiceProvider;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * UrlGeneratorTrait test cases.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @requires PHP 5.4
  */
-class UrlGeneratorTraitTest extends \PHPUnit_Framework_TestCase
+class UrlGeneratorTraitTest extends TestCase
 {
     public function testUrl()
     {
-        $app = $this->createApplication();
-        $app['url_generator'] = $translator = $this->getMockBuilder('Symfony\Component\Routing\Generator\UrlGeneratorInterface')->disableOriginalConstructor()->getMock();
-        $translator->expects($this->once())->method('generate')->with('foo', array(), true);
+        $app = new UrlGeneratorApplication();
+        $app['url_generator'] = $this->getMockBuilder('Symfony\Component\Routing\Generator\UrlGeneratorInterface')->disableOriginalConstructor()->getMock();
+        $app['url_generator']->expects($this->once())->method('generate')->with('foo', array(), UrlGeneratorInterface::ABSOLUTE_URL);
         $app->url('foo');
     }
 
     public function testPath()
     {
-        $app = $this->createApplication();
-        $app['url_generator'] = $translator = $this->getMockBuilder('Symfony\Component\Routing\Generator\UrlGeneratorInterface')->disableOriginalConstructor()->getMock();
-        $translator->expects($this->once())->method('generate')->with('foo', array(), false);
-        $app->path('foo');
-    }
-
-    public function createApplication()
-    {
         $app = new UrlGeneratorApplication();
-        $app->register(new UrlGeneratorServiceProvider());
-
-        return $app;
+        $app['url_generator'] = $this->getMockBuilder('Symfony\Component\Routing\Generator\UrlGeneratorInterface')->disableOriginalConstructor()->getMock();
+        $app['url_generator']->expects($this->once())->method('generate')->with('foo', array(), UrlGeneratorInterface::ABSOLUTE_PATH);
+        $app->path('foo');
     }
 }

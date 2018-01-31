@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +22,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class RouterTest extends \PHPUnit_Framework_TestCase
+class RouterTest extends TestCase
 {
     public function testMapRouting()
     {
@@ -100,7 +101,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public function testMissingRoute()
     {
         $app = new Application();
-        $app['exception_handler']->disable();
+        unset($app['exception_handler']);
 
         $request = Request::create('/baz');
         $app->handle($request);
@@ -152,12 +153,12 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->get('/foo', function () use ($app) {
-            return new Response($app['request']->getRequestUri());
+        $app->get('/foo', function (Request $request) use ($app) {
+            return new Response($request->getRequestUri());
         });
 
-        $app->error(function ($e) use ($app) {
-            return new Response($app['request']->getRequestUri());
+        $app->error(function ($e, Request $request, $code) use ($app) {
+            return new Response($request->getRequestUri());
         });
 
         foreach (array('/foo', '/bar') as $path) {
@@ -230,6 +231,19 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $request = Request::create('http://example.com/secured?query=string');
         $response = $app->handle($request);
         $this->assertTrue($response->isRedirect('https://example.com/secured?query=string'));
+    }
+
+    public function testConditionOnRoute()
+    {
+        $app = new Application();
+        $app->match('/secured', function () {
+            return 'secured content';
+        })
+        ->when('request.isSecure() == true');
+
+        $request = Request::create('http://example.com/secured');
+        $response = $app->handle($request);
+        $this->assertEquals(404, $response->getStatusCode());
     }
 
     public function testClassNameControllerSyntax()

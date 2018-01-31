@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Silex\Provider\ServiceControllerServiceProvider;
@@ -20,7 +21,7 @@ use Silex\Provider\ServiceControllerServiceProvider;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class CallbackServicesTest extends \PHPUnit_Framework_TestCase
+class CallbackServicesTest extends TestCase
 {
     public $called = array();
 
@@ -29,9 +30,9 @@ class CallbackServicesTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
         $app->register(new ServiceControllerServiceProvider());
 
-        $app['service'] = $app->share(function () {
+        $app['service'] = function () {
             return new CallbackServicesTest();
-        });
+        };
 
         $app->before('service:beforeApp');
         $app->after('service:afterApp');

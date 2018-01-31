@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2012 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,16 +11,11 @@
 
 /**
  * Embeds a template.
+ *
+ * @final
  */
 class Twig_TokenParser_Embed extends Twig_TokenParser_Include
 {
-    /**
-     * Parses a token and returns a node.
-     *
-     * @param Twig_Token $token A Twig_Token instance
-     *
-     * @return Twig_NodeInterface A Twig_NodeInterface instance
-     */
     public function parse(Twig_Token $token)
     {
         $stream = $this->parser->getStream();
@@ -29,24 +24,33 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
 
         list($variables, $only, $ignoreMissing) = $this->parseArguments();
 
+        $parentToken = $fakeParentToken = new Twig_Token(Twig_Token::STRING_TYPE, '__parent__', $token->getLine());
+        if ($parent instanceof Twig_Node_Expression_Constant) {
+            $parentToken = new Twig_Token(Twig_Token::STRING_TYPE, $parent->getAttribute('value'), $token->getLine());
+        } elseif ($parent instanceof Twig_Node_Expression_Name) {
+            $parentToken = new Twig_Token(Twig_Token::NAME_TYPE, $parent->getAttribute('name'), $token->getLine());
+        }
+
         // inject a fake parent to make the parent() function work
         $stream->injectTokens(array(
             new Twig_Token(Twig_Token::BLOCK_START_TYPE, '', $token->getLine()),
             new Twig_Token(Twig_Token::NAME_TYPE, 'extends', $token->getLine()),
-            new Twig_Token(Twig_Token::STRING_TYPE, '__parent__', $token->getLine()),
+            $parentToken,
             new Twig_Token(Twig_Token::BLOCK_END_TYPE, '', $token->getLine()),
         ));
 
         $module = $this->parser->parse($stream, array($this, 'decideBlockEnd'), true);
 
         // override the parent with the correct one
-        $module->setNode('parent', $parent);
+        if ($fakeParentToken === $parentToken) {
+            $module->setNode('parent', $parent);
+        }
 
         $this->parser->embedTemplate($module);
 
         $stream->expect(Twig_Token::BLOCK_END_TYPE);
 
-        return new Twig_Node_Embed($module->getAttribute('filename'), $module->getAttribute('index'), $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+        return new Twig_Node_Embed($module->getTemplateName(), $module->getAttribute('index'), $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
 
     public function decideBlockEnd(Twig_Token $token)
@@ -54,13 +58,10 @@ class Twig_TokenParser_Embed extends Twig_TokenParser_Include
         return $token->test('endembed');
     }
 
-    /**
-     * Gets the tag name associated with this token parser.
-     *
-     * @return string The tag name
-     */
     public function getTag()
     {
         return 'embed';
     }
 }
+
+class_alias('Twig_TokenParser_Embed', 'Twig\TokenParser\EmbedTokenParser', false);

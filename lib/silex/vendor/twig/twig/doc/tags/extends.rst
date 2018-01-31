@@ -131,8 +131,8 @@ to variables from outer scopes:
 Block Shortcuts
 ---------------
 
-For blocks with few content, it's possible to use a shortcut syntax. The
-following constructs do the same:
+For blocks with little content, it's possible to use a shortcut syntax. The
+following constructs do the same thing:
 
 .. code-block:: jinja
 
@@ -153,12 +153,16 @@ Twig supports dynamic inheritance by using a variable as the base template:
 
     {% extends some_var %}
 
-If the variable evaluates to a ``Twig_Template`` object, Twig will use it as
-the parent template::
+If the variable evaluates to a ``Twig_Template`` or a ``Twig_TemplateWrapper``
+instance, Twig will use it as the parent template::
 
     // {% extends layout %}
 
+    // deprecated as of Twig 1.28
     $layout = $twig->loadTemplate('some_layout_template.twig');
+
+    // as of Twig 1.28
+    $layout = $twig->load('some_layout_template.twig');
 
     $twig->display('template.twig', array('layout' => $layout));
 

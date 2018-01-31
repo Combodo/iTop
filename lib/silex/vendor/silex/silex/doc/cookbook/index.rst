@@ -8,14 +8,13 @@ The cookbook section contains recipes for solving specific problems.
     :hidden:
 
     json_request_body
-    translating_validation_messages
     session_storage
     form_no_csrf
     validator_yaml
     sub_requests
     error_handler
     multiple_loggers
-    assets
+    guard_authentication
 
 Recipes
 -------
@@ -23,8 +22,6 @@ Recipes
 * :doc:`Accepting a JSON Request Body <json_request_body>` A common need when
   building a restful API is the ability to accept a JSON encoded entity from
   the request body.
-
-* :doc:`Translating Validation Messages<translating_validation_messages>`.
 
 * :doc:`Using PdoSessionStorage to store Sessions in the Database
   <session_storage>`.
@@ -40,4 +37,4 @@ Recipes
 
 * :doc:`Using multiple Monolog Loggers <multiple_loggers>`.
 
-* :doc:`Managing Assets in Templates <assets>`.
+* :doc:`How to Create a Custom Authentication System with Guard <guard_authentication>`.

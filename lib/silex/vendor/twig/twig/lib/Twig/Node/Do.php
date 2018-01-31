@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2011 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,11 +21,6 @@ class Twig_Node_Do extends Twig_Node
         parent::__construct(array('expr' => $expr), array(), $lineno, $tag);
     }
 
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler $compiler A Twig_Compiler instance
-     */
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
@@ -36,3 +31,5 @@ class Twig_Node_Do extends Twig_Node
         ;
     }
 }
+
+class_alias('Twig_Node_Do', 'Twig\Node\DoNode', false);

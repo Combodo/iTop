@@ -377,9 +377,9 @@ class ObjectFormManager extends FormManager
 			if ($this->aFormProperties['layout']['type'] === 'twig')
 			{
 				// Creating sandbox twig env. to load and test the custom form template
-				$oTwig = new \Twig_Environment(new \Twig_Loader_String());
+				$oTwig = new \Twig_Environment(new \Twig_Loader_Array( array($oForm->GetId() => $this->aFormProperties['layout']['content']) ));
 				ApplicationHelper::RegisterTwigExtensions($oTwig);
-				$sRendered = $oTwig->render($this->aFormProperties['layout']['content'], array('oRenderer' => $this->oRenderer, 'oObject' => $this->oObject));
+				$sRendered = $oTwig->render($oForm->GetId(), array('oRenderer' => $this->oRenderer, 'oObject' => $this->oObject));
 			}
 			else
 			{

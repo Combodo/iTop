@@ -3,18 +3,17 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2011 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
+/**
+ * @final
+ */
 class Twig_Extension_Debug extends Twig_Extension
 {
-    /**
-     * Returns a list of global functions to add to the existing list.
-     *
-     * @return array An array of global functions
-     */
     public function getFunctions()
     {
         // dump is safe if var_dump is overridden by xdebug
@@ -24,7 +23,7 @@ class Twig_Extension_Debug extends Twig_Extension
             // false means that it was not set (and the default is on) or it explicitly enabled
             // xdebug.overload_var_dump produces HTML only when html_errors is also enabled
             && (false === ini_get('html_errors') || ini_get('html_errors'))
-            || 'cli' === php_sapi_name()
+            || 'cli' === PHP_SAPI
         ;
 
         return array(
@@ -32,11 +31,6 @@ class Twig_Extension_Debug extends Twig_Extension
         );
     }
 
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
     public function getName()
     {
         return 'debug';
@@ -69,3 +63,5 @@ function twig_var_dump(Twig_Environment $env, $context)
 
     return ob_get_clean();
 }
+
+class_alias('Twig_Extension_Debug', 'Twig\Extension\DebugExtension', false);

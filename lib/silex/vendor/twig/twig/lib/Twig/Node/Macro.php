@@ -3,7 +3,7 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2009 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,18 +22,13 @@ class Twig_Node_Macro extends Twig_Node
     {
         foreach ($arguments as $argumentName => $argument) {
             if (self::VARARGS_NAME === $argumentName) {
-                throw new Twig_Error_Syntax(sprintf('The argument "%s" in macro "%s" cannot be defined because the variable "%s" is reserved for arbitrary arguments', self::VARARGS_NAME, $name, self::VARARGS_NAME), $argument->getLine());
+                throw new Twig_Error_Syntax(sprintf('The argument "%s" in macro "%s" cannot be defined because the variable "%s" is reserved for arbitrary arguments.', self::VARARGS_NAME, $name, self::VARARGS_NAME), $argument->getTemplateLine());
             }
         }
 
         parent::__construct(array('body' => $body, 'arguments' => $arguments), array('name' => $name), $lineno, $tag);
     }
 
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler $compiler A Twig_Compiler instance
-     */
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
@@ -75,7 +70,7 @@ class Twig_Node_Macro extends Twig_Node
 
         foreach ($this->getNode('arguments') as $name => $default) {
             $compiler
-                ->addIndentation()
+                ->write('')
                 ->string($name)
                 ->raw(' => $__'.$name.'__')
                 ->raw(",\n")
@@ -83,7 +78,7 @@ class Twig_Node_Macro extends Twig_Node
         }
 
         $compiler
-            ->addIndentation()
+            ->write('')
             ->string(self::VARARGS_NAME)
             ->raw(' => ')
         ;
@@ -114,6 +109,11 @@ class Twig_Node_Macro extends Twig_Node
             ->write("ob_end_clean();\n\n")
             ->write("throw \$e;\n")
             ->outdent()
+            ->write("} catch (Throwable \$e) {\n")
+            ->indent()
+            ->write("ob_end_clean();\n\n")
+            ->write("throw \$e;\n")
+            ->outdent()
             ->write("}\n\n")
             ->write("return ('' === \$tmp = ob_get_clean()) ? '' : new Twig_Markup(\$tmp, \$this->env->getCharset());\n")
             ->outdent()
@@ -121,3 +121,5 @@ class Twig_Node_Macro extends Twig_Node
         ;
     }
 }
+
+class_alias('Twig_Node_Macro', 'Twig\Node\MacroNode', false);

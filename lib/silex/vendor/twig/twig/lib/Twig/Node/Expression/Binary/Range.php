@@ -3,18 +3,13 @@
 /*
  * This file is part of Twig.
  *
- * (c) 2010 Fabien Potencier
+ * (c) Fabien Potencier
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 class Twig_Node_Expression_Binary_Range extends Twig_Node_Expression_Binary
 {
-    /**
-     * Compiles the node to PHP.
-     *
-     * @param Twig_Compiler $compiler A Twig_Compiler instance
-     */
     public function compile(Twig_Compiler $compiler)
     {
         $compiler
@@ -31,3 +26,5 @@ class Twig_Node_Expression_Binary_Range extends Twig_Node_Expression_Binary
         return $compiler->raw('..');
     }
 }
+
+class_alias('Twig_Node_Expression_Binary_Range', 'Twig\Node\Expression\Binary\RangeBinary', false);

@@ -1,7 +1,7 @@
 Silex, a simple Web Framework
 =============================
 
-Silex is a PHP micro-framework to develop websites based on `Symfony2
+Silex is a PHP micro-framework to develop websites based on `Symfony
 components`_:
 
 .. code-block:: php
@@ -18,7 +18,7 @@ components`_:
 
     $app->run();
 
-Silex works with PHP 5.3.3 or later.
+Silex works with PHP 5.5.9 or later.
 
 Installation
 ------------
@@ -27,14 +27,15 @@ The recommended way to install Silex is through `Composer`_:
 
 .. code-block:: bash
 
-    php composer.phar require silex/silex "~1.2"
+    composer require silex/silex "~2.0"
 
 Alternatively, you can download the `silex.zip`_ file and extract it.
 
 More Information
 ----------------
 
-Read the `documentation`_ for more information.
+Read the `documentation`_ for more information and `changelog
+<doc/changelog.rst>`_ for upgrading information.
 
 Tests
 -----
@@ -43,8 +44,8 @@ To run the test suite, you need `Composer`_ and `PHPUnit`_:
 
 .. code-block:: bash
 
-    $ composer install
-    $ phpunit
+    composer install
+    phpunit
 
 Community
 ---------
@@ -56,8 +57,8 @@ License
 
 Silex is licensed under the MIT license.
 
-.. _Symfony2 components: http://symfony.com
-.. _Composer:            http://getcomposer.org
-.. _PHPUnit:             https://phpunit.de
-.. _silex.zip:           http://silex.sensiolabs.org/download
-.. _documentation:       http://silex.sensiolabs.org/documentation
+.. _Symfony components: http://symfony.com
+.. _Composer:           http://getcomposer.org
+.. _PHPUnit:            https://phpunit.de
+.. _silex.zip:          http://silex.sensiolabs.org/download
+.. _documentation:      http://silex.sensiolabs.org/documentation

@@ -19,16 +19,17 @@ The key-features are...
   may modify the template design.
 
 * *Flexible*: Twig is powered by a flexible lexer and parser. This allows the
-  developer to define its own custom tags and filters, and create its own DSL.
+  developer to define their own custom tags and filters, and to create their own DSL.
 
 Twig is used by many Open-Source projects like Symfony, Drupal8, eZPublish,
-phpBB, Piwik, OroCRM, and many frameworks have support for it as well like
-Slim, Yii, Laravel, Codeigniter, and Kohana, just to name a few.
+phpBB, Piwik, OroCRM; and many frameworks have support for it as well like
+Slim, Yii, Laravel, Codeigniter and Kohana — just to name a few.
 
 Prerequisites
 -------------
 
-Twig needs at least **PHP 5.2.7** to run.
+Twig needs at least **PHP 5.2.7** to run. As of 1.34, the minimum requirement
+was bumped to **PHP 5.3.3**.
 
 Installation
 ------------

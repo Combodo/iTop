@@ -11,16 +11,23 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Silex\ServiceControllerResolver;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Kernel;
 
 /**
  * Unit tests for ServiceControllerResolver, see ServiceControllerResolverRouterTest for some
- * integration tests
+ * integration tests.
  */
-class ServiceControllerResolverTest extends \PHPUnit_Framework_Testcase
+class ServiceControllerResolverTest extends Testcase
 {
+    private $app;
+    private $mockCallbackResolver;
+    private $mockResolver;
+    private $resolver;
+
     public function setup()
     {
         $this->mockResolver = $this->getMockBuilder('Symfony\Component\HttpKernel\Controller\ControllerResolverInterface')
@@ -71,8 +78,15 @@ class ServiceControllerResolverTest extends \PHPUnit_Framework_Testcase
         $this->assertEquals(123, $this->resolver->getController($req));
     }
 
+    /**
+     * @group legacy
+     */
     public function testShouldDelegateGetArguments()
     {
+        if (Kernel::VERSION_ID >= 40000) {
+            self::markTestSkipped('HttpKernel < 4.0 is required');
+        }
+
         $req = Request::create('/');
         $this->mockResolver->expects($this->once())
             ->method('getArguments')

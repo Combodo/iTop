@@ -11,25 +11,28 @@
 
 namespace Silex\Tests;
 
+use Fig\Link\GenericLinkProvider;
+use Fig\Link\Link;
+use PHPUnit\Framework\TestCase;
 use Silex\Application;
 use Silex\ControllerCollection;
-use Silex\ControllerProviderInterface;
+use Silex\Api\ControllerProviderInterface;
 use Silex\Route;
-use Silex\Provider\MonologServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\Routing\RouteCollection;
+use Symfony\Component\WebLink\HttpHeaderSerializer;
 
 /**
  * Application test cases.
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class ApplicationTest extends \PHPUnit_Framework_TestCase
+class ApplicationTest extends TestCase
 {
     public function testMatchReturnValue()
     {
@@ -85,7 +88,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $routes = $app['routes'];
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $routes);
-        $this->assertEquals(0, count($routes->all()));
+        $this->assertCount(0, $routes->all());
     }
 
     public function testGetRoutesWithRoutes()
@@ -102,9 +105,9 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
         $routes = $app['routes'];
         $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $routes);
-        $this->assertEquals(0, count($routes->all()));
+        $this->assertCount(0, $routes->all());
         $app->flush();
-        $this->assertEquals(2, count($routes->all()));
+        $this->assertCount(2, $routes->all());
     }
 
     public function testOnCoreController()
@@ -176,10 +179,34 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testControllersAsMethods()
     {
         $app = new Application();
+        unset($app['exception_handler']);
 
         $app->get('/{name}', 'Silex\Tests\FooController::barAction');
 
         $this->assertEquals('Hello Fabien', $app->handle(Request::create('/Fabien'))->getContent());
+    }
+
+    public function testApplicationTypeHintWorks()
+    {
+        $app = new SpecialApplication();
+        unset($app['exception_handler']);
+
+        $app->get('/{name}', 'Silex\Tests\FooController::barSpecialAction');
+
+        $this->assertEquals('Hello Fabien in Silex\Tests\SpecialApplication', $app->handle(Request::create('/Fabien'))->getContent());
+    }
+
+    /**
+     * @requires PHP 7.0
+     */
+    public function testPhp7TypeHintWorks()
+    {
+        $app = new SpecialApplication();
+        unset($app['exception_handler']);
+
+        $app->get('/{name}', 'Silex\Tests\Fixtures\Php7Controller::typehintedAction');
+
+        $this->assertEquals('Hello Fabien in Silex\Tests\SpecialApplication', $app->handle(Request::create('/Fabien'))->getContent());
     }
 
     public function testHttpSpec()
@@ -417,30 +444,6 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $app->handle(Request::create('/'), HttpKernelInterface::MASTER_REQUEST, false);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testAccessingRequestOutsideOfScopeShouldThrowRuntimeException()
-    {
-        $app = new Application();
-
-        $request = $app['request'];
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testAccessingRequestOutsideOfScopeShouldThrowRuntimeExceptionAfterHandling()
-    {
-        $app = new Application();
-        $app->get('/', function () {
-            return 'hello';
-        });
-        $app->handle(Request::create('/'), HttpKernelInterface::MASTER_REQUEST, false);
-
-        $request = $app['request'];
-    }
-
     public function testSubRequest()
     {
         $app = new Application();
@@ -454,31 +457,10 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $app->handle(Request::create('/'))->getContent());
     }
 
-    public function testSubRequestDoesNotReplaceMainRequestAfterHandling()
-    {
-        $mainRequest = Request::create('/');
-        $subRequest = Request::create('/sub');
-
-        $app = new Application();
-        $app->get('/sub', function (Request $request) {
-            return new Response('foo');
-        });
-        $app->get('/', function (Request $request) use ($subRequest, $app) {
-            $response = $app->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-
-            // request in app must be the main request here
-            $response->setContent($response->getContent().' '.$app['request']->getPathInfo());
-
-            return $response;
-        });
-
-        $this->assertEquals('foo /', $app->handle($mainRequest)->getContent());
-    }
-
     public function testRegisterShouldReturnSelf()
     {
         $app = new Application();
-        $provider = $this->getMock('Silex\ServiceProviderInterface');
+        $provider = $this->getMockBuilder('Pimple\ServiceProviderInterface')->getMock();
 
         $this->assertSame($app, $app->register($provider));
     }
@@ -508,7 +490,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \LogicException
-     * @expectedExceptionMessage The "mount" method takes either a "ControllerCollection" or a "ControllerProviderInterface" instance.
+     * @expectedExceptionMessage The "mount" method takes either a "ControllerCollection" instance, "ControllerProviderInterface" instance, or a callable.
      */
     public function testMountNullException()
     {
@@ -524,6 +506,18 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
         $app->mount('/exception', new IncorrectControllerCollection());
+    }
+
+    public function testMountCallable()
+    {
+        $app = new Application();
+        $app->mount('/prefix', function (ControllerCollection $coll) {
+            $coll->get('/path');
+        });
+
+        $app->flush();
+
+        $this->assertEquals(1, $app['routes']->count());
     }
 
     public function testSendFile()
@@ -542,22 +536,162 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     public function testGetRouteCollectionWithRouteWithoutController()
     {
         $app = new Application();
-        $app['exception_handler']->disable();
+        unset($app['exception_handler']);
         $app->match('/')->bind('homepage');
         $app->handle(Request::create('/'));
     }
 
-    public function testRedirectDoesNotRaisePHPNoticesWhenMonologIsRegistered()
+    public function testBeforeFilterOnMountedControllerGroupIsolatedToGroup()
     {
         $app = new Application();
+        $app->match('/', function () { return new Response('ok'); });
+        $mounted = $app['controllers_factory'];
+        $mounted->before(function () { return new Response('not ok'); });
+        $app->mount('/group', $mounted);
 
-        ErrorHandler::register();
-        $app['monolog.logfile'] = 'php://memory';
-        $app->register(new MonologServiceProvider());
-        $app->get('/foo/', function () { return 'ok'; });
+        $response = $app->handle(Request::create('/'));
+        $this->assertEquals('ok', $response->getContent());
+    }
+
+    public function testViewListenerWithPrimitive()
+    {
+        $app = new Application();
+        $app->get('/foo', function () { return 123; });
+        $app->view(function ($view, Request $request) {
+            return new Response($view);
+        });
 
         $response = $app->handle(Request::create('/foo'));
-        $this->assertEquals(301, $response->getStatusCode());
+
+        $this->assertEquals('123', $response->getContent());
+    }
+
+    public function testViewListenerWithArrayTypeHint()
+    {
+        $app = new Application();
+        $app->get('/foo', function () { return array('ok'); });
+        $app->view(function (array $view) {
+            return new Response($view[0]);
+        });
+
+        $response = $app->handle(Request::create('/foo'));
+
+        $this->assertEquals('ok', $response->getContent());
+    }
+
+    public function testViewListenerWithObjectTypeHint()
+    {
+        $app = new Application();
+        $app->get('/foo', function () { return (object) array('name' => 'world'); });
+        $app->view(function (\stdClass $view) {
+            return new Response('Hello '.$view->name);
+        });
+
+        $response = $app->handle(Request::create('/foo'));
+
+        $this->assertEquals('Hello world', $response->getContent());
+    }
+
+    public function testViewListenerWithCallableTypeHint()
+    {
+        $app = new Application();
+        $app->get('/foo', function () { return function () { return 'world'; }; });
+        $app->view(function (callable $view) {
+            return new Response('Hello '.$view());
+        });
+
+        $response = $app->handle(Request::create('/foo'));
+
+        $this->assertEquals('Hello world', $response->getContent());
+    }
+
+    public function testViewListenersCanBeChained()
+    {
+        $app = new Application();
+        $app->get('/foo', function () { return (object) array('name' => 'world'); });
+
+        $app->view(function (\stdClass $view) {
+            return array('msg' => 'Hello '.$view->name);
+        });
+
+        $app->view(function (array $view) {
+            return $view['msg'];
+        });
+
+        $response = $app->handle(Request::create('/foo'));
+
+        $this->assertEquals('Hello world', $response->getContent());
+    }
+
+    public function testViewListenersAreIgnoredIfNotSuitable()
+    {
+        $app = new Application();
+        $app->get('/foo', function () { return 'Hello world'; });
+
+        $app->view(function (\stdClass $view) {
+            throw new \Exception('View listener was called');
+        });
+
+        $app->view(function (array $view) {
+            throw new \Exception('View listener was called');
+        });
+
+        $response = $app->handle(Request::create('/foo'));
+
+        $this->assertEquals('Hello world', $response->getContent());
+    }
+
+    public function testViewListenersResponsesAreNotUsedIfNull()
+    {
+        $app = new Application();
+        $app->get('/foo', function () { return 'Hello world'; });
+
+        $app->view(function ($view) {
+            return 'Hello view listener';
+        });
+
+        $app->view(function ($view) {
+            return;
+        });
+
+        $response = $app->handle(Request::create('/foo'));
+
+        $this->assertEquals('Hello view listener', $response->getContent());
+    }
+
+    public function testWebLinkListener()
+    {
+        if (!class_exists(HttpHeaderSerializer::class)) {
+            self::markTestSkipped('Symfony WebLink component is required.');
+        }
+
+        $app = new Application();
+
+        $app->get('/', function () {
+            return 'hello';
+        });
+
+        $request = Request::create('/');
+        $request->attributes->set('_links', (new GenericLinkProvider())->withLink(new Link('preload', '/foo.css')));
+
+        $response = $app->handle($request);
+
+        $this->assertEquals('</foo.css>; rel="preload"', $response->headers->get('Link'));
+    }
+
+    public function testDefaultRoutesFactory()
+    {
+        $app = new Application();
+        $this->assertInstanceOf('Symfony\Component\Routing\RouteCollection', $app['routes']);
+    }
+
+    public function testOverriddenRoutesFactory()
+    {
+        $app = new Application();
+        $app['routes_factory'] = $app->factory(function () {
+            return new RouteCollectionSubClass();
+        });
+        $this->assertInstanceOf('Silex\Tests\RouteCollectionSubClass', $app['routes']);
     }
 }
 
@@ -567,6 +701,11 @@ class FooController
     {
         return 'Hello '.$app->escape($name);
     }
+
+    public function barSpecialAction(SpecialApplication $app, $name)
+    {
+        return 'Hello '.$app->escape($name).' in '.get_class($app);
+    }
 }
 
 class IncorrectControllerCollection implements ControllerProviderInterface
@@ -575,4 +714,12 @@ class IncorrectControllerCollection implements ControllerProviderInterface
     {
         return;
     }
+}
+
+class RouteCollectionSubClass extends RouteCollection
+{
+}
+
+class SpecialApplication extends Application
+{
 }

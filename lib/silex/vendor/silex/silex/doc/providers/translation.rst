@@ -1,5 +1,5 @@
-TranslationServiceProvider
-==========================
+Translation
+===========
 
 The *TranslationServiceProvider* provides a service for translating your
 application into different languages.
@@ -37,15 +37,14 @@ Registering
 
 .. code-block:: php
 
+    $app->register(new Silex\Provider\LocaleServiceProvider());
     $app->register(new Silex\Provider\TranslationServiceProvider(), array(
         'locale_fallbacks' => array('en'),
     ));
 
 .. note::
 
-    The Symfony Translation Component comes with the "fat" Silex archive but
-    not with the regular one. If you are using Composer, add it as a
-    dependency:
+    Add the Symfony Translation Component as a dependency:
 
     .. code-block:: bash
 
@@ -93,6 +92,22 @@ The above example will result in following routes:
 
 * ``/it/hello/igor`` will return ``Hello igor`` (because of the fallback).
 
+Using Resources
+---------------
+
+When translations are stored in a file, you can load them as follows::
+
+    $app = new Application();
+    
+    $app->register(new TranslationServiceProvider());
+    $app->extend('translator.resources', function ($resources, $app) {
+        $resources = array_merge($resources, array(
+            array('array', array('This value should be a valid number.' => 'Cette valeur doit être un nombre.'), 'fr', 'validators'),
+        ));
+
+        return $resources;
+    });
+
 Traits
 ------
 
@@ -118,7 +133,7 @@ YAML-based language files
 Having your translations in PHP files can be inconvenient. This recipe will
 show you how to load translations from external YAML files.
 
-First, add the Symfony2 ``Config`` and ``Yaml`` components as dependencies:
+First, add the Symfony ``Config`` and ``Yaml`` components as dependencies:
 
 .. code-block:: bash
 
@@ -137,7 +152,7 @@ translation files::
 
     use Symfony\Component\Translation\Loader\YamlFileLoader;
 
-    $app['translator'] = $app->share($app->extend('translator', function($translator, $app) {
+    $app->extend('translator', function($translator, $app) {
         $translator->addLoader('yaml', new YamlFileLoader());
 
         $translator->addResource('yaml', __DIR__.'/locales/en.yml', 'en');
@@ -145,13 +160,13 @@ translation files::
         $translator->addResource('yaml', __DIR__.'/locales/fr.yml', 'fr');
 
         return $translator;
-    }));
+    });
 
 XLIFF-based language files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Just as you would do with YAML translation files, you first need to add the
-Symfony2 ``Config`` component as a dependency (see above for details).
+Symfony ``Config`` component as a dependency (see above for details).
 
 Then, similarly, create XLIFF files in your locales directory and add them to
 the translator::
@@ -168,15 +183,8 @@ Accessing translations in Twig templates
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Once loaded, the translation service provider is available from within Twig
-templates:
-
-.. code-block:: jinja
-
-    {{ app.translator.trans('translation_key') }}
-
-Moreover, when using the Twig bridge provided by Symfony (see
-:doc:`TwigServiceProvider </providers/twig>`), you will be allowed to translate
-strings in the Twig way:
+templates when using the Twig bridge provided by Symfony (see
+:doc:`TwigServiceProvider </providers/twig>`):
 
 .. code-block:: jinja
 

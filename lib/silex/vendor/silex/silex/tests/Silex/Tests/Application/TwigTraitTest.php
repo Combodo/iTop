@@ -11,6 +11,7 @@
 
 namespace Silex\Tests\Application;
 
+use PHPUnit\Framework\TestCase;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -19,10 +20,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  * TwigTrait test cases.
  *
  * @author Fabien Potencier <fabien@symfony.com>
- *
- * @requires PHP 5.4
  */
-class TwigTraitTest extends \PHPUnit_Framework_TestCase
+class TwigTraitTest extends TestCase
 {
     public function testRender()
     {

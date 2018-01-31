@@ -1,5 +1,5 @@
-Silex
-=====
+The Book
+========
 
 .. toctree::
     :maxdepth: 1
@@ -17,4 +17,3 @@ Silex
     providers/index
     web_servers
     changelog
-    phar

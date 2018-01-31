@@ -1,5 +1,5 @@
-ValidatorServiceProvider
-========================
+Validator
+=========
 
 The *ValidatorServiceProvider* provides a service for validating data. It is
 most useful when used with the *FormServiceProvider*, but can also be used
@@ -8,13 +8,14 @@ standalone.
 Parameters
 ----------
 
-none
+* **validator.validator_service_ids**: An array of service names representing
+  validators.
 
 Services
 --------
 
 * **validator**: An instance of `Validator
-  <http://api.symfony.com/master/Symfony/Component/Validator/Validator.html>`_.
+  <http://api.symfony.com/master/Symfony/Component/Validator/ValidatorInterface.html>`_.
 
 * **validator.mapping.class_metadata_factory**: Factory for metadata loaders,
   which can read validation constraint information from classes. Defaults to
@@ -23,10 +24,6 @@ Services
   This means you can define a static ``loadValidatorMetadata`` method on your
   data class, which takes a ClassMetadata argument. Then you can set
   constraints on this ClassMetadata instance.
-
-* **validator.validator_factory**: Factory for ConstraintValidators. Defaults
-  to a standard ``ConstraintValidatorFactory``. Mostly used internally by the
-  Validator.
 
 Registering
 -----------
@@ -37,8 +34,7 @@ Registering
 
 .. note::
 
-    The Symfony Validator Component comes with the "fat" Silex archive but not
-    with the regular one. If you are using Composer, add it as a dependency:
+    Add the Symfony Validator Component as a dependency:
 
     .. code-block:: bash
 
@@ -52,13 +48,13 @@ The Validator provider provides a ``validator`` service.
 Validating Values
 ~~~~~~~~~~~~~~~~~
 
-You can validate values directly using the ``validateValue`` validator
+You can validate values directly using the ``validate`` validator
 method::
 
     use Symfony\Component\Validator\Constraints as Assert;
 
     $app->get('/validate/{email}', function ($email) use ($app) {
-        $errors = $app['validator']->validateValue($email, new Assert\Email());
+        $errors = $app['validator']->validate($email, new Assert\Email());
 
         if (count($errors) > 0) {
             return (string) $errors;
@@ -75,18 +71,6 @@ collection of constraints::
 
     use Symfony\Component\Validator\Constraints as Assert;
 
-    class Book
-    {
-        public $title;
-        public $author;
-    }
-
-    class Author
-    {
-        public $first_name;
-        public $last_name;
-    }
-
     $book = array(
         'title' => 'My Book',
         'author' => array(
@@ -102,7 +86,7 @@ collection of constraints::
             'last_name'  => new Assert\Length(array('min' => 10)),
         )),
     ));
-    $errors = $app['validator']->validateValue($book, $constraint);
+    $errors = $app['validator']->validate($book, $constraint);
 
     if (count($errors) > 0) {
         foreach ($errors as $error) {
@@ -119,6 +103,18 @@ If you want to add validations to a class, you can define the constraint for
 the class properties and getters, and then call the ``validate`` method::
 
     use Symfony\Component\Validator\Constraints as Assert;
+
+    class Book
+    {
+        public $title;
+        public $author;
+    }
+
+    class Author
+    {
+        public $first_name;
+        public $last_name;
+    }
 
     $author = new Author();
     $author->first_name = 'Fabien';
@@ -217,5 +213,5 @@ provider and register the messages under the ``validators`` domain::
         ),
     );
 
-For more information, consult the `Symfony2 Validation documentation
+For more information, consult the `Symfony Validation documentation
 <http://symfony.com/doc/master/book/validation.html>`_.

@@ -23,6 +23,8 @@ use Exception;
 use Silex\Application;
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\Debug\ExceptionHandler;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Twig_Environment;
 use Twig_SimpleFilter;
 use Dict;
@@ -277,16 +279,18 @@ class ApplicationHelper
 		// Intercepting manually aborted request
 		if (1 || !$oApp['debug'])
 		{
-			$oApp->error(function(Exception $e, $code) use ($oApp)
+			$oApp->error(function(Exception $oException, Request $oRequest) use ($oApp)
 			{
+				$iErrorCode = ($oException instanceof HttpException) ? $oException->getStatusCode() : 500;
+
 				$aData = array(
-					'exception' => $e,
-					'code' => $code,
+					'exception' => $oException,
+					'code' => $iErrorCode,
 					'error_title' => '',
-					'error_message' => $e->getMessage()
+					'error_message' => $oException->getMessage()
 				);
 
-				switch ($code)
+				switch ($iErrorCode)
 				{
 					case 404:
 						$aData['error_title'] = Dict::S('Error:HTTP:404');
@@ -298,15 +302,15 @@ class ApplicationHelper
 
 				IssueLog::Error($aData['error_title'] . ' : ' . $aData['error_message']);
 
-				if ($oApp['request']->isXmlHttpRequest())
+				if ($oApp['request_stack']->getCurrentRequest()->isXmlHttpRequest())
 				{
-					$oResponse = $oApp->json($aData, $code);
+					$oResponse = $oApp->json($aData, $iErrorCode);
 				}
 				else
 				{
 				    // Preparing debug trace
                     $aSteps = array();
-                    foreach($e->getTrace() as $aStep)
+                    foreach($oException->getTrace() as $aStep)
                     {
                         // - Default file name
                         if(!isset($aStep['file']))

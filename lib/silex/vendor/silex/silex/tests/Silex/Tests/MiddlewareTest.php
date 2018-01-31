@@ -11,6 +11,7 @@
 
 namespace Silex\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  */
-class MiddlewareTest extends \PHPUnit_Framework_TestCase
+class MiddlewareTest extends TestCase
 {
     public function testBeforeAndAfterFilter()
     {
@@ -31,17 +32,17 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $app->before(function () use (&$i, $test) {
             $test->assertEquals(0, $i);
-            $i++;
+            ++$i;
         });
 
         $app->match('/foo', function () use (&$i, $test) {
             $test->assertEquals(1, $i);
-            $i++;
+            ++$i;
         });
 
         $app->after(function () use (&$i, $test) {
             $test->assertEquals(2, $i);
-            $i++;
+            ++$i;
         });
 
         $request = Request::create('/foo');
@@ -57,13 +58,13 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app->match('/foo', function () use (&$i) {
-            $i++;
+            ++$i;
 
             return new Response('foo');
         });
 
         $app->after(function () use (&$i) {
-            $i++;
+            ++$i;
         });
 
         $request = Request::create('/foo');
@@ -81,27 +82,27 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $app->before(function () use (&$i, $test) {
             $test->assertEquals(0, $i);
-            $i++;
+            ++$i;
         });
 
         $app->before(function () use (&$i, $test) {
             $test->assertEquals(1, $i);
-            $i++;
+            ++$i;
         });
 
         $app->match('/foo', function () use (&$i, $test) {
             $test->assertEquals(2, $i);
-            $i++;
+            ++$i;
         });
 
         $app->after(function () use (&$i, $test) {
             $test->assertEquals(3, $i);
-            $i++;
+            ++$i;
         });
 
         $app->after(function () use (&$i, $test) {
             $test->assertEquals(4, $i);
-            $i++;
+            ++$i;
         });
 
         $request = Request::create('/foo');
@@ -117,7 +118,7 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app->before(function () use (&$i) {
-            $i++;
+            ++$i;
         });
 
         $app->match('/foo', function () {
@@ -125,7 +126,7 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
         });
 
         $app->after(function () use (&$i) {
-            $i++;
+            ++$i;
         });
 
         $app->error(function () {
@@ -145,11 +146,11 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
 
         $app->before(function () use (&$i) {
-            $i++;
+            ++$i;
         }, Application::EARLY_EVENT);
 
         $app->after(function () use (&$i) {
-            $i++;
+            ++$i;
         });
 
         $app->error(function () {
@@ -191,8 +192,8 @@ class MiddlewareTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
 
-        $app->before(function () use ($app) {
-            $app['project'] = $app['request']->get('project');
+        $app->before(function (Request $request) use ($app) {
+            $app['project'] = $request->get('project');
         });
 
         $app->match('/foo/{project}', function () use ($app) {

@@ -11,28 +11,26 @@
 
 namespace Silex\Tests\Provider;
 
+use PHPUnit\Framework\TestCase;
 use Silex\Application;
 use Silex\Provider\HttpCacheServiceProvider;
 use Silex\Provider\HttpFragmentServiceProvider;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
-class HttpFragmentServiceProviderTest extends \PHPUnit_Framework_TestCase
+class HttpFragmentServiceProviderTest extends TestCase
 {
     public function testRenderFunction()
     {
-        if (!class_exists('Symfony\Component\HttpFoundation\RequestStack')) {
-            $this->markTestSkipped('HttpFragmentServiceProvider is not available on Symfony <2.4');
-        }
-
         $app = new Application();
+        unset($app['exception_handler']);
 
         $app->register(new HttpFragmentServiceProvider());
         $app->register(new HttpCacheServiceProvider(), array('http_cache.cache_dir' => sys_get_temp_dir()));
         $app->register(new TwigServiceProvider(), array(
             'twig.templates' => array(
                 'hello' => '{{ render("/foo") }}{{ render_esi("/foo") }}{{ render_hinclude("/foo") }}',
-                'foo'   => 'foo',
+                'foo' => 'foo',
             ),
         ));
 

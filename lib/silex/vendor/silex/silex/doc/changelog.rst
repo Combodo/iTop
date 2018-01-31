@@ -1,6 +1,145 @@
 Changelog
 =========
 
+2.2.2 (2018-01-12)
+------------------
+
+* [SECURITY] fixed before handlers not executed under mounts
+
+2.2.1 (2017-12-14)
+------------------
+
+* added support for Swiftmailer SSL stream_context_options option
+* fixed usage of namespaces for Twig paths
+
+2.2.0 (2017-07-23)
+------------------
+
+* added json manifest version strategy support
+* fixed EsiFragment constructor
+* fixed RedirectableUrlMatcher compatibility with Symfony
+* fixed compatibility with Pimple 3.2
+* fixed WebTestCase compatibility with PHPUnit 6+
+
+2.1.0 (2017-05-03)
+------------------
+
+* added more options to security.firewalls
+* added WebLink component integration
+* added parameters to configure the Twig core extension behavior
+* fixed deprecation notices with symfony/twig-bridge 3.2+ in TwigServiceProvider
+* added FormRegistry as a service to enable the extension point
+* removed the build scripts
+* fixed some deprecation warnings
+* added support for registering Swiftmailer plugins
+
+2.0.4 (2016-11-06)
+------------------
+
+* fixed twig.app_variable definition
+* added support for latest versions of Twig 1.x and 2.0 (Twig runtime loaders)
+* added support for Symfony 2.3
+
+2.0.3 (2016-08-22)
+------------------
+
+* fixed lazy evaluation of 'monolog.use_error_handler'
+* fixed PHP7 type hint on controllers
+
+2.0.2 (2016-06-14)
+------------------
+
+* fixed Symfony 3.1 deprecations
+
+2.0.1 (2016-05-27)
+------------------
+
+* fixed the silex form extension registration to allow overriding default ones
+* removed support for the obsolete Locale Symfony component (uses the Intl one now)
+* added support for Symfony 3.1
+
+2.0.0 (2016-05-18)
+------------------
+
+* decoupled the exception handler from HttpKernelServiceProvider
+* Switched to BCrypt as the default encoder in the security provider
+* added full support for RequestMatcher
+* added support for Symfony Guard
+* added support for callables in CallbackResolver
+* added FormTrait::namedForm()
+* added support for delivery_addresses, delivery_whitelist, and sender_address
+* added support to register form types / form types extensions / form types guessers as services
+* added support for callable in mounts (allow nested route collection to be built easily)
+* added support for conditions on routes
+* added support for the Symfony VarDumper Component
+* added a global Twig variable (an AppVariable instance)
+* [BC BREAK] CSRF has been moved to a standalone provider (``form.secret`` is not available anymore)
+* added support for the Symfony HttpFoundation Twig bridge extension
+* added support for the Symfony Asset Component
+* bumped minimum version of Symfony to 2.8
+* bumped minimum version of PHP to 5.5.0
+* Updated Pimple to 3.0
+* Updated session listeners to extends HttpKernel ones
+* [BC BREAK] Locale management has been moved to LocaleServiceProvider which must be registered
+  if you want Silex to manage your locale (must also be registered for the translation service provider)
+* [BC BREAK] Provider interfaces moved to Silex\Api namespace, published as
+  separate package via subtree split
+* [BC BREAK] ServiceProviderInterface split in to EventListenerProviderInterface
+  and BootableProviderInterface
+* [BC BREAK] Service Provider support files moved under Silex\Provider
+  namespace, allowing publishing as separate package via sub-tree split
+* ``monolog.exception.logger_filter`` option added to Monolog service provider
+* [BC BREAK] ``$app['request']`` service removed, use ``$app['request_stack']`` instead
+
+1.3.6 (2016-XX-XX)
+------------------
+
+* n/a
+
+1.3.5 (2016-01-06)
+------------------
+
+* fixed typo in SecurityServiceProvider
+
+1.3.4 (2015-09-15)
+------------------
+
+* fixed some new deprecations
+* fixed translation registration for the validators
+
+1.3.3 (2015-09-08)
+------------------
+
+* added support for Symfony 3.0 and Twig 2.0
+* fixed some Form deprecations
+* removed deprecated method call in the exception handler
+* fixed Swiftmailer spool flushing when spool is not enabled
+
+1.3.2 (2015-08-24)
+------------------
+
+* no changes
+
+1.3.1 (2015-08-04)
+------------------
+
+* added missing support for the Expression constraint
+* fixed the possibility to override translations for validator error messages
+* fixed sub-mounts with same name clash
+* fixed session logout handler when a firewall is stateless
+
+1.3.0 (2015-06-05)
+------------------
+
+* added a `$app['user']` to get the current user (security provider)
+* added view handlers
+* added support for the OPTIONS HTTP method
+* added caching for the Translator provider
+* deprecated `$app['exception_handler']->disable()` in favor of `unset($app['exception_handler'])`
+* made Silex compatible with Symfony 2.7 an 2.8 (and keep compatibility with Symfony 2.3, 2.5, and 2.6)
+* removed deprecated TwigCoreExtension class (register the new HttpFragmentServiceProvider instead)
+* bumped minimum version of PHP to 5.3.9
+
 1.2.5 (2015-06-04)
 ------------------
 

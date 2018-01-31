@@ -1,5 +1,5 @@
-SessionServiceProvider
-======================
+Session
+=======
 
 The *SessionServiceProvider* provides a service for storing data persistently
 between requests.
@@ -38,7 +38,7 @@ Parameters
 Services
 --------
 
-* **session**: An instance of Symfony2's `Session
+* **session**: An instance of Symfony's `Session
   <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Session.html>`_.
 
 * **session.storage**: A service that is used for persistence of the session
@@ -56,17 +56,35 @@ Registering
 
     $app->register(new Silex\Provider\SessionServiceProvider());
 
+Using Handlers
+--------------
+
+The default session handler is ``NativeFileSessionHandler``. However, there are
+multiple handlers available for use by setting ``session.storage.handler`` to
+an instance of one of the following handler objects:
+
+* `LegacyPdoSessionHandler <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/LegacyPdoSessionHandler.html>`_
+* `MemcacheSessionHandler <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/MemcacheSessionHandler.html>`_
+* `MemcachedSessionHandler <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/MemcachedSessionHandler.html>`_
+* `MongoDbSessionHandler <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/MongoDbSessionHandler.html>`_
+* `NativeFileSessionHandler <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/NativeFileSessionHandler.html>`_
+* `NativeSessionHandler <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/NativeSessionHandler.html>`_
+* `NullSessionHandler <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/NullSessionHandler.html>`_
+* `PdoSessionHandler <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/PdoSessionHandler.html>`_
+* `WriteCheckSessionHandler <http://api.symfony.com/master/Symfony/Component/HttpFoundation/Session/Storage/Handler/WriteCheckSessionHandler.html>`_
+
 Usage
 -----
 
 The Session provider provides a ``session`` service. Here is an example that
 authenticates a user and creates a session for them::
 
+    use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
 
-    $app->get('/login', function () use ($app) {
-        $username = $app['request']->server->get('PHP_AUTH_USER', false);
-        $password = $app['request']->server->get('PHP_AUTH_PW');
+    $app->get('/login', function (Request $request) use ($app) {
+        $username = $request->server->get('PHP_AUTH_USER', false);
+        $password = $request->server->get('PHP_AUTH_PW');
 
         if ('igor' === $username && 'password' === $password) {
             $app['session']->set('user', array('username' => $username));
