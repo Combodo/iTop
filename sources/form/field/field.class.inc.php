@@ -19,9 +19,9 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use \Closure;
-use \Combodo\iTop\Form\Validator\Validator;
-use \Combodo\iTop\Form\Validator\MandatoryValidator;
+use Closure;
+use Combodo\iTop\Form\Validator\Validator;
+use Combodo\iTop\Form\Validator\MandatoryValidator;
 
 /**
  * Description of Field
@@ -224,7 +224,7 @@ abstract class Field
 
 	/**
 	 *
-	 * @param type $sLabel
+	 * @param string $sLabel
 	 * @return \Combodo\iTop\Form\Field\Field
 	 */
 	public function SetLabel($sLabel)
@@ -301,7 +301,7 @@ abstract class Field
 
     /**
      *
-     * @param $sDisplayMode
+     * @param string $sDisplayMode
      * @return $this
      */
 	public function SetDisplayMode($sDisplayMode)
@@ -369,7 +369,7 @@ abstract class Field
 
 	/**
 	 *
-	 * @param Validator $oValidator
+	 * @param \Combodo\iTop\Form\Validator\Validator $oValidator
 	 * @return \Combodo\iTop\Form\Field\Field
 	 */
 	public function AddValidator(Validator $oValidator)
@@ -380,7 +380,7 @@ abstract class Field
 
 	/**
 	 *
-	 * @param Validator $oValidator
+	 * @param \Combodo\iTop\Form\Validator\Validator $oValidator
 	 * @return \Combodo\iTop\Form\Field\Field
 	 */
 	public function RemoveValidator(Validator $oValidator)
