@@ -359,13 +359,20 @@ class CMDBSource
 		return $oResult;
 	}
 
+	/**
+	 * @param string $sTable
+	 *
+	 * @return int
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function GetNextInsertId($sTable)
 	{
 		$sSQL = "SHOW TABLE STATUS LIKE '$sTable'";
 		$oResult = self::Query($sSQL);
 		$aRow = $oResult->fetch_assoc();
-		$iNextInsertId = $aRow['Auto_increment'];
-		return $iNextInsertId;
+
+		return $aRow['Auto_increment'];
 	}
 
 	public static function GetInsertId()

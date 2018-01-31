@@ -170,8 +170,8 @@ class DBObjectSet implements iDBObjectSetIterator
 
 	/**
 	 * Specify the subset of attributes to load (for each class of objects) before performing the SQL query for retrieving the rows from the DB
-	 * 
-	 * @param hash $aAttToLoad Format: alias => array of attribute_codes
+	 *
+	 * @param array $aAttToLoad Format: alias => array of attribute_codes
 	 * 
 	 * @return void
 	 */
