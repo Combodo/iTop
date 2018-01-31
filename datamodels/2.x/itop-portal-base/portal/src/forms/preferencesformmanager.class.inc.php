@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Portal\Form;
 
 use Exception;
+use IssueLog;
 use CMDBSource;
 use Dict;
 use UserRights;
@@ -120,6 +121,7 @@ class PreferencesFormManager extends FormManager
 				// Updating only if preferences changed
 				if ($iFieldChanged > 0)
 				{
+					$oCurUser->AllowWrite(true);
 					$oCurUser->DBUpdate();
 					$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
 				}
