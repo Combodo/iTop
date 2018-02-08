@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,7 +18,8 @@
 
 /**
  * The standardized result of any pass/fail check performed by the setup
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ *
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class CheckResult
@@ -821,11 +822,11 @@ class SetupUtils
 				'source_dir' => $sSourceDir,
 				'source_environment' => $sSourceEnvironment,
 				'configuration_file' => $sConfigFile,
-				'db_server' => $oPrevConf->GetDBHost(),
-				'db_user' => $oPrevConf->GetDBUser(),
-				'db_pwd' => $oPrevConf->GetDBPwd(),
-				'db_name' => $oPrevConf->GetDBName(),
-				'db_prefix' => $oPrevConf->GetDBSubname(),
+				'db_server' => $oPrevConf->Get('db_host'),
+				'db_user' => $oPrevConf->Get('db_user'),
+				'db_pwd' => $oPrevConf->Get('db_pwd'),
+				'db_name' => $oPrevConf->Get('db_name'),
+				'db_prefix' => $oPrevConf->Get('db_subname'),
 				'graphviz_path' => $oPrevConf->Get('graphviz_path'),
 			);
 		}

@@ -86,10 +86,10 @@ function MakeArchiveFileName($iRefTime = null)
 	$sBackupFile =  utils::ReadParam('backup_file', $sDefaultBackupFileName, true, 'raw_data');
 	
 	$oConfig = new Config(APPCONF.'production/config-itop.php');
-	
-	$sBackupFile = str_replace('__HOST__', $oConfig->GetDBHost(), $sBackupFile);
-	$sBackupFile = str_replace('__DB__', $oConfig->GetDBName(), $sBackupFile);
-	$sBackupFile = str_replace('__SUBNAME__', $oConfig->GetDBSubName(), $sBackupFile);
+
+	$sBackupFile = str_replace('__HOST__', $oConfig->Get('db_host'), $sBackupFile);
+	$sBackupFile = str_replace('__DB__', $oConfig->Get('db_name'), $sBackupFile);
+	$sBackupFile = str_replace('__SUBNAME__', $oConfig->Get('db_subname'), $sBackupFile);
 	
 	if (is_null($iRefTime))
 	{

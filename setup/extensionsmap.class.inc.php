@@ -547,11 +547,10 @@ class iTopExtensionsMap
 		{
 			if (CMDBSource::DBName() === null)
 			{
-				CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName());
-				CMDBSource::SetCharacterSet($oConfig->GetDBCharacterSet(), $oConfig->GetDBCollation());
+				CMDBSource::InitFromConfig($oConfig);
 			}
-			$sLatestInstallationDate = CMDBSource::QueryToScalar("SELECT max(installed) FROM ".$oConfig->GetDBSubname()."priv_extension_install");
-			$aInstalledExtensions = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->GetDBSubname()."priv_extension_install WHERE installed = '".$sLatestInstallationDate."'");
+			$sLatestInstallationDate = CMDBSource::QueryToScalar("SELECT max(installed) FROM ".$oConfig->Get('db_subname')."priv_extension_install");
+			$aInstalledExtensions = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_extension_install WHERE installed = '".$sLatestInstallationDate."'");
 		}
 		catch (MySQLException $e)
 		{

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * DB Server abstraction
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -92,8 +92,33 @@ class CMDBSource
 	protected static $m_sDBSSLCert;
 	protected static $m_sDBSSLCA;
 	protected static $m_sDBSSLCipher;
-	/** @var mysqli */
+	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
+
+	/**
+	 * @param Config $oConfig
+	 *
+	 * @throws \MySQLException
+	 * @uses \CMDBSource::Init()
+	 * @uses \CMDBSource::SetCharacterSet()
+	 */
+	public static function InitFromConfig($oConfig)
+	{
+		$sServer = $oConfig->Get('db_host');
+		$sUser = $oConfig->Get('db_user');
+		$sPwd = $oConfig->Get('db_pwd');
+		$sSource = $oConfig->Get('db_name');
+		$sSSLKey = $oConfig->Get('db_ssl.key');
+		$sSSLCert = $oConfig->Get('db_ssl.cert');
+		$sSSLCA = $oConfig->Get('db_ssl.ca');
+		$sSSLCipher = $oConfig->Get('db_ssl.cipher');
+
+		self::Init($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA, $sSSLCipher);
+
+		$sCharacterSet = $oConfig->Get('db_character_set');
+		$sCollation = $oConfig->Get('db_collation');
+		self::SetCharacterSet($sCharacterSet, $sCollation);
+	}
 
 	/**
 	 * @param string $sServer

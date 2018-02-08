@@ -182,7 +182,7 @@ abstract class MetaModel
 		var_dump(get_class_vars(__CLASS__));
 	}
 
-	/** @var Config */
+	/** @var Config m_oConfig */
 	private static $m_oConfig = null;
 	/** @var array */
 	protected static $m_aModulesParameters = array();
@@ -5801,17 +5801,8 @@ abstract class MetaModel
 			self::IncludeModule($sToInclude, 'addons');
 		}
 
-		$sServer = self::$m_oConfig->GetDBHost();
-		$sUser = self::$m_oConfig->GetDBUser();
-		$sPwd = self::$m_oConfig->GetDBPwd();
-		$sSource = self::$m_oConfig->GetDBName();
-		$sSSLKey = self::$m_oConfig->GetDBSSLKey();
-		$sSSLCert = self::$m_oConfig->GetDBSSLCert();
-		$sSSLCA = self::$m_oConfig->GetDBSSLCA();
-		$sSSLCipher = self::$m_oConfig->GetDBSSLCipher();
-		$sTablePrefix = self::$m_oConfig->GetDBSubname();
-		$sCharacterSet = self::$m_oConfig->GetDBCharacterSet();
-		$sCollation = self::$m_oConfig->GetDBCollation();
+		$sSource = self::$m_oConfig->Get('db_name');
+		$sTablePrefix = self::$m_oConfig->Get('db_subname');
 
 		if (self::$m_bUseAPCCache)
 		{
@@ -5888,8 +5879,7 @@ abstract class MetaModel
 		self::$m_sDBName = $sSource;
 		self::$m_sTablePrefix = $sTablePrefix;
 
-		CMDBSource::Init($sServer, $sUser, $sPwd, '', $sSSLKey, $sSSLCert, $sSSLCA, $sSSLCipher); // do not select the DB (could not exist)
-		CMDBSource::SetCharacterSet($sCharacterSet, $sCollation);
+		CMDBSource::InitFromConfig(self::$m_oConfig);
 		// Later when timezone implementation is correctly done: CMDBSource::SetTimezone($sDBTimezone);
 	}
 

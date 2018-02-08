@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016 Combodo SARL
+// Copyright (C) 2016-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Monitor the backup
  *
- * @copyright   Copyright (C) 2016 Combodo SARL
+ * @copyright   Copyright (C) 2016-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -296,11 +296,11 @@ try
 	$sRestoreDone = addslashes(Dict::S('bkp-success-restore'));
 
 	$sMySQLBinDir = addslashes(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
-	$sDBHost = addslashes(MetaModel::GetConfig()->GetDBHost());
-	$sDBUser = addslashes(MetaModel::GetConfig()->GetDBUser());
-	$sDBPwd = addslashes(MetaModel::GetConfig()->GetDBPwd());
-	$sDBName = addslashes(MetaModel::GetConfig()->GetDBName());
-	$sDBSubName = addslashes(MetaModel::GetConfig()->GetDBSubName());
+	$sDBHost = addslashes(MetaModel::GetConfig()->Get('db_host'));
+	$sDBUser = addslashes(MetaModel::GetConfig()->Get('db_user'));
+	$sDBPwd = addslashes(MetaModel::GetConfig()->Get('db_pwd'));
+	$sDBName = addslashes(MetaModel::GetConfig()->Get('db_name'));
+	$sDBSubName = addslashes(MetaModel::GetConfig()->Get('db_subname'));
 
 	$sEnvironment = addslashes(utils::GetCurrentEnvironment());
 	

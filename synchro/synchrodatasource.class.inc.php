@@ -753,7 +753,7 @@ EOF
 		{
 			$sDBTableName = preg_replace('/[^A-za-z0-9_]/', '_', $sDBTableName); // Remove forbidden characters from the table name
 		}
-		$sPrefix = MetaModel::GetConfig()->GetDBSubName()."synchro_data_";
+		$sPrefix = MetaModel::GetConfig()->Get('db_subname')."synchro_data_";
 		if (strpos($sDBTableName, $sPrefix) !== 0)
 		{
 			$sDBTableName = $sPrefix.$sDBTableName;
@@ -972,7 +972,7 @@ EOF
 			}
 		}
 
-		$sDBName = MetaModel::GetConfig()->GetDBName();
+		$sDBName = MetaModel::GetConfig()->Get('db_name');
 		try
 		{
 			// Note: as per the MySQL documentation, using information_schema behaves exactly like SHOW TRIGGERS (user privileges)

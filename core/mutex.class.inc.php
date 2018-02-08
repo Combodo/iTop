@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013-2017 Combodo SARL
+// Copyright (C) 2013-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@
  * Relies on MySQL locks because the API sem_get is not always present in the
  * installed PHP.    
  *
- * @copyright   Copyright (C) 2013-2017 Combodo SARL
+ * @copyright   Copyright (C) 2013-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class iTopMutex
@@ -47,12 +47,15 @@ class iTopMutex
 		{
 			$oConfig = utils::GetConfig(); // Will return an empty config when called during the setup
 		}
-		$sDBName = $oConfig->GetDBName();
-		$sDBSubname = $oConfig->GetDBSubname();
-		$this->sDBSSLKey = $oConfig->GetDBSSLKey();
-		$this->sDBSSLCert = $oConfig->GetDBSSLCert();
-		$this->sDBSSLCA = $oConfig->GetDBSSLCA();
-		$this->sDBSSLCipher = $oConfig->GetDBSSLCipher();
+		$sDBHost = is_null($sDBHost) ? $oConfig->Get('db_host') : $sDBHost;
+		$sDBUser = is_null($sDBUser) ? $oConfig->Get('db_user') : $sDBUser;
+		$sDBPwd = is_null($sDBPwd) ? $oConfig->Get('db_pwd') : $sDBPwd;
+		$sDBName = $oConfig->Get('db_name');
+		$sDBSubname = $oConfig->Get('db_subname');
+		$this->sDBSSLKey = $oConfig->Get('db_ssl.key');
+		$this->sDBSSLCert = $oConfig->Get('db_ssl.cert');
+		$this->sDBSSLCA = $oConfig->Get('db_ssl.ca');
+		$this->sDBSSLCipher = $oConfig->Get('db_ssl.cipher');
 		$this->sName = 'itop.'.$sName;
 		$this->sName = $sName;
 		if (substr($sName, -strlen($sDBName.$sDBSubname)) != $sDBName.$sDBSubname)
@@ -75,9 +78,6 @@ class iTopMutex
 
 		// It is a MUST to create a dedicated session each time a lock is required, because
 		// using GET_LOCK anytime on the same session will RELEASE the current and unique session lock (known issue)
-		$sDBHost = is_null($sDBHost) ? $oConfig->GetDBHost() : $sDBHost;
-		$sDBUser = is_null($sDBUser) ? $oConfig->GetDBUser() : $sDBUser;
-		$sDBPwd = is_null($sDBPwd) ? $oConfig->GetDBPwd() : $sDBPwd;
 		$this->InitMySQLSession($sDBHost, $sDBUser, $sDBPwd);
 	}
 

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -194,11 +194,11 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			if (is_null($sDBHost))
 			{
 				// Defaulting to the current config
-				$sDBHost = MetaModel::GetConfig()->GetDBHost();
-				$sDBUser = MetaModel::GetConfig()->GetDBUser();
-				$sDBPwd = MetaModel::GetConfig()->GetDBPwd();
-				$sDBName = MetaModel::GetConfig()->GetDBName();
-				$sDBSubName = MetaModel::GetConfig()->GetDBSubName();
+				$sDBHost = MetaModel::GetConfig()->Get('db_host');
+				$sDBUser = MetaModel::GetConfig()->Get('db_user');
+				$sDBPwd = MetaModel::GetConfig()->Get('db_pwd');
+				$sDBName = MetaModel::GetConfig()->Get('db_name');
+				$sDBSubName = MetaModel::GetConfig()->Get('db_subname');
 			}
 
 			// Compute the port (if present in the host name)

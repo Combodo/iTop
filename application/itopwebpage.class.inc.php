@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class iTopWebPage
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -796,7 +796,7 @@ EOF
 		if ($iBreadCrumbMaxCount > 1)
 		{
 			$oConfig = MetaModel::GetConfig();
-			$siTopInstanceId = json_encode(utils::GetAbsoluteUrlAppRoot().'==='.$oConfig->GetDBHost().'/'.$oConfig->GetDBName().'/'.$oConfig->GetDBSubname());
+			$siTopInstanceId = json_encode(utils::GetAbsoluteUrlAppRoot().'==='.$oConfig->Get('db_host').'/'.$oConfig->Get('db_name').'/'.$oConfig->Get('db_subname'));
 			if ($this->bBreadCrumbEnabled)
 			{
 				if (is_null($this->sBreadCrumbEntryId))
