@@ -167,6 +167,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'db_ssl.capath' => array(
+			'type' => 'string',
+			'description' => 'Path to a directory that contains trusted SSL CA certificates in PEM format',
+			'default' => null,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 		'db_ssl.cipher' => array(
 			'type' => 'string',
 			'default' => null,

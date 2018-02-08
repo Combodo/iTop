@@ -528,12 +528,13 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$sSSLKey = $oConfig->Get('db_ssl.key');
 			$sSSLCert = $oConfig->Get('db_ssl.cert');
 			$sSSLCA = $oConfig->Get('db_ssl.ca');
+			$sSSLCaPath = $oConfig->Get('db_ssl.capath');
 			$sSSLCipher = $oConfig->Get('db_ssl.cipher');
 
 			try
 			{
 				$oMysqli = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert,
-					$sSSLCA,
+					$sSSLCA, sSSLCaPath, 
 					$sSSLCipher);
 
 				if ($oMysqli->connect_errno)

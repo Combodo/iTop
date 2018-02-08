@@ -91,6 +91,7 @@ class CMDBSource
 	protected static $m_sDBSSLKey;
 	protected static $m_sDBSSLCert;
 	protected static $m_sDBSSLCA;
+	protected static $m_sDBSSLCaPath;
 	protected static $m_sDBSSLCipher;
 	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
@@ -111,9 +112,10 @@ class CMDBSource
 		$sSSLKey = $oConfig->Get('db_ssl.key');
 		$sSSLCert = $oConfig->Get('db_ssl.cert');
 		$sSSLCA = $oConfig->Get('db_ssl.ca');
+		$sSSLCaPath = $oConfig->Get('db_ssl.capath');
 		$sSSLCipher = $oConfig->Get('db_ssl.cipher');
 
-		self::Init($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA, $sSSLCipher);
+		self::Init($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA, $sSSLCaPath, $sSSLCipher);
 
 		$sCharacterSet = $oConfig->Get('db_character_set');
 		$sCollation = $oConfig->Get('db_collation');
@@ -128,11 +130,15 @@ class CMDBSource
 	 * @param string $sSSLKey
 	 * @param string $sSSLCert
 	 * @param string $sSSLCA
+	 * @param string $sSSLCaPath
 	 * @param string $sSSLCipher
 	 *
 	 * @throws \MySQLException
 	 */
-	public static function Init($sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = NULL, $sSSLCert = NULL, $sSSLCA = NULL, $sSSLCipher = NULL )
+	public static function Init(
+		$sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = null, $sSSLCert = null, $sSSLCA = null, $sSSLCaPath = null,
+		$sSSLCipher = null
+	)
 	{
 		self::$m_sDBHost = $sServer;
 		self::$m_sDBUser = $sUser;
@@ -141,10 +147,11 @@ class CMDBSource
 		self::$m_sDBSSLKey = empty($sSSLKey) ? null : $sSSLKey;
 		self::$m_sDBSSLCert = empty($sSSLCert) ? null : $sSSLCert;
 		self::$m_sDBSSLCA = empty($sSSLCA) ? null : $sSSLCA;
+		self::$m_sDBSSLCaPath = empty($sSSLCaPath) ? null : $sSSLCaPath;
 		self::$m_sDBSSLCipher = empty($sSSLCipher) ? null : $sSSLCipher;
 
 		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA,
-			$sSSLCipher);
+			$sSSLCaPath, $sSSLCipher);
 	}
 
 	/**
@@ -155,13 +162,15 @@ class CMDBSource
 	 * @param string $sSSLKey
 	 * @param string $sSSLCert
 	 * @param string $sSSLCA
+	 * @param string $sSSLCaPath
 	 * @param string $sSSLCipher
 	 *
 	 * @return \mysqli
 	 * @throws \MySQLException
 	 */
 	public static function GetMysqliInstance(
-		$sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = null, $sSSLCert = null, $sSSLCA = null, $sSSLCipher = null
+		$sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = null, $sSSLCert = null, $sSSLCA = null, $sSSLCaPath = null,
+		$sSSLCipher = null
 	) {
 		$oMysqli = null;
 
@@ -182,7 +191,7 @@ class CMDBSource
 			if (!empty($sSSLKey) && !empty($sSSLCert) && !empty($sSSLCA))
 			{
 				$iFlags = MYSQLI_CLIENT_SSL;
-				$oMysqli->ssl_set($sSSLKey, $sSSLCert, $sSSLCA, null, $sSSLCipher);
+				$oMysqli->ssl_set($sSSLKey, $sSSLCert, $sSSLCA, $sSSLCaPath, $sSSLCipher);
 			}
 			$oMysqli->real_connect($sServer, $sUser, $sPwd, '', $iPort,
 				ini_get("mysqli.default_socket"), $iFlags);
