@@ -174,8 +174,11 @@ class CMDBSource
 		self::$m_sDBSSLCaPath = empty($sSSLCaPath) ? null : $sSSLCaPath;
 		self::$m_sDBSSLCipher = empty($sSSLCipher) ? null : $sSSLCipher;
 
+		// when using TLS add persistent connection to reduce overhead
+		$bUsePersistentConnection = self::IsDbConnectionUsingSsl($sServer, $sServer, $sServer);
+
 		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA,
-			$sSSLCaPath, $sSSLCipher, true);
+			$sSSLCaPath, $sSSLCipher, $bUsePersistentConnection, true);
 	}
 
 	/**
@@ -188,6 +191,7 @@ class CMDBSource
 	 * @param string $sSSLCA
 	 * @param string $sSSLCaPath
 	 * @param string $sSSLCipher
+	 * @param boolean $bUsePersistentConnection {@see http://php.net/manual/en/mysqli.persistconns.php}
 	 * @param boolean $bCheckSslAfterConnection
 	 *
 	 * @return \mysqli
@@ -195,14 +199,18 @@ class CMDBSource
 	 */
 	public static function GetMysqliInstance(
 		$sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = null, $sSSLCert = null, $sSSLCA = null, $sSSLCaPath = null,
-		$sSSLCipher = null, $bCheckSslAfterConnection = false
+		$sSSLCipher = null, $bUsePersistentConnection = false, $bCheckSslAfterConnection = false
 	) {
 		$oMysqli = null;
 
 		$sServer = null;
 		$iPort = null;
 		$bSslEnabled = self::IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA);
-		self::InitServerAndPort($sServer, $iPort, $bSslEnabled);
+		self::InitServerAndPort($sServer, $iPort);
+		if ($bUsePersistentConnection)
+		{
+			$sServer = 'p:'.$sServer;
+		}
 
 		$iFlags = null;
 
@@ -259,9 +267,8 @@ class CMDBSource
 	 *
 	 * @param string $sServer
 	 * @param int $iPort
-	 * @param boolean $bSslEnabled
 	 */
-	private static function InitServerAndPort(&$sServer, &$iPort, $bSslEnabled)
+	private static function InitServerAndPort(&$sServer, &$iPort)
 	{
 		$aConnectInfo = explode(':', self::$m_sDBHost);
 		if (count($aConnectInfo) > 1)
@@ -274,13 +281,6 @@ class CMDBSource
 		{
 			$sServer = self::$m_sDBHost;
 			$iPort = null;
-		}
-
-		if ($bSslEnabled)
-		{
-			// use persistent connexions to limit TLS overhead
-			// see http://php.net/manual/en/mysqli.persistconns.php
-			$sServer = 'p:'.self::$m_sDBHost;
 		}
 	}
 
