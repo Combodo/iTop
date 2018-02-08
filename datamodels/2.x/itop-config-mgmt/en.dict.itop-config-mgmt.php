@@ -308,7 +308,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FunctionalCI/Attribute:org_id+' => '',
 	'Class:FunctionalCI/Attribute:organization_name' => 'Organization name',
 	'Class:FunctionalCI/Attribute:organization_name+' => 'Common name',
-	'Class:FunctionalCI/Attribute:business_criticity' => 'Business criticity',
+	'Class:FunctionalCI/Attribute:business_criticity' => 'Business criticality',
 	'Class:FunctionalCI/Attribute:business_criticity+' => '',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => 'high',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => 'high',
