@@ -112,11 +112,11 @@ class CMDBSource
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
 	protected static $m_sDBName;
-	protected static $m_sDBSSLKey;
-	protected static $m_sDBSSLCert;
-	protected static $m_sDBSSLCA;
-	protected static $m_sDBSSLCaPath;
-	protected static $m_sDBSSLCipher;
+	protected static $m_sDBTlsKey;
+	protected static $m_sDBTlsCert;
+	protected static $m_sDBTlsCA;
+	protected static $m_sDBTlsCaPath;
+	protected static $m_sDBTlsCipher;
 	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
 
@@ -133,13 +133,13 @@ class CMDBSource
 		$sUser = $oConfig->Get('db_user');
 		$sPwd = $oConfig->Get('db_pwd');
 		$sSource = $oConfig->Get('db_name');
-		$sSSLKey = $oConfig->Get('db_ssl.key');
-		$sSSLCert = $oConfig->Get('db_ssl.cert');
-		$sSSLCA = $oConfig->Get('db_ssl.ca');
-		$sSSLCaPath = $oConfig->Get('db_ssl.capath');
-		$sSSLCipher = $oConfig->Get('db_ssl.cipher');
+		$sTlsKey = $oConfig->Get('db_tls.key');
+		$sTlsCert = $oConfig->Get('db_tls.cert');
+		$sTlsCA = $oConfig->Get('db_tls.ca');
+		$sTlsCaPath = $oConfig->Get('db_tls.capath');
+		$sTlsCipher = $oConfig->Get('db_tls.cipher');
 
-		self::Init($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA, $sSSLCaPath, $sSSLCipher);
+		self::Init($sServer, $sUser, $sPwd, $sSource, $sTlsKey, $sTlsCert, $sTlsCA, $sTlsCaPath, $sTlsCipher);
 
 		$sCharacterSet = $oConfig->Get('db_character_set');
 		$sCollation = $oConfig->Get('db_collation');
@@ -151,34 +151,34 @@ class CMDBSource
 	 * @param string $sUser
 	 * @param string $sPwd
 	 * @param string $sSource database to use
-	 * @param string $sSSLKey
-	 * @param string $sSSLCert
-	 * @param string $sSSLCA
-	 * @param string $sSSLCaPath
-	 * @param string $sSSLCipher
+	 * @param string $sTlsKey
+	 * @param string $sTlsCert
+	 * @param string $sTlsCA
+	 * @param string $sTlsCaPath
+	 * @param string $sTlsCipher
 	 *
 	 * @throws \MySQLException
 	 */
 	public static function Init(
-		$sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = null, $sSSLCert = null, $sSSLCA = null, $sSSLCaPath = null,
-		$sSSLCipher = null
+		$sServer, $sUser, $sPwd, $sSource = '', $sTlsKey = null, $sTlsCert = null, $sTlsCA = null, $sTlsCaPath = null,
+		$sTlsCipher = null
 	)
 	{
 		self::$m_sDBHost = $sServer;
 		self::$m_sDBUser = $sUser;
 		self::$m_sDBPwd = $sPwd;
 		self::$m_sDBName = $sSource;
-		self::$m_sDBSSLKey = empty($sSSLKey) ? null : $sSSLKey;
-		self::$m_sDBSSLCert = empty($sSSLCert) ? null : $sSSLCert;
-		self::$m_sDBSSLCA = empty($sSSLCA) ? null : $sSSLCA;
-		self::$m_sDBSSLCaPath = empty($sSSLCaPath) ? null : $sSSLCaPath;
-		self::$m_sDBSSLCipher = empty($sSSLCipher) ? null : $sSSLCipher;
+		self::$m_sDBTlsKey = empty($sTlsKey) ? null : $sTlsKey;
+		self::$m_sDBTlsCert = empty($sTlsCert) ? null : $sTlsCert;
+		self::$m_sDBTlsCA = empty($sTlsCA) ? null : $sTlsCA;
+		self::$m_sDBTlsCaPath = empty($sTlsCaPath) ? null : $sTlsCaPath;
+		self::$m_sDBTlsCipher = empty($sTlsCipher) ? null : $sTlsCipher;
 
 		// when using TLS add persistent connection to reduce overhead
-		$bUsePersistentConnection = self::IsDbConnectionUsingSsl($sServer, $sServer, $sServer);
+		$bUsePersistentConnection = self::IsDbConnectionUsingTls($sServer, $sServer, $sServer);
 
-		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA,
-			$sSSLCaPath, $sSSLCipher, $bUsePersistentConnection, true);
+		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sTlsKey, $sTlsCert, $sTlsCA,
+			$sTlsCaPath, $sTlsCipher, $bUsePersistentConnection, true);
 	}
 
 	/**
@@ -186,26 +186,26 @@ class CMDBSource
 	 * @param string $sUser
 	 * @param string $sPwd
 	 * @param string $sSource database to use
-	 * @param string $sSSLKey
-	 * @param string $sSSLCert
-	 * @param string $sSSLCA
-	 * @param string $sSSLCaPath
-	 * @param string $sSSLCipher
+	 * @param string $sTlsKey
+	 * @param string $sTlsCert
+	 * @param string $sTlsCa
+	 * @param string $sTlsCaPath
+	 * @param string $sTlsCipher
 	 * @param boolean $bUsePersistentConnection {@see http://php.net/manual/en/mysqli.persistconns.php}
-	 * @param boolean $bCheckSslAfterConnection
+	 * @param boolean $bCheckTlsAfterConnection
 	 *
 	 * @return \mysqli
 	 * @throws \MySQLException
 	 */
 	public static function GetMysqliInstance(
-		$sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = null, $sSSLCert = null, $sSSLCA = null, $sSSLCaPath = null,
-		$sSSLCipher = null, $bUsePersistentConnection = false, $bCheckSslAfterConnection = false
+		$sServer, $sUser, $sPwd, $sSource = '', $sTlsKey = null, $sTlsCert = null, $sTlsCa = null, $sTlsCaPath = null,
+		$sTlsCipher = null, $bUsePersistentConnection = false, $bCheckTlsAfterConnection = false
 	) {
 		$oMysqli = null;
 
 		$sServer = null;
 		$iPort = null;
-		$bSslEnabled = self::IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA);
+		$bTlsEnabled = self::IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCa);
 		self::InitServerAndPort($sServer, $iPort);
 		if ($bUsePersistentConnection)
 		{
@@ -223,10 +223,10 @@ class CMDBSource
 			$oMysqli = new mysqli();
 			$oMysqli->init();
 
-			if ($bSslEnabled)
+			if ($bTlsEnabled)
 			{
 				$iFlags = MYSQLI_CLIENT_SSL;
-				$oMysqli->ssl_set($sSSLKey, $sSSLCert, $sSSLCA, $sSSLCaPath, $sSSLCipher);
+				$oMysqli->ssl_set($sTlsKey, $sTlsCert, $sTlsCa, $sTlsCaPath, $sTlsCipher);
 			}
 			$oMysqli->real_connect($sServer, $sUser, $sPwd, '', $iPort,
 				ini_get("mysqli.default_socket"), $iFlags);
@@ -237,9 +237,9 @@ class CMDBSource
 				array('host' => $sServer, 'user' => $sUser), $e);
 		}
 
-		if ($bCheckSslAfterConnection
-			&& self::IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA)
-			&& !self::IsOpenedDbConnectionUsingSsl($oMysqli))
+		if ($bCheckTlsAfterConnection
+			&& self::IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCa)
+			&& !self::IsOpenedDbConnectionUsingTls($oMysqli))
 		{
 			throw new MySQLException("Connection to the database is not encrypted whereas it was opened using TLS parameters",
 				null, null, $oMysqli);
@@ -289,25 +289,25 @@ class CMDBSource
 	 *
 	 * @return boolean
 	 */
-	public static function IsDbConnectionInConfigUsingSsl($oConfig)
+	public static function IsDbConnectionInConfigUsingTls($oConfig)
 	{
-		$sSSLKey = $oConfig->Get('db_ssl.key');
-		$sSSLCert = $oConfig->Get('db_ssl.cert');
-		$sSSLCA = $oConfig->Get('db_ssl.ca');
+		$sTlsKey = $oConfig->Get('db_tls.key');
+		$sTlsCert = $oConfig->Get('db_tls.cert');
+		$sTlsCA = $oConfig->Get('db_tls.ca');
 
-		return self::IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA);
+		return self::IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCA);
 	}
 
 	/**
-	 * @param string $sSSLKey
-	 * @param string $sSSLCert
-	 * @param string $sSSLCA
+	 * @param string $sTlsKey
+	 * @param string $sTlsCert
+	 * @param string $sTlsCA
 	 *
 	 * @return bool
 	 */
-	public static function IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA)
+	public static function IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCA)
 	{
-		return (!empty($sSSLKey) && !empty($sSSLCert) && !empty($sSSLCA));
+		return (!empty($sTlsKey) && !empty($sTlsCert) && !empty($sTlsCA));
 	}
 
 	/**
@@ -324,7 +324,7 @@ class CMDBSource
 	 *
 	 * @uses IsMySqlVarNonEmpty
 	 */
-	private static function IsOpenedDbConnectionUsingSsl($oMysqli)
+	private static function IsOpenedDbConnectionUsingTls($oMysqli)
 	{
 		if (self::$m_oMysqli == null)
 		{

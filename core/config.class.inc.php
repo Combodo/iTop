@@ -146,7 +146,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
-		'db_ssl.key' => array(
+		'db_tls.key' => array(
 			'type' => 'string',
 			'description' => 'Path to client key file for SSL',
 			'default' => null,
@@ -154,7 +154,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_ssl.cert' => array(
+		'db_tls.cert' => array(
 			'type' => 'string',
 			'description' => 'Path to client certificate file for SSL',
 			'default' => null,
@@ -162,7 +162,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_ssl.ca' => array(
+		'db_tls.ca' => array(
 			'type' => 'string',
 			'description' => 'Path to certificate authority file for SSL',
 			'default' => null,
@@ -170,7 +170,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_ssl.capath' => array(
+		'db_tls.capath' => array(
 			'type' => 'string',
 			'description' => 'Path to a directory that contains trusted SSL CA certificates in PEM format',
 			'default' => null,
@@ -178,7 +178,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_ssl.cipher' => array(
+		'db_tls.cipher' => array(
 			'type' => 'string',
 			'description' => 'Optional : separated list of permissible cyphers to use for SSL encryption',
 			'default' => null,
@@ -1083,6 +1083,13 @@ class Config
 		return $this->m_aSettings[$sPropCode];
 	}
 
+	/**
+	 * @param string $sPropCode
+	 * @param mixed $value
+	 * @param string $sSourceDesc mandatory for variables with show_in_conf_sample=false
+	 *
+	 * @throws \CoreException
+	 */
 	public function Set($sPropCode, $value, $sSourceDesc = 'unknown')
 	{
 		$sType = $this->m_aSettings[$sPropCode]['type'];
@@ -1645,17 +1652,6 @@ class Config
 		{
 			$aSettings[$sPropCode] = $aSettingInfo['value'];
 		}
-		$aSettings['db_host'] = $this->m_sDBHost;
-		$aSettings['db_user'] = $this->m_sDBUser;
-		$aSettings['db_pwd'] = $this->m_sDBPwd;
-		$aSettings['db_name'] = $this->m_sDBName;
-		$aSettings['db_subname'] = $this->m_sDBSubname;
-		$aSettings['db_ssl_key'] = $this->m_sDBSSLKey;
-		$aSettings['db_ssl_cert'] = $this->m_sDBSSLCert;
-		$aSettings['db_ssl_ca'] = $this->m_sDBSSLCA;
-		$aSettings['db_ssl_cipher'] = $this->m_sDBSSLCipher;
-		$aSettings['db_character_set'] = $this->m_sDBCharacterSet;
-		$aSettings['db_collation'] = $this->m_sDBCollation;
 		$aSettings['log_global'] = $this->m_bLogGlobal;
 		$aSettings['log_notification'] = $this->m_bLogNotification;
 		$aSettings['log_issue'] = $this->m_bLogIssue;
@@ -1877,25 +1873,30 @@ class Config
 			}
 			$this->Set('db_name', $sDBName);
 			$this->Set('db_subname', $aParamValues['db_prefix']);
-			if (isset($aParamValues['db_ssl_key']))
+			$sDbTlsKey = $aParamValues['db_tls_key'];
+			if (isset($sDbTlsKey) && !empty($sDbTlsKey))
 			{
-				$this->Set('db_ssl.key', $aParamValues['db_ssl_key']);
+				$this->Set('db_tls.key', $sDbTlsKey, 'UpdateFromParams');
 			}
-			if (isset($aParamValues['db_ssl_cert']))
+			$sDbTlsCert = $aParamValues['db_tls_cert'];
+			if (isset($sDbTlsCert) && !empty($sDbTlsCert))
 			{
-				$this->Set('db_ssl.cert', $aParamValues['db_ssl_cert']);
+				$this->Set('db_tls.cert', $sDbTlsCert, 'UpdateFromParams');
 			}
-			if (isset($aParamValues['db_ssl_ca']))
+			$sDbTlsCa = $aParamValues['db_tls_ca'];
+			if (isset($sDbTlsCa) && !empty($sDbTlsCa))
 			{
-				$this->Set('db_ssl.ca', $aParamValues['db_ssl_ca']);
+				$this->Set('db_tls.ca', $sDbTlsCa, 'UpdateFromParams');
 			}
-			if (isset($aParamValues['db_ssl_capath']))
+			$sDbTlsCaPath = $aParamValues['db_tls_capath'];
+			if (isset($sDbTlsCaPath) && !empty($sDbTlsCaPath))
 			{
-				$this->Set('db_ssl.capath', $aParamValues['db_ssl_capath']);
+				$this->Set('db_tls.capath', $sDbTlsCaPath, 'UpdateFromParams');
 			}
-			if (isset($aParamValues['db_ssl_cipher']))
+			$sDbTlsCipher = $aParamValues['db_tls_cipher'];
+			if (isset($sDbTlsCipher) && !empty($sDbTlsCipher))
 			{
-				$this->Set('db_ssl.cipher', $aParamValues['db_ssl_cipher']);
+				$this->Set('db_tls.cipher', $sDbTlsCipher, 'UpdateFromParams');
 			}
 		}
 

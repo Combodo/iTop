@@ -40,16 +40,16 @@ class iTopMutex
 	protected $sDBPwd;
 	protected $sDBName;
 	protected $sDBSubname;
-	protected $sDBSSLKey;
-	protected $sDBSSLCert;
-	protected $sDBSSLCA;
-	protected $sDBSSLCaPath;
-	protected $sDBSSLCipher;
+	protected $sDBTlsKey;
+	protected $sDBTlsCert;
+	protected $sDBTlsCA;
+	protected $sDBTlsCaPath;
+	protected $sDBTlsCipher;
 	static protected $aAcquiredLocks = array(); // Number of instances of the Mutex, having the lock, in this page
 
 	public function __construct(
-		$sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null, $sDBSSLKey = null, $sDBSSLCert = null,
-		$sDBSSLCA = null, $sDBSSLCaPath = null, $sDBSSLCypher = null
+		$sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null, $sDBTlsKey = null, $sDBTlsCert = null,
+		$sDBTlsCA = null, $sDBTlsCaPath = null, $sDBTlsCypher = null
 	)
 	{
 		// Compute the name of a lock for mysql
@@ -65,11 +65,11 @@ class iTopMutex
 		$this->sDBName = $oConfig->Get('db_name');
 		$sDBSubname = $oConfig->Get('db_subname');
 
-		$this->sDBSSLKey = is_null($sDBSSLKey) ? $oConfig->Get('db_ssl.key') : $sDBSSLKey;
-		$this->sDBSSLCert = is_null($sDBSSLCert) ? $oConfig->Get('db_ssl.key') : $sDBSSLCert;
-		$this->sDBSSLCA = is_null($sDBSSLCA) ? $oConfig->Get('db_ssl.key') : $sDBSSLCA;
-		$this->sDBSSLCaPath = is_null($sDBSSLCaPath) ? $oConfig->Get('db_ssl.key') : $sDBSSLCaPath;
-		$this->sDBSSLCipher = is_null($sDBSSLCypher) ? $oConfig->Get('db_ssl.key') : $sDBSSLCypher;
+		$this->sDBTlsKey = is_null($sDBTlsKey) ? $oConfig->Get('db_tls.key') : $sDBTlsKey;
+		$this->sDBTlsCert = is_null($sDBTlsCert) ? $oConfig->Get('db_tls.cert') : $sDBTlsCert;
+		$this->sDBTlsCA = is_null($sDBTlsCA) ? $oConfig->Get('db_tls.ca') : $sDBTlsCA;
+		$this->sDBTlsCaPath = is_null($sDBTlsCaPath) ? $oConfig->Get('db_tls.capath') : $sDBTlsCaPath;
+		$this->sDBTlsCipher = is_null($sDBTlsCypher) ? $oConfig->Get('db_tls.cipher') : $sDBTlsCypher;
 
 		$this->sName = 'itop.'.$sName;
 		$this->sName = $sName;
@@ -238,14 +238,14 @@ class iTopMutex
 		$sUser = $this->sDBUser;
 		$sPwd = $this->sDBPwd;
 		$sSource = $this->sDBName;
-		$sSSLKey = $this->sDBSSLKey;
-		$sSSLCert = $this->sDBSSLCert;
-		$sSSLCA = $this->sDBSSLCA;
-		$sSSLCaPath = $this->sDBSSLCaPath;
-		$sSSLCipher = $this->sDBSSLCipher;
+		$sTlsKey = $this->sDBTlsKey;
+		$sTlsCert = $this->sDBTlsCert;
+		$sTlsCA = $this->sDBTlsCA;
+		$sTlsCaPath = $this->sDBTlsCaPath;
+		$sTlsCipher = $this->sDBTlsCipher;
 
-		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA,
-			$sSSLCaPath, $sSSLCipher, false, false);
+		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sTlsKey, $sTlsCert, $sTlsCA,
+			$sTlsCaPath, $sTlsCipher, false, false);
 
 		if (!$this->hDBLink)
 		{

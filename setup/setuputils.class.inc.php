@@ -818,9 +818,6 @@ class SetupUtils
 		{
 			$oPrevConf = new Config($sConfigFile);
 
-			$sDbSslKey = $oPrevConf->Get('db_ssl.key');
-			$sDbSslCert = $oPrevConf->Get('db_ssl.cert');
-			$sDbSslCa = $oPrevConf->Get('db_ssl.ca');
 			$aResult = array(
 				'found' => true,
 				'source_dir' => $sSourceDir,
@@ -831,16 +828,13 @@ class SetupUtils
 				'db_pwd' => $oPrevConf->Get('db_pwd'),
 				'db_name' => $oPrevConf->Get('db_name'),
 				'db_prefix' => $oPrevConf->Get('db_subname'),
-				'db_ssl_key' => $sDbSslKey,
-				'db_ssl_cert' => $sDbSslCert,
-				'db_ssl_ca' => $sDbSslCa,
-				'db_ssl_capath' => $oPrevConf->Get('db_ssl.capath'),
-				'db_ssl_cipher' => $oPrevConf->Get('db_ssl.cipher'),
+				'db_tls_key' => $oPrevConf->Get('db_tls.key'),
+				'db_tls_cert' => $oPrevConf->Get('db_tls.cert'),
+				'db_tls_ca' => $oPrevConf->Get('db_tls.ca'),
+				'db_tls_capath' => $oPrevConf->Get('db_tls.capath'),
+				'db_tls_cipher' => $oPrevConf->Get('db_tls.cipher'),
 				'graphviz_path' => $oPrevConf->Get('graphviz_path'),
 			);
-
-			// SSL options checkbox
-			$aResult['db_ssl'] = (CMDBSource::IsDbConnectionUsingSsl($sDbSslKey, $sDbSslCert, $sDbSslCa));
 		}
 		
 		return $aResult;
@@ -879,16 +873,16 @@ class SetupUtils
 	 * @param string $sDBPwd
 	 * @param string $sDBName
 	 * @param string $sDBPrefix
-	 * @param string $sSSLKey
-	 * @param string $sSSLCert
-	 * @param string $sSSLCA
-	 * @param string $sSSLCaPath
-	 * @param string $sSSLCypher
+	 * @param string $sTlsKey
+	 * @param string $sTlsCert
+	 * @param string $sTlsCA
+	 * @param string $sTlsCaPath
+	 * @param string $sTlsCypher
 	 * @param string $sNewDBName
 	 */
 	static function DisplayDBParameters(
-		$oPage, $bAllowDBCreation, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sSSLKey, $sSSLCert, $sSSLCA,
-		$sSSLCaPath, $sSSLCypher, $sNewDBName = ''
+		$oPage, $bAllowDBCreation, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTlsKey, $sTlsCert, $sTlsCA,
+		$sTlsCaPath, $sTlsCypher, $sNewDBName = ''
 	) {
 		$oPage->add('<tr><td colspan="2">');
 		$oPage->add('<fieldset><legend>Database Server Connection</legend>');
@@ -901,28 +895,28 @@ class SetupUtils
 		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" autocomplete="off" type="password" name="db_pwd" value="'.htmlentities($sDBPwd, ENT_QUOTES, 'UTF-8').'" size="15"/></td></tr>');
 		$oPage->add('</tbody>');
 
-		//-- SSL params (N°1260)
-		$oPage->add('<tbody id="ssl_options">');
-		$oPage->add('<tr><th colspan="3"><label><img id="db_ssl_img"> Connect using SSL</label></th></tr>');
-		$oPage->add('<tr><td colspan="3" style="font-weight: bold; background-color: #f97e75; padding: 1em;">Warning: please make sure of all the system requirements, and test the connection using the simple test page available <a href="https://wiki.openitop.org/doku.php?id=2_4_0:install:php_and_mysql_tls">on Combodo\'s Wiki</a></td>');
+		//-- TLS params (N°1260)
+		$oPage->add('<tbody id="tls_options">');
+		$oPage->add('<tr><th colspan="3"><label><img id="db_tls_img">Use encrypted connection with TLS</label></th></tr>');
+		$oPage->add('<tr><td colspan="3" style="font-weight: bold; background-color: #f97e75; padding: 1em;">Warning: please make sure that your configuration meet all of the system requirements, and before configuring iTop validate the connection using the simple test page available <a href="https://wiki.openitop.org/doku.php?id=2_4_0:install:php_and_mysql_tls">on Combodo\'s Wiki</a></td>');
 		$oPage->add('<tr><td>SSL Key:</td>');
-		$oPage->add('<td><input id="db_ssl_key" autocomplete="off" type="text" name="db_ssl_key" value="'.htmlentities($sSSLKey,
+		$oPage->add('<td><input id="db_tls_key" autocomplete="off" type="text" name="db_tls_key" value="'.htmlentities($sTlsKey,
 				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
 		$oPage->add('<td>Path to client key file for SSL</td></tr>');
 		$oPage->add('<tr><td>SSL CERT:</td>');
-		$oPage->add('<td><input id="db_ssl_cert" autocomplete="off" type="text" name="db_ssl_cert" value="'.htmlentities($sSSLCert,
+		$oPage->add('<td><input id="db_tls_cert" autocomplete="off" type="text" name="db_tls_cert" value="'.htmlentities($sTlsCert,
 				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
 		$oPage->add('<td>Path to client certificate file for SSL</td></tr>');
 		$oPage->add('<tr><td>SSL CA:</td>');
-		$oPage->add('<td><input id="db_ssl_ca" autocomplete="off" type="text" name="db_ssl_ca" value="'.htmlentities($sSSLCA,
+		$oPage->add('<td><input id="db_tls_ca" autocomplete="off" type="text" name="db_tls_ca" value="'.htmlentities($sTlsCA,
 				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
 		$oPage->add('<td>Path to certificate authority file for SSL</td></tr>');
 		$oPage->add('<tr><td>SSL CA path:</td>');
-		$oPage->add('<td><input id="db_ssl_capath" autocomplete="off" type="text" name="db_ssl_capath" value="'.htmlentities($sSSLCaPath,
+		$oPage->add('<td><input id="db_tls_capath" autocomplete="off" type="text" name="db_tls_capath" value="'.htmlentities($sTlsCaPath,
 				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
 		$oPage->add('<td></td></td></tr>');
 		$oPage->add('<tr><td>SSL cypher:</td>');
-		$oPage->add('<td><input id="db_ssl_cipher" autocomplete="off" type="text" name="db_ssl_cipher" value="'.htmlentities($sSSLCypher,
+		$oPage->add('<td><input id="db_tls_cipher" autocomplete="off" type="text" name="db_tls_cipher" value="'.htmlentities($sTlsCypher,
 				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
 		$oPage->add('<td>Optional : separated list of permissible cyphers to use for SSL encryption</td></tr>');
 		$oPage->add('</tbody>');
@@ -954,33 +948,33 @@ class SetupUtils
 		$oPage->add('<tr><td colspan="2"><span id="table_info">&nbsp;</span></td></tr>');
 		$oPage->add('</td></tr>');
 
-		// SSL checkbox toggle
+		// TLS checkbox toggle
 		$oPage->add_script(<<<'EOF'
-function toggleSslOptions() {
-	$("tbody#ssl_options>tr").not("tr:first-child").toggle();
-	updateSslImage();
+function toggleTlsOptions() {
+	$("tbody#tls_options>tr").not("tr:first-child").toggle();
+	updateTlsImage();
 }
-function updateSslImage() {
-	$dbSslImg = $("img#db_ssl_img");
+function updateTlsImage() {
+	$dbTlsImg = $("img#db_tls_img");
 	imgPath = "../images/";
-	dbImgUrl = ($("tbody#ssl_options>tr:nth-child(2)>td:visible").length > 0) 
+	dbImgUrl = ($("tbody#tls_options>tr:nth-child(2)>td:visible").length > 0) 
 		? "minus.gif"
 		: "plus.gif";
-	$dbSslImg.attr("src", imgPath+dbImgUrl);
+	$dbTlsImg.attr("src", imgPath+dbImgUrl);
 }
 EOF
 		);
-		$bSslEnabled = CMDBSource::IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA);
-		if (!$bSslEnabled)
+		$bTlsEnabled = CMDBSource::IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCA);
+		if (!$bTlsEnabled)
 		{
-			$oPage->add_ready_script('toggleSslOptions();');
+			$oPage->add_ready_script('toggleTlsOptions();');
 		}
 		$oPage->add_ready_script(
 			<<<EOF
-$("tbody#ssl_options>tr>th>label").click(function() {
-	toggleSslOptions();
+$("tbody#tls_options>tr>th>label").click(function() {
+	toggleTlsOptions();
 });
-updateSslImage();
+updateTlsImage();
 EOF
 		);
 
@@ -1008,11 +1002,11 @@ function DoCheckDBConnection()
 		'db_user': $("#db_user").val(),
 		'db_pwd': $("#db_pwd").val(),
 		'db_name': $("#db_name").val(),
-		'db_ssl_key': $("input#db_ssl_key").val(),
-		'db_ssl_cert': $("input#db_ssl_cert").val(),
-		'db_ssl_ca': $("input#db_ssl_ca").val(),
-		'db_ssl_capath': $("input#db_ssl_capath").val(),
-		'db_ssl_cypher': $("input#db_ssl_cypher").val()
+		'db_tls_key': $("input#db_tls_key").val(),
+		'db_tls_cert': $("input#db_tls_cert").val(),
+		'db_tls_ca': $("input#db_tls_ca").val(),
+		'db_tls_capath': $("input#db_tls_capath").val(),
+		'db_tls_cypher': $("input#db_tls_cypher").val()
 	}
 	if ((oXHRCheckDB != null) && (oXHRCheckDB != undefined))
 	{
@@ -1119,33 +1113,33 @@ EOF
 	 * @param string $sDBServer
 	 * @param string $sDBUser
 	 * @param string $sDBPwd
-	 * @param string $sSSLKey
-	 * @param string $sSSLCert
-	 * @param string $sSSLCA
-	 * @param string $sSSLCaPath
-	 * @param string $sSSLCipher
+	 * @param string $sTlsKey
+	 * @param string $sTlsCert
+	 * @param string $sTlsCA
+	 * @param string $sTlsCaPath
+	 * @param string $sTlsCipher
 	 *
 	 * @return bool|array false if the connection failed or array('checks' => Array of CheckResult, 'databases' =>
 	 *     Array of database names (as strings) or null if not allowed)
 	 */
 	static function CheckDbServer(
-		$sDBServer, $sDBUser, $sDBPwd, $sSSLKey = null, $sSSLCert = null, $sSSLCA = null, $sSSLCaPath = null,
-		$sSSLCipher = null
+		$sDBServer, $sDBUser, $sDBPwd, $sTlsKey = null, $sTlsCert = null, $sTlsCA = null, $sTlsCaPath = null,
+		$sTlsCipher = null
 	)
 	{
 		$aResult = array('checks' => array(), 'databases' => null);
 
-		if (CMDBSource::IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA))
+		if (CMDBSource::IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCA))
 		{
-			if (!self::CheckFileExists($sSSLKey, $aResult, 'Can\'t open SSL Key file'))
+			if (!self::CheckFileExists($sTlsKey, $aResult, 'Can\'t open SSL Key file'))
 			{
 				return $aResult;
 			}
-			if (!self::CheckFileExists($sSSLCert, $aResult, 'Can\'t open SSL Cert file'))
+			if (!self::CheckFileExists($sTlsCert, $aResult, 'Can\'t open SSL Cert file'))
 			{
 				return $aResult;
 			}
-			if (!self::CheckFileExists($sSSLCA, $aResult, 'Can\'t open SSL CA file'))
+			if (!self::CheckFileExists($sTlsCA, $aResult, 'Can\'t open SSL CA file'))
 			{
 				return $aResult;
 			}
@@ -1154,7 +1148,7 @@ EOF
 		try
 		{
 			$oDBSource = new CMDBSource;
-			$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $sSSLKey, $sSSLCert, $sSSLCA, $sSSLCipher);
+			$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $sTlsKey, $sTlsCert, $sTlsCA, $sTlsCipher);
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Connection to '$sDBServer' as '$sDBUser' successful.");
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Info - User privileges: ".($oDBSource->GetRawPrivileges()));
 
@@ -1202,7 +1196,7 @@ EOF
 	}
 
 	/**
-	 * Use to test MySQL SSL files (key, cert, ca)
+	 * Use to test access to MySQL SSL files (key, cert, ca)
 	 *
 	 * @param string $sPath
 	 * @param array $aResult passed by reference, will by updated in case of error
@@ -1256,11 +1250,13 @@ EOF
 
 		return false;
 	}
-	
-	static public function GetMySQLVersion($sDBServer, $sDBUser, $sDBPwd, $sSSLKey = NULL, $sSSLCert = NULL, $sSSLCA = NULL, $sSSLCipher = NULL )
+
+	static public function GetMySQLVersion(
+		$sDBServer, $sDBUser, $sDBPwd, $sTlsKey = null, $sTlsCert = null, $sTlsCa = null, $sTlsCipher = null
+	)
 	{
 		$oDBSource = new CMDBSource;
-		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $sSSLKey, $sSSLCert, $sSSLCA, $sSSLCipher);
+		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $sTlsKey, $sTlsCert, $sTlsCa, $sTlsCipher);
 		$sDBVersion = $oDBSource->GetDBVersion();
 		return $sDBVersion;
 	}
@@ -1271,16 +1267,16 @@ EOF
 		$sDBUser = $aParameters['db_user'];
 		$sDBPwd = $aParameters['db_pwd'];
 		$sDBName = $aParameters['db_name'];
-		$sSSLKey = (isset($aParameters['db_ssl_key'])) ? $aParameters['db_ssl_key'] : null;
-		$sSSLCert = isset($aParameters['db_ssl_cert']) ? $aParameters['db_ssl_cert'] : null;
-		$sSSLCA = (isset($aParameters['db_ssl_ca'])) ? $aParameters['db_ssl_ca'] : null;
-		$sSSLCaPath = (isset($aParameters['db_ssl_capath'])) ? $aParameters['db_ssl_capath'] : null;
-		$sSSLCipher = (isset($aParameters['db_ssl_cipher'])) ? $aParameters['db_ssl_cipher'] : null;
+		$sTlsKey = (isset($aParameters['db_tls_key'])) ? $aParameters['db_tls_key'] : null;
+		$sTlsCert = isset($aParameters['db_tls_cert']) ? $aParameters['db_tls_cert'] : null;
+		$sTlsCA = (isset($aParameters['db_tls_ca'])) ? $aParameters['db_tls_ca'] : null;
+		$sTlsCaPath = (isset($aParameters['db_tls_capath'])) ? $aParameters['db_tls_capath'] : null;
+		$sTlsCipher = (isset($aParameters['db_tls_cipher'])) ? $aParameters['db_tls_cipher'] : null;
 
 		$oPage->add_ready_script('oXHRCheckDB = null;');
 
-		$checks = SetupUtils::CheckDbServer($sDBServer, $sDBUser, $sDBPwd, $sSSLKey, $sSSLCert, $sSSLCA, $sSSLCaPath,
-			$sSSLCipher);
+		$checks = SetupUtils::CheckDbServer($sDBServer, $sDBUser, $sDBPwd, $sTlsKey, $sTlsCert, $sTlsCA, $sTlsCaPath,
+			$sTlsCipher);
 
 		if ($checks === false)
 		{
@@ -1423,11 +1419,11 @@ EOF
 			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
 			'db_name' => $oWizard->GetParameter('db_name', ''),
 			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
-			'db_ssl_key' => $oWizard->GetParameter('db_ssl_key', ''),
-			'db_ssl_cert' => $oWizard->GetParameter('db_ssl_cert', ''),
-			'db_ssl_ca' => $oWizard->GetParameter('db_ssl_ca', ''),
-			'db_ssl_capath' => $oWizard->GetParameter('db_ssl_capath', ''),
-			'db_ssl_cipher' => $oWizard->GetParameter('db_ssl_cipher', ''),
+			'db_tls_key' => $oWizard->GetParameter('db_tls_key', ''),
+			'db_tls_cert' => $oWizard->GetParameter('db_tls_cert', ''),
+			'db_tls_ca' => $oWizard->GetParameter('db_tls_ca', ''),
+			'db_tls_capath' => $oWizard->GetParameter('db_tls_capath', ''),
+			'db_tls_cipher' => $oWizard->GetParameter('db_tls_cipher', ''),
 			'source_dir' => $sRelativeSourceDir,
 		);
 		$oConfig->UpdateFromParams($aParamValues, null);
@@ -1478,11 +1474,11 @@ EOF
 			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
 			'db_name' => $oWizard->GetParameter('db_name', ''),
 			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
-			'db_ssl_key' => $oWizard->GetParameter('db_ssl_key', ''),
-			'db_ssl_cert' => $oWizard->GetParameter('db_ssl_cert', ''),
-			'db_ssl_ca' => $oWizard->GetParameter('db_ssl_ca', ''),
-			'db_ssl_capath' => $oWizard->GetParameter('db_ssl_capath', ''),
-			'db_ssl_cipher' => $oWizard->GetParameter('db_ssl_cipher', ''),
+			'db_tls_key' => $oWizard->GetParameter('db_tls_key', ''),
+			'db_tls_cert' => $oWizard->GetParameter('db_tls_cert', ''),
+			'db_tls_ca' => $oWizard->GetParameter('db_tls_ca', ''),
+			'db_tls_capath' => $oWizard->GetParameter('db_tls_capath', ''),
+			'db_tls_cipher' => $oWizard->GetParameter('db_tls_cipher', ''),
 			'source_dir' => '',
 		);
 		$oConfig->UpdateFromParams($aParamValues, null);
