@@ -99,59 +99,48 @@ class CMDBSource
 	 * @param string $sServer
 	 * @param string $sUser
 	 * @param string $sPwd
-	 * @param string $sSource
+	 * @param string $sSource database to use
+	 * @param string $sSSLKey
+	 * @param string $sSSLCert
+	 * @param string $sSSLCA
+	 * @param string $sSSLCipher
 	 *
 	 * @throws \MySQLException
 	 */
 	public static function Init($sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = NULL, $sSSLCert = NULL, $sSSLCA = NULL, $sSSLCipher = NULL )
 	{
+		self::$m_oMysqli = null;
+
 		self::$m_sDBHost = $sServer;
 		self::$m_sDBUser = $sUser;
 		self::$m_sDBPwd = $sPwd;
 		self::$m_sDBName = $sSource;
-		self::$m_sDBSSLKey = $sSSLKey;
-		self::$m_sDBSSLCert = $sSSLCert;
-		self::$m_sDBSSLCA = $sSSLCA;
-		self::$m_sDBSSLCipher = $sSSLCipher;
-		self::$m_oMysqli = null;
+		self::$m_sDBSSLKey = empty($sSSLKey) ? null : $sSSLKey;
+		self::$m_sDBSSLCert = empty($sSSLCert) ? null : $sSSLCert;
+		self::$m_sDBSSLCA = empty($sSSLCA) ? null : $sSSLCA;
+		self::$m_sDBSSLCipher = empty($sSSLCipher) ? null : $sSSLCipher;
+
+		$sServer = null;
+		$iPort = null;
+		self::InitServerAndPort($sServer, $iPort);
+		$iFlags = null;
 
 		mysqli_report(MYSQLI_REPORT_STRICT); // *some* errors (like connection errors) will throw mysqli_sql_exception instead
 											 // of generating warnings printed to the output but some other errors will still
 											 // cause the query() method to return false !!!
 		try
 		{
-			$aConnectInfo = explode(':', self::$m_sDBHost);
-			if (count($aConnectInfo) > 1)
+			self::$m_oMysqli = new mysqli();
+			self::$m_oMysqli->init();
+
+			if (!empty(self::$m_sDBSSLKey) && !empty(self::$m_sDBSSLCert) && !empty(self::$m_sDBSSLCA))
 			{
-				// Override the default port
-				$sServer = $aConnectInfo[0];
-				$iPort = (int)$aConnectInfo[1];
-				self::$m_oMysqli = new mysqli();
-				self::$m_oMysqli->init();
-				if ( empty(self::$m_sDBSSLKey) || empty(self::$m_sDBSSLCert) || empty(self::$m_sDBSSLCA) ) 
-				{
-					self::$m_oMysqli->real_connect($sServer,self::$m_sDBUser,self::$m_sDBPwd,'',$iPort);
-				}
-				else
-				{ 
-					self::$m_oMysqli->ssl_set(self::$m_sDBSSLKey,self::$m_sDBSSLCert,self::$m_sDBSSLCA,NULL,self::$m_sDBSSLCipher);
-					self::$m_oMysqli->real_connect($sServer,self::$m_sDBUser,self::$m_sDBPwd,'',$iPort, ini_get("mysqli.default_socket"),MYSQLI_CLIENT_SSL );
-				}
+				$iFlags = MYSQLI_CLIENT_SSL;
+				self::$m_oMysqli->ssl_set(self::$m_sDBSSLKey, self::$m_sDBSSLCert, self::$m_sDBSSLCA, null,
+					self::$m_sDBSSLCipher);
 			}
-			else
-			{
-				self::$m_oMysqli = new mysqli();
-				self::$m_oMysqli->init();
-				if ( empty(self::$m_sDBSSLKey) || empty(self::$m_sDBSSLCert) || empty(self::$m_sDBSSLCA) ) 
-				{
-					self::$m_oMysqli->real_connect($sServer,self::$m_sDBUser,self::$m_sDBPwd);
-				}
-				else
-				{ 
-					self::$m_oMysqli->ssl_set(self::$m_sDBSSLKey,self::$m_sDBSSLCert,self::$m_sDBSSLCA,NULL,self::$m_sDBSSLCipher);
-					self::$m_oMysqli->real_connect('p:'.self::$m_sDBHost,self::$m_sDBUser,self::$m_sDBPwd,'',NULL, ini_get("mysqli.default_socket"),MYSQLI_CLIENT_SSL );
-				}
-			}
+			self::$m_oMysqli->real_connect($sServer, self::$m_sDBUser, self::$m_sDBPwd, '', $iPort,
+				ini_get("mysqli.default_socket"), $iFlags);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -169,6 +158,35 @@ class CMDBSource
 			{
 				throw new MySQLException('Could not select DB', array('host'=>self::$m_sDBHost, 'user'=>self::$m_sDBUser, 'db_name'=>self::$m_sDBName), $e);
 			}
+		}
+	}
+
+	/**
+	 * Initialize variables from the static attribute (containing "domain:port" syntax)
+	 *
+	 * @param string $sServer
+	 * @param int $iPort
+	 */
+	private static function InitServerAndPort(&$sServer, &$iPort)
+	{
+		$aConnectInfo = explode(':', self::$m_sDBHost);
+		if (count($aConnectInfo) > 1)
+		{
+			// Override the default port
+			$sServer = $aConnectInfo[0];
+			$iPort = (int)$aConnectInfo[1];
+		}
+		else
+		{
+			$sServer = self::$m_sDBHost;
+			$iPort = null;
+		}
+
+		if (!empty(self::$m_sDBSSLKey) && !empty(self::$m_sDBSSLCert) && !empty(self::$m_sDBSSLCA))
+		{
+			// use persistent connexions to limit TLS overhead
+			// see http://php.net/manual/en/mysqli.persistconns.php
+			$sServer = 'p:'.self::$m_sDBHost;
 		}
 	}
 

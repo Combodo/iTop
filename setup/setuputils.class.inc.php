@@ -1126,10 +1126,10 @@ EOF
 		$sDBUser = $aParameters['db_user'];
 		$sDBPwd = $aParameters['db_pwd'];
 		$sDBName = $aParameters['db_name'];
-		$sSSLKey = $aParameters['db_ssl_key'];
-		$sSSLCert = $aParameters['db_ssl_cert'];
-		$sSSLCA = $aParameters['db_ssl_ca'];
-		$sSSLCipher = $aParameters['db_ssl_cipher'];
+		$sSSLKey = (isset($aParameters['db_ssl_key'])) ? $aParameters['db_ssl_key'] : null;
+		$sSSLCert = isset($aParameters['db_ssl_cert']) ? $aParameters['db_ssl_cert'] : null;
+		$sSSLCA = (isset($aParameters['db_ssl_ca'])) ? $aParameters['db_ssl_ca'] : null;
+		$sSSLCipher = (isset($aParameters['db_ssl_cipher'])) ? $aParameters['db_ssl_cipher'] : null;
 
 		$oPage->add_ready_script('oXHRCheckDB = null;');
 

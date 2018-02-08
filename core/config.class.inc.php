@@ -1176,6 +1176,14 @@ class Config
 
 		$sConfigCode = trim(file_get_contents($sConfigFile));
 
+		// Variables created when doing an eval() on the config file
+		/** @var array $MySettings */
+		$MySettings = null;
+		/** @var array $MyModuleSettings */
+		$MyModuleSettings = null;
+		/** @var array $MyModules */
+		$MyModules = null;
+
 		// This does not work on several lines
 		// preg_match('/^<\\?php(.*)\\?'.'>$/', $sConfigCode, $aMatches)...
 		// So, I've implemented a solution suggested in the PHP doc (search for phpWrapper)
@@ -1236,10 +1244,10 @@ class Config
 		$this->m_sDBPwd = trim($MySettings['db_pwd']);
 		$this->m_sDBName = trim($MySettings['db_name']);
 		$this->m_sDBSubname = trim($MySettings['db_subname']);
-		$this->m_sDBSSLKey = trim($MySettings['db_ssl_key']);
-		$this->m_sDBSSLCert = trim($MySettings['db_ssl_cert']);
-		$this->m_sDBSSLCA = trim($MySettings['db_ssl_ca']);
-		$this->m_sDBSSLCipher = trim($MySettings['db_ssl_cipher']);
+		$this->m_sDBSSLKey = isset($MySettings['db_ssl.key']) ? (trim($MySettings['db_ssl.key'])) : '';
+		$this->m_sDBSSLCert = isset($MySettings['db_ssl.cert']) ? (trim($MySettings['db_ssl.cert'])) : '';
+		$this->m_sDBSSLCA = isset($MySettings['db_ssl.ca']) ? (trim($MySettings['db_ssl.ca'])) : '';
+		$this->m_sDBSSLCipher = isset($MySettings['db_ssl.cipher']) ? trim($MySettings['db_ssl.cipher']) : '';
 
 		$this->m_sDBCharacterSet = isset($MySettings['db_character_set']) ? trim($MySettings['db_character_set']) : DEFAULT_CHARACTER_SET;
 		$this->m_sDBCollation = isset($MySettings['db_collation']) ? trim($MySettings['db_collation']) : DEFAULT_COLLATION;
@@ -1824,14 +1832,17 @@ class Config
 			if ($sDBName == '')
 			{
 				// Todo - obsolete after the transition to the new setup (2.0) is complete (WARNING: used by the designer)
-				$sDBName = $aParamValues['new_db_name'];
+				if (isset($aParamValues['new_db_name']))
+				{
+					$sDBName = $aParamValues['new_db_name'];
+				}
 			}
 			$this->SetDBName($sDBName);
 			$this->SetDBSubname($aParamValues['db_prefix']);
-			$this->SetDBSSLKey($aParamValues['db_ssl_key']);
-			$this->SetDBSSLCert($aParamValues['db_ssl_cert']);
-			$this->SetDBSSLCA($aParamValues['db_ssl_ca']);
-			$this->SetDBSSLCipher($aParamValues['db_ssl_cipher']);
+			if (isset($aParamValues['db_ssl_key'])) { $this->SetDBSSLKey($aParamValues['db_ssl_key']);}
+			if (isset($aParamValues['db_ssl_key'])) { $this->SetDBSSLCert($aParamValues['db_ssl_cert']);}
+			if (isset($aParamValues['db_ssl_ca'])) { $this->SetDBSSLCA($aParamValues['db_ssl_ca']);}
+			if (isset($aParamValues['db_ssl_cipher'])) { $this->SetDBSSLCipher($aParamValues['db_ssl_cipher']);}
 		}
 		
 		if (isset($aParamValues['selected_modules']))
@@ -1936,6 +1947,8 @@ class Config
 		$sNiceExport = str_replace(array("\r\n", "\n", "\r"), "\n".$sIndentation, trim($sExport));
 		if (!$bForceIndentation)
 		{
+			/** @var array $aImported */
+			$aImported = null;
 			eval('$aImported='.$sNiceExport.';');
 			// Check if adding the identations at the beginning of each line
 			// did not modify the values (in case of a string containing a line break)
