@@ -897,8 +897,8 @@ class SetupUtils
 
 		//-- TLS params (N°1260)
 		$oPage->add('<tbody id="tls_options">');
-		$oPage->add('<tr><th colspan="3"><label><img id="db_tls_img">Use encrypted connection with TLS</label></th></tr>');
-		$oPage->add('<tr><td colspan="3" style="font-weight: bold; background-color: #f97e75; padding: 1em;">Warning: please make sure that your configuration meet all of the system requirements, and before configuring iTop validate the connection using the simple test page available <a href="https://wiki.openitop.org/doku.php?id=2_4_0:install:php_and_mysql_tls">on Combodo\'s Wiki</a></td>');
+		$oPage->add('<tr><th colspan="3" style="text-align: left;"><label style="margin: 1em;"><img id="db_tls_img">Use encrypted connection with TLS</label></th></tr>');
+		$oPage->add('<tr><td colspan="3" style="background-color: #f9e0df; padding: 1em; border: 1px solid #950303; color: #950303;">Before configuring MySQL with TLS encryption, read the documentation <a href="https://wiki.openitop.org/doku.php?id=2_4_0:install:php_and_mysql_tls" target="_blank">on Combodo\'s Wiki</a></td>');
 		$oPage->add('<tr><td>SSL Key:</td>');
 		$oPage->add('<td><input id="db_tls_key" autocomplete="off" type="text" name="db_tls_key" value="'.htmlentities($sTlsKey,
 				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
