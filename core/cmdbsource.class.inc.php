@@ -88,6 +88,10 @@ class CMDBSource
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
 	protected static $m_sDBName;
+	protected static $m_sDBSSLKey;
+	protected static $m_sDBSSLCert;
+	protected static $m_sDBSSLCA;
+	protected static $m_sDBSSLCipher;
 	/** @var mysqli */
 	protected static $m_oMysqli;
 
@@ -99,12 +103,16 @@ class CMDBSource
 	 *
 	 * @throws \MySQLException
 	 */
-	public static function Init($sServer, $sUser, $sPwd, $sSource = '')
+	public static function Init($sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = NULL, $sSSLCert = NULL, $sSSLCA = NULL, $sSSLCipher = NULL )
 	{
 		self::$m_sDBHost = $sServer;
 		self::$m_sDBUser = $sUser;
 		self::$m_sDBPwd = $sPwd;
 		self::$m_sDBName = $sSource;
+		self::$m_sDBSSLKey = $sSSLKey;
+		self::$m_sDBSSLCert = $sSSLCert;
+		self::$m_sDBSSLCA = $sSSLCA;
+		self::$m_sDBSSLCipher = $sSSLCipher;
 		self::$m_oMysqli = null;
 
 		mysqli_report(MYSQLI_REPORT_STRICT); // *some* errors (like connection errors) will throw mysqli_sql_exception instead
@@ -118,11 +126,31 @@ class CMDBSource
 				// Override the default port
 				$sServer = $aConnectInfo[0];
 				$iPort = (int)$aConnectInfo[1];
-				self::$m_oMysqli = new mysqli($sServer, self::$m_sDBUser, self::$m_sDBPwd, '', $iPort);
+				self::$m_oMysqli = new mysqli();
+				self::$m_oMysqli->init();
+				if ( empty(self::$m_sDBSSLKey) || empty(self::$m_sDBSSLCert) || empty(self::$m_sDBSSLCA) ) 
+				{
+					self::$m_oMysqli->real_connect($sServer,self::$m_sDBUser,self::$m_sDBPwd,'',$iPort);
+				}
+				else
+				{ 
+					self::$m_oMysqli->ssl_set(self::$m_sDBSSLKey,self::$m_sDBSSLCert,self::$m_sDBSSLCA,NULL,self::$m_sDBSSLCipher);
+					self::$m_oMysqli->real_connect($sServer,self::$m_sDBUser,self::$m_sDBPwd,'',$iPort, ini_get("mysqli.default_socket"),MYSQLI_CLIENT_SSL );
+				}
 			}
 			else
 			{
-				self::$m_oMysqli = new mysqli(self::$m_sDBHost, self::$m_sDBUser, self::$m_sDBPwd);
+				self::$m_oMysqli = new mysqli();
+				self::$m_oMysqli->init();
+				if ( empty(self::$m_sDBSSLKey) || empty(self::$m_sDBSSLCert) || empty(self::$m_sDBSSLCA) ) 
+				{
+					self::$m_oMysqli->real_connect($sServer,self::$m_sDBUser,self::$m_sDBPwd);
+				}
+				else
+				{ 
+					self::$m_oMysqli->ssl_set(self::$m_sDBSSLKey,self::$m_sDBSSLCert,self::$m_sDBSSLCA,NULL,self::$m_sDBSSLCipher);
+					self::$m_oMysqli->real_connect('p:'.self::$m_sDBHost,self::$m_sDBUser,self::$m_sDBPwd,'',NULL, ini_get("mysqli.default_socket"),MYSQLI_CLIENT_SSL );
+				}
 			}
 		}
 		catch(mysqli_sql_exception $e)

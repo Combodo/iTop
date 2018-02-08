@@ -243,7 +243,7 @@ class RunTimeEnvironment
 		try
 		{
 			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
-			CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName());
+			CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName(), $oConfig->GetDBSSLKey(), $oConfig->GetDBSSLCert(), $oConfig->GetDBSSLCA(), $oConfig->GetDBSSLCipher());
 			CMDBSource::SetCharacterSet($oConfig->GetDBCharacterSet(), $oConfig->GetDBCollation());
 			$aSelectInstall = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->GetDBSubname()."priv_module_install");
 		}
@@ -836,7 +836,7 @@ class RunTimeEnvironment
 		try
 		{
 			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
-			CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName());
+			CMDBSource::Init($oConfig->GetDBHost(), $oConfig->GetDBUser(), $oConfig->GetDBPwd(), $oConfig->GetDBName(), $oConfig->GetDBSSLKey(), $oConfig->GetDBSSLCert(), $oConfig->GetDBSSLCA(), $oConfig->GetDBSSLCipher());
 			CMDBSource::SetCharacterSet($oConfig->GetDBCharacterSet(), $oConfig->GetDBCollation());
 			$sSQLQuery = "SELECT * FROM ".$oConfig->GetDBSubname()."priv_module_install";
 			$aSelectInstall = CMDBSource::QueryToArray($sSQLQuery);

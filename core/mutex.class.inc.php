@@ -32,6 +32,10 @@ class iTopMutex
 	protected $sName;
 	protected $hDBLink;
 	protected $bLocked; // Whether or not this instance of the Mutex is locked
+	protected $sDBSSLKey;
+	protected $sDBSSLCert;
+	protected $sDBSSLCA;
+	protected $sDBSSLCipher;
 	static protected $aAcquiredLocks = array(); // Number of instances of the Mutex, having the lock, in this page
 
 	public function __construct($sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null)
@@ -45,6 +49,11 @@ class iTopMutex
 		}
 		$sDBName = $oConfig->GetDBName();
 		$sDBSubname = $oConfig->GetDBSubname();
+		$this->sDBSSLKey = $oConfig->GetDBSSLKey();
+		$this->sDBSSLCert = $oConfig->GetDBSSLCert();
+		$this->sDBSSLCA = $oConfig->GetDBSSLCA();
+		$this->sDBSSLCipher = $oConfig->GetDBSSLCipher();
+		$this->sName = 'itop.'.$sName;
 		$this->sName = $sName;
 		if (substr($sName, -strlen($sDBName.$sDBSubname)) != $sDBName.$sDBSubname)
 		{
@@ -212,11 +221,30 @@ class iTopMutex
 			// Override the default port
 			$sServer = $aConnectInfo[0];
 			$iPort = $aConnectInfo[1];
-			$this->hDBLink = @mysqli_connect($sServer, $sUser, $sPwd, '', $iPort);
+			$this->hDBLink = mysqli_init();
+			if ( empty($this->sDBSSLKey) || empty($this->sDBSSLCert) || empty($this->sDBSSLCA) )
+			{
+				$this->hDBLink->real_connect($sServer,$sUser,$sPwd,'',$iPort);
+			}
+			else
+			{
+				$this->hDBLink->ssl_set($this->sDBSSLKey,$this->sDBSSLCert,$this->sDBSSLCA,NULL,$this->sDBSSLCipher);
+				$this->hDBLink->real_connect($sServer,$sUser,$sPwd,'',$iPort, ini_get("mysqli.default_socket"),MYSQLI_CLIENT_SSL );
+			}
 		}
 		else
 		{
-			$this->hDBLink = @mysqli_connect($sHost, $sUser, $sPwd);
+			$this->hDBLink = new mysqli();
+			$this->hDBLink->init();
+			if ( empty($this->sDBSSLKey) || empty($this->sDBSSLCert) || empty($this->sDBSSLCA) )
+			{
+				$this->hDBLink->real_connect($sHost,$sUser,$sPwd);
+			}
+			else
+			{
+				$this->hDBLink->ssl_set($this->sDBSSLKey,$this->sDBSSLCert,$this->sDBSSLCA,NULL,$this->sDBSSLCipher);
+				$this->hDBLink->real_connect('p:'.$sHost,$sUser,$sPwd,'',NULL, ini_get("mysqli.default_socket"),MYSQLI_CLIENT_SSL );
+			}
 		}
 
 		if (!$this->hDBLink)
