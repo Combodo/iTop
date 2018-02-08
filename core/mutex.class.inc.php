@@ -245,7 +245,7 @@ class iTopMutex
 		$sSSLCipher = $this->sDBSSLCipher;
 
 		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA,
-			$sSSLCaPath, $sSSLCipher);
+			$sSSLCaPath, $sSSLCipher, false);
 
 		if (!$this->hDBLink)
 		{

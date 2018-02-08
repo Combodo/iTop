@@ -29,13 +29,27 @@ require_once(APPROOT.'core/kpi.class.inc.php');
 
 class MySQLException extends CoreException
 {
-	public function __construct($sIssue, $aContext, $oException = null)
+	/**
+	 * MySQLException constructor.
+	 *
+	 * @param string $sIssue
+	 * @param array $aContext
+	 * @param \Exception $oException
+	 * @param \mysqli $oMysqli to use when working with a custom mysqli instance
+	 */
+	public function __construct($sIssue, $aContext, $oException = null, $oMysqli = null)
 	{
 		if ($oException != null)
 		{
 			$aContext['mysql_errno'] = $oException->getCode();
 			$this->code = $oException->getCode();
 			$aContext['mysql_error'] = $oException->getMessage();
+		}
+		else if ($oMysqli != null)
+		{
+			$aContext['mysql_errno'] = $oMysqli->errno;
+			$this->code = $oMysqli->errno;
+			$aContext['mysql_error'] = $oMysqli->error;
 		}
 		else
 		{
@@ -48,9 +62,19 @@ class MySQLException extends CoreException
 }
 
 /**
+ * Class MySQLQueryHasNoResultException
+ *
+ * @since 2.5
+ */
+class MySQLQueryHasNoResultException extends MySQLException
+{
+
+}
+
+/**
  * Class MySQLHasGoneAwayException
  *
- * @since iTop 2.5
+ * @since 2.5
  * @see itop bug 1195
  * @see https://dev.mysql.com/doc/refman/5.7/en/gone-away.html
  */
@@ -151,7 +175,7 @@ class CMDBSource
 		self::$m_sDBSSLCipher = empty($sSSLCipher) ? null : $sSSLCipher;
 
 		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA,
-			$sSSLCaPath, $sSSLCipher);
+			$sSSLCaPath, $sSSLCipher, true);
 	}
 
 	/**
@@ -164,13 +188,14 @@ class CMDBSource
 	 * @param string $sSSLCA
 	 * @param string $sSSLCaPath
 	 * @param string $sSSLCipher
+	 * @param boolean $bCheckSslAfterConnection
 	 *
 	 * @return \mysqli
 	 * @throws \MySQLException
 	 */
 	public static function GetMysqliInstance(
 		$sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = null, $sSSLCert = null, $sSSLCA = null, $sSSLCaPath = null,
-		$sSSLCipher = null
+		$sSSLCipher = null, $bCheckSslAfterConnection = false
 	) {
 		$oMysqli = null;
 
@@ -202,6 +227,14 @@ class CMDBSource
 		{
 			throw new MySQLException('Could not connect to the DB server',
 				array('host' => $sServer, 'user' => $sUser), $e);
+		}
+
+		if ($bCheckSslAfterConnection
+			&& self::IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA)
+			&& !self::IsOpenedDbConnectionUsingSsl($oMysqli))
+		{
+			throw new MySQLException("Connection to the database is not encrypted whereas it was opened using TLS parameters",
+				null, null, $oMysqli);
 		}
 
 		if (!empty($sSource))
@@ -275,6 +308,55 @@ class CMDBSource
 	public static function IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA)
 	{
 		return (!empty($sSSLKey) && !empty($sSSLCert) && !empty($sSSLCA));
+	}
+
+	/**
+	 * <p>A DB connection can be opened transparently (no errors thrown) without being encrypted, whereas the TLS
+	 * parameters were used.<br>
+	 * This method can be called to ensure that the DB connection really uses TLS.
+	 *
+	 * <p>We're using this object connection : {@link self::$m_oMysqli}
+	 *
+	 * @param \mysqli $oMysqli
+	 *
+	 * @return boolean true if the connection was really established using TLS
+	 * @throws \MySQLException
+	 *
+	 * @uses IsMySqlVarNonEmpty
+	 */
+	private static function IsOpenedDbConnectionUsingSsl($oMysqli)
+	{
+		if (self::$m_oMysqli == null)
+		{
+			self::$m_oMysqli = $oMysqli;
+		}
+
+		$bNonEmptySslVersionVar = self::IsMySqlVarNonEmpty('ssl_version');
+		$bNonEmptySslCipherVar = self::IsMySqlVarNonEmpty('ssl_cipher');
+
+		return ($bNonEmptySslVersionVar && $bNonEmptySslCipherVar);
+	}
+
+	/**
+	 * @param $sVarName
+	 *
+	 * @return bool
+	 * @throws \MySQLException
+	 *
+	 * @uses SHOW STATUS queries
+	 */
+	private static function IsMySqlVarNonEmpty($sVarName)
+	{
+		try
+		{
+			$sResult = self::QueryToScalarCol("SHOW SESSION STATUS LIKE '$sVarName'", 1);
+		}
+		catch (MySQLQueryHasNoResultException $e)
+		{
+			$sResult = null;
+		}
+
+		return (!empty($sResult));
 	}
 
 	public static function SetCharacterSet($sCharset = 'utf8', $sCollation = 'utf8_general_ci')
@@ -542,13 +624,13 @@ class CMDBSource
 
 	/**
 	 * @param string $sSql
+	 * @param int $iCol beginning at 0
 	 *
-	 * @return string[] first line of results
-	 * @throws \MySQLException if query cannot be processed, or no result found
-	 *
-	 * @uses \mysqli_result->fetch_array
+	 * @return string corresponding cell content on the first line
+	 * @throws \MySQLException
+	 * @throws \MySQLQueryHasNoResultException
 	 */
-	public static function QueryToScalar($sSql)
+	public static function QueryToScalar($sSql, $iCol = 0)
 	{
 		$oKPI = new ExecutionKPI();
 		try
@@ -565,19 +647,21 @@ class CMDBSource
 		{
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
-		
+
 		if ($aRow = $oResult->fetch_array(MYSQLI_BOTH))
 		{
-			$res = $aRow[0];
+			$res = $aRow[$iCol];
 		}
 		else
 		{
 			$oResult->free();
-			throw new MySQLException('Found no result for query', array('query' => $sSql));
+			throw new MySQLQueryHasNoResultException('Found no result for query', array('query' => $sSql));
 		}
 		$oResult->free();
+
 		return $res;
 	}
+
 
 	/**
 	 * @param string $sSql
@@ -612,6 +696,13 @@ class CMDBSource
 		return $aData;
 	}
 
+	/**
+	 * @param string $sSql
+	 * @param int $col
+	 *
+	 * @return array
+	 * @throws \MySQLException
+	 */
 	public static function QueryToCol($sSql, $col)
 	{
 		$aColumn = array();
