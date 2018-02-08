@@ -177,7 +177,12 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$this->oWizard->SaveParameter('db_prefix', '');
 		$this->oWizard->SaveParameter('db_backup', false);
 		$this->oWizard->SaveParameter('db_backup_path', '');
-		
+		$this->oWizard->SaveParameter('db_ssl_key', '');
+		$this->oWizard->SaveParameter('db_ssl_cert', '');
+		$this->oWizard->SaveParameter('db_ssl_ca', '');
+		$this->oWizard->SaveParameter('db_ssl_capath', '');
+		$this->oWizard->SaveParameter('db_ssl_cipher', '');
+
 		if ($sInstallMode == 'install')
 		{
 			$this->oWizard->SetParameter('install_mode', 'install');
@@ -205,6 +210,11 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$sDBPrefix = $this->oWizard->GetParameter('db_prefix', '');
 		$bDBBackup = $this->oWizard->GetParameter('db_backup', false);
 		$sDBBackupPath = $this->oWizard->GetParameter('db_backup_path', '');
+		$sSSLKey = $this->oWizard->GetParameter('db_ssl_key');
+		$sSSLCert = $this->oWizard->GetParameter('db_ssl_cert');
+		$sSSLCA = $this->oWizard->GetParameter('db_ssl_ca');
+		$sSSLCaPath = $this->oWizard->GetParameter('db_ssl_capath', '');
+		$sSSLCypher = $this->oWizard->GetParameter('db_ssl_cipher', '');
 		$sPreviousVersionDir = '';
 		if ($sInstallMode == '')
 		{
@@ -220,6 +230,11 @@ class WizStepInstallOrUpgrade extends WizardStep
 				$sDBPwd = $aPreviousInstance['db_pwd'];
 				$sDBName = $aPreviousInstance['db_name'];
 				$sDBPrefix = $aPreviousInstance['db_prefix'];
+				$sSSLKey = $aPreviousInstance['db_ssl_key'];
+				$sSSLCert = $aPreviousInstance['db_ssl_cert'];
+				$sSSLCA = $aPreviousInstance['db_ssl_ca'];
+				$sSSLCaPath = $aPreviousInstance['db_ssl_capath'];
+				$sSSLCypher = $aPreviousInstance['db_ssl_cipher'];
 				$this->oWizard->SaveParameter('graphviz_path', $aPreviousInstance['graphviz_path']);
 				$sStyle = '';
 				$sPreviousVersionDir = APPROOT;
@@ -244,8 +259,10 @@ class WizStepInstallOrUpgrade extends WizardStep
 		//$oPage->add('<fieldset  id="upgrade_info"'.$sUpgradeInfoStyle.'>');
 		//$oPage->add('<legend>Information about the previous instance:</legend>');
 		$oPage->add('<table id="upgrade_info"'.$sUpgradeInfoStyle.'>');
-		$oPage->add('<tr><td>Location on the disk:</td><td><input id="previous_version_dir" type="text" name="previous_version_dir" value="'.htmlentities($sPreviousVersionDir, ENT_QUOTES, 'UTF-8').'" size="25"/></td></tr>');
-		SetupUtils::DisplayDBParameters($oPage, false, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix);
+		$oPage->add('<tr><td>Location on the disk:</td><td><input id="previous_version_dir" type="text" name="previous_version_dir" value="'.htmlentities($sPreviousVersionDir,
+				ENT_QUOTES, 'UTF-8').'" style="width: 98%;"/></td></tr>');
+		SetupUtils::DisplayDBParameters($oPage, false, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sSSLKey,
+			$sSSLCert, $sSSLCA, $sSSLCaPath, $sSSLCypher, null);
 
 		$aBackupChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath);
 		$bCanBackup = true;
@@ -623,7 +640,12 @@ EOF
 				'cron'.$this->oWizard->GetParameter('db_name', '').$this->oWizard->GetParameter('db_prefix', ''),
 				$this->oWizard->GetParameter('db_server', ''),
 				$this->oWizard->GetParameter('db_user', ''),
-				$this->oWizard->GetParameter('db_pwd', '')
+				$this->oWizard->GetParameter('db_pwd', ''),
+				$this->oWizard->GetParameter('db_ssl_key', ''),
+				$this->oWizard->GetParameter('db_ssl_cert', ''),
+				$this->oWizard->GetParameter('db_ssl_ca', ''),
+				$this->oWizard->GetParameter('db_ssl_capath', ''),
+				$this->oWizard->GetParameter('db_ssl_cypher', '')
 			);
 			if ($oMutex->IsLocked())
 			{
@@ -757,7 +779,12 @@ class WizStepDBParams extends WizardStep
 		$this->oWizard->SaveParameter('new_db_name', '');
 		$this->oWizard->SaveParameter('create_db', '');
 		$this->oWizard->SaveParameter('db_new_name', '');
-				
+		$this->oWizard->SaveParameter('db_ssl_key', '');
+		$this->oWizard->SaveParameter('db_ssl_cert', '');
+		$this->oWizard->SaveParameter('db_ssl_ca', '');
+		$this->oWizard->SaveParameter('db_ssl_capath', '');
+		$this->oWizard->SaveParameter('db_ssl_cipher', '');
+
 		return array('class' => 'WizStepAdminAccount', 'state' => '');
 	}
 	
@@ -770,9 +797,15 @@ class WizStepDBParams extends WizardStep
 		$sDBName = $this->oWizard->GetParameter('db_name', '');
 		$sDBPrefix = $this->oWizard->GetParameter('db_prefix', '');
 		$sNewDBName = $this->oWizard->GetParameter('db_new_name', false);
-		
+		$sSSLKey = $this->oWizard->GetParameter('db_ssl_key', '');
+		$sSSLCert = $this->oWizard->GetParameter('db_ssl_cert', '');
+		$sSSLCA = $this->oWizard->GetParameter('db_ssl_ca', '');
+		$sSSLCaPath = $this->oWizard->GetParameter('db_ssl_capath', '');
+		$sSSLCypher = $this->oWizard->GetParameter('db_ssl_cipher', '');
+
 		$oPage->add('<table>');
-		SetupUtils::DisplayDBParameters($oPage, true, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sNewDBName);
+		SetupUtils::DisplayDBParameters($oPage, true, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sSSLKey,
+			$sSSLCert, $sSSLCA, $sSSLCaPath, $sSSLCypher, $sNewDBName);
 		$oPage->add('</table>');
 		$sCreateDB = $this->oWizard->GetParameter('create_db', 'yes');
 		if ($sCreateDB == 'no')
@@ -1208,14 +1241,27 @@ class WizStepModulesChoice extends WizardStep
 		{
 			$sConfigPath = utils::GetConfigFilePath('production');
 		}
-		if ($sConfigPath !== null)
-		{
-			$oConfig = new Config($sConfigPath);
-			$this->bChoicesFromDatabase = $this->oExtensionsMap->LoadChoicesFromDatabase($oConfig);
-		}
+
+		$oConfig = ($sConfigPath !== null) ? new Config($sConfigPath) : new Config();
+		// setting values from the wizard data, as the config file has not been saved yet
+		$aParamValues = array(
+			'db_server' => $this->oWizard->GetParameter('db_server', ''),
+			'db_user' => $this->oWizard->GetParameter('db_user', ''),
+			'db_pwd' => $this->oWizard->GetParameter('db_pwd', ''),
+			'db_name' => $this->oWizard->GetParameter('db_name', ''),
+			'db_prefix' => $this->oWizard->GetParameter('db_prefix', ''),
+			'db_ssl_key' => $this->oWizard->GetParameter('db_ssl_key', ''),
+			'db_ssl_cert' => $this->oWizard->GetParameter('db_ssl_cert', ''),
+			'db_ssl_ca' => $this->oWizard->GetParameter('db_ssl_ca', ''),
+			'db_ssl_capath' => $this->oWizard->GetParameter('db_ssl_capath', ''),
+			'db_ssl_cipher' => $this->oWizard->GetParameter('db_ssl_cipher', ''),
+		);
+
+		$oConfig->UpdateFromParams($aParamValues);
+		$this->bChoicesFromDatabase = $this->oExtensionsMap->LoadChoicesFromDatabase($oConfig);
 		//echo '<div style="display:block;position:fixed;width:100px;height:20px;top:0;left:0;font-size:10pt;">Default: '.($this->bChoicesFromDatabase ? 'DB' : 'Guess').'</div>';
 	}
-	
+
 	public function GetTitle()
 	{
 		$aStepInfo = $this->GetStepInfo();
@@ -2312,6 +2358,11 @@ EOF
 				'user' => $this->oWizard->GetParameter('db_user'),
 				'pwd' => $this->oWizard->GetParameter('db_pwd'),
 				'name' => $sDBName,
+				'db_ssl_key' => $this->oWizard->GetParameter('db_ssl_key'),
+				'db_ssl_cert' => $this->oWizard->GetParameter('db_ssl_cert'),
+				'db_ssl_ca' => $this->oWizard->GetParameter('db_ssl_ca'),
+				'db_ssl_capath' => $this->oWizard->GetParameter('db_ssl_capath'),
+				'db_ssl_cipher' => $this->oWizard->GetParameter('db_ssl_cipher'),
 				'prefix' => $this->oWizard->GetParameter('db_prefix'),
 			),
 			'url' => $this->oWizard->GetParameter('application_url'),

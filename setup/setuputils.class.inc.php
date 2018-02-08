@@ -817,6 +817,10 @@ class SetupUtils
 		if ($aResult['found'])
 		{
 			$oPrevConf = new Config($sConfigFile);
+
+			$sDbSslKey = $oPrevConf->Get('db_ssl.key');
+			$sDbSslCert = $oPrevConf->Get('db_ssl.cert');
+			$sDbSslCa = $oPrevConf->Get('db_ssl.ca');
 			$aResult = array(
 				'found' => true,
 				'source_dir' => $sSourceDir,
@@ -827,8 +831,16 @@ class SetupUtils
 				'db_pwd' => $oPrevConf->Get('db_pwd'),
 				'db_name' => $oPrevConf->Get('db_name'),
 				'db_prefix' => $oPrevConf->Get('db_subname'),
+				'db_ssl_key' => $sDbSslKey,
+				'db_ssl_cert' => $sDbSslCert,
+				'db_ssl_ca' => $sDbSslCa,
+				'db_ssl_capath' => $oPrevConf->Get('db_ssl.capath'),
+				'db_ssl_cipher' => $oPrevConf->Get('db_ssl.cipher'),
 				'graphviz_path' => $oPrevConf->Get('graphviz_path'),
 			);
+
+			// SSL options checkbox
+			$aResult['db_ssl'] = (CMDBSource::IsDbConnectionUsingSsl($sDbSslKey, $sDbSslCert, $sDbSslCa));
 		}
 		
 		return $aResult;
@@ -858,15 +870,63 @@ class SetupUtils
 		
 		return sprintf('%.2f %s', $fBytes, $aSizes[$index]);
 	}
-	
-	static function DisplayDBParameters($oPage, $bAllowDBCreation, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sNewDBName = '')
-	{
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param boolean $bAllowDBCreation
+	 * @param string $sDBServer
+	 * @param string $sDBUser
+	 * @param string $sDBPwd
+	 * @param string $sDBName
+	 * @param string $sDBPrefix
+	 * @param string $sSSLKey
+	 * @param string $sSSLCert
+	 * @param string $sSSLCA
+	 * @param string $sSSLCaPath
+	 * @param string $sSSLCypher
+	 * @param string $sNewDBName
+	 */
+	static function DisplayDBParameters(
+		$oPage, $bAllowDBCreation, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sSSLKey, $sSSLCert, $sSSLCA,
+		$sSSLCaPath, $sSSLCypher, $sNewDBName = ''
+	) {
 		$oPage->add('<tr><td colspan="2">');
 		$oPage->add('<fieldset><legend>Database Server Connection</legend>');
-		$oPage->add('<table>');
+		$oPage->add('<table id="table_db_options">');
+
+		//-- DB connection params
+		$oPage->add('<tbody>');
 		$oPage->add('<tr><td>Server Name:</td><td><input id="db_server" type="text" name="db_server" value="'.htmlentities($sDBServer, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td>E.g. "localhost", "dbserver.mycompany.com" or "192.142.10.23"</td></tr>');
 		$oPage->add('<tr><td>Login:</td><td><input id="db_user" type="text" name="db_user" value="'.htmlentities($sDBUser, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td rowspan="2" style="vertical-align:top">The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, CREATE VIEW, SHOW VIEW, LOCK TABLE, SUPER, TRIGGER</td></tr>');
 		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" autocomplete="off" type="password" name="db_pwd" value="'.htmlentities($sDBPwd, ENT_QUOTES, 'UTF-8').'" size="15"/></td></tr>');
+		$oPage->add('</tbody>');
+
+		//-- SSL params (N°1260)
+		$oPage->add('<tbody id="ssl_options">');
+		$oPage->add('<tr><th colspan="3"><label><img id="db_ssl_img"> Connect using SSL</label></th></tr>');
+		$oPage->add('<tr><td colspan="3" style="font-weight: bold; background-color: #f97e75; padding: 1em;">Warning: please make sure of all the system requirements, and test the connection using the simple test page available <a href="https://wiki.openitop.org/doku.php?id=2_4_0:install:php_and_mysql_tls">on Combodo\'s Wiki</a></td>');
+		$oPage->add('<tr><td>SSL Key:</td>');
+		$oPage->add('<td><input id="db_ssl_key" autocomplete="off" type="text" name="db_ssl_key" value="'.htmlentities($sSSLKey,
+				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
+		$oPage->add('<td>Path to client key file for SSL</td></tr>');
+		$oPage->add('<tr><td>SSL CERT:</td>');
+		$oPage->add('<td><input id="db_ssl_cert" autocomplete="off" type="text" name="db_ssl_cert" value="'.htmlentities($sSSLCert,
+				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
+		$oPage->add('<td>Path to client certificate file for SSL</td></tr>');
+		$oPage->add('<tr><td>SSL CA:</td>');
+		$oPage->add('<td><input id="db_ssl_ca" autocomplete="off" type="text" name="db_ssl_ca" value="'.htmlentities($sSSLCA,
+				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
+		$oPage->add('<td>Path to certificate authority file for SSL</td></tr>');
+		$oPage->add('<tr><td>SSL CA path:</td>');
+		$oPage->add('<td><input id="db_ssl_capath" autocomplete="off" type="text" name="db_ssl_capath" value="'.htmlentities($sSSLCaPath,
+				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
+		$oPage->add('<td></td></td></tr>');
+		$oPage->add('<tr><td>SSL cypher:</td>');
+		$oPage->add('<td><input id="db_ssl_cipher" autocomplete="off" type="text" name="db_ssl_cipher" value="'.htmlentities($sSSLCypher,
+				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
+		$oPage->add('<td>Optional : separated list of permissible cyphers to use for SSL encryption</td></tr>');
+		$oPage->add('</tbody>');
+
 		$oPage->add('</table>');
 		$oPage->add('</fieldset>');
 		$oPage->add('</td></tr>');
@@ -893,6 +953,37 @@ class SetupUtils
 		$oPage->add('</fieldset>');
 		$oPage->add('<tr><td colspan="2"><span id="table_info">&nbsp;</span></td></tr>');
 		$oPage->add('</td></tr>');
+
+		// SSL checkbox toggle
+		$oPage->add_script(<<<'EOF'
+function toggleSslOptions() {
+	$("tbody#ssl_options>tr").not("tr:first-child").toggle();
+	updateSslImage();
+}
+function updateSslImage() {
+	$dbSslImg = $("img#db_ssl_img");
+	imgPath = "../images/";
+	dbImgUrl = ($("tbody#ssl_options>tr:nth-child(2)>td:visible").length > 0) 
+		? "minus.gif"
+		: "plus.gif";
+	$dbSslImg.attr("src", imgPath+dbImgUrl);
+}
+EOF
+		);
+		$bSslEnabled = CMDBSource::IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA);
+		if (!$bSslEnabled)
+		{
+			$oPage->add_ready_script('toggleSslOptions();');
+		}
+		$oPage->add_ready_script(
+			<<<EOF
+$("tbody#ssl_options>tr>th>label").click(function() {
+	toggleSslOptions();
+});
+updateSslImage();
+EOF
+		);
+
 		$oPage->add_script(
 <<<EOF
 var iCheckDBTimer = null;
@@ -916,7 +1007,12 @@ function DoCheckDBConnection()
 		'db_server': $("#db_server").val(),
 		'db_user': $("#db_user").val(),
 		'db_pwd': $("#db_pwd").val(),
-		'db_name': $("#db_name").val()
+		'db_name': $("#db_name").val(),
+		'db_ssl_key': $("input#db_ssl_key").val(),
+		'db_ssl_cert': $("input#db_ssl_cert").val(),
+		'db_ssl_ca': $("input#db_ssl_ca").val(),
+		'db_ssl_capath': $("input#db_ssl_capath").val(),
+		'db_ssl_cypher': $("input#db_ssl_cypher").val()
 	}
 	if ((oXHRCheckDB != null) && (oXHRCheckDB != undefined))
 	{
@@ -1004,32 +1100,57 @@ EOF
 <<<EOF
 DoCheckDBConnection(); // Validate the initial values immediately
 
-$("#db_server").bind("keyup change", function() { CheckDBConnection(); });
-$("#db_user").bind("keyup change", function() { CheckDBConnection(); });
-$("#db_pwd").bind("keyup change", function() { CheckDBConnection(); });
-$("#db_new_name").bind("click keyup change", function() { $("#create_db").attr("checked", "checked"); WizardUpdateButtons(); });
-$("#db_name").bind("click keyup change", function() {  $("#existing_db").attr("checked", "checked"); WizardUpdateButtons(); });
-$("#db_prefix").bind("keyup change", function() { WizardUpdateButtons(); });
-$("#existing_db").bind("click change", function() { WizardUpdateButtons(); });
-$("#create_db").bind("click change", function() { WizardUpdateButtons(); });
+$("table#table_db_options").on("keyup change", "tr>td>input", function() { CheckDBConnection(); });
+
+$("#db_new_name").on("click keyup change", function() { $("#create_db").attr("checked", "checked"); WizardUpdateButtons(); });
+$("#db_name").on("click keyup change", function() {  $("#existing_db").attr("checked", "checked"); WizardUpdateButtons(); });
+$("#db_prefix").on("keyup change", function() { WizardUpdateButtons(); });
+$("#existing_db").on("click change", function() { WizardUpdateButtons(); });
+$("#create_db").on("click change", function() { WizardUpdateButtons(); });
 EOF
 		);
 		
 	}
 
-    /**
-     * Helper function : check the connection to the database, verify a few conditions (minimum version, etc...) and (if connected)
-     * enumerate the existing databases (if possible)
-     *
-     * @param string $sDBServer
-     * @param string $sDBUser
-     * @param string $sDBPwd
-     *
-     * @return mixed false if the connection failed or array('checks' => Array of CheckResult, 'databases' => Array of database names (as strings) or null if not allowed)
-     */
-	static function CheckDbServer($sDBServer, $sDBUser, $sDBPwd, $sSSLKey = NULL, $sSSLCert = NULL, $sSSLCA = NULL, $sSSLCipher = NULL)
+	/**
+	 * Helper function : check the connection to the database, verify a few conditions (minimum version, etc...) and
+	 * (if connected) enumerate the existing databases (if possible)
+	 *
+	 * @param string $sDBServer
+	 * @param string $sDBUser
+	 * @param string $sDBPwd
+	 * @param string $sSSLKey
+	 * @param string $sSSLCert
+	 * @param string $sSSLCA
+	 * @param string $sSSLCaPath
+	 * @param string $sSSLCipher
+	 *
+	 * @return bool|array false if the connection failed or array('checks' => Array of CheckResult, 'databases' =>
+	 *     Array of database names (as strings) or null if not allowed)
+	 */
+	static function CheckDbServer(
+		$sDBServer, $sDBUser, $sDBPwd, $sSSLKey = null, $sSSLCert = null, $sSSLCA = null, $sSSLCaPath = null,
+		$sSSLCipher = null
+	)
 	{
 		$aResult = array('checks' => array(), 'databases' => null);
+
+		if (CMDBSource::IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA))
+		{
+			if (!self::CheckFileExists($sSSLKey, $aResult, 'Can\'t open SSL Key file'))
+			{
+				return $aResult;
+			}
+			if (!self::CheckFileExists($sSSLCert, $aResult, 'Can\'t open SSL Cert file'))
+			{
+				return $aResult;
+			}
+			if (!self::CheckFileExists($sSSLCA, $aResult, 'Can\'t open SSL CA file'))
+			{
+				return $aResult;
+			}
+		}
+
 		try
 		{
 			$oDBSource = new CMDBSource;
@@ -1076,7 +1197,30 @@ EOF
 		{
 			return false;
 		}
+
 		return $aResult;
+	}
+
+	/**
+	 * Use to test MySQL SSL files (key, cert, ca)
+	 *
+	 * @param string $sPath
+	 * @param array $aResult passed by reference, will by updated in case of error
+	 * @param $sErrorMessage
+	 *
+	 * @return bool false if file doesn't exist
+	 * @used-by CheckDbServer
+	 */
+	private static function CheckFileExists($sPath, &$aResult, $sErrorMessage)
+	{
+		if (!is_readable($sPath))
+		{
+			$aResult['checks'][] = new CheckResult(CheckResult::ERROR, $sErrorMessage);
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -1130,11 +1274,13 @@ EOF
 		$sSSLKey = (isset($aParameters['db_ssl_key'])) ? $aParameters['db_ssl_key'] : null;
 		$sSSLCert = isset($aParameters['db_ssl_cert']) ? $aParameters['db_ssl_cert'] : null;
 		$sSSLCA = (isset($aParameters['db_ssl_ca'])) ? $aParameters['db_ssl_ca'] : null;
+		$sSSLCaPath = (isset($aParameters['db_ssl_capath'])) ? $aParameters['db_ssl_capath'] : null;
 		$sSSLCipher = (isset($aParameters['db_ssl_cipher'])) ? $aParameters['db_ssl_cipher'] : null;
 
 		$oPage->add_ready_script('oXHRCheckDB = null;');
 
-		$checks = SetupUtils::CheckDbServer($sDBServer, $sDBUser, $sDBPwd, $sSSLKey, $sSSLCert, $sSSLCA, $sSSLCipher);
+		$checks = SetupUtils::CheckDbServer($sDBServer, $sDBUser, $sDBPwd, $sSSLKey, $sSSLCert, $sSSLCA, $sSSLCaPath,
+			$sSSLCipher);
 
 		if ($checks === false)
 		{
@@ -1277,6 +1423,11 @@ EOF
 			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
 			'db_name' => $oWizard->GetParameter('db_name', ''),
 			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
+			'db_ssl_key' => $oWizard->GetParameter('db_ssl_key', ''),
+			'db_ssl_cert' => $oWizard->GetParameter('db_ssl_cert', ''),
+			'db_ssl_ca' => $oWizard->GetParameter('db_ssl_ca', ''),
+			'db_ssl_capath' => $oWizard->GetParameter('db_ssl_capath', ''),
+			'db_ssl_cipher' => $oWizard->GetParameter('db_ssl_cipher', ''),
 			'source_dir' => $sRelativeSourceDir,
 		);
 		$oConfig->UpdateFromParams($aParamValues, null);
@@ -1311,6 +1462,11 @@ EOF
 		return $aAvailableModules;
 	}
 
+	/**
+	 * @param WizardController $oWizard
+	 *
+	 * @return array|bool
+	 */
 	public static function GetApplicationVersion($oWizard)
 	{
 		require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');
@@ -1322,6 +1478,11 @@ EOF
 			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
 			'db_name' => $oWizard->GetParameter('db_name', ''),
 			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
+			'db_ssl_key' => $oWizard->GetParameter('db_ssl_key', ''),
+			'db_ssl_cert' => $oWizard->GetParameter('db_ssl_cert', ''),
+			'db_ssl_ca' => $oWizard->GetParameter('db_ssl_ca', ''),
+			'db_ssl_capath' => $oWizard->GetParameter('db_ssl_capath', ''),
+			'db_ssl_cipher' => $oWizard->GetParameter('db_ssl_cipher', ''),
 			'source_dir' => '',
 		);
 		$oConfig->UpdateFromParams($aParamValues, null);

@@ -176,7 +176,9 @@ class CMDBSource
 
 		$sServer = null;
 		$iPort = null;
-		self::InitServerAndPort($sServer, $iPort);
+		$bSslEnabled = self::IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA);
+		self::InitServerAndPort($sServer, $iPort, $bSslEnabled);
+
 		$iFlags = null;
 
 		// *some* errors (like connection errors) will throw mysqli_sql_exception instead of generating warnings printed to the output
@@ -188,7 +190,7 @@ class CMDBSource
 			$oMysqli = new mysqli();
 			$oMysqli->init();
 
-			if (!empty($sSSLKey) && !empty($sSSLCert) && !empty($sSSLCA))
+			if ($bSslEnabled)
 			{
 				$iFlags = MYSQLI_CLIENT_SSL;
 				$oMysqli->ssl_set($sSSLKey, $sSSLCert, $sSSLCA, $sSSLCaPath, $sSSLCipher);
@@ -224,8 +226,9 @@ class CMDBSource
 	 *
 	 * @param string $sServer
 	 * @param int $iPort
+	 * @param boolean $bSslEnabled
 	 */
-	private static function InitServerAndPort(&$sServer, &$iPort)
+	private static function InitServerAndPort(&$sServer, &$iPort, $bSslEnabled)
 	{
 		$aConnectInfo = explode(':', self::$m_sDBHost);
 		if (count($aConnectInfo) > 1)
@@ -240,12 +243,38 @@ class CMDBSource
 			$iPort = null;
 		}
 
-		if (!empty(self::$m_sDBSSLKey) && !empty(self::$m_sDBSSLCert) && !empty(self::$m_sDBSSLCA))
+		if ($bSslEnabled)
 		{
 			// use persistent connexions to limit TLS overhead
 			// see http://php.net/manual/en/mysqli.persistconns.php
 			$sServer = 'p:'.self::$m_sDBHost;
 		}
+	}
+
+	/**
+	 * @param \Config $oConfig
+	 *
+	 * @return boolean
+	 */
+	public static function IsDbConnectionInConfigUsingSsl($oConfig)
+	{
+		$sSSLKey = $oConfig->Get('db_ssl.key');
+		$sSSLCert = $oConfig->Get('db_ssl.cert');
+		$sSSLCA = $oConfig->Get('db_ssl.ca');
+
+		return self::IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA);
+	}
+
+	/**
+	 * @param string $sSSLKey
+	 * @param string $sSSLCert
+	 * @param string $sSSLCA
+	 *
+	 * @return bool
+	 */
+	public static function IsDbConnectionUsingSsl($sSSLKey, $sSSLCert, $sSSLCA)
+	{
+		return (!empty($sSSLKey) && !empty($sSSLCert) && !empty($sSSLCA));
 	}
 
 	public static function SetCharacterSet($sCharset = 'utf8', $sCollation = 'utf8_general_ci')

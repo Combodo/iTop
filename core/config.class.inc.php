@@ -148,24 +148,27 @@ class Config
 		),
 		'db_ssl.key' => array(
 			'type' => 'string',
+			'description' => 'Path to client key file for SSL',
 			'default' => null,
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'db_ssl.cert' => array(
 			'type' => 'string',
+			'description' => 'Path to client certificate file for SSL',
 			'default' => null,
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'db_ssl.ca' => array(
 			'type' => 'string',
+			'description' => 'Path to certificate authority file for SSL',
 			'default' => null,
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'db_ssl.capath' => array(
 			'type' => 'string',
@@ -173,14 +176,15 @@ class Config
 			'default' => null,
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'db_ssl.cipher' => array(
 			'type' => 'string',
+			'description' => 'Optional : separated list of permissible cyphers to use for SSL encryption',
 			'default' => null,
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'db_character_set' => array(
 			'type' => 'string',
@@ -1877,13 +1881,17 @@ class Config
 			{
 				$this->Set('db_ssl.key', $aParamValues['db_ssl_key']);
 			}
-			if (isset($aParamValues['db_ssl_key']))
+			if (isset($aParamValues['db_ssl_cert']))
 			{
 				$this->Set('db_ssl.cert', $aParamValues['db_ssl_cert']);
 			}
 			if (isset($aParamValues['db_ssl_ca']))
 			{
 				$this->Set('db_ssl.ca', $aParamValues['db_ssl_ca']);
+			}
+			if (isset($aParamValues['db_ssl_capath']))
+			{
+				$this->Set('db_ssl.capath', $aParamValues['db_ssl_capath']);
 			}
 			if (isset($aParamValues['db_ssl_cipher']))
 			{
@@ -1900,6 +1908,11 @@ class Config
 			$aSelectedModules = null;
 		}
 		$this->UpdateIncludes($sModulesDir, $aSelectedModules);
+
+		if (isset($aParamValues['source_dir']))
+		{
+			$this->Set('source_dir', $aParamValues['source_dir']);
+		}
 	}
 
 	/**

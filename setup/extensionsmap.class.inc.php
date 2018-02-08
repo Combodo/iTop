@@ -542,9 +542,9 @@ class iTopExtensionsMap
 	 */
 	public function LoadChoicesFromDatabase(Config $oConfig)
 	{
-		$aInstalledExtensions = array();
 		try
 		{
+			$aInstalledExtensions = array();
 			if (CMDBSource::DBName() === null)
 			{
 				CMDBSource::InitFromConfig($oConfig);
@@ -555,7 +555,6 @@ class iTopExtensionsMap
 		catch (MySQLException $e)
 		{
 			// No database or erroneous information
-			$aInstalledExtensions = array();
 			return false;
 		}
 		

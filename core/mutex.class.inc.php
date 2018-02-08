@@ -43,10 +43,14 @@ class iTopMutex
 	protected $sDBSSLKey;
 	protected $sDBSSLCert;
 	protected $sDBSSLCA;
+	protected $sDBSSLCaPath;
 	protected $sDBSSLCipher;
 	static protected $aAcquiredLocks = array(); // Number of instances of the Mutex, having the lock, in this page
 
-	public function __construct($sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null)
+	public function __construct(
+		$sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null, $sDBSSLKey = null, $sDBSSLCert = null,
+		$sDBSSLCA = null, $sDBSSLCaPath = null, $sDBSSLCypher = null
+	)
 	{
 		// Compute the name of a lock for mysql
 		// Note: names are server-wide!!! So let's make the name specific to this iTop instance
@@ -60,10 +64,13 @@ class iTopMutex
 		$this->sDBPwd = is_null($sDBPwd) ? $oConfig->Get('db_pwd') : $sDBPwd;
 		$this->sDBName = $oConfig->Get('db_name');
 		$sDBSubname = $oConfig->Get('db_subname');
-		$this->sDBSSLKey = $oConfig->Get('db_ssl.key');
-		$this->sDBSSLCert = $oConfig->Get('db_ssl.cert');
-		$this->sDBSSLCA = $oConfig->Get('db_ssl.ca');
-		$this->sDBSSLCipher = $oConfig->Get('db_ssl.cipher');
+
+		$this->sDBSSLKey = is_null($sDBSSLKey) ? $oConfig->Get('db_ssl.key') : $sDBSSLKey;
+		$this->sDBSSLCert = is_null($sDBSSLCert) ? $oConfig->Get('db_ssl.key') : $sDBSSLCert;
+		$this->sDBSSLCA = is_null($sDBSSLCA) ? $oConfig->Get('db_ssl.key') : $sDBSSLCA;
+		$this->sDBSSLCaPath = is_null($sDBSSLCaPath) ? $oConfig->Get('db_ssl.key') : $sDBSSLCaPath;
+		$this->sDBSSLCipher = is_null($sDBSSLCypher) ? $oConfig->Get('db_ssl.key') : $sDBSSLCypher;
+
 		$this->sName = 'itop.'.$sName;
 		$this->sName = $sName;
 		if (substr($sName, -strlen($this->sDBName.$sDBSubname)) != $this->sDBName.$sDBSubname)
@@ -84,7 +91,7 @@ class iTopMutex
 			self::$aAcquiredLocks[$this->sName] = 0;
 		}
 
-		// It is a MUST to create a dedicated session each time a lock is required, because
+		// It is MANDATORY to create a dedicated session each time a lock is required, because
 		// using GET_LOCK anytime on the same session will RELEASE the current and unique session lock (known issue)
 		$this->InitMySQLSession();
 	}
@@ -234,10 +241,11 @@ class iTopMutex
 		$sSSLKey = $this->sDBSSLKey;
 		$sSSLCert = $this->sDBSSLCert;
 		$sSSLCA = $this->sDBSSLCA;
+		$sSSLCaPath = $this->sDBSSLCaPath;
 		$sSSLCipher = $this->sDBSSLCipher;
 
 		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA,
-			$sSSLCipher);
+			$sSSLCaPath, $sSSLCipher);
 
 		if (!$this->hDBLink)
 		{
