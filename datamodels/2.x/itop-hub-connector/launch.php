@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2017 Combodo SARL
+// Copyright (C) 2017-2018 Combodo SARL
 //
 // This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * iTop Hub Launch Page
  * Collect the information to be posted to iTopHub
  *
- * @copyright Copyright (c) 2017 Combodo SARL
+ * @copyright Copyright (c) 2017-2018 Combodo SARL
  * @license http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -127,11 +127,7 @@ function collect_configuration()
 	);
 	
 	// Database information
-	$class = new ReflectionClass('CMDBSource');
-	$m_oMysqli_property = $class->getProperty('m_oMysqli');
-	$m_oMysqli_property->setAccessible(true);
-	$m_oMysqli = $m_oMysqli_property->getValue();
-	
+	$m_oMysqli = CMDBSource::GetMysqli();
 	$aConfiguration['database_settings']['server'] = (string) $m_oMysqli->server_version;
 	$aConfiguration['database_settings']['client'] = (string) $m_oMysqli->client_version;
 	

@@ -513,27 +513,45 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 		/**
 		 * Helper to open a Database connection
+		 *
+		 * @return \mysqli
+		 * @throws \BackupException
+		 * @uses CMDBSource
 		 */
 		protected function DBConnect()
 		{
-			if (is_null($this->iDBPort))
+			$oConfig = MetaModel::GetConfig();
+			$sServer = $oConfig->Get('db_host');
+			$sUser = $oConfig->Get('db_user');
+			$sPwd = $oConfig->Get('db_pwd');
+			$sSource = $oConfig->Get('db_name');
+			$sSSLKey = $oConfig->Get('db_ssl.key');
+			$sSSLCert = $oConfig->Get('db_ssl.cert');
+			$sSSLCA = $oConfig->Get('db_ssl.ca');
+			$sSSLCipher = $oConfig->Get('db_ssl.cipher');
+
+			try
 			{
-				$oMysqli = new mysqli($this->sDBHost, $this->sDBUser, $this->sDBPwd);
+				$oMysqli = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert,
+					$sSSLCA,
+					$sSSLCipher);
+
+				if ($oMysqli->connect_errno)
+				{
+					$sHost = is_null($this->iDBPort) ? $this->sDBHost : $this->sDBHost.' on port '.$this->iDBPort;
+					throw new BackupException("Cannot connect to the MySQL server '$sHost' (".$oMysqli->connect_errno.") ".$oMysqli->connect_error);
+				}
+				if (!$oMysqli->select_db($this->sDBName))
+				{
+					throw new BackupException("The database '$this->sDBName' does not seem to exist");
+				}
+
+				return $oMysqli;
 			}
-			else
+			catch (MySQLException $e)
 			{
-				$oMysqli = new mysqli($this->sDBHost, $this->sDBUser, $this->sDBPwd, '', $this->iDBPort);
+				throw new BackupException($e->getMessage());
 			}
-			if ($oMysqli->connect_errno)
-			{
-				$sHost = is_null($this->iDBPort) ? $this->sDBHost : $this->sDBHost.' on port '.$this->iDBPort;
-				throw new BackupException("Cannot connect to the MySQL server '$sHost' (".$oMysqli->connect_errno.") ".$oMysqli->connect_error);
-			}
-			if (!$oMysqli->select_db($this->sDBName))
-			{
-				throw new BackupException("The database '$this->sDBName' does not seem to exist");
-			}
-			return $oMysqli;
 		}
 
 		/**

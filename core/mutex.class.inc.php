@@ -30,8 +30,16 @@
 class iTopMutex
 {
 	protected $sName;
-	protected $hDBLink;
+	/** @var bool */
 	protected $bLocked; // Whether or not this instance of the Mutex is locked
+
+	/** @var \mysqli */
+	protected $hDBLink;
+	protected $sDBHost;
+	protected $sDBUser;
+	protected $sDBPwd;
+	protected $sDBName;
+	protected $sDBSubname;
 	protected $sDBSSLKey;
 	protected $sDBSSLCert;
 	protected $sDBSSLCA;
@@ -47,10 +55,10 @@ class iTopMutex
 		{
 			$oConfig = utils::GetConfig(); // Will return an empty config when called during the setup
 		}
-		$sDBHost = is_null($sDBHost) ? $oConfig->Get('db_host') : $sDBHost;
-		$sDBUser = is_null($sDBUser) ? $oConfig->Get('db_user') : $sDBUser;
-		$sDBPwd = is_null($sDBPwd) ? $oConfig->Get('db_pwd') : $sDBPwd;
-		$sDBName = $oConfig->Get('db_name');
+		$this->sDBHost = is_null($sDBHost) ? $oConfig->Get('db_host') : $sDBHost;
+		$this->sDBUser = is_null($sDBUser) ? $oConfig->Get('db_user') : $sDBUser;
+		$this->sDBPwd = is_null($sDBPwd) ? $oConfig->Get('db_pwd') : $sDBPwd;
+		$this->sDBName = $oConfig->Get('db_name');
 		$sDBSubname = $oConfig->Get('db_subname');
 		$this->sDBSSLKey = $oConfig->Get('db_ssl.key');
 		$this->sDBSSLCert = $oConfig->Get('db_ssl.cert');
@@ -58,12 +66,12 @@ class iTopMutex
 		$this->sDBSSLCipher = $oConfig->Get('db_ssl.cipher');
 		$this->sName = 'itop.'.$sName;
 		$this->sName = $sName;
-		if (substr($sName, -strlen($sDBName.$sDBSubname)) != $sDBName.$sDBSubname)
+		if (substr($sName, -strlen($this->sDBName.$sDBSubname)) != $this->sDBName.$sDBSubname)
 		{
 			// If the name supplied already ends with the expected suffix
 			// don't add it twice, since the setup may try to detect an already
 			// running cron job by its mutex, without knowing if the config already exists or not
-			$this->sName .= $sDBName.$sDBSubname;
+			$this->sName .= $this->sDBName.$sDBSubname;
 		}
 
 		// Limit the length of the name for MySQL > 5.7.5
@@ -78,7 +86,7 @@ class iTopMutex
 
 		// It is a MUST to create a dedicated session each time a lock is required, because
 		// using GET_LOCK anytime on the same session will RELEASE the current and unique session lock (known issue)
-		$this->InitMySQLSession($sDBHost, $sDBUser, $sDBPwd);
+		$this->InitMySQLSession();
 	}
 
 	public function __destruct()
@@ -211,45 +219,29 @@ class iTopMutex
 		self::$aAcquiredLocks[$this->sName]--;
 	}
 
-
-
-	public function InitMySQLSession($sHost, $sUser, $sPwd)
+	/**
+	 * Initialiaze database connection. Mandatory attributes must be already set !
+	 *
+	 * @throws \Exception
+	 * @throws \MySQLException
+	 */
+	public function InitMySQLSession()
 	{
-		$aConnectInfo = explode(':', $sHost);
-		if (count($aConnectInfo) > 1)
-		{
-			// Override the default port
-			$sServer = $aConnectInfo[0];
-			$iPort = $aConnectInfo[1];
-			$this->hDBLink = mysqli_init();
-			if ( empty($this->sDBSSLKey) || empty($this->sDBSSLCert) || empty($this->sDBSSLCA) )
-			{
-				$this->hDBLink->real_connect($sServer,$sUser,$sPwd,'',$iPort);
-			}
-			else
-			{
-				$this->hDBLink->ssl_set($this->sDBSSLKey,$this->sDBSSLCert,$this->sDBSSLCA,NULL,$this->sDBSSLCipher);
-				$this->hDBLink->real_connect($sServer,$sUser,$sPwd,'',$iPort, ini_get("mysqli.default_socket"),MYSQLI_CLIENT_SSL );
-			}
-		}
-		else
-		{
-			$this->hDBLink = new mysqli();
-			$this->hDBLink->init();
-			if ( empty($this->sDBSSLKey) || empty($this->sDBSSLCert) || empty($this->sDBSSLCA) )
-			{
-				$this->hDBLink->real_connect($sHost,$sUser,$sPwd);
-			}
-			else
-			{
-				$this->hDBLink->ssl_set($this->sDBSSLKey,$this->sDBSSLCert,$this->sDBSSLCA,NULL,$this->sDBSSLCipher);
-				$this->hDBLink->real_connect('p:'.$sHost,$sUser,$sPwd,'',NULL, ini_get("mysqli.default_socket"),MYSQLI_CLIENT_SSL );
-			}
-		}
+		$sServer = $this->sDBHost;
+		$sUser = $this->sDBUser;
+		$sPwd = $this->sDBPwd;
+		$sSource = $this->sDBName;
+		$sSSLKey = $this->sDBSSLKey;
+		$sSSLCert = $this->sDBSSLCert;
+		$sSSLCA = $this->sDBSSLCA;
+		$sSSLCipher = $this->sDBSSLCipher;
+
+		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA,
+			$sSSLCipher);
 
 		if (!$this->hDBLink)
 		{
-			throw new Exception("Could not connect to the DB server (host=$sHost, user=$sUser): ".mysqli_connect_error().' (mysql errno: '.mysqli_connect_errno().')');
+			throw new Exception("Could not connect to the DB server (host=$sServer, user=$sUser): ".mysqli_connect_error().' (mysql errno: '.mysqli_connect_errno().')');
 		}
 	}
 

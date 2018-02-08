@@ -134,8 +134,6 @@ class CMDBSource
 	 */
 	public static function Init($sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = NULL, $sSSLCert = NULL, $sSSLCA = NULL, $sSSLCipher = NULL )
 	{
-		self::$m_oMysqli = null;
-
 		self::$m_sDBHost = $sServer;
 		self::$m_sDBUser = $sUser;
 		self::$m_sDBPwd = $sPwd;
@@ -145,31 +143,54 @@ class CMDBSource
 		self::$m_sDBSSLCA = empty($sSSLCA) ? null : $sSSLCA;
 		self::$m_sDBSSLCipher = empty($sSSLCipher) ? null : $sSSLCipher;
 
+		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sSSLKey, $sSSLCert, $sSSLCA,
+			$sSSLCipher);
+	}
+
+	/**
+	 * @param string $sServer
+	 * @param string $sUser
+	 * @param string $sPwd
+	 * @param string $sSource database to use
+	 * @param string $sSSLKey
+	 * @param string $sSSLCert
+	 * @param string $sSSLCA
+	 * @param string $sSSLCipher
+	 *
+	 * @return \mysqli
+	 * @throws \MySQLException
+	 */
+	public static function GetMysqliInstance(
+		$sServer, $sUser, $sPwd, $sSource = '', $sSSLKey = null, $sSSLCert = null, $sSSLCA = null, $sSSLCipher = null
+	) {
+		$oMysqli = null;
+
 		$sServer = null;
 		$iPort = null;
 		self::InitServerAndPort($sServer, $iPort);
 		$iFlags = null;
 
-		mysqli_report(MYSQLI_REPORT_STRICT); // *some* errors (like connection errors) will throw mysqli_sql_exception instead
-											 // of generating warnings printed to the output but some other errors will still
-											 // cause the query() method to return false !!!
+		// *some* errors (like connection errors) will throw mysqli_sql_exception instead of generating warnings printed to the output
+		// but some other errors will still cause the query() method to return false !!!
+		mysqli_report(MYSQLI_REPORT_STRICT);
+
 		try
 		{
-			self::$m_oMysqli = new mysqli();
-			self::$m_oMysqli->init();
+			$oMysqli = new mysqli();
+			$oMysqli->init();
 
-			if (!empty(self::$m_sDBSSLKey) && !empty(self::$m_sDBSSLCert) && !empty(self::$m_sDBSSLCA))
+			if (!empty($sSSLKey) && !empty($sSSLCert) && !empty($sSSLCA))
 			{
 				$iFlags = MYSQLI_CLIENT_SSL;
-				self::$m_oMysqli->ssl_set(self::$m_sDBSSLKey, self::$m_sDBSSLCert, self::$m_sDBSSLCA, null,
-					self::$m_sDBSSLCipher);
+				$oMysqli->ssl_set($sSSLKey, $sSSLCert, $sSSLCA, null, $sSSLCipher);
 			}
-			self::$m_oMysqli->real_connect($sServer, self::$m_sDBUser, self::$m_sDBPwd, '', $iPort,
+			$oMysqli->real_connect($sServer, $sUser, $sPwd, '', $iPort,
 				ini_get("mysqli.default_socket"), $iFlags);
 		}
 		catch(mysqli_sql_exception $e)
 		{
-			throw new MySQLException('Could not connect to the DB server', array('host'=>self::$m_sDBHost, 'user'=>self::$m_sDBUser), $e);	
+			throw new MySQLException('Could not connect to the DB server',
+				array('host' => $sServer, 'user' => $sUser), $e);
 		}
 
 		if (!empty($sSource))
@@ -177,13 +198,16 @@ class CMDBSource
 			try
 			{
 				mysqli_report(MYSQLI_REPORT_STRICT); // Errors, in the next query, will throw mysqli_sql_exception
-				self::$m_oMysqli->query("USE `$sSource`");
+				$oMysqli->query("USE `$sSource`");
 			}
 			catch(mysqli_sql_exception $e)
 			{
-				throw new MySQLException('Could not select DB', array('host'=>self::$m_sDBHost, 'user'=>self::$m_sDBUser, 'db_name'=>self::$m_sDBName), $e);
+				throw new MySQLException('Could not select DB',
+					array('host' => $sServer, 'user' => $sUser, 'db_name' => $sSource), $e);
 			}
 		}
+
+		return $oMysqli;
 	}
 
 	/**
@@ -326,6 +350,14 @@ class CMDBSource
 		$res = self::Query("DROP TABLE `$sTable`");
 		self::_TablesInfoCacheReset(true); // reset the table info cache!
 		return $res;
+	}
+
+	/**
+	 * @return \mysqli
+	 */
+	public static function GetMysqli()
+	{
+		return self::$m_oMysqli;
 	}
 
 	public static function GetErrNo()
