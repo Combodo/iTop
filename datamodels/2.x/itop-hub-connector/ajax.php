@@ -264,6 +264,9 @@ try
 		
 		$oRuntimeEnv->InitDataModel($oConfig, true /* model only */);
 		
+		// Safety check: check the inter dependencies, will throw an exception in case of inconsistency
+		$oRuntimeEnv->AnalyzeInstallation($oConfig, $oRuntimeEnv->GetBuildDir(), true);
+		
 		$oRuntimeEnv->CheckMetaModel(); // Will throw an exception if a problem is detected
 		                                
 		// Everything seems Ok so far, commit in env-production!
