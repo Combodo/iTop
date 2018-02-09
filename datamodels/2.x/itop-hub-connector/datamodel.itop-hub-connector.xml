@@ -14,7 +14,7 @@
   </user_rights>
   <module_parameters>
   	<parameters id="itop-hub-connector" _delta="define">
-  		<url>https://www.proto2.itophub.io</url>
+  		<url>https://www.itophub.io</url>
  		<route_landing>/my-instances/landing-from-remote</route_landing>
  		<route_landing_stateless>/stateless-remote-itop/landing-from-remote-stateless</route_landing_stateless>
  		<route_notifications>/api/notifications</route_notifications>
