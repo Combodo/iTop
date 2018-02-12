@@ -58,7 +58,7 @@ class SetupUtils
 	// -- First recent version that is not yet validated by Combodo (warning)
 	const PHP_NOT_VALIDATED_VERSION = '7.2.0';
 
-	const MIN_MEMORY_LIMIT = 32 * 1024 * 1024;
+	const MIN_MEMORY_LIMIT = 33554432; // = 32*1024*1024 Beware: Computations are not allowed in defining constants
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
 
 	/**
