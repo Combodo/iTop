@@ -6225,7 +6225,17 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 
 		utils::PushArchiveMode(true);
-		$aRow = self::MakeSingleRow($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
+		try
+		{
+			$aRow = self::MakeSingleRow($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
+		}
+		catch(Exception $e)
+		{
+			// We need to pop the pushed archived mode before the exception is thrown, otherwise the application stays in ArchiveMode true which has caused hazardious behavior!
+			// Note: When switching to PHP 5.6, we can use a finally block instead of duplicating this line.
+			utils::PopArchiveMode();
+			throw $e;
+		}
 		utils::PopArchiveMode();
 
 		if (empty($aRow))
