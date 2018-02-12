@@ -22,8 +22,7 @@
  * @copyright Copyright (C) 2010-2017 Combodo SARL
  * @license http://opensource.org/licenses/AGPL-3.0
  */
-if (!defined('__DIR__'))
-	define('__DIR__', dirname(__FILE__));
+if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once (APPROOT.'application/webpage.class.inc.php');
 require_once (APPROOT.'application/ajaxwebpage.class.inc.php');
 require_once (APPROOT.'application/utils.inc.php');
@@ -34,6 +33,7 @@ require_once (APPROOT.'setup/runtimeenv.class.inc.php');
 require_once (APPROOT.'setup/backup.class.inc.php');
 require_once (APPROOT.'core/mutex.class.inc.php');
 require_once (APPROOT.'core/dict.class.inc.php');
+require_once (APPROOT.'setup/xmldataloader.class.inc.php');
 require_once (__DIR__.'/hubruntimeenvironment.class.inc.php');
 
 /**
@@ -218,6 +218,7 @@ try
 		
 		try
 		{
+			SetupPage::log_info('Backup starts...');	    
 			set_time_limit(0);
 			$sBackupPath = APPROOT.'/data/backups/manual/backup-';
 			$iSuffix = 1;
@@ -235,20 +236,26 @@ try
 			$aErrors = $oBackup->GetErrors();
 			if (count($aErrors)>0)
 			{
-				ReportError(Dict::S('iTopHub:BackupFailed'), -1, $aErrors);
+			    SetupPage::log_error('Backup failed.');
+			    SetupPage::log_error(implode("\n", $aErrors));
+			    ReportError(Dict::S('iTopHub:BackupFailed'), -1, $aErrors);
 			}
 			else
 			{
+				SetupPage::log_info('Backup successfully completed.');
 				ReportSuccess(Dict::S('iTopHub:BackupOk'));
 			}
 		}
 		catch (Exception $e)
 		{
+			SetupPage::log_error($e->getMessage());
 			ReportError($e->getMessage(), $e->getCode());
 		}
 		break;
 		
 		case 'compile':
+		SetupPage::log_info('Deployment starts...');
+		    
 		// First step: prepare the datamodel, if it fails, roll-back
 		$aSelectedExtensionCodes = utils::ReadParam('extension_codes', array());
 		$aSelectedExtensionDirs = utils::ReadParam('extension_dirs', array());
@@ -274,6 +281,7 @@ try
 		$oRuntimeEnv->Commit();
 		
 		// Report the success in a way that will be detected by the ajax caller
+		SetupPage::log_info('Compilation completed...');
 		ReportSuccess('Ok'); // No access to Dict::S here
 		break;
 		
@@ -284,7 +292,8 @@ try
 		
 		try
 		{
-			// Load the "production" config file to clone & update it
+		    SetupPage::log_info('Move to production starts...');
+		    // Load the "production" config file to clone & update it
 			$oConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
 			
 			$oRuntimeEnv->InitDataModel($oConfig, true /* model only */);
@@ -294,7 +303,7 @@ try
 			$aSelectedModules = array();
 			foreach ($aAvailableModules as $sModuleId => $aModule)
 			{
-				if (($sModuleId==ROOT_MODULE)||($sModuleId==DATAMODEL_MODULE))
+				if (($sModuleId == ROOT_MODULE) || ($sModuleId == DATAMODEL_MODULE))
 				{
 					continue;
 				}
@@ -314,6 +323,8 @@ try
 			$oRuntimeEnv->UpdatePredefinedObjects();
 			
 			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseSetup');
+			
+			$oRuntimeEnv->LoadData($aAvailableModules, $aSelectedModules, false /* no sample data*/);
 			
 			// Record the installation so that the "about box" knows about the installed modules
 			$sDataModelVersion = $oRuntimeEnv->GetCurrentDataModelVersion();
@@ -339,13 +350,14 @@ try
 			$oRuntimeEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModules, $aSelectedExtensionCodes, 'Done by the iTop Hub Connector');
 			
 			// Report the success in a way that will be detected by the ajax caller
+			SetupPage::log_info('Deployment successfully completed.');
 			ReportSuccess(Dict::S('iTopHub:CompiledOK'));
 		}
 		catch (Exception $e)
 		{
 			// Note: at this point, the dictionnary is not necessarily loaded
-			IssueLog::Error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());
-			IssueLog::Error('Debug trace: '.$e->getTraceAsString());
+			SetupPage::log_error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());
+			SetupPage::log_error('Debug trace: '.$e->getTraceAsString());
 			ReportError($e->getMessage(), $e->getCode());
 		}
 		break;
@@ -356,8 +368,8 @@ try
 }
 catch (Exception $e)
 {
-	IssueLog::Error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());
-	IssueLog::Error('Debug trace: '.$e->getTraceAsString());
+	SetupPage::log_error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());
+	SetupPage::log_error('Debug trace: '.$e->getTraceAsString());
 	
 	utils::PopArchiveMode();
 	

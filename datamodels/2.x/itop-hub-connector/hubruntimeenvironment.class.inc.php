@@ -12,6 +12,10 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 		
 		if ($sEnvironment != $this->sTargetEnv)
 		{
+			if (is_dir(APPROOT.'/data/'.$this->sTargetEnv.'-modules'))
+			{
+			    SetupUtils::rrmdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+			}
 			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sTargetEnv.'-modules');
 		}
 	}
@@ -37,6 +41,13 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 			if (!mkdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules')) throw new Exception("ERROR: failed to create directory:'".(APPROOT.'/data/'.$this->sTargetEnv.'-modules')."'");
 		}
 		$sDestinationPath = APPROOT.'/data/'.$this->sTargetEnv.'-modules/';
+		
+		// Make sure that the destination directory of the extension does not already exist
+		if (is_dir($sDestinationPath.basename($sExtensionDirectory)))
+		{
+		    // Cleanup before moving...
+		    SetupUtils::rrmdir($sDestinationPath.basename($sExtensionDirectory));
+		}
 		if (!rename($sExtensionDirectory, $sDestinationPath.basename($sExtensionDirectory))) throw new Exception("ERROR: failed move directory:'$sExtensionDirectory' to '".$sDestinationPath.basename($sExtensionDirectory)."'");
 	}
 	
