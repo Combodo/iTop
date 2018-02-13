@@ -589,7 +589,13 @@ class SetupUtils
 			throw new Exception("Attempting to delete directory: '$dir'");
 		}
 		self::tidydir($dir);
-		rmdir($dir);
+		if (@rmdir($dir) === false)
+		{
+			// Magic trick for windows
+			// sometimes the folder is empty but rmdir fails
+			closedir(opendir($dir));
+			@rmdir($dir);
+		}
 	}
 
     /**
@@ -614,7 +620,13 @@ class SetupUtils
 					if(is_dir($dir.'/'.$file))
 					{
 						self::tidydir($dir.'/'.$file);
-						rmdir($dir.'/'.$file);
+						if (@rmdir($dir.'/'.$file) === false)
+						{
+							// Magic trick for windows
+							// sometimes the folder is empty but rmdir fails
+							closedir(opendir($dir.'/'.$file));
+							@rmdir($dir.'/'.$file);
+						}
 					}
 					else
 					{
