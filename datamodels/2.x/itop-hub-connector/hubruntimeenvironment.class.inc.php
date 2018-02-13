@@ -12,10 +12,14 @@ class HubRunTimeEnvironment extends RunTimeEnvironment
 		
 		if ($sEnvironment != $this->sTargetEnv)
 		{
-			if (is_dir(APPROOT.'/data/'.$this->sTargetEnv.'-modules'))
-			{
-			    SetupUtils::rrmdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules');
-			}
+		    if (is_dir(APPROOT.'/env-'.$this->sTargetEnv))
+		    {
+		        SetupUtils::rrmdir(APPROOT.'/env-'.$this->sTargetEnv);
+		    }
+		    if (is_dir(APPROOT.'/data/'.$this->sTargetEnv.'-modules'))
+		    {
+		        SetupUtils::rrmdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+		    }
 			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sTargetEnv.'-modules');
 		}
 	}
