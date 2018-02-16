@@ -72,8 +72,8 @@ class ItopDataTestCase extends ItopTestCase
 		CMDBSource::Query('START TRANSACTION');
 
 		// Create a specific organization for the tests
-		$oOrg = MetaModel::NewObject('Organization', array('name' => 'UnitTestOrganization'));
-		$this->testOrgId = $oOrg->DBInsert();
+		$oOrg = $this->CreateOrganization('UnitTestOrganization');
+		$this->testOrgId = $oOrg->GetKey();
 	}
 
     /**
@@ -121,6 +121,24 @@ class ItopDataTestCase extends ItopTestCase
         return $oMyObj;
     }
 
+
+	/**
+	 * Create an Organization in database
+	 *
+	 * @param string $sName
+	 * @return Organization
+	 * @throws Exception
+	 */
+	protected function CreateOrganization($sName)
+	{
+		/** @var Organization $oObj */
+		$oObj = self::createObject('Organization', array(
+			'name' => $sName,
+		));
+		$this->debug("\nCreated Organization {$oObj->Get('name')}");
+		return $oObj;
+	}
+
     /**
      * Create a Ticket in database
      *
@@ -138,42 +156,107 @@ class ItopDataTestCase extends ItopTestCase
             'description' => 'method UpdateImpactedItems() reconstruit le lnkContactToTicket donc impossible de rajouter des champs dans cette classe',
             'org_id' => $this->getTestOrgId(),
         ));
-        $this->debug("\nCreated {$oTicket->Get('title')} ({$oTicket->Get('ref')})\n");
+        $this->debug("\nCreated {$oTicket->Get('title')} ({$oTicket->Get('ref')})");
         return $oTicket;
     }
 
-    /**
-     * Create a Server in database
-     * @param int $iNum
-     * @return Server
-     * @throws Exception
-     */
-    protected function CreateServer($iNum)
-    {
-        /** @var Server $oServer */
-        $oServer = self::createObject('Server', array(
-            'name' => 'Server_'.$iNum,
-            'org_id' => $this->getTestOrgId(),
-        ));
-        $this->debug("Created {$oServer->GetName()} ({$oServer->GetKey()})\n");
-        return $oServer;
-    }
+	/**
+	 * Create a UserRequest in database
+	 *
+	 * @param int $iNum
+	 * @param int $iTimeSpent
+	 * @param int $iOrgId
+	 * @param int $iCallerId
+	 * @return UserRequest
+	 * @throws Exception
+	 */
+	protected function CreateUserRequest($iNum, $iTimeSpent = 0, $iOrgId = 0, $iCallerId = 0)
+	{
+		/** @var UserRequest $oTicket */
+		$oTicket = self::createObject('UserRequest', array(
+			'ref' => 'Ticket_'.$iNum,
+			'title' => 'BUG 1161_'.$iNum,
+			'request_type' => 'incident',
+			'description' => 'Add aggregate functions',
+			'time_spent' => $iTimeSpent,
+			'caller_id' => $iCallerId,
+			'org_id' => ($iOrgId == 0 ? $this->getTestOrgId() : $iOrgId),
+		));
+		$this->debug("\nCreated {$oTicket->Get('title')} ({$oTicket->Get('ref')})");
+		return $oTicket;
+	}
 
-    /**
-     * Create a Person in database
-     * @param int $iNum
-     * @return Person
-     * @throws Exception
-     */
-    protected function CreatePerson($iNum)
+	/**
+	 * Create a Server in database
+	 * @param int $iNum
+	 * @return Server
+	 * @throws Exception
+	 */
+	protected function CreateServer($iNum)
+	{
+		/** @var Server $oServer */
+		$oServer = self::createObject('Server', array(
+			'name' => 'Server_'.$iNum,
+			'org_id' => $this->getTestOrgId(),
+		));
+		$this->debug("Created {$oServer->GetName()} ({$oServer->GetKey()})");
+		return $oServer;
+	}
+
+	/**
+	 * Create a PhysicalInterface in database
+	 * @param int $iNum
+	 * @param int $iSpeed
+	 * @param int $iConnectableCiId
+	 * @return DBObject
+	 * @throws Exception
+	 */
+	protected function CreatePhysicalInterface($iNum, $iSpeed, $iConnectableCiId)
+	{
+		$oObj = self::createObject('PhysicalInterface', array(
+			'name' => "$iNum",
+			'speed' => $iSpeed,
+			'connectableci_id' => $iConnectableCiId,
+		));
+		$this->debug("Created {$oObj->GetName()} ({$oObj->GetKey()})");
+		return $oObj;
+	}
+
+	/**
+	 * Create a FiberChannelInterface in database
+	 * @param int $iNum
+	 * @param int $iSpeed
+	 * @param int $iConnectableCiId
+	 * @return DBObject
+	 * @throws Exception
+	 */
+	protected function CreateFiberChannelInterface($iNum, $iSpeed, $iConnectableCiId)
+	{
+		$oObj = self::createObject('FiberChannelInterface', array(
+			'name' => "$iNum",
+			'speed' => $iSpeed,
+			'datacenterdevice_id' => $iConnectableCiId,
+		));
+		$this->debug("Created {$oObj->GetName()} ({$oObj->GetKey()})");
+		return $oObj;
+	}
+
+	/**
+	 * Create a Person in database
+	 * @param int $iNum
+	 * @param int $iOrgId
+	 * @return Person
+	 * @throws Exception
+	 */
+    protected function CreatePerson($iNum, $iOrgId = 0)
     {
         /** @var Person $oPerson */
         $oPerson = self::createObject('Person', array(
             'name' => 'Person_'.$iNum,
             'first_name' => 'Test',
-            'org_id' => $this->getTestOrgId(),
+            'org_id' => ($iOrgId == 0 ? $this->getTestOrgId() : $iOrgId),
         ));
-        $this->debug("Created {$oPerson->GetName()} ({$oPerson->GetKey()})\n");
+        $this->debug("Created {$oPerson->GetName()} ({$oPerson->GetKey()})");
         return $oPerson;
     }
 
@@ -196,7 +279,7 @@ class ItopDataTestCase extends ItopTestCase
 		    'language' => 'EN US',
 		    'profile_list' => $oSet,
 	    ));
-	    $this->debug("Created {$oUser->GetName()} ({$oUser->GetKey()})\n");
+	    $this->debug("Created {$oUser->GetName()} ({$oUser->GetKey()})");
 	    return $oUser;
     }
 
@@ -220,11 +303,11 @@ class ItopDataTestCase extends ItopTestCase
         ));
         if (is_null($oFarm))
         {
-            $this->debug("Created {$oHypervisor->GetName()} ({$oHypervisor->GetKey()}) on {$oServer->GetName()}\n");
+            $this->debug("Created {$oHypervisor->GetName()} ({$oHypervisor->GetKey()}) on {$oServer->GetName()}");
         }
         else
         {
-            $this->debug("Created {$oHypervisor->GetName()} ({$oHypervisor->GetKey()}) on {$oServer->GetName()} part of {$oFarm->GetName()}\n");
+            $this->debug("Created {$oHypervisor->GetName()} ({$oHypervisor->GetKey()}) on {$oServer->GetName()} part of {$oFarm->GetName()}");
         }
         return $oHypervisor;
     }
@@ -244,7 +327,7 @@ class ItopDataTestCase extends ItopTestCase
             'org_id' => $this->getTestOrgId(),
             'redundancy' => $sRedundancy,
         ));
-        $this->debug("Created {$oFarm->GetName()} ({$oFarm->GetKey()}) redundancy $sRedundancy\n");
+        $this->debug("Created {$oFarm->GetName()} ({$oFarm->GetKey()}) redundancy $sRedundancy");
         return $oFarm;
     }
 
@@ -263,7 +346,7 @@ class ItopDataTestCase extends ItopTestCase
             'org_id' => $this->getTestOrgId(),
             'virtualhost_id' => $oVirtualHost->GetKey(),
         ));
-        $this->debug("Created {$oVirtualMachine->GetName()} ({$oVirtualMachine->GetKey()}) on {$oVirtualHost->GetName()}\n");
+        $this->debug("Created {$oVirtualMachine->GetName()} ({$oVirtualMachine->GetKey()}) on {$oVirtualHost->GetName()}");
         return $oVirtualMachine;
     }
 
@@ -285,7 +368,7 @@ class ItopDataTestCase extends ItopTestCase
         $oContacts->AddItem($oNewLink);
         $oCI->Set('contacts_list', $oContacts);
 
-        $this->debug("Added {$oContact->GetName()} to {$oCI->GetName()}\n");
+        $this->debug("Added {$oContact->GetName()} to {$oCI->GetName()}");
         return $oNewLink;
     }
 
@@ -306,7 +389,7 @@ class ItopDataTestCase extends ItopTestCase
             {
                 $oContacts->RemoveItem($oLnk->GetKey());
                 $oCI->Set('contacts_list', $oContacts);
-                $this->debug("Removed {$oContact->GetName()} from {$oCI->Get('name')}\n");
+                $this->debug("Removed {$oContact->GetName()} from {$oCI->Get('name')}");
                 return;
             }
         }
@@ -330,7 +413,7 @@ class ItopDataTestCase extends ItopTestCase
         $oCIs->AddItem($oNewLink);
         $oTicket->Set('functionalcis_list', $oCIs);
 
-        $this->debug("Added {$oCI->GetName()} to {$oTicket->Get('ref')} with {$sImpactCode}\n");
+        $this->debug("Added {$oCI->GetName()} to {$oTicket->Get('ref')} with {$sImpactCode}");
         return array($oCI->GetKey() => $sImpactCode);
     }
 
@@ -352,11 +435,11 @@ class ItopDataTestCase extends ItopTestCase
                 $sImpactCode = $oLnk->Get('impact_code');
                 $oCIs->RemoveItem($oLnk->GetKey());
                 $oTicket->Set('functionalcis_list', $oCIs);
-                $this->debug("Removed {$oCI->GetName()} from {$oTicket->Get('ref')} ({$sImpactCode})\n");
+                $this->debug("Removed {$oCI->GetName()} from {$oTicket->Get('ref')} ({$sImpactCode})");
                 return;
             }
         }
-        $this->debug("ERROR: {$oCI->GetName()} not attached to {$oTicket->Get('ref')}\n");
+        $this->debug("ERROR: {$oCI->GetName()} not attached to {$oTicket->Get('ref')}");
         $this->assertTrue(false);
     }
 
@@ -383,7 +466,7 @@ class ItopDataTestCase extends ItopTestCase
         $oCIs->AddItem($oNewLink);
         $oTicket->Set('contacts_list', $oCIs);
 
-        $this->debug("Added {$oContact->GetName()} to {$oTicket->Get('ref')} with {$sRoleCode}\n");
+        $this->debug("Added {$oContact->GetName()} to {$oTicket->Get('ref')} with {$sRoleCode}");
         return array($oContact->GetKey() => $sRoleCode);
     }
 
@@ -405,7 +488,7 @@ class ItopDataTestCase extends ItopTestCase
                 $sRoleCode = $oLnk->Get('role_code');
                 $oContacts->RemoveItem($oLnk->GetKey());
                 $oTicket->Set('contacts_list', $oContacts);
-                $this->debug("Removed {$oContact->GetName()} from {$oTicket->Get('ref')} ({$sRoleCode})\n");
+                $this->debug("Removed {$oContact->GetName()} from {$oTicket->Get('ref')} ({$sRoleCode})");
                 return;
             }
         }
@@ -433,10 +516,10 @@ class ItopDataTestCase extends ItopTestCase
      */
     protected function CheckFunctionalCIList($oTicket, $aWaitedCIList = array())
     {
-        $this->debug("\nResulting functionalcis_list {$oTicket->Get('ref')} ({$oTicket->Get('functionalcis_list')->Count()}):\n");
+        $this->debug("\nResulting functionalcis_list {$oTicket->Get('ref')} ({$oTicket->Get('functionalcis_list')->Count()}):");
         foreach($oTicket->Get('functionalcis_list') as $oLnk)
         {
-            $this->debug($oLnk->Get('functionalci_name')." => ".$oLnk->Get('impact_code')."\n");
+            $this->debug($oLnk->Get('functionalci_name')." => ".$oLnk->Get('impact_code')."");
             $iId = $oLnk->Get('functionalci_id');
             if (!empty($aWaitedCIList))
             {
@@ -456,10 +539,10 @@ class ItopDataTestCase extends ItopTestCase
      */
     protected function CheckContactList($oTicket, $aWaitedContactList = array())
     {
-        $this->debug("\nResulting contacts_list {$oTicket->Get('ref')} ({$oTicket->Get('contacts_list')->Count()}):\n");
+        $this->debug("\nResulting contacts_list {$oTicket->Get('ref')} ({$oTicket->Get('contacts_list')->Count()}):");
         foreach($oTicket->Get('contacts_list') as $oLnk)
         {
-            $this->debug($oLnk->Get('contact_id_friendlyname')." => ".$oLnk->Get('role_code')."\n");
+            $this->debug($oLnk->Get('contact_id_friendlyname')." => ".$oLnk->Get('role_code'));
             $iId = $oLnk->Get('contact_id');
             if (!empty($aWaitedContactList))
             {

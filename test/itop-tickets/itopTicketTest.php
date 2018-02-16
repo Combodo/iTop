@@ -803,7 +803,7 @@ class ItopTicketTest extends ItopDataTestCase
         $this->assertEquals(1, $oTicket2->Get('contacts_list')->Count());
 
         // The first ticket is not impacted
-        $this->debug("\nCheck that the first ticket has not changed.\n");
+        $this->debug("\nCheck that the first ticket has not changed.");
         $this->ReloadObject($oTicket1); // reload the links
 
         // Ticket1+====>Server1,Hypervisor1
@@ -914,7 +914,7 @@ class ItopTicketTest extends ItopDataTestCase
         $this->assertEquals(1, $oTicket2->Get('contacts_list')->Count());
 
         // The first ticket is not impacted
-        $this->debug("\nCheck that the first ticket has not changed.\n");
+        $this->debug("\nCheck that the first ticket has not changed.");
         $this->ReloadObject($oTicket1); // reload the links
 
         // Ticket1+====>Server1,Hypervisor1,Hypervisor2

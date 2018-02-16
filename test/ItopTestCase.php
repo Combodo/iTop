@@ -27,7 +27,7 @@ namespace Combodo\iTop\Test\UnitTest;
 
 use PHPUnit\Framework\TestCase;
 
-define('DEBUG_UNIT_TEST', false);
+define('DEBUG_UNIT_TEST', true);
 
 class ItopTestCase extends TestCase
 {
@@ -37,14 +37,21 @@ class ItopTestCase extends TestCase
         @include_once '../../approot.inc.php';
         @include_once '../../../approot.inc.php';
 
-        $this->debug("\n----------\n---------- ".$this->getName()."\n----------\n\n");
+        $this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
 	}
 
 	protected function debug($sMsg)
     {
         if (DEBUG_UNIT_TEST)
         {
-            echo $sMsg;
+        	if (is_string($sMsg))
+	        {
+	        	echo "$sMsg\n";
+	        }
+	        else
+	        {
+	        	print_r($sMsg);
+	        }
         }
     }
 }
