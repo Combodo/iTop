@@ -400,7 +400,7 @@ class SetupUtils
 		{
 			ModuleDiscovery::GetAvailableModules($aDirsToScan, true, $aSelectedModules);
 		}
-		catch(MissingDependencyException $e)
+		catch(Exception $e)
 		{
 			$aResult[] = new CheckResult(CheckResult::ERROR, $e->getMessage());
 		}
@@ -589,13 +589,7 @@ class SetupUtils
 			throw new Exception("Attempting to delete directory: '$dir'");
 		}
 		self::tidydir($dir);
-		if (@rmdir($dir) === false)
-		{
-			// Magic trick for windows
-			// sometimes the folder is empty but rmdir fails
-			closedir(opendir($dir));
-			@rmdir($dir);
-		}
+		self::rmdir_safe($dir);
 	}
 
     /**
@@ -620,13 +614,7 @@ class SetupUtils
 					if(is_dir($dir.'/'.$file))
 					{
 						self::tidydir($dir.'/'.$file);
-						if (@rmdir($dir.'/'.$file) === false)
-						{
-							// Magic trick for windows
-							// sometimes the folder is empty but rmdir fails
-							closedir(opendir($dir.'/'.$file));
-							@rmdir($dir.'/'.$file);
-						}
+						self::rmdir_safe($dir.'/'.$file);
 					}
 					else
 					{
@@ -658,6 +646,18 @@ class SetupUtils
 		if (!is_dir($dir))
 		{
 			mkdir($dir);
+		}
+	}
+
+	public static function rmdir_safe($dir)
+	{
+		// avoid unnecessary warning
+		if (@rmdir($dir) === false)
+		{
+			// Magic trick for windows
+			// sometimes the folder is empty but rmdir fails
+			closedir(opendir($dir));
+			rmdir($dir);
 		}
 	}
 
@@ -750,13 +750,14 @@ class SetupUtils
 
 	/**
 	 * Helper to move a directory when the parent directory of the target dir cannot be written
-	 * To be used as alternative to rename()	 	 
+	 * To be used as alternative to rename()
 	 * Files/Subdirs of the source directory are moved one by one
 	 * Returns void
-     *
-     * @param string $sSource
-     * @param string $sDest
-     * @param boolean $bRemoveSource If true $sSource will be removed, otherwise $sSource will just be emptied
+	 *
+	 * @param string $sSource
+	 * @param string $sDest
+	 * @param boolean $bRemoveSource If true $sSource will be removed, otherwise $sSource will just be emptied
+	 * @throws Exception
 	 */
 	public static function movedir($sSource, $sDest, $bRemoveSource = true)
 	{
@@ -777,7 +778,7 @@ class SetupUtils
 		self::tidydir($sSource);
 		if($bRemoveSource === true)
         {
-            rmdir($sSource);
+	        self::rmdir_safe($sSource);
         }
 
 		/**
@@ -798,7 +799,7 @@ class SetupUtils
 				rename($sSource.'/'.$sFile, $sDest.'/'.$sFile);
 			}
 		}
-		rmdir($sSource);
+		self::rmdir_safe($sSource);
 		*/
 	}
 
@@ -1263,6 +1264,17 @@ EOF
 		return false;
 	}
 
+	/**
+	 * @param string $sDBServer
+	 * @param string $sDBUser
+	 * @param string $sDBPwd
+	 * @param string $sTlsKey
+	 * @param string $sTlsCert
+	 * @param string $sTlsCa
+	 * @param string $sTlsCipher
+	 * @return string
+	 * @throws MySQLException
+	 */
 	static public function GetMySQLVersion(
 		$sDBServer, $sDBUser, $sDBPwd, $sTlsKey = null, $sTlsCert = null, $sTlsCa = null, $sTlsCipher = null
 	)
@@ -1646,7 +1658,13 @@ EOF
 //		echo "<pre>Comparison of ".dirname($sBaseDir)."/portal:\n".print_r($aResults, true)."</pre>";
 		return $aResults;
 	}
-	
+
+	/**
+	 * @param string $sInstalledVersion
+	 * @param string $sSourceDir
+	 * @return bool|hash
+	 * @throws Exception
+	 */
 	public static function CheckVersion($sInstalledVersion, $sSourceDir)
 	{
 		$sManifestFilePath = self::GetVersionManifest($sInstalledVersion);
