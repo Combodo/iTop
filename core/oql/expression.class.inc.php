@@ -70,7 +70,7 @@ abstract class Expression
 	{
 		return base64_encode($this->Render());
 	}
-	
+
 	static public function unserialize($sValue)
 	{
 		return self::FromOQL(base64_decode($sValue));
@@ -1373,7 +1373,7 @@ class QueryBuilderExpressions
 	 */
 	protected $m_aClassIds;
 
-	public function __construct(DBObjectSearch $oSearch, $aGroupByExpr = null)
+	public function __construct(DBObjectSearch $oSearch, $aGroupByExpr = null, $aSelectExpr = null)
 	{
 		$this->m_oConditionExpr = $oSearch->GetCriteria();
 		if (!$oSearch->GetShowObsoleteData())
@@ -1387,7 +1387,7 @@ class QueryBuilderExpressions
 				}
 			}
 		}
-		$this->m_aSelectExpr = array();
+		$this->m_aSelectExpr = is_null($aSelectExpr) ? array() : $aSelectExpr;
 		$this->m_aGroupByExpr = $aGroupByExpr;
 		$this->m_aJoinFields = array();
 
@@ -1448,8 +1448,10 @@ class QueryBuilderExpressions
 
 	/**
 	 * Get tables representing the queried objects
-	 * Could be further optimized: when the first join is an outer join, then the rest can be omitted	 
-	 */	 	
+	 * Could be further optimized: when the first join is an outer join, then the rest can be omitted
+	 * @param array $aTables
+	 * @return array
+	 */
 	public function GetMandatoryTables(&$aTables = null)
 	{
 		if (is_null($aTables)) $aTables = array();
@@ -1458,6 +1460,8 @@ class QueryBuilderExpressions
 		{
 			$oExpression->CollectUsedParents($aTables);
 		}
+
+		return $aTables;
 	}
 
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
@@ -1498,7 +1502,6 @@ class QueryBuilderExpressions
 		{
 			$this->m_aJoinFields[$index] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
-
 		foreach($this->m_aClassIds as $sClass => $oExpression)
 		{
 			$this->m_aClassIds[$sClass] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);

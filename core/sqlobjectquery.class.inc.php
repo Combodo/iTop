@@ -293,11 +293,12 @@ class SQLObjectQuery extends SQLQuery
 	 *    Needed for the unions
 	 * @param $aOrderBy
 	 * @return string
+	 * @throws CoreException
 	 */
 	public function RenderOrderByClause($aOrderBy)
 	{
 		$this->PrepareRendering();
-		$sOrderBy = self::ClauseOrderBy($aOrderBy);
+		$sOrderBy = self::ClauseOrderBy($aOrderBy, $this->__aFields);
 		return $sOrderBy;
 	}
 
@@ -357,8 +358,8 @@ class SQLObjectQuery extends SQLQuery
 		}
 		else
 		{
-			$sSelect = self::ClauseSelect($this->__aFields);
-			$sOrderBy = self::ClauseOrderBy($aOrderBy);
+			$sSelect = self::ClauseSelect($this->__aFields, $sLineSep);
+			$sOrderBy = self::ClauseOrderBy($aOrderBy, $this->__aFields);
 			if (!empty($sOrderBy))
 			{
 				$sOrderBy = "ORDER BY $sOrderBy$sLineSep";
@@ -381,21 +382,42 @@ class SQLObjectQuery extends SQLQuery
 	/**
 	 * @param array $aArgs
 	 * @param bool $bBeautifulQuery
+	 * @param array $aOrderBy
+	 * @param int $iLimitCount
+	 * @param int $iLimitStart
 	 * @return string
 	 * @throws CoreException
 	 */
-	public function RenderGroupBy($aArgs = array(), $bBeautifulQuery = false)
+	public function RenderGroupBy($aArgs = array(), $bBeautifulQuery = false, $aOrderBy = array(), $iLimitCount = 0, $iLimitStart = 0)
 	{
 		$this->m_bBeautifulQuery = $bBeautifulQuery;
 		$sLineSep = $this->m_bBeautifulQuery ? "\n" : '';
 		$sIndent = $this->m_bBeautifulQuery ? "   " : null;
 
 		$this->PrepareRendering();
+
 		$sSelect = self::ClauseSelect($this->__aFields);
 		$sFrom   = self::ClauseFrom($this->__aFrom, $sIndent);
 		$sWhere  = self::ClauseWhere($this->m_oConditionExpr, $aArgs);
 		$sGroupBy = self::ClauseGroupBy($this->__aGroupBy);
-		$sSQL = "SELECT $sSelect,$sLineSep COUNT(*) AS _itop_count_$sLineSep FROM $sFrom$sLineSep WHERE $sWhere$sLineSep GROUP BY $sGroupBy";
+		$sOrderBy = self::ClauseOrderBy($aOrderBy, $this->__aFields);
+		if (!empty($sGroupBy))
+		{
+			$sGroupBy = "GROUP BY $sGroupBy$sLineSep";
+		}
+		if (!empty($sOrderBy))
+		{
+			$sOrderBy = "ORDER BY $sOrderBy$sLineSep";
+		}
+		if ($iLimitCount > 0)
+		{
+			$sLimit = 'LIMIT '.$iLimitStart.', '.$iLimitCount;
+		}
+		else
+		{
+			$sLimit = '';
+		}
+		$sSQL = "SELECT $sSelect,$sLineSep COUNT(*) AS _itop_count_$sLineSep FROM $sFrom$sLineSep WHERE $sWhere$sLineSep $sGroupBy $sOrderBy$sLineSep $sLimit";
 		return $sSQL;
 	}
 

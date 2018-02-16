@@ -1434,7 +1434,7 @@ class DBObjectSearch extends DBSearch
 		return $sRet;
 	}
 
-	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null)
+	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
 	{
 		// Hide objects that are not visible to the current user
 		//
@@ -1517,7 +1517,15 @@ class DBObjectSearch extends DBSearch
 					$sRawId .= 'g:'.$sAlias.'!'.$oExpr->Render();
 				}
 			}
+			if (!is_null($aSelectExpr))
+			{
+				foreach($aSelectExpr as $sAlias => $oExpr)
+				{
+					$sRawId .= 'se:'.$sAlias.'!'.$oExpr->Render();
+				}
+			}
 			$aContextData['aGroupByExpr'] = $aGroupByExpr;
+			$aContextData['aSelectExpr'] = $aSelectExpr;
 			$sRawId .= $bGetCount;
 			$aContextData['bGetCount'] = $bGetCount;
 			if (is_array($aSelectedClasses))
@@ -1542,6 +1550,7 @@ class DBObjectSearch extends DBSearch
 
 		// Query caching
 		//
+		$sOqlAPCCacheId = null;
 		if (self::$m_bQueryCacheEnabled)
 		{
 			// Warning: using directly the query string as the key to the hash array can FAIL if the string
@@ -1581,7 +1590,7 @@ class DBObjectSearch extends DBSearch
 		if (!isset($oSQLQuery))
 		{
 			$oKPI = new ExecutionKPI();
-			$oSQLQuery = $oSearch->BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr, $aSelectedClasses);
+			$oSQLQuery = $oSearch->BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr);
 			$oKPI->ComputeStats('BuildSQLQueryStruct', $sOqlQuery);
 
 			if (self::$m_bQueryCacheEnabled)
@@ -1601,16 +1610,17 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 * @param $aAttToLoad
-	 * @param $bGetCount
-	 * @param $aModifierProperties
-	 * @param null $aGroupByExpr
-	 * @param null $aSelectedClasses
+	 * @param array $aAttToLoad
+	 * @param bool $bGetCount
+	 * @param array $aModifierProperties
+	 * @param array $aGroupByExpr
+	 * @param array $aSelectedClasses
+	 * @param array $aSelectExpr
 	 * @return null|SQLObjectQuery
 	 */
-	protected function BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null)
+	protected function BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
 	{
-		$oBuild = new QueryBuilderContext($this, $aModifierProperties, $aGroupByExpr, $aSelectedClasses);
+		$oBuild = new QueryBuilderContext($this, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr);
 
 		$oSQLQuery = $this->MakeSQLObjectQuery($oBuild, $aAttToLoad, array());
 		$oSQLQuery->SetCondition($oBuild->m_oQBExpressions->GetCondition());
@@ -1623,6 +1633,17 @@ class DBObjectSearch extends DBSearch
 		else
 		{
 			$oSQLQuery->SetSelect($oBuild->m_oQBExpressions->GetSelect());
+		}
+		if ($aSelectExpr)
+		{
+			// Get the fields corresponding to the select expressions
+			foreach($oBuild->m_oQBExpressions->GetSelect() as $sAlias => $oExpr)
+			{
+				if (key_exists($sAlias, $aSelectExpr))
+				{
+					$oSQLQuery->AddSelect($sAlias, $oExpr);
+				}
+			}
 		}
 
 		$aMandatoryTables = null;

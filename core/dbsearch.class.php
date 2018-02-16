@@ -429,8 +429,53 @@ abstract class DBSearch
 	protected static $m_aQueryStructCache = array();
 
 
-	public function MakeGroupByQuery($aArgs, $aGroupByExpr, $bExcludeNullValues = false)
+	/** Generate a Group By SQL request from a search
+	 * @param array $aArgs
+	 * @param array $aGroupByExpr array('alias' => Expression)
+	 * @param bool $bExcludeNullValues
+	 * @param array $aSelectExpr array('alias' => Expression) Additional expressions added to the request
+	 * @param array $aOrderBy array('alias' => bool) true = ASC false = DESC
+	 * @param int $iLimitCount
+	 * @param int $iLimitStart
+	 * @return string SQL query generated
+	 * @throws Exception
+	 */
+	public function MakeGroupByQuery($aArgs, $aGroupByExpr, $bExcludeNullValues = false, $aSelectExpr = array(), $aOrderBy = array(), $iLimitCount = 0, $iLimitStart = 0)
 	{
+		// Sanity check
+		foreach($aGroupByExpr as $sAlias => $oExpr)
+		{
+			if (!($oExpr instanceof Expression))
+			{
+				throw new CoreException("Wrong parameter for 'Group By' for [$sAlias] (an array('alias' => Expression) is awaited)");
+			}
+		}
+		foreach($aSelectExpr as $sAlias => $oExpr)
+		{
+			if (array_key_exists($sAlias, $aGroupByExpr))
+			{
+				throw new CoreException("Alias collision between 'Group By' and 'Select Expressions' [$sAlias]");
+			}
+			if (!($oExpr instanceof Expression))
+			{
+				throw new CoreException("Wrong parameter for 'Select Expressions' for [$sAlias] (an array('alias' => Expression) is awaited)");
+			}
+		}
+		foreach($aOrderBy as $sAlias => $bAscending)
+		{
+			if (!array_key_exists($sAlias, $aGroupByExpr) && !array_key_exists($sAlias, $aSelectExpr) && ($sAlias != '_itop_count_'))
+			{
+				$aAllowedAliases = array_keys($aSelectExpr);
+				$aAllowedAliases = array_merge($aAllowedAliases,  array_keys($aGroupByExpr));
+				$aAllowedAliases[] = '_itop_count_';
+				throw new CoreException("Wrong alias [$sAlias] for 'Order By'. Allowed values are: ", null, implode(", ", $aAllowedAliases));
+			}
+			if (!is_bool($bAscending))
+			{
+				throw new CoreException("Wrong direction in ORDER BY spec, found '$bAscending' and expecting a boolean value for '$sAlias''");
+			}
+		}
+
 		if ($bExcludeNullValues)
 		{
 			// Null values are not handled (though external keys set to 0 are allowed)
@@ -448,15 +493,15 @@ abstract class DBSearch
 		}
 
 		$aAttToLoad = array();
-		$oSQLQuery = $oQueryFilter->GetSQLQuery(array(), $aArgs, $aAttToLoad, null, 0, 0, false, $aGroupByExpr);
+		$oSQLQuery = $oQueryFilter->GetSQLQuery(array(), $aArgs, $aAttToLoad, null, 0, 0, false, $aGroupByExpr, $aSelectExpr);
 
 		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
 		try
 		{
 			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
-			$sRes = $oSQLQuery->RenderGroupBy($aScalarArgs, $bBeautifulSQL);
+			$sRes = $oSQLQuery->RenderGroupBy($aScalarArgs, $bBeautifulSQL, $aOrderBy, $iLimitCount, $iLimitStart);
 		}
-		catch (MissingQueryArgument $e)
+		catch (Exception $e)
 		{
 			// Add some information...
 			$e->addInfo('OQL', $this->ToOQL());
@@ -563,9 +608,9 @@ abstract class DBSearch
 	}
 
 
-	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null)
+	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
 	{
-		$oSQLQuery = $this->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr);
+		$oSQLQuery = $this->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
 		$oSQLQuery->SetSourceOQL($this->ToOQL());
 
 		// Join to an additional table, if required...
@@ -587,7 +632,7 @@ abstract class DBSearch
 	}
 
 	public abstract function GetSQLQueryStructure(
-		$aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null
+		$aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null
 	);
 
 	////////////////////////////////////////////////////////////////////////////

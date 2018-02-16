@@ -143,7 +143,7 @@ class DBUnionSearch extends DBSearch
 
 	/**
 	 * Limited to the selected classes
-	 */	 	
+	 */
 	public function GetClassName($sAlias)
 	{
 		if (array_key_exists($sAlias, $this->aSelectedClasses))
@@ -474,15 +474,17 @@ class DBUnionSearch extends DBSearch
 		throw new Exception('MakeUpdateQuery is not implemented for the unions!');
 	}
 
-	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null)
+	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
 	{
 		if (count($this->aSearches) == 1)
 		{
-			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr);
+			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, $aSelectExpr);
 		}
 
 		$aSQLQueries = array();
 		$aAliases = array_keys($this->aSelectedClasses);
+		$aQueryAttToLoad = null;
+		$aUnionQuerySelectExpr = array();
 		foreach ($this->aSearches as $iSearch => $oSearch)
 		{
 			$aSearchAliases = array_keys($oSearch->GetSelectedClasses());
@@ -544,7 +546,43 @@ class DBUnionSearch extends DBSearch
 					$aQueryGroupByExpr[$sExpressionAlias] = $oExpression->Translate($aTranslationData, false, false);
 				}
 			}
-			$oSubQuery = $oSearch->GetSQLQueryStructure($aQueryAttToLoad, false, $aQueryGroupByExpr, $aSearchSelectedClasses);
+
+			if (is_null($aSelectExpr))
+			{
+				$aQuerySelectExpr = null;
+			}
+			else
+			{
+				$aQuerySelectExpr = array();
+				$aTranslationData = array();
+				$aQueryColumns = array_keys($oSearch->GetSelectedClasses());
+				foreach($aAliases as $iColumn => $sAlias)
+				{
+					$sQueryAlias = $aQueryColumns[$iColumn];
+					$aTranslationData[$sAlias]['*'] = $sQueryAlias;
+				}
+				foreach($aSelectExpr as $sExpressionAlias => $oExpression)
+				{
+					$oExpression->Browse(function ($oNode) use (&$aQuerySelectExpr, &$aTranslationData)
+					{
+						if ($oNode instanceof FieldExpression)
+						{
+							$sAlias = $oNode->GetParent()."__".$oNode->GetName();
+							if (!key_exists($sAlias, $aQuerySelectExpr))
+							{
+								$aQuerySelectExpr[$sAlias] = $oNode->Translate($aTranslationData, false, false);
+							}
+							$aTranslationData[$oNode->GetParent()][$oNode->GetName()] = new FieldExpression($sAlias);
+						}
+					});
+					// Only done for the first select as aliases are named after the first query
+					if (!array_key_exists($sExpressionAlias, $aUnionQuerySelectExpr))
+					{
+						$aUnionQuerySelectExpr[$sExpressionAlias] = $oExpression->Translate($aTranslationData, false, false);
+					}
+				}
+			}
+			$oSubQuery = $oSearch->GetSQLQueryStructure($aQueryAttToLoad, false, $aQueryGroupByExpr, $aSearchSelectedClasses, $aQuerySelectExpr);
 			if (count($aSearchAliases) > 1)
 			{
 				// Necessary to make sure that selected columns will match throughout all the queries
@@ -554,7 +592,7 @@ class DBUnionSearch extends DBSearch
 			$aSQLQueries[] = $oSubQuery;
 		}
 
-		$oSQLQuery = new SQLUnionQuery($aSQLQueries, $aGroupByExpr);
+		$oSQLQuery = new SQLUnionQuery($aSQLQueries, $aGroupByExpr, $aUnionQuerySelectExpr);
 		//MyHelpers::var_dump_html($oSQLQuery, true);
 		//MyHelpers::var_dump_html($oSQLQuery->RenderSelect(), true);
 		if (self::$m_bDebugQuery) $oSQLQuery->DisplayHtml();

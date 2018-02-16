@@ -38,8 +38,9 @@ class SQLUnionQuery extends SQLQuery
 {
 	protected $aQueries;
 	protected $aGroupBy;
+	protected $aSelectExpr;
 
-	public function __construct($aQueries, $aGroupBy)
+	public function __construct($aQueries, $aGroupBy, $aSelectExpr = array())
 	{
 		parent::__construct();
 
@@ -49,6 +50,7 @@ class SQLUnionQuery extends SQLQuery
 			$this->aQueries[] = $oSQLQuery->DeepClone();
 		}
 		$this->aGroupBy = $aGroupBy;
+		$this->aSelectExpr = $aSelectExpr;
 	}
 
 	public function DisplayHtml()
@@ -129,7 +131,17 @@ class SQLUnionQuery extends SQLQuery
 	}
 
 	// Interface, build the SQL query
-	public function RenderGroupBy($aArgs = array(), $bBeautifulQuery = false)
+
+	/**
+	 * @param array $aArgs
+	 * @param bool $bBeautifulQuery
+	 * @param array $aOrderBy
+	 * @param int $iLimitCount
+	 * @param int $iLimitStart
+	 * @return string
+	 * @throws CoreException
+	 */
+	public function RenderGroupBy($aArgs = array(), $bBeautifulQuery = false, $aOrderBy = array(), $iLimitCount = 0, $iLimitStart = 0)
 	{
 		$this->m_bBeautifulQuery = $bBeautifulQuery;
 		$sLineSep = $this->m_bBeautifulQuery ? "\n" : '';
@@ -143,15 +155,41 @@ class SQLUnionQuery extends SQLQuery
 		$sSelects = '('.implode(")$sLineSep UNION$sLineSep(", $aSelects).')';
 		$sFrom = "($sLineSep$sSelects$sLineSep) as __selects__";
 
-		$aAliases = array();
+		$aSelectAliases = array();
+		$aGroupAliases = array();
 		foreach ($this->aGroupBy as $sGroupAlias => $trash)
 		{
-			$aAliases[] = "`$sGroupAlias`";
+			$aSelectAliases[$sGroupAlias] = "`$sGroupAlias`";
+			$aGroupAliases[] = "`$sGroupAlias`";
 		}
-		$sSelect = implode(', ', $aAliases);
-		$sGroupBy = implode(', ', $aAliases);
+		foreach($this->aSelectExpr as $sSelectAlias => $oExpr)
+		{
+			$aSelectAliases[$sSelectAlias] = $oExpr->Render()." AS `$sSelectAlias`";
+		}
 
-		$sSQL = "SELECT $sSelect,$sLineSep COUNT(*) AS _itop_count_$sLineSep FROM $sFrom$sLineSep GROUP BY $sGroupBy";
+		$sSelect = implode(",$sLineSep ", $aSelectAliases);
+		$sGroupBy = implode(', ', $aGroupAliases);
+
+		$sOrderBy = self::ClauseOrderBy($aOrderBy, $aSelectAliases);
+		if (!empty($sGroupBy))
+		{
+			$sGroupBy = "GROUP BY $sGroupBy$sLineSep";
+		}
+		if (!empty($sOrderBy))
+		{
+			$sOrderBy = "ORDER BY $sOrderBy$sLineSep";
+		}
+		if ($iLimitCount > 0)
+		{
+			$sLimit = 'LIMIT '.$iLimitStart.', '.$iLimitCount;
+		}
+		else
+		{
+			$sLimit = '';
+		}
+
+
+		$sSQL = "SELECT $sSelect,$sLineSep COUNT(*) AS _itop_count_$sLineSep FROM $sFrom$sLineSep $sGroupBy $sOrderBy$sLineSep $sLimit";
 		return $sSQL;
 	}
 

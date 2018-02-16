@@ -69,18 +69,18 @@ abstract class SQLQuery
 	abstract public function RenderDelete($aArgs = array());
 	abstract public function RenderUpdate($aArgs = array());
 	abstract public function RenderSelect($aOrderBy = array(), $aArgs = array(), $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulQuery = false);
-	abstract public function RenderGroupBy($aArgs = array(), $bBeautifulQuery = false);
+	abstract public function RenderGroupBy($aArgs = array(), $bBeautifulQuery = false,  $aOrderBy = array(), $iLimitCount = 0, $iLimitStart = 0);
 
 	abstract public function OptimizeJoins($aUsedTables, $bTopCall = true);
 
-	protected static function ClauseSelect($aFields)
+	protected static function ClauseSelect($aFields, $sLineSep = '')
 	{
 		$aSelect = array();
 		foreach ($aFields as $sFieldAlias => $sSQLExpr)
 		{
 			$aSelect[] = "$sSQLExpr AS $sFieldAlias";
 		}
-		$sSelect = implode(', ', $aSelect);
+		$sSelect = implode(",$sLineSep ", $aSelect);
 		return $sSelect;
 	}
 
@@ -181,7 +181,13 @@ abstract class SQLQuery
 		}
 	}
 
-	protected static function ClauseOrderBy($aOrderBy)
+	/**
+	 * @param array $aOrderBy
+	 * @param array $aExistingFields
+	 * @return string
+	 * @throws CoreException
+	 */
+	protected static function ClauseOrderBy($aOrderBy, $aExistingFields)
 	{
 		$aOrderBySpec = array();
 		foreach($aOrderBy as $sFieldAlias => $bAscending)
