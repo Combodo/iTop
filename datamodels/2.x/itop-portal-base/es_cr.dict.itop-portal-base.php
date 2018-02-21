@@ -25,27 +25,27 @@
 
 // Portal
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Page:DefaultTitle' => '%1$s User portal',
-	'Page:PleaseWait' => 'Please wait...',
+	'Page:DefaultTitle' => '%1$s - Portal de Usuario',
+	'Page:PleaseWait' => 'Por favor espere...',
 	'Page:Home' => 'Bienvenido',
 	'Page:GoPortalHome' => 'Regresar a bienvenida',
-	'Page:GoPreviousPage' => 'página anterior',
-    'Page:ReloadPage' => 'Reload page~~',
+	'Page:GoPreviousPage' => 'Página anterior',
+    'Page:ReloadPage' => 'Recargar página',
 	'Portal:Button:Submit' => 'Enviar',
-    'Portal:Button:Apply' => 'Update~~',
+    'Portal:Button:Apply' => 'Actualizar',
 	'Portal:Button:Cancel' => 'Cancelar',
 	'Portal:Button:Close' => 'Cerrar',
 	'Portal:Button:Add' => 'Añadir',
 	'Portal:Button:Remove' => 'Eliminar',
 	'Portal:Button:Delete' => 'Borrar',
-	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode~~',
-	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode~~',
-    'Error:HTTP:401' => 'Authentication~~',
+	'Portal:EnvironmentBanner:Title' => 'Se encuentra en modo <strong>%1$s</strong>',
+	'Portal:EnvironmentBanner:GoToProduction' => 'Regresar a modo PRODUCTION',
+    'Error:HTTP:401' => 'Autenticación',
     'Error:HTTP:404' => 'Página no encontrada',
 	'Error:HTTP:500' => '¡Vaya! Ha ocurrido un error.',
 	'Error:HTTP:GetHelp' => 'Póngase en contacto con el administrador de %1$s si el problema persiste.',
 	'Error:XHR:Fail' => 'No se pudieron cargar datos, póngase en contacto con su administrador de %1$s',
-    'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.~~',
+    'Portal:ErrorUserLoggedOut' => 'Se encuentra desconectado y necesita volver a identificarse para continuar.',
     'Portal:Datatables:Language:Processing' => 'Por favor esperar...',
 	'Portal:Datatables:Language:Search' => 'Filtrar:',
 	'Portal:Datatables:Language:LengthMenu' => 'Mostrar _MENU_ elementos por página',
@@ -63,16 +63,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Portal:Datatables:Language:Sort:Descending' => 'Habilitar para un tipo descendente',
 	'Portal:Autocomplete:NoResult' => 'Sin datos',
 	'Portal:Attachments:DropZone:Message' => 'Agrega tus archivos para agregarlos como documentos adjuntos',
-	'Portal:File:None' => 'No file',
+	'Portal:File:None' => 'No hay archivo',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
-	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
+	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Abierto</a> / <a href="%4$s" class="file_download_link">Download</a>',
 ));
 
 // UserProfile brick
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:UserProfile:Name' => 'Perfil del usuario',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Mi perfil',
-	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Desconectarse',
+	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Cerrar Sesión',
 	'Brick:Portal:UserProfile:Password:Title' => 'Contraseña',
 	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Elegir una contraseña',
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirmar contraseña',
@@ -87,7 +87,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Browse:Name' => 'Buscar en todos los elementos',
 	'Brick:Portal:Browse:Mode:List' => 'Lista',
 	'Brick:Portal:Browse:Mode:Tree' => 'Árbol',
-    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
+    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaico',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Desglose',
 	'Brick:Portal:Browse:Action:View' => 'Detalles',
 	'Brick:Portal:Browse:Action:Edit' => 'Editar',
@@ -102,30 +102,30 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Manage:Name' => 'Administrar elementos',
 	'Brick:Portal:Manage:Table:NoData' => 'Sin objeto.',
-    'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Acciones',
 ));
 
 // ObjectBrick brick
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Brick:Portal:Object:Name' => 'Object',
-	'Brick:Portal:Object:Form:Create:Title' => 'New %1$s',
-	'Brick:Portal:Object:Form:Edit:Title' => 'Updating %2$s (%1$s)',
+	'Brick:Portal:Object:Name' => 'Objecto',
+	'Brick:Portal:Object:Form:Create:Title' => 'Nuevo %1$s',
+	'Brick:Portal:Object:Form:Edit:Title' => 'Actualizando %2$s (%1$s)',
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
-	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:',
-	'Brick:Portal:Object:Form:Message:Saved' => 'Saved',
-	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)',
-	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)',
+	'Brick:Portal:Object:Form:Stimulus:Title' => 'Por favor, proporcione la siguiente información:',
+	'Brick:Portal:Object:Form:Message:Saved' => 'Guardado',
+	'Brick:Portal:Object:Search:Regular:Title' => 'Selección %1$s (%2$s)',
+	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selección %1$s (%2$s)',
 ));
 
 // CreateBrick brick
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Create:Name' => 'Creación rápida',
-    'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
+    'Brick:Portal:Create:ChooseType' => 'Por favor, seleccione un tipo',
 ));
 
 // Filter brick
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
-    'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
+    'Brick:Portal:Filter:Name' => 'Prefiltre un bloquek',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'Ej.:. Conectar a WiFi',
+    'Brick:Portal:Filter:SearchInput:Submit' => 'Buscar',
 ));

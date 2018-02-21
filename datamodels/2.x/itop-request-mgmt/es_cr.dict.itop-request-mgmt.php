@@ -272,20 +272,20 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Portal:TitleDetailsFor_Request' => 'Detalles de la Solicitud',
+	'Portal:TitleDetailsFor_Request' => 'Detalles del Requerimiento',
 	'Portal:ButtonUpdate' => 'Actualizar',
 	'Portal:ButtonClose' => 'Cerrar',
 	'Portal:ButtonReopen' => 'Re-abrir',
 	'Portal:ShowServices' => 'Catálogo de Servicios',
-	'Portal:SelectRequestType' => 'Seleccione un Tipo de Solicitud',
+	'Portal:SelectRequestType' => 'Seleccione un Tipo de Requerimiento',
 	'Portal:SelectServiceElementFrom_Service' => 'Seleccione un Elemento de Servicio para %1$s',
 	'Portal:ListServices' => 'Lista de Servicios',
 	'Portal:TitleDetailsFor_Service' => 'Detalles para el Servicio',
-	'Portal:Button:CreateRequestFromService' => 'Crear una Solicitud para este Servicio',
-	'Portal:ListOpenRequests' => 'Solicitudes Abiertas',
+	'Portal:Button:CreateRequestFromService' => 'Crear un Requerimiento para este Servicio',
+	'Portal:ListOpenRequests' => 'Requerimientos Abiertos',
 'Portal:UserRequest:MoreInfo' => 'Más Información',
 	'Portal:Details-Service-Element' => 'Elementos del Servicio',
-	'Portal:NoClosedTicket' => 'Solicitud No Cerrada',
+	'Portal:NoClosedTicket' => 'Requerimiento No Cerrado',
 	'Portal:NoService' => '',
 	'Portal:ListOpenProblems' => 'Problemas Abiertos',
 	'Portal:ShowProblem' => 'Problemas',
@@ -294,10 +294,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Portal:SelectLanguage' => "Seleccione un Idioma",
 	'Portal:LanguageChangedTo_Lang' => 'Idioma Cambiado a ',
 	'Portal:ChooseYourFavoriteLanguage' => 'Seleccione su Idioma Favorito',
-	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
-	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
+	'Tickets:Related:OpenIncidents' => 'Incidentes Abiertos',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'No puede asignarse el requerimiento Padre a si mismo',
+	'Class:UserRequest/Method:ResolveChildTickets' => 'Resolver tickets hijos',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
 ));
-
-?>

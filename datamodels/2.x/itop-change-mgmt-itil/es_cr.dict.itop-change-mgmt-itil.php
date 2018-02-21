@@ -293,8 +293,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => 'Monitorear',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => 'Finalizar',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+	'Tickets:Related:OpenChanges' => 'Cambios Abiertos',
+	'Tickets:Related:RecentChanges' => 'Cambios Recientes (72 hrs)',
 ));
-
-?>

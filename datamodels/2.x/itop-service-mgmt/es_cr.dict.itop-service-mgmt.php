@@ -242,7 +242,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ServiceFamily+' => 'Familia de Servicios',
 	'Class:ServiceFamily/Attribute:name' => 'Nombre',
 	'Class:ServiceFamily/Attribute:name+' => 'Nombre de la Familia de Servicios',
-	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
+	'Class:ServiceFamily/Attribute:icon' => 'Icono',
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Servicios',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Servicios',
@@ -279,7 +279,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Service/Attribute:status/Value:obsolete+' => 'Obsoleto',
 	'Class:Service/Attribute:status/Value:production' => 'Productivo',
 	'Class:Service/Attribute:status/Value:production+' => 'Productivo',
-	'Class:Service/Attribute:icon' => 'Icon~~',
+	'Class:Service/Attribute:icon' => 'Icono',
 	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Acuerdos con Clientes',
 	'Class:Service/Attribute:customercontracts_list+' => 'Acuerdos con Clientes',
@@ -530,10 +530,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => 'Rol',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Rol',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => 'Rol',
-	'Class:Contract/Attribute:cost_currency/Value:euros' => 'Euros~~',
-	'Class:SLT/Attribute:request_type/Value:service_request' => 'service request~~',
-	'Class:SLT/Attribute:request_type/Value:service_request+' => 'service request~~',
+	'Class:Contract/Attribute:cost_currency/Value:euros' => 'Euros',
+	'Class:SLT/Attribute:request_type/Value:service_request' => 'Requerimeinto de Servicio',
+	'Class:SLT/Attribute:request_type/Value:service_request+' => 'Requerimeinto de Servicio',
 ));
-
-
-?>

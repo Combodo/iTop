@@ -235,11 +235,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Stimulus:ev_close+' => 'Cerrar este Ticket',
 	'Class:Incident/Stimulus:ev_reopen' => 'Reabrir',
 	'Class:Incident/Stimulus:ev_reopen+' => 'Reabrir',
-	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Cannot assign the Parent incident to the incident itself~~',
-	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
-	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
-	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
+	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'No puede asignarse el incidente Padre a si mismo',
+	'Class:Incident/Method:ResolveChildTickets' => 'Resolver tickets hijos',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
+	'Tickets:Related:OpenIncidents' => 'Incidentes Abiertos',
 ));
-
-
-?>

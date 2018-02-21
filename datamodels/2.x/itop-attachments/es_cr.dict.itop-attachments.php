@@ -34,12 +34,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Attachments:History_File_Removed' => 'Anexo %1$s removido.',
 	'Attachments:AddAttachment' => 'Agregar Anexo: ',
 	'Attachments:UploadNotAllowedOnThisSystem' => 'La carga de archivos NO está permitida en este sistema.',
-	'Attachment:Max_Go' => '(Tama&ntilde;o M&aacute;ximo de Archivo: %1$s Gb)',
-	'Attachment:Max_Mo' => '(Tama&ntilde;o M&aacute;ximo de Archivo: %1$s Mb)',
-	'Attachment:Max_Ko' => '(Tama&ntilde;o M&aacute;ximo de Archivo: %1$s Kb)',
+	'Attachment:Max_Go' => '(Tamaño Máximo de Archivo: %1$s Gb)',
+	'Attachment:Max_Mo' => '(Tamaño Máximo de Archivo: %1$s Mb)',
+	'Attachment:Max_Ko' => '(Tamaño Máximo de Archivo: %1$s Kb)',
 	'Attachments:NoAttachment' => 'No hay Anexo. ',
 	'Class:Attachment' => 'Anexo',
 	'Class:Attachment+' => 'Anexo',
-  	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.~~',
+  'Attachments:PreviewNotAvailable' => 'Vista preliminar no disponible para este tipo de Anexo.',
   ));
-?>

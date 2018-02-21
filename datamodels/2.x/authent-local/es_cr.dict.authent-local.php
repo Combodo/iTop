@@ -42,10 +42,6 @@
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserLocal' => 'Usuario de iTop',
 	'Class:UserLocal+' => 'Usuario Autenticado vía iTop',
-	'Class:UserLocal/Attribute:password' => 'Contrase&ntilde;a',
-	'Class:UserLocal/Attribute:password+' => 'Contrase&ntilde;a',
+	'Class:UserLocal/Attribute:password' => 'Contraseña',
+	'Class:UserLocal/Attribute:password+' => 'Contraseña',
 ));
-
-
-
-?>
