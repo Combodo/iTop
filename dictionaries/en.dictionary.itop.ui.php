@@ -1158,6 +1158,13 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Form:Property' => 'Property',
 	'UI:Form:Value' => 'Value',
 
+	'UI:DashletUnknown:Label' => 'Unknown',
+	'UI:DashletUnknown:Description' => 'Unknown dashlet (might have been uninstalled)',
+	'UI:DashletUnknown:RenderText:View' => 'Unable to render this dashlet.',
+	'UI:DashletUnknown:RenderText:Edit' => 'Unable to render this dashlet (class "%1$s"). Check with your administrator if it is still available.',
+	'UI:DashletUnknown:RenderNoDataText:Edit' => 'No preview available for this dashlet (class "%1$s").',
+	'UI:DashletUnknown:Prop-XMLConfiguration' => 'Configuration as XML',
+
 	'UI:DashletPlainText:Label' => 'Text',
 	'UI:DashletPlainText:Description' => 'Plain text (no formatting)',
 	'UI:DashletPlainText:Prop-Text' => 'Text',
