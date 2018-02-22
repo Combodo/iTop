@@ -37,10 +37,10 @@ class NiceWebPage extends WebPage
     {
         parent::__construct($s_title, $bPrintable);
 		$this->m_aReadyScripts = array();
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-1.10.0.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-1.2.1.min.js'); // Needed since many other plugins still rely on oldies like $.browser
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/ui-lightness/jquery-ui-1.10.3.custom.min.css');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.10.3.custom.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-1.12.4.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-1.4.1.min.js'); // Needed since many other plugins still rely on oldies like $.browser
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/ui-lightness/jquery-ui-1.11.4.custom.css');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.11.4.custom.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
 		// table sorting
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.js');
