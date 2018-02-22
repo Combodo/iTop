@@ -1091,6 +1091,9 @@ a.ui-button:active,
 .ui-button .ui-icon {
 	background-image: url("images/ui-icons_F26522_256x240.png");
 }
+.ui-state-default .ui-icon{
+	background-image: url("images/ui-icons_F26522_256x240.png");
+}
 
 /* positioning */
 .ui-icon-blank { background-position: 16px 16px; }
