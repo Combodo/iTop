@@ -2404,7 +2404,7 @@ EOF
 		$sJSToken = json_encode($sOwnershipToken);
 		$oPage->add_ready_script(
 <<<EOF
-	$(window).unload(function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
+	$(window).on('unload',function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
 	window.onbeforeunload = function() {
 		if (!window.bInSubmit && !window.bInCancel)
 		{
@@ -2756,7 +2756,7 @@ EOF
 <<<EOF
 		// Starts the validation when the page is ready
 		CheckFields('apply_stimulus', false);
-		$(window).unload(function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
+		$(window).on('unload', function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
 EOF
 		);
 		

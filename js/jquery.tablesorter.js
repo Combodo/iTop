@@ -11,7 +11,7 @@
  * http://www.gnu.org/licenses/gpl.html
  * 
  * Denis Flaven: Modified to add the fakesorton event that simulates a sorton without sorting the table
- * 
+ * sabello : Updated to remove .browser use (deprecated in jQuery 1.3 and removed in 1.9)
  */
 /**
  * 
@@ -869,15 +869,7 @@
                 return /^[-+]?\d*$/.test($.trim(s.replace(/[,.']/g, '')));
             };
             this.clearTableBody = function (table) {
-                if ($.browser.msie) {
-                    function empty() {
-                        while (this.firstChild)
-                        this.removeChild(this.firstChild);
-                    }
-                    empty.apply(table.tBodies[0]);
-                } else {
-                    table.tBodies[0].innerHTML = "";
-                }
+                table.tBodies[0].innerHTML = "";
             };
         }
     });

@@ -187,7 +187,7 @@ $(function()
 			// Check if we need to save the settings or not...
 			var oSaveCheck = $('#datatable_dlg_'+sListId).find('input[name=save_settings]');
 			var oSaveScope = $('#datatable_dlg_'+sListId).find('input[name=scope]:checked');
-			if (oSaveCheck.attr('checked'))
+			if (oSaveCheck.prop('checked'))
 			{
 				if (oSettings.val() == 'defaults')
 				{
@@ -209,14 +209,14 @@ $(function()
 		{
 			var sId = new String(this.element.attr('id'));
 			var sListId = sId.replace('datatable_', '');
-			$('#datatable_dlg_'+sListId).find('input.specific_settings').attr('checked', 'checked');
+			$('#datatable_dlg_'+sListId).find('input.specific_settings').prop('checked', true);
 		},
 		_updateSaveScope: function()
 		{
 			var sId = new String(this.element.attr('id'));
 			var sListId = sId.replace('datatable_', '');
 			var oSaveCheck = $('#datatable_dlg_'+sListId).find('input[name=save_settings]');
-			if (oSaveCheck.attr('checked'))
+			if (oSaveCheck.prop('checked'))
 			{
 				$('#datatable_dlg_'+sListId).find('input[name=scope]').each(function() {
 					if ($(this).attr('stay-disabled') != 'true')

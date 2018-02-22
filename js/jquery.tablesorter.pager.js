@@ -90,7 +90,7 @@ function sprintf(format, etc) {
 			function checkAll(table, pager, value)
 			{
 				// Mark all the displayed items as check or unchecked depending on the value
-				$(table).find(':checkbox[name^=selectObj]').attr('checked', value);
+				$(table).find(':checkbox[name^=selectObj]').prop('checked', value);
 				// Set the 'selectionMode' for the future objects to load
 				if (value)
 				{
@@ -253,7 +253,7 @@ function sprintf(format, etc) {
 				
 				if (c.selectionMode == 'negative')
 				{
-					$(table).find(':checkbox[name^=selectObj]').attr('checked', true);
+					$(table).find(':checkbox[name^=selectObj]').prop('checked', true);;
 				}
 				
 				if (table.config.select_mode == 'multiple')
@@ -264,11 +264,11 @@ function sprintf(format, etc) {
 						{
 							if (c.selectionMode == 'positive')
 							{
-								$(this).attr('checked', true);
+								$(this).prop('checked', true);;
 							}
 							else
 							{
-								$(this).attr('checked', false);
+								$(this).prop('checked', false);;
 							}
 						}
 					});
@@ -285,11 +285,11 @@ function sprintf(format, etc) {
 						{
 							if (c.selectionMode == 'positive')
 							{
-								$(this).attr('checked', true);
+								$(this).prop('checked', true);
 							}
 							else
 							{
-								$(this).attr('checked', false);
+								$(this).prop('checked', false);
 							}
 						}
 					});

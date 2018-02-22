@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -34,7 +34,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.Init = function()
 	{
 		// make sure that the form is clean
-		$('#'+this.id+'_btnRemove').attr('disabled','disabled');
+		$('#'+this.id+'_btnRemove').prop('disabled','disabled');
 		$('#'+this.id+'_linksToRemove').val('');
 	};
 	
@@ -49,7 +49,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	
 	this.Search = function()
 	{
-		if($('#'+me.id).attr('disabled')) return; // Disabled, do nothing
+		if($('#'+me.id).prop('disabled')) return; // Disabled, do nothing
 		var value = $('#'+me.id).val(); // Current value
 		
 		// Query the server to get the form to search for target objects
@@ -140,7 +140,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		}
 		else
 		{
-			okBtn.attr('disabled', 'disabled');
+			okBtn.prop('disabled', 'disabled');
 		}
 	};
 	
@@ -303,7 +303,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 
 	this.CreateObject = function(oWizHelper)
 	{
-		if($('#'+me.id).attr('disabled')) return; // Disabled, do nothing
+		if($('#'+me.id).prop('disabled')) return; // Disabled, do nothing
 		// Query the server to get the form to create a target object
 		if (me.bSelectMode)
 		{
@@ -351,7 +351,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	
 	this.CloseCreateObject = function()
 	{
-		$('#ac_create_'+me.id).dialog( "close" );console.log('closecreateobj')
+		$('#ac_create_'+me.id).dialog( "close" );
 	};
 	
 	this.OnCloseCreateObject = function()
@@ -367,7 +367,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#label_'+me.id).focus();
 		$('#ac_create_'+me.id).dialog("destroy");
 		$('#ac_create_'+me.id).remove();
-		$('#ajax_'+me.id).html('');console.log('onclosecreateobj')
+		$('#ajax_'+me.id).html('');
 	};
 	
 	this.DoCreateObject = function()
@@ -453,10 +453,10 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	
 	this.Update = function()
 	{
-		if ($('#'+me.id).attr('disabled'))
+		if ($('#'+me.id).prop('disabled'))
 		{
 			$('#v_'+me.id).html('');
-			$('#label_'+me.id).attr('disabled', 'disabled');
+			$('#label_'+me.id).prop('disabled', 'disabled');
 			$('#label_'+me.id).css({'background': 'transparent'});
 			$('#mini_add_'+me.id).hide();
 			$('#mini_tree_'+me.id).hide();
