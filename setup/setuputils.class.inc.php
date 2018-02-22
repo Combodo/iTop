@@ -50,11 +50,11 @@ class CheckResult
 class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
-	const PHP_MIN_VERSION = '5.6.0';
-	const MYSQL_MIN_VERSION = '5.5.3';
+	const PHP_MIN_VERSION = '5.6.0'; // 5.6 will be supported since the end of 2018 (see http://php.net/supported-versions.php)
+	const MYSQL_MIN_VERSION = '5.5.3'; // 5.5 branch that is shipped with most distribution, and 5.5.3 to have utf8mb4 (see N°942)
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
-	const PHP_NEXT_MIN_VERSION = '5.6.0'; // 5.6 will be supported since the end of 2018 (see http://php.net/supported-versions.php)
-	const MYSQL_NEXT_MIN_VERSION = '5.5.3'; // 5.5 branch that is shipped with most distribution, and 5.5.3 to have utf8mb4 (see N°942)
+	const PHP_NEXT_MIN_VERSION = ''; // no new PHP requirement for now in iTop 2.6
+	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for now in iTop 2.6
 	// -- First recent version that is not yet validated by Combodo (warning)
 	const PHP_NOT_VALIDATED_VERSION = '7.2.0';
 
@@ -352,15 +352,18 @@ class SetupUtils
 				"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
 
 
-			if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>='))
+			if (!empty(self::PHP_NEXT_MIN_VERSION))
 			{
-				$aResult[] = new CheckResult(CheckResult::INFO,
-					"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
-			}
-			else
-			{
-				$aResult[] = new CheckResult(CheckResult::WARNING,
-					"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>='))
+				{
+					$aResult[] = new CheckResult(CheckResult::INFO,
+						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+				}
+				else
+				{
+					$aResult[] = new CheckResult(CheckResult::WARNING,
+						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+				}
 			}
 
 			if (version_compare($sPhpVersion, self::PHP_NOT_VALIDATED_VERSION, '>='))
@@ -1244,15 +1247,18 @@ EOF
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO,
 				"Current MySQL version ($sDBVersion), greater than minimum required version (".self::MYSQL_MIN_VERSION.")");
 
-			if (version_compare($sDBVersion, self::MYSQL_NEXT_MIN_VERSION, '>='))
+			if (!empty(self::MYSQL_NEXT_MIN_VERSION))
 			{
-				$aResult['checks'][] = new CheckResult(CheckResult::INFO,
-					"Current MySQL version ($sDBVersion), greater than minimum required version for next ".ITOP_APPLICATION." release (".self::MYSQL_NEXT_MIN_VERSION.")");
-			}
-			else
-			{
-				$aResult['checks'][] = new CheckResult(CheckResult::WARNING,
-					"Warning : Current MySQL version is $sDBVersion, minimum required version for next ".ITOP_APPLICATION." release will be ".self::MYSQL_NEXT_MIN_VERSION);
+				if (version_compare($sDBVersion, self::MYSQL_NEXT_MIN_VERSION, '>='))
+				{
+					$aResult['checks'][] = new CheckResult(CheckResult::INFO,
+						"Current MySQL version ($sDBVersion), greater than minimum required version for next ".ITOP_APPLICATION." release (".self::MYSQL_NEXT_MIN_VERSION.")");
+				}
+				else
+				{
+					$aResult['checks'][] = new CheckResult(CheckResult::WARNING,
+						"Warning : Current MySQL version is $sDBVersion, minimum required version for next ".ITOP_APPLICATION." release will be ".self::MYSQL_NEXT_MIN_VERSION);
+				}
 			}
 
 			return true;
