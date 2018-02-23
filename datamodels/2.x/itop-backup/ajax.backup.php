@@ -40,8 +40,8 @@ try
 		case 'backup':
 		require_once(APPROOT.'/application/startup.inc.php');
 		require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-		LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
-
+		LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+		ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
 		$oPage = new ajax_page("");
 		$oPage->no_cache();
 		$oPage->SetContentType('text/html');
@@ -70,7 +70,8 @@ try
 		case 'restore_get_token':
 		require_once(APPROOT.'/application/startup.inc.php');
 		require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-		LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
+		LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+		ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
 
 		$oPage = new ajax_page("");
 		$oPage->no_cache();
@@ -166,7 +167,8 @@ EOF
 		case 'download':
 		require_once(APPROOT.'/application/startup.inc.php');
 		require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-		LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
+		LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+		ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
 
 		if (utils::GetConfig()->Get('demo_mode'))
 		{

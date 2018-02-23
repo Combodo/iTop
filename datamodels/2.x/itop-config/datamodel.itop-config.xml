@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5">
+  <menus>
+    <menu id="ConfigEditor" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>50</rank>
+      <parent>AdminTools</parent>
+      <url>config.php</url>
+      <enable_class>ResourceAdminMenu</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
+  </menus>
+</itop_design>

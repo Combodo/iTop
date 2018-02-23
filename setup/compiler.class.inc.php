@@ -740,7 +740,7 @@ EOF
 			// Relative to the module
 			if ($bIsUrl)
 			{
-				$sPHP = "utils::GetAbsoluteUrlAppRoot().".self::QuoteForPHP($sModuleRelativeDir.''.$sPath);
+				$sPHP = "utils::GetAbsoluteUrlModulePage('$sModuleRelativeDir', ".self::QuoteForPHP($sPath).")";
 			}
 			else
 			{
@@ -1817,12 +1817,32 @@ EOF;
 		}
 
 		$fRank = (float) $oMenu->GetChildText('rank');
+		$sEnablePermission = 'UR_ALLOWED_YES';
+		if ($sEnableClass = $oMenu->GetChildText('enable_class'))
+		{
+			$sEnableAction = $oMenu->GetChildText('enable_action', 'UR_ACTION_MODIFY');
+			$sEnablePermission = $oMenu->GetChildText('enable_permission', 'UR_ALLOWED_YES');
+			$sEnableStimulus = $oMenu->GetChildText('enable_stimulus');
+			if ($sEnableStimulus != null)
+			{
+				$sOptionalEnableParams = ", '$sEnableClass', $sEnableAction, $sEnablePermission, '$sEnableStimulus'";
+			}
+			else
+			{
+				$sOptionalEnableParams = ", '$sEnableClass', $sEnableAction, $sEnablePermission, null";
+			}
+		}
+		else
+		{
+			$sOptionalEnableParams = ", null, UR_ACTION_MODIFY, UR_ALLOWED_YES, null";
+		}
+
 		switch($sMenuClass)
 		{
 		case 'WebPageMenuNode':
 			$sUrl = $oMenu->GetChildText('url');
 			$sUrlSpec = $this->PathToPHP($sUrl, $sModuleRelativeDir, true /* Url */);
-			$sNewMenu = "new WebPageMenuNode('$sMenuId', $sUrlSpec, $sParentSpec, $fRank);";
+			$sNewMenu = "new WebPageMenuNode('$sMenuId', $sUrlSpec, $sParentSpec, $fRank {$sOptionalEnableParams});";
 			break;
 
 		case 'DashboardMenuNode':
@@ -1855,11 +1875,11 @@ EOF;
 				}
 				$oXMLDoc->save($sTempTargetDir.'/'.$sModuleRelativeDir.'/'.$sFileName);
 			}
-			$sNewMenu = "new DashboardMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank);";
+			$sNewMenu = "new DashboardMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank {$sOptionalEnableParams});";
 			break;
 
 		case 'ShortcutContainerMenuNode':
-			$sNewMenu = "new ShortcutContainerMenuNode('$sMenuId', $sParentSpec, $fRank);";
+			$sNewMenu = "new ShortcutContainerMenuNode('$sMenuId', $sParentSpec, $fRank {$sOptionalEnableParams});";
 			break;
 
 		case 'OQLMenuNode':
@@ -1879,64 +1899,28 @@ EOF;
 				default:
 				$sSearchFormOpen = 'null'; // Actual open/close status depend on the config
 			}
-			$sSearchFormOpen = ($oMenu->GetChildText('search_form_open') == '') ? 'null' : 'false';
-			$sNewMenu = "new OQLMenuNode('$sMenuId', $sOQL, $sParentSpec, $fRank, $bSearch, $sSearchFormOpen);";
+			$sNewMenu = "new OQLMenuNode('$sMenuId', $sOQL, $sParentSpec, $fRank, $bSearch {$sOptionalEnableParams}, $sSearchFormOpen);";
 			break;
 
 		case 'NewObjectMenuNode':
 			$sClass = $oMenu->GetChildText('class');
-			$sNewMenu = "new NewObjectMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank);";
+			$sNewMenu = "new NewObjectMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank {$sOptionalEnableParams});";
 			break;
 
 		case 'SearchMenuNode':
 			$sClass = $oMenu->GetChildText('class');
-			$sNewMenu = "new SearchMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank);";
+			$sNewMenu = "new SearchMenuNode('$sMenuId', '$sClass', $sParentSpec, $fRank, null {$sOptionalEnableParams});";
 			break;
 
 		case 'TemplateMenuNode':
 			$sTemplateFile = $oMenu->GetChildText('template_file');
 			$sTemplateSpec = $this->PathToPHP($sTemplateFile, $sModuleRelativeDir);
-
-			if ($sEnableClass = $oMenu->GetChildText('enable_class'))
-			{
-				$sEnableAction = $oMenu->GetChildText('enable_action', 'null');
-				$sEnablePermission = $oMenu->GetChildText('enable_permission', 'UR_ALLOWED_YES');
-				$sEnableStimulus = $oMenu->GetChildText('enable_stimulus');
-				if ($sEnableStimulus != null)
-				{
-					$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission, '$sEnableStimulus');";
-				}
-				else
-				{
-					$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission);";
-				}
-			}
-			else
-			{
-				$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank);";
-			}
+			$sNewMenu = "new TemplateMenuNode('$sMenuId', $sTemplateSpec, $sParentSpec, $fRank {$sOptionalEnableParams});";
 			break;
 
 		case 'MenuGroup':
 		default:
-			if ($sEnableClass = $oMenu->GetChildText('enable_class'))
-			{
-				$sEnableAction = $oMenu->GetChildText('enable_action', 'null');
-				$sEnablePermission = $oMenu->GetChildText('enable_permission', 'UR_ALLOWED_YES');
-				$sEnableStimulus = $oMenu->GetChildText('enable_stimulus');
-				if ($sEnableStimulus != null)
-				{
-					$sNewMenu = "new $sMenuClass('$sMenuId', $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission, '$sEnableStimulus');";
-				}
-				else
-				{
-					$sNewMenu = "new $sMenuClass('$sMenuId', $fRank, '$sEnableClass', $sEnableAction, $sEnablePermission);";
-				}
-			}
-			else
-			{
-				$sNewMenu = "new $sMenuClass('$sMenuId', $fRank);";
-			}
+			$sNewMenu = "new $sMenuClass('$sMenuId', $fRank {$sOptionalEnableParams});";
 		}
 
 		$aPHPMenu = array("\$__comp_menus__['$sMenuId'] = $sNewMenu");

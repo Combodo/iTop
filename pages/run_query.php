@@ -27,11 +27,11 @@
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/itopwebpage.class.inc.php');
-
 require_once(APPROOT.'/application/startup.inc.php');
-
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
+
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+ApplicationMenu::CheckMenuIdEnabled('RunQueriesMenu');
 
 function ShowExamples($oP, $sExpression)
 {

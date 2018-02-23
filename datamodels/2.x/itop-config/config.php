@@ -24,12 +24,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once('../../approot.inc.php');
 require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'application/itopwebpage.class.inc.php');
-
 require_once(APPROOT.'application/startup.inc.php');
-
 require_once(APPROOT.'application/loginwebpage.class.inc.php');
 
 
@@ -81,7 +78,8 @@ function TestConfig($sContents, $oP)
 /////////////////////////////////////////////////////////////////////
 // Main program
 //
-LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+ApplicationMenu::CheckMenuIdEnabled('ConfigEditor');
 
 //$sOperation = utils::ReadParam('operation', 'menu');
 //$oAppContext = new ApplicationContext();

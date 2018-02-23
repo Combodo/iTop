@@ -254,8 +254,8 @@ abstract class User extends cmdbAbstractObject
 		return $this->oContactObject;
 	}
 
-	/*
-	* Overload the standard behavior
+	/**
+	* Overload the standard behavior.
 	*/	
 	public function DoCheckToWrite()
 	{
@@ -285,6 +285,12 @@ abstract class User extends cmdbAbstractObject
 		if ($oSet->Count() == 0)
 		{
 			$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:AtLeastOneProfileIsNeeded');
+		}
+		// Only administrators can manage administrators
+		if (UserRights::IsAdministrator($this) && !UserRights::IsAdministrator())
+		{
+
+			$this->m_aCheckIssues[] = Dict::Format('UI:Login:Error:AccessRestricted');
 		}
 	}
 

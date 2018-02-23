@@ -103,6 +103,94 @@
           <class id="RoutineChange"/>
         </classes>
       </group>
+      <group id="Notification" _delta="define">
+        <classes>
+          <!-- This class list is also present in AdminTools group -->
+          <class id="Trigger"/>
+          <class id="TriggerOnObject"/>
+          <class id="TriggerOnStateChange"/>
+          <class id="TriggerOnPortalUpdate"/>
+          <class id="TriggerOnStateEnter"/>
+          <class id="TriggerOnStateLeave"/>
+          <class id="TriggerOnObjectCreate"/>
+          <class id="TriggerOnThresholdReached"/>
+          <class id="lnkTriggerAction"/>
+          <class id="Action"/>
+          <class id="ActionNotification"/>
+          <class id="ActionEmail"/>
+        </classes>
+      </group>
+      <group id="User">
+        <classes>
+          <!-- This class list is also present in AdminTools group -->
+          <class id="User"/>
+          <class id="UserInternal"/>
+          <class id="URP_UserOrg"/>
+          <class id="URP_UserProfile"/>
+          <class id="UserExternal"/>
+          <class id="UserLDAP"/>
+          <class id="UserLocal"/>
+          <class id="URP_Profiles"/>
+        </classes>
+      </group>
+      <group id="Audit">
+        <classes>
+          <!-- This class list is also present in AdminTools group -->
+          <class id="AuditCategory"/>
+          <class id="AuditRule"/>
+          <class id="ResourceRunQueriesMenu"/>
+        </classes>
+      </group>
+      <group id="Query">
+        <classes>
+          <!-- This class list is also present in AdminTools group -->
+          <class id="Query"/>
+          <class id="QueryOQL"/>
+          <class id="ResourceRunQueriesMenu"/>
+        </classes>
+      </group>
+      <group id="SynchroData">
+        <classes>
+          <!-- This class list is also present in AdminTools group -->
+          <class id="SynchroDataSource"/>
+        </classes>
+      </group>
+      <group id="AdminTools">
+        <classes>
+          <class id="ResourceAdminMenu"/>
+          <class id="ResourceRunQueriesMenu"/>
+          <!-- Notification group -->
+          <class id="Trigger"/>
+          <class id="TriggerOnObject"/>
+          <class id="TriggerOnStateChange"/>
+          <class id="TriggerOnPortalUpdate"/>
+          <class id="TriggerOnStateEnter"/>
+          <class id="TriggerOnStateLeave"/>
+          <class id="TriggerOnObjectCreate"/>
+          <class id="TriggerOnThresholdReached"/>
+          <class id="lnkTriggerAction"/>
+          <class id="Action"/>
+          <class id="ActionNotification"/>
+          <class id="ActionEmail"/>
+          <!-- User group -->
+          <class id="User"/>
+          <class id="UserInternal"/>
+          <class id="URP_UserOrg"/>
+          <class id="URP_UserProfile"/>
+          <class id="UserExternal"/>
+          <class id="UserLDAP"/>
+          <class id="UserLocal"/>
+          <class id="URP_Profiles"/>
+          <!-- Audit group -->
+          <class id="AuditCategory"/>
+          <class id="AuditRule"/>
+          <!-- Query group -->
+          <class id="Query"/>
+          <class id="QueryOQL"/>
+          <!-- SynchroData group -->
+          <class id="SynchroDataSource"/>
+        </classes>
+      </group>
     </groups>
     <profiles>
       <profile id="3" _delta="define">

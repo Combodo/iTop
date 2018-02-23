@@ -38,7 +38,7 @@ abstract class Trigger extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "grant_by_profile,core/cmdb",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
@@ -97,7 +97,7 @@ abstract class TriggerOnObject extends Trigger
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "grant_by_profile,core/cmdb",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
@@ -194,7 +194,7 @@ class TriggerOnPortalUpdate extends TriggerOnObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,application",
+			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
@@ -220,7 +220,7 @@ abstract class TriggerOnStateChange extends TriggerOnObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "grant_by_profile,core/cmdb",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
@@ -249,7 +249,7 @@ class TriggerOnStateEnter extends TriggerOnStateChange
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,application",
+			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
@@ -277,7 +277,7 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,application",
+			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
@@ -305,7 +305,7 @@ class TriggerOnObjectCreate extends TriggerOnObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,application",
+			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
@@ -333,7 +333,7 @@ class lnkTriggerAction extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,application",
+			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "",
 			"state_attcode" => "",
@@ -366,7 +366,7 @@ class TriggerOnThresholdReached extends TriggerOnObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,application",
+			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",

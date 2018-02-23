@@ -718,6 +718,7 @@ try
 	$sMode = utils::ReadParam('mode', '');
 
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+	ApplicationMenu::CheckMenuIdEnabled('ExportMenu');
 
 	ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 	

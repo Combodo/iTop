@@ -39,7 +39,7 @@ abstract class Action extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "grant_by_profile,core/cmdb",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -103,7 +103,7 @@ abstract class ActionNotification extends Action
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb",
+			"category" => "grant_by_profile,core/cmdb",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -136,7 +136,7 @@ class ActionEmail extends ActionNotification
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,application",
+			"category" => "grant_by_profile,core/cmdb,application",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",

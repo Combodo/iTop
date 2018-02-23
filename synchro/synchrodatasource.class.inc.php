@@ -35,7 +35,7 @@ class SynchroDataSource extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,view_in_gui,grant_by_profile",
 			"key_type" => "autoincrement",
 			"name_attcode" => array('name'),
 			"state_attcode" => "",

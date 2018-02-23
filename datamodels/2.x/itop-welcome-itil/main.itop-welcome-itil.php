@@ -16,8 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-
-// Add the standard menus
+// Add the standard menus (done in XML)
 /*
  * +--------------------+
  * | Welcome            |
@@ -28,7 +27,7 @@
  * +--------------------+
  * 		CSV Import
  * +--------------------+
- * | Admin Tools        | << Only present if the user is an admin
+ * | Admin Tools        |
  * +--------------------+
  *		User Accounts
  *		Profiles
@@ -38,29 +37,6 @@
  *		Data Model
  *		Universal Search
  */
-
-
-class ItopWelcome extends ModuleHandlerAPI
-{
-	public static function OnMenuCreation()
-	{
-		// Add the admin menus
-		if (UserRights::IsAdministrator())
-		{
-			$oAdminMenu = new MenuGroup('AdminTools', 80 /* fRank */);
-			new OQLMenuNode('UserAccountsMenu', 'SELECT User', $oAdminMenu->GetIndex(), 1 /* fRank */,true);
-			new OQLMenuNode('ProfilesMenu', 'SELECT URP_Profiles', $oAdminMenu->GetIndex(), 2 /* fRank */);
-			new WebPageMenuNode('NotificationsMenu', utils::GetAbsoluteUrlAppRoot().'pages/notifications.php', $oAdminMenu->GetIndex(), 3 /* fRank */);
-			new OQLMenuNode('AuditCategories', 'SELECT AuditCategory', $oAdminMenu->GetIndex(), 4 /* fRank */);
-			new WebPageMenuNode('RunQueriesMenu', utils::GetAbsoluteUrlAppRoot().'pages/run_query.php', $oAdminMenu->GetIndex(), 8 /* fRank */);
-			new OQLMenuNode('QueryMenu', 'SELECT Query', $oAdminMenu->GetIndex(), 8.5 /* fRank */, true);
-			new WebPageMenuNode('ExportMenu', utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?interactive=1', $oAdminMenu->GetIndex(), 9 /* fRank */);
-			new WebPageMenuNode('DataModelMenu', utils::GetAbsoluteUrlAppRoot().'pages/schema.php', $oAdminMenu->GetIndex(), 10 /* fRank */);
-			new WebPageMenuNode('UniversalSearchMenu', utils::GetAbsoluteUrlAppRoot().'pages/UniversalSearch.php', $oAdminMenu->GetIndex(), 11 /* fRank */);
-            new OQLMenuNode('DataSources', 'SELECT SynchroDataSource', $oAdminMenu->GetIndex(), 12 /* fRank */, true);
-		}
-	}
-}
 
 /**
  * Direct end-users to the standard Portal application

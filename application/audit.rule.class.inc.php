@@ -35,7 +35,7 @@ class AuditRule extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "application",
+			"category" => "application, grant_by_profile",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",

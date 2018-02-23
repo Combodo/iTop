@@ -37,17 +37,19 @@ require_once(APPROOT.'application/loginwebpage.class.inc.php');
 /////////////////////////////////////////////////////////////////////
 // Main program
 //
-LoginWebPage::DoLogin(true); // Check user rights and prompt if needed (must be admin)
+LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+ApplicationMenu::CheckMenuIdEnabled('BackupStatus');
 
 //$sOperation = utils::ReadParam('operation', 'menu');
 //$oAppContext = new ApplicationContext();
 
-$oP = new iTopWebPage(Dict::S('bkp-status-title'));
-$oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 
 
 try
 {
+	$oP = new iTopWebPage(Dict::S('bkp-status-title'));
+	$oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
+
 	$oP->add("<h1>".Dict::S('bkp-status-title')."</h1>");
 
 	if (MetaModel::GetConfig()->Get('demo_mode'))
@@ -93,7 +95,7 @@ try
 	}
 	foreach($aOutput as $sLine)
 	{
-		//echo 'Info - mysqldump -V said: '.$sLine;
+		IssueLog::Info("$sCommand said: $sLine");
 	}
 	$oP->p($sMySqlDump);
 
@@ -394,6 +396,7 @@ EOF
 }
 catch(Exception $e)
 {
+	$oP = new iTopWebPage(Dict::S('bkp-status-title'));
 	$oP->p('<b>'.$e->getMessage().'</b>');
 }
 

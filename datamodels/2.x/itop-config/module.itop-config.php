@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-    'itop-config/2.4.0',
+    'itop-config/2.4.1',
 	array(
 		// Identification
 		//
@@ -12,31 +12,22 @@ SetupWebPage::AddModule(
 
 		// Setup
 		//
-		'dependencies' => array(
-		),
+		'dependencies' => array(),
 		'mandatory' => true,
 		'visible' => false,
 
 		// Components
 		//
 		'datamodel' => array(
-			'main.itop-config.php',
-			//'model.itop-config.php',
+			'model.itop-config.php',
 		),
-		'webservice' => array(
-			//'webservices.itop-config.php',
-		),
+		'webservice' => array(),
 		'dictionary' => array(
 			'en.dict.itop-config.php',
 			'fr.dict.itop-config.php',
-			//'de.dict.itop-config.php',
 		),
-		'data.struct' => array(
-			//'data.struct.itop-config.xml',
-		),
-		'data.sample' => array(
-			//'data.sample.itop-config.xml',
-		),
+		'data.struct' => array(),
+		'data.sample' => array(),
 		
 		// Documentation
 		//
@@ -45,7 +36,6 @@ SetupWebPage::AddModule(
 
 		// Default settings
 		//
-		'settings' => array(
-		),
+		'settings' => array(),
 	)
 );
