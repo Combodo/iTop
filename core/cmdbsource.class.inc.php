@@ -345,7 +345,7 @@ class CMDBSource
 	}
 
 	/**
-	 * @param $sVarName
+	 * @param string $sVarName
 	 *
 	 * @return bool
 	 * @throws \MySQLException
@@ -356,7 +356,7 @@ class CMDBSource
 	{
 		try
 		{
-			$sResult = self::QueryToScalarCol("SHOW SESSION STATUS LIKE '$sVarName'", 1);
+			$sResult = self::QueryToScalar("SHOW SESSION STATUS LIKE '$sVarName'", 1);
 		}
 		catch (MySQLQueryHasNoResultException $e)
 		{
