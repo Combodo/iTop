@@ -722,6 +722,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Schema:DisplaySelector/Label' => 'Label~~',
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'Escriba los primeros 3 caracteres...',
 	'UI:Edit:TestQuery' => 'Consulta de Prueba',
 	'UI:Combo:SelectValue' => '--- seleccione un valor ---',

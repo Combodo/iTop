@@ -601,6 +601,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Schema:DisplaySelector/Label' => 'Label~~',
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'İlk 3 karakteri giriniz...',
 	'UI:Combo:SelectValue' => '--- değer seçiniz ---',
 	'UI:Label:SelectedObjects' => 'Seçilen nesneler: ',

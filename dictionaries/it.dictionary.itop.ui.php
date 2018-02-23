@@ -627,6 +627,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Schema:DisplaySelector/Label' => 'Label~~',
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => '',
 	'UI:Combo:SelectValue' => '--- seleziona un valore ---',
 	'UI:Label:SelectedObjects' => 'oggetti selezionati: ',

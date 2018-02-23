@@ -721,6 +721,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Schema:DisplaySelector/Label' => 'Label~~',
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
     'UI:LinksWidget:Autocomplete+' => 'Zadejte první tři znaky...',
     'UI:Edit:TestQuery' => 'Otestovat dotaz',
     'UI:Combo:SelectValue' => '--- vyberte hodnotu ---',

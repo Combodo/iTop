@@ -722,6 +722,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Schema:DisplaySelector/Label' => 'Label~~',
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'Typ de eerste 3 karakters...',
 	'UI:Edit:TestQuery' => 'Test query',
 	'UI:Combo:SelectValue' => '--- selecteer een waarde ---',

@@ -696,6 +696,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Schema:DisplaySelector/Label' => 'Label~~',
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'Введите первые 3 символа...',
 	'UI:Edit:TestQuery' => 'Проверить запрос',
 	'UI:Combo:SelectValue' => '--- выбор значения ---',

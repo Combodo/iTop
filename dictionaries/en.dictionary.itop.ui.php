@@ -725,6 +725,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Schema:DisplaySelector/Label' => 'Label~~',
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'Type the first 3 characters...',
 	'UI:Edit:TestQuery' => 'Test query',
 	'UI:Combo:SelectValue' => '--- select a value ---',

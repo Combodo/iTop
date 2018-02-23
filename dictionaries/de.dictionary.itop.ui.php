@@ -564,6 +564,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Schema:DisplaySelector/Label' => 'Label~~',
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'Geben Sie die ersten 3 Buchstaben ein...',
 	'UI:Edit:TestQuery' => 'Query testen',
 	'UI:Combo:SelectValue' => '--- wählen Sie einen Wert ---',

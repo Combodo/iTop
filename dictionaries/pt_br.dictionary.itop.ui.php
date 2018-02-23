@@ -714,6 +714,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Schema:DisplaySelector/Label' => 'Label~~',
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'Tipo os 3 primeiro caracteres...',
 	'UI:Edit:TestQuery' => 'Testar consulta',
 	'UI:Combo:SelectValue' => '--- selecione um valor ---',

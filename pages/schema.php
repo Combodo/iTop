@@ -221,6 +221,30 @@ function DisplayClassesList($oPage, $sContext)
 
     $oPage->add("<label for='search-model'>" . Dict::S('UI:Schema:ClassFilter') ."</label><input id='search-model'/> ");
 	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
+	$oPage->add_ready_script(
+		<<<EOF
+        $("#search-model").result(function(){
+		   	$(this).trigger(jQuery.Event('input'));
+		});
+		$("#search-model").on('input', function() {
+			var search_result = [];
+			$("#ClassesList").find("li").each(function(){
+				if( ! ~$(this).children("a").text().toLowerCase().indexOf($("#search-model").val().toLowerCase())){
+					$(this).hide();
+				}
+				else{
+					search_result.push($(this));
+				}
+			});
+			search_result.forEach(function(e){
+				e.show();
+				e.find('ul > li').show();
+				e.parents().show();
+			});
+		});
+EOF
+
+	);
 	// Get all the "root" classes for display
 	$aRootClasses = array();
 	foreach(MetaModel::GetClasses() as $sClassName)
@@ -716,7 +740,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
         $aOrigins[$sOrigin] = true;
         $sAllowedValues = "";
 		$sMoreInfo = "";
-
+		$sDefaultNullValue = "";
 		$aCols = array();
 		foreach($oAttDef->GetSQLColumns() as $sCol => $sFieldDesc)
 		{
@@ -726,7 +750,19 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		{
 
 			$aMoreInfo = array();
-			$aMoreInfo[] = $oAttDef->IsNullAllowed() ? Dict::S('UI:Schema:NullAllowed') : Dict::S('UI:Schema:NullNotAllowed');
+			if($oAttDef->IsNullAllowed())
+			{
+				$aMoreInfo[] = Dict::S('UI:Schema:NullAllowed');
+				$sDefaultNullValue = ($oAttDef->GetNullValue() !== null ? Dict::Format('UI:Schema:DefaultNullValue', $oAttDef->GetNullValue()) : "" );
+			}
+			else
+			{
+				$aMoreInfo[] = Dict::S('UI:Schema:NullNotAllowed');
+			}
+			if($oAttDef->GetDefaultValue())
+			{
+				$aMoreInfo[] = Dict::Format("UI:Schema:Default_Description", $oAttDef->GetDefaultValue());
+			}
 			$sMoreInfo .= implode(', ', $aMoreInfo);
 		}
         $sAttrCode = $oAttDef->GetCode();
@@ -765,7 +801,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 							'origincolor' => "<span class=\"originColor" . $sOrigin ."\"></span>",
             				'origin' => "<span id=\"origin" . $sAttrCode ."\">$sOrigin</span>",
 							'values' => $sAllowedValues,
-							'moreinfo' => $sMoreInfo);
+							'moreinfo' => "<span id=\"moreinfo" . $sAttrCode . "\"> $sMoreInfo</span>");
 		//tooltip construction
         $oPage->add_ready_script(
             <<<EOF
@@ -780,6 +816,9 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 				}
 				if( !$sIsEnumValues && '$sAllowedValuesEscpd' != ''){
 					$('#values$sAttrCode').qtip( { content: '$sAllowedValuesEscpd', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+				}
+				if('$sDefaultNullValue' != ''){
+					$('#moreinfo$sAttrCode').parent().qtip( { content: '$sDefaultNullValue', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
 				}
 EOF
 
@@ -866,19 +905,19 @@ function DisplayGranularityDisplayer($oPage){
 					$('.attrCode').show();
 					$('.attrLabel').show();
 					$('.parenthesis').show();
-					$("#search-model").autocomplete(autocompleteClassLabelAndCode);
+					$("#search-model").autocomplete(autocompleteClassLabelAndCode, {scroll:true, matchContains:true});
 				break;
 				case 'label':
 					$('.attrCode').hide();
 					$('.attrLabel').show();
 					$('.parenthesis').hide();
-					$("#search-model").autocomplete(autocompleteClassLabel);
+					$("#search-model").autocomplete(autocompleteClassLabel, {scroll:true, matchContains:true});
 				break;
 				case 'code':
 					$('.attrCode').show();
 					$('.attrLabel').hide();
 					$('.parenthesis').hide();
-					$("#search-model").autocomplete(autocompleteClassCode);
+					$("#search-model").autocomplete(autocompleteClassCode, {scroll:true, matchContains:true});
 				break;
 			}
 			SetUserPreference("datamodel_viewer_display_granularity", $('#displaySelector').val(), true);
@@ -947,6 +986,12 @@ switch($operation)
 	//if we want to see class details & class is given then display it, otherwise act default (just show the class list)
 	if($sClass != '')
 	{
+		$oPage->add_ready_script(
+			<<<EOF
+$('#search-model').val('$sClass');
+$('#search-model').trigger("input");
+EOF
+);
 		DisplayClassDetails($oPage, $sClass, $sContext);
 		break;
 	}
@@ -963,21 +1008,6 @@ $oPage->add_ready_script(
 		west : {size: "20%", minSize : 200,paneSize : 600}
 		});
 		// Layout
-		   $("#search-model").result(function(){
-		   	$(this).trigger(jQuery.Event('input'));
-		   });
-			$("#search-model").on('input', function() {
-				$("#ClassesList").find("li").each(function(){
-					if( ! ~$(this).children("a").text().toLowerCase().indexOf($("#search-model").val().toLowerCase())){
-						$(this).hide();
-					}
-					else{
-						$(this).show();
-						$(this).parents().show();
-
-					}
-				});
-			});
 EOF
 
 );

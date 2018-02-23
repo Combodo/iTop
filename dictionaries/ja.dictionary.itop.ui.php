@@ -563,6 +563,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Schema:DisplaySelector/Label' => 'Label~~',
 	'UI:Schema:DisplaySelector/Code' => 'Code~~',
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
+	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => '最初の3文字をタイプしてください...',
 	'UI:Edit:TestQuery' => 'Test query',
 	'UI:Combo:SelectValue' => '--- 値を選んでください ---',
