@@ -370,8 +370,8 @@ abstract class User extends cmdbAbstractObject
 		if (!$bEditMode)
 		{
 			$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
-			$this->DoShowGrantSumary($oPage, 'bizmodel');
-	
+			$this->DoShowGrantSumary($oPage, 'bizmodel,grant_by_profile');
+
 			// debug
 			if (false)
 			{

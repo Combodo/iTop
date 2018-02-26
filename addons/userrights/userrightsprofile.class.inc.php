@@ -137,11 +137,8 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		$oUserRights = UserRights::GetModuleInstance();
 	
 		$aDisplayData = array();
-		foreach (MetaModel::GetClasses('bizmodel') as $sClass)
+		foreach (MetaModel::GetClasses('bizmodel,grant_by_profile') as $sClass)
 		{
-			// Skip non instantiable classes
-			if (MetaModel::IsAbstract($sClass)) continue;
-
 			$aStimuli = array();
 			foreach (MetaModel::EnumStimuli($sClass) as $sStimulusCode => $oStimulus)
 			{
@@ -183,7 +180,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		if (!$bEditMode)
 		{
 			$oPage->SetCurrentTab(Dict::S('UI:UserManagement:GrantMatrix'));
-			$this->DoShowGrantSumary($oPage);		
+			$this->DoShowGrantSumary($oPage);
 		}
 	}
 
