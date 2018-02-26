@@ -58,7 +58,7 @@ class SetupUtils
 	// -- First recent version that is not yet validated by Combodo (warning)
 	const PHP_NOT_VALIDATED_VERSION = '7.2.0';
 
-	const MIN_MEMORY_LIMIT = 32 * 1024 * 1024;
+	const MIN_MEMORY_LIMIT = 33554432; // 32 * 1024 * 1024 - we can use expressions in const since PHP 5.6 but we are in the setup !
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
 
 	/**
@@ -352,7 +352,8 @@ class SetupUtils
 				"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
 
 
-			if (!empty(self::PHP_NEXT_MIN_VERSION))
+			$sPhpNextMinVersion = self::PHP_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
+			if (!empty($sPhpNextMinVersion))
 			{
 				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>='))
 				{
@@ -1247,7 +1248,8 @@ EOF
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO,
 				"Current MySQL version ($sDBVersion), greater than minimum required version (".self::MYSQL_MIN_VERSION.")");
 
-			if (!empty(self::MYSQL_NEXT_MIN_VERSION))
+			$sMySqlNextMinVersion = self::MYSQL_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
+			if (!empty($sMySqlNextMinVersion))
 			{
 				if (version_compare($sDBVersion, self::MYSQL_NEXT_MIN_VERSION, '>='))
 				{
