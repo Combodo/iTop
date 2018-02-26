@@ -71,7 +71,6 @@ class iTopMutex
 		$this->sDBTlsCaPath = is_null($sDBTlsCaPath) ? $oConfig->Get('db_tls.capath') : $sDBTlsCaPath;
 		$this->sDBTlsCipher = is_null($sDBTlsCypher) ? $oConfig->Get('db_tls.cipher') : $sDBTlsCypher;
 
-		$this->sName = 'itop.'.$sName;
 		$this->sName = $sName;
 		if (substr($sName, -strlen($this->sDBName.$sDBSubname)) != $this->sDBName.$sDBSubname)
 		{
