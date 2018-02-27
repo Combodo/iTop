@@ -175,25 +175,18 @@ function CronExec($oP, $aProcesses, $bVerbose)
 		/** @var BackgroundTask $oTask */
 	$oTask = $oTasks->Fetch())
 	{
-		if ($oTask->Get('status') != 'active')
-		{
-			continue;
-		}
-		$oNow = new DateTime();
-		if ($oTask->Get('next_run_date') > $oNow->format('Y-m-d H:i:s'))
-		{
-			continue;
-		}
-
 		$sTaskClass = $oTask->Get('class_name');
 		// The BackgroundTask can point to a non existing class : this could happen for example if an extension has been removed
 		// we could also try/catch when instanciating ReflectionClass, but sometimes old recipes are good too ;)
 		if (!class_exists($sTaskClass))
 		{
-			$oP->p("ERROR : the background task was paused because it references the non existing class '$sTaskClass'");
+			if ($oTask->Get('status') == 'active')
+			{
+				$oP->p("ERROR : the background task was paused because it references the non existing class '$sTaskClass'");
 
-			$oTask->Set('status', 'paused');
-			$oTask->DBUpdate();
+				$oTask->Set('status', 'paused');
+				$oTask->DBUpdate();
+			}
 
 			continue;
 		}
@@ -204,14 +197,19 @@ function CronExec($oP, $aProcesses, $bVerbose)
 			continue;
 		}
 
-		if ($bVerbose)
+		$oNow = new DateTime();
+		if (($oTask->Get('status') != 'active')
+			|| ($oTask->Get('next_run_date') > $oNow->format('Y-m-d H:i:s')))
 		{
-			$oP->p("Resetting the next run date for $sTaskClass");
+			if ($bVerbose)
+			{
+				$oP->p("Resetting the next run date for $sTaskClass");
+			}
+			$oProcess = $aProcesses[$sTaskClass];
+			$oNextOcc = $oProcess->GetNextOccurrence();
+			$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
+			$oTask->DBUpdate();
 		}
-		$oProcess = $aProcesses[$sTaskClass];
-		$oNextOcc = $oProcess->GetNextOccurrence();
-		$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
-		$oTask->DBUpdate();
 	}
 
 	$iCronSleep = MetaModel::GetConfig()->Get('cron_sleep');
