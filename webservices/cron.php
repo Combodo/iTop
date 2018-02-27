@@ -186,7 +186,9 @@ function CronExec($oP, $aProcesses, $bVerbose)
 		}
 
 		$sTaskClass = $oTask->Get('class_name');
-		if (!class_exists($sTaskClass)) // we could also try/catch when instanciating ReflectionClass, but sometimes old recipes are good too ;)
+		// The BackgroundTask can point to a non existing class : this could happen for example if an extension has been removed
+		// we could also try/catch when instanciating ReflectionClass, but sometimes old recipes are good too ;)
+		if (!class_exists($sTaskClass))
 		{
 			$oP->p("ERROR : the background task was paused because it references the non existing class '$sTaskClass'");
 
