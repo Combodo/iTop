@@ -169,23 +169,47 @@ function CronExec($oP, $aProcesses, $bVerbose)
 
 	// Reset the next planned execution to take into account new settings
 	$oSearch = new DBObjectSearch('BackgroundTask');
+	/** @var DBObjectSet $oTasks */
 	$oTasks = new DBObjectSet($oSearch);
-	while ($oTask = $oTasks->Fetch())
+	while (
+		/** @var BackgroundTask $oTask */
+	$oTask = $oTasks->Fetch())
 	{
-		$sTaskClass = $oTask->Get('class_name');
-		$oRefClass = new ReflectionClass($sTaskClass);
-		$oNow = new DateTime();
-		if ($oRefClass->implementsInterface('iScheduledProcess') && (($oTask->Get('status') != 'active') || ($oTask->Get('next_run_date') > $oNow->format('Y-m-d H:i:s'))))
+		if ($oTask->Get('status') != 'active')
 		{
-			if ($bVerbose)
-			{
-				$oP->p("Resetting the next run date for $sTaskClass");
-			}
-			$oProcess = $aProcesses[$sTaskClass];
-			$oNextOcc = $oProcess->GetNextOccurrence();
-			$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
-			$oTask->DBUpdate();
+			continue;
 		}
+		$oNow = new DateTime();
+		if ($oTask->Get('next_run_date') > $oNow->format('Y-m-d H:i:s'))
+		{
+			continue;
+		}
+
+		$sTaskClass = $oTask->Get('class_name');
+		if (!class_exists($sTaskClass)) // we could also try/catch when instanciating ReflectionClass, but sometimes old recipes are good too ;)
+		{
+			$oP->p("ERROR : the background task was paused because it references the non existing class '$sTaskClass'");
+
+			$oTask->Set('status', 'paused');
+			$oTask->DBUpdate();
+
+			continue;
+		}
+
+		$oRefClass = new ReflectionClass($sTaskClass);
+		if (!$oRefClass->implementsInterface('iScheduledProcess'))
+		{
+			continue;
+		}
+
+		if ($bVerbose)
+		{
+			$oP->p("Resetting the next run date for $sTaskClass");
+		}
+		$oProcess = $aProcesses[$sTaskClass];
+		$oNextOcc = $oProcess->GetNextOccurrence();
+		$oTask->Set('next_run_date', $oNextOcc->format('Y-m-d H:i:s'));
+		$oTask->DBUpdate();
 	}
 
 	$iCronSleep = MetaModel::GetConfig()->Get('cron_sleep');
