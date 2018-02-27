@@ -634,7 +634,6 @@ class DBObjectSet implements iDBObjectSetIterator
 			$this->m_oSQLResult->free();
 			$this->m_oSQLResult = null;
 		}
-		$this->m_iNumTotalDBRows = null;
 
 		try
 		{
@@ -666,11 +665,12 @@ class DBObjectSet implements iDBObjectSetIterator
 		}
 
 		if ($this->m_oSQLResult === false) return;
-		
-		if (($this->m_iLimitCount == 0) && ($this->m_iLimitStart == 0))
+
+		if ((($this->m_iLimitCount == 0) || ($this->m_iLimitCount > $this->m_oSQLResult->num_rows)) && ($this->m_iLimitStart == 0))
 		{
 			$this->m_iNumTotalDBRows = $this->m_oSQLResult->num_rows;
 		}
+
 		$this->m_iNumLoadedDBRows = $this->m_oSQLResult->num_rows;
 	}
 
@@ -714,7 +714,7 @@ class DBObjectSet implements iDBObjectSetIterator
 
 			$aRow = CMDBSource::FetchArray($resQuery);
 			CMDBSource::FreeResult($resQuery);
-			$this->m_iNumTotalDBRows = $aRow['COUNT'];
+			$this->m_iNumTotalDBRows = intval($aRow['COUNT']);
 		}
 
 		return $this->m_iNumTotalDBRows + count($this->m_aAddedObjects); // Does it fix Trac #887 ??
