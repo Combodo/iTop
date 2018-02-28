@@ -172,53 +172,41 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		{
 		}
 
+		/** @var Config */
+		protected $oConfig;
+
+		// shortcuts used for log purposes
+		/** @var string */
 		protected $sDBHost;
+		/** @var int */
 		protected $iDBPort;
-		protected $sDBUser;
-		protected $sDBPwd;
+		/** @var string */
 		protected $sDBName;
+		/** @var string */
 		protected $sDBSubName;
 
 		/**
 		 * Connects to the database to backup
-		 * By default, connects to the current MetaModel (must be loaded)
 		 *
-		 * @param string sDBHost Database host server
-		 * @param string $sDBUser User login
-		 * @param string $sDBPwd User password
-		 * @param string $sDBName Database name
-		 * @param string $sDBSubName Prefix to the tables of itop in the database
+		 * @param Config $oConfig object containing the database configuration.<br>
+		 * If null then uses the default configuration ({@see MetaModel::GetConfig})
+		 *
+		 * @since 2.5 uses a Config object instead of passing each attribute (there were far too many with the addition of MySQL TLS parameters !)
 		 */
-		public function __construct($sDBHost = null, $sDBUser = null, $sDBPwd = null, $sDBName = null, $sDBSubName = null)
+		public function __construct($oConfig = null)
 		{
-			if (is_null($sDBHost))
+			if (is_null($oConfig))
 			{
 				// Defaulting to the current config
-				$sDBHost = MetaModel::GetConfig()->Get('db_host');
-				$sDBUser = MetaModel::GetConfig()->Get('db_user');
-				$sDBPwd = MetaModel::GetConfig()->Get('db_pwd');
-				$sDBName = MetaModel::GetConfig()->Get('db_name');
-				$sDBSubName = MetaModel::GetConfig()->Get('db_subname');
+				$oConfig = MetaModel::GetConfig();
 			}
 
-			// Compute the port (if present in the host name)
-			$aConnectInfo = explode(':', $sDBHost);
-			$sDBHostName = $aConnectInfo[0];
-			if (count($aConnectInfo) > 1)
-			{
-				$iDBPort = $aConnectInfo[1];
-			}
-			else
-			{
-				$iDBPort = null;
-			}
+			$this->oConfig = $oConfig;
 
-			$this->sDBHost = $sDBHostName;
-			$this->iDBPort = $iDBPort;
-			$this->sDBUser = $sDBUser;
-			$this->sDBPwd = $sDBPwd;
-			$this->sDBName = $sDBName;
-			$this->sDBSubName = $sDBSubName;
+			// init log variables
+			CMDBSource::InitServerAndPort($oConfig->Get('db_host'), $this->sDBHost, $this->iDBPort);
+			$this->sDBName = $oConfig->get('db_name');
+			$this->sDBSubName = $oConfig->get('db_subname');
 		}
 
 		protected $sMySQLBinDir = '';
@@ -249,8 +237,11 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 		/**
 		 * @deprecated 2.4.0 Zip files are limited to 4 Gb, use CreateCompressedBackup to create tar.gz files
+		 *
 		 * @param string $sZipFile
 		 * @param string|null $sSourceConfigFile
+		 *
+		 * @throws \BackupException
 		 */
 		public function CreateZip($sZipFile, $sSourceConfigFile = null)
 		{
@@ -284,6 +275,8 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		/**
 		 * @param string $sTargetFile Path and name, without the extension
 		 * @param string|null $sSourceConfigFile Configuration file to embed into the backup, if not the current one
+		 *
+		 * @throws \Exception
 		 */
 		public function CreateCompressedBackup($sTargetFile, $sSourceConfigFile = null)
 		{
@@ -301,9 +294,12 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 		/**
 		 * Copy files to store into the temporary folder, in addition to the SQL dump
+		 *
 		 * @param string $sSourceConfigFile
 		 * @param string $sTmpFolder
+		 *
 		 * @return array list of files to archive
+		 * @throws \Exception
 		 */
 		protected function PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder)
 		{
@@ -354,12 +350,16 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 		/**
 		 * Create a backup file
+		 *
+		 * @param string $sBackupFileName
+		 *
+		 * @throws \BackupException
 		 */
 		public function DoBackup($sBackupFileName)
 		{
 			$sHost = self::EscapeShellArg($this->sDBHost);
-			$sUser = self::EscapeShellArg($this->sDBUser);
-			$sPwd = self::EscapeShellArg($this->sDBPwd);
+			$sUser = self::EscapeShellArg($this->oConfig->Get('db_user'));
+			$sPwd = self::EscapeShellArg($this->oConfig->Get('db_pwd'));
 			$sDBName = self::EscapeShellArg($this->sDBName);
 
 			// Just to check the connection to the DB (better than getting the retcode of mysqldump = 1)
@@ -398,20 +398,16 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 			// Store the results in a temporary file
 			$sTmpFileName = self::EscapeShellArg($sBackupFileName);
-			if (is_null($this->iDBPort))
-			{
-				$sPortOption = '';
-			}
-			else
-			{
-				$sPortOption = '--port='.$this->iDBPort.' ';
-			}
+			$sPortOption = self::GetMysqliCliSingleOption('port', $this->iDBPort);
+
+			$sTlsOptions = self::GetMysqlCliTlsOptions($this->oConfig);
+
 			// Delete the file created by tempnam() so that the spawned process can write into it (Windows/IIS)
 			@unlink($sBackupFileName);
 			// Note: opt implicitely sets lock-tables... which cancels the benefit of single-transaction!
 			//       skip-lock-tables compensates and allows for writes during a backup
-			$sCommand = "$sMySQLDump --opt --skip-lock-tables --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser --password=$sPwd --result-file=$sTmpFileName $sDBName $sTables 2>&1";
-			$sCommandDisplay = "$sMySQLDump --opt --skip-lock-tables --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx --result-file=$sTmpFileName $sDBName $sTables";
+			$sCommand = "$sMySQLDump --opt --skip-lock-tables --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser --password=$sPwd $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+			$sCommandDisplay = "$sMySQLDump --opt --skip-lock-tables --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
 
 			// Now run the command for real
 			$this->LogInfo("Executing command: $sCommandDisplay");
@@ -449,6 +445,11 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 		/**
 		 * Helper to create a ZIP out of several files
+		 *
+		 * @param array $aFiles
+		 * @param string $sZipArchiveFile
+		 *
+		 * @throws \BackupException
 		 */
 		protected function DoZip($aFiles, $sZipArchiveFile)
 		{
@@ -498,6 +499,8 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 		/**
 		 * Helper to download the file directly from the browser
+		 *
+		 * @param string $sFile
 		 */
 		public function DownloadBackup($sFile)
 		{
@@ -520,7 +523,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		 */
 		protected function DBConnect()
 		{
-			$oConfig = MetaModel::GetConfig();
+			$oConfig = $this->oConfig;
 			$sServer = $oConfig->Get('db_host');
 			$sUser = $oConfig->Get('db_user');
 			$sPwd = $oConfig->Get('db_pwd');
@@ -556,6 +559,8 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 		/**
 		 * Helper to enumerate the tables of the database
+		 *
+		 * @throws \BackupException
 		 */
 		protected function EnumerateTables()
 		{
@@ -578,6 +583,51 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 				$aTables[] = $aRow[0];
 			}
 			return $aTables;
+		}
+
+
+		/**
+		 * @param Config $oConfig
+		 *
+		 * @return string TLS arguments for CLI programs such as mysqldump. Empty string if the config does not use TLS.
+		 *
+		 * @see https://dev.mysql.com/doc/refman/5.6/en/encrypted-connection-options.html
+		 * @since 2.5
+		 */
+		public static function GetMysqlCliTlsOptions($oConfig)
+		{
+			if (!CMDBSource::IsDbConnectionInConfigUsingTls($oConfig))
+			{
+				return '';
+			}
+
+			$sTlsOptions = '';
+			$sTlsOptions .= ' --ssl';
+
+			$sTlsOptions .= self::GetMysqliCliSingleOption('ssl-key', $oConfig->Get('db_tls.key'));
+			$sTlsOptions .= self::GetMysqliCliSingleOption('ssl-cert', $oConfig->Get('db_tls.cert'));
+			$sTlsOptions .= self::GetMysqliCliSingleOption('ssl-ca', $oConfig->Get('db_tls.ca'));
+
+			$sTlsOptions .= self::GetMysqliCliSingleOption('ssl-cipher', $oConfig->Get('db_tls.cipher'));
+			$sTlsOptions .= self::GetMysqliCliSingleOption('ssl-capath', $oConfig->Get('db_tls.capath'));
+
+			return $sTlsOptions;
+		}
+
+		/**
+		 * @param string $sCliArgName
+		 * @param string $sData
+		 *
+		 * @return string empty if data is empty, else argument in form of ' --cliargname=data'
+		 */
+		private static function GetMysqliCliSingleOption($sCliArgName, $sData)
+		{
+			if (empty($sData))
+			{
+				return;
+			}
+
+			return ' --'.$sCliArgName.'='.self::EscapeShellArg($sData);
 		}
 	}
 }

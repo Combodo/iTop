@@ -202,7 +202,7 @@ class CMDBSource
 		$sServer = null;
 		$iPort = null;
 		$bTlsEnabled = self::IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCa);
-		self::InitServerAndPort($sServer, $iPort);
+		self::InitServerAndPort(self::$m_sDBHost, $sServer, $iPort);
 
 		$iFlags = null;
 
@@ -255,14 +255,13 @@ class CMDBSource
 	}
 
 	/**
-	 * Initialize variables from the static attribute (containing "p:domain:port" syntax)
-	 *
-	 * @param string $sServer
-	 * @param int $iPort
+	 * @param string $sDbHost initial value ("p:domain:port" syntax)
+	 * @param string $sServer server variable to update
+	 * @param int $iPort port variable to update
 	 */
-	private static function InitServerAndPort(&$sServer, &$iPort)
+	public static function InitServerAndPort($sDbHost, &$sServer, &$iPort)
 	{
-		$aConnectInfo = explode(':', self::$m_sDBHost);
+		$aConnectInfo = explode(':', $sDbHost);
 
 		$bUsePersistentConnection = false;
 		if (strcasecmp($aConnectInfo[0], 'p') == 0)

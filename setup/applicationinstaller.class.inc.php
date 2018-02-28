@@ -177,10 +177,11 @@ class ApplicationInstaller
 					// __DB__-%Y-%m-%d
 					$sDestination = $aPreinstall['backup']['destination'];
 					$sSourceConfigFile = $aPreinstall['backup']['configuration_file'];
-					$aDBParams = $this->oParams->Get('database');
+					$aDBParams = $this->GetParamValues($this->oParams);
+					$oTempConfig = new Config();
+					$oTempConfig->UpdateFromParams($aDBParams);
 
-					self::DoBackup($aDBParams['server'], $aDBParams['user'], $aDBParams['pwd'], $aDBParams['name'],
-						$aDBParams['prefix'], $sDestination, $sSourceConfigFile);
+					self::DoBackup($oTempConfig, $sDestination, $sSourceConfigFile);
 
 					$aResult = array(
 						'status' => self::OK,
@@ -368,13 +369,13 @@ class ApplicationInstaller
 	}
 
 	/**
-	 * @param $oParams
+	 * @param array $oParams
 	 *
 	 * @return array to use with {@see Config::UpdateFromParams}
 	 */
 	private function GetParamValues($oParams)
 	{
-		$aDBParams = $this->oParams->Get('database');
+		$aDBParams = $oParams->Get('database');
 		$aParamValues = array(
 			'mode' => $oParams->Get('mode'),
 			'db_server' => $aDBParams['server'],
@@ -421,9 +422,18 @@ class ApplicationInstaller
 		return $sReport;
 	}
 
-	protected static function DoBackup($sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sBackupFileFormat, $sSourceConfigFile)
+	/**
+	 * @param Config $oConfig
+	 * @param string $sBackupFileFormat
+	 * @param string $sSourceConfigFile
+	 *
+	 * @throws \Exception
+	 *
+	 * @since 2.5 uses a {@link Config} object to store DB parameters
+	 */
+	protected static function DoBackup($oConfig, $sBackupFileFormat, $sSourceConfigFile)
 	{
-		$oBackup = new SetupDBBackup($sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix);
+		$oBackup = new SetupDBBackup($oConfig);
 		$sTargetFile = $oBackup->MakeName($sBackupFileFormat);
 		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
 	}
