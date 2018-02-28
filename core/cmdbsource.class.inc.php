@@ -217,7 +217,7 @@ class CMDBSource
 
 			if ($bTlsEnabled)
 			{
-				$iFlags = MYSQLI_CLIENT_SSL;
+				$iFlags = MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT; // instead of MYSQLI_CLIENT_SSL
 				$oMysqli->ssl_set($sTlsKey, $sTlsCert, $sTlsCa, $sTlsCaPath, $sTlsCipher);
 			}
 			$oMysqli->real_connect($sServer, $sUser, $sPwd, '', $iPort,
