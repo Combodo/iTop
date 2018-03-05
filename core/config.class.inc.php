@@ -186,6 +186,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'db_tls.verify_server_cert' => array(
+			'type' => 'bool',
+			'description' => 'Change the TLS flag used to connect : MYSQLI_CLIENT_SSL if true, MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT if false (default)',
+			'default' => false,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'db_character_set' => array(
 			'type' => 'string',
 			'default' => null,

@@ -2548,7 +2548,15 @@ class WizStepDone extends WizardStep
 		$sForm .= "<p style=\"text-align:center;width:100%\"><button id=\"enter_itop\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></p>";
 		$sForm .= '</form>';
 		$sPHPVersion = phpversion();
-		$sMySQLVersion = SetupUtils::GetMySQLVersion($this->oWizard->GetParameter('db_server'), $this->oWizard->GetParameter('db_user'), $this->oWizard->GetParameter('db_pwd'));
+		$sMySQLVersion = SetupUtils::GetMySQLVersion(
+			$this->oWizard->GetParameter('db_server'),
+			$this->oWizard->GetParameter('db_user'),
+			$this->oWizard->GetParameter('db_pwd'),
+			$this->oWizard->GetParameter('db_tls_key'),
+			$this->oWizard->GetParameter('db_tls_cert'),
+			$this->oWizard->GetParameter('db_tls_ca'),
+			$this->oWizard->GetParameter('db_tls_capath'),
+			$this->oWizard->GetParameter('db_tls_cipher'));
 		$aParameters = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
 		$sCompactWizChoices = array();
 		foreach($aParameters as $iStep => $aChoices)

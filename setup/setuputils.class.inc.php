@@ -1165,7 +1165,8 @@ EOF
 		try
 		{
 			$oDBSource = new CMDBSource;
-			$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $sTlsKey, $sTlsCert, $sTlsCA, $sTlsCipher);
+			$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $sTlsKey, $sTlsCert, $sTlsCA, $sTlsCaPath, $sTlsCipher,
+				false);
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Connection to '$sDBServer' as '$sDBUser' successful.");
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Info - User privileges: ".($oDBSource->GetRawPrivileges()));
 
@@ -1279,16 +1280,20 @@ EOF
 	 * @param string $sTlsKey
 	 * @param string $sTlsCert
 	 * @param string $sTlsCa
+	 * @param string $sTlsCapath
+	 *
 	 * @param string $sTlsCipher
+	 *
 	 * @return string
-	 * @throws MySQLException
+	 * @throws \MySQLException
 	 */
 	static public function GetMySQLVersion(
-		$sDBServer, $sDBUser, $sDBPwd, $sTlsKey = null, $sTlsCert = null, $sTlsCa = null, $sTlsCipher = null
+		$sDBServer, $sDBUser, $sDBPwd, $sTlsKey = null, $sTlsCert = null, $sTlsCa = null, $sTlsCapath = null,
+		$sTlsCipher = null
 	)
 	{
 		$oDBSource = new CMDBSource;
-		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $sTlsKey, $sTlsCert, $sTlsCa, $sTlsCipher);
+		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $sTlsKey, $sTlsCert, $sTlsCa, $sTlsCapath, $sTlsCipher);
 		$sDBVersion = $oDBSource->GetDBVersion();
 		return $sDBVersion;
 	}

@@ -45,11 +45,12 @@ class iTopMutex
 	protected $sDBTlsCA;
 	protected $sDBTlsCaPath;
 	protected $sDBTlsCipher;
+	protected $bDBTlsVerifyServerCert;
 	static protected $aAcquiredLocks = array(); // Number of instances of the Mutex, having the lock, in this page
 
 	public function __construct(
 		$sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null, $sDBTlsKey = null, $sDBTlsCert = null,
-		$sDBTlsCA = null, $sDBTlsCaPath = null, $sDBTlsCypher = null
+		$sDBTlsCA = null, $sDBTlsCaPath = null, $sDBTlsCypher = null, $bDBTlsVerifyServerCert = null
 	)
 	{
 		// Compute the name of a lock for mysql
@@ -70,6 +71,7 @@ class iTopMutex
 		$this->sDBTlsCA = is_null($sDBTlsCA) ? $oConfig->Get('db_tls.ca') : $sDBTlsCA;
 		$this->sDBTlsCaPath = is_null($sDBTlsCaPath) ? $oConfig->Get('db_tls.capath') : $sDBTlsCaPath;
 		$this->sDBTlsCipher = is_null($sDBTlsCypher) ? $oConfig->Get('db_tls.cipher') : $sDBTlsCypher;
+		$this->bDBTlsVerifyServerCert = is_null($bDBTlsVerifyServerCert) ? $oConfig->Get('db_tls.verify_server_cert') : $bDBTlsVerifyServerCert;
 
 		$this->sName = $sName;
 		if (substr($sName, -strlen($this->sDBName.$sDBSubname)) != $this->sDBName.$sDBSubname)
@@ -242,9 +244,12 @@ class iTopMutex
 		$sTlsCA = $this->sDBTlsCA;
 		$sTlsCaPath = $this->sDBTlsCaPath;
 		$sTlsCipher = $this->sDBTlsCipher;
+		$bTlsVerifyServerCert = $this->bDBTlsVerifyServerCert;
+		$bDBTlsVerifyServerCert = $this->bDBTlsVerifyServerCert;
 
-		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sTlsKey, $sTlsCert, $sTlsCA,
-			$sTlsCaPath, $sTlsCipher, false);
+		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource,
+			$sTlsKey, $sTlsCert, $sTlsCA, $sTlsCaPath, $sTlsCipher,
+			$bTlsVerifyServerCert, $bDBTlsVerifyServerCert);
 
 		if (!$this->hDBLink)
 		{
