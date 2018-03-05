@@ -225,7 +225,7 @@ EOF
 		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, '../images/breadcrumb-search.png');
 
 		$oP->p('');
-		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false);
+		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'runQuery');
 		$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
 		$oP->p(Dict::S('UI:RunQuery:SerializedFilter').$oFilter->serialize());
 		$oP->EndCollapsibleSection();

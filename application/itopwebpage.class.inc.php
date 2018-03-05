@@ -45,6 +45,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	protected $sBreadCrumbEntryIcon;
 	protected $oCtx;
 
+	protected $bHasCollapsibleSection = false;
+
 	public function __construct($sTitle, $bPrintable = false)
 	{
 		parent::__construct($sTitle, $bPrintable);
@@ -623,6 +625,7 @@ EOF
 		);
 	}
 
+
 	/**
 	 * @param string $sId Identifies the item, to search after it in the current breadcrumb
 	 * @param string $sLabel Label of the breadcrumb item
@@ -796,7 +799,7 @@ EOF
 		if ($iBreadCrumbMaxCount > 1)
 		{
 			$oConfig = MetaModel::GetConfig();
-			$siTopInstanceId = json_encode(utils::GetAbsoluteUrlAppRoot().'==='.$oConfig->Get('db_host').'/'.$oConfig->Get('db_name').'/'.$oConfig->Get('db_subname'));
+			$siTopInstanceId = json_encode($oConfig->GetItopInstanceid());
 			if ($this->bBreadCrumbEnabled)
 			{
 				if (is_null($this->sBreadCrumbEntryId))
@@ -820,6 +823,8 @@ EOF
 EOF
 			);
 		}
+
+		$this->outputCollapsibleSectionInit();
 
 		if ($this->GetOutputFormat() == 'html')
 		{
@@ -927,7 +932,7 @@ EOF
 				$sHtml .= "</script>\n";
 			}
 		}
-	
+
 		if (count($this->a_styles)>0)
 		{
 			$sHtml .= "<style>\n";
@@ -1241,6 +1246,38 @@ EOF;
 		ExecutionKPI::ReportStats();
 	}
 
+	/**
+	 * Adds init scripts for the collapsible sections
+	 */
+	private function outputCollapsibleSectionInit()
+	{
+		if (!$this->bHasCollapsibleSection)
+		{
+			return;
+		}
+
+		$this->add_script(<<<'EOD'
+function initCollapsibleSection(iSectionId, bOpenedByDefault, sSectionStateStorageKey)
+{
+var bStoredSectionState = JSON.parse(localStorage.getItem(sSectionStateStorageKey));
+var bIsSectionOpenedInitially = (bStoredSectionState == null) ? bOpenedByDefault : bStoredSectionState;
+
+if (bIsSectionOpenedInitially) {
+	$("#LnkCollapse_"+iSectionId).toggleClass("open");
+	$("#Collapse_"+iSectionId).toggle();
+}
+
+$("#LnkCollapse_"+iSectionId).click(function(e) {
+	localStorage.setItem(sSectionStateStorageKey, !($("#Collapse_"+iSectionId).is(":visible")));
+	$("#LnkCollapse_"+iSectionId).toggleClass("open");
+	$("#Collapse_"+iSectionId).slideToggle("normal");
+	e.preventDefault(); // we don't want to do anything more (see #1030 : a non wanted tab switching was triggered)
+});
+}
+EOD
+		);
+	}
+
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{
 		$this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
@@ -1308,21 +1345,28 @@ EOF;
 		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabLabel));
 	}
 
-	public function StartCollapsibleSection($sSectionLabel, $bOpen = false)
-	{
-		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpen));
+	public function StartCollapsibleSection(
+		$sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = ''
+	) {
+		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault,
+			$sSectionStateStorageBusinessKey));
 	}
 
-	public function GetStartCollapsibleSection($sSectionLabel, $bOpen = false)
-	{
+	private function GetStartCollapsibleSection(
+		$sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = ''
+	) {
+		$this->bHasCollapsibleSection = true;
 		$sHtml = '';
 		static $iSectionId = 0;
-		$sImgStyle = $bOpen ? ' open' : '';
-		$sHtml .= "<a id=\"LnkCollapse_$iSectionId\" class=\"CollapsibleLabel{$sImgStyle}\" href=\"#\">$sSectionLabel</a></br>\n";
-		$sStyle = $bOpen ? '' : 'style="display:none" ';
-		$sHtml .= "<div id=\"Collapse_$iSectionId\" $sStyle>";
-		$this->add_ready_script("\$(\"#LnkCollapse_$iSectionId\").click(function() {\$(\"#Collapse_$iSectionId\").slideToggle('normal'); $(\"#LnkCollapse_$iSectionId\").toggleClass('open');});");
-		//$this->add_ready_script("$('#LnkCollapse_$iSectionId').hide();");
+		$sHtml .= '<a id="LnkCollapse_'.$iSectionId.'" class="CollapsibleLabel" href="#">'.$sSectionLabel.'</a></br>'."\n";
+		$sHtml .= '<div id="Collapse_'.$iSectionId.'" style="display:none">'."\n";
+
+		$oConfig = MetaModel::GetConfig();
+		$sSectionStateStorageKey = $oConfig->GetItopInstanceid().'/'.$sSectionStateStorageBusinessKey.'/collapsible-'.$iSectionId;
+		$sSectionStateStorageKey = json_encode($sSectionStateStorageKey);
+		$sOpenedByDefault = ($bOpenedByDefault) ? 'true' : 'false';
+		$this->add_ready_script("initCollapsibleSection($iSectionId, $sOpenedByDefault, '$sSectionStateStorageKey');");
+
 		$iSectionId++;
 		return $sHtml;
 	}

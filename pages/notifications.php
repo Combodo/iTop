@@ -44,7 +44,7 @@ $oP->add('</div>');
 
 $oP->SetBreadCrumbEntry('ui-tool-notifications', Dict::S('Menu:NotificationsMenu'), Dict::S('Menu:NotificationsMenu+'), '', '../images/bell.png');
 
-$oP->StartCollapsibleSection(Dict::S('UI:NotificationsMenu:Help'), true);
+$oP->StartCollapsibleSection(Dict::S('UI:NotificationsMenu:Help'), true, 'notifications-home');
 $oP->add('<div style="padding: 1em; font-size:10pt;background:#E8F3CF;margin-top: 0.25em;">');
 $oP->add('<img src="../images/bell.png" style="margin-top: -60px; margin-right: 10px; float: right;">');
 $oP->add(Dict::S('UI:NotificationsMenu:HelpContent'));

@@ -1086,6 +1086,18 @@ class Config
 		return (array_key_exists($sPropCode, $this->m_aSettings));
 	}
 
+	/**
+	 * @return string identifier that can be used for example to name WebStorage/SessionStorage keys (they
+	 *     are related to a whole domain, and a domain can host multiple itop)
+	 */
+	public function GetItopInstanceid()
+	{
+		return utils::GetAbsoluteUrlAppRoot()
+			.'==='.$this->Get('db_host')
+			.'/'.$this->Get('db_name')
+			.'/'.$this->Get('db_subname');
+	}
+
 	public function GetDescription($sPropCode)
 	{
 		return $this->m_aSettings[$sPropCode];
