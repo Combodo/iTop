@@ -107,29 +107,17 @@
         <classes>
           <!-- This class list is also present in AdminTools group -->
           <class id="Trigger"/>
-          <class id="TriggerOnObject"/>
-          <class id="TriggerOnStateChange"/>
-          <class id="TriggerOnPortalUpdate"/>
-          <class id="TriggerOnStateEnter"/>
-          <class id="TriggerOnStateLeave"/>
-          <class id="TriggerOnObjectCreate"/>
-          <class id="TriggerOnThresholdReached"/>
           <class id="lnkTriggerAction"/>
           <class id="Action"/>
-          <class id="ActionNotification"/>
-          <class id="ActionEmail"/>
+          <class id="ResourceRunQueriesMenu"/>
         </classes>
       </group>
       <group id="User">
         <classes>
           <!-- This class list is also present in AdminTools group -->
           <class id="User"/>
-          <class id="UserInternal"/>
           <class id="URP_UserOrg"/>
           <class id="URP_UserProfile"/>
-          <class id="UserExternal"/>
-          <class id="UserLDAP"/>
-          <class id="UserLocal"/>
           <class id="URP_Profiles"/>
         </classes>
       </group>
@@ -161,25 +149,12 @@
           <class id="ResourceRunQueriesMenu"/>
           <!-- Notification group -->
           <class id="Trigger"/>
-          <class id="TriggerOnObject"/>
-          <class id="TriggerOnStateChange"/>
-          <class id="TriggerOnPortalUpdate"/>
-          <class id="TriggerOnStateEnter"/>
-          <class id="TriggerOnStateLeave"/>
-          <class id="TriggerOnObjectCreate"/>
-          <class id="TriggerOnThresholdReached"/>
           <class id="lnkTriggerAction"/>
           <class id="Action"/>
-          <class id="ActionNotification"/>
-          <class id="ActionEmail"/>
           <!-- User group -->
           <class id="User"/>
-          <class id="UserInternal"/>
           <class id="URP_UserOrg"/>
           <class id="URP_UserProfile"/>
-          <class id="UserExternal"/>
-          <class id="UserLDAP"/>
-          <class id="UserLocal"/>
           <class id="URP_Profiles"/>
           <!-- Audit group -->
           <class id="AuditCategory"/>
