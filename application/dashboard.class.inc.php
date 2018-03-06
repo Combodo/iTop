@@ -115,15 +115,13 @@ abstract class Dashboard
 					$aDashletOrder = array();
 					foreach($oDashletList as $oDomNode)
 					{
-						$sDashletClass = $oDomNode->getAttribute('xsi:type');
 						$oRank =  $oDomNode->getElementsByTagName('rank')->item(0);
 						if ($oRank)
 						{
 							$iRank = (float)$oRank->textContent;
 						}
-						$sId = $oDomNode->getAttribute('id');
-						$oNewDashlet = new $sDashletClass($this->oMetaModel, $sId);
-						$oNewDashlet->FromDOMNode($oDomNode);
+
+						$oNewDashlet = $this->InitDashletFromDOMNode($oDomNode);
 						$aDashletOrder[] = array('rank' => $iRank, 'dashlet' => $oNewDashlet);
 					}
 					usort($aDashletOrder, array(get_class($this), 'SortOnRank'));
@@ -146,6 +144,22 @@ abstract class Dashboard
 			$this->aCells = array();
 		}
 	}
+
+	protected function InitDashletFromDOMNode($oDomNode)
+    {
+        $sId = $oDomNode->getAttribute('id');
+        $sClass = $oDomNode->getAttribute('xsi:type');
+
+        // Test if dashlet can be instanciated, otherwise (uninstalled, broken, ...) we display a placeholder
+        if(!class_exists($sClass))
+        {
+            $sClass = 'DashletUnknown';
+        }
+        $oNewDashlet = new $sClass($this->oMetaModel, $sId);
+        $oNewDashlet->FromDOMNode($oDomNode);
+
+        return $oNewDashlet;
+    }
 
 	static function SortOnRank($aItem1, $aItem2)
 	{
@@ -414,24 +428,11 @@ EOF
 		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:Dashlets').'</div>');
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
 
-		$oPage->add('<div id="select_dashlet" style="text-align:center">');
-		foreach( get_declared_classes() as $sDashletClass)
+		$oPage->add('<div id="select_dashlet" style="text-align:center; max-height:120px; overflow-y:auto;">');
+		$aAvailableDashlets = $this->GetAvailableDashlets();
+		foreach($aAvailableDashlets as $sDashletClass => $aInfo)
 		{
-			if (is_subclass_of($sDashletClass, 'Dashlet'))
-			{
-				$oReflection = new ReflectionClass($sDashletClass);
-				if (!$oReflection->isAbstract())
-				{
-					$aCallSpec = array($sDashletClass, 'IsVisible');
-					$bVisible = call_user_func($aCallSpec);
-					if ($bVisible)
-					{
-						$aCallSpec = array($sDashletClass, 'GetInfo');
-						$aInfo = call_user_func($aCallSpec);
-						$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="dashlet_icon ui-widget-content ui-corner-all" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'" style="width:34px; height:34px; display:inline-block; margin:2px;"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
-					}
-				}
-			}
+			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="dashlet_icon ui-widget-content ui-corner-all" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'" style="width:34px; height:34px; display:inline-block; margin:2px;"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
 		}
 		$oPage->add('</div>');
 
@@ -464,6 +465,38 @@ EOF
 		$oPage->add('</div>');
 
 		$oPage->add('</div>');
+	}
+
+	/**
+	 * Return an array of dashlets available for selection.
+	 *
+	 * @return array
+	 */
+	protected function GetAvailableDashlets()
+	{
+		$aDashlets = array();
+
+		foreach( get_declared_classes() as $sDashletClass)
+		{
+			// DashletUnknown is not among the selection as it is just a fallback for dashlets that can't instanciated.
+			if ( is_subclass_of($sDashletClass, 'Dashlet') && !in_array($sDashletClass, array('DashletUnknown', 'DashletProxy')) )
+			{
+				$oReflection = new ReflectionClass($sDashletClass);
+				if (!$oReflection->isAbstract())
+				{
+					$aCallSpec = array($sDashletClass, 'IsVisible');
+					$bVisible = call_user_func($aCallSpec);
+					if ($bVisible)
+					{
+						$aCallSpec = array($sDashletClass, 'GetInfo');
+						$aInfo = call_user_func($aCallSpec);
+						$aDashlets[$sDashletClass] = $aInfo;
+					}
+				}
+			}
+		}
+
+		return $aDashlets;
 	}
 	
 	protected function GetNewDashletId()

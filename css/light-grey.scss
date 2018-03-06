@@ -1769,6 +1769,17 @@ td.prop_icon {
 .dashlet-content .display_block {
 	text-align:left;
 }
+.dashlet-unknown {
+	.dashlet-content {
+		padding: 8px;
+		background-color: #F2F2F2;
+		text-align: center;
+
+		.dashlet-ukn-text {
+			margin-top: 10px;
+		}
+	}
+}
 .prop_apply .ui-icon-alert {
 	display: none;
 }
