@@ -92,14 +92,6 @@ class ItopDataTestCase extends ItopTestCase
 		return $this->testOrgId;
 	}
 
-    /**
-     * PHPUnit complains that there is no test... so here is a dummy one.
-     */
-    public function testDummy()
-    {
-        $this->assertTrue(true);
-    }
-
     /////////////////////////////////////////////////////////////////////////////
     /// Database Utilities
     /////////////////////////////////////////////////////////////////////////////
