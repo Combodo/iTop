@@ -111,6 +111,8 @@ define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/re
  */
 abstract class AttributeDefinition
 {
+	const SEARCH_WIDGET_TYPE = 'raw';
+
 	public function GetType()
 	{
 		return Dict::S('Core:'.get_class($this));
@@ -121,6 +123,16 @@ abstract class AttributeDefinition
 	}
 
 	abstract public function GetEditClass();
+
+	/**
+	 * Return the search widget type corresponding to this attribute
+	 *
+	 * @return string
+	 */
+	public function GetSearchType()
+	{
+		return static::SEARCH_WIDGET_TYPE;
+	}
 
 	protected $m_sCode;
 	private $m_aParams = array();
@@ -2085,6 +2097,8 @@ class AttributeBoolean extends AttributeInteger
  */
 class AttributeString extends AttributeDBField
 {
+	const SEARCH_WIDGET_TYPE = 'string';
+
 	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -3433,6 +3447,8 @@ class AttributeTemplateHTML extends AttributeText
  */
 class AttributeEnum extends AttributeString
 {
+	const SEARCH_WIDGET_TYPE = 'enum';
+
 	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -4526,6 +4542,8 @@ class AttributeDeadline extends AttributeDateTime
  */
 class AttributeExternalKey extends AttributeDBFieldVoid
 {
+	const SEARCH_WIDGET_TYPE = 'external_key';
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed", "on_target_delete"));

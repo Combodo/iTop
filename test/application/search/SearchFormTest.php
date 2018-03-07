@@ -36,11 +36,46 @@ class SearchFormTest extends ItopDataTestCase
 	{
 		parent::setUp();
 
-		require_once(APPROOT."sources/application/search/searchform.class.php");
+		require_once(APPROOT."sources/application/search/searchform.class.inc.php");
 	}
 
+	/**
+	 */
 	public function testGetFields()
 	{
-		$this->debug(SearchForm::GetFields('Contact'));
+		$aFields = SearchForm::GetFields('Contact', 'Contact');
+		$this->debug(json_encode($aFields, JSON_PRETTY_PRINT));
+		$this->assertCount(7, $aFields);
+
+		$oSearch = \DBSearch::FromOQL("SELECT Contact AS C WHERE C.status = 'active'");
+		$aFields = SearchForm::GetFields($oSearch->GetClass(), $oSearch->GetClassAlias());
+		$this->debug(json_encode($aFields, JSON_PRETTY_PRINT));
+	}
+
+	/**
+	 * @dataProvider GetCriterionProvider
+	 * @throws \OQLException
+	 */
+	public function testGetCriterion($sOQL, $iOrCount)
+	{
+		$aCriterion = SearchForm::GetCriterion(\DBObjectSearch::FromOQL($sOQL));
+		$this->debug($sOQL);
+		$this->debug(json_encode($aCriterion, JSON_PRETTY_PRINT));
+		$this->assertCount($iOrCount, $aCriterion['or']);
+	}
+
+	public function GetCriterionProvider()
+	{
+		return array(
+			array('OQL' => "SELECT Contact", 1),
+			array('OQL' => "SELECT Contact WHERE status = 'active'", 1),
+			array('OQL' => "SELECT Contact AS C WHERE C.status = 'active'", 1),
+			array('OQL' => "SELECT Contact WHERE status = 'active' AND name LIKE 'toto%'", 1),
+			array('OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3", 1),
+			array('OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')", 1),
+			array('OQL' => "SELECT Contact WHERE status = 'active' OR name LIKE 'toto%'", 2),
+			array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date", 1),
+			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01' AND start_date < '2018-01-01'", 1),
+		);
 	}
 }
