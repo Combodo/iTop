@@ -103,16 +103,16 @@ class SearchForm
 
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
-			array(
-				'search' => array(
-					'fields' => $aFields,
-					'criterion' => $aCriterion,
-					'base_oql' => $oBaseSearch->ToOQL(),
-				)
+			'search' => array(
+				'fields' => $aFields,
+				'criterion' => $aCriterion,
+				'base_oql' => $oBaseSearch->ToOQL(),
 			),
 		);
 
-		$oPage->add_ready_script('$("fs_'.$sSearchFormId.'").search_form_handler('.json_encode($aSearchParams).');');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler.js');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria.js');
+		$oPage->add_ready_script('$("#fs_'.$sSearchFormId.'").search_form_handler('.json_encode($aSearchParams).');');
 
 		return $sHtml;
 	}
