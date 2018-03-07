@@ -185,6 +185,7 @@ abstract class User extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeExternalField("last_name", array("allowed_values"=>null, "extkey_attcode"=> 'contactid', "target_attcode"=>"name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("first_name", array("allowed_values"=>null, "extkey_attcode"=> 'contactid', "target_attcode"=>"first_name")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("email", array("allowed_values"=>null, "extkey_attcode"=> 'contactid', "target_attcode"=>"email")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("org_id", array("allowed_values"=>null, "extkey_attcode"=> 'contactid', "target_attcode"=>"org_id")));
 
 		MetaModel::Init_AddAttribute(new AttributeString("login", array("allowed_values"=>null, "sql"=>"login", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
@@ -195,11 +196,10 @@ abstract class User extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class"=>"URP_UserOrg", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"allowed_org_id", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'login', 'status')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'language', 'status', 'profile_list', 'allowed_org_list')); // Unused as it's an abstract class !
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'status', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the std search form
 	}
 
 	abstract public function CheckCredentials($sPassword);
@@ -240,7 +240,7 @@ abstract class User extends cmdbAbstractObject
 	protected $oContactObject;
 
 	/**
-	 * Fetch and memoize the associated contact (if any)
+	 * Fetch and memorize the associated contact (if any)
 	 */
 	public function GetContactObject()
 	{
@@ -444,11 +444,10 @@ abstract class UserInternal extends User
 		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("reset_pwd_token", array("allowed_values"=>null, "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'first_name', 'email', 'login', 'status', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'login', 'status')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'status', 'language', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'first_name', 'last_name', 'status', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria
-		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status')); // Criteria of the std search form
-		MetaModel::Init_SetZListItems('advanced_search', array('login', 'contactid')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the std search form
 	}
 
 	/**
@@ -936,7 +935,7 @@ class UserRights
 
 		if (self::IsAdministrator()) return true;
 
-		if (MetaModel::HasCategory($sClass, 'bizmodel'))
+		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile'))
 		{
 			return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
 		}
