@@ -38,6 +38,15 @@ use WebPage;
 
 class SearchForm
 {
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
 	public static function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		$sHtml = '';
@@ -110,8 +119,6 @@ class SearchForm
 			),
 		);
 
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria.js');
 		$oPage->add_ready_script('$("#fs_'.$sSearchFormId.'").search_form_handler('.json_encode($aSearchParams).');');
 
 		return $sHtml;
@@ -137,10 +144,10 @@ class SearchForm
 				$aField['code'] = $sFilterCode;
 				$aField['class'] = $sClassName;
 				$aField['class_alias'] = $sClassAlias;
-				$aField['label'] = Dict::S('Class:'.$sClassName.'/Attribute:'.$sFilterCode);
 				if (array_key_exists($sFilterCode, $aAttrDefs))
 				{
 					$oAttrDef = $aAttrDefs[$sFilterCode];
+					$aField['label'] = $oAttrDef->GetLabel();
 					$aField['widget'] = $oAttrDef->GetSearchType();
 					$aField['allowed_values'] = self::GetFieldAllowedValues($oAttrDef);
 				}

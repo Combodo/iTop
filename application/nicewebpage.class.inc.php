@@ -50,7 +50,9 @@ class NiceWebPage extends WebPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/datatable.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
-		$this->add_ready_script(
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria.js');
+	    $this->add_ready_script(
 <<< EOF
 	//add new widget called TruncatedList to properly display truncated lists when they are sorted
 	$.tablesorter.addWidget({ 
