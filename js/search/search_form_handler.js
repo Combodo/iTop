@@ -9,54 +9,57 @@ $(function()
 		// default options
 		options:
 		{
-			"criterion_outer_selector": null,
-			"result_list_outer_selector": null,
-			"submit_button_selector": null,
-			"hide_initial_criterion": false, // What is that?
-			"endpoint": null,
-			"search": {
-				"base_oql": "",
-				"criterion": [
+			'criterion_outer_selector': null,
+			'result_list_outer_selector': null,
+			'submit_button_selector': null,
+			'hide_initial_criterion': false, // TODO: What is that?
+			'endpoint': null,
+			'search': {
+				'base_oql': '',
+				'criterion': [
 					// Structure
 					// {
-					// 	"or": [
+					// 	'or': [
 					// 		{
-					// 			"and": [
+					// 			'and': [
 					// 				{
-					// 					"ref": "alias.code",
-					// 					"operator": "contains",
-					// 					"values": [
+					// 					'ref': 'alias.code',
+					// 					'operator': 'contains',
+					// 					'values': [
 					// 						{
-					// 							"value": "foo",
-					// 							"label": "bar",
+					// 							'value': 'foo',
+					// 							'label': 'bar',
 					// 						}
 					// 					],
-					// 					"is_removable": true,
-					// 					"oql": "",
+					// 					'is_removable': true,
+					// 					'oql': '',
 					// 				},
 					// 			]
 					// 		},
 					// 	]
 					// },
 				],
-				"fields": [
+				'fields': [
 					// Structure
-					// 	"alias.code": {
-					// 		"class_alias": "",
-					// 		"class": "",
-					// 		"code": "",
-					// 		"label": "",
-					// 		"type": "",
-					// 		"allowed_values": {...},
+					// 	'alias.code': {
+					// 		'class_alias': '',
+					// 		'class': '',
+					// 		'code': '',
+					// 		'label': '',
+					// 		'type': '',
+					// 		'allowed_values': {...},
 					// 	},
 				],
 			},
+			'supported_criterion_types': ['raw'],
+			'default_criteria_type': 'raw',
 		},
 
 		// jQuery elements
 		elements:
 		{
-			criterion_area: null,
+			active_criterion: null,
+			more_criterion: null,
 		},
 
 		// the constructor
@@ -64,26 +67,20 @@ $(function()
 		{
 			var me = this;
 			
-			this.element
-			.addClass('search_form_handler');
+			this.element.addClass('search_form_handler');
 
-			// Binding events
-			// this.element.bind('update_fields', function(oEvent, oData){
-			// 	me._onUpdateFields(oEvent, oData);
-			// });
+			// Prepare DOM elements
+			this._prepareCriterionArea();
+			this._prepareResultsArea();
 
 			// Binding buttons
 			if(this.options.submit_button_selector !== null)
 			{
-				this.options.submit_button_selector.off('click').on('click', function(oEvent){ me._onSubmitClick(oEvent); });
+				$(this.options.submit_button_selector).off('click').on('click', function(oEvent){ me._onSubmitClick(oEvent); });
 			}
-			// if(this.options.cancel_btn_selector !== null)
-			// {
-			// 	this.options.cancel_btn_selector.off('click').on('click', function(oEvent){ me._onCancelClick(oEvent); });
-			// }
 
-			// Prepare criterion area
-			this._prepareCriterionArea();
+			// Binding events (eg. from search_form_criteria widgets)
+			this._bindEvents();
 		},
    
 		// called when created, and later when changing options
@@ -111,39 +108,137 @@ $(function()
 		},
 
 
-		getCurrentValues: function()
+		//
+		_bindEvents: function()
 		{
-			// TODO
-			// return this.options.field_set.triggerHandler('get_current_values');
+			var me = this;
+
+			// Criteria events
+			this.element.bind('itop.search.criteria.value_changed', function(oEvent, oData){
+				me._onCriteriaValueChanged(oData);
+			});
+		},
+		// - Update search option of the widget
+		_updateSearch: function()
+		{
+			var me = this;
+
+			// Criterion
+			// - Note: As of today, only a "or" level with a "and" is supported, so the following part
+			//         will need some refactoring when introducing new stuff.
+			var oCriterion = {
+				'or': [{
+					'and': []
+				}]
+			};
+			// - Retrieve criterion
+			this.elements.active_criterion.find('.search_form_criteria').each(function(){
+				var oCriteriaData = $(this).triggerHandler('itop.search.criteria.get_data');
+				oCriterion['or'][0]['and'].push(oCriteriaData);
+			});
+			// - Update search
+			this.options.search.criterion = oCriterion;
+
+			// No need to update base OQL and fields
 		},
 
+		// DOM helpers
 		// - Prepare criterion area
 		_prepareCriterionArea: function()
 		{
+			var oCriterionAreaElem;
+
 			// Build area element
 			if(this.options.criterion_outer_selector !== null && $(this.options.criterion_outer_selector).length > 0)
 			{
-				this.elements.criterion_area = $(this.options.criterion_outer_selector);
+				oCriterionAreaElem = $(this.options.criterion_outer_selector);
 			}
 			else
 			{
-				var oCriterionAreaElem = $('<div></div>').appendTo(this.element);
-				this.elements.criterion_area = oCriterionAreaElem;
+				oCriterionAreaElem = $('<div></div>').appendTo(this.element);
 			}
-			this.elements.criterion_area.addClass('sf_criterion_area');
+			oCriterionAreaElem.addClass('sf_criterion_area');
 
 			// Clean area
-			this.elements.criterion_area.html('');
+			oCriterionAreaElem
+				.html('')
+				.append('<div class="sf_active_criterion"></div>')
+				.append('<div class="sf_more_criterion"><span class="sf_mc_toggler fa fa-plus"></span><ul class="sf_mc_list"></ul></div>');
+			this.elements.active_criterion = oCriterionAreaElem.find('.sf_active_criterion');
+			this.elements.more_criterion = oCriterionAreaElem.find('.sf_more_criterion');
 
-			// Fill area with existing criterion
-			for(var i in this.options.search.criterion)
+			// Prepare content
+			this._prepareExistingCriterion();
+			this._prepareMoreCriterionMenu();
+
+			// TODO: Delete this
+			oCriterionAreaElem.append( $('<button type="button" value="submit" class="sf_submit_btn">Go!</button>') );
+			this.options.submit_button_selector = '.sf_submit_btn';
+		},
+		// - Prepare existing criterion
+		_prepareExistingCriterion: function()
+		{
+			// - OR conditions
+			var aORs = (this.options.search.criterion['or'] !== undefined) ? this.options.search.criterion['or'] : [];
+			for(var iORIdx in aORs)
 			{
-				console.log(i, this.options.search.criterion[i]);
+				// Note: We might want to create a OR container here when handling several OR conditions.
+
+				var aANDs = (aORs[iORIdx]['and'] !== undefined) ? aORs[iORIdx]['and'] : [];
+				for(var iANDIdx in aANDs)
+				{
+					var oCriteriaData = aANDs[iANDIdx];
+					this._addCriteria(oCriteriaData);
+				}
 			}
+		},
+		// - Prepare "more" button
+		_prepareMoreCriterionMenu: function()
+		{
+			var me = this;
+
+			// Add fields
+			// TODO: Find a widget to handle dropdown menu
+			for(var sFieldRef in this.options.search.fields)
+			{
+				var oField = this.options.search.fields[sFieldRef];
+				var oFieldElem = $('<li></li>')
+					.addClass('sf_mc_field')
+					.attr('data-field-ref', sFieldRef)
+					.text(oField.label);
+				this.elements.more_criterion.find('> .sf_mc_list').append(oFieldElem);
+			}
+
+			// Bind event
+			this.elements.more_criterion.find('.sf_mc_field').on('click', function(){
+				// Prepare new criterion data
+				var oData = {
+					'ref': $(this).attr('data-field-ref'),
+				};
+
+				// Add criteria but don't submit form as the user has not specified the value yet.
+				me._addCriteria(oData);
+			});
+		},
+		// - Prepare results area
+		_prepareResultsArea: function()
+		{
+			var oResultAreaElem;
+
+			// Build area element
+			if(this.options.result_list_outer_selector !== null && $(this.options.result_list_outer_selector).length > 0)
+			{
+				oResultAreaElem = $(this.options.result_list_outer_selector);
+			}
+			else
+			{
+				oResultAreaElem = $('<div></div>').appendTo(this.element);
+			}
+			oResultAreaElem.addClass('sf_results_area');
 		},
 
 
-		// Criteria handlers
+		// Criteria helpers
 		// - Add a criteria to the form
 		_addCriteria: function(oData)
 		{
@@ -152,11 +247,11 @@ $(function()
 
 			if(sType !== null)
 			{
-				var sWidgetClass = 'search_form_criteria' + ((sType === 'raw') ? '' : '_' + sType);
+				var sWidgetClass = 'search_form_criteria' + '_' + sType;
 				oCriteriaElem = $('<div></div>')
 					.addClass('sf_criteria')
-					.appendTo(this.elements.criterion_area)
-					.search_form_criteria(oData);
+					.appendTo(this.elements.active_criterion);
+				$.itop[sWidgetClass](oData, oCriteriaElem);
 			}
 			else
 			{
@@ -170,17 +265,35 @@ $(function()
 
 			if(this.options.search.fields[sRef] !== undefined)
 			{
-				sType = this.options.search.fields[sRef].type;
+				sType = this.options.search.fields[sRef].widget.toLowerCase();
+
+				// Make sure the criteria type is supported, otherwise we might try to initialize a unknown widget.
+				if(this.options.supported_criterion_types.indexOf(sType) < 0)
+				{
+					sType = this.options.default_criteria_type;
+				}
+			}
+			// Fallback for unknown widget types or unknown field refs
+			else
+			{
+				sType = this.options.default_criteria_type;
 			}
 
 			return sType;
 		},
-
+		// Criteria handlers
+		// - Event value changed
+		_onCriteriaValueChanged: function(oData)
+		{
+			this._updateSearch();
+			this._submit();
+		},
 
 		// Button handlers
 		_onSubmitClick: function(oEvent)
 		{
-			// TODO
+			// Assertion: the search is already up to date
+			this._submit();
 		},
 		_onCancelClick: function(oEvent)
 		{
@@ -188,9 +301,29 @@ $(function()
 		},
 
 
-		// Update handlers
-		// - Called on form update successes
-		_onUpdateSuccess: function(oData, sFormPath)
+		// Submit handlers
+		_submit: function()
+		{
+			var oData = {
+				'params': JSON.stringify({
+					'base_oql': this.options.search.base_oql,
+					'criterion': this.options.search.criterion,
+				}),
+			};
+
+			$.post(
+				this.options.endpoint,
+				oData,
+				function(oResponse, sStatus, oXHR){
+					console.log('POST success', oResponse, sStatus, oXHR);
+				}
+			)
+				.done(function(a,b,c,d){ console.log('POST done', a,b,c,d);})
+				.fail(function(a,b,c,d){ console.log('POST fail', a,b,c,d);})
+				.always(function(a,b,c,d){ console.log('POST always', a,b,c,d);});
+		},
+		// - Called on form submit successes
+		_onSubmitSuccess: function(oData, sFormPath)
 		{
 			// TODO
 			// if(oData.form.updated_fields !== undefined)
@@ -198,13 +331,13 @@ $(function()
 			// 	this.element.find('[data-form-path="' + sFormPath + '"]').trigger('update_form', {updated_fields: oData.form.updated_fields});
 			// }
 		},
-		// - Called on form update failures
-		_onUpdateFailure: function(oData, sFormPath)
+		// - Called on form submit failures
+		_onSubmitFailure: function(oData, sFormPath)
 		{
 			// TODO
 		},
-		// - Called after form updates
-		_onUpdateAlways: function(oData, sFormPath)
+		// - Called after form submits
+		_onSubmitAlways: function(oData, sFormPath)
 		{
 			// TODO
 			// // Check all touched AFTER ajax is complete, otherwise the renderer will redraw the field in the mean time.
@@ -213,7 +346,7 @@ $(function()
 		},
 
 
-		// Helpers
+		// Global helpers
 		// - Show loader
 		_disableFormBeforeLoading: function()
 		{
@@ -227,6 +360,18 @@ $(function()
 
 
 		// Debug helpers
+		// - Converts a snake_case string to CamelCase
+		_toCamelCase: function(sString)
+		{
+			var aParts = sString.split('_');
+
+			for(var i in aParts)
+			{
+				aParts[i] = aParts[i].charAt(0).toUpperCase() + aParts[i].substr(1);
+			}
+
+			return aParts.join('');
+		},
 		// - Show a trace in the javascript console
 		_trace: function(sMessage, oData)
 		{
@@ -245,7 +390,7 @@ $(function()
 		// - Show current options
 		showOptions: function()
 		{
-			this._trace('Options', this.options, this.toto);
+			this._trace('Options', this.options);
 		}
 	});
 });

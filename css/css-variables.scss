@@ -1,8 +1,28 @@
-$highlight-color: #E87C1E;
+// Base colors
+$gray-base:              #000 !default;
+$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
+$gray-dark:              #444 !default;
+$gray:                   #777 !default;
+$gray-light:             #808080 !default;
+$gray-lighter:           #ddd !default;
+$gray-extra-light:       #F1F1F1 !default;
+
+$white:					#FFFFFF !default;
+
+$combodo-orange:		#EA7D1E !default;
+$combodo-dark-gray:		#585653 !default;
+
+$combodo-orange-dark:		darken($combodo-orange, 13.8%) !default;
+$combodo-orange-darker:		darken($combodo-orange, 18%) !default;
+$combodo-dark-gray-dark:	darken($combodo-dark-gray, 13.5%) !default;
+$combodo-dark-gray-darker:	darken($combodo-dark-gray, 18%) !default;
+
+// Vars
+$highlight-color: $combodo-orange;
 $grey-color: #555555;
 $complement-color: #1c94c4;
 $complement-light: #d6e8ef;
-$frame-background-color: #F1F1F1;
+$frame-background-color: $gray-extra-light;
 $text-color: #000;
 // Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
 $version: "v2.4.0";

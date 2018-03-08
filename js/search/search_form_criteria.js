@@ -9,15 +9,15 @@ $(function()
 		// default options
 		options:
 		{
-			handled_classes: [],
-			get_current_value_callback: 'getCurrentValue',
-			set_current_value_callback: function(me, oEvent, oData){ console.log('Search form criteria: set_current_value_callback must be overloaded, this is the default callback.'); },
+			get_current_values_callback: 'getCurrentValues',
+			set_current_values_callback: function(me, oEvent, oData){ console.log('Search form criteria: set_current_values_callback must be overloaded, this is the default callback.'); },
 
-			ref: "",
-			operator: "=",
+			ref: '',
+			operator: '=',
 			values: [],
-			oql: "",
+			oql: '',
 			is_removable: true,
+			is_modified: false, // TODO: change this on value change and remove oql property value
 		},
    
 		// the constructor
@@ -25,12 +25,14 @@ $(function()
 		{
 			var me = this;
 			
-			this.element
-			.addClass('search_form_criteria');
+			this.element.addClass('search_form_criteria');
 
-			// Get/SetCurrentValue callbacks handler
-			this.element
-				.bind('get_current_value set_current_value', function(oEvent, oData){
+			// GetData
+			this.element.bind('itop.search.criteria.get_data', function(oEvent, oData){
+				return me._onGetData(oData);
+			});
+			// Get/SetCurrentValues callbacks handler
+			this.element.bind('itop.search.criteria.get_current_values itop.search.criteria.set_current_values', function(oEvent, oData){
 					oEvent.stopPropagation();
 
 					var callback = me.options[oEvent.type+'_callback'];
@@ -61,8 +63,7 @@ $(function()
 		// revert other modifications here
 		_destroy: function()
 		{
-			this.element
-			.removeClass('search_form_criteria');
+			this.element.removeClass('search_form_criteria');
 		},
 		// _setOptions is called with a hash of all options that are changing
 		// always refresh when changing options
@@ -77,52 +78,30 @@ $(function()
 		},
 
 
-		getCurrentValue: function()
+		// Public methods
+		getCurrentValues: function()
 		{
-			// TODO
-			// var value = null;
-			//
-			// this.element.find(':input').each(function(iIndex, oElem){
-			// 	if($(oElem).is(':hidden') || $(oElem).is(':text') || $(oElem).is(':password') || $(oElem).is('textarea'))
-			// 	{
-			// 		value = $(oElem).val();
-			// 	}
-			// 	else if($(oElem).is('select'))
-			// 	{
-			// 		if($(oElem).is('select[multiple]'))
-			// 		{
-			// 			value = [];
-			// 			$(oElem).find('option:selected').each(function(){
-			// 				value.push($(this).val());
-			// 			});
-			// 		}
-			// 		else
-			// 		{
-			// 			value = $(oElem).val();
-			// 		}
-			// 	}
-			// 	else if($(oElem).is(':checkbox') || $(oElem).is(':radio'))
-			// 	{
-			// 		if(value === null)
-			// 		{
-			// 			value = [];
-			// 		}
-			// 		if($(oElem).is(':checked'))
-			// 		{
-			// 			value.push($(oElem).val());
-			// 		}
-			// 	}
-			// 	else
-			// 	{
-			// 		console.log('Form field : Input type not handle yet.');
-			// 	}
-			// });
-			//
-			// return value;
+			var aValues = this.options.values;
+			return aValues;
 		},
 
 
-		// Prepare DOM element
+		// Event callbacks
+		_onGetData: function(oData)
+		{
+			var oData = {
+				'ref': this.options.ref,
+				'operator': this.options.operator,
+				'values': this.options.values,
+				'is_removable': this.options.is_removable,
+				'oql': this.options.oql,
+			};
+			return oData;
+		},
+
+
+		// DOM element helpers
+		// - Prepare element DOM structure
 		_prepareElement: function()
 		{
 			// Prepare base DOM structure
@@ -130,26 +109,51 @@ $(function()
 			this.element
 				.append('<div class="sfc_title"></div>')
 				.append('<div class="sfc_form_group"></div>')
-				.append('<div class="sfc_toggle"><span class="fa fa-caret-down"></span></div>');
+				.append('<div class="sfc_toggle"><a class="fa fa-caret-down" href="#"></a></div>');
 
 			// Removable / locked decoration
 			if(this.options.is_removable === true)
 			{
-				this.element.append('<div class="sfc_close"><span class="fa fa-times"></span></div>');
+				this.element.append('<div class="sfc_close"><a class="fa fa-times" href="#"></a></div>');
 			}
 			else
 			{
 				this.element.append('<div class="sfc_locked"><span class="fa fa-lock"></span></div>');
 			}
 
-			// Fill
+			// Fill criteria
+			this._setTitle();
+		},
+		_setTitle: function(sTitle)
+		{
+			if(sTitle === undefined)
+			{
+				// TODO: Make nice label
+			}
+			this.element.find('.sfc_title').text(sTitle);
 		},
 
 
-		// Debug helper
+		// Debug helpers
+		// - Show a trace in the javascript console
+		_trace: function(sMessage, oData)
+		{
+			if(window.console)
+			{
+				if(oData !== undefined)
+				{
+					console.log('Search form criteria: ' + sMessage, oData);
+				}
+				else
+				{
+					console.log('Search form criteria: ' + sMessage);
+				}
+			}
+		},
+		// - Show current options
 		showOptions: function()
 		{
-			return this.options;
+			this._trace('Options', this.options);
 		}
 	});
 });

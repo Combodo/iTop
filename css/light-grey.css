@@ -58,7 +58,7 @@ label {
   cursor: pointer;
 }
 .hilite, .hilite a, .hilite a:visited {
-  color: #e87c1e;
+  color: #ea7d1e;
   text-decoration: none;
 }
 table.datatable {
@@ -114,7 +114,7 @@ table.listResults td .view-image img {
   cursor: pointer;
   margin-bottom: 3px;
   padding: 2px;
-  background-color: #e87c1e;
+  background-color: #ea7d1e;
 }
 .edit-image .edit-buttons .button.disabled {
   cursor: default;
@@ -275,7 +275,7 @@ legend.transparent {
 }
 .ui-widget-content td a:hover, p a:hover, td a:hover {
   text-decoration: underline;
-  color: #e87c1e;
+  color: #ea7d1e;
 }
 .cke_reset_all *:hover {
   text-decoration: none;
@@ -283,8 +283,8 @@ legend.transparent {
 }
 table.cke_dialog_contents a.cke_dialog_ui_button_ok {
   color: #000;
-  border-color: #e87c1e;
-  background: #e87c1e;
+  border-color: #ea7d1e;
+  background: #ea7d1e;
 }
 .cke_notifications_area {
   display: none;
@@ -309,7 +309,7 @@ td a.mailto, td a.mailto:visited {
 }
 td a.mailto:hover {
   text-decoration: underline;
-  color: #e87c1e;
+  color: #ea7d1e;
   padding-left: 20px;
   background: url(../images/mail.png?v=v2.4.0) no-repeat left;
 }
@@ -329,7 +329,7 @@ a.small_action {
   padding-left: 5px;
   padding-top: 2px;
   padding-bottom: 2px;
-  background: #e87c1e url(../images/actions_left.png?v=v2.4.0) no-repeat left;
+  background: #ea7d1e url(../images/actions_left.png?v=v2.4.0) no-repeat left;
 }
 .actions_details span {
   background: url(../images/actions_right.png?v=v2.4.0) no-repeat right;
@@ -424,7 +424,7 @@ div.ui-accordion-content {
   text-decoration: none;
 }
 .ui-accordion-content a:hover {
-  color: #e87c1e;
+  color: #ea7d1e;
   text-decoration: none;
 }
 .ui-accordion-content ul {
@@ -455,7 +455,7 @@ a.CollapsibleLabel.open, td a.CollapsibleLabel.open {
   padding: 0px 0pt 0px 16px;
   font-size: 8pt;
   text-decoration: none;
-  color: #e87c1e;
+  color: #ea7d1e;
   background: url(../images/mini-arrow-orange-open.gif) no-repeat left;
 }
 .page_header {
@@ -506,7 +506,7 @@ div.actions_menu > ul {
   nowidth: 70px;
   padding-left: 5px;
   /* Nasty work-around for IE... en attendant mieux */
-  background: #e87c1e url(../images/actions_left.png?v=v2.4.0) no-repeat top left;
+  background: #ea7d1e url(../images/actions_left.png?v=v2.4.0) no-repeat top left;
   cursor: pointer;
   margin: 0;
 }
@@ -588,7 +588,7 @@ div.actions_menu > ul > li {
   text-align: left;
 }
 .itop_popup li ul li a:hover, #logOffBtn li ul li a:hover {
-  background: #e87c1e;
+  background: #ea7d1e;
   color: #fff;
   font-weight: bold;
 }
@@ -675,6 +675,7 @@ input.dp-applied {
   float: left;
 }
 /* For search forms */
+/* TODO: Remove when cleaning up old search */
 .SearchDrawer {
   border-top: 5px solid #1c94c4;
   border-left: 5px solid #1c94c4;
@@ -752,6 +753,57 @@ div.HRDrawer {
   nopadding-left: 1em;
   nopadding-right: 1em;
   margin-top: 0;
+}
+/* Search forms v2 */
+/* TODO: Remove comment before final commit */
+.search_form_handler {
+  /* Sizing reset */
+  /* Hyperlink reset */
+}
+.search_form_handler * {
+  box-sizing: border-box;
+}
+.search_form_handler a {
+  color: inherit;
+  text-decoration: none;
+}
+.search_form_handler .sf_criterion_area {
+  /* Common style between criterion and more criterion */
+  /* Criteria tags */
+  /* More criterion */
+}
+.search_form_handler .sf_criterion_area .sf_active_criterion, .search_form_handler .sf_criterion_area .sf_more_criterion {
+  display: inline-block;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion, .search_form_handler .sf_criterion_area .search_form_criteria {
+  position: relative;
+  padding: 8px 10px;
+  background-color: #ea7d1e;
+  color: #fff;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria {
+  display: inline-block;
+  margin-right: 3px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.locked {
+  background-color: #f1f1f1;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group {
+  display: none;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened {
+  display: block;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sf_mc_list {
+  position: absolute;
+  margin: 0px;
+  top: 100%;
+  left: 0px;
+  background-color: #ea7d1e;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sf_mc_list .sf_mc_field {
+  cursor: pointer;
+  white-space: nowrap;
 }
 .mandatory {
   border: 1px solid #f00;
@@ -892,7 +944,7 @@ div#logo div {
   margin-top: 2px;
   margin-right: 4px;
   padding: 6px 9px;
-  background-color: #e87c1e;
+  background-color: #ea7d1e;
   color: white;
   border-radius: 6px;
   text-align: left;
@@ -1499,7 +1551,7 @@ img.prev, img.first, img.next, img.last {
 }
 div.actions_button {
   float: right;
-  background: #e87c1e url("../images/actions_left.png?v=v2.4.0") no-repeat scroll left top;
+  background: #ea7d1e url("../images/actions_left.png?v=v2.4.0") no-repeat scroll left top;
   padding-left: 5px;
   margin-top: 0;
   margin-right: 10px;
@@ -1507,7 +1559,7 @@ div.actions_button {
   vertical-align: middle;
 }
 div.actions_button a, .actions_button a:hover, .actions_button a:visited {
-  background: #e87c1e url(../images/actions_bkg.png?v=v2.4.0) no-repeat scroll right top;
+  background: #ea7d1e url(../images/actions_bkg.png?v=v2.4.0) no-repeat scroll right top;
   color: #fff;
   padding-right: 8px;
   cursor: pointer;
@@ -1540,7 +1592,7 @@ select#org_id {
   position: relative;
 }
 .edit_mode .dashlet-selected {
-  background: #e87c1e !important;
+  background: #ea7d1e !important;
   padding: 5px;
   margin: 0;
 }
@@ -1706,7 +1758,7 @@ a.summary, a.summary:hover {
   z-index: 999;
 }
 #DashboardMenu li ul li a:hover {
-  background: #e87c1e;
+  background: #ea7d1e;
   color: #fff;
   font-weight: bold;
   list-style: none;
@@ -2063,7 +2115,7 @@ span.refresh-button {
 }
 #itop-breadcrumb .breadcrumb-item a:hover {
   text-decoration: none;
-  color: #e87c1e;
+  color: #ea7d1e;
 }
 #itop-breadcrumb .breadcrumb-item a::after {
   content: '';
@@ -2127,7 +2179,7 @@ span.refresh-button {
   margin-bottom: 1px;
 }
 .object-ref-icon.fa {
-  color: #e87c1e;
+  color: #ea7d1e;
   font-size: smaller;
   vertical-align: 1px;
   margin-right: 1px;

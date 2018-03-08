@@ -756,6 +756,7 @@ input.dp-applied {
 }
 
 /* For search forms */
+/* TODO: Remove when cleaning up old search */
 .SearchDrawer {
 	//background: $complement-color url(../images/search-top-left-corner.png?v=#{$version}) top left no-repeat;
 	border-top: 5px solid $complement-color;
@@ -839,6 +840,80 @@ div.HRDrawer {
 	nopadding-right: 1em;
 	margin-top: 0;
 }
+/* Search forms v2 */
+/* TODO: Remove comment before final commit */
+.search_form_handler{
+	/* Sizing reset */
+	*{
+		box-sizing: border-box;
+	}
+	/* Hyperlink reset */
+	a{
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.sf_criterion_area{
+		/* Common style between criterion and more criterion */
+		.sf_active_criterion,
+		.sf_more_criterion{
+			display: inline-block;
+		}
+		.sf_more_criterion,
+		.search_form_criteria{
+			position: relative;
+			padding: 8px 10px;
+			background-color: $combodo-orange;
+			color: $white;
+		}
+
+		/* Criteria tags */
+		.search_form_criteria{
+			display: inline-block;
+			margin-right: 3px;
+
+			&.locked{
+				background-color: $gray-extra-light;
+			}
+
+			.sfc_close{
+
+			}
+			.sfc_toggle{
+				&.opened{
+
+				}
+			}
+			.sfc_title{
+
+			}
+			.sfc_form_group{
+				display: none;
+
+				&.opened{
+					display: block;
+				}
+			}
+		}
+
+		/* More criterion */
+		.sf_more_criterion{
+			.sf_mc_list{
+				position: absolute;
+				margin: 0px;
+				top: 100%;
+				left: 0px;
+				background-color: $combodo-orange;
+
+				.sf_mc_field{
+					cursor: pointer;
+					white-space: nowrap;
+				}
+			}
+		}
+	}
+}
+
 .mandatory {
 	border: 1px solid #f00;
 }
