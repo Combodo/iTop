@@ -112,6 +112,7 @@ class SearchForm
 
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
+			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
 			'search' => array(
 				'fields' => $aFields,
 				'criterion' => $aCriterion,

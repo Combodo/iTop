@@ -448,6 +448,7 @@ class BinaryExpression extends Expression
 
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
+		$bReverseOperator = false;
 		$oLeftExpr = $this->GetLeftExpr();
 		$oRightExpr = $this->GetRightExpr();
 		if ($oLeftExpr instanceof FieldExpression && $oRightExpr instanceof FieldExpression)
@@ -462,6 +463,7 @@ class BinaryExpression extends Expression
 		if ($oRightExpr instanceof FieldExpression)
 		{
 			$oAttDef = $oRightExpr->GetAttDef($oSearch->GetJoinedClasses());
+			$bReverseOperator = true;
 		}
 
 		if (is_null($oAttDef))
@@ -474,7 +476,33 @@ class BinaryExpression extends Expression
 
 		$aCriteria = array_merge($aCriteriaLeft, $aCriteriaRight);
 
-		$aCriteria['operator'] = $this->GetOperator();
+		if ($bReverseOperator)
+		{
+			// switch left and right expressions so reverse the operator
+			// Note that the operation is the same so < becomes > and not >=
+			switch ($this->GetOperator())
+			{
+				case '>':
+					$aCriteria['operator'] = '<';
+					break;
+				case '<':
+					$aCriteria['operator'] = '>';
+					break;
+				case '>=':
+					$aCriteria['operator'] = '<=';
+					break;
+				case '<=':
+					$aCriteria['operator'] = '>=';
+					break;
+				default:
+					$aCriteria['operator'] = $this->GetOperator();
+					break;
+			}
+		}
+		else
+		{
+			$aCriteria['operator'] = $this->GetOperator();
+		}
 		$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
 
 		return $aCriteria;

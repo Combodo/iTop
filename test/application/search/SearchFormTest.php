@@ -59,6 +59,8 @@ class SearchFormTest extends ItopDataTestCase
 	public function testGetCriterion($sOQL, $iOrCount)
 	{
 		$aCriterion = SearchForm::GetCriterion(\DBObjectSearch::FromOQL($sOQL));
+		$aRes = array('base_oql' => $sOQL, 'criterion' => $aCriterion);
+		$this->debug(json_encode($aRes));
 		$this->debug($sOQL);
 		$this->debug(json_encode($aCriterion, JSON_PRETTY_PRINT));
 		$this->assertCount($iOrCount, $aCriterion['or']);
@@ -75,7 +77,7 @@ class SearchFormTest extends ItopDataTestCase
 			array('OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')", 1),
 			array('OQL' => "SELECT Contact WHERE status = 'active' OR name LIKE 'toto%'", 2),
 			array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date", 1),
-			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01' AND start_date < '2018-01-01'", 1),
+			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01' AND '2018-01-01' >= start_date", 1),
 		);
 	}
 }
