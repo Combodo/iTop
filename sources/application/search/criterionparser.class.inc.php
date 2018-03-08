@@ -29,6 +29,7 @@
 namespace Combodo\iTop\Application\Search;
 
 
+use Combodo\iTop\Application\Search\CriterionConversion\CriterionToOQL;
 use DBObjectSearch;
 use IssueLog;
 use OQLException;
@@ -62,18 +63,16 @@ class CriterionParser
 		}
 
 		// Sanitize the base OQL
-		if (strpos($sBaseOql, ' WHERE '))
+		try
 		{
-			try
-			{
-				$oSearch = DBObjectSearch::FromOQL($sBaseOql);
-				$oSearch->ResetCondition();
-				$sBaseOql = $oSearch->ToOQL();
-			} catch (OQLException $e)
-			{
-				IssueLog::Error($e->getMessage());
-			}
+			$oSearch = DBObjectSearch::FromOQL($sBaseOql);
+			$oSearch->ResetCondition();
+			$sBaseOql = str_replace(' WHERE 1', '', $oSearch->ToOQL());
+		} catch (OQLException $e)
+		{
+			IssueLog::Error($e->getMessage());
 		}
+
 
 		return $sBaseOql.' WHERE '.implode(" OR ", $aExpression).'';
 	}
@@ -83,7 +82,7 @@ class CriterionParser
 		$aExpression = array();
 		foreach($aAnd as $aCriteria)
 		{
-			$aExpression[] = self::ParseCriteria($aCriteria);
+			$aExpression[] = CriterionToOQL::Convert($aCriteria);
 		}
 
 		if (empty($aExpression))
@@ -92,23 +91,5 @@ class CriterionParser
 		}
 
 		return '('.implode(" AND ", $aExpression).')';
-	}
-
-	private static function ParseCriteria($aCriteria)
-	{
-
-		if (!empty($aCriteria['oql']))
-		{
-			return $aCriteria['oql'];
-		}
-
-		// TODO Manage more complicated case
-		$aRef = explode('.', $aCriteria['ref']);
-		$sRef = '`'.$aRef[0].'`.`'.$aRef[1].'`';
-
-		$sOperator = $aCriteria['operator'];
-		$sValue = $aCriteria['values'][0]['value'];
-
-		return "({$sRef} {$sOperator} '{$sValue}')";
 	}
 }

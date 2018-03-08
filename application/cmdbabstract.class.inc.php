@@ -46,6 +46,10 @@ require_once(APPROOT.'/application/ui.htmleditorwidget.class.inc.php');
 require_once(APPROOT.'/application/datatable.class.inc.php');
 require_once(APPROOT.'/sources/renderer/console/consoleformrenderer.class.inc.php');
 require_once(APPROOT.'/sources/application/search/searchform.class.inc.php');
+require_once(APPROOT.'/sources/application/search/criterionparser.class.inc.php');
+require_once(APPROOT.'/sources/application/search/criterionconversionabstract.class.inc.php');
+require_once(APPROOT.'/sources/application/search/criterionconversion/criteriontooql.class.inc.php');
+require_once(APPROOT.'/sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
 
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {

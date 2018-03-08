@@ -912,9 +912,26 @@ class FieldExpression extends UnaryExpression
 	}
 
 
+	/**
+	 * @param $oSearch
+	 * @param null $aArgs
+	 * @param bool $bRetrofitParams
+	 * @param AttributeDefinition $oAttDef
+	 *
+	 * @return array
+	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
-		return array('ref' => $this->GetParent().'.'.$this->GetName());
+		if (!is_null($oAttDef))
+		{
+			$sSearchType = $oAttDef->GetSearchType();
+		}
+		else
+		{
+			$sSearchType = AttributeDefinition::SEARCH_WIDGET_TYPE;
+		}
+
+		return array('ref' => $this->GetParent().'.'.$this->GetName(), 'widget' => $sSearchType);
 	}
 }
 

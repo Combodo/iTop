@@ -19,17 +19,19 @@
  *
  */
 
-/**
- * Created by PhpStorm.
- * User: Eric
- * Date: 08/03/2018
- * Time: 14:47
- */
 
 namespace Combodo\iTop\Application\Search;
 
 
-class CriterionConversion
+abstract class CriterionConversionAbstract
 {
 
+	const OP_CONTAINS = 'contains';
+	const OP_STARTS_WITH = 'starts_with';
+	const OP_ENDS_WITH = 'ends_with';
+	const OP_EMPTY = 'empty';
+	const OP_NOT_EMPTY = 'not_empty';
+
+
 }
+

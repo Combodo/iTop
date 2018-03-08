@@ -26,6 +26,7 @@ namespace Combodo\iTop\Application\Search;
 use ApplicationContext;
 use AttributeDefinition;
 use CMDBObjectSet;
+use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use CoreException;
 use DBObjectSearch;
 use Dict;
@@ -212,6 +213,7 @@ class SearchForm
 				}
 				$aAndCriterion[] = $oAndSubExpr->GetCriterion($oSearch);
 			}
+			$aAndCriterion = CriterionToSearchForm::Convert($aAndCriterion);
 			$aOrCriterion[] = array('and' => $aAndCriterion);
 		}
 
