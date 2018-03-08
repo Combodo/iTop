@@ -110,8 +110,14 @@ class SearchForm
 		$oBaseSearch = $oSearch->DeepClone();
 		$oBaseSearch->ResetCondition();
 
+		if (!isset($aExtraParams['table_id']))
+		{
+			$aExtraParams['table_id'] = "search_form_result_{$sSearchFormId}";
+			$sHtml .= "<div class=\"display_block\" id=\"search_form_result_{$sSearchFormId}\"></div>\n";
+		}
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
+			'result_list_outer_selector' => "#{$aExtraParams['table_id']}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
 			'search' => array(
 				'fields' => $aFields,

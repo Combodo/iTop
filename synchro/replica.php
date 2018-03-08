@@ -59,7 +59,7 @@ try
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'oql'));
 		}
 		$oFilter = DBObjectSearch::FromOQL($sOQL);
-		$oBlock1 = new DisplayBlock($oFilter, 'search', false, array('menu'=>false));
+			$oBlock1 = new DisplayBlock($oFilter, 'search', false, array('menu' => false, 'table_id' => '1'));
 		$oBlock1->Display($oP, 0);
 		$oP->add('<p class="page-header">'.MetaModel::GetClassIcon('SynchroReplica').Dict::S('Core:SynchroReplica:ListOfReplicas').'</p>');
 		$iSourceId = utils::ReadParam('datasource', null);

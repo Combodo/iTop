@@ -347,7 +347,7 @@ class WebPage implements Page
 	 */
 	public function GetDetails($aFields)
 	{
-		$sHtml = "<div class=\"details\">\n";
+		$sHtml = "<div class=\"details\" id='search-widget-results-outer'>\n";
 		foreach($aFields as $aAttrib)
 		{
 			$sDataAttCode = isset($aAttrib['attcode']) ? "data-attcode=\"{$aAttrib['attcode']}\"" : '';
