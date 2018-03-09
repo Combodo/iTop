@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -180,12 +180,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:NewError+' => 'Criar um erro conhecido',
 	'Menu:SearchError' => 'Pesquisar por um erro conhecido',
 	'Menu:SearchError+' => 'Pesquisar por erros conhecidos',
-        'Menu:Problem:KnownErrors' => 'Todos erros conhecidos',
-        'Menu:Problem:KnownErrors+' => 'Todos erros conhecidos',
+    'Menu:Problem:KnownErrors' => 'Todos erros conhecidos',
+    'Menu:Problem:KnownErrors+' => 'Todos erros conhecidos',
 	'Menu:FAQCategory' => 'Categorias FAQ',
 	'Menu:FAQCategory+' => 'Todas categorias FAQ',
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => 'Todas FAQs',
-
+	
+	'Brick:Portal:FAQ:Menu' => 'FAQ',
+	'Brick:Portal:FAQ:Title' => 'Dúvidas frequentes',
+	'Brick:Portal:FAQ:Title+' => '<p>Já conferiu nossa lista de perguntas frequentes?</p><p>Talvez encontre a resposta esperada imediatamente.</p>',
 ));
-?>
