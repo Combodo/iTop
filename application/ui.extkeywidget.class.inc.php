@@ -342,7 +342,7 @@ EOF
 		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oBlock = new DisplayBlock($oFilter, 'search', false, $aParams);
 		$sHTML .= $oBlock->GetDisplay($oPage, $this->iId,
-			array('open' => $bOpen, 'currentId' => $this->iId, 'table_id' => "dr_{$this->iId}"));
+			array('open' => $bOpen, 'currentId' => $this->iId, 'table_id' => "dr_{$this->iId}", 'selection_mode' => true, 'selection_type' => 'single'));
 		$sHTML .= "<form id=\"fr_{$this->iId}\" OnSubmit=\"return oACWidget_{$this->iId}.DoOk();\">\n";
 		$sHTML .= "<div id=\"dr_{$this->iId}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
 		$sHTML .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";

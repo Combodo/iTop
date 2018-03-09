@@ -53,6 +53,18 @@ try
 	$oFilter = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion']);
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
 
+	$sListParams = stripslashes(utils::ReadParam('list_params', '{}', false, 'raw_data'));
+	$aListParams = json_decode($sListParams, true);
+
+	if (array_key_exists('selection_mode', $aListParams))
+	{
+		$aExtraParams['selection_mode'] = $aListParams['selection_mode'];
+	}
+	if (array_key_exists('selection_type', $aListParams))
+	{
+		$aExtraParams['selection_type'] = $aListParams['selection_type'];
+	}
+
 	$aExtraParams['display_limit'] = true;
 	$aExtraParams['truncated'] = true;
 	$aExtraParams['currentId'] = uniqid('ajax-search-form');

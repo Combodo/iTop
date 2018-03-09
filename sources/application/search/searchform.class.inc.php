@@ -74,6 +74,16 @@ class SearchForm
 		{
 			$sRootClass = $sClassName;
 		}
+		$aListParams = array();
+		if (array_key_exists('selection_mode', $aExtraParams))
+		{
+			$aListParams['selection_mode'] = $aExtraParams['selection_mode'];
+		}
+		if (array_key_exists('selection_type', $aExtraParams))
+		{
+			$aListParams['selection_type'] = $aExtraParams['selection_type'];
+		}
+
 		$aSubClasses = MetaModel::GetSubclasses($sRootClass);
 		if (count($aSubClasses) > 0)
 		{
@@ -120,6 +130,7 @@ class SearchForm
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
 			'result_list_outer_selector' => "#{$aExtraParams['table_id']}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
+			'list_params' => $aListParams,
 			'search' => array(
 				'fields' => $aFields,
 				'criterion' => $aCriterion,
