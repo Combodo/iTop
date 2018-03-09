@@ -110,6 +110,8 @@ class SearchForm
 
 		$oBaseSearch = $oSearch->DeepClone();
 		$oBaseSearch->ResetCondition();
+		$sBaseOQL = $sBaseOql = str_replace(' WHERE 1', '', $oBaseSearch->ToOQL());
+
 
 		if (!isset($aExtraParams['table_id']))
 		{
@@ -123,7 +125,7 @@ class SearchForm
 			'search' => array(
 				'fields' => $aFields,
 				'criterion' => $aCriterion,
-				'base_oql' => $oBaseSearch->ToOQL(),
+				'base_oql' => $sBaseOQL,
 			),
 		);
 
