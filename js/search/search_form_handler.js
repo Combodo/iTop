@@ -51,7 +51,7 @@ $(function()
 					// 	},
 				],
 			},
-			'supported_criterion_types': ['raw'],
+			'supported_criterion_types': ['raw', 'string'],
 			'default_criteria_type': 'raw',
 		},
 
@@ -60,6 +60,7 @@ $(function()
 		{
 			active_criterion: null,
 			more_criterion: null,
+			results_area: null,
 		},
 
 		// the constructor
@@ -113,16 +114,23 @@ $(function()
 		{
 			var me = this;
 
+			// Form events
+			// - Prevent regular form submission (eg. hitting "Enter" in inputs)
+			this.element.on('submit', function(oEvent){
+				oEvent.preventDefault();
+			});
+
 			// Criteria events
 			this.element.bind('itop.search.criteria.value_changed', function(oEvent, oData){
 				me._onCriteriaValueChanged(oData);
+			});
+			this.element.bind('itop.search.criteria.removed', function(oEvent, oData){
+				me._onCriteriaRemoved(oData);
 			});
 		},
 		// - Update search option of the widget
 		_updateSearch: function()
 		{
-			var me = this;
-
 			// Criterion
 			// - Note: As of today, only a "or" level with a "and" is supported, so the following part
 			//         will need some refactoring when introducing new stuff.
@@ -170,10 +178,6 @@ $(function()
 			// Prepare content
 			this._prepareExistingCriterion();
 			this._prepareMoreCriterionMenu();
-
-			// TODO: Delete this
-			oCriterionAreaElem.append( $('<button type="button" value="submit" class="sf_submit_btn">Go!</button>') );
-			this.options.submit_button_selector = '.sf_submit_btn';
 		},
 		// - Prepare existing criterion
 		_prepareExistingCriterion: function()
@@ -209,7 +213,7 @@ $(function()
 				this.elements.more_criterion.find('> .sf_mc_list').append(oFieldElem);
 			}
 
-			// Bind event
+			// Bind events
 			this.elements.more_criterion.find('.sf_mc_field').on('click', function(){
 				// Prepare new criterion data
 				var oData = {
@@ -235,6 +239,8 @@ $(function()
 				oResultAreaElem = $('<div></div>').appendTo(this.element);
 			}
 			oResultAreaElem.addClass('sf_results_area');
+
+			this.elements.results_area = oResultAreaElem;
 		},
 
 
@@ -242,15 +248,24 @@ $(function()
 		// - Add a criteria to the form
 		_addCriteria: function(oData)
 		{
-			var sRef = oData.ref
+			var sRef = oData.ref;
 			var sType = this._getCriteriaTypeFromFieldRef(sRef);
 
 			if(sType !== null)
 			{
 				var sWidgetClass = 'search_form_criteria' + '_' + sType;
-				oCriteriaElem = $('<div></div>')
+
+				// Add some informations from the field
+				oData.field = {
+					label: this.options.search.fields[sRef].label,
+				};
+
+				// Create DOM element
+				var oCriteriaElem = $('<div></div>')
 					.addClass('sf_criteria')
 					.appendTo(this.elements.active_criterion);
+
+				// Instanciate widget
 				$.itop[sWidgetClass](oData, oCriteriaElem);
 			}
 			else
@@ -282,8 +297,12 @@ $(function()
 			return sType;
 		},
 		// Criteria handlers
-		// - Event value changed
 		_onCriteriaValueChanged: function(oData)
+		{
+			this._updateSearch();
+			this._submit();
+		},
+		_onCriteriaRemoved: function(oData)
 		{
 			this._updateSearch();
 			this._submit();
@@ -295,15 +314,12 @@ $(function()
 			// Assertion: the search is already up to date
 			this._submit();
 		},
-		_onCancelClick: function(oEvent)
-		{
-			// TODO
-		},
 
 
 		// Submit handlers
 		_submit: function()
 		{
+			var me = this;
 			var oData = {
 				'params': JSON.stringify({
 					'base_oql': this.options.search.base_oql,
@@ -311,51 +327,47 @@ $(function()
 				}),
 			};
 
+			// Show loader
+			this._showLoader();
+
+			// Do submit
 			$.post(
 				this.options.endpoint,
-				oData,
-				function(oResponse, sStatus, oXHR){
-					console.log('POST success', oResponse, sStatus, oXHR);
-				}
+				oData
 			)
-				.done(function(a,b,c,d){ console.log('POST done', a,b,c,d);})
-				.fail(function(a,b,c,d){ console.log('POST fail', a,b,c,d);})
-				.always(function(a,b,c,d){ console.log('POST always', a,b,c,d);});
+				.done(function(oResponse, sStatus, oXHR){ me._onSubmitSuccess(oResponse); })
+				.fail(function(oResponse, sStatus, oXHR){ me._onSubmitFailure(oResponse); })
+				.always(function(oResponse, sStatus, oXHR){ me._onSubmitAlways(oResponse); });
 		},
 		// - Called on form submit successes
-		_onSubmitSuccess: function(oData, sFormPath)
+		_onSubmitSuccess: function(oData)
 		{
-			// TODO
-			// if(oData.form.updated_fields !== undefined)
-			// {
-			// 	this.element.find('[data-form-path="' + sFormPath + '"]').trigger('update_form', {updated_fields: oData.form.updated_fields});
-			// }
+			this.elements.results_area.html(oData);
 		},
 		// - Called on form submit failures
-		_onSubmitFailure: function(oData, sFormPath)
+		_onSubmitFailure: function(oData)
 		{
-			// TODO
+			// TODO: onSubmitFailure callback
 		},
 		// - Called after form submits
-		_onSubmitAlways: function(oData, sFormPath)
+		_onSubmitAlways: function(oData)
 		{
-			// TODO
-			// // Check all touched AFTER ajax is complete, otherwise the renderer will redraw the field in the mean time.
-			// this.element.find('[data-form-path="' + sFormPath + '"]').trigger('validate');
-			// this._enableFormAfterLoading();
+			this._hideLoader();
 		},
 
 
 		// Global helpers
 		// - Show loader
-		_disableFormBeforeLoading: function()
+		_showLoader: function()
 		{
-			// TODO
+			// TODO: Show loader
+			this._trace('Show loader');
 		},
-		// - Remove loader
-		_enableFormAfterLoading: function()
+		// - Hide loader
+		_hideLoader: function()
 		{
-			// TODO
+			// TODO: Hide loader
+			this._trace('Hide loader');
 		},
 
 

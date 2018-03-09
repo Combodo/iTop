@@ -9,16 +9,19 @@ $(function()
 		// default options
 		options:
 		{
-			get_current_values_callback: 'getCurrentValues',
-			set_current_values_callback: function(me, oEvent, oData){ console.log('Search form criteria: set_current_values_callback must be overloaded, this is the default callback.'); },
-
 			ref: '',
 			operator: '=',
 			values: [],
 			oql: '',
 			is_removable: true,
+
+			field: {
+				label: '',
+			},
 			is_modified: false, // TODO: change this on value change and remove oql property value
 		},
+
+		handler: null,
    
 		// the constructor
 		_create: function()
@@ -26,6 +29,9 @@ $(function()
 			var me = this;
 			
 			this.element.addClass('search_form_criteria');
+
+			// Link search form handler
+			this.handler = this.element.closest('.search_form_handler');
 
 			// GetData
 			this.element.bind('itop.search.criteria.get_data', function(oEvent, oData){
@@ -78,25 +84,25 @@ $(function()
 		},
 
 
-		// Public methods
-		getCurrentValues: function()
+		// Protected methods
+		_remove: function()
 		{
-			var aValues = this.options.values;
-			return aValues;
+			this.element.remove();
+			this.handler.triggerHandler('itop.search.criteria.removed');
 		},
 
 
 		// Event callbacks
 		_onGetData: function(oData)
 		{
-			var oData = {
+			var oCriteriaData = {
 				'ref': this.options.ref,
 				'operator': this.options.operator,
 				'values': this.options.values,
 				'is_removable': this.options.is_removable,
 				'oql': this.options.oql,
 			};
-			return oData;
+			return oCriteriaData;
 		},
 
 
@@ -104,6 +110,8 @@ $(function()
 		// - Prepare element DOM structure
 		_prepareElement: function()
 		{
+			var me = this;
+
 			// Prepare base DOM structure
 			//this.options.ref+' '+this.options.operator+' '+this.options.values
 			this.element
@@ -111,10 +119,19 @@ $(function()
 				.append('<div class="sfc_form_group"></div>')
 				.append('<div class="sfc_toggle"><a class="fa fa-caret-down" href="#"></a></div>');
 
+			// Bind events
+			// - Toggler
+			this.element.find('.sfc_toggle, .sfc_title').on('click', function(){
+				me.element.find('.sfc_form_group').toggle();
+			});
+
 			// Removable / locked decoration
 			if(this.options.is_removable === true)
 			{
 				this.element.append('<div class="sfc_close"><a class="fa fa-times" href="#"></a></div>');
+				this.element.find('.sfc_close').on('click', function(){
+					me._remove();
+				});
 			}
 			else
 			{
@@ -131,6 +148,32 @@ $(function()
 				// TODO: Make nice label
 			}
 			this.element.find('.sfc_title').text(sTitle);
+		},
+
+
+		// Values helpers
+		_getValuesAsText: function()
+		{
+			var aValues = [];
+			for(var iValueIdx in this.options.values)
+			{
+				aValues.push(this.options.values[iValueIdx].value);
+			}
+
+			return aValues.join(', ');
+		},
+		_makeOQLExpression: function()
+		{
+			var aValues = [];
+			var sOQL = '';
+
+			for(var iValueIdx in this.options.values)
+			{
+				aValues.push( '\'' + this.options.values[iValueIdx].value + '\'' );
+			}
+			sOQL += '(`' + this.options.ref + '`) ' + this.options.operator + ' ' + aValues.join(', ') + ')';
+
+			return sOQL;
 		},
 
 
