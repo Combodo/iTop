@@ -51,6 +51,7 @@ $(function()
 					// 	},
 				],
 			},
+			'list_params': {},	// Passed through to the endpoint so it can render the list correctly regarding the context.
 			'supported_criterion_types': ['raw', 'string'],
 			'default_criteria_type': 'raw',
 		},
@@ -334,6 +335,7 @@ $(function()
 					'base_oql': this.options.search.base_oql,
 					'criterion': this.options.search.criterion,
 				}),
+				'list_params': this.options.list_params,
 			};
 
 			// Show loader
@@ -358,7 +360,7 @@ $(function()
 		// - Called on form submit failures
 		_onSubmitFailure: function(oData)
 		{
-			// TODO: onSubmitFailure callback
+			// TODO: onSubmitFailure callback. Show oData in a debug or error div.
 		},
 		// - Called after form submits
 		_onSubmitAlways: function(oData)
