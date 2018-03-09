@@ -111,7 +111,11 @@ define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/re
  */
 abstract class AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = 'raw';
+	const SEARCH_WIDGET_TYPE_RAW = 'raw';
+	const SEARCH_WIDGET_TYPE_STRING = 'string';
+	const SEARCH_WIDGET_TYPE_ENUM = 'enum';
+	const SEARCH_WIDGET_TYPE_EXTERNAL_KEY = 'external_key';
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	public function GetType()
 	{
@@ -2097,7 +2101,7 @@ class AttributeBoolean extends AttributeInteger
  */
 class AttributeString extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = 'string';
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	static public function ListExpectedParams()
 	{
@@ -3447,7 +3451,7 @@ class AttributeTemplateHTML extends AttributeText
  */
 class AttributeEnum extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = 'enum';
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
 
 	static public function ListExpectedParams()
 	{
@@ -4542,7 +4546,7 @@ class AttributeDeadline extends AttributeDateTime
  */
 class AttributeExternalKey extends AttributeDBFieldVoid
 {
-	const SEARCH_WIDGET_TYPE = 'external_key';
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 
 	static public function ListExpectedParams()
 	{
