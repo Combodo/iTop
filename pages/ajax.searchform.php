@@ -56,6 +56,7 @@ try
 
 	$aExtraParams['display_limit'] = true;
 	$aExtraParams['truncated'] = true;
+	$aExtraParams['currentId'] = uniqid('ajax-search-form');
 	$oDisplayBlock->RenderContent($oPage, $aExtraParams);
 
 	$oPage->output();
