@@ -50,8 +50,7 @@ try
 	$oPage->SetContentType('text/html');
 
 	$aParams = json_decode($sParams, true);
-	$sOQL = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion']);
-	$oFilter = DBSearch::FromOQL($sOQL);
+	$oFilter = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion']);
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
 
 	$aExtraParams['display_limit'] = true;

@@ -50,37 +50,60 @@ class CriterionToOQL extends CriterionConversionAbstract
 			self::OP_ENDS_WITH => 'EndsWithToOql',
 			self::OP_EMPTY => 'EmptyToOql',
 			self::OP_NOT_EMPTY => 'NotEmptyToOql',
+			self::OP_ALL => 'AllToOql',
 		);
 
 		if (array_key_exists($sOperator, $aMappedOperators))
 		{
 			$sFct = $aMappedOperators[$sOperator];
 
-			return self::$sFct($sRef, $sOperator, $aCriteria['values']);
+			return self::$sFct($sRef, $sOperator, self::GetValues($aCriteria));
 		}
 
-		$sValue = $aCriteria['values'][0]['value'];
+		$sValue = self::GetValue(self::GetValues($aCriteria), 0);
 
 		return "({$sRef} {$sOperator} '{$sValue}')";
 	}
 
+	private static function GetValues($aCriteria)
+	{
+		if (!array_key_exists('values', $aCriteria))
+		{
+			return array();
+		}
+		return $aCriteria['values'];
+	}
+
+	private static function GetValue($aValues, $iIndex)
+	{
+		if (!array_key_exists($iIndex, $aValues))
+		{
+			return null;
+		}
+		if (!array_key_exists('value', $aValues[$iIndex]))
+		{
+			return null;
+		}
+		return $aValues[$iIndex]['value'];
+	}
+
 	protected static function ContainsToOql($sRef, $sOperator, $aValues)
 	{
-		$sValue = $aValues[0]['value'];
+		$sValue = self::GetValue($aValues, 0);
 
 		return "({$sRef} LIKE '%{$sValue}%')";
 	}
 
 	protected static function StartsWithToOql($sRef, $sOperator, $aValues)
 	{
-		$sValue = $aValues[0]['value'];
+		$sValue = self::GetValue($aValues, 0);
 
 		return "({$sRef} LIKE '{$sValue}%')";
 	}
 
 	protected static function EndsWithToOql($sRef, $sOperator, $aValues)
 	{
-		$sValue = $aValues[0]['value'];
+		$sValue = self::GetValue($aValues, 0);
 
 		return "({$sRef} LIKE '%{$sValue}')";
 	}
@@ -93,6 +116,11 @@ class CriterionToOQL extends CriterionConversionAbstract
 	protected static function NotEmptyToOql($sRef, $sOperator, $aValues)
 	{
 		return "({$sRef} != '')";
+	}
+
+	protected static function AllToOql($sRef, $sOperator, $aValues)
+	{
+		return "1";
 	}
 
 }

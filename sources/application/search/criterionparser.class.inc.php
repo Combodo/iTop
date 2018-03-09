@@ -41,7 +41,7 @@ class CriterionParser
 	 * @param $sBaseOql
 	 * @param $aCriterion
 	 *
-	 * @return string
+	 * @return \DBSearch
 	 */
 	public static function Parse($sBaseOql, $aCriterion)
 	{
@@ -57,24 +57,24 @@ class CriterionParser
 			}
 		}
 
-		if (empty($aExpression))
-		{
-			return $sBaseOql;
-		}
-
-		// Sanitize the base OQL
 		try
 		{
 			$oSearch = DBObjectSearch::FromOQL($sBaseOql);
+			if (empty($aExpression))
+			{
+				return $oSearch;
+			}
+
 			$oSearch->ResetCondition();
-			$sBaseOql = str_replace(' WHERE 1', '', $oSearch->ToOQL());
+			$oExpression = \Expression::FromOQL(implode(" OR ", $aExpression));
+			$oSearch->AddConditionExpression($oExpression);
+			
+			return $oSearch;
 		} catch (OQLException $e)
 		{
 			IssueLog::Error($e->getMessage());
 		}
-
-
-		return $sBaseOql.' WHERE '.implode(" OR ", $aExpression).'';
+		return null;
 	}
 
 	private static function ParseAndList($aAnd)

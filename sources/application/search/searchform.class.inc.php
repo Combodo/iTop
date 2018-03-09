@@ -99,10 +99,8 @@ class SearchForm
 		$sHtml .= "<div id=\"fs_{$sSearchFormId}_criterion_outer\">\n";
 		$sHtml .= "</div>\n";
 
-
 		$sPrimaryClassName = $oSet->GetClass();
 		$sPrimaryClassAlias = $oSet->GetClassAlias();
-
 
 		$aFields = self::GetFields($sPrimaryClassName, $sPrimaryClassAlias);
 		$oSearch = $oSet->GetFilter();

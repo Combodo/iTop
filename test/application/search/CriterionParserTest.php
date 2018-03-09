@@ -78,10 +78,10 @@ class CriterionParserTest extends ItopDataTestCase
     ]
 }
 ', true);
-		$sOQL = CriterionParser::Parse($sBaseOql, $aCriterion);
+		$oSearch = CriterionParser::Parse($sBaseOql, $aCriterion);
 
-		$this->debug($sOQL);
+		//$this->debug($oSearch);
 
-		$this->assertEquals("SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` > '2017-01-01') AND (`UserRequest`.`start_date` < '2018-01-01'))", $sOQL);
+		$this->assertEquals("SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` > '2017-01-01') AND (`UserRequest`.`start_date` < '2018-01-01'))", $oSearch->ToOQL());
 	}
 }
