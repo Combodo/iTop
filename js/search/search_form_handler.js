@@ -256,9 +256,12 @@ $(function()
 				var sWidgetClass = 'search_form_criteria' + '_' + sType;
 
 				// Add some informations from the field
-				oData.field = {
-					label: this.options.search.fields[sRef].label,
-				};
+				if(this._hasFieldDefinition(sRef))
+				{
+					oData.field = {
+						label: this.options.search.fields[sRef].label,
+					};
+				}
 
 				// Create DOM element
 				var oCriteriaElem = $('<div></div>')
@@ -306,6 +309,12 @@ $(function()
 		{
 			this._updateSearch();
 			this._submit();
+		},
+
+		// Field helpers
+		_hasFieldDefinition: function(sRef)
+		{
+			return (this.options.search.fields[sRef] !== undefined);
 		},
 
 		// Button handlers

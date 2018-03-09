@@ -117,7 +117,7 @@ $(function()
 			this.element
 				.append('<div class="sfc_title"></div>')
 				.append('<div class="sfc_form_group"></div>')
-				.append('<div class="sfc_toggle"><a class="fa fa-caret-down" href="#"></a></div>');
+				.append('<span class="sfc_toggle"><a class="fa fa-caret-down" href="#"></a></span>');
 
 			// Bind events
 			// - Toggler
@@ -128,7 +128,7 @@ $(function()
 			// Removable / locked decoration
 			if(this.options.is_removable === true)
 			{
-				this.element.append('<div class="sfc_close"><a class="fa fa-times" href="#"></a></div>');
+				this.element.append('<span class="sfc_close"><a class="fa fa-times" href="#"></a></span>');
 				this.element.find('.sfc_close').on('click', function(){
 					me._remove();
 				});
