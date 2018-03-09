@@ -784,15 +784,22 @@ div.HRDrawer {
 .search_form_handler .sf_criterion_area .search_form_criteria {
   display: inline-block;
   margin-right: 3px;
+  /* Special criterion processing */
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.locked {
   background-color: #f1f1f1;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_title {
+  cursor: pointer;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group {
   display: none;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened {
   display: block;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw .sfc_title {
+  cursor: initial;
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion .sf_mc_list {
   position: absolute;

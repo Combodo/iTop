@@ -339,6 +339,8 @@ $(function()
 			// Show loader
 			this._showLoader();
 
+			// TODO: Make a throttle mecanism or cancel previous call when a newer is made.
+
 			// Do submit
 			$.post(
 				this.options.endpoint,

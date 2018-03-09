@@ -885,13 +885,20 @@ div.HRDrawer {
 				}
 			}
 			.sfc_title{
-
+				cursor: pointer;
 			}
 			.sfc_form_group{
 				display: none;
 
 				&.opened{
 					display: block;
+				}
+			}
+
+			/* Special criterion processing */
+			&.search_form_criteria_raw{
+				.sfc_title{
+					cursor: initial;
 				}
 			}
 		}

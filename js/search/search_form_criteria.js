@@ -141,27 +141,31 @@ $(function()
 			// Fill criteria
 			this._setTitle();
 		},
+		// - Set the title element
 		_setTitle: function(sTitle)
 		{
 			if(sTitle === undefined)
 			{
 				// TODO: Make nice label
+				sTitle = this.options.field.label + ': ' + this._getValuesAsText();
 			}
 			this.element.find('.sfc_title').text(sTitle);
 		},
 
 
 		// Values helpers
+		// - Convert values to a standard string
 		_getValuesAsText: function()
 		{
 			var aValues = [];
 			for(var iValueIdx in this.options.values)
 			{
-				aValues.push(this.options.values[iValueIdx].value);
+				aValues.push(this.options.values[iValueIdx].label);
 			}
 
 			return aValues.join(', ');
 		},
+		// - Make an OQL expression from the criteria values and operator
 		_makeOQLExpression: function()
 		{
 			var aValues = [];

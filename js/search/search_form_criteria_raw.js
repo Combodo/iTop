@@ -43,6 +43,10 @@ $(function()
 			this._super( key, value );
 		},
 
+		//------------------
+		// Inherited methods
+		//------------------
+
 		// DOM element helpers
 		_prepareElement: function()
 		{

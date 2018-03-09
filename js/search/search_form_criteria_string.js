@@ -9,6 +9,7 @@ $(function()
 		// default options
 		options:
 		{
+			operator: 'contains',
 		},
    
 		// the constructor
@@ -43,6 +44,10 @@ $(function()
 			this._super( key, value );
 		},
 
+		//------------------
+		// Inherited methods
+		//------------------
+
 		// DOM element helpers
 		_prepareElement: function()
 		{
@@ -64,14 +69,6 @@ $(function()
 				me.handler.triggerHandler('itop.search.criteria.value_changed');
 			})
 				.appendTo(this.element.find('.sfc_form_group'));
-		},
-		_setTitle: function(sTitle)
-		{
-			if(sTitle === undefined)
-			{
-				sTitle = this.options.field.label + ': ' + this._getValuesAsText();
-			}
-			this._super(sTitle);
 		},
 	});
 });
