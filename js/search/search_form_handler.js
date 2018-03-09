@@ -254,7 +254,8 @@ $(function()
 
 			if(sType !== null)
 			{
-				var sWidgetClass = 'search_form_criteria' + '_' + sType;
+				// Retrieve widget class
+				var sWidgetName = this._getCriteriaWidgetNameFromType(sType);
 
 				// Add some informations from the field
 				if(this._hasFieldDefinition(sRef))
@@ -270,7 +271,7 @@ $(function()
 					.appendTo(this.elements.active_criterion);
 
 				// Instanciate widget
-				$.itop[sWidgetClass](oData, oCriteriaElem);
+				$.itop[sWidgetName](oData, oCriteriaElem);
 			}
 			else
 			{
@@ -299,6 +300,11 @@ $(function()
 			}
 
 			return sType;
+		},
+		// - Find a criteria's widget name from a criteria's type
+		_getCriteriaWidgetNameFromType: function(sType)
+		{
+			return 'search_form_criteria' + '_' + (($.itop['search_form_criteria_'+sType] !== undefined) ? sType : 'raw');
 		},
 		// Criteria handlers
 		_onCriteriaValueChanged: function(oData)
@@ -335,7 +341,7 @@ $(function()
 					'base_oql': this.options.search.base_oql,
 					'criterion': this.options.search.criterion,
 				}),
-				'list_params': this.options.list_params,
+				'list_params': JSON.stringify(this.options.list_params),
 			};
 
 			// Show loader
