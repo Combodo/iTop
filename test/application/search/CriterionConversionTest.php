@@ -29,6 +29,7 @@
 namespace Combodo\iTop\Test\UnitTest\Application\Search;
 
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToOQL;
+use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class CriterionConversionTest extends ItopDataTestCase
@@ -142,6 +143,141 @@ class CriterionConversionTest extends ItopDataTestCase
                     "oql": ""
                 }',
 				"(`Contact`.`name` != '')"
+			),
+		);
+	}
+
+	/**
+	 * @dataProvider ToSearchFormProvider
+	 */
+	function testToSearchForm($aCriterion, $sExpectedOperator)
+	{
+		$aRes = CriterionToSearchForm::Convert($aCriterion);
+		$this->debug($aRes);
+		$this->assertEquals($sExpectedOperator, $aRes[0]['operator']);
+	}
+
+	function ToSearchFormProvider()
+	{
+		return array(
+			'=' => array(
+				json_decode('[
+                {
+                    "ref": "Contact.name",
+                    "widget": "string",
+                    "values": [
+                        {
+                            "value": "toto",
+                            "label": "toto"
+                        }
+                    ],
+                    "operator": "=",
+                    "oql": "(`Contact`.`name` = \'toto\')"
+                }
+            ]', true),
+				'='
+			),
+			'starts_with' => array(
+				json_decode('[
+                {
+                    "ref": "Contact.name",
+                    "widget": "string",
+                    "values": [
+                        {
+                            "value": "toto%",
+                            "label": "toto%"
+                        }
+                    ],
+                    "operator": "LIKE",
+                    "oql": "(`Contact`.`name` LIKE \'toto%\')"
+                }
+            ]', true),
+				'starts_with'
+			),
+			'ends_with' => array(
+				json_decode('[
+                {
+                    "ref": "Contact.name",
+                    "widget": "string",
+                    "values": [
+                        {
+                            "value": "%toto",
+                            "label": "%toto"
+                        }
+                    ],
+                    "operator": "LIKE",
+                    "oql": "(`Contact`.`name` LIKE \'%toto\')"
+                }
+            ]', true),
+				'ends_with'
+			),
+			'contains' => array(
+				json_decode('[
+                {
+                    "widget": "string",
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "%toto%",
+                            "label": "%toto%"
+                        }
+                    ],
+                    "operator": "LIKE",
+                    "oql": "(`Contact`.`name` LIKE \'%toto%\')"
+                }
+            ]', true),
+				'contains'
+			),
+			'empty1' => array(
+				json_decode('[
+                {
+                    "widget": "string",
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "",
+                            "label": ""
+                        }
+                    ],
+                    "operator": "LIKE",
+                    "oql": "(`Contact`.`name` LIKE \'\')"
+                }
+            ]', true),
+				'empty'
+			),
+			'empty2' => array(
+				json_decode('[
+                {
+                    "widget": "string",
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "",
+                            "label": ""
+                        }
+                    ],
+                    "operator": "=",
+                    "oql": "(`Contact`.`name` = \'\')"
+                }
+            ]', true),
+				'empty'
+			),
+			'not_empty' => array(
+				json_decode('[
+                {
+                    "widget": "string",
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "",
+                            "label": ""
+                        }
+                    ],
+                    "operator": "!=",
+                    "oql": "(`Contact`.`name` != \'\')"
+                }
+            ]', true),
+				'not_empty'
 			),
 		);
 	}

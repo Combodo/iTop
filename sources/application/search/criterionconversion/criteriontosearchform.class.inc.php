@@ -58,32 +58,36 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	protected static function TextToSearchForm($aCriteria)
 	{
 		$sOperator = $aCriteria['operator'];
-		$aValues = $aCriteria['values'];
+		$sValue = $aCriteria['values'][0]['value'];
 
-		$value = $aValues[0]['value'];
-
-		$bStartWithPercent = $value{0} == '%' ? true : false;
-		$bEndWithPercent = $value{0} == '%' ? true : false;
+		$bStartWithPercent = substr($sValue, 0, 1) == '%' ? true : false;
+		$bEndWithPercent = substr($sValue, -1) == '%' ? true : false;
 
 		switch (true)
 		{
-			case ('' == $value and ($sOperator == '=' or $sOperator == 'LIKE')):
+			case ('' == $sValue and ($sOperator == '=' or $sOperator == 'LIKE')):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
 				break;
-			case ('' == $value and $sOperator == '!='):
+			case ('' == $sValue and $sOperator == '!='):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_NOT_EMPTY;
 				break;
 			case ($sOperator == 'LIKE' && $bStartWithPercent && $bEndWithPercent):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_CONTAINS;
-				$aValues[0]['value'] = substr($value, 1, strlen($value) - 2);
+				$sValue = substr($sValue, 1, -1);
+				$aCriteria['values'][0]['value'] = $sValue;
+				$aCriteria['values'][0]['label'] = $sValue;
 				break;
 			case ($sOperator == 'LIKE' && $bStartWithPercent):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_ENDS_WITH;
-				$aValues[0]['value'] = substr($value, 1, strlen($value) - 1);
+				$sValue = substr($sValue, 1);
+				$aCriteria['values'][0]['value'] = $sValue;
+				$aCriteria['values'][0]['label'] = $sValue;
 				break;
 			case ($sOperator == 'LIKE' && $bEndWithPercent):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_STARTS_WITH;
-				$aValues[0]['value'] = substr($value, 0, strlen($value) - 1);
+				$sValue = substr($sValue, 0, -1);
+				$aCriteria['values'][0]['value'] = $sValue;
+				$aCriteria['values'][0]['label'] = $sValue;
 				break;
 		}
 

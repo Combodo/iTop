@@ -931,7 +931,10 @@ class FieldExpression extends UnaryExpression
 			$sSearchType = AttributeDefinition::SEARCH_WIDGET_TYPE;
 		}
 
-		return array('ref' => $this->GetParent().'.'.$this->GetName(), 'widget' => $sSearchType);
+		return array(
+			'widget' => $sSearchType,
+			'ref' => $this->GetParent().'.'.$this->GetName(),
+		);
 	}
 }
 
