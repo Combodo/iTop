@@ -280,9 +280,17 @@ class DisplayBlock
 			 );
 			 ');
 		}
+
+
+        if ($this->m_sStyle != 'search') // Search form need to extract result list extra data, the simplest way is to expose this configuration
+        {
+            $oPage->add_script("$('#$sId').data('sExtraParams', \"$sExtraParams\");");
+            $oPage->add_script("$('#$sId').data('bAutoReload', ".json_encode($bAutoReload).");");
+        }
+
 		if (($bAutoReload) && ($this->m_sStyle != 'search')) // Search form do NOT auto-reload
 		{
-			$oPage->add_script('setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
+			$oPage->add_script('aAutoReloadBlock["'.$sId.'"] = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
 		}
 		return $sHtml;
 	}
