@@ -19,7 +19,9 @@
  *
  */
 
-
+/**
+ * Convert OQL expressions into structure for the search form
+ */
 namespace Combodo\iTop\Application\Search\CriterionConversion;
 
 

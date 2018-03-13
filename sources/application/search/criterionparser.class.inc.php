@@ -65,7 +65,6 @@ class CriterionParser
 				return $oSearch;
 			}
 
-			$oSearch->ResetCondition();
 			$oExpression = \Expression::FromOQL(implode(" OR ", $aExpression));
 			$oSearch->AddConditionExpression($oExpression);
 			

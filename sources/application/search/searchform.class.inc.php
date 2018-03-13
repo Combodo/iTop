@@ -41,6 +41,8 @@ use WebPage;
 
 class SearchForm
 {
+	private $aLabels = array();
+
 	/**
 	 * @param \WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
@@ -50,9 +52,10 @@ class SearchForm
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public static function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
+	public function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		$sHtml = '';
+		$this->aLabels = array();
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
 		$aListParams = array();
@@ -87,14 +90,11 @@ class SearchForm
 		{
 			$aListParams['selection_type'] = $aExtraParams['selection_type'];
 		}
-
 		$sJson = stripslashes(utils::ReadParam('json', '', false, 'raw_data'));
 		if (!empty($sJson))
 		{
 			$aListParams['json'] = json_decode($sJson, true);
 		}
-
-
 		if (array_key_exists('cssCount', $aExtraParams))
 		{
 			$aListParams['cssCount'] = $aExtraParams['cssCount'];
@@ -128,9 +128,9 @@ class SearchForm
 		$sPrimaryClassName = $oSet->GetClass();
 		$sPrimaryClassAlias = $oSet->GetClassAlias();
 
-		$aFields = self::GetFields($sPrimaryClassName, $sPrimaryClassAlias);
+		$aFields = $this->GetFields($sPrimaryClassName, $sPrimaryClassAlias);
 		$oSearch = $oSet->GetFilter();
-		$aCriterion = self::GetCriterion($oSearch);
+		$aCriterion = $this->GetCriterion($oSearch);
 
 		$oBaseSearch = $oSearch->DeepClone();
 		$oBaseSearch->ResetCondition();
@@ -171,7 +171,7 @@ class SearchForm
 	 *
 	 * @return array
 	 */
-	public static function GetFields($sClassName, $sClassAlias)
+	public function GetFields($sClassName, $sClassAlias)
 	{
 		$aFields = array();
 		try
@@ -189,7 +189,7 @@ class SearchForm
 				{
 					$oAttrDef = null;
 				}
-				$aZList = self::AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aZList);
+				$aZList = $this->AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aZList);
 			}
 			$aFields['zlist'] = $aZList;
 			$aOthers = array();
@@ -197,7 +197,7 @@ class SearchForm
 			{
 				if (!in_array($sFilterCode, $aList))
 				{
-					$aOthers = self::AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aOthers);
+					$aOthers = $this->AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aOthers);
 				}
 			}
 			$aFields['others'] = $aOthers;
@@ -214,7 +214,7 @@ class SearchForm
 	 *
 	 * @return array
 	 */
-	public static function GetFieldAllowedValues($oAttrDef)
+	public function GetFieldAllowedValues($oAttrDef)
 	{
 		if ($oAttrDef->IsExternalKey(EXTKEY_ABSOLUTE))
 		{
@@ -253,7 +253,7 @@ class SearchForm
 	/**
 	 * @param DBObjectSearch $oSearch
 	 */
-	public static function GetCriterion($oSearch)
+	public function GetCriterion($oSearch)
 	{
 		$oExpression = $oSearch->GetCriteria();
 
@@ -287,18 +287,23 @@ class SearchForm
 	 *
 	 * @return mixed
 	 */
-	private static function AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aFields)
+	private function AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aFields)
 	{
 		if (!is_null($oAttrDef) && ($oAttrDef->GetSearchType() != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
 		{
-			$aField = array();
-			$aField['code'] = $sFilterCode;
-			$aField['class'] = $sClassName;
-			$aField['class_alias'] = $sClassAlias;
-			$aField['label'] = $oAttrDef->GetLabel();
-			$aField['widget'] = $oAttrDef->GetSearchType();
-			$aField['allowed_values'] = self::GetFieldAllowedValues($oAttrDef);
-			$aFields[$sClassAlias.'.'.$sFilterCode] = $aField;
+			$sLabel = $oAttrDef->GetLabel();
+			if (!array_key_exists($sLabel, $this->aLabels))
+			{
+				$aField = array();
+				$aField['code'] = $sFilterCode;
+				$aField['class'] = $sClassName;
+				$aField['class_alias'] = $sClassAlias;
+				$aField['label'] = $sLabel;
+				$aField['widget'] = $oAttrDef->GetSearchType();
+				$aField['allowed_values'] = $this->GetFieldAllowedValues($oAttrDef);
+				$aFields[$sClassAlias.'.'.$sFilterCode] = $aField;
+				$this->aLabels[$sLabel] = true;
+			}
 		}
 
 		return $aFields;

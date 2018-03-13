@@ -1532,10 +1532,21 @@ EOF
 
 		$oPage->add(self::GetSearchForm($oPage, $oSet, $aExtraParams));
 	}
-	
+
+	/**
+	 * @param WebPage $oPage
+	 * @param CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return string
+	 * @throws CoreException
+	 * @throws DictExceptionMissingString
+	 */
 	public static function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		return \Combodo\iTop\Application\Search\SearchForm::GetSearchForm($oPage, $oSet, $aExtraParams);
+		$oSearchForm = new \Combodo\iTop\Application\Search\SearchForm();
+
+		return $oSearchForm->GetSearchForm($oPage, $oSet, $aExtraParams);
 	}
 
 	/**
