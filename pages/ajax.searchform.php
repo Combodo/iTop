@@ -104,18 +104,18 @@ try
 {
 	http_response_code($e->getCode());
 	// note: transform to cope with XSS attacks
-	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
+	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 } catch (SecurityException $e)
 {
 	http_response_code(403);
 	// note: transform to cope with XSS attacks
-	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
+	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 } catch (Exception $e)
 {
 	http_response_code(500);
 	// note: transform to cope with XSS attacks
-	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
+	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
