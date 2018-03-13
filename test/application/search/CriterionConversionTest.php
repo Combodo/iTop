@@ -30,6 +30,7 @@ namespace Combodo\iTop\Test\UnitTest\Application\Search;
 
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToOQL;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
+use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 class CriterionConversionTest extends ItopDataTestCase
@@ -155,10 +156,15 @@ class CriterionConversionTest extends ItopDataTestCase
 	 *
 	 * @param $aCriterion
 	 * @param $sExpectedOperator
+	 *
+	 * @throws \OQLException
 	 */
 	function testToSearchForm($aCriterion, $sExpectedOperator)
 	{
-		$aRes = CriterionToSearchForm::Convert($aCriterion);
+		$oSearchForm = new SearchForm();
+		$oSearch = \DBSearch::FromOQL("SELECT Contact");
+		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
+		$aRes = CriterionToSearchForm::Convert($aCriterion, $aFields);
 		$this->debug($aRes);
 		$this->assertEquals($sExpectedOperator, $aRes[0]['operator']);
 	}
