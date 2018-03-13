@@ -129,29 +129,41 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$sClass = $aCriteria['class'];
 		$aValues = $aCriteria['values'];
 
-		$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
-		if (array_key_exists($sAttCode, $aAttributeDefs))
+		try
 		{
-			$oAttDef = $aAttributeDefs[$sAttCode];
-			$aAllowedValues = SearchForm::GetFieldAllowedValues($oAttDef);
-			if (array_key_exists('values', $aAllowedValues))
+			$aAttributeDefs = \MetaModel::ListAttributeDefs($sClass);
+			if (array_key_exists($sAttCode, $aAttributeDefs))
 			{
-				$aAllowedValues = $aAllowedValues['values'];
-				// more selected values than remaining so use NOT IN
-				if (count($aValues) > (count($aAllowedValues) / 2))
+				$oAttDef = $aAttributeDefs[$sAttCode];
+				$aAllowedValues = SearchForm::GetFieldAllowedValues($oAttDef);
+				if (array_key_exists('values', $aAllowedValues))
 				{
-					foreach($aValues as $aValue)
+					$aAllowedValues = $aAllowedValues['values'];
+					// more selected values than remaining so use NOT IN
+					if (count($aValues) > (count($aAllowedValues) / 2))
 					{
-						unset($aAllowedValues[$aValue['value']]);
-					}
-					$sOQL = "({$sRef} NOT IN (";
-					$s .= implode(',', array_keys($aAllowedValues));
+						foreach($aValues as $aValue)
+						{
+							unset($aAllowedValues[$aValue['value']]);
+						}
+						$sInList = implode(',', array_keys($aAllowedValues));
 
+						return "({$sRef} NOT IN ($sInList))";
+					}
 				}
 			}
+		} catch (\CoreException $e)
+		{
 		}
 
-		return "({$sRef} != '')";
+		$aInValues = array();
+		foreach($aValues as $aValue)
+		{
+			$aInValues[] = $aValue['value'];
+		}
+		$sInList = implode(',', $aInValues);
+
+		return "({$sRef} IN ($sInList))";
 	}
 
 	protected static function AllToOql($sRef, $sOperator, $aCriteria)
