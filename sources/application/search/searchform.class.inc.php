@@ -125,10 +125,7 @@ class SearchForm
 		$sHtml .= "<div id=\"fs_{$sSearchFormId}_criterion_outer\">\n";
 		$sHtml .= "</div>\n";
 
-		$sPrimaryClassName = $oSet->GetClass();
-		$sPrimaryClassAlias = $oSet->GetClassAlias();
-
-		$aFields = $this->GetFields($sPrimaryClassName, $sPrimaryClassAlias);
+		$aFields = $this->GetFields($oSet);
 		$oSearch = $oSet->GetFilter();
 		$aCriterion = $this->GetCriterion($oSearch);
 
@@ -165,48 +162,68 @@ class SearchForm
 	}
 
 	/**
-	 * @param $sClassName
-	 *
-	 * @param $sClassAlias
+	 * @param DBObjectSet $oSet
 	 *
 	 * @return array
 	 */
-	public function GetFields($sClassName, $sClassAlias)
+	public function GetFields($oSet)
 	{
-		$aFields = array();
+		$oSearch = $oSet->GetFilter();
+		$aSelectedClasses = $oSearch->GetSelectedClasses();
+		$aAuthorizedClasses = array();
+		foreach($aSelectedClasses as $sAlias => $sClassName)
+		{
+			if (\UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) != UR_ALLOWED_NO)
+			{
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
+		$aAllFields = array();
 		try
 		{
-			$aList = MetaModel::GetZListItems($sClassName, 'standard_search');
-			$aAttrDefs = MetaModel::ListAttributeDefs($sClassName);
-			$aZList = array();
-			foreach($aList as $sFilterCode)
+			foreach($aAuthorizedClasses as $sAlias => $sClass)
 			{
-				if (array_key_exists($sFilterCode, $aAttrDefs))
+				$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
+				$aList = MetaModel::GetZListItems($sClass, 'standard_search');
+				$aZList = array();
+				foreach($aList as $sAttCode)
 				{
-					$oAttrDef = $aAttrDefs[$sFilterCode];
+					if (array_key_exists($sAttCode, $aAttributeDefs))
+					{
+						$oAttDef = $aAttributeDefs[$sAttCode];
+						$aZList = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aZList);
+						unset($aAttributeDefs[$sAttCode]);
+					}
 				}
-				else
+				usort($aZList, function ($aItem1, $aItem2) {
+					return strcmp($aItem1['label'], $aItem2['label']);
+				});
+				$aAllFields['zlist'] = $aZList;
+
+				$aOthers = array();
+				foreach($aAttributeDefs as $sAttCode => $oAttDef)
 				{
-					$oAttrDef = null;
+					if ($this->IsSubAttribute($oAttDef)) continue;
+
+					$aOthers = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aOthers);
 				}
-				$aZList = $this->AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aZList);
+				usort($aOthers, function ($aItem1, $aItem2) {
+					return strcmp($aItem1['label'], $aItem2['label']);
+				});
+
+				$aAllFields['others'] = $aOthers;
 			}
-			$aFields['zlist'] = $aZList;
-			$aOthers = array();
-			foreach($aAttrDefs as $sFilterCode => $oAttrDef)
-			{
-				if (!in_array($sFilterCode, $aList))
-				{
-					$aOthers = $this->AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aOthers);
-				}
-			}
-			$aFields['others'] = $aOthers;
 		} catch (CoreException $e)
 		{
 			IssueLog::Error($e->getMessage());
 		}
 
-		return $aFields;
+		return $aAllFields;
+	}
+
+	protected function IsSubAttribute($oAttDef)
+	{
+		return (($oAttDef instanceof AttributeFriendlyName) || ($oAttDef instanceof AttributeExternalField) || ($oAttDef instanceof AttributeSubItem));
 	}
 
 	/**
@@ -304,6 +321,22 @@ class SearchForm
 				$aFields[$sClassAlias.'.'.$sFilterCode] = $aField;
 				$this->aLabels[$sLabel] = true;
 			}
+
+			// Sub items
+			//
+			//	if ($oAttDef->IsSearchable())
+			//	{
+			//		$sShortLabel = $oAttDef->GetLabel();
+			//		$sLabel = $sShortAlias.$oAttDef->GetLabel();
+			//		$aSubAttr = $this->GetSubAttributes($sClass, $sAttCode, $oAttDef);
+			//		$aValidSubAttr = array();
+			//		foreach($aSubAttr as $aSubAttDef)
+			//		{
+			//			$aValidSubAttr[] = array('attcodeex' => $aSubAttDef['code'], 'code' => $sShortAlias.$aSubAttDef['code'], 'label' => $aSubAttDef['label'], 'unique_label' => $sShortAlias.$aSubAttDef['unique_label']);
+			//		}
+			//		$aAllFields[] = array('attcodeex' => $sAttCode, 'code' => $sShortAlias.$sAttCode, 'label' => $sShortLabel, 'unique_label' => $sLabel, 'subattr' => $aValidSubAttr);
+			//	}
+
 		}
 
 		return $aFields;
