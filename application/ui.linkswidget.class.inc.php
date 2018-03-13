@@ -386,8 +386,13 @@ EOF
 	/**
 	 * @param WebPage $oPage
 	 * @param DBObject $oCurrentObj
+	 * @param $sJson
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
-	public function GetObjectPickerDialog($oPage, $oCurrentObj)
+	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson)
 	{
 		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
@@ -395,7 +400,14 @@ EOF
 		$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
-			array('open' => $bOpen, 'table_id' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}", 'selection_mode' => true));
+			array(
+				'open' => $bOpen,
+				'table_id' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
+				'table_inner_id' => "ResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
+				'selection_mode' => true,
+				'json' => $sJson,
+				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix
+			));
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\" OnSubmit=\"return oWidget{$this->m_iInputId}.DoAddObjects(this.id);\">\n";
 		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
 		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";

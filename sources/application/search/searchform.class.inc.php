@@ -53,17 +53,20 @@ class SearchForm
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
+		$aListParams = array();
 
 		// Simple search form
 		if (isset($aExtraParams['currentId']))
 		{
 			$sSearchFormId = $aExtraParams['currentId'];
+			$aListParams['currentId'] = $aExtraParams['currentId'];
 		}
 		else
 		{
 			$iSearchFormId = $oPage->GetUniqueId();
 			$sSearchFormId = 'SimpleSearchForm'.$iSearchFormId;
 			$sHtml .= "<div id=\"ds_$sSearchFormId\" class=\"mini_tab{$iSearchFormId}\">\n";
+			$aListParams['currentId'] = "$iSearchFormId";
 		}
 		// Check if the current class has some sub-classes
 		if (isset($aExtraParams['baseClass']))
@@ -74,7 +77,6 @@ class SearchForm
 		{
 			$sRootClass = $sClassName;
 		}
-		$aListParams = array();
 		if (array_key_exists('selection_mode', $aExtraParams))
 		{
 			$aListParams['selection_mode'] = $aExtraParams['selection_mode'];
@@ -82,6 +84,18 @@ class SearchForm
 		if (array_key_exists('selection_type', $aExtraParams))
 		{
 			$aListParams['selection_type'] = $aExtraParams['selection_type'];
+		}
+
+		$sJson = stripslashes(utils::ReadParam('json', '', false, 'raw_data'));
+		if (!empty($sJson))
+		{
+			$aListParams['json'] = json_decode($sJson, true);
+		}
+
+
+		if (array_key_exists('cssCount', $aExtraParams))
+		{
+			$aListParams['cssCount'] = $aExtraParams['cssCount'];
 		}
 
 		$aSubClasses = MetaModel::GetSubclasses($sRootClass);
@@ -125,6 +139,11 @@ class SearchForm
 		{
 			$aExtraParams['table_id'] = "search_form_result_{$sSearchFormId}";
 			$sHtml .= "<div class=\"display_block\" id=\"search_form_result_{$sSearchFormId}\"></div>\n";
+		}
+		$aListParams['table_id'] = $aExtraParams['table_id'];
+		if (array_key_exists('table_inner_id', $aExtraParams))
+		{
+			$aListParams['table_inner_id'] = $aExtraParams['table_inner_id'];
 		}
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",

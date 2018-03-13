@@ -571,33 +571,6 @@ EOF
 		{
 			$oPage->add_ready_script("oTable.trigger(\"fakesorton\", [$sFakeSortList]);");
 		}
-		//if ($iNbPages == 1)
-		if (false)
-		{
-			if (isset($aExtraParams['cssCount']))
-			{
-				$sCssCount = $aExtraParams['cssCount'];
-				if ($sSelectMode == 'single')
-				{
-					$sSelectSelector = ":radio[name^=selectObj]";
-				}
-				else if ($sSelectMode == 'multiple')
-				{
-					$sSelectSelector = ":checkbox[name^=selectObj]";
-				}
-				$oPage->add_ready_script(
-<<<EOF
-	$('#{$this->iListId} table.listResults $sSelectSelector').change(function() {
-		var c = $('{$sCssCount}');							
-		var v = $('#{$this->iListId} table.listResults $sSelectSelector:checked').length;
-		c.val(v);
-		$('#{$this->iListId} .selectedCount').text(v);
-		c.trigger('change');	
-	});
-EOF
-				);
-			}
-		}
 		return $sHtml;
 	}
 	

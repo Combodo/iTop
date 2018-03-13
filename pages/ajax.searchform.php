@@ -31,6 +31,7 @@ require_once(APPROOT.'/application/user.preferences.class.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 require_once(APPROOT.'/sources/application/search/ajaxsearchexception.class.inc.php');
 require_once(APPROOT.'/sources/application/search/criterionparser.class.inc.php');
+require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 try
 {
@@ -56,6 +57,10 @@ try
 	$sListParams = stripslashes(utils::ReadParam('list_params', '{}', false, 'raw_data'));
 	$aListParams = json_decode($sListParams, true);
 
+	if (array_key_exists('currentId', $aListParams))
+	{
+		$aExtraParams['currentId'] = $aListParams['currentId'];
+	}
 	if (array_key_exists('selection_mode', $aListParams))
 	{
 		$aExtraParams['selection_mode'] = $aListParams['selection_mode'];
@@ -63,12 +68,35 @@ try
 	if (array_key_exists('selection_type', $aListParams))
 	{
 		$aExtraParams['selection_type'] = $aListParams['selection_type'];
+		// In case of single selection, the root of the HTML identifiers used is suffixed with "_results" (at least in the external keys)
+	}
+	if (array_key_exists('json', $aListParams))
+	{
+		$aJson = $aListParams['json'];
+		$sJson = json_encode($aJson);
+		$oWizardHelper = WizardHelper::FromJSON($sJson);
+		$oObj = $oWizardHelper->GetTargetObject();
+		$aExtraParams['query_params'] = array('this' => $oObj);
+	}
+	if (array_key_exists('cssCount', $aListParams))
+	{
+		$aExtraParams['cssCount'] = $aListParams['cssCount'];
+	}
+	if (array_key_exists('table_inner_id', $aListParams))
+	{
+		$sListId = $aListParams['table_inner_id'];
 	}
 
 	$aExtraParams['display_limit'] = true;
 	$aExtraParams['truncated'] = true;
-	$aExtraParams['currentId'] = uniqid('ajax-search-form');
-	$oDisplayBlock->RenderContent($oPage, $aExtraParams);
+	if (isset($sListId))
+	{
+		$oDisplayBlock->Display($oPage, $sListId, $aExtraParams);
+	}
+	else
+	{
+		$oDisplayBlock->RenderContent($oPage, $aExtraParams);
+	}
 
 	$oPage->output();
 

@@ -269,7 +269,7 @@ try
 			$oObj = null;
 		}
 		$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
-		$oWidget->GetObjectPickerDialog($oPage, $oObj);	
+			$oWidget->GetObjectPickerDialog($oPage, $oObj, $sJson);
 		break;
 		
 		// ui.linkswidget
