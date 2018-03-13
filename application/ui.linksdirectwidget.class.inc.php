@@ -305,7 +305,10 @@ class UILinksWidgetDirect
 		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}",
-			array('open' => $bOpen, 'table_id' => "SearchResultsToAdd_{$this->sInputid}"));
+			array(
+			    'open' => $bOpen,
+                'table_id' => "SearchResultsToAdd_{$this->sInputid}")
+        );
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->sInputid}\">\n";
 		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->sInputid}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
 		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";

@@ -290,7 +290,7 @@ class DisplayBlock
 
 		if (($bAutoReload) && ($this->m_sStyle != 'search')) // Search form do NOT auto-reload
 		{
-			$oPage->add_script('aAutoReloadBlock["'.$sId.'"] = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
+			$oPage->add_script('aAutoReloadBlock = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
 		}
 		return $sHtml;
 	}

@@ -19,15 +19,15 @@
  * Class UIExtKeyWidget
  * UI wdiget for displaying and editing external keys when
  * A simple drop-down list is not enough...
- * 
+ *
  * The layout is the following
- * 
+ *
  * +-- #label_<id> (input)-------+  +-----------+
  * |                             |  | Browse... |
  * +-----------------------------+  +-----------+
- * 
+ *
  * And the popup dialog has the following layout:
- * 
+ *
  * +------------------- ac_dlg_<id> (div)-----------+
  * + +--- ds_<id> (div)---------------------------+ |
  * | | +------------- fs_<id> (form)------------+ | |
@@ -61,13 +61,13 @@
 require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 
-class UIExtKeyWidget 
+class UIExtKeyWidget
 {
 	protected $iId;
 	protected $sTargetClass;
 	protected $sAttCode;
 	protected $bSearchMode;
-	
+
 	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
 	static public function DisplayFromAttCode($oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '', $aArgs, $bSearchMode = false)
 	{
@@ -94,7 +94,7 @@ class UIExtKeyWidget
 		$this->sAttCode = $sAttCode;
 		$this->bSearchMode = $bSearchMode;
 	}
-	
+
 	/**
 	 * Get the HTML fragment corresponding to the ext key editing widget
 	 * @param WebPage $oP The web page used for all the output
@@ -107,10 +107,10 @@ class UIExtKeyWidget
 		{
 			$this->bSearchMode = $bSearchMode;
 		}
-		$sTitle = addslashes($sTitle);	
+		$sTitle = addslashes($sTitle);
 		$oPage->add_linked_script('../js/extkeywidget.js');
 		$oPage->add_linked_script('../js/forms-json-utils.js');
-		
+
 		$bCreate = (!$this->bSearchMode) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $bAllowTargetCreation);
 		$bExtensions = true;
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
@@ -123,7 +123,7 @@ class UIExtKeyWidget
 			$sWizHelper = 'null';
 			$sWizHelperJSON = "''";
 			$sJSSearchMode = 'true';
-		} 
+		}
 		else
 		{
 			if (isset($aArgs['wizHelper']))
@@ -159,7 +159,7 @@ class UIExtKeyWidget
 				while($oObj = $oAllowedValues->Fetch())
 				{
 					$aAllowedValues[$oObj->GetKey()] = $oObj->GetName();
-				}				
+				}
 				$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", false /*  $bMandatory will be placed manually */, $bVertical, $sValidationField);
 				$aEventsList[] ='change';
 				break;
@@ -168,7 +168,7 @@ class UIExtKeyWidget
 				case 'list':
 				default:
 				$sSelectMode = 'true';
-				
+
 				$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
 				$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
 
@@ -196,7 +196,7 @@ class UIExtKeyWidget
 				{
 					$key = $oObj->GetKey();
 					$display_value = $oObj->GetName();
-	
+
 					if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true') )
 					{
 						// When there is only once choice, select it by default
@@ -239,7 +239,7 @@ EOF
 		{
 			// Too many choices, use an autocomplete
 			$sSelectMode = 'false';
-		
+
 			// Check that the given value is allowed
 			$oSearch = $oAllowedValues->GetFilter();
 			$oSearch->AddCondition('id', $value);
@@ -259,15 +259,15 @@ EOF
 			}
 			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 3; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
 			$iFieldSize = isset($aArgs['iFieldSize']) ? $aArgs['iFieldSize'] : 20; //@@@ $this->oAttDef->GetMaxSize();
-	
+
 			// the input for the auto-complete
 			$sHTMLValue .= "<input class=\"field_autocomplete\" count=\"".$oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
 			$sHTMLValue .= "<span class=\"field_input_btn\"><img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_search.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.Search();\"/></span>";
-	
+
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";
 
-			$JSSearchMode = $this->bSearchMode ? 'true' : 'false';	
+			$JSSearchMode = $this->bSearchMode ? 'true' : 'false';
 			// Scripts to start the autocomplete and bind some events to it
 			$oPage->add_ready_script(
 <<<EOF
@@ -320,7 +320,7 @@ EOF
 
 		return $sHTMLValue;
 	}
-	
+
 	public function GetSearchDialog(WebPage $oPage, $sTitle, $oCurrObject = null)
 	{
 		$sHTML = '<div class="wizContainer" style="vertical-align:top;"><div id="dc_'.$this->iId.'">';
@@ -342,7 +342,16 @@ EOF
 		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oBlock = new DisplayBlock($oFilter, 'search', false, $aParams);
 		$sHTML .= $oBlock->GetDisplay($oPage, $this->iId,
-			array('open' => $bOpen, 'currentId' => $this->iId, 'table_id' => "dr_{$this->iId}", 'table_inner_id' => "{$this->iId}_results", 'selection_mode' => true, 'selection_type' => 'single', 'cssCount' => '#count_'.$this->iId));
+            array(
+                'menu' => false,
+                'open' => $bOpen,
+                'currentId' => $this->iId,
+                'table_id' => "dr_{$this->iId}",
+                'table_inner_id' => "{$this->iId}_results",
+                'selection_mode' => true,
+                'selection_type' => 'single',
+                'cssCount' => '#count_'.$this->iId)
+        );
 		$sHTML .= "<form id=\"fr_{$this->iId}\" OnSubmit=\"return oACWidget_{$this->iId}.DoOk();\">\n";
 		$sHTML .= "<div id=\"dr_{$this->iId}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
 		$sHTML .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
@@ -376,7 +385,7 @@ EOF
 		{
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
-		
+
 		$oFilter = DBObjectSearch::FromOQL($sFilter);
 		if (strlen($sRemoteClass) > 0)
 		{
@@ -390,7 +399,7 @@ EOF
 		$oBlock = new DisplayBlock($oFilter, 'list', false, array('query_params' => array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId)));
 		$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'table_id' => 'select_'.$this->sAttCode)); // Don't display the 'Actions' menu on the results
 	}
-	
+
 	/**
 	 * Search for objects to be selected
 	 * @param WebPage $oP The page used for the output (usually an AjaxWebPage)
@@ -416,7 +425,7 @@ EOF
 			$oP->add(trim($sFriendlyName)."\t".$sKey."\n");
 		}
 	}
-	
+
 	/**
 	 * Get the display name of the selected object, to fill back the autocomplete
 	 */
@@ -506,7 +515,7 @@ EOF
 				}
 			}
 		}
-		
+
 		// 3rd - set values from the page argument 'default'
 		$oNewObj->UpdateObjectFromArg('default');
 
@@ -523,7 +532,7 @@ EOF
 				$aFieldsComments[$sAttCode] = '&nbsp;<img src="../images/transp-lock.png" style="vertical-align:middle" title="'.htmlentities(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
 			}
 		}
-	 	cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true, 'fieldsFlags' => $aFieldsFlags, 'fieldsComments' => $aFieldsComments));	
+	 	cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true, 'fieldsFlags' => $aFieldsFlags, 'fieldsComments' => $aFieldsComments));
 		$oPage->add('</div></div></div>');
 //		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: $(window).width()*0.8, height: 'auto', autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
 		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
@@ -567,7 +576,7 @@ EOF
 		$oPage->add('</div>');
 		$oPage->add("<input type=\"button\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_tree_{$this->iId}').dialog('close');\">&nbsp;&nbsp;");
 		$oPage->add("<input type=\"button\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoHKOk();\">");
-		
+
 		$oPage->add('</div></div>');
 		$oPage->add_ready_script("\$('#tree_$this->iId ul').treeview();\n");
 		$oPage->add_ready_script("\$('#dlg_tree_$this->iId').dialog({ width: 'auto', height: 'auto', autoOpen: true, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.OnHKResize, close: oACWidget_{$this->iId}.OnHKClose });\n");
@@ -589,7 +598,7 @@ EOF
 			}
 			else
 			{
-				return array('error' => implode(' ', $aErrors), 'id' => 0);		
+				return array('error' => implode(' ', $aErrors), 'id' => 0);
 			}
 		}
 		catch(Exception $e)
@@ -612,7 +621,7 @@ EOF
 			$aTree[$iParentId][$oObj->GetKey()] = $oObj->GetName();
 			$aNodes[$oObj->GetKey()] = $oObj;
 		}
-		
+
 		$aParents = array_keys($aTree);
 		$aRoots = array();
 		foreach($aParents as $id)
@@ -627,7 +636,7 @@ EOF
 			$this->DumpNodes($oP, $iRootId, $aTree, $aNodes, $currValue);
 		}
 	}
-	
+
 	function DumpNodes($oP, $iRootId, $aTree, $aNodes, $currValue)
 	{
 		$bSelect = true;

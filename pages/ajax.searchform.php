@@ -57,19 +57,23 @@ try
 	$sListParams = stripslashes(utils::ReadParam('list_params', '{}', false, 'raw_data'));
 	$aListParams = json_decode($sListParams, true);
 
-	if (array_key_exists('currentId', $aListParams))
-	{
-		$aExtraParams['currentId'] = $aListParams['currentId'];
-	}
-	if (array_key_exists('selection_mode', $aListParams))
-	{
-		$aExtraParams['selection_mode'] = $aListParams['selection_mode'];
-	}
-	if (array_key_exists('selection_type', $aListParams))
-	{
-		$aExtraParams['selection_type'] = $aListParams['selection_type'];
-		// In case of single selection, the root of the HTML identifiers used is suffixed with "_results" (at least in the external keys)
-	}
+
+	$aPassFromExtraParamsToListParams = array(
+        'currentId',
+        'selection_mode',
+        'selection_type',// In case of single selection, the root of the HTML identifiers used is suffixed with "_results" (at least in the external keys)
+        'cssCount',
+        'table_inner_id',
+    );
+	foreach ($aPassFromExtraParamsToListParams as $passThroughKey)
+    {
+        if (array_key_exists($passThroughKey, $aListParams))
+        {
+            $aExtraParams[$passThroughKey] = $aListParams[$passThroughKey];
+        }
+    }
+
+
 	if (array_key_exists('json', $aListParams))
 	{
 		$aJson = $aListParams['json'];
@@ -77,15 +81,14 @@ try
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
 		$oObj = $oWizardHelper->GetTargetObject();
 		$aExtraParams['query_params'] = array('this' => $oObj);
+
+
+//        // Current extkey value, so we can display event if it is not available anymore (eg. archived).
+//        $iCurrentExtKeyId = (is_null($oObj)) ? 0 : $oObj->Get($this->sAttCode);
+//        $aExtraParams['current_extkey_id'] = $iCurrentExtKeyId;
+
 	}
-	if (array_key_exists('cssCount', $aListParams))
-	{
-		$aExtraParams['cssCount'] = $aListParams['cssCount'];
-	}
-	if (array_key_exists('table_inner_id', $aListParams))
-	{
-		$sListId = $aListParams['table_inner_id'];
-	}
+
 
 	$aExtraParams['display_limit'] = true;
 	$aExtraParams['truncated'] = true;
