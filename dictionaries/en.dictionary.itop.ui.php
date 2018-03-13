@@ -389,6 +389,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:ChangePassword' => ' Change Password ',
 	'UI:Button:ResetPassword' => ' Reset Password ',
 	'UI:Button:Insert' => 'Insert',
+	'UI:Button:More' => 'More',
+	'UI:Button:Less' => 'Less',
 	
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Create a new %1$s',
@@ -1367,4 +1369,12 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Button:ResetImage' => 'Recover the previous image',
 	'UI:Button:RemoveImage' => 'Remove the image',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.',
+
+	// TODO: Reorganize those entries with other search entries and make entries for other languages.
+	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty:',
+	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty:',
+	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals:',
+	'UI:Search:Criteria:Operator:String:Contains' => 'Contains:',
+	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with:',
+	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with:',
 ));

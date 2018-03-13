@@ -41,14 +41,26 @@ $(function()
 				],
 				'fields': [
 					// Structure
+					// 'zlist': {
 					// 	'alias.code': {
 					// 		'class_alias': '',
-					// 		'class': '',
-					// 		'code': '',
-					// 		'label': '',
-					// 		'type': '',
-					// 		'allowed_values': {...},
+					// 			'class': '',
+					// 			'code': '',
+					// 			'label': '',
+					// 			'type': '',
+					// 			'allowed_values': {...},
 					// 	},
+					// },
+					// 'others': {
+					// 	'alias.code': {
+					// 		'class_alias': '',
+					// 			'class': '',
+					// 			'code': '',
+					// 			'label': '',
+					// 			'type': '',
+					// 			'allowed_values': {...},
+					// 	},
+					// },
 				],
 			},
 			'list_params': {},	// Passed through to the endpoint so it can render the list correctly regarding the context.
@@ -204,14 +216,31 @@ $(function()
 
 			// Add fields
 			// TODO: Find a widget to handle dropdown menu
-			for(var sFieldRef in this.options.search.fields)
+			// - From "search" zlist
+			for(var sFieldRef in this.options.search.fields.zlist)
 			{
-				var oField = this.options.search.fields[sFieldRef];
+				var oField = this.options.search.fields.zlist[sFieldRef];
 				var oFieldElem = $('<li></li>')
 					.addClass('sf_mc_field')
 					.attr('data-field-ref', sFieldRef)
 					.text(oField.label);
 				this.elements.more_criterion.find('> .sf_mc_list').append(oFieldElem);
+			}
+			// - Others
+			if(this.options.search.fields.others !== undefined)
+			{
+				this.elements.more_criterion.find('> .sf_mc_list').append('<li>==================</li>');
+				this.elements.more_criterion.find('> .sf_mc_list').append('<li>|| TODO: Better separation ||</li>');
+				this.elements.more_criterion.find('> .sf_mc_list').append('<li>==================</li>');
+				for(var sFieldRef in this.options.search.fields.others)
+				{
+					var oField = this.options.search.fields.others[sFieldRef];
+					var oFieldElem = $('<li></li>')
+						.addClass('sf_mc_field')
+						.attr('data-field-ref', sFieldRef)
+						.text(oField.label);
+					this.elements.more_criterion.find('> .sf_mc_list').append(oFieldElem);
+				}
 			}
 
 			// Bind events
@@ -260,8 +289,9 @@ $(function()
 				// Add some informations from the field
 				if(this._hasFieldDefinition(sRef))
 				{
+					var oFieldDef = this._getFieldDefinition(sRef);
 					oData.field = {
-						label: this.options.search.fields[sRef].label,
+						label: oFieldDef.label,
 					};
 				}
 
@@ -283,18 +313,24 @@ $(function()
 		{
 			var sType = null;
 
-			if(this.options.search.fields[sRef] !== undefined)
+			for(var sListIdx in this.options.search.fields)
 			{
-				sType = this.options.search.fields[sRef].widget.toLowerCase();
-
-				// Make sure the criteria type is supported, otherwise we might try to initialize a unknown widget.
-				if(this.options.supported_criterion_types.indexOf(sType) < 0)
+				if(this.options.search.fields[sListIdx][sRef] !== undefined)
 				{
-					sType = this.options.default_criteria_type;
+					sType = this.options.search.fields[sListIdx][sRef].widget.toLowerCase();
+
+					// Make sure the criteria type is supported, otherwise we might try to initialize a unknown widget.
+					if(this.options.supported_criterion_types.indexOf(sType) < 0)
+					{
+						sType = this.options.default_criteria_type;
+					}
+
+					break;
 				}
 			}
+
 			// Fallback for unknown widget types or unknown field refs
-			else
+			if(sType === null)
 			{
 				sType = this.options.default_criteria_type;
 			}
@@ -321,7 +357,33 @@ $(function()
 		// Field helpers
 		_hasFieldDefinition: function(sRef)
 		{
-			return (this.options.search.fields[sRef] !== undefined);
+			var bFound = false;
+
+			for(var sListIdx in this.options.search.fields)
+			{
+				if(this.options.search.fields[sListIdx][sRef] !== undefined)
+				{
+					bFound = true;
+					break;
+				}
+			}
+
+			return bFound;
+		},
+		_getFieldDefinition: function(sRef)
+		{
+			var oFieldDef = false;
+
+			for(var sListIdx in this.options.search.fields)
+			{
+				if(this.options.search.fields[sListIdx][sRef] !== undefined)
+				{
+					oFieldDef = this.options.search.fields[sListIdx][sRef];
+					break;
+				}
+			}
+
+			return oFieldDef;
 		},
 
 		// Button handlers
@@ -387,6 +449,18 @@ $(function()
 		{
 			// TODO: Hide loader
 			this._trace('Hide loader');
+		},
+		// - Converts a snake_case string to CamelCase
+		_toCamelCase: function(sString)
+		{
+			var aParts = sString.split('_');
+
+			for(var i in aParts)
+			{
+				aParts[i] = aParts[i].charAt(0).toUpperCase() + aParts[i].substr(1);
+			}
+
+			return aParts.join('');
 		},
 
 

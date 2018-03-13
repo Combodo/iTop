@@ -55,6 +55,14 @@ $(function()
 			// Remove toggler as it's a non sense here
 			this.element.find('.sfc_toggle').remove();
 		},
+		_prepareOperators: function()
+		{
+			// Overloading function and doing nothing for this special kind of criteria.
+		},
+		_prepareButtons: function()
+		{
+			// Overloading function and doing nothing for this special kind of criteria.
+		},
 		_setTitle: function(sTitle)
 		{
 			if(sTitle === undefined)

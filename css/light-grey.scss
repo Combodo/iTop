@@ -880,8 +880,11 @@ div.HRDrawer {
 
 			}
 			.sfc_toggle{
-				&.opened{
+				display: inline-block;
+				transition: all 0.2s ease-in-out;
 
+				&.opened{
+					transform: rotateZ(180deg);
 				}
 			}
 			.sfc_title{

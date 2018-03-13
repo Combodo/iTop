@@ -54,6 +54,17 @@ class NiceWebPage extends WebPage
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_raw.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_string.js');
+	    // TODO: Remove
+	    $this->add_dict_entry('UI:Search:Criteria:Operator:Default:Empty');
+	    $this->add_dict_entry('UI:Search:Criteria:Operator:Default:NotEmpty');
+	    $this->add_dict_entry('UI:Search:Criteria:Operator:Default:Equals');
+	    $this->add_dict_entry('UI:Search:Criteria:Operator:String:Contains');
+	    $this->add_dict_entry('UI:Search:Criteria:Operator:String:StartsWith');
+	    $this->add_dict_entry('UI:Search:Criteria:Operator:String:EndsWith');
+	    $this->add_dict_entry('UI:Button:Apply');
+	    $this->add_dict_entry('UI:Button:Cancel');
+	    $this->add_dict_entry('UI:Button:More');
+	    $this->add_dict_entry('UI:Button:Less');
 	    $this->add_ready_script(
 <<< EOF
 	//add new widget called TruncatedList to properly display truncated lists when they are sorted

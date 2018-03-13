@@ -789,6 +789,13 @@ div.HRDrawer {
 .search_form_handler .sf_criterion_area .search_form_criteria.locked {
   background-color: #f1f1f1;
 }
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_toggle {
+  display: inline-block;
+  transition: all 0.2s ease-in-out;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_toggle.opened {
+  transform: rotateZ(180deg);
+}
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_title {
   cursor: pointer;
 }
