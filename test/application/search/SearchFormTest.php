@@ -40,25 +40,39 @@ class SearchFormTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @throws \OQLException
 	 */
 	public function testGetFields()
 	{
-		$aFields = SearchForm::GetFields('Contact', 'Contact');
+		$oSearchForm = new SearchForm();
+		$aFields = $oSearchForm->GetFields('Contact', 'Contact');
 		$this->debug(json_encode($aFields, JSON_PRETTY_PRINT));
-		$this->assertCount(7, $aFields);
+		$this->assertCount(7, $aFields['zlist']);
 
 		$oSearch = \DBSearch::FromOQL("SELECT Contact AS C WHERE C.status = 'active'");
-		$aFields = SearchForm::GetFields($oSearch->GetClass(), $oSearch->GetClassAlias());
+		$aFields = $oSearchForm->GetFields($oSearch->GetClass(), $oSearch->GetClassAlias());
 		$this->debug(json_encode($aFields, JSON_PRETTY_PRINT));
 	}
 
 	/**
 	 * @dataProvider GetCriterionProvider
-	 * @throws \OQLException
+	 *
+	 * @param $sOQL
+	 * @param $iOrCount
+	 *
 	 */
 	public function testGetCriterion($sOQL, $iOrCount)
 	{
-		$aCriterion = SearchForm::GetCriterion(\DBObjectSearch::FromOQL($sOQL));
+		$oSearchForm = new SearchForm();
+		try
+		{
+			$aCriterion = $oSearchForm->GetCriterion(\DBSearch::FromOQL($sOQL));
+		} catch (\OQLException $e)
+		{
+			$this->assertTrue(false);
+
+			return;
+		}
 		$aRes = array('base_oql' => $sOQL, 'criterion' => $aCriterion);
 		$this->debug(json_encode($aRes));
 		$this->debug($sOQL);
@@ -78,6 +92,7 @@ class SearchFormTest extends ItopDataTestCase
 			array('OQL' => "SELECT Contact WHERE status = 'active' OR name LIKE 'toto%'", 2),
 			array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date", 1),
 			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01' AND '2018-01-01' >= start_date", 1),
+			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01' AND status = 'active' AND org_id = 3 AND '2018-01-01' >= start_date", 1),
 		);
 	}
 }

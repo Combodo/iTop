@@ -251,7 +251,7 @@ class SearchForm
 	}
 
 	/**
-	 * @param DBObjectSearch $oSearch
+	 * @param \DBSearch $oSearch
 	 */
 	public function GetCriterion($oSearch)
 	{

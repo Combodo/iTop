@@ -54,6 +54,11 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			}
 		}
 
+		// Regroup criterion by variable name
+		usort($aAndCriterion, function ($a, $b) {
+			return strcmp($a['ref'], $b['ref']);
+		});
+
 		return $aAndCriterion;
 	}
 

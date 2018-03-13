@@ -35,7 +35,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 class CriterionConversionTest extends ItopDataTestCase
 {
 	/**
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	protected function setUp()
 	{
@@ -46,6 +46,9 @@ class CriterionConversionTest extends ItopDataTestCase
 
 	/**
 	 * @dataProvider ToOqlProvider
+	 *
+	 * @param $sJSONCriterion
+	 * @param $sExpectedOQL
 	 */
 	public function testToOql($sJSONCriterion, $sExpectedOQL)
 	{
@@ -149,6 +152,9 @@ class CriterionConversionTest extends ItopDataTestCase
 
 	/**
 	 * @dataProvider ToSearchFormProvider
+	 *
+	 * @param $aCriterion
+	 * @param $sExpectedOperator
 	 */
 	function testToSearchForm($aCriterion, $sExpectedOperator)
 	{
