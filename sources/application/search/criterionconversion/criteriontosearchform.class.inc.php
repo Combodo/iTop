@@ -20,22 +20,33 @@
  */
 
 /**
- * Convert OQL expressions into structure for the search form
+ * Convert structures from OQL expressions into structure for the search form
  */
 namespace Combodo\iTop\Application\Search\CriterionConversion;
 
 
-use AttributeString;
+use AttributeDefinition;
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
 
 class CriterionToSearchForm extends CriterionConversionAbstract
 {
 
-	public static function Convert($aAndCriterionRaw)
+	public static function Convert($aAndCriterionRaw, $aFieldsByCategory)
 	{
+		$aAllFields = array();
+		foreach($aFieldsByCategory as $aFields)
+		{
+			foreach($aFields as $aField)
+			{
+				$sAlias = $aField['class_alias'];
+				$sCode = $aField['code'];
+				$aAllFields["$sAlias.$sCode"] = $aField;
+			}
+		}
 		$aAndCriterion = array();
 		$aMappingOperatorToFunction = array(
-			AttributeString::SEARCH_WIDGET_TYPE => 'TextToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_STRING => 'TextToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'EnumToSearchForm',
 		);
 
 		foreach($aAndCriterionRaw as $aCriteria)
@@ -45,7 +56,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				if (array_key_exists($aCriteria['widget'], $aMappingOperatorToFunction))
 				{
 					$sFct = $aMappingOperatorToFunction[$aCriteria['widget']];
-					$aAndCriterion[] = self::$sFct($aCriteria);
+					$aAndCriterion[] = self::$sFct($aCriteria, $aAllFields);
 				}
 				else
 				{
@@ -62,7 +73,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		return $aAndCriterion;
 	}
 
-	protected static function TextToSearchForm($aCriteria)
+	protected static function TextToSearchForm($aCriteria, $aFields)
 	{
 		$sOperator = $aCriteria['operator'];
 		$sValue = $aCriteria['values'][0]['value'];
@@ -95,6 +106,45 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				$sValue = substr($sValue, 0, -1);
 				$aCriteria['values'][0]['value'] = $sValue;
 				$aCriteria['values'][0]['label'] = $sValue;
+				break;
+		}
+
+		return $aCriteria;
+	}
+
+	protected static function EnumToSearchForm($aCriteria, $aFields)
+	{
+		$sOperator = $aCriteria['operator'];
+		$sRef = $aCriteria['ref'];
+		$aValues = $aCriteria['values'];
+		if (array_key_exists($sRef, $aFields))
+		{
+			$aField = $aFields[$sRef];
+			if (array_key_exists('allowed_values', $aField) && array_key_exists('values', $aField['allowed_values']))
+			{
+				$aAllowedValues = $aField['allowed_values']['values'];
+			}
+		}
+
+		switch (true)
+		{
+			case ($sOperator == 'NOT IN'):
+				if (isset($aAllowedValues))
+				{
+					foreach($aValues as $aValue)
+					{
+						$sValue = $aValue['value'];
+						unset($aAllowedValues[$sValue]);
+					}
+					$aCriteria['values'] = array();
+					
+					foreach($aAllowedValues as $sValue => $sLabel)
+					{
+						$aValue = array('value' => $sValue, 'label' => $sLabel);
+						$aCriteria['values'][] = $aValue;
+					}
+					$aCriteria['operator'] = 'IN';
+				}
 				break;
 		}
 

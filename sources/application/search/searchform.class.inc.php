@@ -127,7 +127,7 @@ class SearchForm
 
 		$aFields = $this->GetFields($oSet);
 		$oSearch = $oSet->GetFilter();
-		$aCriterion = $this->GetCriterion($oSearch);
+		$aCriterion = $this->GetCriterion($oSearch, $aFields);
 
 		$oBaseSearch = $oSearch->DeepClone();
 		$oBaseSearch->ResetCondition();
@@ -173,7 +173,7 @@ class SearchForm
 		$aAuthorizedClasses = array();
 		foreach($aSelectedClasses as $sAlias => $sClassName)
 		{
-			if (\UserRights::IsActionAllowed($sClassName, UR_ACTION_BULK_READ, $oSet) != UR_ALLOWED_NO)
+			if (\UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO)
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
@@ -195,7 +195,7 @@ class SearchForm
 						unset($aAttributeDefs[$sAttCode]);
 					}
 				}
-				usort($aZList, function ($aItem1, $aItem2) {
+				uasort($aZList, function ($aItem1, $aItem2) {
 					return strcmp($aItem1['label'], $aItem2['label']);
 				});
 				$aAllFields['zlist'] = $aZList;
@@ -207,7 +207,7 @@ class SearchForm
 
 					$aOthers = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aOthers);
 				}
-				usort($aOthers, function ($aItem1, $aItem2) {
+				uasort($aOthers, function ($aItem1, $aItem2) {
 					return strcmp($aItem1['label'], $aItem2['label']);
 				});
 
@@ -231,7 +231,7 @@ class SearchForm
 	 *
 	 * @return array
 	 */
-	public function GetFieldAllowedValues($oAttrDef)
+	public static function GetFieldAllowedValues($oAttrDef)
 	{
 		if ($oAttrDef->IsExternalKey(EXTKEY_ABSOLUTE))
 		{
@@ -269,8 +269,11 @@ class SearchForm
 
 	/**
 	 * @param \DBSearch $oSearch
+	 * @param array $aFields
+	 *
+	 * @return array
 	 */
-	public function GetCriterion($oSearch)
+	public function GetCriterion($oSearch, $aFields)
 	{
 		$oExpression = $oSearch->GetCriteria();
 
@@ -288,7 +291,7 @@ class SearchForm
 				}
 				$aAndCriterion[] = $oAndSubExpr->GetCriterion($oSearch);
 			}
-			$aAndCriterion = CriterionToSearchForm::Convert($aAndCriterion);
+			$aAndCriterion = CriterionToSearchForm::Convert($aAndCriterion, $aFields);
 			$aOrCriterion[] = array('and' => $aAndCriterion);
 		}
 
@@ -317,7 +320,7 @@ class SearchForm
 				$aField['class_alias'] = $sClassAlias;
 				$aField['label'] = $sLabel;
 				$aField['widget'] = $oAttrDef->GetSearchType();
-				$aField['allowed_values'] = $this->GetFieldAllowedValues($oAttrDef);
+				$aField['allowed_values'] = self::GetFieldAllowedValues($oAttrDef);
 				$aFields[$sClassAlias.'.'.$sFilterCode] = $aField;
 				$this->aLabels[$sLabel] = true;
 			}

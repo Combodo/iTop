@@ -45,13 +45,16 @@ class SearchFormTest extends ItopDataTestCase
 	public function testGetFields()
 	{
 		$oSearchForm = new SearchForm();
-		$aFields = $oSearchForm->GetFields('Contact', 'Contact');
+		$oSearch = \DBSearch::FromOQL("SELECT Contact");
+		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
 		$this->debug(json_encode($aFields, JSON_PRETTY_PRINT));
 		$this->assertCount(7, $aFields['zlist']);
 
+		$oSearchForm = new SearchForm();
 		$oSearch = \DBSearch::FromOQL("SELECT Contact AS C WHERE C.status = 'active'");
-		$aFields = $oSearchForm->GetFields($oSearch->GetClass(), $oSearch->GetClassAlias());
+		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
 		$this->debug(json_encode($aFields, JSON_PRETTY_PRINT));
+		$this->assertCount(4, $aFields['others']);
 	}
 
 	/**
@@ -66,7 +69,9 @@ class SearchFormTest extends ItopDataTestCase
 		$oSearchForm = new SearchForm();
 		try
 		{
-			$aCriterion = $oSearchForm->GetCriterion(\DBSearch::FromOQL($sOQL));
+			$oSearch = \DBSearch::FromOQL($sOQL);
+			$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
+			$aCriterion = $oSearchForm->GetCriterion($oSearch, $aFields);
 		} catch (\OQLException $e)
 		{
 			$this->assertTrue(false);
@@ -89,6 +94,8 @@ class SearchFormTest extends ItopDataTestCase
 			array('OQL' => "SELECT Contact WHERE status = 'active' AND name LIKE 'toto%'", 1),
 			array('OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3", 1),
 			array('OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')", 1),
+			array('OQL' => "SELECT Contact WHERE status NOT IN ('active')", 1),
+			array('OQL' => "SELECT Contact WHERE status NOT IN ('active', 'inactive')", 1),
 			array('OQL' => "SELECT Contact WHERE status = 'active' OR name LIKE 'toto%'", 2),
 			array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date", 1),
 			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01' AND '2018-01-01' >= start_date", 1),

@@ -24,6 +24,7 @@ namespace Combodo\iTop\Application\Search\CriterionConversion;
 
 
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
+use Combodo\iTop\Application\Search\SearchForm;
 
 class CriterionToOQL extends CriterionConversionAbstract
 {
@@ -50,6 +51,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 			self::OP_ENDS_WITH => 'EndsWithToOql',
 			self::OP_EMPTY => 'EmptyToOql',
 			self::OP_NOT_EMPTY => 'NotEmptyToOql',
+			self::OP_IN => 'InToOql',
 			self::OP_ALL => 'AllToOql',
 		);
 
@@ -57,7 +59,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		{
 			$sFct = $aMappedOperators[$sOperator];
 
-			return self::$sFct($sRef, $sOperator, self::GetValues($aCriteria));
+			return self::$sFct($sRef, $sOperator, $aCriteria);
 		}
 
 		$sValue = self::GetValue(self::GetValues($aCriteria), 0);
@@ -87,38 +89,72 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return $aValues[$iIndex]['value'];
 	}
 
-	protected static function ContainsToOql($sRef, $sOperator, $aValues)
+	protected static function ContainsToOql($sRef, $sOperator, $aCriteria)
 	{
+		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
 		return "({$sRef} LIKE '%{$sValue}%')";
 	}
 
-	protected static function StartsWithToOql($sRef, $sOperator, $aValues)
+	protected static function StartsWithToOql($sRef, $sOperator, $aCriteria)
 	{
+		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
 		return "({$sRef} LIKE '{$sValue}%')";
 	}
 
-	protected static function EndsWithToOql($sRef, $sOperator, $aValues)
+	protected static function EndsWithToOql($sRef, $sOperator, $aCriteria)
 	{
+		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
 		return "({$sRef} LIKE '%{$sValue}')";
 	}
 
-	protected static function EmptyToOql($sRef, $sOperator, $aValues)
+	protected static function EmptyToOql($sRef, $sOperator, $aCriteria)
 	{
 		return "({$sRef} = '')";
 	}
 
-	protected static function NotEmptyToOql($sRef, $sOperator, $aValues)
+	protected static function NotEmptyToOql($sRef, $sOperator, $aCriteria)
 	{
 		return "({$sRef} != '')";
 	}
 
-	protected static function AllToOql($sRef, $sOperator, $aValues)
+	protected static function InToOql($sRef, $sOperator, $aCriteria)
+	{
+		$sAttCode = $aCriteria['code'];
+		$sClass = $aCriteria['class'];
+		$aValues = $aCriteria['values'];
+
+		$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
+		if (array_key_exists($sAttCode, $aAttributeDefs))
+		{
+			$oAttDef = $aAttributeDefs[$sAttCode];
+			$aAllowedValues = SearchForm::GetFieldAllowedValues($oAttDef);
+			if (array_key_exists('values', $aAllowedValues))
+			{
+				$aAllowedValues = $aAllowedValues['values'];
+				// more selected values than remaining so use NOT IN
+				if (count($aValues) > (count($aAllowedValues) / 2))
+				{
+					foreach($aValues as $aValue)
+					{
+						unset($aAllowedValues[$aValue['value']]);
+					}
+					$sOQL = "({$sRef} NOT IN (";
+					$s .= implode(',', array_keys($aAllowedValues));
+
+				}
+			}
+		}
+
+		return "({$sRef} != '')";
+	}
+
+	protected static function AllToOql($sRef, $sOperator, $aCriteria)
 	{
 		return "1";
 	}
