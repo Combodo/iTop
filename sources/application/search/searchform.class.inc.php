@@ -29,7 +29,9 @@ use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use CoreException;
 use DBObjectSearch;
+use DBObjectSet;
 use Dict;
+use Exception;
 use Expression;
 use IssueLog;
 use MetaModel;
@@ -176,25 +178,29 @@ class SearchForm
 		{
 			$aList = MetaModel::GetZListItems($sClassName, 'standard_search');
 			$aAttrDefs = MetaModel::ListAttributeDefs($sClassName);
+			$aZList = array();
 			foreach($aList as $sFilterCode)
 			{
-				$aField = array();
-				$aField['code'] = $sFilterCode;
-				$aField['class'] = $sClassName;
-				$aField['class_alias'] = $sClassAlias;
 				if (array_key_exists($sFilterCode, $aAttrDefs))
 				{
 					$oAttrDef = $aAttrDefs[$sFilterCode];
-					$aField['label'] = $oAttrDef->GetLabel();
-					$aField['widget'] = $oAttrDef->GetSearchType();
-					$aField['allowed_values'] = self::GetFieldAllowedValues($oAttrDef);
 				}
 				else
 				{
-					$aField['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE;
+					$oAttrDef = null;
 				}
-				$aFields[$sClassAlias.'.'.$sFilterCode] = $aField;
+				$aZList = self::AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aZList);
 			}
+			$aFields['zlist'] = $aZList;
+			$aOthers = array();
+			foreach($aAttrDefs as $sFilterCode => $oAttrDef)
+			{
+				if (!in_array($sFilterCode, $aList))
+				{
+					$aOthers = self::AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aOthers);
+				}
+			}
+			$aFields['others'] = $aOthers;
 		} catch (CoreException $e)
 		{
 			IssueLog::Error($e->getMessage());
@@ -210,12 +216,34 @@ class SearchForm
 	 */
 	public static function GetFieldAllowedValues($oAttrDef)
 	{
-		if (method_exists($oAttrDef, 'GetAllowedValuesAsObjectSet'))
+		if ($oAttrDef->IsExternalKey(EXTKEY_ABSOLUTE))
 		{
-			$oSet = $oAttrDef->GetAllowedValuesAsObjectSet();
+			$sTargetClass = $oAttrDef->GetTargetClass();
+			try
+			{
+				$oSearch = new DBObjectSearch($sTargetClass);
+			} catch (Exception $e)
+			{
+				IssueLog::Error($e->getMessage());
+
+				return array('values' => array());
+			}
+			$oSearch->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
+			$oSet = new DBObjectSet($oSearch);
 			if ($oSet->Count() > MetaModel::GetConfig()->Get('max_combo_length'))
 			{
 				return array('autocomplete' => true);
+			}
+		}
+		else
+		{
+			if (method_exists($oAttrDef, 'GetAllowedValuesAsObjectSet'))
+			{
+				$oSet = $oAttrDef->GetAllowedValuesAsObjectSet();
+				if ($oSet->Count() > MetaModel::GetConfig()->Get('max_combo_length'))
+				{
+					return array('autocomplete' => true);
+				}
 			}
 		}
 
@@ -248,5 +276,31 @@ class SearchForm
 		}
 
 		return array('or' => $aOrCriterion);
+	}
+
+	/**
+	 * @param $sClassName
+	 * @param $sClassAlias
+	 * @param $sFilterCode
+	 * @param $oAttrDef
+	 * @param $aFields
+	 *
+	 * @return mixed
+	 */
+	private static function AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aFields)
+	{
+		if (!is_null($oAttrDef) && ($oAttrDef->GetSearchType() != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
+		{
+			$aField = array();
+			$aField['code'] = $sFilterCode;
+			$aField['class'] = $sClassName;
+			$aField['class_alias'] = $sClassAlias;
+			$aField['label'] = $oAttrDef->GetLabel();
+			$aField['widget'] = $oAttrDef->GetSearchType();
+			$aField['allowed_values'] = self::GetFieldAllowedValues($oAttrDef);
+			$aFields[$sClassAlias.'.'.$sFilterCode] = $aField;
+		}
+
+		return $aFields;
 	}
 }
