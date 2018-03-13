@@ -10,17 +10,15 @@ $(function()
 		options:
 		{
 			// Overload default operator
-			operator: 'contains',
+			'operator': 'contains',
 			// Available operators
-			available_operators: {
+			'available_operators': {
 				'contains': {
 					'label': Dict.S('UI:Search:Criteria:Operator:String:Contains'),
 					'code': 'contains',
 					'rank': 5,
 				},
-				'=': {
-					'rank': false,
-				},
+				'=': null,	// Remove this one from string widget.
 			},
 		},
 

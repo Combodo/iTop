@@ -10,18 +10,18 @@ $(function()
 		options:
 		{
 			// Default values for the criteria
-			ref: '',
-			operator: '=',
-			values: [],
-			oql: '',
-			is_removable: true,
+			'ref': '',
+			'operator': '=',
+			'values': [],
+			'oql': '',
+			'is_removable': true,
 
-			field: {
-				label: '',
+			'field': {
+				'label': '',
 			},
 
-			// Available operators (merged with derived widgets, ordered and then copied to this.operators)
-			available_operators: {
+			// Available operators. They can be extended or restricted by derivated widgets (see this._initOperators() for more informations)
+			'available_operators': {
 				'=': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Default:Equals'),
 					'code': 'equals',
@@ -39,7 +39,7 @@ $(function()
 				},
 			},
 
-			is_modified: false, // TODO: change this on value change and remove oql property value
+			'is_modified': false, // TODO: change this on value change and remove oql property value
 		},
 
 		// Operators
@@ -55,7 +55,8 @@ $(function()
 			
 			this.element.addClass('search_form_criteria');
 
-			this._orderOperators();
+			// Init operators
+			this._initOperators();
 
 			// Link search form handler
 			this.handler = this.element.closest('.search_form_handler');
@@ -90,11 +91,37 @@ $(function()
 
 
 		// Protected methods
-		// - Order available operators
-		_orderOperators: function()
+		// - Init operators by cleaning up available operators and ordering them.
+		//   Note: A null operator or an operator with a rank "false" will be removed.
+		_initOperators: function()
 		{
-			console.log(this.options.available_operators);
+			// Reset oprators
+			this.operators = {};
 
+			// Temp array to sort operators
+			var aSortable = [];
+			for(var sOpIdx in this.options.available_operators)
+			{
+				var oOp = this.options.available_operators[sOpIdx];
+
+				// Some operator can be disabled by the derivated widget, so we check it.
+				if(oOp !== null && oOp.rank !== false)
+				{
+					aSortable.push([sOpIdx, oOp.rank]);
+				}
+			}
+
+			// Sort the array
+			aSortable.sort(function(a, b){
+				return a[1] - b[1];
+			})
+
+			// Populate this.operators
+			for(var iIdx in aSortable)
+			{
+				var sOpIdx = aSortable[iIdx][0];
+				this.operators[sOpIdx] = this.options.available_operators[sOpIdx];
+			}
 		},
 		// - Bind external events
 		_bindEvents: function()
@@ -138,7 +165,7 @@ $(function()
 		// - Internal events
 		_onButtonApply: function()
 		{
-			this._trace('TODO: Apply button');
+			this._trace('TODO: Apply button (call selected operator callback)');
 			this.handler.triggerHandler('itop.search.criteria.value_changed');
 		},
 		_onButtonCancel: function()
@@ -182,8 +209,7 @@ $(function()
 			// Bind events
 			// - Toggler
 			this.element.find('.sfc_toggle, .sfc_title').on('click', function(){
-				me.element.find('.sfc_form_group').toggle();
-				me.element.find('.sfc_toggle').toggleClass('opened');
+				me.element.find('.sfc_form_group, .sfc_toggle').toggleClass('opened');
 			});
 
 			// Removable / locked decoration
@@ -211,9 +237,9 @@ $(function()
 		//   Meant for overloading.
 		_prepareOperators: function()
 		{
-			for(var sOpIdx in this.options.available_operators)
+			for(var sOpIdx in this.operators)
 			{
-				var oOp = this.options.available_operators[sOpIdx];
+				var oOp = this.operators[sOpIdx];
 				var sMethod = '_prepare' + this._toCamelCase(oOp.code) + 'Operator';
 
 				// Create DOM element from template
@@ -245,8 +271,8 @@ $(function()
 			this.element.find('.sfc_fg_buttons')
 				.append('<button type="button" name="apply" class="sfc_fg_button sfc_fg_apply">' + Dict.S('UI:Button:Apply') + '</button>')
 				.append('<button type="button" name="cancel" class="sfc_fg_button sfc_fg_cancel">' + Dict.S('UI:Button:Cancel') + '</button>')
-				.append('<button type="button" name="more" class="sfc_fg_button sfc_fg_more">' + Dict.S('UI:Button:More') + '</button>')
-				.append('<button type="button" name="less" class="sfc_fg_button sfc_fg_less">' + Dict.S('UI:Button:Less') + '</button>');
+				.append('<button type="button" name="more" class="sfc_fg_button sfc_fg_more">' + Dict.S('UI:Button:More') + '<span class="fa fa-angle-double-down"></span></button>')
+				.append('<button type="button" name="less" class="sfc_fg_button sfc_fg_less">' + Dict.S('UI:Button:Less') + '<span class="fa fa-angle-double-up"></span></button>');
 
 			// Events
 			this.element.find('.sfc_fg_button').on('click', function(oEvent){

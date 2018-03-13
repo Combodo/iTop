@@ -24,5 +24,14 @@ $complement-color: #1c94c4;
 $complement-light: #d6e8ef;
 $frame-background-color: $gray-extra-light;
 $text-color: #000;
+$box-radius: 0px;
+$box-shadow-regular: 0 1px 1px rgba(0, 0, 0, 0.15);
+// - Boxes
+$box-blue-color: #2D2D2D;
+$box-blue-bg-color: #d6e8ef;
+$box-blue-border-color: #1c94c4;
+$box-blue-border: 1px solid $box-blue-border-color;
+$box-blue-radius: 1px;
+
 // Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
 $version: "v2.4.0";

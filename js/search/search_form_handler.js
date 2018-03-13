@@ -63,7 +63,6 @@ $(function()
 					// },
 				],
 			},
-			'list_params': {},	// Passed through to the endpoint so it can render the list correctly regarding the context.
 			'supported_criterion_types': ['raw', 'string'],
 			'default_criteria_type': 'raw',
 		},
@@ -144,6 +143,8 @@ $(function()
 		// - Update search option of the widget
 		_updateSearch: function()
 		{
+			var me = this;
+
 			// Criterion
 			// - Note: As of today, only a "or" level with a "and" is supported, so the following part
 			//         will need some refactoring when introducing new stuff.
@@ -154,7 +155,17 @@ $(function()
 			};
 			// - Retrieve criterion
 			this.elements.active_criterion.find('.search_form_criteria').each(function(){
+				// Retrieve criteria data
 				var oCriteriaData = $(this).triggerHandler('itop.search.criteria.get_data');
+
+				// Add some of the field data to criteria data to help server rebuild query
+				// Note: This would be better to be passed in oCriteriaData.field but it's not how server is handling it.
+				var oFieldDef = me._getFieldDefinition(oCriteriaData.ref);
+				oCriteriaData.class = oFieldDef.class;
+				oCriteriaData.class_alias = oFieldDef.class_alias;
+				oCriteriaData.code = oFieldDef.code;
+				oCriteriaData.widget = oFieldDef.widget;
+
 				oCriterion['or'][0]['and'].push(oCriteriaData);
 			});
 			// - Update search
@@ -372,7 +383,7 @@ $(function()
 		},
 		_getFieldDefinition: function(sRef)
 		{
-			var oFieldDef = false;
+			var oFieldDef = null;
 
 			for(var sListIdx in this.options.search.fields)
 			{
@@ -403,7 +414,7 @@ $(function()
 					'base_oql': this.options.search.base_oql,
 					'criterion': this.options.search.criterion,
 				}),
-				'list_params': JSON.stringify(this.options.list_params),
+				'list_params': this.elements.results_area.data('sExtraParams'),
 			};
 
 			// Show loader
