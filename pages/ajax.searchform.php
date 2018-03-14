@@ -55,7 +55,7 @@ try
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
 
 	$sListParams = stripslashes(utils::ReadParam('list_params', '{}', false, 'raw_data'));
-	$aListParams = json_decode($sListParams, true);
+	$aListParams = (array) json_decode($sListParams, true);
 
 
 	$aPassFromExtraParamsToListParams = array(

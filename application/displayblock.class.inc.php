@@ -284,16 +284,21 @@ class DisplayBlock
 		}
 
 
-        if ($this->m_sStyle != 'search') // Search form need to extract result list extra data, the simplest way is to expose this configuration
+        if ($this->m_sStyle == 'list') // Search form need to extract result list extra data, the simplest way is to expose this configuration
         {
+
+            $listJsonExtraParams = json_encode(json_encode($aExtraParams));
             $oPage->add_ready_script("
-            $('#$sId').data('sExtraParams', \"$sExtraParams\");
-            $('#$sId').data('bAutoReload', \"$sExtraParams\");
+            $('#$sId').data('sExtraParams', ".$listJsonExtraParams.");
+            $('#$sId').data('bAutoReload', \"".(int) $bAutoReload."\");
             console.debug($('#$sId').data());
             console.debug($('#$sId'));
             console.debug('#$sId');
             
             ");
+
+
+
 
 //            $oPage->add_ready_script("console.debug($('#Menu_UserRequest_OpenRequests').data());");
 
