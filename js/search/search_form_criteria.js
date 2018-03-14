@@ -155,6 +155,35 @@ $(function()
 				}
 			});
 		},
+		_apply: function()
+		{
+			this._trace('TODO: Apply button (call selected operator callback)');
+			// Find active operator
+			var oActiveOpElem = this.element.find('.sfc_op_radio:checked').closest('.sfc_fg_operator');
+			if(oActiveOpElem.length === 0)
+			{
+				this._trace('Could not apply new value as there seems to be no active operator.');
+				return false;
+			}
+
+			// Get value from operator (polymorphic method)
+			var sCallback = '_get' + this._toCamelCase(oActiveOpElem.attr('data-operator-code')) + 'OperatorValues';
+			if(this[sCallback] === undefined)
+			{
+				this._trace('Callback ' + sCallback + ' is undefined, using _getOperatorValues instead.');
+				sCallback = '_getOperatorValues';
+			}
+			var aValues = this[sCallback](oActiveOpElem);
+
+			// Update widget
+			this.options.operator = oActiveOpElem.find('.sfc_op_radio').val();
+			this.options.values = aValues;
+			// TODO: Update title
+			this._setTitle();
+
+			// Trigger event to handler
+			this.handler.triggerHandler('itop.search.criteria.value_changed');
+		},
 		_remove: function()
 		{
 			this.element.remove();
@@ -166,8 +195,7 @@ $(function()
 		// - Internal events
 		_onButtonApply: function()
 		{
-			this._trace('TODO: Apply button (call selected operator callback)');
-			this.handler.triggerHandler('itop.search.criteria.value_changed');
+			this._apply();
 		},
 		_onButtonCancel: function()
 		{
@@ -318,7 +346,7 @@ $(function()
 		// - Return a HTML template for operators
 		_getOperatorTemplate: function()
 		{
-			return '<div class="sfc_fg_operator"><label><input type="radio" class="sfc_op_radio" name="operator" value="" /><span class="sfc_op_name"></span><span class="sfc_op_content"></span></label></div>';
+			return '<div class="sfc_fg_operator"><label><input type="radio" class="sfc_op_radio" name="operator" /><span class="sfc_op_name"></span><span class="sfc_op_content"></span></label></div>';
 		},
 
 		// Operators helpers
@@ -328,17 +356,15 @@ $(function()
 
 			// Set radio
 			oOpElem.find('.sfc_op_radio').val(sOpIdx);
+			oOpElem.find('.sfc_op_radio').attr('id', sInputId);
 
 			// Set label
 			oOpElem.find('.sfc_op_name').text(oOp.label);
 			oOpElem.find('> label').attr('for', sInputId);
 
-			// Set value
-			oOpElem.find('.sfc_op_radio').val(oOpElem.id);
-			oOpElem.find('.sfc_op_radio').attr('id', sInputId);
-
 			// Set helper classes
-			oOpElem.addClass('sfc_fg_operator_' + oOp.code);
+			oOpElem.addClass('sfc_fg_operator_' + oOp.code)
+				.attr('data-operator-code', oOp.code);
 
 			// Bind events
 			// - Check radio button on click
@@ -369,6 +395,19 @@ $(function()
 		{
 			// Do nothing as only the label is necessary
 		},
+		// - Fallback for operators without a specific callback
+		_getOperatorValues: function(oOpElem)
+		{
+			var aValues = [];
+
+			oOpElem.find('.sfc_op_content input').each(function(){
+				var sValue = $(this).val();
+				aValues.push({value: sValue, label: sValue});
+			});
+
+			return aValues;
+		},
+
 
 		// Values helpers
 		// - Convert values to a standard string

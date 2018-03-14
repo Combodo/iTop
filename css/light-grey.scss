@@ -937,6 +937,7 @@ div.HRDrawer {
 							}
 
 							/* Common operators for most criteria types processing*/
+							&.sfc_fg_operator_equals,
 							&.sfc_fg_operator_contains,
 							&.sfc_fg_operator_starts_with,
 							&.sfc_fg_operator_ends_with{
