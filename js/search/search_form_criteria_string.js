@@ -70,26 +70,5 @@ $(function()
 		//------------------
 
 		// DOM element helpers
-		// _prepareElement: function()
-		// {
-		// 	var me = this;
-		//
-		// 	this._super();
-		//
-		// 	// TODO: Refactor this after UI mockups
-		// 	var oInputElem = $('<input type="text" />');
-		// 	oInputElem.on('change', function(){
-		// 		var sValue = $(this).val();
-		//
-		// 		me.options.values = [{
-		// 			value: sValue,
-		// 			label: sValue,
-		// 		}];
-		// 		me._setTitle();
-		//
-		// 		me.handler.triggerHandler('itop.search.criteria.value_changed');
-		// 	})
-		// 		.appendTo(this.element.find('.sfc_form_group'));
-		// },
 	});
 });

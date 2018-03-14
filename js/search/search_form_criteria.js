@@ -178,7 +178,6 @@ $(function()
 			// Update widget
 			this.options.operator = oActiveOpElem.find('.sfc_op_radio').val();
 			this.options.values = aValues;
-			// TODO: Update title
 			this._setTitle();
 
 			// Trigger event to handler
@@ -339,7 +338,7 @@ $(function()
 			if(sTitle === undefined)
 			{
 				// TODO: Make nice label
-				sTitle = this.options.field.label + ': ' + this._getValuesAsText();
+				sTitle = this.options.field.label + ' ' + this.operators[this.options.operator].label + ' ' + this._getValuesAsText();
 			}
 			this.element.find('.sfc_title').text(sTitle);
 		},
@@ -381,8 +380,23 @@ $(function()
 			oOpContentElem.val(this._getValuesAsText());
 
 			// Events
+			// - Focus input on click (radio, label, ...)
 			oOpElem.on('click', ':not(input[type="text"])', function(){
 				oOpContentElem.focus();
+			});
+			// - Apply on "enter" key hit
+			oOpContentElem.on('keyup', function(oEvent){
+				// Check operator's radio if not already
+				if(oOpElem.find('.sfc_op_radio').prop('checked') === false)
+				{
+					oOpElem.find('.sfc_op_radio').prop('checked', true)
+				}
+
+				// Apply if enter key
+				if(oEvent.key === 'Enter')
+				{
+					me._apply();
+				}
 			});
 
 			oOpElem.find('.sfc_op_content').append(oOpContentElem);
