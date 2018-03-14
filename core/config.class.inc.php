@@ -1089,13 +1089,14 @@ class Config
 	/**
 	 * @return string identifier that can be used for example to name WebStorage/SessionStorage keys (they
 	 *     are related to a whole domain, and a domain can host multiple itop)
+	 *     Beware: do not expose server side information to the client !
 	 */
 	public function GetItopInstanceid()
 	{
-		return utils::GetAbsoluteUrlAppRoot()
+		return md5(utils::GetAbsoluteUrlAppRoot()
 			.'==='.$this->Get('db_host')
 			.'/'.$this->Get('db_name')
-			.'/'.$this->Get('db_subname');
+			.'/'.$this->Get('db_subname'));
 	}
 
 	public function GetDescription($sPropCode)
