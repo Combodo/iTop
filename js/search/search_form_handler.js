@@ -155,17 +155,7 @@ $(function()
 			};
 			// - Retrieve criterion
 			this.elements.active_criterion.find('.search_form_criteria').each(function(){
-				// Retrieve criteria data
 				var oCriteriaData = $(this).triggerHandler('itop.search.criteria.get_data');
-
-				// Add some of the field data to criteria data to help server rebuild query
-				// Note: This would be better to be passed in oCriteriaData.field but it's not how server is handling it.
-				var oFieldDef = me._getFieldDefinition(oCriteriaData.ref);
-				oCriteriaData.class = oFieldDef.class;
-				oCriteriaData.class_alias = oFieldDef.class_alias;
-				oCriteriaData.code = oFieldDef.code;
-				oCriteriaData.widget = oFieldDef.widget;
-
 				oCriterion['or'][0]['and'].push(oCriteriaData);
 			});
 			// - Update search
@@ -256,9 +246,10 @@ $(function()
 
 			// Bind events
 			this.elements.more_criterion.find('.sf_mc_field').on('click', function(){
-				// Prepare new criterion data
+				// Prepare new criterion data (as already opened to increase UX)
 				var oData = {
 					'ref': $(this).attr('data-field-ref'),
+					'init_opened': true,
 				};
 
 				// Add criteria but don't submit form as the user has not specified the value yet.
@@ -303,6 +294,10 @@ $(function()
 					var oFieldDef = this._getFieldDefinition(sRef);
 					oData.field = {
 						label: oFieldDef.label,
+						class: oFieldDef.class,
+						class_alias: oFieldDef.class_alias,
+						code: oFieldDef.code,
+						widget: oFieldDef.widget,
 					};
 				}
 

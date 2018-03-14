@@ -16,7 +16,17 @@ $(function()
 				'contains': {
 					'label': Dict.S('UI:Search:Criteria:Operator:String:Contains'),
 					'code': 'contains',
-					'rank': 5,
+					'rank': 10,
+				},
+				'starts_with': {
+					'label': Dict.S('UI:Search:Criteria:Operator:String:StartsWith'),
+					'code': 'starts_with',
+					'rank': 20,
+				},
+				'ends_with': {
+					'label': Dict.S('UI:Search:Criteria:Operator:String:EndsWith'),
+					'code': 'ends_with',
+					'rank': 30,
 				},
 				'=': null,	// Remove this one from string widget.
 			},

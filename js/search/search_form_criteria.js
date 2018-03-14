@@ -39,6 +39,7 @@ $(function()
 				},
 			},
 
+			'init_opened': false,
 			'is_modified': false, // TODO: change this on value change and remove oql property value
 		},
 
@@ -189,6 +190,12 @@ $(function()
 				'values': this.options.values,
 				'is_removable': this.options.is_removable,
 				'oql': this.options.oql,
+
+				// Field data
+				'class': this.options.field.class,
+				'class_alias': this.options.field.class_alias,
+				'code': this.options.field.code,
+				'widget': this.options.field.widget,
 			};
 			return oCriteriaData;
 		},
@@ -209,7 +216,15 @@ $(function()
 			// Bind events
 			// - Toggler
 			this.element.find('.sfc_toggle, .sfc_title').on('click', function(){
-				me.element.find('.sfc_form_group, .sfc_toggle').toggleClass('opened');
+				// First memorize if current criteria is close
+				var bOpen = !me.element.find('.sfc_toggle').hasClass('opened');
+				// Then close every criterion
+				me.handler.find('.sfc_form_group, .sfc_toggle').removeClass('opened');
+				// Finally open current criteria if necessary
+				if(bOpen === true)
+				{
+					me.element.find('.sfc_form_group, .sfc_toggle').toggleClass('opened');
+				}
 			});
 
 			// Removable / locked decoration
@@ -232,6 +247,13 @@ $(function()
 			// Fill criteria
 			// - Title
 			this._setTitle();
+
+			// Init opened to improve UX (toggle & focus in main operator's input)
+			if(this.options.init_opened === true)
+			{
+				this.element.find('.sfc_toggle').trigger('click');
+				this.element.find('.sfc_fg_operator:first .sfc_op_content input:first').trigger('click').trigger('focus');
+			}
 		},
 		// - Prepare the available operators for the criteria
 		//   Meant for overloading.
@@ -246,16 +268,16 @@ $(function()
 				var oOpElem = $(this._getOperatorTemplate()).uniqueId();
 
 				// Prepare operator's base elements
-				this._prepareOperator(oOpElem, oOp);
+				this._prepareOperator(oOpElem, sOpIdx, oOp);
 
 				// Prepare operator's specific elements
 				if(this[sMethod] !== undefined)
 				{
-					this[sMethod](oOpElem, oOp);
+					this[sMethod](oOpElem, sOpIdx, oOp);
 				}
 				else
 				{
-					this._prepareDefaultOperator(oOpElem, oOp);
+					this._prepareDefaultOperator(oOpElem, sOpIdx, oOp);
 				}
 
 				// Append to form group
@@ -300,9 +322,12 @@ $(function()
 		},
 
 		// Operators helpers
-		_prepareOperator: function(oOpElem, oOp)
+		_prepareOperator: function(oOpElem, sOpIdx, oOp)
 		{
 			var sInputId = oOp.code + '_' + oOpElem.attr('id');
+
+			// Set radio
+			oOpElem.find('.sfc_op_radio').val(sOpIdx);
 
 			// Set label
 			oOpElem.find('.sfc_op_name').text(oOp.label);
@@ -312,13 +337,16 @@ $(function()
 			oOpElem.find('.sfc_op_radio').val(oOpElem.id);
 			oOpElem.find('.sfc_op_radio').attr('id', sInputId);
 
+			// Set helper classes
+			oOpElem.addClass('sfc_fg_operator_' + oOp.code);
+
 			// Bind events
 			// - Check radio button on click
 			oOpElem.on('click', function(){
 				oOpElem.find('.sfc_op_radio').prop('checked', true);
 			});
 		},
-		_prepareDefaultOperator: function(oOpElem, oOp)
+		_prepareDefaultOperator: function(oOpElem, sOpIdx, oOp)
 		{
 			var me = this;
 
@@ -326,13 +354,18 @@ $(function()
 			var oOpContentElem = $('<input type="text" />');
 			oOpContentElem.val(this._getValuesAsText());
 
-			oOpElem.append(oOpContentElem);
+			// Events
+			oOpElem.on('click', ':not(input[type="text"])', function(){
+				oOpContentElem.focus();
+			});
+
+			oOpElem.find('.sfc_op_content').append(oOpContentElem);
 		},
-		_prepareEmptyOperator: function(oOpElem, oOp)
+		_prepareEmptyOperator: function(oOpElem, sOpIdx, oOp)
 		{
 			// Do nothing as only the label is necessary
 		},
-		_prepareNotEmptyOperator: function(oOpElem, oOp)
+		_prepareNotEmptyOperator: function(oOpElem, sOpIdx, oOp)
 		{
 			// Do nothing as only the label is necessary
 		},

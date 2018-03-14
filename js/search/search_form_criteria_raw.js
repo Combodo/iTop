@@ -54,6 +54,8 @@ $(function()
 
 			// Remove toggler as it's a non sense here
 			this.element.find('.sfc_toggle').remove();
+			this.element.find('.sfc_toggle, .sfc_title').off('click');
+
 		},
 		_prepareOperators: function()
 		{

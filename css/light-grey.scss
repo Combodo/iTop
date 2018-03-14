@@ -811,7 +811,7 @@ div.HRDrawer {
 	width: 100%;
 	margin: 0;
 	background-color:  $complement-color;
-	margin: 0;
+	margin-top: 10px;
 	padding: 0;
 	border: 0;
 	display: block;
@@ -867,6 +867,7 @@ div.HRDrawer {
 		.search_form_criteria{
 			position: relative;
 			padding: 7px 8px;
+			vertical-align: top;
 			background-color: $box-blue-bg-color;
 			color: $box-blue-color;
 			border: $box-blue-border;
@@ -878,7 +879,7 @@ div.HRDrawer {
 		.search_form_criteria{
 			display: inline-block;
 			margin-right: 5px;
-			padding-right: 35px;
+			margin-bottom: 5px;
 
 			&.locked{
 				background-color: $gray-extra-light;
@@ -897,14 +898,15 @@ div.HRDrawer {
 			.sfc_toggle{
 				display: inline-block;
 				right: 20px;
-				transition: all 0.2s ease-in-out;
+				transition: all 0.4s ease-in-out;
 
 				&.opened{
-					transform: rotateZ(180deg);
+					transform: rotateZ(-180deg);
 				}
 			}
 
 			.sfc_title{
+				padding-right: 35px;
 				cursor: pointer;
 			}
 			.sfc_form_group{
@@ -914,6 +916,41 @@ div.HRDrawer {
 				&.opened{
 					display: block;
 					margin-top: 5px;
+
+					.sfc_fg_operators{
+						font-size: 12px;
+
+						.sfc_fg_operator{
+							> label{
+								line-height: 20px;
+
+								> *{
+									display: inline-block;
+									vertical-align: middle;
+								}
+							}
+
+							.sfc_op_radio{
+								width: 12px;
+								margin: 0px;
+								margin-right: 7px;
+							}
+
+							/* Common operators for most criteria types processing*/
+							&.sfc_fg_operator_contains,
+							&.sfc_fg_operator_starts_with,
+							&.sfc_fg_operator_ends_with{
+								.sfc_op_name{
+									width: 90px;
+								}
+								.sfc_op_content{
+									input{
+										width: 130px;
+									}
+								}
+							}
+						}
+					}
 
 					.sfc_fg_apply,
 					.sfc_fg_cancel{
@@ -928,7 +965,7 @@ div.HRDrawer {
 					.sfc_fg_more,
 					.sfc_fg_less{
 						position: absolute;
-						bottom: 3px;
+						bottom: 4px;
 						right: 0px;
 						cursor: pointer;
 						color: $box-blue-border-color;
@@ -954,6 +991,7 @@ div.HRDrawer {
 						display: inline-block;
 					}
 
+					/* Show all operators in advanced mode */
 					&.advanced{
 
 						.sfc_fg_operator{
@@ -964,7 +1002,6 @@ div.HRDrawer {
 							}
 						}
 
-						/* Show all operators in simple mode */
 						.sfc_fg_operator:not(:first-of-type),
 						.sfc_fg_operator:first-of-type .sfc_op_radio{
 							display: inherit;
