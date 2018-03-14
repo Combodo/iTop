@@ -7044,7 +7044,7 @@ class AttributeFriendlyName extends AttributeDefinition
  */
 class AttributeRedundancySettings extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_REDUNDANCY;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	static public function ListExpectedParams()
 	{
