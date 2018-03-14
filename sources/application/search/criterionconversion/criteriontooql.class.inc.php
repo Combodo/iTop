@@ -129,6 +129,11 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$sClass = $aCriteria['class'];
 		$aValues = $aCriteria['values'];
 
+		if (count($aValues) == 0)
+		{
+			return "({$sRef}  = '')";
+		}
+
 		try
 		{
 			$aAttributeDefs = \MetaModel::ListAttributeDefs($sClass);
@@ -162,6 +167,11 @@ class CriterionToOQL extends CriterionConversionAbstract
 			$aInValues[] = $aValue['value'];
 		}
 		$sInList = implode(',', $aInValues);
+
+		if (count($aInValues) == 1)
+		{
+			return "({$sRef} = '$sInList')";
+		}
 
 		return "({$sRef} IN ($sInList))";
 	}
