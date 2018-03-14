@@ -113,17 +113,13 @@ abstract class AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE_RAW = 'raw';
 	const SEARCH_WIDGET_TYPE_STRING = 'string';
-	const SEARCH_WIDGET_TYPE_LANGUAGE = 'language';
-	const SEARCH_WIDGET_TYPE_INTEGER = 'integer';
-	const SEARCH_WIDGET_TYPE_PERCENT = 'percent';
-	const SEARCH_WIDGET_TYPE_DECIMAL = 'decimal';
-	const SEARCH_WIDGET_TYPE_BOOLEAN = 'boolean';
+	const SEARCH_WIDGET_TYPE_NUMERIC = 'numeric';
 	const SEARCH_WIDGET_TYPE_ENUM = 'enum';
 	const SEARCH_WIDGET_TYPE_EXTERNAL_KEY = 'external_key';
+	const SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY = 'hierarchical_key';
 	const SEARCH_WIDGET_TYPE_EXTERNAL_FIELD = 'external_field';
 	const SEARCH_WIDGET_TYPE_DATE_TIME = 'date_time';
 	const SEARCH_WIDGET_TYPE_DATE = 'date';
-	const SEARCH_WIDGET_TYPE_REDUNDANCY = 'redundancy';
 
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
@@ -1638,7 +1634,7 @@ class AttributeDBField extends AttributeDBFieldVoid
  */
 class AttributeInteger extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_INTEGER;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
 	static public function ListExpectedParams()
 	{
@@ -1790,7 +1786,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
  */
 class AttributePercentage extends AttributeInteger
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_PERCENT;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
@@ -1831,7 +1827,7 @@ class AttributePercentage extends AttributeInteger
  */
 class AttributeDecimal extends AttributeDBField
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DECIMAL;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
 	static public function ListExpectedParams()
 	{
@@ -1931,7 +1927,7 @@ class AttributeDecimal extends AttributeDBField
  */
 class AttributeBoolean extends AttributeInteger
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_BOOLEAN;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	static public function ListExpectedParams()
 	{
@@ -2329,7 +2325,7 @@ class AttributeClass extends AttributeString
  */
 class AttributeApplicationLanguage extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_LANGUAGE;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	static public function ListExpectedParams()
 	{
@@ -4803,6 +4799,8 @@ class AttributeExternalKey extends AttributeDBFieldVoid
  */
 class AttributeHierarchicalKey extends AttributeExternalKey
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;
+
 	protected $m_sTargetClass;
 
 	static public function ListExpectedParams()
