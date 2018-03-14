@@ -63,7 +63,6 @@ try
         'selection_mode',
         'selection_type',// In case of single selection, the root of the HTML identifiers used is suffixed with "_results" (at least in the external keys)
         'cssCount',
-        'table_inner_id',
     );
 	foreach ($aPassFromExtraParamsToListParams as $passThroughKey)
     {
@@ -73,6 +72,10 @@ try
         }
     }
 
+    if (array_key_exists('table_inner_id', $aListParams))
+    {
+        $sListId = $aListParams['table_inner_id'];
+    }
 
 	if (array_key_exists('json', $aListParams))
 	{
@@ -88,6 +91,7 @@ try
 //        $aExtraParams['current_extkey_id'] = $iCurrentExtKeyId;
 
 	}
+
 
 
 	$aExtraParams['display_limit'] = true;

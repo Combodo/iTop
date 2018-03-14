@@ -259,7 +259,7 @@ class DisplayBlock
 		if (!$this->m_bAsynchronous)
 		{
 			// render now
-			$sHtml .= "<div id=\"$sId\" class=\"display_block\">\n";
+			$sHtml .= "<div id=\"$sId\" class=\"display_block\" >\n";
 			$sHtml .= $this->GetRenderContent($oPage, $aExtraParams, $sId);
 			$sHtml .= "</div>\n";
 		}
@@ -273,9 +273,11 @@ class DisplayBlock
 			$.post("ajax.render.php?style='.$this->m_sStyle.'",
 			   { operation: "ajax", filter: "'.$sFilter.'", extra_params: "'.$sExtraParams.'" },
 			   function(data){
-				 $("#'.$sId.'").empty();
-				 $("#'.$sId.'").append(data);
-				 $("#'.$sId.'").removeClass("loading");
+				 $("#'.$sId.'")
+				    .empty()
+				    .append(data)
+				    .removeClass("loading")
+                 ;
 				}
 			 );
 			 ');
@@ -284,13 +286,28 @@ class DisplayBlock
 
         if ($this->m_sStyle != 'search') // Search form need to extract result list extra data, the simplest way is to expose this configuration
         {
-            $oPage->add_script("$('#$sId').data('sExtraParams', \"$sExtraParams\");");
-            $oPage->add_script("$('#$sId').data('bAutoReload', ".json_encode($bAutoReload).");");
+            $oPage->add_ready_script("
+            $('#$sId').data('sExtraParams', \"$sExtraParams\");
+            $('#$sId').data('bAutoReload', \"$sExtraParams\");
+            console.debug($('#$sId').data());
+            console.debug($('#$sId'));
+            console.debug('#$sId');
+            
+            ");
+
+//            $oPage->add_ready_script("console.debug($('#Menu_UserRequest_OpenRequests').data());");
+
         }
 
 		if (($bAutoReload) && ($this->m_sStyle != 'search')) // Search form do NOT auto-reload
 		{
-			$oPage->add_script('aAutoReloadBlock = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
+			$oPage->add_script('if (typeof aAutoReloadBlock == "undefined") {
+			    aAutoReloadBlock = [];
+			}
+			if (typeof aAutoReloadBlock[\''.$sId.'\'] != "undefined") {
+			    clearInterval(aAutoReloadBlock[\''.$sId.'\']);
+			}
+			aAutoReloadBlock[\''.$sId.'\'] = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
 		}
 		return $sHtml;
 	}
