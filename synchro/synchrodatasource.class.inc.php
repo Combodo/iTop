@@ -862,7 +862,7 @@ EOF
 
 		$sTable = $this->GetDataTable();
 
-		$sDropTable = "DROP TABLE `$sTable`";
+		$sDropTable = "DROP TABLE IF EXISTS `$sTable`"; // Do not fail if the table is already deleted (corrupted database)
 		CMDBSource::Query($sDropTable);
 		// TO DO - check that triggers get dropped with the table
 	}
