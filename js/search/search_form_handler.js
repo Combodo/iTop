@@ -134,6 +134,9 @@ $(function()
 			});
 
 			// Criteria events
+			this.element.on('itop.search.criteria.opening', function(oEvent, oData){
+				me._onCriteriaOpening(oData);
+			});
 			this.element.on('itop.search.criteria.value_changed', function(oEvent, oData){
 				me._onCriteriaValueChanged(oData);
 			});
@@ -168,6 +171,9 @@ $(function()
 		_openMoreCriterion: function()
 		{
 			this.elements.more_criterion.addClass('opened');
+			this.elements.active_criterion.find('.search_form_criteria').each(function(){
+				$(this).triggerHandler('itop.search.criteria.close');
+			});
 		},
 		_closeMoreCriterion: function()
 		{
@@ -175,7 +181,15 @@ $(function()
 		},
 		_toggleMoreCriterion: function()
 		{
-			this.elements.more_criterion.toggleClass('opened');
+			// Calling methods instead of toggling the class so additional processing are done.
+			if(this.elements.more_criterion.hasClass('opened'))
+			{
+				this._closeMoreCriterion();
+			}
+			else
+			{
+				this._openMoreCriterion();
+			}
 		},
 
 		// DOM helpers
@@ -381,6 +395,10 @@ $(function()
 			return 'search_form_criteria' + '_' + (($.itop['search_form_criteria_'+sType] !== undefined) ? sType : 'raw');
 		},
 		// Criteria handlers
+		_onCriteriaOpening: function(oData)
+		{
+			this._closeMoreCriterion();
+		},
 		_onCriteriaValueChanged: function(oData)
 		{
 			this._updateSearch();

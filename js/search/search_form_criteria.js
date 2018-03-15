@@ -164,6 +164,10 @@ $(function()
 		//   - Open / Close criteria
 		_open: function()
 		{
+			// Inform handler that a criteria is opening
+			this.handler.triggerHandler('itop.search.criteria.opening');
+
+			// Open criteria
 			this._resetOperators();
 			this.element.addClass('opened');
 
@@ -476,7 +480,7 @@ $(function()
 			});
 			// - Apply on "enter" key hit
 			oOpContentElem.on('keyup', function(oEvent){
-				// Check operator's radio if not already
+				// Check operator's radio if not already (typically when focusing in input via "tab" key)
 				if(oOpElem.find('.sfc_op_radio').prop('checked') === false)
 				{
 					oOpElem.find('.sfc_op_radio').prop('checked', true)
