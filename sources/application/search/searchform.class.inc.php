@@ -138,12 +138,15 @@ class SearchForm
 		if (!isset($aExtraParams['table_id']))
 		{
 			$aExtraParams['table_id'] = "search_form_result_{$sSearchFormId}";
-			$sHtml .= "<div class=\"display_block\" id=\"search_form_result_{$sSearchFormId}\"></div>\n";
 		}
 		$aListParams['table_id'] = $aExtraParams['table_id'];
 		if (array_key_exists('table_inner_id', $aExtraParams))
 		{
 			$aListParams['table_inner_id'] = $aExtraParams['table_inner_id'];
+		}
+		else
+		{
+			$aListParams['table_inner_id'] = uniqid('table_inner_id_');
 		}
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
