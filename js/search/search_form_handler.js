@@ -11,6 +11,7 @@ $(function()
 		{
 			'criterion_outer_selector': null,
 			'result_list_outer_selector': null,
+			'data_config_list_selector': null,
 			'submit_button_selector': null,
 			'hide_initial_criterion': false, // TODO: What is that?
 			'endpoint': null,
@@ -133,10 +134,10 @@ $(function()
 			});
 
 			// Criteria events
-			this.element.bind('itop.search.criteria.value_changed', function(oEvent, oData){
+			this.element.on('itop.search.criteria.value_changed', function(oEvent, oData){
 				me._onCriteriaValueChanged(oData);
 			});
-			this.element.bind('itop.search.criteria.removed', function(oEvent, oData){
+			this.element.on('itop.search.criteria.removed', function(oEvent, oData){
 				me._onCriteriaRemoved(oData);
 			});
 		},
@@ -268,6 +269,7 @@ $(function()
 			}
 			else
 			{
+				// TODO: Change this so it appears after the search drawer.
 				oResultAreaElem = $('<div></div>').appendTo(this.element);
 			}
 			oResultAreaElem.addClass('sf_results_area');
@@ -404,13 +406,23 @@ $(function()
 		_submit: function()
 		{
 			var me = this;
+
+			// Data
+			// - Regular params
 			var oData = {
 				'params': JSON.stringify({
 					'base_oql': this.options.search.base_oql,
 					'criterion': this.options.search.criterion,
 				}),
-				'list_params': this.elements.results_area.data('sExtraParams'),
 			};
+			// - List params (pass through for the server), merge data_config with list_params if present.
+			var oListParams = {};
+			if(this.options.data_config_list_selector !== null)
+			{
+				// TODO: What ?
+			}
+			$.extend(oListParams, this.options.list_params);
+			oData.list_params = JSON.stringify(oListParams);
 
 			// Show loader
 			this._showLoader();

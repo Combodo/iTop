@@ -130,12 +130,12 @@ $(function()
 			var me = this;
 
 			// Get criteria data
-			this.element.bind('itop.search.criteria.get_data', function(oEvent, oData){
+			this.element.on('itop.search.criteria.get_data', function(oEvent, oData){
 				return me._onGetData(oData);
 			});
 
 			// Get/SetCurrentValues callbacks handler
-			this.element.bind('itop.search.criteria.get_current_values itop.search.criteria.set_current_values', function(oEvent, oData){
+			this.element.on('itop.search.criteria.get_current_values itop.search.criteria.set_current_values', function(oEvent, oData){
 				oEvent.stopPropagation();
 
 				var callback = me.options[oEvent.type+'_callback'];
@@ -154,10 +154,47 @@ $(function()
 					return false;
 				}
 			});
+
+			// Close criteria
+			this.element.on('itop.search.criteria.close', function(){
+				return me._close();
+			});
 		},
+		// - Cinematic
+		//   - Open / Close criteria
+		_open: function()
+		{
+			this._resetOperators();
+			this.element.find('.sfc_form_group, .sfc_toggle').addClass('opened');
+		},
+		_close: function()
+		{
+			this.element.find('.sfc_form_group, .sfc_toggle').removeClass('opened');
+			this._unmarkAsDraft();
+		},
+		_closeAll: function()
+		{
+			this.element.closest('.search_form_handler').find('.search_form_criteria').each(function(){
+				$(this).triggerHandler('itop.search.criteria.close');
+			});
+		},
+		_remove: function()
+		{
+			this.element.remove();
+			this.handler.triggerHandler('itop.search.criteria.removed');
+		},
+		//   - Mark / Unmark criteria as draft (new value not applied)
+		_markAsDraft: function()
+		{
+			this.element.addClass('draft');
+		},
+		_unmarkAsDraft: function()
+		{
+			this.element.removeClass('draft');
+		},
+		//   - Apply / Cancel new value
 		_apply: function()
 		{
-			this._trace('TODO: Apply button (call selected operator callback)');
 			// Find active operator
 			var oActiveOpElem = this.element.find('.sfc_op_radio:checked').closest('.sfc_fg_operator');
 			if(oActiveOpElem.length === 0)
@@ -179,14 +216,14 @@ $(function()
 			this.options.operator = oActiveOpElem.find('.sfc_op_radio').val();
 			this.options.values = aValues;
 			this._setTitle();
+			this._unmarkAsDraft();
 
 			// Trigger event to handler
 			this.handler.triggerHandler('itop.search.criteria.value_changed');
 		},
-		_remove: function()
+		_cancel: function()
 		{
-			this.element.remove();
-			this.handler.triggerHandler('itop.search.criteria.removed');
+			this._close();
 		},
 
 
@@ -198,7 +235,7 @@ $(function()
 		},
 		_onButtonCancel: function()
 		{
-			this._trace('TODO: Cancel button');
+			this._cancel();
 		},
 		_onButtonMore: function()
 		{
@@ -246,11 +283,11 @@ $(function()
 				// First memorize if current criteria is close
 				var bOpen = !me.element.find('.sfc_toggle').hasClass('opened');
 				// Then close every criterion
-				me.handler.find('.sfc_form_group, .sfc_toggle').removeClass('opened');
+				me._closeAll();
 				// Finally open current criteria if necessary
 				if(bOpen === true)
 				{
-					me.element.find('.sfc_form_group, .sfc_toggle').toggleClass('opened');
+					me._open();
 				}
 			});
 
@@ -332,6 +369,36 @@ $(function()
 				me[sCallback]();
 			});
 		},
+		// - Reset all operators but active one
+		_resetOperators: function()
+		{
+			var me = this;
+
+			// Reset all operators
+			this.element.find('.sfc_fg_operator').each(function(){
+				var sCallback = '_reset' + me._toCamelCase($(this).attr('data-operator-code')) + 'Operator';
+				if(me[sCallback] === undefined)
+				{
+					sCallback = '_resetOperator';
+				}
+				me[sCallback]($(this));
+			});
+
+			// Set value on current operator
+			var sCurrentOpCode = this.operators[this.options.operator].code;
+			this.element.find('.sfc_fg_operator[data-operator-code="' + sCurrentOpCode + '"]').each(function(){
+				// Check radio (we don't use .trigger('click'), otherwise the criteria will be seen as draft.
+				$(this).find('.sfc_op_radio').prop('checked', true);
+
+				// Reset values
+				var sCallback = '_set' + me._toCamelCase(sCurrentOpCode) + 'OperatorValues';
+				if(me[sCallback] === undefined)
+				{
+					sCallback = '_setOperatorValues';
+				}
+				me[sCallback]($(this), me.options.values);
+			});
+		},
 		// - Set the title element
 		_setTitle: function(sTitle)
 		{
@@ -342,15 +409,18 @@ $(function()
 			}
 			this.element.find('.sfc_title').text(sTitle);
 		},
+
+		// Operators helpers
 		// - Return a HTML template for operators
 		_getOperatorTemplate: function()
 		{
 			return '<div class="sfc_fg_operator"><label><input type="radio" class="sfc_op_radio" name="operator" /><span class="sfc_op_name"></span><span class="sfc_op_content"></span></label></div>';
 		},
-
-		// Operators helpers
+		// Prepare operator's DOM element
+		// - Base preparation, always called
 		_prepareOperator: function(oOpElem, sOpIdx, oOp)
 		{
+			var me = this;
 			var sInputId = oOp.code + '_' + oOpElem.attr('id');
 
 			// Set radio
@@ -366,11 +436,18 @@ $(function()
 				.attr('data-operator-code', oOp.code);
 
 			// Bind events
-			// - Check radio button on click
+			// - Check radio button on click and mark criteria as draft
 			oOpElem.on('click', function(){
-				oOpElem.find('.sfc_op_radio').prop('checked', true);
+				var bIsChecked = oOpElem.find('.sfc_op_radio').prop('checked');
+
+				if(bIsChecked === false)
+				{
+					oOpElem.find('.sfc_op_radio').prop('checked', true);
+					me._markAsDraft();
+				}
 			});
 		},
+		// - Fallback for operator that has no dedicated callback
 		_prepareDefaultOperator: function(oOpElem, sOpIdx, oOp)
 		{
 			var me = this;
@@ -392,6 +469,8 @@ $(function()
 					oOpElem.find('.sfc_op_radio').prop('checked', true)
 				}
 
+				me._markAsDraft();
+
 				// Apply if enter key
 				if(oEvent.key === 'Enter')
 				{
@@ -409,6 +488,13 @@ $(function()
 		{
 			// Do nothing as only the label is necessary
 		},
+		// Reset operator's state
+		// - Fallback for operator that has no dedicated callback
+		_resetOperator: function(oOpElem)
+		{
+			oOpElem.find('.sfc_op_content input').val('');
+		},
+		// Get operator's values
 		// - Fallback for operators without a specific callback
 		_getOperatorValues: function(oOpElem)
 		{
@@ -420,6 +506,21 @@ $(function()
 			});
 
 			return aValues;
+		},
+		// Set operator's values
+		// - Fallback for operators without a specific callback
+		_setOperatorValues: function(oOpElem, aValues)
+		{
+			if(aValues.length === 0)
+			{
+				return false;
+			}
+
+			oOpElem.find('.sfc_op_content input').each(function(){
+				$(this).val(aValues[0].value);
+			});
+
+			return true;
 		},
 
 

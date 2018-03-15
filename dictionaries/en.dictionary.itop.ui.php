@@ -367,6 +367,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Save',
 	'UI:Button:Cancel' => 'Cancel',
+	'UI:Button:Close' => 'Close',
 	'UI:Button:Apply' => 'Apply',
 	'UI:Button:Back' => ' << Back ',
 	'UI:Button:Restart' => ' |<< Restart ',

@@ -795,11 +795,19 @@ div.HRDrawer {
   display: inline-block;
   margin-right: 5px;
   margin-bottom: 5px;
+  /* Non editable criteria */
+  /* Draft criteria (modifications not applied) */
   /* Top left corner icons */
   /* Special criterion processing */
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.locked {
   background-color: #f1f1f1;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.draft {
+  border-style: dashed;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.draft .sfc_title {
+  font-style: italic;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_close, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_toggle {
   position: absolute;
@@ -811,7 +819,7 @@ div.HRDrawer {
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_toggle {
   display: inline-block;
-  right: 20px;
+  right: 23px;
   transition: all 0.4s ease-in-out;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_toggle.opened {
@@ -904,6 +912,9 @@ div.HRDrawer {
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw .sfc_title {
   cursor: initial;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw .sfc_form_group {
+  display: none;
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion .sf_mc_list {
   position: absolute;

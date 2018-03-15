@@ -63,6 +63,7 @@ class NiceWebPage extends WebPage
 	    $this->add_dict_entry('UI:Search:Criteria:Operator:String:EndsWith');
 	    $this->add_dict_entry('UI:Button:Apply');
 	    $this->add_dict_entry('UI:Button:Cancel');
+	    $this->add_dict_entry('UI:Button:Close');
 	    $this->add_dict_entry('UI:Button:More');
 	    $this->add_dict_entry('UI:Button:Less');
 	    $this->add_ready_script(
