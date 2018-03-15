@@ -61,11 +61,15 @@ class SearchForm
 		$sClassName = $oSet->GetFilter()->GetClass();
 		$aListParams = array();
 
+		foreach($aExtraParams as $key => $value)
+		{
+			$aListParams[$key] = $value;
+		}
+
 		// Simple search form
 		if (isset($aExtraParams['currentId']))
 		{
 			$sSearchFormId = $aExtraParams['currentId'];
-			$aListParams['currentId'] = $aExtraParams['currentId'];
 		}
 		else
 		{
@@ -83,23 +87,13 @@ class SearchForm
 		{
 			$sRootClass = $sClassName;
 		}
-		if (array_key_exists('selection_mode', $aExtraParams))
-		{
-			$aListParams['selection_mode'] = $aExtraParams['selection_mode'];
-		}
-		if (array_key_exists('selection_type', $aExtraParams))
-		{
-			$aListParams['selection_type'] = $aExtraParams['selection_type'];
-		}
+
 		$sJson = stripslashes(utils::ReadParam('json', '', false, 'raw_data'));
 		if (!empty($sJson))
 		{
 			$aListParams['json'] = json_decode($sJson, true);
 		}
-		if (array_key_exists('cssCount', $aExtraParams))
-		{
-			$aListParams['cssCount'] = $aExtraParams['cssCount'];
-		}
+
 
 		$aSubClasses = MetaModel::GetSubclasses($sRootClass);
 		if (count($aSubClasses) > 0)
@@ -139,14 +133,13 @@ class SearchForm
 		{
 			$aExtraParams['table_id'] = "search_form_result_{$sSearchFormId}";
 		}
-		$aListParams['table_id'] = $aExtraParams['table_id'];
-		if (array_key_exists('table_inner_id', $aExtraParams))
-		{
-			$aListParams['table_inner_id'] = $aExtraParams['table_inner_id'];
-		}
-		else
+		if (!array_key_exists('table_inner_id', $aExtraParams))
 		{
 			$aListParams['table_inner_id'] = uniqid('table_inner_id_');
+		}
+		if (array_key_exists('table_id2', $aExtraParams))
+		{
+			$aListParams['table_id'] = $aExtraParams['table_id2'];
 		}
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
@@ -162,13 +155,13 @@ class SearchForm
 			),
 		);
 
-		if (isset($aSearchParams['list_params']['table_inner_id']))
-        {
-            $aSearchParams['data_config_list_selector'] = '#'.$aSearchParams['list_params']['table_inner_id'];
-        }
-        elseif (isset($aSearchParams['list_params']['table_id']))
-        {
-            $aSearchParams['data_config_list_selector'] = '#'.$aSearchParams['list_params']['table_id'];
+		if (isset($aSearchParams['list_params']['table_id']))
+		{
+			$aSearchParams['data_config_list_selector'] = '#'.$aSearchParams['list_params']['table_id'];
+		}
+		elseif (isset($aSearchParams['list_params']['table_inner_id']))
+		{
+			$aSearchParams['data_config_list_selector'] = '#'.$aSearchParams['list_params']['table_inner_id'];
         }
         else
         {

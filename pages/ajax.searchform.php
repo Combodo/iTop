@@ -57,19 +57,9 @@ try
 	$sListParams = stripslashes(utils::ReadParam('list_params', '{}', false, 'raw_data'));
 	$aListParams = (array) json_decode($sListParams, true);
 
-
-	$aPassFromExtraParamsToListParams = array(
-        'currentId',
-        'selection_mode',
-        'selection_type',// In case of single selection, the root of the HTML identifiers used is suffixed with "_results" (at least in the external keys)
-        'cssCount',
-    );
-	foreach ($aPassFromExtraParamsToListParams as $passThroughKey)
+	foreach($aListParams as $key => $value)
     {
-        if (array_key_exists($passThroughKey, $aListParams))
-        {
-            $aExtraParams[$passThroughKey] = $aListParams[$passThroughKey];
-        }
+	    $aExtraParams[$key] = $value;
     }
 
     if (array_key_exists('table_inner_id', $aListParams))
