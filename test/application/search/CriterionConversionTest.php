@@ -30,6 +30,7 @@ namespace Combodo\iTop\Test\UnitTest\Application\Search;
 
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToOQL;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
+use Combodo\iTop\Application\Search\CriterionParser;
 use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
@@ -291,6 +292,64 @@ class CriterionConversionTest extends ItopDataTestCase
             ]', true),
 				'not_empty'
 			),
+		);
+	}
+
+	/**
+	 * @dataProvider OqlProvider
+	 * @throws \OQLException
+	 */
+	function testOqlToForlSearchToOql($sOQL)
+	{
+		$oSearchForm = new SearchForm();
+		$oSearch = \DBSearch::FromOQL($sOQL);
+		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
+		$aCriterion = $oSearchForm->GetCriterion($oSearch, $aFields);
+		$this->debug($sOQL);
+
+		$aAndCriterion = $aCriterion['or'][0]['and'];
+
+		$aNewCriterion = array();
+		foreach($aAndCriterion as $aCriteria)
+		{
+			if (($aCriteria['widget'] == \AttributeDefinition::SEARCH_WIDGET_TYPE_STRING)
+				|| ($aCriteria['widget'] == \AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME)
+				|| ($aCriteria['widget'] == \AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM))
+			{
+				unset($aCriteria['oql']);
+				$aField = $aFields['zlist'][$aCriteria['ref']];
+				$aCriteria['code'] = $aField['code'];
+				$aCriteria['class'] = $aField['class'];
+			}
+
+			$aNewCriterion[] = $aCriteria;
+		}
+		$this->debug($aNewCriterion);
+
+		$aCriterion['or'][0]['and'] = $aNewCriterion;
+
+		$oSearch->ResetCondition();
+		$oFilter = CriterionParser::Parse($oSearch->ToOQL(), $aCriterion);
+
+		$this->debug($oFilter->ToOQL());
+
+		$this->assertTrue(true);
+	}
+
+	function OqlProvider()
+	{
+		return array(
+			array('OQL' => "SELECT Contact WHERE status = 'active'"),
+			array('OQL' => "SELECT Contact WHERE status = 'active' AND name LIKE 'toto%'"),
+			array('OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3"),
+			array('OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')"),
+			array('OQL' => "SELECT Contact WHERE status NOT IN ('active')"),
+			array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date"),
+			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date"),
+			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date"),
+			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date"),
+			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date"),
+			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date"),
 		);
 	}
 }

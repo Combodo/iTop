@@ -24,6 +24,7 @@ namespace Combodo\iTop\Application\Search;
 
 
 use ApplicationContext;
+use AttributeDateTime;
 use AttributeDefinition;
 use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
@@ -149,6 +150,7 @@ class SearchForm
             'result_list_outer_selector' => "#{$aExtraParams['table_id']}",
             'data_config_list_selector' => null,                                            //this one will be set just bellow, it mean to tell the widget where to find the initial list configuration
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
+			'date_format' => AttributeDateTime::GetFormat()->ToMomentJS(),
 			'list_params' => $aListParams,
 			'search' => array(
 				'fields' => $aFields,

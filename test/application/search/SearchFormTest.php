@@ -98,8 +98,11 @@ class SearchFormTest extends ItopDataTestCase
 			array('OQL' => "SELECT Contact WHERE status NOT IN ('active', 'inactive')", 1),
 			array('OQL' => "SELECT Contact WHERE status = 'active' OR name LIKE 'toto%'", 2),
 			array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date", 1),
-			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01' AND '2018-01-01' >= start_date", 1),
-			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01' AND status = 'active' AND org_id = 3 AND '2018-01-01' >= start_date", 1),
+			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date", 1),
+			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date", 1),
+			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date", 1),
+			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date", 1),
+			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date", 1),
 		);
 	}
 }

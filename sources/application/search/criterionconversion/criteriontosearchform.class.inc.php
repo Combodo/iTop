@@ -25,8 +25,11 @@
 namespace Combodo\iTop\Application\Search\CriterionConversion;
 
 
+use AttributeDateTime;
 use AttributeDefinition;
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
+use DateInterval;
+use DateTime;
 
 class CriterionToSearchForm extends CriterionConversionAbstract
 {
@@ -67,11 +70,157 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 		// Regroup criterion by variable name
 		usort($aAndCriterion, function ($a, $b) {
-			return strcmp($a['ref'], $b['ref']);
+			$iRefCmp = strcmp($a['ref'], $b['ref']);
+			if ($iRefCmp != 0) return $iRefCmp;
+			$iOpCmp = strcmp($a['operator'], $b['operator']);
+
+			return $iOpCmp;
 		});
 
-		return $aAndCriterion;
+		$aMergeFctByWidget = array(
+			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE => 'MergeDate',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME => 'MergeDateTime',
+		);
+
+		$aPrevCriterion = null;
+		$aMergedCriterion = array();
+		foreach($aAndCriterion as $aCurrCriterion)
+		{
+			if (!is_null($aPrevCriterion))
+			{
+				if (strcmp($aPrevCriterion['ref'], $aCurrCriterion['ref']) == 0)
+				{
+					// Same attribute, try to merge
+					if (array_key_exists('widget', $aCurrCriterion))
+					{
+						if (array_key_exists($aCurrCriterion['widget'], $aMergeFctByWidget))
+						{
+							$sFct = $aMergeFctByWidget[$aCurrCriterion['widget']];
+							$aPrevCriterion = self::$sFct($aPrevCriterion, $aCurrCriterion, $aMergedCriterion);
+							continue;
+						}
+					}
+				}
+				$aMergedCriterion[] = $aPrevCriterion;
+			}
+
+			$aPrevCriterion = $aCurrCriterion;
+		}
+		if (!is_null($aPrevCriterion))
+		{
+			$aMergedCriterion[] = $aPrevCriterion;
+		}
+
+		return $aMergedCriterion;
 	}
+
+	/**
+	 * @param $aPrevCriterion
+	 * @param $aCurrCriterion
+	 * @param $aMergedCriterion
+	 *
+	 * @return null
+	 * @throws \Exception
+	 */
+	protected static function MergeDate($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
+	{
+		$sPrevOperator = $aPrevCriterion['operator'];
+		$sCurrOperator = $aCurrCriterion['operator'];
+		if ((($sPrevOperator != '<') && ($sPrevOperator != '<=')) || (($sCurrOperator != '>') && ($sCurrOperator != '>=')))
+		{
+			$aMergedCriterion[] = $aPrevCriterion;
+
+			return $aCurrCriterion;
+		}
+
+		// Merge into 'between' operation.
+		// The ends of the interval are included
+		$aCurrCriterion['operator'] = 'between_days';
+		$sFormat = AttributeDateTime::GetFormat()->ToMomentJS();
+		$sLastDate = $aPrevCriterion['values'][0]['value'];
+		if ($sPrevOperator == '<')
+		{
+			// previous day to include ends
+			$oDate = new DateTime($sLastDate);
+			$oDate->sub(DateInterval::createFromDateString('1 day'));
+			$sLastDate = $oDate->format($sFormat);
+		}
+
+		$sFirstDate = $aCurrCriterion['values'][0]['value'];
+		if ($sCurrOperator == '>')
+		{
+			// next day to include ends
+			$oDate = new DateTime($sFirstDate);
+			$oDate->add(DateInterval::createFromDateString('1 day'));
+			$sFirstDate = $oDate->format($sFormat);
+		}
+
+		$aCurrCriterion['values'] = array();
+		$aCurrCriterion['values'][] = array('value' => $sFirstDate, 'label' => $sFirstDate);
+		$aCurrCriterion['values'][] = array('value' => $sLastDate, 'label' => $sLastDate);
+
+		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
+
+		$aMergedCriterion[] = $aCurrCriterion;
+
+		return null;
+	}
+
+	protected static function MergeDateTime($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
+	{
+		$sPrevOperator = $aPrevCriterion['operator'];
+		$sCurrOperator = $aCurrCriterion['operator'];
+		if ((($sPrevOperator != '<') && ($sPrevOperator != '<=')) || (($sCurrOperator != '>') && ($sCurrOperator != '>=')))
+		{
+			$aMergedCriterion[] = $aPrevCriterion;
+
+			return $aCurrCriterion;
+		}
+
+		// Merge into 'between' operation.
+		// The ends of the interval are included
+		$sLastDate = $aPrevCriterion['values'][0]['value'];
+		$sFirstDate = $aCurrCriterion['values'][0]['value'];
+		$oDate = new DateTime($sLastDate);
+		if ((strpos($sFirstDate, '00:00:00') != false) && (strpos($sLastDate, '00:00:00') != false))
+		{
+			$aCurrCriterion['operator'] = 'between_days';
+			$sInterval = '1 day';
+		}
+		else
+		{
+			$aCurrCriterion['operator'] = 'between_hours';
+			$sInterval = '1 second';
+		}
+
+		if ($sPrevOperator == '<')
+		{
+			// previous day/second to include ends
+			$oDate->sub(DateInterval::createFromDateString($sInterval));
+		}
+		$sLastDate = $oDate->format(AttributeDateTime::GetSQLFormat());
+		$sLastDate = AttributeDateTime::GetFormat()->Format($sLastDate);
+
+		$oDate = new DateTime($sFirstDate);
+		if ($sCurrOperator == '>')
+		{
+			// next day/second to include ends
+			$oDate->add(DateInterval::createFromDateString($sInterval));
+		}
+		$sFirstDate = $oDate->format(AttributeDateTime::GetSQLFormat());
+		$sFirstDate = AttributeDateTime::GetFormat()->Format($sFirstDate);
+
+		$aCurrCriterion['values'] = array();
+		$aCurrCriterion['values'][] = array('value' => $sFirstDate, 'label' => $sFirstDate);
+		$aCurrCriterion['values'][] = array('value' => $sLastDate, 'label' => $sLastDate);
+
+		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
+
+		$aMergedCriterion[] = $aCurrCriterion;
+
+		return null;
+	}
+
 
 	protected static function TextToSearchForm($aCriteria, $aFields)
 	{
@@ -115,6 +264,14 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	protected static function EnumToSearchForm($aCriteria, $aFields)
 	{
 		$sOperator = $aCriteria['operator'];
+		if ($sOperator == '=')
+		{
+			$aCriteria['operator'] = 'IN';
+		}
+		if ($sOperator != 'NOT IN')
+		{
+			return $aCriteria;
+		}
 		$sRef = $aCriteria['ref'];
 		$aValues = $aCriteria['values'];
 		if (array_key_exists($sRef, $aFields))
@@ -126,26 +283,21 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			}
 		}
 
-		switch (true)
+		if (isset($aAllowedValues))
 		{
-			case ($sOperator == 'NOT IN'):
-				if (isset($aAllowedValues))
-				{
-					foreach($aValues as $aValue)
-					{
-						$sValue = $aValue['value'];
-						unset($aAllowedValues[$sValue]);
-					}
-					$aCriteria['values'] = array();
-					
-					foreach($aAllowedValues as $sValue => $sLabel)
-					{
-						$aValue = array('value' => $sValue, 'label' => $sLabel);
-						$aCriteria['values'][] = $aValue;
-					}
-					$aCriteria['operator'] = 'IN';
-				}
-				break;
+			foreach($aValues as $aValue)
+			{
+				$sValue = $aValue['value'];
+				unset($aAllowedValues[$sValue]);
+			}
+			$aCriteria['values'] = array();
+
+			foreach($aAllowedValues as $sValue => $sLabel)
+			{
+				$aValue = array('value' => $sValue, 'label' => $sLabel);
+				$aCriteria['values'][] = $aValue;
+			}
+			$aCriteria['operator'] = 'IN';
 		}
 
 		return $aCriteria;

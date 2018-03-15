@@ -23,8 +23,11 @@
 namespace Combodo\iTop\Application\Search\CriterionConversion;
 
 
+use AttributeDateTime;
+use AttributeDefinition;
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
 use Combodo\iTop\Application\Search\SearchForm;
+use DateInterval;
 
 class CriterionToOQL extends CriterionConversionAbstract
 {
@@ -51,6 +54,8 @@ class CriterionToOQL extends CriterionConversionAbstract
 			self::OP_ENDS_WITH => 'EndsWithToOql',
 			self::OP_EMPTY => 'EmptyToOql',
 			self::OP_NOT_EMPTY => 'NotEmptyToOql',
+			self::OP_BETWEEN_DAYS => 'BetweenDaysToOql',
+			self::OP_BETWEEN_HOURS => 'BetweenHoursToOql',
 			self::OP_IN => 'InToOql',
 			self::OP_ALL => 'AllToOql',
 		);
@@ -59,7 +64,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		{
 			$sFct = $aMappedOperators[$sOperator];
 
-			return self::$sFct($sRef, $sOperator, $aCriteria);
+			return self::$sFct($sRef, $aCriteria);
 		}
 
 		$sValue = self::GetValue(self::GetValues($aCriteria), 0);
@@ -73,6 +78,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		{
 			return array();
 		}
+
 		return $aCriteria['values'];
 	}
 
@@ -86,10 +92,11 @@ class CriterionToOQL extends CriterionConversionAbstract
 		{
 			return null;
 		}
+
 		return $aValues[$iIndex]['value'];
 	}
 
-	protected static function ContainsToOql($sRef, $sOperator, $aCriteria)
+	protected static function ContainsToOql($sRef, $aCriteria)
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
@@ -97,7 +104,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} LIKE '%{$sValue}%')";
 	}
 
-	protected static function StartsWithToOql($sRef, $sOperator, $aCriteria)
+	protected static function StartsWithToOql($sRef, $aCriteria)
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
@@ -105,7 +112,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} LIKE '{$sValue}%')";
 	}
 
-	protected static function EndsWithToOql($sRef, $sOperator, $aCriteria)
+	protected static function EndsWithToOql($sRef, $aCriteria)
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
@@ -113,25 +120,26 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} LIKE '%{$sValue}')";
 	}
 
-	protected static function EmptyToOql($sRef, $sOperator, $aCriteria)
+	protected static function EmptyToOql($sRef, $aCriteria)
 	{
 		return "({$sRef} = '')";
 	}
 
-	protected static function NotEmptyToOql($sRef, $sOperator, $aCriteria)
+	protected static function NotEmptyToOql($sRef, $aCriteria)
 	{
 		return "({$sRef} != '')";
 	}
 
-	protected static function InToOql($sRef, $sOperator, $aCriteria)
+	protected static function InToOql($sRef, $aCriteria)
 	{
 		$sAttCode = $aCriteria['code'];
 		$sClass = $aCriteria['class'];
-		$aValues = $aCriteria['values'];
+		$aValues = self::GetValues($aCriteria);
 
 		if (count($aValues) == 0)
 		{
-			return "({$sRef}  = '')";
+			// Ignore when nothing is selected
+			return "1";
 		}
 
 		try
@@ -143,17 +151,21 @@ class CriterionToOQL extends CriterionConversionAbstract
 				$aAllowedValues = SearchForm::GetFieldAllowedValues($oAttDef);
 				if (array_key_exists('values', $aAllowedValues))
 				{
-					$aAllowedValues = $aAllowedValues['values'];
-					// more selected values than remaining so use NOT IN
-					if (count($aValues) > (count($aAllowedValues) / 2))
+					// Can't invert the test if NULL is allowed
+					if (!$oAttDef->IsNullAllowed())
 					{
-						foreach($aValues as $aValue)
+						$aAllowedValues = $aAllowedValues['values'];
+						// more selected values than remaining so use NOT IN
+						if (count($aValues) > (count($aAllowedValues) / 2))
 						{
-							unset($aAllowedValues[$aValue['value']]);
-						}
-						$sInList = implode(',', array_keys($aAllowedValues));
+							foreach($aValues as $aValue)
+							{
+								unset($aAllowedValues[$aValue['value']]);
+							}
+							$sInList = implode("','", array_keys($aAllowedValues));
 
-						return "({$sRef} NOT IN ($sInList))";
+							return "({$sRef} NOT IN ('$sInList'))";
+						}
 					}
 				}
 			}
@@ -166,17 +178,104 @@ class CriterionToOQL extends CriterionConversionAbstract
 		{
 			$aInValues[] = $aValue['value'];
 		}
-		$sInList = implode(',', $aInValues);
+		$sInList = implode("','", $aInValues);
 
 		if (count($aInValues) == 1)
 		{
 			return "({$sRef} = '$sInList')";
 		}
 
-		return "({$sRef} IN ($sInList))";
+		return "({$sRef} IN ('$sInList'))";
 	}
 
-	protected static function AllToOql($sRef, $sOperator, $aCriteria)
+	protected static function BetweenDaysToOql($sRef, $aCriteria)
+	{
+		$aOQL = array();
+
+		$aValues = self::GetValues($aCriteria);
+		if (count($aValues) != 2)
+		{
+			return "1";
+		}
+
+		$oFormat = AttributeDateTime::GetFormat();
+
+		$sStartDate = $aValues[0]['value'];
+		if (!empty($sStartDate))
+		{
+			$oDate = $oFormat->parse($sStartDate);
+			$sStartDate = $oDate->format(AttributeDateTime::GetSQLFormat());
+			$aOQL[] = "({$sRef} >= '$sStartDate')";
+		}
+
+		$sEndDate = $aValues[1]['value'];
+		if (!empty($sEndDate))
+		{
+			$oDate = $oFormat->parse($sEndDate);
+			if ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME)
+			{
+				$oDate->add(DateInterval::createFromDateString('1 day'));
+				$sEndDate = $oDate->format(AttributeDateTime::GetSQLFormat());
+				$aOQL[] = "({$sRef} < '$sEndDate')";
+			}
+			else
+			{
+				$sEndDate = $oDate->format(AttributeDateTime::GetSQLFormat());
+				$aOQL[] = "({$sRef} <= '$sEndDate')";
+			}
+		}
+
+		$sOQL = implode(' AND ', $aOQL);
+
+		if (empty($sOQL))
+		{
+			$sOQL = "1";
+		}
+
+		return $sOQL;
+	}
+
+	protected static function BetweenHoursToOql($sRef, $aCriteria)
+	{
+		$aOQL = array();
+
+		$aValues = self::GetValues($aCriteria);
+		if (count($aValues) != 2)
+		{
+			return "1";
+		}
+
+		$oFormat = AttributeDateTime::GetFormat();
+
+		$sStartDate = $aValues[0]['value'];
+		if (!empty($sStartDate))
+		{
+			$oDate = $oFormat->parse($sStartDate);
+			$sStartDate = $oDate->format(AttributeDateTime::GetSQLFormat());
+			$aOQL[] = "({$sRef} >= '$sStartDate')";
+		}
+
+		$sEndDate = $aValues[1]['value'];
+		if (!empty($sEndDate))
+		{
+			$oDate = $oFormat->parse($sEndDate);
+			$oDate->add(DateInterval::createFromDateString('1 second'));
+			$sEndDate = $oDate->format(AttributeDateTime::GetSQLFormat());
+			$aOQL[] = "({$sRef} < '$sEndDate')";
+		}
+
+		$sOQL = implode(' AND ', $aOQL);
+
+		if (empty($sOQL))
+		{
+			$sOQL = "1";
+		}
+
+		return $sOQL;
+	}
+
+
+	protected static function AllToOql($sRef, $aCriteria)
 	{
 		return "1";
 	}
