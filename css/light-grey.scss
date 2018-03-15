@@ -860,23 +860,44 @@ div.HRDrawer {
 	.sf_criterion_area{
 		/* Common style between criterion and more criterion */
 		.sf_active_criterion,
-		.sf_more_criterion{
+		.sf_more_criterion {
+			position: relative;
 			display: inline-block;
 		}
-		.sf_more_criterion,
-		.search_form_criteria{
-			position: relative;
-			padding: 7px 8px;
-			vertical-align: top;
-			background-color: $box-blue-bg-color;
-			color: $box-blue-color;
-			border: $box-blue-border;
-			border-radius: $box-blue-radius;
-			box-shadow: $box-shadow-regular;
+
+		.search_form_criteria,
+		.sf_more_criterion {
+			&.opened{
+				.sfc_header,
+				.sfm_header{
+					border-bottom: none !important;
+					box-shadow: none !important;
+					padding-bottom: 13px; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+				}
+			}
+
+			> *{
+				padding: 7px 8px;
+				vertical-align: top;
+				background-color: $box-blue-bg-color;
+				color: $box-blue-color;
+				border: $box-blue-border;
+				border-radius: $box-blue-radius;
+				box-shadow: $box-shadow-regular;
+			}
+			.sfc_form_group,
+			.sfm_content{
+				position: absolute;
+				z-index: -1;
+				min-width: 100%;
+				left: 0px;
+				margin-top: -1px;
+			}
 		}
 
 		/* Criteria tags */
 		.search_form_criteria{
+			position: relative;
 			display: inline-block;
 			margin-right: 5px;
 			margin-bottom: 5px;
@@ -887,12 +908,23 @@ div.HRDrawer {
 			}
             /* Draft criteria (modifications not applied) */
             &.draft{
-				border-style: dashed;
+				.sfc_header,
+				.sfc_form_group{
+					border-style: dashed;
+				}
 
 				.sfc_title{
 					font-style: italic;
 				}
             }
+			/* Opened criteria (form group displayed) */
+			&.opened{
+				z-index: 1; /* To be over other criterion */
+
+				.sfc_form_group{
+					display: block;
+				}
+			}
 
 			/* Top left corner icons */
 			.sfc_close,
@@ -922,106 +954,102 @@ div.HRDrawer {
 				/* Form group (operators) is displayed only when the criteria is toggled to opened state */
 				display: none;
 
-				&.opened{
-					display: block;
-					margin-top: 5px;
+				.sfc_fg_operators{
+					font-size: 12px;
 
-					.sfc_fg_operators{
-						font-size: 12px;
+					.sfc_fg_operator{
+						> label{
+							line-height: 20px;
+							white-space: nowrap;
 
-						.sfc_fg_operator{
-							> label{
-								line-height: 20px;
-
-								> *{
-									display: inline-block;
-									vertical-align: middle;
-								}
+							> *{
+								display: inline-block;
+								vertical-align: middle;
 							}
+						}
 
-							.sfc_op_radio{
-								width: 12px;
-								margin: 0px;
-								margin-right: 7px;
+						.sfc_op_radio{
+							width: 12px;
+							margin: 0px;
+							margin-right: 7px;
+						}
+
+						/* Common operators for most criteria types processing*/
+						&.sfc_fg_operator_equals,
+						&.sfc_fg_operator_contains,
+						&.sfc_fg_operator_starts_with,
+						&.sfc_fg_operator_ends_with{
+							.sfc_op_name{
+								width: 90px;
 							}
-
-							/* Common operators for most criteria types processing*/
-							&.sfc_fg_operator_equals,
-							&.sfc_fg_operator_contains,
-							&.sfc_fg_operator_starts_with,
-							&.sfc_fg_operator_ends_with{
-								.sfc_op_name{
-									width: 90px;
-								}
-								.sfc_op_content{
-									input{
-										width: 130px;
-									}
+							.sfc_op_content{
+								input{
+									width: 130px;
 								}
 							}
 						}
 					}
+				}
 
-					.sfc_fg_apply,
-					.sfc_fg_cancel{
-						margin-top: 8px;
-						padding: 3px 6px;
-						font-size: 11px; /* Not bold, so it looks like 10px/bold of more/less buttons */
+				.sfc_fg_apply,
+				.sfc_fg_cancel{
+					margin-top: 8px;
+					padding: 3px 6px;
+					font-size: 11px; /* Not bold, so it looks like 10px/bold of more/less buttons */
+				}
+				.sfc_fg_apply{
+					margin-right: 5px;
+				}
+
+				.sfc_fg_more,
+				.sfc_fg_less{
+					position: absolute;
+					bottom: 4px;
+					right: 0px;
+					cursor: pointer;
+					color: $box-blue-border-color;
+					font-size: 10px;
+					font-weight: bold;
+					border: none;
+					background-color: transparent;
+
+					> span{
+						margin-left: 3px;
 					}
-					.sfc_fg_apply{
-						margin-right: 5px;
-					}
+				}
 
-					.sfc_fg_more,
-					.sfc_fg_less{
-						position: absolute;
-						bottom: 4px;
-						right: 0px;
-						cursor: pointer;
-						color: $box-blue-border-color;
-						font-size: 10px;
-						font-weight: bold;
-						border: none;
-						background-color: transparent;
+				/* Show only first operator in simple mode */
+				.sfc_fg_operator:not(:first-of-type),
+				.sfc_fg_operator:first-of-type .sfc_op_radio{
+					display: none;
+				}
+				.sfc_fg_less{
+					display: none;
+				}
+				.sfc_fg_more{
+					display: inline-block;
+				}
 
-						> span{
-							margin-left: 3px;
+				/* Show all operators in advanced mode */
+				&.advanced{
+
+					.sfc_fg_operator{
+						margin-bottom: 3px;
+
+						&:last-of-type{
+							margin-bottom: 0px;
 						}
 					}
 
-					/* Show only first operator in simple mode */
 					.sfc_fg_operator:not(:first-of-type),
 					.sfc_fg_operator:first-of-type .sfc_op_radio{
-						display: none;
+						display: inherit;
 					}
 					.sfc_fg_less{
-						display: none;
-					}
-					.sfc_fg_more{
 						display: inline-block;
 					}
-
-					/* Show all operators in advanced mode */
-					&.advanced{
-
-						.sfc_fg_operator{
-							margin-bottom: 3px;
-
-							&:last-of-type{
-								margin-bottom: 0px;
-							}
-						}
-
-						.sfc_fg_operator:not(:first-of-type),
-						.sfc_fg_operator:first-of-type .sfc_op_radio{
-							display: inherit;
-						}
-						.sfc_fg_less{
-							display: inline-block;
-						}
-						.sfc_fg_more{
-							display: none;
-						}
+					.sfc_fg_more{
+						display: none;
 					}
 				}
 			}
@@ -1039,19 +1067,34 @@ div.HRDrawer {
 
 		/* More criterion */
 		.sf_more_criterion{
-			.sf_mc_list{
-				position: absolute;
-				max-height: 420px;
-				margin: 0px;
-				top: 100%;
-				left: 0px;
-				overflow-y: auto;
-				background-color: $box-blue-bg-color;
-				border: $box-blue-border;
+			&.opened{
+				z-index: 2; /* To be over criterion */
 
-				.sf_mc_field{
-					cursor: pointer;
-					white-space: nowrap;
+				.sfm_content{
+					display: inherit;
+				}
+			}
+
+			.sfm_toggler{
+				.sfm_tg_title{
+					margin-right: 7px;
+				}
+				.sfm_tg_icon{
+					color: $box-blue-border-color;
+				}
+			}
+
+			.sfm_content{
+				display: none;
+
+				.sfm_list{
+					max-height: 420px;
+					overflow-y: auto;
+
+					.sfm_field{
+						cursor: pointer;
+						white-space: nowrap;
+					}
 				}
 			}
 		}

@@ -55,6 +55,7 @@ class NiceWebPage extends WebPage
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_raw.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_string.js');
 	    // TODO: Remove
+	    $this->add_dict_entry('UI:Search:Criterion:MoreMenu:AddCriteria');
 	    $this->add_dict_entry('UI:Search:Criteria:Operator:Default:Empty');
 	    $this->add_dict_entry('UI:Search:Criteria:Operator:Default:NotEmpty');
 	    $this->add_dict_entry('UI:Search:Criteria:Operator:Default:Equals');

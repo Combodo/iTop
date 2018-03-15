@@ -1372,6 +1372,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.',
 
 	// TODO: Reorganize those entries with other search entries and make entries for other languages.
+	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria',
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals:',

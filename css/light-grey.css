@@ -779,10 +779,16 @@ div.HRDrawer {
   /* More criterion */
 }
 .search_form_handler .sf_criterion_area .sf_active_criterion, .search_form_handler .sf_criterion_area .sf_more_criterion {
+  position: relative;
   display: inline-block;
 }
-.search_form_handler .sf_criterion_area .sf_more_criterion, .search_form_handler .sf_criterion_area .search_form_criteria {
-  position: relative;
+.search_form_handler .sf_criterion_area .search_form_criteria.opened .sfc_header, .search_form_handler .sf_criterion_area .sf_more_criterion.opened .sfc_header, .search_form_handler .sf_criterion_area .search_form_criteria.opened .sfm_header, .search_form_handler .sf_criterion_area .sf_more_criterion.opened .sfm_header {
+  border-bottom: none !important;
+  box-shadow: none !important;
+  padding-bottom: 13px;
+  /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria > *, .search_form_handler .sf_criterion_area .sf_more_criterion > * {
   padding: 7px 8px;
   vertical-align: top;
   background-color: #d6e8ef;
@@ -791,23 +797,39 @@ div.HRDrawer {
   border-radius: 1px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
 }
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group, .search_form_handler .sf_criterion_area .sf_more_criterion .sfc_form_group, .search_form_handler .sf_criterion_area .search_form_criteria .sfm_content, .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content {
+  position: absolute;
+  z-index: -1;
+  min-width: 100%;
+  left: 0px;
+  margin-top: -1px;
+}
 .search_form_handler .sf_criterion_area .search_form_criteria {
+  position: relative;
   display: inline-block;
   margin-right: 5px;
   margin-bottom: 5px;
   /* Non editable criteria */
   /* Draft criteria (modifications not applied) */
+  /* Opened criteria (form group displayed) */
   /* Top left corner icons */
   /* Special criterion processing */
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.locked {
   background-color: #f1f1f1;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria.draft {
+.search_form_handler .sf_criterion_area .search_form_criteria.draft .sfc_header, .search_form_handler .sf_criterion_area .search_form_criteria.draft .sfc_form_group {
   border-style: dashed;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.draft .sfc_title {
   font-style: italic;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.opened {
+  z-index: 1;
+  /* To be over other criterion */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.opened .sfc_form_group {
+  display: block;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_close, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_toggle {
   position: absolute;
@@ -832,47 +854,44 @@ div.HRDrawer {
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group {
   /* Form group (operators) is displayed only when the criteria is toggled to opened state */
   display: none;
-}
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened {
-  display: block;
-  margin-top: 5px;
   /* Show only first operator in simple mode */
   /* Show all operators in advanced mode */
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators {
   font-size: 12px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator {
   /* Common operators for most criteria types processing*/
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator > label {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator > label {
   line-height: 20px;
+  white-space: nowrap;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator > label > * {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator > label > * {
   display: inline-block;
   vertical-align: middle;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator .sfc_op_radio {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_op_radio {
   width: 12px;
   margin: 0px;
   margin-right: 7px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_equals .sfc_op_name, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_contains .sfc_op_name, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_starts_with .sfc_op_name, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_ends_with .sfc_op_name {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_equals .sfc_op_name, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_contains .sfc_op_name, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_starts_with .sfc_op_name, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_ends_with .sfc_op_name {
   width: 90px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_equals .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_contains .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_starts_with .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_ends_with .sfc_op_content input {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_equals .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_contains .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_starts_with .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_ends_with .sfc_op_content input {
   width: 130px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_apply, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_cancel {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_apply, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_cancel {
   margin-top: 8px;
   padding: 3px 6px;
   font-size: 11px;
   /* Not bold, so it looks like 10px/bold of more/less buttons */
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_apply {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_apply {
   margin-right: 5px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_more, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_less {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_more, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_less {
   position: absolute;
   bottom: 4px;
   right: 0px;
@@ -883,31 +902,31 @@ div.HRDrawer {
   border: none;
   background-color: transparent;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_more > span, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_less > span {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_more > span, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_less > span {
   margin-left: 3px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operator:not(:first-of-type), .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_operator:first-of-type .sfc_op_radio {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operator:not(:first-of-type), .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operator:first-of-type .sfc_op_radio {
   display: none;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_less {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_less {
   display: none;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened .sfc_fg_more {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_more {
   display: inline-block;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened.advanced .sfc_fg_operator {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_operator {
   margin-bottom: 3px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened.advanced .sfc_fg_operator:last-of-type {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_operator:last-of-type {
   margin-bottom: 0px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened.advanced .sfc_fg_operator:not(:first-of-type), .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened.advanced .sfc_fg_operator:first-of-type .sfc_op_radio {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_operator:not(:first-of-type), .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_operator:first-of-type .sfc_op_radio {
   display: inherit;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened.advanced .sfc_fg_less {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_less {
   display: inline-block;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.opened.advanced .sfc_fg_more {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_more {
   display: none;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw .sfc_title {
@@ -916,17 +935,27 @@ div.HRDrawer {
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw .sfc_form_group {
   display: none;
 }
-.search_form_handler .sf_criterion_area .sf_more_criterion .sf_mc_list {
-  position: absolute;
-  max-height: 420px;
-  margin: 0px;
-  top: 100%;
-  left: 0px;
-  overflow-y: auto;
-  background-color: #d6e8ef;
-  border: 1px solid #1c94c4;
+.search_form_handler .sf_criterion_area .sf_more_criterion.opened {
+  z-index: 2;
+  /* To be over criterion */
 }
-.search_form_handler .sf_criterion_area .sf_more_criterion .sf_mc_list .sf_mc_field {
+.search_form_handler .sf_criterion_area .sf_more_criterion.opened .sfm_content {
+  display: inherit;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_toggler .sfm_tg_title {
+  margin-right: 7px;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_toggler .sfm_tg_icon {
+  color: #1c94c4;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content {
+  display: none;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_list {
+  max-height: 420px;
+  overflow-y: auto;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_list .sfm_field {
   cursor: pointer;
   white-space: nowrap;
 }

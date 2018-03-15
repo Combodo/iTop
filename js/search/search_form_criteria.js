@@ -165,11 +165,23 @@ $(function()
 		_open: function()
 		{
 			this._resetOperators();
-			this.element.find('.sfc_form_group, .sfc_toggle').addClass('opened');
+			this.element.addClass('opened');
+
+			// Focus on right input
+			var oOpElemToFocus;
+			if(this.element.find('.sfc_form_group').hasClass('advanced'))
+			{
+				oOpElemToFocus = this.element.find('.sfc_fg_operator .sfc_op_radio:checked').closest('.sfc_fg_operator');
+			}
+			else
+			{
+				oOpElemToFocus = this.element.find('.sfc_fg_operator:first');
+			}
+			oOpElemToFocus.find('.sfc_op_content input:first').trigger('click').trigger('focus');
 		},
 		_close: function()
 		{
-			this.element.find('.sfc_form_group, .sfc_toggle').removeClass('opened');
+			this.element.removeClass('opened');
 			this._unmarkAsDraft();
 		},
 		_closeAll: function()
@@ -273,15 +285,14 @@ $(function()
 
 			// Prepare base DOM structure
 			this.element
-				.append('<div class="sfc_title"></div>')
-				.append('<div class="sfc_form_group"><div class="sfc_fg_operators"></div><div class="sfc_fg_buttons"></div></div>')
-				.append('<span class="sfc_toggle"><a class="fa fa-caret-down" href="#"></a></span>');
+				.append('<div class="sfc_header"><div class="sfc_title"></div><span class="sfc_toggle"><a class="fa fa-caret-down" href="#"></a></span></div>')
+				.append('<div class="sfc_form_group"><div class="sfc_fg_operators"></div><div class="sfc_fg_buttons"></div></div>');
 
 			// Bind events
 			// - Toggler
 			this.element.find('.sfc_toggle, .sfc_title').on('click', function(){
 				// First memorize if current criteria is close
-				var bOpen = !me.element.find('.sfc_toggle').hasClass('opened');
+				var bOpen = !me.element.hasClass('opened');
 				// Then close every criterion
 				me._closeAll();
 				// Finally open current criteria if necessary
@@ -294,14 +305,14 @@ $(function()
 			// Removable / locked decoration
 			if(this.options.is_removable === true)
 			{
-				this.element.append('<span class="sfc_close"><a class="fa fa-times" href="#"></a></span>');
+				this.element.find('.sfc_header').append('<span class="sfc_close"><a class="fa fa-times" href="#"></a></span>');
 				this.element.find('.sfc_close').on('click', function(){
 					me._remove();
 				});
 			}
 			else
 			{
-				this.element.append('<div class="sfc_locked"><span class="fa fa-lock"></span></div>');
+				this.element.find('.sfc_header').append('<span class="sfc_locked"><span class="fa fa-lock"></span></span>');
 			}
 
 			// Form group
@@ -315,8 +326,10 @@ $(function()
 			// Init opened to improve UX (toggle & focus in main operator's input)
 			if(this.options.init_opened === true)
 			{
-				this.element.find('.sfc_toggle').trigger('click');
-				this.element.find('.sfc_fg_operator:first .sfc_op_content input:first').trigger('click').trigger('focus');
+				this._closeAll();
+				this._open();
+				// this.element.find('.sfc_toggle').trigger('click');
+				// this.element.find('.sfc_fg_operator:first .sfc_op_content input:first').trigger('click').trigger('focus');
 			}
 		},
 		// - Prepare the available operators for the criteria

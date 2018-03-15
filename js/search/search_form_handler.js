@@ -164,6 +164,19 @@ $(function()
 
 			// No need to update base OQL and fields
 		},
+		// - Open / Close more criterion menu
+		_openMoreCriterion: function()
+		{
+			this.elements.more_criterion.addClass('opened');
+		},
+		_closeMoreCriterion: function()
+		{
+			this.elements.more_criterion.removeClass('opened');
+		},
+		_toggleMoreCriterion: function()
+		{
+			this.elements.more_criterion.toggleClass('opened');
+		},
 
 		// DOM helpers
 		// - Prepare criterion area
@@ -186,7 +199,7 @@ $(function()
 			oCriterionAreaElem
 				.html('')
 				.append('<div class="sf_active_criterion"></div>')
-				.append('<div class="sf_more_criterion"><span class="sf_mc_toggler fa fa-plus"></span><ul class="sf_mc_list"></ul></div>');
+				.append('<div class="sf_more_criterion"></div>');
 			this.elements.active_criterion = oCriterionAreaElem.find('.sf_active_criterion');
 			this.elements.more_criterion = oCriterionAreaElem.find('.sf_more_criterion');
 
@@ -216,37 +229,53 @@ $(function()
 		{
 			var me = this;
 
-			// Add fields
+			// Header part
+			var oHeaderElem = $('<div class="sfm_header"></div>')
+				.append('<a class="sfm_toggler" href="#"><span class="sfm_tg_title">' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '</span><span class="sfm_tg_icon fa fa-plus"></span></a>')
+				.appendTo(this.elements.more_criterion);
+
+			// Content part
+			var oContentElem = $('<div class="sfm_content"></div>')
+				.appendTo(this.elements.more_criterion);
+			// - Add list
+			var oListElem = $('<ul class="sfm_list"></ul>')
+				.appendTo(oContentElem);
+			// - Add fields
 			// TODO: Find a widget to handle dropdown menu
 			// - From "search" zlist
 			for(var sFieldRef in this.options.search.fields.zlist)
 			{
 				var oField = this.options.search.fields.zlist[sFieldRef];
 				var oFieldElem = $('<li></li>')
-					.addClass('sf_mc_field')
+					.addClass('sfm_field')
 					.attr('data-field-ref', sFieldRef)
 					.text(oField.label);
-				this.elements.more_criterion.find('> .sf_mc_list').append(oFieldElem);
+				oListElem.append(oFieldElem);
 			}
 			// - Others
 			if(this.options.search.fields.others !== undefined)
 			{
-				this.elements.more_criterion.find('> .sf_mc_list').append('<li>==================</li>');
-				this.elements.more_criterion.find('> .sf_mc_list').append('<li>|| TODO: Better separation ||</li>');
-				this.elements.more_criterion.find('> .sf_mc_list').append('<li>==================</li>');
+				oListElem.append('<li>==================</li>');
+				oListElem.append('<li>|| TODO: Better separation ||</li>');
+				oListElem.append('<li>==================</li>');
 				for(var sFieldRef in this.options.search.fields.others)
 				{
 					var oField = this.options.search.fields.others[sFieldRef];
 					var oFieldElem = $('<li></li>')
-						.addClass('sf_mc_field')
+						.addClass('sfm_field')
 						.attr('data-field-ref', sFieldRef)
 						.text(oField.label);
-					this.elements.more_criterion.find('> .sf_mc_list').append(oFieldElem);
+					oListElem.append(oFieldElem);
 				}
 			}
 
 			// Bind events
-			this.elements.more_criterion.find('.sf_mc_field').on('click', function(){
+			// - Open / close menu
+			this.elements.more_criterion.find('.sfm_header').on('click', function(){
+				me._toggleMoreCriterion();
+			});
+			// - Add criteria
+			this.elements.more_criterion.find('.sfm_field').on('click', function(){
 				// Prepare new criterion data (as already opened to increase UX)
 				var oData = {
 					'ref': $(this).attr('data-field-ref'),
@@ -255,6 +284,7 @@ $(function()
 
 				// Add criteria but don't submit form as the user has not specified the value yet.
 				me._addCriteria(oData);
+				me._closeMoreCriterion();
 			});
 		},
 		// - Prepare results area
@@ -419,7 +449,11 @@ $(function()
 			var oListParams = {};
 			if(this.options.data_config_list_selector !== null)
 			{
-				// TODO: What ?
+				var sExtraParams = $(this.options.data_config_list_selector).data('sExtraParams');
+				if(sExtraParams !== undefined)
+				{
+					oListParams = JSON.parse(sExtraParams);
+				}
 			}
 			$.extend(oListParams, this.options.list_params);
 			oData.list_params = JSON.stringify(oListParams);

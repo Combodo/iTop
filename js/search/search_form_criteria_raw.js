@@ -56,6 +56,8 @@ $(function()
 			this.element.find('.sfc_toggle').remove();
 			this.element.find('.sfc_toggle, .sfc_title').off('click');
 
+			// Force close as it has no sense either
+			this._close();
 		},
 		_prepareOperators: function()
 		{
