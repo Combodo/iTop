@@ -133,6 +133,10 @@ $(function()
 			this.element.on('submit', function(oEvent){
 				oEvent.preventDefault();
 			});
+			// - Submit the search form
+			this.element.on('itop.search.form.submit', function(oEvent, oData){
+				me._onSubmit();
+			});
 
 			// Criteria events
 			this.element.on('itop.search.criteria.opening', function(oEvent, oData){
@@ -180,10 +184,11 @@ $(function()
 			// - Open it first
 			this.elements.more_criterion.addClass('opened');
 			// - Then only check if more menu is to close to the right side (otherwise we might not have the right element's position)
-			var iPageWidth = $(document).width();
+			var iFormWidth = this.element.outerWidth();
+			var iFormLeftPos = this.element.offset().left;
 			var iMenuWidth = this.elements.more_criterion.find('.sfm_content').outerWidth();
 			var iMenuLeftPos = this.elements.more_criterion.find('.sfm_content').offset().left;
-			if( (iMenuWidth + iMenuLeftPos) > (iPageWidth - 10 /* Security margin */) )
+			if( (iMenuWidth + iMenuLeftPos) > (iFormWidth + iFormLeftPos - 10 /* Security margin */) )
 			{
 				this.elements.more_criterion.addClass('opened_left');
 			}
@@ -480,6 +485,12 @@ $(function()
 
 
 		// Submit handlers
+		// - External event callback
+		_onSubmit: function()
+		{
+			this._submit();
+		},
+		// - Do the submit
 		_submit: function()
 		{
 			var me = this;

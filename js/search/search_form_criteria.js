@@ -172,10 +172,11 @@ $(function()
 			// - Open it first
 			this.element.addClass('opened');
 			// - Then only check if more menu is to close to the right side (otherwise we might not have the right element's position)
-			var iPageWidth = $(document).width();
-			var iFormWidth = this.element.find('.sfc_form_group').outerWidth();
-			var iFormLeftPos = this.element.find('.sfc_form_group').offset().left;
-			if( (iFormWidth + iFormLeftPos) > (iPageWidth - 10 /* Security margin */) )
+			var iFormWidth = this.element.closest('.search_form_handler').outerWidth();
+			var iFormLeftPos = this.element.closest('.search_form_handler').offset().left;
+			var iContentWidth = this.element.find('.sfc_form_group').outerWidth();
+			var iContentLeftPos = this.element.find('.sfc_form_group').offset().left;
+			if( (iContentWidth + iContentLeftPos) > (iFormWidth + iFormLeftPos - 10 /* Security margin */) )
 			{
 				this.element.addClass('opened_left');
 			}
