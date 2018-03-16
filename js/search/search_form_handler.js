@@ -217,6 +217,10 @@ $(function()
 		{
 			var me = this;
 
+			this.element.find('.sft_refresh').on('click', function(oEvent){
+				oEvent.preventDefault();
+				me._submit();
+			});
 			// TODO: UX Improvment
 			// Note: Would be better to toggle by clicking on the whole title, but we have an issue with <select> on abstract classes.
 			this.element.find('.sft_toggler').on('click', function(oEvent){
@@ -347,8 +351,15 @@ $(function()
 			}
 			else
 			{
-				// TODO: Change this so it appears after the search drawer.
-				oResultAreaElem = $('<div></div>').appendTo(this.element);
+				// Reusing previously created DOM element
+				if(this.element.closest('.display_block').next('.sf_results_area').length > 0)
+				{
+					oResultAreaElem = this.element.closest('.display_block').next('.sf_results_area');
+				}
+				else
+				{
+					oResultAreaElem = $('<div></div>').insertAfter(this.element.closest('.display_block'));
+				}
 			}
 			oResultAreaElem.addClass('sf_results_area');
 
@@ -551,14 +562,12 @@ $(function()
 		// - Show loader
 		_showLoader: function()
 		{
-			// TODO: Show loader
-			this._trace('Show loader');
+			this.elements.results_area.block();
 		},
 		// - Hide loader
 		_hideLoader: function()
 		{
-			// TODO: Hide loader
-			this._trace('Hide loader');
+			this.elements.results_area.unblock();
 		},
 		// - Converts a snake_case string to CamelCase
 		_toCamelCase: function(sString)
