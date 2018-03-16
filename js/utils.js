@@ -252,7 +252,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext)
 function FixSearchFormsDisposition()
 {
 	// Fix search forms
-	$('.SearchDrawer').each(function() {
+	$('.search_box').each(function() {
 		var colWidth = 0;
 		var labelWidth = 0;
 		$('label:visible', $(this)).each( function() {

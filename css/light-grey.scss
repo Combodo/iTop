@@ -786,36 +786,6 @@ input.dp-applied {
 		}
 	}
 }*/
-.DrawerClosed {
-	display: none;
-}
-.DrawerHandle {
-	margin: 0;
-	padding: 5px;
-	background: url(../images/drawer-handle.gif) bottom no-repeat transparent;
-	color: #fff;
-	cursor: pointer;
-	text-align: center;
-	/* center the block */
-	width: 100px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 0;
-	margin-bottom: 0;
-	display: block;
-	font-size: 12px;
-}
-
-div.HRDrawer {
-	height: 5px;
-	width: 100%;
-	margin: 0;
-	background-color:  $complement-color;
-	margin-top: 10px;
-	padding: 0;
-	border: 0;
-	display: block;
-}
 .mini_tabs a {
 	text-decoration: none;
 	font-weight:bold;
@@ -842,10 +812,19 @@ div.HRDrawer {
 }
 /* Search forms v2 */
 /* TODO: Remove comment before final commit */
+.search_box{
+	box-sizing: border-box;
+
+	/* Sizing reset */
+	*{
+		box-sizing: border-box;
+	}
+}
 .search_form_handler{
 	position: relative;
 	z-index: 10;
 	font-size: 12px;
+	border: 1px solid $box-blue-border-color;
 
 	/* Sizing reset */
 	*{
@@ -857,7 +836,37 @@ div.HRDrawer {
 		text-decoration: none;
 	}
 
+	&.opened{
+		.sf_title{
+			.sft_toggler{
+				transform: rotateX(180deg);
+			}
+		}
+		.sf_criterion_area{
+			/*display: inherit;*/
+		}
+	}
+
+	.sf_title{
+		padding: 8px 10px;
+		margin: 0;
+		color: #ffffff;
+		background-color: $box-blue-border-color;
+
+		/* Pictogram */
+		> span{
+			margin-right: 10px;
+		}
+
+		.sft_toggler{
+			transition: all 0.4s ease-in-out;
+		}
+	}
 	.sf_criterion_area{
+		/*display: none;*/
+		padding: 8px 8px 3px 8px; /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
+		background-color: $white;
+
 		/* Common style between criterion and more criterion */
 		.sf_active_criterion,
 		.sf_more_criterion {
@@ -867,7 +876,11 @@ div.HRDrawer {
 
 		.search_form_criteria,
 		.sf_more_criterion {
+			margin-bottom: 5px;
+
 			&.opened{
+				margin-bottom: 0px; /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
+
 				.sfc_header,
 				.sfm_header{
 					border-bottom: none !important;
@@ -900,7 +913,6 @@ div.HRDrawer {
 			position: relative;
 			display: inline-block;
 			margin-right: 5px;
-			margin-bottom: 5px;
 
             /* Non editable criteria */
 			&.locked{
@@ -921,8 +933,17 @@ div.HRDrawer {
 			&.opened{
 				z-index: 1; /* To be over other criterion */
 
+				.sfc_toggle{
+					transform: rotateX(-180deg);
+				}
 				.sfc_form_group{
 					display: block;
+				}
+			}
+			&.opened_left{
+				.sfc_form_group{
+					left: auto;
+					right: 0px;
 				}
 			}
 
@@ -939,11 +960,7 @@ div.HRDrawer {
 			.sfc_toggle{
 				display: inline-block;
 				right: 23px;
-				transition: all 0.4s ease-in-out;
-
-				&.opened{
-					transform: rotateZ(-180deg);
-				}
+				transition: all 0.3s ease-in-out;
 			}
 
 			.sfc_title{
@@ -1072,6 +1089,12 @@ div.HRDrawer {
 
 				.sfm_content{
 					display: inherit;
+				}
+			}
+			&.opened_left{
+				.sfm_content{
+					left: auto;
+					right: 0px;
 				}
 			}
 

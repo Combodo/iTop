@@ -169,7 +169,16 @@ $(function()
 
 			// Open criteria
 			this._resetOperators();
+			// - Open it first
 			this.element.addClass('opened');
+			// - Then only check if more menu is to close to the right side (otherwise we might not have the right element's position)
+			var iPageWidth = $(document).width();
+			var iFormWidth = this.element.find('.sfc_form_group').outerWidth();
+			var iFormLeftPos = this.element.find('.sfc_form_group').offset().left;
+			if( (iFormWidth + iFormLeftPos) > (iPageWidth - 10 /* Security margin */) )
+			{
+				this.element.addClass('opened_left');
+			}
 
 			// Focus on right input
 			var oOpElemToFocus;
@@ -185,6 +194,7 @@ $(function()
 		},
 		_close: function()
 		{
+			this.element.removeClass('opened_left');
 			this.element.removeClass('opened');
 			this._unmarkAsDraft();
 		},
@@ -294,7 +304,8 @@ $(function()
 
 			// Bind events
 			// - Toggler
-			this.element.find('.sfc_toggle, .sfc_title').on('click', function(){
+			this.element.find('.sfc_toggle, .sfc_title').on('click', function(oEvent){
+				oEvent.preventDefault();
 				// First memorize if current criteria is close
 				var bOpen = !me.element.hasClass('opened');
 				// Then close every criterion
@@ -310,7 +321,8 @@ $(function()
 			if(this.options.is_removable === true)
 			{
 				this.element.find('.sfc_header').append('<span class="sfc_close"><a class="fa fa-times" href="#"></a></span>');
-				this.element.find('.sfc_close').on('click', function(){
+				this.element.find('.sfc_close').on('click', function(oEvent){
+					oEvent.preventDefault();
 					me._remove();
 				});
 			}

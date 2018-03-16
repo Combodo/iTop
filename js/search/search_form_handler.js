@@ -84,6 +84,7 @@ $(function()
 			this.element.addClass('search_form_handler');
 
 			// Prepare DOM elements
+			this._prepareFormArea();
 			this._prepareCriterionArea();
 			this._prepareResultsArea();
 
@@ -170,13 +171,26 @@ $(function()
 		// - Open / Close more criterion menu
 		_openMoreCriterion: function()
 		{
-			this.elements.more_criterion.addClass('opened');
+			// Close all criterion
 			this.elements.active_criterion.find('.search_form_criteria').each(function(){
 				$(this).triggerHandler('itop.search.criteria.close');
 			});
+
+			// Open more criterion menu
+			// - Open it first
+			this.elements.more_criterion.addClass('opened');
+			// - Then only check if more menu is to close to the right side (otherwise we might not have the right element's position)
+			var iPageWidth = $(document).width();
+			var iMenuWidth = this.elements.more_criterion.find('.sfm_content').outerWidth();
+			var iMenuLeftPos = this.elements.more_criterion.find('.sfm_content').offset().left;
+			if( (iMenuWidth + iMenuLeftPos) > (iPageWidth - 10 /* Security margin */) )
+			{
+				this.elements.more_criterion.addClass('opened_left');
+			}
 		},
 		_closeMoreCriterion: function()
 		{
+			this.elements.more_criterion.removeClass('opened_left');
 			this.elements.more_criterion.removeClass('opened');
 		},
 		_toggleMoreCriterion: function()
@@ -193,6 +207,19 @@ $(function()
 		},
 
 		// DOM helpers
+		// - Prepare form area
+		_prepareFormArea: function()
+		{
+			var me = this;
+
+			// TODO: UX Improvment
+			// Note: Would be better to toggle by clicking on the whole title, but we have an issue with <select> on abstract classes.
+			this.element.find('.sft_toggler').on('click', function(oEvent){
+				oEvent.preventDefault();
+				me.element.find('.sf_criterion_area').slideToggle('fast');
+				me.element.toggleClass('opened');
+			});
+		},
 		// - Prepare criterion area
 		_prepareCriterionArea: function()
 		{
@@ -285,11 +312,13 @@ $(function()
 
 			// Bind events
 			// - Open / close menu
-			this.elements.more_criterion.find('.sfm_header').on('click', function(){
+			this.elements.more_criterion.find('.sfm_header').on('click', function(oEvent){
+				oEvent.preventDefault();
 				me._toggleMoreCriterion();
 			});
 			// - Add criteria
-			this.elements.more_criterion.find('.sfm_field').on('click', function(){
+			this.elements.more_criterion.find('.sfm_field').on('click', function(oEvent){
+				oEvent.preventDefault();
 				// Prepare new criterion data (as already opened to increase UX)
 				var oData = {
 					'ref': $(this).attr('data-field-ref'),

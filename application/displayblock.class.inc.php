@@ -933,21 +933,10 @@ class DisplayBlock
 			case 'search':
 			if (!$oPage->IsPrintableVersion())
 			{
-				$sStyle = (isset($aExtraParams['open']) && ($aExtraParams['open'] == 'true')) ? 'SearchDrawer' : 'SearchDrawer DrawerClosed';
-				$sHtml .= "<div id=\"ds_$sId\" class=\"$sStyle\">\n";
-				$oPage->add_ready_script(
-<<<EOF
-		$("#dh_$sId").click( function() {
-			$("#ds_$sId").slideToggle('normal', function() { $("#ds_$sId").parent().resize(); FixSearchFormsDisposition();  $("#dh_$sId").trigger('toggle_complete'); } );
-			$("#dh_$sId").toggleClass('open');
-		});
-EOF
-				);
+				$sHtml .= "<div id=\"ds_$sId\" class=\"search_box\">\n";
 				$aExtraParams['currentId'] = $sId;
 				$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
 		 		$sHtml .= "</div>\n";
-		 		$sHtml .= "<div class=\"HRDrawer\"></div>\n";
-		 		$sHtml .= "<div id=\"dh_$sId\" class=\"DrawerHandle\">".Dict::S('UI:SearchToggle')."</div>\n";
 		 	}
 			break;
 			
