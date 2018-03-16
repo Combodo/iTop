@@ -127,6 +127,13 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	
 	this.SearchObjectsToAdd = function()
 	{
+		$('#count_'+me.id).change(function () {
+			var c = this.value;
+			me.UpdateButtons(c);
+		});
+		FixSearchFormsDisposition();
+		me.UpdateSizes(null, null);
+
 		$("#fs_SearchFormToAdd_"+me.id).trigger('itop.search.form.submit');
 
 		return false; // Don't submit the form, stay in the current page !

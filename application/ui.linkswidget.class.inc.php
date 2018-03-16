@@ -410,6 +410,7 @@ EOF
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 			array(
 				'open' => $bOpen,
+				'menu' => false,
 				'table_id' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 				'table_id2' => 'add_'.$this->m_sAttCode,
 				'table_inner_id' => "ResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
