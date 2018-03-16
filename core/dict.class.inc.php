@@ -357,5 +357,25 @@ class Dict
 		// No need to actually load the strings since it's only used to know the list of languages
 		// at setup time !!
 	}
+	
+	/**
+	 * Export all the dictionary entries - of the given language - whose code matches the given prefix
+	 * @param string $sStartingWith
+	 * @return string[]
+	 */
+	public static function ExportEntries($sStartingWith)
+	{
+		self::InitLangIfNeeded(self::GetUserLanguage());
+		$aEntries = array();
+		$iLength = strlen($sStartingWith);
+		foreach(self::$m_aData[self::GetUserLanguage()] as $sCode => $sEntry)
+		{
+			if (substr($sCode, 0, $iLength) == $sStartingWith)
+			{
+				$aEntries[$sCode] = $sEntry;
+			}
+		}
+		return $aEntries;
+	}
 }
 ?>

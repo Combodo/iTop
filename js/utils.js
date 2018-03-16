@@ -695,3 +695,58 @@ function DisplayHistory(sSelector, sFilter, iCount, iStart)
 		}
 	);
 }
+
+// Very simple equivalent to format: placeholders are %1$s %2$d ...
+function Format()
+{
+	var args = [];
+	var str = '';
+	if (arguments[0] instanceof Array)
+	{
+		str = arguments[0][0].toString();
+		args = arguments[0];
+	}
+	else
+	{
+	    str = arguments[0].toString();
+	    if (arguments.length > 1)
+	    {
+	        var t = typeof arguments[1];
+        	args = ("string" === t || "number" === t) ? Array.prototype.slice.call(arguments) : arguments[1];
+	    }
+	}
+    var key;
+    for (key in args)
+    {
+        str = str.replace(new RegExp("\\%" + key + "\\$.", "gi"), args[key]);
+    }
+    
+    return str;
+}
+
+var Dict = {};
+if (aDictEntries == undefined)
+{
+	Dict._entries = {}; // Entries have not been loaded (we are in the setup ?)
+}
+else
+{
+	Dict._entries = aDictEntries; // Entries were loaded asynchronously via their own js files	
+}
+Dict.S = function(sEntry)
+{
+	if (sEntry in Dict._entries)
+	{
+		return Dict._entries[sEntry];
+	}
+	else
+	{
+		return sEntry;
+	}
+};
+Dict.Format = function()
+{
+	var args = Array.from(arguments);
+	args[0] = Dict.S(arguments[0]);
+	return Format(args);
+}

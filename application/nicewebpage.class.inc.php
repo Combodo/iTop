@@ -41,6 +41,7 @@ class NiceWebPage extends WebPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-1.4.1.min.js'); // Needed since many other plugins still rely on oldies like $.browser
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/ui-lightness/jquery-ui-1.11.4.custom.css');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.11.4.custom.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
 		// table sorting
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.js');
