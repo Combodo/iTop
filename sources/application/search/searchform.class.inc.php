@@ -129,6 +129,14 @@ class SearchForm
 		$oBaseSearch->ResetCondition();
 		$sBaseOQL = str_replace(' WHERE 1', '', $oBaseSearch->ToOQL());
 
+		if (isset($aExtraParams['table_inner_id']))
+		{
+			$sDataConfigListSelector = $aExtraParams['table_inner_id'];
+		}
+		else
+		{
+			$sDataConfigListSelector = $aExtraParams['table_id'];
+		}
 
 		if (!isset($aExtraParams['table_id']))
 		{
@@ -145,7 +153,7 @@ class SearchForm
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
             'result_list_outer_selector' => "#{$aExtraParams['table_id']}",
-            'data_config_list_selector' => null,                                            //this one will be set just bellow, it mean to tell the widget where to find the initial list configuration
+			'data_config_list_selector' => "#{$sDataConfigListSelector}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
 			'date_format' => AttributeDateTime::GetFormat()->ToMomentJS(),
 			'list_params' => $aListParams,
@@ -155,19 +163,6 @@ class SearchForm
 				'base_oql' => $sBaseOQL,
 			),
 		);
-
-		if (isset($aSearchParams['list_params']['table_id']))
-		{
-			$aSearchParams['data_config_list_selector'] = '#'.$aSearchParams['list_params']['table_id'];
-		}
-		elseif (isset($aSearchParams['list_params']['table_inner_id']))
-		{
-			$aSearchParams['data_config_list_selector'] = '#'.$aSearchParams['list_params']['table_inner_id'];
-        }
-        else
-        {
-            $aSearchParams['data_config_list_selector'] = '#'.$aSearchParams['result_list_outer_selector'];
-        }
 
 		$oPage->add_ready_script('$("#fs_'.$sSearchFormId.'").search_form_handler('.json_encode($aSearchParams).');');
 

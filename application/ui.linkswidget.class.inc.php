@@ -402,8 +402,10 @@ EOF
 		{
 			$oFilter->AddCondition('id', $aAlreadyLinkedIds, 'NOTIN');
 		}
-		$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
-
+		if ($oCurrentObj != null)
+		{
+			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
+		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 			array(

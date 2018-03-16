@@ -316,6 +316,7 @@ try
 		case 'selectObjectsToAdd':
 			$oPage->SetContentType('text/html');
 			$sClass = utils::ReadParam('class', '', false, 'class');
+			$aAlreadyLinked = utils::ReadParam('aAlreadyLinked', array());
 			$sJson = utils::ReadParam('json', '', false, 'raw_data');
 			$oObj = null;
 			if ($sJson != '')
@@ -329,7 +330,7 @@ try
 			$iCurrObjectId = utils::ReadParam('iObjId', 0);
 			$oPage->SetContentType('text/html');
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
-			$oWidget->GetObjectsSelectionDlg($oPage, $oObj);
+			$oWidget->GetObjectsSelectionDlg($oPage, $oObj, $aAlreadyLinked);
 			break;
 
 		// ui.linksdirectwidget
