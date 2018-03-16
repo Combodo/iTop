@@ -787,7 +787,9 @@ EOF
 		$aFieldDefs[] = "INDEX (primary_key)";
 		$sFieldDefs = implode(', ', $aFieldDefs);
 
-		$sCreateTable = "CREATE TABLE `$sTable` ($sFieldDefs) ENGINE = ".MYSQL_ENGINE." CHARACTER SET utf8 COLLATE utf8_unicode_ci;";
+		$sDbCharset = DEFAULT_CHARACTER_SET;
+		$sDbCollation = DEFAULT_COLLATION;
+		$sCreateTable = "CREATE TABLE `$sTable` ($sFieldDefs) ENGINE = ".MYSQL_ENGINE." CHARACTER SET ".$sDbCharset." COLLATE ".$sDbCollation.";";
 		CMDBSource::Query($sCreateTable);
 
 		$aTriggers = $this->GetTriggersDefinition();

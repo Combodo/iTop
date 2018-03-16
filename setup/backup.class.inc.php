@@ -163,6 +163,13 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 	class DBBackup
 	{
+		/**
+		 * utf8mb4 was added in MySQL 5.5.3 but works with programs like mysqldump only since MySQL 5.5.33
+		 *
+		 * @since 2.5 see #1001
+		 */
+		const MYSQL_VERSION_WITH_UTF8MB4_IN_PROGRAMS = '5.5.33';
+
 		// To be overriden depending on the expected usages
 		protected function LogInfo($sMsg)
 		{
@@ -386,28 +393,25 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 			$this->LogInfo("Starting backup of $this->sDBHost/$this->sDBName(suffix:'$this->sDBSubName')");
 
-			$sMySQLBinDir = utils::ReadParam('mysql_bindir', $this->sMySQLBinDir, true);
-			if (empty($sMySQLBinDir))
-			{
-				$sMySQLDump = 'mysqldump';
-			}
-			else
-			{
-				$sMySQLDump = '"'.$sMySQLBinDir.'/mysqldump"';
-			}
+			$sMySQLDump = $this->GetMysqldumpCommand();
 
 			// Store the results in a temporary file
 			$sTmpFileName = self::EscapeShellArg($sBackupFileName);
-			$sPortOption = self::GetMysqliCliSingleOption('port', $this->iDBPort);
 
+			$sPortOption = self::GetMysqliCliSingleOption('port', $this->iDBPort);
 			$sTlsOptions = self::GetMysqlCliTlsOptions($this->oConfig);
+
+			$sMysqldumpVersion = self::GetMysqldumpVersion($sMySQLDump);
+			$bIsMysqldumpSupportUtf8mb4 = (version_compare($sMysqldumpVersion,
+					self::MYSQL_VERSION_WITH_UTF8MB4_IN_PROGRAMS) == -1);
+			$sMysqldumpCharset = $bIsMysqldumpSupportUtf8mb4 ? 'utf8' : DEFAULT_CHARACTER_SET;
 
 			// Delete the file created by tempnam() so that the spawned process can write into it (Windows/IIS)
 			@unlink($sBackupFileName);
 			// Note: opt implicitely sets lock-tables... which cancels the benefit of single-transaction!
 			//       skip-lock-tables compensates and allows for writes during a backup
-			$sCommand = "$sMySQLDump --opt --skip-lock-tables --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser --password=$sPwd $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
-			$sCommandDisplay = "$sMySQLDump --opt --skip-lock-tables --default-character-set=utf8 --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
+			$sCommand = "$sMySQLDump --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser --password=$sPwd $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+			$sCommandDisplay = "$sMySQLDump --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
 
 			// Now run the command for real
 			$this->LogInfo("Executing command: $sCommandDisplay");
@@ -630,6 +634,45 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			}
 
 			return ' --'.$sCliArgName.'='.self::EscapeShellArg($sData);
+		}
+
+		/**
+		 * @return string the command to launch mysqldump (without its params)
+		 */
+		private function GetMysqldumpCommand()
+		{
+			$sMySQLBinDir = utils::ReadParam('mysql_bindir', $this->sMySQLBinDir, true);
+			if (empty($sMySQLBinDir))
+			{
+				$sMysqldumpCommand = 'mysqldump';
+			}
+			else
+			{
+				$sMysqldumpCommand = '"'.$sMySQLBinDir.'/mysqldump"';
+			}
+
+			return $sMysqldumpCommand;
+		}
+
+		/**
+		 * @param string $sMysqldumpCommand
+		 *
+		 * @return string version of the mysqldump program, as parsed from program return
+		 *
+		 * @uses mysqldump -V Sample return value : mysqldump  Ver 10.13 Distrib 5.7.19, for Win64 (x86_64)
+		 * @since 2.5 needed to check compatibility with utf8mb4 (N°1001)
+		 */
+		private static function GetMysqldumpVersion($sMysqldumpCommand)
+		{
+			$sCommand = $sMysqldumpCommand.' -V';
+			$aOutput = array();
+			exec($sCommand, $aOutput, $iRetCode);
+
+			$sMysqldumpOutput = $aOutput[0];
+			$aDumpVersionMatchResults = array();
+			preg_match('/Distrib (\d\.\d+\.\d+)/', $sMysqldumpOutput, $aDumpVersionMatchResults);
+
+			return $aDumpVersionMatchResults[1];
 		}
 	}
 }

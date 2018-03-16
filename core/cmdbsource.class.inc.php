@@ -144,8 +144,8 @@ class CMDBSource
 		self::Init($sServer, $sUser, $sPwd, $sSource, $sTlsKey, $sTlsCert, $sTlsCA, $sTlsCaPath, $sTlsCipher,
 			$sTlsVerifyServerCert);
 
-		$sCharacterSet = $oConfig->Get('db_character_set');
-		$sCollation = $oConfig->Get('db_collation');
+		$sCharacterSet = DEFAULT_CHARACTER_SET;
+		$sCollation = DEFAULT_COLLATION;
 		self::SetCharacterSet($sCharacterSet, $sCollation);
 	}
 
@@ -373,7 +373,7 @@ class CMDBSource
 		return (!empty($sResult));
 	}
 
-	public static function SetCharacterSet($sCharset = 'utf8', $sCollation = 'utf8_general_ci')
+	public static function SetCharacterSet($sCharset = DEFAULT_CHARACTER_SET, $sCollation = DEFAULT_COLLATION)
 	{
 		if (strlen($sCharset) > 0)
 		{
@@ -455,7 +455,7 @@ class CMDBSource
 	 */
 	public static function CreateDB($sSource)
 	{
-		self::Query("CREATE DATABASE `$sSource` CHARACTER SET utf8 COLLATE utf8_unicode_ci");
+		self::Query("CREATE DATABASE `$sSource` CHARACTER SET ".DEFAULT_CHARACTER_SET." COLLATE ".DEFAULT_COLLATION);
 		self::SelectDB($sSource);
 	}
 
@@ -893,6 +893,13 @@ class CMDBSource
 		return ($aFieldData["Type"]);
 	}
 
+	/**
+	 * @param string $sTable
+	 * @param string $sField
+	 *
+	 * @return bool|string
+	 * @see \AttributeDefinition::GetSQLColumns()
+	 */
 	public static function GetFieldSpec($sTable, $sField)
 	{
 		$aTableInfo = self::GetTableInfo($sTable);

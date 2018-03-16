@@ -57,8 +57,8 @@ class DBRestore extends DBBackup
 		}
 
 		$sDataFileEscaped = self::EscapeShellArg($sDataFile);
-		$sCommand = "$sMySQLExe --default-character-set=utf8 --host=$sHost $sPortOption --user=$sUser --password=$sPwd $sDBName <$sDataFileEscaped 2>&1";
-		$sCommandDisplay = "$sMySQLExe --default-character-set=utf8 --host=$sHost $sPortOption --user=xxxx --password=xxxx $sDBName <$sDataFileEscaped 2>&1";
+		$sCommand = "$sMySQLExe --default-character-set=".DEFAULT_CHARACTER_SET." --host=$sHost $sPortOption --user=$sUser --password=$sPwd $sDBName <$sDataFileEscaped 2>&1";
+		$sCommandDisplay = "$sMySQLExe --default-character-set=".DEFAULT_CHARACTER_SET." --host=$sHost $sPortOption --user=xxxx --password=xxxx $sDBName <$sDataFileEscaped 2>&1";
 
 		// Now run the command for real
 		$this->LogInfo("Executing command: $sCommandDisplay");

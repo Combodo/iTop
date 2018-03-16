@@ -4938,13 +4938,15 @@ abstract class MetaModel
 			//
 			$sTable = self::DBGetTable($sClass);
 			$sKeyField = self::DBGetKey($sClass);
+			$sDbCharset = DEFAULT_CHARACTER_SET;
+			$sDbCollation = DEFAULT_COLLATION;
 			$sAutoIncrement = (self::IsAutoIncrementKey($sClass) ? "AUTO_INCREMENT" : "");
 			$sKeyFieldDefinition = "`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY";
 			if (!CMDBSource::IsTable($sTable))
 			{
-				$aErrors[$sClass]['*'][] = "table '$sTable' could not be found into the DB";
-				$aSugFix[$sClass]['*'][] = "CREATE TABLE `$sTable` ($sKeyFieldDefinition) ENGINE = ".MYSQL_ENGINE." CHARACTER SET utf8 COLLATE utf8_unicode_ci";
-				$aCreateTable[$sTable] = "ENGINE = ".MYSQL_ENGINE." CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+				$aErrors[$sClass]['*'][] = "table '$sTable' could not be found in the DB";
+				$aSugFix[$sClass]['*'][] = "CREATE TABLE `$sTable` ($sKeyFieldDefinition) ENGINE = ".MYSQL_ENGINE." CHARACTER SET $sDbCharset COLLATE $sDbCollation";
+				$aCreateTable[$sTable] = "ENGINE = ".MYSQL_ENGINE." CHARACTER SET $sDbCharset COLLATE $sDbCollation";
 				$aCreateTableItems[$sTable][$sKeyField] = $sKeyFieldDefinition;
 			}
 			// Check that the key field exists

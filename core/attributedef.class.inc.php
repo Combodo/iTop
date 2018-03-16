@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Typology for the attributes
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license	 http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -111,6 +111,15 @@ define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/re
  */
 abstract class AttributeDefinition
 {
+	/**
+	 * SQL charset & collation declaration for text columns
+	 *
+	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-column.html
+	 * @since 2.5 #1001 switch to utf8mb4
+	 */
+	const SQL_TEXT_COLUMNS_CHARSET = ' CHARACTER SET '.DEFAULT_CHARACTER_SET.' COLLATE '.DEFAULT_COLLATION;
+
+
 	public function GetType()
 	{
 		return Dict::S('Core:'.get_class($this));
@@ -473,7 +482,18 @@ abstract class AttributeDefinition
 
 	public function GetSQLExpressions($sPrefix = '') {return array();} // returns suffix/expression pairs (1 in most of the cases), for READING (Select)
 	public function FromSQLToValue($aCols, $sPrefix = '') {return null;} // returns a value out of suffix/value pairs, for SELECT result interpretation
-	public function GetSQLColumns($bFullSpec = false) {return array();} // returns column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
+
+	/**
+	 * @param bool $bFullSpec
+	 *
+	 * @return array column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
+	 * @see \CMDBSource::GetFieldSpec()
+	 */
+	public function GetSQLColumns($bFullSpec = false)
+	{
+		return array();
+	}
+
 	public function GetSQLValues($value) {return array();} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
 	public function RequiresIndex() {return false;}
 	public function CopyOnAllTables() {return false;}
@@ -1482,7 +1502,9 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	// To be overriden, used in GetSQLColumns
 	protected function GetSQLCol($bFullSpec = false)
 	{
-		return "VARCHAR(255)".($bFullSpec ? $this->GetSQLColSpec() : '');
+		return 'VARCHAR(255)'
+			.self::SQL_TEXT_COLUMNS_CHARSET
+			.($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
 	protected function GetSQLColSpec()
 	{
@@ -2092,7 +2114,13 @@ class AttributeString extends AttributeDBField
 	}
 
 	public function GetEditClass() {return "String";}
-	protected function GetSQLCol($bFullSpec = false) {return "VARCHAR(255)".($bFullSpec ? $this->GetSQLColSpec() : '');}
+
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return 'VARCHAR(255)'
+			.self::SQL_TEXT_COLUMNS_CHARSET
+			.($bFullSpec ? $this->GetSQLColSpec() : '');
+	}
 
 	public function GetValidationPattern()
 	{
@@ -2478,7 +2506,13 @@ class AttributePassword extends AttributeString
 	}
 
 	public function GetEditClass() {return "Password";}
-	protected function GetSQLCol($bFullSpec = false) {return "VARCHAR(64)".($bFullSpec ? $this->GetSQLColSpec() : '');}
+
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return "VARCHAR(64)"
+			.self::SQL_TEXT_COLUMNS_CHARSET
+			.($bFullSpec ? $this->GetSQLColSpec() : '');
+	}
 
 	public function GetMaxSize()
 	{
@@ -2604,8 +2638,11 @@ define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
 class AttributeText extends AttributeString
 {
 	public function GetEditClass() {return ($this->GetFormat() == 'text') ? 'Text' : "HTML";}
-	
-	protected function GetSQLCol($bFullSpec = false) {return "TEXT";}
+
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return "TEXT".self::SQL_TEXT_COLUMNS_CHARSET;
+	}
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
@@ -2614,7 +2651,7 @@ class AttributeText extends AttributeString
 		if ($this->GetOptional('format', null) != null )
 		{
 			// Add the extra column only if the property 'format' is specified for the attribute
-			$aColumns[$this->Get('sql').'_format'] = "ENUM('text','html')";
+			$aColumns[$this->Get('sql').'_format'] = "ENUM('text','html')".self::SQL_TEXT_COLUMNS_CHARSET;
 			if ($bFullSpec)
 			{
 				$aColumns[$this->Get('sql').'_format'].= " DEFAULT 'text'"; // default 'text' is for migrating old records
@@ -2936,7 +2973,10 @@ class AttributeText extends AttributeString
  */
 class AttributeLongText extends AttributeText
 {
-	protected function GetSQLCol($bFullSpec = false) {return "LONGTEXT";}
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return "LONGTEXT".self::SQL_TEXT_COLUMNS_CHARSET;
+	}
 
 	public function GetMaxSize()
 	{
@@ -3114,7 +3154,8 @@ class AttributeCaseLog extends AttributeLongText
 	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'LONGTEXT'; // 2^32 (4 Gb)
+		$aColumns[$this->GetCode()] = 'LONGTEXT' // 2^32 (4 Gb)
+			.self::SQL_TEXT_COLUMNS_CHARSET;
 		$aColumns[$this->GetCode().'_index'] = 'BLOB';
 		return $aColumns;
 	}
@@ -3457,11 +3498,15 @@ class AttributeEnum extends AttributeString
 			// In particular, I had to remove unnecessary spaces to
 			// make sure that this string will match the field type returned by the DB
 			// (used to perform a comparison between the current DB format and the data model)
-			return "ENUM(".implode(",", $aValues).")".($bFullSpec ? $this->GetSQLColSpec() : '');
+			return "ENUM(".implode(",", $aValues).")"
+				.self::SQL_TEXT_COLUMNS_CHARSET
+				.($bFullSpec ? $this->GetSQLColSpec() : '');
 		}
 		else
 		{
-			return "VARCHAR(255)".($bFullSpec ? " DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
+			return "VARCHAR(255)"
+				.self::SQL_TEXT_COLUMNS_CHARSET
+				.($bFullSpec ? " DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
 		}
 	}
 	
@@ -5190,7 +5235,12 @@ class AttributeURL extends AttributeString
 		return array_merge(parent::ListExpectedParams(), array("target"));
 	}
 
-	protected function GetSQLCol($bFullSpec = false) {return "VARCHAR(2048)".($bFullSpec ? $this->GetSQLColSpec() : '');}
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return "VARCHAR(2048)"
+			.self::SQL_TEXT_COLUMNS_CHARSET
+			.($bFullSpec ? $this->GetSQLColSpec() : '');
+	}
 
 	public function GetMaxSize()
 	{
@@ -5363,8 +5413,8 @@ class AttributeBlob extends AttributeDefinition
 	{
 		$aColumns = array();
 		$aColumns[$this->GetCode().'_data'] = 'LONGBLOB'; // 2^32 (4 Gb)
-		$aColumns[$this->GetCode().'_mimetype'] = 'VARCHAR(255)';
-		$aColumns[$this->GetCode().'_filename'] = 'VARCHAR(255)';
+		$aColumns[$this->GetCode().'_mimetype'] = 'VARCHAR(255)'.self::SQL_TEXT_COLUMNS_CHARSET;
+		$aColumns[$this->GetCode().'_filename'] = 'VARCHAR(255)'.self::SQL_TEXT_COLUMNS_CHARSET;
 		return $aColumns;
 	}
 
@@ -6501,7 +6551,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 	public function GetImportColumns()
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'TINYTEXT';
+		$aColumns[$this->GetCode()] = 'TINYTEXT'.self::SQL_TEXT_COLUMNS_CHARSET;
 		return $aColumns;
 	}
 
@@ -6569,7 +6619,11 @@ class AttributeOneWayPassword extends AttributeDefinition
 class AttributeTable extends AttributeDBField
 {
 	public function GetEditClass() {return "Table";}
-	protected function GetSQLCol($bFullSpec = false) {return "LONGTEXT";}
+
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return "LONGTEXT".self::SQL_TEXT_COLUMNS_CHARSET;
+	}
 
 	public function GetMaxSize()
 	{
@@ -6970,7 +7024,9 @@ class AttributeRedundancySettings extends AttributeDBField
 	public function GetEditClass() {return "RedundancySetting";}
 	protected function GetSQLCol($bFullSpec = false)
 	{
-		return "VARCHAR(20)".($bFullSpec ? $this->GetSQLColSpec() : '');
+		return "VARCHAR(20)"
+			.self::SQL_TEXT_COLUMNS_CHARSET
+			.($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
 
 

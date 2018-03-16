@@ -42,8 +42,12 @@ class ConfigException extends CoreException
 {
 }
 
-define('DEFAULT_CHARACTER_SET', 'utf8');
-define('DEFAULT_COLLATION', 'utf8_unicode_ci');
+// was utf8 but it only supports BMP chars (https://dev.mysql.com/doc/refman/5.5/en/charset-unicode-utf8mb4.html)
+// so we switched to utf8mb4 in iTop 2.5, adding dependency to MySQL 5.5.3
+// The config params db_character_set and db_collation were introduced as a temporary workaround and removed in iTop 2.5
+// now everything uses those fixed value !
+define('DEFAULT_CHARACTER_SET', 'utf8mb4');
+define('DEFAULT_COLLATION', 'utf8mb4_unicode_ci');
 
 define('DEFAULT_LOG_GLOBAL', true);
 define('DEFAULT_LOG_NOTIFICATION', true);
@@ -194,19 +198,21 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_character_set' => array(
+		'db_character_set' => array( // @deprecated to remove in 2.7 ? #1001 utf8mb4 switch
 			'type' => 'string',
-			'default' => null,
+			'description' => 'Deprecated since iTop 2.5 : now using utf8mb4',
+			'default' => 'DEPRECATED_2.5',
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
-		'db_collation' => array(
+		'db_collation' => array( // @deprecated to remove in 2.7 ? #1001 utf8mb4 switch
 			'type' => 'string',
-			'default' => null,
+			'description' => 'Deprecated since iTop 2.5 : now using utf8mb4_unicode_ci',
+			'default' => 'DEPRECATED_2.5',
 			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		),
 		'skip_check_to_write' => array(
 			'type' => 'bool',
@@ -1456,22 +1462,22 @@ class Config
 
 	/**
 	 * @return string
-	 * @deprecated 2.5 will be removed in 2.6
-	 * @see Config::Get() as a replacement
+	 * @deprecated 2.5 will be removed in 2.6 #1001 utf8mb4 switch
+	 * @see Config::DEFAULT_CHARACTER_SET
 	 */
 	public function GetDBCharacterSet()
 	{
-		return $this->Get('db_character_set');
+		return DEFAULT_CHARACTER_SET;
 	}
 
 	/**
 	 * @return string
-	 * @deprecated 2.5 will be removed in 2.6
-	 * @see Config::Get() as a replacement
+	 * @deprecated 2.5 will be removed in 2.6 #1001 utf8mb4 switch
+	 * @see Config::DEFAULT_COLLATION
 	 */
 	public function GetDBCollation()
 	{
-		return $this->Get('db_collation');
+		return DEFAULT_COLLATION;
 	}
 
 	/**
