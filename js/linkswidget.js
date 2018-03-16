@@ -127,6 +127,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	
 	this.SearchObjectsToAdd = function()
 	{
+		$("#fs_SearchFormToAdd_"+me.id).trigger('itop.search.form.submit');
+
+		return false; // Don't submit the form, stay in the current page !
+
 		var theMap = { sAttCode: me.sAttCode,
 					   iInputId: me.iInputId,
 					   sSuffix: me.sSuffix,
