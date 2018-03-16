@@ -1171,7 +1171,6 @@ EOF
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Info - User privileges: ".($oDBSource->GetRawPrivileges()));
 
 			$bHasDbVersionRequired = self::CheckDbServerVersion($aResult, $oDBSource);
-
 			if ($bHasDbVersionRequired)
 			{
 				// Check some server variables
@@ -1185,6 +1184,7 @@ EOF
 				{
 					$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_allowed_packet ($iMaxAllowedPacket) is not big enough. Please, consider setting it to at least ".(500 + $iMaxUploadSize).".");
 				}
+
 				$iMaxConnections = $oDBSource->GetServerVariable('max_connections');
 				if ($iMaxConnections < 5)
 				{
@@ -1193,6 +1193,19 @@ EOF
 				else
 				{
 					$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
+				}
+
+				$iInnodbLargePrefix = $oDBSource->GetServerVariable('innodb_large_prefix');
+				$bInnodbLargePrefix = ($iInnodbLargePrefix == 1);
+				if (!$bInnodbLargePrefix)
+				{
+					$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
+						"MySQL variable innodb_large_prefix is set to false, but must be set to true ! Otherwise this will limit indexes size and cause issues (iTop charset is utf8mb4).");
+				}
+				else
+				{
+					$aResult['checks'][] = new CheckResult(CheckResult::INFO,
+						"MySQL innodb_large_prefix is active, so the iTop charset utf8mb4 can be used.");
 				}
 			}
 
