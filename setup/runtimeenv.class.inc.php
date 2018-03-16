@@ -99,6 +99,7 @@ class RunTimeEnvironment
 	public function LogQueryCallback($sQuery, $fDuration)
 	{
 		$this->log_info(sprintf('%.3fs - query: %s ', $fDuration, $sQuery));
+		$this->log_db_query($sQuery);
 	}
 	
 	/**
@@ -916,6 +917,25 @@ class RunTimeEnvironment
 	protected function log_ok($sText)
 	{
 		SetupPage::log_ok($sText);
+	}
+
+	/**
+	 * Writes queries run by the setup in a SQL file
+	 *
+	 * @param string $sQuery
+	 *
+	 * @since 2.5 #1001 utf8mb4 switch
+	 * @uses \SetupUtils::GetSetupQueriesFilePath()
+	 */
+	protected function log_db_query($sQuery)
+	{
+		$sSetupQueriesFilePath = SetupUtils::GetSetupQueriesFilePath();
+		$hSetupQueriesFile = @fopen($sSetupQueriesFilePath, 'a');
+		if ($hSetupQueriesFile !== false)
+		{
+			fwrite($hSetupQueriesFile, "$sQuery\n");
+			fclose($hSetupQueriesFile);
+		}
 	}
 	
 	public function GetCurrentDataModelVersion()

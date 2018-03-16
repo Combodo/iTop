@@ -1821,6 +1821,14 @@ EOF
 		}
 		return $aLicenses;
 	}
+
+	/**
+	 * @return string path to the log file where the create and/or alter queries are written
+	 */
+	static public function GetSetupQueriesFilePath()
+	{
+		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
+	}
 }
 
 /**
