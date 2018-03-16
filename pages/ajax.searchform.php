@@ -40,7 +40,7 @@ try
 		throw new SecurityException('You must be logged in');
 	}
 
-	$sParams = stripslashes(utils::ReadParam('params', '', false, 'raw_data'));
+	$sParams = utils::ReadParam('params', '', false, 'raw_data');
 	if (!$sParams)
 	{
 		throw new AjaxSearchException("Invalid query (empty filter)", 400);
@@ -54,7 +54,7 @@ try
 	$oFilter = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion']);
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
 
-	$sListParams = stripslashes(utils::ReadParam('list_params', '{}', false, 'raw_data'));
+	$sListParams = utils::ReadParam('list_params', '{}', false, 'raw_data');
 	$aListParams = (array) json_decode($sListParams, true);
 
 	foreach($aListParams as $key => $value)

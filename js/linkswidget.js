@@ -101,17 +101,28 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				   operation: 'addObjects',
 				   json: me.oWizardHelper.ToJSON()
 				 };
-		$.post( GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', theMap, 
-				function(data)
-				{
-					$('#dlg_'+me.id).html(data);
-					$('#dlg_'+me.id).dialog('open');
-					me.UpdateSizes(null, null);
-					me.SearchObjectsToAdd();
-					$('#'+me.id+'_indicatorAdd').html('');
-				},
-				'html'
-			);
+
+		// Gather the already linked target objects
+		theMap.aAlreadyLinked = [];
+		$('#linkedset_'+me.id+' .selection:input').each(function (i) {
+			var iRemote = $(this).attr('data-remote-id');
+			theMap.aAlreadyLinked.push(iRemote);
+		});
+
+		$.ajax({
+				"url": GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+				"method": "POST",
+				"data": theMap,
+				"dataType": "html"
+			})
+			.done(function (data) {
+				$('#dlg_'+me.id).html(data);
+				$('#dlg_'+me.id).dialog('open');
+				me.UpdateSizes(null, null);
+				me.SearchObjectsToAdd();
+				$('#'+me.id+'_indicatorAdd').html('');
+			})
+		;
 	};
 	
 	this.SearchObjectsToAdd = function()

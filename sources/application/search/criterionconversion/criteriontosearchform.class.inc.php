@@ -68,13 +68,30 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			}
 		}
 
-		// Regroup criterion by variable name
+		// Regroup criterion by variable name (no ref first)
 		usort($aAndCriterion, function ($a, $b) {
-			$iRefCmp = strcmp($a['ref'], $b['ref']);
-			if ($iRefCmp != 0) return $iRefCmp;
-			$iOpCmp = strcmp($a['operator'], $b['operator']);
+			if (array_key_exists('ref', $a) || array_key_exists('ref', $b))
+			{
+				if (array_key_exists('ref', $a) && array_key_exists('ref', $b))
+				{
+					$iRefCmp = strcmp($a['ref'], $b['ref']);
+					if ($iRefCmp != 0) return $iRefCmp;
 
-			return $iOpCmp;
+					return strcmp($a['operator'], $b['operator']);
+				}
+				if (array_key_exists('ref', $a))
+				{
+					return 1;
+				}
+
+				return -1;
+			}
+			if (array_key_exists('oql', $a) && array_key_exists('oql', $b))
+			{
+				return strcmp($a['oql'], $b['oql']);
+			}
+
+			return 0;
 		});
 
 		$aMergeFctByWidget = array(
@@ -88,16 +105,20 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		{
 			if (!is_null($aPrevCriterion))
 			{
-				if (strcmp($aPrevCriterion['ref'], $aCurrCriterion['ref']) == 0)
+				if (array_key_exists('ref', $aPrevCriterion))
 				{
-					// Same attribute, try to merge
-					if (array_key_exists('widget', $aCurrCriterion))
+					// If previous has ref, the current has ref as the array is sorted with all without ref first
+					if (strcmp($aPrevCriterion['ref'], $aCurrCriterion['ref']) == 0)
 					{
-						if (array_key_exists($aCurrCriterion['widget'], $aMergeFctByWidget))
+						// Same attribute, try to merge
+						if (array_key_exists('widget', $aCurrCriterion))
 						{
-							$sFct = $aMergeFctByWidget[$aCurrCriterion['widget']];
-							$aPrevCriterion = self::$sFct($aPrevCriterion, $aCurrCriterion, $aMergedCriterion);
-							continue;
+							if (array_key_exists($aCurrCriterion['widget'], $aMergeFctByWidget))
+							{
+								$sFct = $aMergeFctByWidget[$aCurrCriterion['widget']];
+								$aPrevCriterion = self::$sFct($aPrevCriterion, $aCurrCriterion, $aMergedCriterion);
+								continue;
+							}
 						}
 					}
 				}
