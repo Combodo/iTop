@@ -403,6 +403,7 @@ EOF
 			$oFilter->AddCondition('id', $aAlreadyLinkedIds, 'NOTIN');
 		}
 		$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
+
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 			array(
@@ -412,7 +413,8 @@ EOF
 				'table_inner_id' => "ResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 				'selection_mode' => true,
 				'json' => $sJson,
-				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix
+				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
+				'query_params' => json_encode($oFilter->GetInternalParams()),
 			));
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
 		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";

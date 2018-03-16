@@ -73,7 +73,15 @@ try
 		$sJson = json_encode($aJson);
 		$oWizardHelper = WizardHelper::FromJSON($sJson);
 		$oObj = $oWizardHelper->GetTargetObject();
-		$aExtraParams['query_params'] = array('this' => $oObj);
+		if (array_key_exists('query_params', $aExtraParams))
+		{
+			$aExtraParams['query_params'] = json_decode($aExtraParams['query_params'], true);
+			$aExtraParams['query_params']['this'] = $oObj;
+		}
+		else
+		{
+			$aExtraParams['query_params'] = array('this' => $oObj);
+		}
 
 
 //        // Current extkey value, so we can display event if it is not available anymore (eg. archived).
