@@ -75,7 +75,6 @@ try
 		$oObj = $oWizardHelper->GetTargetObject();
 		if (array_key_exists('query_params', $aExtraParams))
 		{
-			$aExtraParams['query_params'] = json_decode($aExtraParams['query_params'], true);
 			$aExtraParams['query_params']['this'] = $oObj;
 		}
 		else

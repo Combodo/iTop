@@ -414,7 +414,7 @@ EOF
 				'selection_mode' => true,
 				'json' => $sJson,
 				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
-				'query_params' => json_encode($oFilter->GetInternalParams()),
+				'query_params' => $oFilter->GetInternalParams(),
 			));
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
 		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
