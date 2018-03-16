@@ -4921,9 +4921,12 @@ abstract class MetaModel
 		$aErrors = array();
 		$aSugFix = array();
 
+		$sAlterDBMetaData = self::DBCheckCharsetAndCollation();
+
 		// A new way of representing things to be done - quicker to execute !
 		$aCreateTable = array(); // array of <table> => <table options>
 		$aCreateTableItems = array(); // array of <table> => array of <create definition>
+		$aAlterTableMetaData = array();
 		$aAlterTableItems = array(); // array of <table> => <alter specification>
 
 		foreach(self::GetClasses() as $sClass)
@@ -4933,10 +4936,10 @@ abstract class MetaModel
 				continue;
 			}
 
-
 			// Check that the table exists
 			//
 			$sTable = self::DBGetTable($sClass);
+			$bTableToCreate = false;
 			$sKeyField = self::DBGetKey($sClass);
 			$sDbCharset = DEFAULT_CHARACTER_SET;
 			$sDbCollation = DEFAULT_COLLATION;
@@ -4944,6 +4947,7 @@ abstract class MetaModel
 			$sKeyFieldDefinition = "`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY";
 			if (!CMDBSource::IsTable($sTable))
 			{
+				$bTableToCreate = true;
 				$aErrors[$sClass]['*'][] = "table '$sTable' could not be found in the DB";
 				$aSugFix[$sClass]['*'][] = "CREATE TABLE `$sTable` ($sKeyFieldDefinition) ENGINE = ".MYSQL_ENGINE." CHARACTER SET $sDbCharset COLLATE $sDbCollation";
 				$aCreateTable[$sTable] = "ENGINE = ".MYSQL_ENGINE." CHARACTER SET $sDbCharset COLLATE $sDbCollation";
@@ -4955,7 +4959,7 @@ abstract class MetaModel
 			{
 				$aErrors[$sClass]['id'][] = "key '$sKeyField' (table $sTable) could not be found";
 				$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` ADD $sKeyFieldDefinition";
-				if (!array_key_exists($sTable, $aCreateTable))
+				if (!$bTableToCreate)
 				{
 					$aAlterTableItems[$sTable][$sKeyField] = "ADD $sKeyFieldDefinition";
 				}
@@ -4968,7 +4972,7 @@ abstract class MetaModel
 				{
 					$aErrors[$sClass]['id'][] = "key '$sKeyField' is not a key for table '$sTable'";
 					$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable`, DROP PRIMARY KEY, ADD PRIMARY key(`$sKeyField`)";
-					if (!array_key_exists($sTable, $aCreateTable))
+					if (!$bTableToCreate)
 					{
 						$aAlterTableItems[$sTable][$sKeyField] = "CHANGE `$sKeyField` $sKeyFieldDefinition";
 					}
@@ -4977,10 +4981,19 @@ abstract class MetaModel
 				{
 					$aErrors[$sClass]['id'][] = "key '$sKeyField' (table $sTable) is not automatically incremented";
 					$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` CHANGE `$sKeyField` $sKeyFieldDefinition";
-					if (!array_key_exists($sTable, $aCreateTable))
+					if (!$bTableToCreate)
 					{
 						$aAlterTableItems[$sTable][$sKeyField] = "CHANGE `$sKeyField` $sKeyFieldDefinition";
 					}
+				}
+			}
+
+			if (!$bTableToCreate)
+			{
+				$sAlterTableMetaDataQuery = self::DBCheckTableCharsetAndCollation($sTable);
+				if (!empty($sAlterTableMetaDataQuery))
+				{
+					$aAlterTableMetaData[$sTable] = $sAlterTableMetaDataQuery;
 				}
 			}
 
@@ -5014,7 +5027,7 @@ abstract class MetaModel
 						{
 							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
 						}
-						if (array_key_exists($sTable, $aCreateTable))
+						if ($bTableToCreate)
 						{
 							$aCreateTableItems[$sTable][$sField] = $sFieldDefinition;
 							if ($bIndexNeeded)
@@ -5087,7 +5100,7 @@ abstract class MetaModel
 						$aErrors[$sClass]['*'][] = "Missing index '$sIndexId' ($sColumns) in table '$sTable'";
 						$aSugFix[$sClass]['*'][] = "ALTER TABLE `$sTable` ADD INDEX `$sIndexId` ($sColumns)";
 					}
-					if (array_key_exists($sTable, $aCreateTable))
+					if ($bTableToCreate)
 					{
 						$aCreateTableItems[$sTable][] = "INDEX `$sIndexId` ($sColumns)";
 					}
@@ -5122,18 +5135,79 @@ abstract class MetaModel
 		}
 
 		$aCondensedQueries = array();
+		if (!empty($sAlterDBMetaData))
+		{
+			$aCondensedQueries[] = $sAlterDBMetaData;
+		}
 		foreach($aCreateTable as $sTable => $sTableOptions)
 		{
 			$sTableItems = implode(', ', $aCreateTableItems[$sTable]);
 			$aCondensedQueries[] = "CREATE TABLE `$sTable` ($sTableItems) $sTableOptions";
 		}
-		foreach($aAlterTableItems as $sTable => $aChangeList)
+		foreach ($aAlterTableMetaData as $sTableAlterQuery)
+		{
+			$aCondensedQueries[] = $sTableAlterQuery;
+		}
+		foreach ($aAlterTableItems as $sTable => $aChangeList)
 		{
 			$sChangeList = implode(', ', $aChangeList);
 			$aCondensedQueries[] = "ALTER TABLE `$sTable` $sChangeList";
 		}
 
 		return array($aErrors, $aSugFix, $aCondensedQueries);
+	}
+
+	/**
+	 * @return string query to upgrade database charset and collation if needed, null if not
+	 * @throws \MySQLException
+	 *
+	 * @since 2.5 #1001 switch to utf8mb4
+	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
+	 */
+	private static function DBCheckCharsetAndCollation()
+	{
+		$sDBName = CMDBSource::DBName();
+		$sDBInfoQuery = "SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME
+			FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$sDBName';";
+		$aDBInfo = CMDBSource::QueryToArray($sDBInfoQuery);
+		$sDBCharset = $aDBInfo[0]['DEFAULT_CHARACTER_SET_NAME'];
+		$sDBCollation = $aDBInfo[0]['DEFAULT_COLLATION_NAME'];
+
+		if ((DEFAULT_CHARACTER_SET == $sDBCharset) && (DEFAULT_COLLATION == $sDBCollation))
+		{
+			return null;
+		}
+
+		return 'ALTER DATABASE'.CMDBSource::SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
+	}
+
+	/**
+	 * @param string $sTableName
+	 *
+	 * @return string query to upgrade table charset and collation if needed, null if not
+	 * @throws \MySQLException
+	 *
+	 * @since 2.5 #1001 switch to utf8mb4
+	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-table.html
+	 */
+	private static function DBCheckTableCharsetAndCollation($sTableName)
+	{
+		$sDBName = CMDBSource::DBName();
+		$sTableInfoQuery = "SELECT C.character_set_name, T.table_collation
+			FROM information_schema.`TABLES` T inner join information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` C
+				ON T.table_collation = C.collation_name
+			WHERE T.table_schema = '$sDBName'
+  			AND T.table_name = '$sTableName';";
+		$aTableInfo = CMDBSource::QueryToArray($sTableInfoQuery);
+		$sTableCharset = $aTableInfo[0]['character_set_name'];
+		$sTableCollation = $aTableInfo[0]['table_collation'];
+
+		if ((DEFAULT_CHARACTER_SET == $sTableCharset) && (DEFAULT_COLLATION == $sTableCollation))
+		{
+			return null;
+		}
+
+		return 'ALTER TABLE `'.$sTableName.'`'.CMDBSource::SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
 	}
 
 	/**

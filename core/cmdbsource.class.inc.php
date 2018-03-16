@@ -108,6 +108,14 @@ class MySQLHasGoneAwayException extends MySQLException
  */
 class CMDBSource
 {
+	/**
+	 * SQL charset & collation declaration for text columns
+	 *
+	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-column.html
+	 * @since 2.5 #1001 switch to utf8mb4
+	 */
+	const SQL_STRING_COLUMNS_CHARSET_DEFINITION = ' CHARACTER SET '.DEFAULT_CHARACTER_SET.' COLLATE '.DEFAULT_COLLATION;
+
 	protected static $m_sDBHost;
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
@@ -906,11 +914,22 @@ class CMDBSource
 		if (empty($aTableInfo)) return false;
 		if (!array_key_exists($sField, $aTableInfo["Fields"])) return false;
 		$aFieldData = $aTableInfo["Fields"][$sField];
+
 		$sRet = $aFieldData["Type"];
+
+		$sColumnCharset = $aFieldData["Charset"];
+		$sColumnCollation = $aFieldData["Collation"];
+		if (!empty($sColumnCharset))
+		{
+			$sRet .= ' CHARACTER SET '.$sColumnCharset;
+			$sRet .= ' COLLATE '.$sColumnCollation;
+		}
+
 		if ($aFieldData["Null"] == 'NO')
 		{
 			$sRet .= ' NOT NULL';
 		}
+
 		if (is_numeric($aFieldData["Default"]))
 		{
 			if (strtolower(substr($aFieldData["Type"], 0, 5)) == 'enum(')
@@ -928,6 +947,7 @@ class CMDBSource
 		{
 			$sRet .= ' DEFAULT '.self::Quote($aFieldData["Default"]);
 		}
+
 		return $sRet;
 	}
 
@@ -970,32 +990,34 @@ class CMDBSource
 	private static function _TableInfoCacheInit($sTableName)
 	{
 		if (isset(self::$m_aTablesInfo[strtolower($sTableName)])
-			&& (self::$m_aTablesInfo[strtolower($sTableName)] != null)) return;
-
-		try
+			&& (self::$m_aTablesInfo[strtolower($sTableName)] != null))
 		{
-			// Check if the table exists
-			$aFields = self::QueryToArray("SHOW COLUMNS FROM `$sTableName`");
-			// Note: without backticks, you get an error with some table names (e.g. "group")
-			foreach ($aFields as $aFieldData)
-			{
-				$sFieldName = $aFieldData["Field"];
-				self::$m_aTablesInfo[strtolower($sTableName)]["Fields"][$sFieldName] =
-					array
-					(
-						"Name"=>$aFieldData["Field"],
-						"Type"=>$aFieldData["Type"],
-						"Null"=>$aFieldData["Null"],
-						"Key"=>$aFieldData["Key"],
-						"Default"=>$aFieldData["Default"],
-						"Extra"=>$aFieldData["Extra"]
-					);
-			}
+			return;
 		}
-		catch(MySQLException $e)
+
+		// Create array entry, if table does not exist / has no columns
+		self::$m_aTablesInfo[strtolower($sTableName)] = null;
+
+		// Get table informations
+		//   We were using SHOW COLUMNS FROM... but this don't return charset and collation info !
+		//   so since 2.5 and #1001 (switch to utf8mb4) we're using INFORMATION_SCHEMA !
+		$aFields = self::QueryToArray('SELECT * FROM information_schema.`COLUMNS`'
+			.' WHERE table_schema = "'.self::$m_sDBName.'" AND table_name = "'.$sTableName.'";');
+		foreach ($aFields as $aFieldData)
 		{
-			// Table does not exist
-			self::$m_aTablesInfo[strtolower($sTableName)] = null;
+			$sFieldName = $aFieldData["COLUMN_NAME"];
+			self::$m_aTablesInfo[strtolower($sTableName)]["Fields"][$sFieldName] =
+				array
+				(
+					"Name" => $sFieldName,
+					"Type" => $aFieldData["COLUMN_TYPE"],
+					"Null" => $aFieldData["IS_NULLABLE"],
+					"Key" => $aFieldData["COLUMN_KEY"],
+					"Default" => $aFieldData["COLUMN_DEFAULT"],
+					"Extra" => $aFieldData["EXTRA"],
+					"Charset" => $aFieldData["CHARACTER_SET_NAME"],
+					"Collation" => $aFieldData["COLLATION_NAME"],
+				);
 		}
 
 		if (!is_null(self::$m_aTablesInfo[strtolower($sTableName)]))
@@ -1009,25 +1031,13 @@ class CMDBSource
 			self::$m_aTablesInfo[strtolower($sTableName)]["Indexes"] = $aMyIndexes;
 		}
 	}
-	//public static function EnumTables()
-	//{
-	//	self::_TablesInfoCacheInit();
-	//	return array_keys(self::$m_aTablesInfo);
-	//}
+
 	public static function GetTableInfo($sTable)
 	{
 		self::_TableInfoCacheInit($sTable);
 
 		// perform a case insensitive match because on Windows the table names become lowercase :-(
-		//foreach(self::$m_aTablesInfo as $sTableName => $aInfo)
-		//{
-		//	if (strtolower($sTableName) == strtolower($sTable))
-		//	{
-		//		return $aInfo;
-		//	}
-		//}
 		return self::$m_aTablesInfo[strtolower($sTable)];
-		//return null;
 	}
 
 	/**
