@@ -139,9 +139,6 @@ $(function()
 			});
 
 			// Criteria events
-			this.element.on('itop.search.criteria.opening', function(oEvent, oData){
-				me._onCriteriaOpening(oData);
-			});
 			this.element.on('itop.search.criteria.value_changed', function(oEvent, oData){
 				me._onCriteriaValueChanged(oData);
 			});
@@ -175,11 +172,6 @@ $(function()
 		// - Open / Close more criterion menu
 		_openMoreCriterion: function()
 		{
-			// Close all criterion
-			this.elements.active_criterion.find('.search_form_criteria').each(function(){
-				$(this).triggerHandler('itop.search.criteria.close');
-			});
-
 			// Open more criterion menu
 			// - Open it first
 			this.elements.more_criterion.addClass('opened');
@@ -210,6 +202,13 @@ $(function()
 				this._openMoreCriterion();
 			}
 		},
+		// - Close all criterion
+		_closeAllCriterion: function()
+		{
+			this.elements.active_criterion.find('.search_form_criteria').each(function(){
+				$(this).triggerHandler('itop.search.criteria.close');
+			});
+		},
 
 		// DOM helpers
 		// - Prepare form area
@@ -217,14 +216,21 @@ $(function()
 		{
 			var me = this;
 
+			// Events
+			// - Refresh icon
 			this.element.find('.sft_refresh').on('click', function(oEvent){
+				// Prevent anchor
 				oEvent.preventDefault();
+
 				me._submit();
 			});
+			// - Toggle icon
 			// TODO: UX Improvment
 			// Note: Would be better to toggle by clicking on the whole title, but we have an issue with <select> on abstract classes.
 			this.element.find('.sft_toggler').on('click', function(oEvent){
+				// Prevent anchor
 				oEvent.preventDefault();
+
 				me.element.find('.sf_criterion_area').slideToggle('fast');
 				me.element.toggleClass('opened');
 			});
@@ -320,14 +326,46 @@ $(function()
 			}
 
 			// Bind events
-			// - Open / close menu
+			// - Close menu on click anywhere else
+			// - Intercept click to avoid propagation (mostly used for closing it when clicking outside of it)
+			$('body').on('click', function(oEvent){
+				// Prevent propagation to parents and therefore multiple attempts to close it
+				oEvent.stopPropagation();
+
+				// If not more menu, close all criterion
+				if($(oEvent.target).closest('.sf_more_criterion').length > 0)
+				{
+					me._closeAllCriterion();
+				}
+				else
+				{
+					// If criteria, close more menu & all criterion but me
+					if($(oEvent.target).closest('.search_form_criteria').length > 0)
+					{
+						me._closeMoreCriterion();
+						// All criterion but me is already handle by the criterion, no callback needed.
+					}
+					// If not criteria, close more menu & all criterion
+					else
+					{
+						me._closeMoreCriterion();
+						me._closeAllCriterion();
+					}
+				}
+			});
 			this.elements.more_criterion.find('.sfm_header').on('click', function(oEvent){
+				// Prevent anchor
 				oEvent.preventDefault();
+
 				me._toggleMoreCriterion();
 			});
 			// - Add criteria
 			this.elements.more_criterion.find('.sfm_field').on('click', function(oEvent){
+				// Prevent anchor
 				oEvent.preventDefault();
+				// Prevent propagation to not close the opening criteria
+				oEvent.stopPropagation();
+
 				// Prepare new criterion data (as already opened to increase UX)
 				var oData = {
 					'ref': $(this).attr('data-field-ref'),
@@ -336,7 +374,6 @@ $(function()
 
 				// Add criteria but don't submit form as the user has not specified the value yet.
 				me._addCriteria(oData);
-				me._closeMoreCriterion();
 			});
 		},
 		// - Prepare results area
@@ -440,10 +477,6 @@ $(function()
 			return 'search_form_criteria' + '_' + (($.itop['search_form_criteria_'+sType] !== undefined) ? sType : 'raw');
 		},
 		// Criteria handlers
-		_onCriteriaOpening: function(oData)
-		{
-			this._closeMoreCriterion();
-		},
 		_onCriteriaValueChanged: function(oData)
 		{
 			this._updateSearch();

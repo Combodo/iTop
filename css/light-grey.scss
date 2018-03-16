@@ -854,17 +854,24 @@ input.dp-applied {
 		background-color: $box-blue-border-color;
 
 		/* Pictogram */
-		> span{
+		.sft_picto{
 			margin-right: 10px;
 		}
 
+		.sft_refresh,
+		.sft_toggler{
+			transition: color 0.2s ease-in-out, transform 0.4s ease-in-out;
+
+			&:hover{
+				color: $gray-extra-light;
+			}
+		}
 		.sft_refresh{
 			font-size: 10pt;
 			line-height: 13pt;
 		}
 		.sft_toggler{
 			margin-left: 0.7em;
-			transition: all 0.4s ease-in-out;
 		}
 	}
 	.sf_criterion_area{

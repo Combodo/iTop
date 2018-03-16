@@ -765,8 +765,14 @@ input.dp-applied {
   background-color: #3f7294;
   /* Pictogram */
 }
-.search_form_handler .sf_title > span {
+.search_form_handler .sf_title .sft_picto {
   margin-right: 10px;
+}
+.search_form_handler .sf_title .sft_refresh, .search_form_handler .sf_title .sft_toggler {
+  transition: color 0.2s ease-in-out, transform 0.4s ease-in-out;
+}
+.search_form_handler .sf_title .sft_refresh:hover, .search_form_handler .sf_title .sft_toggler:hover {
+  color: #f1f1f1;
 }
 .search_form_handler .sf_title .sft_refresh {
   font-size: 10pt;
@@ -774,7 +780,6 @@ input.dp-applied {
 }
 .search_form_handler .sf_title .sft_toggler {
   margin-left: 0.7em;
-  transition: all 0.4s ease-in-out;
 }
 .search_form_handler .sf_criterion_area {
   /*display: none;*/

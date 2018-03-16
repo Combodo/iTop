@@ -304,9 +304,12 @@ $(function()
 				.append('<div class="sfc_form_group"><div class="sfc_fg_operators"></div><div class="sfc_fg_buttons"></div></div>');
 
 			// Bind events
+			// Note: No event to handle criteria closing when clicking outside of it as it is already handle by the form handler.
 			// - Toggler
 			this.element.find('.sfc_toggle, .sfc_title').on('click', function(oEvent){
+				// Prevent anchor
 				oEvent.preventDefault();
+
 				// First memorize if current criteria is close
 				var bOpen = !me.element.hasClass('opened');
 				// Then close every criterion
@@ -323,7 +326,9 @@ $(function()
 			{
 				this.element.find('.sfc_header').append('<span class="sfc_close"><a class="fa fa-times" href="#"></a></span>');
 				this.element.find('.sfc_close').on('click', function(oEvent){
+					// Prevent anchor
 					oEvent.preventDefault();
+
 					me._remove();
 				});
 			}
@@ -345,8 +350,6 @@ $(function()
 			{
 				this._closeAll();
 				this._open();
-				// this.element.find('.sfc_toggle').trigger('click');
-				// this.element.find('.sfc_fg_operator:first .sfc_op_content input:first').trigger('click').trigger('focus');
 			}
 		},
 		// - Prepare the available operators for the criteria
