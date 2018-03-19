@@ -299,7 +299,7 @@ class CriterionConversionTest extends ItopDataTestCase
 	 * @dataProvider OqlProvider
 	 * @throws \OQLException
 	 */
-	function testOqlToForlSearchToOql($sOQL)
+	function testOqlToForSearchToOql($sOQL)
 	{
 		$oSearchForm = new SearchForm();
 		$oSearch = \DBSearch::FromOQL($sOQL);
