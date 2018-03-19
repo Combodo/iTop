@@ -47,7 +47,10 @@ abstract class Expression
 	 *
 	 * @return array parameters for the search form
 	 */
-	abstract public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null);
+	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		return $this->Render($aArgs, $bRetrofitParams);
+	}
 
 	/**
 	 * Recursively browse the expression tree
@@ -159,6 +162,7 @@ abstract class Expression
 		return array(
 			'widget' => AttributeDefinition::SEARCH_WIDGET_TYPE,
 			'oql' => $this->Render($aArgs, $bRetrofitParams),
+			'label' => $this->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef),
 			'source' => get_class($this),
 		);
 	}
@@ -200,11 +204,6 @@ class SQLExpression extends Expression
 	public function IsTrue()
 	{
 		return false;
-	}
-
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
-	{
-		return $this->Render($aArgs, $bRetrofitParams);
 	}
 
 	// recursive rendering
@@ -504,6 +503,7 @@ class BinaryExpression extends Expression
 			$aCriteria['operator'] = $this->GetOperator();
 		}
 		$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
+		$aCriteria['label'] = $this->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 
 		return $aCriteria;
 	}
@@ -528,11 +528,6 @@ class UnaryExpression extends Expression
 	public function GetValue()
 	{
 		return $this->m_value;
-	}
-
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
-	{
-		return $this->Render($aArgs, $bRetrofitParams);
 	}
 
 	// recursive rendering
@@ -1149,11 +1144,6 @@ class ListExpression extends Expression
 		return $this->m_aExpressions;
 	}
 
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
-	{
-		return $this->Render($aArgs, $bRetrofitParams);
-	}
-
 	// recursive rendering
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
@@ -1297,11 +1287,6 @@ class FunctionExpression extends Expression
 	public function GetArgs()
 	{
 		return $this->m_aArgs;
-	}
-
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
-	{
-		return $this->Render($aArgs, $bRetrofitParams);
 	}
 
 	// recursive rendering
@@ -1502,11 +1487,6 @@ class IntervalExpression extends Expression
 		return $this->m_sUnit;
 	}
 
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
-	{
-		return $this->Render($aArgs, $bRetrofitParams);
-	}
-
 	// recursive rendering
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
@@ -1584,11 +1564,6 @@ class CharConcatExpression extends Expression
 	public function GetItems()
 	{
 		return $this->m_aExpressions;
-	}
-
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
-	{
-		return $this->Render($aArgs, $bRetrofitParams);
 	}
 
 	// recursive rendering
@@ -1703,10 +1678,6 @@ class CharConcatWSExpression extends CharConcatExpression
 		parent::__construct($aExpressions);
 	}
 
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
-	{
-		return $this->Render($aArgs, $bRetrofitParams);
-	}
 	// recursive rendering
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
