@@ -146,6 +146,7 @@ class SearchForm
 		{
 			$aListParams['table_inner_id'] = uniqid('table_inner_id_');
 		}
+		// When table_id is different of result_list_outer_selector
 		if (array_key_exists('table_id2', $aExtraParams))
 		{
 			$aListParams['table_id'] = $aExtraParams['table_id2'];

@@ -289,6 +289,23 @@ class UILinksWidgetDirect
 	{
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
 
+		$oHiddenFilter = new DBObjectSearch($this->sLinkedClass);
+		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($this->sLinkedClass, $this->sClass))
+		{
+			// Prevent linking to self if the linked object is of the same family
+			// and already present in the database
+			if (!$oCurrentObj->IsNew())
+			{
+				$oHiddenFilter->AddCondition('id', $oCurrentObj->GetKey(), '!=');
+			}
+		}
+		if (count($aAlreadyLinked) > 0)
+		{
+			$oHiddenFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
+		}
+		$oHiddenCriteria = $oHiddenFilter->GetCriteria();
+		$sHiddenCriteria = $oHiddenCriteria->Render();
+
 		$oLinkSetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		$valuesDef = $oLinkSetDef->GetValuesDef();
 		if ($valuesDef === null)
@@ -303,25 +320,11 @@ class UILinksWidgetDirect
 			}
 			$oFilter = DBObjectSearch::FromOQL($valuesDef->GetFilterExpression());
 		}
+
 		if ($oCurrentObj != null)
 		{
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
-		}
-		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($this->sLinkedClass, $this->sClass))
-		{
-			// Prevent linking to self if the linked object is of the same family
-			// and already present in the database
-			if (!$oCurrentObj->IsNew())
-			{
-				$oFilter->AddCondition('id', $oCurrentObj->GetKey(), '!=');
-			}
-		}
-		if (count($aAlreadyLinked) > 0)
-		{
-			$oFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
-		}
-		if ($oCurrentObj != null)
-		{
+
 			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
 			$oFilter->SetInternalParams($aArgs);
 		}
@@ -335,6 +338,7 @@ class UILinksWidgetDirect
 				'table_inner_id' => "ResultsToAdd_{$this->sInputid}",
 				'cssCount' => "#count_{$this->sInputid}",
 				'query_params' => $oFilter->GetInternalParams(),
+				'hidden_criteria' => $sHiddenCriteria,
 			)
         );
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->sInputid}\">\n";

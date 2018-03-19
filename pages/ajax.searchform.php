@@ -50,12 +50,20 @@ try
 	$oPage->no_cache();
 	$oPage->SetContentType('text/html');
 
-	$aParams = json_decode($sParams, true);
-	$oFilter = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion']);
-	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
-
 	$sListParams = utils::ReadParam('list_params', '{}', false, 'raw_data');
-	$aListParams = (array) json_decode($sListParams, true);
+	$aListParams = (array)json_decode($sListParams, true);
+
+	$aParams = json_decode($sParams, true);
+	if (array_key_exists('hidden_criteria', $aListParams))
+	{
+		$sHiddenCriteria = $aListParams['hidden_criteria'];
+	}
+	else
+	{
+		$sHiddenCriteria = '';
+	}
+	$oFilter = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion'], $sHiddenCriteria);
+	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
 
 	foreach($aListParams as $key => $value)
     {

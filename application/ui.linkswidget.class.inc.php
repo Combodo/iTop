@@ -397,11 +397,20 @@ EOF
 	{
 		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
-		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
+
+		$oAlreadyLinkedFilter = new DBObjectSearch($this->m_sRemoteClass);
 		if (!$this->m_bDuplicatesAllowed && count($aAlreadyLinkedIds) > 0)
 		{
-			$oFilter->AddCondition('id', $aAlreadyLinkedIds, 'NOTIN');
+			$oAlreadyLinkedFilter->AddCondition('id', $aAlreadyLinkedIds, 'NOTIN');
+			$oAlreadyLinkedExpression = $oAlreadyLinkedFilter->GetCriteria();
+			$sAlreadyLinkedExpression = $oAlreadyLinkedExpression->Render();
 		}
+		else
+		{
+			$sAlreadyLinkedExpression = '';
+		}
+
+		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 		if ($oCurrentObj != null)
 		{
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
@@ -418,6 +427,7 @@ EOF
 				'json' => $sJson,
 				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
 				'query_params' => $oFilter->GetInternalParams(),
+				'hidden_criteria' => $sAlreadyLinkedExpression,
 			));
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
 		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";

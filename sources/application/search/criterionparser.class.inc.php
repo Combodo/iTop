@@ -31,6 +31,7 @@ namespace Combodo\iTop\Application\Search;
 
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToOQL;
 use DBObjectSearch;
+use Expression;
 use IssueLog;
 use OQLException;
 
@@ -40,10 +41,11 @@ class CriterionParser
 	/**
 	 * @param $sBaseOql
 	 * @param $aCriterion
+	 * @param $sHiddenCriteria
 	 *
 	 * @return \DBSearch
 	 */
-	public static function Parse($sBaseOql, $aCriterion)
+	public static function Parse($sBaseOql, $aCriterion, $sHiddenCriteria = null)
 	{
 		$aExpression = array();
 		$aOr = $aCriterion['or'];
@@ -60,14 +62,21 @@ class CriterionParser
 		try
 		{
 			$oSearch = DBObjectSearch::FromOQL($sBaseOql);
+
+			if (!empty($sHiddenCriteria))
+			{
+				$oHiddenCriteriaExpression = Expression::FromOQL($sHiddenCriteria);
+				$oSearch->AddConditionExpression($oHiddenCriteriaExpression);
+			}
+
 			if (empty($aExpression))
 			{
 				return $oSearch;
 			}
 
-			$oExpression = \Expression::FromOQL(implode(" OR ", $aExpression));
+			$oExpression = Expression::FromOQL(implode(" OR ", $aExpression));
 			$oSearch->AddConditionExpression($oExpression);
-			
+
 			return $oSearch;
 		} catch (OQLException $e)
 		{
