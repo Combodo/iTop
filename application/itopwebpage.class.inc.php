@@ -111,8 +111,10 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
 		$sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
-		$this->add_dict_entry('UI:Button:Cancel');
-		$this->add_dict_entry('UI:Button:Done');
+
+		$this->add_dict_entries('UI:Search:');
+		$this->add_dict_entries('UI:Button:');
+
 
 		if (!$this->IsPrintableVersion())
 		{
