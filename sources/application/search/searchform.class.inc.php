@@ -159,6 +159,7 @@ class SearchForm
 			'date_format' => AttributeDateTime::GetFormat()->ToMomentJS(),
 			'list_params' => $aListParams,
 			'search' => array(
+				'has_hidden_criteria' => (array_key_exists('hidden_criteria', $aListParams) && !empty($aListParams['hidden_criteria'])),
 				'fields' => $aFields,
 				'criterion' => $aCriterion,
 				'base_oql' => $sBaseOQL,
@@ -308,46 +309,47 @@ class SearchForm
 	}
 
 	/**
-	 * @param $sClassName
+	 * @param $sClass
 	 * @param $sClassAlias
 	 * @param $sFilterCode
-	 * @param $oAttrDef
+	 * @param $oAttDef
 	 * @param $aFields
 	 *
 	 * @return mixed
 	 */
-	private function AppendField($sClassName, $sClassAlias, $sFilterCode, $oAttrDef, $aFields)
+	private function AppendField($sClass, $sClassAlias, $sFilterCode, $oAttDef, $aFields)
 	{
-		if (!is_null($oAttrDef) && ($oAttrDef->GetSearchType() != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
+		if (!is_null($oAttDef) && ($oAttDef->GetSearchType() != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
 		{
-			$sLabel = $oAttrDef->GetLabel();
+			$sLabel = $oAttDef->GetLabel();
 			if (!array_key_exists($sLabel, $this->aLabels))
 			{
 				$aField = array();
 				$aField['code'] = $sFilterCode;
-				$aField['class'] = $sClassName;
+				$aField['class'] = $sClass;
 				$aField['class_alias'] = $sClassAlias;
 				$aField['label'] = $sLabel;
-				$aField['widget'] = $oAttrDef->GetSearchType();
-				$aField['allowed_values'] = self::GetFieldAllowedValues($oAttrDef);
+				$aField['widget'] = $oAttDef->GetSearchType();
+				$aField['allowed_values'] = self::GetFieldAllowedValues($oAttDef);
+				$aField['is_null_allowed'] = $oAttDef->IsNullAllowed();
 				$aFields[$sClassAlias.'.'.$sFilterCode] = $aField;
 				$this->aLabels[$sLabel] = true;
 			}
 
 			// Sub items
 			//
-			//	if ($oAttDef->IsSearchable())
-			//	{
-			//		$sShortLabel = $oAttDef->GetLabel();
-			//		$sLabel = $sShortAlias.$oAttDef->GetLabel();
-			//		$aSubAttr = $this->GetSubAttributes($sClass, $sAttCode, $oAttDef);
-			//		$aValidSubAttr = array();
-			//		foreach($aSubAttr as $aSubAttDef)
-			//		{
-			//			$aValidSubAttr[] = array('attcodeex' => $aSubAttDef['code'], 'code' => $sShortAlias.$aSubAttDef['code'], 'label' => $aSubAttDef['label'], 'unique_label' => $sShortAlias.$aSubAttDef['unique_label']);
-			//		}
-			//		$aAllFields[] = array('attcodeex' => $sAttCode, 'code' => $sShortAlias.$sAttCode, 'label' => $sShortLabel, 'unique_label' => $sLabel, 'subattr' => $aValidSubAttr);
-			//	}
+			//			if ($oAttDef->IsSearchable())
+			//			{
+			//				$sShortLabel = $oAttDef->GetLabel();
+			//				$sLabel = $sShortAlias.$oAttDef->GetLabel();
+			//				$aSubAttr = $this->GetSubAttributes($sClass, $sFilterCode, $oAttDef);
+			//				$aValidSubAttr = array();
+			//				foreach($aSubAttr as $aSubAttDef)
+			//				{
+			//					$aValidSubAttr[] = array('attcodeex' => $aSubAttDef['code'], 'code' => $sShortAlias.$aSubAttDef['code'], 'label' => $aSubAttDef['label'], 'unique_label' => $sShortAlias.$aSubAttDef['unique_label']);
+			//				}
+			//				$aAllFields[] = array('attcodeex' => $sFilterCode, 'code' => $sShortAlias.$sFilterCode, 'label' => $sShortLabel, 'unique_label' => $sLabel, 'subattr' => $aValidSubAttr);
+			//			}
 
 		}
 
