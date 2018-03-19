@@ -609,7 +609,7 @@ EOF
 	function GetBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix, $aExtraParams = array())
 	{
 		$sHtml = '';
-		$oAppContext = new ApplicationContext();	
+		$oAppContext = new ApplicationContext();
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		$aDetails = array();
 		$sClass = get_class($this);
@@ -625,28 +625,28 @@ EOF
 		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
 		$aExtraFlags = (isset($aExtraParams['fieldsFlags'])) ? $aExtraParams['fieldsFlags'] : array();
 		$bFieldComments = (count($aFieldsComments) > 0);
-		
-		foreach($aDetailsStruct as $sTab => $aCols )
+
+		foreach($aDetailsStruct as $sTab => $aCols)
 		{
 			$aDetails[$sTab] = array();
-            $aTableStyles[] = 'vertical-align:top';
-            $aTableClasses = array();
+			$aTableStyles[] = 'vertical-align:top';
+			$aTableClasses = array();
 			$aColStyles[] = 'vertical-align:top';
 			$aColClasses = array();
 
-            ksort($aCols);
+			ksort($aCols);
 			$iColCount = count($aCols);
-			if($iColCount > 1)
-            {
-	            $aTableClasses[] = 'n-cols-details';
-	            $aTableClasses[] = $iColCount.'-cols-details';
+			if ($iColCount > 1)
+			{
+				$aTableClasses[] = 'n-cols-details';
+				$aTableClasses[] = $iColCount.'-cols-details';
 
-	            $aColStyles[] = 'width:'.floor(100/$iColCount).'%';
-            }
-            else
-            {
-	            $aTableClasses[] = 'one-col-details';
-            }
+				$aColStyles[] = 'width:'.floor(100 / $iColCount).'%';
+			}
+			else
+			{
+				$aTableClasses[] = 'one-col-details';
+			}
 
 			$oPage->SetCurrentTab(Dict::S($sTab));
 			$oPage->add('<table style="'.implode('; ', $aTableStyles).'" class="'.implode(' ', $aTableClasses).'" data-mode="'.$sEditMode.'"><tr>');
@@ -659,7 +659,7 @@ EOF
 				$aDetails[$sTab][$sColIndex] = array();
 				foreach($aFieldsets as $sFieldsetName => $aFields)
 				{
-				    if (!empty($sFieldsetName) && ($sFieldsetName[0] != '_'))
+					if (!empty($sFieldsetName) && ($sFieldsetName[0] != '_'))
 					{
 						$sLabel = $sFieldsetName;
 					}
@@ -688,90 +688,93 @@ EOF
 						{
 
 
-						$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
-						$sInfos = '';
-						$iFlags = $this->GetFormAttributeFlags($sAttCode);
-						if (array_key_exists($sAttCode, $aExtraFlags))
-						{
-							// the caller may override some flags if needed
-							$iFlags = $iFlags | $aExtraFlags[$sAttCode];
-						}
-						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
-						{
-							$sInputId = $this->m_iFormId.'_'.$sAttCode;
-							if ($oAttDef->IsWritable())
+							$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
+							$sInfos = '';
+							$iFlags = $this->GetFormAttributeFlags($sAttCode);
+							if (array_key_exists($sAttCode, $aExtraFlags))
 							{
-								if ($sStateAttCode == $sAttCode)
+								// the caller may override some flags if needed
+								$iFlags = $iFlags | $aExtraFlags[$sAttCode];
+							}
+							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
+							{
+								$sInputId = $this->m_iFormId.'_'.$sAttCode;
+								if ($oAttDef->IsWritable())
 								{
-									// State attribute is always read-only from the UI
-									$sHTMLValue = $this->GetStateLabel();
-									$val = array('label' => '<label>'.$oAttDef->GetLabel().'</label>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
-								}
-								else
-								{				
-									if ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE))
+									if ($sStateAttCode == $sAttCode)
 									{
-										// Check if the attribute is not read-only because of a synchro...
-										if ($iFlags & OPT_ATT_SLAVE)
-										{
-											$aReasons = array();
-											$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
-											$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
-											$sTip = '';
-											foreach($aReasons as $aRow)
-											{
-												$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
-												$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
-												$sTip .= "<div class='synchro-source'>";
-												$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
-												$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
-											}
-											$sTip = addslashes($sTip);
-											$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
-											$sComments = $sSynchroIcon;
-										}
-
-										// Attribute is read-only
-										$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode).'</span>';
+										// State attribute is always read-only from the UI
+										$sHTMLValue = $this->GetStateLabel();
+										$val = array('label' => '<label>'.$oAttDef->GetLabel().'</label>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
 									}
 									else
 									{
-										$sValue = $this->Get($sAttCode);
-										$sDisplayValue = $this->GetEditValue($sAttCode);
-										$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-										$sHTMLValue = "".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'';
+										if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE))
+										{
+											// Check if the attribute is not read-only because of a synchro...
+											if ($iFlags & OPT_ATT_SLAVE)
+											{
+												$aReasons = array();
+												$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
+												$sTip = '';
+												foreach($aReasons as $aRow)
+												{
+													$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
+													$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
+													$sTip .= "<div class='synchro-source'>";
+													$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
+													$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
+												}
+												$sTip = addslashes($sTip);
+												$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+												$sComments = $sSynchroIcon;
+											}
+
+											// Attribute is read-only
+											$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode).'</span>';
+										}
+										else
+										{
+											$sValue = $this->Get($sAttCode);
+											$sDisplayValue = $this->GetEditValue($sAttCode);
+											$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
+											$sHTMLValue = "".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'';
+										}
+										$aFieldsMap[$sAttCode] = $sInputId;
+										$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
 									}
+								}
+								else
+								{
+									$val = array(
+										'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
+										'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>",
+										'comments' => $sComments,
+										'infos' => $sInfos,
+										'attcode' => $sAttCode
+									);
 									$aFieldsMap[$sAttCode] = $sInputId;
-									$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
+								}
+
+								// Checking how the field should be rendered
+								// Note: For view mode, this is done in cmdbAbstractObject::GetFieldAsHtml()
+								// Note 2: Shouldn't this be a property of the AttDef instead an array that we have to maintain?
+								if (in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
+								{
+									$val['layout'] = 'large';
+								}
+								else
+								{
+									$val['layout'] = 'small';
 								}
 							}
 							else
 							{
-								$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>", 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
-								$aFieldsMap[$sAttCode] = $sInputId;	
+								$val = null; // Skip this field
 							}
 
-                            // Checking how the field should be rendered
-                            // Note: For view mode, this is done in cmdbAbstractObject::GetFieldAsHtml()
-							// Note 2: Shouldn't this be a property of the AttDef instead an array that we have to maintain?
-                            if(in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
-                            {
-                                $val['layout'] = 'large';
-                            }
-                            else
-                            {
-                                $val['layout'] = 'small';
-                            }
-						}
-						else
-						{
-							$val = null; // Skip this field
-						}
-
-
-
-							
 						}
 						else
 						{
@@ -781,10 +784,10 @@ EOF
 
 						if ($val != null)
 						{
-						    // The field is visible, add it to the current column
+							// The field is visible, add it to the current column
 							$aDetails[$sTab][$sColIndex][] = $val;
 							$iInputId++;
-						}				
+						}
 					}
 				}
 				if (!empty($sPreviousLabel))
@@ -801,6 +804,7 @@ EOF
 			}
 			$oPage->add('</tr></table>');
 		}
+
 		return $aFieldsMap;
 	}
 
@@ -819,6 +823,7 @@ EOF
 		{
 			// Object's details
 			// template not found display the object using the *old style*
+			$oPage->add('<div id="search-widget-results-outer">');
 			$this->DisplayBareHeader($oPage, $bEditMode);
 			$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 			$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
@@ -828,6 +833,7 @@ EOF
 			//$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
 			//$this->DisplayBareHistory($oPage, $bEditMode);
 			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.get_class($this).'&id='.$this->GetKey());
+			$oPage->add('</div>');
 		}
 	}
 	
