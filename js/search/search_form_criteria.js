@@ -242,9 +242,16 @@ $(function()
 
 			// Update widget
 			this.options.operator = oActiveOpElem.find('.sfc_op_radio').val();
-			this.options.values = aValues;
-			this._setTitle();
+
+			if (JSON.stringify(this.options.values) != JSON.stringify(aValues))
+			{
+				this.is_modified = true;
+				this.options.oql = '';
+				this.options.values = aValues;
+				this._setTitle();
+			}
 			this._unmarkAsDraft();
+
 
 			// Trigger event to handler
 			this.handler.triggerHandler('itop.search.criteria.value_changed');
