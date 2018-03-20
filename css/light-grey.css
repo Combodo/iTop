@@ -884,6 +884,9 @@ input.dp-applied {
   margin: 0px;
   margin-right: 7px;
 }
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_op_name {
+  width: 90px;
+}
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices label > input {
   vertical-align: middle;
   margin-right: 8px;
