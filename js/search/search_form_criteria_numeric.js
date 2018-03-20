@@ -95,39 +95,82 @@ $(function()
 		},
 
 
-		// // Prepare operator's DOM element
-		// _prepareBetweenOperator: function(oOpElem, sOpIdx, oOp)
-		// {
-		// 	var me = this;
-		//
-		// 	// DOM element
-		// 	var oOpContentElem = $('<input type="text" />');
-		// 	oOpContentElem.val(this._getValuesAsText());
-		//
-		// 	// Events
-		// 	// - Focus input on click (radio, label, ...)
-		// 	oOpElem.on('click', ':not(input[type="text"])', function(){
-		// 		oOpContentElem.focus();
-		// 	});
-		// 	// - Apply on "enter" key hit
-		// 	oOpContentElem.on('keyup', function(oEvent){
-		// 		// Check operator's radio if not already (typically when focusing in input via "tab" key)
-		// 		if(oOpElem.find('.sfc_op_radio').prop('checked') === false)
-		// 		{
-		// 			oOpElem.find('.sfc_op_radio').prop('checked', true)
-		// 		}
-		//
-		// 		me._markAsDraft();
-		//
-		// 		// Apply if enter key
-		// 		if(oEvent.key === 'Enter')
-		// 		{
-		// 			me._apply();
-		// 		}
-		// 	});
-		//
-		// 	oOpElem.find('.sfc_op_content').append(oOpContentElem);
-		// },
+		// Prepare operator's DOM element
+		_prepareBetweenOperator: function(oOpElem, sOpIdx, oOp)
+		{
+			var me = this;
+
+			aValues = me._getValues();
+
+			// DOM elements
+			var oOpContentElemFrom = $('<input type="text" name="from" />').uniqueId();
+			if (0 in aValues)
+			{
+				oOpContentElemFrom.val(aValues[0]);
+			}
+
+			var oOpContentElemUntil = $('<input type="text" name="until" />').uniqueId();
+			if (1 in aValues)
+			{
+				oOpContentElemUntil.val(aValues[1]);
+			}
+
+			oOpContentElemFrom.data('focusNext', '#'+oOpContentElemUntil.attr('id'));
+			// oOpContentElemUntil.data('focusNext', '#'+oOpContentElemFrom.attr('id'));
+
+
+			oOpContentElem = $().add(oOpContentElemFrom).add(oOpContentElemUntil);
+
+			// Events
+			// - Focus input on click (radio, label, ...)
+			oOpElem.on('click', function(oEvent){
+				if ($(oEvent.target).is('input[type="text"], select')) {
+					return;
+				}
+				oOpContentElemFrom.focus();
+			});
+			// - Apply on "enter" key hit
+			oOpContentElem.on('keyup', function(oEvent){
+				// Check operator's radio if not already (typically when focusing in input via "tab" key)
+				if(oOpElem.find('.sfc_op_radio').prop('checked') === false)
+				{
+					oOpElem.find('.sfc_op_radio').prop('checked', true)
+				}
+
+				me._markAsDraft();
+
+				// Apply if enter key
+				if(oEvent.key === 'Enter')
+				{
+					if (focusNext = $(this).data('focusNext'))
+					{
+						$(focusNext).focus();
+					}
+					else
+					{
+						me._apply();
+					}
+				}
+
+
+			});
+
+			oOpElem.find('.sfc_op_content').append(oOpContentElem);
+		},
+
+		_getBetweenOperatorValues: function(oOpElem)
+		{
+			var aValues = [];
+
+			var sValueFrom  = oOpElem.find('.sfc_op_content input[name="from"]').val();
+			var sValueUntil = oOpElem.find('.sfc_op_content input[name="until"]').val();
+
+			aValues.push({value: sValueFrom, label: sValueFrom});
+			aValues.push({value: sValueUntil, label: sValueUntil});
+
+
+			return aValues;
+		},
 
 		//------------------
 		// Inherited methods
@@ -155,7 +198,7 @@ $(function()
 
 				oDropdown.on('change', function(){
 					$option = $(this);
-					me.element.find('.sfc_op_radio').val($option.val());
+					me.element.find('.sfc_fg_operator_dropdown_group .sfc_op_radio').val($option.val());
 
 					oOptionOp = $option.data('oOp');
 					$option.attr('data-operator-code', oOptionOp.code);
@@ -174,7 +217,7 @@ $(function()
 					.find('.sfc_op_radio')
 						.val(sOpIdx)
 					.end()
-					.on('click', function(){
+					.on('click', function(oEvent){
 						var bIsChecked = oOpElemDropdown.find('.sfc_op_radio').prop('checked');
 
 						if(bIsChecked === false)
@@ -182,6 +225,7 @@ $(function()
 							oOpElemDropdown.find('.sfc_op_radio').prop('checked', true);
 							me._markAsDraft();
 						}
+						oOpElemDropdown.find('input[type="text"]:first').focus();
 					})
 					.appendTo(this.element.find('.sfc_fg_operators'))
 				;

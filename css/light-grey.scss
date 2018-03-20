@@ -1154,6 +1154,18 @@ input.dp-applied {
 					}
 				}
 			}
+			&.search_form_criteria_numeric {
+				.sfc_fg_operator_dropdown_group {
+					select {
+						width: 88px;
+					}
+				}
+				.sfc_fg_operator_between {
+					input {
+						width: 88px;
+					}
+				}
+			}
 		}
 
 		/* More criterion */

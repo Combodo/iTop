@@ -1401,7 +1401,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => '>=',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => '<=',
-	'UI:Search:Criteria:Operator:Numeric:DifferentThan' => 'Different than:',
+	'UI:Search:Criteria:Operator:Numeric:DifferentThan' => 'Not',
 	'UI:Search:Criteria:Operator:Numeric:Between' => 'Between:',
 
 	// - Criteria titles

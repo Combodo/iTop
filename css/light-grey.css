@@ -1002,6 +1002,12 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_enum .sfc_fg_operator_in > label .sfc_op_content {
   width: 100%;
 }
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_dropdown_group select {
+  width: 88px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_between input {
+  width: 88px;
+}
 .search_form_handler .sf_criterion_area .sf_more_criterion.opened {
   z-index: 2;
   /* To be over criterion */

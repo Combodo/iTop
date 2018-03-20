@@ -511,7 +511,10 @@ $(function()
 
 			// Events
 			// - Focus input on click (radio, label, ...)
-			oOpElem.on('click', ':not(input[type="text"])', function(){
+			oOpElem.on('click', ':not(input[type="text"], select)', function(oEvent) {
+				if ($(oEvent.target).is('input[type="text"], select')) {
+					return;
+				}
 				oOpContentElem.focus();
 			});
 			// - Apply on "enter" key hit
@@ -579,7 +582,7 @@ $(function()
 
 		// Values helpers
 		// - Convert values to a standard string
-		_getValuesAsText: function()
+		_getValues: function()
 		{
 			var aValues = [];
 			for(var iValueIdx in this.options.values)
@@ -587,7 +590,14 @@ $(function()
 				aValues.push(this.options.values[iValueIdx].label);
 			}
 
-			return aValues.join(', ');
+			return aValues;
+		},
+		// - Convert values to a standard string
+		_getValuesAsText: function()
+		{
+
+
+			return this._getValues().join(', ');
 		},
 		// - Make an OQL expression from the criteria values and operator
 		_makeOQLExpression: function()
