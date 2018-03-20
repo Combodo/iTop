@@ -170,7 +170,7 @@ function UpdateFileName(id, sNewFileName) {
 /**
  * Reload a search form for the specified class
  */
-function ReloadSearchForm(divId, sClassName, sBaseClass, sContext) {
+function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId) {
 	var oDiv = $('#ds_'+divId);
 	oDiv.block();
 	// deprecated in jQuery 1.8 
@@ -196,6 +196,7 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext) {
 	oMap.className = sClassName;
 	oMap.baseClass = sBaseClass;
 	oMap.currentId = divId;
+	oMap._table_id_ = sTableId;
 	oMap.action = sAction;
 
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, oMap,

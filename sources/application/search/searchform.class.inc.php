@@ -107,7 +107,7 @@ class SearchForm
 			$aOptions[MetaModel::GetName($sClassName)] = "<option selected value=\"$sClassName\">".MetaModel::GetName($sClassName)."</options>\n";
 			ksort($aOptions);
 			$sContext = $oAppContext->GetForLink();
-			$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext')\">\n".implode('',
+			$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '{$aExtraParams['table_id']}')\">\n".implode('',
 					$aOptions)."</select>\n";
 		}
 		else
@@ -119,8 +119,8 @@ class SearchForm
 		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"{$sAction}\" class=\"{$sStyle}\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
 		$sHtml .= "<h2 class=\"sf_title\"><span class=\"sft_picto fa fa-search\"></span>" . Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo) . "<a class=\"sft_toggler fa fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a><a class=\"sft_refresh fa fa-refresh pull-right\" href=\"#\" title=\"" . Dict::S('UI:Button:Refresh') . "\"></a></h2>\n";
 		$sHtml .= "<div id=\"fs_{$sSearchFormId}_message\" class=\"sf_message header_message\"></div>\n";
-		$sHtml .= "<div id=\"fs_{$sSearchFormId}_criterion_outer\">\n";
-		$sHtml .= "</div>\n</form>\n";
+		$sHtml .= "<div id=\"fs_{$sSearchFormId}_criterion_outer\">\n</div>\n";
+		$sHtml .= "</form>\n";
 
 		$aFields = $this->GetFields($oSet);
 		$oSearch = $oSet->GetFilter();
@@ -145,7 +145,7 @@ class SearchForm
 		}
 		if (!array_key_exists('table_inner_id', $aExtraParams))
 		{
-			$aListParams['table_inner_id'] = uniqid('table_inner_id_');
+			$aListParams['table_inner_id'] = "table_inner_id_{$sSearchFormId}";
 		}
 		// When table_id is different of result_list_outer_selector
 		if (array_key_exists('table_id2', $aExtraParams))
