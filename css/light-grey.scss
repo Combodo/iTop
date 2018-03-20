@@ -756,36 +756,6 @@ input.dp-applied {
 }
 
 /* For search forms */
-/* TODO: Remove when cleaning up old search */
-/*.SearchDrawer {
-	//background: $complement-color url(../images/search-top-left-corner.png?v=#{$version}) top left no-repeat;
-	border-top: 5px solid $complement-color;
-	border-left: 5px solid $complement-color;
-	border-right: 5px solid $complement-color;
-	border-bottom: 0;
-	background: $complement-light;
-	color: #000;
-	padding: 10px;
-	margin: 0;
-	font-size: 12px;
-}
-.SearchDrawer label {
-	background: $complement-light;
-	color: #000;
-	text-align: right;
-}
-.SearchDrawer h1 {
-	color: #000;
-}
-.SearchDrawer .SearchAttribute{
-	> .field_input_zone{
-		display: inline-block;
-
-		> .field_select_wrapper{
-			display: inline-block;
-		}
-	}
-}*/
 .mini_tabs a {
 	text-decoration: none;
 	font-weight:bold;
@@ -835,6 +805,10 @@ input.dp-applied {
 		color: inherit;
 		text-decoration: none;
 	}
+	/* Input reset */
+	input[type="text"]{
+		padding: 1px 2px;
+	}
 
 	&.opened{
 		.sf_title{
@@ -873,6 +847,11 @@ input.dp-applied {
 		.sft_toggler{
 			margin-left: 0.7em;
 		}
+	}
+	.sf_message{
+		display: none;
+		margin: 8px 8px 0px 8px;
+		border-radius: 0px;
 	}
 	.sf_criterion_area{
 		/*display: none;*/
@@ -926,7 +905,8 @@ input.dp-applied {
 			display: inline-block;
 			margin-right: 5px;
 
-            /* Non editable criteria */
+
+			/* Non editable criteria */
 			&.locked{
 				background-color: $gray-extra-light;
 			}
@@ -978,6 +958,12 @@ input.dp-applied {
 			.sfc_title{
 				padding-right: 35px;
 				cursor: pointer;
+				/* Uncomment to try fixed width criteria tabs */
+				/*max-width: 240px;
+				padding-right: 25px;
+				white-space: nowrap;
+				overflow-x: hidden;
+				text-overflow: ellipsis;*/
 			}
 			.sfc_form_group{
 				/* Form group (operators) is displayed only when the criteria is toggled to opened state */
@@ -1001,6 +987,40 @@ input.dp-applied {
 							width: 12px;
 							margin: 0px;
 							margin-right: 7px;
+						}
+
+						.sfc_opc_multichoices{
+							label > input{
+								vertical-align: middle;
+								margin-right: 8px;
+							}
+							.sfc_opc_mc_toggler{
+
+							}
+							.sfc_opc_mc_filter{
+								position: relative;
+
+								input{
+									width: 100%;
+								}
+								.sfc_opc_mcf_picto{
+									position: absolute;
+									right: 5px;
+									top: 5px;
+									opacity: 0.6;
+									user-select: none;
+								}
+							}
+							.sfc_opc_mc_items{
+								.sfc_opc_mc_item{
+									margin-top: 5px;
+
+									label{
+										display: inline-block;
+										width: 100%;
+									}
+								}
+							}
 						}
 
 						/* Common operators for most criteria types processing*/

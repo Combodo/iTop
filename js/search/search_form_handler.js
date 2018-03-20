@@ -64,13 +64,13 @@ $(function()
 					// },
 				],
 			},
-			'supported_criterion_types': ['raw', 'string'],
 			'default_criteria_type': 'raw',
 		},
 
 		// jQuery elements
 		elements:
 		{
+			message_area: null,
 			active_criterion: null,
 			more_criterion: null,
 			results_area: null,
@@ -215,6 +215,11 @@ $(function()
 		_prepareFormArea: function()
 		{
 			var me = this;
+
+			// Build DOM elements
+			// - Message area
+			this.elements.message_area = this.element.find('.sf_message');
+			this._cleanMessageArea();
 
 			// Events
 			// - Refresh icon
@@ -426,6 +431,7 @@ $(function()
 						class_alias: oFieldDef.class_alias,
 						code: oFieldDef.code,
 						widget: oFieldDef.widget,
+						allowed_values: oFieldDef.allowed_values,
 					};
 				}
 
@@ -445,28 +451,16 @@ $(function()
 		// - Find a criteria's type from a field's ref (usually <CLASS_ALIAS>.<ATT_CODE>)
 		_getCriteriaTypeFromFieldRef: function(sRef)
 		{
-			var sType = null;
+			// Fallback for unknown widget types or unknown field refs
+			var sType = this.options.default_criteria_type;
 
 			for(var sListIdx in this.options.search.fields)
 			{
 				if(this.options.search.fields[sListIdx][sRef] !== undefined)
 				{
 					sType = this.options.search.fields[sListIdx][sRef].widget.toLowerCase();
-
-					// Make sure the criteria type is supported, otherwise we might try to initialize a unknown widget.
-					if(this.options.supported_criterion_types.indexOf(sType) < 0)
-					{
-						sType = this.options.default_criteria_type;
-					}
-
 					break;
 				}
-			}
-
-			// Fallback for unknown widget types or unknown field refs
-			if(sType === null)
-			{
-				sType = this.options.default_criteria_type;
 			}
 
 			return sType;
@@ -520,6 +514,22 @@ $(function()
 			return oFieldDef;
 		},
 
+		// Message helper
+		_cleanMessageArea: function()
+		{
+			this.elements.message_area
+				.hide()
+				.html('')
+				.removeClass('message_error');
+		},
+		_setErrorMessage: function(sMessage)
+		{
+			this.elements.message_area
+				.addClass('message_error')
+				.html(sMessage)
+				.show();
+		},
+
 		// Button handlers
 		_onSubmitClick: function(oEvent)
 		{
@@ -562,6 +572,7 @@ $(function()
 
 			// Show loader
 			this._showLoader();
+			this._cleanMessageArea();
 
 			// TODO: Make a throttle mecanism or cancel previous call when a newer is made.
 
@@ -582,7 +593,7 @@ $(function()
 		// - Called on form submit failures
 		_onSubmitFailure: function(oData)
 		{
-			// TODO: onSubmitFailure callback. Show oData in a debug or error div.
+			this._setErrorMessage(oData.responseText);
 		},
 		// - Called after form submits
 		_onSubmitAlways: function(oData)
@@ -617,18 +628,6 @@ $(function()
 
 
 		// Debug helpers
-		// - Converts a snake_case string to CamelCase
-		_toCamelCase: function(sString)
-		{
-			var aParts = sString.split('_');
-
-			for(var i in aParts)
-			{
-				aParts[i] = aParts[i].charAt(0).toUpperCase() + aParts[i].substr(1);
-			}
-
-			return aParts.join('');
-		},
 		// - Show a trace in the javascript console
 		_trace: function(sMessage, oData)
 		{

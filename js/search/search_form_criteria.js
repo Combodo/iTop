@@ -14,12 +14,13 @@ $(function()
 			'operator': '=',
 			'values': [],
 			'oql': '',
-			'is_removable': true,
+			'is_removable': true, // Not used for now. If we come to show locked criterion they will need to have this flag set to false.
+			'is_null_allowed': false,
 
 			'field': {
 				'label': '',
+				'allowed_values': null,
 			},
-
 			// Available operators. They can be extended or restricted by derivated widgets (see this._initOperators() for more informations)
 			'available_operators': {
 				'=': {
@@ -191,7 +192,7 @@ $(function()
 			{
 				oOpElemToFocus = this.element.find('.sfc_fg_operator:first');
 			}
-			oOpElemToFocus.find('.sfc_op_content input:first').trigger('click').trigger('focus');
+			oOpElemToFocus.find('.sfc_op_content input[type="text"]:first').trigger('click').trigger('focus');
 		},
 		_close: function()
 		{
@@ -380,6 +381,8 @@ $(function()
 				// Append to form group
 				oOpElem.appendTo(this.element.find('.sfc_fg_operators'));
 			}
+
+			// TODO: We could hide the radio button if there is only one operator
 		},
 		// - Prepare the buttons (DOM and events) for a criteria
 		_prepareButtons: function()
@@ -440,7 +443,9 @@ $(function()
 				// TODO: Make nice label
 				sTitle = this.options.field.label + ' ' + this.operators[this.options.operator].label + ' ' + this._getValuesAsText();
 			}
-			this.element.find('.sfc_title').text(sTitle);
+			this.element.find('.sfc_title')
+				.text(sTitle)
+				.attr('title', sTitle);
 		},
 
 		// Operators helpers
