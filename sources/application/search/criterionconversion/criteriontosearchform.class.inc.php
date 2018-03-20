@@ -59,6 +59,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'EnumToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE => 'DateToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME => 'DateTimeToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC => 'NumericToSearchForm',
 		);
 
 		foreach($aAndCriterionRaw as $aCriteria)
@@ -374,4 +375,16 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 		return $aCriteria;
 	}
+
+	protected static function NumericToSearchForm($aCriteria, $aFields)
+	{
+		if ($aCriteria['operator'] == 'ISNULL')
+		{
+			$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
+		}
+
+		return $aCriteria;
+	}
+
+
 }

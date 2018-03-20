@@ -339,6 +339,7 @@ class CriterionConversionTest extends ItopDataTestCase
 	function OqlProvider()
 	{
 		return array(
+			array('OQL' => "SELECT Server WHERE ISNULL(nb_u)"),
 			array('OQL' => "SELECT Contact WHERE status = 'active'"),
 			array('OQL' => "SELECT Contact WHERE status = 'active' AND name LIKE 'toto%'"),
 			array('OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3"),
@@ -350,6 +351,7 @@ class CriterionConversionTest extends ItopDataTestCase
 			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date"),
 			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date"),
 			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date"),
+
 		);
 	}
 }

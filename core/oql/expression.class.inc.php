@@ -960,6 +960,7 @@ class FieldExpression extends UnaryExpression
 	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
+		$oAttDef = $this->GetAttDef($oSearch->GetJoinedClasses());
 		if (!is_null($oAttDef))
 		{
 			$sSearchType = $oAttDef->GetSearchType();
@@ -968,7 +969,6 @@ class FieldExpression extends UnaryExpression
 		{
 			$sSearchType = AttributeDefinition::SEARCH_WIDGET_TYPE;
 		}
-
 		return array(
 			'widget' => $sSearchType,
 			'ref' => $this->GetParent().'.'.$this->GetName(),
@@ -1532,25 +1532,35 @@ class FunctionExpression extends Expression
 
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
-		if ($this->m_sVerb != 'DATE_SUB' && $this->m_sVerb != 'DATE_ADD' && $this->m_sVerb != 'NOW')
+		$aCriteria = array();
+		switch ($this->m_sVerb)
 		{
-			return parent::GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
-		}
+			case 'ISNULL':
+				$aCriteria['operator'] = $this->m_sVerb;
+				foreach($this->m_aArgs as $oExpression)
+				{
+					$aCriteria = array_merge($oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef), $aCriteria);
+				}
+				break;
 
-		$aCriteria = array('widget' => 'date_time');
+			case 'NOW':
+				$aCriteria = array('widget' => 'date_time');
+				$aCriteria['is_relative'] = true;
+				$aCriteria['verb'] = $this->m_sVerb;
+				break;
 
-		foreach($this->m_aArgs as $oExpression)
-		{
-			$aCriteria = array_merge($oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef), $aCriteria);
-		}
+			case 'DATE_ADD':
+			case 'DATE_SUB':
+				$aCriteria = array('widget' => 'date_time');
+				foreach($this->m_aArgs as $oExpression)
+				{
+					$aCriteria = array_merge($oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef), $aCriteria);
+				}
+				$aCriteria['verb'] = $this->m_sVerb;
+				break;
 
-		if ($this->m_sVerb == 'NOW')
-		{
-			$aCriteria['is_relative'] = true;
-		}
-		else
-		{
-			$aCriteria['verb'] = $this->m_sVerb;
+			default:
+				return parent::GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 		}
 
 		return $aCriteria;
