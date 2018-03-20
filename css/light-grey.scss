@@ -960,14 +960,12 @@ input.dp-applied {
 			}
 
 			.sfc_title{
-				padding-right: 35px;
-				cursor: pointer;
-				/* TODO: Uncomment to try fixed width criteria tabs */
 				max-width: 240px;
-				padding-right: 25px;
+				padding-right: 30px;
 				white-space: nowrap;
 				overflow-x: hidden;
 				text-overflow: ellipsis;
+				cursor: pointer;
 			}
 			.sfc_form_group{
 				/* Form group (operators) is displayed only when the criteria is toggled to opened state */

@@ -79,15 +79,18 @@ $(function()
 			{
 				// Remove starts/ends_with
 				this.element.find('.sfc_fg_operator[data-operator-code*="with"]').remove();
+
 				// Modify contains with a dropdown
 				this.element.find('.sfc_fg_operator[data-operator-code="contains"] .sfc_op_name')
 					.html('<select style="    padding: 1px 0px;"><option>Contains</option><option>Starts with</option><option>Ends with</option></select>')
 					.css('margin-right', '5px');
+
 				// Remove click event on dropdown
 				this.element.find('.sfc_fg_operator[data-operator-code="contains"] .sfc_op_name').on('click', function(oEvent){
 					oEvent.preventDefault();
 					oEvent.stopPropagation();
 				});
+
 				this.element.find('.sfc_fg_operator[data-operator-code="contains"] .sfc_op_name select').on('change', function(){
 					$(this).closest('.sfc_fg_operator').find('.sfc_op_content input:first').trigger('focus');
 				});

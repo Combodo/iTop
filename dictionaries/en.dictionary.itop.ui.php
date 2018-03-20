@@ -1387,12 +1387,15 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Toggle' => 'Minimize / Expand',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria',
 	// - Criteria operators
+	//   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals:',
+	//   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains:',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with:',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with:',
+	//   - Numeric widget
 	'UI:Search:Criteria:Operator:Numeric:Equals' => '=',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => '>',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => '>=',
@@ -1414,6 +1417,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others',
 	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
