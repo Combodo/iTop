@@ -977,6 +977,10 @@ input.dp-applied {
 					font-size: 12px;
 
 					.sfc_fg_operator{
+						&.force_hide {
+							display: none !important;
+						}
+
 						> label{
 							line-height: 20px;
 							white-space: nowrap;

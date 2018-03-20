@@ -94,68 +94,106 @@ $(function()
 			this._super( key, value );
 		},
 
+
+		// // Prepare operator's DOM element
+		// _prepareBetweenOperator: function(oOpElem, sOpIdx, oOp)
+		// {
+		// 	var me = this;
+		//
+		// 	// DOM element
+		// 	var oOpContentElem = $('<input type="text" />');
+		// 	oOpContentElem.val(this._getValuesAsText());
+		//
+		// 	// Events
+		// 	// - Focus input on click (radio, label, ...)
+		// 	oOpElem.on('click', ':not(input[type="text"])', function(){
+		// 		oOpContentElem.focus();
+		// 	});
+		// 	// - Apply on "enter" key hit
+		// 	oOpContentElem.on('keyup', function(oEvent){
+		// 		// Check operator's radio if not already (typically when focusing in input via "tab" key)
+		// 		if(oOpElem.find('.sfc_op_radio').prop('checked') === false)
+		// 		{
+		// 			oOpElem.find('.sfc_op_radio').prop('checked', true)
+		// 		}
+		//
+		// 		me._markAsDraft();
+		//
+		// 		// Apply if enter key
+		// 		if(oEvent.key === 'Enter')
+		// 		{
+		// 			me._apply();
+		// 		}
+		// 	});
+		//
+		// 	oOpElem.find('.sfc_op_content').append(oOpContentElem);
+		// },
+
 		//------------------
 		// Inherited methods
 		//------------------
 
-		//
-		// // Prepare operator's DOM element
-		// // - Base preparation, always called
-		// _prepareOperator: function(oOpElem, sOpIdx, oOp)
-		// {
-		// 	var me = this;
-		// 	if (typeof oOp.dropdown_group == 'undefined')
-		// 	{
-		// 		return this._super(oOpElem, sOpIdx, oOp);
-		// 	}
-		//
-		// 	this._super(oOpElem, sOpIdx, oOp);
-		// 	oOpElem.addClass('force_hide')
-		//
-		// 	// DOM element
-		// 	oDropdown = this.element.find('select.dropdown_group_'+oOp.dropdown_group);
-		// 	if (oDropdown.length == 0)
-		// 	{
-		// 		oDropdown = $('<select class="dropdown_group_'+oOp.dropdown_group+'" data-dropdown-group="'+oOp.dropdown_group+'"></select>');
-		//
-		// 		oDropdown.on('change', function(){
-		// 			$option = $(this);
-		// 			this.element.find('.sfc_op_radio').val($option.val());
-		//
-		// 			oOptionOp = $option.data('oOp');
-		// 			$option.attr('data-operator-code', oOptionOp.code);
-		// 		});
-		//
-		//
-		// 		// Create DOM element from template
-		// 		var oOpElemDropdown = $(this._getOperatorTemplate()).uniqueId();
-		//
-		// 		oOpElemDropdown
-		// 			.addClass('sfc_fg_operator_dropdown_group')
-		// 			.data('data-operator-code', 'dropdown_group')
-		// 			.find('.sfc_op_name')
-		// 				.append(oDropdown)
-		// 			.end()
-		// 			.find('.sfc_op_radio')
-		// 				.val(sOpIdx)
-		// 			.end()
-		// 			.on('click', function(){
-		// 				var bIsChecked = oOpElemDropdown.find('.sfc_op_radio').prop('checked');
-		//
-		// 				if(bIsChecked === false)
-		// 				{
-		// 					oOpElemDropdown.find('.sfc_op_radio').prop('checked', true);
-		// 					me._markAsDraft();
-		// 				}
-		// 			})
-		// 			.appendTo(this.element.find('.sfc_fg_operators'));
-		// 	}
-		//
-		// 	oDropdown
-		// 		.append('<option value="'+sOpIdx+'" >'+oOp.label+'</option>')
-		// 		.data('oOp', oOp)
-		// 	;
-		// },
+
+		// Prepare operator's DOM element
+		// - Base preparation, always called
+		_prepareOperator: function(oOpElem, sOpIdx, oOp)
+		{
+			var me = this;
+			if (typeof oOp.dropdown_group == 'undefined')
+			{
+				return this._super(oOpElem, sOpIdx, oOp);
+			}
+
+			this._super(oOpElem, sOpIdx, oOp);
+			oOpElem.addClass('force_hide')
+
+			// DOM element
+			oDropdown = this.element.find('select.dropdown_group_'+oOp.dropdown_group);
+			if (oDropdown.length == 0)
+			{
+				oDropdown = $('<select class="dropdown_group_'+oOp.dropdown_group+'" data-dropdown-group="'+oOp.dropdown_group+'"></select>');
+
+				oDropdown.on('change', function(){
+					$option = $(this);
+					me.element.find('.sfc_op_radio').val($option.val());
+
+					oOptionOp = $option.data('oOp');
+					$option.attr('data-operator-code', oOptionOp.code);
+				});
+
+
+				// Create DOM element from template
+				var oOpElemDropdown = $(this._getOperatorTemplate()).uniqueId();
+
+				oOpElemDropdown
+					.addClass('sfc_fg_operator_dropdown_group')
+					.attr('data-operator-code', 'dropdown_group')
+					.find('.sfc_op_name')
+						.append(oDropdown)
+					.end()
+					.find('.sfc_op_radio')
+						.val(sOpIdx)
+					.end()
+					.on('click', function(){
+						var bIsChecked = oOpElemDropdown.find('.sfc_op_radio').prop('checked');
+
+						if(bIsChecked === false)
+						{
+							oOpElemDropdown.find('.sfc_op_radio').prop('checked', true);
+							me._markAsDraft();
+						}
+					})
+					.appendTo(this.element.find('.sfc_fg_operators'))
+				;
+
+				this._prepareDefaultOperator(oOpElemDropdown, sOpIdx, oOp);
+			}
+
+			oDropdown
+				.append('<option value="'+sOpIdx+'" >'+oOp.label+'</option>')
+				.data('oOp', oOp)
+			;
+		},
 
 
 	});

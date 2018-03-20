@@ -875,6 +875,9 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator {
   /* Common operators for most criteria types processing*/
 }
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.force_hide {
+  display: none !important;
+}
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator > label {
   line-height: 20px;
   white-space: nowrap;
