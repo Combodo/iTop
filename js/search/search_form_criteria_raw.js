@@ -9,6 +9,7 @@ $(function()
 		// default options
 		options:
 		{
+			'label': '', // Computed by server
 		},
    
 		// the constructor
@@ -71,14 +72,7 @@ $(function()
 		{
 			if(sTitle === undefined)
 			{
-				if(this.options.oql !== '')
-				{
-					sTitle = this.options.oql;
-				}
-				else
-				{
-					sTitle = this._makeOQLExpression();
-				}
+				sTitle = this.options.label;
 			}
 			this._super(sTitle);
 		},
