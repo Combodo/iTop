@@ -40,22 +40,28 @@ class SearchFormTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @dataProvider GetFieldsProvider
 	 * @throws \OQLException
 	 */
-	public function testGetFields()
+	public function testGetFields($sOQL, $iNum, $sList)
 	{
 		$oSearchForm = new SearchForm();
-		$oSearch = \DBSearch::FromOQL("SELECT Contact");
+		$oSearch = \DBSearch::FromOQL($sOQL);
 		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
 		$this->debug(json_encode($aFields, JSON_PRETTY_PRINT));
-		$this->assertCount(7, $aFields['zlist']);
+		$this->assertCount($iNum, $aFields[$sList]);
 
-		$oSearchForm = new SearchForm();
-		$oSearch = \DBSearch::FromOQL("SELECT Contact AS C WHERE C.status = 'active'");
-		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
-		$this->debug(json_encode($aFields, JSON_PRETTY_PRINT));
-		$this->assertCount(4, $aFields['others']);
 	}
+
+	public function GetFieldsProvider()
+	{
+		return array(
+			array("SELECT Contact", 7, 'zlist'),
+			array("SELECT Contact AS C WHERE C.status = 'active'", 4, 'others'),
+			array("SELECT Person", 11, 'zlist'),
+		);
+	}
+
 
 	/**
 	 * @dataProvider GetCriterionProvider
