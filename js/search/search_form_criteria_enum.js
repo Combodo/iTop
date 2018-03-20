@@ -95,11 +95,14 @@ $(function()
 			var oAllowedValuesElem = $('<div class="sfc_opc_mc_items"></div>');
 			if(this.options.field.allowed_values.values !== undefined)
 			{
+				var aSortedValues = this._sortValuesByLabel(this.options.field.allowed_values.values);
+
 				var iValCounter = 0;
-				for(var sValCode in this.options.field.allowed_values.values)
+				for(var i in aSortedValues)
 				{
 					var sItemId = 'value_' + sOpId + '_' + iValCounter;
-					var sValLabel = this.options.field.allowed_values.values[sValCode];
+					var sValCode = aSortedValues[i][0];
+					var sValLabel = aSortedValues[i][1];
 					var oValueElem = $('<div class="sfc_opc_mc_item" data-value-code="' + sValCode + '"></div>')
 						.append('<label for="' + sItemId + '"><input type="checkbox" id="' + sItemId + '" value="' + sValCode + '"/>' + sValLabel + '</label>')
 						.appendTo(oAllowedValuesElem);
@@ -272,5 +275,28 @@ $(function()
 
 			return bFound;
 		},
+		// - Return an array of allowed values sorted by labels
+		_sortValuesByLabel: function(oSource)
+		{
+			var aSortable = [];
+			for (var sKey in oSource) {
+				aSortable.push([sKey, oSource[sKey]]);
+			}
+
+			aSortable.sort(function(a, b) {
+				if(a[1] < b[1])
+				{
+					return -1;
+				}
+				else if(a[1] > b[1])
+				{
+					return 1;
+				}
+
+				return 0;
+			});
+
+			return aSortable;
+		}
 	});
 });
