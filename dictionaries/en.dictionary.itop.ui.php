@@ -1386,7 +1386,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria',
-	// - Operators
+	// - Criteria operators
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals:',
@@ -1402,11 +1402,22 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:Numeric:Between' => 'Between:',
 
 	// - Criteria titles
+	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty',
 	'UI:Search:Criteria:Title:Default:Equals' => '%1$s equals %2$s',
+	//   - String widget
 	'UI:Search:Criteria:Title:String:Contains' => '%1$s contains %2$s',
 	'UI:Search:Criteria:Title:String:StartsWith' => '%1$s starts with %2$s',
 	'UI:Search:Criteria:Title:String:EndsWith' => '%1$s ends with %2$s',
-	'UI:Search:Criteria:Title:Enum:In' => '%1$s in %2$s',
+	//   - External key widget
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',
+	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined',
+	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+	//   - Enum widget
+	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
+	// -
+	'UI:Search:Value:Filter:Placeholder' => 'Filter...',
+	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none',
 ));

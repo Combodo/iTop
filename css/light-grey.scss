@@ -784,6 +784,8 @@ input.dp-applied {
 /* TODO: Remove comment before final commit */
 .search_box{
 	box-sizing: border-box;
+	position: relative;
+	z-index: 1100; /* To be over the table block/unblock UI. Not very sure about this. */
 
 	/* Sizing reset */
 	*{
@@ -806,7 +808,8 @@ input.dp-applied {
 		text-decoration: none;
 	}
 	/* Input reset */
-	input[type="text"]{
+	input[type="text"],
+	select{
 		padding: 1px 2px;
 	}
 
@@ -868,6 +871,7 @@ input.dp-applied {
 		.search_form_criteria,
 		.sf_more_criterion {
 			margin-bottom: 5px;
+			vertical-align: top;
 
 			&.opened{
 				margin-bottom: 0px; /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
@@ -958,12 +962,12 @@ input.dp-applied {
 			.sfc_title{
 				padding-right: 35px;
 				cursor: pointer;
-				/* Uncomment to try fixed width criteria tabs */
-				/*max-width: 240px;
+				/* TODO: Uncomment to try fixed width criteria tabs */
+				max-width: 240px;
 				padding-right: 25px;
 				white-space: nowrap;
 				overflow-x: hidden;
-				text-overflow: ellipsis;*/
+				text-overflow: ellipsis;
 			}
 			.sfc_form_group{
 				/* Form group (operators) is displayed only when the criteria is toggled to opened state */
@@ -1003,6 +1007,7 @@ input.dp-applied {
 							}
 							.sfc_opc_mc_filter{
 								position: relative;
+								margin-top: 8px;
 
 								input{
 									width: 100%;
@@ -1014,10 +1019,27 @@ input.dp-applied {
 									opacity: 0.6;
 									user-select: none;
 								}
+								.sfc_opc_mc_reset{
+									display: none;
+								}
 							}
 							.sfc_opc_mc_items{
 								.sfc_opc_mc_item{
-									margin-top: 5px;
+									margin: 0px -5px 0px -5px; /* -5px to compensate padding and keep aligned to the filter left side */
+									padding: 5px;
+
+									&:first-of-type{
+										margin-top: 8px;
+									}
+									&:hover{
+										padding: 4px; /* Normal padding - border size */
+										background-color: $white;
+										border: 1px solid $box-blue-border-color;
+										/* TODO: Try with this */
+										/*background-color: $box-blue-border-color;
+										color: $white;*/
+
+									}
 
 									label{
 										display: inline-block;
@@ -1114,6 +1136,20 @@ input.dp-applied {
 				}
 				.sfc_form_group{
 					display: none;
+				}
+			}
+			&.search_form_criteria_enum{
+				.sfc_fg_operator_in{
+					> label{
+						display: inline-block;
+						width: 100%;
+						line-height: initial;
+						white-space: nowrap;
+
+						.sfc_op_content{
+							width: 100%;
+						}
+					}
 				}
 			}
 		}

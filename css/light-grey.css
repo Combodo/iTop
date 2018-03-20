@@ -703,6 +703,9 @@ input.dp-applied {
 /* TODO: Remove comment before final commit */
 .search_box {
   box-sizing: border-box;
+  position: relative;
+  z-index: 1100;
+  /* To be over the table block/unblock UI. Not very sure about this. */
   /* Sizing reset */
 }
 .search_box * {
@@ -724,7 +727,7 @@ input.dp-applied {
   color: inherit;
   text-decoration: none;
 }
-.search_form_handler input[type="text"] {
+.search_form_handler input[type="text"], .search_form_handler select {
   padding: 1px 2px;
 }
 .search_form_handler.opened .sf_title .sft_toggler {
@@ -776,6 +779,7 @@ input.dp-applied {
 }
 .search_form_handler .sf_criterion_area .search_form_criteria, .search_form_handler .sf_criterion_area .sf_more_criterion {
   margin-bottom: 5px;
+  vertical-align: top;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.opened, .search_form_handler .sf_criterion_area .sf_more_criterion.opened {
   margin-bottom: 0px;
@@ -852,12 +856,12 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_title {
   padding-right: 35px;
   cursor: pointer;
-  /* Uncomment to try fixed width criteria tabs */
-  /*max-width: 240px;
-   padding-right: 25px;
-   white-space: nowrap;
-   overflow-x: hidden;
-   text-overflow: ellipsis;*/
+  /* TODO: Uncomment to try fixed width criteria tabs */
+  max-width: 240px;
+  padding-right: 25px;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group {
   /* Form group (operators) is displayed only when the criteria is toggled to opened state */
@@ -893,6 +897,7 @@ input.dp-applied {
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_filter {
   position: relative;
+  margin-top: 8px;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_filter input {
   width: 100%;
@@ -904,8 +909,25 @@ input.dp-applied {
   opacity: 0.6;
   user-select: none;
 }
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_filter .sfc_opc_mc_reset {
+  display: none;
+}
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_item {
-  margin-top: 5px;
+  margin: 0px -5px 0px -5px;
+  /* -5px to compensate padding and keep aligned to the filter left side */
+  padding: 5px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_item:first-of-type {
+  margin-top: 8px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_item:hover {
+  padding: 4px;
+  /* Normal padding - border size */
+  background-color: #fff;
+  border: 1px solid #3f7294;
+  /* TODO: Try with this */
+  /*background-color: $box-blue-border-color;
+   color: $white;*/
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_item label {
   display: inline-block;
@@ -969,6 +991,15 @@ input.dp-applied {
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw .sfc_form_group {
   display: none;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_enum .sfc_fg_operator_in > label {
+  display: inline-block;
+  width: 100%;
+  line-height: initial;
+  white-space: nowrap;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_enum .sfc_fg_operator_in > label .sfc_op_content {
+  width: 100%;
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion.opened {
   z-index: 2;

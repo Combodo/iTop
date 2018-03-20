@@ -75,20 +75,20 @@ $(function()
 			// Hide radio & name for now, until there is more than one operator
 			oOpElem.find('.sfc_op_radio, .sfc_op_name').hide();
 
-			// DOM element
+			// DOM elements
 			var sOpId = oOpElem.attr('id');
 			var oOpContentElem = $('<div class="sfc_opc_multichoices"></div>');
 
 			// - Check / Uncheck all togglers
 			var sTogglerId = 'toggle_' + sOpId;
 			var oTogglersElem = $('<div class="sfc_opc_mc_toggler"></div>')
-				.append('<label for="' + sTogglerId + '"><input type="checkbox" id="' + sTogglerId + '" />' + Dict.S('TOTR: CHECK / UNCHECK ALL') + '</label>')
+				.append('<label for="' + sTogglerId + '"><input type="checkbox" id="' + sTogglerId + '" />' + Dict.S('UI:Search:Value:Toggler:CheckAllNone') + '</label>')
 				.appendTo(oOpContentElem);
 
 			// - Filter
 			var sFilterId = 'filter_' + sOpId;
 			var oFilterElem = $('<div class="sfc_opc_mc_filter"></div>')
-				.append('<input type="text" id="' + sFilterId + '" placeholder="TOTR: FILTER..." /><span class="sfc_opc_mcf_picto fa fa-filter"></span>')
+				.append('<input type="text" id="' + sFilterId + '" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sfc_opc_mcf_picto sfc_opc_mcf_filter fa fa-filter"></span><span class="sfc_opc_mcf_picto sfc_opc_mcf_reset fa fa-times"></span>')
 				.appendTo(oOpContentElem);
 
 			// - Allowed values
@@ -124,13 +124,18 @@ $(function()
 				// Apply criteria
 				me._apply();
 			});
+
 			// - Filter
-			oFilterElem.find('input').on('keyup', function(){
+			oFilterElem.find('input').on('keyup focus', function(oEvent){
+				// TODO: Move on values with up and down arrow keys; select with space or enter.
+
 				var sFilter = $(this).val();
 
 				if(sFilter === '')
 				{
 					oOpContentElem.find('.sfc_opc_mc_item').show();
+					oFilterElem.find('.sfc_opc_mcf_filter').show();
+					oFilterElem.find('.sfc_opc_mcf_reset').hide();
 				}
 				else
 				{
@@ -148,8 +153,19 @@ $(function()
 							$(this).hide();
 						}
 					});
+					oFilterElem.find('.sfc_opc_mcf_filter').hide();
+					oFilterElem.find('.sfc_opc_mcf_reset').show();
 				}
 			});
+			oFilterElem.find('.sfc_opc_mcf_filter').on('click', function(){
+				oFilterElem.find('input').trigger('focus');
+			});
+			oFilterElem.find('.sfc_opc_mcf_reset').on('click', function(){
+				oFilterElem.find('input')
+					.val('')
+					.trigger('focus');
+			});
+
 			// - Apply on check
 			oAllowedValuesElem.find('.sfc_opc_mc_item').on('click', function(){
 				// Uncheck toggler
@@ -161,6 +177,25 @@ $(function()
 
 			oOpElem.find('.sfc_op_content').append(oOpContentElem);
 		},
+		_setTitle: function(sTitle)
+		{
+			var iValLimit = 3;
+			var iValCount = Object.keys(this.options.values).length;
+			if(iValCount > iValLimit)
+			{
+				var aFirstValues = [];
+				for(var i=0; i<iValLimit-1; i++)
+				{
+					aFirstValues.push(this.options.values[i].label);
+				}
+
+				sTitle = Dict.Format('UI:Search:Criteria:Title:Enum:In:Many', this.options.field.label, aFirstValues.join(', '), (iValCount - iValLimit+1));
+			}
+
+			this._super(sTitle);
+		},
+
+		// Operators helpers
 		// Reset operator's state
 		_resetInOperator: function(oOpElem)
 		{
