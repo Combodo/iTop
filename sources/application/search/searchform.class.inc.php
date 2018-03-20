@@ -276,10 +276,6 @@ class SearchForm
 		}
 
 		$aAllowedValues = $oAttrDef->GetAllowedValues();
-		if (is_array($aAllowedValues))
-		{
-			asort($aAllowedValues);
-		}
 
 		return array('values' => $aAllowedValues);
 	}
