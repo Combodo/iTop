@@ -1199,4 +1199,24 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Button:ResetImage' => 'Récupérer l\'image initiale',
 	'UI:Button:RemoveImage' => 'Supprimer l\'image',
 	'UI:UploadNotSupportedInThisMode' => 'La modification d\'images ou de fichiers n\'est pas supportée dans ce mode.',
+
+	// TODO: Reorganize those entries with other search entries and make entries for other languages.
+	// Search form
+	'UI:Search:Toggle' => 'Réduire / Ouvrir',
+	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Ajouter un critère',
+	// - Operators
+	'UI:Search:Criteria:Operator:Default:Empty' => 'Vide',
+	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Non vide',
+	'UI:Search:Criteria:Operator:Default:Equals' => 'Egal :',
+	'UI:Search:Criteria:Operator:String:Contains' => 'Contient :',
+	'UI:Search:Criteria:Operator:String:StartsWith' => 'Commence par :',
+	'UI:Search:Criteria:Operator:String:EndsWith' => 'Fini par :',
+	// - Criteria titles
+	'UI:Search:Criteria:Title:Default:Empty' => '%1$s vide',
+	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s non vide',
+	'UI:Search:Criteria:Title:Default:Equals' => '%1$s égal %2$s',
+	'UI:Search:Criteria:Title:String:Contains' => '%1$s contient %2$s',
+	'UI:Search:Criteria:Title:String:StartsWith' => '%1$s commence par %2$s',
+	'UI:Search:Criteria:Title:String:EndsWith' => '%1$s fini par %2$s',
+	'UI:Search:Criteria:Title:Enum:In' => '%1$s parmi %2$s',
 ));

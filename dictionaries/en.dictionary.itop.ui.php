@@ -1372,12 +1372,22 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.',
 
 	// TODO: Reorganize those entries with other search entries and make entries for other languages.
+	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria',
+	// - Operators
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals:',
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains:',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with:',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with:',
+	// - Criteria titles
+	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty',
+	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty',
+	'UI:Search:Criteria:Title:Default:Equals' => '%1$s equals %2$s',
+	'UI:Search:Criteria:Title:String:Contains' => '%1$s contains %2$s',
+	'UI:Search:Criteria:Title:String:StartsWith' => '%1$s starts with %2$s',
+	'UI:Search:Criteria:Title:String:EndsWith' => '%1$s ends with %2$s',
+	'UI:Search:Criteria:Title:Enum:In' => '%1$s in %2$s',
 ));

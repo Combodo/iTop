@@ -440,11 +440,19 @@ $(function()
 		{
 			if(sTitle === undefined)
 			{
-				// TODO: Make nice label
-				sTitle = this.options.field.label + ' ' + this.operators[this.options.operator].label + ' ' + this._getValuesAsText();
+				var sOperator = this.operators[this.options.operator].code;
+				var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':' + this._toCamelCase(sOperator);
+
+				// Fallback to default widget dict entry if none exists for the current widget
+				if(Dict.S(sDictEntry) === sDictEntry)
+				{
+					sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(sOperator);
+				}
+
+				sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
 			}
 			this.element.find('.sfc_title')
-				.text(sTitle)
+				.html(sTitle)
 				.attr('title', sTitle);
 		},
 
