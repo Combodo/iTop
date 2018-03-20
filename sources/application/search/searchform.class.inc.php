@@ -275,7 +275,13 @@ class SearchForm
 			}
 		}
 
-		return array('values' => $oAttrDef->GetAllowedValues());
+		$aAllowedValues = $oAttrDef->GetAllowedValues();
+		if (is_array($aAllowedValues))
+		{
+			asort($aAllowedValues);
+		}
+
+		return array('values' => $aAllowedValues);
 	}
 
 	/**
