@@ -297,44 +297,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 	protected static function EnumToSearchForm($aCriteria, $aFields)
 	{
-		$sOperator = $aCriteria['operator'];
-		if ($sOperator == '=')
-		{
-			$aCriteria['operator'] = 'IN';
-		}
-		if ($sOperator != 'NOT IN')
-		{
-			return $aCriteria;
-		}
-		$sRef = $aCriteria['ref'];
-		$aValues = $aCriteria['values'];
-		if (array_key_exists($sRef, $aFields))
-		{
-			$aField = $aFields[$sRef];
-			if (array_key_exists('allowed_values', $aField) && array_key_exists('values', $aField['allowed_values']))
-			{
-				$aAllowedValues = $aField['allowed_values']['values'];
-			}
-		}
-
-		if (isset($aAllowedValues))
-		{
-			foreach($aValues as $aValue)
-			{
-				$sValue = $aValue['value'];
-				unset($aAllowedValues[$sValue]);
-			}
-			$aCriteria['values'] = array();
-
-			foreach($aAllowedValues as $sValue => $sLabel)
-			{
-				$aValue = array('value' => $sValue, 'label' => $sLabel);
-				$aCriteria['values'][] = $aValue;
-			}
-			$aCriteria['operator'] = 'IN';
-		}
-
-		return $aCriteria;
+		return self::ExternalKeyToSearchForm($aCriteria, $aFields);
 	}
 
 	protected static function DateToSearchForm($aCriteria, $aFields)
@@ -390,9 +353,83 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 	protected static function ExternalKeyToSearchForm($aCriteria, $aFields)
 	{
-		if ($aCriteria['operator'] == '=')
+		$sOperator = $aCriteria['operator'];
+		switch ($sOperator)
 		{
-			$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
+			case '=':
+				if (!isset($aCriteria['values'][0]))
+				{
+					$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
+				}
+				else
+				{
+					$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
+				}
+				break;
+			case '!=':
+				if (!isset($aCriteria['values'][0]))
+				{
+					$aCriteria['operator'] = CriterionConversionAbstract::OP_NOT_EMPTY;
+				}
+				else
+				{
+					// Same as NOT IN
+					$aCriteria = self::RevertValues($aCriteria, $aFields);
+				}
+				break;
+			case 'NOT IN':
+				$aCriteria = self::RevertValues($aCriteria, $aFields);
+				break;
+			case 'IN':
+				break;
+			default:
+				// Unknown operator
+				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+				break;
+		}
+
+		return $aCriteria;
+	}
+
+	/**
+	 * @param $aCriteria
+	 * @param $aFields
+	 *
+	 * @return mixed
+	 */
+	protected static function RevertValues($aCriteria, $aFields)
+	{
+		$sRef = $aCriteria['ref'];
+		$aValues = $aCriteria['values'];
+		if (array_key_exists($sRef, $aFields))
+		{
+			$aField = $aFields[$sRef];
+			if (array_key_exists('allowed_values', $aField) && array_key_exists('values', $aField['allowed_values']))
+			{
+				$aAllowedValues = $aField['allowed_values']['values'];
+			}
+			else
+			{
+				// Can't obtain the list of allowed values, just set as unknown
+				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+			}
+		}
+
+		if (isset($aAllowedValues))
+		{
+			foreach($aValues as $aValue)
+			{
+				$sValue = $aValue['value'];
+				unset($aAllowedValues[$sValue]);
+			}
+			$aCriteria['values'] = array();
+
+			foreach($aAllowedValues as $sValue => $sLabel)
+			{
+				$aValue = array('value' => $sValue, 'label' => $sLabel);
+				$aCriteria['values'][] = $aValue;
+			}
+			$aCriteria['operator'] = 'IN';
 		}
 
 		return $aCriteria;
