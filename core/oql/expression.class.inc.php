@@ -160,7 +160,7 @@ abstract class Expression
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
 		return array(
-			'widget' => AttributeDefinition::SEARCH_WIDGET_TYPE,
+			'widget' => AttributeDefinition::SEARCH_WIDGET_TYPE_RAW,
 			'oql' => $this->Render($aArgs, $bRetrofitParams),
 			'label' => $this->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef),
 			'source' => get_class($this),
@@ -316,27 +316,6 @@ class BinaryExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
-	{
-		$sOperator = Dict::S($this->GetOperator(), " {$this->GetOperator()} ");
-		$oLeftExpr = $this->GetLeftExpr();
-		if ($oLeftExpr instanceof FieldExpression)
-		{
-			$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
-		}
-		$oRightExpr = $this->GetRightExpr();
-		if ($oRightExpr instanceof FieldExpression)
-		{
-			$oAttDef = $oRightExpr->GetAttDef($oSearch->GetJoinedClasses());
-		}
-
-		$sLeft = $oLeftExpr->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
-		$sRight = $oRightExpr->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
-
-		return "({$sLeft}{$sOperator}{$sRight})";
-	}
-
-	// recursive rendering
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
 		$sOperator = $this->GetOperator();
@@ -444,6 +423,67 @@ class BinaryExpression extends Expression
 		$this->GetRightExpr()->RenameAlias($sOldName, $sNewName);
 	}
 
+	// recursive rendering
+	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		$bReverseOperator = false;
+		$oLeftExpr = $this->GetLeftExpr();
+		if ($oLeftExpr instanceof FieldExpression)
+		{
+			$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
+		}
+		$oRightExpr = $this->GetRightExpr();
+		if ($oRightExpr instanceof FieldExpression)
+		{
+			$oAttDef = $oRightExpr->GetAttDef($oSearch->GetJoinedClasses());
+			$bReverseOperator = true;
+		}
+
+		$sLeft = $oLeftExpr->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+		$sRight = $oRightExpr->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+
+		if ($bReverseOperator)
+		{
+			// switch left and right expressions so reverse the operator
+			// Note that the operation is the same so < becomes > and not >=
+			switch ($this->GetOperator())
+			{
+				case '>':
+					$sOperator = '<';
+					break;
+				case '<':
+					$sOperator = '>';
+					break;
+				case '>=':
+					$sOperator = '<=';
+					break;
+				case '<=':
+					$sOperator = '>=';
+					break;
+				default:
+					$sOperator = $this->GetOperator();
+					break;
+			}
+			$sOperator = $this->OperatorToNaturalLanguage($sOperator, $oAttDef);
+
+			return "({$sRight}{$sOperator}{$sLeft})";
+		}
+
+		$sOperator = $this->GetOperator();
+		$sOperator = $this->OperatorToNaturalLanguage($sOperator, $oAttDef);
+
+		return "({$sLeft}{$sOperator}{$sRight})";
+	}
+
+	private function OperatorToNaturalLanguage($sOperator, $oAttDef)
+	{
+		if ($oAttDef instanceof AttributeDateTime)
+		{
+			return Dict::S('Expression:Operator:Date:'.$sOperator, " $sOperator ");
+		}
+
+		return Dict::S('Expression:Operator:'.$sOperator, " $sOperator ");
+	}
 
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
@@ -473,10 +513,10 @@ class BinaryExpression extends Expression
 		$aCriteriaLeft = $oLeftExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 		$aCriteriaRight = $oRightExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 
-		$aCriteria = array_merge($aCriteriaLeft, $aCriteriaRight);
 
 		if ($bReverseOperator)
 		{
+			$aCriteria = array_merge($aCriteriaRight, $aCriteriaLeft);
 			// switch left and right expressions so reverse the operator
 			// Note that the operation is the same so < becomes > and not >=
 			switch ($this->GetOperator())
@@ -500,6 +540,7 @@ class BinaryExpression extends Expression
 		}
 		else
 		{
+			$aCriteria = array_merge($aCriteriaLeft, $aCriteriaRight);
 			$aCriteria['operator'] = $this->GetOperator();
 		}
 		$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
@@ -598,7 +639,7 @@ class ScalarExpression extends UnaryExpression
 	 * @param AttributeDefinition $oAttDef
 	 *
 	 * @return array|string
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
@@ -748,7 +789,9 @@ class FieldExpression extends UnaryExpression
 	 * @param AttributeDefinition $oAttDef
 	 *
 	 * @return array|string
-	 * @throws Exception
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
 	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
@@ -1458,6 +1501,60 @@ class FunctionExpression extends Expression
 		}
 		return $sRes;
 	}
+
+	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		if ($this->m_sVerb != 'DATE_SUB' && $this->m_sVerb != 'DATE_ADD' && $this->m_sVerb != 'NOW')
+		{
+			return $this->Render($aArgs, $bRetrofitParams);
+		}
+		$sOperation = '';
+		switch ($this->m_sVerb)
+		{
+			case 'NOW':
+				$sOperation = '';
+				break;
+			case 'DATE_SUB':
+				$sOperation = '-';
+				break;
+			case 'DATE_ADD':
+				$sOperation = '+';
+				break;
+		}
+
+		foreach($this->m_aArgs as $oExpression)
+		{
+			$sOperation .= $oExpression->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+		}
+
+		return $sOperation;
+	}
+
+	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		if ($this->m_sVerb != 'DATE_SUB' && $this->m_sVerb != 'DATE_ADD' && $this->m_sVerb != 'NOW')
+		{
+			return parent::GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+		}
+
+		$aCriteria = array('widget' => 'date_time');
+
+		foreach($this->m_aArgs as $oExpression)
+		{
+			$aCriteria = array_merge($oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef), $aCriteria);
+		}
+
+		if ($this->m_sVerb == 'NOW')
+		{
+			$aCriteria['is_relative'] = true;
+		}
+		else
+		{
+			$aCriteria['verb'] = $this->m_sVerb;
+		}
+
+		return $aCriteria;
+	}
 }
 
 class IntervalExpression extends Expression
@@ -1543,6 +1640,19 @@ class IntervalExpression extends Expression
 	public function RenameAlias($sOldName, $sNewName)
 	{
 		$this->m_oValue->RenameAlias($sOldName, $sNewName);
+	}
+
+	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		$aCriteria = $this->m_oValue->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+		$aCriteria['unit'] = $this->m_sUnit;
+
+		return $aCriteria;
+	}
+
+	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		return $this->m_oValue->Render($aArgs, $bRetrofitParams).' '.$this->m_sUnit;
 	}
 }
 

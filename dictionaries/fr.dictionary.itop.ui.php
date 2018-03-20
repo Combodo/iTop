@@ -1220,3 +1220,16 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Title:String:EndsWith' => '%1$s fini par %2$s',
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s parmi %2$s',
 ));
+
+
+//
+// Expression to Natural language
+//
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Expression:Operator:AND' => 'ET',
+	'Expression:Operator:OR' => 'OU',
+	'Expression:Unit:Short:DAY' => 'j',
+	'Expression:Unit:Short:WEEK' => 's',
+	'Expression:Unit:Short:MONTH' => 'm',
+	'Expression:Unit:Short:YEAR' => 'a',
+));

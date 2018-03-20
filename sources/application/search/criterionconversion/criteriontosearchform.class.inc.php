@@ -30,10 +30,17 @@ use AttributeDefinition;
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
 use DateInterval;
 use DateTime;
+use Dict;
 
 class CriterionToSearchForm extends CriterionConversionAbstract
 {
 
+	/**
+	 * @param array $aAndCriterionRaw
+	 * @param array $aFieldsByCategory
+	 *
+	 * @return array
+	 */
 	public static function Convert($aAndCriterionRaw, $aFieldsByCategory)
 	{
 		$aAllFields = array();
@@ -50,6 +57,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$aMappingOperatorToFunction = array(
 			AttributeDefinition::SEARCH_WIDGET_TYPE_STRING => 'TextToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'EnumToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE => 'DateToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME => 'DateTimeToSearchForm',
 		);
 
 		foreach($aAndCriterionRaw as $aCriteria)
@@ -181,6 +190,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$aCurrCriterion['values'][] = array('value' => $sLastDate, 'label' => $sLastDate);
 
 		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
+		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND', 'AND').' '.$aCurrCriterion['label'];
 
 		$aMergedCriterion[] = $aCurrCriterion;
 
@@ -236,6 +246,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$aCurrCriterion['values'][] = array('value' => $sLastDate, 'label' => $sLastDate);
 
 		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
+		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND', 'AND').' '.$aCurrCriterion['label'];
 
 		$aMergedCriterion[] = $aCurrCriterion;
 
@@ -320,6 +331,46 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			}
 			$aCriteria['operator'] = 'IN';
 		}
+
+		return $aCriteria;
+	}
+
+	protected static function DateToSearchForm($aCriteria, $aFields)
+	{
+		return DateTimeToSearchForm($aCriteria, $aFields);
+	}
+
+	protected static function DateTimeToSearchForm($aCriteria, $aFields)
+	{
+		if (!array_key_exists('is_relative', $aCriteria) || !$aCriteria['is_relative'])
+		{
+			return $aCriteria;
+		}
+
+		if (isset($aCriteria['values'][0]['value']))
+		{
+			$sLabel = $aCriteria['values'][0]['value'];
+			if (isset($aCriteria['verb']))
+			{
+				switch ($aCriteria['verb'])
+				{
+					case 'DATE_SUB':
+						$sLabel = '-'.$sLabel;
+						break;
+					case 'DATE_ADD':
+						$sLabel = '+'.$sLabel;
+						break;
+				}
+			}
+			if (isset($aCriteria['unit']))
+			{
+				$sLabel .= Dict::S('Expression:Unit:Short:'.$aCriteria['unit'], $aCriteria['unit']);
+			}
+			$aCriteria['values'][0]['label'] = $sLabel;
+		}
+
+		// Temporary until the JS widget support relative dates
+		$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
 
 		return $aCriteria;
 	}

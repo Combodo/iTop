@@ -312,6 +312,17 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Expression to Natural language
+//
+Dict::Add('EN US', 'English', 'English', array(
+	'Expression:Unit:Short:DAY' => 'd',
+	'Expression:Unit:Short:WEEK' => 'w',
+	'Expression:Unit:Short:MONTH' => 'm',
+	'Expression:Unit:Short:YEAR' => 'y',
+));
+
+
+//
 // String from the User Interface: menu, messages, buttons, etc...
 //
 

@@ -20,7 +20,7 @@
  * Class Dict
  * Management of localizable strings 
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -65,6 +65,11 @@ class Dict
 	protected static $m_aData = array();
 	protected static $m_sApplicationPrefix = null;
 
+	/**
+	 * @param $sLanguageCode
+	 *
+	 * @throws \DictExceptionUnknownLanguage
+	 */
 	public static function SetDefaultLanguage($sLanguageCode)
 	{
 		if (!array_key_exists($sLanguageCode, self::$m_aLanguages))
@@ -74,6 +79,11 @@ class Dict
 		self::$m_sDefaultLanguage = $sLanguageCode;
 	}
 
+	/**
+	 * @param $sLanguageCode
+	 *
+	 * @throws \DictExceptionUnknownLanguage
+	 */
 	public static function SetUserLanguage($sLanguageCode)
 	{
 		if (!array_key_exists($sLanguageCode, self::$m_aLanguages))
@@ -113,7 +123,6 @@ class Dict
 	 * @param string $sDefault Default value if there is no match in the dictionary
 	 * @param bool $bUserLanguageOnly True to allow the use of the default language as a fallback, false otherwise
 	 *
-	 * @throws DictExceptionMissingString
 	 * @return string
 	 */
 	public static function S($sStringCode, $sDefault = null, $bUserLanguageOnly = false)
@@ -124,7 +133,7 @@ class Dict
 
 		if (!array_key_exists(self::GetUserLanguage(), self::$m_aData))
 		{
-			// It may happen, when something happens before the dictionnaries get loaded
+			// It may happen, when something happens before the dictionaries get loaded
 			return $sStringCode;
 		}
 		$aCurrentDictionary = self::$m_aData[self::GetUserLanguage()];
@@ -155,25 +164,12 @@ class Dict
 		}
 		// Could not find the string...
 		//
-		switch (self::$m_iErrorMode)
+		if (is_null($sDefault))
 		{
-			case DICT_ERR_STRING:
-				if (is_null($sDefault))
-				{
-					return $sStringCode;
-				}
-				else
-				{
-					return $sDefault;
-				}
-				break;
-
-			case DICT_ERR_EXCEPTION:
-			default:
-				throw new DictExceptionMissingString(self::$m_sCurrentLanguage, $sStringCode);
-				break;
+			return $sStringCode;
 		}
-		return 'bug!';
+
+		return $sDefault;
 	}
 
 
@@ -285,6 +281,9 @@ class Dict
 
 	/**
 	 * Clone a string in every language (if it exists in that language)
+	 *
+	 * @param $sSourceCode
+	 * @param $sDestCode
 	 */
 	public static function CloneString($sSourceCode, $sDestCode)
 	{
