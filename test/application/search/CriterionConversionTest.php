@@ -339,18 +339,20 @@ class CriterionConversionTest extends ItopDataTestCase
 	function OqlProvider()
 	{
 		return array(
-			array('OQL' => "SELECT Server WHERE ISNULL(nb_u)"),
-			array('OQL' => "SELECT Contact WHERE status = 'active'"),
-			array('OQL' => "SELECT Contact WHERE status = 'active' AND name LIKE 'toto%'"),
-			array('OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3"),
-			array('OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')"),
-			array('OQL' => "SELECT Contact WHERE status NOT IN ('active')"),
-			array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date"),
-			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date"),
-			array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date"),
-			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date"),
-			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date"),
-			array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date"),
+			'ISNULL' => array('OQL' => "SELECT Server WHERE ISNULL(nb_u)"),
+			'start' => array('OQL' => "SELECT Contact WHERE status = 'active' AND name LIKE 'toto%'"),
+			'enum + key =' => array('OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3"),
+			'enum =' => array('OQL' => "SELECT Contact WHERE status = 'active'"),
+			'enum IN' => array('OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')"),
+			'enum NOT IN' => array('OQL' => "SELECT Contact WHERE status NOT IN ('active')"),
+			'key NOT IN' => array('OQL' => "SELECT Contact WHERE org_id NOT IN ('1')"),
+			'key IN' => array('OQL' => "SELECT Contact WHERE org_id IN ('1')"),
+			'Date relative' => array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date"),
+			'Date between 1' => array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date"),
+			'Date between 2' => array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date"),
+			'Date between 3' => array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date"),
+			'Date between 4' => array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date"),
+			'Date between 5' => array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date"),
 
 		);
 	}

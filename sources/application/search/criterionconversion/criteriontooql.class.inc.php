@@ -159,8 +159,13 @@ class CriterionToOQL extends CriterionConversionAbstract
 					if (!$oAttDef->IsNullAllowed())
 					{
 						$aAllowedValues = $aAllowedValues['values'];
+						if (count($aValues) == count($aAllowedValues))
+						{
+							// All entries are selected
+							return "1";
+						}
 						// more selected values than remaining so use NOT IN
-						if (count($aValues) > (count($aAllowedValues) / 2))
+						else if (count($aValues) > (count($aAllowedValues) / 2))
 						{
 							foreach($aValues as $aValue)
 							{
