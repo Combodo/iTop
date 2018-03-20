@@ -1393,6 +1393,14 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains:',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with:',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with:',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => '<=',
+	'UI:Search:Criteria:Operator:Numeric:DifferentThan' => 'Different than:',
+	'UI:Search:Criteria:Operator:Numeric:Between' => 'Between:',
+
 	// - Criteria titles
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty',
