@@ -221,6 +221,7 @@ $(function()
 				// Create DOM element from template
 				var oOpElemDropdown = $(this._getOperatorTemplate()).uniqueId();
 
+				//todo : if this code is keeped, the radio mustr have an id and the label need to point to it
 				oOpElemDropdown
 					.addClass('sfc_fg_operator_dropdown_group')
 					.attr('data-operator-code', 'dropdown_group')
