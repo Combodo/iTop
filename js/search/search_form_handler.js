@@ -298,6 +298,7 @@ $(function()
 			// Content part
 			var oContentElem = $('<div class="sfm_content"></div>')
 				.appendTo(this.elements.more_criterion);
+
 			// - Add list
 			var oListElem = $('<ul class="sfm_list"></ul>')
 				.appendTo(oContentElem);
@@ -313,6 +314,7 @@ $(function()
 					.text(oField.label);
 				oListElem.append(oFieldElem);
 			}
+
 			// - Others
 			if(this.options.search.fields.others !== undefined)
 			{
@@ -593,7 +595,11 @@ $(function()
 		// - Called on form submit failures
 		_onSubmitFailure: function(oData)
 		{
-			this._setErrorMessage(oData.responseText);
+			// Fallback message in case the server send back only HTML markup.
+			var oErrorElem = $(oData.responseText);
+			var sErrorMessage = (oErrorElem.text() !== '') ? oErrorElem.text() : Dict.Format('Error:XHR:Fail', '');
+
+			this._setErrorMessage(sErrorMessage);
 		},
 		// - Called after form submits
 		_onSubmitAlways: function(oData)

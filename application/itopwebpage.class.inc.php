@@ -114,6 +114,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		$this->add_dict_entries('UI:Search:');
 		$this->add_dict_entries('UI:Button:');
+		$this->add_dict_entries('Error:');
 
 
 		if (!$this->IsPrintableVersion())

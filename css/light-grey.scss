@@ -1010,6 +1010,7 @@ input.dp-applied {
 							.sfc_opc_mc_filter{
 								position: relative;
 								margin-top: 8px;
+								margin-bottom: 8px;
 
 								input{
 									width: 100%;
@@ -1030,9 +1031,6 @@ input.dp-applied {
 									margin: 0px -5px 0px -5px; /* -5px to compensate padding and keep aligned to the filter left side */
 									padding: 5px;
 
-									&:first-of-type{
-										margin-top: 8px;
-									}
 									&:hover{
 										padding: 4px; /* Normal padding - border size */
 										background-color: $white;

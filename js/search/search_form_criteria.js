@@ -124,6 +124,12 @@ $(function()
 				var sOpIdx = aSortable[iIdx][0];
 				this.operators[sOpIdx] = this.options.available_operators[sOpIdx];
 			}
+
+			// Fallback operator in case the current operator is not available. Should not happen.
+			if(this.operators[this.options.operator] === undefined)
+			{
+				this.options.operator = Object.keys(this.operators)[0];
+			}
 		},
 		// - Bind external events
 		_bindEvents: function()
@@ -509,12 +515,10 @@ $(function()
 			var oOpContentElem = $('<input type="text" />');
 			oOpContentElem.val(this._getValuesAsText());
 
-
-
 			// Events
 			// - Focus input on click (radio, label, ...)
 			oOpElem.on('click', ':not(input[type="text"], select)', function(oEvent) {
-				//in order to prevent from the bubling of the event from inputs so their parents, we filter on oEvent.target, we could have stoped the bubling but it would have been a little agressive.
+				// Stopping propagation like this instead of oEvent.stopPropagation() as the event could be used by something.
 				if ($(oEvent.target).is('input[type="text"], select')) {
 					return;
 				}
@@ -584,7 +588,7 @@ $(function()
 
 
 		// Values helpers
-		// - Convert values to a standard string
+		// - Return current values
 		_getValues: function()
 		{
 			return this.options.values;

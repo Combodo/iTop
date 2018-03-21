@@ -1419,9 +1419,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others',
+	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any',
 	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
+	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any',
 	// -
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none',

@@ -9,11 +9,6 @@ $(function()
 		// default options
 		options:
 		{
-			// Overload default operator
-			'operator': 'IN',
-			// Available operators
-			'available_operators': {
-			},
 		},
 
    

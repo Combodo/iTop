@@ -170,7 +170,7 @@ $(function()
 			});
 
 			// - Apply on check
-			oAllowedValuesElem.find('.sfc_opc_mc_item').on('click', function(){
+			oAllowedValuesElem.find('.sfc_opc_mc_item').on('click', function(oEvent){
 				// Uncheck toggler
 				oTogglersElem.find('input:checkbox').prop('checked', false);
 

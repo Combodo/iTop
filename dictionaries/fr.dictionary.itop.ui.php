@@ -1221,12 +1221,16 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Title:String:StartsWith' => '%1$s commence par %2$s',
 	'UI:Search:Criteria:Title:String:EndsWith' => '%1$s fini par %2$s',
 	//   - External key widget
-	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s est rempli',
-	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s n\'est pas rempli',
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s est renseigné',
+	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s n\'est pas renseigné',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s et %3$s autres',
+	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Indifférent',
 	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s : %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s : %2$s et %3$s autres',
+	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Indifférent',
 	// -
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none',
