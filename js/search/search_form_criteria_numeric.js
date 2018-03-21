@@ -42,7 +42,7 @@ $(function()
 					// 'dropdown_group':1,
 				},
 				'!=': {
-					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:DifferentThan'),
+					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Different'),
 					'code': 'different',
 					'rank': 500,
 					// 'dropdown_group':1,

@@ -1401,18 +1401,32 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => '>=',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => '<=',
-	'UI:Search:Criteria:Operator:Numeric:DifferentThan' => 'Not',
+	'UI:Search:Criteria:Operator:Numeric:Different' => '≠',
 	'UI:Search:Criteria:Operator:Numeric:Between' => 'Between:',
+	//   - DateTime widget
+	'UI:Search:Criteria:Operator:DateTime:Between' => 'Between:',
 
 	// - Criteria titles
 	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty',
 	'UI:Search:Criteria:Title:Default:Equals' => '%1$s equals %2$s',
+
+	'UI:Search:Criteria:Title:Default:GreaterThan' => '%1$s > %2$s',
+	'UI:Search:Criteria:Title:Default:GreaterThanOrEquals' => '%1$s >= %2$s',
+	'UI:Search:Criteria:Title:Default:LessThan' => '%1$s < %2$s',
+	'UI:Search:Criteria:Title:Default:LessThanOrEquals' => '%1$s <= %2$s',
+	'UI:Search:Criteria:Title:Default:Different' => '%1$s ≠ %2$s',
+	'UI:Search:Criteria:Title:Default:Between' => '%1$s between (%2$s)',
+	'UI:Search:Criteria:Title:Default:BetweenDays' => '%1$s between (%2$s)',
 	//   - String widget
 	'UI:Search:Criteria:Title:String:Contains' => '%1$s contains %2$s',
 	'UI:Search:Criteria:Title:String:StartsWith' => '%1$s starts with %2$s',
 	'UI:Search:Criteria:Title:String:EndsWith' => '%1$s ends with %2$s',
+	//   - Numeric widget
+//	'UI:Search:Criteria:Title:Numeric:Equals' => '%1$s equals %2$s',
+	//   - DateTime widget
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
 	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined',
@@ -1427,4 +1441,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// -
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none',
+
+	// - Widget other translations
+	'UI:Search:Criteria:DateTime:From' => 'From',
+	'UI:Search:Criteria:DateTime:Until' => 'Until',
 ));
