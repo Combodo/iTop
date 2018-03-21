@@ -34,6 +34,7 @@ abstract class CriterionConversionAbstract
 	const OP_IN = 'IN';
 	const OP_BETWEEN_DAYS = 'between_days';
 	const OP_BETWEEN_HOURS = 'between_hours';
+	const OP_BETWEEN = 'between';
 	const OP_ALL = 'all';
 
 }

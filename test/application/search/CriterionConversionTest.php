@@ -312,12 +312,17 @@ class CriterionConversionTest extends ItopDataTestCase
 		$aNewCriterion = array();
 		foreach($aAndCriterion as $aCriteria)
 		{
-			if (($aCriteria['widget'] == \AttributeDefinition::SEARCH_WIDGET_TYPE_STRING)
-				|| ($aCriteria['widget'] == \AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME)
-				|| ($aCriteria['widget'] == \AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM))
+			if ($aCriteria['widget'] != \AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
 			{
 				unset($aCriteria['oql']);
-				$aField = $aFields['zlist'][$aCriteria['ref']];
+				if (isset($aFields['zlist'][$aCriteria['ref']]))
+				{
+					$aField = $aFields['zlist'][$aCriteria['ref']];
+				}
+				else
+				{
+					$aField = $aFields['others'][$aCriteria['ref']];
+				}
 				$aCriteria['code'] = $aField['code'];
 				$aCriteria['class'] = $aField['class'];
 			}
@@ -353,7 +358,7 @@ class CriterionConversionTest extends ItopDataTestCase
 			'Date between 3' => array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date"),
 			'Date between 4' => array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date"),
 			'Date between 5' => array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date"),
-
+			'Num between 1' => array('OQL' => "SELECT Server WHERE nb_u >= 0 AND 1 >= nb_u"),
 		);
 	}
 }

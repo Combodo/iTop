@@ -108,6 +108,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$aMergeFctByWidget = array(
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE => 'MergeDate',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME => 'MergeDateTime',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC => 'MergeNumeric',
 		);
 
 		$aPrevCriterion = null;
@@ -151,7 +152,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	 * @param $aCurrCriterion
 	 * @param $aMergedCriterion
 	 *
-	 * @return null
+	 * @return Current criteria or null if merged
 	 * @throws \Exception
 	 */
 	protected static function MergeDate($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
@@ -199,6 +200,49 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		return null;
 	}
 
+	/**
+	 * @param $aPrevCriterion
+	 * @param $aCurrCriterion
+	 * @param $aMergedCriterion
+	 *
+	 * @return Current criteria or null if merged
+	 * @throws \Exception
+	 */
+	protected static function MergeNumeric($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
+	{
+		$sPrevOperator = $aPrevCriterion['operator'];
+		$sCurrOperator = $aCurrCriterion['operator'];
+		if (($sPrevOperator != '<=') || ($sCurrOperator != '>='))
+		{
+			$aMergedCriterion[] = $aPrevCriterion;
+
+			return $aCurrCriterion;
+		}
+
+		// Merge into 'between' operation.
+		$sLastNum = $aPrevCriterion['values'][0]['value'];
+		$sFirstNum = $aCurrCriterion['values'][0]['value'];
+		$aCurrCriterion['values'] = array();
+		$aCurrCriterion['values'][] = array('value' => $sFirstNum, 'label' => $sFirstNum);
+		$aCurrCriterion['values'][] = array('value' => $sLastNum, 'label' => $sLastNum);
+
+		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
+		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND', 'AND').' '.$aCurrCriterion['label'];
+		$aCurrCriterion['operator'] = 'between';
+
+		$aMergedCriterion[] = $aCurrCriterion;
+
+		return null;
+	}
+
+	/**
+	 * @param $aPrevCriterion
+	 * @param $aCurrCriterion
+	 * @param $aMergedCriterion
+	 *
+	 * @return Current criteria or null if merged
+	 * @throws \Exception
+	 */
 	protected static function MergeDateTime($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
 	{
 		$sPrevOperator = $aPrevCriterion['operator'];

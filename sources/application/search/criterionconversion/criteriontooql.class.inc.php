@@ -25,6 +25,7 @@ namespace Combodo\iTop\Application\Search\CriterionConversion;
 
 use AttributeDateTime;
 use AttributeDefinition;
+use Combodo\iTop\Application\Search\AjaxSearchException;
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
 use Combodo\iTop\Application\Search\SearchForm;
 use DateInterval;
@@ -56,6 +57,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 			self::OP_NOT_EMPTY => 'NotEmptyToOql',
 			self::OP_BETWEEN_DAYS => 'BetweenDaysToOql',
 			self::OP_BETWEEN_HOURS => 'BetweenHoursToOql',
+			self::OP_BETWEEN => 'BetweenToOql',
 			self::OP_IN => 'InToOql',
 			self::OP_ALL => 'AllToOql',
 		);
@@ -126,6 +128,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		{
 			return "ISNULL({$sRef})";
 		}
+
 		return "({$sRef} = '')";
 	}
 
@@ -165,15 +168,18 @@ class CriterionToOQL extends CriterionConversionAbstract
 							return "1";
 						}
 						// more selected values than remaining so use NOT IN
-						else if (count($aValues) > (count($aAllowedValues) / 2))
+						else
 						{
-							foreach($aValues as $aValue)
+							if (count($aValues) > (count($aAllowedValues) / 2))
 							{
-								unset($aAllowedValues[$aValue['value']]);
-							}
-							$sInList = implode("','", array_keys($aAllowedValues));
+								foreach($aValues as $aValue)
+								{
+									unset($aAllowedValues[$aValue['value']]);
+								}
+								$sInList = implode("','", array_keys($aAllowedValues));
 
-							return "({$sRef} NOT IN ('$sInList'))";
+								return "({$sRef} NOT IN ('$sInList'))";
+							}
 						}
 					}
 				}
@@ -271,6 +277,65 @@ class CriterionToOQL extends CriterionConversionAbstract
 			$oDate->add(DateInterval::createFromDateString('1 second'));
 			$sEndDate = $oDate->format(AttributeDateTime::GetSQLFormat());
 			$aOQL[] = "({$sRef} < '$sEndDate')";
+		}
+
+		$sOQL = implode(' AND ', $aOQL);
+
+		if (empty($sOQL))
+		{
+			$sOQL = "1";
+		}
+
+		return $sOQL;
+	}
+
+	/**
+	 * @param $sRef
+	 * @param $aCriteria
+	 *
+	 * @return string
+	 * @throws \Combodo\iTop\Application\Search\AjaxSearchException
+	 */
+	protected static function BetweenToOql($sRef, $aCriteria)
+	{
+		$aOQL = array();
+
+		$aValues = self::GetValues($aCriteria);
+		if (count($aValues) != 2)
+		{
+			return "1";
+		}
+
+		if (isset($aValues[0]['value']))
+		{
+			$sStartNum = trim($aValues[0]['value']);
+			if (is_numeric($sStartNum))
+			{
+				$aOQL[] = "({$sRef} >= '$sStartNum')";
+			}
+			else
+			{
+				if (!empty($sStartNum))
+				{
+					throw new AjaxSearchException("'$sStartNum' is not a numeric value", 400);
+				}
+			}
+		}
+
+		if (isset($aValues[1]['value']))
+		{
+			$sEndNum = trim($aValues[1]['value']);
+			if (is_numeric($sEndNum))
+			{
+				$aOQL[] = "({$sRef} <= '$sEndNum')";
+			}
+			else
+			{
+				if (!empty($sEndNum))
+				{
+					throw new AjaxSearchException("'$sEndNum' is not a numeric value", 400);
+				}
+			}
 		}
 
 		$sOQL = implode(' AND ', $aOQL);
