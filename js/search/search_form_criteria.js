@@ -249,13 +249,11 @@ $(function()
 			// Update widget
 			this.options.operator = oActiveOpElem.find('.sfc_op_radio').val();
 
-			if (JSON.stringify(this.options.values) != JSON.stringify(aValues))
-			{
-				this.is_modified = true;
-				this.options.oql = '';
-				this.options.values = aValues;
-				this._setTitle();
-			}
+			// TODO: Better modification check. The previous if has been removed as it caused a regression.
+			this.is_modified = true;
+			this.options.oql = '';
+			this.options.values = aValues;
+			this._setTitle();
 			this._unmarkAsDraft();
 
 

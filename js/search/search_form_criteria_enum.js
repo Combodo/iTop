@@ -170,7 +170,10 @@ $(function()
 			});
 
 			// - Apply on check
-			oAllowedValuesElem.find('.sfc_opc_mc_item').on('click', function(oEvent){
+			oAllowedValuesElem.find('.sfc_opc_mc_item input').on('click', function(oEvent){
+				// Prevent propagation, otherwise there will be multiple "_apply()"
+				oEvent.stopPropagation();
+
 				// Uncheck toggler
 				oTogglersElem.find('input:checkbox').prop('checked', false);
 
@@ -184,7 +187,12 @@ $(function()
 		{
 			var iValLimit = 3;
 			var iValCount = Object.keys(this.options.values).length;
-			if(iValCount > iValLimit)
+			var iAllowedValuesCount = (this.options.field.allowed_values.values !== undefined) ? Object.keys(this.options.field.allowed_values.values).length : 0;
+			if( (iValCount === 0) || (iValCount === iAllowedValuesCount) )
+			{
+				sTitle = Dict.Format('UI:Search:Criteria:Title:Enum:In:All', this.options.field.label);
+			}
+			else if(iValCount > iValLimit)
 			{
 				var aFirstValues = [];
 				for(var i=0; i<iValLimit-1; i++)
