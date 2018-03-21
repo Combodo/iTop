@@ -15,37 +15,37 @@ $(function()
 			'available_operators': {
 				'=': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Equals'),//pre-existing, label changed
-					'dropdown_group':1,
+					// 'dropdown_group':1,
 				},
 				'>': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:GreaterThan'),
 					'code': 'greater_than',
 					'rank': 100,
-					'dropdown_group':1,
+					// 'dropdown_group':1,
 				},
 				'>=': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals'),
 					'code': 'greater_than_or_equals',
 					'rank': 200,
-					'dropdown_group':1,
+					// 'dropdown_group':1,
 				},
 				'<': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:LessThan'),
 					'code': 'less_than',
 					'rank': 300,
-					'dropdown_group':1,
+					// 'dropdown_group':1,
 				},
 				'<=': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:LessThanOrEquals'),
 					'code': 'less_than_or_equals',
 					'rank': 400,
-					'dropdown_group':1,
+					// 'dropdown_group':1,
 				},
 				'!=': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:DifferentThan'),
 					'code': 'different',
 					'rank': 500,
-					'dropdown_group':1,
+					// 'dropdown_group':1,
 				},
 				'between': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Between'),
@@ -100,23 +100,20 @@ $(function()
 		{
 			var me = this;
 
-			aValues = me._getValues();
+			aValues = me._getValues();//TODO : tenir compte du refactoring de la structure
 
 			// DOM elements
 			var oOpContentElemFrom = $('<input type="text" name="from" />').uniqueId();
-			if (0 in aValues)
+			if (0 in aValues && typeof aValues[0].value != 'undefined')
 			{
-				oOpContentElemFrom.val(aValues[0]);
+				oOpContentElemFrom.val(aValues[0].value);
 			}
 
 			var oOpContentElemUntil = $('<input type="text" name="until" />').uniqueId();
-			if (1 in aValues)
+			if (1 in aValues && typeof aValues[1].value != 'undefined')
 			{
-				oOpContentElemUntil.val(aValues[1]);
+				oOpContentElemUntil.val(aValues[1].value);
 			}
-
-			oOpContentElemFrom.data('focusNext', '#'+oOpContentElemUntil.attr('id'));
-			// oOpContentElemUntil.data('focusNext', '#'+oOpContentElemFrom.attr('id'));
 
 
 			oOpContentElem = $().add(oOpContentElemFrom).add(oOpContentElemUntil);
@@ -130,6 +127,7 @@ $(function()
 				oOpContentElemFrom.focus();
 			});
 			// - Apply on "enter" key hit
+			//todo: this could be refactored
 			oOpContentElem.on('keyup', function(oEvent){
 				// Check operator's radio if not already (typically when focusing in input via "tab" key)
 				if(oOpElem.find('.sfc_op_radio').prop('checked') === false)
@@ -142,17 +140,8 @@ $(function()
 				// Apply if enter key
 				if(oEvent.key === 'Enter')
 				{
-					if (focusNext = $(this).data('focusNext'))
-					{
-						$(focusNext).focus();
-					}
-					else
-					{
-						me._apply();
-					}
+					me._apply();
 				}
-
-
 			});
 
 			oOpElem.find('.sfc_op_content').append(oOpContentElem);
@@ -170,6 +159,28 @@ $(function()
 
 
 			return aValues;
+		},
+
+		_setBetweenOperatorValues: function(oOpElem, aValues)
+		{
+			switch (aValues.length)
+			{
+				case 2:
+					oOpElem.find('.sfc_op_content input[name="until"]').val(aValues[0].value);
+					//NO BREAK!!!
+				case 1:
+					oOpElem.find('.sfc_op_content input[name="from"]').val(aValues[0].value);
+					break;
+				default:
+					return false;
+			}
+
+			return true;
+		},
+
+		_resetBetweenOperator: function(oOpElem)
+		{
+			this._resetOperator(oOpElem);
 		},
 
 		//------------------
@@ -190,18 +201,20 @@ $(function()
 			this._super(oOpElem, sOpIdx, oOp);
 			oOpElem.addClass('force_hide')
 
+			//TODO: move this into the abstract widget
+
 			// DOM element
-			oDropdown = this.element.find('select.dropdown_group_'+oOp.dropdown_group);
-			if (oDropdown.length == 0)
+			oDropdownElem = this.element.find('select.dropdown_group_'+oOp.dropdown_group);
+			if (oDropdownElem.length == 0)
 			{
-				oDropdown = $('<select class="dropdown_group_'+oOp.dropdown_group+'" data-dropdown-group="'+oOp.dropdown_group+'"></select>');
+				oDropdownElem = $('<select class="dropdown_group_'+oOp.dropdown_group+'" data-dropdown-group="'+oOp.dropdown_group+'"></select>');
 
-				oDropdown.on('change', function(){
-					$option = $(this);
-					me.element.find('.sfc_fg_operator_dropdown_group .sfc_op_radio').val($option.val());
+				oDropdownElem.on('change', function(){
+					// $option = $(this);
+					me.element.find('.sfc_fg_operator_dropdown_group .sfc_op_radio').val(oDropdownElem.val());
 
-					oOptionOp = $option.data('oOp');
-					$option.attr('data-operator-code', oOptionOp.code);
+					oOptionOp = oDropdownElem.data('oOp');
+					oDropdownElem.attr('data-operator-code', oOptionOp.code);
 				});
 
 
@@ -212,7 +225,7 @@ $(function()
 					.addClass('sfc_fg_operator_dropdown_group')
 					.attr('data-operator-code', 'dropdown_group')
 					.find('.sfc_op_name')
-						.append(oDropdown)
+						.append(oDropdownElem)
 					.end()
 					.find('.sfc_op_radio')
 						.val(sOpIdx)
@@ -233,7 +246,7 @@ $(function()
 				this._prepareDefaultOperator(oOpElemDropdown, sOpIdx, oOp);
 			}
 
-			oDropdown
+			oDropdownElem
 				.append('<option value="'+sOpIdx+'" >'+oOp.label+'</option>')
 				.data('oOp', oOp)
 			;

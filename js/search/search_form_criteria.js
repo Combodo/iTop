@@ -509,9 +509,12 @@ $(function()
 			var oOpContentElem = $('<input type="text" />');
 			oOpContentElem.val(this._getValuesAsText());
 
+			console.debug(oOp, oOpElem, oOpContentElem.val(), '--');
+
 			// Events
 			// - Focus input on click (radio, label, ...)
 			oOpElem.on('click', ':not(input[type="text"], select)', function(oEvent) {
+				//in order to prevent from the bubling of the event from inputs so their parents, we filter on oEvent.target, we could have stoped the bubling but it would have been a little agressive.
 				if ($(oEvent.target).is('input[type="text"], select')) {
 					return;
 				}
@@ -584,20 +587,20 @@ $(function()
 		// - Convert values to a standard string
 		_getValues: function()
 		{
-			var aValues = [];
-			for(var iValueIdx in this.options.values)
-			{
-				aValues.push(this.options.values[iValueIdx].label);
-			}
-
-			return aValues;
+			return this.options.values;
 		},
 		// - Convert values to a standard string
 		_getValuesAsText: function()
 		{
+			var aRawValues = this._getValues();
 
+			var aValues = [];
+			for(var iValueIdx in aRawValues)
+			{
+				aValues.push(aRawValues[iValueIdx].label);
+			}
 
-			return this._getValues().join(', ');
+			return aValues.join(', ');
 		},
 		// - Make an OQL expression from the criteria values and operator
 		_makeOQLExpression: function()
