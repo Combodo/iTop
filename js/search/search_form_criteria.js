@@ -509,7 +509,7 @@ $(function()
 			var oOpContentElem = $('<input type="text" />');
 			oOpContentElem.val(this._getValuesAsText());
 
-			console.debug(oOp, oOpElem, oOpContentElem.val(), '--');
+
 
 			// Events
 			// - Focus input on click (radio, label, ...)
