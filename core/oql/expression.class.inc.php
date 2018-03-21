@@ -34,6 +34,14 @@ abstract class Expression
 
 	// recursive translation of identifiers
 	abstract public function GetUnresolvedFields($sAlias, &$aUnresolved);
+
+	/**
+	 * @param array $aTranslationData
+	 * @param bool $bMatchAll
+	 * @param bool $bMarkFieldsAsResolved
+	 *
+	 * @return Expression Translated expression
+	 */
 	abstract public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
 
 	// recursive rendering (aArgs used as input by default, or used as output if bRetrofitParams set to True

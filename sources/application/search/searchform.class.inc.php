@@ -122,9 +122,18 @@ class SearchForm
 		$sHtml .= "<div id=\"fs_{$sSearchFormId}_criterion_outer\">\n</div>\n";
 		$sHtml .= "</form>\n";
 
+		if (isset($aExtraParams['query_params']))
+		{
+			$aArgs = $aExtraParams['query_params'];
+		}
+		else
+		{
+			$aArgs = array();
+		}
+
 		$aFields = $this->GetFields($oSet);
 		$oSearch = $oSet->GetFilter();
-		$aCriterion = $this->GetCriterion($oSearch, $aFields);
+		$aCriterion = $this->GetCriterion($oSearch, $aFields, $aArgs);
 
 		$oBaseSearch = $oSearch->DeepClone();
 		$oBaseSearch->ResetCondition();
@@ -284,11 +293,21 @@ class SearchForm
 	 * @param \DBSearch $oSearch
 	 * @param array $aFields
 	 *
+	 * @param array $aArgs
+	 *
 	 * @return array
 	 */
-	public function GetCriterion($oSearch, $aFields)
+	public function GetCriterion($oSearch, $aFields, $aArgs = array())
 	{
 		$oExpression = $oSearch->GetCriteria();
+
+		if (!empty($aArgs))
+		{
+			$aArgs = MetaModel::PrepareQueryArguments($aArgs);
+
+			$sOQL = $oExpression->Render($aArgs);
+			$oExpression = Expression::FromOQL($sOQL);
+		}
 
 		$aOrCriterion = array();
 		$aORExpressions = Expression::Split($oExpression, 'OR');
