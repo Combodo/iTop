@@ -9,6 +9,10 @@ $(function()
 		// default options
 		options:
 		{
+			// Null value
+			'null_value': {
+				'label': Dict.S('UI:UndefinedObject'),
+			}
 		},
 
    

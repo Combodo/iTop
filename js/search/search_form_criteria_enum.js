@@ -18,7 +18,15 @@ $(function()
 					'code': 'in',
 					'rank': 10,
 				},
-				'=': null,	// Remove this one from enum widget.
+				'=': null,			// Remove this one from enum widget.
+				'empty': null,		// Remove as it will be handle by the "null" value in the "IN" operator
+				'not_empty': null,	// Remove as it will be handle by the "null" value in the "IN" operator
+			},
+
+			// Null value
+			'null_value': {
+				'code': null,
+				'label': Dict.S('Enum:Undefined'),
 			},
 		},
 
@@ -93,6 +101,18 @@ $(function()
 
 			// - Allowed values
 			var oAllowedValuesElem = $('<div class="sfc_opc_mc_items"></div>');
+			//   - Null value is allowed
+			// TODO: We might want to move this into the allowed_values for a standard behavior. But that needs to know how to send the "null" value to the server.
+			if(this.options.field.is_null_allowed === true)
+			{
+				var sItemId = 'value_' + sOpId + '_null';
+				var sValCode = this.options.null_value.code;
+				var sValLabel = this.options.null_value.label;
+				var oValueElem = $('<div class="sfc_opc_mc_item" data-value-code="' + sValCode + '"></div>')
+					.append('<label for="' + sItemId + '"><input type="checkbox" id="' + sItemId + '" value="' + sValCode + '"/>' + sValLabel + '</label>')
+					.appendTo(oAllowedValuesElem);
+			}
+			//   - Regular allowed values
 			if(this.options.field.allowed_values.values !== undefined)
 			{
 				var aSortedValues = this._sortValuesByLabel(this.options.field.allowed_values.values);

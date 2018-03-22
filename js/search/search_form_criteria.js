@@ -15,11 +15,11 @@ $(function()
 			'values': [],
 			'oql': '',
 			'is_removable': true, // Not used for now. If we come to show locked criterion they will need to have this flag set to false.
-			'is_null_allowed': false,
 
 			'field': {
 				'label': '',
 				'allowed_values': null,
+				'is_null_allowed': false,
 			},
 			// Available operators. They can be extended or restricted by derivated widgets (see this._initOperators() for more informations)
 			'available_operators': {

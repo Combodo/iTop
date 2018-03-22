@@ -446,6 +446,7 @@ $(function()
 						code: oFieldDef.code,
 						widget: oFieldDef.widget,
 						allowed_values: oFieldDef.allowed_values,
+						is_null_allowed: oFieldDef.is_null_allowed,
 					};
 				}
 
