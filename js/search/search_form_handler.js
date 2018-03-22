@@ -71,7 +71,7 @@ $(function()
 		elements:
 		{
 			message_area: null,
-			active_criterion: null,
+			criterion_area: null,
 			more_criterion: null,
 			results_area: null,
 		},
@@ -160,7 +160,7 @@ $(function()
 				}]
 			};
 			// - Retrieve criterion
-			this.elements.active_criterion.find('.search_form_criteria').each(function(){
+			this.elements.criterion_area.find('.search_form_criteria').each(function(){
 				var oCriteriaData = $(this).triggerHandler('itop.search.criteria.get_data');
 				oCriterion['or'][0]['and'].push(oCriteriaData);
 			});
@@ -205,7 +205,7 @@ $(function()
 		// - Close all criterion
 		_closeAllCriterion: function()
 		{
-			this.elements.active_criterion.find('.search_form_criteria').each(function(){
+			this.elements.criterion_area.find('.search_form_criteria').each(function(){
 				$(this).triggerHandler('itop.search.criteria.close');
 			});
 		},
@@ -255,13 +255,12 @@ $(function()
 				oCriterionAreaElem = $('<div></div>').appendTo(this.element);
 			}
 			oCriterionAreaElem.addClass('sf_criterion_area');
+			this.elements.criterion_area = oCriterionAreaElem;
 
-			// Clean area
+				// Clean area
 			oCriterionAreaElem
 				.html('')
-				.append('<div class="sf_active_criterion"></div>')
 				.append('<div class="sf_more_criterion"></div>');
-			this.elements.active_criterion = oCriterionAreaElem.find('.sf_active_criterion');
 			this.elements.more_criterion = oCriterionAreaElem.find('.sf_more_criterion');
 
 			// Prepare content
@@ -386,6 +385,8 @@ $(function()
 		// - Prepare results area
 		_prepareResultsArea: function()
 		{
+			var me = this;
+
 			var oResultAreaElem;
 
 			// Build area element
@@ -402,10 +403,21 @@ $(function()
 				}
 				else
 				{
-					oResultAreaElem = $('<div></div>').insertAfter(this.element.closest('.display_block'));
+					oResultAreaElem = $('<div class="display_block"></div>').insertAfter(this.element.closest('.display_block'));
 				}
 			}
 			oResultAreaElem.addClass('sf_results_area');
+
+			// Make placeholder if nothing yet
+			if(oResultAreaElem.html() === '')
+			{
+				// TODO: Make a good UI for this POC.
+				// TODO: Translate sentence.
+				oResultAreaElem.html('<div class="sf_results_placeholder"><p>Add some criterion on the search box or click the search button to view the objects.</p><p><button type="button">Search<span class="fa fa-search"></span></button></p></div>');
+				oResultAreaElem.find('button').on('click', function(){
+					me._onSubmitClick();
+				});
+			}
 
 			this.elements.results_area = oResultAreaElem;
 		},
@@ -440,7 +452,7 @@ $(function()
 				// Create DOM element
 				var oCriteriaElem = $('<div></div>')
 					.addClass('sf_criteria')
-					.appendTo(this.elements.active_criterion);
+					.insertBefore(this.elements.more_criterion);
 
 				// Instanciate widget
 				$.itop[sWidgetName](oData, oCriteriaElem);

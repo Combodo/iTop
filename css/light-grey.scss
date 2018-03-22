@@ -781,7 +781,6 @@ input.dp-applied {
 	margin-top: 0;
 }
 /* Search forms v2 */
-/* TODO: Remove comment before final commit */
 .search_box{
 	box-sizing: border-box;
 	position: relative;
@@ -862,14 +861,10 @@ input.dp-applied {
 		background-color: $white;
 
 		/* Common style between criterion and more criterion */
-		.sf_active_criterion,
+		.search_form_criteria,
 		.sf_more_criterion {
 			position: relative;
 			display: inline-block;
-		}
-
-		.search_form_criteria,
-		.sf_more_criterion {
 			margin-bottom: 5px;
 			vertical-align: top;
 
@@ -905,8 +900,6 @@ input.dp-applied {
 
 		/* Criteria tags */
 		.search_form_criteria{
-			position: relative;
-			display: inline-block;
 			margin-right: 5px;
 
 
@@ -1204,6 +1197,16 @@ input.dp-applied {
 					}
 				}
 			}
+		}
+	}
+}
+.sf_results_area{
+	.sf_results_placeholder{
+		margin-top: 100px;
+		text-align: center;
+
+		button > span{
+			margin-left: 0.5em;
 		}
 	}
 }

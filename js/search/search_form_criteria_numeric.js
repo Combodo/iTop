@@ -127,21 +127,9 @@ $(function()
 				oOpContentElemFrom.focus();
 			});
 			// - Apply on "enter" key hit
-			//todo: this could be refactored
-			oOpContentElem.on('keyup', function(oEvent){
-				// Check operator's radio if not already (typically when focusing in input via "tab" key)
-				if(oOpElem.find('.sfc_op_radio').prop('checked') === false)
-				{
-					oOpElem.find('.sfc_op_radio').prop('checked', true)
-				}
-
+			// TODO: this could be refactored
+			oOpContentElem.on('keydown', function(oEvent){
 				me._markAsDraft();
-
-				// Apply if enter key
-				if(oEvent.key === 'Enter')
-				{
-					me._apply();
-				}
 			});
 
 			oOpElem.find('.sfc_op_content').append(oOpContentElem);
@@ -201,7 +189,7 @@ $(function()
 			this._super(oOpElem, sOpIdx, oOp);
 			oOpElem.addClass('force_hide')
 
-			//TODO: move this into the abstract widget
+			//TODO: Move this into the abstract widget
 
 			// DOM element
 			oDropdownElem = this.element.find('select.dropdown_group_'+oOp.dropdown_group);
@@ -221,7 +209,7 @@ $(function()
 				// Create DOM element from template
 				var oOpElemDropdown = $(this._getOperatorTemplate()).uniqueId();
 
-				//todo : if this code is keeped, the radio mustr have an id and the label need to point to it
+				// TODO: If this code is keeped, the radio must have an id and the label need to point to it
 				oOpElemDropdown
 					.addClass('sfc_fg_operator_dropdown_group')
 					.attr('data-operator-code', 'dropdown_group')
@@ -232,14 +220,7 @@ $(function()
 						.val(sOpIdx)
 					.end()
 					.on('click', function(oEvent){
-						var bIsChecked = oOpElemDropdown.find('.sfc_op_radio').prop('checked');
-
-						if(bIsChecked === false)
-						{
-							oOpElemDropdown.find('.sfc_op_radio').prop('checked', true);
-							me._markAsDraft();
-						}
-						oOpElemDropdown.find('input[type="text"]:first').focus();
+						//oOpElemDropdown.find('input[type="text"]:first').focus();
 					})
 					.appendTo(this.element.find('.sfc_fg_operators'))
 				;

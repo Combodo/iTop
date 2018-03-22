@@ -700,7 +700,6 @@ input.dp-applied {
   margin-top: 0;
 }
 /* Search forms v2 */
-/* TODO: Remove comment before final commit */
 .search_box {
   box-sizing: border-box;
   position: relative;
@@ -773,11 +772,9 @@ input.dp-applied {
   /* Criteria tags */
   /* More criterion */
 }
-.search_form_handler .sf_criterion_area .sf_active_criterion, .search_form_handler .sf_criterion_area .sf_more_criterion {
+.search_form_handler .sf_criterion_area .search_form_criteria, .search_form_handler .sf_criterion_area .sf_more_criterion {
   position: relative;
   display: inline-block;
-}
-.search_form_handler .sf_criterion_area .search_form_criteria, .search_form_handler .sf_criterion_area .sf_more_criterion {
   margin-bottom: 5px;
   vertical-align: top;
 }
@@ -808,8 +805,6 @@ input.dp-applied {
   margin-top: -1px;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria {
-  position: relative;
-  display: inline-block;
   margin-right: 5px;
   /* Non editable criteria */
   /* Draft criteria (modifications not applied) */
@@ -1033,6 +1028,13 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_list .sfm_field {
   cursor: pointer;
   white-space: nowrap;
+}
+.sf_results_area .sf_results_placeholder {
+  margin-top: 100px;
+  text-align: center;
+}
+.sf_results_area .sf_results_placeholder button > span {
+  margin-left: 0.5em;
 }
 .mandatory {
   border: 1px solid #f00;

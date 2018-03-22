@@ -260,10 +260,6 @@ $(function()
 			// Trigger event to handler
 			this.handler.triggerHandler('itop.search.criteria.value_changed');
 		},
-		_cancel: function()
-		{
-			this._close();
-		},
 
 
 		// Event callbacks
@@ -271,10 +267,11 @@ $(function()
 		_onButtonApply: function()
 		{
 			this._apply();
+			this._close();
 		},
 		_onButtonCancel: function()
 		{
-			this._cancel();
+			this._close();
 		},
 		_onButtonMore: function()
 		{
@@ -330,6 +327,24 @@ $(function()
 				if(bOpen === true)
 				{
 					me._open();
+				}
+			});
+			this.element.on('keydown', function(oEvent){
+				// Apply if "enter" key
+				if(oEvent.key === 'Enter')
+				{
+					me._apply();
+
+					// Keep criteria open only on Ctrl + Enter.
+					if(oEvent.ctrlKey === false)
+					{
+						me._close();
+					}
+				}
+				// Close if "escape" key
+				else if(oEvent.key === 'Escape')
+				{
+					me._close();
 				}
 			});
 
@@ -494,7 +509,7 @@ $(function()
 
 			// Bind events
 			// - Check radio button on click and mark criteria as draft
-			oOpElem.on('click', function(){
+			oOpElem.on('click focusin', function(){
 				var bIsChecked = oOpElem.find('.sfc_op_radio').prop('checked');
 
 				if(bIsChecked === false)
@@ -522,21 +537,9 @@ $(function()
 				}
 				oOpContentElem.focus();
 			});
-			// - Apply on "enter" key hit
-			oOpContentElem.on('keyup', function(oEvent){
-				// Check operator's radio if not already (typically when focusing in input via "tab" key)
-				if(oOpElem.find('.sfc_op_radio').prop('checked') === false)
-				{
-					oOpElem.find('.sfc_op_radio').prop('checked', true)
-				}
-
+			// - Mark as draft on key typing
+			oOpContentElem.on('keydown', function(oEvent){
 				me._markAsDraft();
-
-				// Apply if enter key
-				if(oEvent.key === 'Enter')
-				{
-					me._apply();
-				}
 			});
 
 			oOpElem.find('.sfc_op_content').append(oOpContentElem);
