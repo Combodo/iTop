@@ -205,7 +205,8 @@ class SearchForm
 			{
 				$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
 				$aList = MetaModel::GetZListItems($sClass, 'standard_search');
-				$aZList = array();
+				
+				$aZList = $this->AppendId($sClass, $sAlias, array());
 				foreach($aList as $sAttCode)
 				{
 					if (array_key_exists($sAttCode, $aAttributeDefs))
@@ -330,6 +331,26 @@ class SearchForm
 		return array('or' => $aOrCriterion);
 	}
 
+	/**
+	 * @param $sClass
+	 * @param $sClassAlias
+	 * @param $aFields
+	 *
+	 * @return mixed
+	 */
+	private function AppendId($sClass, $sClassAlias, $aFields)
+	{
+		$aField = array();
+		$aField['code'] = 'id';
+		$aField['class'] = $sClass;
+		$aField['class_alias'] = $sClassAlias;
+		$aField['label'] = 'Id';
+		$aField['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC;
+		$aField['is_null_allowed'] = false;
+		$aFields[$sClassAlias . '.id'] = $aField;
+		$this->aLabels['Id'] = true;
+		return $aFields;
+	}
 	/**
 	 * @param $sClass
 	 * @param $sClassAlias
