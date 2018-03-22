@@ -101,8 +101,11 @@ $(function()
 
 			// - Allowed values
 			var oAllowedValuesElem = $('<div class="sfc_opc_mc_items"></div>');
-			//   - Null value is allowed
-			// TODO: We might want to move this into the allowed_values for a standard behavior. But that needs to know how to send the "null" value to the server.
+
+			//   - Null value if allowed
+			//   Note: null values is NOT put among the allowed values for two reasons:
+			//     - It must be the first value of the list
+			//     - It is not give by neither the autocomplete or the pre-filled values, so we would need to manually add it in both cases, all operations.
 			if(this.options.field.is_null_allowed === true)
 			{
 				var sItemId = 'value_' + sOpId + '_null';
@@ -112,6 +115,7 @@ $(function()
 					.append('<label for="' + sItemId + '"><input type="checkbox" id="' + sItemId + '" value="' + sValCode + '"/>' + sValLabel + '</label>')
 					.appendTo(oAllowedValuesElem);
 			}
+
 			//   - Regular allowed values
 			if(this.options.field.allowed_values.values !== undefined)
 			{
@@ -209,6 +213,14 @@ $(function()
 			var iValLimit = 3;
 			var iValCount = Object.keys(this.options.values).length;
 			var iAllowedValuesCount = (this.options.field.allowed_values.values !== undefined) ? Object.keys(this.options.field.allowed_values.values).length : 0;
+
+			// Manually increase allowed values count if null is allowed
+			if(this.options.field.is_null_allowed === true)
+			{
+				iAllowedValuesCount++;
+			}
+
+			// Making right tite regarding the number of selected values
 			if( (iValCount === 0) || (iValCount === iAllowedValuesCount) )
 			{
 				sTitle = Dict.Format('UI:Search:Criteria:Title:Enum:In:All', this.options.field.label);
