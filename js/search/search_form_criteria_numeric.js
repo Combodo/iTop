@@ -154,7 +154,7 @@ $(function()
 			switch (aValues.length)
 			{
 				case 2:
-					oOpElem.find('.sfc_op_content input[name="until"]').val(aValues[0].value);
+                    oOpElem.find('.sfc_op_content input[name="until"]').val(aValues[1].value);
 					//NO BREAK!!!
 				case 1:
 					oOpElem.find('.sfc_op_content input[name="from"]').val(aValues[0].value);

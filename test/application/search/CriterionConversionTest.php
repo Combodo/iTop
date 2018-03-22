@@ -301,11 +301,11 @@ class CriterionConversionTest extends ItopDataTestCase
 	 */
 	function testOqlToForSearchToOql($sOQL)
 	{
+		$this->debug($sOQL);
 		$oSearchForm = new SearchForm();
 		$oSearch = \DBSearch::FromOQL($sOQL);
 		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
 		$aCriterion = $oSearchForm->GetCriterion($oSearch, $aFields);
-		$this->debug($sOQL);
 
 		$aAndCriterion = $aCriterion['or'][0]['and'];
 

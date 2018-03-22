@@ -50,14 +50,13 @@ abstract class Expression
 	/**
 	 * @param DBObjectSearch $oSearch
 	 * @param array $aArgs
-	 * @param bool $bRetrofitParams
 	 * @param AttributeDefinition $oAttDef
 	 *
 	 * @return array parameters for the search form
 	 */
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
 	{
-		return $this->Render($aArgs, $bRetrofitParams);
+		return $this->Render($aArgs);
 	}
 
 	/**
@@ -170,7 +169,7 @@ abstract class Expression
 		return array(
 			'widget' => AttributeDefinition::SEARCH_WIDGET_TYPE_RAW,
 			'oql' => $this->Render($aArgs, $bRetrofitParams),
-			'label' => $this->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef),
+			'label' => $this->Display($oSearch, $aArgs, $oAttDef),
 			'source' => get_class($this),
 		);
 	}
@@ -432,7 +431,7 @@ class BinaryExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
 	{
 		$bReverseOperator = false;
 		$oLeftExpr = $this->GetLeftExpr();
@@ -447,8 +446,8 @@ class BinaryExpression extends Expression
 			$bReverseOperator = true;
 		}
 
-		$sLeft = $oLeftExpr->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
-		$sRight = $oRightExpr->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+		$sLeft = $oLeftExpr->Display($oSearch, $aArgs, $oAttDef);
+		$sRight = $oRightExpr->Display($oSearch, $aArgs, $oAttDef);
 
 		if ($bReverseOperator)
 		{
@@ -552,7 +551,7 @@ class BinaryExpression extends Expression
 			$aCriteria['operator'] = $this->GetOperator();
 		}
 		$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
-		$aCriteria['label'] = $this->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+		$aCriteria['label'] = $this->Display($oSearch, $aArgs, $oAttDef);
 
 		return $aCriteria;
 	}
@@ -643,13 +642,12 @@ class ScalarExpression extends UnaryExpression
 	/**
 	 * @param array $oSearch
 	 * @param array $aArgs
-	 * @param bool $bRetrofitParams
 	 * @param AttributeDefinition $oAttDef
 	 *
 	 * @return array|string
 	 * @throws \Exception
 	 */
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
 	{
 		if (!is_null($oAttDef))
 		{
@@ -670,7 +668,12 @@ class ScalarExpression extends UnaryExpression
 			return $oAttDef->GetAsPlainText($this->m_value);
 		}
 
-		return $this->Render($aArgs, $bRetrofitParams);
+		if (strpos($this->m_value, '%') === 0)
+		{
+			return '';
+		}
+
+		return $this->Render($aArgs);
 	}
 
 	// recursive rendering
@@ -718,8 +721,24 @@ class ScalarExpression extends UnaryExpression
 					break;
 			}
 		}
+		$aCriteria = array();
+		switch ((string)($this->m_value))
+		{
+			case '%Y-%m-%d':
+				$aCriteria['date'] = 'd';
+				break;
+			case '%Y-%m':
+				$aCriteria['date'] = 'm';
+				break;
+			case '%w':
+				$aCriteria['date'] = 'w';
+				break;
+			default:
+				$aCriteria['values'] = array($aValue);
+				break;
+		}
 
-		return array('values' => array($aValue));
+		return $aCriteria;
 	}
 
 }
@@ -793,7 +812,6 @@ class FieldExpression extends UnaryExpression
 	/**
 	 * @param DBObjectSearch $oSearch
 	 * @param array $aArgs
-	 * @param bool $bRetrofitParams
 	 * @param AttributeDefinition $oAttDef
 	 *
 	 * @return array|string
@@ -801,7 +819,7 @@ class FieldExpression extends UnaryExpression
 	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
 	 */
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
 	{
 		if (empty($this->m_sParent))
 		{
@@ -1019,7 +1037,7 @@ class VariableExpression extends UnaryExpression
 		return $this->m_sName;
 	}
 
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
 	{
 		$sValue = $this->m_value;
 		if (!is_null($aArgs) && (array_key_exists($this->m_sName, $aArgs)))
@@ -1074,7 +1092,7 @@ class VariableExpression extends UnaryExpression
 			return $oAttDef->GetAsPlainText($sValue);
 		}
 
-		return $this->Render($aArgs, $bRetrofitParams);
+		return $this->Render($aArgs);
 	}
 
 	// recursive rendering
@@ -1510,12 +1528,8 @@ class FunctionExpression extends Expression
 		return $sRes;
 	}
 
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
 	{
-		if ($this->m_sVerb != 'DATE_SUB' && $this->m_sVerb != 'DATE_ADD' && $this->m_sVerb != 'NOW')
-		{
-			return $this->Render($aArgs, $bRetrofitParams);
-		}
 		$sOperation = '';
 		switch ($this->m_sVerb)
 		{
@@ -1528,11 +1542,15 @@ class FunctionExpression extends Expression
 			case 'DATE_ADD':
 				$sOperation = '+';
 				break;
+			case 'DATE_FORMAT':
+				break;
+			default:
+				return $this->Render($aArgs);
 		}
 
 		foreach($this->m_aArgs as $oExpression)
 		{
-			$sOperation .= $oExpression->Display($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+			$sOperation .= $oExpression->Display($oSearch, $aArgs, $oAttDef);
 		}
 
 		return $sOperation;
@@ -1668,9 +1686,9 @@ class IntervalExpression extends Expression
 		return $aCriteria;
 	}
 
-	public function Display($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
 	{
-		return $this->m_oValue->Render($aArgs, $bRetrofitParams).' '.$this->m_sUnit;
+		return $this->m_oValue->Render($aArgs) . ' ' . $this->m_sUnit;
 	}
 }
 
