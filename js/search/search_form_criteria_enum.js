@@ -149,7 +149,8 @@ $(function()
 			});
 
 			// - Filter
-			oFilterElem.find('input').on('keydown focus', function(oEvent){
+			// Note: "keyup" event is use instead of "keydown", otherwise, the inpu value would not be set yet.
+			oFilterElem.find('input').on('keyup focus', function(oEvent){
 				// TODO: Move on values with up and down arrow keys; select with space or enter.
 
 				var sFilter = $(this).val();

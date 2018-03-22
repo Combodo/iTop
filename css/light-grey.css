@@ -859,6 +859,8 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group {
   /* Form group (operators) is displayed only when the criteria is toggled to opened state */
   display: none;
+  max-height: 520px;
+  overflow: auto;
   /* Show only first operator in simple mode */
   /* Show all operators in advanced mode */
 }
@@ -887,8 +889,12 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_op_name {
   width: 90px;
 }
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices {
+  padding: 4px 8px;
+}
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices label > input {
   vertical-align: middle;
+  margin-left: 0px;
   margin-right: 8px;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_filter {
@@ -909,16 +915,20 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_filter .sfc_opc_mc_reset {
   display: none;
 }
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items {
+  max-height: 445px;
+  /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0px -8px;
+  /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
+}
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_item {
-  margin: 0px -5px 0px -5px;
-  /* -5px to compensate padding and keep aligned to the filter left side */
-  padding: 5px;
+  padding: 4px 8px;
+  /* Putting back the padding remove by .sfc_opc_mc_items */
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_item:hover {
-  padding: 4px;
-  /* Normal padding - border size */
   background-color: #fff;
-  border: 1px solid #3f7294;
   /* TODO: Try with this */
   /*background-color: $box-blue-border-color;
    color: $white;*/
@@ -986,13 +996,17 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw .sfc_form_group {
   display: none;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_enum .sfc_fg_operator_in > label {
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_enum .sfc_form_group {
+  padding: 0px;
+  /* Resetting as there will be only the multichoices operator. Remove this if other operators are added. */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_enum .sfc_form_group .sfc_fg_operator_in > label {
   display: inline-block;
   width: 100%;
   line-height: initial;
   white-space: nowrap;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_enum .sfc_fg_operator_in > label .sfc_op_content {
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_enum .sfc_form_group .sfc_fg_operator_in > label .sfc_op_content {
   width: 100%;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_dropdown_group select {
