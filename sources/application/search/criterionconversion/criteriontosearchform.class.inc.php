@@ -172,26 +172,28 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$aCurrCriterion['operator'] = 'between_dates';
 		$oFormat = AttributeDate::GetFormat();
 		$sLastDate = $aPrevCriterion['values'][0]['value'];
+		$oDate = new DateTime($sLastDate);
 		if ($sPrevOperator == '<')
 		{
 			// previous day to include ends
-			$oDate = new DateTime($sLastDate);
 			$oDate->sub(DateInterval::createFromDateString('1 day'));
-			$sLastDate = $oFormat->format($oDate);
 		}
+		$sLastDateValue = $oDate->format(AttributeDate::GetSQLFormat());
+		$sLastDateLabel = $oFormat->format($oDate);
 
 		$sFirstDate = $aCurrCriterion['values'][0]['value'];
+		$oDate = new DateTime($sFirstDate);
 		if ($sCurrOperator == '>')
 		{
 			// next day to include ends
-			$oDate = new DateTime($sFirstDate);
 			$oDate->add(DateInterval::createFromDateString('1 day'));
-			$sFirstDate = $oFormat->format($oDate);
 		}
+		$sFirstDateValue = $oDate->format(AttributeDate::GetSQLFormat());
+		$sFirstDateLabel = $oFormat->format($oDate);
 
 		$aCurrCriterion['values'] = array();
-		$aCurrCriterion['values'][] = array('value' => $sFirstDate, 'label' => $sFirstDate);
-		$aCurrCriterion['values'][] = array('value' => $sLastDate, 'label' => $sLastDate);
+		$aCurrCriterion['values'][] = array('value' => $sFirstDateValue, 'label' => $sFirstDateLabel);
+		$aCurrCriterion['values'][] = array('value' => $sLastDateValue, 'label' => $sLastDateLabel);
 
 		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
 		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND', 'AND').' '.$aCurrCriterion['label'];
@@ -268,8 +270,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			// previous day/second to include ends
 			$oDate->sub(DateInterval::createFromDateString($sInterval));
 		}
-		$sLastDate = $oDate->format(AttributeDateTime::GetSQLFormat());
-		$sLastDate = AttributeDateTime::GetFormat()->Format($sLastDate);
+		$sLastDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
+		$sLastDateLabel = AttributeDateTime::GetFormat()->Format($sLastDateValue);
 
 		$oDate = new DateTime($sFirstDate);
 		if ($sCurrOperator == '>')
@@ -277,12 +279,12 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			// next day/second to include ends
 			$oDate->add(DateInterval::createFromDateString($sInterval));
 		}
-		$sFirstDate = $oDate->format(AttributeDateTime::GetSQLFormat());
-		$sFirstDate = AttributeDateTime::GetFormat()->Format($sFirstDate);
+		$sFirstDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
+		$sFirstDateLabel = AttributeDateTime::GetFormat()->Format($sFirstDateValue);
 
 		$aCurrCriterion['values'] = array();
-		$aCurrCriterion['values'][] = array('value' => $sFirstDate, 'label' => $sFirstDate);
-		$aCurrCriterion['values'][] = array('value' => $sLastDate, 'label' => $sLastDate);
+		$aCurrCriterion['values'][] = array('value' => $sFirstDateValue, 'label' => $sFirstDateLabel);
+		$aCurrCriterion['values'][] = array('value' => $sLastDateValue, 'label' => $sLastDateLabel);
 
 		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
 		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND', 'AND').' '.$aCurrCriterion['label'];
