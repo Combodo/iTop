@@ -297,6 +297,9 @@ class CriterionConversionTest extends ItopDataTestCase
 
 	/**
 	 * @dataProvider OqlProvider
+	 *
+	 * @param $sOQL
+	 *
 	 * @throws \OQLException
 	 */
 	function testOqlToForSearchToOql($sOQL)

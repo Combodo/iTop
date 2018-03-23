@@ -25,6 +25,7 @@
 namespace Combodo\iTop\Application\Search\CriterionConversion;
 
 
+use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
@@ -169,14 +170,14 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		// Merge into 'between' operation.
 		// The ends of the interval are included
 		$aCurrCriterion['operator'] = 'between_dates';
-		$sFormat = AttributeDateTime::GetFormat()->ToMomentJS();
+		$oFormat = AttributeDate::GetFormat();
 		$sLastDate = $aPrevCriterion['values'][0]['value'];
 		if ($sPrevOperator == '<')
 		{
 			// previous day to include ends
 			$oDate = new DateTime($sLastDate);
 			$oDate->sub(DateInterval::createFromDateString('1 day'));
-			$sLastDate = $oDate->format($sFormat);
+			$sLastDate = $oFormat->format($oDate);
 		}
 
 		$sFirstDate = $aCurrCriterion['values'][0]['value'];
@@ -185,7 +186,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			// next day to include ends
 			$oDate = new DateTime($sFirstDate);
 			$oDate->add(DateInterval::createFromDateString('1 day'));
-			$sFirstDate = $oDate->format($sFormat);
+			$sFirstDate = $oFormat->format($oDate);
 		}
 
 		$aCurrCriterion['values'] = array();
@@ -338,13 +339,36 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 	protected static function DateToSearchForm($aCriteria, $aFields)
 	{
-		return DateTimeToSearchForm($aCriteria, $aFields);
+		return self::DateTimeToSearchForm($aCriteria, $aFields);
 	}
 
 	protected static function DateTimeToSearchForm($aCriteria, $aFields)
 	{
 		if (!array_key_exists('is_relative', $aCriteria) || !$aCriteria['is_relative'])
 		{
+			// Convert '=' in 'between'
+			if (isset($aCriteria['operator']) && ($aCriteria['operator'] === '='))
+			{
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_BETWEEN_DATES;
+				$sWidget = $aCriteria['widget'];
+				if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
+				{
+					$aCriteria['values'][1] = $aCriteria['values'][0];
+				}
+				else
+				{
+					$sDate = $aCriteria['values'][0]['value'];
+					$oDate = new DateTime($sDate);
+
+					$oDate->add(DateInterval::createFromDateString('1 day'));
+					$oDate->sub(DateInterval::createFromDateString('1 second'));
+
+					$sLastDate = $oDate->format(AttributeDateTime::GetSQLFormat());
+					$sLastDate = AttributeDateTime::GetFormat()->Format($sLastDate);
+					$aCriteria['values'][1] = array('value' => $sLastDate, 'label' => $sLastDate);
+				}
+			}
+
 			return $aCriteria;
 		}
 

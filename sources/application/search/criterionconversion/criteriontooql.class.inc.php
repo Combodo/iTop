@@ -30,7 +30,6 @@ use AttributeExternalKey;
 use Combodo\iTop\Application\Search\AjaxSearchException;
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
 use Combodo\iTop\Application\Search\SearchForm;
-use DateInterval;
 
 class CriterionToOQL extends CriterionConversionAbstract
 {
@@ -273,9 +272,8 @@ class CriterionToOQL extends CriterionConversionAbstract
 		if (!empty($sEndDate))
 		{
 			$oDate = $oFormat->parse($sEndDate);
-			$oDate->add(DateInterval::createFromDateString('1 second'));
 			$sEndDate = $oDate->format($sAttributeClass::GetSQLFormat());
-			$aOQL[] = "({$sRef} < '$sEndDate')";
+			$aOQL[] = "({$sRef} <= '$sEndDate')";
 		}
 
 		$sOQL = implode(' AND ', $aOQL);

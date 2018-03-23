@@ -59,6 +59,11 @@ abstract class Expression
 		return $this->Render($aArgs);
 	}
 
+	public function GetAttDef($aClasses = array())
+	{
+		return null;
+	}
+
 	/**
 	 * Recursively browse the expression tree
 	 * @param Closure $callback
@@ -384,6 +389,14 @@ class BinaryExpression extends Expression
 		$this->GetRightExpr()->CollectUsedParents($aTable);
 	}
 
+	public function GetAttDef($aClasses = array())
+	{
+		$oAttDef = $this->GetLeftExpr()->GetAttDef($aClasses);
+		if (!is_null($oAttDef)) return $oAttDef;
+
+		return $this->GetRightExpr()->GetAttDef($aClasses);
+	}
+
 	/**
 	 * List all constant expression of the form <field> = <scalar> or <field> = :<variable>
 	 * Could be extended to support <field> = <function><constant_expression>
@@ -502,11 +515,10 @@ class BinaryExpression extends Expression
 			// Default criterion (Field OPE Field) is not supported
 			return parent::GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 		}
-		if ($oLeftExpr instanceof FieldExpression)
-		{
-			$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
-		}
-		if ($oRightExpr instanceof FieldExpression)
+
+		$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
+
+		if (is_null($oAttDef))
 		{
 			$oAttDef = $oRightExpr->GetAttDef($oSearch->GetJoinedClasses());
 			$bReverseOperator = true;
@@ -649,6 +661,11 @@ class ScalarExpression extends UnaryExpression
 	 */
 	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
 	{
+		if (strpos($this->m_value, '%') === 0)
+		{
+			return '';
+		}
+
 		if (!is_null($oAttDef))
 		{
 			if ($oAttDef->IsExternalKey())
@@ -666,11 +683,6 @@ class ScalarExpression extends UnaryExpression
 			}
 
 			return $oAttDef->GetAsPlainText($this->m_value);
-		}
-
-		if (strpos($this->m_value, '%') === 0)
-		{
-			return '';
 		}
 
 		return $this->Render($aArgs);
@@ -697,43 +709,44 @@ class ScalarExpression extends UnaryExpression
 
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
-		$aValue = array('value' => $this->GetValue());
-		if (!is_null($oAttDef))
-		{
-			switch (true)
-			{
-				case $oAttDef->IsExternalKey():
-					try
-					{
-						/** @var AttributeExternalKey $oAttDef */
-						$sTarget = $oAttDef->GetTargetClass();
-						$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
-
-						$aValue['label'] = $oObj->Get("friendlyname");
-
-					} catch (Exception $e)
-					{
-						IssueLog::Error($e->getMessage());
-					}
-					break;
-				default:
-					$aValue['label'] = $oAttDef->GetAsPlainText($this->GetValue());
-					break;
-			}
-		}
 		$aCriteria = array();
 		switch ((string)($this->m_value))
 		{
 			case '%Y-%m-%d':
-				$aCriteria['date'] = 'd';
+				$aCriteria['date_type'] = 'd';
 				break;
 			case '%Y-%m':
-				$aCriteria['date'] = 'm';
+				$aCriteria['date_type'] = 'm';
 				break;
 			case '%w':
-				$aCriteria['date'] = 'w';
+				$aCriteria['date_type'] = 'w';
 				break;
 			default:
+				$aValue = array('value' => $this->GetValue());
+				if (!is_null($oAttDef))
+				{
+					switch (true)
+					{
+						case $oAttDef->IsExternalKey():
+							try
+							{
+								/** @var AttributeExternalKey $oAttDef */
+								$sTarget = $oAttDef->GetTargetClass();
+								$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
+
+								$aValue['label'] = $oObj->Get("friendlyname");
+
+							}
+							catch (Exception $e)
+							{
+								IssueLog::Error($e->getMessage());
+							}
+							break;
+						default:
+							$aValue['label'] = $oAttDef->GetAsPlainText($this->GetValue());
+							break;
+					}
+				}
 				$aCriteria['values'] = array($aValue);
 				break;
 		}
@@ -1313,6 +1326,17 @@ class ListExpression extends Expression
 		}
 	}
 
+	public function GetAttDef($aClasses = array())
+	{
+		foreach($this->m_aExpressions as $oExpression)
+		{
+			$oAttDef = $oExpression->GetAttDef($aClasses);
+			if (!is_null($oAttDef)) return $oAttDef;
+		}
+
+		return null;
+	}
+
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
 		$aValues = array();
@@ -1456,6 +1480,17 @@ class FunctionExpression extends Expression
 		}
 	}
 
+	public function GetAttDef($aClasses = array())
+	{
+		foreach($this->m_aArgs as $oExpression)
+		{
+			$oAttDef = $oExpression->GetAttDef($aClasses);
+			if (!is_null($oAttDef)) return $oAttDef;
+		}
+
+		return null;
+	}
+
 	/**
 	 * Make the most relevant label, given the value of the expression
 	 *
@@ -1577,6 +1612,7 @@ class FunctionExpression extends Expression
 
 			case 'DATE_ADD':
 			case 'DATE_SUB':
+			case 'DATE_FORMAT':
 				$aCriteria = array('widget' => 'date_time');
 				foreach($this->m_aArgs as $oExpression)
 				{
