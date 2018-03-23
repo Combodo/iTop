@@ -338,15 +338,27 @@ $(function()
 				// Prevent propagation to parents and therefore multiple attempts to close it
 				oEvent.stopPropagation();
 
+				oEventTargetElem = $(oEvent.target);
+
 				// If not more menu, close all criterion
-				if($(oEvent.target).closest('.sf_more_criterion').length > 0)
+				if(oEventTargetElem.closest('.sf_more_criterion').length > 0)
 				{
 					me._closeAllCriterion();
 				}
 				else
 				{
+					//if using the datetimepicker, do not close anything
+					if (oEventTargetElem.closest('#ui-datepicker-div, .ui-datepicker-prev, .ui-datepicker-next').length > 0 )
+					{
+						//no closing in this case
+					}
+					// //if the context is not document, then we  have encountered a bug : the css ::after elements do have a context on click and thus, we cannot check if they are inside a  #ui-datepicker-div
+					// else if (typeof oEventTargetElem.context != 'undefined' && $(oEventTargetElem.context).is('.ui-icon'))
+					// {
+					// 	//no closing in this case (bugfix)
+					// }
 					// If criteria, close more menu & all criterion but me
-					if($(oEvent.target).closest('.search_form_criteria').length > 0)
+					else if(oEventTargetElem.closest('.search_form_criteria').length > 0)
 					{
 						me._closeMoreCriterion();
 						// All criterion but me is already handle by the criterion, no callback needed.

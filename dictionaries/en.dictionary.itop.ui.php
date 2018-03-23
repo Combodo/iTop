@@ -1444,5 +1444,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	// - Widget other translations
 	'UI:Search:Criteria:DateTime:From' => 'From',
+	'UI:Search:Criteria:DateTime:FromTime' => 'From',
 	'UI:Search:Criteria:DateTime:Until' => 'Until',
+	'UI:Search:Criteria:DateTime:UntilTime' => 'Until',
+	'UI:Search:Criteria:DateTime:PlaceholderFrom' => 'Any date',
+	'UI:Search:Criteria:DateTime:PlaceholderFromTime' => 'Any date',
+	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Any date',
+	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Any date',
 ));

@@ -990,6 +990,12 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_more {
   display: none;
 }
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .hide_on_advanced {
+  display: none;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group:not(.advanced) .hide_on_less {
+  display: none;
+}
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw .sfc_title {
   cursor: initial;
 }

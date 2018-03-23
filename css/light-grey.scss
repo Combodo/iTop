@@ -1126,6 +1126,16 @@ input.dp-applied {
 					.sfc_fg_more{
 						display: none;
 					}
+
+					.hide_on_advanced {
+						display: none;
+					}
+				}
+
+				&:not(.advanced) {
+					.hide_on_less {
+						display: none;
+					}
 				}
 			}
 
@@ -1168,6 +1178,9 @@ input.dp-applied {
 					}
 				}
 			}
+
+
+
 		}
 
 		/* More criterion */
