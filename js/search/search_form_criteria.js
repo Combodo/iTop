@@ -198,7 +198,7 @@ $(function()
 			{
 				oOpElemToFocus = this.element.find('.sfc_fg_operator:first');
 			}
-			oOpElemToFocus.find('.sfc_op_content input[type="text"]:first').trigger('click').trigger('focus');
+			oOpElemToFocus.find('.sfc_op_content input[type="text"]:first').filter(':not([data-no-auto-focus])').trigger('click').trigger('focus');
 		},
 		_close: function()
 		{
@@ -595,9 +595,13 @@ $(function()
 			return this.options.values;
 		},
 		// - Convert values to a standard string
-		_getValuesAsText: function()
+		_getValuesAsText: function(aRawValues)
 		{
-			var aRawValues = this._getValues();
+			if (aRawValues == undefined)
+			{
+				aRawValues = this._getValues();
+			}
+
 
 			var aValues = [];
 			for(var iValueIdx in aRawValues)
