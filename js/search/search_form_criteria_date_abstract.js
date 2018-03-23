@@ -14,43 +14,9 @@ $(function()
 			// Available operators
 			'available_operators': {
 				'between_dates': {
-					'label': Dict.S('UI:Search:Criteria:Operator:DateTime:Between'),
+					'label': Dict.S('UI:Search:Criteria:Operator:Default:Between'),
 					'code': 'between_days',
 					'rank': 1,
-				},
-				'=': {
-					'label': Dict.S('UI:Search:Criteria:Operator:DateTime:Equals'),//pre-existing, label changed
-					// 'dropdown_group':1,
-				},
-				'>': {
-					'label': Dict.S('UI:Search:Criteria:Operator:DateTime:GreaterThan'),
-					'code': 'greater_than',
-					'rank': 100,
-					// 'dropdown_group':1,
-				},
-				'>=': {
-					'label': Dict.S('UI:Search:Criteria:Operator:DateTime:GreaterThanOrEquals'),
-					'code': 'greater_than_or_equals',
-					'rank': 200,
-					// 'dropdown_group':1,
-				},
-				'<': {
-					'label': Dict.S('UI:Search:Criteria:Operator:DateTime:LessThan'),
-					'code': 'less_than',
-					'rank': 300,
-					// 'dropdown_group':1,
-				},
-				'<=': {
-					'label': Dict.S('UI:Search:Criteria:Operator:DateTime:LessThanOrEquals'),
-					'code': 'less_than_or_equals',
-					'rank': 400,
-					// 'dropdown_group':1,
-				},
-				'!=': {
-					'label': Dict.S('UI:Search:Criteria:Operator:DateTime:DifferentThan'),
-					'code': 'different',
-					'rank': 500,
-					// 'dropdown_group':1,
 				},
 				'empty': {
 					'rank': 700,//pre-existing, reordered
@@ -72,39 +38,16 @@ $(function()
 					//  "default_time_add": false,		=> either false to disable it or number of second to add (used by the datetimepicker to choose the right time on synched datepicker change, its value change from 0 for "from" to +1d-1s for "until"
 					//  "show_on_advanced": true,		=> is the input displaye on "more" or "less" mode advanced is an lais for "more" in the css
 					//  "synced_with": "from_time",		=> from and until has both two input (datepicker and datetimepicker). each time one input change, the other one has to change
-					//  "getter_code":"from_time"			=> iTop expect datetime to always provide time, so we must always use the datetimepicker in order to compute the value to be sent to iTop event if whe are in the display mode "less" with datepicker visible
+					//  "getter_code":"from_time"		=> iTop expect datetime to always provide time, so we must always use the datetimepicker in order to compute the value to be sent to iTop event if whe are in the display mode "less" with datepicker visible
+					//  "title_getter_code":"from",		=> if present, the title will be computed base on the given input code. Because the datetime widget title area is not large enought, so we remove the time info, in order to do so we use this.
 				}
 			]
 		},
 
    
-		// // the constructor
-		// _create: function()
-		// {
-		// 	this._super();
-		// },
-		// // called when created, and later when changing options
-		// _refresh: function()
-		// {
-		//
-		// },
-		// // events bound via _bind are removed automatically
-		// // revert other modifications here
-		// _destroy: function()
-		// {
-		// 	this._super();
-		// },
-		// // _setOptions is called with a hash of all options that are changing
-		// // always refresh when changing options
-		// _setOptions: function()
-		// {
-		// 	this._superApply(arguments);
-		// },
-		// // _setOption is called for each individual option that is changing
-		// _setOption: function( key, value )
-		// {
-		// 	this._super( key, value );
-		// },
+
+
+
 
 
 		// Prepare operator's DOM element
@@ -127,6 +70,7 @@ $(function()
 				var oInputElem = oOpContentElem
 					.find('input')
 					.uniqueId()
+					.attr('data-no-auto-focus', true)
 				;
 				oOpContentElem
 					.find('label')
@@ -142,14 +86,14 @@ $(function()
 			}
 
 
-			// Events
-			// - Focus input on click (radio, label, ...)
-			oOpElem.on('click', function(oEvent){
-				if ($(oEvent.target).is('input[type="text"], select')) {
-					return;
-				}
-				oOpElem.find('input:visible:first').focus();
-			});
+			// // Events
+			// // - Focus input on click (radio, label, ...)
+			// oOpElem.on('click', function(oEvent){
+			// 	if ($(oEvent.target).is('input[type="text"], select')) {
+			// 		return;
+			// 	}
+			// 	oOpElem.find('input:visible:first').filter('[data-no-auto-focus]').focus();
+			// });
 			// - Apply on "enter" key hit
 			//todo: this could be refactored
 			oOpContentElem.on('keyup', function(oEvent){
@@ -222,11 +166,19 @@ $(function()
 
 							var dSyncedDate 		= selectElem[oInputParam.x_picker]('getDate');
 
-							if (typeof oSyncedInputParam.default_time_add != 'undefined' && oSyncedInputParam.default_time_add)
+							if (null == dSyncedDate)
 							{
-								dSyncedDate.setSeconds(dSyncedDate.getSeconds() + oSyncedInputParam.default_time_add);
+								oSyncedInputElem.val('');
 							}
-							oSyncedInputElem[oSyncedInputParam.x_picker]('setDate', dSyncedDate);
+							else
+							{
+								if (typeof oSyncedInputParam.default_time_add != 'undefined' && oSyncedInputParam.default_time_add)
+								{
+									dSyncedDate.setSeconds(dSyncedDate.getSeconds() + oSyncedInputParam.default_time_add);
+								}
+								oSyncedInputElem[oSyncedInputParam.x_picker]('setDate', dSyncedDate);
+							}
+
 						}
 
 						me._apply();
@@ -254,26 +206,24 @@ $(function()
 			var aValues = [];
 			var aInputsParam = me.options.aInputsParam;
 			var aInputsParamLength = aInputsParam.length;
+			var bAdvancedMode = (oOpElem.find('adanced').length > 0);
 			for (var i = 0; i < aInputsParamLength; i++) {
 				var oInputParam = aInputsParam[i];
-				var oInputElem = oOpElem.find('input[name="'+oInputParam.code+'"]');
-				if (oInputElem.is(':visible'))
+				var oInputElemForLabel = oOpElem.find('input[name="'+oInputParam.code+'"]');
+				if (typeof oInputParam.show_on_advanced == 'undefined' || bAdvancedMode == oInputParam.show_on_advanced)
 				{
 					if (typeof oInputParam.getter_code != 'undefined')
 					{
-						oInputElem = oOpElem.find('input[name="'+oInputParam.getter_code+'"]');
+						oInputElemForValue = oOpElem.find('input[name="'+oInputParam.getter_code+'"]');
+					}
+					else
+					{
+						oInputElemForValue = oInputElemForLabel;
 					}
 
-					aValues[oInputParam.value_index] = {value: oInputElem.val(), label: oInputElem.val()};
+					aValues[oInputParam.value_index] = {value: oInputElemForValue.val(), label: oInputElemForLabel.val()};
 				}
 			}
-			//
-			// var sValueFrom  = oOpElem.find('.sfc_op_content input[name="from"]').val();
-			// var sValueUntil = oOpElem.find('.sfc_op_content input[name="until"]').val();
-			//
-			// aValues.push({value: sValueFrom, label: sValueFrom});
-			// aValues.push({value: sValueUntil, label: sValueUntil});
-
 
 			return aValues;
 		},
@@ -291,22 +241,17 @@ $(function()
 
 				if (typeof aValues[oInputParam.value_index] != 'undefined' && typeof aValues[oInputParam.value_index].value != 'undefined')
 				{
-					oInputElem[oInputParam.x_picker]('setDate', aValues[oInputParam.value_index].value);
+					var sDate = aValues[oInputParam.value_index].value;
+					var oDate = new Date(aValues[oInputParam.value_index].value);
+					// switch (true)
+					// {
+					// 	case (i == 0 && sDate.search(/(\s\d{2}:\d{2}:\d{2})/) === -1):
+					// 		//if there is no given hour, the GMT offset is appended by javascript, so we need to remove it (if not, we would have our GMT offset add, ie GMT +1 would become "00:01:00"
+					// 		oDate = new Date(oDate.valueOf() + oDate.getTimezoneOffset() * 60000);
+					// }
+					oInputElem[oInputParam.x_picker]('setDate', oDate);
 				}
 			}
-			// switch (aValues.length)
-			// {
-			// 	case 2:
-			// 		oOpElem.find('.sfc_op_content input[name="until"]').val(aValues[0].value);
-			// 		//NO BREAK!!!
-			// 	case 1:
-			// 		oOpElem.find('.sfc_op_content input[name="from"]').val(aValues[0].value);
-			// 		break;
-			// 	default:
-			// 		return false;
-			// }
-			//
-			// return true;
 		},
 
 		_resetBetweenDaysOperator: function(oOpElem)
@@ -317,6 +262,85 @@ $(function()
 		//------------------
 		// Inherited methods
 		//------------------
+
+		_setTitle: function(sTitle)
+		{
+			var me = this;
+			if (sTitle === undefined && me.options.operator == 'between_dates')
+			{
+				var oActiveOpElem = me.element.find('.sfc_op_radio:checked').closest('.sfc_fg_operator');
+				var aValues = me._getValues();
+				switch (true)
+				{
+					case (typeof aValues[0] == 'undefined' && typeof aValues[1] == 'undefined'):
+					case (typeof aValues[0].label == 'undefined' && typeof aValues[1].label == 'undefined'):
+					case (aValues[0].label.trim() == '' && aValues[1].label.trim() == ''):
+						var sDictEntrySuffix = ':All';
+						break;
+					case (typeof aValues[0] == 'undefined' ):
+					case (typeof aValues[0].label == 'undefined' ):
+					case (aValues[0].label.trim() == '' ):
+						var sDictEntrySuffix = ':Until';
+						break;
+					case (typeof aValues[1] == 'undefined'):
+					case (typeof aValues[1].label == 'undefined' ):
+					case (aValues[1].label.trim() == ''):
+						var sDictEntrySuffix = ':From';
+						break;
+					default:
+						var sDictEntrySuffix = undefined;
+						break;
+				}
+
+				if (sDictEntrySuffix != undefined)
+				{
+					var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':' + this._toCamelCase(me.options.operator) + sDictEntrySuffix ;
+					// Fallback to default widget dict entry if none exists for the current widget
+					if(Dict.S(sDictEntry) === sDictEntry)
+					{
+						sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(me.options.operator) + sDictEntrySuffix;
+					}
+
+					sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
+				}
+
+			}
+
+			return me._super(sTitle);
+		},
+
+
+		// - Convert values to a standard string
+		_getValuesAsText: function(aRawValues)
+		{
+			var me = this;
+			var aRawValues = undefined;
+			if (me.options.operator == 'between_dates')
+			{
+				var oActiveOpElem = this.element.find('.sfc_op_radio[value="'+me.options.operator+'"]').closest('.sfc_fg_operator'); // me.element.find('.sfc_op_radio:checked').closest('.sfc_fg_operator');
+				aRawValues = me._getValues();
+
+				if (typeof aRawValues[1] == 'undefined' || typeof aRawValues[1].label == 'undefined' || aRawValues[1].label == '')
+				{
+					aRawValues.splice(1, 1);
+				}
+				else
+				{
+					aRawValues[1].label = aRawValues[1].label.replace(/(\s\d{2}:\d{2}:\d{2})/, '');
+				}
+				if (typeof aRawValues[0] == 'undefined' || typeof aRawValues[0].label == 'undefined' || aRawValues[0].label == '')
+				{
+					aRawValues.splice(0, 1);
+				}
+				else
+				{
+					aRawValues[0].label = aRawValues[0].label.replace(/(\s\d{2}:\d{2}:\d{2})/, '');
+				}
+			}
+			return me._super(aRawValues);
+		},
+
+
 
 
 		// Prepare operator's DOM element

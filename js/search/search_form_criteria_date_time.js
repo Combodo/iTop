@@ -36,6 +36,7 @@ $(function()
 					"value_index": 0,
 					"onclose_show" : "until_time",
 					"synced_with": "from",
+					"title_getter_code":"from",
 				},
 				{
 					"code": "until",
@@ -54,11 +55,16 @@ $(function()
 					"default_time_add": 86399, // 24 * 60 * 60 - 1
 					"show_on_advanced": true,
 					"value_index": 1,
-					"synced_with": "until"
+					"synced_with": "until",
+					"title_getter_code":"until",
 				}
 			]
 		},
 
+
+		//------------------
+		// Inherited methods
+		//------------------
    
 		// the constructor
 		_create: function()
@@ -68,11 +74,7 @@ $(function()
 			this._super();
 			this.element.addClass('search_form_criteria_date_time');
 		},
-		// called when created, and later when changing options
-		_refresh: function()
-		{
 
-		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
 		_destroy: function()
@@ -80,23 +82,6 @@ $(function()
 			this.element.removeClass('search_form_criteria_date_time');
 			this._super();
 		},
-		// _setOptions is called with a hash of all options that are changing
-		// always refresh when changing options
-		_setOptions: function()
-		{
-			this._superApply(arguments);
-		},
-		// _setOption is called for each individual option that is changing
-		_setOption: function( key, value )
-		{
-			this._super( key, value );
-		},
-
-
-
-		//------------------
-		// Inherited methods
-		//------------------
 
 
 

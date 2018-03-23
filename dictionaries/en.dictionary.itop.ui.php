@@ -1396,6 +1396,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals:',
+	'UI:Search:Criteria:Operator:Default:Between' => 'Between:',
 	//   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contains:',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with:',
@@ -1407,9 +1408,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => '≠',
-	'UI:Search:Criteria:Operator:Numeric:Between' => 'Between:',
-	//   - DateTime widget
-	'UI:Search:Criteria:Operator:DateTime:Between' => 'Between:',
+
+
 
 	// - Criteria titles
 	//   - Default widget
@@ -1422,8 +1422,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:Default:LessThan' => '%1$s < %2$s',
 	'UI:Search:Criteria:Title:Default:LessThanOrEquals' => '%1$s <= %2$s',
 	'UI:Search:Criteria:Title:Default:Different' => '%1$s ≠ %2$s',
-	'UI:Search:Criteria:Title:Default:Between' => '%1$s between (%2$s)',
-	'UI:Search:Criteria:Title:Default:BetweenDays' => '%1$s between (%2$s)',
+	'UI:Search:Criteria:Title:Default:Between' => '%1$s between [%2$s]',
+	'UI:Search:Criteria:Title:Default:BetweenDates:All' => '%1$s All',
+	'UI:Search:Criteria:Title:Default:BetweenDates:From' => '%1$s From %2$s',
+	'UI:Search:Criteria:Title:Default:BetweenDates:Until' => '%1$s Until %2$s',
+	'UI:Search:Criteria:Title:Default:BetweenDays' => '%1$s [%2$s]',
 	//   - String widget
 	'UI:Search:Criteria:Title:String:Contains' => '%1$s contains %2$s',
 	'UI:Search:Criteria:Title:String:StartsWith' => '%1$s starts with %2$s',
