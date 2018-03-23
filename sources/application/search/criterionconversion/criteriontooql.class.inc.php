@@ -56,8 +56,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 			self::OP_ENDS_WITH => 'EndsWithToOql',
 			self::OP_EMPTY => 'EmptyToOql',
 			self::OP_NOT_EMPTY => 'NotEmptyToOql',
-			self::OP_BETWEEN_DAYS => 'BetweenDaysToOql',
-			self::OP_BETWEEN_HOURS => 'BetweenHoursToOql',
+			self::OP_BETWEEN_DATES => 'BetweenDatesToOql',
 			self::OP_BETWEEN => 'BetweenToOql',
 			self::OP_IN => 'InToOql',
 			self::OP_ALL => 'AllToOql',
@@ -287,7 +286,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return $sOQL;
 	}
 
-	protected static function BetweenHoursToOql($sRef, $aCriteria)
+	protected static function BetweenDatesToOql($sRef, $aCriteria)
 	{
 		$aOQL = array();
 
@@ -302,7 +301,15 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$sStartDate = $aValues[0]['value'];
 		if (!empty($sStartDate))
 		{
-			$oDate = $oFormat->parse($sStartDate);
+			try
+			{
+				$oDate = $oFormat->parse($sStartDate);
+			}
+			catch (\Exception $e)
+			{
+				// Not the date time format, try the date format
+				return self::BetweenDaysToOql($sRef, $aCriteria);
+			}
 			$sStartDate = $oDate->format(AttributeDateTime::GetSQLFormat());
 			$aOQL[] = "({$sRef} >= '$sStartDate')";
 		}

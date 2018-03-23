@@ -168,7 +168,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 		// Merge into 'between' operation.
 		// The ends of the interval are included
-		$aCurrCriterion['operator'] = 'between_days';
+		$aCurrCriterion['operator'] = 'between_dates';
 		$sFormat = AttributeDateTime::GetFormat()->ToMomentJS();
 		$sLastDate = $aPrevCriterion['values'][0]['value'];
 		if ($sPrevOperator == '<')
@@ -259,14 +259,13 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$sLastDate = $aPrevCriterion['values'][0]['value'];
 		$sFirstDate = $aCurrCriterion['values'][0]['value'];
 		$oDate = new DateTime($sLastDate);
+		$aCurrCriterion['operator'] = 'between_dates';
 		if ((strpos($sFirstDate, '00:00:00') != false) && (strpos($sLastDate, '00:00:00') != false))
 		{
-			$aCurrCriterion['operator'] = 'between_days';
 			$sInterval = '1 day';
 		}
 		else
 		{
-			$aCurrCriterion['operator'] = 'between_hours';
 			$sInterval = '1 second';
 		}
 
