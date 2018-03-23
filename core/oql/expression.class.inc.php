@@ -1602,6 +1602,7 @@ class FunctionExpression extends Expression
 				{
 					$aCriteria = array_merge($oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef), $aCriteria);
 				}
+				$aCriteria['has_undefined'] = true;
 				break;
 
 			case 'NOW':

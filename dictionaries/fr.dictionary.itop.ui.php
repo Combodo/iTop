@@ -1241,8 +1241,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 // Expression to Natural language
 //
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Expression:Operator:AND' => 'ET',
-	'Expression:Operator:OR' => 'OU',
+	'Expression:Operator:AND' => ' ET ',
+	'Expression:Operator:OR' => ' OU ',
 	'Expression:Unit:Short:DAY' => 'j',
 	'Expression:Unit:Short:WEEK' => 's',
 	'Expression:Unit:Short:MONTH' => 'm',

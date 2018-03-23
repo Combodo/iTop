@@ -355,6 +355,7 @@ class CriterionConversionTest extends ItopDataTestCase
 			'enum IN' => array('OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')"),
 			'enum NOT IN' => array('OQL' => "SELECT Contact WHERE status NOT IN ('active')"),
 			'enum undefined' => array('OQL' => "SELECT FunctionalCI WHERE ((business_criticity = 'high') OR ISNULL(business_criticity)) AND 1"),
+			'enum undefined1' => array('OQL' => "SELECT FunctionalCI WHERE ((business_criticity IN ('high', 'medium')) OR ISNULL(business_criticity)) AND 1"),
 			'key NOT IN' => array('OQL' => "SELECT Contact WHERE org_id NOT IN ('1')"),
 			'key IN' => array('OQL' => "SELECT Contact WHERE org_id IN ('1')"),
 			'key empty' => array('OQL' => "SELECT Person WHERE location_id = '0'"),

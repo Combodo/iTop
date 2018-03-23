@@ -56,9 +56,9 @@ class SearchFormTest extends ItopDataTestCase
 	public function GetFieldsProvider()
 	{
 		return array(
-			array("SELECT Contact", 7, 'zlist'),
+			array("SELECT Contact", 8, 'zlist'),
 			array("SELECT Contact AS C WHERE C.status = 'active'", 4, 'others'),
-			array("SELECT Person", 11, 'zlist'),
+			array("SELECT Person", 12, 'zlist'),
 		);
 	}
 

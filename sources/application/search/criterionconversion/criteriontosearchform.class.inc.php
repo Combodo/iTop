@@ -334,11 +334,6 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		return $aCriteria;
 	}
 
-	protected static function EnumToSearchForm($aCriteria, $aFields)
-	{
-		return self::ExternalKeyToSearchForm($aCriteria, $aFields);
-	}
-
 	protected static function DateToSearchForm($aCriteria, $aFields)
 	{
 		return self::DateTimeToSearchForm($aCriteria, $aFields);
@@ -417,6 +412,10 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		return $aCriteria;
 	}
 
+	protected static function EnumToSearchForm($aCriteria, $aFields)
+	{
+		return self::ExternalKeyToSearchForm($aCriteria, $aFields);
+	}
 
 	protected static function ExternalKeyToSearchForm($aCriteria, $aFields)
 	{
@@ -441,6 +440,14 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				$aCriteria = self::RevertValues($aCriteria, $aFields);
 				break;
 			case 'IN':
+				break;
+			case 'OR':
+				// Special case when undefined and other values are selected
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
+				{
+					$aCriteria['values'][] = array('value' => 'null', 'label' => 'null');
+				}
 				break;
 			default:
 				// Unknown operator
