@@ -503,7 +503,7 @@ $(function()
 		_addCriteria: function(oData)
 		{
 			var sRef = oData.ref;
-			var sType = this._getCriteriaTypeFromFieldRef(sRef);
+			var sType = (oData.widget !== undefined) ? oData.widget : this._getCriteriaTypeFromFieldRef(sRef);
 
 			if(sType !== null)
 			{
