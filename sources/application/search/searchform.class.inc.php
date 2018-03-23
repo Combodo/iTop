@@ -161,11 +161,17 @@ class SearchForm
 		{
 			$aListParams['table_id'] = $aExtraParams['table_id2'];
 		}
+		$bOpen = false;
+		if (array_key_exists('open', $aExtraParams))
+		{
+			$bOpen = $aExtraParams['open'];
+		}
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
             'result_list_outer_selector' => "#{$aExtraParams['table_id']}",
 			'data_config_list_selector' => "#{$sDataConfigListSelector}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
+			'open' => $bOpen,
 			'date_format' => AttributeDateTime::GetFormat()->ToMomentJS(),
 			'list_params' => $aListParams,
 			'search' => array(
