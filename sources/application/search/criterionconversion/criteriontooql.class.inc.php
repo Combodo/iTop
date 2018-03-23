@@ -23,6 +23,7 @@
 namespace Combodo\iTop\Application\Search\CriterionConversion;
 
 
+use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
 use AttributeExternalKey;
@@ -249,13 +250,22 @@ class CriterionToOQL extends CriterionConversionAbstract
 			return "1";
 		}
 
-		$oFormat = AttributeDateTime::GetFormat();
+		$sWidget = $aCriteria['widget'];
+		if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME)
+		{
+			$sAttributeClass = AttributeDateTime::class;
+		}
+		else
+		{
+			$sAttributeClass = AttributeDate::class;
+		}
+		$oFormat = $sAttributeClass::GetFormat();
 
 		$sStartDate = $aValues[0]['value'];
 		if (!empty($sStartDate))
 		{
 			$oDate = $oFormat->parse($sStartDate);
-			$sStartDate = $oDate->format(AttributeDateTime::GetSQLFormat());
+			$sStartDate = $oDate->format($sAttributeClass::GetSQLFormat());
 			$aOQL[] = "({$sRef} >= '$sStartDate')";
 		}
 
@@ -264,7 +274,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		{
 			$oDate = $oFormat->parse($sEndDate);
 			$oDate->add(DateInterval::createFromDateString('1 second'));
-			$sEndDate = $oDate->format(AttributeDateTime::GetSQLFormat());
+			$sEndDate = $oDate->format($sAttributeClass::GetSQLFormat());
 			$aOQL[] = "({$sRef} < '$sEndDate')";
 		}
 
