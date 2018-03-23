@@ -424,14 +424,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		switch ($sOperator)
 		{
 			case '=':
-				if (!isset($aCriteria['values'][0]))
-				{
-					$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
-				}
-				else
-				{
-					$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
-				}
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
 				break;
 			case '!=':
 				if (!isset($aCriteria['values'][0]))

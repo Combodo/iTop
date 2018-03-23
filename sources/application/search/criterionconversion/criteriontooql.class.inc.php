@@ -26,7 +26,6 @@ namespace Combodo\iTop\Application\Search\CriterionConversion;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
-use AttributeExternalKey;
 use Combodo\iTop\Application\Search\AjaxSearchException;
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
 use Combodo\iTop\Application\Search\SearchForm;
@@ -150,7 +149,6 @@ class CriterionToOQL extends CriterionConversionAbstract
 		}
 
 		$bFilterOnUndefined = false;
-		$sFilterOnUndefined = '';
 		try
 		{
 			$aAttributeDefs = \MetaModel::ListAttributeDefs($sClass);
@@ -190,14 +188,6 @@ class CriterionToOQL extends CriterionConversionAbstract
 						$aValue = $aValues[$i];
 						if (isset($aValue['value']) && ($aValue['value'] === 'null'))
 						{
-							if ($oAttDef instanceof AttributeExternalKey)
-							{
-								$sFilterOnUndefined = "({$sRef} = 0)";
-							}
-							else
-							{
-								$sFilterOnUndefined = "ISNULL({$sRef})";
-							}
 							$bFilterOnUndefined = true;
 							unset($aValues[$i]);
 							break;
@@ -218,17 +208,18 @@ class CriterionToOQL extends CriterionConversionAbstract
 
 		if ($bFilterOnUndefined)
 		{
+			$sFilterOnUndefined = "ISNULL({$sRef})";
 			if (count($aValues) === 0)
 			{
-				return "{$sFilterOnUndefined}";
+				return $sFilterOnUndefined;
 			}
 
 			if (count($aInValues) == 1)
 			{
-				return "(({$sRef} = '$sInList') OR {$sFilterOnUndefined})";
+				return "((({$sRef} = '$sInList') OR {$sFilterOnUndefined}) AND 1)";
 			}
 
-			return "({$sRef} IN ('$sInList') OR {$sFilterOnUndefined})";
+			return "(({$sRef} IN ('$sInList') OR {$sFilterOnUndefined}) AND 1)";
 		}
 
 		if (count($aInValues) == 1)

@@ -211,8 +211,7 @@ class SearchForm
 			{
 				$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
 				$aList = MetaModel::GetZListItems($sClass, 'standard_search');
-				
-				$aZList = $this->AppendId($sClass, $sAlias, array());
+				$aZList = array();
 				foreach($aList as $sAttCode)
 				{
 					if (array_key_exists($sAttCode, $aAttributeDefs))
@@ -225,6 +224,7 @@ class SearchForm
 				uasort($aZList, function ($aItem1, $aItem2) {
 					return strcmp($aItem1['label'], $aItem2['label']);
 				});
+				$aZList = $this->AppendId($sClass, $sAlias, $aZList);
 				$aAllFields['zlist'] = $aZList;
 
 				$aOthers = array();
@@ -353,7 +353,8 @@ class SearchForm
 		$aField['label'] = 'Id';
 		$aField['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC;
 		$aField['is_null_allowed'] = false;
-		$aFields[$sClassAlias . '.id'] = $aField;
+		$aNewFields = array($sClassAlias.'.id' => $aField);
+		$aFields = array_merge($aNewFields, $aFields);
 		$this->aLabels['Id'] = true;
 		return $aFields;
 	}

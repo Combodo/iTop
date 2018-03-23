@@ -347,14 +347,17 @@ class CriterionConversionTest extends ItopDataTestCase
 	function OqlProvider()
 	{
 		return array(
-			'ISNULL' => array('OQL' => "SELECT Server WHERE ISNULL(nb_u)"),
-			'start' => array('OQL' => "SELECT Contact WHERE status = 'active' AND name LIKE 'toto%'"),
+			'string starts' => array('OQL' => "SELECT Contact WHERE name LIKE 'toto%'"),
+			'string ends' => array('OQL' => "SELECT Contact WHERE name LIKE '%toto'"),
+			'string contains' => array('OQL' => "SELECT Contact WHERE name LIKE '%toto%'"),
 			'enum + key =' => array('OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3"),
 			'enum =' => array('OQL' => "SELECT Contact WHERE status = 'active'"),
 			'enum IN' => array('OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')"),
 			'enum NOT IN' => array('OQL' => "SELECT Contact WHERE status NOT IN ('active')"),
+			'enum undefined' => array('OQL' => "SELECT FunctionalCI WHERE ((business_criticity = 'high') OR ISNULL(business_criticity)) AND 1"),
 			'key NOT IN' => array('OQL' => "SELECT Contact WHERE org_id NOT IN ('1')"),
 			'key IN' => array('OQL' => "SELECT Contact WHERE org_id IN ('1')"),
+			'key empty' => array('OQL' => "SELECT Person WHERE location_id = '0'"),
 			'Date relative' => array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date"),
 			'Date between 1' => array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date"),
 			'Date between 2' => array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date"),
@@ -366,6 +369,7 @@ class CriterionConversionTest extends ItopDataTestCase
 			'Date =' => array('OQL' => "SELECT CustomerContract WHERE (start_date = '2018-03-01')"),
 			'Date =2' => array('OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(start_date, '%Y-%m-%d') = '2018-03-21')"),
 			'Num between 1' => array('OQL' => "SELECT Server WHERE nb_u >= 0 AND 1 >= nb_u"),
+			'Num ISNULL' => array('OQL' => "SELECT Server WHERE ISNULL(nb_u)"),
 		);
 	}
 }
