@@ -442,10 +442,15 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			case 'IN':
 				break;
 			case 'OR':
+			case 'ISNULL':
 				// Special case when undefined and other values are selected
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
 				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
 				{
+					if (!isset($aCriteria['values']))
+					{
+						$aCriteria['values'] = array();
+					}
 					$aCriteria['values'][] = array('value' => 'null', 'label' => 'null');
 				}
 				break;
