@@ -171,7 +171,7 @@ class SearchForm
             'result_list_outer_selector' => "#{$aExtraParams['table_id']}",
 			'data_config_list_selector' => "#{$sDataConfigListSelector}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
-			'open' => $bOpen,
+			'init_opened' => $bOpen,
 			'date_format' => AttributeDateTime::GetFormat()->ToMomentJS(),
 			'list_params' => $aListParams,
 			'search' => array(
