@@ -239,53 +239,6 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} IN ('$sInList'))";
 	}
 
-	protected static function BetweenDaysToOql($sRef, $aCriteria)
-	{
-		$aOQL = array();
-
-		$aValues = self::GetValues($aCriteria);
-		if (count($aValues) != 2)
-		{
-			return "1";
-		}
-
-		$oFormat = AttributeDateTime::GetFormat();
-
-		$sStartDate = $aValues[0]['value'];
-		if (!empty($sStartDate))
-		{
-			$oDate = $oFormat->parse($sStartDate);
-			$sStartDate = $oDate->format(AttributeDateTime::GetSQLFormat());
-			$aOQL[] = "({$sRef} >= '$sStartDate')";
-		}
-
-		$sEndDate = $aValues[1]['value'];
-		if (!empty($sEndDate))
-		{
-			$oDate = $oFormat->parse($sEndDate);
-			if ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME)
-			{
-				$oDate->add(DateInterval::createFromDateString('1 day'));
-				$sEndDate = $oDate->format(AttributeDateTime::GetSQLFormat());
-				$aOQL[] = "({$sRef} < '$sEndDate')";
-			}
-			else
-			{
-				$sEndDate = $oDate->format(AttributeDateTime::GetSQLFormat());
-				$aOQL[] = "({$sRef} <= '$sEndDate')";
-			}
-		}
-
-		$sOQL = implode(' AND ', $aOQL);
-
-		if (empty($sOQL))
-		{
-			$sOQL = "1";
-		}
-
-		return $sOQL;
-	}
-
 	protected static function BetweenDatesToOql($sRef, $aCriteria)
 	{
 		$aOQL = array();
@@ -301,15 +254,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$sStartDate = $aValues[0]['value'];
 		if (!empty($sStartDate))
 		{
-			try
-			{
-				$oDate = $oFormat->parse($sStartDate);
-			}
-			catch (\Exception $e)
-			{
-				// Not the date time format, try the date format
-				return self::BetweenDaysToOql($sRef, $aCriteria);
-			}
+			$oDate = $oFormat->parse($sStartDate);
 			$sStartDate = $oDate->format(AttributeDateTime::GetSQLFormat());
 			$aOQL[] = "({$sRef} >= '$sStartDate')";
 		}
