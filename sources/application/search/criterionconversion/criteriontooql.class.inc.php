@@ -216,9 +216,11 @@ class CriterionToOQL extends CriterionConversionAbstract
 
 			if (count($aInValues) == 1)
 			{
+				// Add 'AND 1' to group the 'OR' inside an AND list for OQL parsing
 				return "((({$sRef} = '$sInList') OR {$sFilterOnUndefined}) AND 1)";
 			}
 
+			// Add 'AND 1' to group the 'OR' inside an AND list for OQL parsing
 			return "(({$sRef} IN ('$sInList') OR {$sFilterOnUndefined}) AND 1)";
 		}
 

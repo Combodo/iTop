@@ -423,27 +423,20 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		switch ($sOperator)
 		{
 			case '=':
+				// Same as IN
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
 				break;
-			case '!=':
-				if (!isset($aCriteria['values'][0]))
-				{
-					$aCriteria['operator'] = CriterionConversionAbstract::OP_NOT_EMPTY;
-				}
-				else
-				{
-					// Same as NOT IN
-					$aCriteria = self::RevertValues($aCriteria, $aFields);
-				}
-				break;
 			case 'NOT IN':
+			case '!=':
+				// Same as NOT IN
 				$aCriteria = self::RevertValues($aCriteria, $aFields);
 				break;
 			case 'IN':
+				// Nothing special to do
 				break;
 			case 'OR':
 			case 'ISNULL':
-				// Special case when undefined and other values are selected
+				// Special case when undefined and/or other values are selected
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
 				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
 				{
@@ -451,6 +444,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 					{
 						$aCriteria['values'] = array();
 					}
+					// Convention for 'undefined' enums
 					$aCriteria['values'][] = array('value' => 'null', 'label' => 'null');
 				}
 				break;
