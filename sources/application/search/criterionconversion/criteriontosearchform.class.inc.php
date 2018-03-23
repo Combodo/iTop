@@ -260,7 +260,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$sFirstDate = $aCurrCriterion['values'][0]['value'];
 		$oDate = new DateTime($sLastDate);
 		$aCurrCriterion['operator'] = 'between_dates';
-		if ((strpos($sFirstDate, '00:00:00') != false) && (strpos($sLastDate, '00:00:00') != false))
+		$sPattern = '@^[\d-]{10}( 00:00:00)?$@';
+		if (preg_match($sPattern, $sFirstDate) && preg_match($sPattern, $sLastDate))
 		{
 			$sInterval = '1 day';
 		}
