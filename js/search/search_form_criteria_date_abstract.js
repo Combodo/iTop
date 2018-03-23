@@ -24,6 +24,7 @@ $(function()
 				'not_empty': {
 					'rank': 800,//pre-existing, reordered
 				},
+				'=': null
 			},
 			aInputsParam: [
 				{
