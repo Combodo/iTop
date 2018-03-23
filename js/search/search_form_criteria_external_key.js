@@ -11,6 +11,7 @@ $(function()
 		{
 			// Null value
 			'null_value': {
+				'code': 0,
 				'label': Dict.S('UI:UndefinedObject'),
 			}
 		},

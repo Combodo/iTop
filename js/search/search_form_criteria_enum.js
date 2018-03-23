@@ -95,8 +95,8 @@ $(function()
 
 			// - Filter
 			var sFilterId = 'filter_' + sOpId;
-			var oFilterElem = $('<div class="sfc_opc_mc_filter"></div>')
-				.append('<input type="text" id="' + sFilterId + '" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sfc_opc_mcf_picto sfc_opc_mcf_filter fa fa-filter"></span><span class="sfc_opc_mcf_picto sfc_opc_mcf_reset fa fa-times"></span>')
+			var oFilterElem = $('<div class="sf_filter"></div>')
+				.append('<input type="text" id="' + sFilterId + '" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sff_picto sff_filter fa fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span>')
 				.appendTo(oOpContentElem);
 
 			// - Allowed values
@@ -108,11 +108,12 @@ $(function()
 			//     - It is not give by neither the autocomplete or the pre-filled values, so we would need to manually add it in both cases, all operations.
 			if(this.options.field.is_null_allowed === true)
 			{
-				var sItemId = 'value_' + sOpId + '_null';
 				var sValCode = this.options.null_value.code;
 				var sValLabel = this.options.null_value.label;
-				var oValueElem = $('<div class="sfc_opc_mc_item" data-value-code="' + sValCode + '"></div>')
-					.append('<label for="' + sItemId + '"><input type="checkbox" id="' + sItemId + '" value="' + sValCode + '"/>' + sValLabel + '</label>')
+				var oValueElem = $('<div></div>')
+					.addClass('sfc_opc_mc_item')
+					.attr('data-value-code', sValCode)
+					.append('<label><input type="checkbox" value="' + sValCode + '"/>' + sValLabel + '</label>')
 					.appendTo(oAllowedValuesElem);
 			}
 
@@ -120,23 +121,20 @@ $(function()
 			if(this.options.field.allowed_values.values !== undefined)
 			{
 				var aSortedValues = this._sortValuesByLabel(this.options.field.allowed_values.values);
-
-				var iValCounter = 0;
 				for(var i in aSortedValues)
 				{
-					var sItemId = 'value_' + sOpId + '_' + iValCounter;
 					var sValCode = aSortedValues[i][0];
 					var sValLabel = aSortedValues[i][1];
-					var oValueElem = $('<div class="sfc_opc_mc_item" data-value-code="' + sValCode + '"></div>')
-						.append('<label for="' + sItemId + '"><input type="checkbox" id="' + sItemId + '" value="' + sValCode + '"/>' + sValLabel + '</label>')
+					var oValueElem = $('<div></div>')
+						.addClass('sfc_opc_mc_item')
+						.attr('data-value-code', sValCode)
+						.append('<label><input type="checkbox" value="' + sValCode + '"/>' + sValLabel + '</label>')
 						.appendTo(oAllowedValuesElem);
 
 					if(this._isSelectedValues(sValCode))
 					{
 						oValueElem.find(':checkbox').prop('checked', true);
 					}
-
-					iValCounter++;
 				}
 			}
 			oAllowedValuesElem.appendTo(oOpContentElem);
@@ -162,8 +160,8 @@ $(function()
 				if(sFilter === '')
 				{
 					oOpContentElem.find('.sfc_opc_mc_item').show();
-					oFilterElem.find('.sfc_opc_mcf_filter').show();
-					oFilterElem.find('.sfc_opc_mcf_reset').hide();
+					oFilterElem.find('.sff_filter').show();
+					oFilterElem.find('.sff_reset').hide();
 				}
 				else
 				{
@@ -181,14 +179,14 @@ $(function()
 							$(this).hide();
 						}
 					});
-					oFilterElem.find('.sfc_opc_mcf_filter').hide();
-					oFilterElem.find('.sfc_opc_mcf_reset').show();
+					oFilterElem.find('.sff_filter').hide();
+					oFilterElem.find('.sff_reset').show();
 				}
 			});
-			oFilterElem.find('.sfc_opc_mcf_filter').on('click', function(){
+			oFilterElem.find('.sff_filter').on('click', function(){
 				oFilterElem.find('input').trigger('focus');
 			});
-			oFilterElem.find('.sfc_opc_mcf_reset').on('click', function(){
+			oFilterElem.find('.sff_reset').on('click', function(){
 				oFilterElem.find('input')
 					.val('')
 					.trigger('focus');

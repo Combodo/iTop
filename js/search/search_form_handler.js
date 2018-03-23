@@ -298,36 +298,57 @@ $(function()
 			var oContentElem = $('<div class="sfm_content"></div>')
 				.appendTo(this.elements.more_criterion);
 
-			// - Add list
-			var oListElem = $('<ul class="sfm_list"></ul>')
+			// - Filter
+			var oFilterElem = $('<div class="sf_filter"></div>')
+				.append('<input type="text" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sff_picto sff_filter fa fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span>')
 				.appendTo(oContentElem);
-			// - Add fields
-			// TODO: Find a widget to handle dropdown menu
-			// - From "search" zlist
+
+			// - Add fields from zlist list
+			var oZlistElem = $('<div></div>')
+				.addClass('sf_list')
+				.addClass('sf_list_zlist')
+				.appendTo(oContentElem);
+
+			$('<div class="sfl_title"></div>')
+				.text(Dict.S('UI:Search:AddCriteria:List:MostPopular:Title'))
+				.appendTo(oZlistElem);
+
+			var oZListItemsElem = $('<ul class="sfl_items"></ul>')
+				.appendTo(oZlistElem);
+
 			for(var sFieldRef in this.options.search.fields.zlist)
 			{
 				var oField = this.options.search.fields.zlist[sFieldRef];
 				var oFieldElem = $('<li></li>')
 					.addClass('sfm_field')
 					.attr('data-field-ref', sFieldRef)
-					.text(oField.label);
-				oListElem.append(oFieldElem);
+					.append('<label><input type="checkbox" value="' + sFieldRef + '" />' + oField.label + '</label>')
+					.appendTo(oZListItemsElem);
 			}
 
-			// - Others
+			// - Add fields remaining
 			if(this.options.search.fields.others !== undefined)
 			{
-				oListElem.append('<li>==================</li>');
-				oListElem.append('<li>|| TODO: Better separation ||</li>');
-				oListElem.append('<li>==================</li>');
+				var oOthersElem = $('<div></div>')
+					.addClass('sf_list')
+					.addClass('sf_list_others')
+					.appendTo(oContentElem);
+
+				$('<div class="sfl_title"></div>')
+					.text(Dict.S('UI:Search:AddCriteria:List:Others:Title'))
+					.appendTo(oOthersElem);
+
+				var oOthersItemsElem = $('<ul class="sfl_items"></ul>')
+					.appendTo(oOthersElem);
+
 				for(var sFieldRef in this.options.search.fields.others)
 				{
 					var oField = this.options.search.fields.others[sFieldRef];
 					var oFieldElem = $('<li></li>')
 						.addClass('sfm_field')
 						.attr('data-field-ref', sFieldRef)
-						.text(oField.label);
-					oListElem.append(oFieldElem);
+						.append('<label><input type="checkbox" value="' + sFieldRef + '" />' + oField.label + '</label>')
+						.appendTo(oOthersItemsElem);
 				}
 			}
 
@@ -347,10 +368,11 @@ $(function()
 				}
 				else
 				{
-					//if using the datetimepicker, do not close anything
+					// TODO: Try to put this back in the date widget as it introduced a non necessary coupling.
+					// If using the datetimepicker, do not close anything
 					if (oEventTargetElem.closest('#ui-datepicker-div, .ui-datepicker-prev, .ui-datepicker-next').length > 0 )
 					{
-						//no closing in this case
+						// No closing in this case
 					}
 					// //if the context is not document, then we  have encountered a bug : the css ::after elements do have a context on click and thus, we cannot check if they are inside a  #ui-datepicker-div
 					// else if (typeof oEventTargetElem.context != 'undefined' && $(oEventTargetElem.context).is('.ui-icon'))
@@ -376,6 +398,47 @@ $(function()
 				oEvent.preventDefault();
 
 				me._toggleMoreCriterion();
+			});
+			// - Filter
+			// Note: "keyup" event is use instead of "keydown", otherwise, the inpu value would not be set yet.
+			oFilterElem.find('input').on('keyup focus', function(oEvent){
+				// TODO: Move on values with up and down arrow keys; select with space or enter.
+
+				var sFilter = $(this).val();
+
+				if(sFilter === '')
+				{
+					oContentElem.find('.sfl_items > li').show();
+					oFilterElem.find('.sff_filter').show();
+					oFilterElem.find('.sff_reset').hide();
+				}
+				else
+				{
+					oContentElem.find('.sfl_items > li').each(function(){
+						var oRegExp = new RegExp(sFilter, 'ig');
+						var sValue = $(this).find('input').val();
+						var sLabel = $(this).text();
+
+						if( (sValue.match(oRegExp) !== null) || (sLabel.match(oRegExp) !== null) )
+						{
+							$(this).show();
+						}
+						else
+						{
+							$(this).hide();
+						}
+					});
+					oFilterElem.find('.sff_filter').hide();
+					oFilterElem.find('.sff_reset').show();
+				}
+			});
+			oFilterElem.find('.sff_filter').on('click', function(){
+				oFilterElem.find('input').trigger('focus');
+			});
+			oFilterElem.find('.sff_reset').on('click', function(){
+				oFilterElem.find('input')
+					.val('')
+					.trigger('focus');
 			});
 			// - Add criteria
 			this.elements.more_criterion.find('.sfm_field').on('click', function(oEvent){

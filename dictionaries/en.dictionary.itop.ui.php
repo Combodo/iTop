@@ -1386,6 +1386,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria',
+	// - Add new criteria button
+	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used',
+	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular',
+	'UI:Search:AddCriteria:List:Others:Title' => 'Others',
+
 	// - Criteria operators
 	//   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty',
@@ -1438,7 +1443,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any',
-	// -
+
+	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none',
 

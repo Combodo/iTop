@@ -718,6 +718,7 @@ input.dp-applied {
   /* Sizing reset */
   /* Hyperlink reset */
   /* Input reset */
+  /* List helpers */
 }
 .search_form_handler * {
   box-sizing: border-box;
@@ -897,24 +898,6 @@ input.dp-applied {
   margin-left: 0px;
   margin-right: 8px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_filter {
-  position: relative;
-  margin-top: 8px;
-  margin-bottom: 8px;
-}
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_filter input {
-  width: 100%;
-}
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_filter .sfc_opc_mcf_picto {
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  opacity: 0.6;
-  user-select: none;
-}
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_filter .sfc_opc_mc_reset {
-  display: none;
-}
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items {
   max-height: 445px;
   /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
@@ -1048,6 +1031,50 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_list .sfm_field {
   cursor: pointer;
   white-space: nowrap;
+}
+.search_form_handler .sf_list .sfl_title {
+  font-weight: bold;
+}
+.search_form_handler .sf_list .sfl_items {
+  margin: 5px -8px 0px -8px;
+  padding: 0px;
+}
+.search_form_handler .sf_list .sfl_items > li {
+  padding: 4px 8px;
+  list-style: none;
+  white-space: nowrap;
+}
+.search_form_handler .sf_list .sfl_items > li:hover {
+  background-color: #fff;
+}
+.search_form_handler .sf_list .sfl_items > li > label {
+  display: inline-block;
+  width: 100%;
+}
+.search_form_handler .sf_list .sfl_items > li > label > * {
+  vertical-align: middle;
+}
+.search_form_handler .sf_list .sfl_items > li > label > input[type="checkbox"] {
+  margin-left: 0px;
+  margin-right: 8px;
+}
+.search_form_handler .sf_filter {
+  position: relative;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.search_form_handler .sf_filter input {
+  width: 100%;
+}
+.search_form_handler .sf_filter .sff_picto {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  opacity: 0.6;
+  user-select: none;
+}
+.search_form_handler .sf_filter .sff_reset {
+  display: none;
 }
 .sf_results_area .sf_results_placeholder {
   margin-top: 100px;
