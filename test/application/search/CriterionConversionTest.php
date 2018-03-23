@@ -361,6 +361,10 @@ class CriterionConversionTest extends ItopDataTestCase
 			'Date between 3' => array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date"),
 			'Date between 4' => array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date"),
 			'Date between 5' => array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date"),
+			'Date between 6' => array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01' AND '2017-01-02' >= start_date"),
+			'Date between 7' => array('OQL' => "SELECT CustomerContract WHERE ((start_date >= '2018-03-01') AND (start_date < '2018-04-01'))"),
+			'Date =' => array('OQL' => "SELECT CustomerContract WHERE (start_date = '2018-03-01')"),
+			'Date =2' => array('OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(start_date, '%Y-%m-%d') = '2018-03-21')"),
 			'Num between 1' => array('OQL' => "SELECT Server WHERE nb_u >= 0 AND 1 >= nb_u"),
 		);
 	}

@@ -360,12 +360,17 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 					$sDate = $aCriteria['values'][0]['value'];
 					$oDate = new DateTime($sDate);
 
+					$sFirstDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
+					$sFirstDateLabel = AttributeDateTime::GetFormat()->Format($sFirstDateValue);
+					$aCriteria['values'][0] = array('value' => $sFirstDateValue, 'label' => $sFirstDateLabel);
+
+
 					$oDate->add(DateInterval::createFromDateString('1 day'));
 					$oDate->sub(DateInterval::createFromDateString('1 second'));
 
-					$sLastDate = $oDate->format(AttributeDateTime::GetSQLFormat());
-					$sLastDate = AttributeDateTime::GetFormat()->Format($sLastDate);
-					$aCriteria['values'][1] = array('value' => $sLastDate, 'label' => $sLastDate);
+					$sLastDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
+					$sLastDateLabel = AttributeDateTime::GetFormat()->Format($sLastDateValue);
+					$aCriteria['values'][1] = array('value' => $sLastDateValue, 'label' => $sLastDateLabel);
 				}
 			}
 
