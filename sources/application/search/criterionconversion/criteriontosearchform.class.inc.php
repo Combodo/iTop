@@ -110,6 +110,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE => 'MergeDate',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME => 'MergeDateTime',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC => 'MergeNumeric',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'MergeEnumExtKeys',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY => 'MergeEnumExtKeys',
 		);
 
 		$aPrevCriterion = null;
@@ -211,41 +213,6 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	 * @return Current criteria or null if merged
 	 * @throws \Exception
 	 */
-	protected static function MergeNumeric($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
-	{
-		$sPrevOperator = $aPrevCriterion['operator'];
-		$sCurrOperator = $aCurrCriterion['operator'];
-		if (($sPrevOperator != '<=') || ($sCurrOperator != '>='))
-		{
-			$aMergedCriterion[] = $aPrevCriterion;
-
-			return $aCurrCriterion;
-		}
-
-		// Merge into 'between' operation.
-		$sLastNum = $aPrevCriterion['values'][0]['value'];
-		$sFirstNum = $aCurrCriterion['values'][0]['value'];
-		$aCurrCriterion['values'] = array();
-		$aCurrCriterion['values'][] = array('value' => $sFirstNum, 'label' => $sFirstNum);
-		$aCurrCriterion['values'][] = array('value' => $sLastNum, 'label' => $sLastNum);
-
-		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
-		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND', 'AND').' '.$aCurrCriterion['label'];
-		$aCurrCriterion['operator'] = 'between';
-
-		$aMergedCriterion[] = $aCurrCriterion;
-
-		return null;
-	}
-
-	/**
-	 * @param $aPrevCriterion
-	 * @param $aCurrCriterion
-	 * @param $aMergedCriterion
-	 *
-	 * @return Current criteria or null if merged
-	 * @throws \Exception
-	 */
 	protected static function MergeDateTime($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
 	{
 		$sPrevOperator = $aPrevCriterion['operator'];
@@ -287,13 +254,71 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$aCurrCriterion['values'][] = array('value' => $sLastDateValue, 'label' => $sLastDateLabel);
 
 		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
-		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND', 'AND').' '.$aCurrCriterion['label'];
+		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND',
+				'AND').' '.$aCurrCriterion['label'];
 
 		$aMergedCriterion[] = $aCurrCriterion;
 
 		return null;
 	}
 
+	/**
+	 * @param $aPrevCriterion
+	 * @param $aCurrCriterion
+	 * @param $aMergedCriterion
+	 *
+	 * @return Current criteria or null if merged
+	 * @throws \Exception
+	 */
+	protected static function MergeNumeric($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
+	{
+		$sPrevOperator = $aPrevCriterion['operator'];
+		$sCurrOperator = $aCurrCriterion['operator'];
+		if (($sPrevOperator != '<=') || ($sCurrOperator != '>='))
+		{
+			$aMergedCriterion[] = $aPrevCriterion;
+
+			return $aCurrCriterion;
+		}
+
+		// Merge into 'between' operation.
+		$sLastNum = $aPrevCriterion['values'][0]['value'];
+		$sFirstNum = $aCurrCriterion['values'][0]['value'];
+		$aCurrCriterion['values'] = array();
+		$aCurrCriterion['values'][] = array('value' => $sFirstNum, 'label' => $sFirstNum);
+		$aCurrCriterion['values'][] = array('value' => $sLastNum, 'label' => $sLastNum);
+
+		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
+		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND', 'AND').' '.$aCurrCriterion['label'];
+		$aCurrCriterion['operator'] = 'between';
+
+		$aMergedCriterion[] = $aCurrCriterion;
+
+		return null;
+	}
+
+	private static function SerializeValues($aValues)
+	{
+		$aSerializedValues = array();
+		foreach($aValues as $aValue)
+		{
+			$aSerializedValues[] = serialize($aValue);
+		}
+
+		return $aSerializedValues;
+	}
+
+	protected static function MergeEnumExtKeys($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
+	{
+		$aFirstValues = self::SerializeValues($aPrevCriterion['values']);
+		$aNextValues = self::SerializeValues($aCurrCriterion['values']);
+
+		// Keep only the common values
+		$aCurrCriterion['values'] = array_map("unserialize", array_intersect($aFirstValues, $aNextValues));
+
+		$aMergedCriterion[] = $aCurrCriterion;
+		return null;
+	}
 
 	protected static function TextToSearchForm($aCriteria, $aFields)
 	{
