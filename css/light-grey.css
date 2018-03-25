@@ -741,6 +741,7 @@ input.dp-applied {
   margin: 0;
   color: #fff;
   background-color: #3f7294;
+  cursor: pointer;
   /* Pictogram */
 }
 .search_form_handler .sf_title .sft_picto {
@@ -792,9 +793,9 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria > *, .search_form_handler .sf_criterion_area .sf_more_criterion > * {
   padding: 7px 8px;
   vertical-align: top;
-  background-color: #f0f3f5;
+  background-color: #eee;
   color: #2d2d2d;
-  border: 1px solid #3f7294;
+  border: 1px solid #ccc;
   border-radius: 1px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
 }
@@ -839,7 +840,7 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_close, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_toggle {
   position: absolute;
   top: 7px;
-  color: #3f7294;
+  color: #e87c1e;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_close {
   right: 7px;
@@ -913,7 +914,7 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_item:hover {
   background-color: #fff;
   /* TODO: Try with this */
-  /*background-color: $box-blue-border-color;
+  /*background-color: $search-criteria-box-border-color;
    color: $white;*/
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_item label {
@@ -979,6 +980,9 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group:not(.advanced) .hide_on_less {
   display: none;
 }
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw > * {
+  border-color: transparent;
+}
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw .sfc_title {
   cursor: initial;
 }
@@ -1019,18 +1023,24 @@ input.dp-applied {
   margin-right: 7px;
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_toggler .sfm_tg_icon {
-  color: #3f7294;
+  color: #e87c1e;
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content {
   display: none;
+  min-width: 200px;
+  /* To avoid element going to thin on filter, not very slick */
 }
-.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_list {
-  max-height: 420px;
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_lists {
+  margin: 0px -8px;
+  padding: 0px 8px;
+  max-height: 460px;
+  overflow-x: hidden;
   overflow-y: auto;
 }
-.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_list .sfm_field {
-  cursor: pointer;
-  white-space: nowrap;
+.search_form_handler .sf_list:not(:first-of-type) .sfl_title {
+  border-top: 1px solid #ddd;
+  padding-top: 8px;
+  margin-top: 5px;
 }
 .search_form_handler .sf_list .sfl_title {
   font-weight: bold;
@@ -1046,6 +1056,10 @@ input.dp-applied {
 }
 .search_form_handler .sf_list .sfl_items > li:hover {
   background-color: #fff;
+}
+.search_form_handler .sf_list .sfl_items > li.sfl_i_placeholder {
+  font-style: italic;
+  opacity: 0.8;
 }
 .search_form_handler .sf_list .sfl_items > li > label {
   display: inline-block;
@@ -1082,6 +1096,12 @@ input.dp-applied {
 }
 .sf_results_area .sf_results_placeholder button > span {
   margin-left: 0.5em;
+}
+.hidden {
+  display: none !important;
+}
+.visible {
+  display: initial !important;
 }
 .mandatory {
   border: 1px solid #f00;

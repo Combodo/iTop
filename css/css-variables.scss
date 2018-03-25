@@ -27,11 +27,17 @@ $text-color: #000;
 $box-radius: 0px;
 $box-shadow-regular: 0 1px 1px rgba(0, 0, 0, 0.15);
 // - Boxes
-$box-blue-color: #2D2D2D;
-$box-blue-bg-color: #f0f3f5;
-$box-blue-border-color: #3f7294;
-$box-blue-border: 1px solid $box-blue-border-color;
-$box-blue-radius: 1px;
+//$search-criteria-box-color: #2D2D2D;
+//$search-criteria-box-bg-color: #f0f3f5;
+//$search-criteria-box-border-color: #3f7294;
+//$search-criteria-box-border: 1px solid $search-criteria-box-border-color;
+//$search-criteria-box-radius: 1px;
+$search-criteria-box-color: #2D2D2D;
+$search-criteria-box-picto-color: #E87C1E;
+$search-criteria-box-bg-color: #EEEEEE;
+$search-criteria-box-border-color: #CCCCCC;
+$search-criteria-box-border: 1px solid $search-criteria-box-border-color;
+$search-criteria-box-radius: 1px;
 
 // Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
 $version: "v2.4.0";

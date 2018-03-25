@@ -1390,6 +1390,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used',
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others',
+	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.',
 
 	// - Criteria operators
 	//   - Default widget

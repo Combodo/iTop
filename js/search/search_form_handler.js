@@ -15,6 +15,7 @@ $(function()
 			'submit_button_selector': null,
 			'hide_initial_criterion': false, // TODO: What is that?
 			'endpoint': null,
+			'init_opened': false,
 			'search': {
 				'base_oql': '',
 				'criterion': [
@@ -175,6 +176,8 @@ $(function()
 			// Open more criterion menu
 			// - Open it first
 			this.elements.more_criterion.addClass('opened');
+			// - Focus filter
+			this.elements.more_criterion.find('.sf_filter:first input[type="text"]').focus();
 			// - Then only check if more menu is to close to the right side (otherwise we might not have the right element's position)
 			var iFormWidth = this.element.outerWidth();
 			var iFormLeftPos = this.element.offset().left;
@@ -202,6 +205,18 @@ $(function()
 				this._openMoreCriterion();
 			}
 		},
+		// - Show / hide "add criterions" buttons from more criterion menu
+		_updateMoreCriterionButtons: function()
+		{
+			if(this.elements.more_criterion.find('.sf_list .sfm_field input[type="checkbox"]:checked').length > 0)
+			{
+
+			}
+			else
+			{
+
+			}
+		},
 		// - Close all criterion
 		_closeAllCriterion: function()
 		{
@@ -226,18 +241,24 @@ $(function()
 			this.element.find('.sft_refresh').on('click', function(oEvent){
 				// Prevent anchor
 				oEvent.preventDefault();
+				// Prevent form toggling
+				oEvent.stopPropagation();
 
 				me._submit();
 			});
 			// - Toggle icon
 			// TODO: UX Improvment
 			// Note: Would be better to toggle by clicking on the whole title, but we have an issue with <select> on abstract classes.
-			this.element.find('.sft_toggler').on('click', function(oEvent){
-				// Prevent anchor
+			this.element.find('.sf_title').on('click', function(oEvent){
+				// Prevent anchors
 				oEvent.preventDefault();
 
-				me.element.find('.sf_criterion_area').slideToggle('fast');
-				me.element.toggleClass('opened');
+				// Prevent toggle on <select>
+				if(oEvent.target.nodeName.toLowerCase() !== 'select')
+				{
+					me.element.find('.sf_criterion_area').slideToggle('fast');
+					me.element.toggleClass('opened');
+				}
 			});
 		},
 		// - Prepare criterion area
@@ -303,11 +324,31 @@ $(function()
 				.append('<input type="text" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sff_picto sff_filter fa fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span>')
 				.appendTo(oContentElem);
 
-			// - Add fields from zlist list
+			// - Lists
+			var oListsElem = $('<div></div>')
+				.addClass('sfm_lists')
+				.appendTo(oContentElem);
+
+			//   - Add recent fields list
+			var oRecentsElem = $('<div></div>')
+				.addClass('sf_list')
+				.addClass('sf_list_recents')
+				.appendTo(oListsElem);
+
+			$('<div class="sfl_title"></div>')
+				.text(Dict.S('UI:Search:AddCriteria:List:RecentlyUsed:Title'))
+				.appendTo(oRecentsElem);
+
+			// TODO: Add elements and remove hidden class if there is some.
+			var oRecentsItemsElem = $('<ul class="sfl_items"></ul>')
+				.append('<li class="sfl_i_placeholder">' + Dict.S('UI:Search:AddCriteria:List:RecentlyUsed:Placeholder') + '</li>')
+				.appendTo(oRecentsElem);
+
+			//   - Add fields from zlist list
 			var oZlistElem = $('<div></div>')
 				.addClass('sf_list')
 				.addClass('sf_list_zlist')
-				.appendTo(oContentElem);
+				.appendTo(oListsElem);
 
 			$('<div class="sfl_title"></div>')
 				.text(Dict.S('UI:Search:AddCriteria:List:MostPopular:Title'))
@@ -319,20 +360,21 @@ $(function()
 			for(var sFieldRef in this.options.search.fields.zlist)
 			{
 				var oField = this.options.search.fields.zlist[sFieldRef];
+				var sFieldTitleAttr = (oField.description !== undefined) ? 'title="' + oField.description + '"' : '';
 				var oFieldElem = $('<li></li>')
 					.addClass('sfm_field')
 					.attr('data-field-ref', sFieldRef)
-					.append('<label><input type="checkbox" value="' + sFieldRef + '" />' + oField.label + '</label>')
+					.append('<label ' + sFieldTitleAttr + '><input type="checkbox" value="' + sFieldRef + '" />' + oField.label + '</label>')
 					.appendTo(oZListItemsElem);
 			}
 
-			// - Add fields remaining
+			//   - Add fields remaining
 			if(this.options.search.fields.others !== undefined)
 			{
 				var oOthersElem = $('<div></div>')
 					.addClass('sf_list')
 					.addClass('sf_list_others')
-					.appendTo(oContentElem);
+					.appendTo(oListsElem);
 
 				$('<div class="sfl_title"></div>')
 					.text(Dict.S('UI:Search:AddCriteria:List:Others:Title'))
@@ -344,13 +386,21 @@ $(function()
 				for(var sFieldRef in this.options.search.fields.others)
 				{
 					var oField = this.options.search.fields.others[sFieldRef];
+					var sFieldTitleAttr = (oField.description !== undefined) ? 'title="' + oField.description + '"' : '';
 					var oFieldElem = $('<li></li>')
 						.addClass('sfm_field')
 						.attr('data-field-ref', sFieldRef)
-						.append('<label><input type="checkbox" value="' + sFieldRef + '" />' + oField.label + '</label>')
+						.append('<label ' + sFieldTitleAttr + '><input type="checkbox" value="' + sFieldRef + '" />' + oField.label + '</label>')
 						.appendTo(oOthersItemsElem);
 				}
 			}
+
+			// - Buttons
+			var oButtons = $('<div></div>')
+				.addClass('sfm_buttons')
+				.append('<button type="button">TOTR: Add</button>')
+				.append('<button type="button">TOTR: Cancel</button>')
+				.appendTo(oContentElem);
 
 			// Bind events
 			// - Close menu on click anywhere else
@@ -403,18 +453,20 @@ $(function()
 			// Note: "keyup" event is use instead of "keydown", otherwise, the inpu value would not be set yet.
 			oFilterElem.find('input').on('keyup focus', function(oEvent){
 				// TODO: Move on values with up and down arrow keys; select with space or enter.
+				// TODO: Hide list if no result on filter.
 
 				var sFilter = $(this).val();
 
+				// Show / hide items
 				if(sFilter === '')
 				{
-					oContentElem.find('.sfl_items > li').show();
+					oListsElem.find('.sfl_items > li').show();
 					oFilterElem.find('.sff_filter').show();
 					oFilterElem.find('.sff_reset').hide();
 				}
 				else
 				{
-					oContentElem.find('.sfl_items > li').each(function(){
+					oListsElem.find('.sfl_items > li:not(.sfl_i_placeholder)').each(function(){
 						var oRegExp = new RegExp(sFilter, 'ig');
 						var sValue = $(this).find('input').val();
 						var sLabel = $(this).text();
@@ -431,6 +483,15 @@ $(function()
 					oFilterElem.find('.sff_filter').hide();
 					oFilterElem.find('.sff_reset').show();
 				}
+
+				// Show / hide lists with no visible items
+				oListsElem.find('.sf_list').each(function(){
+					$(this).show();
+					if($(this).find('.sfl_items > li:visible').length === 0)
+					{
+						$(this).hide();
+					}
+				});
 			});
 			oFilterElem.find('.sff_filter').on('click', function(){
 				oFilterElem.find('input').trigger('focus');
@@ -450,11 +511,17 @@ $(function()
 				// Prepare new criterion data (as already opened to increase UX)
 				var oData = {
 					'ref': $(this).attr('data-field-ref'),
-					'init_opened': true,
+					'init_opened': (oEvent.ctrlKey) ? false : true,
 				};
 
 				// Add criteria but don't submit form as the user has not specified the value yet.
 				me._addCriteria(oData);
+			});
+			this.elements.more_criterion.find('.sfm_field input[type="checkbox"]').on('click', function(oEvent){
+				oEvent.stopPropagation();
+
+				// TODO: Show add button
+				console.log($(this).val(), $(this).prop('checked'));
 			});
 		},
 		// - Prepare results area

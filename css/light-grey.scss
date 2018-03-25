@@ -795,7 +795,7 @@ input.dp-applied {
 	position: relative;
 	z-index: 10;
 	font-size: 12px;
-	border: 1px solid $box-blue-border-color;
+	border: 1px solid #3F7294;
 
 	/* Sizing reset */
 	*{
@@ -827,7 +827,8 @@ input.dp-applied {
 		padding: 8px 10px;
 		margin: 0;
 		color: #ffffff;
-		background-color: $box-blue-border-color;
+		background-color: #3F7294;
+		cursor: pointer;
 
 		/* Pictogram */
 		.sft_picto{
@@ -882,10 +883,10 @@ input.dp-applied {
 			> *{
 				padding: 7px 8px;
 				vertical-align: top;
-				background-color: $box-blue-bg-color;
-				color: $box-blue-color;
-				border: $box-blue-border;
-				border-radius: $box-blue-radius;
+				background-color: $search-criteria-box-bg-color;
+				color: $search-criteria-box-color;
+				border: $search-criteria-box-border;
+				border-radius: $search-criteria-box-radius;
 				box-shadow: $box-shadow-regular;
 			}
 			.sfc_form_group,
@@ -941,7 +942,7 @@ input.dp-applied {
 			.sfc_toggle{
 				position: absolute;
 				top: 7px;
-				color: $box-blue-border-color;
+				color: $search-criteria-box-picto-color;
 			}
 			.sfc_close{
 				right: 7px;
@@ -1017,7 +1018,7 @@ input.dp-applied {
 									&:hover{
 										background-color: $white;
 										/* TODO: Try with this */
-										/*background-color: $box-blue-border-color;
+										/*background-color: $search-criteria-box-border-color;
 										color: $white;*/
 
 									}
@@ -1063,7 +1064,7 @@ input.dp-applied {
 					bottom: 4px;
 					right: 0px;
 					cursor: pointer;
-					color: $box-blue-border-color;
+					color: #3F7294;
 					font-size: 10px;
 					font-weight: bold;
 					border: none;
@@ -1122,6 +1123,9 @@ input.dp-applied {
 
 			/* Special criterion processing */
 			&.search_form_criteria_raw{
+				> *{
+					border-color: transparent;
+				}
 				.sfc_title{
 					cursor: initial;
 				}
@@ -1185,21 +1189,20 @@ input.dp-applied {
 					margin-right: 7px;
 				}
 				.sfm_tg_icon{
-					color: $box-blue-border-color;
+					color: $search-criteria-box-picto-color;
 				}
 			}
 
 			.sfm_content{
 				display: none;
+				min-width: 200px; /* To avoid element going to thin on filter, not very slick */
 
-				.sfm_list{
-					max-height: 420px;
+				.sfm_lists{
+					margin: 0px -8px;
+					padding: 0px 8px;
+					max-height: 460px;
+					overflow-x: hidden;
 					overflow-y: auto;
-
-					.sfm_field{
-						cursor: pointer;
-						white-space: nowrap;
-					}
 				}
 			}
 		}
@@ -1207,9 +1210,16 @@ input.dp-applied {
 
 	/* List helpers */
 	.sf_list{
+		&:not(:first-of-type){
+			.sfl_title{
+				border-top: 1px solid $gray-lighter;
+				padding-top: 8px;
+				margin-top: 5px;
+			}
+		}
+
 		.sfl_title{
 			font-weight: bold;
-
 		}
 		.sfl_items{
 			margin: 5px -8px 0px -8px;
@@ -1222,6 +1232,10 @@ input.dp-applied {
 
 				&:hover{
 					background-color: $white;
+				}
+				&.sfl_i_placeholder{
+					font-style: italic;
+					opacity: 0.8;
 				}
 
 				> label{
@@ -1270,6 +1284,12 @@ input.dp-applied {
 	}
 }
 
+.hidden{
+	display: none !important;
+}
+.visible{
+	display: initial !important;
+}
 .mandatory {
 	border: 1px solid #f00;
 }
