@@ -832,6 +832,7 @@ input.dp-applied {
 
 		/* Pictogram */
 		.sft_picto{
+			display: none; /* TODO: Remove this class and the correspondig DOM element if this option is kept. */
 			margin-right: 10px;
 		}
 
@@ -1200,9 +1201,23 @@ input.dp-applied {
 				.sfm_lists{
 					margin: 0px -8px;
 					padding: 0px 8px;
-					max-height: 460px;
+					max-height: 400px;
 					overflow-x: hidden;
 					overflow-y: auto;
+				}
+				.sfm_buttons{
+					display: none;
+
+					button{
+						margin-top: 8px;
+						margin-right: 5px;
+						padding: 3px 6px;
+						font-size: 11px;
+
+						&:last-of-type{
+							margin-right: 0px;
+						}
+					}
 				}
 			}
 		}

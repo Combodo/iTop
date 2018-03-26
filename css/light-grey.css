@@ -745,6 +745,8 @@ input.dp-applied {
   /* Pictogram */
 }
 .search_form_handler .sf_title .sft_picto {
+  display: none;
+  /* TODO: Remove this class and the correspondig DOM element if this option is kept. */
   margin-right: 10px;
 }
 .search_form_handler .sf_title .sft_refresh, .search_form_handler .sf_title .sft_toggler {
@@ -1033,9 +1035,21 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_lists {
   margin: 0px -8px;
   padding: 0px 8px;
-  max-height: 460px;
+  max-height: 400px;
   overflow-x: hidden;
   overflow-y: auto;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_buttons {
+  display: none;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_buttons button {
+  margin-top: 8px;
+  margin-right: 5px;
+  padding: 3px 6px;
+  font-size: 11px;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_buttons button:last-of-type {
+  margin-right: 0px;
 }
 .search_form_handler .sf_list:not(:first-of-type) .sfl_title {
   border-top: 1px solid #ddd;

@@ -205,18 +205,6 @@ $(function()
 				this._openMoreCriterion();
 			}
 		},
-		// - Show / hide "add criterions" buttons from more criterion menu
-		_updateMoreCriterionButtons: function()
-		{
-			if(this.elements.more_criterion.find('.sf_list .sfm_field input[type="checkbox"]:checked').length > 0)
-			{
-
-			}
-			else
-			{
-
-			}
-		},
 		// - Close all criterion
 		_closeAllCriterion: function()
 		{
@@ -320,16 +308,18 @@ $(function()
 				.appendTo(this.elements.more_criterion);
 
 			// - Filter
-			var oFilterElem = $('<div class="sf_filter"></div>')
+			var oFilterElem = $('<div></div>')
+				.addClass('sf_filter')
+				.addClass('sfm_filter')
 				.append('<input type="text" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sff_picto sff_filter fa fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span>')
 				.appendTo(oContentElem);
 
-			// - Lists
+			// - Lists container
 			var oListsElem = $('<div></div>')
 				.addClass('sfm_lists')
 				.appendTo(oContentElem);
 
-			//   - Add recent fields list
+			// - Recently used list
 			var oRecentsElem = $('<div></div>')
 				.addClass('sf_list')
 				.addClass('sf_list_recents')
@@ -344,7 +334,7 @@ $(function()
 				.append('<li class="sfl_i_placeholder">' + Dict.S('UI:Search:AddCriteria:List:RecentlyUsed:Placeholder') + '</li>')
 				.appendTo(oRecentsElem);
 
-			//   - Add fields from zlist list
+			// - Search zlist list
 			var oZlistElem = $('<div></div>')
 				.addClass('sf_list')
 				.addClass('sf_list_zlist')
@@ -368,7 +358,7 @@ $(function()
 					.appendTo(oZListItemsElem);
 			}
 
-			//   - Add fields remaining
+			// - Remaining fields list
 			if(this.options.search.fields.others !== undefined)
 			{
 				var oOthersElem = $('<div></div>')
@@ -396,10 +386,10 @@ $(function()
 			}
 
 			// - Buttons
-			var oButtons = $('<div></div>')
+			var oButtonsElem = $('<div></div>')
 				.addClass('sfm_buttons')
-				.append('<button type="button">TOTR: Add</button>')
-				.append('<button type="button">TOTR: Cancel</button>')
+				.append('<button type="button" name="apply">' + Dict.S('UI:Button:Apply') + '</button>')
+				.append('<button type="button" name="cancel">' + Dict.S('UI:Button:Cancel') + '</button>')
 				.appendTo(oContentElem);
 
 			// Bind events
@@ -443,12 +433,15 @@ $(function()
 					}
 				}
 			});
+
+			// - More criteria toggling
 			this.elements.more_criterion.find('.sfm_header').on('click', function(oEvent){
 				// Prevent anchor
 				oEvent.preventDefault();
 
 				me._toggleMoreCriterion();
 			});
+
 			// - Filter
 			// Note: "keyup" event is use instead of "keydown", otherwise, the inpu value would not be set yet.
 			oFilterElem.find('input').on('keyup focus', function(oEvent){
@@ -501,7 +494,8 @@ $(function()
 					.val('')
 					.trigger('focus');
 			});
-			// - Add criteria
+
+			// - Add one criteria
 			this.elements.more_criterion.find('.sfm_field').on('click', function(oEvent){
 				// Prevent anchor
 				oEvent.preventDefault();
@@ -517,11 +511,47 @@ $(function()
 				// Add criteria but don't submit form as the user has not specified the value yet.
 				me._addCriteria(oData);
 			});
+
+			// - Add several criterion
 			this.elements.more_criterion.find('.sfm_field input[type="checkbox"]').on('click', function(oEvent){
+				// Prevent propagation to field and instant add of the criteria
 				oEvent.stopPropagation();
 
-				// TODO: Show add button
-				console.log($(this).val(), $(this).prop('checked'));
+				if(me.elements.more_criterion.find('.sfm_field input[type="checkbox"]:checked').length === 0)
+				{
+					oButtonsElem.hide();
+				}
+				else
+				{
+					oButtonsElem.show();
+				}
+
+				// Put focus back to filter to improve UX.
+				oFilterElem.find('input').trigger('focus');
+			});
+			oButtonsElem.find('button').on('click', function(){
+				// Add criterion on apply
+				if($(this).attr('name') === 'apply')
+				{
+					me.elements.more_criterion.find('.sfm_field input[type="checkbox"]:checked').each(function(iIdx, oElem){
+						var oData = {
+							'ref': $(oElem).closest('.sfm_field').attr('data-field-ref'),
+							'init_opened': false,
+						};
+						me._addCriteria(oData);
+					});
+				}
+
+				// Clear all
+				// - Checkboxes
+				me.elements.more_criterion.find('.sfm_field input[type="checkbox"]:checked').prop('checked', false);
+				// - Filter
+				oFilterElem.find('input')
+					.val('')
+					.trigger('focus');
+
+				// Hide buttons
+				oButtonsElem.hide();
 			});
 		},
 		// - Prepare results area
@@ -557,6 +587,7 @@ $(function()
 				// TODO: Translate sentence.
 				oResultAreaElem.html('<div class="sf_results_placeholder"><p>Add some criterion on the search box or click the search button to view the objects.</p><p><button type="button">Search<span class="fa fa-search"></span></button></p></div>');
 				oResultAreaElem.find('button').on('click', function(){
+					// TODO: Bug: Open "Search for CI", change child classe in the dropdown, click the search button. It submit the search for the original child classe, not the current one; whereas a click on the upper right pictogram does. This might be due to the form reloading.
 					me._onSubmitClick();
 				});
 			}
