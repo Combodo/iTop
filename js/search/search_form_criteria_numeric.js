@@ -193,17 +193,29 @@ $(function()
 				switch (true)
 				{
 					case (typeof aValues[0] == 'undefined' && typeof aValues[1] == 'undefined'):
-					case (typeof aValues[0].label == 'undefined' && typeof aValues[1].label == 'undefined'):
-					case (aValues[0].label.trim() == '' && aValues[1].label.trim() == ''):
 						var sDictEntrySuffix = ':All';
 						break;
 					case (typeof aValues[0] == 'undefined' ):
-					case (typeof aValues[0].label == 'undefined' ):
-					case (aValues[0].label.trim() == '' ):
 						var sDictEntrySuffix = ':Until';
 						break;
 					case (typeof aValues[1] == 'undefined'):
+						var sDictEntrySuffix = ':From';
+						break;
+					case (typeof aValues[0].label == 'undefined' && typeof aValues[1].label == 'undefined'):
+						var sDictEntrySuffix = ':All';
+						break;
+					case (typeof aValues[0].label == 'undefined' ):
+						var sDictEntrySuffix = ':Until';
+						break;
 					case (typeof aValues[1].label == 'undefined' ):
+						var sDictEntrySuffix = ':From';
+						break;
+					case (aValues[0].label.trim() == '' && aValues[1].label.trim() == ''):
+						var sDictEntrySuffix = ':All';
+						break;
+					case (aValues[0].label.trim() == '' ):
+						var sDictEntrySuffix = ':Until';
+						break;
 					case (aValues[1].label.trim() == ''):
 						var sDictEntrySuffix = ':From';
 						break;
