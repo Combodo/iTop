@@ -28,7 +28,6 @@ namespace Combodo\iTop\Test\UnitTest\iTopTickets;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Exception;
-use PHPUnit\Framework\TestCase;
 
 
 /**
@@ -799,7 +798,7 @@ class ItopTicketTest extends ItopDataTestCase
             $oServer2->GetKey() => 'manual');
         $this->CheckFunctionalCIList($oTicket2, $aWaitedCIList);
         $this->CheckContactList($oTicket2);
-        $this->assertEquals(5, $oTicket2->Get('functionalcis_list')->Count());
+	    $this->assertEquals(2, $oTicket2->Get('functionalcis_list')->Count());
         $this->assertEquals(1, $oTicket2->Get('contacts_list')->Count());
 
         // The first ticket is not impacted
@@ -910,7 +909,7 @@ class ItopTicketTest extends ItopDataTestCase
             $oServer2->GetKey() => 'manual');
         $this->CheckFunctionalCIList($oTicket2, $aWaitedCIList);
         $this->CheckContactList($oTicket2);
-        $this->assertEquals(6, $oTicket2->Get('functionalcis_list')->Count());
+	    $this->assertEquals(3, $oTicket2->Get('functionalcis_list')->Count());
         $this->assertEquals(1, $oTicket2->Get('contacts_list')->Count());
 
         // The first ticket is not impacted
