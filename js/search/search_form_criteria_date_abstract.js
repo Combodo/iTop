@@ -124,7 +124,7 @@ $(function()
 				buttonText: "",
 				showOn:'button',
 				changeMonth:true,
-				changeYear:true lF
+				changeYear:true
 			};
 			for (var i = 0; i < aInputsParamLength; i++) {
 				var oInputParam = aInputsParam[i];
