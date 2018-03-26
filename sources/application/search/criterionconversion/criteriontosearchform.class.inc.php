@@ -147,6 +147,27 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			$aMergedCriterion[] = $aPrevCriterion;
 		}
 
+		// Sort by label criterion by variable name (no ref first)
+		usort($aMergedCriterion, function ($a, $b) {
+			if (($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW) ||
+				($b['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
+			{
+				if (($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW) &&
+					($b['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
+				{
+					return strcmp($a['label'], $b['label']);
+				}
+				if ($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
+				{
+					return -1;
+				}
+
+				return 1;
+			}
+
+			return strcmp($a['label'], $b['label']);
+		});
+
 		return $aMergedCriterion;
 	}
 
@@ -285,8 +306,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$sLastNum = $aPrevCriterion['values'][0]['value'];
 		$sFirstNum = $aCurrCriterion['values'][0]['value'];
 		$aCurrCriterion['values'] = array();
-		$aCurrCriterion['values'][] = array('value' => $sFirstNum, 'label' => $sFirstNum);
-		$aCurrCriterion['values'][] = array('value' => $sLastNum, 'label' => $sLastNum);
+		$aCurrCriterion['values'][] = array('value' => $sFirstNum, 'label' => "$sFirstNum");
+		$aCurrCriterion['values'][] = array('value' => $sLastNum, 'label' => "$sLastNum");
 
 		$aCurrCriterion['oql'] = "({$aPrevCriterion['oql']} AND {$aCurrCriterion['oql']})";
 		$aCurrCriterion['label'] = $aPrevCriterion['label'].' '.Dict::S('Expression:Operator:AND', 'AND').' '.$aCurrCriterion['label'];
@@ -340,19 +361,19 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_CONTAINS;
 				$sValue = substr($sValue, 1, -1);
 				$aCriteria['values'][0]['value'] = $sValue;
-				$aCriteria['values'][0]['label'] = $sValue;
+				$aCriteria['values'][0]['label'] = "$sValue";
 				break;
 			case ($sOperator == 'LIKE' && $bStartWithPercent):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_ENDS_WITH;
 				$sValue = substr($sValue, 1);
 				$aCriteria['values'][0]['value'] = $sValue;
-				$aCriteria['values'][0]['label'] = $sValue;
+				$aCriteria['values'][0]['label'] = "$sValue";
 				break;
 			case ($sOperator == 'LIKE' && $bEndWithPercent):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_STARTS_WITH;
 				$sValue = substr($sValue, 0, -1);
 				$aCriteria['values'][0]['value'] = $sValue;
-				$aCriteria['values'][0]['label'] = $sValue;
+				$aCriteria['values'][0]['label'] = "$sValue";
 				break;
 		}
 
@@ -384,7 +405,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 					$sFirstDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
 					$sFirstDateLabel = AttributeDateTime::GetFormat()->Format($sFirstDateValue);
-					$aCriteria['values'][0] = array('value' => $sFirstDateValue, 'label' => $sFirstDateLabel);
+					$aCriteria['values'][0] = array('value' => $sFirstDateValue, 'label' => "$sFirstDateLabel");
 
 
 					$oDate->add(DateInterval::createFromDateString('1 day'));
@@ -392,7 +413,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 					$sLastDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
 					$sLastDateLabel = AttributeDateTime::GetFormat()->Format($sLastDateValue);
-					$aCriteria['values'][1] = array('value' => $sLastDateValue, 'label' => $sLastDateLabel);
+					$aCriteria['values'][1] = array('value' => $sLastDateValue, 'label' => "$sLastDateLabel");
 				}
 			}
 
@@ -418,7 +439,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			{
 				$sLabel .= Dict::S('Expression:Unit:Short:'.$aCriteria['unit'], $aCriteria['unit']);
 			}
-			$aCriteria['values'][0]['label'] = $sLabel;
+			$aCriteria['values'][0]['label'] = "$sLabel";
 		}
 
 		// Temporary until the JS widget support relative dates
@@ -517,7 +538,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 			foreach($aAllowedValues as $sValue => $sLabel)
 			{
-				$aValue = array('value' => $sValue, 'label' => $sLabel);
+				$aValue = array('value' => $sValue, 'label' => "$sLabel");
 				$aCriteria['values'][] = $aValue;
 			}
 			$aCriteria['operator'] = 'IN';
