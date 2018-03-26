@@ -102,6 +102,7 @@ $(function()
 				// Apply if enter key
 				if(oEvent.key === 'Enter')
 				{
+					me.val(me.val().trim());
 					me._apply();
 				}
 			});
@@ -136,7 +137,14 @@ $(function()
 
 					if (bSetDate)
 					{
-						selectElem[oInputParam.x_picker]('setDate', null);
+						var sDate = selectElem.val().trim();
+						if ('' == sDate)
+						{
+							selectElem[oInputParam.x_picker]('setDate', null);
+						} else
+						{
+							selectElem[oInputParam.x_picker]('setDate', sDate);
+						}
 					}
 
 					if (sSyncedWith != undefined)
