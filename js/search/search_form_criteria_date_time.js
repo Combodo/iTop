@@ -25,7 +25,8 @@ $(function()
 					"value_index": 0,
 					"onclose_show" : "until",
 					"synced_with": "from_time",
-					"getter_code":"from_time",
+					//"getter_code":"from_time",
+					"getter_suffix":" 00:00:00",
 				},
 				{
 					"code": "from_time",
@@ -46,7 +47,8 @@ $(function()
 					"show_on_advanced": false,
 					"value_index": 1,
 					"synced_with": "until_time",
-					"getter_code":"until_time",
+					//"getter_code":"until_time",
+					"getter_suffix":" 23:59:59",
 				},
 				{
 					"code": "until_time",

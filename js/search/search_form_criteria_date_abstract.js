@@ -40,7 +40,9 @@ $(function()
 					//  "show_on_advanced": true,		=> is the input displaye on "more" or "less" mode advanced is an lais for "more" in the css
 					//  "synced_with": "from_time",		=> from and until has both two input (datepicker and datetimepicker). each time one input change, the other one has to change
 					//  "getter_code":"from_time"		=> iTop expect datetime to always provide time, so we must always use the datetimepicker in order to compute the value to be sent to iTop event if whe are in the display mode "less" with datepicker visible
+					//  "getter_suffix": " 00:00:00",	=> iTop expect datetime to always provide time, so either we use the "getter_code" or we add a suffix to force the time
 					//  "title_getter_code":"from",		=> if present, the title will be computed base on the given input code. Because the datetime widget title area is not large enought, so we remove the time info, in order to do so we use this.
+
 				}
 			]
 		},
@@ -264,22 +266,32 @@ $(function()
 			var aValues = [];
 			var aInputsParam = me.options.aInputsParam;
 			var aInputsParamLength = aInputsParam.length;
-			var bAdvancedMode = (oOpElem.find('adanced').length > 0);
+			var bAdvancedMode = (me.element.find('.sfc_form_group.advanced').length > 0);
+
+			var sValue = '';
+			var sLabel = '';
+
 			for (var i = 0; i < aInputsParamLength; i++) {
 				var oInputParam = aInputsParam[i];
-				var oInputElemForLabel = oOpElem.find('input[name="'+oInputParam.code+'"]');
+
+				sLabel = oOpElem.find('input[name="'+oInputParam.code+'"]').val();
+
 				if (typeof oInputParam.show_on_advanced == 'undefined' || bAdvancedMode == oInputParam.show_on_advanced)
 				{
 					if (typeof oInputParam.getter_code != 'undefined')
 					{
-						oInputElemForValue = oOpElem.find('input[name="'+oInputParam.getter_code+'"]');
+						sValue = oOpElem.find('input[name="'+oInputParam.getter_code+'"]').val();
+					}
+					else if (typeof oInputParam.getter_suffix != 'undefined')
+					{
+						sValue = sLabel + oInputParam.getter_suffix;
 					}
 					else
 					{
-						oInputElemForValue = oInputElemForLabel;
+						sValue = sLabel;
 					}
 
-					aValues[oInputParam.value_index] = {value: oInputElemForValue.val(), label: oInputElemForLabel.val()};
+					aValues[oInputParam.value_index] = {value: sValue, label: sLabel};
 				}
 			}
 
