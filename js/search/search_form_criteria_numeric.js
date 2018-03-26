@@ -103,20 +103,23 @@ $(function()
 			aValues = me._getValues();//TODO : tenir compte du refactoring de la structure
 
 			// DOM elements
-			var oOpContentElemFrom = $('<input type="text" name="from" />').uniqueId();
-			if (0 in aValues && typeof aValues[0].value != 'undefined')
+			var oOpContentOuterElemFrom = $('<span class="sfc_op_content_from_outer"><label class="sfc_op_content_from_label" for=""> '+Dict.S('UI:Search:Criteria:Numeric:From')+'</label><input type="text" name="from" placeholder="'+Dict.S('UI:Search:Criteria:Numeric:PlaceholderFrom')+'"/></span>');
+			var oOpContentElemFrom = oOpContentOuterElemFrom.find('input').uniqueId();
+			oOpContentOuterElemFrom.find('label').attr('for', oOpContentElemFrom.attr('id'));
+			if (typeof aValues[0] != 'undefined' && typeof aValues[0].value != 'undefined')
 			{
 				oOpContentElemFrom.val(aValues[0].value);
 			}
-
-			var oOpContentElemUntil = $('<input type="text" name="until" />').uniqueId();
-			if (1 in aValues && typeof aValues[1].value != 'undefined')
+			var oOpContentOuterElemUntil = $('<span class="sfc_op_content_until_outer"><label class="sfc_op_content_until_label" for=""> '+Dict.S('UI:Search:Criteria:Numeric:Until')+'</label><input type="text" name="until" placeholder="'+Dict.S('UI:Search:Criteria:Numeric:PlaceholderUntil')+'"/></span>');
+			var oOpContentElemUntil = oOpContentOuterElemUntil.find('input').uniqueId();
+			oOpContentOuterElemUntil.find('label').attr('for', oOpContentElemUntil.attr('id'));
+			if (typeof aValues[1] != 'undefined' && typeof aValues[1].value != 'undefined')
 			{
 				oOpContentElemUntil.val(aValues[1].value);
 			}
 
 
-			oOpContentElem = $().add(oOpContentElemFrom).add(oOpContentElemUntil);
+			oOpContentElem = $().add(oOpContentOuterElemFrom).add(oOpContentOuterElemUntil);
 
 			// Events
 			// - Focus input on click (radio, label, ...)
@@ -132,7 +135,12 @@ $(function()
 				me._markAsDraft();
 			});
 
-			oOpElem.find('.sfc_op_content').append(oOpContentElem);
+			oOpElem
+				.find('.sfc_op_name')
+					.remove()
+				.end()
+				.find('.sfc_op_content')
+					.append(oOpContentElem);
 		},
 
 		_getBetweenOperatorValues: function(oOpElem)
@@ -174,6 +182,79 @@ $(function()
 		//------------------
 		// Inherited methods
 		//------------------
+
+
+		_setTitle: function(sTitle)
+		{
+			var me = this;
+			if (sTitle === undefined && me.options.operator == 'between')
+			{
+				var aValues = me._getValues();
+				switch (true)
+				{
+					case (typeof aValues[0] == 'undefined' && typeof aValues[1] == 'undefined'):
+					case (typeof aValues[0].label == 'undefined' && typeof aValues[1].label == 'undefined'):
+					case (aValues[0].label.trim() == '' && aValues[1].label.trim() == ''):
+						var sDictEntrySuffix = ':All';
+						break;
+					case (typeof aValues[0] == 'undefined' ):
+					case (typeof aValues[0].label == 'undefined' ):
+					case (aValues[0].label.trim() == '' ):
+						var sDictEntrySuffix = ':Until';
+						break;
+					case (typeof aValues[1] == 'undefined'):
+					case (typeof aValues[1].label == 'undefined' ):
+					case (aValues[1].label.trim() == ''):
+						var sDictEntrySuffix = ':From';
+						break;
+					default:
+						var sDictEntrySuffix = undefined;
+						break;
+				}
+
+				if (sDictEntrySuffix != undefined)
+				{
+					var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':' + this._toCamelCase(me.options.operator) + sDictEntrySuffix ;
+					// Fallback to default widget dict entry if none exists for the current widget
+					if(Dict.S(sDictEntry) === sDictEntry)
+					{
+						sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(me.options.operator) + sDictEntrySuffix;
+					}
+
+					sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
+				}
+
+			}
+
+			return me._super(sTitle);
+		},
+
+
+		// - Convert values to a standard string
+		_getValuesAsText: function(aRawValues)
+		{
+			var me = this;
+
+			if (aRawValues == undefined)
+			{
+				aRawValues = me._getValues();
+			}
+			if (me.options.operator == 'between')
+			{
+				aRawValues = aRawValues.slice(); //clone
+				if (typeof aRawValues[1] == 'undefined' || typeof aRawValues[1].label == 'undefined' || aRawValues[1].label == '')
+				{
+					aRawValues.splice(1, 1);
+				}
+				if (typeof aRawValues[0] == 'undefined' || typeof aRawValues[0].label == 'undefined' || aRawValues[0].label == '')
+				{
+					aRawValues.splice(0, 1);
+				}
+			}
+			return me._super(aRawValues);
+		},
+
+
 
 
 		// Prepare operator's DOM element

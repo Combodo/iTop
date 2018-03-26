@@ -71,7 +71,7 @@ $(function()
 				var oInputElem = oOpContentElem
 					.find('input')
 					.uniqueId()
-					.attr('data-no-auto-focus', true)
+					//.attr('data-no-auto-focus', true)
 				;
 				oOpContentElem
 					.find('label')
@@ -87,14 +87,7 @@ $(function()
 			}
 
 
-			// // Events
-			// // - Focus input on click (radio, label, ...)
-			// oOpElem.on('click', function(oEvent){
-			// 	if ($(oEvent.target).is('input[type="text"], select')) {
-			// 		return;
-			// 	}
-			// 	oOpElem.find('input:visible:first').filter('[data-no-auto-focus]').focus();
-			// });
+
 			// - Apply on "enter" key hit
 			//todo: this could be refactored
 			oOpContentElem.on('keyup', function(oEvent){
@@ -129,66 +122,122 @@ $(function()
 				buttonImage: GetAbsoluteUrlAppRoot()+"/images/calendar.png",
 				buttonImageOnly: true,
 				buttonText: "",
-				showOn:'both'
+				showOn:'button',
+				changeMonth:true,
+				changeYear:true lF
 			};
 			for (var i = 0; i < aInputsParamLength; i++) {
 				var oInputParam = aInputsParam[i];
 
-				var odatetimepickerOptions = $.extend({}, odatetimepickerOptionsDefault, {
-					onClose: function(dateText, inst) {
-						var selectElem 				= $(this);
-						var sOnCLoseShow 			= selectElem.data('onclose_show');
+				var fHandleSynchCallback = function(select, bSetDate) {
+					var selectElem 				= $(select);
+					var sSyncedWith 			= selectElem.data('synced_with');
+					var oInputParam 			= selectElem.data('oInputParam');
 
-						// if (typeof oInputParam.onclose_show != 'undefined')
-						// {
-						// 	oOpElem.find('input[name="'+oInputParam.onclose_show+'"]')
-						// 		[oInputParam.x_picker]('show')
-						// 	;
-						// }
+					if (bSetDate)
+					{
+						selectElem[oInputParam.x_picker]('setDate', null);
+					}
 
-						// if (sOnCLoseShow != undefined && selectElem.is(':visible'))
-						// {
-						// 	var oOnCLoseShowInputElem = oOpElem.find('input[name="'+sOnCLoseShow+'"]');
-						// 	oOnCLoseShowInputElem[oInputParam.x_picker]('show');
-						// }
+					if (sSyncedWith != undefined)
+					{
+						var sCode 				= selectElem.data('code');
+						var oInputParam 		= aInputsParam[oInputsParamIndexByCode[sCode]];
+						var oSyncedInputParam 	= aInputsParam[oInputsParamIndexByCode[sSyncedWith]];
+						var oSyncedInputElem 	= oOpElem.find('input[name="'+sSyncedWith+'"]');
 
-					},
-					onSelect: function(sDateText, oXPicker) {
-						var selectElem 				= $(this);
-						var sSyncedWith 			= selectElem.data('synced_with');
+						var dSyncedDate 		= selectElem[oInputParam.x_picker]('getDate');
 
-
-						if (sSyncedWith != undefined)
+						if (null == dSyncedDate)
 						{
-							var sCode 				= selectElem.data('code');
-							var oInputParam 		= aInputsParam[oInputsParamIndexByCode[sCode]];
-							var oSyncedInputParam 	= aInputsParam[oInputsParamIndexByCode[sSyncedWith]];
-							var oSyncedInputElem 	= oOpElem.find('input[name="'+sSyncedWith+'"]');
-
-							var dSyncedDate 		= selectElem[oInputParam.x_picker]('getDate');
-
-							if (null == dSyncedDate)
+							// oSyncedInputElem.val('');
+							oSyncedInputElem[oSyncedInputParam.x_picker]('setDate', null);
+						}
+						else
+						{
+							if (typeof oSyncedInputParam.default_time_add != 'undefined' && oSyncedInputParam.default_time_add)
 							{
-								oSyncedInputElem.val('');
+								dSyncedDate.setSeconds(dSyncedDate.getSeconds() + oSyncedInputParam.default_time_add);
 							}
-							else
-							{
-								if (typeof oSyncedInputParam.default_time_add != 'undefined' && oSyncedInputParam.default_time_add)
-								{
-									dSyncedDate.setSeconds(dSyncedDate.getSeconds() + oSyncedInputParam.default_time_add);
-								}
-								oSyncedInputElem[oSyncedInputParam.x_picker]('setDate', dSyncedDate);
-							}
-
+							oSyncedInputElem[oSyncedInputParam.x_picker]('setDate', dSyncedDate);
 						}
 
-						me._apply();
 					}
+
+					//me._apply();
+					selectElem[oInputParam.x_picker]('hide');
+				};
+
+				var odatetimepickerOptions = $.extend({}, odatetimepickerOptionsDefault, {
+					onSelect: function() {
+						fHandleSynchCallback(this, false);
+						$(this).focus();
+					}
+					// onClose: function(dateText, inst) {
+					// 	var selectElem 				= $(this);
+					// 	var sOnCLoseShow 			= selectElem.data('onclose_show');
+					//
+					// 	// if (typeof oInputParam.onclose_show != 'undefined')
+					// 	// {
+					// 	// 	oOpElem.find('input[name="'+oInputParam.onclose_show+'"]')
+					// 	// 		[oInputParam.x_picker]('show')
+					// 	// 	;
+					// 	// }
+					//
+					// 	// if (sOnCLoseShow != undefined && selectElem.is(':visible'))
+					// 	// {
+					// 	// 	var oOnCLoseShowInputElem = oOpElem.find('input[name="'+sOnCLoseShow+'"]');
+					// 	// 	oOnCLoseShowInputElem[oInputParam.x_picker]('show');
+					// 	// }
+					//
+					// },
+					// onSelect: function(sDateText, oXPicker) {
+					// 	var selectElem 				= $(this);
+					// 	var sSyncedWith 			= selectElem.data('synced_with');
+					//
+					//
+					// 	if (sSyncedWith != undefined)
+					// 	{
+					// 		var sCode 				= selectElem.data('code');
+					// 		var oInputParam 		= aInputsParam[oInputsParamIndexByCode[sCode]];
+					// 		var oSyncedInputParam 	= aInputsParam[oInputsParamIndexByCode[sSyncedWith]];
+					// 		var oSyncedInputElem 	= oOpElem.find('input[name="'+sSyncedWith+'"]');
+					//
+					// 		var dSyncedDate 		= selectElem[oInputParam.x_picker]('getDate');
+					//
+					// 		if (null == dSyncedDate)
+					// 		{
+					// 			oSyncedInputElem.val('');
+					// 		}
+					// 		else
+					// 		{
+					// 			if (typeof oSyncedInputParam.default_time_add != 'undefined' && oSyncedInputParam.default_time_add)
+					// 			{
+					// 				dSyncedDate.setSeconds(dSyncedDate.getSeconds() + oSyncedInputParam.default_time_add);
+					// 			}
+					// 			oSyncedInputElem[oSyncedInputParam.x_picker]('setDate', dSyncedDate);
+					// 		}
+					//
+					// 	}
+					//
+					// 	//me._apply();
+					// 	selectElem[oInputParam.x_picker]('hide');
+					// }
 				});
+
+
 
 				var oInputElem = oOpElem.find('input[name="'+oInputParam.code+'"]');
 				oInputElem.data('code', oInputParam.code);
 				oInputElem.data('onclose_show', oInputParam.onclose_show);
+				oInputElem.data('oInputParam', oInputParam);
+				oInputElem.on('keydown', function(oEvent) {
+					// Synch if "enter" key
+					if(oEvent.key === 'Enter')
+					{
+						fHandleSynchCallback(this, true);
+					}
+				});
 				oInputElem[oInputParam.x_picker](odatetimepickerOptions);
 
 				if (typeof aInputsParam[oInputsParamIndexByCode[oInputParam.synced_with]] != 'undefined')
@@ -243,14 +292,15 @@ $(function()
 				if (typeof aValues[oInputParam.value_index] != 'undefined' && typeof aValues[oInputParam.value_index].value != 'undefined')
 				{
 					var sDate = aValues[oInputParam.value_index].value;
-					var oDate = new Date(aValues[oInputParam.value_index].value);
-					// switch (true)
-					// {
-					// 	case (i == 0 && sDate.search(/(\s\d{2}:\d{2}:\d{2})/) === -1):
-					// 		//if there is no given hour, the GMT offset is appended by javascript, so we need to remove it (if not, we would have our GMT offset add, ie GMT +1 would become "00:01:00"
-					// 		oDate = new Date(oDate.valueOf() + oDate.getTimezoneOffset() * 60000);
-					// }
-					oInputElem[oInputParam.x_picker]('setDate', oDate);
+					if (sDate.trim() != '')
+					{
+						var oDate = new Date(sDate);
+						oInputElem[oInputParam.x_picker]('setDate', oDate);
+					}
+					else
+					{
+						oInputElem[oInputParam.x_picker]('setDate', sDate);
+					}
 				}
 			}
 		},
@@ -269,7 +319,6 @@ $(function()
 			var me = this;
 			if (sTitle === undefined && me.options.operator == 'between_dates')
 			{
-				var oActiveOpElem = me.element.find('.sfc_op_radio:checked').closest('.sfc_fg_operator');
 				var aValues = me._getValues();
 				switch (true)
 				{
@@ -315,11 +364,14 @@ $(function()
 		_getValuesAsText: function(aRawValues)
 		{
 			var me = this;
-			var aRawValues = undefined;
+
+			if (aRawValues == undefined)
+			{
+				aRawValues = me._getValues();
+			}
 			if (me.options.operator == 'between_dates')
 			{
-				var oActiveOpElem = this.element.find('.sfc_op_radio[value="'+me.options.operator+'"]').closest('.sfc_fg_operator'); // me.element.find('.sfc_op_radio:checked').closest('.sfc_fg_operator');
-				aRawValues = me._getValues();
+				aRawValues = aRawValues.slice();//clone
 
 				if (typeof aRawValues[1] == 'undefined' || typeof aRawValues[1].label == 'undefined' || aRawValues[1].label == '')
 				{
