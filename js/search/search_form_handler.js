@@ -540,6 +540,7 @@ $(function()
 						};
 						me._addCriteria(oData);
 					});
+					me._closeMoreCriterion();
 				}
 
 				// Clear all
@@ -626,7 +627,8 @@ $(function()
 				// Create DOM element
 				var oCriteriaElem = $('<div></div>')
 					.addClass('sf_criteria')
-					.insertBefore(this.elements.more_criterion);
+					//.insertBefore(this.elements.more_criterion);
+					.appendTo(this.elements.criterion_area);
 
 				// Instanciate widget
 				$.itop[sWidgetName](oData, oCriteriaElem);

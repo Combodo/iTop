@@ -795,8 +795,6 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria > *, .search_form_handler .sf_criterion_area .sf_more_criterion > * {
   padding: 7px 8px;
   vertical-align: top;
-  background-color: #eee;
-  color: #2d2d2d;
   border: 1px solid #ccc;
   border-radius: 1px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
@@ -809,7 +807,7 @@ input.dp-applied {
   margin-top: -1px;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria {
-  margin-right: 5px;
+  margin-right: 30px;
   /* Non editable criteria */
   /* Draft criteria (modifications not applied) */
   /* Opened criteria (form group displayed) */
@@ -838,6 +836,21 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria.opened_left .sfc_form_group {
   left: auto;
   right: 0px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria:not(:last-of-type)::after {
+  /* TODO: Find an elegant way to do this, without hardcoding the content (could be a <style> in the markup) and margin. Note, only a few languages (hawaiian and stuff like this have more than 4 letters in for "and" word. */
+  content: "and";
+  position: absolute;
+  top: 8px;
+  left: calc(100% + 0px);
+  margin-right: 5px;
+  margin-left: 5px;
+  text-align: center;
+  color: #808080;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria > * {
+  background-color: #eee;
+  color: #2d2d2d;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_close, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_toggle {
   position: absolute;
@@ -915,9 +928,6 @@ input.dp-applied {
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_item:hover {
   background-color: #fff;
-  /* TODO: Try with this */
-  /*background-color: $search-criteria-box-border-color;
-   color: $white;*/
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_item label {
   display: inline-block;
@@ -1010,6 +1020,9 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_between input {
   width: 88px;
 }
+.search_form_handler .sf_criterion_area .sf_more_criterion {
+  margin-right: 5px;
+}
 .search_form_handler .sf_criterion_area .sf_more_criterion.opened {
   z-index: 2;
   /* To be over criterion */
@@ -1020,6 +1033,10 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .sf_more_criterion.opened_left .sfm_content {
   left: auto;
   right: 0px;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion > * {
+  background-color: #fff;
+  color: #2d2d2d;
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_toggler .sfm_tg_title {
   margin-right: 7px;
@@ -1038,6 +1055,9 @@ input.dp-applied {
   max-height: 400px;
   overflow-x: hidden;
   overflow-y: auto;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_lists .sfl_items > li:hover {
+  background-color: #f1f1f1;
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_buttons {
   display: none;

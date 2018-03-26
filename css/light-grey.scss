@@ -884,8 +884,6 @@ input.dp-applied {
 			> *{
 				padding: 7px 8px;
 				vertical-align: top;
-				background-color: $search-criteria-box-bg-color;
-				color: $search-criteria-box-color;
 				border: $search-criteria-box-border;
 				border-radius: $search-criteria-box-radius;
 				box-shadow: $box-shadow-regular;
@@ -902,8 +900,7 @@ input.dp-applied {
 
 		/* Criteria tags */
 		.search_form_criteria{
-			margin-right: 5px;
-
+			margin-right: 30px;
 
 			/* Non editable criteria */
 			&.locked{
@@ -936,6 +933,23 @@ input.dp-applied {
 					left: auto;
 					right: 0px;
 				}
+			}
+
+			&:not(:last-of-type)::after{
+				/* TODO: Find an elegant way to do this, without hardcoding the content (could be a <style> in the markup) and margin. Note, only a few languages (hawaiian and stuff like this have more than 4 letters in for "and" word. */
+				content: "and";
+				position: absolute;
+				top: 8px;
+				left: calc(100% + 0px);
+				margin-right: 5px;
+				margin-left: 5px;
+				text-align: center;
+				color: $gray-light;
+			}
+
+			> *{
+				background-color: $search-criteria-box-bg-color;
+				color: $search-criteria-box-color;
 			}
 
 			/* Top left corner icons */
@@ -1017,11 +1031,7 @@ input.dp-applied {
 									padding: 4px 8px; /* Putting back the padding remove by .sfc_opc_mc_items */
 
 									&:hover{
-										background-color: $white;
-										/* TODO: Try with this */
-										/*background-color: $search-criteria-box-border-color;
-										color: $white;*/
-
+										background-color: $search-criteria-box-hover-color;
 									}
 
 									label{
@@ -1164,13 +1174,12 @@ input.dp-applied {
 					}
 				}
 			}
-
-
-
 		}
 
 		/* More criterion */
 		.sf_more_criterion{
+			margin-right: 5px;
+
 			&.opened{
 				z-index: 2; /* To be over criterion */
 
@@ -1185,6 +1194,10 @@ input.dp-applied {
 				}
 			}
 
+			> *{
+				background-color: $search-add-criteria-box-bg-color;
+				color: $search-add-criteria-box-color;
+			}
 			.sfm_toggler{
 				.sfm_tg_title{
 					margin-right: 7px;
@@ -1193,7 +1206,6 @@ input.dp-applied {
 					color: $search-criteria-box-picto-color;
 				}
 			}
-
 			.sfm_content{
 				display: none;
 				min-width: 200px; /* To avoid element going to thin on filter, not very slick */
@@ -1204,6 +1216,14 @@ input.dp-applied {
 					max-height: 400px;
 					overflow-x: hidden;
 					overflow-y: auto;
+
+					.sfl_items{
+						> li{
+							&:hover{
+								background-color: $search-add-criteria-box-hover-color;
+							}
+						}
+					}
 				}
 				.sfm_buttons{
 					display: none;
