@@ -661,11 +661,6 @@ class ScalarExpression extends UnaryExpression
 	 */
 	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
 	{
-		if (strpos($this->m_value, '%') === 0)
-		{
-			return '';
-		}
-
 		if (!is_null($oAttDef))
 		{
 			if ($oAttDef->IsExternalKey())
@@ -682,7 +677,15 @@ class ScalarExpression extends UnaryExpression
 				}
 			}
 
-			return $oAttDef->GetAsPlainText($this->m_value);
+			if (!($oAttDef instanceof AttributeDateTime))
+			{
+				return $oAttDef->GetAsPlainText($this->m_value);
+			}
+		}
+
+		if (strpos($this->m_value, '%') === 0)
+		{
+			return '';
 		}
 
 		return $this->Render($aArgs);
