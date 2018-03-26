@@ -177,7 +177,9 @@ $(function()
 			// - Open it first
 			this.elements.more_criterion.addClass('opened');
 			// - Focus filter
-			this.elements.more_criterion.find('.sf_filter:first input[type="text"]').focus();
+			this.elements.more_criterion.find('.sf_filter:first input[type="text"]')
+				.val('')
+				.focus();
 			// - Then only check if more menu is to close to the right side (otherwise we might not have the right element's position)
 			var iFormWidth = this.element.outerWidth();
 			var iFormLeftPos = this.element.offset().left;
@@ -502,14 +504,22 @@ $(function()
 				// Prevent propagation to not close the opening criteria
 				oEvent.stopPropagation();
 
-				// Prepare new criterion data (as already opened to increase UX)
-				var oData = {
-					'ref': $(this).attr('data-field-ref'),
-					'init_opened': (oEvent.ctrlKey) ? false : true,
-				};
+				// If no checkbox checked, add criteria right away, otherwise we "queue" it we other checkboxed.
+				if(me.elements.more_criterion.find('.sfm_field input[type="checkbox"]:checked').length === 0)
+				{
+					// Prepare new criterion data (as already opened to increase UX)
+					var oData = {
+						'ref': $(this).attr('data-field-ref'),
+						'init_opened': (oEvent.ctrlKey) ? false : true,
+					};
 
-				// Add criteria but don't submit form as the user has not specified the value yet.
-				me._addCriteria(oData);
+					// Add criteria but don't submit form as the user has not specified the value yet.
+					me._addCriteria(oData);
+				}
+				else
+				{
+					$(this).find('input[type="checkbox"]').prop('checked', !$(this).find('input[type="checkbox"]').prop('checked'));
+				}
 			});
 
 			// - Add several criterion
