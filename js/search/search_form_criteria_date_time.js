@@ -71,19 +71,51 @@ $(function()
 		{
 			var me = this;
 
-			this._super();
-			this.element.addClass('search_form_criteria_date_time');
+			me._super();
+			me.element.addClass('search_form_criteria_date_time');
 		},
 
 		// events bound via _bind are removed automatically
 		// revert other modifications here
 		_destroy: function()
 		{
-			this.element.removeClass('search_form_criteria_date_time');
-			this._super();
+			var me = this;
+
+			me.element.removeClass('search_form_criteria_date_time');
+			me._super();
 		},
 
+		_prepareBetweenDaysOperator: function(oOpElem, sOpIdx, oOp)
+		{
+			var me = this;
+			var showAvancedOnInit = false;
 
+			me._super(oOpElem, sOpIdx, oOp);
+			for (i = 0; i <= 1; i++) {
+				if (typeof me.options.values[i] != 'undefined' && typeof me.options.values[i].value != 'undefined')
+				{
+					if (me.options.values[i].value.length > 10)
+					{
+						if (i == 0 && me.options.values[i].value.indexOf(' 00:00:00') == 10)
+						{
+							continue;
+						}
+						if (i == 1 && me.options.values[i].value.indexOf(' 23:59:59') == 10)
+						{
+							continue;
+						}
+
+						showAvancedOnInit = true;
+					}
+				}
+			}
+
+			if (showAvancedOnInit)
+			{
+				this.element.find('.sfc_form_group').addClass('advanced');
+			}
+
+		}
 
 
 
