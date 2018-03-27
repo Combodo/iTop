@@ -476,6 +476,12 @@ $(function()
 				}
 
 				sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
+
+				// Last chande fallback
+				if(sTitle === sDictEntry)
+				{
+					sTitle = this.options.label;
+				}
 			}
 			this.element.find('.sfc_title')
 				.html(sTitle)
@@ -589,6 +595,26 @@ $(function()
 
 
 		// Values helpers
+		// - Check if criteria has allowed values
+		_hasAllowedValues: function()
+		{
+			return ( (this.options.field.allowed_values !== undefined) && (this.options.field.allowed_values !== null) );
+		},
+		// - Check if criteria has preloaded allowed values (as opposed to autocomplete)
+		_hasPreloadedAllowedValues: function()
+		{
+			if(this._hasAllowedValues() && (this.options.field.allowed_values.values !== undefined) && (this.options.field.allowed_values.values !== null))
+			{
+				return true;
+			}
+
+			return false;
+		},
+		// - Return the preloaded allowed values (not coming from autocomplete)
+		_getPreloadedAllowedValues: function()
+		{
+			return (this._hasPreloadedAllowedValues()) ? this.options.field.allowed_values.values : {};
+		},
 		// - Return current values
 		_getValues: function()
 		{
@@ -631,6 +657,11 @@ $(function()
 		// - Converts a snake_case string to CamelCase
 		_toCamelCase: function(sString)
 		{
+			if( (sString === undefined) || (sString === null) )
+			{
+				return sString;
+			}
+
 			var aParts = sString.split('_');
 
 			for(var i in aParts)

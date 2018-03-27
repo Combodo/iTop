@@ -118,20 +118,20 @@ $(function()
 			}
 
 			//   - Regular allowed values
-			if(this.options.field.allowed_values.values !== undefined)
+			if (this._hasPreloadedAllowedValues())
 			{
-				var aSortedValues = this._sortValuesByLabel(this.options.field.allowed_values.values);
-				for(var i in aSortedValues)
+				var aSortedValues = this._sortValuesByLabel(this._getPreloadedAllowedValues());
+				for (var i in aSortedValues)
 				{
 					var sValCode = aSortedValues[i][0];
 					var sValLabel = aSortedValues[i][1];
 					var oValueElem = $('<div></div>')
 						.addClass('sfc_opc_mc_item')
 						.attr('data-value-code', sValCode)
-						.append('<label><input type="checkbox" value="' + sValCode + '"/>' + sValLabel + '</label>')
+						.append('<label><input type="checkbox" value="'+sValCode+'"/>'+sValLabel+'</label>')
 						.appendTo(oAllowedValuesElem);
 
-					if(this._isSelectedValues(sValCode))
+					if (this._isSelectedValues(sValCode))
 					{
 						oValueElem.find(':checkbox').prop('checked', true);
 					}
@@ -210,7 +210,7 @@ $(function()
 		{
 			var iValLimit = 3;
 			var iValCount = Object.keys(this.options.values).length;
-			var iAllowedValuesCount = (this.options.field.allowed_values.values !== undefined) ? Object.keys(this.options.field.allowed_values.values).length : 0;
+			var iAllowedValuesCount = Object.keys(this._getPreloadedAllowedValues()).length;
 
 			// Manually increase allowed values count if null is allowed
 			if(this.options.field.is_null_allowed === true)
