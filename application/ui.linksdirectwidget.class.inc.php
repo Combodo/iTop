@@ -304,7 +304,7 @@ class UILinksWidgetDirect
 			$oHiddenFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
 		}
 		$oHiddenCriteria = $oHiddenFilter->GetCriteria();
-		$sHiddenCriteria = $oHiddenCriteria->Render();
+		$sHiddenCriteria = $oHiddenCriteria->Render($oHiddenFilter->GetInternalParams());
 
 		$oLinkSetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		$valuesDef = $oLinkSetDef->GetValuesDef();
