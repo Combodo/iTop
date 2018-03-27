@@ -1243,8 +1243,15 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Expression:Operator:AND' => ' ET ',
 	'Expression:Operator:OR' => ' OU ',
+
 	'Expression:Unit:Short:DAY' => 'j',
 	'Expression:Unit:Short:WEEK' => 's',
 	'Expression:Unit:Short:MONTH' => 'm',
 	'Expression:Unit:Short:YEAR' => 'a',
+
+	'Expression:Unit:Long:DAY' => 'jour(s)',
+	'Expression:Unit:Long:HOUR' => 'heure(s)',
+	'Expression:Unit:Long:MINUTE' => 'minute(s)',
+
+	'Expression:Verb:NOW' => 'maintenant',
 ));

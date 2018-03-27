@@ -1006,6 +1006,20 @@ class FieldExpression extends UnaryExpression
 		if (!is_null($oAttDef))
 		{
 			$sSearchType = $oAttDef->GetSearchType();
+			try
+			{
+				if ($sSearchType == AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY)
+				{
+					// TODO Check the type of external key ? (EXTKEY_ABSOLUTE or EXTKEY_RELATIVE)
+					if (MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass()))
+					{
+						$sSearchType = AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;
+					}
+				}
+			}
+			catch (CoreException $e)
+			{
+			}
 		}
 		else
 		{
@@ -1569,16 +1583,17 @@ class FunctionExpression extends Expression
 	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
 	{
 		$sOperation = '';
+		$sVerb = '';
 		switch ($this->m_sVerb)
 		{
 			case 'NOW':
-				$sOperation = '';
+				$sVerb = $this->VerbToNaturalLanguage();
 				break;
 			case 'DATE_SUB':
-				$sOperation = '-';
+				$sVerb = ' -';
 				break;
 			case 'DATE_ADD':
-				$sOperation = '+';
+				$sVerb = ' +';
 				break;
 			case 'DATE_FORMAT':
 				break;
@@ -1588,10 +1603,24 @@ class FunctionExpression extends Expression
 
 		foreach($this->m_aArgs as $oExpression)
 		{
+			if ($oExpression instanceof IntervalExpression)
+			{
+				$sOperation .= $sVerb;
+				$sVerb = '';
+			}
 			$sOperation .= $oExpression->Display($oSearch, $aArgs, $oAttDef);
 		}
 
+		if (!empty($sVerb))
+		{
+			$sOperation .= $sVerb;
+		}
 		return $sOperation;
+	}
+
+	private function VerbToNaturalLanguage()
+	{
+		return Dict::S('Expression:Verb:'.$this->m_sVerb, " {$this->m_sVerb} ");
 	}
 
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
@@ -1728,7 +1757,7 @@ class IntervalExpression extends Expression
 
 	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
 	{
-		return $this->m_oValue->Render($aArgs) . ' ' . $this->m_sUnit;
+		return $this->m_oValue->Render($aArgs).' '.Dict::S('Expression:Unit:Long:'.$this->m_sUnit, $this->m_sUnit);
 	}
 }
 

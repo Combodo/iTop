@@ -322,12 +322,15 @@ class CriterionConversionTest extends ItopDataTestCase
 				{
 					$aField = $aFields['zlist'][$aCriteria['ref']];
 				}
-				else
+				elseif (isset($aFields['others'][$aCriteria['ref']]))
 				{
 					$aField = $aFields['others'][$aCriteria['ref']];
 				}
-				$aCriteria['code'] = $aField['code'];
-				$aCriteria['class'] = $aField['class'];
+				if (isset($aField))
+				{
+					$aCriteria['code'] = $aField['code'];
+					$aCriteria['class'] = $aField['class'];
+				}
 			}
 
 			$aNewCriterion[] = $aCriteria;
@@ -347,20 +350,27 @@ class CriterionConversionTest extends ItopDataTestCase
 	function OqlProvider()
 	{
 		return array(
+			'no criteria' => array('OQL' => 'SELECT WebApplication'),
 			'string starts' => array('OQL' => "SELECT Contact WHERE name LIKE 'toto%'"),
 			'string ends' => array('OQL' => "SELECT Contact WHERE name LIKE '%toto'"),
-			'string contains' => array('OQL' => "SELECT Contact WHERE name LIKE '%toto%'"),
+			'string contains 1' => array('OQL' => "SELECT Contact WHERE name LIKE '%toto%'"),
+			'string contains 2' => array('OQL' => "SELECT Person AS B WHERE B.name LIKE '%A%'"),
+			'string regexp' => array('OQL' => "SELECT Server WHERE name REGEXP '^dbserver[0-9]+\\\\\\\\..+\\\\\\\\.[a-z]{2,3}$'"),
 			'enum + key =' => array('OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3"),
 			'enum =' => array('OQL' => "SELECT Contact WHERE status = 'active'"),
 			'enum IN' => array('OQL' => "SELECT Contact WHERE status IN ('active', 'inactive')"),
-			'enum NOT IN' => array('OQL' => "SELECT Contact WHERE status NOT IN ('active')"),
-			'enum undefined' => array('OQL' => "SELECT FunctionalCI WHERE ((business_criticity = 'high') OR ISNULL(business_criticity)) AND 1"),
-			'enum undefined1' => array('OQL' => "SELECT FunctionalCI WHERE ((business_criticity IN ('high', 'medium')) OR ISNULL(business_criticity)) AND 1"),
-			'enum undefined2' => array('OQL' => "SELECT FunctionalCI WHERE ISNULL(business_criticity)"),
+			'enum NOT IN 1' => array('OQL' => "SELECT Contact WHERE status NOT IN ('active')"),
+			'enum NOT IN 2' => array('OQL' => "SELECT Person AS p JOIN UserRequest AS u ON u.agent_id = p.id WHERE u.status != 'closed'"),
+			'enum undefined 1' => array('OQL' => "SELECT FunctionalCI WHERE ((business_criticity = 'high') OR ISNULL(business_criticity)) AND 1"),
+			'enum undefined 2' => array('OQL' => "SELECT FunctionalCI WHERE ((business_criticity IN ('high', 'medium')) OR ISNULL(business_criticity)) AND 1"),
+			'enum undefined 3' => array('OQL' => "SELECT FunctionalCI WHERE ISNULL(business_criticity)"),
 			'key NOT IN' => array('OQL' => "SELECT Contact WHERE org_id NOT IN ('1')"),
 			'key IN' => array('OQL' => "SELECT Contact WHERE org_id IN ('1')"),
 			'key empty' => array('OQL' => "SELECT Person WHERE location_id = '0'"),
-			'Date relative' => array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date"),
+			'Date relative 1' => array('OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date"),
+			'Date relative 2' => array('OQL' => "SELECT Contract AS c WHERE c.end_date > NOW() AND c.end_date < DATE_ADD(NOW(), INTERVAL 30 DAY)"),
+			'Date relative 3' => array('OQL' => "SELECT UserRequest AS u WHERE u.close_date > DATE_ADD(u.start_date, INTERVAL 8 HOUR)"),
+			'Date relative 4' => array('OQL' => "SELECT UserRequest AS u WHERE u.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND u.status = 'new'"),
 			'Date between 1' => array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date"),
 			'Date between 2' => array('OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date"),
 			'Date between 3' => array('OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date"),
@@ -372,6 +382,8 @@ class CriterionConversionTest extends ItopDataTestCase
 			'Date =2' => array('OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(start_date, '%Y-%m-%d') = '2018-03-21')"),
 			'Num between 1' => array('OQL' => "SELECT Server WHERE nb_u >= 0 AND 1 >= nb_u"),
 			'Num ISNULL' => array('OQL' => "SELECT Server WHERE ISNULL(nb_u)"),
+			'Hierarchical below' => array('OQL' => "SELECT Person AS P JOIN Organization AS Node ON P.org_id = Node.id JOIN Organization AS Root ON Node.parent_id BELOW Root.id WHERE Root.id=1"),
+			'IP range' => array('OQL' => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip) < INET_ATON('10.22.32.255')"),
 		);
 	}
 }

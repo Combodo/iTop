@@ -62,6 +62,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME => 'DateTimeToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC => 'NumericToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY => 'ExternalKeyToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY => 'ExternalKeyToSearchForm',
 		);
 
 		foreach($aAndCriterionRaw as $aCriteria)
