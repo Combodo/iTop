@@ -16,6 +16,12 @@ $(function()
 			'hide_initial_criterion': false, // TODO: What is that?
 			'endpoint': null,
 			'init_opened': false,
+			"datepicker":
+			{
+				"dayNamesMin": ["Su","Mo","Tu","We","Th","Fr","Sa"],
+				"monthNamesShort": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+				"firstDay": 0
+			},
 			'search': {
 				'base_oql': '',
 				'criterion': [
@@ -632,6 +638,11 @@ $(function()
 						allowed_values: oFieldDef.allowed_values,
 						is_null_allowed: oFieldDef.is_null_allowed,
 					};
+				}
+
+				if ('date' == sType || 'date_time' == sType)
+				{
+					oData.datepicker = this.options.datepicker;
 				}
 
 				// Create DOM element

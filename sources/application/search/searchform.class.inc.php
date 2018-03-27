@@ -24,6 +24,7 @@ namespace Combodo\iTop\Application\Search;
 
 
 use ApplicationContext;
+use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
 use CMDBObjectSet;
@@ -164,13 +165,25 @@ class SearchForm
 		{
 			$bOpen = $aExtraParams['open'];
 		}
+
+		$aDaysMin = array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
+			Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min'));
+		$aMonthsShort = array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'),
+			Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short'));
+
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
             'result_list_outer_selector' => "#{$aExtraParams['table_id']}",
 			'data_config_list_selector' => "#{$sDataConfigListSelector}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
 			'init_opened' => $bOpen,
-			'date_format' => AttributeDateTime::GetFormat()->ToMomentJS(),
+			'datepicker' => array(
+				'dayNamesMin' => $aDaysMin,
+				'monthNamesShort' => $aMonthsShort,
+				'firstDay' => (int) Dict::S('Calendar-FirstDayOfWeek'),
+//				'date_format' => AttributeDate::GetFormat()->ToDatePicker(),
+//				'date_time_format' => AttributeDateTime::GetFormat()->ToMomentJS(),
+			),
 			'list_params' => $aListParams,
 			'search' => array(
 				'has_hidden_criteria' => (array_key_exists('hidden_criteria', $aListParams) && !empty($aListParams['hidden_criteria'])),

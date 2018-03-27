@@ -178,7 +178,7 @@ $(function()
 
 
 
-				var odatetimepickerOptions = $.extend({}, odatetimepickerOptionsDefault, {
+				var odatetimepickerOptions = $.extend({}, odatetimepickerOptionsDefault, me.options.datepicker, {
 					onSelect: function() {
 						fHandleSynchCallback(this, false);
 						$(this).focus();
