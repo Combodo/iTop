@@ -46,9 +46,8 @@ $(function()
 		{
 			var me = this;
 
-			var iIndexInHistory = me.aHistory.indexOf(sFieldRef);
-
 			//if present, delete
+			var iIndexInHistory = me.aHistory.indexOf(sFieldRef);
 			if (iIndexInHistory > -1)
 			{
 				me.aHistory.splice(iIndexInHistory, 1);
@@ -64,6 +63,7 @@ $(function()
 				me.aHistory.splice(0, iDeleteCount);
 			}
 
+			//store it in the backend (with a delay in the hope to wait long enough to make bulk modifications
 			me._storeHistory();
 
 			//setter should never return a value!
