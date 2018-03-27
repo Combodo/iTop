@@ -57,16 +57,21 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$aAndCriterion = array();
 		$aMappingOperatorToFunction = array(
 			AttributeDefinition::SEARCH_WIDGET_TYPE_STRING => 'TextToSearchForm',
-			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'EnumToSearchForm',
-			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE => 'DateToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE => 'DateTimeToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME => 'DateTimeToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC => 'NumericToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY => 'ExternalKeyToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY => 'ExternalKeyToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'ExternalKeyToSearchForm',
 		);
 
 		foreach($aAndCriterionRaw as $aCriteria)
 		{
+			// Check criteria validity
+			if (!array_key_exists('ref', $aCriteria) || !array_key_exists($aCriteria['ref'], $aAllFields))
+			{
+				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+			}
 			if (array_key_exists('widget', $aCriteria))
 			{
 				if (array_key_exists($aCriteria['widget'], $aMappingOperatorToFunction))
@@ -381,11 +386,6 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		return $aCriteria;
 	}
 
-	protected static function DateToSearchForm($aCriteria, $aFields)
-	{
-		return self::DateTimeToSearchForm($aCriteria, $aFields);
-	}
-
 	protected static function DateTimeToSearchForm($aCriteria, $aFields)
 	{
 		if (!array_key_exists('is_relative', $aCriteria) || !$aCriteria['is_relative'])
@@ -459,10 +459,6 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		return $aCriteria;
 	}
 
-	protected static function EnumToSearchForm($aCriteria, $aFields)
-	{
-		return self::ExternalKeyToSearchForm($aCriteria, $aFields);
-	}
 
 	protected static function ExternalKeyToSearchForm($aCriteria, $aFields)
 	{

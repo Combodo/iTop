@@ -318,13 +318,13 @@ class CriterionConversionTest extends ItopDataTestCase
 			if ($aCriteria['widget'] != \AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
 			{
 				unset($aCriteria['oql']);
-				if (isset($aFields['zlist'][$aCriteria['ref']]))
+				foreach($aFields as $aCatFields)
 				{
-					$aField = $aFields['zlist'][$aCriteria['ref']];
-				}
-				elseif (isset($aFields['others'][$aCriteria['ref']]))
-				{
-					$aField = $aFields['others'][$aCriteria['ref']];
+					if (isset($aCatFields[$aCriteria['ref']]))
+					{
+						$aField = $aCatFields[$aCriteria['ref']];
+						break;
+					}
 				}
 				if (isset($aField))
 				{

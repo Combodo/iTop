@@ -42,7 +42,6 @@ use WebPage;
 
 class SearchForm
 {
-	private $aLabels = array();
 
 	/**
 	 * @param \WebPage $oPage
@@ -56,7 +55,6 @@ class SearchForm
 	public function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		$sHtml = '';
-		$this->aLabels = array();
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
 		$aListParams = array();
@@ -195,57 +193,83 @@ class SearchForm
 	public function GetFields($oSet)
 	{
 		$oSearch = $oSet->GetFilter();
-		$aSelectedClasses = $oSearch->GetSelectedClasses();
+		// TODO: Later consider all the fields including the joined classes
+		//$aAllClasses = $oSearch->GetJoinedClasses();
+		$aAllClasses = $oSearch->GetSelectedClasses();
 		$aAuthorizedClasses = array();
-		foreach($aSelectedClasses as $sAlias => $sClassName)
+		foreach($aAllClasses as $sAlias => $sClassName)
 		{
 			if (\UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO)
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
-		$aAllFields = array();
+		$aAllFields = array('zlist' => array(), 'others' => array());
 		try
 		{
 			foreach($aAuthorizedClasses as $sAlias => $sClass)
 			{
-				$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
-				$aList = MetaModel::GetZListItems($sClass, 'standard_search');
 				$aZList = array();
-				foreach($aList as $sAttCode)
-				{
-					if (array_key_exists($sAttCode, $aAttributeDefs))
-					{
-						$oAttDef = $aAttributeDefs[$sAttCode];
-						$aZList = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aZList);
-						unset($aAttributeDefs[$sAttCode]);
-					}
-				}
-				uasort($aZList, function ($aItem1, $aItem2) {
-					return strcmp($aItem1['label'], $aItem2['label']);
-				});
-				$aZList = $this->AppendId($sClass, $sAlias, $aZList);
-				$aAllFields['zlist'] = $aZList;
-
 				$aOthers = array();
-				foreach($aAttributeDefs as $sAttCode => $oAttDef)
-				{
-					if ($this->IsSubAttribute($oAttDef)) continue;
 
-					$aOthers = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aOthers);
-				}
-				uasort($aOthers, function ($aItem1, $aItem2) {
-					return strcmp($aItem1['label'], $aItem2['label']);
-				});
+				$this->PopulateFiledList($sClass, $sAlias, $aZList, $aOthers);
 
-				$aAllFields['others'] = $aOthers;
+				$aAllFields[$sAlias.'_zlist'] = $aZList;
+				$aAllFields[$sAlias.'_others'] = $aOthers;
 			}
-		} catch (CoreException $e)
+		}
+		catch (CoreException $e)
 		{
 			IssueLog::Error($e->getMessage());
 		}
+		$aSelectedClasses = $oSearch->GetSelectedClasses();
+		foreach($aSelectedClasses as $sAlias => $sClassName)
+		{
+			$aAllFields['zlist'] = array_merge($aAllFields['zlist'], $aAllFields[$sAlias.'_zlist']);
+			unset($aAllFields[$sAlias.'_zlist']);
+			$aAllFields['others'] = array_merge($aAllFields['others'], $aAllFields[$sAlias.'_others']);
+			unset($aAllFields[$sAlias.'_others']);
+
+		}
 
 		return $aAllFields;
+	}
+
+	/**
+	 * @param $sClass
+	 * @param $sAlias
+	 * @param $aZList
+	 * @param $aOthers
+	 *
+	 * @throws \CoreException
+	 */
+	protected function PopulateFiledList($sClass, $sAlias, &$aZList, &$aOthers)
+	{
+		$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
+		$aList = MetaModel::GetZListItems($sClass, 'standard_search');
+		foreach($aList as $sAttCode)
+		{
+			if (array_key_exists($sAttCode, $aAttributeDefs))
+			{
+				$oAttDef = $aAttributeDefs[$sAttCode];
+				$aZList = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aZList);
+				unset($aAttributeDefs[$sAttCode]);
+			}
+		}
+		uasort($aZList, function ($aItem1, $aItem2) {
+			return strcmp($aItem1['label'], $aItem2['label']);
+		});
+		$aZList = $this->AppendId($sClass, $sAlias, $aZList);
+
+		foreach($aAttributeDefs as $sAttCode => $oAttDef)
+		{
+			if ($this->IsSubAttribute($oAttDef)) continue;
+
+			$aOthers = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aOthers);
+		}
+		uasort($aOthers, function ($aItem1, $aItem2) {
+			return strcmp($aItem1['label'], $aItem2['label']);
+		});
 	}
 
 	protected function IsSubAttribute($oAttDef)
@@ -324,7 +348,7 @@ class SearchForm
 			$aAndExpressions = Expression::Split($oORSubExpr, 'AND');
 			foreach($aAndExpressions as $oAndSubExpr)
 			{
-				if ($oAndSubExpr instanceof TrueExpression)
+				if (($oAndSubExpr instanceof TrueExpression) || ($oAndSubExpr->Render() == 1))
 				{
 					continue;
 				}
@@ -355,7 +379,6 @@ class SearchForm
 		$aField['is_null_allowed'] = false;
 		$aNewFields = array($sClassAlias.'.id' => $aField);
 		$aFields = array_merge($aNewFields, $aFields);
-		$this->aLabels['Id'] = true;
 		return $aFields;
 	}
 	/**
@@ -372,19 +395,16 @@ class SearchForm
 		if (!is_null($oAttDef) && ($oAttDef->GetSearchType() != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
 		{
 			$sLabel = $oAttDef->GetLabel();
-			if (!array_key_exists($sLabel, $this->aLabels))
-			{
-				$aField = array();
-				$aField['code'] = $sFilterCode;
-				$aField['class'] = $sClass;
-				$aField['class_alias'] = $sClassAlias;
-				$aField['label'] = $sLabel;
-				$aField['widget'] = $oAttDef->GetSearchType();
-				$aField['allowed_values'] = self::GetFieldAllowedValues($oAttDef);
-				$aField['is_null_allowed'] = $oAttDef->IsNullAllowed();
-				$aFields[$sClassAlias.'.'.$sFilterCode] = $aField;
-				$this->aLabels[$sLabel] = true;
-			}
+
+			$aField = array();
+			$aField['code'] = $sFilterCode;
+			$aField['class'] = $sClass;
+			$aField['class_alias'] = $sClassAlias;
+			$aField['label'] = $sLabel;
+			$aField['widget'] = $oAttDef->GetSearchType();
+			$aField['allowed_values'] = self::GetFieldAllowedValues($oAttDef);
+			$aField['is_null_allowed'] = $oAttDef->IsNullAllowed();
+			$aFields[$sClassAlias.'.'.$sFilterCode] = $aField;
 
 			// Sub items
 			//
@@ -405,4 +425,6 @@ class SearchForm
 
 		return $aFields;
 	}
+
+
 }

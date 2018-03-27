@@ -48,6 +48,7 @@ class SearchFormTest extends ItopDataTestCase
 		$oSearchForm = new SearchForm();
 		$oSearch = \DBSearch::FromOQL($sOQL);
 		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
+		$this->debug($sOQL);
 		$this->debug(json_encode($aFields, JSON_PRETTY_PRINT));
 		$this->assertCount($iNum, $aFields[$sList]);
 
@@ -59,6 +60,11 @@ class SearchFormTest extends ItopDataTestCase
 			array("SELECT Contact", 8, 'zlist'),
 			array("SELECT Contact AS C WHERE C.status = 'active'", 4, 'others'),
 			array("SELECT Person", 12, 'zlist'),
+			array(
+				"SELECT Person AS p JOIN UserRequest AS u ON u.agent_id = p.id WHERE u.status != 'closed'",
+				12,
+				'zlist'
+			),
 		);
 	}
 
