@@ -1017,8 +1017,36 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_dropdown_group select {
   width: 88px;
 }
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_form_group.advanced .sfc_fg_operator_between {
+  margin-bottom: 5px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_between label.sfc_op_content_from_label, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_between label.sfc_op_content_until_label {
+  width: 90px;
+  display: inline-block;
+}
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_between input {
-  width: 88px;
+  width: 130px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_equals .sfc_op_name, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_greater_than .sfc_op_name, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_greater_than_or_equals .sfc_op_name, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_less_than .sfc_op_name, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_less_than_or_equals .sfc_op_name, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_different .sfc_op_name {
+  width: 90px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_equals .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_greater_than .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_greater_than_or_equals .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_less_than .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_less_than_or_equals .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_different .sfc_op_content input {
+  width: 130px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date_time .sfc_form_group.advanced .sfc_fg_operator_between, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date .sfc_form_group.advanced .sfc_fg_operator_between {
+  margin-bottom: 5px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date_time .sfc_fg_operator_between_days input, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date .sfc_fg_operator_between_days input {
+  width: 135px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date_time button.ui-datepicker-trigger, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date button.ui-datepicker-trigger {
+  background: none;
+  border: none;
+  height: 100%;
+  padding: 2px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date_time button.ui-datepicker-trigger img, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date button.ui-datepicker-trigger img {
+  vertical-align: middle;
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion {
   margin-right: 10px;

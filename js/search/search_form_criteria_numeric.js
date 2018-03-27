@@ -10,9 +10,14 @@ $(function()
 		options:
 		{
 			// Overload default operator
-			'operator': '=',
+			'operator': 'between',
 			// Available operators
 			'available_operators': {
+				'between': {
+					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Between'),
+					'code': 'between',
+					'rank': 0,
+				},
 				'=': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Equals'),//pre-existing, label changed
 					// 'dropdown_group':1,
@@ -47,11 +52,7 @@ $(function()
 					'rank': 500,
 					// 'dropdown_group':1,
 				},
-				'between': {
-					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Between'),
-					'code': 'between',
-					'rank': 600,
-				},
+
 				'empty': {
 					'rank': 700,//pre-existing, reordered
 				},
@@ -103,14 +104,14 @@ $(function()
 			aValues = me._getValues();//TODO : tenir compte du refactoring de la structure
 
 			// DOM elements
-			var oOpContentOuterElemFrom = $('<span class="sfc_op_content_from_outer"><label class="sfc_op_content_from_label" for=""> '+Dict.S('UI:Search:Criteria:Numeric:From')+'</label><input type="number" step="any" name="from" placeholder="'+Dict.S('UI:Search:Criteria:Numeric:PlaceholderFrom')+'"/></span>');
+			var oOpContentOuterElemFrom = $('<div class="sfc_op_content_from_outer"><label class="sfc_op_content_from_label" for=""> '+Dict.S('UI:Search:Criteria:Numeric:From')+' </label><input type="text"  name="from" placeholder="'+Dict.S('UI:Search:Criteria:Numeric:PlaceholderFrom')+'"/></div>');
 			var oOpContentElemFrom = oOpContentOuterElemFrom.find('input').uniqueId();
 			oOpContentOuterElemFrom.find('label').attr('for', oOpContentElemFrom.attr('id'));
 			if (typeof aValues[0] != 'undefined' && typeof aValues[0].value != 'undefined')
 			{
 				oOpContentElemFrom.val(aValues[0].value);
 			}
-			var oOpContentOuterElemUntil = $('<span class="sfc_op_content_until_outer"><label class="sfc_op_content_until_label" for=""> '+Dict.S('UI:Search:Criteria:Numeric:Until')+'</label><input type="number" step="any" name="until" placeholder="'+Dict.S('UI:Search:Criteria:Numeric:PlaceholderUntil')+'"/></span>');
+			var oOpContentOuterElemUntil = $('<div class="sfc_op_content_until_outer"><label class="sfc_op_content_until_label" for=""> '+Dict.S('UI:Search:Criteria:Numeric:Until')+' </label><input type="text"  name="until" placeholder="'+Dict.S('UI:Search:Criteria:Numeric:PlaceholderUntil')+'"/></div>');
 			var oOpContentElemUntil = oOpContentOuterElemUntil.find('input').uniqueId();
 			oOpContentOuterElemUntil.find('label').attr('for', oOpContentElemUntil.attr('id'));
 			if (typeof aValues[1] != 'undefined' && typeof aValues[1].value != 'undefined')
@@ -212,13 +213,13 @@ $(function()
 					case (typeof aValues[1].label == 'undefined' ):
 						var sDictEntrySuffix = ':From';
 						break;
-					case (aValues[0].label == '' && aValues[1].label == ''):
+					case ((typeof aValues[0].label == 'string' && aValues[0].label.trim() == '') && (typeof aValues[1].label == 'string' && aValues[1].label.trim() == '')):
 						var sDictEntrySuffix = ':All';
 						break;
-					case (aValues[0].label == '' ):
+					case (typeof aValues[0].label == 'string' && aValues[0].label.trim() == ''):
 						var sDictEntrySuffix = ':Until';
 						break;
-					case (aValues[1].label == ''):
+					case (typeof aValues[1].label == 'string' && aValues[1].label.trim() == ''):
 						var sDictEntrySuffix = ':From';
 						break;
 					default:
@@ -256,11 +257,11 @@ $(function()
 			if (me.options.operator == 'between')
 			{
 				aRawValues = aRawValues.slice(); //clone
-				if (typeof aRawValues[1] == 'undefined' || typeof aRawValues[1].label == 'undefined' || aRawValues[1].label == '')
+				if (typeof aRawValues[1] == 'undefined' || typeof aRawValues[1].label == 'undefined' || (typeof aRawValues[1].label  == 'string' && aRawValues[1].label.trim() == ''))
 				{
 					aRawValues.splice(1, 1);
 				}
-				if (typeof aRawValues[0] == 'undefined' || typeof aRawValues[0].label == 'undefined' || aRawValues[0].label == '')
+				if (typeof aRawValues[0] == 'undefined' || typeof aRawValues[0].label == 'undefined' || (typeof aRawValues[0].label == 'string' && aRawValues[0].label.trim() == ''))
 				{
 					aRawValues.splice(0, 1);
 				}

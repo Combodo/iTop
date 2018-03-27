@@ -69,7 +69,7 @@ $(function()
 
 			for (var i = 0; i < aInputsParamLength; i++) {
 				var oInputParam = aInputsParam[i];
-				var oOpContentElem = $('<span class="sfc_op_content_'+oInputParam.code+'_outer '+(oInputParam.show_on_advanced ? 'hide_on_less' : 'hide_on_advanced')+'"><label class="sfc_op_content_'+oInputParam.code+'_label" for=""> '+Dict.S('UI:Search:Criteria:DateTime:'+oInputParam.code_uc_first)+'</label><input type="text" name="'+oInputParam.code+'" placeholder="'+Dict.S('UI:Search:Criteria:DateTime:Placeholder'+oInputParam.code_uc_first)+'"/></span>');
+				var oOpContentElem = $('<span class="sfc_op_content_'+oInputParam.code+'_outer '+(oInputParam.show_on_advanced ? 'hide_on_less' : 'hide_on_advanced')+'"><label class="sfc_op_content_'+oInputParam.code+'_label" for=""> '+Dict.S('UI:Search:Criteria:DateTime:'+oInputParam.code_uc_first)+' </label><input type="text" name="'+oInputParam.code+'" placeholder="'+Dict.S('UI:Search:Criteria:DateTime:Placeholder'+oInputParam.code_uc_first)+'"/></span>');
 				var oInputElem = oOpContentElem
 					.find('input')
 					.uniqueId()
@@ -119,11 +119,55 @@ $(function()
 
 
 			// once the inputs are appended into the DOM we can safely use jQuery UI
+			var fHandleSynchCallback = function(select, bSetDate) {
+				var selectElem 				= $(select);
+				var sSyncedWith 			= selectElem.data('synced_with');
+				var oInputParam 			= selectElem.data('oInputParam');
+
+				if (bSetDate)
+				{
+					var sDate = selectElem.val().trim();
+					if ('' == sDate)
+					{
+						selectElem[oInputParam.x_picker]('setDate', null);
+					} else
+					{
+						selectElem[oInputParam.x_picker]('setDate', sDate);
+					}
+				}
+
+				if (sSyncedWith != undefined)
+				{
+					var sCode 				= selectElem.data('code');
+					var oInputParam 		= aInputsParam[oInputsParamIndexByCode[sCode]];
+					var oSyncedInputParam 	= aInputsParam[oInputsParamIndexByCode[sSyncedWith]];
+					var oSyncedInputElem 	= oOpElem.find('input[name="'+sSyncedWith+'"]');
+
+					var dSyncedDate 		= selectElem[oInputParam.x_picker]('getDate');
+
+					if (null == dSyncedDate)
+					{
+						// oSyncedInputElem.val('');
+						oSyncedInputElem[oSyncedInputParam.x_picker]('setDate', null);
+					}
+					else
+					{
+						if (typeof oSyncedInputParam.default_time_add != 'undefined' && oSyncedInputParam.default_time_add)
+						{
+							dSyncedDate.setSeconds(dSyncedDate.getSeconds() + oSyncedInputParam.default_time_add);
+						}
+						oSyncedInputElem[oSyncedInputParam.x_picker]('setDate', dSyncedDate);
+					}
+
+				}
+
+			};
+
 			var odatetimepickerOptionsDefault = {
 				dateFormat: 'yy-mm-dd',
 				timeFormat: 'HH:mm:ss',
 				buttonImage: GetAbsoluteUrlAppRoot()+"/images/calendar.png",
-				buttonImageOnly: true,
+				// buttonImageOnly: true,
 				buttonText: "",
 				showOn:'button',
 				changeMonth:true,
@@ -132,107 +176,13 @@ $(function()
 			for (var i = 0; i < aInputsParamLength; i++) {
 				var oInputParam = aInputsParam[i];
 
-				var fHandleSynchCallback = function(select, bSetDate) {
-					var selectElem 				= $(select);
-					var sSyncedWith 			= selectElem.data('synced_with');
-					var oInputParam 			= selectElem.data('oInputParam');
 
-					if (bSetDate)
-					{
-						var sDate = selectElem.val().trim();
-						if ('' == sDate)
-						{
-							selectElem[oInputParam.x_picker]('setDate', null);
-						} else
-						{
-							selectElem[oInputParam.x_picker]('setDate', sDate);
-						}
-					}
-
-					if (sSyncedWith != undefined)
-					{
-						var sCode 				= selectElem.data('code');
-						var oInputParam 		= aInputsParam[oInputsParamIndexByCode[sCode]];
-						var oSyncedInputParam 	= aInputsParam[oInputsParamIndexByCode[sSyncedWith]];
-						var oSyncedInputElem 	= oOpElem.find('input[name="'+sSyncedWith+'"]');
-
-						var dSyncedDate 		= selectElem[oInputParam.x_picker]('getDate');
-
-						if (null == dSyncedDate)
-						{
-							// oSyncedInputElem.val('');
-							oSyncedInputElem[oSyncedInputParam.x_picker]('setDate', null);
-						}
-						else
-						{
-							if (typeof oSyncedInputParam.default_time_add != 'undefined' && oSyncedInputParam.default_time_add)
-							{
-								dSyncedDate.setSeconds(dSyncedDate.getSeconds() + oSyncedInputParam.default_time_add);
-							}
-							oSyncedInputElem[oSyncedInputParam.x_picker]('setDate', dSyncedDate);
-						}
-
-					}
-
-					//me._apply();
-					selectElem[oInputParam.x_picker]('hide');
-				};
 
 				var odatetimepickerOptions = $.extend({}, odatetimepickerOptionsDefault, {
 					onSelect: function() {
 						fHandleSynchCallback(this, false);
 						$(this).focus();
 					}
-					// onClose: function(dateText, inst) {
-					// 	var selectElem 				= $(this);
-					// 	var sOnCLoseShow 			= selectElem.data('onclose_show');
-					//
-					// 	// if (typeof oInputParam.onclose_show != 'undefined')
-					// 	// {
-					// 	// 	oOpElem.find('input[name="'+oInputParam.onclose_show+'"]')
-					// 	// 		[oInputParam.x_picker]('show')
-					// 	// 	;
-					// 	// }
-					//
-					// 	// if (sOnCLoseShow != undefined && selectElem.is(':visible'))
-					// 	// {
-					// 	// 	var oOnCLoseShowInputElem = oOpElem.find('input[name="'+sOnCLoseShow+'"]');
-					// 	// 	oOnCLoseShowInputElem[oInputParam.x_picker]('show');
-					// 	// }
-					//
-					// },
-					// onSelect: function(sDateText, oXPicker) {
-					// 	var selectElem 				= $(this);
-					// 	var sSyncedWith 			= selectElem.data('synced_with');
-					//
-					//
-					// 	if (sSyncedWith != undefined)
-					// 	{
-					// 		var sCode 				= selectElem.data('code');
-					// 		var oInputParam 		= aInputsParam[oInputsParamIndexByCode[sCode]];
-					// 		var oSyncedInputParam 	= aInputsParam[oInputsParamIndexByCode[sSyncedWith]];
-					// 		var oSyncedInputElem 	= oOpElem.find('input[name="'+sSyncedWith+'"]');
-					//
-					// 		var dSyncedDate 		= selectElem[oInputParam.x_picker]('getDate');
-					//
-					// 		if (null == dSyncedDate)
-					// 		{
-					// 			oSyncedInputElem.val('');
-					// 		}
-					// 		else
-					// 		{
-					// 			if (typeof oSyncedInputParam.default_time_add != 'undefined' && oSyncedInputParam.default_time_add)
-					// 			{
-					// 				dSyncedDate.setSeconds(dSyncedDate.getSeconds() + oSyncedInputParam.default_time_add);
-					// 			}
-					// 			oSyncedInputElem[oSyncedInputParam.x_picker]('setDate', dSyncedDate);
-					// 		}
-					//
-					// 	}
-					//
-					// 	//me._apply();
-					// 	selectElem[oInputParam.x_picker]('hide');
-					// }
 				});
 
 

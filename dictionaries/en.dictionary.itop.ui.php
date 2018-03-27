@@ -1403,12 +1403,12 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with:',
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with:',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals',  // => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater',  // => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals',  // > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less',  // => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals',  // > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different',  // => '≠',
 
 
 
