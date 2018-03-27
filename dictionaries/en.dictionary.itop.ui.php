@@ -1469,3 +1469,22 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Any date',
 	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Any date',
 ));
+
+//
+// Expression to Natural language
+//
+Dict::Add('EN US', 'English', 'English', array(
+	'Expression:Operator:AND' => ' AND ',
+	'Expression:Operator:OR' => ' OR ',
+
+	'Expression:Unit:Short:DAY' => 'd',
+	'Expression:Unit:Short:WEEK' => 'w',
+	'Expression:Unit:Short:MONTH' => 'm',
+	'Expression:Unit:Short:YEAR' => 'y',
+
+	'Expression:Unit:Long:DAY' => 'day(s)',
+	'Expression:Unit:Long:HOUR' => 'hour(s)',
+	'Expression:Unit:Long:MINUTE' => 'minute(s)',
+
+	'Expression:Verb:NOW' => 'now',
+));
