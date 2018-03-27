@@ -1021,7 +1021,7 @@ input.dp-applied {
   width: 88px;
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion {
-  margin-right: 5px;
+  margin-right: 10px;
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion.opened {
   z-index: 2;
