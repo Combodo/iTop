@@ -128,9 +128,16 @@ class SearchForm
 			$aArgs = array();
 		}
 
+		$bIsRemovable = true;
+		if (isset($aExtraParams['selection_mode']) && $aExtraParams['selection_mode'])
+		{
+			// Mark all criterion as read-only and non-removable
+			$bIsRemovable = false;
+		}
 		$aFields = $this->GetFields($oSet);
 		$oSearch = $oSet->GetFilter();
-		$aCriterion = $this->GetCriterion($oSearch, $aFields, $aArgs);
+		$aCriterion = $this->GetCriterion($oSearch, $aFields, $aArgs, $bIsRemovable);
+
 
 		$oBaseSearch = $oSearch->DeepClone();
 		$oBaseSearch->ResetCondition();
@@ -149,17 +156,17 @@ class SearchForm
 		{
 			$aExtraParams['table_id'] = "search_form_result_{$sSearchFormId}";
 		}
-		if (!array_key_exists('table_inner_id', $aExtraParams))
+		if (!isset($aExtraParams['table_inner_id']))
 		{
 			$aListParams['table_inner_id'] = "table_inner_id_{$sSearchFormId}";
 		}
 		// When table_id is different of result_list_outer_selector
-		if (array_key_exists('table_id2', $aExtraParams))
+		if (isset($aExtraParams['table_id2']))
 		{
 			$aListParams['table_id'] = $aExtraParams['table_id2'];
 		}
 		$bOpen = false;
-		if (array_key_exists('open', $aExtraParams))
+		if (isset($aExtraParams['open']))
 		{
 			$bOpen = $aExtraParams['open'];
 		}
@@ -349,9 +356,11 @@ class SearchForm
 	 *
 	 * @param array $aArgs
 	 *
+	 * @param bool $bIsRemovable
+	 *
 	 * @return array
 	 */
-	public function GetCriterion($oSearch, $aFields, $aArgs = array())
+	public function GetCriterion($oSearch, $aFields, $aArgs = array(), $bIsRemovable = true)
 	{
 		$oExpression = $oSearch->GetCriteria();
 
@@ -377,7 +386,7 @@ class SearchForm
 				}
 				$aAndCriterion[] = $oAndSubExpr->GetCriterion($oSearch);
 			}
-			$aAndCriterion = CriterionToSearchForm::Convert($aAndCriterion, $aFields, $oSearch->GetJoinedClasses());
+			$aAndCriterion = CriterionToSearchForm::Convert($aAndCriterion, $aFields, $oSearch->GetJoinedClasses(), $bIsRemovable);
 			$aOrCriterion[] = array('and' => $aAndCriterion);
 		}
 

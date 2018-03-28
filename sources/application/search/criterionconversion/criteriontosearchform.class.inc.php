@@ -44,9 +44,11 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	 *
 	 * @param array $aClasses all the classes of the filter
 	 *
+	 * @param bool $bIsRemovable
+	 *
 	 * @return array
 	 */
-	public static function Convert($aAndCriterionRaw, $aFieldsByCategory, $aClasses)
+	public static function Convert($aAndCriterionRaw, $aFieldsByCategory, $aClasses, $bIsRemovable = true)
 	{
 		$aAllFields = array();
 		foreach($aFieldsByCategory as $aFields)
@@ -71,10 +73,17 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 		foreach($aAndCriterionRaw as $aCriteria)
 		{
+			$aCriteria['label'] = trim($aCriteria['label'], "()");
+			$aCriteria['is_removable'] = $bIsRemovable;
+			if (!$bIsRemovable)
+			{
+				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+			}
+
 			// Check criteria validity
 			if (!array_key_exists('ref', $aCriteria) || !array_key_exists($aCriteria['ref'], $aAllFields))
 			{
-				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+
 				$aCriteria['label'] = Dict::S('UI:Search:Criteria:Raw:Filtered');
 				if (array_key_exists('ref', $aCriteria))
 				{
