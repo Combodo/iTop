@@ -32,6 +32,8 @@ use Combodo\iTop\Application\Search\CriterionConversionAbstract;
 use DateInterval;
 use DateTime;
 use Dict;
+use Exception;
+use MetaModel;
 
 class CriterionToSearchForm extends CriterionConversionAbstract
 {
@@ -40,9 +42,11 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	 * @param array $aAndCriterionRaw
 	 * @param array $aFieldsByCategory
 	 *
+	 * @param array $aClasses all the classes of the filter
+	 *
 	 * @return array
 	 */
-	public static function Convert($aAndCriterionRaw, $aFieldsByCategory)
+	public static function Convert($aAndCriterionRaw, $aFieldsByCategory, $aClasses)
 	{
 		$aAllFields = array();
 		foreach($aFieldsByCategory as $aFields)
@@ -71,6 +75,22 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			if (!array_key_exists('ref', $aCriteria) || !array_key_exists($aCriteria['ref'], $aAllFields))
 			{
 				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+				$aCriteria['label'] = Dict::S('UI:Search:Criteria:Raw:Filtered');
+				if (array_key_exists('ref', $aCriteria))
+				{
+					$aRef = explode('.', $aCriteria['ref']);
+					if (isset($aClasses[$aRef[0]]))
+					{
+						$sClass = $aClasses[$aRef[0]];
+						try
+						{
+							$aCriteria['label'] = Dict::Format('UI:Search:Criteria:Raw:FilteredOn', MetaModel::GetName($sClass));
+						}
+						catch (Exception $e)
+						{
+						}
+					}
+				}
 			}
 			if (array_key_exists('widget', $aCriteria))
 			{

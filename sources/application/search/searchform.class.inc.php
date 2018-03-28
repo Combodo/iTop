@@ -206,8 +206,6 @@ class SearchForm
 	public function GetFields($oSet)
 	{
 		$oSearch = $oSet->GetFilter();
-		// TODO: Later consider all the fields including the joined classes
-		//$aAllClasses = $oSearch->GetJoinedClasses();
 		$aAllClasses = $oSearch->GetSelectedClasses();
 		$aAuthorizedClasses = array();
 		foreach($aAllClasses as $sAlias => $sClassName)
@@ -334,7 +332,7 @@ class SearchForm
 	}
 
 	/**
-	 * @param \DBSearch $oSearch
+	 * @param \DBObjectSearch $oSearch
 	 * @param array $aFields
 	 *
 	 * @param array $aArgs
@@ -367,7 +365,7 @@ class SearchForm
 				}
 				$aAndCriterion[] = $oAndSubExpr->GetCriterion($oSearch);
 			}
-			$aAndCriterion = CriterionToSearchForm::Convert($aAndCriterion, $aFields);
+			$aAndCriterion = CriterionToSearchForm::Convert($aAndCriterion, $aFields, $oSearch->GetJoinedClasses());
 			$aOrCriterion[] = array('and' => $aAndCriterion);
 		}
 

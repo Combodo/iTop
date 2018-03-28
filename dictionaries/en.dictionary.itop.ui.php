@@ -1468,6 +1468,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:DateTime:PlaceholderFromTime' => 'Any date',
 	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Any date',
 	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Any date',
+
+	'UI:Search:Criteria:Raw:Filtered' => 'Filtered',
+	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s',
 ));
 
 //

@@ -165,7 +165,7 @@ class CriterionConversionTest extends ItopDataTestCase
 		$oSearchForm = new SearchForm();
 		$oSearch = \DBSearch::FromOQL("SELECT Contact");
 		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
-		$aRes = CriterionToSearchForm::Convert($aCriterion, $aFields);
+		$aRes = CriterionToSearchForm::Convert($aCriterion, $aFields, $oSearch->GetJoinedClasses());
 		$this->debug($aRes);
 		$this->assertEquals($sExpectedOperator, $aRes[0]['operator']);
 	}

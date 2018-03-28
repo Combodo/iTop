@@ -871,6 +871,21 @@ class FieldExpression extends UnaryExpression
 			{
 				return $aAttDefs[$this->m_sName];
 			}
+			else
+			{
+				if ($this->m_sName == 'id')
+				{
+					$aParams = array(
+						'default_value' => 0,
+						'is_null_allowed' => false,
+						'allowed_values' => null,
+						'depends_on' => null,
+						'sql' => 'id',
+					);
+
+					return new AttributeInteger($this->m_sName, $aParams);
+				}
+			}
 		}
 
 		return null;
