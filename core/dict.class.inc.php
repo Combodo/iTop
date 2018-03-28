@@ -359,14 +359,27 @@ class Dict
 	
 	/**
 	 * Export all the dictionary entries - of the given language - whose code matches the given prefix
+	 * missing entries in the current language will be replaced by entries in the default language
 	 * @param string $sStartingWith
 	 * @return string[]
 	 */
 	public static function ExportEntries($sStartingWith)
 	{
 		self::InitLangIfNeeded(self::GetUserLanguage());
+		self::InitLangIfNeeded(self::$m_sDefaultLanguage);
 		$aEntries = array();
 		$iLength = strlen($sStartingWith);
+		
+		// First prefill the array with entries from the default language
+		foreach(self::$m_aData[self::$m_sDefaultLanguage] as $sCode => $sEntry)
+		{
+			if (substr($sCode, 0, $iLength) == $sStartingWith)
+			{
+				$aEntries[$sCode] = $sEntry;
+			}
+		}
+		
+		// Now put (overwrite) the entries for the user language
 		foreach(self::$m_aData[self::GetUserLanguage()] as $sCode => $sEntry)
 		{
 			if (substr($sCode, 0, $iLength) == $sStartingWith)
