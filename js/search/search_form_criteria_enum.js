@@ -95,12 +95,20 @@ $(function()
 
 			// - Filter
 			var sFilterId = 'filter_' + sOpId;
+			var sFilterPlaceholder = (this._hasAutocompleteAllowedValues()) ? Dict.S('UI:Search:Value:Search:Placeholder') : Dict.S('UI:Search:Value:Filter:Placeholder');
 			var oFilterElem = $('<div class="sf_filter"></div>')
-				.append('<input type="text" id="' + sFilterId + '" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sff_picto sff_filter fa fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span>')
+				.append('<span class="sff_input_wrapper"><input type="text" id="' + sFilterId + '" placeholder="' + sFilterPlaceholder + '" /><span class="sff_picto sff_filter fa fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span></span>')
 				.appendTo(oOpContentElem);
 
 			// - Allowed values
-			var oAllowedValuesElem = $('<div class="sfc_opc_mc_items"></div>');
+			var oAllowedValuesElem = $('<div class="sfc_opc_mc_items"></div>')
+				.appendTo(oOpContentElem);
+			// - Static values: Always there no matter the field constraints
+			var oStaticValuesElem = $('<div class="sfc_opc_mc_items_list sfc_opc_mc_items_static"></div>')
+				.appendTo(oAllowedValuesElem);
+			// - Dynamic values: Depends on the field constraints
+			var oDynamicValuesElem = $('<div class="sfc_opc_mc_items_list sfc_opc_mc_items_dynamic"></div>')
+				.appendTo(oAllowedValuesElem);
 
 			//   - Null value if allowed
 			//   Note: null values is NOT put among the allowed values for two reasons:
@@ -114,7 +122,7 @@ $(function()
 					.addClass('sfc_opc_mc_item')
 					.attr('data-value-code', sValCode)
 					.append('<label><input type="checkbox" value="' + sValCode + '"/>' + sValLabel + '</label>')
-					.appendTo(oAllowedValuesElem);
+					.appendTo(oStaticValuesElem);
 			}
 
 			//   - Regular allowed values
@@ -129,7 +137,7 @@ $(function()
 						.addClass('sfc_opc_mc_item')
 						.attr('data-value-code', sValCode)
 						.append('<label><input type="checkbox" value="'+sValCode+'"/>'+sValLabel+'</label>')
-						.appendTo(oAllowedValuesElem);
+						.appendTo(oDynamicValuesElem);
 
 					if (this._isSelectedValues(sValCode))
 					{
@@ -137,7 +145,20 @@ $(function()
 					}
 				}
 			}
-			oAllowedValuesElem.appendTo(oOpContentElem);
+
+			// - Specific to autocomplete mode
+			if(this._hasAutocompleteAllowedValues())
+			{
+				// Remove filter picto from input
+				oFilterElem.find('.sff_filter').remove();
+
+				// Add search dialog button
+				oFilterElem
+					.append('<button type="button" class="sff_search_dialog"><span class=" fa fa-search"></span></button>')
+					.addClass('sf_with_buttons');
+
+				// Prepare "selected" values area
+			}
 
 			// Events
 			// - Check / Uncheck all toggler
@@ -151,7 +172,7 @@ $(function()
 			});
 
 			// - Filter
-			// Note: "keyup" event is use instead of "keydown", otherwise, the inpu value would not be set yet.
+			// Note: "keyup" event is use instead of "keydown", otherwise, the input value would not be set yet.
 			oFilterElem.find('input').on('keyup focus', function(oEvent){
 				// TODO: Move on values with up and down arrow keys; select with space or enter.
 
@@ -203,6 +224,56 @@ $(function()
 				// Apply criteria
 				me._apply();
 			});
+
+			// - Specific to autocomplete mode
+			// TODO: We NEED to refactor all of this for a better integration. Most might be in the main widget as any widget could use XHR helpers.
+			if(this._hasAutocompleteAllowedValues())
+			{
+				// // Autocomplete
+				// var oACXHR = null;
+				// var oACTimeout = null;
+				// oFilterElem.find('input').off('keyup focus').on('keyup focus', function(oEvent){
+				// 	// TODO: Move on values with up and down arrow keys; select with space or enter.
+				//
+				// 	var sFilter = $(this).val();
+				//
+				// 	if(sFilter === '')
+				// 	{
+				// 		oOpContentElem.find('.sfc_opc_mc_item').html('');
+				// 		oFilterElem.find('.sff_reset').hide();
+				// 	}
+				// 	else
+				// 	{
+				// 		oOpContentElem.find('.sfc_opc_mc_item').html('TOTR: Wait');
+				// 		if(oACXHR !== null)
+				// 		{
+				// 			oACXHR.abort();
+				// 		}
+				// 		oACXHR = $.post(
+				// 			AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'),
+				// 			{
+				// 				sTargetClass: me.options.field.class,
+				// 				//iInputId: me.id,
+				// 				//iObjectId: iObjectId,
+				// 				sAttCode: me.options.field.code,
+				// 				bSearchMode: true,
+				// 				operation: 'getObjectName'
+				// 			}
+				// 		)
+				// 			.done(function(oResponse, sStatus, oXHR){ console.log('ok', oResponse); })
+				// 			.fail(function(oResponse, sStatus, oXHR){ console.log('fail', oResponse); })
+				// 			.always(function(oResponse, sStatus, oXHR){ console.log('always', oResponse); });
+				//
+				// 		oFilterElem.find('.sff_reset').show();
+				// 	}
+				// });
+				//
+				// // Open search dialog
+				// oFilterElem.find('.sff_search_dialog').on('click', function(){
+				// 	// TODO: Open search dialog with right params
+				// 	alert('Not implemented yet');
+				// });
+			}
 
 			oOpElem.find('.sfc_op_content').append(oOpContentElem);
 		},

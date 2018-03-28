@@ -953,19 +953,25 @@ input.dp-applied {
 			}
 
 			/* Top left corner icons */
-			.sfc_close,
-			.sfc_toggle{
+			.sfc_toggle,
+			.sfc_close{
 				position: absolute;
 				top: 7px;
 				color: $search-criteria-box-picto-color;
 			}
-			.sfc_close{
-				right: 7px;
+			.sfc_locked{
+				position: absolute;
+				top: 9px;
+				color: $gray-light;
 			}
 			.sfc_toggle{
 				display: inline-block;
 				right: 23px;
 				transition: all 0.3s ease-in-out;
+			}
+			.sfc_close,
+			.sfc_locked{
+				right: 7px;
 			}
 
 			.sfc_title{
@@ -1142,6 +1148,7 @@ input.dp-applied {
 				}
 				.sfc_title{
 					cursor: initial;
+					padding-right: 20px; /* Less than regular as there is no toggle icon */
 				}
 				.sfc_form_group{
 					display: none;
@@ -1204,7 +1211,8 @@ input.dp-applied {
 				}
 			}
 
-			&.search_form_criteria_date_time, &.search_form_criteria_date {
+			&.search_form_criteria_date_time,
+			&.search_form_criteria_date {
 				.sfc_form_group.advanced {
 					.sfc_fg_operator_between {
 						margin-bottom: 5px;
@@ -1353,18 +1361,53 @@ input.dp-applied {
 		margin-top: 8px;
 		margin-bottom: 8px;
 
+		input,
+		button,
+		.sff_picto{
+			vertical-align: middle;
+			height: 22px;
+		}
+
+		input,
+		button{
+			border: 1px solid #ABABAB;
+		}
 		input{
 			width: 100%;
 		}
-		.sff_picto{
-			position: absolute;
-			right: 5px;
-			top: 5px;
-			opacity: 0.6;
-			user-select: none;
+		button{
+			width: 23px; /* Must be equals to .sf_filter > *:height */
+			background-color: $white;
+			color: $combodo-orange;
+			font-size: 10px;
+
+			&:first-of-type{
+				margin-left: 5px;
+			}
+			&:not(:first-of-type){
+				border-left: transparent;
+			}
 		}
-		.sff_reset{
-			display: none;
+		.sff_input_wrapper{
+			position: relative;
+
+			.sff_picto{
+				position: absolute;
+				right: 5px;
+				top: 2px;
+				opacity: 0.6;
+				user-select: none;
+			}
+			.sff_reset{
+				display: none;
+			}
+		}
+
+		&.sf_with_buttons{
+			input{
+				width: initial; /* Reset the 100% */
+				min-width: 120px;
+			}
 		}
 	}
 }

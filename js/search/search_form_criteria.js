@@ -595,7 +595,7 @@ $(function()
 
 
 		// Values helpers
-		// - Check if criteria has allowed values
+		// - Check if criteria has allowed values either preloaded or through autocomplete
 		_hasAllowedValues: function()
 		{
 			return ( (this.options.field.allowed_values !== undefined) && (this.options.field.allowed_values !== null) );
@@ -614,6 +614,21 @@ $(function()
 		_getPreloadedAllowedValues: function()
 		{
 			return (this._hasPreloadedAllowedValues()) ? this.options.field.allowed_values.values : {};
+		},
+		// - Check if criteria has allowed values that should be loaded through autocomplete
+		_hasAutocompleteAllowedValues: function()
+		{
+			if(this._hasAllowedValues() && (this.options.field.allowed_values.autocomplete === true) )
+			{
+				return true;
+			}
+
+			return false;
+		},
+		// - Return the allowed values from the autocomplete
+		_getAutocompleteAllowedValues: function()
+		{
+			console.log('TODO: Retrieve allowed values through autocomplete (get needle in the input)');
 		},
 		// - Return current values
 		_getValues: function()

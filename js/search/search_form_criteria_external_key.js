@@ -9,11 +9,13 @@ $(function()
 		// default options
 		options:
 		{
+			'endpoint': AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'),
+
 			// Null value
 			'null_value': {
 				'code': 0,
 				'label': Dict.S('UI:UndefinedObject'),
-			}
+			},
 		},
 
    
@@ -52,6 +54,5 @@ $(function()
 		//------------------
 		// Inherited methods
 		//------------------
-
 	});
 });

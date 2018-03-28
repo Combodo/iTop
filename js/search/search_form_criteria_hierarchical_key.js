@@ -48,5 +48,25 @@ $(function()
 		// Inherited methods
 		//------------------
 
+		// DOM element helpers
+		prepareInOperator: function(oOpElem, sOpIdx, oOp)
+		{
+			var me = this;
+
+			this._super();
+
+			// DOM elements
+			// - Add search dialog button
+			this.element.find('.sf_filter')
+				.append('<button type="button" class="sff_hierarchy_dialog"><span class=" fa fa-sitemap"></span></button>')
+				.addClass('sf_with_buttons');
+
+			// Events
+			// - Open hierarchy dialog
+			this.element.find('.sff_hierarchy_dialog').on('click', function(){
+				// TODO: Open hierarchy dialog with right params
+				alert('Not implemented yet');
+			});
+		},
 	});
 });

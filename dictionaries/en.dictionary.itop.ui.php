@@ -1453,6 +1453,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...',
+	'UI:Search:Value:Search:Placeholder' => 'Search...',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none',
 
 	// - Widget other translations

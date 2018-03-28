@@ -319,7 +319,7 @@ $(function()
 			var oFilterElem = $('<div></div>')
 				.addClass('sf_filter')
 				.addClass('sfm_filter')
-				.append('<input type="text" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sff_picto sff_filter fa fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span>')
+				.append('<span class="sff_input_wrapper"><input type="text" placeholder="' + Dict.S('UI:Search:Value:Filter:Placeholder') + '" /><span class="sff_picto sff_filter fa fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span></span>')
 				.appendTo(oContentElem);
 
 			// - Lists container
@@ -618,46 +618,54 @@ $(function()
 		_addCriteria: function(oData)
 		{
 			var sRef = oData.ref;
-			var sType = (oData.widget !== undefined) ? oData.widget : this._getCriteriaTypeFromFieldRef(sRef);
+			var sType = sType = (oData.widget !== undefined) ? oData.widget : this._getCriteriaTypeFromFieldRef(sRef);
 
-			if(sType !== null)
+			// Force to raw for non removable criteria
+			if( (oData.is_removable !== undefined) && (oData.is_removable === false) )
 			{
-				// Retrieve widget class
-				var sWidgetName = this._getCriteriaWidgetNameFromType(sType);
-
-				// Add some informations from the field
-				if(this._hasFieldDefinition(sRef))
-				{
-					var oFieldDef = this._getFieldDefinition(sRef);
-					oData.field = {
-						label: oFieldDef.label,
-						class: oFieldDef.class,
-						class_alias: oFieldDef.class_alias,
-						code: oFieldDef.code,
-						widget: oFieldDef.widget,
-						allowed_values: oFieldDef.allowed_values,
-						is_null_allowed: oFieldDef.is_null_allowed,
-					};
-				}
-
-				if ('date' == sType || 'date_time' == sType)
-				{
-					oData.datepicker = this.options.datepicker;
-				}
-
-				// Create DOM element
-				var oCriteriaElem = $('<div></div>')
-					.addClass('sf_criteria')
-					//.insertBefore(this.elements.more_criterion);
-					.appendTo(this.elements.criterion_area);
-
-				// Instanciate widget
-				$.itop[sWidgetName](oData, oCriteriaElem);
+				sType = 'raw';
 			}
-			else
+
+			// Protection against bad initialization data
+			if(sType === null)
 			{
-				this._trace('Could not add criteria as we could not retrieve type for ref "' + sRef + '".');
+				this._trace('Could not add criteria as we could not retrieve type for ref "'+sRef+'".');
+				return false;
 			}
+
+			// Retrieve widget class
+			var sWidgetName = this._getCriteriaWidgetNameFromType(sType);
+
+			// Add some informations from the field
+			if(this._hasFieldDefinition(sRef))
+			{
+				var oFieldDef = this._getFieldDefinition(sRef);
+				oData.field = {
+					label: oFieldDef.label,
+					class: oFieldDef.class,
+					class_alias: oFieldDef.class_alias,
+					code: oFieldDef.code,
+					widget: oFieldDef.widget,
+					allowed_values: oFieldDef.allowed_values,
+					is_null_allowed: oFieldDef.is_null_allowed,
+				};
+			}
+
+			if ('date' == sType || 'date_time' == sType)
+			{
+				oData.datepicker = this.options.datepicker;
+			}
+
+			// Create DOM element
+			var oCriteriaElem = $('<div></div>')
+				.addClass('sf_criteria')
+				//.insertBefore(this.elements.more_criterion);
+				.appendTo(this.elements.criterion_area);
+
+			// Instanciate widget
+			$.itop[sWidgetName](oData, oCriteriaElem);
+
+			return true;
 		},
 		// - Find a criteria's type from a field's ref (usually <CLASS_ALIAS>.<ATT_CODE>)
 		_getCriteriaTypeFromFieldRef: function(sRef)
