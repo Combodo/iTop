@@ -4949,7 +4949,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 class AttributeExternalField extends AttributeDefinition
 {
 
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	static public function ListExpectedParams()
 	{
