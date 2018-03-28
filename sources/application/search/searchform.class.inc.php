@@ -187,6 +187,7 @@ class SearchForm
 				'has_hidden_criteria' => (array_key_exists('hidden_criteria', $aListParams) && !empty($aListParams['hidden_criteria'])),
 				'fields' => $aFields,
 				'criterion' => $aCriterion,
+				'class_name' => $sClassName,
 				'base_oql' => $sBaseOQL,
 			),
 		);
