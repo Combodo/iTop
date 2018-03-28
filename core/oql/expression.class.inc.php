@@ -510,11 +510,6 @@ class BinaryExpression extends Expression
 		$bReverseOperator = false;
 		$oLeftExpr = $this->GetLeftExpr();
 		$oRightExpr = $this->GetRightExpr();
-		if ($oLeftExpr instanceof FieldExpression && $oRightExpr instanceof FieldExpression)
-		{
-			// Default criterion (Field OPE Field) is not supported
-			return parent::GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
-		}
 
 		$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
 
@@ -531,7 +526,6 @@ class BinaryExpression extends Expression
 
 		$aCriteriaLeft = $oLeftExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 		$aCriteriaRight = $oRightExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
-
 
 		if ($bReverseOperator)
 		{
@@ -564,6 +558,12 @@ class BinaryExpression extends Expression
 		}
 		$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
 		$aCriteria['label'] = $this->Display($oSearch, $aArgs, $oAttDef);
+
+		if (isset($aCriteriaLeft['ref']) && isset($aCriteriaRight['ref']) && ($aCriteriaLeft['ref'] != $aCriteriaRight['ref']))
+		{
+			// Only one Field is supported in the expressions
+			$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+		}
 
 		return $aCriteria;
 	}
