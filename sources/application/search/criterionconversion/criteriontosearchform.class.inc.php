@@ -75,10 +75,6 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		{
 			$aCriteria['label'] = trim($aCriteria['label'], "()");
 			$aCriteria['is_removable'] = $bIsRemovable;
-			if (!$bIsRemovable)
-			{
-				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
-			}
 
 			// Check criteria validity
 			if (!array_key_exists('ref', $aCriteria) || !array_key_exists($aCriteria['ref'], $aAllFields))
