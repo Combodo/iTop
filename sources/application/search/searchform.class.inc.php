@@ -24,8 +24,6 @@ namespace Combodo\iTop\Application\Search;
 
 
 use ApplicationContext;
-use AttributeDate;
-use AttributeDateTime;
 use AttributeDefinition;
 use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
