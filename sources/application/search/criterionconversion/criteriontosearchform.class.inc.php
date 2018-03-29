@@ -68,7 +68,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC => 'NumericToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY => 'ExternalKeyToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY => 'ExternalKeyToSearchForm',
-			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'ExternalKeyToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'EnumToSearchForm',
 		);
 
 		foreach($aAndCriterionRaw as $aCriteria)
@@ -93,6 +93,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			// Check criteria validity
 			if (!isset($aCriteria['ref']) || !isset($aAllFields[$aCriteria['ref']]))
 			{
+				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
 				$aCriteria['label'] = Dict::S('UI:Search:Criteria:Raw:Filtered');
 				if (isset($aCriteria['ref']))
 				{
@@ -492,8 +493,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		return $aCriteria;
 	}
 
-
-	protected static function ExternalKeyToSearchForm($aCriteria, $aFields)
+	protected static function EnumToSearchForm($aCriteria, $aFields)
 	{
 		$sOperator = $aCriteria['operator'];
 		switch ($sOperator)
@@ -503,6 +503,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
 				break;
 			case 'NOT IN':
+			case 'NOTIN':
 			case '!=':
 				// Same as NOT IN
 				$aCriteria = self::RevertValues($aCriteria, $aFields);
@@ -523,6 +524,27 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 					// Convention for 'undefined' enums
 					$aCriteria['values'][] = array('value' => 'null', 'label' => 'null');
 				}
+				break;
+			default:
+				// Unknown operator
+				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+				break;
+		}
+
+		return $aCriteria;
+	}
+
+	protected static function ExternalKeyToSearchForm($aCriteria, $aFields)
+	{
+		$sOperator = $aCriteria['operator'];
+		switch ($sOperator)
+		{
+			case '=':
+				// Same as IN
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
+				break;
+			case 'IN':
+				// Nothing special to do
 				break;
 			default:
 				// Unknown operator

@@ -431,7 +431,7 @@ class CriterionConversionTest extends ItopDataTestCase
 			'key NOT IN' => array(
 				'OQL' => "SELECT Contact WHERE org_id NOT IN ('1')",
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` WHERE (`Contact`.`org_id` NOT IN ('1'))",
-				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN')),
+				'ExpectedCriterion' => array(array('widget' => 'raw', 'operator' => 'NOT IN')),
 			),
 			'key IN' => array(
 				'OQL' => "SELECT Contact WHERE org_id IN ('1')",

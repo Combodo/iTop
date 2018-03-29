@@ -26,6 +26,7 @@ namespace Combodo\iTop\Application\Search\CriterionConversion;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
+use AttributeEnum;
 use Combodo\iTop\Application\Search\AjaxSearchException;
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
 use Combodo\iTop\Application\Search\SearchForm;
@@ -155,42 +156,45 @@ class CriterionToOQL extends CriterionConversionAbstract
 			if (array_key_exists($sAttCode, $aAttributeDefs))
 			{
 				$oAttDef = $aAttributeDefs[$sAttCode];
-				$aAllowedValues = SearchForm::GetFieldAllowedValues($oAttDef);
-				if (array_key_exists('values', $aAllowedValues))
+				if ($oAttDef instanceof AttributeEnum)
 				{
-					// Can't invert the test if NULL is allowed
-					if (!$oAttDef->IsNullAllowed())
+					$aAllowedValues = SearchForm::GetFieldAllowedValues($oAttDef);
+					if (array_key_exists('values', $aAllowedValues))
 					{
-						$aAllowedValues = $aAllowedValues['values'];
-						if (count($aValues) == count($aAllowedValues))
+						// Can't invert the test if NULL is allowed
+						if (!$oAttDef->IsNullAllowed())
 						{
-							// All entries are selected
-							return "1";
-						}
-						// more selected values than remaining so use NOT IN
-						else
-						{
-							if (count($aValues) > (count($aAllowedValues) / 2))
+							$aAllowedValues = $aAllowedValues['values'];
+							if (count($aValues) == count($aAllowedValues))
 							{
-								foreach($aValues as $aValue)
+								// All entries are selected
+								return "1";
+							}
+							// more selected values than remaining so use NOT IN
+							else
+							{
+								if (count($aValues) > (count($aAllowedValues) / 2))
 								{
-									unset($aAllowedValues[$aValue['value']]);
-								}
-								$sInList = implode("','", array_keys($aAllowedValues));
+									foreach($aValues as $aValue)
+									{
+										unset($aAllowedValues[$aValue['value']]);
+									}
+									$sInList = implode("','", array_keys($aAllowedValues));
 
-								return "({$sRef} NOT IN ('$sInList'))";
+									return "({$sRef} NOT IN ('$sInList'))";
+								}
 							}
 						}
-					}
-					// search for "undefined"
-					for ($i = 0; $i < count($aValues); $i++)
-					{
-						$aValue = $aValues[$i];
-						if (isset($aValue['value']) && ($aValue['value'] === 'null'))
+						// search for "undefined"
+						for($i = 0; $i < count($aValues); $i++)
 						{
-							$bFilterOnUndefined = true;
-							unset($aValues[$i]);
-							break;
+							$aValue = $aValues[$i];
+							if (isset($aValue['value']) && ($aValue['value'] === 'null'))
+							{
+								$bFilterOnUndefined = true;
+								unset($aValues[$i]);
+								break;
+							}
 						}
 					}
 				}
