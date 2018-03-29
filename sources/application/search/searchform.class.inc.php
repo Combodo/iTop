@@ -323,7 +323,7 @@ class SearchForm
 			$oSet = new DBObjectSet($oSearch);
 			if ($oSet->Count() > MetaModel::GetConfig()->Get('max_combo_length'))
 			{
-				return array('autocomplete' => true, 'target_class' => $sTargetClass);
+				return array('autocomplete' => true);
 			}
 		}
 		else
@@ -333,17 +333,7 @@ class SearchForm
 				$oSet = $oAttrDef->GetAllowedValuesAsObjectSet();
 				if ($oSet->Count() > MetaModel::GetConfig()->Get('max_combo_length'))
 				{
-
-					if (method_exists($oAttrDef, 'GetTargetClass'))
-					{
-						$sTargetClass = $oAttrDef->GetTargetClass();
-					}
-					else
-					{
-						$sTargetClass = $oAttrDef->GetHostClass();
-					}
-
-					return array('autocomplete' => true, 'target_class' => $sTargetClass);
+					return array('autocomplete' => true);
 				}
 			}
 		}
@@ -429,10 +419,20 @@ class SearchForm
 		{
 			$sLabel = $oAttDef->GetLabel();
 
+			if (method_exists($oAttDef, 'GetTargetClass'))
+			{
+				$sTargetClass = $oAttDef->GetTargetClass();
+			}
+			else
+			{
+				$sTargetClass = $oAttDef->GetHostClass();
+			}
+
 			$aField = array();
 			$aField['code'] = $sFilterCode;
 			$aField['class'] = $sClass;
 			$aField['class_alias'] = $sClassAlias;
+			$aField['target_class'] = $sTargetClass;
 			$aField['label'] = $sLabel;
 			$aField['widget'] = $oAttDef->GetSearchType();
 			$aField['allowed_values'] = self::GetFieldAllowedValues($oAttDef);

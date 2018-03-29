@@ -58,7 +58,7 @@ class SearchFormTest extends ItopDataTestCase
 	{
 		return array(
 			array("SELECT Contact", 8, 'zlist'),
-			array("SELECT Contact AS C WHERE C.status = 'active'", 5, 'others'),
+			array("SELECT Contact AS C WHERE C.status = 'active'", 2, 'others'),
 			array("SELECT Person", 12, 'zlist'),
 			array(
 				"SELECT Person AS p JOIN UserRequest AS u ON u.agent_id = p.id WHERE u.status != 'closed'",
