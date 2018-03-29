@@ -10,17 +10,17 @@ $(function()
 		options:
 		{
 			// Overload default operator
-			'operator': 'between',
+			'operator': '=',
 			// Available operators
 			'available_operators': {
-				'between': {
-					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Between'),
-					'code': 'between',
-					'rank': 0,
-				},
 				'=': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Equals'),//pre-existing, label changed
 					// 'dropdown_group':1,
+				},
+				'between': {
+					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Between'),
+					'code': 'between',
+					'rank': 50,
 				},
 				'>': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:GreaterThan'),
