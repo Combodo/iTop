@@ -774,21 +774,37 @@ class DisplayBlock
 			{
 				$aStates = explode(',', $sStatesList);
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
+
+				// Generate one count + group by query [#1330]
+				$oGroupByExpr = Expression::FromOQL($sClass.'.'.$sStateAttrCode);
+				$aGroupBy = array('group1' => $oGroupByExpr);
+				$sCountGroupByQuery = $this->m_oFilter->MakeGroupByQuery(array(), $aGroupBy, false);
+				$aCountGroupByResults = CMDBSource::QueryToArray($sCountGroupByQuery);
+				$aCountsQueryResults = array();
+				foreach ($aCountGroupByResults as $aCountGroupBySingleResult)
+				{
+					$aCountsQueryResults[$aCountGroupBySingleResult[0]] = $aCountGroupBySingleResult[1];
+				}
+
 				foreach($aStates as $sStateValue)
 				{
-					$oFilter = $this->m_oFilter->DeepClone();
-					$oFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
-					$oSet = new DBObjectSet($oFilter);
-					$oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
-					$aCounts[$sStateValue] = $oSet->Count();
 					$aStateLabels[$sStateValue] = htmlentities($oAttDef->GetValueLabel($sStateValue), ENT_QUOTES, 'UTF-8');
+
+					$aCounts[$sStateValue] = (array_key_exists($sStateValue, $aCountsQueryResults))
+						? $aCountsQueryResults[$sStateValue]
+						: 0;
+
 					if ($aCounts[$sStateValue] == 0)
 					{
 						$aCounts[$sStateValue] = '-';
 					}
 					else
 					{
-						$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($oFilter->serialize());
+						$oSingleGroupByValueFilter = $this->m_oFilter->DeepClone();
+						$oSingleGroupByValueFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
+						$sHyperlink = utils::GetAbsoluteUrlAppRoot()
+							.'pages/UI.php?operation=search&'.$oAppContext->GetForLink()
+							.'&filter='.urlencode($oSingleGroupByValueFilter->serialize());
 						$aCounts[$sStateValue] = "<a href=\"$sHyperlink\">{$aCounts[$sStateValue]}</a>";
 					}
 				}
