@@ -1207,10 +1207,10 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	// - Operators
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Vide',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Non vide',
-	'UI:Search:Criteria:Operator:Default:Equals' => 'Egal :',
-	'UI:Search:Criteria:Operator:String:Contains' => 'Contient :',
-	'UI:Search:Criteria:Operator:String:StartsWith' => 'Commence par :',
-	'UI:Search:Criteria:Operator:String:EndsWith' => 'Fini par :',
+	'UI:Search:Criteria:Operator:Default:Equals' => 'Egal',
+	'UI:Search:Criteria:Operator:String:Contains' => 'Contient',
+	'UI:Search:Criteria:Operator:String:StartsWith' => 'Commence par',
+	'UI:Search:Criteria:Operator:String:EndsWith' => 'Fini par',
 	// - Criteria titles
 	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s vide',
