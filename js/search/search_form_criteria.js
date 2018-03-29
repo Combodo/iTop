@@ -97,8 +97,15 @@ $(function()
 		//   Note: A null operator or an operator with a rank "false" will be removed.
 		_initOperators: function()
 		{
-			// Reset oprators
+			// Reset operators
 			this.operators = {};
+
+			// Cancel empty/not_empty operators if field can't be null
+			if(this.options.field.is_null_allowed === false)
+			{
+				this.options.available_operators.empty = null;
+				this.options.available_operators.not_empty = null;
+			}
 
 			// Temp array to sort operators
 			var aSortable = [];
