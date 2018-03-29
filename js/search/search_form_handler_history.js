@@ -6,7 +6,7 @@
  *
  * $(cssSelector).search_form_handler_history({"itop_root_class":"FooBarClass"}) : constructor
  * $(cssSelector).search_form_handler_history("getHistory") : history array getter
- * $(cssSelector).search_form_handler_history("historyUnshift", "field.ref") : prepend the field ref to the beginning of the history array
+ * $(cssSelector).search_form_handler_history("setLatest", "field.ref") : prepend the field ref to the beginning of the history array
  *
  *
  * please take a look at the options for custom constructor values
@@ -37,12 +37,31 @@ $(function()
 		
 		iStoreHistoryTimeoutHandler : undefined,
 
+		/**
+		 * the constructor, called by the widget factory
+		 * @private
+		 */
+		_create: function()
+		{
+			var me = this;
+
+			if (me.options.preference_code == undefined)
+			{
+				me.options.preference_code = me.options.itop_root_class + '__search_history';
+			}
+
+
+			me.aHistory = JSON.parse(GetUserPreference(me._getPreferenceCode(), "[]"));
+		},
+
 		getHistory: function()
 		{
+			var me = this;
+
 			return me.aHistory;
 		},
 
-		historyUnshift: function(sFieldRef)
+		setLatest: function(sFieldRef)
 		{
 			var me = this;
 
@@ -60,7 +79,7 @@ $(function()
 			var iDeleteCount = me.aHistory.length - me.options.history_max_length;
 			if (iDeleteCount > 0)
 			{
-				me.aHistory.splice(0, iDeleteCount);
+				me.aHistory.splice(-iDeleteCount, iDeleteCount);
 			}
 
 			//store it in the backend (with a delay in the hope to wait long enough to make bulk modifications
@@ -70,22 +89,7 @@ $(function()
 			return;
 		},
 
-		/**
-		 * the constructor, called by the widget factory
-		 * @private
-		 */
-		_create: function()
-		{
-			var me = this;
 
-			if (me.options.preference_code == undefined)
-			{
-				me.options.preference_code = me.options.itop_root_class + '|search_history';
-			}
-
-
-			me.aHistory = GetUserPreference(me._getPreferenceCode(), []);
-		},
 
 		/**
 		 * @returns String
@@ -93,12 +97,12 @@ $(function()
 		 */
 		_getPreferenceCode: function()
 		{
-			return me.options.preference_code;
+			return this.options.preference_code;
 		},
 
 
 		/**
-		 * should only be called by historyUnshift in order to store the updated history
+		 * should only be called by setLatest in order to store the updated history
 		 * @private
 		 */
 		_storeHistory: function()
@@ -110,18 +114,16 @@ $(function()
 				clearTimeout(me.iStoreHistoryTimeoutHandler);
 			}
 
-			me.iStoreHistoryTimeoutHandler = setTimeout(me._storeHistoryTimeoutFunction, me.options.history_backend_store_timeout);
+			me.iStoreHistoryTimeoutHandler = setTimeout(me._storeHistoryTimeoutFunction(me), me.options.history_backend_store_timeout);
 		},
 
 		/**
 		 * should only be called by _storeHistory using a timeout
 		 * @private
 		 */
-		_storeHistoryTimeoutFunction: function()
+		_storeHistoryTimeoutFunction: function(me)
 		{
-			var me = this;
-
-			SetUserPreference(me._getPreferenceCode(), me.getHistory(), true);
+			SetUserPreference(me._getPreferenceCode(), JSON.stringify(me.getHistory()), true);
 
 			me.iStoreHistoryTimeoutHandler = undefined;
 		}

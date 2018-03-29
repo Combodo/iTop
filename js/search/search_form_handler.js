@@ -24,6 +24,7 @@ $(function()
 			},
 			'search': {
 				'base_oql': '',
+				'class_name': null,
 				'criterion': [
 					// Structure
 					// {
@@ -89,6 +90,9 @@ $(function()
 			var me = this;
 			
 			this.element.addClass('search_form_handler');
+
+			//init others widgets :
+			this.element.search_form_handler_history({"itop_root_class":me.options.search.class_name});
 
 			// Prepare DOM elements
 			this._prepareFormArea();
@@ -337,10 +341,11 @@ $(function()
 				.text(Dict.S('UI:Search:AddCriteria:List:RecentlyUsed:Title'))
 				.appendTo(oRecentsElem);
 
-			// TODO: Add elements and remove hidden class if there is some.
 			var oRecentsItemsElem = $('<ul class="sfl_items"></ul>')
 				.append('<li class="sfl_i_placeholder">' + Dict.S('UI:Search:AddCriteria:List:RecentlyUsed:Placeholder') + '</li>')
 				.appendTo(oRecentsElem);
+
+			me._refreshRecentlyUsed();
 
 			// - Search zlist list
 			var oZlistElem = $('<div></div>')
@@ -357,13 +362,8 @@ $(function()
 
 			for(var sFieldRef in this.options.search.fields.zlist)
 			{
-				var oField = this.options.search.fields.zlist[sFieldRef];
-				var sFieldTitleAttr = (oField.description !== undefined) ? 'title="' + oField.description + '"' : '';
-				var oFieldElem = $('<li></li>')
-					.addClass('sfm_field')
-					.attr('data-field-ref', sFieldRef)
-					.append('<label ' + sFieldTitleAttr + '><input type="checkbox" value="' + sFieldRef + '" />' + oField.label + '</label>')
-					.appendTo(oZListItemsElem);
+				var oFieldElem = me._getHtmlLiFromFieldRef(me, sFieldRef, ['zlist']);
+				oFieldElem.appendTo(oZListItemsElem);
 			}
 
 			// - Remaining fields list
@@ -383,13 +383,8 @@ $(function()
 
 				for(var sFieldRef in this.options.search.fields.others)
 				{
-					var oField = this.options.search.fields.others[sFieldRef];
-					var sFieldTitleAttr = (oField.description !== undefined) ? 'title="' + oField.description + '"' : '';
-					var oFieldElem = $('<li></li>')
-						.addClass('sfm_field')
-						.attr('data-field-ref', sFieldRef)
-						.append('<label ' + sFieldTitleAttr + '><input type="checkbox" value="' + sFieldRef + '" />' + oField.label + '</label>')
-						.appendTo(oOthersItemsElem);
+					var oFieldElem = me._getHtmlLiFromFieldRef(me, sFieldRef, ['others']);
+					oFieldElem.appendTo(oOthersItemsElem);
 				}
 			}
 
@@ -504,7 +499,7 @@ $(function()
 			});
 
 			// - Add one criteria
-			this.elements.more_criterion.find('.sfm_field').on('click', function(oEvent){
+			this.elements.more_criterion.on('click', '.sfm_field', function(oEvent){
 				// Prevent anchor
 				oEvent.preventDefault();
 				// Prevent propagation to not close the opening criteria
@@ -513,13 +508,17 @@ $(function()
 				// If no checkbox checked, add criteria right away, otherwise we "queue" it we other checkboxed.
 				if(me.elements.more_criterion.find('.sfm_field input[type="checkbox"]:checked').length === 0)
 				{
+					var sFieldRef = $(this).attr('data-field-ref');
+
 					// Prepare new criterion data (as already opened to increase UX)
 					var oData = {
-						'ref': $(this).attr('data-field-ref'),
+						'ref': sFieldRef,
 						'init_opened': (oEvent.ctrlKey) ? false : true,
 					};
 
 					// Add criteria but don't submit form as the user has not specified the value yet.
+					me.element.search_form_handler_history('setLatest', sFieldRef);
+					me._refreshRecentlyUsed();
 					me._addCriteria(oData);
 				}
 				else
@@ -529,7 +528,7 @@ $(function()
 			});
 
 			// - Add several criterion
-			this.elements.more_criterion.find('.sfm_field input[type="checkbox"]').on('click', function(oEvent){
+			this.elements.more_criterion.on('click', '.sfm_field input[type="checkbox"]', function(oEvent){
 				// Prevent propagation to field and instant add of the criteria
 				oEvent.stopPropagation();
 
@@ -550,12 +549,17 @@ $(function()
 				if($(this).attr('name') === 'apply')
 				{
 					me.elements.more_criterion.find('.sfm_field input[type="checkbox"]:checked').each(function(iIdx, oElem){
+						var sFieldRef = $(oElem).closest('.sfm_field').attr('data-field-ref');
 						var oData = {
-							'ref': $(oElem).closest('.sfm_field').attr('data-field-ref'),
+							'ref': sFieldRef,
 							'init_opened': false,
 						};
+
+						me.element.search_form_handler_history('setLatest', sFieldRef);
 						me._addCriteria(oData);
 					});
+
+					me._refreshRecentlyUsed();
 					me._closeMoreCriterion();
 				}
 
@@ -571,6 +575,66 @@ $(function()
 				oButtonsElem.hide();
 			});
 		},
+
+		/**
+		 *  "add new criteria" <li /> markup
+		 *   - with checkbox, label, data-* ...
+		 *   - without event binding
+		 *
+		 * @private
+		 *
+		 * @param sFieldRef
+		 * @param aFieldCollectionsEligible
+		 *
+		 * @return jQuery detached <li />
+		 */
+		_getHtmlLiFromFieldRef: function(me, sFieldRef, aFieldCollectionsEligible) {
+			var oFieldElem = undefined;
+
+			aFieldCollectionsEligible.forEach(function (sFieldCollection) {
+				if (typeof me.options.search.fields[sFieldCollection][sFieldRef] == 'undefined')
+				{
+					return true;//if this field is not present in the Collection, let's try the next
+				}
+
+				var oField = me.options.search.fields[sFieldCollection][sFieldRef];
+				var sFieldTitleAttr = (oField.description !== undefined) ? 'title="' + oField.description + '"' : '';
+				oFieldElem = $('<li></li>')
+					.addClass('sfm_field')
+					.attr('data-field-ref', sFieldRef)
+					.append('<label ' + sFieldTitleAttr + '><input type="checkbox" value="' + sFieldRef + '" />' + oField.label + '</label>')
+			});
+
+			if (undefined == oFieldElem)
+			{
+				me._trace('no sFieldRef in given collection', {"sFieldRef":sFieldRef, "aFieldCollectionsEligible":aFieldCollectionsEligible});
+				return $('<!-- no sFieldRef in given collection -->');
+			}
+
+			return oFieldElem;
+		},
+
+		_refreshRecentlyUsed: function()
+		{
+			me = this;
+
+			var aHistory = me.element.search_form_handler_history("getHistory");
+			var oRecentsItemsElem = me.element.find('.sf_list_recents .sfl_items');
+
+			if (aHistory.length == 0)
+			{
+				return;
+			}
+			oRecentsItemsElem.empty();
+
+
+			aHistory.forEach(function(sFieldRef) {
+				var oFieldElem = me._getHtmlLiFromFieldRef(me, sFieldRef, ['zlist', 'others']);
+				oRecentsItemsElem.append(oFieldElem);
+			});
+
+		},
+
 		// - Prepare results area
 		_prepareResultsArea: function()
 		{
