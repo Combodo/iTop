@@ -73,7 +73,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 		foreach($aAndCriterionRaw as $aCriteria)
 		{
-			$aCriteria['label'] = trim($aCriteria['label'], "()");
+			$aCriteria['label'] = preg_replace("@^\(@", '', $aCriteria['label']);
+			$aCriteria['label'] = preg_replace("@\)$@", '', $aCriteria['label']);
 			$aCriteria['is_removable'] = $bIsRemovable;
 
 			// Check criteria validity
