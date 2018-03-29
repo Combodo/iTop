@@ -167,17 +167,19 @@ $(function()
 
 			oOpElem.find('.sfc_op_content').append(oOpContentElem);
 
-			this._prepareInOperatorWithoutAutocomplete(oOpElem, sOpIdx, oOp);
-			this._prepareInOperatorWithAutocomplete(oOpElem, sOpIdx, oOp);
+			if(this._hasAutocompleteAllowedValues())
+			{
+				this._prepareInOperatorWithAutocomplete(oOpElem, sOpIdx, oOp);
+			}
+			else
+			{
+				this._prepareInOperatorWithoutAutocomplete(oOpElem, sOpIdx, oOp);
+			}
+
 		},
 		_prepareInOperatorWithoutAutocomplete: function(oOpElem, sOpIdx, oOp)
 		{
 			var me = this;
-
-			if(this._hasAutocompleteAllowedValues())
-			{
-				return false;
-			}
 
 			var oOpContentElem = oOpElem.find('.sfc_opc_multichoices');
 			var oDynamicListElem = oOpElem.find('.sfc_opc_mc_items_dynamic');
@@ -208,7 +210,6 @@ $(function()
 			// Note: "keyup" event is use instead of "keydown", otherwise, the input value would not be set yet.
 			oFilterElem.find('input').on('keyup focus', function(oEvent){
 				// TODO: Move on values with up and down arrow keys; select with space or enter.
-
 				var sQuery = $(this).val();
 
 				if(sQuery === '')
@@ -245,11 +246,6 @@ $(function()
 		{
 			var me = this;
 
-			if(!this._hasAutocompleteAllowedValues())
-			{
-				return false;
-			}
-
 			var oOpContentElem = oOpElem.find('.sfc_opc_multichoices');
 			var oDynamicListElem = oOpElem.find('.sfc_opc_mc_items_dynamic');
 			var oFilterElem = oOpElem.find('.sf_filter');
@@ -267,12 +263,11 @@ $(function()
 				.appendTo(oOpContentElem);
 
 			// Events
-			// Autocomplete
+			// - Autocomplete
 			var oACXHR = null;
 			var oACTimeout = null;
 			oFilterElem.find('input').on('keyup focus', function(oEvent){
 				// TODO: Move on values with up and down arrow keys; select with space or enter.
-
 				var sQuery = $(this).val();
 
 				if(sQuery === '')
@@ -313,7 +308,7 @@ $(function()
 				}
 			});
 			//
-			// // Open search dialog
+			// // - Open search dialog
 			// oFilterElem.find('.sff_search_dialog').on('click', function(){
 			// 	// TODO: Open search dialog with right params
 			// 	alert('Not implemented yet');

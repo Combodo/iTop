@@ -84,6 +84,11 @@ $(function()
 			results_area: null,
 		},
 
+		submit: {
+			xhr: null,
+			//timeout: null,
+		},
+
 		// the constructor
 		_create: function()
 		{
@@ -861,12 +866,16 @@ $(function()
 			// TODO: Make a throttle mecanism or cancel previous call when a newer is made.
 
 			// Do submit
-			$.post(
+			if(this.submit.xhr !== null)
+			{
+				this.submit.xhr.abort();
+			}
+			this.submit.xhr = $.post(
 				this.options.endpoint,
 				oData
 			)
 				.done(function(oResponse, sStatus, oXHR){ me._onSubmitSuccess(oResponse); })
-				.fail(function(oResponse, sStatus, oXHR){ me._onSubmitFailure(oResponse); })
+				.fail(function(oResponse, sStatus, oXHR){ me._onSubmitFailure(oResponse, sStatus); })
 				.always(function(oResponse, sStatus, oXHR){ me._onSubmitAlways(oResponse); });
 		},
 		// - Called on form submit successes
@@ -875,8 +884,13 @@ $(function()
 			this.elements.results_area.html(oData);
 		},
 		// - Called on form submit failures
-		_onSubmitFailure: function(oData)
+		_onSubmitFailure: function(oData, sStatus)
 		{
+			if(sStatus === 'abort')
+			{
+				return false;
+			}
+
 			// Fallback message in case the server send back only HTML markup.
 			var oErrorElem = $(oData.responseText);
 			var sErrorMessage = (oErrorElem.text() !== '') ? oErrorElem.text() : Dict.Format('Error:XHR:Fail', '');
