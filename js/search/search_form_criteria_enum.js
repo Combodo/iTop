@@ -28,6 +28,11 @@ $(function()
 				'code': null,
 				'label': Dict.S('Enum:Undefined'),
 			},
+
+			// Autocomplete
+			'autocomplete': {
+				'xhr_throttle': 200,
+			},
 		},
 
    
@@ -85,29 +90,37 @@ $(function()
 
 			// DOM elements
 			var sOpId = oOpElem.attr('id');
-			var oOpContentElem = $('<div class="sfc_opc_multichoices"></div>');
+			var oOpContentElem = $('<div></div>')
+				.addClass('sfc_opc_multichoices');
 
 			// - Check / Uncheck all togglers
 			var sTogglerId = 'toggle_' + sOpId;
-			var oTogglersElem = $('<div class="sfc_opc_mc_toggler"></div>')
+			var oTogglersElem = $('<div></div>')
+				.addClass('sfc_opc_mc_toggler')
 				.append('<label for="' + sTogglerId + '"><input type="checkbox" id="' + sTogglerId + '" />' + Dict.S('UI:Search:Value:Toggler:CheckAllNone') + '</label>')
 				.appendTo(oOpContentElem);
 
 			// - Filter
 			var sFilterId = 'filter_' + sOpId;
 			var sFilterPlaceholder = (this._hasAutocompleteAllowedValues()) ? Dict.S('UI:Search:Value:Search:Placeholder') : Dict.S('UI:Search:Value:Filter:Placeholder');
-			var oFilterElem = $('<div class="sf_filter"></div>')
-				.append('<span class="sff_input_wrapper"><input type="text" id="' + sFilterId + '" placeholder="' + sFilterPlaceholder + '" /><span class="sff_picto sff_filter fa fa-filter"></span><span class="sff_picto sff_reset fa fa-times"></span></span>')
+			var oFilterElem = $('<div></div>')
+				.addClass('sf_filter')
+				.append('<span class="sff_input_wrapper"><input type="text" id="' + sFilterId + '" placeholder="' + sFilterPlaceholder + '" autocomplete="off" /><span class="sff_picto sff_reset fa fa-times"></span></span>')
 				.appendTo(oOpContentElem);
 
 			// - Allowed values
-			var oAllowedValuesElem = $('<div class="sfc_opc_mc_items"></div>')
+			var oAllowedValuesElem = $('<div></div>')
+				.addClass('sfc_opc_mc_items')
 				.appendTo(oOpContentElem);
 			// - Static values: Always there no matter the field constraints
-			var oStaticValuesElem = $('<div class="sfc_opc_mc_items_list sfc_opc_mc_items_static"></div>')
+			var oStaticListElem = $('<div></div>')
+				.addClass('sfc_opc_mc_items_list')
+				.addClass('sfc_opc_mc_items_static')
 				.appendTo(oAllowedValuesElem);
 			// - Dynamic values: Depends on the field constraints
-			var oDynamicValuesElem = $('<div class="sfc_opc_mc_items_list sfc_opc_mc_items_dynamic"></div>')
+			var oDynamicListElem = $('<div></div>')
+				.addClass('sfc_opc_mc_items_list')
+				.addClass('sfc_opc_mc_items_dynamic')
 				.appendTo(oAllowedValuesElem);
 
 			//   - Null value if allowed
@@ -118,49 +131,18 @@ $(function()
 			{
 				var sValCode = this.options.null_value.code;
 				var sValLabel = this.options.null_value.label;
-				var oValueElem = $('<div></div>')
-					.addClass('sfc_opc_mc_item')
-					.attr('data-value-code', sValCode)
-					.append('<label><input type="checkbox" value="' + sValCode + '"/>' + sValLabel + '</label>')
-					.appendTo(oStaticValuesElem);
-			}
-
-			//   - Regular allowed values
-			if (this._hasPreloadedAllowedValues())
-			{
-				var aSortedValues = this._sortValuesByLabel(this._getPreloadedAllowedValues());
-				for (var i in aSortedValues)
-				{
-					var sValCode = aSortedValues[i][0];
-					var sValLabel = aSortedValues[i][1];
-					var oValueElem = $('<div></div>')
-						.addClass('sfc_opc_mc_item')
-						.attr('data-value-code', sValCode)
-						.append('<label><input type="checkbox" value="'+sValCode+'"/>'+sValLabel+'</label>')
-						.appendTo(oDynamicValuesElem);
-
-					if (this._isSelectedValues(sValCode))
-					{
-						oValueElem.find(':checkbox').prop('checked', true);
-					}
-				}
-			}
-
-			// - Specific to autocomplete mode
-			if(this._hasAutocompleteAllowedValues())
-			{
-				// Remove filter picto from input
-				oFilterElem.find('.sff_filter').remove();
-
-				// Add search dialog button
-				oFilterElem
-					.append('<button type="button" class="sff_search_dialog"><span class=" fa fa-search"></span></button>')
-					.addClass('sf_with_buttons');
-
-				// Prepare "selected" values area
+				var oValueElem = this._makeListItemElement(sValLabel, sValCode);
+				oValueElem.appendTo(oStaticListElem);
 			}
 
 			// Events
+			// - Filter
+			oFilterElem.find('.sff_reset').on('click', function(){
+				oFilterElem.find('input')
+					.val('')
+					.trigger('focus');
+			});
+
 			// - Check / Uncheck all toggler
 			oTogglersElem.on('click', function(oEvent){
 				// Check / uncheck all allowed values
@@ -171,14 +153,65 @@ $(function()
 				me._apply();
 			});
 
+			// - Apply on check
+			oAllowedValuesElem.on('click', '.sfc_opc_mc_item input', function(oEvent){
+				// Prevent propagation, otherwise there will be multiple "_apply()"
+				oEvent.stopPropagation();
+
+				// Uncheck toggler
+				oTogglersElem.find('input:checkbox').prop('checked', false);
+
+				// Apply criteria
+				me._apply();
+			});
+
+			oOpElem.find('.sfc_op_content').append(oOpContentElem);
+
+			this._prepareInOperatorWithoutAutocomplete(oOpElem, sOpIdx, oOp);
+			this._prepareInOperatorWithAutocomplete(oOpElem, sOpIdx, oOp);
+		},
+		_prepareInOperatorWithoutAutocomplete: function(oOpElem, sOpIdx, oOp)
+		{
+			var me = this;
+
+			if(this._hasAutocompleteAllowedValues())
+			{
+				return false;
+			}
+
+			var oOpContentElem = oOpElem.find('.sfc_opc_multichoices');
+			var oDynamicListElem = oOpElem.find('.sfc_opc_mc_items_dynamic');
+			var oFilterElem = oOpElem.find('.sf_filter');
+
+			// DOM elements
+			// - Filter
+			oFilterElem.find('.sff_input_wrapper')
+				.append('<span class="sff_picto sff_filter fa fa-filter"></span>');
+
+			// - Allowed values
+			var aSortedValues = this._sortValuesByLabel(this._getPreloadedAllowedValues());
+			for (var i in aSortedValues)
+			{
+				var sValCode = aSortedValues[i][0];
+				var sValLabel = aSortedValues[i][1];
+				var oValueElem = this._makeListItemElement(sValLabel, sValCode);
+				oValueElem.appendTo(oDynamicListElem);
+
+				if (this._isSelectedValues(sValCode))
+				{
+					oValueElem.find(':checkbox').prop('checked', true);
+				}
+			}
+
+			// Events
 			// - Filter
 			// Note: "keyup" event is use instead of "keydown", otherwise, the input value would not be set yet.
 			oFilterElem.find('input').on('keyup focus', function(oEvent){
 				// TODO: Move on values with up and down arrow keys; select with space or enter.
 
-				var sFilter = $(this).val();
+				var sQuery = $(this).val();
 
-				if(sFilter === '')
+				if(sQuery === '')
 				{
 					oOpContentElem.find('.sfc_opc_mc_item').show();
 					oFilterElem.find('.sff_filter').show();
@@ -187,7 +220,7 @@ $(function()
 				else
 				{
 					oOpContentElem.find('.sfc_opc_mc_item').each(function(){
-						var oRegExp = new RegExp(sFilter, 'ig');
+						var oRegExp = new RegExp(sQuery, 'ig');
 						var sValue = $(this).find('input').val();
 						var sLabel = $(this).text();
 
@@ -207,75 +240,84 @@ $(function()
 			oFilterElem.find('.sff_filter').on('click', function(){
 				oFilterElem.find('input').trigger('focus');
 			});
-			oFilterElem.find('.sff_reset').on('click', function(){
-				oFilterElem.find('input')
-					.val('')
-					.trigger('focus');
-			});
+		},
+		_prepareInOperatorWithAutocomplete: function(oOpElem, sOpIdx, oOp)
+		{
+			var me = this;
 
-			// - Apply on check
-			oAllowedValuesElem.find('.sfc_opc_mc_item input').on('click', function(oEvent){
-				// Prevent propagation, otherwise there will be multiple "_apply()"
-				oEvent.stopPropagation();
-
-				// Uncheck toggler
-				oTogglersElem.find('input:checkbox').prop('checked', false);
-
-				// Apply criteria
-				me._apply();
-			});
-
-			// - Specific to autocomplete mode
-			// TODO: We NEED to refactor all of this for a better integration. Most might be in the main widget as any widget could use XHR helpers.
-			if(this._hasAutocompleteAllowedValues())
+			if(!this._hasAutocompleteAllowedValues())
 			{
-				// // Autocomplete
-				// var oACXHR = null;
-				// var oACTimeout = null;
-				// oFilterElem.find('input').off('keyup focus').on('keyup focus', function(oEvent){
-				// 	// TODO: Move on values with up and down arrow keys; select with space or enter.
-				//
-				// 	var sFilter = $(this).val();
-				//
-				// 	if(sFilter === '')
-				// 	{
-				// 		oOpContentElem.find('.sfc_opc_mc_item').html('');
-				// 		oFilterElem.find('.sff_reset').hide();
-				// 	}
-				// 	else
-				// 	{
-				// 		oOpContentElem.find('.sfc_opc_mc_item').html('TOTR: Wait');
-				// 		if(oACXHR !== null)
-				// 		{
-				// 			oACXHR.abort();
-				// 		}
-				// 		oACXHR = $.post(
-				// 			AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'),
-				// 			{
-				// 				sTargetClass: me.options.field.class,
-				// 				//iInputId: me.id,
-				// 				//iObjectId: iObjectId,
-				// 				sAttCode: me.options.field.code,
-				// 				bSearchMode: true,
-				// 				operation: 'getObjectName'
-				// 			}
-				// 		)
-				// 			.done(function(oResponse, sStatus, oXHR){ console.log('ok', oResponse); })
-				// 			.fail(function(oResponse, sStatus, oXHR){ console.log('fail', oResponse); })
-				// 			.always(function(oResponse, sStatus, oXHR){ console.log('always', oResponse); });
-				//
-				// 		oFilterElem.find('.sff_reset').show();
-				// 	}
-				// });
-				//
-				// // Open search dialog
-				// oFilterElem.find('.sff_search_dialog').on('click', function(){
-				// 	// TODO: Open search dialog with right params
-				// 	alert('Not implemented yet');
-				// });
+				return false;
 			}
 
-			oOpElem.find('.sfc_op_content').append(oOpContentElem);
+			var oOpContentElem = oOpElem.find('.sfc_opc_multichoices');
+			var oDynamicListElem = oOpElem.find('.sfc_opc_mc_items_dynamic');
+			var oFilterElem = oOpElem.find('.sf_filter');
+
+			// DOM
+			// - Add search dialog button
+			oFilterElem
+				.append('<button type="button" class="sff_search_dialog"><span class=" fa fa-search"></span></button>')
+				.addClass('sf_with_buttons');
+
+			// - Prepare "selected" values area
+			var oSelectedElem = $('<div></div>')
+				.addClass('sfc_opc_mc_items')
+				.addClass('sfc_opc_mc_items_selected')
+				.appendTo(oOpContentElem);
+
+			// Events
+			// Autocomplete
+			var oACXHR = null;
+			var oACTimeout = null;
+			oFilterElem.find('input').on('keyup focus', function(oEvent){
+				// TODO: Move on values with up and down arrow keys; select with space or enter.
+
+				var sQuery = $(this).val();
+
+				if(sQuery === '')
+				{
+					// TODO: Remove items and show placeholder
+					oDynamicListElem.html('TOTR: Start typing for possible values.');
+
+					oFilterElem.find('.sff_reset').hide();
+				}
+				else
+				{
+					clearTimeout(oACTimeout);
+					oACTimeout = setTimeout(function(){
+						// Show loader
+						oDynamicListElem.html('TOTR: Please wait...');
+
+						if(oACXHR !== null)
+						{
+							oACXHR.abort();
+						}
+						oACXHR = $.post(
+							AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'),
+							{
+								sTargetClass: me.options.field.target_class,
+								sFilter: 'SELECT ' + me.options.field.target_class,
+								q: sQuery,
+								bSearchMode: 'true',
+								sOutputFormat: 'json',
+								operation: 'ac_extkey',
+							}
+							)
+							.done(function(oResponse, sStatus, oXHR){ me._onACSearchSuccess(oResponse, oDynamicListElem); })
+							.fail(function(oResponse, sStatus, oXHR){  me._onACSearchFail(oResponse, sStatus); })
+							.always(function(oResponse, sStatus, oXHR){ me._onACSearchAlways(); });
+
+						oFilterElem.find('.sff_reset').show();
+					}, me.options.autocomplete.xhr_throttle);
+				}
+			});
+			//
+			// // Open search dialog
+			// oFilterElem.find('.sff_search_dialog').on('click', function(){
+			// 	// TODO: Open search dialog with right params
+			// 	alert('Not implemented yet');
+			// });
 		},
 		_setTitle: function(sTitle)
 		{
@@ -352,6 +394,32 @@ $(function()
 		},
 
 
+		// Autocomplete callbacks
+		_onACSearchSuccess: function(oResponse, oListElem)
+		{
+			// TODO: Show results
+			console.log('ok', oResponse);
+			for(var iKey in oResponse)
+			{
+				var oValueElem = this._makeListItemElement(iKey, oResponse[iKey]);
+				oValueElem.appendTo(oListElem);
+			}
+
+		},
+		_onACSearchFail: function(oResponse, sStatus)
+		{
+			if(sStatus !== 'abort')
+			{
+				this.element.find('.sfc_opc_mc_items_dynamic').html('TOTR: Error.');
+			}
+		},
+		_onACSearchAlways: function()
+		{
+			// TODO: Remove loader
+			this._trace('TODO: Remove loader');
+		},
+
+
 		// Value helpers
 		// - Return true if sValue is among the selected values "codes"
 		_isSelectedValues: function(sValue)
@@ -407,6 +475,16 @@ $(function()
 			});
 
 			return aSortable;
-		}
+		},
+		// - Make a jQuery element for a list item
+		_makeListItemElement: function(sLabel, sValue)
+		{
+			var oItemElem = $('<div></div>')
+				.addClass('sfc_opc_mc_item')
+				.attr('data-value-code', sValue)
+				.append('<label><input type="checkbox" value="'+sValue+'"/>'+sLabel+'</label>');
+
+			return oItemElem;
+		},
 	});
 });

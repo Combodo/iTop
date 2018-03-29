@@ -709,6 +709,7 @@ $(function()
 					class: oFieldDef.class,
 					class_alias: oFieldDef.class_alias,
 					code: oFieldDef.code,
+					target_class: oFieldDef.target_class,
 					widget: oFieldDef.widget,
 					allowed_values: oFieldDef.allowed_values,
 					is_null_allowed: oFieldDef.is_null_allowed,

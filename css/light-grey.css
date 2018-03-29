@@ -942,7 +942,7 @@ input.dp-applied {
   width: 90px;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_equals .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_contains .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_starts_with .sfc_op_content input, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_ends_with .sfc_op_content input {
-  width: 130px;
+  width: 160px;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_apply, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_cancel {
   margin-top: 8px;

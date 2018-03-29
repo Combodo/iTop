@@ -422,6 +422,7 @@ try
 			$sJson = utils::ReadParam('json', '', false, 'raw_data');
 			$sContains = utils::ReadParam('q', '', false, 'raw_data');
 			$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
+			$sOutputFormat = utils::ReadParam('sOutputFormat', UIExtKeyWidget::ENUM_OUTPUT_FORMAT_CSV, false, 'raw_data');
 			if ($sContains != '')
 			{
 				if (!empty($sJson))
@@ -435,7 +436,7 @@ try
 					$oObj = null;
 				}
 				$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, '', $bSearchMode);
-				$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains);
+				$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains, $sOutputFormat);
 			}
 			break;
 

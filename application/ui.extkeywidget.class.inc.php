@@ -63,6 +63,9 @@ require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 class UIExtKeyWidget
 {
+	const ENUM_OUTPUT_FORMAT_CSV = 'csv';
+	const ENUM_OUTPUT_FORMAT_JSON = 'json';
+
 	protected $iId;
 	protected $sTargetClass;
 	protected $sAttCode;
@@ -407,7 +410,7 @@ EOF
 	 * @param DBObject $oObj The current object for the OQL context
 	 * @param string $sContains The text of the autocomplete to filter the results
 	 */
-	public function AutoComplete(WebPage $oP, $sFilter, $oObj = null, $sContains)
+	public function AutoComplete(WebPage $oP, $sFilter, $oObj = null, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV)
 	{
 		if (is_null($sFilter))
 		{
@@ -420,9 +423,24 @@ EOF
 		$oValuesSet = new ValueSetObjects($sFilter, 'friendlyname'); // Bypass GetName() to avoid the encoding by htmlentities
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$aValues = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains);
-		foreach($aValues as $sKey => $sFriendlyName)
+
+		switch($sOutputFormat)
 		{
-			$oP->add(trim($sFriendlyName)."\t".$sKey."\n");
+			case static::ENUM_OUTPUT_FORMAT_JSON:
+				// Array flip to preserve values order on the label, otherwise the JS will re-order regarding the keys.
+				$oP->SetContentType('application/json');
+				$oP->add(json_encode(array_flip($aValues)));
+				break;
+
+			case static::ENUM_OUTPUT_FORMAT_CSV:
+				foreach($aValues as $sKey => $sFriendlyName)
+				{
+					$oP->add(trim($sFriendlyName)."\t".$sKey."\n");
+				}
+				break;
+			default:
+				throw new Exception('Invalid output format, "'.$sOutputFormat.'" given.');
+				break;
 		}
 	}
 
