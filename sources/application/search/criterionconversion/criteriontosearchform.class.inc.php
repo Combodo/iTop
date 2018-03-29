@@ -80,24 +80,28 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			}
 			$aCriteria['is_removable'] = $bIsRemovable;
 
-			// Check criteria validity
-			if (!array_key_exists('ref', $aCriteria) || !array_key_exists($aCriteria['ref'], $aAllFields))
+			if (isset($aCriteria['ref']))
 			{
-
-				$aCriteria['label'] = Dict::S('UI:Search:Criteria:Raw:Filtered');
-				if (array_key_exists('ref', $aCriteria))
+				$aRef = explode('.', $aCriteria['ref']);
+				if (isset($aClasses[$aRef[0]]))
 				{
-					$aRef = explode('.', $aCriteria['ref']);
-					if (isset($aClasses[$aRef[0]]))
+					$sClass = $aClasses[$aRef[0]];
+					$aCriteria['class'] = $sClass;
+				}
+			}
+
+			// Check criteria validity
+			if (!isset($aCriteria['ref']) || !isset($aAllFields[$aCriteria['ref']]))
+			{
+				$aCriteria['label'] = Dict::S('UI:Search:Criteria:Raw:Filtered');
+				if (isset($aCriteria['ref']))
+				{
+					try
 					{
-						$sClass = $aClasses[$aRef[0]];
-						try
-						{
-							$aCriteria['label'] = Dict::Format('UI:Search:Criteria:Raw:FilteredOn', MetaModel::GetName($sClass));
-						}
-						catch (Exception $e)
-						{
-						}
+						$aCriteria['label'] = Dict::Format('UI:Search:Criteria:Raw:FilteredOn', MetaModel::GetName($sClass));
+					}
+					catch (Exception $e)
+					{
 					}
 				}
 			}

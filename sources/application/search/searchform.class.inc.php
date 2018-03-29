@@ -137,7 +137,12 @@ class SearchForm
 		$aFields = $this->GetFields($oSet);
 		$oSearch = $oSet->GetFilter();
 		$aCriterion = $this->GetCriterion($oSearch, $aFields, $aArgs, $bIsRemovable);
-
+		$aClasses = $oSearch->GetSelectedClasses();
+		$sClassAlias = '';
+		foreach($aClasses as $sAlias => $sClass)
+		{
+			$sClassAlias = $sAlias;
+		}
 
 		$oBaseSearch = $oSearch->DeepClone();
 		$oBaseSearch->ResetCondition();
@@ -195,6 +200,7 @@ class SearchForm
 				'fields' => $aFields,
 				'criterion' => $aCriterion,
 				'class_name' => $sClassName,
+				'class_alias' => $sClassAlias,
 				'base_oql' => $sBaseOQL,
 			),
 		);

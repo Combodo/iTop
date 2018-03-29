@@ -1043,6 +1043,7 @@ class FieldExpression extends UnaryExpression
 		return array(
 			'widget' => $sSearchType,
 			'ref' => $this->GetParent().'.'.$this->GetName(),
+			'class_alias' => $this->GetParent(),
 		);
 	}
 }
