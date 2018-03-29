@@ -376,6 +376,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Button:SimulateImport' => 'Simular la Importación',
 	'UI:Button:Test' => 'Probar',
 	'UI:Button:Evaluate' => 'Evaluar',
+	'UI:Button:Evaluate:Title' => 'Evaluar (Ctrl+Enter)',
 	'UI:Button:AddObject' => 'Agregar',
 	'UI:Button:BrowseObjects' => 'Examinar',
 	'UI:Button:Add' => 'Agregar ',

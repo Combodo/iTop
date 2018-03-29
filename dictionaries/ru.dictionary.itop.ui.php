@@ -350,6 +350,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:SimulateImport' => ' Эмулировать импорт ',
 	'UI:Button:Test' => 'Тестировать!',
 	'UI:Button:Evaluate' => ' Оценка ',
+	'UI:Button:Evaluate:Title' => ' Оценка (Ctrl+Enter)',
 	'UI:Button:AddObject' => ' Добавить... ',
 	'UI:Button:BrowseObjects' => ' Обзор... ',
 	'UI:Button:Add' => ' Добавить ',

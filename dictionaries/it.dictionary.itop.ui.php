@@ -368,6 +368,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Button:SimulateImport' => ' Simula l\'Importazione ~~',
 	'UI:Button:Test' => 'Testa!',
 	'UI:Button:Evaluate' => ' Valuta',
+	'UI:Button:Evaluate:Title' => ' Valuta (Ctrl+Enter)',
 	'UI:Button:AddObject' => ' Aggiungi... ~~',
 	'UI:Button:BrowseObjects' => ' Sfoglia... ~~',
 	'UI:Button:Add' => ' Aggiungi ~~',

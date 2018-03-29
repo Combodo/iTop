@@ -239,6 +239,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Button:SimulateImport' => ' Import szimulálása',
 	'UI:Button:Test' => 'Teszt!',
 	'UI:Button:Evaluate' => ' Értékelés',
+	'UI:Button:Evaluate:Title' => ' Értékelés (Ctrl+Enter)',
 	'UI:Button:AddObject' => ' Hozzáad...',
 	'UI:Button:BrowseObjects' => ' Böngészés...',
 	'UI:Button:Add' => ' Hozzáad ',

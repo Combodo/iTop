@@ -368,6 +368,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Button:SimulateImport' => ' Simular a importação ',
 	'UI:Button:Test' => 'Testar!',
 	'UI:Button:Evaluate' => ' Avaliar ',
+	'UI:Button:Evaluate:Title' => ' Avaliar (Ctrl+Enter)',
 	'UI:Button:AddObject' => ' Adicionar... ',
 	'UI:Button:BrowseObjects' => ' Navegar... ',
 	'UI:Button:Add' => ' Adicionar ',

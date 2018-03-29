@@ -375,6 +375,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Button:SimulateImport' => ' Simuleer de Import ',
 	'UI:Button:Test' => 'Test!',
 	'UI:Button:Evaluate' => ' Evalueer ',
+	'UI:Button:Evaluate:Title' => ' Evalueer (Ctrl+Enter)',
 	'UI:Button:AddObject' => ' Voeg toe... ',
 	'UI:Button:BrowseObjects' => ' Browse... ',
 	'UI:Button:Add' => ' Voeg toe ',

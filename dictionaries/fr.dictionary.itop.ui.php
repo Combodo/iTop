@@ -258,6 +258,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:SimulateImport' => ' Simuler l\'import ',
 	'UI:Button:Test' => 'Tester !',
 	'UI:Button:Evaluate' => ' Exécuter ',
+	'UI:Button:Evaluate:Title' => ' Exécuter (Ctrl+Entrée)',
 	'UI:Button:AddObject' => ' Ajouter... ',
 	'UI:Button:BrowseObjects' => ' Naviguer... ',
 	'UI:Button:Add' => ' Ajouter ',

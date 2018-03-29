@@ -347,6 +347,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Button:SimulateImport' => ' 激活导入 ',
 	'UI:Button:Test' => '测试!',
 	'UI:Button:Evaluate' => ' 评价 ',
+	'UI:Button:Evaluate:Title' => ' 评价 (Ctrl+Enter)',
 	'UI:Button:AddObject' => ' 添加... ',
 	'UI:Button:BrowseObjects' => ' 浏览... ',
 	'UI:Button:Add' => ' 添加 ',

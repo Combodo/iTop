@@ -190,7 +190,7 @@ EOF
 		$oP->add("</div>\n"); 
 	}
 
-	$oP->add("<input type=\"submit\" value=\"".Dict::S('UI:Button:Evaluate')."\">\n");
+	$oP->add("<input type=\"submit\" value=\"".Dict::S('UI:Button:Evaluate')."\" title=\"".Dict::S('UI:Button:Evaluate:Title')."\">\n");
 	$oP->add($oAppContext->GetForForm());
 	$oP->add("</form>\n");
 

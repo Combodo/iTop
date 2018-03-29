@@ -376,6 +376,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'UI:Button:SimulateImport' => ' Simulovat import ',
     'UI:Button:Test' => 'Testovat!',
     'UI:Button:Evaluate' => ' Vyhodnotit ',
+	'UI:Button:Evaluate:Title' => ' Vyhodnotit (Ctrl+Enter)',
     'UI:Button:AddObject' => ' Přidat... ',
     'UI:Button:BrowseObjects' => ' Procházet... ',
     'UI:Button:Add' => ' Přidat ',

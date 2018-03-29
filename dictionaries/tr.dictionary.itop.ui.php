@@ -348,6 +348,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Button:SimulateImport' => ' Veri alışını simule et ',
 	'UI:Button:Test' => 'Test!',
 	'UI:Button:Evaluate' => ' Değerlendir ',
+	'UI:Button:Evaluate:Title' => ' Değerlendir (Ctrl+Enter)',
 	'UI:Button:AddObject' => ' Ekle... ',
 	'UI:Button:BrowseObjects' => ' Listele... ',
 	'UI:Button:Add' => ' Ekle ',

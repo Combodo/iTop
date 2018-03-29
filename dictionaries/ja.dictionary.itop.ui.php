@@ -254,6 +254,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Button:SimulateImport' => ' インポートをシュミレート ',
 	'UI:Button:Test' => 'テスト実行!',
 	'UI:Button:Evaluate' => ' 評価 ',
+	'UI:Button:Evaluate:Title' => ' 評価 (Ctrl+Enter)',
 	'UI:Button:AddObject' => ' 追加...',
 	'UI:Button:BrowseObjects' => 'ブラウズ...',
 	'UI:Button:Add' => ' 追加 ',

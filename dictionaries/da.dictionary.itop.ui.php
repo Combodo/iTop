@@ -254,6 +254,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Button:SimulateImport' => ' Simuler Importen ',
 	'UI:Button:Test' => 'Test!',
 	'UI:Button:Evaluate' => ' Evaluér ',
+	'UI:Button:Evaluate:Title' => ' Evaluér (Ctrl+Enter)',
 	'UI:Button:AddObject' => ' Tilføj... ',
 	'UI:Button:BrowseObjects' => ' Gennemse... ',
 	'UI:Button:Add' => ' Tilføj ',
