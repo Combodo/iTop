@@ -323,7 +323,7 @@ class SearchForm
 			$oSet = new DBObjectSet($oSearch);
 			if ($oSet->Count() > MetaModel::GetConfig()->Get('max_combo_length'))
 			{
-				return array('autocomplete' => true);
+				return array('autocomplete' => true, 'target_class' => $sTargetClass);
 			}
 		}
 		else
@@ -333,7 +333,17 @@ class SearchForm
 				$oSet = $oAttrDef->GetAllowedValuesAsObjectSet();
 				if ($oSet->Count() > MetaModel::GetConfig()->Get('max_combo_length'))
 				{
-					return array('autocomplete' => true);
+
+					if (method_exists($oAttrDef, 'GetTargetClass'))
+					{
+						$sTargetClass = $oAttrDef->GetTargetClass();
+					}
+					else
+					{
+						$sTargetClass = $oAttrDef->GetHostClass();
+					}
+
+					return array('autocomplete' => true, 'target_class' => $sTargetClass);
 				}
 			}
 		}
