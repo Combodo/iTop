@@ -307,11 +307,6 @@ class SearchForm
 	 */
 	public static function GetFieldAllowedValues($oAttrDef)
 	{
-		// better than MetaModel::GetConfig()->Get('max_combo_length')
-		// changing this value can introduce weird behaviour
-		static $iMaxComboLength = 50;
-		$aValues = array();
-
 		if ($oAttrDef->IsExternalKey(EXTKEY_ABSOLUTE))
 		{
 			$sTargetClass = $oAttrDef->GetTargetClass();
@@ -326,13 +321,9 @@ class SearchForm
 			}
 			$oSearch->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 			$oSet = new DBObjectSet($oSearch);
-			if ($oSet->Count() > $iMaxComboLength)
-			{
-				return array('autocomplete' => true);
-			}
 			if ($oSet->Count() > MetaModel::GetConfig()->Get('max_combo_length'))
 			{
-				$aValues['autocomplete'] = true;
+				return array('autocomplete' => true);
 			}
 		}
 		else
@@ -340,20 +331,14 @@ class SearchForm
 			if (method_exists($oAttrDef, 'GetAllowedValuesAsObjectSet'))
 			{
 				$oSet = $oAttrDef->GetAllowedValuesAsObjectSet();
-				if ($oSet->Count() > $iMaxComboLength)
-				{
-					return array('autocomplete' => true);
-				}
 				if ($oSet->Count() > MetaModel::GetConfig()->Get('max_combo_length'))
 				{
-					$aValues['autocomplete'] = true;
+					return array('autocomplete' => true);
 				}
 			}
 		}
 
-		$aValues['values'] = $oAttrDef->GetAllowedValues();
-
-		return $aValues;
+		return array('values' => $oAttrDef->GetAllowedValues());
 	}
 
 	/**
