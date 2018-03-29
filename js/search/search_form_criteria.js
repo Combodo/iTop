@@ -189,16 +189,14 @@ $(function()
 			}
 
 			// Focus on right input
-			var oOpElemToFocus;
-			if(this.element.find('.sfc_form_group').hasClass('advanced'))
+			var oOpElemRadioChecked = this.element.find('.sfc_fg_operator .sfc_op_radio:checked');
+
+			if (!oOpElemRadioChecked.is(':visible'))
 			{
-				oOpElemToFocus = this.element.find('.sfc_fg_operator .sfc_op_radio:checked').closest('.sfc_fg_operator');
+				this.element.find('.sfc_form_group').addClass('advanced');
 			}
-			else
-			{
-				oOpElemToFocus = this.element.find('.sfc_fg_operator:first');
-			}
-			oOpElemToFocus.find('.sfc_op_content input[type="text"]:first').filter(':not([data-no-auto-focus])').trigger('click').trigger('focus');
+
+			oOpElemRadioChecked.closest('.sfc_fg_operator').find('.sfc_op_content input[type="text"]:first').filter(':not([data-no-auto-focus])').trigger('click').trigger('focus');
 		},
 		_close: function()
 		{
