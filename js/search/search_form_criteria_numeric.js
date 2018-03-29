@@ -17,11 +17,6 @@ $(function()
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Equals'),//pre-existing, label changed
 					// 'dropdown_group':1,
 				},
-				'between': {
-					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Between'),
-					'code': 'between',
-					'rank': 50,
-				},
 				'>': {
 					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:GreaterThan'),
 					'code': 'greater_than',
@@ -51,6 +46,12 @@ $(function()
 					'code': 'different',
 					'rank': 500,
 					// 'dropdown_group':1,
+				},
+
+				'between': {
+					'label': Dict.S('UI:Search:Criteria:Operator:Numeric:Between'),
+					'code': 'between',
+					'rank': 600,
 				},
 
 				'empty': {
