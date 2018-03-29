@@ -1025,6 +1025,7 @@ input.dp-applied {
   width: 88px;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_form_group.advanced .sfc_fg_operator_between {
+  margin-top: 5px;
   margin-bottom: 5px;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_between label.sfc_op_content_from_label, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_between label.sfc_op_content_until_label {
