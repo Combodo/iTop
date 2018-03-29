@@ -190,13 +190,17 @@ $(function()
 
 			// Focus on right input
 			var oOpElemRadioChecked = this.element.find('.sfc_fg_operator .sfc_op_radio:checked');
+			var oOpElemInputFirst = oOpElemRadioChecked.closest('.sfc_fg_operator').find('.sfc_op_content input[type="text"]:first');
 
-			if (!oOpElemRadioChecked.is(':visible'))
+			oOpElemInputFirst.filter(':not([data-no-auto-focus])').trigger('click').trigger('focus');
+
+			this.element.find('.sfc_form_group').removeClass('advanced');
+
+			if (!oOpElemInputFirst.is(':visible'))
 			{
 				this.element.find('.sfc_form_group').addClass('advanced');
 			}
 
-			oOpElemRadioChecked.closest('.sfc_fg_operator').find('.sfc_op_content input[type="text"]:first').filter(':not([data-no-auto-focus])').trigger('click').trigger('focus');
 		},
 		_close: function()
 		{
