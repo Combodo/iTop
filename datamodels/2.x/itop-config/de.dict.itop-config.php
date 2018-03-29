@@ -29,6 +29,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'config-edit-title' => 'Konfigurations-Editor',
 	'config-edit-intro' => 'Seien sie bei der Bearbeitung der Konfigurationsdatei sehr vorsichtig.',
 	'config-apply' => 'Anwenden',
+	'config-apply' => 'Anwenden (Ctrl+S)',
 	'config-cancel' => 'Zurücksetzen',
     'config-saved' => 'Successfully recorded.~~',
 	'config-confirm-cancel' => 'Ihre Änderungen werden nicht gespeichert.',

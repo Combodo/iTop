@@ -16,6 +16,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'config-edit-title' => 'Редактор файла конфигурации',
 	'config-edit-intro' => 'Будьте очень осторожны при редактировании файла конфигурации. В частности, могут быть отредактированы только верхние элементы (т.е. глобальная конфигурация и настройки модулей).',
 	'config-apply' => 'Применить',
+	'config-apply-title' => 'Применить (Ctrl+S)',
 	'config-cancel' => 'Сбросить',
     'config-saved' => 'Successfully recorded.~~',
 	'config-confirm-cancel' => 'Ваши изменения будут утеряны.',

@@ -12,6 +12,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'config-edit-title' => 'Configuration File Editor',
 	'config-edit-intro' => 'Be very cautious when editing the configuration file.',
 	'config-apply' => 'Apply',
+	'config-apply-title' => 'Apply (Ctrl+S)',
 	'config-cancel' => 'Reset',
     'config-saved' => 'Successfully recorded.',
 	'config-confirm-cancel' => 'Your changes will be lost.',

@@ -180,7 +180,7 @@ try
 		$oP->add("<form method=\"POST\">");
         $oP->add("<input id=\"operation\" type=\"hidden\" name=\"operation\" value=\"save\">");
 		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">");
-        $oP->add("<input id=\"submit_button\" type=\"submit\" value=\"".Dict::S('config-apply')."\"><button id=\"cancel_button\" disabled=\"disabled\" onclick=\"return ResetConfig();\">".Dict::S('config-cancel')."</button>");
+		$oP->add("<input id=\"submit_button\" type=\"submit\" value=\"".Dict::S('config-apply')."\" title=\"".Dict::S('config-apply-title')."\"><button id=\"cancel_button\" disabled=\"disabled\" onclick=\"return ResetConfig();\">".Dict::S('config-cancel')."</button>");
 		$oP->add("<input type=\"hidden\" id=\"prev_config\" name=\"prev_config\" value=\"$sOriginalConfigEscaped\">");
         $oP->add("<input type=\"hidden\"  name=\"new_config\" value=\"$sConfigEscaped\">");
         $oP->add("<div id =\"new_config\" style=\"position: absolute; top: ".$iEditorTopMargin."em; bottom: 0; left: 5px; right: 5px;\"></div>");
