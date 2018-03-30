@@ -1431,10 +1431,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s until %2$s',
 	'UI:Search:Criteria:Title:Default:BetweenDays' => '%1$s [%2$s]',
-	//   - String widget
-	'UI:Search:Criteria:Title:String:Contains' => '%1$s contains %2$s',
-	'UI:Search:Criteria:Title:String:StartsWith' => '%1$s starts with %2$s',
-	'UI:Search:Criteria:Title:String:EndsWith' => '%1$s ends with %2$s',
+	'UI:Search:Criteria:Title:Default:Contains' => '%1$s contains %2$s',
+	'UI:Search:Criteria:Title:Default:StartsWith' => '%1$s starts with %2$s',
+	'UI:Search:Criteria:Title:Default:EndsWith' => '%1$s ends with %2$s',
 	//   - Numeric widget
 //	'UI:Search:Criteria:Title:Numeric:Equals' => '%1$s equals %2$s',
 	//   - DateTime widget

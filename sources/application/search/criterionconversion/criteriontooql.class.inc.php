@@ -124,9 +124,14 @@ class CriterionToOQL extends CriterionConversionAbstract
 
 	protected static function EmptyToOql($sRef, $aCriteria)
 	{
-		if (isset($aCriteria['widget']) && ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC))
+		if (isset($aCriteria['widget']))
 		{
-			return "ISNULL({$sRef})";
+			switch ($aCriteria['widget'])
+			{
+				case AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC:
+				case AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD:
+					return "ISNULL({$sRef})";
+			}
 		}
 
 		return "({$sRef} = '')";

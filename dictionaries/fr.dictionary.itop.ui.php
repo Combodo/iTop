@@ -1216,10 +1216,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s vide',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s non vide',
 	'UI:Search:Criteria:Title:Default:Equals' => '%1$s égal %2$s',
-	//   - String widget
-	'UI:Search:Criteria:Title:String:Contains' => '%1$s contient %2$s',
-	'UI:Search:Criteria:Title:String:StartsWith' => '%1$s commence par %2$s',
-	'UI:Search:Criteria:Title:String:EndsWith' => '%1$s fini par %2$s',
+	'UI:Search:Criteria:Title:Default:Contains' => '%1$s contient %2$s',
+	'UI:Search:Criteria:Title:Default:StartsWith' => '%1$s commence par %2$s',
+	'UI:Search:Criteria:Title:Default:EndsWith' => '%1$s fini par %2$s',
 	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s est renseigné',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s n\'est pas renseigné',

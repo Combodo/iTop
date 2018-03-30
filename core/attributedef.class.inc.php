@@ -4948,8 +4948,34 @@ class AttributeHierarchicalKey extends AttributeExternalKey
  */
 class AttributeExternalField extends AttributeDefinition
 {
+	/**
+	 * Return the search widget type corresponding to this attribute
+	 *
+	 * @return string
+	 */
+	public function GetSearchType()
+	{
+		// Not necessary the external key is already present
+		if ($this->IsFriendlyName())
+		{
+			return self::SEARCH_WIDGET_TYPE_RAW;
+		}
 
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+		try
+		{
+			$oRemoteAtt = $this->GetExtAttDef();
+			if ($oRemoteAtt instanceof AttributeString)
+			{
+				return self::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD;
+			}
+		}
+		catch (CoreException $e)
+		{
+		}
+
+		return self::SEARCH_WIDGET_TYPE_RAW;
+	}
+
 
 	static public function ListExpectedParams()
 	{
@@ -5002,6 +5028,23 @@ class AttributeExternalField extends AttributeDefinition
 		}
 		return $sLabel;
 	}
+
+	public function GetLabelForSearchField()
+	{
+		$sLabel = parent::GetLabel('');
+		if (strlen($sLabel) == 0)
+		{
+			$sKeyAttCode = $this->Get("extkey_attcode");
+			$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
+			$sLabel = $oExtKeyAttDef->GetLabel($this->m_sCode);
+
+			$oRemoteAtt = $this->GetExtAttDef();
+			$sLabel .= '->'.$oRemoteAtt->GetLabel($this->m_sCode);
+		}
+
+		return $sLabel;
+	}
+
 	public function GetDescription($sDefault = null)
 	{
 		$sLabel = parent::GetDescription('');

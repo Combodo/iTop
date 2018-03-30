@@ -417,8 +417,15 @@ class SearchForm
 	{
 		if (!is_null($oAttDef) && ($oAttDef->GetSearchType() != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
 		{
-			$sLabel = $oAttDef->GetLabel();
-
+			if (method_exists($oAttDef, 'GetLabelForSearchField'))
+			{
+				$sLabel = $oAttDef->GetLabelForSearchField();
+			}
+			else
+			{
+				$sLabel = $oAttDef->GetLabel();
+			}
+			
 			if (method_exists($oAttDef, 'GetTargetClass'))
 			{
 				$sTargetClass = $oAttDef->GetTargetClass();

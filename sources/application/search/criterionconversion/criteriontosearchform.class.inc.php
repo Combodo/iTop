@@ -63,6 +63,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$aAndCriterion = array();
 		$aMappingOperatorToFunction = array(
 			AttributeDefinition::SEARCH_WIDGET_TYPE_STRING => 'TextToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD => 'ExternalFieldToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE => 'DateTimeToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME => 'DateTimeToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC => 'NumericToSearchForm',
@@ -80,6 +81,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			}
 			$aCriteria['is_removable'] = $bIsRemovable;
 
+			$sClass = '';
 			if (isset($aCriteria['ref']))
 			{
 				$aRef = explode('.', $aCriteria['ref']);
@@ -392,6 +394,46 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		switch (true)
 		{
 			case ('' == $sValue and ($sOperator == '=' or $sOperator == 'LIKE')):
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
+				break;
+			case ('' == $sValue and $sOperator == '!='):
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_NOT_EMPTY;
+				break;
+			case ($sOperator == 'LIKE' && $bStartWithPercent && $bEndWithPercent):
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_CONTAINS;
+				$sValue = substr($sValue, 1, -1);
+				$aCriteria['values'][0]['value'] = $sValue;
+				$aCriteria['values'][0]['label'] = "$sValue";
+				break;
+			case ($sOperator == 'LIKE' && $bStartWithPercent):
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_ENDS_WITH;
+				$sValue = substr($sValue, 1);
+				$aCriteria['values'][0]['value'] = $sValue;
+				$aCriteria['values'][0]['label'] = "$sValue";
+				break;
+			case ($sOperator == 'LIKE' && $bEndWithPercent):
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_STARTS_WITH;
+				$sValue = substr($sValue, 0, -1);
+				$aCriteria['values'][0]['value'] = $sValue;
+				$aCriteria['values'][0]['label'] = "$sValue";
+				break;
+		}
+
+		return $aCriteria;
+	}
+
+	protected static function ExternalFieldToSearchForm($aCriteria, $aFields)
+	{
+		$sOperator = $aCriteria['operator'];
+		$sValue = $aCriteria['values'][0]['value'];
+
+		$bStartWithPercent = substr($sValue, 0, 1) == '%' ? true : false;
+		$bEndWithPercent = substr($sValue, -1) == '%' ? true : false;
+
+		switch (true)
+		{
+			case ($sOperator == 'ISNULL'):
+			case ('' == $sValue and ($sOperator == 'LIKE')):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
 				break;
 			case ('' == $sValue and $sOperator == '!='):
