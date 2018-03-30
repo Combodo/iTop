@@ -46,10 +46,11 @@ $(function()
 
 		// Operators
 		operators: {},
-
 		// Form handler
 		handler: null,
-   
+		// Keys that should not trigger an event in filter/autocomplete inputs
+		filtered_keys: [9, 16, 17, 18, 19, 27, 33, 34, 35, 36, 37, 38, 39, 40], // Tab, Shift, Ctrl, Alt, Pause, Esc, Page Up/Down, Home, End, Left/Up/Right/Down arrows
+
 		// the constructor
 		_create: function()
 		{
@@ -637,7 +638,7 @@ $(function()
 		// - Return the allowed values from the autocomplete
 		_getAutocompleteAllowedValues: function()
 		{
-			console.log('TODO: Retrieve allowed values through autocomplete (get needle in the input)');
+			// Meant for overloading.
 		},
 		// - Return current values
 		_getValues: function()
@@ -694,6 +695,11 @@ $(function()
 			}
 
 			return aParts.join('');
+		},
+		// - Return if the given keycode is among filtered
+		_isFilteredKey: function(iKeyCode)
+		{
+			return (this.filtered_keys.indexOf(iKeyCode) >= 0);
 		},
 
 

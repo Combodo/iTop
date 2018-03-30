@@ -32,6 +32,7 @@ $(function()
 			// Autocomplete
 			'autocomplete': {
 				'xhr_throttle': 200,
+				'min_autocomplete_chars': 3, // TODO: Pass this through widget instanciation.
 			},
 		},
 
@@ -186,6 +187,8 @@ $(function()
 			var oFilterElem = oOpElem.find('.sf_filter');
 
 			// DOM elements
+			// - Check all / none toggler
+			oOpContentElem.find('.sfc_opc_mc_toggler').remove();
 			// - Filter
 			oFilterElem.find('.sff_input_wrapper')
 				.append('<span class="sff_picto sff_filter fa fa-filter"></span>');
@@ -266,14 +269,18 @@ $(function()
 			// - Autocomplete
 			var oACXHR = null;
 			var oACTimeout = null;
-			oFilterElem.find('input').on('keyup focus', function(oEvent){
+			oFilterElem.find('input').on('keyup', function(oEvent){
 				// TODO: Move on values with up and down arrow keys; select with space or enter.
-				var sQuery = $(this).val();
+				if(me._isFilteredKey(oEvent.keyCode))
+				{
+					return false;
+				}
 
-				if(sQuery === '')
+				var sQuery = $(this).val();
+				if( (sQuery === '') || (sQuery.length <= me.options.autocomplete.min_autocomplete_chars) )
 				{
 					// TODO: Remove items and show placeholder
-					oDynamicListElem.html('TOTR: Start typing for possible values.');
+					oDynamicListElem.html('<div class="sfc_opc_mc_placeholder">' + Dict.S('UI:Search:Value:Autocomplete:StartTyping') + '</div>');
 
 					oFilterElem.find('.sff_reset').hide();
 				}
@@ -282,7 +289,7 @@ $(function()
 					clearTimeout(oACTimeout);
 					oACTimeout = setTimeout(function(){
 						// Show loader
-						oDynamicListElem.html('TOTR: Please wait...');
+						oDynamicListElem.html('<div class="sfc_opc_mc_placeholder">' + Dict.S('UI:Search:Value:Autocomplete:Wait') + '</div>');
 
 						if(oACXHR !== null)
 						{
@@ -389,29 +396,43 @@ $(function()
 		},
 
 
+		// Autocomplete helpers
+
 		// Autocomplete callbacks
 		_onACSearchSuccess: function(oResponse, oListElem)
 		{
-			// TODO: Show results
-			console.log('ok', oResponse);
-			for(var iKey in oResponse)
+			if(typeof oResponse !== 'object')
 			{
-				var oValueElem = this._makeListItemElement(iKey, oResponse[iKey]);
-				oValueElem.appendTo(oListElem);
+				this._onACSearchFail(oResponse, 'unexcepted');
+				return false;
 			}
 
+			oListElem.html('');
+			if(Object.keys(oResponse).length > 0)
+			{
+				for(var iKey in oResponse)
+				{
+					var oValueElem = this._makeListItemElement(iKey, oResponse[iKey]);
+					oValueElem.appendTo(oListElem);
+				}
+			}
+			else
+			{
+				oListElem.append('<div class="sfc_opc_mc_placeholder">' + Dict.S('UI:Search:Value:Autocomplete:NoResult') + '</div>')
+			}
 		},
 		_onACSearchFail: function(oResponse, sStatus)
 		{
 			if(sStatus !== 'abort')
 			{
-				this.element.find('.sfc_opc_mc_items_dynamic').html('TOTR: Error.');
+				var sErrorMessage = Dict.Format('Error:XHR:Fail', '');
+
+				this.element.find('.sfc_opc_mc_items_dynamic').html('<div class="sfc_opc_mc_placeholder">=/</div>');
+				this.handler.triggerHandler('itop.search.criteria.error_occured', sErrorMessage);
 			}
 		},
 		_onACSearchAlways: function()
 		{
-			// TODO: Remove loader
-			this._trace('TODO: Remove loader');
 		},
 
 

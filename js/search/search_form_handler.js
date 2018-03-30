@@ -161,6 +161,9 @@ $(function()
 			this.element.on('itop.search.criteria.removed', function(oEvent, oData){
 				me._onCriteriaRemoved(oData);
 			});
+			this.element.on('itop.search.criteria.error_occured', function(oEvent, oData){
+				me._onCriteriaErrorOccured(oData);
+			});
 		},
 		// - Update search option of the widget
 		_updateSearch: function()
@@ -747,6 +750,10 @@ $(function()
 		{
 			this._updateSearch();
 			this._submit();
+		},
+		_onCriteriaErrorOccured: function(oData)
+		{
+			this._setErrorMessage(oData);
 		},
 
 		// Field helpers

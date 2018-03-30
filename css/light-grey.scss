@@ -892,7 +892,7 @@ input.dp-applied {
 			.sfm_content{
 				position: absolute;
 				z-index: -1;
-				min-width: 100%;
+				min-width: 170px; /* 100%; */
 				left: 0px;
 				margin-top: -1px;
 			}
@@ -1033,16 +1033,23 @@ input.dp-applied {
 								overflow-y: auto;
 								margin: 0px -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
 
-								.sfc_opc_mc_item{
-									padding: 4px 8px; /* Putting back the padding remove by .sfc_opc_mc_items */
-
-									&:hover{
-										background-color: $search-criteria-box-hover-color;
+								.sfc_opc_mc_items_list{
+									.sfc_opc_mc_placeholder{
+										padding: 15px 8px;
+										font-style: italic;
+										text-align: center;
 									}
+									.sfc_opc_mc_item{
+										padding: 4px 8px; /* Putting back the padding remove by .sfc_opc_mc_items */
 
-									label{
-										display: inline-block;
-										width: 100%;
+										&:hover{
+											background-color: $search-criteria-box-hover-color;
+										}
+
+										label{
+											display: inline-block;
+											width: 100%;
+										}
 									}
 								}
 							}

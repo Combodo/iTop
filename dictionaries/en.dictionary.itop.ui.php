@@ -1392,26 +1392,6 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.',
 
-	// - Criteria operators
-	//   - Default widget
-	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty',
-	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty',
-	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals',
-	'UI:Search:Criteria:Operator:Default:Between' => 'Between',
-	//   - String widget
-	'UI:Search:Criteria:Operator:String:Contains' => 'Contains',
-	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with',
-	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with',
-	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different',  // => '≠',
-
-
-
 	// - Criteria titles
 	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty',
@@ -1438,6 +1418,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 //	'UI:Search:Criteria:Title:Numeric:Equals' => '%1$s equals %2$s',
 	//   - DateTime widget
 	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	//   - Enum widget
+	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
+	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any',
 	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined',
@@ -1445,15 +1429,33 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any',
-	//   - Enum widget
-	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
-	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
-	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any',
+
+	// - Criteria operators
+	//   - Default widget
+	'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty',
+	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty',
+	'UI:Search:Criteria:Operator:Default:Equals' => 'Equals',
+	'UI:Search:Criteria:Operator:Default:Between' => 'Between',
+	//   - String widget
+	'UI:Search:Criteria:Operator:String:Contains' => 'Contains',
+	'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with',
+	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with',
+	//   - Numeric widget
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals',  // => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater',  // => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals',  // > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less',  // => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals',  // > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different',  // => '≠',
 
 	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...',
 	'UI:Search:Value:Search:Placeholder' => 'Search...',
+	'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.',
+	'UI:Search:Value:Autocomplete:Wait' => 'Please wait...',
+	'UI:Search:Value:Autocomplete:NoResult' => 'No result.',
 	'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none',
+	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none filtered',
 
 	// - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'From',
