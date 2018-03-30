@@ -176,6 +176,12 @@ class SearchForm
 			$bOpen = $aExtraParams['open'];
 		}
 
+		$sDebug = utils::ReadParam('debug', 'false', false, 'parameter');
+		if ($sDebug == 'true')
+		{
+			$aListParams['debug'] = 'true';
+		}
+
 		$aDaysMin = array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
 			Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min'));
 		$aMonthsShort = array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'),

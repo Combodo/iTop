@@ -63,6 +63,14 @@ try
 		$sHiddenCriteria = '';
 	}
 	$oFilter = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion'], $sHiddenCriteria);
+
+	if (isset($aListParams['debug']))
+	{
+		$sOQL = $oFilter->ToOQL();
+		$oPage->add("<div class=\"header_message message_info\">$sOQL</div>\n");
+	}
+
+	//IssueLog::Info('Search OQL: "'.$oFilter->ToOQL().'"');
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
 
 	foreach($aListParams as $key => $value)
@@ -90,14 +98,11 @@ try
 			$aExtraParams['query_params'] = array('this' => $oObj);
 		}
 
-
 //        // Current extkey value, so we can display event if it is not available anymore (eg. archived).
 //        $iCurrentExtKeyId = (is_null($oObj)) ? 0 : $oObj->Get($this->sAttCode);
 //        $aExtraParams['current_extkey_id'] = $iCurrentExtKeyId;
 
 	}
-
-
 
 	$aExtraParams['display_limit'] = true;
 	$aExtraParams['truncated'] = true;
@@ -109,6 +114,7 @@ try
 	{
 		$oDisplayBlock->RenderContent($oPage, $aExtraParams);
 	}
+
 
 	$oPage->output();
 
