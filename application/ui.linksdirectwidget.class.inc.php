@@ -281,7 +281,6 @@ class UILinksWidgetDirect
 	 * @param $aAlreadyLinked
 	 *
 	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
 	 * @throws \OQLException
 	 */
@@ -304,7 +303,8 @@ class UILinksWidgetDirect
 			$oHiddenFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
 		}
 		$oHiddenCriteria = $oHiddenFilter->GetCriteria();
-		$sHiddenCriteria = $oHiddenCriteria->Render($oHiddenFilter->GetInternalParams());
+		$aArgs = $oHiddenFilter->GetInternalParams();
+		$sHiddenCriteria = $oHiddenCriteria->Render($aArgs);
 
 		$oLinkSetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		$valuesDef = $oLinkSetDef->GetValuesDef();
