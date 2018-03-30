@@ -580,66 +580,6 @@ $(function()
 				oButtonsElem.hide();
 			});
 		},
-
-		/**
-		 *  "add new criteria" <li /> markup
-		 *   - with checkbox, label, data-* ...
-		 *   - without event binding
-		 *
-		 * @private
-		 *
-		 * @param sFieldRef
-		 * @param aFieldCollectionsEligible
-		 *
-		 * @return jQuery detached <li />
-		 */
-		_getHtmlLiFromFieldRef: function(me, sFieldRef, aFieldCollectionsEligible) {
-			var oFieldElem = undefined;
-
-			aFieldCollectionsEligible.forEach(function (sFieldCollection) {
-				if (typeof me.options.search.fields[sFieldCollection][sFieldRef] == 'undefined')
-				{
-					return true;//if this field is not present in the Collection, let's try the next
-				}
-
-				var oField = me.options.search.fields[sFieldCollection][sFieldRef];
-				var sFieldTitleAttr = (oField.description !== undefined) ? 'title="' + oField.description + '"' : '';
-				oFieldElem = $('<li></li>')
-					.addClass('sfm_field')
-					.attr('data-field-ref', sFieldRef)
-					.append('<label ' + sFieldTitleAttr + '><input type="checkbox" value="' + sFieldRef + '" />' + oField.label + '</label>')
-			});
-
-			if (undefined == oFieldElem)
-			{
-				me._trace('no sFieldRef in given collection', {"sFieldRef":sFieldRef, "aFieldCollectionsEligible":aFieldCollectionsEligible});
-				return $('<!-- no sFieldRef in given collection -->');
-			}
-
-			return oFieldElem;
-		},
-
-		_refreshRecentlyUsed: function()
-		{
-			me = this;
-
-			var aHistory = me.element.search_form_handler_history("getHistory");
-			var oRecentsItemsElem = me.element.find('.sf_list_recents .sfl_items');
-
-			if (aHistory.length == 0)
-			{
-				return;
-			}
-			oRecentsItemsElem.empty();
-
-
-			aHistory.forEach(function(sFieldRef) {
-				var oFieldElem = me._getHtmlLiFromFieldRef(me, sFieldRef, ['zlist', 'others']);
-				oRecentsItemsElem.append(oFieldElem);
-			});
-
-		},
-
 		// - Prepare results area
 		_prepareResultsArea: function()
 		{
@@ -679,6 +619,44 @@ $(function()
 			}
 
 			this.elements.results_area = oResultAreaElem;
+		},
+
+		/**
+		 *  "add new criteria" <li /> markup
+		 *   - with checkbox, label, data-* ...
+		 *   - without event binding
+		 *
+		 * @private
+		 *
+		 * @param sFieldRef
+		 * @param aFieldCollectionsEligible
+		 *
+		 * @return jQuery detached <li />
+		 */
+		_getHtmlLiFromFieldRef: function(me, sFieldRef, aFieldCollectionsEligible) {
+			var oFieldElem = undefined;
+
+			aFieldCollectionsEligible.forEach(function (sFieldCollection) {
+				if (typeof me.options.search.fields[sFieldCollection][sFieldRef] == 'undefined')
+				{
+					return true;//if this field is not present in the Collection, let's try the next
+				}
+
+				var oField = me.options.search.fields[sFieldCollection][sFieldRef];
+				var sFieldTitleAttr = (oField.description !== undefined) ? 'title="' + oField.description + '"' : '';
+				oFieldElem = $('<li></li>')
+					.addClass('sfm_field')
+					.attr('data-field-ref', sFieldRef)
+					.append('<label ' + sFieldTitleAttr + '><input type="checkbox" value="' + sFieldRef + '" />' + oField.label + '</label>')
+			});
+
+			if (undefined == oFieldElem)
+			{
+				me._trace('no sFieldRef in given collection', {"sFieldRef":sFieldRef, "aFieldCollectionsEligible":aFieldCollectionsEligible});
+				return $('<!-- no sFieldRef in given collection -->');
+			}
+
+			return oFieldElem;
 		},
 
 
@@ -859,17 +837,17 @@ $(function()
 			$.extend(oListParams, this.options.list_params);
 			oData.list_params = JSON.stringify(oListParams);
 
-			// Show loader
-			this._showLoader();
-			this._cleanMessageArea();
-
-			// TODO: Make a throttle mecanism or cancel previous call when a newer is made.
-
-			// Do submit
+			// Abort pending request
 			if(this.submit.xhr !== null)
 			{
 				this.submit.xhr.abort();
 			}
+
+			// Show loader
+			this._showLoader();
+			this._cleanMessageArea();
+
+			// Do submit
 			this.submit.xhr = $.post(
 				this.options.endpoint,
 				oData
@@ -905,6 +883,26 @@ $(function()
 
 
 		// Global helpers
+		_refreshRecentlyUsed: function()
+		{
+			me = this;
+
+			var aHistory = me.element.search_form_handler_history("getHistory");
+			var oRecentsItemsElem = me.element.find('.sf_list_recents .sfl_items');
+
+			if (aHistory.length == 0)
+			{
+				return;
+			}
+			oRecentsItemsElem.empty();
+
+
+			aHistory.forEach(function(sFieldRef) {
+				var oFieldElem = me._getHtmlLiFromFieldRef(me, sFieldRef, ['zlist', 'others']);
+				oRecentsItemsElem.append(oFieldElem);
+			});
+
+		},
 		// - Show loader
 		_showLoader: function()
 		{

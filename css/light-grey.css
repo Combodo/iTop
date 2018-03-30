@@ -577,7 +577,7 @@ div.actions_menu > ul > li {
   position: absolute;
   display: none;
   border-top: 1px solid white;
-  z-index: 999;
+  z-index: 1500;
 }
 .itop_popup li ul li, #logOffBtn li ul li {
   float: none;
@@ -2151,7 +2151,7 @@ a.summary, a.summary:hover {
   position: absolute;
   display: none;
   border-top: 1px solid white;
-  z-index: 999;
+  z-index: 1500;
 }
 #DashboardMenu li ul li a:hover {
   background: #ea7d1e;
