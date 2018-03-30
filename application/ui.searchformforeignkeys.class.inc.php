@@ -30,7 +30,7 @@ class UISearchFormForeignKeys
 	{
 		$this->m_sRemoteClass = $sTargetClass;
 		$this->m_iInputId = $iInputId;
-		$this->sAttCode = $sAttCode;
+		$this->m_sAttCode = $sAttCode;
 		$this->m_sNameSuffix = $sSuffix;
 	}
 
@@ -49,30 +49,30 @@ class UISearchFormForeignKeys
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
-		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
+		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_iInputId}",
 			array(
 				'open' => $bOpen,
 				'menu' => false,
-				'table_id' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
+				'table_id' => "SearchResultsToAdd_{$this->m_iInputId}",
 				'table_id2' => 'add_'.$this->m_sAttCode,
-				'table_inner_id' => "ResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
+				'table_inner_id' => "ResultsToAdd_{$this->m_iInputId}",
 				'selection_mode' => true,
 				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
 				'query_params' => $oFilter->GetInternalParams(),
 			));
-		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
-		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
+		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_iInputId}\">\n";
+		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->m_iInputId}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
 		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
 		$sHtml .= "</div>\n";
-		$sHtml .= "<input type=\"hidden\" id=\"count_{$this->m_sAttCode}{$this->m_sNameSuffix}\" value=\"0\"/>";
-		$sHtml .= "<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('close');\">&nbsp;&nbsp;<input id=\"btn_ok_{$this->m_sAttCode}{$this->m_sNameSuffix}\" disabled=\"disabled\" type=\"button\" onclick=\"return oWidget{$this->m_iInputId}.DoAddObjects(this.id);\" value=\"".Dict::S('UI:Button:Add')."\">";
+		$sHtml .= "<input type=\"hidden\" id=\"count_{$this->m_iInputId}\" value=\"0\"/>";
+		$sHtml .= "<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_{$this->m_iInputId}').dialog('close');\">&nbsp;&nbsp;<input id=\"btn_ok_{$this->m_iInputId}\" disabled=\"disabled\" type=\"button\" onclick=\"return oWForeignKeysWidget{$this->m_iInputId}.DoAddObjects(this.id);\" value=\"".Dict::S('UI:Button:Add')."\">";
 		$sHtml .= "</div>\n";
 		$sHtml .= "</form>\n";
 		$oPage->add($sHtml);
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('option', {title:'$sTitle'});");
-		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix} form').bind('submit.uilinksWizard', oWidget{$this->m_iInputId}.SearchObjectsToAdd);");
-		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}').resize(oWidget{$this->m_iInputId}.UpdateSizes);");
+		$oPage->add_ready_script("$('#dlg_{$this->m_iInputId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWForeignKeysWidget{$this->m_iInputId}.UpdateSizes });");
+		$oPage->add_ready_script("$('#dlg_{$this->m_iInputId}').dialog('option', {title:'$sTitle'});");
+		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_iInputId} form').bind('submit.uilinksWizard', oWForeignKeysWidget{$this->m_iInputId}.SearchObjectsToAdd);");
+		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_iInputId}').resize(oWForeignKeysWidget{$this->m_iInputId}.UpdateSizes);");
 	}
 
 	/**

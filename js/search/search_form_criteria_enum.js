@@ -208,6 +208,8 @@ $(function()
 				}
 			}
 
+
+
 			// Events
 			// - Filter
 			// Note: "keyup" event is use instead of "keydown", otherwise, the input value would not be set yet.
@@ -244,6 +246,8 @@ $(function()
 			oFilterElem.find('.sff_filter').on('click', function(){
 				oFilterElem.find('input').trigger('focus');
 			});
+
+
 		},
 		_prepareInOperatorWithAutocomplete: function(oOpElem, sOpIdx, oOp)
 		{
@@ -264,6 +268,27 @@ $(function()
 				.addClass('sfc_opc_mc_items')
 				.addClass('sfc_opc_mc_items_selected')
 				.appendTo(oOpContentElem);
+
+
+			// External classes
+			var oFilterIconElem = oFilterElem.find('.sff_search_dialog').uniqueId();
+			oFilterIconElem.attr('id', oFilterIconElem.attr('id').replace(/-/g, '_'));
+			var oWForeignKeysWidgetCurrent = new SearchFormForeignKeys(
+				oFilterIconElem.attr('id'), 	// id
+				me.options.field.target_class, 	// sTargetClass
+				me.options.field.code,			// sAttCode
+				'',								// sFilter  //TODO
+				me.options.field.label			// sTitle
+			);
+			window['oWForeignKeysWidget' + oFilterIconElem.attr('id')] = oWForeignKeysWidgetCurrent;
+			oWForeignKeysWidgetCurrent.Init();
+
+			// model of similar code found in UIExtKeyWidget (you can find another on in UILinksWidget for example)
+			// oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode);
+			// $sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
+			// oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
+			// $('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
+			// $('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
 
 			// Events
 			// - Autocomplete
@@ -316,10 +341,12 @@ $(function()
 			});
 			//
 			// // - Open search dialog
-			// oFilterElem.find('.sff_search_dialog').on('click', function(){
-			// 	// TODO: Open search dialog with right params
-			// 	alert('Not implemented yet');
-			// });
+			oFilterElem.find('.sff_search_dialog').on('click', function(){
+				oWForeignKeysWidgetCurrent.ShowModalSearchForeignKeys();
+			});
+
+
+
 		},
 		_setTitle: function(sTitle)
 		{

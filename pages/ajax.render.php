@@ -31,6 +31,7 @@ require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/pdfpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
+require_once(APPROOT.'/application/ui.searchformforeignkeys.class.inc.php');
 require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'/application/datatable.class.inc.php');
 require_once(APPROOT.'/application/excelexporter.class.inc.php');
@@ -257,7 +258,8 @@ try
 			$iInputId = utils::ReadParam('iInputId', '');
 			$sSuffix = utils::ReadParam('sSuffix', '');
 			$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
-			$oWidget = new UISearchFormForeignKeys($sClass, $iInputId, $sAttCode, $sSuffix);
+			$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
+			$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId, $sAttCode, $sSuffix);
 			$oWidget->ShowModalSearchForeignKeys($oPage, $sTitle);
 			break;
 
