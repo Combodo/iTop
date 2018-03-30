@@ -250,6 +250,28 @@ try
 			$oPage->add($bRet ? 'Ok' : 'KO');
 			break;
 
+		// ui.searchformforeignkeys
+		case 'ShowModalSearchForeignKeys':
+			$oPage->SetContentType('text/html');
+			$sAttCode = utils::ReadParam('sAttCode', '');
+			$iInputId = utils::ReadParam('iInputId', '');
+			$sSuffix = utils::ReadParam('sSuffix', '');
+			$oWidget = new UISearchFormForeignKeys($sClass, $iInputId, $sAttCode, $sSuffix);
+			$oWidget->ShowModalSearchForeignKeys($oPage);
+			break;
+
+		// ui.searchformforeignkeys
+		case 'ListResultsSearchForeignKeys':
+			$oPage->SetContentType('text/html');
+			$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
+			$iInputId = utils::ReadParam('iInputId', '');
+			$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
+			$sSuffix = utils::ReadParam('sSuffix', '');
+			$sAttCode = utils::ReadParam('sAttCode', '');
+			$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId, $sAttCode, $sSuffix);
+			$oWidget->GetSearchDialog($oPage, $sTitle);
+			break;
+
 		// ui.linkswidget
 		case 'addObjects':
 			$oPage->SetContentType('text/html');
