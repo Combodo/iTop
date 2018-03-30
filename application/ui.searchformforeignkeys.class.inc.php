@@ -54,7 +54,7 @@ class UISearchFormForeignKeys
 				'open' => $bOpen,
 				'menu' => false,
 				'table_id' => "SearchResultsToAdd_{$this->m_iInputId}",
-				'table_id2' => 'add_'.$this->m_sAttCode,
+				'table_id2' => "add_{$this->m_iInputId}",
 				'table_inner_id' => "ResultsToAdd_{$this->m_iInputId}",
 				'selection_mode' => true,
 				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
@@ -65,14 +65,14 @@ class UISearchFormForeignKeys
 		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
 		$sHtml .= "</div>\n";
 		$sHtml .= "<input type=\"hidden\" id=\"count_{$this->m_iInputId}\" value=\"0\"/>";
-		$sHtml .= "<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_{$this->m_iInputId}').dialog('close');\">&nbsp;&nbsp;<input id=\"btn_ok_{$this->m_iInputId}\" disabled=\"disabled\" type=\"button\" onclick=\"return oWForeignKeysWidget{$this->m_iInputId}.DoAddObjects(this.id);\" value=\"".Dict::S('UI:Button:Add')."\">";
+		$sHtml .= "<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_{$this->m_iInputId}').dialog('close');\">&nbsp;&nbsp;<input id=\"btn_ok_{$this->m_iInputId}\" disabled=\"disabled\" type=\"button\" onclick=\"return oForeignKeysWidget{$this->m_iInputId}.DoAddObjects(this.id);\" value=\"".Dict::S('UI:Button:Add')."\">";
 		$sHtml .= "</div>\n";
 		$sHtml .= "</form>\n";
 		$oPage->add($sHtml);
-		$oPage->add_ready_script("$('#dlg_{$this->m_iInputId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWForeignKeysWidget{$this->m_iInputId}.UpdateSizes });");
+		$oPage->add_ready_script("$('#dlg_{$this->m_iInputId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oForeignKeysWidget{$this->m_iInputId}.UpdateSizes });");
 		$oPage->add_ready_script("$('#dlg_{$this->m_iInputId}').dialog('option', {title:'$sTitle'});");
-		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_iInputId} form').bind('submit.uilinksWizard', oWForeignKeysWidget{$this->m_iInputId}.SearchObjectsToAdd);");
-		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_iInputId}').resize(oWForeignKeysWidget{$this->m_iInputId}.UpdateSizes);");
+		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_iInputId} form').bind('submit.uilinksWizard', oForeignKeysWidget{$this->m_iInputId}.SearchObjectsToAdd);");
+		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_iInputId}').resize(oForeignKeysWidget{$this->m_iInputId}.UpdateSizes);");
 	}
 
 	/**
@@ -97,8 +97,8 @@ class UISearchFormForeignKeys
 		}
 
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
-		$oBlock->Display($oP, "ResultsToAdd_{$this->m_sAttCode}",
-			array('menu' => false, 'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix, 'selection_mode' => true, 'table_id' => 'add_'.$this->m_sAttCode));
+		$oBlock->Display($oP, "ResultsToAdd_{$this->m_iInputId}",
+			array('menu' => false, 'cssCount' => "#count_{$this->m_iInputId}", 'selection_mode' => true, 'table_id' => "add_{$this->m_iInputId}"));
 	}
 
 }

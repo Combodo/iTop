@@ -273,15 +273,15 @@ $(function()
 			// External classes
 			var oFilterIconElem = oFilterElem.find('.sff_search_dialog').uniqueId();
 			oFilterIconElem.attr('id', oFilterIconElem.attr('id').replace(/-/g, '_'));
-			var oWForeignKeysWidgetCurrent = new SearchFormForeignKeys(
+			var oForeignKeysWidgetCurrent = new SearchFormForeignKeys(
 				oFilterIconElem.attr('id'), 	// id
 				me.options.field.target_class, 	// sTargetClass
 				me.options.field.code,			// sAttCode
 				'',								// sFilter  //TODO
 				me.options.field.label			// sTitle
 			);
-			window['oWForeignKeysWidget' + oFilterIconElem.attr('id')] = oWForeignKeysWidgetCurrent;
-			oWForeignKeysWidgetCurrent.Init();
+			window['oForeignKeysWidget'+oFilterIconElem.attr('id')] = oForeignKeysWidgetCurrent;
+			oForeignKeysWidgetCurrent.Init();
 
 			// model of similar code found in UIExtKeyWidget (you can find another on in UILinksWidget for example)
 			// oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode);
@@ -342,7 +342,7 @@ $(function()
 			//
 			// // - Open search dialog
 			oFilterElem.find('.sff_search_dialog').on('click', function(){
-				oWForeignKeysWidgetCurrent.ShowModalSearchForeignKeys();
+				oForeignKeysWidgetCurrent.ShowModalSearchForeignKeys();
 			});
 
 

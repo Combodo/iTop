@@ -143,7 +143,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 			dlg.height($(window).height()-70);
 		}
 		var searchForm = dlg.find('div.display_block:first'); // Top search form, enclosing display_block
-		var results = $('#dr_'+me.id);
+		var results = $('#SearchResultsToAdd_'+me.id);
 		var oPadding = {};
 		var aKeys = ['top', 'right', 'bottom', 'left'];
 		for(k in aKeys)
@@ -199,7 +199,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 		theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
 		theMap.operation = 'ListResultsSearchForeignKeys'; // Override what is defined in the form itself
 		theMap.sAttCode = me.sAttCode;
-		sSearchAreaId = '#dr_'+me.id;
+		sSearchAreaId = '#SearchResultsToAdd_'+me.id;
 		//$(sSearchAreaId).html('<div style="text-align:center;width:100%;height:24px;vertical-align:middle;"><img src="../images/indicator.gif" /></div>');
 		$(sSearchAreaId).block();
 		me.UpdateButtons();
@@ -228,58 +228,55 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 		return false; // Don't submit the form, stay in the current page !
 	};
 
-	this.DoOk = function()
-	{
-		var s = $('#'+me.id+'_results').find(':input[name^=storedSelection]');
-		var iObjectId = 0;
-		if (s.length > 0)
-		{
-			iObjectId = s.val();
-		}
-		else
-		{
-			iObjectId = $('#fr_'+me.id+' input[name=selectObject]:checked').val();
-		}
-		$('#dlg_'+this.id).dialog('close');
-		$('#label_'+this.id).addClass('dlg_loading');
+	/**
+	 * @return {boolean}
+	 */
+	this.DoAddObjects = function () {
+		// Gather the parameters from the search form
+		var theMap = {};
+		var context = $('#SearchResultsToAdd_'+me.id);
+		var selectionMode = $(':input[name=selectionMode]', context);
+		if (selectionMode.length > 0) {
+			// Paginated table retrieve the mode and the exceptions
+			theMap['selectionMode'] = selectionMode.val();
+			$('#fs_SearchFormToAdd_'+me.id+' :input').each(function () {
+				theMap[this.name] = this.value;
+			});
 
-		// Query the server again to get the display name of the selected object
-		var theMap = { sTargetClass: me.sTargetClass,
-			iInputId: me.id,
-			iObjectId: iObjectId,
-			sAttCode: me.sAttCode,
-			// bSearchMode: me.bSearchMode,
-			operation: 'getObjectName'
-		};
-
-		// Make sure that we cancel any pending request before issuing another
-		// since responses may arrive in arbitrary order
-		me.StopPendingRequest();
-
-		// Run the query and get the result back directly in JSON
-		me.ajax_request = $.post( AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
-			function(data)
-			{
-				var oTemp = $('<div>'+data.name+'</div>');
-				var txt = oTemp.text(); // this causes HTML entities to be interpreted
-				$('#label_'+me.id).val(txt);
-				$('#label_'+me.id).removeClass('dlg_loading');
-				var prevValue = $('#'+me.id).val();
-				$('#'+me.id).val(iObjectId);
-				if (prevValue != iObjectId)
-				{
-					$('#'+me.id).trigger('validate');
-					$('#'+me.id).trigger('extkeychange');
-					$('#'+me.id).trigger('change');
+			$(':input[name^=storedSelection]', context).each(function () {
+				if (typeof theMap[this.name] === "undefined") {
+					theMap[this.name] = [];
 				}
-				$('#label_'+me.id).focus();
-				me.ajax_request = null;
-			},
-			'json'
+				theMap[this.name].push(this.value);
+				$(this).remove(); // Remove the selection for the next time the dialog re-opens
+			});
+		}
+
+		// Normal table, retrieve all the checked check-boxes
+		$(':checked[name^=selectObject]', context).each(
+			function (i) {
+				if ((this.name != '') && ((this.type != 'checkbox') || (this.checked))) {
+					arrayExpr = /\[\]$/;
+					if (arrayExpr.test(this.name)) {
+						// Array
+						if (typeof theMap[this.name] === "undefined") {
+							theMap[this.name] = [];
+						}
+						theMap[this.name].push(this.value);
+					}
+					else {
+						theMap[this.name] = this.value;
+					}
+				}
+				$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
+			}
 		);
 
-		return false; // Do NOT submit the form in case we are called by OnSubmit...
+		$('#dlg_'+me.id).dialog('close');
+
+		return false;
 	};
+
 
 	// Workaround for a ui.jquery limitation: if the content of
 	// the dialog contains many INPUTs, closing and opening the
@@ -290,14 +287,12 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 		// called by the dialog, so in the context 'this' points to the jQueryObject
 		if (me.emptyOnClose)
 		{
-			$('#dr_'+me.id).html(me.emptyHtml);
+			$('#SearchResultsToAdd_'+me.id).html(me.emptyHtml);
 		}
 		$('#label_'+me.id).removeClass('dlg_loading');
 		$('#label_'+me.id).focus();
 		me.ajax_request = null;
 	};
-
-
 
 	this.DoSelectObjectClass = function()
 	{
@@ -312,9 +307,6 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 		$('#ac_create_'+me.id).dialog('close');
 		me.CreateObject();
 	};
-
-
-
 
 	this.Update = function()
 	{
@@ -336,139 +328,4 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 			$('#mini_search_'+me.id).show();
 		}
 	};
-
-
-
-	this.OnFormSubmit = function()
-	{
-		var oDiv = $('#linkedset_'+me.id);
-
-		var aToBeCreated = [];
-		me.aAdded.forEach(function(oAdded){
-			if (oAdded != null)
-			{
-				aToBeCreated.push(oAdded);
-			}
-		});
-		var sToBeCreated = JSON.stringify(aToBeCreated);
-		$('<input type="hidden" name="attr_'+me.sAttCode+'_tbc">').val(sToBeCreated).appendTo(oDiv);
-	};
-	// this.HKDisplay = function()
-	// {
-	// 	var theMap = { sTargetClass: me.sTargetClass,
-	// 		sInputId: me.id,
-	// 		sFilter: me.sFilter,
-	//// 		bSearchMode: me.bSearchMode,
-	// 		sAttCode: me.sAttCode,
-	// 		value: $('#'+me.id).val()
-	// 	};
-	//
-	//// 	if (me.bSelectMode)
-	////	{
-	//// 		$('#fstatus_'+me.id).html('<img src="../images/indicator.gif" />');
-	//// 	}
-	//// 	else
-	//// 	{
-	//// 		$('#label_'+me.id).addClass('dlg_loading');
-	//// 	}
-	//	$('#label_'+me.id).addClass('dlg_loading');
-	//
-	// 	theMap['sRemoteClass'] = me.sTargetClass;
-	// 	theMap.operation = 'displayHierarchy';
-	//
-	// 	// Make sure that we cancel any pending request before issuing another
-	// 	// since responses may arrive in arbitrary order
-	// 	me.StopPendingRequest();
-	//
-	// 	// Run the query and display the results
-	// 	me.ajax_request = $.post( AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
-	// 		function(data)
-	// 		{
-	// 			$('#ac_tree_'+me.id).html(data);
-	// 			var maxHeight = $(window).height()-110;
-	// 			$('#tree_'+me.id).css({maxHeight: maxHeight});
-	// 		},
-	// 		'html'
-	// 	);
-	// };
-	//
-	// this.OnHKResize = function(event, ui)
-	// {
-	// 	var dh = ui.size.height - ui.originalSize.height;
-	// 	if (dh != 0)
-	// 	{
-	// 		var dlg_content = $('#dlg_tree_'+me.id+' .wizContainer');
-	// 		var h = dlg_content.height();
-	// 		dlg_content.height(h + dh);
-	// 		var tree = $('#tree_'+me.id);
-	// 		var h = tree.height();
-	// 		tree.height(h + dh - 1);
-	// 	}
-	// };
-	//
-	// this.OnHKClose = function()
-	// {
-	// 	if (me.bSelectMode)
-	// 	{
-	// 		$('#fstatus_'+me.id).html('');
-	// 	}
-	// 	else
-	// 	{
-	// 		$('#label_'+me.id).removeClass('dlg_loading');
-	// 	}
-	// 	$('#label_'+me.id).focus();
-	// 	$('#dlg_tree_'+me.id).dialog("destroy");
-	// 	$('#dlg_tree_'+me.id).remove();
-	// };
-	//
-	// this.DoHKOk = function()
-	// {
-	// 	iObjectId = $('#tree_'+me.id+' input[name=selectObject]:checked').val();
-	//
-	// 	$('#dlg_tree_'+me.id).dialog('close');
-	//
-	// 	// Query the server again to get the display name of the selected object
-	// 	var theMap = { sTargetClass: me.sTargetClass,
-	// 		iInputId: me.id,
-	// 		iObjectId: iObjectId,
-	// 		sAttCode: me.sAttCode,
-	//// 		bSearchMode: me.bSearchMode,
-	// 		operation: 'getObjectName'
-	// 	};
-	//
-	// 	// Make sure that we cancel any pending request before issuing another
-	// 	// since responses may arrive in arbitrary order
-	// 	me.StopPendingRequest();
-	//
-	// 	// Run the query and get the result back directly in JSON
-	// 	me.ajax_request = $.post( AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
-	// 		function(data)
-	// 		{
-	// 			var oTemp = $('<div>'+data.name+'</div>');
-	// 			var txt = oTemp.text(); // this causes HTML entities to be interpreted
-	// 			$('#label_'+me.id).val(txt);
-	// 			$('#label_'+me.id).removeClass('dlg_loading');
-	// 			var prevValue = $('#'+me.id).val();
-	// 			$('#'+me.id).val(iObjectId);
-	// 			if (prevValue != iObjectId)
-	// 			{
-	// 				$('#'+me.id).trigger('validate');
-	// 				$('#'+me.id).trigger('extkeychange');
-	// 				$('#'+me.id).trigger('change');
-	// 			}
-	// 			if ( $('#'+me.id).hasClass('multiselect'))
-	// 			{
-	// 				$('#'+me.id+' option').each(function() { this.selected = ($(this).attr('value') == iObjectId); });
-	// 				$('#'+me.id).multiselect('refresh');
-	// 			}
-	// 			$('#label_'+me.id).focus();
-	// 			me.ajax_request = null;
-	// 		},
-	// 		'json'
-	// 	);
-	//
-	// 	return false; // Do NOT submit the form in case we are called by OnSubmit...
-	// };
-
-
 }
