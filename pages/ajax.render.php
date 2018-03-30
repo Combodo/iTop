@@ -256,8 +256,9 @@ try
 			$sAttCode = utils::ReadParam('sAttCode', '');
 			$iInputId = utils::ReadParam('iInputId', '');
 			$sSuffix = utils::ReadParam('sSuffix', '');
+			$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
 			$oWidget = new UISearchFormForeignKeys($sClass, $iInputId, $sAttCode, $sSuffix);
-			$oWidget->ShowModalSearchForeignKeys($oPage);
+			$oWidget->ShowModalSearchForeignKeys($oPage, $sTitle);
 			break;
 
 		// ui.searchformforeignkeys
@@ -265,11 +266,11 @@ try
 			$oPage->SetContentType('text/html');
 			$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 			$iInputId = utils::ReadParam('iInputId', '');
-			$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
 			$sSuffix = utils::ReadParam('sSuffix', '');
 			$sAttCode = utils::ReadParam('sAttCode', '');
+			$sRemoteClass = utils::ReadParam('sRemoteClass', '', false, 'class');
 			$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId, $sAttCode, $sSuffix);
-			$oWidget->GetSearchDialog($oPage, $sTitle);
+			$oWidget->ListResultsSearchForeignKeys($oPage, $sRemoteClass);
 			break;
 
 		// ui.linkswidget

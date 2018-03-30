@@ -37,11 +37,11 @@ class UISearchFormForeignKeys
 	/**
 	 * @param WebPage $oPage
 	 *
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
+	 * @param $sTitle
+	 *
 	 * @throws \Exception
 	 */
-	public function ShowModalSearchForeignKeys($oPage)
+	public function ShowModalSearchForeignKeys($oPage, $sTitle)
 	{
 		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
@@ -70,8 +70,7 @@ class UISearchFormForeignKeys
 		$sHtml .= "</form>\n";
 		$oPage->add($sHtml);
 		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, resizeStop: oWidget{$this->m_iInputId}.UpdateSizes });");
-		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('option', {title:'".addslashes(Dict::Format('UI:AddObjectsOf_Class_LinkedWith_Class', MetaModel::GetName($this->m_sLinkedClass),
-				MetaModel::GetName($this->m_sClass)))."'});");
+		$oPage->add_ready_script("$('#dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}').dialog('option', {title:'$sTitle'});");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix} form').bind('submit.uilinksWizard', oWidget{$this->m_iInputId}.SearchObjectsToAdd);");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}').resize(oWidget{$this->m_iInputId}.UpdateSizes);");
 	}
