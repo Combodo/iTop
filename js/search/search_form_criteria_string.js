@@ -28,6 +28,11 @@ $(function()
 					'code': 'ends_with',
 					'rank': 30,
 				},
+				'REGEXP': {
+					'label': 'regexp',
+					'code': 'REGEXP',
+					'rank': 40,
+				},
 				'=': null,	// Remove this one from string widget.
 			},
 		},
