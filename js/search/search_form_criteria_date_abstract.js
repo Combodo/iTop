@@ -232,7 +232,7 @@ $(function()
 					{
 						sValue = oOpElem.find('input[name="'+oInputParam.getter_code+'"]').val();
 					}
-					else if (typeof oInputParam.getter_suffix != 'undefined')
+					else if (sLabel != "" && typeof oInputParam.getter_suffix != 'undefined')
 					{
 						sValue = sLabel + oInputParam.getter_suffix;
 					}
