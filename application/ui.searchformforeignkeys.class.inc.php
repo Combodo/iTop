@@ -26,7 +26,7 @@ require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 class UISearchFormForeignKeys
 {
-	public function __construct($sTargetClass, $iInputId, $sAttCode, $sSuffix)
+	public function __construct($sTargetClass, $iInputId = null, $sAttCode = null, $sSuffix = null)
 	{
 		$this->m_sRemoteClass = $sTargetClass;
 		$this->m_iInputId = $iInputId;
@@ -73,6 +73,21 @@ class UISearchFormForeignKeys
 		$oPage->add_ready_script("$('#dlg_{$this->m_iInputId}').dialog('option', {title:'$sTitle'});");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_iInputId} form').bind('submit.uilinksWizard', oForeignKeysWidget{$this->m_iInputId}.SearchObjectsToAdd);");
 		$oPage->add_ready_script("$('#SearchFormToAdd_{$this->m_iInputId}').resize(oForeignKeysWidget{$this->m_iInputId}.UpdateSizes);");
+	}
+
+	public function GetFullListForeignKeysFromSelection($oPage, $oFullSetFilter)
+	{
+		try
+		{
+			$aLinkedObjects = utils::ReadMultipleSelectionWithFriendlyname($oFullSetFilter);
+			$oPage->add(json_encode($aLinkedObjects));
+		}
+		catch (CoreException $e)
+		{
+			http_response_code(500);
+			$oPage->add(json_encode(array('error' => $e->GetMessage())));
+			IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
+		}
 	}
 
 	/**

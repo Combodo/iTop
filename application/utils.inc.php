@@ -413,8 +413,10 @@ class utils
 	
 	/**
 	 * Interprets the results posted by a normal or paginated list (in multiple selection mode)
+	 *
 	 * @param $oFullSetFilter DBSearch The criteria defining the whole sets of objects being selected
-	 * @return Array An arry of object IDs corresponding to the objects selected in the set
+	 *
+	 * @return Array An array of object IDs corresponding to the objects selected in the set
 	 */	
 	public static function ReadMultipleSelection($oFullSetFilter)
 	{
@@ -448,6 +450,47 @@ class utils
 		return $aSelectedObj;
 	}
 
+	/**
+	 * Interprets the results posted by a normal or paginated list (in multiple selection mode)
+	 *
+	 * @param DBSearch $oFullSetFilter The criteria defining the whole sets of objects being selected
+	 *
+	 * @return Array An array of object IDs:friendlyname corresponding to the objects selected in the set
+	 * @throws \CoreException
+	 */
+	public static function ReadMultipleSelectionWithFriendlyname($oFullSetFilter)
+	{
+		$sSelectionMode = utils::ReadParam('selectionMode', '');
+
+		if ($sSelectionMode === '')
+		{
+			throw new CoreException('selectionMode is mandatory');
+		}
+
+		// Paginated selection
+		$aSelectedIds = utils::ReadParam('storedSelection', array());
+		if ($sSelectionMode == 'positive')
+		{
+			// Only the explicitly listed items are selected
+			$oFullSetFilter->AddCondition('id', $aSelectedIds, 'IN');
+		}
+		else
+		{
+			// All items of the set are selected, except the one explicitly listed
+			$oFullSetFilter->AddCondition('id', $aSelectedIds, 'NOTIN');
+		}
+		$aSelectedObj = array();
+		$oFullSet = new DBObjectSet($oFullSetFilter);
+		$sClassAlias = $oFullSetFilter->GetClassAlias();
+		$oFullSet->OptimizeColumnLoad(array($sClassAlias => array('friendlyname'))); // We really need only the IDs but it does not work since id is not a real field
+		while ($oObj = $oFullSet->Fetch())
+		{
+			$aSelectedObj[$oObj->GetKey()] = $oObj->Get('friendlyname');
+		}
+
+		return $aSelectedObj;
+	}
+	
 	public static function GetNewTransactionId()
 	{
 		return privUITransaction::GetNewTransactionId();

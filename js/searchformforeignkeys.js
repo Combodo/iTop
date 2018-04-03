@@ -20,18 +20,20 @@
  * @param id String the dom identifier of the source input
  * @param sTargetClass
  * @param sAttCode
+ * @param oSearchWidgetElmt
  * @param sFilter
  * @param sTitle
  * @constructor
  */
-function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
+function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sFilter, sTitle)
 {
 	this.id = id;
-	this.sOriginalTargetClass = sTargetClass;
+	//this.sOriginalTargetClass = sTargetClass;
 	this.sTargetClass = sTargetClass;
 	this.sFilter = sFilter;
 	this.sTitle = sTitle;
 	this.sAttCode = sAttCode;
+	this.oSearchWidgetElmt = oSearchWidgetElmt;
 	this.emptyHtml = ''; // content to be displayed when the search results are empty (when opening the dialog)
 	this.emptyOnClose = true; // Workaround for the JQuery dialog being very slow when opening and closing if the content contains many INPUT tags
 	this.ajax_request = null;
@@ -46,7 +48,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 		$('#'+this.id+'_btnRemove').prop('disabled', false);
 
 
-		var dialog = $('<div id="dlg_'+me.id+'"></div>').appendTo(document.body);
+		$('<div id="dlg_'+me.id+'"></div>').appendTo(document.body);
 
 		// me.trace(dialog);
 
@@ -58,18 +60,6 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 			// prevent having the dlg div twice
 			$('#dlg_'+me.id).remove();
 		});
-
-		// $('#linkedset_'+me.id+' :input').off('change').on('change', function() {
-		// 	if (!($(this).hasClass('selection')) && !($(this).hasClass('select_all'))) {
-		// 		var oCheckbox = $(this).closest('tr').find('.selection');
-		// 		var iLink = oCheckbox.attr('data-link-id');
-		// 		var iUniqueId = oCheckbox.attr('data-unique-id');
-		// 		var sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
-		// 		var value = $(this).val();
-		// 		return me.OnValueChange(iLink, iUniqueId, sAttCode, value);
-		// 	}
-		// 	return true;
-		// });
 
 		$('#'+this.iInputId).closest('form').submit(function() {
 			return me.OnFormSubmit();
@@ -101,7 +91,6 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 			sAttCode: me.sAttCode,
 			iInputId: me.id,
 			sTitle: me.sTitle,
-			sAttCode: me.sAttCode,
 			sTargetClass: me.sTargetClass,
 			// bSearchMode: me.bSearchMode,
 			operation: 'ShowModalSearchForeignKeys'
@@ -154,9 +143,9 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 				oPadding[aKeys[k]] = parseInt(dlg.css('padding-'+aKeys[k]).replace('px', ''));
 			}
 		}
-		width = dlg.innerWidth() - oPadding['right'] - oPadding['left'] - 22; // 5 (margin-left) + 5 (padding-left) + 5 (padding-right) + 5 (margin-right) + 2 for rounding !
-		height = dlg.innerHeight() - oPadding['top'] - oPadding['bottom'] -22;
-		form_height = searchForm.outerHeight();
+		//var width = dlg.innerWidth() - oPadding['right'] - oPadding['left'] - 22; // 5 (margin-left) + 5 (padding-left) + 5 (padding-right) + 5 (margin-right) + 2 for rounding !
+		var height = dlg.innerHeight()-oPadding['top']-oPadding['bottom']-22;
+		var form_height = searchForm.outerHeight();
 		results.height(height - form_height - 40); // Leave some space for the buttons
 	};
 
@@ -173,7 +162,10 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 		}
 	};
 
-	this.ListResultsSearchForeignKeys = function(id)
+	/**
+	 * @return {boolean}
+	 */
+	this.ListResultsSearchForeignKeys = function ()
 	{
 		var theMap = {
 			sTargetClass: me.sTargetClass,
@@ -184,7 +176,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 
 		// Gather the parameters from the search form
 		$('#fs_'+me.id+' :input').each( function() {
-			if (this.name != '')
+			if (this.name !== '')
 			{
 				var val = $(this).val(); // supports multiselect as well
 				if (val !== null)
@@ -199,7 +191,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 		theMap['sRemoteClass'] = theMap['class'];  // swap 'class' (defined in the form) and 'remoteClass'
 		theMap.operation = 'ListResultsSearchForeignKeys'; // Override what is defined in the form itself
 		theMap.sAttCode = me.sAttCode;
-		sSearchAreaId = '#SearchResultsToAdd_'+me.id;
+		var sSearchAreaId = '#SearchResultsToAdd_'+me.id;
 		//$(sSearchAreaId).html('<div style="text-align:center;width:100%;height:24px;vertical-align:middle;"><img src="../images/indicator.gif" /></div>');
 		$(sSearchAreaId).block();
 		me.UpdateButtons();
@@ -209,7 +201,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 		me.StopPendingRequest();
 
 		// Run the query and display the results
-		me.ajax_request = $.post( AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
+		me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
 			function(data)
 			{
 				$(sSearchAreaId).html(data);
@@ -254,7 +246,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 
 		// Normal table, retrieve all the checked check-boxes
 		$(':checked[name^=selectObject]', context).each(
-			function (i) {
+			function () {
 				if ((this.name !== '') && ((this.type !== 'checkbox') || (this.checked))) {
 					var arrayExpr = /\[\]$/;
 					if (arrayExpr.test(this.name)) {
@@ -271,6 +263,26 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 				$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
 			}
 		);
+		theMap["class"] = me.sTargetClass;
+		theMap['operation'] = 'GetFullListForeignKeysFromSelection';
+		$('#busy_'+me.iInputId).html('&nbsp;<img src="../images/indicator.gif"/>');
+		// Run the query and display the results
+		$.ajax(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {
+				"data": theMap,
+				"method": "POST"
+			})
+			.done(function (data) {
+				if (Object.keys(data).length > 0) {
+					me.oSearchWidgetElmt.trigger("itop.search.criteria_enum.add_selected_values", data);
+				}
+			})
+			.fail(function (data) {
+				try {
+					console.error(data);
+				} catch (e) {
+				}
+			})
+		;
 
 		$('#dlg_'+me.id).dialog('close');
 

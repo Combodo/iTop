@@ -277,6 +277,7 @@ $(function()
 				oFilterIconElem.attr('id'), 	// id
 				me.options.field.target_class, 	// sTargetClass
 				me.options.field.code,			// sAttCode
+				me.element,						// oSearchWidgetElmt
 				'',								// sFilter  //TODO
 				me.options.field.label			// sTitle
 			);

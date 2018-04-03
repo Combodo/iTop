@@ -264,6 +264,14 @@ try
 			break;
 
 		// ui.searchformforeignkeys
+		case 'GetFullListForeignKeysFromSelection':
+			$oPage->SetContentType('application/json');
+			$oWidget = new UISearchFormForeignKeys($sClass);
+			$oFullSetFilter = new DBObjectSearch($sClass);
+			$oWidget->GetFullListForeignKeysFromSelection($oPage, $oFullSetFilter);
+			break;
+
+		// ui.searchformforeignkeys
 		case 'ListResultsSearchForeignKeys':
 			$oPage->SetContentType('text/html');
 			$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
@@ -274,6 +282,7 @@ try
 			$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId, $sAttCode, $sSuffix);
 			$oWidget->ListResultsSearchForeignKeys($oPage, $sRemoteClass);
 			break;
+
 
 		// ui.linkswidget
 		case 'addObjects':
