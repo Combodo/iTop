@@ -333,8 +333,8 @@ class UILinksWidgetDirect
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}",
 			array(
 			    'open' => $bOpen,
-				'table_id' => "SearchResultsToAdd_{$this->sInputid}",
-				'table_id2' => "add_{$this->sInputid}",
+				'result_list_outer_selector' => "SearchResultsToAdd_{$this->sInputid}",
+				'table_id' => "add_{$this->sInputid}",
 				'table_inner_id' => "ResultsToAdd_{$this->sInputid}",
 				'cssCount' => "#count_{$this->sInputid}",
 				'query_params' => $oFilter->GetInternalParams(),

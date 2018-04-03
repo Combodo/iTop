@@ -420,8 +420,8 @@ EOF
 			array(
 				'open' => $bOpen,
 				'menu' => false,
-				'table_id' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
-				'table_id2' => 'add_'.$this->m_sAttCode,
+				'result_list_outer_selector' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
+				'table_id' => 'add_'.$this->m_sAttCode,
 				'table_inner_id' => "ResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 				'selection_mode' => true,
 				'json' => $sJson,

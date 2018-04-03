@@ -91,6 +91,18 @@ class SearchForm
 			$aListParams['json'] = json_decode($sJson, true);
 		}
 
+		if (!isset($aExtraParams['result_list_outer_selector']))
+		{
+			if (isset($aExtraParams['table_id']))
+			{
+				$aExtraParams['result_list_outer_selector'] = $aExtraParams['table_id'];
+			}
+			else
+			{
+				$aExtraParams['result_list_outer_selector'] = "search_form_result_{$sSearchFormId}";
+			}
+		}
+
 
 		$aSubClasses = MetaModel::GetSubclasses($sRootClass);
 		if (count($aSubClasses) > 0)
@@ -104,7 +116,7 @@ class SearchForm
 			$aOptions[MetaModel::GetName($sClassName)] = "<option selected value=\"$sClassName\">".MetaModel::GetName($sClassName)."</options>\n";
 			ksort($aOptions);
 			$sContext = $oAppContext->GetForLink();
-			$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '{$aExtraParams['table_id']}')\">\n".implode('',
+			$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '{$aExtraParams['result_list_outer_selector']}')\">\n".implode('',
 					$aOptions)."</select>\n";
 		}
 		else
@@ -148,27 +160,18 @@ class SearchForm
 		$oBaseSearch->ResetCondition();
 		$sBaseOQL = str_replace(' WHERE 1', '', $oBaseSearch->ToOQL());
 
+
 		if (isset($aExtraParams['table_inner_id']))
 		{
 			$sDataConfigListSelector = $aExtraParams['table_inner_id'];
 		}
 		else
 		{
-			$sDataConfigListSelector = $aExtraParams['table_id'];
-		}
-
-		if (!isset($aExtraParams['table_id']))
-		{
-			$aExtraParams['table_id'] = "search_form_result_{$sSearchFormId}";
+			$sDataConfigListSelector = $aExtraParams['result_list_outer_selector'];
 		}
 		if (!isset($aExtraParams['table_inner_id']))
 		{
 			$aListParams['table_inner_id'] = "table_inner_id_{$sSearchFormId}";
-		}
-		// When table_id is different of result_list_outer_selector
-		if (isset($aExtraParams['table_id2']))
-		{
-			$aListParams['table_id'] = $aExtraParams['table_id2'];
 		}
 		$bOpen = false;
 		if (isset($aExtraParams['open']))
@@ -189,7 +192,7 @@ class SearchForm
 
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
-            'result_list_outer_selector' => "#{$aExtraParams['table_id']}",
+			'result_list_outer_selector' => "#{$aExtraParams['result_list_outer_selector']}",
 			'data_config_list_selector' => "#{$sDataConfigListSelector}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
 			'init_opened' => $bOpen,
@@ -327,9 +330,10 @@ class SearchForm
 			}
 			$oSearch->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 			$oSet = new DBObjectSet($oSearch);
-			if ($oSet->Count() > MetaModel::GetConfig()->Get('max_combo_length'))
+			$iCount = $oSet->Count();
+			if ($iCount > MetaModel::GetConfig()->Get('max_combo_length'))
 			{
-				return array('autocomplete' => true);
+				return array('autocomplete' => true, 'count' => $iCount);
 			}
 		}
 		else
@@ -337,14 +341,17 @@ class SearchForm
 			if (method_exists($oAttrDef, 'GetAllowedValuesAsObjectSet'))
 			{
 				$oSet = $oAttrDef->GetAllowedValuesAsObjectSet();
-				if ($oSet->Count() > MetaModel::GetConfig()->Get('max_combo_length'))
+				$iCount = $oSet->Count();
+				if ($iCount > MetaModel::GetConfig()->Get('max_combo_length'))
 				{
-					return array('autocomplete' => true);
+					return array('autocomplete' => true, 'count' => $iCount);
 				}
 			}
 		}
 
-		return array('values' => $oAttrDef->GetAllowedValues());
+		$aAllowedValues = $oAttrDef->GetAllowedValues();
+
+		return array('values' => $aAllowedValues, 'count' => count($aAllowedValues));
 	}
 
 	/**

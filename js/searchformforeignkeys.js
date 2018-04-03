@@ -255,8 +255,8 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, sFilter, sTitle)
 		// Normal table, retrieve all the checked check-boxes
 		$(':checked[name^=selectObject]', context).each(
 			function (i) {
-				if ((this.name != '') && ((this.type != 'checkbox') || (this.checked))) {
-					arrayExpr = /\[\]$/;
+				if ((this.name !== '') && ((this.type !== 'checkbox') || (this.checked))) {
+					var arrayExpr = /\[\]$/;
 					if (arrayExpr.test(this.name)) {
 						// Array
 						if (typeof theMap[this.name] === "undefined") {

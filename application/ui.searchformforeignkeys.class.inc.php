@@ -53,8 +53,8 @@ class UISearchFormForeignKeys
 			array(
 				'open' => $bOpen,
 				'menu' => false,
-				'table_id' => "SearchResultsToAdd_{$this->m_iInputId}",
-				'table_id2' => "add_{$this->m_iInputId}",
+				'result_list_outer_selector' => "SearchResultsToAdd_{$this->m_iInputId}",
+				'table_id' => "add_{$this->m_iInputId}",
 				'table_inner_id' => "ResultsToAdd_{$this->m_iInputId}",
 				'selection_mode' => true,
 				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
