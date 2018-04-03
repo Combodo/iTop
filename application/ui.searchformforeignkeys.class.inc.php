@@ -26,12 +26,10 @@ require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 class UISearchFormForeignKeys
 {
-	public function __construct($sTargetClass, $iInputId = null, $sAttCode = null, $sSuffix = null)
+	public function __construct($sTargetClass, $iInputId = null)
 	{
 		$this->m_sRemoteClass = $sTargetClass;
 		$this->m_iInputId = $iInputId;
-		$this->m_sAttCode = $sAttCode;
-		$this->m_sNameSuffix = $sSuffix;
 	}
 
 	/**
@@ -57,7 +55,7 @@ class UISearchFormForeignKeys
 				'table_id' => "add_{$this->m_iInputId}",
 				'table_inner_id' => "ResultsToAdd_{$this->m_iInputId}",
 				'selection_mode' => true,
-				'cssCount' => '#count_'.$this->m_sAttCode.$this->m_sNameSuffix,
+				'cssCount' => "#count_{$this->m_iInputId}",
 				'query_params' => $oFilter->GetInternalParams(),
 			));
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->m_iInputId}\">\n";
