@@ -184,6 +184,15 @@ $(function()
 			oParams.real_class = '';
 			oParams.att_code = this.options.att_code;
 			oParams.iInputId = this.id;
+
+			// Gather the already linked target objects
+			oParams.aAlreadyLinked = new Array();
+			$('#'+this.id+' .listResults td input:checkbox').each(function () {
+					iKey = parseInt(this.value, 10); // Numbers are in base 10
+					oParams.aAlreadyLinked.push(iKey);
+				}
+			);
+
 			if (this.options.oWizardHelper)
 			{
 				this.options.oWizardHelper.UpdateWizard();

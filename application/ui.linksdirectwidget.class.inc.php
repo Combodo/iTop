@@ -396,6 +396,8 @@ class UILinksWidgetDirect
 		}
 		if ($oCurrentObj != null)
 		{
+			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
+
 			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
 			$oFilter->SetInternalParams($aArgs);
 		}
