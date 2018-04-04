@@ -640,14 +640,14 @@ $(function()
 				oSelectedValuesElem.hide();
 			}
 
-			// Reorder
-			oSelectedValuesElem.html('');
-			var aSortedValues = this._sortValuesByLabel(this.options.values);
-			for(var iIdx in aSortedValues)
-			{
-				var oItemElem = this._makeListItemElement(aSortedValues[iIdx][1], aSortedValues[iIdx][0], true);
-				oItemElem.appendTo(oSelectedValuesElem);
-			}
+			// TODO: Reorder
+			// oSelectedValuesElem.html('');
+			// var aSortedValues = this._sortValuesByLabel(this.options.values);
+			// for(var iIdx in aSortedValues)
+			// {
+			// 	var oItemElem = this._makeListItemElement(aSortedValues[iIdx][1], aSortedValues[iIdx][0], true);
+			// 	oItemElem.appendTo(oSelectedValuesElem);
+			// }
 		},
 		// - Return an array of allowed values sorted by labels
 		_sortValuesByLabel: function(oSource)
