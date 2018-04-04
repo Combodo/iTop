@@ -191,6 +191,13 @@ try
 	 */
 	function ProcessCSVData(WebPage $oPage, $bSimulate = true)
 	{
+		$sClassName = utils::ReadParam('class_name', '', false, 'class');
+		// Class access right check for the import
+		if (UserRights::IsActionAllowed($sClassName, UR_ACTION_MODIFY) == UR_ALLOWED_NO)
+		{
+			throw new CoreException(Dict::S('UI:ActionNotAllowed'));
+		}
+
 		$aResult = array();
 		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
 		$sCSVDataTruncated = utils::ReadParam('csvdata_truncated', '', false, 'raw_data');
@@ -202,7 +209,6 @@ try
 		{
 			$iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
 		}
-		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
 		$aSearchFields = utils::ReadParam('search_field', array(), false, 'field_name');
 		$iCurrentStep = $bSimulate ? 4 : 5;
