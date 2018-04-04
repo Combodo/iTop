@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'CombodoRegular';
-    src: url('combodo-webfont.woff2?v=2.0') format('woff2'),
-         url('combodo-webfont.woff?v=2.0') format('woff'),
-         url('combodo-webfont.ttf?v=2.0') format('truetype');
+    src: url('combodo-webfont.woff2?v=2.1') format('woff2'),
+         url('combodo-webfont.woff?v=2.1') format('woff'),
+         url('combodo-webfont.ttf?v=2.1') format('truetype');
     font-weight: normal;
     font-style: normal;
 
@@ -186,6 +186,12 @@
 }
 .fc-closed-request:before {
   content: "3";
+}
+.fc-binoculars:before {
+  content: "B";
+}
+.fc-binoculars-alt:before {
+  content: "b";
 }
 .fc-combodo-icon-o:before {
   content: "C";
