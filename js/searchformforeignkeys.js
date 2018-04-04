@@ -227,7 +227,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		// Gather the parameters from the search form
 		var theMap = {};
 		var context = $('#SearchResultsToAdd_'+me.id);
-		var selectionMode = $(':input[name=selectionMode]', context);
+		var selectionMode = $(':input[name="selectionMode"]', context);
 		if (selectionMode.length > 0) {
 			// Paginated table retrieve the mode and the exceptions
 			theMap['selectionMode'] = selectionMode.val();
@@ -235,7 +235,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 				theMap[this.name] = this.value;
 			});
 
-			$(':input[name^=storedSelection]', context).each(function () {
+			$(':input[name="storedSelection[]"]', context).each(function () {
 				if (typeof theMap[this.name] === "undefined") {
 					theMap[this.name] = [];
 				}
@@ -245,7 +245,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		}
 
 		// Normal table, retrieve all the checked check-boxes
-		$(':checked[name^=selectObject]', context).each(
+		$(':checked[name="selectObject[]"]', context).each(
 			function () {
 				if ((this.name !== '') && ((this.type !== 'checkbox') || (this.checked))) {
 					var arrayExpr = /\[\]$/;
