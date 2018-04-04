@@ -892,7 +892,7 @@ input.dp-applied {
 			.sfm_content{
 				position: absolute;
 				z-index: -1;
-				min-width: 170px; /* 100%; */
+				min-width: 100%;
 				left: 0px;
 				margin-top: -1px;
 			}
@@ -905,6 +905,11 @@ input.dp-applied {
 			/* Non editable criteria */
 			&.locked{
 				background-color: $gray-extra-light;
+
+				.sfc_title{
+					user-select: none;
+					cursor: initial;
+				}
 			}
             /* Draft criteria (modifications not applied) */
             &.draft{
@@ -1015,6 +1020,11 @@ input.dp-applied {
 						.sfc_op_name{
 							width: 90px;
 						}
+						.sfc_op_content{
+							input[type="text"]{
+								width: 160px;
+							}
+						}
 
 						.sfc_opc_multichoices{
 							padding: 4px 8px;
@@ -1034,6 +1044,21 @@ input.dp-applied {
 								margin: 0px -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
 
 								.sfc_opc_mc_items_list{
+									&.sfc_opc_mc_items_selected{
+										position: relative;
+										padding-top: 5px;
+										margin-top: 5px;
+
+										&::before{
+											content: "";
+											position: absolute;
+											border-top: 1px solid $gray-lighter;
+											width: calc(100% - 12px); /* minus margin-left x2 */
+											margin-left: 6px;
+											top: 0px;
+										}
+									}
+
 									.sfc_opc_mc_placeholder{
 										padding: 15px 8px;
 										font-style: italic;
@@ -1051,21 +1076,6 @@ input.dp-applied {
 											width: 100%;
 										}
 									}
-								}
-							}
-						}
-
-						/* Common operators for most criteria types processing*/
-						&.sfc_fg_operator_equals,
-						&.sfc_fg_operator_contains,
-						&.sfc_fg_operator_starts_with,
-						&.sfc_fg_operator_ends_with {
-							.sfc_op_name{
-								width: 90px;
-							}
-							.sfc_op_content{
-								input{
-									width: 160px;
 								}
 							}
 						}
@@ -1139,8 +1149,6 @@ input.dp-applied {
 
 				}
 
-
-
 				&:not(.advanced) {
 					.hide_on_less {
 						display: none;
@@ -1180,11 +1188,6 @@ input.dp-applied {
 				}
 			}
 			&.search_form_criteria_numeric {
-				.sfc_fg_operator_dropdown_group {
-					select {
-						width: 88px;
-					}
-				}
 				.sfc_form_group.advanced {
 					.sfc_fg_operator_between {
 						margin-top: 5px;
@@ -1198,24 +1201,6 @@ input.dp-applied {
 							display: inline-block;
 						}
 					}
-					input {
-						width: 130px;
-					}
-				}
-				.sfc_fg_operator_equals,
-				.sfc_fg_operator_greater_than,
-				.sfc_fg_operator_greater_than_or_equals,
-				.sfc_fg_operator_less_than,
-				.sfc_fg_operator_less_than_or_equals,
-				.sfc_fg_operator_different {
-					.sfc_op_name{
-						width: 90px;
-					}
-					.sfc_op_content{
-						input{
-							width: 130px;
-						}
-					}
 				}
 			}
 
@@ -1227,15 +1212,6 @@ input.dp-applied {
 					}
 				}
 				.sfc_fg_operator_between_days {
-					//label {
-					//	&.sfc_op_content_from_time_label,
-					//	&.sfc_op_content_until_time_label,
-					//	&.sfc_op_content_from_label,
-                     //   &.sfc_op_content_until_label {
-					//		width: 90px;
-					//		display: inline-block;
-					//	}
-					//}
 					input {
 						width: 135px;
 					}

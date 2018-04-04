@@ -76,18 +76,10 @@ $(function()
 		},
 
 		// jQuery elements
-		elements:
-		{
-			message_area: null,
-			criterion_area: null,
-			more_criterion: null,
-			results_area: null,
-		},
+		elements: null,
 
-		submit: {
-			xhr: null,
-			//timeout: null,
-		},
+		// Submit properties (XHR, throttle, ...)
+		submit: null,
 
 		// the constructor
 		_create: function()
@@ -95,6 +87,17 @@ $(function()
 			var me = this;
 			
 			this.element.addClass('search_form_handler');
+
+			// Init properties (complexe type properties would be static if not initialized with a simple type variable...)
+			this.elements = {
+				message_area: null,
+				criterion_area: null,
+				more_criterion: null,
+				results_area: null,
+			};
+			this.submit = {
+				xhr: null,
+			};
 
 			//init others widgets :
 			this.element.search_form_handler_history({"itop_root_class":me.options.search.class_name});

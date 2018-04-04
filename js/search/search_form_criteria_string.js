@@ -29,8 +29,8 @@ $(function()
 					'rank': 30,
 				},
 				'REGEXP': {
-					'label': 'regexp',
-					'code': 'REGEXP',
+					'label': Dict.S('UI:Search:Criteria:Operator:String:RegExp'),
+					'code': 'reg_exp',
 					'rank': 40,
 				},
 				'=': null,	// Remove this one from string widget.

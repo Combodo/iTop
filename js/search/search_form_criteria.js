@@ -45,7 +45,7 @@ $(function()
 		},
 
 		// Operators
-		operators: {},
+		operators: null,
 		// Form handler
 		handler: null,
 		// Keys that should not trigger an event in filter/autocomplete inputs
@@ -57,6 +57,9 @@ $(function()
 			var me = this;
 			
 			this.element.addClass('search_form_criteria');
+
+			// Init properties (complexe type properties would be static if not initialized with a simple type variable...)
+			this.operators = {};
 
 			// Init operators
 			this._initOperators();
@@ -371,6 +374,7 @@ $(function()
 			}
 			else
 			{
+				this.element.addClass('locked');
 				this.element.find('.sfc_header').append('<span class="sfc_locked"><span class="fa fa-lock"></span></span>');
 			}
 
@@ -399,7 +403,9 @@ $(function()
 				var sMethod = '_prepare' + this._toCamelCase(oOp.code) + 'Operator';
 
 				// Create DOM element from template
-				var oOpElem = $(this._getOperatorTemplate()).uniqueId();
+				var oOpElem = $(this._getOperatorTemplate())
+					.uniqueId()
+					.appendTo(this.element.find('.sfc_fg_operators'));
 
 				// Prepare operator's base elements
 				this._prepareOperator(oOpElem, sOpIdx, oOp);
@@ -413,12 +419,7 @@ $(function()
 				{
 					this._prepareDefaultOperator(oOpElem, sOpIdx, oOp);
 				}
-
-				// Append to form group
-				oOpElem.appendTo(this.element.find('.sfc_fg_operators'));
 			}
-
-			// TODO: We could hide the radio button if there is only one operator
 		},
 		// - Prepare the buttons (DOM and events) for a criteria
 		_prepareButtons: function()
