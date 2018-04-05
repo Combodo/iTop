@@ -69,7 +69,18 @@ $(function()
 
 			for (var i = 0; i < aInputsParamLength; i++) {
 				var oInputParam = aInputsParam[i];
-				var oOpContentElem = $('<span class="sfc_op_content_'+oInputParam.code+'_outer '+(oInputParam.show_on_advanced ? 'hide_on_less' : 'hide_on_advanced')+'"><label class="sfc_op_content_'+oInputParam.code+'_label" for=""> '+Dict.S('UI:Search:Criteria:DateTime:'+oInputParam.code_uc_first)+' </label><input type="text" name="'+oInputParam.code+'" placeholder="'+Dict.S('UI:Search:Criteria:DateTime:Placeholder'+oInputParam.code_uc_first)+'"/></span>');
+
+
+				if (typeof oInputParam.show_on_advanced == 'undefined')
+				{
+					var customCssClass = '';
+				}
+				else
+				{
+					var customCssClass = oInputParam.show_on_advanced ? 'hide_on_less' : 'hide_on_advanced';
+				}
+
+				var oOpContentElem = $('<span class="sfc_op_content_'+oInputParam.code+'_outer '+customCssClass+'"><label class="sfc_op_content_'+oInputParam.code+'_label" for=""> '+Dict.S('UI:Search:Criteria:DateTime:'+oInputParam.code_uc_first)+' </label><input type="text" name="'+oInputParam.code+'" placeholder="'+Dict.S('UI:Search:Criteria:DateTime:Placeholder'+oInputParam.code_uc_first)+'"/></span>');
 				var oInputElem = oOpContentElem
 					.find('input')
 					.uniqueId()
