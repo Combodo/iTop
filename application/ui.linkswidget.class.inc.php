@@ -393,7 +393,7 @@ EOF
 	 * @throws \DictExceptionMissingString
 	 * @throws \Exception
 	 */
-	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = array())
+	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = array(), $aPrefillFormParam = array())
 	{
 		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
@@ -411,9 +411,12 @@ EOF
 		}
 
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
-		if ($oCurrentObj != null)
+
+		if(!empty($oCurrentObj))
 		{
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
+			$aPrefillFormParam['filter'] = $oFilter;
+			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",

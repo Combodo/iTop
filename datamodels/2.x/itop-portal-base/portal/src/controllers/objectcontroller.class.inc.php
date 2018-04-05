@@ -458,6 +458,9 @@ class ObjectController extends AbstractController
 				// Retrieve action rules information to auto-fill the form if available
 				// Preparing object
 				$oApp['context_manipulator']->PrepareObject($aActionRules, $oObject);
+				$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+											'origin' => 'portal');
+				$oObject->PrefillForm('creation_from_0', $aPrefillFormParam);
 			}
 			else
 			{
@@ -514,6 +517,13 @@ class ObjectController extends AbstractController
                 {
                     $aFormData['buttons']['submit']['label'] = Dict::S('Portal:Button:Apply');
                 }
+			}
+			else
+			{
+				$aPrefillFormParam = array('user' => $_SESSION["auth_user"],
+					'origin' => 'portal',
+					'stimulus' => $oRequestParams->get('apply_stimulus')['code']);
+				$oObject->PrefillForm('state_change', $aPrefillFormParam);
 			}
 
 			// Preparing callback urls

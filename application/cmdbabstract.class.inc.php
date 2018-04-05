@@ -2321,12 +2321,7 @@ EOF
 		
 		if ($oObjectToClone == null)
 		{
-			$oObj = MetaModel::NewObject($sClass);
-			if (!empty($sStateAttCode))
-			{
-				$sTargetState = MetaModel::GetDefaultState($sClass);
-				$oObj->Set($sStateAttCode, $sTargetState);
-			}
+			$oObj = DBObject::MakeDefaultInstance($sClass);
 		}
 		else
 		{

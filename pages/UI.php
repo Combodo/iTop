@@ -346,7 +346,6 @@ try
 	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'), $bPrintable);
 	$oP->SetMessage($sLoginMessage);
 
-
 	// All the following actions use advanced forms that require more javascript to be loaded
 	switch($operation)
 	{
@@ -787,9 +786,14 @@ EOF
 
 				// 1st - set context values
 				$oAppContext->InitObjectFromContext($oObjToClone);
-
 				// 2nd - set values from the page argument 'default'
 				$oObjToClone->UpdateObjectFromArg('default');
+				$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+					'context' => $oAppContext->GetAsHash(),
+					'default' => utils::ReadParam('default', array(), '', 'raw_data'),
+					'origin' => 'console'
+				);
+				$oObjToClone->PrefillForm('creation_from_0',$aPrefillFormParam);
 
 				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array());
 				$oP->add("</div>\n");
@@ -1447,6 +1451,12 @@ EOF
 		$oObj = MetaModel::GetObject($sClass, $id, false);
 		if ($oObj != null)
 		{
+			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+				'context' => $oAppContext->GetAsHash(),
+				'stimulus' => $sStimulus,
+				'origin' => 'console'
+			);
+			$oObj->PrefillForm('state_change', $aPrefillFormParam);
 			$oObj->DisplayStimulusForm($oP, $sStimulus);
 		}
 		else

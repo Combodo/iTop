@@ -3657,5 +3657,75 @@ abstract class DBObject implements iDisplay
 		$this->m_aCurrValues['archive_date'] = null;
 		$this->m_aOrigValues['archive_date'] = null;
 	}
+
+
+
+	/**
+	 * @param string $sClass Needs to be an instanciable class
+	 * @returns $oObj
+	 **/
+	public static function MakeDefaultInstance($sClass)
+	{
+		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
+		$oObj = MetaModel::NewObject($sClass);
+		if (!empty($sStateAttCode))
+		{
+			$sTargetState = MetaModel::GetDefaultState($sClass);
+			$oObj->Set($sStateAttCode, $sTargetState);
+		}
+		return $oObj;
+	}
+
+	/**
+	 * Complete a new object with data from context
+	 * @param array $aContextParam Context used for creation form prefilling
+	 *
+	 */
+	public function PrefillCreationForm(&$aContextParam)
+	{
+	}
+
+	/**
+	 * Complete an object after a state transition with data from context
+	 * @param array $aContextParam Context used for creation form prefilling
+	 *
+	 */
+	public function PrefillTransitionForm(&$aContextParam)
+	{
+	}
+
+	/**
+	 * Complete a filter ($aContextParam['filter']) data from context
+	 * @param array $aContextParam Context used for creation form prefilling
+	 *
+	 */
+	public function PrefillSearchForm(&$aContextParam)
+	{
+	}
+
+	/**
+	 * Prefill a creation / stimulus change / search form according to context, current state of an object, stimulus.. $sOperation
+	 * @param string $sOperation Operation identifier
+	 * @param array $aContextParam Context used for creation form prefilling
+	 *
+	 */
+	public function PrefillForm($sOperation, &$aContextParam)
+	{
+		switch($sOperation){
+			case 'creation_from_0':
+			case 'creation_from_extkey':
+			case 'creation_from_editinplace':
+				$this->PrefillCreationForm($aContextParam);
+				break;
+			case 'state_change':
+				$this->PrefillTransitionForm($aContextParam);
+				break;
+			case 'search':
+				$this->PrefillSearchForm($aContextParam);
+				break;
+			default:
+				break;
+		}
+	}
 }
 

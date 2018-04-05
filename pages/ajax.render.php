@@ -299,10 +299,22 @@ try
 				$oObj = null;
 			}
 			$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
+			$oAppContext = new ApplicationContext();
+			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+				'context' => $oAppContext->GetAsHash(),
+				'att_code' => $sAttCode,
+				'origin' => 'console'
+			);
+			if (!empty($sJson))
+			{
+				$oWizardHelper = WizardHelper::FromJSON($sJson);
+				$oSourceObj = $oWizardHelper->GetTargetObject();
+				$aPrefillFormParam['source_obj'] = $oSourceObj;
+			}
 			$aAlreadyLinked = utils::ReadParam('aAlreadyLinked', array());
-			$oWidget->GetObjectPickerDialog($oPage, $oObj, $sJson, $aAlreadyLinked);
+			$oWidget->GetObjectPickerDialog($oPage, $oObj, $sJson, $aAlreadyLinked, $aPrefillFormParam);
 			break;
-
+		
 		// ui.linkswidget
 		case 'searchObjectsToAdd':
 			$oPage->SetContentType('text/html');
@@ -324,10 +336,17 @@ try
 			$sAttCode = utils::ReadParam('att_code', '');
 			$iInputId = utils::ReadParam('iInputId', '');
 			$oPage->SetContentType('text/html');
+			$sJson = utils::ReadParam('json', '', false, 'raw_data');
+			if (!empty($sJson))
+			{
+				$oWizardHelper = WizardHelper::FromJSON($sJson);
+				$oObj = $oWizardHelper->GetTargetObject();
+			}
+			$oObj =	$oWizardHelper->GetTargetObject();
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
-			$oWidget->GetObjectCreationDlg($oPage, $sRealClass);
-			break;
-
+			$oWidget->GetObjectCreationDlg($oPage, $sRealClass, $oObj);
+		break;
+		
 		// ui.linksdirectwidget
 		case 'getLinksetRow':
 			$oPage->SetContentType('text/html');
@@ -498,31 +517,39 @@ try
 			$oPage->SetContentType('text/html');
 			// Retrieving parameters
 			$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
-			$iInputId = utils::ReadParam('iInputId', '');
-			$sAttCode = utils::ReadParam('sAttCode', '');
-			$sJson = utils::ReadParam('json', '', false, 'raw_data');
+	        $iInputId = utils::ReadParam('iInputId', '');
+	        $sAttCode = utils::ReadParam('sAttCode', '');
+	        $sJson = utils::ReadParam('json', '', false, 'raw_data');
 			// Building form, if target class is abstract we ask the user for the desired leaf class
-			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, false);
-			if (MetaModel::IsAbstract($sTargetClass))
-			{
-				$oWidget->GetClassSelectionForm($oPage);
-			}
-			else
-			{
-				if (!empty($sJson))
-				{
-					$oWizardHelper = WizardHelper::FromJSON($sJson);
-					$oObj = $oWizardHelper->GetTargetObject();
-				}
-				else
-				{
-					// Search form: no current object
-					$oObj = null;
-				}
-				$oWidget->GetObjectCreationForm($oPage, $oObj);
-			}
+	        $oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, false);
+	        if(MetaModel::IsAbstract($sTargetClass))
+	        {
+	            $oWidget->GetClassSelectionForm($oPage);
+	        }
+	        else
+	        {
+		        $aPrefillFormParam = array();
+	            if (!empty($sJson))
+	            {
+		            $oWizardHelper = WizardHelper::FromJSON($sJson);
+		            $oObj = $oWizardHelper->GetTargetObject();
+		            $oAppContext = new ApplicationContext();
+		            $aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+			                                    'context' => $oAppContext->GetAsHash(),
+			                                    'att_code' => $sAttCode,
+		                                        'source_obj' => $oObj,
+			                                    'origin' => 'console'
+		            );
+	            }
+	            else
+	            {
+	                // Search form: no current object
+	                $oObj = null;
+	            }
+	            $oWidget->GetObjectCreationForm($oPage, $oObj, $aPrefillFormParam);
+	        }
 			break;
-
+		
 		// ui.extkeywidget
 		case 'doCreateObject':
 			$oPage->SetContentType('application/json');
@@ -2567,7 +2594,7 @@ EOF
 			$oPage->add_header("Pragma: cache"); // Reset the value set .... where ?
 			$oPage->add(file_get_contents(Utils::GetCachePath().$sSignature.'.js'));
 			break;
-			
+
 		default:
 			$oPage->p("Invalid query.");
 	}

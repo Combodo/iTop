@@ -179,7 +179,7 @@ class UILinksWidgetDirect
 	 * @param WebPage $oPage
 	 * @param string $sProposedRealClass
 	 */
-	public function GetObjectCreationDlg(WebPage $oPage, $sProposedRealClass = '')
+	public function GetObjectCreationDlg(WebPage $oPage, $sProposedRealClass = '', $oSourceObj = null)
 	{
 		// For security reasons: check that the "proposed" class is actually a subclass of the linked class
 		// and that the current user is allowed to create objects of this class
@@ -211,7 +211,10 @@ class UILinksWidgetDirect
 			$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 			$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
 			$aFieldFlags = array( $sExtKeyToMe => OPT_ATT_HIDDEN);
-		 	cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, null, array(), array('formPrefix' => $this->sInputid, 'noRelations' => true, 'fieldsFlags' => $aFieldFlags));
+			$oObj = DBObject::MakeDefaultInstance($sRealClass);
+			$aPrefillParam = array('source_obj' => $oSourceObj);
+			$oObj->PrefillForm('creation_from_editinplace', $aPrefillParam);
+		 	cmdbAbstractObject::DisplayCreationForm($oPage, $sRealClass, $oObj, array(), array('formPrefix' => $this->sInputid, 'noRelations' => true, 'fieldsFlags' => $aFieldFlags));
 		}
 		else
 		{

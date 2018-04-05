@@ -508,7 +508,7 @@ EOF
 	/**
 	 * Get the form to create a new object of the 'target' class
 	 */
-	public function GetObjectCreationForm(WebPage $oPage, $oCurrObject)
+	public function GetObjectCreationForm(WebPage $oPage, $oCurrObject, $aPrefillFormParam)
 	{
 		// Set all the default values in an object and clone this "default" object
 		$oNewObj = MetaModel::NewObject($this->sTargetClass);
@@ -516,7 +516,7 @@ EOF
 		// 1st - set context values
 		$oAppContext = new ApplicationContext();
 		$oAppContext->InitObjectFromContext($oNewObj);
-
+		$oNewObj->PrefillForm('creation_from_extkey', $aPrefillFormParam);
 		// 2nd set the default values from the constraint on the external key... if any
 		if ( ($oCurrObject != null) && ($this->sAttCode != ''))
 		{

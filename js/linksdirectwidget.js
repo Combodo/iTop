@@ -154,6 +154,11 @@ $(function()
 			oParams.att_code = this.options.att_code;
 			oParams.iInputId = this.id;
 			var me = this;
+			if (this.options.oWizardHelper)
+			{
+				this.options.oWizardHelper.UpdateWizard();
+				oParams.json = this.options.oWizardHelper.ToJSON();
+			}
 			$.post(this.options.submit_to, oParams, function(data){
 				me.oDlg = $('<div></div>');
 				$('body').append(me.oDlg);
