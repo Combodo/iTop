@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2017 Combodo SARL
+// Copyright (c) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,11 +21,12 @@ class MissingQueryArgument extends CoreException
 {
 }
 
+
 abstract class Expression
 {
 	/**
 	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects)
-	 **/	 	
+	 **/
 	public function DeepClone()
 	{
 		return unserialize(serialize($this));
@@ -33,10 +34,35 @@ abstract class Expression
 
 	// recursive translation of identifiers
 	abstract public function GetUnresolvedFields($sAlias, &$aUnresolved);
+
+	/**
+	 * @param array $aTranslationData
+	 * @param bool $bMatchAll
+	 * @param bool $bMarkFieldsAsResolved
+	 *
+	 * @return Expression Translated expression
+	 */
 	abstract public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
 
 	// recursive rendering (aArgs used as input by default, or used as output if bRetrofitParams set to True
 	abstract public function Render(&$aArgs = null, $bRetrofitParams = false);
+
+	/**
+	 * @param DBObjectSearch $oSearch
+	 * @param array $aArgs
+	 * @param AttributeDefinition $oAttDef
+	 *
+	 * @return array parameters for the search form
+	 */
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	{
+		return $this->Render($aArgs);
+	}
+
+	public function GetAttDef($aClasses = array())
+	{
+		return null;
+	}
 
 	/**
 	 * Recursively browse the expression tree
@@ -46,7 +72,7 @@ abstract class Expression
 	abstract public function Browse(Closure $callback);
 
 	abstract public function ApplyParameters($aArgs);
-	
+
 	// recursively builds an array of class => fieldname
 	abstract public function ListRequiredFields();
 
@@ -54,10 +80,10 @@ abstract class Expression
 	abstract public function CollectUsedParents(&$aTable);
 
 	abstract public function IsTrue();
-	
+
 	// recursively builds an array of [classAlias][fieldName] => value
 	abstract public function ListConstantFields();
-	
+
 	public function RequiresField($sClass, $sFieldName)
 	{
 		// #@# todo - optimize : this is called quite often when building a single query !
@@ -71,6 +97,12 @@ abstract class Expression
 		return base64_encode($this->Render());
 	}
 
+	/**
+	 * @param $sValue
+	 *
+	 * @return Expression
+	 * @throws OQLException
+	 */
 	static public function unserialize($sValue)
 	{
 		return self::FromOQL(base64_decode($sValue));
@@ -119,21 +151,56 @@ abstract class Expression
 	{
 		return new BinaryExpression($this, 'OR', $oExpr);
 	}
-	
+
 	abstract public function RenameParam($sOldName, $sNewName);
 	abstract public function RenameAlias($sOldName, $sNewName);
 
 	/**
 	 * Make the most relevant label, given the value of the expression
-	 * 	 
-	 * @param DBSearch oFilter The context in which this expression has been used	 	
-	 * @param string sValue The value returned by the query, for this expression	 	
-	 * @param string sDefault The default value if no relevant label could be computed	 	
+	 *
+	 * @param DBSearch oFilter The context in which this expression has been used
+	 * @param string sValue The value returned by the query, for this expression
+	 * @param string sDefault The default value if no relevant label could be computed
+	 *
 	 * @return The label
-	 */	
+	 */
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
 		return $sDefault;
+	}
+
+	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		return array(
+			'widget' => AttributeDefinition::SEARCH_WIDGET_TYPE_RAW,
+			'oql' => $this->Render($aArgs, $bRetrofitParams),
+			'label' => $this->Display($oSearch, $aArgs, $oAttDef),
+			'source' => get_class($this),
+		);
+	}
+
+	/**
+	 * Split binary expression on given operator
+	 *
+	 * @param Expression $oExpr
+	 * @param string $sOperator
+	 * @param array $aAndExpr
+	 *
+	 * @return array of expressions
+	 */
+	public static function Split($oExpr, $sOperator = 'AND', &$aAndExpr = array())
+	{
+		if (($oExpr instanceof BinaryExpression) && ($oExpr->GetOperator() == $sOperator))
+		{
+			static::Split($oExpr->GetLeftExpr(), $sOperator, $aAndExpr);
+			static::Split($oExpr->GetRightExpr(), $sOperator, $aAndExpr);
+		}
+		else
+		{
+			$aAndExpr[] = $oExpr;
+		}
+
+		return $aAndExpr;
 	}
 }
 
@@ -165,7 +232,7 @@ class SQLExpression extends Expression
 	public function ApplyParameters($aArgs)
 	{
 	}
-	
+
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 	}
@@ -183,12 +250,12 @@ class SQLExpression extends Expression
 	public function CollectUsedParents(&$aTable)
 	{
 	}
-	
+
 	public function ListConstantFields()
 	{
 		return array();
 	}
-	
+
 	public function RenameParam($sOldName, $sNewName)
 	{
 		// Do nothing, since there is nothing to rename
@@ -244,7 +311,7 @@ class BinaryExpression extends Expression
 		}
 		return false;
 	}
-	
+
 	public function GetLeftExpr()
 	{
 		return $this->m_oLeftExpr;
@@ -295,7 +362,7 @@ class BinaryExpression extends Expression
 			$this->m_oRightExpr->ApplyParameters($aArgs);
 		}
 	}
-	
+
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 		$this->GetLeftExpr()->GetUnresolvedFields($sAlias, $aUnresolved);
@@ -321,7 +388,15 @@ class BinaryExpression extends Expression
 		$this->GetLeftExpr()->CollectUsedParents($aTable);
 		$this->GetRightExpr()->CollectUsedParents($aTable);
 	}
-	
+
+	public function GetAttDef($aClasses = array())
+	{
+		$oAttDef = $this->GetLeftExpr()->GetAttDef($aClasses);
+		if (!is_null($oAttDef)) return $oAttDef;
+
+		return $this->GetRightExpr()->GetAttDef($aClasses);
+	}
+
 	/**
 	 * List all constant expression of the form <field> = <scalar> or <field> = :<variable>
 	 * Could be extended to support <field> = <function><constant_expression>
@@ -355,7 +430,7 @@ class BinaryExpression extends Expression
 		}
 		return $aResult;
 	}
-	
+
 	public function RenameParam($sOldName, $sNewName)
 	{
 		$this->GetLeftExpr()->RenameParam($sOldName, $sNewName);
@@ -366,6 +441,131 @@ class BinaryExpression extends Expression
 	{
 		$this->GetLeftExpr()->RenameAlias($sOldName, $sNewName);
 		$this->GetRightExpr()->RenameAlias($sOldName, $sNewName);
+	}
+
+	// recursive rendering
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	{
+		$bReverseOperator = false;
+		$oLeftExpr = $this->GetLeftExpr();
+		if ($oLeftExpr instanceof FieldExpression)
+		{
+			$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
+		}
+		$oRightExpr = $this->GetRightExpr();
+		if ($oRightExpr instanceof FieldExpression)
+		{
+			$oAttDef = $oRightExpr->GetAttDef($oSearch->GetJoinedClasses());
+			$bReverseOperator = true;
+		}
+
+		$sLeft = $oLeftExpr->Display($oSearch, $aArgs, $oAttDef);
+		$sRight = $oRightExpr->Display($oSearch, $aArgs, $oAttDef);
+
+		if ($bReverseOperator)
+		{
+			// switch left and right expressions so reverse the operator
+			// Note that the operation is the same so < becomes > and not >=
+			switch ($this->GetOperator())
+			{
+				case '>':
+					$sOperator = '<';
+					break;
+				case '<':
+					$sOperator = '>';
+					break;
+				case '>=':
+					$sOperator = '<=';
+					break;
+				case '<=':
+					$sOperator = '>=';
+					break;
+				default:
+					$sOperator = $this->GetOperator();
+					break;
+			}
+			$sOperator = $this->OperatorToNaturalLanguage($sOperator, $oAttDef);
+
+			return "({$sRight}{$sOperator}{$sLeft})";
+		}
+
+		$sOperator = $this->GetOperator();
+		$sOperator = $this->OperatorToNaturalLanguage($sOperator, $oAttDef);
+
+		return "({$sLeft}{$sOperator}{$sRight})";
+	}
+
+	private function OperatorToNaturalLanguage($sOperator, $oAttDef)
+	{
+		if ($oAttDef instanceof AttributeDateTime)
+		{
+			return Dict::S('Expression:Operator:Date:'.$sOperator, " $sOperator ");
+		}
+
+		return Dict::S('Expression:Operator:'.$sOperator, " $sOperator ");
+	}
+
+	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		$bReverseOperator = false;
+		$oLeftExpr = $this->GetLeftExpr();
+		$oRightExpr = $this->GetRightExpr();
+
+		$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
+
+		if (is_null($oAttDef))
+		{
+			$oAttDef = $oRightExpr->GetAttDef($oSearch->GetJoinedClasses());
+			$bReverseOperator = true;
+		}
+
+		if (is_null($oAttDef))
+		{
+			return parent::GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+		}
+
+		$aCriteriaLeft = $oLeftExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+		$aCriteriaRight = $oRightExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+
+		if ($bReverseOperator)
+		{
+			$aCriteria = array_merge($aCriteriaRight, $aCriteriaLeft);
+			// switch left and right expressions so reverse the operator
+			// Note that the operation is the same so < becomes > and not >=
+			switch ($this->GetOperator())
+			{
+				case '>':
+					$aCriteria['operator'] = '<';
+					break;
+				case '<':
+					$aCriteria['operator'] = '>';
+					break;
+				case '>=':
+					$aCriteria['operator'] = '<=';
+					break;
+				case '<=':
+					$aCriteria['operator'] = '>=';
+					break;
+				default:
+					$aCriteria['operator'] = $this->GetOperator();
+					break;
+			}
+		}
+		else
+		{
+			$aCriteria = array_merge($aCriteriaLeft, $aCriteriaRight);
+			$aCriteria['operator'] = $this->GetOperator();
+		}
+		$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
+		$aCriteria['label'] = $this->Display($oSearch, $aArgs, $oAttDef);
+
+		if (isset($aCriteriaLeft['ref']) && isset($aCriteriaRight['ref']) && ($aCriteriaLeft['ref'] != $aCriteriaRight['ref']))
+		{
+			// Only one Field is supported in the expressions
+			$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+		}
+
+		return $aCriteria;
 	}
 }
 
@@ -404,7 +604,7 @@ class UnaryExpression extends Expression
 	public function ApplyParameters($aArgs)
 	{
 	}
-	
+
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 	}
@@ -427,7 +627,7 @@ class UnaryExpression extends Expression
 	{
 		return array();
 	}
-	
+
 	public function RenameParam($sOldName, $sNewName)
 	{
 		// Do nothing
@@ -451,6 +651,46 @@ class ScalarExpression extends UnaryExpression
 		parent::__construct($value);
 	}
 
+	/**
+	 * @param array $oSearch
+	 * @param array $aArgs
+	 * @param AttributeDefinition $oAttDef
+	 *
+	 * @return array|string
+	 * @throws \Exception
+	 */
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	{
+		if (!is_null($oAttDef))
+		{
+			if ($oAttDef->IsExternalKey())
+			{
+				try
+				{
+					/** @var AttributeExternalKey $oAttDef */
+					$sTarget = $oAttDef->GetTargetClass();
+					$oObj = MetaModel::GetObject($sTarget, $this->m_value);
+
+					return $oObj->Get("friendlyname");
+				} catch (CoreException $e)
+				{
+				}
+			}
+
+			if (!($oAttDef instanceof AttributeDateTime))
+			{
+				return $oAttDef->GetAsPlainText($this->m_value);
+			}
+		}
+
+		if (strpos($this->m_value, '%') === 0)
+		{
+			return '';
+		}
+
+		return $this->Render($aArgs);
+	}
+
 	// recursive rendering
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
@@ -469,6 +709,54 @@ class ScalarExpression extends UnaryExpression
 	{
 		return clone $this;
 	}
+
+	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		$aCriteria = array();
+		switch ((string)($this->m_value))
+		{
+			case '%Y-%m-%d':
+				$aCriteria['date_type'] = 'd';
+				break;
+			case '%Y-%m':
+				$aCriteria['date_type'] = 'm';
+				break;
+			case '%w':
+				$aCriteria['date_type'] = 'w';
+				break;
+			default:
+				$aValue = array('value' => $this->GetValue());
+				if (!is_null($oAttDef))
+				{
+					switch (true)
+					{
+						case $oAttDef->IsExternalKey():
+							try
+							{
+								/** @var AttributeExternalKey $oAttDef */
+								$sTarget = $oAttDef->GetTargetClass();
+								$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
+
+								$aValue['label'] = $oObj->Get("friendlyname");
+
+							}
+							catch (Exception $e)
+							{
+								IssueLog::Error($e->getMessage());
+							}
+							break;
+						default:
+							$aValue['label'] = $oAttDef->GetAsPlainText($this->GetValue());
+							break;
+					}
+				}
+				$aCriteria['values'] = array($aValue);
+				break;
+		}
+
+		return $aCriteria;
+	}
+
 }
 
 class TrueExpression extends ScalarExpression
@@ -525,6 +813,44 @@ class FieldExpression extends UnaryExpression
 		$this->m_value = $sParent.'.'.$this->m_sName;
 	}
 
+	private function GetClassName($aClasses = array())
+	{
+		if (isset($aClasses[$this->m_sParent]))
+		{
+			return $aClasses[$this->m_sParent];
+		}
+		else
+		{
+			return $this->m_sParent;
+		}
+	}
+
+	/**
+	 * @param DBObjectSearch $oSearch
+	 * @param array $aArgs
+	 * @param AttributeDefinition $oAttDef
+	 *
+	 * @return array|string
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
+	 */
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	{
+		if (empty($this->m_sParent))
+		{
+			return "`{$this->m_sName}`";
+		}
+		$sClass = $this->GetClassName($oSearch->GetJoinedClasses());
+		$sAttName = MetaModel::GetLabel($sClass, $this->m_sName);
+		if ($sClass != $oSearch->GetClass())
+		{
+			$sAttName = MetaModel::GetName($sClass).':'.$sAttName;
+		}
+
+		return $sAttName;
+	}
+
 	// recursive rendering
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
@@ -534,6 +860,37 @@ class FieldExpression extends UnaryExpression
 		}
 		return "`{$this->m_sParent}`.`{$this->m_sName}`";
 	}
+
+	public function GetAttDef($aClasses = array())
+	{
+		if (!empty($this->m_sParent))
+		{
+			$sClass = $this->GetClassName($aClasses);
+			$aAttDefs = MetaModel::ListAttributeDefs($sClass);
+			if (isset($aAttDefs[$this->m_sName]))
+			{
+				return $aAttDefs[$this->m_sName];
+			}
+			else
+			{
+				if ($this->m_sName == 'id')
+				{
+					$aParams = array(
+						'default_value' => 0,
+						'is_null_allowed' => false,
+						'allowed_values' => null,
+						'depends_on' => null,
+						'sql' => 'id',
+					);
+
+					return new AttributeInteger($this->m_sName, $aParams);
+				}
+			}
+		}
+
+		return null;
+	}
+
 
 	public function ListRequiredFields()
 	{
@@ -565,8 +922,9 @@ class FieldExpression extends UnaryExpression
 		if (!array_key_exists($this->m_sParent, $aTranslationData))
 		{
 			if ($bMatchAll) throw new CoreException('Unknown parent id in translation table', array('parent_id' => $this->m_sParent, 'translation_table' => array_keys($aTranslationData)));
+
 			return clone $this;
-		} 
+		}
 		if (!array_key_exists($this->m_sName, $aTranslationData[$this->m_sParent]))
 		{
 			if (!array_key_exists('*', $aTranslationData[$this->m_sParent]))
@@ -595,12 +953,13 @@ class FieldExpression extends UnaryExpression
 
 	/**
 	 * Make the most relevant label, given the value of the expression
-	 * 	 
-	 * @param DBSearch oFilter The context in which this expression has been used	 	
-	 * @param string sValue The value returned by the query, for this expression	 	
-	 * @param string sDefault The default value if no relevant label could be computed	 	
+	 *
+	 * @param DBSearch oFilter The context in which this expression has been used
+	 * @param string sValue The value returned by the query, for this expression
+	 * @param string sDefault The default value if no relevant label could be computed
+	 *
 	 * @return The label
-	 */	
+	 */
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
 		$sAttCode = $this->GetName();
@@ -646,6 +1005,47 @@ class FieldExpression extends UnaryExpression
 			$this->m_sParent = $sNewName;
 		}
 	}
+
+
+	/**
+	 * @param $oSearch
+	 * @param null $aArgs
+	 * @param bool $bRetrofitParams
+	 * @param AttributeDefinition $oAttDef
+	 *
+	 * @return array
+	 */
+	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		$oAttDef = $this->GetAttDef($oSearch->GetJoinedClasses());
+		if (!is_null($oAttDef))
+		{
+			$sSearchType = $oAttDef->GetSearchType();
+			try
+			{
+				if ($sSearchType == AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY)
+				{
+					// TODO Check the type of external key ? (EXTKEY_ABSOLUTE or EXTKEY_RELATIVE)
+					if (MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass()))
+					{
+						$sSearchType = AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;
+					}
+				}
+			}
+			catch (CoreException $e)
+			{
+			}
+		}
+		else
+		{
+			$sSearchType = AttributeDefinition::SEARCH_WIDGET_TYPE;
+		}
+		return array(
+			'widget' => $sSearchType,
+			'ref' => $this->GetParent().'.'.$this->GetName(),
+			'class_alias' => $this->GetParent(),
+		);
+	}
 }
 
 // Has been resolved into an SQL expression
@@ -678,7 +1078,68 @@ class VariableExpression extends UnaryExpression
 		return false;
 	}
 
-	public function GetName() {return $this->m_sName;}
+	public function GetName()
+	{
+		return $this->m_sName;
+	}
+
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	{
+		$sValue = $this->m_value;
+		if (!is_null($aArgs) && (array_key_exists($this->m_sName, $aArgs)))
+		{
+			$sValue = $aArgs[$this->m_sName];
+		}
+		elseif (($iPos = strpos($this->m_sName, '->')) !== false)
+		{
+			$sParamName = substr($this->m_sName, 0, $iPos);
+			$oObj = null;
+			$sAttCode = 'id';
+			if (array_key_exists($sParamName.'->object()', $aArgs))
+			{
+				$sAttCode = substr($this->m_sName, $iPos + 2);
+				$oObj = $aArgs[$sParamName.'->object()'];
+			}
+			elseif (array_key_exists($sParamName, $aArgs))
+			{
+				$sAttCode = substr($this->m_sName, $iPos + 2);
+				$oObj = $aArgs[$sParamName];
+			}
+			if (!is_null($oObj))
+			{
+				if ($sAttCode == 'id')
+				{
+					$sValue = $oObj->Get("friendlyname");
+				}
+				else
+				{
+					$sValue = $oObj->Get($sAttCode);
+				}
+
+				return $sValue;
+			}
+		}
+		if (!is_null($oAttDef))
+		{
+			if ($oAttDef->IsExternalKey())
+			{
+				try
+				{
+					/** @var AttributeExternalKey $oAttDef */
+					$sTarget = $oAttDef->GetTargetClass();
+					$oObj = MetaModel::GetObject($sTarget, $sValue);
+
+					return $oObj->Get("friendlyname");
+				} catch (CoreException $e)
+				{
+				}
+			}
+
+			return $oAttDef->GetAsPlainText($sValue);
+		}
+
+		return $this->Render($aArgs);
+	}
 
 	// recursive rendering
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
@@ -729,7 +1190,7 @@ class VariableExpression extends UnaryExpression
 			$this->m_sName = $sNewName;
 		}
 	}
-	
+
 	public function GetAsScalar($aArgs)
 	{
 		$oRet = null;
@@ -833,7 +1294,7 @@ class ListExpression extends Expression
 			}
 		}
 	}
-	
+
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 		foreach ($this->m_aExpressions as $oExpr)
@@ -861,7 +1322,7 @@ class ListExpression extends Expression
 		}
 		return $aRes;
 	}
-	
+
 	public function CollectUsedParents(&$aTable)
 	{
 		foreach ($this->m_aExpressions as $oExpr)
@@ -879,7 +1340,7 @@ class ListExpression extends Expression
 		}
 		return $aRes;
 	}
-	
+
 	public function RenameParam($sOldName, $sNewName)
 	{
 		$aRes = array();
@@ -887,7 +1348,7 @@ class ListExpression extends Expression
 		{
 			$this->m_aExpressions[$key] = $oExpr->RenameParam($sOldName, $sNewName);
 		}
-	}	
+	}
 
 	public function RenameAlias($sOldName, $sNewName)
 	{
@@ -896,7 +1357,34 @@ class ListExpression extends Expression
 		{
 			$oExpr->RenameAlias($sOldName, $sNewName);
 		}
-	}	
+	}
+
+	public function GetAttDef($aClasses = array())
+	{
+		foreach($this->m_aExpressions as $oExpression)
+		{
+			$oAttDef = $oExpression->GetAttDef($aClasses);
+			if (!is_null($oAttDef)) return $oAttDef;
+		}
+
+		return null;
+	}
+
+	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		$aValues = array();
+
+		foreach($this->m_aExpressions as $oExpression)
+		{
+			$aCrit = $oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+			if (array_key_exists('values', $aCrit))
+			{
+				$aValues = array_merge($aValues, $aCrit['values']);
+			}
+		}
+
+		return array('values' => $aValues);
+	}
 }
 
 
@@ -990,7 +1478,7 @@ class FunctionExpression extends Expression
 		}
 		return $aRes;
 	}
-	
+
 	public function CollectUsedParents(&$aTable)
 	{
 		foreach ($this->m_aArgs as $oExpr)
@@ -1008,7 +1496,7 @@ class FunctionExpression extends Expression
 		}
 		return $aRes;
 	}
-	
+
 	public function RenameParam($sOldName, $sNewName)
 	{
 		foreach ($this->m_aArgs as $key => $oExpr)
@@ -1025,14 +1513,26 @@ class FunctionExpression extends Expression
 		}
 	}
 
+	public function GetAttDef($aClasses = array())
+	{
+		foreach($this->m_aArgs as $oExpression)
+		{
+			$oAttDef = $oExpression->GetAttDef($aClasses);
+			if (!is_null($oAttDef)) return $oAttDef;
+		}
+
+		return null;
+	}
+
 	/**
 	 * Make the most relevant label, given the value of the expression
-	 * 	 
-	 * @param DBSearch oFilter The context in which this expression has been used	 	
-	 * @param string sValue The value returned by the query, for this expression	 	
-	 * @param string sDefault The default value if no relevant label could be computed	 	
+	 *
+	 * @param DBSearch oFilter The context in which this expression has been used
+	 * @param string sValue The value returned by the query, for this expression
+	 * @param string sDefault The default value if no relevant label could be computed
+	 *
 	 * @return The label
-	 */	
+	 */
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
 		static $aWeekDayToString = null;
@@ -1095,6 +1595,87 @@ class FunctionExpression extends Expression
 		}
 		return $sRes;
 	}
+
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	{
+		$sOperation = '';
+		$sVerb = '';
+		switch ($this->m_sVerb)
+		{
+			case 'NOW':
+				$sVerb = $this->VerbToNaturalLanguage();
+				break;
+			case 'DATE_SUB':
+				$sVerb = ' -';
+				break;
+			case 'DATE_ADD':
+				$sVerb = ' +';
+				break;
+			case 'DATE_FORMAT':
+				break;
+			default:
+				return $this->Render($aArgs);
+		}
+
+		foreach($this->m_aArgs as $oExpression)
+		{
+			if ($oExpression instanceof IntervalExpression)
+			{
+				$sOperation .= $sVerb;
+				$sVerb = '';
+			}
+			$sOperation .= $oExpression->Display($oSearch, $aArgs, $oAttDef);
+		}
+
+		if (!empty($sVerb))
+		{
+			$sOperation .= $sVerb;
+		}
+		return $sOperation;
+	}
+
+	private function VerbToNaturalLanguage()
+	{
+		return Dict::S('Expression:Verb:'.$this->m_sVerb, " {$this->m_sVerb} ");
+	}
+
+	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		$aCriteria = array();
+		switch ($this->m_sVerb)
+		{
+			case 'ISNULL':
+				$aCriteria['operator'] = $this->m_sVerb;
+				foreach($this->m_aArgs as $oExpression)
+				{
+					$aCriteria = array_merge($oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef), $aCriteria);
+				}
+				$aCriteria['has_undefined'] = true;
+				break;
+
+			case 'NOW':
+				$aCriteria = array('widget' => 'date_time');
+				$aCriteria['is_relative'] = true;
+				$aCriteria['verb'] = $this->m_sVerb;
+				break;
+
+			case 'DATE_ADD':
+			case 'DATE_SUB':
+			case 'DATE_FORMAT':
+				$aCriteria = array('widget' => 'date_time');
+				foreach($this->m_aArgs as $oExpression)
+				{
+					$aCriteria = array_merge($oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef), $aCriteria);
+				}
+				$aCriteria['verb'] = $this->m_sVerb;
+				break;
+
+			default:
+				return parent::GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+		}
+
+		return $aCriteria;
+	}
 }
 
 class IntervalExpression extends Expression
@@ -1147,7 +1728,7 @@ class IntervalExpression extends Expression
 			$this->m_oValue->ApplyParameters($aArgs);
 		}
 	}
-		
+
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 		$this->m_oValue->GetUnresolvedFields($sAlias, $aUnresolved);
@@ -1171,16 +1752,29 @@ class IntervalExpression extends Expression
 	{
 		return array();
 	}
-	
+
 	public function RenameParam($sOldName, $sNewName)
 	{
 		$this->m_oValue->RenameParam($sOldName, $sNewName);
-	}	
+	}
 
 	public function RenameAlias($sOldName, $sNewName)
 	{
 		$this->m_oValue->RenameAlias($sOldName, $sNewName);
-	}	
+	}
+
+	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
+	{
+		$aCriteria = $this->m_oValue->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+		$aCriteria['unit'] = $this->m_sUnit;
+
+		return $aCriteria;
+	}
+
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	{
+		return $this->m_oValue->Render($aArgs).' '.Dict::S('Expression:Unit:Long:'.$this->m_sUnit, $this->m_sUnit);
+	}
 }
 
 class CharConcatExpression extends Expression
@@ -1210,7 +1804,7 @@ class CharConcatExpression extends Expression
 		foreach ($this->m_aExpressions as $oExpr)
 		{
 			$sCol = $oExpr->Render($aArgs, $bRetrofitParams);
-			// Concat will be globally NULL if one single argument is null ! 
+			// Concat will be globally NULL if one single argument is null !
 			$aRes[] = "COALESCE($sCol, '')";
 		}
 		return "CAST(CONCAT(".implode(', ', $aRes).") AS CHAR)";
@@ -1293,7 +1887,7 @@ class CharConcatExpression extends Expression
 		{
 			$this->m_aExpressions[$key] = $oExpr->RenameParam($sOldName, $sNewName);
 		}
-	}	
+	}
 
 	public function RenameAlias($sOldName, $sNewName)
 	{
@@ -1301,7 +1895,7 @@ class CharConcatExpression extends Expression
 		{
 			$oExpr->RenameAlias($sOldName, $sNewName);
 		}
-	}	
+	}
 }
 
 
@@ -1322,7 +1916,7 @@ class CharConcatWSExpression extends CharConcatExpression
 		foreach ($this->m_aExpressions as $oExpr)
 		{
 			$sCol = $oExpr->Render($aArgs, $bRetrofitParams);
-			// Concat will be globally NULL if one single argument is null ! 
+			// Concat will be globally NULL if one single argument is null !
 			$aRes[] = "COALESCE($sCol, '')";
 		}
 		$sSep = CMDBSource::Quote($this->m_separator);
@@ -1502,6 +2096,7 @@ class QueryBuilderExpressions
 		{
 			$this->m_aJoinFields[$index] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
+
 		foreach($this->m_aClassIds as $sClass => $oExpression)
 		{
 			$this->m_aClassIds[$sClass] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);

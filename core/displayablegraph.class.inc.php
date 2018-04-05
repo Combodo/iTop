@@ -1439,7 +1439,7 @@ class DisplayableGraph extends SimpleGraph
 			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
 		}
 		$oP->add("<div class=\"not-printable\">\n");
-		$oP->add("<div id=\"ds_flash\" class=\"SearchDrawer\" style=\"display:none;\">\n");
+		$oP->add("<div id=\"ds_flash\" class=\"search_box\" style=\"display:none;\">\n");
 		if (!$oP->IsPrintableVersion())
 		{
 			$oP->add_ready_script(

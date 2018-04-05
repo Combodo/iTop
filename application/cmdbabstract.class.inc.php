@@ -45,6 +45,11 @@ require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'/application/ui.htmleditorwidget.class.inc.php');
 require_once(APPROOT.'/application/datatable.class.inc.php');
 require_once(APPROOT.'/sources/renderer/console/consoleformrenderer.class.inc.php');
+require_once(APPROOT.'/sources/application/search/searchform.class.inc.php');
+require_once(APPROOT.'/sources/application/search/criterionparser.class.inc.php');
+require_once(APPROOT.'/sources/application/search/criterionconversionabstract.class.inc.php');
+require_once(APPROOT.'/sources/application/search/criterionconversion/criteriontooql.class.inc.php');
+require_once(APPROOT.'/sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
 
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
@@ -604,7 +609,7 @@ EOF
 	function GetBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix, $aExtraParams = array())
 	{
 		$sHtml = '';
-		$oAppContext = new ApplicationContext();	
+		$oAppContext = new ApplicationContext();
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		$aDetails = array();
 		$sClass = get_class($this);
@@ -620,28 +625,28 @@ EOF
 		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
 		$aExtraFlags = (isset($aExtraParams['fieldsFlags'])) ? $aExtraParams['fieldsFlags'] : array();
 		$bFieldComments = (count($aFieldsComments) > 0);
-		
-		foreach($aDetailsStruct as $sTab => $aCols )
+
+		foreach($aDetailsStruct as $sTab => $aCols)
 		{
 			$aDetails[$sTab] = array();
-            $aTableStyles[] = 'vertical-align:top';
-            $aTableClasses = array();
+			$aTableStyles[] = 'vertical-align:top';
+			$aTableClasses = array();
 			$aColStyles[] = 'vertical-align:top';
 			$aColClasses = array();
 
-            ksort($aCols);
+			ksort($aCols);
 			$iColCount = count($aCols);
-			if($iColCount > 1)
-            {
-	            $aTableClasses[] = 'n-cols-details';
-	            $aTableClasses[] = $iColCount.'-cols-details';
+			if ($iColCount > 1)
+			{
+				$aTableClasses[] = 'n-cols-details';
+				$aTableClasses[] = $iColCount.'-cols-details';
 
-	            $aColStyles[] = 'width:'.floor(100/$iColCount).'%';
-            }
-            else
-            {
-	            $aTableClasses[] = 'one-col-details';
-            }
+				$aColStyles[] = 'width:'.floor(100 / $iColCount).'%';
+			}
+			else
+			{
+				$aTableClasses[] = 'one-col-details';
+			}
 
 			$oPage->SetCurrentTab(Dict::S($sTab));
 			$oPage->add('<table style="'.implode('; ', $aTableStyles).'" class="'.implode(' ', $aTableClasses).'" data-mode="'.$sEditMode.'"><tr>');
@@ -654,7 +659,7 @@ EOF
 				$aDetails[$sTab][$sColIndex] = array();
 				foreach($aFieldsets as $sFieldsetName => $aFields)
 				{
-				    if (!empty($sFieldsetName) && ($sFieldsetName[0] != '_'))
+					if (!empty($sFieldsetName) && ($sFieldsetName[0] != '_'))
 					{
 						$sLabel = $sFieldsetName;
 					}
@@ -683,90 +688,93 @@ EOF
 						{
 
 
-						$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
-						$sInfos = '';
-						$iFlags = $this->GetFormAttributeFlags($sAttCode);
-						if (array_key_exists($sAttCode, $aExtraFlags))
-						{
-							// the caller may override some flags if needed
-							$iFlags = $iFlags | $aExtraFlags[$sAttCode];
-						}
-						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
-						{
-							$sInputId = $this->m_iFormId.'_'.$sAttCode;
-							if ($oAttDef->IsWritable())
+							$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
+							$sInfos = '';
+							$iFlags = $this->GetFormAttributeFlags($sAttCode);
+							if (array_key_exists($sAttCode, $aExtraFlags))
 							{
-								if ($sStateAttCode == $sAttCode)
+								// the caller may override some flags if needed
+								$iFlags = $iFlags | $aExtraFlags[$sAttCode];
+							}
+							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
+							{
+								$sInputId = $this->m_iFormId.'_'.$sAttCode;
+								if ($oAttDef->IsWritable())
 								{
-									// State attribute is always read-only from the UI
-									$sHTMLValue = $this->GetStateLabel();
-									$val = array('label' => '<label>'.$oAttDef->GetLabel().'</label>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
-								}
-								else
-								{				
-									if ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE))
+									if ($sStateAttCode == $sAttCode)
 									{
-										// Check if the attribute is not read-only because of a synchro...
-										if ($iFlags & OPT_ATT_SLAVE)
-										{
-											$aReasons = array();
-											$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
-											$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
-											$sTip = '';
-											foreach($aReasons as $aRow)
-											{
-												$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
-												$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
-												$sTip .= "<div class='synchro-source'>";
-												$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
-												$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
-											}
-											$sTip = addslashes($sTip);
-											$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
-											$sComments = $sSynchroIcon;
-										}
-
-										// Attribute is read-only
-										$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode).'</span>';
+										// State attribute is always read-only from the UI
+										$sHTMLValue = $this->GetStateLabel();
+										$val = array('label' => '<label>'.$oAttDef->GetLabel().'</label>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
 									}
 									else
 									{
-										$sValue = $this->Get($sAttCode);
-										$sDisplayValue = $this->GetEditValue($sAttCode);
-										$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-										$sHTMLValue = "".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'';
+										if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE))
+										{
+											// Check if the attribute is not read-only because of a synchro...
+											if ($iFlags & OPT_ATT_SLAVE)
+											{
+												$aReasons = array();
+												$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
+												$sTip = '';
+												foreach($aReasons as $aRow)
+												{
+													$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
+													$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
+													$sTip .= "<div class='synchro-source'>";
+													$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
+													$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
+												}
+												$sTip = addslashes($sTip);
+												$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
+												$sComments = $sSynchroIcon;
+											}
+
+											// Attribute is read-only
+											$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode).'</span>';
+										}
+										else
+										{
+											$sValue = $this->Get($sAttCode);
+											$sDisplayValue = $this->GetEditValue($sAttCode);
+											$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
+											$sHTMLValue = "".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'';
+										}
+										$aFieldsMap[$sAttCode] = $sInputId;
+										$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
 									}
+								}
+								else
+								{
+									$val = array(
+										'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
+										'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>",
+										'comments' => $sComments,
+										'infos' => $sInfos,
+										'attcode' => $sAttCode
+									);
 									$aFieldsMap[$sAttCode] = $sInputId;
-									$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
+								}
+
+								// Checking how the field should be rendered
+								// Note: For view mode, this is done in cmdbAbstractObject::GetFieldAsHtml()
+								// Note 2: Shouldn't this be a property of the AttDef instead an array that we have to maintain?
+								if (in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
+								{
+									$val['layout'] = 'large';
+								}
+								else
+								{
+									$val['layout'] = 'small';
 								}
 							}
 							else
 							{
-								$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>", 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
-								$aFieldsMap[$sAttCode] = $sInputId;	
+								$val = null; // Skip this field
 							}
 
-                            // Checking how the field should be rendered
-                            // Note: For view mode, this is done in cmdbAbstractObject::GetFieldAsHtml()
-							// Note 2: Shouldn't this be a property of the AttDef instead an array that we have to maintain?
-                            if(in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
-                            {
-                                $val['layout'] = 'large';
-                            }
-                            else
-                            {
-                                $val['layout'] = 'small';
-                            }
-						}
-						else
-						{
-							$val = null; // Skip this field
-						}
-
-
-
-							
 						}
 						else
 						{
@@ -776,10 +784,10 @@ EOF
 
 						if ($val != null)
 						{
-						    // The field is visible, add it to the current column
+							// The field is visible, add it to the current column
 							$aDetails[$sTab][$sColIndex][] = $val;
 							$iInputId++;
-						}				
+						}
 					}
 				}
 				if (!empty($sPreviousLabel))
@@ -796,6 +804,7 @@ EOF
 			}
 			$oPage->add('</tr></table>');
 		}
+
 		return $aFieldsMap;
 	}
 
@@ -814,6 +823,7 @@ EOF
 		{
 			// Object's details
 			// template not found display the object using the *old style*
+			$oPage->add('<div id="search-widget-results-outer">');
 			$this->DisplayBareHeader($oPage, $bEditMode);
 			$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 			$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
@@ -823,6 +833,7 @@ EOF
 			//$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
 			//$this->DisplayBareHistory($oPage, $bEditMode);
 			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.get_class($this).'&id='.$this->GetKey());
+			$oPage->add('</div>');
 		}
 	}
 	
@@ -1527,238 +1538,21 @@ EOF
 
 		$oPage->add(self::GetSearchForm($oPage, $oSet, $aExtraParams));
 	}
-	
+
+	/**
+	 * @param WebPage $oPage
+	 * @param CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return string
+	 * @throws CoreException
+	 * @throws DictExceptionMissingString
+	 */
 	public static function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		static $iSearchFormId = 0;
-		$bMultiSelect = false;
-		$oAppContext = new ApplicationContext();
-		$sHtml = '';
-		$numCols=4;
-		$sClassName = $oSet->GetFilter()->GetClass();
+		$oSearchForm = new \Combodo\iTop\Application\Search\SearchForm();
 
-		// Romain: temporarily removed the tab "OQL query" because it was not finalized
-		// (especially when used to add a link)
-		/*
-		$sHtml .= "<div class=\"mini_tabs\" id=\"mini_tabs{$iSearchFormId}\"><ul>
-					<li><a href=\"#\" onClick=\"$('div.mini_tab{$iSearchFormId}').toggle();$('#mini_tabs{$iSearchFormId} ul li a').toggleClass('selected');\">".Dict::S('UI:OQLQueryTab')."</a></li>
-					<li><a class=\"selected\" href=\"#\" onClick=\"$('div.mini_tab{$iSearchFormId}').toggle();$('#mini_tabs{$iSearchFormId} ul li a').toggleClass('selected');\">".Dict::S('UI:SimpleSearchTab')."</a></li>
-					</ul></div>\n";
-		*/
-		// Simple search form
-		if (isset($aExtraParams['currentId']))
-		{
-			$sSearchFormId = $aExtraParams['currentId'];
-		}
-		else
-		{
-			$iSearchFormId = $oPage->GetUniqueId();
-			$sSearchFormId = 'SimpleSearchForm'.$iSearchFormId;
-			$sHtml .= "<div id=\"ds_$sSearchFormId\" class=\"mini_tab{$iSearchFormId}\">\n";			
-		}
-		// Check if the current class has some sub-classes
-		if (isset($aExtraParams['baseClass']))
-		{
-			$sRootClass = $aExtraParams['baseClass'];
-		}
-		else
-		{
-			$sRootClass = $sClassName;
-		}
-		$aSubClasses = MetaModel::GetSubclasses($sRootClass);
-		if (count($aSubClasses) > 0)
-		{
-			$aOptions = array();
-			$aOptions[MetaModel::GetName($sRootClass)] = "<option value=\"$sRootClass\">".MetaModel::GetName($sRootClass)."</options>\n";
-			foreach($aSubClasses as $sSubclassName)
-			{
-				$aOptions[MetaModel::GetName($sSubclassName)] = "<option value=\"$sSubclassName\">".MetaModel::GetName($sSubclassName)."</options>\n";
-			}
-			$aOptions[MetaModel::GetName($sClassName)] = "<option selected value=\"$sClassName\">".MetaModel::GetName($sClassName)."</options>\n";
-			ksort($aOptions);
-			$sContext = $oAppContext->GetForLink();
-			$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext')\">\n".implode('', $aOptions)."</select>\n";
-		}
-		else
-		{
-			$sClassesCombo = MetaModel::GetName($sClassName);
-		}
-		$oUnlimitedFilter = new DBObjectSearch($sClassName);
-		$sAction = (isset($aExtraParams['action'])) ? $aExtraParams['action'] : utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
-		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"{$sAction}\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
-		$sHtml .= "<h2>".Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)."</h2>\n";
-		$index = 0;
-		$sHtml .= "<div>\n";
-		$aMapCriteria = array();
-		$aList = MetaModel::GetZListItems($sClassName, 'standard_search');
-		$aConsts = $oSet->ListConstantFields(); // Some fields are constants based on the query/context
-		$sClassAlias = $oSet->GetFilter()->GetClassAlias();
-		foreach($aList as $sFilterCode)
-		{
-			//$oAppContext->Reset($sFilterCode); // Make sure the same parameter will not be passed twice
-			$sHtml .= '<div class="SearchAttribute" style="white-space: nowrap;padding:5px;display:inline-block;">';
-			$sFilterValue = isset($aConsts[$sClassAlias][$sFilterCode]) ? $aConsts[$sClassAlias][$sFilterCode] : '';
-			$sFilterValue = utils::ReadParam($sFilterCode, $sFilterValue, false, 'raw_data');
-			$sFilterOpCode = null; // Use the default 'loose' OpCode
-			if (empty($sFilterValue))
-			{
-				if (isset($aMapCriteria[$sFilterCode]))
-				{
-					if (count($aMapCriteria[$sFilterCode]) > 1)
-					{
-						$sFilterValue = Dict::S('UI:SearchValue:Mixed');
-					}
-					else
-					{
-						$sFilterValue = $aMapCriteria[$sFilterCode][0]['value'];
-						$sFilterOpCode = $aMapCriteria[$sFilterCode][0]['opcode'];
-					}
-					// Todo: Investigate...
-					if ($sFilterCode != 'company')
-					{
-						$oUnlimitedFilter->AddCondition($sFilterCode, $sFilterValue, $sFilterOpCode);
-					}
-				}
-			}
-
-			$oAttDef = MetaModel::GetAttributeDef($sClassName, $sFilterCode);
-			if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
-			{
-				$oKeyAttDef = $oAttDef->GetFinalAttDef();
-				$sKeyAttClass = $oKeyAttDef->GetHostClass();
-				$sKeyAttCode = $oKeyAttDef->GetCode();
-
-				$sTargetClass = $oKeyAttDef->GetTargetClass();
-				$oSearch = new DBObjectSearch($sTargetClass);
-				$oSearch->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
-				$oAllowedValues = new DBObjectSet($oSearch);
-
-				$iFieldSize = $oKeyAttDef->GetMaxSize();
-				$iMaxComboLength = $oKeyAttDef->GetMaximumComboLength();
-				$sHtml .= "<label>".MetaModel::GetFilterLabel($sKeyAttClass, $sKeyAttCode).":</label>&nbsp;";
-				$aExtKeyParams = $aExtraParams;
-				$aExtKeyParams['iFieldSize'] = $oKeyAttDef->GetMaxSize();
-				$aExtKeyParams['iMinChars'] = $oKeyAttDef->GetMinAutoCompleteChars();
-				$sHtml .= UIExtKeyWidget::DisplayFromAttCode($oPage, $sKeyAttCode, $sKeyAttClass, $oAttDef->GetLabel(), $oAllowedValues, $sFilterValue, $sSearchFormId.'search_'.$sFilterCode, false, $sFilterCode, '', $aExtKeyParams, true);
-			}
-			else
-			{
-				$aAllowedValues = MetaModel::GetAllowedValues_flt($sClassName, $sFilterCode, $aExtraParams);
-				if (is_null($aAllowedValues))
-				{
-					// Any value is possible, display an input box
-					$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;<input class=\"textSearch\" name=\"$sFilterCode\" value=\"".htmlentities($sFilterValue, ENT_QUOTES, 'utf-8')."\"/>\n";
-				}
-				else
-				{
-					//Enum field, display a multi-select combo
-					$sValue = "<select class=\"multiselect\" size=\"1\" name=\"{$sFilterCode}[]\" multiple>\n";
-					$bMultiSelect = true;
-					//$sValue .= "<option value=\"\">".Dict::S('UI:SearchValue:Any')."</option>\n";
-					asort($aAllowedValues);
-					foreach($aAllowedValues as $key => $value)
-					{
-						if (is_array($sFilterValue) && in_array($key, $sFilterValue))
-						{
-							$sSelected = ' selected';
-						}
-						else if ($sFilterValue == $key)
-						{
-							$sSelected = ' selected';
-						}
-						else
-						{
-							$sSelected = '';
-						}
-						$sValue .= "<option value=\"$key\"$sSelected>$value</option>\n";
-					}
-					$sValue .= "</select>\n";
-					$sHtml .= "<label>".MetaModel::GetFilterLabel($sClassName, $sFilterCode).":</label>&nbsp;$sValue\n";
-				}				
-			}
-			unset($aExtraParams[$sFilterCode]);
-			
-			// Finally, add a tooltip if one is defined for this attribute definition
-			$sTip = $oAttDef->GetHelpOnSmartSearch();
-			if (strlen($sTip) > 0)
-			{
-				$sTip = addslashes($sTip);
-				$sTip = str_replace(array("\n", "\r"), " ", $sTip);
-				// :input does represent in form visible input (INPUT, SELECT, TEXTAREA)
-				$oPage->add_ready_script("$('form#fs_$sSearchFormId :input[name={$sFilterCode}]').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
-			}
-			$index++;
-			$sHtml .= '</div> ';
-		}
-		$sHtml .= "</div>\n";
-		$sHtml .= "<p align=\"right\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Search')."\"></p>\n";
-		if (isset($aExtraParams['table_id']))
-		{
-			// Rename to avoid collisions...
-			$aExtraParams['_table_id_'] = $aExtraParams['table_id'];
-			unset($aExtraParams['table_id']);
-		}
-		foreach($aExtraParams as $sName => $sValue)
-		{
-			if (is_scalar($sValue))
-			{
-				$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."\" />\n";
-			}
-		}
-		$sHtml .= "<input type=\"hidden\" name=\"class\" value=\"$sClassName\" />\n";
-		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\" />\n";
-		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_form\" />\n";
-		$sHtml .= $oAppContext->GetForForm();
-		$sHtml .= "</form>\n";		
-		if (!isset($aExtraParams['currentId']))
-		{
-			$sHtml .= "</div><!-- Simple search form -->\n";
-		}
-		if ($bMultiSelect)
-		{
-			$aOptions = array(
-				'header' => true,
-				'checkAllText' => Dict::S('UI:SearchValue:CheckAll'),
-				'uncheckAllText' => Dict::S('UI:SearchValue:UncheckAll'),
-				'noneSelectedText' => Dict::S('UI:SearchValue:Any'),
-				'selectedText' => Dict::S('UI:SearchValue:NbSelected'),
-				'selectedList' => 1,
-			);
-			$sJSOptions = json_encode($aOptions);
-			$oPage->add_ready_script("$('.multiselect').multiselect($sJSOptions);");
-		}
-/*
-		// OQL query builder
-		$sHtml .= "<div id=\"OQLQuery{$iSearchFormId}\" style=\"display:none\" class=\"mini_tab{$iSearchFormId}\">\n";
-		$sHtml .= "<h1>".Dict::S('UI:OQLQueryBuilderTitle')."</h1>\n";
-		$sHtml .= "<form id=\"formOQL{$iSearchFormId}\"><table style=\"width:80%;\"><tr style=\"vertical-align:top\">\n";
-		$sHtml .= "<td style=\"text-align:right\"><label>SELECT&nbsp;</label><select name=\"oql_class\">";
-		$aClasses = MetaModel::EnumChildClasses($sClassName, ENUM_CHILD_CLASSES_ALL);
-		$sSelectedClass = utils::ReadParam('oql_class', $sClassName, false, 'class');
-		$sOQLClause = utils::ReadParam('oql_clause', '', false, 'raw_data');
-		asort($aClasses);
-		foreach($aClasses as $sChildClass)
-		{
-			$sSelected = ($sChildClass == $sSelectedClass) ? 'selected' : '';
-			$sHtml.= "<option value=\"$sChildClass\" $sSelected>".MetaModel::GetName($sChildClass)."</option>\n";
-		}
-		$sHtml .= "</select>&nbsp;</td><td>\n";
-		$sHtml .= "<textarea name=\"oql_clause\" style=\"width:100%\">$sOQLClause</textarea></td></tr>\n";
-		$sHtml .= "<tr><td colspan=\"2\" style=\"text-align:right\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Query')."\"></td></tr>\n";
-		$sHtml .= "<input type=\"hidden\" name=\"dosearch\" value=\"1\" />\n";
-		foreach($aExtraParams as $sName => $sValue)
-		{
-			if (is_scalar($sValue))
-			{
-				$sHtml .= "<input type=\"hidden\" name=\"$sName\" value=\"$sValue\" />\n";
-			}
-		}
-		$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"search_oql\" />\n";
-		$sHtml .= $oAppContext->GetForForm();
-		$sHtml .= "</table></form>\n";
-		$sHtml .= "</div><!-- OQL query form -->\n";
-*/
-		return $sHtml;
+		return $oSearchForm->GetSearchForm($oPage, $oSet, $aExtraParams);
 	}
 
 	/**

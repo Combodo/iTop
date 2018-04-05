@@ -1,3 +1,20 @@
+// Copyright (C) 2010-2018 Combodo SARL
+//
+//   This file is part of iTop.
+//
+//   iTop is free software; you can redistribute it and/or modify
+//   it under the terms of the GNU Affero General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   iTop is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+//
+//   You should have received a copy of the GNU Affero General Public License
+//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
 // JavaScript Document
 function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote)
 {
@@ -101,21 +118,43 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				   operation: 'addObjects',
 				   json: me.oWizardHelper.ToJSON()
 				 };
-		$.post( GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', theMap, 
-				function(data)
-				{
-					$('#dlg_'+me.id).html(data);
-					$('#dlg_'+me.id).dialog('open');
-					me.UpdateSizes(null, null);
-					me.SearchObjectsToAdd();
-					$('#'+me.id+'_indicatorAdd').html('');
-				},
-				'html'
-			);
+
+		// Gather the already linked target objects
+		theMap.aAlreadyLinked = [];
+		$('#linkedset_'+me.id+' .selection:input').each(function (i) {
+			var iRemote = $(this).attr('data-remote-id');
+			theMap.aAlreadyLinked.push(iRemote);
+		});
+
+		$.ajax({
+				"url": GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+				"method": "POST",
+				"data": theMap,
+				"dataType": "html"
+			})
+			.done(function (data) {
+				$('#dlg_'+me.id).html(data);
+				$('#dlg_'+me.id).dialog('open');
+				me.UpdateSizes(null, null);
+				me.SearchObjectsToAdd();
+				$('#'+me.id+'_indicatorAdd').html('');
+			})
+		;
 	};
 	
 	this.SearchObjectsToAdd = function()
 	{
+		$('#count_'+me.id).change(function () {
+			var c = this.value;
+			me.UpdateButtons(c);
+		});
+		FixSearchFormsDisposition();
+		me.UpdateSizes(null, null);
+
+		$("#fs_SearchFormToAdd_"+me.id).trigger('itop.search.form.submit');
+
+		return false; // Don't submit the form, stay in the current page !
+
 		var theMap = { sAttCode: me.sAttCode,
 					   iInputId: me.iInputId,
 					   sSuffix: me.sSuffix,

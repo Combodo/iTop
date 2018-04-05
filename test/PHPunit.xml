@@ -47,6 +47,9 @@
         <testsuite name="Tickets">
             <directory>itop-tickets</directory>
         </testsuite>
+        <testsuite name="Application">
+            <directory>application</directory>
+        </testsuite>
     </testsuites>
 
     <!-- Code coverage white list -->

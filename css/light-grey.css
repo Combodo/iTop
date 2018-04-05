@@ -58,7 +58,7 @@ label {
   cursor: pointer;
 }
 .hilite, .hilite a, .hilite a:visited {
-  color: #e87c1e;
+  color: #ea7d1e;
   text-decoration: none;
 }
 table.datatable {
@@ -114,7 +114,7 @@ table.listResults td .view-image img {
   cursor: pointer;
   margin-bottom: 3px;
   padding: 2px;
-  background-color: #e87c1e;
+  background-color: #ea7d1e;
 }
 .edit-image .edit-buttons .button.disabled {
   cursor: default;
@@ -275,7 +275,7 @@ legend.transparent {
 }
 .ui-widget-content td a:hover, p a:hover, td a:hover {
   text-decoration: underline;
-  color: #e87c1e;
+  color: #ea7d1e;
 }
 .cke_reset_all *:hover {
   text-decoration: none;
@@ -283,8 +283,8 @@ legend.transparent {
 }
 table.cke_dialog_contents a.cke_dialog_ui_button_ok {
   color: #000;
-  border-color: #e87c1e;
-  background: #e87c1e;
+  border-color: #ea7d1e;
+  background: #ea7d1e;
 }
 .cke_notifications_area {
   display: none;
@@ -309,7 +309,7 @@ td a.mailto, td a.mailto:visited {
 }
 td a.mailto:hover {
   text-decoration: underline;
-  color: #e87c1e;
+  color: #ea7d1e;
   padding-left: 20px;
   background: url(../images/mail.png?v=v2.4.0) no-repeat left;
 }
@@ -329,7 +329,7 @@ a.small_action {
   padding-left: 5px;
   padding-top: 2px;
   padding-bottom: 2px;
-  background: #e87c1e url(../images/actions_left.png?v=v2.4.0) no-repeat left;
+  background: #ea7d1e url(../images/actions_left.png?v=v2.4.0) no-repeat left;
 }
 .actions_details span {
   background: url(../images/actions_right.png?v=v2.4.0) no-repeat right;
@@ -424,7 +424,7 @@ div.ui-accordion-content {
   text-decoration: none;
 }
 .ui-accordion-content a:hover {
-  color: #e87c1e;
+  color: #ea7d1e;
   text-decoration: none;
 }
 .ui-accordion-content ul {
@@ -455,7 +455,7 @@ a.CollapsibleLabel.open, td a.CollapsibleLabel.open {
   padding: 0px 0pt 0px 16px;
   font-size: 8pt;
   text-decoration: none;
-  color: #e87c1e;
+  color: #ea7d1e;
   background: url(../images/mini-arrow-orange-open.gif) no-repeat left;
 }
 .page_header {
@@ -506,7 +506,7 @@ div.actions_menu > ul {
   nowidth: 70px;
   padding-left: 5px;
   /* Nasty work-around for IE... en attendant mieux */
-  background: #e87c1e url(../images/actions_left.png?v=v2.4.0) no-repeat top left;
+  background: #ea7d1e url(../images/actions_left.png?v=v2.4.0) no-repeat top left;
   cursor: pointer;
   margin: 0;
 }
@@ -577,7 +577,7 @@ div.actions_menu > ul > li {
   position: absolute;
   display: none;
   border-top: 1px solid white;
-  z-index: 999;
+  z-index: 1500;
 }
 .itop_popup li ul li, #logOffBtn li ul li {
   float: none;
@@ -588,7 +588,7 @@ div.actions_menu > ul > li {
   text-align: left;
 }
 .itop_popup li ul li a:hover, #logOffBtn li ul li a:hover {
-  background: #e87c1e;
+  background: #ea7d1e;
   color: #fff;
   font-weight: bold;
 }
@@ -675,60 +675,6 @@ input.dp-applied {
   float: left;
 }
 /* For search forms */
-.SearchDrawer {
-  border-top: 5px solid #1c94c4;
-  border-left: 5px solid #1c94c4;
-  border-right: 5px solid #1c94c4;
-  border-bottom: 0;
-  background: #d6e8ef;
-  color: #000;
-  padding: 10px;
-  margin: 0;
-  font-size: 12px;
-}
-.SearchDrawer label {
-  background: #d6e8ef;
-  color: #000;
-  text-align: right;
-}
-.SearchDrawer h1 {
-  color: #000;
-}
-.SearchDrawer .SearchAttribute > .field_input_zone {
-  display: inline-block;
-}
-.SearchDrawer .SearchAttribute > .field_input_zone > .field_select_wrapper {
-  display: inline-block;
-}
-.DrawerClosed {
-  display: none;
-}
-.DrawerHandle {
-  margin: 0;
-  padding: 5px;
-  background: url(../images/drawer-handle.gif) bottom no-repeat transparent;
-  color: #fff;
-  cursor: pointer;
-  text-align: center;
-  /* center the block */
-  width: 100px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 0;
-  margin-bottom: 0;
-  display: block;
-  font-size: 12px;
-}
-div.HRDrawer {
-  height: 5px;
-  width: 100%;
-  margin: 0;
-  background-color: #1c94c4;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  display: block;
-}
 .mini_tabs a {
   text-decoration: none;
   font-weight: bold;
@@ -752,6 +698,506 @@ div.HRDrawer {
   nopadding-left: 1em;
   nopadding-right: 1em;
   margin-top: 0;
+}
+/* Search forms v2 */
+.search_box {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1100;
+  /* To be over the table block/unblock UI. Not very sure about this. */
+  /* Sizing reset */
+}
+.search_box * {
+  box-sizing: border-box;
+}
+.search_form_handler {
+  position: relative;
+  z-index: 10;
+  font-size: 12px;
+  border: 1px solid #3f7294;
+  /* Sizing reset */
+  /* Hyperlink reset */
+  /* Input reset */
+  /* List helpers */
+}
+.search_form_handler * {
+  box-sizing: border-box;
+}
+.search_form_handler a {
+  color: inherit;
+  text-decoration: none;
+}
+.search_form_handler input[type="text"], .search_form_handler select {
+  padding: 1px 2px;
+}
+.search_form_handler.opened .sf_title .sft_toggler {
+  transform: rotateX(180deg);
+}
+.search_form_handler.opened .sf_criterion_area {
+  /*display: inherit;*/
+}
+.search_form_handler .sf_title {
+  padding: 8px 10px;
+  margin: 0;
+  color: #fff;
+  background-color: #3f7294;
+  cursor: pointer;
+  /* Pictogram */
+}
+.search_form_handler .sf_title .sft_picto {
+  display: none;
+  /* TODO: Remove this class and the correspondig DOM element if this option is kept. */
+  margin-right: 10px;
+}
+.search_form_handler .sf_title .sft_refresh, .search_form_handler .sf_title .sft_toggler {
+  transition: color 0.2s ease-in-out, transform 0.4s ease-in-out;
+}
+.search_form_handler .sf_title .sft_refresh:hover, .search_form_handler .sf_title .sft_toggler:hover {
+  color: #f1f1f1;
+}
+.search_form_handler .sf_title .sft_refresh {
+  font-size: 10pt;
+  line-height: 13pt;
+}
+.search_form_handler .sf_title .sft_toggler {
+  margin-left: 0.7em;
+}
+.search_form_handler .sf_message {
+  display: none;
+  margin: 8px 8px 0px 8px;
+  border-radius: 0px;
+}
+.search_form_handler .sf_criterion_area {
+  /*display: none;*/
+  padding: 8px 8px 3px 8px;
+  /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
+  background-color: #fff;
+  /* Common style between criterion and more criterion */
+  /* Criteria tags */
+  /* More criterion */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria, .search_form_handler .sf_criterion_area .sf_more_criterion {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 5px;
+  vertical-align: top;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.opened, .search_form_handler .sf_criterion_area .sf_more_criterion.opened {
+  margin-bottom: 0px;
+  /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.opened .sfc_header, .search_form_handler .sf_criterion_area .sf_more_criterion.opened .sfc_header, .search_form_handler .sf_criterion_area .search_form_criteria.opened .sfm_header, .search_form_handler .sf_criterion_area .sf_more_criterion.opened .sfm_header {
+  border-bottom: none !important;
+  box-shadow: none !important;
+  padding-bottom: 13px;
+  /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria > *, .search_form_handler .sf_criterion_area .sf_more_criterion > * {
+  padding: 7px 8px;
+  vertical-align: top;
+  border: 1px solid #ccc;
+  border-radius: 1px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group, .search_form_handler .sf_criterion_area .sf_more_criterion .sfc_form_group, .search_form_handler .sf_criterion_area .search_form_criteria .sfm_content, .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content {
+  position: absolute;
+  z-index: -1;
+  min-width: 100%;
+  left: 0px;
+  margin-top: -1px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria {
+  margin-right: 30px;
+  /* Non editable criteria */
+  /* Draft criteria (modifications not applied) */
+  /* Opened criteria (form group displayed) */
+  /* Top left corner icons */
+  /* Special criterion processing */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.locked {
+  background-color: #f1f1f1;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.locked .sfc_title {
+  user-select: none;
+  cursor: initial;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.draft .sfc_header, .search_form_handler .sf_criterion_area .search_form_criteria.draft .sfc_form_group {
+  border-style: dashed;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.draft .sfc_title {
+  font-style: italic;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.opened {
+  z-index: 1;
+  /* To be over other criterion */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.opened .sfc_toggle {
+  transform: rotateX(-180deg);
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.opened .sfc_form_group {
+  display: block;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.opened_left .sfc_form_group {
+  left: auto;
+  right: 0px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria:not(:last-of-type)::after {
+  /* TODO: Find an elegant way to do this, without hardcoding the content (could be a <style> in the markup) and margin. Note, only a few languages (hawaiian and stuff like this have more than 4 letters in for "and" word. */
+  content: "and";
+  position: absolute;
+  top: 8px;
+  left: calc(100% + 0px);
+  margin-right: 5px;
+  margin-left: 5px;
+  text-align: center;
+  color: #808080;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria > * {
+  background-color: #eee;
+  color: #2d2d2d;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_toggle, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_close {
+  position: absolute;
+  top: 7px;
+  color: #e87c1e;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_locked {
+  position: absolute;
+  top: 9px;
+  color: #808080;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_toggle {
+  display: inline-block;
+  right: 23px;
+  transition: all 0.3s ease-in-out;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_close, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_locked {
+  right: 7px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_title {
+  max-width: 240px;
+  padding-right: 30px;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group {
+  /* Form group (operators) is displayed only when the criteria is toggled to opened state */
+  display: none;
+  max-height: 520px;
+  overflow: auto;
+  /* Show only first operator in simple mode */
+  /* Show all operators in advanced mode */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators {
+  font-size: 12px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator.force_hide {
+  display: none !important;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator > label {
+  line-height: 20px;
+  white-space: nowrap;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator > label > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_op_radio {
+  width: 12px;
+  margin: 0px;
+  margin-right: 7px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_op_name {
+  width: 90px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_op_content input[type="text"] {
+  width: 160px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices label > input {
+  vertical-align: middle;
+  margin-left: 0px;
+  margin-right: 8px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items {
+  max-height: 445px;
+  /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0px -8px;
+  /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list.sfc_opc_mc_items_selected {
+  position: relative;
+  padding-top: 5px;
+  margin-top: 5px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list.sfc_opc_mc_items_selected::before {
+  content: "";
+  position: absolute;
+  border-top: 1px solid #ddd;
+  width: calc(100% - 12px);
+  /* minus margin-left x2 */
+  margin-left: 6px;
+  top: 0px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_placeholder {
+  padding: 15px 8px;
+  font-style: italic;
+  text-align: center;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_item {
+  padding: 4px 8px;
+  /* Putting back the padding remove by .sfc_opc_mc_items */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_item:hover {
+  background-color: #fff;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_item label {
+  display: inline-block;
+  width: 100%;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_apply, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_cancel {
+  margin-top: 8px;
+  padding: 3px 6px;
+  font-size: 11px;
+  /* Not bold, so it looks like 10px/bold of more/less buttons */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_apply {
+  margin-right: 5px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_more, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_less {
+  position: absolute;
+  bottom: 4px;
+  right: 0px;
+  cursor: pointer;
+  color: #3f7294;
+  font-size: 10px;
+  font-weight: bold;
+  border: none;
+  background-color: transparent;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_more > span, .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_less > span {
+  margin-left: 3px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operator:not(:first-of-type), .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operator:first-of-type .sfc_op_radio {
+  display: none;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_less {
+  display: none;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_more {
+  display: inline-block;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_operator {
+  margin-bottom: 3px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_operator:last-of-type {
+  margin-bottom: 0px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_operator:not(:first-of-type), .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_operator:first-of-type .sfc_op_radio {
+  display: inherit;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_less {
+  display: inline-block;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .sfc_fg_more {
+  display: none;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group.advanced .hide_on_advanced {
+  display: none;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group:not(.advanced) .hide_on_less {
+  display: none;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw > * {
+  border-color: transparent;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw .sfc_title {
+  cursor: initial;
+  padding-right: 20px;
+  /* Less than regular as there is no toggle icon */
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_raw .sfc_form_group {
+  display: none;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_enum .sfc_form_group .sfc_fg_operator_in > label {
+  display: inline-block;
+  width: 100%;
+  line-height: initial;
+  white-space: nowrap;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_enum .sfc_form_group .sfc_fg_operator_in > label .sfc_op_content {
+  width: 100%;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_form_group.advanced .sfc_fg_operator_between {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_between label.sfc_op_content_from_label, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operator_between label.sfc_op_content_until_label {
+  width: 90px;
+  display: inline-block;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date_time .sfc_form_group.advanced .sfc_fg_operator_between, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date .sfc_form_group.advanced .sfc_fg_operator_between {
+  margin-bottom: 5px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date_time .sfc_fg_operator_between_days input, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date .sfc_fg_operator_between_days input {
+  width: 135px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date_time button.ui-datepicker-trigger, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date button.ui-datepicker-trigger {
+  background: none;
+  border: none;
+  height: 100%;
+  padding: 2px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date_time button.ui-datepicker-trigger img, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date button.ui-datepicker-trigger img {
+  vertical-align: middle;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion {
+  margin-right: 10px;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion.opened {
+  z-index: 2;
+  /* To be over criterion */
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion.opened .sfm_content {
+  display: inherit;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion.opened_left .sfm_content {
+  left: auto;
+  right: 0px;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion > * {
+  background-color: #fff;
+  color: #2d2d2d;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_toggler .sfm_tg_title {
+  margin-right: 7px;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_toggler .sfm_tg_icon {
+  color: #e87c1e;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content {
+  display: none;
+  min-width: 200px;
+  /* To avoid element going to thin on filter, not very slick */
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_lists {
+  margin: 0px -8px;
+  padding: 0px 8px;
+  max-height: 400px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_lists .sfl_items > li:hover {
+  background-color: #f1f1f1;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_buttons {
+  display: none;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_buttons button {
+  margin-top: 8px;
+  margin-right: 5px;
+  padding: 3px 6px;
+  font-size: 11px;
+}
+.search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_buttons button:last-of-type {
+  margin-right: 0px;
+}
+.search_form_handler .sf_list:not(:first-of-type) .sfl_title {
+  border-top: 1px solid #ddd;
+  padding-top: 8px;
+  margin-top: 5px;
+}
+.search_form_handler .sf_list .sfl_title {
+  font-weight: bold;
+}
+.search_form_handler .sf_list .sfl_items {
+  margin: 5px -8px 0px -8px;
+  padding: 0px;
+}
+.search_form_handler .sf_list .sfl_items > li {
+  padding: 4px 8px;
+  list-style: none;
+  white-space: nowrap;
+}
+.search_form_handler .sf_list .sfl_items > li:hover {
+  background-color: #fff;
+}
+.search_form_handler .sf_list .sfl_items > li.sfl_i_placeholder {
+  font-style: italic;
+  opacity: 0.8;
+}
+.search_form_handler .sf_list .sfl_items > li > label {
+  display: inline-block;
+  width: 100%;
+}
+.search_form_handler .sf_list .sfl_items > li > label > * {
+  vertical-align: middle;
+}
+.search_form_handler .sf_list .sfl_items > li > label > input[type="checkbox"] {
+  margin-left: 0px;
+  margin-right: 8px;
+}
+.search_form_handler .sf_filter {
+  position: relative;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.search_form_handler .sf_filter input, .search_form_handler .sf_filter button, .search_form_handler .sf_filter .sff_picto {
+  vertical-align: middle;
+  height: 22px;
+}
+.search_form_handler .sf_filter input, .search_form_handler .sf_filter button {
+  border: 1px solid #ababab;
+}
+.search_form_handler .sf_filter input {
+  width: 100%;
+}
+.search_form_handler .sf_filter button {
+  width: 23px;
+  /* Must be equals to .sf_filter > *:height */
+  background-color: #fff;
+  color: #ea7d1e;
+  font-size: 10px;
+}
+.search_form_handler .sf_filter button:first-of-type {
+  margin-left: 5px;
+}
+.search_form_handler .sf_filter button:not(:first-of-type) {
+  border-left: transparent;
+}
+.search_form_handler .sf_filter .sff_input_wrapper {
+  position: relative;
+}
+.search_form_handler .sf_filter .sff_input_wrapper .sff_picto {
+  position: absolute;
+  right: 5px;
+  top: 2px;
+  opacity: 0.6;
+  user-select: none;
+}
+.search_form_handler .sf_filter .sff_input_wrapper .sff_reset {
+  display: none;
+}
+.search_form_handler .sf_filter.sf_with_buttons input {
+  width: calc(100% - 28px) !important;
+  /* Minus button outter width (only one for now) */
+  min-width: 120px;
+}
+.sf_results_area .sf_results_placeholder {
+  margin-top: 100px;
+  text-align: center;
+}
+.sf_results_area .sf_results_placeholder button > span {
+  margin-left: 0.5em;
+}
+.hidden {
+  display: none !important;
+}
+.visible {
+  display: initial !important;
 }
 .mandatory {
   border: 1px solid #f00;
@@ -892,7 +1338,7 @@ div#logo div {
   margin-top: 2px;
   margin-right: 4px;
   padding: 6px 9px;
-  background-color: #e87c1e;
+  background-color: #ea7d1e;
   color: white;
   border-radius: 6px;
   text-align: left;
@@ -1499,7 +1945,7 @@ img.prev, img.first, img.next, img.last {
 }
 div.actions_button {
   float: right;
-  background: #e87c1e url("../images/actions_left.png?v=v2.4.0") no-repeat scroll left top;
+  background: #ea7d1e url("../images/actions_left.png?v=v2.4.0") no-repeat scroll left top;
   padding-left: 5px;
   margin-top: 0;
   margin-right: 10px;
@@ -1507,7 +1953,7 @@ div.actions_button {
   vertical-align: middle;
 }
 div.actions_button a, .actions_button a:hover, .actions_button a:visited {
-  background: #e87c1e url(../images/actions_bkg.png?v=v2.4.0) no-repeat scroll right top;
+  background: #ea7d1e url(../images/actions_bkg.png?v=v2.4.0) no-repeat scroll right top;
   color: #fff;
   padding-right: 8px;
   cursor: pointer;
@@ -1540,7 +1986,7 @@ select#org_id {
   position: relative;
 }
 .edit_mode .dashlet-selected {
-  background: #e87c1e !important;
+  background: #ea7d1e !important;
   padding: 5px;
   margin: 0;
 }
@@ -1703,10 +2149,10 @@ a.summary, a.summary:hover {
   position: absolute;
   display: none;
   border-top: 1px solid white;
-  z-index: 999;
+  z-index: 1500;
 }
 #DashboardMenu li ul li a:hover {
-  background: #e87c1e;
+  background: #ea7d1e;
   color: #fff;
   font-weight: bold;
   list-style: none;
@@ -2063,7 +2509,7 @@ span.refresh-button {
 }
 #itop-breadcrumb .breadcrumb-item a:hover {
   text-decoration: none;
-  color: #e87c1e;
+  color: #ea7d1e;
 }
 #itop-breadcrumb .breadcrumb-item a::after {
   content: '';
@@ -2127,7 +2573,7 @@ span.refresh-button {
   margin-bottom: 1px;
 }
 .object-ref-icon.fa {
-  color: #e87c1e;
+  color: #ea7d1e;
   font-size: smaller;
   vertical-align: 1px;
   margin-right: 1px;

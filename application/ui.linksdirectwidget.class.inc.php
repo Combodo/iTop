@@ -278,14 +278,36 @@ class UILinksWidgetDirect
 	/**
 	 * @param WebPage $oPage
 	 * @param DBObject $oCurrentObj
-	 * @throws Exception
+	 * @param $aAlreadyLinked
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 * @throws \OQLException
 	 */
-	public function GetObjectsSelectionDlg($oPage, $oCurrentObj)
+	public function GetObjectsSelectionDlg($oPage, $oCurrentObj, $aAlreadyLinked)
 	{
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
-		
-		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
-		$valuesDef = $oLinksetDef->GetValuesDef();				
+
+		$oHiddenFilter = new DBObjectSearch($this->sLinkedClass);
+		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($this->sLinkedClass, $this->sClass))
+		{
+			// Prevent linking to self if the linked object is of the same family
+			// and already present in the database
+			if (!$oCurrentObj->IsNew())
+			{
+				$oHiddenFilter->AddCondition('id', $oCurrentObj->GetKey(), '!=');
+			}
+		}
+		if (count($aAlreadyLinked) > 0)
+		{
+			$oHiddenFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
+		}
+		$oHiddenCriteria = $oHiddenFilter->GetCriteria();
+		$aArgs = $oHiddenFilter->GetInternalParams();
+		$sHiddenCriteria = $oHiddenCriteria->Render($aArgs);
+
+		$oLinkSetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
+		$valuesDef = $oLinkSetDef->GetValuesDef();
 		if ($valuesDef === null)
 		{
 			$oFilter = new DBObjectSearch($this->sLinkedClass);
@@ -298,13 +320,27 @@ class UILinksWidgetDirect
 			}
 			$oFilter = DBObjectSearch::FromOQL($valuesDef->GetFilterExpression());
 		}
+
 		if ($oCurrentObj != null)
 		{
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
+
+			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
+			$oFilter->SetInternalParams($aArgs);
 		}
 		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
-		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}", array('open' => $bOpen));
+		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}",
+			array(
+			    'open' => $bOpen,
+				'result_list_outer_selector' => "SearchResultsToAdd_{$this->sInputid}",
+				'table_id' => "add_{$this->sInputid}",
+				'table_inner_id' => "ResultsToAdd_{$this->sInputid}",
+				'cssCount' => "#count_{$this->sInputid}",
+				'query_params' => $oFilter->GetInternalParams(),
+				'hidden_criteria' => $sHiddenCriteria,
+			)
+        );
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->sInputid}\">\n";
 		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->sInputid}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
 		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
@@ -330,8 +366,8 @@ class UILinksWidgetDirect
 		{
 			$sRemoteClass = $this->sLinkedClass;
 		}
-		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
-		$valuesDef = $oLinksetDef->GetValuesDef();				
+		$oLinkSetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
+		$valuesDef = $oLinkSetDef->GetValuesDef();
 		if ($valuesDef === null)
 		{
 			$oFilter = new DBObjectSearch($sRemoteClass);
@@ -348,7 +384,7 @@ class UILinksWidgetDirect
 		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($sRemoteClass, $this->sClass))
 		{
 			// Prevent linking to self if the linked object is of the same family
-			// and laready present in the database
+			// and already present in the database
 			if (!$oCurrentObj->IsNew())
 			{
 				$oFilter->AddCondition('id', $oCurrentObj->GetKey(), '!=');
@@ -360,6 +396,8 @@ class UILinksWidgetDirect
 		}
 		if ($oCurrentObj != null)
 		{
+			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
+
 			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
 			$oFilter->SetInternalParams($aArgs);
 		}

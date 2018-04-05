@@ -646,7 +646,7 @@ div.actions_menu > ul > li {
 	position: absolute;
 	display: none;
 	border-top: 1px solid white;
-	z-index: 999;
+	z-index: 1500;
 }
 
 .itop_popup li ul li,  #logOffBtn li ul li {
@@ -756,65 +756,6 @@ input.dp-applied {
 }
 
 /* For search forms */
-.SearchDrawer {
-	//background: $complement-color url(../images/search-top-left-corner.png?v=#{$version}) top left no-repeat;
-	border-top: 5px solid $complement-color;
-	border-left: 5px solid $complement-color;
-	border-right: 5px solid $complement-color;
-	border-bottom: 0;
-	background: $complement-light;
-	color: #000;
-	padding: 10px;
-	margin: 0;
-	font-size: 12px;
-}
-.SearchDrawer label {
-	background: $complement-light;
-	color: #000;
-	text-align: right;
-}
-.SearchDrawer h1 {
-	color: #000;
-}
-.SearchDrawer .SearchAttribute{
-	> .field_input_zone{
-		display: inline-block;
-
-		> .field_select_wrapper{
-			display: inline-block;
-		}
-	}
-}
-.DrawerClosed {
-	display: none;
-}
-.DrawerHandle {
-	margin: 0;
-	padding: 5px;
-	background: url(../images/drawer-handle.gif) bottom no-repeat transparent;
-	color: #fff;
-	cursor: pointer;
-	text-align: center;
-	/* center the block */
-	width: 100px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 0;
-	margin-bottom: 0;
-	display: block;
-	font-size: 12px;
-}
-
-div.HRDrawer {
-	height: 5px;
-	width: 100%;
-	margin: 0;
-	background-color:  $complement-color;
-	margin: 0;
-	padding: 0;
-	border: 0;
-	display: block;
-}
 .mini_tabs a {
 	text-decoration: none;
 	font-weight:bold;
@@ -838,6 +779,634 @@ div.HRDrawer {
 	nopadding-left: 1em;
 	nopadding-right: 1em;
 	margin-top: 0;
+}
+/* Search forms v2 */
+.search_box{
+	box-sizing: border-box;
+	position: relative;
+	z-index: 1100; /* To be over the table block/unblock UI. Not very sure about this. */
+
+	/* Sizing reset */
+	*{
+		box-sizing: border-box;
+	}
+}
+.search_form_handler{
+	position: relative;
+	z-index: 10;
+	font-size: 12px;
+	border: 1px solid #3F7294;
+
+	/* Sizing reset */
+	*{
+		box-sizing: border-box;
+	}
+	/* Hyperlink reset */
+	a{
+		color: inherit;
+		text-decoration: none;
+	}
+	/* Input reset */
+	input[type="text"],
+	select{
+		padding: 1px 2px;
+	}
+
+	&.opened{
+		.sf_title{
+			.sft_toggler{
+				transform: rotateX(180deg);
+			}
+		}
+		.sf_criterion_area{
+			/*display: inherit;*/
+		}
+	}
+
+	.sf_title{
+		padding: 8px 10px;
+		margin: 0;
+		color: #ffffff;
+		background-color: #3F7294;
+		cursor: pointer;
+
+		/* Pictogram */
+		.sft_picto{
+			display: none; /* TODO: Remove this class and the correspondig DOM element if this option is kept. */
+			margin-right: 10px;
+		}
+
+		.sft_refresh,
+		.sft_toggler{
+			transition: color 0.2s ease-in-out, transform 0.4s ease-in-out;
+
+			&:hover{
+				color: $gray-extra-light;
+			}
+		}
+		.sft_refresh{
+			font-size: 10pt;
+			line-height: 13pt;
+		}
+		.sft_toggler{
+			margin-left: 0.7em;
+		}
+	}
+	.sf_message{
+		display: none;
+		margin: 8px 8px 0px 8px;
+		border-radius: 0px;
+	}
+	.sf_criterion_area{
+		/*display: none;*/
+		padding: 8px 8px 3px 8px; /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
+		background-color: $white;
+
+		/* Common style between criterion and more criterion */
+		.search_form_criteria,
+		.sf_more_criterion {
+			position: relative;
+			display: inline-block;
+			margin-bottom: 5px;
+			vertical-align: top;
+
+			&.opened{
+				margin-bottom: 0px; /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
+
+				.sfc_header,
+				.sfm_header{
+					border-bottom: none !important;
+					box-shadow: none !important;
+					padding-bottom: 13px; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+				}
+			}
+
+			> *{
+				padding: 7px 8px;
+				vertical-align: top;
+				border: $search-criteria-box-border;
+				border-radius: $search-criteria-box-radius;
+				box-shadow: $box-shadow-regular;
+			}
+			.sfc_form_group,
+			.sfm_content{
+				position: absolute;
+				z-index: -1;
+				min-width: 100%;
+				left: 0px;
+				margin-top: -1px;
+			}
+		}
+
+		/* Criteria tags */
+		.search_form_criteria{
+			margin-right: 30px;
+
+			/* Non editable criteria */
+			&.locked{
+				background-color: $gray-extra-light;
+
+				.sfc_title{
+					user-select: none;
+					cursor: initial;
+				}
+			}
+            /* Draft criteria (modifications not applied) */
+            &.draft{
+				.sfc_header,
+				.sfc_form_group{
+					border-style: dashed;
+				}
+
+				.sfc_title{
+					font-style: italic;
+				}
+            }
+			/* Opened criteria (form group displayed) */
+			&.opened{
+				z-index: 1; /* To be over other criterion */
+
+				.sfc_toggle{
+					transform: rotateX(-180deg);
+				}
+				.sfc_form_group{
+					display: block;
+				}
+			}
+			&.opened_left{
+				.sfc_form_group{
+					left: auto;
+					right: 0px;
+				}
+			}
+
+			&:not(:last-of-type)::after{
+				/* TODO: Find an elegant way to do this, without hardcoding the content (could be a <style> in the markup) and margin. Note, only a few languages (hawaiian and stuff like this have more than 4 letters in for "and" word. */
+				content: "and";
+				position: absolute;
+				top: 8px;
+				left: calc(100% + 0px);
+				margin-right: 5px;
+				margin-left: 5px;
+				text-align: center;
+				color: $gray-light;
+			}
+
+			> *{
+				background-color: $search-criteria-box-bg-color;
+				color: $search-criteria-box-color;
+			}
+
+			/* Top left corner icons */
+			.sfc_toggle,
+			.sfc_close{
+				position: absolute;
+				top: 7px;
+				color: $search-criteria-box-picto-color;
+			}
+			.sfc_locked{
+				position: absolute;
+				top: 9px;
+				color: $gray-light;
+			}
+			.sfc_toggle{
+				display: inline-block;
+				right: 23px;
+				transition: all 0.3s ease-in-out;
+			}
+			.sfc_close,
+			.sfc_locked{
+				right: 7px;
+			}
+
+			.sfc_title{
+				max-width: 240px;
+				padding-right: 30px;
+				white-space: nowrap;
+				overflow-x: hidden;
+				text-overflow: ellipsis;
+				cursor: pointer;
+			}
+			.sfc_form_group{
+				/* Form group (operators) is displayed only when the criteria is toggled to opened state */
+				display: none;
+				max-height: 520px;
+				overflow: auto;
+
+				.sfc_fg_operators{
+					font-size: 12px;
+
+					.sfc_fg_operator{
+						&.force_hide {
+							display: none !important;
+						}
+
+						> label{
+							line-height: 20px;
+							white-space: nowrap;
+
+							> *{
+								display: inline-block;
+								vertical-align: middle;
+							}
+						}
+
+						.sfc_op_radio{
+							width: 12px;
+							margin: 0px;
+							margin-right: 7px;
+						}
+
+						.sfc_op_name{
+							width: 90px;
+						}
+						.sfc_op_content{
+							input[type="text"]{
+								width: 160px;
+							}
+						}
+
+						.sfc_opc_multichoices{
+							label > input{
+								vertical-align: middle;
+								margin-left: 0px;
+								margin-right: 8px;
+							}
+							.sfc_opc_mc_toggler{
+
+							}
+							.sfc_opc_mc_items{
+								max-height: 445px; /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
+								overflow-x: hidden;
+								overflow-y: auto;
+								margin: 0px -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
+
+								.sfc_opc_mc_items_list{
+									&.sfc_opc_mc_items_selected{
+										position: relative;
+										padding-top: 5px;
+										margin-top: 5px;
+
+										&::before{
+											content: "";
+											position: absolute;
+											border-top: 1px solid $gray-lighter;
+											width: calc(100% - 12px); /* minus margin-left x2 */
+											margin-left: 6px;
+											top: 0px;
+										}
+									}
+
+									.sfc_opc_mc_placeholder{
+										padding: 15px 8px;
+										font-style: italic;
+										text-align: center;
+									}
+									.sfc_opc_mc_item{
+										padding: 4px 8px; /* Putting back the padding remove by .sfc_opc_mc_items */
+
+										&:hover{
+											background-color: $search-criteria-box-hover-color;
+										}
+
+										label{
+											display: inline-block;
+											width: 100%;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				.sfc_fg_apply,
+				.sfc_fg_cancel{
+					margin-top: 8px;
+					padding: 3px 6px;
+					font-size: 11px; /* Not bold, so it looks like 10px/bold of more/less buttons */
+				}
+				.sfc_fg_apply{
+					margin-right: 5px;
+				}
+
+				.sfc_fg_more,
+				.sfc_fg_less{
+					position: absolute;
+					bottom: 4px;
+					right: 0px;
+					cursor: pointer;
+					color: #3F7294;
+					font-size: 10px;
+					font-weight: bold;
+					border: none;
+					background-color: transparent;
+
+					> span{
+						margin-left: 3px;
+					}
+				}
+
+				/* Show only first operator in simple mode */
+				.sfc_fg_operator:not(:first-of-type),
+				.sfc_fg_operator:first-of-type .sfc_op_radio{
+					display: none;
+				}
+				.sfc_fg_less{
+					display: none;
+				}
+				.sfc_fg_more{
+					display: inline-block;
+				}
+
+				/* Show all operators in advanced mode */
+				&.advanced{
+
+					.sfc_fg_operator{
+						margin-bottom: 3px;
+
+						&:last-of-type{
+							margin-bottom: 0px;
+						}
+					}
+
+					.sfc_fg_operator:not(:first-of-type),
+					.sfc_fg_operator:first-of-type .sfc_op_radio{
+						display: inherit;
+					}
+					.sfc_fg_less{
+						display: inline-block;
+					}
+					.sfc_fg_more{
+						display: none;
+					}
+
+					.hide_on_advanced {
+						display: none;
+					}
+
+				}
+
+				&:not(.advanced) {
+					.hide_on_less {
+						display: none;
+					}
+				}
+			}
+
+			/* Special criterion processing */
+			&.search_form_criteria_raw{
+				> *{
+					border-color: transparent;
+				}
+				.sfc_title{
+					cursor: initial;
+					padding-right: 20px; /* Less than regular as there is no toggle icon */
+				}
+				.sfc_form_group{
+					display: none;
+				}
+			}
+			&.search_form_criteria_enum{
+				.sfc_form_group{
+					.sfc_fg_operator_in{
+						> label{
+							display: inline-block;
+							width: 100%;
+							line-height: initial;
+							white-space: nowrap;
+
+							.sfc_op_content{
+								width: 100%;
+							}
+						}
+					}
+				}
+			}
+			&.search_form_criteria_numeric {
+				.sfc_form_group.advanced {
+					.sfc_fg_operator_between {
+						margin-top: 5px;
+						margin-bottom: 5px;
+					}
+				}
+				.sfc_fg_operator_between {
+					label {
+						&.sfc_op_content_from_label, &.sfc_op_content_until_label {
+							width: 90px;
+							display: inline-block;
+						}
+					}
+				}
+			}
+
+			&.search_form_criteria_date_time,
+			&.search_form_criteria_date {
+				.sfc_form_group.advanced {
+					.sfc_fg_operator_between {
+						margin-bottom: 5px;
+					}
+				}
+				.sfc_fg_operator_between_days {
+					input {
+						width: 135px;
+					}
+				}
+				button.ui-datepicker-trigger {
+					background: none;
+					border: none;
+					height: 100%;
+					padding: 2px;
+					img {
+						vertical-align: middle;
+					}
+				}
+			}
+		}
+
+		/* More criterion */
+		.sf_more_criterion{
+			margin-right: 10px;
+
+			&.opened{
+				z-index: 2; /* To be over criterion */
+
+				.sfm_content{
+					display: inherit;
+				}
+			}
+			&.opened_left{
+				.sfm_content{
+					left: auto;
+					right: 0px;
+				}
+			}
+
+			> *{
+				background-color: $search-add-criteria-box-bg-color;
+				color: $search-add-criteria-box-color;
+			}
+			.sfm_toggler{
+				.sfm_tg_title{
+					margin-right: 7px;
+				}
+				.sfm_tg_icon{
+					color: $search-criteria-box-picto-color;
+				}
+			}
+			.sfm_content{
+				display: none;
+				min-width: 200px; /* To avoid element going to thin on filter, not very slick */
+
+				.sfm_lists{
+					margin: 0px -8px;
+					padding: 0px 8px;
+					max-height: 400px;
+					overflow-x: hidden;
+					overflow-y: auto;
+
+					.sfl_items{
+						> li{
+							&:hover{
+								background-color: $search-add-criteria-box-hover-color;
+							}
+						}
+					}
+				}
+				.sfm_buttons{
+					display: none;
+
+					button{
+						margin-top: 8px;
+						margin-right: 5px;
+						padding: 3px 6px;
+						font-size: 11px;
+
+						&:last-of-type{
+							margin-right: 0px;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/* List helpers */
+	.sf_list{
+		&:not(:first-of-type){
+			.sfl_title{
+				border-top: 1px solid $gray-lighter;
+				padding-top: 8px;
+				margin-top: 5px;
+			}
+		}
+
+		.sfl_title{
+			font-weight: bold;
+		}
+		.sfl_items{
+			margin: 5px -8px 0px -8px;
+			padding: 0px;
+
+			> li{
+				padding: 4px 8px;
+				list-style: none;
+				white-space: nowrap;
+
+				&:hover{
+					background-color: $white;
+				}
+				&.sfl_i_placeholder{
+					font-style: italic;
+					opacity: 0.8;
+				}
+
+				> label{
+					display: inline-block;
+					width: 100%;
+
+					> *{
+						vertical-align: middle;
+					}
+					> input[type="checkbox"]{
+						margin-left: 0px;
+						margin-right: 8px;
+					}
+				}
+			}
+		}
+	}
+	.sf_filter{
+		position: relative;
+		margin-top: 8px;
+		margin-bottom: 8px;
+
+		input,
+		button,
+		.sff_picto{
+			vertical-align: middle;
+			height: 22px;
+		}
+
+		input,
+		button{
+			border: 1px solid #ABABAB;
+		}
+		input{
+			width: 100%;
+		}
+		button{
+			width: 23px; /* Must be equals to .sf_filter > *:height */
+			background-color: $white;
+			color: $combodo-orange;
+			font-size: 10px;
+
+			&:first-of-type{
+				margin-left: 5px;
+			}
+			&:not(:first-of-type){
+				border-left: transparent;
+			}
+		}
+		.sff_input_wrapper{
+			position: relative;
+
+			.sff_picto{
+				position: absolute;
+				right: 5px;
+				top: 2px;
+				opacity: 0.6;
+				user-select: none;
+			}
+			.sff_reset{
+				display: none;
+			}
+		}
+
+		&.sf_with_buttons{
+			input{
+				width: calc(100% - 28px) !important; /* Minus button outter width (only one for now) */
+				min-width: 120px;
+			}
+		}
+	}
+}
+.sf_results_area{
+	.sf_results_placeholder{
+		margin-top: 100px;
+		text-align: center;
+
+		button > span{
+			margin-left: 0.5em;
+		}
+	}
+}
+
+.hidden{
+	display: none !important;
+}
+.visible{
+	display: initial !important;
 }
 .mandatory {
 	border: 1px solid #f00;
@@ -1881,7 +2450,7 @@ a.summary,  a.summary:hover {
 	position: absolute;
 	display: none;
 	border-top: 1px solid white;
-	z-index: 999;
+	z-index: 1500;
 }
 #DashboardMenu li ul li a:hover{
 	background: $popup-menu-highlight-color;

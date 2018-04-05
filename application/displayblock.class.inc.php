@@ -220,46 +220,13 @@ class DisplayBlock
 		$aExtraParams['currentId'] = $sId;
 		$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
 		
-		$bAutoReload = false;
-		if (isset($aExtraParams['auto_reload']))
-		{
-			if ($aExtraParams['auto_reload'] === true)
-			{
-				// Note: does not work in the switch (case true) because a positive number evaluates to true!!!
-				$aExtraParams['auto_reload'] = 'standard';
-			}
-			switch($aExtraParams['auto_reload'])
-			{
-				case 'fast':
-				$bAutoReload = true;
-				$iReloadInterval = MetaModel::GetConfig()->GetFastReloadInterval()*1000;
-				break;
-				
-				case 'standard':
-				case 'true':
-				$bAutoReload = true;
-				$iReloadInterval = MetaModel::GetConfig()->GetStandardReloadInterval()*1000;
-				break;
-				
-				default:
-				if (is_numeric($aExtraParams['auto_reload']) && ($aExtraParams['auto_reload'] > 0))
-				{
-					$bAutoReload = true;
-					$iReloadInterval = max(MetaModel::GetConfig()->Get('min_reload_interval'), $aExtraParams['auto_reload'])*1000;
-				}
-				else
-				{
-					// incorrect config, ignore it
-					$bAutoReload = false;
-				}
-			}
-		}
+
 
 		$sFilter = $this->m_oFilter->serialize(); // Used either for asynchronous or auto_reload
 		if (!$this->m_bAsynchronous)
 		{
 			// render now
-			$sHtml .= "<div id=\"$sId\" class=\"display_block\">\n";
+			$sHtml .= "<div id=\"$sId\" class=\"display_block\" >\n";
 			$sHtml .= $this->GetRenderContent($oPage, $aExtraParams, $sId);
 			$sHtml .= "</div>\n";
 		}
@@ -273,17 +240,36 @@ class DisplayBlock
 			$.post("ajax.render.php?style='.$this->m_sStyle.'",
 			   { operation: "ajax", filter: "'.$sFilter.'", extra_params: "'.$sExtraParams.'" },
 			   function(data){
-				 $("#'.$sId.'").empty();
-				 $("#'.$sId.'").append(data);
-				 $("#'.$sId.'").removeClass("loading");
+				 $("#'.$sId.'")
+				    .empty()
+				    .append(data)
+				    .removeClass("loading")
+                 ;
 				}
 			 );
 			 ');
 		}
-		if (($bAutoReload) && ($this->m_sStyle != 'search')) // Search form do NOT auto-reload
-		{
-			$oPage->add_script('setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
-		}
+
+
+        if ($this->m_sStyle == 'list') // Search form need to extract result list extra data, the simplest way is to expose this configuration
+        {
+
+            $listJsonExtraParams = json_encode(json_encode($aExtraParams));
+            $oPage->add_ready_script("
+            $('#$sId').data('sExtraParams', ".$listJsonExtraParams.");
+//            console.debug($('#$sId').data());
+//            console.debug($('#$sId'));
+//            console.debug('#$sId'); 
+            ");
+
+
+
+
+//            $oPage->add_ready_script("console.debug($('#Menu_UserRequest_OpenRequests').data());");
+
+        }
+
+
 		return $sHtml;
 	}
 	
@@ -919,21 +905,10 @@ class DisplayBlock
 			case 'search':
 			if (!$oPage->IsPrintableVersion())
 			{
-				$sStyle = (isset($aExtraParams['open']) && ($aExtraParams['open'] == 'true')) ? 'SearchDrawer' : 'SearchDrawer DrawerClosed';
-				$sHtml .= "<div id=\"ds_$sId\" class=\"$sStyle\">\n";
-				$oPage->add_ready_script(
-<<<EOF
-		$("#dh_$sId").click( function() {
-			$("#ds_$sId").slideToggle('normal', function() { $("#ds_$sId").parent().resize(); FixSearchFormsDisposition();  $("#dh_$sId").trigger('toggle_complete'); } );
-			$("#dh_$sId").toggleClass('open');
-		});
-EOF
-				);
+				$sHtml .= "<div id=\"ds_$sId\" class=\"search_box\">\n";
 				$aExtraParams['currentId'] = $sId;
 				$sHtml .= cmdbAbstractObject::GetSearchForm($oPage, $this->m_oSet, $aExtraParams);
 		 		$sHtml .= "</div>\n";
-		 		$sHtml .= "<div class=\"HRDrawer\"></div>\n";
-		 		$sHtml .= "<div id=\"dh_$sId\" class=\"DrawerHandle\">".Dict::S('UI:SearchToggle')."</div>\n";
 		 	}
 			break;
 			
@@ -1126,6 +1101,56 @@ EOF
 			// Unsupported style, do nothing.
 			$sHtml .= Dict::format('UI:Error:UnsupportedStyleOfBlock', $this->m_sStyle);
 		}
+
+
+		$bAutoReload = false;
+		if (isset($aExtraParams['auto_reload']))
+		{
+			if ($aExtraParams['auto_reload'] === true)
+			{
+				// Note: does not work in the switch (case true) because a positive number evaluates to true!!!
+				$aExtraParams['auto_reload'] = 'standard';
+			}
+			switch($aExtraParams['auto_reload'])
+			{
+				case 'fast':
+					$bAutoReload = true;
+					$iReloadInterval = MetaModel::GetConfig()->GetFastReloadInterval()*1000;
+					break;
+
+				case 'standard':
+				case 'true':
+					$bAutoReload = true;
+					$iReloadInterval = MetaModel::GetConfig()->GetStandardReloadInterval()*1000;
+					break;
+
+				default:
+					if (is_numeric($aExtraParams['auto_reload']) && ($aExtraParams['auto_reload'] > 0))
+					{
+						$bAutoReload = true;
+						$iReloadInterval = max(MetaModel::GetConfig()->Get('min_reload_interval'), $aExtraParams['auto_reload'])*1000;
+					}
+					else
+					{
+						// incorrect config, ignore it
+						$bAutoReload = false;
+					}
+			}
+		}
+		if (($bAutoReload) && ($this->m_sStyle != 'search')) // Search form do NOT auto-reload
+		{
+			$sFilter = $this->m_oFilter->serialize(); // Used either for asynchronous or auto_reload
+			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+
+			$oPage->add_script('if (typeof window.oAutoReloadBlock == "undefined") {
+				    window.oAutoReloadBlock = {};
+				}
+				if (typeof window.oAutoReloadBlock[\''.$sId.'\'] != "undefined") {
+				    clearInterval(window.oAutoReloadBlock[\''.$sId.'\']);
+				}
+				window.oAutoReloadBlock[\''.$sId.'\'] = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
+		}
+
 		return $sHtml;
 	}
 

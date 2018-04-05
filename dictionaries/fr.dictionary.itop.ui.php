@@ -1200,4 +1200,116 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Button:ResetImage' => 'Récupérer l\'image initiale',
 	'UI:Button:RemoveImage' => 'Supprimer l\'image',
 	'UI:UploadNotSupportedInThisMode' => 'La modification d\'images ou de fichiers n\'est pas supportée dans ce mode.',
+
+	// TODO: Reorganize those entries with other search entries and make entries for other languages.
+	// Search form
+	'UI:Search:Toggle' => 'Réduire / Ouvrir',
+	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Ajouter un critère',
+	// - Add new criteria button
+	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Récents',
+	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Populaires',
+	'UI:Search:AddCriteria:List:Others:Title' => 'Autres',
+	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Aucun.',
+
+	// - Criteria titles
+	//   - Default widget
+	'UI:Search:Criteria:Title:Default:Empty' => '%1$s vide',
+	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s non vide',
+	'UI:Search:Criteria:Title:Default:Equals' => '%1$s égal %2$s',
+	'UI:Search:Criteria:Title:Default:Contains' => '%1$s contient %2$s',
+	'UI:Search:Criteria:Title:Default:StartsWith' => '%1$s commence par %2$s',
+	'UI:Search:Criteria:Title:Default:EndsWith' => '%1$s fini par %2$s',
+	'UI:Search:Criteria:Title:Default:RegExp' => '%1$s correspond à %2$s',
+	'UI:Search:Criteria:Title:Default:GreaterThan' => '%1$s > %2$s',
+	'UI:Search:Criteria:Title:Default:GreaterThanOrEquals' => '%1$s >= %2$s',
+	'UI:Search:Criteria:Title:Default:LessThan' => '%1$s < %2$s',
+	'UI:Search:Criteria:Title:Default:LessThanOrEquals' => '%1$s <= %2$s',
+	'UI:Search:Criteria:Title:Default:Different' => '%1$s ≠ %2$s',
+	'UI:Search:Criteria:Title:Default:Between' => '%1$s entre [%2$s]',
+	'UI:Search:Criteria:Title:Default:BetweenDates:All' => '%1$s : Indifférent',
+	'UI:Search:Criteria:Title:Default:BetweenDates:From' => '%1$s depuis %2$s',
+	'UI:Search:Criteria:Title:Default:BetweenDates:Until' => '%1$s jusqu\'à %2$s',
+	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s : Indifférent',
+	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s à partir de %2$s',
+	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s jusqu\'à %2$s',
+	'UI:Search:Criteria:Title:Default:BetweenDays' => '%1$s [%2$s]',
+	//   - Numeric widget
+	//   None yet
+	//   - DateTime widget
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	//   - Enum widget
+	'UI:Search:Criteria:Title:Enum:In' => '%1$s : %2$s',
+	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s : %2$s et %3$s autres',
+	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s : Indifférent',
+	//   - External key widget
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s est renseigné',
+	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s n\'est pas renseigné',
+	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s : %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s : %2$s et %3$s autres',
+	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s : Indifférent',
+
+	/// - Criteria operators
+	//   - Default widget
+	'UI:Search:Criteria:Operator:Default:Empty' => 'Vide',
+	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Non vide',
+	'UI:Search:Criteria:Operator:Default:Equals' => 'Egal',
+	//   - String widget
+	'UI:Search:Criteria:Operator:String:Contains' => 'Contient',
+	'UI:Search:Criteria:Operator:String:StartsWith' => 'Commence par',
+	'UI:Search:Criteria:Operator:String:EndsWith' => 'Fini par',
+	'UI:Search:Criteria:Operator:String:RegExp' => 'Exp. rég.',
+	//   - Numeric widget
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Egal',  // => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Supérieur',  // => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Sup. / égal',  // > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Inférieur',  // => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Inf. / égal',  // > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Différent',  // => '≠',
+
+	// - Other translations
+	'UI:Search:Value:Filter:Placeholder' => 'Filtrez...',
+	'UI:Search:Value:Search:Placeholder' => 'Recherchez...',
+	'UI:Search:Value:Autocomplete:StartTyping' => 'Commencez à taper pour voir les valeurs possibles.',
+	'UI:Search:Value:Autocomplete:Wait' => 'Patientez ...',
+	'UI:Search:Value:Autocomplete:NoResult' => 'Aucun résultat.',
+	'UI:Search:Value:Toggler:CheckAllNone' => 'Cocher tout / aucun',
+	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Cocher tout / aucun filtrés',
+
+	// - Widget other translations
+	'UI:Search:Criteria:Numeric:From' => 'Depuis',
+	'UI:Search:Criteria:Numeric:Until' => 'Jusqu\'à',
+	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Indifférent',
+	'UI:Search:Criteria:Numeric:PlaceholderUntil' => 'Indifférent',
+	'UI:Search:Criteria:DateTime:From' => 'Depuis',
+	'UI:Search:Criteria:DateTime:FromTime' => 'Depuis',
+	'UI:Search:Criteria:DateTime:Until' => 'jusqu\'à',
+	'UI:Search:Criteria:DateTime:UntilTime' => 'jusqu\'à',
+	'UI:Search:Criteria:DateTime:PlaceholderFrom' => 'Indifférent',
+	'UI:Search:Criteria:DateTime:PlaceholderFromTime' => 'Indifférent',
+	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Indifférent',
+	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Indifférent',
+
+	'UI:Search:Criteria:Raw:Filtered' => 'Filtré',
+	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
+));
+
+
+//
+// Expression to Natural language
+//
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Expression:Operator:AND' => ' ET ',
+	'Expression:Operator:OR' => ' OU ',
+
+	'Expression:Unit:Short:DAY' => 'j',
+	'Expression:Unit:Short:WEEK' => 's',
+	'Expression:Unit:Short:MONTH' => 'm',
+	'Expression:Unit:Short:YEAR' => 'a',
+
+	'Expression:Unit:Long:DAY' => 'jour(s)',
+	'Expression:Unit:Long:HOUR' => 'heure(s)',
+	'Expression:Unit:Long:MINUTE' => 'minute(s)',
+
+	'Expression:Verb:NOW' => 'maintenant',
 ));

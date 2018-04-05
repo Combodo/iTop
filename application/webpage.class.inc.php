@@ -58,6 +58,7 @@ class WebPage implements Page
     protected $s_deferred_content;
     protected $a_scripts;
     protected $a_dict_entries;
+    protected $a_dict_entries_prefixes;
     protected $a_styles;
     protected $a_include_scripts;
     protected $a_include_stylesheets;
@@ -80,6 +81,7 @@ class WebPage implements Page
         $this->s_deferred_content = '';
         $this->a_scripts = array();
         $this->a_dict_entries = array();
+        $this->a_dict_entries_prefixes = array();
         $this->a_styles = array();
         $this->a_linked_scripts = array();
         $this->a_linked_stylesheets = array();
@@ -243,10 +245,39 @@ class WebPage implements Page
 	/**
 	 * Add a dictionary entry for the Javascript side
 	 */
-    public function add_dict_entry($s_entryId)
-    {
-        $this->a_dict_entries[$s_entryId] = Dict::S($s_entryId);
-    }
+	    public function add_dict_entry($s_entryId)
+	    {
+	    	$this->a_dict_entries[] = $s_entryId;
+	    }
+	    
+	    /**
+	     * Add a set of dictionary entries (based on the given prefix) for the Javascript side
+	     */
+	    public function add_dict_entries($s_entriesPrefix)
+	    {
+	    	$this->a_dict_entries_prefixes[] = $s_entriesPrefix;
+	    }
+	    
+	    protected function get_dict_signature()
+	    {
+	    	return str_replace('_', '', Dict::GetUserLanguage()).'-'.md5(implode(',', $this->a_dict_entries).'|'.implode(',', $this->a_dict_entries_prefixes));
+	    }
+	    
+	    protected function get_dict_file_content()
+	    {
+	    	$aEntries = array();
+	    	foreach($this->a_dict_entries as $sCode)
+	    	{
+	    		$aEntries[$sCode] = Dict::S($sCode);
+	    	}
+	    	foreach($this->a_dict_entries_prefixes as $sPrefix)
+	    	{
+	    		$aEntries = array_merge($aEntries, Dict::ExportEntries($sPrefix));
+	    	}
+	    	$sJSFile = 'var aDictEntries = '.json_encode($aEntries);
+	    	
+	    	return $sJSFile;
+	    }
     
 
 	/**
@@ -347,7 +378,7 @@ class WebPage implements Page
 	 */
 	public function GetDetails($aFields)
 	{
-		$sHtml = "<div class=\"details\">\n";
+		$sHtml = "<div class=\"details\" id='search-widget-results-outer'>\n";
 		foreach($aFields as $aAttrib)
 		{
 			$sDataAttCode = isset($aAttrib['attcode']) ? "data-attcode=\"{$aAttrib['attcode']}\"" : '';
@@ -501,6 +532,9 @@ class WebPage implements Page
 		echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, shrink-to-fit=no\" />";
         echo "<title>".htmlentities($this->s_title, ENT_QUOTES, 'UTF-8')."</title>\n";
         echo $this->get_base_tag();
+        
+        $this->output_dict_entries();
+        
         foreach($this->a_linked_scripts as $s_script)
         {
         	// Make sure that the URL to the script contains the application's version number
@@ -524,7 +558,6 @@ class WebPage implements Page
             }
             echo "</script>\n";
         }
-        $this->output_dict_entries();
         foreach($this->a_linked_stylesheets as $a_stylesheet)
         {
 			if (strpos($a_stylesheet['link'], '?') === false)
@@ -778,36 +811,21 @@ class WebPage implements Page
 
 	protected function output_dict_entries($bReturnOutput = false)
 	{
-		$sHtml = '';
-		if (count($this->a_dict_entries)>0)
+		if ((count($this->a_dict_entries) > 0) || (count($this->a_dict_entries_prefixes) > 0))
 		{
-			$sHtml .= "<script type=\"text/javascript\">\n";
-			$sHtml .= "var Dict = {};\n";
-			$sHtml .= "Dict._entries = {};\n";
-			$sHtml .= "Dict.S = function(sEntry) {\n";
-			$sHtml .= "   if (sEntry in Dict._entries)\n";
-			$sHtml .= "   {\n";
-			$sHtml .= "      return Dict._entries[sEntry];\n";
-			$sHtml .= "   }\n";
-			$sHtml .= "   else\n";
-			$sHtml .= "   {\n";
-			$sHtml .= "      return sEntry;\n";
-			$sHtml .= "   }\n";
-			$sHtml .= "};\n";
-			foreach($this->a_dict_entries as $s_entry => $s_value)
+			if (class_exists('Dict'))
 			{
-				$sHtml .= "Dict._entries['$s_entry'] = '".addslashes($s_value)."';\n";
+				// The dictionary may not be available for example during the setup...
+				// Create a specific dictionary file and load it as a JS script
+				$sSignature = $this->get_dict_signature();
+				$sJSFileName = utils::GetCachePath().$sSignature.'.js';
+				if (!file_exists($sJSFileName) && is_writable(utils::GetCachePath()))
+				{
+					file_put_contents($sJSFileName, $this->get_dict_file_content());
+				}
+				// Load the dictionary as the first javascript file, so that other JS file benefit from the translations
+				array_unshift($this->a_linked_scripts, utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php/?operation=dict&s='.$sSignature);
 			}
-			$sHtml .= "</script>\n";
-		}
-		
-		if ($bReturnOutput)
-		{
-			return $sHtml;
-		}
-		else
-		{
-			echo $sHtml;
 		}
 	}
 }

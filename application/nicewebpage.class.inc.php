@@ -41,6 +41,7 @@ class NiceWebPage extends WebPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-1.4.1.min.js'); // Needed since many other plugins still rely on oldies like $.browser
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/ui-lightness/jquery-ui-1.11.4.custom.css');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.11.4.custom.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
 		// table sorting
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.js');
@@ -50,7 +51,24 @@ class NiceWebPage extends WebPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/datatable.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
-		$this->add_ready_script(
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/searchformforeignkeys.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler_history.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_raw.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_string.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_field.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_numeric.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_enum.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_key.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_hierarchical_key.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_abstract.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_time.js');
+
+	    $this->add_dict_entries('UI:Combo');
+
+	    $this->add_ready_script(
 <<< EOF
 	//add new widget called TruncatedList to properly display truncated lists when they are sorted
 	$.tablesorter.addWidget({ 

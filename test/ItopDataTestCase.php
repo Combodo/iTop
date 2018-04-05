@@ -37,7 +37,6 @@ use Hypervisor;
 use lnkContactToFunctionalCI;
 use MetaModel;
 use Person;
-use PHPUnit\Framework\TestCase;
 use Server;
 use Ticket;
 use URP_UserProfile;
@@ -92,14 +91,6 @@ class ItopDataTestCase extends ItopTestCase
 		return $this->testOrgId;
 	}
 
-    /**
-     * PHPUnit complains that there is no test... so here is a dummy one.
-     */
-    public function testDummy()
-    {
-        $this->assertTrue(true);
-    }
-
     /////////////////////////////////////////////////////////////////////////////
     /// Database Utilities
     /////////////////////////////////////////////////////////////////////////////
@@ -152,7 +143,7 @@ class ItopDataTestCase extends ItopTestCase
         $oTicket = self::createObject('UserRequest', array(
             'ref' => 'Ticket_'.$iNum,
             'title' => 'BUG 789_'.$iNum,
-            'request_type' => 'incident',
+	        //'request_type' => 'incident',
             'description' => 'method UpdateImpactedItems() reconstruit le lnkContactToTicket donc impossible de rajouter des champs dans cette classe',
             'org_id' => $this->getTestOrgId(),
         ));
@@ -176,7 +167,7 @@ class ItopDataTestCase extends ItopTestCase
 		$oTicket = self::createObject('UserRequest', array(
 			'ref' => 'Ticket_'.$iNum,
 			'title' => 'BUG 1161_'.$iNum,
-			'request_type' => 'incident',
+			//'request_type' => 'incident',
 			'description' => 'Add aggregate functions',
 			'time_spent' => $iTimeSpent,
 			'caller_id' => $iCallerId,
@@ -188,16 +179,20 @@ class ItopDataTestCase extends ItopTestCase
 
 	/**
 	 * Create a Server in database
+	 *
 	 * @param int $iNum
+	 * @param null $iRackUnit
+	 *
 	 * @return Server
-	 * @throws Exception
+	 * @throws \Exception
 	 */
-	protected function CreateServer($iNum)
+	protected function CreateServer($iNum, $iRackUnit = null)
 	{
 		/** @var Server $oServer */
 		$oServer = self::createObject('Server', array(
 			'name' => 'Server_'.$iNum,
 			'org_id' => $this->getTestOrgId(),
+			'nb_u' => $iRackUnit,
 		));
 		$this->debug("Created {$oServer->GetName()} ({$oServer->GetKey()})");
 		return $oServer;

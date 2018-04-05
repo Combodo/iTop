@@ -111,6 +111,18 @@ define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/re
  */
 abstract class AttributeDefinition
 {
+	const SEARCH_WIDGET_TYPE_RAW = 'raw';
+	const SEARCH_WIDGET_TYPE_STRING = 'string';
+	const SEARCH_WIDGET_TYPE_NUMERIC = 'numeric';
+	const SEARCH_WIDGET_TYPE_ENUM = 'enum';
+	const SEARCH_WIDGET_TYPE_EXTERNAL_KEY = 'external_key';
+	const SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY = 'hierarchical_key';
+	const SEARCH_WIDGET_TYPE_EXTERNAL_FIELD = 'external_field';
+	const SEARCH_WIDGET_TYPE_DATE_TIME = 'date_time';
+	const SEARCH_WIDGET_TYPE_DATE = 'date';
+
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	public function GetType()
 	{
 		return Dict::S('Core:'.get_class($this));
@@ -121,6 +133,24 @@ abstract class AttributeDefinition
 	}
 
 	abstract public function GetEditClass();
+
+	/**
+	 * Return the search widget type corresponding to this attribute
+	 *
+	 * @return string
+	 */
+	public function GetSearchType()
+	{
+		return static::SEARCH_WIDGET_TYPE;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsSearchable()
+	{
+		return static::SEARCH_WIDGET_TYPE != static::SEARCH_WIDGET_TYPE_RAW;
+	}
 
 	protected $m_sCode;
 	private $m_aParams = array();
@@ -1617,6 +1647,8 @@ class AttributeDBField extends AttributeDBFieldVoid
  */
 class AttributeInteger extends AttributeDBField
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
+
 	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -1710,6 +1742,8 @@ class AttributeInteger extends AttributeDBField
  */
 class AttributeObjectKey extends AttributeDBFieldVoid
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('class_attcode', 'is_null_allowed'));
@@ -1765,6 +1799,8 @@ class AttributeObjectKey extends AttributeDBFieldVoid
  */
 class AttributePercentage extends AttributeInteger
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
+
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		$iWidth = 5; // Total width of the percentage bar graph, in em...
@@ -1804,6 +1840,8 @@ class AttributePercentage extends AttributeInteger
  */
 class AttributeDecimal extends AttributeDBField
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('digits', 'decimals' /* including precision */));
@@ -1902,6 +1940,8 @@ class AttributeDecimal extends AttributeDBField
  */
 class AttributeBoolean extends AttributeInteger
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -2098,6 +2138,8 @@ class AttributeBoolean extends AttributeInteger
  */
 class AttributeString extends AttributeDBField
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+
 	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -2248,6 +2290,8 @@ class AttributeString extends AttributeDBField
  */
 class AttributeClass extends AttributeString
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("class_category", "more_values"));
@@ -2300,6 +2344,8 @@ class AttributeClass extends AttributeString
  */
 class AttributeApplicationLanguage extends AttributeString
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -2336,6 +2382,8 @@ class AttributeApplicationLanguage extends AttributeString
  */
 class AttributeFinalClass extends AttributeString
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	public function __construct($sCode, $aParams)
 	{
 		$this->m_sCode = $sCode;
@@ -2490,6 +2538,8 @@ class AttributeFinalClass extends AttributeString
  */
 class AttributePassword extends AttributeString
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -2542,6 +2592,8 @@ class AttributePassword extends AttributeString
  */
 class AttributeEncryptedString extends AttributeString
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	static $sKey = null; // Encryption key used for all encrypted fields
 
 	public function __construct($sCode, $aParams)
@@ -2984,6 +3036,8 @@ class AttributeLongText extends AttributeText
  */
 class AttributeCaseLog extends AttributeLongText
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	public function GetNullValue()
 	{
 		return '';
@@ -3403,6 +3457,8 @@ class AttributeIPAddress extends AttributeString
  */
 class AttributeOQL extends AttributeText
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	public function GetEditClass() {return "OQLExpression";}
 }
 
@@ -3413,6 +3469,7 @@ class AttributeOQL extends AttributeText
  */
 class AttributeTemplateString extends AttributeString
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 }
 
 /**
@@ -3422,6 +3479,7 @@ class AttributeTemplateString extends AttributeString
  */
 class AttributeTemplateText extends AttributeText
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 }
 
 /**
@@ -3431,6 +3489,8 @@ class AttributeTemplateText extends AttributeText
  */
 class AttributeTemplateHTML extends AttributeText
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
@@ -3465,6 +3525,8 @@ class AttributeTemplateHTML extends AttributeText
  */
 class AttributeEnum extends AttributeString
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
+
 	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -3892,6 +3954,8 @@ class AttributeMetaEnum extends AttributeEnum
  */
 class AttributeDateTime extends AttributeDBField
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE_TIME;
+
 	static $oFormat = null;
 	
 	static public function GetFormat()
@@ -4418,6 +4482,8 @@ class AttributeDuration extends AttributeInteger
  */
 class AttributeDate extends AttributeDateTime
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE;
+
 	static $oDateFormat = null;
 	
 	static public function GetFormat()
@@ -4562,6 +4628,8 @@ class AttributeDeadline extends AttributeDateTime
  */
 class AttributeExternalKey extends AttributeDBFieldVoid
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed", "on_target_delete"));
@@ -4767,6 +4835,8 @@ class AttributeExternalKey extends AttributeDBFieldVoid
  */
 class AttributeHierarchicalKey extends AttributeExternalKey
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;
+
 	protected $m_sTargetClass;
 
 	static public function ListExpectedParams()
@@ -4914,6 +4984,35 @@ class AttributeHierarchicalKey extends AttributeExternalKey
  */
 class AttributeExternalField extends AttributeDefinition
 {
+	/**
+	 * Return the search widget type corresponding to this attribute
+	 *
+	 * @return string
+	 */
+	public function GetSearchType()
+	{
+		// Not necessary the external key is already present
+		if ($this->IsFriendlyName())
+		{
+			return self::SEARCH_WIDGET_TYPE_RAW;
+		}
+
+		try
+		{
+			$oRemoteAtt = $this->GetExtAttDef();
+			if ($oRemoteAtt instanceof AttributeString)
+			{
+				return self::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD;
+			}
+		}
+		catch (CoreException $e)
+		{
+		}
+
+		return self::SEARCH_WIDGET_TYPE_RAW;
+	}
+
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("extkey_attcode", "target_attcode"));
@@ -4965,6 +5064,23 @@ class AttributeExternalField extends AttributeDefinition
 		}
 		return $sLabel;
 	}
+
+	public function GetLabelForSearchField()
+	{
+		$sLabel = parent::GetLabel('');
+		if (strlen($sLabel) == 0)
+		{
+			$sKeyAttCode = $this->Get("extkey_attcode");
+			$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
+			$sLabel = $oExtKeyAttDef->GetLabel($this->m_sCode);
+
+			$oRemoteAtt = $this->GetExtAttDef();
+			$sLabel .= '->'.$oRemoteAtt->GetLabel($this->m_sCode);
+		}
+
+		return $sLabel;
+	}
+
 	public function GetDescription($sDefault = null)
 	{
 		$sLabel = parent::GetDescription('');
@@ -5285,6 +5401,8 @@ class AttributeURL extends AttributeString
  */
 class AttributeBlob extends AttributeDefinition
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("depends_on"));
@@ -5612,6 +5730,8 @@ class AttributeImage extends AttributeBlob
  */
 class AttributeStopWatch extends AttributeDefinition
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	static public function ListExpectedParams()
 	{
 		// The list of thresholds must be an array of iPercent => array of 'option' => value
@@ -6280,6 +6400,8 @@ class AttributeStopWatch extends AttributeDefinition
  */
 class AttributeSubItem extends AttributeDefinition
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('target_attcode', 'item_code'));
@@ -6446,6 +6568,8 @@ class AttributeSubItem extends AttributeDefinition
  */
 class AttributeOneWayPassword extends AttributeDefinition
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("depends_on"));
@@ -6609,6 +6733,8 @@ class AttributeOneWayPassword extends AttributeDefinition
 // Indexed array having two dimensions
 class AttributeTable extends AttributeDBField
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	public function GetEditClass() {return "Table";}
 
 	protected function GetSQLCol($bFullSpec = false)
@@ -6838,6 +6964,8 @@ class AttributePropertySet extends AttributeTable
  */
 class AttributeFriendlyName extends AttributeDefinition
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+
 	public function __construct($sCode)
 	{
 		$this->m_sCode = $sCode;
@@ -7004,6 +7132,8 @@ class AttributeFriendlyName extends AttributeDefinition
  */
 class AttributeRedundancySettings extends AttributeDBField
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+
 	static public function ListExpectedParams()
 	{
 		return array('sql', 'relation_code', 'from_class', 'neighbour_id', 'enabled', 'enabled_mode', 'min_up', 'min_up_type', 'min_up_mode');
@@ -7394,6 +7524,8 @@ class AttributeRedundancySettings extends AttributeDBField
  */
 class AttributeCustomFields extends AttributeDefinition
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("handler_class"));

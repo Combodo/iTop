@@ -130,7 +130,7 @@ function DisplayDetails($oP, $sClass, $oObj, $id)
 	$sClassLabel = MetaModel::GetName($sClass);
 	$oSearch = new DBObjectSearch($sClass);
 	$oBlock = new DisplayBlock($oSearch, 'search', false);
-	$oBlock->Display($oP, 0);
+	$oBlock->Display($oP, 0, array('table_id' => 'search-widget-results-outer'));
 
 	// The object could be listed, check if it is actually allowed to view it
 	$oSet = CMDBObjectSet::FromObject($oObj);
@@ -198,7 +198,7 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 {
 	if ($bSearchForm)
 	{
-		$aParams = array('open' => $bSearchFormOpen);
+		$aParams = array('open' => $bSearchFormOpen, 'table_id' => '1');
 		if (!empty($sBaseClass))
 		{
 			$aParams['baseClass'] = $sBaseClass;
@@ -484,9 +484,9 @@ try
 				if ($bSearchForm)
 				{
 					$oBlock = new DisplayBlock($oFilter, 'search', false);
-					$oBlock->Display($oP, 0);
+					$oBlock->Display($oP, 0, array('table_id' => 'search-widget-result-outer'));
 				}
-				$oP->P('<b>'.Dict::Format('UI:Error:IncorrectOQLQuery_Message', $e->getHtmlDesc()).'</b>');
+				$oP->add('<div id="search-widget-result-outer"><p><b>'.Dict::Format('UI:Error:IncorrectOQLQuery_Message', $e->getHtmlDesc()).'</b></p></div>');
 			}
 			catch(Exception $e)
 			{

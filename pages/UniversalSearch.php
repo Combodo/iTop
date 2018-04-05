@@ -110,6 +110,7 @@ if ($oFilter != null)
 	$aExtraParams['open'] = true;
 	$aExtraParams['baseClass'] = $sBaseClass;
 	$aExtraParams['action'] = utils::GetAbsoluteUrlAppRoot().'pages/UniversalSearch.php';
+	$aExtraParams['table_id'] = '1';
 	//$aExtraParams['class'] = $sClassName;
 	$oBlock->Display($oP, 0, $aExtraParams);
 
