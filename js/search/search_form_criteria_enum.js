@@ -83,6 +83,8 @@ $(function()
 			this.element.on('itop.search.criteria_enum.add_selected_values', function(oEvent, oData){
 				return me._onAddSelectedValues(oData);
 			});
+
+			this.element.off('input.form_criteria_add_title_on_value_change, change.form_criteria_add_title_on_value_change, non_interactive_change.form_criteria_add_title_on_value_change');//the parent method bind for input changes events in order to add a title on the input, for the filter we do not want to do this, so let's remove all the listeners
 		},
 
 		// Events callbacks

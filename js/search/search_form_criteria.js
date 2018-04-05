@@ -177,6 +177,14 @@ $(function()
 			this.element.on('itop.search.criteria.close', function(){
 				return me._close();
 			});
+
+			this.element
+				.on('input.form_criteria_add_title_on_value_change, change.form_criteria_add_title_on_value_change, non_interactive_change.form_criteria_add_title_on_value_change', 'input', function() {
+					var inputElmt = $(this)
+					inputElmt.attr('title', inputElmt.val());
+				})
+				.trigger('input')
+			;
 		},
 		// - Cinematic
 		//   - Open / Close criteria
@@ -544,7 +552,7 @@ $(function()
 			var sInputId = oOp.code + '_' + oOpElem.attr('id');
 
 			// Set radio
-			oOpElem.find('.sfc_op_radio').val(sOpIdx);
+			oOpElem.find('.sfc_op_radio').val(sOpIdx).trigger('non_interactive_change');
 			oOpElem.find('.sfc_op_radio').attr('id', sInputId);
 
 			// Set label
@@ -574,7 +582,7 @@ $(function()
 
 			// DOM element
 			var oOpContentElem = $('<input type="text" />');
-			oOpContentElem.val(this._getValuesAsText());
+			oOpContentElem.val(this._getValuesAsText()).trigger('non_interactive_change');
 
 			// Events
 			// - Focus input on click (radio, label, ...)
@@ -604,7 +612,7 @@ $(function()
 		// - Fallback for operator that has no dedicated callback
 		_resetOperator: function(oOpElem)
 		{
-			oOpElem.find('.sfc_op_content input').val('');
+			oOpElem.find('.sfc_op_content input').val('').trigger('non_interactive_change');
 		},
 		// Get operator's values
 		// - Fallback for operators without a specific callback
@@ -629,7 +637,7 @@ $(function()
 			}
 
 			oOpElem.find('.sfc_op_content input').each(function(){
-				$(this).val(aValues[0].value);
+				$(this).val(aValues[0].value).trigger('non_interactive_change');
 			});
 
 			return true;
