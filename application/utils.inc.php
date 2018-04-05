@@ -469,16 +469,20 @@ class utils
 
 		// Paginated selection
 		$aSelectedIds = utils::ReadParam('storedSelection', array());
-		if ($sSelectionMode == 'positive')
+		if (count($aSelectedIds) > 0 )
 		{
-			// Only the explicitly listed items are selected
-			$oFullSetFilter->AddCondition('id', $aSelectedIds, 'IN');
+			if ($sSelectionMode == 'positive')
+			{
+				// Only the explicitly listed items are selected
+				$oFullSetFilter->AddCondition('id', $aSelectedIds, 'IN');
+			}
+			else
+			{
+				// All items of the set are selected, except the one explicitly listed
+				$oFullSetFilter->AddCondition('id', $aSelectedIds, 'NOTIN');
+			}
 		}
-		else
-		{
-			// All items of the set are selected, except the one explicitly listed
-			$oFullSetFilter->AddCondition('id', $aSelectedIds, 'NOTIN');
-		}
+
 		$aSelectedObj = array();
 		$oFullSet = new DBObjectSet($oFullSetFilter);
 		$sClassAlias = $oFullSetFilter->GetClassAlias();
