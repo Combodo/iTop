@@ -920,20 +920,19 @@ input.dp-applied {
   margin-left: 0px;
   margin-right: 8px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items_wrapper {
   max-height: 445px;
   /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
-  overflow-x: hidden;
   overflow-y: auto;
   margin: 0px -8px;
   /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list.sfc_opc_mc_items_selected {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items_wrapper .sfc_opc_mc_items .sfc_opc_mc_items_list.sfc_opc_mc_items_selected {
   position: relative;
   padding-top: 5px;
   margin-top: 5px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list.sfc_opc_mc_items_selected::before {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items_wrapper .sfc_opc_mc_items .sfc_opc_mc_items_list.sfc_opc_mc_items_selected::before {
   content: "";
   position: absolute;
   border-top: 1px solid #ddd;
@@ -942,19 +941,19 @@ input.dp-applied {
   margin-left: 6px;
   top: 0px;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_placeholder {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items_wrapper .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_placeholder {
   padding: 15px 8px;
   font-style: italic;
   text-align: center;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_item {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items_wrapper .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_item {
   padding: 4px 8px;
   /* Putting back the padding remove by .sfc_opc_mc_items */
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_item:hover {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items_wrapper .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_item:hover {
   background-color: #fff;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_item label {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items_wrapper .sfc_opc_mc_items .sfc_opc_mc_items_list .sfc_opc_mc_item label {
   display: inline-block;
   width: 100%;
 }
@@ -1159,7 +1158,7 @@ input.dp-applied {
   border: 1px solid #ababab;
 }
 .search_form_handler .sf_filter input {
-  width: 100%;
+  width: 100% !important;
 }
 .search_form_handler .sf_filter button {
   width: 23px;

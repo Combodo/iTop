@@ -129,10 +129,14 @@ $(function()
 				.append('<span class="sff_input_wrapper"><input type="text" id="' + sFilterId + '" placeholder="' + sFilterPlaceholder + '" autocomplete="off" /><span class="sff_picto sff_reset fa fa-times"></span></span>')
 				.appendTo(oOpContentElem);
 
+			// - Values wrapper
+			var oValuesWrapperElem = $('<div></div>')
+				.addClass('sfc_opc_mc_items_wrapper')
+				.appendTo(oOpContentElem);
 			// - Allowed values
 			var oAllowedValuesElem = $('<div></div>')
 				.addClass('sfc_opc_mc_items')
-				.appendTo(oOpContentElem);
+				.appendTo(oValuesWrapperElem);
 			// - Static values: Always there no matter the field constraints
 			var oStaticListElem = $('<div></div>')
 				.addClass('sfc_opc_mc_items_list')
@@ -273,7 +277,8 @@ $(function()
 			var oOpContentElem = oOpElem.find('.sfc_opc_multichoices');
 			var oTogglerElem = oOpContentElem.find('.sfc_opc_mc_toggler');
 			var oFilterElem = oOpContentElem.find('.sf_filter');
-			var oAllowedValuesElem = oOpContentElem.find('.sfc_opc_mc_items');
+			var oValuesWrapperElem = oOpContentElem.find('.sfc_opc_mc_items_wrapper');
+			var oAllowedValuesElem = oValuesWrapperElem.find('.sfc_opc_mc_items');
 
 			// DOM
 			// - Hide toggler for now
@@ -291,7 +296,7 @@ $(function()
 			var oSelectedValuesElem = $('<div></div>')
 				.addClass('sfc_opc_mc_items')
 				.append('<div class="sfc_opc_mc_items_list sfc_opc_mc_items_selected"></div>')
-				.appendTo(oOpContentElem);
+				.appendTo(oValuesWrapperElem);
 			this._refreshSelectedValues();
 
 			// - External classes
@@ -320,7 +325,7 @@ $(function()
 				}
 
 				var sQuery = $(this).val();
-				if( (sQuery === '') || (sQuery.length < me.options.autocomplete.min_autocomplete_chars) )
+				if( (sQuery === '') ) // TODO: Put this back after tests|| (sQuery.length < me.options.autocomplete.min_autocomplete_chars) )
 				{
 					me._setACTypingHint();
 					oFilterElem.find('.sff_reset').hide();

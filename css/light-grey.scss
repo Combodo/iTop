@@ -1035,43 +1035,44 @@ input.dp-applied {
 							.sfc_opc_mc_toggler{
 
 							}
-							.sfc_opc_mc_items{
+							.sfc_opc_mc_items_wrapper{
 								max-height: 445px; /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
-								overflow-x: hidden;
 								overflow-y: auto;
 								margin: 0px -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
 
-								.sfc_opc_mc_items_list{
-									&.sfc_opc_mc_items_selected{
-										position: relative;
-										padding-top: 5px;
-										margin-top: 5px;
+								.sfc_opc_mc_items{
+									.sfc_opc_mc_items_list{
+										&.sfc_opc_mc_items_selected{
+											position: relative;
+											padding-top: 5px;
+											margin-top: 5px;
 
-										&::before{
-											content: "";
-											position: absolute;
-											border-top: 1px solid $gray-lighter;
-											width: calc(100% - 12px); /* minus margin-left x2 */
-											margin-left: 6px;
-											top: 0px;
-										}
-									}
-
-									.sfc_opc_mc_placeholder{
-										padding: 15px 8px;
-										font-style: italic;
-										text-align: center;
-									}
-									.sfc_opc_mc_item{
-										padding: 4px 8px; /* Putting back the padding remove by .sfc_opc_mc_items */
-
-										&:hover{
-											background-color: $search-criteria-box-hover-color;
+											&::before{
+												content: "";
+												position: absolute;
+												border-top: 1px solid $gray-lighter;
+												width: calc(100% - 12px); /* minus margin-left x2 */
+												margin-left: 6px;
+												top: 0px;
+											}
 										}
 
-										label{
-											display: inline-block;
-											width: 100%;
+										.sfc_opc_mc_placeholder{
+											padding: 15px 8px;
+											font-style: italic;
+											text-align: center;
+										}
+										.sfc_opc_mc_item{
+											padding: 4px 8px; /* Putting back the padding remove by .sfc_opc_mc_items */
+
+											&:hover{
+												background-color: $search-criteria-box-hover-color;
+											}
+
+											label{
+												display: inline-block;
+												width: 100%;
+											}
 										}
 									}
 								}
@@ -1363,7 +1364,7 @@ input.dp-applied {
 			border: 1px solid #ABABAB;
 		}
 		input{
-			width: 100%;
+			width: 100% !important;
 		}
 		button{
 			width: 23px; /* Must be equals to .sf_filter > *:height */
