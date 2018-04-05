@@ -406,7 +406,8 @@ $(function()
 		},
 		_setTitle: function(sTitle)
 		{
-			var iValLimit = 3;
+			var iValLimit = 2;
+			var iStrLenLimit = 30;
 			var iValCount = Object.keys(this.options.values).length;
 			var iAllowedValuesCount = Object.keys(this._getPreloadedAllowedValues()).length;
 
@@ -416,7 +417,7 @@ $(function()
 				iAllowedValuesCount++;
 			}
 
-			// Making right tite regarding the number of selected values
+			// Making right title regarding the number of selected values
 			if( (iValCount === 0) || (iValCount === iAllowedValuesCount) )
 			{
 				sTitle = Dict.Format('UI:Search:Criteria:Title:Enum:In:All', this.options.field.label);
@@ -431,6 +432,17 @@ $(function()
 
 				sTitle = Dict.Format('UI:Search:Criteria:Title:Enum:In:Many', this.options.field.label, aFirstValues.join(', '), (iValCount - iValLimit+1));
 			}
+			else
+			{
+				sTitle = this._computeTitle(sTitle);
+			}
+
+			if (typeof sTitle == "string" && sTitle.length > iStrLenLimit)
+			{
+				sTitle = Dict.Format('UI:Search:Criteria:Title:Enum:In:Many:Shortened', this.options.field.label, iValCount);
+			}
+
+
 
 			this._super(sTitle);
 		},
