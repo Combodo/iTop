@@ -812,18 +812,39 @@ input.dp-applied {
 		padding: 1px 2px;
 	}
 
-	&.opened{
+
+	&:not(.closed){
 		.sf_title{
 			.sft_toggler{
 				transform: rotateX(180deg);
+				transition: transform 0.5s linear;
 			}
 		}
 		.sf_criterion_area{
-			/*display: inherit;*/
+			transition: opacity 0.3s linear;
+		}
+	}
+	&.closed{
+		opacity: 0.7;
+		transition: opacity 0.3s linear;
+
+		transition: border 0.3s linear;
+		.sf_criterion_area{
+			height: 0;
+			opacity: 0;
+			padding: 0;
+		}
+		.sf_title {
+			transition:  background-color 0.3s, color 0.3s linear;
+			background-color: #ffffff;
+			color: #3F7294;
 		}
 	}
 
+
+
 	.sf_title{
+		transition: opacity 0.3s, background-color 0.3s, color 0.3s linear;
 		padding: 8px 10px;
 		margin: 0;
 		color: #ffffff;

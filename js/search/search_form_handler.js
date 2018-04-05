@@ -267,8 +267,8 @@ $(function()
 				// Prevent toggle on <select>
 				if(oEvent.target.nodeName.toLowerCase() !== 'select')
 				{
-					me.element.find('.sf_criterion_area').slideToggle('fast');
-					me.element.toggleClass('opened');
+					//me.element.find('.sf_criterion_area').slideToggle('fast');
+					me.element.toggleClass('closed');
 				}
 			});
 		},
@@ -623,6 +623,11 @@ $(function()
 					// TODO: Bug: Open "Search for CI", change child classe in the dropdown, click the search button. It submit the search for the original child classe, not the current one; whereas a click on the upper right pictogram does. This might be due to the form reloading.
 					me._onSubmitClick();
 				});
+
+				if (me.element.find('.search_form_criteria').length == 0)
+				{
+					me.elements.more_criterion.find('.sfm_header').trigger('click');
+				}
 			}
 
 			this.elements.results_area = oResultAreaElem;
