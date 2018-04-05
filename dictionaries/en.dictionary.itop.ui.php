@@ -1395,8 +1395,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	// - Criteria titles
 	//   - Default widget
-	'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty',
-	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty',
+	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any',
+	'UI:Search:Criteria:Title:Default:Any:Empty' => '%1$s is empty',
+	'UI:Search:Criteria:Title:Default:Any:NotEmpty' => '%1$s is not empty',
 	'UI:Search:Criteria:Title:Default:Equals' => '%1$s equals %2$s',
 	'UI:Search:Criteria:Title:Default:Contains' => '%1$s contains %2$s',
 	'UI:Search:Criteria:Title:Default:StartsWith' => '%1$s starts with %2$s',
@@ -1422,6 +1423,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
+	'UI:Search:Criteria:Title:Enum:In:Many:Shortened' => '%1$s: %2$s selected',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any',
 	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',

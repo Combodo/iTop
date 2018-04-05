@@ -1213,8 +1213,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	// - Criteria titles
 	//   - Default widget
-	'UI:Search:Criteria:Title:Default:Empty' => '%1$s vide',
-	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s non vide',
+	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Indifférent',
+	'UI:Search:Criteria:Title:Default:Any:Empty' => '%1$s vide',
+	'UI:Search:Criteria:Title:Default:Any:NotEmpty' => '%1$s non vide',
 	'UI:Search:Criteria:Title:Default:Equals' => '%1$s égal %2$s',
 	'UI:Search:Criteria:Title:Default:Contains' => '%1$s contient %2$s',
 	'UI:Search:Criteria:Title:Default:StartsWith' => '%1$s commence par %2$s',
@@ -1240,6 +1241,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	//   - Enum widget
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s : %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s : %2$s et %3$s autres',
+	'UI:Search:Criteria:Title:Enum:In:Many:Shortened' => '%1$s: %2$s sélectionnés',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s : Indifférent',
 	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s est renseigné',
@@ -1254,6 +1256,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Vide',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Non vide',
 	'UI:Search:Criteria:Operator:Default:Equals' => 'Egal',
+	'UI:Search:Criteria:Operator:Default:Between' => 'Compris entre',
 	//   - String widget
 	'UI:Search:Criteria:Operator:String:Contains' => 'Contient',
 	'UI:Search:Criteria:Operator:String:StartsWith' => 'Commence par',

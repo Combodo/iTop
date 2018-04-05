@@ -472,21 +472,46 @@ $(function()
 				me[sCallback]($(this), me.options.values);
 			});
 		},
-		// - Set the title element
-		_setTitle: function(sTitle)
+		// - compture the title element
+		_computeTitle: function(sTitle)
 		{
 			if(sTitle === undefined)
 			{
+				var sValueAsText = this._getValuesAsText();
 				var sOperator = this.operators[this.options.operator].code;
-				var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':' + this._toCamelCase(sOperator);
 
-				// Fallback to default widget dict entry if none exists for the current widget
-				if(Dict.S(sDictEntry) === sDictEntry)
+				if ('' == sValueAsText)
 				{
-					sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(sOperator);
-				}
+					var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':Any'+ ':' + this._toCamelCase(sOperator);
+					var sTitle = Dict.Format(sDictEntry, this.options.field.label);
+					if(sTitle === sDictEntry)
+					{
+						var sDictEntry = 'UI:Search:Criteria:Title:Default:Any'+ ':' + this._toCamelCase(sOperator);
+						var sTitle = Dict.Format(sDictEntry, this.options.field.label);
+					}
 
-				sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
+					if(sTitle === sDictEntry)
+					{
+						var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':Any';
+						var sTitle = Dict.Format(sDictEntry, this.options.field.label);
+					}
+
+					if(sTitle === sDictEntry)
+					{
+						var sTitle = Dict.Format('UI:Search:Criteria:Title:Default:Any', this.options.field.label);
+					}
+				}
+				else
+				{
+					var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':' + this._toCamelCase(sOperator);
+					var sTitle = Dict.Format(sDictEntry, this.options.field.label, sValueAsText);
+					// Fallback to default widget dict entry if none exists for the current widget
+					if(sTitle === sDictEntry)
+					{
+						sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(sOperator);
+						sTitle = Dict.Format(sDictEntry, this.options.field.label, sValueAsText);
+					}
+				}
 
 				// Last chande fallback
 				if(sTitle === sDictEntry)
@@ -494,6 +519,12 @@ $(function()
 					sTitle = this.options.label;
 				}
 			}
+			return sTitle;
+		},
+		// - Set the title element
+		_setTitle: function(sTitle)
+		{
+			sTitle = this._computeTitle(sTitle);
 			this.element.find('.sfc_title')
 				.html(sTitle)
 				.attr('title', sTitle);
