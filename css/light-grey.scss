@@ -812,7 +812,6 @@ input.dp-applied {
 		padding: 1px 2px;
 	}
 
-
 	&:not(.closed){
 		.sf_title{
 			.sft_toggler{
@@ -840,8 +839,6 @@ input.dp-applied {
 			color: #3F7294;
 		}
 	}
-
-
 
 	.sf_title{
 		transition: opacity 0.3s, background-color 0.3s, color 0.3s linear;

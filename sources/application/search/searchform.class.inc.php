@@ -196,13 +196,6 @@ class SearchForm
 			'data_config_list_selector' => "#{$sDataConfigListSelector}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
 			'init_opened' => $bOpen,
-			'datepicker' => array(
-				'dayNamesMin' => $aDaysMin,
-				'monthNamesShort' => $aMonthsShort,
-				'firstDay' => (int) Dict::S('Calendar-FirstDayOfWeek'),
-//				'date_format' => AttributeDate::GetFormat()->ToDatePicker(),
-//				'date_time_format' => AttributeDateTime::GetFormat()->ToMomentJS(),
-			),
 			'list_params' => $aListParams,
 			'search' => array(
 				'has_hidden_criteria' => (array_key_exists('hidden_criteria', $aListParams) && !empty($aListParams['hidden_criteria'])),
@@ -211,6 +204,14 @@ class SearchForm
 				'class_name' => $sClassName,
 				'class_alias' => $sClassAlias,
 				'base_oql' => $sBaseOQL,
+			),
+			'conf_parameters' => array(
+				'min_autocomplete_chars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
+				'datepicker' => array(
+					'dayNamesMin' => $aDaysMin,
+					'monthNamesShort' => $aMonthsShort,
+					'firstDay' => (int) Dict::S('Calendar-FirstDayOfWeek'),
+				),
 			),
 		);
 

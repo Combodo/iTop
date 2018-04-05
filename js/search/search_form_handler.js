@@ -13,15 +13,8 @@ $(function()
 			'result_list_outer_selector': null,
 			'data_config_list_selector': null,
 			'submit_button_selector': null,
-			'hide_initial_criterion': false, // TODO: What is that?
 			'endpoint': null,
 			'init_opened': false,
-			"datepicker":
-			{
-				"dayNamesMin": ["Su","Mo","Tu","We","Th","Fr","Sa"],
-				"monthNamesShort": ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
-				"firstDay": 0
-			},
 			'search': {
 				'base_oql': '',
 				'class_name': null,
@@ -73,6 +66,14 @@ $(function()
 				],
 			},
 			'default_criteria_type': 'raw',
+			'conf_parameters': {
+				'min_autocomplete_chars': 3,
+				'datepicker': {
+					'dayNamesMin': ['Su','Mo','Tu','We','Th','Fr','Sa'],
+					'monthNamesShort': ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+					'firstDay': 0,
+				},
+			},
 		},
 
 		// jQuery elements
@@ -100,7 +101,7 @@ $(function()
 			};
 
 			//init others widgets :
-			this.element.search_form_handler_history({"itop_root_class":me.options.search.class_name});
+			this.element.search_form_handler_history({'itop_root_class':me.options.search.class_name});
 
 			// Prepare DOM elements
 			this._prepareFormArea();
@@ -267,7 +268,6 @@ $(function()
 				// Prevent toggle on <select>
 				if(oEvent.target.nodeName.toLowerCase() !== 'select')
 				{
-					//me.element.find('.sf_criterion_area').slideToggle('fast');
 					me.element.toggleClass('closed');
 				}
 			});
@@ -711,9 +711,16 @@ $(function()
 				};
 			}
 
-			if ('date' == sType || 'date_time' == sType)
+			// Add widget specific data
+			if( (sType === 'date') || (sType === 'date_time') )
 			{
-				oData.datepicker = this.options.datepicker;
+				oData.datepicker = this.options.conf_parameters.datepicker;
+			}
+			if( (sType === 'enum') || (sType === 'external_key') )
+			{
+				oData.autocomplete = {
+					'min_autocomplete_chars': this.options.conf_parameters.min_autocomplete_chars,
+				};
 			}
 
 			// Create DOM element

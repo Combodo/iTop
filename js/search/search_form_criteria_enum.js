@@ -32,7 +32,7 @@ $(function()
 			// Autocomplete
 			'autocomplete': {
 				'xhr_throttle': 200,
-				'min_autocomplete_chars': 3, // TODO: Pass this through widget instanciation.
+				'min_autocomplete_chars': 3,
 			},
 		},
 
@@ -325,7 +325,7 @@ $(function()
 				}
 
 				var sQuery = $(this).val();
-				if( (sQuery === '') ) // TODO: Put this back after tests|| (sQuery.length < me.options.autocomplete.min_autocomplete_chars) )
+				if( (sQuery === '') || (sQuery.length < me.options.autocomplete.min_autocomplete_chars) )
 				{
 					me._setACTypingHint();
 					oFilterElem.find('.sff_reset').hide();
