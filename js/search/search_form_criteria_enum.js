@@ -320,7 +320,7 @@ $(function()
 				}
 
 				var sQuery = $(this).val();
-				if( (sQuery === '') ) // TODO: Put this back after tests || (sQuery.length < me.options.autocomplete.min_autocomplete_chars) )
+				if( (sQuery === '') || (sQuery.length < me.options.autocomplete.min_autocomplete_chars) )
 				{
 					me._setACTypingHint();
 					oFilterElem.find('.sff_reset').hide();
@@ -615,11 +615,6 @@ $(function()
 						.appendTo(oSelectedValuesElem)
 						.effect('highlight', {}, 500);
 				}
-
-				this.options.values.push({
-					value: sValue,
-					label: oValues[sValue]
-				});
 			}
 			this._refreshSelectedValues();
 		},

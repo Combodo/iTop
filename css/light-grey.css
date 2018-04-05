@@ -305,13 +305,13 @@ td a.mailto, td a.mailto:visited {
   text-decoration: none;
   color: #000;
   padding-left: 20px;
-  background: url(../images/mail.png?v=v2.4.0) no-repeat left;
+  background: url(../images/mail.png?v=v2.5.0) no-repeat left;
 }
 td a.mailto:hover {
   text-decoration: underline;
   color: #ea7d1e;
   padding-left: 20px;
-  background: url(../images/mail.png?v=v2.4.0) no-repeat left;
+  background: url(../images/mail.png?v=v2.5.0) no-repeat left;
 }
 a.small_action {
   font-family: Tahoma, Verdana, Arial, Helvetica;
@@ -329,10 +329,10 @@ a.small_action {
   padding-left: 5px;
   padding-top: 2px;
   padding-bottom: 2px;
-  background: #ea7d1e url(../images/actions_left.png?v=v2.4.0) no-repeat left;
+  background: #ea7d1e url(../images/actions_left.png?v=v2.5.0) no-repeat left;
 }
 .actions_details span {
-  background: url(../images/actions_right.png?v=v2.4.0) no-repeat right;
+  background: url(../images/actions_right.png?v=v2.5.0) no-repeat right;
   color: #fff;
   font-weight: bold;
   padding-top: 2px;
@@ -506,7 +506,7 @@ div.actions_menu > ul {
   nowidth: 70px;
   padding-left: 5px;
   /* Nasty work-around for IE... en attendant mieux */
-  background: #ea7d1e url(../images/actions_left.png?v=v2.4.0) no-repeat top left;
+  background: #ea7d1e url(../images/actions_left.png?v=v2.5.0) no-repeat top left;
   cursor: pointer;
   margin: 0;
 }
@@ -518,7 +518,7 @@ div.actions_menu > ul > li {
   height: 17px;
   padding-right: 16px;
   padding-left: 4px;
-  background: url(../images/actions_right.png?v=v2.4.0) no-repeat top right transparent;
+  background: url(../images/actions_right.png?v=v2.5.0) no-repeat top right transparent;
   font-weight: bold;
   color: #fff;
   vertical-align: middle;
@@ -661,7 +661,7 @@ td a.dp-choose-date, a.dp-choose-date, td a.dp-choose-date:hover, a.dp-choose-da
   display: block;
   text-indent: -2000px;
   overflow: hidden;
-  background: url(../images/calendar.png?v=v2.4.0) no-repeat;
+  background: url(../images/calendar.png?v=v2.5.0) no-repeat;
 }
 td a.dp-choose-date.dp-disabled, a.dp-choose-date.dp-disabled {
   background-position: 0 -20px;
@@ -1204,19 +1204,19 @@ input.dp-applied {
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.odd td.truncated, table.listResults tr td.truncated, .wizContainer table.listResults tr.odd td.truncated, .wizContainer table.listResults tr td.truncated {
-  background: url(../images/truncated.png?v=v2.4.0) bottom repeat-x;
+  background: url(../images/truncated.png?v=v2.5.0) bottom repeat-x;
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.even td.truncated, .wizContainer table.listResults tr.even td.truncated {
-  background: #f9f9f1 url(../images/truncated.png?v=v2.4.0) bottom repeat-x;
+  background: #f9f9f1 url(../images/truncated.png?v=v2.5.0) bottom repeat-x;
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.even td.hover.truncated, .wizContainer table.listResults tr.even td.hover.truncated {
-  background: #fdf5d0 url(../images/truncated.png?v=v2.4.0) bottom repeat-x;
+  background: #fdf5d0 url(../images/truncated.png?v=v2.5.0) bottom repeat-x;
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.odd td.hover.truncated, table.listResults tr td.hover.truncated, .wizContainer table.listResults tr.odd td.hover.truncated, .wizContainer table.listResults tr td.hover.truncated {
-  background: #fdf5d0 url(../images/truncated.png?v=v2.4.0) bottom repeat-x;
+  background: #fdf5d0 url(../images/truncated.png?v=v2.5.0) bottom repeat-x;
 }
 table.listResults.truncated {
   border-bottom: 0;
@@ -1324,7 +1324,7 @@ div#logo {
 div#logo div {
   height: 88px;
   width: 244px;
-  background: url(../images/itop-logo-2.png?v=v2.4.0) left no-repeat;
+  background: url(../images/itop-logo-2.png?v=v2.5.0) left no-repeat;
 }
 #left-pane .ui-layout-north {
   overflow: hidden;
@@ -1416,7 +1416,7 @@ div#logo div {
 }
 #global-search-image {
   vertical-align: middle;
-  background: url(../images/search.png?v=v2.4.0) center center no-repeat;
+  background: url(../images/search.png?v=v2.5.0) center center no-repeat;
   display: inline-block;
   width: 28px;
   height: 30px;
@@ -1445,7 +1445,7 @@ span.ui-icon {
   margin: 0 2px;
 }
 .ui-layout-button-pin-down {
-  background: url(../images/splitter-bkg.png?v=v2.4.0) transparent;
+  background: url(../images/splitter-bkg.png?v=v2.5.0) transparent;
   width: 16px;
   background-position: -144px -144px;
 }
@@ -1945,7 +1945,7 @@ img.prev, img.first, img.next, img.last {
 }
 div.actions_button {
   float: right;
-  background: #ea7d1e url("../images/actions_left.png?v=v2.4.0") no-repeat scroll left top;
+  background: #ea7d1e url("../images/actions_left.png?v=v2.5.0") no-repeat scroll left top;
   padding-left: 5px;
   margin-top: 0;
   margin-right: 10px;
@@ -1953,7 +1953,7 @@ div.actions_button {
   vertical-align: middle;
 }
 div.actions_button a, .actions_button a:hover, .actions_button a:visited {
-  background: #ea7d1e url(../images/actions_bkg.png?v=v2.4.0) no-repeat scroll right top;
+  background: #ea7d1e url(../images/actions_bkg.png?v=v2.5.0) no-repeat scroll right top;
   color: #fff;
   padding-right: 8px;
   cursor: pointer;
@@ -1977,10 +1977,10 @@ select#org_id {
   cursor: not-allowed;
 }
 .dragHover {
-  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.4.0);
+  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.5.0);
 }
 .edit_mode .dashlet {
-  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.4.0);
+  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.5.0);
   padding: 5px;
   margin: 0;
   position: relative;
@@ -2013,7 +2013,7 @@ table.prop_table {
   top: 0;
   right: 0;
   z-index: 10;
-  background: transparent url(../images/delete.png?v=v2.4.0) no-repeat center;
+  background: transparent url(../images/delete.png?v=v2.5.0) no-repeat center;
 }
 td.prop_value {
   text-align: left;
@@ -2215,17 +2215,17 @@ a.summary, a.summary:hover {
 }
 .message_info {
   border: 1px solid #993;
-  background: url(../images/info-mini.png?v=v2.4.0) 1em 1em no-repeat #ffc;
+  background: url(../images/info-mini.png?v=v2.5.0) 1em 1em no-repeat #ffc;
   padding-left: 3em;
 }
 .message_ok {
   border: 1px solid #393;
-  background: url(../images/ok.png?v=v2.4.0) 1em 1em no-repeat #cfc;
+  background: url(../images/ok.png?v=v2.5.0) 1em 1em no-repeat #cfc;
   padding-left: 3em;
 }
 .message_error {
   border: 1px solid #933;
-  background: url(../images/error.png?v=v2.4.0) 1em 1em no-repeat #fcc;
+  background: url(../images/error.png?v=v2.5.0) 1em 1em no-repeat #fcc;
   padding-left: 3em;
 }
 .fg-menu a img {
@@ -2356,18 +2356,18 @@ div.explain-printable {
 }
 #hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter span {
   padding-left: 20px;
-  background: url(../images/eye-open-555.png?v=v2.4.0) 2px center no-repeat;
+  background: url(../images/eye-open-555.png?v=v2.5.0) 2px center no-repeat;
 }
 #hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter.strikethrough span {
   text-decoration: line-through;
-  background: url(../images/eye-closed-555.png?v=v2.4.0) 2px center no-repeat;
+  background: url(../images/eye-closed-555.png?v=v2.5.0) 2px center no-repeat;
 }
 .printable-version legend {
   padding-left: 26px;
-  background: #1c94c4 url(../images/eye-open-fff.png?v=v2.4.0) 8px center no-repeat;
+  background: #1c94c4 url(../images/eye-open-fff.png?v=v2.5.0) 8px center no-repeat;
 }
 .printable-version .strikethrough legend {
-  background: #1c94c4 url(../images/eye-closed-fff.png?v=v2.4.0) 8px center no-repeat;
+  background: #1c94c4 url(../images/eye-closed-fff.png?v=v2.5.0) 8px center no-repeat;
 }
 .printable-version fieldset.strikethrough span {
   display: none;
@@ -2386,7 +2386,7 @@ span.refresh-button {
   width: 21px;
   height: 18px;
   cursor: pointer;
-  background: transparent url(../images/refresh-fff.png?v=v2.4.0) left center no-repeat;
+  background: transparent url(../images/refresh-fff.png?v=v2.5.0) left center no-repeat;
 }
 .case-log-history-entry {
   display: block;
@@ -2514,7 +2514,7 @@ span.refresh-button {
 #itop-breadcrumb .breadcrumb-item a::after {
   content: '';
   position: absolute;
-  background-image: url(../images/breadcrumb-separator.png?v=v2.4.0);
+  background-image: url(../images/breadcrumb-separator.png?v=v2.5.0);
   background-repeat: no-repeat;
   width: 8px;
   height: 16px;
