@@ -1065,13 +1065,13 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:GroupBy:count' => 'Nombre',
 	'UI:GroupBy:count+' => 'Nombre d\'éléments',
 	'UI:GroupBy:sum' => 'Somme',
-	'UI:GroupBy:sum+' => 'Somme : %1$s',
+	'UI:GroupBy:sum+' => 'Somme des %1$s',
 	'UI:GroupBy:avg' => 'Moyenne',
-	'UI:GroupBy:avg+' => 'Moyenne : %1$s',
+	'UI:GroupBy:avg+' => 'Moyenne des %1$s',
 	'UI:GroupBy:min' => 'Minimum',
-	'UI:GroupBy:min+' => 'Minimum : %1$s',
+	'UI:GroupBy:min+' => 'Minimum des %1$s',
 	'UI:GroupBy:max' => 'Maximum',
-	'UI:GroupBy:max+' => 'Maximum : %1$s',
+	'UI:GroupBy:max+' => 'Maximum des %1$s',
 	// ---
 
 	'UI:DashletHeaderStatic:Label' => 'En-tête',
