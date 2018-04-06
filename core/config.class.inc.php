@@ -1053,14 +1053,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'legacy_search_drawer_open' => array(
-			'type' => 'bool',
-			'description' => 'Whether or not to display the "search drawer" open by default as in previous versions of iTop.',
-			'default' => false,
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		),
 		'obsolescence.show_obsolete_data' => array(
 			'type' => 'bool',
 			'description' => 'Default value for the user preference "show obsolete data"',

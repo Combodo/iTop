@@ -331,11 +331,9 @@ class UILinksWidgetDirect
 			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
 			$oFilter->SetInternalParams($aArgs);
 		}
-		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}",
 			array(
-			    'open' => $bOpen,
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->sInputid}",
 				'table_id' => "add_{$this->sInputid}",
 				'table_inner_id' => "ResultsToAdd_{$this->sInputid}",

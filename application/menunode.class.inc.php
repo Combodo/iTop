@@ -824,14 +824,7 @@ class OQLMenuNode extends MenuNode
 		$this->sPageTitle = "Menu:$sMenuId+";
 		$this->sOQL = $sOQL;
 		$this->bSearch = $bSearch;
-		if ($bSearchFormOpen == null)
-		{
-			$this->bSearchFormOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
-		}
-		else
-		{
-			$this->bSearchFormOpen = $bSearchFormOpen;
-		}
+		$this->bSearchFormOpen = $bSearchFormOpen;
 		$this->m_aParams = array();
 		$this->aReflectionProperties['oql'] = $sOQL;
 		$this->aReflectionProperties['do_search'] = $bSearch;
@@ -966,7 +959,7 @@ class SearchMenuNode extends MenuNode
 		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', utils::GetAbsoluteUrlAppRoot().'images/search.png');
 
 		$oSearch = new DBObjectSearch($this->sClass);
-		$aParams = array_merge(array('open' => true, 'table_id' => 'Menu_'.utils::GetSafeId($this->GetMenuId())), $aExtraParams);
+		$aParams = array_merge(array('table_id' => 'Menu_'.utils::GetSafeId($this->GetMenuId())), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oPage, 0);
 	}

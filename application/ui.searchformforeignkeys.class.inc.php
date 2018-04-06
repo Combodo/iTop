@@ -41,7 +41,6 @@ class UISearchFormForeignKeys
 	 */
 	public function ShowModalSearchForeignKeys($oPage, $sTitle)
 	{
-		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
 
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
@@ -49,7 +48,6 @@ class UISearchFormForeignKeys
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_iInputId}",
 			array(
-				'open' => $bOpen,
 				'menu' => false,
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->m_iInputId}",
 				'table_id' => "add_{$this->m_iInputId}",

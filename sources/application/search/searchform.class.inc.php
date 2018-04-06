@@ -84,6 +84,15 @@ class SearchForm
 		{
 			$sRootClass = $sClassName;
 		}
+		//should the search be opend on load?
+		if (isset($aExtraParams['open']))
+		{
+			$bOpen = $aExtraParams['open'];
+		}
+		else
+		{
+			$bOpen = true;
+		}
 
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
 		if (!empty($sJson))
@@ -124,7 +133,7 @@ class SearchForm
 			$sClassesCombo = MetaModel::GetName($sClassName);
 		}
 		$sAction = (isset($aExtraParams['action'])) ? $aExtraParams['action'] : utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
-		$sStyle = (isset($aExtraParams['open']) && ($aExtraParams['open'] == 'true')) ? '' : 'closed';
+		$sStyle = ($bOpen == 'true') ? '' : 'closed';
 		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"{$sAction}\" class=\"{$sStyle}\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
 		$sHtml .= "<h2 class=\"sf_title\"><span class=\"sft_picto fa fa-search\"></span>" . Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo) . "<a class=\"sft_toggler fa fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a><a class=\"sft_refresh fa fa-search pull-right\" href=\"#\" title=\"" . Dict::S('UI:Button:Refresh') . "\"></a></h2>\n";
 		$sHtml .= "<div id=\"fs_{$sSearchFormId}_message\" class=\"sf_message header_message\"></div>\n";
@@ -173,11 +182,8 @@ class SearchForm
 		{
 			$aListParams['table_inner_id'] = "table_inner_id_{$sSearchFormId}";
 		}
-		$bOpen = false;
-		if (isset($aExtraParams['open']))
-		{
-			$bOpen = $aExtraParams['open'];
-		}
+
+
 
 		$sDebug = utils::ReadParam('debug', 'false', false, 'parameter');
 		if ($sDebug == 'true')

@@ -130,7 +130,10 @@ function DisplayDetails($oP, $sClass, $oObj, $id)
 	$sClassLabel = MetaModel::GetName($sClass);
 	$oSearch = new DBObjectSearch($sClass);
 	$oBlock = new DisplayBlock($oSearch, 'search', false);
-	$oBlock->Display($oP, 0, array('table_id' => 'search-widget-results-outer'));
+	$oBlock->Display($oP, 0, array(
+		'table_id'  => 'search-widget-results-outer',
+		'open'      => false,
+	));
 
 	// The object could be listed, check if it is actually allowed to view it
 	$oSet = CMDBObjectSet::FromObject($oObj);
@@ -194,7 +197,7 @@ function SetObjectBreadCrumbEntry(DBObject $oObj, WebPage $oPage)
  * @param $bDoSearch bool True to display the search results below the search form
  * @param $bSearchFormOpen bool True to display the search form fully expanded (only if $bSearchForm of course)
  */
-function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true, $bSearchFormOpen = false)
+function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true, $bSearchFormOpen = true)
 {
 	if ($bSearchForm)
 	{

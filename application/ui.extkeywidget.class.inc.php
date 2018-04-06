@@ -341,13 +341,11 @@ EOF
 			$aParams = array();
 			$oFilter = new DBObjectSearch($this->sTargetClass);
 		}
-		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
 		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oBlock = new DisplayBlock($oFilter, 'search', false, $aParams);
 		$sHTML .= $oBlock->GetDisplay($oPage, $this->iId,
             array(
                 'menu' => false,
-                'open' => $bOpen,
                 'currentId' => $this->iId,
                 'table_id' => "dr_{$this->iId}",
                 'table_inner_id' => "{$this->iId}_results",

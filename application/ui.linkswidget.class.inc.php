@@ -395,7 +395,6 @@ EOF
 	 */
 	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = array(), $aPrefillFormParam = array())
 	{
-		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
 
 		$oAlreadyLinkedFilter = new DBObjectSearch($this->m_sRemoteClass);
@@ -421,7 +420,6 @@ EOF
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 			array(
-				'open' => $bOpen,
 				'menu' => false,
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
 				'table_id' => 'add_'.$this->m_sAttCode,

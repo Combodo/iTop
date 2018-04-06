@@ -1897,7 +1897,7 @@ EOF;
 				break;
 				
 				default:
-				$sSearchFormOpen = 'null'; // Actual open/close status depend on the config
+				$sSearchFormOpen = 'true';
 			}
 			$sNewMenu = "new OQLMenuNode('$sMenuId', $sOQL, $sParentSpec, $fRank, $bSearch {$sOptionalEnableParams}, $sSearchFormOpen);";
 			break;
