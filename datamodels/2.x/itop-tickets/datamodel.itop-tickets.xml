@@ -966,6 +966,30 @@
 					    </argument>
 					  </arguments>
 					</method>
+					<method id="PrefillCreationForm">
+						<arguments>
+							<argument id="1">
+								<type>array</type>
+								<mandatory>true</mandatory>
+							</argument>
+						</arguments>
+					</method>
+					<method id="PrefillTransitionForm">
+						<arguments>
+							<argument id="1">
+								<type>array</type>
+								<mandatory>true</mandatory>
+							</argument>
+						</arguments>
+					</method>
+					<method id="PrefillSearchForm">
+					<arguments>
+							<argument id="1">
+								<type>array</type>
+								<mandatory>true</mandatory>
+							</argument>
+						</arguments>
+					</method>
 				</methods>
 			</class>
 			<class id="ResponseTicketTTO" _delta="define">
