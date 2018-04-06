@@ -68,13 +68,14 @@ $(function()
 		{
 			// Overloading function and doing nothing for this special kind of criteria.
 		},
-		_setTitle: function(sTitle)
+		_computeTitle: function(sTitle)
 		{
 			if(sTitle === undefined)
 			{
 				sTitle = this.options.label;
 			}
-			this._super(sTitle);
+
+			return this._super(sTitle);
 		},
 	});
 });

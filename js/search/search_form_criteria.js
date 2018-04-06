@@ -480,46 +480,22 @@ $(function()
 				me[sCallback]($(this), me.options.values);
 			});
 		},
-		// - compture the title element
+		// - Compute the title string
 		_computeTitle: function(sTitle)
 		{
 			if(sTitle === undefined)
 			{
 				var sValueAsText = this._getValuesAsText();
-				var sOperator = this.operators[this.options.operator].code;
+				var sOperator = (sValueAsText !== '') ? this.operators[this.options.operator].code : 'Any';
+				var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':' + this._toCamelCase(sOperator);
 
-				if ('' == sValueAsText)
+				// Fallback to default widget dict entry if none exists for the current widget
+				if(Dict.S(sDictEntry) === sDictEntry)
 				{
-					var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':Any'+ ':' + this._toCamelCase(sOperator);
-					var sTitle = Dict.Format(sDictEntry, this.options.field.label);
-					if(sTitle === sDictEntry)
-					{
-						var sDictEntry = 'UI:Search:Criteria:Title:Default:Any'+ ':' + this._toCamelCase(sOperator);
-						var sTitle = Dict.Format(sDictEntry, this.options.field.label);
-					}
-
-					if(sTitle === sDictEntry)
-					{
-						var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':Any';
-						var sTitle = Dict.Format(sDictEntry, this.options.field.label);
-					}
-
-					if(sTitle === sDictEntry)
-					{
-						var sTitle = Dict.Format('UI:Search:Criteria:Title:Default:Any', this.options.field.label);
-					}
+					sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(sOperator);
 				}
-				else
-				{
-					var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':' + this._toCamelCase(sOperator);
-					var sTitle = Dict.Format(sDictEntry, this.options.field.label, sValueAsText);
-					// Fallback to default widget dict entry if none exists for the current widget
-					if(sTitle === sDictEntry)
-					{
-						sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(sOperator);
-						sTitle = Dict.Format(sDictEntry, this.options.field.label, sValueAsText);
-					}
-				}
+
+				sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
 
 				// Last chande fallback
 				if(sTitle === sDictEntry)

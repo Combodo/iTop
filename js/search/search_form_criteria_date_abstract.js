@@ -294,8 +294,7 @@ $(function()
 		//------------------
 		// Inherited methods
 		//------------------
-
-		_setTitle: function(sTitle)
+		_computeTitle: function(sTitle)
 		{
 			var me = this;
 			if (sTitle === undefined && me.options.operator == 'between_dates')
@@ -334,7 +333,6 @@ $(function()
 
 					sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
 				}
-
 			}
 
 			return me._super(sTitle);

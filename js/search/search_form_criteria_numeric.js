@@ -186,9 +186,7 @@ $(function()
 		//------------------
 		// Inherited methods
 		//------------------
-
-
-		_setTitle: function(sTitle)
+		_computeTitle: function(sTitle)
 		{
 			var me = this;
 			if (sTitle === undefined && me.options.operator == 'between')
@@ -245,7 +243,6 @@ $(function()
 			return me._super(sTitle);
 		},
 
-
 		// - Convert values to a standard string
 		_getValuesAsText: function(aRawValues)
 		{
@@ -269,9 +266,6 @@ $(function()
 			}
 			return me._super(aRawValues);
 		},
-
-
-
 
 		// Prepare operator's DOM element
 		// - Base preparation, always called
@@ -330,7 +324,5 @@ $(function()
 				.data('oOp', oOp)
 			;
 		},
-
-
 	});
 });
