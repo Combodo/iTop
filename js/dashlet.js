@@ -102,14 +102,19 @@ $(function()
 		{
 			var oParams = {};
 			var oProperties = $('#dashlet_properties_'+this.options.dashlet_id);
-			oProperties.find(':itop-property_field').each(function(){
-				var oWidget = $(this).data('itopProperty_field');
-				if (oWidget)
-				{
-					var oVal = oWidget._get_committed_value();
-					oParams[oVal.name] = oVal.value;
-				}
-			});
+            oProperties.find('.itop-property-field').each(function(){
+                var oWidget = $(this).data('itopProperty_field');
+                if (oWidget == undefined)
+                {
+                    oWidget = $(this).data('itopSelector_property_field');
+                }
+                if (oWidget && $(this).is(':visible'))
+                {
+                    var oVal = oWidget._get_committed_value();
+                    oParams[oVal.name] = oVal.value;
+                }
+            });
+
 			oParams.dashlet_id = this.options.dashlet_id;
 			oParams.dashlet_class = this.options.dashlet_class;
 			return oParams;

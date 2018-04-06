@@ -1217,6 +1217,27 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashletGroupByTable:Label' => 'Group By (table)',
 	'UI:DashletGroupByTable:Description' => 'List (Grouped by a field)',
 
+	// New in 2.5
+	'UI:DashletGroupBy:Prop-Function' => 'Agregation function',
+	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute',
+	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction',
+	'UI:DashletGroupBy:Prop-Limit' => 'Limit',
+
+	'UI:DashletGroupBy:Order:asc' => 'Ascending',
+	'UI:DashletGroupBy:Order:desc' => 'Descending',
+
+	'UI:GroupBy:count' => 'Count',
+	'UI:GroupBy:count+' => 'Number of elements',
+	'UI:GroupBy:sum' => 'Sum',
+	'UI:GroupBy:sum+' => 'Sum of %1$s',
+	'UI:GroupBy:avg' => 'Average',
+	'UI:GroupBy:avg+' => 'Average of %1$s',
+	'UI:GroupBy:min' => 'Minimum',
+	'UI:GroupBy:min+' => 'Minimum of %1$s',
+	'UI:GroupBy:max' => 'Maximum',
+	'UI:GroupBy:max+' => 'Maximum of %1$s',
+	// ---
+
 	'UI:DashletHeaderStatic:Label' => 'Header',
 	'UI:DashletHeaderStatic:Description' => 'Displays an horizontal separator',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Title',

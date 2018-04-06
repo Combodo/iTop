@@ -285,7 +285,19 @@ class DisplayBlock
 		}
 		$oPage->add($this->GetRenderContent($oPage, $aExtraParams, $sId));
 	}
-	
+
+	/**
+	 * @param WebPage $oPage
+	 * @param array $aExtraParams
+	 * @param $sId
+	 * @return string
+	 * @throws ApplicationException
+	 * @throws CoreException
+	 * @throws CoreWarning
+	 * @throws DictExceptionMissingString
+	 * @throws MySQLException
+	 * @throws Exception
+	 */
 	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), $sId)
 	{
 		$sHtml = '';
@@ -400,6 +412,7 @@ class DisplayBlock
 			case 'count':
 			if (isset($aExtraParams['group_by']))
 			{
+				$sAlias = $this->m_oFilter->GetClassAlias();
 				if (isset($aExtraParams['group_by_label']))
 				{
 					$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);					
@@ -408,7 +421,6 @@ class DisplayBlock
 				else
 				{
 					// Backward compatibility: group_by is simply a field id
-					$sAlias = $this->m_oFilter->GetClassAlias();
 					$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
 					$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
 				}
@@ -430,7 +442,42 @@ class DisplayBlock
 				
 				$aGroupBy = array();
 				$aGroupBy['grouped_by_1'] = $oGroupByExp;
-				$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true);
+				$aQueryParams = array();
+				if (isset($aExtraParams['query_params']))
+				{
+					$aQueryParams = $aExtraParams['query_params'];
+				}
+				$aFunctions = array();
+				$aOrderBy = array();
+				$sAgregationFunction = 'count';
+				$sFctVar = '_itop_count_';
+				$sAgregationAttr = '';
+				if (isset($aExtraParams['agregation_function']) && !empty($aExtraParams['agregation_attribute']))
+				{
+					$sAgregationFunction = $aExtraParams['agregation_function'];
+					$sAgregationAttr = $aExtraParams['agregation_attribute'];
+					$oAttrExpr = Expression::FromOQL('`'.$sAlias.'`.`'.$sAgregationAttr.'`');
+					$oFctExpr = new FunctionExpression(strtoupper($sAgregationFunction), array($oAttrExpr));
+					$sFctVar = '_itop_'.$sAgregationFunction.'_';
+					$aFunctions = array($sFctVar => $oFctExpr);
+				}
+				if (!empty($sAgregationAttr))
+				{
+					$sClass = $this->m_oFilter->GetClass();
+					$sAgregationAttr = MetaModel::GetLabel($sClass, $sAgregationAttr);
+				}
+				$iLimit = 0;
+				if (isset($aExtraParams['limit']))
+				{
+					$iLimit = intval($aExtraParams['limit']);
+				}
+				if (isset($aExtraParams['order_direction']))
+				{
+					$aOrderBy = array($sFctVar => ($aExtraParams['order_direction'] === 'asc'));
+				}
+
+				$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true, $aFunctions, $aOrderBy, $iLimit);
+
 				$aRes = CMDBSource::QueryToArray($sSql);
 
 				$aGroupBy = array();
@@ -443,7 +490,7 @@ class DisplayBlock
 					$aValues[$iRow] = $sValue;
 					$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
 					$aLabels[$iRow] = $sHtmlValue;
-					$aGroupBy[$iRow] = (int) $aRow['_itop_count_'];
+					$aGroupBy[$iRow] = (int) $aRow[$sFctVar];
 					$iTotalCount += $aRow['_itop_count_'];
 				}
 
@@ -459,12 +506,12 @@ class DisplayBlock
 					$oSubsetSearch->AddConditionExpression($oCondition);
 					$sFilter = urlencode($oSubsetSearch->serialize());
 
-					$aData[] = array ( 'group' => $aLabels[$iRow],
+					$aData[] = array ('group' => $aLabels[$iRow],
 									  'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"); // TO DO: add the context information
 				}
 				$aAttribs =array(
 					'group' => array('label' => $sGroupByLabel, 'description' => ''),
-					'value' => array('label'=> Dict::S('UI:GroupBy:Count'), 'description' => Dict::S('UI:GroupBy:Count+'))
+					'value' => array('label'=> Dict::S('UI:GroupBy:'.$sAgregationFunction), 'description' => Dict::Format('UI:GroupBy:'.$sAgregationFunction.'+', $sAgregationAttr))
 				);
 				$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
 				$sHtml .= $oPage->GetP(Dict::Format($sFormat, $iTotalCount));
@@ -924,18 +971,21 @@ class DisplayBlock
 			$sFilter = $this->m_oFilter->serialize();
 			$oContext = new ApplicationContext();
 			$sContextParam = $oContext->GetForLink();
+			$sAgregationFunction = isset($aExtraParams['agregation_function']) ? $aExtraParams['agregation_function'] : '';
+			$sAgregationAttr = isset($aExtraParams['agregation_attribute']) ? $aExtraParams['agregation_attribute'] : '';
+			$sLimit = isset($aExtraParams['limit']) ? $aExtraParams['limit'] : '';
+			$sOrderBy = isset($aExtraParams['order_by']) ? $aExtraParams['order_by'] : '';
+			$sOrderDirection = isset($aExtraParams['order_direction']) ? $aExtraParams['order_direction'] : '';
 
 			if (isset($aExtraParams['group_by_label']))
 			{
-				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
+				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[agregation_function]=$sAgregationFunction&params[agregation_attribute]=$sAgregationAttr&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
 			}
 			else
 			{
-				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
+				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[agregation_function]=$sAgregationFunction&params[agregation_attribute]=$sAgregationAttr&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
 			}
-			
-			$sType = ($sChartType == 'pie') ? 'pie' : 'bar';
-			
+
 			$oPage->add_ready_script(
 <<<EOF
 $.post($sUrl, {}, function(data) {
@@ -952,22 +1002,47 @@ EOF
 
 			if (isset($aExtraParams['group_by']))
 			{
+				$sAlias = $this->m_oFilter->GetClassAlias();
 				if (isset($aExtraParams['group_by_label']))
 				{
 					$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
-					$sGroupByLabel = $aExtraParams['group_by_label'];
 				}
 				else
 				{
 					// Backward compatibility: group_by is simply a field id
-					$sAlias = $this->m_oFilter->GetClassAlias();
 					$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
-					$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
 				}
 
 				$aGroupBy = array();
 				$aGroupBy['grouped_by_1'] = $oGroupByExp;
-				$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true);
+				$aQueryParams = array();
+				if (isset($aExtraParams['query_params']))
+				{
+					$aQueryParams = $aExtraParams['query_params'];
+				}
+				$aFunctions = array();
+				$aOrderBy = array();
+				$sFctVar = '_itop_count_';
+				if (isset($aExtraParams['agregation_function']) && !empty($aExtraParams['agregation_attribute']))
+				{
+					$sAgregationFunction = $aExtraParams['agregation_function'];
+					$sAgregationAttr = $aExtraParams['agregation_attribute'];
+					$oAttrExpr = Expression::FromOQL('`'.$sAlias.'`.`'.$sAgregationAttr.'`');
+					$oFctExpr = new FunctionExpression(strtoupper($sAgregationFunction), array($oAttrExpr));
+					$sFctVar = '_itop_'.$sAgregationFunction.'_';
+					$aFunctions = array($sFctVar => $oFctExpr);
+				}
+				$iLimit = 0;
+				if (isset($aExtraParams['limit']))
+				{
+					$iLimit = intval($aExtraParams['limit']);
+				}
+				if (isset($aExtraParams['order_direction']))
+				{
+					$aOrderBy = array($sFctVar => ($aExtraParams['order_direction'] === 'asc'));
+				}
+
+				$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true, $aFunctions, $aOrderBy, $iLimit);
 				$aRes = CMDBSource::QueryToArray($sSql);
 				$oContext = new ApplicationContext();
 				$sContextParam = $oContext->GetForLink();
@@ -980,9 +1055,9 @@ EOF
 				{
 					$sValue = $aRow['grouped_by_1'];
 					$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
-					$aGroupBy[(int)$iRow] = (int) $aRow['_itop_count_'];
+					$aGroupBy[(int)$iRow] = (int) $aRow[$sFctVar];
 					$iTotalCount += $aRow['_itop_count_'];
-					$aValues[] = array('label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'), 'label_html' => $sHtmlValue, 'value' => (int) $aRow['_itop_count_']);
+					$aValues[] = array('label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'), 'label_html' => $sHtmlValue, 'value' => (int) $aRow[$sFctVar]);
 					
 					// Build the search for this subset
 					$oSubsetSearch = $this->m_oFilter->DeepClone();

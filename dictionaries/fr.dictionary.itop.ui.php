@@ -160,7 +160,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Attribute:status+' => 'Est-ce que ce compte utilisateur est actif, ou non?',
 	'Class:User/Attribute:status/Value:enabled' => 'Actif',
 	'Class:User/Attribute:status/Value:disabled' => 'Désactivé',
-	'Class:User/Attribute:status' => 'Etat',
 	'Class:User/Error:LoginMustBeUnique' => 'Le login doit être unique - "%1s" est déjà utilisé.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'L\'utilisateur doit avoir au moins un profil.',
 	'Class:UserInternal' => 'Utilisateur interne',
@@ -1053,6 +1052,27 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashletGroupByBars:Description' => 'Graphique en Barres',
 	'UI:DashletGroupByTable:Label' => 'Table',
 	'UI:DashletGroupByTable:Description' => 'Table',
+
+	// New in 2.5
+	'UI:DashletGroupBy:Prop-Function' => 'Fonction d\'agregation',
+	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Attribut',
+	'UI:DashletGroupBy:Prop-OrderDirection' => 'Type de tri',
+	'UI:DashletGroupBy:Prop-Limit' => 'Limite',
+
+	'UI:DashletGroupBy:Order:asc' => 'Croissant',
+	'UI:DashletGroupBy:Order:desc' => 'Décroissant',
+
+	'UI:GroupBy:count' => 'Nombre',
+	'UI:GroupBy:count+' => 'Nombre d\'éléments',
+	'UI:GroupBy:sum' => 'Somme',
+	'UI:GroupBy:sum+' => 'Somme : %1$s',
+	'UI:GroupBy:avg' => 'Moyenne',
+	'UI:GroupBy:avg+' => 'Moyenne : %1$s',
+	'UI:GroupBy:min' => 'Minimum',
+	'UI:GroupBy:min+' => 'Minimum : %1$s',
+	'UI:GroupBy:max' => 'Maximum',
+	'UI:GroupBy:max+' => 'Maximum : %1$s',
+	// ---
 
 	'UI:DashletHeaderStatic:Label' => 'En-tête',
 	'UI:DashletHeaderStatic:Description' => 'En-tête présenté comme une barre horizontale',

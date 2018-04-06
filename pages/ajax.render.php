@@ -965,7 +965,7 @@ try
 				foreach($aUpdatedProperties as $sProp)
 				{
 					$sDecodedProp = str_replace('attr_', '', $sProp); // Remove the attr_ prefix
-					$aCurrentValues[$sDecodedProp] = $aPreviousValues[$sProp]; // Set the previous value
+					$aCurrentValues[$sDecodedProp] = (isset($aPreviousValues[$sProp]) ? $aPreviousValues[$sProp] : ''); // Set the previous value
 					$aUpdatedDecoded[] = $sDecodedProp;
 				}
 

@@ -700,12 +700,21 @@ abstract class DashletGroupBy extends Dashlet
 		$this->aProperties['query'] = 'SELECT Contact';
 		$this->aProperties['group_by'] = 'status';
 		$this->aProperties['style'] = 'table';
+		$this->aProperties['agregation_function'] = 'count';
+		$this->aProperties['agregation_attribute'] = '';
+		$this->aProperties['limit'] = '';
+		$this->aProperties['order_direction'] = 'desc';
 	}
 
 	protected $sGroupByLabel = null;
 	protected $sGroupByExpr = null;
 	protected $sGroupByAttCode = null;
 	protected $sFunction = null;
+	protected $sAgregationFunction = null;
+	protected $sAgregationAttribute = null;
+	protected $sLimit = null;
+	protected $sOrderDirection = null;
+	protected $sClass = null;
 
 	/**
 	 * Compute Grouping
@@ -716,22 +725,27 @@ abstract class DashletGroupBy extends Dashlet
 		$this->sGroupByLabel = null;
 		$this->sGroupByAttCode = null;
 		$this->sFunction = null;
+		$this->sClass = null;
 
 		$sQuery = $this->aProperties['query'];
 		$sGroupBy = $this->aProperties['group_by'];
-		$sStyle = $this->aProperties['style'];
+
+		$this->sAgregationFunction = $this->aProperties['agregation_function'];
+		$this->sAgregationAttribute = $this->aProperties['agregation_attribute'];
+		$this->sLimit = $this->aProperties['limit'];
+		$this->sOrderDirection = $this->aProperties['order_direction'];
 
 		// First perform the query - if the OQL is not ok, it will generate an exception : no need to go further
 		try
 		{
 			$oQuery = $this->oModelReflection->GetQuery($sQuery);
-			$sClass = $oQuery->GetClass();
+			$this->sClass = $oQuery->GetClass();
 			$sClassAlias = $oQuery->GetClassAlias();
 		}
 		catch(Exception $e)
 		{
 			// Invalid query, let the user edit the dashlet/dashboard anyhow
-			$sClass = '';
+			$this->sClass = null;
 			$sClassAlias = '';
 		}
 		// Check groupby... it can be wrong at this stage
@@ -745,9 +759,9 @@ abstract class DashletGroupBy extends Dashlet
 			$this->sGroupByAttCode = $sGroupBy;
 			$this->sFunction = null;
 		}
-		if (($sClass != '') && $this->oModelReflection->IsValidAttCode($sClass, $this->sGroupByAttCode))
+		if ((!is_null($this->sClass)) && $this->oModelReflection->IsValidAttCode($this->sClass, $this->sGroupByAttCode))
 		{
-			$sAttLabel = $this->oModelReflection->GetLabel($sClass, $this->sGroupByAttCode);
+			$sAttLabel = $this->oModelReflection->GetLabel($this->sClass, $this->sGroupByAttCode);
 			if (!is_null($this->sFunction))
 			{
 				switch($this->sFunction)
@@ -793,7 +807,6 @@ abstract class DashletGroupBy extends Dashlet
 	{
 		$sTitle = $this->aProperties['title'];
 		$sQuery = $this->aProperties['query'];
-		$sGroupBy = $this->aProperties['group_by'];
 		$sStyle = $this->aProperties['style'];
 
 		// First perform the query - if the OQL is not ok, it will generate an exception : no need to go further 
@@ -801,7 +814,6 @@ abstract class DashletGroupBy extends Dashlet
 		$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 
 		$sClass = $oFilter->GetClass();
-		$sClassAlias = $oFilter->GetClassAlias();
 
 		if (!$this->oModelReflection->IsValidAttCode($sClass, $this->sGroupByAttCode))
 		{
@@ -818,6 +830,10 @@ abstract class DashletGroupBy extends Dashlet
 						'chart_title' => $sTitle,
 						'group_by' => $this->sGroupByExpr,
 						'group_by_label' => $this->sGroupByLabel,
+						'agregation_function' => $this->sAgregationFunction,
+						'agregation_attribute' => $this->sAgregationAttribute,
+						'limit' => $this->sLimit,
+						'order_direction' => $this->sOrderDirection,
 					);
 					$sHtmlTitle = ''; // done in the itop block
 					break;
@@ -829,6 +845,10 @@ abstract class DashletGroupBy extends Dashlet
 						'chart_title' => $sTitle,
 						'group_by' => $this->sGroupByExpr,
 						'group_by_label' => $this->sGroupByLabel,
+						'agregation_function' => $this->sAgregationFunction,
+						'agregation_attribute' => $this->sAgregationAttribute,
+						'limit' => $this->sLimit,
+						'order_direction' => $this->sOrderDirection,
 					);
 					$sHtmlTitle = ''; // done in the itop block
 					break;
@@ -840,6 +860,10 @@ abstract class DashletGroupBy extends Dashlet
 					$aExtraParams = array(
 						'group_by' => $this->sGroupByExpr,
 						'group_by_label' => $this->sGroupByLabel,
+						'agregation_function' => $this->sAgregationFunction,
+						'agregation_attribute' => $this->sAgregationAttribute,
+						'limit' => $this->sLimit,
+						'order_direction' => $this->sOrderDirection,
 					);
 					break;
 			}
@@ -966,6 +990,10 @@ abstract class DashletGroupBy extends Dashlet
 		return $aGroupBy;
 	}
 
+	/**
+	 * @param DesignerForm $oForm
+	 * @throws DictExceptionMissingString
+	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
 		$oField = new DesignerTextField('title', Dict::S('UI:DashletGroupBy:Prop-Title'), $this->aProperties['title']);
@@ -1001,6 +1029,100 @@ abstract class DashletGroupBy extends Dashlet
 		$oField->SetMandatory();
 		$oField->SetAllowedValues($aStyles);
 		$oForm->AddField($oField);
+
+		$aFunctionAttributes = $this->GetNumericAttributes($this->aProperties['query']);
+		$aFunctions = $this->GetAllowedFunctions($aFunctionAttributes);
+		$oSelectorField = new DesignerFormSelectorField('agregation_function', Dict::S('UI:DashletGroupBy:Prop-Function'), $this->aProperties['agregation_function']);
+		$oForm->AddField($oSelectorField);
+		$oSelectorField->SetMandatory();
+		// Count sub-menu
+		$oSubForm = new DesignerForm();
+		$oSelectorField->AddSubForm($oSubForm, Dict::S('UI:GroupBy:count'), 'count');
+		foreach($aFunctions as $sFct => $sLabel)
+		{
+			$oSubForm = new DesignerForm();
+			$oField = new DesignerComboField('agregation_attribute', Dict::S('UI:DashletGroupBy:Prop-FunctionAttribute'), $this->aProperties['agregation_attribute']);
+			$oField->SetMandatory();
+			$oField->SetAllowedValues($aFunctionAttributes);
+			$oSubForm->AddField($oField);
+			$oSelectorField->AddSubForm($oSubForm, $sLabel, $sFct);
+		}
+
+		$aOrderDirections = array(
+			'asc' => Dict::S('UI:DashletGroupBy:Order:asc'),
+			'desc' => Dict::S('UI:DashletGroupBy:Order:desc'),
+			);
+		$oField = new DesignerComboField('order_direction', Dict::S('UI:DashletGroupBy:Prop-OrderDirection'), $this->aProperties['order_direction']);
+		$oField->SetMandatory();
+		$oField->SetAllowedValues($aOrderDirections);
+		$oForm->AddField($oField);
+
+		$oField = new DesignerIntegerField('limit', Dict::S('UI:DashletGroupBy:Prop-Limit'), $this->aProperties['limit']);
+		$oForm->AddField($oField);
+
+	}
+
+	/**
+	 * @return array
+	 * @throws DictExceptionMissingString
+	 */
+	protected function GetOrderBy()
+	{
+		if (is_null($this->sClass))
+		{
+			return array();
+		}
+		return array(
+			$this->aProperties['group_by'] => $this->oModelReflection->GetLabel($this->sClass, $this->aProperties['group_by']),
+			'_itop_'.$this->aProperties['agregation_function'].'_' => Dict::S('UI:GroupBy:'.$this->aProperties['agregation_function']));
+	}
+
+	/**
+	 * @return array
+	 * @throws DictExceptionMissingString
+	 */
+	protected function GetAllowedFunctions($aFunctionAttributes)
+	{
+		$aFunctions = array();
+
+		if (!empty($aFunctionAttributes) || is_null($this->sClass))
+		{
+			$aFunctions['sum'] = Dict::S('UI:GroupBy:sum');
+			$aFunctions['avg'] = Dict::S('UI:GroupBy:avg');
+			$aFunctions['min'] = Dict::S('UI:GroupBy:min');
+			$aFunctions['max'] = Dict::S('UI:GroupBy:max');
+		}
+
+		return $aFunctions;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function GetNumericAttributes($sOql)
+	{
+		$aFunctionAttributes = array();
+		$oQuery = $this->oModelReflection->GetQuery($sOql);
+		$sClass = $oQuery->GetClass();
+		if (is_null($sClass))
+		{
+			return $aFunctionAttributes;
+		}
+		foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
+		{
+			switch ($sAttType)
+			{
+				case 'AttributeDecimal':
+				case 'AttributeDuration':
+				case 'AttributeInteger':
+				case 'AttributePercentage':
+					$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
+					$aFunctionAttributes[$sAttCode] = $sLabel;
+					break;
+			}
+		}
+
+		return $aFunctionAttributes;
 	}
 
 	public function Update($aValues, $aUpdatedFields)
@@ -1049,6 +1171,15 @@ abstract class DashletGroupBy extends Dashlet
 					break;
 			}
 			$oDashlet->FromParams($aValues);
+			$oDashlet->bRedrawNeeded = true;
+			$oDashlet->bFormRedrawNeeded = true;
+		}
+		if (in_array('group_by', $aUpdatedFields) || in_array('agregation_attribute', $aUpdatedFields) || in_array('order_direction', $aUpdatedFields) || in_array('limit', $aUpdatedFields))
+		{
+			$oDashlet->bRedrawNeeded = true;
+		}
+		if (in_array('agregation_function', $aUpdatedFields))
+		{
 			$oDashlet->bRedrawNeeded = true;
 			$oDashlet->bFormRedrawNeeded = true;
 		}
