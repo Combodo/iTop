@@ -251,7 +251,7 @@ class SearchForm
 				$aZList = array();
 				$aOthers = array();
 
-				$this->PopulateFiledList($sClass, $sAlias, $aZList, $aOthers);
+				$this->PopulateFieldList($sClass, $sAlias, $aZList, $aOthers);
 
 				$aAllFields[$sAlias.'_zlist'] = $aZList;
 				$aAllFields[$sAlias.'_others'] = $aOthers;
@@ -282,7 +282,7 @@ class SearchForm
 	 *
 	 * @throws \CoreException
 	 */
-	protected function PopulateFiledList($sClass, $sAlias, &$aZList, &$aOthers)
+	protected function PopulateFieldList($sClass, $sAlias, &$aZList, &$aOthers)
 	{
 		$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
 		$aList = MetaModel::GetZListItems($sClass, 'standard_search');
@@ -295,10 +295,10 @@ class SearchForm
 				unset($aAttributeDefs[$sAttCode]);
 			}
 		}
+		$aZList = $this->AppendId($sClass, $sAlias, $aZList);
 		uasort($aZList, function ($aItem1, $aItem2) {
 			return strcmp($aItem1['label'], $aItem2['label']);
 		});
-		$aZList = $this->AppendId($sClass, $sAlias, $aZList);
 
 		foreach($aAttributeDefs as $sAttCode => $oAttDef)
 		{
