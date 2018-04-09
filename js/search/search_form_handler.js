@@ -168,6 +168,52 @@ $(function()
 			this.element.on('itop.search.criteria.error_occured', function(oEvent, oData){
 				me._onCriteriaErrorOccured(oData);
 			});
+
+			$('body').on('update_history.itop', function(event, filter) {
+
+				if (! me.element.is(':visible'))
+				{
+					return;
+				}
+
+				if ($(':itop-search_form_handler:visible').length != 1)
+				{
+					me._trace('history not updated because several search widget are visible');
+					return;
+				}
+
+				me._trace('history update', filter);
+
+				var newUrl = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search';
+				newUrl = newUrl + '&filter='+filter['filter'];
+				newUrl = newUrl + '&c[menu]='+me._extractURLParameter(window.location.href, "c[menu]");
+
+				history.replaceState(null, null, newUrl);
+				$('#itop-breadcrumb').breadcrumb('RefreshLatestEntry', newUrl);
+			});
+
+		},
+		_extractURLParameter: function(url, parameter) {
+			//prefer to use l.search if you have a location/link object
+			var urlparts= url.split('?');
+			if (urlparts.length>=2) {
+
+				var prefix = [
+					parameter+'=',
+					encodeURIComponent(parameter)+'='
+				];
+				var pars = urlparts[1].split(/[&;]/g);
+
+				for (var i = 0; i < pars.length; i++) {
+					for (var j = 0; j < prefix.length; j++) {
+						var pos = pars[i].lastIndexOf(prefix[j], 0);
+						if (pos !== -1) {
+							return pars[i].substring(pos);
+						}
+					}
+				}
+			}
+			return null;
 		},
 		// - Update search option of the widget
 		_updateSearch: function()

@@ -174,6 +174,13 @@ class DataTable
 		}
 		$sJSOptions = json_encode($aOptions);
 		$oPage->add_ready_script("$('#datatable_{$this->iListId}').datatable($sJSOptions);");
+
+		if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history'])
+		{
+			$sFilter = json_encode(array('filter' => $this->oSet->GetFilter()->serialize()));
+			$oPage->add_ready_script("$('body').trigger('update_history.itop', [$sFilter])");
+		}
+
 		return $sHtml;
 	}
 	

@@ -15,50 +15,72 @@ $(function()
 			// 'available_operators': {
 			//
 			// },
+			// aInputsParam: [
+			// 	{
+			// 		"code": "from",
+			// 		"code_uc_first":"From",
+			// 		"x_picker" : 'datepicker',
+			// 		"default_time_add": false,
+			// 		"show_on_advanced": false,
+			// 		"value_index": 0,
+			// 		"onclose_show" : "until",
+			// 		"synced_with": "from_time",
+			// 		//"getter_code":"from_time",
+			// 		"getter_suffix":" 00:00:00",
+			// 	},
+			// 	{
+			// 		"code": "from_time",
+			// 		"code_uc_first":"FromTime",
+			// 		"x_picker" : 'datetimepicker',
+			// 		"default_time_add": 0,
+			// 		"show_on_advanced": true,
+			// 		"value_index": 0,
+			// 		"onclose_show" : "until_time",
+			// 		"synced_with": "from",
+			// 		"title_getter_code":"from",
+			// 	},
+			// 	{
+			// 		"code": "until",
+			// 		"code_uc_first":"Until",
+			// 		"x_picker" : 'datepicker',
+			// 		"default_time_add": false,
+			// 		"show_on_advanced": false,
+			// 		"value_index": 1,
+			// 		"synced_with": "until_time",
+			// 		//"getter_code":"until_time",
+			// 		"getter_suffix":" 23:59:59",
+			// 	},
+			// 	{
+			// 		"code": "until_time",
+			// 		"code_uc_first":"UntilTime",
+			// 		"x_picker" : 'datetimepicker',
+			// 		"default_time_add": 86399, // 24 * 60 * 60 - 1
+			// 		"show_on_advanced": true,
+			// 		"value_index": 1,
+			// 		"synced_with": "until",
+			// 		"title_getter_code":"until",
+			// 	}
+			// ]
 			aInputsParam: [
-				{
-					"code": "from",
-					"code_uc_first":"From",
-					"x_picker" : 'datepicker',
-					"default_time_add": false,
-					"show_on_advanced": false,
-					"value_index": 0,
-					"onclose_show" : "until",
-					"synced_with": "from_time",
-					//"getter_code":"from_time",
-					"getter_suffix":" 00:00:00",
-				},
 				{
 					"code": "from_time",
 					"code_uc_first":"FromTime",
 					"x_picker" : 'datetimepicker',
 					"default_time_add": 0,
-					"show_on_advanced": true,
 					"value_index": 0,
 					"onclose_show" : "until_time",
-					"synced_with": "from",
-					"title_getter_code":"from",
-				},
-				{
-					"code": "until",
-					"code_uc_first":"Until",
-					"x_picker" : 'datepicker',
-					"default_time_add": false,
-					"show_on_advanced": false,
-					"value_index": 1,
-					"synced_with": "until_time",
-					//"getter_code":"until_time",
-					"getter_suffix":" 23:59:59",
 				},
 				{
 					"code": "until_time",
 					"code_uc_first":"UntilTime",
 					"x_picker" : 'datetimepicker',
-					"default_time_add": 86399, // 24 * 60 * 60 - 1
-					"show_on_advanced": true,
+					// "default_time_add": 86399, // 24 * 60 * 60 - 1
+					"picker_extra_params": {
+						"hour": 23,
+						"minute":59,
+						"second":59
+					},
 					"value_index": 1,
-					"synced_with": "until",
-					"title_getter_code":"until",
 				}
 			]
 		},

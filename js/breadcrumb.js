@@ -26,7 +26,7 @@ $(function()
 			{
 				$(window).bind( 'hashchange', function(e)
 				{
-					me._RefreshLatestEntry();
+					me.RefreshLatestEntry();
 				});
 
 				aBreadCrumb = this._Read();
@@ -129,17 +129,23 @@ $(function()
 			sessionStorage.setItem(sBreadCrumbStorageKey, sBreadCrumbData);
 		},
 		// Refresh the latest entry (navigating to a tab)
-		_RefreshLatestEntry: function()
+		RefreshLatestEntry: function(sRefreshHrefTo)
 		{
 			aBreadCrumb = this._Read();
 			var iDisplayableItems = aBreadCrumb.length;
 
 			if (this.options.new_entry !== null) {
+				if (sRefreshHrefTo == undefined)
+				{
+					sRefreshHrefTo = window.location.href;
+				}
+
 				// The current page is the last entry in the breadcrumb, let's refresh it
-				aBreadCrumb[aBreadCrumb.length - 1].url = window.location.href;
-				$('#itop-breadcrumb .breadcrumb-current:last-of-type a').attr('href', window.location.href);
+				aBreadCrumb[aBreadCrumb.length - 1].url = sRefreshHrefTo;
+				$('#itop-breadcrumb .breadcrumb-current:last-of-type a').attr('href', sRefreshHrefTo);
 			}
 			this._Write(aBreadCrumb);
-		}
+		},
+
 	});
 });
