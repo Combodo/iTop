@@ -513,6 +513,11 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2018-03-21 00:00:00') AND (`UserRequest`.`start_date` <= '2018-03-21 23:59:59'))",
 				'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
 			),
+			'Date =3' => array(
+				'OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(`UserRequest`.`start_date`, '%w') = '4')",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (DATE_FORMAT(`UserRequest`.`start_date`, '%w') = '4')",
+				'ExpectedCriterion' => array(array('widget' => 'raw')),
+			),
 			'Num between 1' => array(
 				'OQL' => "SELECT Server WHERE nb_u >= 0 AND 1 >= nb_u",
 				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE ((`Server`.`nb_u` >= '0') AND (`Server`.`nb_u` <= '1'))",

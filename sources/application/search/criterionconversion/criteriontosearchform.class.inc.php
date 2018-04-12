@@ -486,7 +486,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 	protected static function DateTimeToSearchForm($aCriteria, $aFields)
 	{
-		if (!array_key_exists('is_relative', $aCriteria) || !$aCriteria['is_relative'])
+		if ((!array_key_exists('is_relative', $aCriteria) || !$aCriteria['is_relative'])
+			&& (!isset($aCriteria['unit']) || ($aCriteria['unit'] == 'DAY')))
 		{
 			// Convert '=' in 'between'
 			if (isset($aCriteria['operator']))

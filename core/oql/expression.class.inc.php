@@ -52,9 +52,11 @@ abstract class Expression
 	 * @param array $aArgs
 	 * @param AttributeDefinition $oAttDef
 	 *
+	 * @param array $aCtx
+	 *
 	 * @return array parameters for the search form
 	 */
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
 		return $this->Render($aArgs);
 	}
@@ -444,7 +446,7 @@ class BinaryExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
 		$bReverseOperator = false;
 		$oLeftExpr = $this->GetLeftExpr();
@@ -459,11 +461,12 @@ class BinaryExpression extends Expression
 			$bReverseOperator = true;
 		}
 
-		$sLeft = $oLeftExpr->Display($oSearch, $aArgs, $oAttDef);
-		$sRight = $oRightExpr->Display($oSearch, $aArgs, $oAttDef);
 
 		if ($bReverseOperator)
 		{
+			$sRight = $oRightExpr->Display($oSearch, $aArgs, $oAttDef, $aCtx);
+			$sLeft = $oLeftExpr->Display($oSearch, $aArgs, $oAttDef, $aCtx);
+
 			// switch left and right expressions so reverse the operator
 			// Note that the operation is the same so < becomes > and not >=
 			switch ($this->GetOperator())
@@ -488,6 +491,9 @@ class BinaryExpression extends Expression
 
 			return "({$sRight}{$sOperator}{$sLeft})";
 		}
+
+		$sLeft = $oLeftExpr->Display($oSearch, $aArgs, $oAttDef, $aCtx);
+		$sRight = $oRightExpr->Display($oSearch, $aArgs, $oAttDef, $aCtx);
 
 		$sOperator = $this->GetOperator();
 		$sOperator = $this->OperatorToNaturalLanguage($sOperator, $oAttDef);
@@ -656,10 +662,12 @@ class ScalarExpression extends UnaryExpression
 	 * @param array $aArgs
 	 * @param AttributeDefinition $oAttDef
 	 *
+	 * @param array $aCtx
+	 *
 	 * @return array|string
 	 * @throws \Exception
 	 */
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
 		if (!is_null($oAttDef))
 		{
@@ -686,6 +694,11 @@ class ScalarExpression extends UnaryExpression
 		if (strpos($this->m_value, '%') === 0)
 		{
 			return '';
+		}
+
+		if (isset($aCtx['date_display']))
+		{
+			return $aCtx['date_display']->MakeValueLabel($oSearch, $this->m_value, $this->m_value);
 		}
 
 		return $this->Render($aArgs);
@@ -716,13 +729,13 @@ class ScalarExpression extends UnaryExpression
 		switch ((string)($this->m_value))
 		{
 			case '%Y-%m-%d':
-				$aCriteria['date_type'] = 'd';
+				$aCriteria['unit'] = 'DAY';
 				break;
 			case '%Y-%m':
-				$aCriteria['date_type'] = 'm';
+				$aCriteria['unit'] = 'MONTH';
 				break;
 			case '%w':
-				$aCriteria['date_type'] = 'w';
+				$aCriteria['unit'] = 'WEEKDAY';
 				break;
 			default:
 				$aValue = array('value' => $this->GetValue());
@@ -753,7 +766,13 @@ class ScalarExpression extends UnaryExpression
 							}
 							break;
 						default:
-							$aValue['label'] = $oAttDef->GetAsPlainText($this->GetValue());
+							try
+							{
+								$aValue['label'] = $oAttDef->GetAsPlainText($this->GetValue());
+							} catch (Exception $e)
+							{
+								$aValue['label'] = $this->GetValue();
+							}
 							break;
 					}
 				}
@@ -837,12 +856,13 @@ class FieldExpression extends UnaryExpression
 	 * @param array $aArgs
 	 * @param AttributeDefinition $oAttDef
 	 *
+	 * @param array $aCtx
+	 *
 	 * @return array|string
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
-	 * @throws \Exception
 	 */
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
 		if (empty($this->m_sParent))
 		{
@@ -1096,7 +1116,7 @@ class VariableExpression extends UnaryExpression
 		return $this->m_sName;
 	}
 
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
 		$sValue = $this->m_value;
 		if (!is_null($aArgs) && (array_key_exists($this->m_sName, $aArgs)))
@@ -1609,7 +1629,7 @@ class FunctionExpression extends Expression
 		return $sRes;
 	}
 
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
 		$sOperation = '';
 		$sVerb = '';
@@ -1625,6 +1645,7 @@ class FunctionExpression extends Expression
 				$sVerb = ' +';
 				break;
 			case 'DATE_FORMAT':
+				$aCtx['date_display'] = $this;
 				break;
 			default:
 				return $this->Render($aArgs);
@@ -1637,7 +1658,7 @@ class FunctionExpression extends Expression
 				$sOperation .= $sVerb;
 				$sVerb = '';
 			}
-			$sOperation .= $oExpression->Display($oSearch, $aArgs, $oAttDef);
+			$sOperation .= $oExpression->Display($oSearch, $aArgs, $oAttDef, $aCtx);
 		}
 
 		if (!empty($sVerb))
@@ -1784,7 +1805,7 @@ class IntervalExpression extends Expression
 		return $aCriteria;
 	}
 
-	public function Display($oSearch, &$aArgs = null, $oAttDef = null)
+	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
 		return $this->m_oValue->Render($aArgs).' '.Dict::S('Expression:Unit:Long:'.$this->m_sUnit, $this->m_sUnit);
 	}
