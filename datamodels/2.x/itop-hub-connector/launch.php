@@ -222,36 +222,44 @@ function collect_configuration()
 
 function MakeDataToPost($sTargetRoute)
 {
-	$aConfiguration = collect_configuration();
-	
-	$aDataToPost = array(
-		'itop_hub_target_route' => $sTargetRoute,
-		'itop_stack' => array(
-			"uuidBdd" => (string) trim(DBProperty::GetProperty('database_uuid', ''), '{}'), // TODO check if empty and... regenerate a new UUID ??
-			"uuidFile" => (string) trim(@file_get_contents(APPROOT."data/instance.txt"), "{} \n"), // TODO check if empty and... regenerate a new UUID ??
-			'instance_friendly_name' => (string) $_SERVER['SERVER_NAME'],
-			'instance_host' => (string) utils::GetAbsoluteUrlAppRoot(),
-			'application_name' => (string) ITOP_APPLICATION,
-			'application_version' => (string) ITOP_VERSION,
-			'application_version_full' => (string) Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE),
-			'itop_user_id' => (string) (UserRights::GetUserId()===null) ? "1" : UserRights::GetUserId(),
-			'itop_user_lang' => (string) UserRights::GetUserLanguage(),
-			'itop_modules' => (object) $aConfiguration['itop_modules'],
-			'itop_extensions' => (object) $aConfiguration['itop_extensions'],
-			'itop_installation_options' => (object) $aConfiguration['itop_installation_options']
-		),
-		'server_stack' => array(
-			'os_name' => (string) PHP_OS,
-			'web_server_name' => (string) $aConfiguration['web_server_name'],
-			'web_server_version' => (string) $aConfiguration['web_server_version'],
-			'database_name' => (string) isset($aConfiguration['database_name']) ? $aConfiguration['database_name'] : 'MySQL', // if we do not detect MariaDB, we assume this is mysql
-			'database_version' => (string) CMDBSource::GetDBVersion(),
-			'database_settings' => (object) $aConfiguration['database_settings'],
-			'php_version' => (string) CleanVersionNumber(phpversion()),
-			'php_settings' => (object) $aConfiguration['php_settings'],
-			'php_extensions' => (object) $aConfiguration['php_extensions']
-		)
-	);
+	if (MetaModel::GetConfig()->Get('demo_mode'))
+	{
+		// Don't expose such information in demo mode
+		$aDataToPost = array();
+	}
+	else
+	{
+		$aConfiguration = collect_configuration();
+		
+		$aDataToPost = array(
+			'itop_hub_target_route' => $sTargetRoute,
+			'itop_stack' => array(
+				"uuidBdd" => (string) trim(DBProperty::GetProperty('database_uuid', ''), '{}'), // TODO check if empty and... regenerate a new UUID ??
+				"uuidFile" => (string) trim(@file_get_contents(APPROOT."data/instance.txt"), "{} \n"), // TODO check if empty and... regenerate a new UUID ??
+				'instance_friendly_name' => (string) $_SERVER['SERVER_NAME'],
+				'instance_host' => (string) utils::GetAbsoluteUrlAppRoot(),
+				'application_name' => (string) ITOP_APPLICATION,
+				'application_version' => (string) ITOP_VERSION,
+				'application_version_full' => (string) Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE),
+				'itop_user_id' => (string) (UserRights::GetUserId()===null) ? "1" : UserRights::GetUserId(),
+				'itop_user_lang' => (string) UserRights::GetUserLanguage(),
+				'itop_modules' => (object) $aConfiguration['itop_modules'],
+				'itop_extensions' => (object) $aConfiguration['itop_extensions'],
+				'itop_installation_options' => (object) $aConfiguration['itop_installation_options']
+			),
+			'server_stack' => array(
+				'os_name' => (string) PHP_OS,
+				'web_server_name' => (string) $aConfiguration['web_server_name'],
+				'web_server_version' => (string) $aConfiguration['web_server_version'],
+				'database_name' => (string) isset($aConfiguration['database_name']) ? $aConfiguration['database_name'] : 'MySQL', // if we do not detect MariaDB, we assume this is mysql
+				'database_version' => (string) CMDBSource::GetDBVersion(),
+				'database_settings' => (object) $aConfiguration['database_settings'],
+				'php_version' => (string) CleanVersionNumber(phpversion()),
+				'php_settings' => (object) $aConfiguration['php_settings'],
+				'php_extensions' => (object) $aConfiguration['php_extensions']
+			)
+		);
+	}
 	return $aDataToPost;
 }
 
@@ -314,6 +322,11 @@ try
 		
 		$aDataToPost = MakeDataToPost($sTargetRoute);
 		
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			$oPage->add("<div class=\"header_message message_info\">Sorry, iTop is in <b>demonstration mode</b>: the connection to iTop Hub is disabled.</div>");
+		}
+		
 		$oPage->add('<div id="hub_top_banner"></div>');
 		$oPage->add('<div id="hub_launch_content">');
 		$oPage->add('<div id="hub_launch_container">');
@@ -339,7 +352,21 @@ try
 		$oPage->add('</div>');
 		
 		$oPage->add_ready_script('$(".userpref").on("click", function() { var value = $(this).prop("checked") ? 1 : 0; var code = $(this).attr("id"); SetUserPreference(code, value, true); });');
-		$oPage->add_ready_script(
+		if (MetaModel::GetConfig()->Get('demo_mode'))
+		{
+			$oPage->add_ready_script(
+<<<EOF
+			$("#GoToHubBtn").prop('disabled', true);
+			$("#itophub_auto_submit").prop('disabled', true).prop('checked', false);
+			$("#CancelBtn").on("click", function() {
+			    window.history.back();
+			});
+EOF
+			);
+		}
+		else
+		{
+			$oPage->add_ready_script(
 <<<EOF
 $("#GoToHubBtn").on("click", function() {
 	$(this).prop('disabled', true);
@@ -358,7 +385,9 @@ $("#CancelBtn").on("click", function() {
     window.history.back();
 });
 EOF
-);
+			);
+		}
+		
 		if (appUserPreferences::GetPref('itophub_auto_submit', 0) == 1)
 		{
 			$oPage->add_ready_script('$("#GoToHubBtn").trigger("click");');

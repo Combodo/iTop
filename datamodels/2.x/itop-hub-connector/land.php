@@ -279,6 +279,7 @@ try
     require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 
     LoginWebPage::DoLoginEx(null, true /* $bMustBeAdmin */); // Check user rights and prompt if needed
+    if (MetaModel::GetConfig()->Get('demo_mode')) throw new Exception('Sorry the installation of extensions is not allowed in demo mode');
     
     $oPage = new SetupPage(''); // Title will be set later, depending on $sOperation
     $oPage->add_linked_script(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/js/hub.js');

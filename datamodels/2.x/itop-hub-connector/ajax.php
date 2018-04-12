@@ -218,6 +218,7 @@ try
 		
 		try
 		{
+			if (MetaModel::GetConfig()->Get('demo_mode')) throw new Exception('Sorry the installation of extensions is not allowed in demo mode');
 			SetupPage::log_info('Backup starts...');	    
 			set_time_limit(0);
 			$sBackupPath = APPROOT.'/data/backups/manual/backup-';
@@ -264,6 +265,7 @@ try
 		$oRuntimeEnv->MoveSelectedExtensions(APPROOT.'/data/downloaded-extensions/', $aSelectedExtensionDirs);
 		
 		$oConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
+		if ($oConfig->Get('demo_mode')) throw new Exception('Sorry the installation of extensions is not allowed in demo mode');
 		
 		$aSelectModules = $oRuntimeEnv->CompileFrom('production', false); // WARNING symlinks does not seem to be compatible with manual Commit
 		
