@@ -197,7 +197,7 @@ class ShortcutOQL extends Shortcut
 		}
 
 		$bSearchPane = true;
-		$bSearchOpen = false;
+		$bSearchOpen = true;
 		try
 		{
 			OQLMenuNode::RenderOQLSearch($this->Get('oql'), $this->Get('name'), 'shortcut_'.$this->GetKey(), $bSearchPane, $bSearchOpen, $oPage, $aExtraParams, true);
