@@ -1247,13 +1247,13 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Title:Default:LessThanOrEquals' => '%1$s <= %2$s',
 	'UI:Search:Criteria:Title:Default:Different' => '%1$s ≠ %2$s',
 	'UI:Search:Criteria:Title:Default:Between' => '%1$s entre [%2$s]',
+	'UI:Search:Criteria:Title:Default:BetweenDates' => '%1$s [%2$s]',
 	'UI:Search:Criteria:Title:Default:BetweenDates:All' => '%1$s : Indifférent',
 	'UI:Search:Criteria:Title:Default:BetweenDates:From' => '%1$s depuis %2$s',
 	'UI:Search:Criteria:Title:Default:BetweenDates:Until' => '%1$s jusqu\'à %2$s',
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s : Indifférent',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s à partir de %2$s',
 	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s jusqu\'à %2$s',
-	'UI:Search:Criteria:Title:Default:BetweenDays' => '%1$s [%2$s]',
 	//   - Numeric widget
 	//   None yet
 	//   - DateTime widget

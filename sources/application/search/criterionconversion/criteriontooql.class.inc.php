@@ -30,6 +30,8 @@ use AttributeEnum;
 use Combodo\iTop\Application\Search\AjaxSearchException;
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
 use Combodo\iTop\Application\Search\SearchForm;
+use Exception;
+use MetaModel;
 
 class CriterionToOQL extends CriterionConversionAbstract
 {
@@ -59,6 +61,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 
 		$aMappedOperators = array(
 			self::OP_CONTAINS => 'ContainsToOql',
+			self::OP_EQUALS => 'EqualsToOql',
 			self::OP_STARTS_WITH => 'StartsWithToOql',
 			self::OP_ENDS_WITH => 'EndsWithToOql',
 			self::OP_EMPTY => 'EmptyToOql',
@@ -110,6 +113,8 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
+		if (empty($sValue)) return "1";
+
 		return "({$sRef} LIKE '%{$sValue}%')";
 	}
 
@@ -117,6 +122,8 @@ class CriterionToOQL extends CriterionConversionAbstract
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
+
+		if (empty($sValue)) return "1";
 
 		return "({$sRef} LIKE '{$sValue}%')";
 	}
@@ -126,7 +133,19 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
+		if (empty($sValue)) return "1";
+
 		return "({$sRef} LIKE '%{$sValue}')";
+	}
+
+	protected static function EqualsToOql($sRef, $aCriteria)
+	{
+		$aValues = self::GetValues($aCriteria);
+		$sValue = self::GetValue($aValues, 0);
+
+		if (empty($sValue)) return "1";
+
+		return "({$sRef} = '{$sValue}')";
 	}
 
 	protected static function EmptyToOql($sRef, $aCriteria)
@@ -164,7 +183,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$bFilterOnUndefined = false;
 		try
 		{
-			$aAttributeDefs = \MetaModel::ListAttributeDefs($sClass);
+			$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
 			if (array_key_exists($sAttCode, $aAttributeDefs))
 			{
 				$oAttDef = $aAttributeDefs[$sAttCode];
@@ -272,17 +291,29 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$sStartDate = $aValues[0]['value'];
 		if (!empty($sStartDate))
 		{
-			$oDate = $oFormat->parse($sStartDate);
-			$sStartDate = $oDate->format($sAttributeClass::GetSQLFormat());
-			$aOQL[] = "({$sRef} >= '$sStartDate')";
+			try
+			{
+				$oDate = $oFormat->parse($sStartDate);
+				$sStartDate = $oDate->format($sAttributeClass::GetSQLFormat());
+				$aOQL[] = "({$sRef} >= '$sStartDate')";
+			}
+			catch (Exception $e)
+			{
+			}
 		}
 
 		$sEndDate = $aValues[1]['value'];
 		if (!empty($sEndDate))
 		{
-			$oDate = $oFormat->parse($sEndDate);
-			$sEndDate = $oDate->format($sAttributeClass::GetSQLFormat());
-			$aOQL[] = "({$sRef} <= '$sEndDate')";
+			try
+			{
+				$oDate = $oFormat->parse($sEndDate);
+				$sEndDate = $oDate->format($sAttributeClass::GetSQLFormat());
+				$aOQL[] = "({$sRef} <= '$sEndDate')";
+			}
+			catch (Exception $e)
+			{
+			}
 		}
 
 		$sOQL = implode(' AND ', $aOQL);

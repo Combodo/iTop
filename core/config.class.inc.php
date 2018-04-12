@@ -1085,6 +1085,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'search_manual_submit' => array(
+			'type' => 'array',
+			'description' => 'Force manual submit of search requests (class => true)',
+			'default' => false,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

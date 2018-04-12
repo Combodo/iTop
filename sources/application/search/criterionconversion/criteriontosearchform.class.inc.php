@@ -197,6 +197,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				if (($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW) &&
 					($b['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
 				{
+					if (!isset($a['label'])) return -1;
+					if (!isset($b['label'])) return 1;
 					return strcmp($a['label'], $b['label']);
 				}
 				if ($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
@@ -207,6 +209,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				return 1;
 			}
 
+			if (!isset($a['label'])) return -1;
+			if (!isset($b['label'])) return 1;
 			return strcmp($a['label'], $b['label']);
 		});
 
@@ -564,7 +568,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 						$aCriteria['values'] = array();
 					}
 					// Convention for 'undefined' enums
-					$aCriteria['values'][] = array('value' => 'null', 'label' => 'null');
+					$aCriteria['values'][] = array('value' => 'null', 'label' => Dict::S('Enum:Undefined'));
 				}
 				break;
 			default:

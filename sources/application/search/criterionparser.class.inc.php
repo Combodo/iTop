@@ -90,12 +90,17 @@ class CriterionParser
 		$aExpression = array();
 		foreach($aAnd as $aCriteria)
 		{
-			$aExpression[] = CriterionToOQL::Convert($aCriteria);
+
+			$sExpression = CriterionToOQL::Convert($aCriteria);
+			if ($sExpression !== '1')
+			{
+				$aExpression[] = $sExpression;
+			}
 		}
 
 		if (empty($aExpression))
 		{
-			return '';
+			return '1';
 		}
 
 		return '('.implode(" AND ", $aExpression).')';

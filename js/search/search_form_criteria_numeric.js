@@ -186,7 +186,7 @@ $(function()
 		//------------------
 		// Inherited methods
 		//------------------
-		_computeTitle: function(sTitle)
+		_computeBetweenOperatorTitle: function(sTitle)
 		{
 			var me = this;
 			if (sTitle === undefined && me.options.operator == 'between')
@@ -222,7 +222,7 @@ $(function()
 						var sDictEntrySuffix = ':From';
 						break;
 					default:
-						var sDictEntrySuffix = undefined;
+						var sDictEntrySuffix = '';
 						break;
 				}
 
@@ -236,11 +236,12 @@ $(function()
 					}
 
 					sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
+					return sTitle;
 				}
 
 			}
 
-			return me._super(sTitle);
+			return undefined;
 		},
 
 		// - Convert values to a standard string

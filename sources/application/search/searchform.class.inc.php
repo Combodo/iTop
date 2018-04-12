@@ -131,8 +131,39 @@ class SearchForm
 		{
 			$sClassesCombo = MetaModel::GetName($sClassName);
 		}
+
+		$bAutoSubmit = true;
+		$mSubmitParam = utils::GetConfig()->Get('search_manual_submit');
+		if (is_array($mSubmitParam))
+		{
+			// List of classes
+			if (isset($mSubmitParam[$sClassName]))
+			{
+				$bAutoSubmit = !$mSubmitParam[$sClassName];
+			}
+			else
+			{
+				// Serach for child classes
+				foreach($mSubmitParam as $sConfigClass => $bFlag)
+				{
+					$aChildClasses = MetaModel::EnumChildClasses($sConfigClass);
+					if (in_array($sClassName, $aChildClasses))
+					{
+						$bAutoSubmit = !$bFlag;
+						break;
+					}
+				}
+
+			}
+		}
+		else if ($mSubmitParam !== false)
+		{
+			$bAutoSubmit = false;
+		}
+
 		$sAction = (isset($aExtraParams['action'])) ? $aExtraParams['action'] : utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 		$sStyle = ($bOpen == 'true') ? '' : 'closed';
+		$sStyle .= ($bAutoSubmit === true) ? '' : ' no_auto_submit';
 		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"{$sAction}\" class=\"{$sStyle}\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
 		$sHtml .= "<h2 class=\"sf_title\"><span class=\"sft_long\">" . Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo) . "</span><span class=\"sft_short\">" . Dict::S('UI:SearchToggle') . "</span>";
 		$sHtml .= "<a class=\"sft_toggler fa fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a>";
@@ -168,7 +199,10 @@ class SearchForm
 		}
 
 		$oBaseSearch = $oSearch->DeepClone();
-		$oBaseSearch->ResetCondition();
+		if (method_exists($oSearch, 'GetCriteria'))
+		{
+			$oBaseSearch->ResetCondition();
+		}
 		$sBaseOQL = str_replace(' WHERE 1', '', $oBaseSearch->ToOQL());
 
 		if (isset($aExtraParams['table_inner_id']))
@@ -195,13 +229,25 @@ class SearchForm
 		$aMonthsShort = array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'),
 			Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short'));
 
+
+//		$sDateTimeFormat = \AttributeDateTime::GetFormat()->ToMomentJS('%s');
+//		$iDateTimeSeparatorPos = strpos($sDateTimeFormat, ' ');
+//		$sDateFormat = substr($sDateTimeFormat, 0, $iDateTimeSeparatorPos);
+//		$sTimeFormat = substr($sDateTimeFormat, $iDateTimeSeparatorPos + 1);
+
+
+		$sDateTimeFormat = \AttributeDateTime::GetFormat()->ToDatePicker();
+		$iDateTimeSeparatorPos = strpos($sDateTimeFormat, ' ');
+		$sDateFormat = substr($sDateTimeFormat, 0, $iDateTimeSeparatorPos);
+		$sTimeFormat = substr($sDateTimeFormat, $iDateTimeSeparatorPos + 1);
+
 		$aSearchParams = array(
 			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
 			'result_list_outer_selector' => "#{$aExtraParams['result_list_outer_selector']}",
 			'data_config_list_selector' => "#{$sDataConfigListSelector}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
 			'init_opened' => $bOpen,
-			'auto_submit' => false, // TODO: Change this so it takes the configuration parameter value for the current class.
+			'auto_submit' => $bAutoSubmit,
 			'list_params' => $aListParams,
 			'search' => array(
 				'has_hidden_criteria' => (array_key_exists('hidden_criteria', $aListParams) && !empty($aListParams['hidden_criteria'])),
@@ -217,6 +263,9 @@ class SearchForm
 					'dayNamesMin' => $aDaysMin,
 					'monthNamesShort' => $aMonthsShort,
 					'firstDay' => (int) Dict::S('Calendar-FirstDayOfWeek'),
+//					'format' => \AttributeDateTime::GetFormat()->ToDatePicker()
+					'dateFormat' => $sDateFormat,
+					'timeFormat' => $sTimeFormat,
 				),
 			),
 		);
@@ -286,6 +335,7 @@ class SearchForm
 	{
 		$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
 		$aList = MetaModel::GetZListItems($sClass, 'standard_search');
+		$bHasFriendlyname = false;
 		foreach($aList as $sAttCode)
 		{
 			if (array_key_exists($sAttCode, $aAttributeDefs))
@@ -294,6 +344,18 @@ class SearchForm
 				$aZList = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aZList);
 				unset($aAttributeDefs[$sAttCode]);
 			}
+			if ($sAttCode == 'friendlyname')
+			{
+				$bHasFriendlyname = true;
+			}
+		}
+		if (!$bHasFriendlyname)
+		{
+			// Add friendlyname to the most popular
+			$sAttCode = 'friendlyname';
+			$oAttDef = $aAttributeDefs[$sAttCode];
+			$aZList = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aZList);
+			unset($aAttributeDefs[$sAttCode]);
 		}
 		$aZList = $this->AppendId($sClass, $sAlias, $aZList);
 		uasort($aZList, function ($aItem1, $aItem2) {
@@ -373,40 +435,44 @@ class SearchForm
 	 */
 	public function GetCriterion($oSearch, $aFields, $aArgs = array(), $bIsRemovable = true)
 	{
-		$oExpression = $oSearch->GetCriteria();
-
-		if (!empty($aArgs))
-		{
-			$aArgs = MetaModel::PrepareQueryArguments($aArgs);
-
-			$sOQL = $oExpression->Render($aArgs);
-			$oExpression = Expression::FromOQL($sOQL);
-		}
-
 		$aOrCriterion = array();
-		$aORExpressions = Expression::Split($oExpression, 'OR');
-		$bIsEmptyExpression = true;
-		foreach($aORExpressions as $oORSubExpr)
-		{
-			$aAndCriterion = array();
-			$aAndExpressions = Expression::Split($oORSubExpr, 'AND');
-			foreach($aAndExpressions as $oAndSubExpr)
-			{
-				if (($oAndSubExpr instanceof TrueExpression) || ($oAndSubExpr->Render() == 1))
-				{
-					continue;
-				}
-				$aAndCriterion[] = $oAndSubExpr->GetCriterion($oSearch);
-				$bIsEmptyExpression = false;
-			}
-			$aAndCriterion = CriterionToSearchForm::Convert($aAndCriterion, $aFields, $oSearch->GetJoinedClasses(), $bIsRemovable);
-			$aOrCriterion[] = array('and' => $aAndCriterion);
-		}
 
-		if ($bIsEmptyExpression)
+		if (method_exists($oSearch, 'GetCriteria'))
 		{
-			// Add default criterion
-			$aOrCriterion = $this->GetDefaultCriterion($oSearch);
+			$oExpression = $oSearch->GetCriteria();
+
+			if (!empty($aArgs))
+			{
+				$aArgs = MetaModel::PrepareQueryArguments($aArgs);
+
+				$sOQL = $oExpression->Render($aArgs);
+				$oExpression = Expression::FromOQL($sOQL);
+			}
+
+			$aORExpressions = Expression::Split($oExpression, 'OR');
+			$bIsEmptyExpression = true;
+			foreach($aORExpressions as $oORSubExpr)
+			{
+				$aAndCriterion = array();
+				$aAndExpressions = Expression::Split($oORSubExpr, 'AND');
+				foreach($aAndExpressions as $oAndSubExpr)
+				{
+					if (($oAndSubExpr instanceof TrueExpression) || ($oAndSubExpr->Render() == 1))
+					{
+						continue;
+					}
+					$aAndCriterion[] = $oAndSubExpr->GetCriterion($oSearch);
+					$bIsEmptyExpression = false;
+				}
+				$aAndCriterion = CriterionToSearchForm::Convert($aAndCriterion, $aFields, $oSearch->GetJoinedClasses(), $bIsRemovable);
+				$aOrCriterion[] = array('and' => $aAndCriterion);
+			}
+
+			if ($bIsEmptyExpression)
+			{
+				// Add default criterion
+				$aOrCriterion = $this->GetDefaultCriterion($oSearch);
+			}
 		}
 
 		return array('or' => $aOrCriterion);

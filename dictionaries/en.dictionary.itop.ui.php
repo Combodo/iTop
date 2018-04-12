@@ -1430,13 +1430,13 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:Default:LessThanOrEquals' => '%1$s <= %2$s',
 	'UI:Search:Criteria:Title:Default:Different' => '%1$s ≠ %2$s',
 	'UI:Search:Criteria:Title:Default:Between' => '%1$s between [%2$s]',
+	'UI:Search:Criteria:Title:Default:BetweenDates' => '%1$s [%2$s]',
 	'UI:Search:Criteria:Title:Default:BetweenDates:All' => '%1$s: Any',
 	'UI:Search:Criteria:Title:Default:BetweenDates:From' => '%1$s from %2$s',
 	'UI:Search:Criteria:Title:Default:BetweenDates:Until' => '%1$s until %2$s',
 	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any',
 	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s',
-	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s until %2$s',
-	'UI:Search:Criteria:Title:Default:BetweenDays' => '%1$s [%2$s]',
+	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s',
 	//   - Numeric widget
 	//   None yet
 	//   - DateTime widget
@@ -1483,7 +1483,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	// - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => 'From',
-	'UI:Search:Criteria:Numeric:Until' => 'Until',
+	'UI:Search:Criteria:Numeric:Until' => 'To',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Any',
 	'UI:Search:Criteria:Numeric:PlaceholderUntil' => 'Any',
 	'UI:Search:Criteria:DateTime:From' => 'From',

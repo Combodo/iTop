@@ -209,7 +209,7 @@ $(function()
 					for (var j = 0; j < prefix.length; j++) {
 						var pos = pars[i].lastIndexOf(prefix[j], 0);
 						if (pos !== -1) {
-							return pars[i].substring(pos);
+							return pars[i].substring(pos + prefix[j].length);
 						}
 					}
 				}
@@ -524,12 +524,12 @@ $(function()
 				else
 				{
 					oListsElem.find('.sfl_items > li:not(.sfl_i_placeholder)').each(function(){
-						var oRegExp = new RegExp(sFilter, 'ig');
+						var oRegExp = new RegExp(sFilter.latinize(), 'ig');
 						var sValue = $(this).find('input').val();
 						var sLabel = $(this).text();
 
 						// We don't check the sValue as it contains the class alias.
-						if(sLabel.match(oRegExp) !== null)
+						if(sLabel.latinise().match(oRegExp) !== null)
 						{
 							$(this).show();
 						}

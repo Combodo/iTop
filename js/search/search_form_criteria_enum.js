@@ -238,11 +238,11 @@ $(function()
 				else
 				{
 					oOpContentElem.find('.sfc_opc_mc_item').each(function(){
-						var oRegExp = new RegExp(sQuery, 'ig');
+						var oRegExp = new RegExp(sQuery.latinise(), 'ig');
 						var sValue = $(this).find('input').val();
 						var sLabel = $(this).text();
 
-						if( (sValue.match(oRegExp) !== null) || (sLabel.match(oRegExp) !== null) )
+						if( (sValue.latinise().match(oRegExp) !== null) || (sLabel.latinise().match(oRegExp) !== null) )
 						{
 							$(this).show();
 						}

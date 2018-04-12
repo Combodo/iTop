@@ -27,6 +27,7 @@ abstract class CriterionConversionAbstract
 {
 
 	const OP_CONTAINS = 'contains';
+	const OP_EQUALS = '=';
 	const OP_STARTS_WITH = 'starts_with';
 	const OP_ENDS_WITH = 'ends_with';
 	const OP_EMPTY = 'empty';

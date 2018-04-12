@@ -487,28 +487,64 @@ $(function()
 			});
 		},
 		// - Compute the title string
+
+		_computeEmptyOperatorTitle: function(sTitle) {
+			if (sTitle !== undefined) {
+				return sTitle;
+			}
+
+			sTitle = Dict.Format('UI:Search:Criteria:Title:Default:Any:Empty', this.options.field.label);
+
+			return sTitle;
+		},
+		_computeNotEmptyOperatorTitle: function(sTitle) {
+			if (sTitle !== undefined) {
+				return sTitle;
+			}
+
+			sTitle = Dict.Format('UI:Search:Criteria:Title:Default:Any:NotEmpty', this.options.field.label);
+
+			return sTitle;
+		},
+
 		_computeTitle: function(sTitle)
 		{
-			if(sTitle === undefined)
+			if(sTitle !== undefined)
 			{
-				var sValueAsText = this._getValuesAsText();
-				var sOperator = (sValueAsText !== '') ? this.operators[this.options.operator].code : 'Any';
-				var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':' + this._toCamelCase(sOperator);
+				return sTitle;
+			}
 
-				// Fallback to default widget dict entry if none exists for the current widget
-				if(Dict.S(sDictEntry) === sDictEntry)
+
+			var sCallback = '_compute' + this._toCamelCase(this.operators[this.options.operator].code) + 'OperatorTitle';
+			if(this[sCallback] !== undefined)
+			{
+				var sCallbackTitle = this[sCallback](sTitle);
+				if (sCallbackTitle !== undefined)
 				{
-					sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(sOperator);
-				}
-
-				sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
-
-				// Last chande fallback
-				if(sTitle === sDictEntry)
-				{
-					sTitle = this.options.label;
+					sTitle = sCallbackTitle;
+					return sTitle;
 				}
 			}
+
+
+			var sValueAsText = this._getValuesAsText();
+			var sOperator = (sValueAsText !== '') ? this.operators[this.options.operator].code : 'Any';
+			var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':' + this._toCamelCase(sOperator);
+
+			// Fallback to default widget dict entry if none exists for the current widget
+			if(Dict.S(sDictEntry) === sDictEntry)
+			{
+				sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(sOperator);
+			}
+
+			sTitle = Dict.Format(sDictEntry, this.options.field.label, sValueAsText);
+
+			// Last chande fallback
+			if(sTitle === sDictEntry)
+			{
+				sTitle = this.options.label;
+			}
+
 			return sTitle;
 		},
 		// - Set the title element

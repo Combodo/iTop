@@ -733,12 +733,19 @@ class ScalarExpression extends UnaryExpression
 						case $oAttDef->IsExternalKey():
 							try
 							{
-								/** @var AttributeExternalKey $oAttDef */
-								$sTarget = $oAttDef->GetTargetClass();
-								$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
 
-								$aValue['label'] = $oObj->Get("friendlyname");
+								if ($this->GetValue() == 0)
+								{
+									$aValue['label'] = Dict::S('UI:UndefinedObject');
+								}
+								else
+								{
+									/** @var AttributeExternalKey $oAttDef */
+									$sTarget = $oAttDef->GetTargetClass();
+									$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
 
+									$aValue['label'] = $oObj->Get("friendlyname");
+								}
 							}
 							catch (Exception $e)
 							{

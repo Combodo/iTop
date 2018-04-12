@@ -175,8 +175,9 @@ $(function()
 			};
 
 			var odatetimepickerOptionsDefault = {
-				dateFormat: 'yy-mm-dd',
-				timeFormat: 'HH:mm:ss',
+				// dateFormat: 'yy-mm-dd',
+				// timeFormat: 'HH:mm:ss',
+				showSecond: true,
 				buttonImage: GetAbsoluteUrlAppRoot()+"/images/calendar.png",
 				// buttonImageOnly: true,
 				buttonText: "",
@@ -294,10 +295,10 @@ $(function()
 		//------------------
 		// Inherited methods
 		//------------------
-		_computeTitle: function(sTitle)
+		_computeBetweenDaysOperatorTitle: function(sTitle)
 		{
 			var me = this;
-			if (sTitle === undefined && me.options.operator == 'between_dates')
+			if (sTitle === undefined)
 			{
 				var aValues = me._getValues();
 				switch (true)
@@ -318,24 +319,23 @@ $(function()
 						var sDictEntrySuffix = ':From';
 						break;
 					default:
-						var sDictEntrySuffix = undefined;
+						var sDictEntrySuffix = '';
 						break;
 				}
 
-				if (sDictEntrySuffix != undefined)
+				var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':' + this._toCamelCase(me.options.operator) + sDictEntrySuffix ;
+				// Fallback to default widget dict entry if none exists for the current widget
+				if(Dict.S(sDictEntry) === sDictEntry)
 				{
-					var sDictEntry = 'UI:Search:Criteria:Title:' + this._toCamelCase(this.options.field.widget) + ':' + this._toCamelCase(me.options.operator) + sDictEntrySuffix ;
-					// Fallback to default widget dict entry if none exists for the current widget
-					if(Dict.S(sDictEntry) === sDictEntry)
-					{
-						sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(me.options.operator) + sDictEntrySuffix;
-					}
-
-					sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
+					sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(me.options.operator) + sDictEntrySuffix;
 				}
+
+				sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
+				return sTitle;
+
 			}
 
-			return me._super(sTitle);
+			return undefined;
 		},
 
 
@@ -358,7 +358,8 @@ $(function()
 				}
 				else
 				{
-					aRawValues[1].label = aRawValues[1].label.replace(/(\s\d{2}:\d{2}:\d{2})/, '');
+					// aRawValues[1].label = aRawValues[1].label.replace(/(\s\d{2}:\d{2}:\d{2})/, '');
+					aRawValues[1].label = aRawValues[1].label.replace('23:59:59', '');
 				}
 				if (typeof aRawValues[0] == 'undefined' || typeof aRawValues[0].label == 'undefined' || aRawValues[0].label == '')
 				{
@@ -366,7 +367,8 @@ $(function()
 				}
 				else
 				{
-					aRawValues[0].label = aRawValues[0].label.replace(/(\s\d{2}:\d{2}:\d{2})/, '');
+					// aRawValues[0].label = aRawValues[0].label.replace(/(\s\d{2}:\d{2}:\d{2})/, '');
+					aRawValues[0].label = aRawValues[0].label.replace('00:00:00', '');
 				}
 			}
 			return me._super(aRawValues);

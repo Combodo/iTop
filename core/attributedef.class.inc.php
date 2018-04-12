@@ -3957,7 +3957,11 @@ class AttributeDateTime extends AttributeDBField
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE_TIME;
 
 	static $oFormat = null;
-	
+
+	/**
+	 *
+	 * @return DateTimeFormat
+	 */
 	static public function GetFormat()
 	{
 		if (self::$oFormat == null)
