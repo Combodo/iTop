@@ -104,9 +104,14 @@ try
 
 	}
 
+	if (!isset($aExtraParams['update_history']))
+	{
+		$aExtraParams['update_history'] = true;
+	}
+
 	$aExtraParams['display_limit'] = true;
 	$aExtraParams['truncated'] = true;
-	$aExtraParams['update_history'] = true;
+
 	if (isset($sListId))
 	{
 		$oDisplayBlock->Display($oPage, $sListId, $aExtraParams);

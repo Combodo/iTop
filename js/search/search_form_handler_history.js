@@ -29,7 +29,7 @@ $(function()
 		{
 			"itop_root_class": null,
 			"preference_code": undefined, 			// if undefined, it is computed on _create
-			"history_max_length": 10,				// if the history is longer, the older entries are removed
+			"history_max_length": 5,				// if the history is longer, the older entries are removed
 			"history_backend_store_timeout": 5000,	// wait for this time before storing the new history in the backend
 		},
 

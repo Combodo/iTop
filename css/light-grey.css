@@ -922,6 +922,9 @@ input.dp-applied {
   text-overflow: ellipsis;
   cursor: pointer;
 }
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_title .values {
+  font-weight: bold;
+}
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group {
   /* Form group (operators) is displayed only when the criteria is toggled to opened state */
   display: none;
@@ -2426,12 +2429,18 @@ h2.printable-tab-title {
 select.multiselect {
   max-width: 150px;
 }
-span.refresh-button {
+span.search-button, span.refresh-button {
   display: inline-block;
   width: 21px;
   height: 18px;
   cursor: pointer;
-  background: transparent url(../images/refresh-fff.png?v=v2.5.0) left center no-repeat;
+  color: #fff;
+  text-align: center;
+  padding-top: 3px;
+  font-size: 10px;
+}
+.actions_button.icon_actions_button {
+  padding: 0 2px 0 2px;
 }
 .case-log-history-entry {
   display: block;

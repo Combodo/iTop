@@ -706,6 +706,20 @@ class DisplayBlock
 						}
 					}
 				}
+
+				if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history'])
+				{
+
+					$seventAttachedData = json_encode(array(
+						'filter'                => $this->m_oSet->GetFilter()->serialize(),
+						'breadcrumb_id'         => "ui-search-".$this->m_oSet->GetClass(),
+						'breadcrumb_label'      => MetaModel::GetName($this->m_oSet->GetClass()),
+						'breadcrumb_max_count'  => utils::GetConfig()->Get('breadcrumb.max_count'),
+						'breadcrumb_instance_id'=> MetaModel::GetConfig()->GetItopInstanceid(),
+						'breadcrumb_icon'       => utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png'
+					));
+					$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
+				}
 			}
 			break;
 			
@@ -1842,12 +1856,23 @@ class MenuBlock extends DisplayBlock
 			{
 				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
 			}
-				
+
 			$sHtml .= $oPage->RenderPopupMenuItems($aActions, $aFavoriteActions);
+
+			if ($this->m_sStyle == 'details')
+			{
+				$sSearchAction = "window.location=\"{$sRootUrl}pages/UI.php?operation=search_form&class=$sClass{$sContext}\"";
+				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), ENT_QUOTES, 'UTF-8')."\"><span class=\"search-button fa fa-search\" onclick='$sSearchAction'></span></div>";
+			}
+
+
+
 			if (!$oPage->IsPrintableVersion() && ($sRefreshAction!=''))
 			{
-				$sHtml .= "<div class=\"actions_button\" title=\"".htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8')."\"><span class=\"refresh-button\" onclick=\"$sRefreshAction\"></span></div>";
+				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8')."\"><span class=\"refresh-button fa fa-refresh\" onclick=\"$sRefreshAction\"></span></div>";
 			}
+
+
 		}
 
 		static $bPopupScript = false;

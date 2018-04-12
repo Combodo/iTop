@@ -537,7 +537,7 @@ $(function()
 				sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(sOperator);
 			}
 
-			sTitle = Dict.Format(sDictEntry, this.options.field.label, sValueAsText);
+			sTitle = Dict.Format(sDictEntry, this.options.field.label, '<span class="values">'+sValueAsText+'</span>');
 
 			// Last chande fallback
 			if(sTitle === sDictEntry)
@@ -551,9 +551,11 @@ $(function()
 		_setTitle: function(sTitle)
 		{
 			sTitle = this._computeTitle(sTitle);
-			this.element.find('.sfc_title')
-				.html(sTitle)
-				.attr('title', sTitle);
+
+			var titleElemnt = this.element.find('.sfc_title');
+
+			titleElemnt.html(sTitle);
+			titleElemnt.attr('title', titleElemnt.text());
 		},
 
 		// Operators helpers

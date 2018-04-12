@@ -34,8 +34,14 @@ $(function()
 					//  "onclose_show" : "until",		=> on x_picker close, should we open another one (on "from" close shall we show "until")
 					//  "value_index": 0,				=> the widget communicate with an array of values, the index 0 is "from" the index 1 is "until"
 
-					// Date_time widget specifi settings :
+					// Date_time widget specific settings :
+					// > Beware : a lot of those parameters are unused (the intial dev. tested several different UI before the final choice)
 					//  "x_picker" : 'datetimepicker',	=> the plugin used either datepicker or datetimepicker
+					//  "picker_extra_params": {			=> extram init params for the datepicker, use by the datetime to force the time of the "until" at 23:59:59
+					//	  "hour": 23,
+					//	  "minute":59,
+					//	  "second":59
+					//  },
 					//  "default_time_add": false,		=> either false to disable it or number of second to add (used by the datetimepicker to choose the right time on synched datepicker change, its value change from 0 for "from" to +1d-1s for "until"
 					//  "show_on_advanced": true,		=> is the input displaye on "more" or "less" mode advanced is an lais for "more" in the css
 					//  "synced_with": "from_time",		=> from and until has both two input (datepicker and datetimepicker). each time one input change, the other one has to change
@@ -301,21 +307,54 @@ $(function()
 			if (sTitle === undefined)
 			{
 				var aValues = me._getValues();
+				// switch (true)
+				// {
+				// 	case (typeof aValues[0] == 'undefined' && typeof aValues[1] == 'undefined'):
+				// 	case (typeof aValues[0].label == 'undefined' && typeof aValues[1].label == 'undefined'):
+				// 	case (aValues[0].label.trim() == '' && aValues[1].label.trim() == ''):
+				// 		var sDictEntrySuffix = ':All';
+				// 		break;
+				// 	case (typeof aValues[0] == 'undefined' ):
+				// 	case (typeof aValues[0].label == 'undefined' ):
+				// 	case (aValues[0].label.trim() == '' ):
+				// 		var sDictEntrySuffix = ':Until';
+				// 		break;
+				// 	case (typeof aValues[1] == 'undefined'):
+				// 	case (typeof aValues[1].label == 'undefined' ):
+				// 	case (aValues[1].label.trim() == ''):
+				// 		var sDictEntrySuffix = ':From';
+				// 		break;
+				// 	default:
+				// 		var sDictEntrySuffix = '';
+				// 		break;
+				// }
 				switch (true)
 				{
 					case (typeof aValues[0] == 'undefined' && typeof aValues[1] == 'undefined'):
-					case (typeof aValues[0].label == 'undefined' && typeof aValues[1].label == 'undefined'):
-					case (aValues[0].label.trim() == '' && aValues[1].label.trim() == ''):
 						var sDictEntrySuffix = ':All';
 						break;
 					case (typeof aValues[0] == 'undefined' ):
-					case (typeof aValues[0].label == 'undefined' ):
-					case (aValues[0].label.trim() == '' ):
 						var sDictEntrySuffix = ':Until';
 						break;
 					case (typeof aValues[1] == 'undefined'):
+						var sDictEntrySuffix = ':From';
+						break;
+					case (typeof aValues[0].label == 'undefined' && typeof aValues[1].label == 'undefined'):
+						var sDictEntrySuffix = ':All';
+						break;
+					case (typeof aValues[0].label == 'undefined' ):
+						var sDictEntrySuffix = ':Until';
+						break;
 					case (typeof aValues[1].label == 'undefined' ):
-					case (aValues[1].label.trim() == ''):
+						var sDictEntrySuffix = ':From';
+						break;
+					case ((typeof aValues[0].label == 'string' && aValues[0].label.trim() == '') && (typeof aValues[1].label == 'string' && aValues[1].label.trim() == '')):
+						var sDictEntrySuffix = ':All';
+						break;
+					case (typeof aValues[0].label == 'string' && aValues[0].label.trim() == ''):
+						var sDictEntrySuffix = ':Until';
+						break;
+					case (typeof aValues[1].label == 'string' && aValues[1].label.trim() == ''):
 						var sDictEntrySuffix = ':From';
 						break;
 					default:
@@ -330,7 +369,7 @@ $(function()
 					sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(me.options.operator) + sDictEntrySuffix;
 				}
 
-				sTitle = Dict.Format(sDictEntry, this.options.field.label, this._getValuesAsText());
+				sTitle = Dict.Format(sDictEntry, this.options.field.label, '<span class="values">'+this._getValuesAsText()+'</span>');
 				return sTitle;
 
 			}
@@ -343,6 +382,8 @@ $(function()
 		_getValuesAsText: function(aRawValues)
 		{
 			var me = this;
+
+			var keepTime = true;
 
 			if (aRawValues == undefined)
 			{
@@ -358,8 +399,17 @@ $(function()
 				}
 				else
 				{
-					// aRawValues[1].label = aRawValues[1].label.replace(/(\s\d{2}:\d{2}:\d{2})/, '');
-					aRawValues[1].label = aRawValues[1].label.replace('23:59:59', '');
+					if (
+						null == aRawValues[1].label.match('23:59:59')
+						||
+						(typeof aRawValues[0] != 'undefined' && typeof aRawValues[0].label != 'undefined' && aRawValues[0].label != '' && null == aRawValues[0].label.match('00:00:00'))
+					)
+					{
+						keepTime = false;
+					}
+					else {
+						aRawValues[1].label = aRawValues[1].label.replace('23:59:59', '');
+					}
 				}
 				if (typeof aRawValues[0] == 'undefined' || typeof aRawValues[0].label == 'undefined' || aRawValues[0].label == '')
 				{
@@ -367,8 +417,10 @@ $(function()
 				}
 				else
 				{
-					// aRawValues[0].label = aRawValues[0].label.replace(/(\s\d{2}:\d{2}:\d{2})/, '');
-					aRawValues[0].label = aRawValues[0].label.replace('00:00:00', '');
+					if (keepTime)
+					{
+						aRawValues[0].label = aRawValues[0].label.replace('00:00:00', '');
+					}
 				}
 			}
 			return me._super(aRawValues);

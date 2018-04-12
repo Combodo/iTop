@@ -128,12 +128,15 @@ function ReloadAndDisplay($oPage, $oObj, $sMessageId = '', $sMessage = '', $sSev
 function DisplayDetails($oP, $sClass, $oObj, $id)
 {
 	$sClassLabel = MetaModel::GetName($sClass);
-	$oSearch = new DBObjectSearch($sClass);
-	$oBlock = new DisplayBlock($oSearch, 'search', false);
-	$oBlock->Display($oP, 0, array(
-		'table_id'  => 'search-widget-results-outer',
-		'open'      => false,
-	));
+
+// 2018-04-11 : removal of the search block
+//	$oSearch = new DBObjectSearch($sClass);
+//	$oBlock = new DisplayBlock($oSearch, 'search', false);
+//	$oBlock->Display($oP, 0, array(
+//		'table_id'  => 'search-widget-results-outer',
+//		'open'      => false,
+//		'update_history' => false,
+//	));
 
 	// The object could be listed, check if it is actually allowed to view it
 	$oSet = CMDBObjectSet::FromObject($oObj);

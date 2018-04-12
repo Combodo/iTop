@@ -28,12 +28,14 @@ $(function()
 					'code': 'ends_with',
 					'rank': 30,
 				},
+				'=': {
+					'rank': 40,//pre-existing, reordered
+				},
 				'REGEXP': {
 					'label': Dict.S('UI:Search:Criteria:Operator:String:RegExp'),
 					'code': 'reg_exp',
-					'rank': 40,
+					'rank': 50,
 				},
-				'=': null,	// Remove this one from string widget.
 			},
 		},
 

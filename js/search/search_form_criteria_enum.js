@@ -439,7 +439,11 @@ $(function()
 					aFirstValues.push(this.options.values[i].label);
 				}
 
-				sTitle = Dict.Format('UI:Search:Criteria:Title:Enum:In:Many', this.options.field.label, aFirstValues.join(', '), (iValCount - iValLimit+1));
+				sTitle = Dict.Format(
+					'UI:Search:Criteria:Title:Enum:In:Many',
+					'<span class="values">'+this.options.field.label, aFirstValues.join(', ')+'</span>',
+					'<span class="values">'+(iValCount - iValLimit+1)+'</span>'
+				);
 			}
 
 			return this._super(sTitle);

@@ -114,24 +114,31 @@ class SearchForm
 			}
 		}
 
-		$aSubClasses = MetaModel::GetSubclasses($sRootClass);
-		if (count($aSubClasses) > 0)
+		if (isset($aExtraParams['search_header_force_dropdown']))
 		{
-			$aOptions = array();
-			$aOptions[MetaModel::GetName($sRootClass)] = "<option value=\"$sRootClass\">".MetaModel::GetName($sRootClass)."</options>\n";
-			foreach($aSubClasses as $sSubclassName)
-			{
-				$aOptions[MetaModel::GetName($sSubclassName)] = "<option value=\"$sSubclassName\">".MetaModel::GetName($sSubclassName)."</options>\n";
-			}
-			$aOptions[MetaModel::GetName($sClassName)] = "<option selected value=\"$sClassName\">".MetaModel::GetName($sClassName)."</options>\n";
-			ksort($aOptions);
-			$sContext = $oAppContext->GetForLink();
-			$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '{$aExtraParams['result_list_outer_selector']}')\">\n".implode('',
-					$aOptions)."</select>\n";
+			$sClassesCombo = $aExtraParams['search_header_force_dropdown'];
 		}
 		else
 		{
-			$sClassesCombo = MetaModel::GetName($sClassName);
+			$aSubClasses = MetaModel::GetSubclasses($sRootClass);
+			if (count($aSubClasses) > 0)
+			{
+				$aOptions = array();
+				$aOptions[MetaModel::GetName($sRootClass)] = "<option value=\"$sRootClass\">".MetaModel::GetName($sRootClass)."</options>\n";
+				foreach($aSubClasses as $sSubclassName)
+				{
+					$aOptions[MetaModel::GetName($sSubclassName)] = "<option value=\"$sSubclassName\">".MetaModel::GetName($sSubclassName)."</options>\n";
+				}
+				$aOptions[MetaModel::GetName($sClassName)] = "<option selected value=\"$sClassName\">".MetaModel::GetName($sClassName)."</options>\n";
+				ksort($aOptions);
+				$sContext = $oAppContext->GetForLink();
+				$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '{$aExtraParams['result_list_outer_selector']}')\">\n".implode('',
+						$aOptions)."</select>\n";
+			}
+			else
+			{
+				$sClassesCombo = MetaModel::GetName($sClassName);
+			}
 		}
 
 		$bAutoSubmit = true;

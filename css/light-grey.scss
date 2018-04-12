@@ -1038,6 +1038,11 @@ input.dp-applied {
 				overflow-x: hidden;
 				text-overflow: ellipsis;
 				cursor: pointer;
+
+				.values {
+					font-weight: bold;
+				}
+
 			}
 			.sfc_form_group{
 				/* Form group (operators) is displayed only when the criteria is toggled to opened state */
@@ -2751,12 +2756,25 @@ h2.printable-tab-title {
 select.multiselect {
 	max-width: 150px;
 }
-span.refresh-button {
+//span.refresh-button {
+//	display: inline-block;
+//	width: 21px;
+//	height: 18px;
+//	cursor: pointer;
+//	background: transparent url(../images/refresh-fff.png?v=#{$version}) left center no-repeat;
+//}
+span.search-button, span.refresh-button {
 	display: inline-block;
 	width: 21px;
 	height: 18px;
 	cursor: pointer;
-	background: transparent url(../images/refresh-fff.png?v=#{$version}) left center no-repeat;
+	color: #FFFFFF;
+	text-align: center;
+	padding-top: 3px;
+	font-size: 10px;
+}
+.actions_button.icon_actions_button {
+	padding: 0 2px 0 2px;
 }
 .case-log-history-entry {
 	display: block;

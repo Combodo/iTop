@@ -170,7 +170,7 @@ $(function()
 				me._onCriteriaErrorOccured(oData);
 			});
 
-			$('body').on('update_history.itop', function(event, filter) {
+			$('body').on('update_history.itop', function(event, eventData) {
 
 				if (! me.element.is(':visible'))
 				{
@@ -183,14 +183,31 @@ $(function()
 					return;
 				}
 
-				me._trace('history update', filter);
+				me._trace('history update', eventData);
 
 				var newUrl = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search';
-				newUrl = newUrl + '&filter='+filter['filter'];
+				newUrl = newUrl + '&filter='+eventData['filter'];
 				newUrl = newUrl + '&c[menu]='+me._extractURLParameter(window.location.href, "c[menu]");
+				if ('' != me._extractURLParameter(window.location.href, "debug"))
+				{
+					newUrl = newUrl + '&debug='+me._extractURLParameter(window.location.href, "debug");
+				}
 
 				history.replaceState(null, null, newUrl);
-				$('#itop-breadcrumb').breadcrumb('RefreshLatestEntry', newUrl);
+
+				$('#itop-breadcrumb')
+					.breadcrumb('destroy')
+					.breadcrumb({
+					itop_instance_id: eventData['breadcrumb_instance_id'],
+					max_count: eventData['breadcrumb_max_count'],
+					new_entry: {
+						"id": eventData['breadcrumb_id'],
+						"label": eventData['breadcrumb_label'],
+						"url": newUrl,
+						'icon': eventData['breadcrumb_icon'],
+						'description': ''
+					}
+				});
 			});
 
 		},
@@ -214,7 +231,7 @@ $(function()
 					}
 				}
 			}
-			return null;
+			return '';
 		},
 		// - Update search option of the widget
 		_updateSearch: function()
