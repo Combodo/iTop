@@ -108,11 +108,8 @@ $(function()
                 {
                     oWidget = $(this).data('itopSelector_property_field');
                 }
-                if (oWidget && $(this).is(':visible'))
-                {
-                    var oVal = oWidget._get_committed_value();
-                    oParams[oVal.name] = oVal.value;
-                }
+				var oVal = oWidget._get_committed_value();
+				oParams[oVal.name] = oVal.value;
             });
 
 			oParams.dashlet_id = this.options.dashlet_id;
