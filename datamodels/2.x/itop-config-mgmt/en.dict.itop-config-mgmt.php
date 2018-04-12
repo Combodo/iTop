@@ -1078,7 +1078,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Software+' => '',
 	'Class:Software/Attribute:name' => 'Name',
 	'Class:Software/Attribute:name+' => '',
-	'Class:Software/Attribute:vendor' => 'vendor',
+	'Class:Software/Attribute:vendor' => 'Vendor',
 	'Class:Software/Attribute:vendor+' => '',
 	'Class:Software/Attribute:version' => 'Version',
 	'Class:Software/Attribute:version+' => '',

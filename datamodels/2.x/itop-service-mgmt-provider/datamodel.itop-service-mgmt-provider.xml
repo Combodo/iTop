@@ -221,6 +221,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="provider_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -983,6 +996,13 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -1142,6 +1162,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="servicefamily_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -1438,6 +1471,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="service_id">
+              <rank>20</rank>
+            </item>
+            <item id="service_org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">

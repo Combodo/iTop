@@ -82,6 +82,13 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -234,6 +241,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="country">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -423,7 +443,7 @@
             <item id="friendlyname">
               <rank>10</rank>
             </item>
-            <item id="status">
+            <item id="email">
               <rank>20</rank>
             </item>
             <item id="org_id">
@@ -1018,6 +1038,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -1538,6 +1571,16 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -1809,6 +1852,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -2253,6 +2309,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="managementip">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -3345,6 +3414,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="system_id">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -4134,6 +4216,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="middleware_id">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -4254,6 +4349,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="dbserver_id">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -4383,6 +4491,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="webserver_id">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -4540,6 +4661,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="vendor">
+              <rank>20</rank>
+            </item>
+            <item id="type">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -4629,6 +4763,16 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -4919,20 +5063,17 @@
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="documents_list">
+            <item id="org_id">
               <rank>20</rank>
             </item>
-            <item id="org_id">
+            <item id="usage_limit">
               <rank>30</rank>
             </item>
-            <item id="usage_limit">
+            <item id="description">
               <rank>40</rank>
             </item>
-            <item id="description">
-              <rank>50</rank>
-            </item>
             <item id="perpetual">
-              <rank>55</rank>
+              <rank>50</rank>
             </item>
             <item id="start_date">
               <rank>60</rank>
@@ -4943,8 +5084,24 @@
             <item id="licence_key">
               <rank>80</rank>
             </item>
+            <item id="documents_list">
+              <rank>90</rank>
+            </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="description">
+              <rank>20</rank>
+            </item>
+            <item id="licence_key">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -5379,6 +5536,13 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -6540,6 +6704,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="ip">
+              <rank>10</rank>
+            </item>
+            <item id="subnet_name">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="ip">
@@ -6664,6 +6841,16 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="vlan_tag">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="vlan_tag">
@@ -6813,6 +7000,13 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -6913,6 +7107,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="friendlyname">
+              <rank>10</rank>
+            </item>
+            <item id="ipaddress">
+              <rank>20</rank>
+            </item>
+            <item id="macaddress">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -7800,6 +8007,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">

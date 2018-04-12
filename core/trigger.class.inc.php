@@ -116,8 +116,8 @@ abstract class TriggerOnObject extends Trigger
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'description')); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('default_search', array('description', 'target_class'));  // Default criteria of the search banner
+//		MetaModel::Init_SetZListItems('standard_search', array('name', 'target_class', 'description')); // Criteria of the search form
 	}
 
 	public function DoCheckToWrite()
