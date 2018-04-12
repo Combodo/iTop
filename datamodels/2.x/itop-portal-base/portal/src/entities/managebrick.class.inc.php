@@ -53,6 +53,9 @@ class ManageBrick extends PortalBrick
 	protected $aFields;
 	protected $aExportFields;
 	protected $bShowTabCounts;
+	/**
+	 * @var string default display mode for the brick's tile
+	 */
 	protected $sDisplayType;
 	protected $iGroupLimit;
 	protected $bGroupShowOthers;
@@ -62,37 +65,46 @@ class ManageBrick extends PortalBrick
 			'decorationCssClass' => 'fa fa-id-card-o fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-badge.html.twig',
 			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig',
-			'layoutDisplayType' => 'default',
+			'layoutDisplayType' => ManageBrick::DISPLAY_MODE_TABLE,
 			'need_details' => true,
 		),
 		'top-list' => array(
 			'decorationCssClass' => 'fa fa-signal fa-rotate-270 fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-top-list.html.twig',
 			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig',
-			'layoutDisplayType' => 'default',
+			'layoutDisplayType' => ManageBrick::DISPLAY_MODE_TABLE,
 			'need_details' => true,
 		),
 		'pie-chart' => array(
 			'decorationCssClass' => 'fa fa-pie-chart fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
 			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-chart.html.twig',
-			'layoutDisplayType' => 'pie-chart',
+			'layoutDisplayType' => ManageBrick::DISPLAY_MODE_PIE,
 			'need_details' => false,
 		),
 		'bar-chart' => array(
 			'decorationCssClass' => 'fa fa-bar-chart fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
 			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-chart.html.twig',
-			'layoutDisplayType' => 'bar-chart',
+			'layoutDisplayType' => ManageBrick::DISPLAY_MODE_BAR,
 			'need_details' => false,
 		),
 		'default' => array(
 			'decorationCssClass' => 'fa fa-pencil-square fa-2x',
 			'tileTemplate' => self::DEFAULT_TILE_TEMPLATE_PATH,
 			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig',
-			'layoutDisplayType' => 'default',
+			'layoutDisplayType' => ManageBrick::DISPLAY_MODE_TABLE,
 			'need_details' => true,
 		),
+	);
+	protected $aAvailableDisplayModes = array();
+	const DISPLAY_MODE_TABLE = 'default';
+	const DISPLAY_MODE_PIE = 'pie-chart';
+	const DISPLAY_MODE_BAR = 'bar-chart';
+	const DISPLAY_MODES_ALLOWED = array(
+		ManageBrick::DISPLAY_MODE_TABLE,
+		ManageBrick::DISPLAY_MODE_PIE,
+		ManageBrick::DISPLAY_MODE_BAR
 	);
 
 	public function __construct()
@@ -215,20 +227,6 @@ class ManageBrick extends PortalBrick
 	public function ShowGroupOthers()
 	{
 		return $this->bGroupShowOthers;
-	}
-
-	/**
-	 * @return array
-	 */
-	public function ListLayoutDisplayTypes()
-	{
-		$aLayoutDisplayTypes = array();
-		foreach ($this->aPresentationData as $aPresentationDatum)
-		{
-			$aLayoutDisplayTypes[$aPresentationDatum['layoutDisplayType']] = true;
-		}
-
-		return array_keys($aLayoutDisplayTypes);
 	}
 
 	/**
@@ -434,6 +432,19 @@ class ManageBrick extends PortalBrick
 		return (isset($this->aGrouping['areas'])) ? $this->aGrouping['areas'] : false;
 	}
 
+	public function AddAvailableDisplayMode($sModeId)
+	{
+		$this->aAvailableDisplayModes[] = $sModeId;
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public function GetAvailablesDisplayModes()
+	{
+		return $this->aAvailableDisplayModes;
+	}
+
 	/**
 	 * Returns true is the groupings $sGroupingName properties exists and is of the form attribute => attribute_code.
 	 * This is supposed to be called by the IsGroupingTabsByDistinctValues / IsGroupingAreasByDistinctValues function.
@@ -527,11 +538,39 @@ class ManageBrick extends PortalBrick
 					$this->SetOpeningMode($sOpeningMode);
 					break;
 
-				case 'display_type':
-					$this->sDisplayType = $oBrickSubNode->GetText();
-					$aDisplayParameterForType = $this->GetPresentationDataForDisplayType($this->sDisplayType);
-					$this->SetTileTemplatePath($aDisplayParameterForType['tileTemplate']);
-					$this->SetPageTemplatePath($aDisplayParameterForType['layoutTemplate']);
+				case 'display_modes':
+					foreach ($oBrickSubNode->GetNodes('./*') as $oDisplayNode)
+					{
+						switch ($oDisplayNode->nodeName)
+						{
+							case 'availables';
+								foreach ($oDisplayNode->childNodes as $oModeNode)
+								{
+									if (!$oModeNode->hasAttribute('id'))
+									{
+										throw new DOMFormatException('ManageBrick : display mode must have a unique ID attribute',
+											null, null, $oModeNode);
+									}
+
+									$sModeId = $oModeNode->getAttribute('id');
+									if (!in_array($sModeId, ManageBrick::DISPLAY_MODES_ALLOWED))
+									{
+										throw new DOMFormatException('ManageBrick : display mode has an invalid value',
+											null, null, $oModeNode);
+									}
+
+									$this->AddAvailableDisplayMode($sModeId);
+								}
+								break;
+
+							case 'default';
+								$this->sDisplayType = $oDisplayNode->nodeValue;
+								$aDisplayParameterForType = $this->GetPresentationDataForDisplayType($this->sDisplayType);
+								$this->SetTileTemplatePath($aDisplayParameterForType['tileTemplate']);
+								$this->SetPageTemplatePath($aDisplayParameterForType['layoutTemplate']);
+								break;
+						}
+					}
 					break;
 
 				case 'fields':
@@ -651,6 +690,19 @@ class ManageBrick extends PortalBrick
 		if ($this->GetOql() === '')
 		{
 			throw new DOMFormatException('BrowseBrick : must have a valid <class|oql> tag', null, null, $oMDElement);
+		}
+
+		// Display modes : at least one selected
+		$sDefaultDetailDisplayMode = (isset($this->sDisplayType))
+			? $this->aPresentationData[$this->sDisplayType]['layoutDisplayType']
+			: 'default';
+		$bHasAvailableDisplayModes = (count($this->GetAvailablesDisplayModes()) > 0);
+		$bIsDefaultDisplayModeInAvailableModes = in_array($sDefaultDetailDisplayMode,
+			$this->GetAvailablesDisplayModes());
+		if (!$bHasAvailableDisplayModes || (!$bIsDefaultDisplayModeInAvailableModes))
+		{
+			// legacy : setting to default
+			$this->AddAvailableDisplayMode($sDefaultDetailDisplayMode);
 		}
 
 		// Checking if specified fields, if not we put those from the details zlist

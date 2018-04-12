@@ -1173,6 +1173,12 @@
 					<title>
 						<default>Brick:Portal:OngoingRequests:Title</default>
 					</title>
+					<display_modes>
+						<availables>
+							<mode id="default"/>
+						</availables>
+						<default>default</default>
+					</display_modes>
 					<description>Brick:Portal:OngoingRequests:Title+</description>
 					<decoration_class>
 						<default>fc fc-ongoing-request fc-2x</default>
@@ -1232,6 +1238,12 @@
 					<title>
 						<default>Brick:Portal:ClosedRequests:Title</default>
 					</title>
+					<display_modes>
+						<availables>
+							<mode id="default"/>
+						</availables>
+						<default>default</default>
+					</display_modes>
 					<description></description>
 					<decoration_class>
 						<default>fc fc-closed-request fc-2x</default>

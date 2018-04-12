@@ -4,14 +4,16 @@
 {% block pMainHeaderTitle %}{{ oBrick.GetTitle()|dict_s }} ({{ iCount }}) {% endblock %}
 
 {% block pMainHeaderActions %}
-	<div class="btn-group btn_group_explicit">
-        {% for sDisplay in oBrick.ListLayoutDisplayTypes %}
-			<a href="{{ app.url_generator.generate('p_manage_brick', {'sBrickId': sBrickId, 'sDisplayType': sDisplay}) }}{% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] }}{% endif %}"
-			   id="btn_tab_for_{{ sDisplay }}"
-			   class="btn btn-default {% if sDisplay == oBrick.GetPresentationDataForDisplayType(sDisplayType).layoutDisplayType %}active{% endif %}">
-                {{ ('Brick:Portal:Manage:DisplayType:' ~ sDisplay)|dict_s }}
-			</a>
-        {% endfor %}
-	</div>
+    {% if oBrick.GetAvailablesDisplayModes|length > 1 %}
+		<div class="btn-group btn_group_explicit">
+            {% for sDisplay in oBrick.GetAvailablesDisplayModes %}
+				<a href="{{ app.url_generator.generate('p_manage_brick', {'sBrickId': sBrickId, 'sDisplayType': sDisplay}) }}{% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] }}{% endif %}"
+				   id="btn_tab_for_{{ sDisplay }}"
+				   class="btn btn-default {% if sDisplay == oBrick.GetPresentationDataForDisplayType(sDisplayType).layoutDisplayType %}active{% endif %}">
+                    {{ ('Brick:Portal:Manage:DisplayType:' ~ sDisplay)|dict_s }}
+				</a>
+            {% endfor %}
+		</div>
+    {% endif %}
 {% endblock %}
 
