@@ -737,6 +737,9 @@ class ScalarExpression extends UnaryExpression
 			case '%w':
 				$aCriteria['unit'] = 'WEEKDAY';
 				break;
+			case '%H':
+				$aCriteria['unit'] = 'HOUR';
+				break;
 			default:
 				$aValue = array('value' => $this->GetValue());
 				if (!is_null($oAttDef))
