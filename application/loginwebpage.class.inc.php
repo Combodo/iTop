@@ -42,6 +42,7 @@ class LoginWebPage extends NiceWebPage
 	const EXIT_CODE_WRONGCREDENTIALS = 3;
 	const EXIT_CODE_MUSTBEADMIN = 4;
 	const EXIT_CODE_PORTALUSERNOTAUTHORIZED = 5;
+	const EXIT_CODE_NOTAUTHORIZED = 6;
 	
 	protected static $sHandlerClass = __class__;
 	public static function RegisterHandler($sClass)

@@ -118,6 +118,15 @@ try
 	utils::UseParamFile();
 
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN); // Starting with iTop 2.2.0 portal users are no longer allowed to access the REST/JSON API
+	if ($iRet == LoginWebPage::EXIT_CODE_OK)
+	{
+		// Extra validation of the profile
+		if ((MetaModel::GetConfig()->Get('secure_rest_services') == true) && !UserRights::HasProfile('REST Services User'))
+		{
+			// Web services access is limited to the users with the profile REST Web Services
+			$iRet = LoginWebPage::EXIT_CODE_NOTAUTHORIZED;
+		}
+	}
 	if ($iRet != LoginWebPage::EXIT_CODE_OK)
 	{
 		switch($iRet)
@@ -137,7 +146,11 @@ try
 			case LoginWebPage::EXIT_CODE_PORTALUSERNOTAUTHORIZED:
 			throw new Exception("Portal user is not allowed", RestResult::UNAUTHORIZED);
 			break;
-			
+				
+			case LoginWebPage::EXIT_CODE_NOTAUTHORIZED:
+			throw new Exception("This user is not authorized to use the web services. (The profile REST Services User is required to access the REST web services)", RestResult::UNAUTHORIZED);
+			break;
+				
 			default:
 			throw new Exception("Unknown authentication error (retCode=$iRet)", RestResult::UNAUTHORIZED);
 		}

@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design>
+  <user_rights>
+    <profiles>
+      <profile id="1024" _delta="define">
+        <name>REST Services User</name>
+        <description>Only users having this profile are allowed to use the REST Web Services (unless 'secure_rest_services' is set to false in the configuration file).</description>
+        <groups />
+      </profile>
+    </profiles>
+  </user_rights>
 </itop_design>

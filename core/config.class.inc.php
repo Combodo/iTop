@@ -1077,6 +1077,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'secure_rest_services' => array(
+			'type' => 'bool',
+			'description' => 'When set to true, only the users with the profile "REST Services User" are allowed to use the REST web services.',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
