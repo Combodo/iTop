@@ -112,7 +112,6 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 				me.UpdateSizes();
 				me.UpdateButtons();
 				me.ajax_request = null;
-				FixSearchFormsDisposition();
 				me.ListResultsSearchForeignKeys();
 			},
 			'html'

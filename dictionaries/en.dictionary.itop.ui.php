@@ -1407,6 +1407,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// TODO: Reorganize those entries with other search entries and make entries for other languages.
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand',
+	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria',
 	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used',

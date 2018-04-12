@@ -275,7 +275,6 @@ $(function()
 					var c = this.value;
 					me._onUpdateDlgButtons(c);
 				});
-				FixSearchFormsDisposition();
 				$('#SearchResultsToAdd_'+me.id).unblock();
 				me._onSearchDlgUpdateSize();
 			});

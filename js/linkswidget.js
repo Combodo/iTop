@@ -148,7 +148,6 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			var c = this.value;
 			me.UpdateButtons(c);
 		});
-		FixSearchFormsDisposition();
 		me.UpdateSizes(null, null);
 
 		$("#fs_SearchFormToAdd_"+me.id).trigger('itop.search.form.submit');
@@ -197,7 +196,6 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 					var c = this.value;
 					me.UpdateButtons(c);
 				});
-				FixSearchFormsDisposition();
 				me.UpdateSizes(null, null);
 				$(sSearchAreaId).unblock();		
 			},

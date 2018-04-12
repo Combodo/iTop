@@ -175,6 +175,7 @@ $(function()
 
 			// Close criteria
 			this.element.on('itop.search.criteria.close', function(){
+				me._apply();
 				return me._close();
 			});
 
@@ -537,7 +538,7 @@ $(function()
 				sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(sOperator);
 			}
 
-			sTitle = Dict.Format(sDictEntry, this.options.field.label, '<span class="values">'+sValueAsText+'</span>');
+			sTitle = Dict.Format(sDictEntry, this.options.field.label, '<span class="sfc_values">'+sValueAsText+'</span>');
 
 			// Last chande fallback
 			if(sTitle === sDictEntry)
@@ -552,10 +553,10 @@ $(function()
 		{
 			sTitle = this._computeTitle(sTitle);
 
-			var titleElemnt = this.element.find('.sfc_title');
+			var titleElem = this.element.find('.sfc_title');
 
-			titleElemnt.html(sTitle);
-			titleElemnt.attr('title', titleElemnt.text());
+			titleElem.html(sTitle);
+			titleElem.attr('title', titleElem.text());
 		},
 
 		// Operators helpers

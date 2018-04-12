@@ -795,8 +795,6 @@ EOF
 		$('table.listResults').each( function() { FixTableSorter($(this)); } );
 		
 		$('.multiselect').multiselect($sJSMultiselectOptions);
-
-		FixSearchFormsDisposition();
 EOF
 		);
 

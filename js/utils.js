@@ -283,47 +283,11 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId) {
 		function (data) {
 			oDiv.empty();
 			oDiv.append(data);
-			if (aSubmit.length > 0) {
-				var oForm = $('#ds_'+divId+' form'); // Form was reloaded, recompute it
-				for (var index = 0; index < aSubmit.length; index++) {
-					// Restore the previously bound submit handlers
-					var sEventName = 'submit';
-					if ((aSubmit[index].namespace != undefined) && (aSubmit[index].namespace != '')) {
-						sEventName += '.'+aSubmit[index].namespace;
-					}
-					if (aSubmit[index].data != undefined) {
-						oForm.bind(sEventName, aSubmit[index].data, aSubmit[index].handler)
-					}
-					else {
-						oForm.bind(sEventName, aSubmit[index].handler)
-					}
-				}
-			}
-			FixSearchFormsDisposition();
 			oDiv.unblock();
 			oDiv.parent().resize(); // Inform the parent that the form has just been (potentially) resized
+			oDiv.find('form').triggerHandler('itop.search.form.reloaded');
 		}
 	);
-}
-
-function FixSearchFormsDisposition() {
-	// Fix search forms
-	$('.search_box').each(function () {
-		var colWidth = 0;
-		var labelWidth = 0;
-		$('label:visible', $(this)).each(function () {
-			var l = $(this).parent().width()-$(this).width();
-			colWidth = Math.max(l, colWidth);
-			labelWidth = Math.max($(this).width(), labelWidth);
-		});
-		$('label:visible', $(this)).each(function () {
-			if ($(this).data('resized') != true) {
-				$(this).parent().width(colWidth+labelWidth);
-				$(this).width(labelWidth).css({display: 'inline-block'}).data('resized', true);
-			}
-		});
-	});
-
 }
 
 /**

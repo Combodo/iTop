@@ -800,7 +800,7 @@ input.dp-applied {
 	margin-right: auto;
 	font-size: 12px;
 	text-align: initial; /* To compensate .search_box:text-align */
-	border: 1px solid #3F7294;
+	border: 1px solid $complement-color;
 	//transition: width 0.3s ease-in-out;
 
 	/* Sizing reset */
@@ -823,14 +823,16 @@ input.dp-applied {
 			.sft_short{
 				display: none;
 			}
+
+			.sft_hint,
+			.sft_toggler{
+				margin-top: 4px;
+			}
 			.sft_toggler{
 				transform: rotateX(180deg);
 				transition: transform 0.5s linear;
 			}
 		}
-		//.sf_criterion_area{
-		//	transition: opacity 0.3s linear;
-		//}
 	}
 	&.closed{
 		margin-top: -0.25em; /* To remove top padding from the parent .display_block */
@@ -838,9 +840,7 @@ input.dp-applied {
 		width: 150px;
 		overflow: hidden;
 		border-radius: 0 0 4px 4px;
-		//opacity: 0.7;
-		//transition: opacity 0.3s linear;
-		//transition: border 0.3s linear;
+
 		.sf_criterion_area{
 			height: 0;
 			opacity: 0;
@@ -850,20 +850,20 @@ input.dp-applied {
 			padding: 6px 8px;
 			text-align: center;
 			font-size: 12px;
-		//	transition:  background-color 0.3s, color 0.3s linear;
-		//	background-color: #ffffff;
-		//	color: #3F7294;
+
 			.sft_long{
 				display: none;
 			}
-			.sft_refresh{
+			.sft_hint{
 				display: none;
-				line-height: 10pt;
 			}
 		}
 	}
 
 	&:not(.no_auto_submit){
+		.sft_hint{
+			display: none;
+		}
 		.sfc_fg_apply{
 			display: none;
 		}
@@ -879,29 +879,19 @@ input.dp-applied {
 		padding: 8px 10px;
 		margin: 0;
 		color: #ffffff;
-		background-color: #3F7294;
+		background-color: $complement-color;
 		cursor: pointer;
-
-		/* Pictogram */
-		.sft_picto{
-			display: none; /* TODO: Remove this class and the correspondig DOM element if this option is kept. */
-			margin-right: 10px;
+		.sft_hint{
+			font-size: 8pt;
+			font-style: italic;
 		}
-
-		.sft_refresh,
 		.sft_toggler{
+			margin-left: 0.7em;
 			transition: color 0.2s ease-in-out, transform 0.4s ease-in-out;
 
 			&:hover{
 				color: $gray-extra-light;
 			}
-		}
-		.sft_refresh{
-			font-size: 10pt;
-			line-height: 13pt;
-		}
-		.sft_toggler{
-			margin-left: 0.7em;
 		}
 	}
 	.sf_message{
@@ -914,11 +904,44 @@ input.dp-applied {
 		padding: 8px 8px 3px 8px; /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
 		background-color: $white;
 
+		.sf_criterion_row{
+			position: relative;;
+
+			&:not(:first-child){
+				margin-top: 20px;
+
+				&::before{
+					content: "";
+					position: absolute;
+					top: -12px;
+					left: 0px;
+					width: 100%;
+					border-top: 1px solid $search-criteria-box-border-color;
+				}
+				&::after{
+					content: "or"; /* TODO: Make this into a dict entry */
+					position: absolute;
+					top: -20px;
+					left: 8px;
+					padding-left: 5px;
+					padding-right: 5px;
+					color: $gray-light;
+					background-color: $white; /* Must match .sf_criterion_area:background-color */
+				}
+			}
+
+			.sf_criterion_group{
+				display: inline;
+			}
+		}
+
 		/* Common style between criterion and more criterion */
 		.search_form_criteria,
-		.sf_more_criterion {
+		.sf_more_criterion,
+		.sf_button{
 			position: relative;
 			display: inline-block;
+			margin-right: 10px;
 			margin-bottom: 5px;
 			vertical-align: top;
 
@@ -952,8 +975,6 @@ input.dp-applied {
 
 		/* Criteria tags */
 		.search_form_criteria{
-			margin-right: 30px;
-
 			/* Non editable criteria */
 			&.locked{
 				background-color: $gray-extra-light;
@@ -992,16 +1013,21 @@ input.dp-applied {
 				}
 			}
 
-			&:not(:last-of-type)::after{
-				/* TODO: Find an elegant way to do this, without hardcoding the content (could be a <style> in the markup) and margin. Note, only a few languages (hawaiian and stuff like this have more than 4 letters in for "and" word. */
-				content: "and";
-				position: absolute;
-				top: 8px;
-				left: calc(100% + 0px);
-				margin-right: 5px;
-				margin-left: 5px;
-				text-align: center;
-				color: $gray-light;
+			/* Add "and" on criterion but the one and submit button */
+			&:not(:last-of-type){
+				margin-right: 30px;
+
+				&::after{
+					/* TODO: Find an elegant way to do this, without hardcoding the content (could be a <style> in the markup) and margin. Note, only a few languages (hawaiian and stuff like this have more than 4 letters in for "and" word. */
+					content: "and";
+					position: absolute;
+					top: 8px;
+					left: calc(100% + 0px);
+					margin-right: 5px;
+					margin-left: 5px;
+					text-align: center;
+					color: $gray-light;
+				}
 			}
 
 			> *{
@@ -1039,7 +1065,7 @@ input.dp-applied {
 				text-overflow: ellipsis;
 				cursor: pointer;
 
-				.values {
+				.sfc_values {
 					font-weight: bold;
 				}
 
@@ -1093,7 +1119,7 @@ input.dp-applied {
 
 							}
 							.sfc_opc_mc_items_wrapper{
-								max-height: 445px; /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
+								max-height: 415px; /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
 								overflow-y: auto;
 								margin: 0px -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
 
@@ -1296,8 +1322,6 @@ input.dp-applied {
 
 		/* More criterion */
 		.sf_more_criterion{
-			margin-right: 10px;
-
 			&.opened{
 				z-index: 2; /* To be over criterion */
 
@@ -1357,6 +1381,16 @@ input.dp-applied {
 						}
 					}
 				}
+			}
+		}
+
+		/* Misc. buttons */
+		.sf_button{
+			cursor: pointer;
+
+			> *{
+				background-color: $search-button-box-bg-color;
+				color: $search-button-box-color;
 			}
 		}
 	}
@@ -2756,13 +2790,6 @@ h2.printable-tab-title {
 select.multiselect {
 	max-width: 150px;
 }
-//span.refresh-button {
-//	display: inline-block;
-//	width: 21px;
-//	height: 18px;
-//	cursor: pointer;
-//	background: transparent url(../images/refresh-fff.png?v=#{$version}) left center no-repeat;
-//}
 span.search-button, span.refresh-button {
 	display: inline-block;
 	width: 21px;

@@ -721,7 +721,7 @@ input.dp-applied {
   font-size: 12px;
   text-align: initial;
   /* To compensate .search_box:text-align */
-  border: 1px solid #3f7294;
+  border: 1px solid #1c94c4;
   /* Sizing reset */
   /* Hyperlink reset */
   /* Input reset */
@@ -739,6 +739,9 @@ input.dp-applied {
 }
 .search_form_handler:not(.closed) .sf_title .sft_short {
   display: none;
+}
+.search_form_handler:not(.closed) .sf_title .sft_hint, .search_form_handler:not(.closed) .sf_title .sft_toggler {
+  margin-top: 4px;
 }
 .search_form_handler:not(.closed) .sf_title .sft_toggler {
   transform: rotateX(180deg);
@@ -765,9 +768,11 @@ input.dp-applied {
 .search_form_handler.closed .sf_title .sft_long {
   display: none;
 }
-.search_form_handler.closed .sf_title .sft_refresh {
+.search_form_handler.closed .sf_title .sft_hint {
   display: none;
-  line-height: 10pt;
+}
+.search_form_handler:not(.no_auto_submit) .sft_hint {
+  display: none;
 }
 .search_form_handler:not(.no_auto_submit) .sfc_fg_apply {
   display: none;
@@ -780,27 +785,19 @@ input.dp-applied {
   padding: 8px 10px;
   margin: 0;
   color: #fff;
-  background-color: #3f7294;
+  background-color: #1c94c4;
   cursor: pointer;
-  /* Pictogram */
 }
-.search_form_handler .sf_title .sft_picto {
-  display: none;
-  /* TODO: Remove this class and the correspondig DOM element if this option is kept. */
-  margin-right: 10px;
-}
-.search_form_handler .sf_title .sft_refresh, .search_form_handler .sf_title .sft_toggler {
-  transition: color 0.2s ease-in-out, transform 0.4s ease-in-out;
-}
-.search_form_handler .sf_title .sft_refresh:hover, .search_form_handler .sf_title .sft_toggler:hover {
-  color: #f1f1f1;
-}
-.search_form_handler .sf_title .sft_refresh {
-  font-size: 10pt;
-  line-height: 13pt;
+.search_form_handler .sf_title .sft_hint {
+  font-size: 8pt;
+  font-style: italic;
 }
 .search_form_handler .sf_title .sft_toggler {
   margin-left: 0.7em;
+  transition: color 0.2s ease-in-out, transform 0.4s ease-in-out;
+}
+.search_form_handler .sf_title .sft_toggler:hover {
+  color: #f1f1f1;
 }
 .search_form_handler .sf_message {
   display: none;
@@ -815,31 +812,62 @@ input.dp-applied {
   /* Common style between criterion and more criterion */
   /* Criteria tags */
   /* More criterion */
+  /* Misc. buttons */
 }
-.search_form_handler .sf_criterion_area .search_form_criteria, .search_form_handler .sf_criterion_area .sf_more_criterion {
+.search_form_handler .sf_criterion_area .sf_criterion_row {
+  position: relative;
+}
+.search_form_handler .sf_criterion_area .sf_criterion_row:not(:first-child) {
+  margin-top: 20px;
+}
+.search_form_handler .sf_criterion_area .sf_criterion_row:not(:first-child)::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  left: 0px;
+  width: 100%;
+  border-top: 1px solid #ccc;
+}
+.search_form_handler .sf_criterion_area .sf_criterion_row:not(:first-child)::after {
+  content: "or";
+  /* TODO: Make this into a dict entry */
+  position: absolute;
+  top: -20px;
+  left: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #808080;
+  background-color: #fff;
+  /* Must match .sf_criterion_area:background-color */
+}
+.search_form_handler .sf_criterion_area .sf_criterion_row .sf_criterion_group {
+  display: inline;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria, .search_form_handler .sf_criterion_area .sf_more_criterion, .search_form_handler .sf_criterion_area .sf_button {
   position: relative;
   display: inline-block;
+  margin-right: 10px;
   margin-bottom: 5px;
   vertical-align: top;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria.opened, .search_form_handler .sf_criterion_area .sf_more_criterion.opened {
+.search_form_handler .sf_criterion_area .search_form_criteria.opened, .search_form_handler .sf_criterion_area .sf_more_criterion.opened, .search_form_handler .sf_criterion_area .sf_button.opened {
   margin-bottom: 0px;
   /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
 }
-.search_form_handler .sf_criterion_area .search_form_criteria.opened .sfc_header, .search_form_handler .sf_criterion_area .sf_more_criterion.opened .sfc_header, .search_form_handler .sf_criterion_area .search_form_criteria.opened .sfm_header, .search_form_handler .sf_criterion_area .sf_more_criterion.opened .sfm_header {
+.search_form_handler .sf_criterion_area .search_form_criteria.opened .sfc_header, .search_form_handler .sf_criterion_area .sf_more_criterion.opened .sfc_header, .search_form_handler .sf_criterion_area .sf_button.opened .sfc_header, .search_form_handler .sf_criterion_area .search_form_criteria.opened .sfm_header, .search_form_handler .sf_criterion_area .sf_more_criterion.opened .sfm_header, .search_form_handler .sf_criterion_area .sf_button.opened .sfm_header {
   border-bottom: none !important;
   box-shadow: none !important;
   padding-bottom: 13px;
   /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
 }
-.search_form_handler .sf_criterion_area .search_form_criteria > *, .search_form_handler .sf_criterion_area .sf_more_criterion > * {
+.search_form_handler .sf_criterion_area .search_form_criteria > *, .search_form_handler .sf_criterion_area .sf_more_criterion > *, .search_form_handler .sf_criterion_area .sf_button > * {
   padding: 7px 8px;
   vertical-align: top;
   border: 1px solid #ccc;
   border-radius: 1px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group, .search_form_handler .sf_criterion_area .sf_more_criterion .sfc_form_group, .search_form_handler .sf_criterion_area .search_form_criteria .sfm_content, .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group, .search_form_handler .sf_criterion_area .sf_more_criterion .sfc_form_group, .search_form_handler .sf_criterion_area .sf_button .sfc_form_group, .search_form_handler .sf_criterion_area .search_form_criteria .sfm_content, .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content, .search_form_handler .sf_criterion_area .sf_button .sfm_content {
   position: absolute;
   z-index: -1;
   min-width: 100%;
@@ -847,10 +875,10 @@ input.dp-applied {
   margin-top: -1px;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria {
-  margin-right: 30px;
   /* Non editable criteria */
   /* Draft criteria (modifications not applied) */
   /* Opened criteria (form group displayed) */
+  /* Add "and" on criterion but the one and submit button */
   /* Top left corner icons */
   /* Special criterion processing */
 }
@@ -880,6 +908,9 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria.opened_left .sfc_form_group {
   left: auto;
   right: 0px;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria:not(:last-of-type) {
+  margin-right: 30px;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria:not(:last-of-type)::after {
   /* TODO: Find an elegant way to do this, without hardcoding the content (could be a <style> in the markup) and margin. Note, only a few languages (hawaiian and stuff like this have more than 4 letters in for "and" word. */
@@ -922,7 +953,7 @@ input.dp-applied {
   text-overflow: ellipsis;
   cursor: pointer;
 }
-.search_form_handler .sf_criterion_area .search_form_criteria .sfc_title .values {
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_title .sfc_values {
   font-weight: bold;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group {
@@ -964,7 +995,7 @@ input.dp-applied {
   margin-right: 8px;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_opc_multichoices .sfc_opc_mc_items_wrapper {
-  max-height: 445px;
+  max-height: 415px;
   /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
   overflow-y: auto;
   margin: 0px -8px;
@@ -1102,9 +1133,6 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date_time button.ui-datepicker-trigger img, .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_date button.ui-datepicker-trigger img {
   vertical-align: middle;
 }
-.search_form_handler .sf_criterion_area .sf_more_criterion {
-  margin-right: 10px;
-}
 .search_form_handler .sf_criterion_area .sf_more_criterion.opened {
   z-index: 2;
   /* To be over criterion */
@@ -1152,6 +1180,13 @@ input.dp-applied {
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfm_buttons button:last-of-type {
   margin-right: 0px;
+}
+.search_form_handler .sf_criterion_area .sf_button {
+  cursor: pointer;
+}
+.search_form_handler .sf_criterion_area .sf_button > * {
+  background-color: #fff;
+  color: #ea7d1e;
 }
 .search_form_handler .sf_list:not(:first-of-type) .sfl_title {
   border-top: 1px solid #ddd;

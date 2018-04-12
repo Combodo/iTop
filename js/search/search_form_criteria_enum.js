@@ -441,8 +441,8 @@ $(function()
 
 				sTitle = Dict.Format(
 					'UI:Search:Criteria:Title:Enum:In:Many',
-					'<span class="values">'+this.options.field.label, aFirstValues.join(', ')+'</span>',
-					'<span class="values">'+(iValCount - iValLimit+1)+'</span>'
+					'<span class="sfc_values">'+this.options.field.label, aFirstValues.join(', ')+'</span>',
+					'<span class="sfc_values">'+(iValCount - iValLimit+1)+'</span>'
 				);
 			}
 

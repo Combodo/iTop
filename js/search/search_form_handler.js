@@ -12,7 +12,6 @@ $(function()
 			'criterion_outer_selector': null,
 			'result_list_outer_selector': null,
 			'data_config_list_selector': null,
-			'submit_button_selector': null,
 			'endpoint': null,
 			'init_opened': false,
 			'auto_submit': true,
@@ -95,6 +94,7 @@ $(function()
 				message_area: null,
 				criterion_area: null,
 				more_criterion: null,
+				submit_button: null,
 				results_area: null,
 			};
 			this.submit = {
@@ -108,12 +108,6 @@ $(function()
 			this._prepareFormArea();
 			this._prepareCriterionArea();
 			this._prepareResultsArea();
-
-			// Binding buttons
-			if(this.options.submit_button_selector !== null)
-			{
-				$(this.options.submit_button_selector).off('click').on('click', function(oEvent){ me._onSubmitClick(oEvent); });
-			}
 
 			// Binding events (eg. from search_form_criteria widgets)
 			this._bindEvents();
@@ -158,6 +152,13 @@ $(function()
 			this.element.on('itop.search.form.submit', function(oEvent, oData){
 				me._onSubmit();
 			});
+			// - Search form has been reloaded by the page
+			this.element.on('itop.search.form.reloaded', function(){
+				if(me.options.auto_submit === true)
+				{
+					me._submit();
+				}
+			});
 
 			// Criteria events
 			this.element.on('itop.search.criteria.value_changed', function(oEvent, oData){
@@ -170,7 +171,7 @@ $(function()
 				me._onCriteriaErrorOccured(oData);
 			});
 
-			$('body').on('update_history.itop', function(event, eventData) {
+			$('body').on('update_history.itop', function(oEvent, oData) {
 
 				if (! me.element.is(':visible'))
 				{
@@ -179,59 +180,37 @@ $(function()
 
 				if ($(':itop-search_form_handler:visible').length != 1)
 				{
-					me._trace('history not updated because several search widget are visible');
+					me._trace('History not updated because several search widget are visible');
 					return;
 				}
 
-				me._trace('history update', eventData);
+				me._trace('history update', oData);
 
-				var newUrl = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search';
-				newUrl = newUrl + '&filter='+eventData['filter'];
-				newUrl = newUrl + '&c[menu]='+me._extractURLParameter(window.location.href, "c[menu]");
+				var sNewUrl = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search';
+				sNewUrl = sNewUrl + '&filter='+oData['filter'];
+				sNewUrl = sNewUrl + '&c[menu]='+me._extractURLParameter(window.location.href, "c[menu]");
 				if ('' != me._extractURLParameter(window.location.href, "debug"))
 				{
-					newUrl = newUrl + '&debug='+me._extractURLParameter(window.location.href, "debug");
+					sNewUrl = sNewUrl + '&debug='+me._extractURLParameter(window.location.href, "debug");
 				}
 
-				history.replaceState(null, null, newUrl);
+				history.replaceState(null, null, sNewUrl);
 
 				$('#itop-breadcrumb')
 					.breadcrumb('destroy')
 					.breadcrumb({
-					itop_instance_id: eventData['breadcrumb_instance_id'],
-					max_count: eventData['breadcrumb_max_count'],
+					itop_instance_id: oData['breadcrumb_instance_id'],
+					max_count: oData['breadcrumb_max_count'],
 					new_entry: {
-						"id": eventData['breadcrumb_id'],
-						"label": eventData['breadcrumb_label'],
-						"url": newUrl,
-						'icon': eventData['breadcrumb_icon'],
+						"id": oData['breadcrumb_id'],
+						"label": oData['breadcrumb_label'],
+						"url": sNewUrl,
+						'icon': oData['breadcrumb_icon'],
 						'description': ''
 					}
 				});
 			});
 
-		},
-		_extractURLParameter: function(url, parameter) {
-			//prefer to use l.search if you have a location/link object
-			var urlparts= url.split('?');
-			if (urlparts.length>=2) {
-
-				var prefix = [
-					parameter+'=',
-					encodeURIComponent(parameter)+'='
-				];
-				var pars = urlparts[1].split(/[&;]/g);
-
-				for (var i = 0; i < pars.length; i++) {
-					for (var j = 0; j < prefix.length; j++) {
-						var pos = pars[i].lastIndexOf(prefix[j], 0);
-						if (pos !== -1) {
-							return pars[i].substring(pos + prefix[j].length);
-						}
-					}
-				}
-			}
-			return '';
 		},
 		// - Update search option of the widget
 		_updateSearch: function()
@@ -239,17 +218,20 @@ $(function()
 			var me = this;
 
 			// Criterion
-			// - Note: As of today, only a "or" level with a "and" is supported, so the following part
-			//         will need some refactoring when introducing new stuff.
 			var oCriterion = {
 				'or': [{
 					'and': []
 				}]
 			};
 			// - Retrieve criterion
-			this.elements.criterion_area.find('.search_form_criteria').each(function(){
-				var oCriteriaData = $(this).triggerHandler('itop.search.criteria.get_data');
-				oCriterion['or'][0]['and'].push(oCriteriaData);
+			this.elements.criterion_area.find('.sf_criterion_row').each(function(iIdx){
+				var oCriterionRowElem = $(this);
+
+				oCriterion['or'][iIdx] = {'and': []};
+				oCriterionRowElem.find('.search_form_criteria').each(function(){
+					var oCriteriaData = $(this).triggerHandler('itop.search.criteria.get_data');
+					oCriterion['or'][iIdx]['and'].push(oCriteriaData);
+				});
 			});
 			// - Update search
 			this.options.search.criterion = oCriterion;
@@ -296,7 +278,7 @@ $(function()
 		// - Close all criterion
 		_closeAllCriterion: function()
 		{
-			this.elements.criterion_area.find('.search_form_criteria').each(function(){
+			this.elements.criterion_area.find('.search_form_criteria.opened').each(function(){
 				$(this).triggerHandler('itop.search.criteria.close');
 			});
 		},
@@ -356,37 +338,25 @@ $(function()
 			oCriterionAreaElem.addClass('sf_criterion_area');
 			this.elements.criterion_area = oCriterionAreaElem;
 
-				// Clean area
+			// Clean area
 			oCriterionAreaElem
 				.html('')
-				.append('<div class="sf_more_criterion"></div>');
-			this.elements.more_criterion = oCriterionAreaElem.find('.sf_more_criterion');
+				.append('<div class="sf_criterion_row"></div>');
 
 			// Prepare content
-			this._prepareExistingCriterion();
 			this._prepareMoreCriterionMenu();
-		},
-		// - Prepare existing criterion
-		_prepareExistingCriterion: function()
-		{
-			// - OR conditions
-			var aORs = (this.options.search.criterion['or'] !== undefined) ? this.options.search.criterion['or'] : [];
-			for(var iORIdx in aORs)
-			{
-				// Note: We might want to create a OR container here when handling several OR conditions.
-
-				var aANDs = (aORs[iORIdx]['and'] !== undefined) ? aORs[iORIdx]['and'] : [];
-				for(var iANDIdx in aANDs)
-				{
-					var oCriteriaData = aANDs[iANDIdx];
-					this._addCriteria(oCriteriaData);
-				}
-			}
+			this._prepareExistingCriterion();
+			this._prepareSubmitButton();
 		},
 		// - Prepare "more" button
 		_prepareMoreCriterionMenu: function()
 		{
 			var me = this;
+
+			// DOM
+			this.elements.more_criterion = $('<div></div>')
+				.addClass('sf_more_criterion')
+				.appendTo(this.elements.criterion_area.find('.sf_criterion_row:first'));
 
 			// Header part
 			var oHeaderElem = $('<div class="sfm_header"></div>')
@@ -654,6 +624,71 @@ $(function()
 				oButtonsElem.hide();
 			});
 		},
+		// - Prepare "submit" button
+		_prepareSubmitButton: function()
+		{
+			var me = this;
+
+			// DOM
+			this.elements.submit_button = $('<div></div>')
+				.addClass('sf_button')
+				.addClass('sf_submit')
+				.appendTo(this.elements.criterion_area.find('.sf_criterion_row:first'));
+
+			var sButtonText = (this.options.auto_submit === true) ? Dict.S('UI:Button:Refresh') : Dict.S('UI:Button:Search');
+			var oButtonElem = $('<div class="sfb_header"></div>')
+				.append('<a class="fa fa-fw fa-search" title="' + sButtonText + '" href="#"></a>')
+				.appendTo(this.elements.submit_button);
+
+			// Bind events
+			// - Add one criteria
+			this.elements.submit_button.on('click', function(oEvent){
+				// Prevent anchor
+				oEvent.preventDefault();
+
+				me._onSubmitClick();
+			});
+		},
+		// - Prepare existing criterion
+		_prepareExistingCriterion: function()
+		{
+			// - OR conditions
+			var iORCount = 0;
+			var aORs = (this.options.search.criterion['or'] !== undefined) ? this.options.search.criterion['or'] : [];
+			for(var iORIdx in aORs)
+			{
+				if(this.elements.criterion_area.find('.sf_criterion_row:nth-of-type(' + (iORCount+1) + ')').length > 0)
+				{
+					var oCriterionRowElem = this.elements.criterion_area.find('.sf_criterion_row:nth-of-type(' + (iORCount+1) + ')');
+				}
+				else
+				{
+					var oCriterionRowElem = $('<div></div>')
+						.addClass('sf_criterion_row')
+						.appendTo(this.elements.criterion_area);
+				}
+
+				if(oCriterionRowElem.find('.sf_criterion_group').length > 0)
+				{
+					var oCriterionGroupElem = oCriterionRowElem.find('.sf_criterion_group');
+				}
+				else
+				{
+					var oCriterionGroupElem = $('<div></div>')
+						.addClass('sf_criterion_group')
+						.appendTo(oCriterionRowElem);
+				}
+
+				var aANDs = (aORs[iORIdx]['and'] !== undefined) ? aORs[iORIdx]['and'] : [];
+				for(var iANDIdx in aANDs)
+				{
+					var oCriteriaData = aANDs[iANDIdx];
+					this._addCriteria(oCriteriaData, oCriterionGroupElem);
+				}
+
+				iORCount++;
+			}
+		},
 		// - Prepare results area
 		_prepareResultsArea: function()
 		{
@@ -741,7 +776,7 @@ $(function()
 
 		// Criteria helpers
 		// - Add a criteria to the form
-		_addCriteria: function(oData)
+		_addCriteria: function(oData, oCriterionGroupElem)
 		{
 			var sRef = oData.ref;
 			var sType = sType = (oData.widget !== undefined) ? oData.widget : this._getCriteriaTypeFromFieldRef(sRef);
@@ -750,6 +785,12 @@ $(function()
 			if( (oData.is_removable !== undefined) && (oData.is_removable === false) )
 			{
 				sType = 'raw';
+			}
+
+			// Add to first OR condition if not specified
+			if(oCriterionGroupElem === undefined)
+			{
+				oCriterionGroupElem = this.elements.criterion_area.find('.sf_criterion_row:first .sf_criterion_group');
 			}
 
 			// Protection against bad initialization data
@@ -793,8 +834,7 @@ $(function()
 			// Create DOM element
 			var oCriteriaElem = $('<div></div>')
 				.addClass('sf_criteria')
-				//.insertBefore(this.elements.more_criterion);
-				.appendTo(this.elements.criterion_area);
+				.appendTo(oCriterionGroupElem);
 
 			// Instanciate widget
 			$.itop[sWidgetName](oData, oCriteriaElem);
@@ -1017,6 +1057,29 @@ $(function()
 			}
 
 			return aParts.join('');
+		},
+		// - Extract sParameter from sUrl
+		_extractURLParameter: function(sUrl, sParameter) {
+			//prefer to use l.search if you have a location/link object
+			var urlparts= sUrl.split('?');
+			if (urlparts.length>=2) {
+
+				var prefix = [
+					sParameter+'=',
+					encodeURIComponent(sParameter)+'='
+				];
+				var pars = urlparts[1].split(/[&;]/g);
+
+				for (var i = 0; i < pars.length; i++) {
+					for (var j = 0; j < prefix.length; j++) {
+						var pos = pars[i].lastIndexOf(prefix[j], 0);
+						if (pos !== -1) {
+							return pars[i].substring(pos + prefix[j].length);
+						}
+					}
+				}
+			}
+			return '';
 		},
 
 

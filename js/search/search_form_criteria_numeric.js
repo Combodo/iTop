@@ -235,7 +235,7 @@ $(function()
 						sDictEntry = 'UI:Search:Criteria:Title:Default:' + this._toCamelCase(me.options.operator) + sDictEntrySuffix;
 					}
 
-					sTitle = Dict.Format(sDictEntry, this.options.field.label, '<span class="values">'+this._getValuesAsText()+'</span>');
+					sTitle = Dict.Format(sDictEntry, this.options.field.label, '<span class="sfc_values">'+this._getValuesAsText()+'</span>');
 					return sTitle;
 				}
 
