@@ -151,6 +151,11 @@ class HTMLPurifierSanitizer extends HTMLSanitizer
 class HTMLDOMSanitizer extends HTMLSanitizer
 {
 	protected $oDoc;
+
+	/**
+	 * @var array
+	 * @see https://www.itophub.io/wiki/page?id=2_5_0%3Aadmin%3Arich_text_limitations
+	 */
 	protected static $aTagsWhiteList = array(
 		'html' => array(),
 		'body' => array(),
@@ -198,16 +203,34 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'q' => array(),
 		'hr' => array('style'),
 		'pre' => array(),
-		'center' => array(),
-		'caption' => array(),
 	);
-	
+
 	protected static $aAttrsWhiteList = array(
 		'src' => '/^(http:|https:|data:)/i',
 	);
-	
+
+	/**
+	 * @var array
+	 * @see https://www.itophub.io/wiki/page?id=2_5_0%3Aadmin%3Arich_text_limitations
+	 */
 	protected static $aStylesWhiteList = array(
-		'background-color', 'color', 'float', 'font', 'font-style', 'font-size', 'font-family', 'padding', 'margin', 'border', 'cellpadding', 'cellspacing', 'bordercolor', 'border-collapse', 'width', 'height', 'text-align',
+		'background-color',
+		'border',
+		'border-collapse',
+		'bordercolor',
+		'cellpadding',
+		'cellspacing',
+		'color',
+		'float',
+		'font',
+		'font-family',
+		'font-size',
+		'font-style',
+		'height',
+		'margin',
+		'padding',
+		'text-align',
+		'width',
 	);
 
 	public function __construct()
