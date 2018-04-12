@@ -20,6 +20,7 @@ $(function()
 				'label': '',
 				'allowed_values': null,
 				'is_null_allowed': false,
+				'has_index': false,
 			},
 			// Available operators. They can be extended or restricted by derivated widgets (see this._initOperators() for more informations)
 			'available_operators': {
@@ -61,8 +62,13 @@ $(function()
 			// Init properties (complexe type properties would be static if not initialized with a simple type variable...)
 			this.operators = {};
 
+
+            // Choose the default operator
+            this._initChooseDefaultOperator();
+
 			// Init operators
 			this._initOperators();
+
 
 			// Link search form handler
 			this.handler = this.element.closest('.search_form_handler');
@@ -95,7 +101,14 @@ $(function()
 			this._super( key, value );
 		},
 
-
+        _initChooseDefaultOperator: function() {
+            //if the class has an index, in order to maximize the performance, we force the default operator to "equal"
+            if (this.options.field.has_index && typeof this.options.available_operators['='] == 'object')
+            {
+                this.options.operator = '=';
+                this.options.available_operators['='].rank = -1;//we want it to be the first displayed
+            }
+        },
 		// Protected methods
 		// - Init operators by cleaning up available operators and ordering them.
 		//   Note: A null operator or an operator with a rank "false" will be removed.
@@ -103,6 +116,8 @@ $(function()
 		{
 			// Reset operators
 			this.operators = {};
+
+
 
 			// Cancel empty/not_empty operators if field can't be null
 			if(this.options.field.is_null_allowed === false)
