@@ -131,6 +131,15 @@ try
 	// note: transform to cope with XSS attacks
 	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
+} catch (MySQLException $e)
+{
+	http_response_code(500);
+	// Sanytize error:
+	$sMsg = $e->GetMessage();
+	$sMsg = preg_replace("@^.* mysql_error = @", '', $sMsg);
+	// note: transform to cope with XSS attacks
+	echo '<html><head></head><body><div>'.htmlentities($sMsg, ENT_QUOTES, 'utf-8').'</div></body></html>';
+	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 } catch (Exception $e)
 {
 	http_response_code(500);

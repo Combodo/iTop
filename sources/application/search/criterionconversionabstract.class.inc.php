@@ -35,6 +35,7 @@ abstract class CriterionConversionAbstract
 	const OP_IN = 'IN';
 	const OP_BETWEEN_DATES = 'between_dates';
 	const OP_BETWEEN = 'between';
+	const OP_REGEXP = 'REGEXP';
 	const OP_ALL = 'all';
 
 }

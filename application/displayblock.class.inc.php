@@ -272,7 +272,17 @@ class DisplayBlock
 
 		return $sHtml;
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param array $aExtraParams
+	 *
+	 * @throws \ApplicationException
+	 * @throws \CoreException
+	 * @throws \CoreWarning
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 */
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		if (!isset($aExtraParams['currentId']))

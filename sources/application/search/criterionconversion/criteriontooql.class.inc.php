@@ -68,6 +68,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 			self::OP_NOT_EMPTY => 'NotEmptyToOql',
 			self::OP_BETWEEN_DATES => 'BetweenDatesToOql',
 			self::OP_BETWEEN => 'BetweenToOql',
+			self::OP_REGEXP => 'RegexpToOql',
 			self::OP_IN => 'InToOql',
 			self::OP_ALL => 'AllToOql',
 		);
@@ -146,6 +147,16 @@ class CriterionToOQL extends CriterionConversionAbstract
 		if (empty($sValue)) return "1";
 
 		return "({$sRef} = '{$sValue}')";
+	}
+
+	protected static function RegexpToOql($sRef, $aCriteria)
+	{
+		$aValues = self::GetValues($aCriteria);
+		$sValue = self::GetValue($aValues, 0);
+
+		if (empty($sValue)) return "1";
+
+		return "({$sRef} REGEXP '{$sValue}')";
 	}
 
 	protected static function EmptyToOql($sRef, $aCriteria)

@@ -2290,7 +2290,7 @@ class AttributeString extends AttributeDBField
  */
 class AttributeClass extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
 
 	static public function ListExpectedParams()
 	{
@@ -2344,7 +2344,7 @@ class AttributeClass extends AttributeString
  */
 class AttributeApplicationLanguage extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	static public function ListExpectedParams()
 	{
@@ -2382,7 +2382,7 @@ class AttributeApplicationLanguage extends AttributeString
  */
 class AttributeFinalClass extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	public function __construct($sCode, $aParams)
 	{
@@ -3036,7 +3036,7 @@ class AttributeLongText extends AttributeText
  */
 class AttributeCaseLog extends AttributeLongText
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	public function GetNullValue()
 	{
@@ -3457,7 +3457,7 @@ class AttributeIPAddress extends AttributeString
  */
 class AttributeOQL extends AttributeText
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	public function GetEditClass() {return "OQLExpression";}
 }
@@ -3469,7 +3469,7 @@ class AttributeOQL extends AttributeText
  */
 class AttributeTemplateString extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 }
 
 /**
@@ -3479,7 +3479,7 @@ class AttributeTemplateString extends AttributeString
  */
 class AttributeTemplateText extends AttributeText
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 }
 
 /**
@@ -3489,7 +3489,7 @@ class AttributeTemplateText extends AttributeText
  */
 class AttributeTemplateHTML extends AttributeText
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
@@ -5003,10 +5003,13 @@ class AttributeExternalField extends AttributeDefinition
 
 		try
 		{
-			$oRemoteAtt = $this->GetExtAttDef();
-			if ($oRemoteAtt instanceof AttributeString)
+			$oRemoteAtt = $this->GetFinalAttDef();
+			switch (true)
 			{
-				return self::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD;
+				case ($oRemoteAtt instanceof AttributeString):
+					return self::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD;
+				case ($oRemoteAtt instanceof AttributeExternalKey):
+					return self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 			}
 		}
 		catch (CoreException $e)
@@ -7528,7 +7531,7 @@ class AttributeRedundancySettings extends AttributeDBField
  */
 class AttributeCustomFields extends AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	static public function ListExpectedParams()
 	{

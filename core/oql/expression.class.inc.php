@@ -1039,7 +1039,6 @@ class FieldExpression extends UnaryExpression
 			{
 				if ($sSearchType == AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY)
 				{
-					// TODO Check the type of external key ? (EXTKEY_ABSOLUTE or EXTKEY_RELATIVE)
 					if (MetaModel::IsHierarchicalClass($oAttDef->GetTargetClass()))
 					{
 						$sSearchType = AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;

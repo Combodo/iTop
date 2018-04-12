@@ -25,6 +25,7 @@ namespace Combodo\iTop\Application\Search;
 
 use ApplicationContext;
 use AttributeDefinition;
+use AttributeExternalField;
 use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use CoreException;
@@ -144,7 +145,7 @@ class SearchForm
 			}
 			else
 			{
-				// Serach for child classes
+				// Search for child classes
 				foreach($mSubmitParam as $sConfigClass => $bFlag)
 				{
 					$aChildClasses = MetaModel::EnumChildClasses($sConfigClass);
@@ -230,13 +231,6 @@ class SearchForm
 		$aMonthsShort = array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'),
 			Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short'));
 
-
-//		$sDateTimeFormat = \AttributeDateTime::GetFormat()->ToMomentJS('%s');
-//		$iDateTimeSeparatorPos = strpos($sDateTimeFormat, ' ');
-//		$sDateFormat = substr($sDateTimeFormat, 0, $iDateTimeSeparatorPos);
-//		$sTimeFormat = substr($sDateTimeFormat, $iDateTimeSeparatorPos + 1);
-
-
 		$sDateTimeFormat = \AttributeDateTime::GetFormat()->ToDatePicker();
 		$iDateTimeSeparatorPos = strpos($sDateTimeFormat, ' ');
 		$sDateFormat = substr($sDateTimeFormat, 0, $iDateTimeSeparatorPos);
@@ -264,7 +258,6 @@ class SearchForm
 					'dayNamesMin' => $aDaysMin,
 					'monthNamesShort' => $aMonthsShort,
 					'firstDay' => (int) Dict::S('Calendar-FirstDayOfWeek'),
-//					'format' => \AttributeDateTime::GetFormat()->ToDatePicker()
 					'dateFormat' => $sDateFormat,
 					'timeFormat' => $sTimeFormat,
 				),
@@ -334,6 +327,15 @@ class SearchForm
 	 */
 	protected function PopulateFieldList($sClass, $sAlias, &$aZList, &$aOthers)
 	{
+		$aDBIndexes = MetaModel::DBGetIndexes($sClass);
+		$aIndexes = array();
+		foreach($aDBIndexes as $aIndexGroup)
+		{
+			foreach($aIndexGroup as $sIndex)
+			{
+				$aIndexes[$sIndex] = true;
+			}
+		}
 		$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
 		$aList = MetaModel::GetZListItems($sClass, 'standard_search');
 		$bHasFriendlyname = false;
@@ -341,8 +343,13 @@ class SearchForm
 		{
 			if (array_key_exists($sAttCode, $aAttributeDefs))
 			{
+				$bHasIndex = false;
+				if (isset($aIndexes[$sAttCode]))
+				{
+					$bHasIndex = true;
+				}
 				$oAttDef = $aAttributeDefs[$sAttCode];
-				$aZList = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aZList);
+				$aZList = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aZList, $bHasIndex);
 				unset($aAttributeDefs[$sAttCode]);
 			}
 			if ($sAttCode == 'friendlyname')
@@ -499,16 +506,18 @@ class SearchForm
 		$aFields = array_merge($aNewFields, $aFields);
 		return $aFields;
 	}
+
 	/**
 	 * @param $sClass
 	 * @param $sClassAlias
 	 * @param $sAttCode
 	 * @param $oAttDef
 	 * @param $aFields
+	 * @param bool $bHasIndex
 	 *
 	 * @return mixed
 	 */
-	private function AppendField($sClass, $sClassAlias, $sAttCode, $oAttDef, $aFields)
+	private function AppendField($sClass, $sClassAlias, $sAttCode, $oAttDef, $aFields, $bHasIndex = false)
 	{
 		if (!is_null($oAttDef) && ($oAttDef->GetSearchType() != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
 		{
@@ -534,14 +543,23 @@ class SearchForm
 					$sLabel = $oAttDef->GetLabel();
 				}
 			}
-			
-			if (method_exists($oAttDef, 'GetTargetClass'))
+
+			if ($oAttDef instanceof AttributeExternalField)
 			{
-				$sTargetClass = $oAttDef->GetTargetClass();
+				$oTargetAttDef = $oAttDef->GetFinalAttDef();
 			}
 			else
 			{
-				$sTargetClass = $oAttDef->GetHostClass();
+				$oTargetAttDef = $oAttDef;
+			}
+
+			if (method_exists($oTargetAttDef, 'GetTargetClass'))
+			{
+				$sTargetClass = $oTargetAttDef->GetTargetClass();
+			}
+			else
+			{
+				$sTargetClass = $oTargetAttDef->GetHostClass();
 			}
 
 			$aField = array();
@@ -553,6 +571,7 @@ class SearchForm
 			$aField['widget'] = $oAttDef->GetSearchType();
 			$aField['allowed_values'] = self::GetFieldAllowedValues($oAttDef);
 			$aField['is_null_allowed'] = $oAttDef->IsNullAllowed();
+			$aField['has_index'] = $bHasIndex;
 			$aFields[$sClassAlias.'.'.$sAttCode] = $aField;
 
 			// Sub items
