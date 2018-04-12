@@ -1,0 +1,36 @@
+{% if aNames|length > 0 %}
+<div id="pie-{{ oBrick.GetId }}"></div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#pie-{{ oBrick.GetId }}').on('click', function(oEvent){
+            oEvent.preventDefault();
+            oEvent.stopPropagation();
+        });
+        window.setTimeout(function () {
+            var chart = c3.generate({
+                bindto: d3.select('#pie-{{ oBrick.GetId }}'),
+                data: {
+                    columns: {{ aColumns | json_encode | raw }},
+                    type: 'pie',
+                    names: {{ aNames | json_encode() | raw }},
+                    onclick: function (d, element) {
+                        var aURLs = {{ aUrls | json_encode() | raw }};
+                        window.location.href= aURLs[d.index];
+                    },
+                },
+                legend: {
+                    show: true,
+                    position: 'right',
+                },
+                tooltip: {
+                    format: {
+                        value: function (value, ratio, id) { return value; }
+                    }
+                }
+            });
+        }, 100);
+    });
+</script>
+{% else %}
+    <h3 class="text-center">{{ 'Brick:Portal:Manage:Table:NoData'|dict_s }}</h3>
+{% endif %}

@@ -103,6 +103,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Manage:Name' => 'Manage items',
 	'Brick:Portal:Manage:Table:NoData' => 'No item.',
     'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
+	'Brick:Portal:Manage:DisplayType:pie-chart' => 'Pie Chart',
+	'Brick:Portal:Manage:DisplayType:bar-chart' => 'Bar Chart',
+	'Brick:Portal:Manage:DisplayType:default' => 'List',
+	'Brick:Portal:Manage:Others' => 'Others',
+	'Brick:Portal:Manage:All' => 'All',
+	'Brick:Portal:Manage:Group' => 'Group',
+	'Brick:Portal:Manage:fct:count' => 'Total',
+	'Brick:Portal:Manage:fct:sum' => 'Sum',
+	'Brick:Portal:Manage:fct:avg' => 'Average',
+	'Brick:Portal:Manage:fct:min' => 'Min',
+	'Brick:Portal:Manage:fct:max' => 'Max',
 ));
 
 // ObjectBrick brick

@@ -355,10 +355,65 @@ footer{
 	font-weight: bold;
 	color: #333;
 }
+
+.home .tile .tile_title > span.icon {
+	color: $combodo-orange;
+}
+
 .home .tile .tile_description{
 	display: none;
 	color: #555555;
 }
+
+.home div.tile-badge > a.tile {
+	display: table;
+	width: 100%;
+}
+
+.home div.tile-badge > a.tile > div {
+	display: table-row;
+}
+
+.home div.tile-badge > a.tile > div > div {
+	display: table-cell;
+}
+
+.home div.tile-badge > a.tile > div > div.tile_decoration {
+	text-align: center;
+	vertical-align: top;
+	position: inherit;
+	float: inherit;
+}
+
+.home div.tile-badge > a.tile > div > div.tile_body {
+	text-align: right;
+	padding-left: 0;
+}
+
+.home div.tile-badge > a.tile > div > div.tile_body > div:first-child {
+	text-align: center;
+	margin: 0 auto;
+	margin-left: 10%;
+}
+
+.home div.tile-badge > a.tile > div > div.tile_body > div:first-child > div {
+	text-align: center;
+}
+
+.home div.tile-badge > a.tile > div > div.tile_body > div:first-child > div.tile_description {
+	margin-bottom: 1.5em;
+}
+
+.home div.tile-badge > a.tile > div > div.tile_body > div:first-child > div.tile_title {
+	font-size: 1.5em;
+	font-weight: bold;
+}
+
+.home div.tile-badge > a.tile > div > div.tile_body > div.tile_description {
+	text-align: right;
+}
+
+
 @media (min-width: 768px) {
 	.home .tile{
 		display: block;

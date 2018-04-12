@@ -1,0 +1,57 @@
+{# itop-portal-base/popup-export-excel.html.twig #}
+{# Export Excel popup layout #}
+
+<div class="modal-header clearfix">
+    <h4 class="modal-title" style="float: left;">{{ 'ExcelExporter:ExportDialogTitle'|dict_s }}</h4>
+</div>
+<div class="modal-body">
+    <div id="export-text-result" style="display:none;">
+        <p>{{ 'Core:BulkExport:ExportResult'|dict_s }}</p>
+        <p id="export-error" class="alert alert-danger" role="alert"></p>
+    </div>
+
+    <div id="export-feedback">
+        <p class="export-message" style="text-align:center;">{{ 'ExcelExport:PreparingExport'|dict_s }}</p>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 0%"
+                 aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <span class="progress-message">0%</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button id="export-close" type="button" class="btn btn-primary" data-dismiss="modal" style="display:none;">{{ 'Portal:Button:Close'|dict_s }}</button>
+    <button id="export-cancel" type="button" class="btn btn-secondary export-cancel">{{ 'Portal:Button:Cancel'|dict_s }}</button>
+</div>
+
+<script type="text/javascript">
+    var sDataState = 'not-yet-started';
+    var sOQL = "{{ sOQL|raw }}";
+    var sFormat = 'xlsx';
+    var sFields = "{{ sFields }}";
+
+    $(document).ready(function () {
+        window.setTimeout(function () {
+            $('.progress').progressbar({
+                value: 0,
+                change: function () {
+                    $('.progress-message').text($(this).progressbar("value") + "%");
+                    $('.progress-bar').attr('aria-valuenow', $(this).progressbar("value"));
+                    $('.progress-bar').width($(this).progressbar("value") + "%");
+                },
+                complete: function () {
+                    $('.progress-message').text('100 %');
+                    $('.progress-bar').attr('aria-valuenow', '100');
+                    $('.progress-bar').width('100%');
+                }
+            });
+
+            $('.export-cancel').on('click', function () {
+                sDataState = 'cancelled';
+            });
+
+            ExportStartExport();
+        }, 100);
+    });
+</script>

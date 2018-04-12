@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,53 +16,97 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+//
 
 namespace Combodo\iTop\Portal\Brick;
 
-use DOMFormatException;
-use DBSearch;
-use MetaModel;
 use Combodo\iTop\DesignElement;
-use Combodo\iTop\Portal\Brick\PortalBrick;
+use DBSearch;
+use DOMFormatException;
+use MetaModel;
 
-/**
- * Description of ManageBrick
- * 
- * @author Guillaume Lajarige
- */
+define('MANAGE_BRICK_LAYOUT_PATH', 'itop-portal-base/portal/src/views/bricks/manage/');
+
 class ManageBrick extends PortalBrick
 {
-    const ENUM_ACTION_VIEW = 'view';
-    const ENUM_ACTION_EDIT = 'edit';
+	const ENUM_ACTION_VIEW = 'view';
+	const ENUM_ACTION_EDIT = 'edit';
 
 	const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-pencil-square';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-pencil-square fa-2x';
-	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/layout.html.twig';
+	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig';
+	const CHART_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/layout-chart.html.twig';
 	const DEFAULT_OQL = '';
 	const DEFAULT_OPENING_MODE = self::ENUM_ACTION_EDIT;
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_LAZY;
 	const DEFAULT_LIST_LENGTH = 20;
 	const DEFAULT_ZLIST_FIELDS = 'list';
-    const DEFAULT_SHOW_TAB_COUNTS = false;
+	const DEFAULT_SHOW_TAB_COUNTS = false;
+
+	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/tile-default.html.twig';
+	const DEFAULT_TILE_CONTROLLER_ACTION = 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::TileAction';
 
 	static $sRouteName = 'p_manage_brick';
 	protected $sOql;
 	protected $sOpeningMode;
 	protected $aGrouping;
 	protected $aFields;
+	protected $aExportFields;
 	protected $bShowTabCounts;
+	protected $sDisplayType;
+	protected $iGroupLimit;
+	protected $bGroupShowOthers;
+
+	protected $aPresentationData = array(
+		'badge' => array(
+			'decorationCssClass' => 'fa fa-id-card-o fa-2x',
+			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-badge.html.twig',
+			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig',
+			'layoutDisplayType' => 'default',
+			'need_details' => true,
+		),
+		'top-list' => array(
+			'decorationCssClass' => 'fa fa-signal fa-rotate-270 fa-2x',
+			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-top-list.html.twig',
+			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig',
+			'layoutDisplayType' => 'default',
+			'need_details' => true,
+		),
+		'pie-chart' => array(
+			'decorationCssClass' => 'fa fa-pie-chart fa-2x',
+			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
+			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-chart.html.twig',
+			'layoutDisplayType' => 'pie-chart',
+			'need_details' => false,
+		),
+		'bar-chart' => array(
+			'decorationCssClass' => 'fa fa-bar-chart fa-2x',
+			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
+			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-chart.html.twig',
+			'layoutDisplayType' => 'bar-chart',
+			'need_details' => false,
+		),
+		'default' => array(
+			'decorationCssClass' => 'fa fa-pencil-square fa-2x',
+			'tileTemplate' => self::DEFAULT_TILE_TEMPLATE_PATH,
+			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig',
+			'layoutDisplayType' => 'default',
+			'need_details' => true,
+		),
+	);
 
 	public function __construct()
 	{
 		parent::__construct();
 
 		$this->sOql = static::DEFAULT_OQL;
-        $this->sOpeningMode = static::DEFAULT_OPENING_MODE;
+		$this->sOpeningMode = static::DEFAULT_OPENING_MODE;
 		$this->aGrouping = array();
 		$this->aFields = array();
+		$this->aExportFields = array();
 		$this->bShowTabCounts = static::DEFAULT_SHOW_TAB_COUNTS;
 
-		// This is hardcoded for now, we might allow area grouping on another attribute in the futur
+		// This is hardcoded for now, we might allow area grouping on another attribute in the future
 		$this->AddGrouping('areas', array('attribute' => 'finalclass'));
 	}
 
@@ -76,15 +120,15 @@ class ManageBrick extends PortalBrick
 		return $this->sOql;
 	}
 
-    /**
-     * Returns the brick's objects opening mode (edit or view)
-     *
-     * @return string
-     */
-    public function GetOpeningMode()
-    {
-        return $this->sOpeningMode;
-    }
+	/**
+	 * Returns the brick's objects opening mode (edit or view)
+	 *
+	 * @return string
+	 */
+	public function GetOpeningMode()
+	{
+		return $this->sOpeningMode;
+	}
 
 	/**
 	 * Returns the brick grouping
@@ -106,39 +150,114 @@ class ManageBrick extends PortalBrick
 		return $this->aFields;
 	}
 
-    /**
-     * Returns if the brick should display objects count on tabs
-     *
-     * @return bool
-     */
+	/**
+	 * Returns the brick fields to export
+	 *
+	 * @return array
+	 */
+	public function GetExportFields()
+	{
+		return $this->aExportFields;
+	}
+
+	/**
+	 * Returns if the brick should display objects count on tabs
+	 *
+	 * @return bool
+	 */
 	public function GetShowTabCounts()
-    {
-        return $this->bShowTabCounts;
-    }
+	{
+		return $this->bShowTabCounts;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetDisplayType()
+	{
+		return $this->sDisplayType;
+	}
+
+	/**
+	 * @param string $sDisplayType
+	 */
+	public function SetDisplayType($sDisplayType)
+	{
+		$this->sDisplayType = $sDisplayType;
+	}
+
+	/**
+	 * @param string $sDisplayType
+	 *
+	 * @return string[] parameters for specified type, default parameters if type is invalid
+	 */
+	public function GetPresentationDataForDisplayType($sDisplayType)
+	{
+		if (isset($this->aPresentationData[$sDisplayType]))
+		{
+			return $this->aPresentationData[$sDisplayType];
+		}
+
+		return $this->aPresentationData['default'];
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function GetGroupLimit()
+	{
+		return $this->iGroupLimit;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function ShowGroupOthers()
+	{
+		return $this->bGroupShowOthers;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function ListLayoutDisplayTypes()
+	{
+		$aLayoutDisplayTypes = array();
+		foreach ($this->aPresentationData as $aPresentationDatum)
+		{
+			$aLayoutDisplayTypes[$aPresentationDatum['layoutDisplayType']] = true;
+		}
+
+		return array_keys($aLayoutDisplayTypes);
+	}
 
 	/**
 	 * Sets the oql of the brick
 	 *
 	 * @param string $sOql
-	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
+	 *
+	 * @return ManageBrick
 	 */
 	public function SetOql($sOql)
 	{
 		$this->sOql = $sOql;
+
 		return $this;
 	}
 
-    /**
-     * Sets the brick's objects opening mode
-     *
-     * @param string $sOpeningMode
-     * @return \Combodo\iTop\Portal\Brick\ManageBrick
-     */
-    public function SetOpeningMode($sOpeningMode)
-    {
-        $this->sOpeningMode = $sOpeningMode;
-        return $this;
-    }
+	/**
+	 * Sets the brick's objects opening mode
+	 *
+	 * @param string $sOpeningMode
+	 *
+	 * @return ManageBrick
+	 */
+	public function SetOpeningMode($sOpeningMode)
+	{
+		$this->sOpeningMode = $sOpeningMode;
+
+		return $this;
+	}
 
 	/**
 	 * Sets the grouping of the brick
@@ -148,6 +267,7 @@ class ManageBrick extends PortalBrick
 	public function SetGrouping($aGrouping)
 	{
 		$this->aGrouping = $aGrouping;
+
 		return $this;
 	}
 
@@ -159,20 +279,23 @@ class ManageBrick extends PortalBrick
 	public function SetFields($aFields)
 	{
 		$this->aFields = $aFields;
+
 		return $this;
 	}
 
-    /**
-     * Sets if the brick should display objects count on tab
-     *
-     * @param bool $bShowTabCounts
-     * @return \Combodo\iTop\Portal\Brick\ManageBrick
-     */
-    public function SetShowTabCounts($bShowTabCounts)
-    {
-        $this->bShowTabCounts = $bShowTabCounts;
-        return $this;
-    }
+	/**
+	 * Sets if the brick should display objects count on tab
+	 *
+	 * @param bool $bShowTabCounts
+	 *
+	 * @return ManageBrick
+	 */
+	public function SetShowTabCounts($bShowTabCounts)
+	{
+		$this->bShowTabCounts = $bShowTabCounts;
+
+		return $this;
+	}
 
 	/**
 	 * Adds a grouping.
@@ -181,7 +304,8 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @param string $sName (Must be "tabs" or -Not implemented yet, implicit grouping on y axis-)
 	 * @param array $aGrouping
-	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
+	 *
+	 * @return ManageBrick
 	 */
 	public function AddGrouping($sName, $aGrouping)
 	{
@@ -190,8 +314,7 @@ class ManageBrick extends PortalBrick
 		// Sorting
 		if (!$this->IsGroupingByDistinctValues($sName))
 		{
-			usort($this->aGrouping[$sName]['groups'], function($a, $b)
-			{
+			usort($this->aGrouping[$sName]['groups'], function ($a, $b) {
 				return $a['rank'] > $b['rank'];
 			});
 		}
@@ -203,7 +326,8 @@ class ManageBrick extends PortalBrick
 	 * Removes a grouping by its name
 	 *
 	 * @param string $sName
-	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
+	 *
+	 * @return ManageBrick
 	 */
 	public function RemoveGrouping($sName)
 	{
@@ -211,6 +335,7 @@ class ManageBrick extends PortalBrick
 		{
 			unset($this->aGrouping[$sName]);
 		}
+
 		return $this;
 	}
 
@@ -218,7 +343,8 @@ class ManageBrick extends PortalBrick
 	 * Adds a field to display from its attribute_code.
 	 *
 	 * @param string $sAttCode
-	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
+	 *
+	 * @return ManageBrick
 	 */
 	public function AddField($sAttCode)
 	{
@@ -234,7 +360,8 @@ class ManageBrick extends PortalBrick
 	 * Removes a field
 	 *
 	 * @param string $sAttCode
-	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
+	 *
+	 * @return ManageBrick
 	 */
 	public function RemoveField($sAttCode)
 	{
@@ -242,8 +369,30 @@ class ManageBrick extends PortalBrick
 		{
 			unset($this->aFields[$sAttCode]);
 		}
+
 		return $this;
 	}
+
+	public function AddExportField($sAttCode)
+	{
+		if (!in_array($sAttCode, $this->aExportFields))
+		{
+			$this->aExportFields[] = $sAttCode;
+		}
+
+		return $this;
+	}
+
+	public function RemoveExportField($sAttCode)
+	{
+		if (isset($this->aExportFields[$sAttCode]))
+		{
+			unset($this->aExportFields[$sAttCode]);
+		}
+
+		return $this;
+	}
+
 
 	/**
 	 * Returns if the brick has grouping tabs or not.
@@ -290,6 +439,7 @@ class ManageBrick extends PortalBrick
 	 * This is supposed to be called by the IsGroupingTabsByDistinctValues / IsGroupingAreasByDistinctValues function.
 	 *
 	 * @param string $sGroupingName
+	 *
 	 * @return boolean
 	 */
 	public function IsGroupingByDistinctValues($sGroupingName)
@@ -299,7 +449,8 @@ class ManageBrick extends PortalBrick
 
 	/**
 	 * Returns true is the groupings tabs properties exists and is of the form attribute => attribute_code.
-	 * This is mostly used to know if the tabs are grouped by attribute distinct values or by meta-groups (eg : status in ('accepted', 'opened')).
+	 * This is mostly used to know if the tabs are grouped by attribute distinct values or by meta-groups (eg : status
+	 * in ('accepted', 'opened')).
 	 *
 	 * @return boolean
 	 */
@@ -310,7 +461,8 @@ class ManageBrick extends PortalBrick
 
 	/**
 	 * Returns true is the groupings areas properties exists and is of the form attribute => attribute_code.
-	 * This is mostly used to know if the areas are grouped by attribute distinct values or by meta-groups (eg : finalclass in ('Server', 'Router')).
+	 * This is mostly used to know if the areas are grouped by attribute distinct values or by meta-groups (eg :
+	 * finalclass in ('Server', 'Router')).
 	 *
 	 * @return boolean
 	 */
@@ -324,11 +476,18 @@ class ManageBrick extends PortalBrick
 	 * This is used to set all the brick attributes at once.
 	 *
 	 * @param \Combodo\iTop\DesignElement $oMDElement
+	 *
 	 * @return ManageBrick
+	 * @throws DOMFormatException
+	 * @throws \OQLException
 	 */
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
 		parent::LoadFromXml($oMDElement);
+		$this->sDisplayType = 'default';
+		$this->iGroupLimit = 0;
+		$this->bGroupShowOthers = true;
+		$bUseListFieldsForExport = false;
 
 		// Checking specific elements
 		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
@@ -339,40 +498,77 @@ class ManageBrick extends PortalBrick
 					$sClass = $oBrickSubNode->GetText();
 					if ($sClass === '')
 					{
-						throw new DOMFormatException('ManageBrick : class tag is empty. Must contain Classname', null, null, $oBrickSubNode);
+						throw new DOMFormatException('ManageBrick : class tag is empty. Must contain Classname', null,
+							null, $oBrickSubNode);
 					}
 
-					$this->SetOql('SELECT ' . $sClass);
+					$this->SetOql('SELECT '.$sClass);
 					break;
 
 				case 'oql':
 					$sOql = $oBrickSubNode->GetText();
 					if ($sOql === '')
 					{
-						throw new DOMFormatException('ManageBrick : oql tag is empty. Must contain OQL statement', null, null, $oBrickSubNode);
+						throw new DOMFormatException('ManageBrick : oql tag is empty. Must contain OQL statement', null,
+							null, $oBrickSubNode);
 					}
 
 					$this->SetOql($sOql);
 					break;
 
-                case 'opening_mode':
-                    $sOpeningMode = $oBrickSubNode->GetText(static::DEFAULT_OPENING_MODE);
-                    if (!in_array($sOpeningMode, array(static::ENUM_ACTION_VIEW, static::ENUM_ACTION_EDIT)))
-                    {
-                        throw new DOMFormatException('ManageBrick : opening_mode tag value must be edit|view ("' . $sOpeningMode . '" given)', null, null, $oBrickSubNode);
-                    }
+				case 'opening_mode':
+					$sOpeningMode = $oBrickSubNode->GetText(static::DEFAULT_OPENING_MODE);
+					if (!in_array($sOpeningMode, array(static::ENUM_ACTION_VIEW, static::ENUM_ACTION_EDIT)))
+					{
+						throw new DOMFormatException('ManageBrick : opening_mode tag value must be edit|view ("'.$sOpeningMode.'" given)',
+							null, null, $oBrickSubNode);
+					}
 
-                    $this->SetOpeningMode($sOpeningMode);
-                    break;
+					$this->SetOpeningMode($sOpeningMode);
+					break;
+
+				case 'display_type':
+					$this->sDisplayType = $oBrickSubNode->GetText();
+					$aDisplayParameterForType = $this->GetPresentationDataForDisplayType($this->sDisplayType);
+					$this->SetTileTemplatePath($aDisplayParameterForType['tileTemplate']);
+					$this->SetPageTemplatePath($aDisplayParameterForType['layoutTemplate']);
+					break;
 
 				case 'fields':
 					foreach ($oBrickSubNode->GetNodes('./field') as $oFieldNode)
 					{
 						if (!$oFieldNode->hasAttribute('id'))
 						{
-							throw new DOMFormatException('ManageBrick : Field must have a unique ID attribute', null, null, $oFieldNode);
+							throw new DOMFormatException('ManageBrick : Field must have a unique ID attribute', null,
+								null, $oFieldNode);
 						}
 						$this->AddField($oFieldNode->getAttribute('id'));
+					}
+					break;
+
+				case 'export':
+					foreach ($oBrickSubNode->GetNodes('./*') as $oExportNode)
+					{
+						switch ($oExportNode->nodeName)
+						{
+							case 'fields':
+								foreach ($oExportNode->GetNodes('./field') as $oFieldNode)
+								{
+									if (!$oFieldNode->hasAttribute('id'))
+									{
+										throw new DOMFormatException('ManageBrick : Field must have a unique ID attribute',
+											null,
+											null, $oFieldNode);
+									}
+									$this->AddExportField($oFieldNode->getAttribute('id'));
+								}
+								break;
+
+							case 'export_default_fields':
+								$bUseListFieldsForExport = (strtolower($oExportNode->GetText()) === 'true' ? true : false);
+								break;
+						}
+
 					}
 					break;
 
@@ -382,10 +578,10 @@ class ManageBrick extends PortalBrick
 					{
 						switch ($oGroupingNode->nodeName)
 						{
-						    case 'show_tab_counts';
-						        $bShowTabCounts = ( $oGroupingNode->GetText(static::DEFAULT_SHOW_TAB_COUNTS) === 'true' ) ? true : false;
-						        $this->SetShowTabCounts($bShowTabCounts);
-						        break;
+							case 'show_tab_counts';
+								$bShowTabCounts = ($oGroupingNode->GetText(static::DEFAULT_SHOW_TAB_COUNTS) === 'true') ? true : false;
+								$this->SetShowTabCounts($bShowTabCounts);
+								break;
 							case 'attribute':
 								$sAttribute = $oGroupingNode->GetText();
 								if ($sAttribute !== '')
@@ -393,13 +589,24 @@ class ManageBrick extends PortalBrick
 									$this->AddGrouping('tabs', array('attribute' => $sAttribute));
 								}
 								break;
+							case 'limit':
+								$iLimit = $oGroupingNode->GetText();
+								if (is_numeric($iLimit))
+								{
+									$this->iGroupLimit = $iLimit;
+								}
+								break;
+							case 'show_others':
+								$this->bGroupShowOthers = ($oGroupingNode->GetText() === 'true') ? true : false;
+								break;
 							case 'groups':
 								$aGroups = array();
 								foreach ($oGroupingNode->GetNodes('./group') as $oGroupNode)
 								{
 									if (!$oGroupNode->hasAttribute('id'))
 									{
-										throw new DOMFormatException('ManageBrick : Group must have a unique ID attribute', null, null, $oGroupNode);
+										throw new DOMFormatException('ManageBrick : Group must have a unique ID attribute',
+											null, null, $oGroupNode);
 									}
 									$sGroupId = $oGroupNode->getAttribute('id');
 
@@ -410,7 +617,7 @@ class ManageBrick extends PortalBrick
 										switch ($oGroupProperty->nodeName)
 										{
 											case 'rank':
-												$aGroup[$oGroupProperty->nodeName] = (int) $oGroupProperty->GetText(0);
+												$aGroup[$oGroupProperty->nodeName] = (int)$oGroupProperty->GetText(0);
 												break;
 											case 'title':
 											case 'condition':
@@ -422,11 +629,13 @@ class ManageBrick extends PortalBrick
 									// Checking constitancy
 									if (!isset($aGroup['title']) || $aGroup['title'] === '')
 									{
-										throw new DOMFormatException('ManageBrick : Group must have a title tag and it must not be empty', null, null, $oGroupNode);
+										throw new DOMFormatException('ManageBrick : Group must have a title tag and it must not be empty',
+											null, null, $oGroupNode);
 									}
 									if (!isset($aGroup['condition']) || $aGroup['condition'] === '')
 									{
-										throw new DOMFormatException('ManageBrick : Group must have a condition tag and it must not be empty', null, null, $oGroupNode);
+										throw new DOMFormatException('ManageBrick : Group must have a condition tag and it must not be empty',
+											null, null, $oGroupNode);
 									}
 									$aGroups[] = $aGroup;
 								}
@@ -448,11 +657,42 @@ class ManageBrick extends PortalBrick
 		if (empty($this->aFields))
 		{
 			$sClass = DBSearch::FromOQL($this->GetOql());
-			$aFields = MetaModel::FlattenZList(MetaModel::GetZListItems($sClass->GetClass(), static::DEFAULT_ZLIST_FIELDS));
+			$aFields = MetaModel::FlattenZList(MetaModel::GetZListItems($sClass->GetClass(),
+				static::DEFAULT_ZLIST_FIELDS));
 			$this->SetFields($aFields);
+		}
+
+		// Default Export Fields
+		if ($bUseListFieldsForExport)
+		{
+			foreach ($this->GetFields() as $sAttCode)
+			{
+				$this->AddExportField($sAttCode);
+			}
+		}
+
+		// Checking the navigation icon
+		$sDecorationClassNavigationMenu = $this->GetDecorationClassNavigationMenu();
+		if (empty($sDecorationClassNavigationMenu) && isset($this->aPresentationData[$this->sDisplayType]))
+		{
+			$sDecorationClassNavigationMenu = $this->aPresentationData[$this->sDisplayType]['decorationCssClass'];
+			if (!empty($sDecorationClassNavigationMenu))
+			{
+				$this->SetDecorationClassNavigationMenu($sDecorationClassNavigationMenu);
+			}
+		}
+
+		$sTitle = $this->GetTitleHome();
+		if (empty($sTitle))
+		{
+			$sOql = $this->GetOql();
+			$oSeach = DBSearch::FromOQL($sOql);
+			$sClassName = MetaModel::GetName($oSeach->GetClass());
+			$this->SetTitleHome($sClassName);
+			$this->SetTitleNavigationMenu($sClassName);
+			$this->SetTitle($sClassName);
 		}
 
 		return $this;
 	}
-
 }
