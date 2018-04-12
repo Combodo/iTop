@@ -1866,7 +1866,11 @@ class MenuBlock extends DisplayBlock
 			}
 
 
-
+            if (empty($sRefreshAction) && $this->m_sStyle == 'list')
+            {
+                //for the detail page this var is defined way beyond this line
+                $sRefreshAction = "window.location.reload();";
+            }
 			if (!$oPage->IsPrintableVersion() && ($sRefreshAction!=''))
 			{
 				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8')."\"><span class=\"refresh-button fa fa-refresh\" onclick=\"$sRefreshAction\"></span></div>";
