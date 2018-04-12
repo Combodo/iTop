@@ -156,6 +156,8 @@ class CriterionToOQL extends CriterionConversionAbstract
 			{
 				case AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC:
 				case AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD:
+				case AttributeDefinition::SEARCH_WIDGET_TYPE_DATE:
+				case AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME:
 					return "ISNULL({$sRef})";
 			}
 		}
@@ -165,6 +167,18 @@ class CriterionToOQL extends CriterionConversionAbstract
 
 	protected static function NotEmptyToOql($sRef, $aCriteria)
 	{
+		if (isset($aCriteria['widget']))
+		{
+			switch ($aCriteria['widget'])
+			{
+				case AttributeDefinition::SEARCH_WIDGET_TYPE_NUMERIC:
+				case AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_FIELD:
+				case AttributeDefinition::SEARCH_WIDGET_TYPE_DATE:
+				case AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME:
+					return "ISNULL({$sRef}) = 0";
+			}
+		}
+
 		return "({$sRef} != '')";
 	}
 

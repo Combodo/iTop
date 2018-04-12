@@ -22,6 +22,7 @@
 /**
  * Convert structures from OQL expressions into structure for the search form
  */
+
 namespace Combodo\iTop\Application\Search\CriterionConversion;
 
 
@@ -123,13 +124,17 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		}
 
 		// Regroup criterion by variable name (no ref first)
-		usort($aAndCriterion, function ($a, $b) {
+		usort($aAndCriterion, function ($a, $b)
+		{
 			if (array_key_exists('ref', $a) || array_key_exists('ref', $b))
 			{
 				if (array_key_exists('ref', $a) && array_key_exists('ref', $b))
 				{
 					$iRefCmp = strcmp($a['ref'], $b['ref']);
-					if ($iRefCmp != 0) return $iRefCmp;
+					if ($iRefCmp != 0)
+					{
+						return $iRefCmp;
+					}
 
 					return strcmp($a['operator'], $b['operator']);
 				}
@@ -190,15 +195,22 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		}
 
 		// Sort by label criterion by variable name (no ref first)
-		usort($aMergedCriterion, function ($a, $b) {
+		usort($aMergedCriterion, function ($a, $b)
+		{
 			if (($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW) ||
 				($b['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
 			{
 				if (($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW) &&
 					($b['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
 				{
-					if (!isset($a['label'])) return -1;
-					if (!isset($b['label'])) return 1;
+					if (!isset($a['label']))
+					{
+						return -1;
+					}
+					if (!isset($b['label']))
+					{
+						return 1;
+					}
 					return strcmp($a['label'], $b['label']);
 				}
 				if ($a['widget'] === AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
@@ -209,8 +221,14 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				return 1;
 			}
 
-			if (!isset($a['label'])) return -1;
-			if (!isset($b['label'])) return 1;
+			if (!isset($a['label']))
+			{
+				return -1;
+			}
+			if (!isset($b['label']))
+			{
+				return 1;
+			}
 			return strcmp($a['label'], $b['label']);
 		});
 
@@ -440,22 +458,22 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			case ('' == $sValue and ($sOperator == 'LIKE')):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
 				break;
-			case ('' == $sValue and $sOperator == '!='):
+			case (($sOperator == '=') && isset($aCriteria['has_undefined']) && ($sValue == '0')):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_NOT_EMPTY;
 				break;
-			case ($sOperator == 'LIKE' && $bStartWithPercent && $bEndWithPercent):
+			case (($sOperator == 'LIKE') && $bStartWithPercent && $bEndWithPercent):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_CONTAINS;
 				$sValue = substr($sValue, 1, -1);
 				$aCriteria['values'][0]['value'] = $sValue;
 				$aCriteria['values'][0]['label'] = "$sValue";
 				break;
-			case ($sOperator == 'LIKE' && $bStartWithPercent):
+			case (($sOperator == 'LIKE') && $bStartWithPercent):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_ENDS_WITH;
 				$sValue = substr($sValue, 1);
 				$aCriteria['values'][0]['value'] = $sValue;
 				$aCriteria['values'][0]['label'] = "$sValue";
 				break;
-			case ($sOperator == 'LIKE' && $bEndWithPercent):
+			case (($sOperator == 'LIKE') && $bEndWithPercent):
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_STARTS_WITH;
 				$sValue = substr($sValue, 0, -1);
 				$aCriteria['values'][0]['value'] = $sValue;
@@ -471,30 +489,47 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		if (!array_key_exists('is_relative', $aCriteria) || !$aCriteria['is_relative'])
 		{
 			// Convert '=' in 'between'
-			if (isset($aCriteria['operator']) && ($aCriteria['operator'] === '='))
+			if (isset($aCriteria['operator']))
 			{
-				$aCriteria['operator'] = CriterionConversionAbstract::OP_BETWEEN_DATES;
-				$sWidget = $aCriteria['widget'];
-				if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
+				switch ($aCriteria['operator'])
 				{
-					$aCriteria['values'][1] = $aCriteria['values'][0];
-				}
-				else
-				{
-					$sDate = $aCriteria['values'][0]['value'];
-					$oDate = new DateTime($sDate);
+					case '=':
+						if (isset($aCriteria['has_undefined']) && (isset($aCriteria['values'][0]['value']) && ($aCriteria['values'][0]['value'] == 0)))
+						{
+							// Special case for NOT EMPTY
+							$aCriteria['operator'] = CriterionConversionAbstract::OP_NOT_EMPTY;
+						}
+						else
+						{
+							$aCriteria['operator'] = CriterionConversionAbstract::OP_BETWEEN_DATES;
+							$sWidget = $aCriteria['widget'];
+							if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
+							{
+								$aCriteria['values'][1] = $aCriteria['values'][0];
+							}
+							else
+							{
+								$sDate = $aCriteria['values'][0]['value'];
+								$oDate = new DateTime($sDate);
 
-					$sFirstDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
-					$sFirstDateLabel = AttributeDateTime::GetFormat()->Format($sFirstDateValue);
-					$aCriteria['values'][0] = array('value' => $sFirstDateValue, 'label' => "$sFirstDateLabel");
+								$sFirstDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
+								$sFirstDateLabel = AttributeDateTime::GetFormat()->Format($sFirstDateValue);
+								$aCriteria['values'][0] = array('value' => $sFirstDateValue, 'label' => "$sFirstDateLabel");
 
 
-					$oDate->add(DateInterval::createFromDateString('1 day'));
-					$oDate->sub(DateInterval::createFromDateString('1 second'));
+								$oDate->add(DateInterval::createFromDateString('1 day'));
+								$oDate->sub(DateInterval::createFromDateString('1 second'));
 
-					$sLastDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
-					$sLastDateLabel = AttributeDateTime::GetFormat()->Format($sLastDateValue);
-					$aCriteria['values'][1] = array('value' => $sLastDateValue, 'label' => "$sLastDateLabel");
+								$sLastDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
+								$sLastDateLabel = AttributeDateTime::GetFormat()->Format($sLastDateValue);
+								$aCriteria['values'][1] = array('value' => $sLastDateValue, 'label' => "$sLastDateLabel");
+							}
+						}
+						break;
+
+					case 'ISNULL':
+						$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
+						break;
 				}
 			}
 
@@ -531,9 +566,19 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 
 	protected static function NumericToSearchForm($aCriteria, $aFields)
 	{
-		if ($aCriteria['operator'] == 'ISNULL')
+		switch ($aCriteria['operator'])
 		{
-			$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
+			case  'ISNULL':
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
+				break;
+
+			case '=':
+				if (isset($aCriteria['has_undefined']) && (isset($aCriteria['values'][0]['value']) && ($aCriteria['values'][0]['value'] == 0)))
+				{
+					// Special case for NOT EMPTY
+					$aCriteria['operator'] = CriterionConversionAbstract::OP_NOT_EMPTY;
+				}
+				break;
 		}
 
 		return $aCriteria;

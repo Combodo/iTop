@@ -1024,7 +1024,14 @@ class FieldExpression extends UnaryExpression
 	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
-		$oAttDef = $this->GetAttDef($oSearch->GetJoinedClasses());
+		if (method_exists($oSearch, 'GetJoinedClasses'))
+		{
+			$oAttDef = $this->GetAttDef($oSearch->GetJoinedClasses());
+		}
+		else
+		{
+			$oAttDef = $this->GetAttDef($oSearch->GetSelectedClasses());
+		}
 		if (!is_null($oAttDef))
 		{
 			$sSearchType = $oAttDef->GetSearchType();

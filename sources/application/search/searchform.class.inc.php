@@ -33,6 +33,7 @@ use DBObjectSet;
 use Dict;
 use Exception;
 use Expression;
+use FieldExpression;
 use IssueLog;
 use MetaModel;
 use TrueExpression;
@@ -436,6 +437,7 @@ class SearchForm
 	public function GetCriterion($oSearch, $aFields, $aArgs = array(), $bIsRemovable = true)
 	{
 		$aOrCriterion = array();
+		$bIsEmptyExpression = true;
 
 		if (method_exists($oSearch, 'GetCriteria'))
 		{
@@ -450,7 +452,6 @@ class SearchForm
 			}
 
 			$aORExpressions = Expression::Split($oExpression, 'OR');
-			$bIsEmptyExpression = true;
 			foreach($aORExpressions as $oORSubExpr)
 			{
 				$aAndCriterion = array();
@@ -467,12 +468,12 @@ class SearchForm
 				$aAndCriterion = CriterionToSearchForm::Convert($aAndCriterion, $aFields, $oSearch->GetJoinedClasses(), $bIsRemovable);
 				$aOrCriterion[] = array('and' => $aAndCriterion);
 			}
+		}
 
-			if ($bIsEmptyExpression)
-			{
-				// Add default criterion
-				$aOrCriterion = $this->GetDefaultCriterion($oSearch);
-			}
+		if ($bIsEmptyExpression)
+		{
+			// Add default criterion
+			$aOrCriterion = $this->GetDefaultCriterion($oSearch);
 		}
 
 		return array('or' => $aOrCriterion);
@@ -597,8 +598,12 @@ class SearchForm
 		$sAlias = $oSearch->GetClassAlias();
 		foreach($aList as $sAttCode)
 		{
-			$oFieldExpression = new \FieldExpression($sAttCode, $sAlias);
-			$aAndCriterion[] = $oFieldExpression->GetCriterion($oSearch);
+			$oFieldExpression = new FieldExpression($sAttCode, $sAlias);
+			$aCriterion = $oFieldExpression->GetCriterion($oSearch);
+			if (isset($aCriterion['widget']) && ($aCriterion['widget'] != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
+			{
+				$aAndCriterion[] = $aCriterion;
+			}
 		}
 		// Overwrite with default criterion
 		$aOrCriterion = array(array('and' => $aAndCriterion));
