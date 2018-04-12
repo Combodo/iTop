@@ -310,7 +310,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
 	'Class:ServiceFamily/Attribute:services_list+' => '',
-	'Class:Service/Attribute:organization_name' => 'Name',
+	'Class:Service/Attribute:organization_name' => 'Provider Name',
 	'Class:Service/Attribute:organization_name+' => '',
 	'Class:lnkDocumentToService/Attribute:service_name' => 'Service-Name',
 	'Class:lnkDocumentToService/Attribute:service_name+' => '',
