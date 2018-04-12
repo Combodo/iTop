@@ -785,6 +785,7 @@ input.dp-applied {
 	box-sizing: border-box;
 	position: relative;
 	z-index: 1100; /* To be over the table block/unblock UI. Not very sure about this. */
+	text-align: center; /* Used when form is closed */
 
 	/* Sizing reset */
 	*{
@@ -794,8 +795,13 @@ input.dp-applied {
 .search_form_handler{
 	position: relative;
 	z-index: 10;
+	width: 100%;
+	margin-left: auto;
+	margin-right: auto;
 	font-size: 12px;
+	text-align: initial; /* To compensate .search_box:text-align */
 	border: 1px solid #3F7294;
+	//transition: width 0.3s ease-in-out;
 
 	/* Sizing reset */
 	*{
@@ -814,29 +820,57 @@ input.dp-applied {
 
 	&:not(.closed){
 		.sf_title{
+			.sft_short{
+				display: none;
+			}
 			.sft_toggler{
 				transform: rotateX(180deg);
 				transition: transform 0.5s linear;
 			}
 		}
-		.sf_criterion_area{
-			transition: opacity 0.3s linear;
-		}
+		//.sf_criterion_area{
+		//	transition: opacity 0.3s linear;
+		//}
 	}
 	&.closed{
-		opacity: 0.7;
-		transition: opacity 0.3s linear;
-
-		transition: border 0.3s linear;
+		margin-top: -0.25em; /* To remove top padding from the parent .display_block */
+		margin-bottom: 0.5em;
+		width: 150px;
+		overflow: hidden;
+		border-radius: 0 0 4px 4px;
+		//opacity: 0.7;
+		//transition: opacity 0.3s linear;
+		//transition: border 0.3s linear;
 		.sf_criterion_area{
 			height: 0;
 			opacity: 0;
 			padding: 0;
 		}
 		.sf_title {
-			transition:  background-color 0.3s, color 0.3s linear;
-			background-color: #ffffff;
-			color: #3F7294;
+			padding: 6px 8px;
+			text-align: center;
+			font-size: 12px;
+		//	transition:  background-color 0.3s, color 0.3s linear;
+		//	background-color: #ffffff;
+		//	color: #3F7294;
+			.sft_long{
+				display: none;
+			}
+			.sft_refresh{
+				display: none;
+				line-height: 10pt;
+			}
+		}
+	}
+
+	&:not(.no_auto_submit){
+		.sfc_fg_apply{
+			display: none;
+		}
+	}
+	&.no_auto_submit{
+		.sfc_fg_search{
+			display: none;
 		}
 	}
 
@@ -1099,12 +1133,14 @@ input.dp-applied {
 					}
 				}
 
+				.sfc_fg_search,
 				.sfc_fg_apply,
 				.sfc_fg_cancel{
 					margin-top: 8px;
 					padding: 3px 6px;
 					font-size: 11px; /* Not bold, so it looks like 10px/bold of more/less buttons */
 				}
+				.sfc_fg_search,
 				.sfc_fg_apply{
 					margin-right: 5px;
 				}

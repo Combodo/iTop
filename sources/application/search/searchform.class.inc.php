@@ -112,7 +112,6 @@ class SearchForm
 			}
 		}
 
-
 		$aSubClasses = MetaModel::GetSubclasses($sRootClass);
 		if (count($aSubClasses) > 0)
 		{
@@ -135,7 +134,10 @@ class SearchForm
 		$sAction = (isset($aExtraParams['action'])) ? $aExtraParams['action'] : utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 		$sStyle = ($bOpen == 'true') ? '' : 'closed';
 		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"{$sAction}\" class=\"{$sStyle}\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
-		$sHtml .= "<h2 class=\"sf_title\"><span class=\"sft_picto fa fa-search\"></span>" . Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo) . "<a class=\"sft_toggler fa fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a><a class=\"sft_refresh fa fa-search pull-right\" href=\"#\" title=\"" . Dict::S('UI:Button:Refresh') . "\"></a></h2>\n";
+		$sHtml .= "<h2 class=\"sf_title\"><span class=\"sft_long\">" . Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo) . "</span><span class=\"sft_short\">" . Dict::S('UI:SearchToggle') . "</span>";
+		$sHtml .= "<a class=\"sft_toggler fa fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a>";
+		$sHtml .= "<a class=\"sft_refresh fa fa-search pull-right\" href=\"#\" title=\"" . Dict::S('UI:Button:Refresh') . "\"></a>";
+		$sHtml .= "</h2>\n";
 		$sHtml .= "<div id=\"fs_{$sSearchFormId}_message\" class=\"sf_message header_message\"></div>\n";
 		$sHtml .= "<div id=\"fs_{$sSearchFormId}_criterion_outer\">\n</div>\n";
 		$sHtml .= "</form>\n";
@@ -169,7 +171,6 @@ class SearchForm
 		$oBaseSearch->ResetCondition();
 		$sBaseOQL = str_replace(' WHERE 1', '', $oBaseSearch->ToOQL());
 
-
 		if (isset($aExtraParams['table_inner_id']))
 		{
 			$sDataConfigListSelector = $aExtraParams['table_inner_id'];
@@ -182,8 +183,6 @@ class SearchForm
 		{
 			$aListParams['table_inner_id'] = "table_inner_id_{$sSearchFormId}";
 		}
-
-
 
 		$sDebug = utils::ReadParam('debug', 'false', false, 'parameter');
 		if ($sDebug == 'true')
@@ -202,6 +201,7 @@ class SearchForm
 			'data_config_list_selector' => "#{$sDataConfigListSelector}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
 			'init_opened' => $bOpen,
+			'auto_submit' => false, // TODO: Change this so it takes the configuration parameter value for the current class.
 			'list_params' => $aListParams,
 			'search' => array(
 				'has_hidden_criteria' => (array_key_exists('hidden_criteria', $aListParams) && !empty($aListParams['hidden_criteria'])),
@@ -385,6 +385,7 @@ class SearchForm
 
 		$aOrCriterion = array();
 		$aORExpressions = Expression::Split($oExpression, 'OR');
+		$bIsEmptyExpression = true;
 		foreach($aORExpressions as $oORSubExpr)
 		{
 			$aAndCriterion = array();
@@ -396,9 +397,16 @@ class SearchForm
 					continue;
 				}
 				$aAndCriterion[] = $oAndSubExpr->GetCriterion($oSearch);
+				$bIsEmptyExpression = false;
 			}
 			$aAndCriterion = CriterionToSearchForm::Convert($aAndCriterion, $aFields, $oSearch->GetJoinedClasses(), $bIsRemovable);
 			$aOrCriterion[] = array('and' => $aAndCriterion);
+		}
+
+		if ($bIsEmptyExpression)
+		{
+			// Add default criterion
+			$aOrCriterion = $this->GetDefaultCriterion($oSearch);
 		}
 
 		return array('or' => $aOrCriterion);
@@ -427,13 +435,13 @@ class SearchForm
 	/**
 	 * @param $sClass
 	 * @param $sClassAlias
-	 * @param $sFilterCode
+	 * @param $sAttCode
 	 * @param $oAttDef
 	 * @param $aFields
 	 *
 	 * @return mixed
 	 */
-	private function AppendField($sClass, $sClassAlias, $sFilterCode, $oAttDef, $aFields)
+	private function AppendField($sClass, $sClassAlias, $sAttCode, $oAttDef, $aFields)
 	{
 		if (!is_null($oAttDef) && ($oAttDef->GetSearchType() != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
 		{
@@ -443,7 +451,21 @@ class SearchForm
 			}
 			else
 			{
-				$sLabel = $oAttDef->GetLabel();
+				if ($sAttCode == 'friendlyname')
+				{
+					try
+					{
+						$sLabel = MetaModel::GetName($sClass);
+					}
+					catch (Exception $e)
+					{
+						$sLabel = $oAttDef->GetLabel();
+					}
+				}
+				else
+				{
+					$sLabel = $oAttDef->GetLabel();
+				}
 			}
 			
 			if (method_exists($oAttDef, 'GetTargetClass'))
@@ -456,7 +478,7 @@ class SearchForm
 			}
 
 			$aField = array();
-			$aField['code'] = $sFilterCode;
+			$aField['code'] = $sAttCode;
 			$aField['class'] = $sClass;
 			$aField['class_alias'] = $sClassAlias;
 			$aField['target_class'] = $sTargetClass;
@@ -464,7 +486,7 @@ class SearchForm
 			$aField['widget'] = $oAttDef->GetSearchType();
 			$aField['allowed_values'] = self::GetFieldAllowedValues($oAttDef);
 			$aField['is_null_allowed'] = $oAttDef->IsNullAllowed();
-			$aFields[$sClassAlias.'.'.$sFilterCode] = $aField;
+			$aFields[$sClassAlias.'.'.$sAttCode] = $aField;
 
 			// Sub items
 			//
@@ -484,6 +506,37 @@ class SearchForm
 		}
 
 		return $aFields;
+	}
+
+	/**
+	 * @param $oSearch
+	 * @return array
+	 */
+	protected function GetDefaultCriterion($oSearch)
+	{
+		$aAndCriterion = array();
+		$sClass = $oSearch->GetClass();
+		$aList = MetaModel::GetZListItems($sClass, 'default_search');
+		while (empty($aList))
+		{
+			// search in parent class if default criteria are defined
+			$sClass = MetaModel::GetParentClass($sClass);
+			if (is_null($sClass))
+			{
+				$aOrCriterion = array(array('and' => $aAndCriterion));
+				return $aOrCriterion;
+			}
+			$aList = MetaModel::GetZListItems($sClass, 'default_search');
+		}
+		$sAlias = $oSearch->GetClassAlias();
+		foreach($aList as $sAttCode)
+		{
+			$oFieldExpression = new \FieldExpression($sAttCode, $sAlias);
+			$aAndCriterion[] = $oFieldExpression->GetCriterion($oSearch);
+		}
+		// Overwrite with default criterion
+		$aOrCriterion = array(array('and' => $aAndCriterion));
+		return $aOrCriterion;
 	}
 
 

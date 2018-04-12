@@ -285,6 +285,11 @@ $(function()
 
 		// Event callbacks
 		// - Internal events
+		_onButtonSearch: function()
+		{
+			// Note: We do exactly as for apply, the form handler will manage the difference.
+			this._onButtonApply();
+		},
 		_onButtonApply: function()
 		{
 			this._apply();
@@ -436,8 +441,9 @@ $(function()
 
 			// DOM elements
 			this.element.find('.sfc_fg_buttons')
+				.append('<button type="button" name="search" class="sfc_fg_button sfc_fg_search">' + Dict.S('UI:Button:Search') + '</button>')
 				.append('<button type="button" name="apply" class="sfc_fg_button sfc_fg_apply">' + Dict.S('UI:Button:Apply') + '</button>')
-				.append('<button type="button" name="cancel" class="sfc_fg_button sfc_fg_cancel">' + Dict.S('UI:Button:Close') + '</button>')
+				.append('<button type="button" name="cancel" class="sfc_fg_button sfc_fg_cancel">' + Dict.S('UI:Button:Cancel') + '</button>')
 				.append('<button type="button" name="more" class="sfc_fg_button sfc_fg_more">' + Dict.S('UI:Button:More') + '<span class="fa fa-angle-double-down"></span></button>')
 				.append('<button type="button" name="less" class="sfc_fg_button sfc_fg_less">' + Dict.S('UI:Button:Less') + '<span class="fa fa-angle-double-up"></span></button>');
 

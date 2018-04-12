@@ -1624,6 +1624,7 @@ EOF
 		$aListRef = array(
 			'details' => 'details',
 			'standard_search' => 'search',
+			'default_search' => 'default_search',
 			'list' => 'list'
 		);
 	

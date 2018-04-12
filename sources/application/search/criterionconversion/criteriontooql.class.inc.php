@@ -48,7 +48,14 @@ class CriterionToOQL extends CriterionConversionAbstract
 		}
 		$sRef = implode('.', $aRef);
 
-		$sOperator = $aCriteria['operator'];
+		if (isset($aCriteria['operator']))
+		{
+			$sOperator = $aCriteria['operator'];
+		}
+		else
+		{
+			$sOperator = self::OP_ALL;
+		}
 
 		$aMappedOperators = array(
 			self::OP_CONTAINS => 'ContainsToOql',

@@ -493,6 +493,12 @@ $(function()
 					var oItemElem = this._makeListItemElement(aValues[iIdx].label, aValues[iIdx].value, true);
 					oItemElem.appendTo(this._getSelectedValuesWrapperSelector());
 				}
+
+				// If autocomplete, hide them from here and show them in the selected values list
+				if(this._hasAutocompleteAllowedValues() === true)
+				{
+					// TODO.
+				}
 			}
 
 			this._refreshSelectedValues();

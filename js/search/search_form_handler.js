@@ -15,6 +15,7 @@ $(function()
 			'submit_button_selector': null,
 			'endpoint': null,
 			'init_opened': false,
+			'auto_submit': true,
 			'search': {
 				'base_oql': '',
 				'class_name': null,
@@ -290,6 +291,11 @@ $(function()
 			var me = this;
 
 			// Build DOM elements
+			// - Autosubmit option
+			if(this.options.auto_submit === false)
+			{
+				this.element.addClass('no_auto_submit');
+			}
 			// - Message area
 			this.elements.message_area = this.element.find('.sf_message');
 			this._cleanMessageArea();
@@ -305,8 +311,6 @@ $(function()
 				me._submit();
 			});
 			// - Toggle icon
-			// TODO: UX Improvment
-			// Note: Would be better to toggle by clicking on the whole title, but we have an issue with <select> on abstract classes.
 			this.element.find('.sf_title').on('click', function(oEvent){
 				// Prevent anchors
 				oEvent.preventDefault();
@@ -806,7 +810,10 @@ $(function()
 		_onCriteriaValueChanged: function(oData)
 		{
 			this._updateSearch();
-			this._submit();
+			if(this.options.auto_submit === true)
+			{
+				this._submit();
+			}
 		},
 		_onCriteriaRemoved: function(oData)
 		{
