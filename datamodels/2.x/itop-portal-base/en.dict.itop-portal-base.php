@@ -82,6 +82,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:UserProfile:Photo:Title' => 'Photo',
 ));
 
+// AggregatePageBrick
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard',
+));
+
 // BrowseBrick brick
 Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Browse:Name' => 'Browse throught items',
