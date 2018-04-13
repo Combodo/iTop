@@ -190,7 +190,7 @@ $(function()
 
 			// Close criteria
 			this.element.on('itop.search.criteria.close', function(){
-				me._apply();
+				//me._apply();
 				return me._close();
 			});
 

@@ -112,7 +112,6 @@ $(function()
 			// Binding events (eg. from search_form_criteria widgets)
 			this._bindEvents();
 		},
-   
 		// called when created, and later when changing options
 		_refresh: function()
 		{
