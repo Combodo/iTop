@@ -203,7 +203,7 @@ class DesignerForm
 	
 	public function RenderAsPropertySheet($oP, $bReturnHTML = false, $sNotifyParentSelector = null)
 	{
-		$sReturn = '';		
+		$sReturn = '';
 		$sActionUrl = addslashes($this->sSubmitTo);
 		$sJSSubmitParams = json_encode($this->aSubmitParams);
 		$sFormId = $this->GetFormId();
@@ -1525,7 +1525,6 @@ class DesignerFormSelectorField extends DesignerFormField
 	
 	public function AddSubForm($oSubForm, $sLabel, $sValue)
 	{
-		$idx = count($this->aSubForms);
 		$this->aSubForms[] = array('form' => $oSubForm, 'label' => $sLabel, 'value' => $sValue);
 		if ($sValue == $this->defaultRealValue)
 		{
@@ -1539,7 +1538,7 @@ class DesignerFormSelectorField extends DesignerFormField
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' :  '';
-		
+
 		$this->aCSSClasses[] = 'formSelector';
 		
 		$sCSSClasses = '';
@@ -1555,8 +1554,6 @@ class DesignerFormSelectorField extends DesignerFormField
 		
 		if ($this->IsReadOnly())
 		{
-			$aSelected = array();
-			$aHiddenValues = array();
 			$sDisplayValue = '';
 			$sHiddenValue = '';
 			foreach($this->aSubForms as $iKey => $aFormData)
@@ -1572,8 +1569,6 @@ class DesignerFormSelectorField extends DesignerFormField
 		}
 		else
 		{
-			
-			
 			$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
 			foreach($this->aSubForms as $iKey => $aFormData)
 			{
@@ -1589,7 +1584,6 @@ class DesignerFormSelectorField extends DesignerFormField
 		{
 			$sHtml .= '</td><td class="prop_icon prop_apply"><span title="Apply" class="ui-icon ui-icon-circle-check"/></td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td></tr>';
 		}
-				
 		foreach($this->aSubForms as $sKey => $aFormData)
 		{
 			$sId = $this->oForm->GetFieldId($this->sCode);
@@ -1615,25 +1609,7 @@ class DesignerFormSelectorField extends DesignerFormField
 				$oSubForm->SetHierarchyPath($sPath);
 
 				$oSubForm->SetDisplayed($sKey == $this->defaultValue);
-				$sState = ($sKey == $this->defaultValue) ? 'visible' : 'hidden';
-				//$sHtml .= "</tbody><tbody data-selector=\"$sSelector\" data-path=\"$sPath\" data-state=\"$sState\" $sStyle>";
 				$sHtml .= $oSubForm->RenderAsPropertySheet($oP, true);
-
-				$sState = $this->oForm->IsDisplayed() ? 'visible' : 'hidden';
-				$sParentStyle = '';
-				if ($oParent = $this->oForm->GetParentForm())
-				{
-					$sParentStyle = ($oParent->IsDisplayed()) ? '' : 'style="display:none"';
-					$sParentSelector = $oParent->GetHierarchyParent();
-					$sParentPath = $oParent->GetHierarchyPath();
-				}
-				else
-				{
-					$sParentSelector = '';
-					$sParentPath = '';
-				}
-				
-				//$sHtml .= "</tbody><tbody data-selector=\"$sParentSelector\" data-path=\"$sParentPath\" data-state=\"$sState\" $sParentStyle>";
 			}
 			else
 			{
@@ -1681,7 +1657,6 @@ EOF
 				if ($selectedValue == $aFormData['value'])
 				{
 					$this->defaultValue =$iKey;
-					$aDefaultValues = $this->oForm->GetDefaultValues();
 					$oSubForm = $aFormData['form'];
 					$oSubForm->SetDefaultValues($aAllDefaultValues);
 				}

@@ -283,7 +283,9 @@ EOF
 	public function GetForm()
 	{
 		$oForm = new DesignerForm();
-		$oForm->SetPrefix("dashlet_". $this->GetID());
+		$sPrefix = "dashlet_".$this->GetID();
+		$oForm->SetPrefix($sPrefix);
+		$oForm->SetHierarchyPath($sPrefix);
 		$oForm->SetParamsContainer('params');
 
 		$this->GetPropertiesFields($oForm);
