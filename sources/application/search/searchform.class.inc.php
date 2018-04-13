@@ -39,6 +39,7 @@ use IssueLog;
 use MetaModel;
 use TrueExpression;
 use utils;
+use ValueSetObjects;
 use WebPage;
 
 class SearchForm
@@ -402,7 +403,14 @@ class SearchForm
 	{
 		if ($oAttrDef->IsExternalKey(EXTKEY_ABSOLUTE))
 		{
-			$sTargetClass = $oAttrDef->GetTargetClass();
+			if ($oAttrDef instanceof AttributeExternalField)
+			{
+				$sTargetClass = $oAttrDef->GetFinalAttDef()->GetTargetClass();
+			}
+			else
+			{
+				$sTargetClass = $oAttrDef->GetTargetClass();
+			}
 			try
 			{
 				$oSearch = new DBObjectSearch($sTargetClass);
@@ -418,6 +426,13 @@ class SearchForm
 			if ($iCount > MetaModel::GetConfig()->Get('max_combo_length'))
 			{
 				return array('autocomplete' => true, 'count' => $iCount);
+			}
+			if ($oAttrDef instanceof AttributeExternalField)
+			{
+				// Let's propose every existing value
+				$oValSetDef = new ValueSetObjects('SELECT '.$sTargetClass);
+				$aAllowedValues = $oValSetDef->GetValues(array());
+				return array('values' => $aAllowedValues, 'count' => count($aAllowedValues));
 			}
 		}
 		else
