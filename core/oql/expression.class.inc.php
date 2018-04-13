@@ -782,7 +782,7 @@ class ScalarExpression extends UnaryExpression
 				$aCriteria['values'] = array($aValue);
 				break;
 		}
-
+		$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
 		return $aCriteria;
 	}
 
@@ -1693,6 +1693,7 @@ class FunctionExpression extends Expression
 					$aCriteria = array_merge($oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef), $aCriteria);
 				}
 				$aCriteria['has_undefined'] = true;
+				$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
 				break;
 
 			case 'NOW':
