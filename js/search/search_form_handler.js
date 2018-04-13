@@ -172,18 +172,11 @@ $(function()
 
 			$('body').on('update_history.itop', function(oEvent, oData) {
 
-				if (! me.element.is(':visible'))
+				if (me.element.parents('.ui-dialog').length != 0)
 				{
+					//search form in modal are forbiden to update history!
 					return;
 				}
-
-				if ($(':itop-search_form_handler:visible').length != 1)
-				{
-					me._trace('History not updated because several search widget are visible');
-					return;
-				}
-
-				me._trace('history update', oData);
 
 				var sNewUrl = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search';
 				sNewUrl = sNewUrl + '&filter='+oData['filter'];
