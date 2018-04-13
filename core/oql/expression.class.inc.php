@@ -1628,6 +1628,11 @@ class FunctionExpression extends Expression
 				$iMonth = (int) substr($sValue, 5, 2);
 				$sRes = $aMonthToString[$iMonth].' '.(int)substr($sValue, -2);
 			}
+			elseif ($oFormatExpr->Render() == "'%H'")
+			{
+				// H => "H Hour(s)"
+				$sRes = $sValue.':00';
+			}
 		}
 		return $sRes;
 	}
