@@ -429,10 +429,12 @@ class SearchForm
 			}
 			if ($oAttrDef instanceof AttributeExternalField)
 			{
-				// Let's propose every existing value
-				$oValSetDef = new ValueSetObjects('SELECT '.$sTargetClass);
-				$aAllowedValues = $oValSetDef->GetValues(array());
-				return array('values' => $aAllowedValues, 'count' => count($aAllowedValues));
+				$aAllowedValues = array();
+				while ($oObject = $oSet->Fetch())
+				{
+					$aAllowedValues[$oObject->GetKey()] = $oObject->GetName();
+				}
+				return array('values' => $aAllowedValues, 'count' => $iCount);
 			}
 		}
 		else
