@@ -313,7 +313,7 @@ $(function()
 				oEvent.preventDefault();
 
 				// Prevent toggle on <select>
-				if(oEvent.target.nodeName.toLowerCase() !== 'select')
+				if(oEvent.target.nodeName.toLowerCase() !== 'select' && oEvent.target.nodeName.toLowerCase() !== 'option')
 				{
 					me.element.toggleClass('closed');
 				}
