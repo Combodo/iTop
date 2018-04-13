@@ -180,7 +180,7 @@ $(function()
 
                 if ($('.ui-dialog:visible :itop-search_form_handler').length != 0)
                 {
-                    //if a modal containing a dialog is visible then the history update event come from it, whe do not want to update the history in this case!
+                    //if a modal containing a search form is visible then the history update event come from it, whe do not want to update the history in this case! because search form in modal are forbidden to update history!
                     return;
                 }
 
