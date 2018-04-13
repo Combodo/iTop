@@ -449,7 +449,7 @@ try
 		break;
 
 		case 'release_lock_and_details':
-		$oP->DisableBreadCrumb();
+        $oP->DisableBreadCrumb();
 		$sClass = utils::ReadParam('class', '');
 		$id = utils::ReadParam('id', '');
 		$oObj = MetaModel::GetObject($sClass, $id);

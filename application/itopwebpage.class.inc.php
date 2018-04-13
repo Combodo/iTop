@@ -24,106 +24,103 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT."/application/nicewebpage.class.inc.php");
-require_once(APPROOT."/application/applicationcontext.class.inc.php");
-require_once(APPROOT."/application/user.preferences.class.inc.php");
+require_once(APPROOT . "/application/nicewebpage.class.inc.php");
+require_once(APPROOT . "/application/applicationcontext.class.inc.php");
+require_once(APPROOT . "/application/user.preferences.class.inc.php");
+
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
  */
 class iTopWebPage extends NiceWebPage implements iTabbedPage
 {
-	private $m_sMenu;
-	//	private $m_currentOrganization;
-	private $m_aMessages;
-	private $m_sInitScript;
-	protected $m_oTabs;
-	protected $bBreadCrumbEnabled;
-	protected $sBreadCrumbEntryId;
-	protected $sBreadCrumbEntryLabel;
-	protected $sBreadCrumbEntryDescription;
-	protected $sBreadCrumbEntryUrl;
-	protected $sBreadCrumbEntryIcon;
-	protected $oCtx;
+    private $m_sMenu;
+    //	private $m_currentOrganization;
+    private $m_aMessages;
+    private $m_sInitScript;
+    protected $m_oTabs;
+    protected $bBreadCrumbEnabled;
+    protected $sBreadCrumbEntryId;
+    protected $sBreadCrumbEntryLabel;
+    protected $sBreadCrumbEntryDescription;
+    protected $sBreadCrumbEntryUrl;
+    protected $sBreadCrumbEntryIcon;
+    protected $oCtx;
 
-	protected $bHasCollapsibleSection = false;
+    protected $bHasCollapsibleSection = false;
 
-	public function __construct($sTitle, $bPrintable = false)
-	{
-		parent::__construct($sTitle, $bPrintable);
-		$this->m_oTabs = new TabManager();
-		$this->oCtx = new ContextTag('GUI:Console');
+    public function __construct($sTitle, $bPrintable = false)
+    {
+        parent::__construct($sTitle, $bPrintable);
+        $this->m_oTabs = new TabManager();
+        $this->oCtx = new ContextTag('GUI:Console');
 
-		ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
+        ApplicationContext::SetUrlMakerClass('iTopStandardURLMaker');
 
-		if ((count($_POST) == 0) || (array_key_exists('loginop', $_POST)))
-		{
-			// Create a breadcrumb entry for the current page, but get its title as late as possible (page title could be changed later)
-			$this->bBreadCrumbEnabled = true;
-		}
-		else
-		{
-			$this->bBreadCrumbEnabled = false;
-		}
+        if ((count($_POST) == 0) || (array_key_exists('loginop', $_POST))) {
+            // Create a breadcrumb entry for the current page, but get its title as late as possible (page title could be changed later)
+            $this->bBreadCrumbEnabled = true;
+        } else {
+            $this->bBreadCrumbEnabled = false;
+        }
 
-		utils::InitArchiveMode();
+        utils::InitArchiveMode();
 
-		$this->m_sMenu = "";
-		$this->m_aMessages = array();
-		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
-		$this->add_header("Content-type: text/html; charset=utf-8");
-		$this->add_header("Cache-control: no-cache");
-		$this->add_linked_stylesheet("../css/jquery.treeview.css");
-		$this->add_linked_stylesheet("../css/jquery.autocomplete.css");
-		$this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
-		$this->add_linked_stylesheet("../css/fg.menu.css");
-		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
-		$this->add_linked_stylesheet("../css/magnific-popup.css");
-		$this->add_linked_stylesheet("../css/c3.min.css");
-		$this->add_linked_stylesheet("../css/font-awesome/css/font-awesome.min.css");
+        $this->m_sMenu = "";
+        $this->m_aMessages = array();
+        $this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
+        $this->add_header("Content-type: text/html; charset=utf-8");
+        $this->add_header("Cache-control: no-cache");
+        $this->add_linked_stylesheet("../css/jquery.treeview.css");
+        $this->add_linked_stylesheet("../css/jquery.autocomplete.css");
+        $this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
+        $this->add_linked_stylesheet("../css/fg.menu.css");
+        $this->add_linked_stylesheet("../css/jquery.multiselect.css");
+        $this->add_linked_stylesheet("../css/magnific-popup.css");
+        $this->add_linked_stylesheet("../css/c3.min.css");
+        $this->add_linked_stylesheet("../css/font-awesome/css/font-awesome.min.css");
 
-		$this->add_linked_script('../js/jquery.layout.min.js');
-		$this->add_linked_script('../js/jquery.ba-bbq.min.js');
-		$this->add_linked_script("../js/jquery.treeview.js");
-		$this->add_linked_script("../js/jquery.autocomplete.js");
-		$this->add_linked_script("../js/date.js");
-		$this->add_linked_script("../js/jquery-ui-timepicker-addon.js");
-		$this->add_linked_script("../js/jquery-ui-timepicker-addon-i18n.min.js");
-		$this->add_linked_script("../js/jquery.blockUI.js");
-		$this->add_linked_script("../js/utils.js");
-		$this->add_linked_script("../js/swfobject.js");
-		$this->add_linked_script("../js/ckeditor/ckeditor.js");
-		$this->add_linked_script("../js/ckeditor/adapters/jquery.js");
-		$this->add_linked_script("../js/jquery.qtip-1.0.min.js");
-		$this->add_linked_script('../js/property_field.js');
-		$this->add_linked_script('../js/fg.menu.js');
-		$this->add_linked_script('../js/icon_select.js');
-		$this->add_linked_script('../js/raphael-min.js');
-		$this->add_linked_script('../js/d3.js');
-		$this->add_linked_script('../js/c3.js');
-		$this->add_linked_script('../js/jquery.multiselect.js');
-		$this->add_linked_script('../js/ajaxfileupload.js');
-		$this->add_linked_script('../js/jquery.mousewheel.js');
-		$this->add_linked_script('../js/jquery.magnific-popup.min.js');
-		$this->add_linked_script('../js/breadcrumb.js');
-		$this->add_linked_script('../js/moment.min.js');
-		
-		
-		$sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
-		$sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));
-		$this->add_dict_entry('UI:FillAllMandatoryFields');
-
-		$this->add_dict_entries('Error:');
-		$this->add_dict_entries('UI:Button:');
-		$this->add_dict_entries('UI:Search:');
-		$this->add_dict_entry('UI:UndefinedObject');
-		$this->add_dict_entries('Enum:Undefined');
+        $this->add_linked_script('../js/jquery.layout.min.js');
+        $this->add_linked_script('../js/jquery.ba-bbq.min.js');
+        $this->add_linked_script("../js/jquery.treeview.js");
+        $this->add_linked_script("../js/jquery.autocomplete.js");
+        $this->add_linked_script("../js/date.js");
+        $this->add_linked_script("../js/jquery-ui-timepicker-addon.js");
+        $this->add_linked_script("../js/jquery-ui-timepicker-addon-i18n.min.js");
+        $this->add_linked_script("../js/jquery.blockUI.js");
+        $this->add_linked_script("../js/utils.js");
+        $this->add_linked_script("../js/swfobject.js");
+        $this->add_linked_script("../js/ckeditor/ckeditor.js");
+        $this->add_linked_script("../js/ckeditor/adapters/jquery.js");
+        $this->add_linked_script("../js/jquery.qtip-1.0.min.js");
+        $this->add_linked_script('../js/property_field.js');
+        $this->add_linked_script('../js/fg.menu.js');
+        $this->add_linked_script('../js/icon_select.js');
+        $this->add_linked_script('../js/raphael-min.js');
+        $this->add_linked_script('../js/d3.js');
+        $this->add_linked_script('../js/c3.js');
+        $this->add_linked_script('../js/jquery.multiselect.js');
+        $this->add_linked_script('../js/ajaxfileupload.js');
+        $this->add_linked_script('../js/jquery.mousewheel.js');
+        $this->add_linked_script('../js/jquery.magnific-popup.min.js');
+        $this->add_linked_script('../js/breadcrumb.js');
+        $this->add_linked_script('../js/moment.min.js');
 
 
-		if (!$this->IsPrintableVersion())
-		{
-			$this->PrepareLayout();
-			$this->add_script(
-				<<<EOF
+        $sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
+        $sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));
+        $this->add_dict_entry('UI:FillAllMandatoryFields');
+
+        $this->add_dict_entries('Error:');
+        $this->add_dict_entries('UI:Button:');
+        $this->add_dict_entries('UI:Search:');
+        $this->add_dict_entry('UI:UndefinedObject');
+        $this->add_dict_entries('Enum:Undefined');
+
+
+        if (!$this->IsPrintableVersion()) {
+            $this->PrepareLayout();
+            $this->add_script(
+                <<<EOF
 function ShowAboutBox()
 {
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'about_box'}, function(data){
@@ -149,95 +146,88 @@ function StripArchiveArgument(sUrl)
 	return res;
 }
 EOF
-			);
-		}
-	}
+            );
+        }
+    }
 
-	protected function IsMenuPaneVisible()
-	{
-		$bLeftPaneOpen = true;
-		if (MetaModel::GetConfig()->Get('demo_mode'))
-		{
-			// Leave the pane opened
-		}
-		else
-		{
-			if (utils::ReadParam('force_menu_pane', null) === 0)
-			{
-				$bLeftPaneOpen = false;
-			}
-			elseif (appUserPreferences::GetPref('menu_pane', 'open') == 'closed')
-			{
-				$bLeftPaneOpen = false;
-			}
-		}
-		return $bLeftPaneOpen;
-	}
+    protected function IsMenuPaneVisible()
+    {
+        $bLeftPaneOpen = true;
+        if (MetaModel::GetConfig()->Get('demo_mode')) {
+            // Leave the pane opened
+        } else {
+            if (utils::ReadParam('force_menu_pane', null) === 0) {
+                $bLeftPaneOpen = false;
+            } elseif (appUserPreferences::GetPref('menu_pane', 'open') == 'closed') {
+                $bLeftPaneOpen = false;
+            }
+        }
+        return $bLeftPaneOpen;
+    }
 
-	protected function PrepareLayout()
-	{
-		if (MetaModel::GetConfig()->Get('demo_mode'))
-		{
-			// No pin button
-			$sConfigureWestPane = '';
-		}
-		else
-		{
-			$sConfigureWestPane =
-<<<EOF
-				myLayout.addPinBtn( "#tPinMenu", "west" );
+    protected function PrepareLayout()
+    {
+        if (MetaModel::GetConfig()->Get('demo_mode')) {
+            // No pin button
+            $sConfigureWestPane = '';
+        } else {
+            $sConfigureWestPane =
+                <<<EOF
+                if (typeof myLayout !== "undefined")
+                {
+                    myLayout.addPinBtn( "#tPinMenu", "west" );
+                }
 EOF;
-		}
-		$sInitClosed = $this->IsMenuPaneVisible() ? '' : 'initClosed: true,';
+        }
+        $sInitClosed = $this->IsMenuPaneVisible() ? '' : 'initClosed: true,';
 
-		$sJSDisconnectedMessage = json_encode(Dict::S('UI:DisconnectedDlgMessage'));
-		$sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
-		$sJSLoginAgain = json_encode(Dict::S('UI:LoginAgain'));
-		$sJSStayOnThePage = json_encode(Dict::S('UI:StayOnThePage'));
-		$aDaysMin = array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
-										Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min'));
-		$aMonthsShort = array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'), 
-											Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short'));
-		$sTimeFormat = AttributeDateTime::GetFormat()->ToTimeFormat();
-		$oTimeFormat = new DateTimeFormat($sTimeFormat);
-		$sJSLangShort = json_encode(strtolower(substr(Dict::GetUserLanguage(), 0, 2)));
-		
-		// Date picker options
-		$aPickerOptions = array(
-			'showOn' => 'button',
-			'buttonImage' => '../images/calendar.png',
-			'buttonImageOnly' => true,
-			'dateFormat' => AttributeDate::GetFormat()->ToDatePicker(),
-			'constrainInput' => false,
-			'changeMonth' => true,
-			'changeYear' => true,
-			'dayNamesMin' => $aDaysMin,
-			'monthNamesShort' => $aMonthsShort,
-			'firstDay' => (int) Dict::S('Calendar-FirstDayOfWeek'),
-		);
-		$sJSDatePickerOptions = json_encode($aPickerOptions);
-		
-		// Time picker additional options
-		$aPickerOptions['showOn'] = '';
-		$aPickerOptions['buttonImage'] = null;
-		$aPickerOptions['timeFormat'] = $oTimeFormat->ToDatePicker();
-		$aPickerOptions['controlType'] = 'select';
-		$aPickerOptions['closeText'] = 	Dict::S('UI:Button:Ok');
-		$sJSDateTimePickerOptions = json_encode($aPickerOptions);
-		if ($sJSLangShort != '"en"')
-		{
-			// More options that cannot be passed via json_encode since they must be evaluated client-side
-			$aMoreJSOptions = ",
+        $sJSDisconnectedMessage = json_encode(Dict::S('UI:DisconnectedDlgMessage'));
+        $sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
+        $sJSLoginAgain = json_encode(Dict::S('UI:LoginAgain'));
+        $sJSStayOnThePage = json_encode(Dict::S('UI:StayOnThePage'));
+        $aDaysMin = array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
+            Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min'));
+        $aMonthsShort = array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'),
+            Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short'));
+        $sTimeFormat = AttributeDateTime::GetFormat()->ToTimeFormat();
+        $oTimeFormat = new DateTimeFormat($sTimeFormat);
+        $sJSLangShort = json_encode(strtolower(substr(Dict::GetUserLanguage(), 0, 2)));
+
+        // Date picker options
+        $aPickerOptions = array(
+            'showOn' => 'button',
+            'buttonImage' => '../images/calendar.png',
+            'buttonImageOnly' => true,
+            'dateFormat' => AttributeDate::GetFormat()->ToDatePicker(),
+            'constrainInput' => false,
+            'changeMonth' => true,
+            'changeYear' => true,
+            'dayNamesMin' => $aDaysMin,
+            'monthNamesShort' => $aMonthsShort,
+            'firstDay' => (int)Dict::S('Calendar-FirstDayOfWeek'),
+        );
+        $sJSDatePickerOptions = json_encode($aPickerOptions);
+
+        // Time picker additional options
+        $aPickerOptions['showOn'] = '';
+        $aPickerOptions['buttonImage'] = null;
+        $aPickerOptions['timeFormat'] = $oTimeFormat->ToDatePicker();
+        $aPickerOptions['controlType'] = 'select';
+        $aPickerOptions['closeText'] = Dict::S('UI:Button:Ok');
+        $sJSDateTimePickerOptions = json_encode($aPickerOptions);
+        if ($sJSLangShort != '"en"') {
+            // More options that cannot be passed via json_encode since they must be evaluated client-side
+            $aMoreJSOptions = ",
 				'timeText': $.timepicker.regional[$sJSLangShort].timeText,
 				'hourText': $.timepicker.regional[$sJSLangShort].hourText,
 				'minuteText': $.timepicker.regional[$sJSLangShort].minuteText,
 				'secondText': $.timepicker.regional[$sJSLangShort].secondText,
 				'currentText': $.timepicker.regional[$sJSLangShort].currentText
 			}";
-			$sJSDateTimePickerOptions = substr($sJSDateTimePickerOptions, 0, -1).$aMoreJSOptions;
-		}
-		$this->add_script(
-<<< EOF
+            $sJSDateTimePickerOptions = substr($sJSDateTimePickerOptions, 0, -1) . $aMoreJSOptions;
+        }
+        $this->add_script(
+            <<< EOF
 	function PrepareWidgets()
 	{
 		// note: each action implemented here must be idempotent,
@@ -269,68 +259,72 @@ EOF;
 		});
 	}
 EOF
-		);
+        );
 
-		$this->m_sInitScript =
-<<< EOF
+        $this->m_sInitScript =
+            <<< EOF
 	try
 	{
 		var myLayout; // a var is required because this page utilizes: myLayout.allowOverflow() method
 	
 		// Layout
-		paneSize = GetUserPreference('menu_size', 300)
-		myLayout = $('body').layout({
-			west :	{
-						$sInitClosed minSize: 200, size: paneSize, spacing_open: 16, spacing_close: 16, slideTrigger_open: "click", hideTogglerOnSlide: true, enableCursorHotkey: false,
-						onclose_end: function(name, elt, state, options, layout)
-						{
-								if (state.isSliding == false)
-								{
-									$('.menu-pane-exclusive').show();
-									SetUserPreference('menu_pane', 'closed', true);
-								}
-						},
-						onresize_end: function(name, elt, state, options, layout)
-						{
-								if (state.isSliding == false)
-								{
-									SetUserPreference('menu_size', state.size, true);
-								}
-						},
-									
-						onopen_end: function(name, elt, state, options, layout)
-						{
-							if (state.isSliding == false)
-							{
-								$('.menu-pane-exclusive').hide();
-								SetUserPreference('menu_pane', 'open', true);
-							}
-						}
-					},
-			center: {
-						onresize_end: function(name, elt, state, options, layout)
-						{
-								$('.v-resizable').each( function() {
-									var fixedWidth = $(this).parent().innerWidth() - 6;
-									$(this).width(fixedWidth);
-									// Make sure it cannot be resized horizontally
-									$(this).resizable('options', { minWidth: fixedWidth, maxWidth:	fixedWidth });
-									// Now adjust all the child 'items'
-									var innerWidth = $(this).innerWidth() - 10;
-									$(this).find('.item').width(innerWidth);
-								});
-								$('.panel-resized').trigger('resized');
-						}
-				
-					}
-		});
+		paneSize = GetUserPreference('menu_size', 300);
+		if ($('body').length > 0)
+		{
+            myLayout = $('body').layout({
+                west :	{
+                            $sInitClosed minSize: 200, size: paneSize, spacing_open: 16, spacing_close: 16, slideTrigger_open: "click", hideTogglerOnSlide: true, enableCursorHotkey: false,
+                            onclose_end: function(name, elt, state, options, layout)
+                            {
+                                    if (state.isSliding == false)
+                                    {
+                                        $('.menu-pane-exclusive').show();
+                                        SetUserPreference('menu_pane', 'closed', true);
+                                    }
+                            },
+                            onresize_end: function(name, elt, state, options, layout)
+                            {
+                                    if (state.isSliding == false)
+                                    {
+                                        SetUserPreference('menu_size', state.size, true);
+                                    }
+                            },
+                                        
+                            onopen_end: function(name, elt, state, options, layout)
+                            {
+                                if (state.isSliding == false)
+                                {
+                                    $('.menu-pane-exclusive').hide();
+                                    SetUserPreference('menu_pane', 'open', true);
+                                }
+                            }
+                        },
+                center: {
+                            onresize_end: function(name, elt, state, options, layout)
+                            {
+                                    $('.v-resizable').each( function() {
+                                        var fixedWidth = $(this).parent().innerWidth() - 6;
+                                        $(this).width(fixedWidth);
+                                        // Make sure it cannot be resized horizontally
+                                        $(this).resizable('options', { minWidth: fixedWidth, maxWidth:	fixedWidth });
+                                        // Now adjust all the child 'items'
+                                        var innerWidth = $(this).innerWidth() - 10;
+                                        $(this).find('.item').width(innerWidth);
+                                    });
+                                    $('.panel-resized').trigger('resized');
+                            }
+                    
+                        }
+            });
+        }
 		window.clearTimeout(iPaneVisWatchDog);
 		//myLayout.open( "west" );
 		$('.ui-layout-resizer-west .ui-layout-toggler').css({background: 'transparent'});
 		$sConfigureWestPane
-		
-		$('#left-pane').layout({ resizable: false, spacing_open: 0, south: { size: 94 }, enableCursorHotkey: false });
-		
+		if ($('#left-pane').length > 0)
+		{
+		    $('#left-pane').layout({ resizable: false, spacing_open: 0, south: { size: 94 }, enableCursorHotkey: false });
+		}
 		// Tabs, using JQuery BBQ to store the history
 		// The "tab widgets" to handle.
 		var tabs = $('div[id^=tabbedContent]');
@@ -380,11 +374,10 @@ EOF
 		// Do something with the error !
 		alert(err);
 	}
-EOF
-		;
+EOF;
 
-		$this->add_ready_script(
-<<< EOF
+        $this->add_ready_script(
+            <<< EOF
 	
 	// Adjust initial size
 	$('.v-resizable').each( function()
@@ -546,17 +539,17 @@ EOF
 		}
 	});
 EOF
-		);
-		$this->add_ready_script(InlineImage::FixImagesWidth());
-		/*
-		 * Not used since the sorting of the tables is always performed server-side
-		AttributeDateTime::InitTableSorter($this, 'custom_date_time');
-		AttributeDate::InitTableSorter($this, 'custom_date');
-		*/
-				
-		$sUserPrefs = appUserPreferences::GetAsJSON();
-		$this->add_script(
-<<<EOF
+        );
+        $this->add_ready_script(InlineImage::FixImagesWidth());
+        /*
+         * Not used since the sorting of the tables is always performed server-side
+        AttributeDateTime::InitTableSorter($this, 'custom_date_time');
+        AttributeDate::InitTableSorter($this, 'custom_date');
+        */
+
+        $sUserPrefs = appUserPreferences::GetAsJSON();
+        $this->add_script(
+            <<<EOF
 //		// for JQuery history
 //		function history_callback(hash)
 //		{
@@ -627,166 +620,159 @@ EOF
 			$('.ui-layout-center, .ui-layout-north, .ui-layout-south').css({display: 'block'});
 		}
 EOF
-		);
-	}
+        );
+    }
 
 
-	/**
-	 * @param string $sId Identifies the item, to search after it in the current breadcrumb
-	 * @param string $sLabel Label of the breadcrumb item
-	 * @param string $sDescription More information, displayed as a tooltip
-	 * @param string $sUrl Specify a URL if the current URL as perceived on the browser side is not relevant
-	 * @param string $sIcon Icon (relative or absolute) path that will be displayed next to the label
-	 */
-	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '')
-	{
-		$this->bBreadCrumbEnabled = true;
-		$this->sBreadCrumbEntryId = $sId;
-		$this->sBreadCrumbEntryLabel = $sLabel;
-		$this->sBreadCrumbEntryDescription = $sDescription;
-		$this->sBreadCrumbEntryUrl = $sUrl;
-		$this->sBreadCrumbEntryIcon = $sIcon;
-	}
+    /**
+     * @param string $sId          Identifies the item, to search after it in the current breadcrumb
+     * @param string $sLabel       Label of the breadcrumb item
+     * @param string $sDescription More information, displayed as a tooltip
+     * @param string $sUrl         Specify a URL if the current URL as perceived on the browser side is not relevant
+     * @param string $sIcon        Icon (relative or absolute) path that will be displayed next to the label
+     */
+    public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '')
+    {
+        $this->bBreadCrumbEnabled = true;
+        $this->sBreadCrumbEntryId = $sId;
+        $this->sBreadCrumbEntryLabel = $sLabel;
+        $this->sBreadCrumbEntryDescription = $sDescription;
+        $this->sBreadCrumbEntryUrl = $sUrl;
+        $this->sBreadCrumbEntryIcon = $sIcon;
+    }
 
-	/**
-	 * State that there will be no breadcrumb item for the current page
-	 */
-	public function DisableBreadCrumb()
-	{
-		$this->bBreadCrumbEnabled = false;
-		$this->sBreadCrumbEntryId = null;
-		$this->sBreadCrumbEntryLabel = null;
-		$this->sBreadCrumbEntryDescription = null;
-		$this->sBreadCrumbEntryUrl = null;
-		$this->sBreadCrumbEntryIcon = null;
-	}
+    /**
+     * State that there will be no breadcrumb item for the current page
+     */
+    public function DisableBreadCrumb()
+    {
+        $this->bBreadCrumbEnabled = false;
+        $this->sBreadCrumbEntryId = null;
+        $this->sBreadCrumbEntryLabel = null;
+        $this->sBreadCrumbEntryDescription = null;
+        $this->sBreadCrumbEntryUrl = null;
+        $this->sBreadCrumbEntryIcon = null;
+    }
 
-	public function AddToMenu($sHtml)
-	{
-		$this->m_sMenu .= $sHtml;
-	}
+    public function AddToMenu($sHtml)
+    {
+        $this->m_sMenu .= $sHtml;
+    }
 
-	public function GetSiloSelectionForm()
-	{
-		// List of visible Organizations
-		$iCount = 0;
-		$oSet = null;
-		if (MetaModel::IsValidClass('Organization'))
-		{
-			// Display the list of *favorite* organizations... but keeping in mind what is the real number of organizations
-			$aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
-			$oSearchFilter = new DBObjectSearch('Organization');
-			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
-			$oSet = new CMDBObjectSet($oSearchFilter);
-			$iCount = $oSet->Count(); // total number of existing Orgs
-				
-			// Now get the list of Orgs to be displayed in the menu
-			$oSearchFilter = DBObjectSearch::FromOQL(ApplicationMenu::GetFavoriteSiloQuery());
-			$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
-			if (!empty($aFavoriteOrgs))
-			{
-				$oSearchFilter->AddCondition('id', $aFavoriteOrgs, 'IN');
-			}
-			$oSet = new CMDBObjectSet($oSearchFilter); // List of favorite orgs
-		}
-		switch($iCount)
-		{
-			case 0:
-			// No such dimension/silo => nothing to select
-			$sHtml = '<div id="SiloSelection"><!-- nothing to select --></div>';
-			break;
-					
-			case 1:
-			// Only one possible choice... no selection, but display the value
-			$oOrg = $oSet->Fetch();
-			$sHtml = '<div id="SiloSelection">'.$oOrg->GetName().'</div>';
-			$sHtml .= '';
-			break;
-					
-			default:
-			$sHtml = '';
-			$oAppContext = new ApplicationContext();
-			$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
-			$sHtml = '<div id="SiloSelection">';
-			$sHtml .= '<form style="display:inline" action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
+    public function GetSiloSelectionForm()
+    {
+        // List of visible Organizations
+        $iCount = 0;
+        $oSet = null;
+        if (MetaModel::IsValidClass('Organization')) {
+            // Display the list of *favorite* organizations... but keeping in mind what is the real number of organizations
+            $aFavoriteOrgs = appUserPreferences::GetPref('favorite_orgs', null);
+            $oSearchFilter = new DBObjectSearch('Organization');
+            $oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
+            $oSet = new CMDBObjectSet($oSearchFilter);
+            $iCount = $oSet->Count(); // total number of existing Orgs
 
-			$sFavoriteOrgs = '';
-			$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
-			$sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '',
-										array('iFieldSize' => 20, 'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'), 'sDefaultValue' => Dict::S('UI:AllOrganizations')),
-										null, 'select', false /* bSearchMultiple */);
-			$this->add_ready_script('$("#org_id").bind("extkeychange", function() { $("#SiloSelection form").submit(); } )');
-			$this->add_ready_script("$('#label_org_id').click( function() { if ($('#org_id').val() == '') { $(this).val(''); } } );\n");
-			// Add other dimensions/context information to this form
-			$oAppContext->Reset('org_id'); // org_id is handled above and we want to be able to change it here !
-			$oAppContext->Reset('menu'); // don't pass the menu, since a menu may expect more parameters
-			$sHtml .= $oAppContext->GetForForm(); // Pass what remains, if anything...
-			$sHtml .= '</form>';
-			$sHtml .= '</div>';
-		}
-		return $sHtml;
-	}
+            // Now get the list of Orgs to be displayed in the menu
+            $oSearchFilter = DBObjectSearch::FromOQL(ApplicationMenu::GetFavoriteSiloQuery());
+            $oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
+            if (!empty($aFavoriteOrgs)) {
+                $oSearchFilter->AddCondition('id', $aFavoriteOrgs, 'IN');
+            }
+            $oSet = new CMDBObjectSet($oSearchFilter); // List of favorite orgs
+        }
+        switch ($iCount) {
+            case 0:
+                // No such dimension/silo => nothing to select
+                $sHtml = '<div id="SiloSelection"><!-- nothing to select --></div>';
+                break;
 
-	public function DisplayMenu()
-	{
-		// Display the menu
-		$oAppContext = new ApplicationContext();
-		$iAccordionIndex = 0;
+            case 1:
+                // Only one possible choice... no selection, but display the value
+                $oOrg = $oSet->Fetch();
+                $sHtml = '<div id="SiloSelection">' . $oOrg->GetName() . '</div>';
+                $sHtml .= '';
+                break;
 
-		ApplicationMenu::DisplayMenu($this, $oAppContext->GetAsHash());
-	}
+            default:
+                $sHtml = '';
+                $oAppContext = new ApplicationContext();
+                $iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
+                $sHtml = '<div id="SiloSelection">';
+                $sHtml .= '<form style="display:inline" action="' . utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php">'; //<select class="org_combo" name="c[org_id]" title="Pick an organization" onChange="this.form.submit();">';
 
-	/**
-	 * Outputs (via some echo) the complete HTML page by assembling all its elements
-	 */
-	public function output()
-	{
-		$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
+                $sFavoriteOrgs = '';
+                $oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
+                $sHtml .= $oWidget->Display($this, 50, false, '', $oSet, $iCurrentOrganization, 'org_id', false, 'c[org_id]', '',
+                    array('iFieldSize' => 20, 'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'), 'sDefaultValue' => Dict::S('UI:AllOrganizations')),
+                    null, 'select', false /* bSearchMultiple */);
+                $this->add_ready_script('$("#org_id").bind("extkeychange", function() { $("#SiloSelection form").submit(); } )');
+                $this->add_ready_script("$('#label_org_id').click( function() { if ($('#org_id').val() == '') { $(this).val(''); } } );\n");
+                // Add other dimensions/context information to this form
+                $oAppContext->Reset('org_id'); // org_id is handled above and we want to be able to change it here !
+                $oAppContext->Reset('menu'); // don't pass the menu, since a menu may expect more parameters
+                $sHtml .= $oAppContext->GetForForm(); // Pass what remains, if anything...
+                $sHtml .= '</form>';
+                $sHtml .= '</div>';
+        }
+        return $sHtml;
+    }
 
-		//$this->set_base($this->m_sRootUrl.'pages/');
-		$sForm = $this->GetSiloSelectionForm();
-		$this->DisplayMenu(); // Compute the menu
+    public function DisplayMenu()
+    {
+        // Display the menu
+        $oAppContext = new ApplicationContext();
+        $iAccordionIndex = 0;
 
-		// Call the extensions to add content to the page, so that they can also add styles or scripts
-		$sBannerExtraHtml = '';
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-		{
-			$sBannerExtraHtml .= $oExtensionInstance->GetBannerHtml($this);
-		}
-		
-		$sNorthPane = '';
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-		{
-			$sNorthPane .= $oExtensionInstance->GetNorthPaneHtml($this);
-		}
+        ApplicationMenu::DisplayMenu($this, $oAppContext->GetAsHash());
+    }
 
-		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled())
-		{
-			$sNorthPane .= '<div class="app-message"><span style="padding:5px;">'.ExecutionKPI::GetDescription().'<span></div>';
-		}
-		
-		//$sSouthPane = '<p>Peak memory Usage: '.sprintf('%.3f MB', memory_get_peak_usage(true) / (1024*1024)).'</p>';
-		$sSouthPane = '';
-		foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance)
-		{
-			$sSouthPane .= $oExtensionInstance->GetSouthPaneHtml($this);
-		}
+    /**
+     * Outputs (via some echo) the complete HTML page by assembling all its elements
+     */
+    public function output()
+    {
+        $sAbsURLAppRoot = addslashes($this->m_sRootUrl);
 
-		// Render the tabs in the page (if any)
-		$this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
-		
-		// Put here the 'ready scripts' that must be executed after all others
-		$aMultiselectOptions = array(
-			'header' => true,
-			'checkAllText' => Dict::S('UI:SearchValue:CheckAll'),
-			'uncheckAllText' => Dict::S('UI:SearchValue:UncheckAll'),
-			'noneSelectedText' => Dict::S('UI:SearchValue:Any'),
-			'selectedText' => Dict::S('UI:SearchValue:NbSelected'),
-			'selectedList' => 1,
-		);
-		$sJSMultiselectOptions = json_encode($aMultiselectOptions);
-		$this->add_ready_script(
-<<<EOF
+        //$this->set_base($this->m_sRootUrl.'pages/');
+        $sForm = $this->GetSiloSelectionForm();
+        $this->DisplayMenu(); // Compute the menu
+
+        // Call the extensions to add content to the page, so that they can also add styles or scripts
+        $sBannerExtraHtml = '';
+        foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance) {
+            $sBannerExtraHtml .= $oExtensionInstance->GetBannerHtml($this);
+        }
+
+        $sNorthPane = '';
+        foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance) {
+            $sNorthPane .= $oExtensionInstance->GetNorthPaneHtml($this);
+        }
+
+        if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled()) {
+            $sNorthPane .= '<div class="app-message"><span style="padding:5px;">' . ExecutionKPI::GetDescription() . '<span></div>';
+        }
+
+        //$sSouthPane = '<p>Peak memory Usage: '.sprintf('%.3f MB', memory_get_peak_usage(true) / (1024*1024)).'</p>';
+        $sSouthPane = '';
+        foreach (MetaModel::EnumPlugins('iPageUIExtension') as $oExtensionInstance) {
+            $sSouthPane .= $oExtensionInstance->GetSouthPaneHtml($this);
+        }
+
+        // Render the tabs in the page (if any)
+        $this->s_content = $this->m_oTabs->RenderIntoContent($this->s_content, $this);
+
+        // Put here the 'ready scripts' that must be executed after all others
+        $aMultiselectOptions = array(
+            'header' => true,
+            'checkAllText' => Dict::S('UI:SearchValue:CheckAll'),
+            'uncheckAllText' => Dict::S('UI:SearchValue:UncheckAll'),
+            'noneSelectedText' => Dict::S('UI:SearchValue:Any'),
+            'selectedText' => Dict::S('UI:SearchValue:NbSelected'),
+            'selectedList' => 1,
+        );
+        $sJSMultiselectOptions = json_encode($aMultiselectOptions);
+        $this->add_ready_script(
+            <<<EOF
 		// Since the event is only triggered when the hash changes, we need to trigger
 		// the event now, to handle the hash the page may have loaded with.
 		$(window).trigger( 'hashchange' );
@@ -796,106 +782,86 @@ EOF
 		
 		$('.multiselect').multiselect($sJSMultiselectOptions);
 EOF
-		);
+        );
 
-		$iBreadCrumbMaxCount = utils::GetConfig()->Get('breadcrumb.max_count');
-		if ($iBreadCrumbMaxCount > 1)
-		{
-			$oConfig = MetaModel::GetConfig();
-			$siTopInstanceId = json_encode($oConfig->GetItopInstanceid());
-			if ($this->bBreadCrumbEnabled)
-			{
-				if (is_null($this->sBreadCrumbEntryId))
-				{
-					$this->sBreadCrumbEntryId = $this->s_title;
-					$this->sBreadCrumbEntryLabel = $this->s_title;
-					$this->sBreadCrumbEntryDescription = $this->s_title;
-					$this->sBreadCrumbEntryUrl = '';
-					$this->sBreadCrumbEntryIcon = utils::GetAbsoluteUrlAppRoot().'images/wrench.png';
-				}
-				$sNewEntry = json_encode(array('id' => $this->sBreadCrumbEntryId, 'url' => $this->sBreadCrumbEntryUrl, 'label' => htmlentities($this->sBreadCrumbEntryLabel, ENT_QUOTES, 'UTF-8'), 'description' => htmlentities($this->sBreadCrumbEntryDescription, ENT_QUOTES, 'UTF-8'), 'icon' => $this->sBreadCrumbEntryIcon));
-			}
-			else
-			{
-				$sNewEntry = 'null';
-			}
+        $iBreadCrumbMaxCount = utils::GetConfig()->Get('breadcrumb.max_count');
+        if ($iBreadCrumbMaxCount > 1) {
+            $oConfig = MetaModel::GetConfig();
+            $siTopInstanceId = json_encode($oConfig->GetItopInstanceid());
+            if ($this->bBreadCrumbEnabled) {
+                if (is_null($this->sBreadCrumbEntryId)) {
+                    $this->sBreadCrumbEntryId = $this->s_title;
+                    $this->sBreadCrumbEntryLabel = $this->s_title;
+                    $this->sBreadCrumbEntryDescription = $this->s_title;
+                    $this->sBreadCrumbEntryUrl = '';
+                    $this->sBreadCrumbEntryIcon = utils::GetAbsoluteUrlAppRoot() . 'images/wrench.png';
+                }
+                $sNewEntry = json_encode(array('id' => $this->sBreadCrumbEntryId, 'url' => $this->sBreadCrumbEntryUrl, 'label' => htmlentities($this->sBreadCrumbEntryLabel, ENT_QUOTES, 'UTF-8'), 'description' => htmlentities($this->sBreadCrumbEntryDescription, ENT_QUOTES, 'UTF-8'), 'icon' => $this->sBreadCrumbEntryIcon));
+            } else {
+                $sNewEntry = 'null';
+            }
 
-			$this->add_ready_script(
-<<<EOF
+            $this->add_ready_script(
+                <<<EOF
 		$('#itop-breadcrumb').breadcrumb({itop_instance_id: $siTopInstanceId, new_entry: $sNewEntry, max_count: $iBreadCrumbMaxCount});
 EOF
-			);
-		}
+            );
+        }
 
-		$this->outputCollapsibleSectionInit();
+        $this->outputCollapsibleSectionInit();
 
-		if ($this->GetOutputFormat() == 'html')
-		{
-			foreach($this->a_headers as $s_header)
-			{
-				header($s_header);
-			}
-		}
-		$s_captured_output = $this->ob_get_clean_safe();
-		$sHtml = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
-		$sHtml .= "<html>\n";
-		$sHtml .= "<head>\n";
-		// Make sure that Internet Explorer renders the page using its latest/highest/greatest standards !
-		$sHtml .= "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
-		$sHtml .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
-		$sHtml .= "<title>".htmlentities($this->s_title, ENT_QUOTES, 'UTF-8')."</title>\n";
-		$sHtml .= $this->get_base_tag();
-		// Stylesheets MUST be loaded before any scripts otherwise
-		// jQuery scripts may face some spurious problems (like failing on a 'reload')
-		foreach($this->a_linked_stylesheets as $a_stylesheet)
-		{
-			if (strpos($a_stylesheet['link'], '?') === false)
-			{
-				$s_stylesheet = $a_stylesheet['link']."?itopversion=".ITOP_VERSION;
-			}
-			else
-			{
-				$s_stylesheet = $a_stylesheet['link']."&itopversion=".ITOP_VERSION;
-			}
-			if ($a_stylesheet['condition'] != "")
-			{
-				$sHtml .= "<!--[if {$a_stylesheet['condition']}]>\n";
-			}
-			$sHtml .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$s_stylesheet}\" />\n";
-			if ($a_stylesheet['condition'] != "")
-			{
-				$sHtml .= "<![endif]-->\n";
-			}
-		}
-		// special stylesheet for printing, hides the navigation gadgets
-		$sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css?itopversion=".ITOP_VERSION."\" />\n";
-		
-		if ($this->GetOutputFormat() == 'html')
-		{
-			$sHtml .= $this->output_dict_entries(true); // before any script so that they can benefit from the translations
-			foreach($this->a_linked_scripts as $s_script)
-			{
-					// Make sure that the URL to the script contains the application's version number
-					// so that the new script do NOT get reloaded from the cache when the application is upgraded
-					if (strpos($s_script, '?') === false)
-					{
-						$s_script .= "?itopversion=".ITOP_VERSION;
-					}
-					else
-					{
-						$s_script .= "&itopversion=".ITOP_VERSION;
-					}
-					$sHtml .= "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
-			}
-			if (!$this->IsPrintableVersion())
-			{
-				$this->add_script("var iPaneVisWatchDog  = window.setTimeout('FixPaneVis()',5000);");
-			}
-			$this->add_script("\$(document).ready(function() {\n{$this->m_sInitScript};\nwindow.setTimeout('onDelayedReady()',10)\n});");
-			if ($this->IsPrintableVersion())
-			{
-				$this->add_ready_script(
-<<<EOF
+        if ($this->GetOutputFormat() == 'html') {
+            foreach ($this->a_headers as $s_header) {
+                header($s_header);
+            }
+        }
+        $s_captured_output = $this->ob_get_clean_safe();
+        $sHtml = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
+        $sHtml .= "<html>\n";
+        $sHtml .= "<head>\n";
+        // Make sure that Internet Explorer renders the page using its latest/highest/greatest standards !
+        $sHtml .= "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
+        $sHtml .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
+        $sHtml .= "<title>" . htmlentities($this->s_title, ENT_QUOTES, 'UTF-8') . "</title>\n";
+        $sHtml .= $this->get_base_tag();
+        // Stylesheets MUST be loaded before any scripts otherwise
+        // jQuery scripts may face some spurious problems (like failing on a 'reload')
+        foreach ($this->a_linked_stylesheets as $a_stylesheet) {
+            if (strpos($a_stylesheet['link'], '?') === false) {
+                $s_stylesheet = $a_stylesheet['link'] . "?itopversion=" . ITOP_VERSION;
+            } else {
+                $s_stylesheet = $a_stylesheet['link'] . "&itopversion=" . ITOP_VERSION;
+            }
+            if ($a_stylesheet['condition'] != "") {
+                $sHtml .= "<!--[if {$a_stylesheet['condition']}]>\n";
+            }
+            $sHtml .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$s_stylesheet}\" />\n";
+            if ($a_stylesheet['condition'] != "") {
+                $sHtml .= "<![endif]-->\n";
+            }
+        }
+        // special stylesheet for printing, hides the navigation gadgets
+        $sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css?itopversion=" . ITOP_VERSION . "\" />\n";
+
+        if ($this->GetOutputFormat() == 'html') {
+            $sHtml .= $this->output_dict_entries(true); // before any script so that they can benefit from the translations
+            foreach ($this->a_linked_scripts as $s_script) {
+                // Make sure that the URL to the script contains the application's version number
+                // so that the new script do NOT get reloaded from the cache when the application is upgraded
+                if (strpos($s_script, '?') === false) {
+                    $s_script .= "?itopversion=" . ITOP_VERSION;
+                } else {
+                    $s_script .= "&itopversion=" . ITOP_VERSION;
+                }
+                $sHtml .= "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
+            }
+            if (!$this->IsPrintableVersion()) {
+                $this->add_script("var iPaneVisWatchDog  = window.setTimeout('FixPaneVis()',5000);");
+            }
+            $this->add_script("\$(document).ready(function() {\n{$this->m_sInitScript};\nwindow.setTimeout('onDelayedReady()',10)\n});");
+            if ($this->IsPrintableVersion()) {
+                $this->add_ready_script(
+                    <<<EOF
 var sHiddeableChapters = '<div class="light ui-tabs ui-widget ui-widget-content ui-corner-all">';
 sHiddeableChapters += '<ul role="tablist" class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">';
 for (sId in oHiddeableChapters)
@@ -919,106 +885,86 @@ $('legend').css('cursor', 'pointer').click(function(){
 		$(this).parent('fieldset').toggleClass('not-printable strikethrough');
 	});
 EOF
-				);
-			}
-			if (count($this->m_aReadyScripts)>0)
-			{
-				$this->add_script("\nonDelayedReady = function() {\n".implode("\n", $this->m_aReadyScripts)."\n}\n");
-			}
-			if (count($this->a_scripts)>0)
-			{
-				$sHtml .= "<script type=\"text/javascript\">\n";
-				foreach($this->a_scripts as $s_script)
-				{
-					$sHtml .= "$s_script\n";
-				}
-				$sHtml .= "</script>\n";
-			}
-		}
+                );
+            }
+            if (count($this->m_aReadyScripts) > 0) {
+                $this->add_script("\nonDelayedReady = function() {\n" . implode("\n", $this->m_aReadyScripts) . "\n}\n");
+            }
+            if (count($this->a_scripts) > 0) {
+                $sHtml .= "<script type=\"text/javascript\">\n";
+                foreach ($this->a_scripts as $s_script) {
+                    $sHtml .= "$s_script\n";
+                }
+                $sHtml .= "</script>\n";
+            }
+        }
 
-		if (count($this->a_styles)>0)
-		{
-			$sHtml .= "<style>\n";
-			foreach($this->a_styles as $s_style)
-			{
-				$sHtml .= "$s_style\n";
-			}
-			$sHtml .= "</style>\n";
-		}
-		$sHtml .= "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"".utils::GetAbsoluteUrlAppRoot()."pages/opensearch.xml.php\" />\n";
-		$sHtml .= "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico?itopversion=".ITOP_VERSION."\" />\n";
-	
-		$sHtml .= "</head>\n";
-		$sBodyClass = "";
-		if ($this->IsPrintableVersion())
-		{
-			$sBodyClass = 'printable-version';
-		}
-		$sHtml .= "<body class=\"$sBodyClass\">\n";
-		if ($this->IsPrintableVersion())
-		{
-			$sHtml .= "<div class=\"explain-printable not-printable\">";
-			$sHtml .= '<p>'.Dict::Format('UI:ExplainPrintable', '<img src="../images/eye-open-555.png" style="vertical-align:middle">').'</p>';
-			$sHtml .= "<div id=\"hiddeable_chapters\"></div>";
-			$sHtml .= '<button onclick="window.print()">'.htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES, 'UTF-8').'</button>';
-			$sHtml .= '&nbsp;';
-			$sHtml .= '<button onclick="window.close()">'.htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES, 'UTF-8').'</button>';
-			$sHtml .= "</div>";
-		}
+        if (count($this->a_styles) > 0) {
+            $sHtml .= "<style>\n";
+            foreach ($this->a_styles as $s_style) {
+                $sHtml .= "$s_style\n";
+            }
+            $sHtml .= "</style>\n";
+        }
+        $sHtml .= "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"" . utils::GetAbsoluteUrlAppRoot() . "pages/opensearch.xml.php\" />\n";
+        $sHtml .= "<link rel=\"shortcut icon\" href=\"" . utils::GetAbsoluteUrlAppRoot() . "images/favicon.ico?itopversion=" . ITOP_VERSION . "\" />\n";
 
-		// Render the revision number
-		if (ITOP_REVISION == '$WCREV$')
-		{
-			// This is NOT a version built using the buil system, just display the main version
-			$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
-		}
-		else
-		{
-			// This is a build made from SVN, let display the full information
-			$sVersionString = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
-		}
+        $sHtml .= "</head>\n";
+        $sBodyClass = "";
+        if ($this->IsPrintableVersion()) {
+            $sBodyClass = 'printable-version';
+        }
+        $sHtml .= "<body class=\"$sBodyClass\">\n";
+        if ($this->IsPrintableVersion()) {
+            $sHtml .= "<div class=\"explain-printable not-printable\">";
+            $sHtml .= '<p>' . Dict::Format('UI:ExplainPrintable', '<img src="../images/eye-open-555.png" style="vertical-align:middle">') . '</p>';
+            $sHtml .= "<div id=\"hiddeable_chapters\"></div>";
+            $sHtml .= '<button onclick="window.print()">' . htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES, 'UTF-8') . '</button>';
+            $sHtml .= '&nbsp;';
+            $sHtml .= '<button onclick="window.close()">' . htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES, 'UTF-8') . '</button>';
+            $sHtml .= "</div>";
+        }
 
-		// Render the text of the global search form
-		$sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8');
-		$sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
-		if (empty($sText))
-		{
-			$sText = Dict::S("UI:YourSearch");
-		}
+        // Render the revision number
+        if (ITOP_REVISION == '$WCREV$') {
+            // This is NOT a version built using the buil system, just display the main version
+            $sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
+        } else {
+            // This is a build made from SVN, let display the full information
+            $sVersionString = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
+        }
 
-		if ($this->IsPrintableVersion())
-		{
-			$sHtml .= ' <!-- Beginning of page content -->';
-			$sHtml .= self::FilterXSS($this->s_content);
-			$sHtml .= ' <!-- End of page content -->';
-		}
-		elseif ($this->GetOutputFormat() == 'html')
-		{
-			$oAppContext = new ApplicationContext();
-			
-			$sUserName = UserRights::GetUser();
-			$sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
-			if (UserRights::IsAdministrator())
-			{
-				$sLogonMessage = Dict::Format('UI:LoggedAsMessage+Admin', $sUserName);
-			}
-			else
-			{
-				$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);
-			}
-			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/on-off-menu.png\"><ul>";
-			$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
-			$aActions = array();
+        // Render the text of the global search form
+        $sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8');
+        $sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
+        if (empty($sText)) {
+            $sText = Dict::S("UI:YourSearch");
+        }
+
+        if ($this->IsPrintableVersion()) {
+            $sHtml .= ' <!-- Beginning of page content -->';
+            $sHtml .= self::FilterXSS($this->s_content);
+            $sHtml .= ' <!-- End of page content -->';
+        } elseif ($this->GetOutputFormat() == 'html') {
+            $oAppContext = new ApplicationContext();
+
+            $sUserName = UserRights::GetUser();
+            $sIsAdmin = UserRights::IsAdministrator() ? '(Administrator)' : '';
+            if (UserRights::IsAdministrator()) {
+                $sLogonMessage = Dict::Format('UI:LoggedAsMessage+Admin', $sUserName);
+            } else {
+                $sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);
+            }
+            $sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/on-off-menu.png\"><ul>";
+            $sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
+            $aActions = array();
 
             $aAllowedPortals = UserRights::GetAllowedPortals();
-            if(count($aAllowedPortals) > 1)
-            {
+            if (count($aAllowedPortals) > 1) {
                 // Adding portals
-                foreach($aAllowedPortals as $aAllowedPortal)
-                {
-                    if($aAllowedPortal['id'] !== 'backoffice')
-                    {
-                        $oPortalMenuItem = new URLPopupMenuItem('portal:'.$aAllowedPortal['id'], Dict::S($aAllowedPortal['label']), $aAllowedPortal['url'], '_blank');
+                foreach ($aAllowedPortals as $aAllowedPortal) {
+                    if ($aAllowedPortal['id'] !== 'backoffice') {
+                        $oPortalMenuItem = new URLPopupMenuItem('portal:' . $aAllowedPortal['id'], Dict::S($aAllowedPortal['label']), $aAllowedPortal['url'], '_blank');
                         $aActions[$oPortalMenuItem->GetUID()] = $oPortalMenuItem->GetMenuItem();
                     }
                 }
@@ -1027,239 +973,212 @@ EOF
                 $aActions[$oPortalSeparatorMenuItem->GetUID()] = $oPortalSeparatorMenuItem->GetMenuItem();
             }
 
-			$oPrefs = new URLPopupMenuItem('UI:Preferences', Dict::S('UI:Preferences'), utils::GetAbsoluteUrlAppRoot()."pages/preferences.php?".$oAppContext->GetForLink());
-			$aActions[$oPrefs->GetUID()] = $oPrefs->GetMenuItem();
+            $oPrefs = new URLPopupMenuItem('UI:Preferences', Dict::S('UI:Preferences'), utils::GetAbsoluteUrlAppRoot() . "pages/preferences.php?" . $oAppContext->GetForLink());
+            $aActions[$oPrefs->GetUID()] = $oPrefs->GetMenuItem();
 
-			if (utils::IsArchiveMode())
-			{
-				$oExitArchive = new JSPopupMenuItem('UI:ArchiveModeOff', Dict::S('UI:ArchiveModeOff'), 'return ArchiveMode(false);');
-				$aActions[$oExitArchive->GetUID()] = $oExitArchive->GetMenuItem();
+            if (utils::IsArchiveMode()) {
+                $oExitArchive = new JSPopupMenuItem('UI:ArchiveModeOff', Dict::S('UI:ArchiveModeOff'), 'return ArchiveMode(false);');
+                $aActions[$oExitArchive->GetUID()] = $oExitArchive->GetMenuItem();
 
-				$sIcon = '<span class="fa fa-lock fa-1x"></span>';
-				$this->AddApplicationMessage(Dict::S('UI:ArchiveMode:Banner'), $sIcon, Dict::S('UI:ArchiveMode:Banner+'));
-			}
-			elseif (UserRights::CanBrowseArchive())
-			{
-				$oBrowseArchive = new JSPopupMenuItem('UI:ArchiveModeOn', Dict::S('UI:ArchiveModeOn'), 'return ArchiveMode(true);');
-				$aActions[$oBrowseArchive->GetUID()] = $oBrowseArchive->GetMenuItem();
-			}
-			if (utils::CanLogOff())
-			{
-				$oLogOff = new URLPopupMenuItem('UI:LogOffMenu', Dict::S('UI:LogOffMenu'), utils::GetAbsoluteUrlAppRoot().'pages/logoff.php?operation=do_logoff');
-				$aActions[$oLogOff->GetUID()] = $oLogOff->GetMenuItem();
-			}
-			if (UserRights::CanChangePassword())
-			{
-				$oChangePwd = new URLPopupMenuItem('UI:ChangePwdMenu', Dict::S('UI:ChangePwdMenu'), utils::GetAbsoluteUrlAppRoot().'pages/UI.php?loginop=change_pwd');
-				$aActions[$oChangePwd->GetUID()] = $oChangePwd->GetMenuItem();
-			}
-			utils::GetPopupMenuItems($this, iPopupMenuExtension::MENU_USER_ACTIONS, null, $aActions);
+                $sIcon = '<span class="fa fa-lock fa-1x"></span>';
+                $this->AddApplicationMessage(Dict::S('UI:ArchiveMode:Banner'), $sIcon, Dict::S('UI:ArchiveMode:Banner+'));
+            } elseif (UserRights::CanBrowseArchive()) {
+                $oBrowseArchive = new JSPopupMenuItem('UI:ArchiveModeOn', Dict::S('UI:ArchiveModeOn'), 'return ArchiveMode(true);');
+                $aActions[$oBrowseArchive->GetUID()] = $oBrowseArchive->GetMenuItem();
+            }
+            if (utils::CanLogOff()) {
+                $oLogOff = new URLPopupMenuItem('UI:LogOffMenu', Dict::S('UI:LogOffMenu'), utils::GetAbsoluteUrlAppRoot() . 'pages/logoff.php?operation=do_logoff');
+                $aActions[$oLogOff->GetUID()] = $oLogOff->GetMenuItem();
+            }
+            if (UserRights::CanChangePassword()) {
+                $oChangePwd = new URLPopupMenuItem('UI:ChangePwdMenu', Dict::S('UI:ChangePwdMenu'), utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=change_pwd');
+                $aActions[$oChangePwd->GetUID()] = $oChangePwd->GetMenuItem();
+            }
+            utils::GetPopupMenuItems($this, iPopupMenuExtension::MENU_USER_ACTIONS, null, $aActions);
 
-			$oAbout = new JSPopupMenuItem('UI:AboutBox', Dict::S('UI:AboutBox'), 'return ShowAboutBox();');
-			$aActions[$oAbout->GetUID()] = $oAbout->GetMenuItem();
+            $oAbout = new JSPopupMenuItem('UI:AboutBox', Dict::S('UI:AboutBox'), 'return ShowAboutBox();');
+            $aActions[$oAbout->GetUID()] = $oAbout->GetMenuItem();
 
-			$sLogOffMenu .= $this->RenderPopupMenuItems($aActions);
+            $sLogOffMenu .= $this->RenderPopupMenuItems($aActions);
 
 
-			$sRestrictions = '';
-			if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
-			{
-				if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
-				{
-					$sRestrictions = Dict::S('UI:AccessRO-All');
-				}
-			}
-			elseif (!MetaModel::DBHasAccess(ACCESS_USER_WRITE))
-			{
-				$sRestrictions = Dict::S('UI:AccessRO-Users');
-			}
+            $sRestrictions = '';
+            if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE)) {
+                if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE)) {
+                    $sRestrictions = Dict::S('UI:AccessRO-All');
+                }
+            } elseif (!MetaModel::DBHasAccess(ACCESS_USER_WRITE)) {
+                $sRestrictions = Dict::S('UI:AccessRO-Users');
+            }
 
-			if (strlen($sRestrictions) > 0)
-			{
-				$sIcon =
-<<<EOF
+            if (strlen($sRestrictions) > 0) {
+                $sIcon =
+                    <<<EOF
 <span class="fa-stack fa-sm">
   <i class="fa fa-pencil fa-flip-horizontal fa-stack-1x"></i>
   <i class="fa fa-ban fa-stack-2x text-danger"></i>
 </span>
 EOF;
 
-				$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
-				if (strlen($sAdminMessage) > 0)
-				{
-					$sRestrictions .= '&nbsp;'.$sAdminMessage;
-				}
-				$this->AddApplicationMessage($sRestrictions, $sIcon);
-			}
+                $sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
+                if (strlen($sAdminMessage) > 0) {
+                    $sRestrictions .= '&nbsp;' . $sAdminMessage;
+                }
+                $this->AddApplicationMessage($sRestrictions, $sIcon);
+            }
 
-			$sApplicationMessages = '';
-			foreach ($this->m_aMessages as $aMessage)
-			{
-				$sHtmlIcon = $aMessage['icon'] ? $aMessage['icon'] : '';
-				$sHtmlMessage = $aMessage['message'];
-				$sTitleAttr = $aMessage['tip'] ? 'title="'.htmlentities($aMessage['tip'], ENT_QUOTES, 'UTF-8').'"' : '';
-				$sApplicationMessages .= '<div class="app-message" '.$sTitleAttr.'><span class="app-message-icon">'.$sHtmlIcon.'</span><span class="app-message-body">'.$sHtmlMessage.'</div></span>';
-			}
+            $sApplicationMessages = '';
+            foreach ($this->m_aMessages as $aMessage) {
+                $sHtmlIcon = $aMessage['icon'] ? $aMessage['icon'] : '';
+                $sHtmlMessage = $aMessage['message'];
+                $sTitleAttr = $aMessage['tip'] ? 'title="' . htmlentities($aMessage['tip'], ENT_QUOTES, 'UTF-8') . '"' : '';
+                $sApplicationMessages .= '<div class="app-message" ' . $sTitleAttr . '><span class="app-message-icon">' . $sHtmlIcon . '</span><span class="app-message-body">' . $sHtmlMessage . '</div></span>';
+            }
 
-			$sApplicationBanner = "<div class=\"app-banner ui-helper-clearfix\">$sApplicationMessages$sBannerExtraHtml</div>";
-			
-			if (!empty($sNorthPane))
-			{
-				$sNorthPane = '<div id="top-pane" class="ui-layout-north">'.$sNorthPane.'</div>';
-			}
-			
-			if (!empty($sSouthPane))
-			{
-				$sSouthPane = '<div id="bottom-pane" class="ui-layout-south">'.$sSouthPane.'</div>';
-			}
-			
-			$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
-			$sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
-			//$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
+            $sApplicationBanner = "<div class=\"app-banner ui-helper-clearfix\">$sApplicationMessages$sBannerExtraHtml</div>";
 
-			$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png?itopversion='.ITOP_VERSION;
-			if (file_exists(MODULESROOT.'branding/main-logo.png'))
-			{
-				$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/main-logo.png?itopversion='.ITOP_VERSION;
-			}
+            if (!empty($sNorthPane)) {
+                $sNorthPane = '<div id="top-pane" class="ui-layout-north">' . $sNorthPane . '</div>';
+            }
 
-			$sHtml .= $sNorthPane;
-			$sHtml .= '<div id="left-pane" class="ui-layout-west">';
-			$sHtml .= '<!-- Beginning of the left pane -->';
-			$sHtml .= ' <div class="ui-layout-north">';
-			$sHtml .= ' <div id="header-logo">';
-			$sHtml .= ' <div id="top-left"></div><div id="logo"><a href="'.htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8').'"><img src="'.$sDisplayIcon.'" title="'.htmlentities($sVersionString, ENT_QUOTES, 'UTF-8').'" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
-			$sHtml .= ' </div>';
-			$sHtml .= ' <div class="header-menu">';
-			if (!MetaModel::GetConfig()->Get('demo_mode'))
-			{
-				$sHtml .= '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
-			}
-			$sHtml .= '		<div style="text-align:center;">'.self::FilterXSS($sForm).'</div>';
-			$sHtml .= ' </div>';
-			$sHtml .= ' </div>';
-			$sHtml .= ' <div id="menu" class="ui-layout-center">';
-			$sHtml .= '		<div id="inner_menu">';
-			$sHtml .= '			<div id="accordion">';
-			$sHtml .= self::FilterXSS($this->m_sMenu);
-			$sHtml .= '			<!-- Beginning of the accordion menu -->';
-			$sHtml .= '			<!-- End of the accordion menu-->';
-			$sHtml .= '			</div>';
-			$sHtml .= '		</div> <!-- /inner menu -->';
-			$sHtml .= ' </div> <!-- /menu -->';
-			$sHtml .= ' <div class="footer ui-layout-south"><div id="combodo_logo"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png?itopversion='.ITOP_VERSION.'"/></a></div></div>';
-			$sHtml .= '<!-- End of the left pane -->';
-			$sHtml .= '</div>';
+            if (!empty($sSouthPane)) {
+                $sSouthPane = '<div id="bottom-pane" class="ui-layout-south">' . $sSouthPane . '</div>';
+            }
 
-			$sHtml .= '<div class="ui-layout-center">';
-			$sHtml .= ' <div id="top-bar" class="ui-helper-clearfix" style="width:100%">';
-			$sHtml .= self::FilterXSS($sApplicationBanner);
+            $sIconUrl = Utils::GetConfig()->Get('app_icon_url');
+            $sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
+            //$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
 
-			$GoHomeInitialStyle = $this->IsMenuPaneVisible() ? 'display: none;' : '';
+            $sDisplayIcon = utils::GetAbsoluteUrlAppRoot() . 'images/itop-logo.png?itopversion=' . ITOP_VERSION;
+            if (file_exists(MODULESROOT . 'branding/main-logo.png')) {
+                $sDisplayIcon = utils::GetAbsoluteUrlModulesRoot() . 'branding/main-logo.png?itopversion=' . ITOP_VERSION;
+            }
 
-			$sHtml .= ' <table id="top-bar-table">';
-			$sHtml .= ' <tr>';
-			$sHtml .= ' <td id="open-left-pane"  class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'" onclick="$(\'body\').layout().open(\'west\');">';
-			$sHtml .= ' <img src="../images/menu.png">';
-			$sHtml .= ' </td>';
-			$sHtml .= ' <td id="go-home" class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
-			$sHtml .= ' <a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><img src="../images/home.png"></a>';
-			$sHtml .= ' </td>';
-			$sHtml .= ' <td class="top-bar-spacer menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
-			$sHtml .= ' </td>';
-			$sHtml .= ' <td id="top-bar-table-breadcrumb">';
-			$sHtml .= ' <div id="itop-breadcrumb"></div>';
-			$sHtml .= ' </td>';
-			$sHtml .= ' <td id="top-bar-table-search">';
-			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">';
-			$sHtml .= '		<table id="top-left-buttons-area"><tr>';
-			$sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"><input type="hidden" name="operation" value="full_text"/></div></div></td>';
-			$sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?itopversion='.ITOP_VERSION.'"/></td>';
-			$sHtml .= '     	<td id="top-left-logoff-cell">'.self::FilterXSS($sLogOffMenu).'</td>';
-			$sHtml .= '     </tr></table></form></div>';
-			$sHtml .= ' </td>';
-			$sHtml .= ' </tr>';
-			$sHtml .= ' </table>';
+            $sHtml .= $sNorthPane;
+            $sHtml .= '<div id="left-pane" class="ui-layout-west">';
+            $sHtml .= '<!-- Beginning of the left pane -->';
+            $sHtml .= ' <div class="ui-layout-north">';
+            $sHtml .= ' <div id="header-logo">';
+            $sHtml .= ' <div id="top-left"></div><div id="logo"><a href="' . htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8') . '"><img src="' . $sDisplayIcon . '" title="' . htmlentities($sVersionString, ENT_QUOTES, 'UTF-8') . '" style="border:0; margin-top:16px; margin-right:40px;"/></a></div>';
+            $sHtml .= ' </div>';
+            $sHtml .= ' <div class="header-menu">';
+            if (!MetaModel::GetConfig()->Get('demo_mode')) {
+                $sHtml .= '		<div class="icon ui-state-default ui-corner-all"><span id="tPinMenu" class="ui-icon ui-icon-pin-w">pin</span></div>';
+            }
+            $sHtml .= '		<div style="text-align:center;">' . self::FilterXSS($sForm) . '</div>';
+            $sHtml .= ' </div>';
+            $sHtml .= ' </div>';
+            $sHtml .= ' <div id="menu" class="ui-layout-center">';
+            $sHtml .= '		<div id="inner_menu">';
+            $sHtml .= '			<div id="accordion">';
+            $sHtml .= self::FilterXSS($this->m_sMenu);
+            $sHtml .= '			<!-- Beginning of the accordion menu -->';
+            $sHtml .= '			<!-- End of the accordion menu-->';
+            $sHtml .= '			</div>';
+            $sHtml .= '		</div> <!-- /inner menu -->';
+            $sHtml .= ' </div> <!-- /menu -->';
+            $sHtml .= ' <div class="footer ui-layout-south"><div id="combodo_logo"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png?itopversion=' . ITOP_VERSION . '"/></a></div></div>';
+            $sHtml .= '<!-- End of the left pane -->';
+            $sHtml .= '</div>';
+
+            $sHtml .= '<div class="ui-layout-center">';
+            $sHtml .= ' <div id="top-bar" class="ui-helper-clearfix" style="width:100%">';
+            $sHtml .= self::FilterXSS($sApplicationBanner);
+
+            $GoHomeInitialStyle = $this->IsMenuPaneVisible() ? 'display: none;' : '';
+
+            $sHtml .= ' <table id="top-bar-table">';
+            $sHtml .= ' <tr>';
+            $sHtml .= ' <td id="open-left-pane"  class="menu-pane-exclusive" style="' . $GoHomeInitialStyle . '" onclick="$(\'body\').layout().open(\'west\');">';
+            $sHtml .= ' <img src="../images/menu.png">';
+            $sHtml .= ' </td>';
+            $sHtml .= ' <td id="go-home" class="menu-pane-exclusive" style="' . $GoHomeInitialStyle . '">';
+            $sHtml .= ' <a href="' . utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php"><img src="../images/home.png"></a>';
+            $sHtml .= ' </td>';
+            $sHtml .= ' <td class="top-bar-spacer menu-pane-exclusive" style="' . $GoHomeInitialStyle . '">';
+            $sHtml .= ' </td>';
+            $sHtml .= ' <td id="top-bar-table-breadcrumb">';
+            $sHtml .= ' <div id="itop-breadcrumb"></div>';
+            $sHtml .= ' </td>';
+            $sHtml .= ' <td id="top-bar-table-search">';
+            $sHtml .= '		<div id="global-search"><form action="' . utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php">';
+            $sHtml .= '		<table id="top-left-buttons-area"><tr>';
+            $sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="' . $sText . '"></input><div ' . $sOnClick . ' id="global-search-image"><input type="hidden" name="operation" value="full_text"/></div></div></td>';
+            $sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="' . $sOnlineHelpUrl . '" target="_blank"><img title="' . Dict::S('UI:Help') . '" src="../images/help.png?itopversion=' . ITOP_VERSION . '"/></td>';
+            $sHtml .= '     	<td id="top-left-logoff-cell">' . self::FilterXSS($sLogOffMenu) . '</td>';
+            $sHtml .= '     </tr></table></form></div>';
+            $sHtml .= ' </td>';
+            $sHtml .= ' </tr>';
+            $sHtml .= ' </table>';
 
 //			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"></div></div></td>';
 //			$sHtml .= '<td><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?itopversion='.ITOP_VERSION.'"/></td>';
 //			$sHtml .= '<td>'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 //			$sHtml .= ' <div id="itop-breadcrumb"></div>';
 
-			$sHtml .= ' </div>';
-			$sHtml .= ' <div class="ui-layout-content" style="overflow:auto;">';
-			$sHtml .= ' <!-- Beginning of page content -->';
-			$sHtml .= self::FilterXSS($this->s_content);
-			$sHtml .= ' <!-- End of page content -->';
-			$sHtml .= ' </div>';
-			$sHtml .= '</div>';
-			$sHtml .= $sSouthPane;
-			
-			// Add the captured output
-			if (trim($s_captured_output) != "")
-			{
-				$sHtml .= "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">".self::FilterXSS($s_captured_output)."</div></div>\n";
-			}
-			$sHtml .= "<div id=\"at_the_end\">".self::FilterXSS($this->s_deferred_content)."</div>";
-			$sHtml .= "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
-			$sHtml .= "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";
-			$sHtml .= "<div style=\"display:none\" id=\"ajax_content\"></div>";
-		}
-		else
-		{
-			$sHtml .= self::FilterXSS($this->s_content);
-		}
+            $sHtml .= ' </div>';
+            $sHtml .= ' <div class="ui-layout-content" style="overflow:auto;">';
+            $sHtml .= ' <!-- Beginning of page content -->';
+            $sHtml .= self::FilterXSS($this->s_content);
+            $sHtml .= ' <!-- End of page content -->';
+            $sHtml .= ' </div>';
+            $sHtml .= '</div>';
+            $sHtml .= $sSouthPane;
 
-		$sHtml .= "</body>\n";
-		$sHtml .= "</html>\n";
+            // Add the captured output
+            if (trim($s_captured_output) != "") {
+                $sHtml .= "<div id=\"rawOutput\" title=\"Debug Output\"><div style=\"height:500px; overflow-y:auto;\">" . self::FilterXSS($s_captured_output) . "</div></div>\n";
+            }
+            $sHtml .= "<div id=\"at_the_end\">" . self::FilterXSS($this->s_deferred_content) . "</div>";
+            $sHtml .= "<div style=\"display:none\" title=\"ex2\" id=\"ex2\">Please wait...</div>\n"; // jqModal Window
+            $sHtml .= "<div style=\"display:none\" title=\"dialog\" id=\"ModalDlg\"></div>";
+            $sHtml .= "<div style=\"display:none\" id=\"ajax_content\"></div>";
+        } else {
+            $sHtml .= self::FilterXSS($this->s_content);
+        }
 
-		if ($this->GetOutputFormat() == 'html')
-		{
-				$oKPI = new ExecutionKPI();
-				echo $sHtml;
-				$oKPI->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
-		}
-		else if ($this->GetOutputFormat() == 'pdf' && $this->IsOutputFormatAvailable('pdf') )
-		{
-			if (@is_readable(APPROOT.'lib/MPDF/mpdf.php'))
-			{
-				require_once(APPROOT.'lib/MPDF/mpdf.php');
-				$oMPDF = new mPDF('c');
-				$oMPDF->mirroMargins = false;
-				if ($this->a_base['href'] != '')
-				{
-						$oMPDF->setBasePath($this->a_base['href']); // Seems that the <BASE> tag is not recognized by mPDF...
-				}
-				$oMPDF->showWatermarkText = true;
-				if ($this->GetOutputOption('pdf', 'template_path'))
-				{
-						$oMPDF->setImportUse(); // Allow templates
-						$oMPDF->SetDocTemplate ($this->GetOutputOption('pdf', 'template_path'), 1);
-				}
-				$oMPDF->WriteHTML($sHtml);
-				$sOutputName = $this->s_title.'.pdf';
-				if ($this->GetOutputOption('pdf', 'output_name'))
-				{
-					$sOutputName = $this->GetOutputOption('pdf', 'output_name');
-				}
-				$oMPDF->Output($sOutputName, 'I');
-			}
-		}
-		DBSearch::RecordQueryTrace();
-		ExecutionKPI::ReportStats();
-	}
+        $sHtml .= "</body>\n";
+        $sHtml .= "</html>\n";
 
-	/**
-	 * Adds init scripts for the collapsible sections
-	 */
-	private function outputCollapsibleSectionInit()
-	{
-		if (!$this->bHasCollapsibleSection)
-		{
-			return;
-		}
+        if ($this->GetOutputFormat() == 'html') {
+            $oKPI = new ExecutionKPI();
+            echo $sHtml;
+            $oKPI->ComputeAndReport('Echoing (' . round(strlen($sHtml) / 1024) . ' Kb)');
+        } else if ($this->GetOutputFormat() == 'pdf' && $this->IsOutputFormatAvailable('pdf')) {
+            if (@is_readable(APPROOT . 'lib/MPDF/mpdf.php')) {
+                require_once(APPROOT . 'lib/MPDF/mpdf.php');
+                $oMPDF = new mPDF('c');
+                $oMPDF->mirroMargins = false;
+                if ($this->a_base['href'] != '') {
+                    $oMPDF->setBasePath($this->a_base['href']); // Seems that the <BASE> tag is not recognized by mPDF...
+                }
+                $oMPDF->showWatermarkText = true;
+                if ($this->GetOutputOption('pdf', 'template_path')) {
+                    $oMPDF->setImportUse(); // Allow templates
+                    $oMPDF->SetDocTemplate($this->GetOutputOption('pdf', 'template_path'), 1);
+                }
+                $oMPDF->WriteHTML($sHtml);
+                $sOutputName = $this->s_title . '.pdf';
+                if ($this->GetOutputOption('pdf', 'output_name')) {
+                    $sOutputName = $this->GetOutputOption('pdf', 'output_name');
+                }
+                $oMPDF->Output($sOutputName, 'I');
+            }
+        }
+        DBSearch::RecordQueryTrace();
+        ExecutionKPI::ReportStats();
+    }
 
-		$this->add_script(<<<'EOD'
+    /**
+     * Adds init scripts for the collapsible sections
+     */
+    private function outputCollapsibleSectionInit()
+    {
+        if (!$this->bHasCollapsibleSection) {
+            return;
+        }
+
+        $this->add_script(<<<'EOD'
 function initCollapsibleSection(iSectionId, bOpenedByDefault, sSectionStateStorageKey)
 {
 var bStoredSectionState = JSON.parse(localStorage.getItem(sSectionStateStorageKey));
@@ -1278,191 +1197,183 @@ $("#LnkCollapse_"+iSectionId).click(function(e) {
 });
 }
 EOD
-		);
-	}
+        );
+    }
 
-	public function AddTabContainer($sTabContainer, $sPrefix = '')
-	{
-		$this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
-	}
+    public function AddTabContainer($sTabContainer, $sPrefix = '')
+    {
+        $this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
+    }
 
-	public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
-	{
-		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabLabel, $sHtml));
-	}
+    public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
+    {
+        $this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabLabel, $sHtml));
+    }
 
-	public function SetCurrentTabContainer($sTabContainer = '')
-	{
-		return $this->m_oTabs->SetCurrentTabContainer($sTabContainer);
-	}
+    public function SetCurrentTabContainer($sTabContainer = '')
+    {
+        return $this->m_oTabs->SetCurrentTabContainer($sTabContainer);
+    }
 
-	public function SetCurrentTab($sTabLabel = '')
-	{
-		return $this->m_oTabs->SetCurrentTab($sTabLabel);
-	}
-	
-	/**
-	 * Add a tab which content will be loaded asynchronously via the supplied URL
-	 * 
-	 * Limitations:
-	 * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to pull content from another server.
-	 * Static content cannot be added inside such tabs.
-	 * 
-	 * @param string $sTabLabel The (localised) label of the tab
-	 * @param string $sUrl The URL to load (on the same server)
-	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. flase will cause the tab to be reloaded upon each activation.
-	 * @since 2.0.3
-	 */
-	public function AddAjaxTab($sTabLabel, $sUrl, $bCache = true)
-	{
-		$this->add($this->m_oTabs->AddAjaxTab($sTabLabel, $sUrl, $bCache));
-	}
-	
-	public function GetCurrentTab()
-	{
-		return $this->m_oTabs->GetCurrentTab();
-	}
+    public function SetCurrentTab($sTabLabel = '')
+    {
+        return $this->m_oTabs->SetCurrentTab($sTabLabel);
+    }
 
-	public function RemoveTab($sTabLabel, $sTabContainer = null)
-	{
-		$this->m_oTabs->RemoveTab($sTabLabel, $sTabContainer);
-	}
+    /**
+     * Add a tab which content will be loaded asynchronously via the supplied URL
+     *
+     * Limitations:
+     * Cross site scripting is not not allowed for security reasons. Use a normal tab with an IFRAME if you want to pull content from another server.
+     * Static content cannot be added inside such tabs.
+     *
+     * @param string  $sTabLabel The (localised) label of the tab
+     * @param string  $sUrl      The URL to load (on the same server)
+     * @param boolean $bCache    Whether or not to cache the content of the tab once it has been loaded. flase will cause the tab to be reloaded upon each activation.
+     *
+     * @since 2.0.3
+     */
+    public function AddAjaxTab($sTabLabel, $sUrl, $bCache = true)
+    {
+        $this->add($this->m_oTabs->AddAjaxTab($sTabLabel, $sUrl, $bCache));
+    }
 
-	/**
-	 * Finds the tab whose title matches a given pattern
-	 * @return mixed The name of the tab as a string or false if not found
-	 */
-	public function FindTab($sPattern, $sTabContainer = null)
-	{
-		return $this->m_oTabs->FindTab($sPattern, $sTabContainer);
-	}
+    public function GetCurrentTab()
+    {
+        return $this->m_oTabs->GetCurrentTab();
+    }
 
-	/**
-	 * Make the given tab the active one, as if it were clicked
-	 * DOES NOT WORK: apparently in the *old* version of jquery
-	 * that we are using this is not supported... TO DO upgrade
-	 * the whole jquery bundle...
-	 */
-	public function SelectTab($sTabContainer, $sTabLabel)
-	{
-		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabLabel));
-	}
+    public function RemoveTab($sTabLabel, $sTabContainer = null)
+    {
+        $this->m_oTabs->RemoveTab($sTabLabel, $sTabContainer);
+    }
 
-	public function StartCollapsibleSection(
-		$sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = ''
-	) {
-		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault,
-			$sSectionStateStorageBusinessKey));
-	}
+    /**
+     * Finds the tab whose title matches a given pattern
+     * @return mixed The name of the tab as a string or false if not found
+     */
+    public function FindTab($sPattern, $sTabContainer = null)
+    {
+        return $this->m_oTabs->FindTab($sPattern, $sTabContainer);
+    }
 
-	private function GetStartCollapsibleSection(
-		$sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = ''
-	) {
-		$this->bHasCollapsibleSection = true;
-		$sHtml = '';
-		static $iSectionId = 0;
-		$sHtml .= '<a id="LnkCollapse_'.$iSectionId.'" class="CollapsibleLabel" href="#">'.$sSectionLabel.'</a></br>'."\n";
-		$sHtml .= '<div id="Collapse_'.$iSectionId.'" style="display:none">'."\n";
+    /**
+     * Make the given tab the active one, as if it were clicked
+     * DOES NOT WORK: apparently in the *old* version of jquery
+     * that we are using this is not supported... TO DO upgrade
+     * the whole jquery bundle...
+     */
+    public function SelectTab($sTabContainer, $sTabLabel)
+    {
+        $this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabLabel));
+    }
 
-		$oConfig = MetaModel::GetConfig();
-		$sSectionStateStorageKey = $oConfig->GetItopInstanceid().'/'.$sSectionStateStorageBusinessKey.'/collapsible-'.$iSectionId;
-		$sSectionStateStorageKey = json_encode($sSectionStateStorageKey);
-		$sOpenedByDefault = ($bOpenedByDefault) ? 'true' : 'false';
-		$this->add_ready_script("initCollapsibleSection($iSectionId, $sOpenedByDefault, '$sSectionStateStorageKey');");
+    public function StartCollapsibleSection(
+        $sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = ''
+    )
+    {
+        $this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault,
+            $sSectionStateStorageBusinessKey));
+    }
 
-		$iSectionId++;
-		return $sHtml;
-	}
+    private function GetStartCollapsibleSection(
+        $sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = ''
+    )
+    {
+        $this->bHasCollapsibleSection = true;
+        $sHtml = '';
+        static $iSectionId = 0;
+        $sHtml .= '<a id="LnkCollapse_' . $iSectionId . '" class="CollapsibleLabel" href="#">' . $sSectionLabel . '</a></br>' . "\n";
+        $sHtml .= '<div id="Collapse_' . $iSectionId . '" style="display:none">' . "\n";
 
-	public function EndCollapsibleSection()
-	{
-		$this->add($this->GetEndCollapsibleSection());
-	}
+        $oConfig = MetaModel::GetConfig();
+        $sSectionStateStorageKey = $oConfig->GetItopInstanceid() . '/' . $sSectionStateStorageBusinessKey . '/collapsible-' . $iSectionId;
+        $sSectionStateStorageKey = json_encode($sSectionStateStorageKey);
+        $sOpenedByDefault = ($bOpenedByDefault) ? 'true' : 'false';
+        $this->add_ready_script("initCollapsibleSection($iSectionId, $sOpenedByDefault, '$sSectionStateStorageKey');");
 
-	public function GetEndCollapsibleSection()
-	{
-		return "</div>";
-	}
+        $iSectionId++;
+        return $sHtml;
+    }
 
-	public function add($sHtml)
-	{
-		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != ''))
-		{
-			$this->m_oTabs->AddToCurrentTab($sHtml);
-		}
-		else
-		{
-			parent::add($sHtml);
-		}
-	}
+    public function EndCollapsibleSection()
+    {
+        $this->add($this->GetEndCollapsibleSection());
+    }
 
-	/**
-	 * Records the current state of the 'html' part of the page output
-	 * @return mixed The current state of the 'html' output
-	 */
-	public function start_capture()
-	{
-		$sCurrentTabContainer = $this->m_oTabs->GetCurrentTabContainer();
-		$sCurrentTab = $this->m_oTabs->GetCurrentTab();
-		
-		if (!empty($sCurrentTabContainer) && !empty($sCurrentTab))
-		{
-			$iOffset = $this->m_oTabs->GetCurrentTabLength();
-			return array('tc' => $sCurrentTabContainer, 'tab' => $sCurrentTab, 'offset' => $iOffset);
-		}
-		else
-		{
-			return parent::start_capture();
-		}
-	}
+    public function GetEndCollapsibleSection()
+    {
+        return "</div>";
+    }
 
-	/**
-	 * Returns the part of the html output that occurred since the call to start_capture
-	 * and removes this part from the current html output
-	 * @param $offset mixed The value returned by start_capture
-	 * @return string The part of the html output that was added since the call to start_capture
-	 */
-	public function end_capture($offset)
-	{
-		if (is_array($offset))
-		{
-			if ($this->m_oTabs->TabExists($offset['tc'], $offset['tab']))
-			{
-				$sCaptured = $this->m_oTabs->TruncateTab($offset['tc'], $offset['tab'], $offset['offset']);
-			}
-			else
-			{
-				$sCaptured = '';
-			}
-		}
-		else
-		{
-			$sCaptured = parent::end_capture($offset);
-		}
-		return $sCaptured;
-	}
+    public function add($sHtml)
+    {
+        if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != '')) {
+            $this->m_oTabs->AddToCurrentTab($sHtml);
+        } else {
+            parent::add($sHtml);
+        }
+    }
 
-	/**
-	 * Set the message to be displayed in the 'app-banner' section at the top of the page
-	 */
-	public function SetMessage($sHtmlMessage)
-	{
-		$sHtmlIcon = '<span class="fa fa-comment fa-1x"></span>';
-		$this->AddApplicationMessage($sHtmlMessage, $sHtmlIcon);
-	}
+    /**
+     * Records the current state of the 'html' part of the page output
+     * @return mixed The current state of the 'html' output
+     */
+    public function start_capture()
+    {
+        $sCurrentTabContainer = $this->m_oTabs->GetCurrentTabContainer();
+        $sCurrentTab = $this->m_oTabs->GetCurrentTab();
 
-	/**
-	 * Add message to be displayed in the 'app-banner' section at the top of the page
-	 */
-	public function AddApplicationMessage($sHtmlMessage, $sHtmlIcon = null, $sTip = null)
-	{
-		if (strlen($sHtmlMessage))
-		{
-			$this->m_aMessages[] = array(
-				'icon' => $sHtmlIcon,
-				'message' => $sHtmlMessage,
-				'tip' => $sTip
-			);
-		}
-	}
+        if (!empty($sCurrentTabContainer) && !empty($sCurrentTab)) {
+            $iOffset = $this->m_oTabs->GetCurrentTabLength();
+            return array('tc' => $sCurrentTabContainer, 'tab' => $sCurrentTab, 'offset' => $iOffset);
+        } else {
+            return parent::start_capture();
+        }
+    }
+
+    /**
+     * Returns the part of the html output that occurred since the call to start_capture
+     * and removes this part from the current html output
+     *
+     * @param $offset mixed The value returned by start_capture
+     *
+     * @return string The part of the html output that was added since the call to start_capture
+     */
+    public function end_capture($offset)
+    {
+        if (is_array($offset)) {
+            if ($this->m_oTabs->TabExists($offset['tc'], $offset['tab'])) {
+                $sCaptured = $this->m_oTabs->TruncateTab($offset['tc'], $offset['tab'], $offset['offset']);
+            } else {
+                $sCaptured = '';
+            }
+        } else {
+            $sCaptured = parent::end_capture($offset);
+        }
+        return $sCaptured;
+    }
+
+    /**
+     * Set the message to be displayed in the 'app-banner' section at the top of the page
+     */
+    public function SetMessage($sHtmlMessage)
+    {
+        $sHtmlIcon = '<span class="fa fa-comment fa-1x"></span>';
+        $this->AddApplicationMessage($sHtmlMessage, $sHtmlIcon);
+    }
+
+    /**
+     * Add message to be displayed in the 'app-banner' section at the top of the page
+     */
+    public function AddApplicationMessage($sHtmlMessage, $sHtmlIcon = null, $sTip = null)
+    {
+        if (strlen($sHtmlMessage)) {
+            $this->m_aMessages[] = array(
+                'icon' => $sHtmlIcon,
+                'message' => $sHtmlMessage,
+                'tip' => $sTip
+            );
+        }
+    }
 }
