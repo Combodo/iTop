@@ -303,14 +303,9 @@ try
 			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
 				'context' => $oAppContext->GetAsHash(),
 				'att_code' => $sAttCode,
-				'origin' => 'console'
+				'origin' => 'console',
+				'source_obj' => $oObj
 			);
-			if (!empty($sJson))
-			{
-				$oWizardHelper = WizardHelper::FromJSON($sJson);
-				$oSourceObj = $oWizardHelper->GetTargetObject();
-				$aPrefillFormParam['source_obj'] = $oSourceObj;
-			}
 			$aAlreadyLinked = utils::ReadParam('aAlreadyLinked', array());
 			$oWidget->GetObjectPickerDialog($oPage, $oObj, $sJson, $aAlreadyLinked, $aPrefillFormParam);
 			break;

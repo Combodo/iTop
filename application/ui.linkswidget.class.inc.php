@@ -418,7 +418,7 @@ EOF
 	 * @throws DictExceptionMissingString
 	 * @throws Exception
 	 */
-	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = array(), $aPreFillFormParam = array())
+	public function GetObjectPickerDialog($oPage, $oCurrentObj, $sJson, $aAlreadyLinkedIds = array(), $aPrefillFormParam = array())
 	{
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
 
@@ -439,8 +439,9 @@ EOF
 		if(!empty($oCurrentObj))
 		{
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
-			$aPreFillFormParam['filter'] = $oFilter;
-			$oCurrentObj->PrefillForm('search', $aPreFillFormParam);
+			$aPrefillFormParam['filter'] = $oFilter;
+			$aPrefillFormParam['dest_class'] = $this->m_sRemoteClass;
+			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->m_sAttCode}{$this->m_sNameSuffix}",
