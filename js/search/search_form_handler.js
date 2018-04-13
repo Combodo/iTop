@@ -634,8 +634,9 @@ $(function()
 				.appendTo(this.elements.criterion_area.find('.sf_criterion_row:first'));
 
 			var sButtonText = (this.options.auto_submit === true) ? Dict.S('UI:Button:Refresh') : Dict.S('UI:Button:Search');
+			var sButtonIcon = (this.options.auto_submit === true) ? 'fa-refresh' : 'fa-search';
 			var oButtonElem = $('<div class="sfb_header"></div>')
-				.append('<a class="fa fa-fw fa-search" title="' + sButtonText + '" href="#"></a>')
+				.append('<a class="fa fa-fw ' + sButtonIcon + '" title="' + sButtonText + '" href="#"></a>')
 				.appendTo(this.elements.submit_button);
 
 			// Bind events
