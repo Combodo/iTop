@@ -36,6 +36,7 @@ class DBRestore extends DBBackup
 	{
 		//IssueLog::Info('non juste info: '.$sMsg);
 	}
+
 	protected function LogError($sMsg)
 	{
 		IssueLog::Error($sMsg);
@@ -78,20 +79,20 @@ class DBRestore extends DBBackup
 		$aOutput = array();
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
-		foreach($aOutput as $sLine)
+		foreach ($aOutput as $sLine)
 		{
 			$this->LogInfo("mysql said: $sLine");
 		}
 		if ($iRetCode != 0)
 		{
 			$this->LogError("Failed to execute: $sCommandDisplay. The command returned:$iRetCode");
-			foreach($aOutput as $sLine)
+			foreach ($aOutput as $sLine)
 			{
 				$this->LogError("mysql said: $sLine");
 			}
-			if (count($aOutput) == 1) 
+			if (count($aOutput) == 1)
 			{
-				$sMoreInfo = trim($aOutput[0]); 
+				$sMoreInfo = trim($aOutput[0]);
 			}
 			else
 			{
@@ -103,6 +104,7 @@ class DBRestore extends DBBackup
 
 	/**
 	 * @deprecated Use RestoreFromCompressedBackup instead
+	 *
 	 * @param $sZipFile
 	 * @param string $sEnvironment
 	 */

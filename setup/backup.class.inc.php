@@ -22,12 +22,14 @@ interface BackupArchive
 {
 	/**
 	 * @param string $sFile
+	 *
 	 * @return bool <b>TRUE</b> if the file is present, <b>FALSE</b> otherwise.
 	 */
 	public function hasFile($sFile);
 
 	/**
 	 * @param string $sDirectory
+	 *
 	 * @return bool <b>TRUE</b> if the directory is present, <b>FALSE</b> otherwise.
 	 */
 	public function hasDir($sDirectory);
@@ -35,6 +37,7 @@ interface BackupArchive
 	/**
 	 * @param string $sDestinationDir
 	 * @param string $sArchiveFile
+	 *
 	 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
 	 */
 	public function extractFileTo($sDestinationDir, $sArchiveFile);
@@ -42,17 +45,22 @@ interface BackupArchive
 	/**
 	 * Extract a whole directory from the archive.
 	 * Usage: $oArchive->extractDirTo('/var/www/html/itop/data', '/production-modules/')
+	 *
 	 * @param string $sDestinationDir
 	 * @param string $sArchiveDir Note: must start and end with a slash !!
+	 *
 	 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
 	 */
 	public function extractDirTo($sDestinationDir, $sArchiveDir);
 
 	/**
 	 * Returns the entry contents using its name
+	 *
 	 * @param string $name Name of the entry
 	 * @param int $length [optional] The length to be read from the entry. If 0, then the entire entry is read.
-	 * @param int $flags [optional] The flags to use to open the archive. the following values may be ORed to it. <b>ZipArchive::FL_UNCHANGED</b>
+	 * @param int $flags [optional] The flags to use to open the archive. the following values may be ORed to it.
+	 *     <b>ZipArchive::FL_UNCHANGED</b>
+	 *
 	 * @return string the contents of the entry on success or <b>FALSE</b> on failure.
 	 */
 	public function getFromName($name, $length = 0, $flags = null);
@@ -102,6 +110,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 		/**
 		 * @param string $sFile
+		 *
 		 * @return bool <b>TRUE</b> if the file is present, <b>FALSE</b> otherwise.
 		 */
 		public function hasFile($sFile)
@@ -111,6 +120,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 		/**
 		 * @param string $sDirectory
+		 *
 		 * @return bool <b>TRUE</b> if the directory is present, <b>FALSE</b> otherwise.
 		 */
 		public function hasDir($sDirectory)
@@ -121,6 +131,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		/**
 		 * @param string $sDestinationDir
 		 * @param string $sArchiveFile
+		 *
 		 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
 		 */
 		public function extractFileTo($sDestinationDir, $sArchiveFile)
@@ -131,14 +142,16 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		/**
 		 * Extract a whole directory from the archive.
 		 * Usage: $oZip->extractDirTo('/var/www/html/itop/data', '/production-modules/')
+		 *
 		 * @param string $sDestinationDir
 		 * @param string $sZipDir Must start and end with a slash !!
+		 *
 		 * @return boolean
 		 */
 		public function extractDirTo($sDestinationDir, $sZipDir)
 		{
 			$aFiles = array();
-			for($i = 0; $i < $this->numFiles; $i++)
+			for ($i = 0; $i < $this->numFiles; $i++)
 			{
 				$sEntry = $this->getNameIndex($i);
 				//Use strpos() to check if the entry name contains the directory we want to extract
@@ -153,6 +166,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			{
 				return true;
 			}
+
 			return false;
 		}
 	} // class ZipArchiveEx
@@ -220,6 +234,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 		/**
 		 * Create a normalized backup name, depending on the current date/time and Database
+		 *
 		 * @param sNameSpec string Name and path, eventually containing itop placeholders + time formatting specs
 		 */
 		public function SetMySQLBinDir($sMySQLBinDir)
@@ -229,6 +244,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 		/**
 		 * Create a normalized backup name, depending on the current date/time and Database
+		 *
 		 * @param string sNameSpec Name and path, eventually containing itop placeholders + time formatting specs
 		 */
 		public function MakeName($sNameSpec = "__DB__-%Y-%m-%d")
@@ -239,6 +255,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$sFileName = str_replace('__SUBNAME__', $this->sDBSubName, $sFileName);
 			// Transform %Y, etc.
 			$sFileName = strftime($sFileName);
+
 			return $sFileName;
 		}
 
@@ -264,7 +281,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 				'dest' => 'itop-dump.sql',
 			);
 
-			foreach($this->GetAdditionalFiles($sSourceConfigFile) as $sArchiveFile => $sSourceFile)
+			foreach ($this->GetAdditionalFiles($sSourceConfigFile) as $sArchiveFile => $sSourceFile)
 			{
 				$aContents[] = array(
 					'source' => $sSourceFile,
@@ -345,6 +362,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$sDataFile = $sTmpFolder.'/itop-dump.sql';
 			$this->DoBackup($sDataFile);
 			$aRet[] = $sDataFile;
+
 			return $aRet;
 		}
 
@@ -384,7 +402,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 					throw new BackupException("No table has been found with the given prefix");
 				}
 				$aEscapedTables = array();
-				foreach($aTables as $sTable)
+				foreach ($aTables as $sTable)
 				{
 					$aEscapedTables[] = self::EscapeShellArg($sTable);
 				}
@@ -418,7 +436,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$aOutput = array();
 			$iRetCode = 0;
 			exec($sCommand, $aOutput, $iRetCode);
-			foreach($aOutput as $sLine)
+			foreach ($aOutput as $sLine)
 			{
 				$this->LogInfo("mysqldump said: $sLine");
 			}
@@ -431,7 +449,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 				}
 
 				$this->LogError("Failed to execute: $sCommandDisplay. The command returned:$iRetCode");
-				foreach($aOutput as $sLine)
+				foreach ($aOutput as $sLine)
 				{
 					$this->LogError("mysqldump said: $sLine");
 				}
@@ -457,7 +475,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		 */
 		protected function DoZip($aFiles, $sZipArchiveFile)
 		{
-			foreach($aFiles as $aFile)
+			foreach ($aFiles as $aFile)
 			{
 				$sFile = $aFile['source'];
 				if (!is_file($sFile) && !is_dir($sFile))
@@ -471,9 +489,9 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 			$oZip = new ZipArchiveEx();
 			$res = $oZip->open($sZipArchiveFile, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-			if ($res === TRUE)
+			if ($res === true)
 			{
-				foreach($aFiles as $aFile)
+				foreach ($aFiles as $aFile)
 				{
 					if (is_dir($aFile['source']))
 					{
@@ -588,6 +606,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			{
 				$aTables[] = $aRow[0];
 			}
+
 			return $aTables;
 		}
 
@@ -695,6 +714,7 @@ class TarGzArchive implements BackupArchive
 
 	/**
 	 * @param string $sFile
+	 *
 	 * @return bool <b>TRUE</b> if the file is present, <b>FALSE</b> otherwise.
 	 */
 	public function hasFile($sFile)
@@ -706,18 +726,20 @@ class TarGzArchive implements BackupArchive
 			// Initial load
 			$this->buildFileList();
 		}
-		foreach($this->aFiles as $aArchFile)
+		foreach ($this->aFiles as $aArchFile)
 		{
 			if ($aArchFile['filename'] == $sFile)
 			{
 				return true;
 			}
 		}
+
 		return false;
 	}
 
 	/**
 	 * @param string $sDirectory
+	 *
 	 * @return bool <b>TRUE</b> if the directory is present, <b>FALSE</b> otherwise.
 	 */
 	public function hasDir($sDirectory)
@@ -729,19 +751,21 @@ class TarGzArchive implements BackupArchive
 			// Initial load
 			$this->buildFileList();
 		}
-		foreach($this->aFiles as $aArchFile)
+		foreach ($this->aFiles as $aArchFile)
 		{
 			if (($aArchFile['typeflag'] == 5) && ($aArchFile['filename'] == $sDirectory))
 			{
 				return true;
 			}
 		}
+
 		return false;
 	}
 
 	/**
 	 * @param string $sDestinationDir
 	 * @param string $sArchiveFile
+	 *
 	 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
 	 */
 	public function extractFileTo($sDestinationDir, $sArchiveFile)
@@ -752,8 +776,10 @@ class TarGzArchive implements BackupArchive
 	/**
 	 * Extract a whole directory from the archive.
 	 * Usage: $oArchive->extractDirTo('/var/www/html/itop/data', '/production-modules/')
+	 *
 	 * @param string $sDestinationDir
 	 * @param string $sArchiveDir
+	 *
 	 * @return bool <b>TRUE</b> on success or <b>FALSE</b> on failure.
 	 */
 	public function extractDirTo($sDestinationDir, $sArchiveDir)
@@ -763,9 +789,11 @@ class TarGzArchive implements BackupArchive
 
 	/**
 	 * Returns the entry contents using its name
+	 *
 	 * @param string $name Name of the entry
 	 * @param int $length unused.
 	 * @param int $flags unused.
+	 *
 	 * @return string the contents of the entry on success or <b>FALSE</b> on failure.
 	 */
 	public function getFromName($name, $length = 0, $flags = null)
