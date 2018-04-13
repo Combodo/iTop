@@ -19,6 +19,19 @@
 
 class DBRestore extends DBBackup
 {
+	/** @var string */
+	private $sDBPwd;
+	/** @var string */
+	private $sDBUser;
+
+	public function __construct(\Config $oConfig = null)
+	{
+		parent::__construct($oConfig);
+
+		$this->sDBUser = $oConfig->Get('db_user');
+		$this->sDBPwd = $oConfig->Get('db_pwd');
+	}
+
 	protected function LogInfo($sMsg)
 	{
 		//IssueLog::Info('non juste info: '.$sMsg);
@@ -99,8 +112,14 @@ class DBRestore extends DBBackup
 	}
 
 	/**
-	 * @param $sFile A file with the extension .zip or .tar.gz
+	 * <strong>Warning</strong> : can't be called with a loaded DataModel as we're compiling after restore
+	 *
+	 * @param string $sFile A file with the extension .zip or .tar.gz
 	 * @param string $sEnvironment Target environment
+	 *
+	 * @throws \BackupException
+	 *
+	 * @uses \RunTimeEnvironment::CompileFrom()
 	 */
 	public function RestoreFromCompressedBackup($sFile, $sEnvironment = 'production')
 	{
@@ -111,7 +130,7 @@ class DBRestore extends DBBackup
 		{
 			$this->LogInfo('zip file detected');
 			$oArchive = new ZipArchiveEx();
-			$res = $oArchive->open($sFile);
+			$oArchive->open($sFile);
 		}
 		elseif (substr($sNormalizedFile, -7) == '.tar.gz')
 		{
@@ -120,7 +139,7 @@ class DBRestore extends DBBackup
 		}
 		else
 		{
-			throw new Exception('Unsupported format for a backup file: '.$sFile);
+			throw new BackupException('Unsupported format for a backup file: '.$sFile);
 		}
 
 		// Load the database
@@ -131,7 +150,14 @@ class DBRestore extends DBBackup
 		$oArchive->extractFileTo($sDataDir, 'itop-dump.sql');
 		$sDataFile = $sDataDir.'/itop-dump.sql';
 		$this->LoadDatabase($sDataFile);
-		SetupUtils::rrmdir($sDataDir);
+		try
+		{
+			SetupUtils::rrmdir($sDataDir);
+		}
+		catch (Exception $e)
+		{
+			throw new BackupException("Can't remove data dir", 0, $e);
+		}
 
 		// Update the code
 		//
@@ -147,7 +173,14 @@ class DBRestore extends DBBackup
 		}
 		if (is_dir(APPROOT.'data/production-modules/'))
 		{
-			SetupUtils::rrmdir(APPROOT.'data/production-modules/');
+			try
+			{
+				SetupUtils::rrmdir(APPROOT.'data/production-modules/');
+			}
+			catch (Exception $e)
+			{
+				throw new BackupException("Can't remove production-modules dir", 0, $e);
+			}
 		}
 		if ($oArchive->hasDir('production-modules/') !== false)
 		{

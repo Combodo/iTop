@@ -352,14 +352,8 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 
 			var oParams = {};
 			oParams.operation = 'restore_exec';
-			oParams.token = $("#restore_token").val();
-			oParams.mysql_bindir = '$sMySQLBinDir';
-			oParams.db_host = '$sDBHost';
-			oParams.db_user = '$sDBUser';
-			oParams.db_pwd = '$sDBPwd';
-			oParams.db_name = '$sDBName';
-			oParams.db_subname = '$sDBSubName';
-			oParams.environment = '$sEnvironment';
+			oParams.token = $("#restore_token").val(); // token to check auth + rights without loading MetaModel
+			oParams.environment = '$sEnvironment'; // needed to load the config
 			if (oParams.token.length > 0)
 			{
 				$.post(GetAbsoluteUrlModulePage('itop-backup', 'ajax.backup.php'), oParams, function(data){

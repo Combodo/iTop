@@ -67,6 +67,12 @@ try
 		$oPage->output();
 		break;
 
+		/*
+		 * Fix a token :
+		 *  We can't load the MetaModel because in DBRestore, after restore is done we're launching a compile !
+		 *  So as \LoginWebPage::DoLogin needs a loaded DataModel, we can't use it
+		 *  As a result we're setting a token file to make sure the restore is called by an authenticated user with the correct rights !
+		 */
 		case 'restore_get_token':
 		require_once(APPROOT.'/application/startup.inc.php');
 		require_once(APPROOT.'/application/loginwebpage.class.inc.php');
@@ -99,7 +105,10 @@ EOF
 		$oPage->output();
 		break;
 
-
+		/*
+		 * We can't call \LoginWebPage::DoLogin because DBRestore will do a compile after restoring the DB
+		 * Authentication is checked with a token file (see $sOperation='restore_get_token')
+		 */
 		case 'restore_exec':
 		require_once(APPROOT."setup/runtimeenv.class.inc.php");
 		require_once(APPROOT.'/application/utils.inc.php');
@@ -136,15 +145,13 @@ EOF
 				}
 				$sFile = file_get_contents($sTokenFile);
 				unlink($sTokenFile);
-	
-				$sMySQLBinDir = utils::ReadParam('mysql_bindir', '', false, 'raw_data');
-				$sDBHost = utils::ReadParam('db_host', '', false, 'raw_data');
-				$sDBUser = utils::ReadParam('db_user', '', false, 'raw_data');
-				$sDBPwd = utils::ReadParam('db_pwd', '', false, 'raw_data');
-				$sDBName = utils::ReadParam('db_name', '', false, 'raw_data');
-				$sDBSubName = utils::ReadParam('db_subname', '', false, 'raw_data');
-	
-				$oDBRS = new DBRestore($sDBHost, $sDBUser, $sDBPwd, $sDBName, $sDBSubName);
+
+				// Loading config file : we don't have the MetaModel but we have the current env !
+				$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
+				$oItopConfig = new Config($sConfigFilePath, true);
+				$sMySQLBinDir = $oItopConfig->GetModuleSetting('itop-backup', 'mysql_bindir', '');
+
+				$oDBRS = new DBRestore($oItopConfig);
 				$oDBRS->SetMySQLBinDir($sMySQLBinDir);
 	
 				$sBackupDir = APPROOT.'data/backups/';
