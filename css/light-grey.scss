@@ -799,7 +799,7 @@ input.dp-applied {
 	margin-left: auto;
 	margin-right: auto;
 	font-size: 12px;
-	text-align: initial; /* To compensate .search_box:text-align */
+	text-align: left;   /* To compensate .search_box:text-align */
 	border: 1px solid $complement-color;
 	//transition: width 0.3s ease-in-out;
 
@@ -1483,6 +1483,10 @@ input.dp-applied {
 				user-select: none;
 			}
 			.sff_reset{
+				display: none;
+			}
+
+			input::-ms-clear {
 				display: none;
 			}
 		}

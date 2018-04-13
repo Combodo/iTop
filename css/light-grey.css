@@ -719,7 +719,7 @@ input.dp-applied {
   margin-left: auto;
   margin-right: auto;
   font-size: 12px;
-  text-align: initial;
+  text-align: left;
   /* To compensate .search_box:text-align */
   border: 1px solid #1c94c4;
   /* Sizing reset */
@@ -1262,6 +1262,9 @@ input.dp-applied {
   user-select: none;
 }
 .search_form_handler .sf_filter .sff_input_wrapper .sff_reset {
+  display: none;
+}
+.search_form_handler .sf_filter .sff_input_wrapper input::-ms-clear {
   display: none;
 }
 .search_form_handler .sf_filter.sf_with_buttons input {

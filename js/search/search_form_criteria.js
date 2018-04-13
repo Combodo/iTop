@@ -509,7 +509,7 @@ $(function()
 				return sTitle;
 			}
 
-			sTitle = Dict.Format('UI:Search:Criteria:Title:Default:Any:Empty', this.options.field.label);
+			sTitle = Dict.Format('UI:Search:Criteria:Title:Default:Empty', this.options.field.label);
 
 			return sTitle;
 		},
@@ -518,7 +518,7 @@ $(function()
 				return sTitle;
 			}
 
-			sTitle = Dict.Format('UI:Search:Criteria:Title:Default:Any:NotEmpty', this.options.field.label);
+			sTitle = Dict.Format('UI:Search:Criteria:Title:Default:NotEmpty', this.options.field.label);
 
 			return sTitle;
 		},
