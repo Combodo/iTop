@@ -25,7 +25,7 @@ $(function()
 
 			// Null value
 			'null_value': {
-				'code': null,
+				'code': 'null',
 				'label': Dict.S('Enum:Undefined'),
 			},
 
