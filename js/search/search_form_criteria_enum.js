@@ -487,21 +487,25 @@ $(function()
 			// Re-check allowed values from param
 			for(var iIdx in aValues)
 			{
-				if(oOpElem.find('.sfc_opc_mc_item[data-value-code="' + aValues[iIdx].value + '"]').length > 0)
-				{
-					oOpElem.find('.sfc_opc_mc_item[data-value-code="' + aValues[iIdx].value + '"] input')
-						.prop('checked', true);
-				}
-				else
-				{
-					var oItemElem = this._makeListItemElement(aValues[iIdx].label, aValues[iIdx].value, true);
-					oItemElem.appendTo(this._getSelectedValuesWrapperSelector());
-				}
+			    var oItemElem = oOpElem.find('.sfc_opc_mc_item[data-value-code="' + aValues[iIdx].value + '"]');
 
-				// If autocomplete, hide them from here and show them in the selected values list
+			    // Add value to dynamic items if not existing (undefined should have already been put in static items)
+                if(oItemElem.length == 0)
+                {
+                    oItemElem = this._makeListItemElement(aValues[iIdx].label, aValues[iIdx].value, true);
+                    oItemElem.appendTo(this.element.find(this._getDynamicValuesWrapperSelector()));
+                }
+
+                // Check item
+				oItemElem.find('input')
+						.prop('checked', true);
+
+                // In case of autocomplete, clone item into selected items
 				if(this._hasAutocompleteAllowedValues() === true)
 				{
-					// TODO.
+                    oSelectedItemElem = oItemElem.clone();
+                    oSelectedItemElem.appendTo(this.element.find(this._getSelectedValuesWrapperSelector()));
+                    oItemElem.hide();
 				}
 			}
 
@@ -552,8 +556,10 @@ $(function()
 				for(var sLabel in oResponse)
 				{
 					var sValue = oResponse[sLabel];
-					var bInitChecked = this._isSelectedValues(sValue);
-					var bInitHidden = this._isSelectedValues(sValue);
+					// Note: We don't use the _isSelectedValue() method here as it only returns "applied" values; at this moment will could have a checked value that is not among selected (me.options.values) yet. The result would be an hidden item from the AC results.
+					var bSelected = (this.element.find(this._getSelectedValuesWrapperSelector() + ' .sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0);
+					var bInitChecked = bSelected;
+					var bInitHidden = bSelected;
 					var oValueElem = this._makeListItemElement(sLabel, sValue, bInitChecked, bInitHidden);
 					oValueElem.appendTo(oDynamicListElem);
 				}
@@ -579,12 +585,17 @@ $(function()
 
 
 		// Value helpers
-		// - Return the selector fo the element containing the selected values
-		_getSelectedValuesWrapperSelector: function()
-		{
-			return (this._hasAutocompleteAllowedValues()) ? '.sfc_opc_mc_items_selected' : '.sfc_opc_mc_items_static, .sfc_opc_mc_items_dynamic';
-		},
-		// - Return true if sValue is among the selected values "codes"
+        // - Return the selector for the element containing the dynamic values values
+        _getDynamicValuesWrapperSelector: function()
+        {
+            return '.sfc_opc_mc_items_dynamic';
+        },
+        // - Return the selector for the element containing the selected values
+        _getSelectedValuesWrapperSelector: function()
+        {
+            return (this._hasAutocompleteAllowedValues()) ? '.sfc_opc_mc_items_selected' : '.sfc_opc_mc_items_static, .sfc_opc_mc_items_dynamic';
+        },
+		// - Return true if sValue is among the selected values "codes" (this.options.values). Note that those values are updated only on _apply(), not on checkbox change.
 		_isSelectedValues: function(sValue)
 		{
 			var bFound = false;
@@ -601,7 +612,7 @@ $(function()
 
 			return bFound;
 		},
-		// - Return true if sLabel is among the selected values "labels"
+		// - Return true if sLabel is among the selected values "labels" (this.options.values). Note that those values are updated only on _apply(), not on checkbox change.
 		_isSelectedLabels: function(sLabel)
 		{
 			var bFound = false;
@@ -624,24 +635,38 @@ $(function()
 			var oSelectedValuesElem = this.element.find(this._getSelectedValuesWrapperSelector());
 			for(var sValue in oValues)
 			{
-				// Add only if not already selected
-				if(this._isSelectedValues(sValue))
+				// // Add only if not already selected
+				// if(this._isSelectedValues(sValue))
+				// {
+				// 	// continue;
+				// }
+
+				var oItemElem = oSelectedValuesElem.find('.sfc_opc_mc_item[data-value-code="' + sValue + '"]');
+
+				if(oItemElem.length == 0)
 				{
-					continue;
+                    oItemElem = this._makeListItemElement(oValues[sValue], sValue, true);
+                    oItemElem
+                        .appendTo(oSelectedValuesElem)
+						.show()
+                        .effect('highlight', {}, 500);
 				}
 
-				if(oSelectedValuesElem.find('.sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0)
-				{
-					oSelectedValuesElem.find('.sfc_opc_mc_item[data-value-code="' + sValue + '"] input')
-						.prop('checked', true);
-				}
-				else
-				{
-					var oItemElem = this._makeListItemElement(oValues[sValue], sValue, true);
-					oItemElem
-						.appendTo(oSelectedValuesElem)
-						.effect('highlight', {}, 500);
-				}
+				oItemElem.find('input')
+                         .prop('checked', true);
+
+				// if(oSelectedValuesElem.find('.sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0)
+				// {
+				// 	oSelectedValuesElem.find('.sfc_opc_mc_item[data-value-code="' + sValue + '"] input')
+				// 		.prop('checked', true);
+				// }
+				// else
+				// {
+				// 	var oItemElem = this._makeListItemElement(oValues[sValue], sValue, true);
+				// 	oItemElem
+				// 		.appendTo(oSelectedValuesElem)
+				// 		.effect('highlight', {}, 500);
+				// }
 			}
 			this._refreshSelectedValues();
 		},
