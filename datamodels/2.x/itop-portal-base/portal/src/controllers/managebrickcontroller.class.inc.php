@@ -47,6 +47,8 @@ use VariableExpression;
 
 class ManageBrickController extends BrickController
 {
+	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/popup-export-excel.html.twig';
+
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
 	 * @param \Silex\Application $oApp
