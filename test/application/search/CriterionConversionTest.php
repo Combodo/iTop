@@ -33,6 +33,8 @@ use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use Combodo\iTop\Application\Search\CriterionParser;
 use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use DBObjectSearch;
+use DBSearch;
 
 class CriterionConversionTest extends ItopDataTestCase
 {
@@ -49,13 +51,17 @@ class CriterionConversionTest extends ItopDataTestCase
 	/**
 	 * @dataProvider ToOqlProvider
 	 *
+	 * @param $sClass
 	 * @param $sJSONCriterion
 	 * @param $sExpectedOQL
+	 *
+	 * @throws \Exception
 	 */
-	public function testToOql($sJSONCriterion, $sExpectedOQL)
+	public function testToOql($sClass, $sJSONCriterion, $sExpectedOQL)
 	{
+		$oSearch = new DBObjectSearch($sClass);
 		$sOql = CriterionToOQL::Convert(
-			json_decode($sJSONCriterion, true)
+			$oSearch, json_decode($sJSONCriterion, true)
 		);
 
 		$this->debug($sOql);
@@ -66,6 +72,7 @@ class CriterionConversionTest extends ItopDataTestCase
 	{
 		return array(
 			'>' => array(
+				'UserRequest',
 				'{
                     "ref": "UserRequest.start_date",
                     "values": [
@@ -80,6 +87,7 @@ class CriterionConversionTest extends ItopDataTestCase
 				"(`UserRequest`.`start_date` > '2017-01-01')"
 			),
 			'contains' => array(
+				'Contact',
 				'{
                     "ref": "Contact.name",
                     "values": [
@@ -94,6 +102,7 @@ class CriterionConversionTest extends ItopDataTestCase
 				"(`Contact`.`name` LIKE '%toto%')"
 			),
 			'starts_with' => array(
+				'Contact',
 				'{
                     "ref": "Contact.name",
                     "values": [
@@ -108,6 +117,7 @@ class CriterionConversionTest extends ItopDataTestCase
 				"(`Contact`.`name` LIKE 'toto%')"
 			),
 			'ends_with' => array(
+				'Contact',
 				'{
                     "ref": "Contact.name",
                     "values": [
@@ -122,6 +132,7 @@ class CriterionConversionTest extends ItopDataTestCase
 				"(`Contact`.`name` LIKE '%toto')"
 			),
 			'empty' => array(
+				'Contact',
 				'{
                     "ref": "Contact.name",
                     "values": [
@@ -136,6 +147,7 @@ class CriterionConversionTest extends ItopDataTestCase
 				"(`Contact`.`name` = '')"
 			),
 			'not_empty' => array(
+				'Contact',
 				'{
                     "ref": "Contact.name",
                     "values": [
@@ -163,7 +175,8 @@ class CriterionConversionTest extends ItopDataTestCase
 	function testToSearchForm($aCriterion, $sExpectedOperator)
 	{
 		$oSearchForm = new SearchForm();
-		$oSearch = \DBSearch::FromOQL("SELECT Contact");
+		/** @var \DBObjectSearch $oSearch */
+		$oSearch = DBSearch::FromOQL("SELECT Contact");
 		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
 		$aRes = CriterionToSearchForm::Convert($aCriterion, $aFields, $oSearch->GetJoinedClasses());
 		$this->debug($aRes);
@@ -530,8 +543,8 @@ class CriterionConversionTest extends ItopDataTestCase
 			),
 			'Hierarchical below' => array(
 				'OQL' => "SELECT Person AS P JOIN Organization AS Node ON P.org_id = Node.id JOIN Organization AS Root ON Node.parent_id BELOW Root.id WHERE Root.id=1",
-				'ExpectedOQL' => "SELECT `P` FROM Person AS `P` JOIN Organization AS `Node` ON `P`.org_id = `Node`.id JOIN Organization AS `Root` ON `Node`.parent_id BELOW `Root`.id WHERE (`Root`.`id` = 1)",
-				'ExpectedCriterion' => array(array('widget' => 'raw')),
+				'ExpectedOQL' => "SELECT `P` FROM Person AS `P` JOIN Organization AS `Node` ON `P`.org_id = `Node`.id JOIN Organization AS `Root` ON `Node`.parent_id BELOW `Root`.id WHERE (`Root`.`id` = '1')",
+				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
 			),
 			'IP range' => array(
 				'OQL' => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip) < INET_ATON('10.22.32.255')",

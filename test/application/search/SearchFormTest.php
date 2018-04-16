@@ -24,6 +24,7 @@ namespace Combodo\iTop\Test\UnitTest\Application\Search;
 
 use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use DBObjectSearch;
 use Exception;
 
 class SearchFormTest extends ItopDataTestCase
@@ -43,27 +44,25 @@ class SearchFormTest extends ItopDataTestCase
 	 * @dataProvider GetFieldsProvider
 	 * @throws \OQLException
 	 */
-	public function testGetFields($sOQL, $iNum, $sList)
+	public function testGetFields($sOQL)
 	{
 		$oSearchForm = new SearchForm();
 		$oSearch = \DBSearch::FromOQL($sOQL);
 		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
 		$this->debug($sOQL);
 		$this->debug(json_encode($aFields, JSON_PRETTY_PRINT));
-		$this->assertCount($iNum, $aFields[$sList]);
-
+		$this->assertTrue(count($aFields['zlist']) > 0);
+		$this->assertTrue(count($aFields['others']) > 0);
 	}
 
 	public function GetFieldsProvider()
 	{
 		return array(
-			array("SELECT Contact", 8, 'zlist'),
-			array("SELECT Contact AS C WHERE C.status = 'active'", 3, 'others'),
-			array("SELECT Person", 12, 'zlist'),
+			array("SELECT Contact"),
+			array("SELECT Contact AS C WHERE C.status = 'active'"),
+			array("SELECT Person"),
 			array(
 				"SELECT Person AS p JOIN UserRequest AS u ON u.agent_id = p.id WHERE u.status != 'closed'",
-				12,
-				'zlist'
 			),
 		);
 	}
@@ -83,6 +82,7 @@ class SearchFormTest extends ItopDataTestCase
 		{
 			$oSearch = \DBSearch::FromOQL($sOQL);
 			$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
+			/** @var DBObjectSearch $oSearch */
 			$aCriterion = $oSearchForm->GetCriterion($oSearch, $aFields);
 		} catch (\OQLException $e)
 		{

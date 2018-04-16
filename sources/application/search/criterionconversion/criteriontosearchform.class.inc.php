@@ -240,7 +240,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	 * @param $aCurrCriterion
 	 * @param $aMergedCriterion
 	 *
-	 * @return Current criteria or null if merged
+	 * @return array Current criteria or null if merged
 	 * @throws \Exception
 	 */
 	protected static function MergeDate($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
@@ -295,7 +295,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	 * @param $aCurrCriterion
 	 * @param $aMergedCriterion
 	 *
-	 * @return Current criteria or null if merged
+	 * @return array Current criteria or null if merged
 	 * @throws \Exception
 	 */
 	protected static function MergeDateTime($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
@@ -352,7 +352,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	 * @param $aCurrCriterion
 	 * @param $aMergedCriterion
 	 *
-	 * @return Current criteria or null if merged
+	 * @return array Current criteria or null if merged
 	 * @throws \Exception
 	 */
 	protected static function MergeNumeric($aPrevCriterion, $aCurrCriterion, &$aMergedCriterion)
@@ -514,16 +514,27 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 								$oDate = new DateTime($sDate);
 
 								$sFirstDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
-								$sFirstDateLabel = AttributeDateTime::GetFormat()->Format($sFirstDateValue);
-								$aCriteria['values'][0] = array('value' => $sFirstDateValue, 'label' => "$sFirstDateLabel");
-
+								try
+								{
+									$sFirstDateLabel = AttributeDateTime::GetFormat()->Format($sFirstDateValue);
+									$aCriteria['values'][0] = array('value' => $sFirstDateValue, 'label' => "$sFirstDateLabel");
+								}
+								catch (Exception $e)
+								{
+								}
 
 								$oDate->add(DateInterval::createFromDateString('1 day'));
 								$oDate->sub(DateInterval::createFromDateString('1 second'));
 
 								$sLastDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
-								$sLastDateLabel = AttributeDateTime::GetFormat()->Format($sLastDateValue);
-								$aCriteria['values'][1] = array('value' => $sLastDateValue, 'label' => "$sLastDateLabel");
+								try
+								{
+									$sLastDateLabel = AttributeDateTime::GetFormat()->Format($sLastDateValue);
+									$aCriteria['values'][1] = array('value' => $sLastDateValue, 'label' => "$sLastDateLabel");
+								}
+								catch (Exception $e)
+								{
+								}
 							}
 						}
 						break;
@@ -634,6 +645,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			case '=':
 				// Same as IN
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_IN;
+				unset($aCriteria['oql']);
 				break;
 			case 'IN':
 				// Nothing special to do

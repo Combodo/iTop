@@ -44,7 +44,7 @@ class dictTest extends ItopTestCase
 		parent::setUp();
 		require_once (APPROOT.'core/coreexception.class.inc.php');
 		require_once (APPROOT.'core/dict.class.inc.php');
-		require_once 'mockDict.php';
+		require_once 'mockDict.incphp';
 	}
 
     /**

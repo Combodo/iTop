@@ -530,11 +530,14 @@ class BinaryExpression extends Expression
 			return parent::GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 		}
 
-		$aCriteriaLeft = $oLeftExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
-		$aCriteriaRight = $oRightExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 
 		if ($bReverseOperator)
 		{
+			$aCriteriaRight = $oRightExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+			// $oAttDef can be different now
+			$oAttDef = $oRightExpr->GetAttDef($oSearch->GetJoinedClasses());
+			$aCriteriaLeft = $oLeftExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+
 			$aCriteria = array_merge($aCriteriaRight, $aCriteriaLeft);
 			// switch left and right expressions so reverse the operator
 			// Note that the operation is the same so < becomes > and not >=
@@ -559,6 +562,11 @@ class BinaryExpression extends Expression
 		}
 		else
 		{
+			$aCriteriaLeft = $oLeftExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+			// $oAttDef can be different now
+			$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
+			$aCriteriaRight = $oRightExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
+
 			$aCriteria = array_merge($aCriteriaLeft, $aCriteriaRight);
 			$aCriteria['operator'] = $this->GetOperator();
 		}
@@ -1056,9 +1064,28 @@ class FieldExpression extends UnaryExpression
 		}
 	}
 
+	private function GetJoinedFilters($oSearch, $iOperatorCodeTarget)
+	{
+		$aFilters = array();
+		$aPointingToByKey = $oSearch->GetCriteria_PointingTo();
+		foreach ($aPointingToByKey as $sExtKey => $aPointingTo)
+		{
+			foreach($aPointingTo as $iOperatorCode => $aFilter)
+			{
+				if ($iOperatorCode == $iOperatorCodeTarget)
+				{
+					foreach($aFilter as $oExtFilter)
+					{
+						$aFilters[$sExtKey] = $oExtFilter;
+					}
+				}
+			}
+		}
+		return $aFilters;
+	}
 
 	/**
-	 * @param $oSearch
+	 * @param DBObjectSearch $oSearch
 	 * @param null $aArgs
 	 * @param bool $bRetrofitParams
 	 * @param AttributeDefinition $oAttDef
@@ -1067,6 +1094,38 @@ class FieldExpression extends UnaryExpression
 	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
+		$aCriteria = array();
+		$aCriteria['is_hierarchical'] = false;
+		// Replace BELOW joins by the corresponding external key for the search
+		// Try to detect hierarchical links
+		if ($this->m_sName == 'id')
+		{
+			if (method_exists($oSearch, 'GetCriteria_PointingTo'))
+			{
+				$aFilters = $this->GetJoinedFilters($oSearch, TREE_OPERATOR_EQUALS);
+				if (!empty($aFilters))
+				{
+					foreach($aFilters as $sExtKey => $oFilter)
+					{
+						$aSubFilters = $this->GetJoinedFilters($oFilter, TREE_OPERATOR_BELOW);
+						foreach($aSubFilters as $oSubFilter)
+						{
+							/** @var \DBObjectSearch $oSubFilter */
+							$sClassAlias = $oSubFilter->GetClassAlias();
+							if ($sClassAlias == $this->m_sParent)
+							{
+								// Hierarchical link detected
+								// replace current field with the corresponding external key
+								$this->m_sName = $sExtKey;
+								$this->m_sParent = $oSearch->GetClassAlias();
+								$aCriteria['is_hierarchical'] = true;
+							}
+						}
+					}
+				}
+			}
+		}
+
 		if (method_exists($oSearch, 'GetJoinedClasses'))
 		{
 			$oAttDef = $this->GetAttDef($oSearch->GetJoinedClasses());
@@ -1096,11 +1155,12 @@ class FieldExpression extends UnaryExpression
 		{
 			$sSearchType = AttributeDefinition::SEARCH_WIDGET_TYPE;
 		}
-		return array(
-			'widget' => $sSearchType,
-			'ref' => $this->GetParent().'.'.$this->GetName(),
-			'class_alias' => $this->GetParent(),
-		);
+
+		$aCriteria['widget'] = $sSearchType;
+		$aCriteria['ref'] = $this->GetParent().'.'.$this->GetName();
+		$aCriteria['class_alias'] = $this->GetParent();
+
+		return $aCriteria;
 	}
 }
 

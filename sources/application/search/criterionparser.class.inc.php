@@ -47,21 +47,21 @@ class CriterionParser
 	 */
 	public static function Parse($sBaseOql, $aCriterion, $sHiddenCriteria = null)
 	{
-		$aExpression = array();
-		$aOr = $aCriterion['or'];
-		foreach($aOr as $aAndList)
-		{
-
-			$sExpression = self::ParseAndList($aAndList['and']);
-			if (!empty($sExpression))
-			{
-				$aExpression[] = $sExpression;
-			}
-		}
-
 		try
 		{
 			$oSearch = DBObjectSearch::FromOQL($sBaseOql);
+
+			$aExpression = array();
+			$aOr = $aCriterion['or'];
+			foreach($aOr as $aAndList)
+			{
+
+				$sExpression = self::ParseAndList($oSearch, $aAndList['and']);
+				if (!empty($sExpression))
+				{
+					$aExpression[] = $sExpression;
+				}
+			}
 
 			if (!empty($sHiddenCriteria))
 			{
@@ -85,13 +85,13 @@ class CriterionParser
 		return null;
 	}
 
-	private static function ParseAndList($aAnd)
+	private static function ParseAndList($oSearch, $aAnd)
 	{
 		$aExpression = array();
 		foreach($aAnd as $aCriteria)
 		{
 
-			$sExpression = CriterionToOQL::Convert($aCriteria);
+			$sExpression = CriterionToOQL::Convert($oSearch, $aCriteria);
 			if ($sExpression !== '1')
 			{
 				$aExpression[] = $sExpression;

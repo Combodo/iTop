@@ -1005,7 +1005,7 @@ class DBObjectSearch extends DBSearch
 
 	public function GetCriteria() {return $this->m_oSearchCondition;}
 	public function GetCriteria_FullText() {throw new Exception("Removed GetCriteria_FullText");}
-	protected function GetCriteria_PointingTo($sKeyAttCode = "")
+	public function GetCriteria_PointingTo($sKeyAttCode = "")
 	{
 		if (empty($sKeyAttCode))
 		{

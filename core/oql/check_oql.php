@@ -20,13 +20,13 @@
  *     echo "Ok, '$sOQL' is a valid query";
  * }
  */
-if (!class_exists('CoreException', false))
-{
-	class CoreException extends Exception
-	{
-	
-	}
-}
+//if (!class_exists('CoreException', false))
+//{
+//	class CoreException extends Exception
+//	{
+//
+//	}
+//}
 
 require_once(__DIR__.'/expression.class.inc.php');
 require_once(__DIR__.'/oqlquery.class.inc.php');

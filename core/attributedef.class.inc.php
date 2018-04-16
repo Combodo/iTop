@@ -238,8 +238,11 @@ abstract class AttributeDefinition
 
 	/**
 	 * Check the validity of the given value
+	 *
 	 * @param DBObject $oHostObject
 	 * @param string An error if any, null otherwise
+	 *
+	 * @return bool
 	 */
 	public function CheckValue(DBObject $oHostObject, $value)
 	{
@@ -252,7 +255,8 @@ abstract class AttributeDefinition
 	{
 		return "";
 		// e.g: return array("Site", "infrid", "name");
-	} 
+	}
+
 	public function GetFinalAttDef()
 	{
 		return $this;

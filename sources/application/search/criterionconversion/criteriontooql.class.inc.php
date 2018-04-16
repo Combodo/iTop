@@ -27,16 +27,19 @@ use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
 use AttributeEnum;
+use AttributeExternalKey;
 use Combodo\iTop\Application\Search\AjaxSearchException;
 use Combodo\iTop\Application\Search\CriterionConversionAbstract;
 use Combodo\iTop\Application\Search\SearchForm;
+use DBObjectSearch;
 use Exception;
+use Expression;
 use MetaModel;
 
 class CriterionToOQL extends CriterionConversionAbstract
 {
 
-	public static function Convert($aCriteria)
+	public static function Convert($oSearch, $aCriteria)
 	{
 		if (!empty($aCriteria['oql']))
 		{
@@ -44,6 +47,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		}
 
 		$aRef = explode('.', $aCriteria['ref']);
+		$aCriteria['code'] = $aRef[1];
 		for($i = 0; $i < count($aRef); $i++)
 		{
 			$aRef[$i] = '`'.$aRef[$i].'`';
@@ -77,7 +81,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		{
 			$sFct = $aMappedOperators[$sOperator];
 
-			return self::$sFct($sRef, $aCriteria);
+			return self::$sFct($oSearch, $sRef, $aCriteria);
 		}
 
 		$sValue = self::GetValue(self::GetValues($aCriteria), 0);
@@ -109,7 +113,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return $aValues[$iIndex]['value'];
 	}
 
-	protected static function ContainsToOql($sRef, $aCriteria)
+	protected static function ContainsToOql($oSearch, $sRef, $aCriteria)
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
@@ -119,7 +123,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} LIKE '%{$sValue}%')";
 	}
 
-	protected static function StartsWithToOql($sRef, $aCriteria)
+	protected static function StartsWithToOql($oSearch, $sRef, $aCriteria)
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
@@ -129,7 +133,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} LIKE '{$sValue}%')";
 	}
 
-	protected static function EndsWithToOql($sRef, $aCriteria)
+	protected static function EndsWithToOql($oSearch, $sRef, $aCriteria)
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
@@ -139,7 +143,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} LIKE '%{$sValue}')";
 	}
 
-	protected static function EqualsToOql($sRef, $aCriteria)
+	protected static function EqualsToOql($oSearch, $sRef, $aCriteria)
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
@@ -149,7 +153,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} = '{$sValue}')";
 	}
 
-	protected static function RegexpToOql($sRef, $aCriteria)
+	protected static function RegexpToOql($oSearch, $sRef, $aCriteria)
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
@@ -159,7 +163,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} REGEXP '{$sValue}')";
 	}
 
-	protected static function EmptyToOql($sRef, $aCriteria)
+	protected static function EmptyToOql($oSearch, $sRef, $aCriteria)
 	{
 		if (isset($aCriteria['widget']))
 		{
@@ -176,7 +180,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} = '')";
 	}
 
-	protected static function NotEmptyToOql($sRef, $aCriteria)
+	protected static function NotEmptyToOql($oSearch, $sRef, $aCriteria)
 	{
 		if (isset($aCriteria['widget']))
 		{
@@ -193,7 +197,14 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} != '')";
 	}
 
-	protected static function InToOql($sRef, $aCriteria)
+	/**
+	 * @param DBObjectSearch $oSearch
+	 * @param $sRef
+	 * @param $aCriteria
+	 *
+	 * @return mixed|string
+	 */
+	protected static function InToOql($oSearch, $sRef, $aCriteria)
 	{
 		$sAttCode = $aCriteria['code'];
 		$sClass = $aCriteria['class'];
@@ -255,7 +266,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 					}
 				}
 			}
-		} catch (\CoreException $e)
+		} catch (Exception $e)
 		{
 		}
 
@@ -271,28 +282,69 @@ class CriterionToOQL extends CriterionConversionAbstract
 			$sFilterOnUndefined = "ISNULL({$sRef})";
 			if (count($aValues) === 0)
 			{
-				return $sFilterOnUndefined;
+				$sCondition = $sFilterOnUndefined;
 			}
-
-			if (count($aInValues) == 1)
+			elseif (count($aInValues) == 1)
 			{
 				// Add 'AND 1' to group the 'OR' inside an AND list for OQL parsing
-				return "((({$sRef} = '$sInList') OR {$sFilterOnUndefined}) AND 1)";
+				$sCondition =  "((({$sRef} = '$sInList') OR {$sFilterOnUndefined}) AND 1)";
+			}
+			else
+			{
+				// Add 'AND 1' to group the 'OR' inside an AND list for OQL parsing
+				$sCondition =  "(({$sRef} IN ('$sInList') OR {$sFilterOnUndefined}) AND 1)";
+			}
+		}
+		elseif (count($aInValues) == 1)
+		{
+			$sCondition =  "({$sRef} = '$sInList')";
+		}
+		else
+		{
+			$sCondition =  "({$sRef} IN ('$sInList'))";
+		}
+
+		// Hierarchical keys
+		if (isset($oAttDef) && $oAttDef->IsExternalKey() && (!isset($aCriteria['is_hierarchical']) || ($aCriteria['is_hierarchical'] !== false)))
+		{
+			if ($oAttDef instanceof AttributeExternalKey)
+			{
+				$sTargetClass = $oAttDef->GetTargetClass();
+			}
+			else
+			{
+				/** @var AttributeExternalKey $oFinalAttDef */
+				$oFinalAttDef = $oAttDef->GetFinalAttDef();
+				$sTargetClass = $oFinalAttDef->GetTargetClass();
 			}
 
-			// Add 'AND 1' to group the 'OR' inside an AND list for OQL parsing
-			return "(({$sRef} IN ('$sInList') OR {$sFilterOnUndefined}) AND 1)";
+			try
+			{
+				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
+				if ($sHierarchicalKeyCode !== false)
+				{
+					$oFilter = new DBObjectSearch($sTargetClass);
+					$sFilterAlias = $oFilter->GetClassAlias();
+					$sCondition = str_replace("$sRef", $sFilterAlias.'.id', $sCondition);
+					$oCondition = Expression::FromOQL($sCondition);
+					$oFilter->AddConditionExpression($oCondition);
+
+					$oHKFilter = new DBObjectSearch($sTargetClass);
+
+					$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
+					// Use the 'below' operator by default
+					$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
+					$sCondition = '1';
+				}
+			} catch (Exception $e)
+			{
+			}
 		}
 
-		if (count($aInValues) == 1)
-		{
-			return "({$sRef} = '$sInList')";
-		}
-
-		return "({$sRef} IN ('$sInList'))";
+		return $sCondition;
 	}
 
-	protected static function BetweenDatesToOql($sRef, $aCriteria)
+	protected static function BetweenDatesToOql($oSearch, $sRef, $aCriteria)
 	{
 		$aOQL = array();
 
@@ -352,13 +404,14 @@ class CriterionToOQL extends CriterionConversionAbstract
 	}
 
 	/**
+	 * @param DBObjectSearch $oSearch
 	 * @param $sRef
 	 * @param $aCriteria
 	 *
 	 * @return string
 	 * @throws \Combodo\iTop\Application\Search\AjaxSearchException
 	 */
-	protected static function BetweenToOql($sRef, $aCriteria)
+	protected static function BetweenToOql($oSearch, $sRef, $aCriteria)
 	{
 		$aOQL = array();
 
@@ -411,7 +464,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 	}
 
 
-	protected static function AllToOql($sRef, $aCriteria)
+	protected static function AllToOql($oSearch, $sRef, $aCriteria)
 	{
 		return "1";
 	}

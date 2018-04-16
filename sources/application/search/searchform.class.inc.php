@@ -26,6 +26,8 @@ namespace Combodo\iTop\Application\Search;
 use ApplicationContext;
 use AttributeDefinition;
 use AttributeExternalField;
+use AttributeFriendlyName;
+use AttributeSubItem;
 use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use CoreException;
@@ -39,7 +41,6 @@ use IssueLog;
 use MetaModel;
 use TrueExpression;
 use utils;
-use ValueSetObjects;
 use WebPage;
 
 class SearchForm
@@ -395,7 +396,7 @@ class SearchForm
 	}
 
 	/**
-	 * @param $oAttrDef
+	 * @param \AttributeDefinition $oAttrDef
 	 *
 	 * @return array
 	 */
@@ -409,6 +410,7 @@ class SearchForm
 			}
 			else
 			{
+				/** @var \AttributeExternalKey $oAttrDef */
 				$sTargetClass = $oAttrDef->GetTargetClass();
 			}
 			try
@@ -441,6 +443,7 @@ class SearchForm
 		{
 			if (method_exists($oAttrDef, 'GetAllowedValuesAsObjectSet'))
 			{
+				/** @var DBObjectSet $oSet */
 				$oSet = $oAttrDef->GetAllowedValuesAsObjectSet();
 				$iCount = $oSet->Count();
 				if ($iCount > MetaModel::GetConfig()->Get('max_combo_length'))
@@ -489,6 +492,7 @@ class SearchForm
 				$aAndExpressions = Expression::Split($oORSubExpr, 'AND');
 				foreach($aAndExpressions as $oAndSubExpr)
 				{
+					/** @var Expression $oAndSubExpr */
 					if (($oAndSubExpr instanceof TrueExpression) || ($oAndSubExpr->Render() == 1))
 					{
 						continue;
@@ -535,7 +539,7 @@ class SearchForm
 	 * @param $sClass
 	 * @param $sClassAlias
 	 * @param $sAttCode
-	 * @param $oAttDef
+	 * @param AttributeDefinition $oAttDef
 	 * @param $aFields
 	 * @param bool $bHasIndex
 	 *
@@ -619,7 +623,7 @@ class SearchForm
 	}
 
 	/**
-	 * @param $oSearch
+	 * @param DBObjectSearch $oSearch
 	 * @return array
 	 */
 	protected function GetDefaultCriterion($oSearch)
@@ -652,6 +656,5 @@ class SearchForm
 		$aOrCriterion = array(array('and' => $aAndCriterion));
 		return $aOrCriterion;
 	}
-
 
 }
