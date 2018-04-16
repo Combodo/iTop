@@ -482,18 +482,19 @@ $(function()
 			}
 
 			// Uncheck all allowed values
-			oOpElem.find('.sfc_opc_mc_item input').prop('checked', false);
+			oOpElem.find('.sfc_opc_mc_item').show();
+            oOpElem.find('.sfc_opc_mc_item input').prop('checked', false);
 
 			// Re-check allowed values from param
 			for(var iIdx in aValues)
 			{
-			    var oItemElem = oOpElem.find('.sfc_opc_mc_item[data-value-code="' + aValues[iIdx].value + '"]');
+			    var oItemElem = oOpElem.find(this._getAllowedValuesWrapperSelector()).find('.sfc_opc_mc_item[data-value-code="' + aValues[iIdx].value + '"]');
 
 			    // Add value to dynamic items if not existing (undefined should have already been put in static items)
                 if(oItemElem.length == 0)
                 {
                     oItemElem = this._makeListItemElement(aValues[iIdx].label, aValues[iIdx].value, true);
-                    oItemElem.appendTo(this.element.find(this._getDynamicValuesWrapperSelector()));
+                    oItemElem.appendTo(oOpElem.find(this._getDynamicValuesWrapperSelector()));
                 }
 
                 // Check item
@@ -503,8 +504,16 @@ $(function()
                 // In case of autocomplete, clone item into selected items
 				if(this._hasAutocompleteAllowedValues() === true)
 				{
-                    oSelectedItemElem = oItemElem.clone();
-                    oSelectedItemElem.appendTo(this.element.find(this._getSelectedValuesWrapperSelector()));
+                    var oSelectedItemElem = oOpElem.find(this._getSelectedValuesWrapperSelector()).find('.sfc_opc_mc_item[data-value-code="' + aValues[iIdx].value + '"]');
+				    if(oSelectedItemElem.length == 0)
+                    {
+                        oSelectedItemElem = oItemElem.clone();
+                        oSelectedItemElem.appendTo(oOpElem.find(this._getSelectedValuesWrapperSelector()));
+                    }
+
+                    oSelectedItemElem.show()
+                        .find('input')
+                        .prop('checked', true);
                     oItemElem.hide();
 				}
 			}
@@ -585,7 +594,12 @@ $(function()
 
 
 		// Value helpers
-        // - Return the selector for the element containing the dynamic values values
+        // - Return the selector for the element containing the static and dynamic values
+        _getAllowedValuesWrapperSelector: function()
+        {
+            return '.sfc_opc_mc_items_static, .sfc_opc_mc_items_dynamic';
+        },
+        // - Return the selector for the element containing the dynamic values
         _getDynamicValuesWrapperSelector: function()
         {
             return '.sfc_opc_mc_items_dynamic';
