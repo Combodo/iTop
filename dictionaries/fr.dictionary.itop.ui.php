@@ -162,6 +162,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Attribute:status/Value:disabled' => 'Désactivé',
 	'Class:User/Error:LoginMustBeUnique' => 'Le login doit être unique - "%1s" est déjà utilisé.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'L\'utilisateur doit avoir au moins un profil.',
+	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'L\'utilisateur doit avoir au moins une organisation.',
+	'Class:User/Error:OrganizationNotAllowed' => 'Organisation non autorisée.',
 	'Class:UserInternal' => 'Utilisateur interne',
 	'Class:UserInternal+' => 'Utilisateur défini dans iTop',
 	'Class:URP_Dimensions' => 'Dimension',

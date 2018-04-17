@@ -613,11 +613,15 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	/**
 	 * Read and cache organizations allowed to the given user
-	 * 
-	 * @param oUser
-	 * @param sClass -not used here but can be used in overloads
+	 *
+	 * @param $oUser
+	 * @param $sClass (not used here but can be used in overloads)
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \Exception
 	 */
-	protected function GetUserOrgs($oUser, $sClass)
+	public function GetUserOrgs($oUser, $sClass)
 	{
 		$iUser = $oUser->GetKey();
 		if (!array_key_exists($iUser, $this->m_aUserOrgs))
@@ -631,7 +635,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 				$oUserOrgSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData($sUserOrgQuery), array(), array('userid' => $iUser));
 				while ($aRow = $oUserOrgSet->FetchAssoc())
 				{
-					$oUserOrg = $aRow['UserOrg'];
 					$oOrg = $aRow['Org'];
 					$this->m_aUserOrgs[$iUser][] = $oOrg->GetKey();
 				}

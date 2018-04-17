@@ -256,8 +256,10 @@ abstract class User extends cmdbAbstractObject
 	}
 
 	/**
-	* Overload the standard behavior.
-	*/	
+	 * Overload the standard behavior.
+	 *
+	 * @throws \CoreException
+	 */
 	public function DoCheckToWrite()
 	{
 		parent::DoCheckToWrite();
@@ -290,8 +292,36 @@ abstract class User extends cmdbAbstractObject
 		// Only administrators can manage administrators
 		if (UserRights::IsAdministrator($this) && !UserRights::IsAdministrator())
 		{
-
 			$this->m_aCheckIssues[] = Dict::Format('UI:Login:Error:AccessRestricted');
+		}
+		// Check users with restricted organizations
+		if (!UserRights::IsAdministrator())
+		{
+			$oUser = UserRights::GetUserObject();
+			$oAddon = UserRights::GetModuleInstance();
+			if (method_exists($oAddon, 'GetUserOrgs'))
+			{
+				$aOrgs = $oAddon->GetUserOrgs($oUser, '');
+				if (count($aOrgs) > 0)
+				{
+					/** @var ORMLinkset $oSet */
+					$oSet = $this->Get('allowed_org_list');
+					if ($oSet->Count() == 0)
+					{
+						$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:AtLeastOneOrganizationIsNeeded');
+					}
+					else
+					{
+						while ($oUserOrg = $oSet->Fetch())
+						{
+							if (!in_array($oUserOrg->Get('allowed_org_id'), $aOrgs))
+							{
+								$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:OrganizationNotAllowed');
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
