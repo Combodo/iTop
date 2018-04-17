@@ -194,14 +194,12 @@ class SearchForm
 		}
 
 		$bIsRemovable = true;
-		/*
-		if (isset($aExtraParams['selection_mode']) && $aExtraParams['selection_mode'])
+		if (isset($aExtraParams['selection_type']) && ($aExtraParams['selection_type'] == 'single'))
 		{
-			// Mark all criterion as read-only and non-removable
-			// This is a controversy, the parameters were not read-only before
+			// Mark all criterion as read-only and non-removable for external keys only
 			$bIsRemovable = false;
 		}
-		*/
+
 		$aFields = $this->GetFields($oSet);
 		$oSearch = $oSet->GetFilter();
 		$aCriterion = $this->GetCriterion($oSearch, $aFields, $aArgs, $bIsRemovable);
