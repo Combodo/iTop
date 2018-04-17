@@ -111,10 +111,12 @@ class CMDBSource
 	/**
 	 * SQL charset & collation declaration for text columns
 	 *
+	 * Using an attribute instead of a constant to avoid crash in the setup for older PHP versions
+	 *
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-column.html
 	 * @since 2.5 #1001 switch to utf8mb4
 	 */
-	const SQL_STRING_COLUMNS_CHARSET_DEFINITION = ' CHARACTER SET '.DEFAULT_CHARACTER_SET.' COLLATE '.DEFAULT_COLLATION;
+	public static $SQL_STRING_COLUMNS_CHARSET_DEFINITION = ' CHARACTER SET '.DEFAULT_CHARACTER_SET.' COLLATE '.DEFAULT_COLLATION;
 
 	protected static $m_sDBHost;
 	protected static $m_sDBUser;

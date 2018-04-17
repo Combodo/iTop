@@ -5178,7 +5178,7 @@ abstract class MetaModel
 			return null;
 		}
 
-		return 'ALTER DATABASE'.CMDBSource::SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
+		return 'ALTER DATABASE'.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
 	}
 
 	/**
@@ -5207,7 +5207,7 @@ abstract class MetaModel
 			return null;
 		}
 
-		return 'ALTER TABLE `'.$sTableName.'`'.CMDBSource::SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
+		return 'ALTER TABLE `'.$sTableName.'`'.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
 	}
 
 	/**
