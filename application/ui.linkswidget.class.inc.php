@@ -573,7 +573,31 @@ EOF
 	
 				if (MetaModel::IsValidAttCode($sDestClass, $sAttCode) && !empty($defaultValue))
 				{
-					$oSearch->AddCondition($sAttCode, $defaultValue);
+					// Add Hierarchical condition if hierarchical key
+					$oAttDef = MetaModel::GetAttributeDef($sDestClass, $sAttCode);
+					if (isset($oAttDef) && ($oAttDef->IsExternalKey()))
+					{
+						try
+						{
+							/** @var AttributeExternalKey $oAttDef */
+							$sTargetClass = $oAttDef->GetTargetClass();
+							$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
+							if ($sHierarchicalKeyCode !== false)
+							{
+								$oFilter = new DBObjectSearch($sTargetClass);
+								$oFilter->AddCondition('id', $defaultValue);
+								$oHKFilter = new DBObjectSearch($sTargetClass);
+								$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
+								$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
+							}
+						} catch (Exception $e)
+						{
+						}
+					}
+					else
+					{
+						$oSearch->AddCondition($sAttCode, $defaultValue);
+					}
 				}
 			}
 		}
