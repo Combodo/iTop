@@ -3092,7 +3092,9 @@ table.listResults .originColor{
 #displaySelectorLabel,  #changeDefaultDisplay{
 	display :inline-block;
 }
-
+///////////////////
+// Datamodel Viewer
+///////////////////
 #dataModelSplitPane{
 	height:100%;
 }
@@ -3118,6 +3120,70 @@ table.listResults .originColor{
 #dataModelScrollableClassName, #dataModelScrollableClassIcon{
 	display: inline;
 }
-dataModelScrollableDiv > img {
+#dataModelScrollableDiv > img {
   padding-right: 5px;
 }
+
+#dataModelSplitPane .ui-layout-resizer {
+	background: #DDD;
+ }
+#dataModelSplitPane .ui-layout-resizer :hover{
+	background: #E87C1E;
+}
+#dataModelSplitPane .ui-layout-resizer-west{
+	border-left : 1px solid #BBB;
+}
+#dataModelSplitPane .ui-layout-resizer-east{
+	border-right: 1px solid #BBB;
+}
+
+#dataModelSplitPane .ui-layout-toggler{
+	background: #AAA;
+}
+#dataModelSplitPane .ui-layout-toggler:hover{
+	background: #E87C1E;
+}
+.dataModelSchema g {
+	cursor: pointer;
+}
+.dataModelSchema g:hover rect:not(.liseret){
+	fill: #dbe4f0;
+}
+.dataModelSchema text {
+	fill: black;
+	font: 10px sans-serif;
+	text-anchor: middle;
+}
+#selfreferencing:hover ~ g > .selfattr{
+	fill: #dbe4f0;
+}
+.tooltipD3{
+	position: fixed;
+	text-align: center;
+	background: #EEE;
+	border: 1px solid $grey-color;
+	border-radius: 2px;
+	pointer-events: none;
+	fill: black;
+	font: 11px sans-serif;
+	text-anchor: middle;
+}
+#tooltipD3_top{
+	font-weight: bold;
+	border-bottom: 1px solid $grey-color;
+	padding: 3px;
+
+}
+.tooltipD3 i {
+	font-size: 14px;
+}
+.tooltipD3 span{
+	margin: 2px;
+}
+.dataModelSchema .selfattrtxt {
+	font-family: FontAwesome;
+}
+
+
+
+///////////////////

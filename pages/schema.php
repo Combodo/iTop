@@ -107,14 +107,28 @@ function DisplayLifecycle($oPage, $sClass)
 EOF
 
 		);
+		$oPage->add("<button id=\"lifecycleOpenAll\">Open All</button> <button id=\"lifecycleCloseAll\">Close All</button>");
+		$oPage->add_ready_script(
+			<<<EOF
+			$("#lifecycleOpenAll").on('click',function(){
+				$('#LifeCycleList').find('.expandable-hitarea').click();
+				$('#LifeCycleAttrOptList').find('.expandable-hitarea').click();
+			});	
+				
+			$("#lifecycleCloseAll").on('click',function(){
+				$('#LifeCycleList').find('.collapsable-hitarea').click();
+				$('#LifeCycleAttrOptList').find('.collapsable-hitarea').click();
+			});	
+EOF
+		);
 		$oPage->add("<h3>".Dict::S('UI:Schema:LifeCycleTransitions')."</h3>\n");
-		$oPage->add("<ul id=\"LifeCycleList\" class=\"treeview fileview\">\n");
+		$oPage->add("<ul id=\"LifeCycleList\" >\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
-			$oPage->add("<li class=\"open\"><span class=\"attrLabel\">$sStateLabel </span><span style=\"color:grey;\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
-			$oPage->add("<ul class=\"open\">\n");
+			$oPage->add("<li class=\"closed\"><span class=\"attrLabel\">$sStateLabel </span><span style=\"color:grey;\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
+			$oPage->add("<ul class=\"closed\">\n");
 			foreach(MetaModel::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef)
 			{
 				$sStimulusLabel = $aStimuli[$sStimulusCode]->GetLabel();
@@ -146,7 +160,7 @@ EOF
 					$sActions = "";
 				}
 
-				$oPage->add("<li class=\"open\"><span class=\"attrLabel\" title=\"code: $sStimulusCode\" style=\"color:red;font-weight:bold;\">$sStimulusLabel</span> 
+				$oPage->add("<li class=\"closed\"><span class=\"attrLabel\" title=\"code: $sStimulusCode\" style=\"color:red;font-weight:bold;\">$sStimulusLabel</span>
 								<span style=\"color:grey;\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStimulusCode</span><span class=\"parenthesis\">)</span> </span>
 								=&gt;
 								<span class=\"attrLabel\">$sTargetStateLabel </span><span style=\"color:grey;\"><span class=\"parenthesis\">(</span> <span class=\"attrCode\">$sTargetState</span> <span class=\"parenthesis\">)</span></span> $sActions</li>\n");
@@ -155,12 +169,12 @@ EOF
 		}
 		$oPage->add("</ul>\n");
 		$oPage->add("<h3>".Dict::S('UI:Schema:LifeCyleAttributeOptions')."</h3>\n");
-		$oPage->add("<ul id=\"LifeCycleAttrOptList\" class=\"treeview fileview\">\n");
+		$oPage->add("<ul id=\"LifeCycleAttrOptList\">\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
-            $oPage->add("<li class=\"open collapsable\"><span class=\"attrLabel\">$sStateLabel </span><span style=\"color:grey;\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
+            $oPage->add("<li class=\"closed\"><span class=\"attrLabel\">$sStateLabel </span><span style=\"color:grey;\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
 			if (count($aStates[$sStateCode]['attribute_list']) > 0)
 			{
 				$oPage->add("<ul>\n");
@@ -184,7 +198,7 @@ EOF
 						$sOptions = "";
 					}
 	
-					$oPage->add("<li class=\"open\"><span style=\"color:purple;font-weight=bold;\">$sAttLabel</span> $sOptions</li>\n");
+					$oPage->add("<li class=\"closed\"><span style=\"color:purple;font-weight=bold;\">$sAttLabel</span> $sOptions</li>\n");
 				}
 				$oPage->add("</ul></li>\n");
 			}
@@ -194,9 +208,8 @@ EOF
 			}
 		}
 		$oPage->add("</ul>\n");
-        $oPage->add_ready_script('$("#LifeCycleList").treeview();');
-        $oPage->add_ready_script('$("#LifeCycleAttrOptList").treeview();');
-
+        $oPage->add_ready_script('$("#LifeCycleList").treeview({collapsed: true,});');
+        $oPage->add_ready_script('$("#LifeCycleAttrOptList").treeview({collapsed: true,});');
     }
 }
 
@@ -329,28 +342,12 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
                 }
             }
         }
-        $aOrigins = array_keys($aOrigins);
-        $idx = 0;
-        foreach($aData as $sAttCode => $aAttribute)
-		{
-            $aData[$sAttCode]['origin_index'] =  $aAttribute['related_position'] == 1 ? $idx : ++$idx;
-        }
-        ksort($aData);
-        $idx = 0;
-        $aFinalDataReferencing = array();
-        foreach($aData as $sAttCode => $aAttribute)
-        {
-            $aData[$sAttCode]['alphabetical_index'] = $aAttribute['related_position'] == 1 ? ++$idx : $idx;
-            $aFinalDataReferencing[] = $aData[$sAttCode];
-        }
-        $sDataReferencing = json_encode($aFinalDataReferencing);
-        $sOriginsReferencing = json_encode(array_keys($aOrigins));
 
         // 2) Fetching referenced classes data
         //
-        $aData = array(array('label' => $sClass, 'icon' => MetaModel::GetClassIcon($sClass, false), 'origin_index' => 0, 'alphabetical_index' => 0, 'origin' => '_'));
+        $aDataRef = array(array('label' => $sClass, 'icon' => MetaModel::GetClassIcon($sClass, false), 'origin_index' => 0, 'alphabetical_index' => 0, 'origin' => '_'));
         $bOnTheLeft = true;
-        $aOrigins = array('_' => true);
+        $aOriginsRef = array('_' => true);
         foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
         {
             $aAttribute = array('label' => $sAttCode);
@@ -363,6 +360,10 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
                     $aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
                     $aAttribute['related_position'] = $bOnTheLeft  ? 1 : -1;
                     $aAttribute['relation_type'] = 0; //
+	                $aAttribute['tooltip_data']['class'] = $oAttDef->GetLinkedClass();
+	                $aAttribute['tooltip_data']['to_remote'] = $sRemoteAttDef;
+	                $aAttribute['tooltip_data']['to_me'] = $oAttDef->GetExtKeyToMe();
+
                     $bOnTheLeft = !$bOnTheLeft; // Toggle the side
                 }
                 else
@@ -389,7 +390,7 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
                 $aAttribute['related'] = $oAttDef->GetTargetClass();
                 $aAttribute['related_icon'] = MetaModel::GetClassIcon($aAttribute['related'], false);
                 $aAttribute['related_position'] = $bOnTheLeft  ? 1 : -1;
-                $aAttribute['relation_type'] = 0;
+                $aAttribute['relation_type'] = 3;
 
                 $bOnTheLeft = !$bOnTheLeft; // Toggle the side
             }
@@ -397,48 +398,70 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
                 $sOrigin = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
 
 				$aAttribute['origin'] = $sOrigin;
-				$aOrigins[$sOrigin] = true;
-				$aData[$sAttCode] = $aAttribute;
+	            $aOriginsRef[$sOrigin] = true;
+	            $aDataRef[$sAttCode] = $aAttribute;
 
 			}
 
         }
-		$idx = 1;
-        foreach($aData as $sAttCode => $aAttribute)
+
+
+        //sort referencing data
+
+	    $aOrigins = array_keys($aOrigins);
+	    $idx = 0;
+
+		$bOnTheLeft = true;
+	    foreach($aData as $sAttCode => $aAttribute)
+	    {
+	    	$is_also_referenced = false;
+		    foreach($aDataRef as $sAttCodeRef => $aAttributeRef)
+		    {
+		    	if(!empty($aDataRef[$sAttCodeRef]['related']) && ($aData[$sAttCode]['related'] == $aDataRef[$sAttCodeRef]['related']))
+				    $is_also_referenced = true;
+		    }
+		    if(!$is_also_referenced)
+		    {
+			    $aData[$sAttCode]['related_position'] = ($bOnTheLeft) ? -1 : 1;
+			    $bOnTheLeft = !$bOnTheLeft;
+			    $aData[$sAttCode]['origin_index'] = ($aData[$sAttCode]['related_position'] == -1) ? ++$idx : $idx;
+		    }
+		    else
+		    {
+		    	unset($aData[$sAttCode]);
+		    }
+	    }
+	    ksort($aData);
+	    $idx = 0;
+	    $aFinalDataReferencing = array();
+	    foreach($aData as $sAttCode => $aAttribute)
+	    {
+		    $aData[$sAttCode]['alphabetical_index'] = $aAttribute['related_position'] == 1 ? ++$idx : $idx;
+		    $aFinalDataReferencing[] = $aData[$sAttCode];
+	    }
+	    $sDataReferencing = json_encode($aFinalDataReferencing);
+	    $sOriginsReferencing = json_encode(array_keys($aOrigins));
+
+	    //sort referenced data
+
+	    $idx = 1;
+        foreach($aDataRef as $sAttCode => $aAttribute)
         {
-            $aData[$sAttCode]['origin_index'] = $idx++;
+            $aDataRef[$sAttCode]['origin_index'] = $idx++;
         }
 
         $idx = 1;
         $aFinalData = array();
-        foreach($aData as $sAttCode => $aAttribute)
+        foreach($aDataRef as $sAttCode => $aAttribute)
         {
-            $aData[$sAttCode]['alphabetical_index'] = $idx++;
-            $aFinalData[] = $aData[$sAttCode];
+            $aDataRef[$sAttCode]['alphabetical_index'] = $idx++;
+            $aFinalData[] = $aDataRef[$sAttCode];
         }
 
         $sData = json_encode($aFinalData);
 
 	    // 3) Processing data and building graph
 	    //
-        $oPage->add_style(
-            <<<EOF
-.dataModelSchema g {
-	cursor: pointer;
-}
-.dataModelSchema g:hover rect:not(.liseret){
-  fill: #fdf5d0;
-}
-.dataModelSchema text {
-  fill: black;
-  font: 10px sans-serif;
-  text-anchor: middle;
-}		
-#selfreferencing:hover ~ g > .selfattr{
-  fill: #fdf5d0;
-}
-EOF
-        );
         $oPage->add(
             <<<EOF
 <div id="dataModelGraph">
@@ -472,6 +495,10 @@ var relatedCellWidth = Math.max(3*48, Math.max(8*d3.max(data, function(d) { retu
 var gap = 70;
 var schema = d3.select(".dataModelSchema")
     .attr("height", cellHeight * (data.length + dataref.length + (1 + dataref.length%2)*1.5) + 2*margins.top);
+
+var divD3 = d3.select("#dataModelGraph").append("div")
+	.attr("class","tooltipD3")
+	.style("opacity",0);
 
 // 1) Horn construction (top lines used to display referencing classes which doesn't have a linkset attribute)
 //
@@ -590,11 +617,19 @@ field.append("text")
     .attr("y", cellHeight / 2)
     .attr("dy", ".35em")
     .text(function(d) { return d.label; });
+    
+field.append("text")
+    .attr("x", function(d){ return 7*d.label.length/2 })
+    .attr("y", cellHeight / 2)
+    .attr("dy", ".35em")
+    .attr("class", function(d, i){return (d.relation_type == 2 ? "selfattrtxt" : "");}) 
+    .text(function(d) { return ((d.relation_type == 2) ? '\uf01e' : '' ); });
+
 
 // 4) Classes that our main class is refering to
 //
 field.filter(function(d) {
-	return (d.related != null);
+	return (d.related != null) && (d.relation_type != 2);
 }).append("a")
 	.attr("xlink:href",function(d){ return refClassLinkpre + d.related + refClassLinksuf})
 	.append("rect")
@@ -607,7 +642,7 @@ field.filter(function(d) {
 		.attr("transform", function(d, i) { return "translate("+ d.related_position*(relatedCellWidth/2+cellWidth/2+gap) +", 0)"; });
 
 field.filter(function(d) {
-	return (d.related != null);
+	return (d.related != null) && (d.relation_type != 2);
 }).append("a")
 	.attr("xlink:href",function(d){ return refClassLinkpre + d.related + refClassLinksuf})
 	.append("text")
@@ -618,9 +653,20 @@ field.filter(function(d) {
 		.attr("transform", function(d, i) { return "translate("+ (d.related_position*(relatedCellWidth/2+cellWidth/2+gap)) +", 0)"; });
 
 field.filter(function(d) {
-	return (d.related != null);
+	return (d.related != null) && (d.relation_type != 2);
 }).append("path")
-    .attr("d", "M"+cellWidth/2+" "+cellHeight/2+" h"+(gap-2)+" m-10 0l-5 3 m5 -3 l-5 -3")
+    .attr("d", "M"+cellWidth/2+" "+cellHeight/2+" h"+(gap-2))
+	.attr("fill", "transparent")
+	.attr("stroke", "black")
+	.attr("stroke-linecap", "round")
+	.attr("stroke-width", 2)
+	.attr("transform", function(d, i) { return (d.related_position < 0) ? "rotate(180, 0, "+(cellHeight/2)+")" : ""});
+		
+		
+field.filter(function(d) {
+	return (d.related != null) && (d.relation_type == 3 || d.relation_type == 0);
+}).append("path")
+    .attr("d","M"+ (gap - 2 + cellWidth/2) +" "+cellHeight/2+" m-10 0l-5 3 m5 -3 l-5 -3")
 	.attr("fill", "transparent")
 	.attr("stroke", "black")
 	.attr("stroke-linecap", "round")
@@ -628,7 +674,7 @@ field.filter(function(d) {
 	.attr("transform", function(d, i) { return (d.related_position < 0) ? "rotate(180, 0, "+(cellHeight/2)+")" : ""});
 		
 field.filter(function(d) {
-	return (d.related != null) && (d.relation_type == 1);
+	return (d.related != null) && (d.relation_type == 1 || d.relation_type == 0);
 }).append("path")
     .attr("d", "M"+cellWidth/1.9*-1+" "+cellHeight/2+" m-10 0l-5 3 m5 -3 l-5 -3")
 	.attr("fill", "transparent")
@@ -638,7 +684,31 @@ field.filter(function(d) {
 	.attr("transform", function(d, i) { return (d.related_position < 0) ? "rotate(360, 0, "+(cellHeight/2)+")" : "rotate(180, 0, "+(cellHeight/2)+")"});				
 			
 field.filter(function(d) {
-	return (d.related != null);
+	return (d.related != null) && (d.relation_type == 0);
+}).append("circle")
+    .attr("r", 5)
+    .attr("cy", cellHeight/2)
+	.on('mouseover',function(d){
+		divD3.transition()
+			.duration(200)
+			.style("opacity","1");
+		divD3.style("left", (d3.event.pageX - 7*d['tooltip_data']['class'].length/2) + "px");
+		divD3.style("top", (d3.event.pageY - 65) + "px");
+		divD3.html( '<div id="tooltipD3_top">' + d['tooltip_data']['class'] + '</div><span id="tooltipD3_left"> <i class="fa fa-caret-left"></i> '
+		 			+  ( (d.related_position < 0) ? d['tooltip_data']['to_remote'] : d['tooltip_data']['to_me'] ) +  '</span><span id="tooltipD3_right"> <br/>'
+		 			+ ( (d.related_position < 0) ? d['tooltip_data']['to_me'] : d['tooltip_data']['to_remote'] ) + ' <i class="fa fa-caret-right"></i></span>');
+	})
+	.on('mouseout',function(d){
+		divD3.transition()
+			.duration(500)
+			.style("opacity","0");
+	})
+	.attr("transform", function(d, i) { return "translate("+ d.related_position*(cellWidth+gap+2)/2 +", 0)"; });
+			
+
+			
+field.filter(function(d) {
+	return (d.related != null) && (d.relation_type != 2);
 }).append("svg:image")
    .attr("x", -relatedCellWidth/2)
    .attr("width", cellHeight)
