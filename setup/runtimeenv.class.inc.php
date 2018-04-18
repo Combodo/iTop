@@ -1231,6 +1231,12 @@ class RunTimeEnvironment
         $fStart = microtime(true);
         foreach(MetaModel::GetClasses() as $sClass)
         {
+            if (false == MetaModel::HasTable($sClass) && MetaModel::IsAbstract($sClass))
+            {
+                //if a class is not persisted and is abstract, the code below would crash. Needed by the class AbstractRessource. This is tolerable to skip this because we check the setup process integrity, not the datamodel integrity.
+                continue;
+            }
+
             $oSearch = new DBObjectSearch($sClass);
             $oSearch->SetShowObsoleteData(false);
             $oSQLQuery = $oSearch->GetSQLQueryStructure(null, false);
