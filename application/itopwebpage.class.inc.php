@@ -828,9 +828,9 @@ EOF
         // jQuery scripts may face some spurious problems (like failing on a 'reload')
         foreach ($this->a_linked_stylesheets as $a_stylesheet) {
             if (strpos($a_stylesheet['link'], '?') === false) {
-                $s_stylesheet = $a_stylesheet['link'] . "?itopversion=" . ITOP_VERSION;
+                $s_stylesheet = $a_stylesheet['link'] . "?t=".utils::GetCacheBusterTimestamp();
             } else {
-                $s_stylesheet = $a_stylesheet['link'] . "&itopversion=" . ITOP_VERSION;
+                $s_stylesheet = $a_stylesheet['link'] . "&t=".utils::GetCacheBusterTimestamp();
             }
             if ($a_stylesheet['condition'] != "") {
                 $sHtml .= "<!--[if {$a_stylesheet['condition']}]>\n";
@@ -841,7 +841,7 @@ EOF
             }
         }
         // special stylesheet for printing, hides the navigation gadgets
-        $sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css?itopversion=" . ITOP_VERSION . "\" />\n";
+        $sHtml .= "<link rel=\"stylesheet\" media=\"print\" type=\"text/css\" href=\"../css/print.css?t=".utils::GetCacheBusterTimestamp() . "\" />\n";
 
         if ($this->GetOutputFormat() == 'html') {
             $sHtml .= $this->output_dict_entries(true); // before any script so that they can benefit from the translations
@@ -849,9 +849,9 @@ EOF
                 // Make sure that the URL to the script contains the application's version number
                 // so that the new script do NOT get reloaded from the cache when the application is upgraded
                 if (strpos($s_script, '?') === false) {
-                    $s_script .= "?itopversion=" . ITOP_VERSION;
+                    $s_script .= "?t=".utils::GetCacheBusterTimestamp();
                 } else {
-                    $s_script .= "&itopversion=" . ITOP_VERSION;
+                    $s_script .= "&t=".utils::GetCacheBusterTimestamp();
                 }
                 $sHtml .= "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
             }
@@ -907,7 +907,7 @@ EOF
             $sHtml .= "</style>\n";
         }
         $sHtml .= "<link rel=\"search\" type=\"application/opensearchdescription+xml\" title=\"iTop\" href=\"" . utils::GetAbsoluteUrlAppRoot() . "pages/opensearch.xml.php\" />\n";
-        $sHtml .= "<link rel=\"shortcut icon\" href=\"" . utils::GetAbsoluteUrlAppRoot() . "images/favicon.ico?itopversion=" . ITOP_VERSION . "\" />\n";
+        $sHtml .= "<link rel=\"shortcut icon\" href=\"" . utils::GetAbsoluteUrlAppRoot() . "images/favicon.ico?t=".utils::GetCacheBusterTimestamp(). "\" />\n";
 
         $sHtml .= "</head>\n";
         $sBodyClass = "";
@@ -1049,9 +1049,9 @@ EOF;
             $sOnlineHelpUrl = MetaModel::GetConfig()->Get('online_help');
             //$sLogOffMenu = "<span id=\"logOffBtn\" style=\"height:55px;padding:0;margin:0;\"><img src=\"../images/onOffBtn.png\"></span>";
 
-            $sDisplayIcon = utils::GetAbsoluteUrlAppRoot() . 'images/itop-logo.png?itopversion=' . ITOP_VERSION;
+            $sDisplayIcon = utils::GetAbsoluteUrlAppRoot() . 'images/itop-logo.png?t=' . utils::GetCacheBusterTimestamp();
             if (file_exists(MODULESROOT . 'branding/main-logo.png')) {
-                $sDisplayIcon = utils::GetAbsoluteUrlModulesRoot() . 'branding/main-logo.png?itopversion=' . ITOP_VERSION;
+                $sDisplayIcon = utils::GetAbsoluteUrlModulesRoot() . 'branding/main-logo.png?t=' . utils::GetCacheBusterTimestamp();
             }
 
             $sHtml .= $sNorthPane;
@@ -1077,7 +1077,7 @@ EOF;
             $sHtml .= '			</div>';
             $sHtml .= '		</div> <!-- /inner menu -->';
             $sHtml .= ' </div> <!-- /menu -->';
-            $sHtml .= ' <div class="footer ui-layout-south"><div id="combodo_logo"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png?itopversion=' . ITOP_VERSION . '"/></a></div></div>';
+            $sHtml .= ' <div class="footer ui-layout-south"><div id="combodo_logo"><a href="http://www.combodo.com" title="www.combodo.com" target="_blank"><img src="../images/logo-combodo.png?t=' . utils::GetCacheBusterTimestamp() . '"/></a></div></div>';
             $sHtml .= '<!-- End of the left pane -->';
             $sHtml .= '</div>';
 
@@ -1104,7 +1104,7 @@ EOF;
             $sHtml .= '		<div id="global-search"><form action="' . utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php">';
             $sHtml .= '		<table id="top-left-buttons-area"><tr>';
             $sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="' . $sText . '"></input><div ' . $sOnClick . ' id="global-search-image"><input type="hidden" name="operation" value="full_text"/></div></div></td>';
-            $sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="' . $sOnlineHelpUrl . '" target="_blank"><img title="' . Dict::S('UI:Help') . '" src="../images/help.png?itopversion=' . ITOP_VERSION . '"/></td>';
+            $sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="' . $sOnlineHelpUrl . '" target="_blank"><img title="' . Dict::S('UI:Help') . '" src="../images/help.png?t=' . utils::GetCacheBusterTimestamp() . '"/></td>';
             $sHtml .= '     	<td id="top-left-logoff-cell">' . self::FilterXSS($sLogOffMenu) . '</td>';
             $sHtml .= '     </tr></table></form></div>';
             $sHtml .= ' </td>';
@@ -1112,7 +1112,7 @@ EOF;
             $sHtml .= ' </table>';
 
 //			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><table><tr><td></td><td><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"></div></div></td>';
-//			$sHtml .= '<td><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?itopversion='.ITOP_VERSION.'"/></td>';
+//			$sHtml .= '<td><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?t='.utils::GetCacheBusterTimestamp().'"/></td>';
 //			$sHtml .= '<td>'.self::FilterXSS($sLogOffMenu).'</td><td><input type="hidden" name="operation" value="full_text"/></td></tr></table></form></div>';
 //			$sHtml .= ' <div id="itop-breadcrumb"></div>';
 

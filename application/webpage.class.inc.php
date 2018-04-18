@@ -541,11 +541,11 @@ class WebPage implements Page
         	// so that the new script do NOT get reloaded from the cache when the application is upgraded
         	if (strpos($s_script, '?') === false)
         	{
-        		$s_script .= "?itopversion=".ITOP_VERSION;
+        		$s_script .= "?t=".utils::GetCacheBusterTimestamp();
         	}
         	else
         	{
-        		$s_script .= "&itopversion=".ITOP_VERSION;
+        		$s_script .= "&t=".utils::GetCacheBusterTimestamp();
         	}
             echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
         }
@@ -562,11 +562,11 @@ class WebPage implements Page
         {
 			if (strpos($a_stylesheet['link'], '?') === false)
 			{
-				$s_stylesheet = $a_stylesheet['link']."?itopversion=".ITOP_VERSION;
+				$s_stylesheet = $a_stylesheet['link']."?t=".utils::GetCacheBusterTimestamp();
 			}
 			else
 			{
-				$s_stylesheet = $a_stylesheet['link']."&itopversion=".ITOP_VERSION;
+				$s_stylesheet = $a_stylesheet['link']."&t=".utils::GetCacheBusterTimestamp();
 			}
 			if ($a_stylesheet['condition'] != "")
 			{
@@ -590,7 +590,7 @@ class WebPage implements Page
         }
         if (class_exists('MetaModel') && MetaModel::GetConfig())
         {
- 			echo "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico?itopversion=".ITOP_VERSION."\" />\n";
+ 			echo "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico?t=".utils::GetCacheBusterTimestamp()."\" />\n";
         }
         echo "</head>\n";
         echo "<body>\n";

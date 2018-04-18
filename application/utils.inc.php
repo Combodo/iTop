@@ -1887,4 +1887,19 @@ class utils
 		}
 		return $aCleanHeaders;
 	}
+	
+	/**
+	 * Return a string based on compilation time or (if not available because the datamodel has not been loaded)
+	 * the version of iTop. This string is useful to prevent browser side caching of content that may vary at each
+	 * (re)installation of iTop (especially during development). 
+	 * @return string
+	 */
+	public function GetCacheBusterTimestamp()
+	{
+		if(!defined('COMPILATION_TIMESTAMP'))
+		{
+			return ITOP_VERSION;
+		}
+		return COMPILATION_TIMESTAMP;
+	}
 }
