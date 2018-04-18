@@ -992,7 +992,7 @@
 					<method id="PrefillCreationForm">
 						<arguments>
 							<argument id="1">
-								<type>array</type>
+								<type>reference</type>
 								<mandatory>true</mandatory>
 							</argument>
 						</arguments>
@@ -1000,7 +1000,7 @@
 					<method id="PrefillTransitionForm">
 						<arguments>
 							<argument id="1">
-								<type>array</type>
+								<type>reference</type>
 								<mandatory>true</mandatory>
 							</argument>
 						</arguments>
@@ -1008,7 +1008,7 @@
 					<method id="PrefillSearchForm">
 					<arguments>
 							<argument id="1">
-								<type>array</type>
+								<type>reference</type>
 								<mandatory>true</mandatory>
 							</argument>
 						</arguments>
