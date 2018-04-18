@@ -1003,7 +1003,7 @@ function DoCheckDBConnection()
 		'db_user': $("#db_user").val(),
 		'db_pwd': $("#db_pwd").val(),
 		'db_name': $("#db_name").val(),
-		'db_tls_enabled': $("input#db_tls_enabled").val(),
+		'db_tls_enabled': $("input#db_tls_enabled").prop('checked') ? 1 : 0,
 		'db_tls_ca': $("input#db_tls_ca").val(),
 	}
 	if ((oXHRCheckDB != null) && (oXHRCheckDB != undefined))
