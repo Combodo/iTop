@@ -1447,13 +1447,20 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any',
-	//   - External key widget
-	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',
-	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined',
-	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
-	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
-	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others',
-	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any',
+    //   - External key widget
+    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',
+    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined',
+    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
+    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others',
+    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any',
+    //   - Hierarchical key widget
+    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined',
+    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined',
+    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
+    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any',
 
 	// - Criteria operators
 	//   - Default widget
@@ -1496,6 +1503,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:DateTime:PlaceholderFromTime' => 'Any date',
 	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Any date',
 	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Any date',
+	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Children of the selected objects will be included.',
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s',

@@ -4,11 +4,13 @@ $(function()
 {
 	// the widget definition, where 'itop' is the namespace,
 	// 'search_form_criteria_hierarchical_key' the widget name
-	$.widget( 'itop.search_form_criteria_hierarchical_key', $.itop.search_form_criteria_enum,
+	$.widget( 'itop.search_form_criteria_hierarchical_key', $.itop.search_form_criteria_external_key,
 	{
 		// default options
 		options:
 		{
+			// True if the widget should also retrieve children of the selected objects.
+			'is_hierarchical': true,
 		},
 
    
@@ -48,26 +50,31 @@ $(function()
 		// Inherited methods
 		//------------------
 
+		// Event callbacks
+        // - External events
+        _onGetData: function(oData)
+        {
+            var oCriteriaData = this._super(oData);
+            oCriteriaData.is_hierarchical = this.options.is_hierarchical;
+
+            return oCriteriaData;
+        },
+
 		// DOM element helpers
-		prepareInOperator: function(oOpElem, sOpIdx, oOp)
+        _prepareInOperator: function(oOpElem, sOpIdx, oOp)
 		{
 			var me = this;
 
-			this._super();
+			this._super(oOpElem, sOpIdx, oOp);
 
-			// Note: Hierarchical key is on stand by for now.
-			// // DOM elements
-			// // - Add search dialog button
-			// this.element.find('.sf_filter')
-			// 	.append('<button type="button" class="sff_hierarchy_dialog"><span class=" fa fa-sitemap"></span></button>')
-			// 	.addClass('sf_with_buttons');
-			//
-			// // Events
-			// // - Open hierarchy dialog
-			// this.element.find('.sff_hierarchy_dialog').on('click', function(){
-			// 	// TODO: Open hierarchy dialog with right params
-			// 	alert('Not implemented yet');
-			// });
+			if(this.options.is_hierarchical === true)
+			{
+                var oChildrenHintElem = $('<div></div>')
+                    .addClass('sfc_opc_mc_items_hint')
+                    .append('<span class="fa fa-info"></span>')
+                    .append(Dict.S('UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint'))
+                    .appendTo(oOpElem.find('.sfc_opc_mc_items_wrapper'));
+			}
 		},
 	});
 });

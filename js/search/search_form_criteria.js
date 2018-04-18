@@ -503,26 +503,6 @@ $(function()
 			});
 		},
 		// - Compute the title string
-
-		_computeEmptyOperatorTitle: function(sTitle) {
-			if (sTitle !== undefined) {
-				return sTitle;
-			}
-
-			sTitle = Dict.Format('UI:Search:Criteria:Title:Default:Empty', this.options.field.label);
-
-			return sTitle;
-		},
-		_computeNotEmptyOperatorTitle: function(sTitle) {
-			if (sTitle !== undefined) {
-				return sTitle;
-			}
-
-			sTitle = Dict.Format('UI:Search:Criteria:Title:Default:NotEmpty', this.options.field.label);
-
-			return sTitle;
-		},
-
 		_computeTitle: function(sTitle)
 		{
 			if(sTitle !== undefined)
@@ -563,6 +543,24 @@ $(function()
 
 			return sTitle;
 		},
+        _computeEmptyOperatorTitle: function(sTitle) {
+            if (sTitle !== undefined) {
+                return sTitle;
+            }
+
+            sTitle = Dict.Format('UI:Search:Criteria:Title:Default:Empty', this.options.field.label);
+
+            return sTitle;
+        },
+        _computeNotEmptyOperatorTitle: function(sTitle) {
+            if (sTitle !== undefined) {
+                return sTitle;
+            }
+
+            sTitle = Dict.Format('UI:Search:Criteria:Title:Default:NotEmpty', this.options.field.label);
+
+            return sTitle;
+        },
 		// - Set the title element
 		_setTitle: function(sTitle)
 		{

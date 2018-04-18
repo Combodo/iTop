@@ -1159,6 +1159,20 @@ input.dp-applied {
 										}
 									}
 								}
+								.sfc_opc_mc_items_hint{
+									margin-top: 15px;
+									margin-bottom: 15px;
+									padding-left: 9px;
+									padding-right: 9px;
+									color: $gray;
+									font-size: 10px;
+									font-style: italic;
+
+									> span{
+										margin-right: 0.5em;
+										font-style: italic;
+									}
+								}
 							}
 						}
 					}
