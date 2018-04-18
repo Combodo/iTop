@@ -166,14 +166,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_tls.verify_server_cert' => array(
-			'type' => 'bool',
-			'description' => 'Change the TLS flag used to connect : MYSQLI_CLIENT_SSL if true, MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT if false (default)',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		),
 		'db_character_set' => array( // @deprecated to remove in 2.7 ? #1001 utf8mb4 switch
 			'type' => 'string',
 			'description' => 'Deprecated since iTop 2.5 : now using utf8mb4',

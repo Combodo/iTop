@@ -1134,7 +1134,7 @@ EOF
 		try
 		{
 			$oDBSource = new CMDBSource;
-			$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $bTlsEnabled, $sTlsCA, false);
+			$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $bTlsEnabled, $sTlsCA);
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Connection to '$sDBServer' as '$sDBUser' successful.");
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Info - User privileges: ".($oDBSource->GetRawPrivileges()));
 
@@ -1272,7 +1272,7 @@ EOF
 	)
 	{
 		$oDBSource = new CMDBSource;
-		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $bTlsEnabled, $sTlsCa, false);
+		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $bTlsEnabled, $sTlsCa);
 		$sDBVersion = $oDBSource->GetDBVersion();
 		return $sDBVersion;
 	}

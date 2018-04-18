@@ -42,12 +42,10 @@ class iTopMutex
 	protected $sDBSubname;
 	protected $bDBTlsEnabled;
 	protected $sDBTlsCA;
-	protected $bDBTlsVerifyServerCert;
 	static protected $aAcquiredLocks = array(); // Number of instances of the Mutex, having the lock, in this page
 
 	public function __construct(
-		$sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null, $bDBTlsEnabled = false, $sDBTlsCA = null,
-		$bDBTlsVerifyServerCert = null
+		$sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null, $bDBTlsEnabled = false, $sDBTlsCA = null
 	)
 	{
 		// Compute the name of a lock for mysql
@@ -65,7 +63,6 @@ class iTopMutex
 
 		$this->bDBTlsEnabled = is_null($bDBTlsEnabled) ? $oConfig->Get('db_tls.enabled') : $bDBTlsEnabled;
 		$this->sDBTlsCA = is_null($sDBTlsCA) ? $oConfig->Get('db_tls.ca') : $sDBTlsCA;
-		$this->bDBTlsVerifyServerCert = is_null($bDBTlsVerifyServerCert) ? $oConfig->Get('db_tls.verify_server_cert') : $bDBTlsVerifyServerCert;
 
 		$this->sName = $sName;
 		if (substr($sName, -strlen($this->sDBName.$sDBSubname)) != $this->sDBName.$sDBSubname)
@@ -235,10 +232,8 @@ class iTopMutex
 		$sSource = $this->sDBName;
 		$bTlsEnabled = $this->bDBTlsEnabled;
 		$sTlsCA = $this->sDBTlsCA;
-		$bTlsVerifyServerCert = $this->bDBTlsVerifyServerCert;
 
-		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA,
-			false, $bTlsVerifyServerCert);
+		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, false);
 
 		if (!$this->hDBLink)
 		{

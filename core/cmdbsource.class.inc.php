@@ -132,11 +132,6 @@ class CMDBSource
 	 * @since 2.5 #1260 MySQL TLS first implementation
 	 */
 	protected static $m_sDBTlsCA;
-	/**
-	 * @var boolean
-	 * @since 2.5 #1260 MySQL TLS first implementation
-	 */
-	protected static $m_bDBTlsVerifyServerCert;
 
 	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
@@ -156,9 +151,8 @@ class CMDBSource
 		$sSource = $oConfig->Get('db_name');
 		$bTlsEnabled = $oConfig->Get('db_tls.enabled');
 		$sTlsCA = $oConfig->Get('db_tls.ca');
-		$sTlsVerifyServerCert = $oConfig->Get('db_tls.verify_server_cert');
 
-		self::Init($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, $sTlsVerifyServerCert);
+		self::Init($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA);
 
 		$sCharacterSet = DEFAULT_CHARACTER_SET;
 		$sCollation = DEFAULT_COLLATION;
@@ -172,12 +166,11 @@ class CMDBSource
 	 * @param string $sSource database to use
 	 * @param bool $bTlsEnabled
 	 * @param string $sTlsCA
-	 * @param bool $sTlsVerifyServerCert
 	 *
 	 * @throws \MySQLException
 	 */
 	public static function Init(
-		$sServer, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCA = null, $sTlsVerifyServerCert = false
+		$sServer, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCA = null
 	)
 	{
 		self::$m_sDBHost = $sServer;
@@ -186,10 +179,8 @@ class CMDBSource
 		self::$m_sDBName = $sSource;
 		self::$m_bDBTlsEnabled = empty($bTlsEnabled) ? false : $bTlsEnabled;
 		self::$m_sDBTlsCA = empty($sTlsCA) ? null : $sTlsCA;
-		self::$m_bDBTlsVerifyServerCert = empty($sTlsVerifyServerCert) ? null : $sTlsVerifyServerCert;
 
-		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, true,
-			$sTlsVerifyServerCert);
+		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, true);
 	}
 
 	/**
@@ -200,14 +191,12 @@ class CMDBSource
 	 * @param bool $bTlsEnabled
 	 * @param string $sTlsCa
 	 * @param bool $bCheckTlsAfterConnection If true then verify after connection if it is encrypted
-	 * @param bool $bVerifyTlsServerCert If true then verify server certificate when connecting
 	 *
 	 * @return \mysqli
 	 * @throws \MySQLException
 	 */
 	public static function GetMysqliInstance(
-		$sDbHost, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCa = null, $bCheckTlsAfterConnection = false,
-		$bVerifyTlsServerCert = false
+		$sDbHost, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCa = null, $bCheckTlsAfterConnection = false
 	) {
 		$oMysqli = null;
 
@@ -228,9 +217,9 @@ class CMDBSource
 
 			if ($bTlsEnabled)
 			{
-				$iFlags = ($bVerifyTlsServerCert)
-					? MYSQLI_CLIENT_SSL
-					: MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
+				$iFlags = (empty($sTlsCa))
+					? MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT
+					: MYSQLI_CLIENT_SSL;
 				$sTlsCert = null; // not implemented
 				$sTlsCaPath = null; // not implemented
 				$sTlsCipher = null; // not implemented

@@ -552,12 +552,11 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$sSource = $oConfig->Get('db_name');
 			$sTlsEnabled = $oConfig->Get('db_tls.enabled');
 			$sTlsCA = $oConfig->Get('db_tls.ca');
-			$bTlsVerifyServerCert = $oConfig->Get('db_tls.verify_server_cert');
 
 			try
 			{
-				$oMysqli = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sTlsEnabled, $sTlsCA, false,
-					$bTlsVerifyServerCert);
+				$oMysqli = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sTlsEnabled, $sTlsCA,
+					false);
 
 				if ($oMysqli->connect_errno)
 				{
