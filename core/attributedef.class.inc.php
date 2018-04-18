@@ -4638,6 +4638,31 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 
+
+	/**
+	 * Return the search widget type corresponding to this attribute
+	 *
+	 * @return string
+	 */
+	public function GetSearchType()
+	{
+		try
+		{
+			$oRemoteAtt = $this->GetFinalAttDef();
+			$sTargetClass = $oRemoteAtt->GetTargetClass();
+			if (MetaModel::IsHierarchicalClass($sTargetClass))
+			{
+				return self::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY;
+			}
+			return self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
+		}
+		catch (CoreException $e)
+		{
+		}
+
+		return self::SEARCH_WIDGET_TYPE_RAW;
+	}
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed", "on_target_delete"));
