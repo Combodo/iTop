@@ -656,11 +656,17 @@ class SetupUtils
 	public static function rmdir_safe($dir)
 	{
 		// avoid unnecessary warning
-		if (@rmdir($dir) === false)
+		// Try 100 times...
+		$i = 100;
+		while ((@rmdir($dir) === false) && $i > 0)
 		{
 			// Magic trick for windows
 			// sometimes the folder is empty but rmdir fails
 			closedir(opendir($dir));
+			$i--;
+		}
+		if ($i == 0)
+		{
 			rmdir($dir);
 		}
 	}
@@ -784,27 +790,6 @@ class SetupUtils
         {
 	        self::rmdir_safe($sSource);
         }
-
-		/**
-		 * We have tried the following implementation (based on a rename/mv)
-		 * But this does not work on some OSes.
-		 * More info: https://bugs.php.net/bug.php?id=54097		 		 
-		 *		 		 		 		 		
-		$aFiles = scandir($sSource);
-		if(sizeof($aFiles) > 0)
-		{
-			foreach($aFiles as $sFile)
-			{
-				if ($sFile == '.' || $sFile == '..')
-				{
-					// Skip
-					continue;
-				}
-				rename($sSource.'/'.$sFile, $sDest.'/'.$sFile);
-			}
-		}
-		self::rmdir_safe($sSource);
-		*/
 	}
 
 	static function GetPreviousInstance($sDir)
