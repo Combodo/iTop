@@ -824,7 +824,7 @@ class WebPage implements Page
 					file_put_contents($sJSFileName, $this->get_dict_file_content());
 				}
 				// Load the dictionary as the first javascript file, so that other JS file benefit from the translations
-				array_unshift($this->a_linked_scripts, utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php/?operation=dict&s='.$sSignature);
+				array_unshift($this->a_linked_scripts, utils::GetAbsoluteUrlAppRoot().'pages/ajax.document.php?operation=dict&s='.$sSignature);
 			}
 		}
 	}

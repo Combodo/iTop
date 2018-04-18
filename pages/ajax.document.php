@@ -94,7 +94,16 @@ try
 				$oPage->add_header("Last-Modified: Wed, 15 Jun 2016 13:21:15 GMT"); // An arbitrary date in the past is ok
 			}
 			break;
-
+			
+		case 'dict':
+			$sSignature = Utils::ReadParam('s', ''); // Sanitization prevents / and ..
+			$oPage = new ajax_page(""); // New page to cleanup the no_cache done above
+			$oPage->SetContentType('text/javascript');
+			$oPage->add_header('Cache-control: public, max-age=86400'); // Cache for 24 hours
+			$oPage->add_header("Pragma: cache"); // Reset the value set .... where ?
+			$oPage->add(file_get_contents(Utils::GetCachePath().$sSignature.'.js'));
+			break;
+			
 		default:
 		$oPage->p("Invalid query.");
 	}
