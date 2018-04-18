@@ -177,11 +177,8 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$this->oWizard->SaveParameter('db_prefix', '');
 		$this->oWizard->SaveParameter('db_backup', false);
 		$this->oWizard->SaveParameter('db_backup_path', '');
-		$this->oWizard->SaveParameter('db_tls_key', '');
-		$this->oWizard->SaveParameter('db_tls_cert', '');
+		$this->oWizard->SaveParameter('db_tls_enabled', false);
 		$this->oWizard->SaveParameter('db_tls_ca', '');
-		$this->oWizard->SaveParameter('db_tls_capath', '');
-		$this->oWizard->SaveParameter('db_tls_cipher', '');
 
 		if ($sInstallMode == 'install')
 		{
@@ -210,11 +207,8 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$sDBPrefix = $this->oWizard->GetParameter('db_prefix', '');
 		$bDBBackup = $this->oWizard->GetParameter('db_backup', false);
 		$sDBBackupPath = $this->oWizard->GetParameter('db_backup_path', '');
-		$sTlsKey = $this->oWizard->GetParameter('db_tls_key', '');
-		$sTlsCert = $this->oWizard->GetParameter('db_tls_cert', '');
+		$sTlsEnabled = $this->oWizard->GetParameter('db_tls_enabled', false);
 		$sTlsCA = $this->oWizard->GetParameter('db_tls_ca', '');
-		$sTlsCaPath = $this->oWizard->GetParameter('db_tls_capath', '');
-		$sTlsCypher = $this->oWizard->GetParameter('db_tls_cipher', '');
 		$sPreviousVersionDir = '';
 		if ($sInstallMode == '')
 		{
@@ -229,11 +223,8 @@ class WizStepInstallOrUpgrade extends WizardStep
 				$sDBPwd = $aPreviousInstance['db_pwd'];
 				$sDBName = $aPreviousInstance['db_name'];
 				$sDBPrefix = $aPreviousInstance['db_prefix'];
-				$sTlsKey = $aPreviousInstance['db_tls_key'];
-				$sTlsCert = $aPreviousInstance['db_tls_cert'];
+				$sTlsEnabled = $aPreviousInstance['db_tls_enabled'];
 				$sTlsCA = $aPreviousInstance['db_tls_ca'];
-				$sTlsCaPath = $aPreviousInstance['db_tls_capath'];
-				$sTlsCypher = $aPreviousInstance['db_tls_cipher'];
 				$this->oWizard->SaveParameter('graphviz_path', $aPreviousInstance['graphviz_path']);
 				$sPreviousVersionDir = APPROOT;
 			}
@@ -259,8 +250,8 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$oPage->add('<table id="upgrade_info"'.$sUpgradeInfoStyle.'>');
 		$oPage->add('<tr><td>Location on the disk:</td><td><input id="previous_version_dir" type="text" name="previous_version_dir" value="'.htmlentities($sPreviousVersionDir,
 				ENT_QUOTES, 'UTF-8').'" style="width: 98%;"/></td></tr>');
-		SetupUtils::DisplayDBParameters($oPage, false, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTlsKey,
-			$sTlsCert, $sTlsCA, $sTlsCaPath, $sTlsCypher, null);
+		SetupUtils::DisplayDBParameters($oPage, false, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix,
+			$sTlsEnabled, $sTlsCA, null);
 
 		$aBackupChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath);
 		$bCanBackup = true;
@@ -639,11 +630,9 @@ EOF
 				$this->oWizard->GetParameter('db_server', ''),
 				$this->oWizard->GetParameter('db_user', ''),
 				$this->oWizard->GetParameter('db_pwd', ''),
-				$this->oWizard->GetParameter('db_tls_key', ''),
-				$this->oWizard->GetParameter('db_tls_cert', ''),
+				$this->oWizard->GetParameter('db_tls_enabled', ''),
 				$this->oWizard->GetParameter('db_tls_ca', ''),
-				$this->oWizard->GetParameter('db_tls_capath', ''),
-				$this->oWizard->GetParameter('db_tls_cypher', '')
+				false
 			);
 			if ($oMutex->IsLocked())
 			{
@@ -777,11 +766,8 @@ class WizStepDBParams extends WizardStep
 		$this->oWizard->SaveParameter('new_db_name', '');
 		$this->oWizard->SaveParameter('create_db', '');
 		$this->oWizard->SaveParameter('db_new_name', '');
-		$this->oWizard->SaveParameter('db_tls_key', '');
-		$this->oWizard->SaveParameter('db_tls_cert', '');
+		$this->oWizard->SaveParameter('db_tls_enabled', false);
 		$this->oWizard->SaveParameter('db_tls_ca', '');
-		$this->oWizard->SaveParameter('db_tls_capath', '');
-		$this->oWizard->SaveParameter('db_tls_cipher', '');
 
 		return array('class' => 'WizStepAdminAccount', 'state' => '');
 	}
@@ -794,16 +780,13 @@ class WizStepDBParams extends WizardStep
 		$sDBPwd = $this->oWizard->GetParameter('db_pwd', '');
 		$sDBName = $this->oWizard->GetParameter('db_name', '');
 		$sDBPrefix = $this->oWizard->GetParameter('db_prefix', '');
-		$sNewDBName = $this->oWizard->GetParameter('db_new_name', false);
-		$sTlsKey = $this->oWizard->GetParameter('db_tls_key', '');
-		$sTlsCert = $this->oWizard->GetParameter('db_tls_cert', '');
+		$sTlsEnabled = $this->oWizard->GetParameter('db_tls_enabled', '');
 		$sTlsCA = $this->oWizard->GetParameter('db_tls_ca', '');
-		$sTlsCaPath = $this->oWizard->GetParameter('db_tls_capath', '');
-		$sTlsCypher = $this->oWizard->GetParameter('db_tls_cipher', '');
+		$sNewDBName = $this->oWizard->GetParameter('db_new_name', false);
 
 		$oPage->add('<table>');
-		SetupUtils::DisplayDBParameters($oPage, true, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTlsKey,
-			$sTlsCert, $sTlsCA, $sTlsCaPath, $sTlsCypher, $sNewDBName);
+		SetupUtils::DisplayDBParameters($oPage, true, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTlsEnabled,
+			$sTlsCA, $sNewDBName);
 		$oPage->add('</table>');
 		$sCreateDB = $this->oWizard->GetParameter('create_db', 'yes');
 		if ($sCreateDB == 'no')
@@ -2343,11 +2326,8 @@ EOF
 				'user' => $this->oWizard->GetParameter('db_user'),
 				'pwd' => $this->oWizard->GetParameter('db_pwd'),
 				'name' => $sDBName,
-				'db_tls_key' => $this->oWizard->GetParameter('db_tls_key'),
-				'db_tls_cert' => $this->oWizard->GetParameter('db_tls_cert'),
+				'db_tls_enabled' => $this->oWizard->GetParameter('db_tls_enabled'),
 				'db_tls_ca' => $this->oWizard->GetParameter('db_tls_ca'),
-				'db_tls_capath' => $this->oWizard->GetParameter('db_tls_capath'),
-				'db_tls_cipher' => $this->oWizard->GetParameter('db_tls_cipher'),
 				'prefix' => $this->oWizard->GetParameter('db_prefix'),
 			),
 			'url' => $this->oWizard->GetParameter('application_url'),
@@ -2552,11 +2532,9 @@ class WizStepDone extends WizardStep
 			$this->oWizard->GetParameter('db_server'),
 			$this->oWizard->GetParameter('db_user'),
 			$this->oWizard->GetParameter('db_pwd'),
-			$this->oWizard->GetParameter('db_tls_key'),
-			$this->oWizard->GetParameter('db_tls_cert'),
-			$this->oWizard->GetParameter('db_tls_ca'),
-			$this->oWizard->GetParameter('db_tls_capath'),
-			$this->oWizard->GetParameter('db_tls_cipher'));
+			$this->oWizard->GetParameter('db_tls_enabled'),
+			$this->oWizard->GetParameter('db_tls_ca')
+		);
 		$aParameters = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
 		$sCompactWizChoices = array();
 		foreach($aParameters as $iStep => $aChoices)

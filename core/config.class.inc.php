@@ -150,19 +150,11 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
-		'db_tls.key' => array(
-			'type' => 'string',
-			'description' => 'Path to client key file for SSL',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		),
-		'db_tls.cert' => array(
-			'type' => 'string',
-			'description' => 'Path to client certificate file for SSL',
-			'default' => null,
-			'value' => '',
+		'db_tls.enabled' => array(
+			'type' => 'bool',
+			'description' => 'If true then the connection to the DB will be encrypted',
+			'default' => false,
+			'value' => false,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
@@ -174,27 +166,11 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_tls.capath' => array(
-			'type' => 'string',
-			'description' => 'Path to a directory that contains trusted SSL CA certificates in PEM format',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		),
-		'db_tls.cipher' => array(
-			'type' => 'string',
-			'description' => 'Optional : separated list of permissible cyphers to use for SSL encryption',
-			'default' => null,
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		),
 		'db_tls.verify_server_cert' => array(
 			'type' => 'bool',
 			'description' => 'Change the TLS flag used to connect : MYSQLI_CLIENT_SSL if true, MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT if false (default)',
 			'default' => false,
-			'value' => '',
+			'value' => false,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
@@ -1908,30 +1884,23 @@ class Config
 			}
 			$this->Set('db_name', $sDBName);
 			$this->Set('db_subname', $aParamValues['db_prefix']);
-			$sDbTlsKey = $aParamValues['db_tls_key'];
-			if (isset($sDbTlsKey) && !empty($sDbTlsKey))
+
+			$bDbTlsEnabled = (bool) $aParamValues['db_tls_enabled'];
+			if ($bDbTlsEnabled)
 			{
-				$this->Set('db_tls.key', $sDbTlsKey, 'UpdateFromParams');
+				$this->Set('db_tls.enabled', $bDbTlsEnabled, 'UpdateFromParams');
 			}
-			$sDbTlsCert = $aParamValues['db_tls_cert'];
-			if (isset($sDbTlsCert) && !empty($sDbTlsCert))
+			else
 			{
-				$this->Set('db_tls.cert', $sDbTlsCert, 'UpdateFromParams');
+				// disabled : we don't want parameter in the file
+				$this->Set('db_tls.enabled', $bDbTlsEnabled, null);
 			}
-			$sDbTlsCa = $aParamValues['db_tls_ca'];
-			if (isset($sDbTlsCa) && !empty($sDbTlsCa))
-			{
+			$sDbTlsCa = $bDbTlsEnabled ? $aParamValues['db_tls_ca'] : null;
+			if (isset($sDbTlsCa) && !empty($sDbTlsCa)) {
 				$this->Set('db_tls.ca', $sDbTlsCa, 'UpdateFromParams');
-			}
-			$sDbTlsCaPath = $aParamValues['db_tls_capath'];
-			if (isset($sDbTlsCaPath) && !empty($sDbTlsCaPath))
-			{
-				$this->Set('db_tls.capath', $sDbTlsCaPath, 'UpdateFromParams');
-			}
-			$sDbTlsCipher = $aParamValues['db_tls_cipher'];
-			if (isset($sDbTlsCipher) && !empty($sDbTlsCipher))
-			{
-				$this->Set('db_tls.cipher', $sDbTlsCipher, 'UpdateFromParams');
+			} else {
+				// empty parameter : we don't want it in the file
+				$this->Set('db_tls.ca', null, null);
 			}
 		}
 

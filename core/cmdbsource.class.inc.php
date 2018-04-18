@@ -122,12 +122,22 @@ class CMDBSource
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
 	protected static $m_sDBName;
-	protected static $m_sDBTlsKey;
-	protected static $m_sDBTlsCert;
+	/**
+	 * @var boolean
+	 * @since 2.5 #1260 MySQL TLS first implementation
+	 */
+	protected static $m_bDBTlsEnabled;
+	/**
+	 * @var string
+	 * @since 2.5 #1260 MySQL TLS first implementation
+	 */
 	protected static $m_sDBTlsCA;
-	protected static $m_sDBTlsCaPath;
-	protected static $m_sDBTlsCipher;
+	/**
+	 * @var boolean
+	 * @since 2.5 #1260 MySQL TLS first implementation
+	 */
 	protected static $m_bDBTlsVerifyServerCert;
+
 	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
 
@@ -144,15 +154,11 @@ class CMDBSource
 		$sUser = $oConfig->Get('db_user');
 		$sPwd = $oConfig->Get('db_pwd');
 		$sSource = $oConfig->Get('db_name');
-		$sTlsKey = $oConfig->Get('db_tls.key');
-		$sTlsCert = $oConfig->Get('db_tls.cert');
+		$bTlsEnabled = $oConfig->Get('db_tls.enabled');
 		$sTlsCA = $oConfig->Get('db_tls.ca');
-		$sTlsCaPath = $oConfig->Get('db_tls.capath');
-		$sTlsCipher = $oConfig->Get('db_tls.cipher');
 		$sTlsVerifyServerCert = $oConfig->Get('db_tls.verify_server_cert');
 
-		self::Init($sServer, $sUser, $sPwd, $sSource, $sTlsKey, $sTlsCert, $sTlsCA, $sTlsCaPath, $sTlsCipher,
-			$sTlsVerifyServerCert);
+		self::Init($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, $sTlsVerifyServerCert);
 
 		$sCharacterSet = DEFAULT_CHARACTER_SET;
 		$sCollation = DEFAULT_COLLATION;
@@ -164,61 +170,50 @@ class CMDBSource
 	 * @param string $sUser
 	 * @param string $sPwd
 	 * @param string $sSource database to use
-	 * @param string $sTlsKey
-	 * @param string $sTlsCert
+	 * @param bool $bTlsEnabled
 	 * @param string $sTlsCA
-	 * @param string $sTlsCaPath
-	 * @param string $sTlsCipher
 	 * @param bool $sTlsVerifyServerCert
 	 *
 	 * @throws \MySQLException
 	 */
 	public static function Init(
-		$sServer, $sUser, $sPwd, $sSource = '', $sTlsKey = null, $sTlsCert = null, $sTlsCA = null, $sTlsCaPath = null,
-		$sTlsCipher = null, $sTlsVerifyServerCert = false
+		$sServer, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCA = null, $sTlsVerifyServerCert = false
 	)
 	{
 		self::$m_sDBHost = $sServer;
 		self::$m_sDBUser = $sUser;
 		self::$m_sDBPwd = $sPwd;
 		self::$m_sDBName = $sSource;
-		self::$m_sDBTlsKey = empty($sTlsKey) ? null : $sTlsKey;
-		self::$m_sDBTlsCert = empty($sTlsCert) ? null : $sTlsCert;
+		self::$m_bDBTlsEnabled = empty($bTlsEnabled) ? false : $bTlsEnabled;
 		self::$m_sDBTlsCA = empty($sTlsCA) ? null : $sTlsCA;
-		self::$m_sDBTlsCaPath = empty($sTlsCaPath) ? null : $sTlsCaPath;
-		self::$m_sDBTlsCipher = empty($sTlsCipher) ? null : $sTlsCipher;
 		self::$m_bDBTlsVerifyServerCert = empty($sTlsVerifyServerCert) ? null : $sTlsVerifyServerCert;
 
-		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sTlsKey, $sTlsCert, $sTlsCA,
-			$sTlsCaPath, $sTlsCipher, true, $sTlsVerifyServerCert);
+		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, true,
+			$sTlsVerifyServerCert);
 	}
 
 	/**
-	 * @param string $sServer
+	 * @param string $sDbHost
 	 * @param string $sUser
 	 * @param string $sPwd
 	 * @param string $sSource database to use
-	 * @param string $sTlsKey
-	 * @param string $sTlsCert
+	 * @param bool $bTlsEnabled
 	 * @param string $sTlsCa
-	 * @param string $sTlsCaPath
-	 * @param string $sTlsCipher
-	 * @param bool $bCheckTlsAfterConnection
-	 * @param bool $bVerifyTlsServerCert Change the TLS flag used to connect : MYSQLI_CLIENT_SSL if true, MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT if false (default)
+	 * @param bool $bCheckTlsAfterConnection If true then verify after connection if it is encrypted
+	 * @param bool $bVerifyTlsServerCert If true then verify server certificate when connecting
 	 *
 	 * @return \mysqli
 	 * @throws \MySQLException
 	 */
 	public static function GetMysqliInstance(
-		$sServer, $sUser, $sPwd, $sSource = '', $sTlsKey = null, $sTlsCert = null, $sTlsCa = null, $sTlsCaPath = null,
-		$sTlsCipher = null, $bCheckTlsAfterConnection = false, $bVerifyTlsServerCert = false
+		$sDbHost, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCa = null, $bCheckTlsAfterConnection = false,
+		$bVerifyTlsServerCert = false
 	) {
 		$oMysqli = null;
 
 		$sServer = null;
 		$iPort = null;
-		$bTlsEnabled = self::IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCa);
-		self::InitServerAndPort(self::$m_sDBHost, $sServer, $iPort);
+		self::InitServerAndPort($sDbHost, $sServer, $iPort);
 
 		$iFlags = null;
 
@@ -236,18 +231,20 @@ class CMDBSource
 				$iFlags = ($bVerifyTlsServerCert)
 					? MYSQLI_CLIENT_SSL
 					: MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
-				$oMysqli->ssl_set($sTlsKey, $sTlsCert, $sTlsCa, $sTlsCaPath, $sTlsCipher);
+				$sTlsCert = null; // not implemented
+				$sTlsCaPath = null; // not implemented
+				$sTlsCipher = null; // not implemented
+				$oMysqli->ssl_set($bTlsEnabled, $sTlsCert, $sTlsCa, $sTlsCaPath, $sTlsCipher);
 			}
-			$oMysqli->real_connect($sServer, $sUser, $sPwd, '', $iPort,
-				ini_get("mysqli.default_socket"), $iFlags);
+			$oMysqli->real_connect($sServer, $sUser, $sPwd, '', $iPort, ini_get("mysqli.default_socket"), $iFlags);
 		}
 		catch(mysqli_sql_exception $e)
 		{
 			throw new MySQLException('Could not connect to the DB server', array('host' => $sServer, 'user' => $sUser), $e);
 		}
 
-		if ($bCheckTlsAfterConnection
-			&& self::IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCa)
+		if ($bTlsEnabled
+			&& $bCheckTlsAfterConnection
 			&& !self::IsOpenedDbConnectionUsingTls($oMysqli))
 		{
 			throw new MySQLException("Connection to the database is not encrypted whereas it was opened using TLS parameters",
@@ -305,32 +302,6 @@ class CMDBSource
 		{
 			$iPort = 3306;
 		}
-	}
-
-	/**
-	 * @param \Config $oConfig
-	 *
-	 * @return boolean
-	 */
-	public static function IsDbConnectionInConfigUsingTls($oConfig)
-	{
-		$sTlsKey = $oConfig->Get('db_tls.key');
-		$sTlsCert = $oConfig->Get('db_tls.cert');
-		$sTlsCA = $oConfig->Get('db_tls.ca');
-
-		return self::IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCA);
-	}
-
-	/**
-	 * @param string $sTlsKey
-	 * @param string $sTlsCert
-	 * @param string $sTlsCA
-	 *
-	 * @return bool
-	 */
-	public static function IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCA)
-	{
-		return (!empty($sTlsKey) && !empty($sTlsCert) && !empty($sTlsCA));
 	}
 
 	/**

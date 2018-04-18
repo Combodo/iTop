@@ -845,11 +845,8 @@ class SetupUtils
 				'db_pwd' => $oPrevConf->Get('db_pwd'),
 				'db_name' => $oPrevConf->Get('db_name'),
 				'db_prefix' => $oPrevConf->Get('db_subname'),
-				'db_tls_key' => $oPrevConf->Get('db_tls.key'),
-				'db_tls_cert' => $oPrevConf->Get('db_tls.cert'),
+				'db_tls_enabled' => $oPrevConf->Get('db_tls.enabled'),
 				'db_tls_ca' => $oPrevConf->Get('db_tls.ca'),
-				'db_tls_capath' => $oPrevConf->Get('db_tls.capath'),
-				'db_tls_cipher' => $oPrevConf->Get('db_tls.cipher'),
 				'graphviz_path' => $oPrevConf->Get('graphviz_path'),
 			);
 		}
@@ -890,16 +887,13 @@ class SetupUtils
 	 * @param string $sDBPwd
 	 * @param string $sDBName
 	 * @param string $sDBPrefix
-	 * @param string $sTlsKey
-	 * @param string $sTlsCert
+	 * @param string $bTlsEnabled
 	 * @param string $sTlsCA
-	 * @param string $sTlsCaPath
-	 * @param string $sTlsCypher
 	 * @param string $sNewDBName
 	 */
 	static function DisplayDBParameters(
-		$oPage, $bAllowDBCreation, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTlsKey, $sTlsCert, $sTlsCA,
-		$sTlsCaPath, $sTlsCypher, $sNewDBName = ''
+		$oPage, $bAllowDBCreation, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $bTlsEnabled, $sTlsCA,
+		$sNewDBName = ''
 	) {
 		$oPage->add('<tr><td colspan="2">');
 		$oPage->add('<fieldset><legend>Database Server Connection</legend>');
@@ -913,29 +907,16 @@ class SetupUtils
 		$oPage->add('</tbody>');
 
 		//-- TLS params (N°1260)
+		$sTlsEnabledChecked = $bTlsEnabled ? ' checked' : '';
+		$sTlsCaDisabled = $bTlsEnabled ? '' : ' disabled';
 		$oPage->add('<tbody id="tls_options">');
-		$oPage->add('<tr><th colspan="3" style="text-align: left;"><label style="margin: 1em;"><img id="db_tls_img">Use encrypted connection with TLS</label></th></tr>');
-		$oPage->add('<tr><td colspan="3" style="background-color: #f9e0df; padding: 1em; border: 1px solid #950303; color: #950303;">Before configuring MySQL with TLS encryption, read the documentation <a href="https://wiki.openitop.org/doku.php?id=2_4_0:install:php_and_mysql_tls" target="_blank">on Combodo\'s Wiki</a></td>');
-		$oPage->add('<tr><td>SSL Key:</td>');
-		$oPage->add('<td><input id="db_tls_key" autocomplete="off" type="text" name="db_tls_key" value="'.htmlentities($sTlsKey,
-				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
-		$oPage->add('<td>Path to client key file for SSL</td></tr>');
-		$oPage->add('<tr><td>SSL CERT:</td>');
-		$oPage->add('<td><input id="db_tls_cert" autocomplete="off" type="text" name="db_tls_cert" value="'.htmlentities($sTlsCert,
-				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
-		$oPage->add('<td>Path to client certificate file for SSL</td></tr>');
+		$oPage->add('<tr><th colspan="3" style="text-align: left;"><label style="margin: 1em; font-weight: normal; font-style: italic;"><img id="db_tls_img">Use TLS encrypted connection</label></th></tr>');
+		$oPage->add('<tr><td colspan="3" style="background-color: #f9e0df; padding: 1em; border: 1px solid #950303; color: #950303;">Before configuring MySQL with TLS encryption, read the documentation <a href="https://wiki.openitop.org/doku.php?id=2_4_0:install:php_and_mysql_tls" target="_blank">on Combodo\'s Wiki</a></td></tr>');
+		$oPage->add('<tr><td colspan="3"><label><input id="db_tls_enabled" type="checkbox"'.$sTlsEnabledChecked.' name="db_tls_enabled" value="1"> Encrypted connection enabled</label></td></tr>');
 		$oPage->add('<tr><td>SSL CA:</td>');
 		$oPage->add('<td><input id="db_tls_ca" autocomplete="off" type="text" name="db_tls_ca" value="'.htmlentities($sTlsCA,
-				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
+				ENT_QUOTES, 'UTF-8').'" size="15"'.$sTlsCaDisabled.'></td>');
 		$oPage->add('<td>Path to certificate authority file for SSL</td></tr>');
-		$oPage->add('<tr><td>SSL CA path:</td>');
-		$oPage->add('<td><input id="db_tls_capath" autocomplete="off" type="text" name="db_tls_capath" value="'.htmlentities($sTlsCaPath,
-				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
-		$oPage->add('<td></td></td></tr>');
-		$oPage->add('<tr><td>SSL cypher:</td>');
-		$oPage->add('<td><input id="db_tls_cipher" autocomplete="off" type="text" name="db_tls_cipher" value="'.htmlentities($sTlsCypher,
-				ENT_QUOTES, 'UTF-8').'" size="15"/></td>');
-		$oPage->add('<td>Optional : separated list of permissible cyphers to use for SSL encryption</td></tr>');
 		$oPage->add('</tbody>');
 
 		$oPage->add('</table>');
@@ -981,7 +962,6 @@ function updateTlsImage() {
 }
 EOF
 		);
-		$bTlsEnabled = CMDBSource::IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCA);
 		if (!$bTlsEnabled)
 		{
 			$oPage->add_ready_script('toggleTlsOptions();');
@@ -990,6 +970,10 @@ EOF
 			<<<EOF
 $("tbody#tls_options>tr>th>label").click(function() {
 	toggleTlsOptions();
+});
+$("#db_tls_enabled").click(function() {
+	var bTlsEnabled = $("#db_tls_enabled").is(":checked");
+	$("#db_tls_ca").prop("disabled", !bTlsEnabled);
 });
 updateTlsImage();
 EOF
@@ -1019,11 +1003,8 @@ function DoCheckDBConnection()
 		'db_user': $("#db_user").val(),
 		'db_pwd': $("#db_pwd").val(),
 		'db_name': $("#db_name").val(),
-		'db_tls_key': $("input#db_tls_key").val(),
-		'db_tls_cert': $("input#db_tls_cert").val(),
+		'db_tls_enabled': $("input#db_tls_enabled").val(),
 		'db_tls_ca': $("input#db_tls_ca").val(),
-		'db_tls_capath': $("input#db_tls_capath").val(),
-		'db_tls_cypher': $("input#db_tls_cypher").val()
 	}
 	if ((oXHRCheckDB != null) && (oXHRCheckDB != undefined))
 	{
@@ -1111,7 +1092,7 @@ EOF
 <<<EOF
 DoCheckDBConnection(); // Validate the initial values immediately
 
-$("table#table_db_options").on("keyup change", "tr>td>input", function() { CheckDBConnection(); });
+$("table#table_db_options").on("keyup change", "tr>td input", function() { CheckDBConnection(); });
 
 $("#db_new_name").on("click keyup change", function() { $("#create_db").attr("checked", "checked"); WizardUpdateButtons(); });
 $("#db_name").on("click keyup change", function() {  $("#existing_db").attr("checked", "checked"); WizardUpdateButtons(); });
@@ -1130,33 +1111,21 @@ EOF
 	 * @param string $sDBServer
 	 * @param string $sDBUser
 	 * @param string $sDBPwd
-	 * @param string $sTlsKey
-	 * @param string $sTlsCert
+	 * @param bool $bTlsEnabled
 	 * @param string $sTlsCA
-	 * @param string $sTlsCaPath
-	 * @param string $sTlsCipher
 	 *
 	 * @return bool|array false if the connection failed or array('checks' => Array of CheckResult, 'databases' =>
 	 *     Array of database names (as strings) or null if not allowed)
 	 */
 	static function CheckDbServer(
-		$sDBServer, $sDBUser, $sDBPwd, $sTlsKey = null, $sTlsCert = null, $sTlsCA = null, $sTlsCaPath = null,
-		$sTlsCipher = null
+		$sDBServer, $sDBUser, $sDBPwd, $bTlsEnabled = false, $sTlsCA = null
 	)
 	{
 		$aResult = array('checks' => array(), 'databases' => null);
 
-		if (CMDBSource::IsDbConnectionUsingTls($sTlsKey, $sTlsCert, $sTlsCA))
+		if ($bTlsEnabled)
 		{
-			if (!self::CheckFileExists($sTlsKey, $aResult, 'Can\'t open SSL Key file'))
-			{
-				return $aResult;
-			}
-			if (!self::CheckFileExists($sTlsCert, $aResult, 'Can\'t open SSL Cert file'))
-			{
-				return $aResult;
-			}
-			if (!self::CheckFileExists($sTlsCA, $aResult, 'Can\'t open SSL CA file'))
+			if (!empty($sTlsCA) && !self::CheckFileExists($sTlsCA, $aResult, 'Can\'t open SSL CA file'))
 			{
 				return $aResult;
 			}
@@ -1165,48 +1134,50 @@ EOF
 		try
 		{
 			$oDBSource = new CMDBSource;
-			$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $sTlsKey, $sTlsCert, $sTlsCA, $sTlsCaPath, $sTlsCipher,
-				false);
+			$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $bTlsEnabled, $sTlsCA, false);
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Connection to '$sDBServer' as '$sDBUser' successful.");
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Info - User privileges: ".($oDBSource->GetRawPrivileges()));
 
 			$bHasDbVersionRequired = self::CheckDbServerVersion($aResult, $oDBSource);
-			if ($bHasDbVersionRequired)
+			if (!$bHasDbVersionRequired)
 			{
-				// Check some server variables
-				$iMaxAllowedPacket = $oDBSource->GetServerVariable('max_allowed_packet');
-				$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
-				if ($iMaxAllowedPacket >= (500 + $iMaxUploadSize)) // Allow some space for the query + the file to upload
-				{
-					$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($iMaxAllowedPacket) is big enough compared to upload_max_filesize ($iMaxUploadSize).");
-				}
-				else if($iMaxAllowedPacket < $iMaxUploadSize)
-				{
-					$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_allowed_packet ($iMaxAllowedPacket) is not big enough. Please, consider setting it to at least ".(500 + $iMaxUploadSize).".");
-				}
+				return $aResult;
+			}
 
-				$iMaxConnections = $oDBSource->GetServerVariable('max_connections');
-				if ($iMaxConnections < 5)
-				{
-					$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_connections ($iMaxConnections) is not enough. Please, consider setting it to at least 5.");
-				}
-				else
-				{
-					$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
-				}
+			// Check some server variables
+			$iMaxAllowedPacket = $oDBSource->GetServerVariable('max_allowed_packet');
+			$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+			if ($iMaxAllowedPacket >= (500 + $iMaxUploadSize)) // Allow some space for the query + the file to upload
+			{
+				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($iMaxAllowedPacket) is big enough compared to upload_max_filesize ($iMaxUploadSize).");
+			}
+			else if($iMaxAllowedPacket < $iMaxUploadSize)
+			{
+				$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_allowed_packet ($iMaxAllowedPacket) is not big enough. Please, consider setting it to at least ".(500 + $iMaxUploadSize).".");
+			}
 
-				$iInnodbLargePrefix = $oDBSource->GetServerVariable('innodb_large_prefix');
-				$bInnodbLargePrefix = ($iInnodbLargePrefix == 1);
-				if (!$bInnodbLargePrefix)
-				{
-					$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
-						"MySQL variable innodb_large_prefix is set to false, but must be set to true ! Otherwise this will limit indexes size and cause issues (iTop charset is utf8mb4).");
-				}
-				else
-				{
-					$aResult['checks'][] = new CheckResult(CheckResult::INFO,
-						"MySQL innodb_large_prefix is active, so the iTop charset utf8mb4 can be used.");
-				}
+			$iMaxConnections = $oDBSource->GetServerVariable('max_connections');
+			if ($iMaxConnections < 5)
+			{
+				$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_connections ($iMaxConnections) is not enough. Please, consider setting it to at least 5.");
+			}
+			else
+			{
+				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
+			}
+
+			// innodb_large_prefix : since 2.5 #1001 utf8mb4 switch
+			$iInnodbLargePrefix = $oDBSource->GetServerVariable('innodb_large_prefix');
+			$bInnodbLargePrefix = ($iInnodbLargePrefix == 1);
+			if (!$bInnodbLargePrefix)
+			{
+				$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
+					"MySQL variable innodb_large_prefix is set to false, but must be set to true ! Otherwise this will limit indexes size and cause issues (iTop charset is utf8mb4).");
+			}
+			else
+			{
+				$aResult['checks'][] = new CheckResult(CheckResult::INFO,
+					"MySQL innodb_large_prefix is active, so the iTop charset utf8mb4 can be used.");
 			}
 
 			try
@@ -1290,23 +1261,18 @@ EOF
 	 * @param string $sDBServer
 	 * @param string $sDBUser
 	 * @param string $sDBPwd
-	 * @param string $sTlsKey
-	 * @param string $sTlsCert
+	 * @param bool $bTlsEnabled
 	 * @param string $sTlsCa
-	 * @param string $sTlsCapath
-	 *
-	 * @param string $sTlsCipher
 	 *
 	 * @return string
 	 * @throws \MySQLException
 	 */
 	static public function GetMySQLVersion(
-		$sDBServer, $sDBUser, $sDBPwd, $sTlsKey = null, $sTlsCert = null, $sTlsCa = null, $sTlsCapath = null,
-		$sTlsCipher = null
+		$sDBServer, $sDBUser, $sDBPwd, $bTlsEnabled = false, $sTlsCa = null
 	)
 	{
 		$oDBSource = new CMDBSource;
-		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $sTlsKey, $sTlsCert, $sTlsCa, $sTlsCapath, $sTlsCipher);
+		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $bTlsEnabled, $sTlsCa, false);
 		$sDBVersion = $oDBSource->GetDBVersion();
 		return $sDBVersion;
 	}
@@ -1317,16 +1283,12 @@ EOF
 		$sDBUser = $aParameters['db_user'];
 		$sDBPwd = $aParameters['db_pwd'];
 		$sDBName = $aParameters['db_name'];
-		$sTlsKey = (isset($aParameters['db_tls_key'])) ? $aParameters['db_tls_key'] : null;
-		$sTlsCert = isset($aParameters['db_tls_cert']) ? $aParameters['db_tls_cert'] : null;
+		$sTlsEnabled = (isset($aParameters['db_tls_enabled'])) ? $aParameters['db_tls_enabled'] : null;
 		$sTlsCA = (isset($aParameters['db_tls_ca'])) ? $aParameters['db_tls_ca'] : null;
-		$sTlsCaPath = (isset($aParameters['db_tls_capath'])) ? $aParameters['db_tls_capath'] : null;
-		$sTlsCipher = (isset($aParameters['db_tls_cipher'])) ? $aParameters['db_tls_cipher'] : null;
 
 		$oPage->add_ready_script('oXHRCheckDB = null;');
 
-		$checks = SetupUtils::CheckDbServer($sDBServer, $sDBUser, $sDBPwd, $sTlsKey, $sTlsCert, $sTlsCA, $sTlsCaPath,
-			$sTlsCipher);
+		$checks = SetupUtils::CheckDbServer($sDBServer, $sDBUser, $sDBPwd, $sTlsEnabled, $sTlsCA);
 
 		if ($checks === false)
 		{
@@ -1469,11 +1431,8 @@ EOF
 			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
 			'db_name' => $oWizard->GetParameter('db_name', ''),
 			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
-			'db_tls_key' => $oWizard->GetParameter('db_tls_key', ''),
-			'db_tls_cert' => $oWizard->GetParameter('db_tls_cert', ''),
+			'db_tls_enabled' => $oWizard->GetParameter('db_tls_enabled', false),
 			'db_tls_ca' => $oWizard->GetParameter('db_tls_ca', ''),
-			'db_tls_capath' => $oWizard->GetParameter('db_tls_capath', ''),
-			'db_tls_cipher' => $oWizard->GetParameter('db_tls_cipher', ''),
 			'source_dir' => $sRelativeSourceDir,
 		);
 		$oConfig->UpdateFromParams($aParamValues, null);
@@ -1524,11 +1483,8 @@ EOF
 			'db_pwd' => $oWizard->GetParameter('db_pwd', ''),
 			'db_name' => $oWizard->GetParameter('db_name', ''),
 			'db_prefix' => $oWizard->GetParameter('db_prefix', ''),
-			'db_tls_key' => $oWizard->GetParameter('db_tls_key', ''),
-			'db_tls_cert' => $oWizard->GetParameter('db_tls_cert', ''),
+			'db_tls_enabled' => $oWizard->GetParameter('db_tls_enabled', false),
 			'db_tls_ca' => $oWizard->GetParameter('db_tls_ca', ''),
-			'db_tls_capath' => $oWizard->GetParameter('db_tls_capath', ''),
-			'db_tls_cipher' => $oWizard->GetParameter('db_tls_cipher', ''),
 			'source_dir' => '',
 		);
 		$oConfig->UpdateFromParams($aParamValues, null);

@@ -18,19 +18,18 @@ class DBBackupTest extends ItopTestCase
 	public function testGetMysqlCliTlsOptions()
 	{
 		$oConfig = new Config();
-		$oConfig->Set('db_tls.key', 'key');
-		$oConfig->Set('db_tls.cert', 'cert');
+		$oConfig->Set('db_tls.enabled', false);
 
 		$sCliArgsNoTls = \DBBackup::GetMysqlCliTlsOptions($oConfig);
 		$this->assertEmpty($sCliArgsNoTls);
 
-		$oConfig->Set('db_tls.ca', 'ca');
+		$oConfig->Set('db_tls.enabled', true);
 		$sCliArgsMinCfg = \DBBackup::GetMysqlCliTlsOptions($oConfig);
-		$this->assertEquals(' --ssl --ssl-key="key" --ssl-cert="cert" --ssl-ca="ca"', $sCliArgsMinCfg);
+		$this->assertEquals(' --ssl', $sCliArgsMinCfg);
 
-		$oConfig->Set('db_tls.capath', 'capath');
+		$sTestCa = 'my_test_ca';
+		$oConfig->Set('db_tls.ca', $sTestCa);
 		$sCliArgsCapathCfg = \DBBackup::GetMysqlCliTlsOptions($oConfig);
-		$this->assertEquals(' --ssl --ssl-key="key" --ssl-cert="cert" --ssl-ca="ca" --ssl-capath="capath"',
-			$sCliArgsCapathCfg);
+		$this->assertEquals(' --ssl --ssl-ca="'.$sTestCa.'"', $sCliArgsCapathCfg);
 	}
 }

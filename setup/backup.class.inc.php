@@ -550,18 +550,14 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$sUser = $oConfig->Get('db_user');
 			$sPwd = $oConfig->Get('db_pwd');
 			$sSource = $oConfig->Get('db_name');
-			$sTlsKey = $oConfig->Get('db_tls.key');
-			$sTlsCert = $oConfig->Get('db_tls.cert');
+			$sTlsEnabled = $oConfig->Get('db_tls.enabled');
 			$sTlsCA = $oConfig->Get('db_tls.ca');
-			$sTlsCaPath = $oConfig->Get('db_tls.capath');
-			$sTlsCipher = $oConfig->Get('db_tls.cipher');
 			$bTlsVerifyServerCert = $oConfig->Get('db_tls.verify_server_cert');
 
 			try
 			{
-				$oMysqli = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource,
-					$sTlsKey, $sTlsCert, $sTlsCA, $sTlsCaPath, $sTlsCipher,
-					false, $bTlsVerifyServerCert);
+				$oMysqli = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $sTlsEnabled, $sTlsCA, false,
+					$bTlsVerifyServerCert);
 
 				if ($oMysqli->connect_errno)
 				{
@@ -621,7 +617,8 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		 */
 		public static function GetMysqlCliTlsOptions($oConfig)
 		{
-			if (!CMDBSource::IsDbConnectionInConfigUsingTls($oConfig))
+			$bDbTlsEnabled = $oConfig->Get('db_tls.enabled');
+			if (!$bDbTlsEnabled)
 			{
 				return '';
 			}
@@ -629,12 +626,13 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$sTlsOptions = '';
 			$sTlsOptions .= ' --ssl';
 
-			$sTlsOptions .= self::GetMysqliCliSingleOption('ssl-key', $oConfig->Get('db_tls.key'));
-			$sTlsOptions .= self::GetMysqliCliSingleOption('ssl-cert', $oConfig->Get('db_tls.cert'));
+			// ssl-key parameter : not implemented
+			// ssl-cert parameter : not implemented
+
 			$sTlsOptions .= self::GetMysqliCliSingleOption('ssl-ca', $oConfig->Get('db_tls.ca'));
 
-			$sTlsOptions .= self::GetMysqliCliSingleOption('ssl-cipher', $oConfig->Get('db_tls.cipher'));
-			$sTlsOptions .= self::GetMysqliCliSingleOption('ssl-capath', $oConfig->Get('db_tls.capath'));
+			// ssl-cipher parameter : not implemented
+			// ssl-capath parameter : not implemented
 
 			return $sTlsOptions;
 		}
