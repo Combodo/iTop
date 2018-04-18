@@ -875,7 +875,10 @@ $(function()
 		_onCriteriaRemoved: function(oData)
 		{
 			this._updateSearch();
-			this._submit();
+            if(this.options.auto_submit === true)
+            {
+                this._submit();
+            }
 		},
 		_onCriteriaErrorOccured: function(oData)
 		{
