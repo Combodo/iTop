@@ -1894,7 +1894,7 @@ class utils
 	 * (re)installation of iTop (especially during development). 
 	 * @return string
 	 */
-	public function GetCacheBusterTimestamp()
+	public static function GetCacheBusterTimestamp()
 	{
 		if(!defined('COMPILATION_TIMESTAMP'))
 		{

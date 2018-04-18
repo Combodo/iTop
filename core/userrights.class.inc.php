@@ -299,7 +299,7 @@ abstract class User extends cmdbAbstractObject
 		{
 			$oUser = UserRights::GetUserObject();
 			$oAddon = UserRights::GetModuleInstance();
-			if (method_exists($oAddon, 'GetUserOrgs'))
+			if (!is_null($oUser) && method_exists($oAddon, 'GetUserOrgs'))
 			{
 				$aOrgs = $oAddon->GetUserOrgs($oUser, '');
 				if (count($aOrgs) > 0)
