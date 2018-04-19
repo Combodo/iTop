@@ -101,14 +101,6 @@ $(function()
 			this._super( key, value );
 		},
 
-        _initChooseDefaultOperator: function() {
-            //if the class has an index, in order to maximize the performance, we force the default operator to "equal"
-            if (this.options.field.has_index && typeof this.options.available_operators['='] == 'object')
-            {
-                this.options.operator = '=';
-                this.options.available_operators['='].rank = -1;//we want it to be the first displayed
-            }
-        },
 		// Protected methods
 		// - Init operators by cleaning up available operators and ordering them.
 		//   Note: A null operator or an operator with a rank "false" will be removed.
@@ -157,6 +149,15 @@ $(function()
 				this.options.operator = Object.keys(this.operators)[0];
 			}
 		},
+        _initChooseDefaultOperator: function()
+		{
+            //if the class has an index, in order to maximize the performance, we force the default operator to "equal"
+            if (this.options.field.has_index && typeof this.options.available_operators['='] == 'object')
+            {
+                this.options.operator = '=';
+                this.options.available_operators['='].rank = -1;//we want it to be the first displayed
+            }
+        },
 		// - Bind external events
 		_bindEvents: function()
 		{

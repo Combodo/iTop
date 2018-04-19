@@ -91,7 +91,9 @@ $(function()
 		_onAddSelectedValues: function(oData)
 		{
 			this._addSelectedValues(oData);
-			//this._apply();
+			// Note: Selecting values elsewhere (eg. a popup) closes the criteria on the first click, so when the user goes back to the form, the criteria has the new values displayed but not selected. So as a workaround we apply and re-open the criteria.
+			this._apply();
+			this._open();
 		},
 
 		// DOM element helpers
