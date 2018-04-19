@@ -1223,9 +1223,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Button:RemoveImage' => 'Supprimer l\'image',
 	'UI:UploadNotSupportedInThisMode' => 'La modification d\'images ou de fichiers n\'est pas supportée dans ce mode.',
 
-	// TODO: Reorganize those entries with other search entries and make entries for other languages.
 	// Search form
 	'UI:Search:Toggle' => 'Réduire / Ouvrir',
+    'UI:Search:AutoSubmit:DisabledHint' => 'La soumission automatique a été desactivée pour cette classe',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Ajouter un critère',
 	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Récents',
@@ -1235,7 +1235,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	// - Criteria titles
 	//   - Default widget
-	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Indifférent',
+	'UI:Search:Criteria:Title:Default:Any' => '%1$s : Indifférent',
 	'UI:Search:Criteria:Title:Default:Empty' => '%1$s vide',
 	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s non vide',
 	'UI:Search:Criteria:Title:Default:Equals' => '%1$s égal %2$s',
@@ -1271,6 +1271,13 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s : %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s : %2$s et %3$s autres',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s : Indifférent',
+    //   - Hierarchical key widget
+    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s est renseigné',
+    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s n\'est pas renseigné',
+    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
+    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s : %2$s',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s : %2$s et %3$s autres',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s : Indifférent',
 
 	/// - Criteria operators
 	//   - Default widget
@@ -1301,8 +1308,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Cocher tout / aucun visibles',
 
 	// - Widget other translations
-	'UI:Search:Criteria:Numeric:From' => 'Depuis',
-	'UI:Search:Criteria:Numeric:Until' => 'Jusqu\'à',
+	'UI:Search:Criteria:Numeric:From' => 'De',
+	'UI:Search:Criteria:Numeric:Until' => 'à',
 	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Indifférent',
 	'UI:Search:Criteria:Numeric:PlaceholderUntil' => 'Indifférent',
 	'UI:Search:Criteria:DateTime:From' => 'Depuis',
