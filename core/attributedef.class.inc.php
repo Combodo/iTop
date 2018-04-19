@@ -3430,7 +3430,10 @@ class AttributeEmailAddress extends AttributeString
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		if (empty($sValue)) return '';
-		return '<a class="mailto" href="mailto:'.$sValue.'">'.parent::GetAsHTML($sValue).'</a>';
+
+		$sUrlDecorationClass = utils::GetConfig()->Get('email_decoration_class');
+
+		return '<a class="mailto" href="mailto:'.$sValue.'"><span class="text_decoration '.$sUrlDecorationClass.'"></span>'.parent::GetAsHTML($sValue).'</a>';
 	}
 }
 
@@ -3452,6 +3455,35 @@ class AttributeIPAddress extends AttributeString
 		// Note: This is the responsibility of this function to place backticks around column aliases
 		return array('INET_ATON(`'.$sClassAlias.$this->GetCode().'`)');
 	}
+}
+
+/**
+ * Specialization of a string: phone number
+ *
+ * @package	 iTopORM
+ */
+class AttributePhoneNumber extends AttributeString
+{
+    public function GetValidationPattern()
+    {
+        return $this->GetOptional('validation_pattern', '^'.utils::GetConfig()->Get('phone_number_validation_pattern').'$');
+    }
+
+    static public function GetFormFieldClass()
+    {
+        return '\\Combodo\\iTop\\Form\\Field\\PhoneField';
+    }
+
+    public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+    {
+        if (empty($sValue)) return '';
+
+        $sUrlDecorationClass = utils::GetConfig()->Get('phone_number_decoration_class');
+        $sUrlPattern = utils::GetConfig()->Get('phone_number_url_pattern');
+        $sUrl = sprintf($sUrlPattern, $sValue);
+
+        return '<a class="tel" href="'.$sUrl.'"><span class="text_decoration '.$sUrlDecorationClass.'"></span>'.parent::GetAsHTML($sValue).'</a>';
+    }
 }
 
 /**

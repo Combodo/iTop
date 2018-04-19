@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,16 +19,16 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
-use \utils;
-use \Dict;
-use \UserRights;
-use \InlineImage;
-use \DBObjectSet;
-use \DBObjectSearch;
-use \MetaModel;
-use \Combodo\iTop\Renderer\FieldRenderer;
-use \Combodo\iTop\Renderer\RenderingOutput;
-use \Combodo\iTop\Form\Field\LinkedSetField;
+use utils;
+use Dict;
+use UserRights;
+use InlineImage;
+use DBObjectSet;
+use DBObjectSearch;
+use MetaModel;
+use Combodo\iTop\Renderer\FieldRenderer;
+use Combodo\iTop\Renderer\RenderingOutput;
+use Combodo\iTop\Form\Field\LinkedSetField;
 
 /**
  * Description of BsFileUploadFieldRenderer
@@ -46,6 +46,7 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
+        $oOutput->AddCssClass('form_field');
         $oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
 
 		$sObjectClass = get_class($this->oField->GetObject());

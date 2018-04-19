@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,15 +19,15 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
-use \utils;
-use \Dict;
-use \UserRights;
-use \AttributeDateTime;
-use \AttributeText;
-use \InlineImage;
-use \Combodo\iTop\Renderer\FieldRenderer;
-use \Combodo\iTop\Renderer\RenderingOutput;
-use \Combodo\iTop\Form\Field\TextAreaField;
+use utils;
+use Dict;
+use UserRights;
+use AttributeDateTime;
+use AttributeText;
+use InlineImage;
+use Combodo\iTop\Renderer\FieldRenderer;
+use Combodo\iTop\Renderer\RenderingOutput;
+use Combodo\iTop\Form\Field\TextAreaField;
 
 /**
  * Description of BsSimpleFieldRenderer
@@ -45,6 +45,7 @@ class BsSimpleFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
+		$oOutput->AddCssClass('form_field');
 		$oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
 
 		$sFieldClass = get_class($this->oField);
@@ -61,6 +62,7 @@ class BsSimpleFieldRenderer extends FieldRenderer
                 case 'Combodo\\iTop\\Form\\Field\\StringField':
                 case 'Combodo\\iTop\\Form\\Field\\UrlField':
                 case 'Combodo\\iTop\\Form\\Field\\EmailField':
+                case 'Combodo\\iTop\\Form\\Field\\PhoneField':
                 case 'Combodo\\iTop\\Form\\Field\\SelectField':
                 case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
                     // Opening container
@@ -101,6 +103,7 @@ EOF
                         case 'Combodo\\iTop\\Form\\Field\\StringField':
                         case 'Combodo\\iTop\\Form\\Field\\UrlField':
                         case 'Combodo\\iTop\\Form\\Field\\EmailField':
+                        case 'Combodo\\iTop\\Form\\Field\\PhoneField':
                             $oOutput->AddHtml('<input type="text" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="')->AddHtml($this->oField->GetCurrentValue(), true)->AddHtml('" class="form-control" maxlength="255" />');
                             break;
 
@@ -220,6 +223,7 @@ EOF
                 case 'Combodo\\iTop\\Form\\Field\\StringField':
                 case 'Combodo\\iTop\\Form\\Field\\UrlField':
                 case 'Combodo\\iTop\\Form\\Field\\EmailField':
+                case 'Combodo\\iTop\\Form\\Field\\PhoneField':
                 case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
                 case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
                 case 'Combodo\\iTop\\Form\\Field\\SelectField':
@@ -291,6 +295,7 @@ EOF
                     case 'Combodo\\iTop\\Form\\Field\\StringField':
                     case 'Combodo\\iTop\\Form\\Field\\UrlField':
                     case 'Combodo\\iTop\\Form\\Field\\EmailField':
+                    case 'Combodo\\iTop\\Form\\Field\\PhoneField':
                     case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
                     case 'Combodo\\iTop\\Form\\Field\\DurationField':
                         // Opening container
@@ -308,7 +313,7 @@ EOF
                             $oOutput->AddHtml('</div>');
 
                             // Value
-                            $bEncodeHtmlEntities = ( in_array($sFieldClass, array('Combodo\\iTop\\Form\\Field\\UrlField', 'Combodo\\iTop\\Form\\Field\\EmailField')) ) ? false : true;
+                            $bEncodeHtmlEntities = ( in_array($sFieldClass, array('Combodo\\iTop\\Form\\Field\\UrlField', 'Combodo\\iTop\\Form\\Field\\EmailField', 'Combodo\\iTop\\Form\\Field\\PhoneField')) ) ? false : true;
                             $oOutput->AddHtml('<div class="form_field_control">');
 							$oOutput->AddHtml('<div class="form-control-static">')->AddHtml($this->oField->GetDisplayValue(), $bEncodeHtmlEntities)->AddHtml('</div>');
                             $oOutput->AddHtml('</div>');
@@ -475,6 +480,7 @@ EOF
                 case 'Combodo\\iTop\\Form\\Field\\StringField':
                 case 'Combodo\\iTop\\Form\\Field\\UrlField':
                 case 'Combodo\\iTop\\Form\\Field\\EmailField':
+                case 'Combodo\\iTop\\Form\\Field\\PhoneField':
                 case 'Combodo\\iTop\\Form\\Field\\SelectField':
                 case 'Combodo\\iTop\\Form\\Field\\MultipleSelectField':
                 case 'Combodo\\iTop\\Form\\Field\\HiddenField':

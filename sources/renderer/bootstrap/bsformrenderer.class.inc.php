@@ -46,6 +46,7 @@ class BsFormRenderer extends FormRenderer
         $this->AddSupportedField('StringField', 'BsSimpleFieldRenderer');
         $this->AddSupportedField('UrlField', 'BsSimpleFieldRenderer');
         $this->AddSupportedField('EmailField', 'BsSimpleFieldRenderer');
+        $this->AddSupportedField('PhoneField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('TextAreaField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('CaseLogField', 'BsSimpleFieldRenderer');
 		$this->AddSupportedField('SelectField', 'BsSimpleFieldRenderer');

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -45,6 +45,7 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
+        $oOutput->AddCssClass('form_field');
         $oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
 
 		$sFieldValueClass = $this->oField->GetSearch()->GetClass();

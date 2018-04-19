@@ -301,17 +301,15 @@ td a.no-arrow:hover {
   padding-left: 0px;
   background: inherit;
 }
-td a.mailto, td a.mailto:visited {
-  text-decoration: none;
-  color: #000;
-  padding-left: 20px;
-  background: url(../images/mail.png?v=v2.5.0) no-repeat left;
+td a:hover .text_decoration, td a:visited:hover .text_decoration {
+  color: #d56e14;
 }
-td a.mailto:hover {
-  text-decoration: underline;
+td a .text_decoration, td a:visited .text_decoration {
+  vertical-align: baseline;
+  text-decoration: none;
   color: #ea7d1e;
-  padding-left: 20px;
-  background: url(../images/mail.png?v=v2.5.0) no-repeat left;
+  margin-right: 8px;
+  transition: color 0.2s ease-in-out;
 }
 a.small_action {
   font-family: Tahoma, Verdana, Arial, Helvetica;

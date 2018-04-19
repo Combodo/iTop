@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,14 +19,14 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
-use \Exception;
-use \ApplicationContext;
-use \IssueLog;
-use \Dict;
-use \MetaModel;
-use \AttributeFriendlyName;
-use \Combodo\iTop\Renderer\FieldRenderer;
-use \Combodo\iTop\Renderer\RenderingOutput;
+use Exception;
+use ApplicationContext;
+use IssueLog;
+use Dict;
+use MetaModel;
+use AttributeFriendlyName;
+use Combodo\iTop\Renderer\FieldRenderer;
+use Combodo\iTop\Renderer\RenderingOutput;
 
 /**
  * Description of BsLinkedSetFieldRenderer
@@ -43,6 +43,7 @@ class BsLinkedSetFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 	    $oOutput = new RenderingOutput();
+        $oOutput->AddCssClass('form_field');
         $oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
 
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';

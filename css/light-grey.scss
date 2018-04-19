@@ -357,17 +357,21 @@ td a.no-arrow:hover {
 	padding-left:0px;
 	background: inherit;
 }
-td a.mailto, td a.mailto:visited {
-	text-decoration:none;
-	color:#000000;
-	padding-left:20px;
-	background: url(../images/mail.png?v=#{$version}) no-repeat left;
-}
-td a.mailto:hover {
-	text-decoration:underline;
-	color:$highlight-color;
-	padding-left:20px;
-	background: url(../images/mail.png?v=#{$version}) no-repeat left;
+td a,
+td a:visited{
+	&:hover{
+		.text_decoration{
+			color: darken($highlight-color, 6%);
+		}
+	}
+
+	.text_decoration{
+		vertical-align: baseline;
+		text-decoration: none;
+		color: $highlight-color;
+		margin-right: 8px;
+		transition: color 0.2s ease-in-out;
+	}
 }
 
 a.small_action {

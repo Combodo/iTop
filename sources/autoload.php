@@ -33,6 +33,7 @@ require_once APPROOT . 'sources/form/field/labelfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/stringfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/urlfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/emailfield.class.inc.php';
+require_once APPROOT . 'sources/form/field/phonefield.class.inc.php';
 require_once APPROOT . 'sources/form/field/passwordfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/datetimefield.class.inc.php';
 require_once APPROOT . 'sources/form/field/durationfield.class.inc.php';

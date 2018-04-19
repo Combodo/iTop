@@ -23,11 +23,11 @@ use Str;
 use utils;
 
 /**
- * Description of EmailField
+ * Description of PhoneField
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class EmailField extends StringField
+class PhoneField extends StringField
 {
     public function GetDisplayValue()
     {
@@ -38,8 +38,8 @@ class EmailField extends StringField
             $sLabel = substr($sLabel, 0, 100).'.....'.substr($sLabel, -20);
         }
 
-        $sUrlDecorationClass = utils::GetConfig()->Get('email_decoration_class');
+        $sUrlDecorationClass = utils::GetConfig()->Get('phone_number_decoration_class');
 
-        return "<a class=\"mailto\" href=\"mailto:$this->currentValue\"><span class=\"form_field_decoration $sUrlDecorationClass\"></span>$sLabel</a>";
+        return "<a class=\"tel\" href=\"tel:$this->currentValue\"><span class=\"form_field_decoration $sUrlDecorationClass\"></span>$sLabel</a>";
     }
 }
