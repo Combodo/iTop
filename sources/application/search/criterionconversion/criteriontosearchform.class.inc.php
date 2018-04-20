@@ -247,7 +247,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	{
 		$sPrevOperator = $aPrevCriterion['operator'];
 		$sCurrOperator = $aCurrCriterion['operator'];
-		if ((($sPrevOperator != '<') && ($sPrevOperator != '<=')) || (($sCurrOperator != '>') && ($sCurrOperator != '>=')))
+		if (($sPrevOperator != '<=') || ($sCurrOperator != '>='))
 		{
 			$aMergedCriterion[] = $aPrevCriterion;
 
@@ -260,21 +260,11 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$oFormat = AttributeDate::GetFormat();
 		$sLastDate = $aPrevCriterion['values'][0]['value'];
 		$oDate = new DateTime($sLastDate);
-		if ($sPrevOperator == '<')
-		{
-			// previous day to include ends
-			$oDate->sub(DateInterval::createFromDateString('1 day'));
-		}
 		$sLastDateValue = $oDate->format(AttributeDate::GetSQLFormat());
 		$sLastDateLabel = $oFormat->format($oDate);
 
 		$sFirstDate = $aCurrCriterion['values'][0]['value'];
 		$oDate = new DateTime($sFirstDate);
-		if ($sCurrOperator == '>')
-		{
-			// next day to include ends
-			$oDate->add(DateInterval::createFromDateString('1 day'));
-		}
 		$sFirstDateValue = $oDate->format(AttributeDate::GetSQLFormat());
 		$sFirstDateLabel = $oFormat->format($oDate);
 
@@ -302,7 +292,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 	{
 		$sPrevOperator = $aPrevCriterion['operator'];
 		$sCurrOperator = $aCurrCriterion['operator'];
-		if ((($sPrevOperator != '<') && ($sPrevOperator != '<=')) || (($sCurrOperator != '>') && ($sCurrOperator != '>=')))
+		if (($sPrevOperator != '<=') || ($sCurrOperator != '>='))
 		{
 			$aMergedCriterion[] = $aPrevCriterion;
 
@@ -315,22 +305,10 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$sFirstDate = $aCurrCriterion['values'][0]['value'];
 		$oDate = new DateTime($sLastDate);
 		$aCurrCriterion['operator'] = 'between_dates';
-		$sInterval = '1 second';
-
-		if ($sPrevOperator == '<')
-		{
-			// previous day/second to include ends
-			$oDate->sub(DateInterval::createFromDateString($sInterval));
-		}
 		$sLastDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
 		$sLastDateLabel = AttributeDateTime::GetFormat()->Format($sLastDateValue);
 
 		$oDate = new DateTime($sFirstDate);
-		if ($sCurrOperator == '>')
-		{
-			// next day/second to include ends
-			$oDate->add(DateInterval::createFromDateString($sInterval));
-		}
 		$sFirstDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
 		$sFirstDateLabel = AttributeDateTime::GetFormat()->Format($sFirstDateValue);
 
@@ -484,40 +462,40 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		return $aCriteria;
 	}
 
-	protected static function DateTimeToSearchForm($aCriteria, $aFields)
+	protected static function DateTimeToSearchForm($aCriterion, $aFields)
 	{
-		if ((!array_key_exists('is_relative', $aCriteria) || !$aCriteria['is_relative'])
-			&& (!isset($aCriteria['unit']) || ($aCriteria['unit'] == 'DAY')))
+		if ((!array_key_exists('is_relative', $aCriterion) || !$aCriterion['is_relative'])
+			&& (!isset($aCriterion['unit']) || ($aCriterion['unit'] == 'DAY')))
 		{
 			// Convert '=' in 'between'
-			if (isset($aCriteria['operator']))
+			if (isset($aCriterion['operator']))
 			{
-				switch ($aCriteria['operator'])
+				switch ($aCriterion['operator'])
 				{
 					case '=':
-						if (isset($aCriteria['has_undefined']) && (isset($aCriteria['values'][0]['value']) && ($aCriteria['values'][0]['value'] == 0)))
+						if (isset($aCriterion['has_undefined']) && (isset($aCriterion['values'][0]['value']) && ($aCriterion['values'][0]['value'] == 0)))
 						{
 							// Special case for NOT EMPTY
-							$aCriteria['operator'] = CriterionConversionAbstract::OP_NOT_EMPTY;
+							$aCriterion['operator'] = CriterionConversionAbstract::OP_NOT_EMPTY;
 						}
 						else
 						{
-							$aCriteria['operator'] = CriterionConversionAbstract::OP_BETWEEN_DATES;
-							$sWidget = $aCriteria['widget'];
+							$aCriterion['operator'] = CriterionConversionAbstract::OP_BETWEEN_DATES;
+							$sWidget = $aCriterion['widget'];
 							if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
 							{
-								$aCriteria['values'][1] = $aCriteria['values'][0];
+								$aCriterion['values'][1] = $aCriterion['values'][0];
 							}
 							else
 							{
-								$sDate = $aCriteria['values'][0]['value'];
+								$sDate = $aCriterion['values'][0]['value'];
 								$oDate = new DateTime($sDate);
 
 								$sFirstDateValue = $oDate->format(AttributeDateTime::GetSQLFormat());
 								try
 								{
 									$sFirstDateLabel = AttributeDateTime::GetFormat()->Format($sFirstDateValue);
-									$aCriteria['values'][0] = array('value' => $sFirstDateValue, 'label' => "$sFirstDateLabel");
+									$aCriterion['values'][0] = array('value' => $sFirstDateValue, 'label' => "$sFirstDateLabel");
 								}
 								catch (Exception $e)
 								{
@@ -530,7 +508,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 								try
 								{
 									$sLastDateLabel = AttributeDateTime::GetFormat()->Format($sLastDateValue);
-									$aCriteria['values'][1] = array('value' => $sLastDateValue, 'label' => "$sLastDateLabel");
+									$aCriterion['values'][1] = array('value' => $sLastDateValue, 'label' => "$sLastDateLabel");
 								}
 								catch (Exception $e)
 								{
@@ -540,20 +518,67 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 						break;
 
 					case 'ISNULL':
-						$aCriteria['operator'] = CriterionConversionAbstract::OP_EMPTY;
+						$aCriterion['operator'] = CriterionConversionAbstract::OP_EMPTY;
 						break;
+
+					case '>':
+						$aCriterion['operator'] = '>=';
+						$sWidget = $aCriterion['widget'];
+						if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
+						{
+							$sDelta = '1 day';
+						}
+						else
+						{
+							$sDelta = '1 second';
+						}
+						$oFormat = AttributeDate::GetFormat();
+						$sFirstDate = $aCriterion['values'][0]['value'];
+						$oDate = new DateTime($sFirstDate);
+						$oDate->add(DateInterval::createFromDateString($sDelta));
+						$sFirstDateValue = $oDate->format(AttributeDate::GetSQLFormat());
+						try
+						{
+							$sFirstDateLabel = $oFormat->format($oDate);
+							$aCriterion['values'][0] = array('value' => $sFirstDateValue, 'label' => $sFirstDateLabel);
+						} catch (Exception $e) {}
+						break;
+
+					case '<':
+						$aCriterion['operator'] = '<=';
+						$sWidget = $aCriterion['widget'];
+						if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
+						{
+							$sDelta = '1 day';
+						}
+						else
+						{
+							$sDelta = '1 second';
+						}
+						$oFormat = AttributeDate::GetFormat();
+						$sFirstDate = $aCriterion['values'][0]['value'];
+						$oDate = new DateTime($sFirstDate);
+						$oDate->sub(DateInterval::createFromDateString($sDelta));
+						$sFirstDateValue = $oDate->format(AttributeDate::GetSQLFormat());
+						try
+						{
+							$sFirstDateLabel = $oFormat->format($oDate);
+							$aCriterion['values'][0] = array('value' => $sFirstDateValue, 'label' => $sFirstDateLabel);
+						} catch (Exception $e) {}
+						break;
+
 				}
 			}
 
-			return $aCriteria;
+			return $aCriterion;
 		}
 
-		if (isset($aCriteria['values'][0]['value']))
+		if (isset($aCriterion['values'][0]['value']))
 		{
-			$sLabel = $aCriteria['values'][0]['value'];
-			if (isset($aCriteria['verb']))
+			$sLabel = $aCriterion['values'][0]['value'];
+			if (isset($aCriterion['verb']))
 			{
-				switch ($aCriteria['verb'])
+				switch ($aCriterion['verb'])
 				{
 					case 'DATE_SUB':
 						$sLabel = '-'.$sLabel;
@@ -563,17 +588,17 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 						break;
 				}
 			}
-			if (isset($aCriteria['unit']))
+			if (isset($aCriterion['unit']))
 			{
-				$sLabel .= Dict::S('Expression:Unit:Short:'.$aCriteria['unit'], $aCriteria['unit']);
+				$sLabel .= Dict::S('Expression:Unit:Short:'.$aCriterion['unit'], $aCriterion['unit']);
 			}
-			$aCriteria['values'][0]['label'] = "$sLabel";
+			$aCriterion['values'][0]['label'] = "$sLabel";
 		}
 
 		// Temporary until the JS widget support relative dates
-		$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+		$aCriterion['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
 
-		return $aCriteria;
+		return $aCriterion;
 	}
 
 	protected static function NumericToSearchForm($aCriteria, $aFields)
