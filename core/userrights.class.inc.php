@@ -975,6 +975,7 @@ class UserRights
 
 		try
 		{
+			// Check only bizmodel to let API work like in 2.4.1
 			if (MetaModel::HasCategory($sClass, 'bizmodel'))
 			{
 				return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
