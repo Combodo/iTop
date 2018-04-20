@@ -245,7 +245,7 @@ abstract class DBSearch
     public function serialize($bDevelopParams = false, $aContextParams = null)
 	{
 		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
-		return base64_encode(serialize(array($sOql, $this->GetInternalParams(), $this->m_aModifierProperties)));
+		return rawurlencode(base64_encode(serialize(array($sOql, $this->GetInternalParams(), $this->m_aModifierProperties))));
 	}
 
 	/**
@@ -255,7 +255,7 @@ abstract class DBSearch
 	 */
 	static public function unserialize($sValue)
 	{
-		$aData = unserialize(base64_decode($sValue));
+		$aData = unserialize(base64_decode(rawurldecode($sValue)));
 		$sOql = $aData[0];
 		$aParams = $aData[1];
 		// We've tried to use gzcompress/gzuncompress, but for some specific queries
