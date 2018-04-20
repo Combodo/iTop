@@ -786,8 +786,7 @@ class ScalarExpression extends UnaryExpression
 								{
 									/** @var AttributeExternalKey $oAttDef */
 									$sTarget = $oAttDef->GetTargetClass();
-									$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
-
+									$oObj = MetaModel::GetObject($sTarget, $this->GetValue(), true, true);
 									$aValue['label'] = $oObj->Get("friendlyname");
 								}
 							}
@@ -1017,6 +1016,7 @@ class FieldExpression extends UnaryExpression
 	 * @param string sDefault The default value if no relevant label could be computed
 	 *
 	 * @return The label
+	 * @throws \CoreException
 	 */
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
@@ -1033,11 +1033,12 @@ class FieldExpression extends UnaryExpression
 		// Exceptions...
 		if ($oAttDef->IsExternalKey())
 		{
+			/** @var AttributeExternalKey $oAttDef */
 			$sObjClass = $oAttDef->GetTargetClass();
 			$iObjKey = (int)$sValue;
 			if ($iObjKey > 0)
 			{
-				$oObject = MetaModel::GetObjectWithArchive($sObjClass, $iObjKey);
+				$oObject = MetaModel::GetObjectWithArchive($sObjClass, $iObjKey, true, true);
 				$sRes = $oObject->GetHyperlink();
 			}
 			else

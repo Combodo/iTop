@@ -227,7 +227,13 @@ class DisplayBlock
 		{
 			// render now
 			$sHtml .= "<div id=\"$sId\" class=\"display_block\" >\n";
-			$sHtml .= $this->GetRenderContent($oPage, $aExtraParams, $sId);
+			try
+			{
+				$sHtml .= $this->GetRenderContent($oPage, $aExtraParams, $sId);
+			} catch (Exception $e)
+			{
+
+			}
 			$sHtml .= "</div>\n";
 		}
 		else
