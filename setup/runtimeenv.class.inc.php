@@ -526,48 +526,32 @@ class RunTimeEnvironment
 				$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
 			}
 			$oFactory->LoadModule($oModule);
-			if ($oFactory->HasLoadErrors())
-			{
-				break;
-			}
 		}
 		
-		if ($oFactory->HasLoadErrors())
+
+		if ($oModule instanceof MFDeltaModule)
 		{
-			foreach($oFactory->GetLoadErrors() as $sModuleId => $aErrors)
-			{
-				echo "<h3>Module: ".$sModuleId."</h3>\n";
-				foreach($aErrors as $oXmlError)
-				{
-					echo "<p>File: ".$oXmlError->file." Line:".$oXmlError->line." Message:".$oXmlError->message."</p>\n";
-				}
-			}
+			// A delta was loaded, let's save a second copy of the datamodel
+			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'-with-delta.xml');
 		}
 		else
 		{
-			if ($oModule instanceof MFDeltaModule)
-			{
-				// A delta was loaded, let's save a second copy of the datamodel
-				$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'-with-delta.xml');
-			}
-			else
-			{
-				// No delta was loaded, let's save the datamodel now
-				$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
-			}
-
-			$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
-			self::MakeDirSafe($sTargetDir);
-			$bSkipTempDir = ($this->sFinalEnv != $this->sTargetEnv); // No need for a temporary directory if sTargetEnv is already a temporary directory
-			$oMFCompiler = new MFCompiler($oFactory);
-			$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks, $bSkipTempDir);
-
-			$sCacheDir = APPROOT.'data/cache-'.$this->sTargetEnv;
-			SetupUtils::builddir($sCacheDir);
-			SetupUtils::tidydir($sCacheDir);
-
-			MetaModel::ResetCache(md5(APPROOT).'-'.$this->sTargetEnv);
+			// No delta was loaded, let's save the datamodel now
+			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
 		}
+
+		$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
+		self::MakeDirSafe($sTargetDir);
+		$bSkipTempDir = ($this->sFinalEnv != $this->sTargetEnv); // No need for a temporary directory if sTargetEnv is already a temporary directory
+		$oMFCompiler = new MFCompiler($oFactory);
+		$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks, $bSkipTempDir);
+
+		$sCacheDir = APPROOT.'data/cache-'.$this->sTargetEnv;
+		SetupUtils::builddir($sCacheDir);
+		SetupUtils::tidydir($sCacheDir);
+
+		MetaModel::ResetCache(md5(APPROOT).'-'.$this->sTargetEnv);
+
 		return array_keys($aModulesToCompile);
 	}
 

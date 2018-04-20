@@ -821,18 +821,28 @@ class ModelFactory
 	
 	/**
 	 *	XML load errors (XML format and validation)
+	 * @Deprecated Errors are now sent by Exception
 	 */	
 	function HasLoadErrors()
 	{
 		return (count(self::$aLoadErrors) > 0);
 	}
 
+	/**
+ 	 * @Deprecated Errors are now sent by Exception
+	 * @return array
+	 */
 	function GetLoadErrors()
 	{
 		return self::$aLoadErrors;
 	}
 
-	function GetXMLErrorMessage($aErrors)
+	/**
+	 * @param array $aErrors
+	 *
+	 * @return string
+	 */
+	protected function GetXMLErrorMessage($aErrors)
 	{
 		$sMessage = "Data model source file ({$aErrors[0]->file}) could not be loaded : \n";
 		foreach($aErrors as $oXmlError)

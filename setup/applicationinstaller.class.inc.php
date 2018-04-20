@@ -525,32 +525,17 @@ class ApplicationInstaller
 			$oFactory->LoadModule($oDelta);
 			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$sEnvironment.'-with-delta.xml');
 		}
-		//$oFactory->Dump();
-		if ($oFactory->HasLoadErrors())
-		{
-			foreach($oFactory->GetLoadErrors() as $sModuleId => $aErrors)
-			{
-				SetupPage::log_error("Data model source file (xml) could not be loaded - found errors in module: $sModuleId");
-				foreach($aErrors as $oXmlError)
-				{
-					SetupPage::log_error("Load error: File: ".$oXmlError->file." Line:".$oXmlError->line." Message:".$oXmlError->message);
-				}
-			}
-			throw new Exception("The data model could not be compiled. Please check the setup error log");
-		}
-		else
-		{
-			$oMFCompiler = new MFCompiler($oFactory);
-			$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
-			//$aCompilerLog = $oMFCompiler->GetLog();
-			//SetupPage::log_info(implode("\n", $aCompilerLog));
-			SetupPage::log_info("Data model successfully compiled to '$sTargetPath'.");
 
-			$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
-			SetupUtils::builddir($sCacheDir);
-			SetupUtils::tidydir($sCacheDir);
-		}
-		
+		$oMFCompiler = new MFCompiler($oFactory);
+		$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
+		//$aCompilerLog = $oMFCompiler->GetLog();
+		//SetupPage::log_info(implode("\n", $aCompilerLog));
+		SetupPage::log_info("Data model successfully compiled to '$sTargetPath'.");
+
+		$sCacheDir = APPROOT.'/data/cache-'.$sEnvironment.'/';
+		SetupUtils::builddir($sCacheDir);
+		SetupUtils::tidydir($sCacheDir);
+
 		// Special case to patch a ugly patch in itop-config-mgmt
 		$sFileToPatch = $sTargetPath.'/itop-config-mgmt-1.0.0/model.itop-config-mgmt.php';
 		if (file_exists($sFileToPatch))
