@@ -912,7 +912,7 @@ class CMDBSource
 		return $sRet;
 	}
 
-	public static function HasIndex($sTable, $sIndexId, $aFields = null)
+	public static function HasIndex($sTable, $sIndexId, $aFields = null, $aLength = null)
 	{
 		$aTableInfo = self::GetTableInfo($sTable);
 		if (empty($aTableInfo)) return false;
@@ -926,9 +926,24 @@ class CMDBSource
 
 		// Compare the columns
 		$sSearchedIndex = implode(',', $aFields);
-		$sExistingIndex = implode(',', $aTableInfo['Indexes'][$sIndexId]);
+		$aColumnNames = array();
+		$aSubParts = array();
+		foreach($aTableInfo['Indexes'][$sIndexId] as $aIndexDef)
+		{
+			$aColumnNames[] = $aIndexDef['Column_name'];
+			$aSubParts[] = $aIndexDef['Sub_part'];
+		}
+		$sExistingIndex = implode(',', $aColumnNames);
 
-		return ($sSearchedIndex == $sExistingIndex);
+		if (is_null($aLength))
+		{
+			return ($sSearchedIndex == $sExistingIndex);
+		}
+
+		$sSearchedLength = implode(',', $aLength);
+		$sExistingLength = implode(',', $aSubParts);
+
+		return ($sSearchedIndex == $sExistingIndex) && ($sSearchedLength == $sExistingLength);
 	}
 
 	// Returns an array of (fieldname => array of field info)
@@ -948,6 +963,12 @@ class CMDBSource
 	{
 		self::$m_aTablesInfo = array();
 	}
+
+	/**
+	 * @param $sTableName
+	 *
+	 * @throws \MySQLException
+	 */
 	private static function _TableInfoCacheInit($sTableName)
 	{
 		if (isset(self::$m_aTablesInfo[strtolower($sTableName)])
@@ -962,23 +983,29 @@ class CMDBSource
 		// Get table informations
 		//   We were using SHOW COLUMNS FROM... but this don't return charset and collation info !
 		//   so since 2.5 and #1001 (switch to utf8mb4) we're using INFORMATION_SCHEMA !
-		$aFields = self::QueryToArray('SELECT * FROM information_schema.`COLUMNS`'
-			.' WHERE table_schema = "'.self::$m_sDBName.'" AND table_name = "'.$sTableName.'";');
+		$aMapping = array(
+			"Name" => "COLUMN_NAME",
+			"Type" => "COLUMN_TYPE",
+			"Null" => "IS_NULLABLE",
+			"Key" => "COLUMN_KEY",
+			"Default" => "COLUMN_DEFAULT",
+			"Extra" => "EXTRA",
+			"Charset" => "CHARACTER_SET_NAME",
+			"Collation" => "COLLATION_NAME",
+			"CharMaxLength" => "CHARACTER_MAXIMUM_LENGTH",
+		);
+		$sColumns = implode(', ', $aMapping);
+		$sDBName = self::$m_sDBName;
+		$aFields = self::QueryToArray("SELECT $sColumns FROM information_schema.`COLUMNS` WHERE table_schema = '$sDBName' AND table_name = '$sTableName';");
 		foreach ($aFields as $aFieldData)
 		{
+			$aFields = array();
+			foreach($aMapping as $sKey => $sColumn)
+			{
+				$aFields[$sKey] = $aFieldData[$sColumn];
+			}
 			$sFieldName = $aFieldData["COLUMN_NAME"];
-			self::$m_aTablesInfo[strtolower($sTableName)]["Fields"][$sFieldName] =
-				array
-				(
-					"Name" => $sFieldName,
-					"Type" => $aFieldData["COLUMN_TYPE"],
-					"Null" => $aFieldData["IS_NULLABLE"],
-					"Key" => $aFieldData["COLUMN_KEY"],
-					"Default" => $aFieldData["COLUMN_DEFAULT"],
-					"Extra" => $aFieldData["EXTRA"],
-					"Charset" => $aFieldData["CHARACTER_SET_NAME"],
-					"Collation" => $aFieldData["COLLATION_NAME"],
-				);
+			self::$m_aTablesInfo[strtolower($sTableName)]["Fields"][$sFieldName] = $aFields;
 		}
 
 		if (!is_null(self::$m_aTablesInfo[strtolower($sTableName)]))
@@ -987,7 +1014,7 @@ class CMDBSource
 			$aMyIndexes = array();
 			foreach ($aIndexes as $aIndexColumn)
 			{
-				$aMyIndexes[$aIndexColumn['Key_name']][$aIndexColumn['Seq_in_index']-1] = $aIndexColumn['Column_name'];
+				$aMyIndexes[$aIndexColumn['Key_name']][$aIndexColumn['Seq_in_index']-1] = $aIndexColumn;
 			}
 			self::$m_aTablesInfo[strtolower($sTableName)]["Indexes"] = $aMyIndexes;
 		}
@@ -999,6 +1026,37 @@ class CMDBSource
 
 		// perform a case insensitive match because on Windows the table names become lowercase :-(
 		return self::$m_aTablesInfo[strtolower($sTable)];
+	}
+
+	/**
+	 * @param string $sTableName
+	 *
+	 * @return string query to upgrade table charset and collation if needed, null if not
+	 * @throws \MySQLException
+	 *
+	 * @since 2.5 #1001 switch to utf8mb4
+	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-table.html
+	 */
+	public static function DBCheckTableCharsetAndCollation($sTableName)
+	{
+		$sDBName = self::DBName();
+		$sTableInfoQuery = "SELECT C.character_set_name, T.table_collation
+			FROM information_schema.`TABLES` T inner join information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` C
+				ON T.table_collation = C.collation_name
+			WHERE T.table_schema = '$sDBName'
+  			AND T.table_name = '$sTableName';";
+		$aTableInfo = self::QueryToArray($sTableInfoQuery);
+		$sTableCharset = $aTableInfo[0]['character_set_name'];
+		$sTableCollation = $aTableInfo[0]['table_collation'];
+
+		if ((DEFAULT_CHARACTER_SET == $sTableCharset) && (DEFAULT_COLLATION == $sTableCollation))
+		{
+			return null;
+		}
+
+
+		return 'ALTER TABLE `'.$sTableName.'` '.self::$SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
+
 	}
 
 	/**
@@ -1120,5 +1178,29 @@ class CMDBSource
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @return string query to upgrade database charset and collation if needed, null if not
+	 * @throws \MySQLException
+	 *
+	 * @since 2.5 #1001 switch to utf8mb4
+	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
+	 */
+	public static function DBCheckCharsetAndCollation()
+	{
+		$sDBName = CMDBSource::DBName();
+		$sDBInfoQuery = "SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME
+			FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$sDBName';";
+		$aDBInfo = CMDBSource::QueryToArray($sDBInfoQuery);
+		$sDBCharset = $aDBInfo[0]['DEFAULT_CHARACTER_SET_NAME'];
+		$sDBCollation = $aDBInfo[0]['DEFAULT_COLLATION_NAME'];
+
+		if ((DEFAULT_CHARACTER_SET == $sDBCharset) && (DEFAULT_COLLATION == $sDBCollation))
+		{
+			return null;
+		}
+
+		return 'ALTER DATABASE'.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
 	}
 }

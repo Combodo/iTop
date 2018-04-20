@@ -777,8 +777,6 @@ abstract class MetaModel
 		return $aResults;
 	}
 
-	// #@# restore to private ?
-
 	/**
 	 * @param string $sClass
 	 * @param string $sAttCode
@@ -865,6 +863,43 @@ abstract class MetaModel
 		}
 
 		return $aRet;
+	}
+
+
+	/**
+	 * @param $sClass
+	 * @param $aColumns
+	 * @param $aTableInfo
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 */
+	private static function DBGetIndexesLength($sClass, $aColumns, $aTableInfo)
+	{
+		$aLength = array();
+		$aAttDefs = self::ListAttributeDefs($sClass);
+		foreach($aColumns as $sAttSqlCode)
+		{
+			$iLength = null;
+			foreach($aAttDefs as $sAttCode => $oAttDef)
+			{
+				if (($sAttCode == $sAttSqlCode) || ($oAttDef->IsParam('sql') && ($oAttDef->Get('sql') == $sAttSqlCode)))
+				{
+					$iMaxLength = $aTableInfo['Fields'][$sAttSqlCode]['CharMaxLength'];
+					if (is_null($iMaxLength))
+					{
+						$iLength = null;
+					}
+					else
+					{
+						$iLength = min((int) $iMaxLength, $oAttDef->GetIndexLength());
+					}
+					break;
+				}
+			}
+			$aLength[] = $iLength;
+		}
+		return $aLength;
 	}
 
 	/**
@@ -4912,16 +4947,18 @@ abstract class MetaModel
 		return $sRes;
 	}
 
+
 	/**
 	 * @return array
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public static function DBCheckFormat()
 	{
 		$aErrors = array();
 		$aSugFix = array();
 
-		$sAlterDBMetaData = self::DBCheckCharsetAndCollation();
+		$sAlterDBMetaData = CMDBSource::DBCheckCharsetAndCollation();
 
 		// A new way of representing things to be done - quicker to execute !
 		$aCreateTable = array(); // array of <table> => <table options>
@@ -4939,12 +4976,17 @@ abstract class MetaModel
 			// Check that the table exists
 			//
 			$sTable = self::DBGetTable($sClass);
+			$aSugFix[$sClass]['*First'] = array();
+
+			$aTableInfo = CMDBSource::GetTableInfo($sTable);
+
 			$bTableToCreate = false;
 			$sKeyField = self::DBGetKey($sClass);
 			$sDbCharset = DEFAULT_CHARACTER_SET;
 			$sDbCollation = DEFAULT_COLLATION;
 			$sAutoIncrement = (self::IsAutoIncrementKey($sClass) ? "AUTO_INCREMENT" : "");
 			$sKeyFieldDefinition = "`$sKeyField` INT(11) NOT NULL $sAutoIncrement PRIMARY KEY";
+			$aTableInfo['Indexes']['PRIMARY']['used'] = true;
 			if (!CMDBSource::IsTable($sTable))
 			{
 				$bTableToCreate = true;
@@ -4990,7 +5032,7 @@ abstract class MetaModel
 
 			if (!$bTableToCreate)
 			{
-				$sAlterTableMetaDataQuery = self::DBCheckTableCharsetAndCollation($sTable);
+				$sAlterTableMetaDataQuery = CMDBSource::DBCheckTableCharsetAndCollation($sTable);
 				if (!empty($sAlterTableMetaDataQuery))
 				{
 					$aAlterTableMetaData[$sTable] = $sAlterTableMetaDataQuery;
@@ -4999,7 +5041,6 @@ abstract class MetaModel
 
 			// Check that any defined field exists
 			//
-			$aTableInfo = CMDBSource::GetTableInfo($sTable);
 			$aTableInfo['Fields'][$sKeyField]['used'] = true;
 			foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
@@ -5023,29 +5064,74 @@ abstract class MetaModel
 					{
 						$aErrors[$sClass][$sAttCode][] = "field '$sField' could not be found in table '$sTable'";
 						$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD $sFieldDefinition";
-						if ($bIndexNeeded)
-						{
-							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
-						}
+
 						if ($bTableToCreate)
 						{
 							$aCreateTableItems[$sTable][$sField] = $sFieldDefinition;
-							if ($bIndexNeeded)
-							{
-								$aCreateTableItems[$sTable][] = "INDEX (`$sField`)";
-							}
 						}
 						else
 						{
 							$aAlterTableItems[$sTable][$sField] = "ADD $sFieldDefinition";
-							if ($bIndexNeeded)
+						}
+
+						if ($bIndexNeeded)
+						{
+							$aTableInfo['Indexes'][$sField]['used'] = true;
+							$aColumns = array($sField);
+							$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
+							$sColumns = '`'.$sField.'`';
+							if (!is_null($aLength[0]))
 							{
-								$aAlterTableItems[$sTable][] = "ADD INDEX (`$sField`)";
+								$sColumns .= ' ('.$aLength[0].')';
+							}
+							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX `$sField` ($sColumns)";
+							if ($bTableToCreate)
+							{
+								$aCreateTableItems[$sTable][] = "INDEX `$sField` ($sColumns)";
+							}
+							else
+							{
+								$aAlterTableItems[$sTable][] = "ADD INDEX `$sField` ($sColumns)";
 							}
 						}
+
 					}
 					else
 					{
+						// Create indexes (external keys only... so far)
+						// (drop before change, add after change)
+						$sSugFixAfterChange = '';
+						$sAlterTableItemsAfterChange = '';
+						if ($bIndexNeeded)
+						{
+							$aColumns = array($sField);
+							$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
+							$aTableInfo['Indexes'][$sField]['used'] = true;
+
+							if (!CMDBSource::HasIndex($sTable, $sField, $aColumns, $aLength))
+							{
+								$sColumns = '`'.$sField.'`';
+								if (!is_null($aLength[0]))
+								{
+									$sColumns .= ' ('.$aLength[0].')';
+								}
+
+								$aErrors[$sClass][$sAttCode][] = "Foreign key '$sField' in table '$sTable' should have an index";
+								if (CMDBSource::HasIndex($sTable, $sField))
+								{
+									$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` DROP INDEX `$sField`";
+									$sSugFixAfterChange = "ALTER TABLE `$sTable` ADD INDEX `$sField` ($sColumns)";
+									$aAlterTableItems[$sTable][] = "DROP INDEX `$sField`";
+									$sAlterTableItemsAfterChange = "ADD INDEX `$sField` ($sColumns)";
+								}
+								else
+								{
+									$sSugFixAfterChange = "ALTER TABLE `$sTable` ADD INDEX `$sField` ($sColumns)";
+									$sAlterTableItemsAfterChange = "ADD INDEX `$sField` ($sColumns)";
+								}
+							}
+						}
+
 						// The field already exists, does it have the relevant properties?
 						//
 						$bToBeChanged = false;
@@ -5063,20 +5149,10 @@ abstract class MetaModel
 
 						// Create indexes (external keys only... so far)
 						//
-						if ($bIndexNeeded && !CMDBSource::HasIndex($sTable, $sField, array($sField)))
+						if (!empty($sSugFixAfterChange))
 						{
-							$aErrors[$sClass][$sAttCode][] = "Foreign key '$sField' in table '$sTable' should have an index";
-							if (CMDBSource::HasIndex($sTable, $sField))
-							{
-								$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` DROP INDEX `$sField`, ADD INDEX (`$sField`)";
-								$aAlterTableItems[$sTable][] = "DROP INDEX `$sField`";
-								$aAlterTableItems[$sTable][] = "ADD INDEX (`$sField`)";
-							}
-							else
-							{
-								$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
-								$aAlterTableItems[$sTable][] = "ADD INDEX (`$sField`)";
-							}
+							$aSugFix[$sClass][$sAttCode][] = $sSugFixAfterChange;
+							$aAlterTableItems[$sTable][] = $sAlterTableItemsAfterChange;
 						}
 					}
 				}
@@ -5087,13 +5163,30 @@ abstract class MetaModel
 			{
 				$sIndexId = implode('_', $aColumns);
 
-				if (!CMDBSource::HasIndex($sTable, $sIndexId, $aColumns))
+				$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
+				$aTableInfo['Indexes'][$sIndexId]['used'] = true;
+
+				if (!CMDBSource::HasIndex($sTable, $sIndexId, $aColumns, $aLength))
 				{
-					$sColumns = "`".implode("`, `", $aColumns)."`";
+					$sColumns = '';
+
+					for ($i = 0; $i < count($aColumns); $i++)
+					{
+						if (!empty($sColumns))
+						{
+							$sColumns .= ', ';
+						}
+						$sColumns .= '`'.$aColumns[$i].'`';
+						if (!is_null($aLength[$i]))
+						{
+							$sColumns .= ' ('.$aLength[$i].')';
+						}
+					}
 					if (CMDBSource::HasIndex($sTable, $sIndexId))
 					{
 						$aErrors[$sClass]['*'][] = "Wrong index '$sIndexId' ($sColumns) in table '$sTable'";
-						$aSugFix[$sClass]['*'][] = "ALTER TABLE `$sTable` DROP INDEX `$sIndexId`, ADD INDEX `$sIndexId` ($sColumns)";
+						$aSugFix[$sClass]['*First'][] = "ALTER TABLE `$sTable` DROP INDEX `$sIndexId`";
+						$aSugFix[$sClass]['*'][] = "ALTER TABLE `$sTable` ADD INDEX `$sIndexId` ($sColumns)";
 					}
 					else
 					{
@@ -5108,7 +5201,12 @@ abstract class MetaModel
 					{
 						if (CMDBSource::HasIndex($sTable, $sIndexId))
 						{
-							$aAlterTableItems[$sTable][] = "DROP INDEX `$sIndexId`";
+							// Add the drop before CHARSET alteration
+							if (!isset($aAlterTableItems[$sTable]))
+							{
+								$aAlterTableItems[$sTable] = array();
+							}
+							array_unshift($aAlterTableItems[$sTable], "DROP INDEX `$sIndexId`");
 						}
 						$aAlterTableItems[$sTable][] = "ADD INDEX `$sIndexId` ($sColumns)";
 					}
@@ -5130,8 +5228,28 @@ abstract class MetaModel
 						$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` CHANGE `$sField` $sFieldDefinition";
 						$aAlterTableItems[$sTable][$sField] = "CHANGE `$sField` $sFieldDefinition";
 					}
+					$aSugFix[$sClass][$sAttCode][] = "-- Recomanded action: ALTER TABLE `$sTable` DROP `$sField`";
 				}
 			}
+
+			// Find out unused indexes
+			//
+			foreach($aTableInfo['Indexes'] as $sIndexId => $aIndexData)
+			{
+				if (!isset($aIndexData['used']) || !$aIndexData['used'])
+				{
+					$aErrors[$sClass]['*'][] = "Index '$sIndexId' in table '$sTable' is not used and will be removed";
+					$aSugFix[$sClass]['*First'][] = "ALTER TABLE `$sTable` DROP INDEX `$sIndexId`";
+					// Add the drop before CHARSET alteration
+					if (!isset($aAlterTableItems[$sTable]))
+					{
+						$aAlterTableItems[$sTable] = array();
+					}
+					array_unshift($aAlterTableItems[$sTable], "DROP INDEX `$sIndexId`");
+				}
+			}
+
+			if (empty($aSugFix[$sClass]['*First'])) unset($aSugFix[$sClass]['*First']);
 		}
 
 		$aCondensedQueries = array();
@@ -5157,58 +5275,6 @@ abstract class MetaModel
 		return array($aErrors, $aSugFix, $aCondensedQueries);
 	}
 
-	/**
-	 * @return string query to upgrade database charset and collation if needed, null if not
-	 * @throws \MySQLException
-	 *
-	 * @since 2.5 #1001 switch to utf8mb4
-	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
-	 */
-	private static function DBCheckCharsetAndCollation()
-	{
-		$sDBName = CMDBSource::DBName();
-		$sDBInfoQuery = "SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME
-			FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$sDBName';";
-		$aDBInfo = CMDBSource::QueryToArray($sDBInfoQuery);
-		$sDBCharset = $aDBInfo[0]['DEFAULT_CHARACTER_SET_NAME'];
-		$sDBCollation = $aDBInfo[0]['DEFAULT_COLLATION_NAME'];
-
-		if ((DEFAULT_CHARACTER_SET == $sDBCharset) && (DEFAULT_COLLATION == $sDBCollation))
-		{
-			return null;
-		}
-
-		return 'ALTER DATABASE'.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
-	}
-
-	/**
-	 * @param string $sTableName
-	 *
-	 * @return string query to upgrade table charset and collation if needed, null if not
-	 * @throws \MySQLException
-	 *
-	 * @since 2.5 #1001 switch to utf8mb4
-	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-table.html
-	 */
-	private static function DBCheckTableCharsetAndCollation($sTableName)
-	{
-		$sDBName = CMDBSource::DBName();
-		$sTableInfoQuery = "SELECT C.character_set_name, T.table_collation
-			FROM information_schema.`TABLES` T inner join information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` C
-				ON T.table_collation = C.collation_name
-			WHERE T.table_schema = '$sDBName'
-  			AND T.table_name = '$sTableName';";
-		$aTableInfo = CMDBSource::QueryToArray($sTableInfoQuery);
-		$sTableCharset = $aTableInfo[0]['character_set_name'];
-		$sTableCollation = $aTableInfo[0]['table_collation'];
-
-		if ((DEFAULT_CHARACTER_SET == $sTableCharset) && (DEFAULT_COLLATION == $sTableCollation))
-		{
-			return null;
-		}
-
-		return 'ALTER TABLE `'.$sTableName.'`'.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
-	}
 
 	/**
 	 * @return array
@@ -7000,6 +7066,7 @@ abstract class MetaModel
 		}
 		return $sRet;
 	}
+
 }
 
 

@@ -123,6 +123,8 @@ abstract class AttributeDefinition
 
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
+	const INDEX_LENGTH = null;
+
 	public function GetType()
 	{
 		return Dict::S('Core:'.get_class($this));
@@ -156,7 +158,10 @@ abstract class AttributeDefinition
 	private $m_aParams = array();
 	protected $m_sHostClass = '!undefined!';
 	public function Get($sParamName) {return $this->m_aParams[$sParamName];}
-	protected function IsParam($sParamName) {return (array_key_exists($sParamName, $this->m_aParams));}
+
+	public function GetIndexLength() {return static::INDEX_LENGTH;}
+
+	public function IsParam($sParamName) {return (array_key_exists($sParamName, $this->m_aParams));}
 
 	protected function GetOptional($sParamName, $default)
 	{
@@ -2143,6 +2148,7 @@ class AttributeBoolean extends AttributeInteger
 class AttributeString extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	const INDEX_LENGTH = 95; // Allows for 2 varchars
 
 	static public function ListExpectedParams()
 	{
@@ -3562,6 +3568,7 @@ class AttributeTemplateHTML extends AttributeText
 class AttributeEnum extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
+	const INDEX_LENGTH = null;
 
 	static public function ListExpectedParams()
 	{
