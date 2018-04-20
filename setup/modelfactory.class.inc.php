@@ -619,8 +619,11 @@ class ModelFactory
 
 	/**
 	 * Loads the definitions corresponding to the given Module
+	 *
 	 * @param MFModule $oModule
-	 * @param Array $aLanguages The list of languages to process (for the dictionaries). If empty all languages are kept
+	 * @param array $aLanguages The list of languages to process (for the dictionaries). If empty all languages are kept
+	 *
+	 * @throws \Exception
 	 */
 	public function LoadModule(MFModule $oModule, $aLanguages = array())
 	{
@@ -628,7 +631,6 @@ class ModelFactory
 		{
 			$aDataModels = $oModule->GetDataModelFiles();
 			$sModuleName = $oModule->GetName();
-			$aClasses = array();
 			self::$aLoadedModules[] = $oModule;
 		
 			// For persistence in the cache
@@ -644,12 +646,10 @@ class ModelFactory
 				$oDocument = new MFDocument();
 				libxml_clear_errors();
 				$oDocument->load($sXmlFile);
-				//$bValidated = $oDocument->schemaValidate(APPROOT.'setup/itop_design.xsd');
 				$aErrors = libxml_get_errors();
 				if (count($aErrors) > 0)
 				{
-					self::$aLoadErrors[$sModuleName] = $aErrors;
-					return;
+					throw new Exception($this->GetXMLErrorMessage($aErrors));
 				}
 	
 				$oXPath = new DOMXPath($oDocument);
@@ -826,9 +826,21 @@ class ModelFactory
 	{
 		return (count(self::$aLoadErrors) > 0);
 	}
+
 	function GetLoadErrors()
 	{
 		return self::$aLoadErrors;
+	}
+
+	function GetXMLErrorMessage($aErrors)
+	{
+		$sMessage = "Data model source file ({$aErrors[0]->file}) could not be loaded : \n";
+		foreach($aErrors as $oXmlError)
+		{
+			// XML messages already ends with \n
+			$sMessage .= $oXmlError->message;
+		}
+		return $sMessage;
 	}
 
 	function GetLoadedModules($bExcludeWorkspace = true)

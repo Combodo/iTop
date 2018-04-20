@@ -2396,6 +2396,7 @@ EOF
 		else
 		{
 			$sMessage = addslashes(htmlentities($aRes['message'], ENT_QUOTES, 'UTF-8'));
+			$sMessage = str_replace("\n", '<br>', $sMessage);
 			$oPage->add_ready_script(
 <<<EOF
 	$("#wiz_form").data("installation_status", "error");

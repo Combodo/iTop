@@ -5,7 +5,7 @@ class InvalidParameterException extends Exception
 
 abstract class Parameters
 {
-	protected $aData = null;
+	public $aData = null;
 	
 	public function __construct()
 	{

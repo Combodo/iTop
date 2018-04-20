@@ -28,8 +28,8 @@ class DOMFormatException extends Exception
      * Overrides the Exception default constructor to automatically add informations about the concerned node (path and line number)
      * 
      * @param string $message
-     * @param type $code
-     * @param type $previous
+     * @param $code
+     * @param $previous
      * @param DOMNode $node [Optionnal] DOMNode causing the DOMFormatException
      */
     public function __construct($message, $code = null, $previous = null, DOMNode $node = null)
@@ -160,7 +160,6 @@ class MFCompiler
 	 * @param Page $oP
 	 * @param bool $bUseSymbolicLinks
 	 * @throws Exception
-	 * @return string void
 	 */
 	protected function DoCompile($sTempTargetDir, $sFinalTargetDir, $oP = null, $bUseSymbolicLinks = false)
 	{
@@ -441,7 +440,6 @@ EOF;
 
 					// Compile the module into a single file
 					//
-					$sId = $sModuleName;
 					$sCurrDate = date(DATE_ISO8601);
 					$sAuthor = 'iTop compiler';
 					$sLicence = 'http://opensource.org/licenses/AGPL-3.0';
@@ -653,9 +651,12 @@ EOF
 
 	/**
 	 * Helper to format the tracking level for linkset (direct or indirect attributes)
+	 *
 	 * @param string $sTrackingLevel Value set from within the XML
 	 * Returns string PHP flag
-	 */ 
+	 *
+	 * @throws \DOMFormatException
+	 */
 	protected function TrackingLevelToPHP($sAttType, $sTrackingLevel)
 	{
 		static $aXmlToPHP_Links = array(
@@ -690,9 +691,12 @@ EOF
 
 	/**
 	 * Helper to format the edit-mode for direct linkset
+	 *
 	 * @param string $sEditMode Value set from within the XML
 	 * Returns string PHP flag
-	 */ 
+	 *
+	 * @throws \DOMFormatException
+	 */
 	protected function EditModeToPHP($sEditMode)
 	{
 		static $aXmlToPHP = array(
@@ -768,7 +772,14 @@ EOF
 		}
 		return "'".str_replace("'", "\\'", $val)."'";
 	}
-	
+
+	/**
+	 * @param $oNode
+	 * @param $sTag
+	 *
+	 * @return string
+	 * @throws \DOMFormatException
+	 */
 	protected function GetMandatoryPropString($oNode, $sTag)
 	{
 		$val = $oNode->GetChildText($sTag);
@@ -799,6 +810,13 @@ EOF
 		return $val == 'true' ? 'true' : 'false';
 	}
 
+	/**
+	 * @param $oNode
+	 * @param $sTag
+	 *
+	 * @return string
+	 * @throws \DOMFormatException
+	 */
 	protected function GetMandatoryPropBoolean($oNode, $sTag)
 	{
 		$val = $oNode->GetChildText($sTag);
@@ -826,6 +844,13 @@ EOF
 		return (string)$val;
 	}
 
+	/**
+	 * @param $oNode
+	 * @param $sTag
+	 *
+	 * @return string
+	 * @throws \DOMFormatException
+	 */
 	protected function GetMandatoryPropNumber($oNode, $sTag)
 	{
 		$val = $oNode->GetChildText($sTag);
@@ -906,6 +931,17 @@ EOF
 		return $sPHPDefine;
 	}
 
+	/**
+	 * @param $oClass
+	 * @param $sTempTargetDir
+	 * @param $sFinalTargetDir
+	 * @param $sModuleRelativeDir
+	 * @param $oP
+	 *
+	 * @return string
+	 * @throws \DOMFormatException
+	 * @throws \Exception
+	 */
 	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, $oP)
 	{
 		$sClass = $oClass->getAttribute('id');
@@ -1172,14 +1208,14 @@ EOF
 				elseif ($sAttType == 'AttributeExternalField')
 				{
 					$aParameters['allowed_values'] = 'null';
-					$aParameters['extkey_attcode'] = $this->GetMandatoryPropString($oField, 'extkey_attcode', '');
-					$aParameters['target_attcode'] = $this->GetMandatoryPropString($oField, 'target_attcode', '');
+					$aParameters['extkey_attcode'] = $this->GetMandatoryPropString($oField, 'extkey_attcode');
+					$aParameters['target_attcode'] = $this->GetMandatoryPropString($oField, 'target_attcode');
 				}
 				elseif ($sAttType == 'AttributeURL')
 				{
 					$aParameters['target'] = $this->GetPropString($oField, 'target', '');
 					$aParameters['allowed_values'] = 'null';
-					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 					$aParameters['depends_on'] = $sDependencies;
@@ -1198,7 +1234,7 @@ EOF
 					$sValues = '"'.implode(',', $aValues).'"';
 					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
 					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'list');
-					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 					$aParameters['depends_on'] = $sDependencies;
@@ -1216,7 +1252,7 @@ EOF
 					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
 					$sValues = '"'.implode(',', $aValues).'"';
 					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
-					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql', '');
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
 					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
 
 					$oMappings = $oField->GetUniqueElement('mappings');
@@ -1744,7 +1780,6 @@ EOF
 		// Let's make the whole class declaration
 		//
 		$sPHP = "\n\n$sCodeComment\n";
-		$sParentClass = $oClass->GetChildText('php_parent');
 		$oPhpParent = $oClass->GetUniqueElement('php_parent', false);
 		if ($oPhpParent)
 		{
@@ -1802,6 +1837,16 @@ EOF;
 	}// function CompileClass()
 
 
+	/**
+	 * @param $oMenu
+	 * @param $sTempTargetDir
+	 * @param $sFinalTargetDir
+	 * @param $sModuleRelativeDir
+	 * @param $oP
+	 *
+	 * @return array
+	 * @throws \DOMFormatException
+	 */
 	protected function CompileMenu($oMenu, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, $oP)
 	{
 		$this->CompileFiles($oMenu, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, $sModuleRelativeDir);
@@ -1820,7 +1865,6 @@ EOF;
 		}
 
 		$fRank = (float) $oMenu->GetChildText('rank');
-		$sEnablePermission = 'UR_ALLOWED_YES';
 		if ($sEnableClass = $oMenu->GetChildText('enable_class'))
 		{
 			$sEnableAction = $oMenu->GetChildText('enable_action', 'UR_ACTION_MODIFY');
@@ -2039,7 +2083,6 @@ EOF;
 			{
 				$sGroupId = $oGroup->getAttribute("id");
 
-				$aActions = array();
 				$oActions = $oGroup->GetUniqueElement('actions');
 				foreach($oActions->getElementsByTagName('action') as $oAction)
 				{
@@ -2307,6 +2350,15 @@ EOF;
 
 	// Transform the file references into the corresponding filename (and create the file in the relevant directory)
 	//
+	/**
+	 * @param $oNode
+	 * @param $sTempTargetDir
+	 * @param $sFinalTargetDir
+	 * @param $sRelativePath
+	 *
+	 * @throws \DOMFormatException
+	 * @throws \Exception
+	 */
 	protected function CompileFiles($oNode, $sTempTargetDir, $sFinalTargetDir, $sRelativePath)
 	{
 		$oFileRefs = $oNode->GetNodes(".//fileref");
@@ -2342,6 +2394,15 @@ EOF;
 	}
 
 
+	/**
+	 * @param $oBrandingNode
+	 * @param $sTempTargetDir
+	 * @param $sFinalTargetDir
+	 * @param $sNodeName
+	 * @param $sTargetFile
+	 *
+	 * @throws \Exception
+	 */
 	protected function CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $sNodeName, $sTargetFile)
 	{
 		if (($sIcon = $oBrandingNode->GetChildText($sNodeName)) && (strlen($sIcon) > 0))
@@ -2358,6 +2419,14 @@ EOF;
 		}
 	}
 
+	/**
+	 * @param $oBrandingNode
+	 * @param $sTempTargetDir
+	 * @param $sFinalTargetDir
+	 *
+	 * @throws \DOMFormatException
+	 * @throws \Exception
+	 */
 	protected function CompileBranding($oBrandingNode, $sTempTargetDir, $sFinalTargetDir)
 	{
 		// Enable relative paths
@@ -2467,7 +2536,15 @@ EOF;
 			$this->sMainPHPCode .= "}\n";
 		}
 	}
-	
+
+	/**
+	 * @param $oDesigns
+	 * @param $sTempTargetDir
+	 * @param $sFinalTargetDir
+	 *
+	 * @throws \DOMFormatException
+	 * @throws \Exception
+	 */
 	protected function CompileModuleDesigns($oDesigns, $sTempTargetDir, $sFinalTargetDir)
 	{
 		if ($oDesigns)
@@ -2484,6 +2561,9 @@ EOF;
 		}
 	}
 
+	/**
+	 * @throws \DOMFormatException
+	 */
 	protected function LoadSnippets()
 	{
 		$oSnippets = $this->oFactory->GetNodes('/itop_design/snippets/snippet');
