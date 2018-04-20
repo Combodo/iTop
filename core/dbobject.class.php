@@ -3696,6 +3696,7 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Complete a filter ($aContextParam['filter']) data from context
+	 * (Called on source object)
 	 * @param array $aContextParam Context used for creation form prefilling
 	 *
 	 */
