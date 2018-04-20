@@ -109,23 +109,23 @@ $(function()
 		{
 			var me = this;
 
-			if (undefined != me.iStoreHistoryTimeoutHandler)
+			if (undefined != this.iStoreHistoryTimeoutHandler)
 			{
-				clearTimeout(me.iStoreHistoryTimeoutHandler);
+				clearTimeout(this.iStoreHistoryTimeoutHandler);
 			}
 
-			me.iStoreHistoryTimeoutHandler = setTimeout(me._storeHistoryTimeoutFunction(me), me.options.history_backend_store_timeout);
+			this.iStoreHistoryTimeoutHandler = setTimeout(function(){ me._storeHistoryTimeoutFunction(); }, this.options.history_backend_store_timeout);
 		},
 
 		/**
 		 * should only be called by _storeHistory using a timeout
 		 * @private
 		 */
-		_storeHistoryTimeoutFunction: function(me)
+		_storeHistoryTimeoutFunction: function()
 		{
-			SetUserPreference(me._getPreferenceCode(), JSON.stringify(me.getHistory()), true);
+			SetUserPreference(this._getPreferenceCode(), JSON.stringify(this.getHistory()), true);
 
-			me.iStoreHistoryTimeoutHandler = undefined;
+			this.iStoreHistoryTimeoutHandler = undefined;
 		}
 
 	});
