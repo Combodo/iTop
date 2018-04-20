@@ -559,6 +559,7 @@ interface iSelfRegister
  */
 class UserRights
 {
+	/** @var UserRightsAddOnAPI $m_oAddOn */
 	protected static $m_oAddOn;
 	protected static $m_oUser;
 	protected static $m_oRealUser;
@@ -959,20 +960,32 @@ class UserRights
 		return true;
 	}
 
+	/**
+	 * @param $sClass
+	 * @param array $aSettings
+	 *
+	 * @return bool
+	 */
 	public static function GetSelectFilter($sClass, $aSettings = array())
 	{
 		// When initializing, we need to let everything pass trough
-		if (!self::CheckLogin()) return true;
+		if (!self::CheckLogin()) {return true;}
 
-		if (self::IsAdministrator()) return true;
+		if (self::IsAdministrator()) {return true;}
 
-		if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile'))
+		try
 		{
-			return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
-		}
-		else
+			if (MetaModel::HasCategory($sClass, 'bizmodel'))
+			{
+				return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
+			}
+			else
+			{
+				return true;
+			}
+		} catch (Exception $e)
 		{
-			return true;
+			return false;
 		}
 	}
 
