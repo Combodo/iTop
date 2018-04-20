@@ -54,13 +54,29 @@ $(function()
 			]
 		},
 
-   
+
+
+        _create: function() {
+            var me = this;
+
+            //let's hack the <= operator in order to fall back on the only one that matter here : `between_dates`
+            if ('<=' == me.options.operator && me.options.values.constructor === Array)
+            {
+                me.options.operator = 'between_dates';
+                me.options.values.unshift({"label":'', "value":''});
+            }
+            else if ('>=' == me.options.operator)
+			{
+                me.options.operator = 'between_dates';
+			}
+
+            me._superApply(arguments);
+        },
 
 
 
 
-
-		// Prepare operator's DOM element
+                // Prepare operator's DOM element
 		_prepareBetweenDaysOperator: function(oOpElem, sOpIdx, oOp)
 		{
 			var me = this;
