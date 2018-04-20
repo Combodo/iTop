@@ -33,6 +33,7 @@ $(function()
 					//  "code_uc_first":"From",			=> the code used in the translations
 					//  "onclose_show" : "until",		=> on x_picker close, should we open another one (on "from" close shall we show "until")
 					//  "value_index": 0,				=> the widget communicate with an array of values, the index 0 is "from" the index 1 is "until"
+                    //  "has_time": true,				=> wether this field need the time (ie: in its formatting)
 
 					// Date_time widget specific settings :
 					// > Beware : a lot of those parameters are unused (the intial dev. tested several different UI before the final choice)
@@ -189,7 +190,7 @@ $(function()
 				buttonText: "",
 				showOn:'button',
 				changeMonth:true,
-				changeYear:true
+				changeYear:true,
 			};
 			for (var i = 0; i < aInputsParamLength; i++) {
 				var oInputParam = aInputsParam[i];
@@ -241,18 +242,31 @@ $(function()
 
 			for (var i = 0; i < aInputsParamLength; i++) {
 				var oInputParam = aInputsParam[i];
+                var oDate = oOpElem.find('input[name="'+oInputParam.code+'"]').datepicker( "getDate" ); //.val();
 
-				sLabel = oOpElem.find('input[name="'+oInputParam.code+'"]').val();
+                var sLabel = '';
+
+                if (oDate != null)
+				{
+                    sLabel = $.datepicker.formatDate(me.options.datepicker.dateFormat , oDate);
+                    if (oInputParam.has_time)
+                    {
+                        sLabel = sLabel + ' ' + $.datepicker.formatTime(me.options.datepicker.timeFormat , {
+                        	hour: oDate.getHours(),
+                            minute: oDate.getMinutes(),
+                            second: oDate.getSeconds()
+						});
+                    }
+				}
+
+
 
 				if (typeof oInputParam.show_on_advanced == 'undefined' || bAdvancedMode == oInputParam.show_on_advanced)
 				{
 					if (typeof oInputParam.getter_code != 'undefined')
 					{
-						sValue = oOpElem.find('input[name="'+oInputParam.getter_code+'"]').val();
-					}
-					else if (sLabel != "" && typeof oInputParam.getter_suffix != 'undefined')
-					{
-						sValue = sLabel + oInputParam.getter_suffix;
+						sValue = sLabel; //oOpElem.find('input[name="'+oInputParam.getter_code+'"]').datepicker( "getDate" ); //.val();
+                        //sValue = (sValue == null) ? '' : $.datepicker.formatDate(me.options.datepicker.timeFormat ,sValue);
 					}
 					else
 					{
@@ -282,8 +296,46 @@ $(function()
 					var sDate = aValues[oInputParam.value_index].value;
 					if (sDate.trim() != '')
 					{
-						var oDate = new Date(sDate);
-						oInputElem[oInputParam.x_picker]('setDate', oDate);
+                        try
+						{
+                            if (oInputParam.has_time)
+                            {
+                                var iSpacePos = sDate.indexOf(' ');
+                                if (iSpacePos)
+								{
+                                    var sParsableDate =  sDate.substring(0, iSpacePos);
+                                    var sParsableTime =  sDate.substring(iSpacePos + 1);
+								}
+                                else
+                                	{
+                                    var sParsableDate =  sDate
+                                    var sParsableTime =  ''
+								}
+
+
+                            	var oDate = $.datepicker.parseDate( me.options.datepicker.dateFormat, sParsableDate );
+
+                                if ('' != sParsableTime)
+								{
+                                    var oTime = $.datepicker.parseTime( me.options.datepicker.timeFormat, sParsableTime );
+                                    oDate.setHours(oTime.hour);
+                                    oDate.setMinutes(oTime.minute);
+                                    oDate.setSeconds(oTime.second);
+								}
+                            }
+                            else
+                            {
+                                var oDate = $.datepicker.parseDate( me.options.datepicker.dateFormat, sDate );
+                            }
+
+                            oInputElem[oInputParam.x_picker]('setDate', oDate);
+						}
+						catch (e) {
+							//the date is not formated (ie : it is the first arrival)
+                            var oDate = new Date(sDate);
+                            oInputElem[oInputParam.x_picker]('setDate', oDate);
+                        }
+
 					}
 					else
 					{

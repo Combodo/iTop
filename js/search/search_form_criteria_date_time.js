@@ -69,6 +69,7 @@ $(function()
 					"default_time_add": 0,
 					"value_index": 0,
 					"onclose_show" : "until_time",
+					"has_time": true,
 				},
 				{
 					"code": "until_time",
@@ -81,6 +82,7 @@ $(function()
 						"second":59
 					},
 					"value_index": 1,
+                    "has_time": true,
 				}
 			]
 		},

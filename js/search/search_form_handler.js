@@ -192,7 +192,11 @@ $(function()
 					sNewUrl = sNewUrl + '&debug='+me._extractURLParameter(window.location.href, "debug");
 				}
 
-				history.replaceState(null, null, sNewUrl);
+                if (typeof history.replaceState != "undefined")
+				{
+                    history.replaceState(null, null, sNewUrl);
+				}
+
 
 				$('#itop-breadcrumb')
 					.breadcrumb('destroy')
@@ -459,7 +463,7 @@ $(function()
 				{
 					// TODO: Try to put this back in the date widget as it introduced a non necessary coupling.
 					// If using the datetimepicker, do not close anything
-					if (oEventTargetElem.closest('#ui-datepicker-div, .ui-datepicker-prev, .ui-datepicker-next').length > 0 )
+					if (oEventTargetElem.closest('#ui-datepicker-div, .ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker-current').length > 0 )
 					{
 						// No closing in this case
 					}

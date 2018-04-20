@@ -22,12 +22,14 @@ $(function()
 					"x_picker" : 'datepicker',
 					"value_index": 0,
 					"onclose_show" : "until",
+                    "has_time": false,
 				},
 				{
 					"code": "until",
 					"code_uc_first":"Until",
 					"x_picker" : 'datepicker',
 					"value_index": 1,
+                    "has_time": false,
 				}
 			]
 		},
