@@ -197,9 +197,9 @@ public function PrefillSearchForm(&$aContextParam)
     if(MetaModel::IsValidAttCode($aContextParam['dest_class'],'org_id') && !empty($aContextParam['source_obj']->Get('provider_id')) && !empty($aContextParam['source_obj']->Get('org_id')))
     {
       $aContextParam['filter']->ResetCondition();
-      $sOrgIds = array( $aContextParam['source_obj']->Get('provider_id'),
+      $aOrgIds = array( $aContextParam['source_obj']->Get('provider_id'),
                         $aContextParam['source_obj']->Get('org_id'));
-      $aContextParam['filter']->AddCondition('org_id', $sOrgIds , 'IN');
+      $aContextParam['filter']->AddCondition('org_id', $aOrgIds , 'IN');
     }
   }
 }
