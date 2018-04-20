@@ -1219,7 +1219,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashletGroupByTable:Description' => 'List (Grouped by a field)',
 
 	// New in 2.5
-	'UI:DashletGroupBy:Prop-Function' => 'Agregation function',
+	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction',
 	'UI:DashletGroupBy:Prop-Limit' => 'Limit',
