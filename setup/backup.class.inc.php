@@ -686,7 +686,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 			$sMysqldumpOutput = $aOutput[0];
 			$aDumpVersionMatchResults = array();
-			preg_match('/Distrib (\d\.\d+\.\d+)/', $sMysqldumpOutput, $aDumpVersionMatchResults);
+			preg_match('/Distrib (\d+\.\d+\.\d+)/', $sMysqldumpOutput, $aDumpVersionMatchResults);
 
 			return $aDumpVersionMatchResults[1];
 		}
