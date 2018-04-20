@@ -191,6 +191,11 @@ $(function()
 				showOn:'button',
 				changeMonth:true,
 				changeYear:true,
+                beforeShow: function() {
+                    setTimeout(function(){
+                        $('.ui-datepicker').css('z-index', 99999999999999);//this is a hack that let us do not force the datepicker z-index globally but only here. This is needed when we are in presence of a dialog because the dialog has a greater z-index than the datepicker
+                    }, 0);
+                }
 			};
 			for (var i = 0; i < aInputsParamLength; i++) {
 				var oInputParam = aInputsParam[i];
