@@ -408,7 +408,7 @@ $(function()
 
 			for(var sFieldRef in this.options.search.fields.zlist)
 			{
-				var oFieldElem = me._getHtmlLiFromFieldRef(me, sFieldRef, ['zlist']);
+				var oFieldElem = me._getHtmlLiFromFieldRef(sFieldRef, ['zlist']);
 				oFieldElem.appendTo(oZListItemsElem);
 			}
 
@@ -429,7 +429,7 @@ $(function()
 
 				for(var sFieldRef in this.options.search.fields.others)
 				{
-					var oFieldElem = me._getHtmlLiFromFieldRef(me, sFieldRef, ['others']);
+					var oFieldElem = me._getHtmlLiFromFieldRef(sFieldRef, ['others']);
 					oFieldElem.appendTo(oOthersItemsElem);
 				}
 			}
@@ -746,10 +746,12 @@ $(function()
 		 *
 		 * @return jQuery detached <li />
 		 */
-		_getHtmlLiFromFieldRef: function(me, sFieldRef, aFieldCollectionsEligible) {
+		_getHtmlLiFromFieldRef: function(sFieldRef, aFieldCollectionsEligible) {
+			var me = this;
 			var oFieldElem = undefined;
 
-			aFieldCollectionsEligible.forEach(function (sFieldCollection) {
+			aFieldCollectionsEligible.forEach(function (sFieldCollection)
+			{
 				if (typeof me.options.search.fields[sFieldCollection][sFieldRef] == 'undefined')
 				{
 					return true;//if this field is not present in the Collection, let's try the next
@@ -765,7 +767,7 @@ $(function()
 
 			if (undefined == oFieldElem)
 			{
-				me._trace('no sFieldRef in given collection', {"sFieldRef":sFieldRef, "aFieldCollectionsEligible":aFieldCollectionsEligible});
+				this._trace('No sFieldRef "' + sFieldRef + '" in given collections', {"aFieldCollectionsEligible":aFieldCollectionsEligible});
 				return $('<!-- no sFieldRef in given collection -->');
 			}
 
@@ -1034,7 +1036,7 @@ $(function()
 
 
 			aHistory.forEach(function(sFieldRef) {
-				var oFieldElem = me._getHtmlLiFromFieldRef(me, sFieldRef, ['zlist', 'others']);
+				var oFieldElem = me._getHtmlLiFromFieldRef(sFieldRef, ['zlist', 'others']);
 				oRecentsItemsElem.append(oFieldElem);
 			});
 
