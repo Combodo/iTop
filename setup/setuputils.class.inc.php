@@ -1151,20 +1151,6 @@ EOF
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
 			}
 
-			// innodb_large_prefix : since 2.5 #1001 utf8mb4 switch
-			$iInnodbLargePrefix = $oDBSource->GetServerVariable('innodb_large_prefix');
-			$bInnodbLargePrefix = ($iInnodbLargePrefix == 1);
-			if (!$bInnodbLargePrefix)
-			{
-				$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
-					"MySQL variable innodb_large_prefix is set to false, but must be set to true ! Otherwise this will limit indexes size and cause issues (iTop charset is utf8mb4).");
-			}
-			else
-			{
-				$aResult['checks'][] = new CheckResult(CheckResult::INFO,
-					"MySQL innodb_large_prefix is active, so the iTop charset utf8mb4 can be used.");
-			}
-
 			try
 			{
 				$aResult['databases'] = $oDBSource->ListDB();
