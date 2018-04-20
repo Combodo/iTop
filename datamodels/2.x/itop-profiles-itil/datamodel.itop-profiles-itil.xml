@@ -141,6 +141,7 @@
         <classes>
           <!-- This class list is also present in AdminTools group -->
           <class id="SynchroDataSource"/>
+          <class id="SynchroAttribute"/>
         </classes>
       </group>
       <group id="AdminTools">

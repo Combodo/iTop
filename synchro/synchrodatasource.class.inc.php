@@ -1247,7 +1247,7 @@ class SynchroAttribute extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,view_in_gui,grant_by_profile",
 			"key_type" => "autoincrement",
 			"name_attcode" => "attcode",
 			"state_attcode" => "",
@@ -1281,7 +1281,7 @@ class SynchroAttExtKey extends SynchroAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,view_in_gui,grant_by_profile",
 			"key_type" => "autoincrement",
 			"name_attcode" => "attcode",
 			"state_attcode" => "",
@@ -1346,7 +1346,7 @@ class SynchroAttLinkSet extends SynchroAttribute
 	{
 		$aParams = array
 		(
-			"category" => "core/cmdb,view_in_gui",
+			"category" => "core/cmdb,view_in_gui,grant_by_profile",
 			"key_type" => "autoincrement",
 			"name_attcode" => "attcode",
 			"state_attcode" => "",
