@@ -114,9 +114,15 @@ $(function()
 					.attr('for', oInputElem.attr('id'))
 				;
 
-				if (oInputParam.value_index in aValues && typeof aValues[oInputParam.value_index].value != 'undefined')
+				//no arrivla, the date is always formated yyy-mm-dd, we need to apply the user's formating and to write it into both the dom and the values array.
+				if (oInputParam.value_index in aValues && typeof aValues[oInputParam.value_index].value != 'undefined' && aValues[oInputParam.value_index].value != '')
 				{
-					oInputElem.val(aValues[oInputParam.value_index].value);
+                    var oDate = new Date(aValues[oInputParam.value_index].value);
+                    var sDate = me._formatDate(oDate);
+
+					oInputElem.val(sDate);
+                    this.options.values[oInputParam.value_index].value = sDate;
+                    aValues = me._getValues();
 				}
 
 				oContentElem = oContentElem.add(oOpContentElem);
@@ -138,7 +144,8 @@ $(function()
 				// Apply if enter key
 				if(oEvent.key === 'Enter')
 				{
-					me.val(me.val().trim());
+                    var inputElem = $(this).find('input[type="text"]');
+                    inputElem.val(inputElem.val().trim());
 					me._apply();
 				}
 			});
@@ -249,6 +256,22 @@ $(function()
 		},
 
 
+		_formatDate: function(oDate, bWithTime = true)
+		{
+            var me = this;
+
+			var sLabel = $.datepicker.formatDate(me.options.datepicker.dateFormat , oDate);
+            if (bWithTime)
+            {
+                sLabel = sLabel + ' ' + $.datepicker.formatTime(me.options.datepicker.timeFormat , {
+                    hour: oDate.getHours(),
+                    minute: oDate.getMinutes(),
+                    second: oDate.getSeconds()
+                });
+            }
+            return sLabel;
+		},
+
 
 		_getBetweenDaysOperatorValues: function(oOpElem)
 		{
@@ -269,15 +292,16 @@ $(function()
 
                 if (oDate != null)
 				{
-                    sLabel = $.datepicker.formatDate(me.options.datepicker.dateFormat , oDate);
-                    if (oInputParam.has_time)
-                    {
-                        sLabel = sLabel + ' ' + $.datepicker.formatTime(me.options.datepicker.timeFormat , {
-                        	hour: oDate.getHours(),
-                            minute: oDate.getMinutes(),
-                            second: oDate.getSeconds()
-						});
-                    }
+                    sLabel = me._formatDate(oDate, oInputParam.has_time);
+                    // sLabel = $.datepicker.formatDate(me.options.datepicker.dateFormat , oDate);
+                    // if (oInputParam.has_time)
+                    // {
+                    //     sLabel = sLabel + ' ' + $.datepicker.formatTime(me.options.datepicker.timeFormat , {
+                    //     	hour: oDate.getHours(),
+                    //         minute: oDate.getMinutes(),
+                    //         second: oDate.getSeconds()
+						// });
+                    // }
 				}
 
 
@@ -352,8 +376,8 @@ $(function()
                             oInputElem[oInputParam.x_picker]('setDate', oDate);
 						}
 						catch (e) {
-							//the date is not formated (ie : it is the first arrival)
-                            var oDate = new Date(sDate);
+							//in theorie, this should not happen, but hey, it do not harm!
+                            var oDate = new Date(); //sDate);
                             oInputElem[oInputParam.x_picker]('setDate', oDate);
                         }
 
