@@ -123,7 +123,7 @@ abstract class AttributeDefinition
 
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	const INDEX_LENGTH = null;
+	const INDEX_LENGTH = 95;
 
 	public function GetType()
 	{
@@ -159,7 +159,18 @@ abstract class AttributeDefinition
 	protected $m_sHostClass = '!undefined!';
 	public function Get($sParamName) {return $this->m_aParams[$sParamName];}
 
-	public function GetIndexLength() {return static::INDEX_LENGTH;}
+	public function GetIndexLength() {
+		$iMaxLength = $this->GetMaxSize();
+		if (is_null($iMaxLength))
+		{
+			return null;
+		}
+		if ($iMaxLength > static::INDEX_LENGTH)
+		{
+			return static::INDEX_LENGTH;
+		}
+		return $iMaxLength;
+	}
 
 	public function IsParam($sParamName) {return (array_key_exists($sParamName, $this->m_aParams));}
 
@@ -2148,7 +2159,6 @@ class AttributeBoolean extends AttributeInteger
 class AttributeString extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
-	const INDEX_LENGTH = 95; // Allows for 2 varchars
 
 	static public function ListExpectedParams()
 	{
@@ -3568,7 +3578,6 @@ class AttributeTemplateHTML extends AttributeText
 class AttributeEnum extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
-	const INDEX_LENGTH = null;
 
 	static public function ListExpectedParams()
 	{
@@ -3807,7 +3816,12 @@ class AttributeEnum extends AttributeString
 		}
   		return $aLocalizedValues;
   	}
-  	
+
+  	public function GetMaxSize()
+    {
+	    return null;
+    }
+
 	/**
 	 * An enum can be localized
 	 */	 	
@@ -5772,10 +5786,10 @@ class AttributeImage extends AttributeBlob
 	
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		$iMaxWidthPx = $this->Get('display_max_width');
-		$iMaxHeightPx = $this->Get('display_max_height');
+		$iMaxWidthPx = $this->Get('display_max_width').'px';
+		$iMaxHeightPx = $this->Get('display_max_height').'px';
 		$sUrl = $this->Get('default_image');
-		$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'px; max-height: '.$iMaxHeightPx.'px">' : '';
+		$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">' : '';
 		if (is_object($value) && !$value->IsEmpty())
 		{
 			if ($oHostObject->IsNew() || ($oHostObject->IsModified() && (array_key_exists($this->GetCode(), $oHostObject->ListChanges()))))
@@ -5788,9 +5802,9 @@ class AttributeImage extends AttributeBlob
 			{
 				$sUrl = $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
 			}
-			$sRet = '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'px; max-height: '.$iMaxHeightPx.'px">';
+			$sRet = '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">';
 		}
-		return '<div class="view-image" style="width: '.$iMaxWidthPx.'px; height: '.$iMaxHeightPx.'px;"><span class="helper-middle"></span>'.$sRet.'</div>';
+		return '<div class="view-image" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';"><span class="helper-middle"></span>'.$sRet.'</div>';
 	}
 
     static public function GetFormFieldClass()

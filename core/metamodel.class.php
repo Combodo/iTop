@@ -885,15 +885,7 @@ abstract class MetaModel
 			{
 				if (($sAttCode == $sAttSqlCode) || ($oAttDef->IsParam('sql') && ($oAttDef->Get('sql') == $sAttSqlCode)))
 				{
-					$iMaxLength = $aTableInfo['Fields'][$sAttSqlCode]['CharMaxLength'];
-					if (is_null($iMaxLength))
-					{
-						$iLength = null;
-					}
-					else
-					{
-						$iLength = min((int) $iMaxLength, $oAttDef->GetIndexLength());
-					}
+					$iLength = $oAttDef->GetIndexLength();
 					break;
 				}
 			}
