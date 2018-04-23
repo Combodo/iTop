@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2017 Combodo SARL
+// Copyright (c) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -357,10 +357,19 @@ class DBObjectSearch extends DBSearch
 		$this->AddConditionExpression($oNewCondition);
 	}
 
-	public function AddCondition($sFilterCode, $value, $sOpCode = null, $bParseSeachString = false)
+	/**
+	 * @param string $sFilterCode
+	 * @param mixed $value
+	 * @param string $sOpCode operator to use : 'IN', 'NOT IN', 'Contains',' Begins with', 'Finishes with', ...
+	 * @param bool $bParseSearchString
+	 *
+	 * @throws \CoreException
+	 *
+	 * @see AddConditionForInOperatorUsingParam for IN/NOT IN queries with lots of params
+	 */
+	public function AddCondition($sFilterCode, $value, $sOpCode = null, $bParseSearchString = false)
 	{
 		MyHelpers::CheckKeyInArray('filter code in class: '.$this->GetClass(), $sFilterCode, MetaModel::GetClassFilterDefs($this->GetClass()));
-		$oFilterDef = MetaModel::GetClassFilterDef($this->GetClass(), $sFilterCode);
 
 		$oField = new FieldExpression($sFilterCode, $this->GetClassAlias());
 		if (empty($sOpCode))
@@ -372,13 +381,13 @@ class DBObjectSearch extends DBSearch
 			else
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->GetClass(), $sFilterCode);
-				$oNewCondition = $oAttDef->GetSmartConditionExpression($value, $oField, $this->m_aParams, $bParseSeachString);
+				$oNewCondition = $oAttDef->GetSmartConditionExpression($value, $oField, $this->m_aParams, $bParseSearchString);
 				$this->AddConditionExpression($oNewCondition);
 				return;
 			}
 		}
 		// Parse search strings if needed and if the filter code corresponds to a valid attcode
-		if($bParseSeachString && MetaModel::IsValidAttCode($this->GetClass(), $sFilterCode))
+		if($bParseSearchString && MetaModel::IsValidAttCode($this->GetClass(), $sFilterCode))
 		{
 			$oAttDef = MetaModel::GetAttributeDef($this->GetClass(), $sFilterCode);
 			$value = $oAttDef->ParseSearchString($value);
@@ -398,14 +407,14 @@ class DBObjectSearch extends DBSearch
 			throw new CoreException('Deprecated operator, please consider using OQL (SQL) expressions like "(TO_DAYS(NOW()) - TO_DAYS(x)) AS AgeDays"', array('operator' => $sOpCode));
 			break;
 
-		case "IN":
+		case 'IN':
 			if (!is_array($value)) $value = array($value);
 			if (count($value) === 0) throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
 			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
 			$sOQLCondition = $oField->Render()." IN $sListExpr";
 			break;
 
-		case "NOTIN":
+		case 'NOTIN':
 			if (!is_array($value)) $value = array($value);
             if (count($value) === 0) throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
 			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
@@ -459,6 +468,8 @@ class DBObjectSearch extends DBSearch
 				break;
 			case "IN":
 			case "NOTIN":
+				// this will parse all of the values... Can take forever if there are lots of them !
+				// In this case using a parameter is far better : WHERE ... IN (:my_param)
 				$oNewCondition = Expression::FromOQL($sOQLCondition);
 				break;
 
@@ -471,6 +482,42 @@ class DBObjectSearch extends DBSearch
 		}
 
 		$this->AddConditionExpression($oNewCondition);
+	}
+
+	/**
+	 * @param string $sFilterCode attribute code to use
+	 * @param array $aValues
+	 * @param bool $bPositiveMatch if true will add a IN filter, else a NOT IN
+	 *
+	 * @throws \CoreException
+	 */
+	public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true)
+	{
+		$oFieldExpression = new FieldExpression($sFilterCode, $this->GetClassAlias());
+
+		$sOperator = $bPositiveMatch ? 'IN' : 'NOT IN';
+
+		$sInParamName = $this->GenerateUniqueParamName();
+		$oParamExpression = new VariableExpression($sInParamName);
+		$this->SetInternalParams(array($sInParamName => $aValues));
+
+		$oInCondition = new BinaryExpression($oFieldExpression, $sOperator, $oParamExpression);
+		$this->AddConditionExpression($oInCondition);
+	}
+
+	/**
+	 * @return string a unique param name
+	 */
+	private function GenerateUniqueParamName() {
+		$iExistingParamsNb = count($this->m_aParams);
+		$iCurrentArrayParamNb = $iExistingParamsNb + 1;
+		$sParamName = 'param'.$iCurrentArrayParamNb;
+
+		if (isset($this->m_aParams[$sParamName])) {
+			$sParamName .= '_'.microtime(true) . '_' .rand(0,100);
+		}
+
+		return $sParamName;
 	}
 
 	/**
