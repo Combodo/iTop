@@ -3065,6 +3065,11 @@ span.search-button, span.refresh-button {
 	color:#fff;
     border-radius: 4px;
 }
+
+///////////////////
+// Datamodel Viewer
+///////////////////
+
 #img-lifecycle{
 	width:100%;
 }
@@ -3074,7 +3079,7 @@ span.search-button, span.refresh-button {
 }
 
 #search-model{
-	width:98%;
+	width:90%;
 }
 
 .mfp-figure:after{
@@ -3110,9 +3115,7 @@ table.listResults .originColor{
 #displaySelectorLabel,  #changeDefaultDisplay{
 	display :inline-block;
 }
-///////////////////
-// Datamodel Viewer
-///////////////////
+
 #dataModelSplitPane{
 	height:100%;
 }
@@ -3144,19 +3147,24 @@ table.listResults .originColor{
 
 #dataModelSplitPane .ui-layout-resizer {
 	background: #DDD;
- }
+	width:10px !important;
+	margin-left: 15px !important;
+}
 #dataModelSplitPane .ui-layout-resizer :hover{
 	background: #E87C1E;
 }
 #dataModelSplitPane .ui-layout-resizer-west{
 	border-left : 1px solid #BBB;
+	border-right: 1px solid #BBB;
 }
 #dataModelSplitPane .ui-layout-resizer-east{
+	border-left : 1px solid #BBB;
 	border-right: 1px solid #BBB;
 }
 
 #dataModelSplitPane .ui-layout-toggler{
 	background: #AAA;
+	width:10px !important;
 }
 #dataModelSplitPane .ui-layout-toggler:hover{
 	background: #E87C1E;
@@ -3190,7 +3198,6 @@ table.listResults .originColor{
 	font-weight: bold;
 	border-bottom: 1px solid $grey-color;
 	padding: 3px;
-
 }
 .tooltipD3 i {
 	font-size: 14px;
@@ -3202,6 +3209,21 @@ table.listResults .originColor{
 	font-family: FontAwesome;
 }
 
+.data-model-viewer{
+	background-color: #FFF;
+	margin-top:7px !important;
+	margin-left: 15px !important;
+}
 
+#delDataModelSearch {
+	color: #E87C1E;
+	font-family: FontAwesome;
+	display:inline-block;
+	font-size:15px;
+	margin-left:1%;
+}
 
+#dataModelSplitPane .ui-layout-center{
+	margin-left :30px !important;
+}
 ///////////////////

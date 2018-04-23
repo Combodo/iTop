@@ -36,7 +36,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
     private $m_sMenu;
     //	private $m_currentOrganization;
     private $m_aMessages;
-    private $m_sInitScript;
+    private $m_aInitScript = array();
     protected $m_oTabs;
     protected $bBreadCrumbEnabled;
     protected $sBreadCrumbEntryId;
@@ -261,7 +261,7 @@ EOF;
 EOF
         );
 
-        $this->m_sInitScript =
+        $this->add_init_script(
             <<< EOF
 	try
 	{
@@ -366,15 +366,14 @@ EOF
 				});
 			}
 		});
-
-		$('.resizable').filter(':visible').resizable();
 	}
 	catch(err)
 	{
 		// Do something with the error !
 		alert(err);
 	}
-EOF;
+EOF
+    );
 
         $this->add_ready_script(
             <<< EOF
@@ -858,7 +857,13 @@ EOF
             if (!$this->IsPrintableVersion()) {
                 $this->add_script("var iPaneVisWatchDog  = window.setTimeout('FixPaneVis()',5000);");
             }
-            $this->add_script("\$(document).ready(function() {\n{$this->m_sInitScript};\nwindow.setTimeout('onDelayedReady()',10)\n});");
+	        $sInitScripts = "";
+	        if (count($this->m_aInitScript) > 0) {
+		        foreach ($this->m_aInitScript as $m_sInitScript) {
+			        $sInitScripts .= "$m_sInitScript\n";
+		        }
+	        }
+            $this->add_script("\$(document).ready(function() {\n{$sInitScripts};\nwindow.setTimeout('onDelayedReady()',10)\n});");
             if ($this->IsPrintableVersion()) {
                 $this->add_ready_script(
                     <<<EOF
@@ -1375,5 +1380,12 @@ EOD
                 'tip' => $sTip
             );
         }
+    }
+	/**
+	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
+	 * @return void
+	 */
+	public function add_init_script($sScript){
+	    $this->m_aInitScript[] = $sScript;
     }
 }

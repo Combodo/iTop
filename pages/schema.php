@@ -232,12 +232,35 @@ function DisplayClassesList($oPage, $sContext)
 {
 	$oPage->add("<h1>".Dict::S('UI:Schema:Title')."</h1>\n");
 
-    $oPage->add("<label for='search-model'>" . Dict::S('UI:Schema:ClassFilter') ."</label><input id='search-model'/> ");
+    $oPage->add("<label for='search-model'>" . Dict::S('UI:Schema:ClassFilter') ."</label><br/><input type=\"text\" id=\"search-model\" autofocus=\"autofocus\"/>");
+    $oPage->add("<div id=\"delDataModelSearch\"> <i class=\"far fa-times-circle\"></i></div>");
 	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
 	$oPage->add_ready_script(
 		<<<EOF
-        $("#search-model").result(function(){
-		   	$(this).trigger(jQuery.Event('input'));
+        $("#search-model").result(function(e,f,g,h){
+		   	//$(this).trigger(jQuery.Event('input'));
+		   	var preUrl = "?operation=details_class&class=";
+			var sufUrl = "&c[menu]=DataModelMenu";
+			var code = '';
+		   	switch($("#displaySelector").val()){
+				case 'labelandcode':
+					var id = autocompleteClassLabelAndCode.indexOf(g);
+					if(id != undefined)
+						code = autocompleteClassCode[id];
+				break;
+				case 'label':
+					var id = autocompleteClassLabel.indexOf(g);
+					if(id != undefined)
+						code = autocompleteClassCode[id];
+				break;
+				case 'code':
+					var id = autocompleteClassCode.indexOf(g);
+					if(id != undefined)
+						code = autocompleteClassCode[id];
+				break;
+			}
+			if(code != '')
+				window.location = preUrl + code + sufUrl;
 		});
 		$("#search-model").on('input', function() {
 			var search_result = [];
@@ -254,6 +277,10 @@ function DisplayClassesList($oPage, $sContext)
 				e.find('ul > li').show();
 				e.parents().show();
 			});
+		});
+		$("#delDataModelSearch").on ('click', function(){
+			$("#search-model").val("");
+			$("#search-model").trigger('input');
 		});
 EOF
 
@@ -823,7 +850,12 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 			if($oAttDef->IsNullAllowed())
 			{
 				$aMoreInfo[] = Dict::S('UI:Schema:NullAllowed');
-				$sDefaultNullValue = ($oAttDef->GetNullValue() !== null ? Dict::Format('UI:Schema:DefaultNullValue', $oAttDef->GetNullValue()) : "" );
+				$sDefaultNullValue = ($oAttDef->GetNullValue() !== null ? $oAttDef->GetNullValue() : "" );
+				if(!is_string($sDefaultNullValue))
+				{
+					$sDefaultNullValue = json_encode($sDefaultNullValue);
+				}
+				$sDefaultNullValue = (!empty($sDefaultNullValue) ? Dict::Format('UI:Schema:DefaultNullValue', $sDefaultNullValue) : "" );
 			}
 			else
 			{
@@ -831,7 +863,12 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 			}
 			if($oAttDef->GetDefaultValue())
 			{
-				$aMoreInfo[] = Dict::Format("UI:Schema:Default_Description", $oAttDef->GetDefaultValue());
+				$sDefaultValue = $oAttDef->GetDefaultValue();
+				if(!is_string($sDefaultValue))
+				{
+					$sDefaultValue = json_encode($sDefaultValue);
+				}
+				$aMoreInfo[] = Dict::Format("UI:Schema:Default_Description", $sDefaultValue);
 			}
 			$sMoreInfo .= implode(', ', $aMoreInfo);
 		}
@@ -915,14 +952,12 @@ EOF
 				var aColors = d3.scale.linear().domain([1,aOrigins.length])
 				  .interpolate(d3.interpolateHcl)
 				  .range([d3.rgb("#007AFF"), d3.rgb('#FFF500')]);		
-				for(var origin of aOrigins)
-				{
+				$.each(aOrigins,function(idx, origin){
 					$('.originColor'+origin).parent().css('background-color',aColors(aOrigins.indexOf(origin)));
-				}
-				Array.prototype.forEach.call($(".listResults").find('td:nth-child(1),th:nth-child(1)'), e =>{
+				});
+				Array.prototype.forEach.call($(".listResults").find('td:nth-child(1),th:nth-child(1)'), function(e){
 					$(e).removeClass("header").addClass("originColor");
-				}
-				);
+				});
 
 EOF
     );
@@ -1060,6 +1095,7 @@ switch($operation)
 			<<<EOF
 $('#search-model').val('$sClass');
 $('#search-model').trigger("input");
+
 EOF
 );
 		DisplayClassDetails($oPage, $sClass, $sContext);
@@ -1070,9 +1106,8 @@ EOF
 }
 $oPage->add("</div>");
 $oPage->add("</div>");
-
 //split the page in 2 panels
-$oPage->add_ready_script(
+$oPage->add_init_script(
 <<<EOF
 		$('#dataModelSplitPane').layout({
 		west : {size: "20%", minSize : 200,paneSize : 600}
