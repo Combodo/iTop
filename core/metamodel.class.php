@@ -5228,7 +5228,7 @@ abstract class MetaModel
 						$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` CHANGE `$sField` $sFieldDefinition";
 						$aAlterTableItems[$sTable][$sField] = "CHANGE `$sField` $sFieldDefinition";
 					}
-					$aSugFix[$sClass][$sAttCode][] = "-- Recomanded action: ALTER TABLE `$sTable` DROP `$sField`";
+					$aSugFix[$sClass][$sAttCode][] = "-- Recommended action: ALTER TABLE `$sTable` DROP `$sField`";
 				}
 			}
 
