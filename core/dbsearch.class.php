@@ -298,7 +298,7 @@ abstract class DBSearch
 	/**
 	 * @param string $sQuery
 	 * @param array $aParams
-	 * @return DBSearch
+	 * @return self
 	 * @throws OQLException
 	 */
 	static public function FromOQL($sQuery, $aParams = null)
