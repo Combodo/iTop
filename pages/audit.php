@@ -105,6 +105,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 		{
 			$aValidIds[] = $aRow['id'];
 		}
+		/** @var \DBObjectSearch $oFilter */
 		$oFilter = $oDefinitionFilter->DeepClone();
 		if (count($aValidIds) > 0)
 		{
@@ -116,7 +117,7 @@ function GetRuleResultFilter($iRuleId, $oDefinitionFilter, $oAppContext)
 			$aInvalids = array_diff($aInDefSet, $aValidIds);
 			if (count($aInvalids) > 0)
 			{
-				$oFilter->AddCondition('id', $aInvalids, 'IN');
+				$oFilter->AddConditionForInOperatorUsingParam('id', $aInvalids, true);
 			}
 			else
 			{
