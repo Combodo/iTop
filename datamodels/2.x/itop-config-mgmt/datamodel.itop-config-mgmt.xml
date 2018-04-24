@@ -357,7 +357,7 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-        <field id="phone" xsi:type="AttributeString">
+        <field id="phone" xsi:type="AttributePhoneNumber">
           <sql>phone</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
@@ -519,7 +519,7 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-        <field id="mobile_phone" xsi:type="AttributeString">
+        <field id="mobile_phone" xsi:type="AttributePhoneNumber">
           <sql>mobile_phone</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
