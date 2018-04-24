@@ -117,7 +117,9 @@ $(function()
 				//no arrivla, the date is always formated yyy-mm-dd, we need to apply the user's formating and to write it into both the dom and the values array.
 				if (oInputParam.value_index in aValues && typeof aValues[oInputParam.value_index].value != 'undefined' && aValues[oInputParam.value_index].value != '')
 				{
-                    var oDate = new Date(aValues[oInputParam.value_index].value);
+                    //ie9 do not hadle the timezone like the other browsers, so wee need to make extra computation in order to be sure to obtain consistency accross browsers : we declare the date without the UTC offset (the suffix "Z", then wee add the timezone offset
+					var oDate = new Date(aValues[oInputParam.value_index].value.replace(' ', 'T')+'Z');
+                    oDate.setTime(oDate.getTime() + oDate.getTimezoneOffset()*60000);//since the date was without the utc offset, we add it now
                     var sDate = me._formatDate(oDate);
 
 					oInputElem.val(sDate);
@@ -256,12 +258,12 @@ $(function()
 		},
 
 
-		_formatDate: function(oDate, bWithTime = true)
+		_formatDate: function(oDate, bWithTime)
 		{
             var me = this;
 
 			var sLabel = $.datepicker.formatDate(me.options.datepicker.dateFormat , oDate);
-            if (bWithTime)
+            if (bWithTime === true || bWithTime === undefined)
             {
                 sLabel = sLabel + ' ' + $.datepicker.formatTime(me.options.datepicker.timeFormat , {
                     hour: oDate.getHours(),
