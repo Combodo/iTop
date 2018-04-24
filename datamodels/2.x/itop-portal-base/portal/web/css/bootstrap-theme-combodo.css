@@ -5027,3 +5027,20 @@ table.dataTable tbody tr.selected a, table.dataTable tbody th.selected a, table.
     height: 120px !important;
   }
 }
+/* ManageBrick grouping tabs. Should be placed somewhere else? */
+.grouping_tabs.nav-pills > li > a {
+  color: #444;
+  background-color: #f5f5f5;
+}
+.grouping_tabs.nav-pills > li > a:hover, .grouping_tabs.nav-pills > li > a:focus {
+  text-decoration: none;
+  background-color: #ddd;
+}
+.grouping_tabs.nav-pills > li > a > .badge {
+  color: #ea7d1e;
+  background-color: transparent;
+}
+.grouping_tabs.nav-pills > li.active > a, .grouping_tabs.nav-pills > li.active > a:hover, .grouping_tabs.nav-pills > li.active > a:focus {
+  color: #444;
+  background-color: #fcfcfc;
+}

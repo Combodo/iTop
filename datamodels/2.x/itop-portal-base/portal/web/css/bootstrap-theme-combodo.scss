@@ -6137,3 +6137,29 @@ table.dataTable{
         }
     }
 }
+/* ManageBrick grouping tabs. Should be placed somewhere else? */
+.grouping_tabs{
+    &.nav-pills > li > a{
+        color: #444;
+        background-color: #F5F5F5;
+
+        &:hover,
+        &:focus{
+            text-decoration: none;
+            background-color: #DDDDDD;
+        }
+
+        > .badge{
+            color: #ea7d1e;;
+            background-color: transparent;
+        }
+    }
+    &.nav-pills > li.active{
+        > a,
+        > a:hover,
+        > a:focus{
+            color: #444;
+            background-color: #FCFCFC;
+        }
+    }
+}

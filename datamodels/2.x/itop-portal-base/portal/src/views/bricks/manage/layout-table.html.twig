@@ -6,7 +6,7 @@
 
 {% block pMainContentHolder %}
     {% if aGroupingTabsValues|length > 1 %}
-        <ul class="nav nav-pills">
+        <ul class="nav nav-pills grouping_tabs">
             {% for aGroupingTab in aGroupingTabsValues %}
                 <li{% if sGroupingTab is defined and sGroupingTab == aGroupingTab.value %} class="active"{% endif %}>
                     <a href="{{ app.url_generator.generate('p_manage_brick', {'sBrickId': sBrickId, 'sDisplayType': 'default', 'sGroupingTab': aGroupingTab.value}) }}"
