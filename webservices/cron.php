@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -86,7 +86,7 @@ function UsageAndExit($oP)
  */
 function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 {
-	$oNow = new DateTime();
+	$oDateStarted = new DateTime();
 	$fStart = microtime(true);
 	$oCtx = new ContextTag('CRON:Task:'.$oTask->Get('class_name'));
 
@@ -94,6 +94,9 @@ function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 	$oExceptionToThrow = null;
 	try
 	{
+		// Record (when starting) that this task was started, just in case it crashes during the execution
+		$oTask->Set('latest_run_date', $oDateStarted->format('Y-m-d H:i:s'));
+		$oTask->DBUpdate();
 		$sMessage = $oProcess->Process($iTimeLimit);
 	}
 	catch (MySQLHasGoneAwayException $e)
@@ -112,10 +115,13 @@ function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 	if ($oTask->Get('total_exec_count') == 0)
 	{
 		// First execution
-		$oTask->Set('first_run_date', $oNow->format('Y-m-d H:i:s'));
+		$oTask->Set('first_run_date', $oDateStarted->format('Y-m-d H:i:s'));
 	}
 	$oTask->ComputeDurations($fDuration); // does increment the counter and compute statistics
-	$oTask->Set('latest_run_date', $oNow->format('Y-m-d H:i:s'));
+	
+	// Update the timestamp since we want to be able to re-order the tasks based on the time they finished
+	$oDateEnded = new DateTime();
+	$oTask->Set('latest_run_date', $oDateEnded->format('Y-m-d H:i:s'));
 
 	$oRefClass = new ReflectionClass(get_class($oProcess));
 	if ($oRefClass->implementsInterface('iScheduledProcess'))
@@ -126,7 +132,7 @@ function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 	else
 	{
 		// Background processes do repeat periodically
-		$oPlannedStart = new DateTime($oTask->Get('latest_run_date'));
+		$oPlannedStart = clone $oDateStarted;
 		// Let's assume that the task was started exactly when planned so that the schedule does no shift each time
 		// this allows to schedule a task everyday "around" 11:30PM for example
 		$oPlannedStart->modify('+'.$oProcess->GetPeriodicity().' seconds');
@@ -223,10 +229,13 @@ function CronExec($oP, $aProcesses, $bVerbose)
 		{
 			$aTasks[$oTask->Get('class_name')] = $oTask;
 		}
+		
+		$oNow = new DateTime();
+		ReorderProcesses($aProcesses, $aTasks, $oNow, $bVerbose, $oP);
+		
 		foreach ($aProcesses as $oProcess)
 		{
 			$sTaskClass = get_class($oProcess);
-			$oNow = new DateTime();
 			if (!array_key_exists($sTaskClass, $aTasks))
 			{
 				// New entry, let's create a new BackgroundTask record, and plan the first execution
@@ -327,6 +336,125 @@ function DisplayStatus($oP)
 			$sLastRunDate, $sNextRunDate, $iNbRun, $sAverageRunTime));
 	}
 	$oP->p('+---------------------------+---------+---------------------+---------------------+--------+-----------+');
+}
+
+/**
+ * Arrange the list of processes in the best order for their execution.
+ * The idea is to continue just after the last task that was run, to let a chance to every task
+ * even when there are tasks taking a very long time (for example to process a big backlog)
+ * Note: We first record the last_run_date at the startup of a task, then at the end
+ *       so that in case of a crash, the task is still listed has having run.
+ *       In case the task crashes AND the previous task was very quick (less than 1 second)
+ *       both tasks will have the same last_run_date. In this case it is important NOT to start again
+ *       by the task that just crashed.
+ * @param iProcess[] $aProcesses
+ * @param BackgroundTask[] $aTasks
+ * @param DateTime $oNow
+ * @param Page $oP
+ */
+function ReorderProcesses(&$aProcesses, $aTasks, $oNow, $bVerbose, &$oP)
+{
+	$aIndexes = array_keys($aProcesses);
+	
+	// Step 1: find which task was run last
+	$idx = 0;
+	$idxLastTaskExecuted = 0;
+	$sMaxRunDate = '';
+	if ($bVerbose)
+	{
+		$oP->p('Re-ordering the tasks - planned to run now -  to continue after the last task run:');
+		$oP->p('+---------------------------+---------+---------------------+---------------------+');
+		$oP->p('| Task Class                | Status  | Last Run            | Next Run            |');
+		$oP->p('+---------------------------+---------+---------------------+---------------------+');
+		
+		foreach($aProcesses as $sClass => $oProcess)
+		{
+			$sTaskClass = get_class($oProcess);
+			if (array_key_exists($sTaskClass, $aTasks))
+			{
+				$oTask = $aTasks[$sTaskClass];
+				if (($aTasks[$sTaskClass]->Get('status') == 'active') && ($aTasks[$sTaskClass]->Get('next_run_date') <= $oNow->format('Y-m-d H:i:s')))
+				{
+					$sTaskName = $oTask->Get('class_name');
+					$sStatus = $oTask->Get('status');
+					$sLastRunDate = $oTask->Get('latest_run_date');
+					$sNextRunDate = $oTask->Get('next_run_date');
+					$oP->p(sprintf('| %1$-25.25s | %2$-7s | %3$-19s | %4$-19s |', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate));
+				}
+			}
+		}
+		$oP->p('+---------------------------+---------+---------------------+---------------------+');
+	}
+	foreach($aProcesses as $sClass => $oProcess)
+	{
+		$sTaskClass = get_class($oProcess);
+		if (array_key_exists($sTaskClass, $aTasks))
+		{
+			$oTask = $aTasks[$sTaskClass];
+
+			if (($aTasks[$sTaskClass]->Get('status') == 'active') && ($aTasks[$sTaskClass]->Get('next_run_date') <= $oNow->format('Y-m-d H:i:s')))
+			{
+				if (($oTask->Get('latest_run_date') != '') && strcmp($oTask->Get('latest_run_date'), $sMaxRunDate) >= 0)
+				{
+					// More recent or equal (!important) will run later
+					$sMaxRunDate = $oTask->Get('latest_run_date');
+					$idxLastTaskExecuted = $idx;
+				}
+			}
+		}
+		$idx++;
+	}
+	if ($bVerbose)
+	{		
+		$oLastRunProcess = $aProcesses[$aIndexes[$idxLastTaskExecuted]];
+		
+		$oP->p('Last run process: '.get_class($oProcess)." (idx=$idxLastTaskExecuted) at ".$sMaxRunDate);
+	}
+	
+	
+	
+	$aReorderedProcesses = array();
+	
+	
+	// Step 2: the first task will the one just after the last run one, then the next, and so on (circular permutation)
+	$idx = 0;
+	$iTotal = count($aProcesses);
+	foreach($aProcesses as $oProcess)
+	{
+		$iActualIdx = (1 + $idxLastTaskExecuted + $idx )% $iTotal;
+		$sKey = $aIndexes[$iActualIdx];
+		$aReorderedProcesses[] =  $aProcesses[$sKey];
+		$idx++;
+	}
+	
+	if ($bVerbose)
+	{
+		$oP->p('After reordering, the execution order is:');
+		$oP->p('+---------------------------+---------+---------------------+---------------------+');
+		$oP->p('| Task Class                | Status  | Last Run            | Next Run            |');
+		$oP->p('+---------------------------+---------+---------------------+---------------------+');
+		
+		foreach($aReorderedProcesses as $sClass => $oProcess)
+		{
+			$sTaskClass = get_class($oProcess);
+			if (array_key_exists($sTaskClass, $aTasks))
+			{
+				$oTask = $aTasks[$sTaskClass];
+				if (($aTasks[$sTaskClass]->Get('status') == 'active') && ($aTasks[$sTaskClass]->Get('next_run_date') <= $oNow->format('Y-m-d H:i:s')))
+				{
+					$sTaskName = $oTask->Get('class_name');
+					$sStatus = $oTask->Get('status');
+					$sLastRunDate = $oTask->Get('latest_run_date');
+					$sNextRunDate = $oTask->Get('next_run_date');
+					$oP->p(sprintf('| %1$-25.25s | %2$-7s | %3$-19s | %4$-19s |', $sTaskName, $sStatus, $sLastRunDate, $sNextRunDate));
+				}
+			}
+		}
+		$oP->p('+---------------------------+---------+---------------------+---------------------+');
+	}
+	
+	// Update the array
+	$aProcesses = $aReorderedProcesses;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
