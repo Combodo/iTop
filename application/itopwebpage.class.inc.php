@@ -942,8 +942,9 @@ EOF
         // Render the text of the global search form
         $sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8');
         $sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
+	    $sDefaultPlaceHolder = '';
         if (empty($sText)) {
-            $sText = Dict::S("UI:YourSearch");
+	        $sDefaultPlaceHolder = Dict::S("UI:YourSearch");
         }
 
         if ($this->IsPrintableVersion()) {
@@ -1108,7 +1109,7 @@ EOF;
             $sHtml .= ' <td id="top-bar-table-search">';
             $sHtml .= '		<div id="global-search"><form action="' . utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php">';
             $sHtml .= '		<table id="top-left-buttons-area"><tr>';
-            $sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="' . $sText . '"></input><div ' . $sOnClick . ' id="global-search-image"><input type="hidden" name="operation" value="full_text"/></div></div></td>';
+            $sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="' . $sDefaultPlaceHolder . '" value="'. $sText . '"></input><div ' . $sOnClick . ' id="global-search-image"><input type="hidden" name="operation" value="full_text"/></div></div></td>';
             $sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="' . $sOnlineHelpUrl . '" target="_blank"><img title="' . Dict::S('UI:Help') . '" src="../images/help.png?t=' . utils::GetCacheBusterTimestamp() . '"/></td>';
             $sHtml .= '     	<td id="top-left-logoff-cell">' . self::FilterXSS($sLogOffMenu) . '</td>';
             $sHtml .= '     </tr></table></form></div>';
