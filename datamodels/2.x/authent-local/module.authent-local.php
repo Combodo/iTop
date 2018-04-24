@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'authent-local/2.4.0',
+	'authent-local/2.5.0',
 	array(
 		// Identification
 		//
