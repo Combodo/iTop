@@ -895,10 +895,10 @@ class SetupUtils
 		$sTlsEnabledChecked = $bTlsEnabled ? ' checked' : '';
 		$sTlsCaDisabled = $bTlsEnabled ? '' : ' disabled';
 		$oPage->add('<tbody id="tls_options">');
-		$oPage->add('<tr><th colspan="3" style="text-align: left;"><label style="margin: 1em; font-weight: normal; font-style: italic;"><img id="db_tls_img">Use TLS encrypted connection</label></th></tr>');
-		$oPage->add('<tr><td colspan="3" style="background-color: #f9e0df; padding: 1em; border: 1px solid #950303; color: #950303;">Before configuring MySQL with TLS encryption, read the documentation <a href="https://wiki.openitop.org/doku.php?id=2_4_0:install:php_and_mysql_tls" target="_blank">on Combodo\'s Wiki</a></td></tr>');
-		$oPage->add('<tr><td colspan="3"><label><input id="db_tls_enabled" type="checkbox"'.$sTlsEnabledChecked.' name="db_tls_enabled" value="1"> Encrypted connection enabled</label></td></tr>');
-		$oPage->add('<tr><td>SSL CA:</td>');
+		$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 6em; font-weight: normal; color: #696969"><img style="vertical-align:bottom" id="db_tls_img">Use TLS encrypted connection</label></th></tr>');
+		$oPage->add('<tr style="display:none"><td colspan="3" style="background-color: #f9e0df; padding: 1em; border: 1px solid #950303; color: #950303;">Before configuring MySQL with TLS encryption, read the documentation <a href="https://wiki.openitop.org/doku.php?id=2_5_0:install:php_and_mysql_tls" target="_blank">on Combodo\'s Wiki</a></td></tr>');
+		$oPage->add('<tr style="display:none"><td colspan="3"><label><input id="db_tls_enabled" type="checkbox"'.$sTlsEnabledChecked.' name="db_tls_enabled" value="1"> Encrypted connection enabled</label></td></tr>');
+		$oPage->add('<tr style="display:none"><td>SSL CA:</td>');
 		$oPage->add('<td><input id="db_tls_ca" autocomplete="off" type="text" name="db_tls_ca" value="'.htmlentities($sTlsCA,
 				ENT_QUOTES, 'UTF-8').'" size="15"'.$sTlsCaDisabled.'></td>');
 		$oPage->add('<td>Path to certificate authority file for SSL</td></tr>');
@@ -947,7 +947,7 @@ function updateTlsImage() {
 }
 EOF
 		);
-		if (!$bTlsEnabled)
+		if ($bTlsEnabled)
 		{
 			$oPage->add_ready_script('toggleTlsOptions();');
 		}
