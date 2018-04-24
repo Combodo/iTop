@@ -1037,6 +1037,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'inline_image_garbage_collector_interval' => array(
+			'type' => 'integer',
+			'description' => 'Frequency (in seconds) at which the inline image garbage collector will run.',
+			'default' => 3600,
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'date_and_time_format' => array(
 			'type' => 'array',
 			'description' => 'Format for date and time display (per language)',
