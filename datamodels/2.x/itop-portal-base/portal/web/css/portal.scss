@@ -1016,7 +1016,8 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	color: $brand-primary;
 	font-size: 0.9em;
 }
-.form_field .form_field_decoration{
+.form_field .form_field_decoration,
+.form_field_control .form_field_decoration{
 	vertical-align: baseline;
 	margin-right: 8px;
 }

@@ -46,7 +46,6 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
-        $oOutput->AddCssClass('form_field');
         $oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
 
 		$sObjectClass = get_class($this->oField->GetObject());

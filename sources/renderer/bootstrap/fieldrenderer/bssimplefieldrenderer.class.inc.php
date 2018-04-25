@@ -45,7 +45,6 @@ class BsSimpleFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
-		$oOutput->AddCssClass('form_field');
 		$oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
 
 		$sFieldClass = get_class($this->oField);

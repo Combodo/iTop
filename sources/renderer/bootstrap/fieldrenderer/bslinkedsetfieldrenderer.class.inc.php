@@ -43,7 +43,6 @@ class BsLinkedSetFieldRenderer extends FieldRenderer
 	public function Render()
 	{
 	    $oOutput = new RenderingOutput();
-        $oOutput->AddCssClass('form_field');
         $oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
 
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
