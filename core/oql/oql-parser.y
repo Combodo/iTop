@@ -158,7 +158,11 @@ basic_field_id(A) ::= name(X). { A = new FieldOqlExpression(X); }
 basic_field_id(A) ::= class_name(X) DOT name(Y). { A = new FieldOqlExpression(Y, X); }
 
 field_id(A) ::= basic_field_id(X). { A = X; }
-field_id(A) ::= field_id(X) ARROW name(Y). { A = new ExternalFieldOqlExpression(X, Y); }
+field_id(A) ::= field_id(X) ARROW name(Y).
+{
+    $expr = new FieldOqlExpression(Y);
+    A = new ExternalFieldOqlExpression(X, $expr);
+}
 
 class_name(A) ::= name(X). { A=X; }
 

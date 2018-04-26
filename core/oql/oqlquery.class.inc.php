@@ -208,7 +208,34 @@ class ExternalFieldOqlExpression extends ExternalFieldExpression implements Chec
 	 */
 	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
 	{
-		// TODO: Implement Check() method.
+		$sParentAlias = null;
+		foreach($this->aExpression as $i => $oFieldOqlExpression)
+		{
+			if (is_null($sParentAlias))
+			{
+				$oFieldOqlExpression->RefreshAlias($oModelReflection, $aAliases, $sSourceQuery);
+			}
+			else
+			{
+				$oFieldOqlExpression->SetParent($sParentAlias);
+			}
+			$oFieldOqlExpression->Check($oModelReflection, $aAliases, $sSourceQuery);
+
+			$sClass = $aAliases[$oFieldOqlExpression->GetParent()];
+			$sTargetClass = $oModelReflection->GetAttributeProperty($sClass, $oFieldOqlExpression->GetName(), 'targetclass');
+			if (is_null($sTargetClass))
+			{
+				if ($i != (count($this->aExpression) - 1))
+				{
+					throw new OqlNormalizeException('Forbiden operation for attribute', $sSourceQuery, $oFieldOqlExpression->GetNameDetails(), $oModelReflection->GetFiltersList($sClass));
+				}
+			}
+			else
+			{
+				$aAliases[$sTargetClass] = $sTargetClass;
+				$sParentAlias = $sTargetClass;
+			}
+		}
 	}
 }
 
@@ -247,6 +274,39 @@ class FieldOqlExpression extends FieldExpression implements CheckableExpression
 		{
 			// Try to find an alias
 			// Build an array of field => array of aliases
+			$this->RefreshAlias($oModelReflection, $aAliases, $sSourceQuery);
+		}
+		else
+		{
+			if (!array_key_exists($sClassAlias, $aAliases))
+			{
+				throw new OqlNormalizeException('Unknown class [alias]', $sSourceQuery, $this->GetParentDetails(), array_keys($aAliases));
+			}
+			$sClass = $aAliases[$sClassAlias];
+			if (!$oModelReflection->IsValidFilterCode($sClass, $sFltCode))
+			{
+				throw new OqlNormalizeException('Unknown filter code', $sSourceQuery, $this->GetNameDetails(), $oModelReflection->GetFiltersList($sClass));
+			}
+		}
+	}
+
+	/**
+	 * Used by Check => throws exception if error
+	 *
+	 * @param \ModelReflection $oModelReflection
+	 * @param $aAliases
+	 * @param $sSourceQuery
+	 *
+	 * @throws \OqlNormalizeException
+	 */
+	public function RefreshAlias(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
+	{
+		$sClassAlias = $this->GetParent();
+		$sFltCode = $this->GetName();
+		if (empty($sClassAlias))
+		{
+			// Try to find an alias
+			// Build an array of field => array of aliases
 			$aFieldClasses = array();
 			foreach($aAliases as $sAlias => $sReal)
 			{
@@ -264,18 +324,7 @@ class FieldOqlExpression extends FieldExpression implements CheckableExpression
 				throw new OqlNormalizeException('Ambiguous filter code', $sSourceQuery, $this->GetNameDetails());
 			}
 			$sClassAlias = $aFieldClasses[$sFltCode][0];
-		}
-		else
-		{
-			if (!array_key_exists($sClassAlias, $aAliases))
-			{
-				throw new OqlNormalizeException('Unknown class [alias]', $sSourceQuery, $this->GetParentDetails(), array_keys($aAliases));
-			}
-			$sClass = $aAliases[$sClassAlias];
-			if (!$oModelReflection->IsValidFilterCode($sClass, $sFltCode))
-			{
-				throw new OqlNormalizeException('Unknown filter code', $sSourceQuery, $this->GetNameDetails(), $oModelReflection->GetFiltersList($sClass));
-			}
+			$this->SetParent($sClassAlias);
 		}
 	}
 }

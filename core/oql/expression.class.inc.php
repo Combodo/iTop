@@ -843,7 +843,10 @@ class FalseExpression extends ScalarExpression
 
 class ExternalFieldExpression extends UnaryExpression
 {
-
+	public function __construct($value)
+	{
+		parent::__construct($value);
+	}
 }
 
 class FieldExpression extends UnaryExpression
