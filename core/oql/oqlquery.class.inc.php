@@ -174,8 +174,27 @@ class ExternalFieldOqlExpression extends ExternalFieldExpression implements Chec
 
 	function __construct($oExpr1, $oExpr2)
 	{
-        parent::__construct("TOTO");
+	    $sName = '';
+
+        if ($oExpr1 instanceof ExternalFieldOqlExpression)
+        {
+            $this->aExpression = $oExpr1->GetExpressions();
+        }
+        else
+        {
+            $this->aExpression[] = $oExpr1;
+        }
+        $this->aExpression[] = $oExpr2;
+        $sName = $oExpr1->GetValue().'->'.$oExpr2->GetValue();
+
+
+        parent::__construct($sName);
  	}
+
+    public function GetExpressions()
+    {
+        return $this->aExpression;
+    }
 
 	/**
 	 * Check the validity of the expression with regard to the data model
