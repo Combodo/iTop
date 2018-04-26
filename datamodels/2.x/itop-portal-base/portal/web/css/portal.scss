@@ -368,6 +368,7 @@ footer{
 .home div.tile-badge > a.tile {
 	display: table;
 	width: 100%;
+	padding: 12% 15% 5%;
 }
 
 .home div.tile-badge > a.tile > div {
@@ -405,8 +406,9 @@ footer{
 }
 
 .home div.tile-badge > a.tile > div > div.tile_body > div:first-child > div.tile_title {
-	font-size: 1.5em;
-	font-weight: bold;
+	font-size: 4.5em;
+	font-weight: normal;
+	margin-bottom: 0.5em;
 }
 
 .home div.tile-badge > a.tile > div > div.tile_body > div.tile_description {
