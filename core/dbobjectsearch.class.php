@@ -1264,7 +1264,7 @@ class DBObjectSearch extends DBSearch
 		}
 		elseif ($oExpression instanceof ExternalFieldOqlExpression)
 		{
-			return new TrueExpression();
+			return new ExternalFieldExpression($oExpression->GetName(), $oExpression->GetExpressions());
 		}
 		elseif ($oExpression instanceof FieldOqlExpression)
 		{

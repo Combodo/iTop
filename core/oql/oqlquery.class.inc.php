@@ -170,30 +170,37 @@ class ScalarOqlExpression extends ScalarExpression implements CheckableExpressio
 
 class ExternalFieldOqlExpression extends ExternalFieldExpression implements CheckableExpression
 {
-	private $aExpression = array();
+	protected $m_aExpression = array();
+	protected $m_sName = null;
+
 
 	function __construct($oExpr1, $oExpr2)
 	{
-	    $sName = '';
+		$this->m_sName = '';
 
         if ($oExpr1 instanceof ExternalFieldOqlExpression)
         {
-            $this->aExpression = $oExpr1->GetExpressions();
+            $this->m_aExpression = $oExpr1->GetExpressions();
         }
         else
         {
-            $this->aExpression[] = $oExpr1;
+            $this->m_aExpression[] = $oExpr1;
         }
-        $this->aExpression[] = $oExpr2;
-        $sName = $oExpr1->GetValue().'->'.$oExpr2->GetValue();
+        $this->m_aExpression[] = $oExpr2;
+		$this->m_sName = $oExpr1->GetValue().'->'.$oExpr2->GetValue();
 
 
-        parent::__construct($sName);
+        parent::__construct($this->m_sName, $this->m_aExpression);
  	}
 
     public function GetExpressions()
     {
-        return $this->aExpression;
+        return $this->m_aExpression;
+    }
+
+    public function GetName()
+    {
+    	return $this->m_sName;
     }
 
 	/**
@@ -209,7 +216,7 @@ class ExternalFieldOqlExpression extends ExternalFieldExpression implements Chec
 	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
 	{
 		$sParentAlias = null;
-		foreach($this->aExpression as $i => $oFieldOqlExpression)
+		foreach($this->m_aExpression as $i => $oFieldOqlExpression)
 		{
 			if (is_null($sParentAlias))
 			{
@@ -225,7 +232,7 @@ class ExternalFieldOqlExpression extends ExternalFieldExpression implements Chec
 			$sTargetClass = $oModelReflection->GetAttributeProperty($sClass, $oFieldOqlExpression->GetName(), 'targetclass');
 			if (is_null($sTargetClass))
 			{
-				if ($i != (count($this->aExpression) - 1))
+				if ($i != (count($this->m_aExpression) - 1))
 				{
 					throw new OqlNormalizeException('Forbiden operation for attribute', $sSourceQuery, $oFieldOqlExpression->GetNameDetails(), $oModelReflection->GetFiltersList($sClass));
 				}
