@@ -6,23 +6,25 @@
         <a href="{{ app.url_generator.generate('p_manage_brick', {'sBrickId': sBrickId, 'sDisplayType': oBrick.GetDisplayType}) }}{% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] }}{% endif %}"
         {% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][oBrick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}
         {% if oBrick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}
-        class="tile{# vertical-center#}"
-        id="brick-{{ oBrick.GetId }}"
-        data-brick-id="{{ oBrick.GetId }}">
-        <div>
-            <div class="tile_decoration">{% if oBrick.GetDecorationClassHome %}<span
-                    class="icon {{ oBrick.GetDecorationClassHome }}"></span>{% else %}<img src="{{ sIconURL }}"
-                                                                                           style="vertical-align:middle;"
-                                                                                           alt="Class Icon">{% endif %}
-            </div>
-            <div class="tile_body">
+                class="tile{# vertical-center#}"
+                id="brick-{{ oBrick.GetId }}"
+                data-brick-id="{{ oBrick.GetId }}">
+            <div>
                 <div>
-                    <div class="tile_title">{{ iCount }}</div>
-                    <div class="tile_description">{{ oBrick.GetTitle()|dict_s }}</div>
+                    <div class="tile_decoration">{% if oBrick.GetDecorationClassHome %}<span
+                            class="icon {{ oBrick.GetDecorationClassHome }}"></span>{% else %}<img src="{{ sIconURL }}"
+                                                                                                   style="vertical-align:middle;"
+                                                                                                   alt="Class Icon">{% endif %}
+                    </div>
+                    <div class="tile_body">
+                        <div>
+                            <div class="tile_title">{{ iCount }}</div>
+                            <div class="tile_description">{{ oBrick.GetTitle()|dict_s }}</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="tile_description"><p>{{ oBrick.GetDescription|dict_s|raw }}</p></div>
             </div>
-        </div>
+            <div class="tile_description">{{ oBrick.GetDescription|dict_s|raw }}</div>
         </a>
     {% endblock %}
 </div>
