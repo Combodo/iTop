@@ -218,7 +218,8 @@ class ExternalFieldOqlExpression extends ExternalFieldExpression implements Chec
 		$sParentAlias = null;
 		foreach($this->m_aExpression as $i => $oFieldOqlExpression)
 		{
-			if (is_null($sParentAlias))
+
+		    if (is_null($sParentAlias))
 			{
 				$oFieldOqlExpression->RefreshAlias($oModelReflection, $aAliases, $sSourceQuery);
 			}
@@ -229,19 +230,37 @@ class ExternalFieldOqlExpression extends ExternalFieldExpression implements Chec
 			$oFieldOqlExpression->Check($oModelReflection, $aAliases, $sSourceQuery);
 
 			$sClass = $aAliases[$oFieldOqlExpression->GetParent()];
-			$sTargetClass = $oModelReflection->GetAttributeProperty($sClass, $oFieldOqlExpression->GetName(), 'targetclass');
-			if (is_null($sTargetClass))
-			{
-				if ($i != (count($this->m_aExpression) - 1))
-				{
-					throw new OqlNormalizeException('Forbiden operation for attribute', $sSourceQuery, $oFieldOqlExpression->GetNameDetails(), $oModelReflection->GetFiltersList($sClass));
-				}
-			}
-			else
-			{
-				$aAliases[$sTargetClass] = $sTargetClass;
-				$sParentAlias = $sTargetClass;
-			}
+
+			$bLastIteration = ($i == (count($this->m_aExpression) - 1));
+
+			if (!$bLastIteration)
+            {
+                if ($oFieldOqlExpression->GetName() == 'id')
+                {
+                    $sTargetClass = null;
+                }
+                else
+                {
+                    $sTargetClass = $oModelReflection->GetAttributeProperty($sClass, $oFieldOqlExpression->GetName(), 'targetclass');
+                }
+
+                if (is_null($sTargetClass))
+                {
+                    throw new OqlNormalizeException('Forbidden operation for attribute', $sSourceQuery, $oFieldOqlExpression->GetNameDetails(), $oModelReflection->GetFiltersList($sClass));
+                }
+                $aAliases[$sTargetClass] = $sTargetClass;
+                $sParentAlias = $sTargetClass;
+            }
+            else
+            {
+                if ($oFieldOqlExpression->GetName() != 'id')
+                {
+                     if (!$oModelReflection->IsValidAttCode($sClass, $oFieldOqlExpression->GetName()))
+                     {
+                         throw new OqlNormalizeException('Invalid attribute', $sSourceQuery, $oFieldOqlExpression->GetNameDetails(), $oModelReflection->GetFiltersList($sClass));
+                     }
+                }
+            }
 		}
 	}
 }
