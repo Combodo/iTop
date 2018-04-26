@@ -168,6 +168,31 @@ class ScalarOqlExpression extends ScalarExpression implements CheckableExpressio
 	}
 }
 
+class ExternalFieldOqlExpression extends ExternalFieldExpression implements CheckableExpression
+{
+	private $aExpression = array();
+
+	function __construct($oExpr1, $oExpr2)
+	{
+        parent::__construct("TOTO");
+ 	}
+
+	/**
+	 * Check the validity of the expression with regard to the data model
+	 * and the query in which it is used
+	 *
+	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 * @param array $aAliases Aliases to class names (for the current query)
+	 * @param string $sSourceQuery For the reporting
+	 *
+	 * @throws OqlNormalizeException
+	 */
+	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
+	{
+		// TODO: Implement Check() method.
+	}
+}
+
 class FieldOqlExpression extends FieldExpression implements CheckableExpression
 {
 	protected $m_oParent;

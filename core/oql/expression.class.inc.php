@@ -841,6 +841,11 @@ class FalseExpression extends ScalarExpression
 	}
 }
 
+class ExternalFieldExpression extends UnaryExpression
+{
+
+}
+
 class FieldExpression extends UnaryExpression
 {
 	protected $m_sParent;

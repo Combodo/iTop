@@ -88,6 +88,8 @@ where	     = "WHERE"
 join	     = "JOIN"
 on	        = "ON"
 coma       = ","
+arrow      = "->"
+colon      = ":"
 par_open   = "("
 par_close  = ")"
 math_div   = "/"
@@ -170,7 +172,7 @@ numval     = /([0-9]+)/
 strval     = /"([^\\"]|\\"|\\\\)*"|'.chr(94).chr(39).'([^\\'.chr(39).']|\\'.chr(39).'|\\\\)*'.chr(39).'/
 name       = /([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/
 varname    = /:([_a-zA-Z][_a-zA-Z0-9]*->[_a-zA-Z][_a-zA-Z0-9]*|[_a-zA-Z][_a-zA-Z0-9]*)/
-dot       = "."
+dot        = "."
 */
 
 /*!lex2php
@@ -197,6 +199,12 @@ join {
 }
 on {
 	$this->token = OQLParser::ON;
+}
+arrow {
+     	$this->token = OQLParser::ARROW;
+}
+colon {
+      	$this->token = OQLParser::COLON;
 }
 math_div {
 	$this->token = OQLParser::MATH_DIV;
@@ -396,6 +404,7 @@ varname {
 dot {
 	$this->token = OQLParser::DOT;
 }
+
 */
 
 }
