@@ -8,7 +8,9 @@
         {% if oBrick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}
                 class="tile{# vertical-center#}"
                 id="brick-{{ oBrick.GetId }}"
-                data-brick-id="{{ oBrick.GetId }}">
+                data-brick-id="{{ oBrick.GetId }}"
+                {% if oBrick.GetDescription is not empty %} data-toggle="tooltip" data-original-title="{{ oBrick.GetDescription|dict_s|raw }}"{% endif %}
+                >
             <div>
                 <div>
                     <div class="tile_decoration">{% if oBrick.GetDecorationClassHome %}<span
