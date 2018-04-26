@@ -344,42 +344,58 @@ footer {
   color: #555;
 }
 .home div.tile-badge > a.tile {
+  padding: 0;
+  margin: 0;
+  margin-bottom: 25px;
+  height: 12em;
+  min-height: unset;
+}
+.home div.tile-badge > a.tile > div {
+  padding: 12% 10% 0;
+}
+.home div.tile-badge > a.tile > div {
   display: table;
   width: 100%;
 }
-.home div.tile-badge > a.tile > div {
+.home div.tile-badge > a.tile > div > div {
   display: table-row;
 }
-.home div.tile-badge > a.tile > div > div {
+.home div.tile-badge > a.tile > div > div > div {
   display: table-cell;
 }
-.home div.tile-badge > a.tile > div > div.tile_decoration {
-  text-align: center;
+.home div.tile-badge > a.tile > div > div > div.tile_decoration {
+  text-align: left;
   vertical-align: top;
   position: inherit;
   float: inherit;
 }
-.home div.tile-badge > a.tile > div > div.tile_body {
+.home div.tile-badge > a.tile > div > div > div.tile_body {
   text-align: right;
   padding-left: 0;
 }
-.home div.tile-badge > a.tile > div > div.tile_body > div:first-child {
-  text-align: center;
+.home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child {
   margin: 0 auto;
   margin-left: 10%;
 }
-.home div.tile-badge > a.tile > div > div.tile_body > div:first-child > div {
-  text-align: center;
-}
-.home div.tile-badge > a.tile > div > div.tile_body > div:first-child > div.tile_description {
+.home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div.tile_description {
   margin-bottom: 1.5em;
-}
-.home div.tile-badge > a.tile > div > div.tile_body > div:first-child > div.tile_title {
-  font-size: 1.5em;
-  font-weight: bold;
-}
-.home div.tile-badge > a.tile > div > div.tile_body > div.tile_description {
   text-align: right;
+}
+.home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div.tile_title {
+  font-size: 4.5em;
+  font-weight: normal;
+  margin-bottom: 0.5em;
+}
+.home div.tile-badge > a.tile > div.tile_description {
+  display: block;
+  padding: 0 5%;
+  font-size: 1em;
+  font-style: italic;
+  text-align: center;
+  line-height: normal;
+  height: 2em;
+  /* needed even if height is defined on a.tile :/ */
+  overflow: hidden;
 }
 .home div.tile-chart > a > div {
   padding: 0.25em;
@@ -826,6 +842,7 @@ table .group-actions {
   }
   .mosaic-item-description {
     overflow: hidden;
+    text-overflow: ellipsis;
   }
   .mosaic-item-layout-1 .mosaic-item-name {
     font-weight: inherit;
