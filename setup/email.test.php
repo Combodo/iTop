@@ -181,7 +181,7 @@ function DisplayStep1(SetupPage $oP)
 		$aForm[] = array(
 			'label' => "From:",
 			'input' => "<input id=\"from\" type=\"text\" name=\"from\" value=\"\">",
-			'help' => ' defaults to \'To\'',
+			'help' => ' defaults to the configuration param "email_default_sender_address" or "To" field.',
 		);
 		$oP->form($aForm);
 		$oP->add("</fieldset>\n");
@@ -265,10 +265,6 @@ try
 		$oP->no_cache();
 		$sTo = Utils::ReadParam('to', '', false, 'raw_data');
 		$sFrom = Utils::ReadParam('from', '', false, 'raw_data');
-		if (strlen($sFrom) == 0)
-		{
-			$sFrom = $sTo;
-		}
 		DisplayStep2($oP, $sFrom, $sTo);
 		break;
 

@@ -495,6 +495,22 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'email_default_sender_address' => array(
+			'type' => 'string',
+			'description' => 'Default address provided in the email from header field.',
+			'default' => "",
+			'value' => "",
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'email_default_sender_label' => array(
+			'type' => 'string',
+			'description' => 'Default label provided in the email from header field.',
+			'default' => "",
+			'value' => "",
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 		'apc_cache.enabled' => array(
 			'type' => 'bool',
 			'description' => 'If set, the APC cache is allowed (the PHP extension must also be active)',

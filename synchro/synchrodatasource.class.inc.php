@@ -1103,14 +1103,12 @@ EOF
 		}
 
 		$sTo = $oContact->Get($sEmailAttCode);
-		$sFrom = $sTo;
 		$sBody = '<p>Data synchronization: '.$this->GetHyperlink().'</p>'.$sBody;
 
 		$sSubject = 'iTop Data Sync - '.$this->GetName().' - '.$sSubject;
 
 		$oEmail = new Email();
 		$oEmail->SetRecipientTO($sTo);
-		$oEmail->SetRecipientFrom($sFrom);
 		$oEmail->SetSubject($sSubject);
 		$oEmail->SetBody($sBody);
 		if ($oEmail->Send($aIssues) == EMAIL_SEND_ERROR)
