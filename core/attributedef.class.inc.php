@@ -1342,6 +1342,29 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $oSet;
 	}
 
+    /**
+     * @param $proposedValue
+     * @param $oHostObj
+     *
+     * @return mixed
+     */
+    public function MakeRealValue($proposedValue, $oHostObj){
+        if($proposedValue === null)
+        {
+            $sLinkedClass = $this->GetLinkedClass();
+            $aLinkedObjectsArray = array();
+            $oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
+
+            return new ormLinkSet(
+                get_class($oHostObj),
+                $this->GetCode(),
+                $oSet
+            );
+        }
+
+        return $proposedValue;
+    }
+
 	/**
 	 * @param ormLinkSet $val1
 	 * @param ormLinkSet $val2
