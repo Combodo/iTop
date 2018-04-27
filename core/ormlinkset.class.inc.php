@@ -75,6 +75,14 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	protected $iCursor = 0;
 
 	/**
+	 * __toString magical function overload.
+	 */
+	public function __toString()
+	{
+		return '';
+	}
+
+	/**
 	 * ormLinkSet constructor.
 	 * @param $sHostClass
 	 * @param $sAttCode
