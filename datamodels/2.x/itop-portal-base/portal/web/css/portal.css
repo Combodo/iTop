@@ -80,6 +80,7 @@ footer {
 }
 /* Sidebar */
 @media (min-width: 768px) {
+  /* Main content */
   #sidebar {
     position: fixed;
     top: 0px;
@@ -141,6 +142,9 @@ footer {
     width: 40%;
     max-width: 100%;
   }
+  #main-wrapper {
+    margin-top: 20px;
+  }
 }
 /* Warning : Not a offical BS breakpoint */
 @media (min-width: 1600px) {
@@ -150,12 +154,6 @@ footer {
   }
   #sidebar .menu .nav > li > a > .brick_icon {
     margin-right: 20px;
-  }
-}
-/* Main content */
-@media (min-width: 768px) {
-  #main-wrapper {
-    margin-top: 20px;
   }
 }
 /* Overlays*/
@@ -343,6 +341,9 @@ footer {
   display: none;
   color: #555;
 }
+/**********************************/
+/* ManageBrick badge tile display */
+/**********************************/
 .home div.tile-badge > a.tile {
   padding: 0;
   margin: 0;
@@ -351,11 +352,9 @@ footer {
   min-height: unset;
 }
 .home div.tile-badge > a.tile > div {
-  padding: 12% 10% 0;
-}
-.home div.tile-badge > a.tile > div {
   display: table;
   width: 100%;
+  padding: 12% 10% 0;
 }
 .home div.tile-badge > a.tile > div > div {
   display: table-row;
@@ -400,6 +399,34 @@ footer {
 .home div.tile-chart > a > div {
   padding: 0.25em;
 }
+@media (max-width: 768px) {
+  .home div.tile-badge > a.tile {
+    height: auto;
+    padding: inherit;
+  }
+  .home div.tile-badge > a.tile > div {
+    padding: 0;
+  }
+  .home div.tile-badge > a.tile > div > div > div.tile_decoration {
+    vertical-align: middle;
+  }
+  .home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div {
+    display: inline-block;
+  }
+  .home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div.tile_title {
+    margin: 0;
+    font-size: 2.5em;
+    font-weight: bold;
+  }
+  .home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div.tile_description {
+    display: unset;
+    margin: 0;
+    margin-left: 3em;
+  }
+  .home div.tile-badge > a.tile > div.tile_description {
+    display: none;
+  }
+}
 @media (min-width: 768px) {
   .home .tile {
     display: block;
@@ -434,6 +461,9 @@ footer {
     display: block;
     text-align: left;
   }
+  .home div.tile-badge > a.tile > div > div > div.tile_decoration > span.icon {
+    font-size: 2em;
+  }
 }
 @media (min-width: 992px) {
   .home .tile {
@@ -451,6 +481,9 @@ footer {
   }
   .home .tile .tile_description {
     font-size: 1.2em;
+  }
+  .home div.tile-badge > a.tile > div > div > div.tile_decoration > span.icon {
+    font-size: 6em;
   }
 }
 @media (min-width: 1200px) {

@@ -147,6 +147,11 @@ footer{
 		width: 40%;
 		max-width: 100%;
 	}
+
+	/* Main content */
+	#main-wrapper{
+		margin-top: 20px;
+	}
 }
 @media (min-width: 992px){
 
@@ -162,12 +167,6 @@ footer{
 	}
 }
 
-/* Main content */
-@media (min-width: 768px) {
-	#main-wrapper{
-		margin-top: 20px;
-	}
-}
 
 /* Overlays*/
 .global_overlay{
@@ -366,8 +365,10 @@ footer{
 }
 
 
-
-.home div.tile-badge > a.tile {
+/**********************************/
+/* ManageBrick badge tile display */
+/**********************************/
+  .home div.tile-badge > a.tile {
 	padding: 0;
 	margin: 0;
 	margin-bottom: 25px;
@@ -376,12 +377,9 @@ footer{
 }
 
 .home div.tile-badge > a.tile > div {
-	padding: 12% 10% 0;
-}
-
-.home div.tile-badge > a.tile > div {
 	display: table;
 	width: 100%;
+	padding: 12% 10% 0;
 }
 
 .home div.tile-badge > a.tile > div > div {
@@ -436,6 +434,35 @@ footer{
 }
 
 
+@media (max-width: 768px) {
+	.home div.tile-badge > a.tile {
+		height: auto;
+		padding: inherit;
+	}
+	.home div.tile-badge > a.tile > div {
+		padding: 0;
+	}
+	.home div.tile-badge > a.tile > div > div > div.tile_decoration {
+		vertical-align: middle;
+	}
+	.home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div {
+		display: inline-block;
+	}
+	.home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div.tile_title {
+		margin: 0;
+		font-size: 2.5em;
+		font-weight: bold;
+	}
+	.home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div.tile_description {
+		display: unset;
+		margin: 0;
+		margin-left: 3em;
+	}
+	.home div.tile-badge > a.tile > div.tile_description {
+		display: none;
+	}
+}
+
 @media (min-width: 768px) {
 	.home .tile{
 		display: block;
@@ -470,6 +497,9 @@ footer{
 		display: block;
 		text-align: left;
 	}
+	.home div.tile-badge > a.tile > div > div > div.tile_decoration > span.icon {
+		font-size: 2em;
+	}
 }
 @media (min-width: 992px) {
 	.home .tile{
@@ -487,6 +517,10 @@ footer{
 	}
 	.home .tile .tile_description{
 		font-size: 1.2em;
+	}
+
+	.home div.tile-badge > a.tile > div > div > div.tile_decoration > span.icon {
+		font-size: 6em;
 	}
 }
 @media (min-width: 1200px) {
