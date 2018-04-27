@@ -11,8 +11,7 @@
 /**
  * Allows StreamFilters to operate on a stream.
  *
- * @package Swift
- * @author  Chris Corbyn
+ * @author Chris Corbyn
  */
 interface Swift_Filterable
 {

@@ -11,9 +11,7 @@
 /**
  * A factory for creating CharacterReaders.
  *
- * @package    Swift
- * @subpackage Encoder
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 interface Swift_CharacterReaderFactory
 {

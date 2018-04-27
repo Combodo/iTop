@@ -11,9 +11,7 @@
 /**
  * Provides quick access to each encoding type.
  *
- * @package    Swift
- * @subpackage Encoder
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 class Swift_Encoding
 {
@@ -56,8 +54,6 @@ class Swift_Encoding
     {
         return self::_lookup('mime.base64contentencoder');
     }
-
-    // -- Private Static Methods
 
     private static function _lookup($key)
     {

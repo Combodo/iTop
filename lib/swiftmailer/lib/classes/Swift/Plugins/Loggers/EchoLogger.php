@@ -11,9 +11,7 @@
 /**
  * Prints all log messages in real time.
  *
- * @package    Swift
- * @subpackage Transport
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 class Swift_Plugins_Loggers_EchoLogger implements Swift_Plugins_Logger
 {
@@ -23,7 +21,7 @@ class Swift_Plugins_Loggers_EchoLogger implements Swift_Plugins_Logger
     /**
      * Create a new EchoLogger.
      *
-     * @param bool    $isHtml
+     * @param bool $isHtml
      */
     public function __construct($isHtml = true)
     {

@@ -11,9 +11,7 @@
 /**
  * Sends Messages via an abstract Transport subsystem.
  *
- * @package    Swift
- * @subpackage Transport
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 interface Swift_Transport
 {

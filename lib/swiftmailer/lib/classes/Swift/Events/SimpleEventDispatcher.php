@@ -11,9 +11,7 @@
 /**
  * The EventDispatcher which handles the event dispatching layer.
  *
- * @package    Swift
- * @subpackage Events
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 class Swift_Events_SimpleEventDispatcher implements Swift_Events_EventDispatcher
 {
@@ -36,7 +34,7 @@ class Swift_Events_SimpleEventDispatcher implements Swift_Events_EventDispatcher
             'Swift_Events_ResponseEvent' => 'Swift_Events_ResponseListener',
             'Swift_Events_SendEvent' => 'Swift_Events_SendListener',
             'Swift_Events_TransportChangeEvent' => 'Swift_Events_TransportChangeListener',
-            'Swift_Events_TransportExceptionEvent' => 'Swift_Events_TransportExceptionListener'
+            'Swift_Events_TransportExceptionEvent' => 'Swift_Events_TransportExceptionListener',
             );
     }
 
@@ -134,8 +132,6 @@ class Swift_Events_SimpleEventDispatcher implements Swift_Events_EventDispatcher
         $this->_bubble($evt, $target);
     }
 
-    // -- Private methods
-
     /** Queue listeners on a stack ready for $evt to be bubbled up it */
     private function _prepareBubbleQueue(Swift_Events_EventObject $evt)
     {
@@ -143,8 +139,7 @@ class Swift_Events_SimpleEventDispatcher implements Swift_Events_EventDispatcher
         $evtClass = get_class($evt);
         foreach ($this->_listeners as $listener) {
             if (array_key_exists($evtClass, $this->_eventMap)
-                && ($listener instanceof $this->_eventMap[$evtClass]))
-            {
+                && ($listener instanceof $this->_eventMap[$evtClass])) {
                 $this->_bubbleQueue[] = $listener;
             }
         }

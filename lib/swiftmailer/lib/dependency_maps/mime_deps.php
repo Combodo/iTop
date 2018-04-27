@@ -1,6 +1,6 @@
 <?php
 
-require dirname(__FILE__) . '/../mime_types.php';
+require __DIR__.'/../mime_types.php';
 
 Swift_DependencyContainer::getInstance()
     ->register('properties.charset')
@@ -16,7 +16,7 @@ Swift_DependencyContainer::getInstance()
         'mime.qpcontentencoder',
         'cache',
         'mime.grammar',
-        'properties.charset'
+        'properties.charset',
     ))
 
     ->register('mime.part')
@@ -26,7 +26,7 @@ Swift_DependencyContainer::getInstance()
         'mime.qpcontentencoder',
         'cache',
         'mime.grammar',
-        'properties.charset'
+        'properties.charset',
     ))
 
     ->register('mime.attachment')
@@ -35,7 +35,7 @@ Swift_DependencyContainer::getInstance()
         'mime.headerset',
         'mime.base64contentencoder',
         'cache',
-        'mime.grammar'
+        'mime.grammar',
     ))
     ->addConstructorValue($swift_mime_types)
 
@@ -45,7 +45,7 @@ Swift_DependencyContainer::getInstance()
         'mime.headerset',
         'mime.base64contentencoder',
         'cache',
-        'mime.grammar'
+        'mime.grammar',
     ))
     ->addConstructorValue($swift_mime_types)
 
@@ -55,7 +55,7 @@ Swift_DependencyContainer::getInstance()
             'mime.qpheaderencoder',
             'mime.rfc2231encoder',
             'mime.grammar',
-            'properties.charset'
+            'properties.charset',
         ))
 
     ->register('mime.headerset')
@@ -117,7 +117,7 @@ Swift_DependencyContainer::getInstance()
     // As of PHP 5.4.7, the quoted_printable_encode() function behaves correctly.
     // see https://github.com/php/php-src/commit/18bb426587d62f93c54c40bf8535eb8416603629
     ->register('mime.qpcontentencoder')
-    ->asAliasOf(version_compare(phpversion(), '5.4.7', '>=') ? 'mime.qpcontentencoderproxy' : 'mime.safeqpcontentencoder')
+    ->asAliasOf(PHP_VERSION_ID >= 50407 ? 'mime.qpcontentencoderproxy' : 'mime.safeqpcontentencoder')
 ;
 
 unset($swift_mime_types);

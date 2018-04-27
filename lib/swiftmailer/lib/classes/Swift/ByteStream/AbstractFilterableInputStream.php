@@ -11,9 +11,7 @@
 /**
  * Provides the base functionality for an InputStream supporting filters.
  *
- * @package    Swift
- * @subpackage ByteStream
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 abstract class Swift_ByteStream_AbstractFilterableInputStream implements Swift_InputByteStream, Swift_Filterable
 {
@@ -24,6 +22,8 @@ abstract class Swift_ByteStream_AbstractFilterableInputStream implements Swift_I
 
     /**
      * StreamFilters.
+     *
+     * @var Swift_StreamFilter[]
      */
     private $_filters = array();
 
@@ -77,9 +77,9 @@ abstract class Swift_ByteStream_AbstractFilterableInputStream implements Swift_I
      *
      * @param string $bytes
      *
-     * @return int
-     *
      * @throws Swift_IoException
+     *
+     * @return int
      */
     public function write($bytes)
     {
@@ -156,8 +156,6 @@ abstract class Swift_ByteStream_AbstractFilterableInputStream implements Swift_I
             $stream->flushBuffers();
         }
     }
-
-    // -- Private methods
 
     /** Run $bytes through all filters */
     private function _filter($bytes)

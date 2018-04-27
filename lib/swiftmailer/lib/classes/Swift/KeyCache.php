@@ -11,9 +11,7 @@
 /**
  * Provides a mechanism for storing data using two keys.
  *
- * @package    Swift
- * @subpackage KeyCache
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 interface Swift_KeyCache
 {
@@ -28,10 +26,10 @@ interface Swift_KeyCache
      *
      * @see MODE_WRITE, MODE_APPEND
      *
-     * @param string  $nsKey
-     * @param string  $itemKey
-     * @param string  $string
-     * @param int     $mode
+     * @param string $nsKey
+     * @param string $itemKey
+     * @param string $string
+     * @param int    $mode
      */
     public function setString($nsKey, $itemKey, $string, $mode);
 

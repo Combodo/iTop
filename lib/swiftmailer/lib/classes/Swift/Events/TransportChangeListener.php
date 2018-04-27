@@ -11,9 +11,7 @@
 /**
  * Listens for changes within the Transport system.
  *
- * @package    Swift
- * @subpackage Events
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 interface Swift_Events_TransportChangeListener extends Swift_Events_EventListener
 {

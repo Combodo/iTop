@@ -11,10 +11,8 @@
 /**
  * Base Class of Signer Infrastructure.
  *
- * @package    Swift
- * @subpackage Signatures
  *
- * @author     Xavier De Cock <xdecock@gmail.com>
+ * @author Xavier De Cock <xdecock@gmail.com>
  */
 interface Swift_Signer
 {

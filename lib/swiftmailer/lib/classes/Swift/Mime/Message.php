@@ -11,9 +11,7 @@
 /**
  * A Message (RFC 2822) object.
  *
- * @package    Swift
- * @subpackage Mime
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 interface Swift_Mime_Message extends Swift_Mime_MimeEntity
 {
@@ -41,7 +39,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
     /**
      * Set the origination date of the message as a UNIX timestamp.
      *
-     * @param int     $date
+     * @param int $date
      */
     public function setDate($date);
 

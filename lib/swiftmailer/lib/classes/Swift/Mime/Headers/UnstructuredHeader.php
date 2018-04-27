@@ -11,9 +11,7 @@
 /**
  * A Simple MIME Header.
  *
- * @package    Swift
- * @subpackage Mime
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 class Swift_Mime_Headers_UnstructuredHeader extends Swift_Mime_Headers_AbstractHeader
 {

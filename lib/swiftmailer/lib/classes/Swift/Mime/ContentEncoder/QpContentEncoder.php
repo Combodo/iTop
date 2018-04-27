@@ -11,9 +11,7 @@
 /**
  * Handles Quoted Printable (QP) Transfer Encoding in Swift Mailer.
  *
- * @package    Swift
- * @subpackage Mime
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 class Swift_Mime_ContentEncoder_QpContentEncoder extends Swift_Encoder_QpEncoder implements Swift_Mime_ContentEncoder
 {
@@ -76,7 +74,7 @@ class Swift_Mime_ContentEncoder_QpContentEncoder extends Swift_Encoder_QpEncoder
 
         $currentLine = '';
         $prepend = '';
-        $size=$lineLen=0;
+        $size = $lineLen = 0;
 
         while (false !== $bytes = $this->_nextSequence()) {
             // If we're filtering the input
@@ -97,18 +95,29 @@ class Swift_Mime_ContentEncoder_QpContentEncoder extends Swift_Encoder_QpEncoder
             }
 
             $enc = $this->_encodeByteSequence($bytes, $size);
-            if ($currentLine && $lineLen+$size >= $thisLineLength) {
-                $is->write($prepend . $this->_standardize($currentLine));
+
+            $i = strpos($enc, '=0D=0A');
+            $newLineLength = $lineLen + ($i === false ? $size : $i);
+
+            if ($currentLine && $newLineLength >= $thisLineLength) {
+                $is->write($prepend.$this->_standardize($currentLine));
                 $currentLine = '';
                 $prepend = "=\r\n";
                 $thisLineLength = $maxLineLength;
-                $lineLen=0;
+                $lineLen = 0;
             }
-            $lineLen+=$size;
+
             $currentLine .= $enc;
+
+            if ($i === false) {
+                $lineLen += $size;
+            } else {
+                // 6 is the length of '=0D=0A'.
+                $lineLen = $size - strrpos($enc, '=0D=0A') - 6;
+            }
         }
         if (strlen($currentLine)) {
-            $is->write($prepend . $this->_standardize($currentLine));
+            $is->write($prepend.$this->_standardize($currentLine));
         }
     }
 

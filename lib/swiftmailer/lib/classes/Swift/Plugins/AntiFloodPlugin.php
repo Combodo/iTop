@@ -11,9 +11,7 @@
 /**
  * Reduces network flooding when sending large amounts of mail.
  *
- * @package    Swift
- * @subpackage Plugins
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 class Swift_Plugins_AntiFloodPlugin implements Swift_Events_SendListener, Swift_Plugins_Sleeper
 {
@@ -62,7 +60,7 @@ class Swift_Plugins_AntiFloodPlugin implements Swift_Events_SendListener, Swift_
     /**
      * Set the number of emails to send before restarting.
      *
-     * @param int     $threshold
+     * @param int $threshold
      */
     public function setThreshold($threshold)
     {
@@ -82,7 +80,7 @@ class Swift_Plugins_AntiFloodPlugin implements Swift_Events_SendListener, Swift_
     /**
      * Set the number of seconds to sleep for during a restart.
      *
-     * @param int     $sleep time
+     * @param int $sleep time
      */
     public function setSleepTime($sleep)
     {
@@ -130,7 +128,7 @@ class Swift_Plugins_AntiFloodPlugin implements Swift_Events_SendListener, Swift_
     /**
      * Sleep for $seconds.
      *
-     * @param int     $seconds
+     * @param int $seconds
      */
     public function sleep($seconds)
     {

@@ -11,14 +11,12 @@
 /**
  * Stores all sent emails for further usage.
  *
- * @package    Swift
- * @subpackage Plugins
- * @author     Fabien Potencier
+ * @author Fabien Potencier
  */
 class Swift_Plugins_MessageLogger implements Swift_Events_SendListener
 {
     /**
-     * @var array
+     * @var Swift_Mime_Message[]
      */
     private $messages;
 
@@ -28,9 +26,9 @@ class Swift_Plugins_MessageLogger implements Swift_Events_SendListener
     }
 
     /**
-     * Get the message list
+     * Get the message list.
      *
-     * @return array
+     * @return Swift_Mime_Message[]
      */
     public function getMessages()
     {
@@ -38,9 +36,9 @@ class Swift_Plugins_MessageLogger implements Swift_Events_SendListener
     }
 
     /**
-     * Get the message count
+     * Get the message count.
      *
-     * @return int     count
+     * @return int count
      */
     public function countMessages()
     {
@@ -48,8 +46,7 @@ class Swift_Plugins_MessageLogger implements Swift_Events_SendListener
     }
 
     /**
-     * Empty the message list
-     *
+     * Empty the message list.
      */
     public function clear()
     {

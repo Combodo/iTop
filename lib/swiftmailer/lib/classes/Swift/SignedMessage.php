@@ -10,16 +10,14 @@
 
 /**
  * Signed Message, message that can be signed using a signer.
- * 
+ *
  * This class is only kept for compatibility
  *
- * @package    Swift
- * @subpackage Signed
  *
  * @author     Xavier De Cock <xdecock@gmail.com>
+ *
  * @deprecated
  */
 class Swift_SignedMessage extends Swift_Message
 {
-
 }

@@ -11,9 +11,7 @@
 /**
  * Listens for Transports to send commands to the server.
  *
- * @package    Swift
- * @subpackage Events
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 interface Swift_Events_CommandListener extends Swift_Events_EventListener
 {

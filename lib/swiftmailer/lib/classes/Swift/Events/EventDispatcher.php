@@ -11,9 +11,7 @@
 /**
  * Interface for the EventDispatcher which handles the event dispatching layer.
  *
- * @package    Swift
- * @subpackage Events
- * @author     Chris Corbyn
+ * @author Chris Corbyn
  */
 interface Swift_Events_EventDispatcher
 {
