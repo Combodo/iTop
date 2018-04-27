@@ -39,7 +39,15 @@ class UILinksWidget
 	protected $m_sLinkedClass;
 	protected $m_sRemoteClass;
 	protected $m_bDuplicatesAllowed;
-	
+
+	/**
+	 * UILinksWidget constructor.
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param int $iInputId
+	 * @param string $sNameSuffix
+	 * @param bool $bDuplicatesAllowed
+	 */
 	public function __construct($sClass, $sAttCode, $iInputId, $sNameSuffix = '', $bDuplicatesAllowed = false)
 	{
 		$this->m_sClass = $sClass;
@@ -98,11 +106,11 @@ class UILinksWidget
 	 * @param WebPage $oP Web page used for the ouput
 	 * @param DBObject $oLinkedObj Remote object
 	 * @param mixed $linkObjOrId Either the object linked or a unique number for new link records to add
-	 * @param array|Hash $aArgs Extra context arguments
-	 * @param $oCurrentObj The object to which all the elements of the linked set refer to
-	 * @param $iUniqueId A unique identifier of new links
-     * @param boolean $bReadOnly Display link as editable or read-only. Default is false (editable)
-	 * @return string The HTML fragment of the one-row form
+	 * @param array $aArgs Extra context arguments
+	 * @param DBObject $oCurrentObj The object to which all the elements of the linked set refer to
+	 * @param int $iUniqueId A unique identifier of new links
+	 * @param boolean $bReadOnly Display link as editable or read-only. Default is false (editable)
+	 * @return array The HTML fragment of the one-row form
 	 */
 	protected function GetFormRow(WebPage $oP, DBObject $oLinkedObj, $linkObjOrId, $aArgs, $oCurrentObj, $iUniqueId, $bReadOnly = false)
 	{
@@ -229,7 +237,11 @@ EOF
 
 	/**
 	 * Display one row of the whole form
-	 * @return none
+	 * @param WebPage $oP
+	 * @param array $aConfig
+	 * @param array $aRow
+	 * @param int $iRowId
+	 * @return string
 	 */
 	protected function DisplayFormRow(WebPage $oP, $aConfig, $aRow, $iRowId)
 	{
@@ -247,8 +259,8 @@ EOF
 	/**
 	 * Display the table with the form for editing all the links at once
 	 * @param WebPage $oP The web page used for the output
-	 * @param Hash $aConfig The table's header configuration
-	 * @param Hash $aData The tabular data to be displayed
+	 * @param array $aConfig The table's header configuration
+	 * @param array $aData The tabular data to be displayed
 	 * @return string Html fragment representing the form table
 	 */
 	protected function DisplayFormTable(WebPage $oP, $aConfig, $aData)
@@ -285,21 +297,20 @@ EOF
 		
 		return $sHtml;
 	}
-	
+
 
 	/**
 	 * Get the HTML fragment corresponding to the linkset editing widget
-	 * @param WebPage $oP The web page used for all the output
-	 * @param DBObjectSet The initial value of the linked set
-	 * @param Hash $aArgs Extra context arguments
+	 * @param WebPage $oPage
+	 * @param DBObject|ormLinkSet $oValue
+	 * @param array $aArgs Extra context arguments
 	 * @param string $sFormPrefix prefix of the fields in the current form
 	 * @param DBObject $oCurrentObj the current object to which the linkset is related
 	 * @return string The HTML fragment to be inserted into the page
 	 */
-	public function Display(WebPage $oPage, DBObjectSet $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj)
+	public function Display(WebPage $oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj)
 	{
 		$sHtmlValue = '';
-		$sTargetClass = self::GetTargetClass($this->m_sClass, $this->m_sAttCode);
 		$sHtmlValue .= "<div id=\"linkedset_{$this->m_sAttCode}{$this->m_sNameSuffix}\">\n";
 		$sHtmlValue .= "<input type=\"hidden\" id=\"{$sFormPrefix}{$this->m_iInputId}\">\n";
 		$oValue->Rewind();
@@ -346,11 +357,17 @@ EOF
 		$oPage->add_at_the_end("<div id=\"dlg_{$this->m_sAttCode}{$this->m_sNameSuffix}\"></div>"); // To prevent adding forms inside the main form
         return $sHtmlValue;
 	}
-	         
+
+	/**
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @return string
+	 */
 	protected static function GetTargetClass($sClass, $sAttCode)
 	{
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sLinkedClass = $oAttDef->GetLinkedClass();
+		$sTargetClass = '';
 		switch(get_class($oAttDef))
 		{
 			case 'AttributeLinkedSetIndirect':
@@ -365,7 +382,11 @@ EOF
 		
 		return $sTargetClass;
 	}
-	
+
+	/**
+	 * @param WebPage $oPage
+	 * @param DBObject $oCurrentObj
+	 */
 	public function GetObjectPickerDialog($oPage, $oCurrentObj)
 	{
 		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
@@ -414,7 +435,13 @@ EOF
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
 		$oBlock->Display($oP, "ResultsToAdd_{$this->m_sAttCode}", array('menu' => false, 'cssCount'=> '#count_'.$this->m_sAttCode.$this->m_sNameSuffix , 'selection_mode' => true, 'table_id' => 'add_'.$this->m_sAttCode)); // Don't display the 'Actions' menu on the results
 	}
-	
+
+	/**
+	 * @param WebPage $oP
+	 * @param int $iMaxAddedId
+	 * @param $oFullSetFilter
+	 * @param DBObject $oCurrentObj
+	 */
 	public function DoAddObjects(WebPage $oP, $iMaxAddedId, $oFullSetFilter, $oCurrentObj)
 	{
 		$aLinkedObjectIds = utils::ReadMultipleSelection($oFullSetFilter);
@@ -439,7 +466,7 @@ EOF
 	/**
 	 * Initializes the default search parameters based on 1) a 'current' object and 2) the silos defined by the context
 	 * @param DBObject $oSourceObj
-	 * @param DBSearch $oSearch
+	 * @param DBSearch|DBObjectSearch $oSearch
 	 */
 	protected function SetSearchDefaultFromContext($oSourceObj, &$oSearch)
 	{
@@ -458,7 +485,6 @@ EOF
 
 			if (MetaModel::IsValidAttCode($sSrcClass, $sAttCode))
 			{
-				$oAttDef = MetaModel::GetAttributeDef($sSrcClass, $sAttCode);
 				$defaultValue = $oSourceObj->Get($sAttCode);
 
 				// Find the attcode for the same 'context' parameter in the destination class
