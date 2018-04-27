@@ -253,7 +253,7 @@ class ExternalFieldOqlExpression extends ExternalFieldExpression implements Chec
             }
             else
             {
-                if ($oFieldOqlExpression->GetName() != 'id')
+                if ($oFieldOqlExpression->GetName() != 'id')  //on lastIteration, the id field can be used, but since it is not supporter by IsValidAttCode we must avoid it
                 {
                      if (!$oModelReflection->IsValidAttCode($sClass, $oFieldOqlExpression->GetName()))
                      {

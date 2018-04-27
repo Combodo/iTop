@@ -1133,7 +1133,91 @@ class DBObjectSearch extends DBSearch
 	{
 		return $this->m_oSearchCondition->ApplyParameters(array_merge($this->m_aParams, $aArgs));
 	}
-	
+
+	public function ShorthandExpansion($bClone = false)
+    {
+        if ($bClone)
+        {
+            $oDbObject = $this->DeepClone();
+        }
+        else
+        {
+            $oDbObject = $this;
+        }
+
+
+        $callback = function ($oExpression) use ($oDbObject)
+        {
+            if (!$oExpression instanceof ExternalFieldExpression) {
+                return;
+            }
+            /** @var FieldExpression[] $aFieldExpressionsPointingTo */
+            $aFields = $oExpression->GetFields();
+
+            $aExpressionNewConditions = array();
+            $aRealiasingMap = array();
+            foreach ($aFields as $aFieldExpressionPointingTo)
+            {
+                $oFilter = new DBObjectSearch($aFieldExpressionPointingTo['sClass']);
+                $aExpressionNewConditions[] = array(
+                    'oFilter' => $oFilter,
+                    'sExtKeyAttCode' => $aFieldExpressionPointingTo['sAttCode'],
+                );
+
+                $aRealiasingMap[$aFieldExpressionPointingTo['sClass']] = $aFieldExpressionPointingTo['sAlias'];
+
+            }
+
+
+            /**
+             * the iteration beleow is weird because wee need to
+             * - iterate in the reverse order
+             * - the iteration access the "index+1" so wee start at "length-1" (which is "count()-2")
+             * - whe stop at the index 1, because the index 0 is merged into the $oDbObject
+             */
+            for ($i = count($aExpressionNewConditions) - 2; $i > 0; $i--)
+            {
+                $aExpressionNewConditions[$i]['oFilter']->AddCondition_PointingTo(
+                    $aExpressionNewConditions[$i+1]['oFilter'],
+                    $aExpressionNewConditions[$i]['sExtKeyAttCode'],
+                    TREE_OPERATOR_EQUALS,
+                    $aRealiasingMap
+                );
+            }
+
+
+            $oDbObject->AddCondition_PointingTo(
+                $aExpressionNewConditions[1]['oFilter'],
+                $aExpressionNewConditions[0]['sExtKeyAttCode'],
+                TREE_OPERATOR_EQUALS,
+                $aRealiasingMap
+            );
+
+            foreach ($aRealiasingMap as $sOldAlias => $sNewAlias)
+            {
+                if ($sOldAlias == $sNewAlias)
+                {
+                    continue;
+                }
+
+                if ($sOldAlias != $aFields['sAlias'])
+                {
+                    continue;
+                }
+                $aFields['sAlias'] = $sNewAlias;
+            }
+
+            $oExpression->SetFields($aFields);
+        }; //end of the callback definition
+
+
+        $this->m_oSearchCondition->Browse($callback);
+
+        $this->m_oSearchCondition->Translate(array());
+
+        return $oDbObject;
+    }
+
 	public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false)
 	{
 		// Currently unused, but could be useful later
@@ -1264,7 +1348,20 @@ class DBObjectSearch extends DBSearch
 		}
 		elseif ($oExpression instanceof ExternalFieldOqlExpression)
 		{
-			return new ExternalFieldExpression($oExpression->GetName(), $oExpression->GetExpressions());
+			//TODO : convert FieldOqlExpression[] to FieldExpression[]
+            $aOqlFieldExpression = $oExpression->GetExpressions();
+            $aFields = array();
+
+            foreach ($aOqlFieldExpression as $oOqlFieldExpression)
+            {
+                $aFields[] = array(
+                    'sClass'    => $oOqlFieldExpression->GetParent(),
+                    'sAlias'    => $oOqlFieldExpression->GetParent(),
+                    'sAttCode'  => $oOqlFieldExpression->GetName(),
+                );
+            }
+
+		    return new ExternalFieldExpression($oExpression->GetName(), $aFields);
 		}
 		elseif ($oExpression instanceof FieldOqlExpression)
 		{
@@ -1534,7 +1631,7 @@ class DBObjectSearch extends DBSearch
 				$aContextData['sRequestUri'] = '';
 			}
 
-			// Need to identify the query
+			// Need to identify the querySELECT `Contact` FROM Contact AS `Contact` JOIN Organization AS `Organization` ON `Contact`.org_id = `Organization`.id JOIN DeliveryModel AS `DeliveryModel` ON `Organization`.deliverymodel_id = `DeliveryModel`.id WHERE ((((Contact.org_id->deliverymodel_id->name = 'Standard support') AND 1) AND 1) AND 1)
 			$sOqlQuery = $oSearch->ToOql(false, null, true);
 			if ((strpos($sOqlQuery, '`id` IN (') !== false) || (strpos($sOqlQuery, '`id` NOT IN (') !== false))
 			{
@@ -1640,7 +1737,8 @@ class DBObjectSearch extends DBSearch
 
 		if (!isset($oSQLQuery))
 		{
-			$oKPI = new ExecutionKPI();
+            $oSearch = $oSearch->ShorthandExpansion(true);//TODO : check if the clone is really needed (1st param of ShorthandExpansion)
+		    $oKPI = new ExecutionKPI();
 			$oSQLQuery = $oSearch->BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr);
 			$oKPI->ComputeStats('BuildSQLQueryStruct', $sOqlQuery);
 

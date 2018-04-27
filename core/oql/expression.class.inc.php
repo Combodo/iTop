@@ -843,13 +843,56 @@ class FalseExpression extends ScalarExpression
 
 class ExternalFieldExpression extends UnaryExpression
 {
-	protected $m_aFieldExpressions = array();
+    /**
+     * @var array[]                 array containing the shorthand chained fields & their classes
+     *             ['sClass']       string the Class
+     *             ['sAlias']       string the Class alias
+     *             ['sAttCode']     string the attribute code
+     */
+    protected $m_aFields = array();
 	protected $m_sName;
 
-	public function __construct($sName, $aExpressions)
+	public function __construct($sName, $aFields)
 	{
 		parent::__construct($sName);
+
+        $this->SetFields($aFields);
 	}
+
+	public function SetFields($aFields)
+    {
+        $this->m_aFields = $aFields;
+    }
+
+    public function GetFields()
+    {
+        return $this->m_aFields;
+    }
+
+    public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
+    {
+        $aFields = $this->GetFields();
+        $aLastField = end($aFields);
+
+
+        $oRet = new FieldExpression($aLastField['sAttCode'], $aLastField['sAlias']);
+//        $oRet->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+
+        return $oRet;
+    }
+
+    public function Render(&$aArgs = null, $bRetrofitParams = false)
+    {
+        $aAttCode = array();
+
+        $aFields = $this->GetFields();
+        foreach ($aFields as $field) {
+            $aAttCode[] = $field['sAttCode'];
+        }
+
+        return $aFields[0]['sAlias'] . '.' . implode('->', $aAttCode);
+    }
+
 }
 
 class FieldExpression extends UnaryExpression
