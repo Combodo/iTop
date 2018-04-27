@@ -462,7 +462,7 @@ footer {
     text-align: left;
   }
   .home div.tile-badge > a.tile > div > div > div.tile_decoration > span.icon {
-    font-size: 2em;
+    font-size: 1.5em;
   }
 }
 @media (min-width: 992px) {
@@ -483,7 +483,7 @@ footer {
     font-size: 1.2em;
   }
   .home div.tile-badge > a.tile > div > div > div.tile_decoration > span.icon {
-    font-size: 6em;
+    font-size: 4em;
   }
 }
 @media (min-width: 1200px) {
@@ -507,6 +507,9 @@ footer {
   }
   .home .tile .tile_description {
     font-size: 1.2em;
+  }
+  .home div.tile-badge > a.tile > div > div > div.tile_decoration > span.icon {
+    font-size: 6em;
   }
 }
 /********************/
