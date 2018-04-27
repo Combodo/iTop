@@ -1012,7 +1012,7 @@ EOF
 			else
 			{
 				// Several objects
-				$sFilter = utils::ReadPostedParam('filter', '');
+				$sFilter = utils::ReadPostedParam('filter', '', 'raw_data');
 				$oFullSetFilter = DBObjectSearch::unserialize($sFilter);
 				// Add user filter
 				$oFullSetFilter->UpdateContextFromUser();
@@ -1315,7 +1315,7 @@ EOF
 		case 'bulk_apply_stimulus':
 		$oP->DisableBreadCrumb();
 		$bPreviewMode = utils::ReadPostedParam('preview_mode', false);
-		$sFilter = utils::ReadPostedParam('filter', '', false, 'raw_data');
+		$sFilter = utils::ReadPostedParam('filter', '', 'raw_data');
 		$sStimulus = utils::ReadPostedParam('stimulus', '');
 		$sState = utils::ReadPostedParam('state', '');
 		$sSelectObject = utils::ReadPostedParam('selectObject', '', false, 'raw_data');
