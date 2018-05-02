@@ -44,7 +44,15 @@ abstract class Expression
 	 */
 	abstract public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
 
-	// recursive rendering (aArgs used as input by default, or used as output if bRetrofitParams set to True
+	/**
+	 * recursive rendering
+	 *
+	 * @param array $aArgs used as input by default, or used as output if bRetrofitParams set to True
+	 * @param bool $bRetrofitParams
+	 *
+	 * @return array|string
+	 * @throws \MissingQueryArgument
+	 */
 	abstract public function Render(&$aArgs = null, $bRetrofitParams = false);
 
 	/**
@@ -1259,6 +1267,14 @@ class VariableExpression extends UnaryExpression
 	}
 
 	// recursive rendering
+
+	/**
+	 * @param null $aArgs
+	 * @param bool $bRetrofitParams
+	 *
+	 * @return array|string
+	 * @throws \MissingQueryArgument
+	 */
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
 		if (is_null($aArgs))

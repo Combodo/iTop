@@ -39,6 +39,7 @@ use Expression;
 use FieldExpression;
 use IssueLog;
 use MetaModel;
+use MissingQueryArgument;
 use TrueExpression;
 use utils;
 use WebPage;
@@ -468,6 +469,7 @@ class SearchForm
 	 * @param bool $bIsRemovable
 	 *
 	 * @return array
+	 * @throws \MissingQueryArgument
 	 */
 	public function GetCriterion($oSearch, $aFields, $aArgs = array(), $bIsRemovable = true)
 	{
@@ -478,12 +480,20 @@ class SearchForm
 		{
 			$oExpression = $oSearch->GetCriteria();
 
+			$aArgs = MetaModel::PrepareQueryArguments($aArgs, $oSearch->GetInternalParams());
+
 			if (!empty($aArgs))
 			{
-				$aArgs = MetaModel::PrepareQueryArguments($aArgs);
-
-				$sOQL = $oExpression->Render($aArgs);
-				$oExpression = Expression::FromOQL($sOQL);
+				try
+				{
+					$sOQL = $oExpression->Render($aArgs);
+					$oExpression = Expression::FromOQL($sOQL);
+				}
+				catch (MissingQueryArgument $e)
+				{
+					IssueLog::Error("Search form disabled: \"".$oSearch->ToOQL()."\" Error: ".$e->getMessage());
+					throw $e;
+				}
 			}
 
 			$aORExpressions = Expression::Split($oExpression, 'OR');

@@ -167,10 +167,10 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		{
 			if (!is_null($aPrevCriterion))
 			{
-				if (array_key_exists('ref', $aPrevCriterion))
+				if (array_key_exists('ref', $aPrevCriterion) && array_key_exists('widget', $aPrevCriterion))
 				{
 					// If previous has ref, the current has ref as the array is sorted with all without ref first
-					if (strcmp($aPrevCriterion['ref'], $aCurrCriterion['ref']) == 0)
+					if (($aPrevCriterion['ref'] == $aCurrCriterion['ref']) && ($aPrevCriterion['widget'] == $aCurrCriterion['widget']))
 					{
 						// Same attribute, try to merge
 						if (array_key_exists('widget', $aCurrCriterion))
