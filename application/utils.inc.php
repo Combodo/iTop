@@ -658,27 +658,49 @@ class utils
 		return str_replace($aSearch, $aReplacement, $sOldDateTimeFormat);
 	}
 
+	/**
+	 * @return \Config from the current environement, or if not existing from the production env, else new Config made from scratch
+	 * @uses \MetaModel::GetConfig() don't forget to add the needed <code>require_once(APPROOT.'core/metamodel.class.php');</code>
+	 */
 	static public function GetConfig()
 	{
 		if (self::$oConfig == null)
 		{
 		    self::$oConfig = MetaModel::GetConfig();
+
 		    if (self::$oConfig == null)
 		    {
     			$sConfigFile = self::GetConfigFilePath();
-    			if (file_exists($sConfigFile))
+    			if (!file_exists($sConfigFile))
     			{
-    				self::$oConfig = new Config($sConfigFile);
+				    $sConfigFile = self::GetConfigFilePath('production');
+				    if (!file_exists($sConfigFile))
+				    {
+				    	$sConfigFile = null;
+				    }
     			}
-    			else
-    			{
-    				// When executing the setup, the config file may be still missing
-    				self::$oConfig = new Config();
-    			}
+
+			    self::$oConfig = new Config($sConfigFile);
 		    }
 		}
 		return self::$oConfig;
 	}
+
+	public static function InitTimeZone() {
+		$oConfig = self::GetConfig();
+		$sItopTimeZone = $oConfig->Get('timezone');
+
+		if (!empty($sItopTimeZone))
+		{
+			date_default_timezone_set($sItopTimeZone);
+		}
+		else
+		{
+			// Leave as is... up to the admin to set a value somewhere...
+			// see http://php.net/manual/en/datetime.configuration.php#ini.date.timezone
+		}
+	}
+
     /**
      * Returns the absolute URL to the application root path
      * @return string The absolute URL to the application root, without the first slash
