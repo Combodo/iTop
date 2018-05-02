@@ -195,7 +195,7 @@ class LoginWebPage extends NiceWebPage
 	 */	
 	public function ForgotPwdLink()
 	{
-		$sUrl = '?loginop=forgot_pwd';
+		$sUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=forgot_pwd';
 		$sHtml = "<a href=\"$sUrl\" target=\"_blank\">".Dict::S('UI:Login:ForgotPwd')."</a>";
 		return $sHtml;
 	}
