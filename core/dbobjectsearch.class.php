@@ -1134,6 +1134,14 @@ class DBObjectSearch extends DBSearch
 		return $this->m_oSearchCondition->ApplyParameters(array_merge($this->m_aParams, $aArgs));
 	}
 
+    /**
+     *
+     * @todo: check if the clone is mandatory or optional. (the performance would be better without cloning)
+     *
+     * @param bool $bClone
+     *
+     * @return DBObjectSearch|DBSearch
+     */
 	public function ShorthandExpansion($bClone = false)
     {
         if ($bClone)
@@ -1222,7 +1230,7 @@ class DBObjectSearch extends DBSearch
         $this->m_oSearchCondition->Browse($callback);
 
         //replace the ExternalFieldExpression by a FieldExpression (based on last ExternalFieldExpression::$aFields)
-        $this->m_oSearchCondition->Translate(array(), false, false);
+        $this->m_oSearchCondition->Translate(array(), false, false);//TODO: check if this call is correct
 
         return $oDbObject;
     }

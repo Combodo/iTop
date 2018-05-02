@@ -841,6 +841,13 @@ class FalseExpression extends ScalarExpression
 	}
 }
 
+
+/**
+ * Class ExternalFieldExpression
+ *
+ * @todo verify if all required methods are implemented (ie: at first I missed the `Render` method, so  DBObjectSearch::toOQL() result was wrong)
+ *
+ */
 class ExternalFieldExpression extends UnaryExpression
 {
     /**
@@ -869,14 +876,21 @@ class ExternalFieldExpression extends UnaryExpression
         return $this->m_aFields;
     }
 
+    /**
+     * used by DBObjectSearch::ShorthandExpansion(). it result in the ExternalFieldExpression being replaced by a FieldExpression mathching the final entry in self::$m_aFields
+     *
+     * @param array $aTranslationData
+     * @param bool  $bMatchAll
+     * @param bool  $bMarkFieldsAsResolved
+     *
+     * @return Expression|FieldExpression|UnaryExpression
+     */
     public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
     {
         $aFields = $this->GetFields();
         $aLastField = end($aFields);
 
-
         $oRet = new FieldExpression($aLastField['sAttCode'], $aLastField['sAlias']);
-//        $oRet->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 
         return $oRet;
     }
