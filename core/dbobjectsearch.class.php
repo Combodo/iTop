@@ -1145,17 +1145,24 @@ class DBObjectSearch extends DBSearch
             $oDbObject = $this;
         }
 
-
+        /**
+         * This callback add joins based on the classes found inside ExternalFieldExpression::$aFields
+         * to do so, it is applied on each Expression of $this->m_oSearchCondition.
+         *
+         * @param $oExpression
+         */
         $callback = function ($oExpression) use ($oDbObject)
         {
             if (!$oExpression instanceof ExternalFieldExpression) {
                 return;
             }
+
+
             /** @var FieldExpression[] $aFieldExpressionsPointingTo */
             $aFields = $oExpression->GetFields();
 
-            $aExpressionNewConditions = array();
             $aRealiasingMap = array();
+            $aExpressionNewConditions = array();
             foreach ($aFields as $aFieldExpressionPointingTo)
             {
                 $oFilter = new DBObjectSearch($aFieldExpressionPointingTo['sClass']);
@@ -1170,7 +1177,7 @@ class DBObjectSearch extends DBSearch
 
 
             /**
-             * the iteration beleow is weird because wee need to
+             * the iteration below is weird because wee need to
              * - iterate in the reverse order
              * - the iteration access the "index+1" so wee start at "length-1" (which is "count()-2")
              * - whe stop at the index 1, because the index 0 is merged into the $oDbObject
@@ -1211,9 +1218,11 @@ class DBObjectSearch extends DBSearch
         }; //end of the callback definition
 
 
+        //Add the joins
         $this->m_oSearchCondition->Browse($callback);
 
-        $this->m_oSearchCondition->Translate(array());
+        //replace the ExternalFieldExpression by a FieldExpression (based on last ExternalFieldExpression::$aFields)
+        $this->m_oSearchCondition->Translate(array(), false, false);
 
         return $oDbObject;
     }

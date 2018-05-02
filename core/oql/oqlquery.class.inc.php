@@ -221,7 +221,7 @@ class ExternalFieldOqlExpression extends ExternalFieldExpression implements Chec
 
 		    if (is_null($sParentAlias))
 			{
-				$oFieldOqlExpression->RefreshAlias($oModelReflection, $aAliases, $sSourceQuery);
+				$oFieldOqlExpression->RefreshAlias($oModelReflection, $aAliases, $sSourceQuery, FieldOqlExpression::ALLOW_EXTERNAL_FIELDS);
 			}
 			else
 			{
@@ -267,7 +267,9 @@ class ExternalFieldOqlExpression extends ExternalFieldExpression implements Chec
 
 class FieldOqlExpression extends FieldExpression implements CheckableExpression
 {
-	protected $m_oParent;
+    const ALLOW_EXTERNAL_FIELDS = true;
+    const DISALLOW_EXTERNAL_FIELDS = false;
+    protected $m_oParent;
 	protected $m_oName;
 
 	public function __construct($oName, $oParent = null)
@@ -316,16 +318,19 @@ class FieldOqlExpression extends FieldExpression implements CheckableExpression
 		}
 	}
 
-	/**
-	 * Used by Check => throws exception if error
-	 *
-	 * @param \ModelReflection $oModelReflection
-	 * @param $aAliases
-	 * @param $sSourceQuery
-	 *
-	 * @throws \OqlNormalizeException
-	 */
-	public function RefreshAlias(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
+    /**
+     * Used by self::Check and ExternalFieldOqlExpression::Check => throws exception if error
+     *
+     * this method has a side effect : if not previously set $this->m_sParent if computed then set.
+     *
+     * @param \ModelReflection $oModelReflection
+     * @param                  $aAliases
+     * @param                  $sSourceQuery
+     * @param bool             $bAllowExternalFields  should external fields be authorised? used only by @see ExternalFieldOqlExpression
+     *
+     * @throws OqlNormalizeException
+     */
+	public function RefreshAlias(ModelReflection $oModelReflection, $aAliases, $sSourceQuery, $bAllowExternalFields = self::DISALLOW_EXTERNAL_FIELDS)
 	{
 		$sClassAlias = $this->GetParent();
 		$sFltCode = $this->GetName();
@@ -343,14 +348,29 @@ class FieldOqlExpression extends FieldExpression implements CheckableExpression
 			}
 			if (!array_key_exists($sFltCode, $aFieldClasses))
 			{
-				throw new OqlNormalizeException('Unknown filter code', $sSourceQuery, $this->GetNameDetails(), array_keys($aFieldClasses));
+				if (count($aAliases) > 1)
+                {
+                    throw new OqlNormalizeException('Ambiguous filter code', $sSourceQuery, $this->GetNameDetails(), array_keys($aFieldClasses));
+                }
+
+                $sClassAlias = reset($aAliases);
+			    if (self::DISALLOW_EXTERNAL_FIELDS == $bAllowExternalFields || false == $oModelReflection->IsValidAttCode($sClassAlias, $sFltCode))
+                {
+                    throw new OqlNormalizeException('Unknown filter code', $sSourceQuery, $this->GetNameDetails(), array_keys($aFieldClasses));
+                }
+                $this->SetParent($sClassAlias);
+
 			}
-			if (count($aFieldClasses[$sFltCode]) > 1)
+			elseif (count($aFieldClasses[$sFltCode]) > 1)
 			{
 				throw new OqlNormalizeException('Ambiguous filter code', $sSourceQuery, $this->GetNameDetails());
 			}
-			$sClassAlias = $aFieldClasses[$sFltCode][0];
-			$this->SetParent($sClassAlias);
+			else
+            {
+                $sClassAlias = $aFieldClasses[$sFltCode][0];
+                $this->SetParent($sClassAlias);
+            }
+
 		}
 	}
 }

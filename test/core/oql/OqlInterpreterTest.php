@@ -8,8 +8,13 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core\Oql;
 
+use DBObjectSearch;
+use DBObjectSet;
+use ExpressionCache;
 use OqlInterpreter;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use OqlNormalizeException;
+use OQLParserException;
 
 class OqlInterpreterTest extends ItopDataTestCase
 {
@@ -24,9 +29,13 @@ class OqlInterpreterTest extends ItopDataTestCase
         require_once(APPROOT."core/oql/oqlinterpreter.class.inc.php");
         require_once(APPROOT.'core/dbobject.class.php');
         require_once(APPROOT."core/dbobjectsearch.class.php");
+        require_once(APPROOT.'core/dbobjectset.class.php');
         require_once(APPROOT."core/modelreflection.class.inc.php");
 
-
+        require_once(APPROOT."core/expressioncache.class.inc.php");
+        $sCacheFileName = ExpressionCache::GetCacheFileName();
+        unlink($sCacheFileName);
+        ExpressionCache::Warmup();
 	}
 
 
@@ -36,7 +45,7 @@ class OqlInterpreterTest extends ItopDataTestCase
     {
         $sQuery = "SELECT Contact  WHERE org_id->deliverymodel_id->name = 'Standard support' AND 1 AND 1 AND 1";
 
-        $oDbObjectSearch = \DBObjectSearch::FromOQL($sQuery);
+        $oDbObjectSearch = DBObjectSearch::FromOQL($sQuery);
         $oDbObjectSearchExpandedClone1 = $oDbObjectSearch->ShorthandExpansion(true);
         $oDbObjectSearchExpandedClone2 = $oDbObjectSearch->ShorthandExpansion(true);
         $oDbObjectSearchExpandedBase1 = $oDbObjectSearch->ShorthandExpansion();
@@ -57,23 +66,41 @@ class OqlInterpreterTest extends ItopDataTestCase
      * @dataProvider ShorthandExpansionProvider
      * @param $sQuery
      */
-    public function testShorthandExpansion($sQuery)
+    public function testShorthandExpansion($sQuery, $sExpectedException, $sExpectedOqlEquals, $aExpectedSqlContains)
     {
-        $oDbObjectSearch = \DBObjectSearch::FromOQL($sQuery);
-        $oDbObjectSearchExpanded = $oDbObjectSearch->ShorthandExpansion();
 
+        if (!empty($sExpectedException)) {
+            $this->expectException($sExpectedException);
+        }
 
-        $this->assertSame($oDbObjectSearch, $oDbObjectSearchExpanded);
+        $oDbObjectSearch = DBObjectSearch::FromOQL($sQuery);
 
-        $this->debug($oDbObjectSearch->ToOQL());
+        $sSql = $oDbObjectSearch->MakeSelectQuery();
+        $sOql = $oDbObjectSearch->ToOQL();
+        $oSet = new DBObjectSet($oDbObjectSearch);
+        $iCount = $oSet->Count();
+
+        $this->assertInternalType('numeric', $iCount);
+        $this->assertEquals($sExpectedOqlEquals, $sOql);
+        foreach ($aExpectedSqlContains as $sExpectedSqlContain)
+        {
+            $this->assertContains($sExpectedSqlContain, $sSql);
+        }
+
+        $this->debug($sSql);
+        $this->debug($sOql);
     }
 
     public function ShorthandExpansionProvider()
     {
         return array(
-            array("SELECT Contact WHERE org_id->deliverymodel_id->name = 'tato'"),
-            array('SELECT Contact WHERE cis_list->name = "Cluster1"'),
-            array('SELECT Contact WHERE cis_list->name like "%m%"'),
+            array("SELECT Contact WHERE org_id->deliverymodel_id->name = 'Standard support'", false, 'SELECT `Contact` FROM Contact AS `Contact` WHERE (Contact.org_id->deliverymodel_id->name = \'Standard support\')', array(
+                'JOIN (`organization`',
+                'JOIN `deliverymodel`',
+            )),
+            array('SELECT Contact WHERE org_id->deliverymodel_id->contacts_list->role_id->name != ""', OqlNormalizeException::class, '', array()),
+            array('SELECT Contact WHERE cis_list->name = "Cluster1"', OqlNormalizeException::class, '', array()),
+            array('SELECT Contact WHERE cis_list->name LIKE "%m%"', OqlNormalizeException::class, '', array()),
         );
     }
 
@@ -87,14 +114,20 @@ class OqlInterpreterTest extends ItopDataTestCase
         $oOql = new OqlInterpreter($sQuery);
         $oTrash = $oOql->Parse(); // Not expecting a given format, otherwise use ParseExpression/ParseObjectQuery/ParseValueSetQuery
 
-        $this->debug($oTrash);
+        $this->assertInstanceOf(\OqlObjectQuery::class, $oTrash);
+
+
+        $this->debug($sQuery);
     }
 
     public function ParseProvider()
     {
         return array(
             array("SELECT Contact WHERE org_id->deliverymodel_id->name = 'Standard support'"),
-            array("SELECT Contact WHERE cis_list->name = 'toto'"),
+            array("SELECT Contact WHERE org_id->foo->bar LIKE 'Standard support'"),
+            array("SELECT Contact WHERE cis_list->name = 3"),
+            array("SELECT Contact WHERE cis_list->name < 3"),
+            array("SELECT Contact WHERE cis_list->name >- 3"),
         );
     }
 
