@@ -417,7 +417,7 @@ class SetupUtils
      * @return array An array of CheckResults objects
      * @internal param Page $oP The page used only for its 'log' method
      */
-	static function CheckBackupPrerequisites($sDestDir)
+	static function CheckBackupPrerequisites($sDestDir, $sMySQLBinDir = null)
 	{
 		$aResult = array();
 		SetupPage::log('Info - CheckBackupPrerequisites');
@@ -445,7 +445,11 @@ class SetupUtils
 		}
 
 		// availability of mysqldump
-		$sMySQLBinDir = utils::ReadParam('mysql_bindir', '', true);
+		if (empty($sMySQLBinDir) && null != MetaModel::GetConfig())
+		{
+			$sMySQLBinDir = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', '');
+		}
+
 		if (empty($sMySQLBinDir))
 		{
 			$sMySQLDump = 'mysqldump';
@@ -472,7 +476,7 @@ class SetupUtils
 		else
 		{
 		    // Unfortunately $aOutput is not really usable since we don't know its encoding (character set)
-		    $aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path");
+		    $aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and " . (empty($sMySQLBinDir) ? "in the path" :  "located at : $sMySQLDump"));
 		}
 		foreach($aOutput as $sLine)
 		{
@@ -833,6 +837,7 @@ class SetupUtils
 				'db_tls_enabled' => $oPrevConf->Get('db_tls.enabled'),
 				'db_tls_ca' => $oPrevConf->Get('db_tls.ca'),
 				'graphviz_path' => $oPrevConf->Get('graphviz_path'),
+				'mysql_bindir' => $oPrevConf->Get('mysql_bindir', 'itop-backup'),
 			);
 		}
 		

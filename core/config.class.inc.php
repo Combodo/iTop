@@ -20,7 +20,7 @@
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
 define('ITOP_VERSION', '2.5.0-beta');
-define('ITOP_REVISION', 'svn');
+define('ITOP_REVISION', '3804');
 define('ITOP_BUILD_DATE', '$WCNOW$');
 
 define('ACCESS_USER_WRITE', 1);
@@ -1176,9 +1176,19 @@ class Config
 
 	}
 
-	public function Get($sPropCode)
+	public function Get($sPropCode, $sModule = null)
 	{
-		return $this->m_aSettings[$sPropCode]['value'];
+		$sRetValue = '';
+		if(empty($sModule))
+		{
+			$sRetValue = $this->m_aSettings[$sPropCode]['value'];
+		}
+		else
+		{
+			$sRetValue = $this->m_aModuleSettings[$sModule][$sPropCode];
+
+		}
+		return $sRetValue;
 	}
 
 	/**

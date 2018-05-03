@@ -40,7 +40,8 @@ class ApplicationInstaller
 	const ERROR = 2;
 	const WARNING = 3;
 	const INFO = 4;
-	
+
+	/** @var \PHPParameters */
 	protected $oParams;
 	protected static $bMetaModelStarted = false;
 	
@@ -180,8 +181,8 @@ class ApplicationInstaller
 					$aDBParams = $this->GetParamValues($this->oParams);
 					$oTempConfig = new Config();
 					$oTempConfig->UpdateFromParams($aDBParams);
-
-					self::DoBackup($oTempConfig, $sDestination, $sSourceConfigFile);
+					$sMySQLBinDir = $this->oParams->Get('mysql_bindir', null);
+					self::DoBackup($oTempConfig, $sDestination, $sSourceConfigFile, $sMySQLBinDir);
 
 					$aResult = array(
 						'status' => self::OK,
@@ -428,10 +429,14 @@ class ApplicationInstaller
 	 *
 	 * @since 2.5 uses a {@link Config} object to store DB parameters
 	 */
-	protected static function DoBackup($oConfig, $sBackupFileFormat, $sSourceConfigFile)
+	protected static function DoBackup($oConfig, $sBackupFileFormat, $sSourceConfigFile, $sMySQLBinDir = null)
 	{
 		$oBackup = new SetupDBBackup($oConfig);
 		$sTargetFile = $oBackup->MakeName($sBackupFileFormat);
+		if (!empty($sMySQLBinDir))
+		{
+			$oBackup->SetMySQLBinDir($sMySQLBinDir);
+		}
 		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
 	}
 

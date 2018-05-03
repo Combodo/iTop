@@ -209,6 +209,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$sDBBackupPath = $this->oWizard->GetParameter('db_backup_path', '');
 		$sTlsEnabled = $this->oWizard->GetParameter('db_tls_enabled', false);
 		$sTlsCA = $this->oWizard->GetParameter('db_tls_ca', '');
+		$sMySQLBinDir = $this->oWizard->GetParameter('mysql_bindir', null);
 		$sPreviousVersionDir = '';
 		if ($sInstallMode == '')
 		{
@@ -226,6 +227,8 @@ class WizStepInstallOrUpgrade extends WizardStep
 				$sTlsEnabled = $aPreviousInstance['db_tls_enabled'];
 				$sTlsCA = $aPreviousInstance['db_tls_ca'];
 				$this->oWizard->SaveParameter('graphviz_path', $aPreviousInstance['graphviz_path']);
+				$sMySQLBinDir = $aPreviousInstance['mysql_bindir'];
+				$this->oWizard->SaveParameter('mysql_bindir', $aPreviousInstance['mysql_bindir']);
 				$sPreviousVersionDir = APPROOT;
 			}
 			else
@@ -253,7 +256,7 @@ class WizStepInstallOrUpgrade extends WizardStep
 		SetupUtils::DisplayDBParameters($oPage, false, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix,
 			$sTlsEnabled, $sTlsCA, null);
 
-		$aBackupChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath);
+		$aBackupChecks = SetupUtils::CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir);
 		$bCanBackup = true;
 		$sMySQLDumpMessage = '';
 		foreach($aBackupChecks as $oCheck)
@@ -2343,6 +2346,7 @@ EOF
 			'sample_data' => ($this->oWizard->GetParameter('sample_data', '') == 'yes') ? true : false ,
 			'old_addon' => $this->oWizard->GetParameter('old_addon', false), // whether or not to use the "old" userrights profile addon
 			'options' => json_decode($this->oWizard->GetParameter('misc_options', '[]'), true),
+			'mysql_bindir' => $this->oWizard->GetParameter('mysql_bindir'),
 		);
 
 		if ($sBackupDestination != '')

@@ -677,12 +677,18 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		 *
 		 * @uses mysqldump -V Sample return value : mysqldump  Ver 10.13 Distrib 5.7.19, for Win64 (x86_64)
 		 * @since 2.5 needed to check compatibility with utf8mb4 (N°1001)
+		 * @throws \BackupException
 		 */
 		private static function GetMysqldumpVersion($sMysqldumpCommand)
 		{
 			$sCommand = $sMysqldumpCommand.' -V';
 			$aOutput = array();
 			exec($sCommand, $aOutput, $iRetCode);
+
+			if ($iRetCode != 0)
+			{
+				throw new BackupException("mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and located at : $sMysqldumpCommand");
+			}
 
 			$sMysqldumpOutput = $aOutput[0];
 			$aDumpVersionMatchResults = array();
