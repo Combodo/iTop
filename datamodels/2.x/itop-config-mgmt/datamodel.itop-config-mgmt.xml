@@ -1659,6 +1659,7 @@
 						$aSearches[$sSubClass] = $oSearch;
 
 						$oSet = new DBObjectSet($oSearch);
+						$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 						$iTotal += $oSet->Count();
 					}
 				}
