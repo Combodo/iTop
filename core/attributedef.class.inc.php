@@ -4317,16 +4317,9 @@ class AttributeDateTime extends AttributeDBField
 
 	public function ScalarToSQL($value)
 	{
-		if (is_null($value))
+		if (empty($value))
 		{	
 			return null;
-		}
-		elseif (empty($value))
-		{
-			// Make a valid date for MySQL. TO DO: support NULL as a literal value for fields that can be null.
-			// todo: this is NOT valid in strict mode (default setting for MySQL 5.7)
-			// todo: if to be kept, this should be overloaded for AttributeDate (0000-00-00)
-			return '0000-00-00 00:00:00';
 		}
 		return $value;
 	}
