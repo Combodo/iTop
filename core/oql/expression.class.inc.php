@@ -1286,7 +1286,7 @@ class VariableExpression extends UnaryExpression
 			$res = CMDBSource::Quote($aArgs[$this->m_sName]);
 			if (is_array($res))
 			{
-				$res = implode(', ', $res);
+				$res = '('.implode(', ', $res).')';
 			}
 			return $res;
 		}
