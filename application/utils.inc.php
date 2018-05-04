@@ -311,7 +311,7 @@ class utils
 				switch($sSanitizationFilter)
 				{
 					case 'parameter':
-					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[ A-Za-z0-9_=-]*$/'))); // the '=' equal character is used in serialized filters
+					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^([ A-Za-z0-9_=-]|%3D|%2B|%2F)*$/'))); // the '=', '%3D, '%2B', '%2F' characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
 					break;
 					
 					case 'field_name':
