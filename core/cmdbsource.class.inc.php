@@ -492,15 +492,19 @@ class CMDBSource
 	public static function DBPwd() {return self::$m_sDBPwd;}
 	public static function DBName() {return self::$m_sDBName;}
 
+	/**
+	 * Quote variable and protect against SQL injection attacks
+	 * Code found in the PHP documentation: quote_smart($value)
+	 *
+	 * @param mixed $value
+	 * @param bool $bAlways should be set to true when the purpose is to create a IN clause,
+	 *                      otherwise and if there is a mix of strings and numbers, the clause would always be false
+	 * @param string $cQuoteStyle
+	 *
+	 * @return array|string
+	 */
 	public static function Quote($value, $bAlways = false, $cQuoteStyle = "'")
 	{
-		// Quote variable and protect against SQL injection attacks
-		// Code found in the PHP documentation: quote_smart($value)
-
-		// bAlways should be set to true when the purpose is to create a IN clause,
-		// otherwise and if there is a mix of strings and numbers, the clause
-		// would always be false
-
 		if (is_null($value))
 		{
 			return 'NULL';
