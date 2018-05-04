@@ -73,6 +73,8 @@ class BulkExportResult extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeString("temp_file_path", array("allowed_values"=>null, "sql"=>"temp_file_path", "default_value"=>'', "is_null_allowed"=>true, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLongText("search", array("allowed_values"=>null, "sql"=>"search", "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLongText("status_info", array("allowed_values"=>null, "sql"=>"status_info", "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array())));
+        MetaModel::Init_AddAttribute(new AttributeBoolean("localize_output", array("allowed_values"=>null, "sql"=>"localize_output", "default_value"=>true, "is_null_allowed"=>true, "depends_on"=>array())));
+
 	}
 
 	/**
@@ -151,13 +153,16 @@ abstract class BulkExport
 		$this->sTmpFile = '';
 		$this->bLocalizeOutput = false;
 	}
-		
-	/**
-	 * Find the first class capable of exporting the data in the given format
-	 * @param string $sFormatCode The lowercase format (e.g. html, csv, spreadsheet, xlsx, xml, json, pdf...)
-	 * @param DBSearch $oSearch The search/filter defining the set of objects to export or null when listing the supported formats
-	 * @return BulkExport|NULL
-	 */
+
+    /**
+     * Find the first class capable of exporting the data in the given format
+     *
+     * @param string   $sFormatCode The lowercase format (e.g. html, csv, spreadsheet, xlsx, xml, json, pdf...)
+     * @param DBSearch $oSearch     The search/filter defining the set of objects to export or null when listing the supported formats
+     *
+     * @return BulkExport|null
+     * @throws ReflectionException
+     */
 	static public function FindExporter($sFormatCode, $oSearch = null)
 	{
 		foreach(get_declared_classes() as $sPHPClass)
@@ -178,12 +183,17 @@ abstract class BulkExport
 		}
 		return null;
 	}
-	
-	/**
-	 * Find the exporter corresponding to the given persistent token
-	 * @param int $iPersistentToken The identifier of the BulkExportResult object storing the information
-	 * @return iBulkExport|NULL
-	 */
+
+    /**
+     * Find the exporter corresponding to the given persistent token
+     *
+     * @param int $iPersistentToken The identifier of the BulkExportResult object storing the information
+     *
+     * @return iBulkExport|null
+     * @throws ArchivedObjectException
+     * @throws CoreException
+     * @throws ReflectionException
+     */
 	static public function FindExporterFromToken($iPersistentToken = null)
 	{
 		$oBulkExporter = null;
@@ -192,7 +202,7 @@ abstract class BulkExport
 		{
 			$sFormatCode = $oInfo->Get('format');
 			$oSearch = DBObjectSearch::unserialize($oInfo->Get('search'));
-			
+
 			$oBulkExporter = self::FindExporter($sFormatCode, $oSearch);
 			if ($oBulkExporter)
 			{
@@ -200,6 +210,10 @@ abstract class BulkExport
 				$oBulkExporter->SetObjectList($oSearch);
 				$oBulkExporter->SetChunkSize($oInfo->Get('chunk_size'));
 				$oBulkExporter->SetStatusInfo(json_decode($oInfo->Get('status_info'), true));
+
+                $oBulkExporter->SetLocalizeOutput($oInfo->Get('localize_output'));
+
+
 				$oBulkExporter->sTmpFile = $oInfo->Get('temp_file_path');
 				$oBulkExporter->oBulkExportResult = $oInfo;
 			}
@@ -258,6 +272,14 @@ abstract class BulkExport
 	{
 		$this->iChunkSize = $iChunkSize;
 	}
+
+    /**
+     * @param $bLocalizeOutput
+     */
+    public function SetLocalizeOutput($bLocalizeOutput)
+    {
+        $this->bLocalizeOutput = $bLocalizeOutput;
+    }
 	
 	/**
 	 * (non-PHPdoc)
@@ -320,9 +342,10 @@ abstract class BulkExport
 			$this->oBulkExportResult = new BulkExportResult();
 			$this->oBulkExportResult->Set('format', $this->sFormatCode);
 			$this->oBulkExportResult->Set('search', $this->oSearch->serialize());
-			$this->oBulkExportResult->Set('chunk_size', $this->iChunkSize);	
-			$this->oBulkExportResult->Set('temp_file_path', $this->sTmpFile);	
-		}
+			$this->oBulkExportResult->Set('chunk_size', $this->iChunkSize);
+            $this->oBulkExportResult->Set('temp_file_path', $this->sTmpFile);
+            $this->oBulkExportResult->Set('localize_output', $this->bLocalizeOutput);
+        }
 		$this->oBulkExportResult->Set('status_info', json_encode($this->GetStatusInfo()));
 		utils::PushArchiveMode(false);
 		$ret = $this->oBulkExportResult->DBWrite();
