@@ -25,13 +25,14 @@
 /**
  * Adds the context parameters to the audit rule query
  *
- * @param DBObjectSearch $oFilter
+ * @param DBSearch $oFilter
  * @param ApplicationContext $oAppContext
  *
  * @throws \CoreException
  * @throws \CoreWarning
+ * @throws \Exception
  */
-function FilterByContext(DBObjectSearch &$oFilter, ApplicationContext $oAppContext)
+function FilterByContext(DBSearch &$oFilter, ApplicationContext $oAppContext)
 {
 	$sObjClass = $oFilter->GetClass();		
 	$aContextParams = $oAppContext->GetNames();
