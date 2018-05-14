@@ -1,26 +1,22 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * ModuleDiscovery: list available modules
+ * Copyright (c) 2010-2018 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
+ *
  */
 
 class MissingDependencyException extends Exception
@@ -154,23 +150,28 @@ class ModuleDiscovery
 	}
 
 	/**
-	 * Get the list of "discovered" modules, ordered based on their (inter) dependencies	
-	 * @param bool  $bAbortOnMissingDependency ...
-	 * @param hash $aModulesToLoad List of modules to search for, defaults to all if ommitted
-	 */	 
+	 * Get the list of "discovered" modules, ordered based on their (inter) dependencies
+	 *
+	 * @param bool $bAbortOnMissingDependency ...
+	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
+	 *
+	 * @return array
+	 * @throws \MissingDependencyException
+	 */
 	protected static function GetModules($bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		// Order the modules to take into account their inter-dependencies
 		return self::OrderModulesByDependencies(self::$m_aModules, $bAbortOnMissingDependency, $aModulesToLoad);
 	}
-	
+
 	/**
 	 * Arrange an list of modules, based on their (inter) dependencies
-	 * @param hash $aModules The list of modules to process: 'id' => $aModuleInfo
-	 * @param bool  $bAbortOnMissingDependency ...
-	 * @param hash $aModulesToLoad List of modules to search for, defaults to all if ommitted
-	 * @return hash
-	 */	 
+	 * @param array $aModules The list of modules to process: 'id' => $aModuleInfo
+	 * @param bool $bAbortOnMissingDependency ...
+	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
+	 * @return array
+	 * @throws \MissingDependencyException
+*/
 	public static function OrderModulesByDependencies($aModules, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		// Order the modules to take into account their inter-dependencies
@@ -178,7 +179,7 @@ class ModuleDiscovery
 		$aSelectedModules = array();
 		foreach($aModules as $sId => $aModule)
 		{
-			list($sModuleName, $sModuleVersion) = self::GetModuleName($sId);
+			list($sModuleName, ) = self::GetModuleName($sId);
 			if (is_null($aModulesToLoad) || in_array($sModuleName, $aModulesToLoad))
 			{
 				$aDependencies[$sId] = $aModule['dependencies'];
@@ -234,8 +235,8 @@ class ModuleDiscovery
 
 	/**
 	 * Remove the duplicate modules (i.e. modules with the same name but with a different version) from the supplied list of modules
-	 * @param hash $aModules
-	 * @return hash The ordered modules as a duplicate-free list of modules
+	 * @param array $aModules
+	 * @return array The ordered modules as a duplicate-free list of modules
 	 */
 	public static function RemoveDuplicateModules($aModules)
 	{
@@ -340,10 +341,13 @@ class ModuleDiscovery
 	/**
 	 * Search (on the disk) for all defined iTop modules, load them and returns the list (as an array)
 	 * of the possible iTop modules to install
-	 * @param aSearchDirs Array of directories to search (absolute paths)
-	 * @param bool  $bAbortOnMissingDependency ...
-	 * @param hash $aModulesToLoad List of modules to search for, defaults to all if ommitted
-	 * @return Hash A big array moduleID => ModuleData
+	 *
+	 * @param $aSearchDirs array of directories to search (absolute paths)
+	 * @param bool $bAbortOnMissingDependency ...
+	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
+	 *
+	 * @return array A big array moduleID => ModuleData
+	 * @throws \Exception
 	 */
 	public static function GetAvailableModules($aSearchDirs, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
@@ -404,13 +408,15 @@ class ModuleDiscovery
 		}
 		return array($sName, $sVersion);
 	}
-	
+
 	/**
 	 * Helper function to browse a directory and get the modules
+	 *
 	 * @param $sRelDir string Directory to start from
 	 * @param $sRootDir string The root directory path
-	 * @return array(name, version)
-	 */    
+	 *
+	 * @throws \Exception
+	 */
 	protected static function ListModuleFiles($sRelDir, $sRootDir)
 	{
 		static $iDummyClassIndex = 0;
