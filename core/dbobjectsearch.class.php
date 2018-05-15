@@ -100,8 +100,13 @@ class DBObjectSearch extends DBSearch
 
 	/**
 	 * Change the class (only subclasses are supported as of now, because the conditions must fit the new class)
-	 * Defaults to the first selected class (most of the time it is also the first joined class	 
-	 */	 	
+	 * Defaults to the first selected class (most of the time it is also the first joined class
+	 *
+	 * @param $sNewClass
+	 * @param null $sAlias
+	 *
+	 * @throws \CoreException
+	 */
 	public function ChangeClass($sNewClass, $sAlias = null)
 	{
 		if (is_null($sAlias))
@@ -186,7 +191,9 @@ class DBObjectSearch extends DBSearch
 	 *
 	 * @param $sOldName
 	 * @param $sNewName
+	 *
 	 * @return bool True if the alias has been found and changed
+	 * @throws \Exception
 	 */
 	public function RenameAlias($sOldName, $sNewName)
 	{
@@ -381,7 +388,7 @@ class DBObjectSearch extends DBSearch
 			else
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->GetClass(), $sFilterCode);
-				$oNewCondition = $oAttDef->GetSmartConditionExpression($value, $oField, $this->m_aParams, $bParseSearchString);
+				$oNewCondition = $oAttDef->GetSmartConditionExpression($value, $oField, $this->m_aParams);
 				$this->AddConditionExpression($oNewCondition);
 				return;
 			}
@@ -522,10 +529,12 @@ class DBObjectSearch extends DBSearch
 
 	/**
 	 * Specify a condition on external keys or link sets
-	 * @param sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
-	 *                 Example: infra_list->ci_id->location_id->country	 
-	 * @param value The value to match (can be an array => IN(val1, val2...)
+	 * @param string $sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
+	 *                 Example: infra_list->ci_id->location_id->country
+	 * @param $value
 	 * @return void
+	 * @throws \CoreException
+	 * @throws \CoreWarning
 	 */
 	public function AddConditionAdvanced($sAttSpec, $value)
 	{
@@ -722,9 +731,9 @@ class DBObjectSearch extends DBSearch
 	 * - convert a translation table (format optimized for the translation in an expression tree) into simple hash
 	 * - compile over an eventually existing map
 	 *
-	 * @param $aRealiasingMap  Map to update
-	 * @param $aAliasTranslation Translation table resulting from calls to MergeWith_InNamespace
-	 * @return array of <old-alias> => <new-alias>
+	 * @param array $aRealiasingMap Map to update
+	 * @param array $aAliasTranslation Translation table resulting from calls to MergeWith_InNamespace
+	 * @return void of <old-alias> => <new-alias>
 	 */
 	protected function UpdateRealiasingMap(&$aRealiasingMap, $aAliasTranslation)
 	{
@@ -754,7 +763,7 @@ class DBObjectSearch extends DBSearch
 	 * This a workaround to handle some cases in which the list of classes is not correctly updated.
 	 * This code should disappear as soon as DBObjectSearch get split between a container search class and a Node class
 	 *
-	 * @param $aClasses List to be completed
+	 * @param array $aClasses List to be completed
 	 */
 	protected function RecomputeClassList(&$aClasses)
 	{
@@ -874,6 +883,8 @@ class DBObjectSearch extends DBSearch
 	 * @param $sForeignExtKeyAttCode
 	 * @param int $iOperatorCode
 	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @return void
+	 * @throws \CoreException
 	 */
 	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
@@ -896,7 +907,7 @@ class DBObjectSearch extends DBSearch
 		// NO: $oFilter = $oFilter->DeepClone();
 		// See also: Trac #639, and self::AddCondition_PointingTo()
 		$aAliasTranslation = array();
-		$res = $this->AddCondition_ReferencedBy_InNameSpace($oFilter, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation, $iOperatorCode);
+		$this->AddCondition_ReferencedBy_InNameSpace($oFilter, $sForeignExtKeyAttCode, $this->m_aClasses, $aAliasTranslation, $iOperatorCode);
 		$this->TransferConditionExpression($oFilter, $aAliasTranslation);
 		$this->UpdateRealiasingMap($aRealiasingMap, $aAliasTranslation);
 
@@ -920,7 +931,6 @@ class DBObjectSearch extends DBSearch
 			}
 		}
 		$this->RecomputeClassList($this->m_aClasses);
-		return $res;
 	}
 
 	protected function AddCondition_ReferencedBy_InNameSpace(DBSearch $oFilter, $sForeignExtKeyAttCode, &$aClassAliases, &$aAliasTranslation, $iOperatorCode)
@@ -979,7 +989,10 @@ class DBObjectSearch extends DBSearch
 			$oRightFilter = $oRightFilter->DeepClone();
 
 			$bAllowAllData = ($oLeftFilter->IsAllDataAllowed() && $oRightFilter->IsAllDataAllowed());
-			$oLeftFilter->AllowAllData($bAllowAllData);
+			if ($bAllowAllData)
+			{
+				$oLeftFilter->AllowAllData();
+			}
 
 			if ($oLeftFilter->GetClass() != $oRightFilter->GetClass())
 			{
@@ -1124,14 +1137,15 @@ class DBObjectSearch extends DBSearch
 	{
 		return $this->m_oSearchCondition->ListConstantFields();
 	}
-	
+
 	/**
 	 * Turn the parameters (:xxx) into scalar values in order to easily
 	 * serialize a search
-	 */
+	 * @param $aArgs
+*/
 	public function ApplyParameters($aArgs)
 	{
-		return $this->m_oSearchCondition->ApplyParameters(array_merge($this->m_aParams, $aArgs));
+		$this->m_oSearchCondition->ApplyParameters(array_merge($this->m_aParams, $aArgs));
 	}
 	
 	public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false)
@@ -1500,11 +1514,6 @@ class DBObjectSearch extends DBSearch
 				$oSearch = $this->Intersect($oVisibleObjects);
 				$oSearch->SetDataFiltered();
 			}
-			else
-			{
-				// should be true at this point, meaning that no additional filtering
-				// is required
-			}
 		}
 
 		// Compute query modifiers properties (can be set in the search itself, by the context, etc.)
@@ -1663,7 +1672,9 @@ class DBObjectSearch extends DBSearch
 	 * @param array $aGroupByExpr
 	 * @param array $aSelectedClasses
 	 * @param array $aSelectExpr
+	 *
 	 * @return null|SQLObjectQuery
+	 * @throws \CoreException
 	 */
 	protected function BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
 	{
@@ -1671,7 +1682,7 @@ class DBObjectSearch extends DBSearch
 
 		$oSQLQuery = $this->MakeSQLObjectQuery($oBuild, $aAttToLoad, array());
 		$oSQLQuery->SetCondition($oBuild->m_oQBExpressions->GetCondition());
-		if ($aGroupByExpr)
+		if (is_array($aGroupByExpr))
 		{
 			$aCols = $oBuild->m_oQBExpressions->GetGroupBy();
 			$oSQLQuery->SetGroupBy($aCols);
@@ -1725,6 +1736,7 @@ class DBObjectSearch extends DBSearch
 	 * @param null $aAttToLoad
 	 * @param array $aValues
 	 * @return null|SQLObjectQuery
+	 * @throws \CoreException
 	 */
 	protected function MakeSQLObjectQuery(&$oBuild, $aAttToLoad = null, $aValues = array())
 	{
@@ -2205,7 +2217,7 @@ class DBObjectSearch extends DBSearch
 							self::DbgTrace("External key $sKeyAttCode, Join on $sLocalKeyField = $sExternalKeyField");
 							if ($oKeyAttDef->IsNullAllowed())
 							{
-								$oSelectBase->AddLeftJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField, $sExternalKeyTable);
+								$oSelectBase->AddLeftJoin($oSelectExtKey, $sLocalKeyField, $sExternalKeyField);
 							}
 							else
 							{
@@ -2257,9 +2269,13 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 *	Get the expression for the class and its subclasses (if finalclass = 'subclass' ...)
-	 *	Simplifies the final expression by grouping classes having the same expression
-	 */
+	 *    Get the expression for the class and its subclasses (if finalclass = 'subclass' ...)
+	 *    Simplifies the final expression by grouping classes having the same expression
+	 * @param $sClass
+	 * @param $sAttCode
+	 * @return \FunctionExpression|mixed|null
+	 * @throws \CoreException
+*/
 	static public function GetPolymorphicExpression($sClass, $sAttCode)
 	{
 		$oExpression = ExpressionCache::GetCachedExpression($sClass, $sAttCode);
