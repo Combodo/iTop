@@ -73,15 +73,19 @@ EOF
 
 /**
  * Apply the 'next-action' to the given object or redirect to the page that prompts for additional information if needed
+ *
  * @param $oP WebPage The page for the output
  * @param $oObj CMDBObject The object to process
  * @param $sNextAction string The code of the stimulus for the 'action' (i.e. Transition) to apply
+ *
+ * @throws \ApplicationException
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
  */
 function ApplyNextAction(Webpage $oP, CMDBObject $oObj, $sNextAction)
 {
 	// Here handle the apply stimulus
 	$aTransitions = $oObj->EnumTransitions();
-	$aStimuli = MetaModel::EnumStimuli(get_class($oObj));
 	if (!isset($aTransitions[$sNextAction]))
 	{
 		// Invalid stimulus
@@ -118,13 +122,17 @@ function ReloadAndDisplay($oPage, $oObj, $sMessageId = '', $sMessage = '', $sSev
 	}
 	$oPage->add_header('Location: '.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.get_class($oObj).'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink());
 }
+
 /**
  * Displays the details of an object
  * @param $oP WebPage Page for the output
  * @param $sClass string The name of the class of the object
  * @param $oObj DBObject The object to display
  * @param $id mixed Identifier of the object (name or ID)
- */
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
+ * @throws \SecurityException
+*/
 function DisplayDetails($oP, $sClass, $oObj, $id)
 {
 	$sClassLabel = MetaModel::GetName($sClass);
@@ -170,7 +178,7 @@ function DisplayMessages($sMessageKey, WebPage $oPage)
 		foreach ($aMessages as $sMessage)
 		{
 			$oPage->add($sMessage);
-		}		
+		}
 	}
 }
 
@@ -178,7 +186,9 @@ function DisplayMessages($sMessageKey, WebPage $oPage)
  * Helper to update the breadrumb for the current object
  * @param DBObject $oObj
  * @param WebPage $oPage
- */
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
+*/
 function SetObjectBreadCrumbEntry(DBObject $oObj, WebPage $oPage)
 {
 	$sClass = get_class($oObj); // get the leaf class
@@ -199,6 +209,8 @@ function SetObjectBreadCrumbEntry(DBObject $oObj, WebPage $oPage)
  * @param $sFormat string The format to use for the output: csv or html
  * @param $bDoSearch bool True to display the search results below the search form
  * @param $bSearchFormOpen bool True to display the search form fully expanded (only if $bSearchForm of course)
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
  */
 function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', $sFormat = '', $bDoSearch = true, $bSearchFormOpen = true)
 {
@@ -583,6 +595,7 @@ try
 				}
 
 				// Sanity check of the accelerators
+				/** @var array $aAccelerators */
 				$aAccelerators = MetaModel::GetConfig()->Get('full_text_accelerators');
 				foreach ($aAccelerators as $sClass => $aAccelerator)
 				{
@@ -952,7 +965,7 @@ EOF
 				if ($bLockEnabled)
 				{
 					// Release the concurrent lock, if any
-					$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+					$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
 					if ($sOwnershipToken !== null)
 					{
 						// We're done, let's release the lock
@@ -1318,7 +1331,7 @@ EOF
 		$sFilter = utils::ReadPostedParam('filter', '', 'raw_data');
 		$sStimulus = utils::ReadPostedParam('stimulus', '');
 		$sState = utils::ReadPostedParam('state', '');
-		$sSelectObject = utils::ReadPostedParam('selectObject', '', false, 'raw_data');
+		$sSelectObject = utils::ReadPostedParam('selectObject', '', 'raw_data');
 		$aSelectObject = explode(',', $sSelectObject);
 
 		if (empty($sFilter) || empty($sStimulus) || empty($sState))
@@ -1558,7 +1571,7 @@ EOF
 					else if ($sIssues != '')
 					{
 						
-						$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+						$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
 						if ($sOwnershipToken !== null)
 						{
 							// Release the concurrent lock, if any, a new lock will be re-acquired by DisplayStimulusForm below
@@ -1581,7 +1594,7 @@ EOF
 						if ($bLockEnabled)
 						{
 							// Release the concurrent lock, if any
-							$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+							$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
 							if ($sOwnershipToken !== null)
 							{
 								// We're done, let's release the lock
