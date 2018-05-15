@@ -847,7 +847,8 @@ class DisplayBlock
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
 
 				// Generate one count + group by query [#1330]
-				$oGroupByExpr = Expression::FromOQL($sClass.'.'.$sStateAttrCode);
+				$sClassAlias = $this->m_oFilter->GetClassAlias();
+				$oGroupByExpr = Expression::FromOQL($sClassAlias.'.'.$sStateAttrCode);
 				$aGroupBy = array('group1' => $oGroupByExpr);
 				$sCountGroupByQuery = $this->m_oFilter->MakeGroupByQuery(array(), $aGroupBy, false);
 				$aCountGroupByResults = CMDBSource::QueryToArray($sCountGroupByQuery);
