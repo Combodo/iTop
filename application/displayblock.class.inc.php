@@ -69,6 +69,10 @@ class DisplayBlock
 			// User defined
 			$this->m_bShowObsoleteData = utils::ShowObsoleteData();
 		}
+		if (isset($this->m_bShowObsoleteData))
+		{
+			$this->m_oFilter->SetShowObsoleteData($this->m_bShowObsoleteData);
+		}
 	}
 	
 	public function GetFilter()
