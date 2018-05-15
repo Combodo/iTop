@@ -28,6 +28,9 @@
 
 namespace Combodo\iTop\Test\UnitTest\Application\Search;
 
+use AttributeDate;
+use AttributeDateTime;
+use AttributeDefinition;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToOQL;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use Combodo\iTop\Application\Search\CriterionParser;
@@ -308,64 +311,22 @@ class CriterionConversionTest extends ItopDataTestCase
 		);
 	}
 
-	/**
-	 * @dataProvider OqlProvider
-	 *
-	 * @param $sOQL
-	 *
-	 * @param $sExpectedOQL
-	 *
-	 * @param $aExpectedCriterion
-	 *
-	 * @throws \OQLException
-	 */
+    /**
+     * @dataProvider OqlProvider
+     *
+     * @param      $sOQL
+     *
+     * @param      $sExpectedOQL
+     *
+     * @param      $aExpectedCriterion
+     *
+     * @throws \DictExceptionUnknownLanguage
+     * @throws \MissingQueryArgument
+     * @throws \OQLException
+     */
 	function testOqlToForSearchToOql($sOQL, $sExpectedOQL, $aExpectedCriterion)
 	{
-		$this->debug($sOQL);
-		$oSearchForm = new SearchForm();
-		$oSearch = \DBSearch::FromOQL($sOQL);
-		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
-		/** @var \DBObjectSearch $oSearch */
-		$aCriterion = $oSearchForm->GetCriterion($oSearch, $aFields);
-
-		$aAndCriterion = $aCriterion['or'][0]['and'];
-
-		$aNewCriterion = array();
-		foreach($aAndCriterion as $aCriteria)
-		{
-			if ($aCriteria['widget'] != \AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
-			{
-				unset($aCriteria['oql']);
-				foreach($aFields as $aCatFields)
-				{
-					if (isset($aCatFields[$aCriteria['ref']]))
-					{
-						$aField = $aCatFields[$aCriteria['ref']];
-						break;
-					}
-				}
-				if (isset($aField))
-				{
-					$aCriteria['code'] = $aField['code'];
-					$aCriteria['class'] = $aField['class'];
-				}
-			}
-
-			$aNewCriterion[] = $aCriteria;
-		}
-		$this->debug($aNewCriterion);
-
-		$this->assertFalse($this->array_diff_assoc_recursive($aExpectedCriterion, $aNewCriterion));
-
-		$aCriterion['or'][0]['and'] = $aNewCriterion;
-
-		$oSearch->ResetCondition();
-		$oFilter = CriterionParser::Parse($oSearch->ToOQL(), $aCriterion);
-
-		$sResultOQL = $oFilter->ToOQL();
-		$this->debug($sResultOQL);
-
-		$this->assertEquals($sExpectedOQL, $sResultOQL);
+        $this->OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
 	}
 
 	function OqlProvider()
@@ -461,76 +422,6 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedOQL' => "SELECT `u` FROM UserRequest AS `u` WHERE (`u`.`close_date` > `u`.`start_date`)",
 				'ExpectedCriterion' => array(array('widget' => 'raw')),
 			),
-			'Date relative 1' => array(
-				'OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (DATE_SUB(NOW(), INTERVAL 14 DAY) < `UserRequest`.`start_date`)",
-				'ExpectedCriterion' => array(array('widget' => 'raw')),
-			),
-			'Date relative 2' => array(
-				'OQL' => "SELECT Contract AS c WHERE c.end_date > NOW() AND c.end_date < DATE_ADD(NOW(), INTERVAL 30 DAY)",
-				'ExpectedOQL' => "SELECT `c` FROM Contract AS `c` WHERE ((`c`.`end_date` < DATE_ADD(NOW(), INTERVAL 30 DAY)) AND (`c`.`end_date` > NOW()))",
-				'ExpectedCriterion' => array(array('widget' => 'raw'), array('widget' => 'raw')),
-			),
-			'Date relative 3' => array(
-				'OQL' => "SELECT UserRequest AS u WHERE u.close_date > DATE_ADD(u.start_date, INTERVAL 8 HOUR)",
-				'ExpectedOQL' => "SELECT `u` FROM UserRequest AS `u` WHERE (`u`.`close_date` > DATE_ADD(`u`.`start_date`, INTERVAL 8 HOUR))",
-				'ExpectedCriterion' => array(),
-			),
-			'Date relative 4' => array(
-				'OQL' => "SELECT UserRequest AS u WHERE u.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND u.status = 'new'",
-				'ExpectedOQL' => "SELECT `u` FROM UserRequest AS `u` WHERE ((`u`.`start_date` < DATE_SUB(NOW(), INTERVAL 60 MINUTE)) AND (`u`.`status` = 'new'))",
-				'ExpectedCriterion' => array(array('widget' => 'raw')),
-			),
-			'Date between 1' => array(
-				'OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:01') AND (`UserRequest`.`start_date` <= '2018-01-01 00:00:00'))",
-				'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-			),
-			'Date between 2' => array(
-				'OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((((`UserRequest`.`org_id` = '3') AND (`UserRequest`.`start_date` >= '2017-01-01 00:00:01')) AND (`UserRequest`.`start_date` <= '2018-01-01 00:00:00')) AND (`UserRequest`.`status` = 'active'))",
-				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN'), array('widget' => 'date_time', 'operator' => 'between_dates'), array('widget' => 'enum', 'operator' => 'IN')),
-			),
-			'Date between 3' => array(
-				'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 00:00:00'))",
-				'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-			),
-			'Date between 4' => array(
-				'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 00:59:59'))",
-				'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-			),
-			'Date between 5' => array(
-				'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 23:59:59'))",
-				'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-			),
-			'Date between 6' => array(
-				'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01' AND '2017-01-02' >= start_date",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-02 00:00:00'))",
-				'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-			),
-			'Date between 7' => array(
-				'OQL' => "SELECT CustomerContract WHERE ((start_date >= '2018-03-01') AND (start_date < '2018-04-01'))",
-				'ExpectedOQL' => "SELECT `CustomerContract` FROM CustomerContract AS `CustomerContract` WHERE ((`CustomerContract`.`start_date` >= '2018-03-01') AND (`CustomerContract`.`start_date` <= '2018-03-31'))",
-				'ExpectedCriterion' => array(array('widget' => 'date', 'operator' => 'between_dates')),
-			),
-			'Date =' => array(
-				'OQL' => "SELECT CustomerContract WHERE (start_date = '2018-03-01')",
-				'ExpectedOQL' => "SELECT `CustomerContract` FROM CustomerContract AS `CustomerContract` WHERE ((`CustomerContract`.`start_date` >= '2018-03-01') AND (`CustomerContract`.`start_date` <= '2018-03-01'))",
-				'ExpectedCriterion' => array(array('widget' => 'date', 'operator' => 'between_dates')),
-			),
-			'Date =2' => array(
-				'OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(start_date, '%Y-%m-%d') = '2018-03-21')",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2018-03-21 00:00:00') AND (`UserRequest`.`start_date` <= '2018-03-21 23:59:59'))",
-				'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
-			),
-			'Date =3' => array(
-				'OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(`UserRequest`.`start_date`, '%w') = '4')",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (DATE_FORMAT(`UserRequest`.`start_date`, '%w') = '4')",
-				'ExpectedCriterion' => array(array('widget' => 'raw')),
-			),
 			'Num between 1' => array(
 				'OQL' => "SELECT Server WHERE nb_u >= 0 AND 1 >= nb_u",
 				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE ((`Server`.`nb_u` >= '0') AND (`Server`.`nb_u` <= '1'))",
@@ -547,12 +438,212 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
 			),
 			'IP range' => array(
-				'OQL' => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip) < INET_ATON('10.22.32.255')",
-				'ExpectedOQL' => "SELECT `dev` FROM DatacenterDevice AS `dev` WHERE ((INET_ATON(`dev`.`managementip`) < INET_ATON('10.22.32.255')) AND (INET_ATON(`dev`.`managementip`) > INET_ATON('10.22.32.224')))",
+				'OQL' => "SELECT DatacenterDevice AS dev WHERE INET_ATON(dev.managementip_name) > INET_ATON('10.22.32.224') AND INET_ATON(dev.managementip_name) < INET_ATON('10.22.32.255')",
+				'ExpectedOQL' => "SELECT `dev` FROM DatacenterDevice AS `dev` WHERE ((INET_ATON(`dev`.`managementip_name`) < INET_ATON('10.22.32.255')) AND (INET_ATON(`dev`.`managementip_name`) > INET_ATON('10.22.32.224')))",
 				'ExpectedCriterion' => array(array('widget' => 'raw')),
 			),
+
+
 		);
 	}
+
+    /**
+     * @dataProvider OqlProviderDates
+     *
+     * @param      $sOQL
+     *
+     * @param      $sExpectedOQL
+     *
+     * @param      $aExpectedCriterion
+     *
+     * @throws \DictExceptionUnknownLanguage
+     * @throws \MissingQueryArgument
+     * @throws \OQLException
+     */
+    function testOqlToForSearchToOqlAltLanguageFR($sOQL, $sExpectedOQL, $aExpectedCriterion)
+    {
+        $this->OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "FR FR");
+    }
+
+
+    /**
+     * @dataProvider OqlProviderDates
+     *
+     * @param      $sOQL
+     *
+     * @param      $sExpectedOQL
+     *
+     * @param      $aExpectedCriterion
+     *
+     * @throws \DictExceptionUnknownLanguage
+     * @throws \MissingQueryArgument
+     * @throws \OQLException
+     */
+    function testOqlToForSearchToOqlAltLanguageEN($sOQL, $sExpectedOQL, $aExpectedCriterion)
+    {
+        $this->OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
+    }
+
+
+    function OqlProviderDates()
+    {
+        return array(
+
+            'Date relative 1' => array(
+                'OQL' => "SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) < start_date",
+                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (DATE_SUB(NOW(), INTERVAL 14 DAY) < `UserRequest`.`start_date`)",
+                'ExpectedCriterion' => array(array('widget' => 'raw')),
+            ),
+            'Date relative 2' => array(
+                'OQL' => "SELECT Contract AS c WHERE c.end_date > NOW() AND c.end_date < DATE_ADD(NOW(), INTERVAL 30 DAY)",
+                'ExpectedOQL' => "SELECT `c` FROM Contract AS `c` WHERE ((`c`.`end_date` < DATE_ADD(NOW(), INTERVAL 30 DAY)) AND (`c`.`end_date` > NOW()))",
+                'ExpectedCriterion' => array(array('widget' => 'raw'), array('widget' => 'raw')),
+            ),
+            'Date relative 3' => array(
+                'OQL' => "SELECT UserRequest AS u WHERE u.close_date > DATE_ADD(u.start_date, INTERVAL 8 HOUR)",
+                'ExpectedOQL' => "SELECT `u` FROM UserRequest AS `u` WHERE (`u`.`close_date` > DATE_ADD(`u`.`start_date`, INTERVAL 8 HOUR))",
+                'ExpectedCriterion' => array(),
+            ),
+            'Date relative 4' => array(
+                'OQL' => "SELECT UserRequest AS u WHERE u.start_date < DATE_SUB(NOW(), INTERVAL 60 MINUTE) AND u.status = 'new'",
+                'ExpectedOQL' => "SELECT `u` FROM UserRequest AS `u` WHERE ((`u`.`start_date` < DATE_SUB(NOW(), INTERVAL 60 MINUTE)) AND (`u`.`status` = 'new'))",
+                'ExpectedCriterion' => array(array('widget' => 'raw')),
+            ),
+            'Date between 1' => array(
+                'OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND '2018-01-01 00:00:00' >= start_date",
+                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:01') AND (`UserRequest`.`start_date` <= '2018-01-01 00:00:00'))",
+                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
+            ),
+            'Date between 2' => array(
+                'OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date",
+                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((((`UserRequest`.`org_id` = '3') AND (`UserRequest`.`start_date` >= '2017-01-01 00:00:01')) AND (`UserRequest`.`start_date` <= '2018-01-01 00:00:00')) AND (`UserRequest`.`status` = 'active'))",
+                'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN'), array('widget' => 'date_time', 'operator' => 'between_dates'), array('widget' => 'enum', 'operator' => 'IN')),
+            ),
+            'Date between 3' => array(
+                'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 00:00:00' >= start_date",
+                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 00:00:00'))",
+                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
+            ),
+            'Date between 4' => array(
+                'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-01 01:00:00' > start_date",
+                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 00:59:59'))",
+                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
+            ),
+            'Date between 5' => array(
+                'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01 00:00:00' AND '2017-01-02 00:00:00' > start_date",
+                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-01 23:59:59'))",
+                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
+            ),
+            'Date between 6' => array(
+                'OQL' => "SELECT UserRequest WHERE start_date >= '2017-01-01' AND '2017-01-02' >= start_date",
+                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2017-01-01 00:00:00') AND (`UserRequest`.`start_date` <= '2017-01-02 00:00:00'))",
+                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
+            ),
+            'Date between 7' => array(
+                'OQL' => "SELECT CustomerContract WHERE ((start_date >= '2018-03-01') AND (start_date < '2018-04-01'))",
+                'ExpectedOQL' => "SELECT `CustomerContract` FROM CustomerContract AS `CustomerContract` WHERE ((`CustomerContract`.`start_date` >= '2018-03-01') AND (`CustomerContract`.`start_date` <= '2018-03-31'))",
+                'ExpectedCriterion' => array(array('widget' => 'date', 'operator' => 'between_dates')),
+            ),
+            'Date =' => array(
+                'OQL' => "SELECT CustomerContract WHERE (start_date = '2018-03-01')",
+                'ExpectedOQL' => "SELECT `CustomerContract` FROM CustomerContract AS `CustomerContract` WHERE ((`CustomerContract`.`start_date` >= '2018-03-01') AND (`CustomerContract`.`start_date` <= '2018-03-01'))",
+                'ExpectedCriterion' => array(array('widget' => 'date', 'operator' => 'between_dates')),
+            ),
+            'Date =2' => array(
+                'OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(start_date, '%Y-%m-%d') = '2018-03-21')",
+                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`start_date` >= '2018-03-21 00:00:00') AND (`UserRequest`.`start_date` <= '2018-03-21 23:59:59'))",
+                'ExpectedCriterion' => array(array('widget' => 'date_time', 'operator' => 'between_dates')),
+            ),
+            'Date =3' => array(
+                'OQL' => "SELECT UserRequest WHERE (DATE_FORMAT(`UserRequest`.`start_date`, '%w') = '4')",
+                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (DATE_FORMAT(`UserRequest`.`start_date`, '%w') = '4')",
+                'ExpectedCriterion' => array(array('widget' => 'raw')),
+            ),
+        );
+    }
+
+    /**
+     *
+     * @param      $sOQL
+     *
+     * @param      $sExpectedOQL
+     *
+     * @param      $aExpectedCriterion
+     *
+     * @param      $sLanguageCode
+     *
+     * @throws \DictExceptionUnknownLanguage
+     * @throws \MissingQueryArgument
+     * @throws \OQLException
+     */
+    function OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, $sLanguageCode )
+    {
+        $this->debug($sOQL);
+
+
+        \Dict::SetUserLanguage($sLanguageCode);
+
+
+        $oSearchForm = new SearchForm();
+        $oSearch = \DBSearch::FromOQL($sOQL);
+        $aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
+        /** @var \DBObjectSearch $oSearch */
+        $aCriterion = $oSearchForm->GetCriterion($oSearch, $aFields);
+
+        $aAndCriterion = $aCriterion['or'][0]['and'];
+
+        $aNewCriterion = array();
+        foreach($aAndCriterion as $aCriteria)
+        {
+            if ($aCriteria['widget'] != \AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
+            {
+                unset($aCriteria['oql']);
+                foreach($aFields as $aCatFields)
+                {
+                    if (isset($aCatFields[$aCriteria['ref']]))
+                    {
+                        $aField = $aCatFields[$aCriteria['ref']];
+                        break;
+                    }
+                }
+                if (isset($aField))
+                {
+                    $aCriteria['code'] = $aField['code'];
+                    $aCriteria['class'] = $aField['class'];
+                }
+            }
+
+            if ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME || $aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
+            {
+                $sAttributeClass = ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME) ? AttributeDateTime::class : AttributeDate::class;
+
+                $oFormat = $sAttributeClass::GetFormat();
+
+                foreach($aCriteria['values'] as $i => $aValue)
+                {
+                    if (!empty($aValue['value'])) {
+                        $aCriteria['values'][$i]['value'] = $oFormat->Format($aValue['value']);
+                    }
+                }
+            }
+
+            $aNewCriterion[] = $aCriteria;
+        }
+        $this->debug($aNewCriterion);
+
+        $this->assertFalse($this->array_diff_assoc_recursive($aExpectedCriterion, $aNewCriterion), 'Criterion array contains critical parts');
+
+        $aCriterion['or'][0]['and'] = $aNewCriterion;
+
+        $oSearch->ResetCondition();
+        $oFilter = CriterionParser::Parse($oSearch->ToOQL(), $aCriterion);
+
+        $sResultOQL = $oFilter->ToOQL();
+        $this->debug($sResultOQL);
+
+        $this->assertEquals($sExpectedOQL, $sResultOQL);
+    }
+
 
 	function array_diff_assoc_recursive($array1, $array2)
 	{
