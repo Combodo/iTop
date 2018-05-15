@@ -527,16 +527,18 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 						if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
 						{
 							$sDelta = '1 day';
+							$sAttributeClass = AttributeDate::class;
 						}
 						else
 						{
 							$sDelta = '1 second';
+							$sAttributeClass = AttributeDateTime::class;
 						}
-						$oFormat = AttributeDate::GetFormat();
+						$oFormat = $sAttributeClass::GetFormat();
 						$sFirstDate = $aCriterion['values'][0]['value'];
 						$oDate = new DateTime($sFirstDate);
 						$oDate->add(DateInterval::createFromDateString($sDelta));
-						$sFirstDateValue = $oDate->format(AttributeDate::GetSQLFormat());
+						$sFirstDateValue = $oDate->format($sAttributeClass::GetSQLFormat());
 						try
 						{
 							$sFirstDateLabel = $oFormat->format($oDate);
@@ -550,16 +552,18 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 						if ($sWidget == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE)
 						{
 							$sDelta = '1 day';
+							$sAttributeClass = AttributeDate::class;
 						}
 						else
 						{
 							$sDelta = '1 second';
+							$sAttributeClass = AttributeDateTime::class;
 						}
-						$oFormat = AttributeDate::GetFormat();
+						$oFormat = $sAttributeClass::GetFormat();
 						$sFirstDate = $aCriterion['values'][0]['value'];
 						$oDate = new DateTime($sFirstDate);
 						$oDate->sub(DateInterval::createFromDateString($sDelta));
-						$sFirstDateValue = $oDate->format(AttributeDate::GetSQLFormat());
+						$sFirstDateValue = $oDate->format($sAttributeClass::GetSQLFormat());
 						try
 						{
 							$sFirstDateLabel = $oFormat->format($oDate);
