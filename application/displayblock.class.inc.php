@@ -108,11 +108,15 @@ class DisplayBlock
 		$oBlock = new DisplayBlock($oDummyFilter, $sStyle, false, $aParams); // DisplayBlocks built this way are synchronous
 		return $oBlock;
 	}
-	
+
 	/**
 	 * Constructs a DisplayBlock object from an XML template
+	 *
 	 * @param $sTemplate string The XML template
+	 *
 	 * @return DisplayBlock The DisplayBlock object, or null if the template is invalid
+	 * @throws \ApplicationException
+	 * @throws \OQLException
 	 */
 	public static function FromTemplate($sTemplate)
 	{
@@ -122,7 +126,6 @@ class DisplayBlock
 		$aParams = array();
 		
 		if (($iStartPos === false) || ($iEndPos === false)) return null; // invalid template		
-		$sITopBlock = substr($sTemplate,$iStartPos, $iEndPos-$iStartPos+strlen('</'.self::TAG_BLOCK.'>'));
 		$sITopData = substr($sTemplate, 1+$iEndTag, $iEndPos - $iEndTag - 1);
 		$sITopTag = substr($sTemplate, $iStartPos + strlen('<'.self::TAG_BLOCK), $iEndTag - $iStartPos - strlen('<'.self::TAG_BLOCK));
 
@@ -142,10 +145,6 @@ class DisplayBlock
 		if (preg_match('/ blockclass="(.*)"/U',$sITopTag, $aMatches))
 		{
 			$sBlockClass = $aMatches[1];
-		}
-		if (preg_match('/ objectclass="(.*)"/U',$sITopTag, $aMatches))
-		{
-			$sObjectClass = $aMatches[1];
 		}
 		if (preg_match('/ encoding="(.*)"/U',$sITopTag, $aMatches))
 		{
@@ -195,6 +194,7 @@ class DisplayBlock
 			}
 
 		}
+		$oFilter = null;
 		switch($sEncoding)
 		{
 			case 'text/serialize':
@@ -748,8 +748,6 @@ class DisplayBlock
 				{
 					if ((UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES))
 					{
-						$oAppContext = new ApplicationContext();
-						$sParams = $oAppContext->GetForLink();
 						$sDefaults = '';
 						if (isset($this->m_aParams['default']))
 						{
@@ -777,7 +775,6 @@ class DisplayBlock
 			$bContextFilter = isset($aExtraParams['context_filter']) ? isset($aExtraParams['context_filter']) != 0 : false;
 			if ($bContextFilter)
 			{
-				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
 				foreach($oAppContext->GetNames() as $sFilterCode)
 				{
 					$sContextParamValue = $oAppContext->GetCurrentValue($sFilterCode, null);
@@ -821,7 +818,6 @@ class DisplayBlock
 			$bContextFilter = isset($aExtraParams['context_filter']) ? isset($aExtraParams['context_filter']) != 0 : false;
 			if ($bContextFilter)
 			{
-				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($this->m_oFilter->GetClass()));
 				foreach($oAppContext->GetNames() as $sFilterCode)
 				{
 					$sContextParamValue = $oAppContext->GetCurrentValue($sFilterCode, null);
@@ -1110,7 +1106,6 @@ EOF
 				$sJSNames = json_encode($aNames);
 				
 				$sJson = json_encode($aValues);
-				$sJSCount = json_encode(Dict::S('UI:GroupBy:Count'));
 				$oPage->add_ready_script(
 <<<EOF
 var chart = c3.generate({
@@ -1328,7 +1323,7 @@ EOF
 		// In all other cases, just add the condition directly
 		if (!$bConditionAdded)
 		{
-			$this->m_oFilter->AddCondition($sFilterCode, $condition, null, $bParseSearchString); // Use the default 'loose' operator
+			$this->m_oFilter->AddCondition($sFilterCode, $condition, null); // Use the default 'loose' operator
 		}
 	}
 	
@@ -1537,7 +1532,6 @@ class MenuBlock extends DisplayBlock
 		$oReflectionClass = new ReflectionClass($sClass);
 		$oSet = new CMDBObjectSet($this->m_oFilter);
 		$sFilter = $this->m_oFilter->serialize();
-		$sFilterDesc = $this->m_oFilter->ToOql(true);
 		$aActions = array();
 		$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($sClass);
 		$sRootUrl = utils::GetAbsoluteUrlAppRoot();
@@ -1656,6 +1650,7 @@ class MenuBlock extends DisplayBlock
 					if ($bLocked && $bRawModifiedAllowed)
 					{
 						// Add a special menu to kill the lock, but only to allowed users who can also modify this object
+						/** @var array $aAllowedProfiles */
 						$aAllowedProfiles = MetaModel::GetConfig()->Get('concurrent_lock_override_profiles');
 						$bCanKill = false;
 					
@@ -1724,7 +1719,6 @@ class MenuBlock extends DisplayBlock
 				$sTargetAttr = $aExtraParams['target_attr'];
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sTargetAttr);
 				$sTargetClass = $oAttDef->GetTargetClass();
-				$bIsDeleteAllowed = UserRights::IsActionAllowed($sClass, UR_ACTION_DELETE, $oSet);
 				if ($bIsModifyAllowed) { $aActions['UI:Menu:Add'] = array ('label' => Dict::S('UI:Menu:Add'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id&addObjects=true{$sContext}") + $aActionParams; }
 				if ($bIsBulkModifyAllowed) { $aActions['UI:Menu:Manage'] = array ('label' => Dict::S('UI:Menu:Manage'), 'url' => "{$sRootUrl}pages/$sUIPage?operation=modify_links&class=$sClass&link_attr=".$aExtraParams['link_attr']."&target_class=$sTargetClass&id=$id{$sContext}") + $aActionParams; }
 				//if ($bIsBulkDeleteAllowed) { $aActions[] = array ('label' => 'Remove All...', 'url' => "#") + $aActionParams; }
@@ -1815,7 +1809,8 @@ class MenuBlock extends DisplayBlock
 				}
 			}
 		}
-					
+		$param  =  null;
+		$iMenuId = null;
 		// New extensions based on iPopupMenuItem interface 
 		switch($this->m_sStyle)
 		{
@@ -1848,11 +1843,7 @@ class MenuBlock extends DisplayBlock
 				}
 			}
 		}
-		else
-		{
-			$aShortcutActions = array();
-		}
-		
+
 		if (!$oPage->IsPrintableVersion())
 		{
 			if (count($aFavoriteActions) > 0)
@@ -1898,7 +1889,7 @@ class MenuBlock extends DisplayBlock
 	
 	/**
 	 * Appends a menu separator to the current list of actions
-	 * @param Hash $aActions The current actions list
+	 * @param array $aActions The current actions list
 	 * @return void
 	 */
 	protected function AddMenuSeparator(&$aActions)
