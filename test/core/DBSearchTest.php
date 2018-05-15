@@ -491,25 +491,25 @@ class DBSearchTest extends ItopDataTestCase
 		$oSearch = DBSearch::FromOQL("SELECT UserRequest WHERE org_id IN ($sOrgs)");
 		self::assertNotNull($oSearch);
 
-		// Alias => Expression
-		$aGroupBy = array();
 
 		$oTimeExpr = Expression::FromOQL('UserRequest.time_spent');
 		$oSumExpr = new FunctionExpression('SUM', array($oTimeExpr));
 		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
 		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
 		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
+		$oTanExpr = new FunctionExpression('ATAN', array($oTimeExpr));
+		$oTanExpr = new FunctionExpression('DEGREES', array($oTanExpr));
 		// Alias => Expression
 		$aFunctions = array(
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
+			'_itop_atan_' => $oTanExpr,
 		);
 
-		// Alias => Order
+		$aGroupBy = array();
 		$aOrderBy = array();
-
 		$aArgs = array();
 
 		$sSQL = $oSearch->MakeGroupByQuery($aArgs, $aGroupBy, false, $aFunctions, $aOrderBy, 0);
@@ -519,10 +519,6 @@ class DBSearchTest extends ItopDataTestCase
 		$this->debug($aRes);
 
 		self::assertEquals(1, count($aRes));
-//		for ($i = 0; $i < count($aCountRes); $i++)
-//		{
-//			self::assertEquals($aCountRes[$i], $aRes[$i]['_itop_count_']);
-//		}
 	}
 
 }
