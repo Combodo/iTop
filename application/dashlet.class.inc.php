@@ -313,6 +313,38 @@ EOF
 	{
 		// Default: do nothing since it's not supported
 	}
+
+
+	protected function GetGroupByOptions($sOql)
+	{
+		$oQuery = $this->oModelReflection->GetQuery($sOql);
+		$sClass = $oQuery->GetClass();
+		$aGroupBy = array();
+		foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
+		{
+			if ($sAttType == 'AttributeLinkedSet') continue;
+			if (is_subclass_of($sAttType, 'AttributeLinkedSet')) continue;
+			if ($sAttType == 'AttributeFriendlyName') continue;
+			if (is_subclass_of($sAttType, 'AttributeFriendlyName')) continue;
+			if ($sAttType == 'AttributeExternalField') continue;
+			if (is_subclass_of($sAttType, 'AttributeExternalField')) continue;
+			if ($sAttType == 'AttributeOneWayPassword') continue;
+
+			$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
+			$aGroupBy[$sAttCode] = $sLabel;
+
+			if (is_subclass_of($sAttType, 'AttributeDateTime') || $sAttType == 'AttributeDateTime')
+			{
+				$aGroupBy[$sAttCode.':hour'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel);
+				$aGroupBy[$sAttCode.':month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel);
+				$aGroupBy[$sAttCode.':day_of_week'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek', $sLabel);
+				$aGroupBy[$sAttCode.':day_of_month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth', $sLabel);
+			}
+		}
+		asort($aGroupBy);
+		return $aGroupBy;
+	}
+
 }
 
 /**
@@ -960,36 +992,6 @@ abstract class DashletGroupBy extends Dashlet
 		$oPage->add('<div class="dashlet-content">');
 		$oPage->add('error!');
 		$oPage->add('</div>');
-	}
-
-	protected function GetGroupByOptions($sOql)
-	{
-		$oQuery = $this->oModelReflection->GetQuery($sOql);
-		$sClass = $oQuery->GetClass();
-		$aGroupBy = array();
-		foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
-		{
-			if ($sAttType == 'AttributeLinkedSet') continue;
-			if (is_subclass_of($sAttType, 'AttributeLinkedSet')) continue;
-			if ($sAttType == 'AttributeFriendlyName') continue;
-			if (is_subclass_of($sAttType, 'AttributeFriendlyName')) continue;
-			if ($sAttType == 'AttributeExternalField') continue;
-			if (is_subclass_of($sAttType, 'AttributeExternalField')) continue;
-			if ($sAttType == 'AttributeOneWayPassword') continue;
-
-			$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
-			$aGroupBy[$sAttCode] = $sLabel;
-
-			if (is_subclass_of($sAttType, 'AttributeDateTime') || $sAttType == 'AttributeDateTime')
-			{
-				$aGroupBy[$sAttCode.':hour'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel);
-				$aGroupBy[$sAttCode.':month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel);
-				$aGroupBy[$sAttCode.':day_of_week'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek', $sLabel);
-				$aGroupBy[$sAttCode.':day_of_month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth', $sLabel);
-			}
-		}
-		asort($aGroupBy);
-		return $aGroupBy;
 	}
 
 	/**
@@ -1693,16 +1695,7 @@ class DashletHeaderDynamic extends Dashlet
 			// Group by field: build the list of possible values (attribute codes + ...)
 			$oQuery = $this->oModelReflection->GetQuery($this->aProperties['query']);
 			$sClass = $oQuery->GetClass();
-			$aGroupBy = array();
-			foreach($this->oModelReflection->ListAttributes($sClass, 'AttributeEnum,AttributeFinalClass') as $sAttCode => $sAttType)
-			{
-				if (is_subclass_of($sAttType, 'AttributeFinalClass') || ($sAttType == 'AttributeFinalClass'))
-				{
-					if (!$this->oModelReflection->HasChildrenClasses($sClass)) continue;
-				}
-				$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
-				$aGroupBy[$sAttCode] = $sLabel;
-			}
+			$aGroupBy = $this->GetGroupByOptions($this->aProperties['query']);
 			$oField = new DesignerComboField('group_by', Dict::S('UI:DashletHeaderDynamic:Prop-GroupBy'), $this->aProperties['group_by']);
 			$oField->SetMandatory();
 			$oField->SetAllowedValues($aGroupBy);
@@ -1719,7 +1712,12 @@ class DashletHeaderDynamic extends Dashlet
 		if (isset($sClass) && $this->oModelReflection->IsValidAttCode($sClass, $this->aProperties['group_by']))
 		{
 			$aValues = $this->oModelReflection->GetAllowedValues_att($sClass, $this->aProperties['group_by']);
-			$oField->SetAllowedValues($aValues);
+			$aNewValues = array();
+			foreach($aValues as $sKey => $sValue)
+			{
+				$aNewValues[$sKey] = html_entity_decode($sValue, ENT_QUOTES);
+			}
+			$oField->SetAllowedValues($aNewValues);
 		}
 		else
 		{
