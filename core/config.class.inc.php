@@ -1176,20 +1176,10 @@ class Config
 
 	}
 
-	public function Get($sPropCode, $sModule = null)
-	{
-		$sRetValue = '';
-		if(empty($sModule))
-		{
-			$sRetValue = $this->m_aSettings[$sPropCode]['value'];
-		}
-		else
-		{
-			$sRetValue = $this->m_aModuleSettings[$sModule][$sPropCode];
-
-		}
-		return $sRetValue;
-	}
+    public function Get($sPropCode)
+    {
+        return $this->m_aSettings[$sPropCode]['value'];
+    }
 
 	/**
 	 * Event log options (see LOG_... definition)

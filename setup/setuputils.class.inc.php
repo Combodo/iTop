@@ -837,7 +837,7 @@ class SetupUtils
 				'db_tls_enabled' => $oPrevConf->Get('db_tls.enabled'),
 				'db_tls_ca' => $oPrevConf->Get('db_tls.ca'),
 				'graphviz_path' => $oPrevConf->Get('graphviz_path'),
-				'mysql_bindir' => $oPrevConf->Get('mysql_bindir', 'itop-backup'),
+				'mysql_bindir' => $oPrevConf->GetModuleSetting('itop-backup', 'mysql_bindir', ''),
 			);
 		}
 		
