@@ -942,10 +942,7 @@ EOF
         // Render the text of the global search form
         $sText = htmlentities(utils::ReadParam('text', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8');
         $sOnClick = " onclick=\"if ($('#global-search-input').val() != '') { $('#global-search form').submit();  } \"";
-	    $sDefaultPlaceHolder = '';
-        if (empty($sText)) {
-	        $sDefaultPlaceHolder = Dict::S("UI:YourSearch");
-        }
+        $sDefaultPlaceHolder = Dict::S("UI:YourSearch");
 
         if ($this->IsPrintableVersion()) {
             $sHtml .= ' <!-- Beginning of page content -->';
