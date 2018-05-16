@@ -1053,9 +1053,9 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
-		'inline_image_garbage_collector_interval' => array(
+		'draft_attachments_lifetime' => array(
 			'type' => 'integer',
-			'description' => 'Frequency (in seconds) at which the inline image garbage collector will run.',
+			'description' => 'Lifetime (in seconds) of drafts\' attachments and inline images: after this duration, the garbage collector will delete them.',
 			'default' => 3600,
 			'value' => '',
 			'source_of_value' => '',

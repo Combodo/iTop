@@ -1455,7 +1455,7 @@ class ObjectController extends AbstractController
 					{
 						$oDocument = utils::ReadPostedDocument($sFieldName);
 						$oAttachment = MetaModel::NewObject('Attachment');
-						$oAttachment->Set('expire', time() + 3600); // one hour...
+						$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime')); // one hour...
 						$oAttachment->Set('temp_id', $sTempId);
 						$oAttachment->Set('item_class', $sObjectClass);
 						$oAttachment->SetDefaultOrgId();

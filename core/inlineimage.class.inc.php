@@ -497,10 +497,10 @@ EOF
  */
 class InlineImageGC implements iBackgroundProcess
 {
-	public function GetPeriodicity()
-	{
-		return MetaModel::GetConfig()->Get('inline_image_garbage_collector_interval'); // run every definied time
-	}
+    public function GetPeriodicity()
+    {
+        return 3600; // Runs every hour
+    }
 
 	public function Process($iTimeLimit)
 	{

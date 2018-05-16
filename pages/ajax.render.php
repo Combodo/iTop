@@ -2386,7 +2386,7 @@ EOF
 						$aDimensions = null;
 						$oDoc = InlineImage::ResizeImageToFit($oDoc, $aDimensions);
 						$oAttachment = MetaModel::NewObject('InlineImage');
-						$oAttachment->Set('expire', time() + 3600); // one hour...
+						$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));
 						$oAttachment->Set('temp_id', $sTempId);
 						$oAttachment->Set('item_class', $sObjClass);
 						$oAttachment->SetDefaultOrgId();
@@ -2427,7 +2427,7 @@ EOF
 					$aDimensions = null;
 					$oDoc = InlineImage::ResizeImageToFit($oDoc, $aDimensions);
 					$oAttachment = MetaModel::NewObject('InlineImage');
-					$oAttachment->Set('expire', time() + 3600); // one hour...
+					$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));
 					$oAttachment->Set('temp_id', $sTempId);
 					$oAttachment->Set('item_class', $sObjClass);
 					$oAttachment->SetDefaultOrgId();
