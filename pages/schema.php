@@ -233,7 +233,7 @@ function DisplayClassesList($oPage, $sContext)
 	$oPage->add("<h1>".Dict::S('UI:Schema:Title')."</h1>\n");
 
     $oPage->add("<label for='search-model'>" . Dict::S('UI:Schema:ClassFilter') ."</label><br/><input type=\"text\" id=\"search-model\" autofocus=\"autofocus\"/>");
-    $oPage->add("<div id=\"delDataModelSearch\"> <i class=\"far fa-times-circle\"></i></div>");
+    $oPage->add("<div id=\"delDataModelSearch\"> <i class=\"fa fa-times-circle\"></i></div>");
 	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
 	$oPage->add_ready_script(
 		<<<EOF
