@@ -590,9 +590,19 @@ try
 					if (strlen($sNeedle) < $iMinLenth)
 					{
 						$oP->p(Dict::Format('UI:Search:NeedleTooShort', $sNeedle, $iMinLenth));
-						$iErrors++;
+						$key = array_search($sNeedle, $aFullTextNeedles);
+						if($key!== false)
+						{
+							unset($aFullTextNeedles[$key]);
+						}
 					}
 				}
+				if(empty($aFullTextNeedles))
+				{
+					$oP->p(Dict::S('UI:Search:NoSearch'));
+					break;
+				}
+				$sFullText = implode(' ', $aFullTextNeedles);
 
 				// Sanity check of the accelerators
 				/** @var array $aAccelerators */
