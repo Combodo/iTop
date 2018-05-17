@@ -57,6 +57,7 @@ class EMail
 	{
 		$this->m_aData = array();
 		$this->m_oMessage = Swift_Message::newInstance();
+		$this->SetRecipientFrom(MetaModel::GetConfig()->Get('email_default_sender_address'), MetaModel::GetConfig()->Get('email_default_sender_label'));
 	}
 
 	/**
@@ -261,13 +262,10 @@ class EMail
 	public function Send(&$aIssues, $bForceSynchronous = false, $oLog = null)
 	{
 		//select a default sender if none is provided.
-		if(empty($this->m_aData['from']['address']))
-		{
-			$this->SetRecipientFrom(MetaModel::GetConfig()->Get('email_default_sender_address'), MetaModel::GetConfig()->Get('email_default_sender_label'));
-			if(empty($this->m_aData['from']['address']) && !empty($this->m_aData['to'])){
-				$this->SetRecipientFrom($this->m_aData['to']);
-			}
+		if(empty($this->m_aData['from']['address']) && !empty($this->m_aData['to'])){
+			$this->SetRecipientFrom($this->m_aData['to']);
 		}
+
 		if ($bForceSynchronous)
 		{
 			return $this->SendSynchronous($aIssues, $oLog);
