@@ -242,7 +242,15 @@ abstract class AsyncTask extends DBObject
 			{
 				$oEventLog = MetaModel::GetObject('Event', $this->Get('event_id'));
 				$oEventLog->Set('message', "$sErrorMessage\nFailed to process async task. Remaining retries: '.$iRemaining.'. Next retry in '.$iRetryDelay.'s'");
-				$oEventLog->DBUpdate();
+                try
+                {
+                    $oEventLog->DBUpdate();
+                }
+                catch (Exception $e)
+                {
+                    $oEventLog->Set('message', "Failed to process async task. Remaining retries: '.$iRemaining.'. Next retry in '.$iRetryDelay.'s', more details in the log");
+                    $oEventLog->DBUpdate();
+                }
 			}
 			$this->Set('remaining_retries', $iRemaining - 1);
 			$this->Set('status', 'planned');
@@ -256,7 +264,15 @@ abstract class AsyncTask extends DBObject
 			{
 				$oEventLog = MetaModel::GetObject('Event', $this->Get('event_id'));
 				$oEventLog->Set('message', "$sErrorMessage\nFailed to process async task.");
-				$oEventLog->DBUpdate();
+				try
+				{
+                    $oEventLog->DBUpdate();
+				}
+				catch (Exception $e)
+				{
+                    $oEventLog->Set('message', 'Failed to process async task, more details in the log');
+                    $oEventLog->DBUpdate();
+				}
 			}
 			$this->Set('status', 'error');
 			$this->Set('started', null);

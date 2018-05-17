@@ -262,22 +262,34 @@ class ActionEmail extends ActionNotification
 			{
 				$sPrefix = '';
 			}
+
 			if ($oLog)
 			{
 				$oLog->Set('message', $sPrefix . $sRes);
-			}
+                $oLog->DBUpdate();
+            }
+
 		}
 		catch (Exception $e)
 		{
 			if ($oLog)
 			{
 				$oLog->Set('message', 'Error: '.$e->getMessage());
+
+				try
+				{
+                    $oLog->DBUpdate();
+				}
+				catch (Exception $eSecondTryUpdate)
+				{
+                    IssueLog::Error("Failed to process email ".$oLog->GetKey()." - reason: ".$e->getMessage()."\nTrace:\n".$e->getTraceAsString());
+
+                    $oLog->Set('message', 'Error: more details in the log for email "'.$oLog->GetKey().'"');
+                    $oLog->DBUpdate();
+                }
 			}
 		}
-		if ($oLog)
-		{
-			$oLog->DBUpdate();
-		}
+
 	}
 
 	protected function _DoExecute($oTrigger, $aContextArgs, &$oLog)
