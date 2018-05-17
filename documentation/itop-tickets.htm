@@ -86,8 +86,10 @@ In order to ease the installation, all the background tasks have been grouped to
 <p>For more information about cron.php, check the <a href="http://wiki.openitop.org/doku.php">iTop Wiki</a></p>
 <h2>Scheduling cron.php on Windows</h2>
 <ol>
-<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> to set the credentials used for cronified tasks (requires administator privileges)</li>
-<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.cmd</b>, and set the relevant path for your installation of PHP. If you care about security, it is recommended to change also the path to the parameters file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> and move this file to a place where its content is not served by the web server.</li>
+<li>Copy the file <em>&lt;itop root&gt</em>/webservices/<b>cron.distrib</b> to <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> (requires administator privileges)</li>
+<li>If you care about security: move the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> into a directory not in the scope of the web server (Apache), and make it be readable only by the account that will execute the cron</li>
+<li>Edit the file <b>cron.params</b> to set the credentials used for cronified tasks</li>
+<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.cmd</b>, and set the relevant path for your installation of PHP.</li>
 <li>Schedule the execution of cron.cmd:
   <pre>schtasks.exe /create /tn "iTop CRON" /sc minute /mo 1 /tr "\"<em>&lt;itop root&gt</em>/webservices/cron.cmd\""</pre>
 </li> 
@@ -96,8 +98,9 @@ In order to ease the installation, all the background tasks have been grouped to
 
 <h2>Scheduling cron.php on Linux/Unix</h2>
 <ol>
-<li>Edit the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> to set the credentials used for cronified tasks (requires administator privileges)</li>
+<li>Copy the file <em>&lt;itop root&gt</em>/webservices/<b>cron.distrib</b> to <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> (requires administator privileges)</li>
 <li>If you care about security: move the file <em>&lt;itop root&gt</em>/webservices/<b>cron.params</b> into a directory not in the scope of the web server (Apache), and make it be readable only by the account that will execute the cron</li>
+<li>Edit the file <b>cron.params</b> to set the credentials used for cronified tasks</li>
 <li>Edit the crontab and add the following line:
    <pre>* * * * * /usr/bin/php <em>&lt;itop root&gt</em>/webservices/cron.php --param_file=<em>&lt;itop root&gt</em>/webservices/cron.params</pre>
 </li>
