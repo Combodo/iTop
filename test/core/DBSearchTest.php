@@ -497,15 +497,12 @@ class DBSearchTest extends ItopDataTestCase
 		$oAvgExpr = new FunctionExpression('AVG', array($oTimeExpr));
 		$oMinExpr = new FunctionExpression('MIN', array($oTimeExpr));
 		$oMaxExpr = new FunctionExpression('MAX', array($oTimeExpr));
-		$oTanExpr = new FunctionExpression('ATAN', array($oTimeExpr));
-		$oTanExpr = new FunctionExpression('DEGREES', array($oTanExpr));
 		// Alias => Expression
 		$aFunctions = array(
 			'_itop_sum_' => $oSumExpr,
 			'_itop_avg_' => $oAvgExpr,
 			'_itop_min_' => $oMinExpr,
 			'_itop_max_' => $oMaxExpr,
-			'_itop_atan_' => $oTanExpr,
 		);
 
 		$aGroupBy = array();
