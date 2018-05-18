@@ -69,10 +69,6 @@ class DisplayBlock
 			// User defined
 			$this->m_bShowObsoleteData = utils::ShowObsoleteData();
 		}
-		if (isset($this->m_bShowObsoleteData))
-		{
-			$this->m_oFilter->SetShowObsoleteData($this->m_bShowObsoleteData);
-		}
 	}
 	
 	public function GetFilter()
@@ -850,7 +846,12 @@ class DisplayBlock
 				$sClassAlias = $this->m_oFilter->GetClassAlias();
 				$oGroupByExpr = Expression::FromOQL($sClassAlias.'.'.$sStateAttrCode);
 				$aGroupBy = array('group1' => $oGroupByExpr);
-				$sCountGroupByQuery = $this->m_oFilter->MakeGroupByQuery(array(), $aGroupBy, false);
+				$oGroupBySearch = $this->m_oFilter->DeepClone();
+				if (isset($this->m_bShowObsoleteData))
+				{
+					$oGroupBySearch->SetShowObsoleteData($this->m_bShowObsoleteData);
+				}
+				$sCountGroupByQuery = $oGroupBySearch->MakeGroupByQuery(array(), $aGroupBy, false);
 				$aCountGroupByResults = CMDBSource::QueryToArray($sCountGroupByQuery);
 				$aCountsQueryResults = array();
 				foreach ($aCountGroupByResults as $aCountGroupBySingleResult)
@@ -874,6 +875,10 @@ class DisplayBlock
 					{
 						$oSingleGroupByValueFilter = $this->m_oFilter->DeepClone();
 						$oSingleGroupByValueFilter->AddCondition($sStateAttrCode, $sStateValue, '=');
+						if (isset($this->m_bShowObsoleteData))
+						{
+							$oSingleGroupByValueFilter->SetShowObsoleteData($this->m_bShowObsoleteData);
+						}
 						$sHyperlink = utils::GetAbsoluteUrlAppRoot()
 							.'pages/UI.php?operation=search&'.$oAppContext->GetForLink()
 							.'&filter='.urlencode($oSingleGroupByValueFilter->serialize());
