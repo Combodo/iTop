@@ -946,8 +946,17 @@ $(function()
 		// Button handlers
 		_onSubmitClick: function(oEvent)
 		{
-			// Assertion: the search is already up to date
-			this._submit();
+
+            //if there is an opened criteria let's get it's new value before processing
+            if (this.elements.criterion_area.find('.sf_criteria.opened').length > 0)
+            {
+                this.elements.criterion_area.find('.sf_criteria.opened').trigger('itop.search.criteria.close');
+                setTimeout(this._submit.call(this), 300);
+            }
+            else
+            {
+                this._submit();
+			}
 		},
 
 
