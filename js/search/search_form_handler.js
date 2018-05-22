@@ -194,7 +194,8 @@ $(function()
 
 				var sNewUrl = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search';
 				sNewUrl = sNewUrl + '&filter='+oData['filter'];
-				sNewUrl = sNewUrl + '&c[menu]='+me._extractURLParameter(window.location.href, "c[menu]");
+                sNewUrl = sNewUrl + '&c[menu]='+me._extractURLParameter(window.location.href, "c[menu]");
+                sNewUrl = sNewUrl + '&c[org_id]='+me._extractURLParameter(window.location.href, "c[org_id]");
 				if ('' != me._extractURLParameter(window.location.href, "debug"))
 				{
 					sNewUrl = sNewUrl + '&debug='+me._extractURLParameter(window.location.href, "debug");
@@ -687,10 +688,20 @@ $(function()
 				}
 
 				var aANDs = (aORs[iORIdx]['and'] !== undefined) ? aORs[iORIdx]['and'] : [];
+                var aANDsStringified = [];//used in order to deduplicate the crterions
+
+
 				for(var iANDIdx in aANDs)
 				{
 					var oCriteriaData = aANDs[iANDIdx];
-					this._addCriteria(oCriteriaData, oCriterionGroupElem);
+
+					var sCriteriaData = JSON.stringify(oCriteriaData);
+
+					if (aANDsStringified.indexOf(sCriteriaData) == -1)
+					{
+                        aANDsStringified.push(sCriteriaData);
+                        this._addCriteria(oCriteriaData, oCriterionGroupElem);
+					}
 				}
 
 				iORCount++;
