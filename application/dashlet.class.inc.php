@@ -917,7 +917,6 @@ abstract class DashletGroupBy extends Dashlet
 	protected function MakeSimulatedData()
 	{
 		$sQuery = $this->aProperties['query'];
-		$sGroupBy = $this->aProperties['group_by'];
 
 		$oQuery = $this->oModelReflection->GetQuery($sQuery);
 		$sClass = $oQuery->GetClass();
@@ -1334,7 +1333,6 @@ class DashletGroupByBars extends DashletGroupBy
 		$sJSNames = json_encode($aNames);
 
 		$sJson = json_encode($aDisplayValues);
-		$sJSCount = json_encode(Dict::S('UI:GroupBy:Count'));
 		$oPage->add_ready_script(
 <<<EOF
 window.setTimeout(function() {
@@ -1406,7 +1404,6 @@ class DashletGroupByTable extends DashletGroupBy
 
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$sTitle = $this->aProperties['title'];
 
 		$aDisplayValues = $this->MakeSimulatedData();
 		$iTotal = 0;
@@ -1616,7 +1613,6 @@ class DashletHeaderDynamic extends Dashlet
 		$sSubtitle = $this->aProperties['subtitle'];
 		$sQuery = $this->aProperties['query'];
 		$sGroupBy = $this->aProperties['group_by'];
-		$aValues = $this->aProperties['values'];
 
 		$oQuery = $this->oModelReflection->GetQuery($sQuery);
 		$sClass = $oQuery->GetClass();
@@ -1633,14 +1629,6 @@ class DashletHeaderDynamic extends Dashlet
 
 		$iTotal = 0;
 		$aValues = $this->GetValues();
-		if (count($aValues) > 0)
-		{
-			// Stats grouped by <group_by>
-		}
-		else
-		{
-			// Simple stats
-		}
 
 		$oPage->add('<div class="display_block" id="'.$sBlockId.'">');
 		$oPage->add('<div class="summary-details">');
@@ -1665,7 +1653,6 @@ class DashletHeaderDynamic extends Dashlet
 
 		$sTitle = $this->oModelReflection->DictString($sTitle);
 		$sSubtitle = $this->oModelReflection->DictFormat($sSubtitle, $iTotal);
-//		$sSubtitle = "original: $sSubtitle, S:".$this->oModelReflection->DictString($sSubtitle).", Format: '".$this->oModelReflection->DictFormat($sSubtitle, $iTotal)."'";
 
 		$oPage->add('<h1>'.$sTitle.'</h1>');
 		$oPage->add('<a class="summary">'.$sSubtitle.'</a>');
@@ -1814,7 +1801,7 @@ class DashletBadge extends Dashlet
 		$aExtraParams = array(
 			'context_filter' => 1,
 		);
-		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
 		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
 
 		$oPage->add('</div>');
@@ -1863,7 +1850,6 @@ class DashletBadge extends Dashlet
 			foreach($aClasses as $sClass => $sLabel)
 			{
 				$sIconUrl = $this->oModelReflection->GetClassIcon($sClass, false);
-				$sIconFilePath = str_replace(utils::GetAbsoluteUrlAppRoot(), APPROOT, $sIconUrl);
 				if ($sIconUrl == '')
 				{
 					// The icon does not exist, let's use a transparent one of the same size.
