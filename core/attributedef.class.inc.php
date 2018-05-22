@@ -740,10 +740,14 @@ abstract class AttributeDefinition
 
 	/**
 	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
+	 *
 	 * @param $value mixed The current value of the field
 	 * @param $sVerb string The verb specifying the representation of the value
 	 * @param $oHostObject DBObject The object
 	 * @param $bLocalize bool Whether or not to localize the value
+	 *
+	 * @return mixed|null|string
+	 * @throws \Exception
 	 */
 	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
 	{
@@ -852,7 +856,7 @@ abstract class AttributeDefinition
 	 * does nothing special, and just calls the default (loose) operator
 	 * @param string $sSearchText The search string to analyze for smart patterns
 	 * @param FieldExpression The FieldExpression representing the atttribute code in this OQL query
-	 * @param Hash $aParams Values of the query parameters
+	 * @param array $aParams Values of the query parameters
 	 * @return Expression The search condition to be added (AND) to the current search
 	 */
 	public function GetSmartConditionExpression($sSearchText, FieldExpression $oField, &$aParams)
@@ -888,7 +892,7 @@ abstract class AttributeDefinition
 	
 	/**
 	 * The part of the current attribute in the object's signature, for the supplied value
-	 * @param unknown $value The value of this attribute for the object
+	 * @param mixed $value The value of this attribute for the object
 	 * @return string The "signature" for this field/attribute
 	 */
 	public function Fingerprint($value)
@@ -1008,7 +1012,6 @@ class AttributeLinkedSet extends AttributeDefinition
 				$sObjClass = get_class($oObj);
 				$sRes .= "<$sObjClass id=\"".$oObj->GetKey()."\">\n";
 				// Show only relevant information (hide the external key to the current object)
-				$aAttributes = array();
 				foreach(MetaModel::ListAttributeDefs($sObjClass) as $sAttCode => $oAttDef)
 				{
 					if ($sAttCode == 'finalclass')
@@ -1105,10 +1108,14 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	/**
 	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
+	 *
 	 * @param $value mixed The current value of the field
 	 * @param $sVerb string The verb specifying the representation of the value
 	 * @param $oHostObject DBObject The object
 	 * @param $bLocalize bool Whether or not to localize the value
+	 *
+	 * @return string
+	 * @throws \Exception
 	 */
 	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
 	{
@@ -1405,12 +1412,13 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $oSet;
 	}
 
-    /**
-     * @param $proposedValue
-     * @param $oHostObj
-     *
-     * @return mixed
-     */
+	/**
+	 * @param $proposedValue
+	 * @param $oHostObj
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
     public function MakeRealValue($proposedValue, $oHostObj){
         if($proposedValue === null)
         {
@@ -1448,7 +1456,9 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	/**
 	 * Find the corresponding "link" attribute on the target class, if any
+	 *
 	 * @return null | AttributeDefinition
+	 * @throws \Exception
 	 */
 	public function GetMirrorLinkAttribute()
 	{
@@ -1532,6 +1542,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 	/**
 	 * Find the corresponding "link" attribute on the target class, if any
 	 * @return null | AttributeDefinition
+	 * @throws \CoreException
 	 */
 	public function GetMirrorLinkAttribute()
 	{
@@ -2426,6 +2437,7 @@ class AttributeApplicationLanguage extends AttributeString
 class AttributeFinalClass extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	protected $m_sValue;
 
 	public function __construct($sCode, $aParams)
 	{
@@ -2777,7 +2789,6 @@ class AttributeText extends AttributeString
 			$sPattern = '/'.str_replace('/', '\/', utils::GetConfig()->Get('url_validation_pattern')).'/i';
 			if (preg_match_all($sPattern, $sText, $aAllMatches, PREG_SET_ORDER /* important !*/ |PREG_OFFSET_CAPTURE /* important ! */))
 			{
-				$aUrls = array();
 				$i = count($aAllMatches);
 				// Replace the URLs by an actual hyperlink <a href="...">...</a>
 				// Let's do it backwards so that the initial positions are not modified by the replacement
@@ -3314,10 +3325,14 @@ class AttributeCaseLog extends AttributeLongText
 
 	/**
 	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
+	 *
 	 * @param $value mixed The current value of the field
 	 * @param $sVerb string The verb specifying the representation of the value
 	 * @param $oHostObject DBObject The object
 	 * @param $bLocalize bool Whether or not to localize the value
+	 *
+	 * @return mixed
+	 * @throws \Exception
 	 */
 	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
 	{
@@ -4181,7 +4196,6 @@ class AttributeDateTime extends AttributeDBField
                 return parent::GetForTemplate($value, $sVerb, $oHostObject, $bLocalize);
                 break;
         }
-        return null;
     }
 
 	static public function ListExpectedParams()
@@ -4302,7 +4316,7 @@ class AttributeDateTime extends AttributeDBField
 			try
 			{
 				$oFormat = new DateTimeFormat($this->GetInternalFormat());
-				$oTrash = $oFormat->Parse($proposedValue);
+				$oFormat->Parse($proposedValue);
 			}
 			catch (Exception $e)
 			{
@@ -4361,7 +4375,7 @@ class AttributeDateTime extends AttributeDBField
 	 * does nothing special, and just calls the default (loose) operator
 	 * @param string $sSearchText The search string to analyze for smart patterns
 	 * @param FieldExpression The FieldExpression representing the atttribute code in this OQL query
-	 * @param Hash $aParams Values of the query parameters
+	 * @param array $aParams Values of the query parameters
 	 * @return Expression The search condition to be added (AND) to the current search
 	 */
 	public function GetSmartConditionExpression($sSearchText, FieldExpression $oField, &$aParams, $bParseSearchString = false)
@@ -4404,7 +4418,6 @@ class AttributeDateTime extends AttributeDBField
 
 			$sParamName2 = $oField->GetParent().'_'.$oField->GetName().'_2';
 			$oRightExpr = new VariableExpression($sParamName2);
-			$sOperator = $this->GetBasicFilterLooseOperator();
 			if ($bParseSearchString)
 			{
 				$aParams[$sParamName2] = $this->ParseSearchString($aMatches[2]);
@@ -4438,7 +4451,7 @@ class AttributeDateTime extends AttributeDBField
 			break;
 						
 			default:
-			$oNewCondition = parent::GetSmartConditionExpression($sSearchText, $oField, $aParams, $bParseSearchString);
+			$oNewCondition = parent::GetSmartConditionExpression($sSearchText, $oField, $aParams);
 
 		}
 
@@ -4494,8 +4507,7 @@ class AttributeDuration extends AttributeInteger
 	public static function FormatDuration($duration)
 	{
 		$aDuration = self::SplitDuration($duration);
-		$sResult = '';
-		
+
 		if ($duration < 60)
 		{
 			// Less than 1 min
@@ -4657,7 +4669,7 @@ class AttributeDeadline extends AttributeDateTime
 			{
 				$sDifference = Dict::Format('UI:DeadlineMissedBy_duration', self::FormatDuration(-$difference));
 			}
-			$sFormat = MetaModel::GetConfig()->Get('deadline_format', '$difference$');
+			$sFormat = MetaModel::GetConfig()->Get('deadline_format');
 			$sResult = str_replace(array('$date$', '$difference$'), array($sDate, $sDifference), $sFormat);
 		}
 
@@ -4669,8 +4681,7 @@ class AttributeDeadline extends AttributeDateTime
 		$days = floor($duration / 86400);
 		$hours = floor(($duration - (86400*$days)) / 3600);
 		$minutes = floor(($duration - (86400*$days + 3600*$hours)) / 60);
-		$sResult = '';
-		
+
 		if ($duration < 60)
 		{
 			// Less than 1 min
@@ -4857,6 +4868,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	/**
 	 * Find the corresponding "link" attribute on the target class, if any
 	 * @return null | AttributeDefinition
+	 * @throws \CoreException
 	 */
 	public function GetMirrorLinkAttribute()
 	{
@@ -5226,6 +5238,7 @@ class AttributeExternalField extends AttributeDefinition
 
 	/**
 	 * @return bool
+	 * @throws \CoreException
 	 */
 	public function IsFriendlyName()
 	{
@@ -5635,12 +5648,6 @@ class AttributeBlob extends AttributeDefinition
 	public function GetFilterDefinitions()
 	{
 		return array();
-		// still not working... see later...
-		return array(
-			$this->GetCode().'->filename' => new FilterFromAttribute($this, '_filename'),
-			$this->GetCode().'_mimetype' => new FilterFromAttribute($this, '_mimetype'),
-			$this->GetCode().'_mimetype' => new FilterFromAttribute($this, '_mimetype')
-		);
 	}
 
 	public function GetBasicFilterOperators()
@@ -5663,6 +5670,7 @@ class AttributeBlob extends AttributeDefinition
 		{
 			return $value->GetAsHTML();
 		}
+		return '';
 	}
 
 	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
@@ -5959,7 +5967,6 @@ class AttributeStopWatch extends AttributeDefinition
 			self::DateToSeconds($aCols[$sPrefix.'_stopped'])
 		);
 
-		$aThresholds = array();
 		foreach ($this->ListThresholds() as $iThreshold => $aDefinition)
 		{
 			$sThPrefix = '_'.$iThreshold;
@@ -6063,6 +6070,7 @@ class AttributeStopWatch extends AttributeDefinition
 		{
 			return $value->GetAsHTML($this, $oHostObject);
 		}
+		return '';
 	}
 
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
@@ -6815,6 +6823,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 		{
 			return $value->GetAsHTML();
 		}
+		return '';
 	}
 
 	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
@@ -7070,6 +7079,7 @@ class AttributePropertySet extends AttributeTable
 class AttributeFriendlyName extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+	protected $m_sValue;
 
 	public function __construct($sCode)
 	{
@@ -7325,12 +7335,16 @@ class AttributeRedundancySettings extends AttributeDBField
 				}
 			}
 		}
+		return array();
 	}
 
 	/**
 	 * Find the user option label
-	 * @param user option : disabled|cout|percent	 	
-	 */	
+	 *
+	 * @param user option : disabled|cout|percent
+	 *
+	 * @return string
+	 */
 	public function GetUserOptionFormat($sUserOption, $sDefault = null)
 	{
 		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/'.$sUserOption, null, true /*user lang*/);
@@ -7580,7 +7594,7 @@ class AttributeRedundancySettings extends AttributeDBField
 			$sOptionName = $sHtmlNamesPrefix.'_user_option';
 			$sOptionId = $sOptionName.'_'.$sUserOption;
 			$sChecked = $bSelected ? 'checked' : '';
-			$sRet = '<input type="radio" name="'.$sOptionName.'" id="'.$sOptionId.'" value="'.$sUserOption.'"'.$sChecked.'> <label for="'.$sOptionId.'">'.$sLabel.'</label>';
+			$sRet = '<input type="radio" name="'.$sOptionName.'" id="'.$sOptionId.'" value="'.$sUserOption.'" '.$sChecked.'> <label for="'.$sOptionId.'">'.$sLabel.'</label>';
 		}
 		else
 		{
@@ -7732,7 +7746,9 @@ class AttributeCustomFields extends AttributeDefinition
 
 	/**
 	 * @param DBObject $oHostObject
+	 * @param null $sFormPrefix
 	 * @return Combodo\iTop\Form\Form
+	 * @throws \Exception
 	 */
 	public function GetForm(DBObject $oHostObject, $sFormPrefix = null)
 	{
@@ -7801,7 +7817,7 @@ class AttributeCustomFields extends AttributeDefinition
 
 	/**
 	 * The part of the current attribute in the object's signature, for the supplied value
-	 * @param $value The value of this attribute for the object
+	 * @param ormCustomFieldsValue $value The value of this attribute for the object
 	 * @return string The "signature" for this field/attribute
 	 */
 	public function Fingerprint($value)
@@ -7848,6 +7864,8 @@ class AttributeCustomFields extends AttributeDefinition
 	/**
 	 * Cleanup data upon object deletion (object id still available here)
 	 * @param DBObject $oHostObject
+	 * @return
+	 * @throws \CoreException
 	 */
 	public function DeleteValue(DBObject $oHostObject)
 	{
@@ -7909,10 +7927,13 @@ class AttributeCustomFields extends AttributeDefinition
 
 	/**
 	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
+	 *
 	 * @param $value mixed The current value of the field
 	 * @param $sVerb string The verb specifying the representation of the value
 	 * @param $oHostObject DBObject The object
 	 * @param $bLocalize bool Whether or not to localize the value
+	 *
+	 * @return string
 	 */
 	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
 	{
@@ -8040,11 +8061,6 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 	public function GetSQLExpressions($sPrefix = '')
 	{
 		return array();
-		if ($sPrefix == '')
-		{
-			$sPrefix = $this->GetCode(); // Warning AttributeComputedFieldVoid does not have any sql property
-		}
-		return array('' => $sPrefix);
 	}
 	public function GetSQLColumns($bFullSpec = false) {return array();} // returns column/spec pairs (1 in most of the cases), for STRUCTURING (DB creation)
 	public function GetSQLValues($value) {return array();} // returns column/value pairs (1 in most of the cases), for WRITING (Insert, Update)
