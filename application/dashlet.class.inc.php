@@ -1712,12 +1712,7 @@ class DashletHeaderDynamic extends Dashlet
 		if (isset($sClass) && $this->oModelReflection->IsValidAttCode($sClass, $this->aProperties['group_by']))
 		{
 			$aValues = $this->oModelReflection->GetAllowedValues_att($sClass, $this->aProperties['group_by']);
-			$aNewValues = array();
-			foreach($aValues as $sKey => $sValue)
-			{
-				$aNewValues[$sKey] = html_entity_decode($sValue, ENT_QUOTES);
-			}
-			$oField->SetAllowedValues($aNewValues);
+			$oField->SetAllowedValues($aValues);
 		}
 		else
 		{
