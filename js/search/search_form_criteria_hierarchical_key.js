@@ -55,7 +55,11 @@ $(function()
         _onGetData: function(oData)
         {
             var oCriteriaData = this._super(oData);
-            oCriteriaData.is_hierarchical = this.options.is_hierarchical;
+
+            if (null != oCriteriaData)
+			{
+                oCriteriaData.is_hierarchical = this.options.is_hierarchical;
+            }
 
             return oCriteriaData;
         },

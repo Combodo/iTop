@@ -104,13 +104,21 @@ $(function()
 			//init others widgets :
 			this.element.search_form_handler_history({'itop_root_class':me.options.search.class_name});
 
-			// Prepare DOM elements
+
+            // Prepare DOM elements
 			this._prepareFormArea();
 			this._prepareCriterionArea();
 			this._prepareResultsArea();
 
 			// Binding events (eg. from search_form_criteria widgets)
 			this._bindEvents();
+
+            //memorize the initial state so on first criteria close, we do not trigger a refresh if nothing has changed
+            this._updateSearch();
+			this.oPreviousAjaxParams = JSON.stringify({
+                'base_oql': this.options.search.base_oql,
+                'criterion': this.options.search.criterion,
+            });
 		},
 		// called when created, and later when changing options
 		_refresh: function()
@@ -232,7 +240,11 @@ $(function()
 				oCriterion['or'][iIdx] = {'and': []};
 				oCriterionRowElem.find('.search_form_criteria').each(function(){
 					var oCriteriaData = $(this).triggerHandler('itop.search.criteria.get_data');
-					oCriterion['or'][iIdx]['and'].push(oCriteriaData);
+
+					if (null != oCriteriaData)
+					{
+                        oCriterion['or'][iIdx]['and'].push(oCriteriaData);
+                    }
 				});
 			});
 			// - Update search
@@ -449,9 +461,6 @@ $(function()
 			// - Close menu on click anywhere else
 			// - Intercept click to avoid propagation (mostly used for closing it when clicking outside of it)
 			$('body').on('click', function(oEvent){
-				// Prevent propagation to parents and therefore multiple attempts to close it
-				oEvent.stopPropagation();
-
 				oEventTargetElem = $(oEvent.target);
 
 				// If not more menu, close all criterion
@@ -465,13 +474,8 @@ $(function()
 					// If using the datetimepicker, do not close anything
 					if (oEventTargetElem.closest('#ui-datepicker-div, .ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker-current').length > 0 )
 					{
-						// No closing in this case
+						// No closing in this edge-case introduced by the use of css3's insertion on content using ::before and ::after that pop directly at the body instead of bubbling normally (and passing by their DOM parents)
 					}
-					// //if the context is not document, then we  have encountered a bug : the css ::after elements do have a context on click and thus, we cannot check if they are inside a  #ui-datepicker-div
-					// else if (typeof oEventTargetElem.context != 'undefined' && $(oEventTargetElem.context).is('.ui-icon'))
-					// {
-					// 	//no closing in this case (bugfix)
-					// }
 					// If criteria, close more menu & all criterion but me
 					else if(oEventTargetElem.closest('.search_form_criteria').length > 0)
 					{
@@ -875,7 +879,7 @@ $(function()
 			this._updateSearch();
 			if(this.options.auto_submit === true)
 			{
-				this._submit();
+				this._submit(true);
 			}
 		},
 		_onCriteriaRemoved: function(oData)
@@ -954,7 +958,7 @@ $(function()
 			this._submit();
 		},
 		// - Do the submit
-		_submit: function()
+		_submit: function(bAbortIfNoChange)
 		{
 			var me = this;
 
@@ -978,6 +982,21 @@ $(function()
 			}
 			$.extend(oListParams, this.options.list_params);
 			oData.list_params = JSON.stringify(oListParams);
+
+			if (true === bAbortIfNoChange)
+			{
+				if (typeof me.oPreviousAjaxParams == "undefined")
+				{
+                    me.oPreviousAjaxParams = oData.params;
+					return;
+				}
+
+                if (me.oPreviousAjaxParams == oData.params)
+                {
+                    return;
+                }
+			}
+            me.oPreviousAjaxParams = oData.params;
 
 			// Abort pending request
 			if(this.submit.xhr !== null)

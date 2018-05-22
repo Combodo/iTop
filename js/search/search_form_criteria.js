@@ -191,8 +191,8 @@ $(function()
 
 			// Close criteria
 			this.element.on('itop.search.criteria.close', function(){
-				//me._apply();
-				return me._close();
+				me._apply();
+				me._close();
 			});
 
 			this.element
@@ -325,8 +325,26 @@ $(function()
 			this.element.find('.sfc_form_group').removeClass('advanced');
 		},
 		// - External events
+        /**
+		 *
+         * @param oData
+         * @return {*}|null return oCriteriaData or null if there is no value
+         * @private
+         */
 		_onGetData: function(oData)
 		{
+            var bHasToReturnNull = true;
+            this.options.values.forEach(function (oValue) {
+				if (oValue.value != '')
+				{
+                    bHasToReturnNull = false;
+				}
+            });
+            if (bHasToReturnNull)
+			{
+				return null;
+			}
+
 			var oCriteriaData = {
 				'ref': this.options.ref,
 				'operator': this.options.operator,
@@ -358,9 +376,10 @@ $(function()
 			// Bind events
 			// Note: No event to handle criteria closing when clicking outside of it as it is already handle by the form handler.
 			// - Toggler
-			this.element.find('.sfc_toggle, .sfc_title').on('click', function(oEvent){
+			this.element.on('click', '.sfc_toggle, .sfc_title', function(oEvent){
 				// Prevent anchor
 				oEvent.preventDefault();
+                oEvent.stopPropagation();
 
 				// First memorize if current criteria is close
 				var bOpen = !me.element.hasClass('opened');
