@@ -303,6 +303,10 @@ class BinaryExpression extends Expression
 		{
 			throw new CoreException('Expecting an Expression object on the right hand', array('found_class' => get_class($oRightExpr)));
 		}
+		if ( (($sOperator == "IN") ||  ($sOperator == "NOT IN")) && !$oRightExpr instanceof ListExpression)
+		{
+			throw new CoreException("Expecting a List Expression object on the right hand for operator $sOperator", array('found_class' => get_class($oRightExpr)));
+		}
 		$this->m_oLeftExpr  = $oLeftExpr;
 		$this->m_oRightExpr = $oRightExpr;
 		$this->m_sOperator  = $sOperator;
@@ -1286,7 +1290,7 @@ class VariableExpression extends UnaryExpression
 			$res = CMDBSource::Quote($aArgs[$this->m_sName]);
 			if (is_array($res))
 			{
-				$res = '('.implode(', ', $res).')';
+				$res = implode(', ', $res);
 			}
 			return $res;
 		}
