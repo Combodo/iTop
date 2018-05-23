@@ -501,7 +501,9 @@ class DBObjectSearch extends DBSearch
 		$oParamExpression = new VariableExpression($sInParamName);
 		$this->SetInternalParams(array($sInParamName => $aValues));
 
-		$oInCondition = new BinaryExpression($oFieldExpression, $sOperator, $oParamExpression);
+		$oListExpression = new ListExpression(array($oParamExpression));
+
+		$oInCondition = new BinaryExpression($oFieldExpression, $sOperator, $oListExpression);
 		$this->AddConditionExpression($oInCondition);
 	}
 
