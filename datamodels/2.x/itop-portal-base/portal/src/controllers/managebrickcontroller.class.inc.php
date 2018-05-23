@@ -336,7 +336,7 @@ class ManageBrickController extends BrickController
 			}
 		}
 
-		// - Retrieving the current grouping tab to display and altering the query to do so
+		// - Retrieving the current grouping tab to display if necessary and altering the query to do so
 		if ($sGroupingTab === null)
 		{
 			if ($oBrick->HasGroupingTabs())
@@ -345,7 +345,7 @@ class ManageBrickController extends BrickController
 				$sGroupingTab = key($aGroupingTabsValues);
 				if ($aGroupingTabsValues[$sGroupingTab]['condition'] !== null)
 				{
-					$oQuery = $oQuery->Intersect($aGroupingTabsValues[$sGroupingTab]['condition']);
+					$oQuery = $aGroupingTabsValues[$sGroupingTab]['condition']->DeepClone();
 				}
 			}
 		}
@@ -353,7 +353,7 @@ class ManageBrickController extends BrickController
 		{
 			if ($aGroupingTabsValues[$sGroupingTab]['condition'] !== null)
 			{
-				$oQuery = $oQuery->Intersect($aGroupingTabsValues[$sGroupingTab]['condition']);
+				$oQuery = $aGroupingTabsValues[$sGroupingTab]['condition']->DeepClone();
 			}
 		}
 
@@ -415,8 +415,7 @@ class ManageBrickController extends BrickController
 				$oAreaQuery = DBSearch::CloneWithAlias($oQuery, $sParentAlias);
 				if ($aGroupingAreasValue['condition'] !== null)
 				{
-					//$oAreaQuery->AddConditionExpression($aGroupingAreasValue['condition']);
-					$oAreaQuery = $oAreaQuery->Intersect($aGroupingAreasValue['condition']);
+					$oAreaQuery = $aGroupingAreasValue['condition']->DeepClone();
 				}
 
 				// Restricting query to allowed scope on each classes
