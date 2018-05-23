@@ -334,12 +334,12 @@ $(function()
 		_onGetData: function(oData)
 		{
             var bHasToReturnNull = true;
-            this.options.values.forEach(function (oValue) {
+            for (oValue in this.options.values) {
 				if (oValue.value != '')
 				{
                     bHasToReturnNull = false;
 				}
-            });
+            };
             if (bHasToReturnNull)
 			{
 				return null;
