@@ -475,7 +475,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Menu:CSVExport' => 'CSV Export...',
 	'UI:Menu:Modify' => 'Modify...',
 	'UI:Menu:Delete' => 'Delete...',
-	'UI:Menu:Manage' => 'Manage...',
 	'UI:Menu:BulkDelete' => 'Delete...',
 	'UI:UndefinedObject' => 'undefined',
 	'UI:Document:OpenInNewWindow:Download' => 'Open in new window: %1$s, Download: %2$s',
@@ -1222,6 +1221,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction',
+	'UI:DashletGroupBy:Prop-OrderField' => 'Order by',
 	'UI:DashletGroupBy:Prop-Limit' => 'Limit',
 
 	'UI:DashletGroupBy:Order:asc' => 'Ascending',

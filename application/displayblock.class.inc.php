@@ -428,71 +428,7 @@ class DisplayBlock
 			case 'count':
 			if (isset($aExtraParams['group_by']))
 			{
-				$sAlias = $this->m_oFilter->GetClassAlias();
-				if (isset($aExtraParams['group_by_label']))
-				{
-					$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);					
-					$sGroupByLabel = $aExtraParams['group_by_label'];
-				}
-				else
-				{
-					// Backward compatibility: group_by is simply a field id
-					$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
-					$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
-				}
-
-				// Security filtering
-				$aFields = $oGroupByExp->ListRequiredFields();
-				foreach($aFields as $sFieldAlias)
-				{
-					if (preg_match('/^([^.]+)\\.([^.]+)$/', $sFieldAlias, $aMatches))
-					{
-						$sFieldClass = $this->m_oFilter->GetClassName($aMatches[1]);
-						$oAttDef = MetaModel::GetAttributeDef($sFieldClass, $aMatches[2]);
-						if ($oAttDef instanceof AttributeOneWayPassword)
-						{
-							throw new Exception('Grouping on password fields is not supported.');
-						}
-					}
-				}
-				
-				$aGroupBy = array();
-				$aGroupBy['grouped_by_1'] = $oGroupByExp;
-				$aQueryParams = array();
-				if (isset($aExtraParams['query_params']))
-				{
-					$aQueryParams = $aExtraParams['query_params'];
-				}
-				$aFunctions = array();
-				$aOrderBy = array();
-				$sAgregationFunction = 'count';
-				$sFctVar = '_itop_count_';
-				$sAgregationAttr = '';
-				if (isset($aExtraParams['agregation_function']) && !empty($aExtraParams['agregation_attribute']))
-				{
-					$sAgregationFunction = $aExtraParams['agregation_function'];
-					$sAgregationAttr = $aExtraParams['agregation_attribute'];
-					$oAttrExpr = Expression::FromOQL('`'.$sAlias.'`.`'.$sAgregationAttr.'`');
-					$oFctExpr = new FunctionExpression(strtoupper($sAgregationFunction), array($oAttrExpr));
-					$sFctVar = '_itop_'.$sAgregationFunction.'_';
-					$aFunctions = array($sFctVar => $oFctExpr);
-				}
-				if (!empty($sAgregationAttr))
-				{
-					$sClass = $this->m_oFilter->GetClass();
-					$sAgregationAttr = MetaModel::GetLabel($sClass, $sAgregationAttr);
-				}
-				$iLimit = 0;
-				if (isset($aExtraParams['limit']))
-				{
-					$iLimit = intval($aExtraParams['limit']);
-				}
-				if (isset($aExtraParams['order_direction']))
-				{
-					$aOrderBy = array($sFctVar => ($aExtraParams['order_direction'] === 'asc'));
-				}
-
-				$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true, $aFunctions, $aOrderBy, $iLimit);
+				$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
 
 				$aRes = CMDBSource::QueryToArray($sSql);
 
@@ -527,7 +463,7 @@ class DisplayBlock
 				}
 				$aAttribs =array(
 					'group' => array('label' => $sGroupByLabel, 'description' => ''),
-					'value' => array('label'=> Dict::S('UI:GroupBy:'.$sAgregationFunction), 'description' => Dict::Format('UI:GroupBy:'.$sAgregationFunction.'+', $sAgregationAttr))
+					'value' => array('label'=> Dict::S('UI:GroupBy:'.$sAggregationFunction), 'description' => Dict::Format('UI:GroupBy:'.$sAggregationFunction.'+', $sAggregationAttr))
 				);
 				$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
 				$sHtml .= $oPage->GetP(Dict::Format($sFormat, $iTotalCount));
@@ -922,36 +858,6 @@ class DisplayBlock
 			}
 			$sAjaxLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php';
 				
-/*
-			$sCSVData = cmdbAbstractObject::GetSetAsCSV($this->m_oSet, array('fields_advanced' => $bAdvancedMode));
-			$sCharset = MetaModel::GetConfig()->Get('csv_file_default_charset');
-			if ($sCharset == 'UTF-8')
-			{
-				$bLostChars = false;
-			}
-			else
-			{
-				$sConverted = @iconv('UTF-8', $sCharset, $sCSVData);
-				$sRestored = @iconv($sCharset, 'UTF-8', $sConverted);
-				$bLostChars = ($sRestored != $sCSVData);
-			}
-
-			if ($bLostChars)
-			{
-				$sCharsetNotice = "&nbsp;&nbsp;<span id=\"csv_charset_issue\">";
-				$sCharsetNotice .= '<img src="../images/error.png"  style="vertical-align:middle"/>';
-				$sCharsetNotice .= "</span>";
-
-				$sTip = "<p>".htmlentities(Dict::S('UI:CSVExport:LostChars'), ENT_QUOTES, 'UTF-8')."</p>";
-				$sTip .= "<p>".htmlentities(Dict::Format('UI:CSVExport:LostChars+', $sCharset), ENT_QUOTES, 'UTF-8')."</p>";
-				$oPage->add_ready_script("$('#csv_charset_issue').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
-			}
-			else
-			{
-				$sCharsetNotice = '';
-			}
-
-*/
 			$sCharsetNotice = false;
 			$sHtml .= "<div>";
 			$sHtml .= '<table style="width:100%" class="transparent">';
@@ -1007,19 +913,19 @@ class DisplayBlock
 			$sFilter = $this->m_oFilter->serialize();
 			$oContext = new ApplicationContext();
 			$sContextParam = $oContext->GetForLink();
-			$sAgregationFunction = isset($aExtraParams['agregation_function']) ? $aExtraParams['agregation_function'] : '';
-			$sAgregationAttr = isset($aExtraParams['agregation_attribute']) ? $aExtraParams['agregation_attribute'] : '';
+			$sAggregationFunction = isset($aExtraParams['aggregation_function']) ? $aExtraParams['aggregation_function'] : '';
+			$sAggregationAttr = isset($aExtraParams['aggregation_attribute']) ? $aExtraParams['aggregation_attribute'] : '';
 			$sLimit = isset($aExtraParams['limit']) ? $aExtraParams['limit'] : '';
 			$sOrderBy = isset($aExtraParams['order_by']) ? $aExtraParams['order_by'] : '';
 			$sOrderDirection = isset($aExtraParams['order_direction']) ? $aExtraParams['order_direction'] : '';
 
 			if (isset($aExtraParams['group_by_label']))
 			{
-				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[agregation_function]=$sAgregationFunction&params[agregation_attribute]=$sAgregationAttr&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
+				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
 			}
 			else
 			{
-				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[agregation_function]=$sAgregationFunction&params[agregation_attribute]=$sAgregationAttr&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
+				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
 			}
 
 			$oPage->add_ready_script(
@@ -1038,47 +944,7 @@ EOF
 
 			if (isset($aExtraParams['group_by']))
 			{
-				$sAlias = $this->m_oFilter->GetClassAlias();
-				if (isset($aExtraParams['group_by_label']))
-				{
-					$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
-				}
-				else
-				{
-					// Backward compatibility: group_by is simply a field id
-					$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
-				}
-
-				$aGroupBy = array();
-				$aGroupBy['grouped_by_1'] = $oGroupByExp;
-				$aQueryParams = array();
-				if (isset($aExtraParams['query_params']))
-				{
-					$aQueryParams = $aExtraParams['query_params'];
-				}
-				$aFunctions = array();
-				$aOrderBy = array();
-				$sFctVar = '_itop_count_';
-				if (isset($aExtraParams['agregation_function']) && !empty($aExtraParams['agregation_attribute']))
-				{
-					$sAgregationFunction = $aExtraParams['agregation_function'];
-					$sAgregationAttr = $aExtraParams['agregation_attribute'];
-					$oAttrExpr = Expression::FromOQL('`'.$sAlias.'`.`'.$sAgregationAttr.'`');
-					$oFctExpr = new FunctionExpression(strtoupper($sAgregationFunction), array($oAttrExpr));
-					$sFctVar = '_itop_'.$sAgregationFunction.'_';
-					$aFunctions = array($sFctVar => $oFctExpr);
-				}
-				$iLimit = 0;
-				if (isset($aExtraParams['limit']))
-				{
-					$iLimit = intval($aExtraParams['limit']);
-				}
-				if (isset($aExtraParams['order_direction']))
-				{
-					$aOrderBy = array($sFctVar => ($aExtraParams['order_direction'] === 'asc'));
-				}
-
-				$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true, $aFunctions, $aOrderBy, $iLimit);
+				$this->MakeGroupByQuery($aExtraParams, $oGroupByExp, $sGroupByLabel, $aGroupBy, $sAggregationFunction, $sFctVar, $sAggregationAttr, $sSql);
 				$aRes = CMDBSource::QueryToArray($sSql);
 				$oContext = new ApplicationContext();
 				$sContextParam = $oContext->GetForLink();
@@ -1190,6 +1056,7 @@ var chart = c3.generate({
 			var aURLs = $sJSURLs;
 		    window.location.href= aURLs[d.index];
 		},
+		order: null,
     },
     legend: {
       show: true,
@@ -1352,6 +1219,97 @@ EOF
 	public function GetDisplayedCount()
 	{
 		return $this->m_oSet->Count();
+	}
+
+	/**
+	 * @param $aExtraParams
+	 * @param $oGroupByExp
+	 * @param $sGroupByLabel
+	 * @param $aGroupBy
+	 * @param $sAggregationFunction
+	 * @param $sFctVar
+	 * @param $sAggregationAttr
+	 * @param $sSql
+	 *
+	 * @throws \Exception
+	 */
+	protected function MakeGroupByQuery(&$aExtraParams, &$oGroupByExp, &$sGroupByLabel, &$aGroupBy, &$sAggregationFunction, &$sFctVar, &$sAggregationAttr, &$sSql)
+	{
+		$sAlias = $this->m_oFilter->GetClassAlias();
+		if (isset($aExtraParams['group_by_label']))
+		{
+			$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
+			$sGroupByLabel = $aExtraParams['group_by_label'];
+		}
+		else
+		{
+			// Backward compatibility: group_by is simply a field id
+			$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
+			$sGroupByLabel = MetaModel::GetLabel($this->m_oFilter->GetClass(), $aExtraParams['group_by']);
+		}
+
+		// Security filtering
+		$aFields = $oGroupByExp->ListRequiredFields();
+		foreach($aFields as $sFieldAlias)
+		{
+			$aMatches = array();
+			if (preg_match('/^([^.]+)\\.([^.]+)$/', $sFieldAlias, $aMatches))
+			{
+				$sFieldClass = $this->m_oFilter->GetClassName($aMatches[1]);
+				$oAttDef = MetaModel::GetAttributeDef($sFieldClass, $aMatches[2]);
+				if ($oAttDef instanceof AttributeOneWayPassword)
+				{
+					throw new Exception('Grouping on password fields is not supported.');
+				}
+			}
+		}
+
+		$aGroupBy = array();
+		$aGroupBy['grouped_by_1'] = $oGroupByExp;
+		$aQueryParams = array();
+		if (isset($aExtraParams['query_params']))
+		{
+			$aQueryParams = $aExtraParams['query_params'];
+		}
+		$aFunctions = array();
+		$sAggregationFunction = 'count';
+		$sFctVar = '_itop_count_';
+		$sAggregationAttr = '';
+		if (isset($aExtraParams['aggregation_function']) && !empty($aExtraParams['aggregation_attribute']))
+		{
+			$sAggregationFunction = $aExtraParams['aggregation_function'];
+			$sAggregationAttr = $aExtraParams['aggregation_attribute'];
+			$oAttrExpr = Expression::FromOQL('`'.$sAlias.'`.`'.$sAggregationAttr.'`');
+			$oFctExpr = new FunctionExpression(strtoupper($sAggregationFunction), array($oAttrExpr));
+			$sFctVar = '_itop_'.$sAggregationFunction.'_';
+			$aFunctions = array($sFctVar => $oFctExpr);
+		}
+
+		if (!empty($sAggregationAttr))
+		{
+			$sClass = $this->m_oFilter->GetClass();
+			$sAggregationAttr = MetaModel::GetLabel($sClass, $sAggregationAttr);
+		}
+		$iLimit = 0;
+		if (isset($aExtraParams['limit']))
+		{
+			$iLimit = intval($aExtraParams['limit']);
+		}
+		$aOrderBy = array();
+		if (isset($aExtraParams['order_direction']) && isset($aExtraParams['order_by']))
+		{
+			switch ($aExtraParams['order_by'])
+			{
+				case 'attribute':
+					$aOrderBy = array('grouped_by_1' => ($aExtraParams['order_direction'] === 'asc'));
+					break;
+				case 'function':
+					$aOrderBy = array($sFctVar => ($aExtraParams['order_direction'] === 'asc'));
+					break;
+			}
+		}
+
+		$sSql = $this->m_oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true, $aFunctions, $aOrderBy, $iLimit);
 	}
 }
 

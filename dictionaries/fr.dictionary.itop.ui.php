@@ -1056,9 +1056,10 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashletGroupByTable:Description' => 'Table',
 
 	// New in 2.5
-	'UI:DashletGroupBy:Prop-Function' => 'Fonction d\'agregation',
+	'UI:DashletGroupBy:Prop-Function' => 'Fonction d\'agrégation',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Attribut',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Type de tri',
+	'UI:DashletGroupBy:Prop-OrderField' => 'Trié par',
 	'UI:DashletGroupBy:Prop-Limit' => 'Limite',
 
 	'UI:DashletGroupBy:Order:asc' => 'Croissant',
