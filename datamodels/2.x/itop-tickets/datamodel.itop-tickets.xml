@@ -1248,6 +1248,9 @@
 						<!-- Implicit grouping on y axis by finalclass -->
 					</grouping>
 					<data_loading>full</data_loading>
+					<export>
+            			<export_default_fields>true</export_default_fields>
+          			</export>
 				</brick>
 				<brick id="closed-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
 					<active>true</active>
@@ -1298,6 +1301,9 @@
 						<!-- Implicit grouping on y axis by finalclass -->
 					</grouping>
 					<data_loading>auto</data_loading>
+					<export>
+            			<export_default_fields>true</export_default_fields>
+          			</export>
 				</brick>
 			</bricks>
 			<forms>
