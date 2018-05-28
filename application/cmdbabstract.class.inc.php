@@ -2367,7 +2367,7 @@ EOF
 					else
 					{
 						$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
-						if (count($aAllowedValues) == 1)
+						if (is_array($aAllowedValues) && (count($aAllowedValues) == 1))
 						{
 							$aValues = array_keys($aAllowedValues);
 							$oObj->Set($sAttCode, $aValues[0]);
@@ -3461,7 +3461,7 @@ EOF
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$aNewIssues = $oExtensionInstance->OnCheckToWrite($this);
-			if (count($aNewIssues) > 0)
+			if (is_array($aNewIssues) && (count($aNewIssues) > 0)) // Some extensions return null instead of an empty array
 			{
 				$this->m_aCheckIssues = array_merge($this->m_aCheckIssues, $aNewIssues);
 			}

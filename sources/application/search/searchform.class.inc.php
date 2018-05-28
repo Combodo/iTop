@@ -457,7 +457,8 @@ class SearchForm
 
 		$aAllowedValues = $oAttrDef->GetAllowedValues();
 
-		return array('values' => $aAllowedValues, 'count' => count($aAllowedValues));
+		$iCount = is_array($aAllowedValues) ? count($aAllowedValues) : 0;
+		return array('values' => $aAllowedValues, 'count' => $iCount);
 	}
 
 	/**

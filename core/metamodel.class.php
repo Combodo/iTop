@@ -6185,7 +6185,7 @@ abstract class MetaModel
 		{
 			$sQuerySign .= '_all_';
 		}
-		if (count($aModifierProperties))
+		if (is_array($aModifierProperties) && (count($aModifierProperties) > 0))
 		{
 			array_multisort($aModifierProperties);
 			$sModifierProperties = json_encode($aModifierProperties);

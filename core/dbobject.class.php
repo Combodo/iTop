@@ -1234,7 +1234,7 @@ abstract class DBObject implements iDisplay
 		elseif ($oAtt->IsScalar())
 		{
 			$aValues = $oAtt->GetAllowedValues($this->ToArgsForQuery());
-			if (count($aValues) > 0)
+			if (is_array($aValues) && (count($aValues) > 0))
 			{
 				if (!array_key_exists($toCheck, $aValues))
 				{
