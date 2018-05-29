@@ -1555,7 +1555,7 @@
 						<scope id="all">
 							<oql_view><![CDATA[SELECT Contact WHERE org_id = :current_contact->org_id]]></oql_view>
 						</scope>
-						<scope id="all">
+						<scope id="admin">
 							<oql_view><![CDATA[SELECT Contact]]></oql_view>
 							<allowed_profiles>
 								<allowed_profile id="Administrator"/>
