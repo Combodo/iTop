@@ -156,7 +156,9 @@ class ManageBrickController extends BrickController
 		{
 			$oQuery = DBSearch::FromOQL($oBrick->GetOql());
 			$sClass = $oQuery->GetClass();
-			$this->AddScopeToQuery($oQuery, $oApp, $oBrick, $sClass);
+			/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
+			$oScopeHelper = $oApp['scope_validator'];
+			$oScopeHelper->AddScopeToQuery($oQuery, $sClass);
 			$aData = array();
 			$this->ManageSearchValue($oRequest, $aData, $oQuery, $sClass);
 
@@ -304,7 +306,11 @@ class ManageBrickController extends BrickController
 				{
 					$oConditionQuery = $oQuery->Intersect(DBSearch::FromOQL($aGroup['condition']));
 					// - Restricting query to scope
-					if ($this->AddScopeToQuery($oConditionQuery, $oApp, $oBrick, $oConditionQuery->GetClass()))
+
+					/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
+					$oScopeHelper = $oApp['scope_validator'];
+					$bHasScope = $oScopeHelper->AddScopeToQuery($oConditionQuery, $oConditionQuery->GetClass());
+					if ($bHasScope)
 					{
 						// - Building ObjectSet
 						$oConditionSet = new DBObjectSet($oConditionQuery);
@@ -421,7 +427,10 @@ class ManageBrickController extends BrickController
 				// Restricting query to allowed scope on each classes
 				// Note: Will need to moved the scope restriction on queries elsewhere when we consider grouping on something else than finalclass
 				// Note: We now get view scope instead of edit scope as we allowed users to view/edit objects in the brick regarding their rights
-				if (!$this->AddScopeToQuery($oAreaQuery, $oApp, $oBrick, $aGroupingAreasValue['value']))
+				/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
+				$oScopeHelper = $oApp['scope_validator'];
+				$bHasScope = $oScopeHelper->AddScopeToQuery($oAreaQuery, $aGroupingAreasValue['value']);
+				if (!$bHasScope)
 				{
 					// if no scope apply does not allow any data
 					$oAreaQuery = null;
@@ -796,7 +805,9 @@ class ManageBrickController extends BrickController
 		$aGroupingTabsValues = array();
 		$aDistinctResults = array();
 		$oDistinctQuery = DBSearch::FromOQL($oBrick->GetOql());
-		$bHasScope = $this->AddScopeToQuery($oDistinctQuery, $oApp, $oBrick, $oDistinctQuery->GetClass());
+		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
+		$oScopeHelper = $oApp['scope_validator'];
+		$bHasScope = $oScopeHelper->AddScopeToQuery($oDistinctQuery, $oDistinctQuery->GetClass());
 		if ($bHasScope)
 		{
 			// - Adding field condition
@@ -903,35 +914,10 @@ class ManageBrickController extends BrickController
 	protected function GetScopedQuery(Application $oApp, ManageBrick $oBrick, $sClass)
 	{
 		$oQuery = DBSearch::FromOQL($oBrick->GetOql());
-		$this->AddScopeToQuery($oQuery, $oApp, $oBrick, $sClass);
+		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
+		$oScopeHelper = $oApp['scope_validator'];
+		$oScopeHelper->AddScopeToQuery($oQuery, $sClass);
 
 		return $oQuery;
-	}
-
-	/**
-	 * @param DBSearch $oQuery
-	 * @param Application $oApp
-	 * @param ManageBrick $oBrick
-	 * @param string $sClass
-	 *
-	 * @return bool true if scope exists, false if scope is null
-	 */
-	protected function AddScopeToQuery(DBSearch &$oQuery, Application $oApp, ManageBrick $oBrick, $sClass)
-	{
-		$oScopeQuery = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sClass,
-			UR_ACTION_READ);
-		if ($oScopeQuery !== null)
-		{
-			$oQuery = $oQuery->Intersect($oScopeQuery);
-			// - Allowing all data if necessary
-			if ($oScopeQuery->IsAllDataAllowed())
-			{
-				$oQuery->AllowAllData();
-			}
-
-			return true;
-		}
-
-		return false;
 	}
 }

@@ -19,15 +19,23 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
-use Exception;
-use DOMNodeList;
-use DOMFormatException;
-use utils;
-use ProfilesConfig;
-use MetaModel;
 use DBSearch;
 use DBUnionSearch;
+use DOMFormatException;
+use DOMNodeList;
+use Exception;
+use MetaModel;
+use ProfilesConfig;
+use UserRights;
+use utils;
 
+/**
+ * Class ScopeValidatorHelper
+ *
+ * Inside the portal this service is injected, get the instance using $oApp['scope_validator']
+ *
+ * @package Combodo\iTop\Portal\Helper
+ */
 class ScopeValidatorHelper
 {
 	const ENUM_MODE_READ = 'r';
@@ -113,6 +121,7 @@ class ScopeValidatorHelper
 
 		$this->sInstancePrefix = $sInstancePrefix;
 		$this->sGeneratedClass = $this->sInstancePrefix . static::DEFAULT_GENERATED_CLASS;
+
 		return $this;
 	}
 
@@ -150,7 +159,7 @@ class ScopeValidatorHelper
 				{
 					throw new DOMFormatException('Class tag must have an id attribute.', null, null, $oClassNode);
 				}
-				
+
 				// Iterating over scope nodes of the class
 				$oScopesNode = $oClassNode->GetOptionalElement('scopes');
 				if ($oScopesNode !== null)
@@ -213,7 +222,7 @@ class ScopeValidatorHelper
 						{
 							// Scope profile id
 							$iProfileId = $this->GetProfileIdFromProfileName($sProfileName);
-							
+
 							// Now that we have the queries infos, we are going to build the queries for that profile / class
 							$sMatrixPrefix = $iProfileId . '_' . $sClass . '_';
 							// - View query
@@ -284,7 +293,7 @@ class ScopeValidatorHelper
 					$aProfileClasses[] = $sClass;
 				}
 			}
-			
+
 			// Filling the array with missing classes from MetaModel, so we can have an inheritance principle on the scope
 			// For each class explicitly given in the scopes, we check if its child classes were also in the scope :
 			// If not, we add them with the same OQL
@@ -493,7 +502,7 @@ class ScopeValidatorHelper
 		{
 			$iAction = UR_ACTION_READ;
 		}
-		
+
 		// Iterating on profiles to retrieving the different OQLs parts
 		foreach ($aProfiles as $sProfile)
 		{
@@ -539,8 +548,32 @@ class ScopeValidatorHelper
 		{
 			$oSearch->AllowAllData();
 		}
-		
+
 		return $oSearch;
+	}
+
+	/**
+	 * @param DBSearch $oQuery
+	 * @param string $sClass
+	 *
+	 * @return bool true if scope exists, false if scope is null
+	 */
+	public function AddScopeToQuery(DBSearch &$oQuery, $sClass)
+	{
+		$oScopeQuery = $this->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sClass, UR_ACTION_READ);
+		if ($oScopeQuery !== null)
+		{
+			$oQuery = $oQuery->Intersect($oScopeQuery);
+			// - Allowing all data if necessary
+			if ($oScopeQuery->IsAllDataAllowed())
+			{
+				$oQuery->AllowAllData();
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -665,6 +698,7 @@ class $sClassName
 }
 
 EOF;
+
 		return $sPHP;
 	}
 
