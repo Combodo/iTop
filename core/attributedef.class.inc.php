@@ -2437,7 +2437,7 @@ class AttributeApplicationLanguage extends AttributeString
 class AttributeFinalClass extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
-	protected $m_sValue;
+	public $m_sValue;
 
 	public function __construct($sCode, $aParams)
 	{
@@ -7079,7 +7079,7 @@ class AttributePropertySet extends AttributeTable
 class AttributeFriendlyName extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
-	protected $m_sValue;
+	public $m_sValue;
 
 	public function __construct($sCode)
 	{
