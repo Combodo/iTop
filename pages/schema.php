@@ -912,20 +912,20 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		//tooltip construction
         $oPage->add_ready_script(
             <<<EOF
-            	if('$sAttrValueEscpd' != ''){
-		       		$('#attr$sAttrCode').qtip( { content: '$sAttrValueEscpd', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+            	if(`$sAttrValueEscpd` != ''){
+		       		$('#attr$sAttrCode').qtip( { content: `$sAttrValueEscpd`, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
 		       	}
-		       	if('$sAttrTypeDescEscpd' != ''){
-		      	  $('#type$sAttrCode').qtip( { content: '$sAttrTypeDescEscpd', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+		       	if(`$sAttrTypeDescEscpd` != ''){
+		      	  $('#type$sAttrCode').qtip( { content: `$sAttrTypeDescEscpd`, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
 				}
 				if('$sAttrOriginEscpd' != ''){
 					$('#originColor$sAttrCode').parent().qtip( { content: '$sAttrOriginEscpd', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
 				}
-				if( !$sIsEnumValues && '$sAllowedValuesEscpd' != ''){
-					$('#values$sAttrCode').qtip( { content: '$sAllowedValuesEscpd', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+				if( !$sIsEnumValues && `$sAllowedValuesEscpd` != ''){
+					$('#values$sAttrCode').qtip( { content: `$sAllowedValuesEscpd`, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
 				}
-				if('$sDefaultNullValue' != ''){
-					$('#moreinfo$sAttrCode').parent().qtip( { content: '$sDefaultNullValue', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+				if(`$sDefaultNullValue` != ''){
+					$('#moreinfo$sAttrCode').parent().qtip( { content: `$sDefaultNullValue`, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
 				}
 EOF
 
