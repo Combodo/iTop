@@ -354,11 +354,7 @@ class SearchForm
 		{
 			if (array_key_exists($sAttCode, $aAttributeDefs))
 			{
-				$bHasIndex = false;
-				if (isset($aIndexes[$sAttCode]))
-				{
-					$bHasIndex = true;
-				}
+				$bHasIndex = isset($aIndexes[$sAttCode]);
 				$oAttDef = $aAttributeDefs[$sAttCode];
 				$aZList = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aZList, $bHasIndex);
 				unset($aAttributeDefs[$sAttCode]);
@@ -372,8 +368,9 @@ class SearchForm
 		{
 			// Add friendlyname to the most popular
 			$sAttCode = 'friendlyname';
+            $bHasIndex =  isset($aIndexes[$sAttCode]);
 			$oAttDef = $aAttributeDefs[$sAttCode];
-			$aZList = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aZList);
+			$aZList = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aZList, $bHasIndex);
 			unset($aAttributeDefs[$sAttCode]);
 		}
 		$aZList = $this->AppendId($sClass, $sAlias, $aZList);
@@ -385,7 +382,8 @@ class SearchForm
 		{
 			if ($this->IsSubAttribute($oAttDef)) continue;
 
-			$aOthers = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aOthers);
+            $bHasIndex =  isset($aIndexes[$sAttCode]);
+			$aOthers = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aOthers, $bHasIndex);
 		}
 		uasort($aOthers, function ($aItem1, $aItem2) {
 			return strcmp($aItem1['label'], $aItem2['label']);
