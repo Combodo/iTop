@@ -244,9 +244,18 @@ EOF
         //echo $this->s_deferred_content;
         if (count($this->a_scripts) > 0)
         {
-            echo "<script type=\"text/javascript\">\n";
-            echo implode("\n", $this->a_scripts);
-            echo "\n</script>\n";
+        	echo "<script type=\"text/javascript\">\n";
+        	echo implode("\n", $this->a_scripts);
+        	echo "\n</script>\n";
+        }
+        if (count($this->a_linked_scripts) > 0)
+        {
+        	echo "<script type=\"text/javascript\">\n";
+        	foreach($this->a_linked_scripts as $sScriptUrl)
+        	{
+        		echo '$.getScript('.json_encode($sScriptUrl).");\n";
+        	}
+        	echo "\n</script>\n";
         }
         if (!empty($this->s_deferred_content))
         {
