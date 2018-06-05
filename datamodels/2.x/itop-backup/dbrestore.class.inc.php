@@ -99,8 +99,10 @@ class DBRestore extends DBBackup
 	}
 
 	/**
-	 * @param $sFile A file with the extension .zip or .tar.gz
+	 * @param string $sFile A file with the extension .zip or .tar.gz
 	 * @param string $sEnvironment Target environment
+	 *
+	 * @throws \Exception
 	 */
 	public function RestoreFromCompressedBackup($sFile, $sEnvironment = 'production')
 	{
@@ -111,7 +113,7 @@ class DBRestore extends DBBackup
 		{
 			$this->LogInfo('zip file detected');
 			$oArchive = new ZipArchiveEx();
-			$res = $oArchive->open($sFile);
+			$oArchive->open($sFile);
 		}
 		elseif (substr($sNormalizedFile, -7) == '.tar.gz')
 		{
@@ -125,21 +127,22 @@ class DBRestore extends DBBackup
 
 		// Load the database
 		//
-		$sDataDir = tempnam(SetupUtils::GetTmpDir(), 'itop-');
-		unlink($sDataDir); // I need a directory, not a file...
+		$sDataDir = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
+
 		SetupUtils::builddir($sDataDir); // Here is the directory
-		$oArchive->extractFileTo($sDataDir, 'itop-dump.sql');
+		$oArchive->extractTo($sDataDir);
+
 		$sDataFile = $sDataDir.'/itop-dump.sql';
 		$this->LoadDatabase($sDataFile);
-		SetupUtils::rrmdir($sDataDir);
 
 		// Update the code
 		//
 		$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
-		if ($oArchive->hasFile('delta.xml') !== false)
+
+		if (is_file($sDataDir.'/delta.xml'))
 		{
 			// Extract and rename delta.xml => <env>.delta.xml;
-			file_put_contents($sDeltaFile, $oArchive->getFromName('delta.xml'));
+			rename($sDataDir.'/delta.xml', $sDeltaFile);
 		}
 		else
 		{
@@ -149,15 +152,17 @@ class DBRestore extends DBBackup
 		{
 			SetupUtils::rrmdir(APPROOT.'data/production-modules/');
 		}
-		if ($oArchive->hasDir('production-modules/') !== false)
+		if (is_dir($sDataDir.'/production-modules'))
 		{
-			$oArchive->extractDirTo(APPROOT.'data/', 'production-modules/');
+			rename($sDataDir.'/production-modules', APPROOT.'data/production-modules/');
 		}
 
 		$sConfigFile = APPROOT.'conf/'.$sEnvironment.'/config-itop.php';
 		@chmod($sConfigFile, 0770); // Allow overwriting the file
-		$oArchive->extractFileTo(APPROOT.'conf/'.$sEnvironment, 'config-itop.php');
+		rename($sDataDir.'/config-itop.php', $sConfigFile);
 		@chmod($sConfigFile, 0444); // Read-only
+
+		SetupUtils::rrmdir($sDataDir);
 
 		$oEnvironment = new RunTimeEnvironment($sEnvironment);
 		$oEnvironment->CompileFrom($sEnvironment);

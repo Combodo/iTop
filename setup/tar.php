@@ -1,21 +1,42 @@
 <?php
-// Copyright (c) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
+/**
+ * File::CSV
+ *
+ * PHP versions 4 and 5
+ *
+ * Copyright (c) 1997-2008,
+ * Vincent Blavet <vincent@phpconcept.net>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright notice,
+ *       this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @category  File_Formats
+ * @package   Archive_Tar
+ * @author    Vincent Blavet <vincent@phpconcept.net>
+ * @author    Combodo
+ * @copyright 1997-2018 The Authors
+ * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
+ * @version   CVS: $Id$
+ * @link      http://pear.php.net/package/Archive_Tar
+ */
 
 define('ARCHIVE_TAR_ATT_SEPARATOR', 90001);
 define('ARCHIVE_TAR_END_BLOCK', pack("a512", ''));
@@ -1188,8 +1209,19 @@ class ArchiveTar
 				return false;
 			}
 
-			while (($v_buffer = fread($v_file, 512)) != '') {
-				$v_binary_data = pack("a512", "$v_buffer");
+			$iLen = 1024*1024;
+			while (($v_buffer = fread($v_file, $iLen)) != '') {
+				$iBufferLen = strlen("$v_buffer");
+				if ($iBufferLen != $iLen)
+				{
+					$iPack = ((int)($iBufferLen / 512) + 1) * 512;
+					$sPack = sprintf('a%d', $iPack);
+				}
+				else
+				{
+					$sPack = sprintf('a%d', $iLen);
+				}
+				$v_binary_data = pack($sPack, "$v_buffer");
 				$this->_writeBlock($v_binary_data);
 			}
 

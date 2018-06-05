@@ -588,13 +588,7 @@ class SetupUtils
 			throw new Exception("Attempting to delete directory: '$dir'");
 		}
 		self::tidydir($dir);
-		if (@rmdir($dir) === false)
-		{
-			// Magic trick for windows
-			// sometimes the folder is empty but rmdir fails
-			closedir(opendir($dir));
-			@rmdir($dir);
-		}
+		self::rmdir_safe($dir);
 	}
 
 	/**
@@ -617,13 +611,7 @@ class SetupUtils
 					if(is_dir($dir.'/'.$file))
 					{
 						self::tidydir($dir.'/'.$file);
-						if (@rmdir($dir.'/'.$file) === false)
-						{
-							// Magic trick for windows
-							// sometimes the folder is empty but rmdir fails
-							closedir(opendir($dir.'/'.$file));
-							@rmdir($dir.'/'.$file);
-						}
+						self::rmdir_safe($dir.'/'.$file);
 					}
 					else
 					{
@@ -654,6 +642,24 @@ class SetupUtils
 		if (!is_dir($dir))
 		{
 			mkdir($dir);
+		}
+	}
+
+	public static function rmdir_safe($dir)
+	{
+		// avoid unnecessary warning
+		// Try 100 times...
+		$i = 100;
+		while ((@rmdir($dir) === false) && $i > 0)
+		{
+			// Magic trick for windows
+			// sometimes the folder is empty but rmdir fails
+			closedir(opendir($dir));
+			$i--;
+		}
+		if ($i == 0)
+		{
+			rmdir($dir);
 		}
 	}
 
@@ -768,14 +774,14 @@ class SetupUtils
 		self::tidydir($sSource);
 		if($bRemoveSource === true)
         {
-            rmdir($sSource);
+	        self::rmdir_safe($sSource);
         }
 
 		/**
 		 * We have tried the following implementation (based on a rename/mv)
 		 * But this does not work on some OSes.
-		 * More info: https://bugs.php.net/bug.php?id=54097		 		 
-		 *		 		 		 		 		
+		 * More info: https://bugs.php.net/bug.php?id=54097
+		 *
 		$aFiles = scandir($sSource);
 		if(sizeof($aFiles) > 0)
 		{
