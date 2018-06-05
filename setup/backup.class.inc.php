@@ -766,6 +766,17 @@ class TarGzArchive implements BackupArchive
 	}
 
 	/**
+	 * @param string $p_path
+	 * @param null $aEntries
+	 *
+	 * @return bool
+	 */
+	public function extractTo($p_path = '', $aEntries = null)
+	{
+		return $this->oArchive->extract($p_path);
+	}
+
+	/**
 	 * @param string $sDestinationDir
 	 * @param string $sArchiveFile
 	 *

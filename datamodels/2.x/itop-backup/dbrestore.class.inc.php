@@ -79,18 +79,18 @@ class DBRestore extends DBBackup
 		$aOutput = array();
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
-		foreach ($aOutput as $sLine)
+		foreach($aOutput as $sLine)
 		{
 			$this->LogInfo("mysql said: $sLine");
 		}
 		if ($iRetCode != 0)
 		{
 			$this->LogError("Failed to execute: $sCommandDisplay. The command returned:$iRetCode");
-			foreach ($aOutput as $sLine)
+			foreach($aOutput as $sLine)
 			{
 				$this->LogError("mysql said: $sLine");
 			}
-			if (count($aOutput) == 1)
+			if (count($aOutput) == 1) 
 			{
 				$sMoreInfo = trim($aOutput[0]);
 			}
@@ -146,28 +146,22 @@ class DBRestore extends DBBackup
 
 		// Load the database
 		//
-		$sDataDir = tempnam(SetupUtils::GetTmpDir(), 'itop-');
-		unlink($sDataDir); // I need a directory, not a file...
+		$sDataDir = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
+
 		SetupUtils::builddir($sDataDir); // Here is the directory
-		$oArchive->extractFileTo($sDataDir, 'itop-dump.sql');
+		$oArchive->extractTo($sDataDir);
+
 		$sDataFile = $sDataDir.'/itop-dump.sql';
 		$this->LoadDatabase($sDataFile);
-		try
-		{
-			SetupUtils::rrmdir($sDataDir);
-		}
-		catch (Exception $e)
-		{
-			throw new BackupException("Can't remove data dir", 0, $e);
-		}
 
 		// Update the code
 		//
 		$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
-		if ($oArchive->hasFile('delta.xml') !== false)
+
+		if (is_file($sDataDir.'/delta.xml'))
 		{
 			// Extract and rename delta.xml => <env>.delta.xml;
-			file_put_contents($sDeltaFile, $oArchive->getFromName('delta.xml'));
+			rename($sDataDir.'/delta.xml', $sDeltaFile);
 		}
 		else
 		{
@@ -184,15 +178,24 @@ class DBRestore extends DBBackup
 				throw new BackupException("Can't remove production-modules dir", 0, $e);
 			}
 		}
-		if ($oArchive->hasDir('production-modules/') !== false)
+		if (is_dir($sDataDir.'/production-modules'))
 		{
-			$oArchive->extractDirTo(APPROOT.'data/', 'production-modules/');
+			rename($sDataDir.'/production-modules', APPROOT.'data/production-modules/');
 		}
 
 		$sConfigFile = APPROOT.'conf/'.$sEnvironment.'/config-itop.php';
 		@chmod($sConfigFile, 0770); // Allow overwriting the file
-		$oArchive->extractFileTo(APPROOT.'conf/'.$sEnvironment, 'config-itop.php');
+		rename($sDataDir.'/config-itop.php', $sConfigFile);
 		@chmod($sConfigFile, 0444); // Read-only
+
+		try
+		{
+			SetupUtils::rrmdir($sDataDir);
+		}
+		catch (Exception $e)
+		{
+			throw new BackupException("Can't remove data dir", 0, $e);
+		}
 
 		$oEnvironment = new RunTimeEnvironment($sEnvironment);
 		$oEnvironment->CompileFrom($sEnvironment);
