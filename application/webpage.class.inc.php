@@ -60,8 +60,8 @@ class WebPage implements Page
     protected $a_dict_entries;
     protected $a_dict_entries_prefixes;
     protected $a_styles;
-    protected $a_include_scripts;
-    protected $a_include_stylesheets;
+    protected $a_linked_scripts;
+    protected $a_linked_stylesheets;
     protected $a_headers;
     protected $a_base;
     protected $iNextId;
