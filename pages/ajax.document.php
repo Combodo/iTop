@@ -31,7 +31,7 @@ require_once(APPROOT.'application/utils.inc.php');
 if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && (strlen($_SERVER['HTTP_IF_MODIFIED_SINCE']) > 0))
 {
 	// The content is garanteed to be unmodified since the URL includes a signature based on the contents of the document
-	header('not modified', true, 304);
+	header('Last-Modified: Mon, 1 January 2018 00:00:00 GMT', true, 304); // Any date in the past
 	exit;
 }
 
