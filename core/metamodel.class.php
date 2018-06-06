@@ -422,13 +422,13 @@ abstract class MetaModel
 	}
 
 	/**
-	 * Returns the friendly name IIF it is equivalent to a single attribute	
-	 */	
+	 * Returns the friendly name IIF it is equivalent to a single attribute
+	 */
 	final static public function GetFriendlyNameAttributeCode($sClass)
 	{
 		$aNameSpec = self::GetNameSpec($sClass);
 		$sFormat = trim($aNameSpec[0]);
-		$aAttributes = $aNameSpec[1];                                                     
+		$aAttributes = $aNameSpec[1];
 		if (($sFormat != '') && ($sFormat != '%1$s'))
 		{
 			return null;
@@ -438,6 +438,20 @@ abstract class MetaModel
 			return null;
 		}
 		return reset($aAttributes);
+	}
+
+	/**
+	 * Returns the list of attributes composing the friendlyname
+	 *
+	 * @param $sClass
+	 *
+	 * @return array
+	 */
+	final static public function GetFriendlyNameAttributeCodeList($sClass)
+	{
+		$aNameSpec = self::GetNameSpec($sClass);
+		$aAttributes = $aNameSpec[1];
+		return $aAttributes;
 	}
 
 	final static public function GetStateAttributeCode($sClass)
@@ -3806,6 +3820,7 @@ abstract class MetaModel
 			//
 			$aTableInfo = CMDBSource::GetTableInfo($sTable);
 			$aTableInfo['Fields'][$sKeyField]['used'] = true;
+			$aFriendlynameAttcodes = self::GetFriendlyNameAttributeCodeList($sClass);
 			foreach(self::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
 			{
 				if (!$oAttDef->CopyOnAllTables())
@@ -3819,6 +3834,14 @@ abstract class MetaModel
 					$aTableInfo['Fields'][$sField]['used'] = true;
 
 					$bIndexNeeded = $oAttDef->RequiresIndex();
+					if (!$bIndexNeeded)
+					{
+						// Add an index on the columns of the friendlyname
+						if (in_array($sField, $aFriendlynameAttcodes))
+						{
+							$bIndexNeeded = true;
+						}
+					}
 
 					$sFieldDefinition = "`$sField` $sDBFieldSpec";
 					if (!CMDBSource::IsField($sTable, $sField))

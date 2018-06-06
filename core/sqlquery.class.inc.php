@@ -39,7 +39,7 @@ require_once('cmdbsource.class.inc.php');
 abstract class SQLQuery
 {
 	private $m_SourceOQL = '';
-	private $m_bBeautifulQuery = false;
+	protected $m_bBeautifulQuery = false;
 
 	public function __construct()
 	{

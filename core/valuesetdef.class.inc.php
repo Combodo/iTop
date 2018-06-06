@@ -52,7 +52,7 @@ abstract class ValueSetDefinition
 	}
 
 
-	public function GetValues($aArgs, $sContains = '')
+	public function GetValues($aArgs, $sContains = '', $sOperation = 'contains')
 	{
 		if (!$this->m_bIsLoaded)
 		{
@@ -93,12 +93,16 @@ abstract class ValueSetDefinition
 class ValueSetObjects extends ValueSetDefinition
 {
 	protected $m_sContains;
+	protected $m_sOperation;
 	protected $m_sFilterExpr; // in OQL
 	protected $m_sValueAttCode;
 	protected $m_aOrderBy;
 	protected $m_aExtraConditions;
 	private $m_bAllowAllData;
 	private $m_aModifierProperties;
+	private $m_bSort;
+	private $m_iLimit;
+
 
 	/**
 	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
@@ -106,12 +110,15 @@ class ValueSetObjects extends ValueSetDefinition
 	public function __construct($sFilterExp, $sValueAttCode = '', $aOrderBy = array(), $bAllowAllData = false, $aModifierProperties = array())
 	{
 		$this->m_sContains = '';
+		$this->m_sOperation = '';
 		$this->m_sFilterExpr = $sFilterExp;
 		$this->m_sValueAttCode = $sValueAttCode;
 		$this->m_aOrderBy = $aOrderBy;
 		$this->m_bAllowAllData = $bAllowAllData;
 		$this->m_aModifierProperties = $aModifierProperties;
 		$this->m_aExtraConditions = array();
+		$this->m_bSort = true;
+		$this->m_iLimit = 0;
 	}
 
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
@@ -163,11 +170,11 @@ class ValueSetObjects extends ValueSetDefinition
 		return new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
 	}
 
-	public function GetValues($aArgs, $sContains = '')
+	public function GetValues($aArgs, $sContains = '', $sOperation = 'contains')
 	{
-		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains))
+		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains) || ($sOperation != $this->m_sOperation))
 		{
-			$this->LoadValues($aArgs, $sContains);
+			$this->LoadValues($aArgs, $sContains, $sOperation);
 			$this->m_bIsLoaded = true;
 		}
 		// The results are already filtered and sorted (on friendly name)
@@ -175,9 +182,10 @@ class ValueSetObjects extends ValueSetDefinition
 		return $aRet;
 	}
 
-	protected function LoadValues($aArgs, $sContains = '')
+	protected function LoadValues($aArgs, $sContains = '', $sOperation = 'contains')
 	{
 		$this->m_sContains = $sContains;
+		$this->m_sOperation = $sOperation;
 
 		$this->m_aValues = array();
 		
@@ -202,12 +210,54 @@ class ValueSetObjects extends ValueSetDefinition
 			}
 		}
 
-		$oValueExpr = new ScalarExpression('%'.$sContains.'%');
-		$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
-		$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
-		$oFilter->AddConditionExpression($oNewCondition);
+		switch ($sOperation)
+		{
+			case 'equals_start_with':
+				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($oFilter->GetClass());
+				$sClassAlias = $oFilter->GetClassAlias();
+				$aFilters = array();
+				// Equals first
+				$oValueExpr = new ScalarExpression($sContains);
+				foreach($aAttributes as $sAttribute)
+				{
+					$oNewFilter = $oFilter->DeepClone();
+					$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
+					$oCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+					$oNewFilter->AddConditionExpression($oCondition);
+					$aFilters[] = $oNewFilter;
+				}
+				// start with next
+				$oValueExpr = new ScalarExpression($sContains.'%');
+				foreach($aAttributes as $sAttribute)
+				{
+					$oNewFilter = $oFilter->DeepClone();
+					$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
+					$oCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+					$oNewFilter->AddConditionExpression($oCondition);
+					$aFilters[] = $oNewFilter;
+				}
+				// Unions are much faster than OR conditions
+				$oFilter = new DBUnionSearch($aFilters);
+				break;
 
-		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
+			default:
+				$oValueExpr = new ScalarExpression('%'.$sContains.'%');
+				$oNameExpr = new FieldExpression('friendlyname', $oFilter->GetClassAlias());
+				$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+				$oFilter->AddConditionExpression($oNewCondition);
+				break;
+		}
+
+		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs, null, $this->m_iLimit, 0, $this->m_bSort);
+		if (empty($this->m_sValueAttCode))
+		{
+			$aAttToLoad = array($oFilter->GetClassAlias() => array('friendlyname'));
+		}
+		else
+		{
+			$aAttToLoad = array($oFilter->GetClassAlias() => array($this->m_sValueAttCode));
+		}
+		$oObjects->OptimizeColumnLoad($aAttToLoad);
 		while ($oObject = $oObjects->Fetch())
 		{
 			if (empty($this->m_sValueAttCode))
@@ -230,6 +280,22 @@ class ValueSetObjects extends ValueSetDefinition
 	public function GetFilterExpression()
 	{
 		return $this->m_sFilterExpr;
+	}
+
+	/**
+	 * @param $iLimit
+	 */
+	public function SetLimit($iLimit)
+	{
+		$this->m_iLimit = $iLimit;
+	}
+
+	/**
+	 * @param $bSort
+	 */
+	public function SetSort($bSort)
+	{
+		$this->m_bSort = $bSort;
 	}
 }
 

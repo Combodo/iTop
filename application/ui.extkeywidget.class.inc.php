@@ -142,7 +142,12 @@ class UIExtKeyWidget
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
 		$oAllowedValues->SetShowObsoleteData(utils::ShowObsoleteData());
-		if ($oAllowedValues->Count() < $iMaxComboLength)
+		// Don't automatically launch the search if the table is huge
+		$bDoSearch = !utils::IsHighCardinality($this->sTargetClass);
+		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
+
+		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
+		if ($oAllowedValues->Count($iMaxComboLength * 2) < $iMaxComboLength)
 		{
             // Discrete list of values, use a SELECT or RADIO buttons depending on the config
 			switch($sDisplayStyle)
@@ -226,7 +231,7 @@ class UIExtKeyWidget
 				}
 				$oPage->add_ready_script(
 <<<EOF
-		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode);
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
 		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
@@ -261,7 +266,7 @@ EOF
 			$iFieldSize = isset($aArgs['iFieldSize']) ? $aArgs['iFieldSize'] : 20; //@@@ $this->oAttDef->GetMaxSize();
 	
 			// the input for the auto-complete
-			$sHTMLValue .= "<input class=\"field_autocomplete\" count=\"".$oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
+			$sHTMLValue .= "<input class=\"field_autocomplete\" type=\"text\" id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
 			$sHTMLValue .= "<span class=\"field_input_btn\"><img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_search.gif?itopversion=".ITOP_VERSION."\" onClick=\"oACWidget_{$this->iId}.Search();\"/></span>";
 	
 			// another hidden input to store & pass the object's Id
@@ -271,7 +276,7 @@ EOF
 			// Scripts to start the autocomplete and bind some events to it
 			$oPage->add_ready_script(
 <<<EOF
-		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode);
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#label_$this->iId').autocomplete(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', { scroll:true, minChars:{$iMinChars}, autoFill:false, matchContains:true, mustMatch: true, keyHolder:'#{$this->iId}', extraParams:{operation:'ac_extkey', sTargetClass:'{$this->sTargetClass}',sFilter:'$sFilter',bSearchMode:$JSSearchMode, json: function() { return $sWizHelperJSON; } }});
 		$('#label_$this->iId').keyup(function() { if ($(this).val() == '') { $('#$this->iId').val(''); } } ); // Useful for search forms: empty value in the "label", means no value, immediatly !
@@ -338,7 +343,7 @@ EOF
 			$aParams = array();
 			$oFilter = new DBObjectSearch($this->sTargetClass);
 		}
-		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
+		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open') || utils::IsHighCardinality($this->sTargetClass);
 		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oBlock = new DisplayBlock($oFilter, 'search', false, $aParams);
 		$sHTML .= $oBlock->GetDisplay($oPage, $this->iId, array('open' => $bOpen, 'currentId' => $this->iId));
@@ -408,14 +413,35 @@ EOF
         $iCurrentExtKeyId = (is_null($oObj) || $this->sAttCode === '') ? 0 : $oObj->Get($this->sAttCode);
 
 		$oValuesSet = new ValueSetObjects($sFilter, 'friendlyname'); // Bypass GetName() to avoid the encoding by htmlentities
+		$iMax = 150;
+		$oValuesSet->SetLimit($iMax);
+		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
-		$aValues = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains);
-		foreach($aValues as $sKey => $sFriendlyName)
+
+		$aValuesEquals = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'equals_start_with');
+		asort($aValuesEquals);
+		foreach($aValuesEquals as $sKey => $sFriendlyName)
 		{
 			$oP->add(trim($sFriendlyName)."\t".$sKey."\n");
+			$iMax--;
+		}
+		if ($iMax <= 0)
+		{
+			return;
+		}
+
+		$oValuesSet->SetLimit($iMax);
+		$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
+		asort($aValuesContains);
+		foreach($aValuesContains as $sKey => $sFriendlyName)
+		{
+			if (!isset($aValuesEquals[$sKey]))
+			{
+				$oP->add(trim($sFriendlyName)."\t".$sKey."\n");
+			}
 		}
 	}
-	
+
 	/**
 	 * Get the display name of the selected object, to fill back the autocomplete
 	 */

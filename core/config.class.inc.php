@@ -970,6 +970,22 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'optimize_requests_for_join_count' => array(
+			'type' => 'bool',
+			'description' => 'Optimize request joins to minimize the count (default is true, try to set it to false in case of performance issues)',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'high_cardinality_classes' => array(
+			'type' => 'array',
+			'description' => 'List of classes with high cardinality (force auto-complete mode)',
+			'default' => array(),
+			'value' => array(),
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)
