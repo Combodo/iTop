@@ -158,8 +158,17 @@ function collect_configuration()
 	}
 	else
 	{
+		// The format of the variable $_SERVER["SERVER_SOFTWARE"] seems to be the following:
+		// PHP 7 FPM with Apache on Ubuntu: "Apache/2.4.18 (Ubuntu)"
+		// IIS 7.5 on Windows 7:            "Microsoft-IIS/7.5"
+		// Nginx with PHP FPM on Ubuntu:    "nginx/1.10.0"
 		$aConfiguration['web_server_name'] = substr($_SERVER["SERVER_SOFTWARE"], 0, strpos($_SERVER["SERVER_SOFTWARE"], '/'));
-		$aConfiguration['web_server_version'] = substr($_SERVER["SERVER_SOFTWARE"], strpos($_SERVER["SERVER_SOFTWARE"], '/'), strpos($_SERVER["SERVER_SOFTWARE"], 'PHP'));
+		$sWebServerVersion = trim(substr($_SERVER["SERVER_SOFTWARE"], 1+strpos($_SERVER["SERVER_SOFTWARE"], '/')));
+		if ($sWebServerVersion == '')
+		{
+			$sWebServerVersion = 'Unknown';
+		}
+		$aConfiguration['web_server_version'] = $sWebServerVersion;
 	}
 	
 	// PHP extensions
