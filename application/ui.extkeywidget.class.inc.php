@@ -101,7 +101,7 @@ class UIExtKeyWidget
 	/**
 	 * Get the HTML fragment corresponding to the ext key editing widget
 	 * @param WebPage $oP The web page used for all the output
-	 * @param Hash $aArgs Extra context arguments
+	 * @param array $aArgs Extra context arguments
 	 * @return string The HTML fragment to be inserted into the page
 	 */
 	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, DBObjectset $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = null, $sDisplayStyle = 'select', $bSearchMultiple = true)
@@ -145,7 +145,12 @@ class UIExtKeyWidget
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
 		$oAllowedValues->SetShowObsoleteData(utils::ShowObsoleteData());
-		if ($oAllowedValues->Count() < $iMaxComboLength)
+		// Don't automatically launch the search if the table is huge
+		$bDoSearch = !utils::IsHighCardinality($this->sTargetClass);
+		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
+
+		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
+		if (!$oAllowedValues->CountExceeds($iMaxComboLength))
 		{
             // Discrete list of values, use a SELECT or RADIO buttons depending on the config
 			switch($sDisplayStyle)
@@ -170,7 +175,6 @@ class UIExtKeyWidget
 				case 'select':
 				case 'list':
 				default:
-				$sSelectMode = 'true';
 
 				$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
 				$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
@@ -203,13 +207,13 @@ class UIExtKeyWidget
 					if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true') )
 					{
 						// When there is only once choice, select it by default
-						$sSelected = ' selected';
+						$sSelected = 'selected';
 					}
 					else
 					{
-						$sSelected = (is_array($value) && in_array($key, $value)) || ($value == $key) ? ' selected' : '';
+						$sSelected = (is_array($value) && in_array($key, $value)) || ($value == $key) ? 'selected' : '';
 					}
-					$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
+					$sHTMLValue .= "<option value=\"$key\" $sSelected>$display_value</option>\n";
 				}
 				$sHTMLValue .= "</select>\n";
 				$sHTMLValue .= "</div>\n";
@@ -229,7 +233,7 @@ class UIExtKeyWidget
 				}
 				$oPage->add_ready_script(
 <<<EOF
-		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode);
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
 		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
@@ -241,8 +245,6 @@ EOF
 		else
 		{
 			// Too many choices, use an autocomplete
-			$sSelectMode = 'false';
-
 			// Check that the given value is allowed
 			$oSearch = $oAllowedValues->GetFilter();
 			$oSearch->AddCondition('id', $value);
@@ -261,10 +263,9 @@ EOF
 				$sDisplayValue = $this->GetObjectName($value);
 			}
 			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 3; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
-			$iFieldSize = isset($aArgs['iFieldSize']) ? $aArgs['iFieldSize'] : 20; //@@@ $this->oAttDef->GetMaxSize();
 
 			// the input for the auto-complete
-			$sHTMLValue .= "<input class=\"field_autocomplete\" count=\"".$oAllowedValues->Count()."\" type=\"text\" id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
+			$sHTMLValue .= "<input class=\"field_autocomplete\" type=\"text\" id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
 			$sHTMLValue .= "<span class=\"field_input_btn\"><img id=\"mini_search_{$this->iId}\" style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"../images/mini_search.gif?t=".utils::GetCacheBusterTimestamp()."\" onClick=\"oACWidget_{$this->iId}.Search();\"/></span>";
 
 			// another hidden input to store & pass the object's Id
@@ -274,7 +275,7 @@ EOF
 			// Scripts to start the autocomplete and bind some events to it
 			$oPage->add_ready_script(
 <<<EOF
-		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode);
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		$('#label_$this->iId').autocomplete(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', { scroll:true, minChars:{$iMinChars}, autoFill:false, matchContains:true, mustMatch: true, keyHolder:'#{$this->iId}', extraParams:{operation:'ac_extkey', sTargetClass:'{$this->sTargetClass}',sFilter:'$sFilter',bSearchMode:$JSSearchMode, json: function() { return $sWizHelperJSON; } }});
 		$('#label_$this->iId').keyup(function() { if ($(this).val() == '') { $('#$this->iId').val(''); } } ); // Useful for search forms: empty value in the "label", means no value, immediatly !
@@ -376,9 +377,13 @@ EOF
 
 	/**
 	 * Search for objects to be selected
+	 *
 	 * @param WebPage $oP The page used for the output (usually an AjaxWebPage)
+	 * @param $sFilter
 	 * @param string $sRemoteClass Name of the "remote" class to perform the search on, must be a derived class of m_sRemoteClass
-	 * @param Array $aAlreadyLinkedIds List of IDs of objects of "remote" class already linked, to be filtered out of the search
+	 * @param null $oObj
+	 *
+	 * @throws \OQLException
 	 */
 	public function SearchObjectsToSelect(WebPage $oP, $sFilter, $sRemoteClass = '', $oObj = null)
 	{
@@ -403,10 +408,14 @@ EOF
 
 	/**
 	 * Search for objects to be selected
+	 *
 	 * @param WebPage $oP The page used for the output (usually an AjaxWebPage)
 	 * @param string $sFilter The OQL expression used to define/limit limit the scope of possible values
 	 * @param DBObject $oObj The current object for the OQL context
 	 * @param string $sContains The text of the autocomplete to filter the results
+	 * @param string $sOutputFormat
+	 *
+	 * @throws \CoreException
 	 */
 	public function AutoComplete(WebPage $oP, $sFilter, $oObj = null, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV)
 	{
@@ -419,8 +428,26 @@ EOF
         $iCurrentExtKeyId = (is_null($oObj) || $this->sAttCode === '') ? 0 : $oObj->Get($this->sAttCode);
 
 		$oValuesSet = new ValueSetObjects($sFilter, 'friendlyname'); // Bypass GetName() to avoid the encoding by htmlentities
+		$iMax = 150;
+		$oValuesSet->SetLimit($iMax);
+		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
-		$aValues = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains);
+
+		$aValues = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'equals_start_with');
+		$iMax -= count($aValues);
+		if ($iMax > 0)
+		{
+			$oValuesSet->SetLimit($iMax);
+			$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
+			asort($aValuesContains);
+			foreach($aValuesContains as $sKey => $sFriendlyName)
+			{
+				if (!isset($aValues[$sKey]))
+				{
+					$aValues[$sKey] = $sFriendlyName;
+				}
+			}
+		}
 
 		switch($sOutputFormat)
 		{
@@ -461,12 +488,15 @@ EOF
 		}
 	}
 
-    /**
+	/**
 	 * Get the form to select a leaf class from the $this->sTargetClass (that should be abstract)
 	 * Note: Inspired from UILinksWidgetDirect::GetObjectCreationDialog()
 	 *
-     * @param WebPage $oPage
-     */
+	 * @param WebPage $oPage
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
 	public function GetClassSelectionForm(WebPage $oPage)
 	{
         // For security reasons: check that the "proposed" class is actually a subclass of the linked class
@@ -568,21 +598,11 @@ EOF
 		{
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
-		try
-		{
-		    $oFilter = DBObjectSearch::FromOQL($sFilter);
-			$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
-			$oSet = new DBObjectSet($oFilter, array(), array('this' => $oObj, 'current_extkey_id' => $currValue));
-		}
-		catch(MissingQueryArgument $e)
-		{
-			// When used in a search form the $this parameter may be missing, in this case return all possible values...
-			// TODO check if we can improve this behavior...
-			$sOQL = 'SELECT '.$this->m_sTargetClass;
-			$oFilter = DBObjectSearch::FromOQL($sOQL);
-			$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
-			$oSet = new DBObjectSet($oFilter);
-		}
+
+	    $oFilter = DBObjectSearch::FromOQL($sFilter);
+		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
+		$oSet = new DBObjectSet($oFilter, array(), array('this' => $oObj, 'current_extkey_id' => $currValue));
+
 		$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 
 		$sHKAttCode = MetaModel::IsHierarchicalClass($this->sTargetClass);

@@ -77,18 +77,20 @@ class DBObjectSet implements iDBObjectSetIterator
 	 * @var mysqli_result
 	 */
 	protected $m_oSQLResult;
+	protected $m_bSort;
 
 	/**
 	 * Create a new set based on a Search definition.
 	 * 
 	 * @param DBSearch $oFilter The search filter defining the objects which are part of the set (multiple columns/objects per row are supported)
-	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
-	 * @param hash $aArgs Values to substitute for the search/query parameters (if any). Format: param_name => value
-	 * @param hash $aExtendedDataSpec
+	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 * @param array $aArgs Values to substitute for the search/query parameters (if any). Format: param_name => value
+	 * @param array $aExtendedDataSpec
 	 * @param int $iLimitCount Maximum number of rows to load (i.e. equivalent to MySQL's LIMIT start, count)
 	 * @param int $iLimitStart Index of the first row to load (i.e. equivalent to MySQL's LIMIT start, count)
+	 * @param bool $bSort if false no order by is done
 	 */
-	public function __construct(DBSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0)
+	public function __construct(DBSearch $oFilter, $aOrderBy = array(), $aArgs = array(), $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bSort = true)
 	{
 		$this->m_oFilter = $oFilter->DeepClone();
 		$this->m_aAddedIds = array();
@@ -98,6 +100,7 @@ class DBObjectSet implements iDBObjectSetIterator
 		$this->m_aExtendedDataSpec = $aExtendedDataSpec;
 		$this->m_iLimitCount = $iLimitCount;
 		$this->m_iLimitStart = $iLimitStart;
+		$this->m_bSort = $bSort;
 
 		$this->m_iNumTotalDBRows = null;
 		$this->m_iNumLoadedDBRows = 0;
@@ -601,10 +604,15 @@ class DBObjectSet implements iDBObjectSetIterator
 	 * 
 	 * Limitation: the sort order has no effect on objects added in-memory
 	 * 
-	 * @return hash Format: field_code => boolean (true = ascending, false = descending)
+	 * @return array Format: field_code => boolean (true = ascending, false = descending)
 	 */
 	public function GetRealSortOrder()
 	{
+		if (!$this->m_bSort)
+		{
+			// No order by
+			return array();
+		}
 		// Get the class default sort order if not specified with the API
 		//
 		if (empty($this->m_aOrderBy))
@@ -719,7 +727,19 @@ class DBObjectSet implements iDBObjectSetIterator
 
 		return $this->m_iNumTotalDBRows + count($this->m_aAddedObjects); // Does it fix Trac #887 ??
 	}
-	
+
+	public function CountExceeds($iLimit)
+	{
+		$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, $iLimit + 2, 0, true);
+		$resQuery = CMDBSource::Query($sSQL);
+		if (!$resQuery) return (0 > $iLimit);
+
+		$aRow = CMDBSource::FetchArray($resQuery);
+		CMDBSource::FreeResult($resQuery);
+
+		return (intval($aRow['COUNT']) > $iLimit);
+	}
+
 	/**
 	 * Number of rows available in memory (loaded from DB + added in memory)
 	 * 

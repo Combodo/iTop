@@ -147,31 +147,20 @@ class SearchForm
 
 		$bAutoSubmit = true;
 		$mSubmitParam = utils::GetConfig()->Get('search_manual_submit');
-		if (is_array($mSubmitParam))
-		{
-			// List of classes
-			if (isset($mSubmitParam[$sClassName]))
-			{
-				$bAutoSubmit = !$mSubmitParam[$sClassName];
-			}
-			else
-			{
-				// Search for child classes
-				foreach($mSubmitParam as $sConfigClass => $bFlag)
-				{
-					$aChildClasses = MetaModel::EnumChildClasses($sConfigClass);
-					if (in_array($sClassName, $aChildClasses))
-					{
-						$bAutoSubmit = !$bFlag;
-						break;
-					}
-				}
-
-			}
-		}
-		else if ($mSubmitParam !== false)
+		if ($mSubmitParam !== false)
 		{
 			$bAutoSubmit = false;
+		}
+		else
+		{
+			$mSubmitParam = utils::GetConfig()->Get('high_cardinality_classes');
+			if (is_array($mSubmitParam))
+			{
+				if (in_array($sClassName, $mSubmitParam))
+				{
+					$bAutoSubmit = false;
+				}
+			}
 		}
 
 		$sAction = (isset($aExtraParams['action'])) ? $aExtraParams['action'] : utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
@@ -404,6 +393,7 @@ class SearchForm
 	 */
 	public static function GetFieldAllowedValues($oAttrDef)
 	{
+		$iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');
 		if ($oAttrDef->IsExternalKey(EXTKEY_ABSOLUTE))
 		{
 			if ($oAttrDef instanceof AttributeExternalField)
@@ -426,10 +416,9 @@ class SearchForm
 			}
 			$oSearch->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 			$oSet = new DBObjectSet($oSearch);
-			$iCount = $oSet->Count();
-			if ($iCount > MetaModel::GetConfig()->Get('max_combo_length'))
+			if ($oSet->CountExceeds($iMaxComboLength))
 			{
-				return array('autocomplete' => true, 'count' => $iCount);
+				return array('autocomplete' => true);
 			}
 			if ($oAttrDef instanceof AttributeExternalField)
 			{
@@ -438,7 +427,7 @@ class SearchForm
 				{
 					$aAllowedValues[$oObject->GetKey()] = $oObject->GetName();
 				}
-				return array('values' => $aAllowedValues, 'count' => $iCount);
+				return array('values' => $aAllowedValues);
 			}
 		}
 		else
@@ -447,18 +436,16 @@ class SearchForm
 			{
 				/** @var DBObjectSet $oSet */
 				$oSet = $oAttrDef->GetAllowedValuesAsObjectSet();
-				$iCount = $oSet->Count();
-				if ($iCount > MetaModel::GetConfig()->Get('max_combo_length'))
+				if ($oSet->CountExceeds($iMaxComboLength))
 				{
-					return array('autocomplete' => true, 'count' => $iCount);
+					return array('autocomplete' => true);
 				}
 			}
 		}
 
 		$aAllowedValues = $oAttrDef->GetAllowedValues();
 
-		$iCount = is_array($aAllowedValues) ? count($aAllowedValues) : 0;
-		return array('values' => $aAllowedValues, 'count' => $iCount);
+		return array('values' => $aAllowedValues);
 	}
 
 	/**

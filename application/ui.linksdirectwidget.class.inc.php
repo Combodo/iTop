@@ -275,7 +275,10 @@ class UILinksWidgetDirect
 		$sJSONLabels = json_encode($aLabels);
 		$sJSONButtons = json_encode($aButtons);
 		$sWizHelper = 'oWizardHelper'.$sFormPrefix;
-		$oPage->add_ready_script("$('#{$this->sInputid}').directlinks({class_name: '$this->sClass', att_code: '$this->sAttCode', input_name:'$sInputName', labels: $sJSONLabels, submit_to: '$sSubmitUrl', buttons: $sJSONButtons, oWizardHelper: $sWizHelper });");
+		// Don't automatically launch the search if the table is huge
+		$bDoSearch = !utils::IsHighCardinality($this->sLinkedClass);
+		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
+		$oPage->add_ready_script("$('#{$this->sInputid}').directlinks({class_name: '$this->sClass', att_code: '$this->sAttCode', input_name:'$sInputName', labels: $sJSONLabels, submit_to: '$sSubmitUrl', buttons: $sJSONButtons, oWizardHelper: $sWizHelper, do_search: $sJSDoSearch});");
 	}
 
 	/**
@@ -337,6 +340,7 @@ class UILinksWidgetDirect
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->sInputid}",
 				'table_id' => "add_{$this->sInputid}",
 				'table_inner_id' => "ResultsToAdd_{$this->sInputid}",
+				'selection_mode' => true,
 				'cssCount' => "#count_{$this->sInputid}",
 				'query_params' => $oFilter->GetInternalParams(),
 				'hidden_criteria' => $sHiddenCriteria,

@@ -15,7 +15,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper, sAttCode, bSearchMode)
+function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper, sAttCode, bSearchMode, bDoSearch)
 {
 	this.id = id;
 	this.sOriginalTargetClass = sTargetClass;
@@ -29,6 +29,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.ajax_request = null;
 	this.bSelectMode = bSelectMode; // true if the edited field is a SELECT, false if it's an autocomplete
 	this.bSearchMode = bSearchMode; // true if selecting a value in the context of a search form
+	this.bDoSearch = bDoSearch; // false if the search is not launched
 	var me = this;
 	
 	this.Init = function()
@@ -94,7 +95,13 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				me.UpdateSizes();
 				me.UpdateButtons();
 				me.ajax_request = null;
-				me.DoSearchObjects();
+				$('#count_'+me.id).change(function(){
+					me.UpdateButtons();
+				});
+				if (me.bDoSearch)
+				{
+					me.DoSearchObjects();
+				}
 			},
 			'html'
 		);
@@ -196,9 +203,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				$('#fr_'+me.id+' input:radio').click(function() { me.UpdateButtons(); });
 				me.UpdateButtons();
 				me.ajax_request = null;
-				$('#count_'+me.id).change(function(){
-					me.UpdateButtons();
-				});
 				me.UpdateSizes();
 			},
 			'html'

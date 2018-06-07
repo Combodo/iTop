@@ -639,6 +639,20 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Returns the list of attributes composing the friendlyname
+	 *
+	 * @param $sClass
+	 *
+	 * @return array
+	 */
+	final static public function GetFriendlyNameAttributeCodeList($sClass)
+	{
+		$aNameSpec = self::GetNameSpec($sClass);
+		$aAttributes = $aNameSpec[1];
+		return $aAttributes;
+	}
+
+	/**
 	 * @param string $sClass
 	 *
 	 * @return string
@@ -5034,6 +5048,7 @@ abstract class MetaModel
 			// Check that any defined field exists
 			//
 			$aTableInfo['Fields'][$sKeyField]['used'] = true;
+			$aFriendlynameAttcodes = self::GetFriendlyNameAttributeCodeList($sClass);
 			foreach(self::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
 				if (!$oAttDef->CopyOnAllTables())
@@ -5050,6 +5065,14 @@ abstract class MetaModel
 					$aTableInfo['Fields'][$sField]['used'] = true;
 
 					$bIndexNeeded = $oAttDef->RequiresIndex();
+					if (!$bIndexNeeded)
+					{
+						// Add an index on the columns of the friendlyname
+						if (in_array($sField, $aFriendlynameAttcodes))
+						{
+							$bIndexNeeded = true;
+						}
+					}
 
 					$sFieldDefinition = "`$sField` $sDBFieldSpec";
 					if (!CMDBSource::IsField($sTable, $sField))

@@ -1111,9 +1111,17 @@ class Config
 		),
 		'search_manual_submit' => array(
 			'type' => 'array',
-			'description' => 'Force manual submit of search requests (class => true)',
+			'description' => 'Force manual submit of search all requests',
 			'default' => false,
 			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'high_cardinality_classes' => array(
+			'type' => 'array',
+			'description' => 'List of classes with high cardinality (Force manual submit of search)',
+			'default' => array(),
+			'value' => array(),
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),

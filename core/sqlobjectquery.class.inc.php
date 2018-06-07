@@ -339,6 +339,14 @@ class SQLObjectQuery extends SQLQuery
 		$this->PrepareRendering();
 		$sFrom   = self::ClauseFrom($this->__aFrom, $sIndent);
 		$sWhere  = self::ClauseWhere($this->m_oConditionExpr, $aArgs);
+		if ($iLimitCount > 0)
+		{
+			$sLimit = 'LIMIT '.$iLimitStart.', '.$iLimitCount;
+		}
+		else
+		{
+			$sLimit = '';
+		}
 		if ($bGetCount)
 		{
 			if (count($this->__aSelectedIdFields) > 0)
@@ -349,11 +357,13 @@ class SQLObjectQuery extends SQLQuery
 					$aCountFields[] = "COALESCE($sFieldExpr, 0)"; // Null values are excluded from the count
 				}
 				$sCountFields = implode(', ', $aCountFields);
-				$sSQL = "SELECT$sLineSep COUNT(DISTINCT $sCountFields) AS COUNT$sLineSep FROM $sFrom$sLineSep WHERE $sWhere";
+				// Count can be limited for performance reason, in this case the total amount is not important,
+				// we only need to know if the number of entries is greater than a certain amount.
+				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep DISTINCT $sCountFields $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _tatooine_";
 			}
 			else
 			{
-				$sSQL = "SELECT$sLineSep COUNT(*) AS COUNT$sLineSep FROM $sFrom$sLineSep WHERE $sWhere";
+				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep 1 $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _tatooine_";
 			}
 		}
 		else
@@ -364,14 +374,7 @@ class SQLObjectQuery extends SQLQuery
 			{
 				$sOrderBy = "ORDER BY $sOrderBy$sLineSep";
 			}
-			if ($iLimitCount > 0)
-			{
-				$sLimit = 'LIMIT '.$iLimitStart.', '.$iLimitCount;
-			}
-			else
-			{
-				$sLimit = '';
-			}
+
 			$sSQL = "SELECT$sLineSep DISTINCT $sSelect$sLineSep FROM $sFrom$sLineSep WHERE $sWhere$sLineSep $sOrderBy $sLimit";
 		}
 		return $sSQL;

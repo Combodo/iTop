@@ -16,7 +16,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 // JavaScript Document
-function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote)
+function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote, bDoSearch)
 {
 	this.id = id;
 	this.iInputId = iInputId;
@@ -30,6 +30,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.aAdded = [];
 	this.aRemoved = [];
 	this.aModified = {};
+	this.bDoSearch = bDoSearch; // false if the search is not launched
 	var me = this;
 
 	this.Init = function()
@@ -132,11 +133,22 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 				"data": theMap,
 				"dataType": "html"
 			})
-			.done(function (data) {
+			.done(function (data)
+			{
 				$('#dlg_'+me.id).html(data);
 				$('#dlg_'+me.id).dialog('open');
 				me.UpdateSizes(null, null);
-				me.SearchObjectsToAdd();
+				if (me.bDoSearch)
+				{
+					me.SearchObjectsToAdd();
+				}
+				else
+				{
+					$('#count_'+me.id).change(function () {
+						var c = this.value;
+						me.UpdateButtons(c);
+					});
+				}
 				$('#'+me.id+'_indicatorAdd').html('');
 			})
 		;

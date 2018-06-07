@@ -1924,4 +1924,17 @@ class utils
 		}
 		return COMPILATION_TIMESTAMP;
 	}
+
+	/**
+	 * Check if the given class if configured as a high cardinality class.
+	 *
+	 * @param $sClass
+	 *
+	 * @return bool
+	 */
+	public static function IsHighCardinality($sClass)
+	{
+		$aHugeClasses = MetaModel::GetConfig()->Get('high_cardinality_classes');
+		return in_array($sClass, $aHugeClasses);
+	}
 }
