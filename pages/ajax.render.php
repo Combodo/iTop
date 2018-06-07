@@ -861,9 +861,21 @@ try
 			$currentId = utils::ReadParam('currentId', '');
 			$sTableId = utils::ReadParam('_table_id_', null, false, 'raw_data');
 			$sAction = utils::ReadParam('action', '');
+			$sSelectionMode = utils::ReadParam('selection_mode', null,false,'raw_data');
+			$sResultListOuterSelector = utils::ReadParam('result_list_outer_selector', null,false,'raw_data');
+			$scssCount = utils::ReadParam('css_count', null,false,'raw_data');
+			$sTableInnerId = utils::ReadParam('table_inner_id', null,false,'raw_data');
+
 			$oFilter = new DBObjectSearch($sClass);
 			$oSet = new CMDBObjectSet($oFilter);
-			$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array('currentId' => $currentId, 'baseClass' => $sRootClass, 'action' => $sAction, 'table_id' => $sTableId));
+			$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array('currentId' => $currentId,
+																			'baseClass' => $sRootClass,
+																			'action' => $sAction,
+																			'table_id' => $sTableId,
+																			'selection_mode' => $sSelectionMode,
+																			'result_list_outer_selector' => $sResultListOuterSelector,
+																			'cssCount' => $scssCount,
+																			'table_inner_id' => $sTableInnerId));
 			$oPage->add($sHtml);
 			break;
 

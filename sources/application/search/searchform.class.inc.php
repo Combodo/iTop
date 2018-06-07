@@ -135,7 +135,8 @@ class SearchForm
 				$aOptions[MetaModel::GetName($sClassName)] = "<option selected value=\"$sClassName\">".MetaModel::GetName($sClassName)."</options>\n";
 				ksort($aOptions);
 				$sContext = $oAppContext->GetForLink();
-				$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '{$aExtraParams['result_list_outer_selector']}')\">\n".implode('',
+				$sJsonExtraParams = htmlentities(json_encode($aListParams), ENT_QUOTES);
+				$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '{$aExtraParams['result_list_outer_selector']}', $sJsonExtraParams)\">\n".implode('',
 						$aOptions)."</select>\n";
 			}
 			else
@@ -218,17 +219,18 @@ class SearchForm
 		}
 		$sBaseOQL = str_replace(' WHERE 1', '', $oBaseSearch->ToOQL());
 
-		if (isset($aExtraParams['table_inner_id']))
-		{
-			$sDataConfigListSelector = $aExtraParams['table_inner_id'];
-		}
-		else
-		{
-			$sDataConfigListSelector = $aExtraParams['result_list_outer_selector'];
-		}
 		if (!isset($aExtraParams['table_inner_id']))
 		{
 			$aListParams['table_inner_id'] = "table_inner_id_{$sSearchFormId}";
+		}
+
+		if (isset($aExtraParams['result_list_outer_selector']))
+		{
+			$sDataConfigListSelector = $aExtraParams['result_list_outer_selector'];
+		}
+		else
+		{
+			$sDataConfigListSelector = $aExtraParams['table_inner_id'];
 		}
 
 		$sDebug = utils::ReadParam('debug', 'false', false, 'parameter');

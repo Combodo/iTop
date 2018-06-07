@@ -250,7 +250,7 @@ function UpdateFileName(id, sNewFileName) {
 /**
  * Reload a search form for the specified class
  */
-function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId) {
+function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sExtraParams) {
 	var oDiv = $('#ds_'+divId);
 	oDiv.block();
 	// deprecated in jQuery 1.8 
@@ -278,7 +278,23 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId) {
 	oMap.currentId = divId;
 	oMap._table_id_ = sTableId;
 	oMap.action = sAction;
-
+	if(sExtraParams['selection_mode'])
+	{
+		oMap.selection_mode = sExtraParams['selection_mode'];
+	}
+	if(sExtraParams['result_list_outer_selector'])
+	{
+		oMap.result_list_outer_selector = sExtraParams['result_list_outer_selector'];
+	}
+	if(sExtraParams['cssCount'])
+	{
+		oMap.css_count = sExtraParams['cssCount'];
+		$(sExtraParams['cssCount']).val(0).trigger('change');
+	}
+	if(sExtraParams['table_inner_id'])
+	{
+		oMap.table_inner_id = sExtraParams['table_inner_id'];
+	}
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, oMap,
 		function (data) {
 			oDiv.empty();
