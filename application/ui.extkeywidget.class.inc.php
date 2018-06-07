@@ -419,7 +419,7 @@ EOF
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 
 		$aValuesEquals = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'equals_start_with');
-		asort($aValuesEquals);
+		//asort($aValuesEquals);
 		foreach($aValuesEquals as $sKey => $sFriendlyName)
 		{
 			$oP->add(trim($sFriendlyName)."\t".$sKey."\n");

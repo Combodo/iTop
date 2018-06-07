@@ -92,14 +92,14 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			{
 				$('#ac_dlg_'+me.id).html(data);
 				$('#ac_dlg_'+me.id).dialog('open');
-				me.UpdateSizes();
 				me.UpdateButtons();
 				me.ajax_request = null;
-				FixSearchFormsDisposition();
 				if (me.bDoSearch)
 				{
 					me.DoSearchObjects();
 				}
+				FixSearchFormsDisposition();
+				me.UpdateSizes();
 			},
 			'html'
 		);

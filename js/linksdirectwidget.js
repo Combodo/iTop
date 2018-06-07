@@ -11,6 +11,7 @@ $(function()
 			input_name: '',
 			class_name: '',
 			att_code: '',
+			do_search: true,
 			submit_to: '../pages/ajax.render.php',
 			submit_parameters: {},
 			labels: { 'delete': 'Delete',
@@ -211,7 +212,14 @@ $(function()
 				});
 				me.indicator.html('');
 				me.oButtons['add'].removeAttr('disabled');
-				me._onSearchToAdd();
+				if (me.options.do_search)
+				{
+					me._onSearchToAdd();
+				}
+				else
+				{
+					FixSearchFormsDisposition();
+				}
 				me._updateDlgPosition();
 				me._onSearchDlgUpdateSize();
 			});

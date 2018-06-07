@@ -1,5 +1,5 @@
 // JavaScript Document
-function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote)
+function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote, bDoSearch)
 {
 	this.id = id;
 	this.iInputId = iInputId;
@@ -13,6 +13,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.aAdded = [];
 	this.aRemoved = [];
 	this.aModified = {};
+	this.bDoSearch = bDoSearch; // false if the search is not launched
 	var me = this;
 
 	this.Init = function()
@@ -107,7 +108,14 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 					$('#dlg_'+me.id).html(data);
 					$('#dlg_'+me.id).dialog('open');
 					me.UpdateSizes(null, null);
-					me.SearchObjectsToAdd();
+					if (me.bDoSearch)
+					{
+						me.SearchObjectsToAdd();
+					}
+					else
+					{
+						FixSearchFormsDisposition();
+					}
 					$('#'+me.id+'_indicatorAdd').html('');
 				},
 				'html'

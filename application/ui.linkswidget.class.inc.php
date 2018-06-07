@@ -344,9 +344,12 @@ EOF
 		}
 		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
 		$sDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
+		// Don't automatically launch the search if the table is huge
+		$bDoSearch = !utils::IsHighCardinality($this->m_sRemoteClass);
+		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
 		$sWizHelper = 'oWizardHelper'.$sFormPrefix;
 		$oPage->add_ready_script(<<<EOF
-		oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper, '{$this->m_sExtKeyToRemote}');
+		oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper, '{$this->m_sExtKeyToRemote}', $sJSDoSearch);
 		oWidget{$this->m_iInputId}.Init();
 EOF
 );
@@ -389,7 +392,7 @@ EOF
 	 */
 	public function GetObjectPickerDialog($oPage, $oCurrentObj)
 	{
-		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
+		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open') || utils::IsHighCardinality($this->m_sRemoteClass);
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
 		$oFilter = new DBObjectSearch($this->m_sRemoteClass);
 		$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);

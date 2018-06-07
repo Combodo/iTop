@@ -272,7 +272,10 @@ class UILinksWidgetDirect
 		$sJSONLabels = json_encode($aLabels);
 		$sJSONButtons = json_encode($aButtons);
 		$sWizHelper = 'oWizardHelper'.$sFormPrefix;
-		$oPage->add_ready_script("$('#{$this->sInputid}').directlinks({class_name: '$this->sClass', att_code: '$this->sAttCode', input_name:'$sInputName', labels: $sJSONLabels, submit_to: '$sSubmitUrl', buttons: $sJSONButtons, oWizardHelper: $sWizHelper });");
+		// Don't automatically launch the search if the table is huge
+		$bDoSearch = !utils::IsHighCardinality($this->sLinkedClass);
+		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
+		$oPage->add_ready_script("$('#{$this->sInputid}').directlinks({class_name: '$this->sClass', att_code: '$this->sAttCode', input_name:'$sInputName', labels: $sJSONLabels, submit_to: '$sSubmitUrl', buttons: $sJSONButtons, oWizardHelper: $sWizHelper, do_search: $sJSDoSearch});");
 	}
 
 	/**
@@ -302,7 +305,7 @@ class UILinksWidgetDirect
 		{
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 		}
-		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open');
+		$bOpen = MetaModel::GetConfig()->Get('legacy_search_drawer_open') || utils::IsHighCardinality($this->sLinkedClass);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}", array('open' => $bOpen));
 		$sHtml .= "<form id=\"ObjectsAddForm_{$this->sInputid}\">\n";
