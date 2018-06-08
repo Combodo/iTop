@@ -5178,7 +5178,7 @@ abstract class MetaModel
 			{
 				$sIndexId = implode('_', $aColumns);
 
-				if (isset($aTableInfo['Indexes'][$sIndexId]) && $aTableInfo['Indexes'][$sIndexId]['used'])
+				if (isset($aTableInfo['Indexes'][$sIndexId]['used']) && $aTableInfo['Indexes'][$sIndexId]['used'])
 				{
 					continue;
 				}
