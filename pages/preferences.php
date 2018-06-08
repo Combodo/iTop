@@ -346,6 +346,7 @@ try
 		$oUser = UserRights::GetUserObject();
 		$oUser->Set('language', $sLangCode);
 		utils::PushArchiveMode(false);
+		$oUser->AllowWrite(true);
 		$oUser->DBUpdate();
 		utils::PopArchiveMode();
 		// Redirect to force a reload/display of the page with the new language
