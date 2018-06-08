@@ -2568,7 +2568,7 @@ EOF
 					if ($oAttDef->IsExternalKey())
 					{
 						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
-						if ($oAllowedValues->Count() == 1)
+						if ($oAllowedValues->Count(2) == 1)
 						{
 							$oRemoteObj = $oAllowedValues->Fetch();
 							$oObj->Set($sAttCode, $oRemoteObj->GetKey());
@@ -2687,7 +2687,7 @@ EOF
 						if ($oAttDef->IsExternalKey())
 						{
 							$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $this->Get($sAttCode));
-							if ($oAllowedValues->Count() == 1)
+							if ($oAllowedValues->Count(2) == 1)
 							{
 								$oRemoteObj = $oAllowedValues->Fetch();
 								$this->Set($sAttCode, $oRemoteObj->GetKey());
