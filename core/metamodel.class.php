@@ -3911,7 +3911,7 @@ abstract class MetaModel
 			foreach (self::DBGetIndexes($sClass) as $aColumns)
 			{
 				$sIndexId = implode('_', $aColumns);
-				if (isset($aTableInfo['Indexes'][$sIndexId]) && $aTableInfo['Indexes'][$sIndexId]['used'])
+				if (isset($aTableInfo['Indexes'][$sIndexId]['used']) && $aTableInfo['Indexes'][$sIndexId]['used'])
 				{
 					continue;
 				}
