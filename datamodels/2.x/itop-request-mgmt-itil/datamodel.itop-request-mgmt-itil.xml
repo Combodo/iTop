@@ -211,6 +211,7 @@
 					<states>
 						<state id="new"/>
 						<state id="escalated_tto"/>
+						<state id="approved"/>
 					</states>
 					<working_time/>
 					<goal>ResponseTicketTTO</goal>
