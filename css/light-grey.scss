@@ -839,11 +839,11 @@ input.dp-applied {
 		}
 	}
 	&.closed{
-		margin-top: -0.25em; /* To remove top padding from the parent .display_block */
 		margin-bottom: 0.5em;
 		width: 150px;
 		overflow: hidden;
-		border-radius: 0 0 4px 4px;
+		border-radius: 4px;
+		background-color: $complement-color;
 
 		.sf_criterion_area{
 			height: 0;
@@ -3227,3 +3227,7 @@ table.listResults .originColor{
 	margin-left :30px !important;
 }
 ///////////////////
+//Impact analysis filter
+#ds_flash{
+	margin-bottom: 5px;
+}

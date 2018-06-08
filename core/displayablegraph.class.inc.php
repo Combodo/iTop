@@ -1438,22 +1438,22 @@ class DisplayableGraph extends SimpleGraph
 			}
 			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
 		}
+		$sSftShort = Dict::S('UI:ElementsDisplayed');
+		$sSearchToggle = Dict::S('UI:Search:Toggle');
 		$oP->add("<div class=\"not-printable\">\n");
-		$oP->add("<div id=\"ds_flash\" class=\"search_box\" style=\"display:none;\">\n");
-		if (!$oP->IsPrintableVersion())
-		{
-			$oP->add_ready_script(
+		$oP->add(
 <<<EOF
-	$( "#tabbedContent_0" ).tabs({ heightStyle: "fill" });
+ <div id="ds_flash" class="search_box">
+	<form id="dh_flash" class="search_form_handler closed">
+	<h2 class="sf_title"><span class="sft_long">$sSftShort</span><span class="sft_short">$sSftShort</span><span class="sft_toggler fa fa-caret-down pull-right" title="$sSearchToggle"></span></h2>
+	<div id="dh_flash_criterion_outer" class="sf_criterion_area"><div class="sf_criterion_row">
 EOF
-			);
-		}
+		);
 		
 		$oP->add_ready_script(
 <<<EOF
-	$("#dh_flash").click( function() {
-		$("#ds_flash").slideToggle('normal', function() { $("#ds_flash").parent().resize(); $("#dh_flash").trigger('toggle_complete'); } );
-		$("#dh_flash").toggleClass('open');
+	$("#dh_flash > .sf_title").click( function() {
+		$("#dh_flash").toggleClass('closed');
 	});
     $('#ReloadMovieBtn').button().button('disable');
 EOF
@@ -1476,9 +1476,8 @@ EOF
 			$idx++;
 		}
 		$oP->add("<p style=\"text-align:right\"><button type=\"button\" id=\"ReloadMovieBtn\" onClick=\"DoReload()\">".Dict::S('UI:Button:Refresh')."</button></p>");
+		$oP->add("</div></div></form>");
 		$oP->add("</div>\n");
-		$oP->add("<div class=\"HRDrawer\"></div>\n");
-		$oP->add("<div id=\"dh_flash\" class=\"DrawerHandle\">".Dict::S('UI:ElementsDisplayed')."</div>\n");
 	 	$oP->add("</div>\n"); // class="not-printable"
 
 		$aAdditionalContexts = array();
