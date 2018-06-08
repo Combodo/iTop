@@ -1089,9 +1089,13 @@ abstract class DashletGroupBy extends Dashlet
 			$oSelectorField->AddSubForm($oSubForm, $sLabel, $sFct);
 		}
 
-		$aOrderField = array(
-			'attribute' => $aGroupBy[$this->aProperties['group_by']],
-		);
+		$aOrderField = array();
+
+		if (isset($this->aProperties['group_by']) && isset($aGroupBy[$this->aProperties['group_by']]))
+		{
+			$aOrderField['attribute'] = $aGroupBy[$this->aProperties['group_by']];
+		}
+
 		if ($this->aProperties['aggregation_function'] == 'count')
 		{
 			$aOrderField['function'] = Dict::S('UI:GroupBy:count');
