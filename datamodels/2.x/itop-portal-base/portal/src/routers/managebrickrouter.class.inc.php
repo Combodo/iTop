@@ -23,15 +23,15 @@ class ManageBrickRouter extends AbstractRouter
 {
 	static $aRoutes = array(
 		array(
-			'pattern' => '/manage/{sBrickId}/{sDisplayType}/{sGroupingTab}',
+			'pattern' => '/manage/{sBrickId}/{sGroupingTab}/{sDisplayType}',
 			'callback' => 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::DisplayAction',
 			'bind' => 'p_manage_brick',
 			'asserts' => array(
 				'sDisplayType' => 'badge|pie-chart|bar-chart|top-list|default'
 			),
 			'values' => array(
-				'sDisplayType' => null, // will be set using brick's XML config
-				'sGroupingTab' => null
+				'sDisplayType' => 'default',
+				'sGroupingTab' => null,
 			)
 		),
 		array(
@@ -40,12 +40,12 @@ class ManageBrickRouter extends AbstractRouter
 			'bind' => 'p_manage_brick_lazy',
 			'asserts' => array(
 				'iPageNumber' => '\d+',
-				'iListLength' => '\d+'
+				'iListLength' => '\d+',
 			),
 			'values' => array(
 				'sDataLoading' => 'lazy',
 				'iPageNumber' => '1',
-				'iListLength' => '20'
+				'iListLength' => '20',
 			)
 		),
 		array(

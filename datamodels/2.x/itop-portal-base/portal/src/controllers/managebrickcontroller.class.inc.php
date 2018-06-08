@@ -751,7 +751,7 @@ class ManageBrickController extends BrickController
 		// Note : This is a very naive search at the moment
 		if ($sSearchValue !== null)
 		{
-			$aSearchListItems = MetaModel::GetZListItems($sClass, 'standard_search');
+			$aSearchListItems = MetaModel::GetZListItems($sClass, 'list');
 			$oFullBinExpr = null;
 			foreach ($aSearchListItems as $sSearchItemAttr)
 			{
