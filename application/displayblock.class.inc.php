@@ -594,7 +594,7 @@ class DisplayBlock
 				}
 				if (count($aAuthorizedClasses) > 0)
 				{
-					if($this->m_oSet->Count() > 0)
+					if($this->m_oSet->CountWithLimit(1) > 0)
 					{
 						$sHtml .= cmdbAbstractObject::GetDisplayExtendedSet($oPage, $this->m_oSet, $aExtraParams);
 					}
@@ -613,7 +613,7 @@ class DisplayBlock
 			else
 			{
 				// The list is made of only 1 class of objects, actions on the list are possible
-				if ( ($this->m_oSet->Count()> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
+				if ( ($this->m_oSet->CountWithLimit(1)> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
 				{
 					$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $this->m_oSet, $aExtraParams);
 				}
@@ -668,7 +668,7 @@ class DisplayBlock
 			case 'links':
 			//$bDashboardMode = isset($aExtraParams['dashboard']) ? ($aExtraParams['dashboard'] == 'true') : false;
 			//$bSelectMode = isset($aExtraParams['select']) ? ($aExtraParams['select'] == 'true') : false;
-			if ( ($this->m_oSet->Count()> 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
+			if ( ($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) )
 			{
 				//$sLinkage = isset($aExtraParams['linkage']) ? $aExtraParams['linkage'] : '';
 				$sHtml .= cmdbAbstractObject::GetDisplaySet($oPage, $this->m_oSet, $aExtraParams);
@@ -1702,7 +1702,7 @@ class MenuBlock extends DisplayBlock
 				// Do not perform time consuming computations if there are too may objects in the list
 				$iLimit = MetaModel::GetConfig()->Get('complex_actions_limit');
 				
-				if ((count($aStates) > 0) && (($iLimit == 0) || ($oSet->Count() < $iLimit)))
+				if ((count($aStates) > 0) && (($iLimit == 0) || ($oSet->CountWithLimit($iLimit + 1) < $iLimit)))
 				{
 					// Life cycle actions may be available... if all objects are in the same state
 					//

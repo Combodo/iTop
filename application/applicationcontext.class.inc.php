@@ -118,7 +118,7 @@ class ApplicationContext
 						$oSearchFilter = new DBObjectSearch('Organization');
 						$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 						$oSet = new CMDBObjectSet($oSearchFilter);
-						$iCount = $oSet->Count();
+						$iCount = $oSet->CountWithLimit(2);
 						if ($iCount == 1)
 						{
 							// Only one possible value for org_id, set it in the context

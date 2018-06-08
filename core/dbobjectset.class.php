@@ -570,7 +570,7 @@ class DBObjectSet implements iDBObjectSetIterator
 		$aAttributes = array();
 		foreach ($aAliases as $sAlias => $bClassDirection)
 		{
-			foreach (MetaModel::GetOrderByDefault($this->m_oFilter->GetClass($sAlias)) as $sAttCode => $bAttributeDirection)
+			foreach (MetaModel::GetOrderByDefault($this->m_oFilter->GetClass()) as $sAttCode => $bAttributeDirection)
 			{
 				$bDirection = $bClassDirection ? $bAttributeDirection : !$bAttributeDirection;
 				$aAttributes[$sAlias.'.'.$sAttCode] = $bDirection;
@@ -728,16 +728,72 @@ class DBObjectSet implements iDBObjectSetIterator
 		return $this->m_iNumTotalDBRows + count($this->m_aAddedObjects); // Does it fix Trac #887 ??
 	}
 
+	/** Check if the count exceeds a given limit
+	 * @param $iLimit
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public function CountExceeds($iLimit)
 	{
-		$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, $iLimit + 2, 0, true);
-		$resQuery = CMDBSource::Query($sSQL);
-		if (!$resQuery) return (0 > $iLimit);
+		if (is_null($this->m_iNumTotalDBRows))
+		{
+			$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, $iLimit + 2, 0, true);
+			$resQuery = CMDBSource::Query($sSQL);
+			if ($resQuery)
+			{
+				$aRow = CMDBSource::FetchArray($resQuery);
+				CMDBSource::FreeResult($resQuery);
+				$iCount = intval($aRow['COUNT']);
+			}
+			else
+			{
+				$iCount = 0;
+			}
+		}
+		else
+		{
+			$iCount = $this->m_iNumTotalDBRows;
+		}
 
-		$aRow = CMDBSource::FetchArray($resQuery);
-		CMDBSource::FreeResult($resQuery);
+		return ($iCount > $iLimit);
+	}
 
-		return (intval($aRow['COUNT']) > $iLimit);
+	/** Count only up to the given limit
+	 * @param $iLimit
+	 *
+	 * @return int
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	public function CountWithLimit($iLimit)
+	{
+		if (is_null($this->m_iNumTotalDBRows))
+		{
+			$sSQL = $this->m_oFilter->MakeSelectQuery(array(), $this->m_aArgs, null, null, $iLimit + 2, 0, true);
+			$resQuery = CMDBSource::Query($sSQL);
+			if ($resQuery)
+			{
+				$aRow = CMDBSource::FetchArray($resQuery);
+				CMDBSource::FreeResult($resQuery);
+				$iCount = intval($aRow['COUNT']);
+			}
+			else
+			{
+				$iCount = 0;
+			}
+		}
+		else
+		{
+			$iCount = $this->m_iNumTotalDBRows;
+		}
+
+		return $iCount;
 	}
 
 	/**

@@ -1768,11 +1768,11 @@ EOF
 				case 'LinkedSet':
 					if ($oAttDef->IsIndirect())
 					{
-						$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix, $oAttDef->DuplicatesAllowed(), $aArgs);
+						$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix, $oAttDef->DuplicatesAllowed());
 					}
 					else
 					{
-						$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix, $aArgs);
+						$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix);
 					}					
 					$aEventsList[] ='validate';
 					$aEventsList[] ='change';
@@ -2045,7 +2045,7 @@ EOF
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
 			if ($LockEnabled) 
 			{
-				$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+				$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
 				if ($sOwnershipToken !== null)
 				{
 					// We're probably inside something like "apply_modify" where the validation failed and we must prompt the user again to edit the object
@@ -2357,8 +2357,9 @@ EOF
 				{
 					if ($oAttDef->IsExternalKey())
 					{
+						/** @var DBObjectSet $oAllowedValues */
 						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs);
-						if ($oAllowedValues->Count() == 1)
+						if ($oAllowedValues->CountWithLimit(2) == 1)
 						{
 							$oRemoteObj = $oAllowedValues->Fetch();
 							$oObj->Set($sAttCode, $oRemoteObj->GetKey());
@@ -2395,7 +2396,7 @@ EOF
 		$sOwnershipToken = null;
 		if ($LockEnabled) 
 		{
-			$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+			$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
 			$aLockInfo = iTopOwnershipLock::AcquireLock($sClass, $iKey);
 			if ($aLockInfo['success'])
 			{
@@ -2476,8 +2477,9 @@ EOF
 					{
 						if ($oAttDef->IsExternalKey())
 						{
+							/** @var DBObjectSet $oAllowedValues */
 							$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $this->Get($sAttCode));
-							if ($oAllowedValues->Count() == 1)
+							if ($oAllowedValues->CountWithLimit(2) == 1)
 							{
 								$oRemoteObj = $oAllowedValues->Fetch();
 								$this->Set($sAttCode, $oRemoteObj->GetKey());
@@ -3883,7 +3885,7 @@ EOF
 			$bResult = (count($aErrors) == 0);
 			if ($bResult)
 			{
-				list($bResult, $aErrors) = $oObj->CheckToWrite(true /* Enforce Read-only fields */);
+				list($bResult, $aErrors) = $oObj->CheckToWrite();
 			}
 			if ($bPreview)
 			{

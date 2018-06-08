@@ -2939,7 +2939,7 @@ abstract class DBObject implements iDisplay
 					$oSearch->AllowAllData();
 				}
 				$oSet = new CMDBObjectSet($oSearch);
-				if ($oSet->Count() > 0)
+				if ($oSet->CountExceeds(0))
 				{
 					$aDependentObjects[$sRemoteClass][$sExtKeyAttCode] = array(
 						'attribute' => $oExtKeyAttDef,
