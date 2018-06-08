@@ -934,7 +934,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	}
 	.mosaic-item:hover,
 	.mosaic-item:focus{
-		background-color: $combodo-orange;
+		background-color: $brand-primary;
 		box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.20);
 	}
 
@@ -970,6 +970,19 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 		max-height: 40px;
 		font-size: 10px;
 	}
+	/* Layout 5 & 7 */
+	.mosaic-item-layout-5 .mosaic-item-image,
+	.mosaic-item-layout-7 .mosaic-item-image{
+		display: table-cell;
+		width: 65px;
+		padding-left: 5px;
+		padding-right: 10px;
+	}
+	.mosaic-item-layout-5 .mosaic-item-image > img,
+	.mosaic-item-layout-7 .mosaic-item-image > img{
+		max-width: 65px; /* Equals parent element width */
+		max-height: 100px; /* Equals parent element height */
+	}
 }
 @media (min-width: 992px) {
 	.mosaic-item{
@@ -982,14 +995,13 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	/* Layout 5 & 7 */
 	.mosaic-item-layout-5 .mosaic-item-image,
 	.mosaic-item-layout-7 .mosaic-item-image{
-		display: table-cell;
 		width: 105px;
-		padding-left: 5px;
 		padding-right: 18px;
 	}
 	.mosaic-item-layout-5 .mosaic-item-image > img,
 	.mosaic-item-layout-7 .mosaic-item-image > img{
 		max-width: 105px; /* Equals parent element width */
+		max-height: 100px; /* Equals parent element height */
 	}
 	.mosaic-item-layout-5 .mosaic-item-name,
 	.mosaic-item-layout-7 .mosaic-item-name{
@@ -1007,6 +1019,11 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	.mosaic-item-text .mosaic-item-text-wrapper{
 		max-height: 120px; /* Must be .mosaic-item absolute height (in px) */
 		/* overflow hidden inherited */
+	}
+
+	.mosaic-item-layout-5 .mosaic-item-image > img,
+	.mosaic-item-layout-7 .mosaic-item-image > img{
+		max-height: 120px; /* Equals parent element height */
 	}
 }
 

@@ -850,6 +850,7 @@ table .group-actions {
    }*/
   /* Layout 1 */
   /* Layout 7 */
+  /* Layout 5 & 7 */
   .mosaic-group-item {
     display: inline-block;
     width: 32%;
@@ -892,6 +893,18 @@ table .group-actions {
     max-height: 40px;
     font-size: 10px;
   }
+  .mosaic-item-layout-5 .mosaic-item-image, .mosaic-item-layout-7 .mosaic-item-image {
+    display: table-cell;
+    width: 65px;
+    padding-left: 5px;
+    padding-right: 10px;
+  }
+  .mosaic-item-layout-5 .mosaic-item-image > img, .mosaic-item-layout-7 .mosaic-item-image > img {
+    max-width: 65px;
+    /* Equals parent element width */
+    max-height: 100px;
+    /* Equals parent element height */
+  }
 }
 @media (min-width: 992px) {
   /* Layout 5 & 7 */
@@ -902,14 +915,14 @@ table .group-actions {
     font-size: 40px;
   }
   .mosaic-item-layout-5 .mosaic-item-image, .mosaic-item-layout-7 .mosaic-item-image {
-    display: table-cell;
     width: 105px;
-    padding-left: 5px;
     padding-right: 18px;
   }
   .mosaic-item-layout-5 .mosaic-item-image > img, .mosaic-item-layout-7 .mosaic-item-image > img {
     max-width: 105px;
     /* Equals parent element width */
+    max-height: 100px;
+    /* Equals parent element height */
   }
   .mosaic-item-layout-5 .mosaic-item-name, .mosaic-item-layout-7 .mosaic-item-name {
     font-size: 12px;
@@ -926,6 +939,10 @@ table .group-actions {
     max-height: 120px;
     /* Must be .mosaic-item absolute height (in px) */
     /* overflow hidden inherited */
+  }
+  .mosaic-item-layout-5 .mosaic-item-image > img, .mosaic-item-layout-7 .mosaic-item-image > img {
+    max-height: 120px;
+    /* Equals parent element height */
   }
 }
 /* Helper classes to remove margin depending on the screen size */
