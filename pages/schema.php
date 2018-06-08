@@ -837,7 +837,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
         $aOrigins[$sOrigin] = true;
         $sAllowedValues = "";
 		$sMoreInfo = "";
-		$sDefaultNullValue = "";
+		$sDefaultNullValue = '""';
 		$aCols = array();
 		foreach($oAttDef->GetSQLColumns() as $sCol => $sFieldDesc)
 		{
@@ -850,12 +850,12 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 			if($oAttDef->IsNullAllowed())
 			{
 				$aMoreInfo[] = Dict::S('UI:Schema:NullAllowed');
-				$sDefaultNullValue = ($oAttDef->GetNullValue() !== null ? $oAttDef->GetNullValue() : "" );
-				if(!is_string($sDefaultNullValue))
+				$sDefaultNullValue = (!is_null($oAttDef->GetNullValue()) ? $oAttDef->GetNullValue() : null );
+				if(!is_null($sDefaultNullValue) && !is_string($sDefaultNullValue))
 				{
 					$sDefaultNullValue = json_encode($sDefaultNullValue);
 				}
-				$sDefaultNullValue = (!empty($sDefaultNullValue) ? Dict::Format('UI:Schema:DefaultNullValue', $sDefaultNullValue) : "" );
+				$sDefaultNullValue = (!is_null($sDefaultNullValue) ? json_encode(Dict::Format('UI:Schema:DefaultNullValue', $sDefaultNullValue)) : '""' );
 			}
 			else
 			{
@@ -874,7 +874,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		}
         $sAttrCode = $oAttDef->GetCode();
         $sIsEnumValues = 'false';
-        $sAllowedValuesEscpd = '';
+        $sAllowedValuesEscpd = '""';
 		if ($oAttDef instanceof AttributeEnum)
 		{
 			// Display localized values for the enum (which depend on the localization provided by the class)
@@ -890,7 +890,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		elseif (is_object($oAllowedValuesDef = $oAttDef->GetValuesDef()))
 		{
 			$sAllowedValues = trim( $oAllowedValuesDef->GetValuesDescription(), "Filter : ");
-            $sAllowedValuesEscpd = str_replace("'","\'",$sAllowedValues);
+            $sAllowedValuesEscpd = json_encode($sAllowedValues);
 
             $sFilterURL = urlencode($sAllowedValues);
 			$sAllowedValues = "<span id=\"values" . $sAttrCode ."\"><a href=\"run_query.php?expression=" . $sFilterURL . "\">⚵</a>" . Dict::S('UI:Schema:Attribute/Filter') . "</span>";
@@ -899,9 +899,9 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		{
 			$sAllowedValues = '';
 		}
-		$sAttrValueEscpd = str_replace("'","\'",$sValue);
-		$sAttrTypeDescEscpd = str_replace("'", "\'",$sTypeDesc);
-		$sAttrOriginEscpd = str_replace("'", "\'", $sOrigin);
+		$sAttrValueEscpd = json_encode($sValue);
+		$sAttrTypeDescEscpd = json_encode($sTypeDesc);
+		$sAttrOriginEscpd = json_encode($sOrigin);
 
 		$aDetails[] = array('code' => "<span id=\"attr". $sAttrCode."\"><span class=\"attrLabel\">". $oAttDef->GetLabel() ."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" . $oAttDef->GetCode() ."</span><span class=\"parenthesis\">)</span></span>",
 							'type' =>  "<span id=\"type". $sAttrCode."\"><span class=\"attrLabel\">". $sTypeDict ."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">" . $sType ."</span><span class=\"parenthesis\">)</span></span>",
@@ -912,20 +912,20 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		//tooltip construction
         $oPage->add_ready_script(
             <<<EOF
-            	if(`$sAttrValueEscpd` != ''){
-		       		$('#attr$sAttrCode').qtip( { content: `$sAttrValueEscpd`, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+            	if($sAttrValueEscpd != ''){
+		       		$('#attr$sAttrCode').qtip( { content: $sAttrValueEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
 		       	}
-		       	if(`$sAttrTypeDescEscpd` != ''){
-		      	  $('#type$sAttrCode').qtip( { content: `$sAttrTypeDescEscpd`, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+		       	if($sAttrTypeDescEscpd != ''){
+		      	  $('#type$sAttrCode').qtip( { content: $sAttrTypeDescEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
 				}
-				if('$sAttrOriginEscpd' != ''){
-					$('#originColor$sAttrCode').parent().qtip( { content: '$sAttrOriginEscpd', show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+				if($sAttrOriginEscpd != ''){
+					$('#originColor$sAttrCode').parent().qtip( { content: $sAttrOriginEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
 				}
-				if( !$sIsEnumValues && `$sAllowedValuesEscpd` != ''){
-					$('#values$sAttrCode').qtip( { content: `$sAllowedValuesEscpd`, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+				if( !$sIsEnumValues && $sAllowedValuesEscpd != ''){
+					$('#values$sAttrCode').qtip( { content: $sAllowedValuesEscpd, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
 				}
-				if(`$sDefaultNullValue` != ''){
-					$('#moreinfo$sAttrCode').parent().qtip( { content: `$sDefaultNullValue`, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
+				if($sDefaultNullValue != ''){
+					$('#moreinfo$sAttrCode').qtip( { content: $sDefaultNullValue, show: 'mouseover', hide: {fixed : true, delay : 500}, style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );
 				}
 EOF
 
