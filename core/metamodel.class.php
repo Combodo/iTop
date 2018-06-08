@@ -5178,6 +5178,11 @@ abstract class MetaModel
 			{
 				$sIndexId = implode('_', $aColumns);
 
+				if (isset($aTableInfo['Indexes'][$sIndexId]) && $aTableInfo['Indexes'][$sIndexId]['used'])
+				{
+					continue;
+				}
+
 				$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
 				$aTableInfo['Indexes'][$sIndexId]['used'] = true;
 
