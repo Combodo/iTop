@@ -1826,7 +1826,7 @@ class MenuBlock extends DisplayBlock
 
 			if ($this->m_sStyle == 'details')
 			{
-				$sSearchAction = "window.location=\"{$sRootUrl}pages/UI.php?operation=search_form&class=$sClass{$sContext}\"";
+				$sSearchAction = "window.location=\"{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}\"";
 				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), ENT_QUOTES, 'UTF-8')."\"><span class=\"search-button fa fa-search\" onclick='$sSearchAction'></span></div>";
 			}
 
