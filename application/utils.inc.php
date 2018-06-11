@@ -1934,6 +1934,10 @@ class utils
 	 */
 	public static function IsHighCardinality($sClass)
 	{
+		if (utils::GetConfig()->Get('search_manual_submit'))
+		{
+			return true;
+		}
 		$aHugeClasses = MetaModel::GetConfig()->Get('high_cardinality_classes');
 		return in_array($sClass, $aHugeClasses);
 	}
