@@ -636,7 +636,10 @@ abstract class MenuNode
 					}
 					if ($this->m_aEnableActions[$index] != null)
 					{
+						// Menus access rights ignore the archive mode
+						utils::PushArchiveMode(false);
 						$iResult = UserRights::IsActionAllowed($sClass, $this->m_aEnableActions[$index]);
+						utils::PopArchiveMode();
 						if (!($iResult & $this->m_aEnableActionResults[$index]))
 						{
 							return false;
