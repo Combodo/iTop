@@ -64,9 +64,8 @@ class ManageBrickController extends BrickController
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DisplayAction(
-		Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDisplayType = null, $sDataLoading = null
-	) {
+	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDisplayType = null, $sDataLoading = null)
+    {
 		/** @var ManageBrick $oBrick */
 		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
 
@@ -280,7 +279,7 @@ class ManageBrickController extends BrickController
 		$sIconURL = \MetaModel::GetClassIcon($sClass, false);
 
 		// - Adding search clause if necessary
-		$this->ManageSearchValue($oRequest, $aData, $oQuery, $sClass);
+		$this->ManageSearchValue($oRequest, $aData, $oQuery, $sClass, $aColumnsAttrs);
 
 		// Preparing tabs
 		// - We need to retrieve distinct values for the grouping attribute
@@ -742,7 +741,7 @@ class ManageBrickController extends BrickController
 	 * @param DBSearch $oQuery
 	 * @param string $sClass
 	 */
-	protected function ManageSearchValue(Request $oRequest, &$aData, DBSearch &$oQuery, $sClass)
+	protected function ManageSearchValue(Request $oRequest, &$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs)
 	{
 		// Getting search value
 		$sSearchValue = $oRequest->get('sSearchValue', null);
@@ -751,7 +750,7 @@ class ManageBrickController extends BrickController
 		// Note : This is a very naive search at the moment
 		if ($sSearchValue !== null)
 		{
-			$aSearchListItems = MetaModel::GetZListItems($sClass, 'list');
+		    $aSearchListItems = $aColumnsAttrs;
 			$oFullBinExpr = null;
 			foreach ($aSearchListItems as $sSearchItemAttr)
 			{
