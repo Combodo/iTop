@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use Exception;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
@@ -113,7 +114,7 @@ class ManageBrickController extends BrickController
 		{
 			$aData = $this->GetData($oRequest, $oApp, $sBrickId, null);
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			// TODO Default values
 			$aData = array();
@@ -276,10 +277,7 @@ class ManageBrickController extends BrickController
 		// Starting to build query
 		$oQuery = DBSearch::FromOQL($oBrick->GetOql());
 		$sClass = $oQuery->GetClass();
-		$sIconURL = \MetaModel::GetClassIcon($sClass, false);
-
-		// - Adding search clause if necessary
-		$this->ManageSearchValue($oRequest, $aData, $oQuery, $sClass, $aColumnsAttrs);
+		$sIconURL = MetaModel::GetClassIcon($sClass, false);
 
 		// Preparing tabs
 		// - We need to retrieve distinct values for the grouping attribute
@@ -361,6 +359,9 @@ class ManageBrickController extends BrickController
 				$oQuery = $aGroupingTabsValues[$sGroupingTab]['condition']->DeepClone();
 			}
 		}
+
+        // - Adding search clause if necessary
+        $this->ManageSearchValue($oRequest, $aData, $oQuery, $sClass, $aColumnsAttrs);
 
 		// Preparing areas
 		// - We need to retrieve distinct values for the grouping attribute
@@ -750,7 +751,17 @@ class ManageBrickController extends BrickController
 		// Note : This is a very naive search at the moment
 		if ($sSearchValue !== null)
 		{
-		    $aSearchListItems = $aColumnsAttrs;
+		    // Putting only valid attributes as one can define attributes of leaf classes in the brick definition (<fields>), but at this stage we are working on the abstract class.
+            // Note: This won't fix everything as the search will not be looking in all fields.
+		    $aSearchListItems = array();
+		    foreach($aColumnsAttrs as $sColumnAttr)
+            {
+                if(MetaModel::IsValidAttCode($sClass, $sColumnAttr))
+                {
+                    $aSearchListItems[] = $sColumnAttr;
+                }
+            }
+
 			$oFullBinExpr = null;
 			foreach ($aSearchListItems as $sSearchItemAttr)
 			{
