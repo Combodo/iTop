@@ -722,9 +722,9 @@ $(function()
 			else
 			{
 				// Reusing previously created DOM element
-				if(this.element.closest('.display_block').next('.sf_results_area').length > 0)
+				if(this.element.closest('.display_block').parent().find('.sf_results_area').length > 0)
 				{
-					oResultAreaElem = this.element.closest('.display_block').next('.sf_results_area');
+					oResultAreaElem = this.element.closest('.display_block').parent().find('.sf_results_area');
 				}
 				else
 				{
