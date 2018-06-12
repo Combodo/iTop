@@ -151,11 +151,13 @@ abstract class Dashboard
         $sClass = $oDomNode->getAttribute('xsi:type');
 
         // Test if dashlet can be instanciated, otherwise (uninstalled, broken, ...) we display a placeholder
+	    $sDashletType = $sClass;
         if(!class_exists($sClass))
         {
             $sClass = 'DashletUnknown';
         }
         $oNewDashlet = new $sClass($this->oMetaModel, $sId);
+        $oNewDashlet->SetDashletType($sDashletType);
         $oNewDashlet->FromDOMNode($oDomNode);
 
         return $oNewDashlet;
@@ -234,7 +236,7 @@ abstract class Dashboard
 				$oNode = $oDoc->createElement('dashlet');
 				$oDashletsNode->appendChild($oNode);
 				$oNode->setAttribute('id', $oDashlet->GetID());
-				$oNode->setAttribute('xsi:type', get_class($oDashlet));
+				$oNode->setAttribute('xsi:type', $oDashlet->GetDashletType());
 				$oDashletRank = $oDoc->createElement('rank', $iDashletRank);
 				$oNode->appendChild($oDashletRank);
 				$iDashletRank++;
@@ -258,8 +260,9 @@ abstract class Dashboard
 			{
 				$sDashletClass = $aDashletParams['dashlet_class'];
 				$sId = $aDashletParams['dashlet_id'];
+				$sType = $aDashletParams['dashlet_type'];
 				$oNewDashlet = new $sDashletClass($this->oMetaModel, $sId);
-				
+				$oNewDashlet->SetDashletType($sType);
 				$oForm = $oNewDashlet->GetForm();
 				$oForm->SetParamsContainer($sId);
 				$oForm->SetPrefix('');

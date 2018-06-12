@@ -32,6 +32,7 @@ abstract class Dashlet
 	protected $bFormRedrawNeeded;
 	protected $aProperties; // array of {property => value}
 	protected $aCSSClasses;
+	protected $sDashletType;
 
 	public function __construct(ModelReflection $oModelReflection, $sId)
 	{
@@ -41,6 +42,7 @@ abstract class Dashlet
 		$this->bFormRedrawNeeded = false; // By default: no need to redraw the form (independent fields)
 		$this->aProperties = array(); // By default: there is no property
 		$this->aCSSClasses = array('dashlet');
+		$this->sDashletType = get_class($this);
 	}
 
 	// Assuming that a property has the type of its default value, set in the constructor
@@ -214,9 +216,10 @@ abstract class Dashlet
 		if ($bEditMode)
 		{
 			$sClass = get_class($this);
+			$sType = $this->sDashletType;
 			$oPage->add_ready_script(
 <<<EOF
-$('#dashlet_$sId').dashlet({dashlet_id: '$sId', dashlet_class: '$sClass'});
+$('#dashlet_$sId').dashlet({dashlet_id: '$sId', dashlet_class: '$sClass', 'dashlet_type': '$sType'});
 EOF
 			);
 		}
@@ -293,6 +296,9 @@ EOF
 		$oDashletClassField = new DesignerHiddenField('dashlet_class', '', get_class($this));
 		$oForm->AddField($oDashletClassField);
 
+		$oDashletTypeField = new DesignerHiddenField('dashlet_type', '', $this->sDashletType);
+		$oForm->AddField($oDashletTypeField);
+
 		$oDashletIdField = new DesignerHiddenField('dashlet_id', '', $this->GetID());
 		$oForm->AddField($oDashletIdField);
 
@@ -345,6 +351,21 @@ EOF
 		return $aGroupBy;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function GetDashletType()
+	{
+		return $this->sDashletType;
+	}
+
+	/**
+	 * @param string $sDashletType
+	 */
+	public function SetDashletType($sDashletType)
+	{
+		$this->sDashletType = $sDashletType;
+	}
 }
 
 /**
@@ -364,32 +385,14 @@ class DashletUnknown extends Dashlet
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
-		$this->sOriginalDashletClass = 'Unknown';
 		$this->sOriginalDashletXML = '';
 		$this->aCSSClasses[] = 'dashlet-unknown';
 	}
-
-	public function GetOriginalDashletClass()
-    {
-        return $this->sOriginalDashletClass;
-    }
-
-    public function SetOriginalDashletClass($sOriginalDashletClass)
-    {
-        $this->sOriginalDashletClass = $sOriginalDashletClass;
-    }
 
 	public function FromDOMNode($oDOMNode)
 	{
 		// Parent won't do anything as there is no property declared
 		parent::FromDOMNode($oDOMNode);
-
-		// Original dashlet
-		// - Class
-		if($oDOMNode->hasAttribute('xsi:type'))
-		{
-			$this->sOriginalDashletClass = $oDOMNode->getAttribute('xsi:type');
-		}
 
 		// Build properties from XML
         $this->sOriginalDashletXML = "";
@@ -432,7 +435,7 @@ class DashletUnknown extends Dashlet
 		$aInfos = static::GetInfo();
 
 		$sIconUrl = utils::GetAbsoluteUrlAppRoot().$aInfos['icon'];
-		$sExplainText = ($bEditMode) ? Dict::Format('UI:DashletUnknown:RenderText:Edit', $this->sOriginalDashletClass) : Dict::S('UI:DashletUnknown:RenderText:View');
+		$sExplainText = ($bEditMode) ? Dict::Format('UI:DashletUnknown:RenderText:Edit', $this->GetDashletType()) : Dict::S('UI:DashletUnknown:RenderText:View');
 
 		$oPage->add('<div class="dashlet-content">');
 
@@ -447,7 +450,7 @@ class DashletUnknown extends Dashlet
 		$aInfos = static::GetInfo();
 
 		$sIconUrl = utils::GetAbsoluteUrlAppRoot().$aInfos['icon'];
-		$sExplainText = Dict::Format('UI:DashletUnknown:RenderNoDataText:Edit', $this->sOriginalDashletClass);
+		$sExplainText = Dict::Format('UI:DashletUnknown:RenderNoDataText:Edit', $this->GetDashletType());
 
 		$oPage->add('<div class="dashlet-content">');
 
@@ -522,9 +525,6 @@ class DashletUnknown extends Dashlet
 
 class DashletProxy extends DashletUnknown
 {
-	protected $sOriginalDashletClass;
-	protected $sOriginalDashletXML;
-
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
@@ -535,8 +535,6 @@ class DashletProxy extends DashletUnknown
             unset($this->aCSSClasses[$key]);
         }
 
-		$this->sOriginalDashletClass = 'Proxy';
-		$this->sOriginalDashletXML = '';
 		$this->aCSSClasses[] = 'dashlet-proxy';
 	}
 

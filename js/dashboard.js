@@ -84,14 +84,14 @@ $(function()
 						var oDashletParams = oDashlet.get_params();
 						var sId = oDashletParams.dashlet_id;
 						oState[sId] = oDashletParams;				
-						aList.push({dashlet_id: sId, dashlet_class: oDashletParams.dashlet_class} );
+						aList.push({dashlet_id: sId, dashlet_class: oDashletParams.dashlet_class, dashlet_type: oDashletParams.dashlet_type} );
 					}
 				});
 				
 				if (aList.length == 0)
 				{
-					oState[0] = {dashlet_id: 0, dashlet_class: 'DashletEmptyCell'};
-					aList.push({dashlet_id: 0, dashlet_class: 'DashletEmptyCell'});
+					oState[0] = {dashlet_id: 0, dashlet_class: 'DashletEmptyCell', dashlet_type: 'DashletEmptyCell'};
+					aList.push({dashlet_id: 0, dashlet_class: 'DashletEmptyCell', dashlet_type: 'DashletEmptyCell'});
 				}
 				oState.cells.push(aList);
 			});
