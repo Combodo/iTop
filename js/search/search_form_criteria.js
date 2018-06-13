@@ -334,6 +334,11 @@ $(function()
 		_onGetData: function(oData)
 		{
             var bHasToReturnNull = true;
+            // for operations without input text (empty/not empty) no values are present
+            if (this.options.values.length == 0)
+			{
+				bHasToReturnNull = false;
+			}
             for (oValue in this.options.values) {
 				if (oValue.value != '')
 				{
