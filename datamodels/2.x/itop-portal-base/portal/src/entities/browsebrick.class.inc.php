@@ -30,29 +30,37 @@ use Combodo\iTop\Portal\Brick\PortalBrick;
  */
 class BrowseBrick extends PortalBrick
 {
-	const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-map';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-map fa-2x';
 	const ENUM_BROWSE_MODE_LIST = 'list';
     const ENUM_BROWSE_MODE_TREE = 'tree';
     const ENUM_BROWSE_MODE_MOSAIC = 'mosaic';
+
 	const ENUM_ACTION_VIEW = 'view';
 	const ENUM_ACTION_EDIT = 'edit';
 	const ENUM_ACTION_DRILLDOWN = 'drilldown';
+
 	const ENUM_ACTION_CREATE_FROM_THIS = 'create_from_this';
 	const ENUM_ACTION_ICON_CLASS_VIEW = 'glyphicon glyphicon-list-alt';
 	const ENUM_ACTION_ICON_CLASS_EDIT = 'glyphicon glyphicon-pencil';
 	const ENUM_ACTION_ICON_CLASS_DRILLDOWN = 'glyphicon glyphicon-menu-down';
 	const ENUM_ACTION_ICON_CLASS_CREATE_FROM_THIS = 'glyphicon glyphicon-edit';
+
 	const ENUM_FACTORY_TYPE_METHOD = 'method';
 	const ENUM_FACTORY_TYPE_CLASS = 'class';
-	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_FULL;
+
+	const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-map';
+    const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-map fa-2x';
+    const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_FULL;
 	const DEFAULT_LEVEL_NAME_ATT = 'name';
 	const DEFAULT_BROWSE_MODE = self::ENUM_BROWSE_MODE_LIST;
 	const DEFAULT_ACTION = self::ENUM_ACTION_DRILLDOWN;
 	const DEFAULT_ACTION_OPENING_TARGET = self::ENUM_OPENING_TARGET_MODAL;
 	const DEFAULT_LIST_LENGTH = 20;
 
-    static $aBrowseModes = array(self::ENUM_BROWSE_MODE_LIST, self::ENUM_BROWSE_MODE_TREE, self::ENUM_BROWSE_MODE_MOSAIC);
+    static $aBrowseModes = array(
+        self::ENUM_BROWSE_MODE_LIST,
+        self::ENUM_BROWSE_MODE_TREE,
+        self::ENUM_BROWSE_MODE_MOSAIC
+    );
 
     static $sRouteName = 'p_browse_brick';
 

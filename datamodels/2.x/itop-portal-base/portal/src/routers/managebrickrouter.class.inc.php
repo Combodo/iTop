@@ -22,19 +22,29 @@ namespace Combodo\iTop\Portal\Router;
 class ManageBrickRouter extends AbstractRouter
 {
 	static $aRoutes = array(
-		array(
-			'pattern' => '/manage/{sBrickId}/{sGroupingTab}/{sDisplayType}',
-			'callback' => 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::DisplayAction',
-			'bind' => 'p_manage_brick',
-			'asserts' => array(
-				'sDisplayType' => 'badge|pie-chart|bar-chart|top-list|default'
-			),
-			'values' => array(
-				'sDisplayType' => 'default',
-				'sGroupingTab' => null,
-			)
-		),
-		array(
+        array(
+            'pattern' => '/manage/{sBrickId}/{sGroupingTab}',
+            'callback' => 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::DisplayAction',
+            'bind' => 'p_manage_brick',
+            'asserts' => array(),
+            'values' => array(
+                'sDisplayMode' => 'default',
+                'sGroupingTab' => null,
+            )
+        ),
+        array(
+            'pattern' => '/manage/{sBrickId}/display-as/{sDisplayMode}/{sGroupingTab}',
+            'callback' => 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::DisplayAction',
+            'bind' => 'p_manage_brick_display_as',
+            'asserts' => array(
+                'sDisplayMode' => 'badge|pie-chart|bar-chart|top-list|default'
+            ),
+            'values' => array(
+                'sDisplayMode' => 'default',
+                'sGroupingTab' => null,
+            )
+        ),
+        array(
 			'pattern' => '/manage/{sBrickId}/{sGroupingTab}/{sGroupingArea}/page/{iPageNumber}/show/{iListLength}',
 			'callback' => 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::DisplayAction',
 			'bind' => 'p_manage_brick_lazy',

@@ -3,16 +3,16 @@
 
 <div class="col-xs-12 col-sm-{{ oBrick.GetWidth }} tile-chart">
     {% block pTileWrapper %}
-        <a href="{{ app.url_generator.generate('p_manage_brick', {'sBrickId': sBrickId, 'sDisplayType': oBrick.GetDisplayType}) }}{% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] }}{% endif %}"
+        <a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': oBrick.GetDisplayMode}) }}{% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] }}{% endif %}"
         {% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][oBrick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}
         {% if oBrick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}
         class="tile{# vertical-center#}"
         id="brick-{{ oBrick.GetId }}"
         data-brick-id="{{ oBrick.GetId }}">
         <div>
-            <div class="tile_title"><span class="icon fa fa-{{ oBrick.GetDisplayType }}"></span> {{ oBrick.GetTitle()|dict_s }}
+            <div class="tile_title"><span class="icon fa fa-{{ oBrick.GetDisplayMode }}"></span> {{ oBrick.GetTitle()|dict_s }}
                 ({{ iCount }})</span> </div>
-            {% include 'itop-portal-base/portal/src/views/bricks/manage/mode-' ~ oBrick.GetDisplayType ~ '.html.twig' with {'oBrick': oBrick, 'aColumns': aColumns, 'aNames': aNames, 'aUrls': aUrls, 'aDisplayValues': aDisplayValues} %}
+            {% include 'itop-portal-base/portal/src/views/bricks/manage/mode-' ~ oBrick.GetDisplayMode ~ '.html.twig' with {'oBrick': oBrick, 'aColumns': aColumns, 'aNames': aNames, 'aUrls': aUrls, 'aDisplayValues': aDisplayValues} %}
         </div>
         </a>
     {% endblock %}

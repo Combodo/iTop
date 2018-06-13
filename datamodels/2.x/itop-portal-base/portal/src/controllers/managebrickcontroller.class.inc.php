@@ -54,7 +54,7 @@ class ManageBrickController extends BrickController
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
 	 * @param \Silex\Application $oApp
 	 * @param string $sBrickId
-	 * @param string $sDisplayType
+	 * @param string $sDisplayMode
 	 * @param string $sGroupingTab
 	 * @param string $sDataLoading
 	 *
@@ -65,21 +65,21 @@ class ManageBrickController extends BrickController
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDisplayType = null, $sDataLoading = null)
+	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDisplayMode = null, $sDataLoading = null)
     {
 		/** @var ManageBrick $oBrick */
 		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
 
-		if (is_null($sDisplayType))
+		if (is_null($sDisplayMode))
 		{
-			$sDisplayType = $oBrick->GetDisplayType();
+			$sDisplayMode = $oBrick->GetDisplayMode();
 		}
-		$aDisplayParams = $oBrick->GetPresentationDataForDisplayType($sDisplayType);
+		$aDisplayParams = $oBrick->GetPresentationDataForDisplayMode($sDisplayMode);
 		$aData = $this->GetData($oRequest, $oApp, $sBrickId, $sGroupingTab, $aDisplayParams['need_details']);
 
 		$aExportFields = $oBrick->GetExportFields();
 		$aData = $aData + array(
-				'sDisplayType' => $sDisplayType,
+				'sDisplayMode' => $sDisplayMode,
 				'bCanExport' => !empty($aExportFields),
 			);
 		// Preparing response
@@ -701,7 +701,7 @@ class ManageBrickController extends BrickController
 					);
 					$aUrls[] = $oApp['url_generator']->generate('p_manage_brick', array(
 						'sBrickId' => $sBrickId,
-						'sDisplayType' => 'default',
+						'sDisplayMode' => 'default',
 						'sGroupingTab' => $aValues['value']
 					));
 				}

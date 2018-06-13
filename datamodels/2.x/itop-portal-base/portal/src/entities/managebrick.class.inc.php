@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -25,17 +25,21 @@ use DBSearch;
 use DOMFormatException;
 use MetaModel;
 
-define('MANAGE_BRICK_LAYOUT_PATH', 'itop-portal-base/portal/src/views/bricks/manage/');
-
 class ManageBrick extends PortalBrick
 {
 	const ENUM_ACTION_VIEW = 'view';
 	const ENUM_ACTION_EDIT = 'edit';
 
-	const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-pencil-square';
+    const ENUM_DISPLAY_MODE_TABLE = 'default';
+    const ENUM_DISPLAY_MODE_PIE = 'pie-chart';
+    const ENUM_DISPLAY_MODE_BAR = 'bar-chart';
+
+	const ENUM_PAGE_TEMPLATE_PATH_TABLE = 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig';
+    const ENUM_PAGE_TEMPLATE_PATH_CHART = 'itop-portal-base/portal/src/views/bricks/manage/layout-chart.html.twig';
+
+    const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-pencil-square';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-pencil-square fa-2x';
-	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig';
-	const CHART_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/layout-chart.html.twig';
+	const DEFAULT_PAGE_TEMPLATE_PATH = self::ENUM_PAGE_TEMPLATE_PATH_TABLE;
 	const DEFAULT_OQL = '';
 	const DEFAULT_OPENING_MODE = self::ENUM_ACTION_EDIT;
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_LAZY;
@@ -46,7 +50,14 @@ class ManageBrick extends PortalBrick
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/tile-default.html.twig';
 	const DEFAULT_TILE_CONTROLLER_ACTION = 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::TileAction';
 
+	static $aDisplayModes = array(
+        self::ENUM_DISPLAY_MODE_TABLE,
+        self::ENUM_DISPLAY_MODE_PIE,
+        self::ENUM_DISPLAY_MODE_BAR,
+    );
+
 	static $sRouteName = 'p_manage_brick';
+
 	protected $sOql;
 	protected $sOpeningMode;
 	protected $aGrouping;
@@ -56,7 +67,7 @@ class ManageBrick extends PortalBrick
 	/**
 	 * @var string default display mode for the brick's tile
 	 */
-	protected $sDisplayType;
+	protected $sDisplayMode;
 	protected $iGroupLimit;
 	protected $bGroupShowOthers;
 
@@ -64,48 +75,40 @@ class ManageBrick extends PortalBrick
 		'badge' => array(
 			'decorationCssClass' => 'fa fa-id-card-o fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-badge.html.twig',
-			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig',
-			'layoutDisplayType' => ManageBrick::DISPLAY_MODE_TABLE,
+			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
+			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
 			'need_details' => true,
 		),
 		'top-list' => array(
 			'decorationCssClass' => 'fa fa-signal fa-rotate-270 fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-top-list.html.twig',
-			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig',
-			'layoutDisplayType' => ManageBrick::DISPLAY_MODE_TABLE,
+			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
+			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
 			'need_details' => true,
 		),
 		'pie-chart' => array(
 			'decorationCssClass' => 'fa fa-pie-chart fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
-			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-chart.html.twig',
-			'layoutDisplayType' => ManageBrick::DISPLAY_MODE_PIE,
+			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
+			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_PIE,
 			'need_details' => false,
 		),
 		'bar-chart' => array(
 			'decorationCssClass' => 'fa fa-bar-chart fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
-			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-chart.html.twig',
-			'layoutDisplayType' => ManageBrick::DISPLAY_MODE_BAR,
+			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
+			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_BAR,
 			'need_details' => false,
 		),
 		'default' => array(
 			'decorationCssClass' => 'fa fa-pencil-square fa-2x',
 			'tileTemplate' => self::DEFAULT_TILE_TEMPLATE_PATH,
-			'layoutTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/layout-table.html.twig',
-			'layoutDisplayType' => ManageBrick::DISPLAY_MODE_TABLE,
+			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
+			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
 			'need_details' => true,
 		),
 	);
 	protected $aAvailableDisplayModes = array();
-	const DISPLAY_MODE_TABLE = 'default';
-	const DISPLAY_MODE_PIE = 'pie-chart';
-	const DISPLAY_MODE_BAR = 'bar-chart';
-	const DISPLAY_MODES_ALLOWED = array(
-		ManageBrick::DISPLAY_MODE_TABLE,
-		ManageBrick::DISPLAY_MODE_PIE,
-		ManageBrick::DISPLAY_MODE_BAR
-	);
 
 	public function __construct()
 	{
@@ -185,29 +188,29 @@ class ManageBrick extends PortalBrick
 	/**
 	 * @return string
 	 */
-	public function GetDisplayType()
+	public function GetDisplayMode()
 	{
-		return $this->sDisplayType;
+		return $this->sDisplayMode;
 	}
 
 	/**
-	 * @param string $sDisplayType
+	 * @param string $sDisplayMode
 	 */
-	public function SetDisplayType($sDisplayType)
+	public function SetDisplayMode($sDisplayMode)
 	{
-		$this->sDisplayType = $sDisplayType;
+		$this->sDisplayMode = $sDisplayMode;
 	}
 
 	/**
-	 * @param string $sDisplayType
+	 * @param string $sDisplayMode
 	 *
 	 * @return string[] parameters for specified type, default parameters if type is invalid
 	 */
-	public function GetPresentationDataForDisplayType($sDisplayType)
+	public function GetPresentationDataForDisplayMode($sDisplayMode)
 	{
-		if (isset($this->aPresentationData[$sDisplayType]))
+		if (isset($this->aPresentationData[$sDisplayMode]))
 		{
-			return $this->aPresentationData[$sDisplayType];
+			return $this->aPresentationData[$sDisplayMode];
 		}
 
 		return $this->aPresentationData['default'];
@@ -495,7 +498,7 @@ class ManageBrick extends PortalBrick
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
 		parent::LoadFromXml($oMDElement);
-		$this->sDisplayType = 'default';
+		$this->sDisplayMode = 'default';
 		$this->iGroupLimit = 0;
 		$this->bGroupShowOthers = true;
 		$bUseListFieldsForExport = false;
@@ -509,7 +512,7 @@ class ManageBrick extends PortalBrick
 					$sClass = $oBrickSubNode->GetText();
 					if ($sClass === '')
 					{
-						throw new DOMFormatException('ManageBrick : class tag is empty. Must contain Classname', null,
+						throw new DOMFormatException('ManageBrick: class tag is empty. Must contain Classname', null,
 							null, $oBrickSubNode);
 					}
 
@@ -520,7 +523,7 @@ class ManageBrick extends PortalBrick
 					$sOql = $oBrickSubNode->GetText();
 					if ($sOql === '')
 					{
-						throw new DOMFormatException('ManageBrick : oql tag is empty. Must contain OQL statement', null,
+						throw new DOMFormatException('ManageBrick: oql tag is empty. Must contain OQL statement', null,
 							null, $oBrickSubNode);
 					}
 
@@ -531,7 +534,7 @@ class ManageBrick extends PortalBrick
 					$sOpeningMode = $oBrickSubNode->GetText(static::DEFAULT_OPENING_MODE);
 					if (!in_array($sOpeningMode, array(static::ENUM_ACTION_VIEW, static::ENUM_ACTION_EDIT)))
 					{
-						throw new DOMFormatException('ManageBrick : opening_mode tag value must be edit|view ("'.$sOpeningMode.'" given)',
+						throw new DOMFormatException('ManageBrick: opening_mode tag value must be edit|view ("'.$sOpeningMode.'" given)',
 							null, null, $oBrickSubNode);
 					}
 
@@ -548,14 +551,14 @@ class ManageBrick extends PortalBrick
 								{
 									if (!$oModeNode->hasAttribute('id'))
 									{
-										throw new DOMFormatException('ManageBrick : display mode must have a unique ID attribute',
+										throw new DOMFormatException('ManageBrick: Display mode must have a unique ID attribute',
 											null, null, $oModeNode);
 									}
 
 									$sModeId = $oModeNode->getAttribute('id');
-									if (!in_array($sModeId, ManageBrick::DISPLAY_MODES_ALLOWED))
+									if (!in_array($sModeId, static::$aDisplayModes))
 									{
-										throw new DOMFormatException('ManageBrick : display mode has an invalid value',
+										throw new DOMFormatException('ManageBrick: Display mode has an invalid value. Expected '.implode('/', static::$aDisplayModes.', "'.$sModeId.'" given.'),
 											null, null, $oModeNode);
 									}
 
@@ -564,8 +567,8 @@ class ManageBrick extends PortalBrick
 								break;
 
 							case 'default';
-								$this->sDisplayType = $oDisplayNode->nodeValue;
-								$aDisplayParameterForType = $this->GetPresentationDataForDisplayType($this->sDisplayType);
+								$this->sDisplayMode = $oDisplayNode->nodeValue;
+								$aDisplayParameterForType = $this->GetPresentationDataForDisplayMode($this->sDisplayMode);
 								$this->SetTileTemplatePath($aDisplayParameterForType['tileTemplate']);
 								$this->SetPageTemplatePath($aDisplayParameterForType['layoutTemplate']);
 								break;
@@ -693,8 +696,8 @@ class ManageBrick extends PortalBrick
 		}
 
 		// Display modes : at least one selected
-		$sDefaultDetailDisplayMode = (isset($this->sDisplayType))
-			? $this->aPresentationData[$this->sDisplayType]['layoutDisplayType']
+		$sDefaultDetailDisplayMode = (isset($this->sDisplayMode))
+			? $this->aPresentationData[$this->sDisplayMode]['layoutDisplayMode']
 			: 'default';
 		$bHasAvailableDisplayModes = (count($this->GetAvailablesDisplayModes()) > 0);
 		$bIsDefaultDisplayModeInAvailableModes = in_array($sDefaultDetailDisplayMode,
@@ -725,9 +728,9 @@ class ManageBrick extends PortalBrick
 
 		// Checking the navigation icon
 		$sDecorationClassNavigationMenu = $this->GetDecorationClassNavigationMenu();
-		if (empty($sDecorationClassNavigationMenu) && isset($this->aPresentationData[$this->sDisplayType]))
+		if (empty($sDecorationClassNavigationMenu) && isset($this->aPresentationData[$this->sDisplayMode]))
 		{
-			$sDecorationClassNavigationMenu = $this->aPresentationData[$this->sDisplayType]['decorationCssClass'];
+			$sDecorationClassNavigationMenu = $this->aPresentationData[$this->sDisplayMode]['decorationCssClass'];
 			if (!empty($sDecorationClassNavigationMenu))
 			{
 				$this->SetDecorationClassNavigationMenu($sDecorationClassNavigationMenu);
