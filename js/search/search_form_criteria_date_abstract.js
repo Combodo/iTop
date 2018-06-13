@@ -114,7 +114,7 @@ $(function()
 					.attr('for', oInputElem.attr('id'))
 				;
 
-				//no arrivla, the date is always formated yyy-mm-dd, we need to apply the user's formating and to write it into both the dom and the values array.
+				//on arrival, the date is always formated yyy-mm-dd, we need to apply the user's formating and to write it into both the dom and the values array.
 				if (oInputParam.value_index in aValues && typeof aValues[oInputParam.value_index].value != 'undefined' && aValues[oInputParam.value_index].value != '')
 				{
                     //ie9 do not hadle the timezone like the other browsers, so wee need to make extra computation in order to be sure to obtain consistency accross browsers : we declare the date without the UTC offset (the suffix "Z", then wee add the timezone offset
@@ -128,30 +128,30 @@ $(function()
 				}
 
 				oContentElem = oContentElem.add(oOpContentElem);
+
+				// - Apply on "enter" key hit
+				//todo: this could be refactored
+				oOpContentElem.on('keyup', function(oEvent){
+					// Check operator's radio if not already (typically when focusing in input via "tab" key)
+					if(oOpElem.find('.sfc_op_radio').prop('checked') === false)
+					{
+						oOpElem.find('.sfc_op_radio').prop('checked', true)
+					}
+
+					me._markAsDraft();
+
+					// Apply if enter key
+					if(oEvent.key === 'Enter')
+					{
+						var inputElem = $(this).find('input[type="text"]');
+						inputElem.val(inputElem.val().trim());
+						inputElem[oInputParam.x_picker]('hide');
+						//Closing the criterion because the datetime picker widget catches the keydown event
+						me._close();
+						me._apply();
+					}
+				});
 			}
-
-
-
-			// - Apply on "enter" key hit
-			//todo: this could be refactored
-			oOpContentElem.on('keyup', function(oEvent){
-				// Check operator's radio if not already (typically when focusing in input via "tab" key)
-				if(oOpElem.find('.sfc_op_radio').prop('checked') === false)
-				{
-					oOpElem.find('.sfc_op_radio').prop('checked', true)
-				}
-
-				me._markAsDraft();
-
-				// Apply if enter key
-				if(oEvent.key === 'Enter')
-				{
-                    var inputElem = $(this).find('input[type="text"]');
-                    inputElem.val(inputElem.val().trim());
-					me._apply();
-				}
-			});
-
 			oOpElem
 				.find('.sfc_op_name')
 					.remove()

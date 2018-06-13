@@ -184,7 +184,7 @@ $(function()
 				}
 				else
 				{
-					console.log('search form criteria: callback type must be a function or a existing function name of the widget');
+					me._trace('search form criteria: callback type must be a function or a existing function name of the widget');
 					return false;
 				}
 			});
