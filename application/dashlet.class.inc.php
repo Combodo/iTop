@@ -134,7 +134,14 @@ abstract class Dashlet
 	public function FromXml($sXml)
 	{
 		$oDomDoc = new DOMDocument('1.0', 'UTF-8');
+		libxml_clear_errors();
 		$oDomDoc->loadXml($sXml);
+		$aErrors = libxml_get_errors();
+		if (count($aErrors) > 0)
+		{
+			throw new DOMException("Malformed XML");
+		}
+
 		$this->FromDOMNode($oDomDoc->firstChild);
 	}
 
@@ -379,7 +386,6 @@ class DashletUnknown extends Dashlet
 {
 	static protected $aClassList = null;
 
-	protected $sOriginalDashletClass;
 	protected $sOriginalDashletXML;
 
 	public function __construct($oModelReflection, $sId)
@@ -423,8 +429,8 @@ class DashletUnknown extends Dashlet
         // For unknown dashlet, parameters are not parsed but passed as a raw xml
         if(array_key_exists('xml', $aParams))
         {
-            // A namspace must be present for the "xsi:type" attribute, otherwise a warning will be thrown.
-            $sXML = '<dashlet id="'.$aParams['dashlet_id'].'" xsi:type="'.$aParams['dashlet_class'].'" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'.$aParams['xml'].'</dashlet>';
+            // A namespace must be present for the "xsi:type" attribute, otherwise a warning will be thrown.
+            $sXML = '<dashlet id="'.$aParams['dashlet_id'].'" xsi:type="'.$aParams['dashlet_type'].'" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'.$aParams['xml'].'</dashlet>';
             $this->FromXml($sXML);
         }
         $this->OnUpdate();
@@ -481,7 +487,7 @@ class DashletUnknown extends Dashlet
 		if($bHasSubProperties)
 		{
 			$sTmp = $oDOMNode->ownerDocument->saveXML($oDOMNode, LIBXML_NOENT);
-			$sTmp = trim(preg_replace("/(<".$oDOMNode->tagName.".*>|<\/".$oDOMNode->tagName.">)/", "", $sTmp));
+			$sTmp = trim(preg_replace("/(<".$oDOMNode->tagName."[^>]*>|<\/".$oDOMNode->tagName.">)/", "", $sTmp));
 			return $sTmp;
 		}
 		else
@@ -541,13 +547,24 @@ class DashletProxy extends DashletUnknown
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		// This should never be called.
+		$oPage->add('<div class="dashlet-content">');
 		$oPage->add('<div>This dashlet is not supposed to be rendered as it is just a proxy for third-party widgets.</div>');
+		$oPage->add('</div>');
 	}
 
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		// TODO
-		$oPage->add('<div>RENDER NO DATA TO DO! (PREVIEW OR SO)</div>');
+		$aInfos = static::GetInfo();
+
+		$sIconUrl = utils::GetAbsoluteUrlAppRoot().$aInfos['icon'];
+		$sExplainText = Dict::Format('UI:DashletProxy:RenderNoDataText:Edit', $this->GetDashletType());
+
+		$oPage->add('<div class="dashlet-content">');
+
+		$oPage->add('<div class="dashlet-pxy-image"><img src="'.$sIconUrl.'" /></div>');
+		$oPage->add('<div class="dashlet-pxy-text">'.$sExplainText.'</div>');
+
+		$oPage->add('</div>');
 	}
 
 	static public function GetInfo()

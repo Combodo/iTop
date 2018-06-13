@@ -478,7 +478,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Menu:BulkDelete' => 'Delete...',
 	'UI:UndefinedObject' => 'undefined',
 	'UI:Document:OpenInNewWindow:Download' => 'Open in new window: %1$s, Download: %2$s',
-	'UI:SelectAllToggle+' => 'Select / Deselect All',
 	'UI:SplitDateTime-Date' => 'date',
 	'UI:SplitDateTime-Time' => 'time',
 	'UI:TruncatedResults' => '%1$d objects displayed out of %2$d',
@@ -1183,6 +1182,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:DashletProxy:Label' => 'Proxy',
 	'UI:DashletProxy:Description' => 'Proxy dashlet',
+	'UI:DashletProxy:RenderNoDataText:Edit' => 'No preview available for this third-party dashlet (class "%1$s").',
 	'UI:DashletProxy:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)',
 
 	'UI:DashletPlainText:Label' => 'Text',

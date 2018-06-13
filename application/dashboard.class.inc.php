@@ -148,14 +148,10 @@ abstract class Dashboard
 	protected function InitDashletFromDOMNode($oDomNode)
     {
         $sId = $oDomNode->getAttribute('id');
-        $sClass = $oDomNode->getAttribute('xsi:type');
+	    $sDashletType = $oDomNode->getAttribute('xsi:type');
 
         // Test if dashlet can be instanciated, otherwise (uninstalled, broken, ...) we display a placeholder
-	    $sDashletType = $sClass;
-        if(!class_exists($sClass))
-        {
-            $sClass = 'DashletUnknown';
-        }
+	    $sClass = static::GetDashletClassFromType($sDashletType);
         $oNewDashlet = new $sClass($this->oMetaModel, $sId);
         $oNewDashlet->SetDashletType($sDashletType);
         $oNewDashlet->FromDOMNode($oDomNode);
@@ -516,6 +512,15 @@ EOF
 	}
 	
 	abstract protected function SetFormParams($oForm);
+
+	public static function GetDashletClassFromType($sType, $oFactory = null)
+	{
+		if (is_subclass_of($sType, 'Dashlet'))
+		{
+			return $sType;
+		}
+		return 'DashletUnknown';
+	}
 }
 
 class RuntimeDashboard extends Dashboard

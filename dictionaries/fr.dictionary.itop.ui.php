@@ -1023,6 +1023,18 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Form:Property' => 'Propriété',
 	'UI:Form:Value' => 'Valeur',
 
+	'UI:DashletUnknown:Label' => 'Inconnu',
+	'UI:DashletUnknown:Description' => 'Element inconnu (est peut-être désinstallé)',
+	'UI:DashletUnknown:RenderText:View' => 'Impossible d\'effectuer le rendu de cet élément.',
+	'UI:DashletUnknown:RenderText:Edit' => 'Impossible d\'effectuer le rendu de cet élément (classe "%1$s"). Vérifiez avec votre administrateur si il est toujours disponible.',
+	'UI:DashletUnknown:RenderNoDataText:Edit' => 'Impossible d\'effectuer le rendu de cet élément (classe "%1$s").',
+	'UI:DashletUnknown:Prop-XMLConfiguration' => 'Configuration (XML)',
+
+	'UI:DashletProxy:Label' => 'Proxy',
+	'UI:DashletProxy:Description' => 'Proxy',
+	'UI:DashletProxy:RenderNoDataText:Edit' => 'Impossible d\'effectuer le rendu de cet élément externe (classe "%1$s").',
+	'UI:DashletProxy:Prop-XMLConfiguration' => 'Configuration (XML)',
+
 	'UI:DashletPlainText:Label' => 'Texte',
 	'UI:DashletPlainText:Description' => 'Text pur (pas de mise en forme)',
 	'UI:DashletPlainText:Prop-Text' => 'Texte',

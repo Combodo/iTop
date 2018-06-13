@@ -2141,12 +2141,12 @@ td.prop_icon {
 .dashlet-content .display_block {
   text-align: left;
 }
-.dashlet-unknown .dashlet-content {
+.dashlet-unknown .dashlet-content, .dashlet-proxy .dashlet-content {
   padding: 8px;
   background-color: #f2f2f2;
   text-align: center;
 }
-.dashlet-unknown .dashlet-content .dashlet-ukn-text {
+.dashlet-unknown .dashlet-content .dashlet-ukn-text, .dashlet-proxy .dashlet-content .dashlet-ukn-text, .dashlet-unknown .dashlet-content .dashlet-pxy-text, .dashlet-proxy .dashlet-content .dashlet-pxy-text {
   margin-top: 10px;
 }
 .prop_apply .ui-icon-alert {

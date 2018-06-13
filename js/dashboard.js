@@ -171,7 +171,7 @@ $(function()
 		add_dashlet_finalize: function(options, sDashletId, sDashletClass)
 		{
 			$('#dashlet_'+sDashletId)
-			.dashlet({dashlet_id: sDashletId, dashlet_class: sDashletClass})
+			.dashlet({dashlet_id: sDashletId, dashlet_class: sDashletClass, dashlet_type: options.dashlet_type})
 			.dashlet('deselect_all')
 			.dashlet('select')
 			.draggable({
@@ -318,6 +318,7 @@ $(function()
 			var sDashletClass = options.dashlet_class;
 			oParams.dashlet_class = sDashletClass;
 			oParams.dashlet_id = sDashletId;
+			oParams.dashlet_type = options.dashlet_type;
 			var me = this;
 			$.post(this.options.render_to, oParams, function(data){
 				me.ajax_div.html(data);
