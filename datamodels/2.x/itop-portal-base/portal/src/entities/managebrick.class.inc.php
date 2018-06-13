@@ -46,6 +46,7 @@ class ManageBrick extends PortalBrick
 	const DEFAULT_LIST_LENGTH = 20;
 	const DEFAULT_ZLIST_FIELDS = 'list';
 	const DEFAULT_SHOW_TAB_COUNTS = false;
+	const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_TABLE;
 
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/tile-default.html.twig';
 	const DEFAULT_TILE_CONTROLLER_ACTION = 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::TileAction';
@@ -54,6 +55,43 @@ class ManageBrick extends PortalBrick
         self::ENUM_DISPLAY_MODE_TABLE,
         self::ENUM_DISPLAY_MODE_PIE,
         self::ENUM_DISPLAY_MODE_BAR,
+    );
+    static $aPresentationData = array(
+        'badge' => array(
+            'decorationCssClass' => 'fa fa-id-card-o fa-2x',
+            'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-badge.html.twig',
+            'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
+            'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
+            'need_details' => true,
+        ),
+        'top-list' => array(
+            'decorationCssClass' => 'fa fa-signal fa-rotate-270 fa-2x',
+            'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-top-list.html.twig',
+            'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
+            'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
+            'need_details' => true,
+        ),
+        'pie-chart' => array(
+            'decorationCssClass' => 'fa fa-pie-chart fa-2x',
+            'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
+            'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
+            'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_PIE,
+            'need_details' => false,
+        ),
+        'bar-chart' => array(
+            'decorationCssClass' => 'fa fa-bar-chart fa-2x',
+            'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
+            'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
+            'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_BAR,
+            'need_details' => false,
+        ),
+        'default' => array(
+            'decorationCssClass' => 'fa fa-pencil-square fa-2x',
+            'tileTemplate' => self::DEFAULT_TILE_TEMPLATE_PATH,
+            'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
+            'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
+            'need_details' => true,
+        ),
     );
 
 	static $sRouteName = 'p_manage_brick';
@@ -70,44 +108,6 @@ class ManageBrick extends PortalBrick
 	protected $sDisplayMode;
 	protected $iGroupLimit;
 	protected $bGroupShowOthers;
-
-	protected $aPresentationData = array(
-		'badge' => array(
-			'decorationCssClass' => 'fa fa-id-card-o fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-badge.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
-			'need_details' => true,
-		),
-		'top-list' => array(
-			'decorationCssClass' => 'fa fa-signal fa-rotate-270 fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-top-list.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
-			'need_details' => true,
-		),
-		'pie-chart' => array(
-			'decorationCssClass' => 'fa fa-pie-chart fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_PIE,
-			'need_details' => false,
-		),
-		'bar-chart' => array(
-			'decorationCssClass' => 'fa fa-bar-chart fa-2x',
-			'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_BAR,
-			'need_details' => false,
-		),
-		'default' => array(
-			'decorationCssClass' => 'fa fa-pencil-square fa-2x',
-			'tileTemplate' => self::DEFAULT_TILE_TEMPLATE_PATH,
-			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
-			'need_details' => true,
-		),
-	);
 	protected $aAvailableDisplayModes = array();
 
 	public function __construct()
@@ -208,12 +208,12 @@ class ManageBrick extends PortalBrick
 	 */
 	public function GetPresentationDataForDisplayMode($sDisplayMode)
 	{
-		if (isset($this->aPresentationData[$sDisplayMode]))
+		if (isset(static::$aPresentationData[$sDisplayMode]))
 		{
-			return $this->aPresentationData[$sDisplayMode];
+			return static::$aPresentationData[$sDisplayMode];
 		}
 
-		return $this->aPresentationData['default'];
+		return static::$aPresentationData[static::DEFAULT_DISPLAY_MODE];
 	}
 
 	/**
@@ -697,7 +697,7 @@ class ManageBrick extends PortalBrick
 
 		// Display modes : at least one selected
 		$sDefaultDetailDisplayMode = (isset($this->sDisplayMode))
-			? $this->aPresentationData[$this->sDisplayMode]['layoutDisplayMode']
+			? static::$aPresentationData[$this->sDisplayMode]['layoutDisplayMode']
 			: 'default';
 		$bHasAvailableDisplayModes = (count($this->GetAvailablesDisplayModes()) > 0);
 		$bIsDefaultDisplayModeInAvailableModes = in_array($sDefaultDetailDisplayMode,
@@ -728,9 +728,9 @@ class ManageBrick extends PortalBrick
 
 		// Checking the navigation icon
 		$sDecorationClassNavigationMenu = $this->GetDecorationClassNavigationMenu();
-		if (empty($sDecorationClassNavigationMenu) && isset($this->aPresentationData[$this->sDisplayMode]))
+		if (empty($sDecorationClassNavigationMenu) && isset(static::$aPresentationData[$this->sDisplayMode]))
 		{
-			$sDecorationClassNavigationMenu = $this->aPresentationData[$this->sDisplayMode]['decorationCssClass'];
+			$sDecorationClassNavigationMenu = static::$aPresentationData[$this->sDisplayMode]['decorationCssClass'];
 			if (!empty($sDecorationClassNavigationMenu))
 			{
 				$this->SetDecorationClassNavigationMenu($sDecorationClassNavigationMenu);
