@@ -170,7 +170,16 @@ class ValueSetObjects extends ValueSetDefinition
 		return new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs);
 	}
 
-	public function GetValues($aArgs, $sContains = '', $sOperation = 'contains')
+    /**
+     * @param        $aArgs
+     * @param string $sContains
+     * @param string $sOperation for the values @see self::LoadValues()
+     *
+     * @return array
+     * @throws CoreException
+     * @throws OQLException
+     */
+    public function GetValues($aArgs, $sContains = '', $sOperation = 'contains')
 	{
 		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains) || ($sOperation != $this->m_sOperation))
 		{

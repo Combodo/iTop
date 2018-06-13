@@ -67,7 +67,7 @@ $(function()
 			},
 			'default_criteria_type': 'raw',
 			'conf_parameters': {
-				'min_autocomplete_chars': 3,
+				'min_autocomplete_chars': 2,
 				'datepicker': {
 					'dayNamesMin': ['Su','Mo','Tu','We','Th','Fr','Sa'],
 					'monthNamesShort': ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],

@@ -406,18 +406,20 @@ EOF
 		$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'table_id' => 'select_'.$this->sAttCode)); // Don't display the 'Actions' menu on the results
 	}
 
-	/**
-	 * Search for objects to be selected
-	 *
-	 * @param WebPage $oP The page used for the output (usually an AjaxWebPage)
-	 * @param string $sFilter The OQL expression used to define/limit limit the scope of possible values
-	 * @param DBObject $oObj The current object for the OQL context
-	 * @param string $sContains The text of the autocomplete to filter the results
-	 * @param string $sOutputFormat
-	 *
-	 * @throws \CoreException
-	 */
-	public function AutoComplete(WebPage $oP, $sFilter, $oObj = null, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV)
+    /**
+     * Search for objects to be selected
+     *
+     * @param WebPage  $oP        The page used for the output (usually an AjaxWebPage)
+     * @param string   $sFilter   The OQL expression used to define/limit limit the scope of possible values
+     * @param DBObject $oObj      The current object for the OQL context
+     * @param string   $sContains The text of the autocomplete to filter the results
+     * @param string   $sOutputFormat
+     * @param null     $sOperation for the values @see ValueSetObjects->LoadValues()
+     *
+     * @throws CoreException
+     * @throws OQLException
+     */
+	public function AutoComplete(WebPage $oP, $sFilter, $oObj = null, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null)
 	{
 		if (is_null($sFilter))
 		{
@@ -433,9 +435,17 @@ EOF
 		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 
-		$aValues = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'equals_start_with');
+		if (empty($sOperation) || 'equals_start_with' == $sOperation)
+        {
+            $aValues = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'equals_start_with');
+        }
+        else
+        {
+            $aValues = array();
+        }
+
 		$iMax -= count($aValues);
-		if ($iMax > 0)
+		if ($iMax > 0 && (empty($sOperation) || 'contains' == $sOperation))
 		{
 			$oValuesSet->SetLimit($iMax);
 			$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');

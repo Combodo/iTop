@@ -265,8 +265,8 @@ class Config
 		'min_autocomplete_chars' => array(
 			'type' => 'integer',
 			'description' => 'The minimum number of characters to type in order to trigger the "autocomplete" behavior',
-			'default' => 3,
-			'value' => 3,
+			'default' => 2,
+			'value' => 2,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),

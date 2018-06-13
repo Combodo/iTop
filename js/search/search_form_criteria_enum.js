@@ -32,7 +32,7 @@ $(function()
 			// Autocomplete
 			'autocomplete': {
 				'xhr_throttle': 200,
-				'min_autocomplete_chars': 3,
+				'min_autocomplete_chars': 2,
 			},
 		},
 
@@ -322,6 +322,13 @@ $(function()
 			// - Autocomplete
 			var oACXHR = null;
 			var oACTimeout = null;
+
+            oFilterElem.find('input').on('keydown', function(event) {
+                //this filter should not close the criteria when the enter button is triggered
+            	event.stopPropagation();
+                // return false;
+			});
+
 			oFilterElem.find('input').on('keyup itop.search.criteria_enum.autocomplete.submit', function(oEvent){
 				// TODO: Move on values with up and down arrow keys; select with space or enter.
 				if(me._isFilteredKey(oEvent.keyCode))
@@ -356,9 +363,41 @@ $(function()
 								bSearchMode: 'true',
 								sOutputFormat: 'json',
 								operation: 'ac_extkey',
+                                sAutocompleteOperation: 'equals_start_with'
 							}
 							)
-							.done(function(oResponse, sStatus, oXHR){ me._onACSearchSuccess(oResponse); })
+							.done(function(oResponse, sStatus, oXHR){
+								me._onACSearchSuccess(oResponse);
+
+
+								if (oResponse.length > 150)
+								{
+                                    this._emptyACTempHint();
+
+									return;
+								}
+
+                                oACXHR = $.post(
+                                    AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'),
+                                    {
+                                        sTargetClass: me.options.field.target_class,
+                                        sFilter: 'SELECT ' + me.options.field.target_class,
+                                        q: sQuery,
+                                        bSearchMode: 'true',
+                                        sOutputFormat: 'json',
+                                        operation: 'ac_extkey',
+                                        sAutocompleteOperation: 'contains'
+                                    }
+                                )
+								.done(function(oResponseContains, sStatus, oXHR){
+                                    //filter duplicates
+                                    $.each(oResponse, function(index, value) {
+                                        delete oResponseContains[index];
+									});
+
+                                    me._onACSearchContainsSuccess(oResponseContains);
+                                });
+							})
 							.fail(function(oResponse, sStatus, oXHR){  me._onACSearchFail(oResponse, sStatus); })
 							.always(function(oResponse, sStatus, oXHR){ me._onACSearchAlways(); });
 
@@ -550,6 +589,12 @@ $(function()
 		{
 			this._setACHint(Dict.S('UI:Search:Value:Autocomplete:NoResult'));
 		},
+        _setACWaitTempHint: function() {
+            this.element.find('.sfc_opc_mc_items_dynamic').append('<div class="sfc_opc_mc_placeholder">'+Dict.S('UI:Search:Value:Autocomplete:Wait')+'</div>');
+        },
+        _emptyACTempHint: function() {
+            this.element.find('.sfc_opc_mc_items_dynamic .sfc_opc_mc_placeholder').remove();
+        },
 		// Autocomplete callbacks
 		_onACSearchSuccess: function(oResponse)
 		{
@@ -575,11 +620,43 @@ $(function()
 					oValueElem.appendTo(oDynamicListElem);
 				}
 			}
-			else
-			{
-				this._setACNoResultHint();
-			}
+            this._setACWaitTempHint();
 		},
+
+        // Autocomplete CONTAINS callbacks
+        _onACSearchContainsSuccess: function(oResponse)
+        {
+            if(typeof oResponse !== 'object')
+            {
+                this._emptyACTempHint();
+            	return false;
+            }
+
+            var oDynamicListElem = this.element.find('.sfc_opc_mc_items_dynamic');
+            if(Object.keys(oResponse).length > 0)
+            {
+                // Note: Response is indexed by labels from server so the JSON is always ordered on decoding.
+                for(var sLabel in oResponse)
+                {
+                    var sValue = oResponse[sLabel];
+                    // Note: We don't use the _isSelectedValue() method here as it only returns "applied" values; at this moment will could have a checked value that is not among selected (me.options.values) yet. The result would be an hidden item from the AC results.
+                    var bSelected = (this.element.find(this._getSelectedValuesWrapperSelector() + ' .sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0);
+                    var bInitChecked = bSelected;
+                    var bInitHidden = bSelected;
+                    var oValueElem = this._makeListItemElement(sLabel, sValue, bInitChecked, bInitHidden);
+                    oValueElem.appendTo(oDynamicListElem);
+                }
+            }
+
+            if (oDynamicListElem.find('.sfc_opc_mc_item').length == 0)
+            {
+            	this._setACNoResultHint();
+            }
+            else
+            {
+                this._emptyACTempHint();
+			}
+        },
 		_onACSearchFail: function(oResponse, sStatus)
 		{
 			if(sStatus !== 'abort')
