@@ -344,17 +344,9 @@ footer {
 /**********************************/
 /* ManageBrick badge tile display */
 /**********************************/
-.home a.tile.tile_badge {
-  /*padding: 0;
-   margin: 0;
-   margin-bottom: 25px;
-   height: 12em;
-   min-height: unset;*/
-}
 .home a.tile.tile_badge > div {
   display: table;
   width: 100%;
-  /*padding: 12% 10% 0;*/
 }
 .home a.tile.tile_badge > div > div {
   display: table-row;

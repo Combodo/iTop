@@ -368,18 +368,9 @@ footer{
 /**********************************/
 /* ManageBrick badge tile display */
 /**********************************/
-.home a.tile.tile_badge {
-	/*padding: 0;
-	margin: 0;
-	margin-bottom: 25px;
-	height: 12em;
-	min-height: unset;*/
-}
-
 .home a.tile.tile_badge > div {
 	display: table;
 	width: 100%;
-	/*padding: 12% 10% 0;*/
 }
 
 .home a.tile.tile_badge > div > div {
@@ -389,11 +380,6 @@ footer{
 .home a.tile.tile_badge > div > div > div {
 	display: table-cell;
 }
-
-//.home div.tile-chart > a > div {
-//	padding: 0.25em;
-//}
-
 
 @media (max-width: 768px) {
 	.home a.tile.tile_badge > div > div > div.tile_body div.tile_count {
@@ -407,7 +393,6 @@ footer{
 		display: none;
 	}
 }
-
 @media (min-width: 768px) {
 	.home .tile{
 		display: block;
@@ -445,7 +430,7 @@ footer{
 
 	.home a.tile.tile_badge{
 		height: 10em;
-		overflow-y: hidden;
+		overflow: hidden;
 	}
 	.home a.tile.tile_badge > div > div > div.tile_decoration{
 		top: unset;
