@@ -13,7 +13,6 @@ SetupWebPage::AddModule(
 	'visible' => true,
 	// Components
 	'datamodel' => array(
-		'portal/src/apis/extensions/d3portaluiextension.class.inc.php',
 		'portal/src/controllers/abstractcontroller.class.inc.php',
 		'portal/src/controllers/brickcontroller.class.inc.php',
 		'portal/src/entities/abstractbrick.class.inc.php',
