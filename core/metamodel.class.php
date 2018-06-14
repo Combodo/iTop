@@ -3850,6 +3850,7 @@ abstract class MetaModel
 						$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD $sFieldDefinition";
 						if ($bIndexNeeded)
 						{
+							$aTableInfo['Indexes'][$sField]['used'] = true;
 							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX (`$sField`)";
 						}
 						if (array_key_exists($sTable, $aCreateTable))
@@ -3865,6 +3866,7 @@ abstract class MetaModel
 							$aAlterTableItems[$sTable][$sField] = "ADD $sFieldDefinition";
 							if ($bIndexNeeded)
 							{
+								$aTableInfo['Indexes'][$sField]['used'] = true;
 								$aAlterTableItems[$sTable][] = "ADD INDEX (`$sField`)";
 							}
 						}
@@ -3890,6 +3892,7 @@ abstract class MetaModel
 						//
 						if ($bIndexNeeded && !CMDBSource::HasIndex($sTable, $sField, array($sField)))
 						{
+							$aTableInfo['Indexes'][$sField]['used'] = true;
 							$aErrors[$sClass][$sAttCode][] = "Foreign key '$sField' in table '$sTable' should have an index";
 							if (CMDBSource::HasIndex($sTable, $sField))
 							{
