@@ -700,26 +700,36 @@ EOF
 			}
 		}
 	}
-	
+
 	/**
 	 * Check if the user is already authentified, if yes, then performs some additional validations:
 	 * - if $bMustBeAdmin is true, then the user must be an administrator, otherwise an error is displayed
-	 * - if $bIsAllowedToPortalUsers is false and the user has only access to the portal, then the user is redirected to the portal
+	 * - if $bIsAllowedToPortalUsers is false and the user has only access to the portal, then the user is redirected
+	 * to the portal
+	 *
 	 * @param bool $bMustBeAdmin Whether or not the user must be an admin to access the current page
 	 * @param bool $bIsAllowedToPortalUsers Whether or not the current page is considered as part of the portal
 	 * @param int iOnExit What action to take if the user is not logged on (one of the class constants EXIT_...)
+	 *
+	 * @return int|mixed|string
+	 * @throws \Exception
 	 */
 	static function DoLogin($bMustBeAdmin = false, $bIsAllowedToPortalUsers = false, $iOnExit = self::EXIT_PROMPT)
 	{
 		$sRequestedPortalId = $bIsAllowedToPortalUsers ? 'legacy_portal' : 'backoffice';
 		return self::DoLoginEx($sRequestedPortalId, $bMustBeAdmin, $iOnExit);
 	}
-	
+
 	/**
-	 * Check if the user is already authentified, if yes, then performs some additional validations to redirect towards the desired "portal"
+	 * Check if the user is already authentified, if yes, then performs some additional validations to redirect towards
+	 * the desired "portal"
+	 *
 	 * @param string|null $sRequestedPortalId The requested "portal" interface, null for any
 	 * @param bool $bMustBeAdmin Whether or not the user must be an admin to access the current page
 	 * @param int iOnExit What action to take if the user is not logged on (one of the class constants EXIT_...)
+	 *
+	 * @return int|mixed|string
+	 * @throws \Exception
 	 */
 	static function DoLoginEx($sRequestedPortalId = null, $bMustBeAdmin = false, $iOnExit = self::EXIT_PROMPT)
 	{

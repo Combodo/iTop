@@ -843,7 +843,13 @@ class SetupUtils
 		
 		return $aResult;
 	}
-	
+
+	/**
+	 * @param string $sDir
+	 *
+	 * @return bool|float false if failure
+	 * @uses \disk_free_space()
+	 */
 	static function CheckDiskSpace($sDir)
 	{
 		while(($f = @disk_free_space($sDir)) == false)
