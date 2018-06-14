@@ -27,7 +27,7 @@ namespace Combodo\iTop\Test\UnitTest;
 
 use PHPUnit\Framework\TestCase;
 
-define('DEBUG_UNIT_TEST', false);
+define('DEBUG_UNIT_TEST', true);
 
 class ItopTestCase extends TestCase
 {

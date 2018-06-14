@@ -216,95 +216,23 @@ class CriterionToOQL extends CriterionConversionAbstract
 			return "1";
 		}
 
-		$bFilterOnUndefined = false;
+		$oAttDef = null;
 		try
 		{
 			$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
-			if (array_key_exists($sAttCode, $aAttributeDefs))
-			{
-				$oAttDef = $aAttributeDefs[$sAttCode];
-				if ($oAttDef instanceof AttributeEnum)
-				{
-					$aAllowedValues = SearchForm::GetFieldAllowedValues($oAttDef);
-					if (array_key_exists('values', $aAllowedValues))
-					{
-						// Can't invert the test if NULL is allowed
-						if (!$oAttDef->IsNullAllowed())
-						{
-							$aAllowedValues = $aAllowedValues['values'];
-							if (count($aValues) == count($aAllowedValues))
-							{
-								// All entries are selected
-								return "1";
-							}
-							// more selected values than remaining so use NOT IN
-							else
-							{
-								if (count($aValues) > (count($aAllowedValues) / 2))
-								{
-									foreach($aValues as $aValue)
-									{
-										unset($aAllowedValues[$aValue['value']]);
-									}
-									$sInList = implode("','", array_keys($aAllowedValues));
-
-									return "({$sRef} NOT IN ('$sInList'))";
-								}
-							}
-						}
-						// search for "undefined"
-						for($i = 0; $i < count($aValues); $i++)
-						{
-							$aValue = $aValues[$i];
-							if (isset($aValue['value']) && ($aValue['value'] === 'null'))
-							{
-								$bFilterOnUndefined = true;
-								unset($aValues[$i]);
-								break;
-							}
-						}
-					}
-				}
-			}
-		} catch (Exception $e)
-		{
 		}
-
-		$aInValues = array();
-		foreach($aValues as $aValue)
+		catch (\CoreException $e)
 		{
-			$aInValues[] = $aValue['value'];
+			return "1";
 		}
-		$sInList = implode("','", $aInValues);
-
-		if ($bFilterOnUndefined)
+		if (array_key_exists($sAttCode, $aAttributeDefs))
 		{
-			$sFilterOnUndefined = "ISNULL({$sRef})";
-			if (count($aValues) === 0)
-			{
-				$sCondition = $sFilterOnUndefined;
-			}
-			elseif (count($aInValues) == 1)
-			{
-				// Add 'AND 1' to group the 'OR' inside an AND list for OQL parsing
-				$sCondition =  "((({$sRef} = '$sInList') OR {$sFilterOnUndefined}) AND 1)";
-			}
-			else
-			{
-				// Add 'AND 1' to group the 'OR' inside an AND list for OQL parsing
-				$sCondition =  "(({$sRef} IN ('$sInList') OR {$sFilterOnUndefined}) AND 1)";
-			}
-		}
-		elseif (count($aInValues) == 1)
-		{
-			$sCondition =  "({$sRef} = '$sInList')";
-		}
-		else
-		{
-			$sCondition =  "({$sRef} IN ('$sInList'))";
+			$oAttDef = $aAttributeDefs[$sAttCode];
 		}
 
 		// Hierarchical keys
+		$sHierarchicalKeyCode = false;
+		$sTargetClass = '';
 		if (isset($oAttDef) && $oAttDef->IsExternalKey() && (!isset($aCriteria['is_hierarchical']) || ($aCriteria['is_hierarchical'] !== false)))
 		{
 			if ($oAttDef instanceof AttributeExternalKey)
@@ -321,26 +249,126 @@ class CriterionToOQL extends CriterionConversionAbstract
 			try
 			{
 				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
-				if ($sHierarchicalKeyCode !== false)
-				{
-					$oFilter = new DBObjectSearch($sTargetClass);
-					$sFilterAlias = $oFilter->GetClassAlias();
-					$sCondition = str_replace("$sRef", $sFilterAlias.'.id', $sCondition);
-					$oCondition = Expression::FromOQL($sCondition);
-					$oFilter->AddConditionExpression($oCondition);
-
-					$oHKFilter = new DBObjectSearch($sTargetClass);
-
-					$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
-					// Use the 'below' operator by default
-					$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
-					$sCondition = '1';
-				}
-			} catch (Exception $e)
+			}
+			catch (\CoreException $e)
 			{
 			}
 		}
 
+		$sFilterOnUndefined = '';
+		if ($oAttDef instanceof AttributeEnum)
+		{
+			$aAllowedValues = SearchForm::GetFieldAllowedValues($oAttDef);
+			if (array_key_exists('values', $aAllowedValues))
+			{
+				// Can't invert the test if NULL is allowed
+				if (!$oAttDef->IsNullAllowed())
+				{
+					$aAllowedValues = $aAllowedValues['values'];
+					if (count($aValues) == count($aAllowedValues))
+					{
+						// All entries are selected
+						return "1";
+					}
+					// more selected values than remaining so use NOT IN
+					else
+					{
+						if (count($aValues) > (count($aAllowedValues) / 2))
+						{
+							foreach($aValues as $aValue)
+							{
+								unset($aAllowedValues[$aValue['value']]);
+							}
+							$sInList = implode("','", array_keys($aAllowedValues));
+
+							return "({$sRef} NOT IN ('$sInList'))";
+						}
+					}
+				}
+				// search for "undefined"
+				for($i = 0; $i < count($aValues); $i++)
+				{
+					$aValue = $aValues[$i];
+					if (isset($aValue['value']) && ($aValue['value'] === 'null'))
+					{
+						$sFilterOnUndefined = "ISNULL({$sRef})";
+						unset($aValues[$i]);
+						break;
+					}
+				}
+			}
+		}
+
+		if ($sHierarchicalKeyCode !== false)
+		{
+			// search for "undefined"
+			for($i = 0; $i < count($aValues); $i++)
+			{
+				$aValue = $aValues[$i];
+				if (isset($aValue['value']) && ($aValue['value'] === '0'))
+				{
+					$sFilterOnUndefined = "({$sRef} = '0')";
+					unset($aValues[$i]);
+					break;
+				}
+			}
+		}
+
+		$aInValues = array();
+		foreach($aValues as $aValue)
+		{
+			$aInValues[] = $aValue['value'];
+		}
+		$sInList = implode("','", $aInValues);
+
+		$sCondition = '1';
+		if (count($aInValues) == 1)
+		{
+			$sCondition = "({$sRef} = '$sInList')";
+		}
+		elseif (count($aInValues) > 1)
+		{
+			$sCondition = "({$sRef} IN ('$sInList'))";
+		}
+
+		// Hierarchical keys
+		try
+		{
+			if ($sHierarchicalKeyCode !== false)
+			{
+				// Add all the joins for hierarchical key
+				$oFilter = new DBObjectSearch($sTargetClass);
+				$sFilterAlias = $oFilter->GetClassAlias();
+				// Filter on hierarchy
+				$sCondition = str_replace("$sRef", $sFilterAlias.'.id', $sCondition);
+				$oCondition = Expression::FromOQL($sCondition);
+				$oFilter->AddConditionExpression($oCondition);
+
+				$oHKFilter = new DBObjectSearch($sTargetClass);
+				$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
+				// Use the 'below' operator by default
+				$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
+				$oCriteria = $oSearch->GetCriteria();
+				$aArgs = MetaModel::PrepareQueryArguments(array(), $oSearch->GetInternalParams());
+				$oSearch->ResetCondition();
+				$sCondition = $oCriteria->Render($aArgs);
+			}
+		} catch (Exception $e)
+		{
+		}
+
+		if (!empty($sFilterOnUndefined))
+		{
+			if (count($aValues) === 0)
+			{
+				$sCondition = $sFilterOnUndefined;
+			}
+			else
+			{
+				// Add 'AND 1' to group the 'OR' inside an AND list for OQL parsing
+				$sCondition =  "(({$sCondition} OR {$sFilterOnUndefined}) AND 1)";
+			}
+		}
 		return $sCondition;
 	}
 

@@ -432,9 +432,14 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE ISNULL(`Server`.`nb_u`)",
 				'ExpectedCriterion' => array(array('widget' => 'numeric', 'operator' => 'empty')),
 			),
-			'Hierarchical below' => array(
+			'Hierarchical below 1' => array(
 				'OQL' => "SELECT Person AS P JOIN Organization AS Node ON P.org_id = Node.id JOIN Organization AS Root ON Node.parent_id BELOW Root.id WHERE Root.id=1",
 				'ExpectedOQL' => "SELECT `P` FROM Person AS `P` JOIN Organization AS `Node` ON `P`.org_id = `Node`.id JOIN Organization AS `Root` ON `Node`.parent_id BELOW `Root`.id WHERE (`Root`.`id` = '1')",
+				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
+			),
+			'Hierarchical below 2' => array(
+				'OQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('2', '4')) OR (`Organization`.`parent_id` = '0')) AND 1)",
+				'ExpectedOQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('2', '4')) OR (`Organization`.`parent_id` = '0')) AND 1)",
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
 			),
 			'IP range' => array(

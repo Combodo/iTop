@@ -677,7 +677,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				unset($aCriteria['oql']);
 				break;
 			case 'IN':
-				// Nothing special to do
+				unset($aCriteria['oql']);
 				break;
 			default:
 				// Unknown operator

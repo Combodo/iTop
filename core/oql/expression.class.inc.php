@@ -550,27 +550,27 @@ class BinaryExpression extends Expression
 			$oAttDef = $oRightExpr->GetAttDef($oSearch->GetJoinedClasses());
 			$aCriteriaLeft = $oLeftExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 
-			$aCriteria = array_merge($aCriteriaRight, $aCriteriaLeft);
 			// switch left and right expressions so reverse the operator
 			// Note that the operation is the same so < becomes > and not >=
 			switch ($this->GetOperator())
 			{
 				case '>':
-					$aCriteria['operator'] = '<';
+					$sOperator = '<';
 					break;
 				case '<':
-					$aCriteria['operator'] = '>';
+					$sOperator = '>';
 					break;
 				case '>=':
-					$aCriteria['operator'] = '<=';
+					$sOperator = '<=';
 					break;
 				case '<=':
-					$aCriteria['operator'] = '>=';
+					$sOperator = '>=';
 					break;
 				default:
-					$aCriteria['operator'] = $this->GetOperator();
+					$sOperator = $this->GetOperator();
 					break;
 			}
+			$aCriteria = self::MergeCriteria($aCriteriaRight, $aCriteriaLeft, $sOperator);
 		}
 		else
 		{
@@ -579,8 +579,7 @@ class BinaryExpression extends Expression
 			$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
 			$aCriteriaRight = $oRightExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 
-			$aCriteria = array_merge($aCriteriaLeft, $aCriteriaRight);
-			$aCriteria['operator'] = $this->GetOperator();
+			$aCriteria = self::MergeCriteria($aCriteriaLeft, $aCriteriaRight, $this->GetOperator());
 		}
 		$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
 		$aCriteria['label'] = $this->Display($oSearch, $aArgs, $oAttDef);
@@ -592,6 +591,30 @@ class BinaryExpression extends Expression
 		}
 
 		return $aCriteria;
+	}
+
+	protected static function MergeCriteria($aCriteriaLeft, $aCriteriaRight, $sOperator)
+	{
+		$aCriteriaOverride = array();
+		$aCriteriaOverride['operator'] = $sOperator;
+		if ($sOperator == 'OR')
+		{
+			if (isset($aCriteriaLeft['ref']) && isset($aCriteriaRight['ref']) && ($aCriteriaLeft['ref'] == $aCriteriaRight['ref']))
+			{
+				if (isset($aCriteriaLeft['widget']) && isset($aCriteriaRight['widget']) && ($aCriteriaLeft['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY) && ($aCriteriaRight['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY))
+				{
+					$aCriteriaOverride['operator'] = 'IN';
+					$aCriteriaOverride['is_hierarchical'] = true;
+
+					if (isset($aCriteriaLeft['values']) && isset($aCriteriaRight['values']))
+					{
+						$aCriteriaOverride['values'] = array_merge($aCriteriaLeft['values'], $aCriteriaRight['values']);
+					}
+				}
+			}
+		}
+
+		return array_merge($aCriteriaLeft, $aCriteriaRight, $aCriteriaOverride);
 	}
 }
 
@@ -697,7 +720,11 @@ class ScalarExpression extends UnaryExpression
 				{
 					/** @var AttributeExternalKey $oAttDef */
 					$sTarget = $oAttDef->GetTargetClass();
-					$oObj = MetaModel::GetObject($sTarget, $this->m_value);
+					$oObj = MetaModel::GetObject($sTarget, $this->m_value, false);
+					if (empty($oObj))
+					{
+						return Dict::S('Enum:Undefined');
+					}
 
 					return $oObj->Get("friendlyname");
 				} catch (CoreException $e)
