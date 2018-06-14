@@ -332,7 +332,7 @@ footer {
 }
 .home .tile .tile_title {
   font-weight: bold;
-  color: #333;
+  color: #777;
 }
 .home .tile .tile_title > span.icon {
   color: #ea7d1e;
@@ -344,86 +344,33 @@ footer {
 /**********************************/
 /* ManageBrick badge tile display */
 /**********************************/
-.home div.tile-badge > a.tile {
-  padding: 0;
-  margin: 0;
-  margin-bottom: 25px;
-  height: 12em;
-  min-height: unset;
+.home a.tile.tile_badge {
+  /*padding: 0;
+   margin: 0;
+   margin-bottom: 25px;
+   height: 12em;
+   min-height: unset;*/
 }
-.home div.tile-badge > a.tile > div {
+.home a.tile.tile_badge > div {
   display: table;
   width: 100%;
-  padding: 12% 10% 0;
+  /*padding: 12% 10% 0;*/
 }
-.home div.tile-badge > a.tile > div > div {
+.home a.tile.tile_badge > div > div {
   display: table-row;
 }
-.home div.tile-badge > a.tile > div > div > div {
+.home a.tile.tile_badge > div > div > div {
   display: table-cell;
 }
-.home div.tile-badge > a.tile > div > div > div.tile_decoration {
-  text-align: left;
-  vertical-align: top;
-  position: inherit;
-  float: inherit;
-}
-.home div.tile-badge > a.tile > div > div > div.tile_body {
-  text-align: right;
-  padding-left: 0;
-}
-.home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child {
-  margin: 0 auto;
-  margin-left: 10%;
-}
-.home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div.tile_description {
-  margin-bottom: 1.5em;
-  text-align: right;
-}
-.home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div.tile_title {
-  font-size: 4.5em;
-  font-weight: normal;
-  margin-bottom: 0.5em;
-}
-.home div.tile-badge > a.tile > div.tile_description {
-  display: block;
-  padding: 0 5%;
-  font-size: 1em;
-  font-style: italic;
-  text-align: center;
-  line-height: normal;
-  height: 2em;
-  /* needed even if height is defined on a.tile :/ */
-  overflow: hidden;
-}
-.home div.tile-chart > a > div {
-  padding: 0.25em;
-}
 @media (max-width: 768px) {
-  .home div.tile-badge > a.tile {
-    height: auto;
-    padding: inherit;
+  .home a.tile.tile_badge > div > div > div.tile_body div.tile_count {
+    position: absolute;
+    top: 0em;
+    right: 2em;
+    text-align: right;
+    font-size: 1.2em;
   }
-  .home div.tile-badge > a.tile > div {
-    padding: 0;
-  }
-  .home div.tile-badge > a.tile > div > div > div.tile_decoration {
-    vertical-align: middle;
-  }
-  .home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div {
-    display: inline-block;
-  }
-  .home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div.tile_title {
-    margin: 0;
-    font-size: 2.5em;
-    font-weight: bold;
-  }
-  .home div.tile-badge > a.tile > div > div > div.tile_body > div:first-child > div.tile_description {
-    display: unset;
-    margin: 0;
-    margin-left: 3em;
-  }
-  .home div.tile-badge > a.tile > div.tile_description {
+  .home a.tile.tile_badge > div.tile_description {
     display: none;
   }
 }
@@ -461,8 +408,40 @@ footer {
     display: block;
     text-align: left;
   }
-  .home div.tile-badge > a.tile > div > div > div.tile_decoration > span.icon {
-    font-size: 1.5em;
+  .home a.tile.tile_badge {
+    height: 10em;
+    overflow-y: hidden;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_decoration {
+    top: unset;
+    vertical-align: middle;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
+    font-size: 4em;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_body {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+    text-align: right;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_body .tile_title {
+    margin-top: 1em;
+    margin-bottom: 0;
+    font-size: 1em;
+    font-weight: normal;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_body .tile_count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 2em;
+    font-weight: bold;
+    color: #777;
+  }
+  .home a.tile.tile_badge .tile_description {
+    display: none;
   }
 }
 @media (min-width: 992px) {
@@ -482,8 +461,19 @@ footer {
   .home .tile .tile_description {
     font-size: 1.2em;
   }
-  .home div.tile-badge > a.tile > div > div > div.tile_decoration > span.icon {
+  .home a.tile.tile_badge > div > div > div.tile_body .tile_title {
+    font-size: 1.2em;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_body .tile_count {
+    font-size: 3em;
+  }
+  .home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
     font-size: 4em;
+  }
+  .home a.tile.tile_badge .tile_description {
+    display: block;
+    font-size: 1em;
+    text-align: center;
   }
 }
 @media (min-width: 1200px) {
@@ -508,7 +498,7 @@ footer {
   .home .tile .tile_description {
     font-size: 1.2em;
   }
-  .home div.tile-badge > a.tile > div > div > div.tile_decoration > span.icon {
+  .home a.tile.tile_badge > div > div > div.tile_decoration > span.icon {
     font-size: 6em;
   }
 }

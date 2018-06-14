@@ -1,12 +1,12 @@
 {# itop-portal-dashlet-basic/tile.html.twig #}
 {# Image brick tile layout #}
 
-<div class="col-xs-12 col-sm-{{ oBrick.GetWidth }} tile-badge">
+<div class="col-xs-12 col-sm-{{ oBrick.GetWidth }}">
     {% block pTileWrapper %}
         <a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': oBrick.GetDisplayMode}) }}{% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] }}{% endif %}"
         {% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][oBrick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %}
         {% if oBrick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}
-                class="tile{# vertical-center#}"
+                class="tile tile_badge{# vertical-center#}"
                 id="brick-{{ oBrick.GetId }}"
                 data-brick-id="{{ oBrick.GetId }}"
                 {% if oBrick.GetDescription is not empty %} data-toggle="tooltip" data-original-title="{{ oBrick.GetDescription|dict_s|raw }}"{% endif %}
@@ -20,8 +20,8 @@
                     </div>
                     <div class="tile_body">
                         <div>
-                            <div class="tile_title">{{ iCount }}</div>
-                            <div class="tile_description">{{ oBrick.GetTitle()|dict_s }}</div>
+                            <div class="tile_title">{{ oBrick.GetTitle()|dict_s }}</div>
+                            <div class="tile_count">{{ iCount }}</div>
                         </div>
                     </div>
                 </div>
