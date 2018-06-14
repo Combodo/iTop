@@ -553,14 +553,17 @@ class ScopeValidatorHelper
 	}
 
 	/**
+     * Add the scope query (view or edit depending on $sAction) for $sClass to the $oQuery.
+     *
 	 * @param DBSearch $oQuery
 	 * @param string $sClass
+     * @param string $sAction
 	 *
 	 * @return bool true if scope exists, false if scope is null
 	 */
-	public function AddScopeToQuery(DBSearch &$oQuery, $sClass)
+	public function AddScopeToQuery(DBSearch &$oQuery, $sClass, $sAction = UR_ACTION_READ)
 	{
-		$oScopeQuery = $this->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sClass, UR_ACTION_READ);
+		$oScopeQuery = $this->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sClass, $sAction);
 		if ($oScopeQuery !== null)
 		{
 			$oQuery = $oQuery->Intersect($oScopeQuery);
