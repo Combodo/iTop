@@ -376,7 +376,7 @@ class ManageBrickController extends BrickController
 			{
 				$oDistinctQuery = $this->GetScopedQuery($oApp, $oBrick, $sClass);
 				// Adding grouping conditions
-				$oFieldExp = new FieldExpression($sGroupingAreaAttCode, $sParentAlias);
+				$oFieldExp = new FieldExpression($sGroupingAreaAttCode, $oDistinctQuery->GetClassAlias());
 				$sDistinctSql = $oDistinctQuery->MakeGroupByQuery(array(), array('grouped_by_1' => $oFieldExp), true);
 				$aDistinctResults = CMDBSource::QueryToArray($sDistinctSql);
 
@@ -851,7 +851,7 @@ class ManageBrickController extends BrickController
 				{
 					$oConditionQuery = DBSearch::CloneWithAlias($oQuery, 'GTAB');
 					$oExpression = new BinaryExpression(new FieldExpression($sGroupingTabAttCode,
-						$oDistinctQuery->GetClassAlias()), '=', new UnaryExpression($aDistinctResult['grouped_by_1']));
+                        $oConditionQuery->GetClassAlias()), '=', new UnaryExpression($aDistinctResult['grouped_by_1']));
 					$oConditionQuery->AddConditionExpression($oExpression);
 
 					$sHtmlLabel = $oFieldExp->MakeValueLabel($oDistinctQuery, $aDistinctResult['grouped_by_1'], '');
@@ -874,7 +874,7 @@ class ManageBrickController extends BrickController
 					{
 						$iOtherCount += $aResult['_itop_count_'];
 						$oExpr = new BinaryExpression(new FieldExpression($sGroupingTabAttCode,
-							$oDistinctQuery->GetClassAlias()), '=', new UnaryExpression($aResult['grouped_by_1']));
+                            $oConditionQuery->GetClassAlias()), '=', new UnaryExpression($aResult['grouped_by_1']));
 						if (is_null($oExpression))
 						{
 							$oExpression = $oExpr;

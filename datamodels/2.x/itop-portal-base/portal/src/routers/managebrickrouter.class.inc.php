@@ -40,7 +40,6 @@ class ManageBrickRouter extends AbstractRouter
                 'sDisplayMode' => 'badge|pie-chart|bar-chart|top-list|default'
             ),
             'values' => array(
-                'sDisplayMode' => 'default',
                 'sGroupingTab' => null,
             )
         ),
