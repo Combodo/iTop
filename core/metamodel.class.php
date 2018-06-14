@@ -3858,6 +3858,7 @@ abstract class MetaModel
 							$aCreateTableItems[$sTable][$sField] = $sFieldDefinition;
 							if ($bIndexNeeded)
 							{
+								$aTableInfo['Indexes'][$sField]['used'] = true;
 								$aCreateTableItems[$sTable][] = "INDEX (`$sField`)";
 							}
 						}
