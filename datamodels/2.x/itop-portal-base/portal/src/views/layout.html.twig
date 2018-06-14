@@ -131,7 +131,7 @@
         {% endif %}
 		<script type="text/javascript">
 			$(document).ready(function() {
-				$('.tile-badge > .tile[data-toggle="tooltip"]').tooltip();
+				$('.tile.tile_badge[data-toggle="tooltip"]').tooltip({'html': true});
 			});
 		</script>
 	{% endblock %}
