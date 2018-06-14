@@ -402,7 +402,7 @@ footer {
   }
   .home a.tile.tile_badge {
     height: 10em;
-    overflow-y: hidden;
+    overflow: hidden;
   }
   .home a.tile.tile_badge > div > div > div.tile_decoration {
     top: unset;
