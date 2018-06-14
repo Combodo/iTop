@@ -370,9 +370,9 @@ $(function()
 								me._onACSearchSuccess(oResponse);
 
 
-								if (oResponse.length > 150)
+								if (Object.keys(oResponse).length >= 150)
 								{
-                                    this._emptyACTempHint();
+                                    me._emptyACTempHint();
 
 									return;
 								}
