@@ -86,12 +86,20 @@ class WizardHelper
 								}
 								elseif($sLinkedAttDef instanceof AttributeDateTime)
                                 {
+                                    $sDateClass = get_class($sLinkedAttDef);
                                     $sDate = $aLinkedObject[$sLinkedAttCode];
                                     if($sDate !== null && $sDate !== '')
                                     {
-                                        $oDateTimeFormat = AttributeDateTime::GetFormat();
+                                        $oDateTimeFormat = $sDateClass::GetFormat();
                                         $oDate = $oDateTimeFormat->Parse($sDate);
-                                        $sDate = $oDate->format('Y-m-d H:i:s');
+                                        if ($sDateClass == "AttributeDate")
+                                        {
+                                            $sDate = $oDate->format('Y-m-d');
+                                        }
+                                        else
+                                        {
+                                            $sDate = $oDate->format('Y-m-d H:i:s');
+                                        }
                                     }
 
                                     $oLinkedObj->Set($sLinkedAttCode, $sDate);
