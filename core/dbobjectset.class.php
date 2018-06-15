@@ -570,7 +570,7 @@ class DBObjectSet implements iDBObjectSetIterator
 		$aAttributes = array();
 		foreach ($aAliases as $sAlias => $bClassDirection)
 		{
-			foreach (MetaModel::GetOrderByDefault($this->m_oFilter->GetClass()) as $sAttCode => $bAttributeDirection)
+			foreach (MetaModel::GetOrderByDefault($this->m_oFilter->GetClassName($sAlias)) as $sAttCode => $bAttributeDirection)
 			{
 				$bDirection = $bClassDirection ? $bAttributeDirection : !$bAttributeDirection;
 				$aAttributes[$sAlias.'.'.$sAttCode] = $bDirection;
