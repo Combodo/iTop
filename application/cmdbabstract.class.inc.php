@@ -2431,7 +2431,7 @@ EOF
 			$oPage->add('</div>');
 		}
 		$oPage->add("<div class=\"wizContainer\">\n");
-		$oPage->add("<form id=\"apply_stimulus\" method=\"post\" onSubmit=\"return OnSubmit('apply_stimulus');\">\n");
+		$oPage->add("<form id=\"apply_stimulus\" method=\"post\" enctype=\"multipart/form-data\" onSubmit=\"return OnSubmit('apply_stimulus');\">\n");
 		$aDetails = array();
 		$iFieldIndex = 0;
 		$aFieldsMap = array();
