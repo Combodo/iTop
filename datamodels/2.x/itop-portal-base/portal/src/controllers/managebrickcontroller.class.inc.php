@@ -72,10 +72,10 @@ class ManageBrickController extends BrickController
 
 		if (is_null($sDisplayMode))
 		{
-			$sDisplayMode = $oBrick->GetDisplayMode();
+			$sDisplayMode = $oBrick->GetDefaultDisplayMode();
 		}
-		$aDisplayParams = $oBrick->GetPresentationDataForDisplayMode($sDisplayMode);
-		$aData = $this->GetData($oRequest, $oApp, $sBrickId, $sGroupingTab, $aDisplayParams['need_details']);
+		$aDisplayParams = $oBrick->GetPresentationDataForTileMode($sDisplayMode);
+		$aData = $this->GetData($oRequest, $oApp, $sBrickId, $sGroupingTab, $oBrick::AreDetailsNeededForDisplayMode($sDisplayMode));
 
 		$aExportFields = $oBrick->GetExportFields();
 		$aData = $aData + array(
@@ -89,7 +89,7 @@ class ManageBrickController extends BrickController
 		}
 		else
 		{
-			$sLayoutTemplate = $aDisplayParams['layoutTemplate'];
+			$sLayoutTemplate = $oBrick::GetPageTemplateFromDisplayMode($sDisplayMode);
 			$oResponse = $oApp['twig']->render($sLayoutTemplate, $aData);
 		}
 

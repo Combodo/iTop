@@ -103,6 +103,17 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Manage:Name' => 'Administrar elementos',
 	'Brick:Portal:Manage:Table:NoData' => 'Sin objeto.',
     'Brick:Portal:Manage:Table:ItemActions' => 'Acciones',
+    'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
+    'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
+    'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
+    'Brick:Portal:Manage:Others' => 'Others~~',
+    'Brick:Portal:Manage:All' => 'All~~',
+    'Brick:Portal:Manage:Group' => 'Group~~',
+    'Brick:Portal:Manage:fct:count' => 'Total~~',
+    'Brick:Portal:Manage:fct:sum' => 'Sum~~',
+    'Brick:Portal:Manage:fct:avg' => 'Average~~',
+    'Brick:Portal:Manage:fct:min' => 'Min~~',
+    'Brick:Portal:Manage:fct:max' => 'Max~~',
 ));
 
 // ObjectBrick brick

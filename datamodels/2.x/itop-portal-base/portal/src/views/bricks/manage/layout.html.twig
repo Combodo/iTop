@@ -9,7 +9,7 @@
             {% for sDisplay in oBrick.GetAvailablesDisplayModes %}
 				<a href="{{ app.url_generator.generate('p_manage_brick_display_as', {'sBrickId': sBrickId, 'sDisplayMode': sDisplay}) }}{% if app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][oBrick.GetRouteName]['hash'] }}{% endif %}"
 				   id="btn_tab_for_{{ sDisplay }}"
-				   class="btn btn-default {% if sDisplay == oBrick.GetPresentationDataForDisplayMode(sDisplayMode).layoutDisplayMode %}active{% endif %}">
+				   class="btn btn-default {% if sDisplay == oBrick.GetPresentationDataForTileMode(sDisplayMode).layoutDisplayMode %}active{% endif %}">
                     {{ ('Brick:Portal:Manage:DisplayMode:' ~ sDisplay)|dict_s }}
 				</a>
             {% endfor %}

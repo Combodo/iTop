@@ -28,7 +28,6 @@ class ManageBrickRouter extends AbstractRouter
             'bind' => 'p_manage_brick',
             'asserts' => array(),
             'values' => array(
-                'sDisplayMode' => 'default',
                 'sGroupingTab' => null,
             )
         ),
@@ -37,7 +36,7 @@ class ManageBrickRouter extends AbstractRouter
             'callback' => 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::DisplayAction',
             'bind' => 'p_manage_brick_display_as',
             'asserts' => array(
-                'sDisplayMode' => 'badge|pie-chart|bar-chart|top-list|default'
+                'sDisplayMode' => 'list|pie-chart|bar-chart'
             ),
             'values' => array(
                 'sGroupingTab' => null,

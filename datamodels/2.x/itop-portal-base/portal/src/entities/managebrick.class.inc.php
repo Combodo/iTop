@@ -30,7 +30,13 @@ class ManageBrick extends PortalBrick
 	const ENUM_ACTION_VIEW = 'view';
 	const ENUM_ACTION_EDIT = 'edit';
 
-    const ENUM_DISPLAY_MODE_TABLE = 'default';
+    const ENUM_TILE_MODE_TEXT = 'text';
+    const ENUM_TILE_MODE_BADGE = 'badge';
+    const ENUM_TILE_MODE_PIE = 'pie-chart';
+    const ENUM_TILE_MODE_BAR = 'bar-chart';
+    const ENUM_TILE_MODE_TOP = 'top-list';
+
+    const ENUM_DISPLAY_MODE_LIST = 'list';
     const ENUM_DISPLAY_MODE_PIE = 'pie-chart';
     const ENUM_DISPLAY_MODE_BAR = 'bar-chart';
 
@@ -46,50 +52,60 @@ class ManageBrick extends PortalBrick
 	const DEFAULT_LIST_LENGTH = 20;
 	const DEFAULT_ZLIST_FIELDS = 'list';
 	const DEFAULT_SHOW_TAB_COUNTS = false;
-	const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_TABLE;
+	const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_LIST;
+    const DEFAULT_TILE_MODE = self::ENUM_TILE_MODE_TEXT;
+    const DEFAULT_GROUP_LIMIT = 0;
+    const DEFAULT_GROUP_SHOW_OTHERS = true;
 
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/tile-default.html.twig';
 	const DEFAULT_TILE_CONTROLLER_ACTION = 'Combodo\\iTop\\Portal\\Controller\\ManageBrickController::TileAction';
 
 	static $aDisplayModes = array(
-        self::ENUM_DISPLAY_MODE_TABLE,
+        self::ENUM_DISPLAY_MODE_LIST,
         self::ENUM_DISPLAY_MODE_PIE,
         self::ENUM_DISPLAY_MODE_BAR,
     );
+    static $aTileModes = array(
+        self::ENUM_TILE_MODE_TEXT,
+        self::ENUM_TILE_MODE_BADGE,
+        self::ENUM_TILE_MODE_PIE,
+        self::ENUM_TILE_MODE_BAR,
+        self::ENUM_TILE_MODE_TOP,
+    );
     static $aPresentationData = array(
-        'badge' => array(
+        self::ENUM_TILE_MODE_BADGE => array(
             'decorationCssClass' => 'fa fa-id-card-o fa-2x',
             'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-badge.html.twig',
             'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-            'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
+            'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
             'need_details' => true,
         ),
-        'top-list' => array(
+        self::ENUM_TILE_MODE_TOP => array(
             'decorationCssClass' => 'fa fa-signal fa-rotate-270 fa-2x',
             'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-top-list.html.twig',
             'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-            'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
+            'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
             'need_details' => true,
         ),
-        'pie-chart' => array(
+        self::ENUM_TILE_MODE_PIE => array(
             'decorationCssClass' => 'fa fa-pie-chart fa-2x',
             'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
             'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
             'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_PIE,
             'need_details' => false,
         ),
-        'bar-chart' => array(
+        self::ENUM_TILE_MODE_BAR => array(
             'decorationCssClass' => 'fa fa-bar-chart fa-2x',
             'tileTemplate' => 'itop-portal-base/portal/src/views/bricks/manage/tile-chart.html.twig',
             'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
             'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_BAR,
             'need_details' => false,
         ),
-        'default' => array(
+        self::ENUM_TILE_MODE_TEXT => array(
             'decorationCssClass' => 'fa fa-pencil-square fa-2x',
             'tileTemplate' => self::DEFAULT_TILE_TEMPLATE_PATH,
             'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
-            'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_TABLE,
+            'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
             'need_details' => true,
         ),
     );
@@ -102,15 +118,58 @@ class ManageBrick extends PortalBrick
 	protected $aFields;
 	protected $aExportFields;
 	protected $bShowTabCounts;
-	/**
-	 * @var string default display mode for the brick's tile
-	 */
-	protected $sDisplayMode;
+    protected $aAvailableDisplayModes = array();
+    protected $sDefaultDisplayMode;
+
+    protected $sTileMode;
 	protected $iGroupLimit;
 	protected $bGroupShowOthers;
-	protected $aAvailableDisplayModes = array();
 
-	public function __construct()
+    /**
+     * Returns true if the $sDisplayMode need objects details for rendering.
+     *
+     * @param string $sDisplayMode
+     *
+     * @return bool
+     */
+	static public function AreDetailsNeededForDisplayMode($sDisplayMode)
+    {
+        $bNeedDetails = false;
+        foreach(static::$aPresentationData as $aData)
+        {
+            if($aData['layoutDisplayMode'] === $sDisplayMode)
+            {
+                $bNeedDetails = $aData['need_details'];
+                break;
+            }
+        }
+
+        return $bNeedDetails;
+    }
+
+    /**
+     * Returns the page template path for the $sDisplayMode
+     *
+     * @param string $sDisplayMode
+     *
+     * @return string
+     */
+    static public function GetPageTemplateFromDisplayMode($sDisplayMode)
+    {
+        $sTemplate = static::DEFAULT_PAGE_TEMPLATE_PATH;
+        foreach(static::$aPresentationData as $aData)
+        {
+            if($aData['layoutDisplayMode'] === $sDisplayMode)
+            {
+                $sTemplate = $aData['layoutTemplate'];
+                break;
+            }
+        }
+
+        return $sTemplate;
+    }
+
+    public function __construct()
 	{
 		parent::__construct();
 
@@ -120,6 +179,11 @@ class ManageBrick extends PortalBrick
 		$this->aFields = array();
 		$this->aExportFields = array();
 		$this->bShowTabCounts = static::DEFAULT_SHOW_TAB_COUNTS;
+        $this->sDefaultDisplayMode = static::DEFAULT_DISPLAY_MODE;
+
+		$this->sTileMode = static::DEFAULT_TILE_MODE;
+		$this->iGroupLimit = static::DEFAULT_GROUP_LIMIT;
+		$this->bGroupShowOthers = static::DEFAULT_GROUP_SHOW_OTHERS;
 
 		// This is hardcoded for now, we might allow area grouping on another attribute in the future
 		$this->AddGrouping('areas', array('attribute' => 'finalclass'));
@@ -185,35 +249,66 @@ class ManageBrick extends PortalBrick
 		return $this->bShowTabCounts;
 	}
 
+    /**
+     * Returns the brick default display mode
+     *
+     * @return string
+     */
+    public function GetDefaultDisplayMode()
+    {
+        return $this->sDefaultDisplayMode;
+    }
+
+    /**
+     * Sets the default display mode of the brick
+     *
+     * @param string $sDefaultDisplayMode
+     *
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
+     */
+    public function SetDefaultDisplayMode($sDefaultDisplayMode)
+    {
+        $this->sDefaultDisplayMode = $sDefaultDisplayMode;
+
+        return $this;
+    }
+
 	/**
+     * Returns the tile mode (display)
+     *
 	 * @return string
 	 */
-	public function GetDisplayMode()
+	public function GetTileMode()
 	{
-		return $this->sDisplayMode;
+		return $this->sTileMode;
 	}
 
 	/**
-	 * @param string $sDisplayMode
+     * Sets the tile mode (display)
+     *
+	 * @param string $sTileMode
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
-	public function SetDisplayMode($sDisplayMode)
+	public function SetTileMode($sTileMode)
 	{
-		$this->sDisplayMode = $sDisplayMode;
+		$this->sTileMode = $sTileMode;
+
+		return $this;
 	}
 
 	/**
-	 * @param string $sDisplayMode
+	 * @param string $sTileMode
 	 *
 	 * @return string[] parameters for specified type, default parameters if type is invalid
 	 */
-	public function GetPresentationDataForDisplayMode($sDisplayMode)
+	public function GetPresentationDataForTileMode($sTileMode)
 	{
-		if (isset(static::$aPresentationData[$sDisplayMode]))
+		if (isset(static::$aPresentationData[$sTileMode]))
 		{
-			return static::$aPresentationData[$sDisplayMode];
+			return static::$aPresentationData[$sTileMode];
 		}
 
-		return static::$aPresentationData[static::DEFAULT_DISPLAY_MODE];
+		return static::$aPresentationData[static::DEFAULT_TILE_MODE];
 	}
 
 	/**
@@ -394,7 +489,6 @@ class ManageBrick extends PortalBrick
 		return $this;
 	}
 
-
 	/**
 	 * Returns if the brick has grouping tabs or not.
 	 *
@@ -435,12 +529,41 @@ class ManageBrick extends PortalBrick
 		return (isset($this->aGrouping['areas'])) ? $this->aGrouping['areas'] : false;
 	}
 
+    /**
+     * @param string $sModeId
+     *
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
+     */
 	public function AddAvailableDisplayMode($sModeId)
 	{
+	    if(!in_array($sModeId, static::$aDisplayModes))
+        {
+            throw new Exception('ManageBrick: Display mode "' . $sModeId. '" must be one of the allowed display modes (' . implode(', ', static::$aDisplayModes) . ')');
+        }
+
 		$this->aAvailableDisplayModes[] = $sModeId;
+
+		return $this;
 	}
 
+    /**
+     * Removes $sModeId from the list of availables display modes
+     *
+     * @param string $sModeId
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
+     */
+    public function RemoveAvailableDisplayMode($sModeId)
+    {
+        if (isset($this->aAvailableDisplayModes[$sModeId]))
+        {
+            unset($this->aAvailableDisplayModes[$sModeId]);
+        }
+        return $this;
+    }
+
 	/**
+     * Returns the available display modes for the brick (page, not tile)
+     *
 	 * @return string[]
 	 */
 	public function GetAvailablesDisplayModes()
@@ -498,9 +621,6 @@ class ManageBrick extends PortalBrick
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
 		parent::LoadFromXml($oMDElement);
-		$this->sDisplayMode = 'default';
-		$this->iGroupLimit = 0;
-		$this->bGroupShowOthers = true;
 		$bUseListFieldsForExport = false;
 
 		// Checking specific elements
@@ -566,11 +686,16 @@ class ManageBrick extends PortalBrick
 								}
 								break;
 
-							case 'default';
-								$this->sDisplayMode = $oDisplayNode->nodeValue;
-								$aDisplayParameterForType = $this->GetPresentationDataForDisplayMode($this->sDisplayMode);
-								$this->SetTileTemplatePath($aDisplayParameterForType['tileTemplate']);
-								$this->SetPageTemplatePath($aDisplayParameterForType['layoutTemplate']);
+                            case 'default':
+                                $this->SetDefaultDisplayMode($oDisplayNode->GetText(static::DEFAULT_DISPLAY_MODE));
+                                break;
+
+							case 'tile';
+							    $this->SetTileMode($oDisplayNode->GetText(static::DEFAULT_TILE_MODE));
+
+								$aTileParametersForType = $this->GetPresentationDataForTileMode($this->sTileMode);
+								$this->SetTileTemplatePath($aTileParametersForType['tileTemplate']);
+								$this->SetPageTemplatePath($aTileParametersForType['layoutTemplate']);
 								break;
 						}
 					}
@@ -692,21 +817,24 @@ class ManageBrick extends PortalBrick
 		// Checking if has an oql
 		if ($this->GetOql() === '')
 		{
-			throw new DOMFormatException('BrowseBrick : must have a valid <class|oql> tag', null, null, $oMDElement);
+			throw new DOMFormatException('ManageBrick: must have a valid <class|oql> tag', null, null, $oMDElement);
 		}
 
-		// Display modes : at least one selected
-		$sDefaultDetailDisplayMode = (isset($this->sDisplayMode))
-			? static::$aPresentationData[$this->sDisplayMode]['layoutDisplayMode']
-			: 'default';
-		$bHasAvailableDisplayModes = (count($this->GetAvailablesDisplayModes()) > 0);
-		$bIsDefaultDisplayModeInAvailableModes = in_array($sDefaultDetailDisplayMode,
-			$this->GetAvailablesDisplayModes());
-		if (!$bHasAvailableDisplayModes || (!$bIsDefaultDisplayModeInAvailableModes))
-		{
-			// legacy : setting to default
-			$this->AddAvailableDisplayMode($sDefaultDetailDisplayMode);
-		}
+        // Checking that the brick has at least a display mode
+        if (count($this->GetAvailablesDisplayModes()) === 0)
+        {
+            $this->AddAvailableDisplayMode(static::DEFAULT_DISPLAY_MODE);
+        }
+        // Checking that default display mode in among the availables
+        if (!in_array($this->sDefaultDisplayMode, $this->aAvailableDisplayModes))
+        {
+            throw new DOMFormatException('ManageBrick: Default display mode "' . $this->sDefaultDisplayMode . '" must be one of the available display modes (' . implode(', ', $this->aAvailableDisplayModes) . ')', null, null, $oMDElement);
+        }
+        // Checking that tile mode in among the availables
+        if (!in_array($this->sTileMode, static::$aTileModes))
+        {
+            throw new DOMFormatException('ManageBrick: Tile mode "' . $this->sTileMode. '" must be one of the allowed tile modes (' . implode(', ', static::$aTileModes) . ')', null, null, $oMDElement);
+        }
 
 		// Checking if specified fields, if not we put those from the details zlist
 		if (empty($this->aFields))
@@ -728,9 +856,9 @@ class ManageBrick extends PortalBrick
 
 		// Checking the navigation icon
 		$sDecorationClassNavigationMenu = $this->GetDecorationClassNavigationMenu();
-		if (empty($sDecorationClassNavigationMenu) && isset(static::$aPresentationData[$this->sDisplayMode]))
+		if (empty($sDecorationClassNavigationMenu) && isset(static::$aPresentationData[$this->sTileMode]))
 		{
-			$sDecorationClassNavigationMenu = static::$aPresentationData[$this->sDisplayMode]['decorationCssClass'];
+			$sDecorationClassNavigationMenu = static::$aPresentationData[$this->sTileMode]['decorationCssClass'];
 			if (!empty($sDecorationClassNavigationMenu))
 			{
 				$this->SetDecorationClassNavigationMenu($sDecorationClassNavigationMenu);
@@ -741,8 +869,8 @@ class ManageBrick extends PortalBrick
 		if (empty($sTitle))
 		{
 			$sOql = $this->GetOql();
-			$oSeach = DBSearch::FromOQL($sOql);
-			$sClassName = MetaModel::GetName($oSeach->GetClass());
+			$oSearch = DBSearch::FromOQL($sOql);
+			$sClassName = MetaModel::GetName($oSearch->GetClass());
 			$this->SetTitleHome($sClassName);
 			$this->SetTitleNavigationMenu($sClassName);
 			$this->SetTitle($sClassName);
