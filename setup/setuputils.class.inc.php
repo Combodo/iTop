@@ -56,7 +56,7 @@ class SetupUtils
 	const PHP_NEXT_MIN_VERSION = ''; // no new PHP requirement for now in iTop 2.6
 	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for now in iTop 2.6
 	// -- First recent version that is not yet validated by Combodo (warning)
-	const PHP_NOT_VALIDATED_VERSION = '7.2.0';
+	const PHP_NOT_VALIDATED_VERSION = '7.3.0';
 
 	const MIN_MEMORY_LIMIT = 33554432; // 32 * 1024 * 1024 - we can use expressions in const since PHP 5.6 but we are in the setup !
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;

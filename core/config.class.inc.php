@@ -1360,6 +1360,12 @@ class Config
 			throw new ConfigException('Error in configuration file',
 				array('file' => $sConfigFile, 'error' => $e->getMessage()));
 		}
+		catch(Error $e)
+		{
+		    // PHP 7
+		    throw new ConfigException('Error in configuration file',
+		        array('file' => $sConfigFile, 'error' => $e->getMessage().' at line '.$e->getLine()));
+		}
 		if (strlen($sNoise) > 0)
 		{
 			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack) 

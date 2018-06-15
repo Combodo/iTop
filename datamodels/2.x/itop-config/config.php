@@ -46,7 +46,7 @@ function TestConfig($sContents, $oP)
     catch (Error $e)
     {
         // ParseError only thrown in PHP7
-		throw new Exception('Error in configuration: '.$e->getMessage());
+		throw new Exception('Error in configuration: '.$e->getMessage().' at line '.$e->getLine());
 	}
 	if (strlen($sNoise) > 0)
 	{

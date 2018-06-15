@@ -448,6 +448,11 @@ class iTopExtensionsMap
 				SetupPage::log_warning("Eval of $sModuleFile did  not return the expected information...");
 			}
 		}
+		catch(ParseError $e)
+		{
+		    // Continue...
+		    SetupPage::log_warning("Eval of $sModuleFile caused a parse error: ".$e->getMessage()." at line ".$e->getLine());
+		}
 		catch(Exception $e)
 		{
 			// Continue...

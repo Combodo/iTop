@@ -465,6 +465,11 @@ class ModuleDiscovery
 						
 						//echo "<p>Done.</p>\n";
 					}
+					catch(ParseError $e)
+					{
+					    // PHP 7
+					    SetupPage::log_warning("Eval of $sRelDir/$sFile caused an exception: ".$e->getMessage()." at line ".$e->getLine());
+					}
 					catch(Exception $e)
 					{
 						// Continue...
