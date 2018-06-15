@@ -1175,7 +1175,6 @@
 							</levels>
 						</level>
 					</levels>
-
 					<browse_modes>
 						<availables>
 							<mode id="list"/>
@@ -1196,12 +1195,19 @@
 					<title>
 						<default>Brick:Portal:OngoingRequests:Title</default>
 					</title>
-					<display_modes>
-						<availables>
-							<mode id="default"/>
-						</availables>
-						<default>default</default>
-					</display_modes>
+					<!-- Optional tag to define which display modes can be used in the brick's page and the brick's tile -->
+					<!--<display_modes>-->
+						<!-- Optional tag that must contain at least 1 <mode> tag. -->
+						<!--<availables>-->
+							<!--<mode id="list"/>-->
+							<!--<mode id="pie-chart"/>-->
+							<!--<mode id="bar-chart"/>-->
+						<!--</availables>-->
+						<!-- Optional tag to define which display mode will be used by default when opening the brick -->
+						<!--<default>list</default>-->
+						<!-- Optional tag to define which display mode will be used to render the brick's tile -->
+						<!--<tile>text</tile>-->
+					<!--</display_modes>-->
 					<description>Brick:Portal:OngoingRequests:Title+</description>
 					<decoration_class>
 						<default>fc fc-ongoing-request fc-2x</default>
@@ -1264,12 +1270,6 @@
 					<title>
 						<default>Brick:Portal:ClosedRequests:Title</default>
 					</title>
-					<display_modes>
-						<availables>
-							<mode id="default"/>
-						</availables>
-						<default>default</default>
-					</display_modes>
 					<description></description>
 					<decoration_class>
 						<default>fc fc-closed-request fc-2x</default>
