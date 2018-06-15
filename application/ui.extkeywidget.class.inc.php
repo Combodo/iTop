@@ -437,7 +437,20 @@ EOF
 
 		if (empty($sOperation) || 'equals_start_with' == $sOperation)
         {
-            $aValues = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'equals_start_with');
+            $aValues = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'equals');
+            asort($aValues);
+
+            $iMax -= count($aValues);
+            if ($iMax > 0 ) {
+                $oValuesSet->SetLimit($iMax);
+                $aValuesStartWith = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
+                asort($aValuesStartWith);
+                foreach ($aValuesStartWith as $sKey => $sFriendlyName) {
+                    if (!isset($aValues[$sKey])) {
+                        $aValues[$sKey] = $sFriendlyName;
+                    }
+                }
+            }
         }
         else
         {
@@ -462,9 +475,15 @@ EOF
 		switch($sOutputFormat)
 		{
 			case static::ENUM_OUTPUT_FORMAT_JSON:
-				// Array flip to preserve values order on the label, otherwise the JS will re-order regarding the keys.
-				$oP->SetContentType('application/json');
-				$oP->add(json_encode(array_flip($aValues)));
+
+			    $aJsonMap = array();
+			    foreach ($aValues as $sKey => $sLabel)
+                {
+                    $aJsonMap[] = array('value' => $sKey, 'label' => $sLabel);
+                }
+
+			    $oP->SetContentType('application/json');
+                $oP->add(json_encode($aJsonMap));
 				break;
 
 			case static::ENUM_OUTPUT_FORMAT_CSV:
