@@ -29,6 +29,7 @@ use Exception;
 use iPortalUIExtension;
 use IssueLog;
 use MetaModel;
+use cmdbAbstractObject;
 use ModuleDesign;
 use Silex\Application;
 use Symfony\Component\Debug\ErrorHandler;
@@ -751,12 +752,7 @@ class ApplicationHelper
 			// If we have still not found one, we return a default form
 			if (!$bFound)
 			{
-				$aForm = array(
-					'id' => 'default',
-					'type' => 'zlist',
-					'fields' => 'details',
-					'layout' => null
-				);
+			    $aForm = static::GenerateDefaultFormForClass($sClass);
 			}
 		}
 
@@ -1345,5 +1341,114 @@ class ApplicationHelper
 
 		return $aUIExtensions;
 	}
+
+    /**
+     * Generate the form data for the $sClass.
+     * Form will look like the "Properties" tab of a $sClass object in the console.
+     *
+     * @param string $sClass
+     *
+     * @return array
+     */
+	protected static function GenerateDefaultFormForClass($sClass, $bAddLinksets = false)
+    {
+        $aForm = array(
+            'id' => strtolower($sClass)."-default-".uniqid(),
+            'type' => 'custom_list',
+            'properties' => array(
+                'display_mode' => static::FORM_DEFAULT_DISPLAY_MODE,
+                'always_show_submit' => static::FORM_DEFAULT_ALWAYS_SHOW_SUBMIT,
+            ),
+            'fields' => array(),
+            'layout' => array(
+                'type' => 'xhtml',
+                'content' => '',
+            ),
+        );
+
+        // Generate layout
+        $sContent = "";
+
+        // - Retrieve zlist details
+        $aDetailsList = MetaModel::GetZListItems($sClass, 'details');
+        $aDetailsStruct = cmdbAbstractObject::ProcessZlist($aDetailsList, array(), 'UI:PropertiesTab', 'col1', '');
+        $aPropertiesStruct = $aDetailsStruct['UI:PropertiesTab'];
+
+        // Count cols (not linksets)
+        $iColCount = 0;
+        foreach($aPropertiesStruct as $sColId => $aColFieldsets)
+        {
+            if(substr($sColId, 0, 1) !== '_')
+            {
+                foreach($aColFieldsets as $sFieldsetName => $aAttCodes)
+                {
+                    if(substr($sFieldsetName, 0, 1) !== '_')
+                    {
+                        $iColCount++;
+                        break;
+                    }
+                }
+            }
+        }
+        // If no cols, return a default form with all fields one after another
+        if($iColCount === 0)
+        {
+            return array(
+                'id' => 'default',
+                'type' => 'zlist',
+                'fields' => 'details',
+                'layout' => null
+            );
+        }
+        // Warning, this might not be great when 12 modulo $iColCount is greater than 0.
+        $sColCSSClass = 'col-sm-'.floor(12/$iColCount);
+
+        $sLinksetsHTML = "";
+        $sRowHTML = "<div class=\"row\">\n";
+        foreach($aPropertiesStruct as $sColId => $aColFieldsets)
+        {
+            $sColsHTML = "\t<div class=\"".$sColCSSClass."\">\n";
+            foreach($aColFieldsets as $sFieldsetName => $aAttCodes)
+            {
+                // Add fieldset, not linkset
+                if(substr($sFieldsetName, 0, 1) !== '_')
+                {
+                    $sFieldsetHTML = "\t\t<fieldset>\n";
+                    $sFieldsetHTML .= "\t\t\t<legend>".htmlentities(Dict::S($sFieldsetName), ENT_QUOTES, 'UTF-8')."</legend>\n";
+
+                    foreach($aAttCodes as $sAttCode)
+                    {
+                        $sFieldsetHTML .= "\t\t\t<div class=\"form_field\" data-field-id=\"".$sAttCode."\"></div>\n";
+                    }
+
+                    $sFieldsetHTML .= "\t\t</fieldset>\n";
+
+                    // Add to col
+                    $sColsHTML .= $sFieldsetHTML;
+                }
+                elseif($bAddLinksets)
+                {
+                    foreach($aAttCodes as $sAttCode)
+                    {
+                        $sLinksetsHTML .= "<div class=\"form_field\" data-field-id=\"".$sAttCode."\"></div>\n";
+                    }
+                }
+            }
+            $sColsHTML .= "\t</div>\n";
+
+            // Add col to row
+            $sRowHTML .= $sColsHTML;
+        }
+        $sRowHTML .= "</div>\n";
+
+        // Add row to twig
+        $sContent .= $sRowHTML;
+        // Add linksets to twig
+        $sContent .= $sLinksetsHTML;
+
+        $aForm['layout']['content'] = $sContent;
+
+        return $aForm;
+    }
 
 }
