@@ -79,8 +79,8 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 		// Removing upload input if in read only
 		// TODO : Add max upload size when itop attachment has been refactored
 		if (!$this->oField->GetReadOnly())
-		{
-			$oOutput->AddHtml('<div class="upload_container row">' . Dict::S('Attachments:AddAttachment') . '<input type="file" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" /><span class="loader glyphicon glyphicon-refresh"></span></div>');
+        {
+			$oOutput->AddHtml('<div class="upload_container row">' . Dict::S('Attachments:AddAttachment') . '<input type="file" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" /><span class="loader glyphicon glyphicon-refresh"></span>' . InlineImage::GetMaxUpload() . '</div>');
 		}
 		// Ending files container
         $oOutput->AddHtml('</div>');
