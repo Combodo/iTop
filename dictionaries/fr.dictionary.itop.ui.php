@@ -272,6 +272,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:ChangePassword' => ' Changer ! ',
 	'UI:Button:ResetPassword' => ' Ràz du mot de passe ',
 	'UI:Button:Insert' => 'Insérer',
+    'UI:Button:More' => 'Plus',
+    'UI:Button:Less' => 'Moins',
 	'UI:SearchToggle' => 'Recherche',
 	'UI:ClickToCreateNew' => 'Créer un nouvel objet de type %1$s',
 	'UI:SearchFor_Class' => 'Rechercher des objets de type %1$s',

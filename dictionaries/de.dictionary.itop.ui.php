@@ -267,6 +267,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:Delete' => ' Löschen! ',
 	'UI:Button:ChangePassword' => ' Passwort ändern ',
 	'UI:Button:ResetPassword' => ' Passwort zurücksetzen ',
+    'UI:Button:More' => 'Mehr',
+    'UI:Button:Less' => 'Weniger',
 	'UI:SearchToggle' => 'Suche',
 	'UI:ClickToCreateNew' => 'Klicken Sie hier, um eine neues Objekt vom Typ %1$s zu erstellen',
 	'UI:SearchFor_Class' => 'Suche nach Objekten vom Typ "%1$s"',
