@@ -53,9 +53,6 @@
 				   </attributes>
 				 </index>
 				</indexes>
-		        <obsolescence>
-        			<condition><![CDATA[operational_status='closed' AND (close_date < DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 15 MONTH),'%Y-%m-%d 00:00:00') OR (ISNULL(close_date) AND last_update < DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 15 MONTH),'%Y-%m-%d 00:00:00')))]]></condition>
-        		</obsolescence>
 			</properties>
 			<fields>
 				<field id="operational_status" xsi:type="AttributeMetaEnum">
@@ -1407,7 +1404,7 @@
 					<properties>
 						<!--Display mode of the form fields. "cosy" for a regular labels over values layout; "compact" for a side-by-side layout with input aligned; "dense" for a side-by-side layout with input filling all available space. You can also use a custom css class that will be used on the form as "form_xxx", as well as on the fields as "form_field_xxx".-->
 						<!--<display_mode>cosy</display_mode>-->
-						<!-- When set to false, submit button is hidden when transitions are available on the object (in edit mode only). Default is false. -->
+						<!-- When set to false, submit button is hidden when transitions are available on the object (in creation and edit mode). Default is false. -->
 						<!--<always_show_submit>false</always_show_submit>-->
 					</properties>
 					<fields></fields>
