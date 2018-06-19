@@ -364,7 +364,7 @@ class CriterionConversionTest extends ItopDataTestCase
 			),
 			'enum + key =' => array(
 				'OQL' => "SELECT Contact WHERE status = 'active' AND org_id = 3",
-				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` WHERE ((`Contact`.`org_id` = '3') AND (`Contact`.`status` = 'active'))",
+				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` JOIN Organization AS `Organization` ON `Contact`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE ((`Organization1`.`id` = '3') AND (`Contact`.`status` = 'active'))",
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN'), array('widget' => 'enum', 'operator' => 'IN')),
 			),
 			'enum =' => array(
@@ -409,7 +409,7 @@ class CriterionConversionTest extends ItopDataTestCase
 			),
 			'key IN' => array(
 				'OQL' => "SELECT Contact WHERE org_id IN ('1')",
-				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` WHERE (`Contact`.`org_id` = '1')",
+				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` JOIN Organization AS `Organization` ON `Contact`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = '1')",
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN')),
 			),
 			'key empty' => array(
@@ -521,7 +521,7 @@ class CriterionConversionTest extends ItopDataTestCase
             ),
             'Date between 2' => array(
                 'OQL' => "SELECT UserRequest WHERE start_date > '2017-01-01 00:00:00' AND status = 'active' AND org_id = 3 AND '2018-01-01 00:00:00' >= start_date",
-                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((((`UserRequest`.`org_id` = '3') AND (`UserRequest`.`start_date` >= '2017-01-01 00:00:01')) AND (`UserRequest`.`start_date` <= '2018-01-01 00:00:00')) AND (`UserRequest`.`status` = 'active'))",
+                'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Organization AS `Organization` ON `UserRequest`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE ((((`Organization1`.`id` = '3') AND (`UserRequest`.`start_date` >= '2017-01-01 00:00:01')) AND (`UserRequest`.`start_date` <= '2018-01-01 00:00:00')) AND (`UserRequest`.`status` = 'active'))",
                 'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN'), array('widget' => 'date_time', 'operator' => 'between_dates'), array('widget' => 'enum', 'operator' => 'IN')),
             ),
             'Date between 3' => array(
