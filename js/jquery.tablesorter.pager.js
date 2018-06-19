@@ -506,6 +506,8 @@ function sprintf(format, etc) {
 							applySelection(table);
 						});
 						$(table).bind('check_all', function() {
+							// update header checkbox
+							$(table).find("thead>tr>th>input:checkbox").prop("checked", true);
 							checkAll(table, pager, true);
 						});
 					}
