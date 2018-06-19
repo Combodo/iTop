@@ -145,7 +145,7 @@
       <rank>10</rank>
       <parent>AdminTools</parent>
       <url>$pages/schema.php</url>
-      <enable_class>ResourceAdminMenu</enable_class>
+      <enable_class>ResourceRunQueriesMenu</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
     <menu id="UniversalSearchMenu" xsi:type="WebPageMenuNode" _delta="define">
