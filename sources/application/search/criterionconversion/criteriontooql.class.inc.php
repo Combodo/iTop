@@ -233,7 +233,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		// Hierarchical keys
 		$sHierarchicalKeyCode = false;
 		$sTargetClass = '';
-		if (isset($oAttDef) && $oAttDef->IsExternalKey() && (!isset($aCriteria['is_hierarchical']) || ($aCriteria['is_hierarchical'] !== false)))
+		if (isset($oAttDef) && $oAttDef->IsExternalKey() && ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY))
 		{
 			if ($oAttDef instanceof AttributeExternalKey)
 			{
