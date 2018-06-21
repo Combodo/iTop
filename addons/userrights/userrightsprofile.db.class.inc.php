@@ -99,6 +99,9 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('default_search', array (
+			0 => 'name',
+		));
 	}
 
 	protected $m_bCheckReservedNames = true;
