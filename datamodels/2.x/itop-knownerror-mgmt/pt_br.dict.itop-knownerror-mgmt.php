@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -20,7 +20,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -132,7 +132,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkDocumentToError/Attribute:error_id+' => '',
 	'Class:lnkDocumentToError/Attribute:error_name' => 'Nome erro',
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
-	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type',
+	'Class:lnkDocumentToError/Attribute:link_type' => 'Tipo de link',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
 ));
 
@@ -180,14 +180,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:NewError+' => 'Criar um erro conhecido',
 	'Menu:SearchError' => 'Pesquisar por um erro conhecido',
 	'Menu:SearchError+' => 'Pesquisar por erros conhecidos',
-    'Menu:Problem:KnownErrors' => 'Todos erros conhecidos',
-    'Menu:Problem:KnownErrors+' => 'Todos erros conhecidos',
+	'Menu:Problem:KnownErrors' => 'Todos erros conhecidos',
+	'Menu:Problem:KnownErrors+' => 'Todos erros conhecidos',
 	'Menu:FAQCategory' => 'Categorias FAQ',
 	'Menu:FAQCategory+' => 'Todas categorias FAQ',
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => 'Todas FAQs',
-	
+
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
-	'Brick:Portal:FAQ:Title' => 'Dúvidas frequentes',
-	'Brick:Portal:FAQ:Title+' => '<p>Já conferiu nossa lista de perguntas frequentes?</p><p>Talvez encontre a resposta esperada imediatamente.</p>',
+	'Brick:Portal:FAQ:Title' => 'Perguntes frequentes (FAQ)',
+	'Brick:Portal:FAQ:Title+' => '<p>Com pressa?</p><p>Confira a lista de perguntas mais comuns e (talvez) encontre a resposta esperada imediatamente.</p>',
+
 ));

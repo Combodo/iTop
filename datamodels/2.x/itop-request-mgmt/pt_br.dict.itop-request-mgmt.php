@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -280,7 +280,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:TitleDetailsFor_Service' => 'Detalhes dos serviços',
 	'Portal:Button:CreateRequestFromService' => 'Criar uma solicitação para esse serviço',
 	'Portal:ListOpenRequests' => 'Lista solicitações abertas',
-'Portal:UserRequest:MoreInfo' => 'Mais informações',
+	'Portal:UserRequest:MoreInfo' => 'Mais informações',
 	'Portal:Details-Service-Element' => 'Elementos do Serviço',
 	'Portal:NoClosedTicket' => 'Nenhuma solicitação fechada',
 	'Portal:NoService' => '',
@@ -295,5 +295,3 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));
-
-?>
