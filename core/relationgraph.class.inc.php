@@ -433,15 +433,19 @@ class RelationGraph extends SimpleGraph
 			}
 			elseif ($oObjectNode->GetProperty('developped', false))
 			{
-				// No need to execute the queries again... just dig into the nodes down/up to iMaxDepth
-				//
-				$aRelatedEdges = $bDown ? $oObjectNode->GetOutgoingEdges() : $oObjectNode->GetIncomingEdges();
-				foreach ($aRelatedEdges as $oRelatedEdge)
-				{
-					$oRelatedNode = $bDown ? $oRelatedEdge->GetSinkNode() : $oRelatedEdge->GetSourceNode();
-					// Recurse (decrement the depth)
-					$this->AddRelatedObjects($sRelCode, $bDown, $oRelatedNode, $iMaxDepth - 1, $bEnableRedundancy);
-				}
+				// No need to explore the underlying graph at all. We can stop here since the node has already been developped.
+				// Otherwise in case of "loops" in the graph we would recurse up to the max depth limit
+				// without producing any difference in the resulting graph... but potentially taking a LOOOONG time.
+				return;
+				
+				// Former code was
+				//$aRelatedEdges = $bDown ? $oObjectNode->GetOutgoingEdges() : $oObjectNode->GetIncomingEdges();
+				//foreach ($aRelatedEdges as $oRelatedEdge)
+				//{
+				//	$oRelatedNode = $bDown ? $oRelatedEdge->GetSinkNode() : $oRelatedEdge->GetSourceNode();
+				//	// Recurse (decrement the depth)
+				//	$this->AddRelatedObjects($sRelCode, $bDown, $oRelatedNode, $iMaxDepth - 1, $bEnableRedundancy);
+				//}
 			}
 			else
 			{
