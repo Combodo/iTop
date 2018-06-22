@@ -407,7 +407,7 @@ $(function()
 			ymax = this.options.ymax + iMargin;
 			var xScale = this.element.width() / (xmax - xmin);
 			var yScale = this.element.height() / (ymax - ymin + this.iTextHeight);
-			
+
 			this.fZoom = Math.min(xScale, yScale, fMaxZoom);
 			switch(this.options.align)
 			{
@@ -682,7 +682,7 @@ $(function()
 		},
 		_on_resize: function()
 		{
-			this.element.closest('.ui-tabs').tabs({ heightStyle: "fill" });
+			this.element.closest('.ui-tabs').tabs({ heightStyle: "content" });
 			this.auto_scale();
 			this._close_all_tooltips();
 			this.draw();
