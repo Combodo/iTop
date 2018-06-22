@@ -203,6 +203,12 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	// preserve DB integrity by deleting links to users
 	protected function OnDelete()
 	{
+		// Don't remove admin profile
+		if ($this->Get('name') === ADMIN_PROFILE_NAME)
+		{
+			throw new SecurityException(Dict::Format('UI:Login:Error:AccessAdmin'));
+		}
+
 		// Note: this may break the rule that says: "a user must have at least ONE profile" !
 		$oLnkSet = $this->Get('user_list');
 		while($oLnk = $oLnkSet->Fetch())
@@ -300,13 +306,38 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 		$this->CheckIfProfileIsAllowed(UR_ACTION_DELETE);
 	}
 
+	/**
+	 * @param $iActionCode
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \SecurityException
+	 */
 	protected function CheckIfProfileIsAllowed($iActionCode)
 	{
+		// When initializing or admin, we need to let everything pass trough
+		if (!UserRights::IsLoggedIn() || UserRights::IsAdministrator()) { return; }
+
+		// Only administrators can manage administrators
+		$iOrigUserId = $this->GetOriginal('userid');
+		if (!empty($iOrigUserId))
+		{
+			$oUser = MetaModel::GetObject('User', $iOrigUserId, true, true);
+			if (UserRights::IsAdministrator($oUser) && !UserRights::IsAdministrator())
+			{
+				throw new SecurityException(Dict::Format('UI:Login:Error:AccessRestricted'));
+			}
+		}
+		$oUser = MetaModel::GetObject('User', $this->Get('userid'), true, true);
+		if (UserRights::IsAdministrator($oUser) && !UserRights::IsAdministrator())
+		{
+			throw new SecurityException(Dict::Format('UI:Login:Error:AccessRestricted'));
+		}
 		if (!UserRights::IsActionAllowed(get_class($this), $iActionCode, DBObjectSet::FromObject($this)))
 		{
 			throw new SecurityException(Dict::Format('UI:Error:ObjectCannotBeUpdated'));
 		}
-		if (UserRights::IsLoggedIn() && !UserRights::IsAdministrator() && ($this->Get('profile') === ADMIN_PROFILE_NAME))
+		if (!UserRights::IsAdministrator() && ($this->Get('profile') === ADMIN_PROFILE_NAME))
 		{
 			throw new SecurityException(Dict::Format('UI:Login:Error:AccessAdmin'));
 		}
@@ -351,6 +382,42 @@ class URP_UserOrg extends UserRightsBaseClassGUI
 	public function GetName()
 	{
 		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Org', $this->Get('userlogin'), $this->Get('allowed_org_name'));
+	}
+
+
+	protected function OnInsert()
+	{
+		$this->CheckIfOrgIsAllowed();
+	}
+
+	protected function OnUpdate()
+	{
+		$this->CheckIfOrgIsAllowed();
+	}
+
+	protected function OnDelete()
+	{
+		$this->CheckIfOrgIsAllowed();
+	}
+
+	/**
+	 * @throws \CoreException
+	 */
+	protected function CheckIfOrgIsAllowed()
+	{
+		if (UserRights::IsAdministrator()) { return; }
+
+		$oUser = UserRights::GetUserObject();
+		$oAddon = UserRights::GetModuleInstance();
+		$aOrgs = $oAddon->GetUserOrgs($oUser, '');
+		if (count($aOrgs) > 0)
+		{
+			$iOrigOrgId = $this->GetOriginal('allowed_org_id');
+			if ((!empty($iOrigOrgId) && !in_array($iOrigOrgId, $aOrgs)) || !in_array($this->Get('allowed_org_id'), $aOrgs))
+			{
+				throw new SecurityException(Dict::Format('Class:User/Error:OrganizationNotAllowed'));
+			}
+		}
 	}
 }
 

@@ -140,6 +140,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'At least one profile must be assigned to this user.',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.',
+	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.',
 	'Class:UserInternal' => 'User Internal',
 	'Class:UserInternal+' => 'User defined within iTop',
 ));

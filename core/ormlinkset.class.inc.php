@@ -540,6 +540,27 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	}
 
 	/**
+	 * Get the list of all modified (added, modified and removed) links
+	 *
+	 * @return array of link objects
+	 * @throws \Exception
+	 */
+	public function ListModifiedLinks()
+	{
+		$aAdded = $this->aAdded;
+		$aModified = $this->aModified;
+		$aRemoved = array();
+		if (count($this->aRemoved) > 0)
+		{
+			$oSearch = new DBObjectSearch($this->sClass);
+			$oSearch->AddCondition('id', $this->aRemoved, 'IN');
+			$oSet = new DBObjectSet($oSearch);
+			$aRemoved = $oSet->ToArray();
+		}
+		return array_merge($aAdded, $aModified, $aRemoved);
+	}
+
+	/**
 	 * @param DBObject $oHostObject
 	 */
 	public function DBWrite(DBObject $oHostObject)

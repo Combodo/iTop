@@ -164,6 +164,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'L\'utilisateur doit avoir au moins un profil.',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'L\'utilisateur doit avoir au moins une organisation.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organisation non autorisée.',
+	'Class:User/Error:UserOrganizationNotAllowed' => 'L\'utilisateur n\'appartient pas à vos organisations.',
 	'Class:UserInternal' => 'Utilisateur interne',
 	'Class:UserInternal+' => 'Utilisateur défini dans iTop',
 	'Class:URP_Dimensions' => 'Dimension',

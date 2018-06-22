@@ -283,18 +283,21 @@ abstract class User extends cmdbAbstractObject
 				}
 			}
 		}
-		// Check that this user has at least one profile assigned
-		$oSet = $this->Get('profile_list');
-		if ($oSet->Count() == 0)
+		// Check that this user has at least one profile assigned when profiles have changed
+		if (array_key_exists('profile_list', $aChanges))
 		{
-			$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:AtLeastOneProfileIsNeeded');
+			$oSet = $this->Get('profile_list');
+			if ($oSet->Count() == 0)
+			{
+				$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:AtLeastOneProfileIsNeeded');
+			}
 		}
 		// Only administrators can manage administrators
 		if (UserRights::IsAdministrator($this) && !UserRights::IsAdministrator())
 		{
 			$this->m_aCheckIssues[] = Dict::Format('UI:Login:Error:AccessRestricted');
 		}
-		// Check users with restricted organizations
+
 		if (!UserRights::IsAdministrator())
 		{
 			$oUser = UserRights::GetUserObject();
@@ -304,19 +307,28 @@ abstract class User extends cmdbAbstractObject
 				$aOrgs = $oAddon->GetUserOrgs($oUser, '');
 				if (count($aOrgs) > 0)
 				{
-					/** @var ORMLinkset $oSet */
-					$oSet = $this->Get('allowed_org_list');
-					if ($oSet->Count() == 0)
+					// Check that the modified User belongs to one of our organization
+					if (!in_array($this->GetOriginal('org_id'), $aOrgs) || !in_array($this->Get('org_id'), $aOrgs))
 					{
-						$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:AtLeastOneOrganizationIsNeeded');
+						$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:UserOrganizationNotAllowed');
 					}
-					else
+					// Check users with restricted organizations when allowed organizations have changed
+					if ($this->IsNew() || array_key_exists('allowed_org_list', $aChanges))
 					{
-						while ($oUserOrg = $oSet->Fetch())
+						$oSet = $this->get('allowed_org_list');
+						if ($oSet->Count() == 0)
 						{
-							if (!in_array($oUserOrg->Get('allowed_org_id'), $aOrgs))
+							$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:AtLeastOneOrganizationIsNeeded');
+						}
+						else
+						{
+							$aModifiedLinks = $oSet->ListModifiedLinks();
+							foreach($aModifiedLinks as $oLink)
 							{
-								$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:OrganizationNotAllowed');
+								if (!in_array($oLink->Get('allowed_org_id'), $aOrgs))
+								{
+									$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:OrganizationNotAllowed');
+								}
 							}
 						}
 					}
@@ -961,10 +973,12 @@ class UserRights
 	}
 
 	/**
+	 * Add additional filter for organization silos to all the requests.
+	 *
 	 * @param $sClass
 	 * @param array $aSettings
 	 *
-	 * @return bool
+	 * @return bool|\Expression
 	 */
 	public static function GetSelectFilter($sClass, $aSettings = array())
 	{
@@ -975,8 +989,8 @@ class UserRights
 
 		try
 		{
-			// In case of pb, use AllowAllData internally
-			if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'grant_by_profile'))
+			// Check Bug 1436 for details
+			if (MetaModel::HasCategory($sClass, 'bizmodel'))
 			{
 				return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
 			}
