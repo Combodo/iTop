@@ -4,21 +4,6 @@
 
 {% block pPageBodyClass %}home{% endblock %}
 
-{# Showing only bricks that are not visible on the main content as well as a welcome message #}
-{#{% block pNavigationSideMenu %}
-	<ul class="nav">
-		{% for brick in app['combodo.portal.instance.conf'].bricks %}
-			{% if brick.GetActive and brick.GetVisibleNavigationMenu and not brick.GetVisibleHome and brick.GetRouteName is not null %}
-				<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
-					<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
-						{{ brick.GetTitle|dict_s }}
-					</a>
-				</li>
-			{% endif %}
-		{% endfor %}
-	</ul>
-{% endblock %}#}
-
 {% block pMainWrapper %}
 {% set iCurrentTileIndex = 0 %}
 <div class="container-fluid" id="main-wrapper">
