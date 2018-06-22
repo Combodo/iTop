@@ -32,6 +32,9 @@ class FilterBrick extends PortalBrick
 {
 	const DEFAULT_VISIBLE_NAVIGATION_MENU = false;
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/filter/tile.html.twig';
+    const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-search';
+    const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-search fa-2x';
+
 	const DEFAULT_TARGET_BRICK_CLASS = 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick';
 	const DEFAULT_SEARCH_PLACEHOLDER_VALUE = 'Brick:Portal:Filter:SearchInput:Placeholder';
 	const DEFAULT_SEARCH_SUBMIT_LABEL = 'Brick:Portal:Filter:SearchInput:Submit';

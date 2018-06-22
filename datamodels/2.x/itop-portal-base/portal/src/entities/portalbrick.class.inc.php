@@ -35,7 +35,7 @@ abstract class PortalBrick extends AbstractBrick
     const ENUM_OPENING_TARGET_SELF = 'self';
     const ENUM_OPENING_TARGET_NEW = 'new';
 
-	const DEFAULT_WIDTH = 1;
+	const DEFAULT_WIDTH = 6;
 	const DEFAULT_HEIGHT = 1;
 	const DEFAULT_MODAL = false;
 	const DEFAULT_VISIBLE_HOME = true;
