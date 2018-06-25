@@ -100,7 +100,7 @@
       <rank>2</rank>
       <parent>AdminTools</parent>
       <oql><![CDATA[SELECT URP_Profiles]]></oql>
-      <do_search/>
+      <do_search>1</do_search>
       <enable_class>URP_Profiles</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
@@ -115,7 +115,7 @@
       <rank>4</rank>
       <parent>AdminTools</parent>
       <oql><![CDATA[SELECT AuditCategory]]></oql>
-      <do_search/>
+      <do_search>1</do_search>
       <enable_class>AuditCategory</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
