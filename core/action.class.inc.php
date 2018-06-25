@@ -60,7 +60,7 @@ abstract class Action extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'status', 'trigger_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'name', 'description', 'status')); // Attributes to be displayed for a list
 		// Search criteria
-//		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
+		MetaModel::Init_SetZListItems('default_search', array('name', 'description', 'status')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
