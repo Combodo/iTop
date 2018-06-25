@@ -96,7 +96,8 @@ class SynchroDataSource extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('list', array('scope_class', 'status', 'user_id', 'full_load_periodicity')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('name', 'status', 'scope_class', 'user_id')); // Criteria of the std search form
-//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+		MetaModel::Init_SetZListItems('default_search', array('name', 'status', 'scope_class')); // Criteria of the defaut search form
+		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 
 	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
