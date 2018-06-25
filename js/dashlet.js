@@ -120,7 +120,7 @@ $(function()
 		},
 		get_drag_icon: function()
 		{
-			var oDragItem = $('#dashlet_'+this.options.dashlet_class).clone();
+			var oDragItem = $('#dashlet_'+this.options.dashlet_type).clone();
 			oDragItem.css({zIndex: 999});
 			oDragItem.appendTo('body');
 			return oDragItem;
