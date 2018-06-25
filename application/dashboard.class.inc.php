@@ -256,9 +256,11 @@ abstract class Dashboard
 			{
 				$sDashletClass = $aDashletParams['dashlet_class'];
 				$sId = $aDashletParams['dashlet_id'];
-				$sType = $aDashletParams['dashlet_type'];
 				$oNewDashlet = new $sDashletClass($this->oMetaModel, $sId);
-				$oNewDashlet->SetDashletType($sType);
+				if (isset($aDashletParams['dashlet_type']))
+				{
+					$oNewDashlet->SetDashletType($aDashletParams['dashlet_type']);
+				}
 				$oForm = $oNewDashlet->GetForm();
 				$oForm->SetParamsContainer($sId);
 				$oForm->SetPrefix('');

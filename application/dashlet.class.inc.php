@@ -827,14 +827,17 @@ abstract class DashletGroupBy extends Dashlet
 		if (empty($this->aProperties['order_direction']))
 		{
 			$aAttributeTypes = $this->oModelReflection->ListAttributes($this->sClass);
-			$sAttributeType = $aAttributeTypes[$this->sGroupByAttCode];
-			if (is_subclass_of($sAttributeType, 'AttributeDateTime') || $sAttributeType == 'AttributeDateTime')
+			if (isset($aAttributeTypes[$this->sGroupByAttCode]))
 			{
-				$this->sOrderDirection = 'asc';
-			}
-			else
-			{
-				$this->sOrderDirection = 'desc';
+				$sAttributeType = $aAttributeTypes[$this->sGroupByAttCode];
+				if (is_subclass_of($sAttributeType, 'AttributeDateTime') || $sAttributeType == 'AttributeDateTime')
+				{
+					$this->sOrderDirection = 'asc';
+				}
+				else
+				{
+					$this->sOrderDirection = 'desc';
+				}
 			}
 		}
 		else
@@ -1199,6 +1202,7 @@ abstract class DashletGroupBy extends Dashlet
 				case 'AttributeDuration':
 				case 'AttributeInteger':
 				case 'AttributePercentage':
+				case 'AttributeSubItem': // TODO: Known limitation: no unit displayed (values in sec)
 					$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
 					$aFunctionAttributes[$sAttCode] = $sLabel;
 					break;
