@@ -329,7 +329,7 @@ class SearchForm
 	 */
 	protected function PopulateFieldList($sClass, $sAlias, &$aZList, &$aOthers)
 	{
-		$aDBIndexes = MetaModel::DBGetIndexes($sClass);
+		$aDBIndexes = self::DBGetIndexes($sClass);
 		$aIndexes = array();
 		foreach($aDBIndexes as $aIndexGroup)
 		{
@@ -379,6 +379,23 @@ class SearchForm
 		uasort($aOthers, function ($aItem1, $aItem2) {
 			return strcmp($aItem1['label'], $aItem2['label']);
 		});
+	}
+
+	/**
+	 * Search indexes for class and parents
+	 * @param $sClass
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 */
+	protected static function DBGetIndexes($sClass)
+	{
+		$aDBIndexes = MetaModel::DBGetIndexes($sClass);
+		while ($sClass = MetaModel::GetParentClass($sClass))
+		{
+			$aDBIndexes = array_merge($aDBIndexes, MetaModel::DBGetIndexes($sClass));
+		}
+		return $aDBIndexes;
 	}
 
 	protected function IsSubAttribute($oAttDef)
