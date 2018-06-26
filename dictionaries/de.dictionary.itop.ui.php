@@ -118,7 +118,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:User/Attribute:allowed_org_list+' => 'Der Endbenutzer ist berechtigt, die Daten der folgenden Organisationen zu sehen. Wenn keine Organisation zu sehen ist, gibt es keine Beschränkung.',
 	'Class:User/Error:LoginMustBeUnique' => 'Login-Namen müssen unterschiedlich sein - "%1s" benutzt diesen Login-Name bereits.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Mindestens ein Profil muss diesem Benutzer zugewiesen sein.',
-	'Class:URP_Dimensions' => 'Dimension',
+    'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
+    'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
+    'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
+    'Class:URP_Dimensions' => 'Dimension',
 	'Class:URP_Dimensions+' => 'Anwendungsdimension (Festlegen von Silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Name',
 	'Class:URP_Dimensions/Attribute:name+' => 'Label',
@@ -954,6 +957,17 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:DashboardEdit:DashletProperties' => 'Dashlet-Einstellungen',
 	'UI:Form:Property' => 'Einstellung',
 	'UI:Form:Value' => 'Wert',
+    'UI:DashletUnknown:Label' => 'Unknown~~',
+    'UI:DashletUnknown:Description' => 'Unknown dashlet (might have been uninstalled)~~',
+    'UI:DashletUnknown:RenderText:View' => 'Unable to render this dashlet.~~',
+    'UI:DashletUnknown:RenderText:Edit' => 'Unable to render this dashlet (class "%1$s"). Check with your administrator if it is still available.~~',
+    'UI:DashletUnknown:RenderNoDataText:Edit' => 'No preview available for this dashlet (class "%1$s").~~',
+    'UI:DashletUnknown:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)~~',
+
+    'UI:DashletProxy:Label' => 'Proxy~~',
+    'UI:DashletProxy:Description' => 'Proxy dashlet~~',
+    'UI:DashletProxy:RenderNoDataText:Edit' => 'No preview available for this third-party dashlet (class "%1$s").~~',
+    'UI:DashletProxy:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)~~',
 	'UI:DashletPlainText:Label' => 'Text',
 	'UI:DashletPlainText:Description' => 'Reiner Text (ohne Formatierung)',
 	'UI:DashletPlainText:Prop-Text' => 'Text',
@@ -982,6 +996,29 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:DashletGroupByBars:Description' => 'Balkendiagramm',
 	'UI:DashletGroupByTable:Label' => 'Gruppieren nach (Tabelle)',
 	'UI:DashletGroupByTable:Description' => 'Liste (gruppiert nach einem Feld)',
+
+    // New in 2.5
+    'UI:DashletGroupBy:Prop-Function' => 'Aggregation function~~',
+    'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute~~',
+    'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction~~',
+    'UI:DashletGroupBy:Prop-OrderField' => 'Order by~~',
+    'UI:DashletGroupBy:Prop-Limit' => 'Limit~~',
+
+    'UI:DashletGroupBy:Order:asc' => 'Ascending~~',
+    'UI:DashletGroupBy:Order:desc' => 'Descending~~',
+
+    'UI:GroupBy:count' => 'Count~~',
+    'UI:GroupBy:count+' => 'Number of elements~~',
+    'UI:GroupBy:sum' => 'Sum~~',
+    'UI:GroupBy:sum+' => 'Sum of %1$s~~',
+    'UI:GroupBy:avg' => 'Average~~',
+    'UI:GroupBy:avg+' => 'Average of %1$s~~',
+    'UI:GroupBy:min' => 'Minimum~~',
+    'UI:GroupBy:min+' => 'Minimum of %1$s~~',
+    'UI:GroupBy:max' => 'Maximum~~',
+    'UI:GroupBy:max+' => 'Maximum of %1$s~~',
+    // ---
+
 	'UI:DashletHeaderStatic:Label' => 'Header',
 	'UI:DashletHeaderStatic:Description' => 'Zeigt einen horizontalen Trenner',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Titel',
@@ -1136,5 +1173,125 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'portal:legacy_portal' => 'Endbenutzer-Portal',
 	'portal:backoffice' => 'iTop Backend',
 	'UI:UploadNotSupportedInThisMode' => 'Die Modifizierung von Bildern oder Dateien wird in diesem Modus nicht unterstützt.',
+
+    // Search form
+    'UI:Search:Toggle' => 'Minimize / Expand~~',
+    'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+    'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
+    // - Add new criteria button
+    'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used~~',
+    'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular~~',
+    'UI:Search:AddCriteria:List:Others:Title' => 'Others~~',
+    'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.~~',
+
+    // - Criteria titles
+    //   - Default widget
+    'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any~~',
+    'UI:Search:Criteria:Title:Default:Empty' => '%1$s is empty~~',
+    'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s is not empty~~',
+    'UI:Search:Criteria:Title:Default:Equals' => '%1$s equals %2$s~~',
+    'UI:Search:Criteria:Title:Default:Contains' => '%1$s contains %2$s~~',
+    'UI:Search:Criteria:Title:Default:StartsWith' => '%1$s starts with %2$s~~',
+    'UI:Search:Criteria:Title:Default:EndsWith' => '%1$s ends with %2$s~~',
+    'UI:Search:Criteria:Title:Default:RegExp' => '%1$s matches %2$s~~',
+    'UI:Search:Criteria:Title:Default:GreaterThan' => '%1$s > %2$s~~',
+    'UI:Search:Criteria:Title:Default:GreaterThanOrEquals' => '%1$s >= %2$s~~',
+    'UI:Search:Criteria:Title:Default:LessThan' => '%1$s < %2$s~~',
+    'UI:Search:Criteria:Title:Default:LessThanOrEquals' => '%1$s <= %2$s~~',
+    'UI:Search:Criteria:Title:Default:Different' => '%1$s ≠ %2$s~~',
+    'UI:Search:Criteria:Title:Default:Between' => '%1$s between [%2$s]~~',
+    'UI:Search:Criteria:Title:Default:BetweenDates' => '%1$s [%2$s]~~',
+    'UI:Search:Criteria:Title:Default:BetweenDates:All' => '%1$s: Any~~',
+    'UI:Search:Criteria:Title:Default:BetweenDates:From' => '%1$s from %2$s~~',
+    'UI:Search:Criteria:Title:Default:BetweenDates:Until' => '%1$s until %2$s~~',
+    'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Any~~',
+    'UI:Search:Criteria:Title:Default:Between:From' => '%1$s from %2$s~~',
+    'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s up to %2$s~~',
+    //   - Numeric widget
+    //   None yet
+    //   - DateTime widget
+    'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s~~',
+    //   - Enum widget
+    'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s~~',
+    'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others~~',
+    'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any~~',
+    //   - External key widget
+    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined~~',
+    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined~~',
+    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s~~',
+    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s~~',
+    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
+    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any~~',
+    //   - Hierarchical key widget
+    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined~~',
+    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined~~',
+    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s~~',
+    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s~~',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others~~',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any~~',
+
+    // - Criteria operators
+    //   - Default widget
+    'UI:Search:Criteria:Operator:Default:Empty' => 'Is empty~~',
+    'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Is not empty~~',
+    'UI:Search:Criteria:Operator:Default:Equals' => 'Equals~~',
+    'UI:Search:Criteria:Operator:Default:Between' => 'Between~~',
+    //   - String widget
+    'UI:Search:Criteria:Operator:String:Contains' => 'Contains~~',
+    'UI:Search:Criteria:Operator:String:StartsWith' => 'Starts with~~',
+    'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
+    'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
+    //   - Numeric widget
+    'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',
+    'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',
+    'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',
+    'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',
+    'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',
+    'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',
+
+    // - Other translations
+    'UI:Search:Value:Filter:Placeholder' => 'Filter...~~',
+    'UI:Search:Value:Search:Placeholder' => 'Search...~~',
+    'UI:Search:Value:Autocomplete:StartTyping' => 'Start typing for possible values.~~',
+    'UI:Search:Value:Autocomplete:Wait' => 'Please wait...~~',
+    'UI:Search:Value:Autocomplete:NoResult' => 'No result.~~',
+    'UI:Search:Value:Toggler:CheckAllNone' => 'Check all / none~~',
+    'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Check all / none visibles~~',
+
+    // - Widget other translations
+    'UI:Search:Criteria:Numeric:From' => 'From~~',
+    'UI:Search:Criteria:Numeric:Until' => 'To~~',
+    'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Any~~',
+    'UI:Search:Criteria:Numeric:PlaceholderUntil' => 'Any~~',
+    'UI:Search:Criteria:DateTime:From' => 'From~~',
+    'UI:Search:Criteria:DateTime:FromTime' => 'From~~',
+    'UI:Search:Criteria:DateTime:Until' => 'until~~',
+    'UI:Search:Criteria:DateTime:UntilTime' => 'until~~',
+    'UI:Search:Criteria:DateTime:PlaceholderFrom' => 'Any date~~',
+    'UI:Search:Criteria:DateTime:PlaceholderFromTime' => 'Any date~~',
+    'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Any date~~',
+    'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Any date~~',
+    'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Children of the selected objects will be included.~~',
+
+    'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
+    'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
 ));
-?>
+
+//
+// Expression to Natural language
+//
+Dict::Add('EN US', 'English', 'English', array(
+    'Expression:Operator:AND' => ' AND ~~',
+    'Expression:Operator:OR' => ' OR ~~',
+
+    'Expression:Unit:Short:DAY' => 'd~~',
+    'Expression:Unit:Short:WEEK' => 'w~~',
+    'Expression:Unit:Short:MONTH' => 'm~~',
+    'Expression:Unit:Short:YEAR' => 'y~~',
+
+    'Expression:Unit:Long:DAY' => 'day(s)~~',
+    'Expression:Unit:Long:HOUR' => 'hour(s)~~',
+    'Expression:Unit:Long:MINUTE' => 'minute(s)~~',
+
+    'Expression:Verb:NOW' => 'now~~',
+));
