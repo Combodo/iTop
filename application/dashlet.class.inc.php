@@ -290,7 +290,7 @@ EOF
 		);
 	}
 
-	public function GetForm()
+	public function GetForm($aInfo = array())
 	{
 		$oForm = new DesignerForm();
 		$sPrefix = "dashlet_".$this->GetID();
@@ -424,6 +424,28 @@ class DashletUnknown extends Dashlet
 		$this->OnUpdate();
 	}
 
+	/**
+	 * @param $oDOMNode
+	 *
+	 * @throws \DOMFormatException
+	 */
+	public function ToDOMNode($oDOMNode)
+	{
+		$oDoc = new DOMDocument();
+		libxml_clear_errors();
+		$oDoc->loadXML('<root>'.$this->sOriginalDashletXML.'</root>');
+		$aErrors = libxml_get_errors();
+		if (count($aErrors) > 0)
+		{
+			throw new DOMFormatException('Dashlet definition not correctly formatted!');
+		}
+		foreach($oDoc->documentElement->childNodes as $oDOMChildNode)
+		{
+			$oPropNode = $oDOMNode->ownerDocument->importNode($oDOMChildNode, true);
+			$oDOMNode->appendChild($oPropNode);
+		}
+	}
+
     public function FromParams($aParams)
     {
         // For unknown dashlet, parameters are not parsed but passed as a raw xml
@@ -464,6 +486,15 @@ class DashletUnknown extends Dashlet
 		$oPage->add('<div class="dashlet-ukn-text">'.$sExplainText.'</div>');
 
 		$oPage->add('</div>');
+	}
+
+	public function GetForm($aInfo = array())
+	{
+		if (isset($aInfo['configuration']) && empty($this->sOriginalDashletXML))
+		{
+			$this->sOriginalDashletXML = $aInfo['configuration'];
+		}
+		return parent::GetForm($aInfo);
 	}
 
 	public function GetPropertiesFields(DesignerForm $oForm)
