@@ -31,9 +31,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Page:Home' => 'Start',
 	'Page:GoPortalHome' => 'Startseite',
 	'Page:GoPreviousPage' => 'vorherige Seite',
-    'Page:ReloadPage' => 'Reload page~~',
+    'Page:ReloadPage' => 'Seite neu laden',
 	'Portal:Button:Submit' => 'Abschicken',
-    'Portal:Button:Apply' => 'Update~~',
+    'Portal:Button:Apply' => 'Anwenden',
 	'Portal:Button:Cancel' => 'Zurück',
 	'Portal:Button:Close' => 'Schließen',
 	'Portal:Button:Add' => 'Hinzu',
@@ -41,12 +41,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:Button:Delete' => 'Löschen',
 	'Portal:EnvironmentBanner:Title' => 'Sie sind im Moment im <strong>%1$s</strong> Modus',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Zurück zum PRODUCTION Modus',
-    'Error:HTTP:401' => 'Authentication~~',
+    'Error:HTTP:401' => 'Authentifizierung',
     'Error:HTTP:404' => 'Seite nicht gefunden.',
 	'Error:HTTP:500' => 'Oops! Es ist ein Fehler aufgetreten.',
 	'Error:HTTP:GetHelp' => 'Bitte kontaktieren Sie Ihren %1$s administrator falls das Problem öfter auftaucht.',
 	'Error:XHR:Fail' => 'Konnte Daten nicht laden, bitte kontaktieren Sie Ihren %1$s administrator',
-    'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.~~',
+    'Portal:ErrorUserLoggedOut' => 'Sie sind ausgeloggt und müssen sich erneut einloggen, um fortfahren zu können.',
     'Portal:Datatables:Language:Processing' => 'Bitte warten...',
 	'Portal:Datatables:Language:Search' => 'Filter :',
 	'Portal:Datatables:Language:LengthMenu' => 'Anzahl _MENU_ Einträge pro Seite',
@@ -87,7 +87,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Browse:Name' => 'List durchgehen',
 	'Brick:Portal:Browse:Mode:List' => 'Liste',
 	'Brick:Portal:Browse:Mode:Tree' => 'Baum',
-    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
+    'Brick:Portal:Browse:Mode:Mosaic' => 'Kachel',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Drilldown',
 	'Brick:Portal:Browse:Action:View' => 'Details',
 	'Brick:Portal:Browse:Action:Edit' => 'Editieren',
@@ -102,18 +102,18 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Manage:Name' => 'Einträge managen',
 	'Brick:Portal:Manage:Table:NoData' => 'Kein Eintrag.',
-    'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
-    'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
-    'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
-    'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
-    'Brick:Portal:Manage:Others' => 'Others~~',
-    'Brick:Portal:Manage:All' => 'All~~',
-    'Brick:Portal:Manage:Group' => 'Group~~',
-    'Brick:Portal:Manage:fct:count' => 'Total~~',
-    'Brick:Portal:Manage:fct:sum' => 'Sum~~',
-    'Brick:Portal:Manage:fct:avg' => 'Average~~',
-    'Brick:Portal:Manage:fct:min' => 'Min~~',
-    'Brick:Portal:Manage:fct:max' => 'Max~~',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Aktionen',
+	'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
+	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
+	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart~~',
+	'Brick:Portal:Manage:Others' => 'Others~~',
+	'Brick:Portal:Manage:All' => 'All~~',
+	'Brick:Portal:Manage:Group' => 'Group~~',
+	'Brick:Portal:Manage:fct:count' => 'Total~~',
+	'Brick:Portal:Manage:fct:sum' => 'Sum~~',
+	'Brick:Portal:Manage:fct:avg' => 'Average~~',
+	'Brick:Portal:Manage:fct:min' => 'Min~~',
+	'Brick:Portal:Manage:fct:max' => 'Max~~',
 ));
 
 // ObjectBrick brick
@@ -131,12 +131,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // CreateBrick brick
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Create:Name' => 'Schnelles Erstellen',
-    'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
+    'Brick:Portal:Create:ChooseType' => 'Bitte wählen Sie einen Typ',
 ));
 
 // Filter brick
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
-    'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
+    'Brick:Portal:Filter:Name' => 'Brick vorfiltern',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'z.B. connect wifi',
+    'Brick:Portal:Filter:SearchInput:Submit' => 'Suchen',
 ));

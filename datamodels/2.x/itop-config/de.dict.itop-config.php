@@ -31,10 +31,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'config-apply' => 'Anwenden',
 	'config-apply' => 'Anwenden (Ctrl+S)',
 	'config-cancel' => 'Zurücksetzen',
-    'config-saved' => 'Successfully recorded.~~',
+    'config-saved' => 'Erfolgreich gesprichert',
 	'config-confirm-cancel' => 'Ihre Änderungen werden nicht gespeichert.',
 	'config-no-change' => 'Keine Änderungen: Die Datei wurde nicht verändert.',
-    'config-reverted' => 'The configuration has been reverted.~~',
+    'config-reverted' => 'Die Konfiguration wurde zurückgesetzt',
 	'config-parse-error' => 'Zeile %2$d: %1$s.<br/>Die Datei wurde nicht aktualisiert.',
 	'config-current-line' => 'Editiere Zeile: %1$s',
 	));
