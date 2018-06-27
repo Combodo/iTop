@@ -1,7 +1,7 @@
-﻿iTop - version 2.5.0-beta - 25-apr-2018
+﻿iTop - version 2.5.0 - 27-jun-2018
 Readme file
 
-iTop 2.5.0-beta is the 32st release of iTop.
+iTop 2.5.0 is the 33rd release of iTop.
 
 Changes since the previous version
 -------------------------------------------------------------------
