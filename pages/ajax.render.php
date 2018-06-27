@@ -959,12 +959,14 @@ try
 			require_once(APPROOT.'application/dashlet.class.inc.php');
 			$aParams = utils::ReadParam('params', '', false, 'raw_data');
 			$sDashletClass = $aParams['attr_dashlet_class'];
+			$sDashletType = $aParams['attr_dashlet_type'];
 			$sDashletId = $aParams['attr_dashlet_id'];
 			$aUpdatedProperties = $aParams['updated']; // Code of the changed properties as an array: 'attr_xxx', 'attr_xxy', etc...
 			$aPreviousValues = $aParams['previous_values']; // hash array: 'attr_xxx' => 'old_value'
 			if (is_subclass_of($sDashletClass, 'Dashlet'))
 			{
 				$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
+				$oDashlet->SetDashletType($sDashletType);
 				$oForm = $oDashlet->GetForm();
 				$aValues = $oForm->ReadParams(); // hash array: 'xxx' => 'new_value'
 
