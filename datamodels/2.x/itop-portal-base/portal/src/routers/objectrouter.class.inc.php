@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,8 +18,6 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 namespace Combodo\iTop\Portal\Router;
-
-use Silex\Application;
 
 class ObjectRouter extends AbstractRouter
 {
@@ -113,5 +111,3 @@ class ObjectRouter extends AbstractRouter
 	);
 
 }
-
-?>

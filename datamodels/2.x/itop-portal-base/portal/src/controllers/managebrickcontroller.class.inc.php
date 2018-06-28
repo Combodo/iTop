@@ -31,6 +31,7 @@ use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\ManageBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\SecurityHelper;
+use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
@@ -43,7 +44,6 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use UnaryExpression;
 use URLButtonItem;
-use UserRights;
 use VariableExpression;
 
 class ManageBrickController extends BrickController
@@ -736,12 +736,14 @@ class ManageBrickController extends BrickController
 		return $aData;
 	}
 
-	/**
-	 * @param Request $oRequest
-	 * @param array $aData
-	 * @param DBSearch $oQuery
-	 * @param string $sClass
-	 */
+    /**
+     * @param Request $oRequest
+     * @param array $aData
+     * @param DBSearch $oQuery
+     * @param string $sClass
+     *
+     * @throws Exception
+     */
 	protected function ManageSearchValue(Request $oRequest, &$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs)
 	{
 		// Getting search value
@@ -794,28 +796,28 @@ class ManageBrickController extends BrickController
 		$aData['sSearchValue'] = $sSearchValue;
 	}
 
-	/**
-	 * Get the groups using a given attribute code.
-	 * If a limit is given, the remaining groups are aggregated (groupby result and search request).
-	 *
-	 * @param DBSearch $oQuery Initial query
-	 * @param string $sGroupingTabAttCode Attribute code to group by
-	 * @param Application $oApp
-	 * @param ManageBrick $oBrick
-	 *
-	 * @return array of results from the groupby request and the corrsponding search.
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
+    /**
+     * Get the groups using a given attribute code.
+     * If a limit is given, the remaining groups are aggregated (groupby result and search request).
+     *
+     * @param DBSearch $oQuery Initial query
+     * @param string $sGroupingTabAttCode Attribute code to group by
+     * @param Application $oApp
+     * @param ManageBrick $oBrick
+     *
+     * @return array of results from the groupby request and the corrsponding search.
+     *
+     * @throws \MySQLException
+     * @throws \OQLException
+     * @throws \Exception
+     */
 	protected function GroupByAttribute(
 		DBSearch $oQuery, $sGroupingTabAttCode, Application $oApp, ManageBrick $oBrick
 	) {
 		$aGroupingTabsValues = array();
 		$aDistinctResults = array();
 		$oDistinctQuery = DBSearch::FromOQL($oBrick->GetOql());
-		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
+		/** @var ScopeValidatorHelper $oScopeHelper */
 		$oScopeHelper = $oApp['scope_validator'];
 		$bHasScope = $oScopeHelper->AddScopeToQuery($oDistinctQuery, $oDistinctQuery->GetClass());
 		if ($bHasScope)

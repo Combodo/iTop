@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -32,7 +32,8 @@ class DefaultController
 
 		// Rendering tiles
 		$aData['aTilesRendering'] = array();
-		foreach($oApp['combodo.portal.instance.conf']['bricks'] as $oBrick)
+		/** @var PortalBrick $oBrick */
+        foreach($oApp['combodo.portal.instance.conf']['bricks'] as $oBrick)
 		{
 			// Doing it only for tile visible on home page to avoid unnecessary rendering
 			if (($oBrick->GetVisibleHome() === true) && ($oBrick->GetTileControllerAction() !== null))
@@ -58,5 +59,3 @@ class DefaultController
 	}
 
 }
-
-?>

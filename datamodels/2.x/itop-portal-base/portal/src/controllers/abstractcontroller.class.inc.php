@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,9 +19,6 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * AbstractController class
  *
@@ -31,5 +28,3 @@ abstract class AbstractController
 {
 
 }
-
-?>
