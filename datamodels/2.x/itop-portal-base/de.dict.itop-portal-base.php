@@ -104,7 +104,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Manage:Table:NoData' => 'Kein Eintrag.',
     'Brick:Portal:Manage:Table:ItemActions' => 'Aktionen',
 	'Brick:Portal:Manage:DisplayMode:list' => 'Liste',
-	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Kuchendiagramm',
+	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Tortendiagramm',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Balkendiagramm',
 	'Brick:Portal:Manage:Others' => 'Andere',
 	'Brick:Portal:Manage:All' => 'Alle',
