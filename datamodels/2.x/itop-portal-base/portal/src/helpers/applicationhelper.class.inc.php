@@ -1301,8 +1301,20 @@ class ApplicationHelper
 		foreach (MetaModel::EnumPlugins('iPortalUIExtension') as $oExtensionInstance)
 		{
 			// Adding CSS files
-			$aUIExtensions['css_files'] = array_merge($aUIExtensions['css_files'],
-				$oExtensionInstance->GetCSSFiles($oApp));
+            $aImportPaths = array($oApp['combodo.portal.base.absolute_path'].'css/');
+            foreach($oExtensionInstance->GetCSSFiles($oApp) as $sCSSFile)
+            {
+                // Removing app root url as we need to pass a path on the file system (relative to app root)
+                $sCSSFilePath = str_replace(utils::GetAbsoluteUrlAppRoot(), '', $sCSSFile);
+                // Compiling SCSS file
+                $sCSSFileCompiled = $oApp['combodo.absolute_url'].utils::GetCSSFromSASS($sCSSFilePath,
+                    $aImportPaths);
+
+                if(!in_array($sCSSFileCompiled, $aUIExtensions['css_files']))
+                {
+                    $aUIExtensions['css_files'][] = $sCSSFileCompiled;
+                }
+            }
 
 			// Adding CSS inline
 			$sCSSInline = $oExtensionInstance->GetCSSInline($oApp);
