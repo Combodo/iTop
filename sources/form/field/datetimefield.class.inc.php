@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -52,7 +52,7 @@ class DateTimeField extends StringField
 
 	/**
 	 *
-	 * @param string $sFormat
+	 * @param string $sDateTimeFormat
 	 *
 	 * @return \Combodo\iTop\Form\Field\DateTimeField
 	 */
@@ -73,7 +73,7 @@ class DateTimeField extends StringField
 
 	/**
 	 *
-	 * @param string $sFormat
+	 * @param string $sDateTimeFormat
 	 *
 	 * @return \Combodo\iTop\Form\Field\DateTimeField
 	 */
@@ -84,14 +84,17 @@ class DateTimeField extends StringField
 		return $this;
 	}
 
-	/**
-	 * Set the DateOnly flag
-	 *
-	 * @return \Combodo\iTop\Form\Field\DateTimeField
-	 */
+    /**
+     * Set the DateOnly flag
+     *
+     * @param boolean $bDateOnly
+     *
+     * @return \Combodo\iTop\Form\Field\DateTimeField
+     */
 	public function SetDateOnly($bDateOnly)
 	{
-		return $this->bDateOnly = $bDateOnly;
+		$this->bDateOnly = $bDateOnly;
+		return $this;
 	}
 
 	/**

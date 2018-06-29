@@ -28,6 +28,7 @@ use InlineImage;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
 use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Form\Field\MultipleChoicesField;
 
 /**
  * Description of BsSimpleFieldRenderer
@@ -37,11 +38,13 @@ use Combodo\iTop\Form\Field\TextAreaField;
 class BsSimpleFieldRenderer extends FieldRenderer
 {
 
-	/**
-	 * Returns a RenderingOutput for the FieldRenderer's Field
-	 *
-	 * @return \Combodo\iTop\Renderer\RenderingOutput
-	 */
+    /**
+     * Returns a RenderingOutput for the FieldRenderer's Field
+     *
+     * @return \Combodo\iTop\Renderer\RenderingOutput
+     *
+     * @throws \Exception
+     */
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
@@ -281,7 +284,7 @@ EOF
 		else
 		{
 			// ... specific rendering for fields with multiple values
-			if (($this->oField instanceof Combodo\iTop\Form\Field\MultipleChoicesField) && ($this->oField->GetMultipleValuesEnabled()))
+			if (($this->oField instanceof MultipleChoicesField) && ($this->oField->GetMultipleValuesEnabled()))
 			{
 				// TODO
 			}
@@ -525,6 +528,11 @@ EOF
 		return $oOutput;
 	}
 
+    /**
+     * @param RenderingOutput $oOutput
+     *
+     * @throws \Exception
+     */
 	protected function PreparingCaseLogEntries(RenderingOutput &$oOutput)
 	{
 		$aEntries = $this->oField->GetEntries();

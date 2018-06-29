@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -153,12 +153,14 @@ class SelectObjectField extends Field
 		return $this->sSearchEndpoint;
 	}
 
-	/**
-	 * Resets current value is not among allowed ones.
-	 * By default, reset is done ONLY when the field is not read-only.
-	 *
-	 * @param boolean $bAlways Set to true to verify even when the field is read-only.
-	 */
+    /**
+     * Resets current value is not among allowed ones.
+     * By default, reset is done ONLY when the field is not read-only.
+     *
+     * @param boolean $bAlways Set to true to verify even when the field is read-only.
+     *
+     * @throws \CoreException
+     */
 	public function VerifyCurrentValue($bAlways = false)
 	{
 		if(!$this->GetReadOnly() || $bAlways)

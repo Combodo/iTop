@@ -35,11 +35,13 @@ use Combodo\iTop\Renderer\RenderingOutput;
  */
 class BsLinkedSetFieldRenderer extends FieldRenderer
 {
-	/**
-	 * Returns a RenderingOutput for the FieldRenderer's Field
-	 *
-	 * @return \Combodo\iTop\Renderer\RenderingOutput
-	 */
+    /**
+     * Returns a RenderingOutput for the FieldRenderer's Field
+     *
+     * @return \Combodo\iTop\Renderer\RenderingOutput
+     *
+     * @throws \CoreException
+     */
 	public function Render()
 	{
 	    $oOutput = new RenderingOutput();
@@ -542,6 +544,13 @@ EOF
 		return $oOutput;
 	}
 
+    /**
+     * @param $aItems
+     * @param $aItemIds
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     */
 	protected function PrepareItems(&$aItems, &$aItemIds)
 	{
 		$oValueSet = $this->oField->GetCurrentValue();

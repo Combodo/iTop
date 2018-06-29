@@ -403,11 +403,16 @@ class SearchForm
 		return (($oAttDef instanceof AttributeFriendlyName) || ($oAttDef instanceof AttributeExternalField) || ($oAttDef instanceof AttributeSubItem));
 	}
 
-	/**
-	 * @param \AttributeDefinition $oAttrDef
-	 *
-	 * @return array
-	 */
+    /**
+     * @param \AttributeDefinition $oAttrDef
+     *
+     * @return array
+     *
+     * @throws \CoreException
+     * @throws \MissingQueryArgument
+     * @throws \MySQLException
+     * @throws \MySQLHasGoneAwayException
+     */
 	public static function GetFieldAllowedValues($oAttrDef)
 	{
 		$iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -18,8 +18,6 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 namespace Combodo\iTop\Form\Field;
-
-use \Combodo\iTop\Form\Field\Field;
 
 /**
  * Description of LinkedSetField
@@ -69,7 +67,7 @@ class LinkedSetField extends Field
 	public function SetTargetClass($sTargetClass)
 	{
 		$this->sTargetClass = $sTargetClass;
-		return $sTargetClass;
+		return $this;
 	}
 
 	/**
@@ -89,7 +87,7 @@ class LinkedSetField extends Field
 	public function SetExtKeyToRemote($sExtKeyToRemote)
 	{
 		$this->sExtKeyToRemote = $sExtKeyToRemote;
-		return $sExtKeyToRemote;
+		return $this;
 	}
 
 	/**
@@ -137,7 +135,8 @@ class LinkedSetField extends Field
 	/**
 	 * Returns a hash array of attributes to be displayed in the linkedset in the form $sAttCode => $sAttLabel
 	 *
-	 * @param $bAttCodesOnly If set to true, will return only the attcodes
+	 * @param boolean $bAttCodesOnly If set to true, will return only the attcodes
+     *
 	 * @return array
 	 */
 	public function GetAttributesToDisplay($bAttCodesOnly = false)
@@ -147,7 +146,8 @@ class LinkedSetField extends Field
 
 	/**
 	 *
-	 * @param array $aAttCodes
+	 * @param array $aAttributesToDisplay
+     *
 	 * @return \Combodo\iTop\Form\Field\LinkedSetField
 	 */
 	public function SetAttributesToDisplay(array $aAttributesToDisplay)

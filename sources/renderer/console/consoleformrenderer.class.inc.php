@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,6 @@ namespace Combodo\iTop\Renderer\Console;
 
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Renderer\FormRenderer;
-use \Dict;
 
 require_once('fieldrenderer/consolesimplefieldrenderer.class.inc.php');
 require_once('fieldrenderer/consoleselectobjectfieldrenderer.class.inc.php');

@@ -2623,8 +2623,8 @@ abstract class DBObject implements iDisplay
 	 * Associate a portal to a class that implements iDBObjectURLMaker,
 	 * and which will be invoked with placeholders like $this->org_id->hyperlink(portal)$
 	 *
-	 * @param $sPortalId Identifies the portal. Conventions: the main portal is 'console', The user requests portal is 'portal'.
-	 * @param $sUrlMakerClass
+	 * @param string $sPortalId Identifies the portal. Conventions: the main portal is 'console', The user requests portal is 'portal'.
+	 * @param string $sUrlMakerClass
 	 */
 	static public function RegisterURLMakerClass($sPortalId, $sUrlMakerClass)
 	{

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,9 +19,8 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use \Closure;
-use \Dict;
-use \Combodo\iTop\Form\Field\MultipleChoicesField;
+use Closure;
+use Dict;
 
 /**
  * Description of SelectField
