@@ -2599,7 +2599,7 @@ abstract class MetaModel
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension');
+		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface');
 		foreach($aInterfaces as $sInterface)
 		{
 			self::$m_aExtensionClasses[$sInterface] = array();
@@ -5858,20 +5858,10 @@ abstract class MetaModel
 
 		CMDBSource::SelectDB(self::$m_sDBName);
 
-		foreach(get_declared_classes() as $sPHPClass)
-		{
-			if (is_subclass_of($sPHPClass, 'ModuleHandlerAPI'))
-			{
-				$aCallSpec = array($sPHPClass, 'OnMetaModelStarted');
-				call_user_func_array($aCallSpec, array());
-			}
-		}
-
-//		if (false)
-//		{
-//			echo "Debug<br/>\n";
-//			self::static_var_dump();
-//		}
+        foreach(MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass)
+        {
+            $oPHPClass::OnMetaModelStarted();
+        }
 
 		ExpressionCache::Warmup();
 	}

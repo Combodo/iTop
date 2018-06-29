@@ -25,7 +25,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-abstract class ModuleHandlerAPI
+abstract class ModuleHandlerAPI implements ModuleHandlerApiInterface
 {
 	public static function OnMetaModelStarted()
 	{
@@ -34,5 +34,19 @@ abstract class ModuleHandlerAPI
 	public static function OnMenuCreation()
 	{
 	}
+
+	public function __construct()
+    {
+    }
+
 }
-?>
+
+
+interface ModuleHandlerApiInterface
+{
+    public static function OnMetaModelStarted();
+
+    public static function OnMenuCreation();
+
+    public function __construct(); //empty params is required in order to be instantiable by MetaModel::InitClasses()
+}
