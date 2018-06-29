@@ -21,12 +21,11 @@ namespace Combodo\iTop\Portal\Brick;
 
 use DOMFormatException;
 use Combodo\iTop\DesignElement;
-use Combodo\iTop\Portal\Brick\PortalBrick;
 
 /**
  * Description of CreateBrick
  * 
- * @author Guillaume Lajarige
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
 class CreateBrick extends PortalBrick
 {
@@ -60,11 +59,13 @@ class CreateBrick extends PortalBrick
 		return $this->sClass;
 	}
 
-	/**
-	 * Sets the class of the brick
-	 *
-	 * @param string $sClass
-	 */
+    /**
+     * Sets the class of the brick
+     *
+     * @param string $sClass
+     *
+     * @return \Combodo\iTop\Portal\Brick\CreateBrick
+     */
 	public function SetClass($sClass)
 	{
 		$this->sClass = $sClass;
@@ -85,6 +86,8 @@ class CreateBrick extends PortalBrick
 	 * Sets the rules of the brick
 	 *
 	 * @param array $aRules
+     *
+     * @return \Combodo\iTop\Portal\Brick\CreateBrick
 	 */
 	public function SetRules($aRules)
 	{
@@ -92,13 +95,16 @@ class CreateBrick extends PortalBrick
 		return $this;
 	}
 
-	/**
-	 * Load the brick's data from the xml passed as a ModuleDesignElement.
-	 * This is used to set all the brick attributes at once.
-	 *
-	 * @param \Combodo\iTop\DesignElement $oMDElement
-	 * @return CreateBrick
-	 */
+    /**
+     * Load the brick's data from the xml passed as a ModuleDesignElement.
+     * This is used to set all the brick attributes at once.
+     *
+     * @param \Combodo\iTop\DesignElement $oMDElement
+     *
+     * @return \Combodo\iTop\Portal\Brick\CreateBrick
+     *
+     * @throws \DOMFormatException
+     */
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
 		parent::LoadFromXml($oMDElement);

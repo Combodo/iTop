@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -134,5 +134,3 @@ abstract class AbstractRouter
 	}
 
 }
-
-?>

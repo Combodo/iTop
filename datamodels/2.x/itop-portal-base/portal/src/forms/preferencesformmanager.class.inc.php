@@ -38,7 +38,10 @@ class PreferencesFormManager extends FormManager
 {
 	const FORM_TYPE = 'preferences';
 
-	public function Build()
+    /**
+     * @throws \Exception
+     */
+    public function Build()
 	{
 		// Building the form
 		$oForm = new Form('preferences');
@@ -70,20 +73,25 @@ class PreferencesFormManager extends FormManager
 		$this->oRenderer->SetForm($this->oForm);
 	}
 
-	/**
-	 * Validates the form and returns an array with the validation status and the messages.
-	 * If the form is valid, creates/updates the object.
-	 *
-	 * eg :
-	 *  array(
-	 * 	  'status' => true|false
-	 * 	  'messages' => array(
-	 * 		  'errors' => array()
-	 * 	)
-	 *
-	 * @param array $aArgs
-	 * @return array
-	 */
+    /**
+     * Validates the form and returns an array with the validation status and the messages.
+     * If the form is valid, creates/updates the object.
+     *
+     * eg :
+     *  array(
+     *      'status' => true|false
+     *      'messages' => array(
+     *          'errors' => array()
+     *    )
+     *
+     * @param array $aArgs
+     *
+     * @return array
+     *
+     * @throws \Exception
+     * @throws \MySQLException
+     * @throws \MySQLHasGoneAwayException
+     */
 	public function OnSubmit($aArgs = null)
 	{
 		$aData = array(
@@ -148,7 +156,12 @@ class PreferencesFormManager extends FormManager
 		return $aData;
 	}
 
-	public function OnUpdate($aArgs = null)
+    /**
+     * @param array $aArgs
+     *
+     * @throws \Exception
+     */
+    public function OnUpdate($aArgs = null)
 	{
 
 		// We build the form
@@ -167,6 +180,9 @@ class PreferencesFormManager extends FormManager
 		}
 	}
 
+    /**
+     * @param array $aArgs
+     */
 	public function OnCancel($aArgs = null)
 	{
 		

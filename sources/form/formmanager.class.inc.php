@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,7 +19,6 @@
 
 namespace Combodo\iTop\Form;
 
-use \Combodo\iTop\Form\Form;
 use \Combodo\iTop\Renderer\FormRenderer;
 
 /**
@@ -57,6 +56,7 @@ abstract class FormManager
 		$oFormManager = new static();
 
 		$sFormRendererClass = $aJson['formrenderer_class'];
+		/** @var \Combodo\iTop\Renderer\FormRenderer $oFormRenderer */
 		$oFormRenderer = new $sFormRendererClass();
 		$oFormRenderer->SetEndpoint($aJson['formrenderer_endpoint']);
 		$oFormManager->SetRenderer($oFormRenderer);
@@ -129,7 +129,7 @@ abstract class FormManager
 	 * - formrenderer_class
 	 * - formrenderer_endpoint
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function ToJSON()
 	{

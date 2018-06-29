@@ -42,6 +42,7 @@ use JSButtonItem;
 use MetaModel;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use UnaryExpression;
 use URLButtonItem;
 use VariableExpression;
@@ -50,21 +51,22 @@ class ManageBrickController extends BrickController
 {
 	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/popup-export-excel.html.twig';
 
-	/**
-	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
-	 * @param \Silex\Application $oApp
-	 * @param string $sBrickId
-	 * @param string $sDisplayMode
-	 * @param string $sGroupingTab
-	 * @param string $sDataLoading
-	 *
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
+    /**
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sBrickId
+     * @param string $sGroupingTab
+     * @param string $sDisplayMode
+     * @param string $sDataLoading
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \DictExceptionMissingString
+     * @throws \MySQLException
+     * @throws \OQLException
+     */
 	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDisplayMode = null, $sDataLoading = null)
     {
 		/** @var ManageBrick $oBrick */
@@ -96,15 +98,17 @@ class ManageBrickController extends BrickController
 		return $oResponse;
 	}
 
-	/**
-	 * Method for the brick's tile on home page
-	 *
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sBrickId
-	 *
-	 * @return Response
-	 */
+    /**
+     * Method for the brick's tile on home page
+     *
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sBrickId
+     *
+     * @return Response
+     *
+     * @throws Exception
+     */
 	public function TileAction(Request $oRequest, Application $oApp, $sBrickId)
 	{
 		/** @var ManageBrick $oBrick */
@@ -123,19 +127,20 @@ class ManageBrickController extends BrickController
 		return $oApp['twig']->render($oBrick->GetTileTemplatePath(), $aData);
 	}
 
-	/**
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sBrickId
-	 * @param string $sGroupingTab
-	 * @param string $sGroupingArea
-	 *
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 * @throws \Exception
-	 */
+    /**
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sBrickId
+     * @param string $sGroupingTab
+     * @param string $sGroupingArea
+     *
+     * @return Response
+     *
+     * @throws Exception
+     * @throws \DictExceptionMissingString
+     * @throws \MySQLException
+     * @throws \OQLException
+     */
 	public function ExcelExportStartAction(
 		Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sGroupingArea
 	) {
@@ -156,7 +161,7 @@ class ManageBrickController extends BrickController
 		{
 			$oQuery = DBSearch::FromOQL($oBrick->GetOql());
 			$sClass = $oQuery->GetClass();
-			/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
+			/** @var ScopeValidatorHelper $oScopeHelper */
 			$oScopeHelper = $oApp['scope_validator'];
 			$oScopeHelper->AddScopeToQuery($oQuery, $sClass);
 			$aData = array();
@@ -229,21 +234,21 @@ class ManageBrickController extends BrickController
 	}
 
 
-	/**
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sBrickId
-	 * @param string $sGroupingTab
-	 * @param bool $bNeedDetails
-	 *
-	 * @return array
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 * @throws \Exception
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
+    /**
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sBrickId
+     * @param string $sGroupingTab
+     * @param bool $bNeedDetails
+     *
+     * @return array
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \DictExceptionMissingString
+     * @throws \MySQLException
+     * @throws \OQLException
+     */
 	public function GetData(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $bNeedDetails = false)
 	{
 		/** @var ManageBrick $oBrick */
@@ -614,7 +619,8 @@ class ManageBrickController extends BrickController
 
 					// ... Checking menu extensions
 					$aItemButtons = array();
-					foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
+					/** @var iPopupMenuExtension $oExtensionInstance */
+                    foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
 					{
 						foreach ($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJLISTITEM_ACTIONS, array(
 							'portal_id' => $oApp['combodo.portal.instance.id'],
@@ -741,8 +747,10 @@ class ManageBrickController extends BrickController
      * @param array $aData
      * @param DBSearch $oQuery
      * @param string $sClass
+     * @param array $aColumnsAttrs
      *
-     * @throws Exception
+     * @throws \Exception
+     * @throws \CoreException
      */
 	protected function ManageSearchValue(Request $oRequest, &$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs)
 	{
@@ -915,18 +923,20 @@ class ManageBrickController extends BrickController
 		return $aGroupingTabsValues;
 	}
 
-	/**
-	 * @param Application $oApp
-	 * @param ManageBrick $oBrick
-	 * @param string $sClass
-	 *
-	 * @return DBSearch
-	 * @throws \OQLException
-	 */
+    /**
+     * @param Application $oApp
+     * @param ManageBrick $oBrick
+     * @param string $sClass
+     *
+     * @return DBSearch
+     *
+     * @throws \CoreException
+     * @throws \OQLException
+     */
 	protected function GetScopedQuery(Application $oApp, ManageBrick $oBrick, $sClass)
 	{
 		$oQuery = DBSearch::FromOQL($oBrick->GetOql());
-		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
+		/** @var ScopeValidatorHelper $oScopeHelper */
 		$oScopeHelper = $oApp['scope_validator'];
 		$oScopeHelper->AddScopeToQuery($oQuery, $sClass);
 

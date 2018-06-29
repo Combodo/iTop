@@ -22,6 +22,7 @@ namespace Combodo\iTop\Portal\Form;
 use Exception;
 use Dict;
 use UserRights;
+use IssueLog;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\Field\HiddenField;
@@ -36,7 +37,10 @@ class PasswordFormManager extends FormManager
 {
 	const FORM_TYPE = 'change_password';
 
-	public function Build()
+    /**
+     * @throws \Exception
+     */
+    public function Build()
 	{
 		// Building the form
 		$oForm = new Form('change_password');
@@ -67,20 +71,23 @@ class PasswordFormManager extends FormManager
 		$this->oRenderer->SetForm($this->oForm);
 	}
 
-	/**
-	 * Validates the form and returns an array with the validation status and the messages.
-	 * If the form is valid, creates/updates the object.
-	 *
-	 * eg :
-	 *  array(
-	 * 	  'status' => true|false
-	 * 	  'messages' => array(
-	 * 		  'errors' => array()
-	 * 	)
-	 *
-	 * @param array $aArgs
-	 * @return array
-	 */
+    /**
+     * Validates the form and returns an array with the validation status and the messages.
+     * If the form is valid, creates/updates the object.
+     *
+     * eg :
+     *  array(
+     *      'status' => true|false
+     *      'messages' => array(
+     *          'errors' => array()
+     *    )
+     *
+     * @param array $aArgs
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
 	public function OnSubmit($aArgs = null)
 	{
 		$aData = array(
@@ -152,7 +159,12 @@ class PasswordFormManager extends FormManager
 		return $aData;
 	}
 
-	public function OnUpdate($aArgs = null)
+    /**
+     * @param array $aArgs
+     *
+     * @throws \Exception
+     */
+    public function OnUpdate($aArgs = null)
 	{
 
 		// We build the form
@@ -171,6 +183,9 @@ class PasswordFormManager extends FormManager
 		}
 	}
 
+    /**
+     * @param array $aArgs
+     */
 	public function OnCancel($aArgs = null)
 	{
 		

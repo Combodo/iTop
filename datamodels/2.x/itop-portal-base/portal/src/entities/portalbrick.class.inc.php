@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
+use DOMFormatException;
 use ModuleDesign;
 use Combodo\iTop\DesignElement;
 
@@ -27,7 +28,7 @@ use Combodo\iTop\DesignElement;
  * 
  * Classes that will be used only in the portal, not the console.
  *
- * @author Guillaume Lajarige
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
 abstract class PortalBrick extends AbstractBrick
 {
@@ -233,6 +234,8 @@ abstract class PortalBrick extends AbstractBrick
 	 * Sets the width of the brick
 	 *
 	 * @param boolean $iWidth
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetWidth($iWidth)
 	{
@@ -243,7 +246,9 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Sets the width of the brick
 	 *
-	 * @param boolean $iWidth
+	 * @param integer $iHeight
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetHeight($iHeight)
 	{
@@ -255,6 +260,8 @@ abstract class PortalBrick extends AbstractBrick
 	 * Sets if the brick will show in a modal dialog or not
 	 *
 	 * @param boolean $bModal
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetModal($bModal)
 	{
@@ -265,7 +272,9 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Sets if the brick is visible on the portal's home
 	 *
-	 * @param boolean $iWidth
+	 * @param boolean $bVisibleHome
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetVisibleHome($bVisibleHome)
 	{
@@ -276,7 +285,9 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Sets if the brick is visible on the portal's navigation menu
 	 *
-	 * @param boolean $iWidth
+	 * @param boolean $bVisibleNavigationMenu
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetVisibleNavigationMenu($bVisibleNavigationMenu)
 	{
@@ -287,7 +298,9 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Sets if the brick's rank on the portal's home
 	 *
-	 * @param boolean $fRank
+	 * @param float $fRankHome
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetRankHome($fRankHome)
 	{
@@ -298,7 +311,9 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Sets if the brick's rank on the portal's navigation menu
 	 *
-	 * @param boolean $fRank
+	 * @param float $fRankNavigationMenu
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetRankNavigationMenu($fRankNavigationMenu)
 	{
@@ -309,7 +324,9 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Sets if the brick's decoration class on the portal's home
 	 *
-	 * @param boolean $sDecorationClassHome
+	 * @param string $sDecorationClassHome
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetDecorationClassHome($sDecorationClassHome)
 	{
@@ -320,7 +337,9 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Sets if the brick's decoration class on the portal's navigation menu
 	 *
-	 * @param boolean $sDecorationClassNavigationMenu
+	 * @param string $sDecorationClassNavigationMenu
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetDecorationClassNavigationMenu($sDecorationClassNavigationMenu)
 	{
@@ -331,7 +350,9 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Sets if the brick's title on the portal's home
 	 *
-	 * @param boolean $sTitleHome
+	 * @param string $sTitleHome
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetTitleHome($sTitleHome)
 	{
@@ -342,7 +363,9 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Sets if the brick's title on the portal's navigation menu
 	 *
-	 * @param boolean $sTitleNavigationMenu
+	 * @param string $sTitleNavigationMenu
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetTitleNavigationMenu($sTitleNavigationMenu)
 	{
@@ -353,7 +376,9 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Sets the brick tile template path
 	 *
-	 * @param boolean $sTileTemplatePath
+	 * @param string $sTileTemplatePath
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetTileTemplatePath($sTileTemplatePath)
 	{
@@ -364,7 +389,9 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Sets the brick tile controller action
 	 *
-	 * @param boolean $sTileControllerAction
+	 * @param string $sTileControllerAction
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
 	 */
 	public function SetTileControllerAction($sTileControllerAction)
 	{
@@ -376,6 +403,7 @@ abstract class PortalBrick extends AbstractBrick
      * Sets the brick's objects opening target
      *
      * @param string $sOpeningTarget
+     *
      * @return \Combodo\iTop\Portal\Brick\PortalBrick
      */
     public function SetOpeningTarget($sOpeningTarget)
@@ -384,13 +412,16 @@ abstract class PortalBrick extends AbstractBrick
         return $this;
     }
 
-	/**
-	 * Load the brick's data from the xml passed as a ModuleDesignElement.
-	 * This is used to set all the brick attributes at once.
-	 *
-	 * @param \Combodo\iTop\DesignElement $oMDElement
-	 * @return PortalBrick
-	 */
+    /**
+     * Load the brick's data from the xml passed as a ModuleDesignElement.
+     * This is used to set all the brick attributes at once.
+     *
+     * @param \Combodo\iTop\DesignElement $oMDElement
+     *
+     * @return \Combodo\iTop\Portal\Brick\PortalBrick
+     *
+     * @throws \DOMFormatException
+     */
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
 		parent::LoadFromXml($oMDElement);
@@ -551,5 +582,3 @@ abstract class PortalBrick extends AbstractBrick
 	}
 
 }
-
-?>

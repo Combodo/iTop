@@ -40,7 +40,19 @@ class BrowseBrickController extends BrickController
 	const LEVEL_SEPARATOR = '-';
 	public static $aOptionalAttributes = array('tooltip_att', 'description_att', 'image_att');
 
-	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sBrowseMode = null, $sDataLoading = null)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
+     * @param string $sBrickId
+     * @param string $sBrowseMode
+     * @param string $sDataLoading
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     */
+    public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sBrowseMode = null, $sDataLoading = null)
 	{
         /** @var \Combodo\iTop\Portal\Brick\BrowseBrick $oBrick */
         $oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
@@ -113,7 +125,7 @@ class BrowseBrickController extends BrickController
 				{
 					// - Cleaning the search value by exploding and trimming spaces
 					$aSearchValues = explode(' ', $sSearchValue);
-					array_walk($aSearchValues, function(&$sSearchValue, $sKey)
+					array_walk($aSearchValues, function(&$sSearchValue /*, $sKey*/)
 					{
 						trim($sSearchValue);
 					});
@@ -385,17 +397,21 @@ class BrowseBrickController extends BrickController
 		return $oResponse;
 	}
 
-	/**
-	 * Flattens the $aLevels into $aLevelsProperties in order to be able to build an OQL query from multiple single queries related to each others.
-	 * As of now it only keeps search / parent_att / name_att properties.
-	 *
-	 * Note : This is not in the BrowseBrick class because the classes should not rely on DBObjectSearch.
-	 *
-	 * @param \Silex\Application $oApp
-	 * @param array $aLevels Levels from a BrowseBrick class
-	 * @param array $aLevelsProperties Reference to an array that will contain the flattened levels
-	 * @param string $sLevelAliasPrefix String that will be prefixed to the level ID as an unique path identifier
-	 */
+    /**
+     * Flattens the $aLevels into $aLevelsProperties in order to be able to build an OQL query from multiple single queries related to each others.
+     * As of now it only keeps search / parent_att / name_att properties.
+     *
+     * Note : This is not in the BrowseBrick class because the classes should not rely on DBObjectSearch.
+     *
+     * @param \Silex\Application $oApp
+     * @param array $aLevels Levels from a BrowseBrick class
+     * @param array $aLevelsProperties Reference to an array that will contain the flattened levels
+     * @param string $sLevelAliasPrefix String that will be prefixed to the level ID as an unique path identifier
+     *
+     * @throws \Exception
+     * @throws \OQLException
+     * @throws \CoreException
+     */
 	public static function TreeToFlatLevelsProperties(Application $oApp, array $aLevels, array &$aLevelsProperties, $sLevelAliasPrefix = 'L')
 	{
 		foreach ($aLevels as $aLevel)
@@ -586,28 +602,32 @@ class BrowseBrickController extends BrickController
         return $aActionRules;
     }
 
-	/**
-	 * Takes $aCurrentRow as a flat array and transform it in another flat array (not objects) with only the necessary informations
-	 *
-	 * eg:
-	 * - $aCurrentRow : array('L-1' => ObjectClass1, 'L-1-1' => ObjectClass2, 'L-1-1-1' => ObjectClass3)
-	 * - $aRow will be : array(
-	 * 	  'L1' => array(
-	 * 		  'name' => 'Object class 1 name'
-	 * 	  ),
-	 * 	  'L1-1' => array(
-	 * 		  'name' => 'Object class 2 name',
-	 * 	  ),
-	 * 	  'L1-1-1' => array(
-	 * 		  'name' => 'Object class 3 name',
-	 * 	  ),
-	 * 	  ...
-	 *  )
-	 *
-	 * @param array $aCurrentRow
-	 * @param array $aLevelsProperties
-	 * @return array
-	 */
+    /**
+     * Takes $aCurrentRow as a flat array and transform it in another flat array (not objects) with only the necessary informations
+     *
+     * eg:
+     * - $aCurrentRow : array('L-1' => ObjectClass1, 'L-1-1' => ObjectClass2, 'L-1-1-1' => ObjectClass3)
+     * - $aRow will be : array(
+     *      'L1' => array(
+     *          'name' => 'Object class 1 name'
+     *      ),
+     *      'L1-1' => array(
+     *          'name' => 'Object class 2 name',
+     *      ),
+     *      'L1-1-1' => array(
+     *          'name' => 'Object class 3 name',
+     *      ),
+     *      ...
+     *  )
+     *
+     * @param array $aCurrentRow
+     * @param array $aLevelsProperties
+     * @param \Silex\Application $oApp
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
 	public static function AddToFlatItems(array $aCurrentRow, array &$aLevelsProperties, Application $oApp)
 	{
 		$aRow = array();
@@ -663,36 +683,40 @@ class BrowseBrickController extends BrickController
 		return $aRow;
 	}
 
-	/**
-	 * Takes $aCurrentRow as a flat array to recursvily convert and insert it into a tree array $aItems.
-	 * This is used to build a tree array from a DBObjectSet retrieved with FetchAssoc().
-	 *
-	 * eg:
-	 * - $aCurrentRow : array('L-1' => ObjectClass1, 'L-1-1' => ObjectClass2, 'L-1-1-1' => ObjectClass3)
-	 * - $aItems will be : array(
-	 * 	  'L1' =>
-	 * 		  'name' => 'Object class 1 name',
-	 * 		  'subitems' => array(
-	 * 			  'L1-1' => array(
-	 * 				  'name' => 'Object class 2 name',
-	 * 				  'subitems' => array(
-	 * 					  'L1-1-1' => array(
-	 * 						  'name' => 'Object class 3 name',
-	 * 						  'subitems' => array()
-	 * 					  ),
-	 * 					  ...
-	 * 				  )
-	 * 			  ),
-	 * 			  ...
-	 * 		  )
-	 * 	  ),
-	 * 	  ...
-	 *  )
-	 *
-	 * @param array &$aItems Reference to the array to be built
-	 * @param array $aCurrentRow
-	 * @param array $aLevelsProperties
-	 */
+    /**
+     * Takes $aCurrentRow as a flat array to recursvily convert and insert it into a tree array $aItems.
+     * This is used to build a tree array from a DBObjectSet retrieved with FetchAssoc().
+     *
+     * eg:
+     * - $aCurrentRow : array('L-1' => ObjectClass1, 'L-1-1' => ObjectClass2, 'L-1-1-1' => ObjectClass3)
+     * - $aItems will be : array(
+     *      'L1' =>
+     *          'name' => 'Object class 1 name',
+     *          'subitems' => array(
+     *              'L1-1' => array(
+     *                  'name' => 'Object class 2 name',
+     *                  'subitems' => array(
+     *                      'L1-1-1' => array(
+     *                          'name' => 'Object class 3 name',
+     *                          'subitems' => array()
+     *                      ),
+     *                      ...
+     *                  )
+     *              ),
+     *              ...
+     *          )
+     *      ),
+     *      ...
+     *  )
+     *
+     * @param array &$aItems Reference to the array to be built
+     * @param array $aCurrentRow
+     * @param array $aLevelsProperties
+     * @param array|null $aCurrentRowObjects
+     * @param \Silex\Application|null $oApp
+     *
+     * @throws \Exception
+     */
 	public static function AddToTreeItems(array &$aItems, array $aCurrentRow, array &$aLevelsProperties, $aCurrentRowObjects = null, Application $oApp = null)
 	{
 		$aCurrentRowKeys = array_keys($aCurrentRow);

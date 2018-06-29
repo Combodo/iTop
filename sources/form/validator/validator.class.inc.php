@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -38,10 +38,11 @@ class Validator
 		return static::VALIDATOR_NAME;
 	}
 
-	/**
-	 *
-	 * @param Closure $callback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
-	 */
+    /**
+     *
+     * @param string $sRegExp
+     * @param string $sErrorMessage
+     */
 	public function __construct($sRegExp = null, $sErrorMessage = null)
 	{
 		$this->sRegExp = ($sRegExp === null) ? static::DEFAULT_REGEXP : $sRegExp;

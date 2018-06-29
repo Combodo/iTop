@@ -49,7 +49,8 @@ class AggregatePageBrick extends PortalBrick
 	/**
 	 * @param \Combodo\iTop\DesignElement $oMDElement
 	 *
-	 * @return \Combodo\iTop\Portal\Brick\PortalBrick|void
+	 * @return \Combodo\iTop\Portal\Brick\AggregatePageBrick
+     *
 	 * @throws \DOMFormatException
 	 */
 	public function LoadFromXml(DesignElement $oMDElement)
@@ -83,6 +84,8 @@ class AggregatePageBrick extends PortalBrick
 		}
 
 		asort($this->aAggregatePageBricks);
+
+		return $this;
 	}
 
 	/**

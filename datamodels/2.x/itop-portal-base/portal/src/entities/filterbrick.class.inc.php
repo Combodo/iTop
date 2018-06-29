@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,14 +19,13 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
+use DOMFormatException;
 use Combodo\iTop\DesignElement;
-use Combodo\iTop\Portal\Brick\PortalBrick;
-use Combodo\iTop\Portal\Brick\BrowseBrick;
 
 /**
  * Description of FilterBrick
  * 
- * @author Guillaume Lajarige
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
 class FilterBrick extends PortalBrick
 {
@@ -122,14 +121,16 @@ class FilterBrick extends PortalBrick
 		return $this;
 	}
 
-	/**
-	 * Load the brick's data from the xml passed as a ModuleDesignElement.
-	 * This is used to set all the brick attributes at once.
-	 *
-	 * @param \Combodo\iTop\DesignElement $oMDElement
-	 * @return BrowseBrick
-	 * @throws DOMFormatException
-	 */
+    /**
+     * Load the brick's data from the xml passed as a ModuleDesignElement.
+     * This is used to set all the brick attributes at once.
+     *
+     * @param \Combodo\iTop\DesignElement $oMDElement
+     *
+     * @return \Combodo\iTop\Portal\Brick\FilterBrick
+     *
+     * @throws \DOMFormatException
+     */
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
 		parent::LoadFromXml($oMDElement);
@@ -180,5 +181,3 @@ class FilterBrick extends PortalBrick
 	}
 
 }
-
-?>

@@ -21,18 +21,22 @@ namespace Combodo\iTop\Portal\Controller;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Combodo\iTop\Portal\Brick\PortalBrick;
 
 class DefaultController
 {
-
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
 	public function homeAction(Request $oRequest, Application $oApp)
 	{
 		$aData = array();
 
 		// Rendering tiles
 		$aData['aTilesRendering'] = array();
-		/** @var PortalBrick $oBrick */
+		/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oBrick */
         foreach($oApp['combodo.portal.instance.conf']['bricks'] as $oBrick)
 		{
 			// Doing it only for tile visible on home page to avoid unnecessary rendering

@@ -24,7 +24,7 @@ use Combodo\iTop\DesignElement;
 /**
  * Description of UserProfileBrick
  * 
- * @author Guillaume Lajarige
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
 class UserProfileBrick extends PortalBrick
 {

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -26,9 +26,9 @@ use MetaModel;
 use UserRights;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Brick\UserProfileBrick;
-use Combodo\iTop\Portal\Controller\ObjectController;
 use Combodo\iTop\Portal\Form\PreferencesFormManager;
 use Combodo\iTop\Portal\Form\PasswordFormManager;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
@@ -37,6 +37,21 @@ class UserProfileBrickController extends BrickController
 {
 	const ENUM_FORM_TYPE_PICTURE = 'picture';
 
+    /**
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param $sBrickId
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     * @throws \OQLException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
 	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId)
 	{
 		// If the brick id was not specified, we get the first one registered that is an instance of UserProfileBrick as default
@@ -117,6 +132,13 @@ class UserProfileBrickController extends BrickController
 		return $oResponse;
 	}
 
+    /**
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param $sFormMode
+     *
+     * @return array
+     */
 	public function HandlePreferencesForm(Request $oRequest, Application $oApp, $sFormMode)
 	{
 		$aFormData = array();
@@ -185,6 +207,12 @@ class UserProfileBrickController extends BrickController
 		return $aFormData;
 	}
 
+    /**
+     * @param Request $oRequest
+     * @param Application $oApp
+     *
+     * @return array
+     */
 	public function HandlePasswordForm(Request $oRequest, Application $oApp)
 	{
 		$aFormData = array();
@@ -241,6 +269,14 @@ class UserProfileBrickController extends BrickController
 		return $aFormData;
 	}
 
+    /**
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param $sFormMode
+     *
+     * @return array
+     * @throws \FileUploadException
+     */
 	public function HandlePictureForm(Request $oRequest, Application $oApp, $sFormMode)
 	{
 		$aFormData = array();
@@ -302,5 +338,3 @@ class UserProfileBrickController extends BrickController
 	}
 
 }
-
-?>

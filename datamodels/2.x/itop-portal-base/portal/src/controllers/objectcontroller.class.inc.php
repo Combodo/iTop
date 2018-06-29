@@ -63,15 +63,21 @@ class ObjectController extends AbstractController
 	const ENUM_MODE_CREATE = 'create';
 	const DEFAULT_LIST_LENGTH = 10;
 
-	/**
-	 * Displays an cmdbAbstractObject if the connected user is allowed to.
-	 *
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sObjectClass (Class must be instance of cmdbAbstractObject)
-	 * @param string $sObjectId
-	 * @return Response
-	 */
+    /**
+     * Displays an cmdbAbstractObject if the connected user is allowed to.
+     *
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sObjectClass (Class must be instance of cmdbAbstractObject)
+     * @param string $sObjectId
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     * @throws \DictExceptionMissingString
+     */
 	public function ViewAction(Request $oRequest, Application $oApp, $sObjectClass, $sObjectId)
 	{
 		// Checking parameters
@@ -145,6 +151,19 @@ class ObjectController extends AbstractController
 		return $oResponse;
 	}
 
+    /**
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param $sObjectClass
+     * @param $sObjectId
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     * @throws \DictExceptionMissingString
+     */
 	public function EditAction(Request $oRequest, Application $oApp, $sObjectClass, $sObjectId)
 	{
 		// Checking parameters
@@ -208,14 +227,19 @@ class ObjectController extends AbstractController
 		return $oResponse;
 	}
 
-	/**
-	 * Creates an cmdbAbstractObject of the $sObjectClass
-	 *
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sObjectClass
-	 * @return Response
-	 */
+    /**
+     * Creates an cmdbAbstractObject of the $sObjectClass
+     *
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sObjectClass
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \DictExceptionMissingString
+     */
 	public function CreateAction(Request $oRequest, Application $oApp, $sObjectClass)
 	{
 		// Checking security layers
@@ -261,17 +285,22 @@ class ObjectController extends AbstractController
 		return $oResponse;
 	}
 
-	/**
-	 * Creates an cmdbAbstractObject of a class determined by the method encoded in $sEncodedMethodName.
-	 * This method use an origin DBObject in order to determine the created cmdbAbstractObject.
-	 *
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sObjectClass Class of the origin object
-	 * @param string $sObjectId ID of the origin object
-	 * @param string $sEncodedMethodName Base64 encoded factory method name
-	 * @return Response
-	 */
+    /**
+     * Creates an cmdbAbstractObject of a class determined by the method encoded in $sEncodedMethodName.
+     * This method use an origin DBObject in order to determine the created cmdbAbstractObject.
+     *
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sObjectClass Class of the origin object
+     * @param string $sObjectId ID of the origin object
+     * @param string $sEncodedMethodName Base64 encoded factory method name
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     */
 	public function CreateFromFactoryAction(Request $oRequest, Application $oApp, $sObjectClass, $sObjectId, $sEncodedMethodName)
 	{
 		$sMethodName = base64_decode($sEncodedMethodName);
@@ -312,16 +341,21 @@ class ObjectController extends AbstractController
 		return $oApp->handle($oSubRequest, HttpKernelInterface::SUB_REQUEST, true);
 	}
 
-	/**
-	 * Applies a stimulus $sStimulus on an cmdbAbstractObject
-	 *
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sObjectClass
-	 * @param string $sObjectId
-	 * @param string $sStimulusCode
-	 * @return Response
-	 */
+    /**
+     * Applies a stimulus $sStimulus on an cmdbAbstractObject
+     *
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sObjectClass
+     * @param string $sObjectId
+     * @param string $sStimulusCode
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     */
 	public function ApplyStimulusAction(Request $oRequest, Application $oApp, $sObjectClass, $sObjectId, $sStimulusCode)
 	{
 		// Checking parameters
@@ -426,6 +460,24 @@ class ObjectController extends AbstractController
 		return $oResponse;
 	}
 
+    /**
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param $sMode
+     * @param $sObjectClass
+     * @param null $sObjectId
+     * @param null $aFormProperties
+     *
+     * @return array
+     *
+     * @throws \Exception
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     * @throws \OQLException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
 	public static function HandleForm(Request $oRequest, Application $oApp, $sMode, $sObjectClass, $sObjectId = null, $aFormProperties = null)
 	{
 		$aFormData = array();
@@ -662,16 +714,22 @@ class ObjectController extends AbstractController
 		return $aFormData;
 	}
 
-	/**
-	 * Handles the autocomplete search
-	 *
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sTargetAttCode Attribute code of the host object pointing to the Object class to search
-	 * @param string $sHostObjectClass Class name of the host object
-	 * @param string $sHostObjectId Id of the host object
-	 * @return Response
-	 */
+    /**
+     * Handles the autocomplete search
+     *
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sTargetAttCode Attribute code of the host object pointing to the Object class to search
+     * @param string $sHostObjectClass Class name of the host object
+     * @param string $sHostObjectId Id of the host object
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     * @throws \OQLException
+     */
 	public function SearchAutocompleteAction(Request $oRequest, Application $oApp, $sTargetAttCode, $sHostObjectClass, $sHostObjectId = null)
 	{
 		$aData = array(
@@ -820,16 +878,23 @@ class ObjectController extends AbstractController
 		return $oResponse;
 	}
 
-	/**
-	 * Handles the regular (table) search from an attribute
-	 *
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sTargetAttCode Attribute code of the host object pointing to the Object class to search
-	 * @param string $sHostObjectClass Class name of the host object
-	 * @param string $sHostObjectId Id of the host object
-	 * @return Response
-	 */
+    /**
+     * Handles the regular (table) search from an attribute
+     *
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sTargetAttCode Attribute code of the host object pointing to the Object class to search
+     * @param string $sHostObjectClass Class name of the host object
+     * @param string $sHostObjectId Id of the host object
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     * @throws \DictExceptionMissingString
+     * @throws \OQLException
+     */
 	public function SearchFromAttributeAction(Request $oRequest, Application $oApp, $sTargetAttCode, $sHostObjectClass, $sHostObjectId = null)
 	{
 		$aData = array(
@@ -1112,226 +1177,21 @@ class ObjectController extends AbstractController
 		return $oResponse;
 	}
 
-	/**
-	 * Handles the hierarchical search from an attribute
-	 *
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sTargetAttCode Attribute code of the host object pointing to the Object class to search
-	 * @param string $sHostObjectClass Class name of the host object
-	 * @param string $sHostObjectId Id of the host object
-	 * @return Response
-	 */
+    /**
+     * Handles the hierarchical search from an attribute
+     *
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sTargetAttCode Attribute code of the host object pointing to the Object class to search
+     * @param string $sHostObjectClass Class name of the host object
+     * @param string $sHostObjectId Id of the host object
+     *
+     * @return void
+     *
+     */
 	public function SearchHierarchyAction(Request $oRequest, Application $oApp, $sTargetAttCode, $sHostObjectClass, $sHostObjectId = null)
 	{
-		$aData = array(
-			'sMode' => 'search_hierarchy',
-			'sTargetAttCode' => $sTargetAttCode,
-			'sHostObjectClass' => $sHostObjectClass,
-			'sHostObjectId' => $sHostObjectId
-		);
-
-		// Checking security layers
-		if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sHostObjectClass, $sHostObjectId))
-		{
-			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to read ' . $sHostObjectClass . '::' . $sHostObjectId . ' object.');
-			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
-		}
-
-		// Retrieving host object for future DBSearch parameters
-		if ($sHostObjectId !== null)
-		{
-			// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
-			$oHostObject = MetaModel::GetObject($sHostObjectClass, $sHostObjectId, true, true);
-		}
-		else
-		{
-			$oHostObject = MetaModel::NewObject($sHostObjectClass);
-		}
-
-		// Retrieving request parameters
-		$bInitalPass = ($oRequest->get('draw') === null) ? true : false;
-		$sQuery = $oRequest->get('sSearchValue'); // Note : Not used yet
-		$sFormPath = $oRequest->get('sFormPath');
-		$sFieldId = $oRequest->get('sFieldId');
-
-		// Building search query
-		// - Retrieving target object class from attcode
-		$oTargetAttDef = MetaModel::GetAttributeDef($sHostObjectClass, $sTargetAttCode);
-		if ($oTargetAttDef->IsExternalKey())
-		{
-			$sTargetObjectClass = $oTargetAttDef->GetTargetClass();
-		}
-		elseif ($oTargetAttDef->IsLinkSet())
-		{
-			if (!$oTargetAttDef->IsIndirect())
-			{
-				$sTargetObjectClass = $oTargetAttDef->GetLinkedClass();
-			}
-			else
-			{
-				$oRemoteAttDef = MetaModel::GetAttributeDef($oTargetAttDef->GetLinkedClass(), $oTargetAttDef->GetExtKeyToRemote());
-				$sTargetObjectClass = $oRemoteAttDef->GetTargetClass();
-			}
-		}
-		else
-		{
-			throw new Exception('Search by hierarchy can only apply on AttributeExternalKey or AttributeLinkedSet objects, ' . get_class($oTargetAttDef) . ' given.');
-		}
-
-//		// - Retrieving class attribute list
-//		$aAttCodes = MetaModel::FlattenZList(MetaModel::GetZListItems($sTargetObjectClass, 'list'));
-//		// - Adding friendlyname attribute to the list is not already in it
-//		$sTitleAttrCode = 'friendlyname';
-//		if (($sTitleAttrCode !== null) && !in_array($sTitleAttrCode, $aAttCodes))
-//		{
-//			$aAttCodes = array_merge(array($sTitleAttrCode), $aAttCodes);
-//		}
-		// - Retrieving scope search
-		$oScopeSearch = $oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sTargetObjectClass, UR_ACTION_READ);
-		if ($oScopeSearch === null)
-		{
-			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' has no scope query for ' . $sTargetObjectClass . ' class.');
-			$oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
-		}
-
-		// - Base query from meta model
-		if ($oTargetAttDef->IsExternalKey())
-		{
-			$oSearch = DBSearch::FromOQL($oTargetAttDef->GetValuesDef()->GetFilterExpression());
-		}
-//		elseif ($oTargetAttDef->IsLinkSet())
-		else
-		{
-			$oSearch = $oScopeSearch;
-		}
-
-//		// - Adding query condition
-		$aInternalParams = array('this' => $oHostObject);
-//		if ($sQuery !== null)
-//		{
-//			for ($i = 0; $i < count($aAttCodes); $i++)
-//			{
-//				// Checking if the current attcode is an external key in order to search on the friendlyname
-//				$oAttDef = MetaModel::GetAttributeDef($sTargetObjectClass, $aAttCodes[$i]);
-//				$sAttCode = (!$oAttDef->IsExternalKey()) ? $aAttCodes[$i] : $aAttCodes[$i] . '_friendlyname';
-//				// Building expression for the current attcode
-//				$oBinExpr = new BinaryExpression(new FieldExpression($sAttCode, $oSearch->GetClassAlias()), 'LIKE', new VariableExpression('re_query'));
-//				// Adding expression to the full expression (all attcodes)
-//				if ($i === 0)
-//				{
-//					$oFullExpr = $oBinExpr;
-//				}
-//				else
-//				{
-//					$oFullExpr = new BinaryExpression($oFullExpr, 'OR', $oBinExpr);
-//				}
-//			}
-//			// Adding full expression to the search object
-//			$oSearch->AddConditionExpression($oFullExpr);
-//			$aInternalParams['re_query'] = '%' . $sQuery . '%';
-//		}
-		// - Intersecting with scope constraints
-		$oSearch = $oSearch->Intersect($oScopeSearch);
-		// - Allowing all data if necessary
-		if ($oScopeSearch->IsAllDataAllowed())
-		{
-			$oSearch->AllowAllData();
-		}
-
-		// Retrieving results
-		// - Preparing object set
-		$oSet = new DBObjectSet($oSearch, array(), $aInternalParams);
-		$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
-//		$oSet->SetLimit($iListLength, $iListLength * ($iPageNumber - 1));
-//		// - Retrieving columns properties
-//		$aColumnProperties = array();
-//		foreach ($aAttCodes as $sAttCode)
-//		{
-//			$oAttDef = MetaModel::GetAttributeDef($sTargetObjectClass, $sAttCode);
-//			$aColumnProperties[$sAttCode] = array(
-//				'title' => $oAttDef->GetLabel()
-//			);
-//		}
-		// - Retrieving objects
-		$aItems = array();
-		while ($oItem = $oSet->Fetch())
-		{
-			$aItemProperties = array(
-				'id' => $oItem->GetKey(),
-				'name' => $oItem->GetName(),
-				'attributes' => array()
-			);
-
-//			foreach ($aAttCodes as $sAttCode)
-//			{
-//				if ($sAttCode !== 'id')
-//				{
-//					$aAttProperties = array(
-//						'att_code' => $sAttCode
-//					);
-//
-//					$oAttDef = MetaModel::GetAttributeDef($sTargetObjectClass, $sAttCode);
-//					if ($oAttDef->IsExternalKey())
-//					{
-//						$aAttProperties['value'] = $oItem->Get($sAttCode . '_friendlyname');
-//						// Checking if we can view the object
-//						if ((SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $oAttDef->GetTargetClass(), $oItem->Get($sAttCode))))
-//						{
-//							$aAttProperties['url'] = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $oAttDef->GetTargetClass(), 'sObjectId' => $oItem->GetKey()));
-//						}
-//					}
-//					else
-//					{
-//						$aAttProperties['value'] = $oAttDef->GetValueLabel($oItem->Get($sAttCode));
-//					}
-//
-//					$aItemProperties['attributes'][$sAttCode] = $aAttProperties;
-//				}
-//			}
-
-			$aItems[] = $aItemProperties;
-		}
-
-		// Preparing response
-		if ($bInitalPass)
-		{
-			$aData = $aData + array(
-				'form' => array(
-					'id' => 'object_search_form_' . time(),
-					'title' => Dict::Format('Brick:Portal:Object:Search:Hierarchy:Title', $oTargetAttDef->GetLabel(), MetaModel::GetName($sTargetObjectClass))
-				),
-				'aResults' => array(
-					'aItems' => json_encode($aItems),
-					'iCount' => count($aItems)
-				),
-				'aSource' => array(
-					'sFormPath' => $sFormPath,
-					'sFieldId' => $sFieldId
-				)
-			);
-
-			if ($oRequest->isXmlHttpRequest())
-			{
-				$oResponse = $oApp['twig']->render('itop-portal-base/portal/src/views/bricks/object/modal.html.twig', $aData);
-			}
-			else
-			{
-				//$oResponse = $oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
-				$oResponse = $oApp['twig']->render('itop-portal-base/portal/src/views/bricks/object/layout.html.twig', $aData);
-			}
-		}
-		else
-		{
-			$aData = $aData + array(
-				'levelsProperties' => $aColumnProperties,
-				'data' => $aItems
-			);
-
-			$oResponse = $oApp->json($aData);
-		}
-
-		return $oResponse;
+		// TODO
 	}
 
     /**
@@ -1342,6 +1202,11 @@ class ObjectController extends AbstractController
      * @param Request $oRequest
      * @param Application $oApp
      * @param string $sOperation
+     *
+     * @return Response
+     *
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
      */
 	public function DocumentAction(Request $oRequest, Application $oApp, $sOperation = null)
     {
@@ -1417,14 +1282,21 @@ class ObjectController extends AbstractController
         return new Response($oDocument->GetData(), Response::HTTP_OK, $aHeaders);
     }
 
-	/**
-	 * Handles attachment add/remove on an object
-	 *
-	 * Note: This is inspired from itop-attachment/ajax.attachment.php
-	 * 
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 */
+    /**
+     * Handles attachment add/remove on an object
+     *
+     * Note: This is inspired from itop-attachment/ajax.attachment.php
+     *
+     * @param Request $oRequest
+     * @param Application $oApp
+     * @param string $sOperation
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \CoreUnexpectedValue
+     */
 	public function AttachmentAction(Request $oRequest, Application $oApp, $sOperation = null)
 	{
 		$aData = array(
@@ -1502,18 +1374,22 @@ class ObjectController extends AbstractController
 		return $oResponse;
 	}
 
-	/**
-	 * Returns a json response containing an array of objects informations.
-	 *
-	 * The service must be given 3 parameters :
-	 * - sObjectClass : The class of objects to retrieve information from
-	 * - aObjectIds : An array of object ids
-	 * - aObjectAttCodes : An array of attribute codes to retrieve
-	 *
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @return Response
-	 */
+    /**
+     * Returns a json response containing an array of objects informations.
+     *
+     * The service must be given 3 parameters :
+     * - sObjectClass : The class of objects to retrieve information from
+     * - aObjectIds : An array of object ids
+     * - aObjectAttCodes : An array of attribute codes to retrieve
+     *
+     * @param Request $oRequest
+     * @param Application $oApp
+     *
+     * @return Response
+     *
+     * @throws \OQLException
+     * @throws \CoreException
+     */
 	public function GetInformationsAsJsonAction(Request $oRequest, Application $oApp)
 	{
 		$aData = array();
@@ -1524,7 +1400,7 @@ class ObjectController extends AbstractController
 		$aObjectAttCodes = $oRequest->Get('aObjectAttCodes');
 		if ($sObjectClass === null || $aObjectIds === null || $aObjectAttCodes === null)
 		{
-			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : sObjectClass, sObjectId and aObjectAttCodes expected, "' . $sObjectClass . '", "' . $sObjectId . '" given.');
+			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : sObjectClass, aObjectIds and aObjectAttCodes expected, "' . $sObjectClass . '", "' . implode('/', $aObjectIds) . '" given.');
 			$oApp->abort(500, 'Invalid request data, some informations are missing');
 		}
 
@@ -1553,15 +1429,18 @@ class ObjectController extends AbstractController
 		return $oApp->json($aData);
 	}
 
-	/**
-	 * Prepare a DBObject informations as an array for a client side usage (typically, add a row in a table)
-	 *
-	 * @param \Silex\Application $oApp
-	 * @param \Combodo\iTop\Portal\Controller\DBObject $oObject
-	 * @param array $aAttCodes
-	 *
-	 * @return array
-	 */
+    /**
+     * Prepare a DBObject informations as an array for a client side usage (typically, add a row in a table)
+     *
+     * @param Application $oApp
+     * @param DBObject $oObject
+     * @param array $aAttCodes
+     *
+     * @return array
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     */
 	protected function PrepareObjectInformations(Application $oApp, DBObject $oObject, $aAttCodes = array())
 	{
 		$sObjectClass = get_class($oObject);

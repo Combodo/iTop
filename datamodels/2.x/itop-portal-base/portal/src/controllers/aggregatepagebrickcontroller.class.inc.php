@@ -31,7 +31,8 @@ class AggregatePageBrickController
 	 * @param \Silex\Application $oApp
 	 * @param string $sBrickId
 	 *
-	 * @return response
+	 * @return \Symfony\Component\HttpFoundation\Response
+     *
 	 * @throws \Exception
 	 */
 	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId)

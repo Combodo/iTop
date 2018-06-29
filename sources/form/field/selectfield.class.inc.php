@@ -53,6 +53,11 @@ class SelectField extends MultipleChoicesField
 		return $this->bStartsWithNullChoice;
 	}
 
+    /**
+     * @param $bStartsWithNullChoice
+     *
+     * @return \Combodo\iTop\Form\Field\SelectField
+     */
 	public function SetStartsWithNullChoice($bStartsWithNullChoice)
 	{
 		$this->bStartsWithNullChoice = $bStartsWithNullChoice;

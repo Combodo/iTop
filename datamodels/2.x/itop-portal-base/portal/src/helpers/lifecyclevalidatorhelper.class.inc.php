@@ -25,7 +25,6 @@ use DOMFormatException;
 use utils;
 use ProfilesConfig;
 use MetaModel;
-use DBSearch;
 
 class LifecycleValidatorHelper
 {
@@ -92,6 +91,7 @@ class LifecycleValidatorHelper
 	 * This is used to create a unique lifecycle values class in the cache directory (/data/cache-<ENV>) as there can be several instance of the portal.
 	 *
 	 * @param string $sInstancePrefix
+     *
 	 * @return \Combodo\iTop\Portal\Helper\LifecycleValidatorHelper
 	 */
 	public function SetInstancePrefix($sInstancePrefix)
@@ -108,9 +108,10 @@ class LifecycleValidatorHelper
 	/**
 	 * Initializes the LifecycleValidator by generating and caching the lifecycles compilation in the $this->sCachePath.$this->sFilename file.
 	 *
-	 * @param DOMNodeList $oNodes
-	 * @throws DOMFormatException
-	 * @throws Exception
+	 * @param \DOMNodeList $oNodes
+     *
+	 * @throws \DOMFormatException
+	 * @throws \Exception
 	 */
 	public function Init(DOMNodeList $oNodes)
 	{
@@ -260,26 +261,32 @@ class LifecycleValidatorHelper
 		}
 	}
 
-	/**
-	 * Returns an array of available stimuli for the $sProfile for the class $sClass
-	 *
-	 * @param string $sProfile
-	 * @param string $sClass
-	 * @return DBSearch
-	 */
+    /**
+     * Returns an array of available stimuli for the $sProfile for the class $sClass
+     *
+     * @param string $sProfile
+     * @param string $sClass
+     *
+     * @return \DBSearch
+     *
+     * @throws \Exception
+     */
 	public function GetStimuliForProfile($sProfile, $sClass)
 	{
 		return $this->GetStimuliForProfiles(array($sProfile), $sClass);
 	}
 
-	/**
-	 * Returns an array of available stimuli for the $aProfiles for the class $sClass.
-	 * Profiles are a OR condition.
-	 *
-	 * @param array $aProfiles
-	 * @param string $sClass
-	 * @return DBSearch
-	 */
+    /**
+     * Returns an array of available stimuli for the $aProfiles for the class $sClass.
+     * Profiles are a OR condition.
+     *
+     * @param array $aProfiles
+     * @param string $sClass
+     *
+     * @return \DBSearch
+     *
+     * @throws \Exception
+     */
 	public function GetStimuliForProfiles($aProfiles, $sClass)
 	{
 		$aStimuli = array();
@@ -316,8 +323,10 @@ class LifecycleValidatorHelper
 	 * Returns the profile id from a string being either a constant or its name.
 	 *
 	 * @param string $sProfile
+     *
 	 * @return integer
-	 * @throws Exception
+     *
+	 * @throws \Exception
 	 */
 	protected function GetProfileIdFromProfileName($sProfile)
 	{
@@ -362,6 +371,7 @@ class LifecycleValidatorHelper
 	 * Returns a string containing the generated PHP class for the compiled scopes
 	 *
 	 * @param array $aProfiles
+     *
 	 * @return string
 	 */
 	protected function BuildPHPClass($aProfiles = array())
