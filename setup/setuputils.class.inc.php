@@ -50,7 +50,7 @@ class CheckResult
 class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
-	const PHP_MIN_VERSION = '5.6.0'; // 5.6 will be supported since the end of 2018 (see http://php.net/supported-versions.php)
+	const PHP_MIN_VERSION = '5.6.0'; // 5.6 will be supported untill the end of 2018 (see http://php.net/supported-versions.php)
 	const MYSQL_MIN_VERSION = '5.5.3'; // 5.5 branch that is shipped with most distribution, and 5.5.3 to have utf8mb4 (see N°942)
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
 	const PHP_NEXT_MIN_VERSION = ''; // no new PHP requirement for now in iTop 2.6
