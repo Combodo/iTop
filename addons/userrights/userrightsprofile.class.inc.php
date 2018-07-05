@@ -402,9 +402,9 @@ class URP_UserOrg extends UserRightsBaseClassGUI
 	 */
 	protected function CheckIfOrgIsAllowed()
 	{
-		if (UserRights::IsAdministrator()) { return; }
+		if (!UserRights::IsLoggedIn() || UserRights::IsAdministrator()) { return; }
 
-		$oUser = UserRights::GetUserObject();
+		$oUser = UserRights::GetUserObject();		
 		$oAddon = UserRights::GetModuleInstance();
 		$aOrgs = $oAddon->GetUserOrgs($oUser, '');
 		if (count($aOrgs) > 0)
