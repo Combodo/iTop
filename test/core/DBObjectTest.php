@@ -26,9 +26,8 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObject;
-use PHPUnit\Framework\TestCase;
 
 
 /**
@@ -36,7 +35,7 @@ use PHPUnit\Framework\TestCase;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class DBObjectTest extends ItopTestCase
+class DBObjectTest extends ItopDataTestCase
 {
 	protected function setUp()
 	{
@@ -50,7 +49,7 @@ class DBObjectTest extends ItopTestCase
 	 */
 	public function testGetUIPage()
 	{
-		$this->assertEquals('UI.php', DBObject::GetUIPage());
+		static::assertEquals('UI.php', DBObject::GetUIPage());
 	}
 
 	/**
@@ -61,7 +60,7 @@ class DBObjectTest extends ItopTestCase
 	 */
 	public function testIsValidPKeyOK($key, $res)
 	{
-		$this->assertEquals(DBObject::IsValidPKey($key), $res);
+		static::assertEquals(DBObject::IsValidPKey($key), $res);
 	}
 
 	public function keyProviderOK()
@@ -78,6 +77,13 @@ class DBObjectTest extends ItopTestCase
 			array('', false),
 			array('a255', false),
 			array('PHP_INT_MIN', false));
+	}
+
+	public function testGetOriginal()
+	{
+		$oObject = $this->CreateUserRequest(190664);
+
+		static::assertNull($oObject->GetOriginal('sla_tto_passed'));
 	}
 
 }
