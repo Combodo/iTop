@@ -1578,7 +1578,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	protected function GetSQLCol($bFullSpec = false)
 	{
 		return 'VARCHAR(255)'
-			.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION
+			.CMDBSource::GetSqlStringColumnDefinition()
 			.($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
 	protected function GetSQLColSpec()
@@ -2205,7 +2205,7 @@ class AttributeString extends AttributeDBField
 	protected function GetSQLCol($bFullSpec = false)
 	{
 		return 'VARCHAR(255)'
-			.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION
+			.CMDBSource::GetSqlStringColumnDefinition()
 			.($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
 
@@ -2606,7 +2606,7 @@ class AttributePassword extends AttributeString
 	protected function GetSQLCol($bFullSpec = false)
 	{
 		return "VARCHAR(64)"
-			.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION
+			.CMDBSource::GetSqlStringColumnDefinition()
 			.($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
 
@@ -2739,7 +2739,7 @@ class AttributeText extends AttributeString
 
 	protected function GetSQLCol($bFullSpec = false)
 	{
-		return "TEXT".CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION;
+		return "TEXT".CMDBSource::GetSqlStringColumnDefinition();
 	}
 
 	public function GetSQLColumns($bFullSpec = false)
@@ -2749,7 +2749,7 @@ class AttributeText extends AttributeString
 		if ($this->GetOptional('format', null) != null )
 		{
 			// Add the extra column only if the property 'format' is specified for the attribute
-			$aColumns[$this->Get('sql').'_format'] = "ENUM('text','html')".CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION;
+			$aColumns[$this->Get('sql').'_format'] = "ENUM('text','html')".CMDBSource::GetSqlStringColumnDefinition();
 			if ($bFullSpec)
 			{
 				$aColumns[$this->Get('sql').'_format'].= " DEFAULT 'text'"; // default 'text' is for migrating old records
@@ -3072,7 +3072,7 @@ class AttributeLongText extends AttributeText
 {
 	protected function GetSQLCol($bFullSpec = false)
 	{
-		return "LONGTEXT".CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION;
+		return "LONGTEXT".CMDBSource::GetSqlStringColumnDefinition();
 	}
 
 	public function GetMaxSize()
@@ -3254,7 +3254,7 @@ class AttributeCaseLog extends AttributeLongText
 	{
 		$aColumns = array();
 		$aColumns[$this->GetCode()] = 'LONGTEXT' // 2^32 (4 Gb)
-			.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION;
+			.CMDBSource::GetSqlStringColumnDefinition();
 		$aColumns[$this->GetCode().'_index'] = 'BLOB';
 		return $aColumns;
 	}
@@ -3642,13 +3642,13 @@ class AttributeEnum extends AttributeString
 			// make sure that this string will match the field type returned by the DB
 			// (used to perform a comparison between the current DB format and the data model)
 			return "ENUM(".implode(",", $aValues).")"
-				.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION
+				.CMDBSource::GetSqlStringColumnDefinition()
 				.($bFullSpec ? $this->GetSQLColSpec() : '');
 		}
 		else
 		{
 			return "VARCHAR(255)"
-				.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION
+				.CMDBSource::GetSqlStringColumnDefinition()
 				.($bFullSpec ? " DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
 		}
 	}
@@ -5463,7 +5463,7 @@ class AttributeURL extends AttributeString
 	protected function GetSQLCol($bFullSpec = false)
 	{
 		return "VARCHAR(2048)"
-			.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION
+			.CMDBSource::GetSqlStringColumnDefinition()
 			.($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
 
@@ -5640,8 +5640,8 @@ class AttributeBlob extends AttributeDefinition
 	{
 		$aColumns = array();
 		$aColumns[$this->GetCode().'_data'] = 'LONGBLOB'; // 2^32 (4 Gb)
-		$aColumns[$this->GetCode().'_mimetype'] = 'VARCHAR(255)'.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION;
-		$aColumns[$this->GetCode().'_filename'] = 'VARCHAR(255)'.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION;
+		$aColumns[$this->GetCode().'_mimetype'] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
+		$aColumns[$this->GetCode().'_filename'] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
 		return $aColumns;
 	}
 
@@ -6779,7 +6779,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 	public function GetImportColumns()
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'TINYTEXT'.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION;
+		$aColumns[$this->GetCode()] = 'TINYTEXT'.CMDBSource::GetSqlStringColumnDefinition();
 		return $aColumns;
 	}
 
@@ -6853,7 +6853,7 @@ class AttributeTable extends AttributeDBField
 
 	protected function GetSQLCol($bFullSpec = false)
 	{
-		return "LONGTEXT".CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION;
+		return "LONGTEXT".CMDBSource::GetSqlStringColumnDefinition();
 	}
 
 	public function GetMaxSize()
@@ -7261,7 +7261,7 @@ class AttributeRedundancySettings extends AttributeDBField
 	protected function GetSQLCol($bFullSpec = false)
 	{
 		return "VARCHAR(20)"
-			.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION
+			.CMDBSource::GetSqlStringColumnDefinition()
 			.($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
 

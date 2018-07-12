@@ -108,16 +108,6 @@ class MySQLHasGoneAwayException extends MySQLException
  */
 class CMDBSource
 {
-	/**
-	 * SQL charset & collation declaration for text columns
-	 *
-	 * Using an attribute instead of a constant to avoid crash in the setup for older PHP versions
-	 *
-	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-column.html
-	 * @since 2.5 #1001 switch to utf8mb4
-	 */
-	public static $SQL_STRING_COLUMNS_CHARSET_DEFINITION = ' CHARACTER SET '.DEFAULT_CHARACTER_SET.' COLLATE '.DEFAULT_COLLATION;
-
 	protected static $m_sDBHost;
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
@@ -135,6 +125,20 @@ class CMDBSource
 
 	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
+
+	/**
+	 * SQL charset & collation declaration for text columns
+	 *
+	 * Using a function instead of a constant or attribute to avoid crash in the setup for older PHP versions (cannot
+	 * use expression as value)
+	 *
+	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-column.html
+	 * @since 2.5 #1001 switch to utf8mb4
+	 */
+	public static function GetSqlStringColumnDefinition()
+	{
+		return ' CHARACTER SET '.DEFAULT_CHARACTER_SET.' COLLATE '.DEFAULT_COLLATION;
+	}
 
 	/**
 	 * @param Config $oConfig
@@ -1059,7 +1063,7 @@ class CMDBSource
 		}
 
 
-		return 'ALTER TABLE `'.$sTableName.'` '.self::$SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
+		return 'ALTER TABLE `'.$sTableName.'` '.self::GetSqlStringColumnDefinition().';';
 
 	}
 
@@ -1205,6 +1209,6 @@ class CMDBSource
 			return null;
 		}
 
-		return 'ALTER DATABASE'.CMDBSource::$SQL_STRING_COLUMNS_CHARSET_DEFINITION.';';
+		return 'ALTER DATABASE'.CMDBSource::GetSqlStringColumnDefinition().';';
 	}
 }
