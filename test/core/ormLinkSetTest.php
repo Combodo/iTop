@@ -31,7 +31,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Exception;
 use ormLinkSet;
-use PHPUnit\Framework\TestCase;
 
 
 /**
@@ -58,7 +57,7 @@ class ormLinkSetTest extends ItopDataTestCase
     public function testConstruct()
     {
         $oOrmLink = new ormLinkSet('UserRequest', 'contacts_list');
-        $this->assertNotNull($oOrmLink);
+        static::assertNotNull($oOrmLink);
     }
 
     /**
@@ -88,7 +87,7 @@ class ormLinkSetTest extends ItopDataTestCase
         $this->ReloadObject($oServer);
 
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(3, $oContactsSet->Count());
+        static::assertEquals(3, $oContactsSet->Count());
     }
 
     /**
@@ -108,17 +107,17 @@ class ormLinkSetTest extends ItopDataTestCase
         $this->ReloadObject($oServer);
 
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(3, $oContactsSet->Count());
+        static::assertEquals(3, $oContactsSet->Count());
 
         $this->AddContactToCI($this->CreatePerson($i), $oServer);
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(4, $oContactsSet->Count());
+        static::assertEquals(4, $oContactsSet->Count());
 
         $oServer->DBUpdate();
         $this->ReloadObject($oServer);
 
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(4, $oContactsSet->Count());
+        static::assertEquals(4, $oContactsSet->Count());
     }
 
     /**
@@ -138,20 +137,20 @@ class ormLinkSetTest extends ItopDataTestCase
         $this->ReloadObject($oServer);
 
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(3, $oContactsSet->Count());
+        static::assertEquals(3, $oContactsSet->Count());
 
         for ($i = 0; $i < 3; $i++)
         {
             $this->RemoveContactFromCI($aPersons[$i], $oServer);
         }
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(0, $oContactsSet->Count());
+        static::assertEquals(0, $oContactsSet->Count());
 
         $oServer->DBUpdate();
         $this->ReloadObject($oServer);
 
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(0, $oContactsSet->Count());
+        static::assertEquals(0, $oContactsSet->Count());
     }
 
     /**
@@ -167,13 +166,13 @@ class ormLinkSetTest extends ItopDataTestCase
             $this->RemoveContactFromCI($oPerson, $oServer);
         }
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(0, $oContactsSet->Count());
+        static::assertEquals(0, $oContactsSet->Count());
 
         $oServer->DBUpdate();
         $this->ReloadObject($oServer);
 
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(0, $oContactsSet->Count());
+        static::assertEquals(0, $oContactsSet->Count());
     }
 
     /**
@@ -193,7 +192,7 @@ class ormLinkSetTest extends ItopDataTestCase
         $this->ReloadObject($oServer);
 
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(3, $oContactsSet->Count());
+        static::assertEquals(3, $oContactsSet->Count());
 
         for ($i = 0; $i < 3; $i++)
         {
@@ -201,13 +200,13 @@ class ormLinkSetTest extends ItopDataTestCase
             $this->AddContactToCI($aPersons[$i], $oServer);
         }
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(3, $oContactsSet->Count());
+        static::assertEquals(3, $oContactsSet->Count());
 
         $oServer->DBUpdate();
         $this->ReloadObject($oServer);
 
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(3, $oContactsSet->Count());
+        static::assertEquals(3, $oContactsSet->Count());
     }
 
     /**
@@ -227,19 +226,51 @@ class ormLinkSetTest extends ItopDataTestCase
         $this->ReloadObject($oServer);
 
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(3, $oContactsSet->Count());
+        static::assertEquals(3, $oContactsSet->Count());
 
         for ($i = 0; $i < 3; $i++)
         {
             $this->AddContactToCI($aPersons[$i], $oServer);
         }
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(6, $oContactsSet->Count());
+        static::assertEquals(6, $oContactsSet->Count());
 
         $oServer->DBUpdate();
         $this->ReloadObject($oServer);
 
         $oContactsSet = $oServer->Get('contacts_list');
-        $this->assertEquals(3, $oContactsSet->Count());
+        static::assertEquals(3, $oContactsSet->Count());
     }
+
+	/**
+	 * @throws Exception
+	 */
+	public function testModifyThenRemove()
+	{
+		$oServer = $this->CreateServer(1);
+		$aPersons = array();
+		for ($i = 0; $i < 3; $i++)
+		{
+			$oPerson = $this->CreatePerson($i);
+			$aPersons[] = $oPerson;
+			$this->AddContactToCI($oPerson, $oServer);
+		}
+
+		$oServer->DBUpdate();
+		$this->ReloadObject($oServer);
+
+		for ($i = 3; $i < 6; $i++)
+		{
+			$oPerson = $this->CreatePerson($i);
+			$this->AddContactToCI($oPerson, $oServer);
+		}
+
+		for ($i = 0; $i < 3; $i++)
+		{
+			$this->RemoveContactFromCI($aPersons[$i], $oServer);
+		}
+
+		$oContactsSet = $oServer->Get('contacts_list');
+		static::assertEquals(3, $oContactsSet->Count());
+	}
 }
