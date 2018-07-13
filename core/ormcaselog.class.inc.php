@@ -34,7 +34,7 @@ class ormCaseLog {
 	/**
 	 * Initializes the log with the first (initial) entry
 	 * @param $sLog string The text of the whole case log
-	 * @param $aIndex hash The case log index
+	 * @param $aIndex array The case log index
 	 */
 	public function __construct($sLog = '', $aIndex = array())
 	{
@@ -296,7 +296,6 @@ class ormCaseLog {
 	 */	 	
 	public function GetAsSimpleHtml($aTransfoHandler = null)
 	{
-		$sStyleCaseLogHeader = '';
 		$sStyleCaseLogEntry = '';
 
 		$sHtml = '<ul class="case_log_simple_html">';
@@ -514,7 +513,6 @@ class ormCaseLog {
 	public function AddLogEntry($sText, $sOnBehalfOf = '')
 	{
 		$sText = HTMLSanitizer::Sanitize($sText);
-		$bMergeEntries = false;
 		$sDate = date(AttributeDateTime::GetInternalFormat());
 		if ($sOnBehalfOf == '')
 		{
@@ -700,7 +698,6 @@ class ormCaseLog {
 	{
 		$iPos = 0;
 		$index = count($this->m_aIndex) - 1;
-		$aIndex = $this->m_aIndex;
 		while($index > $iIndex)
 		{
 			$iPos += $this->m_aIndex[$index]['separator_length'];
