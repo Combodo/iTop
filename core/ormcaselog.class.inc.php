@@ -159,6 +159,7 @@ class ormCaseLog {
 			$aEntries[] = array(
 				'date' => '',
 				'user_login' => '',
+				'user_id' => 0,
 				'message' => $sTextEntry,
 				'message_html' => utils::TextToHtml($sTextEntry),
 			);
