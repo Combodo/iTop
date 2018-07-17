@@ -326,7 +326,8 @@ class DisplayBlock
 			{
 				$aQueryParams = $aExtraParams['query_params'];
 			}
-			if ($this->m_sStyle != 'links')
+			// In case of search, the context filtering is done by the search itself
+			if (($this->m_sStyle != 'links') && ($this->m_sStyle != 'search'))
 			{
 				$oAppContext = new ApplicationContext();
 				$sClass = $this->m_oFilter->GetClass();
