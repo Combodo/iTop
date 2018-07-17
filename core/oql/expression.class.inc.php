@@ -461,15 +461,23 @@ class BinaryExpression extends Expression
 	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
 		$bReverseOperator = false;
+		if (method_exists($oSearch, 'GetJoinedClasses'))
+		{
+			$aClasses = $oSearch->GetJoinedClasses();
+		}
+		else
+		{
+			$aClasses = array($oSearch->GetClass());
+		}
 		$oLeftExpr = $this->GetLeftExpr();
 		if ($oLeftExpr instanceof FieldExpression)
 		{
-			$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
+			$oAttDef = $oLeftExpr->GetAttDef($aClasses);
 		}
 		$oRightExpr = $this->GetRightExpr();
 		if ($oRightExpr instanceof FieldExpression)
 		{
-			$oAttDef = $oRightExpr->GetAttDef($oSearch->GetJoinedClasses());
+			$oAttDef = $oRightExpr->GetAttDef($aClasses);
 			$bReverseOperator = true;
 		}
 
@@ -523,17 +531,33 @@ class BinaryExpression extends Expression
 		return Dict::S('Expression:Operator:'.$sOperator, " $sOperator ");
 	}
 
+	/**
+	 * @param DBSearch $oSearch
+	 * @param null $aArgs
+	 * @param bool $bRetrofitParams
+	 * @param null $oAttDef
+	 *
+	 * @return array
+	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
 		$bReverseOperator = false;
 		$oLeftExpr = $this->GetLeftExpr();
 		$oRightExpr = $this->GetRightExpr();
 
-		$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
+		if (method_exists($oSearch, 'GetJoinedClasses'))
+		{
+			$aClasses = $oSearch->GetJoinedClasses();
+		}
+		else
+		{
+			$aClasses = array($oSearch->GetClass());
+		}
 
+		$oAttDef = $oLeftExpr->GetAttDef($aClasses);
 		if (is_null($oAttDef))
 		{
-			$oAttDef = $oRightExpr->GetAttDef($oSearch->GetJoinedClasses());
+			$oAttDef = $oRightExpr->GetAttDef($aClasses);
 			$bReverseOperator = true;
 		}
 
@@ -547,7 +571,7 @@ class BinaryExpression extends Expression
 		{
 			$aCriteriaRight = $oRightExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 			// $oAttDef can be different now
-			$oAttDef = $oRightExpr->GetAttDef($oSearch->GetJoinedClasses());
+			$oAttDef = $oRightExpr->GetAttDef($aClasses);
 			$aCriteriaLeft = $oLeftExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 
 			// switch left and right expressions so reverse the operator
@@ -576,7 +600,7 @@ class BinaryExpression extends Expression
 		{
 			$aCriteriaLeft = $oLeftExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 			// $oAttDef can be different now
-			$oAttDef = $oLeftExpr->GetAttDef($oSearch->GetJoinedClasses());
+			$oAttDef = $oLeftExpr->GetAttDef($aClasses);
 			$aCriteriaRight = $oRightExpr->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef);
 
 			$aCriteria = self::MergeCriteria($aCriteriaLeft, $aCriteriaRight, $this->GetOperator());
@@ -937,7 +961,15 @@ class FieldExpression extends UnaryExpression
 		{
 			return "`{$this->m_sName}`";
 		}
-		$sClass = $this->GetClassName($oSearch->GetJoinedClasses());
+		if (method_exists($oSearch, 'GetJoinedClasses'))
+		{
+			$aClasses = $oSearch->GetJoinedClasses();
+		}
+		else
+		{
+			$aClasses = array($oSearch->GetClass());
+		}
+		$sClass = $this->GetClassName($aClasses);
 		$sAttName = MetaModel::GetLabel($sClass, $this->m_sName);
 		if ($sClass != $oSearch->GetClass())
 		{
