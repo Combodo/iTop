@@ -112,6 +112,26 @@ class ItopDataTestCase extends ItopTestCase
         return $oMyObj;
     }
 
+	/**
+	 * @param string $sClass
+	 * @param $iKey
+	 * @param array $aParams
+	 *
+	 * @return DBObject
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	protected static function updateObject($sClass, $iKey, $aParams)
+	{
+		$oMyObj = MetaModel::GetObject($sClass, $iKey);
+		foreach($aParams as $sAttCode => $oValue)
+		{
+			$oMyObj->Set($sAttCode, $oValue);
+		}
+		$oMyObj->DBUpdate();
+		return $oMyObj;
+	}
 
 	/**
 	 * Create an Organization in database

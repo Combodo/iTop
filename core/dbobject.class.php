@@ -568,7 +568,8 @@ abstract class DBObject implements iDisplay
 		{
 			throw new CoreException("Unknown attribute code '$sAttCode' for the class ".get_class($this));
 		}
-		return $this->m_aOrigValues[$sAttCode];
+		$aOrigValues = $this->m_aOrigValues;
+		return isset($aOrigValues[$sAttCode]) ? $aOrigValues[$sAttCode] : null;
 	}
 
     /**
