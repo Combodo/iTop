@@ -485,12 +485,11 @@ class SearchForm
 	{
 		$aOrCriterion = array();
 		$bIsEmptyExpression = true;
+		$aArgs = MetaModel::PrepareQueryArguments($aArgs, $oSearch->GetInternalParams());
 
 		if (method_exists($oSearch, 'GetCriteria'))
 		{
 			$oExpression = $oSearch->GetCriteria();
-
-			$aArgs = MetaModel::PrepareQueryArguments($aArgs, $oSearch->GetInternalParams());
 
 			if (!empty($aArgs))
 			{
@@ -526,11 +525,49 @@ class SearchForm
 			}
 		}
 
+		// Context induced criteria are read-only
+		$oAppContext = new ApplicationContext();
+		$sClass = $oSearch->GetClass();
+		$aCallSpec = array($sClass, 'MapContextParam');
+		$aContextParams = array();
+		if (is_callable($aCallSpec))
+		{
+			foreach($oAppContext->GetNames() as $sContextParam)
+			{
+				$sParamCode = call_user_func($aCallSpec, $sContextParam); //Map context parameter to the value/filter code depending on the class
+				if (!is_null($sParamCode))
+				{
+					$sParamValue = $oAppContext->GetCurrentValue($sContextParam, null);
+					if (!is_null($sParamValue))
+					{
+						$aContextParams[$sParamCode] = $sParamValue;
+					}
+				}
+			}
+		}
+
 		if ($bIsEmptyExpression)
 		{
 			// Add default criterion
-			$aOrCriterion = $this->GetDefaultCriterion($oSearch);
+			$aOrCriterion = $this->GetDefaultCriterion($oSearch, $aContextParams);
 		}
+
+		foreach($aContextParams as $sParamCode => $sParamValue)
+		{
+			// Add Context criteria in read only mode
+			$sAlias = $oSearch->GetClassAlias();
+			$oFieldExpression = new FieldExpression($sParamCode, $sAlias);
+			$oScalarExpression = new \ScalarExpression($sParamValue);
+			$oExpression = new \BinaryExpression($oFieldExpression, '=', $oScalarExpression);
+			$aCriterion = $oExpression->GetCriterion($oSearch, $aArgs);
+			$aCriterion['is_removable'] = false;
+			foreach($aOrCriterion as &$aAndExpression)
+			{
+				$aAndExpression['and'][] = $aCriterion;
+			}
+		}
+
+
 
 		return array('or' => $aOrCriterion);
 	}
@@ -645,9 +682,11 @@ class SearchForm
 
 	/**
 	 * @param DBObjectSearch $oSearch
+	 * @param $aContextParams
+	 *
 	 * @return array
 	 */
-	protected function GetDefaultCriterion($oSearch)
+	protected function GetDefaultCriterion($oSearch, &$aContextParams = array())
 	{
 		$aAndCriterion = array();
 		$sClass = $oSearch->GetClass();
@@ -666,8 +705,20 @@ class SearchForm
 		$sAlias = $oSearch->GetClassAlias();
 		foreach($aList as $sAttCode)
 		{
-			$oFieldExpression = new FieldExpression($sAttCode, $sAlias);
-			$aCriterion = $oFieldExpression->GetCriterion($oSearch);
+			$oExpression = new FieldExpression($sAttCode, $sAlias);
+			$bIsRemovable = true;
+			if (isset($aContextParams[$sAttCode]))
+			{
+				// When a context parameter exists, use it with the default search criteria
+				$oFieldExpression = $oExpression;
+				$oScalarExpression = new \ScalarExpression($aContextParams[$sAttCode]);
+				$oExpression = new \BinaryExpression($oFieldExpression, '=', $oScalarExpression);
+				unset($aContextParams[$sAttCode]);
+				// Read only mode for search criteria from context
+				$bIsRemovable = false;
+			}
+			$aCriterion = $oExpression->GetCriterion($oSearch);
+			$aCriterion['is_removable'] = $bIsRemovable;
 			if (isset($aCriterion['widget']) && ($aCriterion['widget'] != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
 			{
 				$aAndCriterion[] = $aCriterion;
