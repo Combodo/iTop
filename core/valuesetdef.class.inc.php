@@ -210,6 +210,19 @@ class ValueSetObjects extends ValueSetDefinition
 			}
 		}
 
+		$oExpression = DBObjectSearch::GetPolymorphicExpression($oFilter->GetClass(), 'friendlyname');
+		$aFields = $oExpression->ListRequiredFields();
+		$sClass = $oFilter->GetClass();
+		foreach($aFields as $sField)
+		{
+			$aFieldItems = explode('.', $sField);
+			if ($aFieldItems[0] != $sClass)
+			{
+				$sOperation = 'contains';
+				break;
+			}
+		}
+
 		switch ($sOperation)
 		{
 			case 'equals_start_with':
