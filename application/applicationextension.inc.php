@@ -122,7 +122,8 @@ interface iApplicationUIExtension
 	 * Sorry, the verb has been reserved. You must implement it, but it is not called as of now.
 	 * 
 	 * @param DBObject $oObject The object being displayed
-	 * @return type desc
+	 *
+	 * @return string[] desc
 	 */	
 	public function EnumUsedAttributes($oObject); // Not yet implemented
 
@@ -441,8 +442,9 @@ abstract class ApplicationPopupMenuItem
 	
 	/**
 	 * Returns the components to create a popup menu item in HTML
-	 * @return Hash A hash array: array('label' => , 'url' => , 'target' => , 'onclick' => )
-	 * @ignore	 	 
+	 *
+	 * @return array A hash array: array('label' => , 'url' => , 'target' => , 'onclick' => )
+	 * @ignore
 	 */
 	abstract public function GetMenuItem();
 
@@ -759,11 +761,15 @@ interface iRestServiceProvider
 	 * @return array An array of hash 'verb' => verb, 'description' => description
 	 */
 	public function ListOperations($sVersion);
+
 	/**
 	 * Enumerate services delivered by this class
+	 *
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
+	 * @param string $sVerb
+	 * @param array $aParams
+	 *
 	 * @return RestResult The standardized result structure (at least a message)
-	 * @throws Exception in case of internal failure.	 
 	 */
 	public function ExecOperation($sVersion, $sVerb, $aParams);
 }
@@ -824,10 +830,6 @@ class RestResult
 
 	/**
 	 * Default constructor - ok!
-	 * 	 
-	 * @param DBObject $oObject The object being reported
-	 * @param string $sAttCode The attribute code (must be valid)
-	 * @return string A scalar representation of the value
 	 */
 	public function __construct()
 	{
@@ -865,7 +867,8 @@ class RestUtils
 	 * 	 
 	 * @param StdClass $oData Structured input data. Must contain the entry defined by sParamName.
 	 * @param string $sParamName Name of the parameter to fetch from the input data
-	 * @return void
+	 *
+	 * @return mixed parameter value if present
 	 * @throws Exception If the parameter is missing
 	 * @api
 	 */
@@ -888,7 +891,8 @@ class RestUtils
 	 * @param StdClass $oData Structured input data.
 	 * @param string $sParamName Name of the parameter to fetch from the input data
 	 * @param mixed $default Default value if the parameter is not found in the input data
-	 * @return void
+	 *
+	 * @return mixed
 	 * @throws Exception
 	 * @api
 	 */
@@ -910,7 +914,8 @@ class RestUtils
 	 *
 	 * @param StdClass $oData Structured input data. Must contain the entry defined by sParamName.
 	 * @param string $sParamName Name of the parameter to fetch from the input data
-	 * @return void
+	 *
+	 * @return string
 	 * @throws Exception If the parameter is missing or the class is unknown
 	 * @api
 	 */
@@ -931,7 +936,8 @@ class RestUtils
 	 * @param string $sClass Name of the class
 	 * @param StdClass $oData Structured input data.
 	 * @param string $sParamName Name of the parameter to fetch from the input data
-	 * @return An array of class => list of attributes (see RestResultWithObjects::AddObject that uses it)
+	 *
+	 * @return array of class => list of attributes (see RestResultWithObjects::AddObject that uses it)
 	 * @throws Exception
 	 * @api
 	 */
@@ -1111,7 +1117,6 @@ class RestUtils
 		{
 			// OQL
 			$oSearch = DBObjectSearch::FromOQL($key);
-			$oObjectSet = new DBObjectSet($oSearch);
 		}
 		else
 		{
