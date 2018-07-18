@@ -228,10 +228,23 @@ class ValueSetObjects extends ValueSetDefinition
 			}
 		}
 
+		$oExpression = DBObjectSearch::GetPolymorphicExpression($oFilter->GetClass(), 'friendlyname');
+		$aFields = $oExpression->ListRequiredFields();
+		$sClass = $oFilter->GetClass();
+		foreach($aFields as $sField)
+		{
+			$aFieldItems = explode('.', $sField);
+			if ($aFieldItems[0] != $sClass)
+			{
+				$sOperation = 'contains';
+				break;
+			}
+		}
+
 		switch ($sOperation)
 		{
 			case 'equals':
-				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($oFilter->GetClass());
+				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
 				$sClassAlias = $oFilter->GetClassAlias();
 				$aFilters = array();
 				$oValueExpr = new ScalarExpression($sContains);
@@ -247,7 +260,7 @@ class ValueSetObjects extends ValueSetDefinition
 				$oFilter = new DBUnionSearch($aFilters);
 				break;
             case 'start_with':
-                $aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($oFilter->GetClass());
+                $aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
                 $sClassAlias = $oFilter->GetClassAlias();
                 $aFilters = array();
                 $oValueExpr = new ScalarExpression($sContains.'%');
