@@ -152,7 +152,7 @@ $(function()
         _initChooseDefaultOperator: function()
 		{
             //if the class has an index, in order to maximize the performance, we force the default operator to "equal"
-            if (this.options.field.has_index && typeof this.options.available_operators['='] == 'object')
+            if (this.options.field.has_index && typeof this.options.available_operators['='] == 'object' && this.options.values.length == 0)
             {
                 this.options.operator = '=';
                 this.options.available_operators['='].rank = -1;//we want it to be the first displayed
