@@ -205,6 +205,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Person/Attribute:tickets_list+' => 'Tickets',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nombre del Jefe',
 	'Class:Person/Attribute:manager_id_friendlyname+' => 'Nombre del Jefe',
+	'Class:Person/Attribute:picture' => 'Fotografía',
+	'Class:Person/Attribute:picture+' => 'Fotografía',
 ));
 
 //
@@ -1865,6 +1867,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'Server:moreinfo' => 'Más Información',
 'Server:otherinfo' => 'Otra Información',
 'Person:info' => 'Información General',
+'Person:personal_info' => 'Información Personal',
 'Person:notifiy' => 'Notificación',
 'Class:Subnet/Tab:IPUsage' => 'Uso de IP',
 'Class:Subnet/Tab:IPUsage-explain' => 'Interfases con IP en el rango: <em>%1$s</em> a <em>%2$s</em>',

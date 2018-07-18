@@ -138,7 +138,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	
 	'Class:User/Error:LoginMustBeUnique' => 'Usuario debe ser único - "%1s" ya se encuentra en uso.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Al menos un Perfil debe ser asignado a este usuario.',
-	
+	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Al menos una organización debe ser asignada a este usuario.',
+	'Class:User/Error:OrganizationNotAllowed' => 'Organización no permitida.',
 	'Class:UserInternal' => 'Usuario Interno',
 	'Class:UserInternal+' => 'Usuario definido en iTop',
 ));
@@ -312,6 +313,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 //
+// Expression to Natural language
+//
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Expression:Unit:Short:DAY' => 'd',
+	'Expression:Unit:Short:WEEK' => 's',
+	'Expression:Unit:Short:MONTH' => 'm',
+	'Expression:Unit:Short:YEAR' => 'a',
+));
+
+//
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
@@ -366,6 +377,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Guardar',
 	'UI:Button:Cancel' => 'Cancelar',
+	'UI:Button:Close' => 'Cerrar',
 	'UI:Button:Apply' => 'Aplicar',
 	'UI:Button:Back' => '<< Anterior',
 	'UI:Button:Restart' => '|<< Reiniciar',
@@ -389,6 +401,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Button:ChangePassword' => 'Cambiar Contraseña',
 	'UI:Button:ResetPassword' => 'Restablecer Contraseña',
 	'UI:Button:Insert' => 'Insertar',
+	'UI:Button:More' => 'Más',
+	'UI:Button:Less' => 'Menos',
 
 	'UI:SearchToggle' => 'Buscar',
 	'UI:ClickToCreateNew' => 'Crear %1$s',
@@ -410,9 +424,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Carga de archivo fallida, causa desconocida. (Codigo de error = "%1$s").',
 	
 	'UI:Error:1ParametersMissing' => 'Error: El siguiente parametro debe ser especificado para esta operacion: %1$s.',
-	'UI:Error:2ParametersMissing' => 'Error: Los siguientes parametros deben ser especificados para esta operacion: %1$s and %2$s.',
-	'UI:Error:3ParametersMissing' => 'Error: Los siguientes parametros deben ser especificados para esta operacion: %1$s, %2$s and %3$s.',
-	'UI:Error:4ParametersMissing' => 'Error: Los siguientes parametros deben ser especificados para esta operacion: %1$s, %2$s, %3$s and %4$s.',
+	'UI:Error:2ParametersMissing' => 'Error: Los siguientes parametros deben ser especificados para esta operacion: %1$s y %2$s.',
+	'UI:Error:3ParametersMissing' => 'Error: Los siguientes parametros deben ser especificados para esta operacion: %1$s, %2$s y %3$s.',
+	'UI:Error:4ParametersMissing' => 'Error: Los siguientes parametros deben ser especificados para esta operacion: %1$s, %2$s, %3$s y %4$s.',
 	'UI:Error:IncorrectOQLQuery_Message' => 'Error: Consulta OQL incorrecta: %1$s',
 	'UI:Error:AnErrorOccuredWhileRunningTheQuery_Message' => 'Se ha producido un error al ejecutar la consulta: %1$s',
 	'UI:Error:ObjectAlreadyUpdated' => 'Error: el objeta ha sido previamente actualizado.',
@@ -717,13 +731,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Schema:LifeCycleAttributeMustChange' => 'Debe cambiar',
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'Se le pedira al usuario que cambie el valor',
 	'UI:Schema:LifeCycleEmptyList' => 'Lista Vacía',
-	'UI:Schema:ClassFilter' => 'Class:~~',
-	'UI:Schema:DisplayLabel' => 'Display:~~',
-	'UI:Schema:DisplaySelector/LabelAndCode' => 'Label and code~~',
-	'UI:Schema:DisplaySelector/Label' => 'Label~~',
-	'UI:Schema:DisplaySelector/Code' => 'Code~~',
-	'UI:Schema:Attribute/Filter' => 'Filter~~',
-	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
+	'UI:Schema:ClassFilter' => 'Clase:',
+	'UI:Schema:DisplayLabel' => 'Despliegue:',
+	'UI:Schema:DisplaySelector/LabelAndCode' => 'Etiqueta y código',
+	'UI:Schema:DisplaySelector/Label' => 'Etiqueta',
+	'UI:Schema:DisplaySelector/Code' => 'Código',
+	'UI:Schema:Attribute/Filter' => 'Filtro',
+	'UI:Schema:DefaultNullValue' => 'Nulo por Omisión : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'Escriba los primeros 3 caracteres...',
 	'UI:Edit:TestQuery' => 'Consulta de Prueba',
 	'UI:Combo:SelectValue' => '--- seleccione un valor ---',
@@ -889,8 +903,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'UI-ChangeManagementOverview-ChangeWithOutage' => 'Interrupciones de Servicios debida a Cambios',
 
 'UI:ServiceMgmtMenuOverview:Title' => 'Panel de Control para Administración de Servicios',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Contratos de Usuario a ser Renovados en 30 días',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => 'contratos de Proveedores a ser Renovados en 30 días',
+'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Acuerdos con Usuarios a ser Renovados en 30 días',
+'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Contratos de Proveedores a ser Renovados en 30 días',
 
 	'UI:ContactsMenu' => 'Contactos',
 	'UI:ContactsMenu+' => 'Contactos',
@@ -1126,7 +1140,18 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:Form:Property' => 'Propiedad',
 	'UI:Form:Value' => 'Valor',
 
-	'UI:DashletPlainText:Label' => 'Texto',
+	'UI:DashletUnknown:Label' => 'Desconocido',
+	'UI:DashletUnknown:Description' => 'Dashlet desconocido (puede haber sido desinstalado)',
+	'UI:DashletUnknown:RenderText:View' => 'No es posible desplegar este dashlet.',
+	'UI:DashletUnknown:RenderText:Edit' => 'No es posible desplegar este dashlet (clase "%1$s"). Verifique con su administrador si está todavia disponible.',
+	'UI:DashletUnknown:RenderNoDataText:Edit' => 'No hay vista previa para este dashlet (clase "%1$s").',
+	'UI:DashletUnknown:Prop-XMLConfiguration' => 'Configuración (mostrado como código XML)',
+
+	'UI:DashletProxy:Label' => 'Proxy',
+	'UI:DashletProxy:Description' => 'Proxy dashlet',
+	'UI:DashletProxy:Prop-XMLConfiguration' => 'Configuration (shown as raw XML)',
+
+  	'UI:DashletPlainText:Label' => 'Texto',
 	'UI:DashletPlainText:Description' => 'Texto Plano (sin formato)',
 	'UI:DashletPlainText:Prop-Text' => 'Texto',
 	'UI:DashletPlainText:Prop-Text:Default' => 'Escriba texto aquí...',
@@ -1157,7 +1182,28 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:DashletGroupByBars:Description' => 'Gráfica de Barras',
 	'UI:DashletGroupByTable:Label' => 'Agrupado por (tabla)',
 	'UI:DashletGroupByTable:Description' => 'Lista (Campos de agrupación)',
+  
+	// New in 2.5
+	'UI:DashletGroupBy:Prop-Function' => 'Función de Agregación',
+	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Atributo de Función',
+	'UI:DashletGroupBy:Prop-OrderDirection' => 'Dirección',
+	'UI:DashletGroupBy:Prop-Limit' => 'Límite',
 
+	'UI:DashletGroupBy:Order:asc' => 'Ascendente',
+	'UI:DashletGroupBy:Order:desc' => 'Descendente',
+
+	'UI:GroupBy:count' => 'Cuenta',
+	'UI:GroupBy:count+' => 'Número de elementos',
+	'UI:GroupBy:sum' => 'Suma',
+	'UI:GroupBy:sum+' => 'Suma de %1$s',
+	'UI:GroupBy:avg' => 'Promedio',
+	'UI:GroupBy:avg+' => 'Promedio de %1$s',
+	'UI:GroupBy:min' => 'Mínimo',
+	'UI:GroupBy:min+' => 'Mínimo de %1$s',
+	'UI:GroupBy:max' => 'Máximo',
+	'UI:GroupBy:max+' => 'Máximo de %1$s',
+	// ---
+  
 	'UI:DashletHeaderStatic:Label' => 'Encabezado',
 	'UI:DashletHeaderStatic:Description' => 'Desplegar un separador horizontal',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Título',
@@ -1182,7 +1228,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'DayOfWeek-Sunday' => 'Domingo',
 	'DayOfWeek-Monday' => 'Lunes',
 	'DayOfWeek-Tuesday' => 'Martes',
-	'DayOfWeek-Wednesday' => 'Miercoles',
+	'DayOfWeek-Wednesday' => 'Miércoles',
 	'DayOfWeek-Thursday' => 'Jueves',
 	'DayOfWeek-Friday' => 'Viernes',
 	'DayOfWeek-Saturday' => 'Sábado',
@@ -1437,6 +1483,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:About:DataModel' => 'Modelo de Datos',
 	'UI:About:Support' => 'Información de Soporte',
 	'UI:About:Licenses' => 'Licencias',
+	'UI:About:InstallationOptions' => 'Opciones de Instalación',
 	'UI:About:Modules' => 'Módulos Instalados',
 	'UI:DisconnectedDlgMessage' => 'Está desconectado. Debe identificarse para continuar usando la aplicación.',
 	'UI:DisconnectedDlgTitle' => 'Advertencia',
@@ -1462,4 +1509,135 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Menu:KillConcurrentLock' => 'Detener el bloque por modificaciones concurrentes!',
 	'UI:Menu:ExportPDF' => 'Exportar como PDF...',
 	'UI:Menu:PrintableVersion' => 'Versión imprimible',
+	'UI:BrowseInlineImages' => 'Ver imágenes...',
+	'UI:UploadInlineImageLegend' => 'Subir nueva imágen',
+	'UI:SelectInlineImageToUpload' => 'Seleccione la imágen a subir',
+	'UI:AvailableInlineImagesLegend' => 'Imágenes disponibles',
+	'UI:NoInlineImage' => 'No hay imágenes disponibles en el servidor. Use el botón "Seleccionar archivo" para seleccionar una imágen de su equipo local y subirla al servidor.',
+	
+	'UI:ToggleFullScreen' => 'Cambiar Maximizar / Minimizar',
+	'UI:Button:ResetImage' => 'Recuperar imágen previa',
+	'UI:Button:RemoveImage' => 'Remover imágen',
+	'UI:UploadNotSupportedInThisMode' => 'La modificación de imágenes o archivos no está soportado en este modo.',
+
+	// Search form
+	'UI:Search:Toggle' => 'Minimizar/ Expandir',
+	'UI:Search:AutoSubmit:DisabledHint' => 'Auto enviar ha sido deshabilitado para esta clase',
+	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Agregar nuevo criterio',
+	// - Add new criteria button
+	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recientemente usado',
+	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Más popular',
+	'UI:Search:AddCriteria:List:Others:Title' => 'Otros',
+	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Ninguno todavía',
+
+	// - Criteria titles
+	//   - Default widget
+	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Cualquier',
+	'UI:Search:Criteria:Title:Default:Empty' => '%1$s está vacío',
+	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s no está vacío',
+	'UI:Search:Criteria:Title:Default:Equals' => '%1$s igual a %2$s',
+	'UI:Search:Criteria:Title:Default:Contains' => '%1$s contiene %2$s',
+	'UI:Search:Criteria:Title:Default:StartsWith' => '%1$s comienza con %2$s',
+	'UI:Search:Criteria:Title:Default:EndsWith' => '%1$s termina con %2$s',
+	'UI:Search:Criteria:Title:Default:RegExp' => '%1$s coincide con %2$s',
+	'UI:Search:Criteria:Title:Default:GreaterThan' => '%1$s > %2$s',
+	'UI:Search:Criteria:Title:Default:GreaterThanOrEquals' => '%1$s >= %2$s',
+	'UI:Search:Criteria:Title:Default:LessThan' => '%1$s < %2$s',
+	'UI:Search:Criteria:Title:Default:LessThanOrEquals' => '%1$s <= %2$s',
+	'UI:Search:Criteria:Title:Default:Different' => '%1$s ≠ %2$s',
+	'UI:Search:Criteria:Title:Default:Between' => '%1$s entre [%2$s]',
+	'UI:Search:Criteria:Title:Default:BetweenDates' => '%1$s [%2$s]',
+	'UI:Search:Criteria:Title:Default:BetweenDates:All' => '%1$s: Cualquier',
+	'UI:Search:Criteria:Title:Default:BetweenDates:From' => '%1$s desde %2$s',
+	'UI:Search:Criteria:Title:Default:BetweenDates:Until' => '%1$s hasta %2$s',
+	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Cualquier',
+	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s desde %2$s',
+	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s hasta %2$s',
+	//   - Numeric widget
+	//   None yet
+	//   - DateTime widget
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	//   - Enum widget
+	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s y %3$s otros',
+	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Cualquier',
+    //   - External key widget
+    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s está definido',
+    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s no está definido',
+    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
+    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s y %3$s otros',
+    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Cualquier',
+    //   - Hierarchical key widget
+    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s está definido',
+    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s no está definido',
+    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
+    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s y %3$s otros',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Cualquier',
+
+	// - Criteria operators
+	//   - Default widget
+	'UI:Search:Criteria:Operator:Default:Empty' => 'Está vacío',
+	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'No está vacío',
+	'UI:Search:Criteria:Operator:Default:Equals' => 'Igual',
+	'UI:Search:Criteria:Operator:Default:Between' => 'Entre',
+	//   - String widget
+	'UI:Search:Criteria:Operator:String:Contains' => 'Contiene',
+	'UI:Search:Criteria:Operator:String:StartsWith' => 'Comienza con',
+	'UI:Search:Criteria:Operator:String:EndsWith' => 'Termina con',
+	'UI:Search:Criteria:Operator:String:RegExp' => 'Exp. Regular',
+	//   - Numeric widget
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Igual',  // => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Mayor',  // => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Mayor / igual',  // > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Menor',  // => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Menor / igual',  // > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Diferente',  // => '≠',
+
+	// - Other translations
+	'UI:Search:Value:Filter:Placeholder' => 'Filtro...',
+	'UI:Search:Value:Search:Placeholder' => 'Búsqueda...',
+	'UI:Search:Value:Autocomplete:StartTyping' => 'Inicie escribiento posibles valores.',
+	'UI:Search:Value:Autocomplete:Wait' => 'Por favor espere...',
+	'UI:Search:Value:Autocomplete:NoResult' => 'Sin Resultados.',
+	'UI:Search:Value:Toggler:CheckAllNone' => 'Marcar todos / ninguno',
+	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Marcar todos / ninguno visible',
+
+	// - Widget other translations
+	'UI:Search:Criteria:Numeric:From' => 'De',
+	'UI:Search:Criteria:Numeric:Until' => 'Para',
+	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Cualquier',
+	'UI:Search:Criteria:Numeric:PlaceholderUntil' => 'Cualquier',
+	'UI:Search:Criteria:DateTime:From' => 'De',
+	'UI:Search:Criteria:DateTime:FromTime' => 'De',
+	'UI:Search:Criteria:DateTime:Until' => 'hasta',
+	'UI:Search:Criteria:DateTime:UntilTime' => 'hasta',
+	'UI:Search:Criteria:DateTime:PlaceholderFrom' => 'Cualquier fecha',
+	'UI:Search:Criteria:DateTime:PlaceholderFromTime' => 'Cualquier fecha',
+	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Cualquier fecha',
+	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Cualquier fecha',
+	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Hijos de los objetos seleccionados serán incluídos.',
+
+	'UI:Search:Criteria:Raw:Filtered' => 'Filtrado',
+	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtrado en %1$s',
+));
+
+//
+// Expression to Natural language
+//
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Expression:Operator:AND' => ' Y ',
+	'Expression:Operator:OR' => ' O ',
+
+	'Expression:Unit:Short:DAY' => 'd',
+	'Expression:Unit:Short:WEEK' => 's',
+	'Expression:Unit:Short:MONTH' => 'm',
+	'Expression:Unit:Short:YEAR' => 'a',
+
+	'Expression:Unit:Long:DAY' => 'día(s)',
+	'Expression:Unit:Long:HOUR' => 'hora(s)',
+	'Expression:Unit:Long:MINUTE' => 'minuto(s)',
+
+	'Expression:Verb:NOW' => 'Ahora',
 ));
