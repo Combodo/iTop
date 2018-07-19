@@ -400,7 +400,7 @@ class SearchForm
 
 	protected function IsSubAttribute($oAttDef)
 	{
-		return (($oAttDef instanceof AttributeFriendlyName) || ($oAttDef instanceof AttributeExternalField) || ($oAttDef instanceof AttributeSubItem));
+		return (($oAttDef instanceof AttributeFriendlyName) || ($oAttDef instanceof AttributeSubItem));
 	}
 
 	/**
