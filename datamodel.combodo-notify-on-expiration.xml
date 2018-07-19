@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3">
+    <classes>
+        <class id="ExpirationRule" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+            <properties>
+                <category>bizmodel,searchable</category>
+                <abstract>false</abstract>
+                <db_table>expirationrule</db_table>
+                <naming>
+                    <attributes>
+                        <attribute id="name"/>
+                    </attributes>
+                </naming>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="name"/>
+                        <attribute id="class"/>
+                    </attributes>
+                </reconciliation>
+            </properties>
+            <fields>
+                <field id="name" xsi:type="AttributeString">
+                    <sql>name</sql>
+                    <default_value/>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+ 				<field id="description" xsi:type="AttributeText">
+					<sql>description</sql>
+					<default_value/>
+					<is_null_allowed>true</is_null_allowed>
+					<format>html</format>
+				</field>
+                <field id="class" xsi:type="AttributeString">
+                    <sql>class</sql>
+                    <default_value/>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <field id="status" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="active">active</value>
+                        <value id="inactive">inactive</value>
+                    </values>
+                    <sql>status</sql>
+                    <default_value>active</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                    <display_style>list</display_style>
+                </field>
+                <field id="type" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="simple">simple</value>
+                        <value id="advanced">advanced</value>
+                    </values>
+                    <dependencies>
+                        <attribute id="date_to_check_att"/>
+                        <attribute id="term_of_notice"/>
+                        <attribute id="oql_scope"/>
+                    </dependencies>
+                    <sql>type</sql>
+                    <default_value>simple</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <field id="date_to_check_att" xsi:type="AttributeString">
+                    <sql>date_to_check_att</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="term_of_notice" xsi:type="AttributeInteger">
+                    <sql>term_of_notice</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="oql_scope" xsi:type="AttributeOQL">
+                    <sql>oql_scope</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+            </fields>
+            <methods>
+                <method id="GetInitialStateAttributeFlags">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+	{
+		if ($sAttCode == 'type')
+		{
+		    return OPT_ATT_READONLY;
+		}
+		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+	}
+]]></code>
+                </method>
+                <method id="GetAttributeFlags">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+		if ($sAttCode == 'type')
+		{
+		    return OPT_ATT_READONLY;
+		}
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+]]></code>
+                </method>
+                <method id="ComputeValues">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[	public function ComputeValues()
+	{
+		// Compute the type of the rule
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'oql_scope');
+		$sType = ($oAttDef->IsNull($this->Get('oql_scope'))) ? 'simple' : 'advanced';
+
+		$this->Set('type', $sType);
+
+		return parent::ComputeValues();
+	}]]></code>
+                </method>
+                <method id="DoCheckToWrite">
+                    <static>false</static>
+                    <access>public </access>
+                    <code><![CDATA[    public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+
+		// Checking class / attributes consistency with Datamodel
+		$sClass = $this->Get('class');
+		$sDateToCheckAttCode = $this->Get('date_to_check_att');
+		$sOqlScope = $this->Get('oql_scope');
+		// - Class
+		if(!MetaModel::IsValidClass($sClass))
+		{
+		    $this->m_aCheckIssues[] = Dict::Format('Class:ExpirationRule/Error:ClassNotValid', $sClass);
+		}
+		// - Date to check attribute
+		if(!empty($sDateToCheckAttCode))
+		{
+            if(!MetaModel::IsValidAttCode($sClass, $sDateToCheckAttCode))
+            {
+                $this->m_aCheckIssues[] = Dict::Format('Class:ExpirationRule/Error:AttributeNotValid', $sClass, $sDateToCheckAttCode);
+            }
+            else
+            {
+                $oAttDef = MetaModel::GetAttributeDef($sClass, $sDateToCheckAttCode);
+                if(($oAttDef instanceof AttributeDateTime) === false)
+                {
+                    $this->m_aCheckIssues[] = Dict::Format('Class:ExpirationRule/Error:AttributeMustBeDate', $sClass, $sDateToCheckAttCode);
+                }
+            }
+        }
+
+		// Checking option consistency
+		// - At least one option must be filled (either simple or advanced)
+		$bNoOptionFilled = true;
+		$aOptionAttCodes = array('date_to_check_att', 'term_of_notice', 'oql_scope');
+		foreach($aOptionAttCodes as $sOptionAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sOptionAttCode);
+			$value = $this->Get($sOptionAttCode);
+			if(!$oAttDef->IsNull($value))
+			{
+				$bNoOptionFilled = false;
+				break;
+			}
+		}
+
+		if($bNoOptionFilled)
+		{
+			$this->m_aCheckIssues[] = Dict::Format('Class:ExpirationRule/Error:NoOptionFilled');
+		}
+		// - Checking that option 1 is valid if selected
+		elseif(empty($sOqlScope))
+		{
+			$bOptionOneValid = true;
+
+			// Removing OQL attribute as we only test option 1 attributes
+			array_pop($aOptionAttCodes);
+			foreach($aOptionAttCodes as $sOptionAttCode)
+			{
+				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sOptionAttCode);
+				$value = $this->Get($sOptionAttCode);
+				if($oAttDef->IsNull($value))
+				{
+					$bOptionOneValid = false;
+					break;
+				}
+			}
+
+			if(!$bOptionOneValid)
+			{
+				$this->m_aCheckIssues[] = Dict::Format('Class:ExpirationRule/Error:OptionOneMissingField');
+			}
+		}
+		// - Checking that option 2 OQL is about the right class
+		elseif(!empty($sOqlScope))
+		{
+		    try
+		    {
+		        $oSearch = DBObjectSearch::FromOQL($sOqlScope);
+		        $sOqlClass = $oSearch->GetClass();
+			    if($sOqlClass !== $sClass)
+			    {
+				    $this->m_aCheckIssues[] = Dict::Format('Class:StateRule/Error:OQLClassDontMatch', $sClass, $sOqlClass);
+			    }
+		    }
+		    catch(Exception $e)
+		    {
+		        $this->m_aCheckIssues[] = Dict::Format('Class:StateRule/Error:OQLNotValid', $e->getMessage());
+		    }
+		}
+	}]]></code>
+                </method>
+                <method id="GetFilter">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[	/**
+    * @return DBObjectSearch
+    */
+    public function GetFilter()
+	{
+		if($this->Get('type') === 'advanced')
+		{
+		    $oSearch = DBObjectSearch::FromOQL($this->Get('oql_scope'));
+        }
+        else
+        {
+            $sClass = $this->Get('class');
+            $sDateAttCode = $this->Get('date_to_check_att');
+
+            $oSearch = DBObjectSearch::FromOQL('SELECT '.$sClass.' WHERE '.$sDateAttCode.' = DATE_ADD(CURRENT_DATE(), INTERVAL :term_of_notice DAY)');
+            $oSearch->SetInternalParams(
+            	array(
+            		'term_of_notice' => $this->Get('term_of_notice'),
+	            )
+            );
+        }
+        return $oSearch;
+	}]]></code>
+                </method>
+                <method id="DisplayBareRelations">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 */
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	{
+		parent::DisplayBareRelations($oPage, $bEditMode);
+
+		if(!$bEditMode)
+		{
+			$oPage->SetCurrentTab(Dict::S('UI:ExpiredObject:Preview'));
+			$this->OnShowPreview($oPage);
+		}
+	}]]></code>
+                </method>
+                <method id="OnShowPreview">
+                    <static>false</static>
+                    <access>protected</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[/**
+	 * @param \WebPage $oPage
+	 */
+	public function OnShowPreview(WebPage $oPage)
+	{
+		$sClass = $this->Get('class');
+
+		$oPage->p(MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:ExpiredObject:Title', MetaModel::GetName($sClass)));
+
+		$aParams = array(
+			'menu' => true,
+			'table_id' => 'ExpiredObject_preview_rule_'.$this->GetKey(),
+		);
+		$oBlock = new DisplayBlock($this->GetFilter(), 'list', true, $aParams);
+		$oBlock->Display($oPage, 'rel_preview_rule_'.$this->GetKey(), $aParams);
+	}]]></code>
+                </method>
+        </methods>
+            <presentation>
+                <list>
+                    <items>
+                        <item id="class">
+                            <rank>10</rank>
+                        </item>
+                        <item id="name">
+                            <rank>20</rank>
+                        </item>
+                        <item id="description">
+                            <rank>30</rank>
+                        </item>
+                        <item id="status">
+                            <rank>40</rank>
+                        </item>
+                        <item id="type">
+                            <rank>50</rank>
+                        </item>
+                    </items>
+                </list>
+                <search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="class">
+                            <rank>20</rank>
+                        </item>
+                        <item id="status">
+                            <rank>30</rank>
+                        </item>
+                        <item id="type">
+                            <rank>40</rank>
+                        </item>
+                        <item id="description">
+                            <rank>70</rank>
+                        </item>
+                        <item id="date_to_check_att">
+                            <rank>80</rank>
+                        </item>
+                        <item id="term_of_notice">
+                            <rank>90</rank>
+                        </item>
+                        <item id="oql_scope">
+                            <rank>100</rank>
+                        </item>
+                    </items>
+                </search>
+                <details>
+                    <items>
+                        <item id="col:col0">
+                            <rank>10</rank>
+                            <items>
+                                <item id="fieldset:ExpirationRule:general">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="name">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="class">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="description">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="status">
+                                            <rank>40</rank>
+                                        </item>
+                                        <item id="type">
+                                            <rank>50</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="col:col1">
+                            <rank>20</rank>
+                            <items>
+                                <item id="fieldset:ExpirationRule:simple">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="date_to_check_att">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="term_of_notice">
+                                            <rank>20</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="col:col2">
+                            <rank>30</rank>
+                            <items>
+                                <item id="fieldset:ExpirationRule:advanced">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="oql_scope">
+                                            <rank>10</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                    </items>
+                </details>
+            </presentation>
+        </class>
+    </classes>
+    <menus>
+        <menu xsi:type="OQLMenuNode" id="ExpirationRule" _delta="define">
+            <parent>ServiceManagement</parent>
+            <rank>17</rank>
+            <oql>SELECT ExpirationRule</oql>
+            <do_search>1</do_search>
+        </menu>
+    </menus>
+</itop_design>
