@@ -1515,6 +1515,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 Dict::Add('EN US', 'English', 'English', array(
 	'Expression:Operator:AND' => ' AND ',
 	'Expression:Operator:OR' => ' OR ',
+	'Expression:Operator:=' => ': ',
 
 	'Expression:Unit:Short:DAY' => 'd',
 	'Expression:Unit:Short:WEEK' => 'w',
@@ -1526,4 +1527,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(s)',
 
 	'Expression:Verb:NOW' => 'now',
+	'Expression:Verb:ISNULL' => ': undefined',
 ));

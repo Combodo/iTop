@@ -1348,6 +1348,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Expression:Operator:AND' => ' ET ',
 	'Expression:Operator:OR' => ' OU ',
+	'Expression:Operator:=' => ' : ',
 
 	'Expression:Unit:Short:DAY' => 'j',
 	'Expression:Unit:Short:WEEK' => 's',
@@ -1359,4 +1360,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(s)',
 
 	'Expression:Verb:NOW' => 'maintenant',
+	'Expression:Verb:ISNULL' => ' : non défini',
 ));

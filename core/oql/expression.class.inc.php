@@ -1803,6 +1803,7 @@ class FunctionExpression extends Expression
 		$sVerb = '';
 		switch ($this->m_sVerb)
 		{
+			case 'ISNULL':
 			case 'NOW':
 				$sVerb = $this->VerbToNaturalLanguage();
 				break;
@@ -1833,7 +1834,7 @@ class FunctionExpression extends Expression
 		{
 			$sOperation .= $sVerb;
 		}
-		return $sOperation;
+		return '('.$sOperation.')';
 	}
 
 	private function VerbToNaturalLanguage()
