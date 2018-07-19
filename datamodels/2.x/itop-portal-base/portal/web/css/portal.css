@@ -263,6 +263,10 @@ footer {
 /******************/
 /* Modal settings */
 /******************/
+#modal-for-alert {
+  z-index: 9999;
+  /* Should always be on top to display errors messages */
+}
 .modal-content .content_loader {
   margin: 7em 0em;
   text-align: center;
