@@ -238,15 +238,30 @@ $(function()
 			this.elements.criterion_area.find('.sf_criterion_row').each(function(iIdx){
 				var oCriterionRowElem = $(this);
 
-				oCriterion['or'][iIdx] = {'and': []};
-				oCriterionRowElem.find('.search_form_criteria').each(function(){
-					var oCriteriaData = $(this).triggerHandler('itop.search.criteria.get_data');
-
-					if (null != oCriteriaData)
+				if (oCriterionRowElem.find('.search_form_criteria').length == 0 && iIdx > 0)
+				{
+					$(this).remove();
+				}
+				else
+				{
+					oCriterionRowElem.find('.search_form_criteria').each(function ()
 					{
-                        oCriterion['or'][iIdx]['and'].push(oCriteriaData);
-                    }
-				});
+						var oCriteriaData = $(this).triggerHandler('itop.search.criteria.get_data');
+
+						if (null != oCriteriaData)
+						{
+							if (!oCriterion['or'][iIdx])
+							{
+								oCriterion['or'][iIdx] = {'and': []};
+							}
+							oCriterion['or'][iIdx]['and'].push(oCriteriaData);
+						}
+						else
+						{
+							$(this).remove();
+						}
+					});
+				}
 			});
 			// - Update search
 			this.options.search.criterion = oCriterion;
