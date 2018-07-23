@@ -2840,3 +2840,13 @@ table.listResults .originColor {
 #ds_flash {
   margin-bottom: 5px;
 }
+.menu-icon-select {
+  max-height: 300px;
+  position: absolute;
+  z-index: 201;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.menu-icon-select > .ui-menu-item {
+  padding: 0.3em 3%;
+}

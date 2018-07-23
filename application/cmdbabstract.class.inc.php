@@ -4292,7 +4292,7 @@ EOF
 						$('.ui-layout-content').prepend('<div class="header_message message_error lock_owned">'+data.message+'</div>');
 						$('<div>'+data.popup_message+'</div>').dialog({title: $sJSTitle, modal: true, autoOpen: true, buttons:[ {text: $sJSOk, click: function() { $(this).dialog('close'); } }], close: function() { $(this).remove(); }});
 					}
-					$('.wizContainer form button.action:not(.cancel)').attr('disabled', 'disabled');
+					$('.wizContainer form button.action:not(.cancel)').prop('disabled', true);
 				}
 				else if ((data.operation == 'lost') || (data.operation == 'expired'))
 				{
@@ -4301,7 +4301,7 @@ EOF
 						$('.ui-layout-content').prepend('<div class="header_message message_error lock_owned">'+data.message+'</div>');
 						$('<div>'+data.popup_message+'</div>').dialog({title: $sJSTitle, modal: true, autoOpen: true, buttons:[ {text: $sJSOk, click: function() { $(this).dialog('close'); } }], close: function() { $(this).remove(); }});
 					}
-					$('.wizContainer form button.action:not(.cancel)').attr('disabled', 'disabled');
+					$('.wizContainer form button.action:not(.cancel)').prop('disabled', true);
 				}
 			}, 'json');
 		}, $iInterval);

@@ -73,17 +73,17 @@ class UIPasswordWidget
 		$oPage->add_ready_script("$('#{$this->iId}_confirm').bind('keyup change', function(evt, sFormId) { return ValidatePasswordField('$this->iId', sFormId) } );"); // Bind to a custom event: validate
 		$oPage->add_ready_script("$('#{$this->iId}').bind('update', function(evt, sFormId)
 			{
-				if ($(this).attr('disabled'))
+				if ($(this).prop('disabled'))
 				{
-					$('#{$this->iId}_confirm').attr('disabled', 'disabled');
-					$('#{$this->iId}_changed').attr('disabled', 'disabled');
-					$('#{$this->iId}_reset').attr('disabled', 'disabled');
+					$('#{$this->iId}_confirm').prop('disabled', true);
+					$('#{$this->iId}_changed').prop('disabled', true);
+					$('#{$this->iId}_reset').prop('disabled', true);
 				}
 				else
 				{
-					$('#{$this->iId}_confirm').removeAttr('disabled');
-					$('#{$this->iId}_changed').removeAttr('disabled');
-					$('#{$this->iId}_reset').removeAttr('disabled');
+					$('#{$this->iId}_confirm').prop('disabled', false);
+					$('#{$this->iId}_changed').prop('disabled', false);
+					$('#{$this->iId}_reset').prop('disabled', false);
 				}
 			}
 		);"); // Bind to a custom event: update to handle enabling/disabling

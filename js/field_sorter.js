@@ -121,8 +121,8 @@ $(function()
 					$(this).removeClass('selected');
 				}
 			});
-			this.moveup_btn.removeAttr('disabled');
-			this.movedown_btn.removeAttr('disabled');
+			this.moveup_btn.prop('disabled', false);
+			this.movedown_btn.prop('disabled', false);
 		},
 		_moveUp: function()
 		{

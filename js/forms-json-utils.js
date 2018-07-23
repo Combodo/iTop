@@ -138,8 +138,8 @@ var oFormErrors = { err_form0: 0 };
 
 function CheckFields(sFormId, bDisplayAlert)
 {
-	$('#'+sFormId+' :submit').attr('disable', 'disabled');
-	$('#'+sFormId+' :button[type=submit]').attr('disable', 'disabled');
+	$('#'+sFormId+' :submit').prop('disable', true);
+	$('#'+sFormId+' :button[type=submit]').prop('disable', true);
 	firstErrorId = '';
 	
 	// The two 'fields' below will be updated when the 'validate' event is processed
@@ -156,8 +156,8 @@ function CheckFields(sFormId, bDisplayAlert)
 		{
 			alert(Dict.S('UI:FillAllMandatoryFields'));
 		}
-		$('#'+sFormId+' :submit').attr('disable', '');
-		$('#'+sFormId+' :button[type=submit]').attr('disable', '');
+		$('#'+sFormId+' :submit').prop('disable', false);
+		$('#'+sFormId+' :button[type=submit]').prop('disable', false);
 		if (oFormErrors['input_'+sFormId] != null)
 		{
 			$('#'+oFormErrors['input_'+sFormId]).focus();
@@ -198,7 +198,7 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue, origi
 {
 	var bValid = true;
 	var sExplain = '';
-	if ($('#'+sFieldId).attr('disabled'))
+	if ($('#'+sFieldId).prop('disabled'))
 	{
 		bValid = true; // disabled fields are not checked
 	}
@@ -251,7 +251,7 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 	var sExplain = '';
 	var sTextContent;
 
-	if ($('#'+sFieldId).attr('disabled'))
+	if ($('#'+sFieldId).prop('disabled'))
 	{
 		bValid = true; // disabled fields are not checked
 	}
@@ -382,7 +382,7 @@ function ValidateCaseLogField(sFieldId, bMandatory, sFormId, nullValue, original
 	var sExplain = '';
 	var sTextContent;
 	
-	if ($('#'+sFieldId).attr('disabled'))
+	if ($('#'+sFieldId).prop('disabled'))
 	{
 		bValid = true; // disabled fields are not checked
 	}

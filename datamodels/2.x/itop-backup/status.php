@@ -374,7 +374,7 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 			}
 			else
 			{
-				$('button.restore').attr('disabled', 'disabled');
+				$('button.restore').prop('disabled', true);
 				$.unblockUI();
 			}
 		});
@@ -385,7 +385,7 @@ EOF
 
 	if (MetaModel::GetConfig()->Get('demo_mode'))
 	{
-		$oP->add_ready_script("$('button').attr('disabled', 'disabled').attr('title', 'Disabled in demonstration mode')");
+		$oP->add_ready_script("$('button').prop('disabled', true).attr('title', 'Disabled in demonstration mode')");
 	}
 }
 catch(Exception $e)

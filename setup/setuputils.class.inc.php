@@ -1019,12 +1019,12 @@ function ValidateField(sFieldId, bUsed)
 	{
 		if (sFieldId == 'db_name')
 		{
-			bUsed = ($("#existing_db").attr("checked") == "checked");
+			bUsed = ($("#existing_db").prop("checked"));
 			bMandatory = true;
 		}
 		if (sFieldId == 'db_new_name')
 		{
-			bUsed = ($("#create_db").attr("checked") == "checked");
+			bUsed = ($("#create_db").prop("checked"));
 			bMandatory = true;
 		}
 	}
@@ -1090,8 +1090,8 @@ DoCheckDBConnection(); // Validate the initial values immediately
 
 $("table#table_db_options").on("keyup change", "tr>td input", function() { CheckDBConnection(); });
 
-$("#db_new_name").on("click keyup change", function() { $("#create_db").attr("checked", "checked"); WizardUpdateButtons(); });
-$("#db_name").on("click keyup change", function() {  $("#existing_db").attr("checked", "checked"); WizardUpdateButtons(); });
+$("#db_new_name").on("click keyup change", function() { $("#create_db").prop("checked", true); WizardUpdateButtons(); });
+$("#db_name").on("click keyup change", function() {  $("#existing_db").prop("checked", true); WizardUpdateButtons(); });
 $("#db_prefix").on("keyup change", function() { WizardUpdateButtons(); });
 $("#existing_db").on("click change", function() { WizardUpdateButtons(); });
 $("#create_db").on("click change", function() { WizardUpdateButtons(); });
@@ -1329,7 +1329,7 @@ EOF
 				$sDBNameInput .= '</select>';
 			}
 			$oPage->add_ready_script('$("#db_name_container").html("'.addslashes($sDBNameInput).'");');
-			$oPage->add_ready_script('$("#db_name").bind("click keyup change", function() { $("#existing_db").attr("checked", "checked"); WizardUpdateButtons(); });');
+			$oPage->add_ready_script('$("#db_name").bind("click keyup change", function() { $("#existing_db").prop("checked", true); WizardUpdateButtons(); });');
 			
 		}
 		$oPage->add_ready_script('WizardUpdateButtons();');

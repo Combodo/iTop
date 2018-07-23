@@ -23,20 +23,20 @@ function WizardUpdateButtons()
 {
 	if (CanMoveForward())
 	{
-		$("#btn_next").removeAttr("disabled");
+		$("#btn_next").prop('disabled', false);
 	}
 	else
 	{
-		$("#btn_next").attr("disabled", "disabled");		
+		$("#btn_next").prop('disabled', true);
 	}
 
 	if (CanMoveBackward())
 	{
-		$("#btn_back").removeAttr("disabled");
+		$("#btn_back").prop('disabled', false);
 	}
 	else
 	{
-		$("#btn_back").attr("disabled", "disabled");		
+		$("#btn_back").prop('disabled', true);
 	}
 }
 

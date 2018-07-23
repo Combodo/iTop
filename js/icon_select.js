@@ -13,7 +13,17 @@ $(function()
 			labels: {cancel: 'Cancel', pick_icon_file: 'Select an icon file to upload:', upload_dlg_title: 'Icon Upload...', upload: 'Upload...'},
 			post_upload_to: null
 		},
-	
+
+		menus : [],
+
+		_cleanAllMenus()
+		{
+			var me = this;
+			$.each(this.menus, function(i){
+				me._cleanMenu(me.menus[i]);
+			});
+		},
+
 		// the constructor
 		_create: function()
 		{	
@@ -36,7 +46,11 @@ $(function()
 			this.oLabel = $('<span>'+sLabel+'</span>');
 			this.oButton = $('<button type="button" class="icon-select"><div style="display: inline-block;vertical-align: middle;"><span class="ui-icon ui-icon-triangle-1-s"/></div></button>');
 			this.oButton.prepend(this.oLabel).prepend(this.oImg);
-			this.oButton.click(function(event, ui) { me._on_button_clicked(event, ui); });
+			this.oButton.click(function(event, ui) {
+				//me._cleanAllMenus();
+				me._on_button_clicked(event, ui);
+				event.stopPropagation();
+			});
 			this.element.after(this.oButton);
 			this.element.addClass( "itop-icon-select" ).button();
 			this.element.bind( "reverted.itop-icon-select", function(ev, data) {
@@ -69,6 +83,7 @@ $(function()
 		// called when created, and later when changing options
 		_refresh: function()
 		{
+			this._cleanAllMenus();
 			if (!this.element.parent().is(':visible'))
 			{
 				this.options.offsetX = null; // Menu needs to be reconstructed when the button becomes visible
@@ -87,23 +102,43 @@ $(function()
 		_create_menu: function()
 		{
 			var me = this;
-			var sMenu = '<ul>';
+			$(document).on('click', function(){
+				me._cleanAllMenus();
+			});
+			var oMenu =
+				$('<ul class="menu-icon-select">');
 			for(var i in this.options.items)
 			{
-				sMenu = sMenu + '<li><a href="#" value="'+i+'"><img src="'+this.options.items[i].icon+'" style="vertical-align: middle;">'+this.options.items[i].label+'</a></li>';					
+				var oItem = $('<li><div value="'+i+'"><img src="'+this.options.items[i].icon+'" style="vertical-align: middle;"/>'+this.options.items[i].label+'<div></li>');
+				oItem.on('click',function(data) {me._on_icon_selection(data);} );
+				oMenu.append(oItem);
 			}
-			sMenu = sMenu + '</ul>';
+			oMenu.append('</ul>');
 			var iWidth = Math.max(250, this.oButton.width());
-			this.oMenu = this.oButton.menu({ content: sMenu, callback: function(data) {me._on_icon_selection(data);}, showSpeed: 0, maxHeight: 300, flyOut: true, width: iWidth, positionOpts: {posX: 'left', posY: 'top', offsetX: 0, offsetY: 0} });
+			oMenu.menu();
+			oMenu.width(iWidth);
+			oMenu.hide()
+			$(document.body).append(oMenu);
+			oMenu.offset(this.oButton.offset());
+			oMenu.slideDown(200);
+			this.menus.push(oMenu);
+			//this.oMenu = this.oButton.menu({ content: sMenu, callback: function(data) {me._on_icon_selection(data);}, showSpeed: 0, maxHeight: 300, flyOut: true, width: iWidth, positionOpts: {posX: 'left', posY: 'top', offsetX: 0, offsetY: 0} });
 		},
+
+
 		_on_button_clicked: function(event, ui)
 		{
 			// Adjust the position of the menu, in case the button was moved...
 			// The simpler is to kill and rebuild the menu !!!
-			KillAllMenus();
 			this._create_menu();
 		},
-	
+
+		_cleanMenu(menu)
+		{
+			menu.hide();
+			menu.remove();
+		},
+
 		// events bound via _bind are removed automatically
 		// revert other modifications here
 		_destroy: function()
@@ -134,7 +169,18 @@ $(function()
 		},
 		_on_icon_selection: function(data)
 		{
-			this._setOptions({current_idx: data.item.attr('value')});
+			var value = 0;
+			if ($(data.target).attr('value') !== undefined)
+			{
+				value = $(data.target).attr('value');
+			}
+			else
+			{
+				value = $(data.target).parent().attr('value');
+			}
+			this._setOptions({current_idx: value });
+			this._cleanAllMenus();
+
 		},
 		_find_item: function(value)
 		{

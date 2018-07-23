@@ -116,13 +116,13 @@ function ValidateOtherSettings()
 	if (/^[0-9]+$/.test(sPageLength) && (iPageLength > 0))
 	{
 		$('#v_default_page_size').html('');
-		$('#other_submit').removeAttr('disabled');
+		$('#other_submit').prop('disabled', false);
 		return true;
 	}
 	else
 	{
 		$('#v_default_page_size').html('<img src="../images/validation_error.png"/>');
-		$('#other_submit').attr('disabled', 'disabled');
+		$('#other_submit').prop('disabled', true);
 		return false;
 	}
 }
@@ -196,7 +196,7 @@ EOF
 			{
 				if ($.inArray($(this).val(), aChecked) > -1)
 				{
-					$(this).attr('checked', true);
+					$(this).prop('checked', true);
 					$(this).trigger('change');
 				}
 			});
@@ -269,18 +269,18 @@ function OnSelectionCountChange()
 	var iCountSelected = $("#shortcut_selection_count").val();
 	if (iCountSelected == 0)
 	{
-		$('#shortcut_btn_rename').attr('disabled', 'disabled');
-		$('#shortcut_btn_delete').attr('disabled', 'disabled');
+		$('#shortcut_btn_rename').prop('disabled', true);
+		$('#shortcut_btn_delete').prop('disabled', true);
 	}
 	else if (iCountSelected == 1)
 	{
-		$('#shortcut_btn_rename').removeAttr('disabled');
-		$('#shortcut_btn_delete').removeAttr('disabled');
+		$('#shortcut_btn_rename').prop('disabled', false);
+		$('#shortcut_btn_delete').prop('disabled', false);
 	}
 	else
 	{
-		$('#shortcut_btn_rename').attr('disabled', 'disabled');
-		$('#shortcut_btn_delete').removeAttr('disabled');
+		$('#shortcut_btn_rename').prop('disabled', true);
+		$('#shortcut_btn_delete').prop('disabled', false);
 	}
 }
 
