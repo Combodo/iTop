@@ -455,7 +455,7 @@ class CMDBSource
 	public static function DropTable($sTable)
 	{
 		$res = self::Query("DROP TABLE `$sTable`");
-		self::_TablesInfoCacheReset(true); // reset the table info cache!
+		self::_TablesInfoCacheReset(); // reset the table info cache!
 		return $res;
 	}
 
