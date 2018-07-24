@@ -57,7 +57,6 @@ class ManageBrickController extends BrickController
      * @param string $sBrickId
      * @param string $sGroupingTab
      * @param string $sDisplayMode
-     * @param string $sDataLoading
      *
      * @return Response
      *
@@ -67,7 +66,7 @@ class ManageBrickController extends BrickController
      * @throws \MySQLException
      * @throws \OQLException
      */
-	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDisplayMode = null, $sDataLoading = null)
+	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDisplayMode = null)
     {
 		/** @var ManageBrick $oBrick */
 		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
@@ -165,7 +164,7 @@ class ManageBrickController extends BrickController
 			$oScopeHelper = $oApp['scope_validator'];
 			$oScopeHelper->AddScopeToQuery($oQuery, $sClass);
 			$aData = array();
-			$this->ManageSearchValue($oRequest, $aData, $oQuery, $sClass);
+			$this->ManageSearchValue($oApp, $aData, $oQuery, $sClass);
 
 			// Grouping tab
 			if ($oBrick->HasGroupingTabs())
@@ -261,11 +260,11 @@ class ManageBrickController extends BrickController
 		$bHasScope = true;
 
 		// Getting current dataloading mode (First from router parameter, then query parameter, then default brick value)
-		$sDataLoading = ($oRequest->get('sDataLoading') !== null) ? $oRequest->get('sDataLoading') : $oBrick->GetDataLoading();
+		$sDataLoading = $oApp['request_manipulator']->ReadParam('sDataLoading', $oBrick->GetDataLoading());
 
 		// - Retrieving the grouping areas to display
-		$sGroupingArea = $oRequest->get('sGroupingArea');
-		if (!is_null($sGroupingArea))
+		$sGroupingArea = $oApp['request_manipulator']->ReadParam('sGroupingArea', '');
+		if (!empty($sGroupingArea))
 		{
 			$bNeedDetails = true;
 		}
@@ -345,7 +344,7 @@ class ManageBrickController extends BrickController
 		}
 
 		// - Retrieving the current grouping tab to display if necessary and altering the query to do so
-		if ($sGroupingTab === null)
+		if (empty($sGroupingTab))
 		{
 			if ($oBrick->HasGroupingTabs())
 			{
@@ -366,7 +365,7 @@ class ManageBrickController extends BrickController
 		}
 
         // - Adding search clause if necessary
-        $this->ManageSearchValue($oRequest, $aData, $oQuery, $sClass, $aColumnsAttrs);
+        $this->ManageSearchValue($oApp, $aData, $oQuery, $sClass, $aColumnsAttrs);
 
 		// Preparing areas
 		// - We need to retrieve distinct values for the grouping attribute
@@ -416,7 +415,7 @@ class ManageBrickController extends BrickController
 			}
 
 			//   - If specified or lazy loading, we truncate the $aGroupingAreasValues to keep only this one
-			if ($sGroupingArea !== null)
+			if (!empty($sGroupingArea))
 			{
 				$aGroupingAreasValues = array($sGroupingArea => $aGroupingAreasValues[$sGroupingArea]);
 			}
@@ -472,8 +471,8 @@ class ManageBrickController extends BrickController
 					if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY)
 					{
 						// Retrieving parameters
-						$iPageNumber = (int)$oRequest->get('iPageNumber', 1);
-						$iListLength = (int)$oRequest->get('iListLength', ManageBrick::DEFAULT_LIST_LENGTH);
+						$iPageNumber = (int)$oApp['request_manipulator']->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
+						$iListLength = (int)$oApp['request_manipulator']->ReadParam('iListLength', ManageBrick::DEFAULT_LIST_LENGTH, FILTER_SANITIZE_NUMBER_INT);
 
 						// Getting total records number
 						$oCountSet = new DBObjectSet($oQuery);
@@ -743,7 +742,7 @@ class ManageBrickController extends BrickController
 	}
 
     /**
-     * @param Request $oRequest
+     * @param Application $oApp
      * @param array $aData
      * @param DBSearch $oQuery
      * @param string $sClass
@@ -752,14 +751,14 @@ class ManageBrickController extends BrickController
      * @throws \Exception
      * @throws \CoreException
      */
-	protected function ManageSearchValue(Request $oRequest, &$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs)
+	protected function ManageSearchValue(Application $oApp, &$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs)
 	{
 		// Getting search value
-		$sSearchValue = $oRequest->get('sSearchValue', null);
+		$sSearchValue = $oApp['request_manipulator']->ReadParam('sSearchValue', '');
 
 		// - Adding search clause if necessary
 		// Note : This is a very naive search at the moment
-		if ($sSearchValue !== null)
+		if (!empty($sSearchValue))
 		{
 		    // Putting only valid attributes as one can define attributes of leaf classes in the brick definition (<fields>), but at this stage we are working on the abstract class.
             // Note: This won't fix everything as the search will not be looking in all fields.

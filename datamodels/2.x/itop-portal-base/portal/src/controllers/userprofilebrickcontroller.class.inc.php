@@ -86,7 +86,7 @@ class UserProfileBrickController extends BrickController
 		// If this is ajax call, we are just submiting preferences or password forms
 		if ($oRequest->isXmlHttpRequest())
 		{
-			$aCurrentValues = $oRequest->request->get('current_values');
+			$aCurrentValues = $oApp['request_manipulator']->ReadParam('current_values', array(), FILTER_UNSAFE_RAW);
 			$sFormType = $aCurrentValues['form_type'];
 			if ($sFormType === PreferencesFormManager::FORM_TYPE)
 			{
@@ -142,10 +142,9 @@ class UserProfileBrickController extends BrickController
 	public function HandlePreferencesForm(Request $oRequest, Application $oApp, $sFormMode)
 	{
 		$aFormData = array();
-		$oRequestParams = $oRequest->request;
 
 		// Handling form
-		$sOperation = $oRequestParams->get('operation');
+		$sOperation = $oApp['request_manipulator']->ReadParam('operation', null);
 		// - Create
 		if ($sOperation === null)
 		{
@@ -165,8 +164,8 @@ class UserProfileBrickController extends BrickController
 		// - Submit
 		else if ($sOperation === 'submit')
 		{
-			$sFormManagerClass = $oRequestParams->get('formmanager_class');
-			$sFormManagerData = $oRequestParams->get('formmanager_data');
+			$sFormManagerClass = $oApp['request_manipulator']->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
+			$sFormManagerData = $oApp['request_manipulator']->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
 			if ($sFormManagerClass === null || $sFormManagerData === null)
 			{
 				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameters formmanager_class and formamanager_data must be defined.');
@@ -176,7 +175,7 @@ class UserProfileBrickController extends BrickController
 			// Rebuilding manager from json
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
 			// Applying modification to object
-			$aFormData['validation'] = $oFormManager->OnSubmit(array('currentValues' => $oRequestParams->get('current_values')));
+			$aFormData['validation'] = $oFormManager->OnSubmit(array('currentValues' => $oApp['request_manipulator']->ReadParam('current_values', array(), FILTER_UNSAFE_RAW)));
 			// Reloading page only if preferences were changed
 			if (($aFormData['validation']['valid'] === true) && !empty($aFormData['validation']['messages']['success']))
 			{
@@ -216,10 +215,9 @@ class UserProfileBrickController extends BrickController
 	public function HandlePasswordForm(Request $oRequest, Application $oApp)
 	{
 		$aFormData = array();
-		$oRequestParams = $oRequest->request;
 
 		// Handling form
-		$sOperation = $oRequestParams->get('operation');
+		$sOperation = $oApp['request_manipulator']->ReadParam('operation', null);
 		// - Create
 		if ($sOperation === null)
 		{
@@ -234,8 +232,8 @@ class UserProfileBrickController extends BrickController
 		// - Submit
 		else if ($sOperation === 'submit')
 		{
-			$sFormManagerClass = $oRequestParams->get('formmanager_class');
-			$sFormManagerData = $oRequestParams->get('formmanager_data');
+			$sFormManagerClass = $oApp['request_manipulator']->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
+			$sFormManagerData = $oApp['request_manipulator']->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
 			if ($sFormManagerClass === null || $sFormManagerData === null)
 			{
 				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameters formmanager_class and formamanager_data must be defined.');
@@ -245,7 +243,7 @@ class UserProfileBrickController extends BrickController
 			// Rebuilding manager from json
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
 			// Applying modification to object
-			$aFormData['validation'] = $oFormManager->OnSubmit(array('currentValues' => $oRequestParams->get('current_values')));
+			$aFormData['validation'] = $oFormManager->OnSubmit(array('currentValues' => $oApp['request_manipulator']->ReadParam('current_values', array(), FILTER_UNSAFE_RAW)));
 		}
 		else
 		{
@@ -280,11 +278,10 @@ class UserProfileBrickController extends BrickController
 	public function HandlePictureForm(Request $oRequest, Application $oApp, $sFormMode)
 	{
 		$aFormData = array();
-		$oRequestParams = $oRequest->request;
 		$sPictureAttCode = 'picture';
 
 		// Handling form
-		$sOperation = $oRequestParams->get('operation');
+		$sOperation = $oApp['request_manipulator']->ReadParam('operation', null);
 		// - No operation specified
 		if ($sOperation === null)
 		{
