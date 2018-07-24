@@ -63,9 +63,9 @@ class ManageBrickController extends BrickController
 		$aQueries = array();
 
 		// Getting current dataloading mode (First from router parameter, then query parameter, then default brick value)
-		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : ( ($oRequest->get('sDataLoading') !== null) ? $oRequest->get('sDataLoading') : $oBrick->GetDataLoading() );
+		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $oApp['request_manipulator']->ReadParam('sDataLoading', $oBrick->GetDataLoading());
 		// Getting search value
-		$sSearchValue = $oRequest->get('sSearchValue', null);
+		$sSearchValue = $oApp['request_manipulator']->ReadParam('sSearchValue', '');
 
 		// Getting area columns properties
 		$aColumnsAttrs = $oBrick->GetFields();
@@ -201,7 +201,7 @@ class ManageBrickController extends BrickController
 			}
 		}
 		// - Retrieving the current grouping tab to display and altering the query to do so
-		if ($sGroupingTab === null)
+		if (empty($sGroupingTab))
 		{
 			if ($oBrick->HasGroupingTabs())
 			{
@@ -281,9 +281,9 @@ class ManageBrickController extends BrickController
 			}
 		}
 		// - Retrieving the grouping areas to display
-		$sGroupingArea = $oRequest->get('sGroupingArea');
+		$sGroupingArea = $oApp['request_manipulator']->ReadParam('sGroupingArea');
 		//   - If specified or lazy loading, we trunc the $aGroupingAreasValues to keep only this one
-		if ($sGroupingArea !== null)
+		if (!empty($sGroupingArea))
 		{
 			$aGroupingAreasValues = array($sGroupingArea => $aGroupingAreasValues[$sGroupingArea]);
 		}
@@ -342,8 +342,8 @@ class ManageBrickController extends BrickController
 				if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY)
 				{
 					// Retrieving parameters
-					$iPageNumber = (int) $oRequest->get('iPageNumber', 1);
-					$iListLength = (int) $oRequest->get('iListLength', ManageBrick::DEFAULT_LIST_LENGTH);
+					$iPageNumber = (int) $oApp['request_manipulator']->ReadParam('iPageNumber', 1);
+					$iListLength = (int) $oApp['request_manipulator']->ReadParam('iListLength', ManageBrick::DEFAULT_LIST_LENGTH);
 
 					// Getting total records number
 					$oCountSet = new DBObjectSet($oQuery);
