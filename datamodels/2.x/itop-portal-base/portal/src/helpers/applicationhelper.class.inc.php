@@ -286,7 +286,7 @@ class ApplicationHelper
 		// Intercepting manually aborted request
 		if (1 || !$oApp['debug'])
 		{
-			$oApp->error(function (Exception $oException, Request $oRequest) use ($oApp) {
+			$oApp->error(function (Exception $oException /*, Request $oRequest*/) use ($oApp) {
 				$iErrorCode = ($oException instanceof HttpException) ? $oException->getStatusCode() : 500;
 
 				$aData = array(

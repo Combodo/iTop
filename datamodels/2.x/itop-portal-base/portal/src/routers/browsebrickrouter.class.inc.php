@@ -19,6 +19,13 @@
 
 namespace Combodo\iTop\Portal\Router;
 
+/**
+ * Class BrowseBrickRouter
+ *
+ * @package Combodo\iTop\Portal\Router
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
+ */
 class BrowseBrickRouter extends AbstractRouter
 {
 	static $aRoutes = array(

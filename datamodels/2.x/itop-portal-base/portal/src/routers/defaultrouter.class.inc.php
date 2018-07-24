@@ -19,6 +19,14 @@
 
 namespace Combodo\iTop\Portal\Router;
 
+
+/**
+ * Class DefaultRouter
+ *
+ * @package Combodo\iTop\Portal\Router
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
+ */
 class DefaultRouter extends AbstractRouter
 {
 	static $aRoutes = array(

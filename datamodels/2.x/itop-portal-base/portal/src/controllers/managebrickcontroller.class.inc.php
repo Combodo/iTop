@@ -42,23 +42,31 @@ use JSButtonItem;
 use MetaModel;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use UnaryExpression;
 use URLButtonItem;
 use VariableExpression;
 
+/**
+ * Class ManageBrickController
+ *
+ * @package Combodo\iTop\Portal\Controller
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @author Pierre Goiffon <pierre.goiffon@combodo.com>
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @since 2.3.0
+ */
 class ManageBrickController extends BrickController
 {
 	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/popup-export-excel.html.twig';
 
     /**
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sBrickId
      * @param string $sGroupingTab
      * @param string $sDisplayMode
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      * @throws \CoreException
@@ -68,14 +76,13 @@ class ManageBrickController extends BrickController
      */
 	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDisplayMode = null)
     {
-		/** @var ManageBrick $oBrick */
+		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
 		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
 
 		if (is_null($sDisplayMode))
 		{
 			$sDisplayMode = $oBrick->GetDefaultDisplayMode();
 		}
-		$aDisplayParams = $oBrick->GetPresentationDataForTileMode($sDisplayMode);
 		$aData = $this->GetData($oRequest, $oApp, $sBrickId, $sGroupingTab, $oBrick::AreDetailsNeededForDisplayMode($sDisplayMode));
 
 		$aExportFields = $oBrick->GetExportFields();
@@ -100,17 +107,17 @@ class ManageBrickController extends BrickController
     /**
      * Method for the brick's tile on home page
      *
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sBrickId
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws Exception
+     * @throws \Exception
      */
 	public function TileAction(Request $oRequest, Application $oApp, $sBrickId)
 	{
-		/** @var ManageBrick $oBrick */
+		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
 		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
 
 		try
@@ -127,15 +134,15 @@ class ManageBrickController extends BrickController
 	}
 
     /**
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sBrickId
      * @param string $sGroupingTab
      * @param string $sGroupingArea
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Request
      *
-     * @throws Exception
+     * @throws \Exception
      * @throws \DictExceptionMissingString
      * @throws \MySQLException
      * @throws \OQLException
@@ -158,9 +165,7 @@ class ManageBrickController extends BrickController
 		}
 		else
 		{
-			$oQuery = DBSearch::FromOQL($oBrick->GetOql());
-			$sClass = $oQuery->GetClass();
-			/** @var ScopeValidatorHelper $oScopeHelper */
+			/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
 			$oScopeHelper = $oApp['scope_validator'];
 			$oScopeHelper->AddScopeToQuery($oQuery, $sClass);
 			$aData = array();
@@ -234,8 +239,8 @@ class ManageBrickController extends BrickController
 
 
     /**
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sBrickId
      * @param string $sGroupingTab
      * @param bool $bNeedDetails
@@ -250,7 +255,7 @@ class ManageBrickController extends BrickController
      */
 	public function GetData(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $bNeedDetails = false)
 	{
-		/** @var ManageBrick $oBrick */
+		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
 		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
 
 		$aData = array();
@@ -742,16 +747,16 @@ class ManageBrickController extends BrickController
 	}
 
     /**
-     * @param Application $oApp
+     * @param \Silex\Application $oApp
      * @param array $aData
-     * @param DBSearch $oQuery
+     * @param \DBSearch $oQuery
      * @param string $sClass
      * @param array $aColumnsAttrs
      *
      * @throws \Exception
      * @throws \CoreException
      */
-	protected function ManageSearchValue(Application $oApp, &$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs)
+	protected function ManageSearchValue(Application $oApp, &$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs = array())
 	{
 		// Getting search value
 		$sSearchValue = $oApp['request_manipulator']->ReadParam('sSearchValue', '');
@@ -807,10 +812,10 @@ class ManageBrickController extends BrickController
      * Get the groups using a given attribute code.
      * If a limit is given, the remaining groups are aggregated (groupby result and search request).
      *
-     * @param DBSearch $oQuery Initial query
+     * @param \DBSearch $oQuery Initial query
      * @param string $sGroupingTabAttCode Attribute code to group by
-     * @param Application $oApp
-     * @param ManageBrick $oBrick
+     * @param \Silex\Application $oApp
+     * @param \Combodo\iTop\Portal\Brick\ManageBrick $oBrick
      *
      * @return array of results from the groupby request and the corrsponding search.
      *
@@ -923,11 +928,11 @@ class ManageBrickController extends BrickController
 	}
 
     /**
-     * @param Application $oApp
-     * @param ManageBrick $oBrick
+     * @param \Silex\Application $oApp
+     * @param \Combodo\iTop\Portal\Brick\ManageBrick $oBrick
      * @param string $sClass
      *
-     * @return DBSearch
+     * @return \DBSearch
      *
      * @throws \CoreException
      * @throws \OQLException

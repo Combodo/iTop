@@ -27,6 +27,13 @@ use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
 use Combodo\iTop\Portal\Helper\SecurityHelper;
 
+/**
+ * Class CreateBrickController
+ *
+ * @package Combodo\iTop\Portal\Controller
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
+ */
 class CreateBrickController extends BrickController
 {
 

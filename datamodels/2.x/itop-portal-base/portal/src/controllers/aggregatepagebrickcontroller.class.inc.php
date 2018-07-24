@@ -24,6 +24,14 @@ use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
+
+/**
+ * Class AggregatePageBrickController
+ *
+ * @package Combodo\iTop\Portal\Controller
+ * @author Pierre Goiffon <pierre.goiffon@combodo.com>
+ * @since 2.5.0
+ */
 class AggregatePageBrickController
 {
 	/**

@@ -35,6 +35,13 @@ use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\BrowseBrick;
 
+/**
+ * Class BrowseBrickController
+ *
+ * @package Combodo\iTop\Portal\Controller
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
+ */
 class BrowseBrickController extends BrickController
 {
 	const LEVEL_SEPARATOR = '-';
@@ -588,6 +595,7 @@ class BrowseBrickController extends BrickController
      * @param array $aItems
      * @param string $sLevelsAlias
      * @param array $aLevelsProperties
+     *
      * @return array
      */
 	public static function PrepareActionRulesForItems(array $aItems, $sLevelsAlias, array &$aLevelsProperties)

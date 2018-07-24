@@ -20,29 +20,36 @@
 namespace Combodo\iTop\Portal\Controller;
 
 use Exception;
+use FileUploadException;
 use IssueLog;
 use utils;
 use MetaModel;
 use UserRights;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Brick\UserProfileBrick;
 use Combodo\iTop\Portal\Form\PreferencesFormManager;
 use Combodo\iTop\Portal\Form\PasswordFormManager;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 
+/**
+ * Class UserProfileBrickController
+ *
+ * @package Combodo\iTop\Portal\Controller
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
+ */
 class UserProfileBrickController extends BrickController
 {
 	const ENUM_FORM_TYPE_PICTURE = 'picture';
 
     /**
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param $sBrickId
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      * @throws \ArchivedObjectException
@@ -94,11 +101,11 @@ class UserProfileBrickController extends BrickController
 			}
 			elseif ($sFormType === PasswordFormManager::FORM_TYPE)
 			{
-				$aData['form'] = $this->HandlePasswordForm($oRequest, $oApp);
+				$aData['form'] = $this->HandlePasswordForm($oRequest, $oApp, $sFormMode);
 			}
 			elseif ($sFormType === static::ENUM_FORM_TYPE_PICTURE)
 			{
-				$aData['form'] = $this->HandlePictureForm($oRequest, $oApp, $sFormMode);
+				$aData['form'] = $this->HandlePictureForm($oRequest, $oApp);
 			}
 			else
 			{
@@ -118,7 +125,7 @@ class UserProfileBrickController extends BrickController
 			$aData['forms']['contact'] = ObjectController::HandleForm($oRequest, $oApp, $sFormMode, $sCurContactClass, $sCurContactId, $oBrick->GetForm());
 			$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $oApp, $sFormMode);
 			// - If user can change password, we display the form
-			$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $oApp) : null;
+			$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $oApp, $sFormMode) : null;
 
 			$aData = $aData + array(
 				'oBrick' => $oBrick,
@@ -133,11 +140,13 @@ class UserProfileBrickController extends BrickController
 	}
 
     /**
-     * @param Request $oRequest
-     * @param Application $oApp
-     * @param $sFormMode
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
+     * @param string $sFormMode
      *
      * @return array
+     *
+     * @throws \Exception
      */
 	public function HandlePreferencesForm(Request $oRequest, Application $oApp, $sFormMode)
 	{
@@ -184,10 +193,7 @@ class UserProfileBrickController extends BrickController
 				);
 			}
 		}
-		else
-		{
-			// Else, submit from another form
-		}
+        // Else, submit from another form
 
 		// Preparing field_set data
 		$aFieldSetData = array(
@@ -207,12 +213,15 @@ class UserProfileBrickController extends BrickController
 	}
 
     /**
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
+     * @param string $sFormMode
      *
      * @return array
+     *
+     * @throws \Exception
      */
-	public function HandlePasswordForm(Request $oRequest, Application $oApp)
+	public function HandlePasswordForm(Request $oRequest, Application $oApp, $sFormMode)
 	{
 		$aFormData = array();
 
@@ -228,6 +237,11 @@ class UserProfileBrickController extends BrickController
 			$oFormManager = new PasswordFormManager();
 			$oFormManager->SetRenderer($oFormRenderer)
 				->Build();
+            // - Checking if we have to make the form read only
+            if ($sFormMode === ObjectController::ENUM_MODE_VIEW)
+            {
+                $oFormManager->GetForm()->MakeReadOnly();
+            }
 		}
 		// - Submit
 		else if ($sOperation === 'submit')
@@ -245,10 +259,7 @@ class UserProfileBrickController extends BrickController
 			// Applying modification to object
 			$aFormData['validation'] = $oFormManager->OnSubmit(array('currentValues' => $oApp['request_manipulator']->ReadParam('current_values', array(), FILTER_UNSAFE_RAW)));
 		}
-		else
-		{
-			// Else, submit from another form
-		}
+		// Else, submit from another form
 
 		// Preparing field_set data
 		$aFieldSetData = array(
@@ -268,14 +279,14 @@ class UserProfileBrickController extends BrickController
 	}
 
     /**
-     * @param Request $oRequest
-     * @param Application $oApp
-     * @param $sFormMode
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      *
      * @return array
-     * @throws \FileUploadException
+     *
+     * @throws \Exception
      */
-	public function HandlePictureForm(Request $oRequest, Application $oApp, $sFormMode)
+	public function HandlePictureForm(Request $oRequest, Application $oApp)
 	{
 		$aFormData = array();
 		$sPictureAttCode = 'picture';
@@ -326,10 +337,7 @@ class UserProfileBrickController extends BrickController
 				'messages' => array()
 			);
 		}
-		else
-		{
-			// Else, submit from another form
-		}
+		// Else, submit from another form
 
 		return $aFormData;
 	}

@@ -22,6 +22,13 @@ namespace Combodo\iTop\Portal\Controller;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class DefaultController
+ *
+ * @package Combodo\iTop\Portal\Controller
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
+ */
 class DefaultController
 {
     /**

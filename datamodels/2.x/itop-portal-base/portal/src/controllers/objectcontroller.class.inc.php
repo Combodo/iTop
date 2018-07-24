@@ -53,7 +53,13 @@ use Combodo\iTop\Portal\Form\ObjectFormManager;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 
 /**
- * Controller to handle basic view / edit / create of cmdbAbstractObject
+ * Class ObjectController
+ *
+ * Controller to handle basic view / edit / create of cmdbAbstractObjectClass ManageBrickController
+ *
+ * @package Combodo\iTop\Portal\Controller
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
  */
 class ObjectController extends AbstractController
 {
@@ -68,12 +74,12 @@ class ObjectController extends AbstractController
     /**
      * Displays an cmdbAbstractObject if the connected user is allowed to.
      *
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sObjectClass (Class must be instance of cmdbAbstractObject)
      * @param string $sObjectId
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      * @throws \ArchivedObjectException
@@ -156,12 +162,12 @@ class ObjectController extends AbstractController
 	}
 
     /**
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param $sObjectClass
      * @param $sObjectId
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      * @throws \ArchivedObjectException
@@ -236,11 +242,11 @@ class ObjectController extends AbstractController
     /**
      * Creates an cmdbAbstractObject of the $sObjectClass
      *
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sObjectClass
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      * @throws \CoreException
@@ -297,13 +303,13 @@ class ObjectController extends AbstractController
      * Creates an cmdbAbstractObject of a class determined by the method encoded in $sEncodedMethodName.
      * This method use an origin DBObject in order to determine the created cmdbAbstractObject.
      *
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sObjectClass Class of the origin object
      * @param string $sObjectId ID of the origin object
      * @param string $sEncodedMethodName Base64 encoded factory method name
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      * @throws \ArchivedObjectException
@@ -352,13 +358,13 @@ class ObjectController extends AbstractController
     /**
      * Applies a stimulus $sStimulus on an cmdbAbstractObject
      *
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sObjectClass
      * @param string $sObjectId
      * @param string $sStimulusCode
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      * @throws \ArchivedObjectException
@@ -469,12 +475,12 @@ class ObjectController extends AbstractController
 	}
 
     /**
-     * @param Request $oRequest
-     * @param Application $oApp
-     * @param $sMode
-     * @param $sObjectClass
-     * @param null $sObjectId
-     * @param null $aFormProperties
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
+     * @param string $sMode
+     * @param string $sObjectClass
+     * @param string $sObjectId
+     * @param string $aFormProperties
      *
      * @return array
      *
@@ -726,13 +732,13 @@ class ObjectController extends AbstractController
     /**
      * Handles the autocomplete search
      *
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sTargetAttCode Attribute code of the host object pointing to the Object class to search
      * @param string $sHostObjectClass Class name of the host object
      * @param string $sHostObjectId Id of the host object
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      * @throws \ArchivedObjectException
@@ -760,7 +766,6 @@ class ObjectController extends AbstractController
 
 		// Retrieving parameters
 		$sQuery = $aRequestContent['sQuery'];
-		$sFormPath = $aRequestContent['sFormPath'];
 		$sFieldId = $aRequestContent['sFieldId'];
 
 		// Checking security layers
@@ -890,13 +895,13 @@ class ObjectController extends AbstractController
     /**
      * Handles the regular (table) search from an attribute
      *
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sTargetAttCode Attribute code of the host object pointing to the Object class to search
      * @param string $sHostObjectClass Class name of the host object
      * @param string $sHostObjectId Id of the host object
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      * @throws \ArchivedObjectException
@@ -1188,8 +1193,8 @@ class ObjectController extends AbstractController
     /**
      * Handles the hierarchical search from an attribute
      *
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sTargetAttCode Attribute code of the host object pointing to the Object class to search
      * @param string $sHostObjectClass Class name of the host object
      * @param string $sHostObjectId Id of the host object
@@ -1207,11 +1212,11 @@ class ObjectController extends AbstractController
      *
      * Note: This is inspired from pages/ajax.document.php, but duplicated as there is no secret mecanism for ormDocument yet.
      *
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sOperation
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \ArchivedObjectException
      * @throws \CoreException
@@ -1294,11 +1299,11 @@ class ObjectController extends AbstractController
      *
      * Note: This is inspired from itop-attachment/ajax.attachment.php
      *
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      * @param string $sOperation
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \Exception
      * @throws \CoreException
@@ -1389,10 +1394,10 @@ class ObjectController extends AbstractController
      * - aObjectIds : An array of object ids
      * - aObjectAttCodes : An array of attribute codes to retrieve
      *
-     * @param Request $oRequest
-     * @param Application $oApp
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\Response
      *
      * @throws \OQLException
      * @throws \CoreException
@@ -1439,8 +1444,8 @@ class ObjectController extends AbstractController
     /**
      * Prepare a DBObject informations as an array for a client side usage (typically, add a row in a table)
      *
-     * @param Application $oApp
-     * @param DBObject $oObject
+     * @param \Silex\Application $oApp
+     * @param \DBObject $oObject
      * @param array $aAttCodes
      *
      * @return array

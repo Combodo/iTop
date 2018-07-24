@@ -20,9 +20,11 @@
 namespace Combodo\iTop\Portal\Controller;
 
 /**
- * AbstractController class
+ * Class AbstractController
  *
+ * @package Combodo\iTop\Portal\Controller
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
  */
 abstract class AbstractController
 {

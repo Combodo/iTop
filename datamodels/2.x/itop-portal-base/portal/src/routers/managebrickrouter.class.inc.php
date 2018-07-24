@@ -19,6 +19,15 @@
 
 namespace Combodo\iTop\Portal\Router;
 
+/**
+ * Class ManageBrickRouter
+ *
+ * @package Combodo\iTop\Portal\Router
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @author Pierre Goiffon <pierre.goiffon@combodo.com>
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @since 2.3.0
+ */
 class ManageBrickRouter extends AbstractRouter
 {
 	static $aRoutes = array(

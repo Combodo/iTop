@@ -1181,7 +1181,7 @@ class ObjectFormManager extends FormManager
 	protected function FinalizeAttachments($aAttachmentIds)
 	{
 		$aRemovedAttachmentsIds = (isset($aAttachmentIds['removed_attachments_ids'])) ? $aAttachmentIds['removed_attachments_ids'] : array();
-		$aActualAttachmentsIds = (isset($aAttachmentIds['actual_attachments_ids'])) ? $aAttachmentIds['actual_attachments_ids'] : array();
+		// Not used for now. //$aActualAttachmentsIds = (isset($aAttachmentIds['actual_attachments_ids'])) ? $aAttachmentIds['actual_attachments_ids'] : array();
 
 		// Removing attachments from currents
 		if (!empty($aRemovedAttachmentsIds))
