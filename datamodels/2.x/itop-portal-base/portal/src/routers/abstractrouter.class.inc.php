@@ -24,8 +24,10 @@ use Silex\Application;
 /**
  * AbstractRouter class is where URLs are defined with their callback, parameters and constraints (assertions).
  * It allows us to have URL pattern at one place only and to generate them anywhere in the code, avoiding to maintain URLs in multiple places.
- * 
+ *
+ * @package \Combodo\iTop\Portal\Router
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
  */
 abstract class AbstractRouter
 {
@@ -59,7 +61,9 @@ abstract class AbstractRouter
 	 * Throws an exception if not found.
 	 *
 	 * @param string $name
+     *
 	 * @return array
+     *
 	 * @throws \Exception
 	 */
 	static function GetRoute($name)
@@ -82,7 +86,7 @@ abstract class AbstractRouter
 			throw new \Exception('Unknown route "' . $name . '" for ' . get_class() . '');
 		}
 
-		return $aRoute;
+		return $aFoundRoute;
 	}
 
 	/**
