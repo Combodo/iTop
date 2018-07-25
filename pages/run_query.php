@@ -170,7 +170,7 @@ try
 	$oP->add("<form method=\"post\">\n");
 	$oP->add(Dict::S('UI:RunQuery:ExpressionToEvaluate')."<br/>\n");
 	$oP->add("<textarea cols=\"120\" rows=\"8\" id=\"expression\" name=\"expression\">".htmlentities($sExpression, ENT_QUOTES, 'UTF-8')."</textarea>\n");
-	$oP->add_linked_script(utils::GetDefaultUrlAppRoot()."/js/jquery.hotkeys.js");
+	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
 	$oP->add_ready_script(<<<EOF
 $("#expression").select();
 $("#expression").on("keydown", null, "ctrl+return", function() {
