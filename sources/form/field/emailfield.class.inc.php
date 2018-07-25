@@ -40,6 +40,6 @@ class EmailField extends StringField
 
         $sUrlDecorationClass = utils::GetConfig()->Get('email_decoration_class');
 
-        return "<a class=\"mailto\" href=\"mailto:$this->currentValue\"><span class=\"form_field_decoration $sUrlDecorationClass\"></span>$sLabel</a>";
+        return "<a class=\"mailto\" href=\"mailto:$this->currentValue\"><span class=\"form_field_decoration text_decoration $sUrlDecorationClass\"></span>$sLabel</a>";
     }
 }

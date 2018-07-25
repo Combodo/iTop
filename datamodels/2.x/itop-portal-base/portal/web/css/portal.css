@@ -225,6 +225,10 @@ footer {
   -webkit-justify-content: center;
   justify-content: center;
 }
+.text_decoration {
+  vertical-align: baseline;
+  margin-right: 8px;
+}
 /*********************/
 /* Global animations */
 /*********************/
@@ -989,10 +993,6 @@ table .group-actions {
   left: 3px;
   color: #ea7d1e;
   font-size: 0.9em;
-}
-.form_field .form_field_decoration, .form_field_control .form_field_decoration {
-  vertical-align: baseline;
-  margin-right: 8px;
 }
 /* ExternalKey */
 .selectobject .input-group-addon {
