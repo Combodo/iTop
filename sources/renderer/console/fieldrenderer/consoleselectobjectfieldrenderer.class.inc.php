@@ -28,7 +28,17 @@ use Combodo\iTop\Form\Field\SelectObjectField;
 
 class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 {
-	public function Render()
+    /**
+     * @return RenderingOutput
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \CoreUnexpectedValue
+     * @throws \MissingQueryArgument
+     * @throws \MySQLException
+     * @throws \MySQLHasGoneAwayException
+     */
+    public function Render()
 	{
 		$oOutput = new RenderingOutput();
 
@@ -124,13 +134,13 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 					if (($iCount == 1) && $bMandatory)
 					{
 						// When there is only once choice, select it by default
-						$sSelected = ' checked';
+						$sSelected = 'checked';
 					}
 					else
 					{
-						$sSelected = ($value == $iObject) ? ' checked' : '';
+						$sSelected = ($value == $iObject) ? 'checked' : '';
 					}
-					$oOutput->AddHtml("<input type=\"radio\" id=\"{$sId}_{$iObject}\" name=\"radio_$sId\" onChange=\"$('#{$sId}').val(this.value).trigger('change');\" value=\"$iObject\"$sSelected><label class=\"radio\" for=\"{$sId}_{$iObject}\">&nbsp;".htmlentities($sLabel, ENT_QUOTES, 'UTF-8')."</label>&nbsp;");
+					$oOutput->AddHtml("<input type=\"radio\" id=\"{$sId}_{$iObject}\" name=\"radio_$sId\" onChange=\"$('#{$sId}').val(this.value).trigger('change');\" value=\"$iObject\" $sSelected><label class=\"radio\" for=\"{$sId}_{$iObject}\">&nbsp;".htmlentities($sLabel, ENT_QUOTES, 'UTF-8')."</label>&nbsp;");
 					if ($bVertical)
 					{
 						$oOutput->AddHtml("<br>\n");

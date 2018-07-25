@@ -24,7 +24,12 @@ use Combodo\iTop\Renderer\RenderingOutput;
 
 class ConsoleSubFormFieldRenderer extends FieldRenderer
 {
-	public function Render()
+    /**
+     * @return RenderingOutput
+     *
+     * @throws \Exception
+     */
+    public function Render()
 	{
 		$oOutput = new RenderingOutput();
 

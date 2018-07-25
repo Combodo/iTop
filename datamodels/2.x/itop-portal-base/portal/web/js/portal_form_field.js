@@ -10,7 +10,7 @@ $(function()
 		options:
 		{
 			on_validation_callback: function(me, oResult){
-				me.element.removeClass('has-success has-warning has-error')
+				me.element.removeClass('has-success has-warning has-error');
 				me.element.find('.help-block').html('');
 				if(!oResult.is_valid)
 				{

@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Form\Field;
 
 use Str;
+use Closure;
 
 /**
  * Description of UrlField
@@ -36,7 +37,7 @@ class UrlField extends StringField
      * Default constructor
      *
      * @param string $sId
-     * @param Closure $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
+     * @param \Closure $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
      */
     public function __construct($sId, Closure $onFinalizeCallback = null)
     {

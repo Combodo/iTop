@@ -19,7 +19,6 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use \Combodo\iTop\Form\Field\TextField;
 class StringField extends TextField
 {
 

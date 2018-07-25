@@ -19,6 +19,8 @@
 
 namespace Combodo\iTop\Form\Field;
 
+use Closure;
+
 /**
  * A field for Dates and Date & Times, supporting custom formats
  */
@@ -32,7 +34,7 @@ class DateTimeField extends StringField
 	 * Overloaded constructor
 	 *
 	 * @param string $sId
-	 * @param Closure $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
+	 * @param \Closure $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
 	 */
 	public function __construct($sId, Closure $onFinalizeCallback = null)
 	{
@@ -52,13 +54,13 @@ class DateTimeField extends StringField
 
 	/**
 	 *
-	 * @param string $sDateTimeFormat
+	 * @param string $sPHPDateTimeFormat
 	 *
 	 * @return \Combodo\iTop\Form\Field\DateTimeField
 	 */
-	public function SetPHPDateTimeFormat($sDateTimeFormat)
+	public function SetPHPDateTimeFormat($sPHPDateTimeFormat)
 	{
-		$this->sPHPDateTimeFormat = $sDateTimeFormat;
+		$this->sPHPDateTimeFormat = $sPHPDateTimeFormat;
 
 		return $this;
 	}
@@ -68,18 +70,18 @@ class DateTimeField extends StringField
 	 */
 	public function GetJSDateTimeFormat()
 	{
-		return $this->sDateTimeFormat;
+		return $this->sJSDateTimeFormat;
 	}
 
 	/**
 	 *
-	 * @param string $sDateTimeFormat
+	 * @param string $sJSDateTimeFormat
 	 *
 	 * @return \Combodo\iTop\Form\Field\DateTimeField
 	 */
-	public function SetJSDateTimeFormat($sDateTimeFormat)
+	public function SetJSDateTimeFormat($sJSDateTimeFormat)
 	{
-		$this->sDateTimeFormat = $sDateTimeFormat;
+		$this->sJSDateTimeFormat = $sJSDateTimeFormat;
 
 		return $this;
 	}

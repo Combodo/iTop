@@ -113,7 +113,7 @@ abstract class MultipleChoicesField extends Field
 	{
 		if (array_key_exists($value, $this->currentValue))
 		{
-			unset($this->currentValue[$sId]);
+			unset($this->currentValue[$value]);
 		}
 		return $this;
 	}

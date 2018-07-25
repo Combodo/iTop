@@ -104,6 +104,8 @@ function ExportRun(data) {
             $('#export-error').html(data.message);
             $('#export-cancel').hide();
             $('#export-close').show();
+            break;
+
         default:
     }
 }

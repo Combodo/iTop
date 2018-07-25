@@ -48,7 +48,7 @@
 		var sNodeCollapsedClass = 'glyphicon-menu-right';
 		var sNodeExpandedClass = 'glyphicon-menu-down';
 		var sNodeLoadingClass = 'glyphicon-refresh keep-spinning';
-		var iSearchDelay = 500
+		var iSearchDelay = 500;
 		var sBrowseMode = '{{ sBrowseMode }}';
 		var oLevelsProperties = {{ aLevelsProperties|raw }};
 		var oRawDatas = {{ aItems|raw }};
@@ -76,7 +76,7 @@
 		{
 			$('#brick_tree_overlay').hide();
 			$("#brick_content_tree").show();
-		}
+		};
 		// Registers the toggle listeners on the tree nodes. Used after every AJAX calls.
 		var registerToggleListeners = function()
 		{
