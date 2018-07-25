@@ -2587,7 +2587,6 @@ span.search-button, span.refresh-button {
   margin-right: 5px;
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
-  filter: gray;
   opacity: 0.5;
 }
 #itop-breadcrumb .breadcrumb-item a {
