@@ -1236,7 +1236,7 @@ table .group-actions {
   .form_buttons .form_btn_regular {
     text-align: right;
   }
-  .form_buttons .form_btn_regular btn {
+  .form_buttons .form_btn_regular .btn {
     width: inherit;
   }
   .form_btn_regular.sticky {
