@@ -54,7 +54,7 @@ class SetupUtils
 	const MYSQL_MIN_VERSION = '5.5.3'; // 5.5 branch that is shipped with most distribution, and 5.5.3 to have utf8mb4 (see N°942)
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
 	const PHP_NEXT_MIN_VERSION = ''; // no new PHP requirement for now in iTop 2.6
-	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for now in iTop 2.6
+	const MYSQL_NEXT_MIN_VERSION = '5.6.0'; // 5.6 to have fulltext on InnoDB for Tags fields (N°931)
 	// -- First recent version that is not yet validated by Combodo (warning)
 	const PHP_NOT_VALIDATED_VERSION = '7.3.0';
 
