@@ -634,8 +634,9 @@ class BrowseBrickController extends BrickController
                 if ($aLevelsProperties[$key][$sOptionalAttribute] !== null)
                 {
                     $sPropertyName = substr($sOptionalAttribute, 0, -4);
+                    $oAttDef = MetaModel::GetAttributeDef(get_class($value), $aLevelsProperties[$key][$sOptionalAttribute]);
 
-                    $tmpAttValue = $value->Get($aLevelsProperties[$key][$sOptionalAttribute]);
+                    $tmpAttValue = $value->GetAsHTML($aLevelsProperties[$key][$sOptionalAttribute]);
                     if($sOptionalAttribute === 'image_att')
                     {
                         if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
@@ -644,7 +645,7 @@ class BrowseBrickController extends BrickController
                         }
                         else
                         {
-                            $tmpAttValue = MetaModel::GetAttributeDef(get_class($value), $aLevelsProperties[$key][$sOptionalAttribute])->Get('default_image');
+                            $tmpAttValue = $oAttDef->Get('default_image');
                         }
                     }
 
@@ -658,7 +659,7 @@ class BrowseBrickController extends BrickController
 				foreach ($aLevelsProperties[$key]['fields'] as $aField)
 				{
 					$oAttDef = MetaModel::GetAttributeDef(get_class($value), $aField['code']);
-					$aRow[$key]['fields'][$aField['code']] = $oAttDef->GetValueLabel($value->Get($aField['code']));
+					$aRow[$key]['fields'][$aField['code']] = $oAttDef->GetAsHTML($value->Get($aField['code']));
 				}
 			}
 		}
@@ -726,8 +727,9 @@ class BrowseBrickController extends BrickController
                 if ($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute] !== null)
                 {
                     $sPropertyName = substr($sOptionalAttribute, 0, -4);
+                    $oAttDef = MetaModel::GetAttributeDef(get_class($aCurrentRowValues[0]), $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
 
-                    $tmpAttValue = $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
+                    $tmpAttValue = $aCurrentRowValues[0]->GetAsHTML($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
                     if($sOptionalAttribute === 'image_att')
                     {
                         if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
@@ -736,7 +738,7 @@ class BrowseBrickController extends BrickController
                         }
                         else
                         {
-                            $tmpAttValue = MetaModel::GetAttributeDef(get_class($aCurrentRowValues[0]), $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute])->Get('default_image');
+                            $tmpAttValue = $oAttDef->Get('default_image');
                         }
                     }
 

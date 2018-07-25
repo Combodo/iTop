@@ -29,6 +29,8 @@ use \Combodo\iTop\Form\Field\TextField;
  * Description of TextAreaField
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @package \Combodo\iTop\Form\Field
+ * @since 2.3.0
  */
 class TextAreaField extends TextField
 {
@@ -113,7 +115,7 @@ class TextAreaField extends TextField
 	{
 		if ($this->GetFormat() == TextAreaField::ENUM_FORMAT_TEXT)
 		{
-			$sValue = $this->GetCurrentValue();
+		    $sValue = \Str::pure2html($this->GetCurrentValue());
 			$sValue = AttributeText::RenderWikiHtml($sValue);
 			return "<div>".str_replace("\n", "<br>\n", $sValue).'</div>';			
 		}

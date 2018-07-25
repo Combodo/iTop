@@ -31,6 +31,7 @@ use \AttributeDate;
 use \AttributeDateTime;
 use \AttributeDuration;
 use \AttributeSubItem;
+use \AttributeImage;
 use \DBSearch;
 use \DBObjectSearch;
 use \DBObjectSet;
@@ -388,7 +389,7 @@ class ManageBrickController extends BrickController
 		{
 			// Set properties
 			$sCurrentClass = $sKey;
-			
+
 			// Defining which attribute will open the edition form)
 			$sMainActionAttrCode = $aColumnsAttrs[0];
 
@@ -444,36 +445,46 @@ class ManageBrickController extends BrickController
 						}
 					}
 
-					/** @var AttributeDefinition $oAttDef */
-					$oAttDef = MetaModel::GetAttributeDef($sCurrentClass, $sItemAttr);
-					if ($oAttDef->IsExternalKey())
-					{
-						$sValue = $oCurrentRow->Get($sItemAttr . '_friendlyname');
-
-						// Adding a view action on the external keys
-						if ($oCurrentRow->Get($sItemAttr) !== $oAttDef->GetNullValue())
+						/** @var AttributeDefinition $oAttDef */
+						$oAttDef = MetaModel::GetAttributeDef($sCurrentClass, $sItemAttr);
+						if ($oAttDef->IsExternalKey())
 						{
-							// Checking if we can view the object
-							if ((SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $oAttDef->GetTargetClass(), $oCurrentRow->Get($sItemAttr))))
+							$sValue = $oCurrentRow->GetAsHTML($sItemAttr.'_friendlyname');
+
+							// Adding a view action on the external keys
+							if ($oCurrentRow->Get($sItemAttr) !== $oAttDef->GetNullValue())
 							{
-								$aActions[] = array(
-									'type' => ManageBrick::ENUM_ACTION_VIEW,
-									'class' => $oAttDef->GetTargetClass(),
-									'id' => $oCurrentRow->Get($sItemAttr),
-                                    'opening_target' => $oBrick->GetOpeningTarget(),
-								);
+								// Checking if we can view the object
+								if ((SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $oAttDef->GetTargetClass(),
+									$oCurrentRow->Get($sItemAttr))))
+								{
+									$aActions[] = array(
+										'type' => ManageBrick::ENUM_ACTION_VIEW,
+										'class' => $oAttDef->GetTargetClass(),
+										'id' => $oCurrentRow->Get($sItemAttr),
+										'opening_target' => $oBrick->GetOpeningTarget(),
+									);
+								}
 							}
 						}
-					}
-					elseif ($oAttDef instanceof AttributeSubItem || $oAttDef instanceof AttributeDuration)
-					{
-						$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
-					}
-					else
-					{
-						$sValue = $oAttDef->GetValueLabel($oCurrentRow->Get($sItemAttr));
-					}
-					unset($oAttDef);
+						elseif ($oAttDef instanceof AttributeImage)
+                        {
+                            $oOrmDoc = $oCurrentRow->Get($sItemAttr);
+                            if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
+                            {
+                                $sUrl = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($oCurrentRow), 'sObjectId' => $oCurrentRow->GetKey(), 'sObjectField' => $sItemAttr, 'cache' => 86400));
+                            }
+                            else
+                            {
+                                $sUrl = $oAttDef->Get('default_image');
+                            }
+                            $sValue = '<img src="' . $sUrl . '" />';
+                        }
+						else
+						{
+                            $sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
+						}
+						unset($oAttDef);
 
 					$aItemAttrs[$sItemAttr] = array(
 						'att_code' => $sItemAttr,
@@ -501,7 +512,7 @@ class ManageBrickController extends BrickController
                         }
                     }
                 }
-				
+
 				// ... And item's properties
 				$aItems[] = array(
 					'id' => $oCurrentRow->GetKey(),

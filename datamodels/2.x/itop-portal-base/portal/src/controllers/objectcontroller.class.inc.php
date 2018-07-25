@@ -42,6 +42,7 @@ use \ScalarExpression;
 use \DBObjectSet;
 use \cmdbAbstractObject;
 use \AttributeEnum;
+use \AttributeImage;
 use \AttributeFinalClass;
 use \AttributeFriendlyName;
 use \UserRights;
@@ -1587,7 +1588,7 @@ class ObjectController extends AbstractController
 
 			if ($oAttDef->IsExternalKey())
 			{
-				$aAttData['value'] = $oObject->Get($oAttDef->GetCode() . '_friendlyname');
+				$aAttData['value'] = $oObject->GetAsHTML($oAttDef->GetCode() . '_friendlyname');
 
 				// Checking if user can access object's external key
 				if (SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $oAttDef->GetTargetClass()))
@@ -1600,9 +1601,22 @@ class ObjectController extends AbstractController
 				// We skip it
 				continue;
 			}
+			elseif ($oAttDef instanceof AttributeImage)
+            {
+                $oOrmDoc = $oObject->Get($oAttDef->GetCode());
+                if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
+                {
+                    $sUrl = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($oObject), 'sObjectId' => $oObject->GetKey(), 'sObjectField' => $oAttDef->GetCode(), 'cache' => 86400));
+                }
+                else
+                {
+                    $sUrl = $oAttDef->Get('default_image');
+                }
+                $aAttData['value'] = '<img src="' . $sUrl . '" />';
+            }
 			else
 			{
-				$aAttData['value'] = $oAttDef->GetValueLabel($oObject->Get($oAttDef->GetCode()));
+				$aAttData['value'] = $oAttDef->GetAsHTML($oObject->Get($oAttDef->GetCode()));
 
 				if ($oAttDef instanceof AttributeFriendlyName)
 				{
