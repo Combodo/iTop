@@ -703,8 +703,11 @@ class utils
 
     /**
      * Returns the absolute URL to the application root path
+     *
      * @return string The absolute URL to the application root, without the first slash
-     */                   
+     *
+     * @throws \Exception
+     */
 	static public function GetAbsoluteUrlAppRoot()
 	{
 		static $sUrl = null;
@@ -732,7 +735,15 @@ class utils
 		return $sUrl;
 	}
 
-	static public function GetDefaultUrlAppRoot()
+    /**
+     * Builds an root url from the server's variables.
+     * For most usages, when an root url is needed, use utils::GetAbsoluteUrlAppRoot() instead as uses this only as a fallback when the app_root_url conf parameter is not defined.
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    static public function GetDefaultUrlAppRoot()
 	{
 		// Build an absolute URL to this page on this server/port
 		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
