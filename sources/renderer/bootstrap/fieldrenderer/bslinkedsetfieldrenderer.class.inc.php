@@ -585,6 +585,7 @@ EOF
 			);
 
 			// Target object others attributes
+            // TODO: Support for AttriubteImage, AttributeBlob
 			foreach ($this->oField->GetAttributesToDisplay(true) as $sAttCode)
 			{
 				if ($sAttCode !== 'id')
@@ -607,7 +608,7 @@ EOF
 					}
 					else
 					{
-						$aAttProperties['value'] = $oAttDef->GetValueLabel($oRemoteItem->Get($sAttCode));
+						$aAttProperties['value'] = $oAttDef->GetAsHTML($oRemoteItem->Get($sAttCode));
 
 						if ($oAttDef instanceof AttributeFriendlyName)
 						{

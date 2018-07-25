@@ -23,8 +23,7 @@ use Exception;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
-use AttributeDuration;
-use AttributeSubItem;
+use AttributeImage;
 use BinaryExpression;
 use CMDBSource;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
@@ -236,7 +235,6 @@ class ManageBrickController extends BrickController
 
 		return $oApp['twig']->render(static::EXCEL_EXPORT_TEMPLATE_PATH, $aData);
 	}
-
 
     /**
      * @param \Symfony\Component\HttpFoundation\Request $oRequest
@@ -586,7 +584,7 @@ class ManageBrickController extends BrickController
 						$oAttDef = MetaModel::GetAttributeDef($sCurrentClass, $sItemAttr);
 						if ($oAttDef->IsExternalKey())
 						{
-							$sValue = $oCurrentRow->Get($sItemAttr.'_friendlyname');
+							$sValue = $oCurrentRow->GetAsHTML($sItemAttr.'_friendlyname');
 
 							// Adding a view action on the external keys
 							if ($oCurrentRow->Get($sItemAttr) !== $oAttDef->GetNullValue())
@@ -604,13 +602,22 @@ class ManageBrickController extends BrickController
 								}
 							}
 						}
-						elseif ($oAttDef instanceof AttributeSubItem || $oAttDef instanceof AttributeDuration)
-						{
-							$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
-						}
+						elseif ($oAttDef instanceof AttributeImage)
+                        {
+                            $oOrmDoc = $oCurrentRow->Get($sItemAttr);
+                            if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
+                            {
+                                $sUrl = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($oCurrentRow), 'sObjectId' => $oCurrentRow->GetKey(), 'sObjectField' => $sItemAttr, 'cache' => 86400));
+                            }
+                            else
+                            {
+                                $sUrl = $oAttDef->Get('default_image');
+                            }
+                            $sValue = '<img src="' . $sUrl . '" />';
+                        }
 						else
 						{
-							$sValue = $oAttDef->GetValueLabel($oCurrentRow->Get($sItemAttr));
+                            $sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
 						}
 						unset($oAttDef);
 
