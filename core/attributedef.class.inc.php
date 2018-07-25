@@ -185,8 +185,16 @@ abstract class AttributeDefinition
 			return $default;
 		}
 	}
-	
-	public function __construct($sCode, $aParams)
+
+    /**
+     * AttributeDefinition constructor.
+     *
+     * @param string $sCode
+     * @param array $aParams
+     *
+     * @throws \Exception
+     */
+    public function __construct($sCode, $aParams)
 	{
 		$this->m_sCode = $sCode;
 		$this->m_aParams = $aParams;
@@ -212,7 +220,12 @@ abstract class AttributeDefinition
 		return $this->m_sHostClass;
 	}
 
-	public function ListSubItems()
+    /**
+     * @return array
+     *
+     * @throws \CoreException
+     */
+    public function ListSubItems()
 	{
 		$aSubItems = array();
 		foreach(MetaModel::ListAttributeDefs($this->m_sHostClass) as $sAttCode => $oAttDef)
@@ -235,7 +248,10 @@ abstract class AttributeDefinition
 		return array();
 	}
 
-	private function ConsistencyCheck()
+    /**
+     * @throws \Exception
+     */
+    private function ConsistencyCheck()
 	{
 		// Check that any mandatory param has been specified
 		//
@@ -255,7 +271,7 @@ abstract class AttributeDefinition
 	/**
 	 * Check the validity of the given value
 	 *
-	 * @param DBObject $oHostObject
+	 * @param \DBObject $oHostObject
 	 * @param string An error if any, null otherwise
 	 *
 	 * @return bool
@@ -368,9 +384,11 @@ abstract class AttributeDefinition
 	 */
 	public function GetMirrorLinkAttribute() {return null;}
 
-	/**
-	 * Helper to browse the hierarchy of classes, searching for a label
-	 */	 	
+    /**
+     * Helper to browse the hierarchy of classes, searching for a label
+     *
+     * @throws \Exception
+     */
 	protected function SearchLabel($sDictEntrySuffix, $sDefault, $bUserLanguageOnly)
 	{
 		$sLabel = Dict::S('Class:'.$this->m_sHostClass.$sDictEntrySuffix, '', $bUserLanguageOnly);
@@ -392,7 +410,14 @@ abstract class AttributeDefinition
 		return $sLabel;
 	}
 
-	public function GetLabel($sDefault = null)
+    /**
+     * @param string|null $sDefault
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function GetLabel($sDefault = null)
 	{
 		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode, null, true /*user lang*/);
 		if (is_null($sLabel))
@@ -435,7 +460,13 @@ abstract class AttributeDefinition
 	{
 		return $sSearchString;
 	}
-	public function GetLabel_Obsolete()
+
+    /**
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function GetLabel_Obsolete()
 	{
 		// Written for compatibility with a data model written prior to version 0.9.1
 		if (array_key_exists('label', $this->m_aParams))
@@ -448,7 +479,14 @@ abstract class AttributeDefinition
 		}
 	}
 
-	public function GetDescription($sDefault = null)
+    /**
+     * @param string|null $sDefault
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function GetDescription($sDefault = null)
 	{
 		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'+', null, true /*user lang*/);
 		if (is_null($sLabel))
@@ -464,7 +502,14 @@ abstract class AttributeDefinition
 		return $sLabel;
 	}
 
-	public function GetHelpOnEdition($sDefault = null)
+    /**
+     * @param string|null $sDefault
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function GetHelpOnEdition($sDefault = null)
 	{
 		$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'?', null, true /*user lang*/);
 		if (is_null($sLabel))
@@ -492,9 +537,14 @@ abstract class AttributeDefinition
 			}
 		} 
 		return '';
-	} 
+	}
 
-	public function GetDescription_Obsolete()
+    /**
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function GetDescription_Obsolete()
 	{
 		// Written for compatibility with a data model written prior to version 0.9.1
 		if (array_key_exists('description', $this->m_aParams))
@@ -675,11 +725,13 @@ abstract class AttributeDefinition
 		return '\\Combodo\\iTop\\Form\\Field\\StringField';
 	}
 
-	/**
-	 * Override to specify Field class
-	 *
-	 * When called first, $oFormField is null and will be created (eg. Make). Then when the ::parent is called and the $oFormField is passed, MakeFormField behave more like a Prepare.
-	 */
+    /**
+     * Override to specify Field class
+     *
+     * When called first, $oFormField is null and will be created (eg. Make). Then when the ::parent is called and the $oFormField is passed, MakeFormField behave more like a Prepare.
+     *
+     * @throws \Exception
+     */
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
 		// This is a fallback in case the AttributeDefinition subclass has no overloading of this function.
@@ -741,12 +793,13 @@ abstract class AttributeDefinition
 	/**
 	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
 	 *
-	 * @param $value mixed The current value of the field
-	 * @param $sVerb string The verb specifying the representation of the value
-	 * @param $oHostObject DBObject The object
-	 * @param $bLocalize bool Whether or not to localize the value
+	 * @param mixed $value mixed The current value of the field
+	 * @param string $sVerb string The verb specifying the representation of the value
+	 * @param \DBObject $oHostObject DBObject The object
+	 * @param bool $bLocalize bool Whether or not to localize the value
 	 *
 	 * @return mixed|null|string
+     *
 	 * @throws \Exception
 	 */
 	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
@@ -782,9 +835,11 @@ abstract class AttributeDefinition
 		return $oValSetDef->GetValues($aArgs, $sContains);
 	}
 
-	/**
-	 * Explain the change of the attribute (history)
-	 */	
+    /**
+     * Explain the change of the attribute (history)
+     *
+     * @throws \Exception
+     */
 	public function DescribeChangeAsHTML($sOldValue, $sNewValue, $sLabel = null)
 	{
 		if (is_null($sLabel))
@@ -850,15 +905,19 @@ abstract class AttributeDefinition
 	}
 
 
-	/**
-	 * Parses a string to find some smart search patterns and build the corresponding search/OQL condition
-	 * Each derived class is reponsible for defining and processing their own smart patterns, the base class
-	 * does nothing special, and just calls the default (loose) operator
-	 * @param string $sSearchText The search string to analyze for smart patterns
-	 * @param FieldExpression The FieldExpression representing the atttribute code in this OQL query
-	 * @param array $aParams Values of the query parameters
-	 * @return Expression The search condition to be added (AND) to the current search
-	 */
+    /**
+     * Parses a string to find some smart search patterns and build the corresponding search/OQL condition
+     * Each derived class is reponsible for defining and processing their own smart patterns, the base class
+     * does nothing special, and just calls the default (loose) operator
+     *
+     * @param string $sSearchText The search string to analyze for smart patterns
+     * @param \FieldExpression $oField
+     * @param array $aParams Values of the query parameters
+     *
+     * @return \Expression The search condition to be added (AND) to the current search
+     *
+     * @throws \CoreException
+     */
 	public function GetSmartConditionExpression($sSearchText, FieldExpression $oField, &$aParams)
 	{
 		$sParamName = $oField->GetParent().'_'.$oField->GetName();
@@ -921,7 +980,17 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function GetValuesDef() {return $this->Get("allowed_values");} 
 	public function GetPrerequisiteAttributes($sClass = null) {return $this->Get("depends_on");}
-	public function GetDefaultValue(DBObject $oHostObject = null)
+
+    /**
+     * @param \DBObject|null $oHostObject
+     *
+     * @return \ormLinkSet
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \CoreWarning
+     */
+    public function GetDefaultValue(DBObject $oHostObject = null)
 	{
 		$sLinkClass = $this->GetLinkedClass();
 		$sExtKeyToMe = $this->GetExtKeyToMe();
@@ -973,7 +1042,16 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetBasicFilterLooseOperator() {return '';}
 	public function GetBasicFilterSQLExpr($sOpCode, $value) {return '';}
 
-	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+    /**
+     * @param string $sValue
+     * @param \DBObject $oHostObject
+     * @param bool $bLocalize
+     *
+     * @return string|null
+     *
+     * @throws \CoreException
+     */
+    public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
 		{
@@ -1001,7 +1079,16 @@ class AttributeLinkedSet extends AttributeDefinition
 		return null;
 	}
 
-	public function GetAsXML($sValue, $oHostObject = null, $bLocalize = true)
+    /**
+     * @param string $sValue
+     * @param \DBObject $oHostObject
+     * @param bool $bLocalize
+     *
+     * @return string
+     *
+     * @throws \CoreException
+     */
+    public function GetAsXML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		if (is_object($sValue) && ($sValue instanceof ormLinkSet))
 		{

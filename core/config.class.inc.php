@@ -1184,6 +1184,11 @@ class Config
 
 	}
 
+    /**
+     * @param string $sPropCode
+     *
+     * @return mixed
+     */
     public function Get($sPropCode)
     {
         return $this->m_aSettings[$sPropCode]['value'];
@@ -1252,7 +1257,16 @@ class Config
 	 */
 	protected $m_aCharsets;
 
-	public function __construct($sConfigFile = null, $bLoadConfig = true)
+    /**
+     * Config constructor.
+     *
+     * @param string|null $sConfigFile
+     * @param bool $bLoadConfig
+     *
+     * @throws \ConfigException
+     * @throws \CoreException
+     */
+    public function __construct($sConfigFile = null, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
 		if (is_null($sConfigFile))
@@ -1310,7 +1324,13 @@ class Config
 		 */
 	}
 
-	protected function CheckFile($sPurpose, $sFileName)
+    /**
+     * @param string $sPurpose
+     * @param string $sFileName
+     *
+     * @throws \ConfigException
+     */
+    protected function CheckFile($sPurpose, $sFileName)
 	{
 		if (!file_exists($sFileName))
 		{
@@ -1446,7 +1466,14 @@ class Config
 		return $this->GetModuleParameter($sModule, $sProperty, $defaultvalue);
 	}
 
-	public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
+    /**
+     * @param string $sModule
+     * @param string $sProperty
+     * @param mixed|null $defaultvalue
+     *
+     * @return mixed|null
+     */
+    public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
 	{
 		$ret = $defaultvalue;
 		if (class_exists('ModulesXMLParameters'))
@@ -1478,6 +1505,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6
 	 * @see Config::Get() as a replacement
 	 */
@@ -1488,6 +1516,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6
 	 * @see Config::Get() as a replacement
 	 */
@@ -1498,6 +1527,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6
 	 * @see Config::Get() as a replacement
 	 */
@@ -1508,6 +1538,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6 #1001 utf8mb4 switch
 	 * @see Config::DEFAULT_CHARACTER_SET
 	 */
@@ -1518,6 +1549,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6 #1001 utf8mb4 switch
 	 * @see Config::DEFAULT_COLLATION
 	 */
@@ -1528,6 +1560,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6
 	 * @see Config::Get() as a replacement
 	 */
@@ -1538,6 +1571,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6
 	 * @see Config::Get() as a replacement
 	 */
@@ -1756,14 +1790,16 @@ class Config
 		return $aSettings;
 	}
 
-	/**
-	 * Write the configuration to a file (php format) that can be reloaded later
-	 * By default write to the same file that was specified when constructing the object
+    /**
+     * Write the configuration to a file (php format) that can be reloaded later
+     * By default write to the same file that was specified when constructing the object
+     *
+     * @param string $sFileName string Name of the file to write to (emtpy to write to the same file)
+     *
+     * @return boolean True otherwise throws an Exception
 	 *
-	 * @param $sFileName string Name of the file to write to (emtpy to write to the same file)
-	 *
-	 * @return boolean True otherwise throws an Exception
-	 */
+     * @throws \ConfigException
+     */
 	public function WriteToFile($sFileName = '')
 	{
 		if (empty($sFileName))
@@ -1910,9 +1946,16 @@ class Config
 		}
 	}
 
-	/**
-	 * Helper function to initialize a configuration from the page arguments
-	 */
+    /**
+     * Helper function to initialize a configuration from the page arguments
+     *
+     * @param array $aParamValues
+     * @param string|null $sModulesDir
+     * @param bool $bPreserveModuleSettings
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     */
 	public function UpdateFromParams($aParamValues, $sModulesDir = null, $bPreserveModuleSettings = false)
 	{
 		if (isset($aParamValues['application_path']))
@@ -2042,9 +2085,13 @@ class Config
 		}
 	}
 
-	/**
-	 * Helper: for an array of string, change the prefix when found
-	 */
+    /**
+     * Helper: for an array of string, change the prefix when found
+     *
+     * @param array $aStrings
+     * @param string $sSearchPrefix
+     * @param string $sNewPrefix
+     */
 	protected static function ChangePrefix(&$aStrings, $sSearchPrefix, $sNewPrefix)
 	{
 		foreach ($aStrings as &$sFile)
@@ -2056,10 +2103,13 @@ class Config
 		}
 	}
 
-	/**
-	 * Obsolete: kept only for backward compatibility of the Toolkit
-	 * Quick and dirty way to clone a config file into another environment
-	 */
+    /**
+     * Obsolete: kept only for backward compatibility of the Toolkit
+     * Quick and dirty way to clone a config file into another environment
+     *
+     * @param string $sSourceEnv
+     * @param string $sTargetEnv
+     */
 	public function ChangeModulesPath($sSourceEnv, $sTargetEnv)
 	{
 		// Now does nothing since the includes are built into the environment itself
@@ -2096,5 +2146,3 @@ class Config
 	}
 
 }
-
-?>
