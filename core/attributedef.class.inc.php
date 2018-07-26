@@ -5835,6 +5835,32 @@ class AttributeImage extends AttributeBlob
     {
         return '\\Combodo\\iTop\\Form\\Field\\ImageField';
     }
+
+    public function MakeFormField(DBObject $oObject, $oFormField = null)
+    {
+        if ($oFormField === null)
+        {
+            $sFormFieldClass = static::GetFormFieldClass();
+            $oFormField = new $sFormFieldClass($this->GetCode());
+        }
+
+        parent::MakeFormField($oObject, $oFormField);
+
+        // Generating urls
+        $value = $oObject->Get($this->GetCode());
+        if (is_object($value) && !$value->IsEmpty())
+        {
+            $oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+            $oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+        }
+        else
+        {
+            $oFormField->SetDownloadUrl($this->Get('default_image'));
+            $oFormField->SetDisplayUrl($this->Get('default_image'));
+        }
+
+        return $oFormField;
+    }
 }
 /**
  * A stop watch is an ormStopWatch object, it is stored as several columns in the database  
