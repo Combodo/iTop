@@ -3505,7 +3505,7 @@ EOF
 		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$aNewIssues = $oExtensionInstance->OnCheckToDelete($this);
-			if (count($aNewIssues) > 0)
+			if (is_array($aNewIssues) && count($aNewIssues) > 0)
 			{
 				$this->m_aDeleteIssues = array_merge($this->m_aDeleteIssues, $aNewIssues);
 			}
