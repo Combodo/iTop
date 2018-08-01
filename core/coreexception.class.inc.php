@@ -127,5 +127,3 @@ class SecurityException extends CoreException
 class ArchivedObjectException extends CoreException
 {
 }
-
-?>
