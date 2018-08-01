@@ -497,6 +497,8 @@ class DBObjectSearch extends DBSearch
 	 * @param bool $bPositiveMatch if true will add a IN filter, else a NOT IN
 	 *
 	 * @throws \CoreException
+	 *
+	 * @since 2.5 N°1418
 	 */
 	public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true)
 	{
@@ -506,7 +508,7 @@ class DBObjectSearch extends DBSearch
 
 		$sInParamName = $this->GenerateUniqueParamName();
 		$oParamExpression = new VariableExpression($sInParamName);
-		$this->SetInternalParams(array($sInParamName => $aValues));
+		$this->GetInternalParamsByRef()[$sInParamName] = $aValues;
 
 		$oListExpression = new ListExpression(array($oParamExpression));
 
@@ -1086,9 +1088,43 @@ class DBObjectSearch extends DBSearch
 		return $this->m_aParams = $aParams;
 	}
 
+	/**
+	 * @return array <strong>warning</strong> : array returned by value
+	 * @see self::GetInternalParamsByRef to get the attribute by reference
+	 */
 	public function GetInternalParams()
 	{
 		return $this->m_aParams;
+	}
+
+	/**
+	 * @return array
+	 * @see http://php.net/manual/en/language.references.return.php
+	 * @since 2.5.1 N°1582
+	 */
+	public function &GetInternalParamsByRef()
+	{
+		return $this->m_aParams;
+	}
+
+	/**
+	 * @param string $sKey
+	 * @param mixed $value
+	 * @param bool $bDoNotOverride
+	 *
+	 * @throws \CoreUnexpectedValue if $bDoNotOverride and $sKey already exists
+	 */
+	public function AddInternalParam($sKey, $value, $bDoNotOverride = false)
+	{
+		if ($bDoNotOverride)
+		{
+			if (array_key_exists($sKey, $this->m_aParams))
+			{
+				throw new CoreUnexpectedValue("The key $sKey already exists with value : ".$this->m_aParams[$sKey]);
+			}
+		}
+
+		$this->m_aParams[$sKey] = $value;
 	}
 
 	public function GetQueryParams($bExcludeMagicParams = true)
