@@ -360,6 +360,7 @@ class ActionEmail extends ActionNotification
 			$sTestBody .= "</div>\n";
 			$oEmail->SetBody($sTestBody, 'text/html', $sStyles);
 			$oEmail->SetRecipientTO($this->Get('test_recipient'));
+			$oEmail->SetRecipientFrom($sFrom);
 			$oEmail->SetReferences($sReference);
 			$oEmail->SetMessageId($sMessageId);
 		}
