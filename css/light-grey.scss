@@ -116,6 +116,23 @@ table.listResults td .view-image {
   }
 }
 
+table.listResults > tbody > tr.selected > * {
+	background-color: $combodo-orange;
+}
+
+table.listResults > tbody > tr > * {
+	transition: background-color 400ms linear;
+}
+
+table.listResults > tbody > tr:hover > * {
+	cursor: pointer;
+}
+
+table.listResults > tbody > tr.selected:hover > * {
+	/* hover on lines is currently done toggling td.hover, and having a rule for links */
+	background-color: lighten($combodo-orange, 20%);
+}
+
 .edit-image {
   .view-image {
 	display: inline-block;

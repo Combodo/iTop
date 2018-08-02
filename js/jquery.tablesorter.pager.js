@@ -90,7 +90,12 @@ function sprintf(format, etc) {
 			function checkAll(table, pager, value)
 			{
 				// Mark all the displayed items as check or unchecked depending on the value
-				$(table).find(':checkbox[name^=selectObj]').prop('checked', value);
+				$(table).find(':checkbox[name^=selectObj]').each(function (index, element) {
+					var $currentCheckbox = $(this);
+					$currentCheckbox.prop('checked', value);
+					$currentLine = $currentCheckbox.closest("tr");
+					(value) ? $currentLine.addClass("selected") : $currentLine.removeClass("selected");
+				});
 				// Set the 'selectionMode' for the future objects to load
 				if (value)
 				{

@@ -47,6 +47,7 @@ class NiceWebPage extends WebPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.pager.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablehover.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/table-selectable-lines.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_sorter.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/datatable.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
