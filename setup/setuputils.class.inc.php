@@ -549,26 +549,7 @@ class SetupUtils
 	 */
 	static function GetTmpDir()
 	{
-		// try to figure out what is the temporary directory
-		// prior to PHP 5.2.1 the function sys_get_temp_dir
-		// did not exist
-		if ( !function_exists('sys_get_temp_dir'))
-		{
-			if( $temp=getenv('TMP') ) return realpath($temp);
-			if( $temp=getenv('TEMP') ) return realpath($temp);
-			if( $temp=getenv('TMPDIR') ) return realpath($temp);
-			$temp=tempnam(__FILE__,'');
-			if (file_exists($temp))
-			{
-				unlink($temp);
-				return realpath(dirname($temp));
-			}
-			return null;
-		}
-		else
-		{
-			return realpath(sys_get_temp_dir());
-		}
+		return realpath(sys_get_temp_dir());
 	}
 
 	/**
