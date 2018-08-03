@@ -96,12 +96,10 @@ class ormPassword
 	{
 		$bResult = false;
 		$aInfo = password_get_info($this->m_sHashed);
-		switch ($aInfo["algoName"])
+		switch ($aInfo["algo"])
 		{
-			case 'bcrypt':
-				$bResult = password_verify($sClearTextPassword, $this->m_sHashed);
-				break;
-			case 'unknown':
+			case 0:
+				//unknown, assume it's a legacy password
 				$sHashedPwd = $this->ComputeHash($sClearTextPassword);
 				if ($this->m_sHashed == $sHashedPwd)
 				{
@@ -109,7 +107,7 @@ class ormPassword
 				}
 				break;
 			default:
-				//shouldn't happen until php modify PASSWORD_DEFAULT
+				$bResult = password_verify($sClearTextPassword, $this->m_sHashed);
 		}
 		return $bResult;
 	}
