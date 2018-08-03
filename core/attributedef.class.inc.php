@@ -2737,13 +2737,17 @@ class AttributeEncryptedString extends AttributeString
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	static $sKey = null; // Encryption key used for all encrypted fields
-
+	static $sLibrary = null; // Encryption library used for all encrypted fields
 	public function __construct($sCode, $aParams)
 	{
 		parent::__construct($sCode, $aParams);
 		if (self::$sKey == null)
 		{
 			self::$sKey = MetaModel::GetConfig()->GetEncryptionKey();
+		}
+		if(self::$sLibrary == null)
+		{
+			self::$sLibrary = MetaModel::GetConfig()->GetEncryptionLibrary();
 		}
 	}
 	/**
@@ -2759,6 +2763,10 @@ class AttributeEncryptedString extends AttributeString
 		if (self::$sKey == null)
 		{
 			self::$sKey = MetaModel::GetConfig()->GetEncryptionKey();
+		}
+		if(self::$sLibrary == null)
+		{
+			self::$sLibrary = MetaModel::GetConfig()->GetEncryptionLibrary();
 		}
 	}
 	
@@ -2788,7 +2796,7 @@ class AttributeEncryptedString extends AttributeString
 	 */
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
- 		$oSimpleCrypt = new SimpleCrypt();
+ 		$oSimpleCrypt = new SimpleCrypt(self::$sLibrary);
  		$sValue = $oSimpleCrypt->Decrypt(self::$sKey, $aCols[$sPrefix]);
 		return $sValue;
 	}
@@ -2798,7 +2806,7 @@ class AttributeEncryptedString extends AttributeString
 	 */
 	public function GetSQLValues($value)
 	{
- 		$oSimpleCrypt = new SimpleCrypt();
+ 		$oSimpleCrypt = new SimpleCrypt(self::$sLibrary);
  		$encryptedValue = $oSimpleCrypt->Encrypt(self::$sKey, $value);
 
 		$aValues = array();

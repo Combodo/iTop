@@ -356,6 +356,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributePassword+' => '外部デバイス用パスワード',
 	'Core:AttributeEncryptedString' => '暗号化文字列',
 	'Core:AttributeEncryptedString+' => 'ローカルキーで暗号化された文字列',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 	'Core:AttributeText' => 'テキスト',
 	'Core:AttributeText+' => '複数行文字列',
 	'Core:AttributeHTML' => 'HTML',

@@ -86,6 +86,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
     'Core:AttributeEncryptedString' => 'Šifrovaný řetězec',
     'Core:AttributeEncryptedString+' => 'Řetězec šifrovaný lokálním klíčem',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 
     'Core:AttributeText' => 'Text',
     'Core:AttributeText+' => 'Víceřádkový řetězec znaků',

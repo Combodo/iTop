@@ -127,6 +127,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd+' => '',
 	'Class:CMDBChangeOpSetAttributeEncrypted' => 'Champ chiffré',
 	'Class:CMDBChangeOpSetAttributeEncrypted+' => '',
+	'Core:AttributeEncryptUnknownLibrary' => 'La bibliothèque de chiffrement specifée (%1$s) est inconnue',
+	'Core:AttributeEncryptFailedToDecrypt' => '** erreur de déchiffrage **',
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Ancienne valeur',
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring+' => '',
 	'Class:CMDBChangeOpSetAttributeText' => 'Modification de texte',

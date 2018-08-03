@@ -89,6 +89,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
  	'Core:AttributeEncryptedString' => 'Gecodeerde string',
 	'Core:AttributeEncryptedString+' => 'String gecodeerd met een locale key',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 
 	'Core:AttributeText' => 'Text',
 	'Core:AttributeText+' => 'Multiline character string',

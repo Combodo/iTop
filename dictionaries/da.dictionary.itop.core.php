@@ -1428,6 +1428,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:AttributePassword+' => '',
 	'Core:AttributeEncryptedString' => 'Krypteret streng',
 	'Core:AttributeEncryptedString+' => '',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 	'Core:AttributeText' => 'Tekst',
 	'Core:AttributeText+' => '',
 	'Core:AttributeHTML' => 'HTML',

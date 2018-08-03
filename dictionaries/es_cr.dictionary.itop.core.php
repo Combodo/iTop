@@ -84,7 +84,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
  	'Core:AttributeEncryptedString' => 'Cadena encriptada',
 	'Core:AttributeEncryptedString+' => 'Cadena encriptada con llave local',
-
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+	
 	'Core:AttributeText' => 'Texto',
 	'Core:AttributeText+' => 'Cadena de Múltiples Líneas de Caracteres',
 

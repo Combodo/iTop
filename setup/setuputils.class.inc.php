@@ -91,7 +91,9 @@ class SetupUtils
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 		
 		$aMandatoryExtensions = array('mysqli', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom', 'zlib', 'zip');
-		$aOptionalExtensions = array('mcrypt' => 'Strong encryption will not be used.',
+		$aOptionalExtensions = array( 'mcrypt, sodium or openssl' => array(  'mcrypt' => 'Strong encryption will not be used.',
+																	'sodium' => 'Strong encryption will not be used.',
+																	'openssl' => 'Strong encryption will not be used.',),
 									 'ldap' => 'LDAP authentication will be disabled.',
 									 'gd' => 'PDF export will be disabled. Also, image resizing will be disabled on profile pictures (May increase database size).');
 		asort($aMandatoryExtensions); // Sort the list to look clean !
@@ -125,13 +127,38 @@ class SetupUtils
 		$aMissingExtensions = array();
 		foreach($aOptionalExtensions as $sExtension => $sMessage)
 		{
-			if (extension_loaded($sExtension))
+			//if sMessage is an array, extensions in it are conditional between them
+			if (is_array($sMessage))
 			{
-				$aExtensionsOk[] = $sExtension;
+				$bIsAtLeastOneLoaded = false;
+				$sConditionalMissingMessage = '';
+				foreach($sMessage as $sConditionalExtension => $sConditionalMessage)
+				{
+					if (extension_loaded($sConditionalExtension))
+					{
+						$bIsAtLeastOneLoaded = true;
+						$aExtensionsOk[] = $sConditionalExtension;
+					}
+					else
+					{
+						$sConditionalMissingMessage = $sConditionalMessage;
+					}
+				}
+				if(!$bIsAtLeastOneLoaded)
+				{
+					$aMissingExtensions[$sExtension] = $sConditionalMissingMessage;
+				}
 			}
 			else
 			{
-				$aMissingExtensions[$sExtension] = $sMessage;
+				if (extension_loaded($sExtension))
+				{
+					$aExtensionsOk[] = $sExtension;
+				}
+				else
+				{
+					$aMissingExtensions[$sExtension] = $sMessage;
+				}
 			}
 		}
 		if (count($aExtensionsOk) > 0)

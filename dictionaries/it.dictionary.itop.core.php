@@ -78,6 +78,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
  	'Core:AttributeEncryptedString' => 'Stringa criptata',
 	'Core:AttributeEncryptedString+' => 'Stringa cripta con una chiave locale',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 
 	'Core:AttributeText' => 'Testo',
 	'Core:AttributeText+' => 'Stringa di caratteri multilinea',

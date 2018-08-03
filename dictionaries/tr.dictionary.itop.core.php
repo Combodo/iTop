@@ -444,6 +444,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:AttributePassword+' => 'Password of an external device~~',
 	'Core:AttributeEncryptedString' => 'Encrypted string~~',
 	'Core:AttributeEncryptedString+' => 'String encrypted with a local key~~',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 	'Core:AttributeText' => 'Text~~',
 	'Core:AttributeText+' => 'Multiline character string~~',
 	'Core:AttributeHTML' => 'HTML~~',

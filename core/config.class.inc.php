@@ -37,6 +37,7 @@ define('ACCESS_READONLY', 0);
 
 require_once('coreexception.class.inc.php');
 require_once('attributedef.class.inc.php'); // For the defines
+require_once('simplecrypt.class.inc.php');
 
 class ConfigException extends CoreException
 {
@@ -64,8 +65,8 @@ define('DEFAULT_FAST_RELOAD_INTERVAL', 1 * 60);
 define('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
 define('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|basic|external');
 define('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
-define('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random value, later...
-
+define('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random generated key later (if possible)
+define('DEFAULT_ENCRYPTION_LIB', 'Mcrypt'); // We'll define the best encryption available later
 /**
  * Config
  * configuration data (this class cannot not be localized, because it is responsible for loading the dictionaries)
@@ -1252,6 +1253,13 @@ class Config
 	protected $m_sEncryptionKey;
 
 	/**
+	 * @var string Encryption key used for all attributes of type "encrypted string". Can be set to a random value
+	 *             unless you want to import a database from another iTop instance, in which case you must use
+	 *             the same encryption key in order to properly decode the encrypted fields
+	 */
+	protected $m_sEncryptionLibrary;
+
+	/**
 	 * @var array Additional character sets to be supported by the interactive CSV import
 	 *            'iconv_code' => 'display name'
 	 */
@@ -1296,9 +1304,13 @@ class Config
 		$this->m_sDefaultLanguage = 'EN US';
 		$this->m_sAllowedLoginTypes = DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
-		$this->m_sEncryptionKey = DEFAULT_ENCRYPTION_KEY;
 		$this->m_aCharsets = array();
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
+
+		//define default encryption params according to php install
+		$aEncryptParams = SimpleCrypt::GetNewDefaultParams();
+		$this->m_sEncryptionLibrary = isset($aEncryptParams['lib']) ? $aEncryptParams['lib'] : DEFAULT_ENCRYPTION_LIB;
+		$this->m_sEncryptionKey= isset($aEncryptParams['key']) ? $aEncryptParams['key'] : DEFAULT_ENCRYPTION_KEY;
 
 		$this->m_aModuleSettings = array();
 
@@ -1445,7 +1457,8 @@ class Config
 		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
 		$this->m_sAllowedLoginTypes = isset($MySettings['allowed_login_types']) ? trim($MySettings['allowed_login_types']) : DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = isset($MySettings['ext_auth_variable']) ? trim($MySettings['ext_auth_variable']) : DEFAULT_EXT_AUTH_VARIABLE;
-		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : DEFAULT_ENCRYPTION_KEY;
+		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : $this->m_sEncryptionKey;
+		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
 		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : array();
 	}
 
@@ -1645,6 +1658,11 @@ class Config
 		return $this->m_sEncryptionKey;
 	}
 
+	public function GetEncryptionLibrary()
+	{
+		return $this->m_sEncryptionLibrary;
+	}
+
 	public function GetAllowedLoginTypes()
 	{
 		return explode('|', $this->m_sAllowedLoginTypes);
@@ -1773,6 +1791,7 @@ class Config
 		$aSettings['allowed_login_types'] = $this->m_sAllowedLoginTypes;
 		$aSettings['ext_auth_variable'] = $this->m_sExtAuthVariable;
 		$aSettings['encryption_key'] = $this->m_sEncryptionKey;
+		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
 
 		foreach ($this->m_aModuleSettings as $sModule => $aProperties)
@@ -1861,6 +1880,7 @@ class Config
 				'allowed_login_types' => $this->m_sAllowedLoginTypes,
 				'ext_auth_variable' => $this->m_sExtAuthVariable,
 				'encryption_key' => $this->m_sEncryptionKey,
+				'encryption_library' => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
 			);
 			foreach ($aOtherValues as $sKey => $value)
