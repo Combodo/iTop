@@ -2380,7 +2380,7 @@ EOF
 		return $oObj->DisplayModifyForm( $oPage, $aExtraParams);
 	}
 	
-	public function DisplayStimulusForm(WebPage $oPage, $sStimulus)
+	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null)
 	{
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
@@ -2422,6 +2422,12 @@ EOF
         $oPage->add("<h1>$sActionDetails</h1>\n");
         $sTargetState = $aTransitions[$sStimulus]['target_state'];
         $aExpectedAttributes = $this->GetTransitionAttributes($sStimulus /*, current state*/);
+		if ($aPrefillFormParam != null)
+		{
+			$aPrefillFormParam['expected_attributes'] = $aExpectedAttributes;
+			$this->PrefillForm('state_change', $aPrefillFormParam);
+			$aExpectedAttributes = $aPrefillFormParam['expected_attributes'];
+		}
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
 		if ($sButtonsPosition == 'bottom')
 		{

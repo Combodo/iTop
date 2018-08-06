@@ -1485,8 +1485,7 @@ EOF
 				'stimulus' => $sStimulus,
 				'origin' => 'console'
 			);
-			$oObj->PrefillForm('state_change', $aPrefillFormParam);
-			$oObj->DisplayStimulusForm($oP, $sStimulus);
+			$oObj->DisplayStimulusForm($oP, $sStimulus, $aPrefillFormParam);
 		}
 		else
 		{
