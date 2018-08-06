@@ -82,6 +82,9 @@ $(document).ready(function () {
 	 * @returns {boolean} true if our custom handler shouldn't be run
 	 */
 	function shouldExitHandler($eventTarget) {
+		if ($eventTarget.is("table")) { // might happen on cell padding/margin/border
+			return true;
+		}
 		if ($eventTarget.is("a, button")) {
 			return true;
 		}
