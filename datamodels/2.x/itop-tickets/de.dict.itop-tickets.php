@@ -199,7 +199,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Offen',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Gelöst',
 	'Brick:Portal:ClosedRequests:Title' => 'Geschlossene Störungen/Anfragen',
-	'Class:Ticket/Attribute:operational_status' => 'Status',
+	'Class:Ticket/Attribute:operational_status' => 'Betriebsstatus',
 	'Class:Ticket/Attribute:operational_status+' => 'Berechnet nach detailliertem Status',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'In Bearbeitung',
 	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'In Bearbeitung',
