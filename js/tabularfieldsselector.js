@@ -428,11 +428,7 @@ $(function()
 				event.stopImmediatePropagation();
 				var jMe = $(this);
 				$(this).data('openTimeoutId', setTimeout(function() {
-					var sDataId = jMe.attr('data-attcode');
-					if ($('.tooltip-close-button[data-attcode="'+sDataId+'"]').length == 0)
-					{
-						jMe.tooltip('open');						
-					}
+						jMe.tooltip('open');
 				}, 500));					
 			})
 			.on( "mouseout", function(event){
