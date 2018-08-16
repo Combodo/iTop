@@ -50,6 +50,9 @@ class LoginWebPage extends NiceWebPage
 		self::$sHandlerClass = $sClass;
 	}
 
+	/**
+	 * @return \LoginWebPage
+	 */
 	public static function NewLoginWebPage()
 	{
 		return new self::$sHandlerClass;
