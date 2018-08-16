@@ -121,6 +121,9 @@ class ExecutionKPI
 			$fDuration = $aOpStats['time_end'] - $aOpStats['time_begin'];
 			$sDuration = round($fDuration, 3);
 
+			$sMemBegin = 'n/a';
+			$sMemEnd = 'n/a';
+			$sMemPeak = 'n/a';
 			if (isset($aOpStats['mem_begin']))
 			{
 				$sMemBegin = self::MemStr($aOpStats['mem_begin']);
