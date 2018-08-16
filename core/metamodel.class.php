@@ -6316,7 +6316,7 @@ abstract class MetaModel
 	 *
 	 * @param string $sClass
 	 * @param int $iKey id value of the object to retrieve
-	 * @param bool $bMustBeFound
+	 * @param bool $bMustBeFound see throws ArchivedObjectException
 	 * @param bool $bAllowAllData if true then no rights filtering
 	 * @param null $aModifierProperties
 	 *
