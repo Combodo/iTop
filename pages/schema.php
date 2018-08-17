@@ -771,6 +771,12 @@ EOF
 
 /**
  * Display the details of a given class of objects
+ *
+ * @param \iTopWebPage $oPage
+ * @param string $sClass
+ * @param string $sContext
+ *
+ * @throws \CoreException
  */
 function DisplayClassDetails($oPage, $sClass, $sContext)
 {
@@ -969,10 +975,10 @@ EOF
     DisplaySubclasses($oPage, $sClass, $sContext);
 
     $oPage->SetCurrentTab(Dict::S('UI:Schema:LifeCycle'));
-	DisplayLifecycle($oPage, $sClass, $sContext);
+	DisplayLifecycle($oPage, $sClass);
 
 	$oPage->SetCurrentTab(Dict::S('UI:Schema:Triggers'));
-	DisplayTriggers($oPage, $sClass, $sContext);
+	DisplayTriggers($oPage, $sClass);
 
 	$oPage->SetCurrentTab();
 	$oPage->SetCurrentTabContainer();
