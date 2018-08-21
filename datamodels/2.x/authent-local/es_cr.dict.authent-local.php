@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -39,9 +39,9 @@
 // Class: UserLocal
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'EspaÃ±ol, Castellano', array(
 	'Class:UserLocal' => 'Usuario de iTop',
-	'Class:UserLocal+' => 'Usuario Autenticado vía iTop',
-	'Class:UserLocal/Attribute:password' => 'Contraseña',
-	'Class:UserLocal/Attribute:password+' => 'Contraseña',
+	'Class:UserLocal+' => 'Usuario Autenticado vÃ­a iTop',
+	'Class:UserLocal/Attribute:password' => 'ContraseÃ±a',
+	'Class:UserLocal/Attribute:password+' => 'ContraseÃ±a',
 ));
