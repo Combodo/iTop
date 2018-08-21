@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -25,7 +25,7 @@
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'EspaÃ±ol, Castellano', array(
 	'Attachments:TabTitle_Count' => 'Anexos (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Anexos',
 	'Attachments:FieldsetTitle' => 'Anexos',
@@ -33,10 +33,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Attachments:History_File_Added' => 'Anexo %1$s agregado.',
 	'Attachments:History_File_Removed' => 'Anexo %1$s removido.',
 	'Attachments:AddAttachment' => 'Agregar Anexo: ',
-	'Attachments:UploadNotAllowedOnThisSystem' => 'La carga de archivos NO está permitida en este sistema.',
-	'Attachment:Max_Go' => '(Tamaño Máximo de Archivo: %1$s Gb)',
-	'Attachment:Max_Mo' => '(Tamaño Máximo de Archivo: %1$s Mb)',
-	'Attachment:Max_Ko' => '(Tamaño Máximo de Archivo: %1$s Kb)',
+	'Attachments:UploadNotAllowedOnThisSystem' => 'La carga de archivos NO estÃ¡ permitida en este sistema.',
+	'Attachment:Max_Go' => '(TamaÃ±o MÃ¡ximo de Archivo: %1$s Gb)',
+	'Attachment:Max_Mo' => '(TamaÃ±o MÃ¡ximo de Archivo: %1$s Mb)',
+	'Attachment:Max_Ko' => '(TamaÃ±o MÃ¡ximo de Archivo: %1$s Kb)',
 	'Attachments:NoAttachment' => 'No hay Anexo. ',
 	'Class:Attachment' => 'Anexo',
 	'Class:Attachment+' => 'Anexo',

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -39,11 +39,7 @@
 // Class: UserExternal
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'EspaÃ±ol, CastellaÃ±o', array(
 	'Class:UserExternal' => 'Usuario Externo',
 	'Class:UserExternal+' => 'Usuario Autenticado fuera de iTop',
 ));
-
-
-
-?>

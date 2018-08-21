@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -39,10 +39,9 @@
 // Class: UserLDAP
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'EspaÃ±ol, Castellano', array(
   'Class:UserLDAP' => 'Usuario LDAP',
-	'Class:UserLDAP+' => 'Usuario Autenticado vía LDAP',
-	'Class:UserLDAP/Attribute:password' => 'Contraseña',
-	'Class:UserLDAP/Attribute:password+' => 'Contraseña',
+	'Class:UserLDAP+' => 'Usuario Autenticado vÃ­a LDAP',
+	'Class:UserLDAP/Attribute:password' => 'ContraseÃ±a',
+	'Class:UserLDAP/Attribute:password+' => 'ContraseÃ±a',
 ));
-
