@@ -235,18 +235,20 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		/**
 		 * Create a normalized backup name, depending on the current date/time and Database
 		 *
-		 * @param sNameSpec string Name and path, eventually containing itop placeholders + time formatting specs
+		 * @param string sMySQLBinDir  Name and path, eventually containing itop placeholders + time formatting specs
 		 */
 		public function SetMySQLBinDir($sMySQLBinDir)
 		{
 			$this->sMySQLBinDir = $sMySQLBinDir;
 		}
 
-		/**
-		 * Create a normalized backup name, depending on the current date/time and Database
-		 *
-		 * @param string sNameSpec Name and path, eventually containing itop placeholders + time formatting specs
-		 */
+        /**
+         * Create a normalized backup name, depending on the current date/time and Database
+         *
+         * @param string sNameSpec Name and path, eventually containing itop placeholders + time formatting specs
+         *
+         * @return string
+         */
 		public function MakeName($sNameSpec = "__DB__-%Y-%m-%d")
 		{
 			$sFileName = $sNameSpec;
@@ -646,7 +648,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		{
 			if (empty($sData))
 			{
-				return;
+				return '';
 			}
 
 			return ' --'.$sCliArgName.'='.self::EscapeShellArg($sData);
