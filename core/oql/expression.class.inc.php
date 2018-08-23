@@ -812,7 +812,7 @@ class ScalarExpression extends UnaryExpression
 				$aCriteria['unit'] = 'HOUR';
 				break;
 			default:
-				$aValue = array('value' => $this->GetValue());
+				$aValue = array();
 				if (!is_null($oAttDef))
 				{
 					switch (true)
@@ -820,11 +820,7 @@ class ScalarExpression extends UnaryExpression
 						case ($oAttDef instanceof AttributeExternalField):
 							try
 							{
-								if ($this->GetValue() == 0)
-								{
-									$aValue['label'] = Dict::S('UI:UndefinedObject');
-								}
-								else
+								if ($this->GetValue() != 0)
 								{
 									/** @var AttributeExternalKey $oAttDef */
 									$sTarget = $oAttDef->GetFinalAttDef()->GetTargetClass();
@@ -841,11 +837,7 @@ class ScalarExpression extends UnaryExpression
 						case $oAttDef->IsExternalKey():
 							try
 							{
-								if ($this->GetValue() == 0)
-								{
-									$aValue['label'] = Dict::S('UI:UndefinedObject');
-								}
-								else
+								if ($this->GetValue() != 0)
 								{
 									/** @var AttributeExternalKey $oAttDef */
 									$sTarget = $oAttDef->GetTargetClass();
@@ -855,7 +847,7 @@ class ScalarExpression extends UnaryExpression
 							}
 							catch (Exception $e)
 							{
-								IssueLog::Error($e->getMessage());
+								// This object cannot be seen... ignore
 							}
 							break;
 						default:
@@ -869,7 +861,12 @@ class ScalarExpression extends UnaryExpression
 							break;
 					}
 				}
-				$aCriteria['values'] = array($aValue);
+				if (!empty($aValue))
+                {
+                    // only if a label is found
+                    $aValue['value'] = $this->GetValue();
+                    $aCriteria['values'] = array($aValue);
+                }
 				break;
 		}
 		$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
