@@ -168,7 +168,7 @@ class SQLUnionQuery extends SQLQuery
 		}
 		foreach($this->aSelectExpr as $sSelectAlias => $oExpr)
 		{
-			$aSelectAliases[$sSelectAlias] = $oExpr->Render()." AS `$sSelectAlias`";
+			$aSelectAliases[$sSelectAlias] = $oExpr->RenderExpression(true)." AS `$sSelectAlias`";
 		}
 
 		$sSelect = implode(",$sLineSep ", $aSelectAliases);

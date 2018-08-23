@@ -47,13 +47,30 @@ abstract class Expression
 	/**
 	 * recursive rendering
 	 *
+	 * @deprecated use RenderExpression
+	 *
 	 * @param array $aArgs used as input by default, or used as output if bRetrofitParams set to True
 	 * @param bool $bRetrofitParams
 	 *
 	 * @return array|string
 	 * @throws \MissingQueryArgument
 	 */
-	abstract public function Render(&$aArgs = null, $bRetrofitParams = false);
+	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	{
+		return $this->RenderExpression(false, $aArgs, $bRetrofitParams);
+	}
+
+	/**
+	 * recursive rendering
+	 *
+	 * @param bool $bForSQL generates code for OQL if false, for SQL otherwise
+	 * @param array $aArgs used as input by default, or used as output if bRetrofitParams set to True
+	 * @param bool $bRetrofitParams
+	 *
+	 * @return array|string
+	 * @throws \MissingQueryArgument
+	 */
+	abstract public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false);
 
 	/**
 	 * @param DBObjectSearch $oSearch
@@ -66,7 +83,7 @@ abstract class Expression
 	 */
 	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
-		return $this->Render($aArgs);
+		return $this->RenderExpression(false, $aArgs);
 	}
 
 	public function GetAttDef($aClasses = array())
@@ -104,7 +121,7 @@ abstract class Expression
 
 	public function serialize()
 	{
-		return base64_encode($this->Render());
+		return base64_encode($this->RenderExpression(false));
 	}
 
 	/**
@@ -183,7 +200,7 @@ abstract class Expression
 	{
 		return array(
 			'widget' => AttributeDefinition::SEARCH_WIDGET_TYPE_RAW,
-			'oql' => $this->Render($aArgs, $bRetrofitParams),
+			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
 			'label' => $this->Display($oSearch, $aArgs, $oAttDef),
 			'source' => get_class($this),
 		);
@@ -229,7 +246,7 @@ class SQLExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	public function RenderExpression($bForSql = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		return $this->m_sSQL;
 	}
@@ -285,7 +302,30 @@ class BinaryExpression extends Expression
 	protected $m_oRightExpr;
 	protected $m_sOperator;
 
+	/**
+	 * @param \Expression $oLeftExpr
+	 * @param string $sOperator
+	 * @param \Expression $oRightExpr
+	 *
+	 * @throws \CoreException
+	 */
 	public function __construct($oLeftExpr, $sOperator, $oRightExpr)
+	{
+		$this->ValidateConstructorParams($oLeftExpr, $sOperator, $oRightExpr);
+
+		$this->m_oLeftExpr  = $oLeftExpr;
+		$this->m_oRightExpr = $oRightExpr;
+		$this->m_sOperator  = $sOperator;
+	}
+
+	/**
+	 * @param $oLeftExpr
+	 * @param $sOperator
+	 * @param $oRightExpr
+	 *
+	 * @throws \CoreException if one of the parameter is invalid
+	 */
+	protected function ValidateConstructorParams($oLeftExpr, $sOperator, $oRightExpr)
 	{
 		if (!is_object($oLeftExpr))
 		{
@@ -303,13 +343,11 @@ class BinaryExpression extends Expression
 		{
 			throw new CoreException('Expecting an Expression object on the right hand', array('found_class' => get_class($oRightExpr)));
 		}
-		if ( (($sOperator == "IN") ||  ($sOperator == "NOT IN")) && !$oRightExpr instanceof ListExpression)
+		if ((($sOperator == "IN") || ($sOperator == "NOT IN")) && !($oRightExpr instanceof ListExpression))
 		{
-			throw new CoreException("Expecting a List Expression object on the right hand for operator $sOperator", array('found_class' => get_class($oRightExpr)));
+			throw new CoreException("Expecting a List Expression object on the right hand for operator $sOperator",
+				array('found_class' => get_class($oRightExpr)));
 		}
-		$this->m_oLeftExpr  = $oLeftExpr;
-		$this->m_oRightExpr = $oRightExpr;
-		$this->m_sOperator  = $sOperator;
 	}
 
 	public function IsTrue()
@@ -341,12 +379,11 @@ class BinaryExpression extends Expression
 		return $this->m_sOperator;
 	}
 
-	// recursive rendering
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		$sOperator = $this->GetOperator();
-		$sLeft = $this->GetLeftExpr()->Render($aArgs, $bRetrofitParams);
-		$sRight = $this->GetRightExpr()->Render($aArgs, $bRetrofitParams);
+		$sLeft = $this->GetLeftExpr()->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
+		$sRight = $this->GetRightExpr()->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		return "($sLeft $sOperator $sRight)";
 	}
 
@@ -605,7 +642,7 @@ class BinaryExpression extends Expression
 
 			$aCriteria = self::MergeCriteria($aCriteriaLeft, $aCriteriaRight, $this->GetOperator());
 		}
-		$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
+		$aCriteria['oql'] = $this->RenderExpression(false, $aArgs, $bRetrofitParams);
 		$aCriteria['label'] = $this->Display($oSearch, $aArgs, $oAttDef);
 
 		if (isset($aCriteriaLeft['ref']) && isset($aCriteriaRight['ref']) && ($aCriteriaLeft['ref'] != $aCriteriaRight['ref']))
@@ -643,6 +680,56 @@ class BinaryExpression extends Expression
 }
 
 
+/**
+ * @since 2.6 N°931 tag fields
+ */
+class MatchExpression extends BinaryExpression
+{
+	/** @var \FieldExpression */
+	protected $m_oLeftExpr;
+	/** @var \ScalarExpression */
+	protected $m_oRightExpr;
+
+	/**
+	 * MatchExpression constructor.
+	 *
+	 * @param \FieldExpression $oLeftExpr
+	 * @param \ScalarExpression $oRightExpr
+	 *
+	 * @throws \CoreException
+	 */
+	public function __construct(FieldExpression $oLeftExpr, ScalarExpression $oRightExpr)
+	{
+		parent::__construct($oLeftExpr, 'MATCHES', $oRightExpr);
+	}
+
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
+	{
+		$sLeft = $this->GetLeftExpr()->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
+		$sRight = $this->GetRightExpr()->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
+
+		if ($bForSQL)
+		{
+			$sRet = "MATCH ($sLeft) AGAINST ($sRight IN NATURAL LANGUAGE MODE)";
+		}
+		else
+		{
+			$sRet = "$sLeft MATCHES $sRight";
+		}
+
+		return $sRet;
+	}
+
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
+	{
+		$oLeft = $this->GetLeftExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+		$oRight = $this->GetRightExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+
+		return new static($oLeft, $oRight);
+	}
+}
+
+
 class UnaryExpression extends Expression
 {
 	protected $m_value;
@@ -664,7 +751,7 @@ class UnaryExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		return CMDBSource::Quote($this->m_value);
 	}
@@ -772,11 +859,11 @@ class ScalarExpression extends UnaryExpression
 			return $aCtx['date_display']->MakeValueLabel($oSearch, $this->m_value, $this->m_value);
 		}
 
-		return $this->Render($aArgs);
+		return $this->RenderExpression(false, $aArgs);
 	}
 
 	// recursive rendering
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		if (is_null($this->m_value))
 		{
@@ -869,7 +956,7 @@ class ScalarExpression extends UnaryExpression
                 }
 				break;
 		}
-		$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
+		$aCriteria['oql'] = $this->RenderExpression(false, $aArgs, $bRetrofitParams);
 		return $aCriteria;
 	}
 
@@ -977,7 +1064,7 @@ class FieldExpression extends UnaryExpression
 	}
 
 	// recursive rendering
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		if (empty($this->m_sParent))
 		{
@@ -1323,19 +1410,18 @@ class VariableExpression extends UnaryExpression
 			return $oAttDef->GetAsPlainText($sValue);
 		}
 
-		return $this->Render($aArgs);
+		return $this->RenderExpression(false, $aArgs);
 	}
 
-	// recursive rendering
-
 	/**
-	 * @param null $aArgs
+	 * @param bool $bForSQL
+	 * @param array $aArgs
 	 * @param bool $bRetrofitParams
 	 *
 	 * @return array|string
 	 * @throws \MissingQueryArgument
 	 */
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		if (is_null($aArgs))
 		{
@@ -1453,12 +1539,12 @@ class ListExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		$aRes = array();
 		foreach ($this->m_aExpressions as $oExpr)
 		{
-			$aRes[] = $oExpr->Render($aArgs, $bRetrofitParams);
+			$aRes[] = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		}
 		return '('.implode(', ', $aRes).')';
 	}
@@ -1609,12 +1695,12 @@ class FunctionExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		$aRes = array();
 		foreach ($this->m_aArgs as $iPos => $oExpr)
 		{
-			$aRes[] = $oExpr->Render($aArgs, $bRetrofitParams);
+			$aRes[] = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		}
 		return $this->m_sVerb.'('.implode(', ', $aRes).')';
 	}
@@ -1814,7 +1900,7 @@ class FunctionExpression extends Expression
 				$aCtx['date_display'] = $this;
 				break;
 			default:
-				return $this->Render($aArgs);
+				return $this->RenderExpression(false, $aArgs);
 		}
 
 		foreach($this->m_aArgs as $oExpression)
@@ -1851,7 +1937,7 @@ class FunctionExpression extends Expression
 					$aCriteria = array_merge($oExpression->GetCriterion($oSearch, $aArgs, $bRetrofitParams, $oAttDef), $aCriteria);
 				}
 				$aCriteria['has_undefined'] = true;
-				$aCriteria['oql'] = $this->Render($aArgs, $bRetrofitParams);
+				$aCriteria['oql'] = $this->RenderExpression(false, $aArgs, $bRetrofitParams);
 				break;
 
 			case 'NOW':
@@ -1907,9 +1993,9 @@ class IntervalExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
-		return 'INTERVAL '.$this->m_oValue->Render($aArgs, $bRetrofitParams).' '.$this->m_sUnit;
+		return 'INTERVAL '.$this->m_oValue->RenderExpression($bForSQL, $aArgs, $bRetrofitParams).' '.$this->m_sUnit;
 	}
 
 	public function Browse(Closure $callback)
@@ -1974,7 +2060,7 @@ class IntervalExpression extends Expression
 
 	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
-		return $this->m_oValue->Render($aArgs).' '.Dict::S('Expression:Unit:Long:'.$this->m_sUnit, $this->m_sUnit);
+		return $this->m_oValue->RenderExpression(false, $aArgs).' '.Dict::S('Expression:Unit:Long:'.$this->m_sUnit, $this->m_sUnit);
 	}
 }
 
@@ -1999,12 +2085,12 @@ class CharConcatExpression extends Expression
 	}
 
 	// recursive rendering
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		$aRes = array();
 		foreach ($this->m_aExpressions as $oExpr)
 		{
-			$sCol = $oExpr->Render($aArgs, $bRetrofitParams);
+			$sCol = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 			// Concat will be globally NULL if one single argument is null !
 			$aRes[] = "COALESCE($sCol, '')";
 		}
@@ -2111,12 +2197,12 @@ class CharConcatWSExpression extends CharConcatExpression
 	}
 
 	// recursive rendering
-	public function Render(&$aArgs = null, $bRetrofitParams = false)
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		$aRes = array();
 		foreach ($this->m_aExpressions as $oExpr)
 		{
-			$sCol = $oExpr->Render($aArgs, $bRetrofitParams);
+			$sCol = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 			// Concat will be globally NULL if one single argument is null !
 			$aRes[] = "COALESCE($sCol, '')";
 		}
