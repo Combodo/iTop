@@ -5065,12 +5065,20 @@ abstract class MetaModel
 					$aTableInfo['Fields'][$sField]['used'] = true;
 
 					$bIndexNeeded = $oAttDef->RequiresIndex();
+					$bFullTextIndexNeeded = false;
 					if (!$bIndexNeeded)
 					{
 						// Add an index on the columns of the friendlyname
 						if (in_array($sField, $aFriendlynameAttcodes))
 						{
 							$bIndexNeeded = true;
+						}
+					}
+					else
+					{
+						if ($oAttDef->RequiresFullTextIndex())
+						{
+							$bFullTextIndexNeeded = true;
 						}
 					}
 
@@ -5092,21 +5100,32 @@ abstract class MetaModel
 						if ($bIndexNeeded)
 						{
 							$aTableInfo['Indexes'][$sField]['used'] = true;
-							$aColumns = array($sField);
-							$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
+							$sIndexName = $sField;
 							$sColumns = '`'.$sField.'`';
-							if (!is_null($aLength[0]))
+
+							if ($bFullTextIndexNeeded)
 							{
-								$sColumns .= ' ('.$aLength[0].')';
-							}
-							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX `$sField` ($sColumns)";
-							if ($bTableToCreate)
-							{
-								$aCreateTableItems[$sTable][] = "INDEX `$sField` ($sColumns)";
+								$sIndexType = 'FULLTEXT INDEX';
 							}
 							else
 							{
-								$aAlterTableItems[$sTable][] = "ADD INDEX `$sField` ($sColumns)";
+								$sIndexType = 'INDEX';
+								$aColumns = array($sField);
+								$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
+								if (!is_null($aLength[0]))
+								{
+									$sColumns .= ' ('.$aLength[0].')';
+								}
+							}
+
+							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD $sIndexType `$sIndexName` ($sColumns)";
+							if ($bTableToCreate)
+							{
+								$aCreateTableItems[$sTable][] = "$sIndexType `$sIndexName` ($sColumns)";
+							}
+							else
+							{
+								$aAlterTableItems[$sTable][] = "ADD $sIndexType `$sIndexName` ($sColumns)";
 							}
 						}
 
@@ -5119,12 +5138,24 @@ abstract class MetaModel
 						$sAlterTableItemsAfterChange = '';
 						if ($bIndexNeeded)
 						{
-							$aColumns = array($sField);
-							$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
 							$aTableInfo['Indexes'][$sField]['used'] = true;
+
+							if ($bFullTextIndexNeeded)
+							{
+								$sIndexType = 'FULLTEXT INDEX';
+								$aColumns = null;
+								$aLength = null;
+							}
+							else
+							{
+								$sIndexType = 'INDEX';
+								$aColumns = array($sField);
+								$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
+							}
 
 							if (!CMDBSource::HasIndex($sTable, $sField, $aColumns, $aLength))
 							{
+								$sIndexName = $sField;
 								$sColumns = '`'.$sField.'`';
 								if (!is_null($aLength[0]))
 								{
@@ -5134,16 +5165,11 @@ abstract class MetaModel
 								$aErrors[$sClass][$sAttCode][] = "Foreign key '$sField' in table '$sTable' should have an index";
 								if (CMDBSource::HasIndex($sTable, $sField))
 								{
-									$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` DROP INDEX `$sField`";
-									$sSugFixAfterChange = "ALTER TABLE `$sTable` ADD INDEX `$sField` ($sColumns)";
-									$aAlterTableItems[$sTable][] = "DROP INDEX `$sField`";
-									$sAlterTableItemsAfterChange = "ADD INDEX `$sField` ($sColumns)";
+									$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` DROP INDEX `$sIndexName`";
+									$aAlterTableItems[$sTable][] = "DROP INDEX `$sIndexName`";
 								}
-								else
-								{
-									$sSugFixAfterChange = "ALTER TABLE `$sTable` ADD INDEX `$sField` ($sColumns)";
-									$sAlterTableItemsAfterChange = "ADD INDEX `$sField` ($sColumns)";
-								}
+								$sSugFixAfterChange = "ALTER TABLE `$sTable` ADD $sIndexType `$sIndexName` ($sColumns)";
+								$sAlterTableItemsAfterChange = "ADD $sIndexType `$sIndexName` ($sColumns)";
 							}
 						}
 

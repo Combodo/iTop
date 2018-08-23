@@ -179,6 +179,9 @@ Operators:<br/>
 
 	'Core:FriendlyName-Label' => 'Full name',
 	'Core:FriendlyName-Description' => 'Full name',
+
+	'Core:AttributeTag' => 'Tags',
+	'Core:AttributeTag+' => 'Tags',
 ));
 
 

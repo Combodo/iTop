@@ -540,6 +540,9 @@ Opérateurs :<br/>
 	'Core:FriendlyName-Label' => 'Nom complet',
 	'Core:FriendlyName-Description' => 'Nom complet',
 
+	'Core:AttributeTag' => 'Taxon',
+	'Core:AttributeTag+' => 'Taxon',
+
 	'Change:ObjectCreated' => 'Elément créé',
 	'Change:ObjectDeleted' => 'Elément effacé',
 	'Change:ObjectModified' => 'Elément modifié',

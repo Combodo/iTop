@@ -662,6 +662,11 @@ abstract class AttributeDefinition
 		return array();
 	}
 	public function RequiresIndex() {return false;}
+
+	public function RequiresFullTextIndex()
+	{
+		return false;
+	}
 	public function CopyOnAllTables() {return false;}
 
 	public function GetOrderBySQLExpressions($sClassAlias)
@@ -5881,6 +5886,34 @@ class AttributeExternalField extends AttributeDefinition
 		return false;
 	}
 
+}
+
+
+/**
+ * Multi value list of tags
+ *
+ * @see TagSetFieldData
+ * @since 2.6 N°931 tag fields
+ */
+class AttributeTagSet extends AttributeString
+{
+	//TODO SQL type length (nb of tags per record, max tag length)
+	//TODO implement ??
+	//TODO specific filters
+	public function RequiresIndex()
+	{
+		return true;
+	}
+
+	public function RequiresFullTextIndex()
+	{
+		return true;
+	}
+
+	public function IsNullAllowed()
+	{
+		return true;
+	}
 }
 
 /**
