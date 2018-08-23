@@ -29,6 +29,7 @@ MetaModel::IncludeModule('core/action.class.inc.php');
 MetaModel::IncludeModule('core/trigger.class.inc.php');
 MetaModel::IncludeModule('core/bulkexport.class.inc.php');
 MetaModel::IncludeModule('core/ownershiplock.class.inc.php');
+MetaModel::IncludeModule('core/tagfield.class.inc.php');
 MetaModel::IncludeModule('synchro/synchrodatasource.class.inc.php');
 MetaModel::IncludeModule('core/backgroundtask.class.inc.php');
 MetaModel::IncludeModule('core/inlineimage.class.inc.php');
