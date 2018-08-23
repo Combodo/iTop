@@ -1001,7 +1001,14 @@ EOF
 			{
 				$aReconcAttCodes[] = $oAttribute->getAttribute('id');
 			}
-			$sReconcKeys = "array('".implode("', '", $aReconcAttCodes)."')";
+			if (empty($aReconcAttCodes))
+            {
+                $sReconcKeys = "array()";
+            }
+            else
+            {
+                $sReconcKeys = "array('".implode("', '", $aReconcAttCodes)."')";
+            }
 		}
 		else
 		{
