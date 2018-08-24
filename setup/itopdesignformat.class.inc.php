@@ -73,6 +73,12 @@ class iTopDesignFormat
 		'1.5' => array(
 			'previous' => '1.4',
 			'go_to_previous' => 'From15To14',
+			'next' => '1.6',
+			'go_to_next' => 'From15To16', //TODO
+		),
+		'1.6' => array(
+			'previous' => '1.5',
+			'go_to_previous' => 'From16To15', //TODO
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -628,6 +634,38 @@ class iTopDesignFormat
 	protected function From14To15($oFactory)
 	{
 	}
+
+	/**
+	 * @param $oFactory
+	 *
+	 * @return void (Errors are logged)
+	 */
+	protected function From15To16($oFactory)
+	{
+		// nothing changed !
+	}
+
+	/**
+	 * @param $oFactory
+	 *
+	 * @return void (Errors are logged)
+	 */
+	protected function From16To15($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// Remove AttributeTagSet nodes
+		//
+		$sPath = "/itop_design/classes/class/fields/field[@xsi:type='AttributeTagSet']";
+		$oNodeList = $oXPath->query($sPath);
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('Node '.self::GetItopNodePath($oNode).' is irrelevant in this version, it will be removed.');
+			$this->DeleteNode($oNode);
+		}
+	}
+
+
 
 	/**
 	 * Delete a node from the DOM and make sure to also remove the immediately following line break (DOMText), if any.

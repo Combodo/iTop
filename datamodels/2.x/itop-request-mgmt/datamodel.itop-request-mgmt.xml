@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
 	<constants>
 		<constant id="PORTAL_USERREQUEST_PUBLIC_LOG" xsi:type="string" _delta="define"><![CDATA[public_log]]></constant>
 		<constant id="PORTAL_USERREQUEST_USER_COMMENT" xsi:type="string" _delta="define"><![CDATA[user_comment]]></constant>
