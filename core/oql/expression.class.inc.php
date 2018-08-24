@@ -189,7 +189,7 @@ abstract class Expression
 	 * @param string sValue The value returned by the query, for this expression
 	 * @param string sDefault The default value if no relevant label could be computed
 	 *
-	 * @return The label
+	 * @return string label
 	 */
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
@@ -710,7 +710,7 @@ class MatchExpression extends BinaryExpression
 
 		if ($bForSQL)
 		{
-			$sRet = "MATCH ($sLeft) AGAINST ($sRight IN NATURAL LANGUAGE MODE)";
+			$sRet = "MATCH ($sLeft) AGAINST ($sRight IN BOOLEAN MODE)";
 		}
 		else
 		{
@@ -1170,7 +1170,7 @@ class FieldExpression extends UnaryExpression
 	 * @param string sValue The value returned by the query, for this expression
 	 * @param string sDefault The default value if no relevant label could be computed
 	 *
-	 * @return The label
+	 * @return string label
 	 * @throws \CoreException
 	 */
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
@@ -1560,7 +1560,6 @@ class ListExpression extends Expression
 
 	public function ApplyParameters($aArgs)
 	{
-		$aRes = array();
 		foreach ($this->m_aExpressions as $idx => $oExpr)
 		{
 			if ($oExpr instanceof VariableExpression)
@@ -1622,7 +1621,6 @@ class ListExpression extends Expression
 
 	public function RenameParam($sOldName, $sNewName)
 	{
-		$aRes = array();
 		foreach ($this->m_aExpressions as $key => $oExpr)
 		{
 			$this->m_aExpressions[$key] = $oExpr->RenameParam($sOldName, $sNewName);
@@ -1631,7 +1629,6 @@ class ListExpression extends Expression
 
 	public function RenameAlias($sOldName, $sNewName)
 	{
-		$aRes = array();
 		foreach ($this->m_aExpressions as $key => $oExpr)
 		{
 			$oExpr->RenameAlias($sOldName, $sNewName);
@@ -1716,7 +1713,6 @@ class FunctionExpression extends Expression
 
 	public function ApplyParameters($aArgs)
 	{
-		$aRes = array();
 		foreach ($this->m_aArgs as $idx => $oExpr)
 		{
 			if ($oExpr instanceof VariableExpression)
@@ -1810,7 +1806,7 @@ class FunctionExpression extends Expression
 	 * @param string sValue The value returned by the query, for this expression
 	 * @param string sDefault The default value if no relevant label could be computed
 	 *
-	 * @return The label
+	 * @return string label
 	 */
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
@@ -2108,7 +2104,6 @@ class CharConcatExpression extends Expression
 
 	public function ApplyParameters($aArgs)
 	{
-		$aRes = array();
 		foreach ($this->m_aExpressions as $idx => $oExpr)
 		{
 			if ($oExpr instanceof VariableExpression)
