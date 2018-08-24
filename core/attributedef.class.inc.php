@@ -272,7 +272,7 @@ abstract class AttributeDefinition
 	 * Check the validity of the given value
 	 *
 	 * @param \DBObject $oHostObject
-	 * @param $value An error if any, null otherwise
+	 * @param $value Object error if any, null otherwise
 	 *
 	 * @return bool
 	 */
@@ -5210,7 +5210,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		{
 			return parent::GetAllowedValues($aArgs, $sContains);
 		}
-		catch (MissingQueryArgument $e) //FIXME never enters here...
+		catch (Exception $e)
 		{
 			// Some required arguments could not be found, enlarge to any existing value
 			$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
@@ -5709,7 +5709,9 @@ class AttributeExternalField extends AttributeDefinition
 			return $this->GetKeyAttDef(EXTKEY_RELATIVE); // which corresponds to the code hereafter !
 
 		case EXTKEY_RELATIVE:
-			return MetaModel::GetAttributeDef($this->GetHostClass(), $this->Get("extkey_attcode"));
+            /** @var \AttributeExternalKey $oAttDef */
+			$oAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $this->Get("extkey_attcode"));
+			return $oAttDef;
 
 		default:
 			throw new CoreException("Unexpected value for argument iType: '$iType'");
@@ -7527,7 +7529,7 @@ class AttributeTable extends AttributeDBField
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (count($value) == 0)
+		if (!is_array($value) || count($value) == 0)
 		{
 			return "";
 		}
@@ -7593,7 +7595,7 @@ class AttributePropertySet extends AttributeTable
 
 	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
-		if (count($value) == 0)
+		if (!is_array($value) || count($value) == 0)
 		{
 			return "";
 		}
@@ -7619,7 +7621,7 @@ class AttributePropertySet extends AttributeTable
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
-		if (count($value) == 0)
+		if (!is_array($value) || count($value) == 0)
 		{
 			return "";
 		}
