@@ -27,6 +27,7 @@
           <class id="Typology"/>
           <class id="NASFileSystem"/>
           <class id="LogicalVolume"/>
+          <class id="TagSetFieldData"/>
           <class id="Tape"/>
           <class id="VLAN"/>
         </classes>
