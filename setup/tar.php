@@ -680,7 +680,7 @@ class ArchiveTar
 	 */
 	public function _error($p_message)
 	{
-		$this->error_object = $this->raiseError($p_message);
+		IssueLog::Error($p_message);
 	}
 
 	/**
@@ -688,7 +688,7 @@ class ArchiveTar
 	 */
 	public function _warning($p_message)
 	{
-		$this->error_object = $this->raiseError($p_message);
+		IssueLog::Warning($p_message);
 	}
 
 	/**

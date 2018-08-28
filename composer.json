@@ -6,7 +6,9 @@
     "ext-mcrypt": "*",
     "ext-cli": "*",
     "ext-soap": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "ext-zip": "*",
+    "ext-mysqli": "*"
   },
   "config": {
     "platform": {
