@@ -31,6 +31,7 @@ require_once('ormstopwatch.class.inc.php');
 require_once('ormpassword.class.inc.php');
 require_once('ormcaselog.class.inc.php');
 require_once('ormlinkset.class.inc.php');
+require_once('ormtagset.class.inc.php');
 require_once('htmlsanitizer.class.inc.php');
 require_once(APPROOT.'sources/autoload.php');
 require_once('customfieldshandler.class.inc.php');
@@ -4210,7 +4211,7 @@ class AttributeEnum extends AttributeString
 	{
 		if ($oFormField === null)
 		{
-			// TODO : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
+			// Later : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -5297,7 +5298,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	{
 		if ($oFormField === null)
 		{
-			// TODO : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
+			// Later : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
@@ -5363,7 +5364,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		unset($aParams[$idx]);
 		$idx = array_search('jointype', $aParams);
 		unset($aParams[$idx]);
-		return $aParams; // TODO: mettre les bons parametres ici !!
+		return $aParams; // Later: mettre les bons parametres ici !!
 	}
 
 	public function GetEditClass() {return "ExtKey";}
@@ -5899,23 +5900,216 @@ class AttributeExternalField extends AttributeDefinition
  */
 class AttributeTagSet extends AttributeString
 {
-	//TODO SQL type length (nb of tags per record, max tag length)
-	//TODO implement ??
-	//TODO specific filters
-	public function RequiresIndex()
-	{
-		return true;
-	}
+    public function GetEditClass() {return "TagSet";}
 
-	public function RequiresFullTextIndex()
-	{
-		return true;
-	}
+    protected function GetSQLCol($bFullSpec = false)
+    {
+        return 'VARCHAR(1024)'
+            .CMDBSource::GetSqlStringColumnDefinition()
+            .($bFullSpec ? $this->GetSQLColSpec() : '');
+    }
 
-	public function IsNullAllowed()
-	{
-		return true;
-	}
+    public function RequiresIndex() {return true;}
+
+	public function RequiresFullTextIndex() {return true;}
+
+    public function Equals($val1, $val2) {
+        if (($val1 instanceof ormTagSet) && ($val2 instanceof ormTagSet))
+        {
+            return $val1->Equals($val2);
+        }
+        return ($val1 == $val2);
+    }
+
+    /**
+     * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
+     *
+     * @param $proposedValue
+     * @param $oHostObj
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function MakeRealValue($proposedValue, $oHostObj)
+    {
+        $oTagSet = new ormTagSet($this->GetHostClass(), $this->GetCode());
+        if (is_string($proposedValue) && !empty($proposedValue))
+        {
+            $aTagCodes = explode(' ', "$proposedValue");
+            $oTagSet->SetValue($aTagCodes);
+        }
+        return $oTagSet;
+    }
+
+    public function ScalarToSQL($value)
+    {
+        if (empty($value))
+        {
+            return '';
+        }
+        if ($value instanceof ormTagSet)
+        {
+            $aValues = $value->GetValue();
+            return implode(' ', $aValues);
+        }
+        throw new CoreWarning('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetHostClass(), 'attribute' => $this->GetCode()));
+    }
+
+    /**
+     * @param $value
+     * @param \DBObject $oHostObject
+     * @param bool $bLocalize
+     *
+     * @return string|null
+     *
+     * @throws \CoreException
+     */
+    public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+    {
+        if (is_object($value) && ($value instanceof ormTagSet))
+        {
+            $aValues = $value->GetValue();
+            return implode(' ', $aValues);
+        }
+        return null;
+    }
+
+    /**
+     * @param $value
+     * @param \DBObject $oHostObject
+     * @param bool $bLocalize
+     *
+     * @return string
+     *
+     */
+    public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
+    {
+        if (is_object($value) && ($value instanceof ormTagSet))
+        {
+            $sRes = "<Set>\n";
+            $aValues = $value->GetValue();
+            if (!empty($aValuess))
+            {
+                $sRes .= '<Tag>'.implode('</Tag><Tag>', $aValues).'</Tag>';
+            }
+            $sRes .= "</Set>\n";
+        }
+        else
+        {
+            $sRes = '';
+        }
+        return $sRes;
+    }
+
+    /**
+     * @param $value
+     * @param string $sSeparator
+     * @param string $sTextQualifier
+     * @param \DBObject $oHostObject
+     * @param bool $bLocalize
+     * @param bool $bConvertToPlainText
+     *
+     * @return mixed|string
+     * @throws \CoreException
+     */
+    public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
+    {
+        $sSepItem = MetaModel::GetConfig()->Get('link_set_item_separator');
+
+        if (is_object($value) && ($value instanceof ormTagSet))
+        {
+            $aValues = $value->GetValue();
+            $sRes = implode($sSepItem, $aValues);
+        }
+        else
+        {
+            $sRes = '';
+        }
+        $sRes = str_replace($sTextQualifier, $sTextQualifier.$sTextQualifier, $sRes);
+        $sRes = $sTextQualifier.$sRes.$sTextQualifier;
+        return $sRes;
+    }
+
+    /**
+     * List the available verbs for 'GetForTemplate'
+     */
+    public function EnumTemplateVerbs()
+    {
+        return array(
+            '' => 'Plain text (unlocalized) representation',
+            'html' => 'HTML representation (unordered list)',
+        );
+    }
+
+    /**
+     * Get various representations of the value, for insertion into a template (e.g. in Notifications)
+     *
+     * @param mixed $value The current value of the field
+     * @param string $sVerb The verb specifying the representation of the value
+     * @param DBObject $oHostObject The object
+     * @param bool $bLocalize Whether or not to localize the value
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
+    {
+        if (is_object($value) && ($value instanceof ormTagSet))
+        {
+            $aValues = $value->GetValue();
+
+            switch ($sVerb)
+            {
+                case '':
+                    return implode("\n", $aValues);
+
+                case 'html':
+                    return '<ul><li>'.implode("</li><li>", $aValues).'</li></ul>';
+
+                default:
+                    throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
+            }
+        }
+        throw new CoreUnexpectedValue("Bad value '$value' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
+    }
+
+    /**
+     * Helper to get a value that will be JSON encoded
+     * The operation is the opposite to FromJSONToValue
+     *
+     * @param \ormTagSet $value
+     *
+     * @return array
+     * @throws \CoreException
+     */
+    public function GetForJSON($value)
+    {
+        $aRet = array();
+        if (is_object($value) && ($value instanceof ormTagSet))
+        {
+            $aRet = $value->GetValue();
+        }
+        return $aRet;
+    }
+
+    /**
+     * Helper to form a value, given JSON decoded data
+     * The operation is the opposite to GetForJSON
+     *
+     * @param $json
+     *
+     * @return \ormTagSet
+     * @throws \CoreException
+     * @throws \CoreUnexpectedValue
+     * @throws \Exception
+     */
+    public function FromJSONToValue($json)
+    {
+        $oSet = new ormTagSet($this->GetHostClass(), $this->GetCode());
+        $oSet->SetValue($json);
+        return $oSet;
+    }
+
 }
 
 /**

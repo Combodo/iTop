@@ -171,7 +171,35 @@ class ItopDataTestCase extends ItopTestCase
         return $oTicket;
     }
 
-	/**
+    /**
+     * Create a Ticket in database
+     *
+     * @param string $sClass
+     * @param string $sAttCode
+     * @param string $sTagCode
+     * @param string $sTagLabel
+     * @param string $sTagDescription
+     *
+     * @return \TagSetFieldData
+     * @throws \CoreException
+     */
+    protected function CreateTagData($sClass, $sAttCode, $sTagCode, $sTagLabel, $sTagDescription = '')
+    {
+        $sTagClass = MetaModel::GetTagDataClass($sClass, $sAttCode);
+        $oTagData = self::createObject($sTagClass, array(
+            'tag_code' => $sTagCode,
+            'tag_label' => $sTagLabel,
+            'tag_class' => $sClass,
+            'tag_attcode' => $sAttCode,
+            'tag_description' => $sTagDescription,
+        ));
+        $this->debug("\nCreated {$oTagData->Get('tag_code')} ({$oTagData->Get('tag_label')})");
+
+        /** @var \TagSetFieldData $oTagData */
+        return $oTagData;
+    }
+
+    /**
 	 * Create a UserRequest in database
 	 *
 	 * @param int $iNum

@@ -1388,19 +1388,25 @@ EOF
 				{
 					$aParameters['handler_class'] = $this->GetMandatoryPropString($oField, 'handler_class');
 				}
-				else
+				elseif ($sAttType == 'AttributeTagSet')
+                {
+                    $aTagFieldsInfo[] = $sAttCode;
+                    $aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+                    $aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+                    $aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+                    $aParameters['depends_on'] = $sDependencies;
+                    $aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+                }
+                else
 				{
-					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
-					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
-					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
-					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-					$aParameters['depends_on'] = $sDependencies;
+                    $aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+                    $aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+                    $aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+                    $aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+                    $aParameters['depends_on'] = $sDependencies;
 				}
 
-				if ($sAttType == 'AttributeTagSet')
-				{
-					$aTagFieldsInfo[] = $sAttCode;
-				}
+
 
 				// Optional parameters (more for historical reasons)
 				// Added if present...

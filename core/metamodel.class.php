@@ -7105,6 +7105,12 @@ abstract class MetaModel
 		return $sRet;
 	}
 
+	public static function GetTagDataClass($sClass, $sAttCode)
+    {
+        $sTagSuffix = $sClass.'_'.$sAttCode;
+        return 'TagSetFieldDataFor_'.$sTagSuffix;
+    }
+
 }
 
 

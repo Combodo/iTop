@@ -27,55 +27,69 @@
  */
 abstract class TagSetFieldData extends cmdbAbstractObject
 {
-	public static function Init()
-	{
-		$aParams = array
-		(
-			'category' => 'bizmodel',
-			'key_type' => 'autoincrement',
-			'name_attcode' => array('tag_label'),
-			'state_attcode' => '',
-			'reconc_keys' => array('tag_code'),
-			'db_table' => 'priv_tagfielddata',
-			'db_key_field' => 'id',
-			'db_finalclass_field' => 'finalclass',
-		);
+    public static function Init()
+    {
+        $aParams = array
+        (
+            'category' => 'bizmodel',
+            'key_type' => 'autoincrement',
+            'name_attcode' => array('tag_label'),
+            'state_attcode' => '',
+            'reconc_keys' => array('tag_code'),
+            'db_table' => 'priv_tagfielddata',
+            'db_key_field' => 'id',
+            'db_finalclass_field' => 'finalclass',
+        );
 
-		MetaModel::Init_Params($aParams);
-		MetaModel::Init_InheritAttributes();
+        MetaModel::Init_Params($aParams);
+        MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeString("tag_code", array(
-			"allowed_values" => null,
-			"sql" => 'tag_code',
-			"default_value" => '',
-			"is_null_allowed" => false,
-			"depends_on" => array()
-		)));
-		MetaModel::Init_AddAttribute(new AttributeString("tag_label", array(
-			"allowed_values" => null,
-			"sql" => 'tag_label',
-			"default_value" => '',
-			"is_null_allowed" => false,
-			"depends_on" => array()
-		)));
-		MetaModel::Init_AddAttribute(new AttributeString("tag_description", array(
-			"allowed_values" => null,
-			"sql" => 'tag_description',
-			"default_value" => '',
-			"is_null_allowed" => false,
-			"depends_on" => array()
-		)));
-		MetaModel::Init_AddAttribute(new AttributeBoolean("is_default", array(
-			"allowed_values" => null,
-			"sql" => "is_default",
-			"default_value" => false,
-			"is_null_allowed" => false,
-			"depends_on" => array()
-		)));
+        MetaModel::Init_AddAttribute(new AttributeString("tag_code", array(
+            "allowed_values" => null,
+            "sql" => 'tag_code',
+            "default_value" => '',
+            "is_null_allowed" => false,
+            "depends_on" => array()
+        )));
+        MetaModel::Init_AddAttribute(new AttributeString("tag_label", array(
+            "allowed_values" => null,
+            "sql" => 'tag_label',
+            "default_value" => '',
+            "is_null_allowed" => false,
+            "depends_on" => array()
+        )));
+        MetaModel::Init_AddAttribute(new AttributeString("tag_description", array(
+            "allowed_values" => null,
+            "sql" => 'tag_description',
+            "default_value" => '',
+            "is_null_allowed" => true,
+            "depends_on" => array()
+        )));
+        MetaModel::Init_AddAttribute(new AttributeString("tag_class", array(
+            "allowed_values" => null,
+            "sql" => 'tag_class',
+            "default_value" => '',
+            "is_null_allowed" => false,
+            "depends_on" => array()
+        )));
+        MetaModel::Init_AddAttribute(new AttributeString("tag_attcode", array(
+            "allowed_values" => null,
+            "sql" => 'tag_attcode',
+            "default_value" => '',
+            "is_null_allowed" => false,
+            "depends_on" => array()
+        )));
+        MetaModel::Init_AddAttribute(new AttributeBoolean("is_default", array(
+            "allowed_values" => null,
+            "sql" => "is_default",
+            "default_value" => false,
+            "is_null_allowed" => false,
+            "depends_on" => array()
+        )));
 
 
-		MetaModel::Init_SetZListItems('details', array('tag_code', 'tag_label', 'tag_description', 'is_default'));
-		MetaModel::Init_SetZListItems('standard_search', array('tag_code', 'tag_label', 'tag_description', 'is_default'));
-		MetaModel::Init_SetZListItems('list', array('tag_code', 'tag_label', 'tag_description', 'is_default'));
-	}
+        MetaModel::Init_SetZListItems('details', array('tag_code', 'tag_label', 'tag_description', 'is_default'));
+        MetaModel::Init_SetZListItems('standard_search', array('tag_code', 'tag_label', 'tag_description', 'is_default'));
+        MetaModel::Init_SetZListItems('list', array('tag_code', 'tag_label', 'tag_description', 'is_default'));
+    }
 }

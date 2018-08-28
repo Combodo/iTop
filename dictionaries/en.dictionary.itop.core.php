@@ -34,7 +34,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeLinkedSet' => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 
-	'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
+    'Core:AttributeTagSet' => 'List of tags',
+    'Core:AttributeTagSet+' => '',
+
+    'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
 
 	'Core:AttributeInteger' => 'Integer',
