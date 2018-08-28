@@ -34,8 +34,8 @@
  *     echo "Error, failed to upgrade the format, reason(s):\n".implode("\n", $oFormat->GetErrors());
  * }
  */
- 
-define('ITOP_DESIGN_LATEST_VERSION', '1.5'); // iTop >= 2.5.0
+
+define('ITOP_DESIGN_LATEST_VERSION', '1.6'); // iTop >= 2.6.0
  
 class iTopDesignFormat
 {
@@ -74,11 +74,11 @@ class iTopDesignFormat
 			'previous' => '1.4',
 			'go_to_previous' => 'From15To14',
 			'next' => '1.6',
-			'go_to_next' => 'From15To16', //TODO
+			'go_to_next' => 'From15To16',
 		),
 		'1.6' => array(
 			'previous' => '1.5',
-			'go_to_previous' => 'From16To15', //TODO
+			'go_to_previous' => 'From16To15',
 			'next' => null,
 			'go_to_next' => null,
 		),
