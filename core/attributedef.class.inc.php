@@ -5375,7 +5375,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 
 	/*
 	*  The target class is the class for which the attribute has been defined first
-	*/	
+	*/
 	public function SetHostClass($sHostClass)
 	{
 		if (!isset($this->m_sTargetClass))
@@ -5900,7 +5900,23 @@ class AttributeExternalField extends AttributeDefinition
  */
 class AttributeTagSet extends AttributeString
 {
-    public function GetEditClass() {return "TagSet";}
+    public function GetEditClass() {
+        return "String";
+    }
+
+    public function GetEditValue($value, $oHostObj = null)
+    {
+        if (empty($value))
+        {
+            return '';
+        }
+        if ($value instanceof ormTagSet)
+        {
+            $aValues = $value->GetValue();
+            return implode(' ', $aValues);
+        }
+        return '';
+    }
 
     protected function GetSQLCol($bFullSpec = false)
     {
@@ -5919,6 +5935,16 @@ class AttributeTagSet extends AttributeString
             return $val1->Equals($val2);
         }
         return ($val1 == $val2);
+    }
+
+    public function GetType()
+    {
+        return Dict::S('Core:TagSetFieldData');
+    }
+
+    public function GetTypeDesc()
+    {
+        return Dict::S('Core:TagSetFieldData+');
     }
 
     /**
@@ -6108,6 +6134,21 @@ class AttributeTagSet extends AttributeString
         $oSet = new ormTagSet($this->GetHostClass(), $this->GetCode());
         $oSet->SetValue($json);
         return $oSet;
+    }
+
+    /**
+     * The part of the current attribute in the object's signature, for the supplied value
+     * @param mixed $value The value of this attribute for the object
+     * @return string The "signature" for this field/attribute
+     */
+    public function Fingerprint($value)
+    {
+        if ($value instanceof ormTagSet)
+        {
+            $aValues = $value->GetValue();
+            return implode(' ', $aValues);
+        }
+        return parent::Fingerprint($value);
     }
 
 }
