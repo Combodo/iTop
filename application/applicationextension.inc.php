@@ -1169,7 +1169,7 @@ class RestUtils
             {
                 if (!is_array($value))
                 {
-                    throw new Exception("A tag set must be defined by an array of objects");
+                    throw new Exception("A tag set must be defined by an array of tag codes");
                 }
                 $value = $oAttDef->FromJSONToValue($value);
             }

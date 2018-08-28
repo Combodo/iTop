@@ -5932,7 +5932,7 @@ class AttributeTagSet extends AttributeString
      */
     public function MakeRealValue($proposedValue, $oHostObj)
     {
-        $oTagSet = new ormTagSet($this->GetHostClass(), $this->GetCode());
+        $oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
         if (is_string($proposedValue) && !empty($proposedValue))
         {
             $aTagCodes = explode(' ', "$proposedValue");

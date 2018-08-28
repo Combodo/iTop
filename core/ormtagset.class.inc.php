@@ -25,7 +25,6 @@
  * Time: 14:35
  */
 
-require_once('dbobjectiterator.php');
 
 final class ormTagSet
 {
@@ -291,4 +290,8 @@ final class ormTagSet
         return implode(' ',$this->GetValue()) === implode(' ', $other->GetValue());
     }
 
+    public function GetTagDataClass()
+    {
+        return MetaModel::GetTagDataClass($this->sClass, $this->sAttCode);
+    }
 }

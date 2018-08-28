@@ -284,6 +284,9 @@
 						<item id="operational_status">
 							<rank>75</rank>
 						</item>
+						<item id="tagfield">
+							<rank>76</rank>
+						</item>
 						<item id="start_date">
 							<rank>80</rank>
 						</item>
