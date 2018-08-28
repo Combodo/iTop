@@ -105,6 +105,7 @@ expression_basic(A) ::= PAR_OPEN expression_prio4(X) PAR_CLOSE. { A = X; }
 expression_basic(A) ::= expression_basic(X) list_operator(Y) list(Z). { A = new BinaryOqlExpression(X, Y, Z); }
 
 expression_prio1(A) ::= expression_basic(X). { A = X; }
+expression_prio1(A) ::= match_expression(X). { A = X; }
 expression_prio1(A) ::= expression_prio1(X) operator1(Y) expression_basic(Z). { A = new BinaryOqlExpression(X, Y, Z); }
 
 expression_prio2(A) ::= expression_prio1(X). { A = X; }
@@ -115,6 +116,9 @@ expression_prio3(A) ::= expression_prio3(X) operator3(Y) expression_prio2(Z). { 
 
 expression_prio4(A) ::= expression_prio3(X). { A = X; }
 expression_prio4(A) ::= expression_prio4(X) operator4(Y) expression_prio3(Z). { A = new BinaryOqlExpression(X, Y, Z); }
+
+
+match_expression(A) ::= field_id(X) MATCHES scalar(Y). { A = new MatchOqlExpression(X, Y); }
 
 
 list(A) ::= PAR_OPEN list_items(X) PAR_CLOSE. {
@@ -234,7 +238,6 @@ func_name(A) ::= F_ROUND(X). { A=X; }
 func_name(A) ::= F_FLOOR(X). { A=X; }
 func_name(A) ::= F_INET_ATON(X). { A=X; }
 func_name(A) ::= F_INET_NTOA(X). { A=X; }
-
 
 %code {
 
