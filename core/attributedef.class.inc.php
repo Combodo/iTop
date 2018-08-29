@@ -279,7 +279,7 @@ abstract class AttributeDefinition
 	 */
 	public function CheckValue(DBObject $oHostObject, $value)
 	{
-		// todo: factorize here the cases implemented into DBObject
+		// later: factorize here the cases implemented into DBObject
 		return true;
 	}
 
@@ -5898,8 +5898,10 @@ class AttributeExternalField extends AttributeDefinition
  * @see TagSetFieldData
  * @since 2.6 N°931 tag fields
  */
-class AttributeTagSet extends AttributeString
+class AttributeTagSet extends AttributeDBField
 {
+    const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+
     public function GetEditClass() {
         return "String";
     }
@@ -5920,9 +5922,14 @@ class AttributeTagSet extends AttributeString
 
     protected function GetSQLCol($bFullSpec = false)
     {
-        return 'VARCHAR(1024)'
+        return 'VARCHAR(255)'
             .CMDBSource::GetSqlStringColumnDefinition()
             .($bFullSpec ? $this->GetSQLColSpec() : '');
+    }
+
+    public function GetMaxSize()
+    {
+        return 255;
     }
 
     public function RequiresIndex() {return true;}
@@ -5935,16 +5942,6 @@ class AttributeTagSet extends AttributeString
             return $val1->Equals($val2);
         }
         return ($val1 == $val2);
-    }
-
-    public function GetType()
-    {
-        return Dict::S('Core:TagSetFieldData');
-    }
-
-    public function GetTypeDesc()
-    {
-        return Dict::S('Core:TagSetFieldData+');
     }
 
     /**
@@ -5964,9 +5961,43 @@ class AttributeTagSet extends AttributeString
             $aTagCodes = explode(' ', "$proposedValue");
             $oTagSet->SetValue($aTagCodes);
         }
+        elseif ($proposedValue instanceof ormTagSet)
+        {
+            $oTagSet = $proposedValue;
+        }
         return $oTagSet;
     }
 
+
+    public function GetNullValue() {
+        return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
+    }
+
+    public function IsNull($proposedValue)
+    {
+        /** @var \ormTagSet $proposedValue */
+        return count($proposedValue->GetValue()) == 0;
+    }
+
+    /**
+     * To be overloaded for localized enums
+     *
+     * @param $sValue
+     *
+     * @return string label corresponding to the given value (in plain text)
+     */
+    public function GetValueLabel($sValue)
+    {
+        // TODO
+        return $sValue;
+    }
+
+    /**
+     * @param $value
+     *
+     * @return string
+     * @throws \CoreWarning
+     */
     public function ScalarToSQL($value)
     {
         if (empty($value))
@@ -5992,6 +6023,7 @@ class AttributeTagSet extends AttributeString
      */
     public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
     {
+        // TODO $bLocalize = true
         if (is_object($value) && ($value instanceof ormTagSet))
         {
             $aValues = $value->GetValue();
@@ -6010,6 +6042,7 @@ class AttributeTagSet extends AttributeString
      */
     public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
     {
+        // TODO $bLocalize = true
         if (is_object($value) && ($value instanceof ormTagSet))
         {
             $sRes = "<Set>\n";
@@ -6040,19 +6073,16 @@ class AttributeTagSet extends AttributeString
      */
     public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
     {
-        $sSepItem = MetaModel::GetConfig()->Get('link_set_item_separator');
-
+        // TODO $bLocalize = true
         if (is_object($value) && ($value instanceof ormTagSet))
         {
             $aValues = $value->GetValue();
-            $sRes = implode($sSepItem, $aValues);
+            $sRes = implode(' ', $aValues);
         }
         else
         {
             $sRes = '';
         }
-        $sRes = str_replace($sTextQualifier, $sTextQualifier.$sTextQualifier, $sRes);
-        $sRes = $sTextQualifier.$sRes.$sTextQualifier;
         return $sRes;
     }
 
@@ -6080,6 +6110,7 @@ class AttributeTagSet extends AttributeString
      */
     public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
     {
+        // TODO $bLocalize = true
         if (is_object($value) && ($value instanceof ormTagSet))
         {
             $aValues = $value->GetValue();
@@ -6087,7 +6118,7 @@ class AttributeTagSet extends AttributeString
             switch ($sVerb)
             {
                 case '':
-                    return implode("\n", $aValues);
+                    return implode(' ', $aValues);
 
                 case 'html':
                     return '<ul><li>'.implode("</li><li>", $aValues).'</li></ul>';

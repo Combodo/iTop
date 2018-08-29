@@ -37,6 +37,12 @@ Dict::Add('EN US', 'English', 'English', array(
     'Core:AttributeTagSet' => 'List of tags',
     'Core:AttributeTagSet+' => '',
 
+    'Core:AttributeCaseLog' => 'Log',
+    'Core:AttributeCaseLog+' => '',
+
+    'Core:AttributeMetaEnum' => 'Computed enum',
+    'Core:AttributeMetaEnum+' => '',
+
     'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
 
@@ -620,7 +626,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Name',
 	'Class:SynchroDataSource/Attribute:name+' => 'Name',
 	'Class:SynchroDataSource/Attribute:description' => 'Description',
-	'Class:SynchroDataSource/Attribute:status' => 'Status', //TODO: enum values
+	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Target class',
 	'Class:SynchroDataSource/Attribute:user_id' => 'User',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contact to notify',
@@ -629,7 +635,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which iTop is synchronized',
 	'Class:SynchroDataSource/Attribute:url_application' => 'Application\'s hyperlink',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink to the iTop object in the external application with which iTop is synchronized (if applicable). Possible placeholders: $this->attribute$ and $replica->primary_key$',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation policy', //TODO enum values
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation policy',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Full load interval',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'A complete reload of all data must occur at least as often as specified here',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Action on zero',
@@ -640,7 +646,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Action taken when the search returns more than one object',
 	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Users allowed',
 	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Who is allowed to delete synchronized objects',
-	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Users allowed',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Nobody',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Administrators only',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'All allowed users',
@@ -691,7 +696,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:Synchro:label_obj_new_updated' => 'Updated (%1$s)',
 	'Core:Synchro:label_obj_created' => 'Created (%1$s)',
 	'Core:Synchro:label_obj_new_errors' => 'Errors (%1$s)',
-	'Core:Synchro:History' => 'Synchronization History',
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica processed: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
@@ -904,4 +908,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:Validator:Mandatory' => 'Please, fill this field',
 	'Core:Validator:MustBeInteger' => 'Must be an integer',
 	'Core:Validator:MustSelectOne' => 'Please, select one',
+));
+
+//
+// Class: TagSetFieldData
+//
+Dict::Add('EN US', 'English', 'English', array(
+    'Class:TagSetFieldData' => 'List of tags',
+    'Class:TagSetFieldData+' => '',
 ));

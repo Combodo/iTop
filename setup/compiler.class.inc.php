@@ -1395,7 +1395,7 @@ EOF
                     $aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
                     $aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
                     $aParameters['depends_on'] = $sDependencies;
-                    $aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+                    $aParameters['default_value'] = '';
                 }
                 else
 				{
@@ -1405,8 +1405,6 @@ EOF
                     $aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
                     $aParameters['depends_on'] = $sDependencies;
 				}
-
-
 
 				// Optional parameters (more for historical reasons)
 				// Added if present...
