@@ -284,6 +284,11 @@ abstract class AttributeDefinition
 	}
 
 	// table, key field, name field
+
+    /**
+     * @return string
+     * @deprecated never used
+     */
 	public function ListDBJoins()
 	{
 		return "";
@@ -710,7 +715,11 @@ abstract class AttributeDefinition
 	{
 		return null;
 	}
-	 
+
+    /**
+     * @return mixed|null
+     * @deprecated never used
+     */
 	public function MakeValue()
 	{
 		$sComputeFunc = $this->Get("compute_func");
@@ -5898,9 +5907,15 @@ class AttributeExternalField extends AttributeDefinition
  * @see TagSetFieldData
  * @since 2.6 N°931 tag fields
  */
-class AttributeTagSet extends AttributeDBField
+class AttributeTagSet extends AttributeDBFieldVoid
 {
     const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+    static public function ListExpectedParams()
+    {
+        return array_merge(parent::ListExpectedParams(), array("is_null_allowed"));
+    }
+    public function GetDefaultValue(DBObject $oHostObject = null) {return null;}
+    public function IsNullAllowed() {return $this->Get("is_null_allowed");}
 
     public function GetEditClass() {
         return "String";
@@ -5968,6 +5983,24 @@ class AttributeTagSet extends AttributeDBField
         return $oTagSet;
     }
 
+    /**
+     * Get the value from a given string (plain text, CSV import)
+     *
+     * @param string $sProposedValue
+     * @param bool $bLocalizedValue
+     * @param string $sSepItem
+     * @param string $sSepAttribute
+     * @param string $sSepValue
+     * @param string $sAttributeQualifier
+     *
+     * @return mixed null if no match could be found
+     * @throws \Exception
+     */
+    public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+    {
+        // TODO $bLocalizedValue
+        return $this->MakeRealValue($sProposedValue, null);
+    }
 
     public function GetNullValue() {
         return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
@@ -6023,7 +6056,7 @@ class AttributeTagSet extends AttributeDBField
      */
     public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
     {
-        if (is_object($value) && ($value instanceof ormTagSet))
+        if ($value instanceof ormTagSet)
         {
             if ($bLocalize)
             {
@@ -6033,9 +6066,19 @@ class AttributeTagSet extends AttributeDBField
             {
                 $aValues = $value->GetValue();
             }
-            return implode(' ', $aValues);
+            if (empty($aValues))
+            {
+                return '';
+            }
+            return '<span class="attribute-tagset">'.implode('</span><span class="attribute-tagset">', $aValues).'</span>';
         }
-        return null;
+        if (is_string($value))
+        {
+            $oValue = $this->MakeRealValue($value, $oHostObject);
+            return $this->GetAsHTML($oValue, $oHostObject, $bLocalize);
+        }
+        return parent::GetAsHTML($value, $oHostObject, $bLocalize);
+
     }
 
     /**
@@ -6094,7 +6137,7 @@ class AttributeTagSet extends AttributeDBField
             {
                 $aValues = $value->GetValue();
             }
-            $sRes = implode(' ', $aValues);
+            $sRes = implode('|', $aValues);
         }
         else
         {

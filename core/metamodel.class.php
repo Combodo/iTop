@@ -1024,7 +1024,7 @@ abstract class MetaModel
 	/**
 	 * array of ("classname" => array of attributes)
 	 *
-	 * @var array
+	 * @var \AttributeDefinition[]
 	 */
 	private static $m_aAttribDefs = array();
 	/**

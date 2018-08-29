@@ -83,12 +83,12 @@ abstract class TagSetFieldData extends cmdbAbstractObject
             "allowed_values" => null,
             "sql" => "is_default",
             "default_value" => false,
-            "is_null_allowed" => false,
+            "is_null_allowed" => true,
             "depends_on" => array()
         )));
 
 
-        MetaModel::Init_SetZListItems('details', array('tag_code', 'tag_label', 'tag_description', 'is_default'));
+        MetaModel::Init_SetZListItems('details', array('tag_code', 'tag_label', 'tag_description', 'tag_class', 'tag_attcode'));
         MetaModel::Init_SetZListItems('standard_search', array('tag_code', 'tag_label', 'tag_description', 'is_default'));
         MetaModel::Init_SetZListItems('list', array('tag_code', 'tag_label', 'tag_description', 'is_default'));
     }

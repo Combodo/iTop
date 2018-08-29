@@ -1395,7 +1395,6 @@ EOF
                     $aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
                     $aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
                     $aParameters['depends_on'] = $sDependencies;
-                    $aParameters['default_value'] = '';
                 }
                 else
 				{

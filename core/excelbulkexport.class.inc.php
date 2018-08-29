@@ -188,11 +188,16 @@ EOF
 				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
 				$sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
 			}
-			else if ($value instanceOf ormDocument)
-			{
-				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
-				$sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
-			}
+            else if ($value instanceOf ormDocument)
+            {
+                $oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+                $sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
+            }
+            else if ($value instanceOf ormTagSet)
+            {
+                $oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);
+                $sRet = $oAttDef->GetAsCSV($value, '', '', $oObj);
+            }
 			else
 			{
 				$oAttDef = MetaModel::GetAttributeDef(get_class($oObj), $sAttCode);

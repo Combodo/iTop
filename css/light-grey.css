@@ -2862,3 +2862,11 @@ table.listResults .originColor {
 .menu-icon-select > .ui-menu-item {
   padding: 0.3em 3%;
 }
+.attribute-tagset {
+  display: inline-block;
+  padding: 3px;
+  background-color: grey;
+  color: white;
+  margin-right: 3px;
+  border-radius: 4px;
+}
