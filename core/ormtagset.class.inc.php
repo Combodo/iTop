@@ -28,8 +28,8 @@
 
 final class ormTagSet
 {
-    private $sClass; // class of the tag
-    private $sAttCode; // attcode of the tag
+    private $sClass; // class of the tag field
+    private $sAttCode; // attcode of the tag field
 
     private $aAllowedTags;
     private $oOriginalSet;
@@ -119,12 +119,12 @@ final class ormTagSet
      */
     public function GetValue()
     {
-        $aValue = array();
+        $aValues = array();
         foreach ($this->aPreserved as $oTag)
         {
             try
             {
-                $aValue[] = $oTag->Get('tag_code');
+                $aValues[] = $oTag->Get('tag_code');
             } catch (CoreException $e)
             {
                 IssueLog::Error($e->getMessage());
@@ -134,16 +134,47 @@ final class ormTagSet
         {
             try
             {
-                $aValue[] = $oTag->Get('tag_code');
+                $aValues[] = $oTag->Get('tag_code');
             } catch (CoreException $e)
             {
                 IssueLog::Error($e->getMessage());
             }
         }
 
-        sort($aValue);
+        sort($aValues);
 
-        return $aValue;
+        return $aValues;
+    }
+
+    public function GetLabel()
+    {
+        $aLabels = array();
+        foreach ($this->aPreserved as $oTag)
+        {
+            try
+            {
+                $aValues[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
+            } catch (CoreException $e)
+            {
+                IssueLog::Error($e->getMessage());
+            }
+        }
+        foreach ($this->aAdded as $oTag)
+        {
+            try
+            {
+                $aValues[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
+            } catch (CoreException $e)
+            {
+                IssueLog::Error($e->getMessage());
+            }
+        }
+        ksort($aValues);
+        foreach($aValues as $sLabel)
+        {
+            $aLabels[] = $sLabel;
+        }
+        return $aLabels;
     }
 
     /**

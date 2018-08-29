@@ -6023,10 +6023,16 @@ class AttributeTagSet extends AttributeDBField
      */
     public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
     {
-        // TODO $bLocalize = true
         if (is_object($value) && ($value instanceof ormTagSet))
         {
-            $aValues = $value->GetValue();
+            if ($bLocalize)
+            {
+                $aValues = $value->GetLabel();
+            }
+            else
+            {
+                $aValues = $value->GetValue();
+            }
             return implode(' ', $aValues);
         }
         return null;
@@ -6042,12 +6048,17 @@ class AttributeTagSet extends AttributeDBField
      */
     public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
     {
-        // TODO $bLocalize = true
         if (is_object($value) && ($value instanceof ormTagSet))
         {
             $sRes = "<Set>\n";
-            $aValues = $value->GetValue();
-            if (!empty($aValuess))
+            if ($bLocalize)
+            {
+                $aValues = $value->GetLabel();
+            }
+            else
+            {
+                $aValues = $value->GetValue();
+            }            if (!empty($aValuess))
             {
                 $sRes .= '<Tag>'.implode('</Tag><Tag>', $aValues).'</Tag>';
             }
@@ -6073,10 +6084,16 @@ class AttributeTagSet extends AttributeDBField
      */
     public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
     {
-        // TODO $bLocalize = true
         if (is_object($value) && ($value instanceof ormTagSet))
         {
-            $aValues = $value->GetValue();
+            if ($bLocalize)
+            {
+                $aValues = $value->GetLabel();
+            }
+            else
+            {
+                $aValues = $value->GetValue();
+            }
             $sRes = implode(' ', $aValues);
         }
         else
@@ -6110,10 +6127,16 @@ class AttributeTagSet extends AttributeDBField
      */
     public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
     {
-        // TODO $bLocalize = true
         if (is_object($value) && ($value instanceof ormTagSet))
         {
-            $aValues = $value->GetValue();
+            if ($bLocalize)
+            {
+                $aValues = $value->GetLabel();
+            }
+            else
+            {
+                $aValues = $value->GetValue();
+            }
 
             switch ($sVerb)
             {
