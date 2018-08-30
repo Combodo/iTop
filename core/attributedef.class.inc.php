@@ -6045,15 +6045,16 @@ class AttributeTagSet extends AttributeDBFieldVoid
         throw new CoreWarning('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetHostClass(), 'attribute' => $this->GetCode()));
     }
 
-    /**
-     * @param $value
-     * @param \DBObject $oHostObject
-     * @param bool $bLocalize
-     *
-     * @return string|null
-     *
-     * @throws \CoreException
-     */
+	/**
+	 * @param $value
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 *
+	 * @return string|null
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
     public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
     {
         if ($value instanceof ormTagSet)
@@ -6074,8 +6075,41 @@ class AttributeTagSet extends AttributeDBFieldVoid
         }
         if (is_string($value))
         {
-            $oValue = $this->MakeRealValue($value, $oHostObject);
-            return $this->GetAsHTML($oValue, $oHostObject, $bLocalize);
+	        try
+	        {
+		        $oValue = $this->MakeRealValue($value, $oHostObject);
+		        return $this->GetAsHTML($oValue, $oHostObject, $bLocalize);
+	        }
+	        catch (Exception $e)
+	        {
+	        	// unknown tags are present display the code instead
+	        }
+	        $aTagCodes = explode(' ', $value);
+	        $aValues = array();
+	        $oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
+	        foreach ($aTagCodes as $sTagCode)
+	        {
+		        try
+		        {
+			        $oTagSet->AddTag($sTagCode);
+		        }
+		        catch (Exception $e)
+		        {
+			        $aValues[] = $sTagCode;
+		        }
+	        }
+	        $sHTML = '';
+	        if (!empty($aValues))
+	        {
+		        $sHTML .= '<span class="attribute-tagset-undefined">'.implode('</span><span class="attribute-tagset-undefined">', $aValues).'</span>';
+	        }
+	        $aValues = $oTagSet->GetLabel();
+	        if (!empty($aValues))
+	        {
+		        $sHTML .= '<span class="attribute-tagset">'.implode('</span><span class="attribute-tagset">', $aValues).'</span>';
+	        }
+
+	        return $sHTML;
         }
         return parent::GetAsHTML($value, $oHostObject, $bLocalize);
 

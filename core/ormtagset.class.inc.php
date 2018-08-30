@@ -149,6 +149,7 @@ final class ormTagSet
     public function GetLabel()
     {
         $aLabels = array();
+        $aValues = array();
         foreach ($this->aPreserved as $oTag)
         {
             try

@@ -2870,3 +2870,12 @@ table.listResults .originColor {
   margin-right: 3px;
   border-radius: 4px;
 }
+.attribute-tagset-undefined {
+  color: grey;
+  font-style: italic;
+  display: inline-block;
+  padding: 3px;
+  background-color: lightgrey;
+  margin-right: 3px;
+  border-radius: 4px;
+}
