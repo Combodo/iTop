@@ -1,28 +1,41 @@
-## Special news for developers:
-To get closer to the Open Source community, we are pleased to announce that since the 30th of August iTop code is available on the GitHub platform.
+# iTop - ITSM & CMDB
+ 
+iTop stands for *IT Operations Portal*.
+It is a complete open source, ITIL, web based service management tool including a fully customizable CMDB, a helpdesk system and a document management tool. 
+iTop also offers mass import tools and web services to integrate with your IT
+
+## Features
+- Fully configurable **CMDB**
+- **HelpDesk** and Incident Management
+- **Service and Contract Management**
+- **Change** Management
+- **Configuration** Management
+- Automatic **SLA** management
+- Automatic **impact analysis**
+- **CSV import** tool for all data
+- Consistency **audit** to check data quality
+- **Data synchronization** (for data federation)
 
 
+## Resources
 
-# iTop code moves to GitHub
-The iTop project was hosted on a SourceForge project since its beginning in 2009. Combodo wants to ease collaboration with iTop developer community, and so we decided to move our code to the popular GitHub platform!
-
-
-The iTop repository is part of the [GitHub Combodo](https://github.com/Combodo) organization. It can be used with either Git or SVN.
-Any contributor can fork the code and submit contributions using GitHub pull requests !
-
-
-
-
-
-## Important
-[iTop SourceForge project](https://sourceforge.net/projects/itop/) will still host:
- - [Forums](https://sourceforge.net/p/itop/discussion/): for support request
- - [Tickets](https://sourceforge.net/p/itop/tickets/): for feature requests and bug reports
+ - [iTop Forums](https://sourceforge.net/p/itop/discussion/): for support request
+ - [iTop Tickets](https://sourceforge.net/p/itop/tickets/): for feature requests and bug reports
  - [Releases download](https://sourceforge.net/projects/itop/files/itop/)
+ - [iTop documentation](https://www.itophub.io/wiki/page) for iTop and official extensions
+ - [iTop extensions](https://store.itophub.io/en_US/) for discovering ans installing extensions
+   
+ 
+## Releases
+### Version 2.5  
+ - [Changes since the previous version](https://wiki.openitop.org/doku.php?id=2_5_0:release:change_log)
+ - [New features](https://wiki.openitop.org/doku.php?id=2_5_0:release:2_5_whats_new)
+ - [Migration notes](https://wiki.openitop.org/doku.php?id=2_5_0:install:240_to_250_migration_notes)
+ 
 
-**Warning!** Starting of 30th august, you should get the code from GitHub only.
-
-
-
-
-If you have any questions, remarks or need any assistance please do not hesitate to [contact us](https://www.combodo.com/nous-contacter) !
+### Version 2.4  
+ - [Changes since the previous version](https://wiki.openitop.org/doku.php?id=2_4_0:release:change_log)
+ - [New features](https://wiki.openitop.org/doku.php?id=2_4_0:release:2_4_whats_new)
+ - [Migration notes](https://wiki.openitop.org/doku.php?id=2_4_0:install:230_to_240_migration_notes)
+ 
+  
