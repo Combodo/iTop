@@ -274,7 +274,7 @@ class SetupUtils
 			// Check that the limit will allow us to load the data
 			//
 			$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-			if ($iMemoryLimit < self::MIN_MEMORY_LIMIT)
+			if (!utils::IsMemoryLimitOk($iMemoryLimit, self::MIN_MEMORY_LIMIT))
 			{
 				$aResult[] = new CheckResult(CheckResult::ERROR, "memory_limit ($iMemoryLimit) is too small, the minimum value to run the application is ".self::MIN_MEMORY_LIMIT.".");
 			}
