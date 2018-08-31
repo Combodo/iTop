@@ -7,8 +7,8 @@ env-*/*
 # Jetbrains
 .idea/**
 !.idea/encodings.xml
-!.idea/codeStyles
-!.idea/inspectionProfiles
+!.idea/codeStyles/*
+!.idea/inspectionProfiles/*
 
 
 
