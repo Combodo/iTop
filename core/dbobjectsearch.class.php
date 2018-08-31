@@ -1314,6 +1314,13 @@ class DBObjectSearch extends DBSearch
 			$oRight = $this->OQLExpressionToCondition($sQuery, $oExpression->GetRightExpr(), $aClassAliases);
 			return new BinaryExpression($oLeft, $sOperator, $oRight);
 		}
+		elseif ($oExpression instanceof MatchOqlExpression)
+		{
+			$oLeft = $this->OQLExpressionToCondition($sQuery, $oExpression->GetLeftExpr(), $aClassAliases);
+			$oRight = $this->OQLExpressionToCondition($sQuery, $oExpression->GetRightExpr(), $aClassAliases);
+
+			return new MatchExpression($oLeft, $oRight);
+		}
 		elseif ($oExpression instanceof FieldOqlExpression)
 		{
 			$sClassAlias = $oExpression->GetParent();

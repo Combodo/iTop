@@ -139,6 +139,7 @@ f_round    = "ROUND"
 f_floor    = "FLOOR"
 f_inet_aton = "INET_ATON"
 f_inet_ntoa = "INET_NTOA"
+matches          = "MATCHES"
 below            = "BELOW"
 below_strict     = "BELOW STRICT"
 not_below        = "NOT BELOW"
@@ -272,6 +273,9 @@ in {
 }
 not_in {
 	$this->token = OQLParser::NOT_IN;
+}
+matches {
+    $this->token = OQLParser::MATCHES;
 }
 interval {
 	$this->token = OQLParser::INTERVAL;

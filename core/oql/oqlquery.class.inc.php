@@ -160,6 +160,26 @@ class BinaryOqlExpression extends BinaryExpression implements CheckableExpressio
 	}
 }
 
+class MatchOqlExpression extends MatchExpression implements CheckableExpression
+{
+	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
+	{
+		$this->m_oLeftExpr->Check($oModelReflection, $aAliases, $sSourceQuery);
+		$this->m_oRightExpr->Check($oModelReflection, $aAliases, $sSourceQuery);
+
+		// Only field MATCHES scalar is allowed
+		if (!$this->m_oLeftExpr instanceof FieldExpression)
+		{
+			throw new OqlNormalizeException('Only "field MATCHES string" syntax is allowed', $sSourceQuery, new OqlName($this->m_oLeftExpr->RenderExpression(true), 0));
+		}
+		// Only field MATCHES scalar is allowed
+		if (!$this->m_oRightExpr instanceof ScalarExpression)
+		{
+			throw new OqlNormalizeException('Only "field MATCHES string" syntax is allowed', $sSourceQuery, new OqlName($this->m_oRightExpr->RenderExpression(true), 0));
+		}
+	}
+}
+
 class ScalarOqlExpression extends ScalarExpression implements CheckableExpression
 {
 	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)

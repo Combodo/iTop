@@ -22,6 +22,9 @@ class MissingQueryArgument extends CoreException
 }
 
 
+/**
+ * @method Check($oModelReflection, array $aAliases, $sSourceQuery)
+ */
 abstract class Expression
 {
 	/**
