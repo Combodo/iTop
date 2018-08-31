@@ -79,17 +79,21 @@ abstract class TagSetFieldData extends cmdbAbstractObject
             "is_null_allowed" => false,
             "depends_on" => array()
         )));
-        MetaModel::Init_AddAttribute(new AttributeBoolean("is_default", array(
-            "allowed_values" => null,
-            "sql" => "is_default",
-            "default_value" => false,
-            "is_null_allowed" => true,
-            "depends_on" => array()
-        )));
 
 
-        MetaModel::Init_SetZListItems('details', array('tag_code', 'tag_label', 'tag_description', 'tag_class', 'tag_attcode'));
-        MetaModel::Init_SetZListItems('standard_search', array('tag_code', 'tag_label', 'tag_description', 'is_default'));
-        MetaModel::Init_SetZListItems('list', array('tag_code', 'tag_label', 'tag_description', 'is_default'));
+        MetaModel::Init_SetZListItems('details', array('tag_code', 'tag_label', 'tag_description'));
+        MetaModel::Init_SetZListItems('standard_search', array('tag_code', 'tag_label', 'tag_description'));
+        MetaModel::Init_SetZListItems('list', array('tag_code', 'tag_label', 'tag_description'));
     }
+
+	public function ComputeValues()
+	{
+		$sClassName = get_class($this);
+		// Extract class and attcode from class name using pattern  TagSetFieldDataFor_<class>_<attcode>>;
+		if (preg_match('@^TagSetFieldDataFor_(?<class>\w+)_(?<attcode>\w+)$@', $sClassName, $aMatches))
+		{
+			$this->_Set('tag_class', $aMatches['class']);
+			$this->_Set('tag_attcode', $aMatches['attcode']);
+		}
+	}
 }
