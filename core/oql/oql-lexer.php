@@ -672,25 +672,25 @@ class OQLLexer extends OQLLexerRaw
 
    function yylex()
    {
-      try
-      {
-      	return parent::yylex();
-		}
-		catch (Exception $e)
-		{
-			$sMessage = $e->getMessage();
-			if (substr($sMessage, 0, strlen(UNEXPECTED_INPUT_AT_LINE)) == UNEXPECTED_INPUT_AT_LINE)
-			{
-				$sLineAndChar = substr($sMessage, strlen(UNEXPECTED_INPUT_AT_LINE));
-				if (preg_match('#^([0-9]+): (.+)$#', $sLineAndChar, $aMatches))
-				{
-					$iLine = $aMatches[1];
-					$sUnexpected = $aMatches[2];
-					throw new OQLLexerException($this->data, $iLine, $this->count, $sUnexpected);
-				}
-			}
-			// Default: forward the exception
-			throw $e;
+        try
+        {
+          return parent::yylex();
+        }
+        catch (Exception $e)
+        {
+            $sMessage = $e->getMessage();
+            if (substr($sMessage, 0, strlen(UNEXPECTED_INPUT_AT_LINE)) == UNEXPECTED_INPUT_AT_LINE)
+            {
+                $sLineAndChar = substr($sMessage, strlen(UNEXPECTED_INPUT_AT_LINE));
+                if (preg_match('#^([0-9]+): (.+)$#', $sLineAndChar, $aMatches))
+                {
+                    $iLine = $aMatches[1];
+                    $sUnexpected = $aMatches[2];
+                    throw new OQLLexerException($this->data, $iLine, $this->count, $sUnexpected);
+                }
+            }
+            // Default: forward the exception
+            throw $e;
 		}
 	}
 }
