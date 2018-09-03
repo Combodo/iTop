@@ -2,6 +2,20 @@
 conf/*
 env-*/*
 
+# composer reserver directory, from sources, populate/update using "composer install"
+vendor/*
+
+# all datas but listing prevention
+data/*
+!data/.htaccess
+!data/index.php
+!data/web.config
+
+# all logs but listing prevention
+log/*
+!log/.htaccess
+!log/index.php
+!log/web.config
 
 
 # Jetbrains
