@@ -1,5 +1,6 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
+    <option name="LINE_SEPARATOR" value="&#10;" />
     <PHPCodeStyleSettings>
       <option name="CONCAT_SPACES" value="false" />
       <option name="PHPDOC_BLANK_LINE_BEFORE_TAGS" value="true" />
