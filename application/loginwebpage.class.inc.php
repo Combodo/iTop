@@ -230,7 +230,8 @@ class LoginWebPage extends NiceWebPage
 		try
 		{
 			UserRights::Login($sAuthUser); // Set the user's language (if possible!)
-			$oUser = UserRights::GetUserObject();
+            /** @var UserInternal $oUser */
+            $oUser = UserRights::GetUserObject();
 			if ($oUser == null)
 			{
 				throw new Exception(Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser));
@@ -254,6 +255,7 @@ class LoginWebPage extends NiceWebPage
 			$sToken = substr(md5(APPROOT.uniqid()), 0, 16);
 			$oUser->Set('reset_pwd_token', $sToken);
 			CMDBObject::SetTrackInfo('Reset password');
+			$oUser->AllowWrite(true);
 			$oUser->DBUpdate();
 
 			$oEmail = new Email();
