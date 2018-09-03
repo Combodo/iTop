@@ -11,6 +11,10 @@ data/*
 !data/index.php
 !data/web.config
 
+# iTop extensions
+extensions/*
+!extensions/readme.txt
+
 # all logs but listing prevention
 log/*
 !log/.htaccess
