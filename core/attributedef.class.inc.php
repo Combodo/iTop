@@ -6061,7 +6061,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
         {
             if ($bLocalize)
             {
-                $aValues = $value->GetLabel();
+                $aValues = $value->GetTags();
             }
             else
             {
@@ -6103,7 +6103,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	        {
 		        $sHTML .= '<span class="attribute-tagset-undefined">'.implode('</span><span class="attribute-tagset-undefined">', $aValues).'</span>';
 	        }
-	        $aValues = $oTagSet->GetLabel();
+	        $aValues = $oTagSet->GetTags();
 	        if (!empty($aValues))
 	        {
 		        $sHTML .= '<span class="attribute-tagset">'.implode('</span><span class="attribute-tagset">', $aValues).'</span>';
@@ -6130,7 +6130,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
             $sRes = "<Set>\n";
             if ($bLocalize)
             {
-                $aValues = $value->GetLabel();
+                $aValues = $value->GetTags();
             }
             else
             {
@@ -6165,7 +6165,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
         {
             if ($bLocalize)
             {
-                $aValues = $value->GetLabel();
+                $aValues = $value->GetTags();
             }
             else
             {
@@ -6208,7 +6208,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
         {
             if ($bLocalize)
             {
-                $aValues = $value->GetLabel();
+                $aValues = $value->GetTags();
             }
             else
             {

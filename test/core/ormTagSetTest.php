@@ -152,4 +152,43 @@ use ormTagSet;
         $oTagSet->RemoveTag('tag2');
         static::assertEquals($oTagSet->GetValue(), array());
     }
+
+    public function testGetDelta()
+    {
+	    $this->CreateTagData('Ticket', 'tagfield', 'tag1', 'First');
+	    $this->CreateTagData('Ticket', 'tagfield', 'tag2', 'Second');
+	    $this->CreateTagData('Ticket', 'tagfield', 'tag3', 'Third');
+	    $this->CreateTagData('Ticket', 'tagfield', 'tag4', 'Fourth');
+
+	    $oTagSet1 = new ormTagSet('Ticket', 'tagfield');
+	    $oTagSet1->SetValue(array('tag1', 'tag2'));
+
+	    $oTagSet2 = new ormTagSet('Ticket', 'tagfield');
+	    $oTagSet2->SetValue(array('tag1', 'tag3', 'tag4'));
+
+		$aDelta = $oTagSet1->GetDelta($oTagSet2);
+	    static::assertCount(2, $aDelta);
+	    static::assertCount(2, $aDelta['added']);
+	    static::assertCount(1, $aDelta['removed']);
+    }
+
+    public function testApplyDelta()
+    {
+	    $this->CreateTagData('Ticket', 'tagfield', 'tag1', 'First');
+	    $this->CreateTagData('Ticket', 'tagfield', 'tag2', 'Second');
+	    $this->CreateTagData('Ticket', 'tagfield', 'tag3', 'Third');
+	    $this->CreateTagData('Ticket', 'tagfield', 'tag4', 'Fourth');
+
+	    $oTagSet1 = new ormTagSet('Ticket', 'tagfield');
+	    $oTagSet1->SetValue(array('tag1', 'tag2'));
+
+	    $oTagSet2 = new ormTagSet('Ticket', 'tagfield');
+	    $oTagSet2->SetValue(array('tag1', 'tag3', 'tag4'));
+
+	    $aDelta = $oTagSet1->GetDelta($oTagSet2);
+
+	    $oTagSet1->ApplyDelta($aDelta);
+
+	    static::assertTrue($oTagSet1->Equals($oTagSet2));
+    }
 }

@@ -52,7 +52,7 @@ final class ormTagSet
     private $aAdded = array();
 
     /**
-     * @var int[] Removed items
+     * @var DBObject[] Removed items
      */
     private $aRemoved = array();
 
@@ -146,15 +146,17 @@ final class ormTagSet
         return $aValues;
     }
 
-    public function GetLabel()
+	/**
+	 * @return array of tag labels indexed by code
+	 */
+	public function GetTags()
     {
-        $aLabels = array();
-        $aValues = array();
+        $aTags = array();
         foreach ($this->aPreserved as $oTag)
         {
             try
             {
-                $aValues[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
+                $aTags[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
             } catch (CoreException $e)
             {
                 IssueLog::Error($e->getMessage());
@@ -164,18 +166,115 @@ final class ormTagSet
         {
             try
             {
-                $aValues[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
+                $aTags[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
             } catch (CoreException $e)
             {
                 IssueLog::Error($e->getMessage());
             }
         }
-        ksort($aValues);
-        foreach($aValues as $sLabel)
-        {
-            $aLabels[] = $sLabel;
-        }
-        return $aLabels;
+        ksort($aTags);
+        return $aTags;
+    }
+
+	/**
+	 * @return array of tag labels indexed by code for only the added tags
+	 */
+	public function GetAddedTags()
+	{
+		$aTags = array();
+		foreach ($this->aAdded as $oTag)
+		{
+			try
+			{
+				$aTags[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
+			} catch (CoreException $e)
+			{
+				IssueLog::Error($e->getMessage());
+			}
+		}
+		ksort($aTags);
+		return $aTags;
+	}
+
+	/**
+	 * @return array of tag labels indexed by code for only the removed tags
+	 */
+	public function GetRemovedTags()
+	{
+		$aTags = array();
+		foreach ($this->aRemoved as $oTag)
+		{
+			try
+			{
+				$aTags[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
+			} catch (CoreException $e)
+			{
+				IssueLog::Error($e->getMessage());
+			}
+		}
+		ksort($aTags);
+		return $aTags;
+	}
+
+	/** Get the delta with another TagSet
+	 *
+	 *  $aDelta['added] = array of tag labels indexed by code for only the added tags
+	 *  $aDelta['removed'] = array of tag labels indexed by code for only the removed tags
+	 *
+	 * @param \ormTagSet $oOtherTagSet
+	 *
+	 * @return array
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public function GetDelta(ormTagSet $oOtherTagSet)
+    {
+		$oTag = new ormTagSet($this->sClass, $this->sAttCode);
+		// Set the initial value
+	    $aOrigTagCodes = $this->GetValue();
+	    $oTag->SetValue($aOrigTagCodes);
+		// now remove everything
+	    foreach($aOrigTagCodes as $sTagCode)
+	    {
+	    	$oTag->RemoveTag($sTagCode);
+	    }
+	    // now add the tags of the other TagSet
+	    foreach($oOtherTagSet->GetValue() as $sTagCode)
+	    {
+	    	$oTag->AddTag($sTagCode);
+	    }
+	    $aDelta = array();
+	    $aDelta['added'] = $oTag->GetAddedTags();
+	    $aDelta['removed'] = $oTag->GetRemovedTags();
+
+	    return $aDelta;
+    }
+
+	/**
+	 * Apply a delta to the current TagSet
+	 *
+	 * @param $aDelta
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public function ApplyDelta($aDelta)
+    {
+	    if (isset($aDelta['removed']))
+	    {
+		    foreach($aDelta['removed'] as $sTagCode => $aTagLabel)
+		    {
+			    $this->RemoveTag($sTagCode);
+		    }
+	    }
+	    if (isset($aDelta['added']))
+	    {
+		    foreach($aDelta['added'] as $sTagCode => $aTagLabel)
+		    {
+			    $this->AddTag($sTagCode);
+		    }
+	    }
     }
 
     /**
