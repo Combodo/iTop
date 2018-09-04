@@ -1,28 +1,77 @@
-## Special news for developers:
-To get closer to the Open Source community, we are pleased to announce that since the 30th of August iTop code is available on the GitHub platform.
+<p align="center"><a href="https://www.combodo.com/itop-193" target="_blank">
+    <img src="https://www.combodo.com/logos/logo-itop.svg">
+</a></p>
+
+# iTop - ITSM & CMDB
+ 
+iTop stands for *IT Operations Portal*.
+It is a complete open source, ITIL, web based service management tool including a fully customizable CMDB, a helpdesk system and a document management tool. 
+iTop also offers mass import tools and web services to integrate with your IT
+
+## Features
+- Fully configurable [Configuration Management (CMDB)][20]
+- [HelpDesk][21] and Incident Management
+- [Service and Contract Management][22]
+- [Change][23] Management
+- Configurable [SLA][24] Management
+- Graphical [impact analysis][25]
+- [CSV import][26] tool for any data
+- Consistency [audit][27] to check data quality
+- [Data synchronization][28] (for data federation)
+
+
+## Resources
+
+ - [iTop Forums][1]: for support request
+ - [iTop Tickets][2]: for feature requests and bug reports
+ - [Releases download][3]
+ - [iTop documentation][4] for iTop and official extensions
+ - [iTop extensions][5] for discovering and installing extensions
+   
+ 
+## Releases
+### Version 2.5  
+ - [Changes since the previous version][6]
+ - [New features][7]
+ - [Migration notes][8]
+ - [Download iTop 2.5.0][9]
+ 
+
+### Version 2.4  
+ - [Changes since the previous version][10]
+ - [New features][11]
+ - [Migration notes][12]
+ - [Download iTop 2.4.1][13]
+
+# About Us
+
+iTop development is sponsored, led and supported by [Combodo][14].
+ 
+[1]: https://sourceforge.net/p/itop/discussion/
+[2]: https://sourceforge.net/p/itop/tickets/
+[3]: https://sourceforge.net/projects/itop/files/itop/
+[4]: https://www.itophub.io/wiki
+[5]: https://store.itophub.io/en_US/
+[6]: https://www.itophub.io/wiki/page?id=2_5_0:release:change_log
+[7]: https://www.itophub.io/wiki/page?id=2_5_0:release:2_5_whats_new
+[8]: https://www.itophub.io/wiki/page?id=2_5_0:install:240_to_250_migration_notes
+[9]: https://sourceforge.net/projects/itop/files/itop/2.5.0/iTop-2.5.0-3935.zip/download
+[10]: https://www.itophub.io/wiki/page?id=2_4_0:release:change_log
+[11]: https://www.itophub.io/wiki/page?id=2_4_0:release:2_4_whats_new
+[12]: https://www.itophub.io/wiki/page?id=2_4_0:install:230_to_240_migration_notes
+[13]: https://sourceforge.net/projects/itop/files/itop/2.4.1/iTop-2.4.1-3714.zip/download
+[14]: https://www.combodo.com
+
+[20]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#configuration_management_cmdb
+[21]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#ticketing
+[22]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#service_management
+[23]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#change_management
+[24]: https://www.itophub.io/wiki/page?id=2_5_0%3Aimplementation%3Astart#service_level_agreements_and_targets
+[25]: https://www.itophub.io/wiki/page?id=2_5_0%3Auser%3Aactions#relations
+[26]: https://www.itophub.io/wiki/page?id=2_5_0%3Auser%3Abulk_modify#uploading_data
+[27]: https://manage-wiki.openitop.org/doku.php?id=2_5_0:admin:audit
+[28]: https://manage-wiki.openitop.org/doku.php?id=2_5_0:advancedtopics:data_synchro_overview
 
 
 
-# iTop code moves to GitHub
-The iTop project was hosted on a SourceForge project since its beginning in 2009. Combodo wants to ease collaboration with iTop developer community, and so we decided to move our code to the popular GitHub platform!
 
-
-The iTop repository is part of the [GitHub Combodo](https://github.com/Combodo) organization. It can be used with either Git or SVN.
-Any contributor can fork the code and submit contributions using GitHub pull requests !
-
-
-
-
-
-## Important
-[iTop SourceForge project](https://sourceforge.net/projects/itop/) will still host:
- - [Forums](https://sourceforge.net/p/itop/discussion/): for support request
- - [Tickets](https://sourceforge.net/p/itop/tickets/): for feature requests and bug reports
- - [Releases download](https://sourceforge.net/projects/itop/files/itop/)
-
-**Warning!** Starting of 30th august, you should get the code from GitHub only.
-
-
-
-
-If you have any questions, remarks or need any assistance please do not hesitate to [contact us](https://www.combodo.com/nous-contacter) !
