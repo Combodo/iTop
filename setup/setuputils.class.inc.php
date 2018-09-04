@@ -50,11 +50,11 @@ class CheckResult
 class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
-	const PHP_MIN_VERSION = '5.6.0'; // 5.6 will be supported untill the end of 2018 (see http://php.net/supported-versions.php)
+	const PHP_MIN_VERSION = '5.6.0'; // 5.6 will be supported until the end of 2018 (see http://php.net/supported-versions.php)
 	const MYSQL_MIN_VERSION = '5.6.0'; // 5.6 to have fulltext on InnoDB for Tags fields (N°931)
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
-	const PHP_NEXT_MIN_VERSION = ''; // no new PHP requirement for now in iTop 2.6
-	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for now in iTop 2.6
+	const PHP_NEXT_MIN_VERSION = ''; // no new PHP requirement for next iTop version
+	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for next iTop version
 	// -- First recent version that is not yet validated by Combodo (warning)
 	const PHP_NOT_VALIDATED_VERSION = '7.3.0';
 
