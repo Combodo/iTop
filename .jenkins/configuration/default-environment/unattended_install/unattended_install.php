@@ -1,5 +1,5 @@
 <?php
-require_once('../../../../approot.inc.php');
+require_once('../../../approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/clipage.class.inc.php');
 require_once(APPROOT.'/core/config.class.inc.php');
