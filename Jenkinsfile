@@ -58,6 +58,17 @@ pipeline {
     }
 
   }
+
+  post {
+//    always {
+//
+//    }
+    failure {
+      junit 'var/test/phpunit-log.junit.xml'
+      slackSend(color: '#00FF00', message: "Ho no! Build failed! (${currentBuild.result}), Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+    }
+  }
+
   environment {
     DEBUG_UNIT_TEST = '0'
   }
