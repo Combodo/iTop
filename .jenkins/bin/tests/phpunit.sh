@@ -2,5 +2,6 @@
 
 set -x
 
+cd test
 
-php test/vendor/bin/phpunit test/ --log-junit var/test/phpunit-log.junit.xml --teamcity
+php vendor/bin/phpunit  --log-junit var/test/phpunit-log.junit.xml --teamcity
