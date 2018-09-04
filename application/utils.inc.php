@@ -568,7 +568,7 @@ class utils
      */
     public static function IsMemoryLimitOk($memoryLimit, $requiredLimit)
     {
-        return $memoryLimit >= $requiredLimit || $memoryLimit == -1;
+        return ($memoryLimit >= $requiredLimit) || ($memoryLimit == -1);
     }
 
 	/**
