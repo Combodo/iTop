@@ -42,30 +42,14 @@ pipeline {
       }
     }
 
-    stage('archive phpunit result') {
-      parallel {
-        stage('archive phpunit result') {
-          steps {
-            junit 'var/test/phpunit-log.junit.xml'
-          }
-        }
-      }
-    }
-    stage('notify') {
-      steps {
-        slackSend(color: '#00FF00', message: "Build finished (${currentBuild.result}), Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
-      }
-    }
-
   }
 
   post {
-//    always {
-//
-//    }
-    failure {
+    always {
       junit 'var/test/phpunit-log.junit.xml'
-      slackSend(color: '#00FF00', message: "Ho no! Build failed! (${currentBuild.result}), Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+    }
+    failure {
+      slackSend(channel: "#jenkins-itop", color: '#FF0000', message: "Ho no! Build failed! (${currentBuild.result}), Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
     }
   }
 
