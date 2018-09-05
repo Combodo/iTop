@@ -335,7 +335,7 @@ class cmdbDataGenerator
 	 */
 	protected function CleanForEmail($sText)
 	{
-		return str_replace(array("'", "é", "è", "ê", "ç", "à", "â", "ñ", "ö", "ä"), array("", "e", "e", "e", "c", "a", "a", "n", "oe", "ae"), $sText);
+		return str_replace(array("'", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½", "ï¿½"), array("", "e", "e", "e", "c", "a", "a", "n", "oe", "ae"), $sText);
 	}
 
 	/**

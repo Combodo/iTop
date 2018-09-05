@@ -4,6 +4,7 @@ env-*/*
 
 # composer reserver directory, from sources, populate/update using "composer install"
 vendor/*
+test/vendor/*
 
 # all datas but listing prevention
 data/*
