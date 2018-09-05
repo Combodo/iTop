@@ -46,6 +46,42 @@ iTop also offers mass import tools and web services to integrate with your IT
 # About Us
 
 iTop development is sponsored, led and supported by [Combodo][14].
+
+# Contributors
+
+We would like to give a special thank you to the people from the community who contributed to this project, including:
+ - Alves, David
+ - Beck, Pedro
+ - Bilger, Jean-François
+ - Cardoso, Anderson
+ - Cassaro, Bruno
+ - Castro, Randall Badilla
+ - Colantoni, Maria Laura
+ - Dvořák, Lukáš
+ - Goethals, Stefan
+ - Gumble, David
+ - Hippler, Lars
+ - Khamit, Shamil
+ - Kunin, Vladimir
+ - Lucas, Jonathan
+ - Malik, Remie
+ - Rosenke, Stephan
+ - Seki, Shoji
+ - Shilov, Vladimir
+ - Tulio, Marco
+ - Turrubiates, Miguel
+
+#### Aliases
+ - cprobst
+ - Karkoff1212
+ - Laura
+ - Schlobinux
+ - theBigOne
+ - ulmerspatz
+
+#### Companies
+ - Hardis
+ - ITOMIG
  
 [1]: https://sourceforge.net/p/itop/discussion/
 [2]: https://sourceforge.net/p/itop/tickets/
