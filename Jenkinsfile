@@ -24,7 +24,7 @@ pipeline {
 
     stage('unattended_install') {
       parallel {
-        stage('debug') {
+        stage('unattended_install default env') {
           steps {
             sh './.jenkins/bin/unattended_install/default_env.sh'
           }
