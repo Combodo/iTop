@@ -193,7 +193,7 @@
 				var result;
 				if( data && data.length ) {
 					for (var i=0; i < data.length; i++) {
-						if( data[i].result.toLowerCase() == q.toLowerCase() ) {
+						if( data[i].result.toLowerCase() === q.toLowerCase() ) {
 							result = data[i];
 							break;
 						}
@@ -386,6 +386,7 @@
 				$.ajax({
 					// try to leverage ajaxQueue plugin to abort previous requests
 					mode: "abort",
+                    method: "POST",
 					// limit abortion to this input
 					port: "autocomplete" + input.name,
 					dataType: options.dataType,

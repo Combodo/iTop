@@ -558,6 +558,18 @@ class utils
 	    }
         return $iReturn;
     }
+  
+  /**
+   * Checks if the memory limit is at least what is required
+   *
+   * @param int $memoryLimit set limit in bytes
+   * @param int $requiredLimit required limit in bytes
+   * @return bool
+   */
+  public static function IsMemoryLimitOk($memoryLimit, $requiredLimit)
+  {
+      return ($memoryLimit >= $requiredLimit) || ($memoryLimit == -1);
+  }
 
 	/**
 	 * Format a value into a more friendly format (KB, MB, GB, TB) instead a juste a Bytes amount.
