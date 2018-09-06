@@ -2862,20 +2862,21 @@ table.listResults .originColor {
 .menu-icon-select > .ui-menu-item {
   padding: 0.3em 3%;
 }
-.attribute-tagset {
+
+.attribute-tagset > span, .attribute-tagset-undefined > span {
   display: inline-block;
   padding: 3px;
-  background-color: grey;
-  color: white;
   margin-right: 3px;
   border-radius: 4px;
 }
-.attribute-tagset-undefined {
+
+.attribute-tagset > span {
+  color: white;
+  background-color: grey;
+}
+
+.attribute-tagset-undefined > span {
   color: grey;
-  font-style: italic;
-  display: inline-block;
-  padding: 3px;
   background-color: lightgrey;
-  margin-right: 3px;
-  border-radius: 4px;
+  font-style: italic;
 }

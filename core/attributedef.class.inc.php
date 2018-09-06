@@ -6054,65 +6054,84 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-    public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
-    {
-        if ($value instanceof ormTagSet)
-        {
-            if ($bLocalize)
-            {
-                $aValues = $value->GetTags();
-            }
-            else
-            {
-                $aValues = $value->GetValue();
-            }
-            if (empty($aValues))
-            {
-                return '';
-            }
-            return '<span class="attribute-tagset">'.implode('</span><span class="attribute-tagset">', $aValues).'</span>';
-        }
-        if (is_string($value))
-        {
-	        try
-	        {
-		        $oValue = $this->MakeRealValue($value, $oHostObject);
-		        return $this->GetAsHTML($oValue, $oHostObject, $bLocalize);
-	        }
-	        catch (Exception $e)
-	        {
-	        	// unknown tags are present display the code instead
-	        }
-	        $aTagCodes = explode(' ', $value);
-	        $aValues = array();
-	        $oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
-	        foreach ($aTagCodes as $sTagCode)
-	        {
-		        try
-		        {
-			        $oTagSet->AddTag($sTagCode);
-		        }
-		        catch (Exception $e)
-		        {
-			        $aValues[] = $sTagCode;
-		        }
-	        }
-	        $sHTML = '';
-	        if (!empty($aValues))
-	        {
-		        $sHTML .= '<span class="attribute-tagset-undefined">'.implode('</span><span class="attribute-tagset-undefined">', $aValues).'</span>';
-	        }
-	        $aValues = $oTagSet->GetTags();
-	        if (!empty($aValues))
-	        {
-		        $sHTML .= '<span class="attribute-tagset">'.implode('</span><span class="attribute-tagset">', $aValues).'</span>';
-	        }
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	{
+		if ($value instanceof ormTagSet)
+		{
+			if ($bLocalize)
+			{
+				$aValues = $value->GetTags();
+			}
+			else
+			{
+				$aValues = $value->GetValue();
+			}
+			if (empty($aValues))
+			{
+				return '';
+			}
 
-	        return $sHTML;
-        }
-        return parent::GetAsHTML($value, $oHostObject, $bLocalize);
+			return $this->GenerateViewHtmlForValues($aValues);
+		}
+		if (is_string($value))
+		{
+			try
+			{
+				$oValue = $this->MakeRealValue($value, $oHostObject);
 
-    }
+				return $this->GetAsHTML($oValue, $oHostObject, $bLocalize);
+			} catch (Exception $e)
+			{
+				// unknown tags are present display the code instead
+			}
+			$aTagCodes = explode(' ', $value);
+			$aValues = array();
+			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
+				$this->GetCode());
+			foreach($aTagCodes as $sTagCode)
+			{
+				try
+				{
+					$oTagSet->AddTag($sTagCode);
+				} catch (Exception $e)
+				{
+					$aValues[] = $sTagCode;
+				}
+			}
+			$sHTML = '';
+			if (!empty($aValues))
+			{
+				$sHTML .= $this->GenerateViewHtmlForValues($aValues, 'attribute-tagset-undefined');
+			}
+			$aValues = $oTagSet->GetTags();
+			if (!empty($aValues))
+			{
+				$sHTML .= $this->GenerateViewHtmlForValues($aValues);
+			}
+
+			return $sHTML;
+		}
+
+		return parent::GetAsHTML($value, $oHostObject, $bLocalize);
+	}
+
+	/**
+	 * @param array $aValues
+	 * @param string $sCssClass
+	 *
+	 * @return string
+	 */
+	private function GenerateViewHtmlForValues($aValues, $sCssClass = 'attribute-tagset')
+	{
+		$sHtml = '<span class="'.$sCssClass.'">';
+		foreach($aValues as $sTagSetLabel)
+		{
+			$sHtml .= '<span>'.$sTagSetLabel.'</span>';
+		}
+		$sHtml .= '</span>';
+
+		return $sHtml;
+	}
 
     /**
      * @param $value
