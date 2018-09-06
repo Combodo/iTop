@@ -27,6 +27,8 @@
  */
 abstract class TagSetFieldData extends cmdbAbstractObject
 {
+	private static $m_aAllowedValues = array();
+
     public static function Init()
     {
         $aParams = array
@@ -95,5 +97,19 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			$this->_Set('tag_class', $aMatches['class']);
 			$this->_Set('tag_attcode', $aMatches['attcode']);
 		}
+	}
+
+	public static function GetAllowedValues($sClass, $sAttCode)
+	{
+		$sTagDataClass = MetaModel::GetTagDataClass($sClass, $sAttCode);
+		if (!isset(self::$m_aAllowedValues[$sTagDataClass]))
+		{
+			$oSearch = new DBObjectSearch($sTagDataClass);
+			$oSearch->AddCondition('tag_class', $sClass);
+			$oSearch->AddCondition('tag_attcode', $sAttCode);
+			$oSet = new DBObjectSet($oSearch);
+			self::$m_aAllowedValues[$sTagDataClass] = $oSet->ToArray();
+		}
+		return self::$m_aAllowedValues[$sTagDataClass];
 	}
 }

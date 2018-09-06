@@ -394,15 +394,7 @@ final class ormTagSet
      */
     private function GetAllowedTags()
     {
-        if (!$this->aAllowedTags)
-        {
-            $oSearch = new DBObjectSearch($this->GetTagDataClass());
-            $oSearch->AddCondition('tag_class', $this->sClass);
-            $oSearch->AddCondition('tag_attcode', $this->sAttCode);
-            $oSet = new DBObjectSet($oSearch);
-            $this->aAllowedTags = $oSet->ToArray();
-        }
-        return $this->aAllowedTags;
+       return TagSetFieldData::GetAllowedValues($this->sClass, $this->sAttCode);
     }
 
     /**

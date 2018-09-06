@@ -5917,8 +5917,8 @@ class AttributeTagSet extends AttributeDBFieldVoid
     public function GetDefaultValue(DBObject $oHostObject = null) {return null;}
     public function IsNullAllowed() {return $this->Get("is_null_allowed");}
 
-    public function GetEditClass() {
-        return "String";
+	public function GetEditClass() {
+        return "TagSet";
     }
 
     public function GetEditValue($value, $oHostObj = null)
@@ -6021,7 +6021,6 @@ class AttributeTagSet extends AttributeDBFieldVoid
      */
     public function GetValueLabel($sValue)
     {
-        // TODO
         return $sValue;
     }
 
@@ -6042,7 +6041,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
             $aValues = $value->GetValue();
             return implode(' ', $aValues);
         }
-        throw new CoreWarning('Expected the attribute value to be a string', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetHostClass(), 'attribute' => $this->GetCode()));
+        throw new CoreWarning('Expected the attribute value to be a TagSet', array('found_type' => gettype($value), 'value' => $value, 'class' => $this->GetHostClass(), 'attribute' => $this->GetCode()));
     }
 
 	/**

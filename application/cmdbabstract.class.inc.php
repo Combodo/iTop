@@ -56,26 +56,28 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	static $iGlobalFormId = 1;
 	protected $aFieldsMap;
-	
+
 	/**
 	 * If true, bypass IsActionAllowedOnAttribute when writing this object
+	 *
 	 * @var bool
 	 */
 	protected $bAllowWrite;
 
 	/**
 	 * Constructor from a row of data (as a hash 'attcode' => value)
-	 * @param hash $aRow
+	 *
+	 * @param array $aRow
 	 * @param string $sClassAlias
-	 * @param hash $aAttToLoad
-	 * @param hash $aExtendedDataSpec
+	 * @param array $aAttToLoad
+	 * @param array $aExtendedDataSpec
 	 */
 	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		parent::__construct($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 		$this->bAllowWrite = false;
 	}
-	
+
 	/**
 	 * returns what will be the next ID for the forms
 	 */
@@ -83,11 +85,12 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	{
 		return 1 + self::$iGlobalFormId;
 	}
+
 	public static function GetUIPage()
 	{
 		return 'UI.php';
 	}
-	
+
 	public static function ReloadAndDisplay($oPage, $oObj, $aParams)
 	{
 		$oAppContext = new ApplicationContext();
@@ -104,7 +107,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		}
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/'.$oObj->GetUIPage().'?'.$sParams.'class='.get_class($oObj).'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink().'&a=1';
 		$oPage->add_script(
-<<<EOF
+			<<<EOF
 	if (!sessionStorage.getItem('$sSessionStorageKey'))
 	{
 		sessionStorage.setItem('$sSessionStorageKey', 1);
@@ -123,20 +126,22 @@ EOF
 
 	/**
 	 * Set a message diplayed to the end-user next time this object will be displayed
-	 * Messages are uniquely identified so that plugins can override standard messages (the final work is given to the last plugin to set the message for a given message id)
-	 * In practice, standard messages are recorded at the end but they will not overwrite existing messages	 
-	 * 	 
+	 * Messages are uniquely identified so that plugins can override standard messages (the final work is given to the
+	 * last plugin to set the message for a given message id) In practice, standard messages are recorded at the end
+	 * but they will not overwrite existing messages
+	 *
 	 * @param string $sClass The class of the object (must be the final class)
 	 * @param int $iKey The identifier of the object
 	 * @param string $sMessageId Your id or one of the well-known ids: 'create', 'update' and 'apply_stimulus'
 	 * @param string $sMessage The HTML message (must be correctly escaped)
 	 * @param string $sSeverity Any of the following: ok, info, error.
 	 * @param float $fRank Ordering of the message: smallest displayed first (can be negative)
-	 * @param bool $bMustNotExist Do not alter any existing message (considering the id)	 	 
+	 * @param bool $bMustNotExist Do not alter any existing message (considering the id)
 	 *
 	 */
-	public static function SetSessionMessage($sClass, $iKey, $sMessageId, $sMessage, $sSeverity, $fRank, $bMustNotExist = false)
-	{
+	public static function SetSessionMessage(
+		$sClass, $iKey, $sMessageId, $sMessage, $sSeverity, $fRank, $bMustNotExist = false
+	) {
 		$sMessageKey = $sClass.'::'.$iKey;
 		if (!isset($_SESSION['obj_messages'][$sMessageKey]))
 		{
@@ -156,7 +161,7 @@ EOF
 	{
 		// Standard Header with name, actions menu and history block
 		//
-		
+
 		if (!$oPage->IsPrintableVersion())
 		{
 			// Is there a message for this object ??
@@ -168,18 +173,21 @@ EOF
 				if ($aLockInfo['locked'])
 				{
 					$aRanks[] = 0;
-					$sName =  $aLockInfo['owner']->GetName();
+					$sName = $aLockInfo['owner']->GetName();
 					if ($aLockInfo['owner']->Get('contactid') != 0)
 					{
 						$sName .= ' ('.$aLockInfo['owner']->Get('contactid_friendlyname').')';
 					}
-					$aResult['message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName);			$aMessages[] = "<div class=\"header_message message_error\">".Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName)."</div>";
+					$aResult['message'] = Dict::Format('UI:CurrentObjectIsLockedBy_User', $sName);
+					$aMessages[] = "<div class=\"header_message message_error\">".Dict::Format('UI:CurrentObjectIsLockedBy_User',
+							$sName)."</div>";
 				}
 			}
 			$sMessageKey = get_class($this).'::'.$this->GetKey();
-			if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey, $_SESSION['obj_messages']))
+			if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey,
+					$_SESSION['obj_messages']))
 			{
-				foreach ($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData)
+				foreach($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData)
 				{
 					$sMsgClass = 'message_'.$aMessageData['severity'];
 					$aMessages[] = "<div class=\"header_message $sMsgClass\">".$aMessageData['message']."</div>";
@@ -188,12 +196,12 @@ EOF
 				unset($_SESSION['obj_messages'][$sMessageKey]);
 			}
 			array_multisort($aRanks, $aMessages);
-			foreach ($aMessages as $sMessage)
+			foreach($aMessages as $sMessage)
 			{
 				$oPage->add($sMessage);
 			}
 		}
-				
+
 		if (!$oPage->IsPrintableVersion())
 		{
 			// action menu
@@ -216,11 +224,11 @@ EOF
 			if (count($aSyncData) > 0)
 			{
 				$bSynchronized = true;
-				foreach ($aSyncData as $iSourceId => $aSourceData)
+				foreach($aSyncData as $iSourceId => $aSourceData)
 				{
 					$oDataSource = $aSourceData['source'];
 					$oReplica = reset($aSourceData['replica']); // Take the first one!
-	
+
 					$sApplicationURL = $oDataSource->GetApplicationUrl($this, $oReplica);
 					$sLink = $oDataSource->GetName();
 					if (!empty($sApplicationURL))
@@ -260,13 +268,14 @@ EOF
 					$aMasterSources[$iSourceId]['url'] = $sLink;
 					$aMasterSources[$iSourceId]['last_synchro'] = $oReplica->Get('status_last_seen');
 				}
-	
+
 				if (is_object($oCreatorTask))
 				{
 					$sTaskUrl = $aMasterSources[$oCreatorTask->GetKey()]['url'];
 					if (!$bCanBeDeletedByUser)
 					{
-						$sTip = "<p>".Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source', $sTaskUrl)."</p>";
+						$sTip = "<p>".Dict::Format('Core:Synchro:TheObjectCannotBeDeletedByUser_Source',
+								$sTaskUrl)."</p>";
 					}
 					else
 					{
@@ -281,7 +290,7 @@ EOF
 				{
 					$sTip = "<p>".Dict::S('Core:Synchro:ThisObjectIsSynchronized')."</p>";
 				}
-	
+
 				$sTip .= "<p><b>".Dict::S('Core:Synchro:ListOfDataSources')."</b></p>";
 				foreach($aMasterSources as $aStruct)
 				{
@@ -292,8 +301,9 @@ EOF
 
 					$oDataSource = $aStruct['datasource'];
 					$sLink = $aStruct['url'];
-					$sTip .= "<p style=\"white-space:nowrap\">".$oDataSource->GetIcon(true, 'style="vertical-align:middle"')."&nbsp;$sLink<br/>";
-					$sTip .= Dict::S('Core:Synchro:LastSynchro') . '<br/>' . $sLastSynchro . "</p>";
+					$sTip .= "<p style=\"white-space:nowrap\">".$oDataSource->GetIcon(true,
+							'style="vertical-align:middle"')."&nbsp;$sLink<br/>";
+					$sTip .= Dict::S('Core:Synchro:LastSynchro').'<br/>'.$sLastSynchro."</p>";
 				}
 				$sLabel = htmlentities(Dict::S('Tag:Synchronized'), ENT_QUOTES, 'UTF-8');
 				$sSynchroTagId = 'synchro_icon-'.$this->GetKey();
@@ -329,7 +339,7 @@ EOF
 		}
 
 		$oPage->add(
-<<<EOF
+			<<<EOF
 <div class="page_header">
    <div class="object-details-header">
       <div class ="object-icon">$sObjectIcon</div>
@@ -356,12 +366,12 @@ EOF
 
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
-		$aFieldsMap = $this->GetBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);		
+		$aFieldsMap = $this->GetBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
 
 
 		if (!isset($aExtraParams['disable_plugins']) || !$aExtraParams['disable_plugins'])
 		{
-			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+			foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 			{
 				$oExtensionInstance->OnDisplayProperties($this, $oPage, $bEditMode);
 			}
@@ -381,9 +391,10 @@ EOF
 
 		return $aFieldsMap;
 	}
-	
+
 	/**
 	 * Add a field to the map: attcode => id used when building a form
+	 *
 	 * @param string $sAttCode The attribute code of the field being edited
 	 * @param string $sInputId The unique ID of the control/widget in the page
 	 */
@@ -409,7 +420,10 @@ EOF
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			// Display mode
-			if (!$oAttDef->IsLinkset()) continue; // Process only linkset attributes...
+			if (!$oAttDef->IsLinkset())
+			{
+				continue;
+			} // Process only linkset attributes...
 
 			$sLinkedClass = $oAttDef->GetLinkedClass();
 
@@ -438,12 +452,14 @@ EOF
 				$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 				$sTargetClass = $oLinkingAttDef->GetTargetClass();
 				// n:n links => must be allowed to modify the linking class AND  read the target class in order to edit the linkedset
-				if (!UserRights::IsActionAllowed($sLinkedClass, UR_ACTION_MODIFY) || !UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ))
+				if (!UserRights::IsActionAllowed($sLinkedClass,
+						UR_ACTION_MODIFY) || !UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ))
 				{
 					$iFlags |= OPT_ATT_READONLY;
 				}
 				// n:n links => must be allowed to read the linking class AND  the target class in order to display the linkedset
-				if (!UserRights::IsActionAllowed($sLinkedClass, UR_ACTION_READ) || !UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ))
+				if (!UserRights::IsActionAllowed($sLinkedClass,
+						UR_ACTION_READ) || !UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ))
 				{
 					$iFlags |= OPT_ATT_HIDDEN;
 				}
@@ -462,10 +478,13 @@ EOF
 				}
 			}
 			// Non-readable/hidden linkedset... don't display anything
-			if ($iFlags & OPT_ATT_HIDDEN) continue;
-			
+			if ($iFlags & OPT_ATT_HIDDEN)
+			{
+				continue;
+			}
+
 			$aArgs = array('this' => $this);
-			$bReadOnly = ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE));
+			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));
 			if ($bEditMode && (!$bReadOnly))
 			{
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
@@ -482,8 +501,9 @@ EOF
 				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription().'<span id="busy_'.$sInputId.'"></span>');
 
 				$sDisplayValue = ''; // not used
-				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
-				$this->AddToFieldsMap($sAttCode,  $sInputId);
+				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode,
+						$oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+				$this->AddToFieldsMap($sAttCode, $sInputId);
 				$oPage->add($sHTMLValue);
 			}
 			else
@@ -508,7 +528,7 @@ EOF
 						'target_attr' => $oAttDef->GetExtKeyToMe(),
 						'object_id' => $this->GetKey(),
 						'menu' => MetaModel::GetConfig()->Get('allow_menu_on_linkset'),
-                        //'menu_actions_target' => '_blank',
+						//'menu_actions_target' => '_blank',
 						'default' => $aDefaults,
 						'table_id' => $sClass.'_'.$sAttCode,
 					);
@@ -519,15 +539,15 @@ EOF
 					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
 					$aParams = array(
-							'link_attr' => $oAttDef->GetExtKeyToMe(),
-							'object_id' => $this->GetKey(),
-							'target_attr' => $oAttDef->GetExtKeyToRemote(),
-							'view_link' => false,
-							'menu' => false,
-                            //'menu_actions_target' => '_blank',
-							'display_limit' => true, // By default limit the list to speed up the initial load & display
-							'table_id' => $sClass.'_'.$sAttCode,
-						);
+						'link_attr' => $oAttDef->GetExtKeyToMe(),
+						'object_id' => $this->GetKey(),
+						'target_attr' => $oAttDef->GetExtKeyToRemote(),
+						'view_link' => false,
+						'menu' => false,
+						//'menu_actions_target' => '_blank',
+						'display_limit' => true, // By default limit the list to speed up the initial load & display
+						'table_id' => $sClass.'_'.$sAttCode,
+					);
 				}
 				$oPage->p(MetaModel::GetClassIcon($sTargetClass)."&nbsp;".$oAttDef->GetDescription());
 				$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'list', false);
@@ -535,19 +555,21 @@ EOF
 			}
 			if (array_key_exists($sAttCode, $aRedundancySettings))
 			{
-				foreach ($aRedundancySettings[$sAttCode] as $oRedundancyAttDef)
+				foreach($aRedundancySettings[$sAttCode] as $oRedundancyAttDef)
 				{
 					$sRedundancyAttCode = $oRedundancyAttDef->GetCode();
 					$sValue = $this->Get($sRedundancyAttCode);
 					$iRedundancyFlags = $this->GetFormAttributeFlags($sRedundancyAttCode);
-					$bRedundancyReadOnly = ($iRedundancyFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE));
+					$bRedundancyReadOnly = ($iRedundancyFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));
 
 					$oPage->add('<fieldset>');
 					$oPage->add('<legend>'.$oRedundancyAttDef->GetLabel().'</legend>');
 					if ($bEditMode && (!$bRedundancyReadOnly))
 					{
 						$sInputId = $this->m_iFormId.'_'.$sRedundancyAttCode;
-						$oPage->add("<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sRedundancyAttCode, $oRedundancyAttDef, $sValue, '', $sInputId, '', $iFlags, $aArgs).'</span>');
+						$oPage->add("<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass,
+								$sRedundancyAttCode, $oRedundancyAttDef, $sValue, '', $sInputId, '', $iFlags,
+								$aArgs).'</span>');
 					}
 					else
 					{
@@ -559,7 +581,7 @@ EOF
 		}
 		$oPage->SetCurrentTab('');
 
-		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+		foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnDisplayRelations($this, $oPage, $bEditMode);
 		}
@@ -572,9 +594,9 @@ EOF
 			//			
 			$oTriggerSet = new CMDBObjectSet(new DBObjectSearch('Trigger'));
 			$aTriggers = array();
-			while($oTrigger = $oTriggerSet->Fetch())
+			while ($oTrigger = $oTriggerSet->Fetch())
 			{
-				if($oTrigger->IsInScope($this))
+				if ($oTrigger->IsInScope($this))
 				{
 					$aTriggers[] = $oTrigger->GetKey();
 				}
@@ -590,12 +612,12 @@ EOF
 				{
 					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN ($sTriggersList) AND Ev.object_id = $iId");
 					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass]);
-					$iNotifsCount += $oNotifSet->Count();	
+					$iNotifsCount += $oNotifSet->Count();
 				}
 				// Display notifications regarding the object: on block per subclass to have the intersting columns
 				$sCount = ($iNotifsCount > 0) ? ' ('.$iNotifsCount.')' : '';
 				$oPage->SetCurrentTab(Dict::S('UI:NotificationsTab').$sCount);
-				
+
 				foreach($aNotificationClasses as $sNotifClass)
 				{
 					$oPage->p(MetaModel::GetClassIcon($sNotifClass, true).'&nbsp;'.MetaModel::GetName($sNotifClass));
@@ -614,7 +636,8 @@ EOF
 		$aDetails = array();
 		$sClass = get_class($this);
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
-		$aDetailsStruct = self::ProcessZlist($aDetailsList, array('UI:PropertiesTab' => array()), 'UI:PropertiesTab', 'col1', '');
+		$aDetailsStruct = self::ProcessZlist($aDetailsList, array('UI:PropertiesTab' => array()), 'UI:PropertiesTab',
+			'col1', '');
 		// Compute the list of properties to display, first the attributes in the 'details' list, then 
 		// all the remaining attributes that are not external fields
 		$sHtml = '';
@@ -649,7 +672,8 @@ EOF
 			}
 
 			$oPage->SetCurrentTab(Dict::S($sTab));
-			$oPage->add('<table style="'.implode('; ', $aTableStyles).'" class="'.implode(' ', $aTableClasses).'" data-mode="'.$sEditMode.'"><tr>');
+			$oPage->add('<table style="'.implode('; ', $aTableStyles).'" class="'.implode(' ',
+					$aTableClasses).'" data-mode="'.$sEditMode.'"><tr>');
 			foreach($aCols as $sColIndex => $aFieldsets)
 			{
 				$oPage->add('<td style="'.implode('; ', $aColStyles).'" class="'.implode(' ', $aColClasses).'">');
@@ -706,7 +730,13 @@ EOF
 									{
 										// State attribute is always read-only from the UI
 										$sHTMLValue = $this->GetStateLabel();
-										$val = array('label' => '<label>'.$oAttDef->GetLabel().'</label>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
+										$val = array(
+											'label' => '<label>'.$oAttDef->GetLabel().'</label>',
+											'value' => $sHTMLValue,
+											'comments' => $sComments,
+											'infos' => $sInfos,
+											'attcode' => $sAttCode
+										);
 									}
 									else
 									{
@@ -721,8 +751,10 @@ EOF
 												$sTip = '';
 												foreach($aReasons as $aRow)
 												{
-													$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
-													$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
+													$sDescription = htmlentities($aRow['description'], ENT_QUOTES,
+														'UTF-8');
+													$sDescription = str_replace(array("\r\n", "\n"), "<br/>",
+														$sDescription);
 													$sTip .= "<div class='synchro-source'>";
 													$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
 													$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
@@ -740,10 +772,18 @@ EOF
 											$sValue = $this->Get($sAttCode);
 											$sDisplayValue = $this->GetEditValue($sAttCode);
 											$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-											$sHTMLValue = "".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'';
+											$sHTMLValue = "".self::GetFormElementForField($oPage, $sClass, $sAttCode,
+													$oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags,
+													$aArgs).'';
 										}
 										$aFieldsMap[$sAttCode] = $sInputId;
-										$val = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos, 'attcode' => $sAttCode);
+										$val = array(
+											'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
+											'value' => $sHTMLValue,
+											'comments' => $sComments,
+											'infos' => $sInfos,
+											'attcode' => $sAttCode
+										);
 									}
 								}
 								else
@@ -761,7 +801,8 @@ EOF
 								// Checking how the field should be rendered
 								// Note: For view mode, this is done in cmdbAbstractObject::GetFieldAsHtml()
 								// Note 2: Shouldn't this be a property of the AttDef instead an array that we have to maintain?
-								if (in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
+								if (in_array($oAttDef->GetEditClass(),
+									array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
 								{
 									$val['layout'] = 'large';
 								}
@@ -808,7 +849,7 @@ EOF
 		return $aFieldsMap;
 	}
 
-	
+
 	function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
 		$sTemplate = Utils::ReadFromFile(MetaModel::GetDisplayTemplate(get_class($this)));
@@ -817,7 +858,13 @@ EOF
 			$oTemplate = new DisplayTemplate($sTemplate);
 			// Note: to preserve backward compatibility with home-made templates, the placeholder '$pkey$' has been preserved
 			//       but the preferred method is to use '$id$'
-			$oTemplate->Render($oPage, array('class_name'=> MetaModel::GetName(get_class($this)),'class'=> get_class($this), 'pkey'=> $this->GetKey(), 'id'=> $this->GetKey(), 'name' => $this->GetName()));
+			$oTemplate->Render($oPage, array(
+				'class_name' => MetaModel::GetName(get_class($this)),
+				'class' => get_class($this),
+				'pkey' => $this->GetKey(),
+				'id' => $this->GetKey(),
+				'name' => $this->GetName()
+			));
 		}
 		else
 		{
@@ -832,11 +879,12 @@ EOF
 			$this->DisplayBareRelations($oPage, $bEditMode);
 			//$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
 			//$this->DisplayBareHistory($oPage, $bEditMode);
-			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.get_class($this).'&id='.$this->GetKey());
+			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'),
+				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.get_class($this).'&id='.$this->GetKey());
 			$oPage->add('</div>');
 		}
 	}
-	
+
 	function DisplayPreview(WebPage $oPage)
 	{
 		$aDetails = array();
@@ -844,45 +892,51 @@ EOF
 		$aList = MetaModel::GetZListItems($sClass, 'preview');
 		foreach($aList as $sAttCode)
 		{
-			$aDetails[] = array('label' => MetaModel::GetLabel($sClass, $sAttCode), 'value' =>$this->GetAsHTML($sAttCode));
+			$aDetails[] = array(
+				'label' => MetaModel::GetLabel($sClass, $sAttCode),
+				'value' => $this->GetAsHTML($sAttCode)
+			);
 		}
-		$oPage->details($aDetails);		
+		$oPage->details($aDetails);
 	}
-	
+
 	public static function DisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oPage->add(self::GetDisplaySet($oPage, $oSet, $aExtraParams));
 	}
-	
+
 	/**
 	 * Simplifed version of GetDisplaySet() with less "decoration" around the table (and no paging)
 	 * that fits better into a printed document (like a PDF or a printable view)
+	 *
 	 * @param WebPage $oPage
 	 * @param DBObjectSet $oSet
-	 * @param hash $aExtraParams
+	 * @param array $aExtraParams
+	 *
 	 * @return string The HTML representation of the table
 	 */
 	public static function GetDisplaySetForPrinting(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$iListId = empty($aExtraParams['currentId']) ? $oPage->GetUniqueId() : $aExtraParams['currentId'];
 		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
-		
+
 		$bViewLink = true;
 		$sSelectMode = 'none';
 		$iListId = $sTableId;
 		$sClassAlias = $oSet->GetClassAlias();
 		$sClassName = $oSet->GetClass();
 		$sZListName = 'list';
-		$aClassAliases = array( $sClassAlias => $sClassName);
+		$aClassAliases = array($sClassAlias => $sClassName);
 		$aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
-	
+
 		$oDataTable = new PrintableDataTable($iListId, $oSet, $aClassAliases, $sTableId);
 		$oSettings = DataTableSettings::GetDataModelSettings($aClassAliases, $bViewLink, array($sClassAlias => $aList));
 		$oSettings->iDefaultPageSize = 0;
 		$oSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
-	
-		return $oDataTable->Display($oPage, $oSettings, false /* $bDisplayMenu */, $sSelectMode, $bViewLink, $aExtraParams);
-	
+
+		return $oDataTable->Display($oPage, $oSettings, false /* $bDisplayMenu */, $sSelectMode, $bViewLink,
+			$aExtraParams);
+
 	}
 
 	/**
@@ -892,10 +946,11 @@ EOF
 	 * @param CMDBObjectSet The set of objects to display
 	 * @param array $aExtraParams Some extra configuration parameters to tweak the behavior of the display
 	 *
-	 * @return String The HTML fragment representing the table of objects. <b>Warning</b> : no JS added to handled pagination or table sorting !
+	 * @return String The HTML fragment representing the table of objects. <b>Warning</b> : no JS added to handled
+	 *     pagination or table sorting !
 	 *
 	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
-	 */	
+	 */
 	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		if ($oPage->IsPrintableVersion() || $oPage->is_pdf())
@@ -911,7 +966,7 @@ EOF
 		{
 			$iListId = $aExtraParams['currentId'];
 		}
-		
+
 		// Initialize and check the parameters
 		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
 		$sLinkageAttribute = isset($aExtraParams['link_attr']) ? $aExtraParams['link_attr'] : '';
@@ -919,12 +974,12 @@ EOF
 		$sTargetAttr = isset($aExtraParams['target_attr']) ? $aExtraParams['target_attr'] : '';
 		if (!empty($sLinkageAttribute))
 		{
-			if($iLinkedObjectId == 0)
+			if ($iLinkedObjectId == 0)
 			{
 				// if 'links' mode is requested the id of the object to link to must be specified
 				throw new ApplicationException(Dict::S('UI:Error:MandatoryTemplateParameter_object_id'));
 			}
-			if($sTargetAttr == '')
+			if ($sTargetAttr == '')
 			{
 				// if 'links' mode is requested the d of the object to link to must be specified
 				throw new ApplicationException(Dict::S('UI:Error:MandatoryTemplateParameter_target_attr'));
@@ -935,9 +990,10 @@ EOF
 		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
 		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
 
-		$aExtraFieldsRaw = isset($aExtraParams['extra_fields']) ? explode(',', trim($aExtraParams['extra_fields'])) : array();
+		$aExtraFieldsRaw = isset($aExtraParams['extra_fields']) ? explode(',',
+			trim($aExtraParams['extra_fields'])) : array();
 		$aExtraFields = array();
-		foreach ($aExtraFieldsRaw as $sFieldName)
+		foreach($aExtraFieldsRaw as $sFieldName)
 		{
 			// Ignore attributes not of the main queried class
 			if (preg_match('/^(.*)\.(.*)$/', $sFieldName, $aMatches))
@@ -995,7 +1051,7 @@ EOF
 			foreach($aList as $sLinkAttCode)
 			{
 				$oLinkAttDef = $aAttDefs[$sLinkAttCode];
-				if ( (!$oLinkAttDef->IsExternalKey()) && (!$oLinkAttDef->IsExternalField()) )
+				if ((!$oLinkAttDef->IsExternalKey()) && (!$oLinkAttDef->IsExternalField()))
 				{
 					$aDisplayList[] = $sLinkAttCode;
 				}
@@ -1005,7 +1061,7 @@ EOF
 			{
 				$oLinkAttDef = $aAttDefs[$sLinkAttCode];
 				if (($oLinkAttDef->IsExternalKey() && ($sLinkAttCode != $sLinkageAttribute))
-					|| ($oLinkAttDef->IsExternalField() && ($oLinkAttDef->GetKeyAttCode()!=$sLinkageAttribute)) )
+					|| ($oLinkAttDef->IsExternalField() && ($oLinkAttDef->GetKeyAttCode() != $sLinkageAttribute)))
 				{
 					$aDisplayList[] = $sLinkAttCode;
 				}
@@ -1014,24 +1070,25 @@ EOF
 			// Then display all the attributes linked to the other end of the relationship
 			$aList = $aDisplayList;
 		}
-		
+
 		$sSelectMode = 'none';
 		if ($bSelectMode)
 		{
 			$sSelectMode = $bSingleSelectMode ? 'single' : 'multiple';
 		}
-		
+
 		$sClassAlias = $oSet->GetClassAlias();
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
-		
+
 		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
-		$aClassAliases = array( $sClassAlias => $sClassName);
+		$aClassAliases = array($sClassAlias => $sClassName);
 		$oDataTable = new DataTable($iListId, $oSet, $aClassAliases, $sTableId);
 		$oSettings = DataTableSettings::GetDataModelSettings($aClassAliases, $bViewLink, array($sClassAlias => $aList));
-		
+
 		if ($bDisplayLimit)
 		{
-			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
+			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size',
+				MetaModel::GetConfig()->GetMinDisplayLimit());
 			$oSettings->iDefaultPageSize = $iDefaultPageSize;
 		}
 		else
@@ -1039,10 +1096,10 @@ EOF
 			$oSettings->iDefaultPageSize = 0;
 		}
 		$oSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
-		
+
 		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
-	
+
 	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		if (empty($aExtraParams['currentId']))
@@ -1054,18 +1111,20 @@ EOF
 			$iListId = $aExtraParams['currentId'];
 		}
 		$aList = array();
-		
+
 		// Initialize and check the parameters
 		$bViewLink = isset($aExtraParams['view_link']) ? $aExtraParams['view_link'] : true;
 		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
 		// Check if there is a list of aliases to limit the display to...
-		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',', $aExtraParams['display_aliases']) : array();
+		$aDisplayAliases = isset($aExtraParams['display_aliases']) ? explode(',',
+			$aExtraParams['display_aliases']) : array();
 		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
 
-		$aExtraFieldsRaw = isset($aExtraParams['extra_fields']) ? explode(',', trim($aExtraParams['extra_fields'])) : array();
+		$aExtraFieldsRaw = isset($aExtraParams['extra_fields']) ? explode(',',
+			trim($aExtraParams['extra_fields'])) : array();
 		$aExtraFields = array();
 		$sAttCode = '';
-		foreach ($aExtraFieldsRaw as $sFieldName)
+		foreach($aExtraFieldsRaw as $sFieldName)
 		{
 			// Ignore attributes not of the main queried class
 			if (preg_match('/^(.*)\.(.*)$/', $sFieldName, $aMatches))
@@ -1089,8 +1148,8 @@ EOF
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
 		{
-			if ( (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO) &&
-			( (count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases))) )
+			if ((UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO) &&
+				((count($aDisplayAliases) == 0) || (in_array($sAlias, $aDisplayAliases))))
 			{
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
@@ -1109,10 +1168,10 @@ EOF
 			if ($sZListName !== false)
 			{
 				$aDefaultList = self::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
-				
+
 				$aList[$sAlias] = array_merge($aDefaultList, $aList[$sAlias]);
 			}
-	
+
 			// Filter the list to removed linked set since we are not able to display them here
 			foreach($aList[$sAlias] as $index => $sAttCode)
 			{
@@ -1122,33 +1181,34 @@ EOF
 					// Removed from the display list
 					unset($aList[$sAlias][$index]);
 				}
-			}						
+			}
 		}
 
 		$sSelectMode = 'none';
-				
+
 		$sClassAlias = $oSet->GetClassAlias();
 		$oDataTable = new DataTable($iListId, $oSet, $aAuthorizedClasses);
 
 		$oSettings = DataTableSettings::GetDataModelSettings($aAuthorizedClasses, $bViewLink, $aList);
-		
+
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
 		if ($bDisplayLimit)
 		{
-			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size', MetaModel::GetConfig()->GetMinDisplayLimit());
+			$iDefaultPageSize = appUserPreferences::GetPref('default_page_size',
+				MetaModel::GetConfig()->GetMinDisplayLimit());
 			$oSettings->iDefaultPageSize = $iDefaultPageSize;
 		}
-		
+
 		$oSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
-		
+
 		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
-	
+
 	static function DisplaySetAsCSV(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
 	{
 		$oPage->add(self::GetSetAsCSV($oSet, $aParams, $sCharset));
 	}
-	
+
 	static function GetSetAsCSV(DBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
 	{
 		$sSeparator = isset($aParams['separator']) ? $aParams['separator'] : ','; // default separator is comma
@@ -1162,13 +1222,13 @@ EOF
 		$bFieldsAdvanced = false;
 		if (isset($aParams['fields_advanced']))
 		{
-			$bFieldsAdvanced = (bool) $aParams['fields_advanced'];
+			$bFieldsAdvanced = (bool)$aParams['fields_advanced'];
 		}
 
 		$bLocalize = true;
 		if (isset($aParams['localize_values']))
 		{
-			$bLocalize = (bool) $aParams['localize_values'];
+			$bLocalize = (bool)$aParams['localize_values'];
 		}
 
 		$aList = array();
@@ -1197,7 +1257,7 @@ EOF
 					if ($oAttDef->IsScalar() && ($oAttDef->IsWritable() || $oAttDef->IsExternalField()))
 					{
 						$sAttCodeEx = $oAttDef->IsExternalField() ? $oAttDef->GetKeyAttCode().'->'.$oAttDef->GetExtAttCode() : $sAttCode;
-						
+
 						if ($oAttDef->IsExternalKey(EXTKEY_ABSOLUTE))
 						{
 							if ($bFieldsAdvanced)
@@ -1206,11 +1266,12 @@ EOF
 
 								if ($oAttDef->IsExternalKey(EXTKEY_RELATIVE))
 								{
-							  		$sRemoteClass = $oAttDef->GetTargetClass();
+									$sRemoteClass = $oAttDef->GetTargetClass();
 									foreach(MetaModel::GetReconcKeys($sRemoteClass) as $sRemoteAttCode)
-								  	{
-										$aList[$sAlias][$sAttCode.'->'.$sRemoteAttCode] = MetaModel::GetAttributeDef($sRemoteClass, $sRemoteAttCode);
-								  	}
+									{
+										$aList[$sAlias][$sAttCode.'->'.$sRemoteAttCode] = MetaModel::GetAttributeDef($sRemoteClass,
+											$sRemoteAttCode);
+									}
 								}
 							}
 						}
@@ -1236,7 +1297,8 @@ EOF
 			}
 			foreach($aList[$sAlias] as $sAttCodeEx => $oAttDef)
 			{
-				$aHeader[] = $bLocalize ? MetaModel::GetLabel($sClassName, $sAttCodeEx, isset($aParams['showMandatoryFields'])) : $sAttCodeEx;
+				$aHeader[] = $bLocalize ? MetaModel::GetLabel($sClassName, $sAttCodeEx,
+					isset($aParams['showMandatoryFields'])) : $sAttCodeEx;
 			}
 		}
 		$sHtml = implode($sSeparator, $aHeader)."\n";
@@ -1274,19 +1336,19 @@ EOF
 			}
 			$sHtml .= implode($sSeparator, $aRow)."\n";
 		}
-		
+
 		return $sHtml;
 	}
-	
+
 	static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$oPage->add(self::GetSetAsHTMLSpreadsheet($oSet, $aParams));
 	}
-	
+
 	/**
 	 * Spreadsheet output: designed for end users doing some reporting
 	 * Then the ids are excluded and replaced by the corresponding friendlyname
-	 */	 	 	
+	 */
 	static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
 	{
 		$aFields = null;
@@ -1298,13 +1360,13 @@ EOF
 		$bFieldsAdvanced = false;
 		if (isset($aParams['fields_advanced']))
 		{
-			$bFieldsAdvanced = (bool) $aParams['fields_advanced'];
+			$bFieldsAdvanced = (bool)$aParams['fields_advanced'];
 		}
 
 		$bLocalize = true;
 		if (isset($aParams['localize_values']))
 		{
-			$bLocalize = (bool) $aParams['localize_values'];
+			$bLocalize = (bool)$aParams['localize_values'];
 		}
 
 		$aList = array();
@@ -1333,16 +1395,17 @@ EOF
 					if ($oAttDef->IsScalar() && ($oAttDef->IsWritable() || $oAttDef->IsExternalField()))
 					{
 						$sAttCodeEx = $oAttDef->IsExternalField() ? $oAttDef->GetKeyAttCode().'->'.$oAttDef->GetExtAttCode() : $sAttCode;
-						
+
 						$aList[$sAlias][$sAttCodeEx] = $oAttDef;
 
-					  	if ($bFieldsAdvanced && $oAttDef->IsExternalKey(EXTKEY_RELATIVE))
-					  	{
-					  		$sRemoteClass = $oAttDef->GetTargetClass();
+						if ($bFieldsAdvanced && $oAttDef->IsExternalKey(EXTKEY_RELATIVE))
+						{
+							$sRemoteClass = $oAttDef->GetTargetClass();
 							foreach(MetaModel::GetReconcKeys($sRemoteClass) as $sRemoteAttCode)
-						  	{
-								$aList[$sAlias][$sAttCode.'->'.$sRemoteAttCode] = MetaModel::GetAttributeDef($sRemoteClass, $sRemoteAttCode);
-						  	}
+							{
+								$aList[$sAlias][$sAttCode.'->'.$sRemoteAttCode] = MetaModel::GetAttributeDef($sRemoteClass,
+									$sRemoteAttCode);
+							}
 						}
 					}
 				}
@@ -1362,7 +1425,8 @@ EOF
 				{
 					unset($aList[$sAlias][$sAttCode]);
 					$sFriendlyNameAttCode = $sAttCode.'_friendlyname';
-					if (!array_key_exists($sFriendlyNameAttCode, $aList[$sAlias]) && MetaModel::IsValidAttCode($sClassName, $sFriendlyNameAttCode))
+					if (!array_key_exists($sFriendlyNameAttCode,
+							$aList[$sAlias]) && MetaModel::IsValidAttCode($sClassName, $sFriendlyNameAttCode))
 					{
 						$oFriendlyNameAtt = MetaModel::GetAttributeDef($sClassName, $sFriendlyNameAttCode);
 						$aList[$sAlias][$sFriendlyNameAttCode] = $oFriendlyNameAtt;
@@ -1419,39 +1483,46 @@ EOF
 							else
 							{
 								$iDate = AttributeDateTime::GetAsUnixSeconds($sDate);
-								$aRow[] = '<td>'.date('Y-m-d', $iDate).'</td>'; // Format kept as-is for 100% backward compatibility of the exports
-								$aRow[] = '<td>'.date('H:i:s', $iDate).'</td>'; // Format kept as-is for 100% backward compatibility of the exports								
+								$aRow[] = '<td>'.date('Y-m-d',
+										$iDate).'</td>'; // Format kept as-is for 100% backward compatibility of the exports
+								$aRow[] = '<td>'.date('H:i:s',
+										$iDate).'</td>'; // Format kept as-is for 100% backward compatibility of the exports
 							}
-						}
-						else if($oAttDef instanceof AttributeCaseLog)
-						{
-							$rawValue = $oObj->Get($sAttCodeEx);
-							$outputValue = str_replace("\n", "<br/>", htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
-							// Trick for Excel: treat the content as text even if it begins with an equal sign
-							$aRow[] = '<td x:str>'.$outputValue.'</td>';
 						}
 						else
 						{
-							$rawValue = $oObj->Get($sAttCodeEx);
-							// Due to custom formatting rules, empty friendlynames may be rendered as non-empty strings
-							// let's fix this and make sure we render an empty string if the key == 0
-							if ($oAttDef instanceof AttributeExternalField && $oAttDef->IsFriendlyName())
+							if ($oAttDef instanceof AttributeCaseLog)
 							{
-								$sKeyAttCode = $oAttDef->GetKeyAttCode();
-								if ($oObj->Get($sKeyAttCode) == 0)
-								{
-									$rawValue = '';
-								}
-							}
-							if ($bLocalize)
-							{
-								$outputValue = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES, 'UTF-8');
+								$rawValue = $oObj->Get($sAttCodeEx);
+								$outputValue = str_replace("\n", "<br/>",
+									htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
+								// Trick for Excel: treat the content as text even if it begins with an equal sign
+								$aRow[] = '<td x:str>'.$outputValue.'</td>';
 							}
 							else
 							{
-								$outputValue = htmlentities($rawValue, ENT_QUOTES, 'UTF-8');
+								$rawValue = $oObj->Get($sAttCodeEx);
+								// Due to custom formatting rules, empty friendlynames may be rendered as non-empty strings
+								// let's fix this and make sure we render an empty string if the key == 0
+								if ($oAttDef instanceof AttributeExternalField && $oAttDef->IsFriendlyName())
+								{
+									$sKeyAttCode = $oAttDef->GetKeyAttCode();
+									if ($oObj->Get($sKeyAttCode) == 0)
+									{
+										$rawValue = '';
+									}
+								}
+								if ($bLocalize)
+								{
+									$outputValue = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES,
+										'UTF-8');
+								}
+								else
+								{
+									$outputValue = htmlentities($rawValue, ENT_QUOTES, 'UTF-8');
+								}
+								$aRow[] = '<td>'.$outputValue.'</td>';
 							}
-							$aRow[] = '<td>'.$outputValue.'</td>';
 						}
 					}
 				}
@@ -1460,16 +1531,16 @@ EOF
 			$sHtml .= "</tr>\n";
 		}
 		$sHtml .= "</table>\n";
-		
+
 		return $sHtml;
 	}
-	
+
 	static function DisplaySetAsXML(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$bLocalize = true;
 		if (isset($aParams['localize_values']))
 		{
-			$bLocalize = (bool) $aParams['localize_values'];
+			$bLocalize = (bool)$aParams['localize_values'];
 		}
 
 		$oAppContext = new ApplicationContext();
@@ -1491,7 +1562,7 @@ EOF
 		{
 			if (count($aAuthorizedClasses) > 1)
 			{
-				$oPage->add("<Row>\n");				
+				$oPage->add("<Row>\n");
 			}
 			foreach($aAuthorizedClasses as $sAlias => $sClassName)
 			{
@@ -1505,7 +1576,7 @@ EOF
 					$sClassName = get_class($oObj);
 					$oPage->add("<$sClassName alias=\"$sAlias\" id=\"".$oObj->GetKey()."\">\n");
 				}
-				foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode=>$oAttDef)
+				foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
 				{
 					if (is_null($oObj))
 					{
@@ -1527,7 +1598,7 @@ EOF
 			}
 			if (count($aAuthorizedClasses) > 1)
 			{
-				$oPage->add("</Row>\n");				
+				$oPage->add("</Row>\n");
 			}
 		}
 		$oPage->add("</Set>\n");
@@ -1567,10 +1638,13 @@ EOF
 	 * @param int $iFlags
 	 * @param array $aArgs
 	 * @param bool $bPreserveCurrentValue Preserve the current value even if not allowed
+	 *
 	 * @return string
 	 */
-	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '', $iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true)
-	{
+	public static function GetFormElementForField(
+		$oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '',
+		$iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true
+	) {
 		static $iInputId = 0;
 		$sFieldPrefix = '';
 		$sFormPrefix = isset($aArgs['formPrefix']) ? $aArgs['formPrefix'] : '';
@@ -1599,7 +1673,7 @@ EOF
 		if (!$oAttDef->IsExternalField())
 		{
 			$bMandatory = 'false';
-			if ( (!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
+			if ((!$oAttDef->IsNullAllowed()) || ($iFlags & OPT_ATT_MANDATORY))
 			{
 				$bMandatory = 'true';
 			}
@@ -1607,55 +1681,62 @@ EOF
 			$sReloadSpan = "<span class=\"field_status\" id=\"fstatus_{$iId}\"></span>";
 			$sHelpText = htmlentities($oAttDef->GetHelpOnEdition(), ENT_QUOTES, 'UTF-8');
 			$aEventsList = array();
-			switch($oAttDef->GetEditClass())
+			switch ($oAttDef->GetEditClass())
 			{
 				case 'Date':
-				$aEventsList[] ='validate';
-				$aEventsList[] ='keyup';
-				$aEventsList[] ='change';
-				$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDate::GetFormat()->ToPlaceholder(), ENT_QUOTES, 'UTF-8').'"';
+					$aEventsList[] = 'validate';
+					$aEventsList[] = 'keyup';
+					$aEventsList[] = 'change';
+					$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDate::GetFormat()->ToPlaceholder(),
+							ENT_QUOTES, 'UTF-8').'"';
 
-				$sHTMLValue = "<div class=\"field_input_zone field_input_date\"><input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
-				break;
+					$sHTMLValue = "<div class=\"field_input_zone field_input_date\"><input title=\"$sHelpText\" class=\"date-pick\" type=\"text\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
+							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					break;
 
 				case 'DateTime':
-				$aEventsList[] ='validate';
-				$aEventsList[] ='keyup';
-				$aEventsList[] ='change';
+					$aEventsList[] = 'validate';
+					$aEventsList[] = 'keyup';
+					$aEventsList[] = 'change';
 
-				$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDateTime::GetFormat()->ToPlaceholder(), ENT_QUOTES, 'UTF-8').'"';
-				$sHTMLValue = "<div class=\"field_input_zone field_input_datetime\"><input title=\"$sHelpText\" class=\"datetime-pick\" type=\"text\" size=\"19\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
-				break;
+					$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDateTime::GetFormat()->ToPlaceholder(),
+							ENT_QUOTES, 'UTF-8').'"';
+					$sHTMLValue = "<div class=\"field_input_zone field_input_datetime\"><input title=\"$sHelpText\" class=\"datetime-pick\" type=\"text\" size=\"19\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
+							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					break;
 
 				case 'Duration':
-				$aEventsList[] ='validate';
-				$aEventsList[] ='change';
-				$oPage->add_ready_script("$('#{$iId}_d').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
-				$oPage->add_ready_script("$('#{$iId}_h').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
-				$oPage->add_ready_script("$('#{$iId}_m').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
-				$oPage->add_ready_script("$('#{$iId}_s').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
-				$aVal = AttributeDuration::SplitDuration($value);
-				$sDays = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"3\" name=\"attr_{$sFieldPrefix}{$sAttCode}[d]{$sNameSuffix}\" value=\"{$aVal['days']}\" id=\"{$iId}_d\"/>";
-				$sHours = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
-				$sMinutes = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
-				$sSeconds = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
-				$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\"/>";
-				$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
-				$oPage->add_ready_script("$('#{$iId}').bind('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");				
-				break;
-				
+					$aEventsList[] = 'validate';
+					$aEventsList[] = 'change';
+					$oPage->add_ready_script("$('#{$iId}_d').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+					$oPage->add_ready_script("$('#{$iId}_h').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+					$oPage->add_ready_script("$('#{$iId}_m').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+					$oPage->add_ready_script("$('#{$iId}_s').bind('keyup change', function(evt, sFormId) { return UpdateDuration('$iId'); });");
+					$aVal = AttributeDuration::SplitDuration($value);
+					$sDays = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"3\" name=\"attr_{$sFieldPrefix}{$sAttCode}[d]{$sNameSuffix}\" value=\"{$aVal['days']}\" id=\"{$iId}_d\"/>";
+					$sHours = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
+					$sMinutes = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
+					$sSeconds = "<input title=\"$sHelpText\" type=\"text\" style=\"text-align:right\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
+					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".htmlentities($value, ENT_QUOTES,
+							'UTF-8')."\"/>";
+					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes,
+							$sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
+					$oPage->add_ready_script("$('#{$iId}').bind('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");
+					break;
+
 				case 'Password':
-					$aEventsList[] ='validate';
-					$aEventsList[] ='keyup';
-					$aEventsList[] ='change';
-					$sHTMLValue = "<div class=\"field_input_zone field_input_password\"><input title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
-				break;
-				
+					$aEventsList[] = 'validate';
+					$aEventsList[] = 'keyup';
+					$aEventsList[] = 'change';
+					$sHTMLValue = "<div class=\"field_input_zone field_input_password\"><input title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value,
+							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					break;
+
 				case 'OQLExpression':
 				case 'Text':
-					$aEventsList[] ='validate';
-					$aEventsList[] ='keyup';
-					$aEventsList[] ='change';
+					$aEventsList[] = 'validate';
+					$aEventsList[] = 'keyup';
+					$aEventsList[] = 'change';
 					$sEditValue = $oAttDef->GetEditValue($value);
 
 					$aStyles = array();
@@ -1688,10 +1769,11 @@ EOF
 						$sAdditionalStuff = "";
 					}
 					// Ok, the text area is drawn here
-					$sHTMLValue = "<div class=\"field_input_zone field_input_text\"><div class=\"f_i_text_header\"><span class=\"fullscreen_button\" title=\"".Dict::S('UI:ToggleFullScreen')."\"></span></div><textarea class=\"\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sAdditionalStuff</div>{$sValidationSpan}{$sReloadSpan}";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_text\"><div class=\"f_i_text_header\"><span class=\"fullscreen_button\" title=\"".Dict::S('UI:ToggleFullScreen')."\"></span></div><textarea class=\"\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\" $sStyle>".htmlentities($sEditValue,
+							ENT_QUOTES, 'UTF-8')."</textarea>$sAdditionalStuff</div>{$sValidationSpan}{$sReloadSpan}";
 
-                    $oPage->add_ready_script(
-<<<EOF
+					$oPage->add_ready_script(
+						<<<EOF
                         $('#$iId').closest('.field_input_text').find('.fullscreen_button').on('click', function(oEvent){
                             var oOriginField = $('#$iId').closest('.field_input_text');
                             var oClonedField = oOriginField.clone();
@@ -1705,8 +1787,8 @@ EOF
                             });
                         });
 EOF
-                    );
-				break;
+					);
+					break;
 
 				case 'CaseLog':
 					$aStyles = array();
@@ -1728,11 +1810,14 @@ EOF
 
 					$sHeader = '<div class="caselog_input_header"></div>'; // will be hidden in CSS (via :empty) if it remains empty
 					$sEditValue = is_object($value) ? $value->GetModifiedEntry('html') : '';
-					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */, array('AttributeText', 'RenderWikiHtml')) : '';
+					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */,
+						array('AttributeText', 'RenderWikiHtml')) : '';
 					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
 
-					$sHTMLValue = "<div class=\"field_input_zone field_input_caselog caselog\" $sStyle>$sHeader<textarea class=\"htmlEditor\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue, ENT_QUOTES, 'UTF-8')."</textarea>$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_caselog caselog\" $sStyle>$sHeader<textarea class=\"htmlEditor\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue,
+							ENT_QUOTES,
+							'UTF-8')."</textarea>$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
 
 					// Note: This should be refactored for all types of attribute (see at the end of this function) but as we are doing this for a maintenance release, we are scheduling it for the next main release in to order to avoid regressions as much as possible.
 					$sNullValue = $oAttDef->GetNullValue();
@@ -1757,32 +1842,34 @@ EOF
 					$sConfigJS = json_encode($aConfig);
 
 					$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
-				break;
+					break;
 
 				case 'HTML':
 					$sEditValue = $oAttDef->GetEditValue($value);
-					$oWidget = new UIHTMLEditorWidget($iId, $oAttDef, $sNameSuffix, $sFieldPrefix, $sHelpText, $sValidationSpan.$sReloadSpan, $sEditValue, $bMandatory);
+					$oWidget = new UIHTMLEditorWidget($iId, $oAttDef, $sNameSuffix, $sFieldPrefix, $sHelpText,
+						$sValidationSpan.$sReloadSpan, $sEditValue, $bMandatory);
 					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
-				break;
+					break;
 
 				case 'LinkedSet':
 					if ($oAttDef->IsIndirect())
 					{
-						$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix, $oAttDef->DuplicatesAllowed());
+						$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix,
+							$oAttDef->DuplicatesAllowed());
 					}
 					else
 					{
 						$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix);
-					}					
-					$aEventsList[] ='validate';
-					$aEventsList[] ='change';
+					}
+					$aEventsList[] = 'validate';
+					$aEventsList[] = 'change';
 					$oObj = isset($aArgs['this']) ? $aArgs['this'] : null;
 					$sHTMLValue = $oWidget->Display($oPage, $value, array(), $sFormPrefix, $oObj);
 					break;
-							
+
 				case 'Document':
-					$aEventsList[] ='validate';
-					$aEventsList[] ='change';
+					$aEventsList[] = 'validate';
+					$aEventsList[] = 'change';
 					$oDocument = $value; // Value is an ormDocument object
 					$sFileName = '';
 					if (is_object($oDocument))
@@ -1792,16 +1879,18 @@ EOF
 					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
 					$sHTMLValue = "<div class=\"field_input_zone field_input_document\">\n";
 					$sHTMLValue .= "<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$iMaxFileSize\" />\n";
-					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]\" type=\"hidden\" id=\"$iId\" \" value=\"".htmlentities($sFileName, ENT_QUOTES, 'UTF-8')."\"/>\n";
-					$sHTMLValue .= "<span id=\"name_$iInputId\"'>".htmlentities($sFileName, ENT_QUOTES, 'UTF-8')."</span><br/>\n";
+					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]\" type=\"hidden\" id=\"$iId\" \" value=\"".htmlentities($sFileName,
+							ENT_QUOTES, 'UTF-8')."\"/>\n";
+					$sHTMLValue .= "<span id=\"name_$iInputId\"'>".htmlentities($sFileName, ENT_QUOTES,
+							'UTF-8')."</span><br/>\n";
 					$sHTMLValue .= "<input title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]\" type=\"file\" id=\"file_$iId\" onChange=\"UpdateFileName('$iId', this.value)\"/>\n";
 					$sHTMLValue .= "</div>\n";
 					$sHTMLValue .= "{$sValidationSpan}{$sReloadSpan}\n";
-				break;
+					break;
 
 				case 'Image':
-					$aEventsList[] ='validate';
-					$aEventsList[] ='change';
+					$aEventsList[] = 'validate';
+					$aEventsList[] = 'change';
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/edit_image.js');
 					$oDocument = $value; // Value is an ormDocument object
 					$sDefaultUrl = $oAttDef->Get('default_image');
@@ -1836,27 +1925,28 @@ EOF
 
 				case 'StopWatch':
 					$sHTMLValue = "The edition of a stopwatch is not allowed!!!";
-				break;
+					break;
 
 				case 'List':
 					// Not editable for now...
 					$sHTMLValue = '';
-				break;
-				
+					break;
+
 				case 'One Way Password':
-					$aEventsList[] ='validate';
+					$aEventsList[] = 'validate';
 					$oWidget = new UIPasswordWidget($sAttCode, $iId, $sNameSuffix);
 					$sHTMLValue = $oWidget->Display($oPage, $aArgs);
 					// Event list & validation is handled  directly by the widget
-				break;
-				
+					break;
+
 				case 'ExtKey':
-					$aEventsList[] ='validate';
-					$aEventsList[] ='change';
+					$aEventsList[] = 'validate';
+					$aEventsList[] = 'change';
 
 					if ($bPreserveCurrentValue)
 					{
-						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $value);
+						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '',
+							$value);
 					}
 					else
 					{
@@ -1865,11 +1955,12 @@ EOF
 					$sFieldName = $sFieldPrefix.$sAttCode.$sNameSuffix;
 					$aExtKeyParams = $aArgs;
 					$aExtKeyParams['iFieldSize'] = $oAttDef->GetMaxSize();
-					$aExtKeyParams['iMinChars'] = $oAttDef->GetMinAutoCompleteChars();	
-					$sHTMLValue = UIExtKeyWidget::DisplayFromAttCode($oPage, $sAttCode, $sClass, $oAttDef->GetLabel(), $oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aExtKeyParams);
+					$aExtKeyParams['iMinChars'] = $oAttDef->GetMinAutoCompleteChars();
+					$sHTMLValue = UIExtKeyWidget::DisplayFromAttCode($oPage, $sAttCode, $sClass, $oAttDef->GetLabel(),
+						$oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aExtKeyParams);
 					$sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
 					break;
-					
+
 				case 'RedundancySetting':
 					$sHTMLValue = '<table>';
 					$sHTMLValue .= '<tr>';
@@ -1908,7 +1999,8 @@ EOF
 					);
 					$sFormHandlerOptions = json_encode($aFormHandlerOptions);
 					$aFieldSetOptions = array(
-						'field_identifier_attr' => 'data-field-id', // convention: fields are rendered into a div and are identified by this attribute
+						'field_identifier_attr' => 'data-field-id',
+						// convention: fields are rendered into a div and are identified by this attribute
 						'fields_list' => $aRenderRes,
 						'fields_impacts' => $oForm->GetFieldsImpacts(),
 						'form_path' => $oForm->GetId()
@@ -1935,7 +2027,7 @@ EOF
 
 				case 'String':
 				default:
-					$aEventsList[] ='validate';
+					$aEventsList[] = 'validate';
 					// #@# todo - add context information (depending on dimensions)
 					$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
 					$iFieldSize = $oAttDef->GetMaxSize();
@@ -1943,51 +2035,53 @@ EOF
 					{
 						// Discrete list of values, use a SELECT or RADIO buttons depending on the config
 						$sDisplayStyle = $oAttDef->GetDisplayStyle();
-						switch($sDisplayStyle)
+						switch ($sDisplayStyle)
 						{
 							case 'radio':
 							case 'radio_horizontal':
 							case 'radio_vertical':
-							$aEventsList[] ='change';
-							$sHTMLValue = "<div class=\"field_input_zone field_input_{$sDisplayStyle}\">";
-							$bVertical = ($sDisplayStyle != 'radio_horizontal');
-							$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $iId, "attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, '');
-							$sHTMLValue .= "</div>{$sValidationSpan}{$sReloadSpan}\n";
-							break;
-							
+								$aEventsList[] = 'change';
+								$sHTMLValue = "<div class=\"field_input_zone field_input_{$sDisplayStyle}\">";
+								$bVertical = ($sDisplayStyle != 'radio_horizontal');
+								$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $iId,
+									"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, '');
+								$sHTMLValue .= "</div>{$sValidationSpan}{$sReloadSpan}\n";
+								break;
+
 							case 'select':
 							default:
-							$aEventsList[] ='change';
-							$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
-							$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
-							foreach($aAllowedValues as $key => $display_value)
-							{
-								if ((count($aAllowedValues) == 1) && ($bMandatory == 'true') )
+								$aEventsList[] = 'change';
+								$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
+								$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
+								foreach($aAllowedValues as $key => $display_value)
 								{
-									// When there is only once choice, select it by default
-									$sSelected = ' selected';
+									if ((count($aAllowedValues) == 1) && ($bMandatory == 'true'))
+									{
+										// When there is only once choice, select it by default
+										$sSelected = ' selected';
+									}
+									else
+									{
+										$sSelected = ($value == $key) ? ' selected' : '';
+									}
+									$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
 								}
-								else
-								{
-									$sSelected = ($value == $key) ? ' selected' : '';
-								}
-								$sHTMLValue .= "<option value=\"$key\"$sSelected>$display_value</option>\n";
-							}
-							$sHTMLValue .= "</select></div>{$sValidationSpan}{$sReloadSpan}\n";
-							break;
+								$sHTMLValue .= "</select></div>{$sValidationSpan}{$sReloadSpan}\n";
+								break;
 						}
 					}
 					else
 					{
-						$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><input title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
-						$aEventsList[] ='keyup';
-						$aEventsList[] ='change';
+						$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><input title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
+								ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+						$aEventsList[] = 'keyup';
+						$aEventsList[] = 'change';
 
 						// Adding tooltip so we can read the whole value when its very long (eg. URL)
-						if(!empty($sDisplayValue))
+						if (!empty($sDisplayValue))
 						{
 							$oPage->add_ready_script(
-<<<EOF
+								<<<EOF
 								$('#{$iId}').qtip( { content: $('#{$iId}').val(), show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'bottomLeft' }, position: { corner: { target: 'topLeft', tooltip: 'bottomLeft' }, adjust: { y: -15}} } );
 								
 								$('#{$iId}').bind('keyup', function(evt, sFormId){ 
@@ -2008,7 +2102,7 @@ EOF
 							);
 						}
 					}
-				break;
+					break;
 			}
 			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';			
 			if (!empty($aEventsList))
@@ -2019,18 +2113,22 @@ EOF
 					$sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
 				}
 				$sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? json_encode($value) : 'undefined';
-				$oPage->add_ready_script("$('#$iId').bind('".implode(' ', $aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );\n"); // Bind to a custom event: validate
+				$oPage->add_ready_script("$('#$iId').bind('".implode(' ',
+						$aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );\n"); // Bind to a custom event: validate
 			}
-			$aDependencies = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that depend on the current one
+			$aDependencies = MetaModel::GetDependentAttributes($sClass,
+				$sAttCode); // List of attributes that depend on the current one
 			if (count($aDependencies) > 0)
 			{
 				// Unbind first to avoid duplicate event handlers in case of reload of the whole (or part of the) form
-				$oPage->add_ready_script("$('#$iId').unbind('change.dependencies').bind('change.dependencies', function(evt, sFormId) { return oWizardHelper{$sFormPrefix}.UpdateDependentFields(['".implode("','", $aDependencies)."']) } );\n"); // Bind to a custom event: validate
+				$oPage->add_ready_script("$('#$iId').unbind('change.dependencies').bind('change.dependencies', function(evt, sFormId) { return oWizardHelper{$sFormPrefix}.UpdateDependentFields(['".implode("','",
+						$aDependencies)."']) } );\n"); // Bind to a custom event: validate
 			}
 		}
 		$oPage->add_dict_entry('UI:ValueMustBeSet');
 		$oPage->add_dict_entry('UI:ValueMustBeChanged');
 		$oPage->add_dict_entry('UI:ValueInvalidFormat');
+
 		return "<div id=\"field_{$iId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div></div>";
 	}
 
@@ -2043,7 +2141,7 @@ EOF
 		{
 			// The concurrent access lock makes sense only for already existing objects
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
-			if ($LockEnabled) 
+			if ($LockEnabled)
 			{
 				$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
 				if ($sOwnershipToken !== null)
@@ -2068,18 +2166,21 @@ EOF
 						// the lock may be released by 'onunload' which is called AFTER loading the current page.
 						//$bTryAgain = $oOwner->GetKey() == UserRights::GetUserId();
 						self::ReloadAndDisplay($oPage, $this, array('operation' => 'modify'));
+
 						return;
 					}
 				}
 			}
 		}
-		
+
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container'])
-		{			
+		{
 			$sClassLabel = MetaModel::GetName($sClass);
-			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
+			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
+				$sClassLabel)); // Set title will take care of the encoding
 			$oPage->add("<div class=\"page_header\">\n");
-			$oPage->add("<h1>".$this->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $this->GetName())."</h1>\n");
+			$oPage->add("<h1>".$this->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
+					$this->GetName())."</h1>\n");
 			$oPage->add("</div>\n");
 			$oPage->add("<div class=\"wizContainer\">\n");
 		}
@@ -2091,7 +2192,7 @@ EOF
 			$sPrefix = $aExtraParams['formPrefix'];
 		}
 		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
-		
+
 		$this->m_iFormId = $sPrefix.self::$iGlobalFormId;
 		$oAppContext = new ApplicationContext();
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
@@ -2108,41 +2209,47 @@ EOF
 		// Custom label for the apply button ?
 		if (isset($aExtraParams['custom_button']))
 		{
-			$sApplyButton = $aExtraParams['custom_button'];			
-		}
-		else if ($iKey > 0)
-		{
-			$sApplyButton = Dict::S('UI:Button:Apply');
+			$sApplyButton = $aExtraParams['custom_button'];
 		}
 		else
 		{
-			$sApplyButton = Dict::S('UI:Button:Create');
+			if ($iKey > 0)
+			{
+				$sApplyButton = Dict::S('UI:Button:Apply');
+			}
+			else
+			{
+				$sApplyButton = Dict::S('UI:Button:Create');
+			}
 		}
 		// Custom operation for the form ?
 		if (isset($aExtraParams['custom_operation']))
 		{
-			$sOperation = $aExtraParams['custom_operation'];			
-		}
-		else if ($iKey > 0)
-		{
-			$sOperation = 'apply_modify';
+			$sOperation = $aExtraParams['custom_operation'];
 		}
 		else
 		{
-			$sOperation = 'apply_new';
+			if ($iKey > 0)
+			{
+				$sOperation = 'apply_modify';
+			}
+			else
+			{
+				$sOperation = 'apply_new';
+			}
 		}
 		if ($iKey > 0)
 		{
 			// The object already exists in the database, it's a modification
 			$sButtons = "<input id=\"{$sPrefix}_id\" type=\"hidden\" name=\"id\" value=\"$iKey\">\n";
-			$sButtons .= "<input type=\"hidden\" name=\"operation\" value=\"{$sOperation}\">\n";			
+			$sButtons .= "<input type=\"hidden\" name=\"operation\" value=\"{$sOperation}\">\n";
 			$sButtons .= "<button type=\"button\" class=\"action cancel\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n";
 			$sButtons .= "<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n";
 		}
 		else
 		{
 			// The object does not exist in the database it's a creation
-			$sButtons = "<input type=\"hidden\" name=\"operation\" value=\"$sOperation\">\n";			
+			$sButtons = "<input type=\"hidden\" name=\"operation\" value=\"$sOperation\">\n";
 			$sButtons .= "<button type=\"button\" class=\"action cancel\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;&nbsp;&nbsp;\n";
 			$sButtons .= "<button type=\"submit\" class=\"action\"><span>{$sApplyButton}</span></button>\n";
 		}
@@ -2155,19 +2262,20 @@ EOF
 			$aStimuli = Metamodel::EnumStimuli($sClass);
 			foreach($aTransitions as $sStimulusCode => $aTransitionDef)
 			{
-				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass, $sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
-				switch($iActionAllowed)
+				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass,
+					$sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
+				switch ($iActionAllowed)
 				{
 					case UR_ALLOWED_YES:
-					$sButtons .= "<button type=\"submit\" name=\"next_action\" value=\"{$sStimulusCode}\" class=\"action\"><span>".$aStimuli[$sStimulusCode]->GetLabel()."</span></button>\n";
-					break;
-					
+						$sButtons .= "<button type=\"submit\" name=\"next_action\" value=\"{$sStimulusCode}\" class=\"action\"><span>".$aStimuli[$sStimulusCode]->GetLabel()."</span></button>\n";
+						break;
+
 					default:
-					// Do nothing
+						// Do nothing
 				}
 			}
 		}
-				
+
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
 		$iTransactionId = isset($aExtraParams['transaction_id']) ? $aExtraParams['transaction_id'] : utils::GetNewTransactionId();
 		$oPage->SetTransactionId($iTransactionId);
@@ -2179,7 +2287,8 @@ EOF
 			//$aInitialStates = array('new' => 'foo', 'closed' => 'bar');
 			if (count($aInitialStates) > 1)
 			{
-				$sStatesSelection = Dict::Format('UI:Create_Class_InState', MetaModel::GetName($sClass)).'<select name="obj_state" class="state_select_'.$this->m_iFormId.'">';
+				$sStatesSelection = Dict::Format('UI:Create_Class_InState',
+						MetaModel::GetName($sClass)).'<select name="obj_state" class="state_select_'.$this->m_iFormId.'">';
 				foreach($aInitialStates as $sStateCode => $sStateData)
 				{
 					$sSelected = '';
@@ -2187,7 +2296,8 @@ EOF
 					{
 						$sSelected = ' selected';
 					}
-					$sStatesSelection .= '<option value="'.$sStateCode.'" '.$sSelected.'>'.MetaModel::GetStateLabel($sClass, $sStateCode).'</option>';
+					$sStatesSelection .= '<option value="'.$sStateCode.'" '.$sSelected.'>'.MetaModel::GetStateLabel($sClass,
+							$sStateCode).'</option>';
 				}
 				$sStatesSelection .= '</select>';
 				$oPage->add_ready_script("$('.state_select_{$this->m_iFormId}').change( function() { oWizardHelper$sPrefix.ReloadObjectCreationForm('form_{$this->m_iFormId}', $(this).val()); } );");
@@ -2197,7 +2307,7 @@ EOF
 		$sConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
 		$sJSToken = json_encode($sOwnershipToken);
 		$oPage->add_ready_script(
-<<<EOF
+			<<<EOF
 	$(window).on('unload',function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
 	window.onbeforeunload = function() {
 		if (!window.bInSubmit && !window.bInCancel)
@@ -2207,7 +2317,7 @@ EOF
 		// return nothing ! safer for IE
 	};
 EOF
-);
+		);
 
 		if ($sButtonsPosition != 'bottom')
 		{
@@ -2244,7 +2354,8 @@ EOF
 		}
 		if ($sOwnershipToken !== null)
 		{
-			$oPage->add("<input type=\"hidden\" name=\"ownership_token\" value=\"".htmlentities($sOwnershipToken, ENT_QUOTES, 'UTF-8')."\">\n");
+			$oPage->add("<input type=\"hidden\" name=\"ownership_token\" value=\"".htmlentities($sOwnershipToken,
+					ENT_QUOTES, 'UTF-8')."\">\n");
 		}
 		$oPage->add($oAppContext->GetForForm());
 		if ($sButtonsPosition != 'top')
@@ -2258,21 +2369,21 @@ EOF
 		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=cancel&'.$oAppContext->GetForLink();
 		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').click( function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)} );");
 		$oPage->add("</form>\n");
-		
+
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container'])
 		{
 			$oPage->add("</div>\n");
 		}
-		
+
 		$iFieldsCount = count($aFieldsMap);
 		$sJsonFieldsMap = json_encode($aFieldsMap);
 		$sState = $this->GetState();
 		$sSessionStorageKey = $sClass.'_'.$iKey;
 		$sTempId = session_id().'_'.$iTransactionId;
 		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
-		
+
 		$oPage->add_script(
-<<<EOF
+			<<<EOF
 		sessionStorage.removeItem('$sSessionStorageKey');
 		
 		// Create the object once at the beginning of the page...
@@ -2282,7 +2393,7 @@ EOF
 EOF
 		);
 		$oPage->add_ready_script(
-<<<EOF
+			<<<EOF
 		oWizardHelper$sPrefix.UpdateWizard();
 		// Starts the validation when the page is ready
 		CheckFields('form_{$this->m_iFormId}', false);
@@ -2299,26 +2410,28 @@ EOF
 			$iInterval = MetaModel::GetConfig()->Get('concurrent_lock_expiration_delay') * 1000 / 2;
 			if ($iInterval > 0)
 			{
-				$iInterval = max(MIN_WATCHDOG_INTERVAL*1000, $iInterval); // Minimum interval for the watchdog is MIN_WATCHDOG_INTERVAL
+				$iInterval = max(MIN_WATCHDOG_INTERVAL * 1000,
+					$iInterval); // Minimum interval for the watchdog is MIN_WATCHDOG_INTERVAL
 				$oPage->add_ready_script(
-<<<EOF
+					<<<EOF
 				window.setInterval(function() {
 					$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'watchdog'});
 				}, $iInterval);
 EOF
 				);
-			}			
+			}
 		}
 	}
 
-	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array(), $aExtraParams = array())
-	{
+	public static function DisplayCreationForm(
+		WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array(), $aExtraParams = array()
+	) {
 		$oAppContext = new ApplicationContext();
 		$sClass = ($oObjectToClone == null) ? $sClass : get_class($oObjectToClone);
 		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 		$aStates = MetaModel::EnumStates($sClass);
 		$sStatesSelection = '';
-		
+
 		if ($oObjectToClone == null)
 		{
 			$oObj = DBObject::MakeDefaultInstance($sClass);
@@ -2339,13 +2452,13 @@ EOF
 			$aDeps[$sAttCode] = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
 		}
 		$aList = self::OrderDependentFields($aDeps);
-		
+
 		// Now fill-in the fields with default/supplied values
 		foreach($aList as $sAttCode)
 		{
 			if (isset($aArgs['default'][$sAttCode]))
 			{
-				$oObj->Set($sAttCode, $aArgs['default'][$sAttCode]);			
+				$oObj->Set($sAttCode, $aArgs['default'][$sAttCode]);
 			}
 			else
 			{
@@ -2377,9 +2490,10 @@ EOF
 				}
 			}
 		}
-		return $oObj->DisplayModifyForm( $oPage, $aExtraParams);
+
+		return $oObj->DisplayModifyForm($oPage, $aExtraParams);
 	}
-	
+
 	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null)
 	{
 		$sClass = get_class($this);
@@ -2389,12 +2503,13 @@ EOF
 		if (!isset($aTransitions[$sStimulus]))
 		{
 			// Invalid stimulus
-			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus, $this->GetName(), $this->GetStateLabel()));
+			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus,
+				$this->GetName(), $this->GetStateLabel()));
 		}
 		// Check for concurrent access lock
 		$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
 		$sOwnershipToken = null;
-		if ($LockEnabled) 
+		if ($LockEnabled)
 		{
 			$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
 			$aLockInfo = iTopOwnershipLock::AcquireLock($sClass, $iKey);
@@ -2410,18 +2525,19 @@ EOF
 				// the lock may be released by 'onunload' which is called AFTER loading the current page.
 				//$bTryAgain = $oOwner->GetKey() == UserRights::GetUserId();
 				self::ReloadAndDisplay($oPage, $this, array('operation' => 'stimulus', 'stimulus' => $sStimulus));
+
 				return;
 			}
 		}
 		$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
 		$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
-        $oPage->add("<div class=\"page_header\">\n");
-        $oPage->add("<h1>$sActionLabel - <span class=\"hilite\">{$this->GetName()}</span></h1>\n");
-        $oPage->set_title($sActionLabel);
-        $oPage->add("</div>\n");
-        $oPage->add("<h1>$sActionDetails</h1>\n");
-        $sTargetState = $aTransitions[$sStimulus]['target_state'];
-        $aExpectedAttributes = $this->GetTransitionAttributes($sStimulus /*, current state*/);
+		$oPage->add("<div class=\"page_header\">\n");
+		$oPage->add("<h1>$sActionLabel - <span class=\"hilite\">{$this->GetName()}</span></h1>\n");
+		$oPage->set_title($sActionLabel);
+		$oPage->add("</div>\n");
+		$oPage->add("<h1>$sActionDetails</h1>\n");
+		$sTargetState = $aTransitions[$sStimulus]['target_state'];
+		$aExpectedAttributes = $this->GetTransitionAttributes($sStimulus /*, current state*/);
 		if ($aPrefillFormParam != null)
 		{
 			$aPrefillFormParam['expected_attributes'] = $aExpectedAttributes;
@@ -2444,10 +2560,10 @@ EOF
 
 		// The list of candidate fields is made of the ordered list of "details" attributes + other attributes
 		$aAttributes = array();
-		foreach ($this->FlattenZList(MetaModel::GetZListItems($sClass, 'details')) as $sAttCode)
+		foreach($this->FlattenZList(MetaModel::GetZListItems($sClass, 'details')) as $sAttCode)
 		{
 			$aAttributes[$sAttCode] = true;
-		}		
+		}
 		foreach(MetaModel::GetAttributesList($sClass) as $sAttCode)
 		{
 			if (!array_key_exists($sAttCode, $aAttributes))
@@ -2473,8 +2589,8 @@ EOF
 				// Prompt for an attribute if
 				// - the attribute must be changed or must be displayed to the user for confirmation
 				// - or the field is mandatory and currently empty
-				if ( ($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
-					 (($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) == '')) ) 
+				if (($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
+					(($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) == '')))
 				{
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					$aArgs = array('this' => $this);
@@ -2484,7 +2600,8 @@ EOF
 						if ($oAttDef->IsExternalKey())
 						{
 							/** @var DBObjectSet $oAllowedValues */
-							$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $this->Get($sAttCode));
+							$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '',
+								$this->Get($sAttCode));
 							if ($oAllowedValues->CountWithLimit(2) == 1)
 							{
 								$oRemoteObj = $oAllowedValues->Fetch();
@@ -2501,8 +2618,13 @@ EOF
 							}
 						}
 					}
-					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,$this->Get($sAttCode),$this->GetEditValue($sAttCode), 'att_'.$iFieldIndex, '', $iExpectCode, $aArgs);
-					$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>");
+					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef,
+						$this->Get($sAttCode), $this->GetEditValue($sAttCode), 'att_'.$iFieldIndex, '', $iExpectCode,
+						$aArgs);
+					$aDetails[] = array(
+						'label' => '<span>'.$oAttDef->GetLabel().'</span>',
+						'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>"
+					);
 					$aFieldsMap[$sAttCode] = 'att_'.$iFieldIndex;
 					$iFieldIndex++;
 				}
@@ -2521,7 +2643,8 @@ EOF
 		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".$iTransactionId."\">\n");
 		if ($sOwnershipToken !== null)
 		{
-			$oPage->add("<input type=\"hidden\" name=\"ownership_token\" value=\"".htmlentities($sOwnershipToken, ENT_QUOTES, 'UTF-8')."\">\n");
+			$oPage->add("<input type=\"hidden\" name=\"ownership_token\" value=\"".htmlentities($sOwnershipToken,
+					ENT_QUOTES, 'UTF-8')."\">\n");
 		}
 		$oAppContext = new ApplicationContext();
 		$oPage->add($oAppContext->GetForForm());
@@ -2541,7 +2664,7 @@ EOF
 		$sJsonFieldsMap = json_encode($aFieldsMap);
 
 		$oPage->add_script(
-<<<EOF
+			<<<EOF
 		// Initializes the object once at the beginning of the page...
 		var oWizardHelper = new WizardHelper('$sClass', '', '$sTargetState', '{$this->GetState()}', '$sStimulus');
 		oWizardHelper.SetFieldsMap($sJsonFieldsMap);
@@ -2550,13 +2673,13 @@ EOF
 		);
 		$sJSToken = json_encode($sOwnershipToken);
 		$oPage->add_ready_script(
-<<<EOF
+			<<<EOF
 		// Starts the validation when the page is ready
 		CheckFields('apply_stimulus', false);
 		$(window).on('unload', function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
 EOF
 		);
-		
+
 		if ($sOwnershipToken !== null)
 		{
 			$this->GetOwnershipJSHandler($oPage, $sOwnershipToken);
@@ -2581,35 +2704,35 @@ EOF
 				{
 					$sCode = $aMatches[1];
 					$sName = $aMatches[2];
-					switch($sCode)
+					switch ($sCode)
 					{
 						case 'tab':
-						//echo "<p>Found a tab:  $sName ($sKey)</p>\n";
-						if(!isset($aDetails[$sName]))
-						{
-							$aDetails[$sName] = array('col1' => array());
-						}
-						$aDetails = self::ProcessZlist($value, $aDetails, $sName, 'col1', '');
-						break;
-						
+							//echo "<p>Found a tab:  $sName ($sKey)</p>\n";
+							if (!isset($aDetails[$sName]))
+							{
+								$aDetails[$sName] = array('col1' => array());
+							}
+							$aDetails = self::ProcessZlist($value, $aDetails, $sName, 'col1', '');
+							break;
+
 						case 'fieldset':
-						//echo "<p>Found a fieldset: $sName ($sKey)</p>\n";
-						if(!isset($aDetailsStruct[$sCurrentTab][$sCurrentCol][$sName]))
-						{
-							$aDetails[$sCurrentTab][$sCurrentCol][$sName] = array();
-						}
-						$aDetails = self::ProcessZlist($value, $aDetails, $sCurrentTab, $sCurrentCol, $sName);
-						break;
+							//echo "<p>Found a fieldset: $sName ($sKey)</p>\n";
+							if (!isset($aDetailsStruct[$sCurrentTab][$sCurrentCol][$sName]))
+							{
+								$aDetails[$sCurrentTab][$sCurrentCol][$sName] = array();
+							}
+							$aDetails = self::ProcessZlist($value, $aDetails, $sCurrentTab, $sCurrentCol, $sName);
+							break;
 
 						default:
 						case 'col':
-						//echo "<p>Found a column: $sName ($sKey)</p>\n";
-						if(!isset($aDetails[$sCurrentTab][$sName]))
-						{
-							$aDetails[$sCurrentTab][$sName] = array();
-						}
-						$aDetails = self::ProcessZlist($value, $aDetails, $sCurrentTab, $sName, '');
-						break;
+							//echo "<p>Found a column: $sName ($sKey)</p>\n";
+							if (!isset($aDetails[$sCurrentTab][$sName]))
+							{
+								$aDetails[$sCurrentTab][$sName] = array();
+							}
+							$aDetails = self::ProcessZlist($value, $aDetails, $sCurrentTab, $sName, '');
+							break;
 					}
 				}
 			}
@@ -2627,6 +2750,7 @@ EOF
 			}
 			$index++;
 		}
+
 		return $aDetails;
 	}
 
@@ -2641,12 +2765,13 @@ EOF
 			}
 			else
 			{
-				$aResult = array_merge($aResult,self::FlattenZList($value));
+				$aResult = array_merge($aResult, self::FlattenZList($value));
 			}
 		}
+
 		return $aResult;
 	}
-		
+
 	protected function GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode)
 	{
 		$retVal = null;
@@ -2659,7 +2784,7 @@ EOF
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 		}
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		if ( (!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) )
+		if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
 		{
 			// The field is visible in the current state of the object
 			if ($sStateAttCode == $sAttCode)
@@ -2667,38 +2792,50 @@ EOF
 				// Special display for the 'state' attribute itself
 				$sDisplayValue = $this->GetStateLabel();
 			}
-			else if ($oAttDef->GetEditClass() == 'Document')
+			else
 			{
-				$oDocument = $this->Get($sAttCode);
-				$sDisplayValue = $this->GetAsHTML($sAttCode);
-				$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_', $oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
-				$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_', $oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+				if ($oAttDef->GetEditClass() == 'Document')
+				{
+					$oDocument = $this->Get($sAttCode);
+					$sDisplayValue = $this->GetAsHTML($sAttCode);
+					$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
+							$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+					$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
+							$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+				}
+				else
+				{
+					$sDisplayValue = $this->GetAsHTML($sAttCode);
+				}
+			}
+			$retVal = array(
+				'label' => '<span title="'.MetaModel::GetDescription($sClass,
+						$sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>',
+				'value' => $sDisplayValue,
+				'attcode' => $sAttCode
+			);
+
+			// Checking how the field should be rendered
+			// Note: For edit mode, this is done in self::GetBareProperties()
+			// Note 2: Shouldn't this be a AttDef property instead of an array to maintain?
+			if (in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
+			{
+				$retVal['layout'] = 'large';
 			}
 			else
 			{
-				$sDisplayValue = $this->GetAsHTML($sAttCode);
+				$retVal['layout'] = 'small';
 			}
-			$retVal = array('label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>', 'value' => $sDisplayValue, 'attcode' => $sAttCode);
-
-            // Checking how the field should be rendered
-            // Note: For edit mode, this is done in self::GetBareProperties()
-			// Note 2: Shouldn't this be a AttDef property instead of an array to maintain?
-            if(in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
-            {
-                $retVal['layout'] = 'large';
-            }
-            else
-            {
-                $retVal['layout'] = 'small';
-            }
 		}
+
 		return $retVal;
 	}
-	
+
 	/**
 	 * Displays a blob document *inline* (if possible, depending on the type of the document)
+	 *
 	 * @return string
-	 */	 	 	
+	 */
 	public function DisplayDocumentInline(WebPage $oPage, $sAttCode)
 	{
 		$oDoc = $this->Get($sAttCode);
@@ -2708,40 +2845,41 @@ EOF
 		{
 			case 'text':
 			case 'html':
-			$data = $oDoc->GetData();
-			switch($oDoc->GetMimeType())
-			{
-				case 'text/html':
-				case 'text/xml':
-				$oPage->add("<iframe id='preview_$sAttCode' src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
+				$data = $oDoc->GetData();
+				switch ($oDoc->GetMimeType())
+				{
+					case 'text/html':
+					case 'text/xml':
+						$oPage->add("<iframe id='preview_$sAttCode' src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
+						break;
+
+					default:
+						$oPage->add("<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true), ENT_QUOTES,
+								'UTF-8')."</pre>\n");
+				}
 				break;
-				
-				default:
-				$oPage->add("<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true), ENT_QUOTES, 'UTF-8')."</pre>\n");			
-			}
-			break;
 
 			case 'application':
-			switch($oDoc->GetMimeType())
-			{
-				case 'application/pdf':
-				$oPage->add("<iframe id='preview_$sAttCode' src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
+				switch ($oDoc->GetMimeType())
+				{
+					case 'application/pdf':
+						$oPage->add("<iframe id='preview_$sAttCode' src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" width=\"100%\" height=\"400\">Loading...</iframe>\n");
+						break;
+
+					default:
+						$oPage->add(Dict::S('UI:Document:NoPreview'));
+				}
 				break;
 
-				default:
-				$oPage->add(Dict::S('UI:Document:NoPreview'));
-			}
-			break;
-			
 			case 'image':
-			$oPage->add("<img src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" />\n");
-			break;
-			
+				$oPage->add("<img src=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" />\n");
+				break;
+
 			default:
-			$oPage->add(Dict::S('UI:Document:NoPreview'));
+				$oPage->add(Dict::S('UI:Document:NoPreview'));
 		}
 	}
-	
+
 	// $m_highlightComparison[previous][new] => next value
 	protected static $m_highlightComparison = array(
 		HILIGHT_CLASS_CRITICAL => array(
@@ -2769,13 +2907,15 @@ EOF
 			HILIGHT_CLASS_NONE => HILIGHT_CLASS_NONE,
 		),
 	);
-	
+
 	/**
 	 * This function returns a 'hilight' CSS class, used to hilight a given row in a table
 	 * There are currently (i.e defined in the CSS) 4 possible values HILIGHT_CLASS_CRITICAL,
 	 * HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
 	 * To Be overridden by derived classes
+	 *
 	 * @param void
+	 *
 	 * @return String The desired higlight class for the object/row
 	 */
 	public function GetHilightClass()
@@ -2785,17 +2925,20 @@ EOF
 		$current = parent::GetHilightClass(); // Default computation
 
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
-		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+		foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$new = $oExtensionInstance->GetHilightClass($this);
 			@$current = self::$m_highlightComparison[$current][$new];
 		}
+
 		return $current;
 	}
-	
+
 	/**
 	 * Re-order the fields based on their inter-dependencies
+	 *
 	 * @params hash @aFields field_code => array_of_depencies
+	 *
 	 * @return array Ordered array of fields or throws an exception
 	 */
 	public static function OrderDependentFields($aFields)
@@ -2816,11 +2959,14 @@ EOF
 						// Dependency is resolved, remove it
 						unset($aFields[$sFieldCode][$key]);
 					}
-					else if (!array_key_exists($sDependency, $aFields))
+					else
 					{
-						// The current fields depends on a field not present in the form
-						// let's ignore it (since it cannot change)
-						unset($aFields[$sFieldCode][$key]);						
+						if (!array_key_exists($sDependency, $aFields))
+						{
+							// The current fields depends on a field not present in the form
+							// let's ignore it (since it cannot change)
+							unset($aFields[$sFieldCode][$key]);
+						}
 					}
 				}
 				if (count($aFields[$sFieldCode]) == 0)
@@ -2831,32 +2977,38 @@ EOF
 					$bSet = true;
 				}
 			}
-		}
-		while($bSet && (count($aFields) > 0));
-		
+		} while ($bSet && (count($aFields) > 0));
+
 		if (count($aFields) > 0)
 		{
-			$sMessage =  "Error: Circular dependencies between the fields! <pre>".print_r($aFields, true)."</pre>";
+			$sMessage = "Error: Circular dependencies between the fields! <pre>".print_r($aFields, true)."</pre>";
 			throw(new Exception($sMessage));
 		}
+
 		return $aResult;
 	}
-	
+
 	/**
 	 * Get the list of actions to be displayed as 'shortcuts' (i.e buttons) instead of inside the Actions popup menu
+	 *
 	 * @param $sFinalClass string The actual class of the objects for which to display the menu
-	 * @return Array the list of menu codes (i.e dictionary entries) that can be displayed as shortcuts next to the actions menu
+	 *
+	 * @return Array the list of menu codes (i.e dictionary entries) that can be displayed as shortcuts next to the
+	 *     actions menu
 	 */
-	 public static function GetShortcutActions($sFinalClass)
-	 {
-	 	$sShortcutActions = MetaModel::GetConfig()->Get('shortcut_actions');
-	 	$aShortcutActions = explode(',', $sShortcutActions);
-	 	return $aShortcutActions;
-	 }
-	
+	public static function GetShortcutActions($sFinalClass)
+	{
+		$sShortcutActions = MetaModel::GetConfig()->Get('shortcut_actions');
+		$aShortcutActions = explode(',', $sShortcutActions);
+
+		return $aShortcutActions;
+	}
+
 	/**
 	 * Maps the given context parameter name to the appropriate filter/search code for this class
+	 *
 	 * @param string $sContextParam Name of the context parameter, i.e. 'org_id'
+	 *
 	 * @return string Filter code, i.e. 'customer_id'
 	 */
 	public static function MapContextParam($sContextParam)
@@ -2870,12 +3022,14 @@ EOF
 			return $sContextParam;
 		}
 	}
-	
+
 	/**
 	 * Updates the object from a flat array of values
+	 *
 	 * @param $aAttList array $aAttList array of attcode
 	 * @param $aErrors array Returns information about slave attributes
 	 * @param $aAttFlags array Attribute codes => Flags to use instead of those from the MetaModel
+	 *
 	 * @return array of attcodes that can be used for writing on the current object
 	 */
 	public function GetWriteableAttList($aAttList, &$aErrors, $aAttFlags = array())
@@ -2888,10 +3042,10 @@ EOF
 			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 			{
 
-			    if(array_key_exists($sAttCode, $aAttFlags))
-                {
-                    $iFlags = $aAttFlags[$sAttCode];
-                }
+				if (array_key_exists($sAttCode, $aAttFlags))
+				{
+					$iFlags = $aAttFlags[$sAttCode];
+				}
 				elseif ($this->IsNew())
 				{
 					$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
@@ -2903,7 +3057,7 @@ EOF
 				}
 				if ($oAttDef instanceof AttributeCaseLog)
 				{
-					if (!($iFlags & (OPT_ATT_HIDDEN|OPT_ATT_SLAVE|OPT_ATT_READONLY)))
+					if (!($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_SLAVE | OPT_ATT_READONLY)))
 					{
 						// The case log is editable, append it to the list of fields to retrieve
 						$aAttList[] = $sAttCode;
@@ -2916,11 +3070,11 @@ EOF
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 
-            if(array_key_exists($sAttCode, $aAttFlags))
-            {
-                $iFlags = $aAttFlags[$sAttCode];
-            }
-            elseif ($this->IsNew())
+			if (array_key_exists($sAttCode, $aAttFlags))
+			{
+				$iFlags = $aAttFlags[$sAttCode];
+			}
+			elseif ($this->IsNew())
 			{
 				$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
 			}
@@ -2931,11 +3085,11 @@ EOF
 			}
 			if ($oAttDef->IsWritable())
 			{
-				if ( $iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
+				if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY))
 				{
 					// Non-visible, or read-only attribute, do nothing
 				}
-				elseif($iFlags & OPT_ATT_SLAVE)
+				elseif ($iFlags & OPT_ATT_SLAVE)
 				{
 					$aErrors[$sAttCode] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
 				}
@@ -2945,12 +3099,13 @@ EOF
 				}
 			}
 		}
+
 		return $aWriteableAttList;
 	}
 
 	/**
 	 * Compute the attribute flags depending on the object state
-	 */	
+	 */
 	public function GetFormAttributeFlags($sAttCode)
 	{
 		if ($this->IsNew())
@@ -2965,146 +3120,158 @@ EOF
 		{
 			$iFlags = $iFlags & ~OPT_ATT_READONLY; // Mandatory fields cannot be read-only when creating an object
 		}
+
 		return $iFlags;
 	}
 
 	/**
 	 * Updates the object from a flat array of values
-	 * @param string $aValues array of attcode => scalar or array (N-N links)
+	 *
+	 * @param $aValues array of attcode => scalar or array (N-N links)
+	 *
 	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
 	public function UpdateObjectFromArray($aValues)
 	{
 		foreach($aValues as $sAttCode => $value)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			if ($oAttDef->GetEditClass() == 'Document')
+			switch ($oAttDef->GetEditClass())
 			{
-				// There should be an uploaded file with the named attr_<attCode>
-				$oDocument = $value['fcontents'];
-				if (!$oDocument->IsEmpty())
-				{
-					// A new file has been uploaded
-					$this->Set($sAttCode, $oDocument);
-				}
-			}
-			elseif ($oAttDef->GetEditClass() == 'Image')
-			{
-				// There should be an uploaded file with the named attr_<attCode>
-				if ($value['remove'])
-				{
-					$this->Set($sAttCode, null);
-				}
-				else
-				{
+				case 'Document':
+					// There should be an uploaded file with the named attr_<attCode>
 					$oDocument = $value['fcontents'];
 					if (!$oDocument->IsEmpty())
 					{
 						// A new file has been uploaded
 						$this->Set($sAttCode, $oDocument);
 					}
-				}
-			}
-			elseif ($oAttDef->GetEditClass() == 'One Way Password')
-			{
-				// Check if the password was typed/changed
-				$aPwdData = $value;
-				if (!is_null($aPwdData) && $aPwdData['changed'])
-				{
-					// The password has been changed or set
-					$this->Set($sAttCode, $aPwdData['value']);
-				}
-			}
-			elseif ($oAttDef->GetEditClass() == 'Duration')
-			{
-				$aDurationData = $value;
-				if (!is_array($aDurationData)) continue;
+					break;
+				case 'Image':
+					// There should be an uploaded file with the named attr_<attCode>
+					if ($value['remove'])
+					{
+						$this->Set($sAttCode, null);
+					}
+					else
+					{
+						$oDocument = $value['fcontents'];
+						if (!$oDocument->IsEmpty())
+						{
+							// A new file has been uploaded
+							$this->Set($sAttCode, $oDocument);
+						}
+					}
+					break;
+				case 'One Way Password':
+					// Check if the password was typed/changed
+					$aPwdData = $value;
+					if (!is_null($aPwdData) && $aPwdData['changed'])
+					{
+						// The password has been changed or set
+						$this->Set($sAttCode, $aPwdData['value']);
+					}
+					break;
+				case 'Duration':
+					$aDurationData = $value;
+					if (!is_array($aDurationData))
+					{
+						continue;
+					}
 
-				$iValue = (((24*$aDurationData['d'])+$aDurationData['h'])*60 +$aDurationData['m'])*60 + $aDurationData['s'];
-				$this->Set($sAttCode, $iValue);
-				$previousValue = $this->Get($sAttCode);
-				if ($previousValue !== $iValue)
-				{
+					$iValue = (((24 * $aDurationData['d']) + $aDurationData['h']) * 60 + $aDurationData['m']) * 60 + $aDurationData['s'];
 					$this->Set($sAttCode, $iValue);
-				}
-			}
-			elseif ($oAttDef->GetEditClass() == 'CustomFields')
-			{
-				$this->Set($sAttCode, $value);
-			}
-			else if ($oAttDef->GetEditClass() == 'LinkedSet')
-			{
-				$oLinkSet = $this->Get($sAttCode);
-				$sLinkedClass = $oAttDef->GetLinkedClass();
-				if (array_key_exists('to_be_created', $value) && (count($value['to_be_created']) > 0))
-				{
-					// Now handle the links to be created
-					foreach($value['to_be_created'] as $aData)
-					{
-						$sSubClass = $aData['class'];
-						if ( ($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass)) )
-						{
-							$aObjData = $aData['data'];
-
-							$oLink = MetaModel::NewObject($sSubClass);
-							$oLink->UpdateObjectFromArray($aObjData);
-							$oLinkSet->AddItem($oLink);
-						}
-					}
-				}
-				if (array_key_exists('to_be_added', $value) && (count($value['to_be_added']) > 0))
-				{
-					// Now handle the links to be added by making the remote object point to self
-					foreach($value['to_be_added'] as $iObjKey)
-					{
-						$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
-						if ($oLink)
-						{
-							$oLinkSet->AddItem($oLink);
-						}
-					}
-				}
-				if (array_key_exists('to_be_modified', $value) && (count($value['to_be_modified']) > 0))
-				{
-					// Now handle the links to be added by making the remote object point to self
-					foreach($value['to_be_modified'] as $iObjKey => $aData)
-					{
-						$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
-						if ($oLink)
-						{
-							$aObjData = $aData['data'];
-							$oLink->UpdateObjectFromArray($aObjData);
-							$oLinkSet->ModifyItem($oLink);
-						}
-					}
-				}
-				if (array_key_exists('to_be_removed', $value) && (count($value['to_be_removed']) > 0))
-				{
-					foreach($value['to_be_removed'] as $iObjKey)
-					{
-						$oLinkSet->RemoveItem($iObjKey);
-					}
-				}
-				if (array_key_exists('to_be_deleted', $value) && (count($value['to_be_deleted']) > 0))
-				{
-					foreach($value['to_be_deleted'] as $iObjKey)
-					{
-						$oLinkSet->RemoveItem($iObjKey);
-					}
-				}
-				$this->Set($sAttCode, $oLinkSet);
-			}
-			else
-			{
-				if (!is_null($value))
-				{
-					$aAttributes[$sAttCode] = trim($value);
 					$previousValue = $this->Get($sAttCode);
-					if ($previousValue !== $aAttributes[$sAttCode])
+					if ($previousValue !== $iValue)
 					{
-						$this->Set($sAttCode, $aAttributes[$sAttCode]);
+						$this->Set($sAttCode, $iValue);
 					}
-				}
+					break;
+				case 'CustomFields':
+					$this->Set($sAttCode, $value);
+					break;
+				case 'LinkedSet':
+					$oLinkSet = $this->Get($sAttCode);
+					$sLinkedClass = $oAttDef->GetLinkedClass();
+					if (array_key_exists('to_be_created', $value) && (count($value['to_be_created']) > 0))
+					{
+						// Now handle the links to be created
+						foreach($value['to_be_created'] as $aData)
+						{
+							$sSubClass = $aData['class'];
+							if (($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass)))
+							{
+								$aObjData = $aData['data'];
+
+								$oLink = MetaModel::NewObject($sSubClass);
+								$oLink->UpdateObjectFromArray($aObjData);
+								$oLinkSet->AddItem($oLink);
+							}
+						}
+					}
+					if (array_key_exists('to_be_added', $value) && (count($value['to_be_added']) > 0))
+					{
+						// Now handle the links to be added by making the remote object point to self
+						foreach($value['to_be_added'] as $iObjKey)
+						{
+							$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
+							if ($oLink)
+							{
+								$oLinkSet->AddItem($oLink);
+							}
+						}
+					}
+					if (array_key_exists('to_be_modified', $value) && (count($value['to_be_modified']) > 0))
+					{
+						// Now handle the links to be added by making the remote object point to self
+						foreach($value['to_be_modified'] as $iObjKey => $aData)
+						{
+							$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
+							if ($oLink)
+							{
+								$aObjData = $aData['data'];
+								$oLink->UpdateObjectFromArray($aObjData);
+								$oLinkSet->ModifyItem($oLink);
+							}
+						}
+					}
+					if (array_key_exists('to_be_removed', $value) && (count($value['to_be_removed']) > 0))
+					{
+						foreach($value['to_be_removed'] as $iObjKey)
+						{
+							$oLinkSet->RemoveItem($iObjKey);
+						}
+					}
+					if (array_key_exists('to_be_deleted', $value) && (count($value['to_be_deleted']) > 0))
+					{
+						foreach($value['to_be_deleted'] as $iObjKey)
+						{
+							$oLinkSet->RemoveItem($iObjKey);
+						}
+					}
+					$this->Set($sAttCode, $oLinkSet);
+					break;
+
+				case 'TagSet':
+					/** @var ormTagSet $oTagSet */
+					$oTagSet = $this->Get($sAttCode);
+					$oTagSet->ApplyDelta($value);
+					$this->Set($sAttCode, $oTagSet);
+					break;
+
+				default:
+					if (!is_null($value))
+					{
+						$aAttributes[$sAttCode] = trim($value);
+						$previousValue = $this->Get($sAttCode);
+						if ($previousValue !== $aAttributes[$sAttCode])
+						{
+							$this->Set($sAttCode, $aAttributes[$sAttCode]);
+						}
+					}
 			}
 		}
 	}
@@ -3121,7 +3288,7 @@ EOF
 		$aValues = array();
 		foreach($aAttList as $sAttCode)
 		{
-		    $value = $this->PrepareValueFromPostedForm($sFormPrefix, $sAttCode);
+			$value = $this->PrepareValueFromPostedForm($sFormPrefix, $sAttCode);
 			if (!is_null($value))
 			{
 				$aValues[$sAttCode] = $value;
@@ -3139,180 +3306,205 @@ EOF
 		{
 			InlineImage::FinalizeInlineImages($this);
 		}
-		
+
 		// Invoke extensions after the update of the object from the form
-		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+		foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnFormSubmit($this, $sFormPrefix);
 		}
-		
+
 		return $aErrors;
 	}
 
-    /**
-     * @param string $sFormPrefix
-     * @param string $sAttCode
-     * @param string $sClass Optional parameter, host object's class for the $sAttCode
-     * @param array $aPostedData Optional parameter, used through recursive calls
-     * @return array|null
-     */
+	/**
+	 * @param string $sFormPrefix
+	 * @param string $sAttCode
+	 * @param string $sClass Optional parameter, host object's class for the $sAttCode
+	 * @param array $aPostedData Optional parameter, used through recursive calls
+	 *
+	 * @return array|null
+	 */
 	protected function PrepareValueFromPostedForm($sFormPrefix, $sAttCode, $sClass = null, $aPostedData = null)
-    {
-        if($sClass === null)
-        {
-            $sClass = get_class($this);
-        }
+	{
+		if ($sClass === null)
+		{
+			$sClass = get_class($this);
+		}
 
-        $value = null;
+		$value = null;
 
-        $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-        if ($oAttDef->GetEditClass() == 'Document')
-        {
-            $value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'));
-        }
-        elseif ($oAttDef->GetEditClass() == 'Image')
-        {
-            $oImage = utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents');
-            $aSize = utils::GetImageSize($oImage->GetData());
-            $oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'), $oAttDef->Get('storage_max_height'));
-            $aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
-            if (is_array($aOtherData))
-            {
-                $value = array('fcontents' => $oImage, 'remove' => $aOtherData['remove']);
-            }
-            else
-            {
-                $value = null;
-            }
-        }
-        elseif ($oAttDef->GetEditClass() == 'RedundancySetting')
-        {
-            $value = $oAttDef->ReadValueFromPostedForm($sFormPrefix);
-        }
-        elseif ($oAttDef->GetEditClass() == 'CustomFields')
-        {
-            $value = $oAttDef->ReadValueFromPostedForm($this, $sFormPrefix);
-        }
-        else if ($oAttDef->GetEditClass() == 'LinkedSet')
-        {
-            /** @var AttributeLinkedSet $oAttDef */
-            $aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}', 'raw_data'), true);
-            $aToBeCreated = array();
-            foreach($aRawToBeCreated as $aData)
-            {
-                $sSubFormPrefix = $aData['formPrefix'];
-                $sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
-                $aObjData = array();
-                foreach($aData as $sKey => $value)
-                {
-                    if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
-                    {
-                        $sLinkClass = $oAttDef->GetLinkedClass();
-                        if($oAttDef->IsIndirect())
-                        {
-                            $oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
-                            // Recursing over n:n link datetime attributes
-                            // Note: We might need to do it with other attribute types, like Document or redundancy setting.
-                            if($oLinkAttDef instanceof AttributeDateTime)
-                            {
-                                $aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix, $aMatches[1], $sLinkClass, $aData);
-                            }
-                            else
-                            {
-                                $aObjData[$aMatches[1]] = $value;
-                            }
-                        }
-                        else
-                        {
-                            $aObjData[$aMatches[1]] = $value;
-                        }
-                    }
-                }
-                $aToBeCreated[] = array('class' => $sObjClass, 'data' => $aObjData);
-            }
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		switch ($oAttDef->GetEditClass())
+		{
+			case  'Document':
+				$value = array('fcontents' => utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents'));
+				break;
 
-            $aRawToBeModified = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbm", '{}', 'raw_data'), true);
-            $aToBeModified = array();
-            foreach($aRawToBeModified as $iObjKey => $aData)
-            {
-                $sSubFormPrefix = $aData['formPrefix'];
-                $aObjData = array();
-                foreach($aData as $sKey => $value)
-                {
-                    if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
-                    {
-                        $sLinkClass = $oAttDef->GetLinkedClass();
-                        if($oAttDef->IsIndirect())
-                        {
-                            $oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
-                            // Recursing over n:n link datetime attributes
-                            // Note: We might need to do it with other attribute types, like Document or redundancy setting.
-                            if($oLinkAttDef instanceof AttributeDateTime)
-                            {
-                                $aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix, $aMatches[1], $sLinkClass, $aData);
-                            }
-                            else
-                            {
-                                $aObjData[$aMatches[1]] = $value;
-                            }
-                        }
-                        else
-                        {
-                            $aObjData[$aMatches[1]] = $value;
-                        }
-                    }
-                }
-                $aToBeModified[$iObjKey] = array('data' => $aObjData);
-            }
+			case 'Image':
+				$oImage = utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents');
+				$aSize = utils::GetImageSize($oImage->GetData());
+				$oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'),
+					$oAttDef->Get('storage_max_height'));
+				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+				if (is_array($aOtherData))
+				{
+					$value = array('fcontents' => $oImage, 'remove' => $aOtherData['remove']);
+				}
+				else
+				{
+					$value = null;
+				}
+				break;
 
-            $value = array(
-                'to_be_created' => $aToBeCreated,
-                'to_be_modified' => $aToBeModified,
-                'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]', 'raw_data'), true),
-                'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]', 'raw_data'), true),
-                'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]', 'raw_data'), true)
-            );
-        }
-        else if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
-        {
-            // Retrieving value from array when present (means what we are in a recursion)
-            if($aPostedData !== null && isset($aPostedData['attr_'.$sFormPrefix.$sAttCode]))
-            {
-                $value = $aPostedData['attr_'.$sFormPrefix.$sAttCode];
-            }
-            else
-            {
-                $value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
-            }
+			case 'RedundancySetting':
+				$value = $oAttDef->ReadValueFromPostedForm($sFormPrefix);
+				break;
 
-            if ($value != null)
-            {
-                $oDate = $oAttDef->GetFormat()->Parse($value);
-                if ($oDate instanceof DateTime)
-                {
-                    $value = $oDate->format($oAttDef->GetInternalFormat());
-                }
-                else
-                {
-                    $value = null;
-                }
-            }
-        }
-        else
-        {
-            // Retrieving value from array when present (means what we are in a recursion)
-            if($aPostedData !== null && isset($aPostedData['attr_'.$sFormPrefix.$sAttCode]))
-            {
-                $value = $aPostedData['attr_'.$sFormPrefix.$sAttCode];
-            }
-            else
-            {
-                $value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
-            }
-        }
+			case 'CustomFields':
+				$value = $oAttDef->ReadValueFromPostedForm($this, $sFormPrefix);
+				break;
 
-        return $value;
-    }
+			case 'LinkedSet':
+				/** @var AttributeLinkedSet $oAttDef */
+				$aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}',
+					'raw_data'), true);
+				$aToBeCreated = array();
+				foreach($aRawToBeCreated as $aData)
+				{
+					$sSubFormPrefix = $aData['formPrefix'];
+					$sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
+					$aObjData = array();
+					foreach($aData as $sKey => $value)
+					{
+						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
+						{
+							$sLinkClass = $oAttDef->GetLinkedClass();
+							if ($oAttDef->IsIndirect())
+							{
+								$oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
+								// Recursing over n:n link datetime attributes
+								// Note: We might need to do it with other attribute types, like Document or redundancy setting.
+								if ($oLinkAttDef instanceof AttributeDateTime)
+								{
+									$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
+										$aMatches[1], $sLinkClass, $aData);
+								}
+								else
+								{
+									$aObjData[$aMatches[1]] = $value;
+								}
+							}
+							else
+							{
+								$aObjData[$aMatches[1]] = $value;
+							}
+						}
+					}
+					$aToBeCreated[] = array('class' => $sObjClass, 'data' => $aObjData);
+				}
+
+				$aRawToBeModified = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbm", '{}',
+					'raw_data'), true);
+				$aToBeModified = array();
+				foreach($aRawToBeModified as $iObjKey => $aData)
+				{
+					$sSubFormPrefix = $aData['formPrefix'];
+					$aObjData = array();
+					foreach($aData as $sKey => $value)
+					{
+						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
+						{
+							$sLinkClass = $oAttDef->GetLinkedClass();
+							if ($oAttDef->IsIndirect())
+							{
+								$oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
+								// Recursing over n:n link datetime attributes
+								// Note: We might need to do it with other attribute types, like Document or redundancy setting.
+								if ($oLinkAttDef instanceof AttributeDateTime)
+								{
+									$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
+										$aMatches[1], $sLinkClass, $aData);
+								}
+								else
+								{
+									$aObjData[$aMatches[1]] = $value;
+								}
+							}
+							else
+							{
+								$aObjData[$aMatches[1]] = $value;
+							}
+						}
+					}
+					$aToBeModified[$iObjKey] = array('data' => $aObjData);
+				}
+
+				$value = array(
+					'to_be_created' => $aToBeCreated,
+					'to_be_modified' => $aToBeModified,
+					'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]',
+						'raw_data'), true),
+					'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]',
+						'raw_data'), true),
+					'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]',
+						'raw_data'), true)
+				);
+				break;
+
+			case 'TagSet':
+				$sPreserved = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+				$sAdded = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", null, 'raw_data');
+				$sRemoved = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", null, 'raw_data');
+				$value = array(
+					'preserved' => $sPreserved,
+					'added' => $sAdded,
+					'removed' => $sRemoved,
+				);
+				break;
+
+			default:
+				if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+				{
+					// Retrieving value from array when present (means what we are in a recursion)
+					if ($aPostedData !== null && isset($aPostedData['attr_'.$sFormPrefix.$sAttCode]))
+					{
+						$value = $aPostedData['attr_'.$sFormPrefix.$sAttCode];
+					}
+					else
+					{
+						$value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+					}
+
+					if ($value != null)
+					{
+						$oDate = $oAttDef->GetFormat()->Parse($value);
+						if ($oDate instanceof DateTime)
+						{
+							$value = $oDate->format($oAttDef->GetInternalFormat());
+						}
+						else
+						{
+							$value = null;
+						}
+					}
+				}
+				else
+				{
+					// Retrieving value from array when present (means what we are in a recursion)
+					if ($aPostedData !== null && isset($aPostedData['attr_'.$sFormPrefix.$sAttCode]))
+					{
+						$value = $aPostedData['attr_'.$sFormPrefix.$sAttCode];
+					}
+					else
+					{
+						$value = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+					}
+				}
+				break;
+		}
+
+		return $value;
+	}
 
 	/**
 	 * Updates the object from a given page argument
@@ -3347,6 +3539,7 @@ EOF
 			}
 		}
 		$this->UpdateObjectFromArray($aFinalValues);
+
 		return $aErrors;
 	}
 
@@ -3355,7 +3548,7 @@ EOF
 		$res = parent::DBInsertNoReload();
 
 		// Invoke extensions after insertion (the object must exist, have an id, etc.)
-		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
 		}
@@ -3363,56 +3556,57 @@ EOF
 		return $res;
 	}
 
-    /**
-     * Attaches InlineImages to the current object
-     */
+	/**
+	 * Attaches InlineImages to the current object
+	 */
 	protected function OnObjectKeyReady()
-    {
-        InlineImage::FinalizeInlineImages($this);
-    }
+	{
+		InlineImage::FinalizeInlineImages($this);
+	}
 
 	protected function DBCloneTracked_Internal($newKey = null)
 	{
 		$oNewObj = parent::DBCloneTracked_Internal($newKey);
 
 		// Invoke extensions after insertion (the object must exist, have an id, etc.)
-		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnDBInsert($oNewObj, self::GetCurrentChange());
 		}
+
 		return $oNewObj;
 	}
 
 	public function DBUpdate()
 	{
-        $res = parent::DBUpdate();
+		$res = parent::DBUpdate();
 
-        // Protection against reentrance (e.g. cascading the update of ticket logs)
-        // Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
-        static $aUpdateReentrance = array();
-        $sKey = get_class($this).'::'.$this->GetKey();
-        if(array_key_exists($sKey, $aUpdateReentrance))
-        {
-            return $res;
-        }
-        $aUpdateReentrance[$sKey] = true;
+		// Protection against reentrance (e.g. cascading the update of ticket logs)
+		// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
+		static $aUpdateReentrance = array();
+		$sKey = get_class($this).'::'.$this->GetKey();
+		if (array_key_exists($sKey, $aUpdateReentrance))
+		{
+			return $res;
+		}
+		$aUpdateReentrance[$sKey] = true;
 
-        try
-        {
-            // Invoke extensions after the update (could be before)
-            foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
-            {
-                $oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
-            }
-        }
-        catch(Exception $e)
-        {
-            unset($aUpdateReentrance[$sKey]);
-            throw $e;
-        }
+		try
+		{
+			// Invoke extensions after the update (could be before)
+			foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+			{
+				$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
+			}
+		} catch (Exception $e)
+		{
+			unset($aUpdateReentrance[$sKey]);
+			throw $e;
+		}
 
-        unset($aUpdateReentrance[$sKey]);
-        return $res;
+		unset($aUpdateReentrance[$sKey]);
+
+		return $res;
 	}
 
 	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)
@@ -3424,7 +3618,7 @@ EOF
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
-		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnDBDelete($this, self::GetCurrentChange());
 		}
@@ -3441,32 +3635,34 @@ EOF
 
 		// Plugins
 		//
-		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			if ($oExtensionInstance->OnIsModified($this))
 			{
 				return true;
 			}
 		}
+
 		return false;
 	}
-	
+
 	/**
 	 * Bypass the check of the user rights when writing this object
+	 *
 	 * @param bool $bAllow True to bypass the checks, false to restore the default behavior
 	 */
 	public function AllowWrite($bAllow = true)
 	{
 		$this->bAllowWrite = $bAllow;
 	}
-	
+
 	public function DoCheckToWrite()
 	{
 		parent::DoCheckToWrite();
 
 		// Plugins
 		//
-		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$aNewIssues = $oExtensionInstance->OnCheckToWrite($this);
 			if (is_array($aNewIssues) && (count($aNewIssues) > 0)) // Some extensions return null instead of an empty array
@@ -3483,9 +3679,10 @@ EOF
 			if (count($aChanges) > 0)
 			{
 				$aForbiddenFields = array();
-				foreach ($this->ListChanges() as $sAttCode => $value)
+				foreach($this->ListChanges() as $sAttCode => $value)
 				{
-					$bUpdateAllowed = UserRights::IsActionAllowedOnAttribute(get_class($this), $sAttCode, UR_ACTION_MODIFY, DBObjectSet::FromObject($this));
+					$bUpdateAllowed = UserRights::IsActionAllowedOnAttribute(get_class($this), $sAttCode,
+						UR_ACTION_MODIFY, DBObjectSet::FromObject($this));
 					if (!$bUpdateAllowed)
 					{
 						$oAttCode = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
@@ -3496,7 +3693,8 @@ EOF
 				{
 					// Security issue
 					$this->m_bSecurityIssue = true;
-					$this->m_aCheckIssues[] = Dict::Format('UI:Delete:NotAllowedToUpdate_Fields',implode(', ', $aForbiddenFields));
+					$this->m_aCheckIssues[] = Dict::Format('UI:Delete:NotAllowedToUpdate_Fields',
+						implode(', ', $aForbiddenFields));
 				}
 			}
 		}
@@ -3508,7 +3706,7 @@ EOF
 
 		// Plugins
 		//
-		foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$aNewIssues = $oExtensionInstance->OnCheckToDelete($this);
 			if (is_array($aNewIssues) && count($aNewIssues) > 0)
@@ -3519,7 +3717,8 @@ EOF
 
 		// User rights
 		//
-		$bDeleteAllowed = UserRights::IsActionAllowed(get_class($this), UR_ACTION_DELETE, DBObjectSet::FromObject($this));
+		$bDeleteAllowed = UserRights::IsActionAllowed(get_class($this), UR_ACTION_DELETE,
+			DBObjectSet::FromObject($this));
 		if (!$bDeleteAllowed)
 		{
 			// Security issue
@@ -3543,7 +3742,7 @@ EOF
 		{
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 		}
-		if ( $iFlags & OPT_ATT_HIDDEN)
+		if ($iFlags & OPT_ATT_HIDDEN)
 		{
 			// The case log is hidden do nothing
 		}
@@ -3551,8 +3750,8 @@ EOF
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			$sInputId = $this->m_iFormId.'_'.$sAttCode;
-			
-			if ((!$bEditMode) || ($iFlags & (OPT_ATT_READONLY|OPT_ATT_SLAVE)))
+
+			if ((!$bEditMode) || ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)))
 			{
 				// Check if the attribute is not read-only because of a synchro...
 				$sSynchroIcon = '';
@@ -3575,7 +3774,8 @@ EOF
 
 				// Attribute is read-only
 				$sHTMLValue = $this->GetAsHTML($sAttCode);
-				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->GetEditValue($sAttCode), ENT_QUOTES, 'UTF-8').'"/>';
+				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->GetEditValue($sAttCode),
+						ENT_QUOTES, 'UTF-8').'"/>';
 				$aFieldsMap[$sAttCode] = $sInputId;
 				$sComment .= $sSynchroIcon;
 			}
@@ -3589,7 +3789,9 @@ EOF
 				{
 					$sHTMLValue = '<span>'.$sComment.'</span><br/>';
 				}
-				$sHTMLValue .= "<span style=\"font-family:Tahoma,Verdana,Arial,Helvetica;font-size:12px;\" id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+				$sHTMLValue .= "<span style=\"font-family:Tahoma,Verdana,Arial,Helvetica;font-size:12px;\" id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage,
+						$sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags,
+						$aArgs).'</span>';
 				$aFieldsMap[$sAttCode] = $sInputId;
 			}
 			//$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
@@ -3599,14 +3801,15 @@ EOF
 		}
 	}
 
-    /**
-     * @param $sCurrentState
-     * @param $sStimulus
-     * @param $bOnlyNewOnes
-     * @return array
-     * @throws ApplicationException
-     * @deprecated Since iTop 2.4, use DBObject::GetTransitionAttributes() instead.
-     */
+	/**
+	 * @param $sCurrentState
+	 * @param $sStimulus
+	 * @param $bOnlyNewOnes
+	 *
+	 * @return array
+	 * @throws ApplicationException
+	 * @deprecated Since iTop 2.4, use DBObject::GetTransitionAttributes() instead.
+	 */
 	public function GetExpectedAttributes($sCurrentState, $sStimulus, $bOnlyNewOnes)
 	{
 		$aTransitions = $this->EnumTransitions();
@@ -3614,7 +3817,8 @@ EOF
 		if (!isset($aTransitions[$sStimulus]))
 		{
 			// Invalid stimulus
-			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus,$this->GetName(),$this->GetStateLabel()));
+			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus,
+				$this->GetName(), $this->GetStateLabel()));
 		}
 		$aTransition = $aTransitions[$sStimulus];
 		$sTargetState = $aTransition['target_state'];
@@ -3633,35 +3837,38 @@ EOF
 			}
 			else
 			{
-				if ( !($aCurrentAttributes[$sAttCode] & (OPT_ATT_HIDDEN|OPT_ATT_READONLY)) )
+				if (!($aCurrentAttributes[$sAttCode] & (OPT_ATT_HIDDEN | OPT_ATT_READONLY)))
 				{
-					$iExpectCode = $iExpectCode & ~(OPT_ATT_MUSTPROMPT|OPT_ATT_MUSTCHANGE); // Already prompted/changed, reset the flags
+					$iExpectCode = $iExpectCode & ~(OPT_ATT_MUSTPROMPT | OPT_ATT_MUSTCHANGE); // Already prompted/changed, reset the flags
 				}
 				//TODO: better check if the attribute is not *null*
-				if ( ($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) != ''))
+				if (($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) != ''))
 				{
 					$iExpectCode = $iExpectCode & ~(OPT_ATT_MANDATORY); // If the attribute is present, then no need to request its presence
 				}
 
-				$aComputedAttributes[$sAttCode] = $iExpectCode;								
+				$aComputedAttributes[$sAttCode] = $iExpectCode;
 			}
 
-			$aComputedAttributes[$sAttCode] = $aComputedAttributes[$sAttCode] & ~(OPT_ATT_READONLY|OPT_ATT_HIDDEN); // Don't care about this form now
+			$aComputedAttributes[$sAttCode] = $aComputedAttributes[$sAttCode] & ~(OPT_ATT_READONLY | OPT_ATT_HIDDEN); // Don't care about this form now
 
 			if ($aComputedAttributes[$sAttCode] == 0)
 			{
 				unset($aComputedAttributes[$sAttCode]);
 			}
 		}
+
 		return $aComputedAttributes;
 	}
 
 	/**
 	 * Display a form for modifying several objects at once
-	 * The form will be submitted to the current page, with the specified additional values	 
-	 */	 	
-	public static function DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, $sCustomOperation, $sCancelUrl, $aExcludeAttributes = array(), $aContextData = array())
-	{
+	 * The form will be submitted to the current page, with the specified additional values
+	 */
+	public static function DisplayBulkModifyForm(
+		$oP, $sClass, $aSelectedObj, $sCustomOperation, $sCancelUrl, $aExcludeAttributes = array(),
+		$aContextData = array()
+	) {
 		if (count($aSelectedObj) > 0)
 		{
 			$iAllowedCount = count($aSelectedObj);
@@ -3669,8 +3876,8 @@ EOF
 
 			$sOQL = "SELECT $sClass WHERE id IN (".$sSelectedObj.")";
 			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
-			
-			// Compute the distribution of the values for each field to determine which of the "scalar" fields are homogenous
+
+			// Compute the distribution of the values for each field to determine which of the "scalar" fields are homogeneous
 			$aList = MetaModel::ListAttributeDefs($sClass);
 			$aValues = array();
 			foreach($aList as $sAttCode => $oAttDef)
@@ -3680,7 +3887,7 @@ EOF
 					$aValues[$sAttCode] = array();
 				}
 			}
-			while($oObj = $oSet->Fetch())
+			while ($oObj = $oSet->Fetch())
 			{
 				foreach($aList as $sAttCode => $oAttDef)
 				{
@@ -3691,28 +3898,40 @@ EOF
 						{
 							$currValue = ' '; // Don't put an empty string, in case the field would be considered as mandatory...
 						}
-						if (is_object($currValue)) continue; // Skip non scalar values...
-						if(!array_key_exists($currValue, $aValues[$sAttCode]))
+						elseif ($currValue instanceof ormTagSet)
 						{
-							$aValues[$sAttCode][$currValue] = array('count' => 1, 'display' => $oObj->GetAsHTML($sAttCode)); 
+							$currValue = implode(' ', $currValue->GetValue());
+						}
+						if (is_object($currValue))
+						{
+							continue;
+						} // Skip non scalar values...
+						if (!array_key_exists($currValue, $aValues[$sAttCode]))
+						{
+							$aValues[$sAttCode][$currValue] = array(
+								'count' => 1,
+								'display' => $oObj->GetAsHTML($sAttCode)
+							);
 						}
 						else
 						{
-							$aValues[$sAttCode][$currValue]['count']++; 
+							$aValues[$sAttCode][$currValue]['count']++;
 						}
 					}
 				}
 			}
-			// Now create an object that has values for the homogenous values only				
+			// Now create an object that has values for the homogeneous values only
+			/** @var DBObject $oDummyObj */
 			$oDummyObj = new $sClass(); // @@ What if the class is abstract ?
 			$aComments = array();
 			function MyComparison($a, $b) // Sort descending
 			{
-			    if ($a['count'] == $b['count'])
-			    {
-			        return 0;
-			    }
-			    return ($a['count'] > $b['count']) ? -1 : 1;
+				if ($a['count'] == $b['count'])
+				{
+					return 0;
+				}
+
+				return ($a['count'] > $b['count']) ? -1 : 1;
 			}
 
 			$iFormId = cmdbAbstractObject::GetNextFormId(); // Identifier that prefixes all the form fields
@@ -3721,14 +3940,16 @@ EOF
 			$sFormPrefix = '2_';
 			foreach($aList as $sAttCode => $oAttDef)
 			{
-				$aPrerequisites = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode); // List of attributes that are needed for the current one
+				$aPrerequisites = MetaModel::GetPrerequisiteAttributes($sClass,
+					$sAttCode); // List of attributes that are needed for the current one
 				if (count($aPrerequisites) > 0)
 				{
 					// When 'enabling' a field, all its prerequisites must be enabled too
 					$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aPrerequisites)."']";
 					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').bind('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, true); } );\n");
 				}
-				$aDependents = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that are needed for the current one
+				$aDependents = MetaModel::GetDependentAttributes($sClass,
+					$sAttCode); // List of attributes that are needed for the current one
 				if (count($aDependents) > 0)
 				{
 					// When 'disabling' a field, all its dependent fields must be disabled too
@@ -3739,21 +3960,21 @@ EOF
 				{
 					if ($oAttDef->GetEditClass() == 'One Way Password')
 					{
-						
+
 						$sTip = "Unknown values";
 						$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
 
 						$oDummyObj->Set($sAttCode, null);
 						$aComments[$sAttCode] = '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToogleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 						$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'"> ? </div>';
-						$sReadyScript .=  'ToogleField(false, \''.$iFormId.'_'.$sAttCode.'\');'."\n";
+						$sReadyScript .= 'ToogleField(false, \''.$iFormId.'_'.$sAttCode.'\');'."\n";
 					}
 					else
 					{
 						$iCount = count($aValues[$sAttCode]);
 						if ($iCount == 1)
 						{
-							// Homogenous value
+							// Homogeneous value
 							reset($aValues[$sAttCode]);
 							$aKeys = array_keys($aValues[$sAttCode]);
 							$currValue = $aKeys[0]; // The only value is the first key
@@ -3768,7 +3989,7 @@ EOF
 						}
 						else
 						{
-							// Non-homogenous value
+							// Non-homogeneous value
 							$aMultiValues = $aValues[$sAttCode];
 							uasort($aMultiValues, 'MyComparison');
 							$iMaxCount = 5;
@@ -3776,20 +3997,49 @@ EOF
 							$index = 0;
 							foreach($aMultiValues as $sCurrValue => $aVal)
 							{
-								$sDisplayValue = empty($aVal['display']) ? '<i>'.Dict::S('Enum:Undefined').'</i>' : str_replace(array("\n", "\r"), " ", $aVal['display']);
-								$sTip .= "<li>".Dict::Format('UI:BulkModify:Value_Exists_N_Times', $sDisplayValue, $aVal['count'])."</li>";
+								$sDisplayValue = empty($aVal['display']) ? '<i>'.Dict::S('Enum:Undefined').'</i>' : str_replace(array(
+									"\n",
+									"\r"
+								), " ", $aVal['display']);
+								$sTip .= "<li>".Dict::Format('UI:BulkModify:Value_Exists_N_Times', $sDisplayValue,
+										$aVal['count'])."</li>";
 								$index++;
 								if ($iMaxCount == $index)
 								{
-									$sTip .= "<li>".Dict::Format('UI:BulkModify:N_MoreValues', count($aMultiValues) - $iMaxCount)."</li>";
+									$sTip .= "<li>".Dict::Format('UI:BulkModify:N_MoreValues',
+											count($aMultiValues) - $iMaxCount)."</li>";
 									break;
-								}					
+								}
 							}
 							$sTip .= "</ul></p>";
 							$sTip = addslashes($sTip);
 							$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
-	
-							$oDummyObj->Set($sAttCode, null);
+
+							if ($oAttDef->GetEditClass() == 'TagSet')
+							{
+								// Set the value by adding the values to the first one
+								reset($aMultiValues);
+								$aKeys = array_keys($aMultiValues);
+								$currValue = $aKeys[0];
+								$oDummyObj->Set($sAttCode, $currValue);
+								/** @var ormTagSet $oTagSet */
+								$oTagSet = $oDummyObj->Get($sAttCode);
+								foreach($aKeys as $sValues)
+								{
+									if (!empty($sValues))
+									{
+										foreach(explode(' ', $sValues) as $sTagCode)
+										{
+											$oTagSet->AddTag($sTagCode);
+										}
+									}
+								}
+								$oDummyObj->Set($sAttCode, $oTagSet);
+							}
+							else
+							{
+								$oDummyObj->Set($sAttCode, null);
+							}
 							$aComments[$sAttCode] = '';
 							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass))
 							{
@@ -3797,11 +4047,11 @@ EOF
 							}
 							$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'">'.$iCount.'</div>';
 						}
-						$sReadyScript .=  'ToogleField('.(($iCount == 1) ? 'true': 'false').', \''.$iFormId.'_'.$sAttCode.'\');'."\n";
+						$sReadyScript .= 'ToogleField('.(($iCount == 1) ? 'true' : 'false').', \''.$iFormId.'_'.$sAttCode.'\');'."\n";
 					}
 				}
-			}				
-			
+			}
+
 			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 			if (($sStateAttCode != '') && ($oDummyObj->GetState() == ''))
 			{
@@ -3813,12 +4063,13 @@ EOF
 				{
 					$oDummyObj->Set($sStateAttCode, $sCurrValue);
 					break;
-				}				
+				}
 				//$oStateAtt = MetaModel::GetAttributeDef($sClass, $sStateAttCode);
 				//$oDummyObj->Set($sStateAttCode, $oStateAtt->GetDefaultValue());
 			}
 			$oP->add("<div class=\"page_header\">\n");
-			$oP->add("<h1>".$oDummyObj->GetIcon()."&nbsp;".Dict::Format('UI:Modify_M_ObjectsOf_Class_OutOf_N', $iAllowedCount, $sClass, $iAllowedCount)."</h1>\n");
+			$oP->add("<h1>".$oDummyObj->GetIcon()."&nbsp;".Dict::Format('UI:Modify_M_ObjectsOf_Class_OutOf_N',
+					$iAllowedCount, $sClass, $iAllowedCount)."</h1>\n");
 			$oP->add("</div>\n");
 
 			$oP->add("<div class=\"wizContainer\">\n");
@@ -3836,16 +4087,16 @@ EOF
 				'disable_plugins' => true
 			);
 			$aParams = $aParams + $aContextData; // merge keeping associations
-			
+
 			$oDummyObj->DisplayModifyForm($oP, $aParams);
 			$oP->add("</div>\n");
 			$oP->add_ready_script($sReadyScript);
 			$oP->add_ready_script(
-<<<EOF
+				<<<EOF
 $('.wizContainer button.cancel').unbind('click');
 $('.wizContainer button.cancel').click( function() { window.location.href = '$sCancelUrl'; } );
 EOF
-);
+			);
 
 		} // Else no object selected ???
 		else
@@ -3856,19 +4107,30 @@ EOF
 
 	/**
 	 * Process the reply made from a form built with DisplayBulkModifyForm
-	 */	 	
-	public static function DoBulkModify($oP, $sClass, $aSelectedObj, $sCustomOperation, $bPreview, $sCancelUrl, $aContextData = array())
-	{
+	 */
+	public static function DoBulkModify(
+		$oP, $sClass, $aSelectedObj, $sCustomOperation, $bPreview, $sCancelUrl, $aContextData = array()
+	) {
 		$aHeaders = array(
-			'form::select' => array('label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList:not(:disabled)', this.checked);\"></input>", 'description' => Dict::S('UI:SelectAllToggle+')),
+			'form::select' => array(
+				'label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList:not(:disabled)', this.checked);\"></input>",
+				'description' => Dict::S('UI:SelectAllToggle+')
+			),
 			'object' => array('label' => MetaModel::GetName($sClass), 'description' => Dict::S('UI:ModifiedObject')),
-			'status' => array('label' => Dict::S('UI:BulkModifyStatus'), 'description' => Dict::S('UI:BulkModifyStatus+')),
-			'errors' => array('label' => Dict::S('UI:BulkModifyErrors'), 'description' => Dict::S('UI:BulkModifyErrors+')),
+			'status' => array(
+				'label' => Dict::S('UI:BulkModifyStatus'),
+				'description' => Dict::S('UI:BulkModifyStatus+')
+			),
+			'errors' => array(
+				'label' => Dict::S('UI:BulkModifyErrors'),
+				'description' => Dict::S('UI:BulkModifyErrors+')
+			),
 		);
 		$aRows = array();
 
 		$oP->add("<div class=\"page_header\">\n");
-		$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), MetaModel::GetName($sClass))."</h1>\n");
+		$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Modify_N_ObjectsOf_Class',
+				count($aSelectedObj), MetaModel::GetName($sClass))."</h1>\n");
 		$oP->add("</div>\n");
 		$oP->set_title(Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), $sClass));
 		if (!$bPreview)
@@ -3886,6 +4148,7 @@ EOF
 		foreach($aSelectedObj as $iId)
 		{
 			set_time_limit($iLoopTimeLimit);
+			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::GetObject($sClass, $iId);
 			$aErrors = $oObj->UpdateObjectFromPostedForm('');
 			$bResult = (count($aErrors) == 0);
@@ -3908,7 +4171,7 @@ EOF
 				'form::select' => "<input type=\"checkbox\" class=\"selectList\" $sChecked $sDisabled\"></input>",
 				'object' => $oObj->GetHyperlink(),
 				'status' => $sStatus,
-				'errors' => '<p>'.($bResult ? '': implode('</p><p>', $aErrors)).'</p>',
+				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrors)).'</p>',
 				'@class' => $sCSSClass,
 			);
 			if ($bResult && (!$bPreview))
@@ -3926,7 +4189,7 @@ EOF
 			$aDefaults = utils::ReadParam('default', array());
 			$oAppContext = new ApplicationContext();
 			$oP->add($oAppContext->GetForForm());
-			foreach ($aContextData as $sKey => $value)
+			foreach($aContextData as $sKey => $value)
 			{
 				$oP->add("<input type=\"hidden\" name=\"{$sKey}\" value=\"$value\">\n");
 			}
@@ -3945,12 +4208,14 @@ EOF
 					{
 						foreach($value as $vKey => $vValue)
 						{
-							$oP->add("<input type=\"hidden\" name=\"{$sKey}[$vKey]\" value=\"".htmlentities($vValue, ENT_QUOTES, 'UTF-8')."\">\n");
+							$oP->add("<input type=\"hidden\" name=\"{$sKey}[$vKey]\" value=\"".htmlentities($vValue,
+									ENT_QUOTES, 'UTF-8')."\">\n");
 						}
 					}
 					else
 					{
-						$oP->add("<input type=\"hidden\" name=\"$sKey\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\">\n");
+						$oP->add("<input type=\"hidden\" name=\"$sKey\" value=\"".htmlentities($value, ENT_QUOTES,
+								'UTF-8')."\">\n");
 					}
 				}
 			}
@@ -3965,10 +4230,11 @@ EOF
 	/**
 	 * Perform all the needed checks to delete one (or more) objects
 	 */
-	public static function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bPreview, $sCustomOperation, $aContextData = array())
-	{
+	public static function DeleteObjects(
+		WebPage $oP, $sClass, $aObjects, $bPreview, $sCustomOperation, $aContextData = array()
+	) {
 		$oDeletionPlan = new DeletionPlan();
-	
+
 		foreach($aObjects as $oObj)
 		{
 			if ($bPreview)
@@ -3980,7 +4246,7 @@ EOF
 				$oObj->DBDeleteTracked(CMDBObject::GetCurrentChange(), null, $oDeletionPlan);
 			}
 		}
-		
+
 		if ($bPreview)
 		{
 			if (count($aObjects) == 1)
@@ -3990,14 +4256,15 @@ EOF
 			}
 			else
 			{
-				$oP->add("<h1>".Dict::Format('UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass))."</h1>\n");
+				$oP->add("<h1>".Dict::Format('UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class', count($aObjects),
+						MetaModel::GetName($sClass))."</h1>\n");
 			}
 			// Explain what should be done
 			//
 			$aDisplayData = array();
-			foreach ($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes)
+			foreach($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes)
 			{
-				foreach ($aDeletes as $iId => $aData)
+				foreach($aDeletes as $iId => $aData)
 				{
 					$oToDelete = $aData['to_delete'];
 					$bAutoDel = (($aData['mode'] == DEL_SILENT) || ($aData['mode'] == DEL_AUTO));
@@ -4011,12 +4278,14 @@ EOF
 							}
 							else
 							{
-								$sConsequence = Dict::Format('UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible', $aData['issue']);
+								$sConsequence = Dict::Format('UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible',
+									$aData['issue']);
 							}
 						}
 						else
 						{
-							$sConsequence = Dict::Format('UI:Delete:MustBeDeletedManuallyButNotPossible', $aData['issue']);
+							$sConsequence = Dict::Format('UI:Delete:MustBeDeletedManuallyButNotPossible',
+								$aData['issue']);
 						}
 					}
 					else
@@ -4025,7 +4294,7 @@ EOF
 						{
 							if (isset($aData['requested_explicitely']))
 							{
-		                  $sConsequence = ''; // not applicable
+								$sConsequence = ''; // not applicable
 							}
 							else
 							{
@@ -4044,9 +4313,9 @@ EOF
 					);
 				}
 			}
-			foreach ($oDeletionPlan->ListUpdates() as $sRemoteClass => $aToUpdate)
+			foreach($oDeletionPlan->ListUpdates() as $sRemoteClass => $aToUpdate)
 			{
-				foreach ($aToUpdate as $iId => $aData)
+				foreach($aToUpdate as $iId => $aData)
 				{
 					$oToUpdate = $aData['to_reset'];
 					if (array_key_exists('issue', $aData))
@@ -4055,7 +4324,8 @@ EOF
 					}
 					else
 					{
-						$sConsequence = Dict::Format('UI:Delete:WillAutomaticallyUpdate_Fields', $aData['attributes_list']);
+						$sConsequence = Dict::Format('UI:Delete:WillAutomaticallyUpdate_Fields',
+							$aData['attributes_list']);
 					}
 					$aDisplayData[] = array(
 						'class' => MetaModel::GetName(get_class($oToUpdate)),
@@ -4064,14 +4334,15 @@ EOF
 					);
 				}
 			}
-	
-	      $iImpactedIndirectly = $oDeletionPlan->GetTargetCount() - count($aObjects);
+
+			$iImpactedIndirectly = $oDeletionPlan->GetTargetCount() - count($aObjects);
 			if ($iImpactedIndirectly > 0)
 			{
 				if (count($aObjects) == 1)
 				{
 					$oObj = $aObjects[0];
-					$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencing_Object', $iImpactedIndirectly, $oObj->GetName()));
+					$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencing_Object', $iImpactedIndirectly,
+						$oObj->GetName()));
 				}
 				else
 				{
@@ -4079,16 +4350,19 @@ EOF
 				}
 				$oP->p(Dict::S('UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity'));
 			}
-	
+
 			if (($iImpactedIndirectly > 0) || $oDeletionPlan->FoundStopper())
 			{
 				$aDisplayConfig = array();
 				$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
 				$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
-				$aDisplayConfig['consequence'] = array('label' => 'Consequence', 'description' => Dict::S('UI:Delete:Consequence+'));
+				$aDisplayConfig['consequence'] = array(
+					'label' => 'Consequence',
+					'description' => Dict::S('UI:Delete:Consequence+')
+				);
 				$oP->table($aDisplayConfig, $aDisplayData);
 			}
-	
+
 			if ($oDeletionPlan->FoundStopper())
 			{
 				if ($oDeletionPlan->FoundSecurityIssue())
@@ -4102,7 +4376,7 @@ EOF
 				else // $bFoundManualOp
 				{
 					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
-				}		
+				}
 				$oAppContext = new ApplicationContext();
 				$oP->add("<form method=\"post\">\n");
 				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id')."\">\n");
@@ -4121,7 +4395,8 @@ EOF
 				}
 				else
 				{
-					$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass)).'</h1>');
+					$oP->p('<h1>'.Dict::Format('UI:Delect:Confirm_Count_ObjectsOf_Class', count($aObjects),
+							MetaModel::GetName($sClass)).'</h1>');
 				}
 				foreach($aObjects as $oObj)
 				{
@@ -4134,7 +4409,7 @@ EOF
 				CMDBAbstractObject::DisplaySet($oP, $oSet, array('display_limit' => false, 'menu' => false));
 				$oP->add("</div>\n");
 				$oP->add("<form method=\"post\">\n");
-				foreach ($aContextData as $sKey => $value)
+				foreach($aContextData as $sKey => $value)
 				{
 					$oP->add("<input type=\"hidden\" name=\"{$sKey}\" value=\"$value\">\n");
 				}
@@ -4160,11 +4435,12 @@ EOF
 			if (count($aObjects) == 1)
 			{
 				$oObj = $aObjects[0];
-				$oP->add("<h1>".Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetName())."</h1>\n");				
+				$oP->add("<h1>".Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetName())."</h1>\n");
 			}
 			else
 			{
-				$oP->add("<h1>".Dict::Format('UI:Title:BulkDeletionOf_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass))."</h1>\n");		
+				$oP->add("<h1>".Dict::Format('UI:Title:BulkDeletionOf_Count_ObjectsOf_Class', count($aObjects),
+						MetaModel::GetName($sClass))."</h1>\n");
 			}
 			// Security - do not allow the user to force a forbidden delete by the mean of page arguments...
 			if ($oDeletionPlan->FoundSecurityIssue())
@@ -4179,16 +4455,16 @@ EOF
 			{
 				throw new CoreException(Dict::S('UI:Error:CannotDeleteBecauseOfDepencies'));
 			}
-	
+
 			// Report deletions
 			//
 			$aDisplayData = array();
-			foreach ($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes)
+			foreach($oDeletionPlan->ListDeletes() as $sTargetClass => $aDeletes)
 			{
-				foreach ($aDeletes as $iId => $aData)
+				foreach($aDeletes as $iId => $aData)
 				{
 					$oToDelete = $aData['to_delete'];
-	
+
 					if (isset($aData['requested_explicitely']))
 					{
 						$sMessage = Dict::S('UI:Delete:Deleted');
@@ -4204,12 +4480,12 @@ EOF
 					);
 				}
 			}
-		
+
 			// Report updates
 			//
-			foreach ($oDeletionPlan->ListUpdates() as $sTargetClass => $aToUpdate)
+			foreach($oDeletionPlan->ListUpdates() as $sTargetClass => $aToUpdate)
 			{
-				foreach ($aToUpdate as $iId => $aData)
+				foreach($aToUpdate as $iId => $aData)
 				{
 					$oToUpdate = $aData['to_reset'];
 					$aDisplayData[] = array(
@@ -4219,7 +4495,7 @@ EOF
 					);
 				}
 			}
-	
+
 			// Report automatic jobs
 			//
 			if ($oDeletionPlan->GetTargetCount() > 0)
@@ -4231,7 +4507,8 @@ EOF
 				}
 				else
 				{
-					$oP->p(Dict::Format('UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass)));
+					$oP->p(Dict::Format('UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class', count($aObjects),
+						MetaModel::GetName($sClass)));
 				}
 				$aDisplayConfig = array();
 				$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
@@ -4244,12 +4521,12 @@ EOF
 
 	/**
 	 * Find redundancy settings that can be viewed and modified in a tab
-	 * Settings are distributed to the corresponding link set attribute so as to be shown in the relevant tab	 
-	 */	 	
+	 * Settings are distributed to the corresponding link set attribute so as to be shown in the relevant tab
+	 */
 	protected function FindVisibleRedundancySettings()
 	{
 		$aRet = array();
-		foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 		{
 			if ($oAttDef instanceof AttributeRedundancySettings)
 			{
@@ -4258,7 +4535,8 @@ EOF
 					$aQueryInfo = $oAttDef->GetRelationQueryData();
 					if (isset($aQueryInfo['sAttribute']))
 					{
-						$oUpperAttDef = MetaModel::GetAttributeDef($aQueryInfo['sFromClass'], $aQueryInfo['sAttribute']);
+						$oUpperAttDef = MetaModel::GetAttributeDef($aQueryInfo['sFromClass'],
+							$aQueryInfo['sAttribute']);
 						$oHostAttDef = $oUpperAttDef->GetMirrorLinkAttribute();
 						if ($oHostAttDef)
 						{
@@ -4268,25 +4546,28 @@ EOF
 					}
 				}
 			}
-		}	
+		}
+
 		return $aRet;
 	}
 
 	/**
 	 * Generates the javascript code handle the "watchdog" associated with the concurrent access locking mechanism
+	 *
 	 * @param Webpage $oPage
 	 * @param string $sOwnershipToken
 	 */
 	protected function GetOwnershipJSHandler($oPage, $sOwnershipToken)
 	{
-		$iInterval = max(MIN_WATCHDOG_INTERVAL, MetaModel::GetConfig()->Get('concurrent_lock_expiration_delay')) * 1000 / 2; // Minimum interval for the watchdog is MIN_WATCHDOG_INTERVAL
+		$iInterval = max(MIN_WATCHDOG_INTERVAL,
+				MetaModel::GetConfig()->Get('concurrent_lock_expiration_delay')) * 1000 / 2; // Minimum interval for the watchdog is MIN_WATCHDOG_INTERVAL
 		$sJSClass = json_encode(get_class($this));
-		$iKey = (int) $this->GetKey();
+		$iKey = (int)$this->GetKey();
 		$sJSToken = json_encode($sOwnershipToken);
 		$sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
 		$sJSOk = json_encode(Dict::S('UI:Button:Ok'));
 		$oPage->add_ready_script(
-<<<EOF
+			<<<EOF
 		window.setInterval(function() {
 			if (window.bInSubmit || window.bInCancel) return;
 			
