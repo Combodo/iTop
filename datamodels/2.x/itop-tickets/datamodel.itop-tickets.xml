@@ -198,8 +198,8 @@
 				</field>
 				<field id="tagfield" xsi:type="AttributeTagSet">
 					<sql>tagfield</sql>
-					<default_value/>
 					<is_null_allowed>true</is_null_allowed>
+					<tracking_level>all</tracking_level>
 				</field>
 			</fields>
 			<methods>
