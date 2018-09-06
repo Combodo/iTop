@@ -55,6 +55,7 @@ We would like to give a special thank you to the people from the community who c
  - Bilger, Jean-François
  - Cardoso, Anderson
  - Cassaro, Bruno
+ - Casteleyn, Thomas
  - Castro, Randall Badilla
  - Colantoni, Maria Laura
  - Dvořák, Lukáš
