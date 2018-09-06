@@ -1951,6 +1951,7 @@ EOF
 							$aEventsList[] ='change';
 							$sHTMLValue = "<div class=\"field_input_zone field_input_{$sDisplayStyle}\">";
 							$bVertical = ($sDisplayStyle != 'radio_horizontal');
+							asort($aAllowedValues, SORT_REGULAR);
 							$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $iId, "attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}", $bMandatory, $bVertical, '');
 							$sHTMLValue .= "</div>{$sValidationSpan}{$sReloadSpan}\n";
 							break;
@@ -1960,6 +1961,7 @@ EOF
 							$aEventsList[] ='change';
 							$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><select title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" id=\"$iId\">\n";
 							$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
+							asort($aAllowedValues, SORT_REGULAR);
 							foreach($aAllowedValues as $key => $display_value)
 							{
 								if ((count($aAllowedValues) == 1) && ($bMandatory == 'true') )
