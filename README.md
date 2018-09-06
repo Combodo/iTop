@@ -63,6 +63,7 @@ We would like to give a special thank you to the people from the community who c
  - Hippler, Lars
  - Khamit, Shamil
  - Kunin, Vladimir
+ - Lassiter, Dennis
  - Lucas, Jonathan
  - Malik, Remie
  - Rosenke, Stephan
