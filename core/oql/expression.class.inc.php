@@ -915,6 +915,10 @@ class ScalarExpression extends UnaryExpression
 
 									$aValue['label'] = $oObj->Get("friendlyname");
 								}
+								else
+								{
+									$aValue['label'] = Dict::S('Enum:Undefined');
+								}
 							}
 							catch (Exception $e)
 							{
@@ -930,6 +934,10 @@ class ScalarExpression extends UnaryExpression
 									$sTarget = $oAttDef->GetTargetClass();
 									$oObj = MetaModel::GetObject($sTarget, $this->GetValue(), true, true);
 									$aValue['label'] = $oObj->Get("friendlyname");
+								}
+								else
+								{
+									$aValue['label'] = Dict::S('Enum:Undefined');
 								}
 							}
 							catch (Exception $e)
