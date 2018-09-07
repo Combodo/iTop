@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
-
 set -x
 
 cd test
-
 
 export DEBUG_UNIT_TEST="0"
 
