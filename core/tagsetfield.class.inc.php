@@ -99,6 +99,44 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		}
 	}
 
+	/**
+	 * @param \DeletionPlan $oDeletionPlan
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 */
+	public function DoCheckToDelete(&$oDeletionPlan)
+	{
+		$sTagCode = $this->Get('tag_code');
+		$sClass = $this->Get('tag_class');
+		$sAttCode = $this->Get('tag_attcode');
+		$oSearch = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
+		$oSet = new DBObjectSet($oSearch);
+		if ($oSet->CountExceeds(1))
+		{
+			$this->m_aDeleteIssues[] = Dict::S('Core:TagSetFieldData:ErrorDeleteUsedTag');
+		}
+
+		return parent::DoCheckToDelete($oDeletionPlan);
+	}
+
+	public function DoCheckToWrite()
+	{
+		// Check that code and labels are uniques
+		$sTagCode = $this->Get('tag_code');
+		$sTagLabel = $this->Get('tag_label');
+		$id = $this->GetKey();
+		$sClassName = get_class($this);
+		$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE id != $id AND (tag_code = '$sTagCode' OR tag_label = '$sTagLabel')");
+		$oSet = new DBObjectSet($oSearch);
+		if ($oSet->CountExceeds(1))
+		{
+			$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel');
+		}
+
+		parent::DoCheckToWrite();
+	}
+
 	public static function GetAllowedValues($sClass, $sAttCode)
 	{
 		$sTagDataClass = MetaModel::GetTagDataClass($sClass, $sAttCode);

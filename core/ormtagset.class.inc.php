@@ -30,9 +30,6 @@ final class ormTagSet
 {
     private $sClass; // class of the tag field
     private $sAttCode; // attcode of the tag field
-
-    private $aAllowedTags;
-    private $oOriginalSet;
     private $aOriginalObjects = null;
 
     /**
@@ -69,14 +66,12 @@ final class ormTagSet
      *
      * @param string $sClass
      * @param string $sAttCode
-     * @param DBObjectSet|null $oOriginalSet
      *
      * @throws \Exception
      */
-    public function __construct($sClass, $sAttCode, DBObjectSet $oOriginalSet = null)
+    public function __construct($sClass, $sAttCode)
     {
         $this->sAttCode = $sAttCode;
-        $this->oOriginalSet = $oOriginalSet ? clone $oOriginalSet : null;
 
         $oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
         if (!$oAttDef instanceof AttributeTagSet)
@@ -274,6 +269,24 @@ final class ormTagSet
 		    {
 			    $this->AddTag($sTagCode);
 		    }
+	    }
+    }
+
+	/**
+	 * @param string $sTagCode
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 */
+	public function TagsExist($sTagCode)
+    {
+	    try
+	    {
+		    $this->GetTagFromCode($sTagCode);
+		    return true;
+	    } catch (CoreUnexpectedValue $e)
+	    {
+	    	return false;
 	    }
     }
 

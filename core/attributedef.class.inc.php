@@ -5959,7 +5959,39 @@ class AttributeTagSet extends AttributeDBFieldVoid
         return ($val1 == $val2);
     }
 
-    /**
+	/**
+	 * @param array $aCols
+	 * @param string $sPrefix
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public function FromSQLToValue($aCols, $sPrefix = '')
+    {
+    	$sValue = $aCols["$sPrefix"];
+	    $aTagCodes = explode(' ', "$sValue");
+	    $sAttCode = $this->GetCode();
+	    $sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
+	    $oTagSet = new ormTagSet($sClass, $sAttCode);
+	    $aGoodTags = array();
+		foreach($aTagCodes as $sTagCode)
+		{
+			if ($oTagSet->TagsExist($sTagCode))
+			{
+				$aGoodTags[] = $sTagCode;
+			}
+			else
+			{
+				// Ignore bad tags from database
+				IssueLog::Warning("Unknown tag $sTagCode for $sClass::$sAttCode found in database, ignored.");
+			}
+		}
+	    $oTagSet->SetValue($aGoodTags);
+		return $oTagSet;
+    }
+
+	/**
      * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
      *
      * @param $proposedValue

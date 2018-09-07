@@ -916,4 +916,6 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
     'Class:TagSetFieldData' => 'List of tags',
     'Class:TagSetFieldData+' => '',
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique',
 ));
