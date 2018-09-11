@@ -102,22 +102,24 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	/**
 	 * @param \DeletionPlan $oDeletionPlan
 	 *
-	 * @return bool
 	 * @throws \CoreException
 	 */
 	public function DoCheckToDelete(&$oDeletionPlan)
 	{
+		parent::DoCheckToDelete($oDeletionPlan);
+
 		$sTagCode = $this->Get('tag_code');
 		$sClass = $this->Get('tag_class');
 		$sAttCode = $this->Get('tag_attcode');
 		$oSearch = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 		$oSet = new DBObjectSet($oSearch);
-		if ($oSet->CountExceeds(1))
+		if ($oSet->CountExceeds(0))
 		{
 			$this->m_aDeleteIssues[] = Dict::S('Core:TagSetFieldData:ErrorDeleteUsedTag');
 		}
-
-		return parent::DoCheckToDelete($oDeletionPlan);
+		// Clear cache
+		$sTagDataClass = MetaModel::GetTagDataClass($sClass, $sAttCode);
+		unset(self::$m_aAllowedValues[$sTagDataClass]);
 	}
 
 	public function DoCheckToWrite()
@@ -127,12 +129,24 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		$sTagLabel = $this->Get('tag_label');
 		$id = $this->GetKey();
 		$sClassName = get_class($this);
-		$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE id != $id AND (tag_code = '$sTagCode' OR tag_label = '$sTagLabel')");
+		if (empty($id))
+		{
+			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE (tag_code = '$sTagCode' OR tag_label = '$sTagLabel')");
+		}
+		else
+		{
+			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE id != $id AND (tag_code = '$sTagCode' OR tag_label = '$sTagLabel')");
+		}
 		$oSet = new DBObjectSet($oSearch);
-		if ($oSet->CountExceeds(1))
+		if ($oSet->CountExceeds(0))
 		{
 			$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel');
 		}
+		// Clear cache
+		$sClass = $this->Get('tag_class');
+		$sAttCode = $this->Get('tag_attcode');
+		$sTagDataClass = MetaModel::GetTagDataClass($sClass, $sAttCode);
+		unset(self::$m_aAllowedValues[$sTagDataClass]);
 
 		parent::DoCheckToWrite();
 	}

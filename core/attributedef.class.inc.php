@@ -6040,6 +6040,10 @@ class AttributeTagSet extends AttributeDBFieldVoid
 
     public function IsNull($proposedValue)
     {
+    	if (is_null($proposedValue))
+	    {
+		    return true;
+	    }
         /** @var \ormTagSet $proposedValue */
         return count($proposedValue->GetValue()) == 0;
     }
