@@ -392,6 +392,18 @@ EOF
 		$this->aFieldsMap[$sAttCode] = $sInputId;
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		$aRedundancySettings = $this->FindVisibleRedundancySettings();
