@@ -1,6 +1,10 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
     <option name="LINE_SEPARATOR" value="&#10;" />
+    <HTMLCodeStyleSettings>
+      <option name="HTML_DO_NOT_INDENT_CHILDREN_OF" value="html,body,thead,tbody,tfoot,script,style" />
+      <option name="HTML_DO_NOT_ALIGN_CHILDREN_OF_MIN_LINES" value="4" />
+    </HTMLCodeStyleSettings>
     <PHPCodeStyleSettings>
       <option name="CONCAT_SPACES" value="false" />
       <option name="PHPDOC_BLANK_LINE_BEFORE_TAGS" value="true" />
