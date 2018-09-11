@@ -5977,7 +5977,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	    $aGoodTags = array();
 		foreach($aTagCodes as $sTagCode)
 		{
-			if ($oTagSet->TagsExist($sTagCode))
+			if ($oTagSet->IsValidTag($sTagCode))
 			{
 				$aGoodTags[] = $sTagCode;
 			}

@@ -563,6 +563,12 @@ abstract class CMDBObject extends DBObject
 		$this->DBUpdate();
 	}
 
+	/**
+	 * @param null $oDeletionPlan
+	 *
+	 * @return \DeletionPlan|null
+	 * @throws \DeleteException
+	 */
 	public function DBDelete(&$oDeletionPlan = null)
 	{
 		return $this->DBDeleteTracked_Internal($oDeletionPlan);
@@ -575,6 +581,12 @@ abstract class CMDBObject extends DBObject
 		$this->DBDeleteTracked_Internal($oDeletionPlan);
 	}
 
+	/**
+	 * @param null $oDeletionPlan
+	 *
+	 * @return \DeletionPlan|null
+	 * @throws \DeleteException
+	 */
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		$prevkey = $this->GetKey();
