@@ -180,17 +180,11 @@ $(function()
 
 			$('body').on('update_history.itop', function(oEvent, oData) {
 
-				// if (me.element.parents('.ui-dialog').length != 0)
-				// {
-				// 	//search form in modal are forbidden to update history!
-				// 	return;
-				// }
-
-                if ($('.ui-dialog:visible :itop-search_form_handler').length != 0)
-                {
-                    //if a modal containing a search form is visible then the history update event come from it, whe do not want to update the history in this case! because search form in modal are forbidden to update history!
-                    return;
-                }
+				if (me.element.parents('.ui-dialog').length !== 0)
+				{
+					//search form in modal are forbidden to update history!
+					return;
+				}
 
 				var sNewUrl = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search';
 				sNewUrl = sNewUrl + '&filter='+oData['filter'];
@@ -1016,6 +1010,10 @@ $(function()
 				}
 			}
 			$.extend(oListParams, this.options.list_params);
+            if (me.element.parents('.ui-dialog').length !== 0)
+            {
+                oListParams.update_history = false;
+            }
 			oData.list_params = JSON.stringify(oListParams);
 
 			if (true === bAbortIfNoChange)
