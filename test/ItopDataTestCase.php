@@ -44,6 +44,9 @@ use VirtualHost;
 use VirtualMachine;
 
 
+define('TAG_CLASS', 'Ticket');
+define('TAG_ATTCODE', 'tagfield');
+
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled

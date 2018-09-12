@@ -173,6 +173,7 @@ class CriterionConversionTest extends ItopDataTestCase
 	 * @param $aCriterion
 	 * @param $sExpectedOperator
 	 *
+	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
 	function testToSearchForm($aCriterion, $sExpectedOperator)
@@ -311,22 +312,27 @@ class CriterionConversionTest extends ItopDataTestCase
 		);
 	}
 
-    /**
-     * @dataProvider OqlProvider
-     *
-     * @param      $sOQL
-     *
-     * @param      $sExpectedOQL
-     *
-     * @param      $aExpectedCriterion
-     *
-     * @throws \DictExceptionUnknownLanguage
-     * @throws \MissingQueryArgument
-     * @throws \OQLException
-     */
-	function testOqlToForSearchToOql($sOQL, $sExpectedOQL, $aExpectedCriterion)
+	/**
+	 * @dataProvider OqlProvider
+	 *
+	 * @param      $sOQL
+	 *
+	 * @param      $sExpectedOQL
+	 *
+	 * @param      $aExpectedCriterion
+	 *
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 * @throws \CoreException
+	 */
+	function testOqlToSearchToOql($sOQL, $sExpectedOQL, $aExpectedCriterion)
 	{
-        $this->OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
+		// For tests on tags
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag2', 'Second');
+
+		$this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
 	}
 
 	function OqlProvider()
@@ -452,46 +458,58 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedOQL' => "SELECT `dev` FROM DatacenterDevice AS `dev` WHERE ((INET_ATON(`dev`.`managementip`) < INET_ATON('10.22.32.255')) AND (INET_ATON(`dev`.`managementip`) > INET_ATON('10.22.32.224')))",
 				'ExpectedCriterion' => array(array('widget' => 'raw')),
 			),
+			'TagSet Matches' => array(
+				'OQL' => "SELECT UserRequest WHERE tagfield MATCHES 'tag1'",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE `UserRequest`.`tagfield` MATCHES 'tag1'",
+				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
+			),
+			'TagSet Matches2' => array(
+				'OQL' => "SELECT UserRequest WHERE tagfield MATCHES 'tag1 tag2'",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE `UserRequest`.`tagfield` MATCHES 'tag1 tag2'",
+				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
+			),
 
 
 		);
 	}
 
-    /**
-     * @dataProvider OqlProviderDates
-     *
-     * @param      $sOQL
-     *
-     * @param      $sExpectedOQL
-     *
-     * @param      $aExpectedCriterion
-     *
-     * @throws \DictExceptionUnknownLanguage
-     * @throws \MissingQueryArgument
-     * @throws \OQLException
-     */
+	/**
+	 * @dataProvider OqlProviderDates
+	 *
+	 * @param      $sOQL
+	 *
+	 * @param      $sExpectedOQL
+	 *
+	 * @param      $aExpectedCriterion
+	 *
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 * @throws \CoreException
+	 */
     function testOqlToForSearchToOqlAltLanguageFR($sOQL, $sExpectedOQL, $aExpectedCriterion)
     {
-        $this->OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "FR FR");
+        $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "FR FR");
     }
 
 
-    /**
-     * @dataProvider OqlProviderDates
-     *
-     * @param      $sOQL
-     *
-     * @param      $sExpectedOQL
-     *
-     * @param      $aExpectedCriterion
-     *
-     * @throws \DictExceptionUnknownLanguage
-     * @throws \MissingQueryArgument
-     * @throws \OQLException
-     */
+	/**
+	 * @dataProvider OqlProviderDates
+	 *
+	 * @param      $sOQL
+	 *
+	 * @param      $sExpectedOQL
+	 *
+	 * @param      $aExpectedCriterion
+	 *
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 * @throws \CoreException
+	 */
     function testOqlToForSearchToOqlAltLanguageEN($sOQL, $sExpectedOQL, $aExpectedCriterion)
     {
-        $this->OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
+        $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
     }
 
 
@@ -572,21 +590,22 @@ class CriterionConversionTest extends ItopDataTestCase
         );
     }
 
-    /**
-     *
-     * @param      $sOQL
-     *
-     * @param      $sExpectedOQL
-     *
-     * @param      $aExpectedCriterion
-     *
-     * @param      $sLanguageCode
-     *
-     * @throws \DictExceptionUnknownLanguage
-     * @throws \MissingQueryArgument
-     * @throws \OQLException
-     */
-    function OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, $sLanguageCode )
+	/**
+	 *
+	 * @param      $sOQL
+	 *
+	 * @param      $sExpectedOQL
+	 *
+	 * @param      $aExpectedCriterion
+	 *
+	 * @param      $sLanguageCode
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 */
+    function OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, $sLanguageCode )
     {
         $this->debug($sOQL);
 

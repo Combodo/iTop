@@ -8,8 +8,6 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
-define('TAG_CLASS', 'Ticket');
-define('TAG_ATTCODE', 'tagfield');
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use TagSetFieldData;
