@@ -157,8 +157,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 	{
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
-
-		if (empty($sValue))
+		if (empty($sValue) && (!(isset($aCriteria['has_undefined'])) || !($aCriteria['has_undefined'])))
 		{
 			return "1";
 		}
@@ -183,17 +182,34 @@ class CriterionToOQL extends CriterionConversionAbstract
 	{
 		$aValues = self::GetValues($aCriteria);
 		$aRawValues = array();
+		$bHasUnDefined = isset($aCriteria['has_undefined']) ? $aCriteria['has_undefined'] : false;
 		for($i = 0; $i < count($aValues); $i++)
 		{
-			$aRawValues[] = self::GetValue($aValues, $i);
+			$sRawValue = self::GetValue($aValues, $i);
+			if (strlen($sRawValue) == 0)
+			{
+				$bHasUnDefined = true;
+			}
+			else
+			{
+				$aRawValues[] = $sRawValue;
+			}
 		}
 		$sValue = implode(' ', $aRawValues);
 
 		if (empty($sValue))
 		{
+			if ($bHasUnDefined)
+			{
+				return "({$sRef} = '')";
+			}
 			return "1";
 		}
 
+		if ($bHasUnDefined)
+		{
+			return "((({$sRef} MATCHES '{$sValue}') OR ({$sRef} = '')) AND 1)";
+		}
 		return "({$sRef} MATCHES '{$sValue}')";
 	}
 

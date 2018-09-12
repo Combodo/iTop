@@ -468,7 +468,16 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE `UserRequest`.`tagfield` MATCHES 'tag1 tag2'",
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
-
+			'TagSet Undefined' => array(
+				'OQL' => "SELECT UserRequest WHERE tagfield = ''",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`tagfield` = '')",
+				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
+			),
+			'TagSet Undefined and tag' => array(
+				'OQL' => "SELECT UserRequest WHERE (((tagfield MATCHES 'tag1 tag2') OR (tagfield = '')) AND 1)",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`tagfield` MATCHES 'tag1 tag2' OR (`UserRequest`.`tagfield` = '')) AND 1)",
+				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
+			),
 
 		);
 	}

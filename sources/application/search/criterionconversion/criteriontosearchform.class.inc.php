@@ -674,8 +674,18 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		{
 			case 'MATCHES':
 				// Nothing special to do
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
+				{
+					if (!isset($aCriteria['values']))
+					{
+						$aCriteria['values'] = array();
+					}
+					// Convention for 'undefined' tag set
+					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
+				}
 				break;
 
+			case 'OR':
 			case 'ISNULL':
 				$aCriteria['operator'] = CriterionConversionAbstract::OP_EQUALS;
 				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
@@ -684,8 +694,21 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 					{
 						$aCriteria['values'] = array();
 					}
-					// Convention for 'undefined' enums
-					$aCriteria['values'][] = array('value' => 'null', 'label' => Dict::S('Enum:Undefined'));
+					// Convention for 'undefined' tag set
+					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
+				}
+				break;
+
+			case '=':
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_EQUALS;
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
+				{
+					if (!isset($aCriteria['values']))
+					{
+						$aCriteria['values'] = array();
+					}
+					// Convention for 'undefined' tag set
+					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
 				}
 				break;
 

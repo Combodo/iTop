@@ -578,6 +578,7 @@ class BinaryExpression extends Expression
 	 * @param null $oAttDef
 	 *
 	 * @return array
+	 * @throws \MissingQueryArgument
 	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
@@ -675,6 +676,10 @@ class BinaryExpression extends Expression
 						$aCriteriaOverride['values'] = array_merge($aCriteriaLeft['values'], $aCriteriaRight['values']);
 					}
 				}
+			}
+			if (isset($aCriteriaLeft['widget']) && isset($aCriteriaRight['widget']) && ($aCriteriaLeft['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET) && ($aCriteriaRight['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET))
+			{
+				$aCriteriaOverride['operator'] = 'MATCHES';
 			}
 		}
 
@@ -886,20 +891,20 @@ class ScalarExpression extends UnaryExpression
 
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
-		$aCriteria = array();
+		$aCriterion = array();
 		switch ((string)($this->m_value))
 		{
 			case '%Y-%m-%d':
-				$aCriteria['unit'] = 'DAY';
+				$aCriterion['unit'] = 'DAY';
 				break;
 			case '%Y-%m':
-				$aCriteria['unit'] = 'MONTH';
+				$aCriterion['unit'] = 'MONTH';
 				break;
 			case '%w':
-				$aCriteria['unit'] = 'WEEKDAY';
+				$aCriterion['unit'] = 'WEEKDAY';
 				break;
 			case '%H':
-				$aCriteria['unit'] = 'HOUR';
+				$aCriterion['unit'] = 'HOUR';
 				break;
 			default:
 				$aValue = array();
@@ -938,7 +943,7 @@ class ScalarExpression extends UnaryExpression
 							}
 							else
 							{
-								$aValue['label'] = Dict::S('Enum:Undefined');
+								$aCriterion['has_undefined'] = true;
 							}
 						}
 						catch (Exception $e)
@@ -981,12 +986,12 @@ class ScalarExpression extends UnaryExpression
                 {
                     // only if a label is found
                     $aValue['value'] = $this->GetValue();
-                    $aCriteria['values'] = array($aValue);
+                    $aCriterion['values'] = array($aValue);
                 }
 				break;
 		}
-		$aCriteria['oql'] = $this->RenderExpression(false, $aArgs, $bRetrofitParams);
-		return $aCriteria;
+		$aCriterion['oql'] = $this->RenderExpression(false, $aArgs, $bRetrofitParams);
+		return $aCriterion;
 	}
 
 }

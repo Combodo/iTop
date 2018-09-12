@@ -23,6 +23,11 @@ $(function()
 				'empty': null,		// Remove as it will be handle by the "null" value in the "MATCHES" operator
 				'not_empty': null,	// Remove as it will be handle by the "null" value in the "MATCHES" operator
 			},
+            // Null value
+            'null_value': {
+                'code': '',
+                'label': Dict.S('Enum:Undefined'),
+            },
 		},
 
    
