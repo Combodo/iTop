@@ -1627,10 +1627,10 @@ EOF
 	}
 
 	/**
-	 * @param $oPage
-	 * @param $sClass
-	 * @param $sAttCode
-	 * @param $oAttDef
+	 * @param \iTopWebPage $oPage
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param \AttributeDefinition $oAttDef
 	 * @param string $value
 	 * @param string $sDisplayValue
 	 * @param string $iId
@@ -1640,6 +1640,9 @@ EOF
 	 * @param bool $bPreserveCurrentValue Preserve the current value even if not allowed
 	 *
 	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
 	 */
 	public static function GetFormElementForField(
 		$oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '',
@@ -2025,6 +2028,20 @@ EOF
 					$oPage->add_ready_script("$('#{$iId}').bind('validate', function(evt, sFormId) { return ValidateCustomFields('$iId', sFormId) } );"); // Custom validation function
 					break;
 
+				case 'TagSet':
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/selectize.min.js');
+					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/jquery.itop-tagset-widget.js');
+
+					/** @var \ormTagSet $value */
+					$sJson = static::GetTagSetJsonForWidget($value);
+					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
+					$sHTMLValue = "<input id='$sInputId' name='$sInputId' type='text' value='$sJson' style='display: none;'>";
+					$sScript = "$('#$sInputId').tagset_widget();";
+					$oPage->add_ready_script($sScript);
+
+					break;
+
 				case 'String':
 				default:
 					$aEventsList[] = 'validate';
@@ -2130,6 +2147,43 @@ EOF
 		$oPage->add_dict_entry('UI:ValueInvalidFormat');
 
 		return "<div id=\"field_{$iId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div></div>";
+	}
+
+	/**
+	 * @param \ormTagSet $oValue
+	 *
+	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	private static function GetTagSetJsonForWidget($oValue)
+	{
+		$aJson = array();
+
+		// possible_values
+		$aTagSetObjectData = TagSetFieldData::GetAllowedValues($oValue->GetClass(), $oValue->GetAttCode());
+		$aTagSetKeyValData = array();
+		foreach($aTagSetObjectData as $oTagSet)
+		{
+			$aTagSetKeyValData[] = [
+				'code' => $oTagSet->Get('tag_code'),
+				'label' => $oTagSet->Get('tag_label')
+			];
+		}
+		$aJson['possible_values'] = $aTagSetKeyValData;
+
+		$aJson['partial_values'] = $oValue->GetModifiedTags();
+
+		// orig_values
+		$aJson['orig_value'] = $oValue->GetValue();
+
+		// added
+		$aJson['added'] = array();
+		// removed
+		$aJson['removed'] = array();
+
+		return json_encode($aJson);
 	}
 
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
@@ -3258,6 +3312,10 @@ EOF
 				case 'TagSet':
 					/** @var ormTagSet $oTagSet */
 					$oTagSet = $this->Get($sAttCode);
+					if (is_null($oTagSet))
+					{
+						$oTagSet = new ormTagSet(get_class($this), $sAttCode);
+					}
 					$oTagSet->ApplyDelta($value);
 					$this->Set($sAttCode, $oTagSet);
 					break;
@@ -3452,14 +3510,8 @@ EOF
 				break;
 
 			case 'TagSet':
-				$sPreserved = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
-				$sAdded = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", null, 'raw_data');
-				$sRemoved = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", null, 'raw_data');
-				$value = array(
-					'preserved' => $sPreserved,
-					'added' => $sAdded,
-					'removed' => $sRemoved,
-				);
+				$sTagSetJson = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
+				$value = json_decode($sTagSetJson, true);
 				break;
 
 			default:
@@ -3864,6 +3916,19 @@ EOF
 	/**
 	 * Display a form for modifying several objects at once
 	 * The form will be submitted to the current page, with the specified additional values
+	 *
+	 * @param \iTopWebPage $oP
+	 * @param string $sClass
+	 * @param array $aSelectedObj
+	 * @param string $sCustomOperation
+	 * @param string $sCancelUrl
+	 * @param array $aExcludeAttributes
+	 * @param array $aContextData
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public static function DisplayBulkModifyForm(
 		$oP, $sClass, $aSelectedObj, $sCustomOperation, $sCancelUrl, $aExcludeAttributes = array(),
@@ -4024,15 +4089,18 @@ EOF
 								$oDummyObj->Set($sAttCode, $currValue);
 								/** @var ormTagSet $oTagSet */
 								$oTagSet = $oDummyObj->Get($sAttCode);
-								foreach($aKeys as $sValues)
+								foreach($aKeys as $iIndex => $sValues)
 								{
+									if ($iIndex == 0)
+									{
+										continue;
+									}
+									$aTagCodes = array();
 									if (!empty($sValues))
 									{
-										foreach(explode(' ', $sValues) as $sTagCode)
-										{
-											$oTagSet->AddTag($sTagCode);
-										}
+										$aTagCodes = explode(' ', $sValues);
 									}
+									$oTagSet->GenerateDiffFromTags($aTagCodes);
 								}
 								$oDummyObj->Set($sAttCode, $oTagSet);
 							}

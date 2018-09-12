@@ -54,7 +54,7 @@
  * }
  * </code>
  *
- * <p>Needs js/selectize.js already loaded !!<br>
+ * <p>Needs js/selectize.js already loaded !! (https://github.com/selectize/selectize.js)<br>
  * In the future we could use a solution like this :
  * https://www.safaribooksonline.com/library/view/learning-javascript-design/9781449334840/ch13s09.html
  */
@@ -95,7 +95,7 @@ $.widget('itop.tagset_widget',
 		_initWidgetData: function (originalFieldValue) {
 			var dataArray = JSON.parse(originalFieldValue);
 			this.possibleValues = dataArray[this.POSSIBLE_VAL_KEY];
-			this.partialValues = dataArray[this.PARTIAL_VAL_KEY];
+			this.partialValues = ($.isArray(dataArray[this.PARTIAL_VAL_KEY])) ? dataArray[this.PARTIAL_VAL_KEY] : [];
 			this.originalValue = dataArray[this.ORIG_VAL_KEY];
 			this.tagSetCodesStatus = {};
 		},

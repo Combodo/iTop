@@ -1,1158 +1,1168 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
-	<constants>
-		<constant id="PORTAL_USERREQUEST_PUBLIC_LOG" xsi:type="string" _delta="define"><![CDATA[public_log]]></constant>
-		<constant id="PORTAL_USERREQUEST_USER_COMMENT" xsi:type="string" _delta="define"><![CDATA[user_comment]]></constant>
-		<constant id="PORTAL_USERREQUEST_FORM_ATTRIBUTES" xsi:type="string" _delta="define"><![CDATA[title,description,impact,urgency]]></constant>
-		<constant id="PORTAL_USERREQUEST_TYPE" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
-		<constant id="PORTAL_USERREQUEST_LIST_ZLIST" xsi:type="string" _delta="define"><![CDATA[finalclass,title,start_date,status,servicesubcategory_id,priority,caller_id]]></constant>
-		<constant id="PORTAL_USERREQUEST_CLOSED_ZLIST" xsi:type="string" _delta="define"><![CDATA[title,start_date,close_date,servicesubcategory_id]]></constant>
-		<constant id="PORTAL_USERREQUEST_DETAILS_ZLIST" xsi:type="string" _delta="define"><![CDATA[{"col:left":["ref","caller_id","servicesubcategory_id","title","description","solution"],"col:right":["status","priority","start_date","resolution_date","last_update","agent_id"]}]]></constant>
-		<constant id="PORTAL_USERREQUEST_DISPLAY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT UserRequest WHERE org_id = :contact->org_id AND caller_id = :contact->id]]></constant>
-		<constant id="PORTAL_USERREQUEST_DISPLAY_POWERUSER_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT UserRequest WHERE org_id = :contact->org_id]]></constant>
-	</constants>
-	<classes>
-		<class id="UserRequest" _delta="define">
-			<parent>Ticket</parent>
-			<properties>
-				<comment><![CDATA[/**
+    <constants>
+        <constant id="PORTAL_USERREQUEST_PUBLIC_LOG" xsi:type="string" _delta="define"><![CDATA[public_log]]></constant>
+        <constant id="PORTAL_USERREQUEST_USER_COMMENT" xsi:type="string" _delta="define">
+            <![CDATA[user_comment]]></constant>
+        <constant id="PORTAL_USERREQUEST_FORM_ATTRIBUTES" xsi:type="string" _delta="define">
+            <![CDATA[title,description,impact,urgency]]></constant>
+        <constant id="PORTAL_USERREQUEST_TYPE" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
+        <constant id="PORTAL_USERREQUEST_LIST_ZLIST" xsi:type="string" _delta="define">
+            <![CDATA[finalclass,title,start_date,status,servicesubcategory_id,priority,caller_id]]></constant>
+        <constant id="PORTAL_USERREQUEST_CLOSED_ZLIST" xsi:type="string" _delta="define">
+            <![CDATA[title,start_date,close_date,servicesubcategory_id]]></constant>
+        <constant id="PORTAL_USERREQUEST_DETAILS_ZLIST" xsi:type="string" _delta="define">
+            <![CDATA[{"col:left":["ref","caller_id","servicesubcategory_id","title","description","solution"],"col:right":["status","priority","start_date","resolution_date","last_update","agent_id"]}]]></constant>
+        <constant id="PORTAL_USERREQUEST_DISPLAY_QUERY" xsi:type="string" _delta="define">
+            <![CDATA[SELECT UserRequest WHERE org_id = :contact->org_id AND caller_id = :contact->id]]></constant>
+        <constant id="PORTAL_USERREQUEST_DISPLAY_POWERUSER_QUERY" xsi:type="string" _delta="define">
+            <![CDATA[SELECT UserRequest WHERE org_id = :contact->org_id]]></constant>
+    </constants>
+    <classes>
+        <class id="UserRequest" _delta="define">
+            <parent>Ticket</parent>
+            <properties>
+                <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
-        <category>bizmodel,searchable,requestmgmt</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>ticket_request</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <naming>
-          <attributes>
-            <attribute id="ref"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <icon>images/user-request.png</icon>
-        <reconciliation>
-          <attributes>
-            <attribute id="ref"/>
-          </attributes>
-        </reconciliation>
-        <order>
-          <columns>
-            <column id="ref" ascending="false"/>
-          </columns>
-        </order>
-      </properties>
-      <fields>
-        <field id="status" xsi:type="AttributeEnum">
-          <always_load_in_tables>true</always_load_in_tables>
-          <values>
-            <value id="new">new</value>
-            <value id="waiting_for_approval">waiting_for_approval</value>
-            <value id="approved">approved</value>
-            <value id="rejected">rejected</value>
-            <value id="assigned">assigned</value>
-            <value id="pending">pending</value>
-            <value id="escalated_tto">escalated_tto</value>
-            <value id="escalated_ttr">escalated_ttr</value>
-            <value id="resolved">resolved</value>
-            <value id="closed">closed</value>
-          </values>
-          <sql>status</sql>
-          <default_value>new</default_value>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="request_type" xsi:type="AttributeEnum">
-          <values>
-            <value id="incident">incident</value>
-            <value id="service_request">service_request</value>
-          </values>
-          <sql>request_type</sql>
-          <default_value></default_value>
-          <is_null_allowed>true</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-        <field id="impact" xsi:type="AttributeEnum">
-          <values>
-            <value id="1">1</value>
-            <value id="2">2</value>
-            <value id="3">3</value>
-          </values>
-          <sql>impact</sql>
-          <default_value>1</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-        <field id="priority" xsi:type="AttributeEnum">
-          <values>
-            <value id="1">1</value>
-            <value id="2">2</value>
-            <value id="3">3</value>
-            <value id="4">4</value>
-          </values>
-          <dependencies>
-            <attribute id="impact"/>
-            <attribute id="urgency"/>
-          </dependencies>
-          <sql>priority</sql>
-          <default_value>4</default_value>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="urgency" xsi:type="AttributeEnum">
-          <values>
-            <value id="1">1</value>
-            <value id="2">2</value>
-            <value id="3">3</value>
-            <value id="4">4</value>
-          </values>
-          <sql>urgency</sql>
-          <default_value>4</default_value>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="origin" xsi:type="AttributeEnum">
-          <values>
-            <value id="mail">mail</value>
-            <value id="phone">phone</value>
-            <value id="portal">portal</value>
-            <value id="monitoring">monitoring</value>
-          </values>
-          <sql>origin</sql>
-          <default_value>phone</default_value>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="approver_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Person WHERE org_id= :this->org_id]]></filter>
-          <dependencies>
-            <attribute id="org_id"/>
-          </dependencies>
-          <sql>approver_id</sql>
-          <target_class>Person</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
-          <allow_target_creation>false</allow_target_creation>
-          <jointype/>
-        </field>
-        <field id="approver_email" xsi:type="AttributeExternalField">
-          <extkey_attcode>approver_id</extkey_attcode>
-          <target_attcode>email</target_attcode>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="service_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :this->org_id AND s.status != 'obsolete']]></filter>
-          <dependencies>
-            <attribute id="org_id"/>
-          </dependencies>
-          <sql>service_id</sql>
-          <target_class>Service</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
-          <allow_target_creation>false</allow_target_creation>
-          <jointype/>
-        </field>
-        <field id="service_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>service_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="servicesubcategory_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id AND (ISNULL(:this->request_type) OR request_type = :this->request_type) AND status != 'obsolete']]></filter>
-          <dependencies>
-            <attribute id="service_id"/>
-            <attribute id="request_type"/>
-          </dependencies>
-          <sql>servicesubcategory_id</sql>
-          <target_class>ServiceSubcategory</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
-          <allow_target_creation>false</allow_target_creation>
-          <jointype/>
-        </field>
-        <field id="servicesubcategory_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>servicesubcategory_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="escalation_flag" xsi:type="AttributeEnum">
-          <values>
-            <value id="yes">yes</value>
-            <value id="no">no</value>
-          </values>
-          <sql>escalation_flag</sql>
-          <default_value>no</default_value>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="escalation_reason" xsi:type="AttributeString">
-          <sql>escalation_reason</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="assignment_date" xsi:type="AttributeDateTime">
-          <sql>assignment_date</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="resolution_date" xsi:type="AttributeDateTime">
-          <sql>resolution_date</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="last_pending_date" xsi:type="AttributeDateTime">
-          <sql>last_pending_date</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="cumulatedpending" xsi:type="AttributeStopWatch">
-          <states>
-            <state id="pending"/>
-          </states>
-          <working_time/>
-          <thresholds/>
-          <goal/>
-        </field>
-        <field id="tto" xsi:type="AttributeStopWatch">
-          <always_load_in_tables>true</always_load_in_tables>
-          <states>
-            <state id="new"/>
-            <state id="escalated_tto"/>
-            <state id="approved"/>
-          </states>
-          <working_time/>
-          <goal>ResponseTicketTTO</goal>
-          <thresholds>
-            <threshold id="75">
-              <highlight>
-                <code>warning</code>
-                <persistent>false</persistent>
-              </highlight>
-              <actions>
-              </actions>
-            </threshold>
-            <threshold id="100">
-              <highlight>
-                <code>critical</code>
-                <persistent>false</persistent>
-              </highlight>
-              <actions>
-                <action>
-                  <verb>ApplyStimulus</verb>
-                  <params>
-                    <param>ev_timeout</param>
-                  </params>
-                </action>
-              </actions>
-            </threshold>
-          </thresholds>
-        </field>
-        <field id="ttr" xsi:type="AttributeStopWatch">
-          <always_load_in_tables>true</always_load_in_tables>
-          <states>
-            <state id="new"/>
-            <state id="escalated_tto"/>
-            <state id="assigned"/>
-            <state id="approved"/>
-            <state id="escalated_ttr"/>
-          </states>
-          <working_time/>
-          <goal>ResponseTicketTTR</goal>
-          <thresholds>
-            <threshold id="75">
-              <highlight>
-                <code>warning</code>
-                <persistent>false</persistent>
-              </highlight>
-              <actions>
-              </actions>
-            </threshold>
-            <threshold id="100">
-              <highlight>
-                <code>critical</code>
-                <persistent>false</persistent>
-              </highlight>
-              <actions>
-                <action>
-                  <verb>ApplyStimulus</verb>
-                  <params>
-                    <param>ev_timeout</param>
-                  </params>
-                </action>
-              </actions>
-            </threshold>
-          </thresholds>
-        </field>
-        <field id="tto_escalation_deadline" xsi:type="AttributeSubItem">
-          <target_attcode>tto</target_attcode>
-          <item_code>100_deadline</item_code>
-        </field>
-        <field id="sla_tto_passed" xsi:type="AttributeSubItem">
-          <target_attcode>tto</target_attcode>
-          <item_code>100_passed</item_code>
-        </field>
-        <field id="sla_tto_over" xsi:type="AttributeSubItem">
-          <target_attcode>tto</target_attcode>
-          <item_code>100_overrun</item_code>
-        </field>
-        <field id="ttr_escalation_deadline" xsi:type="AttributeSubItem">
-          <target_attcode>ttr</target_attcode>
-          <item_code>100_deadline</item_code>
-        </field>
-        <field id="sla_ttr_passed" xsi:type="AttributeSubItem">
-          <target_attcode>ttr</target_attcode>
-          <item_code>100_passed</item_code>
-        </field>
-        <field id="sla_ttr_over" xsi:type="AttributeSubItem">
-          <target_attcode>ttr</target_attcode>
-          <item_code>100_overrun</item_code>
-        </field>
-        <field id="time_spent" xsi:type="AttributeDuration">
-          <sql>time_spent</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="resolution_code" xsi:type="AttributeEnum">
-          <values>
-            <value id="assistance">assistance</value>
-            <value id="other">other</value>
-            <value id="software patch">software patch</value>
-            <value id="training">training</value>
-            <value id="hardware repair">hardware repair</value>
-            <value id="system update">system update</value>
-            <value id="bug fixed">bug fixed</value>
-          </values>
-          <sql>resolution_code</sql>
-          <default_value>assistance</default_value>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="solution" xsi:type="AttributeText">
-          <sql>solution</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="pending_reason" xsi:type="AttributeText">
-          <sql>pending_reason</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="parent_request_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT UserRequest WHERE id != :this->id AND status NOT IN ('rejected','resolved','closed')]]></filter>
-          <dependencies>
-          </dependencies>
-          <sql>parent_request_id</sql>
-          <target_class>UserRequest</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype/>
-        </field>
-        <field id="parent_request_ref" xsi:type="AttributeExternalField">
-          <extkey_attcode>parent_request_id</extkey_attcode>
-          <target_attcode>ref</target_attcode>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="parent_problem_id" xsi:type="AttributeExternalKey">
-          <sql>parent_problem_id</sql>
-          <target_class>Problem</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype/>
-        </field>
-        <field id="parent_problem_ref" xsi:type="AttributeExternalField">
-          <extkey_attcode>parent_problem_id</extkey_attcode>
-          <target_attcode>ref</target_attcode>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="parent_change_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Change WHERE status != "closed"]]></filter>
-          <sql>parent_change_id</sql>
-          <target_class>Change</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype/>
-        </field>
-        <field id="parent_change_ref" xsi:type="AttributeExternalField">
-          <extkey_attcode>parent_change_id</extkey_attcode>
-          <target_attcode>ref</target_attcode>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="related_request_list" xsi:type="AttributeLinkedSet">
-          <linked_class>UserRequest</linked_class>
-          <ext_key_to_me>parent_request_id</ext_key_to_me>
-          <edit_mode>add_remove</edit_mode>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-        </field>
-        <field id="public_log" xsi:type="AttributeCaseLog">
-          <sql>public_log</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="user_satisfaction" xsi:type="AttributeEnum">
-          <values>
-            <value id="1">1</value>
-            <value id="2">2</value>
-            <value id="3">3</value>
-            <value id="4">4</value>
-          </values>
-          <sql>user_satisfaction</sql>
-          <default_value>1</default_value>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="user_comment" xsi:type="AttributeText">
-          <sql>user_commment</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-      </fields>
-      <lifecycle>
-        <highlight_scale>
-          <item id="warning">
-            <rank>1</rank>
-            <color>HIGHLIGHT_CLASS_WARNING</color>
-            <icon>images/user-request-deadline.png</icon>
-          </item>
-          <item id="critical">
-            <rank>2</rank>
-            <color>HIGHLIGHT_CLASS_CRITICAL</color>
-            <icon>images/user-request-escalated.png</icon>
-          </item>
-          <item id="closed">
-            <rank>3</rank>
-            <color>HIGHLIGHT_CLASS_NONE</color>
-            <icon>images/user-request-closed.png</icon>
-          </item>
-        </highlight_scale>
-        <attribute>status</attribute>
-        <stimuli>
-          <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_approve" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_reject" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_pending" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_timeout" xsi:type="StimulusInternal"/>
-          <stimulus id="ev_autoresolve" xsi:type="StimulusInternal"/>
-          <stimulus id="ev_autoclose" xsi:type="StimulusInternal"/>
-          <stimulus id="ev_resolve" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_close" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_reopen" xsi:type="StimulusUserAction"/>
-          <stimulus id="ev_wait_for_approval" xsi:type="StimulusUserAction"/>
-        </stimuli>
-        <states>
-          <state id="new">
-            <flags>
-              <attribute id="ref">
-                <read_only/>
-              </attribute>
-              <attribute id="org_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="caller_id">
-                <mandatory/>
-              </attribute>
-              <attribute id="team_id">
-                <hidden/>
-              </attribute>
-              <attribute id="priority">
-                <read_only/>
-              </attribute>
-              <attribute id="agent_id">
-                <hidden/>
-              </attribute>
-              <attribute id="start_date">
-                <read_only/>
-              </attribute>
-              <attribute id="last_update">
-                <read_only/>
-              </attribute>
-              <attribute id="close_date">
-                <hidden/>
-              </attribute>
-              <attribute id="approver_id">
-                <hidden/>
-              </attribute>
-              <attribute id="escalation_flag">
-                <hidden/>
-              </attribute>
-              <attribute id="escalation_reason">
-                <hidden/>
-              </attribute>
-              <attribute id="assignment_date">
-                <hidden/>
-              </attribute>
-              <attribute id="resolution_date">
-                <hidden/>
-              </attribute>
-              <attribute id="last_pending_date">
-                <hidden/>
-              </attribute>
-              <attribute id="time_spent">
-                <hidden/>
-              </attribute>
-              <attribute id="resolution_code">
-                <hidden/>
-              </attribute>
-              <attribute id="solution">
-                <hidden/>
-              </attribute>
-              <attribute id="pending_reason">
-                <hidden/>
-              </attribute>
-              <attribute id="user_satisfaction">
-                <hidden/>
-              </attribute>
-              <attribute id="user_comment">
-                <hidden/>
-              </attribute>
-              <attribute id="tto_escalation_deadline">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_tto_passed">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_tto_over">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_ttr_passed">
-                <hidden/>
-              </attribute>
-              <attribute id="ttr_escalation_deadline">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_ttr_over">
-                <hidden/>
-              </attribute>
-            </flags>
-            <transitions>
-              <transition id="ev_assign">
-                <target>assigned</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">assignment_date</param>
-                    </params>
-                  </action>
-                </actions>
-              </transition>
-              <transition id="ev_timeout">
-                <target>escalated_tto</target>
-                <actions/>
-              </transition>
-              <transition id="ev_wait_for_approval">
-                <target>waiting_for_approval</target>
-                <actions/>
-              </transition>
-              <transition id="ev_autoresolve">
-                <target>resolved</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">resolution_date</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>SetElapsedTime</verb>
-                    <params>
-                      <param xsi:type="attcode">time_spent</param>
-                      <param xsi:type="attcode">start_date</param>
-                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>ResolveChildTickets</verb>
-                    <params/>
-                  </action>
-                </actions>
-              </transition>
-            </transitions>
-          </state>
-          <state id="escalated_tto">
-            <highlight>
-              <code>critical</code>
-            </highlight>
-            <inherit_flags_from>new</inherit_flags_from>
-            <flags>
-              <attribute id="team_id"/>
-            </flags>
-            <transitions>
-              <transition id="ev_assign">
-                <target>assigned</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">assignment_date</param>
-                    </params>
-                  </action>
-                </actions>
-              </transition>
-            </transitions>
-          </state>
-          <state id="assigned">
-            <inherit_flags_from>new</inherit_flags_from>
-            <flags>
-              <attribute id="request_type">
-                <mandatory/>
-              </attribute>
-              <attribute id="team_id">
-                <mandatory/>
-                <must_prompt/>
-                <read_only/>
-              </attribute>
-              <attribute id="agent_id">
-                <mandatory/>
-                <must_prompt/>
-                <read_only/>
-              </attribute>
-              <attribute id="approver_id">
-                <read_only/>
-              </attribute>
-              <attribute id="assignment_date">
-                <read_only/>
-              </attribute>
-              <attribute id="tto_escalation_deadline">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_tto_passed">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_tto_over">
-                <read_only/>
-              </attribute>
-              <attribute id="ttr_escalation_deadline">
-                <read_only/>
-              </attribute>
-              <attribute id="caller_id"/>
-              <attribute id="escalation_flag"/>
-              <attribute id="escalation_reason"/>
-            </flags>
-            <transitions>
-              <transition id="ev_pending">
-                <target>pending</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">last_pending_date</param>
-                    </params>
-                  </action>
-                </actions>
-              </transition>
-              <transition id="ev_resolve">
-                <target>resolved</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">resolution_date</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>SetElapsedTime</verb>
-                    <params>
-                      <param xsi:type="attcode">time_spent</param>
-                      <param xsi:type="attcode">start_date</param>
-                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>ResolveChildTickets</verb>
-                    <params/>
-                  </action>
-                </actions>
-              </transition>
-              <transition id="ev_reassign">
-                <target>assigned</target>
-                <actions/>
-				<flags>
-					<attribute id="agent_id">
-						<must_change/>
-					</attribute>
-					<attribute id="team_id">
-						<must_prompt/>
-					</attribute>
-				</flags>
-              </transition>
-              <transition id="ev_timeout">
-                <target>escalated_ttr</target>
-                <actions/>
-              </transition>
-              <transition id="ev_autoresolve">
-                <target>resolved</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">resolution_date</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>SetElapsedTime</verb>
-                    <params>
-                      <param xsi:type="attcode">time_spent</param>
-                      <param xsi:type="attcode">start_date</param>
-                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>ResolveChildTickets</verb>
-                    <params/>
-                  </action>
-                </actions>
-              </transition>
-            </transitions>
-          </state>
-          <state id="escalated_ttr">
-            <highlight>
-              <code>critical</code>
-            </highlight>
-            <inherit_flags_from>assigned</inherit_flags_from>
-            <flags/>
-            <transitions>
-              <transition id="ev_pending">
-                <target>pending</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">last_pending_date</param>
-                    </params>
-                  </action>
-                </actions>
-              </transition>
-              <transition id="ev_resolve">
-                <target>resolved</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">resolution_date</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>SetElapsedTime</verb>
-                    <params>
-                      <param xsi:type="attcode">time_spent</param>
-                      <param xsi:type="attcode">start_date</param>
-                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>ResolveChildTickets</verb>
-                    <params/>
-                  </action>
-                </actions>
-              </transition>
-              <transition id="ev_reassign">
-                <target>assigned</target>
-                <actions/>
-              </transition>
-              <transition id="ev_autoresolve">
-                <target>resolved</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">resolution_date</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>SetElapsedTime</verb>
-                    <params>
-                      <param xsi:type="attcode">time_spent</param>
-                      <param xsi:type="attcode">start_date</param>
-                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>ResolveChildTickets</verb>
-                    <params/>
-                  </action>
-                </actions>
-              </transition>
-            </transitions>
-          </state>
-          <state id="waiting_for_approval">
-            <inherit_flags_from>new</inherit_flags_from>
-            <flags>
-              <attribute id="approver_id">
-                <must_prompt/>
-              </attribute>
-              <attribute id="team_id"/>
-            </flags>
-            <transitions>
-              <transition id="ev_approve">
-                <target>approved</target>
-                <actions/>
-              </transition>
-              <transition id="ev_reject">
-                <target>rejected</target>
-                <actions/>
-              </transition>
-            </transitions>
-          </state>
-          <state id="approved">
-            <inherit_flags_from>waiting_for_approval</inherit_flags_from>
-            <flags>
-              <attribute id="approver_id">
-                <read_only/>
-              </attribute>
-            </flags>
-            <transitions>
-              <transition id="ev_timeout">
-                <target>escalated_tto</target>
-                <actions/>
-              </transition>
-              <transition id="ev_assign">
-                <target>assigned</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">assignment_date</param>
-                    </params>
-                  </action>
-                </actions>
-              </transition>
-              <transition id="ev_autoresolve">
-                <target>resolved</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">resolution_date</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>SetElapsedTime</verb>
-                    <params>
-                      <param xsi:type="attcode">time_spent</param>
-                      <param xsi:type="attcode">start_date</param>
-                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>ResolveChildTickets</verb>
-                    <params/>
-                  </action>
-                </actions>
-              </transition>
-            </transitions>
-          </state>
-          <state id="rejected">
-            <inherit_flags_from>new</inherit_flags_from>
-            <flags>
-              <attribute id="tto_escalation_deadline">
-                <hidden/>
-              </attribute>
-              <attribute id="team_id"/>
-            </flags>
-            <transitions>
-              <transition id="ev_reopen">
-                <target>new</target>
-                <actions/>
-              </transition>
-            </transitions>
-          </state>
-          <state id="pending">
-            <inherit_flags_from>assigned</inherit_flags_from>
-            <flags>
-              <attribute id="last_pending_date">
-                <read_only/>
-              </attribute>
-              <attribute id="pending_reason">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="ttr_escalation_deadline">
-                <hidden/>
-              </attribute>
-            </flags>
-            <transitions>
-              <transition id="ev_assign">
-                <target>assigned</target>
-                <actions>
-                </actions>
-              </transition>
-              <transition id="ev_autoresolve">
-                <target>resolved</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">resolution_date</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>SetElapsedTime</verb>
-                    <params>
-                      <param xsi:type="attcode">time_spent</param>
-                      <param xsi:type="attcode">start_date</param>
-                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>ResolveChildTickets</verb>
-                    <params/>
-                  </action>
-                </actions>
-              </transition>
-            </transitions>
-          </state>
-          <state id="resolved">
-            <highlight>
-              <code>closed</code>
-            </highlight>
-            <inherit_flags_from>assigned</inherit_flags_from>
-            <flags>
-              <attribute id="caller_id">
-                <read_only/>
-              </attribute>
-              <attribute id="origin">
-                <read_only/>
-              </attribute>
-              <attribute id="impact">
-                <read_only/>
-              </attribute>
-              <attribute id="urgency">
-                <read_only/>
-              </attribute>
-              <attribute id="service_id">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="servicesubcategory_id">
-                <must_prompt/>
-              </attribute>
-              <attribute id="escalation_flag">
-                <read_only/>
-              </attribute>
-              <attribute id="escalation_reason">
-                <read_only/>
-              </attribute>
-              <attribute id="parent_request_id">
-                <read_only/>
-              </attribute>
-              <attribute id="parent_change_id">
-                <read_only/>
-              </attribute>
-              <attribute id="parent_problem_id">
-                <read_only/>
-              </attribute>
-              <attribute id="title">
-                <read_only/>
-              </attribute>
-              <attribute id="description">
-                <read_only/>
-              </attribute>
-              <attribute id="org_id">
-                <read_only/>
-              </attribute>
-              <attribute id="team_id">
-                <read_only/>
-              </attribute>
-              <attribute id="agent_id">
-                <read_only/>
-              </attribute>
-              <attribute id="request_type">
-                <read_only/>
-              </attribute>
-              <attribute id="resolution_date">
-                <read_only/>
-              </attribute>
-              <attribute id="time_spent">
-                <read_only/>
-              </attribute>
-              <attribute id="resolution_code">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="solution">
-                <mandatory/>
-                <must_prompt/>
-              </attribute>
-              <attribute id="pending_reason">
-                <read_only/>
-              </attribute>
-              <attribute id="sla_ttr_passed">
-                <read_only/>
-              </attribute>
-              <attribute id="ttr_escalation_deadline">
-                <hidden/>
-              </attribute>
-              <attribute id="sla_ttr_over">
-                <read_only/>
-              </attribute>
-            </flags>
-            <transitions>
-              <transition id="ev_close">
-                <target>closed</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">close_date</param>
-                    </params>
-                  </action>
-                </actions>
-              </transition>
-              <transition id="ev_reopen">
-                <target>assigned</target>
-                <actions>
-                </actions>
-              </transition>
-              <transition id="ev_autoresolve">
-                <target>resolved</target>
-                <actions>
-                  <action>
-                    <verb>SetCurrentDate</verb>
-                    <params>
-                      <param xsi:type="attcode">resolution_date</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>SetElapsedTime</verb>
-                    <params>
-                      <param xsi:type="attcode">time_spent</param>
-                      <param xsi:type="attcode">start_date</param>
-                      <param xsi:type="string">DefaultWorkingTimeComputer</param>
-                    </params>
-                  </action>
-                  <action>
-                    <verb>ResolveChildTickets</verb>
-                    <params/>
-                  </action>
-                </actions>
-              </transition>
-            </transitions>
-          </state>
-          <state id="closed">
-            <highlight>
-              <code>closed</code>
-            </highlight>
-            <inherit_flags_from>resolved</inherit_flags_from>
-            <flags>
-              <attribute id="private_log">
-                <read_only/>
-              </attribute>
-              <attribute id="public_log">
-                <read_only/>
-              </attribute>
-              <attribute id="functionalcis_list">
-                <read_only/>
-              </attribute>
-              <attribute id="contacts_list">
-                <read_only/>
-              </attribute>
-              <attribute id="service_id">
-                <read_only/>
-              </attribute>
-              <attribute id="servicesubcategory_id">
-                <read_only/>
-              </attribute>
-              <attribute id="close_date">
-                <read_only/>
-              </attribute>
-              <attribute id="resolution_code">
-                <read_only/>
-              </attribute>
-              <attribute id="solution">
-                <read_only/>
-              </attribute>
-              <attribute id="pending_reason">
-                <read_only/>
-              </attribute>
-              <attribute id="user_satisfaction">
-                <read_only/>              
-                <must_prompt/>
-              </attribute>
-              <attribute id="user_comment">
-				<read_only/>              
-                <must_prompt/>
-              </attribute>
-            </flags>
-            <transitions/>
-          </state>
-        </states>
-      </lifecycle>
-      <methods>
-        <method id="SetAssignedDate">
-          <comment><![CDATA[/**
+                <category>bizmodel,searchable,requestmgmt</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>ticket_request</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <naming>
+                    <attributes>
+                        <attribute id="ref"/>
+                    </attributes>
+                </naming>
+                <display_template/>
+                <icon>images/user-request.png</icon>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="ref"/>
+                    </attributes>
+                </reconciliation>
+                <order>
+                    <columns>
+                        <column id="ref" ascending="false"/>
+                    </columns>
+                </order>
+            </properties>
+            <fields>
+                <field id="status" xsi:type="AttributeEnum">
+                    <always_load_in_tables>true</always_load_in_tables>
+                    <values>
+                        <value id="new">new</value>
+                        <value id="waiting_for_approval">waiting_for_approval</value>
+                        <value id="approved">approved</value>
+                        <value id="rejected">rejected</value>
+                        <value id="assigned">assigned</value>
+                        <value id="pending">pending</value>
+                        <value id="escalated_tto">escalated_tto</value>
+                        <value id="escalated_ttr">escalated_ttr</value>
+                        <value id="resolved">resolved</value>
+                        <value id="closed">closed</value>
+                    </values>
+                    <sql>status</sql>
+                    <default_value>new</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <field id="request_type" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="incident">incident</value>
+                        <value id="service_request">service_request</value>
+                    </values>
+                    <sql>request_type</sql>
+                    <default_value></default_value>
+                    <is_null_allowed>true</is_null_allowed>
+                    <display_style>list</display_style>
+                </field>
+                <field id="impact" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="1">1</value>
+                        <value id="2">2</value>
+                        <value id="3">3</value>
+                    </values>
+                    <sql>impact</sql>
+                    <default_value>1</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                    <display_style>list</display_style>
+                </field>
+                <field id="priority" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="1">1</value>
+                        <value id="2">2</value>
+                        <value id="3">3</value>
+                        <value id="4">4</value>
+                    </values>
+                    <dependencies>
+                        <attribute id="impact"/>
+                        <attribute id="urgency"/>
+                    </dependencies>
+                    <sql>priority</sql>
+                    <default_value>4</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <field id="urgency" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="1">1</value>
+                        <value id="2">2</value>
+                        <value id="3">3</value>
+                        <value id="4">4</value>
+                    </values>
+                    <sql>urgency</sql>
+                    <default_value>4</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <field id="origin" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="mail">mail</value>
+                        <value id="phone">phone</value>
+                        <value id="portal">portal</value>
+                        <value id="monitoring">monitoring</value>
+                    </values>
+                    <sql>origin</sql>
+                    <default_value>phone</default_value>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="approver_id" xsi:type="AttributeExternalKey">
+                    <filter><![CDATA[SELECT Person WHERE org_id= :this->org_id]]></filter>
+                    <dependencies>
+                        <attribute id="org_id"/>
+                    </dependencies>
+                    <sql>approver_id</sql>
+                    <target_class>Person</target_class>
+                    <is_null_allowed>true</is_null_allowed>
+                    <on_target_delete>DEL_MANUAL</on_target_delete>
+                    <allow_target_creation>false</allow_target_creation>
+                    <jointype/>
+                </field>
+                <field id="approver_email" xsi:type="AttributeExternalField">
+                    <extkey_attcode>approver_id</extkey_attcode>
+                    <target_attcode>email</target_attcode>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="service_id" xsi:type="AttributeExternalKey">
+                    <filter>
+                        <![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :this->org_id AND s.status != 'obsolete']]></filter>
+                    <dependencies>
+                        <attribute id="org_id"/>
+                    </dependencies>
+                    <sql>service_id</sql>
+                    <target_class>Service</target_class>
+                    <is_null_allowed>true</is_null_allowed>
+                    <on_target_delete>DEL_MANUAL</on_target_delete>
+                    <allow_target_creation>false</allow_target_creation>
+                    <jointype/>
+                </field>
+                <field id="service_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>service_id</extkey_attcode>
+                    <target_attcode>name</target_attcode>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="servicesubcategory_id" xsi:type="AttributeExternalKey">
+                    <filter>
+                        <![CDATA[SELECT ServiceSubcategory WHERE service_id = :this->service_id AND (ISNULL(:this->request_type) OR request_type = :this->request_type) AND status != 'obsolete']]></filter>
+                    <dependencies>
+                        <attribute id="service_id"/>
+                        <attribute id="request_type"/>
+                    </dependencies>
+                    <sql>servicesubcategory_id</sql>
+                    <target_class>ServiceSubcategory</target_class>
+                    <is_null_allowed>true</is_null_allowed>
+                    <on_target_delete>DEL_MANUAL</on_target_delete>
+                    <allow_target_creation>false</allow_target_creation>
+                    <jointype/>
+                </field>
+                <field id="servicesubcategory_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>servicesubcategory_id</extkey_attcode>
+                    <target_attcode>name</target_attcode>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="escalation_flag" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="yes">yes</value>
+                        <value id="no">no</value>
+                    </values>
+                    <sql>escalation_flag</sql>
+                    <default_value>no</default_value>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="escalation_reason" xsi:type="AttributeString">
+                    <sql>escalation_reason</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="assignment_date" xsi:type="AttributeDateTime">
+                    <sql>assignment_date</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="resolution_date" xsi:type="AttributeDateTime">
+                    <sql>resolution_date</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="last_pending_date" xsi:type="AttributeDateTime">
+                    <sql>last_pending_date</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="cumulatedpending" xsi:type="AttributeStopWatch">
+                    <states>
+                        <state id="pending"/>
+                    </states>
+                    <working_time/>
+                    <thresholds/>
+                    <goal/>
+                </field>
+                <field id="tto" xsi:type="AttributeStopWatch">
+                    <always_load_in_tables>true</always_load_in_tables>
+                    <states>
+                        <state id="new"/>
+                        <state id="escalated_tto"/>
+                        <state id="approved"/>
+                    </states>
+                    <working_time/>
+                    <goal>ResponseTicketTTO</goal>
+                    <thresholds>
+                        <threshold id="75">
+                            <highlight>
+                                <code>warning</code>
+                                <persistent>false</persistent>
+                            </highlight>
+                            <actions>
+                            </actions>
+                        </threshold>
+                        <threshold id="100">
+                            <highlight>
+                                <code>critical</code>
+                                <persistent>false</persistent>
+                            </highlight>
+                            <actions>
+                                <action>
+                                    <verb>ApplyStimulus</verb>
+                                    <params>
+                                        <param>ev_timeout</param>
+                                    </params>
+                                </action>
+                            </actions>
+                        </threshold>
+                    </thresholds>
+                </field>
+                <field id="ttr" xsi:type="AttributeStopWatch">
+                    <always_load_in_tables>true</always_load_in_tables>
+                    <states>
+                        <state id="new"/>
+                        <state id="escalated_tto"/>
+                        <state id="assigned"/>
+                        <state id="approved"/>
+                        <state id="escalated_ttr"/>
+                    </states>
+                    <working_time/>
+                    <goal>ResponseTicketTTR</goal>
+                    <thresholds>
+                        <threshold id="75">
+                            <highlight>
+                                <code>warning</code>
+                                <persistent>false</persistent>
+                            </highlight>
+                            <actions>
+                            </actions>
+                        </threshold>
+                        <threshold id="100">
+                            <highlight>
+                                <code>critical</code>
+                                <persistent>false</persistent>
+                            </highlight>
+                            <actions>
+                                <action>
+                                    <verb>ApplyStimulus</verb>
+                                    <params>
+                                        <param>ev_timeout</param>
+                                    </params>
+                                </action>
+                            </actions>
+                        </threshold>
+                    </thresholds>
+                </field>
+                <field id="tto_escalation_deadline" xsi:type="AttributeSubItem">
+                    <target_attcode>tto</target_attcode>
+                    <item_code>100_deadline</item_code>
+                </field>
+                <field id="sla_tto_passed" xsi:type="AttributeSubItem">
+                    <target_attcode>tto</target_attcode>
+                    <item_code>100_passed</item_code>
+                </field>
+                <field id="sla_tto_over" xsi:type="AttributeSubItem">
+                    <target_attcode>tto</target_attcode>
+                    <item_code>100_overrun</item_code>
+                </field>
+                <field id="ttr_escalation_deadline" xsi:type="AttributeSubItem">
+                    <target_attcode>ttr</target_attcode>
+                    <item_code>100_deadline</item_code>
+                </field>
+                <field id="sla_ttr_passed" xsi:type="AttributeSubItem">
+                    <target_attcode>ttr</target_attcode>
+                    <item_code>100_passed</item_code>
+                </field>
+                <field id="sla_ttr_over" xsi:type="AttributeSubItem">
+                    <target_attcode>ttr</target_attcode>
+                    <item_code>100_overrun</item_code>
+                </field>
+                <field id="time_spent" xsi:type="AttributeDuration">
+                    <sql>time_spent</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="resolution_code" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="assistance">assistance</value>
+                        <value id="other">other</value>
+                        <value id="software patch">software patch</value>
+                        <value id="training">training</value>
+                        <value id="hardware repair">hardware repair</value>
+                        <value id="system update">system update</value>
+                        <value id="bug fixed">bug fixed</value>
+                    </values>
+                    <sql>resolution_code</sql>
+                    <default_value>assistance</default_value>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="solution" xsi:type="AttributeText">
+                    <sql>solution</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="pending_reason" xsi:type="AttributeText">
+                    <sql>pending_reason</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="parent_request_id" xsi:type="AttributeExternalKey">
+                    <filter>
+                        <![CDATA[SELECT UserRequest WHERE id != :this->id AND status NOT IN ('rejected','resolved','closed')]]></filter>
+                    <dependencies>
+                    </dependencies>
+                    <sql>parent_request_id</sql>
+                    <target_class>UserRequest</target_class>
+                    <is_null_allowed>true</is_null_allowed>
+                    <on_target_delete>DEL_MANUAL</on_target_delete>
+                    <jointype/>
+                </field>
+                <field id="parent_request_ref" xsi:type="AttributeExternalField">
+                    <extkey_attcode>parent_request_id</extkey_attcode>
+                    <target_attcode>ref</target_attcode>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="parent_problem_id" xsi:type="AttributeExternalKey">
+                    <sql>parent_problem_id</sql>
+                    <target_class>Problem</target_class>
+                    <is_null_allowed>true</is_null_allowed>
+                    <on_target_delete>DEL_MANUAL</on_target_delete>
+                    <jointype/>
+                </field>
+                <field id="parent_problem_ref" xsi:type="AttributeExternalField">
+                    <extkey_attcode>parent_problem_id</extkey_attcode>
+                    <target_attcode>ref</target_attcode>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="parent_change_id" xsi:type="AttributeExternalKey">
+                    <filter><![CDATA[SELECT Change WHERE status != "closed"]]></filter>
+                    <sql>parent_change_id</sql>
+                    <target_class>Change</target_class>
+                    <is_null_allowed>true</is_null_allowed>
+                    <on_target_delete>DEL_MANUAL</on_target_delete>
+                    <jointype/>
+                </field>
+                <field id="parent_change_ref" xsi:type="AttributeExternalField">
+                    <extkey_attcode>parent_change_id</extkey_attcode>
+                    <target_attcode>ref</target_attcode>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="related_request_list" xsi:type="AttributeLinkedSet">
+                    <linked_class>UserRequest</linked_class>
+                    <ext_key_to_me>parent_request_id</ext_key_to_me>
+                    <edit_mode>add_remove</edit_mode>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                </field>
+                <field id="public_log" xsi:type="AttributeCaseLog">
+                    <sql>public_log</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="user_satisfaction" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="1">1</value>
+                        <value id="2">2</value>
+                        <value id="3">3</value>
+                        <value id="4">4</value>
+                    </values>
+                    <sql>user_satisfaction</sql>
+                    <default_value>1</default_value>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="user_comment" xsi:type="AttributeText">
+                    <sql>user_commment</sql>
+                    <default_value/>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+            </fields>
+            <lifecycle>
+                <highlight_scale>
+                    <item id="warning">
+                        <rank>1</rank>
+                        <color>HIGHLIGHT_CLASS_WARNING</color>
+                        <icon>images/user-request-deadline.png</icon>
+                    </item>
+                    <item id="critical">
+                        <rank>2</rank>
+                        <color>HIGHLIGHT_CLASS_CRITICAL</color>
+                        <icon>images/user-request-escalated.png</icon>
+                    </item>
+                    <item id="closed">
+                        <rank>3</rank>
+                        <color>HIGHLIGHT_CLASS_NONE</color>
+                        <icon>images/user-request-closed.png</icon>
+                    </item>
+                </highlight_scale>
+                <attribute>status</attribute>
+                <stimuli>
+                    <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_approve" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_reject" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_pending" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_timeout" xsi:type="StimulusInternal"/>
+                    <stimulus id="ev_autoresolve" xsi:type="StimulusInternal"/>
+                    <stimulus id="ev_autoclose" xsi:type="StimulusInternal"/>
+                    <stimulus id="ev_resolve" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_close" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_reopen" xsi:type="StimulusUserAction"/>
+                    <stimulus id="ev_wait_for_approval" xsi:type="StimulusUserAction"/>
+                </stimuli>
+                <states>
+                    <state id="new">
+                        <flags>
+                            <attribute id="ref">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="org_id">
+                                <mandatory/>
+                            </attribute>
+                            <attribute id="caller_id">
+                                <mandatory/>
+                            </attribute>
+                            <attribute id="team_id">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="priority">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="agent_id">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="start_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="last_update">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="close_date">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="approver_id">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="escalation_flag">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="escalation_reason">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="assignment_date">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="resolution_date">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="last_pending_date">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="time_spent">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="resolution_code">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="solution">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="pending_reason">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="user_satisfaction">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="user_comment">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="tto_escalation_deadline">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="sla_tto_passed">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="sla_tto_over">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="sla_ttr_passed">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="ttr_escalation_deadline">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="sla_ttr_over">
+                                <hidden/>
+                            </attribute>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_assign">
+                                <target>assigned</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">assignment_date</param>
+                                        </params>
+                                    </action>
+                                </actions>
+                            </transition>
+                            <transition id="ev_timeout">
+                                <target>escalated_tto</target>
+                                <actions/>
+                            </transition>
+                            <transition id="ev_wait_for_approval">
+                                <target>waiting_for_approval</target>
+                                <actions/>
+                            </transition>
+                            <transition id="ev_autoresolve">
+                                <target>resolved</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">resolution_date</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>SetElapsedTime</verb>
+                                        <params>
+                                            <param xsi:type="attcode">time_spent</param>
+                                            <param xsi:type="attcode">start_date</param>
+                                            <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>ResolveChildTickets</verb>
+                                        <params/>
+                                    </action>
+                                </actions>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="escalated_tto">
+                        <highlight>
+                            <code>critical</code>
+                        </highlight>
+                        <inherit_flags_from>new</inherit_flags_from>
+                        <flags>
+                            <attribute id="team_id"/>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_assign">
+                                <target>assigned</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">assignment_date</param>
+                                        </params>
+                                    </action>
+                                </actions>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="assigned">
+                        <inherit_flags_from>new</inherit_flags_from>
+                        <flags>
+                            <attribute id="request_type">
+                                <mandatory/>
+                            </attribute>
+                            <attribute id="team_id">
+                                <mandatory/>
+                                <must_prompt/>
+                                <read_only/>
+                            </attribute>
+                            <attribute id="agent_id">
+                                <mandatory/>
+                                <must_prompt/>
+                                <read_only/>
+                            </attribute>
+                            <attribute id="approver_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="assignment_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="tto_escalation_deadline">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="sla_tto_passed">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="sla_tto_over">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="ttr_escalation_deadline">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="caller_id"/>
+                            <attribute id="escalation_flag"/>
+                            <attribute id="escalation_reason"/>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_pending">
+                                <target>pending</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">last_pending_date</param>
+                                        </params>
+                                    </action>
+                                </actions>
+                            </transition>
+                            <transition id="ev_resolve">
+                                <target>resolved</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">resolution_date</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>SetElapsedTime</verb>
+                                        <params>
+                                            <param xsi:type="attcode">time_spent</param>
+                                            <param xsi:type="attcode">start_date</param>
+                                            <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>ResolveChildTickets</verb>
+                                        <params/>
+                                    </action>
+                                </actions>
+                            </transition>
+                            <transition id="ev_reassign">
+                                <target>assigned</target>
+                                <actions/>
+                                <flags>
+                                    <attribute id="agent_id">
+                                        <must_change/>
+                                    </attribute>
+                                    <attribute id="team_id">
+                                        <must_prompt/>
+                                    </attribute>
+                                </flags>
+                            </transition>
+                            <transition id="ev_timeout">
+                                <target>escalated_ttr</target>
+                                <actions/>
+                            </transition>
+                            <transition id="ev_autoresolve">
+                                <target>resolved</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">resolution_date</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>SetElapsedTime</verb>
+                                        <params>
+                                            <param xsi:type="attcode">time_spent</param>
+                                            <param xsi:type="attcode">start_date</param>
+                                            <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>ResolveChildTickets</verb>
+                                        <params/>
+                                    </action>
+                                </actions>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="escalated_ttr">
+                        <highlight>
+                            <code>critical</code>
+                        </highlight>
+                        <inherit_flags_from>assigned</inherit_flags_from>
+                        <flags/>
+                        <transitions>
+                            <transition id="ev_pending">
+                                <target>pending</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">last_pending_date</param>
+                                        </params>
+                                    </action>
+                                </actions>
+                            </transition>
+                            <transition id="ev_resolve">
+                                <target>resolved</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">resolution_date</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>SetElapsedTime</verb>
+                                        <params>
+                                            <param xsi:type="attcode">time_spent</param>
+                                            <param xsi:type="attcode">start_date</param>
+                                            <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>ResolveChildTickets</verb>
+                                        <params/>
+                                    </action>
+                                </actions>
+                            </transition>
+                            <transition id="ev_reassign">
+                                <target>assigned</target>
+                                <actions/>
+                            </transition>
+                            <transition id="ev_autoresolve">
+                                <target>resolved</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">resolution_date</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>SetElapsedTime</verb>
+                                        <params>
+                                            <param xsi:type="attcode">time_spent</param>
+                                            <param xsi:type="attcode">start_date</param>
+                                            <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>ResolveChildTickets</verb>
+                                        <params/>
+                                    </action>
+                                </actions>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="waiting_for_approval">
+                        <inherit_flags_from>new</inherit_flags_from>
+                        <flags>
+                            <attribute id="approver_id">
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="team_id"/>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_approve">
+                                <target>approved</target>
+                                <actions/>
+                            </transition>
+                            <transition id="ev_reject">
+                                <target>rejected</target>
+                                <actions/>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="approved">
+                        <inherit_flags_from>waiting_for_approval</inherit_flags_from>
+                        <flags>
+                            <attribute id="approver_id">
+                                <read_only/>
+                            </attribute>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_timeout">
+                                <target>escalated_tto</target>
+                                <actions/>
+                            </transition>
+                            <transition id="ev_assign">
+                                <target>assigned</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">assignment_date</param>
+                                        </params>
+                                    </action>
+                                </actions>
+                            </transition>
+                            <transition id="ev_autoresolve">
+                                <target>resolved</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">resolution_date</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>SetElapsedTime</verb>
+                                        <params>
+                                            <param xsi:type="attcode">time_spent</param>
+                                            <param xsi:type="attcode">start_date</param>
+                                            <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>ResolveChildTickets</verb>
+                                        <params/>
+                                    </action>
+                                </actions>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="rejected">
+                        <inherit_flags_from>new</inherit_flags_from>
+                        <flags>
+                            <attribute id="tto_escalation_deadline">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="team_id"/>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_reopen">
+                                <target>new</target>
+                                <actions/>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="pending">
+                        <inherit_flags_from>assigned</inherit_flags_from>
+                        <flags>
+                            <attribute id="last_pending_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="pending_reason">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="ttr_escalation_deadline">
+                                <hidden/>
+                            </attribute>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_assign">
+                                <target>assigned</target>
+                                <actions>
+                                </actions>
+                            </transition>
+                            <transition id="ev_autoresolve">
+                                <target>resolved</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">resolution_date</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>SetElapsedTime</verb>
+                                        <params>
+                                            <param xsi:type="attcode">time_spent</param>
+                                            <param xsi:type="attcode">start_date</param>
+                                            <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>ResolveChildTickets</verb>
+                                        <params/>
+                                    </action>
+                                </actions>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="resolved">
+                        <highlight>
+                            <code>closed</code>
+                        </highlight>
+                        <inherit_flags_from>assigned</inherit_flags_from>
+                        <flags>
+                            <attribute id="caller_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="origin">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="impact">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="urgency">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="service_id">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="servicesubcategory_id">
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="escalation_flag">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="escalation_reason">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="parent_request_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="parent_change_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="parent_problem_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="title">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="description">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="org_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="team_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="agent_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="request_type">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="resolution_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="time_spent">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="resolution_code">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="solution">
+                                <mandatory/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="pending_reason">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="sla_ttr_passed">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="ttr_escalation_deadline">
+                                <hidden/>
+                            </attribute>
+                            <attribute id="sla_ttr_over">
+                                <read_only/>
+                            </attribute>
+                        </flags>
+                        <transitions>
+                            <transition id="ev_close">
+                                <target>closed</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">close_date</param>
+                                        </params>
+                                    </action>
+                                </actions>
+                            </transition>
+                            <transition id="ev_reopen">
+                                <target>assigned</target>
+                                <actions>
+                                </actions>
+                            </transition>
+                            <transition id="ev_autoresolve">
+                                <target>resolved</target>
+                                <actions>
+                                    <action>
+                                        <verb>SetCurrentDate</verb>
+                                        <params>
+                                            <param xsi:type="attcode">resolution_date</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>SetElapsedTime</verb>
+                                        <params>
+                                            <param xsi:type="attcode">time_spent</param>
+                                            <param xsi:type="attcode">start_date</param>
+                                            <param xsi:type="string">DefaultWorkingTimeComputer</param>
+                                        </params>
+                                    </action>
+                                    <action>
+                                        <verb>ResolveChildTickets</verb>
+                                        <params/>
+                                    </action>
+                                </actions>
+                            </transition>
+                        </transitions>
+                    </state>
+                    <state id="closed">
+                        <highlight>
+                            <code>closed</code>
+                        </highlight>
+                        <inherit_flags_from>resolved</inherit_flags_from>
+                        <flags>
+                            <attribute id="private_log">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="public_log">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="functionalcis_list">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="contacts_list">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="service_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="servicesubcategory_id">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="close_date">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="resolution_code">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="solution">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="pending_reason">
+                                <read_only/>
+                            </attribute>
+                            <attribute id="user_satisfaction">
+                                <read_only/>
+                                <must_prompt/>
+                            </attribute>
+                            <attribute id="user_comment">
+                                <read_only/>
+                                <must_prompt/>
+                            </attribute>
+                        </flags>
+                        <transitions/>
+                    </state>
+                </states>
+            </lifecycle>
+            <methods>
+                <method id="SetAssignedDate">
+                    <comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead
 	 * @return void
 	 */]]></comment>
-					<static>false</static>
-					<access>public</access>
-					<type>LifecycleAction</type>
-					<code><![CDATA[	public function SetAssignedDate($sStimulusCode)
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[	public function SetAssignedDate($sStimulusCode)
 	{
 		$this->Set('assignment_date', time());
 		return true;
 	}]]></code>
-				</method>
-				<method id="SetLastPendingDate">
-					<comment><![CDATA[/**
+                </method>
+                <method id="SetLastPendingDate">
+                    <comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead
 	 * @return void
 	 */]]></comment>
-					<static>false</static>
-					<access>public</access>
-					<type>LifecycleAction</type>
-					<code><![CDATA[	public function SetLastPendingDate($sStimulusCode)
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[	public function SetLastPendingDate($sStimulusCode)
 	{
 		$this->Set('last_pending_date', time());
 		return true;
 	}]]></code>
-				</method>
-				<method id="SetResolveDate">
-					<comment><![CDATA[/**
+                </method>
+                <method id="SetResolveDate">
+                    <comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() and SetElapsedTime() instead
 	 * @return void
 	 */]]></comment>
-					<static>false</static>
-					<access>public</access>
-					<type>LifecycleAction</type>
-					<code><![CDATA[	public function SetResolveDate($sStimulusCode)
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[	public function SetResolveDate($sStimulusCode)
 	{
 		$this->Set('resolution_date', time());
                 $iTimeSpent = time() - AttributeDateTime::GetAsUnixSeconds($this->Get('start_date'));
 		$this->Set('time_spent', $iTimeSpent);
 		return true;
 	}]]></code>
-				</method>
-				<method id="SetClosureDate">
-					<comment><![CDATA[/**
+                </method>
+                <method id="SetClosureDate">
+                    <comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead
 	 * @return void
 	 */]]></comment>
-					<static>false</static>
-					<access>public</access>
-					<type>LifecycleAction</type>
-					<code><![CDATA[	public function SetClosureDate($sStimulusCode)
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[	public function SetClosureDate($sStimulusCode)
 	{
 		$this->Set('close_date', time());
 		return true;
 	}]]></code>
-				</method>
-				<method id="SetApprover">
-					<comment><![CDATA[/**
+                </method>
+                <method id="SetApprover">
+                    <comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentUser() instead
 	 * @return void
 	 */]]></comment>
-					<static>false</static>
-					<access>public</access>
-					<type>LifecycleAction</type>
-					<code><![CDATA[	public function SetApprover($sStimulusCode)
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[	public function SetApprover($sStimulusCode)
 	{
 		$this->Set('approver_id', UserRights::GetUserId());
 		return true;
 	}]]></code>
-				</method>
-				<method id="DoCheckToWrite">
-					<static>false</static>
-					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[public function DoCheckToWrite()
+                </method>
+                <method id="DoCheckToWrite">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[public function DoCheckToWrite()
   {
     parent::DoCheckToWrite();
     if (!$this->IsNew() && ($this->Get('parent_request_id') == $this->GetKey()))
@@ -1160,15 +1170,16 @@
       $this->m_aCheckIssues[] = Dict::Format('Class:UserRequest/Error:CannotAssignParentRequestIdToSelf');
     }
   }]]></code>
-				</method>
-				<method id="ComputePriority">
-					<comment>/** Compute the priority of the ticket based on its impact and urgency&#13;
-						* @return integer The priority of the ticket 1(high) .. 3(low)&#13;
-						*/</comment>
-					<static>false</static>
-					<access>public</access>
-					<type>LifecycleAction</type>
-					<code><![CDATA[        public function ComputePriority()
+                </method>
+                <method id="ComputePriority">
+                    <comment>/** Compute the priority of the ticket based on its impact and urgency&#13;
+                        * @return integer The priority of the ticket 1(high) .. 3(low)&#13;
+                        */
+                    </comment>
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[        public function ComputePriority()
         {
                 // priority[impact][urgency]
                 $aPriorities = array(
@@ -1201,12 +1212,12 @@
                 }
                 return $iPriority;              
         }]]></code>
-				</method>
-				<method id="ComputeValues">
-					<static>false</static>
-					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[	public function ComputeValues()
+                </method>
+                <method id="ComputeValues">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[	public function ComputeValues()
 	{
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
@@ -1225,12 +1236,12 @@
 
 		return parent::ComputeValues();
 	}]]></code>
-				</method>
-				<method id="DisplayBareRelations">
-					<static>false</static>
-					<access>public</access>
-					<type>Overload-cmdbAbstractObject</type>
-					<code><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+                </method>
+                <method id="DisplayBareRelations">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-cmdbAbstractObject</type>
+                    <code><![CDATA[	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
@@ -1255,15 +1266,15 @@
 			}
 		}
 	}]]></code>
-				</method>
-				<method id="resolveChilds">
-					<comment><![CDATA[/**
+                </method>
+                <method id="resolveChilds">
+                    <comment><![CDATA[/**
 	 * To be deprecated: use ResolveChildTickets() instead
 	 */]]></comment>
-					<static>false</static>
-					<access>public</access>
-					<type>LifecycleAction</type>
-					<code><![CDATA[	public function resolveChilds($sStimulusCode)
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[	public function resolveChilds($sStimulusCode)
 	{
 				
 		$sOQL = "SELECT UserRequest WHERE parent_request_id=:ticket";
@@ -1290,18 +1301,18 @@
 		return true;
 
 	}]]></code>
-				</method>
-				<method id="ResolveChildTickets">
-					<comment><![CDATA[/**
+                </method>
+                <method id="ResolveChildTickets">
+                    <comment><![CDATA[/**
 	 * Cascade the resolution to child User Request
 	 * @return true (returning false would stop the ongoing transition)
 	 */]]></comment>
-					<static>false</static>
-					<access>public</access>
-					<type>LifecycleAction</type>
-					<arguments>
-					</arguments>
-					<code><![CDATA[	public function ResolveChildTickets()
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <arguments>
+                    </arguments>
+                    <code><![CDATA[	public function ResolveChildTickets()
 	{
 		static $aTickets = array(); // prevent infinite recursion
 		
@@ -1318,16 +1329,16 @@
 		}
 		return true;
 	}]]></code>
-				</method>
-				<method id="ResolveFrom">
-					<comment><![CDATA[/**
+                </method>
+                <method id="ResolveFrom">
+                    <comment><![CDATA[/**
 	 * Resolve the ticket from another resolved ticket
 	 * @return void
 	 */]]></comment>
-					<static>false</static>
-					<access>public</access>
-					<type>Internal</type>
-					<code><![CDATA[	public function ResolveFrom($oParentTicket)
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Internal</type>
+                    <code><![CDATA[	public function ResolveFrom($oParentTicket)
 	{
 		if ($this->Get('status') != 'resolved')
 		{
@@ -1342,12 +1353,12 @@
 			$this->DBUpdate();
 		}
 	}]]></code>
-				</method>
-				<method id="UpdateChildRequestLog">
-					<static>false</static>
-					<access>public</access>
-					<type>LifecycleAction</type>
-					<code><![CDATA[	public function UpdateChildRequestLog()
+                </method>
+                <method id="UpdateChildRequestLog">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[	public function UpdateChildRequestLog()
 	{
 		$oLog = $this->Get('public_log');
 		$sLogPublic = $oLog->GetModifiedEntry('html');
@@ -1387,12 +1398,12 @@
 		return true;
 
 	}]]></code>
-				</method>
-				<method id="ComputeImpactedItems">
-					<static>false</static>
-					<access>public</access>
-					<type>LifecycleAction</type>
-					<code><![CDATA[
+                </method>
+                <method id="ComputeImpactedItems">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>LifecycleAction</type>
+                    <code><![CDATA[
     public function ComputeImpactedItems()
 	{
         // This method is kept for backward compatibility
@@ -1400,12 +1411,12 @@
         // UpdateImpactedItems directly
 		$this->UpdateImpactedItems();
 	}]]></code>
-				</method>
-				<method id="OnInsert">
-					<static>false</static>
-					<access>protected</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[
+                </method>
+                <method id="OnInsert">
+                    <static>false</static>
+                    <access>protected</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
     protected function OnInsert()
 	{
         parent::OnInsert();
@@ -1413,12 +1424,12 @@
 		$this->Set('last_update', time());
 		$this->Set('start_date', time());
 	}]]></code>
-				</method>
-				<method id="OnUpdate">
-					<static>false</static>
-					<access>protected</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[
+                </method>
+                <method id="OnUpdate">
+                    <static>false</static>
+                    <access>protected</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
    	protected function OnUpdate()
 	{
         parent::OnUpdate();
@@ -1430,512 +1441,523 @@
 		$this->Set('last_update', time());
 		$this->UpdateChildRequestLog();
 	}]]></code>
-				</method>
-			</methods>
-			<presentation>
-				<details>
-					<items>
-						<item id="functionalcis_list">
-							<rank>10</rank>
-						</item>
-						<item id="contacts_list">
-							<rank>20</rank>
-						</item>
-						<item id="related_request_list">
-							<rank>30</rank>
-						</item>
-						<item id="workorders_list">
-							<rank>40</rank>
-						</item>
-						<item id="col:col1">
-							<rank>50</rank>
-							<items>
-								<item id="fieldset:Ticket:baseinfo">
-									<rank>10</rank>
-									<items>
-										<item id="org_id">
-											<rank>10</rank>
-										</item>
-										<item id="caller_id">
-											<rank>20</rank>
-										</item>
-										<item id="status">
-											<rank>30</rank>
-										</item>
-										<item id="origin">
-											<rank>40</rank>
-										</item>
-										<item id="title">
-											<rank>50</rank>
-										</item>
-										<item id="description">
-											<rank>60</rank>
-										</item>
-									</items>
-								</item>
-								<item id="fieldset:Ticket:moreinfo">
-									<rank>20</rank>
-									<items>
-										<item id="service_id">
-											<rank>10</rank>
-										</item>
-										<item id="servicesubcategory_id">
-											<rank>20</rank>
-										</item>
-										<item id="escalation_flag">
-											<rank>30</rank>
-										</item>
-										<item id="escalation_reason">
-											<rank>40</rank>
-										</item>
-										<item id="pending_reason">
-											<rank>50</rank>
-										</item>
-									</items>
-								</item>
-							</items>
-						</item>
-						<item id="col:col2">
-							<rank>60</rank>
-							<items>
-								<item id="fieldset:Ticket:Type">
-									<rank>10</rank>
-									<items>
-										<item id="request_type">
-											<rank>10</rank>
-										</item>
-										<item id="impact">
-											<rank>20</rank>
-										</item>
-										<item id="urgency">
-											<rank>30</rank>
-										</item>
-										<item id="priority">
-											<rank>40</rank>
-										</item>
-									</items>
-								</item>
-								<item id="fieldset:Ticket:contact">
-									<rank>20</rank>
-									<items>
-										<item id="team_id">
-											<rank>10</rank>
-										</item>
-										<item id="agent_id">
-											<rank>20</rank>
-										</item>
-										<item id="approver_id">
-											<rank>30</rank>
-										</item>
-									</items>
-								</item>
-								<item id="fieldset:Ticket:date">
-									<rank>30</rank>
-									<items>
-										<item id="start_date">
-											<rank>10</rank>
-										</item>
-										<item id="last_update">
-											<rank>20</rank>
-										</item>
-										<item id="assignment_date">
-											<rank>30</rank>
-										</item>
-										<item id="tto_escalation_deadline">
-											<rank>40</rank>
-										</item>
-										<item id="ttr_escalation_deadline">
-											<rank>50</rank>
-										</item>
-										<item id="last_pending_date">
-											<rank>60</rank>
-										</item>
-										<item id="resolution_date">
-											<rank>70</rank>
-										</item>
-										<item id="close_date">
-											<rank>80</rank>
-										</item>
-									</items>
-								</item>
-							</items>
-						</item>
-						<item id="col:col3">
-							<rank>70</rank>
-							<items>
-								<item id="fieldset:Ticket:relation">
-									<rank>10</rank>
-									<items>
-										<item id="parent_request_id">
-											<rank>10</rank>
-										</item>
-										<item id="parent_problem_id">
-											<rank>20</rank>
-										</item>
-										<item id="parent_change_id">
-											<rank>30</rank>
-										</item>
-									</items>
-								</item>
-								<item id="fieldset:Ticket:resolution">
-									<rank>20</rank>
-									<items>
-										<item id="resolution_code">
-											<rank>10</rank>
-										</item>
-										<item id="solution">
-											<rank>20</rank>
-										</item>
-										<item id="time_spent">
-											<rank>30</rank>
-										</item>
-										<item id="user_satisfaction">
-											<rank>40</rank>
-										</item>
-										<item id="user_comment">
-											<rank>50</rank>
-										</item>
-									</items>
-								</item>
-								<item id="fieldset:Ticket:SLA">
-									<rank>30</rank>
-									<items>
-										<item id="sla_tto_passed">
-											<rank>10</rank>
-										</item>
-										<item id="sla_tto_over">
-											<rank>20</rank>
-										</item>
-										<item id="sla_ttr_passed">
-											<rank>30</rank>
-										</item>
-										<item id="sla_ttr_over">
-											<rank>40</rank>
-										</item>
-									</items>
-								</item>
-							</items>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="ref">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="title">
-							<rank>30</rank>
-						</item>
-						<item id="description">
-							<rank>40</rank>
-						</item>
-						<item id="start_date">
-							<rank>50</rank>
-						</item>
-						<item id="resolution_date">
-							<rank>70</rank>
-						</item>
-						<item id="close_date">
-							<rank>80</rank>
-						</item>
-						<item id="status">
-							<rank>90</rank>
-						</item>
-						<item id="operational_status">
-							<rank>95</rank>
-						</item>
-						<item id="caller_id">
-							<rank>100</rank>
-						</item>
-						<item id="origin">
-							<rank>110</rank>
-						</item>
-						<item id="request_type">
-							<rank>120</rank>
-						</item>
-						<item id="impact">
-							<rank>130</rank>
-						</item>
-						<item id="urgency">
-							<rank>140</rank>
-						</item>
-						<item id="priority">
-							<rank>150</rank>
-						</item>
-						<item id="service_id">
-							<rank>160</rank>
-						</item>
-						<item id="servicesubcategory_id">
-							<rank>170</rank>
-						</item>
-						<item id="team_id">
-							<rank>180</rank>
-						</item>
-						<item id="agent_id">
-							<rank>190</rank>
-						</item>
-						<item id="escalation_flag">
-							<rank>200</rank>
-						</item>
-						<item id="resolution_code">
-							<rank>210</rank>
-						</item>
-						<item id="user_satisfaction">
-							<rank>220</rank>
-						</item>
-						<item id="sla_tto_passed">
-							<rank>230</rank>
-						</item>
-						<item id="sla_ttr_passed">
-							<rank>240</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="title">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="caller_id">
-							<rank>30</rank>
-						</item>
-						<item id="start_date">
-							<rank>40</rank>
-						</item>
-						<item id="status">
-							<rank>50</rank>
-						</item>
-						<item id="agent_id">
-							<rank>60</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-	</classes>
-	<menus>
-		<menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="must_exist">
-			<definition>
-				<cells>
-					<cell id="1" _delta="define">
-						<rank>1</rank>
-						<dashlets>
-							<dashlet id="9" xsi:type="DashletHeaderDynamic">
-								<rank>0</rank>
-								<title>Menu:RequestManagement</title>
-								<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
-								<subtitle>Menu:UserRequest:OpenRequests</subtitle>
-								<query>SELECT UserRequest WHERE status != "closed"</query>
-								<group_by>status</group_by>
-								<values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
-							</dashlet>
-							<dashlet id="10" xsi:type="DashletObjectList">
-								<rank>1</rank>
-								<title>UI:WelcomeMenu:MyCalls</title>
-								<query>SELECT UserRequest AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")</query>
-								<menu>true</menu>
-							</dashlet>
-						</dashlets>
-					</cell>
-				</cells>
-			</definition>
-		</menu>
-		<menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
-			<rank>30</rank>
-			<enable_stimulus/>
-		</menu>
-		<menu id="UserRequest:Overview" xsi:type="DashboardMenuNode" _delta="define">
-			<rank>0</rank>
-			<parent>RequestManagement</parent>
-			<definition>
-				<layout>DashboardLayoutTwoCols</layout>
-				<title>UI:RequestMgmtMenuOverview:Title</title>
-				<cells>
-					<cell id="0">
-						<rank>0</rank>
-						<dashlets>
-							<dashlet id="1" xsi:type="DashletGroupByPie">
-								<rank>0</rank>
-								<title>UI-RequestManagementOverview-RequestByType-last-14-days</title>
-								<query>SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
-								<group_by>request_type</group_by>
-								<style>pie</style>
-							</dashlet>
-						</dashlets>
-					</cell>
-					<cell id="1">
-						<rank>1</rank>
-						<dashlets>
-							<dashlet id="2" xsi:type="DashletGroupByBars">
-								<rank>0</rank>
-								<title>UI-RequestManagementOverview-Last-14-days</title>
-								<query>SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
-								<group_by>start_date:day_of_month</group_by>
-								<style>bars</style>
-							</dashlet>
-						</dashlets>
-					</cell>
-					<cell id="11">
-						<rank>2</rank>
-						<dashlets>
-							<dashlet id="3" xsi:type="DashletGroupByTable">
-								<rank>0</rank>
-								<title>UI-RequestManagementOverview-OpenRequestByStatus</title>
-								<query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
-								<group_by>status</group_by>
-								<style>table</style>
-							</dashlet>
-						</dashlets>
-					</cell>
-					<cell id="2">
-						<rank>3</rank>
-						<dashlets>
-							<dashlet id="4" xsi:type="DashletGroupByTable">
-								<rank>0</rank>
-								<title>UI-RequestManagementOverview-OpenRequestByAgent</title>
-								<query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
-								<group_by>agent_id</group_by>
-								<style>table</style>
-							</dashlet>
-						</dashlets>
-					</cell>
-					<cell id="3">
-						<rank>4</rank>
-						<dashlets>
-							<dashlet id="5" xsi:type="DashletGroupByTable">
-								<rank>0</rank>
-								<title>UI-RequestManagementOverview-OpenRequestByType</title>
-								<query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
-								<group_by>finalclass</group_by>
-								<style>table</style>
-							</dashlet>
-						</dashlets>
-					</cell>
-					<cell id="4">
-						<rank>5</rank>
-						<dashlets>
-							<dashlet id="6" xsi:type="DashletGroupByTable">
-								<rank>0</rank>
-								<title>UI-RequestManagementOverview-OpenRequestByCustomer</title>
-								<query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
-								<group_by>org_id</group_by>
-								<style>table</style>
-							</dashlet>
-						</dashlets>
-					</cell>
-				</cells>
-			</definition>
-		</menu>
-		<menu id="NewUserRequest" xsi:type="NewObjectMenuNode" _delta="define">
-			<rank>1</rank>
-			<parent>RequestManagement</parent>
-			<class>UserRequest</class>
-		</menu>
-		<menu id="SearchUserRequests" xsi:type="SearchMenuNode" _delta="define">
-			<rank>2</rank>
-			<parent>RequestManagement</parent>
-			<class>UserRequest</class>
-		</menu>
-		<menu id="UserRequest:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
-			<rank>3</rank>
-			<parent>RequestManagement</parent>
-			<template_file/>
-		</menu>
-		<menu id="UserRequest:MyRequests" xsi:type="OQLMenuNode" _delta="define">
-			<rank>0</rank>
-			<parent>UserRequest:Shortcuts</parent>
-			<oql><![CDATA[SELECT UserRequest WHERE agent_id = :current_contact_id AND status NOT IN ("closed","resolved")]]></oql>
-			<do_search/>
-			<auto_reload>fast</auto_reload>
-		</menu>
-		<menu id="UserRequest:EscalatedRequests" xsi:type="OQLMenuNode" _delta="define">
-			<rank>1</rank>
-			<parent>UserRequest:Shortcuts</parent>
-			<oql><![CDATA[SELECT UserRequest WHERE status IN ("escalated_tto", "escalated_ttr") OR escalation_flag="yes"]]></oql>
-			<do_search/>
-			<auto_reload>fast</auto_reload>
-		</menu>
-		<menu id="UserRequest:OpenRequests" xsi:type="OQLMenuNode" _delta="define">
-			<rank>2</rank>
-			<parent>UserRequest:Shortcuts</parent>
-			<oql><![CDATA[SELECT UserRequest WHERE status NOT IN ("closed")]]></oql>
-			<do_search>1</do_search>
-			<auto_reload>fast</auto_reload>
-		</menu>
-		<menu id="UserRequest:MySupportRequests" xsi:type="OQLMenuNode" _delta="define">
-			<rank>3</rank>
-			<parent>UserRequest:Shortcuts</parent>
-			<oql><![CDATA[SELECT UserRequest WHERE caller_id = :current_contact_id AND status NOT IN ("closed")]]></oql>
-			<do_search/>
-			<auto_reload>fast</auto_reload>
-		</menu>
-	</menus>
-	<module_parameters>
-		<parameters id="itop-tickets">
-			<relation_context>
-				<UserRequest>
-					<impacts>
-						<down>
-							<items type="array">
-								<item id="open_incidents" _delta="define">
-									<oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
-									<dict>Tickets:Related:OpenIncidents</dict>
-									<icon>itop-request-mgmt/images/incident-red.png</icon>
-									<default>yes</default>
-								</item>
-							</items>
-						</down>
-					</impacts>
-				</UserRequest>
-				<Change>
-					<impacts>
-						<down>
-							<items type="array">
-								<item id="open_incidents" _delta="define">
-									<oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
-									<dict>Tickets:Related:OpenIncidents</dict>
-									<icon>itop-request-mgmt/images/incident-red.png</icon>
-									<default>yes</default>
-								</item>
-							</items>
-						</down>
-					</impacts>
-				</Change>
-			</relation_context>
-		</parameters>
-		<parameters id="itop-config-mgmt">
-			<relation_context>
-				<FunctionalCI>
-					<impacts>
-						<down>
-							<items type="array">
-								<item id="open_incidents" _delta="define">
-									<oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
-									<dict>Tickets:Related:OpenIncidents</dict>
-									<icon>itop-request-mgmt/images/incident-red.png</icon>
-									<default>yes</default>
-								</item>
-							</items>
-						</down>
-						<up>
-							<items type="array">
-								<item id="open_incidents" _delta="define">
-									<oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
-									<dict>Tickets:Related:OpenIncidents</dict>
-									<icon>itop-request-mgmt/images/incident-red.png</icon>
-									<default>yes</default>
-								</item>
-							</items>
-						</up>
-					</impacts>
-				</FunctionalCI>
-			</relation_context>
-		</parameters>
-	</module_parameters>
+                </method>
+            </methods>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="functionalcis_list">
+                            <rank>10</rank>
+                        </item>
+                        <item id="contacts_list">
+                            <rank>20</rank>
+                        </item>
+                        <item id="related_request_list">
+                            <rank>30</rank>
+                        </item>
+                        <item id="workorders_list">
+                            <rank>40</rank>
+                        </item>
+                        <item id="col:col1">
+                            <rank>50</rank>
+                            <items>
+                                <item id="fieldset:Ticket:baseinfo">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="org_id">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="caller_id">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="status">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="origin">
+                                            <rank>40</rank>
+                                        </item>
+                                        <item id="title">
+                                            <rank>50</rank>
+                                        </item>
+                                        <item id="description">
+                                            <rank>60</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Ticket:moreinfo">
+                                    <rank>20</rank>
+                                    <items>
+                                        <item id="service_id">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="servicesubcategory_id">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="escalation_flag">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="escalation_reason">
+                                            <rank>40</rank>
+                                        </item>
+                                        <item id="pending_reason">
+                                            <rank>50</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="col:col2">
+                            <rank>60</rank>
+                            <items>
+                                <item id="fieldset:Ticket:Type">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="request_type">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="impact">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="urgency">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="priority">
+                                            <rank>40</rank>
+                                        </item>
+                                        <item id="tagfield">
+                                            <rank>50</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Ticket:contact">
+                                    <rank>20</rank>
+                                    <items>
+                                        <item id="team_id">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="agent_id">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="approver_id">
+                                            <rank>30</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Ticket:date">
+                                    <rank>30</rank>
+                                    <items>
+                                        <item id="start_date">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="last_update">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="assignment_date">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="tto_escalation_deadline">
+                                            <rank>40</rank>
+                                        </item>
+                                        <item id="ttr_escalation_deadline">
+                                            <rank>50</rank>
+                                        </item>
+                                        <item id="last_pending_date">
+                                            <rank>60</rank>
+                                        </item>
+                                        <item id="resolution_date">
+                                            <rank>70</rank>
+                                        </item>
+                                        <item id="close_date">
+                                            <rank>80</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="col:col3">
+                            <rank>70</rank>
+                            <items>
+                                <item id="fieldset:Ticket:relation">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="parent_request_id">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="parent_problem_id">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="parent_change_id">
+                                            <rank>30</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Ticket:resolution">
+                                    <rank>20</rank>
+                                    <items>
+                                        <item id="resolution_code">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="solution">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="time_spent">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="user_satisfaction">
+                                            <rank>40</rank>
+                                        </item>
+                                        <item id="user_comment">
+                                            <rank>50</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Ticket:SLA">
+                                    <rank>30</rank>
+                                    <items>
+                                        <item id="sla_tto_passed">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="sla_tto_over">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="sla_ttr_passed">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="sla_ttr_over">
+                                            <rank>40</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                    </items>
+                </details>
+                <search>
+                    <items>
+                        <item id="ref">
+                            <rank>10</rank>
+                        </item>
+                        <item id="org_id">
+                            <rank>20</rank>
+                        </item>
+                        <item id="title">
+                            <rank>30</rank>
+                        </item>
+                        <item id="description">
+                            <rank>40</rank>
+                        </item>
+                        <item id="start_date">
+                            <rank>50</rank>
+                        </item>
+                        <item id="resolution_date">
+                            <rank>70</rank>
+                        </item>
+                        <item id="close_date">
+                            <rank>80</rank>
+                        </item>
+                        <item id="status">
+                            <rank>90</rank>
+                        </item>
+                        <item id="operational_status">
+                            <rank>95</rank>
+                        </item>
+                        <item id="caller_id">
+                            <rank>100</rank>
+                        </item>
+                        <item id="origin">
+                            <rank>110</rank>
+                        </item>
+                        <item id="request_type">
+                            <rank>120</rank>
+                        </item>
+                        <item id="impact">
+                            <rank>130</rank>
+                        </item>
+                        <item id="urgency">
+                            <rank>140</rank>
+                        </item>
+                        <item id="priority">
+                            <rank>150</rank>
+                        </item>
+                        <item id="service_id">
+                            <rank>160</rank>
+                        </item>
+                        <item id="servicesubcategory_id">
+                            <rank>170</rank>
+                        </item>
+                        <item id="team_id">
+                            <rank>180</rank>
+                        </item>
+                        <item id="agent_id">
+                            <rank>190</rank>
+                        </item>
+                        <item id="escalation_flag">
+                            <rank>200</rank>
+                        </item>
+                        <item id="resolution_code">
+                            <rank>210</rank>
+                        </item>
+                        <item id="user_satisfaction">
+                            <rank>220</rank>
+                        </item>
+                        <item id="sla_tto_passed">
+                            <rank>230</rank>
+                        </item>
+                        <item id="sla_ttr_passed">
+                            <rank>240</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="title">
+                            <rank>10</rank>
+                        </item>
+                        <item id="org_id">
+                            <rank>20</rank>
+                        </item>
+                        <item id="caller_id">
+                            <rank>30</rank>
+                        </item>
+                        <item id="start_date">
+                            <rank>40</rank>
+                        </item>
+                        <item id="status">
+                            <rank>50</rank>
+                        </item>
+                        <item id="agent_id">
+                            <rank>60</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+    </classes>
+    <menus>
+        <menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="must_exist">
+            <definition>
+                <cells>
+                    <cell id="1" _delta="define">
+                        <rank>1</rank>
+                        <dashlets>
+                            <dashlet id="9" xsi:type="DashletHeaderDynamic">
+                                <rank>0</rank>
+                                <title>Menu:RequestManagement</title>
+                                <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+                                <subtitle>Menu:UserRequest:OpenRequests</subtitle>
+                                <query>SELECT UserRequest WHERE status != "closed"</query>
+                                <group_by>status</group_by>
+                                <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+                            </dashlet>
+                            <dashlet id="10" xsi:type="DashletObjectList">
+                                <rank>1</rank>
+                                <title>UI:WelcomeMenu:MyCalls</title>
+                                <query>SELECT UserRequest AS i WHERE i.agent_id = :current_contact_id AND status NOT IN
+                                    ("closed", "resolved")
+                                </query>
+                                <menu>true</menu>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                </cells>
+            </definition>
+        </menu>
+        <menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
+            <rank>30</rank>
+            <enable_stimulus/>
+        </menu>
+        <menu id="UserRequest:Overview" xsi:type="DashboardMenuNode" _delta="define">
+            <rank>0</rank>
+            <parent>RequestManagement</parent>
+            <definition>
+                <layout>DashboardLayoutTwoCols</layout>
+                <title>UI:RequestMgmtMenuOverview:Title</title>
+                <cells>
+                    <cell id="0">
+                        <rank>0</rank>
+                        <dashlets>
+                            <dashlet id="1" xsi:type="DashletGroupByPie">
+                                <rank>0</rank>
+                                <title>UI-RequestManagementOverview-RequestByType-last-14-days</title>
+                                <query>SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
+                                <group_by>request_type</group_by>
+                                <style>pie</style>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                    <cell id="1">
+                        <rank>1</rank>
+                        <dashlets>
+                            <dashlet id="2" xsi:type="DashletGroupByBars">
+                                <rank>0</rank>
+                                <title>UI-RequestManagementOverview-Last-14-days</title>
+                                <query>SELECT UserRequest WHERE DATE_SUB(NOW(), INTERVAL 14 DAY) &lt; start_date</query>
+                                <group_by>start_date:day_of_month</group_by>
+                                <style>bars</style>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                    <cell id="11">
+                        <rank>2</rank>
+                        <dashlets>
+                            <dashlet id="3" xsi:type="DashletGroupByTable">
+                                <rank>0</rank>
+                                <title>UI-RequestManagementOverview-OpenRequestByStatus</title>
+                                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+                                <group_by>status</group_by>
+                                <style>table</style>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                    <cell id="2">
+                        <rank>3</rank>
+                        <dashlets>
+                            <dashlet id="4" xsi:type="DashletGroupByTable">
+                                <rank>0</rank>
+                                <title>UI-RequestManagementOverview-OpenRequestByAgent</title>
+                                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+                                <group_by>agent_id</group_by>
+                                <style>table</style>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                    <cell id="3">
+                        <rank>4</rank>
+                        <dashlets>
+                            <dashlet id="5" xsi:type="DashletGroupByTable">
+                                <rank>0</rank>
+                                <title>UI-RequestManagementOverview-OpenRequestByType</title>
+                                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+                                <group_by>finalclass</group_by>
+                                <style>table</style>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                    <cell id="4">
+                        <rank>5</rank>
+                        <dashlets>
+                            <dashlet id="6" xsi:type="DashletGroupByTable">
+                                <rank>0</rank>
+                                <title>UI-RequestManagementOverview-OpenRequestByCustomer</title>
+                                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+                                <group_by>org_id</group_by>
+                                <style>table</style>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                </cells>
+            </definition>
+        </menu>
+        <menu id="NewUserRequest" xsi:type="NewObjectMenuNode" _delta="define">
+            <rank>1</rank>
+            <parent>RequestManagement</parent>
+            <class>UserRequest</class>
+        </menu>
+        <menu id="SearchUserRequests" xsi:type="SearchMenuNode" _delta="define">
+            <rank>2</rank>
+            <parent>RequestManagement</parent>
+            <class>UserRequest</class>
+        </menu>
+        <menu id="UserRequest:Shortcuts" xsi:type="TemplateMenuNode" _delta="define">
+            <rank>3</rank>
+            <parent>RequestManagement</parent>
+            <template_file/>
+        </menu>
+        <menu id="UserRequest:MyRequests" xsi:type="OQLMenuNode" _delta="define">
+            <rank>0</rank>
+            <parent>UserRequest:Shortcuts</parent>
+            <oql>
+                <![CDATA[SELECT UserRequest WHERE agent_id = :current_contact_id AND status NOT IN ("closed","resolved")]]></oql>
+            <do_search/>
+            <auto_reload>fast</auto_reload>
+        </menu>
+        <menu id="UserRequest:EscalatedRequests" xsi:type="OQLMenuNode" _delta="define">
+            <rank>1</rank>
+            <parent>UserRequest:Shortcuts</parent>
+            <oql>
+                <![CDATA[SELECT UserRequest WHERE status IN ("escalated_tto", "escalated_ttr") OR escalation_flag="yes"]]></oql>
+            <do_search/>
+            <auto_reload>fast</auto_reload>
+        </menu>
+        <menu id="UserRequest:OpenRequests" xsi:type="OQLMenuNode" _delta="define">
+            <rank>2</rank>
+            <parent>UserRequest:Shortcuts</parent>
+            <oql><![CDATA[SELECT UserRequest WHERE status NOT IN ("closed")]]></oql>
+            <do_search>1</do_search>
+            <auto_reload>fast</auto_reload>
+        </menu>
+        <menu id="UserRequest:MySupportRequests" xsi:type="OQLMenuNode" _delta="define">
+            <rank>3</rank>
+            <parent>UserRequest:Shortcuts</parent>
+            <oql><![CDATA[SELECT UserRequest WHERE caller_id = :current_contact_id AND status NOT IN ("closed")]]></oql>
+            <do_search/>
+            <auto_reload>fast</auto_reload>
+        </menu>
+    </menus>
+    <module_parameters>
+        <parameters id="itop-tickets">
+            <relation_context>
+                <UserRequest>
+                    <impacts>
+                        <down>
+                            <items type="array">
+                                <item id="open_incidents" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
+                                    <dict>Tickets:Related:OpenIncidents</dict>
+                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    <default>yes</default>
+                                </item>
+                            </items>
+                        </down>
+                    </impacts>
+                </UserRequest>
+                <Change>
+                    <impacts>
+                        <down>
+                            <items type="array">
+                                <item id="open_incidents" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
+                                    <dict>Tickets:Related:OpenIncidents</dict>
+                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    <default>yes</default>
+                                </item>
+                            </items>
+                        </down>
+                    </impacts>
+                </Change>
+            </relation_context>
+        </parameters>
+        <parameters id="itop-config-mgmt">
+            <relation_context>
+                <FunctionalCI>
+                    <impacts>
+                        <down>
+                            <items type="array">
+                                <item id="open_incidents" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
+                                    <dict>Tickets:Related:OpenIncidents</dict>
+                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    <default>yes</default>
+                                </item>
+                            </items>
+                        </down>
+                        <up>
+                            <items type="array">
+                                <item id="open_incidents" _delta="define">
+                                    <oql>
+                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
+                                    <dict>Tickets:Related:OpenIncidents</dict>
+                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                    <default>yes</default>
+                                </item>
+                            </items>
+                        </up>
+                    </impacts>
+                </FunctionalCI>
+            </relation_context>
+        </parameters>
+    </module_parameters>
 </itop_design>

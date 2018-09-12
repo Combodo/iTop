@@ -31,11 +31,6 @@ final class ormTagSet
 	private $aOriginalObjects = null;
 
 	/**
-	 * @var bool
-	 */
-	private $bHasDelta = false;
-
-	/**
 	 * Object from the original set, minus the removed objects
 	 *
 	 * @var DBObject[] array of iObjectId => DBObject
@@ -51,6 +46,11 @@ final class ormTagSet
 	 * @var DBObject[] Removed items
 	 */
 	private $aRemoved = array();
+
+	/**
+	 * @var DBObject[] Modified items (mass edit)
+	 */
+	private $aModified = array();
 
 	/**
 	 * __toString magical function overload.
@@ -89,6 +89,22 @@ final class ormTagSet
 	}
 
 	/**
+	 * @return string
+	 */
+	public function GetClass()
+	{
+		return $this->sClass;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetAttCode()
+	{
+		return $this->sAttCode;
+	}
+
+	/**
 	 *
 	 * @param array $aTagCodes
 	 *
@@ -106,14 +122,14 @@ final class ormTagSet
 		foreach($aTagCodes as $sTagCode)
 		{
 			$oTag = $this->GetTagFromCode($sTagCode);
-			$oTags[$oTag->GetKey()] = $oTag;
+			$oTags[$sTagCode] = $oTag;
 		}
 
 		$this->aPreserved = &$oTags;
 		$this->aRemoved = array();
 		$this->aAdded = array();
+		$this->aModified = array();
 		$this->aOriginalObjects = $oTags;
-		$this->bHasDelta = false;
 	}
 
 	/**
@@ -122,25 +138,13 @@ final class ormTagSet
 	public function GetValue()
 	{
 		$aValues = array();
-		foreach($this->aPreserved as $oTag)
+		foreach($this->aPreserved as $sTagCode => $oTag)
 		{
-			try
-			{
-				$aValues[] = $oTag->Get('tag_code');
-			} catch (CoreException $e)
-			{
-				IssueLog::Error($e->getMessage());
-			}
+			$aValues[] = $sTagCode;
 		}
-		foreach($this->aAdded as $oTag)
+		foreach($this->aAdded as $sTagCode => $oTag)
 		{
-			try
-			{
-				$aValues[] = $oTag->Get('tag_code');
-			} catch (CoreException $e)
-			{
-				IssueLog::Error($e->getMessage());
-			}
+			$aValues[] = $sTagCode;
 		}
 
 		sort($aValues);
@@ -154,21 +158,21 @@ final class ormTagSet
 	public function GetTags()
 	{
 		$aTags = array();
-		foreach($this->aPreserved as $oTag)
+		foreach($this->aPreserved as $sTagCode => $oTag)
 		{
 			try
 			{
-				$aTags[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
+				$aTags[$sTagCode] = $oTag->Get('tag_label');
 			} catch (CoreException $e)
 			{
 				IssueLog::Error($e->getMessage());
 			}
 		}
-		foreach($this->aAdded as $oTag)
+		foreach($this->aAdded as $sTagCode => $oTag)
 		{
 			try
 			{
-				$aTags[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
+				$aTags[$sTagCode] = $oTag->Get('tag_label');
 			} catch (CoreException $e)
 			{
 				IssueLog::Error($e->getMessage());
@@ -185,15 +189,9 @@ final class ormTagSet
 	public function GetAddedTags()
 	{
 		$aTags = array();
-		foreach($this->aAdded as $oTag)
+		foreach($this->aAdded as $sTagCode => $oTag)
 		{
-			try
-			{
-				$aTags[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
-			} catch (CoreException $e)
-			{
-				IssueLog::Error($e->getMessage());
-			}
+			$aTags[] = $sTagCode;
 		}
 		ksort($aTags);
 
@@ -206,15 +204,9 @@ final class ormTagSet
 	public function GetRemovedTags()
 	{
 		$aTags = array();
-		foreach($this->aRemoved as $oTag)
+		foreach($this->aRemoved as $sTagCode => $oTag)
 		{
-			try
-			{
-				$aTags[$oTag->Get('tag_code')] = $oTag->Get('tag_label');
-			} catch (CoreException $e)
-			{
-				IssueLog::Error($e->getMessage());
-			}
+			$aTags[] = $sTagCode;
 		}
 		ksort($aTags);
 
@@ -258,6 +250,17 @@ final class ormTagSet
 	}
 
 	/**
+	 * @return string[] list of codes for partial entries
+	 */
+	public function GetModifiedTags()
+	{
+		$aModifiedTagCodes = array_keys($this->aModified);
+		sort($aModifiedTagCodes);
+
+		return $aModifiedTagCodes;
+	}
+
+	/**
 	 * Apply a delta to the current TagSet
 	 *
 	 * @param $aDelta
@@ -269,14 +272,14 @@ final class ormTagSet
 	{
 		if (isset($aDelta['removed']))
 		{
-			foreach($aDelta['removed'] as $sTagCode => $aTagLabel)
+			foreach($aDelta['removed'] as $sTagCode)
 			{
 				$this->RemoveTag($sTagCode);
 			}
 		}
 		if (isset($aDelta['added']))
 		{
-			foreach($aDelta['added'] as $sTagCode => $aTagLabel)
+			foreach($aDelta['added'] as $sTagCode)
 			{
 				$this->AddTag($sTagCode);
 			}
@@ -320,13 +323,15 @@ final class ormTagSet
 		if (($oTag = $this->RemoveTagFromList($this->aRemoved, $sTagCode)) !== false)
 		{
 			// put it back into preserved
-			$this->aPreserved[] = $oTag;
+			$this->aPreserved[$sTagCode] = $oTag;
+			// no need to add it to aModified : was already done when calling RemoveTag method
 		}
 		else
 		{
-			$this->aAdded[] = $this->GetTagFromCode($sTagCode);
+			$oTag = $this->GetTagFromCode($sTagCode);
+			$this->aAdded[$sTagCode] = $oTag;
+			$this->aModified[$sTagCode] = $oTag;
 		}
-		$this->UpdateHasDeltaFlag();
 	}
 
 	/**
@@ -339,74 +344,70 @@ final class ormTagSet
 			// nothing to do, already removed tag
 			return;
 		}
-		// if added then remove it
-		if (($oTag = $this->RemoveTagFromList($this->aAdded, $sTagCode)) === false)
+
+		$oTag = $this->RemoveTagFromList($this->aAdded, $sTagCode);
+		if ($oTag !== false)
 		{
-			// if present then remove it
-			if (($oTag = $this->RemoveTagFromList($this->aPreserved, $sTagCode)) !== false)
-			{
-				$this->aRemoved[] = $oTag;
-			}
+			$this->aModified[$sTagCode] = $oTag;
+
+			return; // if present in added, can't be in preserved !
 		}
-		$this->UpdateHasDeltaFlag();
+
+		$oTag = $this->RemoveTagFromList($this->aPreserved, $sTagCode);
+		if ($oTag !== false)
+		{
+			$this->aModified[$sTagCode] = $oTag;
+			$this->aRemoved[$sTagCode] = $oTag;
+		}
 	}
 
 	private function IsTagInList($aTagList, $sTagCode)
 	{
-		foreach($aTagList as $oTag)
-		{
-			/** @var \TagSetFieldData $oTag */
-			try
-			{
-				$sCode = $oTag->Get('tag_code');
-				if ($sCode === $sTagCode)
-				{
-					return true;
-				}
-			} catch (CoreException $e)
-			{
-				IssueLog::Error($e->getMessage());
-			}
-		}
-
-		return false;
+		return isset($aTagList[$sTagCode]);
 	}
 
+	/**
+	 * @param \ormTagSet[] $aTagList
+	 * @param string $sTagCode
+	 *
+	 * @return bool|\ormTagSet false if not found, else the removed element
+	 */
 	private function RemoveTagFromList(&$aTagList, $sTagCode)
 	{
-		foreach($aTagList as $index => $oTag)
+		if (!($this->IsTagInList($aTagList, $sTagCode)))
 		{
-			/** @var \TagSetFieldData $oTag */
-			try
-			{
-				$sCode = $oTag->Get('tag_code');
-				if ($sCode === $sTagCode)
-				{
-					unset($aTagList[$index]);
+			return false;
+		}
 
-					return $oTag;
-				}
-			} catch (CoreException $e)
+		$oTag = $aTagList[$sTagCode];
+		unset($aTagList[$sTagCode]);
+
+		return $oTag;
+	}
+
+	/**
+	 * Populates the added and removed arrays for bulk edit
+	 *
+	 * @param string[] $aTagCodes
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public function GenerateDiffFromTags($aTagCodes)
+	{
+		foreach($this->GetValue() as $sCurrentTagCode)
+		{
+			if (!in_array($sCurrentTagCode, $aTagCodes))
 			{
-				IssueLog::Error($e->getMessage());
+				$this->RemoveTag($sCurrentTagCode);
 			}
 		}
 
-		return false;
-	}
-
-	private function UpdateHasDeltaFlag()
-	{
-		if ((count($this->aAdded) == 0) && (count($this->aRemoved) == 0))
+		foreach($aTagCodes as $sNewTagCode)
 		{
-			$this->bHasDelta = false;
-		}
-		else
-		{
-			$this->bHasDelta = true;
+			$this->AddTag($sNewTagCode);
 		}
 	}
-
 
 	/**
 	 * @param $sTagCode
@@ -429,7 +430,10 @@ final class ormTagSet
 	}
 
 	/**
-	 * @return array
+	 * @return \TagSetFieldData[]
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	private function GetAllowedTags()
 	{

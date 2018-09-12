@@ -38,157 +38,240 @@ use ormTagSet;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
- */class ormTagSetTest extends ItopDataTestCase
+ */
+class ormTagSetTest extends ItopDataTestCase
 {
 
-    /**
-     * @throws Exception
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-    }
+	/**
+	 * @throws Exception
+	 */
+	protected function setUp()
+	{
+		parent::setUp();
 
-    public function testGetTagDataClass()
-    {
-        $oTagSet = new ormTagSet('Ticket', 'tagfield');
-        static::assertEquals($oTagSet->GetTagDataClass(), 'TagSetFieldDataFor_Ticket_tagfield');
-    }
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag2', 'Second');
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag3', 'Third');
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag4', 'Fourth');
+	}
 
-    public function testGetValue()
-    {
-        $this->CreateTagData('Ticket', 'tagfield', 'tag1', 'First');
-        $this->CreateTagData('Ticket', 'tagfield', 'tag2', 'Second');
+	public function testGetTagDataClass()
+	{
+		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		static::assertEquals($oTagSet->GetTagDataClass(), 'TagSetFieldDataFor_Ticket_tagfield');
+	}
 
-        $oTagSet = new ormTagSet('Ticket', 'tagfield');
-        static::assertEquals($oTagSet->GetValue(), array());
+	public function testGetValue()
+	{
+		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		static::assertEquals($oTagSet->GetValue(), array());
 
-        $oTagSet->AddTag('tag1');
-        static::assertEquals($oTagSet->GetValue(), array('tag1'));
+		$oTagSet->AddTag('tag1');
+		static::assertEquals($oTagSet->GetValue(), array('tag1'));
 
-        $oTagSet->AddTag('tag2');
-        static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
-    }
+		$oTagSet->AddTag('tag2');
+		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
+	}
 
-    public function testAddTag()
-    {
-        $this->CreateTagData('Ticket', 'tagfield', 'tag1', 'First');
-        $this->CreateTagData('Ticket', 'tagfield', 'tag2', 'Second');
+	public function testAddTag()
+	{
+		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
 
-        $oTagSet = new ormTagSet('Ticket', 'tagfield');
+		$oTagSet->AddTag('tag1');
+		static::assertEquals($oTagSet->GetValue(), array('tag1'));
 
-        $oTagSet->AddTag('tag1');
-        static::assertEquals($oTagSet->GetValue(), array('tag1'));
+		$oTagSet->SetValue(array('tag1', 'tag2'));
+		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
 
-        $oTagSet->SetValue(array('tag1', 'tag2'));
-        static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
+		$oTagSet->RemoveTag('tag1');
+		static::assertEquals($oTagSet->GetValue(), array('tag2'));
 
-        $oTagSet->RemoveTag('tag1');
-        static::assertEquals($oTagSet->GetValue(), array('tag2'));
+		$oTagSet->AddTag('tag1');
+		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
+	}
 
-        $oTagSet->AddTag('tag1');
-        static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
-    }
+	public function testEquals()
+	{
+		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet1->AddTag('tag1');
+		static::assertTrue($oTagSet1->Equals($oTagSet1));
 
-    public function testEquals()
-    {
-        $this->CreateTagData('Ticket', 'tagfield', 'tag1', 'First');
-        $this->CreateTagData('Ticket', 'tagfield', 'tag2', 'Second');
+		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet2->SetValue(array('tag1'));
 
-        $oTagSet1 = new ormTagSet('Ticket', 'tagfield');
-        $oTagSet1->AddTag('tag1');
-        static::assertTrue($oTagSet1->Equals($oTagSet1));
+		static::assertTrue($oTagSet1->Equals($oTagSet2));
 
-        $oTagSet2 = new ormTagSet('Ticket', 'tagfield');
-        $oTagSet2->SetValue(array('tag1'));
+		$oTagSet1->AddTag('tag2');
+		static::assertFalse($oTagSet1->Equals($oTagSet2));
+	}
 
-        static::assertTrue($oTagSet1->Equals($oTagSet2));
+	public function testSetValue()
+	{
+		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
 
-        $oTagSet1->AddTag('tag2');
-        static::assertFalse($oTagSet1->Equals($oTagSet2));
-    }
+		$oTagSet->SetValue(array('tag1'));
+		static::assertEquals($oTagSet->GetValue(), array('tag1'));
 
-    public function testSetValue()
-    {
-        $this->CreateTagData('Ticket', 'tagfield', 'tag1', 'First');
-        $this->CreateTagData('Ticket', 'tagfield', 'tag2', 'Second');
+		$oTagSet->SetValue(array('tag1', 'tag2'));
+		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
 
-        $oTagSet = new ormTagSet('Ticket', 'tagfield');
+	}
 
-        $oTagSet->SetValue(array('tag1'));
-        static::assertEquals($oTagSet->GetValue(), array('tag1'));
+	public function testRemoveTag()
+	{
+		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet->RemoveTag('tag_unknown');
+		static::assertEquals($oTagSet->GetValue(), array());
 
-        $oTagSet->SetValue(array('tag1', 'tag2'));
-        static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
+		$oTagSet->SetValue(array('tag1'));
+		$oTagSet->RemoveTag('tag_unknown');
+		static::assertEquals($oTagSet->GetValue(), array('tag1'));
 
-    }
+		$oTagSet->SetValue(array('tag1', 'tag2'));
+		$oTagSet->RemoveTag('tag1');
+		static::assertEquals($oTagSet->GetValue(), array('tag2'));
 
-    public function testRemoveTag()
-    {
-        $this->CreateTagData('Ticket', 'tagfield', 'tag1', 'First');
-        $this->CreateTagData('Ticket', 'tagfield', 'tag2', 'Second');
+		$oTagSet->AddTag('tag1');
+		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
 
-        $oTagSet = new ormTagSet('Ticket', 'tagfield');
-        $oTagSet->RemoveTag('tag_unknown');
-        static::assertEquals($oTagSet->GetValue(), array());
+		$oTagSet->RemoveTag('tag1');
+		static::assertEquals($oTagSet->GetValue(), array('tag2'));
 
-        $oTagSet->SetValue(array('tag1'));
-        $oTagSet->RemoveTag('tag_unknown');
-        static::assertEquals($oTagSet->GetValue(), array('tag1'));
+		$oTagSet->RemoveTag('tag1');
+		static::assertEquals($oTagSet->GetValue(), array('tag2'));
 
-        $oTagSet->SetValue(array('tag1', 'tag2'));
-        $oTagSet->RemoveTag('tag1');
-        static::assertEquals($oTagSet->GetValue(), array('tag2'));
+		$oTagSet->RemoveTag('tag2');
+		static::assertEquals($oTagSet->GetValue(), array());
+	}
 
-        $oTagSet->AddTag('tag1');
-        static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
+	public function testGetDelta()
+	{
+		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet1->SetValue(array('tag1', 'tag2'));
 
-        $oTagSet->RemoveTag('tag1');
-        static::assertEquals($oTagSet->GetValue(), array('tag2'));
-
-        $oTagSet->RemoveTag('tag1');
-        static::assertEquals($oTagSet->GetValue(), array('tag2'));
-
-        $oTagSet->RemoveTag('tag2');
-        static::assertEquals($oTagSet->GetValue(), array());
-    }
-
-    public function testGetDelta()
-    {
-	    $this->CreateTagData('Ticket', 'tagfield', 'tag1', 'First');
-	    $this->CreateTagData('Ticket', 'tagfield', 'tag2', 'Second');
-	    $this->CreateTagData('Ticket', 'tagfield', 'tag3', 'Third');
-	    $this->CreateTagData('Ticket', 'tagfield', 'tag4', 'Fourth');
-
-	    $oTagSet1 = new ormTagSet('Ticket', 'tagfield');
-	    $oTagSet1->SetValue(array('tag1', 'tag2'));
-
-	    $oTagSet2 = new ormTagSet('Ticket', 'tagfield');
-	    $oTagSet2->SetValue(array('tag1', 'tag3', 'tag4'));
+		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet2->SetValue(array('tag1', 'tag3', 'tag4'));
 
 		$aDelta = $oTagSet1->GetDelta($oTagSet2);
-	    static::assertCount(2, $aDelta);
-	    static::assertCount(2, $aDelta['added']);
-	    static::assertCount(1, $aDelta['removed']);
-    }
+		static::assertCount(2, $aDelta);
+		static::assertCount(2, $aDelta['added']);
+		static::assertCount(1, $aDelta['removed']);
+	}
 
-    public function testApplyDelta()
-    {
-	    $this->CreateTagData('Ticket', 'tagfield', 'tag1', 'First');
-	    $this->CreateTagData('Ticket', 'tagfield', 'tag2', 'Second');
-	    $this->CreateTagData('Ticket', 'tagfield', 'tag3', 'Third');
-	    $this->CreateTagData('Ticket', 'tagfield', 'tag4', 'Fourth');
+	public function testApplyDelta()
+	{
+		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet1->SetValue(array('tag1', 'tag2'));
 
-	    $oTagSet1 = new ormTagSet('Ticket', 'tagfield');
-	    $oTagSet1->SetValue(array('tag1', 'tag2'));
+		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet2->SetValue(array('tag1', 'tag3', 'tag4'));
 
-	    $oTagSet2 = new ormTagSet('Ticket', 'tagfield');
-	    $oTagSet2->SetValue(array('tag1', 'tag3', 'tag4'));
+		$aDelta = $oTagSet1->GetDelta($oTagSet2);
 
-	    $aDelta = $oTagSet1->GetDelta($oTagSet2);
+		$oTagSet1->ApplyDelta($aDelta);
 
-	    $oTagSet1->ApplyDelta($aDelta);
+		static::assertTrue($oTagSet1->Equals($oTagSet2));
+	}
 
-	    static::assertTrue($oTagSet1->Equals($oTagSet2));
-    }
+	/**
+	 * @param $aInitialTags
+	 * @param $aDiffTags
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 *
+	 * @dataProvider GetModifiedProvider
+	 */
+	public function testGetModified($aInitialTags, $aDiffAndExpectedTags)
+	{
+		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet1->SetValue($aInitialTags);
+
+		foreach($aDiffAndExpectedTags as $aTestItem)
+		{
+			$oTagSet1->GenerateDiffFromTags($aTestItem['diff']);
+			static::assertEquals($aTestItem['modified'], $oTagSet1->GetModifiedTags());
+		}
+	}
+
+	public function GetModifiedProvider()
+	{
+		return array(
+			array(
+				array('tag2'),
+				array(
+					array('diff' => array('tag1', 'tag2'), 'modified' => array('tag1')),
+					array('diff' => array('tag2'), 'modified' => array('tag1')),
+					array('diff' => array(), 'modified' => array('tag1', 'tag2')),
+				)
+			),
+			array(
+				array('tag1', 'tag2'),
+				array(
+					array('diff' => array('tag1', 'tag3'), 'modified' => array('tag2', 'tag3')),
+					array('diff' => array('tag1', 'tag2'), 'modified' => array('tag2', 'tag3')),
+					array('diff' => array('tag1', 'tag2', 'tag3', 'tag4'), 'modified' => array('tag2', 'tag3', 'tag4')),
+				)
+			),
+			array(
+				array(),
+				array(
+					array('diff' => array('tag2'), 'modified' => array('tag2')),
+					array('diff' => array('tag1', 'tag2'), 'modified' => array('tag1', 'tag2')),
+					array('diff' => array('tag2'), 'modified' => array('tag1', 'tag2')),
+				)
+			),
+		);
+	}
+
+	/**
+	 * @param $aInitialTags
+	 * @param $aDelta
+	 * @param $aExpectedTags
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
+	 * @dataProvider BulkModifyProvider
+	 */
+	public function testBulkModify($aInitialTags, $aDelta, $aExpectedTags)
+	{
+		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet1->SetValue($aInitialTags);
+
+		$oTagSet1->ApplyDelta($aDelta);
+
+		static::assertEquals($aExpectedTags, $oTagSet1->GetValue());
+	}
+
+	public function BulkModifyProvider()
+	{
+		return array(
+			'Add one tag' => array(
+				array('tag1', 'tag2'),
+				array('added' => array('tag3')),
+				array('tag1', 'tag2', 'tag3')
+			),
+			'Remove one tag' => array(
+				array('tag1', 'tag2'),
+				array('removed' => array('tag2')),
+				array('tag1')
+			),
+			'Remove unexisting tag' => array(
+				array('tag1', 'tag2'),
+				array('removed' => array('tag3')),
+				array('tag1', 'tag2')
+			),
+			'Add one and remove one tag' => array(
+				array('tag1', 'tag2'),
+				array('added' => array('tag3'), 'removed' => array('tag2')),
+				array('tag1', 'tag3')
+			),
+			'Remove first tag' => array(
+				array('tag1', 'tag2'),
+				array('removed' => array('tag1')),
+				array('tag2')
+			),
+		);
+	}
 }

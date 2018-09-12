@@ -3298,3 +3298,35 @@ table.listResults .originColor{
 	background-color: lightgrey;
 	font-style: italic;
 }
+
+div.selectize-control {
+	position: static;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+div.selectize-input {
+	width: auto;
+	min-width: 8em;
+}
+
+div.selectize-input.has-items:after {
+	content: "➕";
+	display: inline-block;
+}
+
+div.selectize-control > div.selectize-input > div.item.partial-code {
+	color: floralwhite;
+	background-color: grey;
+	background-image: linear-gradient(to bottom, white, grey);
+	border-color: darkgray;
+	font-style: italic;
+}
+
+div.selectize-control > div.selectize-input > div.item.partial-code.active {
+	background-image: linear-gradient(to bottom, grey, darkgrey);
+}
+
+div.selectize-control > div.selectize-input > div.item.partial-code > a.remove {
+	border-color: grey;
+}

@@ -192,7 +192,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	 * @param $sClass
 	 * @param $sAttCode
 	 *
-	 * @return mixed
+	 * @return \TagSetFieldData[]
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
