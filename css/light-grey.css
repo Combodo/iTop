@@ -884,6 +884,9 @@ input.dp-applied {
   left: 0px;
   margin-top: -1px;
 }
+.search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_buttons, .search_form_handler .sf_criterion_area .sf_more_criterion .sfc_form_group .sfc_fg_buttons, .search_form_handler .sf_criterion_area .sf_button .sfc_form_group .sfc_fg_buttons, .search_form_handler .sf_criterion_area .search_form_criteria .sfm_content .sfc_fg_buttons, .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_content .sfc_fg_buttons, .search_form_handler .sf_criterion_area .sf_button .sfm_content .sfc_fg_buttons {
+  white-space: nowrap;
+}
 .search_form_handler .sf_criterion_area .search_form_criteria {
   /* Non editable criteria */
   /* Draft criteria (modifications not applied) */
@@ -1125,6 +1128,15 @@ input.dp-applied {
   white-space: nowrap;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_enum .sfc_form_group .sfc_fg_operator_in > label .sfc_op_content {
+  width: 100%;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_tag_set .sfc_form_group .sfc_fg_operator_in > label {
+  display: inline-block;
+  width: 100%;
+  line-height: initial;
+  white-space: nowrap;
+}
+.search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_tag_set .sfc_form_group .sfc_fg_operator_in > label .sfc_op_content {
   width: 100%;
 }
 .search_form_handler .sf_criterion_area .search_form_criteria.search_form_criteria_numeric .sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_between .sfc_op_content_from_outer {
@@ -2862,19 +2874,16 @@ table.listResults .originColor {
 .menu-icon-select > .ui-menu-item {
   padding: 0.3em 3%;
 }
-
 .attribute-tagset > span, .attribute-tagset-undefined > span {
   display: inline-block;
   padding: 3px;
   margin-right: 3px;
   border-radius: 4px;
 }
-
 .attribute-tagset > span {
   color: white;
   background-color: grey;
 }
-
 .attribute-tagset-undefined > span {
   color: grey;
   background-color: lightgrey;

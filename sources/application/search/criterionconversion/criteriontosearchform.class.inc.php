@@ -71,6 +71,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY => 'ExternalKeyToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY => 'ExternalKeyToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'EnumToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET => 'TagSetToSearchForm',
 		);
 
 		foreach($aAndCriterionRaw as $aCriteria)
@@ -663,6 +664,36 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				break;
 		}
 
+		return $aCriteria;
+	}
+
+	protected static function TagSetToSearchForm($aCriteria, $aFields)
+	{
+		$sOperator = $aCriteria['operator'];
+		switch ($sOperator)
+		{
+			case 'MATCHES':
+				// Nothing special to do
+				break;
+
+			case 'ISNULL':
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_EQUALS;
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
+				{
+					if (!isset($aCriteria['values']))
+					{
+						$aCriteria['values'] = array();
+					}
+					// Convention for 'undefined' enums
+					$aCriteria['values'][] = array('value' => 'null', 'label' => Dict::S('Enum:Undefined'));
+				}
+				break;
+
+			default:
+				// Unknown operator
+				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+				break;
+		}
 		return $aCriteria;
 	}
 

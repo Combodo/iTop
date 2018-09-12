@@ -928,6 +928,24 @@ class ScalarExpression extends UnaryExpression
 								IssueLog::Error($e->getMessage());
 							}
 							break;
+					case ($oAttDef instanceof AttributeTagSet):
+						try
+						{
+							if (!empty($this->GetValue()))
+							{
+								/** @var AttributeTagSet $oAttDef */
+								$aValue['label'] = $oAttDef->GetValueLabel($this->GetValue());
+							}
+							else
+							{
+								$aValue['label'] = Dict::S('Enum:Undefined');
+							}
+						}
+						catch (Exception $e)
+						{
+							IssueLog::Error($e->getMessage());
+						}
+						break;
 						case $oAttDef->IsExternalKey():
 							try
 							{
@@ -1575,7 +1593,7 @@ class ListExpression extends Expression
 		{
 			if ($oExpr instanceof VariableExpression)
 			{
-				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar();
+				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar($aArgs);
 			}
 			else
 			{
@@ -2119,7 +2137,7 @@ class CharConcatExpression extends Expression
 		{
 			if ($oExpr instanceof VariableExpression)
 			{
-				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar();
+				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar($aArgs);
 			}
 			else
 			{

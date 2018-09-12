@@ -1280,6 +1280,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s : %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s : %2$s et %3$s autres',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s : Indifférent',
+	//   - TagSet widget
+	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s : %2$s',
 	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s est renseigné',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s n\'est pas renseigné',
@@ -1294,6 +1296,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
     'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s : %2$s',
     'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s : %2$s et %3$s autres',
     'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s : Indifférent',
+	//   - Tag Set Widget
+	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Contient',
 
 	/// - Criteria operators
 	//   - Default widget

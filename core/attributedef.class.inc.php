@@ -42,7 +42,7 @@ require_once(APPROOT . 'sources/form/validator/validator.class.inc.php');
 require_once(APPROOT . 'sources/form/validator/notemptyextkeyvalidator.class.inc.php');
 
 /**
- * MissingColumnException - sent if an attribute is being created but the column is missing in the row 
+ * MissingColumnException - sent if an attribute is being created but the column is missing in the row
  *
  * @package	 iTopORM
  */
@@ -50,28 +50,28 @@ class MissingColumnException extends Exception
 {}
 
 /**
- * add some description here... 
+ * add some description here...
  *
  * @package	 iTopORM
  */
 define('EXTKEY_RELATIVE', 1);
 
 /**
- * add some description here... 
+ * add some description here...
  *
  * @package	 iTopORM
  */
 define('EXTKEY_ABSOLUTE', 2);
 
 /**
- * Propagation of the deletion through an external key - ask the user to delete the referencing object 
+ * Propagation of the deletion through an external key - ask the user to delete the referencing object
  *
  * @package	 iTopORM
  */
 define('DEL_MANUAL', 1);
 
 /**
- * Propagation of the deletion through an external key - ask the user to delete the referencing object 
+ * Propagation of the deletion through an external key - ask the user to delete the referencing object
  *
  * @package	 iTopORM
  */
@@ -106,7 +106,7 @@ define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/re
 
 
 /**
- * Attribute definition API, implemented in and many flavours (Int, String, Enum, etc.) 
+ * Attribute definition API, implemented in and many flavours (Int, String, Enum, etc.)
  *
  * @package	 iTopORM
  */
@@ -121,6 +121,8 @@ abstract class AttributeDefinition
 	const SEARCH_WIDGET_TYPE_EXTERNAL_FIELD = 'external_field';
 	const SEARCH_WIDGET_TYPE_DATE_TIME = 'date_time';
 	const SEARCH_WIDGET_TYPE_DATE = 'date';
+	const SEARCH_WIDGET_TYPE_TAG_SET = 'tag_set';
+
 
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
@@ -555,7 +557,7 @@ abstract class AttributeDefinition
 			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'?', $sDefault, false);
 		}
 		return $sLabel;
-	} 
+	}
 
 	public function GetHelpOnSmartSearch()
 	{
@@ -567,7 +569,7 @@ abstract class AttributeDefinition
 			{
 				return $sHelp;
 			}
-		} 
+		}
 		return '';
 	}
 
@@ -680,7 +682,7 @@ abstract class AttributeDefinition
 		// Note: This is the responsibility of this function to place backticks around column aliases
 		return array('`'.$sClassAlias.$this->GetCode().'`');
 	}
-	
+
 	public function GetOrderByHint()
 	{
 		return '';
@@ -705,12 +707,12 @@ abstract class AttributeDefinition
 	{
 		return '';
 	}
-	
+
 	public function CheckFormat($value)
 	{
 		return true;
 	}
-	 
+
 	public function GetMaxSize()
 	{
 		return null;
@@ -727,17 +729,17 @@ abstract class AttributeDefinition
 
 		return call_user_func($sComputeFunc);
 	}
-	
+
 	abstract public function GetDefaultValue(DBObject $oHostObject = null);
 
 	//
 	// To be overloaded in subclasses
 	//
-	
+
 	abstract public function GetBasicFilterOperators(); // returns an array of "opCode"=>"description"
 	abstract public function GetBasicFilterLooseOperator(); // returns an "opCode"
 	//abstract protected GetBasicFilterHTMLInput();
-	abstract public function GetBasicFilterSQLExpr($sOpCode, $value); 
+	abstract public function GetBasicFilterSQLExpr($sOpCode, $value);
 
 	public function GetFilterDefinitions()
 	{
@@ -899,7 +901,7 @@ abstract class AttributeDefinition
 		{
 			$oFormField->SetReadOnly(true);
 		}
-		
+
 		// CurrentValue
 		$oFormField->SetCurrentValue($oObject->Get($this->GetCode()));
 
@@ -914,7 +916,7 @@ abstract class AttributeDefinition
 
 	/**
 	 * List the available verbs for 'GetForTemplate'
-	 */	 
+	 */
 	public function EnumTemplateVerbs()
 	{
 		return array(
@@ -945,17 +947,17 @@ abstract class AttributeDefinition
 			{
 				case '':
 				return $value;
-				
+
 				case 'html':
 				return $this->GetAsHtml($value, $oHostObject, $bLocalize);
-				
+
 				case 'label':
 				return $this->GetEditValue($value);
-				
+
 				case 'text':
 				return $this->GetAsPlainText($value);
 				break;
-				
+
 				default:
 				throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
 			}
@@ -1082,7 +1084,7 @@ abstract class AttributeDefinition
 			$aParams[$sParamName] = "%$sSearchText%";
 			$sSQLOperator = 'LIKE';
 			break;
-			
+
 			default:
 			$sSQLOperator = $sOperator;
 			$aParams[$sParamName] = $sSearchText;
@@ -1090,7 +1092,7 @@ abstract class AttributeDefinition
 		$oNewCondition = new BinaryExpression($oField, $sSQLOperator, $oRightExpr);
 		return $oNewCondition;
 	}
-	
+
 	/**
 	 * Tells if an attribute is part of the unique fingerprint of the object (used for comparing two objects)
 	 * All attributes which value is not based on a value from the object itself (like ExternalFields or LinkedSet)
@@ -1101,7 +1103,7 @@ abstract class AttributeDefinition
 	{
 		return true;
 	}
-	
+
 	/**
 	 * The part of the current attribute in the object's signature, for the supplied value
 	 * @param mixed $value The value of this attribute for the object
@@ -1114,7 +1116,7 @@ abstract class AttributeDefinition
 }
 
 /**
- * Set of objects directly linked to an object, and being part of its definition  
+ * Set of objects directly linked to an object, and being part of its definition
  *
  * @package	 iTopORM
  */
@@ -1129,9 +1131,9 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	public function IsWritable() {return true;}
 	static public function IsLinkSet() {return true;}
-	public function IsIndirect() {return false;} 
+	public function IsIndirect() {return false;}
 
-	public function GetValuesDef() {return $this->Get("allowed_values");} 
+	public function GetValuesDef() {return $this->Get("allowed_values");}
 	public function GetPrerequisiteAttributes($sClass = null) {return $this->Get("depends_on");}
 
     /**
@@ -1191,7 +1193,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	{
 		return $this->GetOptional('edit_mode', LINKSET_EDITMODE_ACTIONS);
 	}
-	
+
 	public function GetLinkedClass() {return $this->Get('linked_class');}
 	public function GetExtKeyToMe() {return $this->Get('ext_key_to_me');}
 
@@ -1354,7 +1356,7 @@ class AttributeLinkedSet extends AttributeDefinition
 
 	/**
 	 * List the available verbs for 'GetForTemplate'
-	 */	 
+	 */
 	public function EnumTemplateVerbs()
 	{
 		return array(
@@ -1400,10 +1402,10 @@ class AttributeLinkedSet extends AttributeDefinition
 		{
 			case '':
 			return implode("\n", $aNames);
-					
+
 			case 'html':
 			return '<ul><li>'.implode("</li><li>", $aNames).'</li></ul>';
-			
+
 			default:
 			throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
 		}
@@ -1573,7 +1575,7 @@ class AttributeLinkedSet extends AttributeDefinition
 						continue; // Don't check the key to self
 					}
 				}
-				
+
 				if ($oAttDef->IsWritable() && $oAttDef->IsNull($oLink->Get($sAttCode)) && !$oAttDef->IsNullAllowed())
 				{
 					$aErrors[] = $sAttCode;
@@ -1686,7 +1688,7 @@ class AttributeLinkedSet extends AttributeDefinition
 						continue; // Don't check the key to self
 					}
 				}
-				
+
 				if ($oAttDef->IsWritable() && $oAttDef->IsNull($oLink->Get($sAttCode)) && !$oAttDef->IsNullAllowed())
 				{
 					$aErrors[] = $sAttCode;
@@ -1778,7 +1780,7 @@ class AttributeLinkedSet extends AttributeDefinition
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
-		
+
 		// Setting target class
 		if (!$this->IsIndirect())
 		{
@@ -1812,9 +1814,9 @@ class AttributeLinkedSet extends AttributeDefinition
 			$aAttributesToDisplay[$sAttCodeToDisplay] = $oAttDefToDisplay->GetLabel();
 		}
 		$oFormField->SetAttributesToDisplay($aAttributesToDisplay);
-		
+
 		parent::MakeFormField($oObject, $oFormField);
-		
+
 		return $oFormField;
 	}
 
@@ -1822,7 +1824,7 @@ class AttributeLinkedSet extends AttributeDefinition
 }
 
 /**
- * Set of objects linked to an object (n-n), and being part of its definition  
+ * Set of objects linked to an object (n-n), and being part of its definition
  *
  * @package	 iTopORM
  */
@@ -1872,12 +1874,12 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 }
 
 /**
- * Abstract class implementing default filters for a DB column  
+ * Abstract class implementing default filters for a DB column
  *
  * @package	 iTopORM
  */
 class AttributeDBFieldVoid extends AttributeDefinition
-{	
+{
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "sql"));
@@ -1914,8 +1916,8 @@ class AttributeDBFieldVoid extends AttributeDefinition
 	}
 
 	public function GetEditClass() {return "String";}
-	
-	public function GetValuesDef() {return $this->Get("allowed_values");} 
+
+	public function GetValuesDef() {return $this->Get("allowed_values");}
 	public function GetPrerequisiteAttributes($sClass = null) {return $this->Get("depends_on");}
 
 	static public function IsBasedOnDBColumns() {return true;}
@@ -1985,16 +1987,16 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		default:
 			return $this->GetSQLExpr()." = $sQValue";
 		}
-	} 
+	}
 }
 
 /**
- * Base class for all kind of DB attributes, with the exception of external keys 
+ * Base class for all kind of DB attributes, with the exception of external keys
  *
  * @package	 iTopORM
  */
 class AttributeDBField extends AttributeDBFieldVoid
-{	
+{
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
@@ -2004,7 +2006,7 @@ class AttributeDBField extends AttributeDBFieldVoid
 }
 
 /**
- * Map an integer column to an attribute 
+ * Map an integer column to an attribute
  *
  * @package	 iTopORM
  */
@@ -2020,7 +2022,7 @@ class AttributeInteger extends AttributeDBField
 
 	public function GetEditClass() {return "String";}
 	protected function GetSQLCol($bFullSpec = false) {return "INT(11)".($bFullSpec ? $this->GetSQLColSpec() : '');}
-	
+
 	public function GetValidationPattern()
 	{
 		return "^[0-9]+$";
@@ -2066,23 +2068,23 @@ class AttributeInteger extends AttributeDBField
 			break;
 		case 'in':
 			if (!is_array($value)) throw new CoreException("Expected an array for argument value (sOpCode='$sOpCode')");
-			return $this->GetSQLExpr()." IN ('".implode("', '", $value)."')"; 
+			return $this->GetSQLExpr()." IN ('".implode("', '", $value)."')";
 			break;
 
 		case '=':
 		default:
 			return $this->GetSQLExpr()." = \"$value\"";
 		}
-	} 
+	}
 
 	public function GetNullValue()
 	{
 		return null;
-	} 
+	}
 	public function IsNull($proposedValue)
 	{
 		return is_null($proposedValue);
-	} 
+	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
@@ -2099,7 +2101,7 @@ class AttributeInteger extends AttributeDBField
 }
 
 /**
- * An external key for which the class is defined as the value of another attribute 
+ * An external key for which the class is defined as the value of another attribute
  *
  * @package	 iTopORM
  */
@@ -2134,17 +2136,17 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		return parent::GetBasicFilterSQLExpr($sOpCode, $value);
-	} 
+	}
 
 	public function GetNullValue()
 	{
 		return 0;
-	} 
+	}
 
 	public function IsNull($proposedValue)
 	{
 		return ($proposedValue == 0);
-	} 
+	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
@@ -2159,7 +2161,7 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 }
 
 /**
- * Display an integer between 0 and 100 as a percentage / horizontal bar graph 
+ * Display an integer between 0 and 100 as a percentage / horizontal bar graph
  *
  * @package	 iTopORM
  */
@@ -2218,7 +2220,7 @@ class AttributeDecimal extends AttributeDBField
 	{
 		return "DECIMAL(".$this->Get('digits').",".$this->Get('decimals').")".($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
-	
+
 	public function GetValidationPattern()
 	{
 		$iNbDigits = $this->Get('digits');
@@ -2267,23 +2269,23 @@ class AttributeDecimal extends AttributeDBField
 			break;
 		case 'in':
 			if (!is_array($value)) throw new CoreException("Expected an array for argument value (sOpCode='$sOpCode')");
-			return $this->GetSQLExpr()." IN ('".implode("', '", $value)."')"; 
+			return $this->GetSQLExpr()." IN ('".implode("', '", $value)."')";
 			break;
 
 		case '=':
 		default:
 			return $this->GetSQLExpr()." = \"$value\"";
 		}
-	} 
+	}
 
 	public function GetNullValue()
 	{
 		return null;
-	} 
+	}
 	public function IsNull($proposedValue)
 	{
 		return is_null($proposedValue);
-	} 
+	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
@@ -2300,7 +2302,7 @@ class AttributeDecimal extends AttributeDBField
 }
 
 /**
- * Map a boolean column to an attribute 
+ * Map a boolean column to an attribute
  *
  * @package	 iTopORM
  */
@@ -2509,7 +2511,7 @@ class AttributeBoolean extends AttributeInteger
 }
 
 /**
- * Map a varchar column (size < ?) to an attribute 
+ * Map a varchar column (size < ?) to an attribute
  *
  * @package	 iTopORM
  */
@@ -2601,17 +2603,17 @@ class AttributeString extends AttributeDBField
 		default:
 			return $this->GetSQLExpr()." LIKE $sQValue";
 		}
-	} 
+	}
 
 	public function GetNullValue()
 	{
 		return '';
-	} 
+	}
 
 	public function IsNull($proposedValue)
 	{
 		return ($proposedValue == '');
-	} 
+	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
@@ -2661,7 +2663,7 @@ class AttributeString extends AttributeDBField
 }
 
 /**
- * An attibute that matches an object class 
+ * An attibute that matches an object class
  *
  * @package	 iTopORM
  */
@@ -2688,7 +2690,7 @@ class AttributeClass extends AttributeString
 		{
 			// For this kind of attribute specifying null as default value
 			// is authorized even if null is not allowed
-			
+
 			// Pick the first one...
 			$aClasses = $this->GetAllowedValues();
 			$sDefault = key($aClasses);
@@ -2706,16 +2708,16 @@ class AttributeClass extends AttributeString
 	{
 		return true;
 	}
-	
+
 	public function GetBasicFilterLooseOperator()
 	{
 		return '=';
 	}
-	
+
 }
 
 /**
- * An attibute that matches one of the language codes availables in the dictionnary 
+ * An attibute that matches one of the language codes availables in the dictionnary
  *
  * @package	 iTopORM
  */
@@ -2745,7 +2747,7 @@ class AttributeApplicationLanguage extends AttributeString
 	{
 		return true;
 	}
-	
+
 	public function GetBasicFilterLooseOperator()
 	{
 		return '=';
@@ -2753,7 +2755,7 @@ class AttributeApplicationLanguage extends AttributeString
 }
 
 /**
- * The attribute dedicated to the finalclass automatic attribute 
+ * The attribute dedicated to the finalclass automatic attribute
  *
  * @package	 iTopORM
  */
@@ -2919,7 +2921,7 @@ class AttributeFinalClass extends AttributeString
 	{
 		return '=';
 	}
-	
+
 	public function GetValueLabel($sValue)
 	{
 		if (empty($sValue)) return '';
@@ -2940,7 +2942,7 @@ class AttributeFinalClass extends AttributeString
 
 
 /**
- * Map a varchar column (size < ?) to an attribute that must never be shown to the user 
+ * Map a varchar column (size < ?) to an attribute that must never be shown to the user
  *
  * @package	 iTopORM
  */
@@ -2986,7 +2988,7 @@ class AttributePassword extends AttributeString
 			return '******';
 		}
 	}
-	
+
 	public function IsPartOfFingerprint() { return false; } // Cannot reliably compare two encrypted passwords since the same password will be encrypted in diffferent manners depending on the random 'salt'
 }
 
@@ -3021,7 +3023,7 @@ class AttributeEncryptedString extends AttributeString
 	 * 1) The static class variable $sKey is NOT serialized
 	 * 2) The object's constructor is NOT called upon wakeup
 	 * 3) mcrypt may crash the server if passed an empty key !!
-	 * 
+	 *
 	 * So let's restore the key (if needed) when waking up
 	 **/
 	public function __wakeup()
@@ -3035,9 +3037,9 @@ class AttributeEncryptedString extends AttributeString
 			self::$sLibrary = MetaModel::GetConfig()->GetEncryptionLibrary();
 		}
 	}
-	
 
-	protected function GetSQLCol($bFullSpec = false) {return "TINYBLOB";}	
+
+	protected function GetSQLCol($bFullSpec = false) {return "TINYBLOB";}
 
 	public function GetMaxSize()
 	{
@@ -3101,7 +3103,7 @@ define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
 
 
 /**
- * Map a text column (size > ?) to an attribute 
+ * Map a text column (size > ?) to an attribute
  *
  * @package	 iTopORM
  */
@@ -3146,7 +3148,7 @@ class AttributeText extends AttributeString
 		}
 		return $aColumns;
 	}
-	
+
 	public function GetMaxSize()
 	{
 		// Is there a way to know the current limitation for mysql?
@@ -3172,7 +3174,7 @@ class AttributeText extends AttributeString
 					$sUrl = $aAllMatches[$i][0][0]; // String corresponding to the main pattern
 					$iPos = $aAllMatches[$i][0][1]; // Position of the main pattern
 					$sText = substr_replace($sText, "<a href=\"$sUrl\">$sUrl</a>", $iPos, strlen($sUrl));
-					
+
 				}
 			}
 		}
@@ -3182,7 +3184,7 @@ class AttributeText extends AttributeString
 			{
 				$sClass = trim($aMatches[1]);
 				$sName = trim($aMatches[2]);
-				
+
 				if (MetaModel::IsValidClass($sClass))
 				{
 					$oObj = MetaModel::GetObjectByName($sClass, $sName, false /* MustBeFound */);
@@ -3223,19 +3225,19 @@ class AttributeText extends AttributeString
 			$aStyles[] = 'overflow:auto';
 			$sStyle = 'style="'.implode(';', $aStyles).'"';
 		}
-		
+
 		if ($this->GetFormat() == 'text')
 		{
 			$sValue = parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
 			$sValue = self::RenderWikiHtml($sValue);
-			return "<div $sStyle>".str_replace("\n", "<br>\n", $sValue).'</div>';			
+			return "<div $sStyle>".str_replace("\n", "<br>\n", $sValue).'</div>';
 		}
 		else
 		{
 			$sValue = self::RenderWikiHtml($sValue, true /* wiki only */);
 			return "<div class=\"HTML\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
 		}
-		
+
 	}
 
 	public function GetEditValue($sValue, $oHostObj = null)
@@ -3283,7 +3285,7 @@ class AttributeText extends AttributeString
 			return parent::GetAsPlainText($sValue, $oHostObj);
 		}
 	}
-	
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$sValue = $proposedValue;
@@ -3295,7 +3297,7 @@ class AttributeText extends AttributeString
 				$sValue = HTMLSanitizer::Sanitize($sValue);
 			}
 			break;
-			
+
 			case 'text':
 			default:
 			if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
@@ -3323,15 +3325,15 @@ class AttributeText extends AttributeString
 	{
 		return Str::pure2xml($value);
 	}
-	
+
 	public function GetWidth()
 	{
-		return $this->GetOptional('width', '');		
+		return $this->GetOptional('width', '');
 	}
-	
+
 	public function GetHeight()
 	{
-		return $this->GetOptional('height', '');		
+		return $this->GetOptional('height', '');
 	}
 
 	static public function GetFormFieldClass()
@@ -3392,7 +3394,7 @@ class AttributeText extends AttributeString
 		{
 			$sFormat = $this->GetFormat();
 		}
-		
+
 		switch($sFormat)
 		{
 			case 'text':
@@ -3401,7 +3403,7 @@ class AttributeText extends AttributeString
 				$value = utils::TextToHtml($value);
 			}
 			break;
-			
+
 			case 'html':
 			if ($this->GetFormat() == 'text')
 			{
@@ -3412,13 +3414,13 @@ class AttributeText extends AttributeString
 				$value = InlineImage::FixUrls((string)$value);
 			}
 			break;
-			
+
 			default:
 			// unknown format ??
 		}
 		return $value;
 	}
-	
+
 	public function GetSQLValues($value)
 	{
 		$aValues = array();
@@ -3429,8 +3431,8 @@ class AttributeText extends AttributeString
 			$aValues[$this->Get("sql").'_format'] = $this->GetFormat();
 		}
 		return $aValues;
-	}	
-	
+	}
+
 	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
 		switch($this->GetFormat())
@@ -3445,7 +3447,7 @@ class AttributeText extends AttributeString
 			$sEscaped = str_replace($sFrom, $sTo, (string)$sValue);
 			return $sTextQualifier.$sEscaped.$sTextQualifier;
 			break;
-			
+
 			case 'text':
 			default:
 			return parent::GetAsCSV($sValue, $sSeparator, $sTextQualifier, $oHostObject, $bLocalize, $bConvertToPlainText);
@@ -3454,7 +3456,7 @@ class AttributeText extends AttributeString
 }
 
 /**
- * Map a log to an attribute 
+ * Map a log to an attribute
  *
  * @package	 iTopORM
  */
@@ -3474,7 +3476,7 @@ class AttributeLongText extends AttributeText
 }
 
 /**
- * An attibute that stores a case log (i.e journal) 
+ * An attibute that stores a case log (i.e journal)
  *
  * @package	 iTopORM
  */
@@ -3485,7 +3487,7 @@ class AttributeCaseLog extends AttributeLongText
 	public function GetNullValue()
 	{
 		return '';
-	} 
+	}
 
 	public function IsNull($proposedValue)
 	{
@@ -3494,7 +3496,7 @@ class AttributeCaseLog extends AttributeLongText
 			return ($proposedValue == '');
 		}
 		return ($proposedValue->GetText() == '');
-	} 
+	}
 
 	public function ScalarToSQL($value)
 	{
@@ -3535,7 +3537,7 @@ class AttributeCaseLog extends AttributeLongText
 			return (string) $value;
 		}
 	}
-	
+
 	public function GetDefaultValue(DBObject $oHostObject = null) {return new ormCaseLog();}
 	public function Equals($val1, $val2) {return ($val1->GetText() == $val2->GetText());}
 
@@ -3568,7 +3570,7 @@ class AttributeCaseLog extends AttributeLongText
 				{
 					$oPreviousLog = $oHostObj->GetOriginal($this->GetCode());;
 				}
-				
+
 			}
 			if (is_object($oPreviousLog))
 			{
@@ -3621,10 +3623,10 @@ class AttributeCaseLog extends AttributeLongText
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
-		} 
+		}
 		$sLog = $aCols[$sPrefix];
 
-		if (isset($aCols[$sPrefix.'_index'])) 
+		if (isset($aCols[$sPrefix.'_index']))
 		{
 			$sIndex = $aCols[$sPrefix.'_index'];
 		}
@@ -3635,7 +3637,7 @@ class AttributeCaseLog extends AttributeLongText
 		}
 
 		if (strlen($sIndex) > 0)
-		{ 
+		{
 			$aIndex = unserialize($sIndex);
 			$value = new ormCaseLog($sLog, $aIndex);
 		}
@@ -3706,7 +3708,7 @@ class AttributeCaseLog extends AttributeLongText
 			return '';
 		}
 	}
-	
+
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		if ($value instanceOf ormCaseLog)
@@ -3721,7 +3723,7 @@ class AttributeCaseLog extends AttributeLongText
 
 	/**
 	 * List the available verbs for 'GetForTemplate'
-	 */	 
+	 */
 	public function EnumTemplateVerbs()
 	{
 		return array(
@@ -3749,25 +3751,25 @@ class AttributeCaseLog extends AttributeLongText
 		{
 			case '':
 			return $value->GetText(true);
-			
+
 			case 'head':
 			return $value->GetLatestEntry('text');
 
 			case 'head_html':
 			return $value->GetLatestEntry('html');
-			
+
 			case 'html':
 			return $value->GetAsEmailHtml();
-	
+
 			default:
 			throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
 		}
 	}
-	
+
 	/**
 	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue	 
-	 */	 	
+	 * The operation is the opposite to FromJSONToValue
+	 */
 	public function GetForJSON($value)
 	{
 		return $value->GetForJSON();
@@ -3775,8 +3777,8 @@ class AttributeCaseLog extends AttributeLongText
 
 	/**
 	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON	 
-	 */	 	
+	 * The operation is the opposite to GetForJSON
+	 */
 	public function FromJSONToValue($json)
 	{
 		if (is_string($json))
@@ -3802,7 +3804,7 @@ class AttributeCaseLog extends AttributeLongText
 		}
 		return $ret;
 	}
-	
+
 	public function Fingerprint($value)
 	{
 		$sFingerprint = '';
@@ -3812,7 +3814,7 @@ class AttributeCaseLog extends AttributeLongText
 		}
 		return $sFingerprint;
 	}
-	
+
 	/**
 	 * The actual formatting of the text: either text (=plain text) or html (= text with HTML markup)
 	 * @return string
@@ -3841,7 +3843,7 @@ class AttributeCaseLog extends AttributeLongText
 }
 
 /**
- * Map a text column (size > ?), containing HTML code, to an attribute 
+ * Map a text column (size > ?), containing HTML code, to an attribute
  *
  * @package	 iTopORM
  */
@@ -3874,7 +3876,7 @@ class AttributeHTML extends AttributeLongText
 }
 
 /**
- * Specialization of a string: email 
+ * Specialization of a string: email
  *
  * @package	 iTopORM
  */
@@ -3901,7 +3903,7 @@ class AttributeEmailAddress extends AttributeString
 }
 
 /**
- * Specialization of a string: IP address 
+ * Specialization of a string: IP address
  *
  * @package	 iTopORM
  */
@@ -3950,7 +3952,7 @@ class AttributePhoneNumber extends AttributeString
 }
 
 /**
- * Specialization of a string: OQL expression 
+ * Specialization of a string: OQL expression
  *
  * @package	 iTopORM
  */
@@ -3962,7 +3964,7 @@ class AttributeOQL extends AttributeText
 }
 
 /**
- * Specialization of a string: template (contains iTop placeholders like $current_contact_id$ or $this->name$) 
+ * Specialization of a string: template (contains iTop placeholders like $current_contact_id$ or $this->name$)
  *
  * @package	 iTopORM
  */
@@ -4018,7 +4020,7 @@ class AttributeTemplateHTML extends AttributeText
 
 
 /**
- * Map a enum column to an attribute 
+ * Map a enum column to an attribute
  *
  * @package	 iTopORM
  */
@@ -4061,7 +4063,7 @@ class AttributeEnum extends AttributeString
 				.($bFullSpec ? " DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
 		}
 	}
-	
+
 	protected function GetSQLColSpec()
 	{
 		$default = $this->ScalarToSQL($this->GetDefaultValue());
@@ -4111,7 +4113,7 @@ class AttributeEnum extends AttributeString
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		return parent::GetBasicFilterSQLExpr($sOpCode, $value);
-	} 
+	}
 
 	public function GetValueLabel($sValue)
 	{
@@ -4245,8 +4247,8 @@ class AttributeEnum extends AttributeString
 
 	/**
 	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue	 
-	 */	 	
+	 * The operation is the opposite to FromJSONToValue
+	 */
 	public function GetForJSON($value)
 	{
 		return $value;
@@ -4271,7 +4273,7 @@ class AttributeEnum extends AttributeString
 
 	/**
 	 * An enum can be localized
-	 */	 	
+	 */
 	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
 	{
 		if ($bLocalizedValue)
@@ -4315,11 +4317,11 @@ class AttributeEnum extends AttributeString
 		if ($proposedValue == '') return null;
 		return parent::MakeRealValue($proposedValue, $oHostObj);
 	}
-	
+
 	public function GetOrderByHint()
 	{
 		$aValues = $this->GetAllowedValues();
-	
+
 		return Dict::Format('UI:OrderByHint_Values', implode(', ', $aValues));
 	}
 }
@@ -4452,7 +4454,7 @@ class AttributeMetaEnum extends AttributeEnum
 	}
 }
 /**
- * Map a date+time column to an attribute 
+ * Map a date+time column to an attribute
  *
  * @package	 iTopORM
  */
@@ -4470,11 +4472,11 @@ class AttributeDateTime extends AttributeDBField
 	{
 		if (self::$oFormat == null)
 		{
-			static::LoadFormatFromConfig();		
+			static::LoadFormatFromConfig();
 		}
 		return self::$oFormat;
-	}	
-	
+	}
+
 	/**
 	 * Load the 3 settings: date format, time format and data_time format from the configuration
 	 */
@@ -4485,13 +4487,13 @@ class AttributeDateTime extends AttributeDBField
 		$sDateFormat = isset($aFormats[$sLang]['date']) ? $aFormats[$sLang]['date'] : (isset($aFormats['default']['date']) ? $aFormats['default']['date'] : 'Y-m-d');
 		$sTimeFormat = isset($aFormats[$sLang]['time']) ? $aFormats[$sLang]['time'] : (isset($aFormats['default']['time']) ? $aFormats['default']['time'] : 'H:i:s');
 		$sDateAndTimeFormat = isset($aFormats[$sLang]['date_time']) ? $aFormats[$sLang]['date_time'] : (isset($aFormats['default']['date_time']) ? $aFormats['default']['date_time'] : '$date $time');
-		
+
 		$sFullFormat = str_replace(array('$date', '$time'), array($sDateFormat, $sTimeFormat), $sDateAndTimeFormat);
-		
+
 		self::SetFormat(new DateTimeFormat($sFullFormat));
-		AttributeDate::SetFormat(new DateTimeFormat($sDateFormat));		
+		AttributeDate::SetFormat(new DateTimeFormat($sDateFormat));
 	}
-	
+
 	/**
 	 * Returns the format string used for the date & time stored in memory
 	 * @return string
@@ -4509,17 +4511,17 @@ class AttributeDateTime extends AttributeDBField
 	{
 		return 'Y-m-d H:i:s';
 	}
-	
+
 	static public function SetFormat(DateTimeFormat $oDateTimeFormat)
 	{
 		self::$oFormat = $oDateTimeFormat;
 	}
-	
+
 	static public function GetSQLTimeFormat()
 	{
 		return 'H:i:s';
 	}
-	
+
 	/**
 	 * Parses a search string coming from user input
 	 * @param string $sSearchString
@@ -4535,7 +4537,7 @@ class AttributeDateTime extends AttributeDBField
 		catch(Exception $e)
 		{
 			$sFormatString = '!'.(string)AttributeDate::GetFormat(); // BEWARE: ! is needed to set non-parsed fields to zero !!!
-			$oDateTime = DateTime::createFromFormat($sFormatString, $sSearchString); 
+			$oDateTime = DateTime::createFromFormat($sFormatString, $sSearchString);
 			if ($oDateTime !== false)
 			{
 				$sSearchString = $oDateTime->format($this->GetInternalFormat());
@@ -4543,12 +4545,12 @@ class AttributeDateTime extends AttributeDBField
 		}
 		return $sSearchString;
 	}
-	
+
 	static public function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\DateTimeField';
 	}
-	
+
 	/**
 	 * Override to specify Field class
 	 *
@@ -4619,12 +4621,12 @@ class AttributeDateTime extends AttributeDBField
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
 		return (string)static::GetFormat()->format($sValue);
-	}	
+	}
 	public function GetValueLabel($sValue, $oHostObj = null)
 	{
 		return (string)static::GetFormat()->format($sValue);
-	}	
-	
+	}
+
 	protected function GetSQLCol($bFullSpec = false) {return "DATETIME";}
 
 	public function GetImportColumns()
@@ -4708,7 +4710,7 @@ class AttributeDateTime extends AttributeDBField
 			return $this->GetSQLExpr()." = $sQValue";
 		}
 	}
-	
+
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if (is_null($proposedValue))
@@ -4741,7 +4743,7 @@ class AttributeDateTime extends AttributeDBField
 	public function ScalarToSQL($value)
 	{
 		if (empty($value))
-		{	
+		{
 			return null;
 		}
 		return $value;
@@ -4801,7 +4803,7 @@ class AttributeDateTime extends AttributeDBField
 			'less than or equal' => array('pattern' => '/^<=(.*)$/', 'operator' => '<='),
 			'less than' =>  array('pattern' => '/^<(.*)$/', 'operator' => '<'),
 		);
-		
+
 		$sPatternFound = '';
 		$aMatches = array();
 		foreach($aPatterns as $sPatName => $sPattern)
@@ -4810,13 +4812,13 @@ class AttributeDateTime extends AttributeDBField
 			{
 				$sPatternFound = $sPatName;
 				break;
-			}			
+			}
 		}
-		
+
 		switch($sPatternFound)
 		{
 			case 'between':
-			
+
 			$sParamName1 = $oField->GetParent().'_'.$oField->GetName().'_1';
 			$oRightExpr = new VariableExpression($sParamName1);
 			if ($bParseSearchString)
@@ -4840,10 +4842,10 @@ class AttributeDateTime extends AttributeDBField
 			$aParams[$sParamName2] = $aMatches[2];
 			}
 			$oCondition2 = new BinaryExpression($oField, '<=', $oRightExpr);
-			
+
 			$oNewCondition = new BinaryExpression($oCondition1, 'AND', $oCondition2);
 			break;
-			
+
 			case 'greater than':
 			case 'greater than or equal':
 			case 'less than':
@@ -4860,9 +4862,9 @@ class AttributeDateTime extends AttributeDBField
 			$aParams[$sParamName] = $aMatches[1];
 			}
 			$oNewCondition = new BinaryExpression($oField, $sSQLOperator, $oRightExpr);
-			
+
 			break;
-						
+
 			default:
 			$oNewCondition = parent::GetSmartConditionExpression($sSearchText, $oField, $aParams);
 
@@ -4875,15 +4877,15 @@ class AttributeDateTime extends AttributeDBField
 	public function GetHelpOnSmartSearch()
 	{
 		$sDict = parent::GetHelpOnSmartSearch();
-		
+
 		$oFormat = static::GetFormat();
 		$sExample = $oFormat->Format(new DateTime('2015-07-19 18:40:00'));
 		return vsprintf($sDict, array($oFormat->ToPlaceholder(), $sExample));
-	}	
+	}
 }
 
 /**
- * Store a duration as a number of seconds 
+ * Store a duration as a number of seconds
  *
  * @package	 iTopORM
  */
@@ -4906,7 +4908,7 @@ class AttributeDuration extends AttributeInteger
 	public function ScalarToSQL($value)
 	{
 		if (is_null($value))
-		{	
+		{
 			return null;
 		}
 		return $value;
@@ -4924,26 +4926,26 @@ class AttributeDuration extends AttributeInteger
 		if ($duration < 60)
 		{
 			// Less than 1 min
-			$sResult = Dict::Format('Core:Duration_Seconds', $aDuration['seconds']);			
+			$sResult = Dict::Format('Core:Duration_Seconds', $aDuration['seconds']);
 		}
 		else if ($duration < 3600)
 		{
 			// less than 1 hour, display it in minutes/seconds
-			$sResult = Dict::Format('Core:Duration_Minutes_Seconds', $aDuration['minutes'], $aDuration['seconds']);			
+			$sResult = Dict::Format('Core:Duration_Minutes_Seconds', $aDuration['minutes'], $aDuration['seconds']);
 		}
 		else if ($duration < 86400)
 		{
-			// Less than 1 day, display it in hours/minutes/seconds	
-			$sResult = Dict::Format('Core:Duration_Hours_Minutes_Seconds', $aDuration['hours'], $aDuration['minutes'], $aDuration['seconds']);			
+			// Less than 1 day, display it in hours/minutes/seconds
+			$sResult = Dict::Format('Core:Duration_Hours_Minutes_Seconds', $aDuration['hours'], $aDuration['minutes'], $aDuration['seconds']);
 		}
 		else
 		{
 			// more than 1 day, display it in days/hours/minutes/seconds
-			$sResult = Dict::Format('Core:Duration_Days_Hours_Minutes_Seconds', $aDuration['days'], $aDuration['hours'], $aDuration['minutes'], $aDuration['seconds']);			
+			$sResult = Dict::Format('Core:Duration_Days_Hours_Minutes_Seconds', $aDuration['days'], $aDuration['hours'], $aDuration['minutes'], $aDuration['seconds']);
 		}
 		return $sResult;
 	}
-	
+
 	static function SplitDuration($duration)
 	{
 		$duration = (int) $duration;
@@ -4951,7 +4953,7 @@ class AttributeDuration extends AttributeInteger
 		$hours = floor(($duration - (86400*$days)) / 3600);
 		$minutes = floor(($duration - (86400*$days + 3600*$hours)) / 60);
 		$seconds = ($duration % 60); // modulo
-		return array( 'days' => $days, 'hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds );		
+		return array( 'days' => $days, 'hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds );
 	}
 
 	static public function GetFormFieldClass()
@@ -4978,7 +4980,7 @@ class AttributeDuration extends AttributeInteger
 
 }
 /**
- * Map a date+time column to an attribute 
+ * Map a date+time column to an attribute
  *
  * @package	 iTopORM
  */
@@ -4987,12 +4989,12 @@ class AttributeDate extends AttributeDateTime
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE;
 
 	static $oDateFormat = null;
-	
+
 	static public function GetFormat()
 	{
 		if (self::$oDateFormat == null)
-		{			
-			AttributeDateTime::LoadFormatFromConfig();		
+		{
+			AttributeDateTime::LoadFormatFromConfig();
 		}
 		return self::$oDateFormat;
 	}
@@ -5019,7 +5021,7 @@ class AttributeDate extends AttributeDateTime
 	{
 		return 'Y-m-d';
 	}
-	
+
 	static public function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -5046,10 +5048,10 @@ class AttributeDate extends AttributeDateTime
 	{
 		$oFormField = parent::MakeFormField($oObject, $oFormField);
 		$oFormField->SetDateOnly(true);
-		
+
 		return $oFormField;
 	}
-	
+
 }
 
 /**
@@ -5073,7 +5075,7 @@ class AttributeDeadline extends AttributeDateTime
 			$iValue = AttributeDateTime::GetAsUnixSeconds($value);
 			$sDate = AttributeDateTime::GetFormat()->Format($value);
 			$difference = $iValue - time();
-	
+
 			if ($difference >= 0)
 			{
 				$sDifference = self::FormatDuration($difference);
@@ -5098,29 +5100,29 @@ class AttributeDeadline extends AttributeDateTime
 		if ($duration < 60)
 		{
 			// Less than 1 min
-			$sResult =Dict::S('UI:Deadline_LessThan1Min');			
+			$sResult =Dict::S('UI:Deadline_LessThan1Min');
 		}
 		else if ($duration < 3600)
 		{
 			// less than 1 hour, display it in minutes
-			$sResult =Dict::Format('UI:Deadline_Minutes', $minutes);			
+			$sResult =Dict::Format('UI:Deadline_Minutes', $minutes);
 		}
 		else if ($duration < 86400)
 		{
-			// Less that 1 day, display it in hours/minutes	
-			$sResult =Dict::Format('UI:Deadline_Hours_Minutes', $hours, $minutes);			
+			// Less that 1 day, display it in hours/minutes
+			$sResult =Dict::Format('UI:Deadline_Hours_Minutes', $hours, $minutes);
 		}
 		else
 		{
-			// Less that 1 day, display it in hours/minutes	
-			$sResult =Dict::Format('UI:Deadline_Days_Hours_Minutes', $days, $hours, $minutes);			
+			// Less that 1 day, display it in hours/minutes
+			$sResult =Dict::Format('UI:Deadline_Days_Hours_Minutes', $days, $hours, $minutes);
 		}
 		return $sResult;
 	}
 }
 
 /**
- * Map a foreign key to an attribute 
+ * Map a foreign key to an attribute
  *  AttributeExternalKey and AttributeExternalField may be an external key
  *  the difference is that AttributeExternalKey corresponds to a column into the defined table
  *  where an AttributeExternalField corresponds to a column into another table (class)
@@ -5171,9 +5173,9 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function IsExternalKey($iType = EXTKEY_RELATIVE) {return true;}
 	public function GetTargetClass($iType = EXTKEY_RELATIVE) {return $this->Get("targetclass");}
 	public function GetKeyAttDef($iType = EXTKEY_RELATIVE){return $this;}
-	public function GetKeyAttCode() {return $this->GetCode();} 
+	public function GetKeyAttCode() {return $this->GetCode();}
 	public function GetDisplayStyle() { return $this->GetOptional('display_style', 'select'); }
-	
+
 
 	public function GetDefaultValue(DBObject $oHostObject = null) {return 0;}
 	public function IsNullAllowed()
@@ -5198,7 +5200,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		return parent::GetBasicFilterSQLExpr($sOpCode, $value);
-	} 
+	}
 
 	// overloaded here so that an ext key always have the answer to
 	// "what are your possible values?"
@@ -5248,12 +5250,12 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function GetNullValue()
 	{
 		return 0;
-	} 
+	}
 
 	public function IsNull($proposedValue)
 	{
 		return ($proposedValue == 0);
-	} 
+	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
@@ -5262,17 +5264,17 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		if (MetaModel::IsValidObject($proposedValue)) return $proposedValue->GetKey();
 		return (int)$proposedValue;
 	}
-	
+
 	public function GetMaximumComboLength()
 	{
 		return $this->GetOptional('max_combo_length', MetaModel::GetConfig()->Get('max_combo_length'));
 	}
-	
+
 	public function GetMinAutoCompleteChars()
 	{
 		return $this->GetOptional('min_autocomplete_chars', MetaModel::GetConfig()->Get('min_autocomplete_chars'));
 	}
-	
+
 	public function AllowTargetCreation()
 	{
 		return $this->GetOptional('allow_target_creation', MetaModel::GetConfig()->Get('allow_target_creation'));
@@ -5311,7 +5313,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
 		}
-		
+
 		// Setting params
 		$oFormField->SetMaximumComboLength($this->GetMaximumComboLength());
 		$oFormField->SetMinAutoCompleteChars($this->GetMinAutoCompleteChars());
@@ -5505,7 +5507,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 }
 
 /**
- * An attribute which corresponds to an external key (direct or indirect) 
+ * An attribute which corresponds to an external key (direct or indirect)
  *
  * @package	 iTopORM
  */
@@ -5558,14 +5560,14 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetFinalAttDef()
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetFinalAttDef(); 
+		return $oExtAttDef->GetFinalAttDef();
 	}
 
 	protected function GetSQLCol($bFullSpec = false)
 	{
 		// throw new CoreException("external attribute: does it make any sense to request its type ?");  
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetSQLCol($bFullSpec); 
+		return $oExtAttDef->GetSQLCol($bFullSpec);
 	}
 
 	public function GetSQLExpressions($sPrefix = '')
@@ -5577,7 +5579,7 @@ class AttributeExternalField extends AttributeDefinition
 		else
 		{
 			return $sPrefix;
-		} 
+		}
 	}
 
 	public function GetLabel($sDefault = null)
@@ -5625,7 +5627,7 @@ class AttributeExternalField extends AttributeDefinition
 			$sLabel = $oRemoteAtt->GetDescription('');
 		}
 		return $sLabel;
-	} 
+	}
 	public function GetHelpOnEdition($sDefault = null)
 	{
 		$sLabel = parent::GetHelpOnEdition('');
@@ -5635,7 +5637,7 @@ class AttributeExternalField extends AttributeDefinition
 			$sLabel = $oRemoteAtt->GetHelpOnEdition('');
 		}
 		return $sLabel;
-	} 
+	}
 
 	public function IsExternalKey($iType = EXTKEY_RELATIVE)
 	{
@@ -5727,7 +5729,7 @@ class AttributeExternalField extends AttributeDefinition
 			throw new CoreException("Unexpected value for argument iType: '$iType'");
 		}
 	}
-	
+
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
 		return array($this->Get("extkey_attcode"));
@@ -5755,8 +5757,8 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetSQLExpr()
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetSQLExpr(); 
-	} 
+		return $oExtAttDef->GetSQLExpr();
+	}
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
@@ -5766,7 +5768,7 @@ class AttributeExternalField extends AttributeDefinition
 	public function IsNullAllowed()
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->IsNullAllowed(); 
+		return $oExtAttDef->IsNullAllowed();
 	}
 
 	static public function IsScalar()
@@ -5782,31 +5784,31 @@ class AttributeExternalField extends AttributeDefinition
 	public function GetBasicFilterOperators()
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetBasicFilterOperators(); 
+		return $oExtAttDef->GetBasicFilterOperators();
 	}
 	public function GetBasicFilterLooseOperator()
 	{
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetBasicFilterLooseOperator(); 
+		return $oExtAttDef->GetBasicFilterLooseOperator();
 	}
 
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetBasicFilterSQLExpr($sOpCode, $value);
-	} 
+	}
 
 	public function GetNullValue()
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->GetNullValue();
-	} 
+	}
 
 	public function IsNull($proposedValue)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
 		return $oExtAttDef->IsNull($proposedValue);
-	} 
+	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
@@ -5909,7 +5911,8 @@ class AttributeExternalField extends AttributeDefinition
  */
 class AttributeTagSet extends AttributeDBFieldVoid
 {
-    const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+    const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
+
     static public function ListExpectedParams()
     {
         return array_merge(parent::ListExpectedParams(), array("is_null_allowed"));
@@ -5923,16 +5926,18 @@ class AttributeTagSet extends AttributeDBFieldVoid
 
     public function GetEditValue($value, $oHostObj = null)
     {
-        if (empty($value))
-        {
-            return '';
-        }
-        if ($value instanceof ormTagSet)
-        {
-            $aValues = $value->GetValue();
-            return implode(' ', $aValues);
-        }
-        return '';
+	    if (empty($value))
+	    {
+		    return '';
+	    }
+	    if ($value instanceof ormTagSet)
+	    {
+		    $aValues = $value->GetValue();
+
+		    return implode(' ', $aValues);
+	    }
+
+	    return '';
     }
 
     protected function GetSQLCol($bFullSpec = false)
@@ -5957,6 +5962,19 @@ class AttributeTagSet extends AttributeDBFieldVoid
             return $val1->Equals($val2);
         }
         return ($val1 == $val2);
+    }
+
+    public function GetAllowedValues($aArgs = array(), $sContains = '')
+    {
+	    $sAttCode = $this->GetCode();
+	    $sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
+		$aAllowedTags = TagSetFieldData::GetAllowedValues($sClass, $sAttCode);
+		$aAllowedValues = array();
+	    foreach($aAllowedTags as $oAllowedTag)
+	    {
+		    $aAllowedValues[$oAllowedTag->Get('tag_code')] = $oAllowedTag->Get('tag_label');
+	    }
+	    return $aAllowedValues;
     }
 
 	/**
@@ -6048,19 +6066,46 @@ class AttributeTagSet extends AttributeDBFieldVoid
         return count($proposedValue->GetValue()) == 0;
     }
 
-    /**
-     * To be overloaded for localized enums
-     *
-     * @param $sValue
-     *
-     * @return string label corresponding to the given value (in plain text)
-     */
+	/**
+	 * To be overloaded for localized enums
+	 *
+	 * @param $sValue
+	 *
+	 * @return string label corresponding to the given value (in plain text)
+	 * @throws \CoreWarning
+	 * @throws \Exception
+	 */
     public function GetValueLabel($sValue)
     {
-        return $sValue;
+	    if (empty($sValue))
+	    {
+		    return '';
+	    }
+	    if (is_string($sValue))
+	    {
+	    	$sValue = $this->MakeRealValue($sValue, null);
+	    }
+	    if ($sValue instanceof ormTagSet)
+	    {
+		    $aValues = $sValue->GetTags();
+		    return implode(' ', $aValues);
+	    }
+	    throw new CoreWarning('Expected the attribute value to be a TagSet', array('found_type' => gettype($sValue), 'value' => $sValue, 'class' => $this->GetHostClass(), 'attribute' => $this->GetCode()));
     }
 
-    /**
+	/**
+	 * @param string $sValue
+	 * @param null $oHostObj
+	 *
+	 * @return string
+	 * @throws \CoreWarning
+	 */
+	public function GetAsPlainText($sValue, $oHostObj = null)
+    {
+	    return $this->GetValueLabel($sValue);
+    }
+
+	/**
      * @param $value
      *
      * @return string
@@ -6339,7 +6384,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 }
 
 /**
- * Map a varchar column to an URL (formats the ouput in HMTL) 
+ * Map a varchar column to an URL (formats the ouput in HMTL)
  *
  * @package	 iTopORM
  */
@@ -6362,7 +6407,7 @@ class AttributeURL extends AttributeString
 	{
 		return 2048;
 	}
-	
+
 	public function GetEditClass() {return "String";}
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
@@ -6411,7 +6456,7 @@ class AttributeURL extends AttributeString
 }
 
 /**
- * A blob is an ormDocument, it is stored as several columns in the database  
+ * A blob is an ormDocument, it is stored as several columns in the database
  *
  * @package	 iTopORM
  */
@@ -6436,7 +6481,7 @@ class AttributeBlob extends AttributeDefinition
 	{
 		return '';
 	}
-	
+
 	/**
 	 * Users can provide the document from an URL (including an URL on iTop itself)
 	 * for CSV import. Administrators can even provide the path to a local file
@@ -6446,7 +6491,7 @@ class AttributeBlob extends AttributeDefinition
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		if ($proposedValue === null) return null;
-		
+
 		if (is_object($proposedValue))
 		{
 			$proposedValue = clone $proposedValue;
@@ -6463,7 +6508,7 @@ class AttributeBlob extends AttributeDefinition
 				IssueLog::Warning(get_class($this)."::MakeRealValue - ".$e->getMessage());
 				// Not a real document !! store is as text !!! (This was the default behavior before)
 				$proposedValue = new ormDocument($e->getMessage()." \n".$proposedValue, 'text/plain');
-			}	
+			}
 		}
 		return $proposedValue;
 	}
@@ -6488,21 +6533,21 @@ class AttributeBlob extends AttributeDefinition
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
-		} 
+		}
 		$sMimeType = isset($aCols[$sPrefix]) ? $aCols[$sPrefix] : '';
 
-		if (!array_key_exists($sPrefix.'_data', $aCols)) 
+		if (!array_key_exists($sPrefix.'_data', $aCols))
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '".$sPrefix."_data' from {$sAvailable}");
-		} 
+		}
 		$data = isset($aCols[$sPrefix.'_data']) ? $aCols[$sPrefix.'_data'] : null;
 
-		if (!array_key_exists($sPrefix.'_filename', $aCols)) 
+		if (!array_key_exists($sPrefix.'_filename', $aCols))
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '".$sPrefix."_filename' from {$sAvailable}");
-		} 
+		}
 		$sFileName =  isset($aCols[$sPrefix.'_filename']) ? $aCols[$sPrefix.'_filename'] : '';
 
 		$value = new ormDocument($data, $sMimeType, $sFileName);
@@ -6560,7 +6605,7 @@ class AttributeBlob extends AttributeDefinition
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		return 'true';
-	} 
+	}
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
@@ -6615,8 +6660,8 @@ class AttributeBlob extends AttributeDefinition
 
 	/**
 	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue	 
-	 */	 	
+	 * The operation is the opposite to FromJSONToValue
+	 */
 	public function GetForJSON($value)
 	{
 		if ($value instanceOf ormDocument)
@@ -6635,8 +6680,8 @@ class AttributeBlob extends AttributeDefinition
 
 	/**
 	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON	 
-	 */	 	
+	 * The operation is the opposite to GetForJSON
+	 */
 	public function FromJSONToValue($json)
 	{
 		if (isset($json->data))
@@ -6650,7 +6695,7 @@ class AttributeBlob extends AttributeDefinition
 		}
 		return $value;
 	}
-	
+
 	public function Fingerprint($value)
 	{
 		$sFingerprint = '';
@@ -6658,7 +6703,7 @@ class AttributeBlob extends AttributeDefinition
 		{
 			$sFingerprint = md5($value->GetData());
 		}
-		return $sFingerprint;		
+		return $sFingerprint;
 	}
 
 	static public function GetFormFieldClass()
@@ -6708,7 +6753,7 @@ class AttributeImage extends AttributeBlob
 		// The validation of the MIME Type is done by CheckFormat below
 		return $oDoc;
 	}
-	
+
 	/**
 	 * Check that the supplied ormDocument actually contains an image
 	 * {@inheritDoc}
@@ -6722,7 +6767,7 @@ class AttributeImage extends AttributeBlob
 		}
 		return true;
 	}
-	
+
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$iMaxWidthPx = $this->Get('display_max_width').'px';
@@ -6778,7 +6823,7 @@ class AttributeImage extends AttributeBlob
     }
 }
 /**
- * A stop watch is an ormStopWatch object, it is stored as several columns in the database  
+ * A stop watch is an ormStopWatch object, it is stored as several columns in the database
  *
  * @package	 iTopORM
  */
@@ -6823,7 +6868,7 @@ class AttributeStopWatch extends AttributeDefinition
 
 	/**
 	 * Construct a brand new (but configured) stop watch
-	 */	 	
+	 */
 	public function NewStopWatch()
 	{
 		$oSW = new ormStopWatch();
@@ -6904,7 +6949,7 @@ class AttributeStopWatch extends AttributeDefinition
 			{
 				$sAvailable = implode(', ', array_keys($aCols));
 				throw new MissingColumnException("Missing column '$sExpectedCol' from {$sAvailable}");
-			} 
+			}
 		}
 
 		$value = new ormStopWatch(
@@ -7058,7 +7103,7 @@ class AttributeStopWatch extends AttributeDefinition
 	{
 		return $this->Get('thresholds');
 	}
-	
+
 	public function Fingerprint($value)
 	{
 		$sFingerprint = '';
@@ -7498,7 +7543,7 @@ class AttributeStopWatch extends AttributeDefinition
  * If an attribute implements the verbs GetSubItem.... then it can expose
  * internal values, each of them being an attribute and therefore they
  * can be displayed at different times in the object lifecycle, and used for
- * reporting (as a condition in OQL, or as an additional column in an export)  
+ * reporting (as a condition in OQL, or as an additional column in an export)
  * Known usages: Stop Watches can expose threshold statuses
  */
 class AttributeSubItem extends AttributeDefinition
@@ -7510,11 +7555,11 @@ class AttributeSubItem extends AttributeDefinition
 		return array_merge(parent::ListExpectedParams(), array('target_attcode', 'item_code'));
 	}
 
-	public function GetParentAttCode() {return $this->Get("target_attcode");} 
+	public function GetParentAttCode() {return $this->Get("target_attcode");}
 
 	/**
-	 * Helper : get the attribute definition to which the execution will be forwarded	
-	 */	
+	 * Helper : get the attribute definition to which the execution will be forwarded
+	 */
 	public function GetTargetAttDef()
 	{
 		$sClass = $this->GetHostClass();
@@ -7523,7 +7568,7 @@ class AttributeSubItem extends AttributeDefinition
 	}
 
 	public function GetEditClass() {return "";}
-	
+
 	public function GetValuesDef() {return null;}
 
 	static public function IsBasedOnDBColumns() {return true;}
@@ -7589,7 +7634,7 @@ class AttributeSubItem extends AttributeDefinition
 		default:
 			return $this->GetSQLExpr()." = $sQValue";
 		}
-	} 
+	}
 
 	public function GetSQLExpressions($sPrefix = '')
 	{
@@ -7625,7 +7670,7 @@ class AttributeSubItem extends AttributeDefinition
 		$res = $oParent->GetSubItemAsCSV($this->Get('item_code'), $value, $sSeparator, $sTextQualifier, $bConvertToPlainText);
 		return $res;
 	}
-	
+
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$oParent = $this->GetTargetAttDef();
@@ -7635,14 +7680,14 @@ class AttributeSubItem extends AttributeDefinition
 
 	/**
 	 * As of now, this function must be implemented to have the value in spreadsheet format
-	 */	 	
+	 */
 	public function GetEditValue($value, $oHostObj = null)
 	{
 		$oParent = $this->GetTargetAttDef();
 		$res = $oParent->GetSubItemAsEditValue($this->Get('item_code'), $value);
 		return $res;
 	}
-	
+
 	public function IsPartOfFingerprint()
 	{
 		return false;
@@ -7727,14 +7772,14 @@ class AttributeOneWayPassword extends AttributeDefinition
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
-		} 
+		}
 		$hashed = isset($aCols[$sPrefix]) ? $aCols[$sPrefix] : '';
 
-		if (!array_key_exists($sPrefix.'_salt', $aCols)) 
+		if (!array_key_exists($sPrefix.'_salt', $aCols))
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '".$sPrefix."_salt' from {$sAvailable}");
-		} 
+		}
 		$sSalt = isset($aCols[$sPrefix.'_salt']) ? $aCols[$sPrefix.'_salt'] : '';
 
 		$value = new ormPassword($hashed, $sSalt);
@@ -7785,7 +7830,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 		{
 			$sAvailable = implode(', ', array_keys($aCols));
 			throw new MissingColumnException("Missing column '$sPrefix' from {$sAvailable}");
-		} 
+		}
 		$sClearPwd = $aCols[$sPrefix];
 
 		$oPassword = new ormPassword('', '');
@@ -7811,7 +7856,7 @@ class AttributeOneWayPassword extends AttributeDefinition
 	public function GetBasicFilterSQLExpr($sOpCode, $value)
 	{
 		return 'true';
-	} 
+	}
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
@@ -7826,18 +7871,18 @@ class AttributeOneWayPassword extends AttributeDefinition
 	{
 		return ''; // Not exportable in CSV
 	}
-	
+
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		return ''; // Not exportable in XML
 	}
-	
+
 	public function GetValueLabel($sValue, $oHostObj = null)
 	{
 		// Don't display anything in "group by" reports
 		return '*****';
 	}
-	
+
 }
 
 // Indexed array having two dimensions
@@ -7860,12 +7905,12 @@ class AttributeTable extends AttributeDBField
 	public function GetNullValue()
 	{
 		return array();
-	} 
+	}
 
 	public function IsNull($proposedValue)
 	{
 		return (count($proposedValue) == 0);
-	} 
+	}
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
@@ -8062,13 +8107,13 @@ class AttributePropertySet extends AttributeTable
 }
 
 /**
- * The attribute dedicated to the friendly name automatic attribute (not written) 
+ * The attribute dedicated to the friendly name automatic attribute (not written)
  *
  * @package	 iTopORM
  */
 
 /**
- * The attribute dedicated to the friendly name automatic attribute (not written) 
+ * The attribute dedicated to the friendly name automatic attribute (not written)
  *
  * @package	 iTopORM
  */
@@ -8128,7 +8173,7 @@ class AttributeFriendlyName extends AttributeDefinition
 			$sLabel = Dict::S('Core:FriendlyName-Description');
 		}
 		return $sLabel;
-	} 
+	}
 
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
@@ -8228,7 +8273,7 @@ class AttributeFriendlyName extends AttributeDefinition
 			return $this->GetSQLExpr()." LIKE $sQValue";
 		}
 	}
-	
+
 	public function IsPartOfFingerprint() { return false; }
 }
 
@@ -8250,7 +8295,7 @@ class AttributeRedundancySettings extends AttributeDBField
 		return array('sql', 'relation_code', 'from_class', 'neighbour_id', 'enabled', 'enabled_mode', 'min_up', 'min_up_type', 'min_up_mode');
 	}
 
-	public function GetValuesDef() {return null;} 
+	public function GetValuesDef() {return null;}
 	public function GetPrerequisiteAttributes($sClass = null) {return array();}
 
 	public function GetEditClass() {return "RedundancySetting";}
@@ -8292,17 +8337,17 @@ class AttributeRedundancySettings extends AttributeDBField
 	public function IsNullAllowed()
 	{
 		return false;
-	} 
+	}
 
 	public function GetNullValue()
 	{
 		return '';
-	} 
+	}
 
 	public function IsNull($proposedValue)
 	{
 		return ($proposedValue == '');
-	} 
+	}
 
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
@@ -8386,8 +8431,8 @@ class AttributeRedundancySettings extends AttributeDBField
 	}
 
 	/**
-	 * Helper to interpret the value, given the current settings and string representation of the attribute	
-	 */	
+	 * Helper to interpret the value, given the current settings and string representation of the attribute
+	 */
 	public function IsEnabled($sValue)
 	{
 		if ($this->get('enabled_mode') == 'fixed')
@@ -8402,8 +8447,8 @@ class AttributeRedundancySettings extends AttributeDBField
 	}
 
 	/**
-	 * Helper to interpret the value, given the current settings and string representation of the attribute	
-	 */	
+	 * Helper to interpret the value, given the current settings and string representation of the attribute
+	 */
 	public function GetMinUpType($sValue)
 	{
 		if ($this->get('min_up_mode') == 'fixed')
@@ -8422,8 +8467,8 @@ class AttributeRedundancySettings extends AttributeDBField
 	}
 
 	/**
-	 * Helper to interpret the value, given the current settings and string representation of the attribute	
-	 */	
+	 * Helper to interpret the value, given the current settings and string representation of the attribute
+	 */
 	public function GetMinUpValue($sValue)
 	{
 		if ($this->get('min_up_mode') == 'fixed')
@@ -8444,7 +8489,7 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	/**
 	 * Helper to determine if the redundancy can be viewed/edited by the end-user
-	 */	
+	 */
 	public function IsVisible()
 	{
 		$bRet = false;
@@ -8470,7 +8515,7 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	/**
 	 * Returns an HTML form that can be read by ReadValueFromPostedForm
-	 */	
+	 */
 	public function GetDisplayForm($sCurrentValue, $oPage, $bEditMode = false, $sFormPrefix = '')
 	{
 		$sRet = '';
@@ -8500,7 +8545,7 @@ class AttributeRedundancySettings extends AttributeDBField
 
 	/**
 	 * Depending on the xxx_mode parameters, build the list of options that are allowed to the end-user
-	 */	 	
+	 */
 	protected function GetUserOptions($sValue)
 	{
 		$aRet = array();
@@ -8508,7 +8553,7 @@ class AttributeRedundancySettings extends AttributeDBField
 		{
 			$aRet[] = self::USER_OPTION_DISABLED;
 		}
-		
+
 		if ($this->Get('min_up_mode') == 'user')
 		{
 			$aRet[] = self::USER_OPTION_ENABLED_COUNT;
@@ -8529,8 +8574,8 @@ class AttributeRedundancySettings extends AttributeDBField
 	}
 
 	/**
-	 * Convert the string representation into one of the existing options	
-	 */	
+	 * Convert the string representation into one of the existing options
+	 */
 	protected function GetCurrentOption($sValue)
 	{
 		$sRet = self::USER_OPTION_DISABLED;
@@ -8577,7 +8622,7 @@ class AttributeRedundancySettings extends AttributeDBField
 			case self::USER_OPTION_DISABLED:
 				$sValue = ''; // Empty placeholder
 				break;
-	
+
 			case self::USER_OPTION_ENABLED_COUNT:
 				if ($bEditMode)
 				{
@@ -8592,7 +8637,7 @@ class AttributeRedundancySettings extends AttributeDBField
 					$sValue = $iCurrentValue;
 				}
 				break;
-	
+
 			case self::USER_OPTION_ENABLED_PERCENT:
 				if ($bEditMode)
 				{
@@ -8627,8 +8672,8 @@ class AttributeRedundancySettings extends AttributeDBField
 	}
 
 	/**
-	 * Makes the string representation out of the values given by the form defined in GetDisplayForm	
-	 */	
+	 * Makes the string representation out of the values given by the form defined in GetDisplayForm
+	 */
 	public function ReadValueFromPostedForm($sFormPrefix)
 	{
 		$sHtmlNamesPrefix = 'rddcy_'.$this->Get('relation_code').'_'.$this->Get('from_class').'_'.$this->Get('neighbour_id');
@@ -8759,7 +8804,7 @@ class AttributeCustomFields extends AttributeDefinition
 			$oFormField->SetForm($this->GetForm($oObject));
 		}
 		parent::MakeFormField($oObject, $oFormField);
-		
+
 		return $oFormField;
 	}
 

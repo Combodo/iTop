@@ -74,6 +74,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 			self::OP_BETWEEN => 'BetweenToOql',
 			self::OP_REGEXP => 'RegexpToOql',
 			self::OP_IN => 'InToOql',
+			self::OP_MATCHES => 'MatchesToOql',
 			self::OP_ALL => 'AllToOql',
 		);
 
@@ -118,7 +119,10 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (empty($sValue)) return "1";
+		if (empty($sValue))
+		{
+			return "1";
+		}
 
 		return "({$sRef} LIKE '%{$sValue}%')";
 	}
@@ -128,7 +132,10 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (empty($sValue)) return "1";
+		if (empty($sValue))
+		{
+			return "1";
+		}
 
 		return "({$sRef} LIKE '{$sValue}%')";
 	}
@@ -138,7 +145,10 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (empty($sValue)) return "1";
+		if (empty($sValue))
+		{
+			return "1";
+		}
 
 		return "({$sRef} LIKE '%{$sValue}')";
 	}
@@ -148,7 +158,10 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (empty($sValue)) return "1";
+		if (empty($sValue))
+		{
+			return "1";
+		}
 
 		return "({$sRef} = '{$sValue}')";
 	}
@@ -158,9 +171,30 @@ class CriterionToOQL extends CriterionConversionAbstract
 		$aValues = self::GetValues($aCriteria);
 		$sValue = self::GetValue($aValues, 0);
 
-		if (empty($sValue)) return "1";
+		if (empty($sValue))
+		{
+			return "1";
+		}
 
 		return "({$sRef} REGEXP '{$sValue}')";
+	}
+
+	protected static function MatchesToOql($oSearch, $sRef, $aCriteria)
+	{
+		$aValues = self::GetValues($aCriteria);
+		$aRawValues = array();
+		for($i = 0; $i < count($aValues); $i++)
+		{
+			$aRawValues[] = self::GetValue($aValues, $i);
+		}
+		$sValue = implode(' ', $aRawValues);
+
+		if (empty($sValue))
+		{
+			return "1";
+		}
+
+		return "({$sRef} MATCHES '{$sValue}')";
 	}
 
 	protected static function EmptyToOql($oSearch, $sRef, $aCriteria)
@@ -197,18 +231,18 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} != '')";
 	}
 
-    /**
-     * @param \DBObjectSearch $oSearch
-     * @param string $sRef
-     * @param array $aCriteria
-     *
-     * @return mixed|string
-     *
-     * @throws \CoreException
-     * @throws \MissingQueryArgument
-     * @throws \MySQLException
-     * @throws \MySQLHasGoneAwayException
-     */
+	/**
+	 * @param \DBObjectSearch $oSearch
+	 * @param string $sRef
+	 * @param array $aCriteria
+	 *
+	 * @return mixed|string
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	protected static function InToOql($oSearch, $sRef, $aCriteria)
 	{
 		$sAttCode = $aCriteria['code'];
@@ -225,8 +259,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 		try
 		{
 			$aAttributeDefs = MetaModel::ListAttributeDefs($sClass);
-		}
-		catch (\CoreException $e)
+		} catch (\CoreException $e)
 		{
 			return "1";
 		}
@@ -254,8 +287,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 			try
 			{
 				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
-			}
-			catch (\CoreException $e)
+			} catch (\CoreException $e)
 			{
 			}
 		}
@@ -371,9 +403,10 @@ class CriterionToOQL extends CriterionConversionAbstract
 			else
 			{
 				// Add 'AND 1' to group the 'OR' inside an AND list for OQL parsing
-				$sCondition =  "(({$sCondition} OR {$sFilterOnUndefined}) AND 1)";
+				$sCondition = "(({$sCondition} OR {$sFilterOnUndefined}) AND 1)";
 			}
 		}
+
 		return $sCondition;
 	}
 
@@ -406,8 +439,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 				$oDate = $oFormat->parse($sStartDate);
 				$sStartDate = $oDate->format($sAttributeClass::GetSQLFormat());
 				$aOQL[] = "({$sRef} >= '$sStartDate')";
-			}
-			catch (Exception $e)
+			} catch (Exception $e)
 			{
 			}
 		}
@@ -420,8 +452,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 				$oDate = $oFormat->parse($sEndDate);
 				$sEndDate = $oDate->format($sAttributeClass::GetSQLFormat());
 				$aOQL[] = "({$sRef} <= '$sEndDate')";
-			}
-			catch (Exception $e)
+			} catch (Exception $e)
 			{
 			}
 		}

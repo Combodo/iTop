@@ -1447,6 +1447,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any',
+	//   - TagSet widget
+	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
     //   - External key widget
     'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',
     'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined',
@@ -1480,6 +1482,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less',  // => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals',  // > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different',  // => '≠',
+	//   - Tag Set Widget
+	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches',
 
 	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...',
