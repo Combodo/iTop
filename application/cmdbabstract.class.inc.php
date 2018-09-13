@@ -2176,14 +2176,17 @@ EOF
 		}
 		$aJson['possible_values'] = $aTagSetKeyValData;
 
-		$aJson['partial_values'] = is_null($oValue) ? array() : $oValue->GetModifiedTags();
-
-		// orig_values
-		$aJson['orig_value'] = is_null($oValue) ? array() : $oValue->GetValue();
-
-		// added
+		if (is_null($oValue))
+		{
+			$aJson['partial_values'] = array();
+			$aJson['orig_value'] = array();
+		}
+		else
+		{
+			$aJson['partial_values'] = $oValue->GetModifiedTags();
+			$aJson['orig_value'] = array_merge($oValue->GetValue(), $oValue->GetModifiedTags());
+		}
 		$aJson['added'] = array();
-		// removed
 		$aJson['removed'] = array();
 
 		return json_encode($aJson);

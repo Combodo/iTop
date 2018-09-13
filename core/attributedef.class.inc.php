@@ -5966,8 +5966,15 @@ class AttributeTagSet extends AttributeDBFieldVoid
 
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
-		// The check is done when adding / removing tags, no need to have also this check here
-		return array();
+		$sAttCode = $this->GetCode();
+		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
+		$aAllowedTags = TagSetFieldData::GetAllowedValues($sClass, $sAttCode);
+		$aAllowedValues = array();
+		foreach($aAllowedTags as $oAllowedTag)
+		{
+			$aAllowedValues[$oAllowedTag->Get('tag_code')] = $oAllowedTag->Get('tag_label');
+		}
+		return $aAllowedValues;
 	}
 
 	/**
