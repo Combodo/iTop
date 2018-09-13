@@ -199,6 +199,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	 */
 	public static function GetAllowedValues($sClass, $sAttCode)
 	{
+		$sClass = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
 		$sTagDataClass = MetaModel::GetTagDataClass($sClass, $sAttCode);
 		if (!isset(self::$m_aAllowedValues[$sTagDataClass]))
 		{

@@ -2034,7 +2034,7 @@ EOF
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/jquery.itop-tagset-widget.js');
 
 					/** @var \ormTagSet $value */
-					$sJson = static::GetTagSetJsonForWidget($value);
+					$sJson = static::GetTagSetJsonForWidget($value, $sClass, $sAttCode);
 					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
 					$sHTMLValue = "<input id='$sInputId' name='$sInputId' type='text' value='$sJson' style='display: none;'>";
 					$sScript = "$('#$sInputId').tagset_widget();";
@@ -2152,17 +2152,20 @@ EOF
 	/**
 	 * @param \ormTagSet $oValue
 	 *
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 *
 	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	private static function GetTagSetJsonForWidget($oValue)
+	private static function GetTagSetJsonForWidget($oValue, $sClass, $sAttCode)
 	{
 		$aJson = array();
 
 		// possible_values
-		$aTagSetObjectData = TagSetFieldData::GetAllowedValues($oValue->GetClass(), $oValue->GetAttCode());
+		$aTagSetObjectData = TagSetFieldData::GetAllowedValues($sClass, $sAttCode);
 		$aTagSetKeyValData = array();
 		foreach($aTagSetObjectData as $oTagSet)
 		{
@@ -2173,10 +2176,10 @@ EOF
 		}
 		$aJson['possible_values'] = $aTagSetKeyValData;
 
-		$aJson['partial_values'] = $oValue->GetModifiedTags();
+		$aJson['partial_values'] = is_null($oValue) ? array() : $oValue->GetModifiedTags();
 
 		// orig_values
-		$aJson['orig_value'] = $oValue->GetValue();
+		$aJson['orig_value'] = is_null($oValue) ? array() : $oValue->GetValue();
 
 		// added
 		$aJson['added'] = array();
