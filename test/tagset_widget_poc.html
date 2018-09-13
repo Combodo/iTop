@@ -1,0 +1,102 @@
+<!--
+  ~  Copyright (c) 2010-2018 Combodo SARL
+  ~
+  ~    This file is part of iTop.
+  ~
+  ~    iTop is free software; you can redistribute it and/or modify
+  ~    it under the terms of the GNU Affero General Public License as published by
+  ~    the Free Software Foundation, either version 3 of the License, or
+  ~    (at your option) any later version.
+  ~
+  ~    iTop is distributed in the hope that it will be useful,
+  ~    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~    GNU Affero General Public License for more details.
+  ~
+  ~    You should have received a copy of the GNU Affero General Public License
+  ~    along with iTop. If not, see <http://www.gnu.org/licenses/>
+  ~
+  -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>TagSet fields widget test</title>
+
+    <script src="../js/jquery-3.3.1.min.js"></script>
+    <script src="../js/jquery-ui-1.11.4.custom.min.js"></script>
+    <script src="../js/selectize.min.js"></script>
+    <script src="../js/jquery.itop-tagset-widget.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../css/selectize.default.css">
+
+    <style>
+        div.selectize-control {
+            position: static;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        div.selectize-input {
+            width: auto;
+            min-width: 8em;
+        }
+
+        div.selectize-input.has-items:after {
+            content: "➕";
+            display: inline-block;
+        }
+
+        div.selectize-control > div.selectize-input > div.item.partial-code {
+            color: floralwhite;
+            background-color: grey;
+            background-image: linear-gradient(to bottom, white, grey);
+            border-color: darkgray;
+            font-style: italic;
+        }
+
+        div.selectize-control > div.selectize-input > div.item.partial-code.active {
+            background-image: linear-gradient(to bottom, grey, darkgrey);
+        }
+
+        div.selectize-control > div.selectize-input > div.item.partial-code > a.remove {
+            border-color: grey;
+        }
+    </style>
+</head>
+<body>
+
+
+<form>
+    <label>Exemple un champ : </label>
+    <textarea id="tagset-field" rows="30" cols="60">
+{
+  "possible_values": [{
+    "code": "critical",
+    "label": "Critical ticket"
+  }, {
+    "code": "high",
+    "label": "don't forget it !"
+  }, {
+    "code": "normal",
+    "label": "when time available"
+  }, {
+    "code": "low",
+    "label": "don't worry ;)"
+  }],
+  "partial_values": ["low"],
+  "orig_value": ["critical", "low"],
+  "added": "",
+  "removed": ""
+}
+</textarea>
+</form>
+
+
+<script>
+	$("#tagset-field").tagset_widget({isDebug: true});
+</script>
+
+</body>
+</html>
