@@ -36,6 +36,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
     'Core:AttributeTagSet' => 'List of tags',
     'Core:AttributeTagSet+' => '',
+	'Core:AttributeTagSet:placeholder' => 'click to add',
 
     'Core:AttributeCaseLog' => 'Log',
     'Core:AttributeCaseLog+' => '',

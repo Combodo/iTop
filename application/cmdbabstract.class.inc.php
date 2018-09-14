@@ -2031,6 +2031,8 @@ EOF
 					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/jquery.itop-tagset-widget.js');
 
+					$oPage->add_dict_entry('Core:AttributeTagSet:placeholder');
+
 					/** @var \ormTagSet $value */
 					$sJson = static::GetTagSetJsonForWidget($value, $sClass, $sAttCode);
 					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";

@@ -123,6 +123,7 @@ $.widget('itop.tagset_widget',
 				searchField: 'label',
 				options: this.possibleValues,
 				create: false,
+				placeholder: Dict.S("Core:AttributeTagSet:placeholder"),
 				onInitialize: function () {
 					var selectizeWidget = this;
 					tagSetWidget._onInitialize(selectizeWidget);

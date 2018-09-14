@@ -2900,6 +2900,7 @@ div.selectize-input {
   width: auto;
   min-width: 8em;
 }
+
 div.selectize-input.has-items:after {
   content: "➕";
   display: inline-block;
