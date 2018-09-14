@@ -430,6 +430,26 @@ final class ormTagSet
 	}
 
 	/**
+	 * @param $sTagCode
+	 *
+	 * @return DBObject tag
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreException
+	 */
+	public function GetTagFromLabel($sTagLabel)
+	{
+		$aAllowedTags = $this->GetAllowedTags();
+		foreach($aAllowedTags as $oAllowedTag)
+		{
+			if ($oAllowedTag->Get('tag_label') === $sTagLabel)
+			{
+				return $oAllowedTag->Get('tag_code');
+			}
+		}
+		throw new CoreUnexpectedValue("{$sTagLabel} is not defined as a valid tag for {$this->sClass}:{$this->sAttCode}");
+	}
+
+	/**
 	 * @return \TagSetFieldData[]
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue

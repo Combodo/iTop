@@ -5995,6 +5995,10 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	    $aGoodTags = array();
 		foreach($aTagCodes as $sTagCode)
 		{
+			if ($sTagCode === '')
+			{
+				continue;
+			}
 			if ($oTagSet->IsValidTag($sTagCode))
 			{
 				$aGoodTags[] = $sTagCode;
@@ -6048,7 +6052,20 @@ class AttributeTagSet extends AttributeDBFieldVoid
      */
     public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
     {
-        // TODO $bLocalizedValue
+	    if ($bLocalizedValue && !empty($sProposedValue))
+	    {
+	    	$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
+	    	$aLabels = explode('|', $sProposedValue);
+	    	$aCodes = array();
+	    	foreach($aLabels as $sTagLabel)
+		    {
+		    	if (!empty($sTagLabel))
+			    {
+				    $aCodes[] = $oTagSet->GetTagFromLabel($sTagLabel);
+			    }
+		    }
+		    $sProposedValue = implode(' ', $aCodes);
+	    }
         return $this->MakeRealValue($sProposedValue, null);
     }
 
