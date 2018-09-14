@@ -78,6 +78,8 @@ $.widget('itop.tagset_widget',
 		/** will hold all interactions done : code as key and one of STATUS_* constant as value */
 		tagSetCodesStatus: null,
 
+		selectizeWidget: null,
+
 		// the constructor
 		_create: function () {
 			var $this = this.element;
@@ -137,6 +139,8 @@ $.widget('itop.tagset_widget',
 					tagSetWidget._onTagRemove(value, selectizeWidget);
 				}
 			});
+
+			this.selectizeWidget = $inputWidget[0].selectize; // keeping this for widget public methods
 		},
 
 		refresh: function () {
@@ -164,6 +168,14 @@ $.widget('itop.tagset_widget',
 			widgetPublicData[this.REMOVED_VAL_KEY] = removedValues;
 
 			this.element.val(JSON.stringify(widgetPublicData, null, (this.options.isDebug ? 2 : null)));
+		},
+
+		disable: function () {
+			this.selectizeWidget.disable();
+		},
+
+		enable: function () {
+			this.selectizeWidget.enable();
 		},
 
 		/**
