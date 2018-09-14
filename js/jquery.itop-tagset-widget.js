@@ -19,7 +19,7 @@
  */
 
 /**
- * <p>To be applyed on a field containing a JSON value. The value will be updated on every change.<br>
+ * <p>To be applied on a field containing a JSON value. The value will be updated on every change.<br>
  * Exemple of JSON value :
  * <code>
  * {
@@ -50,7 +50,7 @@
  *     "high",
  *     "low"
  *   ],
- *   "removed": []
+ *   "removed": ["critical"]
  * }
  * </code>
  *
@@ -70,11 +70,12 @@ $.widget('itop.tagset_widget',
 		REMOVED_VAL_KEY: "removed",
 		STATUS_ADDED: "added",
 		STATUS_REMOVED: "removed",
+		STATUS_NEUTRAL: "unchanged",
 
 		possibleValues: null,
 		partialValues: null,
 		originalValue: null,
-		/** will hold all interactions done : code as key and "added" or "removed" as value */
+		/** will hold all interactions done : code as key and one of STATUS_* constant as value */
 		tagSetCodesStatus: null,
 
 		// the constructor
@@ -107,7 +108,11 @@ $.widget('itop.tagset_widget',
 			$parentElement.append("<input id='" + inputId + "' value='" + this.originalValue.join(" ") + "'>");
 			var $inputWidget = $("#" + inputId);
 
+			// create closure to have both tagset widget and Selectize instances available in callbacks
+			// selectize instance could also be retrieve on the source input DOM node (selectize property)
+			// I think this is much clearer this way !
 			var tagSetWidget = this;
+
 			$inputWidget.selectize({
 				plugins: ['remove_button'],
 				delimiter: ' ',
@@ -118,73 +123,97 @@ $.widget('itop.tagset_widget',
 				searchField: 'label',
 				options: this.possibleValues,
 				create: false,
-				render: {
-					item: function (data, escape) {
-						return tagSetWidget._onRender(data, escape);
-					}
+				onInitialize: function () {
+					var selectizeWidget = this;
+					tagSetWidget._onInitialize(selectizeWidget);
 				},
 				onItemAdd: function (value, $item) {
-					tagSetWidget._onTagAdd(value, $item);
+					var selectizeWidget = this;
+					tagSetWidget._onTagAdd(value, $item, selectizeWidget);
 				},
 				onItemRemove: function (value) {
-					tagSetWidget._onTagRemove(value, this);
-					// selectize instance could also be retrieve on the original input (selectize property)
-					// I think this is much clearer this way !
+					var selectizeWidget = this;
+					tagSetWidget._onTagRemove(value, selectizeWidget);
 				}
 			});
 		},
 
 		refresh: function () {
-			var finalData = {}, addedValues = [], removedValues = [];
+			if (this.options.isDebug) {
+				console.debug("refresh");
+			}
+			var widgetPublicData = {}, addedValues = [], removedValues = [];
 
-			finalData[this.POSSIBLE_VAL_KEY] = this.possibleValues;
-			finalData[this.PARTIAL_VAL_KEY] = this.partialValues;
-			finalData[this.ORIG_VAL_KEY] = this.originalValue;
+			widgetPublicData[this.POSSIBLE_VAL_KEY] = this.possibleValues;
+			widgetPublicData[this.PARTIAL_VAL_KEY] = this.partialValues;
+			widgetPublicData[this.ORIG_VAL_KEY] = this.originalValue;
 
 			for (var tagSetCode in this.tagSetCodesStatus) {
 				var tagSetCodeStatus = this.tagSetCodesStatus[tagSetCode];
 				switch (tagSetCodeStatus) {
 					case this.STATUS_ADDED:
-						if (this.originalValue.indexOf(tagSetCode) === -1) {
-							addedValues.push(tagSetCode);
-						}
+						addedValues.push(tagSetCode);
 						break;
 					case this.STATUS_REMOVED:
-						if (this.originalValue.indexOf(tagSetCode) !== -1) {
-							removedValues.push(tagSetCode);
-						}
+						removedValues.push(tagSetCode);
 						break;
 				}
 			}
-			finalData[this.ADDED_VAL_KEY] = addedValues;
-			finalData[this.REMOVED_VAL_KEY] = removedValues;
+			widgetPublicData[this.ADDED_VAL_KEY] = addedValues;
+			widgetPublicData[this.REMOVED_VAL_KEY] = removedValues;
 
-			this.element.val(JSON.stringify(finalData, null, (this.options.isDebug ? 2 : null)));
+			this.element.val(JSON.stringify(widgetPublicData, null, (this.options.isDebug ? 2 : null)));
 		},
 
-		_onRender: function (data, escape) {
-			var itemCssClass = 'item',
-				isPartialCode = (this._isCodeInPartialValues(data.code));
+		/**
+		 * Updating items to have a specific rendering for partial codes.<br>
+		 *     At first I was thinking about using the Selectize render callback, but it is called before onItemAdd/onItemRemove :(<br>
+		 *     Indeed as we only need to have partial items on first display, this callback is the right place O:)
+		 * @param inputWidget Selectize object
+		 * @private
+		 */
+		_onInitialize: function (inputWidget) {
+			if (this.options.isDebug) {
+				console.debug("onInit", this);
+			}
+			var tagSetWidget = this;
+			inputWidget.items.forEach(function (tagSetCode) {
+				if (tagSetWidget._isCodeInPartialValues(tagSetCode)) {
+					inputWidget.getItem(tagSetCode).addClass("partial-code");
+				}
+			});
+		},
 
-			if (isPartialCode) {
-				itemCssClass += ' partial-code';
+		_onTagAdd: function (tagSetCode, $item, inputWidget) {
+			if (this.options.isDebug) {
+				console.debug("tagAdd");
+			}
+			this.tagSetCodesStatus[tagSetCode] = this.STATUS_ADDED;
+
+			if (this._isCodeInPartialValues(tagSetCode)) {
+				this.partialValues = this.partialValues.filter(item => (item !== tagSetCode));
+			} else {
+				if (this.originalValue.indexOf(tagSetCode) !== -1) {
+					// do not add if was present initially and removed
+					this.tagSetCodesStatus[tagSetCode] = this.STATUS_NEUTRAL;
+				}
 			}
 
-			return '<div class="' + itemCssClass + '">' + escape(data.label) + '</div>';
-		},
-
-		_onTagAdd: function (value, $item) {
-			this.tagSetCodesStatus[value] = this.STATUS_ADDED;
 			this.refresh();
 		},
 
-		_onTagRemove: function (value, inputWidget) {
-			this.tagSetCodesStatus[value] = this.STATUS_REMOVED;
+		_onTagRemove: function (tagSetCode, inputWidget) {
+			this.tagSetCodesStatus[tagSetCode] = this.STATUS_REMOVED;
 
-			if (this._isCodeInPartialValues(value)) {
+			if (this._isCodeInPartialValues(tagSetCode)) {
+				// force rendering items again, otherwise partial class will be kept
+				// can'be in the onItemAdd callback as it is called after the render callback...
 				inputWidget.clearCache("item");
-				this.originalValue = this.originalValue.filter(item => (item !== value));
-				this.partialValues = this.partialValues.filter(item => (item !== value));
+			}
+
+			if (this.originalValue.indexOf(tagSetCode) === -1) {
+				// do not remove if wasn't present initially
+				this.tagSetCodesStatus[tagSetCode] = this.STATUS_NEUTRAL;
 			}
 
 			this.refresh();
