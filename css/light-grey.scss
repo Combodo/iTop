@@ -117,7 +117,6 @@ table.listResults td .view-image {
 }
 
 table.listResults > tbody > tr.selected > * {
-	background-color: $combodo-orange;
 }
 
 table.listResults > tbody > tr > * {
@@ -131,6 +130,13 @@ table.listResults > tbody > tr:hover > * {
 table.listResults > tbody > tr.selected:hover > * {
 	/* hover on lines is currently done toggling td.hover, and having a rule for links */
 	background-color: lighten($combodo-orange, 20%);
+	color: $text-color;
+}
+
+table.listResults > tbody > tr:hover > * {
+	/* hover on lines is currently done toggling td.hover, and having a rule for links */
+	background-color: #fdf5d0;
+	color: $text-color;
 }
 
 .edit-image {
@@ -242,7 +248,7 @@ tr.green td, .wizContainer tr.green td {
 } 
 
 tr td.hover, tr.even td.hover, .hover a, .hover a:visited, .hover a:hover, .wizContainer tr.even td.hover,  .wizContainer tr td.hover {
-	background-color: #fdf5d0;
+	//background-color: #fdf5d0;
 	color: $text-color;
 }
 

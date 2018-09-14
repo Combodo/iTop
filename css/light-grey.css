@@ -92,9 +92,6 @@ table.listResults td .view-image img {
   margin-left: auto;
   margin-right: auto;
 }
-table.listResults > tbody > tr.selected > * {
-  background-color: #ea7d1e;
-}
 table.listResults > tbody > tr > * {
   transition: background-color 400ms linear;
 }
@@ -104,6 +101,12 @@ table.listResults > tbody > tr:hover > * {
 table.listResults > tbody > tr.selected:hover > * {
   /* hover on lines is currently done toggling td.hover, and having a rule for links */
   background-color: #f3b37b;
+  color: #000;
+}
+table.listResults > tbody > tr:hover > * {
+  /* hover on lines is currently done toggling td.hover, and having a rule for links */
+  background-color: #fdf5d0;
+  color: #000;
 }
 .edit-image .view-image {
   display: inline-block;
@@ -192,7 +195,6 @@ tr.green td, .wizContainer tr.green td {
   background-color: #b3e5b4;
 }
 tr td.hover, tr.even td.hover, .hover a, .hover a:visited, .hover a:hover, .wizContainer tr.even td.hover, .wizContainer tr td.hover {
-  background-color: #fdf5d0;
   color: #000;
 }
 th {
