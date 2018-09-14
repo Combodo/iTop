@@ -34,22 +34,22 @@ define('HILIGHT_CLASS_NONE', '');
 
 define('MIN_WATCHDOG_INTERVAL', 15); // Minimum interval for the watchdog: 15s
 
-require_once(APPROOT.'/core/cmdbobject.class.inc.php');
-require_once(APPROOT.'/application/applicationextension.inc.php');
-require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/application/applicationcontext.class.inc.php');
-require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
-require_once(APPROOT.'/application/ui.linksdirectwidget.class.inc.php');
-require_once(APPROOT.'/application/ui.passwordwidget.class.inc.php');
-require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
-require_once(APPROOT.'/application/ui.htmleditorwidget.class.inc.php');
-require_once(APPROOT.'/application/datatable.class.inc.php');
-require_once(APPROOT.'/sources/renderer/console/consoleformrenderer.class.inc.php');
-require_once(APPROOT.'/sources/application/search/searchform.class.inc.php');
-require_once(APPROOT.'/sources/application/search/criterionparser.class.inc.php');
-require_once(APPROOT.'/sources/application/search/criterionconversionabstract.class.inc.php');
-require_once(APPROOT.'/sources/application/search/criterionconversion/criteriontooql.class.inc.php');
-require_once(APPROOT.'/sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
+require_once(APPROOT.'core/cmdbobject.class.inc.php');
+require_once(APPROOT.'application/applicationextension.inc.php');
+require_once(APPROOT.'application/utils.inc.php');
+require_once(APPROOT.'application/applicationcontext.class.inc.php');
+require_once(APPROOT.'application/ui.linkswidget.class.inc.php');
+require_once(APPROOT.'application/ui.linksdirectwidget.class.inc.php');
+require_once(APPROOT.'application/ui.passwordwidget.class.inc.php');
+require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
+require_once(APPROOT.'application/ui.htmleditorwidget.class.inc.php');
+require_once(APPROOT.'application/datatable.class.inc.php');
+require_once(APPROOT.'sources/renderer/console/consoleformrenderer.class.inc.php');
+require_once(APPROOT.'sources/application/search/searchform.class.inc.php');
+require_once(APPROOT.'sources/application/search/criterionparser.class.inc.php');
+require_once(APPROOT.'sources/application/search/criterionconversionabstract.class.inc.php');
+require_once(APPROOT.'sources/application/search/criterionconversion/criteriontooql.class.inc.php');
+require_once(APPROOT.'sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
 
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
@@ -212,7 +212,6 @@ EOF
 		}
 
 		// Master data sources
-		$bSynchronized = false;
 		$aIcons = array();
 		if (!$oPage->IsPrintableVersion())
 		{
@@ -223,7 +222,6 @@ EOF
 			$aSyncData = $this->GetSynchroData();
 			if (count($aSyncData) > 0)
 			{
-				$bSynchronized = true;
 				foreach($aSyncData as $iSourceId => $aSourceData)
 				{
 					$oDataSource = $aSourceData['source'];
@@ -259,9 +257,6 @@ EOF
 						elseif (($sUserDeletePolicy == 'administrators') && !UserRights::IsAdministrator())
 						{
 							$bCanBeDeletedByUser = false;
-						}
-						else // everybody...
-						{
 						}
 					}
 					$aMasterSources[$iSourceId]['datasource'] = $oDataSource;
@@ -628,7 +623,7 @@ EOF
 		}
 	}
 
-	function GetBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix, $aExtraParams = array())
+	function GetBareProperties(WebPage $oPage, $bEditMode, $sPrefix, $aExtraParams = array())
 	{
 		$sHtml = '';
 		$oAppContext = new ApplicationContext();
@@ -914,6 +909,7 @@ EOF
 	 * @param array $aExtraParams
 	 *
 	 * @return string The HTML representation of the table
+	 * @throws \CoreException
 	 */
 	public static function GetDisplaySetForPrinting(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
@@ -949,6 +945,8 @@ EOF
 	 * @return String The HTML fragment representing the table of objects. <b>Warning</b> : no JS added to handled
 	 *     pagination or table sorting !
 	 *
+	 * @throws \ApplicationException
+	 * @throws \CoreException
 	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
 	 */
 	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
@@ -2894,7 +2892,11 @@ EOF
 	/**
 	 * Displays a blob document *inline* (if possible, depending on the type of the document)
 	 *
+	 * @param \WebPage $oPage
+	 * @param $sAttCode
+	 *
 	 * @return string
+	 * @throws \CoreException
 	 */
 	public function DisplayDocumentInline(WebPage $oPage, $sAttCode)
 	{
@@ -2938,6 +2940,7 @@ EOF
 			default:
 				$oPage->add(Dict::S('UI:Document:NoPreview'));
 		}
+		return '';
 	}
 
 	// $m_highlightComparison[previous][new] => next value
@@ -2999,7 +3002,9 @@ EOF
 	 *
 	 * @params hash @aFields field_code => array_of_depencies
 	 *
+	 * @param $aFields
 	 * @return array Ordered array of fields or throws an exception
+	 * @throws \Exception
 	 */
 	public static function OrderDependentFields($aFields)
 	{
@@ -3053,7 +3058,7 @@ EOF
 	 *
 	 * @param $sFinalClass string The actual class of the objects for which to display the menu
 	 *
-	 * @return Array the list of menu codes (i.e dictionary entries) that can be displayed as shortcuts next to the
+	 * @return array the list of menu codes (i.e dictionary entries) that can be displayed as shortcuts next to the
 	 *     actions menu
 	 */
 	public static function GetShortcutActions($sFinalClass)
@@ -3091,6 +3096,7 @@ EOF
 	 * @param $aAttFlags array Attribute codes => Flags to use instead of those from the MetaModel
 	 *
 	 * @return array of attcodes that can be used for writing on the current object
+	 * @throws \CoreException
 	 */
 	public function GetWriteableAttList($aAttList, &$aErrors, $aAttFlags = array())
 	{
@@ -3387,6 +3393,7 @@ EOF
 	 * @param array $aPostedData Optional parameter, used through recursive calls
 	 *
 	 * @return array|null
+	 * @throws \FileUploadException
 	 */
 	protected function PrepareValueFromPostedForm($sFormPrefix, $sAttCode, $sClass = null, $aPostedData = null)
 	{
@@ -3865,7 +3872,8 @@ EOF
 	 * @param $bOnlyNewOnes
 	 *
 	 * @return array
-	 * @throws ApplicationException
+	 * @throws \ApplicationException
+	 * @throws \CoreException
 	 * @deprecated Since iTop 2.4, use DBObject::GetTransitionAttributes() instead.
 	 */
 	public function GetExpectedAttributes($sCurrentState, $sStimulus, $bOnlyNewOnes)
@@ -4303,6 +4311,16 @@ EOF
 
 	/**
 	 * Perform all the needed checks to delete one (or more) objects
+	 *
+	 * @param \WebPage $oP
+	 * @param $sClass
+	 * @param $aObjects
+	 * @param $bPreview
+	 * @param $sCustomOperation
+	 * @param array $aContextData
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
 	 */
 	public static function DeleteObjects(
 		WebPage $oP, $sClass, $aObjects, $bPreview, $sCustomOperation, $aContextData = array()

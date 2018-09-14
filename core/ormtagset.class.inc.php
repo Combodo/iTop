@@ -307,7 +307,7 @@ final class ormTagSet
 	}
 
 	/**
-	 * @param $sTagCode
+	 * @param string $sTagCode
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -367,10 +367,10 @@ final class ormTagSet
 	}
 
 	/**
-	 * @param \ormTagSet[] $aTagList
+	 * @param \DBObject[] $aTagList
 	 * @param string $sTagCode
 	 *
-	 * @return bool|\ormTagSet false if not found, else the removed element
+	 * @return bool|\DBObject false if not found, else the removed element
 	 */
 	private function RemoveTagFromList(&$aTagList, $sTagCode)
 	{
