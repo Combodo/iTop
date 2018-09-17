@@ -30,10 +30,23 @@ require_once(APPROOT.'/core/contexttag.class.inc.php');
 session_name('itop-'.md5(APPROOT));
 session_start();
 $sSwitchEnv = utils::ReadParam('switch_env', null);
-if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE)))
+$bAllowCache = true;
+if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE)) && isset($_SESSION['itop_env']) && ($_SESSION['itop_env'] !== $sSwitchEnv))
 {
 	$_SESSION['itop_env'] = $sSwitchEnv;
 	$sEnv = $sSwitchEnv;
+    $bAllowCache = false;
+    // Reset the opcache since otherwise the PHP "model" files may still be cached !!
+    if (function_exists('opcache_reset'))
+    {
+        // Zend opcode cache
+        opcache_reset();
+    }
+    if (function_exists('apc_clear_cache'))
+    {
+        // APC(u) cache
+        apc_clear_cache();
+    }
 	// TODO: reset the credentials as well ??
 }
 else if (isset($_SESSION['itop_env']))
@@ -46,4 +59,4 @@ else
 	$_SESSION['itop_env'] = ITOP_DEFAULT_ENV;
 }
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
-MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
+MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);
