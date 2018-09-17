@@ -93,17 +93,20 @@ table.listResults td .view-image img {
   margin-right: auto;
 }
 table.listResults > tbody > tr.selected > * {
-  background-color: #ea7d1e;
+  background-color: #f5c093;
 }
 table.listResults > tbody > tr > * {
-  transition: background-color 400ms linear;
+  transition: background-color 200ms ease-in-out;
 }
 table.listResults > tbody > tr:hover > * {
   cursor: pointer;
 }
 table.listResults > tbody > tr.selected:hover > * {
   /* hover on lines is currently done toggling td.hover, and having a rule for links */
-  background-color: #f3b37b;
+  background-color: #f1a564;
+}
+table.listResults > tbody > tr.selected:hover a {
+  background-color: transparent;
 }
 .edit-image .view-image {
   display: inline-block;
