@@ -480,6 +480,11 @@ class DBObjectSearch extends DBSearch
 				$oNewCondition = Expression::FromOQL($sOQLCondition);
 				break;
 
+			case 'MATCHES':
+				$oRightExpr = new ScalarExpression($value);
+				$oNewCondition = new MatchExpression($oField, $oRightExpr);
+				break;
+
 			case 'Contains':
 			case 'Begins with':
 			case 'Finishes with':
