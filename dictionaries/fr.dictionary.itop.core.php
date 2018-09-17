@@ -767,7 +767,7 @@ Opérateurs :<br/>
 	'Core:Validator:MustSelectOne' => 'Veuillez choisir une valeur',
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Impossible de supprimer une étiquette utilisée',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Les codes et noms des étiquettes doivent être unique',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Le code de l\'étiquette doit avoir la syntaxe suivante : [a-zA-Z0-9]{1,20}',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Le code de l\'étiquette doit contenir entre 3 et 20 caractères alphanumériques.',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Le nom de l\'étiquette ne doit pas être vide ni contenir le caractère \'|\'',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Le code de l\'étiquette ne peut pas être changé',
 ));

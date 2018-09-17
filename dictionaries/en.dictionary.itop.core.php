@@ -919,7 +919,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:TagSetFieldData+' => '',
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code should match [a-zA-Z0-9]{1,20} syntax',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code should contain between 3 and 20 alphanumeric characters',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label should not contain | nor be empty',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags code cannot be changed',
 ));

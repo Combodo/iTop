@@ -139,7 +139,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		// Check that code and labels are uniques
 		$sTagCode = $this->Get('tag_code');
 		// Check tag_code syntax
-		if (!preg_match("@^[a-zA-Z0-9]{1,20}$@", $sTagCode))
+		if (!preg_match("@^[a-zA-Z0-9]{3,20}$@", $sTagCode))
 		{
 			$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorTagCodeSyntax');
 		}

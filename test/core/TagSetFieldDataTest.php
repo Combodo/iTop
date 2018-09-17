@@ -165,7 +165,9 @@ class TagSetFieldDataTest extends ItopDataTestCase
 			'No -' => array('tag-1'),
 			'No %' => array('tag%1'),
 			'Less than 21 chars' => array('012345678901234567890'),
-			'At least one char' => array(''),
+			'At least 3 chars' => array(''),
+			'At least 3 chars 1' => array('a'),
+			'At least 3 chars 2' => array('ab'),
 			'No #' => array('#tag'),
 			'No !' => array('tag!'),
 		);
