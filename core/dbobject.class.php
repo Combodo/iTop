@@ -965,6 +965,28 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * Get the name as defined in the dictionary
+	 * @return string (empty for default name scheme)
+	 */
+	public static function GetClassName($sClass)
+	{
+		$sStringCode = 'Class:'.$sClass;
+		return Dict::S($sStringCode, str_replace('_', ' ', $sClass));
+	}
+
+	/**
+	 * Get the description as defined in the dictionary
+	 * @param string $sClass
+	 *
+	 * @return string
+	 */
+	final static public function GetClassDescription($sClass)
+	{
+		$sStringCode = 'Class:'.$sClass.'+';
+		return Dict::S($sStringCode, '');
+	}
+
+	/**
 	 * Gets the name of an object in a safe manner for displaying inside a web page
 	 * @return string
 	 */

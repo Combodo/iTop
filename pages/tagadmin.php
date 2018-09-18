@@ -74,12 +74,8 @@ try
 		{
 			$sClass = $sCurrentClass;
 		}
-		$aTagFieldInfo = TagSetFieldData::ExtractTagFieldName($sCurrentClass);
-		$sClassDesc = MetaModel::GetName($aTagFieldInfo['tag_class']);
-		$sAttDesc = MetaModel::GetAttributeDef($aTagFieldInfo['tag_class'], $aTagFieldInfo['tag_attcode'])->GetLabel();
-		$sDescription = Dict::Format('Core:TagSetFieldData:FieldDescription', $sClassDesc, $sAttDesc);
 		$sSelected = ($sCurrentClass == $sClass) ? " SELECTED" : "";
-		$sSearchHeaderForceDropdown .= "<option value=\"$sCurrentClass\" title=\"$sDescription\"$sSelected>$sDescription</option>";
+		$sSearchHeaderForceDropdown .= "<option value=\"$sCurrentClass\" title=\"$sLabel\"$sSelected>$sLabel</option>";
 	}
 	$sSearchHeaderForceDropdown .= "</select>\n";
 

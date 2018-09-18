@@ -248,6 +248,22 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		}
 	}
 
+	public static function GetClassName($sClass)
+	{
+		$aTagFieldInfo = TagSetFieldData::ExtractTagFieldName($sClass);
+		$sClassDesc = MetaModel::GetName($aTagFieldInfo['tag_class']);
+		$sAttDesc = MetaModel::GetAttributeDef($aTagFieldInfo['tag_class'], $aTagFieldInfo['tag_attcode'])->GetLabel();
+		if (Dict::Exists("Class:$sClass"))
+		{
+			$sName = Dict::Format("Class:$sClass", $sClassDesc, $sAttDesc);
+		}
+		else
+		{
+			$sName = Dict::Format('Class:TagSetFieldData', $sClassDesc, $sAttDesc);
+		}
+		return $sName;
+	}
+
 	/**
 	 * @param $sClass
 	 * @param $sAttCode

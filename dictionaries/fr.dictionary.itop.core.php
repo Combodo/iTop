@@ -765,11 +765,13 @@ Opérateurs :<br/>
 	'Core:Validator:Mandatory' => 'Veuillez remplir ce champ',
 	'Core:Validator:MustBeInteger' => 'Ce champ ne peut contenir qu\'un nombre entier',
 	'Core:Validator:MustSelectOne' => 'Veuillez choisir une valeur',
+
+	'Class:TagSetFieldData' => '%2$s pour la classe %1$s',
+	'Class:TagSetFieldData+' => '',
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Impossible de supprimer une étiquette utilisée',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Les codes et noms des étiquettes doivent être unique',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Le code de l\'étiquette doit contenir entre 3 et 20 caractères alphanumériques.',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Le nom de l\'étiquette ne doit pas être vide ni contenir le caractère \'|\'',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Le code de l\'étiquette ne peut pas être changé',
-	'Core:TagSetFieldData:FieldDescription' => '%2$s pour la classe %1$s',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Utilisation (%1$d)',
 ));
