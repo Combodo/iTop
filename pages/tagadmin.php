@@ -59,7 +59,7 @@ try
 	$oP->add('<h1>'.dict::S('UI:TagAdminMenu:Title').'</h1>');
 	$oP->add('</div>');
 
-	$oP->SetBreadCrumbEntry('ui-tool-tag-admin', Dict::S('Menu:TagAdminMenu'), Dict::S('Menu:TagAdminMenu+'));
+	$oP->SetBreadCrumbEntry('ui-tool-tag-admin', Dict::S('Menu:TagAdminMenu'), Dict::S('Menu:TagAdminMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 
 	$sSearchHeaderForceDropdown = '<select  id="select_class" name="class" onChange="this.form.submit();">';
 	$aClassLabels = array();
@@ -75,7 +75,7 @@ try
 			$sClass = $sCurrentClass;
 		}
 		$sSelected = ($sCurrentClass == $sClass) ? " SELECTED" : "";
-		$sSearchHeaderForceDropdown .= "<option value=\"$sCurrentClass\" title=\"$sLabel\"$sSelected>$sLabel</option>";
+		$sSearchHeaderForceDropdown .= "<option value=\"$sCurrentClass\" title=\"$sLabel\" $sSelected>$sLabel</option>";
 	}
 	$sSearchHeaderForceDropdown .= "</select>\n";
 
@@ -120,12 +120,6 @@ try
 		// Search results
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
 		$oResultBlock->Display($oP, 1);
-
-		// Breadcrumb
-		//$iCount = $oBlock->GetDisplayedCount();
-		$sPageId = "ui-search-".$oFilter->GetClass();
-		$sLabel = MetaModel::GetName($oFilter->GetClass());
-		$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', '../images/breadcrumb-search.png');
 
 		// Menu node
 		$sFilter = $oFilter->ToOQL();
