@@ -408,6 +408,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'tag_set_item_separator' => array(
+			'type' => 'string',
+			'description' => 'Tag set from string: tag label separator',
+			'default' => '|',
+			'value' => '|',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 		'cron_max_execution_time' => array(
 			'type' => 'integer',
 			'description' => 'Duration (seconds) of the page cron.php, must be shorter than php setting max_execution_time and shorter than the web server response timeout',

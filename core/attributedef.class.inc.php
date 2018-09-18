@@ -6052,10 +6052,14 @@ class AttributeTagSet extends AttributeDBFieldVoid
      */
     public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
     {
+	    if (is_null($sSepItem) || empty($sSepItem))
+	    {
+		    $sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+	    }
 	    if ($bLocalizedValue && !empty($sProposedValue))
 	    {
 	    	$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
-	    	$aLabels = explode('|', $sProposedValue);
+	    	$aLabels = explode($sSepItem, $sProposedValue);
 	    	$aCodes = array();
 	    	foreach($aLabels as $sTagLabel)
 		    {
@@ -6277,6 +6281,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
      */
     public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
     {
+	    $sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
         if (is_object($value) && ($value instanceof ormTagSet))
         {
             if ($bLocalize)
@@ -6287,13 +6292,13 @@ class AttributeTagSet extends AttributeDBFieldVoid
             {
                 $aValues = $value->GetValue();
             }
-            $sRes = implode('|', $aValues);
+            $sRes = implode($sSepItem, $aValues);
         }
         else
         {
             $sRes = '';
         }
-        return $sRes;
+        return "{$sTextQualifier}{$sRes}{$sTextQualifier}";
     }
 
     /**
