@@ -2671,7 +2671,7 @@ EOF;
 	 * @param bool $bIsAbstractClass
 	 * @param string $sMethods
 	 *
-	 * @param string $aRequiredFiles
+	 * @param array $aRequiredFiles
 	 * @param string $sCodeComment
 	 *
 	 * @return string php code for the class

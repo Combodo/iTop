@@ -922,4 +922,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code should contain between 3 and 20 alphanumeric characters',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label should not contain | nor be empty',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags code cannot be changed',
+	'Core:TagSetFieldData:FieldDescription' => '%2$s of class %1$s',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)',
 ));

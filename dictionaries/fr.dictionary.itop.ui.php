@@ -1343,6 +1343,12 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtré',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
+
+	// - Tags admin
+	'Menu:TagAdminMenu' => 'Etiquettes',
+	'Menu:TagAdminMenu+' => 'Gestion des étiquettes',
+	'UI:TagAdminMenu:Title' => 'Gestion des étiquettes',
+	'UI:TagSetFieldData:Error' => 'Erreur: %1$s',
 ));
 
 

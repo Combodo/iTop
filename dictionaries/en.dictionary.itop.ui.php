@@ -956,7 +956,12 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:NotificationsMenu:OnStateLeave' => 'When an object leaves a given state',
 	'UI:NotificationsMenu:Actions' => 'Actions',
 	'UI:NotificationsMenu:AvailableActions' => 'Available actions',
-	
+
+	'Menu:TagAdminMenu' => 'Tags configuration',
+	'Menu:TagAdminMenu+' => 'Tags values management',
+	'UI:TagAdminMenu:Title' => 'Tags configuration',
+	'UI:TagSetFieldData:Error' => 'Error: %1$s',
+
 	'Menu:AuditCategories' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)

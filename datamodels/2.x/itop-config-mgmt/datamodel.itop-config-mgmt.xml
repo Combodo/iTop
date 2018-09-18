@@ -8423,5 +8423,12 @@
         </cells>
       </definition>
     </menu>
+    <menu id="TagAdminMenu" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>100</rank>
+      <parent>Catalogs</parent>
+      <url>$pages/tagadmin.php</url>
+      <enable_class>TagSetFieldData</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
   </menus>
 </itop_design>

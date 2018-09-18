@@ -76,7 +76,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Ticket/Attribute:private_log+' => '',
     'Class:Ticket/Attribute:contacts_list' => 'Contacts',
 	'Class:Ticket/Attribute:contacts_list+' => 'All the contacts linked to this ticket',
-    'Class:Ticket/Attribute:tagfield' => 'Tag',
+    'Class:Ticket/Attribute:tagfield' => 'Tags',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CIs',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'All the configuration items impacted by this ticket. Items marked as "Computed" have been automatically marked as impacted. Items marked as "Not impacted" are excluded from the impact.',
 	'Class:Ticket/Attribute:workorders_list' => 'Work orders',

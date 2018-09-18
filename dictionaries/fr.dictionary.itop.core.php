@@ -770,4 +770,6 @@ Opérateurs :<br/>
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Le code de l\'étiquette doit contenir entre 3 et 20 caractères alphanumériques.',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Le nom de l\'étiquette ne doit pas être vide ni contenir le caractère \'|\'',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Le code de l\'étiquette ne peut pas être changé',
+	'Core:TagSetFieldData:FieldDescription' => '%2$s pour la classe %1$s',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Utilisation (%1$d)',
 ));

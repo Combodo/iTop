@@ -96,12 +96,27 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	public function ComputeValues()
 	{
 		$sClassName = get_class($this);
+		$aRes = static::ExtractTagFieldName($sClassName);
+		$this->_Set('tag_class', $aRes['tag_class']);
+		$this->_Set('tag_attcode', $aRes['tag_attcode']);
+	}
+
+	/**
+	 * Extract Tag class and attcode from the TagFieldData class name
+	 * @param $sClassName
+	 *
+	 * @return string[]
+	 */
+	public static function ExtractTagFieldName($sClassName)
+	{
+		$aRes = array();
 		// Extract class and attcode from class name using pattern  TagSetFieldDataFor_<class>_<attcode>>;
 		if (preg_match('@^TagSetFieldDataFor_(?<class>\w+)_(?<attcode>\w+)$@', $sClassName, $aMatches))
 		{
-			$this->_Set('tag_class', $aMatches['class']);
-			$this->_Set('tag_attcode', $aMatches['attcode']);
+			$aRes['tag_class'] = $aMatches['class'];
+			$aRes['tag_attcode'] = $aMatches['attcode'];
 		}
+		return $aRes;
 	}
 
 	/**
@@ -185,6 +200,51 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		if (array_key_exists('tag_code', $aChanges))
 		{
 			throw new CoreException(Dict::S('Core:TagSetFieldData:ErrorCodeUpdateNotAllowed'));
+		}
+	}
+
+	/**
+	 * Display Tag Usage
+	 *
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	{
+		parent::DisplayBareRelations($oPage, $bEditMode);
+		if (!$bEditMode)
+		{
+			$sClass = $this->Get('tag_class');
+			$sAttCode = $this->Get('tag_attcode');
+			$sTagCode = $this->Get('tag_code');
+			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
+			$oSet = new DBObjectSet($oFilter);
+			$iCount = $oSet->Count();
+			$oPage->SetCurrentTab(Dict::Format('Core:TagSetFieldData:WhereIsThisTagTab', $iCount));
+			$aClassLabels = array();
+			foreach(MetaModel::EnumChildClasses($sClass) as $sCurrentClass)
+			{
+				$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
+			}
+
+			foreach($aClassLabels as $sClass => $sClassLabel)
+			{
+				$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
+				$oSet = new DBObjectSet($oFilter);
+				if ($oSet->CountExceeds(0))
+				{
+					$oPage->add("<h2>$sClassLabel</h2>");
+					$oResultBlock = new DisplayBlock($oFilter, 'list', false);
+					$oResultBlock->Display($oPage, 1);
+				}
+			}
 		}
 	}
 
