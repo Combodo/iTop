@@ -32,6 +32,8 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Exception;
 use ormTagSet;
 
+define('MAX_TAGS', 12);
+
 /**
  * Tests of the ormTagSet class
  *
@@ -57,13 +59,13 @@ class ormTagSetTest extends ItopDataTestCase
 
 	public function testGetTagDataClass()
 	{
-		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		static::assertEquals($oTagSet->GetTagDataClass(), 'TagSetFieldDataFor_Ticket_tagfield');
 	}
 
 	public function testGetValue()
 	{
-		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		static::assertEquals($oTagSet->GetValue(), array());
 
 		$oTagSet->AddTag('tag1');
@@ -75,7 +77,7 @@ class ormTagSetTest extends ItopDataTestCase
 
 	public function testAddTag()
 	{
-		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 
 		$oTagSet->AddTag('tag1');
 		static::assertEquals($oTagSet->GetValue(), array('tag1'));
@@ -90,13 +92,38 @@ class ormTagSetTest extends ItopDataTestCase
 		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
 	}
 
+
+	/**
+	 * @expectedException \CoreException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public function testMaxTagLimit()
+	{
+		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, 3);
+
+		$oTagSet->SetValue(array('tag1', 'tag2', 'tag3'));
+
+		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2', 'tag3'));
+
+		try
+		{
+			$oTagSet->SetValue(array('tag1', 'tag2', 'tag3', 'tag4'));
+		}
+		catch (\CoreException $e)
+		{
+			$this->debug('Awaited: '.$e->getMessage());
+			throw $e;
+		}
+	}
+
 	public function testEquals()
 	{
-		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		$oTagSet1->AddTag('tag1');
 		static::assertTrue($oTagSet1->Equals($oTagSet1));
 
-		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		$oTagSet2->SetValue(array('tag1'));
 
 		static::assertTrue($oTagSet1->Equals($oTagSet2));
@@ -107,7 +134,7 @@ class ormTagSetTest extends ItopDataTestCase
 
 	public function testSetValue()
 	{
-		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 
 		$oTagSet->SetValue(array('tag1'));
 		static::assertEquals($oTagSet->GetValue(), array('tag1'));
@@ -119,7 +146,7 @@ class ormTagSetTest extends ItopDataTestCase
 
 	public function testRemoveTag()
 	{
-		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		$oTagSet->RemoveTag('tag_unknown');
 		static::assertEquals($oTagSet->GetValue(), array());
 
@@ -146,10 +173,10 @@ class ormTagSetTest extends ItopDataTestCase
 
 	public function testGetDelta()
 	{
-		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		$oTagSet1->SetValue(array('tag1', 'tag2'));
 
-		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		$oTagSet2->SetValue(array('tag1', 'tag3', 'tag4'));
 
 		$aDelta = $oTagSet1->GetDelta($oTagSet2);
@@ -160,10 +187,10 @@ class ormTagSetTest extends ItopDataTestCase
 
 	public function testApplyDelta()
 	{
-		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		$oTagSet1->SetValue(array('tag1', 'tag2'));
 
-		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		$oTagSet2->SetValue(array('tag1', 'tag3', 'tag4'));
 
 		$aDelta = $oTagSet1->GetDelta($oTagSet2);
@@ -184,7 +211,7 @@ class ormTagSetTest extends ItopDataTestCase
 	 */
 	public function testGetModified($aInitialTags, $aDiffAndExpectedTags)
 	{
-		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		$oTagSet1->SetValue($aInitialTags);
 
 		foreach($aDiffAndExpectedTags as $aTestItem)
@@ -236,7 +263,7 @@ class ormTagSetTest extends ItopDataTestCase
 	 */
 	public function testBulkModify($aInitialTags, $aDelta, $aExpectedTags)
 	{
-		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE);
+		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 		$oTagSet1->SetValue($aInitialTags);
 
 		$oTagSet1->ApplyDelta($aDelta);

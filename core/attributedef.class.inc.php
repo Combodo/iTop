@@ -6712,7 +6712,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 
 	static public function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array("is_null_allowed"));
+		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'tag_max_nb', 'tag_code_max_len'));
 	}
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
@@ -6723,6 +6723,16 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	public function IsNullAllowed()
 	{
 		return $this->Get("is_null_allowed");
+	}
+
+	public function GetTagMaxNb()
+	{
+		return $this->Get('tag_max_nb');
+	}
+
+	public function GetTagCodeMaxLength()
+	{
+		return $this->Get('tag_code_max_len');
 	}
 
 	public function GetEditClass()
@@ -6748,14 +6758,15 @@ class AttributeTagSet extends AttributeDBFieldVoid
 
 	protected function GetSQLCol($bFullSpec = false)
 	{
-		return 'VARCHAR(255)'
+		$iLen = $this->GetMaxSize();
+		return "VARCHAR($iLen)"
 			.CMDBSource::GetSqlStringColumnDefinition()
 			.($bFullSpec ? $this->GetSQLColSpec() : '');
 	}
 
 	public function GetMaxSize()
 	{
-		return 255;
+		return $iLen = ($this->GetTagMaxNb() * $this->GetTagCodeMaxLength()) + 1;
 	}
 
 	public function RequiresIndex()
@@ -6806,7 +6817,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		$aTagCodes = explode(' ', "$sValue");
 		$sAttCode = $this->GetCode();
 		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
-		$oTagSet = new ormTagSet($sClass, $sAttCode);
+		$oTagSet = new ormTagSet($sClass, $sAttCode, $this->GetTagMaxNb());
 		$aGoodTags = array();
 		foreach($aTagCodes as $sTagCode)
 		{
@@ -6817,6 +6828,11 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			if ($oTagSet->IsValidTag($sTagCode))
 			{
 				$aGoodTags[] = $sTagCode;
+				if (count($aGoodTags) === $this->GetTagMaxNb())
+				{
+					// extra tags are ignored
+					continue;
+				}
 			}
 			else
 			{
@@ -6841,7 +6857,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-			$this->GetCode());
+			$this->GetCode(), $this->GetTagMaxNb());
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$aTagCodes = explode(' ', "$proposedValue");
@@ -6879,7 +6895,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		if ($bLocalizedValue && !empty($sProposedValue))
 		{
 			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-				$this->GetCode());
+				$this->GetCode(), $this->GetTagMaxNb());
 			$aLabels = explode($sSepItem, $sProposedValue);
 			$aCodes = array();
 			foreach($aLabels as $sTagLabel)
@@ -6897,7 +6913,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 
 	public function GetNullValue()
 	{
-		return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
+		return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetTagMaxNb());
 	}
 
 	public function IsNull($proposedValue)
@@ -7025,7 +7041,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			$aTagCodes = explode(' ', $value);
 			$aValues = array();
 			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-				$this->GetCode());
+				$this->GetCode(), $this->GetTagMaxNb());
 			foreach($aTagCodes as $sTagCode)
 			{
 				try
@@ -7225,7 +7241,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	 */
 	public function FromJSONToValue($json)
 	{
-		$oSet = new ormTagSet($this->GetHostClass(), $this->GetCode());
+		$oSet = new ormTagSet($this->GetHostClass(), $this->GetCode(), $this->GetTagMaxNb());
 		$oSet->SetValue($json);
 
 		return $oSet;

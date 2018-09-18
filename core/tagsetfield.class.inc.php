@@ -154,24 +154,35 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function DoCheckToWrite()
 	{
-		// Check that code and labels are uniques
+		$sClass = $this->Get('tag_class');
+		$sAttCode = $this->Get('tag_attcode');
+		$iMaxLen = 20;
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		if ($oAttDef instanceof AttributeTagSet)
+		{
+			$iMaxLen = $oAttDef->GetTagCodeMaxLength();
+		}
+
 		$sTagCode = $this->Get('tag_code');
 		// Check tag_code syntax
-		if (!preg_match("@^[a-zA-Z0-9]{3,20}$@", $sTagCode))
+		if (!preg_match("@^[a-zA-Z0-9]{3,$iMaxLen}$@", $sTagCode))
 		{
-			$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorTagCodeSyntax');
+			$this->m_aCheckIssues[] = Dict::Format('Core:TagSetFieldData:ErrorTagCodeSyntax', $iMaxLen);
 		}
 
 		$sTagLabel = $this->Get('tag_label');
-		if (empty($sTagLabel) || (strpos($sTagLabel, "|") !== false))
+		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+		if (empty($sTagLabel) || (strpos($sTagLabel, $sSepItem) !== false))
 		{
 			// Label must not contain | character
-			$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorTagLabelSyntax');
+			$this->m_aCheckIssues[] = Dict::Format('Core:TagSetFieldData:ErrorTagLabelSyntax', $sSepItem);
 		}
 
+		// Check that code and labels are uniques
 		$id = $this->GetKey();
 		$sClassName = get_class($this);
 		if (empty($id))
@@ -188,8 +199,6 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel');
 		}
 		// Clear cache
-		$sClass = $this->Get('tag_class');
-		$sAttCode = $this->Get('tag_attcode');
 		$sTagDataClass = MetaModel::GetTagDataClass($sClass, $sAttCode);
 		unset(self::$m_aAllowedValues[$sTagDataClass]);
 

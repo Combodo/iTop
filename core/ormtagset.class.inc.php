@@ -53,6 +53,11 @@ final class ormTagSet
 	private $aModified = array();
 
 	/**
+	 * @var int Max number of tags in collection
+	 */
+	private $iLimit;
+
+	/**
 	 * __toString magical function overload.
 	 */
 	public function __toString()
@@ -73,10 +78,11 @@ final class ormTagSet
 	 *
 	 * @param string $sClass
 	 * @param string $sAttCode
+	 * @param int $iLimit
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct($sClass, $sAttCode)
+	public function __construct($sClass, $sAttCode, $iLimit = 12)
 	{
 		$this->sAttCode = $sAttCode;
 
@@ -86,6 +92,7 @@ final class ormTagSet
 			throw new Exception("ormTagSet: field {$sClass}:{$sAttCode} is not a tag");
 		}
 		$this->sClass = $sClass;
+		$this->iLimit = $iLimit;
 	}
 
 	/**
@@ -119,8 +126,16 @@ final class ormTagSet
 		}
 
 		$oTags = array();
+		$iCount = 0;
+		$bError = false;
 		foreach($aTagCodes as $sTagCode)
 		{
+			$iCount++;
+			if ($iCount > $this->iLimit)
+			{
+				$bError = true;
+				continue;
+			}
 			$oTag = $this->GetTagFromCode($sTagCode);
 			$oTags[$sTagCode] = $oTag;
 		}
@@ -130,6 +145,16 @@ final class ormTagSet
 		$this->aAdded = array();
 		$this->aModified = array();
 		$this->aOriginalObjects = $oTags;
+
+		if ($bError)
+		{
+			throw new CoreException("Maximum number of tags ({$this->iLimit}) reached for {$this->sClass}:{$this->sAttCode}");
+		}
+	}
+
+	private function GetCount()
+	{
+		return count($this->aPreserved) + count($this->aAdded) - count($this->aRemoved);
 	}
 
 	/**
@@ -314,6 +339,10 @@ final class ormTagSet
 	 */
 	public function AddTag($sTagCode)
 	{
+		if ($this->GetCount() === $this->iLimit)
+		{
+			throw new CoreException("Maximum number of tags ({$this->iLimit}) reached for {$this->sClass}:{$this->sAttCode}");
+		}
 		if ($this->IsTagInList($this->aPreserved, $sTagCode) || $this->IsTagInList($this->aAdded, $sTagCode))
 		{
 			// nothing to do, already existing tag
@@ -481,4 +510,5 @@ final class ormTagSet
 	{
 		return MetaModel::GetTagDataClass($this->sClass, $this->sAttCode);
 	}
+
 }

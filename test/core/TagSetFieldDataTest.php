@@ -164,7 +164,6 @@ class TagSetFieldDataTest extends ItopDataTestCase
 			'No _' => array('tag_1'),
 			'No -' => array('tag-1'),
 			'No %' => array('tag%1'),
-			'Less than 21 chars' => array('012345678901234567890'),
 			'At least 3 chars' => array(''),
 			'At least 3 chars 1' => array('a'),
 			'At least 3 chars 2' => array('ab'),
@@ -196,5 +195,36 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		$oTagData = $this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
 		$oTagData->Set('tag_code', 'tag2');
 		$oTagData->DBWrite();
+	}
+
+	/**
+	 * Check that the code length is correctly checked
+	 *
+	 * @throws \CoreException
+	 */
+	public function testMaxTagCodeLength()
+	{
+		/** @var \AttributeTagSet $oAttdef */
+		$oAttdef = \MetaModel::GetAttributeDef(TAG_CLASS, TAG_ATTCODE);
+
+		$iMaxLength = $oAttdef->GetTagCodeMaxLength();
+		$sTagCode = str_repeat('a', $iMaxLength);
+
+		// Should work
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, $sTagCode, $sTagCode);
+
+		// Too long
+		$sTagCode = str_repeat('a', $iMaxLength + 1);
+		try
+		{
+			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, $sTagCode, $sTagCode);
+		} catch (\CoreException $e)
+		{
+			$this->debug('Awaited: '.$e->getMessage());
+			static::assertTrue(true);
+			return;
+		}
+		// Failed
+		static::assertFalse(true);
 	}
 }
