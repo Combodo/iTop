@@ -923,4 +923,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label should not contain | nor be empty',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags code cannot be changed',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)',
+	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag',
 ));

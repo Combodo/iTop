@@ -774,4 +774,6 @@ Opérateurs :<br/>
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Le nom de l\'étiquette ne doit pas être vide ni contenir le caractère \'|\'',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Le code de l\'étiquette ne peut pas être changé',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Utilisation (%1$d)',
+	'Core:TagSetFieldData:NoEntryFound' => 'Pas d\'utilisation de cette étiquette',
+
 ));

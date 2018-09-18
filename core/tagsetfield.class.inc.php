@@ -234,21 +234,29 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			$oSet = new DBObjectSet($oFilter);
 			$iCount = $oSet->Count();
 			$oPage->SetCurrentTab(Dict::Format('Core:TagSetFieldData:WhereIsThisTagTab', $iCount));
-			$aClassLabels = array();
-			foreach(MetaModel::EnumChildClasses($sClass) as $sCurrentClass)
+			if ($iCount === 0)
 			{
-				$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
+				$sNoEntries = Dict::S('Core:TagSetFieldData:NoEntryFound');
+				$oPage->add("<p>$sNoEntries</p>");
 			}
-
-			foreach($aClassLabels as $sClass => $sClassLabel)
+			else
 			{
-				$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
-				$oSet = new DBObjectSet($oFilter);
-				if ($oSet->CountExceeds(0))
+				$aClassLabels = array();
+				foreach(MetaModel::EnumChildClasses($sClass) as $sCurrentClass)
 				{
-					$oPage->add("<h2>$sClassLabel</h2>");
-					$oResultBlock = new DisplayBlock($oFilter, 'list', false);
-					$oResultBlock->Display($oPage, 1);
+					$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
+				}
+
+				foreach($aClassLabels as $sClass => $sClassLabel)
+				{
+					$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
+					$oSet = new DBObjectSet($oFilter);
+					if ($oSet->CountExceeds(0))
+					{
+						$oPage->add("<h2>$sClassLabel</h2>");
+						$oResultBlock = new DisplayBlock($oFilter, 'list', false);
+						$oResultBlock->Display($oPage, 1);
+					}
 				}
 			}
 		}
