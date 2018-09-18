@@ -103,9 +103,11 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 
 	/**
 	 * Extract Tag class and attcode from the TagFieldData class name
+	 *
 	 * @param $sClassName
 	 *
 	 * @return string[]
+	 * @throws \CoreException
 	 */
 	public static function ExtractTagFieldName($sClassName)
 	{
@@ -115,6 +117,10 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		{
 			$aRes['tag_class'] = $aMatches['class'];
 			$aRes['tag_attcode'] = $aMatches['attcode'];
+		}
+		else
+		{
+			throw new CoreException("Bad Class name format: $sClassName");
 		}
 		return $aRes;
 	}
@@ -250,7 +256,13 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 
 	public static function GetClassName($sClass)
 	{
-		$aTagFieldInfo = TagSetFieldData::ExtractTagFieldName($sClass);
+		try
+		{
+			$aTagFieldInfo = TagSetFieldData::ExtractTagFieldName($sClass);
+		} catch (CoreException $e)
+		{
+			return $sClass;
+		}
 		$sClassDesc = MetaModel::GetName($aTagFieldInfo['tag_class']);
 		$sAttDesc = MetaModel::GetAttributeDef($aTagFieldInfo['tag_class'], $aTagFieldInfo['tag_attcode'])->GetLabel();
 		if (Dict::Exists("Class:$sClass"))
