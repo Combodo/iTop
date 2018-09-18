@@ -6948,7 +6948,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		}
 		if ($sValue instanceof ormTagSet)
 		{
-			$aValues = $sValue->GetTags();
+			$aValues = $sValue->GetLabels();
 
 			return implode(' ', $aValues);
 		}
@@ -7069,18 +7069,71 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		return parent::GetAsHTML($value, $oHostObject, $bLocalize);
 	}
 
+	// Do not display friendly names in the history of change
+	public function DescribeChangeAsHTML($sOldValue, $sNewValue, $sLabel = null)
+	{
+		$sResult = Dict::Format('Change:AttName_Changed', $this->GetLabel()).", ";
+
+		/** @var \ormTagSet $oOldValue */
+		$oOldValue = $this->MakeRealValue($sOldValue, null);
+
+		/** @var \ormTagSet $oNewValue */
+		$oNewValue = $this->MakeRealValue($sNewValue, null);
+
+		$aDelta = $oOldValue->GetDeltaTags($oNewValue);
+		$sAdded = null;
+		if (isset($aDelta['added']) && !empty($aDelta['added']))
+		{
+			$sAdded = $this->GenerateViewHtmlForValues($aDelta['added']);
+			$sResult .= Dict::Format('Change:LinkSet:Added', $sAdded);
+		}
+
+		if (isset($aDelta['removed']) && !empty($aDelta['removed']))
+		{
+			if (!empty($sAdded))
+			{
+				$sResult .= ', ';
+			}
+			$sRemoved = $this->GenerateViewHtmlForValues($aDelta['removed']);
+			$sResult .= Dict::Format('Change:LinkSet:Removed', $sRemoved);
+		}
+
+		return $sResult;
+	}
+
 	/**
+	 * HTML representation of a list of tags (read-only)
+	 * accept a list of strings or a list of TagSetFieldData
+	 *
 	 * @param array $aValues
 	 * @param string $sCssClass
 	 *
 	 * @return string
+	 * @throws \CoreException
 	 */
 	private function GenerateViewHtmlForValues($aValues, $sCssClass = 'attribute-tagset')
 	{
 		$sHtml = '<span class="'.$sCssClass.'">';
-		foreach($aValues as $sTagSetLabel)
+		foreach($aValues as $oTag)
 		{
-			$sHtml .= '<span>'.$sTagSetLabel.'</span>';
+			if ($oTag instanceof TagSetFieldData)
+			{
+				$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
+				$sAttCode = $this->GetCode();
+				$sTagCode = $oTag->Get('tag_code');
+				$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
+				$oAppContext = new ApplicationContext();
+				$sContext = $oAppContext->GetForLink();
+				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
+				$sFilter = urlencode($oFilter->serialize());
+				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+
+				$sHtml .= '<a href="'.$sUrl.'"><span>'.$oTag->Get('tag_label').'</span></a>';
+			}
+			else
+			{
+				$sHtml .= '<span>'.$oTag.'</span>';
+			}
 		}
 		$sHtml .= '</span>';
 
@@ -7102,7 +7155,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			$sRes = "<Set>\n";
 			if ($bLocalize)
 			{
-				$aValues = $value->GetTags();
+				$aValues = $value->GetLabels();
 			}
 			else
 			{
@@ -7142,7 +7195,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		{
 			if ($bLocalize)
 			{
-				$aValues = $value->GetTags();
+				$aValues = $value->GetLabels();
 			}
 			else
 			{
@@ -7186,7 +7239,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		{
 			if ($bLocalize)
 			{
-				$aValues = $value->GetTags();
+				$aValues = $value->GetLabels();
 			}
 			else
 			{
@@ -7215,7 +7268,6 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	 * @param \ormTagSet $value
 	 *
 	 * @return array
-	 * @throws \CoreException
 	 */
 	public function GetForJSON($value)
 	{

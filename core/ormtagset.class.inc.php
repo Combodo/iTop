@@ -180,7 +180,7 @@ final class ormTagSet
 	/**
 	 * @return array of tag labels indexed by code
 	 */
-	public function GetTags()
+	public function GetLabels()
 	{
 		$aTags = array();
 		foreach($this->aPreserved as $sTagCode => $oTag)
@@ -209,9 +209,28 @@ final class ormTagSet
 	}
 
 	/**
+	 * @return array of tags indexed by code
+	 */
+	public function GetTags()
+	{
+		$aTags = array();
+		foreach($this->aPreserved as $sTagCode => $oTag)
+		{
+			$aTags[$sTagCode] = $oTag;
+		}
+		foreach($this->aAdded as $sTagCode => $oTag)
+		{
+			$aTags[$sTagCode] = $oTag;
+		}
+		ksort($aTags);
+
+		return $aTags;
+	}
+
+	/**
 	 * @return array of tag labels indexed by code for only the added tags
 	 */
-	public function GetAddedTags()
+	private function GetAddedCodes()
 	{
 		$aTags = array();
 		foreach($this->aAdded as $sTagCode => $oTag)
@@ -226,7 +245,7 @@ final class ormTagSet
 	/**
 	 * @return array of tag labels indexed by code for only the removed tags
 	 */
-	public function GetRemovedTags()
+	private function GetRemovedCodes()
 	{
 		$aTags = array();
 		foreach($this->aRemoved as $sTagCode => $oTag)
@@ -236,6 +255,72 @@ final class ormTagSet
 		ksort($aTags);
 
 		return $aTags;
+	}
+
+	/**
+	 * @return array of tag labels indexed by code for only the added tags
+	 */
+	private function GetAddedTags()
+	{
+		$aTags = array();
+		foreach($this->aAdded as $sTagCode => $oTag)
+		{
+			$aTags[$sTagCode] = $oTag;
+		}
+		ksort($aTags);
+
+		return $aTags;
+	}
+
+	/**
+	 * @return array of tag labels indexed by code for only the removed tags
+	 */
+	private function GetRemovedTags()
+	{
+		$aTags = array();
+		foreach($this->aRemoved as $sTagCode => $oTag)
+		{
+			$aTags[$sTagCode] = $oTag;
+		}
+		ksort($aTags);
+
+		return $aTags;
+	}
+
+	/** Get the delta with another TagSet
+	 *
+	 *  $aDelta['added] = array of tag codes for only the added tags
+	 *  $aDelta['removed'] = array of tag codes for only the removed tags
+	 *
+	 * @param \ormTagSet $oOtherTagSet
+	 *
+	 * @return array
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
+	 */
+	public function GetDelta(ormTagSet $oOtherTagSet)
+	{
+		$oTag = new ormTagSet($this->sClass, $this->sAttCode);
+		// Set the initial value
+		$aOrigTagCodes = $this->GetValue();
+		$oTag->SetValue($aOrigTagCodes);
+		// now remove everything
+		foreach($aOrigTagCodes as $sTagCode)
+		{
+			$oTag->RemoveTag($sTagCode);
+		}
+		// now add the tags of the other TagSet
+		foreach($oOtherTagSet->GetValue() as $sTagCode)
+		{
+			$oTag->AddTag($sTagCode);
+		}
+		$aDelta = array();
+		$aDelta['added'] = $oTag->GetAddedCodes();
+		$aDelta['removed'] = $oTag->GetRemovedCodes();
+
+		return $aDelta;
 	}
 
 	/** Get the delta with another TagSet
@@ -251,7 +336,7 @@ final class ormTagSet
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function GetDelta(ormTagSet $oOtherTagSet)
+	public function GetDeltaTags(ormTagSet $oOtherTagSet)
 	{
 		$oTag = new ormTagSet($this->sClass, $this->sAttCode);
 		// Set the initial value
@@ -287,6 +372,8 @@ final class ormTagSet
 
 	/**
 	 * Apply a delta to the current TagSet
+	 *  $aDelta['added] = array of tag code for only the added tags
+	 *  $aDelta['removed'] = array of tag code for only the removed tags
 	 *
 	 * @param $aDelta
 	 *
