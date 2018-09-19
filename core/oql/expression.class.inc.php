@@ -730,7 +730,9 @@ class MatchExpression extends BinaryExpression
 
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
+		/** @var \FieldExpression $oLeft */
 		$oLeft = $this->GetLeftExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+		/** @var \ScalarExpression $oRight */
 		$oRight = $this->GetRightExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 
 		return new static($oLeft, $oRight);
@@ -922,35 +924,51 @@ class ScalarExpression extends UnaryExpression
 									$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
 
 									$aValue['label'] = $oObj->Get("friendlyname");
+									$aValue['value'] = $this->GetValue();
+									$aCriterion['values'] = array($aValue);
+
 								}
 								else
 								{
 									$aValue['label'] = Dict::S('Enum:Undefined');
+									$aValue['value'] = $this->GetValue();
+									$aCriterion['values'] = array($aValue);
 								}
-							}
-							catch (Exception $e)
+							} catch (Exception $e)
 							{
 								IssueLog::Error($e->getMessage());
 							}
 							break;
-					case ($oAttDef instanceof AttributeTagSet):
-						try
-						{
-							if (!empty($this->GetValue()))
+						case ($oAttDef instanceof AttributeTagSet):
+							try
 							{
-								/** @var AttributeTagSet $oAttDef */
-								$aValue['label'] = $oAttDef->GetValueLabel($this->GetValue());
-							}
-							else
+								if (!empty($this->GetValue()))
+								{
+									$aValues = array();
+									$oValue = $this->GetValue();
+									if (is_string($oValue))
+									{
+										$oValue = $oAttDef->MakeRealValue($oValue, null);
+									}
+									/** @var \ormTagSet $oValue */
+									$aTags = $oValue->GetTags();
+									foreach($aTags as $oTag)
+									{
+										$aValue['label'] = $oTag->Get('tag_label');
+										$aValue['value'] = $oTag->Get('tag_code');
+										$aValues[] = $aValue;
+									}
+									$aCriterion['values'] = $aValues;
+								}
+								else
+								{
+									$aCriterion['has_undefined'] = true;
+								}
+							} catch (Exception $e)
 							{
-								$aCriterion['has_undefined'] = true;
+								IssueLog::Error($e->getMessage());
 							}
-						}
-						catch (Exception $e)
-						{
-							IssueLog::Error($e->getMessage());
-						}
-						break;
+							break;
 						case $oAttDef->IsExternalKey():
 							try
 							{
@@ -960,13 +978,16 @@ class ScalarExpression extends UnaryExpression
 									$sTarget = $oAttDef->GetTargetClass();
 									$oObj = MetaModel::GetObject($sTarget, $this->GetValue(), true, true);
 									$aValue['label'] = $oObj->Get("friendlyname");
+									$aValue['value'] = $this->GetValue();
+									$aCriterion['values'] = array($aValue);
 								}
 								else
 								{
 									$aValue['label'] = Dict::S('Enum:Undefined');
+									$aValue['value'] = $this->GetValue();
+									$aCriterion['values'] = array($aValue);
 								}
-							}
-							catch (Exception $e)
+							} catch (Exception $e)
 							{
 								// This object cannot be seen... ignore
 							}
@@ -975,22 +996,21 @@ class ScalarExpression extends UnaryExpression
 							try
 							{
 								$aValue['label'] = $oAttDef->GetAsPlainText($this->GetValue());
+								$aValue['value'] = $this->GetValue();
+								$aCriterion['values'] = array($aValue);
 							} catch (Exception $e)
 							{
 								$aValue['label'] = $this->GetValue();
+								$aValue['value'] = $this->GetValue();
+								$aCriterion['values'] = array($aValue);
 							}
 							break;
 					}
 				}
-				if (!empty($aValue))
-                {
-                    // only if a label is found
-                    $aValue['value'] = $this->GetValue();
-                    $aCriterion['values'] = array($aValue);
-                }
 				break;
 		}
 		$aCriterion['oql'] = $this->RenderExpression(false, $aArgs, $bRetrofitParams);
+
 		return $aCriterion;
 	}
 
