@@ -165,6 +165,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	 */
 	public function DoCheckToWrite()
 	{
+		$this->ComputeValues();
 		$sClass = $this->Get('tag_class');
 		$sAttCode = $this->Get('tag_attcode');
 		$iMaxLen = 20;
