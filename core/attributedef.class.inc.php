@@ -7157,7 +7157,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 				$sFilter = urlencode($oFilter->serialize());
 				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 
-				$sHtml .= '<a href="'.$sUrl.'"><span class="attribute-tag">'.$oTag->Get('tag_label').'</span></a>';
+				$sHtml .= '<a href="'.$sUrl.'" class="attribute-tag">'.$oTag->Get('tag_label').'</a>';
 			}
 			else
 			{

@@ -342,10 +342,10 @@ a.small_action {
   padding-left: 5px;
   padding-top: 2px;
   padding-bottom: 2px;
-  background: #ea7d1e url(../images/actions_left.png?v=v2.5.0-beta) no-repeat left;
+  background: #ea7d1e url(../images/actions_left.png?v=v2.6.0-dev) no-repeat left;
 }
 .actions_details span {
-  background: url(../images/actions_right.png?v=v2.5.0-beta) no-repeat right;
+  background: url(../images/actions_right.png?v=v2.6.0-dev) no-repeat right;
   color: #fff;
   font-weight: bold;
   padding-top: 2px;
@@ -519,7 +519,7 @@ div.actions_menu > ul {
   nowidth: 70px;
   padding-left: 5px;
   /* Nasty work-around for IE... en attendant mieux */
-  background: #ea7d1e url(../images/actions_left.png?v=v2.5.0-beta) no-repeat top left;
+  background: #ea7d1e url(../images/actions_left.png?v=v2.6.0-dev) no-repeat top left;
   cursor: pointer;
   margin: 0;
 }
@@ -531,7 +531,7 @@ div.actions_menu > ul > li {
   height: 17px;
   padding-right: 16px;
   padding-left: 4px;
-  background: url(../images/actions_right.png?v=v2.5.0-beta) no-repeat top right transparent;
+  background: url(../images/actions_right.png?v=v2.6.0-dev) no-repeat top right transparent;
   font-weight: bold;
   color: #fff;
   vertical-align: middle;
@@ -674,7 +674,7 @@ td a.dp-choose-date, a.dp-choose-date, td a.dp-choose-date:hover, a.dp-choose-da
   display: block;
   text-indent: -2000px;
   overflow: hidden;
-  background: url(../images/calendar.png?v=v2.5.0-beta) no-repeat;
+  background: url(../images/calendar.png?v=v2.6.0-dev) no-repeat;
 }
 td a.dp-choose-date.dp-disabled, a.dp-choose-date.dp-disabled {
   background-position: 0 -20px;
@@ -1327,19 +1327,19 @@ input.dp-applied {
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.odd td.truncated, table.listResults tr td.truncated, .wizContainer table.listResults tr.odd td.truncated, .wizContainer table.listResults tr td.truncated {
-  background: url(../images/truncated.png?v=v2.5.0-beta) bottom repeat-x;
+  background: url(../images/truncated.png?v=v2.6.0-dev) bottom repeat-x;
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.even td.truncated, .wizContainer table.listResults tr.even td.truncated {
-  background: #f9f9f1 url(../images/truncated.png?v=v2.5.0-beta) bottom repeat-x;
+  background: #f9f9f1 url(../images/truncated.png?v=v2.6.0-dev) bottom repeat-x;
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.even td.hover.truncated, .wizContainer table.listResults tr.even td.hover.truncated {
-  background: #fdf5d0 url(../images/truncated.png?v=v2.5.0-beta) bottom repeat-x;
+  background: #fdf5d0 url(../images/truncated.png?v=v2.6.0-dev) bottom repeat-x;
 }
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.odd td.hover.truncated, table.listResults tr td.hover.truncated, .wizContainer table.listResults tr.odd td.hover.truncated, .wizContainer table.listResults tr td.hover.truncated {
-  background: #fdf5d0 url(../images/truncated.png?v=v2.5.0-beta) bottom repeat-x;
+  background: #fdf5d0 url(../images/truncated.png?v=v2.6.0-dev) bottom repeat-x;
 }
 table.listResults.truncated {
   border-bottom: 0;
@@ -1447,7 +1447,7 @@ div#logo {
 div#logo div {
   height: 88px;
   width: 244px;
-  background: url(../images/itop-logo-2.png?v=v2.5.0-beta) left no-repeat;
+  background: url(../images/itop-logo-2.png?v=v2.6.0-dev) left no-repeat;
 }
 #left-pane .ui-layout-north {
   overflow: hidden;
@@ -1539,7 +1539,7 @@ div#logo div {
 }
 #global-search-image {
   vertical-align: middle;
-  background: url(../images/search.png?v=v2.5.0-beta) center center no-repeat;
+  background: url(../images/search.png?v=v2.6.0-dev) center center no-repeat;
   display: inline-block;
   width: 28px;
   height: 30px;
@@ -1568,7 +1568,7 @@ span.ui-icon {
   margin: 0 2px;
 }
 .ui-layout-button-pin-down {
-  background: url(../images/splitter-bkg.png?v=v2.5.0-beta) transparent;
+  background: url(../images/splitter-bkg.png?v=v2.6.0-dev) transparent;
   width: 16px;
   background-position: -144px -144px;
 }
@@ -1944,6 +1944,43 @@ fieldset .details > .field_container {
 .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn > img {
   max-width: 20px;
 }
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control {
+  width: 100%;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-dropdown, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input input {
+  font-size: 12px;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input {
+  padding: 2px 2px 0px 2px;
+  /* padding-bottom = padding-top - item margin-bottom */
+  border: 1px solid #ababab;
+  border-radius: 0;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input .item {
+  /* Overloading default theming */
+  padding-right: 4px !important;
+  text-shadow: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  background-image: none;
+  background-color: #ea7d1e;
+  color: #fff;
+  border: none;
+  background-color: #fff;
+  color: #222;
+  border: 1px solid #ddd;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input .item .remove {
+  /* Overloading default theming */
+  position: relative;
+  top: initial;
+  right: initial;
+  bottom: initial;
+  vertical-align: initial;
+  padding: initial;
+  border: none;
+  margin-left: 4px;
+}
 .one-col-details .details .field_container.field_small {
   /* On a single column, field labels can take more width but they are limited so it doesn't feel weird when all labels are short */
 }
@@ -2068,7 +2105,7 @@ img.prev, img.first, img.next, img.last {
 }
 div.actions_button {
   float: right;
-  background: #ea7d1e url("../images/actions_left.png?v=v2.5.0-beta") no-repeat scroll left top;
+  background: #ea7d1e url("../images/actions_left.png?v=v2.6.0-dev") no-repeat scroll left top;
   padding-left: 5px;
   margin-top: 0;
   margin-right: 10px;
@@ -2076,7 +2113,7 @@ div.actions_button {
   vertical-align: middle;
 }
 div.actions_button a, .actions_button a:hover, .actions_button a:visited {
-  background: #ea7d1e url(../images/actions_bkg.png?v=v2.5.0-beta) no-repeat scroll right top;
+  background: #ea7d1e url(../images/actions_bkg.png?v=v2.6.0-dev) no-repeat scroll right top;
   color: #fff;
   padding-right: 8px;
   cursor: pointer;
@@ -2100,10 +2137,10 @@ select#org_id {
   cursor: not-allowed;
 }
 .dragHover {
-  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.5.0-beta);
+  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.6.0-dev);
 }
 .edit_mode .dashlet {
-  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.5.0-beta);
+  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.6.0-dev);
   padding: 5px;
   margin: 0;
   position: relative;
@@ -2137,7 +2174,7 @@ table.prop_table {
   top: 0;
   right: 0;
   z-index: 10;
-  background: transparent url(../images/delete.png?v=v2.5.0-beta) no-repeat center;
+  background: transparent url(../images/delete.png?v=v2.6.0-dev) no-repeat center;
 }
 td.prop_value {
   text-align: left;
@@ -2339,17 +2376,17 @@ a.summary, a.summary:hover {
 }
 .message_info {
   border: 1px solid #993;
-  background: url(../images/info-mini.png?v=v2.5.0-beta) 1em 1em no-repeat #ffc;
+  background: url(../images/info-mini.png?v=v2.6.0-dev) 1em 1em no-repeat #ffc;
   padding-left: 3em;
 }
 .message_ok {
   border: 1px solid #393;
-  background: url(../images/ok.png?v=v2.5.0-beta) 1em 1em no-repeat #cfc;
+  background: url(../images/ok.png?v=v2.6.0-dev) 1em 1em no-repeat #cfc;
   padding-left: 3em;
 }
 .message_error {
   border: 1px solid #933;
-  background: url(../images/error.png?v=v2.5.0-beta) 1em 1em no-repeat #fcc;
+  background: url(../images/error.png?v=v2.6.0-dev) 1em 1em no-repeat #fcc;
   padding-left: 3em;
 }
 .fg-menu a img {
@@ -2480,18 +2517,18 @@ div.explain-printable {
 }
 #hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter span {
   padding-left: 20px;
-  background: url(../images/eye-open-555.png?v=v2.5.0-beta) 2px center no-repeat;
+  background: url(../images/eye-open-555.png?v=v2.6.0-dev) 2px center no-repeat;
 }
 #hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter.strikethrough span {
   text-decoration: line-through;
-  background: url(../images/eye-closed-555.png?v=v2.5.0-beta) 2px center no-repeat;
+  background: url(../images/eye-closed-555.png?v=v2.6.0-dev) 2px center no-repeat;
 }
 .printable-version legend {
   padding-left: 26px;
-  background: #1c94c4 url(../images/eye-open-fff.png?v=v2.5.0-beta) 8px center no-repeat;
+  background: #1c94c4 url(../images/eye-open-fff.png?v=v2.6.0-dev) 8px center no-repeat;
 }
 .printable-version .strikethrough legend {
-  background: #1c94c4 url(../images/eye-closed-fff.png?v=v2.5.0-beta) 8px center no-repeat;
+  background: #1c94c4 url(../images/eye-closed-fff.png?v=v2.6.0-dev) 8px center no-repeat;
 }
 .printable-version fieldset.strikethrough span {
   display: none;
@@ -2642,7 +2679,7 @@ span.search-button, span.refresh-button {
 #itop-breadcrumb .breadcrumb-item a::after {
   content: '';
   position: absolute;
-  background-image: url(../images/breadcrumb-separator.png?v=v2.5.0-beta);
+  background-image: url(../images/breadcrumb-separator.png?v=v2.6.0-dev);
   background-repeat: no-repeat;
   width: 8px;
   height: 16px;
@@ -2876,45 +2913,45 @@ table.listResults .originColor {
 .menu-icon-select > .ui-menu-item {
   padding: 0.3em 3%;
 }
-.attribute-tagset > span, .attribute-tagset-undefined > span {
+.attribute-tagset .attribute-tag, .attribute-tagset-undefined .attribute-tag {
   display: inline-block;
-  padding: 3px;
   margin-right: 3px;
-  border-radius: 4px;
+  padding: 4px 6px;
+  background-color: #fdfdfd;
+  border-radius: 3px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
 }
-.attribute-tagset > span {
-  color: white;
-  background-color: grey;
-}
-.attribute-tagset-undefined > span {
+.attribute-tagset-undefined .attribute-tag {
   color: grey;
-  background-color: lightgrey;
   font-style: italic;
 }
-div.selectize-control {
+.selectize-control {
   position: static;
   display: inline-block;
   vertical-align: middle;
+  width: 100%;
 }
-div.selectize-input {
+.selectize-input {
   width: auto;
   min-width: 8em;
 }
-
-div.selectize-input.has-items:after {
-  content: "➕";
+.selectize-input.has-items:after {
+  content: "+";
   display: inline-block;
+  font-size: 17px;
+  font-weight: bold;
+  color: #222;
 }
-div.selectize-control > div.selectize-input > div.item.partial-code {
+.selectize-control > .selectize-input > .item.partial-code {
   color: floralwhite;
   background-color: grey;
   background-image: linear-gradient(to bottom, white, grey);
   border-color: darkgray;
   font-style: italic;
 }
-div.selectize-control > div.selectize-input > div.item.partial-code.active {
+.selectize-control > .selectize-input > .item.partial-code.active {
   background-image: linear-gradient(to bottom, grey, darkgrey);
 }
-div.selectize-control > div.selectize-input > div.item.partial-code > a.remove {
+.selectize-control > .selectize-input > .item.partial-code > a.remove {
   border-color: grey;
 }

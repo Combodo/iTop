@@ -2036,7 +2036,7 @@ EOF
 					/** @var \ormTagSet $value */
 					$sJson = static::GetTagSetJsonForWidget($value, $sClass, $sAttCode);
 					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
-					$sHTMLValue = "<input id='$sInputId' name='$sInputId' type='text' value='$sJson' style='display: none;'>";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_tagset\"><input id='$sInputId' name='$sInputId' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
 					$sScript = "$('#$sInputId').tagset_widget();";
 					$oPage->add_ready_script($sScript);
 
