@@ -1855,8 +1855,7 @@ EOF;
 			);
 			foreach ($aTagFieldsInfo as $sTagFieldName)
 			{
-				$sTagSuffix = $sClassName.'_'.$sTagFieldName;
-				$sTagClassName = 'TagSetFieldDataFor_'.$sTagSuffix;
+				$sTagClassName = static::GetTagDataClassName($sClassName, $sTagFieldName);
 				$sTagClassParams = var_export($aTagClassParams, true);
 				$sPHP .= $this->GeneratePhpCodeForClass($sTagClassName, $sTagClassParentClass, $sTagClassParams);
 			}
@@ -1865,6 +1864,12 @@ EOF;
 		return $sPHP;
 	}
 
+	private static function GetTagDataClassName($sClass, $sAttCode)
+	{
+		$sTagSuffix = $sClass.'__'.$sAttCode;
+
+		return 'TagSetFieldDataFor_'.$sTagSuffix;
+	}
 
 	/**
 	 * @param $oMenu

@@ -129,7 +129,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	 */
 	public function testComputeValues()
 	{
-		$sTagClass = \MetaModel::GetTagDataClass(TAG_CLASS, TAG_ATTCODE);
+		$sTagClass = TagSetFieldData::GetTagDataClassName(TAG_CLASS, TAG_ATTCODE);
 		$oTagData = $this->createObject($sTagClass, array(
 			'tag_code' => 'tag1',
 			'tag_label' => 'First',

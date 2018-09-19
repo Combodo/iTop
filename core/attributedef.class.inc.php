@@ -6830,14 +6830,9 @@ class AttributeTagSet extends AttributeDBFieldVoid
 				$aGoodTags[] = $sTagCode;
 				if (count($aGoodTags) === $this->GetTagMaxNb())
 				{
-					// extra tags are ignored
+					// extra and bad tags are ignored
 					continue;
 				}
-			}
-			else
-			{
-				// Ignore bad tags from database
-				IssueLog::Warning("Unknown tag $sTagCode for $sClass::$sAttCode found in database, ignored.");
 			}
 		}
 		$oTagSet->SetValue($aGoodTags);
@@ -7082,36 +7077,12 @@ class AttributeTagSet extends AttributeDBFieldVoid
 
 		$aAllowedTags = TagSetFieldData::GetAllowedValues(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
 
-		if (!empty($aDelta['added']))
-		{
-			$aAdded = array();
-			foreach($aDelta['added'] as $idx => $sTagCode)
-			{
-				$sTagLabel = $sTagCode;
-				foreach($aAllowedTags as $oTag)
-				{
-					if ($sTagCode === $oTag->Get('tag_code'))
-					{
-						$sTagLabel = $oTag->Get('tag_label');
-					}
-				}
-				$aAdded[] = $sTagLabel;
-			}
-
-			$sAdded = $this->GenerateViewHtmlForValues($aAdded);
-			$sResult .= Dict::Format('Change:LinkSet:Added', $sAdded);
-		}
-
 		if (!empty($aDelta['removed']))
 		{
-			if (!empty($sAdded))
-			{
-				$sResult .= ', ';
-			}
-
 			$aRemoved = array();
 			foreach($aDelta['removed'] as $idx => $sTagCode)
 			{
+				if (empty($sTagCode)) {continue;}
 				$sTagLabel = $sTagCode;
 				foreach($aAllowedTags as $oTag)
 				{
@@ -7124,7 +7095,39 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			}
 
 			$sRemoved = $this->GenerateViewHtmlForValues($aRemoved);
-			$sResult .= Dict::Format('Change:LinkSet:Removed', $sRemoved);
+			if (!empty($sRemoved))
+			{
+				$sResult .= Dict::Format('Change:LinkSet:Removed', $sRemoved);
+			}
+		}
+
+		if (!empty($aDelta['added']))
+		{
+			if (!empty($sRemoved))
+			{
+				$sResult .= ', ';
+			}
+
+			$aAdded = array();
+			foreach($aDelta['added'] as $idx => $sTagCode)
+			{
+				if (empty($sTagCode)) {continue;}
+				$sTagLabel = $sTagCode;
+				foreach($aAllowedTags as $oTag)
+				{
+					if ($sTagCode === $oTag->Get('tag_code'))
+					{
+						$sTagLabel = $oTag->Get('tag_label');
+					}
+				}
+				$aAdded[] = $sTagLabel;
+			}
+
+			$sAdded = $this->GenerateViewHtmlForValues($aAdded);
+			if (!empty($sAdded))
+			{
+				$sResult .= Dict::Format('Change:LinkSet:Added', $sAdded);
+			}
 		}
 
 		return $sResult;
@@ -7142,6 +7145,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	 */
 	private function GenerateViewHtmlForValues($aValues, $sCssClass = 'attribute-tagset')
 	{
+		if (empty($aValues)) {return '';}
 		$sHtml = '<span class="'.$sCssClass.'">';
 		foreach($aValues as $oTag)
 		{

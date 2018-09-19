@@ -38,6 +38,7 @@ use lnkContactToFunctionalCI;
 use MetaModel;
 use Person;
 use Server;
+use TagSetFieldData;
 use Ticket;
 use URP_UserProfile;
 use VirtualHost;
@@ -223,7 +224,7 @@ class ItopDataTestCase extends ItopTestCase
 	 */
 	protected function CreateTagData($sClass, $sAttCode, $sTagCode, $sTagLabel, $sTagDescription = '')
 	{
-		$sTagClass = MetaModel::GetTagDataClass($sClass, $sAttCode);
+		$sTagClass = TagSetFieldData::GetTagDataClassName($sClass, $sAttCode);
 		$oTagData = $this->createObject($sTagClass, array(
 			'tag_code' => $sTagCode,
 			'tag_label' => $sTagLabel,
@@ -248,7 +249,7 @@ class ItopDataTestCase extends ItopTestCase
 	 */
 	protected function RemoveTagData($sClass, $sAttCode, $sTagCode)
 	{
-		$sTagClass = MetaModel::GetTagDataClass($sClass, $sAttCode);
+		$sTagClass = TagSetFieldData::GetTagDataClassName($sClass, $sAttCode);
 		$this->RemoveObjects($sTagClass, "SELECT $sTagClass WHERE tag_code = '$sTagCode'");
 	}
 

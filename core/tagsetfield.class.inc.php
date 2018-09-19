@@ -101,6 +101,13 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		$this->_Set('tag_attcode', $aRes['tag_attcode']);
 	}
 
+	public static function GetTagDataClassName($sClass, $sAttCode)
+	{
+		$sTagSuffix = $sClass.'__'.$sAttCode;
+
+		return 'TagSetFieldDataFor_'.$sTagSuffix;
+	}
+
 	/**
 	 * Extract Tag class and attcode from the TagFieldData class name
 	 *
@@ -113,7 +120,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	{
 		$aRes = array();
 		// Extract class and attcode from class name using pattern  TagSetFieldDataFor_<class>_<attcode>>;
-		if (preg_match('@^TagSetFieldDataFor_(?<class>\w+)_(?<attcode>\w+)$@', $sClassName, $aMatches))
+		if (preg_match('@^TagSetFieldDataFor_(?<class>\w+)__(?<attcode>\w+)$@', $sClassName, $aMatches))
 		{
 			$aRes['tag_class'] = $aMatches['class'];
 			$aRes['tag_attcode'] = $aMatches['attcode'];
@@ -144,7 +151,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			$this->m_aDeleteIssues[] = Dict::S('Core:TagSetFieldData:ErrorDeleteUsedTag');
 		}
 		// Clear cache
-		$sTagDataClass = MetaModel::GetTagDataClass($sClass, $sAttCode);
+		$sTagDataClass = self::GetTagDataClassName($sClass, $sAttCode);
 		unset(self::$m_aAllowedValues[$sTagDataClass]);
 	}
 
@@ -199,7 +206,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel');
 		}
 		// Clear cache
-		$sTagDataClass = MetaModel::GetTagDataClass($sClass, $sAttCode);
+		$sTagDataClass = self::GetTagDataClassName($sClass, $sAttCode);
 		unset(self::$m_aAllowedValues[$sTagDataClass]);
 
 		parent::DoCheckToWrite();
@@ -275,7 +282,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	{
 		try
 		{
-			$aTagFieldInfo = TagSetFieldData::ExtractTagFieldName($sClass);
+			$aTagFieldInfo = self::ExtractTagFieldName($sClass);
 		} catch (CoreException $e)
 		{
 			return $sClass;
@@ -305,7 +312,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	public static function GetAllowedValues($sClass, $sAttCode)
 	{
 		$sClass = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
-		$sTagDataClass = MetaModel::GetTagDataClass($sClass, $sAttCode);
+		$sTagDataClass = self::GetTagDataClassName($sClass, $sAttCode);
 		if (!isset(self::$m_aAllowedValues[$sTagDataClass]))
 		{
 			$oSearch = new DBObjectSearch($sTagDataClass);

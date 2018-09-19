@@ -595,7 +595,7 @@ final class ormTagSet
 
 	public function GetTagDataClass()
 	{
-		return MetaModel::GetTagDataClass($this->sClass, $this->sAttCode);
+		return TagSetFieldData::GetTagDataClassName($this->sClass, $this->sAttCode);
 	}
 
 }
