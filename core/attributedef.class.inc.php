@@ -7074,27 +7074,56 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	{
 		$sResult = Dict::Format('Change:AttName_Changed', $this->GetLabel()).", ";
 
-		/** @var \ormTagSet $oOldValue */
-		$oOldValue = $this->MakeRealValue($sOldValue, null);
+		$aNewValues = explode(' ', $sNewValue);
+		$aOldValues = explode(' ', $sOldValue);
 
-		/** @var \ormTagSet $oNewValue */
-		$oNewValue = $this->MakeRealValue($sNewValue, null);
+		$aDelta['removed'] = array_diff($aOldValues, $aNewValues);
+		$aDelta['added'] = array_diff($aNewValues, $aOldValues);
 
-		$aDelta = $oOldValue->GetDeltaTags($oNewValue);
-		$sAdded = null;
-		if (isset($aDelta['added']) && !empty($aDelta['added']))
+		$aAllowedTags = TagSetFieldData::GetAllowedValues(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
+
+		if (!empty($aDelta['added']))
 		{
-			$sAdded = $this->GenerateViewHtmlForValues($aDelta['added']);
+			$aAdded = array();
+			foreach($aDelta['added'] as $idx => $sTagCode)
+			{
+				$sTagLabel = $sTagCode;
+				foreach($aAllowedTags as $oTag)
+				{
+					if ($sTagCode === $oTag->Get('tag_code'))
+					{
+						$sTagLabel = $oTag->Get('tag_label');
+					}
+				}
+				$aAdded[] = $sTagLabel;
+			}
+
+			$sAdded = $this->GenerateViewHtmlForValues($aAdded);
 			$sResult .= Dict::Format('Change:LinkSet:Added', $sAdded);
 		}
 
-		if (isset($aDelta['removed']) && !empty($aDelta['removed']))
+		if (!empty($aDelta['removed']))
 		{
 			if (!empty($sAdded))
 			{
 				$sResult .= ', ';
 			}
-			$sRemoved = $this->GenerateViewHtmlForValues($aDelta['removed']);
+
+			$aRemoved = array();
+			foreach($aDelta['removed'] as $idx => $sTagCode)
+			{
+				$sTagLabel = $sTagCode;
+				foreach($aAllowedTags as $oTag)
+				{
+					if ($sTagCode === $oTag->Get('tag_code'))
+					{
+						$sTagLabel = $oTag->Get('tag_label');
+					}
+				}
+				$aRemoved[] = $sTagLabel;
+			}
+
+			$sRemoved = $this->GenerateViewHtmlForValues($aRemoved);
 			$sResult .= Dict::Format('Change:LinkSet:Removed', $sRemoved);
 		}
 
