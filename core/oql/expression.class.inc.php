@@ -954,8 +954,8 @@ class ScalarExpression extends UnaryExpression
 									$aTags = $oValue->GetTags();
 									foreach($aTags as $oTag)
 									{
-										$aValue['label'] = $oTag->Get('tag_label');
-										$aValue['value'] = $oTag->Get('tag_code');
+										$aValue['label'] = $oTag->Get('label');
+										$aValue['value'] = $oTag->Get('code');
 										$aValues[] = $aValue;
 									}
 									$aCriterion['values'] = $aValues;

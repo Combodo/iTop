@@ -187,7 +187,7 @@ final class ormTagSet
 		{
 			try
 			{
-				$aTags[$sTagCode] = $oTag->Get('tag_label');
+				$aTags[$sTagCode] = $oTag->Get('label');
 			} catch (CoreException $e)
 			{
 				IssueLog::Error($e->getMessage());
@@ -197,7 +197,7 @@ final class ormTagSet
 		{
 			try
 			{
-				$aTags[$sTagCode] = $oTag->Get('tag_label');
+				$aTags[$sTagCode] = $oTag->Get('label');
 			} catch (CoreException $e)
 			{
 				IssueLog::Error($e->getMessage());
@@ -537,7 +537,7 @@ final class ormTagSet
 		$aAllowedTags = $this->GetAllowedTags();
 		foreach($aAllowedTags as $oAllowedTag)
 		{
-			if ($oAllowedTag->Get('tag_code') === $sTagCode)
+			if ($oAllowedTag->Get('code') === $sTagCode)
 			{
 				return $oAllowedTag;
 			}
@@ -557,9 +557,9 @@ final class ormTagSet
 		$aAllowedTags = $this->GetAllowedTags();
 		foreach($aAllowedTags as $oAllowedTag)
 		{
-			if ($oAllowedTag->Get('tag_label') === $sTagLabel)
+			if ($oAllowedTag->Get('label') === $sTagLabel)
 			{
-				return $oAllowedTag->Get('tag_code');
+				return $oAllowedTag->Get('code');
 			}
 		}
 		throw new CoreUnexpectedValue("{$sTagLabel} is not defined as a valid tag for {$this->sClass}:{$this->sAttCode}");

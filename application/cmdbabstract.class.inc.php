@@ -2170,8 +2170,8 @@ EOF
 		foreach($aTagSetObjectData as $oTagSet)
 		{
 			$aTagSetKeyValData[] = [
-				'code' => $oTagSet->Get('tag_code'),
-				'label' => $oTagSet->Get('tag_label')
+				'code' => $oTagSet->Get('code'),
+				'label' => $oTagSet->Get('label')
 			];
 		}
 		$aJson['possible_values'] = $aTagSetKeyValData;

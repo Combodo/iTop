@@ -40,9 +40,9 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		(
 			'category' => 'bizmodel',
 			'key_type' => 'autoincrement',
-			'name_attcode' => array('tag_label'),
+			'name_attcode' => array('label'),
 			'state_attcode' => '',
-			'reconc_keys' => array('tag_code'),
+			'reconc_keys' => array('code'),
 			'db_table' => 'priv_tagfielddata',
 			'db_key_field' => 'id',
 			'db_finalclass_field' => 'finalclass',
@@ -51,54 +51,54 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeString("tag_code", array(
+		MetaModel::Init_AddAttribute(new AttributeString("code", array(
 			"allowed_values" => null,
-			"sql" => 'tag_code',
+			"sql" => 'code',
 			"default_value" => '',
 			"is_null_allowed" => false,
 			"depends_on" => array()
 		)));
-		MetaModel::Init_AddAttribute(new AttributeString("tag_label", array(
+		MetaModel::Init_AddAttribute(new AttributeString("label", array(
 			"allowed_values" => null,
-			"sql" => 'tag_label',
+			"sql" => 'label',
 			"default_value" => '',
 			"is_null_allowed" => false,
 			"depends_on" => array()
 		)));
-		MetaModel::Init_AddAttribute(new AttributeString("tag_description", array(
+		MetaModel::Init_AddAttribute(new AttributeString("description", array(
 			"allowed_values" => null,
-			"sql" => 'tag_description',
+			"sql" => 'description',
 			"default_value" => '',
 			"is_null_allowed" => true,
 			"depends_on" => array()
 		)));
-		MetaModel::Init_AddAttribute(new AttributeString("tag_class", array(
+		MetaModel::Init_AddAttribute(new AttributeString("obj_class", array(
 			"allowed_values" => null,
-			"sql" => 'tag_class',
+			"sql" => 'obj_class',
 			"default_value" => '',
 			"is_null_allowed" => false,
 			"depends_on" => array()
 		)));
-		MetaModel::Init_AddAttribute(new AttributeString("tag_attcode", array(
+		MetaModel::Init_AddAttribute(new AttributeString("obj_attcode", array(
 			"allowed_values" => null,
-			"sql" => 'tag_attcode',
+			"sql" => 'obj_attcode',
 			"default_value" => '',
 			"is_null_allowed" => false,
 			"depends_on" => array()
 		)));
 
 
-		MetaModel::Init_SetZListItems('details', array('tag_code', 'tag_label', 'tag_description'));
-		MetaModel::Init_SetZListItems('standard_search', array('tag_code', 'tag_label', 'tag_description'));
-		MetaModel::Init_SetZListItems('list', array('tag_code', 'tag_label', 'tag_description'));
+		MetaModel::Init_SetZListItems('details', array('code', 'label', 'description'));
+		MetaModel::Init_SetZListItems('standard_search', array('code', 'label', 'description'));
+		MetaModel::Init_SetZListItems('list', array('code', 'label', 'description'));
 	}
 
 	public function ComputeValues()
 	{
 		$sClassName = get_class($this);
 		$aRes = static::ExtractTagFieldName($sClassName);
-		$this->_Set('tag_class', $aRes['tag_class']);
-		$this->_Set('tag_attcode', $aRes['tag_attcode']);
+		$this->_Set('obj_class', $aRes['obj_class']);
+		$this->_Set('obj_attcode', $aRes['obj_attcode']);
 	}
 
 	public static function GetTagDataClassName($sClass, $sAttCode)
@@ -122,8 +122,8 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		// Extract class and attcode from class name using pattern  TagSetFieldDataFor_<class>_<attcode>>;
 		if (preg_match('@^TagSetFieldDataFor_(?<class>\w+)__(?<attcode>\w+)$@', $sClassName, $aMatches))
 		{
-			$aRes['tag_class'] = $aMatches['class'];
-			$aRes['tag_attcode'] = $aMatches['attcode'];
+			$aRes['obj_class'] = $aMatches['class'];
+			$aRes['obj_attcode'] = $aMatches['attcode'];
 		}
 		else
 		{
@@ -141,9 +141,9 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	{
 		parent::DoCheckToDelete($oDeletionPlan);
 
-		$sTagCode = $this->Get('tag_code');
-		$sClass = $this->Get('tag_class');
-		$sAttCode = $this->Get('tag_attcode');
+		$sTagCode = $this->Get('code');
+		$sClass = $this->Get('obj_class');
+		$sAttCode = $this->Get('obj_attcode');
 		$oSearch = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 		$oSet = new DBObjectSet($oSearch);
 		if ($oSet->CountExceeds(0))
@@ -166,8 +166,8 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	public function DoCheckToWrite()
 	{
 		$this->ComputeValues();
-		$sClass = $this->Get('tag_class');
-		$sAttCode = $this->Get('tag_attcode');
+		$sClass = $this->Get('obj_class');
+		$sAttCode = $this->Get('obj_attcode');
 		$iMaxLen = 20;
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		if ($oAttDef instanceof AttributeTagSet)
@@ -175,14 +175,14 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			$iMaxLen = $oAttDef->GetTagCodeMaxLength();
 		}
 
-		$sTagCode = $this->Get('tag_code');
-		// Check tag_code syntax
+		$sTagCode = $this->Get('code');
+		// Check code syntax
 		if (!preg_match("@^[a-zA-Z0-9]{3,$iMaxLen}$@", $sTagCode))
 		{
 			$this->m_aCheckIssues[] = Dict::Format('Core:TagSetFieldData:ErrorTagCodeSyntax', $iMaxLen);
 		}
 
-		$sTagLabel = $this->Get('tag_label');
+		$sTagLabel = $this->Get('label');
 		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 		if (empty($sTagLabel) || (strpos($sTagLabel, $sSepItem) !== false))
 		{
@@ -195,11 +195,11 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		$sClassName = get_class($this);
 		if (empty($id))
 		{
-			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE (tag_code = '$sTagCode' OR tag_label = '$sTagLabel')");
+			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE (code = '$sTagCode' OR label = '$sTagLabel')");
 		}
 		else
 		{
-			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE id != $id AND (tag_code = '$sTagCode' OR tag_label = '$sTagLabel')");
+			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE id != $id AND (code = '$sTagCode' OR label = '$sTagLabel')");
 		}
 		$oSet = new DBObjectSet($oSearch);
 		if ($oSet->CountExceeds(0))
@@ -220,7 +220,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 	{
 		parent::OnUpdate();
 		$aChanges = $this->ListChanges();
-		if (array_key_exists('tag_code', $aChanges))
+		if (array_key_exists('code', $aChanges))
 		{
 			throw new CoreException(Dict::S('Core:TagSetFieldData:ErrorCodeUpdateNotAllowed'));
 		}
@@ -244,9 +244,9 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		parent::DisplayBareRelations($oPage, $bEditMode);
 		if (!$bEditMode)
 		{
-			$sClass = $this->Get('tag_class');
-			$sAttCode = $this->Get('tag_attcode');
-			$sTagCode = $this->Get('tag_code');
+			$sClass = $this->Get('obj_class');
+			$sAttCode = $this->Get('obj_attcode');
+			$sTagCode = $this->Get('code');
 			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 			$oSet = new DBObjectSet($oFilter);
 			$iCount = $oSet->Count();
@@ -259,7 +259,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			else
 			{
 				$aClassLabels = array();
-				foreach(MetaModel::EnumChildClasses($sClass) as $sCurrentClass)
+				foreach(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sCurrentClass)
 				{
 					$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
 				}
@@ -288,8 +288,8 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		{
 			return $sClass;
 		}
-		$sClassDesc = MetaModel::GetName($aTagFieldInfo['tag_class']);
-		$sAttDesc = MetaModel::GetAttributeDef($aTagFieldInfo['tag_class'], $aTagFieldInfo['tag_attcode'])->GetLabel();
+		$sClassDesc = MetaModel::GetName($aTagFieldInfo['obj_class']);
+		$sAttDesc = MetaModel::GetAttributeDef($aTagFieldInfo['obj_class'], $aTagFieldInfo['obj_attcode'])->GetLabel();
 		if (Dict::Exists("Class:$sClass"))
 		{
 			$sName = Dict::Format("Class:$sClass", $sClassDesc, $sAttDesc);
@@ -317,8 +317,8 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		if (!isset(self::$m_aAllowedValues[$sTagDataClass]))
 		{
 			$oSearch = new DBObjectSearch($sTagDataClass);
-			$oSearch->AddCondition('tag_class', $sClass);
-			$oSearch->AddCondition('tag_attcode', $sAttCode);
+			$oSearch->AddCondition('obj_class', $sClass);
+			$oSearch->AddCondition('obj_attcode', $sAttCode);
 			$oSet = new DBObjectSet($oSearch);
 			self::$m_aAllowedValues[$sTagDataClass] = $oSet->ToArray();
 		}

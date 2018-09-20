@@ -226,13 +226,13 @@ class ItopDataTestCase extends ItopTestCase
 	{
 		$sTagClass = TagSetFieldData::GetTagDataClassName($sClass, $sAttCode);
 		$oTagData = $this->createObject($sTagClass, array(
-			'tag_code' => $sTagCode,
-			'tag_label' => $sTagLabel,
-			'tag_class' => $sClass,
-			'tag_attcode' => $sAttCode,
-			'tag_description' => $sTagDescription,
+			'code' => $sTagCode,
+			'label' => $sTagLabel,
+			'obj_class' => $sClass,
+			'obj_attcode' => $sAttCode,
+			'description' => $sTagDescription,
 		));
-		$this->debug("Created {$oTagData->Get('tag_code')} ({$oTagData->Get('tag_label')})");
+		$this->debug("Created {$oTagData->Get('code')} ({$oTagData->Get('label')})");
 
 		/** @var \TagSetFieldData $oTagData */
 		return $oTagData;
@@ -250,7 +250,7 @@ class ItopDataTestCase extends ItopTestCase
 	protected function RemoveTagData($sClass, $sAttCode, $sTagCode)
 	{
 		$sTagClass = TagSetFieldData::GetTagDataClassName($sClass, $sAttCode);
-		$this->RemoveObjects($sTagClass, "SELECT $sTagClass WHERE tag_code = '$sTagCode'");
+		$this->RemoveObjects($sTagClass, "SELECT $sTagClass WHERE code = '$sTagCode'");
 	}
 
 	private function RemoveObjects($sClass, $sOQL)

@@ -6797,7 +6797,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		$aAllowedValues = array();
 		foreach($aAllowedTags as $oAllowedTag)
 		{
-			$aAllowedValues[$oAllowedTag->Get('tag_code')] = $oAllowedTag->Get('tag_label');
+			$aAllowedValues[$oAllowedTag->Get('code')] = $oAllowedTag->Get('label');
 		}
 
 		return $aAllowedValues;
@@ -7086,9 +7086,9 @@ class AttributeTagSet extends AttributeDBFieldVoid
 				$sTagLabel = $sTagCode;
 				foreach($aAllowedTags as $oTag)
 				{
-					if ($sTagCode === $oTag->Get('tag_code'))
+					if ($sTagCode === $oTag->Get('code'))
 					{
-						$sTagLabel = $oTag->Get('tag_label');
+						$sTagLabel = $oTag->Get('label');
 					}
 				}
 				$aRemoved[] = $sTagLabel;
@@ -7115,9 +7115,9 @@ class AttributeTagSet extends AttributeDBFieldVoid
 				$sTagLabel = $sTagCode;
 				foreach($aAllowedTags as $oTag)
 				{
-					if ($sTagCode === $oTag->Get('tag_code'))
+					if ($sTagCode === $oTag->Get('code'))
 					{
-						$sTagLabel = $oTag->Get('tag_label');
+						$sTagLabel = $oTag->Get('label');
 					}
 				}
 				$aAdded[] = $sTagLabel;
@@ -7153,7 +7153,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			{
 				$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
 				$sAttCode = $this->GetCode();
-				$sTagCode = $oTag->Get('tag_code');
+				$sTagCode = $oTag->Get('code');
 				$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 				$oAppContext = new ApplicationContext();
 				$sContext = $oAppContext->GetForLink();
@@ -7161,7 +7161,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 				$sFilter = urlencode($oFilter->serialize());
 				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 
-				$sHtml .= '<a href="'.$sUrl.'" class="attribute-tag">'.$oTag->Get('tag_label').'</a>';
+				$sHtml .= '<a href="'.$sUrl.'" class="attribute-tag">'.$oTag->Get('label').'</a>';
 			}
 			else
 			{

@@ -1846,9 +1846,9 @@ EOF;
 			(
 				'category' => 'bizmodel',
 				'key_type' => 'autoincrement',
-				'name_attcode' => array('tag_label'),
+				'name_attcode' => array('label'),
 				'state_attcode' => '',
-				'reconc_keys' => array('tag_code'),
+				'reconc_keys' => array('code'),
 				'db_table' => '', // no need to have a corresponding table : this class exists only for rights, no additional field
 				'db_key_field' => 'id',
 				'db_finalclass_field' => 'finalclass',

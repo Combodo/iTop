@@ -131,13 +131,13 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	{
 		$sTagClass = TagSetFieldData::GetTagDataClassName(TAG_CLASS, TAG_ATTCODE);
 		$oTagData = $this->createObject($sTagClass, array(
-			'tag_code' => 'tag1',
-			'tag_label' => 'First',
+			'code' => 'tag1',
+			'label' => 'First',
 		));
-		$this->debug("Created {$oTagData->Get('tag_class')}::{$oTagData->Get('tag_attcode')}");
+		$this->debug("Created {$oTagData->Get('obj_class')}::{$oTagData->Get('obj_attcode')}");
 
-		static::assertEquals(TAG_CLASS, $oTagData->Get('tag_class'));
-		static::assertEquals(TAG_ATTCODE, $oTagData->Get('tag_attcode'));
+		static::assertEquals(TAG_CLASS, $oTagData->Get('obj_class'));
+		static::assertEquals(TAG_ATTCODE, $oTagData->Get('obj_attcode'));
 	}
 
 	/**
@@ -193,7 +193,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	public function testUpdateCode()
 	{
 		$oTagData = $this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
-		$oTagData->Set('tag_code', 'tag2');
+		$oTagData->Set('code', 'tag2');
 		$oTagData->DBWrite();
 	}
 

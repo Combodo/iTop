@@ -63,7 +63,7 @@ try
 
 	$sSearchHeaderForceDropdown = '<select  id="select_class" name="class" onChange="this.form.submit();">';
 	$aClassLabels = array();
-	foreach(MetaModel::EnumChildClasses($sBaseClass) as $sCurrentClass)
+	foreach(MetaModel::EnumChildClasses($sBaseClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sCurrentClass)
 	{
 		$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
 	}
