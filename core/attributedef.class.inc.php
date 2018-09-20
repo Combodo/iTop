@@ -6725,6 +6725,43 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		return $this->Get("is_null_allowed");
 	}
 
+	/**
+	 * Extract all existing tags from a string and ignore bad tags
+	 *
+	 * @param $sValue
+	 *
+	 * @return \ormTagSet
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public function GetExistingTagsFromString($sValue)
+	{
+		$aTagCodes = explode(' ', "$sValue");
+		$sAttCode = $this->GetCode();
+		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
+		$oTagSet = new ormTagSet($sClass, $sAttCode, $this->GetTagMaxNb());
+		$aGoodTags = array();
+		foreach($aTagCodes as $sTagCode)
+		{
+			if ($sTagCode === '')
+			{
+				continue;
+			}
+			if ($oTagSet->IsValidTag($sTagCode))
+			{
+				$aGoodTags[] = $sTagCode;
+				if (count($aGoodTags) === $this->GetTagMaxNb())
+				{
+					// extra and bad tags are ignored
+					continue;
+				}
+			}
+		}
+		$oTagSet->SetValue($aGoodTags);
+
+		return $oTagSet;
+	}
+
 	public function GetTagMaxNb()
 	{
 		return $this->Get('tag_max_nb');
@@ -6814,30 +6851,8 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
 		$sValue = $aCols["$sPrefix"];
-		$aTagCodes = explode(' ', "$sValue");
-		$sAttCode = $this->GetCode();
-		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
-		$oTagSet = new ormTagSet($sClass, $sAttCode, $this->GetTagMaxNb());
-		$aGoodTags = array();
-		foreach($aTagCodes as $sTagCode)
-		{
-			if ($sTagCode === '')
-			{
-				continue;
-			}
-			if ($oTagSet->IsValidTag($sTagCode))
-			{
-				$aGoodTags[] = $sTagCode;
-				if (count($aGoodTags) === $this->GetTagMaxNb())
-				{
-					// extra and bad tags are ignored
-					continue;
-				}
-			}
-		}
-		$oTagSet->SetValue($aGoodTags);
 
-		return $oTagSet;
+		return $this->GetExistingTagsFromString($sValue);
 	}
 
 	/**
@@ -6851,8 +6866,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-			$this->GetCode(), $this->GetTagMaxNb());
+		$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetTagMaxNb());
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$aTagCodes = explode(' ', "$proposedValue");
@@ -6879,10 +6893,8 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	 * @return mixed null if no match could be found
 	 * @throws \Exception
 	 */
-	public function MakeValueFromString(
-		$sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null,
-		$sAttributeQualifier = null
-	) {
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
 		if (is_null($sSepItem) || empty($sSepItem))
 		{
 			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
@@ -6939,7 +6951,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		}
 		if (is_string($sValue))
 		{
-			$sValue = $this->MakeRealValue($sValue, null);
+			$sValue = $this->GetExistingTagsFromString($sValue);
 		}
 		if ($sValue instanceof ormTagSet)
 		{
