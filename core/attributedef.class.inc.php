@@ -6864,6 +6864,20 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	}
 
 	/**
+	 * @param $aCols
+	 * @param string $sPrefix
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function FromImportToValue($aCols, $sPrefix = '')
+	{
+		$sValue = $aCols["$sPrefix"];
+
+		return $this->MakeRealValue($sValue, null);
+	}
+
+	/**
 	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
 	 *
 	 * @param $proposedValue
