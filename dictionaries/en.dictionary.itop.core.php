@@ -921,7 +921,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code should contain between 3 and %1$d alphanumeric characters',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label should not contain \'%1$s\' nor be empty',
-	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags code cannot be changed',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags "Code" cannot be changed',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag',
 ));

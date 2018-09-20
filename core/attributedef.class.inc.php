@@ -6869,7 +6869,8 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetTagMaxNb());
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
-			$aTagCodes = explode(' ', "$proposedValue");
+			$proposedValue = trim("$proposedValue");
+			$aTagCodes = explode(' ', $proposedValue);
 			$oTagSet->SetValue($aTagCodes);
 		}
 		elseif ($proposedValue instanceof ormTagSet)

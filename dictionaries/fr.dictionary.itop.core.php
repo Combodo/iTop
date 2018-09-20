@@ -773,6 +773,8 @@ Opérateurs :<br/>
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Le code de l\'étiquette doit contenir entre 3 et %1$d caractères alphanumériques.',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Le nom de l\'étiquette ne doit pas être vide ni contenir le caractère \'%1$s\'',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Le code de l\'étiquette ne peut pas être changé',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'La classe de l\'étiquette ne peut pas être changée',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'L\'attribut de l\'étiquette ne peut pas être changé',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Utilisation (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Pas d\'utilisation de cette étiquette',
 

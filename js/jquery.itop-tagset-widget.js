@@ -70,7 +70,8 @@ $.widget('itop.tagset_widget',
 		REMOVED_VAL_KEY: "removed",
 		STATUS_ADDED: "added",
 		STATUS_REMOVED: "removed",
-		STATUS_NEUTRAL: "unchanged",
+        STATUS_NEUTRAL: "unchanged",
+        MAX_TAGS_ALLOWED: "max_tags_allowed",
 
 		possibleValues: null,
 		partialValues: null,
@@ -79,6 +80,7 @@ $.widget('itop.tagset_widget',
 		tagSetCodesStatus: null,
 
 		selectizeWidget: null,
+		maxTagsAllowed: null,
 
 		// the constructor
 		_create: function () {
@@ -100,6 +102,7 @@ $.widget('itop.tagset_widget',
 			this.possibleValues = dataArray[this.POSSIBLE_VAL_KEY];
 			this.partialValues = ($.isArray(dataArray[this.PARTIAL_VAL_KEY])) ? dataArray[this.PARTIAL_VAL_KEY] : [];
 			this.originalValue = dataArray[this.ORIG_VAL_KEY];
+			this.maxTagsAllowed = dataArray[this.MAX_TAGS_ALLOWED];
 			this.tagSetCodesStatus = {};
 		},
 
@@ -118,7 +121,7 @@ $.widget('itop.tagset_widget',
 			$inputWidget.selectize({
 				plugins: ['remove_button'],
 				delimiter: ' ',
-				maxItems: null,
+				maxItems: this.maxTagsAllowed,
 				hideSelected: true,
 				valueField: 'code',
 				labelField: 'label',

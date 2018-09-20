@@ -2189,6 +2189,11 @@ EOF
 		$aJson['added'] = array();
 		$aJson['removed'] = array();
 
+		/** @var \AttributeTagSet $oAttDef */
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$iMaxTags = $oAttDef->GetTagMaxNb();
+		$aJson['max_tags_allowed'] = $iMaxTags;
+
 		return json_encode($aJson);
 	}
 

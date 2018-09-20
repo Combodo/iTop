@@ -142,15 +142,13 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		parent::DoCheckToDelete($oDeletionPlan);
 
 		$sTagCode = $this->Get('code');
-		$sClass = $this->Get('obj_class');
-		$sAttCode = $this->Get('obj_attcode');
-		$oSearch = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
-		$oSet = new DBObjectSet($oSearch);
-		if ($oSet->CountExceeds(0))
+		if ($this->IsCodeUsed($sTagCode))
 		{
 			$this->m_aDeleteIssues[] = Dict::S('Core:TagSetFieldData:ErrorDeleteUsedTag');
 		}
 		// Clear cache
+		$sClass = $this->Get('obj_class');
+		$sAttCode = $this->Get('obj_attcode');
 		$sTagDataClass = self::GetTagDataClassName($sClass, $sAttCode);
 		unset(self::$m_aAllowedValues[$sTagDataClass]);
 	}
@@ -222,9 +220,42 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		$aChanges = $this->ListChanges();
 		if (array_key_exists('code', $aChanges))
 		{
-			throw new CoreException(Dict::S('Core:TagSetFieldData:ErrorCodeUpdateNotAllowed'));
+			$sTagCode = $this->GetOriginal('code');
+			if ($this->IsCodeUsed($sTagCode))
+			{
+				throw new CoreException(Dict::S('Core:TagSetFieldData:ErrorCodeUpdateNotAllowed'));
+			}
+		}
+		if (array_key_exists('obj_class', $aChanges))
+		{
+			throw new CoreException(Dict::S('Core:TagSetFieldData:ErrorClassUpdateNotAllowed'));
+		}
+		if (array_key_exists('obj_attcode', $aChanges))
+		{
+			throw new CoreException(Dict::S('Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed'));
 		}
 	}
+
+	private function IsCodeUsed($sTagCode)
+	{
+		try
+		{
+			$sClass = $this->Get('obj_class');
+			$sAttCode = $this->Get('obj_attcode');
+			$oSearch = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
+			$oSet = new DBObjectSet($oSearch);
+			if ($oSet->CountExceeds(0))
+			{
+				return true;
+			}
+		}
+		catch (Exception $e)
+		{
+			IssueLog::Warning($e->getMessage());
+		}
+		return false;
+	}
+
 
 	/**
 	 * Display Tag Usage

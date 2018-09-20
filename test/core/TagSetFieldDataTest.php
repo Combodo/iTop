@@ -185,16 +185,37 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	}
 
 	/**
-	 * Test that tag code cannot be modified
-	 * @expectedException \CoreException
+	 * Test that tag code cannot be modified if used
+	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
 	 */
 	public function testUpdateCode()
 	{
 		$oTagData = $this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
 		$oTagData->Set('code', 'tag2');
 		$oTagData->DBWrite();
+
+		//Use it
+		$oTicket = $this->CreateTicket(1);
+		$oTicket->Set(TAG_ATTCODE, 'tag2');
+		$oTicket->DBWrite();
+
+		// Try to change the code of the tag, must complain !
+		try
+		{
+			$oTagData->Set('code', 'tag1');
+			$oTagData->DBWrite();
+
+		} catch (\CoreException $e)
+		{
+			static::assertTrue(true);
+
+			return;
+		}
+		// Should not pass here
+		static::assertFalse(true);
 	}
 
 	/**
@@ -225,6 +246,40 @@ class TagSetFieldDataTest extends ItopDataTestCase
 			return;
 		}
 		// Failed
+		static::assertFalse(true);
+	}
+
+	public function testMaxTagsAllowed()
+	{
+		/** @var \AttributeTagSet $oAttDef */
+		$oAttDef = \MetaModel::GetAttributeDef(TAG_CLASS, TAG_ATTCODE);
+		$iMaxTags = $oAttDef->GetTagMaxNb();
+		for ($i = 0; $i < $iMaxTags; $i++)
+		{
+			$sTagCode = 'MaxTag'.$i;
+			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, $sTagCode, $sTagCode);
+		}
+		$oTicket = $this->CreateTicket(1);
+		$this->debug("Max number of tags is $iMaxTags");
+		$sValue = '';
+		for ($i = 0; $i < ($iMaxTags + 1); $i++)
+		{
+			try
+			{
+				$sTagCode = 'MaxTag'.$i;
+				$sValue .= "$sTagCode ";
+				$oTicket->Set(TAG_ATTCODE, $sValue);
+				$oTicket->DBWrite();
+			} catch (\Exception $e)
+			{
+				// Should fail on the last iteration
+				static::assertEquals($iMaxTags, $i);
+				$this->debug("Setting (".($i+1).") tag(s) failed");
+				return;
+			}
+			$this->debug("Setting (".($i+1).") tag(s) worked");
+		}
+
 		static::assertFalse(true);
 	}
 }
