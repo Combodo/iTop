@@ -2287,13 +2287,10 @@ fieldset .details>.field_container {
 										border-radius: 2px;
 										background-image: none;
 
-										background-color: $combodo-orange;
-										color: $white;
-										border: none;
-
-										background-color: $white;
+										background-color: #fdfdfd;
 										color: $gray-darker;
 										border: 1px solid $gray-lighter;
+										box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb(241, 241, 241, 0.7);
 
 										.remove{
 											/* Overloading default theming */
@@ -2306,6 +2303,11 @@ fieldset .details>.field_container {
 											border: none;
 
 											margin-left: 4px;
+										}
+
+										&.partial-code{
+											color: transparentize($gray-darker, 0.4);
+											background-color: lighten($gray-lighter, 5%);
 										}
 									}
 								}
@@ -3337,18 +3339,13 @@ table.listResults .originColor{
 //////////////////////
 // Tagset attribute //
 // - Readonly (object viewing, objects list)
-.attribute-tagset .attribute-tag,
-.attribute-tagset-undefined .attribute-tag{
+.attribute-tagset .attribute-tag{
 	display: inline-block;
 	margin-right: 3px;
 	padding: 4px 6px;
 	background-color: #fdfdfd;
-	border-radius: 3px;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-}
-.attribute-tagset-undefined .attribute-tag {
-	color: grey;
-	font-style: italic;
+	border-radius: 2px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb(241, 241, 241, 0.7);
 }
 // - Edition done in the xxx part
 
@@ -3381,7 +3378,6 @@ table.listResults .originColor{
 	background-color: grey;
 	background-image: linear-gradient(to bottom, white, grey);
 	border-color: darkgray;
-	font-style: italic;
 }
 .selectize-control > .selectize-input > .item.partial-code.active {
 	background-image: linear-gradient(to bottom, grey, darkgrey);

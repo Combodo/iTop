@@ -1963,12 +1963,10 @@ fieldset .details > .field_container {
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
   border-radius: 2px;
   background-image: none;
-  background-color: #ea7d1e;
-  color: #fff;
-  border: none;
-  background-color: #fff;
+  background-color: #fdfdfd;
   color: #222;
   border: 1px solid #ddd;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
 }
 .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input .item .remove {
   /* Overloading default theming */
@@ -1980,6 +1978,10 @@ fieldset .details > .field_container {
   padding: initial;
   border: none;
   margin-left: 4px;
+}
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input .item.partial-code {
+  color: rgba(34, 34, 34, 0.6);
+  background-color: #eaeaea;
 }
 .one-col-details .details .field_container.field_small {
   /* On a single column, field labels can take more width but they are limited so it doesn't feel weird when all labels are short */
@@ -2913,17 +2915,13 @@ table.listResults .originColor {
 .menu-icon-select > .ui-menu-item {
   padding: 0.3em 3%;
 }
-.attribute-tagset .attribute-tag, .attribute-tagset-undefined .attribute-tag {
+.attribute-tagset .attribute-tag {
   display: inline-block;
   margin-right: 3px;
   padding: 4px 6px;
   background-color: #fdfdfd;
-  border-radius: 3px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-}
-.attribute-tagset-undefined .attribute-tag {
-  color: grey;
-  font-style: italic;
+  border-radius: 2px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
 }
 .selectize-control {
   position: static;
@@ -2947,7 +2945,6 @@ table.listResults .originColor {
   background-color: grey;
   background-image: linear-gradient(to bottom, white, grey);
   border-color: darkgray;
-  font-style: italic;
 }
 .selectize-control > .selectize-input > .item.partial-code.active {
   background-image: linear-gradient(to bottom, grey, darkgrey);
