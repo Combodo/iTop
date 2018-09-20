@@ -3342,7 +3342,12 @@ table.listResults .originColor{
 .attribute-tagset .attribute-tag{
 	display: inline-block;
 	margin-right: 3px;
+	margin-bottom: 3px;
 	padding: 4px 6px;
+	max-width: 120px;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	background-color: #fdfdfd;
 	border-radius: 2px;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb(241, 241, 241, 0.7);

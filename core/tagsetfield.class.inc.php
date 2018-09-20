@@ -65,7 +65,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			"is_null_allowed" => false,
 			"depends_on" => array()
 		)));
-		MetaModel::Init_AddAttribute(new AttributeString("description", array(
+		MetaModel::Init_AddAttribute(new AttributeHTML("description", array(
 			"allowed_values" => null,
 			"sql" => 'description',
 			"default_value" => '',

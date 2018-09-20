@@ -259,6 +259,24 @@ EOF;
 EOF
         );
 
+        // Attribute tag tooltips
+	    $this->add_ready_script(
+<<<EOF
+	$('.attribute-tag').each(function(){
+	    $(this).qtip({
+	       content: {
+	         text: $(this).attr('data-description'),
+	         title: { text: $(this).attr('data-label')},
+	       },
+	       show: { delay: 300, when: 'mouseover' },
+	       hide: { delay: 140, when: 'mouseout', fixed: true },
+	       style: { name: 'dark', tip: 'bottomLeft' },
+	       position: { corner: { target: 'topMiddle', tooltip: 'bottomLeft' }}
+	    });
+	});
+EOF
+	    );
+
         $this->add_init_script(
             <<< EOF
 	try

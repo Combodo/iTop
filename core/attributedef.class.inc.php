@@ -7166,6 +7166,8 @@ class AttributeTagSet extends AttributeDBFieldVoid
 				$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
 				$sAttCode = $this->GetCode();
 				$sTagCode = $oTag->Get('code');
+				$sTagLabel = $oTag->Get('label');
+				$sTagDescription = $oTag->Get('description');
 				$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 				$oAppContext = new ApplicationContext();
 				$sContext = $oAppContext->GetForLink();
@@ -7173,11 +7175,11 @@ class AttributeTagSet extends AttributeDBFieldVoid
 				$sFilter = urlencode($oFilter->serialize());
 				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 
-				$sHtml .= '<a href="'.$sUrl.'" class="attribute-tag">'.$oTag->Get('label').'</a>';
+				$sHtml .= '<a href="'.$sUrl.'" class="attribute-tag" data-label="'.$sTagLabel.'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES, 'UTF-8').'">'.$sTagLabel.'</a>';
 			}
 			else
 			{
-				$sHtml .= '<span class="attribute-tag">'.$oTag.'</span>';
+				$sHtml .= '<span class="attribute-tag-undefined">'.$oTag.'</span>';
 			}
 		}
 		$sHtml .= '</span>';
