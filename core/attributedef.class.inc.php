@@ -6729,17 +6729,25 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	 * Extract all existing tags from a string and ignore bad tags
 	 *
 	 * @param $sValue
+	 * @param bool $bNoLimit : don't apply the maximum tag limit
 	 *
 	 * @return \ormTagSet
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public function GetExistingTagsFromString($sValue)
+	public function GetExistingTagsFromString($sValue, $bNoLimit = false)
 	{
 		$aTagCodes = explode(' ', "$sValue");
 		$sAttCode = $this->GetCode();
 		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
-		$oTagSet = new ormTagSet($sClass, $sAttCode, $this->GetTagMaxNb());
+		if ($bNoLimit)
+		{
+			$oTagSet = new ormTagSet($sClass, $sAttCode, 0);
+		}
+		else
+		{
+			$oTagSet = new ormTagSet($sClass, $sAttCode, $this->GetTagMaxNb());
+		}
 		$aGoodTags = array();
 		foreach($aTagCodes as $sTagCode)
 		{
@@ -6750,10 +6758,10 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			if ($oTagSet->IsValidTag($sTagCode))
 			{
 				$aGoodTags[] = $sTagCode;
-				if (count($aGoodTags) === $this->GetTagMaxNb())
+				if (!$bNoLimit && (count($aGoodTags) === $this->GetTagMaxNb()))
 				{
 					// extra and bad tags are ignored
-					continue;
+					break;
 				}
 			}
 		}

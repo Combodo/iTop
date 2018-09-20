@@ -131,7 +131,7 @@ final class ormTagSet
 		foreach($aTagCodes as $sTagCode)
 		{
 			$iCount++;
-			if ($iCount > $this->iLimit)
+			if (($this->iLimit != 0) && ($iCount > $this->iLimit))
 			{
 				$bError = true;
 				continue;

@@ -948,7 +948,7 @@ class ScalarExpression extends UnaryExpression
 									$oValue = $this->GetValue();
 									if (is_string($oValue))
 									{
-										$oValue = $oAttDef->GetExistingTagsFromString($oValue);
+										$oValue = $oAttDef->GetExistingTagsFromString($oValue, true);
 									}
 									/** @var \ormTagSet $oValue */
 									$aTags = $oValue->GetTags();
