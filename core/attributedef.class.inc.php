@@ -6696,7 +6696,6 @@ class AttributeExternalField extends AttributeDefinition
 	{
 		return false;
 	}
-
 }
 
 
