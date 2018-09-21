@@ -917,11 +917,20 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:TagSetFieldData' => '%2$s for class %1$s',
 	'Class:TagSetFieldData+' => '',
+
+	'Class:TagSetFieldData/Attribute:code' => 'Code',
+	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters',
+	'Class:TagSetFieldData/Attribute:label' => 'Label',
+	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label',
+	'Class:TagSetFieldData/Attribute:description' => 'Description',
+	'Class:TagSetFieldData/Attribute:description+' => 'Description',
+
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code should contain between 3 and %1$d alphanumeric characters',
-	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label should not contain \'%1$s\' nor be empty',
-	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags "Code" cannot be changed',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used',
 	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed',
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)',

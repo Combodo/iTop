@@ -6696,7 +6696,6 @@ class AttributeExternalField extends AttributeDefinition
 	{
 		return false;
 	}
-
 }
 
 
@@ -7021,7 +7020,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		{
 			$aValues = $sValue->GetLabels();
 
-			return implode(' ', $aValues);
+			return implode(', ', $aValues);
 		}
 		throw new CoreWarning('Expected the attribute value to be a TagSet', array(
 			'found_type' => gettype($sValue),
@@ -7328,7 +7327,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	public function EnumTemplateVerbs()
 	{
 		return array(
-			'' => 'Plain text (unlocalized) representation',
+			'' => 'Plain text representation',
 			'html' => 'HTML representation (unordered list)',
 		);
 	}
@@ -7351,16 +7350,18 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			if ($bLocalize)
 			{
 				$aValues = $value->GetLabels();
+				$sSep = ', ';
 			}
 			else
 			{
 				$aValues = $value->GetValue();
+				$sSep = ' ';
 			}
 
 			switch ($sVerb)
 			{
 				case '':
-					return implode(' ', $aValues);
+					return implode($sSep, $aValues);
 
 				case 'html':
 					return '<ul><li>'.implode("</li><li>", $aValues).'</li></ul>';

@@ -56,7 +56,8 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			"sql" => 'code',
 			"default_value" => '',
 			"is_null_allowed" => false,
-			"depends_on" => array()
+			"depends_on" => array(),
+			"validation_pattern" => '^[a-zA-Z0-9]{3,}$',
 		)));
 		MetaModel::Init_AddAttribute(new AttributeString("label", array(
 			"allowed_values" => null,
@@ -178,6 +179,26 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		if (!preg_match("@^[a-zA-Z0-9]{3,$iMaxLen}$@", $sTagCode))
 		{
 			$this->m_aCheckIssues[] = Dict::Format('Core:TagSetFieldData:ErrorTagCodeSyntax', $iMaxLen);
+		}
+
+		// Check that the code is not a MySQL stop word
+		$sSQL = "SELECT * FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD";
+		try
+		{
+			$aResults = CMDBSource::QueryToArray($sSQL);
+		} catch (MySQLException $e)
+		{
+			IssueLog::Warning($e->getMessage());
+			$aResults = array();
+		}
+
+		foreach($aResults as $aResult)
+		{
+			if ($aResult['value'] == $sTagCode)
+			{
+				$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorTagCodeReservedWord');
+				break;
+			}
 		}
 
 		$sTagLabel = $this->Get('label');

@@ -768,9 +768,18 @@ Opérateurs :<br/>
 
 	'Class:TagSetFieldData' => '%2$s pour la classe %1$s',
 	'Class:TagSetFieldData+' => '',
+
+	'Class:TagSetFieldData/Attribute:code' => 'Code',
+	'Class:TagSetFieldData/Attribute:code+' => 'Code interne. Doit contenir au moins 3 caractères alphanumériques',
+	'Class:TagSetFieldData/Attribute:label' => 'Label',
+	'Class:TagSetFieldData/Attribute:label+' => 'Label',
+	'Class:TagSetFieldData/Attribute:description' => 'Description',
+	'Class:TagSetFieldData/Attribute:description+' => 'Description',
+
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Impossible de supprimer une étiquette utilisée',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Les codes et noms des étiquettes doivent être unique',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Le code de l\'étiquette doit contenir entre 3 et %1$d caractères alphanumériques.',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'Le code de l\'étiquette un mot réservé.',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Le nom de l\'étiquette ne doit pas être vide ni contenir le caractère \'%1$s\'',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Le code de l\'étiquette ne peut pas être changé',
 	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'La classe de l\'étiquette ne peut pas être changée',
