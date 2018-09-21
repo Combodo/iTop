@@ -33,6 +33,7 @@ use DBSearch;
 use DBObjectSearch;
 use InlineImage;
 use AttributeDateTime;
+use AttributeTagSet;
 use AttachmentPlugIn;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Form\Form;
@@ -1120,7 +1121,18 @@ class ObjectFormManager extends FormManager
 							// Setting value in the object
 							$this->oObject->Set($sAttCode, $oLinkSet);
 						}
-					    else if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+						elseif ($oAttDef instanceof AttributeTagSet)
+						{
+							/** @var ormTagSet $oTagSet */
+							$oTagSet = $this->oObject->Get($sAttCode);
+							if (is_null($oTagSet))
+							{
+								$oTagSet = new ormTagSet(get_class($this->oObject), $sAttCode);
+							}
+							$oTagSet->ApplyDelta($value);
+							$this->oObject->Set($sAttCode, $oTagSet);
+						}
+					    elseif ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 					    {
 						    if ($value != null)
 						    {
