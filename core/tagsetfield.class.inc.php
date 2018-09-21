@@ -180,6 +180,26 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			$this->m_aCheckIssues[] = Dict::Format('Core:TagSetFieldData:ErrorTagCodeSyntax', $iMaxLen);
 		}
 
+		// Check that the code is not a MySQL stop word
+		$sSQL = "SELECT * FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD";
+		try
+		{
+			$aResults = CMDBSource::QueryToArray($sSQL);
+		} catch (MySQLException $e)
+		{
+			IssueLog::Warning($e->getMessage());
+			$aResults = array();
+		}
+
+		foreach($aResults as $aResult)
+		{
+			if ($aResult['value'] == $sTagCode)
+			{
+				$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorTagCodeReservedWord');
+				break;
+			}
+		}
+
 		$sTagLabel = $this->Get('label');
 		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 		if (empty($sTagLabel) || (strpos($sTagLabel, $sSepItem) !== false))
