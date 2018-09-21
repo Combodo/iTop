@@ -2034,7 +2034,7 @@ EOF
 					$oPage->add_dict_entry('Core:AttributeTagSet:placeholder');
 
 					/** @var \ormTagSet $value */
-					$sJson = static::GetTagSetJsonForWidget($value, $sClass, $sAttCode);
+					$sJson = $oAttDef->GetJsonForWidget($value);
 					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
 					$sHTMLValue = "<div class=\"field_input_zone field_input_tagset\"><input id='$sInputId' name='$sInputId' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
 					$sScript = "$('#$sInputId').tagset_widget();";
@@ -2147,54 +2147,6 @@ EOF
 		$oPage->add_dict_entry('UI:ValueInvalidFormat');
 
 		return "<div id=\"field_{$iId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div></div>";
-	}
-
-	/**
-	 * @param \ormTagSet $oValue
-	 *
-	 * @param string $sClass
-	 * @param string $sAttCode
-	 *
-	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 */
-	private static function GetTagSetJsonForWidget($oValue, $sClass, $sAttCode)
-	{
-		$aJson = array();
-
-		// possible_values
-		$aTagSetObjectData = TagSetFieldData::GetAllowedValues($sClass, $sAttCode);
-		$aTagSetKeyValData = array();
-		foreach($aTagSetObjectData as $oTagSet)
-		{
-			$aTagSetKeyValData[] = [
-				'code' => $oTagSet->Get('code'),
-				'label' => $oTagSet->Get('label')
-			];
-		}
-		$aJson['possible_values'] = $aTagSetKeyValData;
-
-		if (is_null($oValue))
-		{
-			$aJson['partial_values'] = array();
-			$aJson['orig_value'] = array();
-		}
-		else
-		{
-			$aJson['partial_values'] = $oValue->GetModifiedTags();
-			$aJson['orig_value'] = array_merge($oValue->GetValue(), $oValue->GetModifiedTags());
-		}
-		$aJson['added'] = array();
-		$aJson['removed'] = array();
-
-		/** @var \AttributeTagSet $oAttDef */
-		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		$iMaxTags = $oAttDef->GetTagMaxNb();
-		$aJson['max_tags_allowed'] = $iMaxTags;
-
-		return json_encode($aJson);
 	}
 
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
