@@ -652,16 +652,21 @@ class DisplayBlock
 
 				if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history'])
 				{
+					$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
+					// Limit the size of the URL (N°1585 - request uri too long)
+					if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH)
+					{
+						$seventAttachedData = json_encode(array(
+							'filter' => $sSearchFilter,
+							'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
+							'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
+							'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
+							'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
+							'breadcrumb_icon' => utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png'
+						));
 
-					$seventAttachedData = json_encode(array(
-						'filter'                => $this->m_oSet->GetFilter()->serialize(),
-						'breadcrumb_id'         => "ui-search-".$this->m_oSet->GetClass(),
-						'breadcrumb_label'      => MetaModel::GetName($this->m_oSet->GetClass()),
-						'breadcrumb_max_count'  => utils::GetConfig()->Get('breadcrumb.max_count'),
-						'breadcrumb_instance_id'=> MetaModel::GetConfig()->GetItopInstanceid(),
-						'breadcrumb_icon'       => utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png'
-					));
-					$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
+						$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
+					}
 				}
 			}
 			break;

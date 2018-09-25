@@ -36,6 +36,8 @@ define('ITOP_DEFAULT_CONFIG_FILE', APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE
 
 define('SERVER_NAME_PLACEHOLDER', '$SERVER_NAME$');
 
+define('SERVER_MAX_URL_LENGTH', 2048);
+
 class FileUploadException extends Exception
 {
 }
@@ -1046,12 +1048,16 @@ class utils
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
 			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
-			
-			$aResult = array(
-				new SeparatorPopupMenuItem(),
+
+			$aResult = array();
+			if (strlen($sUrl) < SERVER_MAX_URL_LENGTH)
+			{
+				$aResult[] = new SeparatorPopupMenuItem();
 				// Static menus: Email this page, CSV Export & Add to Dashboard
-				new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?body=".urlencode($sUrl).' '), // Add an extra space to make it work in Outlook
-			);
+				$aResult[] = new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'),
+						"mailto:?body=".urlencode($sUrl).' ' // Add an extra space to make it work in Outlook
+				);
+			}
 			
 			if (UserRights::IsActionAllowed($param->GetFilter()->GetClass(), UR_ACTION_BULK_READ, $param) != UR_ALLOWED_NO)
 			{

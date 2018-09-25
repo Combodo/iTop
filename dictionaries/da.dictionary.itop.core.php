@@ -36,7 +36,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ActionEmail/Attribute:to+' => 'Modtager af emailen',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
 	'Class:ActionEmail/Attribute:cc+' => 'Kopi sendes til',
-	'Class:ActionEmail/Attribute:bcc' => 'bcc',
+	'Class:ActionEmail/Attribute:bcc' => 'Bcc',
 	'Class:ActionEmail/Attribute:bcc+' => 'Blind kopi sendes til',
 	'Class:ActionEmail/Attribute:subject' => 'Emne',
 	'Class:ActionEmail/Attribute:subject+' => 'Tekst i emne feltet',

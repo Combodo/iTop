@@ -398,6 +398,18 @@ EOF
 		$this->aFieldsMap[$sAttCode] = $sInputId;
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		$aRedundancySettings = $this->FindVisibleRedundancySettings();
@@ -2040,6 +2052,18 @@ EOF
 					$sScript = "$('#$sInputId').tagset_widget();";
 					$oPage->add_ready_script($sScript);
 
+					break;
+
+				case 'ObjectAttcodeSet':
+					$iFieldSize = $oAttDef->GetMaxSize();
+					if (is_array($sDisplayValue))
+					{
+						$sDisplayValue = implode(', ', $sDisplayValue);
+					}
+					$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><input title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$aEventsList[] ='validate';
+					$aEventsList[] ='keyup';
+					$aEventsList[] ='change';
 					break;
 
 				case 'String':

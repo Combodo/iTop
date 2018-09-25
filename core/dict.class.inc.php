@@ -213,7 +213,7 @@ class Dict
 	/**
 	 * Initialize a the entries for a given language (replaces the former Add() method)
 	 * @param string $sLanguageCode Code identifying the language i.e. 'FR-FR', 'EN-US'
-	 * @param hash $aEntries Hash array of dictionnary entries
+	 * @param array $aEntries Hash array of dictionnary entries
 	 */
 	public static function SetEntries($sLanguageCode, $aEntries)
 	{
