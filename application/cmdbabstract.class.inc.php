@@ -1881,7 +1881,7 @@ EOF
 					$sHTMLValue = UIExtKeyWidget::DisplayFromAttCode($oPage, $sAttCode, $sClass, $oAttDef->GetLabel(), $oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aExtKeyParams);
 					$sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
 					break;
-					
+
 				case 'RedundancySetting':
 					$sHTMLValue = '<table>';
 					$sHTMLValue .= '<tr>';
@@ -1943,6 +1943,18 @@ EOF
 					$oPage->add_ready_script("$('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });");
 					// validate is triggered by CheckFields, on all the input fields, once at page init and once before submitting the form
 					$oPage->add_ready_script("$('#{$iId}').bind('validate', function(evt, sFormId) { return ValidateCustomFields('$iId', sFormId) } );"); // Custom validation function
+					break;
+
+				case 'ObjectAttcodeSet':
+					$iFieldSize = $oAttDef->GetMaxSize();
+					if (is_array($sDisplayValue))
+					{
+						$sDisplayValue = implode(', ', $sDisplayValue);
+					}
+					$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><input title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$aEventsList[] ='validate';
+					$aEventsList[] ='keyup';
+					$aEventsList[] ='change';
 					break;
 
 				case 'String':
