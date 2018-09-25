@@ -1,6 +1,7 @@
 
-conf/*
-env-*/*
+/toolkit/
+/conf/*
+/env-*/*
 
 # composer reserver directory, from sources, populate/update using "composer install"
 vendor/*
