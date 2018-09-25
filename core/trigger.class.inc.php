@@ -427,7 +427,7 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeObjectAttCode('target_attcodes', array("allowed_values" => null, "class" => "target_class", "sql" => "target_attcodes", "default_value" => null, "is_null_allowed" => true, "depends_on" => array('target_class'))));
+		MetaModel::Init_AddAttribute(new AttributeObjectAttCodeSet('target_attcodes', array("allowed_values" => null, "class" => "target_class", "sql" => "target_attcodes", "default_value" => null, "is_null_allowed" => true, "depends_on" => array('target_class'))));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'target_attcodes', 'action_list')); // Attributes to be displayed for the complete details

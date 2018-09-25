@@ -1945,7 +1945,7 @@ EOF
 					$oPage->add_ready_script("$('#{$iId}').bind('validate', function(evt, sFormId) { return ValidateCustomFields('$iId', sFormId) } );"); // Custom validation function
 					break;
 
-				case 'ObjectAttcode':
+				case 'ObjectAttcodeSet':
 					$iFieldSize = $oAttDef->GetMaxSize();
 					if (is_array($sDisplayValue))
 					{

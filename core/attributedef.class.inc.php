@@ -7639,11 +7639,16 @@ class AttributePropertySet extends AttributeTable
 	}
 }
 
-class AttributeObjectAttCode extends AttributeDBFieldVoid
+/**
+ * An unordered multi values attribute
+ *
+ * Class AttributeSet
+ */
+class AttributeSet extends AttributeDBFieldVoid
 {
 	static public function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'class'));
+		return array_merge(parent::ListExpectedParams(), array('is_null_allowed'));
 	}
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
@@ -7658,7 +7663,7 @@ class AttributeObjectAttCode extends AttributeDBFieldVoid
 
 	public function GetEditClass()
 	{
-		return "ObjectAttcode";
+		return "List";
 	}
 
 	public function GetEditValue($value, $oHostObj = null)
@@ -7727,35 +7732,30 @@ class AttributeObjectAttCode extends AttributeDBFieldVoid
 	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
-		$aAllowedAttributes = array();
-		$sClass = '';
-		if (!empty($oHostObj))
+		if (empty($proposedValue))
 		{
-			$sTargetClass = $this->Get('class');
-			$sClass = $oHostObj->Get($sTargetClass);
-			$aAllowedAttributes = MetaModel::GetAttributesList($sClass);
+			return array();
 		}
-		if (is_string($proposedValue) && !empty($proposedValue))
+		if (is_string($proposedValue))
 		{
 			$proposedValue = trim("$proposedValue");
 			$proposedValue = explode(',', $proposedValue);
 			$aValues = array();
 			foreach($proposedValue as $sValue)
 			{
-				$sAttCode = trim($sValue);
-				if (empty($aAllowedAttributes) || in_array($sAttCode, $aAllowedAttributes))
-				{
-					$aValues[] = $sAttCode;
-				}
-				else
-				{
-					throw new CoreUnexpectedValue("The attribute {$sAttCode} does not exist in class {$sClass}");
-				}
+				$sValue = trim($sValue);
+				$aValues[$sValue] = $sValue;
 			}
 			return $aValues;
 		}
 
-		return $proposedValue;
+		if (is_array($proposedValue))
+		{
+			return $proposedValue;
+		}
+
+		throw new CoreUnexpectedValue("Wrong format");
+
 	}
 
 	/**
@@ -7801,7 +7801,7 @@ class AttributeObjectAttCode extends AttributeDBFieldVoid
 		{
 			return implode(', ', $sValue);
 		}
-        return $sValue;
+		return $sValue;
 	}
 
 	/**
@@ -7853,6 +7853,67 @@ class AttributeObjectAttCode extends AttributeDBFieldVoid
 		}
 		return $value;
 	}
+}
+
+class AttributeObjectAttCodeSet extends AttributeSet
+{
+	static public function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('class'));
+	}
+
+	public function GetEditClass()
+	{
+		return "ObjectAttcodeSet";
+	}
+
+	public function GetMaxSize()
+	{
+		return 255;
+	}
+
+	/**
+	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
+	 *
+	 * @param $proposedValue
+	 * @param \DBObject $oHostObj
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function MakeRealValue($proposedValue, $oHostObj)
+	{
+		$aAllowedAttributes = array();
+		$sClass = '';
+		if (!empty($oHostObj))
+		{
+			$sTargetClass = $this->Get('class');
+			$sClass = $oHostObj->Get($sTargetClass);
+			$aAllowedAttributes = MetaModel::GetAttributesList($sClass);
+		}
+		if (is_string($proposedValue) && !empty($proposedValue))
+		{
+			$proposedValue = trim("$proposedValue");
+			$proposedValue = explode(',', $proposedValue);
+			$aValues = array();
+			foreach($proposedValue as $sValue)
+			{
+				$sAttCode = trim($sValue);
+				if (empty($aAllowedAttributes) || in_array($sAttCode, $aAllowedAttributes))
+				{
+					$aValues[$sAttCode] = $sAttCode;
+				}
+				else
+				{
+					throw new CoreUnexpectedValue("The attribute {$sAttCode} does not exist in class {$sClass}");
+				}
+			}
+			return $aValues;
+		}
+
+		return $proposedValue;
+	}
+
 }
 
 /**
