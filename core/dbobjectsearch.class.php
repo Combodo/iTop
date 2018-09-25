@@ -2215,7 +2215,8 @@ class DBObjectSearch extends DBSearch
 									$oRemoteAttDef = MetaModel::GetAttributeDef($sKeyClass, $sExtAttCode);
 									foreach ($oRemoteAttDef->GetSQLExpressions() as $sColId => $sRemoteAttExpr)
 									{
-										$aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode, $sKeyClassAlias);
+										// It seems to be necessary to add $sCoLid in the FieldExpression as well, because for AttributeBlob types it adds _data, _mimetype, _filename
+										$aTranslateNow[$sTargetAlias][$sAttCode.$sColId] = new FieldExpression($sExtAttCode.$sColId, $sKeyClassAlias);
 									}
 								}
 							}
