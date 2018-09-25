@@ -194,7 +194,7 @@ abstract class TriggerOnObject extends Trigger
 		{
 			/** @var \DBObject $oObject */
 			$oObject = $aContextArgs['this->object()'];
-			$bGo = $this->IsTargetObject($oObject->GetKey());
+			$bGo = $this->IsTargetObject($oObject->GetKey(), $oObject->ListChanges());
 		}
 		if ($bGo)
 		{
@@ -204,6 +204,7 @@ abstract class TriggerOnObject extends Trigger
 
 	/**
 	 * @param $iObjectId
+	 * @param array $aChanges
 	 *
 	 * @return bool
 	 * @throws \CoreException
@@ -212,7 +213,7 @@ abstract class TriggerOnObject extends Trigger
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function IsTargetObject($iObjectId)
+	public function IsTargetObject($iObjectId, $aChanges = array())
 	{
 		$sFilter = trim($this->Get('filter'));
 		if (strlen($sFilter) > 0)
@@ -398,6 +399,64 @@ class TriggerOnObjectCreate extends TriggerOnObject
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
 		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	}
+}
+
+/**
+ * Class TriggerOnObjectCreate
+ */
+class TriggerOnObjectUpdate extends TriggerOnObject
+{
+	/**
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "grant_by_profile,core/cmdb,application",
+			"key_type" => "autoincrement",
+			"name_attcode" => "description",
+			"state_attcode" => "",
+			"reconc_keys" => array('description'),
+			"db_table" => "priv_trigger_onobjupdate",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeObjectAttCode('target_attcodes', array("allowed_values" => null, "class" => "target_class", "sql" => "target_attcodes", "default_value" => null, "is_null_allowed" => true, "depends_on" => array('target_class'))));
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'target_attcodes', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
+	}
+
+	public function IsTargetObject($iObjectId, $aChanges = array())
+	{
+		if (!parent::IsTargetObject($iObjectId, $aChanges))
+		{
+			return false;
+		}
+
+		// Check the attribute
+		$aAttCodes = $this->Get('target_attcodes');
+		if (empty($aAttCodes))
+		{
+			return true;
+		}
+		foreach($aAttCodes as $sAttCode)
+		{
+			if (array_key_exists($sAttCode, $aChanges))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
 

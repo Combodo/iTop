@@ -7639,6 +7639,222 @@ class AttributePropertySet extends AttributeTable
 	}
 }
 
+class AttributeObjectAttCode extends AttributeDBFieldVoid
+{
+	static public function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'class'));
+	}
+
+	public function GetDefaultValue(DBObject $oHostObject = null)
+	{
+		return null;
+	}
+
+	public function IsNullAllowed()
+	{
+		return $this->Get("is_null_allowed");
+	}
+
+	public function GetEditClass()
+	{
+		return "ObjectAttcode";
+	}
+
+	public function GetEditValue($value, $oHostObj = null)
+	{
+		if (is_string($value))
+		{
+			return $value;
+		}
+		if (is_array($value))
+		{
+			return implode(', ', $value);
+		}
+		return '';
+	}
+
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		$iLen = $this->GetMaxSize();
+		return "VARCHAR($iLen)"
+			.CMDBSource::GetSqlStringColumnDefinition()
+			.($bFullSpec ? $this->GetSQLColSpec() : '');
+	}
+
+	public function GetMaxSize()
+	{
+		return 255;
+	}
+
+	/**
+	 * @param array $aCols
+	 * @param string $sPrefix
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		$sValue = $aCols["$sPrefix"];
+
+		return $this->MakeRealValue($sValue, null);
+	}
+
+	/**
+	 * @param $aCols
+	 * @param string $sPrefix
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function FromImportToValue($aCols, $sPrefix = '')
+	{
+		$sValue = $aCols["$sPrefix"];
+
+		return $this->MakeRealValue($sValue, null);
+	}
+
+	/**
+	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
+	 *
+	 * @param $proposedValue
+	 * @param \DBObject $oHostObj
+	 *
+	 * @return mixed
+	 * @throws \Exception
+	 */
+	public function MakeRealValue($proposedValue, $oHostObj)
+	{
+		$aAllowedAttributes = array();
+		$sClass = '';
+		if (!empty($oHostObj))
+		{
+			$sTargetClass = $this->Get('class');
+			$sClass = $oHostObj->Get($sTargetClass);
+			$aAllowedAttributes = MetaModel::GetAttributesList($sClass);
+		}
+		if (is_string($proposedValue) && !empty($proposedValue))
+		{
+			$proposedValue = trim("$proposedValue");
+			$proposedValue = explode(',', $proposedValue);
+			$aValues = array();
+			foreach($proposedValue as $sValue)
+			{
+				$sAttCode = trim($sValue);
+				if (empty($aAllowedAttributes) || in_array($sAttCode, $aAllowedAttributes))
+				{
+					$aValues[] = $sAttCode;
+				}
+				else
+				{
+					throw new CoreUnexpectedValue("The attribute {$sAttCode} does not exist in class {$sClass}");
+				}
+			}
+			return $aValues;
+		}
+
+		return $proposedValue;
+	}
+
+	/**
+	 * Get the value from a given string (plain text, CSV import)
+	 *
+	 * @param string $sProposedValue
+	 * @param bool $bLocalizedValue
+	 * @param string $sSepItem
+	 * @param string $sSepAttribute
+	 * @param string $sSepValue
+	 * @param string $sAttributeQualifier
+	 *
+	 * @return mixed null if no match could be found
+	 * @throws \Exception
+	 */
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
+		return $this->MakeRealValue($sProposedValue, null);
+	}
+
+	public function GetNullValue()
+	{
+		return null;
+	}
+
+	public function IsNull($proposedValue)
+	{
+		return empty($proposedValue);
+	}
+
+	/**
+	 * To be overloaded for localized enums
+	 *
+	 * @param $sValue
+	 *
+	 * @return string label corresponding to the given value (in plain text)
+	 * @throws \CoreWarning
+	 * @throws \Exception
+	 */
+	public function GetValueLabel($sValue)
+	{
+		if (is_array($sValue))
+		{
+			return implode(', ', $sValue);
+		}
+        return $sValue;
+	}
+
+	/**
+	 * @param string $sValue
+	 * @param null $oHostObj
+	 *
+	 * @return string
+	 * @throws \CoreWarning
+	 */
+	public function GetAsPlainText($sValue, $oHostObj = null)
+	{
+		return $this->GetValueLabel($sValue);
+	}
+
+	/**
+	 * @param $value
+	 *
+	 * @return string
+	 * @throws \CoreWarning
+	 */
+	public function ScalarToSQL($value)
+	{
+		if (empty($value))
+		{
+			return '';
+		}
+		if (is_array($value))
+		{
+			return implode(', ', $value);
+		}
+		return $value;
+	}
+
+	/**
+	 * @param $value
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 *
+	 * @return string|null
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	{
+		if (is_array($value))
+		{
+			return implode(', ', $value);
+		}
+		return $value;
+	}
+}
+
 /**
  * The attribute dedicated to the friendly name automatic attribute (not written) 
  *

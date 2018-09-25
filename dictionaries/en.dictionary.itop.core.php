@@ -579,6 +579,17 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: TriggerOnObjectUpdate
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)',
+	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target attributes',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 

@@ -1998,6 +1998,16 @@ abstract class DBObject implements iDisplay
 			// Save the original values (will be reset to the new values when the object get written to the DB)
 			$aOriginalValues = $this->m_aOrigValues;
 
+			// Activate any existing trigger
+			$sClass = get_class($this);
+			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN ('$sClassList')"));
+			while ($oTrigger = $oSet->Fetch())
+			{
+				/** @var \Trigger $oTrigger */
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+
 			$bHasANewExternalKeyValue = false;
 			$aHierarchicalKeys = array();
 			$aDBChanges = array();
