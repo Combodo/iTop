@@ -1285,7 +1285,7 @@ abstract class DBObject implements iDisplay
 				$oTag = new ormTagSet(get_class($this), $sAttCode);
 				try
 				{
-					$oTag->SetValue(explode(' ', $toCheck));
+					$oTag->SetValues(explode(' ', $toCheck));
 				} catch (Exception $e)
 				{
 					return "Tag value '$toCheck' is not a valid tag list";

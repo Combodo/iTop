@@ -6744,8 +6744,8 @@ class AttributeTagSet extends AttributeSet
 		}
 		else
 		{
-			$aJson['partial_values'] = $oValue->GetModifiedTags();
-			$aJson['orig_value'] = array_merge($oValue->GetValue(), $oValue->GetModifiedTags());
+			$aJson['partial_values'] = $oValue->GetModified();
+			$aJson['orig_value'] = array_merge($oValue->GetValues(), $oValue->GetModified());
 		}
 		$aJson['added'] = array();
 		$aJson['removed'] = array();
@@ -6754,6 +6754,20 @@ class AttributeTagSet extends AttributeSet
 		$aJson['max_tags_allowed'] = $iMaxTags;
 
 		return json_encode($aJson);
+	}
+
+	public function FromStringToArray($proposedValue)
+	{
+		$aValues = array();
+		if (!empty($proposedValue))
+		{
+			foreach(explode(' ', $proposedValue) as $sCode)
+			{
+				$sValue = trim($sCode);
+				$aValues[] = $sValue;
+			}
+		}
+		return $aValues;
 	}
 
 	/**
@@ -6768,7 +6782,7 @@ class AttributeTagSet extends AttributeSet
 	 */
 	public function GetExistingTagsFromString($sValue, $bNoLimit = false)
 	{
-		$aTagCodes = explode(' ', "$sValue");
+		$aTagCodes = $this->FromStringToArray("$sValue");
 		$sAttCode = $this->GetCode();
 		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
 		if ($bNoLimit)
@@ -6796,7 +6810,7 @@ class AttributeTagSet extends AttributeSet
 				}
 			}
 		}
-		$oTagSet->SetValue($aGoodTags);
+		$oTagSet->SetValues($aGoodTags);
 
 		return $oTagSet;
 	}
@@ -6819,7 +6833,7 @@ class AttributeTagSet extends AttributeSet
 		}
 		if ($value instanceof ormTagSet)
 		{
-			$aValues = $value->GetValue();
+			$aValues = $value->GetValues();
 
 			return implode(' ', $aValues);
 		}
@@ -6887,17 +6901,20 @@ class AttributeTagSet extends AttributeSet
 	 * @param $proposedValue
 	 * @param $oHostObj
 	 *
+	 * @param bool $bIgnoreErrors
+	 *
 	 * @return mixed
-	 * @throws \Exception
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
-	public function MakeRealValue($proposedValue, $oHostObj)
+	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$proposedValue = trim("$proposedValue");
-			$aTagCodes = explode(' ', $proposedValue);
-			$oTagSet->SetValue($aTagCodes);
+			$aTagCodes = $this->FromStringToArray($proposedValue);
+			$oTagSet->SetValues($aTagCodes);
 		}
 		elseif ($proposedValue instanceof ormTagSet)
 		{
@@ -6958,7 +6975,7 @@ class AttributeTagSet extends AttributeSet
 		}
 
 		/** @var \ormTagSet $proposedValue */
-		return count($proposedValue->GetValue()) == 0;
+		return count($proposedValue->GetValues()) == 0;
 	}
 
 	/**
@@ -7008,7 +7025,7 @@ class AttributeTagSet extends AttributeSet
 		}
 		if ($value instanceof ormTagSet)
 		{
-			$aValues = $value->GetValue();
+			$aValues = $value->GetValues();
 
 			return implode(' ', $aValues);
 		}
@@ -7040,7 +7057,7 @@ class AttributeTagSet extends AttributeSet
 			}
 			else
 			{
-				$aValues = $value->GetValue();
+				$aValues = $value->GetValues();
 			}
 			if (empty($aValues))
 			{
@@ -7060,7 +7077,7 @@ class AttributeTagSet extends AttributeSet
 			{
 				// unknown tags are present display the code instead
 			}
-			$aTagCodes = explode(' ', $value);
+			$aTagCodes = $this->FromStringToArray($value);
 			$aValues = array();
 			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
 				$this->GetCode(), $this->GetMaxItems());
@@ -7068,7 +7085,7 @@ class AttributeTagSet extends AttributeSet
 			{
 				try
 				{
-					$oTagSet->AddTag($sTagCode);
+					$oTagSet->Add($sTagCode);
 				} catch (Exception $e)
 				{
 					$aValues[] = $sTagCode;
@@ -7096,8 +7113,8 @@ class AttributeTagSet extends AttributeSet
 	{
 		$sResult = Dict::Format('Change:AttName_Changed', $this->GetLabel()).", ";
 
-		$aNewValues = explode(' ', $sNewValue);
-		$aOldValues = explode(' ', $sOldValue);
+		$aNewValues = $this->FromStringToArray($sNewValue);
+		$aOldValues = $this->FromStringToArray($sOldValue);
 
 		$aDelta['removed'] = array_diff($aOldValues, $aNewValues);
 		$aDelta['added'] = array_diff($aNewValues, $aOldValues);
@@ -7194,7 +7211,7 @@ class AttributeTagSet extends AttributeSet
 			}
 			else
 			{
-				$sHtml .= '<span class="attribute-tag-undefined">'.$oTag.'</span>';
+				$sHtml .= '<span class="attribute-tag">'.$oTag.'</span>';
 			}
 		}
 		$sHtml .= '</span>';
@@ -7221,7 +7238,7 @@ class AttributeTagSet extends AttributeSet
 			}
 			else
 			{
-				$aValues = $value->GetValue();
+				$aValues = $value->GetValues();
 			}
 			if (!empty($aValuess))
 			{
@@ -7261,7 +7278,7 @@ class AttributeTagSet extends AttributeSet
 			}
 			else
 			{
-				$aValues = $value->GetValue();
+				$aValues = $value->GetValues();
 			}
 			$sRes = implode($sSepItem, $aValues);
 		}
@@ -7306,7 +7323,7 @@ class AttributeTagSet extends AttributeSet
 			}
 			else
 			{
-				$aValues = $value->GetValue();
+				$aValues = $value->GetValues();
 				$sSep = ' ';
 			}
 
@@ -7338,7 +7355,7 @@ class AttributeTagSet extends AttributeSet
 		$aRet = array();
 		if (is_object($value) && ($value instanceof ormTagSet))
 		{
-			$aRet = $value->GetValue();
+			$aRet = $value->GetValues();
 		}
 
 		return $aRet;
@@ -7358,7 +7375,7 @@ class AttributeTagSet extends AttributeSet
 	public function FromJSONToValue($json)
 	{
 		$oSet = new ormTagSet($this->GetHostClass(), $this->GetCode(), $this->GetMaxItems());
-		$oSet->SetValue($json);
+		$oSet->SetValues($json);
 
 		return $oSet;
 	}
@@ -7415,7 +7432,7 @@ class AttributeTagSet extends AttributeSet
 	{
 		if ($value instanceof ormTagSet)
 		{
-			$aValues = $value->GetValue();
+			$aValues = $value->GetValues();
 
 			return implode(' ', $aValues);
 		}
@@ -8750,7 +8767,7 @@ class AttributeSubItem extends AttributeDefinition
 	static public function LoadInObject()
 	{
 		return false;
-	} // if this verb returns false, then GetValue must be implemented
+	} // if this verb returns false, then GetValues must be implemented
 
 	/**
 	 * Used by DBOBject::Get()
@@ -9367,9 +9384,9 @@ class AttributeSet extends AttributeDBFieldVoid
 		$aJson = array();
 
 		// possible_values
-		$aSetObjectData = $this->GetAllowedValues();
+		$aAllowedValues = $this->GetAllowedValues();
 		$aSetKeyValData = array();
-		foreach($aSetObjectData as $sCode => $sLabel)
+		foreach($aAllowedValues as $sCode => $sLabel)
 		{
 			$aSetKeyValData[] = [
 				'code' => $sCode,
@@ -9385,8 +9402,24 @@ class AttributeSet extends AttributeDBFieldVoid
 		}
 		else
 		{
-			$aJson['partial_values'] = $oValue->GetModified();
-			$aJson['orig_value'] = array_merge($oValue->GetValues(), $oValue->GetModified());
+			$aPartialValues = $oValue->GetModified();
+			foreach ($aPartialValues as $key => $value)
+			{
+				if (!isset($aAllowedValues[$value]))
+				{
+					unset($aPartialValues[$key]);
+				}
+			}
+			$aJson['partial_values'] = array_values($aPartialValues);
+			$aOrigValues = array_merge($oValue->GetValues(), $oValue->GetModified());
+			foreach ($aOrigValues as $key => $value)
+			{
+				if (!isset($aAllowedValues[$value]))
+				{
+					unset($aOrigValues[$key]);
+				}
+			}
+			$aJson['orig_value'] = array_values($aOrigValues);
 		}
 		$aJson['added'] = array();
 		$aJson['removed'] = array();
@@ -9409,7 +9442,7 @@ class AttributeSet extends AttributeDBFieldVoid
 
 	public function GetEditClass()
 	{
-		return "List";
+		return "Set";
 	}
 
 	public function GetEditValue($value, $oHostObj = null)
@@ -9442,6 +9475,20 @@ class AttributeSet extends AttributeDBFieldVoid
 		return 255;
 	}
 
+	public function FromStringToArray($proposedValue)
+	{
+		$aValues = array();
+		if (!empty($proposedValue))
+		{
+			foreach(explode(',', $proposedValue) as $sCode)
+			{
+				$sValue = trim($sCode);
+				$aValues[] = $sValue;
+			}
+		}
+		return $aValues;
+	}
+
 	/**
 	 * @param array $aCols
 	 * @param string $sPrefix
@@ -9453,7 +9500,7 @@ class AttributeSet extends AttributeDBFieldVoid
 	{
 		$sValue = $aCols["$sPrefix"];
 
-		return $this->MakeRealValue($sValue, null);
+		return $this->MakeRealValue($sValue, null, true);
 	}
 
 	/**
@@ -9476,21 +9523,19 @@ class AttributeSet extends AttributeDBFieldVoid
 	 * @param $proposedValue
 	 * @param \DBObject $oHostObj
 	 *
+	 * @param bool $bIgnoreErrors
+	 *
 	 * @return mixed
-	 * @throws \Exception
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
-	public function MakeRealValue($proposedValue, $oHostObj)
+	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$proposedValue = trim("$proposedValue");
-			$aValues = array();
-			foreach (explode(',', $proposedValue) as $sCode)
-			{
-				$sValue = trim($sCode);
-				$aValues[] = $sValue;
-			}
+			$aValues = $this->FromStringToArray($proposedValue);
 			$oSet->SetValues($aValues);
 		}
 		elseif ($proposedValue instanceof ormSet)
@@ -9700,17 +9745,23 @@ class AttributeClassAttCodeSet extends AttributeSet
 	 * @param $proposedValue
 	 * @param \DBObject $oHostObj
 	 *
+	 * @param bool $bIgnoreErrors
+	 *
 	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \OQLException
 	 * @throws \Exception
 	 */
-	public function MakeRealValue($proposedValue, $oHostObj)
+	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 		$this->SetTargetClass($oHostObj);
 		$aAllowedAttributes = $this->GetAllowedValues();
+		$aInvalidAttCodes = array();
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
-			$proposedValue = trim("$proposedValue");
+			$proposedValue = trim($proposedValue);
 			$aValues = array();
 			foreach(explode(',', $proposedValue) as $sValue)
 			{
@@ -9721,7 +9772,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 				}
 				else
 				{
-					throw new CoreUnexpectedValue("The attribute {$sAttCode} does not exist in class {$this->sTargetClass}");
+					$aInvalidAttCodes[] = $sAttCode;
 				}
 			}
 			$oSet->SetValues($aValues);
@@ -9729,6 +9780,10 @@ class AttributeClassAttCodeSet extends AttributeSet
 		elseif ($proposedValue instanceof ormSet)
 		{
 			$oSet = $proposedValue;
+		}
+		if (!empty($aInvalidAttCodes) && !$bIgnoreErrors)
+		{
+			throw new CoreUnexpectedValue("The attribute(s) ".implode(', ', $aInvalidAttCodes)." are invalid for class {$this->sTargetClass}");
 		}
 
 		return $oSet;
@@ -9757,7 +9812,13 @@ class AttributeClassAttCodeSet extends AttributeSet
 				$aLocalizedValues = array();
 				foreach($value as $sAttCode)
 				{
-					$aLocalizedValues[] = MetaModel::GetLabel($this->sTargetClass, $sAttCode);
+					try
+					{
+						$aLocalizedValues[] = MetaModel::GetLabel($this->sTargetClass, $sAttCode);
+					} catch (Exception $e)
+					{
+						// Ignore bad values
+					}
 				}
 				$value = $aLocalizedValues;
 			}

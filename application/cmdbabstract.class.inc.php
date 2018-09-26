@@ -2057,11 +2057,11 @@ EOF
 
 					$oPage->add_dict_entry('Core:AttributeTagSet:placeholder');
 
-					/** @var \ormSet $value */
 					if (isset($aArgs['this']))
 					{
 						$oAttDef->SetTargetClass($aArgs['this']);
 					}
+					/** @var \ormSet $value */
 					$sJson = $oAttDef->GetJsonForWidget($value);
 					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
 					$sHTMLValue = "<div class=\"field_input_zone field_input_tagset\"><input id='$sInputId' name='$sInputId' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
@@ -3975,9 +3975,9 @@ EOF
 						{
 							$currValue = ' '; // Don't put an empty string, in case the field would be considered as mandatory...
 						}
-						elseif ($currValue instanceof ormTagSet)
+						elseif ($currValue instanceof ormSet)
 						{
-							$currValue = implode(' ', $currValue->GetValue());
+							$currValue = $oAttDef->GetEditValue($currValue, $oObj);
 						}
 						if (is_object($currValue))
 						{
@@ -4107,12 +4107,8 @@ EOF
 									{
 										continue;
 									}
-									$aTagCodes = array();
-									if (!empty($sValues))
-									{
-										$aTagCodes = explode(' ', $sValues);
-									}
-									$oTagSet->GenerateDiffFromTags($aTagCodes);
+									$aTagCodes = $oAttDef->FromStringToArray($sValues);
+									$oTagSet->GenerateDiffFromArray($aTagCodes);
 								}
 								$oDummyObj->Set($sAttCode, $oTagSet);
 							}

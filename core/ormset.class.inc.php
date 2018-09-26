@@ -24,36 +24,36 @@
  * Date: 24/08/2018
  * Time: 14:35
  */
-final class ormSet
+class ormSet
 {
-	private $sClass; // class of the field
-	private $sAttCode; // attcode of the field
-	private $aOriginalObjects = null;
+	protected $sClass; // class of the field
+	protected $sAttCode; // attcode of the field
+	protected $aOriginalObjects = null;
 
 	/**
 	 * Object from the original set, minus the removed objects
 	 */
-	private $aPreserved = array();
+	protected $aPreserved = array();
 
 	/**
 	 * New items
 	 */
-	private $aAdded = array();
+	protected $aAdded = array();
 
 	/**
 	 * Removed items
 	 */
-	private $aRemoved = array();
+	protected $aRemoved = array();
 
 	/**
 	 * Modified items (mass edit)
 	 */
-	private $aModified = array();
+	protected $aModified = array();
 
 	/**
 	 * @var int Max number of tags in collection
 	 */
-	private $iLimit;
+	protected $iLimit;
 
 	/**
 	 * __toString magical function overload.
@@ -231,8 +231,8 @@ final class ormSet
 
 	/**
 	 * Apply a delta to the current ItemSet
-	 *  $aDelta['added] = array of tag code for only the added tags
-	 *  $aDelta['removed'] = array of tag code for only the removed tags
+	 *  $aDelta['added] = array of added items
+	 *  $aDelta['removed'] = array of removed items
 	 *
 	 * @param $aDelta
 	 *
@@ -254,6 +254,9 @@ final class ormSet
 				$this->Add($oItem);
 			}
 		}
+
+		// Reset the object
+		$this->SetValues($this->GetValues());
 	}
 
 	/**
@@ -347,7 +350,7 @@ final class ormSet
 	 *
 	 * @throws \CoreException
 	 */
-	public function GenerateDiffFromItems($aItems)
+	public function GenerateDiffFromArray($aItems)
 	{
 		foreach($this->GetValues() as $oCurrentItem)
 		{
