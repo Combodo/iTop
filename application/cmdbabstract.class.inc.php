@@ -1677,6 +1677,13 @@ EOF
 		{
 			$iInputId = $oPage->GetUniqueId();
 		}
+		if (method_exists($oAttDef, 'SetTargetClass'))
+		{
+			if (isset($aArgs['this']))
+			{
+				$oAttDef->SetTargetClass($aArgs['this']);
+			}
+		}
 
 		$sHTMLValue = '';
 		if (!$oAttDef->IsExternalField())
@@ -2057,10 +2064,6 @@ EOF
 
 					$oPage->add_dict_entry('Core:AttributeTagSet:placeholder');
 
-					if (isset($aArgs['this']))
-					{
-						$oAttDef->SetTargetClass($aArgs['this']);
-					}
 					/** @var \ormSet $value */
 					$sJson = $oAttDef->GetJsonForWidget($value);
 					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
@@ -2073,7 +2076,7 @@ EOF
 				default:
 					$aEventsList[] = 'validate';
 					// #@# todo - add context information (depending on dimensions)
-					$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
+					$aAllowedValues = $oAttDef->GetAllowedValues($aArgs);
 					$iFieldSize = $oAttDef->GetMaxSize();
 					if ($aAllowedValues !== null)
 					{

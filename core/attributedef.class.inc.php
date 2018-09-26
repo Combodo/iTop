@@ -3103,7 +3103,7 @@ class AttributeString extends AttributeDBField
 }
 
 /**
- * An attibute that matches an object class
+ * An attribute that matches an object class
  *
  * @package     iTopORM
  */
@@ -3157,6 +3157,66 @@ class AttributeClass extends AttributeString
 	public function GetBasicFilterLooseOperator()
 	{
 		return '=';
+	}
+
+}
+
+
+/**
+ * An attribute that matches a class state
+ *
+ * @package     iTopORM
+ */
+class AttributeClassState extends AttributeString
+{
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
+
+	private $sTargetClass;
+
+	/**
+	 * @param \DBObject $oHostObj
+	 *
+	 * @throws \CoreException
+	 */
+	public function SetTargetClass($oHostObj)
+	{
+		if (!empty($oHostObj))
+		{
+			$sTargetClass = $this->Get('class_field');
+			$sClass = $oHostObj->Get($sTargetClass);
+			$this->sTargetClass = $sClass;
+		}
+	}
+
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		if (!empty($this->sTargetClass))
+		{
+			$aAllowedStates = array();
+			$aValues = MetaModel::EnumStates($this->sTargetClass);
+			foreach(array_keys($aValues) as $sState)
+			{
+				$aAllowedStates[$sState] = MetaModel::GetStateLabel($this->sTargetClass, $sState);
+			}
+			return $aAllowedStates;
+		}
+
+		return null;
+	}
+
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	{
+		if (empty($sValue))
+		{
+			return '';
+		}
+		$this->SetTargetClass($oHostObject);
+		if (!empty($this->sTargetClass))
+		{
+			return MetaModel::GetStateLabel($this->sTargetClass, $sValue);
+		}
+
+		return $sValue;
 	}
 
 }
