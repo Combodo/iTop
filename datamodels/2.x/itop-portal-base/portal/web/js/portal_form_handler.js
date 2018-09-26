@@ -175,7 +175,15 @@ $(function()
 													// Passing formmanager data to the next page, just in case it needs it (eg. when applying stimulus)
 													formmanager_class: me.options.formmanager_class,
 													formmanager_data: JSON.stringify(me.options.formmanager_data)
-												}
+												},
+                                                function(oData, sStatus, oXHR)
+                                                {
+                                                    if(sStatus === 'error')
+                                                    {
+                                                        // Hiding modal in case of error as the general AJAX error handler will display a message
+                                                        oModalElem.modal('hide');
+                                                    }
+                                                }
 											);
 											
 											oModalElem.modal('show');

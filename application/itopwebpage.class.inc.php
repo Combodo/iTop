@@ -73,7 +73,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
         $this->add_linked_stylesheet("../css/jquery.treeview.css");
         $this->add_linked_stylesheet("../css/jquery.autocomplete.css");
         $this->add_linked_stylesheet("../css/jquery-ui-timepicker-addon.css");
-        $this->add_linked_stylesheet("../css/fg.menu.css");
         $this->add_linked_stylesheet("../css/jquery.multiselect.css");
         $this->add_linked_stylesheet("../css/magnific-popup.css");
         $this->add_linked_stylesheet("../css/c3.min.css");
@@ -93,7 +92,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
         $this->add_linked_script("../js/ckeditor/adapters/jquery.js");
         $this->add_linked_script("../js/jquery.qtip-1.0.min.js");
         $this->add_linked_script('../js/property_field.js');
-        $this->add_linked_script('../js/fg.menu.js');
         $this->add_linked_script('../js/icon_select.js');
         $this->add_linked_script('../js/raphael-min.js');
         $this->add_linked_script('../js/d3.js');
@@ -361,7 +359,7 @@ EOF
 					return;
 				}
 				ui.panel.html('<div><img src="../images/indicator.gif"></div>');
-				ui.jqXHR.success(function() {
+				ui.jqXHR.done(function() {
 					ui.tab.data( "loaded", true );
 				});
 			}

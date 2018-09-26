@@ -358,14 +358,14 @@ function CheckAll(sSelector, bValue) {
  */
 function ToogleField(value, field_id) {
 	if (value) {
-		$('#'+field_id).removeAttr('disabled');
+		$('#'+field_id).prop('disabled', false);
 		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
-		$('#'+field_id+' :input').removeAttr('disabled');
+		$('#'+field_id+' :input').prop('disabled', false);
 	}
 	else {
-		$('#'+field_id).attr('disabled', 'disabled');
+		$('#'+field_id).prop('disabled', true);
 		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
-		$('#'+field_id+' :input').attr('disabled', 'disabled');
+		$('#'+field_id+' :input').prop('disabled', true);
 	}
 	$('#'+field_id).trigger('update');
 	$('#'+field_id).trigger('validate');
@@ -391,14 +391,14 @@ function ToggleDurationField(field_id) {
 	// Toggle all the subfields that compose the "duration" input
 	aSubFields = new Array('d', 'h', 'm', 's');
 
-	if ($('#'+field_id).attr('disabled')) {
+	if ($('#'+field_id).prop('disabled')) {
 		for (var i = 0; i < aSubFields.length; i++) {
-			$('#'+field_id+'_'+aSubFields[i]).attr('disabled', 'disabled');
+			$('#'+field_id+'_'+aSubFields[i]).prop('disabled', true);
 		}
 	}
 	else {
 		for (var i = 0; i < aSubFields.length; i++) {
-			$('#'+field_id+'_'+aSubFields[i]).removeAttr('disabled');
+			$('#'+field_id+'_'+aSubFields[i]).prop('disabled', false);
 		}
 	}
 }
@@ -409,7 +409,7 @@ function ToggleDurationField(field_id) {
 function PropagateCheckBox(bCurrValue, aFieldsList, bCheck) {
 	if (bCurrValue == bCheck) {
 		for (var i = 0; i < aFieldsList.length; i++) {
-			$('#enable_'+aFieldsList[i]).attr('checked', bCheck);
+			$('#enable_'+aFieldsList[i]).prop('checked', bCheck);
 			ToogleField(bCheck, aFieldsList[i]);
 		}
 	}
@@ -640,7 +640,7 @@ function ExportInitButton(sSelector) {
 					$(this).button('disable');
 				}
 				else {
-					$(this).attr('disabled', 'disabled');
+					$(this).prop('disabled', true);
 				}
 				$('#export-form').attr('data-state', 'cancelled');
 				break;

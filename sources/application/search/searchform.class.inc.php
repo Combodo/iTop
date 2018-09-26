@@ -271,11 +271,13 @@ class SearchForm
 		return $sHtml;
 	}
 
-	/**
-	 * @param DBObjectSet $oSet
-	 *
-	 * @return array
-	 */
+    /**
+     * @param \DBObjectSet $oSet
+     *
+     * @return array
+     *
+     * @throws \CoreException
+     */
 	public function GetFields($oSet)
 	{
 		$oSearch = $oSet->GetFilter();
@@ -403,11 +405,16 @@ class SearchForm
 		return (($oAttDef instanceof AttributeFriendlyName) || ($oAttDef instanceof AttributeSubItem));
 	}
 
-	/**
-	 * @param \AttributeDefinition $oAttrDef
-	 *
-	 * @return array
-	 */
+    /**
+     * @param \AttributeDefinition $oAttrDef
+     *
+     * @return array
+     *
+     * @throws \CoreException
+     * @throws \MissingQueryArgument
+     * @throws \MySQLException
+     * @throws \MySQLHasGoneAwayException
+     */
 	public static function GetFieldAllowedValues($oAttrDef)
 	{
 		$iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');
@@ -465,17 +472,17 @@ class SearchForm
 		return array('values' => $aAllowedValues);
 	}
 
-	/**
-	 * @param \DBObjectSearch $oSearch
-	 * @param array $aFields
-	 *
-	 * @param array $aArgs
-	 *
-	 * @param bool $bIsRemovable
-	 *
-	 * @return array
-	 * @throws \MissingQueryArgument
-	 */
+    /**
+     * @param \DBObjectSearch $oSearch
+     * @param array $aFields
+     * @param array $aArgs
+     * @param bool $bIsRemovable
+     *
+     * @return array
+     *
+     * @throws \CoreException
+     * @throws \MissingQueryArgument
+     */
 	public function GetCriterion($oSearch, $aFields, $aArgs = array(), $bIsRemovable = true)
 	{
 		$aOrCriterion = array();
@@ -588,16 +595,21 @@ class SearchForm
 		return $aFields;
 	}
 
-	/**
-	 * @param $sClass
-	 * @param $sClassAlias
-	 * @param $sAttCode
-	 * @param AttributeDefinition $oAttDef
-	 * @param $aFields
-	 * @param bool $bHasIndex
-	 *
-	 * @return mixed
-	 */
+    /**
+     * @param string $sClass
+     * @param string $sClassAlias
+     * @param string $sAttCode
+     * @param \AttributeDefinition $oAttDef
+     * @param array $aFields
+     * @param bool $bHasIndex
+     *
+     * @return mixed
+     *
+     * @throws \CoreException
+     * @throws \MissingQueryArgument
+     * @throws \MySQLException
+     * @throws \MySQLHasGoneAwayException
+     */
 	private function AppendField($sClass, $sClassAlias, $sAttCode, $oAttDef, $aFields, $bHasIndex = false)
 	{
 		if (!is_null($oAttDef) && ($oAttDef->GetSearchType() != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
@@ -675,12 +687,14 @@ class SearchForm
 		return $aFields;
 	}
 
-	/**
-	 * @param DBObjectSearch $oSearch
-	 * @param $aContextParams
-	 *
-	 * @return array
-	 */
+    /**
+     * @param \DBObjectSearch $oSearch
+     * @param array $aContextParams
+     *
+     * @return array
+     *
+     * @throws \CoreException
+     */
 	protected function GetDefaultCriterion($oSearch, &$aContextParams = array())
 	{
 		$aAndCriterion = array();

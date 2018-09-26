@@ -56,6 +56,8 @@
  *
  * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @link https://www.itophub.io/wiki/page?id=2_5_0%3Aadvancedtopics%3Arest_json REST service documentation
+ * @example https://www.itophub.io/wiki/page?id=2_5_0%3Aadvancedtopics%3Arest_json_playground
  */
 
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
@@ -172,6 +174,7 @@ try
 	}
 
 
+	/** @var iRestServiceProvider[] $aProviders */
 	$aProviders = array();
 	foreach(get_declared_classes() as $sPHPClass)
 	{
@@ -219,6 +222,7 @@ try
 		{
 			throw new Exception("Unknown verb '$sOperation' in version '$sVersion'", RestResult::UNKNOWN_OPERATION);
 		}
+		/** @var iRestServiceProvider $oRS */
 		$oRS = $aOpToRestService[$sOperation]['service_provider'];
 		$sProvider = get_class($oRS);
 	

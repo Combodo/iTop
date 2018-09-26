@@ -123,12 +123,12 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 		{
 			var sAttCode = this.m_oData.m_aAllowedValuesRequested[i];
 			var sFieldId = this.m_oData.m_oFieldsMap[sAttCode];
-			var bDisabled = $('#'+sFieldId).attr('disabled');
+			var bDisabled = $('#'+sFieldId).prop('disabled');
 			//console.log('Setting #field_'+sFieldId+' to: '+this.m_oData.m_oAllowedValues[sAttCode]);
 			$('#field_'+sFieldId).html(this.m_oData.m_oAllowedValues[sAttCode]);
 			if (bDisabled)
 			{
-				$('#'+sFieldId).attr('disabled', 'disabled');
+				$('#'+sFieldId).prop('disabled', true);
 				//$('#'+sFieldId).trigger('update'); // Propagate the disable
 			}
 			aRefreshed.push(sFieldId);

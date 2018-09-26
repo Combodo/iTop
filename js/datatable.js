@@ -221,13 +221,13 @@ $(function()
 				$('#datatable_dlg_'+sListId).find('input[name=scope]').each(function() {
 					if ($(this).attr('stay-disabled') != 'true')
 					{
-						$(this).removeAttr('disabled');
+						$(this).prop('disabled', false);
 					}
 				});
 			}
 			else
 			{
-				$('#datatable_dlg_'+sListId).find('input[name=scope]').attr('disabled', 'disabled');
+				$('#datatable_dlg_'+sListId).find('input[name=scope]').prop('disabled', true);
 			}
 		},
 		// events bound via _bind are removed automatically

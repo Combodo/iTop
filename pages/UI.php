@@ -1485,8 +1485,7 @@ EOF
 				'stimulus' => $sStimulus,
 				'origin' => 'console'
 			);
-			$oObj->PrefillForm('state_change', $aPrefillFormParam);
-			$oObj->DisplayStimulusForm($oP, $sStimulus);
+			$oObj->DisplayStimulusForm($oP, $sStimulus, $aPrefillFormParam);
 		}
 		else
 		{
@@ -1576,11 +1575,17 @@ EOF
 					if (!$bApplyStimulus)
 					{
 						$sMessage = Dict::S('UI:FailedToApplyStimuli');
-						$sSeverity = 'error';								
+						$sSeverity = 'error';
+
+						$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
+						if ($sOwnershipToken !== null)
+						{
+							// Release the concurrent lock, if any
+							iTopOwnershipLock::ReleaseLock(get_class($oObj), $oObj->GetKey(), $sOwnershipToken);
+						}
 					}
 					else if ($sIssues != '')
 					{
-						
 						$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
 						if ($sOwnershipToken !== null)
 						{

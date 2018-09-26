@@ -36,6 +36,8 @@ require_once __DIR__ . '/../src/providers/urlgeneratorserviceprovider.class.inc.
 require_once __DIR__ . '/../src/helpers/urlgeneratorhelper.class.inc.php';
 require_once __DIR__ . '/../src/providers/contextmanipulatorserviceprovider.class.inc.php';
 require_once __DIR__ . '/../src/helpers/contextmanipulatorhelper.class.inc.php';
+require_once __DIR__ . '/../src/providers/requestmanipulatorserviceprovider.class.inc.php';
+require_once __DIR__ . '/../src/helpers/requestmanipulatorhelper.class.inc.php';
 require_once __DIR__ . '/../src/providers/scopevalidatorserviceprovider.class.inc.php';
 require_once __DIR__ . '/../src/helpers/scopevalidatorhelper.class.inc.php';
 require_once __DIR__ . '/../src/providers/lifecyclevalidatorserviceprovider.class.inc.php';
@@ -98,6 +100,9 @@ $oApp->before(function(Symfony\Component\HttpFoundation\Request $oRequest, Silex
     {
         die(Dict::S('Portal:ErrorNoContactForThisUser'));
     }
+
+    // Register request manipulator now that the request has been created.
+    $oApp->register(new Combodo\iTop\Portal\Provider\RequestManipulatorServiceProvider());
 
 	// Enable archived data
 	utils::InitArchiveMode();

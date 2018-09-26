@@ -21,14 +21,11 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use utils;
 use Dict;
-use UserRights;
 use InlineImage;
 use DBObjectSet;
 use DBObjectSearch;
-use MetaModel;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
-use Combodo\iTop\Form\Field\LinkedSetField;
 
 /**
  * Description of BsFileUploadFieldRenderer
@@ -37,12 +34,14 @@ use Combodo\iTop\Form\Field\LinkedSetField;
  */
 class BsFileUploadFieldRenderer extends FieldRenderer
 {
-
-	/**
-	 * Returns a RenderingOutput for the FieldRenderer's Field
-	 *
-	 * @return \Combodo\iTop\Renderer\RenderingOutput
-	 */
+    /**
+     * Returns a RenderingOutput for the FieldRenderer's Field
+     *
+     * @return \Combodo\iTop\Renderer\RenderingOutput
+     *
+     * @throws \CoreException
+     * @throws \OQLException
+     */
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
@@ -229,10 +228,13 @@ EOF
 		return $oOutput;
 	}
 
-	/**
-	 * 
-	 * @param RenderingOutput $oOutput
-	 */
+    /**
+     *
+     * @param \Combodo\iTop\Renderer\RenderingOutput $oOutput
+     *
+     * @throws \CoreException
+     * @throws \OQLException
+     */
 	protected function PrepareExistingFiles(RenderingOutput &$oOutput)
 	{
 		$sObjectClass = get_class($this->oField->GetObject());

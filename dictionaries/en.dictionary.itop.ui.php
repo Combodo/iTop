@@ -751,7 +751,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Add %1$s objects linked with %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Add %1$s objects to link with the %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Manage %1$s objects linked with %2$s: %3$s',
-	'UI:AddLinkedObjectsOf_Class' => 'Add %1$ss...',
+	'UI:AddLinkedObjectsOf_Class' => 'Add %1$s objects...',
 	'UI:RemoveLinkedObjectsOf_Class' => 'Remove selected objects',
 	'UI:Message:EmptyList:UseAdd' => 'The list is empty, use the "Add..." button to add elements.',
 	'UI:Message:EmptyList:UseSearchForm' => 'Use the search form above to search for objects to be added.',
@@ -1515,6 +1515,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 Dict::Add('EN US', 'English', 'English', array(
 	'Expression:Operator:AND' => ' AND ',
 	'Expression:Operator:OR' => ' OR ',
+	'Expression:Operator:=' => ': ',
 
 	'Expression:Unit:Short:DAY' => 'd',
 	'Expression:Unit:Short:WEEK' => 'w',
@@ -1526,4 +1527,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Expression:Unit:Long:MINUTE' => 'minute(s)',
 
 	'Expression:Verb:NOW' => 'now',
+	'Expression:Verb:ISNULL' => ': undefined',
 ));

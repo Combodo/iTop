@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -136,11 +136,14 @@ class Form
 		return $aValues;
 	}
 
-	/**
-	 *
-	 * @param array $aValues Must be a hash array of "Field id" => "Field value"
-	 * @return \Combodo\iTop\Form\Form
-	 */
+    /**
+     *
+     * @param array $aValues Must be a hash array of "Field id" => "Field value"
+     *
+     * @return \Combodo\iTop\Form\Form
+     *
+     * @throws \Exception
+     */
 	public function SetCurrentValues($aValues)
 	{
 		foreach ($aValues as $sId => $value)
@@ -374,11 +377,13 @@ class Form
         return $aRes;
     }
 
-	/**
-	 * Returns the number of editable fields in this form.
-	 *
-	 * @return integer
-	 */
+    /**
+     * Returns the number of editable fields in this form.
+     *
+     * @param bool $bForce
+     *
+     * @return integer
+     */
 	public function GetEditableFieldCount($bForce = false)
 	{
 		// Count is usally done by the Finalize function but it can be done there if Finalize hasn't been called yet or if we choose to force it.
@@ -488,10 +493,12 @@ class Form
         return $this;
     }
 
-	/**
-	 * Finalizes each field, following the dependencies so that a field can compute its value or other properties,
-	 * depending on other fields
-	 */
+    /**
+     * Finalizes each field, following the dependencies so that a field can compute its value or other properties,
+     * depending on other fields
+     *
+     * @throws \Exception
+     */
     public function Finalize()
     {
 		$aFieldList = array(); // Fields ordered by dependence

@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -27,11 +27,30 @@ use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
 use Combodo\iTop\Portal\Helper\SecurityHelper;
 
+/**
+ * Class CreateBrickController
+ *
+ * @package Combodo\iTop\Portal\Controller
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
+ */
 class CreateBrickController extends BrickController
 {
 
-	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
+     * @param string $sBrickId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \DictExceptionMissingString
+     */
+    public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId)
 	{
+	    /** @var \Combodo\iTop\Portal\Brick\CreateBrick $oBrick */
 		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
         $sObjectClass = $oBrick->GetClass();
 

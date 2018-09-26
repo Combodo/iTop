@@ -84,7 +84,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
  	'Core:AttributeEncryptedString' => 'Cadena encriptada',
 	'Core:AttributeEncryptedString+' => 'Cadena encriptada con llave local',
-
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+	
 	'Core:AttributeText' => 'Texto',
 	'Core:AttributeText+' => 'Cadena de Múltiples Líneas de Caracteres',
 
@@ -838,7 +840,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:BulkExport:XLSXFormat' => 'Excel 2007 o posterior (*.xlsx)',
 	'Core:BulkExport:PDFFormat' => 'Documento PDF (*.pdf)',
 	'Core:BulkExport:DragAndDropHelp' => 'Arrastre y suelta los encabezados de columnas para ordenarlos. Vista preliminar de %1$s líneas. Número total de líneas a exportar: %2$s.',
-	'Core:BulkExport:EmptyPreview' => 'Seleccione las columnas a esportar de la lista de arriba',
+	'Core:BulkExport:EmptyPreview' => 'Seleccione las columnas a exportar de la lista de arriba',
 	'Core:BulkExport:ColumnsOrder' => 'Orden de Columnas',
 	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Columnas disponibles de %1$s',
 	'Core:BulkExport:NoFieldSelected' => 'Seleccione al menos una columna para ser exportada',
@@ -873,6 +875,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:BulkExportLegacyExport' => 'Click aqui para acdesar a la exportación tradicional.',
 	'Core:BulkExport:XLSXOptions' => 'Opciones Excel',
 	'Core:BulkExport:TextFormat' => 'Compos texto conteniendo algunas marcas HTML',
+	'Core:BulkExport:DateTimeFormat' => 'Formato de fecha y hora',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Formato por omisión (%1$s), ej. %2$s',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Formato personalizado: %1$s',
 	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12

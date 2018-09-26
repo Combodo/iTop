@@ -63,15 +63,20 @@ class ObjectFormManager extends FormManager
 	protected $aFormProperties;
 	protected $aCallbackUrls = array();
 
-	/**
-	 * Creates an instance of \Combodo\iTop\Portal\Form\ObjectFormManager from JSON data that must contain at least :
-	 * - formobject_class : The class of the object that is being edited/viewed
-	 * - formmode : view|edit|create
-	 * - values for parent
-	 *
-	 * @param string $sJson
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
-	 */
+    /**
+     * Creates an instance of \Combodo\iTop\Portal\Form\ObjectFormManager from JSON data that must contain at least :
+     * - formobject_class : The class of the object that is being edited/viewed
+     * - formmode : view|edit|create
+     * - values for parent
+     *
+     * @param string $sJson
+     *
+     * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+     *
+     * @throws \Exception
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     */
 	static function FromJSON($sJson)
 	{
 		if (is_array($sJson))
@@ -83,6 +88,7 @@ class ObjectFormManager extends FormManager
 			$aJson = json_decode($sJson, true);
 		}
 
+		/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 		$oFormManager = parent::FromJSON($sJson);
 
 		// Retrieving object to edit
@@ -277,7 +283,7 @@ class ObjectFormManager extends FormManager
 	 * - formmode
 	 * - values for parent
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function ToJSON()
 	{
@@ -292,7 +298,15 @@ class ObjectFormManager extends FormManager
 		return $aJson;
 	}
 
-	public function Build()
+    /**
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \OQLException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function Build()
 	{
 		$sObjectClass = get_class($this->oObject);
 
@@ -876,15 +890,19 @@ class ObjectFormManager extends FormManager
 		$this->oRenderer->SetForm($this->oForm);
 	}
 
-	/**
-	 * Calls all form fields OnCancel method in order to delegate them the cleanup;
-	 *
-	 * @param array $aArgs
-	 */
+    /**
+     * Calls all form fields OnCancel method in order to delegate them the cleanup;
+     *
+     * @param array $aArgs
+     *
+     * @throws \DeleteException
+     * @throws \OQLException
+     */
 	public function OnCancel($aArgs = null)
 	{
 		// Ask to each field to clean itself
-		foreach ($this->oForm->GetFields() as $oField)
+        /** @var \Combodo\iTop\Form\Field\Field $oField */
+        foreach ($this->oForm->GetFields() as $oField)
 		{
 			$oField->OnCancel();
 		}
@@ -897,20 +915,31 @@ class ObjectFormManager extends FormManager
 		$this->CancelAttachments();
 	}
 
-	/**
-	 * Validates the form and returns an array with the validation status and the messages.
-	 * If the form is valid, creates/updates the object.
-	 *
-	 * eg :
-	 *  array(
-	 * 	  'status' => true|false
-	 * 	  'messages' => array(
-	 * 		  'errors' => array()
-	 * 	)
-	 *
-	 * @param array $aArgs
-	 * @return array
-	 */
+    /**
+     * Validates the form and returns an array with the validation status and the messages.
+     * If the form is valid, creates/updates the object.
+     *
+     * eg :
+     *  array(
+     *      'status' => true|false
+     *      'messages' => array(
+     *          'errors' => array()
+     *    )
+     *
+     * @param array $aArgs
+     *
+     * @return array
+     *
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     * @throws \CoreUnexpectedValue
+     * @throws \MySQLException
+     * @throws \MySQLHasGoneAwayException
+     * @throws \OQLException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
 	public function OnSubmit($aArgs = null)
 	{
 		$aData = array(
@@ -1005,13 +1034,22 @@ class ObjectFormManager extends FormManager
 		return $aData;
 	}
 
-	/**
-	 * Updates the form and its fields with the current values
-	 *
-	 * Note : Doesn't update the object, see ObjectFormManager::OnSubmit() for that;
-	 *
-	 * @param array $aArgs
-	 */
+    /**
+     * Updates the form and its fields with the current values
+     *
+     * Note : Doesn't update the object, see ObjectFormManager::OnSubmit() for that;
+     *
+     * @param array $aArgs
+     *
+     * @throws \Exception
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     * @throws \CoreUnexpectedValue
+     * @throws \OQLException
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
 	public function OnUpdate($aArgs = null)
 	{
 		$aFormProperties = array();
@@ -1129,16 +1167,21 @@ class ObjectFormManager extends FormManager
 		$this->Build();
 	}
 
-	/**
-	 * This is a temporary function until the Attachment refactoring is done. It should be remove once it's done.
-	 * It is inspired from itop-attachments/main.attachments.php / UpdateAttachments()
-	 *
-	 * @param array $aAttachmentIds
-	 */
+    /**
+     * This is a temporary function until the Attachment refactoring is done. It should be remove once it's done.
+     * It is inspired from itop-attachments/main.attachments.php / UpdateAttachments()
+     *
+     * @param array $aAttachmentIds
+     *
+     * @throws \CoreException
+     * @throws \CoreUnexpectedValue
+     * @throws \DeleteException
+     * @throws \OQLException
+     */
 	protected function FinalizeAttachments($aAttachmentIds)
 	{
 		$aRemovedAttachmentsIds = (isset($aAttachmentIds['removed_attachments_ids'])) ? $aAttachmentIds['removed_attachments_ids'] : array();
-		$aActualAttachmentsIds = (isset($aAttachmentIds['actual_attachments_ids'])) ? $aAttachmentIds['actual_attachments_ids'] : array();
+		// Not used for now. //$aActualAttachmentsIds = (isset($aAttachmentIds['actual_attachments_ids'])) ? $aAttachmentIds['actual_attachments_ids'] : array();
 
 		// Removing attachments from currents
 		if (!empty($aRemovedAttachmentsIds))
@@ -1176,10 +1219,13 @@ class ObjectFormManager extends FormManager
 		}
 	}
 
-	/**
-	 * This is a temporary function until the Attachment refactoring is done. It should be remove once it's done.
-	 * It is inspired from itop-attachments/main.attachments.php / UpdateAttachments()
-	 */
+    /**
+     * This is a temporary function until the Attachment refactoring is done. It should be remove once it's done.
+     * It is inspired from itop-attachments/main.attachments.php / UpdateAttachments()
+     *
+     * @throws \OQLException
+     * @throws \DeleteException
+     */
 	protected function CancelAttachments()
 	{
 		// Processing temporary attachments

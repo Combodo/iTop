@@ -37,7 +37,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	{
 		// make sure that the form is clean
 		$('#linkedset_'+this.id+' .selection').each( function() { this.checked = false; });
-		$('#'+this.id+'_btnRemove').attr('disabled','disabled');
+		$('#'+this.id+'_btnRemove').prop('disabled', true);
 
 		$('#linkedset_'+me.id).on('remove', function() {
 			// prevent having the dlg div twice
@@ -82,7 +82,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			}
 		});
 		// Disable the button since all the selected items have been removed
-		$(my_id+'_btnRemove').attr('disabled','disabled');
+		$(my_id+'_btnRemove').prop('disabled', true);
 		// Re-run the zebra plugin to properly highlight the remaining lines & and take into account the removed ones
 		$('#linkedset_'+this.id+' .listResults').trigger('update').trigger("applyWidgets");
 		
@@ -98,11 +98,11 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		var nbChecked = $('#linkedset_'+me.id+' .selection:checked').length;
 		if (nbChecked > 0)
 		{
-			$('#'+me.id+'_btnRemove').removeAttr('disabled');
+			$('#'+me.id+'_btnRemove').prop('disabled', false);
 		}
 		else
 		{
-			$('#'+me.id+'_btnRemove').attr('disabled','disabled');
+			$('#'+me.id+'_btnRemove').prop('disabled', true);
 		}
 	};
 	
@@ -222,11 +222,11 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		var okBtn = $('#btn_ok_'+me.id);
 		if (iCount > 0)
 		{
-			okBtn.removeAttr('disabled');
+			okBtn.prop('disabled', false);
 		}
 		else
 		{
-			okBtn.attr('disabled', 'disabled');
+			okBtn.prop('disabled', true);
 		}
 	};
 	

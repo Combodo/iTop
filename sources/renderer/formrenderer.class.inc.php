@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,10 +19,9 @@
 
 namespace Combodo\iTop\Renderer;
 
-use \Exception;
-use \Dict;
-use \Combodo\iTop\Form\Form;
-use \Combodo\iTop\Form\Field\Field;
+use Exception;
+use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\Field\Field;
 
 /**
  * Description of FormRenderer
@@ -119,8 +118,10 @@ abstract class FormRenderer
 	/**
 	 *
 	 * @param \Combodo\iTop\Form\Field\Field $oField
-	 * @return string
-	 * @throws Exception
+	 *
+     * @return string
+     *
+	 * @throws \Exception
 	 */
 	public function GetFieldRendererClass(Field $oField)
 	{
@@ -134,12 +135,15 @@ abstract class FormRenderer
 		}
 	}
 
-	/**
-	 * Returns the field identified by the id $sId in $this->oForm.
-	 *
-	 * @param string $sId
-	 * @return \Combodo\iTop\Renderer\FieldRenderer
-	 */
+    /**
+     * Returns the field identified by the id $sId in $this->oForm.
+     *
+     * @param string $sId
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
 	public function GetFieldRendererClassFromId($sId)
 	{
 		return $this->GetFieldRendererClass($this->oForm->GetField($sId));
@@ -154,15 +158,17 @@ abstract class FormRenderer
 		return $this->aOutputs;
 	}
 
-	/**
-	 * Registers a Renderer class for the specified Field class.
-	 *
-	 * If the Field class is not fully qualified, the default "Combodo\iTop\Form\Field" will be prepend.
-	 * If the Field class already had a registered Renderer, it is replaced.
-	 *
-	 * @param string $sFieldClass
-	 * @param string $sRendererClass
-	 */
+    /**
+     * Registers a Renderer class for the specified Field class.
+     *
+     * If the Field class is not fully qualified, the default "Combodo\iTop\Form\Field" will be prepend.
+     * If the Field class already had a registered Renderer, it is replaced.
+     *
+     * @param string $sFieldClass
+     * @param string $sRendererClass
+     *
+     * @return \Combodo\iTop\Renderer\FormRenderer
+     */
 	public function AddSupportedField($sFieldClass, $sRendererClass)
 	{
 		$sFieldClass = (strpos($sFieldClass, '\\') !== false) ? $sFieldClass : 'Combodo\\iTop\\Form\\Field\\' . $sFieldClass;
@@ -183,17 +189,21 @@ abstract class FormRenderer
 		return $this;
 	}
 
-	/**
-	 * Returns an array of Output for the form fields.
-	 *
-	 * @param array $aFieldIds An array of field ids. If specified, renders only those fields
-	 * @return array
-	 */
+    /**
+     * Returns an array of Output for the form fields.
+     *
+     * @param array $aFieldIds An array of field ids. If specified, renders only those fields
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
 	public function Render($aFieldIds = null)
 	{
 		$this->InitOutputs();
 
-		foreach ($this->oForm->GetFields() as $oField)
+		/** @var Field $oField */
+        foreach ($this->oForm->GetFields() as $oField)
 		{
 			if ($aFieldIds !== null && !in_array($oField->GetId(), $aFieldIds))
 			{
@@ -205,16 +215,19 @@ abstract class FormRenderer
 		return $this->aOutputs;
 	}
 
-	/**
-	 * Returns the output for the $oField. Output format depends on the $sMode.
-	 *
-	 * If $sMode = 'exploded', output is an has array with id / html / js_inline / js_files / css_inline / css_files / validators
-	 * Else if $sMode = 'joined', output is a string with everything in it
-	 *
-	 * @param \Combodo\iTop\Form\Field\Field $oField
-	 * @param string $sMode 'exploded'|'joined'
-	 * @return mixed
-	 */
+    /**
+     * Returns the output for the $oField. Output format depends on the $sMode.
+     *
+     * If $sMode = 'exploded', output is an has array with id / html / js_inline / js_files / css_inline / css_files / validators
+     * Else if $sMode = 'joined', output is a string with everything in it
+     *
+     * @param \Combodo\iTop\Form\Field\Field $oField
+     * @param string $sMode 'exploded'|'joined'
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
 	protected function PrepareOutputForField($oField, $sMode = 'exploded')
 	{
 		$output = array(

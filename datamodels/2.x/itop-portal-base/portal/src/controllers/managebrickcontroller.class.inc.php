@@ -23,14 +23,14 @@ use Exception;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
-use AttributeDuration;
-use AttributeSubItem;
+use AttributeImage;
 use BinaryExpression;
 use CMDBSource;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\ManageBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\SecurityHelper;
+use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
@@ -43,38 +43,45 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use UnaryExpression;
 use URLButtonItem;
-use UserRights;
 use VariableExpression;
 
+/**
+ * Class ManageBrickController
+ *
+ * @package Combodo\iTop\Portal\Controller
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @author Pierre Goiffon <pierre.goiffon@combodo.com>
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @since 2.3.0
+ */
 class ManageBrickController extends BrickController
 {
 	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/popup-export-excel.html.twig';
 
-	/**
-	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
-	 * @param \Silex\Application $oApp
-	 * @param string $sBrickId
-	 * @param string $sDisplayMode
-	 * @param string $sGroupingTab
-	 * @param string $sDataLoading
-	 *
-	 * @return \Symfony\Component\HttpFoundation\Response
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
-	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDisplayMode = null, $sDataLoading = null)
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
+     * @param string $sBrickId
+     * @param string $sGroupingTab
+     * @param string $sDisplayMode
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \DictExceptionMissingString
+     * @throws \MySQLException
+     * @throws \OQLException
+     */
+	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDisplayMode = null)
     {
-		/** @var ManageBrick $oBrick */
+		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
 		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
 
 		if (is_null($sDisplayMode))
 		{
 			$sDisplayMode = $oBrick->GetDefaultDisplayMode();
 		}
-		$aDisplayParams = $oBrick->GetPresentationDataForTileMode($sDisplayMode);
 		$aData = $this->GetData($oRequest, $oApp, $sBrickId, $sGroupingTab, $oBrick::AreDetailsNeededForDisplayMode($sDisplayMode));
 
 		$aExportFields = $oBrick->GetExportFields();
@@ -96,18 +103,20 @@ class ManageBrickController extends BrickController
 		return $oResponse;
 	}
 
-	/**
-	 * Method for the brick's tile on home page
-	 *
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sBrickId
-	 *
-	 * @return Response
-	 */
+    /**
+     * Method for the brick's tile on home page
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
+     * @param string $sBrickId
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Exception
+     */
 	public function TileAction(Request $oRequest, Application $oApp, $sBrickId)
 	{
-		/** @var ManageBrick $oBrick */
+		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
 		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
 
 		try
@@ -123,19 +132,20 @@ class ManageBrickController extends BrickController
 		return $oApp['twig']->render($oBrick->GetTileTemplatePath(), $aData);
 	}
 
-	/**
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sBrickId
-	 * @param string $sGroupingTab
-	 * @param string $sGroupingArea
-	 *
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 * @throws \Exception
-	 */
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
+     * @param string $sBrickId
+     * @param string $sGroupingTab
+     * @param string $sGroupingArea
+     *
+     * @return \Symfony\Component\HttpFoundation\Request
+     *
+     * @throws \Exception
+     * @throws \DictExceptionMissingString
+     * @throws \MySQLException
+     * @throws \OQLException
+     */
 	public function ExcelExportStartAction(
 		Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sGroupingArea
 	) {
@@ -154,13 +164,11 @@ class ManageBrickController extends BrickController
 		}
 		else
 		{
-			$oQuery = DBSearch::FromOQL($oBrick->GetOql());
-			$sClass = $oQuery->GetClass();
 			/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
 			$oScopeHelper = $oApp['scope_validator'];
 			$oScopeHelper->AddScopeToQuery($oQuery, $sClass);
 			$aData = array();
-			$this->ManageSearchValue($oRequest, $aData, $oQuery, $sClass);
+			$this->ManageSearchValue($oApp, $aData, $oQuery, $sClass);
 
 			// Grouping tab
 			if ($oBrick->HasGroupingTabs())
@@ -228,25 +236,24 @@ class ManageBrickController extends BrickController
 		return $oApp['twig']->render(static::EXCEL_EXPORT_TEMPLATE_PATH, $aData);
 	}
 
-
-	/**
-	 * @param Request $oRequest
-	 * @param Application $oApp
-	 * @param string $sBrickId
-	 * @param string $sGroupingTab
-	 * @param bool $bNeedDetails
-	 *
-	 * @return array
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 * @throws \Exception
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
+     * @param string $sBrickId
+     * @param string $sGroupingTab
+     * @param bool $bNeedDetails
+     *
+     * @return array
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \DictExceptionMissingString
+     * @throws \MySQLException
+     * @throws \OQLException
+     */
 	public function GetData(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $bNeedDetails = false)
 	{
-		/** @var ManageBrick $oBrick */
+		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
 		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
 
 		$aData = array();
@@ -256,11 +263,11 @@ class ManageBrickController extends BrickController
 		$bHasScope = true;
 
 		// Getting current dataloading mode (First from router parameter, then query parameter, then default brick value)
-		$sDataLoading = ($oRequest->get('sDataLoading') !== null) ? $oRequest->get('sDataLoading') : $oBrick->GetDataLoading();
+		$sDataLoading = $oApp['request_manipulator']->ReadParam('sDataLoading', $oBrick->GetDataLoading());
 
 		// - Retrieving the grouping areas to display
-		$sGroupingArea = $oRequest->get('sGroupingArea');
-		if (!is_null($sGroupingArea))
+		$sGroupingArea = $oApp['request_manipulator']->ReadParam('sGroupingArea', '');
+		if (!empty($sGroupingArea))
 		{
 			$bNeedDetails = true;
 		}
@@ -340,7 +347,7 @@ class ManageBrickController extends BrickController
 		}
 
 		// - Retrieving the current grouping tab to display if necessary and altering the query to do so
-		if ($sGroupingTab === null)
+		if (empty($sGroupingTab))
 		{
 			if ($oBrick->HasGroupingTabs())
 			{
@@ -361,7 +368,7 @@ class ManageBrickController extends BrickController
 		}
 
         // - Adding search clause if necessary
-        $this->ManageSearchValue($oRequest, $aData, $oQuery, $sClass, $aColumnsAttrs);
+        $this->ManageSearchValue($oApp, $aData, $oQuery, $sClass, $aColumnsAttrs);
 
 		// Preparing areas
 		// - We need to retrieve distinct values for the grouping attribute
@@ -411,7 +418,7 @@ class ManageBrickController extends BrickController
 			}
 
 			//   - If specified or lazy loading, we truncate the $aGroupingAreasValues to keep only this one
-			if ($sGroupingArea !== null)
+			if (!empty($sGroupingArea))
 			{
 				$aGroupingAreasValues = array($sGroupingArea => $aGroupingAreasValues[$sGroupingArea]);
 			}
@@ -467,8 +474,8 @@ class ManageBrickController extends BrickController
 					if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY)
 					{
 						// Retrieving parameters
-						$iPageNumber = (int)$oRequest->get('iPageNumber', 1);
-						$iListLength = (int)$oRequest->get('iListLength', ManageBrick::DEFAULT_LIST_LENGTH);
+						$iPageNumber = (int)$oApp['request_manipulator']->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
+						$iListLength = (int)$oApp['request_manipulator']->ReadParam('iListLength', ManageBrick::DEFAULT_LIST_LENGTH, FILTER_SANITIZE_NUMBER_INT);
 
 						// Getting total records number
 						$oCountSet = new DBObjectSet($oQuery);
@@ -577,7 +584,7 @@ class ManageBrickController extends BrickController
 						$oAttDef = MetaModel::GetAttributeDef($sCurrentClass, $sItemAttr);
 						if ($oAttDef->IsExternalKey())
 						{
-							$sValue = $oCurrentRow->Get($sItemAttr.'_friendlyname');
+							$sValue = $oCurrentRow->GetAsHTML($sItemAttr.'_friendlyname');
 
 							// Adding a view action on the external keys
 							if ($oCurrentRow->Get($sItemAttr) !== $oAttDef->GetNullValue())
@@ -595,13 +602,22 @@ class ManageBrickController extends BrickController
 								}
 							}
 						}
-						elseif ($oAttDef instanceof AttributeSubItem || $oAttDef instanceof AttributeDuration)
-						{
-							$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
-						}
+						elseif ($oAttDef instanceof AttributeImage)
+                        {
+                            $oOrmDoc = $oCurrentRow->Get($sItemAttr);
+                            if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
+                            {
+                                $sUrl = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($oCurrentRow), 'sObjectId' => $oCurrentRow->GetKey(), 'sObjectField' => $sItemAttr, 'cache' => 86400));
+                            }
+                            else
+                            {
+                                $sUrl = $oAttDef->Get('default_image');
+                            }
+                            $sValue = '<img src="' . $sUrl . '" />';
+                        }
 						else
 						{
-							$sValue = $oAttDef->GetValueLabel($oCurrentRow->Get($sItemAttr));
+                            $sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
 						}
 						unset($oAttDef);
 
@@ -614,7 +630,8 @@ class ManageBrickController extends BrickController
 
 					// ... Checking menu extensions
 					$aItemButtons = array();
-					foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
+					/** @var iPopupMenuExtension $oExtensionInstance */
+                    foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
 					{
 						foreach ($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJLISTITEM_ACTIONS, array(
 							'portal_id' => $oApp['combodo.portal.instance.id'],
@@ -736,20 +753,24 @@ class ManageBrickController extends BrickController
 		return $aData;
 	}
 
-	/**
-	 * @param Request $oRequest
-	 * @param array $aData
-	 * @param DBSearch $oQuery
-	 * @param string $sClass
-	 */
-	protected function ManageSearchValue(Request $oRequest, &$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs)
+    /**
+     * @param \Silex\Application $oApp
+     * @param array $aData
+     * @param \DBSearch $oQuery
+     * @param string $sClass
+     * @param array $aColumnsAttrs
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     */
+	protected function ManageSearchValue(Application $oApp, &$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs = array())
 	{
 		// Getting search value
-		$sSearchValue = $oRequest->get('sSearchValue', null);
+		$sSearchValue = $oApp['request_manipulator']->ReadParam('sSearchValue', '');
 
 		// - Adding search clause if necessary
 		// Note : This is a very naive search at the moment
-		if ($sSearchValue !== null)
+		if (!empty($sSearchValue))
 		{
 		    // Putting only valid attributes as one can define attributes of leaf classes in the brick definition (<fields>), but at this stage we are working on the abstract class.
             // Note: This won't fix everything as the search will not be looking in all fields.
@@ -794,28 +815,28 @@ class ManageBrickController extends BrickController
 		$aData['sSearchValue'] = $sSearchValue;
 	}
 
-	/**
-	 * Get the groups using a given attribute code.
-	 * If a limit is given, the remaining groups are aggregated (groupby result and search request).
-	 *
-	 * @param DBSearch $oQuery Initial query
-	 * @param string $sGroupingTabAttCode Attribute code to group by
-	 * @param Application $oApp
-	 * @param ManageBrick $oBrick
-	 *
-	 * @return array of results from the groupby request and the corrsponding search.
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
+    /**
+     * Get the groups using a given attribute code.
+     * If a limit is given, the remaining groups are aggregated (groupby result and search request).
+     *
+     * @param \DBSearch $oQuery Initial query
+     * @param string $sGroupingTabAttCode Attribute code to group by
+     * @param \Silex\Application $oApp
+     * @param \Combodo\iTop\Portal\Brick\ManageBrick $oBrick
+     *
+     * @return array of results from the groupby request and the corrsponding search.
+     *
+     * @throws \MySQLException
+     * @throws \OQLException
+     * @throws \Exception
+     */
 	protected function GroupByAttribute(
 		DBSearch $oQuery, $sGroupingTabAttCode, Application $oApp, ManageBrick $oBrick
 	) {
 		$aGroupingTabsValues = array();
 		$aDistinctResults = array();
 		$oDistinctQuery = DBSearch::FromOQL($oBrick->GetOql());
-		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
+		/** @var ScopeValidatorHelper $oScopeHelper */
 		$oScopeHelper = $oApp['scope_validator'];
 		$bHasScope = $oScopeHelper->AddScopeToQuery($oDistinctQuery, $oDistinctQuery->GetClass());
 		if ($bHasScope)
@@ -913,18 +934,20 @@ class ManageBrickController extends BrickController
 		return $aGroupingTabsValues;
 	}
 
-	/**
-	 * @param Application $oApp
-	 * @param ManageBrick $oBrick
-	 * @param string $sClass
-	 *
-	 * @return DBSearch
-	 * @throws \OQLException
-	 */
+    /**
+     * @param \Silex\Application $oApp
+     * @param \Combodo\iTop\Portal\Brick\ManageBrick $oBrick
+     * @param string $sClass
+     *
+     * @return \DBSearch
+     *
+     * @throws \CoreException
+     * @throws \OQLException
+     */
 	protected function GetScopedQuery(Application $oApp, ManageBrick $oBrick, $sClass)
 	{
 		$oQuery = DBSearch::FromOQL($oBrick->GetOql());
-		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
+		/** @var ScopeValidatorHelper $oScopeHelper */
 		$oScopeHelper = $oApp['scope_validator'];
 		$oScopeHelper->AddScopeToQuery($oQuery, $sClass);
 

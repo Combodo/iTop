@@ -238,6 +238,10 @@ footer{
 	-webkit-justify-content : center;
 	justify-content : center;
 }
+.text_decoration{
+	vertical-align: baseline;
+	margin-right: 8px;
+}
 
 /*********************/
 /* Global animations */
@@ -278,6 +282,9 @@ footer{
 /******************/
 /* Modal settings */
 /******************/
+#modal-for-alert{
+	z-index: 9999; /* Should always be on top to display errors messages */
+}
 .modal-content .content_loader{
 	margin: 7em 0em;
 	text-align: center;
@@ -1064,11 +1071,6 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	color: $brand-primary;
 	font-size: 0.9em;
 }
-.form_field .form_field_decoration,
-.form_field_control .form_field_decoration{
-	vertical-align: baseline;
-	margin-right: 8px;
-}
 /* ExternalKey */
 .selectobject .input-group-addon{
 	cursor: pointer;
@@ -1085,7 +1087,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 }
 .caselog_field_entry_header{
 	padding: 6px;
-	font-size: 1em;
+	font-size: 0.9em;
 	border-bottom: 1px solid $white;
 	background-color: #F2F2F2;
 }
@@ -1314,7 +1316,7 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	.form_buttons .form_btn_regular{
 		text-align: right;
 	}
-	.form_buttons .form_btn_regular btn{
+	.form_buttons .form_btn_regular .btn{
 		width: inherit;
 	}
 	/* Making regular button sticky */

@@ -43,17 +43,61 @@
 
 class SimpleCrypt
 {
+	public static function GetNewDefaultParams()
+	{
+		if(function_exists('sodium_crypto_secretbox_open') && function_exists('random_bytes')){
+			$sEngineName = 'Sodium';
+		}
+		else if (function_exists('openssl_decrypt'))
+		{
+			$sEngineName = 'OpenSSL';
+		}
+		else if(function_exists('mcrypt_module_open')){
+			$sEngineName = 'Mcrypt';
+		}
+		else
+		{
+			$sEngineName = 'Simple';
+		}
+		$sEngineName = 'SimpleCrypt' . $sEngineName . 'Engine';
+		return $sEngineName::GetNewDefaultParams();
+	}
     /**
      * Constructor
-     * @param string $sEngineName Engine for encryption. Values: Simple, Mcrypt
+     * @param string $sEngineName Engine for encryption. Values: Simple, Mcrypt, Sodium or OpenSSL
+     * @throws Exception This library is unkown
      */       
     function __construct($sEngineName = 'Mcrypt')
     {
-    	if (($sEngineName == 'Mcrypt') && (!function_exists('mcrypt_module_open')))
-    	{
-    		// Defaults to Simple encryption if the mcrypt module is not present
-    		$sEngineName = 'Simple';
-    	}
+    	switch($sEngineName){
+		    case 'Sodium':
+		    	if(!function_exists('sodium_crypto_secretbox_open')){
+					    $sEngineName = 'Simple';
+			    }
+		    	break;
+		    case 'Mcrypt':
+			    if(!function_exists('mcrypt_module_open')){
+				    if (function_exists('openssl_decrypt'))
+				    {
+					    $sEngineName = 'OpenSSLMcryptCompatibility';
+				    }
+				    else
+				    {
+					    $sEngineName = 'Simple';
+				    }
+			    }
+			    break;
+		    case 'OpenSSL':
+			    if(!function_exists('openssl_decrypt')){
+				    $sEngineName = 'Simple';
+			    }
+			    break;
+		    case 'Simple':
+		    	break;
+		    default:
+		    	throw new Exception(Dict::Format("Core:AttributeEncryptUnknownLibrary", $sEngineName));
+	    }
+
         $sEngineName = 'SimpleCrypt' . $sEngineName . 'Engine';
         $this->oEngine = new $sEngineName;
     }
@@ -150,6 +194,7 @@ class SimpleCrypt
  */
 interface CryptEngine
 {
+	public static function GetNewDefaultParams();
 	function Encrypt($key, $sString);
 	function Decrypt($key, $encrypted_data);
 }
@@ -161,7 +206,12 @@ interface CryptEngine
  */
 class SimpleCryptSimpleEngine implements CryptEngine
 {
-    public function Encrypt($key, $sString)
+	public static function GetNewDefaultParams()
+	{
+		return array( 'lib' => 'Simple', 'key' => null);
+	}
+
+	public function Encrypt($key, $sString)
     {
         $result = '';
         for($i=1; $i<=strlen($sString); $i++)
@@ -197,7 +247,13 @@ class SimpleCryptMcryptEngine implements CryptEngine
 {
     var $alg = MCRYPT_BLOWFISH;
     var $td = null;
- 
+
+	public static function GetNewDefaultParams()
+	{
+		return array('lib' => 'Mcrypt', 'key' => null);
+	}
+
+
 	public function __construct()
 	{
 		$this->td = mcrypt_module_open($this->alg,'','cbc','');
@@ -205,7 +261,7 @@ class SimpleCryptMcryptEngine implements CryptEngine
 	
     public function Encrypt($key, $sString)
     {
-		$iv = mcrypt_create_iv (mcrypt_enc_get_iv_size($this->td), MCRYPT_RAND); // MCRYPT_RAND is the only choice on Windows prior to PHP 5.3     
+		$iv = mcrypt_create_iv (mcrypt_enc_get_iv_size($this->td), MCRYPT_RAND_URANDOM); // MCRYPT_RAND_URANDOM is now useable since itop requires php >= 5.6
 		mcrypt_generic_init($this->td, $key, $iv);
 		if (empty($sString))
 		{
@@ -223,7 +279,7 @@ class SimpleCryptMcryptEngine implements CryptEngine
 		$r = mcrypt_generic_init($this->td, $key, $iv);
 		if (($r < 0) || ($r === false))
 		{
-			$decrypted_data = '** decryption error **';
+			$decrypted_data = Dict::S("Core:AttributeEncryptFailedToDecrypt");
 		}
 		else
 		{
@@ -238,4 +294,121 @@ class SimpleCryptMcryptEngine implements CryptEngine
     	mcrypt_module_close($this->td);
     }
 }
-?>
+/**
+* SodiumEngine requires Sodium extension
+* Every encryption of the same string with the same key
+* will return a different encrypted string.
+ * The key has to be SODIUM_CRYPTO_SECRETBOX_KEYBYTES bytes long.
+ */
+class SimpleCryptSodiumEngine implements CryptEngine
+{
+	public static function GetNewDefaultParams()
+	{
+		return array('lib' => 'Sodium', 'key' => bin2hex(sodium_crypto_secretbox_keygen()));
+	}
+
+	public function Encrypt($key, $sString)
+	{
+		$key = hex2bin($key);
+		$nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+		$encrypted_string = sodium_crypto_secretbox($sString, $nonce, $key);
+		sodium_memzero($sString);
+		sodium_memzero($key);
+		return base64_encode($nonce.$encrypted_string);
+	}
+
+	public function Decrypt($key, $encrypted_data)
+	{
+		$key = hex2bin($key);
+		$encrypted_data = base64_decode($encrypted_data);
+		$nonce = mb_substr($encrypted_data, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
+		$encrypted_data = mb_substr($encrypted_data, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
+		$plaintext = sodium_crypto_secretbox_open($encrypted_data, $nonce, $key);
+		if ($plaintext === false)
+		{
+			$plaintext = Dict::S("Core:AttributeEncryptFailedToDecrypt");
+		}
+		sodium_memzero($encrypted_data);
+		sodium_memzero($key);
+		return $plaintext;
+	}
+
+}
+class SimpleCryptOpenSSLEngine implements CryptEngine
+{
+	public static function GetNewDefaultParams()
+	{
+		return array('lib' => 'OpenSSL', 'key' => bin2hex(openssl_random_pseudo_bytes(32)));
+	}
+
+	public function Encrypt($key, $sString)
+	{
+		$key = hex2bin($key);
+		$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length("AES-256-CBC"));
+		$encrypted_string = openssl_encrypt($sString, "AES-256-CBC", $key, 0 , $iv);
+		return $iv.$encrypted_string;
+	}
+
+	public function Decrypt($key, $encrypted_data)
+	{
+		$key = hex2bin($key);
+		$iv = mb_substr($encrypted_data, 0, openssl_cipher_iv_length("AES-256-CBC"), '8bit');
+		$encrypted_data = mb_substr($encrypted_data, openssl_cipher_iv_length("AES-256-CBC"), null, '8bit');
+		$plaintext = openssl_decrypt($encrypted_data,"AES-256-CBC", $key, 0 , $iv);
+		if ($plaintext === false)
+		{
+			$plaintext = Dict::S("Core:AttributeEncryptFailedToDecrypt");
+		}
+		return trim($plaintext);
+	}
+
+}
+
+class SimpleCryptOpenSSLMcryptCompatibilityEngine implements CryptEngine
+{
+	public static function GetNewDefaultParams()
+	{
+		return array('lib' => 'OpenSSLMcryptCompatibility', 'key' => null);
+	}
+	//fix for php < 7.1.8 (keys are Zero padded instead of cycle padded)
+	static private function MakeOpenSSLBlowfishKey($key)
+	{
+		if("$key" === '')
+		{
+			return $key;
+		}
+		$len = (16+2)*4;
+		while(strlen($key) < $len)
+		{
+			$key .= $key;
+		}
+		$key = substr($key, 0, $len);
+		return $key;
+	}
+	public function Encrypt($key, $sString)
+	{
+		$key = SimpleCryptOpenSSLMcryptCompatibilityEngine::MakeOpenSSLBlowfishKey($key);
+		$blockSize = 8;
+		$len = strlen($sString);
+		$paddingLen = intval (($len + $blockSize -1) / $blockSize) * $blockSize - $len;
+		$padding = str_repeat("\0", $paddingLen);
+		$sData = $sString . $padding;
+		$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length("BF-CBC"));
+		$encrypted_string = openssl_encrypt($sData, "BF-CBC", $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $iv);
+		return $iv.$encrypted_string;
+	}
+
+	public function Decrypt($key, $encrypted_data)
+	{
+		$key = SimpleCryptOpenSSLMcryptCompatibilityEngine::MakeOpenSSLBlowfishKey($key);
+		$iv = mb_substr($encrypted_data, 0, openssl_cipher_iv_length("BF-CBC"), '8bit');
+		$encrypted_data = mb_substr($encrypted_data, openssl_cipher_iv_length("BF-CBC"), null, '8bit');
+		$plaintext = openssl_decrypt($encrypted_data,"BF-CBC", $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $iv);
+		if ($plaintext === false)
+		{
+			$plaintext = Dict::S("Core:AttributeEncryptFailedToDecrypt");
+		}
+		return trim($plaintext);
+	}
+
+}

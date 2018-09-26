@@ -97,11 +97,13 @@ class RenderingOutput
         return $this->aCssClasses;
     }
 
-	/**
-	 *
-	 * @param string $sHtml
-	 * @return \Combodo\iTop\Renderer\RenderingOutput
-	 */
+    /**
+     *
+     * @param string $sHtml
+     * @param bool $bEncodeHtmlEntities
+     *
+     * @return \Combodo\iTop\Renderer\RenderingOutput
+     */
 	public function AddHtml($sHtml, $bEncodeHtmlEntities = false)
 	{
 		$this->sHtml .= ($bEncodeHtmlEntities) ? htmlentities($sHtml, ENT_QUOTES, 'UTF-8') : $sHtml;

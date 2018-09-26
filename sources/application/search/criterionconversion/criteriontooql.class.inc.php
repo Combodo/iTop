@@ -197,13 +197,18 @@ class CriterionToOQL extends CriterionConversionAbstract
 		return "({$sRef} != '')";
 	}
 
-	/**
-	 * @param DBObjectSearch $oSearch
-	 * @param $sRef
-	 * @param $aCriteria
-	 *
-	 * @return mixed|string
-	 */
+    /**
+     * @param \DBObjectSearch $oSearch
+     * @param string $sRef
+     * @param array $aCriteria
+     *
+     * @return mixed|string
+     *
+     * @throws \CoreException
+     * @throws \MissingQueryArgument
+     * @throws \MySQLException
+     * @throws \MySQLHasGoneAwayException
+     */
 	protected static function InToOql($oSearch, $sRef, $aCriteria)
 	{
 		$sAttCode = $aCriteria['code'];

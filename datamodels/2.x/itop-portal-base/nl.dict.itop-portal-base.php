@@ -126,4 +126,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Create:Name' => 'Snel aanmaken',
 ));
-?>

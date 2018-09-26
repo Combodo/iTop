@@ -1564,7 +1564,7 @@ EOF
 				}
 				$sEnlargeTheSearch =
 					<<<EOF
-			$('.search-class-$sClassName button').attr('disabled', 'disabled');
+			$('.search-class-$sClassName button').prop('disabled', true);
 
 			$('.search-class-$sClassName h2').append('&nbsp;<img id="indicator" src="../images/indicator.gif">');
 			var oParams = {operation: 'full_text_search_enlarge', class: '$sClassName', text: '$sFullTextJS'};

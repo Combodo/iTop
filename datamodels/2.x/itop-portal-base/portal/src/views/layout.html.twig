@@ -79,8 +79,8 @@
 	{% endblock %}
 
 	{% block pPageScripts %}
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-1.12.4.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-migrate-1.4.1.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-3.3.1.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-migrate-3.0.1.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-ui-1.11.4.custom.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.magnific-popup.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.iframe-transport.js'|add_itop_version }}"></script>
@@ -388,10 +388,20 @@
 					sUrl += (sUrl.split('?')[1] ? '&':'?') + sParamName + '=' + sParamValue;
 					return sUrl;
 				};
+				// Test is sString is a valid JSON string
+				var IsJSONString = function(sString)
+				{
+					try {
+						JSON.parse(sString);
+					} catch (oException) {
+						return false;
+					}
+					return true;
+				};
 				var GetContentLoaderTemplate = function()
 				{
 					return '<div class="content_loader"><div class="icon glyphicon glyphicon-refresh"></div><div class="message">{{ 'Page:PleaseWait'|dict_s }}</div></div>';
-				}
+				};
 				var ShowLoginDialog = function()
 				{
                     var oModalElem = $('#modal-for-alert').clone();
@@ -459,6 +469,19 @@
                         else if(oXHR.status === 404)
                         {
                             ShowErrorDialog('{{ 'UI:ObjectDoesNotExist'|dict_s|escape('js') }}', '{{ 'Error:HTTP:404'|dict_s|escape('js') }}');
+                        }
+                        else if(oXHR.responseText !== undefined && IsJSONString(oXHR.responseText) === true)
+                        {
+                            var oData = JSON.parse(oXHR.responseText);
+                            // Catching AJAX exception with detailed error.
+                            if( (oData.error_message !== undefined) && (oData.error_title !== undefined) )
+                            {
+                                ShowErrorDialog(oData.error_message, oData.error_title);
+                            }
+                            else
+                            {
+                                ShowErrorDialog();
+                            }
                         }
                         else
                         {

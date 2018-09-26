@@ -223,7 +223,14 @@ class ActionEmail extends ActionNotification
 		return implode(', ', $aRecipients);
 	}
 
-
+	/**
+	 * @param \Trigger $oTrigger
+	 * @param array $aContextArgs
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 */
 	public function DoExecute($oTrigger, $aContextArgs)
 	{
 		if (MetaModel::IsLogEnabledNotification())
@@ -292,6 +299,14 @@ class ActionEmail extends ActionNotification
 
 	}
 
+	/**
+	 * @param \Trigger $oTrigger
+	 * @param array $aContextArgs
+	 * @param \EventNotification $oLog
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
 	protected function _DoExecute($oTrigger, $aContextArgs, &$oLog)
 	{
 		$sPreviousUrlMaker = ApplicationContext::SetUrlMakerClass();
@@ -360,6 +375,7 @@ class ActionEmail extends ActionNotification
 			$sTestBody .= "</div>\n";
 			$oEmail->SetBody($sTestBody, 'text/html', $sStyles);
 			$oEmail->SetRecipientTO($this->Get('test_recipient'));
+			$oEmail->SetRecipientFrom($sFrom);
 			$oEmail->SetReferences($sReference);
 			$oEmail->SetMessageId($sMessageId);
 		}

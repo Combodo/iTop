@@ -35,7 +35,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	this.Init = function()
 	{
 		// make sure that the form is clean
-		$('#'+this.id+'_btnRemove').prop('disabled','disabled');
+		$('#'+this.id+'_btnRemove').prop('disabled',true);
 		$('#'+this.id+'_linksToRemove').val('');
 	};
 	
@@ -142,11 +142,11 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		var okBtn = $('#btn_ok_'+me.id);
 		if ($('#count_'+me.id).val() > 0)
 		{
-			okBtn.removeAttr('disabled');
+			okBtn.prop('disabled', false);
 		}
 		else
 		{
-			okBtn.prop('disabled', 'disabled');
+			okBtn.prop('disabled', true);
 		}
 	};
 	
@@ -467,7 +467,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		}
 		else
 		{
-			$('#label_'+me.id).removeAttr('disabled');
+			$('#label_'+me.id).prop('disabled', false);
 			$('#label_'+me.id).css({'background': '#fff url(../images/ac-background.gif) no-repeat right'});
 			$('#mini_add_'+me.id).show();
 			$('#mini_tree_'+me.id).show();

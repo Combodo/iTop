@@ -70,6 +70,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
  	'Core:AttributeEncryptedString' => 'Шифр.значение',
 	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 
 	'Core:AttributeText' => 'Текст~~',
 	'Core:AttributeText+' => 'Multiline character string',

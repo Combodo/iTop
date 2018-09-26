@@ -243,9 +243,6 @@
               <attribute id="team_id">
                 <hidden/>
               </attribute>
-              <attribute id="team_id">
-                <hidden/>
-              </attribute>
               <attribute id="title">
                 <mandatory/>
               </attribute>

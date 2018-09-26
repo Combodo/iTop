@@ -337,6 +337,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:AttributePassword+' => '',
 	'Core:AttributeEncryptedString' => 'Encrypted string',
 	'Core:AttributeEncryptedString+' => '',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 	'Core:AttributeText' => 'Text',
 	'Core:AttributeText+' => '',
 	'Core:AttributeHTML' => 'HTML',

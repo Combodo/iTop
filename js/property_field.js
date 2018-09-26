@@ -143,7 +143,7 @@ $(function()
 				var oField = $('#'+this.options.field_id, this.element);
 				if (oField.attr('type') == 'checkbox')
 				{
-					return (oField.attr('checked') == 'checked');
+					return oField.prop('checked');
 				}
 				else
 				{
@@ -220,11 +220,11 @@ $(function()
 				{
 					if (this.value)
 					{
-						oField.attr('checked', true);					
+						oField.prop('checked', true);
 					}
 					else
 					{
-						oField.removeAttr('checked');										
+						oField.prop('checked', false);
 					}
 				}
 				else
@@ -664,7 +664,7 @@ function ReadFormParams(sFormId)
 			{
 				if (this.type == 'checkbox')
 				{
-					oMap[sName] = ($(this).attr('checked') == 'checked');
+					oMap[sName] = $(this).prop('checked');
 				}
 				else if (this.type == 'radio')
 				{
@@ -699,7 +699,7 @@ function SubmitForm(sFormId, onSubmitResult)
 				{
 					if (this.type == 'checkbox')
 					{
-						oMap[sName] = ($(this).attr('checked') == 'checked');
+						oMap[sName] = $(this).prop('checked');
 					}
 					else
 					{

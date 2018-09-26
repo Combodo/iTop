@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,12 +19,14 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
-
+/**
+ * Class BrickController
+ *
+ * @package Combodo\iTop\Portal\Controller
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
+ */
 abstract class BrickController extends AbstractController
 {
 
 }
-
-?>

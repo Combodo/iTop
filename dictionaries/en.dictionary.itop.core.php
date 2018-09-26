@@ -84,6 +84,8 @@ Dict::Add('EN US', 'English', 'English', array(
 
  	'Core:AttributeEncryptedString' => 'Encrypted string',
 	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **',
 
 	'Core:AttributeText' => 'Text',
 	'Core:AttributeText+' => 'Multiline character string',
@@ -177,6 +179,9 @@ Operators:<br/>
 
 	'Core:FriendlyName-Label' => 'Full name',
 	'Core:FriendlyName-Description' => 'Full name',
+
+	'Core:AttributeTag' => 'Tags',
+	'Core:AttributeTag+' => 'Tags',
 ));
 
 
@@ -480,11 +485,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ActionEmail/Attribute:to+' => 'Destination of the email',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
 	'Class:ActionEmail/Attribute:cc+' => 'Carbon Copy',
-	'Class:ActionEmail/Attribute:bcc' => 'bcc',
+	'Class:ActionEmail/Attribute:bcc' => 'Bcc',
 	'Class:ActionEmail/Attribute:bcc+' => 'Blind Carbon Copy',
-	'Class:ActionEmail/Attribute:subject' => 'subject',
+	'Class:ActionEmail/Attribute:subject' => 'Subject',
 	'Class:ActionEmail/Attribute:subject+' => 'Title of the email',
-	'Class:ActionEmail/Attribute:body' => 'body',
+	'Class:ActionEmail/Attribute:body' => 'Body',
 	'Class:ActionEmail/Attribute:body+' => 'Contents of the email',
 	'Class:ActionEmail/Attribute:importance' => 'importance',
 	'Class:ActionEmail/Attribute:importance+' => 'Importance flag',
@@ -571,6 +576,17 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:TriggerOnObjectCreate' => 'Trigger (on object creation)',
 	'Class:TriggerOnObjectCreate+' => 'Trigger on object creation of [a child class of] the given class',
+));
+
+//
+// Class: TriggerOnObjectUpdate
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)',
+	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target attributes',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //

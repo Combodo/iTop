@@ -44,19 +44,22 @@ class SecurityHelper
         UR_ACTION_MODIFY => array(),
     );
 
-	/**
-	 * Returns true if the current user is allowed to do the $sAction on an $sObjectClass object (with optionnal $sObjectId id)
+    /**
+     * Returns true if the current user is allowed to do the $sAction on an $sObjectClass object (with optionnal $sObjectId id)
      * Checks are:
      * - Has a scope query for the $sObjectClass / $sAction
      * - Optionally, if $sObjectId provided: Is object within scope for $sObjectClass / $sObjectId / $sAction
      * - Is allowed by datamodel for $sObjectClass / $sAction
-	 *
-	 * @param Silex\Application $oApp
-	 * @param string $sAction Must be in UR_ACTION_READ|UR_ACTION_MODIFY|UR_ACTION_CREATE
-	 * @param string $sObjectClass
-	 * @param string $sObjectId
-	 * @return boolean
-	 */
+     *
+     * @param \Silex\Application $oApp
+     * @param string $sAction Must be in UR_ACTION_READ|UR_ACTION_MODIFY|UR_ACTION_CREATE
+     * @param string $sObjectClass
+     * @param string $sObjectId
+     *
+     * @return boolean
+     *
+     * @throws \CoreException
+     */
 	public static function IsActionAllowed(Application $oApp, $sAction, $sObjectClass, $sObjectId = null)
 	{
 		$sDebugTracePrefix = __CLASS__ . ' / ' . __METHOD__ . ' : Returned false for action ' . $sAction . ' on ' . $sObjectClass . '::' . $sObjectId;
@@ -174,9 +177,12 @@ class SecurityHelper
     /**
      * Preloads scope objects cache with objects from $oQuery
      *
-     * @param Application $oApp
-     * @param DBSearch $oSet
+     * @param \Silex\Application $oApp
+     * @param \DBSearch $oSearch
      * @param array $aExtKeysToPreload
+     *
+     * @throws \Exception
+     * @throws \CoreException
      */
 	public static function PreloadForCache(Application $oApp, DBSearch $oSearch, $aExtKeysToPreload = null)
     {

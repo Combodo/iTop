@@ -19,7 +19,7 @@
 
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
-define('ITOP_VERSION', '2.5.0-beta');
+define('ITOP_VERSION', '2.6.0-dev');
 define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');
 
@@ -37,6 +37,7 @@ define('ACCESS_READONLY', 0);
 
 require_once('coreexception.class.inc.php');
 require_once('attributedef.class.inc.php'); // For the defines
+require_once('simplecrypt.class.inc.php');
 
 class ConfigException extends CoreException
 {
@@ -64,8 +65,8 @@ define('DEFAULT_FAST_RELOAD_INTERVAL', 1 * 60);
 define('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
 define('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|basic|external');
 define('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
-define('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random value, later...
-
+define('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random generated key later (if possible)
+define('DEFAULT_ENCRYPTION_LIB', 'Mcrypt'); // We'll define the best encryption available later
 /**
  * Config
  * configuration data (this class cannot not be localized, because it is responsible for loading the dictionaries)
@@ -1184,6 +1185,11 @@ class Config
 
 	}
 
+    /**
+     * @param string $sPropCode
+     *
+     * @return mixed
+     */
     public function Get($sPropCode)
     {
         return $this->m_aSettings[$sPropCode]['value'];
@@ -1247,12 +1253,28 @@ class Config
 	protected $m_sEncryptionKey;
 
 	/**
+	 * @var string Encryption key used for all attributes of type "encrypted string". Can be set to a random value
+	 *             unless you want to import a database from another iTop instance, in which case you must use
+	 *             the same encryption key in order to properly decode the encrypted fields
+	 */
+	protected $m_sEncryptionLibrary;
+
+	/**
 	 * @var array Additional character sets to be supported by the interactive CSV import
 	 *            'iconv_code' => 'display name'
 	 */
 	protected $m_aCharsets;
 
-	public function __construct($sConfigFile = null, $bLoadConfig = true)
+    /**
+     * Config constructor.
+     *
+     * @param string|null $sConfigFile
+     * @param bool $bLoadConfig
+     *
+     * @throws \ConfigException
+     * @throws \CoreException
+     */
+    public function __construct($sConfigFile = null, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
 		if (is_null($sConfigFile))
@@ -1282,9 +1304,13 @@ class Config
 		$this->m_sDefaultLanguage = 'EN US';
 		$this->m_sAllowedLoginTypes = DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
-		$this->m_sEncryptionKey = DEFAULT_ENCRYPTION_KEY;
 		$this->m_aCharsets = array();
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
+
+		//define default encryption params according to php install
+		$aEncryptParams = SimpleCrypt::GetNewDefaultParams();
+		$this->m_sEncryptionLibrary = isset($aEncryptParams['lib']) ? $aEncryptParams['lib'] : DEFAULT_ENCRYPTION_LIB;
+		$this->m_sEncryptionKey= isset($aEncryptParams['key']) ? $aEncryptParams['key'] : DEFAULT_ENCRYPTION_KEY;
 
 		$this->m_aModuleSettings = array();
 
@@ -1310,7 +1336,13 @@ class Config
 		 */
 	}
 
-	protected function CheckFile($sPurpose, $sFileName)
+    /**
+     * @param string $sPurpose
+     * @param string $sFileName
+     *
+     * @throws \ConfigException
+     */
+    protected function CheckFile($sPurpose, $sFileName)
 	{
 		if (!file_exists($sFileName))
 		{
@@ -1425,7 +1457,8 @@ class Config
 		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
 		$this->m_sAllowedLoginTypes = isset($MySettings['allowed_login_types']) ? trim($MySettings['allowed_login_types']) : DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = isset($MySettings['ext_auth_variable']) ? trim($MySettings['ext_auth_variable']) : DEFAULT_EXT_AUTH_VARIABLE;
-		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : DEFAULT_ENCRYPTION_KEY;
+		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : $this->m_sEncryptionKey;
+		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
 		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : array();
 	}
 
@@ -1446,7 +1479,14 @@ class Config
 		return $this->GetModuleParameter($sModule, $sProperty, $defaultvalue);
 	}
 
-	public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
+    /**
+     * @param string $sModule
+     * @param string $sProperty
+     * @param mixed|null $defaultvalue
+     *
+     * @return mixed|null
+     */
+    public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
 	{
 		$ret = $defaultvalue;
 		if (class_exists('ModulesXMLParameters'))
@@ -1478,6 +1518,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6
 	 * @see Config::Get() as a replacement
 	 */
@@ -1488,6 +1529,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6
 	 * @see Config::Get() as a replacement
 	 */
@@ -1498,6 +1540,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6
 	 * @see Config::Get() as a replacement
 	 */
@@ -1508,6 +1551,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6 #1001 utf8mb4 switch
 	 * @see Config::DEFAULT_CHARACTER_SET
 	 */
@@ -1518,6 +1562,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6 #1001 utf8mb4 switch
 	 * @see Config::DEFAULT_COLLATION
 	 */
@@ -1528,6 +1573,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6
 	 * @see Config::Get() as a replacement
 	 */
@@ -1538,6 +1584,7 @@ class Config
 
 	/**
 	 * @return string
+	 *
 	 * @deprecated 2.5 will be removed in 2.6
 	 * @see Config::Get() as a replacement
 	 */
@@ -1609,6 +1656,11 @@ class Config
 	public function GetEncryptionKey()
 	{
 		return $this->m_sEncryptionKey;
+	}
+
+	public function GetEncryptionLibrary()
+	{
+		return $this->m_sEncryptionLibrary;
 	}
 
 	public function GetAllowedLoginTypes()
@@ -1739,6 +1791,7 @@ class Config
 		$aSettings['allowed_login_types'] = $this->m_sAllowedLoginTypes;
 		$aSettings['ext_auth_variable'] = $this->m_sExtAuthVariable;
 		$aSettings['encryption_key'] = $this->m_sEncryptionKey;
+		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
 
 		foreach ($this->m_aModuleSettings as $sModule => $aProperties)
@@ -1756,14 +1809,16 @@ class Config
 		return $aSettings;
 	}
 
-	/**
-	 * Write the configuration to a file (php format) that can be reloaded later
-	 * By default write to the same file that was specified when constructing the object
+    /**
+     * Write the configuration to a file (php format) that can be reloaded later
+     * By default write to the same file that was specified when constructing the object
+     *
+     * @param string $sFileName string Name of the file to write to (emtpy to write to the same file)
+     *
+     * @return boolean True otherwise throws an Exception
 	 *
-	 * @param $sFileName string Name of the file to write to (emtpy to write to the same file)
-	 *
-	 * @return boolean True otherwise throws an Exception
-	 */
+     * @throws \ConfigException
+     */
 	public function WriteToFile($sFileName = '')
 	{
 		if (empty($sFileName))
@@ -1825,6 +1880,7 @@ class Config
 				'allowed_login_types' => $this->m_sAllowedLoginTypes,
 				'ext_auth_variable' => $this->m_sExtAuthVariable,
 				'encryption_key' => $this->m_sEncryptionKey,
+				'encryption_library' => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
 			);
 			foreach ($aOtherValues as $sKey => $value)
@@ -1910,9 +1966,16 @@ class Config
 		}
 	}
 
-	/**
-	 * Helper function to initialize a configuration from the page arguments
-	 */
+    /**
+     * Helper function to initialize a configuration from the page arguments
+     *
+     * @param array $aParamValues
+     * @param string|null $sModulesDir
+     * @param bool $bPreserveModuleSettings
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     */
 	public function UpdateFromParams($aParamValues, $sModulesDir = null, $bPreserveModuleSettings = false)
 	{
 		if (isset($aParamValues['application_path']))
@@ -2042,9 +2105,13 @@ class Config
 		}
 	}
 
-	/**
-	 * Helper: for an array of string, change the prefix when found
-	 */
+    /**
+     * Helper: for an array of string, change the prefix when found
+     *
+     * @param array $aStrings
+     * @param string $sSearchPrefix
+     * @param string $sNewPrefix
+     */
 	protected static function ChangePrefix(&$aStrings, $sSearchPrefix, $sNewPrefix)
 	{
 		foreach ($aStrings as &$sFile)
@@ -2056,10 +2123,13 @@ class Config
 		}
 	}
 
-	/**
-	 * Obsolete: kept only for backward compatibility of the Toolkit
-	 * Quick and dirty way to clone a config file into another environment
-	 */
+    /**
+     * Obsolete: kept only for backward compatibility of the Toolkit
+     * Quick and dirty way to clone a config file into another environment
+     *
+     * @param string $sSourceEnv
+     * @param string $sTargetEnv
+     */
 	public function ChangeModulesPath($sSourceEnv, $sTargetEnv)
 	{
 		// Now does nothing since the includes are built into the environment itself
@@ -2096,5 +2166,3 @@ class Config
 	}
 
 }
-
-?>

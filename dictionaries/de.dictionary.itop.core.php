@@ -354,6 +354,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributePassword+' => 'Passwort eines externen Geräts',
 	'Core:AttributeEncryptedString' => 'verschlüsselter String',
 	'Core:AttributeEncryptedString+' => 'mit einem lokalen Schüssel verschlüsselter String',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 	'Core:AttributeText' => 'Text',
 	'Core:AttributeText+' => 'Mehrzeiliger String',
 	'Core:AttributeHTML' => 'HTML',

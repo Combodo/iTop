@@ -412,6 +412,11 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` JOIN Organization AS `Organization` ON `Contact`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = '1')",
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN')),
 			),
+			'key IN 2' => array(
+				'OQL' => "SELECT Contact WHERE org_id IN ('1', '999999')",
+				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` JOIN Organization AS `Organization` ON `Contact`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = '1')",
+				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN')),
+			),
 			'key empty' => array(
 				'OQL' => "SELECT Person WHERE location_id = '0'",
 				'ExpectedOQL' => "SELECT `Person` FROM Person AS `Person` WHERE (`Person`.`location_id` = '0')",
@@ -438,8 +443,8 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
 			),
 			'Hierarchical below 2' => array(
-				'OQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('2', '4')) OR (`Organization`.`parent_id` = '0')) AND 1)",
-				'ExpectedOQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('2', '4')) OR (`Organization`.`parent_id` = '0')) AND 1)",
+				'OQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('1', '2')) OR (`Organization`.`parent_id` = '0')) AND 1)",
+				'ExpectedOQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('1', '2')) OR (`Organization`.`parent_id` = '0')) AND 1)",
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
 			),
 			'IP range' => array(

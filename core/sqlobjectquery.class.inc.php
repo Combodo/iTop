@@ -95,7 +95,7 @@ class SQLObjectQuery extends SQLQuery
 			$aFieldDesc = array();
 			foreach ($this->m_aFields as $sAlias => $oExpression)
 			{
-				$aFieldDesc[] = $oExpression->Render()." as <em>$sAlias</em>";
+				$aFieldDesc[] = $oExpression->RenderExpression(false)." as <em>$sAlias</em>";
 			}
 			$sFields = " =&gt; ".implode(', ', $aFieldDesc);
 		}
@@ -112,7 +112,7 @@ class SQLObjectQuery extends SQLQuery
 				$oSQLQuery = $aJoinInfo["select"];
 				if (isset($aJoinInfo["on_expression"]))
 				{
-					$sOnCondition = $aJoinInfo["on_expression"]->Render();
+					$sOnCondition = $aJoinInfo["on_expression"]->RenderExpression(false);
 
 					echo "<li>Join '$sJoinType', ON ($sOnCondition)".$oSQLQuery->DisplayHtml()."</li>\n";
 				}
@@ -464,7 +464,7 @@ class SQLObjectQuery extends SQLQuery
 			case "left":
 				if (isset($aJoinData["on_expression"]))
 				{
-					$sJoinCond = $aJoinData["on_expression"]->Render();
+					$sJoinCond = $aJoinData["on_expression"]->RenderExpression(true);
 				}
 				else
 				{
@@ -531,13 +531,13 @@ class SQLObjectQuery extends SQLQuery
 		//
 		foreach($this->m_aFields as $sAlias => $oExpression)
 		{
-			$oRootQuery->__aFields["`$sAlias`"] = $oExpression->Render();
+			$oRootQuery->__aFields["`$sAlias`"] = $oExpression->RenderExpression(true);
 		}
 		if ($this->m_aGroupBy)
 		{
 			foreach($this->m_aGroupBy as $sAlias => $oExpression)
 			{
-				$oRootQuery->__aGroupBy["`$sAlias`"] = $oExpression->Render();
+				$oRootQuery->__aGroupBy["`$sAlias`"] = $oExpression->RenderExpression(true);
 			}
 		}
 		if ($this->m_bToDelete)
@@ -551,7 +551,7 @@ class SQLObjectQuery extends SQLQuery
 
   		if (!is_null($this->m_oSelectedIdField))
   		{
-  			$oRootQuery->__aSelectedIdFields[] = $this->m_oSelectedIdField->Render();
+		    $oRootQuery->__aSelectedIdFields[] = $this->m_oSelectedIdField->RenderExpression(true);
 		}
 
 		// loop on joins, to complete the list of tables/fields/conditions

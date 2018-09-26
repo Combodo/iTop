@@ -392,6 +392,18 @@ EOF
 		$this->aFieldsMap[$sAttCode] = $sInputId;
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		$aRedundancySettings = $this->FindVisibleRedundancySettings();
@@ -1869,7 +1881,7 @@ EOF
 					$sHTMLValue = UIExtKeyWidget::DisplayFromAttCode($oPage, $sAttCode, $sClass, $oAttDef->GetLabel(), $oAllowedValues, $value, $iId, $bMandatory, $sFieldName, $sFormPrefix, $aExtKeyParams);
 					$sHTMLValue .= "<!-- iFlags: $iFlags bMandatory: $bMandatory -->\n";
 					break;
-					
+
 				case 'RedundancySetting':
 					$sHTMLValue = '<table>';
 					$sHTMLValue .= '<tr>';
@@ -1931,6 +1943,18 @@ EOF
 					$oPage->add_ready_script("$('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });");
 					// validate is triggered by CheckFields, on all the input fields, once at page init and once before submitting the form
 					$oPage->add_ready_script("$('#{$iId}').bind('validate', function(evt, sFormId) { return ValidateCustomFields('$iId', sFormId) } );"); // Custom validation function
+					break;
+
+				case 'ObjectAttcodeSet':
+					$iFieldSize = $oAttDef->GetMaxSize();
+					if (is_array($sDisplayValue))
+					{
+						$sDisplayValue = implode(', ', $sDisplayValue);
+					}
+					$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><input title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$aEventsList[] ='validate';
+					$aEventsList[] ='keyup';
+					$aEventsList[] ='change';
 					break;
 
 				case 'String':
@@ -2380,7 +2404,7 @@ EOF
 		return $oObj->DisplayModifyForm( $oPage, $aExtraParams);
 	}
 	
-	public function DisplayStimulusForm(WebPage $oPage, $sStimulus)
+	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null)
 	{
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
@@ -2422,6 +2446,12 @@ EOF
         $oPage->add("<h1>$sActionDetails</h1>\n");
         $sTargetState = $aTransitions[$sStimulus]['target_state'];
         $aExpectedAttributes = $this->GetTransitionAttributes($sStimulus /*, current state*/);
+		if ($aPrefillFormParam != null)
+		{
+			$aPrefillFormParam['expected_attributes'] = $aExpectedAttributes;
+			$this->PrefillForm('state_change', $aPrefillFormParam);
+			$aExpectedAttributes = $aPrefillFormParam['expected_attributes'];
+		}
 		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
 		if ($sButtonsPosition == 'bottom')
 		{
@@ -4292,7 +4322,7 @@ EOF
 						$('.ui-layout-content').prepend('<div class="header_message message_error lock_owned">'+data.message+'</div>');
 						$('<div>'+data.popup_message+'</div>').dialog({title: $sJSTitle, modal: true, autoOpen: true, buttons:[ {text: $sJSOk, click: function() { $(this).dialog('close'); } }], close: function() { $(this).remove(); }});
 					}
-					$('.wizContainer form button.action:not(.cancel)').attr('disabled', 'disabled');
+					$('.wizContainer form button.action:not(.cancel)').prop('disabled', true);
 				}
 				else if ((data.operation == 'lost') || (data.operation == 'expired'))
 				{
@@ -4301,7 +4331,7 @@ EOF
 						$('.ui-layout-content').prepend('<div class="header_message message_error lock_owned">'+data.message+'</div>');
 						$('<div>'+data.popup_message+'</div>').dialog({title: $sJSTitle, modal: true, autoOpen: true, buttons:[ {text: $sJSOk, click: function() { $(this).dialog('close'); } }], close: function() { $(this).remove(); }});
 					}
-					$('.wizContainer form button.action:not(.cancel)').attr('disabled', 'disabled');
+					$('.wizContainer form button.action:not(.cancel)').prop('disabled', true);
 				}
 			}, 'json');
 		}, $iInterval);

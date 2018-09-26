@@ -358,7 +358,7 @@ EOF
 	{
 		return
 <<<EOF
-		if ($("#radio_install").attr("checked") == "checked")
+		if ($("#radio_install").prop("checked"))
 		{
 			ValidateField("db_name", false);
 			ValidateField("db_new_name", false);
@@ -722,7 +722,7 @@ class WizStepLicense extends WizardStep
 	 */
 	public function JSCanMoveForward()
 	{
-		return 'return ($("#accept").attr("checked") === "checked");';
+		return 'return ($("#accept").prop("checked"));';
 	}
 
 
@@ -794,11 +794,11 @@ class WizStepDBParams extends WizardStep
 		$sCreateDB = $this->oWizard->GetParameter('create_db', 'yes');
 		if ($sCreateDB == 'no')
 		{
-			$oPage->add_ready_script('$("#existing_db").attr("checked", "checked");');
+			$oPage->add_ready_script('$("#existing_db").prop("checked", true);');
 		}
 		else
 		{
-			$oPage->add_ready_script('$("#create_db").attr("checked", "checked");');
+			$oPage->add_ready_script('$("#create_db").prop("checked", true);');
 		}		
 	}
 	
@@ -1363,7 +1363,7 @@ class WizStepModulesChoice extends WizardStep
 function CheckChoice(sChoiceId)
 {
 	var oElement = $('#'+sChoiceId);
-	var bChecked = (oElement.attr('checked') == 'checked');
+	var bChecked = oElement.prop('checked');
 	var sId = sChoiceId.replace('choice', '');
 	if ((oElement.attr('type') == 'radio') && bChecked)
 	{
@@ -1394,13 +1394,13 @@ function CheckChoice(sChoiceId)
 				if ($(this).attr('data-disabled') != 'disabled')
 				{
 					// Only non-mandatory fields can be enabled
-					$(this).removeAttr('disabled');
+					$(this).prop('disabled', false);
 				}
 			}
 			else
 			{
-				$(this).attr('disabled', 'disabled');
-				$(this).removeAttr('checked');
+				$(this).prop('disabled', true);
+				$(this).prop('checked', false);
 			}
 		});
 	});
@@ -2240,7 +2240,7 @@ EOF
 	$("#btn_next").bind("click.install", function(event) {
 			$('#summary').hide();
 			$('#installation_progress').show();
-			$(this).attr("disabled", "disabled"); event.preventDefault(); ExecuteStep("");
+			$(this).prop('disabled', true);	 event.preventDefault(); ExecuteStep("");
 	});
 	$("#wiz_form").data("installation_status", "not started")
 EOF

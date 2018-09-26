@@ -101,7 +101,7 @@ class UIHTMLEditorWidget
 		$oPage->add_ready_script(
 				<<<EOF
 $('#$iId').bind('update', function(evt){
-	BlockField('cke_$iId', $('#$iId').attr('disabled'));
+	BlockField('cke_$iId', $('#$iId').prop('disabled'));
 	//Delayed execution - ckeditor must be properly initialized before setting readonly
 	var retryCount = 0;
 	var oMe = $('#$iId');

@@ -51,16 +51,17 @@ class ContextManipulatorHelper
 	/**
 	 * Initializes the ScopeValidator by generating and caching the scopes compilation in the $this->sCachePath.$this->sFilename file.
 	 *
-	 * @param DOMNodeList $oNodes
-	 * @throws DOMFormatException
-	 * @throws Exception
+	 * @param \DOMNodeList $oNodes
+     *
+     * @throws \Exception
+	 * @throws \DOMFormatException
 	 */
 	public function Init(DOMNodeList $oNodes)
 	{
 		$this->aRules = array();
 
 		// Iterating over the scope nodes
-		foreach ($oNodes as $oRuleNode)
+        foreach ($oNodes as $oRuleNode)
 		{
 			// Retrieving mandatory id attribute
 			$sRuleId = $oRuleNode->getAttribute('id');
@@ -195,12 +196,14 @@ class ContextManipulatorHelper
 		return $this->aRules;
 	}
 
-	/**
-	 * Return the rule identified by its ID, as a hash array
-	 *
-	 * @param string $sId
-	 * @return array
-	 */
+    /**
+     * Return the rule identified by its ID, as a hash array
+     *
+     * @param string $sId
+     *
+     * @return array
+     * @throws \Exception
+     */
 	public function GetRule($sId)
 	{
 		if (!array_key_exists($sId, $this->aRules))
@@ -210,26 +213,30 @@ class ContextManipulatorHelper
 		return $this->aRules[$sId];
 	}
 
-	/**
-	 * Prepare the $oObject passed as a reference with the $aData
-	 *
-	 * $aData must be of the form :
-	 * array(
-	 *   'rules' => array(
-	 *     'rule-id-1',
-	 *     'rule-id-2',
-	 *     ...
-	 *   ),
-	 *   'sources' => array(
-	 *     <DBObject1 class> => <DBObject1 id>,
-	 *     <DBObject2 class> => <DBObject2 id>,
-	 *     ...
-	 *   )
-	 * )
-	 *
-	 * @param array $aData
-	 * @param DBObject $oObject
-	 */
+    /**
+     * Prepare the $oObject passed as a reference with the $aData
+     *
+     * $aData must be of the form :
+     * array(
+     *   'rules' => array(
+     *     'rule-id-1',
+     *     'rule-id-2',
+     *     ...
+     *   ),
+     *   'sources' => array(
+     *     <DBObject1 class> => <DBObject1 id>,
+     *     <DBObject2 class> => <DBObject2 id>,
+     *     ...
+     *   )
+     * )
+     *
+     * @param array $aData
+     * @param \DBObject $oObject
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \OQLException
+     */
 	public function PrepareObject(array $aData, DBObject &$oObject)
 	{
 		if (isset($aData['rules']) && isset($aData['sources']))
@@ -237,7 +244,7 @@ class ContextManipulatorHelper
 			$aRules = $aData['rules'];
 			$aSources = $aData['sources'];
 
-			foreach ($aData['rules'] as $sId)
+			foreach ($aRules as $sId)
 			{
 				// Retrieveing current rule
 				$aRule = $this->GetRule($sId);
@@ -333,21 +340,24 @@ class ContextManipulatorHelper
 		}
 	}
 
-	/**
-	 * Returns a hash array of urls for each type of callback
-	 *
-	 * eg :
-	 * array(
-	 * 	 'submit' => 'http://localhost/',
-	 * 	 'cancel' => null
-	 * );
-	 *
-	 * @param \Silex\Application $oApp
-	 * @param array $aData
-	 * @param \DBObject $oObject
-	 * @param boolean $bModal
-	 * @return array
-	 */
+    /**
+     * Returns a hash array of urls for each type of callback
+     *
+     * eg :
+     * array(
+     *     'submit' => 'http://localhost/',
+     *     'cancel' => null
+     * );
+     *
+     * @param \Silex\Application $oApp
+     * @param array $aData
+     * @param \DBObject $oObject
+     * @param boolean $bModal
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
 	public function GetCallbackUrls(Application $oApp, array $aData, DBObject $oObject, $bModal = false)
 	{
 		$aResults = array(
@@ -429,8 +439,8 @@ class ContextManipulatorHelper
 	 *
 	 * To retrieve it has
 	 *
-	 * @param array $aRules
-	 * @param array $aObjects
+	 * @param array $aTokenRules
+     *
 	 * @return string
 	 */
 	public static function EncodeRulesToken($aTokenRules)
@@ -465,5 +475,3 @@ class ContextManipulatorHelper
 	}
 
 }
-
-?>

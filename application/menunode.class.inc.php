@@ -84,14 +84,10 @@ class ApplicationMenu
 		{
 			// Build menus from module handlers
 			//
-			foreach(get_declared_classes() as $sPHPClass)
-			{
-				if (is_subclass_of($sPHPClass, 'ModuleHandlerAPI'))
-				{
-					$aCallSpec = array($sPHPClass, 'OnMenuCreation');
-					call_user_func($aCallSpec);
-				}
-			}
+            foreach(MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass)
+            {
+                $oPHPClass::OnMenuCreation();
+            }
 
 			// Build menus from the menus themselves (e.g. the ShortcutContainerMenuNode will do that)
 			//

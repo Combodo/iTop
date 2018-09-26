@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,18 +21,30 @@ namespace Combodo\iTop\Portal\Controller;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Combodo\iTop\Portal\Brick\PortalBrick;
 
+/**
+ * Class DefaultController
+ *
+ * @package Combodo\iTop\Portal\Controller
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
+ */
 class DefaultController
 {
-
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $oRequest
+     * @param \Silex\Application $oApp
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
 	public function homeAction(Request $oRequest, Application $oApp)
 	{
 		$aData = array();
 
 		// Rendering tiles
 		$aData['aTilesRendering'] = array();
-		foreach($oApp['combodo.portal.instance.conf']['bricks'] as $oBrick)
+		/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oBrick */
+        foreach($oApp['combodo.portal.instance.conf']['bricks'] as $oBrick)
 		{
 			// Doing it only for tile visible on home page to avoid unnecessary rendering
 			if (($oBrick->GetVisibleHome() === true) && ($oBrick->GetTileControllerAction() !== null))
@@ -58,5 +70,3 @@ class DefaultController
 	}
 
 }
-
-?>

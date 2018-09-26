@@ -18,13 +18,17 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
-use Dict;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
 
 class BsSubFormFieldRenderer extends FieldRenderer
 {
+    /**
+     * @return \Combodo\iTop\Renderer\RenderingOutput
+     *
+     * @throws \Exception
+     */
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();

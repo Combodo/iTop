@@ -21,6 +21,7 @@ namespace Combodo\iTop\Portal\Helper;
 
 use ApplicationContext;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
+use Combodo\iTop\Portal\Brick\PortalBrick;
 use DBObjectSearch;
 use DBObjectSet;
 use Dict;
@@ -45,7 +46,7 @@ use utils;
  * Contains static methods to help loading / registering classes of the application.
  * Mostly used for Controllers / Routers / Entities initialization.
  *
- * @author Guillaume Lajarige
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
 class ApplicationHelper
 {
@@ -285,7 +286,7 @@ class ApplicationHelper
 		// Intercepting manually aborted request
 		if (1 || !$oApp['debug'])
 		{
-			$oApp->error(function (Exception $oException, Request $oRequest) use ($oApp) {
+			$oApp->error(function (Exception $oException /*, Request $oRequest*/) use ($oApp) {
 				$iErrorCode = ($oException instanceof HttpException) ? $oException->getStatusCode() : 500;
 
 				$aData = array(
@@ -592,7 +593,7 @@ class ApplicationHelper
 	 *
 	 * @param \Silex\Application $oApp
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public static function LoadCurrentUser(Application $oApp)
 	{
@@ -689,28 +690,21 @@ class ApplicationHelper
 	 * @param \Silex\Application $oApp
 	 * @param string $sBrickId
 	 *
-	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
-	 * @throws Exception
+	 * @return \Combodo\iTop\Portal\Brick\PortalBrick
+     *
+	 * @throws \Exception
 	 */
 	public static function GetLoadedBrickFromId(Application $oApp, $sBrickId)
 	{
-		$bFound = false;
-
 		foreach ($oApp['combodo.portal.instance.conf']['bricks'] as $oBrick)
 		{
 			if ($oBrick->GetId() === $sBrickId)
 			{
-				$bFound = true;
-				break;
+				return $oBrick;
 			}
 		}
 
-		if (!$bFound)
-		{
-			throw new Exception('Brick with id = "'.$sBrickId.'" was not found among loaded bricks.');
-		}
-
-		return $oBrick;
+		throw new Exception('Brick with id = "'.$sBrickId.'" was not found among loaded bricks.');
 	}
 
 	/**
@@ -724,6 +718,7 @@ class ApplicationHelper
 	 * @param string $sMode Form mode to find (view|edit|create)
 	 *
 	 * @return array
+     *
 	 * @throws \CoreException
 	 */
 	public static function GetLoadedFormFromClass(Application $oApp, $sClass, $sMode)
@@ -770,6 +765,7 @@ class ApplicationHelper
 	 * @param string $sList List name to find
 	 *
 	 * @return array Array of attribute codes
+     *
 	 * @throws \CoreException
 	 */
 	public static function GetLoadedListFromClass(Application $oApp, $sClass, $sList = 'default')
@@ -830,10 +826,11 @@ class ApplicationHelper
 	 * - 'bricks_total_width' => an integer used to create the home page grid
 	 *
 	 * @param \Silex\Application $oApp
-	 * @param ModuleDesign $oDesign
+	 * @param \ModuleDesign $oDesign
 	 *
 	 * @return array
-	 * @throws Exception
+     *
+	 * @throws \Exception
 	 */
 	protected static function LoadBricksConfiguration(Application $oApp, ModuleDesign $oDesign)
 	{
@@ -846,32 +843,16 @@ class ApplicationHelper
 
 		foreach ($oDesign->GetNodes('/module_design/bricks/brick') as $oBrickNode)
 		{
+            $sBrickClass = $oBrickNode->getAttribute('xsi:type');
 			try
 			{
-				$sBrickClass = $oBrickNode->getAttribute('xsi:type');
 				if (class_exists($sBrickClass))
 				{
+				    /** @var \Combodo\iTop\Portal\Brick\PortalBrick $oBrick */
 					$oBrick = new $sBrickClass();
 					$oBrick->LoadFromXml($oBrickNode);
 					static::LoadBrickSecurity($oBrick);
 
-					// GLA : This didn't work has the modal flag was set for all instances of that brick
-//					// Checking brick modal flag
-//					if ($oBrick->GetModal())
-//					{
-//						// We have to extract / replace the array as we can modify $oApp values directly
-//						$aRoutes = $oApp['combodo.portal.instance.routes'];
-//						// Init brick's array if necessary
-//						if (!isset($aRoutes[$oBrick->GetRouteName()]['navigation_menu_attr']))
-//						{
-//							$aRoutes[$oBrick->GetRouteName()]['navigation_menu_attr'] = array();
-//						}
-//						// Add modal datas for the brick
-//						$aRoutes[$oBrick->GetRouteName()]['navigation_menu_attr']['data-toggle'] = 'modal';
-//						$aRoutes[$oBrick->GetRouteName()]['navigation_menu_attr']['data-target'] = '#modal-for-all';
-//						// Finally, replace array in $oApp
-//						$oApp['combodo.portal.instance.routes'] = $aRoutes;
-//					}
 					// Checking brick security
 					if ($oBrick->GetActive() && $oBrick->IsGrantedForProfiles(UserRights::ListProfiles()))
 					{
@@ -906,12 +887,12 @@ class ApplicationHelper
 		$aPortalConf['bricks_ordering'] = array();
 		//   - Home
 		$aPortalConf['bricks_ordering']['home'] = $aPortalConf['bricks'];
-		usort($aPortalConf['bricks_ordering']['home'], function ($a, $b) {
+		usort($aPortalConf['bricks_ordering']['home'], function (PortalBrick $a, PortalBrick $b) {
 			return $a->GetRankHome() > $b->GetRankHome();
 		});
 		//    - Navigation menu
 		$aPortalConf['bricks_ordering']['navigation_menu'] = $aPortalConf['bricks'];
-		usort($aPortalConf['bricks_ordering']['navigation_menu'], function ($a, $b) {
+		usort($aPortalConf['bricks_ordering']['navigation_menu'], function (PortalBrick $a, PortalBrick $b) {
 			return $a->GetRankNavigationMenu() > $b->GetRankNavigationMenu();
 		});
 
@@ -930,12 +911,12 @@ class ApplicationHelper
 	 *  ...
 	 *
 	 * @param \Silex\Application $oApp
-	 * @param ModuleDesign $oDesign
+	 * @param \ModuleDesign $oDesign
 	 *
 	 * @return array
-	 * @throws Exception
-	 * @throws DOMFormatException
-	 */
+     *
+	 * @throws \Exception
+     */
 	protected static function LoadFormsConfiguration(Application $oApp, ModuleDesign $oDesign)
 	{
 		$aForms = array();
@@ -1301,8 +1282,20 @@ class ApplicationHelper
 		foreach (MetaModel::EnumPlugins('iPortalUIExtension') as $oExtensionInstance)
 		{
 			// Adding CSS files
-			$aUIExtensions['css_files'] = array_merge($aUIExtensions['css_files'],
-				$oExtensionInstance->GetCSSFiles($oApp));
+            $aImportPaths = array($oApp['combodo.portal.base.absolute_path'].'css/');
+            foreach($oExtensionInstance->GetCSSFiles($oApp) as $sCSSFile)
+            {
+                // Removing app root url as we need to pass a path on the file system (relative to app root)
+                $sCSSFilePath = str_replace(utils::GetAbsoluteUrlAppRoot(), '', $sCSSFile);
+                // Compiling SCSS file
+                $sCSSFileCompiled = $oApp['combodo.absolute_url'].utils::GetCSSFromSASS($sCSSFilePath,
+                    $aImportPaths);
+
+                if(!in_array($sCSSFileCompiled, $aUIExtensions['css_files']))
+                {
+                    $aUIExtensions['css_files'][] = $sCSSFileCompiled;
+                }
+            }
 
 			// Adding CSS inline
 			$sCSSInline = $oExtensionInstance->GetCSSInline($oApp);
@@ -1347,6 +1340,7 @@ class ApplicationHelper
      * Form will look like the "Properties" tab of a $sClass object in the console.
      *
      * @param string $sClass
+     * @param bool $bAddLinksets
      *
      * @return array
      */

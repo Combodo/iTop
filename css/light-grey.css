@@ -92,6 +92,22 @@ table.listResults td .view-image img {
   margin-left: auto;
   margin-right: auto;
 }
+table.listResults > tbody > tr.selected > * {
+  background-color: #f5c093;
+}
+table.listResults > tbody > tr > * {
+  transition: background-color 200ms ease-in-out;
+}
+table.listResults > tbody > tr:hover > * {
+  cursor: pointer;
+}
+table.listResults > tbody > tr.selected:hover > * {
+  /* hover on lines is currently done toggling td.hover, and having a rule for links */
+  background-color: #f1a564;
+}
+table.listResults > tbody > tr.selected:hover a {
+  background-color: transparent;
+}
 .edit-image .view-image {
   display: inline-block;
 }
@@ -2587,8 +2603,6 @@ span.search-button, span.refresh-button {
   margin-right: 5px;
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
-  filter: gray;
-  filter: url("data:image/svg+xml;utf8,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' height='0'><filter id='greyscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0' /></filter></svg>#greyscale");
   opacity: 0.5;
 }
 #itop-breadcrumb .breadcrumb-item a {
@@ -2840,4 +2854,14 @@ table.listResults .originColor {
 }
 #ds_flash {
   margin-bottom: 5px;
+}
+.menu-icon-select {
+  max-height: 300px;
+  position: absolute;
+  z-index: 201;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.menu-icon-select > .ui-menu-item {
+  padding: 0.3em 3%;
 }

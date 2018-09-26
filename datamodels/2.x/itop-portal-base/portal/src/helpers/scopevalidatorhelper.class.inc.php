@@ -333,115 +333,6 @@ class ScopeValidatorHelper
 				}
 			}
 
-			// Iterating over the scope nodes
-			/* foreach ($oNodes as $oScopeNode)
-			  {
-			  // Retrieving mandatory id attribute
-			  $sProfile = $oScopeNode->getAttribute('id');
-			  if ($sProfile === '')
-			  {
-			  throw new DOMFormatException('Scope tag must have an id attribute.', null, null, $oScopeNode);
-			  }
-
-			  // Scope profile id
-			  $iProfileId = $this->GetProfileIdFromProfileName($sProfile);
-			  // This will be used to know which classes have been set, so we can set the missing ones.
-			  $aProfileClasses = array();
-
-			  // Iterating over the class nodes of the scope
-			  foreach ($oScopeNode->GetUniqueElement('classes')->GetNodes('./class') as $oClassNode)
-			  {
-			  // Retrieving mandatory id attribute
-			  $sClass = $oClassNode->getAttribute('id');
-			  if ($sClass === '')
-			  {
-			  throw new DOMFormatException('Class tag must have an id attribute.', null, null, $oClassNode);
-			  }
-
-			  // Retrieving the type of query
-			  $oOqlViewTypeNode = $oClassNode->GetOptionalElement('oql_view_type');
-			  $sOqlViewType = ($oOqlViewTypeNode !== null && ($oOqlViewTypeNode->GetText() === static::ENUM_TYPE_RESTRICT)) ? static::ENUM_TYPE_RESTRICT : static::ENUM_TYPE_ALLOW;
-			  // Retrieving the view query
-			  $oOqlViewNode = $oClassNode->GetUniqueElement('oql_view');
-			  $sOqlView = $oOqlViewNode->GetText();
-			  if ($sOqlView === null)
-			  {
-			  throw new DOMFormatException('Class tag in scope must have a not empty oql_view tag', null, null, $oClassNode);
-			  }
-			  // Retrieving the edit query
-			  $oOqlEditNode = $oClassNode->GetOptionalElement('oql_edit');
-			  $sOqlEdit = ( ($oOqlEditNode !== null) && ($oOqlEditNode->GetText() !== null) ) ? $oOqlEditNode->GetText() : null;
-
-			  // Now that we have the queries infos, we are going to build the queries for that profile / class
-			  $sMatrixPrefix = $iProfileId . '_' . $sClass . '_';
-			  // - View query
-			  $oViewFilter = DBSearch::FromOQL($sOqlView);
-			  $aProfiles[$sMatrixPrefix . 'r'] = array(
-			  $sOqlViewType => $oViewFilter->ToOQL()
-			  );
-			  // - Edit query
-			  if ($sOqlEdit !== null)
-			  {
-			  $oEditFilter = DBSearch::FromOQL($sOqlEdit);
-			  // - If the queries are the same, we don't make an intersect, we just reuse the view query
-			  if ($sOqlEdit === $sOqlView)
-			  {
-			  // Do not intersect, edit query is identical to view query
-			  }
-			  else
-			  {
-			  if (($oEditFilter->GetClass() === $oViewFilter->GetClass()) && $oEditFilter->IsAny())
-			  {
-			  $oEditFilter = $oViewFilter;
-			  // Do not intersect, edit query is identical to view query
-			  }
-			  else
-			  {
-			  // Intersect
-			  $oEditFilter = $oViewFilter->Intersect($oEditFilter);
-			  }
-			  }
-
-			  $aProfiles[$sMatrixPrefix . 'w'] = array(
-			  $sOqlViewType => $oEditFilter->ToOQL()
-			  );
-			  }
-
-			  $aProfileClasses[] = $sClass;
-			  }
-
-			  // Filling the array with missing classes from MetaModel, so we can have an inheritance principle on the scope
-			  // For each class explicitly given in the scopes, we check if its child classes were also in the scope :
-			  // If not, we add them with the same OQL
-			  foreach ($aProfileClasses as $sProfileClass)
-			  {
-			  foreach (MetaModel::EnumChildClasses($sProfileClass) as $sChildClass)
-			  {
-			  // If the child class is not in the scope, we are going to try to add it
-			  if (!in_array($sChildClass, $aProfileClasses))
-			  {
-			  foreach (array('r', 'w') as $sAction)
-			  {
-			  // If the current profile has scope for that class in that mode, we duplicate it
-			  if (isset($aProfiles[$iProfileId . '_' . $sProfileClass . '_' . $sAction]))
-			  {
-			  $aTmpProfile = $aProfiles[$iProfileId . '_' . $sProfileClass . '_' . $sAction];
-			  foreach ($aTmpProfile as $sType => $sOql)
-			  {
-			  $oTmpFilter = DBSearch::FromOQL($sOql);
-			  $oTmpFilter->ChangeClass($sChildClass);
-
-			  $aTmpProfile[$sType] = $oTmpFilter->ToOQL();
-			  }
-
-			  $aProfiles[$iProfileId . '_' . $sChildClass . '_' . $sAction] = $aTmpProfile;
-			  }
-			  }
-			  }
-			  }
-			  }
-			  } */
-
 			// - Build php class
 			$sPHP = $this->BuildPHPClass($aProfiles);
 
@@ -474,22 +365,32 @@ class ScopeValidatorHelper
 	 * @param string $sProfile
 	 * @param string $sClass
 	 * @param integer $iAction
-	 * @return DBSearch
+     *
+	 * @return \DBSearch
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \OQLException
 	 */
 	public function GetScopeFilterForProfile($sProfile, $sClass, $iAction = null)
 	{
 		return $this->GetScopeFilterForProfiles(array($sProfile), $sClass, $iAction);
 	}
 
-	/**
-	 * Returns the DBSearch for the $aProfiles in $iAction for the class $sClass.
-	 * Profiles are a OR condition.
-	 *
-	 * @param array $aProfiles
-	 * @param string $sClass
-	 * @param integer $iAction
-	 * @return DBSearch
-	 */
+    /**
+     * Returns the DBSearch for the $aProfiles in $iAction for the class $sClass.
+     * Profiles are a OR condition.
+     *
+     * @param array $aProfiles
+     * @param string $sClass
+     * @param integer $iAction
+     *
+     * @return \DBSearch
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \OQLException
+     */
 	public function GetScopeFilterForProfiles($aProfiles, $sClass, $iAction = null)
 	{
 		$oSearch = null;
@@ -552,15 +453,18 @@ class ScopeValidatorHelper
 		return $oSearch;
 	}
 
-	/**
+    /**
      * Add the scope query (view or edit depending on $sAction) for $sClass to the $oQuery.
      *
-	 * @param DBSearch $oQuery
-	 * @param string $sClass
-     * @param string $sAction
-	 *
-	 * @return bool true if scope exists, false if scope is null
-	 */
+     * @param \DBSearch $oQuery
+     * @param string $sClass
+     * @param int $sAction
+     *
+     * @return bool true if scope exists, false if scope is null
+     *
+     * @throws \CoreException
+     * @throws \OQLException
+     */
 	public function AddScopeToQuery(DBSearch &$oQuery, $sClass, $sAction = UR_ACTION_READ)
 	{
 		$oScopeQuery = $this->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sClass, $sAction);
@@ -579,13 +483,16 @@ class ScopeValidatorHelper
 		return false;
 	}
 
-	/**
-	 * Returns true if at least one of the $aProfiles has the ignore_silos flag set to true for the $sClass.
-	 *
-	 * @param array $aProfiles
-	 * @param string $sClass
-	 * @return boolean
-	 */
+    /**
+     * Returns true if at least one of the $aProfiles has the ignore_silos flag set to true for the $sClass.
+     *
+     * @param array $aProfiles
+     * @param string $sClass
+     *
+     * @return boolean
+     *
+     * @throws \Exception
+     */
 	public function IsAllDataAllowedForScope($aProfiles, $sClass)
 	{
 		$bIgnoreSilos = false;
@@ -616,8 +523,10 @@ class ScopeValidatorHelper
 	 * Returns the profile id from a string being either a constant or its name.
 	 *
 	 * @param string $sProfile
+     *
 	 * @return integer
-	 * @throws Exception
+     *
+	 * @throws \Exception
 	 */
 	protected function GetProfileIdFromProfileName($sProfile)
 	{

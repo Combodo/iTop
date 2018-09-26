@@ -24,6 +24,26 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+// This storage is freed on error (case of allowed memory exhausted)
+$sReservedMemory = str_repeat('*', 1024 * 1024);
+register_shutdown_function(function()
+{
+	global $sReservedMemory;
+	$sReservedMemory = null;
+	if (!is_null($err = error_get_last()) && ($err['type'] == E_ERROR))
+	{
+		if (strpos($err['message'], 'Allowed memory size of') !== false)
+		{
+			$sLimit = ini_get('memory_limit');
+			echo "<p>iTop: Allowed memory size of $sLimit exhausted, contact your administrator to increase memory_limit in php.ini</p>\n";
+		}
+		else
+		{
+			echo "<p>iTop: An error occurred, check server error log for more information.</p>\n";
+		}
+	}
+});
+
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/core/contexttag.class.inc.php');

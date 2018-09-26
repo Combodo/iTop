@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,6 +19,8 @@
 
 namespace Combodo\iTop\Form\Field;
 
+use Closure;
+
 /**
  * A field for Dates and Date & Times, supporting custom formats
  */
@@ -32,7 +34,7 @@ class DateTimeField extends StringField
 	 * Overloaded constructor
 	 *
 	 * @param string $sId
-	 * @param Closure $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
+	 * @param \Closure $onFinalizeCallback (Used in the $oForm->AddField($sId, ..., function() use ($oManager, $oForm, '...') { ... } ); )
 	 */
 	public function __construct($sId, Closure $onFinalizeCallback = null)
 	{
@@ -52,13 +54,13 @@ class DateTimeField extends StringField
 
 	/**
 	 *
-	 * @param string $sFormat
+	 * @param string $sPHPDateTimeFormat
 	 *
 	 * @return \Combodo\iTop\Form\Field\DateTimeField
 	 */
-	public function SetPHPDateTimeFormat($sDateTimeFormat)
+	public function SetPHPDateTimeFormat($sPHPDateTimeFormat)
 	{
-		$this->sPHPDateTimeFormat = $sDateTimeFormat;
+		$this->sPHPDateTimeFormat = $sPHPDateTimeFormat;
 
 		return $this;
 	}
@@ -68,30 +70,33 @@ class DateTimeField extends StringField
 	 */
 	public function GetJSDateTimeFormat()
 	{
-		return $this->sDateTimeFormat;
+		return $this->sJSDateTimeFormat;
 	}
 
 	/**
 	 *
-	 * @param string $sFormat
+	 * @param string $sJSDateTimeFormat
 	 *
 	 * @return \Combodo\iTop\Form\Field\DateTimeField
 	 */
-	public function SetJSDateTimeFormat($sDateTimeFormat)
+	public function SetJSDateTimeFormat($sJSDateTimeFormat)
 	{
-		$this->sDateTimeFormat = $sDateTimeFormat;
+		$this->sJSDateTimeFormat = $sJSDateTimeFormat;
 
 		return $this;
 	}
 
-	/**
-	 * Set the DateOnly flag
-	 *
-	 * @return \Combodo\iTop\Form\Field\DateTimeField
-	 */
+    /**
+     * Set the DateOnly flag
+     *
+     * @param boolean $bDateOnly
+     *
+     * @return \Combodo\iTop\Form\Field\DateTimeField
+     */
 	public function SetDateOnly($bDateOnly)
 	{
-		return $this->bDateOnly = $bDateOnly;
+		$this->bDateOnly = $bDateOnly;
+		return $this;
 	}
 
 	/**

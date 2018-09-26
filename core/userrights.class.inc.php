@@ -1218,8 +1218,9 @@ class UserRights
 	}
 
 	/**
-	 * @param $sProfileName Profile name to search for
-	 * @param $oUser User|null
+	 * @param string $sProfileName Profile name to search for
+	 * @param User|null $oUser
+	 *
 	 * @return bool
 	 */
 	public static function HasProfile($sProfileName, $oUser = null)
@@ -1233,8 +1234,6 @@ class UserRights
 	 * @param Bool Reset admin cache as well
 	 * @return void
 	 */
-	// Reset cached data
-	//
 	public static function FlushPrivileges($bResetAdminCache = false)
 	{
 		if ($bResetAdminCache)
@@ -1255,12 +1254,16 @@ class UserRights
 	}
 
 	static $m_aCacheUsers;
+
 	/**
 	 * Find a user based on its login and its type of authentication
+	 *
 	 * @param string $sLogin Login/identifier of the user
 	 * @param string $sAuthentication Type of authentication used: internal|external|any
 	 * @param bool $bAllowDisabledUsers Whether or not to retrieve disabled users (status != enabled)
+	 *
 	 * @return User The found user or null
+	 * @throws \OQLException
 	 */
 	protected static function FindUser($sLogin, $sAuthentication = 'any', $bAllowDisabledUsers = false)
 	{

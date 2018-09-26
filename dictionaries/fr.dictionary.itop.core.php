@@ -61,6 +61,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnStateLeave+' => '',
 	'Class:TriggerOnObjectCreate' => 'Déclencheur sur la création d\'un objet',
 	'Class:TriggerOnObjectCreate+' => '',
+	'Class:TriggerOnObjectUpdate' => 'Déclencheur sur la modification d\'un objet',
+	'Class:TriggerOnObjectUpdate+' => '',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Attributs cible',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 	'Class:lnkTriggerAction' => 'Actions-Déclencheur',
 	'Class:lnkTriggerAction+' => '',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Action',
@@ -127,6 +131,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd+' => '',
 	'Class:CMDBChangeOpSetAttributeEncrypted' => 'Champ chiffré',
 	'Class:CMDBChangeOpSetAttributeEncrypted+' => '',
+	'Core:AttributeEncryptUnknownLibrary' => 'La bibliothèque de chiffrement specifée (%1$s) est inconnue',
+	'Core:AttributeEncryptFailedToDecrypt' => '** erreur de déchiffrage **',
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Ancienne valeur',
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring+' => '',
 	'Class:CMDBChangeOpSetAttributeText' => 'Modification de texte',
@@ -537,6 +543,9 @@ Opérateurs :<br/>
 
 	'Core:FriendlyName-Label' => 'Nom complet',
 	'Core:FriendlyName-Description' => 'Nom complet',
+
+	'Core:AttributeTag' => 'Taxon',
+	'Core:AttributeTag+' => 'Taxon',
 
 	'Change:ObjectCreated' => 'Elément créé',
 	'Change:ObjectDeleted' => 'Elément effacé',

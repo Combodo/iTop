@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,8 +19,13 @@
 
 namespace Combodo\iTop\Portal\Router;
 
-use Silex\Application;
-
+/**
+ * Class CreateBrickRouter
+ *
+ * @package Combodo\iTop\Portal\Router
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.3.0
+ */
 class CreateBrickRouter extends AbstractRouter
 {
 	static $aRoutes = array(

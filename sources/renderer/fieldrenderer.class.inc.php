@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,9 +19,8 @@
 
 namespace Combodo\iTop\Renderer;
 
-use \Dict;
-use \DBObject;
-use \Combodo\iTop\Form\Field\Field;
+use Dict;
+use Combodo\iTop\Form\Field\Field;
 
 /**
  * Description of FieldRenderer
@@ -52,10 +51,12 @@ abstract class FieldRenderer
 		return $this->sEndpoint;
 	}
 
-	/**
-	 *
-	 * @param string $sEndpoint
-	 */
+    /**
+     *
+     * @param string $sEndpoint
+     *
+     * @return \Combodo\iTop\Renderer\FieldRenderer
+     */
 	public function SetEndpoint($sEndpoint)
 	{
 		$this->sEndpoint = $sEndpoint;

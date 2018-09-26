@@ -37,11 +37,15 @@ use MetaModel;
 class BsSelectObjectFieldRenderer extends FieldRenderer
 {
 
-	/**
-	 * Returns a RenderingOutput for the FieldRenderer's Field
-	 *
-	 * @return \Combodo\iTop\Renderer\RenderingOutput
-	 */
+    /**
+     * Returns a RenderingOutput for the FieldRenderer's Field
+     *
+     * @return \Combodo\iTop\Renderer\RenderingOutput
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \ArchivedObjectException
+     */
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();

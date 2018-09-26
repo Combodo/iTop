@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -31,13 +31,12 @@ class SubFormField extends Field
 {
 	protected $oForm;
 
-	/**
-	 * Default constructor
-	 *
-	 * @param string $sId
-	 * @param string $sParentFormId
-	 * @param Closure $onFinalizeCallback
-	 */
+    /**
+     * Default constructor
+     *
+     * @param string $sId
+     * @param \Closure $onFinalizeCallback
+     */
 	public function __construct($sId, Closure $onFinalizeCallback = null)
 	{
 		$this->oForm = new Form('subform_' . $sId);
@@ -55,7 +54,8 @@ class SubFormField extends Field
 
 	/**
 	 *
-	 * @param \Combodo\iTop\Form\Field\Form $oForm
+	 * @param \Combodo\iTop\Form\Form $oForm
+     *
 	 * @return \Combodo\iTop\Form\Field\SubFormField
 	 */
 	public function SetForm(Form $oForm)
@@ -107,11 +107,14 @@ class SubFormField extends Field
 		return $this->oForm->GetCurrentValues();
 	}
 
-	/**
-	 *
-	 * @param array $value
-	 * @return \Combodo\iTop\Form\Field\SubFormField
-	 */
+    /**
+     *
+     * @param array $value
+     *
+     * @return \Combodo\iTop\Form\Field\SubFormField
+     *
+     * @throws \Exception
+     */
 	public function SetCurrentValue($value)
 	{
 		$this->oForm->SetCurrentValues($value);
@@ -170,7 +173,10 @@ class SubFormField extends Field
 		return $this->oForm->FindSubForm($sFormPath);
 	}
 
-	public function OnFinalize()
+    /**
+     * @throws \Exception
+     */
+    public function OnFinalize()
 	{
 		$sFormId = 'subform_' . $this->sId;
 		if ($this->sFormPath !== null)

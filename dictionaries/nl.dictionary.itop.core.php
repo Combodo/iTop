@@ -89,6 +89,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
  	'Core:AttributeEncryptedString' => 'Gecodeerde string',
 	'Core:AttributeEncryptedString+' => 'String gecodeerd met een locale key',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 
 	'Core:AttributeText' => 'Text',
 	'Core:AttributeText+' => 'Multiline character string',
@@ -483,11 +485,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ActionEmail/Attribute:to+' => 'Bestemming van de e-mail',
 	'Class:ActionEmail/Attribute:cc' => 'Cc',
 	'Class:ActionEmail/Attribute:cc+' => 'Carbon Copy',
-	'Class:ActionEmail/Attribute:bcc' => 'bcc',
+	'Class:ActionEmail/Attribute:bcc' => 'Bcc',
 	'Class:ActionEmail/Attribute:bcc+' => 'Blind Carbon Copy',
-	'Class:ActionEmail/Attribute:subject' => 'onderwerp',
+	'Class:ActionEmail/Attribute:subject' => 'Onderwerp',
 	'Class:ActionEmail/Attribute:subject+' => 'Titel van de e-mail',
-	'Class:ActionEmail/Attribute:body' => 'body',
+	'Class:ActionEmail/Attribute:body' => 'Body',
 	'Class:ActionEmail/Attribute:body+' => 'Inhoud van de e-mail',
 	'Class:ActionEmail/Attribute:importance' => 'Prioriteit',
 	'Class:ActionEmail/Attribute:importance+' => 'Prioriteitsvlag',

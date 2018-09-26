@@ -25,7 +25,8 @@ require_once(APPROOT.'core/moduledesign.class.inc.php');
 class DOMFormatException extends Exception
 {
     /**
-     * Overrides the Exception default constructor to automatically add informations about the concerned node (path and line number)
+     * Overrides the Exception default constructor to automatically add informations about the concerned node (path and
+     * line number)
      * 
      * @param string $message
      * @param $code
@@ -47,6 +48,7 @@ class DOMFormatException extends Exception
  */ 
 class MFCompiler
 {
+	/** @var \ModelFactory */
 	protected $oFactory;
 
 	protected $aRootClasses;
@@ -280,13 +282,15 @@ class MFCompiler
 			}
 			else
 			{
+				/** @var \DOMElement $oClass */
 				foreach($oClasses as $oClass)
 				{
 					$sClass = $oClass->getAttribute("id");
 					$aAllClasses[] = $sClass;
 					try
 					{
-						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $oP);
+						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir,
+							$sRelativeDir);
 					}
 					catch (DOMFormatException $e)
 					{
@@ -932,17 +936,15 @@ EOF
 	}
 
 	/**
-	 * @param $oClass
-	 * @param $sTempTargetDir
-	 * @param $sFinalTargetDir
-	 * @param $sModuleRelativeDir
-	 * @param $oP
+	 * @param \DOMElement $oClass
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 * @param string $sModuleRelativeDir
 	 *
 	 * @return string
 	 * @throws \DOMFormatException
-	 * @throws \Exception
 	 */
-	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, $oP)
+	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir)
 	{
 		$sClass = $oClass->getAttribute('id');
 		$oProperties = $oClass->GetUniqueElement('properties');
@@ -1001,7 +1003,14 @@ EOF
 			{
 				$aReconcAttCodes[] = $oAttribute->getAttribute('id');
 			}
-			$sReconcKeys = "array('".implode("', '", $aReconcAttCodes)."')";
+			if (empty($aReconcAttCodes))
+            {
+                $sReconcKeys = "array()";
+            }
+            else
+            {
+                $sReconcKeys = "array('".implode("', '", $aReconcAttCodes)."')";
+            }
 		}
 		else
 		{
@@ -1082,17 +1091,12 @@ EOF
 
 		// Finalize class params declaration
 		//
-		$aClassParamsPHP = array();
-		foreach($aClassParams as $sKey => $sPHPValue)
-		{
-			$aClassParamsPHP[] = "			'$sKey' => $sPHPValue,";
-		}
-		$sClassParams = implode("\n", $aClassParamsPHP);
-	
+		$sClassParams = $this->GetAssociativeArrayAsPhpCode($aClassParams);
+
 		// Comment on top of the class declaration
 		//
 		$sCodeComment = $oProperties->GetChildText('comment');
-	
+
 		// Fields
 		//
 		$oFields = $oClass->GetOptionalElement('fields');
@@ -1101,6 +1105,8 @@ EOF
 			$this->CompileFiles($oFields, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
 		}
 		$sAttributes = '';
+		$aTagFieldsInfo = array();
+		/** @var \DOMElement $oField */
 		foreach($this->oFactory->ListFields($oClass) as $oField)
 		{
 			try
@@ -1390,7 +1396,12 @@ EOF
 					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
 					$aParameters['depends_on'] = $sDependencies;
 				}
-	
+
+				if ($sAttType == 'AttributeTagSet')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+				}
+
 				// Optional parameters (more for historical reasons)
 				// Added if present...
 				//
@@ -1779,8 +1790,10 @@ EOF
 
 		// Let's make the whole class declaration
 		//
-		$sPHP = "\n\n$sCodeComment\n";
+		$sClassName = $oClass->getAttribute('id');
+		$bIsAbstractClass = ($oProperties->GetChildText('abstract') == 'true');
 		$oPhpParent = $oClass->GetUniqueElement('php_parent', false);
+		$aRequiredFiles = array();
 		if ($oPhpParent)
 		{
 			$sParentClass = $oPhpParent->GetChildText('name', '');
@@ -1791,7 +1804,7 @@ EOF
 			$sIncludeFile = $oPhpParent->GetChildText('file', '');
 			if ($sIncludeFile != '')
 			{
-				$sPHP .= "\nrequire_once('$sIncludeFile'); // Implementation of the class $sParentClass\n";
+				$aRequiredFiles[] = $sIncludeFile;
 			}
 //TODO fix this !!!
 //			$sFullPath =  $this->sSourceDir.'/'.$sModuleRelativeDir.'/'.$sIncludeFile;
@@ -1804,37 +1817,44 @@ EOF
 		{
 			$sParentClass = $oClass->GetChildText('parent', 'DBObject');
 		}
-		if ($oProperties->GetChildText('abstract') == 'true')
-		{
-			$sPHP .= 'abstract class '.$oClass->getAttribute('id');
-		}
-		else
-		{
-			$sPHP .= 'class '.$oClass->getAttribute('id');
-		}
-		$sPHP .= " extends $sParentClass\n";
-		$sPHP .=
-<<<EOF
-{
-	public static function Init()
-	{
-		\$aParams = array
-		(
-$sClassParams
-		);
-		MetaModel::Init_Params(\$aParams);
-		MetaModel::Init_InheritAttributes();
+		$sInitMethodCalls =
+			<<<EOF
 $sAttributes
 $sLifecycle
 $sHighlightScale
-$sZlists
-	}
-
-$sMethods
-}
+$sZlists;
 EOF;
+		// some other stuff (magical attributes like friendlyName) are done in MetaModel::InitClasses and though not present in the
+		// generated PHP
+		$sPHP = $this->GeneratePhpCodeForClass($sClassName, $sParentClass, $sClassParams, $sInitMethodCalls,
+			$bIsAbstractClass, $sMethods, $aRequiredFiles, $sCodeComment);
+
+		// N°931 generates TagFieldData classes for AttributeTag fields
+		if (!empty($aTagFieldsInfo))
+		{
+			$sTagClassParentClass = "TagSetFieldData";
+			$aTagClassParams = array
+			(
+				'category' => 'bizmodel',
+				'key_type' => 'autoincrement',
+				'name_attcode' => array('tag_label'),
+				'state_attcode' => '',
+				'reconc_keys' => array('tag_code'),
+				'db_table' => '', // no need to have a corresponding table : this class exists only for rights, no additional field
+				'db_key_field' => 'id',
+				'db_finalclass_field' => 'finalclass',
+			);
+			foreach ($aTagFieldsInfo as $sTagFieldName)
+			{
+				$sTagSuffix = $sClassName.'_'.$sTagFieldName;
+				$sTagClassName = 'TagSetFieldDataFor_'.$sTagSuffix;
+				$sTagClassParams = var_export($aTagClassParams, true);
+				$sPHP .= $this->GeneratePhpCodeForClass($sTagClassName, $sTagClassParentClass, $sTagClassParams);
+			}
+		}
+
 		return $sPHP;
-	}// function CompileClass()
+	}
 
 
 	/**
@@ -1977,7 +1997,7 @@ EOF;
 			$aPHPMenu[] = "\$__comp_menus__['$sMenuId']->SetParameters(array('auto_reload' => $sAutoReload));";
 		}
 		return $aPHPMenu;
-	} // function CompileMenu
+	}
 
 	/**
 	 * Helper to compute the grant, taking any existing grant into account
@@ -2348,9 +2368,9 @@ EOF;
 		return $s;
 	}
 
-	// Transform the file references into the corresponding filename (and create the file in the relevant directory)
-	//
 	/**
+	 * Transform the file references into the corresponding filename (and create the file in the relevant directory)
+	 *
 	 * @param $oNode
 	 * @param $sTempTargetDir
 	 * @param $sFinalTargetDir
@@ -2619,5 +2639,75 @@ EOF;
 		{
 			uasort($this->aSnippets[$sModuleId]['before'], array(get_class($this), 'SortOnRank'));
 		}
+	}
+
+	/**
+	 * We can't use var_export() as we need to output some PHP code, for example `utils::GetAbsoluteUrlModulesRoot()` calls
+	 *
+	 * @param string[string] $aAssocArray
+	 *
+	 * @return string PHP declaration of the array
+	 */
+	private function GetAssociativeArrayAsPhpCode($aAssocArray)
+	{
+		$aArrayPhp = array();
+		foreach ($aAssocArray as $sKey => $sPHPValue)
+		{
+			$aArrayPhp[] = "			'$sKey' => $sPHPValue,";
+		}
+		$sArrayPhp = implode("\n", $aArrayPhp);
+
+		return 'array('.$sArrayPhp.')';
+	}
+
+	/**
+	 * @param string $sClassName
+	 * @param string $sParentClassName
+	 * @param string $sClassParams serialized array. Use ::GetAssociativeArrayAsPhpCode if you need to keep some PHP code calls
+	 * @param string $sInitMethodCalls
+	 * @param bool $bIsAbstractClass
+	 * @param string $sMethods
+	 *
+	 * @param string $aRequiredFiles
+	 * @param string $sCodeComment
+	 *
+	 * @return string php code for the class
+	 */
+	private function GeneratePhpCodeForClass(
+		$sClassName, $sParentClassName, $sClassParams, $sInitMethodCalls = '', $bIsAbstractClass = false, $sMethods = '',
+		$aRequiredFiles = array(), $sCodeComment = ''
+	) {
+		$sPHP = "\n\n$sCodeComment\n";
+
+		foreach ($aRequiredFiles as $sIncludeFile)
+		{
+			$sPHP .= "\nrequire_once('$sIncludeFile');\n";
+		}
+
+		if ($bIsAbstractClass)
+		{
+			$sPHP .= 'abstract class '.$sClassName;
+		}
+		else
+		{
+			$sPHP .= 'class '.$sClassName;
+		}
+		$sPHP .= " extends $sParentClassName\n";
+		$sPHP .=
+			<<<EOF
+{
+	public static function Init()
+	{
+		\$aParams = $sClassParams;
+		MetaModel::Init_Params(\$aParams);
+		MetaModel::Init_InheritAttributes();
+$sInitMethodCalls
+	}
+
+$sMethods
+}
+EOF;
+
+		return $sPHP;
 	}
 }

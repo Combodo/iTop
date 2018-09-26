@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,6 @@ namespace Combodo\iTop\Portal\Brick;
 require_once APPROOT . '/core/moduledesign.class.inc.php';
 require_once APPROOT . '/setup/compiler.class.inc.php';
 
-use DOMXPath;
 use DOMFormatException;
 use ModuleDesign;
 use Combodo\iTop\DesignElement;
@@ -33,7 +32,7 @@ use Combodo\iTop\DesignElement;
  * Bricks are used mostly in the portal for now, not the console. 
  * This class defines common functionnalities for the extended classes.
  *
- * @author Guillaume Lajarige
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
 abstract class AbstractBrick
 {
@@ -227,7 +226,9 @@ abstract class AbstractBrick
 	/**
 	 * Sets the brick id
 	 *
-	 * @param string $sid
+	 * @param string $sId
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetId($sId)
 	{
@@ -239,6 +240,8 @@ abstract class AbstractBrick
 	 * Sets if the brick is mandatory
 	 *
 	 * @param boolean $bMandatory
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetMandatory($bMandatory)
 	{
@@ -250,6 +253,8 @@ abstract class AbstractBrick
 	 * Sets if the brick is visible
 	 *
 	 * @param boolean $bVisible
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetVisible($bVisible)
 	{
@@ -261,6 +266,8 @@ abstract class AbstractBrick
 	 * Sets if the brick is active
 	 *
 	 * @param boolean $bActive
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetActive($bActive)
 	{
@@ -272,6 +279,8 @@ abstract class AbstractBrick
 	 * Sets the rank of the brick
 	 *
 	 * @param float $fRank
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetRank($fRank)
 	{
@@ -283,6 +292,8 @@ abstract class AbstractBrick
 	 * Sets the page template path of the brick
 	 *
 	 * @param string $sPageTemplatePath
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetPageTemplatePath($sPageTemplatePath)
 	{
@@ -294,6 +305,8 @@ abstract class AbstractBrick
 	 * Sets the title of the brick
 	 *
 	 * @param string $sTitle
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetTitle($sTitle)
 	{
@@ -305,6 +318,8 @@ abstract class AbstractBrick
 	 * Sets the description of the brick
 	 *
 	 * @param string $sDescription
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetDescription($sDescription)
 	{
@@ -316,6 +331,8 @@ abstract class AbstractBrick
 	 * Sets the data loading mode of the brick
 	 *
 	 * @param string $sDataLoading
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetDataLoading($sDataLoading)
 	{
@@ -327,6 +344,8 @@ abstract class AbstractBrick
 	 * Sets the allowed profiles for the brick
 	 *
 	 * @param array $aAllowedProfiles
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetAllowedProfiles($aAllowedProfiles)
 	{
@@ -338,6 +357,8 @@ abstract class AbstractBrick
 	 * Sets the denied profiles for the brick
 	 *
 	 * @param array $aDeniedProfiles
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetDeniedProfiles($aDeniedProfiles)
 	{
@@ -349,6 +370,8 @@ abstract class AbstractBrick
 	 * Sets the allowed profiles oql query for the brick
 	 *
 	 * @param string $sAllowedProfilesOql
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetAllowedProfilesOql($sAllowedProfilesOql)
 	{
@@ -360,6 +383,8 @@ abstract class AbstractBrick
 	 * Sets the denied profiles oql query for the brick
 	 *
 	 * @param array $sDeniedProfilesOql
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetDeniedProfilesOql($sDeniedProfilesOql)
 	{
@@ -371,6 +396,7 @@ abstract class AbstractBrick
 	 * Adds $sProfile to the list of allowed profiles for that brick
 	 *
 	 * @param string $sProfile
+     *
 	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function AddAllowedProfile($sProfile)
@@ -383,6 +409,7 @@ abstract class AbstractBrick
 	 * Removes $sProfile from the list of allowed profiles
 	 *
 	 * @param string $sProfile
+     *
 	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function RemoveAllowedProfile($sProfile)
@@ -408,6 +435,7 @@ abstract class AbstractBrick
 	 * Adds $sProfile to the list of denied profiles for that brick
 	 *
 	 * @param string $sProfile
+     *
 	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function AddDeniedProfile($sProfile)
@@ -420,6 +448,7 @@ abstract class AbstractBrick
 	 * Removes $sProfile from the list of denied profiles
 	 *
 	 * @param string $sProfile
+     *
 	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function RemoveDeniedProfile($sProfile)
@@ -448,6 +477,7 @@ abstract class AbstractBrick
 	 * Priority is deny/allow
 	 *
 	 * @param string $sProfile
+     *
 	 * @return boolean
 	 */
 	public function IsGrantedForProfile($sProfile)
@@ -462,6 +492,7 @@ abstract class AbstractBrick
 	 * Priority is deny/allow
 	 *
 	 * @param array $aProfiles
+     *
 	 * @return boolean
 	 */
 	public function IsGrantedForProfiles($aProfiles)
@@ -512,8 +543,10 @@ abstract class AbstractBrick
 	 * This is used to set all the brick attributes at once.
 	 *
 	 * @param \Combodo\iTop\DesignElement $oMDElement
-	 * @return AbstractBrick
-	 * @throws DOMFormatException
+     *
+     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+     *
+	 * @throws \DOMFormatException
 	 */
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
@@ -588,5 +621,3 @@ abstract class AbstractBrick
 	}
 
 }
-
-?>

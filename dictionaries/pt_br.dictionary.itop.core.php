@@ -84,6 +84,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
  	'Core:AttributeEncryptedString' => 'String encriptada',
 	'Core:AttributeEncryptedString+' => 'String encriptada com uma chave local',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 
 	'Core:AttributeText' => 'Texto',
 	'Core:AttributeText+' => 'Cadeia de caracteres Multi-linha',

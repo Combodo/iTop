@@ -2599,7 +2599,7 @@ abstract class MetaModel
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension');
+		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface');
 		foreach($aInterfaces as $sInterface)
 		{
 			self::$m_aExtensionClasses[$sInterface] = array();
@@ -5065,12 +5065,20 @@ abstract class MetaModel
 					$aTableInfo['Fields'][$sField]['used'] = true;
 
 					$bIndexNeeded = $oAttDef->RequiresIndex();
+					$bFullTextIndexNeeded = false;
 					if (!$bIndexNeeded)
 					{
 						// Add an index on the columns of the friendlyname
 						if (in_array($sField, $aFriendlynameAttcodes))
 						{
 							$bIndexNeeded = true;
+						}
+					}
+					else
+					{
+						if ($oAttDef->RequiresFullTextIndex())
+						{
+							$bFullTextIndexNeeded = true;
 						}
 					}
 
@@ -5092,21 +5100,32 @@ abstract class MetaModel
 						if ($bIndexNeeded)
 						{
 							$aTableInfo['Indexes'][$sField]['used'] = true;
-							$aColumns = array($sField);
-							$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
+							$sIndexName = $sField;
 							$sColumns = '`'.$sField.'`';
-							if (!is_null($aLength[0]))
+
+							if ($bFullTextIndexNeeded)
 							{
-								$sColumns .= ' ('.$aLength[0].')';
-							}
-							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD INDEX `$sField` ($sColumns)";
-							if ($bTableToCreate)
-							{
-								$aCreateTableItems[$sTable][] = "INDEX `$sField` ($sColumns)";
+								$sIndexType = 'FULLTEXT INDEX';
 							}
 							else
 							{
-								$aAlterTableItems[$sTable][] = "ADD INDEX `$sField` ($sColumns)";
+								$sIndexType = 'INDEX';
+								$aColumns = array($sField);
+								$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
+								if (!is_null($aLength[0]))
+								{
+									$sColumns .= ' ('.$aLength[0].')';
+								}
+							}
+
+							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD $sIndexType `$sIndexName` ($sColumns)";
+							if ($bTableToCreate)
+							{
+								$aCreateTableItems[$sTable][] = "$sIndexType `$sIndexName` ($sColumns)";
+							}
+							else
+							{
+								$aAlterTableItems[$sTable][] = "ADD $sIndexType `$sIndexName` ($sColumns)";
 							}
 						}
 
@@ -5119,12 +5138,24 @@ abstract class MetaModel
 						$sAlterTableItemsAfterChange = '';
 						if ($bIndexNeeded)
 						{
-							$aColumns = array($sField);
-							$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
 							$aTableInfo['Indexes'][$sField]['used'] = true;
+
+							if ($bFullTextIndexNeeded)
+							{
+								$sIndexType = 'FULLTEXT INDEX';
+								$aColumns = null;
+								$aLength = null;
+							}
+							else
+							{
+								$sIndexType = 'INDEX';
+								$aColumns = array($sField);
+								$aLength = self::DBGetIndexesLength($sClass, $aColumns, $aTableInfo);
+							}
 
 							if (!CMDBSource::HasIndex($sTable, $sField, $aColumns, $aLength))
 							{
+								$sIndexName = $sField;
 								$sColumns = '`'.$sField.'`';
 								if (!is_null($aLength[0]))
 								{
@@ -5134,16 +5165,11 @@ abstract class MetaModel
 								$aErrors[$sClass][$sAttCode][] = "Foreign key '$sField' in table '$sTable' should have an index";
 								if (CMDBSource::HasIndex($sTable, $sField))
 								{
-									$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` DROP INDEX `$sField`";
-									$sSugFixAfterChange = "ALTER TABLE `$sTable` ADD INDEX `$sField` ($sColumns)";
-									$aAlterTableItems[$sTable][] = "DROP INDEX `$sField`";
-									$sAlterTableItemsAfterChange = "ADD INDEX `$sField` ($sColumns)";
+									$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` DROP INDEX `$sIndexName`";
+									$aAlterTableItems[$sTable][] = "DROP INDEX `$sIndexName`";
 								}
-								else
-								{
-									$sSugFixAfterChange = "ALTER TABLE `$sTable` ADD INDEX `$sField` ($sColumns)";
-									$sAlterTableItemsAfterChange = "ADD INDEX `$sField` ($sColumns)";
-								}
+								$sSugFixAfterChange = "ALTER TABLE `$sTable` ADD $sIndexType `$sIndexName` ($sColumns)";
+								$sAlterTableItemsAfterChange = "ADD $sIndexType `$sIndexName` ($sColumns)";
 							}
 						}
 
@@ -5858,20 +5884,10 @@ abstract class MetaModel
 
 		CMDBSource::SelectDB(self::$m_sDBName);
 
-		foreach(get_declared_classes() as $sPHPClass)
-		{
-			if (is_subclass_of($sPHPClass, 'ModuleHandlerAPI'))
-			{
-				$aCallSpec = array($sPHPClass, 'OnMetaModelStarted');
-				call_user_func_array($aCallSpec, array());
-			}
-		}
-
-//		if (false)
-//		{
-//			echo "Debug<br/>\n";
-//			self::static_var_dump();
-//		}
+        foreach(MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass)
+        {
+            $oPHPClass::OnMetaModelStarted();
+        }
 
 		ExpressionCache::Warmup();
 	}
@@ -6326,7 +6342,7 @@ abstract class MetaModel
 	 *
 	 * @param string $sClass
 	 * @param int $iKey id value of the object to retrieve
-	 * @param bool $bMustBeFound
+	 * @param bool $bMustBeFound see throws ArchivedObjectException
 	 * @param bool $bAllowAllData if true then no rights filtering
 	 * @param null $aModifierProperties
 	 *
@@ -6393,12 +6409,14 @@ abstract class MetaModel
 		}
 		catch(Exception $e)
 		{
-			// We need to pop the pushed archived mode before the exception is thrown, otherwise the application stays in ArchiveMode true which has caused hazardious behavior!
-			// Note: When switching to PHP 5.6, we can use a finally block instead of duplicating this line.
-			utils::PopArchiveMode();
+			// In the finally block we will pop the pushed archived mode
+			// otherwise the application stays in ArchiveMode true which has caused hazardious behavior!
 			throw $e;
 		}
-		utils::PopArchiveMode();
+		finally
+		{
+			utils::PopArchiveMode();
+		}
 
 		if (empty($aRow))
 		{

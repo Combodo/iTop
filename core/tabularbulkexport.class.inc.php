@@ -150,15 +150,18 @@ abstract class TabularBulkExport extends BulkExport
 				// Add the reconciliation keys
 				foreach(MetaModel::GetReconcKeys($sRemoteClass) as $sRemoteAttCode)
 			  	{
-					$sAttCodeEx = $sAttCode.'->'.$sRemoteAttCode;
-					if (!array_key_exists($sAttCodeEx, $aResult))
-					{
-						$oRemoteAttDef = MetaModel::GetAttributeDef($sRemoteClass, $sRemoteAttCode);
-						if ($this->IsExportableField($sRemoteClass, $sRemoteAttCode, $oRemoteAttDef))
-						{
-							$aResult[$sAttCodeEx] = array('code' =>  $sAttCodeEx, 'unique_label' => $oAttDef->GetLabel().'->'.$oRemoteAttDef->GetLabel(), 'label' => MetaModel::GetLabel($sRemoteClass, $sRemoteAttCode), 'attdef' => $oRemoteAttDef);
-						}
-					}
+			  	    if (!empty($sRemoteAttCode))
+                    {
+                        $sAttCodeEx = $sAttCode.'->'.$sRemoteAttCode;
+                        if (!array_key_exists($sAttCodeEx, $aResult))
+                        {
+                            $oRemoteAttDef = MetaModel::GetAttributeDef($sRemoteClass, $sRemoteAttCode);
+                            if ($this->IsExportableField($sRemoteClass, $sRemoteAttCode, $oRemoteAttDef))
+                            {
+                                $aResult[$sAttCodeEx] = array('code' => $sAttCodeEx, 'unique_label' => $oAttDef->GetLabel().'->'.$oRemoteAttDef->GetLabel(), 'label' => MetaModel::GetLabel($sRemoteClass, $sRemoteAttCode), 'attdef' => $oRemoteAttDef);
+                            }
+                        }
+                    }
 			  	}
 				break;
 					

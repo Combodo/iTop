@@ -196,6 +196,9 @@
 					<count_min>0</count_min>
 					<count_max>0</count_max>
 				</field>
+				<field id="tagfield" xsi:type="AttributeTagSet">
+					<sql>tagfield</sql>
+				</field>
 			</fields>
 			<methods>
 				<method id="DBInsertNoReload">

@@ -177,7 +177,7 @@ abstract class SQLQuery
 		}
 		else
 		{
-			return $oConditionExpr->Render($aArgs);
+			return $oConditionExpr->RenderExpression(true, $aArgs);
 		}
 	}
 

@@ -20,6 +20,13 @@
 
 namespace Combodo\iTop\Portal\Router;
 
+/**
+ * Class AggregatePageBrickRouter
+ *
+ * @package Combodo\iTop\Portal\Router
+ * @author Pierre Goiffon <pierre.goiffon@combodo.com>
+ * @since 2.5.0
+ */
 class AggregatePageBrickRouter extends AbstractRouter
 {
 	static $aRoutes = array(

@@ -116,13 +116,14 @@ class ExecutionKPI
 		foreach (self::$m_aExecData as $aOpStats)
 		{
 			$sOperation = $aOpStats['op'];
-			$sBegin = $sEnd = $sDuration = $sMemBegin = $sMemEnd = $sMemPeak = '?';
-		
 			$sBegin = round($aOpStats['time_begin'], 3);
 			$sEnd = round($aOpStats['time_end'], 3);
 			$fDuration = $aOpStats['time_end'] - $aOpStats['time_begin'];
 			$sDuration = round($fDuration, 3);
 
+			$sMemBegin = 'n/a';
+			$sMemEnd = 'n/a';
+			$sMemPeak = 'n/a';
 			if (isset($aOpStats['mem_begin']))
 			{
 				$sMemBegin = self::MemStr($aOpStats['mem_begin']);
@@ -197,12 +198,13 @@ class ExecutionKPI
 
 		self::Report("</div>");
 
+		self::Report("<p><a href=\"#end-".md5($sExecId)."\">Next page stats</a></p>");
+
 		// Report operation details
 		foreach (self::$m_aStats as $sOperation => $aOpStats)
 		{
 			$sOperationHtml = '<a name="'.md5($sExecId.$sOperation).'">'.$sOperation.'</a>';
 			self::Report("<h4>$sOperationHtml</h4>");
-			self::Report("<p><a href=\"#".md5($sExecId)."\">Back to page stats</a></p>");
 			self::Report("<table border=\"1\" style=\"$sTableStyle\">");
 			self::Report("<thead>");
 			self::Report("   <th>Operation details (+ blame caller if log_kpi_duration = 2)</th><th>Count</th><th>Duration</th><th>Min</th><th>Max</th>");
@@ -251,7 +253,9 @@ class ExecutionKPI
 				self::Report("</tr>");
 			}
 			self::Report("</table>");
+			self::Report("<p><a href=\"#".md5($sExecId)."\">Back to page stats</a></p>");
 		}
+		self::Report('<a name="end-'.md5($sExecId).'">&nbsp;</a>');
 	}
 
 

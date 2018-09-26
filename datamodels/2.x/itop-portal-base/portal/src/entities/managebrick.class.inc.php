@@ -20,10 +20,11 @@
 
 namespace Combodo\iTop\Portal\Brick;
 
-use Combodo\iTop\DesignElement;
-use DBSearch;
+use Exception;
 use DOMFormatException;
+use DBSearch;
 use MetaModel;
+use Combodo\iTop\DesignElement;
 
 class ManageBrick extends PortalBrick
 {
@@ -287,6 +288,7 @@ class ManageBrick extends PortalBrick
      * Sets the tile mode (display)
      *
 	 * @param string $sTileMode
+     *
      * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
 	public function SetTileMode($sTileMode)
@@ -332,7 +334,7 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @param string $sOql
 	 *
-	 * @return ManageBrick
+	 * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
 	public function SetOql($sOql)
 	{
@@ -345,8 +347,8 @@ class ManageBrick extends PortalBrick
 	 * Sets the brick's objects opening mode
 	 *
 	 * @param string $sOpeningMode
-	 *
-	 * @return ManageBrick
+     *
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
 	public function SetOpeningMode($sOpeningMode)
 	{
@@ -359,6 +361,8 @@ class ManageBrick extends PortalBrick
 	 * Sets the grouping of the brick
 	 *
 	 * @param array $aGrouping
+     *
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
 	public function SetGrouping($aGrouping)
 	{
@@ -371,6 +375,8 @@ class ManageBrick extends PortalBrick
 	 * Sets the fields of the brick
 	 *
 	 * @param array $aFields
+     *
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
 	public function SetFields($aFields)
 	{
@@ -383,8 +389,8 @@ class ManageBrick extends PortalBrick
 	 * Sets if the brick should display objects count on tab
 	 *
 	 * @param bool $bShowTabCounts
-	 *
-	 * @return ManageBrick
+     *
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
 	public function SetShowTabCounts($bShowTabCounts)
 	{
@@ -400,8 +406,8 @@ class ManageBrick extends PortalBrick
 	 *
 	 * @param string $sName (Must be "tabs" or -Not implemented yet, implicit grouping on y axis-)
 	 * @param array $aGrouping
-	 *
-	 * @return ManageBrick
+     *
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
 	public function AddGrouping($sName, $aGrouping)
 	{
@@ -422,8 +428,8 @@ class ManageBrick extends PortalBrick
 	 * Removes a grouping by its name
 	 *
 	 * @param string $sName
-	 *
-	 * @return ManageBrick
+     *
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
 	public function RemoveGrouping($sName)
 	{
@@ -439,8 +445,8 @@ class ManageBrick extends PortalBrick
 	 * Adds a field to display from its attribute_code.
 	 *
 	 * @param string $sAttCode
-	 *
-	 * @return ManageBrick
+     *
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
 	public function AddField($sAttCode)
 	{
@@ -456,8 +462,8 @@ class ManageBrick extends PortalBrick
 	 * Removes a field
 	 *
 	 * @param string $sAttCode
-	 *
-	 * @return ManageBrick
+     *
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
 	 */
 	public function RemoveField($sAttCode)
 	{
@@ -533,6 +539,8 @@ class ManageBrick extends PortalBrick
      * @param string $sModeId
      *
      * @return \Combodo\iTop\Portal\Brick\ManageBrick
+     *
+     * @throws \Exception
      */
 	public function AddAvailableDisplayMode($sModeId)
 	{
@@ -550,6 +558,7 @@ class ManageBrick extends PortalBrick
      * Removes $sModeId from the list of availables display modes
      *
      * @param string $sModeId
+     *
      * @return \Combodo\iTop\Portal\Brick\ManageBrick
      */
     public function RemoveAvailableDisplayMode($sModeId)
@@ -608,16 +617,18 @@ class ManageBrick extends PortalBrick
 		return $this->IsGroupingByDistinctValues('areas');
 	}
 
-	/**
-	 * Load the brick's data from the xml passed as a ModuleDesignElement.
-	 * This is used to set all the brick attributes at once.
-	 *
-	 * @param \Combodo\iTop\DesignElement $oMDElement
-	 *
-	 * @return ManageBrick
-	 * @throws DOMFormatException
-	 * @throws \OQLException
-	 */
+    /**
+     * Load the brick's data from the xml passed as a ModuleDesignElement.
+     * This is used to set all the brick attributes at once.
+     *
+     * @param \Combodo\iTop\DesignElement $oMDElement
+     *
+     * @return \Combodo\iTop\Portal\Brick\ManageBrick
+     *
+     * @throws \Exception
+     * @throws \DOMFormatException
+     * @throws \OQLException
+     */
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
 		parent::LoadFromXml($oMDElement);
@@ -858,6 +869,7 @@ class ManageBrick extends PortalBrick
 		$sDecorationClassNavigationMenu = $this->GetDecorationClassNavigationMenu();
 		if (empty($sDecorationClassNavigationMenu) && isset(static::$aPresentationData[$this->sTileMode]))
 		{
+		    /** @var string $sDecorationClassNavigationMenu */
 			$sDecorationClassNavigationMenu = static::$aPresentationData[$this->sTileMode]['decorationCssClass'];
 			if (!empty($sDecorationClassNavigationMenu))
 			{

@@ -24,16 +24,19 @@
  */
 class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 {
-	/**
-	 * Generate an (absolute) URL to an object, either in view or edit mode.
-	 * Returns null if the current user is not allowed to view / edit object.
-	 *
-	 * @param string $sClass The class of the object
-	 * @param int $iId The identifier of the object
-	 * @param string $sMode edit|view
-	 *
-	 * @return string | null
-	 */
+    /**
+     * Generate an (absolute) URL to an object, either in view or edit mode.
+     * Returns null if the current user is not allowed to view / edit object.
+     *
+     * @param string $sClass The class of the object
+     * @param int $iId The identifier of the object
+     * @param string $sMode edit|view
+     *
+     * @return string | null
+     *
+     * @throws Exception
+     * @throws CoreException
+     */
 	public static function PrepareObjectURL($sClass, $iId, $sMode)
 	{
 		require_once APPROOT . '/lib/silex/vendor/autoload.php';
@@ -75,16 +78,19 @@ class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 			Combodo\iTop\Portal\Helper\ApplicationHelper::LoadScopesConfiguration($oApp, new ModuleDesign($sPortalId));
 		}
 
+		/** @var \Combodo\iTop\Portal\Helper\UrlGenerator $oUrlGenerator */
+		$oUrlGenerator = $oApp['url_generator'];
+
 		// The object is reachable in the specified mode (edit/view)
 		//
 		// Note: Scopes only apply when URL check is triggered from the portal GUI.
-		$sObjectQueryString = null;
+        $sObjectQueryString = null;
 		switch($sMode)
 		{
 			case 'view':
 				if(!ContextTag::Check('GUI:Portal') || Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sClass, $iId))
 				{
-					$sObjectQueryString = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+					$sObjectQueryString = $oUrlGenerator->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
 				}
 			break;
 					
@@ -93,11 +99,11 @@ class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 				// Checking if user is allowed to edit object, if not we check if it can at least view it.
 				if(!ContextTag::Check('GUI:Portal') || Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_MODIFY, $sClass, $iId))
 				{
-					$sObjectQueryString = $oApp['url_generator']->generate('p_object_edit', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+					$sObjectQueryString = $oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
 				}
 				elseif(!ContextTag::Check('GUI:Portal') || Combodo\iTop\Portal\Helper\SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sClass, $iId))
 				{
-					$sObjectQueryString = $oApp['url_generator']->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
+					$sObjectQueryString = $oUrlGenerator->generate('p_object_view', array('sObjectClass' => $sClass, 'sObjectId' => $iId));
 				}
 			break;
 		}
@@ -126,6 +132,14 @@ class iTopPortalEditUrlMaker implements iDBObjectURLMaker
 		return $sUrl;
 	}
 
+    /**
+     * @param $sClass
+     * @param $iId
+     *
+     * @return null|string
+     *
+     * @throws CoreException
+     */
 	public static function MakeObjectURL($sClass, $iId)
 	{	
 		return static::PrepareObjectURL($sClass, $iId, 'edit');

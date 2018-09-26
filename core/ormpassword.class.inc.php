@@ -42,6 +42,7 @@ class ormPassword
 	public function __construct($sHash = '', $sSalt = '')
 	{
 		$this->m_sHashed = $sHash;
+		//only used for <= 2.5 hashed password
 		$this->m_sSalt = $sSalt;
 	}
 	
@@ -50,8 +51,7 @@ class ormPassword
 	 */
 	public function SetPassword($sClearTextPassword)
 	{
-		$this->m_sSalt = SimpleCrypt::GetNewSalt();
-		$this->m_sHashed = $this->ComputeHash($sClearTextPassword);
+		$this->m_sHashed = password_hash($sClearTextPassword, PASSWORD_DEFAULT);
 	}
 	
 	/**
@@ -95,10 +95,19 @@ class ormPassword
 	public function CheckPassword($sClearTextPassword)
 	{
 		$bResult = false;
-		$sHashedPwd = $this->ComputeHash($sClearTextPassword);
-		if ($this->m_sHashed == $sHashedPwd)
+		$aInfo = password_get_info($this->m_sHashed);
+		switch ($aInfo["algo"])
 		{
-			$bResult = true;
+			case 0:
+				//unknown, assume it's a legacy password
+				$sHashedPwd = $this->ComputeHash($sClearTextPassword);
+				if ($this->m_sHashed == $sHashedPwd)
+				{
+					$bResult = true;
+				}
+				break;
+			default:
+				$bResult = password_verify($sClearTextPassword, $this->m_sHashed);
 		}
 		return $bResult;
 	}

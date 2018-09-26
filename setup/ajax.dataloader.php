@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Does load data from XML files (currently used in the setup only)
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -62,7 +62,7 @@ else
 	// Check that the limit will allow us to load the data
 	//
 	$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-	if ($iMemoryLimit < SAFE_MINIMUM_MEMORY)
+	if (!utils::IsMemoryLimitOk($iMemoryLimit, SAFE_MINIMUM_MEMORY))
 	{
 		if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === FALSE)
 		{
@@ -73,13 +73,37 @@ else
 			SetupPage::log_info("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");		
 		}
 	}
+}
 
+
+define('PHP_FATAL_ERROR_TAG', 'phpfatalerror');
+
+
+/**
+ * Handler for register_shutdown_function, to catch PHP errors
+ */
+function ShutdownCallback()
+{
+	$error = error_get_last();
+	$bIsErrorToReport = (($error !== null) && ($error['type'] & (E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR)));
+	if (!$bIsErrorToReport)
+	{
+		return;
+	}
+
+	$errno = $error["type"];
+	$errfile = $error["file"];
+	$errline = $error["line"];
+	$errstr = $error["message"];
+	$sLogMessage = "PHP error occured : msg=$errstr, no=$errno, file=$errfile, line=$errline";
+	SetupPage::log_error("Setup error: $sLogMessage");
+	echo '<'.PHP_FATAL_ERROR_TAG.'>'.$sLogMessage.'</'.PHP_FATAL_ERROR_TAG.'>';
 }
 
 
 function FatalErrorCatcher($sOutput)
-{ 
-	if ( preg_match('|<phpfatalerror>.*</phpfatalerror>|s', $sOutput, $aMatches) )
+{
+	if (preg_match('|<'.PHP_FATAL_ERROR_TAG.'>.*</'.PHP_FATAL_ERROR_TAG.'>|s', $sOutput, $aMatches))
 	{
 		header("HTTP/1.0 500 Internal server error.");
 		$errors = '';
@@ -97,9 +121,11 @@ function FatalErrorCatcher($sOutput)
 //Define some bogus, invalid HTML tags that no sane
 //person would ever put in an actual document and tell
 //PHP to delimit fatal error warnings with them.
-ini_set('error_prepend_string', '<phpfatalerror>');
-ini_set('error_append_string', '</phpfatalerror>');
+ini_set('error_prepend_string', '<'.PHP_FATAL_ERROR_TAG.'>');
+ini_set('error_append_string', '</'.PHP_FATAL_ERROR_TAG.'>');
 
+// callback on errors to log
+register_shutdown_function('ShutdownCallback');
 // Starts the capture of the ouput, and sets a filter to capture the fatal errors.
 ob_start('FatalErrorCatcher'); // Start capturing the output, and pass it through the fatal error catcher
 
@@ -140,6 +166,7 @@ try
 		$oDummyController = new WizardController('');
 		if (is_subclass_of($sClass, 'WizardStep'))
 		{
+			/** @var WizardStep $oStep */
 			$oStep = new $sClass($oDummyController, $sState);
 			$sConfigFile = utils::GetConfigFilePath();
 			if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig())
@@ -179,4 +206,3 @@ if (function_exists('memory_get_peak_usage'))
 		SetupPage::log_info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
 	}
 }
-?>

@@ -245,8 +245,8 @@ var EditorUtils = (function() {
 	var updateConfigEditorButtonState = function(editor) {
 	    var isSameContent = (editor.getValue() == $('#prev_config').val());
 	    var hasNoError = $.isEmptyObject(editor.getSession().getAnnotations());
-	    $('#cancel_button').attr('disabled', isSameContent);
-	    $('#submit_button').attr('disabled', isSameContent || !hasNoError);
+	    $('#cancel_button').prop('disabled', isSameContent);
+	    $('#submit_button').prop('disabled', isSameContent || !hasNoError);
 	};
 	
 	return {

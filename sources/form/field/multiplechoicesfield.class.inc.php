@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,8 +19,7 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use \Closure;
-use \Combodo\iTop\Form\Field\Field;
+use Closure;
 
 /**
  * Description of MultipleChoicesField
@@ -114,7 +113,7 @@ abstract class MultipleChoicesField extends Field
 	{
 		if (array_key_exists($value, $this->currentValue))
 		{
-			unset($this->currentValue[$sId]);
+			unset($this->currentValue[$value]);
 		}
 		return $this;
 	}

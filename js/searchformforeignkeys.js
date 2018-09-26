@@ -153,11 +153,11 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		var okBtn = $('#btn_ok_'+me.id);
 		if ($('#count_'+me.id).val() > 0)
 		{
-			okBtn.removeAttr('disabled');
+			okBtn.prop('disabled', false);
 		}
 		else
 		{
-			okBtn.prop('disabled', 'disabled');
+			okBtn.prop('disabled', true);
 		}
 	};
 
@@ -324,7 +324,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		if ($('#'+me.id).prop('disabled'))
 		{
 			$('#v_'+me.id).html('');
-			$('#label_'+me.id).prop('disabled', 'disabled');
+			$('#label_'+me.id).prop('disabled', true);
 			$('#label_'+me.id).css({'background': 'transparent'});
 			$('#mini_add_'+me.id).hide();
 			$('#mini_tree_'+me.id).hide();
@@ -332,7 +332,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		}
 		else
 		{
-			$('#label_'+me.id).removeAttr('disabled');
+			$('#label_'+me.id).prop('disabled', false);
 			$('#label_'+me.id).css({'background': '#fff url(../images/ac-background.gif) no-repeat right'});
 			$('#mini_add_'+me.id).show();
 			$('#mini_tree_'+me.id).show();
