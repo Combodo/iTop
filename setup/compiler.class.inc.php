@@ -1395,7 +1395,7 @@ EOF
                     $aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
                     $aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
                     $aParameters['depends_on'] = $sDependencies;
-	                $aParameters['tag_max_nb'] = $this->GetPropNumber($oField, 'tag_max_nb', 12);
+	                $aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
 	                $aParameters['tag_code_max_len'] = $this->GetPropNumber($oField, 'tag_code_max_len', 20);
 	                if ($aParameters['tag_code_max_len'] > 255)
 	                {

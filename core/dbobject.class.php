@@ -1301,6 +1301,34 @@ abstract class DBObject implements iDisplay
 
 			return "Bad type";
 		}
+		elseif ($oAtt instanceof AttributeClassAttCodeSet)
+		{
+			if (is_string($toCheck))
+			{
+				$oTag = new ormSet(get_class($this), $sAttCode);
+				try
+				{
+					$aValues = array();
+					foreach(explode(',', $toCheck) as $sValue)
+					{
+						$aValues[] = trim($sValue);
+					}
+					$oTag->SetValues($aValues);
+				} catch (Exception $e)
+				{
+					return "Set value '$toCheck' is not a valid set";
+				}
+
+				return true;
+			}
+
+			if ($toCheck instanceof ormSet)
+			{
+				return true;
+			}
+
+			return "Bad type";
+		}
 		elseif ($oAtt->IsScalar())
 		{
 			$aValues = $oAtt->GetAllowedValues($this->ToArgsForQuery());

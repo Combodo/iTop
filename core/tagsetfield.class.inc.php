@@ -277,7 +277,6 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		return false;
 	}
 
-
 	/**
 	 * Display Tag Usage
 	 *
@@ -333,6 +332,11 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 
 	public static function GetClassName($sClass)
 	{
+		if ($sClass == 'TagSetFieldData')
+		{
+			$aWords = preg_split('/(?=[A-Z]+)/', $sClass);
+			return trim(implode(' ', $aWords));
+		}
 		try
 		{
 			$aTagFieldInfo = self::ExtractTagFieldName($sClass);

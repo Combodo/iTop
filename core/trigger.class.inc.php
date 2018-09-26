@@ -427,7 +427,7 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeObjectAttCodeSet('target_attcodes', array("allowed_values" => null, "class" => "target_class", "sql" => "target_attcodes", "default_value" => null, "is_null_allowed" => true, "depends_on" => array('target_class'))));
+		MetaModel::Init_AddAttribute(new AttributeClassAttCodeSet('target_attcodes', array("allowed_values" => null, "class_field" => "target_class", "sql" => "target_attcodes", "default_value" => null, "is_null_allowed" => true, "max_items" => 20, "min_items" => 0, "attribute_definition_list" => null, "depends_on" => array('target_class'))));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'target_attcodes', 'action_list')); // Attributes to be displayed for the complete details
@@ -444,11 +444,13 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 		}
 
 		// Check the attribute
-		$aAttCodes = $this->Get('target_attcodes');
+		$oAttCodeSet = $this->Get('target_attcodes');
+		$aAttCodes = $oAttCodeSet->GetValues();
 		if (empty($aAttCodes))
 		{
 			return true;
 		}
+
 		foreach($aAttCodes as $sAttCode)
 		{
 			if (array_key_exists($sAttCode, $aChanges))

@@ -1654,12 +1654,8 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public static function GetFormElementForField(
-		$oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '',
-		$iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true
-	) {
-		static $iInputId = 0;
-		$sFieldPrefix = '';
+	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '',	$iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true)
+	{
 		$sFormPrefix = isset($aArgs['formPrefix']) ? $aArgs['formPrefix'] : '';
 		$sFieldPrefix = isset($aArgs['prefix']) ? $sFormPrefix.$aArgs['prefix'] : $sFormPrefix;
 		if ($sDisplayValue == '')
@@ -2054,16 +2050,23 @@ EOF
 
 					break;
 
-				case 'ObjectAttcodeSet':
-					$iFieldSize = $oAttDef->GetMaxSize();
-					if (is_array($sDisplayValue))
+				case 'ClassAttCodeSet':
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/selectize.min.js');
+					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/jquery.itop-tagset-widget.js');
+
+					$oPage->add_dict_entry('Core:AttributeTagSet:placeholder');
+
+					/** @var \ormSet $value */
+					if (isset($aArgs['this']))
 					{
-						$sDisplayValue = implode(', ', $sDisplayValue);
+						$oAttDef->SetTargetClass($aArgs['this']);
 					}
-					$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><input title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
-					$aEventsList[] ='validate';
-					$aEventsList[] ='keyup';
-					$aEventsList[] ='change';
+					$sJson = $oAttDef->GetJsonForWidget($value);
+					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_tagset\"><input id='$sInputId' name='$sInputId' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
+					$sScript = "$('#$sInputId').tagset_widget();";
+					$oPage->add_ready_script($sScript);
 					break;
 
 				case 'String':
@@ -3315,6 +3318,17 @@ EOF
 					$this->Set($sAttCode, $oTagSet);
 					break;
 
+				case 'ClassAttCodeSet':
+					/** @var ormSet $oSet */
+					$oSet = $this->Get($sAttCode);
+					if (is_null($oSet))
+					{
+						$oSet = new ormSet(get_class($this), $sAttCode);
+					}
+					$oSet->ApplyDelta($value);
+					$this->Set($sAttCode, $oSet);
+					break;
+
 				default:
 					if (!is_null($value))
 					{
@@ -3506,6 +3520,7 @@ EOF
 				break;
 
 			case 'TagSet':
+			case 'ClassAttCodeSet':
 				$sTagSetJson = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 				$value = json_decode($sTagSetJson, true);
 				break;
@@ -4077,7 +4092,7 @@ EOF
 							$sTip = addslashes($sTip);
 							$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
 
-							if ($oAttDef->GetEditClass() == 'TagSet')
+							if (($oAttDef->GetEditClass() == 'TagSet') || ($oAttDef->GetEditClass() == 'ClassAttCodeSet'))
 							{
 								// Set the value by adding the values to the first one
 								reset($aMultiValues);
