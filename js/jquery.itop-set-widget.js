@@ -41,6 +41,7 @@
  *       "label": "don't worry ;)"
  *     }
  *   ],
+ *   "max_items_allowed": 20,
  *   "partial_values": [],
  *   "orig_value": [
  *     "critical"
@@ -55,10 +56,10 @@
  * </code>
  *
  * <p>Needs js/selectize.js already loaded !! (https://github.com/selectize/selectize.js)<br>
- * In the future we could use a solution like this :
+ * In the future we could use WebPack... Or a solution like this :
  * https://www.safaribooksonline.com/library/view/learning-javascript-design/9781449334840/ch13s09.html
  */
-$.widget('itop.tagset_widget',
+$.widget('itop.set_widget',
 	{
 		// default options
 		options: {isDebug: false},
@@ -71,23 +72,23 @@ $.widget('itop.tagset_widget',
 		STATUS_ADDED: "added",
 		STATUS_REMOVED: "removed",
         STATUS_NEUTRAL: "unchanged",
-        MAX_TAGS_ALLOWED: "max_tags_allowed",
+        MAX_ITEMS_ALLOWED_KEY: "max_items_allowed",
 
 		possibleValues: null,
 		partialValues: null,
 		originalValue: null,
 		/** will hold all interactions done : code as key and one of STATUS_* constant as value */
-		tagSetCodesStatus: null,
+		setItemsCodesStatus: null,
 
 		selectizeWidget: null,
-		maxTagsAllowed: null,
+		maxItemsAllowed: null,
 
 		// the constructor
 		_create: function () {
 			var $this = this.element;
 
 			this._initWidgetData($this.val());
-			this._generateTagSetField($this);
+			this._generateSelectionWidget($this);
 		},
 
 		// events bound via _bind are removed automatically
@@ -102,44 +103,44 @@ $.widget('itop.tagset_widget',
 			this.possibleValues = dataArray[this.POSSIBLE_VAL_KEY];
 			this.partialValues = ($.isArray(dataArray[this.PARTIAL_VAL_KEY])) ? dataArray[this.PARTIAL_VAL_KEY] : [];
 			this.originalValue = dataArray[this.ORIG_VAL_KEY];
-			this.maxTagsAllowed = dataArray[this.MAX_TAGS_ALLOWED];
-			this.tagSetCodesStatus = {};
+			this.maxItemsAllowed = dataArray[this.MAX_ITEMS_ALLOWED_KEY];
+			this.setItemsCodesStatus = {};
 		},
 
-		_generateTagSetField: function ($widgetElement) {
+		_generateSelectionWidget: function ($widgetElement) {
 			var $parentElement = $widgetElement.parent(),
-				inputId = $widgetElement.attr("id") + "-tagset-values";
+				inputId = $widgetElement.attr("id") + "-setwidget-values";
 
 			$parentElement.append("<input id='" + inputId + "' value='" + this.originalValue.join(" ") + "'>");
 			var $inputWidget = $("#" + inputId);
 
-			// create closure to have both tagset widget and Selectize instances available in callbacks
+			// create closure to have both set widget and Selectize instances available in callbacks
 			// selectize instance could also be retrieve on the source input DOM node (selectize property)
 			// I think this is much clearer this way !
-			var tagSetWidget = this;
+			var setWidget = this;
 
 			$inputWidget.selectize({
 				plugins: ['remove_button'],
 				delimiter: ' ',
-				maxItems: this.maxTagsAllowed,
+				maxItems: this.maxItemsAllowed,
 				hideSelected: true,
 				valueField: 'code',
 				labelField: 'label',
 				searchField: 'label',
 				options: this.possibleValues,
 				create: false,
-				placeholder: Dict.S("Core:AttributeTagSet:placeholder"),
+				placeholder: Dict.S("Core:AttributeSet:placeholder"),
 				onInitialize: function () {
 					var selectizeWidget = this;
-					tagSetWidget._onInitialize(selectizeWidget);
+					setWidget._onInitialize(selectizeWidget);
 				},
 				onItemAdd: function (value, $item) {
 					var selectizeWidget = this;
-					tagSetWidget._onTagAdd(value, $item, selectizeWidget);
+					setWidget._onTagAdd(value, $item, selectizeWidget);
 				},
 				onItemRemove: function (value) {
 					var selectizeWidget = this;
-					tagSetWidget._onTagRemove(value, selectizeWidget);
+					setWidget._onTagRemove(value, selectizeWidget);
 				}
 			});
 
@@ -156,14 +157,14 @@ $.widget('itop.tagset_widget',
 			widgetPublicData[this.PARTIAL_VAL_KEY] = this.partialValues;
 			widgetPublicData[this.ORIG_VAL_KEY] = this.originalValue;
 
-			for (var tagSetCode in this.tagSetCodesStatus) {
-				var tagSetCodeStatus = this.tagSetCodesStatus[tagSetCode];
-				switch (tagSetCodeStatus) {
+			for (var setItemCode in this.setItemsCodesStatus) {
+				var setItemCodeStatus = this.setItemsCodesStatus[setItemCode];
+				switch (setItemCodeStatus) {
 					case this.STATUS_ADDED:
-						addedValues.push(tagSetCode);
+						addedValues.push(setItemCode);
 						break;
 					case this.STATUS_REMOVED:
-						removedValues.push(tagSetCode);
+						removedValues.push(setItemCode);
 						break;
 				}
 			}
@@ -183,59 +184,59 @@ $.widget('itop.tagset_widget',
 
 		/**
 		 * Updating items to have a specific rendering for partial codes.<br>
-		 *     At first I was thinking about using the Selectize render callback, but it is called before onItemAdd/onItemRemove :(<br>
+		 *     At first I was thinking about using the Selectize <code>render</code> callback, but it is called before <code>onItemAdd</code>/<code>onItemRemove</code> :(<br>
 		 *     Indeed as we only need to have partial items on first display, this callback is the right place O:)
-		 * @param inputWidget Selectize object
+		 * @param selectionWidget Selectize object
 		 * @private
 		 */
-		_onInitialize: function (inputWidget) {
+		_onInitialize: function (selectionWidget) {
 			if (this.options.isDebug) {
 				console.debug("onInit", this);
 			}
-			var tagSetWidget = this;
-			inputWidget.items.forEach(function (tagSetCode) {
-				if (tagSetWidget._isCodeInPartialValues(tagSetCode)) {
-					inputWidget.getItem(tagSetCode).addClass("partial-code");
+			var setWidget = this;
+			selectionWidget.items.forEach(function (setItemCode) {
+				if (setWidget._isCodeInPartialValues(setItemCode)) {
+					selectionWidget.getItem(setItemCode).addClass("partial-code");
 				}
 			});
 		},
 
-		_onTagAdd: function (tagSetCode, $item, inputWidget) {
+		_onTagAdd: function (setItemCode, $item, inputWidget) {
 			if (this.options.isDebug) {
 				console.debug("tagAdd");
 			}
-			this.tagSetCodesStatus[tagSetCode] = this.STATUS_ADDED;
+			this.setItemsCodesStatus[setItemCode] = this.STATUS_ADDED;
 
-			if (this._isCodeInPartialValues(tagSetCode)) {
-				this.partialValues = this.partialValues.filter(item => (item !== tagSetCode));
+			if (this._isCodeInPartialValues(setItemCode)) {
+				this.partialValues = this.partialValues.filter(item => (item !== setItemCode));
 			} else {
-				if (this.originalValue.indexOf(tagSetCode) !== -1) {
+				if (this.originalValue.indexOf(setItemCode) !== -1) {
 					// do not add if was present initially and removed
-					this.tagSetCodesStatus[tagSetCode] = this.STATUS_NEUTRAL;
+					this.setItemsCodesStatus[setItemCode] = this.STATUS_NEUTRAL;
 				}
 			}
 
 			this.refresh();
 		},
 
-		_onTagRemove: function (tagSetCode, inputWidget) {
-			this.tagSetCodesStatus[tagSetCode] = this.STATUS_REMOVED;
+		_onTagRemove: function (setItemCode, inputWidget) {
+			this.setItemsCodesStatus[setItemCode] = this.STATUS_REMOVED;
 
-			if (this._isCodeInPartialValues(tagSetCode)) {
+			if (this._isCodeInPartialValues(setItemCode)) {
 				// force rendering items again, otherwise partial class will be kept
 				// can'be in the onItemAdd callback as it is called after the render callback...
 				inputWidget.clearCache("item");
 			}
 
-			if (this.originalValue.indexOf(tagSetCode) === -1) {
+			if (this.originalValue.indexOf(setItemCode) === -1) {
 				// do not remove if wasn't present initially
-				this.tagSetCodesStatus[tagSetCode] = this.STATUS_NEUTRAL;
+				this.setItemsCodesStatus[setItemCode] = this.STATUS_NEUTRAL;
 			}
 
 			this.refresh();
 		},
 
-		_isCodeInPartialValues: function (tagSetCode) {
-			return (this.partialValues.indexOf(tagSetCode) >= 0);
+		_isCodeInPartialValues: function (setItemCode) {
+			return (this.partialValues.indexOf(setItemCode) >= 0);
 		}
 	});

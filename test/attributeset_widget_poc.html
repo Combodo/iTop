@@ -1,0 +1,96 @@
+<!--
+  ~  Copyright (c) 2010-2018 Combodo SARL
+  ~
+  ~    This file is part of iTop.
+  ~
+  ~    iTop is free software; you can redistribute it and/or modify
+  ~    it under the terms of the GNU Affero General Public License as published by
+  ~    the Free Software Foundation, either version 3 of the License, or
+  ~    (at your option) any later version.
+  ~
+  ~    iTop is distributed in the hope that it will be useful,
+  ~    but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~    GNU Affero General Public License for more details.
+  ~
+  ~    You should have received a copy of the GNU Affero General Public License
+  ~    along with iTop. If not, see <http://www.gnu.org/licenses/>
+  ~
+  -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>AttributeSet fields widget test</title>
+
+<script>
+var aDictEntries = {"Core:AttributeSet:placeholder": "click to add"};
+</script>
+
+<script src="../js/utils.js"></script>
+<script src="../js/jquery-3.3.1.min.js"></script>
+<script src="../js/jquery-ui-1.11.4.custom.min.js"></script>
+<script src="../js/selectize.min.js"></script>
+<script src="../js/jquery.itop-set-widget.js"></script>
+
+<link rel="stylesheet" type="text/css" href="../css/light-grey.css">
+<link rel="stylesheet" type="text/css" href="../css/selectize.default.css">
+
+</head>
+<body>
+
+
+<form>
+<div class="field_container">
+<div>
+<div class="field_value">
+<div class="attribute-edit">
+<div class="field_input_zone field_input_tagset">
+<label>Exemple un champ : </label>
+<textarea id="tagset-field" rows="30" cols="60">
+{
+  "possible_values": [
+    {
+      "code": "critical",
+      "label": "Critical ticket"
+    },
+    {
+      "code": "high",
+      "label": "don't forget it !"
+    },
+    {
+      "code": "normal",
+      "label": "when time available"
+    },
+    {
+      "code": "low",
+      "label": "don't worry ;)"
+    }
+  ],
+  "max_items_allowed": 3,
+  "partial_values": [
+    "low"
+  ],
+  "orig_value": [
+    "critical",
+    "low"
+  ],
+  "added": "",
+  "removed": ""
+}
+</textarea>
+</div>
+</div>
+</div>
+</div>
+</div>
+</form>
+
+
+<script>
+$("#tagset-field").set_widget({isDebug: true});
+</script>
+
+</body>
+</html>

@@ -2041,15 +2041,15 @@ EOF
 				case 'TagSet':
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/selectize.min.js');
 					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/jquery.itop-tagset-widget.js');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/jquery.itop-set-widget.js');
 
-					$oPage->add_dict_entry('Core:AttributeTagSet:placeholder');
+					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
 					/** @var \ormTagSet $value */
 					$sJson = $oAttDef->GetJsonForWidget($value);
 					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
 					$sHTMLValue = "<div class=\"field_input_zone field_input_tagset\"><input id='$sInputId' name='$sInputId' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
-					$sScript = "$('#$sInputId').tagset_widget();";
+					$sScript = "$('#$sInputId').set_widget();";
 					$oPage->add_ready_script($sScript);
 
 					break;

@@ -6717,7 +6717,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	/**
 	 * @param \ormTagSet $oValue
 	 *
-	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
+	 * @return string JSON to be used in the itop.set_widget JQuery widget
 	 * @throws \CoreException
 	 */
 	public function GetJsonForWidget($oValue)
@@ -6750,7 +6750,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		$aJson['removed'] = array();
 
 		$iMaxTags = $this->GetTagMaxNb();
-		$aJson['max_tags_allowed'] = $iMaxTags;
+		$aJson['max_items_allowed'] = $iMaxTags;
 
 		return json_encode($aJson);
 	}

@@ -432,7 +432,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeLinkedSet+' => 'Liste d\'objets d\'une classe donnée et pointant sur l\'objet courant',
     'Core:AttributeTagSet' => 'Liste d\'étiquettes',
     'Core:AttributeTagSet+' => '',
-	'Core:AttributeTagSet:placeholder' => 'cliquer pour ajouter',
+	'Core:AttributeSet:placeholder' => 'cliquer pour ajouter',
 	'Core:AttributeLinkedSetIndirect' => 'Objets liés (1-n)',
 	'Core:AttributeLinkedSetIndirect+' => 'Liste d\'objets d\'une classe donnée et liés à l\'objet courant via une classe intermédiaire',
 	'Core:AttributeInteger' => 'Nombre entier',
