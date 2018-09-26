@@ -405,6 +405,40 @@ class TriggerOnObjectCreate extends TriggerOnObject
 /**
  * Class TriggerOnObjectCreate
  */
+class TriggerOnObjectDelete extends TriggerOnObject
+{
+	/**
+	 * @throws \CoreException
+	 */
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "grant_by_profile,core/cmdb,application",
+			"key_type" => "autoincrement",
+			"name_attcode" => "description",
+			"state_attcode" => "",
+			"reconc_keys" => array('description'),
+			"db_table" => "priv_trigger_onobjdelete",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
+		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	}
+}
+
+/**
+ * Class TriggerOnObjectCreate
+ */
 class TriggerOnObjectUpdate extends TriggerOnObject
 {
 	/**

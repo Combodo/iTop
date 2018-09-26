@@ -2241,6 +2241,17 @@ abstract class DBObject implements iDisplay
 		if (!MetaModel::DBIsReadOnly())
 		{
 			$this->OnDelete();
+
+			// Activate any existing trigger
+			$sClass = get_class($this);
+			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectDelete AS t WHERE t.target_class IN ('$sClassList')"));
+			while ($oTrigger = $oSet->Fetch())
+			{
+				/** @var \Trigger $oTrigger */
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+
 			$this->RecordObjDeletion($this->m_iKey); // May cause a reload for storing history information
 			
 			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
