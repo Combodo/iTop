@@ -46,6 +46,7 @@ require_once APPROOT . 'sources/form/field/selectobjectfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/checkboxfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/radiofield.class.inc.php';
 require_once APPROOT . 'sources/form/field/linkedsetfield.class.inc.php';
+require_once APPROOT . 'sources/form/field/tagsetfield.class.inc.php';
 require_once APPROOT . 'sources/form/validator/validator.class.inc.php';
 require_once APPROOT . 'sources/form/validator/mandatoryvalidator.class.inc.php';
 require_once APPROOT . 'sources/form/validator/integervalidator.class.inc.php';
@@ -57,5 +58,6 @@ require_once APPROOT . 'sources/renderer/bootstrap/bsformrenderer.class.inc.php'
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bssimplefieldrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bsselectobjectfieldrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bslinkedsetfieldrenderer.class.inc.php';
+require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bstagsetfieldrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bssubformfieldrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bsfileuploadfieldrenderer.class.inc.php';

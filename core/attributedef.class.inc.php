@@ -6714,47 +6714,6 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'tag_max_nb', 'tag_code_max_len'));
 	}
 
-	/**
-	 * @param \ormTagSet $oValue
-	 *
-	 * @return string JSON to be used in the itop.set_widget JQuery widget
-	 * @throws \CoreException
-	 */
-	public function GetJsonForWidget($oValue)
-	{
-		$aJson = array();
-
-		// possible_values
-		$aTagSetObjectData = $this->GetAllowedValues();
-		$aTagSetKeyValData = array();
-		foreach($aTagSetObjectData as $sTagCode => $sTagLabel)
-		{
-			$aTagSetKeyValData[] = [
-				'code' => $sTagCode,
-				'label' => $sTagLabel,
-			];
-		}
-		$aJson['possible_values'] = $aTagSetKeyValData;
-
-		if (is_null($oValue))
-		{
-			$aJson['partial_values'] = array();
-			$aJson['orig_value'] = array();
-		}
-		else
-		{
-			$aJson['partial_values'] = $oValue->GetModifiedTags();
-			$aJson['orig_value'] = array_merge($oValue->GetValue(), $oValue->GetModifiedTags());
-		}
-		$aJson['added'] = array();
-		$aJson['removed'] = array();
-
-		$iMaxTags = $this->GetTagMaxNb();
-		$aJson['max_items_allowed'] = $iMaxTags;
-
-		return json_encode($aJson);
-	}
-
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
 		return null;
@@ -7412,6 +7371,47 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	}
 
 	/**
+	 * @param \ormTagSet $oValue
+	 *
+	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
+	 * @throws \CoreException
+	 */
+	public function GetJsonForWidget($oValue)
+	{
+		$aJson = array();
+
+		// possible_values
+		$aTagSetObjectData = $this->GetAllowedValues();
+		$aTagSetKeyValData = array();
+		foreach($aTagSetObjectData as $sTagCode => $sTagLabel)
+		{
+			$aTagSetKeyValData[] = [
+				'code' => $sTagCode,
+				'label' => $sTagLabel,
+			];
+		}
+		$aJson['possible_values'] = $aTagSetKeyValData;
+
+		if (is_null($oValue))
+		{
+			$aJson['partial_values'] = array();
+			$aJson['orig_value'] = array();
+		}
+		else
+		{
+			$aJson['partial_values'] = $oValue->GetModifiedTags();
+			$aJson['orig_value'] = array_merge($oValue->GetValue(), $oValue->GetModifiedTags());
+		}
+		$aJson['added'] = array();
+		$aJson['removed'] = array();
+
+		$iMaxTags = $this->GetTagMaxNb();
+		$aJson['max_tags_allowed'] = $iMaxTags;
+
+		return json_encode($aJson);
+	}
+
+	/**
 	 * The part of the current attribute in the object's signature, for the supplied value
 	 *
 	 * @param mixed $value The value of this attribute for the object
@@ -7430,6 +7430,10 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		return parent::Fingerprint($value);
 	}
 
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\TagSetField';
+	}
 }
 
 /**

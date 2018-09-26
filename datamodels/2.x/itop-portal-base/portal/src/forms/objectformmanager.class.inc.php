@@ -32,6 +32,7 @@ use DBObjectSet;
 use DBSearch;
 use DBObjectSearch;
 use InlineImage;
+use ormTagSet;
 use AttributeDateTime;
 use AttributeTagSet;
 use AttachmentPlugIn;
@@ -1123,13 +1124,13 @@ class ObjectFormManager extends FormManager
 						}
 						elseif ($oAttDef instanceof AttributeTagSet)
 						{
-							/** @var ormTagSet $oTagSet */
+							/** @var \ormTagSet $oTagSet */
 							$oTagSet = $this->oObject->Get($sAttCode);
 							if (is_null($oTagSet))
 							{
 								$oTagSet = new ormTagSet(get_class($this->oObject), $sAttCode);
 							}
-							$oTagSet->ApplyDelta($value);
+							$oTagSet->ApplyDelta(json_decode($value, true));
 							$this->oObject->Set($sAttCode, $oTagSet);
 						}
 					    elseif ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
