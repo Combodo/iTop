@@ -3171,32 +3171,19 @@ class AttributeClassState extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
 
-	private $sTargetClass;
-
-	/**
-	 * @param \DBObject $oHostObj
-	 *
-	 * @throws \CoreException
-	 */
-	public function SetTargetClass($oHostObj)
-	{
-		if (!empty($oHostObj))
-		{
-			$sTargetClass = $this->Get('class_field');
-			$sClass = $oHostObj->Get($sTargetClass);
-			$this->sTargetClass = $sClass;
-		}
-	}
-
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
-		if (!empty($this->sTargetClass))
+		if (isset($aArgs['this']))
 		{
+			$oHostObj = $aArgs['this'];
+			$sTargetClass = $this->Get('class_field');
+			$sClass = $oHostObj->Get($sTargetClass);
+
 			$aAllowedStates = array();
-			$aValues = MetaModel::EnumStates($this->sTargetClass);
+			$aValues = MetaModel::EnumStates($sClass);
 			foreach(array_keys($aValues) as $sState)
 			{
-				$aAllowedStates[$sState] = MetaModel::GetStateLabel($this->sTargetClass, $sState);
+				$aAllowedStates[$sState] = MetaModel::GetStateLabel($sClass, $sState);
 			}
 			return $aAllowedStates;
 		}
@@ -3210,10 +3197,13 @@ class AttributeClassState extends AttributeString
 		{
 			return '';
 		}
-		$this->SetTargetClass($oHostObject);
-		if (!empty($this->sTargetClass))
+
+		if (!empty($oHostObject))
 		{
-			return MetaModel::GetStateLabel($this->sTargetClass, $sValue);
+			$sTargetClass = $this->Get('class_field');
+			$sClass = $oHostObject->Get($sTargetClass);
+
+			return MetaModel::GetStateLabel($sClass, $sValue);
 		}
 
 		return $sValue;
@@ -6778,15 +6768,18 @@ class AttributeTagSet extends AttributeSet
 	/**
 	 * @param \ormTagSet $oValue
 	 *
+	 * @param $aArgs
+	 *
 	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
 	 * @throws \CoreException
+	 * @throws \OQLException
 	 */
-	public function GetJsonForWidget($oValue)
+	public function GetJsonForWidget($oValue, $aArgs)
 	{
 		$aJson = array();
 
 		// possible_values
-		$aTagSetObjectData = $this->GetAllowedValues();
+		$aTagSetObjectData = $this->GetAllowedValues($aArgs);
 		$aTagSetKeyValData = array();
 		foreach($aTagSetObjectData as $sTagCode => $sTagLabel)
 		{
@@ -7438,47 +7431,6 @@ class AttributeTagSet extends AttributeSet
 		$oSet->SetValues($json);
 
 		return $oSet;
-	}
-
-	/**
-	 * @param \ormTagSet $oValue
-	 *
-	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
-	 * @throws \CoreException
-	 */
-	public function GetJsonForWidget($oValue)
-	{
-		$aJson = array();
-
-		// possible_values
-		$aTagSetObjectData = $this->GetAllowedValues();
-		$aTagSetKeyValData = array();
-		foreach($aTagSetObjectData as $sTagCode => $sTagLabel)
-		{
-			$aTagSetKeyValData[] = [
-				'code' => $sTagCode,
-				'label' => $sTagLabel,
-			];
-		}
-		$aJson['possible_values'] = $aTagSetKeyValData;
-
-		if (is_null($oValue))
-		{
-			$aJson['partial_values'] = array();
-			$aJson['orig_value'] = array();
-		}
-		else
-		{
-			$aJson['partial_values'] = $oValue->GetModifiedTags();
-			$aJson['orig_value'] = array_merge($oValue->GetValue(), $oValue->GetModifiedTags());
-		}
-		$aJson['added'] = array();
-		$aJson['removed'] = array();
-
-		$iMaxTags = $this->GetTagMaxNb();
-		$aJson['max_tags_allowed'] = $iMaxTags;
-
-		return json_encode($aJson);
 	}
 
 	/**
@@ -9436,15 +9388,18 @@ class AttributeSet extends AttributeDBFieldVoid
 	/**
 	 * @param \ormSet $oValue
 	 *
+	 * @param $aArgs
+	 *
 	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
 	 * @throws \CoreException
+	 * @throws \OQLException
 	 */
-	public function GetJsonForWidget($oValue)
+	public function GetJsonForWidget($oValue, $aArgs)
 	{
 		$aJson = array();
 
 		// possible_values
-		$aAllowedValues = $this->GetAllowedValues();
+		$aAllowedValues = $this->GetAllowedValues($aArgs);
 		$aSetKeyValData = array();
 		foreach($aAllowedValues as $sCode => $sLabel)
 		{
@@ -9730,8 +9685,6 @@ class AttributeSet extends AttributeDBFieldVoid
 
 class AttributeClassAttCodeSet extends AttributeSet
 {
-	private $sTargetClass;
-
 	/**
 	 * @param \DBObject $oHostObj
 	 *
@@ -9764,10 +9717,14 @@ class AttributeClassAttCodeSet extends AttributeSet
 
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
-		if (!empty($this->sTargetClass))
+		if (isset($aArgs['this']))
 		{
+			$oHostObj = $aArgs['this'];
+			$sTargetClass = $this->Get('class_field');
+			$sClass = $oHostObj->Get($sTargetClass);
+
 			$aAllowedAttributes = array();
-			$aAllAttributes = MetaModel::GetAttributesList($this->sTargetClass);
+			$aAllAttributes = MetaModel::GetAttributesList($sClass);
 			$sAttDefList = $this->Get('attribute_definition_list');
 			if (!empty($sAttDefList))
 			{
@@ -9779,10 +9736,10 @@ class AttributeClassAttCodeSet extends AttributeSet
 				}
 				foreach($aAllAttributes as $sAttCode)
 				{
-					$oAttDef = MetaModel::GetAttributeDef($this->sTargetClass, $sAttCode);
+					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					if (isset($aAllowedDefs[get_class($oAttDef)]))
 					{
-						$aAllowedAttributes[$sAttCode] = MetaModel::GetLabel($this->sTargetClass, $sAttCode);
+						$aAllowedAttributes[$sAttCode] = MetaModel::GetLabel($sClass, $sAttCode);
 					}
 				}
 			}
@@ -9790,7 +9747,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 			{
 				foreach($aAllAttributes as $sAttCode)
 				{
-					$aAllowedAttributes[$sAttCode] = MetaModel::GetLabel($this->sTargetClass, $sAttCode);
+					$aAllowedAttributes[$sAttCode] = MetaModel::GetLabel($sClass, $sAttCode);
 				}
 			}
 			return $aAllowedAttributes;
@@ -9816,8 +9773,12 @@ class AttributeClassAttCodeSet extends AttributeSet
 	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
-		$this->SetTargetClass($oHostObj);
-		$aAllowedAttributes = $this->GetAllowedValues();
+		$aArgs = array();
+		if (!empty($oHostObj))
+		{
+			$aArgs['this'] = $oHostObj;
+		}
+		$aAllowedAttributes = $this->GetAllowedValues($aArgs);
 		$aInvalidAttCodes = array();
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
@@ -9843,7 +9804,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 		}
 		if (!empty($aInvalidAttCodes) && !$bIgnoreErrors)
 		{
-			throw new CoreUnexpectedValue("The attribute(s) ".implode(', ', $aInvalidAttCodes)." are invalid for class {$this->sTargetClass}");
+			$sTargetClass = $this->Get('class_field');
+			$sClass = $oHostObj->Get($sTargetClass);
+			throw new CoreUnexpectedValue("The attribute(s) ".implode(', ', $aInvalidAttCodes)." are invalid for class {$sClass}");
 		}
 
 		return $oSet;

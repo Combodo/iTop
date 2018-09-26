@@ -1677,13 +1677,6 @@ EOF
 		{
 			$iInputId = $oPage->GetUniqueId();
 		}
-		if (method_exists($oAttDef, 'SetTargetClass'))
-		{
-			if (isset($aArgs['this']))
-			{
-				$oAttDef->SetTargetClass($aArgs['this']);
-			}
-		}
 
 		$sHTMLValue = '';
 		if (!$oAttDef->IsExternalField())
@@ -1961,8 +1954,7 @@ EOF
 
 					if ($bPreserveCurrentValue)
 					{
-						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '',
-							$value);
+						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $value);
 					}
 					else
 					{
@@ -2049,7 +2041,7 @@ EOF
 					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
 					/** @var \ormTagSet $value */
-					$sJson = $oAttDef->GetJsonForWidget($value);
+					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
 					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
 					$sHTMLValue = "<div class=\"field_input_zone field_input_tagset\"><input id='$sInputId' name='$sInputId' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
 					$sScript = "$('#$sInputId').set_widget();";
@@ -2065,7 +2057,7 @@ EOF
 					$oPage->add_dict_entry('Core:AttributeTagSet:placeholder');
 
 					/** @var \ormSet $value */
-					$sJson = $oAttDef->GetJsonForWidget($value);
+					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
 					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
 					$sHTMLValue = "<div class=\"field_input_zone field_input_tagset\"><input id='$sInputId' name='$sInputId' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
 					$sScript = "$('#$sInputId').tagset_widget();";
