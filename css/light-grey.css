@@ -1944,26 +1944,19 @@ fieldset .details > .field_container {
 .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_extkey > .field_input_btn > img {
   max-width: 20px;
 }
-.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_set .selectize-control {
   width: 100%;
 }
-.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-dropdown, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input input {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_set .selectize-control .selectize-dropdown, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_set .selectize-control .selectize-input, .field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_set .selectize-control .selectize-input input {
   font-size: 12px;
 }
-.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_set .selectize-control .selectize-input {
   padding: 2px 2px 0px 2px;
   /* padding-bottom = padding-top - item margin-bottom */
   border: 1px solid #ababab;
   border-radius: 0;
 }
-.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input.has-items:after {
-  content: "+";
-  display: inline-block;
-  font-size: 17px;
-  font-weight: bold;
-  color: #222;
-}
-.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input .attribute-set-item.partial-code {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_set .selectize-control .selectize-input .attribute-set-item.partial-code {
   color: rgba(34, 34, 34, 0.6);
   background-color: #eaeaea;
 }
@@ -2899,7 +2892,22 @@ table.listResults .originColor {
 .menu-icon-select > .ui-menu-item {
   padding: 0.3em 3%;
 }
-div.selectize-control > div.selectize-input > div.item[data-value], div.selectize-control > div.selectize-input > div.item[data-value].active, .attribute-set .attribute-set-item {
+.selectize-control .selectize-input.has-items:after {
+  content: "+";
+  display: inline-block;
+  font-size: 17px;
+  font-weight: bold;
+  color: #222;
+}
+.attribute.attribute-set .attribute-set-item::after {
+  content: ",";
+  margin-right: 0.5em;
+}
+.attribute.attribute-set .attribute-set-item:last-of-type::after {
+  content: "";
+  margin-right: 0;
+}
+.attribute-edit .attribute-set .attribute-set-item, .attribute-set.attribute-tag-set .attribute-set-item, div.selectize-control > div.selectize-input > div.item[data-value], div.selectize-control > div.selectize-input > div.item[data-value].active {
   display: inline-block;
   margin-right: 3px;
   margin-bottom: 3px;
@@ -2917,6 +2925,9 @@ div.selectize-control > div.selectize-input > div.item[data-value], div.selectiz
   overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.attribute-edit .attribute-set .attribute-set-item::after, .attribute-set.attribute-tag-set .attribute-set-item::after, div.selectize-control > div.selectize-input > div.item[data-value]::after, div.selectize-control > div.selectize-input > div.item[data-value].active::after {
+  content: "";
 }
 div.selectize-control > div.selectize-input > div.item[data-value] > .remove {
   border: none;

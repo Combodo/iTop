@@ -6786,7 +6786,7 @@ class AttributeTagSet extends AttributeSet
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function GetJsonForWidget($oValue, $aArgs)
+	public function GetJsonForWidget($oValue, $aArgs = array())
 	{
 		$aJson = array();
 
@@ -9415,7 +9415,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function GetJsonForWidget($oValue, $aArgs)
+	public function GetJsonForWidget($oValue, $aArgs = array())
 	{
 		$aJson = array();
 
@@ -9871,7 +9871,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 				}
 				$value = $aLocalizedValues;
 			}
-			return implode(' ', $value);
+			$value = implode('', $value);
 		}
 		return '<span class="'.implode(' ', $this->aCSSClasses).'">'.$value.'</span>';
 	}
@@ -10059,7 +10059,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 				}
 				$value = $aLocalizedValues;
 			}
-			$value = implode(' ', $value);
+			$value = implode('', $value);
 		}
 
 		return '<span class="'.implode(' ', $this->aCSSClasses).'">'.$value.'</span>';

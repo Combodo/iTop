@@ -29,11 +29,11 @@ use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
 
 /**
- * Description of BsTagSetFieldRenderer
+ * Description of BsItemSetFieldRenderer
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class BsTagSetFieldRenderer extends FieldRenderer
+class BsItemSetFieldRenderer extends FieldRenderer
 {
     /**
      * @inheritdoc
@@ -56,8 +56,8 @@ class BsTagSetFieldRenderer extends FieldRenderer
 		// Rendering field
 		if (!$this->oField->GetHidden())
 		{
-			/** @var \ormTagSet $oOrmSet */
-			$oOrmSet = $this->oField->GetCurrentValue();
+			/** @var \ormSet $oOrmItemSet */
+			$oOrmItemSet = $this->oField->GetCurrentValue();
 
 			// Opening container
 			$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldMandatoryClass . '">');
@@ -77,8 +77,8 @@ class BsTagSetFieldRenderer extends FieldRenderer
 			// ... in edit mode
 			if(!$this->oField->GetReadOnly())
 			{
-				$oAttDef = MetaModel::GetAttributeDef($oOrmSet->GetClass(), $oOrmSet->GetAttCode());
-				$sJSONForWidget = $oAttDef->GetJsonForWidget($oOrmSet);
+				$oAttDef = MetaModel::GetAttributeDef($oOrmItemSet->GetClass(), $oOrmItemSet->GetAttCode());
+				$sJSONForWidget = $oAttDef->GetJsonForWidget($oOrmItemSet);
 
 				// - Help block
 				$oOutput->AddHtml('<div class="help-block"></div>');
@@ -94,7 +94,7 @@ class BsTagSetFieldRenderer extends FieldRenderer
 				$sValidators = json_encode($aValidators);
 				$oOutput->AddJs(
 <<<EOF
-    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field_tagset({
+    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").portal_form_field_set({
         validators: $sValidators,
         // Overloading default callback as the Selectize widget adds several inputs and we want to retrieve only the one with the value.
         get_current_value_callback: function(me, oEvent, oData){
@@ -105,7 +105,6 @@ class BsTagSetFieldRenderer extends FieldRenderer
 
 			return value;
 		},
-        set_current_value_callback: function(me, oEvent, oData){ console.log($(me).element); /*$(me.element).find('textarea').val(oData);*/ }
     });
 EOF
 				);
@@ -113,15 +112,15 @@ EOF
 			// ... in view mode
 			else
 			{
-				$aTags = $oOrmSet->GetTags();
+				$aItems = $oOrmItemSet->GetTags();
 				$oOutput->AddHtml('<div class="form-control-static">')
 						->AddHtml('<span class="label-group">');
-				foreach($aTags as $sTagCode => $oTag)
+				foreach($aItems as $sItemCode => $oItem)
 				{
-					$sTagLabel = $oTag->Get('label');
-					$sTagDescription = $oTag->Get('description');
-					$oOutput->AddHtml('<span class="label label-default" data-tag-code="'.$sTagCode.'" data-tag-label="'.$sTagLabel.'" data-tag-description="">')
-							->AddHtml($sTagLabel, true)
+					$sItemLabel = $oItem->Get('label');
+					$sItemDescription = $oItem->Get('description');
+					$oOutput->AddHtml('<span class="label label-default" data-item-code="'.$sItemCode.'" data-item-label="'.$sItemLabel.'" data-item-description="">')
+							->AddHtml($sItemLabel, true)
 							->AddHtml('</span>');
 				}
 				$oOutput->AddHtml('</span>')

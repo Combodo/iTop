@@ -1,11 +1,11 @@
-//iTop Portal Form field TagSet
+//iTop Portal Form field Set
 //Used for field containing tagset ...
 ;
 $(function()
 {
 	// the widget definition, where 'itop' is the namespace,
 	// 'portal_form_field' the widget name
-	$.widget( 'itop.portal_form_field_tagset', $.itop.portal_form_field,
+	$.widget( 'itop.portal_form_field_set', $.itop.portal_form_field,
 	{
 		// the constructor
 		_create: function()
@@ -13,7 +13,7 @@ $(function()
 			this.element
 			.addClass('portal_form_field_tagset');
 
-            this.element.find('input[type="hidden"]').tagset_widget();
+            this.element.find('input[type="hidden"]').set_widget();
 	
 			this._super();
 		},  
@@ -53,4 +53,3 @@ $(function()
 		}
 	});
 });
-light

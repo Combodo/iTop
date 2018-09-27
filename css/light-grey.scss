@@ -2265,7 +2265,7 @@ fieldset .details>.field_container {
 							}
 						}
 
-						&.field_input_tagset{
+						&.field_input_set{
 							.selectize-control{
 								width: 100%;
 
@@ -2278,14 +2278,6 @@ fieldset .details>.field_container {
 									padding: 2px 2px 0px 2px; /* padding-bottom = padding-top - item margin-bottom */
 									border: 1px solid #ABABAB;
 									border-radius: 0;
-
-									&.has-items:after {
-										content: "+";
-										display: inline-block;
-										font-size: 17px;
-										font-weight: bold;
-										color: $gray-darker;
-									}
 
 									.attribute-set-item.partial-code{
 										color: transparentize($gray-darker, 0.4);
@@ -3323,9 +3315,38 @@ table.listResults .originColor{
 //////////////////////
 // Selectize widget //
 //
+.selectize-control{
+	.selectize-input{
+		&.has-items:after {
+			content: "+";
+			display: inline-block;
+			font-size: 17px;
+			font-weight: bold;
+			color: $gray-darker;
+		}
+	}
+}
+
+.attribute {
+	&.attribute-set {
+		.attribute-set-item{
+			&::after{
+				content: ",";
+				margin-right: 0.5em;
+			}
+
+			&:last-of-type::after{
+				content: "";
+				margin-right: 0;
+			}
+		}
+	}
+}
+
+.attribute-edit .attribute-set .attribute-set-item,
+.attribute-set.attribute-tag-set .attribute-set-item,
 div.selectize-control > div.selectize-input > div.item[data-value],
-div.selectize-control > div.selectize-input > div.item[data-value].active,
-.attribute-set .attribute-set-item {
+div.selectize-control > div.selectize-input > div.item[data-value].active{
 	display: inline-block;
 	margin-right: 3px;
 	margin-bottom: 3px;
@@ -3344,7 +3365,12 @@ div.selectize-control > div.selectize-input > div.item[data-value].active,
 	overflow-x: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+
+	&::after{
+		content: "";
+	}
 }
+
 
 
 div.selectize-control > div.selectize-input > div.item[data-value] > .remove {

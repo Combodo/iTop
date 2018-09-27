@@ -118,7 +118,7 @@
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/handlebars/js/handlebars.min-768ddbd.js'|add_itop_version }}"></script>
 		{# Selectize for sets #}
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/selectize.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.itop-tagset-widget.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.itop-set-widget.js'|add_itop_version }}"></script>
 		{# Form files #}
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/form_handler.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/form_field.js'|add_itop_version }}"></script>
@@ -128,7 +128,7 @@
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_handler.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field_html.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field_tagset.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field_set.js'|add_itop_version }}"></script>
         {# UI Extensions JS, in an undefined order #}
         {% if app['combodo.portal.instance.conf'].ui_extensions.js_files is defined %}
 			{% for js_file in app['combodo.portal.instance.conf'].ui_extensions.js_files %}

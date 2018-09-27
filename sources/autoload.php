@@ -58,6 +58,6 @@ require_once APPROOT . 'sources/renderer/bootstrap/bsformrenderer.class.inc.php'
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bssimplefieldrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bsselectobjectfieldrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bslinkedsetfieldrenderer.class.inc.php';
-require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bstagsetfieldrenderer.class.inc.php';
+require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bsitemsetfieldrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bssubformfieldrenderer.class.inc.php';
 require_once APPROOT . 'sources/renderer/bootstrap/fieldrenderer/bsfileuploadfieldrenderer.class.inc.php';
