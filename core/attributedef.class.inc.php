@@ -9863,7 +9863,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 				{
 					try
 					{
-						$aLocalizedValues[] = MetaModel::GetLabel($sClass, $sAttCode);
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sAttCode.'" data-description="">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>';
 					} catch (Exception $e)
 					{
 						// Ignore bad values
@@ -9873,7 +9873,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 			}
 			return implode(', ', $value);
 		}
-		return $value;
+		return '<span class="'.implode(' ', $this->aCSSClasses).'">'.$value.'</span>';
 	}
 }
 
@@ -10054,7 +10054,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 				{
 					if (isset($aAllowedAttributes[$sAttCode]))
 					{
-						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sAttCode.'" data-description="'.$aAllowedAttributes[$sAttCode].'">'.$aAllowedAttributes[$sAttCode].'</span>';
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sAttCode.'" data-description="">'.$aAllowedAttributes[$sAttCode].'</span>';
 					}
 				}
 				$value = $aLocalizedValues;
