@@ -9367,7 +9367,7 @@ class AttributePropertySet extends AttributeTable
  *
  * Class AttributeSet
  */
-class AttributeSet extends AttributeDBFieldVoid
+abstract class AttributeSet extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_SET;
 
@@ -9846,6 +9846,187 @@ class AttributeClassAttCodeSet extends AttributeSet
 					} catch (Exception $e)
 					{
 						// Ignore bad values
+					}
+				}
+				$value = $aLocalizedValues;
+			}
+			return implode(', ', $value);
+		}
+		return $value;
+	}
+}
+
+class AttributeQueryAttCodeSet extends AttributeSet
+{
+	static public function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('query_field'));
+	}
+
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return "TEXT".CMDBSource::GetSqlStringColumnDefinition();
+	}
+
+	public function GetMaxSize()
+	{
+		return 65535;
+	}
+
+	/**
+	 * Get a class array indexed by alias
+	 * @param $oHostObj
+	 *
+	 * @return array
+	 */
+	private function GetClassList($oHostObj)
+	{
+		try
+		{
+			$sQueryField = $this->Get('query_field');
+			$sQuery = $oHostObj->Get($sQueryField);
+			if (empty($sQuery))
+			{
+				return array();
+			}
+			$oFilter = DBSearch::FromOQL($sQuery);
+			return $oFilter->GetSelectedClasses();
+
+		} catch (OQLException $e)
+		{
+			IssueLog::Warning($e->getMessage());
+		}
+		return array();
+	}
+
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		if (isset($aArgs['this']))
+		{
+			$oHostObj = $aArgs['this'];
+			$aClasses = $this->GetClassList($oHostObj);
+
+			$aAllowedAttributes = array();
+			$aAllAttributes = array();
+			if (is_array($aClasses))
+			{
+				if (!empty($aClasses))
+				{
+					ksort($aClasses);
+					foreach($aClasses as $sAlias => $sClass)
+					{
+						$aAttributes = MetaModel::GetAttributesList($sClass);
+						foreach($aAttributes as $sAttCode)
+						{
+							$aAllAttributes[] = array('alias' => $sAlias, 'class' => $sClass, 'att_code' => $sAttCode);
+						}
+					}
+				}
+				foreach($aAllAttributes as $aFullAttCode)
+				{
+					$sAttCode = $aFullAttCode['alias'].'.'.$aFullAttCode['att_code'];
+					$sClass = $aFullAttCode['class'];
+					$sLabel = $aFullAttCode['alias'].'.'.MetaModel::GetLabel($sClass, $aFullAttCode['att_code']);
+					$aAllowedAttributes[$sAttCode] = $sLabel;
+				}
+			}
+			else
+			{
+				$sClass = "$aClasses";
+				$aAttributes = MetaModel::GetAttributesList($sClass);
+				foreach($aAttributes as $sAttCode)
+				{
+					$aAllowedAttributes[$sAttCode] = MetaModel::GetLabel($sClass, $sAttCode);
+				}
+			}
+			return $aAllowedAttributes;
+		}
+
+		return null;
+	}
+
+	/**
+	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
+	 *
+	 * @param $proposedValue
+	 * @param \DBObject $oHostObj
+	 *
+	 * @param bool $bIgnoreErrors
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \OQLException
+	 * @throws \Exception
+	 */
+	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
+	{
+		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+		$aArgs = array();
+		if (!empty($oHostObj))
+		{
+			$aArgs['this'] = $oHostObj;
+		}
+		$aAllowedAttributes = $this->GetAllowedValues($aArgs);
+		$aInvalidAttCodes = array();
+		if (is_string($proposedValue) && !empty($proposedValue))
+		{
+			$proposedValue = trim($proposedValue);
+			$aValues = array();
+			foreach(explode(',', $proposedValue) as $sValue)
+			{
+				$sAttCode = trim($sValue);
+				if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
+				{
+					$aValues[$sAttCode] = $sAttCode;
+				}
+				else
+				{
+					$aInvalidAttCodes[] = $sAttCode;
+				}
+			}
+			$oSet->SetValues($aValues);
+		}
+		elseif ($proposedValue instanceof ormSet)
+		{
+			$oSet = $proposedValue;
+		}
+		if (!empty($aInvalidAttCodes) && !$bIgnoreErrors)
+		{
+			throw new CoreUnexpectedValue("The attribute(s) ".implode(', ', $aInvalidAttCodes)." are invalid");
+		}
+
+		return $oSet;
+	}
+
+	/**
+	 * @param $value
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 *
+	 * @return string|null
+	 *
+	 * @throws \Exception
+	 */
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	{
+		if ($value instanceof ormSet)
+		{
+			$value = $value->GetValues();
+		}
+		if (is_array($value))
+		{
+			if (!empty($oHostObject) && $bLocalize)
+			{
+				$aArgs['this'] = $oHostObject;
+				$aAllowedAttributes = $this->GetAllowedValues($aArgs);
+
+				$aLocalizedValues = array();
+				foreach($value as $sAttCode)
+				{
+					if (isset($aAllowedAttributes[$sAttCode]))
+					{
+						$aLocalizedValues[] = $aAllowedAttributes[$sAttCode];
 					}
 				}
 				$value = $aLocalizedValues;
