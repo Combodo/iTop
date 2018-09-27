@@ -1402,15 +1402,6 @@ EOF
 						$aParameters['tag_code_max_len'] = 255;
 					}
 				}
-				elseif ($sAttType == 'AttributeSet')
-				{
-					$aTagFieldsInfo[] = $sAttCode;
-					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
-					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
-					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-					$aParameters['depends_on'] = $sDependencies;
-					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
-				}
 				elseif ($sAttType == 'AttributeClassAttCodeSet')
 				{
 					$aTagFieldsInfo[] = $sAttCode;
