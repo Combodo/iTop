@@ -7261,7 +7261,7 @@ class AttributeTagSet extends AttributeSet
 			}
 			else
 			{
-				$sHtml .= '<span class="attribute-set-item-undefined">'.$oTag.'</span>';
+				$sHtml .= '<span class="attribute-set-item">'.$oTag.'</span>';
 			}
 		}
 		$sHtml .= '</span>';
