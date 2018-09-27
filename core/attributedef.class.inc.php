@@ -7188,7 +7188,7 @@ class AttributeTagSet extends AttributeSet
 				$aRemoved[] = $sTagLabel;
 			}
 
-			$sRemoved = $this->GenerateViewHtmlForValues($aRemoved);
+			$sRemoved = $this->GenerateViewHtmlForValues($aRemoved, 'history-removed');
 			if (!empty($sRemoved))
 			{
 				$sResult .= Dict::Format('Change:LinkSet:Removed', $sRemoved);
@@ -7217,7 +7217,7 @@ class AttributeTagSet extends AttributeSet
 				$aAdded[] = $sTagLabel;
 			}
 
-			$sAdded = $this->GenerateViewHtmlForValues($aAdded);
+			$sAdded = $this->GenerateViewHtmlForValues($aAdded, 'history-added');
 			if (!empty($sAdded))
 			{
 				$sResult .= Dict::Format('Change:LinkSet:Added', $sAdded);

@@ -3324,6 +3324,18 @@ table.listResults .originColor{
 				margin-right: 0;
 			}
 		}
+
+		&.history-added {
+			.attribute-set-item {
+				font-weight: bold;
+			}
+		}
+		&.history-removed {
+			.attribute-set-item {
+				text-decoration: line-through;
+				font-style: italic;
+			}
+		}
 	}
 }
 // - Edit is always styled like the selectize items, see below.
