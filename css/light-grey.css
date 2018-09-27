@@ -2904,10 +2904,10 @@ div.selectize-control > div.selectize-input > div.item[data-value], div.selectiz
   margin-right: 3px;
   margin-bottom: 3px;
   padding: 4px 6px;
-  padding-right: 4px !important;
+  padding-right: 1.5em !important;
+  /* this is for the remove box ! */
   max-width: 120px;
-  background-color: #fdfdfd;
-  background-image: none;
+  background: #fdfdfd none;
   border-radius: 2px;
   border: 1px solid #ddd;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
@@ -2919,12 +2919,5 @@ div.selectize-control > div.selectize-input > div.item[data-value], div.selectiz
   white-space: nowrap;
 }
 div.selectize-control > div.selectize-input > div.item[data-value] > .remove {
-  position: relative;
-  top: initial;
-  right: initial;
-  bottom: initial;
-  vertical-align: initial;
-  padding: initial;
   border: none;
-  margin-left: 4px;
 }
