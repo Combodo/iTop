@@ -40,14 +40,15 @@ var aDictEntries = {"Core:AttributeSet:placeholder": "click to add"};
 </head>
 <body>
 
+<h1>POC Set widget (itop.set_widget) et CSS</h1>
 
+<h2>Edition : widget</h2>
 <form>
 <div class="field_container">
 <div>
 <div class="field_value">
 <div class="attribute-edit">
 <div class="field_input_zone field_input_tagset">
-<label>Exemple un champ : </label>
 <textarea id="tagset-field" rows="30" cols="60">
 {
   "possible_values": [
@@ -87,10 +88,22 @@ var aDictEntries = {"Core:AttributeSet:placeholder": "click to add"};
 </div>
 </form>
 
-
 <script>
 $("#tagset-field").set_widget({isDebug: true});
 </script>
+
+
+
+<h2>Visualisation</h2>
+
+<p>
+<span class="attribute-tagset">
+  <a href="" class="attribute-tag attribute-tag-city" data-code="city" data-label="Ville 🏢" data-description="">Ville 🏢</a>
+  <a href="" class="attribute-tag attribute-tag-ocean" data-code="ocean" data-label="Mer 🌊" data-description="">Mer 🌊</a>
+  <a href="" class="attribute-tag attribute-tag-sunny" data-code="sunny" data-label="Soleil 🌞" data-description="">Soleil 🌞</a>
+</span>
+</p>
+
 
 </body>
 </html>
