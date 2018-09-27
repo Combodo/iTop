@@ -9701,21 +9701,6 @@ class AttributeSet extends AttributeDBFieldVoid
 
 class AttributeClassAttCodeSet extends AttributeSet
 {
-	/**
-	 * @param \DBObject $oHostObj
-	 *
-	 * @throws \CoreException
-	 */
-	public function SetTargetClass($oHostObj)
-	{
-		if (!empty($oHostObj))
-		{
-			$sTargetClass = $this->Get('class_field');
-			$sClass = $oHostObj->Get($sTargetClass);
-			$this->sTargetClass = $sClass;
-		}
-	}
-
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list'));
@@ -9841,21 +9826,23 @@ class AttributeClassAttCodeSet extends AttributeSet
 	 */
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		$this->SetTargetClass($oHostObject);
 		if ($value instanceof ormSet)
 		{
 			$value = $value->GetValues();
 		}
 		if (is_array($value))
 		{
-			if (!empty($this->sTargetClass) && $bLocalize)
+			if (!empty($oHostObject) && $bLocalize)
 			{
+				$sTargetClass = $this->Get('class_field');
+				$sClass = $oHostObject->Get($sTargetClass);
+
 				$aLocalizedValues = array();
 				foreach($value as $sAttCode)
 				{
 					try
 					{
-						$aLocalizedValues[] = MetaModel::GetLabel($this->sTargetClass, $sAttCode);
+						$aLocalizedValues[] = MetaModel::GetLabel($sClass, $sAttCode);
 					} catch (Exception $e)
 					{
 						// Ignore bad values
