@@ -130,6 +130,8 @@ abstract class AttributeDefinition
 
 	const INDEX_LENGTH = 95;
 
+	protected $aCSSClasses;
+
 	public function GetType()
 	{
 		return Dict::S('Core:'.get_class($this));
@@ -214,6 +216,7 @@ abstract class AttributeDefinition
 		$this->m_sCode = $sCode;
 		$this->m_aParams = $aParams;
 		$this->ConsistencyCheck();
+		$this->aCSSClasses = array('attribute');
 	}
 
 	public function GetParams()
@@ -6763,6 +6766,12 @@ class AttributeExternalField extends AttributeDefinition
  */
 class AttributeTagSet extends AttributeSet
 {
+	public function __construct($sCode, array $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+		$this->aCSSClasses[] = 'attribute-tag-set';
+	}
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('tag_code_max_len'));
@@ -9371,6 +9380,12 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_SET;
 
+	public function __construct($sCode, array $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+		$this->aCSSClasses[] = 'attribute-set';
+	}
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'max_items'));
@@ -9701,6 +9716,12 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 class AttributeClassAttCodeSet extends AttributeSet
 {
+	public function __construct($sCode, array $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+		$this->aCSSClasses[] = 'attribute-class-att-code-set';
+	}
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list'));
@@ -9858,6 +9879,12 @@ class AttributeClassAttCodeSet extends AttributeSet
 
 class AttributeQueryAttCodeSet extends AttributeSet
 {
+	public function __construct($sCode, array $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+		$this->aCSSClasses[] = 'attribute-query-att-code-set';
+	}
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('query_field'));
@@ -10010,6 +10037,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 	 */
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
+
 		if ($value instanceof ormSet)
 		{
 			$value = $value->GetValues();
@@ -10026,14 +10054,15 @@ class AttributeQueryAttCodeSet extends AttributeSet
 				{
 					if (isset($aAllowedAttributes[$sAttCode]))
 					{
-						$aLocalizedValues[] = $aAllowedAttributes[$sAttCode];
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sAttCode.'" data-description="'.$aAllowedAttributes[$sAttCode].'">'.$aAllowedAttributes[$sAttCode].'</span>';
 					}
 				}
 				$value = $aLocalizedValues;
 			}
-			return implode(', ', $value);
+			$value = implode(', ', $value);
 		}
-		return $value;
+
+		return '<span class="'.implode(' ', $this->aCSSClasses).'">'.$value.'</span>';
 	}
 }
 

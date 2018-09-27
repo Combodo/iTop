@@ -262,7 +262,7 @@ EOF
         // Attribute tag tooltips
 	    $this->add_ready_script(
 <<<EOF
-	$('.attribute-tag').each(function(){
+	$('.attribute-set-item').each(function(){
 	    $(this).qtip({
 	       content: {
 	         text: $(this).attr('data-description'),
