@@ -356,7 +356,7 @@ function CheckAll(sSelector, bValue) {
 /**
  * Toggle (enabled/disabled) the specified field of a form
  */
-function ToogleField(value, field_id) {
+function ToggleField(value, field_id) {
 	if (value) {
 		$('#'+field_id).prop('disabled', false);
 		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
@@ -410,7 +410,7 @@ function PropagateCheckBox(bCurrValue, aFieldsList, bCheck) {
 	if (bCurrValue == bCheck) {
 		for (var i = 0; i < aFieldsList.length; i++) {
 			$('#enable_'+aFieldsList[i]).prop('checked', bCheck);
-			ToogleField(bCheck, aFieldsList[i]);
+			ToggleField(bCheck, aFieldsList[i]);
 		}
 	}
 }

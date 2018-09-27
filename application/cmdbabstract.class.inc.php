@@ -2043,9 +2043,9 @@ EOF
 
 					/** @var \ormSet $value */
 					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
-					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
-					$sHTMLValue = "<div class=\"field_input_zone field_input_set\"><input id='$sInputId' name='$sInputId' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
-					$sScript = "$('#$sInputId').set_widget();";
+					$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_set\"><input id='$iId' name='$sSetInputName' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
+					$sScript = "$('#$iId').set_widget();";
 					$oPage->add_ready_script($sScript);
 					break;
 
@@ -3978,7 +3978,7 @@ EOF
 				}
 			}
 			// Now create an object that has values for the homogeneous values only
-			/** @var DBObject $oDummyObj */
+			/** @var \cmdbAbstractObject $oDummyObj */
 			$oDummyObj = new $sClass(); // @@ What if the class is abstract ?
 			$aComments = array();
 			function MyComparison($a, $b) // Sort descending
@@ -4021,9 +4021,9 @@ EOF
 						$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
 
 						$oDummyObj->Set($sAttCode, null);
-						$aComments[$sAttCode] = '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToogleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+						$aComments[$sAttCode] = '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 						$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'"> ? </div>';
-						$sReadyScript .= 'ToogleField(false, \''.$iFormId.'_'.$sAttCode.'\');'."\n";
+						$sReadyScript .= 'ToggleField(false, \''.$iFormId.'_'.$sAttCode.'\');'."\n";
 					}
 					else
 					{
@@ -4039,7 +4039,7 @@ EOF
 							$aComments[$sAttCode] = '';
 							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass))
 							{
-								$aComments[$sAttCode] .= '<input type="checkbox" checked id="enable_'.$iFormId.'_'.$sAttCode.'"  onClick="ToogleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+								$aComments[$sAttCode] .= '<input type="checkbox" checked id="enable_'.$iFormId.'_'.$sAttCode.'"  onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
 							$aComments[$sAttCode] .= '<div class="mono_value">1</div>';
 						}
@@ -4098,11 +4098,11 @@ EOF
 							$aComments[$sAttCode] = '';
 							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass))
 							{
-								$aComments[$sAttCode] .= '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToogleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+								$aComments[$sAttCode] .= '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
 							$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'">'.$iCount.'</div>';
 						}
-						$sReadyScript .= 'ToogleField('.(($iCount == 1) ? 'true' : 'false').', \''.$iFormId.'_'.$sAttCode.'\');'."\n";
+						$sReadyScript .= 'ToggleField('.(($iCount == 1) ? 'true' : 'false').', \''.$iFormId.'_'.$sAttCode.'\');'."\n";
 					}
 				}
 			}

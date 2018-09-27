@@ -92,6 +92,7 @@ $.widget('itop.set_widget',
 
 			this._initWidgetData($this.val());
 			this._generateSelectionWidget($this);
+			this._bindEvents($this);
 		},
 
 		// events bound via _bind are removed automatically
@@ -112,10 +113,14 @@ $.widget('itop.set_widget',
 
 		_generateSelectionWidget: function ($widgetElement) {
 			var $parentElement = $widgetElement.parent(),
+				isWidgetElementDisabled = $widgetElement.prop("disabled"),
 				inputId = $widgetElement.attr("id") + "-setwidget-values";
 
 			$parentElement.append("<input id='" + inputId + "' value='" + this.originalValue.join(" ") + "'>");
 			var $inputWidget = $("#" + inputId);
+			if (isWidgetElementDisabled) {
+				$inputWidget.prop("disabled", true);
+			}
 
 			// create closure to have both set widget and Selectize instances available in callbacks
 			// selectize instance could also be retrieve on the source input DOM node (selectize property)
@@ -148,6 +153,19 @@ $.widget('itop.set_widget',
 			});
 
 			this.selectizeWidget = $inputWidget[0].selectize; // keeping this for set widget public methods
+		},
+
+        _bindEvents: function($widgetElement) {
+            var setWidget = this;
+			$widgetElement.bind("update", function() {
+				console.debug("update event in Selectize !", this);
+				var $this = $(this);
+				if ($this.prop("disabled")) {
+                    setWidget.disable();
+                } else {
+                    setWidget.enable();
+                }
+			});
 		},
 
 		refresh: function () {
@@ -188,6 +206,7 @@ $.widget('itop.set_widget',
 		/**
          * <p>Updating selection widget :
          * <ul>
+		 *     <li>handles bulk edit disabling on widget opening
          *     <li>adding specific CSS class to parent node
          *     <li>adding specific CSS classes to item node
          *     <li>items to have a specific rendering for partial codes.
@@ -203,6 +222,10 @@ $.widget('itop.set_widget',
             var setWidget = this;
 			if (this.options.isDebug) {
 				console.debug("onInit", inputWidget, setWidget);
+			}
+
+			if (inputWidget.$input.prop("disabled")) {
+				inputWidget.disable(); // can't use this.selectizeWidget for now
 			}
 
 			inputWidget.$control.addClass(setWidget.PARENT_CSS_CLASS);
