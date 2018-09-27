@@ -2045,7 +2045,7 @@ EOF
 					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
 					$sEscapedJson = htmlentities($sJson, ENT_QUOTES, 'UTF-8');
 					$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
-				$sHTMLValue = '<div class="field_input_zone field_input_set"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
+					$sHTMLValue = '<div class="field_input_zone field_input_set"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
 					$sScript = "$('#$iId').set_widget();";
 					$oPage->add_ready_script($sScript);
 					break;
@@ -3306,6 +3306,7 @@ EOF
 					{
 						$oSet = new ormSet(get_class($this), $sAttCode);
 					}
+					$oSet->SetValues($value['orig_value']);
 					$oSet->ApplyDelta($value);
 					$this->Set($sAttCode, $oSet);
 					break;

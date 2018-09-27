@@ -72,6 +72,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY => 'ExternalKeyToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'EnumToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_SET => 'SetToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET => 'TagSetToSearchForm',
 		);
 
 		foreach($aAndCriterionRaw as $aCriteria)
@@ -667,8 +668,64 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		return $aCriteria;
 	}
 
+	protected static function TagSetToSearchForm($aCriteria, $aFields)
+	{
+		$sOperator = $aCriteria['operator'];
+		switch ($sOperator)
+		{
+			case 'MATCHES':
+				// Nothing special to do
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
+				{
+					if (!isset($aCriteria['values']))
+					{
+						$aCriteria['values'] = array();
+					}
+					// Convention for 'undefined' tag set
+					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
+				}
+				break;
+
+			case 'OR':
+			case 'ISNULL':
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_EQUALS;
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
+				{
+					if (!isset($aCriteria['values']))
+					{
+						$aCriteria['values'] = array();
+					}
+					// Convention for 'undefined' tag set
+					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
+				}
+				break;
+
+			case '=':
+				// TODO BUG SPLIT INTO AN 'AND' LIST OF MATCHES
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_EQUALS;
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
+				{
+					if (!isset($aCriteria['values']))
+					{
+						$aCriteria['values'] = array();
+					}
+					// Convention for 'undefined' tag set
+					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
+				}
+				break;
+
+			default:
+				// Unknown operator
+				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+				break;
+		}
+		return $aCriteria;
+	}
+
 	protected static function SetToSearchForm($aCriteria, $aFields)
 	{
+		// TODO New widget based on String but with match
+		$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
 		$sOperator = $aCriteria['operator'];
 		switch ($sOperator)
 		{

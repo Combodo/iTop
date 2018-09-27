@@ -124,6 +124,7 @@ abstract class AttributeDefinition
 	const SEARCH_WIDGET_TYPE_DATE_TIME = 'date_time';
 	const SEARCH_WIDGET_TYPE_DATE = 'date';
 	const SEARCH_WIDGET_TYPE_SET = 'set';
+	const SEARCH_WIDGET_TYPE_TAG_SET = 'tag_set';
 
 
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
@@ -6766,6 +6767,9 @@ class AttributeExternalField extends AttributeDefinition
  */
 class AttributeTagSet extends AttributeSet
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
+
+
 	public function __construct($sCode, array $aParams)
 	{
 		parent::__construct($sCode, $aParams);
@@ -10054,7 +10058,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 				{
 					if (isset($aAllowedAttributes[$sAttCode]))
 					{
-						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sAttCode.'" data-description="">'.$aAllowedAttributes[$sAttCode].'</span>';
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$aAllowedAttributes[$sAttCode]." ($sAttCode)".'" data-description="">'.$aAllowedAttributes[$sAttCode].'</span>';
 					}
 				}
 				$value = $aLocalizedValues;

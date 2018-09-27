@@ -495,37 +495,6 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 		return false;
 	}
 
-	public function ComputeValues()
-	{
-		parent::ComputeValues();
-
-		// Remove unwanted attribute codes
-		$aChanges = $this->ListChanges();
-		if (isset($aChanges['target_attcodes']))
-		{
-			$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'target_attcodes');
-			$aArgs = array('this' => $this);
-			$aAllowedValues = $oAttDef->GetAllowedValues($aArgs);
-
-			/** @var \ormSet $oValue */
-			$oValue = $this->Get('target_attcodes');
-			$aValues = $oValue->GetValues();
-			$bChanged = false;
-			foreach($aValues as $key => $sValue)
-			{
-				if (!isset($aAllowedValues[$sValue]))
-				{
-					unset($aValues[$key]);
-					$bChanged = true;
-				}
-			}
-			if ($bChanged)
-			{
-				$oValue->SetValues($aValues);
-				$this->Set('target_attcodes', $oValue);
-			}
-		}
-	}
 }
 
 /**
