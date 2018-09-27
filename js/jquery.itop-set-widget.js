@@ -147,7 +147,7 @@ $.widget('itop.set_widget',
 				}
 			});
 
-			this.selectizeWidget = $inputWidget[0].selectize; // keeping this for widget public methods
+			this.selectizeWidget = $inputWidget[0].selectize; // keeping this for set widget public methods
 		},
 
 		refresh: function () {
@@ -196,24 +196,24 @@ $.widget('itop.set_widget',
          * <p>For partial codes at first I was thinking about using the Selectize <code>render</code> callback, but it is called before <code>onItemAdd</code>/<code>onItemRemove</code> :(<br>
          * Indeed as we only need to have partial items on first display, this callback is the right place O:)
 		 *
-         * @param selectionWidget Selectize object
+         * @param inputWidget Selectize object
          * @private
          */
-		_onInitialize: function (selectionWidget) {
+		_onInitialize: function (inputWidget) {
             var setWidget = this;
 			if (this.options.isDebug) {
-				console.debug("onInit", selectionWidget, setWidget);
+				console.debug("onInit", inputWidget, setWidget);
 			}
 
-			selectionWidget.$control.addClass(setWidget.PARENT_CSS_CLASS);
+			inputWidget.$control.addClass(setWidget.PARENT_CSS_CLASS);
 
-			selectionWidget.items.forEach(function (setItemCode) {
-				var $item = selectionWidget.getItem(setItemCode);
+			inputWidget.items.forEach(function (setItemCode) {
+				var $item = inputWidget.getItem(setItemCode);
 				$item.addClass(setWidget.ITEM_CSS_CLASS);
 				$item.addClass(setWidget.ITEM_CSS_CLASS + '-' + setItemCode); // no escape as codes are already pretty restrictive
 
 				if (setWidget._isCodeInPartialValues(setItemCode)) {
-					selectionWidget.getItem(setItemCode).addClass("partial-code");
+					inputWidget.getItem(setItemCode).addClass("partial-code");
 				}
 			});
 		},
