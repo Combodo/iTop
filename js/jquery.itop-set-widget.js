@@ -64,6 +64,9 @@ $.widget('itop.set_widget',
 		// default options
 		options: {isDebug: false},
 
+		PARENT_CSS_CLASS: "attribute-set",
+		ITEM_CSS_CLASS: "attribute-set-item",
+
 		POSSIBLE_VAL_KEY: 'possible_values',
 		PARTIAL_VAL_KEY: "partial_values",
 		ORIG_VAL_KEY: "orig_value",
@@ -183,18 +186,32 @@ $.widget('itop.set_widget',
 		},
 
 		/**
-		 * Updating items to have a specific rendering for partial codes.<br>
-		 *     At first I was thinking about using the Selectize <code>render</code> callback, but it is called before <code>onItemAdd</code>/<code>onItemRemove</code> :(<br>
-		 *     Indeed as we only need to have partial items on first display, this callback is the right place O:)
-		 * @param selectionWidget Selectize object
-		 * @private
-		 */
+         * <p>Updating selection widget :
+         * <ul>
+         *     <li>adding specific CSS class to parent node
+         *     <li>adding specific CSS classes to item node
+         *     <li>items to have a specific rendering for partial codes.
+         * </ul>
+         *
+         * <p>For partial codes at first I was thinking about using the Selectize <code>render</code> callback, but it is called before <code>onItemAdd</code>/<code>onItemRemove</code> :(<br>
+         * Indeed as we only need to have partial items on first display, this callback is the right place O:)
+		 *
+         * @param selectionWidget Selectize object
+         * @private
+         */
 		_onInitialize: function (selectionWidget) {
+            var setWidget = this;
 			if (this.options.isDebug) {
-				console.debug("onInit", this);
+				console.debug("onInit", selectionWidget, setWidget);
 			}
-			var setWidget = this;
+
+			selectionWidget.$control.addClass(setWidget.PARENT_CSS_CLASS);
+
 			selectionWidget.items.forEach(function (setItemCode) {
+				var $item = selectionWidget.getItem(setItemCode);
+				$item.addClass(setWidget.ITEM_CSS_CLASS);
+				$item.addClass(setWidget.ITEM_CSS_CLASS + '-' + setItemCode); // no escape as codes are already pretty restrictive
+
 				if (setWidget._isCodeInPartialValues(setItemCode)) {
 					selectionWidget.getItem(setItemCode).addClass("partial-code");
 				}

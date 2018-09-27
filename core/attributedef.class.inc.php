@@ -7084,7 +7084,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			$sHTML = '';
 			if (!empty($aValues))
 			{
-				$sHTML .= $this->GenerateViewHtmlForValues($aValues, 'attribute-tagset-undefined');
+				$sHTML .= $this->GenerateViewHtmlForValues($aValues, 'attribute-set-item-undefined');
 			}
 			$aValues = $oTagSet->GetTags();
 			if (!empty($aValues))
@@ -7177,7 +7177,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	 * @return string
 	 * @throws \CoreException
 	 */
-	private function GenerateViewHtmlForValues($aValues, $sCssClass = 'attribute-tagset')
+	private function GenerateViewHtmlForValues($aValues, $sCssClass = 'attribute-set')
 	{
 		if (empty($aValues)) {return '';}
 		$sHtml = '<span class="'.$sCssClass.'">';
@@ -7197,11 +7197,11 @@ class AttributeTagSet extends AttributeDBFieldVoid
 				$sFilter = urlencode($oFilter->serialize());
 				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 
-				$sHtml .= '<a href="'.$sUrl.'" class="attribute-tag attribute-tag-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.$sTagLabel.'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES, 'UTF-8').'">'.$sTagLabel.'</a>';
+				$sHtml .= '<a href="'.$sUrl.'" class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.$sTagLabel.'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES, 'UTF-8').'">'.$sTagLabel.'</a>';
 			}
 			else
 			{
-				$sHtml .= '<span class="attribute-tag-undefined">'.$oTag.'</span>';
+				$sHtml .= '<span class="attribute-set-item-undefined">'.$oTag.'</span>';
 			}
 		}
 		$sHtml .= '</span>';

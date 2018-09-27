@@ -2279,36 +2279,17 @@ fieldset .details>.field_container {
 									border: 1px solid #ABABAB;
 									border-radius: 0;
 
-									.item{
-										/* Overloading default theming */
-										padding-right: 4px !important;
-										text-shadow: none;
-										box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-										border-radius: 2px;
-										background-image: none;
-
-										background-color: #fdfdfd;
+									&.has-items:after {
+										content: "+";
+										display: inline-block;
+										font-size: 17px;
+										font-weight: bold;
 										color: $gray-darker;
-										border: 1px solid $gray-lighter;
-										box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb(241, 241, 241, 0.7);
+									}
 
-										.remove{
-											/* Overloading default theming */
-											position: relative;
-											top: initial;
-											right: initial;
-											bottom: initial;
-											vertical-align: initial;
-											padding: initial;
-											border: none;
-
-											margin-left: 4px;
-										}
-
-										&.partial-code{
-											color: transparentize($gray-darker, 0.4);
-											background-color: lighten($gray-lighter, 5%);
-										}
+									.attribute-set-item.partial-code{
+										color: transparentize($gray-darker, 0.4);
+										background-color: lighten($gray-lighter, 5%);
 									}
 								}
 							}
@@ -3339,55 +3320,42 @@ table.listResults .originColor{
 //////////////////////
 // Tagset attribute //
 // - Readonly (object viewing, objects list)
-.attribute-tagset .attribute-tag{
+//////////////////////
+// Selectize widget //
+//
+div.selectize-control > div.selectize-input > div.item[data-value],
+div.selectize-control > div.selectize-input > div.item[data-value].active,
+.attribute-set .attribute-set-item {
 	display: inline-block;
 	margin-right: 3px;
 	margin-bottom: 3px;
 	padding: 4px 6px;
+	padding-right: 4px !important;
 	max-width: 120px;
+
+	background-color: #fdfdfd;
+	background-image: none;
+	border-radius: 2px;
+	border: 1px solid $gray-lighter;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb(241, 241, 241, 0.7);
+
+	color: $gray-darker;
+	text-shadow: none;
 	vertical-align: middle;
 	overflow-x: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	background-color: #fdfdfd;
-	border-radius: 2px;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb(241, 241, 241, 0.7);
-}
-// - Edition done in the xxx part
-
-//////////////////////
-// Selectize widget //
-//
-// Theming should not be done for a specific use-case (eg. tagset attribute)
-// as it can be used anywhere in the application)
-.selectize-control {
-	position: static;
-	display: inline-block;
-	vertical-align: middle;
-	width: 100%;
 }
 
-.selectize-input {
-	width: auto;
-	min-width: 8em;
-}
-.selectize-input.has-items:after {
-	content: "+";
-	display: inline-block;
-	font-size: 17px;
-	font-weight: bold;
-	color: $gray-darker;
-}
 
-.selectize-control > .selectize-input > .item.partial-code {
-	color: floralwhite;
-	background-color: grey;
-	background-image: linear-gradient(to bottom, white, grey);
-	border-color: darkgray;
-}
-.selectize-control > .selectize-input > .item.partial-code.active {
-	background-image: linear-gradient(to bottom, grey, darkgrey);
-}
-.selectize-control > .selectize-input > .item.partial-code > a.remove {
-	border-color: grey;
+div.selectize-control > div.selectize-input > div.item[data-value] > .remove {
+	position: relative;
+	top: initial;
+	right: initial;
+	bottom: initial;
+	vertical-align: initial;
+	padding: initial;
+	border: none;
+
+	margin-left: 4px;
 }

@@ -1956,30 +1956,14 @@ fieldset .details > .field_container {
   border: 1px solid #ababab;
   border-radius: 0;
 }
-.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input .item {
-  /* Overloading default theming */
-  padding-right: 4px !important;
-  text-shadow: none;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-  border-radius: 2px;
-  background-image: none;
-  background-color: #fdfdfd;
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input.has-items:after {
+  content: "+";
+  display: inline-block;
+  font-size: 17px;
+  font-weight: bold;
   color: #222;
-  border: 1px solid #ddd;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
 }
-.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input .item .remove {
-  /* Overloading default theming */
-  position: relative;
-  top: initial;
-  right: initial;
-  bottom: initial;
-  vertical-align: initial;
-  padding: initial;
-  border: none;
-  margin-left: 4px;
-}
-.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input .item.partial-code {
+.field_container > div > div.field_value .attribute-edit .field_input_zone.field_input_tagset .selectize-control .selectize-input .attribute-set-item.partial-code {
   color: rgba(34, 34, 34, 0.6);
   background-color: #eaeaea;
 }
@@ -2915,46 +2899,32 @@ table.listResults .originColor {
 .menu-icon-select > .ui-menu-item {
   padding: 0.3em 3%;
 }
-.attribute-tagset .attribute-tag {
+div.selectize-control > div.selectize-input > div.item[data-value], div.selectize-control > div.selectize-input > div.item[data-value].active, .attribute-set .attribute-set-item {
   display: inline-block;
   margin-right: 3px;
   margin-bottom: 3px;
   padding: 4px 6px;
+  padding-right: 4px !important;
   max-width: 120px;
+  background-color: #fdfdfd;
+  background-image: none;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
+  color: #222;
+  text-shadow: none;
   vertical-align: middle;
   overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  background-color: #fdfdfd;
-  border-radius: 2px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
 }
-.selectize-control {
-  position: static;
-  display: inline-block;
-  vertical-align: middle;
-  width: 100%;
-}
-.selectize-input {
-  width: auto;
-  min-width: 8em;
-}
-.selectize-input.has-items:after {
-  content: "+";
-  display: inline-block;
-  font-size: 17px;
-  font-weight: bold;
-  color: #222;
-}
-.selectize-control > .selectize-input > .item.partial-code {
-  color: floralwhite;
-  background-color: grey;
-  background-image: linear-gradient(to bottom, white, grey);
-  border-color: darkgray;
-}
-.selectize-control > .selectize-input > .item.partial-code.active {
-  background-image: linear-gradient(to bottom, grey, darkgrey);
-}
-.selectize-control > .selectize-input > .item.partial-code > a.remove {
-  border-color: grey;
+div.selectize-control > div.selectize-input > div.item[data-value] > .remove {
+  position: relative;
+  top: initial;
+  right: initial;
+  bottom: initial;
+  vertical-align: initial;
+  padding: initial;
+  border: none;
+  margin-left: 4px;
 }
