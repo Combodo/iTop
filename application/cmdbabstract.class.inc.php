@@ -2044,7 +2044,7 @@ EOF
 					/** @var \ormSet $value */
 					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
 					$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
-					$sHTMLValue = "<div class=\"field_input_zone field_input_set\"><input id='$iId' name='$sSetInputName' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_set\"><textarea id='$iId' name='$sSetInputName' style='display: none;'> $sJson</textarea></div>{$sValidationSpan}{$sReloadSpan}";
 					$sScript = "$('#$iId').set_widget();";
 					$oPage->add_ready_script($sScript);
 					break;
