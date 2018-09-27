@@ -7237,10 +7237,10 @@ class AttributeTagSet extends AttributeSet
 	 * @return string
 	 * @throws \CoreException
 	 */
-	private function GenerateViewHtmlForValues($aValues, $sCssClass = 'attribute-set')
+	private function GenerateViewHtmlForValues($aValues, $sCssClass = '')
 	{
 		if (empty($aValues)) {return '';}
-		$sHtml = '<span class="'.$sCssClass.'">';
+		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
 		foreach($aValues as $oTag)
 		{
 			if ($oTag instanceof TagSetFieldData)
@@ -9871,7 +9871,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 				}
 				$value = $aLocalizedValues;
 			}
-			return implode(', ', $value);
+			return implode(' ', $value);
 		}
 		return '<span class="'.implode(' ', $this->aCSSClasses).'">'.$value.'</span>';
 	}
@@ -10059,7 +10059,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 				}
 				$value = $aLocalizedValues;
 			}
-			$value = implode(', ', $value);
+			$value = implode(' ', $value);
 		}
 
 		return '<span class="'.implode(' ', $this->aCSSClasses).'">'.$value.'</span>';
