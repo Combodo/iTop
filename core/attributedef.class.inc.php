@@ -123,7 +123,7 @@ abstract class AttributeDefinition
 	const SEARCH_WIDGET_TYPE_EXTERNAL_FIELD = 'external_field';
 	const SEARCH_WIDGET_TYPE_DATE_TIME = 'date_time';
 	const SEARCH_WIDGET_TYPE_DATE = 'date';
-	const SEARCH_WIDGET_TYPE_TAG_SET = 'tag_set';
+	const SEARCH_WIDGET_TYPE_SET = 'set';
 
 
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
@@ -3170,6 +3170,11 @@ class AttributeClass extends AttributeString
 class AttributeClassState extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
+
+	static public function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('class_field'));
+	}
 
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
@@ -6758,8 +6763,6 @@ class AttributeExternalField extends AttributeDefinition
  */
 class AttributeTagSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
-
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('tag_code_max_len'));
@@ -6804,7 +6807,7 @@ class AttributeTagSet extends AttributeSet
 		$aJson['removed'] = array();
 
 		$iMaxTags = $this->GetMaxItems();
-		$aJson['max_tags_allowed'] = $iMaxTags;
+		$aJson['max_items_allowed'] = $iMaxTags;
 
 		return json_encode($aJson);
 	}
@@ -6873,11 +6876,6 @@ class AttributeTagSet extends AttributeSet
 		return $this->Get('tag_code_max_len');
 	}
 
-	public function GetEditClass()
-	{
-		return "TagSet";
-	}
-
 	public function GetEditValue($value, $oHostObj = null)
 	{
 		if (empty($value))
@@ -6896,17 +6894,7 @@ class AttributeTagSet extends AttributeSet
 
 	public function GetMaxSize()
 	{
-		return $iLen = ($this->GetMaxItems() * $this->GetTagCodeMaxLength()) + 1;
-	}
-
-	public function RequiresIndex()
-	{
-		return true;
-	}
-
-	public function RequiresFullTextIndex()
-	{
-		return true;
+		return max(255, ($this->GetMaxItems() * $this->GetTagCodeMaxLength()) + 1);
 	}
 
 	public function Equals($val1, $val2)
@@ -9375,14 +9363,32 @@ class AttributePropertySet extends AttributeTable
 
 /**
  * An unordered multi values attribute
+ * Allowed values are mandatory for this attribute to be modified
  *
  * Class AttributeSet
  */
 class AttributeSet extends AttributeDBFieldVoid
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_SET;
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'max_items'));
+	}
+
+	/**
+	 * Allowed values are mandatory for this attribute to be modified
+	 *
+	 * @param array $aArgs
+	 * @param string $sContains
+	 *
+	 * @return array|null
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		return parent::GetAllowedValues($aArgs, $sContains);
 	}
 
 	/**
@@ -9390,7 +9396,7 @@ class AttributeSet extends AttributeDBFieldVoid
 	 *
 	 * @param $aArgs
 	 *
-	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
+	 * @return string JSON to be used in the itop.set_widget JQuery widget
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
@@ -9440,9 +9446,19 @@ class AttributeSet extends AttributeDBFieldVoid
 		$aJson['removed'] = array();
 
 		$iMaxTags = $this->GetMaxItems();
-		$aJson['max_tags_allowed'] = $iMaxTags;
+		$aJson['max_items_allowed'] = $iMaxTags;
 
 		return json_encode($aJson);
+	}
+
+	public function RequiresIndex()
+	{
+		return true;
+	}
+
+	public function RequiresFullTextIndex()
+	{
+		return true;
 	}
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
@@ -9705,14 +9721,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list'));
 	}
 
-	public function GetEditClass()
-	{
-		return "ClassAttCodeSet";
-	}
-
 	public function GetMaxSize()
 	{
-		return 255;
+		return max(255, 15 * $this->GetMaxItems());
 	}
 
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
@@ -9724,7 +9735,14 @@ class AttributeClassAttCodeSet extends AttributeSet
 			$sClass = $oHostObj->Get($sTargetClass);
 
 			$aAllowedAttributes = array();
-			$aAllAttributes = MetaModel::GetAttributesList($sClass);
+			if (empty($sClass))
+			{
+				$aAllAttributes = array();
+			}
+			else
+			{
+				$aAllAttributes = MetaModel::GetAttributesList($sClass);
+			}
 			$sAttDefList = $this->Get('attribute_definition_list');
 			if (!empty($sAttDefList))
 			{

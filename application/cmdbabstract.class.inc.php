@@ -2033,6 +2033,7 @@ EOF
 					$oPage->add_ready_script("$('#{$iId}').bind('validate', function(evt, sFormId) { return ValidateCustomFields('$iId', sFormId) } );"); // Custom validation function
 					break;
 
+				case 'Set':
 				case 'TagSet':
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/selectize.min.js');
 					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
@@ -2040,27 +2041,11 @@ EOF
 
 					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
-					/** @var \ormTagSet $value */
-					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
-					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
-					$sHTMLValue = "<div class=\"field_input_zone field_input_tagset\"><input id='$sInputId' name='$sInputId' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
-					$sScript = "$('#$sInputId').set_widget();";
-					$oPage->add_ready_script($sScript);
-
-					break;
-
-				case 'ClassAttCodeSet':
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/selectize.min.js');
-					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/jquery.itop-tagset-widget.js');
-
-					$oPage->add_dict_entry('Core:AttributeTagSet:placeholder');
-
 					/** @var \ormSet $value */
 					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
 					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
 					$sHTMLValue = "<div class=\"field_input_zone field_input_tagset\"><input id='$sInputId' name='$sInputId' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
-					$sScript = "$('#$sInputId').tagset_widget();";
+					$sScript = "$('#$sInputId').set_widget();";
 					$oPage->add_ready_script($sScript);
 					break;
 
@@ -3313,7 +3298,7 @@ EOF
 					$this->Set($sAttCode, $oTagSet);
 					break;
 
-				case 'ClassAttCodeSet':
+				case 'Set':
 					/** @var ormSet $oSet */
 					$oSet = $this->Get($sAttCode);
 					if (is_null($oSet))
@@ -3514,8 +3499,8 @@ EOF
 				);
 				break;
 
+			case 'Set':
 			case 'TagSet':
-			case 'ClassAttCodeSet':
 				$sTagSetJson = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 				$value = json_decode($sTagSetJson, true);
 				break;
@@ -4008,7 +3993,6 @@ EOF
 
 			$iFormId = cmdbAbstractObject::GetNextFormId(); // Identifier that prefixes all the form fields
 			$sReadyScript = '';
-			$aDependsOn = array();
 			$sFormPrefix = '2_';
 			foreach($aList as $sAttCode => $oAttDef)
 			{
@@ -4087,7 +4071,7 @@ EOF
 							$sTip = addslashes($sTip);
 							$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
 
-							if (($oAttDef->GetEditClass() == 'TagSet') || ($oAttDef->GetEditClass() == 'ClassAttCodeSet'))
+							if (($oAttDef->GetEditClass() == 'TagSet') || ($oAttDef->GetEditClass() == 'Set'))
 							{
 								// Set the value by adding the values to the first one
 								reset($aMultiValues);

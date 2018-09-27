@@ -1389,20 +1389,49 @@ EOF
 					$aParameters['handler_class'] = $this->GetMandatoryPropString($oField, 'handler_class');
 				}
 				elseif ($sAttType == 'AttributeTagSet')
-                {
-                    $aTagFieldsInfo[] = $sAttCode;
-                    $aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
-                    $aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
-                    $aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-                    $aParameters['depends_on'] = $sDependencies;
-	                $aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
-	                $aParameters['tag_code_max_len'] = $this->GetPropNumber($oField, 'tag_code_max_len', 20);
-	                if ($aParameters['tag_code_max_len'] > 255)
-	                {
-		                $aParameters['tag_code_max_len'] = 255;
-	                }
-                }
-                else
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+					$aParameters['tag_code_max_len'] = $this->GetPropNumber($oField, 'tag_code_max_len', 20);
+					if ($aParameters['tag_code_max_len'] > 255)
+					{
+						$aParameters['tag_code_max_len'] = 255;
+					}
+				}
+				elseif ($sAttType == 'AttributeSet')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+				}
+				elseif ($sAttType == 'AttributeClassAttCodeSet')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+					$aParameters['class_field'] = $this->GetMandatoryPropString($oField, 'class_field');
+					$aParameters['attribute_definition_list'] = $this->GetPropString($oField, 'attribute_definition_list', '');
+				}
+				elseif ($sAttType == 'AttributeClassState')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['class_field'] = $this->GetMandatoryPropString($oField, 'class_field');
+				}
+				else
 				{
                     $aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
                     $aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
