@@ -24,55 +24,8 @@
  * Date: 24/08/2018
  * Time: 14:35
  */
-final class ormTagSet
+final class ormTagSet extends ormSet
 {
-	private $sClass; // class of the tag field
-	private $sAttCode; // attcode of the tag field
-	private $aOriginalObjects = null;
-
-	/**
-	 * Object from the original set, minus the removed objects
-	 *
-	 * @var DBObject[] array of iObjectId => DBObject
-	 */
-	private $aPreserved = array();
-
-	/**
-	 * @var DBObject[] New items
-	 */
-	private $aAdded = array();
-
-	/**
-	 * @var DBObject[] Removed items
-	 */
-	private $aRemoved = array();
-
-	/**
-	 * @var DBObject[] Modified items (mass edit)
-	 */
-	private $aModified = array();
-
-	/**
-	 * @var int Max number of tags in collection
-	 */
-	private $iLimit;
-
-	/**
-	 * __toString magical function overload.
-	 */
-	public function __toString()
-	{
-		$aValue = $this->GetValue();
-		if (!empty($aValue))
-		{
-			return implode(' ', $aValue);
-		}
-		else
-		{
-			return ' ';
-		}
-	}
-
 	/**
 	 * ormTagSet constructor.
 	 *
@@ -84,31 +37,7 @@ final class ormTagSet
 	 */
 	public function __construct($sClass, $sAttCode, $iLimit = 12)
 	{
-		$this->sAttCode = $sAttCode;
-
-		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		if (!$oAttDef instanceof AttributeTagSet)
-		{
-			throw new Exception("ormTagSet: field {$sClass}:{$sAttCode} is not a tag");
-		}
-		$this->sClass = $sClass;
-		$this->iLimit = $iLimit;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetClass()
-	{
-		return $this->sClass;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetAttCode()
-	{
-		return $this->sAttCode;
+		parent::__construct($sClass, $sAttCode, $iLimit);
 	}
 
 	/**
@@ -118,7 +47,7 @@ final class ormTagSet
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue when a code is invalid
 	 */
-	public function SetValue($aTagCodes)
+	public function SetValues($aTagCodes)
 	{
 		if (!is_array($aTagCodes))
 		{
@@ -152,15 +81,10 @@ final class ormTagSet
 		}
 	}
 
-	private function GetCount()
-	{
-		return count($this->aPreserved) + count($this->aAdded) - count($this->aRemoved);
-	}
-
 	/**
 	 * @return array of tag codes
 	 */
-	public function GetValue()
+	public function GetValues()
 	{
 		$aValues = array();
 		foreach($this->aPreserved as $sTagCode => $oTag)
@@ -183,6 +107,7 @@ final class ormTagSet
 	public function GetLabels()
 	{
 		$aTags = array();
+		/** @var \TagSetFieldData $oTag */
 		foreach($this->aPreserved as $sTagCode => $oTag)
 		{
 			try
@@ -300,21 +225,21 @@ final class ormTagSet
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function GetDelta(ormTagSet $oOtherTagSet)
+	public function GetDelta(ormSet $oOtherTagSet)
 	{
 		$oTag = new ormTagSet($this->sClass, $this->sAttCode);
 		// Set the initial value
-		$aOrigTagCodes = $this->GetValue();
-		$oTag->SetValue($aOrigTagCodes);
+		$aOrigTagCodes = $this->GetValues();
+		$oTag->SetValues($aOrigTagCodes);
 		// now remove everything
 		foreach($aOrigTagCodes as $sTagCode)
 		{
-			$oTag->RemoveTag($sTagCode);
+			$oTag->Remove($sTagCode);
 		}
 		// now add the tags of the other TagSet
-		foreach($oOtherTagSet->GetValue() as $sTagCode)
+		foreach($oOtherTagSet->GetValues() as $sTagCode)
 		{
-			$oTag->AddTag($sTagCode);
+			$oTag->Add($sTagCode);
 		}
 		$aDelta = array();
 		$aDelta['added'] = $oTag->GetAddedCodes();
@@ -340,17 +265,17 @@ final class ormTagSet
 	{
 		$oTag = new ormTagSet($this->sClass, $this->sAttCode);
 		// Set the initial value
-		$aOrigTagCodes = $this->GetValue();
-		$oTag->SetValue($aOrigTagCodes);
+		$aOrigTagCodes = $this->GetValues();
+		$oTag->SetValues($aOrigTagCodes);
 		// now remove everything
 		foreach($aOrigTagCodes as $sTagCode)
 		{
-			$oTag->RemoveTag($sTagCode);
+			$oTag->Remove($sTagCode);
 		}
 		// now add the tags of the other TagSet
-		foreach($oOtherTagSet->GetValue() as $sTagCode)
+		foreach($oOtherTagSet->GetValues() as $sTagCode)
 		{
-			$oTag->AddTag($sTagCode);
+			$oTag->Add($sTagCode);
 		}
 		$aDelta = array();
 		$aDelta['added'] = $oTag->GetAddedTags();
@@ -362,40 +287,12 @@ final class ormTagSet
 	/**
 	 * @return string[] list of codes for partial entries
 	 */
-	public function GetModifiedTags()
+	public function GetModified()
 	{
 		$aModifiedTagCodes = array_keys($this->aModified);
 		sort($aModifiedTagCodes);
 
 		return $aModifiedTagCodes;
-	}
-
-	/**
-	 * Apply a delta to the current TagSet
-	 *  $aDelta['added] = array of tag code for only the added tags
-	 *  $aDelta['removed'] = array of tag code for only the removed tags
-	 *
-	 * @param $aDelta
-	 *
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 */
-	public function ApplyDelta($aDelta)
-	{
-		if (isset($aDelta['removed']))
-		{
-			foreach($aDelta['removed'] as $sTagCode)
-			{
-				$this->RemoveTag($sTagCode);
-			}
-		}
-		if (isset($aDelta['added']))
-		{
-			foreach($aDelta['added'] as $sTagCode)
-			{
-				$this->AddTag($sTagCode);
-			}
-		}
 	}
 
 	/**
@@ -424,9 +321,9 @@ final class ormTagSet
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public function AddTag($sTagCode)
+	public function Add($sTagCode)
 	{
-		if ($this->GetCount() === $this->iLimit)
+		if ($this->Count() === $this->iLimit)
 		{
 			throw new CoreException("Maximum number of tags ({$this->iLimit}) reached for {$this->sClass}:{$this->sAttCode}");
 		}
@@ -440,7 +337,7 @@ final class ormTagSet
 		{
 			// put it back into preserved
 			$this->aPreserved[$sTagCode] = $oTag;
-			// no need to add it to aModified : was already done when calling RemoveTag method
+			// no need to add it to aModified : was already done when calling Remove method
 		}
 		else
 		{
@@ -453,7 +350,7 @@ final class ormTagSet
 	/**
 	 * @param $sTagCode
 	 */
-	public function RemoveTag($sTagCode)
+	public function Remove($sTagCode)
 	{
 		if ($this->IsTagInList($this->aRemoved, $sTagCode))
 		{
@@ -499,30 +396,6 @@ final class ormTagSet
 		unset($aTagList[$sTagCode]);
 
 		return $oTag;
-	}
-
-	/**
-	 * Populates the added and removed arrays for bulk edit
-	 *
-	 * @param string[] $aTagCodes
-	 *
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 */
-	public function GenerateDiffFromTags($aTagCodes)
-	{
-		foreach($this->GetValue() as $sCurrentTagCode)
-		{
-			if (!in_array($sCurrentTagCode, $aTagCodes))
-			{
-				$this->RemoveTag($sCurrentTagCode);
-			}
-		}
-
-		foreach($aTagCodes as $sNewTagCode)
-		{
-			$this->AddTag($sNewTagCode);
-		}
 	}
 
 	/**
@@ -583,14 +456,18 @@ final class ormTagSet
 	 *
 	 * @return bool true if same tag set
 	 */
-	public function Equals(ormTagSet $other)
+	public function Equals(ormSet $other)
 	{
+		if (!($other instanceof ormTagSet))
+		{
+			return false;
+		}
 		if ($this->GetTagDataClass() !== $other->GetTagDataClass())
 		{
 			return false;
 		}
 
-		return implode(' ', $this->GetValue()) === implode(' ', $other->GetValue());
+		return implode(' ', $this->GetValues()) === implode(' ', $other->GetValues());
 	}
 
 	public function GetTagDataClass()

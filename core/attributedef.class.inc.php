@@ -31,6 +31,7 @@ require_once('ormstopwatch.class.inc.php');
 require_once('ormpassword.class.inc.php');
 require_once('ormcaselog.class.inc.php');
 require_once('ormlinkset.class.inc.php');
+require_once('ormset.class.inc.php');
 require_once('ormtagset.class.inc.php');
 require_once('htmlsanitizer.class.inc.php');
 require_once(APPROOT.'sources/autoload.php');
@@ -122,12 +123,14 @@ abstract class AttributeDefinition
 	const SEARCH_WIDGET_TYPE_EXTERNAL_FIELD = 'external_field';
 	const SEARCH_WIDGET_TYPE_DATE_TIME = 'date_time';
 	const SEARCH_WIDGET_TYPE_DATE = 'date';
-	const SEARCH_WIDGET_TYPE_TAG_SET = 'tag_set';
+	const SEARCH_WIDGET_TYPE_SET = 'set';
 
 
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	const INDEX_LENGTH = 95;
+
+	protected $aCSSClasses;
 
 	public function GetType()
 	{
@@ -213,6 +216,7 @@ abstract class AttributeDefinition
 		$this->m_sCode = $sCode;
 		$this->m_aParams = $aParams;
 		$this->ConsistencyCheck();
+		$this->aCSSClasses = array('attribute');
 	}
 
 	public function GetParams()
@@ -3102,7 +3106,7 @@ class AttributeString extends AttributeDBField
 }
 
 /**
- * An attibute that matches an object class
+ * An attribute that matches an object class
  *
  * @package     iTopORM
  */
@@ -3156,6 +3160,61 @@ class AttributeClass extends AttributeString
 	public function GetBasicFilterLooseOperator()
 	{
 		return '=';
+	}
+
+}
+
+
+/**
+ * An attribute that matches a class state
+ *
+ * @package     iTopORM
+ */
+class AttributeClassState extends AttributeString
+{
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
+
+	static public function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('class_field'));
+	}
+
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		if (isset($aArgs['this']))
+		{
+			$oHostObj = $aArgs['this'];
+			$sTargetClass = $this->Get('class_field');
+			$sClass = $oHostObj->Get($sTargetClass);
+
+			$aAllowedStates = array();
+			$aValues = MetaModel::EnumStates($sClass);
+			foreach(array_keys($aValues) as $sState)
+			{
+				$aAllowedStates[$sState] = MetaModel::GetStateLabel($sClass, $sState);
+			}
+			return $aAllowedStates;
+		}
+
+		return null;
+	}
+
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	{
+		if (empty($sValue))
+		{
+			return '';
+		}
+
+		if (!empty($oHostObject))
+		{
+			$sTargetClass = $this->Get('class_field');
+			$sClass = $oHostObject->Get($sTargetClass);
+
+			return MetaModel::GetStateLabel($sClass, $sValue);
+		}
+
+		return $sValue;
 	}
 
 }
@@ -6705,23 +6764,75 @@ class AttributeExternalField extends AttributeDefinition
  * @see TagSetFieldData
  * @since 2.6 N°931 tag fields
  */
-class AttributeTagSet extends AttributeDBFieldVoid
+class AttributeTagSet extends AttributeSet
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
+	public function __construct($sCode, array $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+		$this->aCSSClasses[] = 'attribute-tag-set';
+	}
 
 	static public function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'tag_max_nb', 'tag_code_max_len'));
+		return array_merge(parent::ListExpectedParams(), array('tag_code_max_len'));
 	}
 
-	public function GetDefaultValue(DBObject $oHostObject = null)
+	/**
+	 * @param \ormTagSet $oValue
+	 *
+	 * @param $aArgs
+	 *
+	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GetJsonForWidget($oValue, $aArgs)
 	{
-		return null;
+		$aJson = array();
+
+		// possible_values
+		$aTagSetObjectData = $this->GetAllowedValues($aArgs);
+		$aTagSetKeyValData = array();
+		foreach($aTagSetObjectData as $sTagCode => $sTagLabel)
+		{
+			$aTagSetKeyValData[] = [
+				'code' => $sTagCode,
+				'label' => $sTagLabel,
+			];
+		}
+		$aJson['possible_values'] = $aTagSetKeyValData;
+
+		if (is_null($oValue))
+		{
+			$aJson['partial_values'] = array();
+			$aJson['orig_value'] = array();
+		}
+		else
+		{
+			$aJson['partial_values'] = $oValue->GetModified();
+			$aJson['orig_value'] = array_merge($oValue->GetValues(), $oValue->GetModified());
+		}
+		$aJson['added'] = array();
+		$aJson['removed'] = array();
+
+		$iMaxTags = $this->GetMaxItems();
+		$aJson['max_items_allowed'] = $iMaxTags;
+
+		return json_encode($aJson);
 	}
 
-	public function IsNullAllowed()
+	public function FromStringToArray($proposedValue)
 	{
-		return $this->Get("is_null_allowed");
+		$aValues = array();
+		if (!empty($proposedValue))
+		{
+			foreach(explode(' ', $proposedValue) as $sCode)
+			{
+				$sValue = trim($sCode);
+				$aValues[] = $sValue;
+			}
+		}
+		return $aValues;
 	}
 
 	/**
@@ -6736,7 +6847,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	 */
 	public function GetExistingTagsFromString($sValue, $bNoLimit = false)
 	{
-		$aTagCodes = explode(' ', "$sValue");
+		$aTagCodes = $this->FromStringToArray("$sValue");
 		$sAttCode = $this->GetCode();
 		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
 		if ($bNoLimit)
@@ -6745,7 +6856,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		}
 		else
 		{
-			$oTagSet = new ormTagSet($sClass, $sAttCode, $this->GetTagMaxNb());
+			$oTagSet = new ormTagSet($sClass, $sAttCode, $this->GetMaxItems());
 		}
 		$aGoodTags = array();
 		foreach($aTagCodes as $sTagCode)
@@ -6757,31 +6868,21 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			if ($oTagSet->IsValidTag($sTagCode))
 			{
 				$aGoodTags[] = $sTagCode;
-				if (!$bNoLimit && (count($aGoodTags) === $this->GetTagMaxNb()))
+				if (!$bNoLimit && (count($aGoodTags) === $this->GetMaxItems()))
 				{
 					// extra and bad tags are ignored
 					break;
 				}
 			}
 		}
-		$oTagSet->SetValue($aGoodTags);
+		$oTagSet->SetValues($aGoodTags);
 
 		return $oTagSet;
-	}
-
-	public function GetTagMaxNb()
-	{
-		return $this->Get('tag_max_nb');
 	}
 
 	public function GetTagCodeMaxLength()
 	{
 		return $this->Get('tag_code_max_len');
-	}
-
-	public function GetEditClass()
-	{
-		return "TagSet";
 	}
 
 	public function GetEditValue($value, $oHostObj = null)
@@ -6792,7 +6893,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		}
 		if ($value instanceof ormTagSet)
 		{
-			$aValues = $value->GetValue();
+			$aValues = $value->GetValues();
 
 			return implode(' ', $aValues);
 		}
@@ -6800,27 +6901,9 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		return '';
 	}
 
-	protected function GetSQLCol($bFullSpec = false)
-	{
-		$iLen = $this->GetMaxSize();
-		return "VARCHAR($iLen)"
-			.CMDBSource::GetSqlStringColumnDefinition()
-			.($bFullSpec ? $this->GetSQLColSpec() : '');
-	}
-
 	public function GetMaxSize()
 	{
-		return $iLen = ($this->GetTagMaxNb() * $this->GetTagCodeMaxLength()) + 1;
-	}
-
-	public function RequiresIndex()
-	{
-		return true;
-	}
-
-	public function RequiresFullTextIndex()
-	{
-		return true;
+		return max(255, ($this->GetMaxItems() * $this->GetTagCodeMaxLength()) + 1);
 	}
 
 	public function Equals($val1, $val2)
@@ -6863,36 +6946,25 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	}
 
 	/**
-	 * @param $aCols
-	 * @param string $sPrefix
-	 *
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	public function FromImportToValue($aCols, $sPrefix = '')
-	{
-		$sValue = $aCols["$sPrefix"];
-
-		return $this->MakeRealValue($sValue, null);
-	}
-
-	/**
 	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
 	 *
 	 * @param $proposedValue
 	 * @param $oHostObj
 	 *
+	 * @param bool $bIgnoreErrors
+	 *
 	 * @return mixed
-	 * @throws \Exception
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
-	public function MakeRealValue($proposedValue, $oHostObj)
+	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
-		$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetTagMaxNb());
+		$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$proposedValue = trim("$proposedValue");
-			$aTagCodes = explode(' ', $proposedValue);
-			$oTagSet->SetValue($aTagCodes);
+			$aTagCodes = $this->FromStringToArray($proposedValue);
+			$oTagSet->SetValues($aTagCodes);
 		}
 		elseif ($proposedValue instanceof ormTagSet)
 		{
@@ -6924,7 +6996,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		if ($bLocalizedValue && !empty($sProposedValue))
 		{
 			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-				$this->GetCode(), $this->GetTagMaxNb());
+				$this->GetCode(), $this->GetMaxItems());
 			$aLabels = explode($sSepItem, $sProposedValue);
 			$aCodes = array();
 			foreach($aLabels as $sTagLabel)
@@ -6942,7 +7014,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 
 	public function GetNullValue()
 	{
-		return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetTagMaxNb());
+		return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 	}
 
 	public function IsNull($proposedValue)
@@ -6953,7 +7025,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		}
 
 		/** @var \ormTagSet $proposedValue */
-		return count($proposedValue->GetValue()) == 0;
+		return count($proposedValue->GetValues()) == 0;
 	}
 
 	/**
@@ -6990,18 +7062,6 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	}
 
 	/**
-	 * @param string $sValue
-	 * @param null $oHostObj
-	 *
-	 * @return string
-	 * @throws \CoreWarning
-	 */
-	public function GetAsPlainText($sValue, $oHostObj = null)
-	{
-		return $this->GetValueLabel($sValue);
-	}
-
-	/**
 	 * @param $value
 	 *
 	 * @return string
@@ -7015,7 +7075,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		}
 		if ($value instanceof ormTagSet)
 		{
-			$aValues = $value->GetValue();
+			$aValues = $value->GetValues();
 
 			return implode(' ', $aValues);
 		}
@@ -7047,7 +7107,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			}
 			else
 			{
-				$aValues = $value->GetValue();
+				$aValues = $value->GetValues();
 			}
 			if (empty($aValues))
 			{
@@ -7067,15 +7127,15 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			{
 				// unknown tags are present display the code instead
 			}
-			$aTagCodes = explode(' ', $value);
+			$aTagCodes = $this->FromStringToArray($value);
 			$aValues = array();
 			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-				$this->GetCode(), $this->GetTagMaxNb());
+				$this->GetCode(), $this->GetMaxItems());
 			foreach($aTagCodes as $sTagCode)
 			{
 				try
 				{
-					$oTagSet->AddTag($sTagCode);
+					$oTagSet->Add($sTagCode);
 				} catch (Exception $e)
 				{
 					$aValues[] = $sTagCode;
@@ -7103,8 +7163,8 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	{
 		$sResult = Dict::Format('Change:AttName_Changed', $this->GetLabel()).", ";
 
-		$aNewValues = explode(' ', $sNewValue);
-		$aOldValues = explode(' ', $sOldValue);
+		$aNewValues = $this->FromStringToArray($sNewValue);
+		$aOldValues = $this->FromStringToArray($sOldValue);
 
 		$aDelta['removed'] = array_diff($aOldValues, $aNewValues);
 		$aDelta['added'] = array_diff($aNewValues, $aOldValues);
@@ -7228,7 +7288,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			}
 			else
 			{
-				$aValues = $value->GetValue();
+				$aValues = $value->GetValues();
 			}
 			if (!empty($aValuess))
 			{
@@ -7268,7 +7328,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			}
 			else
 			{
-				$aValues = $value->GetValue();
+				$aValues = $value->GetValues();
 			}
 			$sRes = implode($sSepItem, $aValues);
 		}
@@ -7313,7 +7373,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 			}
 			else
 			{
-				$aValues = $value->GetValue();
+				$aValues = $value->GetValues();
 				$sSep = ' ';
 			}
 
@@ -7345,7 +7405,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 		$aRet = array();
 		if (is_object($value) && ($value instanceof ormTagSet))
 		{
-			$aRet = $value->GetValue();
+			$aRet = $value->GetValues();
 		}
 
 		return $aRet;
@@ -7364,51 +7424,10 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	 */
 	public function FromJSONToValue($json)
 	{
-		$oSet = new ormTagSet($this->GetHostClass(), $this->GetCode(), $this->GetTagMaxNb());
-		$oSet->SetValue($json);
+		$oSet = new ormTagSet($this->GetHostClass(), $this->GetCode(), $this->GetMaxItems());
+		$oSet->SetValues($json);
 
 		return $oSet;
-	}
-
-	/**
-	 * @param \ormTagSet $oValue
-	 *
-	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
-	 * @throws \CoreException
-	 */
-	public function GetJsonForWidget($oValue)
-	{
-		$aJson = array();
-
-		// possible_values
-		$aTagSetObjectData = $this->GetAllowedValues();
-		$aTagSetKeyValData = array();
-		foreach($aTagSetObjectData as $sTagCode => $sTagLabel)
-		{
-			$aTagSetKeyValData[] = [
-				'code' => $sTagCode,
-				'label' => $sTagLabel,
-			];
-		}
-		$aJson['possible_values'] = $aTagSetKeyValData;
-
-		if (is_null($oValue))
-		{
-			$aJson['partial_values'] = array();
-			$aJson['orig_value'] = array();
-		}
-		else
-		{
-			$aJson['partial_values'] = $oValue->GetModifiedTags();
-			$aJson['orig_value'] = array_merge($oValue->GetValue(), $oValue->GetModifiedTags());
-		}
-		$aJson['added'] = array();
-		$aJson['removed'] = array();
-
-		$iMaxTags = $this->GetTagMaxNb();
-		$aJson['max_tags_allowed'] = $iMaxTags;
-
-		return json_encode($aJson);
 	}
 
 	/**
@@ -7422,7 +7441,7 @@ class AttributeTagSet extends AttributeDBFieldVoid
 	{
 		if ($value instanceof ormTagSet)
 		{
-			$aValues = $value->GetValue();
+			$aValues = $value->GetValues();
 
 			return implode(' ', $aValues);
 		}
@@ -8757,7 +8776,7 @@ class AttributeSubItem extends AttributeDefinition
 	static public function LoadInObject()
 	{
 		return false;
-	} // if this verb returns false, then GetValue must be implemented
+	} // if this verb returns false, then GetValues must be implemented
 
 	/**
 	 * Used by DBOBject::Get()
@@ -9353,14 +9372,108 @@ class AttributePropertySet extends AttributeTable
 
 /**
  * An unordered multi values attribute
+ * Allowed values are mandatory for this attribute to be modified
  *
  * Class AttributeSet
  */
-class AttributeSet extends AttributeDBFieldVoid
+abstract class AttributeSet extends AttributeDBFieldVoid
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_SET;
+
+	public function __construct($sCode, array $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+		$this->aCSSClasses[] = 'attribute-set';
+	}
+
 	static public function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('is_null_allowed'));
+		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'max_items'));
+	}
+
+	/**
+	 * Allowed values are mandatory for this attribute to be modified
+	 *
+	 * @param array $aArgs
+	 * @param string $sContains
+	 *
+	 * @return array|null
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		return parent::GetAllowedValues($aArgs, $sContains);
+	}
+
+	/**
+	 * @param \ormSet $oValue
+	 *
+	 * @param $aArgs
+	 *
+	 * @return string JSON to be used in the itop.set_widget JQuery widget
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GetJsonForWidget($oValue, $aArgs)
+	{
+		$aJson = array();
+
+		// possible_values
+		$aAllowedValues = $this->GetAllowedValues($aArgs);
+		$aSetKeyValData = array();
+		foreach($aAllowedValues as $sCode => $sLabel)
+		{
+			$aSetKeyValData[] = [
+				'code' => $sCode,
+				'label' => $sLabel,
+			];
+		}
+		$aJson['possible_values'] = $aSetKeyValData;
+
+		if (is_null($oValue))
+		{
+			$aJson['partial_values'] = array();
+			$aJson['orig_value'] = array();
+		}
+		else
+		{
+			$aPartialValues = $oValue->GetModified();
+			foreach ($aPartialValues as $key => $value)
+			{
+				if (!isset($aAllowedValues[$value]))
+				{
+					unset($aPartialValues[$key]);
+				}
+			}
+			$aJson['partial_values'] = array_values($aPartialValues);
+			$aOrigValues = array_merge($oValue->GetValues(), $oValue->GetModified());
+			foreach ($aOrigValues as $key => $value)
+			{
+				if (!isset($aAllowedValues[$value]))
+				{
+					unset($aOrigValues[$key]);
+				}
+			}
+			$aJson['orig_value'] = array_values($aOrigValues);
+		}
+		$aJson['added'] = array();
+		$aJson['removed'] = array();
+
+		$iMaxTags = $this->GetMaxItems();
+		$aJson['max_items_allowed'] = $iMaxTags;
+
+		return json_encode($aJson);
+	}
+
+	public function RequiresIndex()
+	{
+		return true;
+	}
+
+	public function RequiresFullTextIndex()
+	{
+		return true;
 	}
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
@@ -9375,7 +9488,7 @@ class AttributeSet extends AttributeDBFieldVoid
 
 	public function GetEditClass()
 	{
-		return "List";
+		return "Set";
 	}
 
 	public function GetEditValue($value, $oHostObj = null)
@@ -9383,6 +9496,10 @@ class AttributeSet extends AttributeDBFieldVoid
 		if (is_string($value))
 		{
 			return $value;
+		}
+		if ($value instanceof ormSet)
+		{
+			$value = $value->GetValues();
 		}
 		if (is_array($value))
 		{
@@ -9404,19 +9521,32 @@ class AttributeSet extends AttributeDBFieldVoid
 		return 255;
 	}
 
+	public function FromStringToArray($proposedValue)
+	{
+		$aValues = array();
+		if (!empty($proposedValue))
+		{
+			foreach(explode(',', $proposedValue) as $sCode)
+			{
+				$sValue = trim($sCode);
+				$aValues[] = $sValue;
+			}
+		}
+		return $aValues;
+	}
+
 	/**
 	 * @param array $aCols
 	 * @param string $sPrefix
 	 *
 	 * @return mixed
-	 * @throws \CoreException
 	 * @throws \Exception
 	 */
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
 		$sValue = $aCols["$sPrefix"];
 
-		return $this->MakeRealValue($sValue, null);
+		return $this->MakeRealValue($sValue, null, true);
 	}
 
 	/**
@@ -9439,35 +9569,27 @@ class AttributeSet extends AttributeDBFieldVoid
 	 * @param $proposedValue
 	 * @param \DBObject $oHostObj
 	 *
+	 * @param bool $bIgnoreErrors
+	 *
 	 * @return mixed
-	 * @throws \Exception
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
-	public function MakeRealValue($proposedValue, $oHostObj)
+	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
-		if (empty($proposedValue))
-		{
-			return array();
-		}
-		if (is_string($proposedValue))
+		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$proposedValue = trim("$proposedValue");
-			$proposedValue = explode(',', $proposedValue);
-			$aValues = array();
-			foreach($proposedValue as $sValue)
-			{
-				$sValue = trim($sValue);
-				$aValues[$sValue] = $sValue;
-			}
-			return $aValues;
+			$aValues = $this->FromStringToArray($proposedValue);
+			$oSet->SetValues($aValues);
 		}
-
-		if (is_array($proposedValue))
+		elseif ($proposedValue instanceof ormSet)
 		{
-			return $proposedValue;
+			$oSet = $proposedValue;
 		}
 
-		throw new CoreUnexpectedValue("Wrong format");
-
+		return $oSet;
 	}
 
 	/**
@@ -9488,14 +9610,25 @@ class AttributeSet extends AttributeDBFieldVoid
 		return $this->MakeRealValue($sProposedValue, null);
 	}
 
+	/**
+	 * @return null|\ormSet
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public function GetNullValue()
 	{
-		return null;
+		return new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 	}
 
 	public function IsNull($proposedValue)
 	{
-		return empty($proposedValue);
+		if (empty($proposedValue))
+		{
+			return true;
+		}
+
+		/** @var \ormSet $proposedValue */
+		return $proposedValue->Count() == 0;
 	}
 
 	/**
@@ -9504,11 +9637,14 @@ class AttributeSet extends AttributeDBFieldVoid
 	 * @param $sValue
 	 *
 	 * @return string label corresponding to the given value (in plain text)
-	 * @throws \CoreWarning
 	 * @throws \Exception
 	 */
 	public function GetValueLabel($sValue)
 	{
+		if ($sValue instanceof ormSet)
+		{
+			$sValue = $sValue->GetValues();
+		}
 		if (is_array($sValue))
 		{
 			return implode(', ', $sValue);
@@ -9521,7 +9657,7 @@ class AttributeSet extends AttributeDBFieldVoid
 	 * @param null $oHostObj
 	 *
 	 * @return string
-	 * @throws \CoreWarning
+	 * @throws \Exception
 	 */
 	public function GetAsPlainText($sValue, $oHostObj = null)
 	{
@@ -9532,13 +9668,16 @@ class AttributeSet extends AttributeDBFieldVoid
 	 * @param $value
 	 *
 	 * @return string
-	 * @throws \CoreWarning
 	 */
 	public function ScalarToSQL($value)
 	{
 		if (empty($value))
 		{
 			return '';
+		}
+		if ($value instanceof ormSet)
+		{
+			$value = $value->GetValues();
 		}
 		if (is_array($value))
 		{
@@ -9554,34 +9693,91 @@ class AttributeSet extends AttributeDBFieldVoid
 	 *
 	 * @return string|null
 	 *
-	 * @throws \CoreException
 	 * @throws \Exception
 	 */
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
+		if ($value instanceof ormSet)
+		{
+			$value = $value->GetValues();
+		}
 		if (is_array($value))
 		{
 			return implode(', ', $value);
 		}
 		return $value;
 	}
+
+	public function GetMaxItems()
+	{
+		return $this->Get('max_items');
+	}
 }
 
-class AttributeObjectAttCodeSet extends AttributeSet
+class AttributeClassAttCodeSet extends AttributeSet
 {
-	static public function ListExpectedParams()
+	public function __construct($sCode, array $aParams)
 	{
-		return array_merge(parent::ListExpectedParams(), array('class'));
+		parent::__construct($sCode, $aParams);
+		$this->aCSSClasses[] = 'attribute-class-att-code-set';
 	}
 
-	public function GetEditClass()
+	static public function ListExpectedParams()
 	{
-		return "ObjectAttcodeSet";
+		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list'));
 	}
 
 	public function GetMaxSize()
 	{
-		return 255;
+		return max(255, 15 * $this->GetMaxItems());
+	}
+
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		if (isset($aArgs['this']))
+		{
+			$oHostObj = $aArgs['this'];
+			$sTargetClass = $this->Get('class_field');
+			$sClass = $oHostObj->Get($sTargetClass);
+
+			$aAllowedAttributes = array();
+			if (empty($sClass))
+			{
+				$aAllAttributes = array();
+			}
+			else
+			{
+				$aAllAttributes = MetaModel::GetAttributesList($sClass);
+			}
+			$sAttDefList = $this->Get('attribute_definition_list');
+			if (!empty($sAttDefList))
+			{
+				$aAllowedDefs = array();
+				foreach(explode(',', $sAttDefList) as $sAttDefName)
+				{
+					$sAttDefName = trim($sAttDefName);
+					$aAllowedDefs[$sAttDefName] = $sAttDefName;
+				}
+				foreach($aAllAttributes as $sAttCode)
+				{
+					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					if (isset($aAllowedDefs[get_class($oAttDef)]))
+					{
+						$aAllowedAttributes[$sAttCode] = MetaModel::GetLabel($sClass, $sAttCode);
+					}
+				}
+			}
+			else
+			{
+				foreach($aAllAttributes as $sAttCode)
+				{
+					$aAllowedAttributes[$sAttCode] = MetaModel::GetLabel($sClass, $sAttCode);
+				}
+			}
+			return $aAllowedAttributes;
+		}
+
+		return null;
 	}
 
 	/**
@@ -9590,49 +9786,285 @@ class AttributeObjectAttCodeSet extends AttributeSet
 	 * @param $proposedValue
 	 * @param \DBObject $oHostObj
 	 *
+	 * @param bool $bIgnoreErrors
+	 *
 	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \OQLException
 	 * @throws \Exception
 	 */
-	public function MakeRealValue($proposedValue, $oHostObj)
+	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
-		$aAllowedAttributes = array();
-		$sClass = '';
+		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+		$aArgs = array();
 		if (!empty($oHostObj))
 		{
-			$sTargetClass = $this->Get('class');
-			$sClass = $oHostObj->Get($sTargetClass);
-			$aAllowedAttributes = MetaModel::GetAttributesList($sClass);
+			$aArgs['this'] = $oHostObj;
 		}
+		$aAllowedAttributes = $this->GetAllowedValues($aArgs);
+		$aInvalidAttCodes = array();
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
-			$proposedValue = trim("$proposedValue");
-			$proposedValue = explode(',', $proposedValue);
+			$proposedValue = trim($proposedValue);
 			$aValues = array();
-			foreach($proposedValue as $sValue)
+			foreach(explode(',', $proposedValue) as $sValue)
 			{
 				$sAttCode = trim($sValue);
-				if (empty($aAllowedAttributes) || in_array($sAttCode, $aAllowedAttributes))
+				if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
 				{
 					$aValues[$sAttCode] = $sAttCode;
 				}
 				else
 				{
-					throw new CoreUnexpectedValue("The attribute {$sAttCode} does not exist in class {$sClass}");
+					$aInvalidAttCodes[] = $sAttCode;
 				}
 			}
-			return $aValues;
+			$oSet->SetValues($aValues);
+		}
+		elseif ($proposedValue instanceof ormSet)
+		{
+			$oSet = $proposedValue;
+		}
+		if (!empty($aInvalidAttCodes) && !$bIgnoreErrors)
+		{
+			$sTargetClass = $this->Get('class_field');
+			$sClass = $oHostObj->Get($sTargetClass);
+			throw new CoreUnexpectedValue("The attribute(s) ".implode(', ', $aInvalidAttCodes)." are invalid for class {$sClass}");
 		}
 
-		return $proposedValue;
+		return $oSet;
 	}
 
+	/**
+	 * @param $value
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 *
+	 * @return string|null
+	 *
+	 * @throws \Exception
+	 */
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	{
+		if ($value instanceof ormSet)
+		{
+			$value = $value->GetValues();
+		}
+		if (is_array($value))
+		{
+			if (!empty($oHostObject) && $bLocalize)
+			{
+				$sTargetClass = $this->Get('class_field');
+				$sClass = $oHostObject->Get($sTargetClass);
+
+				$aLocalizedValues = array();
+				foreach($value as $sAttCode)
+				{
+					try
+					{
+						$aLocalizedValues[] = MetaModel::GetLabel($sClass, $sAttCode);
+					} catch (Exception $e)
+					{
+						// Ignore bad values
+					}
+				}
+				$value = $aLocalizedValues;
+			}
+			return implode(', ', $value);
+		}
+		return $value;
+	}
 }
 
-/**
- * The attribute dedicated to the friendly name automatic attribute (not written)
- *
- * @package     iTopORM
- */
+class AttributeQueryAttCodeSet extends AttributeSet
+{
+	public function __construct($sCode, array $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+		$this->aCSSClasses[] = 'attribute-query-att-code-set';
+	}
+
+	static public function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('query_field'));
+	}
+
+	protected function GetSQLCol($bFullSpec = false)
+	{
+		return "TEXT".CMDBSource::GetSqlStringColumnDefinition();
+	}
+
+	public function GetMaxSize()
+	{
+		return 65535;
+	}
+
+	/**
+	 * Get a class array indexed by alias
+	 * @param $oHostObj
+	 *
+	 * @return array
+	 */
+	private function GetClassList($oHostObj)
+	{
+		try
+		{
+			$sQueryField = $this->Get('query_field');
+			$sQuery = $oHostObj->Get($sQueryField);
+			if (empty($sQuery))
+			{
+				return array();
+			}
+			$oFilter = DBSearch::FromOQL($sQuery);
+			return $oFilter->GetSelectedClasses();
+
+		} catch (OQLException $e)
+		{
+			IssueLog::Warning($e->getMessage());
+		}
+		return array();
+	}
+
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		if (isset($aArgs['this']))
+		{
+			$oHostObj = $aArgs['this'];
+			$aClasses = $this->GetClassList($oHostObj);
+
+			$aAllowedAttributes = array();
+			$aAllAttributes = array();
+			if (is_array($aClasses))
+			{
+				if (!empty($aClasses))
+				{
+					ksort($aClasses);
+					foreach($aClasses as $sAlias => $sClass)
+					{
+						$aAttributes = MetaModel::GetAttributesList($sClass);
+						foreach($aAttributes as $sAttCode)
+						{
+							$aAllAttributes[] = array('alias' => $sAlias, 'class' => $sClass, 'att_code' => $sAttCode);
+						}
+					}
+				}
+				foreach($aAllAttributes as $aFullAttCode)
+				{
+					$sAttCode = $aFullAttCode['alias'].'.'.$aFullAttCode['att_code'];
+					$sClass = $aFullAttCode['class'];
+					$sLabel = $aFullAttCode['alias'].'.'.MetaModel::GetLabel($sClass, $aFullAttCode['att_code']);
+					$aAllowedAttributes[$sAttCode] = $sLabel;
+				}
+			}
+			else
+			{
+				$sClass = "$aClasses";
+				$aAttributes = MetaModel::GetAttributesList($sClass);
+				foreach($aAttributes as $sAttCode)
+				{
+					$aAllowedAttributes[$sAttCode] = MetaModel::GetLabel($sClass, $sAttCode);
+				}
+			}
+			return $aAllowedAttributes;
+		}
+
+		return null;
+	}
+
+	/**
+	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
+	 *
+	 * @param $proposedValue
+	 * @param \DBObject $oHostObj
+	 *
+	 * @param bool $bIgnoreErrors
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \OQLException
+	 * @throws \Exception
+	 */
+	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
+	{
+		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+		$aArgs = array();
+		if (!empty($oHostObj))
+		{
+			$aArgs['this'] = $oHostObj;
+		}
+		$aAllowedAttributes = $this->GetAllowedValues($aArgs);
+		$aInvalidAttCodes = array();
+		if (is_string($proposedValue) && !empty($proposedValue))
+		{
+			$proposedValue = trim($proposedValue);
+			$aValues = array();
+			foreach(explode(',', $proposedValue) as $sValue)
+			{
+				$sAttCode = trim($sValue);
+				if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
+				{
+					$aValues[$sAttCode] = $sAttCode;
+				}
+				else
+				{
+					$aInvalidAttCodes[] = $sAttCode;
+				}
+			}
+			$oSet->SetValues($aValues);
+		}
+		elseif ($proposedValue instanceof ormSet)
+		{
+			$oSet = $proposedValue;
+		}
+		if (!empty($aInvalidAttCodes) && !$bIgnoreErrors)
+		{
+			throw new CoreUnexpectedValue("The attribute(s) ".implode(', ', $aInvalidAttCodes)." are invalid");
+		}
+
+		return $oSet;
+	}
+
+	/**
+	 * @param $value
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 *
+	 * @return string|null
+	 *
+	 * @throws \Exception
+	 */
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	{
+
+		if ($value instanceof ormSet)
+		{
+			$value = $value->GetValues();
+		}
+		if (is_array($value))
+		{
+			if (!empty($oHostObject) && $bLocalize)
+			{
+				$aArgs['this'] = $oHostObject;
+				$aAllowedAttributes = $this->GetAllowedValues($aArgs);
+
+				$aLocalizedValues = array();
+				foreach($value as $sAttCode)
+				{
+					if (isset($aAllowedAttributes[$sAttCode]))
+					{
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sAttCode.'" data-description="'.$aAllowedAttributes[$sAttCode].'">'.$aAllowedAttributes[$sAttCode].'</span>';
+					}
+				}
+				$value = $aLocalizedValues;
+			}
+			$value = implode(', ', $value);
+		}
+
+		return '<span class="'.implode(' ', $this->aCSSClasses).'">'.$value.'</span>';
+	}
+}
 
 /**
  * The attribute dedicated to the friendly name automatic attribute (not written)

@@ -589,13 +589,22 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: TriggerOnObjectDelete
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)',
+	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class',
+));
+
+//
 // Class: TriggerOnObjectUpdate
 //
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target attributes',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
 

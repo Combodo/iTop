@@ -214,13 +214,14 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		$sClassName = get_class($this);
 		if (empty($id))
 		{
-			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE (code = '$sTagCode' OR label = '$sTagLabel')");
+			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE (code = :tag_code OR label = :tag_label)");
 		}
 		else
 		{
-			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE id != $id AND (code = '$sTagCode' OR label = '$sTagLabel')");
+			$oSearch = DBSearch::FromOQL("SELECT $sClassName WHERE id != :id AND (code = :tag_code OR label = :tag_label)");
 		}
-		$oSet = new DBObjectSet($oSearch);
+		$aArgs = array('id' => $id, 'tag_code' => $sTagCode, 'tag_label' => $sTagLabel);
+		$oSet = new DBObjectSet($oSearch, array(), $aArgs);
 		if ($oSet->CountExceeds(0))
 		{
 			$this->m_aCheckIssues[] = Dict::S('Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel');
@@ -277,7 +278,6 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		return false;
 	}
 
-
 	/**
 	 * Display Tag Usage
 	 *
@@ -333,6 +333,11 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 
 	public static function GetClassName($sClass)
 	{
+		if ($sClass == 'TagSetFieldData')
+		{
+			$aWords = preg_split('/(?=[A-Z]+)/', $sClass);
+			return trim(implode(' ', $aWords));
+		}
 		try
 		{
 			$aTagFieldInfo = self::ExtractTagFieldName($sClass);

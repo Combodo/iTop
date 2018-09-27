@@ -1654,12 +1654,8 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public static function GetFormElementForField(
-		$oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '',
-		$iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true
-	) {
-		static $iInputId = 0;
-		$sFieldPrefix = '';
+	public static function GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $value = '', $sDisplayValue = '', $iId = '', $sNameSuffix = '',	$iFlags = 0, $aArgs = array(), $bPreserveCurrentValue = true)
+	{
 		$sFormPrefix = isset($aArgs['formPrefix']) ? $aArgs['formPrefix'] : '';
 		$sFieldPrefix = isset($aArgs['prefix']) ? $sFormPrefix.$aArgs['prefix'] : $sFormPrefix;
 		if ($sDisplayValue == '')
@@ -1958,8 +1954,7 @@ EOF
 
 					if ($bPreserveCurrentValue)
 					{
-						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '',
-							$value);
+						$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '', $value);
 					}
 					else
 					{
@@ -2038,6 +2033,7 @@ EOF
 					$oPage->add_ready_script("$('#{$iId}').bind('validate', function(evt, sFormId) { return ValidateCustomFields('$iId', sFormId) } );"); // Custom validation function
 					break;
 
+				case 'Set':
 				case 'TagSet':
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/selectize.min.js');
 					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
@@ -2045,32 +2041,19 @@ EOF
 
 					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
-					/** @var \ormTagSet $value */
-					$sJson = $oAttDef->GetJsonForWidget($value);
+					/** @var \ormSet $value */
+					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
 					$sInputId = "attr_{$sFormPrefix}{$sAttCode}";
 					$sHTMLValue = "<div class=\"field_input_zone field_input_tagset\"><input id='$sInputId' name='$sInputId' type='hidden' value='$sJson'></div>{$sValidationSpan}{$sReloadSpan}";
 					$sScript = "$('#$sInputId').set_widget();";
 					$oPage->add_ready_script($sScript);
-
-					break;
-
-				case 'ObjectAttcodeSet':
-					$iFieldSize = $oAttDef->GetMaxSize();
-					if (is_array($sDisplayValue))
-					{
-						$sDisplayValue = implode(', ', $sDisplayValue);
-					}
-					$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><input title=\"$sHelpText\" type=\"text\" maxlength=\"$iFieldSize\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
-					$aEventsList[] ='validate';
-					$aEventsList[] ='keyup';
-					$aEventsList[] ='change';
 					break;
 
 				case 'String':
 				default:
 					$aEventsList[] = 'validate';
 					// #@# todo - add context information (depending on dimensions)
-					$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
+					$aAllowedValues = $oAttDef->GetAllowedValues($aArgs);
 					$iFieldSize = $oAttDef->GetMaxSize();
 					if ($aAllowedValues !== null)
 					{
@@ -3315,6 +3298,17 @@ EOF
 					$this->Set($sAttCode, $oTagSet);
 					break;
 
+				case 'Set':
+					/** @var ormSet $oSet */
+					$oSet = $this->Get($sAttCode);
+					if (is_null($oSet))
+					{
+						$oSet = new ormSet(get_class($this), $sAttCode);
+					}
+					$oSet->ApplyDelta($value);
+					$this->Set($sAttCode, $oSet);
+					break;
+
 				default:
 					if (!is_null($value))
 					{
@@ -3505,6 +3499,7 @@ EOF
 				);
 				break;
 
+			case 'Set':
 			case 'TagSet':
 				$sTagSetJson = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 				$value = json_decode($sTagSetJson, true);
@@ -3960,9 +3955,9 @@ EOF
 						{
 							$currValue = ' '; // Don't put an empty string, in case the field would be considered as mandatory...
 						}
-						elseif ($currValue instanceof ormTagSet)
+						elseif ($currValue instanceof ormSet)
 						{
-							$currValue = implode(' ', $currValue->GetValue());
+							$currValue = $oAttDef->GetEditValue($currValue, $oObj);
 						}
 						if (is_object($currValue))
 						{
@@ -3998,7 +3993,6 @@ EOF
 
 			$iFormId = cmdbAbstractObject::GetNextFormId(); // Identifier that prefixes all the form fields
 			$sReadyScript = '';
-			$aDependsOn = array();
 			$sFormPrefix = '2_';
 			foreach($aList as $sAttCode => $oAttDef)
 			{
@@ -4077,7 +4071,7 @@ EOF
 							$sTip = addslashes($sTip);
 							$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );";
 
-							if ($oAttDef->GetEditClass() == 'TagSet')
+							if (($oAttDef->GetEditClass() == 'TagSet') || ($oAttDef->GetEditClass() == 'Set'))
 							{
 								// Set the value by adding the values to the first one
 								reset($aMultiValues);
@@ -4092,12 +4086,8 @@ EOF
 									{
 										continue;
 									}
-									$aTagCodes = array();
-									if (!empty($sValues))
-									{
-										$aTagCodes = explode(' ', $sValues);
-									}
-									$oTagSet->GenerateDiffFromTags($aTagCodes);
+									$aTagCodes = $oAttDef->FromStringToArray($sValues);
+									$oTagSet->GenerateDiffFromArray($aTagCodes);
 								}
 								$oDummyObj->Set($sAttCode, $oTagSet);
 							}

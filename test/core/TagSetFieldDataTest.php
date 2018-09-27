@@ -253,7 +253,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	{
 		/** @var \AttributeTagSet $oAttDef */
 		$oAttDef = \MetaModel::GetAttributeDef(TAG_CLASS, TAG_ATTCODE);
-		$iMaxTags = $oAttDef->GetTagMaxNb();
+		$iMaxTags = $oAttDef->GetMaxItems();
 		for ($i = 0; $i < $iMaxTags; $i++)
 		{
 			$sTagCode = 'MaxTag'.$i;

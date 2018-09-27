@@ -289,7 +289,7 @@ abstract class TriggerOnStateChange extends TriggerOnObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeString("state", array("allowed_values" => null, "sql" => "state", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeClassState("state", array("class_field" => 'target_class', "allowed_values" => null, "sql" => "state", "default_value" => null, "is_null_allowed" => false, "depends_on" => array('target_class'))));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'state', 'action_list')); // Attributes to be displayed for the complete details
@@ -405,6 +405,40 @@ class TriggerOnObjectCreate extends TriggerOnObject
 /**
  * Class TriggerOnObjectCreate
  */
+class TriggerOnObjectDelete extends TriggerOnObject
+{
+	/**
+	 * @throws \CoreException
+	 */
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "grant_by_profile,core/cmdb,application",
+			"key_type" => "autoincrement",
+			"name_attcode" => "description",
+			"state_attcode" => "",
+			"reconc_keys" => array('description'),
+			"db_table" => "priv_trigger_onobjdelete",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
+		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	}
+}
+
+/**
+ * Class TriggerOnObjectCreate
+ */
 class TriggerOnObjectUpdate extends TriggerOnObject
 {
 	/**
@@ -427,7 +461,7 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
-		MetaModel::Init_AddAttribute(new AttributeObjectAttCodeSet('target_attcodes', array("allowed_values" => null, "class" => "target_class", "sql" => "target_attcodes", "default_value" => null, "is_null_allowed" => true, "depends_on" => array('target_class'))));
+		MetaModel::Init_AddAttribute(new AttributeClassAttCodeSet('target_attcodes', array("allowed_values" => null, "class_field" => "target_class", "sql" => "target_attcodes", "default_value" => null, "is_null_allowed" => true, "max_items" => 20, "min_items" => 0, "attribute_definition_list" => null, "depends_on" => array('target_class'))));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'target_attcodes', 'action_list')); // Attributes to be displayed for the complete details
@@ -444,11 +478,13 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 		}
 
 		// Check the attribute
-		$aAttCodes = $this->Get('target_attcodes');
+		$oAttCodeSet = $this->Get('target_attcodes');
+		$aAttCodes = $oAttCodeSet->GetValues();
 		if (empty($aAttCodes))
 		{
 			return true;
 		}
+
 		foreach($aAttCodes as $sAttCode)
 		{
 			if (array_key_exists($sAttCode, $aChanges))

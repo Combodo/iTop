@@ -61,6 +61,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnStateLeave+' => '',
 	'Class:TriggerOnObjectCreate' => 'Déclencheur sur la création d\'un objet',
 	'Class:TriggerOnObjectCreate+' => '',
+	'Class:TriggerOnObjectDelete' => 'Déclencheur sur la suppression d\'un objet',
+	'Class:TriggerOnObjectDelete+' => '',
 	'Class:TriggerOnObjectUpdate' => 'Déclencheur sur la modification d\'un objet',
 	'Class:TriggerOnObjectUpdate+' => '',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Attributs cible',

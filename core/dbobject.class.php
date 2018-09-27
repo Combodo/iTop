@@ -1285,7 +1285,7 @@ abstract class DBObject implements iDisplay
 				$oTag = new ormTagSet(get_class($this), $sAttCode);
 				try
 				{
-					$oTag->SetValue(explode(' ', $toCheck));
+					$oTag->SetValues(explode(' ', $toCheck));
 				} catch (Exception $e)
 				{
 					return "Tag value '$toCheck' is not a valid tag list";
@@ -1295,6 +1295,34 @@ abstract class DBObject implements iDisplay
 			}
 
 			if ($toCheck instanceof ormTagSet)
+			{
+				return true;
+			}
+
+			return "Bad type";
+		}
+		elseif ($oAtt instanceof AttributeClassAttCodeSet)
+		{
+			if (is_string($toCheck))
+			{
+				$oTag = new ormSet(get_class($this), $sAttCode);
+				try
+				{
+					$aValues = array();
+					foreach(explode(',', $toCheck) as $sValue)
+					{
+						$aValues[] = trim($sValue);
+					}
+					$oTag->SetValues($aValues);
+				} catch (Exception $e)
+				{
+					return "Set value '$toCheck' is not a valid set";
+				}
+
+				return true;
+			}
+
+			if ($toCheck instanceof ormSet)
 			{
 				return true;
 			}
@@ -2213,6 +2241,17 @@ abstract class DBObject implements iDisplay
 		if (!MetaModel::DBIsReadOnly())
 		{
 			$this->OnDelete();
+
+			// Activate any existing trigger
+			$sClass = get_class($this);
+			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectDelete AS t WHERE t.target_class IN ('$sClassList')"));
+			while ($oTrigger = $oSet->Fetch())
+			{
+				/** @var \Trigger $oTrigger */
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+
 			$this->RecordObjDeletion($this->m_iKey); // May cause a reload for storing history information
 			
 			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)

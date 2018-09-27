@@ -66,30 +66,30 @@ class ormTagSetTest extends ItopDataTestCase
 	public function testGetValue()
 	{
 		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		static::assertEquals($oTagSet->GetValue(), array());
+		static::assertEquals($oTagSet->GetValues(), array());
 
-		$oTagSet->AddTag('tag1');
-		static::assertEquals($oTagSet->GetValue(), array('tag1'));
+		$oTagSet->Add('tag1');
+		static::assertEquals($oTagSet->GetValues(), array('tag1'));
 
-		$oTagSet->AddTag('tag2');
-		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
+		$oTagSet->Add('tag2');
+		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2'));
 	}
 
 	public function testAddTag()
 	{
 		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 
-		$oTagSet->AddTag('tag1');
-		static::assertEquals($oTagSet->GetValue(), array('tag1'));
+		$oTagSet->Add('tag1');
+		static::assertEquals($oTagSet->GetValues(), array('tag1'));
 
-		$oTagSet->SetValue(array('tag1', 'tag2'));
-		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
+		$oTagSet->SetValues(array('tag1', 'tag2'));
+		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2'));
 
-		$oTagSet->RemoveTag('tag1');
-		static::assertEquals($oTagSet->GetValue(), array('tag2'));
+		$oTagSet->Remove('tag1');
+		static::assertEquals($oTagSet->GetValues(), array('tag2'));
 
-		$oTagSet->AddTag('tag1');
-		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
+		$oTagSet->Add('tag1');
+		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2'));
 	}
 
 
@@ -102,13 +102,13 @@ class ormTagSetTest extends ItopDataTestCase
 	{
 		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, 3);
 
-		$oTagSet->SetValue(array('tag1', 'tag2', 'tag3'));
+		$oTagSet->SetValues(array('tag1', 'tag2', 'tag3'));
 
-		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2', 'tag3'));
+		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2', 'tag3'));
 
 		try
 		{
-			$oTagSet->SetValue(array('tag1', 'tag2', 'tag3', 'tag4'));
+			$oTagSet->SetValues(array('tag1', 'tag2', 'tag3', 'tag4'));
 		}
 		catch (\CoreException $e)
 		{
@@ -120,15 +120,15 @@ class ormTagSetTest extends ItopDataTestCase
 	public function testEquals()
 	{
 		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet1->AddTag('tag1');
+		$oTagSet1->Add('tag1');
 		static::assertTrue($oTagSet1->Equals($oTagSet1));
 
 		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet2->SetValue(array('tag1'));
+		$oTagSet2->SetValues(array('tag1'));
 
 		static::assertTrue($oTagSet1->Equals($oTagSet2));
 
-		$oTagSet1->AddTag('tag2');
+		$oTagSet1->Add('tag2');
 		static::assertFalse($oTagSet1->Equals($oTagSet2));
 	}
 
@@ -136,48 +136,48 @@ class ormTagSetTest extends ItopDataTestCase
 	{
 		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
 
-		$oTagSet->SetValue(array('tag1'));
-		static::assertEquals($oTagSet->GetValue(), array('tag1'));
+		$oTagSet->SetValues(array('tag1'));
+		static::assertEquals($oTagSet->GetValues(), array('tag1'));
 
-		$oTagSet->SetValue(array('tag1', 'tag2'));
-		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
+		$oTagSet->SetValues(array('tag1', 'tag2'));
+		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2'));
 
 	}
 
 	public function testRemoveTag()
 	{
 		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet->RemoveTag('tag_unknown');
-		static::assertEquals($oTagSet->GetValue(), array());
+		$oTagSet->Remove('tag_unknown');
+		static::assertEquals($oTagSet->GetValues(), array());
 
-		$oTagSet->SetValue(array('tag1'));
-		$oTagSet->RemoveTag('tag_unknown');
-		static::assertEquals($oTagSet->GetValue(), array('tag1'));
+		$oTagSet->SetValues(array('tag1'));
+		$oTagSet->Remove('tag_unknown');
+		static::assertEquals($oTagSet->GetValues(), array('tag1'));
 
-		$oTagSet->SetValue(array('tag1', 'tag2'));
-		$oTagSet->RemoveTag('tag1');
-		static::assertEquals($oTagSet->GetValue(), array('tag2'));
+		$oTagSet->SetValues(array('tag1', 'tag2'));
+		$oTagSet->Remove('tag1');
+		static::assertEquals($oTagSet->GetValues(), array('tag2'));
 
-		$oTagSet->AddTag('tag1');
-		static::assertEquals($oTagSet->GetValue(), array('tag1', 'tag2'));
+		$oTagSet->Add('tag1');
+		static::assertEquals($oTagSet->GetValues(), array('tag1', 'tag2'));
 
-		$oTagSet->RemoveTag('tag1');
-		static::assertEquals($oTagSet->GetValue(), array('tag2'));
+		$oTagSet->Remove('tag1');
+		static::assertEquals($oTagSet->GetValues(), array('tag2'));
 
-		$oTagSet->RemoveTag('tag1');
-		static::assertEquals($oTagSet->GetValue(), array('tag2'));
+		$oTagSet->Remove('tag1');
+		static::assertEquals($oTagSet->GetValues(), array('tag2'));
 
-		$oTagSet->RemoveTag('tag2');
-		static::assertEquals($oTagSet->GetValue(), array());
+		$oTagSet->Remove('tag2');
+		static::assertEquals($oTagSet->GetValues(), array());
 	}
 
 	public function testGetDelta()
 	{
 		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet1->SetValue(array('tag1', 'tag2'));
+		$oTagSet1->SetValues(array('tag1', 'tag2'));
 
 		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet2->SetValue(array('tag1', 'tag3', 'tag4'));
+		$oTagSet2->SetValues(array('tag1', 'tag3', 'tag4'));
 
 		$aDelta = $oTagSet1->GetDelta($oTagSet2);
 		static::assertCount(2, $aDelta);
@@ -188,10 +188,10 @@ class ormTagSetTest extends ItopDataTestCase
 	public function testApplyDelta()
 	{
 		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet1->SetValue(array('tag1', 'tag2'));
+		$oTagSet1->SetValues(array('tag1', 'tag2'));
 
 		$oTagSet2 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet2->SetValue(array('tag1', 'tag3', 'tag4'));
+		$oTagSet2->SetValues(array('tag1', 'tag3', 'tag4'));
 
 		$aDelta = $oTagSet1->GetDelta($oTagSet2);
 
@@ -212,12 +212,12 @@ class ormTagSetTest extends ItopDataTestCase
 	public function testGetModified($aInitialTags, $aDiffAndExpectedTags)
 	{
 		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet1->SetValue($aInitialTags);
+		$oTagSet1->SetValues($aInitialTags);
 
 		foreach($aDiffAndExpectedTags as $aTestItem)
 		{
-			$oTagSet1->GenerateDiffFromTags($aTestItem['diff']);
-			static::assertEquals($aTestItem['modified'], $oTagSet1->GetModifiedTags());
+			$oTagSet1->GenerateDiffFromArray($aTestItem['diff']);
+			static::assertEquals($aTestItem['modified'], $oTagSet1->GetModified());
 		}
 	}
 
@@ -264,11 +264,11 @@ class ormTagSetTest extends ItopDataTestCase
 	public function testBulkModify($aInitialTags, $aDelta, $aExpectedTags)
 	{
 		$oTagSet1 = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		$oTagSet1->SetValue($aInitialTags);
+		$oTagSet1->SetValues($aInitialTags);
 
 		$oTagSet1->ApplyDelta($aDelta);
 
-		static::assertEquals($aExpectedTags, $oTagSet1->GetValue());
+		static::assertEquals($aExpectedTags, $oTagSet1->GetValues());
 	}
 
 	public function BulkModifyProvider()
