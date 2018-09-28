@@ -103,12 +103,20 @@ $.widget('itop.set_widget',
 
 
 		_initWidgetData: function (originalFieldValue) {
-			var dataArray = JSON.parse(originalFieldValue);
+			var dataArray = JSON.parse(originalFieldValue),
+			    setWidget = this;
 			this.possibleValues = dataArray[this.POSSIBLE_VAL_KEY];
 			this.partialValues = ($.isArray(dataArray[this.PARTIAL_VAL_KEY])) ? dataArray[this.PARTIAL_VAL_KEY] : [];
 			this.originalValue = dataArray[this.ORIG_VAL_KEY];
 			this.maxItemsAllowed = dataArray[this.MAX_ITEMS_ALLOWED_KEY];
 			this.setItemsCodesStatus = {};
+
+			// load existing removed codes
+			//   used for example in triggers update fields selection, after switching class
+			//   class A + fields a,b selected, then switch to class B : the server sends fields a,b to as removed values
+			dataArray[this.REMOVED_VAL_KEY].forEach(function(setItemCode) {
+                setWidget.setItemsCodesStatus[setItemCode] = setWidget.STATUS_REMOVED;
+			});
 		},
 
 		_generateSelectionWidget: function ($widgetElement) {
