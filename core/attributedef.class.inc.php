@@ -6760,710 +6760,6 @@ class AttributeExternalField extends AttributeDefinition
 
 
 /**
- * Multi value list of tags
- *
- * @see TagSetFieldData
- * @since 2.6 N°931 tag fields
- */
-class AttributeTagSet extends AttributeSet
-{
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
-
-
-	public function __construct($sCode, array $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-		$this->aCSSClasses[] = 'attribute-tag-set';
-	}
-
-	static public function ListExpectedParams()
-	{
-		return array_merge(parent::ListExpectedParams(), array('tag_code_max_len'));
-	}
-
-	/**
-	 * @param \ormTagSet $oValue
-	 *
-	 * @param $aArgs
-	 *
-	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
-	 * @throws \CoreException
-	 * @throws \OQLException
-	 */
-	public function GetJsonForWidget($oValue, $aArgs = array())
-	{
-		$aJson = array();
-
-		// possible_values
-		$aTagSetObjectData = $this->GetAllowedValues($aArgs);
-		$aTagSetKeyValData = array();
-		foreach($aTagSetObjectData as $sTagCode => $sTagLabel)
-		{
-			$aTagSetKeyValData[] = [
-				'code' => $sTagCode,
-				'label' => $sTagLabel,
-			];
-		}
-		$aJson['possible_values'] = $aTagSetKeyValData;
-
-		if (is_null($oValue))
-		{
-			$aJson['partial_values'] = array();
-			$aJson['orig_value'] = array();
-		}
-		else
-		{
-			$aJson['partial_values'] = $oValue->GetModified();
-			$aJson['orig_value'] = array_merge($oValue->GetValues(), $oValue->GetModified());
-		}
-		$aJson['added'] = array();
-		$aJson['removed'] = array();
-
-		$iMaxTags = $this->GetMaxItems();
-		$aJson['max_items_allowed'] = $iMaxTags;
-
-		return json_encode($aJson);
-	}
-
-	public function FromStringToArray($proposedValue)
-	{
-		$aValues = array();
-		if (!empty($proposedValue))
-		{
-			foreach(explode(' ', $proposedValue) as $sCode)
-			{
-				$sValue = trim($sCode);
-				$aValues[] = $sValue;
-			}
-		}
-		return $aValues;
-	}
-
-	/**
-	 * Extract all existing tags from a string and ignore bad tags
-	 *
-	 * @param $sValue
-	 * @param bool $bNoLimit : don't apply the maximum tag limit
-	 *
-	 * @return \ormTagSet
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 */
-	public function GetExistingTagsFromString($sValue, $bNoLimit = false)
-	{
-		$aTagCodes = $this->FromStringToArray("$sValue");
-		$sAttCode = $this->GetCode();
-		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
-		if ($bNoLimit)
-		{
-			$oTagSet = new ormTagSet($sClass, $sAttCode, 0);
-		}
-		else
-		{
-			$oTagSet = new ormTagSet($sClass, $sAttCode, $this->GetMaxItems());
-		}
-		$aGoodTags = array();
-		foreach($aTagCodes as $sTagCode)
-		{
-			if ($sTagCode === '')
-			{
-				continue;
-			}
-			if ($oTagSet->IsValidTag($sTagCode))
-			{
-				$aGoodTags[] = $sTagCode;
-				if (!$bNoLimit && (count($aGoodTags) === $this->GetMaxItems()))
-				{
-					// extra and bad tags are ignored
-					break;
-				}
-			}
-		}
-		$oTagSet->SetValues($aGoodTags);
-
-		return $oTagSet;
-	}
-
-	public function GetTagCodeMaxLength()
-	{
-		return $this->Get('tag_code_max_len');
-	}
-
-	public function GetEditValue($value, $oHostObj = null)
-	{
-		if (empty($value))
-		{
-			return '';
-		}
-		if ($value instanceof ormTagSet)
-		{
-			$aValues = $value->GetValues();
-
-			return implode(' ', $aValues);
-		}
-
-		return '';
-	}
-
-	public function GetMaxSize()
-	{
-		return max(255, ($this->GetMaxItems() * $this->GetTagCodeMaxLength()) + 1);
-	}
-
-	public function Equals($val1, $val2)
-	{
-		if (($val1 instanceof ormTagSet) && ($val2 instanceof ormTagSet))
-		{
-			return $val1->Equals($val2);
-		}
-
-		return ($val1 == $val2);
-	}
-
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
-	{
-		$sAttCode = $this->GetCode();
-		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
-		$aAllowedTags = TagSetFieldData::GetAllowedValues($sClass, $sAttCode);
-		$aAllowedValues = array();
-		foreach($aAllowedTags as $oAllowedTag)
-		{
-			$aAllowedValues[$oAllowedTag->Get('code')] = $oAllowedTag->Get('label');
-		}
-
-		return $aAllowedValues;
-	}
-
-	/**
-	 * @param array $aCols
-	 * @param string $sPrefix
-	 *
-	 * @return mixed
-	 * @throws \CoreException
-	 * @throws \Exception
-	 */
-	public function FromSQLToValue($aCols, $sPrefix = '')
-	{
-		$sValue = $aCols["$sPrefix"];
-
-		return $this->GetExistingTagsFromString($sValue);
-	}
-
-	/**
-	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
-	 *
-	 * @param $proposedValue
-	 * @param $oHostObj
-	 *
-	 * @param bool $bIgnoreErrors
-	 *
-	 * @return mixed
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 */
-	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
-	{
-		$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
-		if (is_string($proposedValue) && !empty($proposedValue))
-		{
-			$sJsonFromWidget = json_decode($proposedValue, true);
-			if (is_null($sJsonFromWidget))
-			{
-				$proposedValue = trim("$proposedValue");
-				$aTagCodes = $this->FromStringToArray($proposedValue);
-				$oTagSet->SetValues($aTagCodes);
-			}
-		}
-		elseif ($proposedValue instanceof ormTagSet)
-		{
-			$oTagSet = $proposedValue;
-		}
-
-		return $oTagSet;
-	}
-
-	/**
-	 * Get the value from a given string (plain text, CSV import)
-	 *
-	 * @param string $sProposedValue
-	 * @param bool $bLocalizedValue
-	 * @param string $sSepItem
-	 * @param string $sSepAttribute
-	 * @param string $sSepValue
-	 * @param string $sAttributeQualifier
-	 *
-	 * @return mixed null if no match could be found
-	 * @throws \Exception
-	 */
-	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
-	{
-		if (is_null($sSepItem) || empty($sSepItem))
-		{
-			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
-		}
-		if ($bLocalizedValue && !empty($sProposedValue))
-		{
-			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-				$this->GetCode(), $this->GetMaxItems());
-			$aLabels = explode($sSepItem, $sProposedValue);
-			$aCodes = array();
-			foreach($aLabels as $sTagLabel)
-			{
-				if (!empty($sTagLabel))
-				{
-					$aCodes[] = $oTagSet->GetTagFromLabel($sTagLabel);
-				}
-			}
-			$sProposedValue = implode(' ', $aCodes);
-		}
-
-		return $this->MakeRealValue($sProposedValue, null);
-	}
-
-	public function GetNullValue()
-	{
-		return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
-	}
-
-	public function IsNull($proposedValue)
-	{
-		if (is_null($proposedValue))
-		{
-			return true;
-		}
-
-		/** @var \ormTagSet $proposedValue */
-		return count($proposedValue->GetValues()) == 0;
-	}
-
-	/**
-	 * To be overloaded for localized enums
-	 *
-	 * @param $sValue
-	 *
-	 * @return string label corresponding to the given value (in plain text)
-	 * @throws \CoreWarning
-	 * @throws \Exception
-	 */
-	public function GetValueLabel($sValue)
-	{
-		if (empty($sValue))
-		{
-			return '';
-		}
-		if (is_string($sValue))
-		{
-			$sValue = $this->GetExistingTagsFromString($sValue);
-		}
-		if ($sValue instanceof ormTagSet)
-		{
-			$aValues = $sValue->GetLabels();
-
-			return implode(', ', $aValues);
-		}
-		throw new CoreWarning('Expected the attribute value to be a TagSet', array(
-			'found_type' => gettype($sValue),
-			'value' => $sValue,
-			'class' => $this->GetHostClass(),
-			'attribute' => $this->GetCode()
-		));
-	}
-
-	/**
-	 * @param $value
-	 *
-	 * @return string
-	 * @throws \CoreWarning
-	 */
-	public function ScalarToSQL($value)
-	{
-		if (empty($value))
-		{
-			return '';
-		}
-		if ($value instanceof ormTagSet)
-		{
-			$aValues = $value->GetValues();
-
-			return implode(' ', $aValues);
-		}
-		throw new CoreWarning('Expected the attribute value to be a TagSet', array(
-			'found_type' => gettype($value),
-			'value' => $value,
-			'class' => $this->GetHostClass(),
-			'attribute' => $this->GetCode()
-		));
-	}
-
-	/**
-	 * @param $value
-	 * @param \DBObject $oHostObject
-	 * @param bool $bLocalize
-	 *
-	 * @return string|null
-	 *
-	 * @throws \CoreException
-	 * @throws \Exception
-	 */
-	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
-	{
-		if ($value instanceof ormTagSet)
-		{
-			if ($bLocalize)
-			{
-				$aValues = $value->GetTags();
-			}
-			else
-			{
-				$aValues = $value->GetValues();
-			}
-			if (empty($aValues))
-			{
-				return '';
-			}
-
-			return $this->GenerateViewHtmlForValues($aValues);
-		}
-		if (is_string($value))
-		{
-			try
-			{
-				$oValue = $this->MakeRealValue($value, $oHostObject);
-
-				return $this->GetAsHTML($oValue, $oHostObject, $bLocalize);
-			} catch (Exception $e)
-			{
-				// unknown tags are present display the code instead
-			}
-			$aTagCodes = $this->FromStringToArray($value);
-			$aValues = array();
-			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
-				$this->GetCode(), $this->GetMaxItems());
-			foreach($aTagCodes as $sTagCode)
-			{
-				try
-				{
-					$oTagSet->Add($sTagCode);
-				} catch (Exception $e)
-				{
-					$aValues[] = $sTagCode;
-				}
-			}
-			$sHTML = '';
-			if (!empty($aValues))
-			{
-				$sHTML .= $this->GenerateViewHtmlForValues($aValues, 'attribute-set-item-undefined');
-			}
-			$aValues = $oTagSet->GetTags();
-			if (!empty($aValues))
-			{
-				$sHTML .= $this->GenerateViewHtmlForValues($aValues);
-			}
-
-			return $sHTML;
-		}
-
-		return parent::GetAsHTML($value, $oHostObject, $bLocalize);
-	}
-
-	// Do not display friendly names in the history of change
-	public function DescribeChangeAsHTML($sOldValue, $sNewValue, $sLabel = null)
-	{
-		$sResult = Dict::Format('Change:AttName_Changed', $this->GetLabel()).", ";
-
-		$aNewValues = $this->FromStringToArray($sNewValue);
-		$aOldValues = $this->FromStringToArray($sOldValue);
-
-		$aDelta['removed'] = array_diff($aOldValues, $aNewValues);
-		$aDelta['added'] = array_diff($aNewValues, $aOldValues);
-
-		$aAllowedTags = TagSetFieldData::GetAllowedValues(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
-
-		if (!empty($aDelta['removed']))
-		{
-			$aRemoved = array();
-			foreach($aDelta['removed'] as $idx => $sTagCode)
-			{
-				if (empty($sTagCode)) {continue;}
-				$sTagLabel = $sTagCode;
-				foreach($aAllowedTags as $oTag)
-				{
-					if ($sTagCode === $oTag->Get('code'))
-					{
-						$sTagLabel = $oTag->Get('label');
-					}
-				}
-				$aRemoved[] = $sTagLabel;
-			}
-
-			$sRemoved = $this->GenerateViewHtmlForValues($aRemoved, 'history-removed');
-			if (!empty($sRemoved))
-			{
-				$sResult .= Dict::Format('Change:LinkSet:Removed', $sRemoved);
-			}
-		}
-
-		if (!empty($aDelta['added']))
-		{
-			if (!empty($sRemoved))
-			{
-				$sResult .= ', ';
-			}
-
-			$aAdded = array();
-			foreach($aDelta['added'] as $idx => $sTagCode)
-			{
-				if (empty($sTagCode)) {continue;}
-				$sTagLabel = $sTagCode;
-				foreach($aAllowedTags as $oTag)
-				{
-					if ($sTagCode === $oTag->Get('code'))
-					{
-						$sTagLabel = $oTag->Get('label');
-					}
-				}
-				$aAdded[] = $sTagLabel;
-			}
-
-			$sAdded = $this->GenerateViewHtmlForValues($aAdded, 'history-added');
-			if (!empty($sAdded))
-			{
-				$sResult .= Dict::Format('Change:LinkSet:Added', $sAdded);
-			}
-		}
-
-		return $sResult;
-	}
-
-	/**
-	 * HTML representation of a list of tags (read-only)
-	 * accept a list of strings or a list of TagSetFieldData
-	 *
-	 * @param array $aValues
-	 * @param string $sCssClass
-	 *
-	 * @return string
-	 * @throws \CoreException
-	 */
-	private function GenerateViewHtmlForValues($aValues, $sCssClass = '')
-	{
-		if (empty($aValues)) {return '';}
-		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
-		foreach($aValues as $oTag)
-		{
-			if ($oTag instanceof TagSetFieldData)
-			{
-				$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
-				$sAttCode = $this->GetCode();
-				$sTagCode = $oTag->Get('code');
-				$sTagLabel = $oTag->Get('label');
-				$sTagDescription = $oTag->Get('description');
-				$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
-				$oAppContext = new ApplicationContext();
-				$sContext = $oAppContext->GetForLink();
-				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
-				$sFilter = urlencode($oFilter->serialize());
-				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
-
-				$sHtml .= '<a href="'.$sUrl.'" class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.htmlentities($sTagLabel, ENT_QUOTES, 'UTF-8').'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES, 'UTF-8').'">'.$sTagLabel.'</a>';
-			}
-			else
-			{
-				$sHtml .= '<span class="attribute-set-item">'.$oTag.'</span>';
-			}
-		}
-		$sHtml .= '</span>';
-
-		return $sHtml;
-	}
-
-	/**
-	 * @param $value
-	 * @param \DBObject $oHostObject
-	 * @param bool $bLocalize
-	 *
-	 * @return string
-	 *
-	 */
-	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
-	{
-		if (is_object($value) && ($value instanceof ormTagSet))
-		{
-			$sRes = "<Set>\n";
-			if ($bLocalize)
-			{
-				$aValues = $value->GetLabels();
-			}
-			else
-			{
-				$aValues = $value->GetValues();
-			}
-			if (!empty($aValuess))
-			{
-				$sRes .= '<Tag>'.implode('</Tag><Tag>', $aValues).'</Tag>';
-			}
-			$sRes .= "</Set>\n";
-		}
-		else
-		{
-			$sRes = '';
-		}
-
-		return $sRes;
-	}
-
-	/**
-	 * @param $value
-	 * @param string $sSeparator
-	 * @param string $sTextQualifier
-	 * @param \DBObject $oHostObject
-	 * @param bool $bLocalize
-	 * @param bool $bConvertToPlainText
-	 *
-	 * @return mixed|string
-	 * @throws \CoreException
-	 */
-	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
-		$bConvertToPlainText = false
-	) {
-		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
-		if (is_object($value) && ($value instanceof ormTagSet))
-		{
-			if ($bLocalize)
-			{
-				$aValues = $value->GetLabels();
-			}
-			else
-			{
-				$aValues = $value->GetValues();
-			}
-			$sRes = implode($sSepItem, $aValues);
-		}
-		else
-		{
-			$sRes = '';
-		}
-
-		return "{$sTextQualifier}{$sRes}{$sTextQualifier}";
-	}
-
-	/**
-	 * List the available verbs for 'GetForTemplate'
-	 */
-	public function EnumTemplateVerbs()
-	{
-		return array(
-			'' => 'Plain text representation',
-			'html' => 'HTML representation (unordered list)',
-		);
-	}
-
-	/**
-	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
-	 *
-	 * @param mixed $value The current value of the field
-	 * @param string $sVerb The verb specifying the representation of the value
-	 * @param DBObject $oHostObject The object
-	 * @param bool $bLocalize Whether or not to localize the value
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
-	{
-		if (is_object($value) && ($value instanceof ormTagSet))
-		{
-			if ($bLocalize)
-			{
-				$aValues = $value->GetLabels();
-				$sSep = ', ';
-			}
-			else
-			{
-				$aValues = $value->GetValues();
-				$sSep = ' ';
-			}
-
-			switch ($sVerb)
-			{
-				case '':
-					return implode($sSep, $aValues);
-
-				case 'html':
-					return '<ul><li>'.implode("</li><li>", $aValues).'</li></ul>';
-
-				default:
-					throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
-			}
-		}
-		throw new CoreUnexpectedValue("Bad value '$value' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
-	}
-
-	/**
-	 * Helper to get a value that will be JSON encoded
-	 * The operation is the opposite to FromJSONToValue
-	 *
-	 * @param \ormTagSet $value
-	 *
-	 * @return array
-	 */
-	public function GetForJSON($value)
-	{
-		$aRet = array();
-		if (is_object($value) && ($value instanceof ormTagSet))
-		{
-			$aRet = $value->GetValues();
-		}
-
-		return $aRet;
-	}
-
-	/**
-	 * Helper to form a value, given JSON decoded data
-	 * The operation is the opposite to GetForJSON
-	 *
-	 * @param $json
-	 *
-	 * @return \ormTagSet
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \Exception
-	 */
-	public function FromJSONToValue($json)
-	{
-		$oSet = new ormTagSet($this->GetHostClass(), $this->GetCode(), $this->GetMaxItems());
-		$oSet->SetValues($json);
-
-		return $oSet;
-	}
-
-	/**
-	 * The part of the current attribute in the object's signature, for the supplied value
-	 *
-	 * @param mixed $value The value of this attribute for the object
-	 *
-	 * @return string The "signature" for this field/attribute
-	 */
-	public function Fingerprint($value)
-	{
-		if ($value instanceof ormTagSet)
-		{
-			$aValues = $value->GetValues();
-
-			return implode(' ', $aValues);
-		}
-
-		return parent::Fingerprint($value);
-	}
-
-	static public function GetFormFieldClass()
-	{
-		return '\\Combodo\\iTop\\Form\\Field\\SetField';
-	}
-}
-
-/**
  * Map a varchar column to an URL (formats the ouput in HMTL)
  *
  * @package     iTopORM
@@ -9729,7 +9025,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 	public function __construct($sCode, array $aParams)
 	{
 		parent::__construct($sCode, $aParams);
-		$this->aCSSClasses[] = 'attribute-class-att-code-set';
+		$this->aCSSClasses[] = 'attribute-class-attcode-set';
 	}
 
 	static public function ListExpectedParams()
@@ -9896,7 +9192,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 	public function __construct($sCode, array $aParams)
 	{
 		parent::__construct($sCode, $aParams);
-		$this->aCSSClasses[] = 'attribute-query-att-code-set';
+		$this->aCSSClasses[] = 'attribute-query-attcode-set';
 	}
 
 	static public function ListExpectedParams()
@@ -10077,6 +9373,709 @@ class AttributeQueryAttCodeSet extends AttributeSet
 		}
 
 		return '<span class="'.implode(' ', $this->aCSSClasses).'">'.$value.'</span>';
+	}
+}
+
+/**
+ * Multi value list of tags
+ *
+ * @see TagSetFieldData
+ * @since 2.6 N°931 tag fields
+ */
+class AttributeTagSet extends AttributeSet
+{
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
+
+	public function __construct($sCode, array $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+		$this->aCSSClasses[] = 'attribute-tag-set';
+	}
+
+	static public function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('tag_code_max_len'));
+	}
+
+	/**
+	 * @param \ormTagSet $oValue
+	 *
+	 * @param $aArgs
+	 *
+	 * @return string JSON to be used in the itop.tagset_widget JQuery widget
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GetJsonForWidget($oValue, $aArgs = array())
+	{
+		$aJson = array();
+
+		// possible_values
+		$aTagSetObjectData = $this->GetAllowedValues($aArgs);
+		$aTagSetKeyValData = array();
+		foreach($aTagSetObjectData as $sTagCode => $sTagLabel)
+		{
+			$aTagSetKeyValData[] = [
+				'code' => $sTagCode,
+				'label' => $sTagLabel,
+			];
+		}
+		$aJson['possible_values'] = $aTagSetKeyValData;
+
+		if (is_null($oValue))
+		{
+			$aJson['partial_values'] = array();
+			$aJson['orig_value'] = array();
+		}
+		else
+		{
+			$aJson['partial_values'] = $oValue->GetModified();
+			$aJson['orig_value'] = array_merge($oValue->GetValues(), $oValue->GetModified());
+		}
+		$aJson['added'] = array();
+		$aJson['removed'] = array();
+
+		$iMaxTags = $this->GetMaxItems();
+		$aJson['max_items_allowed'] = $iMaxTags;
+
+		return json_encode($aJson);
+	}
+
+	public function FromStringToArray($proposedValue)
+	{
+		$aValues = array();
+		if (!empty($proposedValue))
+		{
+			foreach(explode(' ', $proposedValue) as $sCode)
+			{
+				$sValue = trim($sCode);
+				$aValues[] = $sValue;
+			}
+		}
+		return $aValues;
+	}
+
+	/**
+	 * Extract all existing tags from a string and ignore bad tags
+	 *
+	 * @param $sValue
+	 * @param bool $bNoLimit : don't apply the maximum tag limit
+	 *
+	 * @return \ormTagSet
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public function GetExistingTagsFromString($sValue, $bNoLimit = false)
+	{
+		$aTagCodes = $this->FromStringToArray("$sValue");
+		$sAttCode = $this->GetCode();
+		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
+		if ($bNoLimit)
+		{
+			$oTagSet = new ormTagSet($sClass, $sAttCode, 0);
+		}
+		else
+		{
+			$oTagSet = new ormTagSet($sClass, $sAttCode, $this->GetMaxItems());
+		}
+		$aGoodTags = array();
+		foreach($aTagCodes as $sTagCode)
+		{
+			if ($sTagCode === '')
+			{
+				continue;
+			}
+			if ($oTagSet->IsValidTag($sTagCode))
+			{
+				$aGoodTags[] = $sTagCode;
+				if (!$bNoLimit && (count($aGoodTags) === $this->GetMaxItems()))
+				{
+					// extra and bad tags are ignored
+					break;
+				}
+			}
+		}
+		$oTagSet->SetValues($aGoodTags);
+
+		return $oTagSet;
+	}
+
+	public function GetTagCodeMaxLength()
+	{
+		return $this->Get('tag_code_max_len');
+	}
+
+	public function GetEditValue($value, $oHostObj = null)
+	{
+		if (empty($value))
+		{
+			return '';
+		}
+		if ($value instanceof ormTagSet)
+		{
+			$aValues = $value->GetValues();
+
+			return implode(' ', $aValues);
+		}
+
+		return '';
+	}
+
+	public function GetMaxSize()
+	{
+		return max(255, ($this->GetMaxItems() * $this->GetTagCodeMaxLength()) + 1);
+	}
+
+	public function Equals($val1, $val2)
+	{
+		if (($val1 instanceof ormTagSet) && ($val2 instanceof ormTagSet))
+		{
+			return $val1->Equals($val2);
+		}
+
+		return ($val1 == $val2);
+	}
+
+	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	{
+		$sAttCode = $this->GetCode();
+		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
+		$aAllowedTags = TagSetFieldData::GetAllowedValues($sClass, $sAttCode);
+		$aAllowedValues = array();
+		foreach($aAllowedTags as $oAllowedTag)
+		{
+			$aAllowedValues[$oAllowedTag->Get('code')] = $oAllowedTag->Get('label');
+		}
+
+		return $aAllowedValues;
+	}
+
+	/**
+	 * @param array $aCols
+	 * @param string $sPrefix
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public function FromSQLToValue($aCols, $sPrefix = '')
+	{
+		$sValue = $aCols["$sPrefix"];
+
+		return $this->GetExistingTagsFromString($sValue);
+	}
+
+	/**
+	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
+	 *
+	 * @param $proposedValue
+	 * @param $oHostObj
+	 *
+	 * @param bool $bIgnoreErrors
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
+	{
+		$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+		if (is_string($proposedValue) && !empty($proposedValue))
+		{
+			$sJsonFromWidget = json_decode($proposedValue, true);
+			if (is_null($sJsonFromWidget))
+			{
+				$proposedValue = trim("$proposedValue");
+				$aTagCodes = $this->FromStringToArray($proposedValue);
+				$oTagSet->SetValues($aTagCodes);
+			}
+		}
+		elseif ($proposedValue instanceof ormTagSet)
+		{
+			$oTagSet = $proposedValue;
+		}
+
+		return $oTagSet;
+	}
+
+	/**
+	 * Get the value from a given string (plain text, CSV import)
+	 *
+	 * @param string $sProposedValue
+	 * @param bool $bLocalizedValue
+	 * @param string $sSepItem
+	 * @param string $sSepAttribute
+	 * @param string $sSepValue
+	 * @param string $sAttributeQualifier
+	 *
+	 * @return mixed null if no match could be found
+	 * @throws \Exception
+	 */
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
+		if (is_null($sSepItem) || empty($sSepItem))
+		{
+			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+		}
+		if ($bLocalizedValue && !empty($sProposedValue))
+		{
+			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
+				$this->GetCode(), $this->GetMaxItems());
+			$aLabels = explode($sSepItem, $sProposedValue);
+			$aCodes = array();
+			foreach($aLabels as $sTagLabel)
+			{
+				if (!empty($sTagLabel))
+				{
+					$aCodes[] = $oTagSet->GetTagFromLabel($sTagLabel);
+				}
+			}
+			$sProposedValue = implode(' ', $aCodes);
+		}
+
+		return $this->MakeRealValue($sProposedValue, null);
+	}
+
+	public function GetNullValue()
+	{
+		return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+	}
+
+	public function IsNull($proposedValue)
+	{
+		if (is_null($proposedValue))
+		{
+			return true;
+		}
+
+		/** @var \ormTagSet $proposedValue */
+		return count($proposedValue->GetValues()) == 0;
+	}
+
+	/**
+	 * To be overloaded for localized enums
+	 *
+	 * @param $sValue
+	 *
+	 * @return string label corresponding to the given value (in plain text)
+	 * @throws \CoreWarning
+	 * @throws \Exception
+	 */
+	public function GetValueLabel($sValue)
+	{
+		if (empty($sValue))
+		{
+			return '';
+		}
+		if (is_string($sValue))
+		{
+			$sValue = $this->GetExistingTagsFromString($sValue);
+		}
+		if ($sValue instanceof ormTagSet)
+		{
+			$aValues = $sValue->GetLabels();
+
+			return implode(', ', $aValues);
+		}
+		throw new CoreWarning('Expected the attribute value to be a TagSet', array(
+			'found_type' => gettype($sValue),
+			'value' => $sValue,
+			'class' => $this->GetHostClass(),
+			'attribute' => $this->GetCode()
+		));
+	}
+
+	/**
+	 * @param $value
+	 *
+	 * @return string
+	 * @throws \CoreWarning
+	 */
+	public function ScalarToSQL($value)
+	{
+		if (empty($value))
+		{
+			return '';
+		}
+		if ($value instanceof ormTagSet)
+		{
+			$aValues = $value->GetValues();
+
+			return implode(' ', $aValues);
+		}
+		throw new CoreWarning('Expected the attribute value to be a TagSet', array(
+			'found_type' => gettype($value),
+			'value' => $value,
+			'class' => $this->GetHostClass(),
+			'attribute' => $this->GetCode()
+		));
+	}
+
+	/**
+	 * @param $value
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 *
+	 * @return string|null
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	{
+		if ($value instanceof ormTagSet)
+		{
+			if ($bLocalize)
+			{
+				$aValues = $value->GetTags();
+			}
+			else
+			{
+				$aValues = $value->GetValues();
+			}
+			if (empty($aValues))
+			{
+				return '';
+			}
+
+			return $this->GenerateViewHtmlForValues($aValues);
+		}
+		if (is_string($value))
+		{
+			try
+			{
+				$oValue = $this->MakeRealValue($value, $oHostObject);
+
+				return $this->GetAsHTML($oValue, $oHostObject, $bLocalize);
+			} catch (Exception $e)
+			{
+				// unknown tags are present display the code instead
+			}
+			$aTagCodes = $this->FromStringToArray($value);
+			$aValues = array();
+			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
+				$this->GetCode(), $this->GetMaxItems());
+			foreach($aTagCodes as $sTagCode)
+			{
+				try
+				{
+					$oTagSet->Add($sTagCode);
+				} catch (Exception $e)
+				{
+					$aValues[] = $sTagCode;
+				}
+			}
+			$sHTML = '';
+			if (!empty($aValues))
+			{
+				$sHTML .= $this->GenerateViewHtmlForValues($aValues, 'attribute-set-item-undefined');
+			}
+			$aValues = $oTagSet->GetTags();
+			if (!empty($aValues))
+			{
+				$sHTML .= $this->GenerateViewHtmlForValues($aValues);
+			}
+
+			return $sHTML;
+		}
+
+		return parent::GetAsHTML($value, $oHostObject, $bLocalize);
+	}
+
+	// Do not display friendly names in the history of change
+	public function DescribeChangeAsHTML($sOldValue, $sNewValue, $sLabel = null)
+	{
+		$sResult = Dict::Format('Change:AttName_Changed', $this->GetLabel()).", ";
+
+		$aNewValues = $this->FromStringToArray($sNewValue);
+		$aOldValues = $this->FromStringToArray($sOldValue);
+
+		$aDelta['removed'] = array_diff($aOldValues, $aNewValues);
+		$aDelta['added'] = array_diff($aNewValues, $aOldValues);
+
+		$aAllowedTags = TagSetFieldData::GetAllowedValues(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode());
+
+		if (!empty($aDelta['removed']))
+		{
+			$aRemoved = array();
+			foreach($aDelta['removed'] as $idx => $sTagCode)
+			{
+				if (empty($sTagCode)) {continue;}
+				$sTagLabel = $sTagCode;
+				foreach($aAllowedTags as $oTag)
+				{
+					if ($sTagCode === $oTag->Get('code'))
+					{
+						$sTagLabel = $oTag->Get('label');
+					}
+				}
+				$aRemoved[] = $sTagLabel;
+			}
+
+			$sRemoved = $this->GenerateViewHtmlForValues($aRemoved, 'history-removed');
+			if (!empty($sRemoved))
+			{
+				$sResult .= Dict::Format('Change:LinkSet:Removed', $sRemoved);
+			}
+		}
+
+		if (!empty($aDelta['added']))
+		{
+			if (!empty($sRemoved))
+			{
+				$sResult .= ', ';
+			}
+
+			$aAdded = array();
+			foreach($aDelta['added'] as $idx => $sTagCode)
+			{
+				if (empty($sTagCode)) {continue;}
+				$sTagLabel = $sTagCode;
+				foreach($aAllowedTags as $oTag)
+				{
+					if ($sTagCode === $oTag->Get('code'))
+					{
+						$sTagLabel = $oTag->Get('label');
+					}
+				}
+				$aAdded[] = $sTagLabel;
+			}
+
+			$sAdded = $this->GenerateViewHtmlForValues($aAdded, 'history-added');
+			if (!empty($sAdded))
+			{
+				$sResult .= Dict::Format('Change:LinkSet:Added', $sAdded);
+			}
+		}
+
+		return $sResult;
+	}
+
+	/**
+	 * HTML representation of a list of tags (read-only)
+	 * accept a list of strings or a list of TagSetFieldData
+	 *
+	 * @param array $aValues
+	 * @param string $sCssClass
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
+	private function GenerateViewHtmlForValues($aValues, $sCssClass = '')
+	{
+		if (empty($aValues)) {return '';}
+		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
+		foreach($aValues as $oTag)
+		{
+			if ($oTag instanceof TagSetFieldData)
+			{
+				$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
+				$sAttCode = $this->GetCode();
+				$sTagCode = $oTag->Get('code');
+				$sTagLabel = $oTag->Get('label');
+				$sTagDescription = $oTag->Get('description');
+				$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
+				$oAppContext = new ApplicationContext();
+				$sContext = $oAppContext->GetForLink();
+				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
+				$sFilter = urlencode($oFilter->serialize());
+				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+
+				$sHtml .= '<a href="'.$sUrl.'" class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.htmlentities($sTagLabel, ENT_QUOTES, 'UTF-8').'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES, 'UTF-8').'">'.$sTagLabel.'</a>';
+			}
+			else
+			{
+				$sHtml .= '<span class="attribute-set-item">'.$oTag.'</span>';
+			}
+		}
+		$sHtml .= '</span>';
+
+		return $sHtml;
+	}
+
+	/**
+	 * @param $value
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 *
+	 * @return string
+	 *
+	 */
+	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
+	{
+		if (is_object($value) && ($value instanceof ormTagSet))
+		{
+			$sRes = "<Set>\n";
+			if ($bLocalize)
+			{
+				$aValues = $value->GetLabels();
+			}
+			else
+			{
+				$aValues = $value->GetValues();
+			}
+			if (!empty($aValuess))
+			{
+				$sRes .= '<Tag>'.implode('</Tag><Tag>', $aValues).'</Tag>';
+			}
+			$sRes .= "</Set>\n";
+		}
+		else
+		{
+			$sRes = '';
+		}
+
+		return $sRes;
+	}
+
+	/**
+	 * @param $value
+	 * @param string $sSeparator
+	 * @param string $sTextQualifier
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 * @param bool $bConvertToPlainText
+	 *
+	 * @return mixed|string
+	 * @throws \CoreException
+	 */
+	public function GetAsCSV(
+		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
+		$bConvertToPlainText = false
+	) {
+		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+		if (is_object($value) && ($value instanceof ormTagSet))
+		{
+			if ($bLocalize)
+			{
+				$aValues = $value->GetLabels();
+			}
+			else
+			{
+				$aValues = $value->GetValues();
+			}
+			$sRes = implode($sSepItem, $aValues);
+		}
+		else
+		{
+			$sRes = '';
+		}
+
+		return "{$sTextQualifier}{$sRes}{$sTextQualifier}";
+	}
+
+	/**
+	 * List the available verbs for 'GetForTemplate'
+	 */
+	public function EnumTemplateVerbs()
+	{
+		return array(
+			'' => 'Plain text representation',
+			'html' => 'HTML representation (unordered list)',
+		);
+	}
+
+	/**
+	 * Get various representations of the value, for insertion into a template (e.g. in Notifications)
+	 *
+	 * @param mixed $value The current value of the field
+	 * @param string $sVerb The verb specifying the representation of the value
+	 * @param DBObject $oHostObject The object
+	 * @param bool $bLocalize Whether or not to localize the value
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function GetForTemplate($value, $sVerb, $oHostObject = null, $bLocalize = true)
+	{
+		if (is_object($value) && ($value instanceof ormTagSet))
+		{
+			if ($bLocalize)
+			{
+				$aValues = $value->GetLabels();
+				$sSep = ', ';
+			}
+			else
+			{
+				$aValues = $value->GetValues();
+				$sSep = ' ';
+			}
+
+			switch ($sVerb)
+			{
+				case '':
+					return implode($sSep, $aValues);
+
+				case 'html':
+					return '<ul><li>'.implode("</li><li>", $aValues).'</li></ul>';
+
+				default:
+					throw new Exception("Unknown verb '$sVerb' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
+			}
+		}
+		throw new CoreUnexpectedValue("Bad value '$value' for attribute ".$this->GetCode().' in class '.get_class($oHostObject));
+	}
+
+	/**
+	 * Helper to get a value that will be JSON encoded
+	 * The operation is the opposite to FromJSONToValue
+	 *
+	 * @param \ormTagSet $value
+	 *
+	 * @return array
+	 */
+	public function GetForJSON($value)
+	{
+		$aRet = array();
+		if (is_object($value) && ($value instanceof ormTagSet))
+		{
+			$aRet = $value->GetValues();
+		}
+
+		return $aRet;
+	}
+
+	/**
+	 * Helper to form a value, given JSON decoded data
+	 * The operation is the opposite to GetForJSON
+	 *
+	 * @param $json
+	 *
+	 * @return \ormTagSet
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
+	 */
+	public function FromJSONToValue($json)
+	{
+		$oSet = new ormTagSet($this->GetHostClass(), $this->GetCode(), $this->GetMaxItems());
+		$oSet->SetValues($json);
+
+		return $oSet;
+	}
+
+	/**
+	 * The part of the current attribute in the object's signature, for the supplied value
+	 *
+	 * @param mixed $value The value of this attribute for the object
+	 *
+	 * @return string The "signature" for this field/attribute
+	 */
+	public function Fingerprint($value)
+	{
+		if ($value instanceof ormTagSet)
+		{
+			$aValues = $value->GetValues();
+
+			return implode(' ', $aValues);
+		}
+
+		return parent::Fingerprint($value);
+	}
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\SetField';
 	}
 }
 
