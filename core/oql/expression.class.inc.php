@@ -677,7 +677,7 @@ class BinaryExpression extends Expression
 					}
 				}
 			}
-			if (isset($aCriteriaLeft['widget']) && isset($aCriteriaRight['widget']) && ($aCriteriaLeft['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_SET) && ($aCriteriaRight['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_SET))
+			if (isset($aCriteriaLeft['widget']) && isset($aCriteriaRight['widget']) && ($aCriteriaLeft['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET) && ($aCriteriaRight['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET))
 			{
 				$aCriteriaOverride['operator'] = 'MATCHES';
 			}
