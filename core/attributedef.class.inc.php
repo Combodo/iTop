@@ -5562,6 +5562,12 @@ class AttributeExternalField extends AttributeDefinition
 	{
 		if ($sPrefix == '')
 		{
+
+			// AttributeImage needs to return different SQLExpressions (_data, _mimetype, _filename)
+			if( get_class($this->GetFinalAttDef()) == "AttributeImage") { 
+				return $this->GetFinalAttDef()->GetSQLExpressions( $sPrefix );
+			}
+			
 			return array('' => $this->GetCode()); // Warning: Use GetCode() since AttributeExternalField does not have any 'sql' property
 		}
 		else
@@ -5822,9 +5828,61 @@ class AttributeExternalField extends AttributeDefinition
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
+		
 		$oExtAttDef = $this->GetExtAttDef();
-		return $oExtAttDef->GetAsHTML($value, null, $bLocalize);
+		 
+		if( get_class($this->GetFinalAttDef()) != "AttributeImage") { 
+			
+			// Wait, why was this 'null'?
+			// Let's change it to $oHostObject 
+			return $oExtAttDef->GetAsHTML($value, $oHostObject, $bLocalize);
+		
+		}
+		else {
+			 
+			// Properties about dimensions etc are part of the final attribute definition. 
+			$oExtFinalAttDef = $this->GetFinalAttDef();
+ 
+			// We need to overrule this with the same definition as in AttributeImage. 
+			// The parameter there does not take car properly of the key name. 
+			// When calling the function by the method above, we'd get a link with attribute 'picture' instead of the name it's given in the ExternalField (which might be 'picture', but could be a different name!) 
+			
+			// These values would need to be obtained from the destination class			
+			$iMaxWidthPx = $oExtFinalAttDef->Get('display_max_width').'px';
+			$iMaxHeightPx = $oExtFinalAttDef->Get('display_max_height').'px';
+			$sUrl = $oExtFinalAttDef->Get('default_image');
+	
+  
+			$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">' : '';
+			if (is_object($value) && !$value->IsEmpty())
+			{
+				if ($oHostObject->IsNew() || ($oHostObject->IsModified() && (array_key_exists($this->GetCode(), $oHostObject->ListChanges()))))
+				{
+					// If the object is modified (or not yet stored in the database) we must serve the content of the image directly inline
+					// otherwise (if we just give an URL) the browser will be given the wrong content... and may cache it
+					$sUrl = 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
+				}
+				else
+				{
+					
+					// For the URL, we actually want to refer to the destination ID, destination Key and destination Code.
+					// $sUrl = $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
+
+					// Value must be obtained from a different field on $oHostObject 
+					// That's why we use the Get() method on $oHostObject, with the attribute code being the current key attribute code. 
+					// When cascading, we have something like ExternalField (class C, something related to UserRequest) -> External Field (class B, such as UserRequest) -> AttributeImage (class A, such as Person)
+					// Using $this->GetTargetClass(), we could get 'Person', but we can't get the ID for class A here (Person), right? 
+					// Anyhow, it still shows a valid picture. It probably won't cause caching issues?
+					$sUrl = $value->GetDownloadURL( $this->GetTargetClass() , $oHostObject->Get( $this->GetKeyAttCode() ), $this->GetExtAttCode());
+
+				}
+				$sRet = '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">';
+			}
+			return '<div class="view-image" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';"><span class="helper-middle"></span>'.$sRet.'</div>';
+			
+		}
 	}
+	
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$oExtAttDef = $this->GetExtAttDef();
