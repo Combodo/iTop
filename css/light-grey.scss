@@ -3310,23 +3310,8 @@ table.listResults .originColor{
 }
 
 //////////////////////
-// Tagset attribute //
+// Set attribute //
 // - Readonly (object viewing, objects list)
-//////////////////////
-// Selectize widget //
-//
-.selectize-control{
-	.selectize-input{
-		&.has-items:after {
-			content: "+";
-			display: inline-block;
-			font-size: 17px;
-			font-weight: bold;
-			color: $gray-darker;
-		}
-	}
-}
-
 .attribute {
 	&.attribute-set {
 		.attribute-set-item{
@@ -3334,7 +3319,6 @@ table.listResults .originColor{
 				content: ",";
 				margin-right: 0.5em;
 			}
-
 			&:last-of-type::after{
 				content: "";
 				margin-right: 0;
@@ -3342,21 +3326,16 @@ table.listResults .originColor{
 		}
 	}
 }
-
-.attribute-edit .attribute-set .attribute-set-item,
-.attribute-set.attribute-tag-set .attribute-set-item,
-div.selectize-control > div.selectize-input > div.item[data-value],
-div.selectize-control > div.selectize-input > div.item[data-value].active{
+// - Edit is always styled like the selectize items, see below.
+%attribute-set-item-edition{
 	display: inline-block;
 	margin-right: 3px;
 	margin-bottom: 3px;
 	padding: 4px 6px;
-	padding-right: 1.5em !important; /* this is for the remove box ! */
 	max-width: 120px;
 
 	background: #fdfdfd none;
 	border-radius: 2px;
-	border: 1px solid $gray-lighter;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb(241, 241, 241, 0.7);
 
 	color: $gray-darker;
@@ -3368,11 +3347,47 @@ div.selectize-control > div.selectize-input > div.item[data-value].active{
 
 	&::after{
 		content: "";
+		margin-right: 0;
+	}
+}
+.attribute-edit .attribute-set .attribute-set-item{
+	@extend %attribute-set-item-edition;
+}
+//////////////////////
+// TagSet attribute //
+// Always styled like the selectize items, see below.
+.attribute-tag-set.attribute-set{
+	.attribute-set-item{
+		@extend %attribute-set-item-edition;
 	}
 }
 
+//////////////////////
+// Selectize widget //
+//
+.selectize-control,
+.selectize-control.multi{
+	> .selectize-input{
+		&.has-items:after {
+			content: "+";
+			display: inline-block;
+			font-size: 17px;
+			font-weight: bold;
+			color: $gray-darker;
+		}
 
+		> .item[data-value]{
+			@extend %attribute-set-item-edition;
 
-div.selectize-control > div.selectize-input > div.item[data-value] > .remove {
-	border: none;
+			padding-right: 1.5em !important;
+			border: 1px solid $gray-lighter;
+
+			&.active{
+				@extend %attribute-set-item-edition;
+			}
+			> .remove {
+				border: none;
+			}
+		}
+	}
 }

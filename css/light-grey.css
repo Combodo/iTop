@@ -2892,13 +2892,6 @@ table.listResults .originColor {
 .menu-icon-select > .ui-menu-item {
   padding: 0.3em 3%;
 }
-.selectize-control .selectize-input.has-items:after {
-  content: "+";
-  display: inline-block;
-  font-size: 17px;
-  font-weight: bold;
-  color: #222;
-}
 .attribute.attribute-set .attribute-set-item::after {
   content: ",";
   margin-right: 0.5em;
@@ -2907,17 +2900,14 @@ table.listResults .originColor {
   content: "";
   margin-right: 0;
 }
-.attribute-edit .attribute-set .attribute-set-item, .attribute-set.attribute-tag-set .attribute-set-item, div.selectize-control > div.selectize-input > div.item[data-value], div.selectize-control > div.selectize-input > div.item[data-value].active {
+.attribute-edit .attribute-set .attribute-set-item, .attribute-tag-set.attribute-set .attribute-set-item, .selectize-control > .selectize-input > .item[data-value], .selectize-control.multi > .selectize-input > .item[data-value], .selectize-control > .selectize-input > .item[data-value].active, .selectize-control.multi > .selectize-input > .item[data-value].active {
   display: inline-block;
   margin-right: 3px;
   margin-bottom: 3px;
   padding: 4px 6px;
-  padding-right: 1.5em !important;
-  /* this is for the remove box ! */
   max-width: 120px;
   background: #fdfdfd none;
   border-radius: 2px;
-  border: 1px solid #ddd;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
   color: #222;
   text-shadow: none;
@@ -2926,9 +2916,21 @@ table.listResults .originColor {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.attribute-edit .attribute-set .attribute-set-item::after, .attribute-set.attribute-tag-set .attribute-set-item::after, div.selectize-control > div.selectize-input > div.item[data-value]::after, div.selectize-control > div.selectize-input > div.item[data-value].active::after {
+.attribute-edit .attribute-set .attribute-set-item::after, .attribute-tag-set.attribute-set .attribute-set-item::after, .selectize-control > .selectize-input > .item[data-value]::after, .selectize-control.multi > .selectize-input > .item[data-value]::after, .selectize-control > .selectize-input > .item[data-value].active::after, .selectize-control.multi > .selectize-input > .item[data-value].active::after {
   content: "";
+  margin-right: 0;
 }
-div.selectize-control > div.selectize-input > div.item[data-value] > .remove {
+.selectize-control > .selectize-input.has-items:after, .selectize-control.multi > .selectize-input.has-items:after {
+  content: "+";
+  display: inline-block;
+  font-size: 17px;
+  font-weight: bold;
+  color: #222;
+}
+.selectize-control > .selectize-input > .item[data-value], .selectize-control.multi > .selectize-input > .item[data-value] {
+  padding-right: 1.5em !important;
+  border: 1px solid #ddd;
+}
+.selectize-control > .selectize-input > .item[data-value] > .remove, .selectize-control.multi > .selectize-input > .item[data-value] > .remove {
   border: none;
 }
