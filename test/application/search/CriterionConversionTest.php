@@ -478,6 +478,11 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`tagfield` MATCHES 'tag1 tag2' OR (`UserRequest`.`tagfield` = '')) AND 1)",
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
+			'TagSet equals' => array(
+				'OQL' => "SELECT UserRequest WHERE tagfield = 'tag1 tag2'",
+				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`tagfield` MATCHES 'tag1' AND `UserRequest`.`tagfield` MATCHES 'tag2')",
+				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
+			),
 
 		);
 	}
@@ -655,7 +660,9 @@ class CriterionConversionTest extends ItopDataTestCase
             {
                 $sAttributeClass = ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME) ? AttributeDateTime::class : AttributeDate::class;
 
-                $oFormat = $sAttributeClass::GetFormat();
+	            /** @var \AttributeDateTime $sAttributeClass */
+	            /** @var \DateTimeFormat $oFormat */
+	            $oFormat = $sAttributeClass::GetFormat();
 
                 foreach($aCriteria['values'] as $i => $aValue)
                 {
