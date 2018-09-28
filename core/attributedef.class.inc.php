@@ -7278,29 +7278,60 @@ class AttributeImage extends AttributeBlob
 		return true;
 	}
 
+	/**
+	 * @param \ormDocument $value
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 *
+	 * @return string
+	 */
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
+		$sRet = '';
+
 		$iMaxWidthPx = $this->Get('display_max_width').'px';
 		$iMaxHeightPx = $this->Get('display_max_height').'px';
-		$sUrl = $this->Get('default_image');
-		$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">' : '';
-		if (is_object($value) && !$value->IsEmpty())
-		{
-			if ($oHostObject->IsNew() || ($oHostObject->IsModified() && (array_key_exists($this->GetCode(),
-						$oHostObject->ListChanges()))))
-			{
-				// If the object is modified (or not yet stored in the database) we must serve the content of the image directly inline
-				// otherwise (if we just give an URL) the browser will be given the wrong content... and may cache it
-				$sUrl = 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
-			}
-			else
-			{
-				$sUrl = $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
-			}
-			$sRet = '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">';
+
+		$sDefaultImageUrl = $this->Get('default_image');
+		if ($sDefaultImageUrl !== null) {
+			$sRet = $this->GetHtmlForImageUrl($sDefaultImageUrl, $iMaxWidthPx, $iMaxHeightPx);
+		}
+
+		$sCustomImageUrl = $this->GetAttributeImageFileUrl($value, $oHostObject);
+		if ($sCustomImageUrl !== null) {
+			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $iMaxWidthPx, $iMaxHeightPx);
 		}
 
 		return '<div class="view-image" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';"><span class="helper-middle"></span>'.$sRet.'</div>';
+	}
+
+	private function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx) {
+		return  '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">';
+	}
+
+	/**
+	 * @param \ormDocument $value
+	 * @param \DBObject $oHostObject
+	 *
+	 * @return null|string
+	 */
+	private function GetAttributeImageFileUrl($value, $oHostObject) {
+		if (!is_object($value)) {
+			return null;
+		}
+		if ($value->IsEmpty()) {
+			return null;
+		}
+
+		$bExistingImageModified = ($oHostObject->IsModified() && (array_key_exists($this->GetCode(), $oHostObject->ListChanges())));
+		if ($oHostObject->IsNew() || ($bExistingImageModified))
+		{
+			// If the object is modified (or not yet stored in the database) we must serve the content of the image directly inline
+			// otherwise (if we just give an URL) the browser will be given the wrong content... and may cache it
+			return 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
+		}
+
+		return $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
 	}
 
 	static public function GetFormFieldClass()
