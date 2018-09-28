@@ -265,8 +265,9 @@ EOF
 	$('.attribute-set-item').each(function(){
 	    $(this).qtip({
 	       content: {
+	       	 // Encoding only title as the content is already sanitized by the HTML attribute.
 	         text: $(this).attr('data-description'),
-	         title: { text: $(this).attr('data-label')},
+	         title: { text: $('<div/>').text($(this).attr('data-label')).html()},
 	       },
 	       show: { delay: 300, when: 'mouseover' },
 	       hide: { delay: 140, when: 'mouseout', fixed: true },

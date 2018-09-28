@@ -7257,7 +7257,7 @@ class AttributeTagSet extends AttributeSet
 				$sFilter = urlencode($oFilter->serialize());
 				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 
-				$sHtml .= '<a href="'.$sUrl.'" class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.$sTagLabel.'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES, 'UTF-8').'">'.$sTagLabel.'</a>';
+				$sHtml .= '<a href="'.$sUrl.'" class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.htmlentities($sTagLabel, ENT_QUOTES, 'UTF-8').'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES, 'UTF-8').'">'.$sTagLabel.'</a>';
 			}
 			else
 			{
@@ -7451,7 +7451,7 @@ class AttributeTagSet extends AttributeSet
 
 	static public function GetFormFieldClass()
 	{
-		return '\\Combodo\\iTop\\Form\\Field\\TagSetField';
+		return '\\Combodo\\iTop\\Form\\Field\\SetField';
 	}
 }
 
