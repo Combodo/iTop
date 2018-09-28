@@ -2043,7 +2043,7 @@ EOF
 
 					/** @var \ormSet $value */
 					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
-					$sEscapedJson = htmlentities($sJson);
+					$sEscapedJson = htmlentities($sJson, ENT_QUOTES, 'UTF-8');
 					$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
 				$sHTMLValue = '<div class="field_input_zone field_input_set"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
 					$sScript = "$('#$iId').set_widget();";
