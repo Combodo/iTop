@@ -9382,7 +9382,7 @@ class AttributePropertySet extends AttributeTable
  */
 abstract class AttributeSet extends AttributeDBFieldVoid
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_SET;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
 	public function __construct($sCode, array $aParams)
 	{
