@@ -161,8 +161,6 @@ class ormSet
 	{
 		$aValues = array_merge($this->aPreserved, $this->aAdded);
 
-		sort($aValues);
-
 		return $aValues;
 	}
 

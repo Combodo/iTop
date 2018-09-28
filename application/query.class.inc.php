@@ -137,6 +137,38 @@ class QueryOQL extends Query
 		return $aFieldsMap;
 	}
 
+	public function ComputeValues()
+	{
+		parent::ComputeValues();
+
+		// Remove unwanted attribute codes
+		$aChanges = $this->ListChanges();
+		if (isset($aChanges['fields']))
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'fields');
+			$aArgs = array('this' => $this);
+			$aAllowedValues = $oAttDef->GetAllowedValues($aArgs);
+
+			/** @var \ormSet $oValue */
+			$oValue = $this->Get('fields');
+			$aValues = $oValue->GetValues();
+			$bChanged = false;
+			foreach($aValues as $key => $sValue)
+			{
+				if (!isset($aAllowedValues[$sValue]))
+				{
+					unset($aValues[$key]);
+					$bChanged = true;
+				}
+			}
+			if ($bChanged)
+			{
+				$oValue->SetValues($aValues);
+				$this->Set('fields', $oValue);
+			}
+		}
+	}
+
 }
 
 ?>

@@ -3306,7 +3306,6 @@ EOF
 					{
 						$oSet = new ormSet(get_class($this), $sAttCode);
 					}
-					$oSet->SetValues($value['orig_value']);
 					$oSet->ApplyDelta($value);
 					$this->Set($sAttCode, $oSet);
 					break;

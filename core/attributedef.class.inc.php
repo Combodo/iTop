@@ -6966,9 +6966,13 @@ class AttributeTagSet extends AttributeSet
 		$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
-			$proposedValue = trim("$proposedValue");
-			$aTagCodes = $this->FromStringToArray($proposedValue);
-			$oTagSet->SetValues($aTagCodes);
+			$sJsonFromWidget = json_decode($proposedValue, true);
+			if (is_null($sJsonFromWidget))
+			{
+				$proposedValue = trim("$proposedValue");
+				$aTagCodes = $this->FromStringToArray($proposedValue);
+				$oTagSet->SetValues($aTagCodes);
+			}
 		}
 		elseif ($proposedValue instanceof ormTagSet)
 		{
@@ -9434,7 +9438,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			];
 		}
 		$aJson['possible_values'] = $aSetKeyValData;
-
+		$aRemoved = array();
 		if (is_null($oValue))
 		{
 			$aJson['partial_values'] = array();
@@ -9456,13 +9460,15 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			{
 				if (!isset($aAllowedValues[$value]))
 				{
+					// Remove unwanted values
+					$aRemoved[] = $value;
 					unset($aOrigValues[$key]);
 				}
 			}
 			$aJson['orig_value'] = array_values($aOrigValues);
 		}
 		$aJson['added'] = array();
-		$aJson['removed'] = array();
+		$aJson['removed'] = $aRemoved;
 
 		$iMaxTags = $this->GetMaxItems();
 		$aJson['max_items_allowed'] = $iMaxTags;
@@ -9810,21 +9816,25 @@ class AttributeClassAttCodeSet extends AttributeSet
 		$aInvalidAttCodes = array();
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
-			$proposedValue = trim($proposedValue);
-			$aValues = array();
-			foreach(explode(',', $proposedValue) as $sValue)
+			$aJsonFromWidget = json_decode($proposedValue, true);
+			if (is_null($aJsonFromWidget))
 			{
-				$sAttCode = trim($sValue);
-				if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
+				$proposedValue = trim($proposedValue);
+				$aValues = array();
+				foreach(explode(',', $proposedValue) as $sValue)
 				{
-					$aValues[$sAttCode] = $sAttCode;
+					$sAttCode = trim($sValue);
+					if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
+					{
+						$aValues[$sAttCode] = $sAttCode;
+					}
+					else
+					{
+						$aInvalidAttCodes[] = $sAttCode;
+					}
 				}
-				else
-				{
-					$aInvalidAttCodes[] = $sAttCode;
-				}
+				$oSet->SetValues($aValues);
 			}
-			$oSet->SetValues($aValues);
 		}
 		elseif ($proposedValue instanceof ormSet)
 		{
