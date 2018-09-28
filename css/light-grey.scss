@@ -117,11 +117,10 @@ table.listResults td .view-image {
 }
 
 table.listResults > tbody > tr.selected > * {
-	background-color: lighten($combodo-orange, 25%);
 }
 
 table.listResults > tbody > tr > * {
-	transition: background-color 200ms ease-in-out;
+	transition: background-color 400ms linear;
 }
 
 table.listResults > tbody > tr:hover > * {
@@ -130,10 +129,14 @@ table.listResults > tbody > tr:hover > * {
 
 table.listResults > tbody > tr.selected:hover > * {
 	/* hover on lines is currently done toggling td.hover, and having a rule for links */
-	background-color: lighten($combodo-orange, 15%);
+	background-color: lighten($combodo-orange, 20%);
+	color: $text-color;
 }
-table.listResults > tbody > tr.selected:hover a {
-	background-color: transparent;
+
+table.listResults > tbody > tr:hover > * {
+	/* hover on lines is currently done toggling td.hover, and having a rule for links */
+	background-color: #fdf5d0;
+	color: $text-color;
 }
 
 .edit-image {
@@ -245,7 +248,7 @@ tr.green td, .wizContainer tr.green td {
 } 
 
 tr td.hover, tr.even td.hover, .hover a, .hover a:visited, .hover a:hover, .wizContainer tr.even td.hover,  .wizContainer tr td.hover {
-	background-color: #fdf5d0;
+	//background-color: #fdf5d0;
 	color: $text-color;
 }
 
@@ -994,6 +997,10 @@ input.dp-applied {
 				min-width: 100%;
 				left: 0px;
 				margin-top: -1px;
+
+				.sfc_fg_buttons{
+					white-space: nowrap;
+				}
 			}
 		}
 
@@ -1292,6 +1299,22 @@ input.dp-applied {
 				}
 			}
 			&.search_form_criteria_enum{
+				.sfc_form_group{
+					.sfc_fg_operator_in{
+						> label{
+							display: inline-block;
+							width: 100%;
+							line-height: initial;
+							white-space: nowrap;
+
+							.sfc_op_content{
+								width: 100%;
+							}
+						}
+					}
+				}
+			}
+			&.search_form_criteria_tag_set{
 				.sfc_form_group{
 					.sfc_fg_operator_in{
 						> label{
@@ -2238,6 +2261,28 @@ fieldset .details>.field_container {
 
 								> img {
 									max-width: 20px;
+								}
+							}
+						}
+
+						&.field_input_set{
+							.selectize-control{
+								width: 100%;
+
+								.selectize-dropdown,
+								.selectize-input,
+								.selectize-input input{
+									font-size: 12px;
+								}
+								.selectize-input{
+									padding: 2px 2px 0px 2px; /* padding-bottom = padding-top - item margin-bottom */
+									border: 1px solid #ABABAB;
+									border-radius: 0;
+
+									.attribute-set-item.partial-code{
+										color: transparentize($gray-darker, 0.4);
+										background-color: lighten($gray-lighter, 5%);
+									}
 								}
 							}
 						}
@@ -3262,4 +3307,100 @@ table.listResults .originColor{
 }
 .menu-icon-select > .ui-menu-item{
 	padding: .3em 3%;
+}
+
+//////////////////////
+// Set attribute //
+// - Readonly (object viewing, objects list)
+.attribute {
+	&.attribute-set {
+		.attribute-set-item{
+			&::after{
+				content: ",";
+				margin-right: 0.5em;
+			}
+			&:last-of-type::after{
+				content: "";
+				margin-right: 0;
+			}
+		}
+
+		&.history-added {
+			.attribute-set-item {
+				font-weight: bold;
+			}
+		}
+		&.history-removed {
+			.attribute-set-item {
+				text-decoration: line-through;
+				font-style: italic;
+			}
+		}
+	}
+}
+// - Edit is always styled like the selectize items, see below.
+%attribute-set-item-edition{
+	display: inline-block;
+	margin-right: 3px;
+	margin-bottom: 3px;
+	padding: 4px 6px;
+	max-width: 120px;
+
+	background: #fdfdfd none;
+	border-radius: 2px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb(241, 241, 241, 0.7);
+
+	color: $gray-darker;
+	text-shadow: none;
+	vertical-align: middle;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+
+	&::after{
+		content: "";
+		margin-right: 0;
+	}
+}
+.attribute-edit .attribute-set .attribute-set-item{
+	@extend %attribute-set-item-edition;
+}
+//////////////////////
+// TagSet attribute //
+// Always styled like the selectize items, see below.
+.attribute-tag-set.attribute-set{
+	.attribute-set-item{
+		@extend %attribute-set-item-edition;
+	}
+}
+
+//////////////////////
+// Selectize widget //
+//
+.selectize-control,
+.selectize-control.multi{
+	> .selectize-input{
+		&.has-items:after {
+			content: "+";
+			display: inline-block;
+			font-size: 17px;
+			font-weight: bold;
+			color: $gray-darker;
+		}
+
+		> .item[data-value]{
+			@extend %attribute-set-item-edition;
+
+			padding-right: 1.5em !important;
+			border: 1px solid $gray-lighter;
+
+			&.active{
+				@extend %attribute-set-item-edition;
+			}
+			> .remove {
+				padding-top: 0.3em;
+				border: none;
+			}
+		}
+	}
 }

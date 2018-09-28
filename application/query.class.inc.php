@@ -47,7 +47,7 @@ abstract class Query extends cmdbAbstractObject
 		MetaModel::Init_AddAttribute(new AttributeString("name", array("allowed_values"=>null, "sql"=>"name", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeText("description", array("allowed_values"=>null, "sql"=>"description", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
-		MetaModel::Init_AddAttribute(new AttributeText("fields", array("allowed_values"=>null, "sql"=>"fields", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeQueryAttCodeSet("fields", array("allowed_values"=>null,"max_items" => 1000, "query_field" => "oql", "sql"=>"fields", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array('oql'))));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'fields')); // Attributes to be displayed for the complete details
@@ -136,6 +136,39 @@ class QueryOQL extends Query
 		}
 		return $aFieldsMap;
 	}
+
+	public function ComputeValues()
+	{
+		parent::ComputeValues();
+
+		// Remove unwanted attribute codes
+		$aChanges = $this->ListChanges();
+		if (isset($aChanges['fields']))
+		{
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'fields');
+			$aArgs = array('this' => $this);
+			$aAllowedValues = $oAttDef->GetAllowedValues($aArgs);
+
+			/** @var \ormSet $oValue */
+			$oValue = $this->Get('fields');
+			$aValues = $oValue->GetValues();
+			$bChanged = false;
+			foreach($aValues as $key => $sValue)
+			{
+				if (!isset($aAllowedValues[$sValue]))
+				{
+					unset($aValues[$key]);
+					$bChanged = true;
+				}
+			}
+			if ($bChanged)
+			{
+				$oValue->SetValues($aValues);
+				$this->Set('fields', $oValue);
+			}
+		}
+	}
+
 }
 
 ?>

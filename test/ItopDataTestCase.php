@@ -38,11 +38,15 @@ use lnkContactToFunctionalCI;
 use MetaModel;
 use Person;
 use Server;
+use TagSetFieldData;
 use Ticket;
 use URP_UserProfile;
 use VirtualHost;
 use VirtualMachine;
 
+
+define('TAG_CLASS', 'Ticket');
+define('TAG_ATTCODE', 'tagfield');
 
 /**
  * @runTestsInSeparateProcesses
@@ -51,7 +55,11 @@ use VirtualMachine;
  */
 class ItopDataTestCase extends ItopTestCase
 {
-	protected $testOrgId;
+	private $iTestOrgId;
+	// For cleanup
+	private $aCreatedObjects = array();
+
+	const USE_TRANSACTION = true;
 
 	/**
 	 * @throws Exception
@@ -68,11 +76,11 @@ class ItopDataTestCase extends ItopTestCase
         $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
         MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
 
-		CMDBSource::Query('START TRANSACTION');
-
-		// Create a specific organization for the tests
-		$oOrg = $this->CreateOrganization('UnitTestOrganization');
-		$this->testOrgId = $oOrg->GetKey();
+        if (static::USE_TRANSACTION)
+        {
+	        CMDBSource::Query('START TRANSACTION');
+        }
+		$this->CreateTestOrganization();
 	}
 
     /**
@@ -80,7 +88,30 @@ class ItopDataTestCase extends ItopTestCase
      */
 	protected  function tearDown()
 	{
-		CMDBSource::Query('ROLLBACK');
+		if (static::USE_TRANSACTION)
+		{
+			$this->debug("ROLLBACK !!!");
+			CMDBSource::Query('ROLLBACK');
+		}
+		else
+		{
+			$this->debug("");
+			$this->aCreatedObjects = array_reverse($this->aCreatedObjects);
+			foreach($this->aCreatedObjects as $oObject)
+			{
+				/** @var DBObject $oObject */
+				try
+				{
+					$sClass = get_class($oObject);
+					$iKey = $oObject->GetKey();
+					$this->debug("Removing $sClass::$iKey");
+					$oObject->DBDelete();
+				} catch (Exception $e)
+				{
+					$this->debug($e->getMessage());
+				}
+			}
+		}
 	}
 
 	/**
@@ -88,7 +119,7 @@ class ItopDataTestCase extends ItopTestCase
 	 */
 	public function getTestOrgId()
 	{
-		return $this->testOrgId;
+		return $this->iTestOrgId;
 	}
 
     /////////////////////////////////////////////////////////////////////////////
@@ -101,7 +132,7 @@ class ItopDataTestCase extends ItopTestCase
      * @return DBObject
      * @throws Exception
      */
-    protected static function createObject($sClass, $aParams)
+    protected function createObject($sClass, $aParams)
     {
         $oMyObj = MetaModel::NewObject($sClass);
         foreach($aParams as $sAttCode => $oValue)
@@ -109,6 +140,9 @@ class ItopDataTestCase extends ItopTestCase
             $oMyObj->Set($sAttCode, $oValue);
         }
         $oMyObj->DBInsert();
+        $iKey = $oMyObj->GetKey();
+        $this->debug("Created $sClass::$iKey");
+        $this->aCreatedObjects[] = $oMyObj;
         return $oMyObj;
     }
 
@@ -137,16 +171,16 @@ class ItopDataTestCase extends ItopTestCase
 	 * Create an Organization in database
 	 *
 	 * @param string $sName
-	 * @return Organization
+	 * @return \Organization
 	 * @throws Exception
 	 */
 	protected function CreateOrganization($sName)
 	{
-		/** @var Organization $oObj */
-		$oObj = self::createObject('Organization', array(
+		/** @var \Organization $oObj */
+		$oObj = $this->createObject('Organization', array(
 			'name' => $sName,
 		));
-		$this->debug("\nCreated Organization {$oObj->Get('name')}");
+		$this->debug("Created Organization {$oObj->Get('name')}");
 		return $oObj;
 	}
 
@@ -160,31 +194,95 @@ class ItopDataTestCase extends ItopTestCase
     protected function CreateTicket($iNum)
     {
         /** @var Ticket $oTicket */
-        $oTicket = self::createObject('UserRequest', array(
+        $oTicket = $this->createObject('UserRequest', array(
             'ref' => 'Ticket_'.$iNum,
-            'title' => 'BUG 789_'.$iNum,
+            'title' => 'TICKET_'.$iNum,
 	        //'request_type' => 'incident',
-            'description' => 'method UpdateImpactedItems() reconstruit le lnkContactToTicket donc impossible de rajouter des champs dans cette classe',
+            'description' => 'Created for unit tests.',
             'org_id' => $this->getTestOrgId(),
         ));
-        $this->debug("\nCreated {$oTicket->Get('title')} ({$oTicket->Get('ref')})");
+        $this->debug("Created {$oTicket->Get('title')} ({$oTicket->Get('ref')})");
         return $oTicket;
     }
 
+    protected function RemoveTicket($iNum)
+    {
+	    $this->RemoveObjects('UserRequest', "SELECT UserRequest WHERE ref = 'Ticket_$iNum'");
+    }
+
 	/**
+	 * Create a Ticket in database
+	 *
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param string $sTagCode
+	 * @param string $sTagLabel
+	 * @param string $sTagDescription
+	 *
+	 * @return \TagSetFieldData
+	 * @throws \CoreException
+	 */
+	protected function CreateTagData($sClass, $sAttCode, $sTagCode, $sTagLabel, $sTagDescription = '')
+	{
+		$sTagClass = TagSetFieldData::GetTagDataClassName($sClass, $sAttCode);
+		$oTagData = $this->createObject($sTagClass, array(
+			'code' => $sTagCode,
+			'label' => $sTagLabel,
+			'obj_class' => $sClass,
+			'obj_attcode' => $sAttCode,
+			'description' => $sTagDescription,
+		));
+		$this->debug("Created {$oTagData->Get('code')} ({$oTagData->Get('label')})");
+
+		/** @var \TagSetFieldData $oTagData */
+		return $oTagData;
+	}
+
+	/**
+	 * Create a Ticket in database
+	 *
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param string $sTagCode
+	 *
+	 * @throws \CoreException
+	 */
+	protected function RemoveTagData($sClass, $sAttCode, $sTagCode)
+	{
+		$sTagClass = TagSetFieldData::GetTagDataClassName($sClass, $sAttCode);
+		$this->RemoveObjects($sTagClass, "SELECT $sTagClass WHERE code = '$sTagCode'");
+	}
+
+	private function RemoveObjects($sClass, $sOQL)
+	{
+		$oFilter = \DBSearch::FromOQL($sOQL);
+		$aRes = $oFilter->ToDataArray(array('id'));
+		foreach($aRes as $aRow)
+		{
+			$this->debug($aRow);
+			$iKey = $aRow['id'];
+			if (!empty($iKey))
+			{
+				$oObject = MetaModel::GetObject($sClass, $iKey);
+				$oObject->DBDelete();
+			}
+		}
+	}
+
+    /**
 	 * Create a UserRequest in database
 	 *
 	 * @param int $iNum
 	 * @param int $iTimeSpent
 	 * @param int $iOrgId
 	 * @param int $iCallerId
-	 * @return UserRequest
+	 * @return \UserRequest
 	 * @throws Exception
 	 */
 	protected function CreateUserRequest($iNum, $iTimeSpent = 0, $iOrgId = 0, $iCallerId = 0)
 	{
-		/** @var UserRequest $oTicket */
-		$oTicket = self::createObject('UserRequest', array(
+		/** @var \UserRequest $oTicket */
+		$oTicket = $this->createObject('UserRequest', array(
 			'ref' => 'Ticket_'.$iNum,
 			'title' => 'BUG 1161_'.$iNum,
 			//'request_type' => 'incident',
@@ -193,7 +291,7 @@ class ItopDataTestCase extends ItopTestCase
 			'caller_id' => $iCallerId,
 			'org_id' => ($iOrgId == 0 ? $this->getTestOrgId() : $iOrgId),
 		));
-		$this->debug("\nCreated {$oTicket->Get('title')} ({$oTicket->Get('ref')})");
+		$this->debug("Created {$oTicket->Get('title')} ({$oTicket->Get('ref')})");
 		return $oTicket;
 	}
 
@@ -209,7 +307,7 @@ class ItopDataTestCase extends ItopTestCase
 	protected function CreateServer($iNum, $iRackUnit = null)
 	{
 		/** @var Server $oServer */
-		$oServer = self::createObject('Server', array(
+		$oServer = $this->createObject('Server', array(
 			'name' => 'Server_'.$iNum,
 			'org_id' => $this->getTestOrgId(),
 			'nb_u' => $iRackUnit,
@@ -228,7 +326,7 @@ class ItopDataTestCase extends ItopTestCase
 	 */
 	protected function CreatePhysicalInterface($iNum, $iSpeed, $iConnectableCiId)
 	{
-		$oObj = self::createObject('PhysicalInterface', array(
+		$oObj = $this->createObject('PhysicalInterface', array(
 			'name' => "$iNum",
 			'speed' => $iSpeed,
 			'connectableci_id' => $iConnectableCiId,
@@ -247,7 +345,7 @@ class ItopDataTestCase extends ItopTestCase
 	 */
 	protected function CreateFiberChannelInterface($iNum, $iSpeed, $iConnectableCiId)
 	{
-		$oObj = self::createObject('FiberChannelInterface', array(
+		$oObj = $this->createObject('FiberChannelInterface', array(
 			'name' => "$iNum",
 			'speed' => $iSpeed,
 			'datacenterdevice_id' => $iConnectableCiId,
@@ -266,7 +364,7 @@ class ItopDataTestCase extends ItopTestCase
     protected function CreatePerson($iNum, $iOrgId = 0)
     {
         /** @var Person $oPerson */
-        $oPerson = self::createObject('Person', array(
+        $oPerson = $this->createObject('Person', array(
             'name' => 'Person_'.$iNum,
             'first_name' => 'Test',
             'org_id' => ($iOrgId == 0 ? $this->getTestOrgId() : $iOrgId),
@@ -287,7 +385,7 @@ class ItopDataTestCase extends ItopTestCase
 	    $oUserProfile->Set('profileid', $iProfileId);
 	    $oUserProfile->Set('reason', 'UNIT Tests');
 	    $oSet = DBObjectSet::FromObject($oUserProfile);
-    	$oUser = self::createObject('UserLocal', array(
+    	$oUser = $this->createObject('UserLocal', array(
 		    'contactid' => 2,
 		    'login' => $sLogin,
 		    'password' => $sLogin,
@@ -310,7 +408,7 @@ class ItopDataTestCase extends ItopTestCase
     protected function CreateHypervisor($iNum, $oServer, $oFarm = null)
     {
         /** @var Hypervisor $oHypervisor */
-        $oHypervisor = self::createObject('Hypervisor', array(
+        $oHypervisor = $this->createObject('Hypervisor', array(
             'name' => 'Hypervisor_'.$iNum,
             'org_id' => $this->getTestOrgId(),
             'server_id' => $oServer->GetKey(),
@@ -337,7 +435,7 @@ class ItopDataTestCase extends ItopTestCase
     protected function CreateFarm($iNum, $sRedundancy = '1')
     {
         /** @var Farm $oFarm */
-        $oFarm = self::createObject('Farm', array(
+        $oFarm = $this->createObject('Farm', array(
             'name' => 'Farm_'.$iNum,
             'org_id' => $this->getTestOrgId(),
             'redundancy' => $sRedundancy,
@@ -356,7 +454,7 @@ class ItopDataTestCase extends ItopTestCase
     protected function CreateVirtualMachine($iNum, $oVirtualHost)
     {
         /** @var VirtualMachine $oVirtualMachine */
-        $oVirtualMachine = self::createObject('VirtualMachine', array(
+        $oVirtualMachine = $this->createObject('VirtualMachine', array(
             'name' => 'VirtualMachine_'.$iNum,
             'org_id' => $this->getTestOrgId(),
             'virtualhost_id' => $oVirtualHost->GetKey(),
@@ -509,13 +607,15 @@ class ItopDataTestCase extends ItopTestCase
         }
     }
 
-    /**
-     * Reload a Ticket from the database.
-     *
-     * @param DBObject $oObject
-     * @throws ArchivedObjectException
-     * @throws Exception
-     */
+	/**
+	 * Reload a Ticket from the database.
+	 *
+	 * @param DBObject $oObject
+	 *
+	 * @return \DBObject|null
+	 * @throws ArchivedObjectException
+	 * @throws Exception
+	 */
     protected function ReloadObject(&$oObject)
     {
         $oObject = MetaModel::GetObject(get_class($oObject), $oObject->GetKey());
@@ -572,6 +672,13 @@ class ItopDataTestCase extends ItopTestCase
             }
         }
     }
+
+	protected function CreateTestOrganization()
+	{
+		// Create a specific organization for the tests
+		$oOrg = $this->CreateOrganization('UnitTestOrganization');
+		$this->iTestOrgId = $oOrg->GetKey();
+	}
 
 
 }

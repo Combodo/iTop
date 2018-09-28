@@ -320,8 +320,7 @@ abstract class MetaModel
 	final static public function GetName($sClass)
 	{
 		self::_check_subclass($sClass);
-		$sStringCode = 'Class:'.$sClass;
-		return Dict::S($sStringCode, str_replace('_', ' ', $sClass));
+		return $sClass::GetClassName($sClass);
 	}
 
 	/**
@@ -411,8 +410,7 @@ abstract class MetaModel
 	final static public function GetClassDescription($sClass)
 	{
 		self::_check_subclass($sClass);
-		$sStringCode = 'Class:'.$sClass.'+';
-		return Dict::S($sStringCode, '');
+		return $sClass::GetClassDescription($sClass);
 	}
 
 	/**
@@ -1024,7 +1022,7 @@ abstract class MetaModel
 	/**
 	 * array of ("classname" => array of attributes)
 	 *
-	 * @var array
+	 * @var \AttributeDefinition[]
 	 */
 	private static $m_aAttribDefs = array();
 	/**

@@ -1165,6 +1165,14 @@ class RestUtils
 				}
 				$value = DBObjectSet::FromArray($sLnkClass, $aLinks);
 			}
+            elseif ($oAttDef instanceof AttributeTagSet)
+            {
+                if (!is_array($value))
+                {
+                    throw new Exception("A tag set must be defined by an array of tag codes");
+                }
+                $value = $oAttDef->FromJSONToValue($value);
+            }
 			else
 			{
 				$value = $oAttDef->FromJSONToValue($value);

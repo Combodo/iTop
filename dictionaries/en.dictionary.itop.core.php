@@ -34,7 +34,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeLinkedSet' => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 
-	'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
+    'Core:AttributeTagSet' => 'List of tags',
+    'Core:AttributeTagSet+' => '',
+	'Core:AttributeSet:placeholder' => 'click to add',
+
+    'Core:AttributeCaseLog' => 'Log',
+    'Core:AttributeCaseLog+' => '',
+
+    'Core:AttributeMetaEnum' => 'Computed enum',
+    'Core:AttributeMetaEnum+' => '',
+
+    'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
 
 	'Core:AttributeInteger' => 'Integer',
@@ -579,13 +589,22 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: TriggerOnObjectDelete
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)',
+	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class',
+));
+
+//
 // Class: TriggerOnObjectUpdate
 //
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target attributes',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
 
@@ -628,7 +647,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Name',
 	'Class:SynchroDataSource/Attribute:name+' => 'Name',
 	'Class:SynchroDataSource/Attribute:description' => 'Description',
-	'Class:SynchroDataSource/Attribute:status' => 'Status', //TODO: enum values
+	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Target class',
 	'Class:SynchroDataSource/Attribute:user_id' => 'User',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contact to notify',
@@ -637,7 +656,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which iTop is synchronized',
 	'Class:SynchroDataSource/Attribute:url_application' => 'Application\'s hyperlink',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink to the iTop object in the external application with which iTop is synchronized (if applicable). Possible placeholders: $this->attribute$ and $replica->primary_key$',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation policy', //TODO enum values
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation policy',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Full load interval',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'A complete reload of all data must occur at least as often as specified here',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Action on zero',
@@ -648,7 +667,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Action taken when the search returns more than one object',
 	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Users allowed',
 	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Who is allowed to delete synchronized objects',
-	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Users allowed',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Nobody',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Administrators only',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'All allowed users',
@@ -666,7 +684,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'SynchroDataSource:Definition' => 'Definition',
 	'Core:SynchroAttributes' => 'Attributes',
 	'Core:SynchroStatus' => 'Status',
-	'Core:Synchro:ErrorsLabel' => 'Errors',	
+	'Core:Synchro:ErrorsLabel' => 'Errors',
 	'Core:Synchro:CreatedLabel' => 'Created',
 	'Core:Synchro:ModifiedLabel' => 'Modified',
 	'Core:Synchro:UnchangedLabel' => 'Unchanged',
@@ -693,18 +711,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:Synchro:label_obj_disappeared_errors' => 'Errors (%1$s)',
 	'Core:Synchro:label_obj_disappeared_no_action' => 'No Action (%1$s)',
 	'Core:Synchro:label_obj_unchanged' => 'Unchanged (%1$s)',
-	'Core:Synchro:label_obj_updated' => 'Updated (%1$s)', 
+	'Core:Synchro:label_obj_updated' => 'Updated (%1$s)',
 	'Core:Synchro:label_obj_updated_errors' => 'Errors (%1$s)',
 	'Core:Synchro:label_obj_new_unchanged' => 'Unchanged (%1$s)',
 	'Core:Synchro:label_obj_new_updated' => 'Updated (%1$s)',
 	'Core:Synchro:label_obj_created' => 'Created (%1$s)',
 	'Core:Synchro:label_obj_new_errors' => 'Errors (%1$s)',
-	'Core:Synchro:History' => 'Synchronization History',
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica processed: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
-	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'At Least one reconciliation key must be specified, or the reconciliation policy must be to use the primary key.',			
-	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete',			
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'At Least one reconciliation key must be specified, or the reconciliation policy must be to use the primary key.',
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete objects are to be updated, but no update is specified.',
 	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'The table %1$s already exists in the database. Please use another name for the synchro data table.',
 	'Core:SynchroReplica:PublicData' => 'Public Data',
@@ -833,16 +850,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',	
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',	
-	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',		
-	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',		
+	'Core:Duration_Seconds'	=> '%1$ds',
+	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
+	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
 	// Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%',
-	
+
 	// Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter "query". There is no Query Phrasebook corresponding to the id: "%1$s".',
@@ -912,4 +929,30 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:Validator:Mandatory' => 'Please, fill this field',
 	'Core:Validator:MustBeInteger' => 'Must be an integer',
 	'Core:Validator:MustSelectOne' => 'Please, select one',
+));
+
+//
+// Class: TagSetFieldData
+//
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:TagSetFieldData' => '%2$s for class %1$s',
+	'Class:TagSetFieldData+' => '',
+
+	'Class:TagSetFieldData/Attribute:code' => 'Code',
+	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters',
+	'Class:TagSetFieldData/Attribute:label' => 'Label',
+	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label',
+	'Class:TagSetFieldData/Attribute:description' => 'Description',
+	'Class:TagSetFieldData/Attribute:description+' => 'Description',
+
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)',
+	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag',
 ));

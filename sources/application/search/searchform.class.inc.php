@@ -46,7 +46,6 @@ use WebPage;
 
 class SearchForm
 {
-
 	/**
 	 * @param \WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
@@ -55,6 +54,7 @@ class SearchForm
 	 * @return string
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
 	public function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
@@ -136,7 +136,8 @@ class SearchForm
 				ksort($aOptions);
 				$sContext = $oAppContext->GetForLink();
 				$sJsonExtraParams = htmlentities(json_encode($aListParams), ENT_QUOTES);
-				$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '{$aExtraParams['result_list_outer_selector']}', $sJsonExtraParams)\">\n".implode('',
+				$sOuterSelector = $aExtraParams['result_list_outer_selector'];
+				$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '$sOuterSelector', $sJsonExtraParams)\">\n".implode('',
 						$aOptions)."</select>\n";
 			}
 			else
@@ -497,7 +498,7 @@ class SearchForm
 			{
 				try
 				{
-					$sOQL = $oExpression->Render($aArgs);
+					$sOQL = $oExpression->RenderExpression(false, $aArgs);
 					$oExpression = Expression::FromOQL($sOQL);
 				}
 				catch (MissingQueryArgument $e)
@@ -515,7 +516,7 @@ class SearchForm
 				foreach($aAndExpressions as $oAndSubExpr)
 				{
 					/** @var Expression $oAndSubExpr */
-					if (($oAndSubExpr instanceof TrueExpression) || ($oAndSubExpr->Render() == 1))
+					if (($oAndSubExpr instanceof TrueExpression) || ($oAndSubExpr->RenderExpression(false) == 1))
 					{
 						continue;
 					}
@@ -595,21 +596,22 @@ class SearchForm
 		return $aFields;
 	}
 
-    /**
-     * @param string $sClass
-     * @param string $sClassAlias
-     * @param string $sAttCode
-     * @param \AttributeDefinition $oAttDef
-     * @param array $aFields
-     * @param bool $bHasIndex
-     *
-     * @return mixed
-     *
-     * @throws \CoreException
-     * @throws \MissingQueryArgument
-     * @throws \MySQLException
-     * @throws \MySQLHasGoneAwayException
-     */
+	/**
+	 * @param string $sClass
+	 * @param string $sClassAlias
+	 * @param string $sAttCode
+	 * @param \AttributeDefinition $oAttDef
+	 * @param array $aFields
+	 * @param bool $bHasIndex
+	 *
+	 * @return mixed
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
+	 */
 	private function AppendField($sClass, $sClassAlias, $sAttCode, $oAttDef, $aFields, $bHasIndex = false)
 	{
 		if (!is_null($oAttDef) && ($oAttDef->GetSearchType() != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
