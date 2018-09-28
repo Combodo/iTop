@@ -9018,6 +9018,11 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	{
 		return $this->Get('max_items');
 	}
+
+	static public function GetFormFieldClass()
+	{
+		return '\\Combodo\\iTop\\Form\\Field\\SetField';
+	}
 }
 
 class AttributeClassAttCodeSet extends AttributeSet
@@ -10075,7 +10080,7 @@ class AttributeTagSet extends AttributeSet
 
 	static public function GetFormFieldClass()
 	{
-		return '\\Combodo\\iTop\\Form\\Field\\SetField';
+		return '\\Combodo\\iTop\\Form\\Field\\TagSetField';
 	}
 }
 

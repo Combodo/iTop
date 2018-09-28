@@ -19,21 +19,16 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
-use Exception;
-use ApplicationContext;
-use IssueLog;
-use Dict;
 use MetaModel;
-use AttributeFriendlyName;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
 
 /**
- * Description of BsItemSetFieldRenderer
+ * Description of BsSetFieldRenderer
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
-class BsItemSetFieldRenderer extends FieldRenderer
+class BsSetFieldRenderer extends FieldRenderer
 {
     /**
      * @inheritdoc
@@ -119,7 +114,11 @@ EOF
 				{
 					$sItemLabel = $oItem->Get('label');
 					$sItemDescription = $oItem->Get('description');
-					$oOutput->AddHtml('<span class="label label-default" data-item-code="'.$sItemCode.'" data-item-label="'.$sItemLabel.'" data-item-description="">')
+					$oOutput->AddHtml('<span class="label label-default" data-code="'.$sItemCode.'" data-label="')
+							->AddHtml($sItemLabel, true)
+							->AddHtml('" data-description="')
+							->AddHtml($sItemDescription, true)
+							->AddHtml('">')
 							->AddHtml($sItemLabel, true)
 							->AddHtml('</span>');
 				}
