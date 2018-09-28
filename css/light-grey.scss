@@ -3398,6 +3398,7 @@ table.listResults .originColor{
 				@extend %attribute-set-item-edition;
 			}
 			> .remove {
+				padding-top: 0.3em;
 				border: none;
 			}
 		}

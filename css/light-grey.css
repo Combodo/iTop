@@ -2932,5 +2932,6 @@ table.listResults .originColor {
   border: 1px solid #ddd;
 }
 .selectize-control > .selectize-input > .item[data-value] > .remove, .selectize-control.multi > .selectize-input > .item[data-value] > .remove {
+  padding-top: 0.3em;
   border: none;
 }
