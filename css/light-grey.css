@@ -2900,6 +2900,13 @@ table.listResults .originColor {
   content: "";
   margin-right: 0;
 }
+.attribute.attribute-set.history-added .attribute-set-item {
+  font-weight: bold;
+}
+.attribute.attribute-set.history-removed .attribute-set-item {
+  text-decoration: line-through;
+  font-style: italic;
+}
 .attribute-edit .attribute-set .attribute-set-item, .attribute-tag-set.attribute-set .attribute-set-item, .selectize-control > .selectize-input > .item[data-value], .selectize-control.multi > .selectize-input > .item[data-value], .selectize-control > .selectize-input > .item[data-value].active, .selectize-control.multi > .selectize-input > .item[data-value].active {
   display: inline-block;
   margin-right: 3px;
