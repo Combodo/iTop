@@ -4017,20 +4017,21 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
     cursor: not-allowed
 }
 .label {
-    display: inline;
+    display: inline-block;
     padding: .2em .6em .3em;
     font-size: 75%;
-    font-weight: bold;
     line-height: 1;
-    color: #ffffff;
+    color: $label-default-color;
+    background-color: $label-default-bg;
     text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
-    border-radius: .25em
+    border-radius: $label-border-radius;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
 }
 a.label:hover,
 a.label:focus {
-    color: #ffffff;
+    color: $label-default-color;
     text-decoration: none;
     cursor: pointer
 }
@@ -4042,11 +4043,12 @@ a.label:focus {
     top: -1px
 }
 .label-default {
-    background-color: #474949
+    color: $label-default-color;
+    background-color: $label-default-bg;
 }
 .label-default[href]:hover,
 .label-default[href]:focus {
-    background-color: #2e2f2f
+    background-color: darken($label-default-bg, 2.5%);
 }
 .label-primary {
     background-color: $brand-primary
@@ -6161,5 +6163,38 @@ table.dataTable{
             color: #444;
             background-color: #FCFCFC;
         }
+    }
+}
+
+
+
+
+
+
+/* Temp */
+.label{
+    margin-right: 0.4em;
+    margin-bottom: 0.4em;
+    padding: 0.5em 0.7em 0.5em;
+    font-size: 90%;
+    font-weight: normal;
+    //color: $white;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
+
+    &:last-of-type{
+        margin-right: 0;
+    }
+}
+.selectize-control.multi .selectize-input .attribute-set-item[data-value]{
+    border-radius: 0;
+    background-color: $white;
+    background-image: none;
+    border: none;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
+    text-shadow: none;
+    color: black;
+
+    .remove{
+        border-left: none;
     }
 }
