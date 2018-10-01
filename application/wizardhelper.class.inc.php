@@ -221,11 +221,10 @@ class WizardHelper
 				// this as to be handled as an array of objects
 				// thus encoded in json like: [ { name:'link1', 'id': 123}, { name:'link2', 'id': 124}...]
 				// NOT YET IMPLEMENTED !!
-				$sLinkedClass = $oAttDef->GetLinkedClass();
 				$oSet = $value;
 				$aData = array();
 				$aFields = $this->GetLinkedWizardStructure($oAttDef);
-				while($oSet->fetch())
+				while($oLinkedObj = $oSet->fetch())
 				{
 					foreach($aFields as $sLinkedAttCode)
 					{
