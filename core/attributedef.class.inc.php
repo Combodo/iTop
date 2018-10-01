@@ -3173,7 +3173,7 @@ class AttributeClass extends AttributeString
  */
 class AttributeClassState extends AttributeString
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
 	static public function ListExpectedParams()
 	{
@@ -3192,7 +3192,7 @@ class AttributeClassState extends AttributeString
 			$aValues = MetaModel::EnumStates($sClass);
 			foreach(array_keys($aValues) as $sState)
 			{
-				$aAllowedStates[$sState] = MetaModel::GetStateLabel($sClass, $sState);
+				$aAllowedStates[$sState] = $sState.' ('.MetaModel::GetStateLabel($sClass, $sState).')';
 			}
 			return $aAllowedStates;
 		}
@@ -3212,7 +3212,8 @@ class AttributeClassState extends AttributeString
 			$sTargetClass = $this->Get('class_field');
 			$sClass = $oHostObject->Get($sTargetClass);
 
-			return MetaModel::GetStateLabel($sClass, $sValue);
+			$sHTML = '<span class="attribute-set-item" data-code="'.$sValue.'" data-label="'.$sValue.' ('.MetaModel::GetStateLabel($sClass, $sValue).')'.'" data-description="">'.$sValue.'</span>';
+			return $sHTML;
 		}
 
 		return $sValue;
@@ -9027,6 +9028,8 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 
 class AttributeClassAttCodeSet extends AttributeSet
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+
 	public function __construct($sCode, array $aParams)
 	{
 		parent::__construct($sCode, $aParams);
@@ -9074,7 +9077,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					if (isset($aAllowedDefs[get_class($oAttDef)]))
 					{
-						$aAllowedAttributes[$sAttCode] = MetaModel::GetLabel($sClass, $sAttCode);
+						$aAllowedAttributes[$sAttCode] = $sAttCode.' ('.MetaModel::GetLabel($sClass, $sAttCode).')';
 					}
 				}
 			}
@@ -9082,7 +9085,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 			{
 				foreach($aAllAttributes as $sAttCode)
 				{
-					$aAllowedAttributes[$sAttCode] = MetaModel::GetLabel($sClass, $sAttCode);
+					$aAllowedAttributes[$sAttCode] = $sAttCode.' ('.MetaModel::GetLabel($sClass, $sAttCode).')';
 				}
 			}
 			return $aAllowedAttributes;
@@ -9178,7 +9181,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 				{
 					try
 					{
-						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sAttCode.'" data-description="">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>';
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.MetaModel::GetLabel($sClass, $sAttCode)." ($sAttCode)".'" data-description="">'.$sAttCode.'</span>';
 					} catch (Exception $e)
 					{
 						// Ignore bad values
@@ -9194,6 +9197,8 @@ class AttributeClassAttCodeSet extends AttributeSet
 
 class AttributeQueryAttCodeSet extends AttributeSet
 {
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+
 	public function __construct($sCode, array $aParams)
 	{
 		parent::__construct($sCode, $aParams);
@@ -9250,7 +9255,17 @@ class AttributeQueryAttCodeSet extends AttributeSet
 
 			$aAllowedAttributes = array();
 			$aAllAttributes = array();
-			if (is_array($aClasses))
+
+			if ((count($aClasses) == 1) && (array_keys($aClasses)[0] == array_values($aClasses)[0]))
+			{
+				$sClass = reset($aClasses);
+				$aAttributes = MetaModel::GetAttributesList($sClass);
+				foreach($aAttributes as $sAttCode)
+				{
+					$aAllowedAttributes[$sAttCode] = "$sAttCode (".MetaModel::GetLabel($sClass, $sAttCode).')';
+				}
+			}
+			else
 			{
 				if (!empty($aClasses))
 				{
@@ -9268,17 +9283,8 @@ class AttributeQueryAttCodeSet extends AttributeSet
 				{
 					$sAttCode = $aFullAttCode['alias'].'.'.$aFullAttCode['att_code'];
 					$sClass = $aFullAttCode['class'];
-					$sLabel = $aFullAttCode['alias'].'.'.MetaModel::GetLabel($sClass, $aFullAttCode['att_code']);
+					$sLabel = "$sAttCode (".MetaModel::GetLabel($sClass, $aFullAttCode['att_code']).')';
 					$aAllowedAttributes[$sAttCode] = $sLabel;
-				}
-			}
-			else
-			{
-				$sClass = "$aClasses";
-				$aAttributes = MetaModel::GetAttributesList($sClass);
-				foreach($aAttributes as $sAttCode)
-				{
-					$aAllowedAttributes[$sAttCode] = MetaModel::GetLabel($sClass, $sAttCode);
 				}
 			}
 			return $aAllowedAttributes;
@@ -9369,7 +9375,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 				{
 					if (isset($aAllowedAttributes[$sAttCode]))
 					{
-						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$aAllowedAttributes[$sAttCode]." ($sAttCode)".'" data-description="">'.$aAllowedAttributes[$sAttCode].'</span>';
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$aAllowedAttributes[$sAttCode].'" data-description="">'.$sAttCode.'</span>';
 					}
 				}
 				$value = $aLocalizedValues;
