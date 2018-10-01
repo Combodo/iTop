@@ -263,28 +263,30 @@ EOF
 	    $this->add_ready_script(
 <<<EOF
 	$('.attribute-set-item').each(function(){
-		var sLabel = $('<div/>').text($(this).attr('data-label')).html();
+		// Encoding only title as the content is already sanitized by the HTML attribute.
+        var sLabel = $('<div/>').text($(this).attr('data-label')).html();
 		var sDescription = $(this).attr('data-description');
+		
+		var oContent = {};
 		
 		// Make nice tooltip if item has a description, otherwise just make a title attribute so the truncated label can be read.
 		if(sDescription !== '')
 		{
-		    $(this).qtip({
-		       content: {
-		         // Encoding only title as the content is already sanitized by the HTML attribute.
-		         text: sDescription,
-		         title: { text: sLabel},
-		       },
-		       show: { delay: 300, when: 'mouseover' },
-		       hide: { delay: 140, when: 'mouseout', fixed: true },
-		       style: { name: 'dark', tip: 'bottomLeft' },
-		       position: { corner: { target: 'topMiddle', tooltip: 'bottomLeft' }}
-		    });
+			oContent.title = { text: sLabel };
+			oContent.text = sDescription;
 	    }
 	    else
 	    {
-	    	$(this).attr('title', sLabel);
+	    	oContent.text = sLabel;
 	    }
+	    
+	    $(this).qtip({
+	       content: oContent,
+	       show: { delay: 300, when: 'mouseover' },
+	       hide: { delay: 140, when: 'mouseout', fixed: true },
+	       style: { name: 'dark', tip: 'bottomLeft' },
+	       position: { corner: { target: 'topMiddle', tooltip: 'bottomLeft' }}
+	    });
 	});
 EOF
 	    );
