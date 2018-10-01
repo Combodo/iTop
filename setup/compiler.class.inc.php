@@ -1411,7 +1411,18 @@ EOF
 					$aParameters['depends_on'] = $sDependencies;
 					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
 					$aParameters['class_field'] = $this->GetMandatoryPropString($oField, 'class_field');
+					// List of AttributeDefinition Classes to filter class_field (empty means all)
 					$aParameters['attribute_definition_list'] = $this->GetPropString($oField, 'attribute_definition_list', '');
+				}
+				elseif ($sAttType == 'AttributeQueryAttCodeSet')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+					$aParameters['query_field'] = $this->GetMandatoryPropString($oField, 'query_field');
 				}
 				elseif ($sAttType == 'AttributeClassState')
 				{
