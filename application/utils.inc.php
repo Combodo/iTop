@@ -1970,4 +1970,14 @@ class utils
 		$aHugeClasses = MetaModel::GetConfig()->Get('high_cardinality_classes');
 		return in_array($sClass, $aHugeClasses);
 	}
+
+	/**
+	 * Check if iTop is in a development environment (VCS vs build number)
+	 *
+	 * @return bool
+	 */
+	public static function IsDevelopmentEnvironment()
+	{
+		return ITOP_REVISION  === 'svn';
+	}
 }

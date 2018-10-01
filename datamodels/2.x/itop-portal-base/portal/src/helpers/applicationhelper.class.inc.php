@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Twig_Environment;
 use Twig_SimpleFilter;
+use Twig_SimpleFunction;
 use UserRights;
 use utils;
 
@@ -268,6 +269,13 @@ class ApplicationHelper
 			}
 
 			return $sUrl;
+		}));
+
+		// Function to check our current environment
+		// Usage in twig :   {% if is_development_environment() %}
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('is_development_environment', function()
+		{
+			return utils::IsDevelopmentEnvironment();
 		}));
 	}
 
