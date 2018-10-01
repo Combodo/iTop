@@ -174,10 +174,18 @@ class WizardHelper
 					}
 					$oObj->Set($sAttCode, $value);
 				}
-				else if ($oAttDef instanceof AttributeSet) // AttributeDate is derived from AttributeDateTime
+				else if ($oAttDef instanceof AttributeTagSet) // AttributeDate is derived from AttributeDateTime
 				{
 					$value = json_decode($value, true);
 					$oTagSet = new ormTagSet(get_class($oObj), $sAttCode);
+					$oTagSet->SetValues($value['orig_value']);
+					$oTagSet->ApplyDelta($value);
+					$oObj->Set($sAttCode, $oTagSet);
+				}
+				else if ($oAttDef instanceof AttributeSet) // AttributeDate is derived from AttributeDateTime
+				{
+					$value = json_decode($value, true);
+					$oTagSet = new ormSet(get_class($oObj), $sAttCode);
 					$oTagSet->SetValues($value['orig_value']);
 					$oTagSet->ApplyDelta($value);
 					$oObj->Set($sAttCode, $oTagSet);
