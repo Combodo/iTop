@@ -1,9 +1,11 @@
 
-conf/*
-env-*/*
+/toolkit/
+/conf/*
+/env-*/*
 
 # composer reserver directory, from sources, populate/update using "composer install"
 vendor/*
+test/vendor/*
 
 # all datas but listing prevention
 data/*
@@ -118,4 +120,3 @@ local.properties
 .cache-main
 .scala_dependencies
 .worksheet
-
