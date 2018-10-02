@@ -2494,7 +2494,7 @@ EOF
 						else
 						{
 							$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
-							if (count($aAllowedValues) == 1)
+							if (is_array($aAllowedValues) && count($aAllowedValues) == 1)
 							{
 								$aValues = array_keys($aAllowedValues);
 								$this->Set($sAttCode, $aValues[0]);
