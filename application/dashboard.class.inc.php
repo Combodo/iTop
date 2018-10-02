@@ -100,10 +100,10 @@ abstract class Dashboard
 			$oCellsList = $oCellsNode->getElementsByTagName('cell');
 			$aCellOrder = array();
 			$iCellRank = 0;
+			/** @var \DOMElement $oCellNode */
 			foreach($oCellsList as $oCellNode)
 			{
-				$aDashletList = array();
-				$oCellRank =  $oCellNode->getElementsByTagName('rank')->item(0);
+				$oCellRank = $oCellNode->getElementsByTagName('rank')->item(0);
 				if ($oCellRank)
 				{
 					$iCellRank = (float)$oCellRank->textContent;
@@ -113,6 +113,7 @@ abstract class Dashboard
 					$oDashletList = $oDashletsNode->getElementsByTagName('dashlet');
 					$iRank = 0;
 					$aDashletOrder = array();
+					/** @var \DOMElement $oDomNode */
 					foreach($oDashletList as $oDomNode)
 					{
 						$oRank =  $oDomNode->getElementsByTagName('rank')->item(0);
@@ -145,6 +146,11 @@ abstract class Dashboard
 		}
 	}
 
+	/**
+	 * @param \DOMElement $oDomNode
+	 *
+	 * @return mixed
+	 */
 	protected function InitDashletFromDOMNode($oDomNode)
     {
         $sId = $oDomNode->getAttribute('id');
@@ -152,7 +158,8 @@ abstract class Dashboard
 
         // Test if dashlet can be instanciated, otherwise (uninstalled, broken, ...) we display a placeholder
 	    $sClass = static::GetDashletClassFromType($sDashletType);
-        $oNewDashlet = new $sClass($this->oMetaModel, $sId);
+	    /** @var \Dashlet $oNewDashlet */
+	    $oNewDashlet = new $sClass($this->oMetaModel, $sId);
         $oNewDashlet->SetDashletType($sDashletType);
         $oNewDashlet->FromDOMNode($oDomNode);
 
@@ -163,8 +170,17 @@ abstract class Dashboard
 	{
 		return ($aItem1['rank'] > $aItem2['rank']) ? +1 : -1;
 	}
+
 	/**
 	 * Error handler to turn XML loading warnings into exceptions
+	 *
+	 * @param $errno
+	 * @param $errstr
+	 * @param $errfile
+	 * @param $errline
+	 *
+	 * @return bool
+	 * @throws \DOMException
 	 */
 	public static function ErrorHandler($errno, $errstr, $errfile, $errline)
 	{
@@ -194,8 +210,12 @@ abstract class Dashboard
 		return $sXml;
 	}
 
+	/**
+	 * @param \DOMElement $oDefinition
+	 */
 	public function ToDOMNode($oDefinition)
 	{
+		/** @var \DOMDocument $oDoc */
 		$oDoc = $oDefinition->ownerDocument;
 
 		$oNode = $oDoc->createElement('layout', $this->sLayoutClass);
@@ -227,6 +247,7 @@ abstract class Dashboard
 			$iDashletRank = 0;
 			$oDashletsNode = $oDoc->createElement('dashlets');
 			$oCellNode->appendChild($oDashletsNode);
+			/** @var \Dashlet $oDashlet */
 			foreach ($aCell as $oDashlet)
 			{
 				$oNode = $oDoc->createElement('dashlet');
@@ -256,6 +277,7 @@ abstract class Dashboard
 			{
 				$sDashletClass = $aDashletParams['dashlet_class'];
 				$sId = $aDashletParams['dashlet_id'];
+				/** @var \Dashlet $oNewDashlet */
 				$oNewDashlet = new $sDashletClass($this->oMetaModel, $sId);
 				if (isset($aDashletParams['dashlet_type']))
 				{
@@ -318,17 +340,26 @@ abstract class Dashboard
 		$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int)$iAutoReloadSec);
 	}
 
+	/**
+	 * @param \Dashlet $oDashlet
+	 */
 	public function AddDashlet($oDashlet)
 	{
 		$sId = $this->GetNewDashletId();
 		$oDashlet->SetId($sId);
 		$this->aCells[] = array($oDashlet);
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param array $aExtraParams
+	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$oPage->add('<h1>'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</h1>');
 		$oLayout = new $this->sLayoutClass;
+		/** @var \DashboardLayoutMultiCol $oLayout */
 		$oLayout->Render($oPage, $this->aCells, $bEditMode, $aExtraParams);
 		if (!$bEditMode)
 		{
@@ -336,7 +367,12 @@ abstract class Dashboard
 			$oPage->add_linked_script('../js/dashboard.js');
 		}
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \ReflectionException
+	 */
 	public function RenderProperties($oPage)
 	{
 		// menu to pick a layout and edit other properties of the dashboard
@@ -423,7 +459,7 @@ EOF
 		);
 	}
 	
-	public function RenderDashletsSelection($oPage)
+	public function RenderDashletsSelection(WebPage $oPage)
 	{
 		// Toolbox/palette to drag and drop dashlets
 		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:Dashlets').'</div>');
@@ -441,7 +477,7 @@ EOF
 		$oPage->add_ready_script("$('.dashlet_icon').draggable({helper: 'clone', appendTo: 'body', zIndex: 10000, revert:'invalid'});");
 	}
 	
-	public function RenderDashletsProperties($oPage)
+	public function RenderDashletsProperties(WebPage $oPage)
 	{
 		// Toolbox/palette to edit the properties of each dashlet
 		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:DashletProperties').'</div>');
@@ -449,10 +485,10 @@ EOF
 		$oPage->add('<div id="dashlet_properties" style="text-align:center">');
 		foreach($this->aCells as $aCell)
 		{
+			/** @var \Dashlet $oDashlet */
 			foreach($aCell as $oDashlet)
 			{
 				$sId = $oDashlet->GetID();
-				$sClass = get_class($oDashlet);
 				if ($oDashlet->IsVisible())
 				{
 					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
@@ -505,6 +541,7 @@ EOF
 		$iNewId = 0;
 		foreach($this->aCells as $aDashlets)
 		{
+			/** @var \Dashlet $oDashlet */
 			foreach($aDashlets as $oDashlet)
 			{
 				$iNewId = max($iNewId, (int)$oDashlet->GetID());
@@ -540,7 +577,12 @@ class RuntimeDashboard extends Dashboard
 	{
 		$this->bCustomized = $bCustomized;
 	}
-	
+
+	/**
+	 * @param \DesignerForm $oForm
+	 *
+	 * @throws \Exception
+	 */
 	protected function SetFormParams($oForm)
 	{
 		$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));		
@@ -588,7 +630,7 @@ class RuntimeDashboard extends Dashboard
 		}
 	}
 	
-	public function RenderEditionTools($oPage)
+	public function RenderEditionTools(WebPage $oPage)
 	{
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
@@ -643,6 +685,11 @@ EOF
 		);
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \ReflectionException
+	 */
 	public function RenderProperties($oPage)
 	{
 		parent::RenderProperties($oPage);
@@ -676,6 +723,11 @@ EOF
 	}
 
 
+	/**
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \ReflectionException
+	 */
 	public function RenderEditor($oPage)
 	{
 		$oPage->add('<div id="dashboard_editor">');
@@ -835,7 +887,8 @@ EOF
                     $sParentId = $aParentMenu['parent'];
                     $aParentMenu = $aParentMenus[$sParentId];
                 }
-                $oParentMenu = $aParentMenu['node'];
+	            /** @var \MenuNode $oParentMenu */
+	            $oParentMenu = $aParentMenu['node'];
                 if ($oMenu->IsEnabled() && $oParentMenu->IsEnabled())
                 {
                     $sMenuLabel = $oMenu->GetTitle();
@@ -890,6 +943,7 @@ EOF
 		{
 			$oSubForm = new DesignerForm();
 			$oMetaModel = new ModelReflectionRuntime();
+			/** @var \Dashlet $oDashlet */
 			$oDashlet = new $sDashletClass($oMetaModel, 0);
 			$oDashlet->GetPropertiesFieldsFromOQL($oSubForm, $sOQL);
 			
@@ -900,7 +954,11 @@ EOF
 		
 		return $oForm;
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param $sOQL
+	 */
 	public static function GetDashletCreationDlgFromOQL($oPage, $sOQL)
 	{
 		$oPage->add('<div id="dashlet_creation_dlg">');
