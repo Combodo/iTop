@@ -60,7 +60,7 @@ class ormTagSetTest extends ItopDataTestCase
 	public function testGetTagDataClass()
 	{
 		$oTagSet = new ormTagSet(TAG_CLASS, TAG_ATTCODE, MAX_TAGS);
-		static::assertEquals($oTagSet->GetTagDataClass(), 'TagSetFieldDataFor_Ticket__tagfield');
+		static::assertEquals($oTagSet->GetTagDataClass(), 'TagSetFieldDataFor_'.TAG_CLASS.'__'.TAG_ATTCODE);
 	}
 
 	public function testGetValue()

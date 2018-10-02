@@ -41,18 +41,18 @@ class DBSearchCommitTest extends ItopDataTestCase
 		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'UNIT First');
 		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag2', 'UNIT Second');
 		//Use it
-		$oTicket = $this->CreateTicket(1);
-		$oTicket->Set(TAG_ATTCODE, 'tag1');
-		$oTicket->DBWrite();
+		$oObjWithTagSet = $this->CreateObjectWithTagSet();
+		$oObjWithTagSet->Set(TAG_ATTCODE, 'tag1');
+		$oObjWithTagSet->DBWrite();
 
-		$oSearch = DBSearch::FromOQL("SELECT UserRequest");
+		$oSearch = DBSearch::FromOQL("SELECT ".TAG_CLASS);
 		$oSearch->AddCondition(TAG_ATTCODE, 'tag1', 'MATCHES');
 		$oSet = new \DBObjectSet($oSearch);
 		static::assertEquals(1, $oSet->Count());
 
 
-		$oTicket->Set(TAG_ATTCODE, 'tag1 tag2');
-		$oTicket->DBWrite();
+		$oObjWithTagSet->Set(TAG_ATTCODE, 'tag1 tag2');
+		$oObjWithTagSet->DBWrite();
 
 		$oSet = new \DBObjectSet($oSearch);
 		static::assertEquals(1, $oSet->Count());
@@ -73,18 +73,18 @@ class DBSearchCommitTest extends ItopDataTestCase
 		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'UNIT First');
 		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag2', 'UNIT Second');
 		//Use it
-		$oTicket = $this->CreateTicket(1);
-		$oTicket->Set(TAG_ATTCODE, 'tag1');
-		$oTicket->DBWrite();
+		$oObjWithTagSet = $this->CreateObjectWithTagSet();
+		$oObjWithTagSet->Set(TAG_ATTCODE, 'tag1');
+		$oObjWithTagSet->DBWrite();
 
-		$oSearch = DBSearch::FromOQL("SELECT UserRequest");
+		$oSearch = DBSearch::FromOQL("SELECT ".TAG_CLASS);
 		$oSearch->AddCondition(TAG_ATTCODE, 'tag1');
 		$oSet = new \DBObjectSet($oSearch);
 		static::assertEquals(1, $oSet->Count());
 
 
-		$oTicket->Set(TAG_ATTCODE, 'tag1 tag2');
-		$oTicket->DBWrite();
+		$oObjWithTagSet->Set(TAG_ATTCODE, 'tag1 tag2');
+		$oObjWithTagSet->DBWrite();
 
 		$oSet = new \DBObjectSet($oSearch);
 		static::assertEquals(0, $oSet->Count());

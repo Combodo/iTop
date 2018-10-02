@@ -105,9 +105,9 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		// Create a tag
 		$oTagData = $this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
 		//Use it
-		$oTicket = $this->CreateTicket(1);
-		$oTicket->Set(TAG_ATTCODE, 'tag1');
-		$oTicket->DBWrite();
+		$oObjWithTagSet = $this->CreateObjectWithTagSet();
+		$oObjWithTagSet->Set(TAG_ATTCODE, 'tag1');
+		$oObjWithTagSet->DBWrite();
 
 		// Try to delete the tag, must complain !
 		try
@@ -203,9 +203,9 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		$oTagData->DBWrite();
 
 		//Use it
-		$oTicket = $this->CreateTicket(1);
-		$oTicket->Set(TAG_ATTCODE, 'tag2');
-		$oTicket->DBWrite();
+		$oObjWithTagSet = $this->CreateObjectWithTagSet();
+		$oObjWithTagSet->Set(TAG_ATTCODE, 'tag2');
+		$oObjWithTagSet->DBWrite();
 
 		// Try to change the code of the tag, must complain !
 		try
@@ -264,7 +264,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 			$sTagCode = 'MaxTag'.$i;
 			$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, $sTagCode, $sTagCode);
 		}
-		$oTicket = $this->CreateTicket(1);
+		$oObjWithTagSet = $this->CreateObjectWithTagSet();
 		$this->debug("Max number of tags is $iMaxTags");
 		$sValue = '';
 		for ($i = 0; $i < ($iMaxTags + 1); $i++)
@@ -273,8 +273,8 @@ class TagSetFieldDataTest extends ItopDataTestCase
 			{
 				$sTagCode = 'MaxTag'.$i;
 				$sValue .= "$sTagCode ";
-				$oTicket->Set(TAG_ATTCODE, $sValue);
-				$oTicket->DBWrite();
+				$oObjWithTagSet->Set(TAG_ATTCODE, $sValue);
+				$oObjWithTagSet->DBWrite();
 			} catch (\Exception $e)
 			{
 				// Should fail on the last iteration

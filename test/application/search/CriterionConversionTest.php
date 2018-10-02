@@ -459,28 +459,28 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedCriterion' => array(array('widget' => 'raw')),
 			),
 			'TagSet Matches' => array(
-				'OQL' => "SELECT UserRequest WHERE tagfield MATCHES 'tag1'",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE `UserRequest`.`tagfield` MATCHES 'tag1'",
+				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." MATCHES 'tag1'",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1'",
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 			'TagSet Matches2' => array(
-				'OQL' => "SELECT UserRequest WHERE tagfield MATCHES 'tag1 tag2'",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE `UserRequest`.`tagfield` MATCHES 'tag1 tag2'",
+				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." MATCHES 'tag1 tag2'",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1 tag2'",
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 			'TagSet Undefined' => array(
-				'OQL' => "SELECT UserRequest WHERE tagfield = ''",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`tagfield` = '')",
+				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." = ''",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE (`".TAG_CLASS."`.`".TAG_ATTCODE."` = '')",
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 			'TagSet Undefined and tag' => array(
-				'OQL' => "SELECT UserRequest WHERE (((tagfield MATCHES 'tag1 tag2') OR (tagfield = '')) AND 1)",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE ((`UserRequest`.`tagfield` MATCHES 'tag1 tag2' OR (`UserRequest`.`tagfield` = '')) AND 1)",
+				'OQL' => "SELECT ".TAG_CLASS." WHERE (((".TAG_ATTCODE." MATCHES 'tag1 tag2') OR (".TAG_ATTCODE." = '')) AND 1)",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE ((`".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1 tag2' OR (`".TAG_CLASS."`.`".TAG_ATTCODE."` = '')) AND 1)",
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 			'TagSet equals' => array(
-				'OQL' => "SELECT UserRequest WHERE tagfield = 'tag1 tag2'",
-				'ExpectedOQL' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`tagfield` MATCHES 'tag1' AND `UserRequest`.`tagfield` MATCHES 'tag2')",
+				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." = 'tag1 tag2'",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE (`".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1' AND `".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag2')",
 				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
 			),
 
