@@ -278,6 +278,19 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		return false;
 	}
 
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+		if ($sAttCode == 'code')
+		{
+			if ((!$this->IsNew()) && ($this->IsCodeUsed($this->Get('code'))))
+			{
+				return OPT_ATT_READONLY;
+			}
+		}
+
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+
 	/**
 	 * Display Tag Usage
 	 *
@@ -299,34 +312,29 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			$sClass = $this->Get('obj_class');
 			$sAttCode = $this->Get('obj_attcode');
 			$sTagCode = $this->Get('code');
+
+
 			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
 			$oSet = new DBObjectSet($oFilter);
 			$iCount = $oSet->Count();
 			$oPage->SetCurrentTab(Dict::Format('Core:TagSetFieldData:WhereIsThisTagTab', $iCount));
+
 			if ($iCount === 0)
 			{
 				$sNoEntries = Dict::S('Core:TagSetFieldData:NoEntryFound');
 				$oPage->add("<p>$sNoEntries</p>");
-			}
-			else
-			{
-				$aClassLabels = array();
-				foreach(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sCurrentClass)
-				{
-					$aClassLabels[$sCurrentClass] = MetaModel::GetName($sCurrentClass);
-				}
 
-				foreach($aClassLabels as $sClass => $sClassLabel)
-				{
-					$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
-					$oSet = new DBObjectSet($oFilter);
-					if ($oSet->CountExceeds(0))
-					{
-						$oPage->add("<h2>$sClassLabel</h2>");
-						$oResultBlock = new DisplayBlock($oFilter, 'list', false);
-						$oResultBlock->Display($oPage, 1);
-					}
-				}
+				return;
+			}
+
+			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sTagCode'");
+			$oSet = new DBObjectSet($oFilter);
+			if ($oSet->CountExceeds(0))
+			{
+				$sClassLabel = MetaModel::GetName($sClass);
+				$oPage->add("<h2>$sClassLabel</h2>");
+				$oResultBlock = new DisplayBlock($oFilter, 'list', false);
+				$oResultBlock->Display($oPage, 1);
 			}
 		}
 	}
