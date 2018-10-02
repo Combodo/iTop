@@ -169,6 +169,11 @@ class TagSetFieldDataTest extends ItopDataTestCase
 			'At least 3 chars 2' => array('ab'),
 			'No #' => array('#tag'),
 			'No !' => array('tag!'),
+			'Stop Word 1' => array('about'),
+			'Stop Word 2' => array('from'),
+			'Stop Word 3' => array('that'),
+			'Stop Word 4' => array('where'),
+			'Stop Word 5' => array('who'),
 		);
 	}
 
