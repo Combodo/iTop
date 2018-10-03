@@ -1409,6 +1409,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class',
+	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria',
 	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used',
