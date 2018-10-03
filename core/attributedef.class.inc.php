@@ -9925,7 +9925,7 @@ class AttributeTagSet extends AttributeSet
 			{
 				$aValues = $value->GetValues();
 			}
-			if (!empty($aValuess))
+			if (!empty($aValues))
 			{
 				$sRes .= '<Tag>'.implode('</Tag><Tag>', $aValues).'</Tag>';
 			}
