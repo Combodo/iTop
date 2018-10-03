@@ -2590,6 +2590,28 @@ a.summary,  a.summary:hover {
     text-align: center;
 }
 
+.dashboard-title {
+	display: block;
+	float: left;
+
+	color: $text-color;
+	font-weight: bold;
+	font-size: 1.2em;
+
+	margin: 10px;
+}
+
+.dashboard_contents {
+	width: 100%;
+}
+
+#DashboardMenu {
+	display: block;
+	float: right;
+	font-size: 12px;
+	margin: 10px;
+}
+
 #DashboardMenu > ul > li {
 	list-style: none;
 	vertical-align: middle;

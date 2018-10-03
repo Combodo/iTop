@@ -926,6 +926,7 @@ try
 			$sId = utils::ReadParam('id', '', false, 'raw_data');
 			ApplicationMenu::LoadAdditionalMenus();
 			$idx = ApplicationMenu::GetMenuIndexById($sId);
+			/** @var \DashboardMenuNode $oMenu */
 			$oMenu = ApplicationMenu::GetMenuNode($idx);
 			$oMenu->RenderEditor($oPage);
 			break;
@@ -1419,7 +1420,7 @@ EOF
 			$oPage->SetContentType('text/html');
 			$id = (int)utils::ReadParam('id', 0);
 			$iStart = (int)utils::ReadParam('start', 0);
-			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length', '50'));
+			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
 			$oObj = MetaModel::GetObject($sClass, $id);
 			$oObj->DisplayBareHistory($oPage, false, $iCount, $iStart);
 			$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
@@ -1429,7 +1430,7 @@ EOF
 			$oPage->SetContentType('text/html');
 			$oHistoryFilter = DBSearch::unserialize($sFilter);
 			$iStart = (int)utils::ReadParam('start', 0);
-			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length', '50'));
+			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
 			$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
 			$oBlock->SetLimit($iCount, $iStart);
 			$oBlock->Display($oPage, 'history');
@@ -1914,7 +1915,7 @@ EOF
 				}
 			}
 
-			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth');
 			if ($sDirection == 'up')
 			{
 				$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aContexts);
@@ -2084,7 +2085,7 @@ EOF
 			}
 
 			// Compute the graph
-			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth');
 			if ($sDirection == 'up')
 			{
 				$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aContexts);
@@ -2189,7 +2190,7 @@ EOF
 			}
 
 			// Compute the graph
-			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth');
 			if ($sDirection == 'up')
 			{
 				$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);

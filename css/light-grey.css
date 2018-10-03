@@ -2241,6 +2241,23 @@ a.summary, a.summary:hover {
   padding: 5px;
   text-align: center;
 }
+.dashboard-title {
+  display: block;
+  float: left;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin: 10px;
+}
+.dashboard_contents {
+  width: 100%;
+}
+#DashboardMenu {
+  display: block;
+  float: right;
+  font-size: 12px;
+  margin: 10px;
+}
 #DashboardMenu > ul > li {
   list-style: none;
   vertical-align: middle;

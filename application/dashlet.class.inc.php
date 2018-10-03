@@ -94,6 +94,9 @@ abstract class Dashlet
 	{
 	}
 
+	/**
+	 * @param \DOMElement $oDOMNode
+	 */
 	public function FromDOMNode($oDOMNode)
 	{
 		foreach ($this->aProperties as $sProperty => $value)
@@ -107,6 +110,9 @@ abstract class Dashlet
 		$this->OnUpdate();
 	}
 
+	/**
+	 * @param \DOMElement $oDOMNode
+	 */
 	public function ToDOMNode($oDOMNode)
 	{
 		foreach ($this->aProperties as $sProperty => $value)
@@ -124,6 +130,11 @@ abstract class Dashlet
 		return $res;
 	}
 
+	/**
+	 * @param \DOMElement $oDOMNode
+	 * @param $sProperty
+	 * @param $value
+	 */
 	protected function PropertyToDOMNode($oDOMNode, $sProperty, $value)
 	{
 		$sXmlValue = $this->Prop2Str($value);
@@ -157,6 +168,12 @@ abstract class Dashlet
 		$this->OnUpdate();
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param bool $bEnclosingDiv
+	 * @param array $aExtraParams
+	 */
 	public function DoRender($oPage, $bEditMode = false, $bEnclosingDiv = true, $aExtraParams = array())
 	{
 		$sCSSClasses = implode(' ', $this->aCSSClasses);
@@ -242,9 +259,22 @@ EOF
 		return $this->sId;
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param array $aExtraParams
+	 *
+	 * @return mixed
+	 */
 	abstract public function Render($oPage, $bEditMode = false, $aExtraParams = array());
 
-	/* Rendering without the real data */
+	/**
+	 * Rendering without the real data
+	 *
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param array $aExtraParams
+	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$this->Render($oPage, $bEditMode, $aExtraParams);
@@ -458,6 +488,13 @@ class DashletUnknown extends Dashlet
         $this->OnUpdate();
     }
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param array $aExtraParams
+	 *
+	 * @throws \Exception
+	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$aInfos = static::GetInfo();
@@ -473,6 +510,13 @@ class DashletUnknown extends Dashlet
 		$oPage->add('</div>');
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param array $aExtraParams
+	 *
+	 * @throws \Exception
+	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$aInfos = static::GetInfo();
@@ -615,6 +659,11 @@ class DashletEmptyCell extends Dashlet
 		parent::__construct($oModelReflection, $sId);
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param array $aExtraParams
+	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$oPage->add('&nbsp;');
@@ -647,6 +696,11 @@ class DashletPlainText extends Dashlet
 		$this->aProperties['text'] = Dict::S('UI:DashletPlainText:Prop-Text:Default');
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param array $aExtraParams
+	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sText = htmlentities($this->aProperties['text'], ENT_QUOTES, 'UTF-8');
@@ -920,6 +974,13 @@ abstract class DashletGroupBy extends Dashlet
 		}
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param array $aExtraParams
+	 *
+	 * @throws \OQLException
+	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];

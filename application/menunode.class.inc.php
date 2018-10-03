@@ -84,7 +84,8 @@ class ApplicationMenu
 		{
 			// Build menus from module handlers
 			//
-            foreach(MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass)
+			/** @var \ModuleHandlerApiInterface $oPHPClass */
+			foreach(MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass)
             {
                 $oPHPClass::OnMenuCreation();
             }
@@ -121,9 +122,11 @@ class ApplicationMenu
 	}
 
 	/**
-	 * Check wether a menu Id is enabled or not
+	 * Check whether a menu Id is enabled or not
+	 *
 	 * @param $sMenuId
-	 * @throws DictExceptionMissingString
+	 *
+	 * @throws \Exception
 	 */
 	static public function CheckMenuIdEnabled($sMenuId)
 	{
@@ -163,7 +166,9 @@ class ApplicationMenu
 			}
 			else
 			{
-				$sParentId = self::$aMenusIndex[$iParentIndex]['node']->GetMenuId();
+				/** @var \MenuNode $oNode */
+				$oNode = self::$aMenusIndex[$iParentIndex]['node'];
+				$sParentId = $oNode->GetMenuId();
 				self::$aMenusIndex[$iParentIndex]['children'][] = array ('rank' => $fRank, 'index' => $index);
 			}
 
@@ -177,7 +182,9 @@ class ApplicationMenu
 		else
 		{
 			// the menu already exists, let's combine the conditions that make it visible
-			self::$aMenusIndex[$index]['node']->AddCondition($oMenuNode);
+			/** @var \MenuNode $oNode */
+			$oNode = self::$aMenusIndex[$index]['node'];
+			$oNode->AddCondition($oMenuNode);
 		}
 
 		return $index;
@@ -194,7 +201,7 @@ class ApplicationMenu
 
 	/**
 	 * Entry point to display the whole menu into the web page, used by iTopWebPage
-	 * @param $oPage
+	 * @param \iTopWebPage $oPage
 	 * @param $aExtraParams
 	 * @throws DictExceptionMissingString
 	 */
@@ -260,7 +267,7 @@ EOF
 
 	/**
 	 * Handles the display of the sub-menus (called recursively if necessary)
-	 * @param WebPage $oPage
+	 * @param \iTopWebPage $oPage
 	 * @param array $aMenus
 	 * @param array $aExtraParams
 	 * @param int $iActiveMenu
@@ -352,6 +359,7 @@ EOF
 	static public function GetMenuIndexById($sTitle)
 	{
 		$index = -1;
+		/** @var MenuNode[] $aMenu */
 		foreach(self::$aMenusIndex as $aMenu)
 		{
 			if ($aMenu['node']->GetMenuId() == $sTitle)
@@ -833,7 +841,7 @@ class OQLMenuNode extends MenuNode
 	
 	/**
 	 * Set some extra parameters to be passed to the display block to fine tune its appearence
-	 * @param Hash $aParams paramCode => value. See DisplayBlock::GetDisplay for the meaning of the parameters
+	 * @param array $aParams paramCode => value. See DisplayBlock::GetDisplay for the meaning of the parameters
 	 */
 	public function SetParameters($aParams)
 	{
@@ -946,7 +954,7 @@ class SearchMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param WebPage $oPage
+	 * @param \iTopWebPage $oPage
 	 * @param array $aExtraParams
 	 * @return mixed|void
 	 * @throws DictExceptionMissingString
@@ -1050,7 +1058,9 @@ class NewObjectMenuNode extends MenuNode
 
 	/**
 	 * @param string[] $aExtraParams
+	 *
 	 * @return string
+	 * @throws \Exception
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
@@ -1169,7 +1179,7 @@ class DashboardMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param WebPage $oPage
+	 * @param \iTopWebPage $oPage
 	 * @param string[] $aExtraParams
 	 * @throws CoreException
 	 * @throws Exception

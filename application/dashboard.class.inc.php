@@ -21,6 +21,7 @@ require_once(APPROOT.'application/dashlet.class.inc.php');
 require_once(APPROOT.'core/modelreflection.class.inc.php');
 
 /**
+ *
  * A user editable dashboard page
  *
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
@@ -357,7 +358,7 @@ abstract class Dashboard
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oPage->add('<h1>'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</h1>');
+		$oPage->add('<div class="dashboard-title">'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</div>');
 		$oLayout = new $this->sLayoutClass;
 		/** @var \DashboardLayoutMultiCol $oLayout */
 		$oLayout->Render($oPage, $this->aCells, $bEditMode, $aExtraParams);
@@ -634,7 +635,7 @@ class RuntimeDashboard extends Dashboard
 	{
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
-		$sEditMenu = "<td><span id=\"DashboardMenu\"><ul><li><img src=\"../images/pencil-menu.png\"><ul>";
+		$sEditMenu = "<div id=\"DashboardMenu\"><ul><li><img src=\"../images/pencil-menu.png\"><ul>";
 	
 		$aActions = array();
 		$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}')");
@@ -651,10 +652,10 @@ class RuntimeDashboard extends Dashboard
 				
 
 		$sEditMenu = addslashes($sEditMenu);
-		//$sEditBtn = addslashes('<div style="display: inline-block; height: 55px; width:200px;vertical-align:center;line-height:60px;text-align:left;"><button onclick="EditDashboard(\''.$this->sId.'\');">Edit This Page</button></div>');
+
 		$oPage->add_ready_script(
 <<<EOF
-	$('#logOffBtn').parent().before('$sEditMenu');
+	$('.dashboard-title').after('$sEditMenu');
 	$('#DashboardMenu>ul').popupmenu();
 	
 EOF
@@ -727,6 +728,7 @@ EOF
 	 * @param \WebPage $oPage
 	 *
 	 * @throws \ReflectionException
+	 * @throws \Exception
 	 */
 	public function RenderEditor($oPage)
 	{
