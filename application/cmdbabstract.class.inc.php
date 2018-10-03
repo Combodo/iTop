@@ -1757,6 +1757,27 @@ EOF
 					$sConfigJS = json_encode($aConfig);
 
 					$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
+
+					$oPage->add_ready_script(
+<<<EOF
+$('#$iId').bind('update', function(evt){
+	BlockField('cke_$iId', $('#$iId').attr('disabled'));
+	//Delayed execution - ckeditor must be properly initialized before setting readonly
+	var retryCount = 0;
+	var oMe = $('#$iId');
+	var delayedSetReadOnly = function () {
+		if (oMe.data('ckeditorInstance').editable() == undefined && retryCount++ < 10) {
+			setTimeout(delayedSetReadOnly, retryCount * 100); //Wait a while longer each iteration
+		}
+		else
+		{
+			oMe.data('ckeditorInstance').setReadOnly(oMe.prop('disabled'));
+		}
+	};
+	setTimeout(delayedSetReadOnly, 50);
+});
+EOF
+					);
 				break;
 
 				case 'HTML':
@@ -3689,7 +3710,7 @@ EOF
 						$currValue = $oObj->Get($sAttCode);
 						if ($oAttDef instanceof AttributeCaseLog)
 						{
-							$currValue = ' '; // Don't put an empty string, in case the field would be considered as mandatory...
+							$currValue = ''; // Put a single scalar value to force caselog to mock a new entry. For more info see N°1059.
 						}
 						if (is_object($currValue)) continue; // Skip non scalar values...
 						if(!array_key_exists($currValue, $aValues[$sAttCode]))
