@@ -879,7 +879,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:BulkExport:XMLOptions' => 'Možnosti XML',
     'Core:BulkExport:SpreadsheetFormat' => 'HTML tabulka (*.html)',
     'Core:BulkExport:SpreadsheetOptions' => 'Možnosti tabulky',
-    'Core:BulkExport:OptionNoLocalize' => 'Nepřekládat hodnoty číselníků',
+	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
     'Core:BulkExport:OptionLinkSets' => 'Zahrnout odkazované objekty',
     'Core:BulkExport:OptionFormattedText' => 'Zachovat formátování textu',
     'Core:BulkExport:ScopeDefinition' => 'Definice objektů k exportu',

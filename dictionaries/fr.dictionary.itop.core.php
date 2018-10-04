@@ -733,7 +733,7 @@ Opérateurs :<br/>
 	'Core:BulkExport:XMLOptions' => 'Options XML',
 	'Core:BulkExport:SpreadsheetFormat' => 'Format HTML pour Excel (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Options du format HTML pour Excel',
-	'Core:BulkExport:OptionNoLocalize' => 'Ne pas traduire les valeurs (pour les champs de type "Enum")',
+	'Core:BulkExport:OptionNoLocalize' => 'Exporter le Code au lieu du Label',
 	'Core:BulkExport:OptionLinkSets' => 'Inclure les objets liés',
 	'Core:BulkExport:OptionFormattedText' => 'Préserver le formatage du texte',
 	'Core:BulkExport:ScopeDefinition' => 'Définition des objets à exporter',

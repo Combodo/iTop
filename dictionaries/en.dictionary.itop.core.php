@@ -895,7 +895,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:BulkExport:XMLOptions' => 'XML Options',
 	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options',
-	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)',
+	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label',
 	'Core:BulkExport:OptionLinkSets' => 'Include linked objects',
 	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export',
