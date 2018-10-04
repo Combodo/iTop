@@ -1149,33 +1149,7 @@ class DashboardMenuNode extends MenuNode
 	 */
 	public function GetDashboard()
 	{
-		$sDashboardDefinition = @file_get_contents($this->sDashboardFile);		
-		if ($sDashboardDefinition !== false)
-		{
-			$bCustomized = false;
-			
-			// Search for an eventual user defined dashboard, overloading the existing one
-			$oUDSearch = new DBObjectSearch('UserDashboard');
-			$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
-			$oUDSearch->AddCondition('menu_code', $this->sMenuId, '=');
-			$oUDSet = new DBObjectSet($oUDSearch);
-			if ($oUDSet->Count() > 0)
-			{
-				// Assuming there is at most one couple {user, menu}!
-				$oUserDashboard = $oUDSet->Fetch();
-				$sDashboardDefinition = $oUserDashboard->Get('contents');
-				$bCustomized = true;
-				
-			}
-			$oDashboard = new RuntimeDashboard($this->sMenuId);
-			$oDashboard->FromXml($sDashboardDefinition);
-			$oDashboard->SetCustomFlag($bCustomized);
-		}
-		else
-		{
-			$oDashboard = null;
-		}
-		return $oDashboard;
+		return RuntimeDashboard::GetDashboard($this->sDashboardFile, $this->sMenuId);
 	}
 
 	/**
@@ -1199,6 +1173,7 @@ class DashboardMenuNode extends MenuNode
 			if ($oDashboard->GetAutoReload())
 			{
 				$sId = $this->sMenuId;
+				$sFile = addslashes($oDashboard->GetDefinitionFile());
 				$sExtraParams = json_encode($aExtraParams);
 				$iReloadInterval = 1000 * $oDashboard->GetAutoReloadInterval();
 				$oPage->add_script(
@@ -1213,7 +1188,7 @@ class DashboardMenuNode extends MenuNode
 						{
 							$('.dashboard_contents#'+sDivId).block();
 							$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-							   { operation: 'reload_dashboard', dashboard_id: '$sId', extra_params: oExtraParams},
+							   { operation: 'reload_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: oExtraParams},
 							   function(data){
 								 $('.dashboard_contents#'+sDivId).html(data);
 								 $('.dashboard_contents#'+sDivId).unblock();

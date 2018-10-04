@@ -1104,19 +1104,22 @@ class utils
 			break;
 
 			case iPopupMenuExtension::MENU_DASHBOARD_ACTIONS:
-			// $param is a Dashboard
-			$oAppContext = new ApplicationContext();
-			$aParams = $oAppContext->GetAsHash();
-			$sMenuId = ApplicationMenu::GetActiveNodeId();
-			$sDlgTitle = addslashes(Dict::S('UI:ImportDashboardTitle'));
-			$sDlgText = addslashes(Dict::S('UI:ImportDashboardText'));
-			$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
-			$aResult = array(
-				new SeparatorPopupMenuItem(),
-				new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sMenuId),
-				new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sMenuId', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })"),
-			);
-			break;
+				// $param is a Dashboard
+				/** @var \RuntimeDashboard $oDashboard */
+				$oDashboard = $param;
+				$sDashboardId = $oDashboard->GetId();
+				$sDashboardFile = $oDashboard->GetDefinitionFile();
+				$sDlgTitle = addslashes(Dict::S('UI:ImportDashboardTitle'));
+				$sDlgText = addslashes(Dict::S('UI:ImportDashboardText'));
+				$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
+				$sDashboardFileJS = addslashes($sDashboardFile);
+				$sDashboardFileURL = urlencode($sDashboardFile);
+				$aResult = array(
+					new SeparatorPopupMenuItem(),
+					new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sDashboardId.'&file='.$sDashboardFileURL),
+					new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sDashboardId', file: '$sDashboardFileJS', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })"),
+				);
+				break;
 
 			default:
 			// Unknown type of menu, do nothing

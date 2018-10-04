@@ -398,6 +398,54 @@ EOF
 		$this->aFieldsMap[$sAttCode] = $sInputId;
 	}
 
+
+	/**
+	 * @param \iTopWebPage $oPage
+	 * @param $bEditMode
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public function DisplayDashboards($oPage, $bEditMode)
+	{
+		if ($bEditMode || $this->IsNew())
+		{
+			return;
+		}
+
+		$aList = $this->FlattenZList(MetaModel::GetZListItems(get_class($this), 'details'));
+		if (count($aList) == 0)
+		{
+			// Empty ZList defined, display all the dashboard attributes defined
+			$aList = array_keys(MetaModel::ListAttributeDefs(get_class($this)));
+		}
+		$sClass = get_class($this);
+		foreach($aList as $sAttCode)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			// Display mode
+			if (!$oAttDef instanceof AttributeDashboard)
+			{
+				continue;
+			} // Process only dashboards attributes...
+
+			$oPage->SetCurrentTab($oAttDef->GetLabel());
+
+			// Load the dashboard
+			$oDashboard = $oAttDef->GetDashboard();
+			if (is_null($oDashboard))
+			{
+				continue;
+			}
+
+			$sDivId = $oDashboard->GetId();
+			$oPage->add('<div class="dashboard_contents" id="'.$sDivId.'">');
+			$oDashboard->Render($oPage, false, array());
+			$oPage->add('</div>');
+			$oDashboard->RenderEditionTools($oPage);
+		}
+	}
+
 	/**
 	 * @param \WebPage $oPage
 	 * @param bool $bEditMode
@@ -857,6 +905,18 @@ EOF
 	}
 
 
+	/**
+	 * @param \iTopWebPage $oPage
+	 * @param bool $bEditMode
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
 		$sTemplate = Utils::ReadFromFile(MetaModel::GetDisplayTemplate(get_class($this)));
@@ -884,6 +944,7 @@ EOF
 			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 			$this->DisplayBareProperties($oPage, $bEditMode);
 			$this->DisplayBareRelations($oPage, $bEditMode);
+			$this->DisplayDashboards($oPage, $bEditMode);
 			//$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
 			//$this->DisplayBareHistory($oPage, $bEditMode);
 			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'),
@@ -2848,6 +2909,10 @@ EOF
 							$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
 					$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
 							$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+				}
+				elseif ($oAttDef instanceof AttributeDashboard)
+				{
+					$sDisplayValue = '';
 				}
 				else
 				{

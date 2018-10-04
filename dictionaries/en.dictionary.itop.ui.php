@@ -441,8 +441,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:ObjectAlreadyCloned' => 'Error: the object has already been cloned!',
 	'UI:Error:ObjectAlreadyCreated' => 'Error: the object has already been created!',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Error: invalid stimulus "%1$s" on object %2$s in state "%3$s".',
-	
-	
+	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file',
+
 	'UI:GroupBy:Count' => 'Count',
 	'UI:GroupBy:Count+' => 'Number of elements',
 	'UI:CountOfObjects' => '%1$d objects matching the criteria.',

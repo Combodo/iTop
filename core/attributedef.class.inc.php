@@ -1249,6 +1249,53 @@ abstract class AttributeDefinition
 	}
 }
 
+class AttributeDashboard extends AttributeDefinition
+{
+	static public function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(),
+			array("definition_file"));
+	}
+
+	public function GetDashboard()
+	{
+		$sAttCode = $this->GetCode();
+		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
+		$sFilePath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/'.$this->Get('definition_file');
+		return RuntimeDashboard::GetDashboard($sFilePath, $sClass.'__'.$sAttCode);
+	}
+
+	public function IsWritable()
+	{
+		return false;
+	}
+
+	public function GetEditClass()
+	{
+		return "";
+	}
+
+	public function GetDefaultValue(DBObject $oHostObject = null)
+	{
+		return null;
+	}
+
+	public function GetBasicFilterOperators()
+	{
+		return array();
+	}
+
+	public function GetBasicFilterLooseOperator()
+	{
+		return '=';
+	}
+
+	public function GetBasicFilterSQLExpr($sOpCode, $value)
+	{
+		return '';
+	}
+}
+
 /**
  * Set of objects directly linked to an object, and being part of its definition
  *

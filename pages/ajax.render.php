@@ -910,25 +910,68 @@ try
 			}
 			break;
 
+		case 'export_dashboard':
+			$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
+			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
+			if (!is_null($oDashboard))
+			{
+				$oPage->TrashUnexpectedOutput();
+				$oPage->SetContentType('text/xml');
+				$oPage->SetContentDisposition('attachment', 'dashboard_'.$oDashboard->GetTitle().'.xml');
+				$oPage->add($oDashboard->ToXml());
+			}
+			break;
+
+		case 'import_dashboard':
+			$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
+			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
+			$aResult = array('error' => '');
+			if (!is_null($oDashboard))
+			{
+				try
+				{
+					$oDoc = utils::ReadPostedDocument('dashboard_upload_file');
+					$oDashboard->FromXml($oDoc->GetData());
+					$oDashboard->Save();
+				} catch (DOMException $e)
+				{
+					$aResult = array('error' => Dict::S('UI:Error:InvalidDashboardFile'));
+				} catch (Exception $e)
+				{
+					$aResult = array('error' => $e->getMessage());
+				}
+			}
+			else
+			{
+				$aResult['error'] = 'Dashboard id="'.$sMenuId.'" not found.';
+			}
+			$oPage->add(json_encode($aResult));
+			break;
+
 		case 'reload_dashboard':
 			$oPage->SetContentType('text/html');
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
 			$aExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
-			ApplicationMenu::LoadAdditionalMenus();
-			$idx = ApplicationMenu::GetMenuIndexById($sDashboardId);
-			$oMenu = ApplicationMenu::GetMenuNode($idx);
-			$oDashboard = $oMenu->GetDashboard();
-			$oDashboard->Render($oPage, false, $aExtraParams);
+			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
+			$aResult = array('error' => '');
+			if (!is_null($oDashboard))
+			{
+				$oDashboard->Render($oPage, false, $aExtraParams);
+			}
 			$oPage->add_ready_script("$('.dashboard_contents table.listResults').tableHover(); $('.dashboard_contents table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'dashboard_editor':
 			$sId = utils::ReadParam('id', '', false, 'raw_data');
-			ApplicationMenu::LoadAdditionalMenus();
-			$idx = ApplicationMenu::GetMenuIndexById($sId);
-			/** @var \DashboardMenuNode $oMenu */
-			$oMenu = ApplicationMenu::GetMenuNode($idx);
-			$oMenu->RenderEditor($oPage);
+			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sId);
+			if (!is_null($oDashboard))
+			{
+				$oDashboard->RenderEditor($oPage);
+			}
 			break;
 
 		case 'new_dashlet':
@@ -1024,15 +1067,7 @@ try
 			$oDashboard->FromParams($aParams);
 			$oDashboard->Save();
 			// trigger a reload of the current page since the dashboard just changed
-			$oPage->add_ready_script(
-				<<<EOF
-	var sLocation = new String(window.location.href);
-	var sNewLocation = sLocation.replace('&edit=1', '');
-	sNewLocation = sLocation.replace(/#(.?)$/, ''); // Strips everything after the hash, since IF the URL does not change AND contains a hash, then Chrome does not reload the page
-	window.location.href = sNewLocation;
-EOF
-			);
-			$oPage->add_ready_script("sLocation = new String(window.location.href); window.location.href=sLocation.replace('&edit=1', '');"); // reloads the page, doing a GET even if we arrived via a POST
+			$oPage->add_ready_script("location.reload(true);");
 			break;
 
 		case 'revert_dashboard':
@@ -1041,7 +1076,7 @@ EOF
 			$oDashboard->Revert();
 
 			// trigger a reload of the current page since the dashboard just changed
-			$oPage->add_ready_script("window.location.href=window.location.href;"); // reloads the page, doing a GET even if we arrived via a POST
+			$oPage->add_ready_script("location.reload(true);");
 			break;
 
 		case 'render_dashboard':
@@ -1163,51 +1198,6 @@ EOF
 				utils::PopArchiveMode();
 				$oPage->add_ready_script('window.location.reload();');
 			}
-			break;
-
-		case 'export_dashboard':
-			$sMenuId = utils::ReadParam('id', '', false, 'raw_data');
-			ApplicationMenu::LoadAdditionalMenus();
-			$index = ApplicationMenu::GetMenuIndexById($sMenuId);
-			$oMenu = ApplicationMenu::GetMenuNode($index);
-			if ($oMenu instanceof DashboardMenuNode)
-			{
-				$oDashboard = $oMenu->GetDashboard();
-
-				$oPage->TrashUnexpectedOutput();
-				$oPage->SetContentType('text/xml');
-				$oPage->SetContentDisposition('attachment', $oMenu->GetLabel().'.xml');
-				$oPage->add($oDashboard->ToXml());
-			}
-			break;
-
-		case 'import_dashboard':
-			$sMenuId = utils::ReadParam('id', '', false, 'raw_data');
-			ApplicationMenu::LoadAdditionalMenus();
-			$index = ApplicationMenu::GetMenuIndexById($sMenuId);
-			$oMenu = ApplicationMenu::GetMenuNode($index);
-			$aResult = array('error' => '');
-			try
-			{
-				if ($oMenu instanceof DashboardMenuNode)
-				{
-					$oDoc = utils::ReadPostedDocument('dashboard_upload_file');
-					$oDashboard = $oMenu->GetDashboard();
-					$oDashboard->FromXml($oDoc->GetData());
-					$oDashboard->Save();
-				}
-				else
-				{
-					$aResult['error'] = 'Dashboard id="'.$sMenuId.'" not found.';
-				}
-			} catch (DOMException $e)
-			{
-				$aResult = array('error' => Dict::S('UI:Error:InvalidDashboardFile'));
-			} catch (Exception $e)
-			{
-				$aResult = array('error' => $e->getMessage());
-			}
-			$oPage->add(json_encode($aResult));
 			break;
 
 		case 'about_box':

@@ -50,6 +50,11 @@ abstract class Dashboard
 		$this->sId = $sId;
 	}
 
+	/**
+	 * @param $sXml
+	 *
+	 * @throws \Exception
+	 */
 	public function FromXml($sXml)
 	{
 		$this->aCells = array(); // reset the content of the dashboard
@@ -509,6 +514,7 @@ EOF
 	 * Return an array of dashlets available for selection.
 	 *
 	 * @return array
+	 * @throws \ReflectionException
 	 */
 	protected function GetAvailableDashlets()
 	{
@@ -561,11 +567,21 @@ EOF
 		}
 		return 'DashletUnknown';
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public function GetId()
+	{
+		return $this->sId;
+	}
 }
 
 class RuntimeDashboard extends Dashboard
 {
 	protected $bCustomized;
+	private $sDefinitionFile = '';
+
 
 	public function __construct($sId)
 	{
@@ -630,7 +646,53 @@ class RuntimeDashboard extends Dashboard
 			utils::PopArchiveMode();
 		}
 	}
-	
+
+	/**
+	 * @param string $sDashboardFile file name relative to the current module folder
+	 * @param string $sDashBoardCode code of the dashboard either menu_id or <class>__<attcode>
+	 *
+	 * @return null|RuntimeDashboard
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	public static function GetDashboard($sDashboardFile, $sDashBoardCode)
+	{
+		$bCustomized = false;
+
+		// Search for an eventual user defined dashboard
+		$oUDSearch = new DBObjectSearch('UserDashboard');
+		$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+		$oUDSearch->AddCondition('menu_code', $sDashBoardCode, '=');
+		$oUDSet = new DBObjectSet($oUDSearch);
+		if ($oUDSet->Count() > 0)
+		{
+			// Assuming there is at most one couple {user, menu}!
+			$oUserDashboard = $oUDSet->Fetch();
+			$sDashboardDefinition = $oUserDashboard->Get('contents');
+			$bCustomized = true;
+		}
+		else
+		{
+			$sDashboardDefinition = @file_get_contents($sDashboardFile);
+		}
+
+		if ($sDashboardDefinition !== false)
+		{
+			$oDashboard = new RuntimeDashboard($sDashBoardCode);
+			$oDashboard->FromXml($sDashboardDefinition);
+			$oDashboard->SetCustomFlag($bCustomized);
+			$oDashboard->SetDefinitionFile($sDashboardFile);
+		}
+		else
+		{
+			$oDashboard = null;
+		}
+		return $oDashboard;
+	}
+
 	public function RenderEditionTools(WebPage $oPage)
 	{
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
@@ -638,7 +700,8 @@ class RuntimeDashboard extends Dashboard
 		$sEditMenu = "<div id=\"DashboardMenu\"><ul><li><img src=\"../images/pencil-menu.png\"><ul>";
 	
 		$aActions = array();
-		$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}')");
+		$sFile = addslashes($this->sDefinitionFile);
+		$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}', '$sFile')");
 		$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
 
 		if ($this->bCustomized)
@@ -662,9 +725,9 @@ EOF
 		);
 		$oPage->add_script(
 <<<EOF
-function EditDashboard(sId)
+function EditDashboard(sId, sDashboardFile)
 {
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'dashboard_editor', id: sId},
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'dashboard_editor', id: sId, file: sDashboardFile},
 		function(data)
 		{
 			$('body').append(data);
@@ -1006,5 +1069,21 @@ $('#dashlet_creation_dlg').dialog({
 });
 EOF
 		);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetDefinitionFile()
+	{
+		return $this->sDefinitionFile;
+	}
+
+	/**
+	 * @param string $sDefinitionFile
+	 */
+	public function SetDefinitionFile($sDefinitionFile)
+	{
+		$this->sDefinitionFile = $sDefinitionFile;
 	}
 }

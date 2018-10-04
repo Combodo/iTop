@@ -1433,6 +1433,37 @@ EOF
 					$aParameters['depends_on'] = $sDependencies;
 					$aParameters['class_field'] = $this->GetMandatoryPropString($oField, 'class_field');
 				}
+				elseif ($sAttType == 'AttributeDashboard')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['definition_file'] = $this->GetPropString($oField, 'definition_file');
+
+					if ($aParameters['definition_file'] == null)
+					{
+						$oDashboardDefinition = $oField->GetOptionalElement('definition');
+						if ($oDashboardDefinition == null)
+						{
+							throw(new DOMFormatException('Missing definition for Dashboard Attribute "'.$sAttCode.'" expecting either a tag "definition_file" or "definition".'));
+						}
+						$sFileName = strtolower($sClass).'__'.strtolower($sAttCode).'_dashboard.xml';
+
+						$oXMLDoc = new DOMDocument('1.0', 'UTF-8');
+						$oXMLDoc->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
+						$oXMLDoc->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
+
+						$oRootNode = $oXMLDoc->createElement('dashboard'); // make sure that the document is not empty
+						$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+						$oXMLDoc->appendChild($oRootNode);
+						foreach($oDashboardDefinition->childNodes as $oNode)
+						{
+							$oDefNode = $oXMLDoc->importNode($oNode, true); // layout, cells, etc Nodes and below
+							$oRootNode->appendChild($oDefNode);
+						}
+						$sFileName = $sModuleRelativeDir.'/'.$sFileName;
+						$oXMLDoc->save($sTempTargetDir.'/'.$sFileName);
+						$aParameters['definition_file'] = "'".str_replace("'", "\\'", $sFileName)."'";
+					}
+				}
 				else
 				{
                     $aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
@@ -1970,7 +2001,7 @@ EOF;
 				{
 					throw(new DOMFormatException('Missing definition for Dashboard menu "'.$sMenuId.'" expecting either a tag "definition_file" or "definition".'));
 				}
-				$sFileName = strtolower(str_replace(array(':', '/', '\\', '*'), '_', $sMenuId)).'_dashboard_menu.xml';
+				$sFileName = strtolower(str_replace(array(':', '/', '\\', '*'), '_', $sMenuId)).'_dashboard.xml';
 				$sTemplateSpec = $this->PathToPHP($sFileName, $sModuleRelativeDir);
 
 				$oXMLDoc = new DOMDocument('1.0', 'UTF-8');

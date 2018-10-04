@@ -2251,6 +2251,7 @@ a.summary, a.summary:hover {
 }
 .dashboard_contents {
   width: 100%;
+  background-color: #fff;
 }
 #DashboardMenu {
   display: block;

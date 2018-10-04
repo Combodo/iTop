@@ -412,6 +412,57 @@
                     <default_value/>
                     <is_null_allowed>true</is_null_allowed>
                 </field>
+                <field id="dashboard" xsi:type="AttributeDashboard">
+                    <definition>
+                        <layout>DashboardLayoutOneCol</layout>
+                        <title>Test Modified</title>
+                        <auto_reload>
+                            <enabled>false</enabled>
+                            <interval>300</interval>
+                        </auto_reload>
+                        <cells>
+                            <cell id="0">
+                                <rank>0</rank>
+                                <dashlets>
+                                    <dashlet id="9" xsi:type="DashletHeaderDynamic">
+                                        <rank>0</rank>
+                                        <title>Menu:RequestManagement</title>
+                                        <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+                                        <subtitle>Menu:UserRequest:OpenRequests</subtitle>
+                                        <query>SELECT UserRequest WHERE status != "closed"</query>
+                                        <group_by>status</group_by>
+                                        <values>assigned,escalated_tto,escalated_ttr,new,resolved</values>
+                                    </dashlet>
+                                </dashlets>
+                            </cell>
+                            <cell id="1">
+                                <rank>1</rank>
+                                <dashlets>
+                                    <dashlet id="10" xsi:type="DashletGroupByBars">
+                                        <rank>0</rank>
+                                        <title>Callers</title>
+                                        <query>SELECT UserRequest</query>
+                                        <group_by>caller_id</group_by>
+                                        <style>bars</style>
+                                        <aggregation_function>count</aggregation_function>
+                                        <aggregation_attribute></aggregation_attribute>
+                                        <limit></limit>
+                                        <order_by>function</order_by>
+                                        <order_direction>desc</order_direction>
+                                    </dashlet>
+                                </dashlets>
+                            </cell>
+                            <cell id="2">
+                                <rank>2</rank>
+                                <dashlets>
+                                    <dashlet id="0" xsi:type="DashletEmptyCell">
+                                        <rank>0</rank>
+                                    </dashlet>
+                                </dashlets>
+                            </cell>
+                        </cells>
+                    </definition>
+                </field>
             </fields>
             <lifecycle>
                 <highlight_scale>
@@ -1457,6 +1508,9 @@
                         </item>
                         <item id="workorders_list">
                             <rank>40</rank>
+                        </item>
+                        <item id="dashboard">
+                            <rank>45</rank>
                         </item>
                         <item id="col:col1">
                             <rank>50</rank>
