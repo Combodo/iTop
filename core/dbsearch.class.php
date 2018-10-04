@@ -235,23 +235,30 @@ abstract class DBSearch
 	abstract public function GetInternalParams();
 	abstract public function GetQueryParams($bExcludeMagicParams = true);
 	abstract public function ListConstantFields();
-	
+
 	/**
 	 * Turn the parameters (:xxx) into scalar values in order to easily
 	 * serialize a search
+	 *
+	 * @param array $aArgs
+	 *
+	 * @return string
 	 */
 	abstract public function ApplyParameters($aArgs);
 
     public function serialize($bDevelopParams = false, $aContextParams = null)
 	{
-		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
-		return rawurlencode(base64_encode(serialize(array($sOql, $this->GetInternalParams(), $this->m_aModifierProperties))));
+		$oSearch = $this->DeepClone();
+		$oSearch->ApplyParameters(array());
+		$sOql = $oSearch->ToOql($bDevelopParams, $aContextParams);
+		return rawurlencode(base64_encode(serialize(array($sOql, array(), $this->m_aModifierProperties))));
 	}
 
 	/**
 	 * @param string $sValue Serialized OQL query
 	 *
 	 * @return \DBSearch
+	 * @throws \OQLException
 	 */
 	static public function unserialize($sValue)
 	{

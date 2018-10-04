@@ -440,7 +440,7 @@ EOF
 
 			$sDivId = $oDashboard->GetId();
 			$oPage->add('<div class="dashboard_contents" id="'.$sDivId.'">');
-			$aExtraParams = array('query_params' => array('this' => $this));
+			$aExtraParams = array('query_params' => $this->ToArgsForQuery());
 			$oDashboard->Render($oPage, false, $aExtraParams);
 			$oPage->add('</div>');
 			$oDashboard->RenderEditionTools($oPage);
