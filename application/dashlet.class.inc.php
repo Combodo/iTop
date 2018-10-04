@@ -330,31 +330,62 @@ EOF
 
 	protected function GetGroupByOptions($sOql)
 	{
-		$oQuery = $this->oModelReflection->GetQuery($sOql);
-		$sClass = $oQuery->GetClass();
 		$aGroupBy = array();
-		foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
+		try
 		{
-			if ($sAttType == 'AttributeLinkedSet') continue;
-			if (is_subclass_of($sAttType, 'AttributeLinkedSet')) continue;
-			if ($sAttType == 'AttributeFriendlyName') continue;
-			if (is_subclass_of($sAttType, 'AttributeFriendlyName')) continue;
-			if ($sAttType == 'AttributeExternalField') continue;
-			if (is_subclass_of($sAttType, 'AttributeExternalField')) continue;
-			if ($sAttType == 'AttributeOneWayPassword') continue;
-
-			$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
-			$aGroupBy[$sAttCode] = $sLabel;
-
-			if (is_subclass_of($sAttType, 'AttributeDateTime') || $sAttType == 'AttributeDateTime')
+			$oQuery = $this->oModelReflection->GetQuery($sOql);
+			$sClass = $oQuery->GetClass();
+			foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
 			{
-				$aGroupBy[$sAttCode.':hour'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel);
-				$aGroupBy[$sAttCode.':month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel);
-				$aGroupBy[$sAttCode.':day_of_week'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek', $sLabel);
-				$aGroupBy[$sAttCode.':day_of_month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth', $sLabel);
+				if ($sAttType == 'AttributeLinkedSet')
+				{
+					continue;
+				}
+				if (is_subclass_of($sAttType, 'AttributeLinkedSet'))
+				{
+					continue;
+				}
+				if ($sAttType == 'AttributeFriendlyName')
+				{
+					continue;
+				}
+				if (is_subclass_of($sAttType, 'AttributeFriendlyName'))
+				{
+					continue;
+				}
+				if ($sAttType == 'AttributeExternalField')
+				{
+					continue;
+				}
+				if (is_subclass_of($sAttType, 'AttributeExternalField'))
+				{
+					continue;
+				}
+				if ($sAttType == 'AttributeOneWayPassword')
+				{
+					continue;
+				}
+
+				$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
+				$aGroupBy[$sAttCode] = $sLabel;
+
+				if (is_subclass_of($sAttType, 'AttributeDateTime') || $sAttType == 'AttributeDateTime')
+				{
+					$aGroupBy[$sAttCode.':hour'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel);
+					$aGroupBy[$sAttCode.':month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month',
+						$sLabel);
+					$aGroupBy[$sAttCode.':day_of_week'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek',
+						$sLabel);
+					$aGroupBy[$sAttCode.':day_of_month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth',
+						$sLabel);
+				}
 			}
+			asort($aGroupBy);
 		}
-		asort($aGroupBy);
+		catch(Exception $e)
+		{
+			// Bad OQL is ignored
+		}
 		return $aGroupBy;
 	}
 
@@ -1219,25 +1250,32 @@ abstract class DashletGroupBy extends Dashlet
 	protected function GetNumericAttributes($sOql)
 	{
 		$aFunctionAttributes = array();
-		$oQuery = $this->oModelReflection->GetQuery($sOql);
-		$sClass = $oQuery->GetClass();
-		if (is_null($sClass))
+		try
 		{
-			return $aFunctionAttributes;
-		}
-		foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
-		{
-			switch ($sAttType)
+			$oQuery = $this->oModelReflection->GetQuery($sOql);
+			$sClass = $oQuery->GetClass();
+			if (is_null($sClass))
 			{
-				case 'AttributeDecimal':
-				case 'AttributeDuration':
-				case 'AttributeInteger':
-				case 'AttributePercentage':
-				case 'AttributeSubItem': // TODO: Known limitation: no unit displayed (values in sec)
-					$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
-					$aFunctionAttributes[$sAttCode] = $sLabel;
-					break;
+				return $aFunctionAttributes;
 			}
+			foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
+			{
+				switch ($sAttType)
+				{
+					case 'AttributeDecimal':
+					case 'AttributeDuration':
+					case 'AttributeInteger':
+					case 'AttributePercentage':
+					case 'AttributeSubItem': // TODO: Known limitation: no unit displayed (values in sec)
+						$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
+						$aFunctionAttributes[$sAttCode] = $sLabel;
+						break;
+				}
+			}
+		}
+		catch (Exception $e)
+		{
+			// Ignore bad OQL
 		}
 
 		return $aFunctionAttributes;
