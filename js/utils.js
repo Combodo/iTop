@@ -409,8 +409,12 @@ function ToggleDurationField(field_id) {
 function PropagateCheckBox(bCurrValue, aFieldsList, bCheck) {
 	if (bCurrValue == bCheck) {
 		for (var i = 0; i < aFieldsList.length; i++) {
-			$('#enable_'+aFieldsList[i]).prop('checked', bCheck);
-			ToggleField(bCheck, aFieldsList[i]);
+			var sFieldId = aFieldsList[i];
+			$('#enable_'+sFieldId).prop('checked', bCheck);
+			ToggleField(bCheck, sFieldId);
+
+			// Cascade propagation
+            $('#enable_'+sFieldId).trigger('change');
 		}
 	}
 }

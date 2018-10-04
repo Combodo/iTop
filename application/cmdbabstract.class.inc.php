@@ -1851,7 +1851,28 @@ EOF
 					$sConfigJS = json_encode($aConfig);
 
 					$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
-					break;
+
+					$oPage->add_ready_script(
+<<<EOF
+$('#$iId').bind('update', function(evt){
+	BlockField('cke_$iId', $('#$iId').attr('disabled'));
+	//Delayed execution - ckeditor must be properly initialized before setting readonly
+	var retryCount = 0;
+	var oMe = $('#$iId');
+	var delayedSetReadOnly = function () {
+		if (oMe.data('ckeditorInstance').editable() == undefined && retryCount++ < 10) {
+			setTimeout(delayedSetReadOnly, retryCount * 100); //Wait a while longer each iteration
+		}
+		else
+		{
+			oMe.data('ckeditorInstance').setReadOnly(oMe.prop('disabled'));
+		}
+	};
+	setTimeout(delayedSetReadOnly, 50);
+});
+EOF
+					);
+				break;
 
 				case 'HTML':
 					$sEditValue = $oAttDef->GetEditValue($value);
@@ -2636,7 +2657,7 @@ EOF
 						else
 						{
 							$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
-							if (count($aAllowedValues) == 1)
+							if (is_array($aAllowedValues) && count($aAllowedValues) == 1)
 							{
 								$aValues = array_keys($aAllowedValues);
 								$this->Set($sAttCode, $aValues[0]);
@@ -3954,7 +3975,7 @@ EOF
 						$currValue = $oObj->Get($sAttCode);
 						if ($oAttDef instanceof AttributeCaseLog)
 						{
-							$currValue = ' '; // Don't put an empty string, in case the field would be considered as mandatory...
+							$currValue = ''; // Put a single scalar value to force caselog to mock a new entry. For more info see N°1059.
 						}
 						elseif ($currValue instanceof ormSet)
 						{

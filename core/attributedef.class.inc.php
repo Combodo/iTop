@@ -7241,10 +7241,8 @@ class AttributeImage extends AttributeBlob
 		$value = $oObject->Get($this->GetCode());
 		if (is_object($value) && !$value->IsEmpty())
 		{
-			$oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(),
-				$this->GetCode()));
-			$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(),
-				$this->GetCode()));
+			$oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+			$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(),	$this->GetCode()));
 		}
 		else
 		{

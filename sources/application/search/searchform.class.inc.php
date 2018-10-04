@@ -312,11 +312,16 @@ class SearchForm
 		$aSelectedClasses = $oSearch->GetSelectedClasses();
 		foreach($aSelectedClasses as $sAlias => $sClassName)
 		{
-			$aAllFields['zlist'] = array_merge($aAllFields['zlist'], $aAllFields[$sAlias.'_zlist']);
-			unset($aAllFields[$sAlias.'_zlist']);
-			$aAllFields['others'] = array_merge($aAllFields['others'], $aAllFields[$sAlias.'_others']);
-			unset($aAllFields[$sAlias.'_others']);
-
+			if(array_key_exists($sAlias.'_zlist', $aAllFields))
+			{
+				$aAllFields['zlist'] = array_merge($aAllFields['zlist'], $aAllFields[$sAlias.'_zlist']);
+				unset($aAllFields[$sAlias.'_zlist']);
+			}
+			if(array_key_exists($sAlias.'_others', $aAllFields))
+			{
+				$aAllFields['others'] = array_merge($aAllFields['others'], $aAllFields[$sAlias.'_others']);
+				unset($aAllFields[$sAlias.'_others']);
+			}
 		}
 
 		return $aAllFields;
