@@ -9946,7 +9946,6 @@ class AttributeTagSet extends AttributeSet
 	 * @param bool $bConvertToPlainText
 	 *
 	 * @return mixed|string
-	 * @throws \CoreException
 	 */
 	public function GetAsCSV(
 		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,

@@ -276,6 +276,7 @@ EOF
 				$sAttCode = $aFieldSpec['sAttCode'];
 
 				$sField = '';
+				/** @var \DBObject $oObj */
 				$oObj = $aRow[$sAlias];
 				if ($oObj == null)
 				{
@@ -333,9 +334,14 @@ EOF
 							$sField = utils::TextToHtml($oObj->GetEditValue($sAttCode));
 							$sData .= "<td x:str>$sField</td>";
 						}
-						else if($oAttDef instanceof AttributeString)
+						else if ($oAttDef instanceof AttributeString)
 						{
 							$sField = $oObj->GetAsHTML($sAttCode, $this->bLocalizeOutput);
+							$sData .= "<td x:str>$sField</td>";
+						}
+						else if ($oAttDef instanceof AttributeTagSet)
+						{
+							$sField = $oObj->GetAsCSV($sAttCode, $this->bLocalizeOutput, '');
 							$sData .= "<td x:str>$sField</td>";
 						}
 						else
