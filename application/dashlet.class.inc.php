@@ -360,31 +360,59 @@ EOF
 
 	protected function GetGroupByOptions($sOql)
 	{
-		$oQuery = $this->oModelReflection->GetQuery($sOql);
-		$sClass = $oQuery->GetClass();
 		$aGroupBy = array();
-		foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
+		try
 		{
-			if ($sAttType == 'AttributeLinkedSet') continue;
-			if (is_subclass_of($sAttType, 'AttributeLinkedSet')) continue;
-			if ($sAttType == 'AttributeFriendlyName') continue;
-			if (is_subclass_of($sAttType, 'AttributeFriendlyName')) continue;
-			if ($sAttType == 'AttributeExternalField') continue;
-			if (is_subclass_of($sAttType, 'AttributeExternalField')) continue;
-			if ($sAttType == 'AttributeOneWayPassword') continue;
-
-			$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
-			$aGroupBy[$sAttCode] = $sLabel;
-
-			if (is_subclass_of($sAttType, 'AttributeDateTime') || $sAttType == 'AttributeDateTime')
+			$oQuery = $this->oModelReflection->GetQuery($sOql);
+			$sClass = $oQuery->GetClass();
+			foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
 			{
-				$aGroupBy[$sAttCode.':hour'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel);
-				$aGroupBy[$sAttCode.':month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel);
-				$aGroupBy[$sAttCode.':day_of_week'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek', $sLabel);
-				$aGroupBy[$sAttCode.':day_of_month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth', $sLabel);
+				if ($sAttType == 'AttributeLinkedSet')
+				{
+					continue;
+				}
+				if (is_subclass_of($sAttType, 'AttributeLinkedSet'))
+				{
+					continue;
+				}
+				if ($sAttType == 'AttributeFriendlyName')
+				{
+					continue;
+				}
+				if (is_subclass_of($sAttType, 'AttributeFriendlyName'))
+				{
+					continue;
+				}
+				if ($sAttType == 'AttributeExternalField')
+				{
+					continue;
+				}
+				if (is_subclass_of($sAttType, 'AttributeExternalField'))
+				{
+					continue;
+				}
+				if ($sAttType == 'AttributeOneWayPassword')
+				{
+					continue;
+				}
+
+				$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
+				$aGroupBy[$sAttCode] = $sLabel;
+
+				if (is_subclass_of($sAttType, 'AttributeDateTime') || $sAttType == 'AttributeDateTime')
+				{
+					$aGroupBy[$sAttCode.':hour'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel);
+					$aGroupBy[$sAttCode.':month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel);
+					$aGroupBy[$sAttCode.':day_of_week'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek', $sLabel);
+					$aGroupBy[$sAttCode.':day_of_month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth', $sLabel);
+				}
 			}
+			asort($aGroupBy);
 		}
-		asort($aGroupBy);
+		catch (Exception $e)
+		{
+			// Fallback in case of OQL problem
+		}
 		return $aGroupBy;
 	}
 
@@ -749,14 +777,22 @@ class DashletObjectList extends Dashlet
 		{
 			$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
 		}
-		$oFilter = DBObjectSearch::FromOQL($sQuery);
+		if (isset($aExtraParams['query_params']))
+		{
+			$aQueryParams = $aExtraParams['query_params'];
+		}
+		else
+		{
+			$aQueryParams = array();
+		}
+		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
 		$oBlock = new DisplayBlock($oFilter, 'list');
-		$aExtraParams = array(
+		$aParams = array(
 			'menu' => $sShowMenu,
 			'table_id' => 'Dashlet'.$this->sId,
 		);
-		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
-		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
+		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
+		$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
 		$oPage->add('</div>');
 	}
 
@@ -987,12 +1023,19 @@ abstract class DashletGroupBy extends Dashlet
 		$sQuery = $this->aProperties['query'];
 		$sStyle = $this->aProperties['style'];
 
-		// First perform the query - if the OQL is not ok, it will generate an exception : no need to go further 
-		$oFilter = DBObjectSearch::FromOQL($sQuery);
+		// First perform the query - if the OQL is not ok, it will generate an exception : no need to go further
+		if (isset($aExtraParams['query_params']))
+		{
+			$aQueryParams = $aExtraParams['query_params'];
+		}
+		else
+		{
+			$aQueryParams = array();
+		}
+		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
 		$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 
 		$sClass = $oFilter->GetClass();
-
 		if (!$this->oModelReflection->IsValidAttCode($sClass, $this->sGroupByAttCode))
 		{
 			$oPage->add('<p>'.Dict::S('UI:DashletGroupBy:MissingGroupBy').'</p>');
@@ -1003,7 +1046,7 @@ abstract class DashletGroupBy extends Dashlet
 			{
 				case 'bars':
 					$sType = 'chart';
-					$aExtraParams = array(
+					$aParams = array(
 						'chart_type' => 'bars',
 						'chart_title' => $sTitle,
 						'group_by' => $this->sGroupByExpr,
@@ -1019,7 +1062,7 @@ abstract class DashletGroupBy extends Dashlet
 
 				case 'pie':
 					$sType = 'chart';
-					$aExtraParams = array(
+					$aParams = array(
 						'chart_type' => 'pie',
 						'chart_title' => $sTitle,
 						'group_by' => $this->sGroupByExpr,
@@ -1037,7 +1080,7 @@ abstract class DashletGroupBy extends Dashlet
 				default:
 					$sHtmlTitle = htmlentities(Dict::S($sTitle), ENT_QUOTES, 'UTF-8'); // done in the itop block
 					$sType = 'count';
-					$aExtraParams = array(
+					$aParams = array(
 						'group_by' => $this->sGroupByExpr,
 						'group_by_label' => $this->sGroupByLabel,
 						'aggregation_function' => $this->sAggregationFunction,
@@ -1056,7 +1099,7 @@ abstract class DashletGroupBy extends Dashlet
 			}
 			$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 			$oBlock = new DisplayBlock($oFilter, $sType);
-			$oBlock->Display($oPage, $sBlockId, $aExtraParams);
+			$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
 			$oPage->add('</div>');
 		}
 	}
@@ -1280,25 +1323,32 @@ abstract class DashletGroupBy extends Dashlet
 	protected function GetNumericAttributes($sOql)
 	{
 		$aFunctionAttributes = array();
-		$oQuery = $this->oModelReflection->GetQuery($sOql);
-		$sClass = $oQuery->GetClass();
-		if (is_null($sClass))
+		try
 		{
-			return $aFunctionAttributes;
-		}
-		foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
-		{
-			switch ($sAttType)
+			$oQuery = $this->oModelReflection->GetQuery($sOql);
+			$sClass = $oQuery->GetClass();
+			if (is_null($sClass))
 			{
-				case 'AttributeDecimal':
-				case 'AttributeDuration':
-				case 'AttributeInteger':
-				case 'AttributePercentage':
-				case 'AttributeSubItem': // TODO: Known limitation: no unit displayed (values in sec)
-					$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
-					$aFunctionAttributes[$sAttCode] = $sLabel;
-					break;
+				return $aFunctionAttributes;
 			}
+			foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
+			{
+				switch ($sAttType)
+				{
+					case 'AttributeDecimal':
+					case 'AttributeDuration':
+					case 'AttributeInteger':
+					case 'AttributePercentage':
+					case 'AttributeSubItem': // TODO: Known limitation: no unit displayed (values in sec)
+						$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
+						$aFunctionAttributes[$sAttCode] = $sLabel;
+						break;
+				}
+			}
+		}
+		catch (Exception $e)
+		{
+			// In case the OQL is bad
 		}
 
 		return $aFunctionAttributes;
@@ -1750,7 +1800,7 @@ class DashletHeaderDynamic extends Dashlet
 		{
 			// Stats grouped by <group_by>
 			$sCSV = implode(',', $aValues);
-			$aExtraParams = array(
+			$aParams = array(
 				'title[block]' => $sTitle,
 				'label[block]' => $sSubtitle,
 				'status[block]' => $sGroupBy,
@@ -1761,7 +1811,7 @@ class DashletHeaderDynamic extends Dashlet
 		else
 		{
 			// Simple stats
-			$aExtraParams = array(
+			$aParams = array(
 				'title[block]' => $sTitle,
 				'label[block]' => $sSubtitle,
 				'context_filter' => 1,
@@ -1773,10 +1823,18 @@ class DashletHeaderDynamic extends Dashlet
 
 		$oPage->add('<img src="'.$sIconPath.'">');
 
-		$oFilter = DBObjectSearch::FromOQL($sQuery);
+		if (isset($aExtraParams['query_params']))
+		{
+			$aQueryParams = $aExtraParams['query_params'];
+		}
+		else
+		{
+			$aQueryParams = array();
+		}
+		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
 		$oBlock = new DisplayBlock($oFilter, 'summary');
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
-		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
+		$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
 
 		$oPage->add('</div>');
 		$oPage->add('</div>');
@@ -1974,9 +2032,7 @@ class DashletBadge extends Dashlet
 
 		$oFilter = new DBObjectSearch($sClass);
 		$oBlock = new DisplayBlock($oFilter, 'actions');
-		$aExtraParams = array(
-			'context_filter' => 1,
-		);
+		$aExtraParams['context_filter'] = 1;
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
 		$oBlock->Display($oPage, $sBlockId, $aExtraParams);
 

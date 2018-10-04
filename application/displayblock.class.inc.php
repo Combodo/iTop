@@ -314,7 +314,7 @@ class DisplayBlock
 	 * @throws MySQLException
 	 * @throws Exception
 	 */
-	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), $sId)
+	public function GetRenderContent(WebPage $oPage, $aExtraParams, $sId)
 	{
 		$sHtml = '';
 		// Add the extra params into the filter if they make sense for such a filter
