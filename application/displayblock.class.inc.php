@@ -220,9 +220,16 @@ class DisplayBlock
 		$aExtraParams['currentId'] = $sId;
 		$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
 		
+		if (isset($aExtraParams['query_params']))
+		{
+			$aQueryParams = $aExtraParams['query_params'];
+		}
+		else
+		{
+			$aQueryParams = array();
+		}
 
-
-		$sFilter = $this->m_oFilter->serialize(); // Used either for asynchronous or auto_reload
+		$sFilter = $this->m_oFilter->serialize(false, $aQueryParams); // Used either for asynchronous or auto_reload
 		if (!$this->m_bAsynchronous)
 		{
 			// render now
@@ -457,7 +464,15 @@ class DisplayBlock
 					$oSubsetSearch = $this->m_oFilter->DeepClone();
 					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
 					$oSubsetSearch->AddConditionExpression($oCondition);
-					$sFilter = urlencode($oSubsetSearch->serialize());
+					if (isset($aExtraParams['query_params']))
+					{
+						$aQueryParams = $aExtraParams['query_params'];
+					}
+					else
+					{
+						$aQueryParams = array();
+					}
+					$sFilter = urlencode($oSubsetSearch->serialize(false, $aQueryParams));
 
 					$aData[] = array ('group' => $aLabels[$iRow],
 									  'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"); // TO DO: add the context information

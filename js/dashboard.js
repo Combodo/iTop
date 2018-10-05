@@ -304,12 +304,17 @@ $(function()
 		{
 			$('#dashboard_editor .ui-layout-east .itop-property-field-modified').trigger('apply_changes');
 		},
-		save: function()
+		save: function(dialog)
 		{
 			var oParams = this._get_state(this.options.submit_parameters);
 			var me = this;
 			$.post(this.options.submit_to, oParams, function(data){
 				me.ajax_div.html(data);
+				if(dialog)
+				{
+                    dialog.dialog( "close" );
+                    dialog.remove();
+                }
 			});
 		},
 		add_dashlet_ajax: function(options, sDashletId)

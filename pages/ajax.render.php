@@ -953,7 +953,7 @@ try
 		case 'reload_dashboard':
 			$oPage->SetContentType('text/html');
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
-			$aExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 			$aResult = array('error' => '');
@@ -964,13 +964,79 @@ try
 			$oPage->add_ready_script("$('.dashboard_contents table.listResults').tableHover(); $('.dashboard_contents table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
+		case 'save_dashboard':
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
+			$sJSExtraParams = json_encode($aExtraParams);
+			$aParams = array();
+			$aParams['layout_class'] = utils::ReadParam('layout_class', '');
+			$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
+			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
+			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
+			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
+			$oDashboard = new RuntimeDashboard($sDashboardId);
+			$oDashboard->FromParams($aParams);
+			$oDashboard->Save();
+			$sFile = $oDashboard->GetDefinitionFile();
+			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
+			// trigger a reload of the current page since the dashboard just changed
+			$oPage->add_script(
+<<<EOF
+			$('.dashboard_contents#$sDivId').block();
+			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile', extra_params: $sJSExtraParams},
+			   function(data){
+				 $('.dashboard_contents#$sDivId').html(data);
+				 $('.dashboard_contents#$sDivId').unblock();
+				}
+			 );
+EOF
+			);
+			break;
+
+		case 'revert_dashboard':
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+			$oDashboard = new RuntimeDashboard($sDashboardId);
+			$oDashboard->Revert();
+			$sFile = $oDashboard->GetDefinitionFile();
+			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
+			// trigger a reload of the current page since the dashboard just changed
+			$oPage->add_script(
+<<<EOF
+			$('.dashboard_contents#$sDivId').block();
+			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile'},
+			   function(data){
+				 $('.dashboard_contents#$sDivId').html(data);
+				 $('.dashboard_contents#$sDivId').unblock();
+				}
+			 );
+EOF
+			);
+			break;
+
+		case 'render_dashboard':
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
+			$aParams = array();
+			$aParams['layout_class'] = utils::ReadParam('layout_class', '');
+			$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
+			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
+			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
+			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
+			$oDashboard = new RuntimeDashboard($sDashboardId);
+			$oDashboard->FromParams($aParams);
+			$oDashboard->Render($oPage, true /* bEditMode */, $aExtraParams);
+			break;
+
 		case 'dashboard_editor':
 			$sId = utils::ReadParam('id', '', false, 'raw_data');
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sId);
 			if (!is_null($oDashboard))
 			{
-				$oDashboard->RenderEditor($oPage);
+				$oDashboard->RenderEditor($oPage, $aExtraParams);
 			}
 			break;
 
@@ -1001,6 +1067,7 @@ try
 		case 'update_dashlet_property':
 			require_once(APPROOT.'application/forms.class.inc.php');
 			require_once(APPROOT.'application/dashlet.class.inc.php');
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$aParams = utils::ReadParam('params', '', false, 'raw_data');
 			$sDashletClass = $aParams['attr_dashlet_class'];
 			$sDashletType = $aParams['attr_dashlet_type'];
@@ -1009,6 +1076,7 @@ try
 			$aPreviousValues = $aParams['previous_values']; // hash array: 'attr_xxx' => 'old_value'
 			if (is_subclass_of($sDashletClass, 'Dashlet'))
 			{
+				/** @var \Dashlet $oDashlet */
 				$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
 				$oDashlet->SetDashletType($sDashletType);
 				$oForm = $oDashlet->GetForm();
@@ -1034,7 +1102,7 @@ try
 				if ($oDashlet->IsRedrawNeeded())
 				{
 					$offset = $oPage->start_capture();
-					$oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */);
+					$oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */, $aExtraParams);
 					$sHtml = addslashes($oPage->end_capture($offset));
 					$sHtml = str_replace("\n", '', $sHtml);
 					$sHtml = str_replace("\r", '', $sHtml);
@@ -1045,7 +1113,7 @@ try
 				if ($oDashlet->IsFormRedrawNeeded())
 				{
 					$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
-					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));
+					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
 					$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */, '.itop-dashboard'));
 					$sHtml = str_replace("\n", '', $sHtml);
 					$sHtml = str_replace("\r", '', $sHtml);
@@ -1053,43 +1121,6 @@ try
 					// but is executed BEFORE all 'ready_scripts'
 				}
 			}
-			break;
-
-		case 'save_dashboard':
-			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
-			$aParams = array();
-			$aParams['layout_class'] = utils::ReadParam('layout_class', '');
-			$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
-			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
-			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
-			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
-			$oDashboard = new RuntimeDashboard($sDashboardId);
-			$oDashboard->FromParams($aParams);
-			$oDashboard->Save();
-			// trigger a reload of the current page since the dashboard just changed
-			$oPage->add_ready_script("location.reload(true);");
-			break;
-
-		case 'revert_dashboard':
-			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
-			$oDashboard = new RuntimeDashboard($sDashboardId);
-			$oDashboard->Revert();
-
-			// trigger a reload of the current page since the dashboard just changed
-			$oPage->add_ready_script("location.reload(true);");
-			break;
-
-		case 'render_dashboard':
-			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
-			$aParams = array();
-			$aParams['layout_class'] = utils::ReadParam('layout_class', '');
-			$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
-			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
-			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
-			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
-			$oDashboard = new RuntimeDashboard($sDashboardId);
-			$oDashboard->FromParams($aParams);
-			$oDashboard->Render($oPage, true /* bEditMode */);
 			break;
 
 		case 'dashlet_creation_dlg':

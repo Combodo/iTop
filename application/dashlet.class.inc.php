@@ -781,6 +781,11 @@ class DashletObjectList extends Dashlet
 		{
 			$aQueryParams = $aExtraParams['query_params'];
 		}
+		elseif (isset($aExtraParams['class']))
+		{
+			$oObj = MetaModel::GetObject($aExtraParams['class'], $aExtraParams['id']);
+			$aQueryParams = $oObj->ToArgsForQuery();
+		}
 		else
 		{
 			$aQueryParams = array();
@@ -1027,6 +1032,11 @@ abstract class DashletGroupBy extends Dashlet
 		if (isset($aExtraParams['query_params']))
 		{
 			$aQueryParams = $aExtraParams['query_params'];
+		}
+		elseif (isset($aExtraParams['class']))
+		{
+			$oObj = MetaModel::GetObject($aExtraParams['class'], $aExtraParams['id']);
+			$aQueryParams = $oObj->ToArgsForQuery();
 		}
 		else
 		{
@@ -1826,6 +1836,11 @@ class DashletHeaderDynamic extends Dashlet
 		if (isset($aExtraParams['query_params']))
 		{
 			$aQueryParams = $aExtraParams['query_params'];
+		}
+		elseif (isset($aExtraParams['class']))
+		{
+			$oObj = MetaModel::GetObject($aExtraParams['class'], $aExtraParams['id']);
+			$aQueryParams = $oObj->ToArgsForQuery();
 		}
 		else
 		{

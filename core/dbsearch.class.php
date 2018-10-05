@@ -248,10 +248,35 @@ abstract class DBSearch
 
     public function serialize($bDevelopParams = false, $aContextParams = null)
 	{
-		$oSearch = $this->DeepClone();
-		$oSearch->ApplyParameters(array());
-		$sOql = $oSearch->ToOql($bDevelopParams, $aContextParams);
-		return rawurlencode(base64_encode(serialize(array($sOql, array(), $this->m_aModifierProperties))));
+		$aQueryParams = $this->GetQueryParams();
+
+		foreach($aQueryParams as $sParam => $sValue)
+		{
+			if (isset($aContextParams[$sParam]))
+			{
+				$aQueryParams[$sParam] = $aContextParams[$sParam];
+			}
+			elseif (($iPos = strpos($sParam, '->')) !== false)
+			{
+				$sParamName = substr($sParam, 0, $iPos);
+				if (isset($aContextParams[$sParamName.'->object()']))
+				{
+					$sAttCode = substr($sParam, $iPos + 2);
+					$oObj = $aContextParams[$sParamName.'->object()'];
+					if ($sAttCode == 'id')
+					{
+						$aQueryParams[$sParam] = $oObj->GetKey();
+					}
+					else
+					{
+						$aQueryParams[$sParam] = $oObj->Get($sAttCode);
+					}
+				}
+			}
+		}
+
+		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
+		return rawurlencode(base64_encode(serialize(array($sOql, $aQueryParams, $this->m_aModifierProperties))));
 	}
 
 	/**

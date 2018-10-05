@@ -443,7 +443,6 @@ EOF
 			$aExtraParams = array('query_params' => $this->ToArgsForQuery());
 			$oDashboard->Render($oPage, false, $aExtraParams);
 			$oPage->add('</div>');
-			$oDashboard->RenderEditionTools($oPage);
 		}
 	}
 
