@@ -9626,7 +9626,7 @@ class AttributeTagSet extends AttributeSet
 		{
 			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
 		}
-		if ($bLocalizedValue && !empty($sProposedValue))
+		if (!empty($sProposedValue))
 		{
 			$oTagSet = new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()),
 				$this->GetCode(), $this->GetMaxItems());
@@ -9636,7 +9636,7 @@ class AttributeTagSet extends AttributeSet
 			{
 				if (!empty($sTagLabel))
 				{
-					$aCodes[] = $oTagSet->GetTagFromLabel($sTagLabel);
+					$aCodes[] = ($bLocalizedValue) ? $oTagSet->GetTagFromLabel($sTagLabel) : $sTagLabel;
 				}
 			}
 			$sProposedValue = implode(' ', $aCodes);
