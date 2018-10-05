@@ -9401,6 +9401,11 @@ class AttributeTagSet extends AttributeSet
 		$this->aCSSClasses[] = 'attribute-tag-set';
 	}
 
+	public function GetEditClass()
+	{
+		return 'TagSet';
+	}
+
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('tag_code_max_len'));
