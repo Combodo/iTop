@@ -444,6 +444,12 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="domains" xsi:type="AttributeTagSet">
+          <sql>domains</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+          <max_items>12</max_items>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -461,11 +467,14 @@
             <item id="key_words">
               <rank>40</rank>
             </item>
-            <item id="summary">
+            <item id="domains">
               <rank>50</rank>
             </item>
-            <item id="description">
+            <item id="summary">
               <rank>60</rank>
+            </item>
+            <item id="description">
+              <rank>70</rank>
             </item>
           </items>
         </details>
@@ -483,7 +492,7 @@
             <item id="error_code">
               <rank>40</rank>
             </item>
-            <item id="key_words">
+            <item id="domains">
               <rank>50</rank>
             </item>
           </items>
@@ -496,7 +505,7 @@
             <item id="error_code">
               <rank>20</rank>
             </item>
-            <item id="key_words">
+            <item id="domains">
               <rank>30</rank>
             </item>
           </items>

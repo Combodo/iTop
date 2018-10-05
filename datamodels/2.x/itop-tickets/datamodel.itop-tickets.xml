@@ -196,12 +196,6 @@
 					<count_min>0</count_min>
 					<count_max>0</count_max>
 				</field>
-				<field id="tagfield" xsi:type="AttributeTagSet">
-					<sql>tagfield</sql>
-					<is_null_allowed>true</is_null_allowed>
-					<tracking_level>all</tracking_level>
-					<max_items>12</max_items>
-				</field>
 			</fields>
 			<methods>
 				<method id="DBInsertNoReload">
@@ -284,9 +278,6 @@
 						</item>
 						<item id="operational_status">
 							<rank>75</rank>
-						</item>
-						<item id="tagfield">
-							<rank>76</rank>
 						</item>
 						<item id="start_date">
 							<rank>80</rank>
