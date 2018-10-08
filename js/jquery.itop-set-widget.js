@@ -166,13 +166,15 @@ $.widget('itop.set_widget',
         _bindEvents: function($widgetElement) {
             var setWidget = this;
 			$widgetElement.bind("update", function() {
-				console.debug("update event in Selectize !", this);
+				if (setWidget.options.isDebug) {
+					console.debug("update event in Selectize !", this);
+				}
 				var $this = $(this);
 				if ($this.prop("disabled")) {
-                    setWidget.disable();
-                } else {
-                    setWidget.enable();
-                }
+					setWidget.disable();
+				} else {
+					setWidget.enable();
+				}
 			});
 		},
 
@@ -212,20 +214,20 @@ $.widget('itop.set_widget',
 		},
 
 		/**
-         * <p>Updating selection widget :
-         * <ul>
+		 * <p>Updating selection widget :
+		 * <ul>
 		 *     <li>handles bulk edit disabling on widget opening
-         *     <li>adding specific CSS class to parent node
-         *     <li>adding specific CSS classes to item node
-         *     <li>items to have a specific rendering for partial codes.
-         * </ul>
-         *
-         * <p>For partial codes at first I was thinking about using the Selectize <code>render</code> callback, but it is called before <code>onItemAdd</code>/<code>onItemRemove</code> :(<br>
-         * Indeed as we only need to have partial items on first display, this callback is the right place O:)
+		 *     <li>adding specific CSS class to parent node
+		 *     <li>adding specific CSS classes to item node
+		 *     <li>items to have a specific rendering for partial codes.
+		 * </ul>
 		 *
-         * @param inputWidget Selectize object
-         * @private
-         */
+		 * <p>For partial codes at first I was thinking about using the Selectize <code>render</code> callback, but it is called before <code>onItemAdd</code>/<code>onItemRemove</code> :(<br>
+		 * Indeed as we only need to have partial items on first display, this callback is the right place O:)
+		 *
+		 * @param inputWidget Selectize object
+		 * @private
+		 */
 		_onInitialize: function (inputWidget) {
             var setWidget = this;
 			if (this.options.isDebug) {
