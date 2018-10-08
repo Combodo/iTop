@@ -66,6 +66,7 @@ $.widget('itop.set_widget',
 
 		PARENT_CSS_CLASS: "attribute-set",
 		ITEM_CSS_CLASS: "attribute-set-item",
+		ITEM_PARTIAL_CSS_CLASS: "partial-code",
 
 		POSSIBLE_VAL_KEY: 'possible_values',
 		PARTIAL_VAL_KEY: "partial_values",
@@ -176,6 +177,11 @@ $.widget('itop.set_widget',
 					setWidget.enable();
 				}
 			});
+
+			console.debug("bindEvents", setWidget.selectizeWidget);
+			setWidget.selectizeWidget.$control.on('click', '.attribute-set-item.partial-code', function () {
+				setWidget._onTagPartialClick(setWidget, this);
+			})
 		},
 
 		refresh: function () {
@@ -246,7 +252,7 @@ $.widget('itop.set_widget',
 				$item.addClass(setWidget.ITEM_CSS_CLASS + '-' + setItemCode); // no escape as codes are already pretty restrictive
 
 				if (setWidget._isCodeInPartialValues(setItemCode)) {
-					inputWidget.getItem(setItemCode).addClass("partial-code");
+					inputWidget.getItem(setItemCode).addClass(setWidget.ITEM_PARTIAL_CSS_CLASS);
 				}
 			});
 		},
@@ -258,7 +264,7 @@ $.widget('itop.set_widget',
 			this.setItemsCodesStatus[setItemCode] = this.STATUS_ADDED;
 
 			if (this._isCodeInPartialValues(setItemCode)) {
-				this.partialValues = this.partialValues.filter(item => (item !== setItemCode));
+				this._partialCodeRemove(setItemCode);
 			} else {
 				if (this.originalValue.indexOf(setItemCode) !== -1) {
 					// do not add if was present initially and removed
@@ -284,6 +290,24 @@ $.widget('itop.set_widget',
 			}
 
 			this.refresh();
+		},
+
+		_onTagPartialClick: function (setWidget, inputWidgetItemNode) {
+			if (setWidget.options.isDebug) {
+				console.debug("onTagPartialClick", setWidget, inputWidgetItemNode);
+			}
+			if (setWidget.selectizeWidget.isDisabled) {
+				return;
+			}
+
+			var partialCodeClicked = $(inputWidgetItemNode).data("value");
+			this._onTagAdd(partialCodeClicked, $(inputWidgetItemNode), setWidget.selectizeWidget);
+
+			$(inputWidgetItemNode).removeClass(setWidget.ITEM_PARTIAL_CSS_CLASS);
+		},
+
+		_partialCodeRemove: function (setItemCode) {
+			this.partialValues = this.partialValues.filter(item => (item !== setItemCode));
 		},
 
 		_isCodeInPartialValues: function (setItemCode) {
