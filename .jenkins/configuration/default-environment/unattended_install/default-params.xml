@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <installation>
+<!-- On manual installs, this file is generated in setup/install-*.xml -->
     <mode>upgrade</mode>
     <preinstall>
         <copies type="array"/>
@@ -28,37 +29,39 @@
     </admin_account>
     <language>EN US</language>
     <selected_modules type="array">
-        <item>authent-external</item>
-        <item>authent-local</item>
-        <item>itop-backup</item>
-        <item>itop-config</item>
-        <item>itop-profiles-itil</item>
-        <item>itop-sla-computation</item>
-        <item>itop-tickets</item>
-        <item>itop-welcome-itil</item>
-        <item>itop-config-mgmt</item>
-        <item>itop-attachments</item>
-        <item>itop-datacenter-mgmt</item>
-        <item>itop-endusers-devices</item>
-        <item>itop-storage-mgmt</item>
-        <item>itop-virtualization-mgmt</item>
-        <item>itop-bridge-virtualization-storage</item>
-        <item>itop-service-mgmt</item>
-        <item>itop-request-mgmt</item>
-        <item>itop-portal</item>
-        <item>itop-portal-base</item>
-        <item>itop-change-mgmt</item>
+      <item>authent-external</item>
+      <item>authent-local</item>
+      <item>itop-backup</item>
+      <item>itop-config</item>
+      <item>itop-profiles-itil</item>
+      <item>itop-sla-computation</item>
+      <item>itop-tickets</item>
+      <item>itop-welcome-itil</item>
+      <item>itop-config-mgmt</item>
+      <item>itop-attachments</item>
+      <item>itop-datacenter-mgmt</item>
+      <item>itop-endusers-devices</item>
+      <item>itop-storage-mgmt</item>
+      <item>itop-virtualization-mgmt</item>
+      <item>itop-bridge-virtualization-storage</item>
+      <item>itop-service-mgmt</item>
+      <item>itop-request-mgmt</item>
+      <item>itop-portal</item>
+      <item>itop-portal-base</item>
+      <item>itop-change-mgmt</item>
+      <item>itop-knownerror-mgmt</item>
     </selected_modules>
     <selected_extensions type="array">
-        <item>itop-config-mgmt-core</item>
-        <item>itop-config-mgmt-datacenter</item>
-        <item>itop-config-mgmt-end-user</item>
-        <item>itop-config-mgmt-storage</item>
-        <item>itop-config-mgmt-virtualization</item>
-        <item>itop-service-mgmt-enterprise</item>
-        <item>itop-ticket-mgmt-simple-ticket</item>
-        <item>itop-ticket-mgmt-simple-ticket-enhanced-portal</item>
-        <item>itop-change-mgmt-simple</item>
+      <item>itop-config-mgmt-core</item>
+      <item>itop-config-mgmt-datacenter</item>
+      <item>itop-config-mgmt-end-user</item>
+      <item>itop-config-mgmt-storage</item>
+      <item>itop-config-mgmt-virtualization</item>
+      <item>itop-service-mgmt-enterprise</item>
+      <item>itop-ticket-mgmt-simple-ticket</item>
+      <item>itop-ticket-mgmt-simple-ticket-enhanced-portal</item>
+      <item>itop-change-mgmt-simple</item>
+      <item>itop-kown-error-mgmt</item>
     </selected_extensions>
     <sample_data>1</sample_data>
     <old_addon></old_addon>

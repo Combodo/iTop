@@ -498,9 +498,17 @@ class ItopDataTestCase extends ItopTestCase
 
 	protected function CreateObjectWithTagSet()
 	{
+		$oFaqCategory = MetaModel::GetObject('FAQCategory', 1, false);
+		if (empty($oFaqCategory))
+		{
+			$oFaqCategory = $this->createObject('FAQCategory', array(
+				'name' => 'FAQCategory_phpunit',
+			));
+		}
+
 		/** @var FAQ $oFaq */
 		$oFaq = $this->createObject('FAQ', array(
-			'category_id' => 1,
+			'category_id' => $oFaqCategory->GetKey(),
 			'title' => 'FAQ_phpunit',
 		));
 		$this->debug("Created {$oFaq->GetName()}");
