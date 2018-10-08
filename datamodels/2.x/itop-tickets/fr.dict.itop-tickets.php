@@ -63,7 +63,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Ticket/Attribute:private_log+' => '',
 	'Class:Ticket/Attribute:contacts_list' => 'Contacts',
 	'Class:Ticket/Attribute:contacts_list+' => '',
-    'Class:Ticket/Attribute:tagfield' => 'Etiquette',
     'Class:Ticket/Attribute:functionalcis_list' => 'CIs',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Tous les éléments de configuration impactés par ce ticket. Les éléments marqués comme "Calculés" sont le résultat du calcul de l\'analyse d\'impact. Les éléments marqués comme "Non impactés" sont exclus de cette analyse.',
 	'Class:Ticket/Attribute:workorders_list' => 'Tâches',

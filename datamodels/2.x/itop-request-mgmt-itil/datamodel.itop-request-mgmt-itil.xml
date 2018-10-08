@@ -1500,9 +1500,6 @@
 										<item id="priority">
 											<rank>40</rank>
 										</item>
-										<item id="tagfield">
-											<rank>76</rank>
-										</item>
 									</items>
 								</item>
 								<item id="fieldset:Ticket:contact">
