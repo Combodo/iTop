@@ -945,10 +945,6 @@ class ScalarExpression extends UnaryExpression
 							{
 								IssueLog::Error($e->getMessage());
 							}
-							catch (Exception $e)
-							{
-								IssueLog::Error($e->getMessage());
-							}
 							break;
 						case ($oAttDef instanceof AttributeTagSet):
 							try
