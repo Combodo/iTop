@@ -917,24 +917,35 @@ class ScalarExpression extends UnaryExpression
 						case ($oAttDef instanceof AttributeExternalField):
 							try
 							{
-								if ($this->GetValue() != 0)
+								$oFinalAttDef = $oAttDef->GetFinalAttDef();
+								if($oFinalAttDef instanceof  AttributeExternalKey)
 								{
-									/** @var AttributeExternalKey $oAttDef */
-									$sTarget = $oAttDef->GetFinalAttDef()->GetTargetClass();
-									$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
-
-									$aValue['label'] = $oObj->Get("friendlyname");
-									$aValue['value'] = $this->GetValue();
-									$aCriterion['values'] = array($aValue);
-
+									if ($this->GetValue() !== 0)
+									{
+										/** @var AttributeExternalKey $oFinalAttDef */
+										$sTarget = $oFinalAttDef->GetTargetClass();
+										$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
+										$aValue['label'] = $oObj->Get("friendlyname");
+										$aValue['value'] = $this->GetValue();
+									}
+									else
+									{
+										$aValue['label'] = Dict::S('Enum:Undefined');
+										$aValue['value'] = $this->GetValue();
+									}
 								}
 								else
 								{
-									$aValue['label'] = Dict::S('Enum:Undefined');
+									$aValue['label'] = $this->GetValue();
 									$aValue['value'] = $this->GetValue();
-									$aCriterion['values'] = array($aValue);
 								}
-							} catch (Exception $e)
+								$aCriterion['values'] = array($aValue);
+							}
+							catch (Exception $e)
+							{
+								IssueLog::Error($e->getMessage());
+							}
+							catch (Exception $e)
 							{
 								IssueLog::Error($e->getMessage());
 							}
