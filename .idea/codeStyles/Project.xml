@@ -11,6 +11,14 @@
       <option name="KEEP_RPAREN_AND_LBRACE_ON_ONE_LINE" value="true" />
       <option name="PHPDOC_USE_FQCN" value="true" />
     </PHPCodeStyleSettings>
+    <codeStyleSettings language="JavaScript">
+      <option name="BRACE_STYLE" value="2" />
+      <option name="ELSE_ON_NEW_LINE" value="true" />
+      <option name="IF_BRACE_FORCE" value="3" />
+      <indentOptions>
+        <option name="USE_TAB_CHARACTER" value="true" />
+      </indentOptions>
+    </codeStyleSettings>
     <codeStyleSettings language="PHP">
       <option name="BLANK_LINES_AFTER_PACKAGE" value="1" />
       <option name="BRACE_STYLE" value="2" />
