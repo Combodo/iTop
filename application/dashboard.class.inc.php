@@ -732,7 +732,7 @@ class RuntimeDashboard extends Dashboard
 		{
 			$aAjaxParams = $aExtraParams;
 		}
-		if (!$bEditMode)
+		if (!$bEditMode && !$oPage->IsPrintableVersion())
 		{
 			$sId = $this->GetId();
 			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);

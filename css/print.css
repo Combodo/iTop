@@ -21,7 +21,8 @@ p a, .ui-widget-content td a, p a:hover, .ui-widget-content td a:hover, p a:visi
 	padding-left: 0;
 	background: transparent;
 }
-body { margin:none; }
+body { margin:0; }
+
 .printable-tab {
 	-webkit-region-break-inside: avoid;
 	page-break-inside: avoid;

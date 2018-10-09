@@ -333,7 +333,7 @@ function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent) {
  */
 function GetUserPreference(sPreferenceCode, sDefaultValue) {
 	var value = sDefaultValue;
-	if (oUserPreferences[sPreferenceCode] != undefined) {
+	if ((typeof(oUserPreferences) !== 'undefined') && (typeof(oUserPreferences[sPreferenceCode]) !== 'undefined')) {
 		value = oUserPreferences[sPreferenceCode];
 	}
 	return value;
