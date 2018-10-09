@@ -229,32 +229,38 @@ $(function()
 				}]
 			};
 			// - Retrieve criterion
-			this.elements.criterion_area.find('.sf_criterion_row').each(function(iIdx){
-				var oCriterionRowElem = $(this);
+			var iCurrentCriterionRow = 0;
+			this.elements.criterion_area.find('.sf_criterion_row').each(function (iDomCriterionRowIdx) {
+				var isFirstRow = (iDomCriterionRowIdx === 0),
+					oCriterionRowElem = $(this),
+					oCriteriaRowCriterias = oCriterionRowElem.find('.search_form_criteria');
 
-				if (oCriterionRowElem.find('.search_form_criteria').length == 0 && iIdx > 0)
+				if (oCriteriaRowCriterias.length === 0)
 				{
-					$(this).remove();
+					if (!isFirstRow)
+					{
+						$(this).remove();
+					}
 				}
 				else
 				{
-					oCriterionRowElem.find('.search_form_criteria').each(function ()
-					{
+					oCriteriaRowCriterias.each(function () {
 						var oCriteriaData = $(this).triggerHandler('itop.search.criteria.get_data');
 
 						if (null != oCriteriaData)
 						{
-							if (!oCriterion['or'][iIdx])
+							if (!oCriterion['or'][iCurrentCriterionRow])
 							{
-								oCriterion['or'][iIdx] = {'and': []};
+								oCriterion['or'][iCurrentCriterionRow] = {'and': []};
 							}
-							oCriterion['or'][iIdx]['and'].push(oCriteriaData);
+							oCriterion['or'][iCurrentCriterionRow]['and'].push(oCriteriaData);
 						}
 						else
 						{
 							$(this).remove();
 						}
 					});
+					iCurrentCriterionRow++;
 				}
 			});
 			// - Update search
