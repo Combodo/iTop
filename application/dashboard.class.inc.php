@@ -734,34 +734,34 @@ class RuntimeDashboard extends Dashboard
 		}
 		if (!$bEditMode)
 		{
+			$sId = $this->GetId();
+			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);
 			if ($this->GetAutoReload())
 			{
-				$sId = $this->GetId();
-				$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);
 				$sFile = addslashes($this->GetDefinitionFile());
 				$sExtraParams = json_encode($aAjaxParams);
 				$iReloadInterval = 1000 * $this->GetAutoReloadInterval();
 				$oPage->add_script(
 <<<EOF
-				if (typeof(AutoReloadDashboardId) !== 'undefined')
+				if (typeof(AutoReloadDashboardId$sDivId) !== 'undefined')
 				{
-					clearInterval(AutoReloadDashboardId);
-					delete AutoReloadDashboardId;
+					clearInterval(AutoReloadDashboardId$sDivId);
+					delete AutoReloadDashboardId$sDivId;
 				}
 			
-				AutoReloadDashboardId = setInterval("ReloadDashboard('$sDivId');", $iReloadInterval);
+				AutoReloadDashboardId$sDivId = setInterval("ReloadDashboard$sDivId();", $iReloadInterval);
 
-				function ReloadDashboard(sDivId)
+				function ReloadDashboard$sDivId()
 				{
 					// Do not reload when a dialog box is active
 					if (!($('.ui-dialog:visible').length > 0))
 					{
-						$('.dashboard_contents#'+sDivId).block();
+						$('.dashboard_contents#$sDivId').block();
 						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 						   { operation: 'reload_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams},
 						   function(data){
-							 $('.dashboard_contents#'+sDivId).html(data);
-							 $('.dashboard_contents#'+sDivId).unblock();
+							 $('.dashboard_contents#$sDivId').html(data);
+							 $('.dashboard_contents#$sDivId').unblock();
 							}
 						 );
 					}
@@ -773,10 +773,10 @@ EOF
 			{
 				$oPage->add_script(
 <<<EOF
-				if (typeof(AutoReloadDashboardId) !== 'undefined')
+				if (typeof(AutoReloadDashboardId$sDivId) !== 'undefined')
 				{
-					clearInterval(AutoReloadDashboardId);
-					delete AutoReloadDashboardId;
+					clearInterval(AutoReloadDashboardId$sDivId);
+					delete AutoReloadDashboardId$sDivId;
 				}
 EOF
 				);
