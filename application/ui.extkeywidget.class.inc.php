@@ -332,7 +332,8 @@ EOF
 		if ( ($oCurrObject != null) && ($this->sAttCode != ''))
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($oCurrObject), $this->sAttCode);
-			$aArgs = array('this' => $oCurrObject);
+			/** @var \DBObject $oCurrObject */
+			$aArgs = $oCurrObject->ToArgsForQuery();
 			$aParams = array('query_params' => $aArgs);
 			$oSet = $oAttDef->GetAllowedValuesAsObjectSet($aArgs);
 			$oFilter = $oSet->GetFilter();

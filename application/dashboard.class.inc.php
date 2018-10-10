@@ -710,9 +710,9 @@ class RuntimeDashboard extends Dashboard
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		if (!isset($aExtraParams['query_params']) && isset($aExtraParams['class']))
+		if (!isset($aExtraParams['query_params']) && isset($aExtraParams['this->class']))
 		{
-			$oObj = MetaModel::GetObject($aExtraParams['class'], $aExtraParams['id']);
+			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aRenderParams = array('query_params' => $oObj->ToArgsForQuery());
 		}
 		else
@@ -726,7 +726,7 @@ class RuntimeDashboard extends Dashboard
 		{
 			/** @var \DBObject $oObj */
 			$oObj = $aExtraParams['query_params']['this->object()'];
-			$aAjaxParams = array('class' => get_class($oObj), 'id' => $oObj->GetKey());
+			$aAjaxParams = array('this->class' => get_class($oObj), 'this->id' => $oObj->GetKey());
 		}
 		else
 		{
@@ -938,9 +938,9 @@ EOF
 	 */
 	public function RenderEditor($oPage, $aExtraParams = array())
 	{
-		if (isset($aExtraParams['class']))
+		if (isset($aExtraParams['this->class']))
 		{
-			$oObj = MetaModel::GetObject($aExtraParams['class'], $aExtraParams['id']);
+			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aRenderParams = array('query_params' => $oObj->ToArgsForQuery());
 		}
 		else

@@ -472,7 +472,7 @@ class DisplayBlock
 					{
 						$aQueryParams = array();
 					}
-					$sFilter = urlencode($oSubsetSearch->serialize(false, $aQueryParams));
+					$sFilter = $oSubsetSearch->serialize(false, $aQueryParams);
 
 					$aData[] = array ('group' => $aLabels[$iRow],
 									  'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"); // TO DO: add the context information
@@ -749,7 +749,7 @@ class DisplayBlock
 				$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 			}
 			$iCount = $this->m_oSet->Count();
-			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize());
+			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.$this->m_oFilter->serialize();
 			$sHtml .= '<p><a class="actions" href="'.$sHyperlink.'">';
 			// Note: border set to 0 due to various browser interpretations (IE9 adding a 2px border)
 			$sHtml .= MetaModel::GetClassIcon($sClass, true, 'float;left;margin-right:10px;border:0;');
@@ -838,7 +838,7 @@ class DisplayBlock
 						}
 						$sHyperlink = utils::GetAbsoluteUrlAppRoot()
 							.'pages/UI.php?operation=search&'.$oAppContext->GetForLink()
-							.'&filter='.urlencode($oSingleGroupByValueFilter->serialize());
+							.'&filter='.$oSingleGroupByValueFilter->serialize();
 						$aCounts[$sStateValue] = "<a href=\"$sHyperlink\">{$aCounts[$sStateValue]}</a>";
 					}
 				}
@@ -847,7 +847,7 @@ class DisplayBlock
 			$sHtml .= '<tr><td>'.implode('</td><td>', $aCounts).'</td></tr></table></div>';
 			// Title & summary
 			$iCount = $this->m_oSet->Count();
-			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize());
+			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.$this->m_oFilter->serialize();
 			$sHtml .= '<h1>'.Dict::S(str_replace('_', ':', $sTitle)).'</h1>';
 			$sHtml .= '<a class="summary" href="'.$sHyperlink.'">'.Dict::Format(str_replace('_', ':', $sLabel), $iCount).'</a>';
 			$sHtml .= '<div style="clear:both;"></div>';
@@ -858,7 +858,7 @@ class DisplayBlock
 
 			$sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv'; 
 			$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($sCsvFile);
-			$sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize()).'&format=csv';
+			$sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.$this->m_oFilter->serialize().'&format=csv';
 			// Pass the parameters via POST, since expression may be very long
 			$aParamsToPost = array(
 				'expression' => $this->m_oFilter->ToOQL(true),
@@ -986,7 +986,7 @@ EOF
 					$oSubsetSearch = $this->m_oFilter->DeepClone();
 					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
 					$oSubsetSearch->AddConditionExpression($oCondition);
-					$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".urlencode($oSubsetSearch->serialize()).'&'.$sContextParam;
+					$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".$oSubsetSearch->serialize().'&'.$sContextParam;
 				}
 				$sJSURLs = json_encode($aURLs);
 			}

@@ -781,9 +781,9 @@ class DashletObjectList extends Dashlet
 		{
 			$aQueryParams = $aExtraParams['query_params'];
 		}
-		elseif (isset($aExtraParams['class']))
+		elseif (isset($aExtraParams['this->class']))
 		{
-			$oObj = MetaModel::GetObject($aExtraParams['class'], $aExtraParams['id']);
+			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aQueryParams = $oObj->ToArgsForQuery();
 		}
 		else
@@ -1020,6 +1020,8 @@ abstract class DashletGroupBy extends Dashlet
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
@@ -1033,9 +1035,9 @@ abstract class DashletGroupBy extends Dashlet
 		{
 			$aQueryParams = $aExtraParams['query_params'];
 		}
-		elseif (isset($aExtraParams['class']))
+		elseif (isset($aExtraParams['this->class']))
 		{
-			$oObj = MetaModel::GetObject($aExtraParams['class'], $aExtraParams['id']);
+			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aQueryParams = $oObj->ToArgsForQuery();
 		}
 		else
@@ -1837,9 +1839,9 @@ class DashletHeaderDynamic extends Dashlet
 		{
 			$aQueryParams = $aExtraParams['query_params'];
 		}
-		elseif (isset($aExtraParams['class']))
+		elseif (isset($aExtraParams['this->class']))
 		{
-			$oObj = MetaModel::GetObject($aExtraParams['class'], $aExtraParams['id']);
+			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aQueryParams = $oObj->ToArgsForQuery();
 		}
 		else

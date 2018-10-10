@@ -262,34 +262,63 @@ abstract class DBSearch
 				if (isset($aContextParams[$sParamName.'->object()']))
 				{
 					$sAttCode = substr($sParam, $iPos + 2);
+					/** @var \DBObject $oObj */
 					$oObj = $aContextParams[$sParamName.'->object()'];
-					if ($sAttCode == 'id')
+					if ($oObj->IsModified())
 					{
-						$aQueryParams[$sParam] = $oObj->GetKey();
+						if ($sAttCode == 'id')
+						{
+							$aQueryParams[$sParam] = $oObj->GetKey();
+						}
+						else
+						{
+							$aQueryParams[$sParam] = $oObj->Get($sAttCode);
+						}
 					}
 					else
 					{
-						$aQueryParams[$sParam] = $oObj->Get($sAttCode);
+						unset($aQueryParams[$sParam]);
+						// For database objects, serialize only class, key
+						$aQueryParams[$sParamName.'->id'] = $oObj->GetKey();
+						$aQueryParams[$sParamName.'->class'] = get_class($oObj);
 					}
 				}
 			}
 		}
 
 		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
-		return rawurlencode(base64_encode(serialize(array($sOql, $aQueryParams, $this->m_aModifierProperties))));
+		return rawurlencode(json_encode(array($sOql, $aQueryParams, $this->m_aModifierProperties)));
 	}
 
 	/**
 	 * @param string $sValue Serialized OQL query
 	 *
 	 * @return \DBSearch
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
 	static public function unserialize($sValue)
 	{
-		$aData = unserialize(base64_decode(rawurldecode($sValue)));
+		$aData = json_decode(rawurldecode($sValue), true);
 		$sOql = $aData[0];
 		$aParams = $aData[1];
+		$aExtraParams = array();
+		foreach($aParams as $sParam => $sValue)
+		{
+			if (($iPos = strpos($sParam, '->class')) !== false)
+			{
+				$sParamName = substr($sParam, 0, $iPos);
+				if (isset($aParams[$sParamName.'->id']))
+				{
+					$sClass = $aParams[$sParamName.'->class'];
+					$iKey = $aParams[$sParamName.'->id'];
+					$oObj = MetaModel::GetObject($sClass, $iKey);
+					$aExtraParams[$sParamName.'->object()'] = $oObj;
+				}
+			}
+		}
+		$aParams = array_merge($aExtraParams, $aParams);
 		// We've tried to use gzcompress/gzuncompress, but for some specific queries
 		// it was not working at all (See Trac #193)
 		// gzuncompress was issuing a warning "data error" and the return object was null

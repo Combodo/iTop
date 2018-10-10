@@ -728,7 +728,7 @@ class TestQueriesOnFarm extends MyFarm
 		$oFilter2 = DBObjectSearch::unserialize($sSerialize);
 		try
 		{
-			$sQuery2 = $oMyFilter2->MakeSelectQuery();
+			$sQuery2 = $oFilter2->MakeSelectQuery();
 		}
 		catch (Exception $e)
 		{
