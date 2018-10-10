@@ -1,7 +1,7 @@
-﻿iTop - version 2.5.0 - 27-jun-2018
+iTop - version 2.5.1 - 10-Oct-2018
 Readme file
 
-iTop 2.5.0 is the 33rd release of iTop.
+iTop 2.5.1 is the 34th release of iTop.
 
 Changes since the previous version
 -------------------------------------------------------------------
