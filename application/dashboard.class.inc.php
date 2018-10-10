@@ -846,13 +846,11 @@ EOF
 		if ($this->bCustomized)
 		{
 			$oRevert = new JSPopupMenuItem('UI:Dashboard:RevertConfirm', Dict::S('UI:Dashboard:Revert'),
-											"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}'); else return false");
+											"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}', $sJSExtraParams); else return false");
 			$aActions[$oRevert->GetUID()] = $oRevert->GetMenuItem();
 		}
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
 		$sEditMenu .= $oPage->RenderPopupMenuItems($aActions);
-				
-
 		$sEditMenu = addslashes($sEditMenu);
 
 		$oPage->add_ready_script(
@@ -874,12 +872,12 @@ function EditDashboard(sId, sDashboardFile, aExtraParams)
 	);
 	return false;
 }
-function RevertDashboard(sId)
+function RevertDashboard(sId, aExtraParams)
 {
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'revert_dashboard', dashboard_id: sId},
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'revert_dashboard', dashboard_id: sId, extra_params: aExtraParams},
 		function(data)
 		{
-			$('body').append(data);
+			location.reload();
 		}
 	);
 	return false;

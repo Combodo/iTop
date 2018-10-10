@@ -945,7 +945,7 @@ try
 			}
 			else
 			{
-				$aResult['error'] = 'Dashboard id="'.$sMenuId.'" not found.';
+				$aResult['error'] = 'Dashboard id="'.$sDashboardId.'" not found.';
 			}
 			$oPage->add(json_encode($aResult));
 			break;

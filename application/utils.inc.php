@@ -1079,12 +1079,7 @@ class utils
 			// $param is a DBObject
 			$oObj = $param;
 			$sOQL = "SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey();
-			$oFilter = DBObjectSearch::FromOQL($sOQL);
-			$sFilter = $oFilter->serialize();
 			$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
-			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage(get_class($oObj));
-			$oAppContext = new ApplicationContext();
-			$sContext = $oAppContext->GetForLink();
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
 			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
