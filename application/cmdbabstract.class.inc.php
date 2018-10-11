@@ -438,10 +438,11 @@ EOF
 				continue;
 			}
 
+			$bCanEdit = UserRights::IsAdministrator() || $oAttDef->IsUserEditable();
 			$sDivId = $oDashboard->GetId();
 			$oPage->add('<div class="dashboard_contents" id="'.$sDivId.'">');
 			$aExtraParams = array('query_params' => $this->ToArgsForQuery());
-			$oDashboard->Render($oPage, false, $aExtraParams);
+			$oDashboard->Render($oPage, false, $aExtraParams, $bCanEdit);
 			$oPage->add('</div>');
 		}
 	}

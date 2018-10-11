@@ -1254,7 +1254,7 @@ class AttributeDashboard extends AttributeDefinition
 	static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(),
-			array("definition_file"));
+			array("definition_file", "is_user_editable"));
 	}
 
 	public function GetDashboard()
@@ -1263,6 +1263,11 @@ class AttributeDashboard extends AttributeDefinition
 		$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $sAttCode);
 		$sFilePath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/'.$this->Get('definition_file');
 		return RuntimeDashboard::GetDashboard($sFilePath, $sClass.'__'.$sAttCode);
+	}
+
+	public function IsUserEditable()
+	{
+		return $this->Get('is_user_editable');
 	}
 
 	public function IsWritable()

@@ -956,9 +956,31 @@ EOF
             $sHtml .= '<p>' . Dict::Format('UI:ExplainPrintable', '<img src="../images/eye-open-555.png" style="vertical-align:middle">') . '</p>';
             $sHtml .= "<div id=\"hiddeable_chapters\"></div>";
             $sHtml .= '<button onclick="window.print()">' . htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES, 'UTF-8') . '</button>';
-            $sHtml .= '&nbsp;';
-            $sHtml .= '<button onclick="window.close()">' . htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES, 'UTF-8') . '</button>';
+	        $sHtml .= '&nbsp;';
+	        $sHtml .= '<button onclick="window.close()">' . htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES, 'UTF-8') . '</button>';
+	        $sHtml .= '&nbsp;';
+
+	        $aResolutionChoices = array('100%' => Dict::S('UI:PrintResolution:FullSize'),
+		        '19cm' => Dict::S('UI:PrintResolution:A4Portrait'),
+		        '27.7cm' => Dict::S('UI:PrintResolution:A4Landscape'),
+		        '19.6cm' => Dict::S('UI:PrintResolution:LetterPortrait'),
+		        '25.9cm' => Dict::S('UI:PrintResolution:LetterLandscape'),
+	        );
+	        $sHtml .=
+<<<EOF
+<select name="text" onchange='$(".printable-content").width(this.value); $(charts).each(function(i, chart) { $(chart).trigger("resize"); });'>
+EOF
+		        ;
+	        $bIsSelected = true;
+	        foreach ($aResolutionChoices as $sValue => $sText)
+	        {
+		        $sHtml .= '<option value="'.$sValue.'" '.($bIsSelected ? 'selected' : '').'>'.$sText.'</option>';
+		        $bIsSelected = false;
+	        }
+	        $sHtml .= "</select>";
+
             $sHtml .= "</div>";
+	        $sHtml .= "<div class=\"printable-content\">";
         }
 
         // Render the revision number
@@ -979,7 +1001,9 @@ EOF
             $sHtml .= ' <!-- Beginning of page content -->';
             $sHtml .= self::FilterXSS($this->s_content);
             $sHtml .= ' <!-- End of page content -->';
-        } elseif ($this->GetOutputFormat() == 'html') {
+        }
+        elseif ($this->GetOutputFormat() == 'html')
+        {
             $oAppContext = new ApplicationContext();
 
             $sUserName = UserRights::GetUser();
@@ -1170,6 +1194,10 @@ EOF;
         } else {
             $sHtml .= self::FilterXSS($this->s_content);
         }
+
+	    if ($this->IsPrintableVersion()) {
+		    $sHtml .= '</div>';
+	    }
 
         $sHtml .= "</body>\n";
         $sHtml .= "</html>\n";

@@ -1132,6 +1132,13 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Button:Refresh' => 'Refresh',
 	'UI:Button:GoPrint' => 'Print...',
 	'UI:ExplainPrintable' => 'Click onto the %1$s icon to hide items from the print.<br/>Use the "print preview" feature of your browser to preview before printing.<br/>Note: this header and the other tuning controls will not be printed.',
+	'UI:PrintResolution:FullSize' => 'Full size',
+	'UI:PrintResolution:A4Portrait' => 'A4 Portrait',
+	'UI:PrintResolution:A4Landscape' => 'A4 Landscape',
+	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait',
+	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape',
+	'UI:Toggle:StandardDashboard' => 'Standard',
+	'UI:Toggle:CustomDashboard' => 'Custom',
 
 	'UI:ConfigureThisList' => 'Configure This List...',
 	'UI:ListConfigurationTitle' => 'List Configuration',

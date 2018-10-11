@@ -451,8 +451,9 @@ EOF
 	 * @param \iTopWebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
+	 * @param bool $bCanEdit
 	 */
-	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
 		$oPage->add('<div class="dashboard-title">'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</div>');
 
@@ -582,6 +583,7 @@ class RuntimeDashboard extends Dashboard
 {
 	protected $bCustomized;
 	private $sDefinitionFile = '';
+	private $sReloadURL = null;
 
 
 	public function __construct($sId)
@@ -598,6 +600,8 @@ class RuntimeDashboard extends Dashboard
 
 	/**
 	 * @param \DesignerForm $oForm
+	 *
+	 * @param array $aExtraParams
 	 *
 	 * @throws \Exception
 	 */
@@ -708,7 +712,7 @@ class RuntimeDashboard extends Dashboard
 	 *
 	 * @throws \Exception
 	 */
-	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
+	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
 		if (!isset($aExtraParams['query_params']) && isset($aExtraParams['this->class']))
 		{
@@ -754,7 +758,7 @@ class RuntimeDashboard extends Dashboard
 				function ReloadDashboard$sDivId()
 				{
 					// Do not reload when a dialog box is active
-					if (!($('.ui-dialog:visible').length > 0))
+					if (!($('.ui-dialog:visible').length > 0) && $('.dashboard_contents#$sDivId').is(':visible'))
 					{
 						$('.dashboard_contents#$sDivId').block();
 						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
@@ -782,9 +786,11 @@ EOF
 				);
 			}
 
-			$this->RenderDashboardSelector($oPage);
-
-			$this->RenderEditionTools($oPage, $aAjaxParams);
+			if ($bCanEdit)
+			{
+				$this->RenderDashboardSelector($oPage);
+				$this->RenderEditionTools($oPage, $aAjaxParams);
+			}
 		}
 	}
 
@@ -852,7 +858,7 @@ EOF
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
 		$sEditMenu .= $oPage->RenderPopupMenuItems($aActions);
 		$sEditMenu = addslashes($sEditMenu);
-
+		$sReloadURL = $this->GetReloadURL();
 		$oPage->add_ready_script(
 <<<EOF
 	$('.dashboard-selector').after('$sEditMenu');
@@ -864,7 +870,7 @@ EOF
 <<<EOF
 function EditDashboard(sId, sDashboardFile, aExtraParams)
 {
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'dashboard_editor', id: sId, file: sDashboardFile, extra_params: aExtraParams},
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'dashboard_editor', id: sId, file: sDashboardFile, extra_params: aExtraParams, reload_url: '$sReloadURL'},
 		function(data)
 		{
 			$('body').append(data);
@@ -874,7 +880,7 @@ function EditDashboard(sId, sDashboardFile, aExtraParams)
 }
 function RevertDashboard(sId, aExtraParams)
 {
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'revert_dashboard', dashboard_id: sId, extra_params: aExtraParams},
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'revert_dashboard', dashboard_id: sId, extra_params: aExtraParams, reload_url: '$sReloadURL'},
 		function(data)
 		{
 			location.reload();
@@ -968,6 +974,7 @@ EOF
 		$sAutoReloadSec = (string) $this->iAutoReloadSec;
 		$sTitle = addslashes($this->sTitle);
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
+		$sReloadURL = $this->GetReloadURL();
 
 		$sExitConfirmationMessage = addslashes(Dict::S('UI:NavigateAwayConfirmationMessage'));
 		$sCancelConfirmationMessage = addslashes(Dict::S('UI:CancelConfirmationMessage'));
@@ -1019,8 +1026,8 @@ $('#dashboard_editor').dialog({
 $('#dashboard_editor .ui-layout-center').runtimedashboard({
 	dashboard_id: '$sId', layout_class: '$sLayoutClass', title: '$sTitle',
 	auto_reload: $sAutoReload, auto_reload_sec: $sAutoReloadSec,
-	submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard', extra_params: $sJSExtraParams},
-	render_to: '$sUrl', render_parameters: {operation: 'render_dashboard', extra_params: $sJSExtraParams},
+	submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	render_to: '$sUrl', render_parameters: {operation: 'render_dashboard', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	new_dashlet_parameters: {operation: 'new_dashlet'}
 });
 
@@ -1236,5 +1243,15 @@ EOF
 	public function SetDefinitionFile($sDefinitionFile)
 	{
 		$this->sDefinitionFile = $sDefinitionFile;
+	}
+
+	public function GetReloadURL()
+	{
+		return $this->sReloadURL;
+	}
+
+	public function SetReloadURL($sReloadURL)
+	{
+		$this->sReloadURL = $sReloadURL;
 	}
 }

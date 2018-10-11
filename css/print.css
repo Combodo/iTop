@@ -16,12 +16,20 @@ div.graph_config { display:none; }
 h2.printable-tab-title {
 	page-break-after: avoid;
 }
+h1 {
+	page-break-after: avoid;
+}
 div#tabbedContent_0 { border:none; }
 p a, .ui-widget-content td a, p a:hover, .ui-widget-content td a:hover, p a:visited, .ui-widget-content td a:visited, td a, td a:visited, td a:hover {
 	padding-left: 0;
 	background: transparent;
 }
-body { margin:0; }
+body {
+	margin:10px;
+}
+@page {
+	margin: 1cm;
+}
 
 .printable-tab {
 	-webkit-region-break-inside: avoid;

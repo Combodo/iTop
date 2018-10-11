@@ -955,10 +955,15 @@ try
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 			$aResult = array('error' => '');
 			if (!is_null($oDashboard))
 			{
+				if (!empty($sReloadURL))
+				{
+					$oDashboard->SetReloadURL($sReloadURL);
+				}
 				$oDashboard->Render($oPage, false, $aExtraParams);
 			}
 			$oPage->add_ready_script("$('.dashboard_contents table.listResults').tableHover(); $('.dashboard_contents table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
@@ -967,6 +972,7 @@ try
 		case 'save_dashboard':
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$sJSExtraParams = json_encode($aExtraParams);
 			$aParams = array();
 			$aParams['layout_class'] = utils::ReadParam('layout_class', '');
@@ -984,7 +990,7 @@ try
 <<<EOF
 			$('.dashboard_contents#$sDivId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile', extra_params: $sJSExtraParams},
+			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 			   function(data){
 				 $('.dashboard_contents#$sDivId').html(data);
 				 $('.dashboard_contents#$sDivId').unblock();
@@ -1005,7 +1011,7 @@ EOF
 <<<EOF
 			$('.dashboard_contents#$sDivId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile'},
+			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile', reload_url: '$sReloadURL'},
 			   function(data){
 				 $('.dashboard_contents#$sDivId').html(data);
 				 $('.dashboard_contents#$sDivId').unblock();
@@ -1024,8 +1030,10 @@ EOF
 			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
 			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
 			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
+			$oDashboard->SetReloadURL($sReloadURL);
 			$oDashboard->Render($oPage, true /* bEditMode */, $aExtraParams);
 			break;
 
@@ -1033,9 +1041,14 @@ EOF
 			$sId = utils::ReadParam('id', '', false, 'raw_data');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sId);
 			if (!is_null($oDashboard))
 			{
+				if (!empty($sReloadURL))
+				{
+					$oDashboard->SetReloadURL($sReloadURL);
+				}
 				$oDashboard->RenderEditor($oPage, $aExtraParams);
 			}
 			break;

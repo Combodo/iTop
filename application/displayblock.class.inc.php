@@ -928,7 +928,7 @@ class DisplayBlock
 	
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 			$sTitle = isset($aExtraParams['chart_title']) ? '<h1 style="text-align:center">'.htmlentities(Dict::S($aExtraParams['chart_title']), ENT_QUOTES, 'UTF-8').'</h1>' : '';
-			$sHtml = "$sTitle<div style=\"height:200px;width:100%\" id=\"my_chart_$sId{$iChartCounter}\"><div style=\"height:200px;line-height:200px;vertical-align:center;text-align:center;width:100%\"><img src=\"../images/indicator.gif\"></div></div>\n";
+			$sHtml = "$sTitle<div style=\"height:200px;width:100%\" class=\"dashboard_chart\" id=\"my_chart_$sId{$iChartCounter}\"><div style=\"height:200px;line-height:200px;vertical-align:center;text-align:center;width:100%\"><img src=\"../images/indicator.gif\"></div></div>\n";
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
 			$sGroupByExpr = isset($aExtraParams['group_by_expr']) ? '&params[group_by_expr]='.$aExtraParams['group_by_expr'] : '';
 			$sFilter = $this->m_oFilter->serialize();
@@ -1004,6 +1004,7 @@ EOF
 				$sJson = json_encode($aValues);
 				$oPage->add_ready_script(
 <<<EOF
+
 var chart = c3.generate({
     bindto: d3.select('#my_chart_$sId'),
     data: {
@@ -1051,6 +1052,12 @@ var chart = c3.generate({
 	  }
 	}
 });
+
+if (typeof(charts) === "undefined")
+{
+  charts = [];
+}
+charts.push(chart);
 EOF
 				);
 				break;
@@ -1089,6 +1096,12 @@ var chart = c3.generate({
 	  }
 	}
 });
+
+if (typeof(charts) === "undefined")
+{
+  charts = [];
+}
+charts.push(chart);
 EOF
 				);
 				break;				
