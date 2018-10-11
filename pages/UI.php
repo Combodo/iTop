@@ -1653,7 +1653,7 @@ EOF
 
 		$bDirDown = ($sDirection === 'down');
 		$oObj = MetaModel::GetObject($sClass, $id);
-		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth');
 		$aSourceObjects = array($oObj);
 
 		$oP->set_title(MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName());
