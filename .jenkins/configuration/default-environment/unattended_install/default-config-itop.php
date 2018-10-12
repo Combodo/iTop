@@ -124,7 +124,7 @@ $MySettings = array(
 
 	// email_transport_smtp.password: Authentication password (optional)
 	//	default: ''
-	'email_transport_smtp.password' => 'IDoNotWrok',
+	'email_transport_smtp.password' => 'IDoNotWork',
 
 	// email_transport_smtp.port: port number (optional)
 	//	default: 25
