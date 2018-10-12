@@ -390,7 +390,7 @@ abstract class Dashboard
 		$oField = new DesignerHiddenField('dashboard_id', '', $this->sId);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerLongTextField('dashboard_title', Dict::S('UI:DashboardEdit:DashboardTitle'), $this->sTitle);
+		$oField = new DesignerTextField('dashboard_title', Dict::S('UI:DashboardEdit:DashboardTitle'), $this->sTitle);
 		$oForm->AddField($oField);
 
 		$oField = new DesignerBooleanField('auto_reload', Dict::S('UI:DashboardEdit:AutoReload'), $this->bAutoReload);
@@ -455,7 +455,7 @@ EOF
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
-		$oPage->add('<div class="dashboard-title">'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</div>');
+		$oPage->add('<div class="dashboard-title-line"><div class="dashboard-title">'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</div></div>');
 
 		$oLayout = new $this->sLayoutClass;
 		/** @var \DashboardLayoutMultiCol $oLayout */
@@ -654,7 +654,7 @@ class RuntimeDashboard extends Dashboard
 
 	/**
 	 * @param string $sDashboardFile file name relative to the current module folder
-	 * @param string $sDashBoardCode code of the dashboard either menu_id or <class>__<attcode>
+	 * @param string $sDashBoardId code of the dashboard either menu_id or <class>__<attcode>
 	 *
 	 * @return null|RuntimeDashboard
 	 * @throws \CoreException
@@ -663,16 +663,16 @@ class RuntimeDashboard extends Dashboard
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public static function GetDashboard($sDashboardFile, $sDashBoardCode)
+	public static function GetDashboard($sDashboardFile, $sDashBoardId)
 	{
 		$bCustomized = false;
 
-		if (!appUserPreferences::GetPref('display_original_dashboard_'.$sDashBoardCode, false))
+		if (!appUserPreferences::GetPref('display_original_dashboard_'.$sDashBoardId, false))
 		{
 			// Search for an eventual user defined dashboard
 			$oUDSearch = new DBObjectSearch('UserDashboard');
 			$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
-			$oUDSearch->AddCondition('menu_code', $sDashBoardCode, '=');
+			$oUDSearch->AddCondition('menu_code', $sDashBoardId, '=');
 			$oUDSet = new DBObjectSet($oUDSearch);
 			if ($oUDSet->Count() > 0)
 			{
@@ -693,7 +693,7 @@ class RuntimeDashboard extends Dashboard
 
 		if ($sDashboardDefinition !== false)
 		{
-			$oDashboard = new RuntimeDashboard($sDashBoardCode);
+			$oDashboard = new RuntimeDashboard($sDashBoardId);
 			$oDashboard->FromXml($sDashboardDefinition);
 			$oDashboard->SetCustomFlag($bCustomized);
 			$oDashboard->SetDefinitionFile($sDashboardFile);
@@ -745,6 +745,7 @@ class RuntimeDashboard extends Dashboard
 				$sFile = addslashes($this->GetDefinitionFile());
 				$sExtraParams = json_encode($aAjaxParams);
 				$iReloadInterval = 1000 * $this->GetAutoReloadInterval();
+				$sReloadURL = $this->GetReloadURL();
 				$oPage->add_script(
 <<<EOF
 				if (typeof(AutoReloadDashboardId$sDivId) !== 'undefined')
@@ -762,7 +763,7 @@ class RuntimeDashboard extends Dashboard
 					{
 						$('.dashboard_contents#$sDivId').block();
 						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-						   { operation: 'reload_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams},
+						   { operation: 'reload_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, reload_url: '$sReloadURL'},
 						   function(data){
 							 $('.dashboard_contents#$sDivId').html(data);
 							 $('.dashboard_contents#$sDivId').unblock();
@@ -788,7 +789,7 @@ EOF
 
 			if ($bCanEdit)
 			{
-				$this->RenderDashboardSelector($oPage);
+				$this->RenderSelector($oPage);
 				$this->RenderEditionTools($oPage, $aAjaxParams);
 			}
 		}
@@ -797,18 +798,57 @@ EOF
 	/**
 	 * @param \iTopWebPage $oPage
 	 */
-	protected function RenderDashboardSelector($oPage)
+	protected function RenderSelector($oPage, $aExtraParams = array())
 	{
+		$sId = $this->GetId();
+		$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);
+		if (isset($aExtraParams['query_params']['this->object()']))
+		{
+			/** @var \DBObject $oObj */
+			$oObj = $aExtraParams['query_params']['this->object()'];
+			$aAjaxParams = array('this->class' => get_class($oObj), 'this->id' => $oObj->GetKey());
+		}
+		else
+		{
+			$aAjaxParams = $aExtraParams;
+		}
+		$sExtraParams = json_encode($aAjaxParams);
+
 		$sSelectorHtml = '<div class="dashboard-selector">';
 		if ($this->HasCustomDashboard())
 		{
+			$bStandardSelected = appUserPreferences::GetPref('display_original_dashboard_'.$sId, false);
+			$sStandard = Dict::S('UI:Toggle:StandardDashboard');
+			$sSelectorHtml .= '<div class="selector-label">'.$sStandard.'</div>';
+			$sSelectorHtml .= '<label class="switch"><input type="checkbox" onchange="ToggleDashboardSelector'.$sDivId.'();" '.($bStandardSelected ? '' : 'checked').'><span class="slider round"></span></label></input></label>';
+			$sCustom = Dict::S('UI:Toggle:CustomDashboard');
+			$sSelectorHtml .= '<div class="selector-label">'.$sCustom.'</div>';
 
 		}
 		$sSelectorHtml .= '</div>';
+		$sSelectorHtml = addslashes($sSelectorHtml);
+		$sFile = addslashes($this->GetDefinitionFile());
+		$sReloadURL = $this->GetReloadURL();
 
 		$oPage->add_ready_script(
 <<<EOF
 	$('.dashboard-title').after('$sSelectorHtml');
+EOF
+		);
+
+		$oPage->add_script(
+<<<EOF
+			function ToggleDashboardSelector$sDivId()
+			{
+				$('.dashboard_contents#$sDivId').block();
+				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+				   { operation: 'toggle_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, reload_url: '$sReloadURL' },
+				   function(data) {
+					 $('.dashboard_contents#$sDivId').html(data);
+					 $('.dashboard_contents#$sDivId').unblock();
+					}
+				 );
+			}
 EOF
 		);
 	}
@@ -846,8 +886,16 @@ EOF
 		$aActions = array();
 		$sFile = addslashes($this->sDefinitionFile);
 		$sJSExtraParams = json_encode($aExtraParams);
-		$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
-		$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
+		$bCanEdit = true;
+		if ($this->HasCustomDashboard())
+		{
+			$bCanEdit = !appUserPreferences::GetPref('display_original_dashboard_'.$this->GetId(), false);
+		}
+		if ($bCanEdit)
+		{
+			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
+			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
+		}
 
 		if ($this->bCustomized)
 		{
@@ -861,7 +909,7 @@ EOF
 		$sReloadURL = $this->GetReloadURL();
 		$oPage->add_ready_script(
 <<<EOF
-	$('.dashboard-selector').after('$sEditMenu');
+	$('.dashboard-title').after('$sEditMenu');
 	$('#DashboardMenu>ul').popupmenu();
 	
 EOF
@@ -973,6 +1021,7 @@ EOF
 		$sAutoReload = $this->bAutoReload ? 'true' : 'false';
 		$sAutoReloadSec = (string) $this->iAutoReloadSec;
 		$sTitle = addslashes($this->sTitle);
+		$sFile = addslashes($this->GetDefinitionFile());
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php';
 		$sReloadURL = $this->GetReloadURL();
 
@@ -1026,8 +1075,8 @@ $('#dashboard_editor').dialog({
 $('#dashboard_editor .ui-layout-center').runtimedashboard({
 	dashboard_id: '$sId', layout_class: '$sLayoutClass', title: '$sTitle',
 	auto_reload: $sAutoReload, auto_reload_sec: $sAutoReloadSec,
-	submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
-	render_to: '$sUrl', render_parameters: {operation: 'render_dashboard', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	render_to: '$sUrl', render_parameters: {operation: 'render_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	new_dashlet_parameters: {operation: 'new_dashlet'}
 });
 

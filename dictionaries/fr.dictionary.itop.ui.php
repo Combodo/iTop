@@ -982,7 +982,14 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Button:Refresh' => 'Rafraîchir',
 	'UI:Button:GoPrint' => 'Imprimer...',
 	'UI:ExplainPrintable' => 'Cliquez sur les icones %1$s pour cacher des éléments lors de l\'impression.<br/>Utilisez la fonction "Aperçu avant impression" de votre navigateur pour prévisualiser avant d\'imprimer.<br/>Note: cet en-tête ainsi que les icones %1$s ne seront pas imprimés.',
-	
+	'UI:PrintResolution:FullSize' => 'Pleine largeur',
+	'UI:PrintResolution:A4Portrait' => 'A4 Portrait',
+	'UI:PrintResolution:A4Landscape' => 'A4 Paysage',
+	'UI:PrintResolution:LetterPortrait' => 'US Letter Portrait',
+	'UI:PrintResolution:LetterLandscape' => 'US Letter Paysage',
+	'UI:Toggle:StandardDashboard' => 'Standard',
+	'UI:Toggle:CustomDashboard' => 'Modifié',
+
 	'UI:ConfigureThisList' => 'Configurer Cette Liste...',
 	'UI:ListConfigurationTitle' => 'Configuration de la liste',
 	'UI:ColumnsAndSortOrder' => 'Colonnes et ordre de tri:',

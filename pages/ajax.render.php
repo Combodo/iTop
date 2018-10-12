@@ -950,6 +950,30 @@ try
 			$oPage->add(json_encode($aResult));
 			break;
 
+		case 'toggle_dashboard':
+			$oPage->SetContentType('text/html');
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+
+			$bStandardSelected = appUserPreferences::GetPref('display_original_dashboard_'.$sDashboardId, false);
+			appUserPreferences::UnsetPref('display_original_dashboard_'.$sDashboardId);
+			appUserPreferences::SetPref('display_original_dashboard_'.$sDashboardId, !$bStandardSelected);
+
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
+			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
+			$aResult = array('error' => '');
+			if (!is_null($oDashboard))
+			{
+				if (!empty($sReloadURL))
+				{
+					$oDashboard->SetReloadURL($sReloadURL);
+				}
+				$oDashboard->Render($oPage, false, $aExtraParams);
+			}
+			$oPage->add_ready_script("$('.dashboard_contents table.listResults').tableHover(); $('.dashboard_contents table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
+			break;
+
 		case 'reload_dashboard':
 			$oPage->SetContentType('text/html');
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
@@ -983,14 +1007,14 @@ try
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
 			$oDashboard->Save();
-			$sFile = $oDashboard->GetDefinitionFile();
+			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'raw_data'));
 			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
 <<<EOF
 			$('.dashboard_contents#$sDivId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sDashboardFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 			   function(data){
 				 $('.dashboard_contents#$sDivId').html(data);
 				 $('.dashboard_contents#$sDivId').unblock();
@@ -1002,9 +1026,10 @@ EOF
 
 		case 'revert_dashboard':
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+			appUserPreferences::UnsetPref('display_original_dashboard_'.$sDashboardId);
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->Revert();
-			$sFile = $oDashboard->GetDefinitionFile();
+			$sFile = addslashes($oDashboard->GetDefinitionFile());
 			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
