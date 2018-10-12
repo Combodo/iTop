@@ -789,7 +789,7 @@ EOF
 
 			if ($bCanEdit)
 			{
-				$this->RenderSelector($oPage);
+				$this->RenderSelector($oPage, $aAjaxParams);
 				$this->RenderEditionTools($oPage, $aAjaxParams);
 			}
 		}
@@ -797,21 +797,12 @@ EOF
 
 	/**
 	 * @param \iTopWebPage $oPage
+	 * @param array $aAjaxParams
 	 */
-	protected function RenderSelector($oPage, $aExtraParams = array())
+	protected function RenderSelector($oPage, $aAjaxParams = array())
 	{
 		$sId = $this->GetId();
 		$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);
-		if (isset($aExtraParams['query_params']['this->object()']))
-		{
-			/** @var \DBObject $oObj */
-			$oObj = $aExtraParams['query_params']['this->object()'];
-			$aAjaxParams = array('this->class' => get_class($oObj), 'this->id' => $oObj->GetKey());
-		}
-		else
-		{
-			$aAjaxParams = $aExtraParams;
-		}
 		$sExtraParams = json_encode($aAjaxParams);
 
 		$sSelectorHtml = '<div class="dashboard-selector">';
