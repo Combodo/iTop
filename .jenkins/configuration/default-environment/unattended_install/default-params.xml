@@ -13,8 +13,8 @@
     <workspace_dir></workspace_dir>
     <database>
         <server></server>
-        <user>root</user>
-        <pwd>c8mb0do</pwd>
+        <user>jenkins_itop</user>
+        <pwd>IKnowYouSeeMeInJenkinsConf</pwd>
         <name>itop_ci</name>
         <db_tls_enabled></db_tls_enabled>
         <db_tls_ca></db_tls_ca>
