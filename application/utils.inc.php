@@ -464,9 +464,9 @@ class utils
 	{
 		$sSelectionMode = utils::ReadParam('selectionMode', '');
 
-		if ($sSelectionMode === '')
+		if ($sSelectionMode != 'positive' && $sSelectionMode != 'negative')
 		{
-			throw new CoreException('selectionMode is mandatory');
+			throw new CoreException('selectionMode must be either positive or negative');
 		}
 
 		// Paginated selection
