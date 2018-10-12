@@ -229,7 +229,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		var selectionMode = $(':input[name="selectionMode"]', context);
 		if (selectionMode.length > 0) {
 			// Paginated table retrieve the mode and the exceptions
-			theMap['selectionMode'] = selectionMode.val();
+			theMap['selectionMode'] = (selectionMode.val() == 'negative') ? 'negative' : 'positive';
 			$('#fs_SearchFormToAdd_'+me.id+' :input').each(function () {
 				theMap[this.name] = this.value;
 			});
