@@ -910,6 +910,15 @@ try
 			}
 			break;
 
+		case 'dashboard':
+			$oPage->SetContentType('text/html');
+			$id = (int)utils::ReadParam('id', 0);
+			$sAttCode = utils::ReadParam('attcode', '');
+			/** @var \cmdbAbstractObject $oObj */
+			$oObj = MetaModel::GetObject($sClass, $id);
+			$oObj->DisplayDashboard($oPage, $sAttCode);
+			break;
+
 		case 'export_dashboard':
 			$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');

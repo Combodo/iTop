@@ -309,6 +309,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:ObjectAlreadyCreated' => 'Erreur: l\'objet a déjà été créé !',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erreur: le stimulus "%1$s" n\'est pas valide pour l\'objet %2$s dans l\'état "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Erreur: Le fichier tableau de bord est invalide',
+	'UI:Error:InvalidDashboard' => 'Erreur: Le tableau de bord est invalide',
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
 	'UI:CountOfObjects' => '%1$d objets correspondants aux critères.',

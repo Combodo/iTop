@@ -398,15 +398,13 @@ EOF
 		$this->aFieldsMap[$sAttCode] = $sInputId;
 	}
 
-
 	/**
 	 * @param \iTopWebPage $oPage
 	 * @param $bEditMode
 	 *
 	 * @throws \CoreException
-	 * @throws \Exception
 	 */
-	public function DisplayDashboards($oPage, $bEditMode)
+	protected function DisplayDashboardTabs($oPage, $bEditMode)
 	{
 		if ($bEditMode || $this->IsNew())
 		{
@@ -429,22 +427,39 @@ EOF
 				continue;
 			} // Process only dashboards attributes...
 
-			$oPage->SetCurrentTab($oAttDef->GetLabel());
-
-			// Load the dashboard
-			$oDashboard = $oAttDef->GetDashboard();
-			if (is_null($oDashboard))
-			{
-				continue;
-			}
-
-			$bCanEdit = UserRights::IsAdministrator() || $oAttDef->IsUserEditable();
-			$sDivId = $oDashboard->GetId();
-			$oPage->add('<div class="dashboard_contents" id="'.$sDivId.'">');
-			$aExtraParams = array('query_params' => $this->ToArgsForQuery());
-			$oDashboard->Render($oPage, false, $aExtraParams, $bCanEdit);
-			$oPage->add('</div>');
+			$oPage->AddAjaxTab($oAttDef->GetLabel(), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode());
 		}
+	}
+
+	/**
+	 * @param \iTopWebPage $oPage
+	 * @param $sAttCode
+	 *
+	 * @throws \Exception
+	 */
+	public function DisplayDashboard($oPage, $sAttCode)
+	{
+		$sClass = get_class($this);
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+
+		if (!$oAttDef instanceof AttributeDashboard)
+		{
+			throw new CoreException(Dict::S('UI:Error:InvalidDashboard'));
+		}
+
+		// Load the dashboard
+		$oDashboard = $oAttDef->GetDashboard();
+		if (is_null($oDashboard))
+		{
+			throw new CoreException(Dict::S('UI:Error:InvalidDashboard'));
+		}
+
+		$bCanEdit = UserRights::IsAdministrator() || $oAttDef->IsUserEditable();
+		$sDivId = $oDashboard->GetId();
+		$oPage->add('<div class="dashboard_contents" id="'.$sDivId.'">');
+		$aExtraParams = array('query_params' => $this->ToArgsForQuery());
+		$oDashboard->Render($oPage, false, $aExtraParams, $bCanEdit);
+		$oPage->add('</div>');
 	}
 
 	/**
@@ -945,7 +960,7 @@ EOF
 			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 			$this->DisplayBareProperties($oPage, $bEditMode);
 			$this->DisplayBareRelations($oPage, $bEditMode);
-			$this->DisplayDashboards($oPage, $bEditMode);
+			$this->DisplayDashboardTabs($oPage, $bEditMode);
 			//$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
 			//$this->DisplayBareHistory($oPage, $bEditMode);
 			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'),
