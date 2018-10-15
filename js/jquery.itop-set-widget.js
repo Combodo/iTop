@@ -178,9 +178,12 @@ $.widget('itop.set_widget',
 				}
 			});
 
-			console.debug("bindEvents", setWidget.selectizeWidget);
-			setWidget.selectizeWidget.$control.on('click', '.attribute-set-item.partial-code', function () {
-				setWidget._onTagPartialClick(setWidget, this);
+			if (setWidget.options.isDebug)
+			{
+				console.debug("bindEvents", setWidget.selectizeWidget);
+			}
+			setWidget.selectizeWidget.$control.on('click', '.attribute-set-item.partial-code', function (event) {
+				setWidget._onTagPartialClick(setWidget, this, event);
 			})
 		},
 
@@ -292,17 +295,25 @@ $.widget('itop.set_widget',
 			this.refresh();
 		},
 
-		_onTagPartialClick: function (setWidget, inputWidgetItemNode) {
-			if (setWidget.options.isDebug) {
-				console.debug("onTagPartialClick", setWidget, inputWidgetItemNode);
+		_onTagPartialClick: function (setWidget, inputWidgetItemNode, event) {
+			var $targetNode = $(event.target),
+				partialCodeClicked = $(inputWidgetItemNode).data("value");
+
+			if (setWidget.options.isDebug)
+			{
+				console.debug("onTagPartialClick", setWidget, inputWidgetItemNode, event);
 			}
-			if (setWidget.selectizeWidget.isDisabled) {
+
+			if (setWidget.selectizeWidget.isDisabled)
+			{
+				return;
+			}
+			if ($targetNode.is("a.remove"))
+			{
 				return;
 			}
 
-			var partialCodeClicked = $(inputWidgetItemNode).data("value");
 			this._onTagAdd(partialCodeClicked, $(inputWidgetItemNode), setWidget.selectizeWidget);
-
 			$(inputWidgetItemNode).removeClass(setWidget.ITEM_PARTIAL_CSS_CLASS);
 		},
 
