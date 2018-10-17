@@ -356,11 +356,12 @@ abstract class Dashboard
 		$this->aCells[] = array($oDashlet);
 	}
 
-	/**
-	 * @param \WebPage $oPage
-	 *
-	 * @throws \ReflectionException
-	 */
+    /**
+     * @param \WebPage $oPage     *
+     * @param array $aExtraParams
+     *
+     * @throws \ReflectionException
+     */
 	public function RenderProperties($oPage, $aExtraParams = array())
 	{
 		// menu to pick a layout and edit other properties of the dashboard
@@ -558,7 +559,13 @@ EOF
 		}
 		return $iNewId + 1;
 	}
-	
+
+    /**
+     * @param $oForm
+     * @param array $aExtraParams
+     *
+     * @return mixed
+     */
 	abstract protected function SetFormParams($oForm, $aExtraParams = array());
 
 	public static function GetDashletClassFromType($sType, $oFactory = null)
