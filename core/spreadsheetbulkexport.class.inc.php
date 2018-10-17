@@ -234,7 +234,6 @@ EOF
 			}
 		}
 		$sData = '';
-		$sData .= '<style>table br {mso-data-placement:same-cell;}</style>'; // Trick for Excel: keep line breaks inside the same cell !
 		$sData .= "<table border=\"1\">\n";
 		$sData .= "<tr>\n";
 		foreach($aData as $sLabel)
