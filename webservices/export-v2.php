@@ -740,6 +740,7 @@ try
 			else
 			{
 				$oP = new WebPage('iTop export');
+                $oP->add_style("table br { mso-data-placement:same-cell; }"); // Trick for Excel: keep line breaks inside the same cell !
 			}
 			$oP->add_style("body { overflow: auto; }");
 		}
