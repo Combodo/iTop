@@ -1177,7 +1177,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
     // Search form
     'UI:Search:Toggle' => 'Ein-/Ausklappen',
     'UI:Search:AutoSubmit:DisabledHint' => 'Automatische Eingabe für diese Klasse deaktiviert',
-	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
+	'UI:Search:NoAutoSubmit:ExplainText' => 'Fügen Sie ein Kriterium in das Suchfeld ein oder klicken Sie auf die Suchschaltfläche, um die Objekte anzuzeigen.',
     'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Kriterium hinzufügen',
     // - Add new criteria button
     'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Kürzlich verwendet',
