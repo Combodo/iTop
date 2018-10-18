@@ -82,11 +82,11 @@ $MySettings = array(
 
 	'db_name' => 'itop_ci_main',
 
-	'db_pwd' => 'c8mb0do',
+	'db_pwd' => 'IKnowYouSeeMeInJenkinsConf',
 
 	'db_subname' => '',
 
-	'db_user' => 'root',
+	'db_user' => 'jenkins_itop',
 
 	// deadline_format: The format used for displaying "deadline" attributes: any string with the following placeholders: $date$, $difference$
 	//	default: '$difference$'
@@ -124,7 +124,7 @@ $MySettings = array(
 
 	// email_transport_smtp.password: Authentication password (optional)
 	//	default: ''
-	'email_transport_smtp.password' => '++combodo++',
+	'email_transport_smtp.password' => 'IDoNotWork',
 
 	// email_transport_smtp.port: port number (optional)
 	//	default: 25
