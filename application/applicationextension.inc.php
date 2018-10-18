@@ -830,6 +830,10 @@ class RestResult
 
 	/**
 	 * Default constructor - ok!
+	 * 	 
+	 * @param DBObject $oObject The object being reported
+	 * @param string $sAttCode The attribute code (must be valid)
+	 * @return string A scalar representation of the value
 	 */
 	public function __construct()
 	{
