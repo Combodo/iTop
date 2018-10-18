@@ -38,7 +38,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachments:UploadNotAllowedOnThisSystem' => 'Bestand upload is NIET toegestaan op dit systeem.',
 	'Attachment:Max_Go' => '(Maximum bestandsgrootte: %1$s GB)',
 	'Attachment:Max_Mo' => '(Maximum bestandsgrootte: %1$s MB)',
-	'Attachment:Max_Ko' => '(Maximum bestandsgrootte: %1$s KB)',
+	'Attachment:Max_Ko' => '(Maximum bestandsgrootte: %1$s kB)',
 	'Attachments:NoAttachment' => 'Geen bijlage. ',
 	'Attachments:PreviewNotAvailable' => 'Een voorbeeld is niet beschikbaar voor dit type bijlage.',
 	'Class:Attachment' => 'Bijlage',
