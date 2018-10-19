@@ -270,6 +270,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ClickToCreateNew' => '新規 %1$s を作成',
 	'UI:SearchFor_Class' => '%1$s オブジェクトを検索',
 	'UI:NoObjectToDisplay' => '表示するオブジェクトはありません。',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'link_attrが指定されている時は、object_idパラメータは必須です。表示テンプレートの定義を確認してください。',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'link_attrを指定する場合は、target_attrパラメータは必須です。表示テンプレートの定義を確認してください。',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'group_byパラメータは必須です。表示テンプレートの定義を確認してください。',

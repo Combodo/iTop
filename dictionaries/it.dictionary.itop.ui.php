@@ -383,6 +383,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:ClickToCreateNew' => 'Crea un nuovo %1$s~~',
 	'UI:SearchFor_Class' => 'Cerca l\'oggetto %1$s',
 	'UI:NoObjectToDisplay' => 'Nessun oggetto da mostrare.',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Object_id parametro è obbligatorio quando link_attr è specificato. Verificare la definizione del modello di display.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Target_attr parametro è obbligatorio quando link_attr è specificato. Verificare la definizione del modello di display.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Il parametro è group_by obbligatoria. Verificare la definizione del modello di display.',

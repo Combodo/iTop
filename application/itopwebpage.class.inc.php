@@ -1582,6 +1582,47 @@ EOD
 	}
 
 	/**
+	 * @param string $sTitle
+	 * @param string[] $aIssues
+	 *
+	 * @see AddHeaderMessage
+	 */
+	public function AddHeaderMessageForErrors($sTitle, $aIssues)
+	{
+		$sContent = "<span><strong>$sTitle</strong></span>";
+
+		if (count($aIssues) == 1)
+		{
+			$sContent .= " <span>{$aIssues[0]}</span>";
+		}
+		else
+		{
+			$sContent .= '\n<ul>';
+			foreach ($aIssues as $sError)
+			{
+				$sContent .= "\n<li>$sError";
+			}
+			$sContent .= '</ul>';
+		}
+
+		$this->AddHeaderMessage($sContent, 'message_error');
+	}
+
+	/**
+	 * Adds in the page a container with the header_message CSS class
+	 *
+	 * @param string $sContent
+	 * @param string $sCssClasses CSS classes to add to the container
+	 */
+	public function AddHeaderMessage($sContent, $sCssClasses = 'message_info')
+	{
+		$this->add(<<<EOF
+<div class="header_message $sCssClasses">$sContent</div>
+EOF
+		);
+	}
+
+	/**
 	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
 	 *
 	 * @return void

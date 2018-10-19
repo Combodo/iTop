@@ -363,6 +363,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ClickToCreateNew' => '创建一个新的 %1$s',
 	'UI:SearchFor_Class' => '搜索 %1$s 对象',
 	'UI:NoObjectToDisplay' => '没有对象可显示.',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
 	'UI:Error:MandatoryTemplateParameter_object_id' => '当link_attr被指定时,参数 object_id 是必须的. 检查显示模板的定义.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => '当 link_attr被指定时, 参数 target_attr 是必须的. 检查显示模板的定义.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => '参数 group_by 是必须的. 检查显示模板的定义.',

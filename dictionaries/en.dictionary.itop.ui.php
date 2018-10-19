@@ -411,6 +411,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:ClickToCreateNew' => 'Create a new %1$s',
 	'UI:SearchFor_Class' => 'Search for %1$s objects',
 	'UI:NoObjectToDisplay' => 'No object to display.',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by is mandatory. Check the definition of the display template.',

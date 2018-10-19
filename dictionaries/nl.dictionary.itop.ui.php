@@ -392,6 +392,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ClickToCreateNew' => 'Maak een %1$s aan',
 	'UI:SearchFor_Class' => 'Zoek naar %1$s objecten',
 	'UI:NoObjectToDisplay' => 'Geen object om weer te geven.',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id is verplicht als link_attr is gespecificeerd. Controleer de definitie van het display template.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter target_attr is verplicht als link_attr is gespecificeerd. Controleer de definitie van het display template.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by is verplicht. Controleer de definitie van het display template.',
