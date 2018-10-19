@@ -1905,8 +1905,18 @@ abstract class DBObject implements iDisplay
 		return $this->m_iKey;
 	}
 
-	// Insert of record for the new object into the database
-	// Returns the key of the newly created object
+	/**
+	 * Insert of record for the new object into the database
+	 *
+	 * @return int key of the newly created object
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException if {@link CheckToWrite()} returns issues
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
 	public function DBInsertNoReload()
 	{
 		if ($this->m_bIsInDB)
@@ -1940,8 +1950,7 @@ abstract class DBObject implements iDisplay
 		list($bRes, $aIssues) = $this->CheckToWrite();
 		if (!$bRes)
 		{
-			$sIssues = implode(', ', $aIssues);
-			throw new CoreException("Object not following integrity rules", array('issues' => $sIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
+			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 		}
 
 		// Stop watches
@@ -2152,7 +2161,13 @@ abstract class DBObject implements iDisplay
 		$this->m_iKey = self::GetNextTempId(get_class($this));
 	}
 
-	// Update a record
+	/**
+	 * Update an object in DB
+	 *
+	 * @return int object key
+	 * @throws \CoreException
+	 * @throws \CoreCannotSaveObjectException if {@link CheckToWrite()} returns issues
+	 */
 	public function DBUpdate()
 	{
 		if (!$this->m_bIsInDB)
@@ -2205,8 +2220,7 @@ abstract class DBObject implements iDisplay
 			list($bRes, $aIssues) = $this->CheckToWrite();
 			if (!$bRes)
 			{
-				$sIssues = implode(', ', $aIssues);
-				throw new CoreException("Object not following integrity rules", array('issues' => $sIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
+				throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 			}
 
 			// Save the original values (will be reset to the new values when the object get written to the DB)
@@ -2326,13 +2340,19 @@ abstract class DBObject implements iDisplay
 				$this->RecordAttChanges($aChanges, $aOriginalValues);
 			}
 		}
-		catch (Exception $e)
+		catch (CoreCannotSaveObjectException $e)
 		{
-			unset($aUpdateReentrance[$sKey]);
 			throw $e;
 		}
+		catch (Exception $e)
+		{
+			throw $e;
+		}
+		finally
+		{
+			unset($aUpdateReentrance[$sKey]);
+		}
 
-		unset($aUpdateReentrance[$sKey]);
 		return $this->m_iKey;
 	}
 	
@@ -2342,7 +2362,13 @@ abstract class DBObject implements iDisplay
 		return $this->DBUpdate();
 	}
 
-	// Make the current changes persistent - clever wrapper for Insert or Update
+	/**
+	 * Make the current changes persistent - clever wrapper for Insert or Update
+	 *
+	 * @return int
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 */
 	public function DBWrite()
 	{
 		if ($this->m_bIsInDB)

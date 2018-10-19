@@ -920,40 +920,40 @@ EOF
 				}
 				else
 				{
-					list($bRes, $aIssues) = $oObj->CheckToWrite(); // called also in DBUpdate()
-					if ($bRes)
+					try
 					{
-						try
-						{
-							CMDBSource::Query('START TRANSACTION');
-							$oObj->DBUpdate();
-							CMDBSource::Query('COMMIT');
-							$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
-							$sSeverity = 'ok';
-						}
-						catch(DeleteException $e)
-						{
-							CMDBSource::Query('ROLLBACK');
-							// Say two things: 1) Don't be afraid nothing was modified
-							$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
-							$sSeverity = 'info';
-							cmdbAbstractObject::SetSessionMessage(get_class($oObj), $oObj->GetKey(), 'UI:Class_Object_NotUpdated', $sMessage, $sSeverity, 0, true /* must not exist */);
-							// 2) Ok, there was some trouble indeed	
-							$sMessage = $e->getMessage();
-							$sSeverity = 'error';
-							$bDisplayDetails = true;
-						}
-						utils::RemoveTransaction($sTransactionId);
-			
+						CMDBSource::Query('START TRANSACTION');
+						$oObj->DBUpdate();
+						CMDBSource::Query('COMMIT');
+						$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
+						$sSeverity = 'ok';
 					}
-					else
+					catch (CoreCannotSaveObjectException $e)
 					{
-						$bDisplayDetails = false;
 						// Found issues, explain and give the user a second chance
 						//
-						$oP->AddHeaderMessageForErrors(Dict::S('UI:Error:SaveFailed'), $aIssues);
-						$oObj->DisplayModifyForm($oP, array('wizard_container' => true)); // wizard_container: display the wizard border and the title
+						CMDBSource::Query('ROLLBACK');
+						$bDisplayDetails = false;
+						$aIssues = $e->getIssues();
+						$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
+						$oObj->DisplayModifyForm($oP,
+							array('wizard_container' => true)); // wizard_container: display the wizard border and the title
 					}
+					catch (DeleteException $e)
+					{
+						CMDBSource::Query('ROLLBACK');
+						// Say two things:
+						// - 1) Don't be afraid nothing was modified
+						$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
+						$sSeverity = 'info';
+						cmdbAbstractObject::SetSessionMessage(get_class($oObj), $oObj->GetKey(), 'UI:Class_Object_NotUpdated', $sMessage,
+							$sSeverity, 0, true /* must not exist */);
+						// - 2) Ok, there was some trouble indeed
+						$sMessage = $e->getMessage();
+						$sSeverity = 'error';
+						$bDisplayDetails = true;
+					}
+					utils::RemoveTransaction($sTransactionId);
 				}
 			}
 			if ($bDisplayDetails)
@@ -1101,18 +1101,18 @@ EOF
 			$sClass = get_class($oObj);
 			$sClassLabel = MetaModel::GetName($sClass);
 
-			list($bRes, $aIssues) = $oObj->CheckToWrite(); // called also in DBInsertNoReload()
-			if ($bRes)
+			try
 			{
-				$oObj->DBInsertNoReload(); // No need to reload
+				$oObj->DBInsertNoReload();// No need to reload
+
 				utils::RemoveTransaction($sTransactionId);
 				$oP->set_title(Dict::S('UI:PageTitle:ObjectCreated'));
-				
+
 				// Compute the name, by reloading the object, even if it disappeared from the silo
 				$oObj = MetaModel::GetObject($sClass, $oObj->GetKey(), true /* Must be found */, true /* Allow All Data*/);
-				$sName = $oObj->GetName(); 
+				$sName = $oObj->GetName();
 				$sMessage = Dict::Format('UI:Title:Object_Of_Class_Created', $sName, $sClassLabel);
-				
+
 				$sNextAction = utils::ReadPostedParam('next_action', '');
 				if (!empty($sNextAction))
 				{
@@ -1125,14 +1125,16 @@ EOF
 					ReloadAndDisplay($oP, $oObj, 'create', $sMessage, 'ok');
 				}
 			}
-			else
+			catch (CoreCannotSaveObjectException $e)
 			{
 				// Found issues, explain and give the user a second chance
 				//
+				$aIssues = $e->getIssues();
+
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 				$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
 				$oP->add("<div class=\"wizContainer\">\n");
-				$oP->AddHeaderMessageForErrors(Dict::S('UI:Error:SaveFailed'), $aIssues);
+				$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
 				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
 				$oP->add("</div>\n");
 			}
