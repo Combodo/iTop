@@ -31,6 +31,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:UnknownObjectLabel' => 'Elemento No Encontrado (Clase: %1$s, Identificador: %2$d)',
 	'Core:UnknownObjectTip' => 'El Elemento no pudo ser encontrado.  Pudo haber sido eliminado hace tiempo y purgado de la Bitácora.',
 
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+
 	'Core:AttributeLinkedSet' => 'Arreglo de objetos',
 	'Core:AttributeLinkedSet+' => 'Cualquier tipo de objetos [subclass] de la misma clase',
 

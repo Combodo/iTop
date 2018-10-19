@@ -499,6 +499,31 @@
             <attribute id="employee_number"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="employee_number">
+            <attributes>
+              <attribute id="org_id"/>
+              <attribute id="employee_number"/>
+            </attributes>
+            <filter><![CDATA[employee_number != '']]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+            <description>Class:Person/UniquenessRule:employee_number/Description</description>
+            <error_message>Class:Person/UniquenessRule:employee_number/Error</error_message>
+          </rule>
+          <rule id="name">
+            <attributes>
+              <attribute id="org_id"/>
+              <attribute id="name"/>
+              <attribute id="first_name"/>
+            </attributes>
+            <filter/>
+            <disabled>false</disabled>
+            <is_blocking>false</is_blocking>
+            <description>Class:Person/UniquenessRule:name/Description</description>
+            <error_message>Class:Person/UniquenessRule:name/Error</error_message>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="picture" xsi:type="AttributeImage">
@@ -5792,6 +5817,16 @@
             <attribute id="name"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="name">
+            <attributes>
+              <attribute id="name"/>
+            </attributes>
+            <is_blocking>true</is_blocking>
+            <description>Class:Brand/UniquenessRule:name/Description</description>
+            <error_message>Class:Brand/UniquenessRule:name/Error</error_message>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="physicaldevices_list" xsi:type="AttributeLinkedSet">
@@ -5855,6 +5890,17 @@
             <attribute id="type"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="name_brand">
+            <attributes>
+              <attribute id="name"/>
+              <attribute id="brand_id"/>
+            </attributes>
+            <is_blocking>true</is_blocking>
+            <description>Class:Model/UniquenessRule:name_brand/Description</description>
+            <error_message>Class:Model/UniquenessRule:name_brand/Error</error_message>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="brand_id" xsi:type="AttributeExternalKey">

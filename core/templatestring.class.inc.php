@@ -56,18 +56,20 @@ class TemplateString
 {
 	protected $m_sRaw;
 	protected $m_aPlaceholders;
-	    
+
 	public function __construct($sRaw)
 	{
 		$this->m_sRaw = $sRaw;
 		$this->m_aPlaceholders = null;
 	}
-	
+
 	/**
-	* Split the string into placholders
-	* @param Hash $aParamTypes Class of the expected parameters: hash array of '<param_id>' => '<class_name>'
-	* @return void
-	*/	  
+	 * Split the string into placholders
+	 *
+	 * @param array $aParamTypes Class of the expected parameters: hash array of '<param_id>' => '<class_name>'
+	 *
+	 * @throws \Exception
+	 */
 	protected function Analyze($aParamTypes = array())
 	{
 		if (!is_null($this->m_aPlaceholders)) return;
@@ -100,9 +102,10 @@ class TemplateString
 	}
 
 	/**
-	* Return the placeholders (for reporting purposes)
-	* @return void
-	*/	  
+	 * Return the placeholders (for reporting purposes)
+	 *
+	 * @return array
+	 */
 	public function GetPlaceholders()
 	{
 		return $this->m_aPlaceholders;
@@ -110,9 +113,11 @@ class TemplateString
 
 	/**
 	* Check the format when possible
-	* @param Hash $aParamTypes Class of the expected parameters: hash array of '<param_id>' => '<class_name>'
-	* @return void
-	*/	  
+	 *
+	 * @param array $aParamTypes Class of the expected parameters: hash array of '<param_id>' => '<class_name>'
+	 *
+	 * @return boolean
+	 */
 	public function IsValid($aParamTypes = array())
 	{
 		$this->Analyze($aParamTypes);
@@ -135,10 +140,12 @@ class TemplateString
 	}
 
 	/**
-	* Apply the given parameters to replace the placeholders
-	* @param Hash $aParamValues Value of the expected parameters: hash array of '<param_id>' => '<value>'
-	* @return void
-	*/	  
+	 * Apply the given parameters to replace the placeholders
+	 *
+	 * @param array $aParamValues Value of the expected parameters: hash array of '<param_id>' => '<value>'
+	 *
+	 * @return string
+	 */
 	public function Render($aParamValues = array())
 	{
 		$aParamTypes = array();
@@ -175,4 +182,3 @@ class TemplateString
 		return str_replace($aSearch, $aReplace, $this->m_sRaw);
 	}
 }
-?>

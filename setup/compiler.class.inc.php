@@ -797,6 +797,37 @@ EOF
 		}	
 	}
 
+	/**
+	 * @param $oNode
+	 * @param $sTag
+	 * @param bool|null $bDefault
+	 *
+	 * @return bool|null
+	 */
+	private function GetPropBooleanConverted($oNode, $sTag, $bDefault = null)
+	{
+		$sValue = $this->GetPropBoolean($oNode, $sTag, $bDefault);
+
+		if ($sValue == null)
+		{
+			return null;
+		}
+		if ($sValue == 'true')
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param $oNode
+	 * @param $sTag
+	 * @param bool|null $bDefault
+	 *
+	 * @return null|string
+	 * @see GetPropBooleanConverted() to get boolean value
+	 */
 	protected function GetPropBoolean($oNode, $sTag, $bDefault = null)
 	{
 		$val = $oNode->GetChildText($sTag);
@@ -936,7 +967,7 @@ EOF
 	}
 
 	/**
-	 * @param \DOMElement $oClass
+	 * @param \MFElement $oClass
 	 * @param string $sTempTargetDir
 	 * @param string $sFinalTargetDir
 	 * @param string $sModuleRelativeDir
@@ -962,8 +993,10 @@ EOF
 		if ($oNaming = $oProperties->GetOptionalElement('naming'))
 		{
 			$oNameAttributes = $oNaming->GetUniqueElement('attributes');
+			/** @var \DOMNodeList $oAttributes */
 			$oAttributes = $oNameAttributes->getElementsByTagName('attribute');
 			$aNameAttCodes = array();
+			/** @var \MFElement $oAttribute */
 			foreach($oAttributes as $oAttribute)
 			{
 				$aNameAttCodes[] = $oAttribute->getAttribute('id');
@@ -1080,6 +1113,7 @@ EOF
 			$bEnabled = $this->GetPropBoolean($oArchive, 'enabled', false);
 			$aClassParams['archive'] = $bEnabled;
 		}
+
 		if ($oObsolescence = $oProperties->GetOptionalElement('obsolescence'))
 		{
 			$sCondition = trim($this->GetPropString($oObsolescence, 'condition', ''));
@@ -1087,6 +1121,51 @@ EOF
 			{
 				$aClassParams['obsolescence_expression'] = $sCondition;
 			}
+		}
+
+		if ($oUniquenessRules = $oProperties->GetOptionalElement('uniqueness_rules'))
+		{
+			$aUniquenessRules = array();
+			/** @var \MFElement $oUniquenessSingleRule */
+			foreach ($oUniquenessRules->GetElementsByTagName('rule') as $oUniquenessSingleRule)
+			{
+				$sCurrentRuleId = $oUniquenessSingleRule->getAttribute('id');
+
+				$oAttributes = $oUniquenessSingleRule->GetUniqueElement('attributes', false);
+				if ($oAttributes)
+				{
+					$aUniquenessAttributes = array();
+					foreach ($oAttributes->getElementsByTagName('attribute') as $oAttribute)
+					{
+						$aUniquenessAttributes[] = $oAttribute->getAttribute('id');
+					}
+					$aUniquenessRules[$sCurrentRuleId]['attributes'] = $aUniquenessAttributes;
+				}
+				else
+				{
+					$aUniquenessRules[$sCurrentRuleId]['attributes'] = null;
+				}
+
+				$aUniquenessRules[$sCurrentRuleId]['filter'] = $oUniquenessSingleRule->GetChildText('filter');
+				$aUniquenessRules[$sCurrentRuleId]['disabled'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'disabled', null);
+				$aUniquenessRules[$sCurrentRuleId]['is_blocking'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'is_blocking',
+					null);
+				$aUniquenessRules[$sCurrentRuleId]['description'] = $oUniquenessSingleRule->GetChildText('description');
+				$aUniquenessRules[$sCurrentRuleId]['error_message'] = $oUniquenessSingleRule->GetChildText('error_message');
+
+				try
+				{
+					// we're just checking all mandatory fields are present right now
+					// we will check for rule overrides validity later (see \MetaModel::InitClasses)
+					MetaModel::CheckUniquenessRuleValidity($aUniquenessRules[$sCurrentRuleId], true);
+				}
+				catch (CoreUnexpectedValue $e)
+				{
+					throw(new DOMFormatException("Invalid uniqueness rule declaration : class={$oClass->getAttribute('id')}, rule=$sCurrentRuleId, reason={$e->getMessage()}"));
+				}
+			}
+
+			$aClassParams['uniqueness_rules'] = var_export($aUniquenessRules, true);
 		}
 
 		// Finalize class params declaration
@@ -1746,7 +1825,7 @@ EOF
 			'details' => 'details',
 			'standard_search' => 'search',
 			'default_search' => 'default_search',
-			'list' => 'list'
+			'list' => 'list',
 		);
 	
 		$oPresentation = $oClass->GetUniqueElement('presentation');
@@ -1933,6 +2012,7 @@ EOF;
 
 		return 'TagSetFieldDataFor_'.$sTagSuffix;
 	}
+
 
 	/**
 	 * @param $oMenu
@@ -2164,7 +2244,7 @@ EOF;
 		// Hardcode the administrator profile
 		$aProfiles[1] = array(
 			'name' => 'Administrator',
-			'description' => 'Has the rights on everything (bypassing any control)'
+			'description' => 'Has the rights on everything (bypassing any control)',
 		); 
 
 		$aGrants = array();
@@ -2224,7 +2304,7 @@ EOF;
 
 			$aProfiles[$iProfile] = array(
 				'name' => $sName,
-				'description' => $sDescription
+				'description' => $sDescription,
 			);
 		}
 

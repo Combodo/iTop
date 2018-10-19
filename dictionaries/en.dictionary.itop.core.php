@@ -31,6 +31,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.',
 
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error',
+
 	'Core:AttributeLinkedSet' => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 

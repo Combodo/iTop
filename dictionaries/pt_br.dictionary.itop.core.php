@@ -31,6 +31,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:UnknownObjectLabel' => 'Objeto não encontrado (classe: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'O objeto não pode ser encontrado. Ele pode ter sido eliminado há algum tempo e o log foi removido desde então.',
 
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+
 	'Core:AttributeLinkedSet' => 'Array de objetos',
 	'Core:AttributeLinkedSet+' => 'Qualquer tipo de objetos da mesma classe ou subclasses',
 

@@ -125,6 +125,24 @@ EOF
 	}
 
 	/**
+	 * @param $sMessageId
+	 * @param $sMessage
+	 * @param $sSeverity
+	 * @param $fRank
+	 * @param bool $bMustNotExist
+	 *
+	 * @see SetSessionMessage()
+	 * @since 2.6
+	 */
+	protected function SetSessionMessageFromInstance($sMessageId, $sMessage, $sSeverity, $fRank, $bMustNotExist = false)
+	{
+		$sObjectClass = get_class($this);
+		$iObjectId = $this->GetKey();
+
+		self::SetSessionMessage($sObjectClass, $iObjectId, $sMessageId, $sMessage, $sSeverity, $fRank);
+	}
+
+	/**
 	 * Set a message diplayed to the end-user next time this object will be displayed
 	 * Messages are uniquely identified so that plugins can override standard messages (the final work is given to the
 	 * last plugin to set the message for a given message id) In practice, standard messages are recorded at the end
@@ -138,6 +156,7 @@ EOF
 	 * @param float $fRank Ordering of the message: smallest displayed first (can be negative)
 	 * @param bool $bMustNotExist Do not alter any existing message (considering the id)
 	 *
+	 * @see SetSessionMessageFromInstance() to call from within an instance
 	 */
 	public static function SetSessionMessage(
 		$sClass, $iKey, $sMessageId, $sMessage, $sSeverity, $fRank, $bMustNotExist = false
@@ -3693,6 +3712,8 @@ EOF
 	{
 		$res = parent::DBInsertNoReload();
 
+		$this->SetWarningsAsSessionMessages('create');
+
 		// Invoke extensions after insertion (the object must exist, have an id, etc.)
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
@@ -3727,6 +3748,8 @@ EOF
 	{
 		$res = parent::DBUpdate();
 
+		$this->SetWarningsAsSessionMessages('update');
+
 		// Protection against reentrance (e.g. cascading the update of ticket logs)
 		// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
 		static $aUpdateReentrance = array();
@@ -3753,6 +3776,25 @@ EOF
 		unset($aUpdateReentrance[$sKey]);
 
 		return $res;
+	}
+
+	/**
+	 * @param string $sMessageIdPrefix
+	 *
+	 * @since 2.6
+	 */
+	protected function SetWarningsAsSessionMessages($sMessageIdPrefix)
+	{
+		if (!empty($this->m_aCheckWarnings) && is_array($this->m_aCheckWarnings))
+		{
+			$iMsgNb = 0;
+			foreach ($this->m_aCheckWarnings as $sWarningMessage)
+			{
+				$iMsgNb++;
+				$sMessageId = "$sMessageIdPrefix-$iMsgNb"; // each message must have its own messageId !
+				$this->SetSessionMessageFromInstance($sMessageId, $sWarningMessage, 'info', 0);
+			}
+		}
 	}
 
 	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)

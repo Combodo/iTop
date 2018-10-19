@@ -33,6 +33,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:UnknownObjectLabel' => 'Objekt nenalezen (třída: %1$s, id: %2$d)',
     'Core:UnknownObjectTip' => 'Objekt nemohl být nalezen. Je možné, že byl odstraněn před nějakou dobou a protokol byl mezitím vyčištěn.',
 
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+
     'Core:AttributeLinkedSet' => 'Pole objektů',
     'Core:AttributeLinkedSet+' => 'Jakékoli objekty stejné třídy, nebo podtřídy',
 
