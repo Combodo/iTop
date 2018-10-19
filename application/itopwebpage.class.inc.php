@@ -1581,38 +1581,14 @@ EOD
 		}
 	}
 
-	/**
-	 * @param string $sTitle
-	 * @param string[] $aIssues
-	 *
-	 * @see AddHeaderMessage
-	 */
-	public function AddHeaderMessageForErrors($sTitle, $aIssues)
-	{
-		$sContent = "<span><strong>$sTitle</strong></span>";
-
-		if (count($aIssues) == 1)
-		{
-			$sContent .= " <span>{$aIssues[0]}</span>";
-		}
-		else
-		{
-			$sContent .= '\n<ul>';
-			foreach ($aIssues as $sError)
-			{
-				$sContent .= "\n<li>$sError";
-			}
-			$sContent .= '</ul>';
-		}
-
-		$this->AddHeaderMessage($sContent, 'message_error');
-	}
 
 	/**
 	 * Adds in the page a container with the header_message CSS class
 	 *
 	 * @param string $sContent
 	 * @param string $sCssClasses CSS classes to add to the container
+	 *
+	 * @since 2.6
 	 */
 	public function AddHeaderMessage($sContent, $sCssClasses = 'message_info')
 	{

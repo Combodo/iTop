@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Portal\Helper;
 
 use ApplicationContext;
+use cmdbAbstractObject;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\PortalBrick;
 use DBObjectSearch;
@@ -30,12 +31,10 @@ use Exception;
 use iPortalUIExtension;
 use IssueLog;
 use MetaModel;
-use cmdbAbstractObject;
 use ModuleDesign;
 use Silex\Application;
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\Debug\ExceptionHandler;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Twig_Environment;
 use Twig_SimpleFilter;
@@ -1341,6 +1340,45 @@ class ApplicationHelper
 		}
 
 		return $aUIExtensions;
+	}
+
+	public static function LoadSessionMessages(Application $oApp)
+	{
+		$aAllMessages = array();
+		if ((array_key_exists('obj_messages', $_SESSION)) && (!empty($_SESSION['obj_messages'])))
+		{
+			foreach ($_SESSION['obj_messages'] as $sMessageKey => $aMessageObjectData)
+			{
+				$aObjectMessages = array();
+				$aRanks = array();
+				foreach ($aMessageObjectData as $sMessageId => $aMessageData)
+				{
+					$sMsgClass = 'alert alert-';
+					switch ($aMessageData['severity'])
+					{
+						case 'info':
+							$sMsgClass .= 'info';
+							break;
+						case 'error':
+							$sMsgClass .= 'danger';
+							break;
+						case 'ok':
+						default:
+							$sMsgClass .= 'success';
+							break;
+					}
+					$aObjectMessages[] = array('cssClass' => $sMsgClass, 'message' => $aMessageData['message']);
+					$aRanks[] = $aMessageData['rank'];
+				}
+				unset($_SESSION['obj_messages'][$sMessageKey]);
+				array_multisort($aRanks, $aObjectMessages);
+				foreach ($aObjectMessages as $aObjectMessage)
+				{
+					$aAllMessages[] = $aObjectMessage;
+				}
+			}
+		}
+		$oApp['combodo.current_user.session_messages'] = $aAllMessages;
 	}
 
     /**
