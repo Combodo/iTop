@@ -657,6 +657,18 @@ class iTopDesignFormat
 		// Remove AttributeTagSet nodes
 		//
 		$sPath = "/itop_design/classes/class/fields/field[@xsi:type='AttributeTagSet']";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// Remove uniqueness rules nodes
+		//
+		$sPath = "/itop_design/classes/class/properties/uniqueness_rules";
+		$this->RemoveNodeFromXPath($sPath);
+	}
+
+	private function RemoveNodeFromXPath($sPath)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
 		$oNodeList = $oXPath->query($sPath);
 		foreach ($oNodeList as $oNode)
 		{
@@ -664,7 +676,6 @@ class iTopDesignFormat
 			$this->DeleteNode($oNode);
 		}
 	}
-
 
 
 	/**

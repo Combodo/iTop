@@ -36,6 +36,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:UnknownObjectLabel' => 'Object niet gevonden (klasse: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'Object kon niet worden gevonden. Het zou eerder verwijderd kunnen zijn en de log zou kunnen zijn opgeschoond.',
 
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+
 	'Core:AttributeLinkedSet' => 'Reeks van objecten',
 	'Core:AttributeLinkedSet+' => 'Elke soort objecten van dezelfde klasse of subklasse',
 

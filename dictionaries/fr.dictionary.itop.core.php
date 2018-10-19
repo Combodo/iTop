@@ -27,6 +27,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:UnknownObjectLabel' => 'Classe: %1$s, Identifiant: %2$d',
 	'Core:UnknownObjectTip' => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
 
+	'Core:UniquenessDefaultError' => 'La règle d\'unicité \'%1$s\' renvoie une erreur',
+
 	'Class:ActionEmail' => 'Notification par mél',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinataire de test',

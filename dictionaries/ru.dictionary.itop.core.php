@@ -17,6 +17,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:UnknownObjectLabel' => 'Объект не найден (class: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'Не может быть найден. Возможно он был удален и очищен в лог-е.',
 
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+
 	'Core:AttributeLinkedSet' => 'Массив объектов',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 

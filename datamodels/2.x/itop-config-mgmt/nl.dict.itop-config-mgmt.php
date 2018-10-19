@@ -207,6 +207,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Person/Attribute:tickets_list+' => 'Alle tickets waarvan deze persoon de aanvrager is',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Volledige naam van de manager',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
+	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
+	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
+	'Class:Person/UniquenessRule:name/Error' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 ));
 
 //
@@ -1285,6 +1289,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Fysieke apparaten',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Alle fysieke apparaten die corresponderen met dit merk',
+	'Class:Brand/UniquenessRule:name/Description' => 'The name must be unique~~',
+	'Class:Brand/UniquenessRule:name/Error' => 'This brand already exists~~',
 ));
 
 //
@@ -1338,6 +1344,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Model/Attribute:type/Value:Telephone+' => 'Telefoon',
 	'Class:Model/Attribute:physicaldevices_list' => 'Physical devices',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Alle fysieke apparaten die corresponderen met dit model',
+	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
+	'Class:Model/UniquenessRule:name_brand/Error' => 'this model already exists for this brand~~',
 ));
 
 //

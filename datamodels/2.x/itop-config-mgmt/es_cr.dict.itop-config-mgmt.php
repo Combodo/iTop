@@ -207,6 +207,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => 'Nombre del Jefe',
 	'Class:Person/Attribute:picture' => 'Fotografía',
 	'Class:Person/Attribute:picture+' => 'Fotografía',
+	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
+	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
+	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
+	'Class:Person/UniquenessRule:name/Error' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 ));
 
 //
@@ -1287,6 +1291,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Brand+' => 'Marca',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Dispositivo Físico',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Dispositivo Físico',
+	'Class:Brand/UniquenessRule:name/Description' => 'The name must be unique~~',
+	'Class:Brand/UniquenessRule:name/Error' => 'This brand already exists~~',
 ));
 
 //
@@ -1340,6 +1346,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Model/Attribute:type/Value:Phone+' => 'Teléfono',
 	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo Físico',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Dispositivo Físico',
+	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
+	'Class:Model/UniquenessRule:name_brand/Error' => 'this model already exists for this brand~~',
 ));
 
 //

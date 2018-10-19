@@ -802,4 +802,5 @@ Operators:<br/>
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
 ));

@@ -83,10 +83,28 @@ abstract class DBObject implements iDisplay
 
 	private $m_bDirty = false; // Means: "a modification is ongoing"
 										// The object may have incorrect external keys, then any attempt of reload must be avoided
-	private $m_bCheckStatus = null; // Means: the object has been verified and is consistent with integrity rules
-													//        if null, then the check has to be performed again to know the status
+	/**
+	 * @var boolean|null true if the object has been verified and is consistent with integrity rules
+	 *                   if null, then the check has to be performed again to know the status
+	 * @see CheckToWrite()
+	 */
+	private $m_bCheckStatus = null;
+	/**
+	 * @var null|boolean true if cannot be saved because of security reason
+	 * @see CheckToWrite()
+	 */
 	protected $m_bSecurityIssue = null;
+	/**
+	 * @var null|string[] list of issues preventing object save
+	 * @see CheckToWrite()
+	 */
 	protected $m_aCheckIssues = null;
+	/**
+	 * @var null|string[] list of warnings throws during object save
+	 * @see CheckToWrite()
+	 * @since 2.6 N°659 uniqueness constraints
+	 */
+	protected $m_aCheckWarnings = null;
 	protected $m_aDeleteIssues = null;
 
 	private $m_bFullyLoaded = false; // Compound objects can be partially loaded
@@ -1364,12 +1382,114 @@ abstract class DBObject implements iDisplay
 	{
 		return true;
 	}
-	
-	// check integrity rules (before inserting or updating the object)
-	// a displayable error is returned
+
+	/**
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 * @since 2.6 N°659 uniqueness constraint
+	 */
+	protected function DoCheckUniqueness()
+	{
+		$sCurrentClass = get_class($this);
+		$aUniquenessRules = MetaModel::GetUniquenessRules($sCurrentClass);
+
+		foreach ($aUniquenessRules as $sUniquenessRuleName => $aUniquenessRuleProperties)
+		{
+			if ($aUniquenessRuleProperties['disabled'] === true)
+			{
+				continue;
+			}
+
+			$oUniquenessQuery = $this->GetUniquenessDuplicatesQuery($aUniquenessRuleProperties);
+			$oUniquenessDuplicates = new DBObjectSet($oUniquenessQuery);
+			$bHasDuplicates = $oUniquenessDuplicates->CountExceeds(0);
+			if ($bHasDuplicates)
+			{
+				$bIsBlockingRule = $aUniquenessRuleProperties['is_blocking'];
+				if (is_null($bIsBlockingRule))
+				{
+					$bIsBlockingRule = true;
+				}
+
+				$sErrorKey = $aUniquenessRuleProperties['error_message'];
+				$sErrorMessage = $this->GetUniquenessRuleMessage($sErrorKey, $sUniquenessRuleName);
+
+				if ($bIsBlockingRule)
+				{
+					$this->m_aCheckIssues[] = $sErrorMessage;
+					continue;
+				}
+				$this->m_aCheckWarnings[] = $sErrorMessage;
+				continue;
+			}
+		}
+	}
+
+	/**
+	 * @param string $sMessageKey string or dictionnary key, could be empty
+	 * @param string $sUniquenessRuleName
+	 *
+	 * @return string
+	 * @since 2.6 N°659 uniqueness constraint
+	 */
+	protected function GetUniquenessRuleMessage($sMessageKey, $sUniquenessRuleName)
+	{
+		if (empty($sMessageKey))
+		{
+			return Dict::Format('Core:UniquenessDefaultError', $sUniquenessRuleName);
+		}
+
+		$sTemplate = Dict::S($sMessageKey);
+		$oString = new TemplateString($sTemplate);
+
+		return $oString->Render(array('this' => $this));
+	}
+
+	/**
+	 * @param array $aUniquenessSingleRule
+	 *
+	 * @return \DBSearch
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 * @since 2.6 N°659 uniqueness constraint
+	 */
+	protected function GetUniquenessDuplicatesQuery($aUniquenessSingleRule)
+	{
+		$sCurrentClass = get_class($this);
+		$sOqlUniquenessQuery = "SELECT $sCurrentClass";
+		if (!(empty($sUniquenessFilter = $aUniquenessSingleRule['filter'])))
+		{
+			$sOqlUniquenessQuery .= ' WHERE '.$sUniquenessFilter;
+		}
+		$oUniquenessQuery = DBObjectSearch::FromOQL($sOqlUniquenessQuery);
+
+		if (!$this->IsNew())
+		{
+			$oUniquenessQuery->AddCondition('id', $this->GetKey(), '<>');
+		}
+
+		foreach ($aUniquenessSingleRule['attributes'] as $sAttributeCode)
+		{
+			$attributeValue = $this->Get($sAttributeCode);
+			$oUniquenessQuery->AddCondition($sAttributeCode, $attributeValue, '=');
+		}
+
+		return $oUniquenessQuery;
+	}
+
+	/**
+	 * check integrity rules (before inserting or updating the object)
+	 * a displayable error is returned
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
 	public function DoCheckToWrite()
 	{
 		$this->DoComputeValues();
+
+		$this->DoCheckUniqueness();
 
 		$aChanges = $this->ListChanges();
 
@@ -1417,6 +1537,18 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
+	/**
+	 * @return array containing :
+	 * <ul>
+	 * <li>{@link $m_bCheckStatus}
+	 * <li>{@link $m_aCheckIssues}
+	 * <li>{@link $m_bSecurityIssue}
+	 * </ul>
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
 	final public function CheckToWrite()
 	{
 		if (MetaModel::SkipCheckToWrite())
