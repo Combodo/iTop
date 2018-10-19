@@ -270,6 +270,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:ClickToCreateNew' => 'Opret nyt objekt af typen %1$s ',
 	'UI:SearchFor_Class' => 'Søg efter objekter af typen %1$s ',
 	'UI:NoObjectToDisplay' => 'Ingen objekter at vise.',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter objekt_id er obligatorisk når link_attr er specificeret. Tjek definitionen af display skabelonen.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter objekt_id er obligatorisk når link_attr er specificeret. Tjek definitionen af display skabelonen.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by er obligatorisk. Tjek definitionen af display skabelonen.',

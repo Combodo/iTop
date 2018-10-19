@@ -393,6 +393,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'UI:ClickToCreateNew' => 'Nový objekt (%1$s)',
     'UI:SearchFor_Class' => 'Hledat objekty třídy %1$s',
     'UI:NoObjectToDisplay' => 'Žádný objekt k zobrazení.',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
     'UI:Error:MandatoryTemplateParameter_object_id' => 'Parametr object_id je povinný, pokud je uveden parametr link_attr. Zkontrolujte definici šablony zobrazení.',
     'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parametr target_attr je povinný, pokud je uveden parametr link_attr. Zkontrolujte definici šablony zobrazení.',
     'UI:Error:MandatoryTemplateParameter_group_by' => 'Parametr group_by je povinný. Zkontrolujte definici šablony zobrazení.',

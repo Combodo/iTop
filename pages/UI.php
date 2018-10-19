@@ -920,7 +920,7 @@ EOF
 				}
 				else
 				{
-					list($bRes, $aIssues) = $oObj->CheckToWrite();
+					list($bRes, $aIssues) = $oObj->CheckToWrite(); // called also in DBUpdate()
 					if ($bRes)
 					{
 						try
@@ -951,9 +951,8 @@ EOF
 						$bDisplayDetails = false;
 						// Found issues, explain and give the user a second chance
 						//
+						$oP->AddHeaderMessageForErrors(Dict::S('UI:Error:SaveFailed'), $aIssues);
 						$oObj->DisplayModifyForm($oP, array('wizard_container' => true)); // wizard_container: display the wizard border and the title
-						$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten', implode(', ', $aIssues));
-						$oP->add_ready_script("alert('".addslashes($sIssueDesc)."');");
 					}
 				}
 			}
@@ -1102,7 +1101,7 @@ EOF
 			$sClass = get_class($oObj);
 			$sClassLabel = MetaModel::GetName($sClass);
 
-			list($bRes, $aIssues) = $oObj->CheckToWrite();
+			list($bRes, $aIssues) = $oObj->CheckToWrite(); // called also in DBInsertNoReload()
 			if ($bRes)
 			{
 				$oObj->DBInsertNoReload(); // No need to reload
@@ -1133,10 +1132,9 @@ EOF
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 				$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
 				$oP->add("<div class=\"wizContainer\">\n");
+				$oP->AddHeaderMessageForErrors(Dict::S('UI:Error:SaveFailed'), $aIssues);
 				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
 				$oP->add("</div>\n");
-				$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten', implode(', ', $aIssues));
-				$oP->add_ready_script("alert('".addslashes($sIssueDesc)."');");
 			}
 		}
 		break;

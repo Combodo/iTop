@@ -254,6 +254,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:ClickToCreateNew' => 'Új %1$s létrehozása',
 	'UI:SearchFor_Class' => '%1$s objektumok keresése',
 	'UI:NoObjectToDisplay' => 'Nincs megjeleníthető objektum',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'object_id pareméter kötelező a link_attr megadásánál. Ellenőrizze a sablon definíciót.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'target_attr pareméter kötelező a link_attr megadásánál. Ellenőrizze a sablon definíciót.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'group_by paraméter kötelező. Ellenőrizze a sablon definíciót.',

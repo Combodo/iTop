@@ -408,6 +408,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:ClickToCreateNew' => 'Crear %1$s',
 	'UI:SearchFor_Class' => 'Buscar %1$s',
 	'UI:NoObjectToDisplay' => 'Ninguna Información por Visualizar.',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'El parámetro object_id es obligatorio cuando link_attr es especificado. Verifique la definición de la plantilla de visualización.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'El parámetro target_attr es obligatorio cuando link_attr es especificado. Verifique la definición de la plantilla de visualización.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'El parámetro group_by es obligatorio. Verifique la definición de la plantilla de visualización.',

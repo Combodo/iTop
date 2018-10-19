@@ -385,6 +385,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:ClickToCreateNew' => 'Criar um(a) novo(a) %1$s',
 	'UI:SearchFor_Class' => 'Pesquisar por objeto(s) %1$s',
 	'UI:NoObjectToDisplay' => 'Nenhum objeto encontrado.',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parâmetro Object_id é obrigatório quando link_attr é especificado. Verifique a definição do modelo de exibição.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parâmetro Target_attr é obrigatório quando link_attr é especificado. Verifique a definição do modelo de exibição.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parâmetro Group_by é obrigatório. Verifique a definição do modelo de exibição.',

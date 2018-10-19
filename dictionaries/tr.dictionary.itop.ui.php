@@ -364,6 +364,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:ClickToCreateNew' => 'Yeni %1$s yarat',
 	'UI:SearchFor_Class' => '%1$s Arama',
 	'UI:NoObjectToDisplay' => 'Görüntülenecek nesne bulunamadı.',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'link_attr tanımlandığında object_id alanı zorunludur. Görüntülme (Display) şablonun tanımlamasını kontrol ediniz.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'link_attr tanımlandığında target_attr alanı zorunludur. Görüntülme (Display) şablonun tanımlamasını kontrol ediniz.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'group_by alanı zorunludur. Görüntülme (Display) şablonun tanımlamasını kontrol ediniz.',
