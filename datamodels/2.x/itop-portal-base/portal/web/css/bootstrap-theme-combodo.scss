@@ -6198,3 +6198,8 @@ table.dataTable{
         border-left: none;
     }
 }
+
+.attribute-set-item {
+    @extend .label;
+    @extend .label-default;
+}
