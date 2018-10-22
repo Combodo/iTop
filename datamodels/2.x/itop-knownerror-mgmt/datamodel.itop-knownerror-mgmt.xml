@@ -642,6 +642,7 @@
                   <title>Class:FAQ</title>
                   <fields>
                     <field id="error_code"/>
+					<field id="domains"/>
 					<field id="key_words">
 						<hidden>true</hidden>
 					</field>
@@ -673,6 +674,7 @@
             <field id="title"/>
             <field id="error_code"/>
             <field id="key_words"/>
+            <field id="domains"/>
             <field id="summary"/>
             <field id="description"/>
           </fields>
@@ -683,6 +685,7 @@
                 <div class="form_field" data-field-id="title"></div>
                 <div class="form_field" data-field-id="error_code"></div>
                 <div class="form_field" data-field-id="key_words"></div>
+                <div class="form_field" data-field-id="domains"></div>
                 <div class="form_field" data-field-id="summary"></div>
               </div>
               <div class="col-sm-8">

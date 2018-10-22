@@ -3212,7 +3212,7 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   background-color: #fff;
   cursor: not-allowed;
 }
-.label {
+.label, .attribute-set-item {
   display: inline-block;
   padding: 0.2em 0.6em 0.3em;
   font-size: 75%;
@@ -3225,23 +3225,23 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   border-radius: 0px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
 }
-a.label:hover, a.label:focus {
+a.label:hover, a.attribute-set-item:hover, a.label:focus, a.attribute-set-item:focus {
   color: #222;
   text-decoration: none;
   cursor: pointer;
 }
-.label:empty {
+.label:empty, .attribute-set-item:empty {
   display: none;
 }
-.btn .label {
+.btn .label, .btn .attribute-set-item {
   position: relative;
   top: -1px;
 }
-.label-default {
+.label-default, .attribute-set-item {
   color: #222;
   background-color: #fff;
 }
-.label-default[href]:hover, .label-default[href]:focus {
+.label-default[href]:hover, .attribute-set-item[href]:hover, .label-default[href]:focus, .attribute-set-item[href]:focus {
   background-color: #f9f9f9;
 }
 .label-primary {
@@ -5047,15 +5047,15 @@ table.dataTable tbody tr.selected a, table.dataTable tbody th.selected a, table.
   background-color: #fcfcfc;
 }
 /* Temp */
-.label {
+.label, .attribute-set-item {
   margin-right: 0.4em;
   margin-bottom: 0.4em;
   padding: 0.5em 0.7em 0.5em;
-  font-size: 85%;
+  font-size: 90%;
   font-weight: normal;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
 }
-.label:last-of-type {
+.label:last-of-type, .attribute-set-item:last-of-type {
   margin-right: 0;
 }
 .selectize-control.multi .selectize-input .attribute-set-item[data-value] {
@@ -5063,6 +5063,7 @@ table.dataTable tbody tr.selected a, table.dataTable tbody th.selected a, table.
   background-color: #fff;
   background-image: none;
   border: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
   text-shadow: none;
   color: black;
 }
