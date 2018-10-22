@@ -277,7 +277,7 @@ function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker,
 		$oP->add("<form method=\"post\" action=\"./UI.php\">\n");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 		$oP->add("<input type=\"hidden\" name=\"class\" value=\"".$oFilter->GetClass()."\">\n");
-		$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".$oFilter->Serialize()."\">\n");
+		$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".rawurlencode($oFilter->Serialize())."\">\n");
 		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 		foreach($aExtraFormParams as $sName => $sValue)
 		{
