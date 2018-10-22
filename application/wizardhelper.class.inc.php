@@ -174,6 +174,22 @@ class WizardHelper
 					}
 					$oObj->Set($sAttCode, $value);
 				}
+				else if ($oAttDef instanceof AttributeTagSet) // AttributeDate is derived from AttributeDateTime
+				{
+					$value = json_decode($value, true);
+					$oTagSet = new ormTagSet(get_class($oObj), $sAttCode);
+					$oTagSet->SetValues($value['orig_value']);
+					$oTagSet->ApplyDelta($value);
+					$oObj->Set($sAttCode, $oTagSet);
+				}
+				else if ($oAttDef instanceof AttributeSet) // AttributeDate is derived from AttributeDateTime
+				{
+					$value = json_decode($value, true);
+					$oTagSet = new ormSet(get_class($oObj), $sAttCode);
+					$oTagSet->SetValues($value['orig_value']);
+					$oTagSet->ApplyDelta($value);
+					$oObj->Set($sAttCode, $oTagSet);
+				}
 				else
 				{
 					$oObj->Set($sAttCode, $value);
@@ -205,11 +221,10 @@ class WizardHelper
 				// this as to be handled as an array of objects
 				// thus encoded in json like: [ { name:'link1', 'id': 123}, { name:'link2', 'id': 124}...]
 				// NOT YET IMPLEMENTED !!
-				$sLinkedClass = $oAttDef->GetLinkedClass();
 				$oSet = $value;
 				$aData = array();
 				$aFields = $this->GetLinkedWizardStructure($oAttDef);
-				while($oSet->fetch())
+				while($oLinkedObj = $oSet->fetch())
 				{
 					foreach($aFields as $sLinkedAttCode)
 					{

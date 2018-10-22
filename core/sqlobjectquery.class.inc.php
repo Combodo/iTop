@@ -339,8 +339,12 @@ class SQLObjectQuery extends SQLQuery
 		$this->PrepareRendering();
 		$sFrom   = self::ClauseFrom($this->__aFrom, $sIndent);
 		$sWhere  = self::ClauseWhere($this->m_oConditionExpr, $aArgs);
+		// Sanity
+		$iLimitCount = (int)$iLimitCount;
 		if ($iLimitCount > 0)
 		{
+			// Sanity
+			$iLimitStart = (int)$iLimitStart;
 			$sLimit = 'LIMIT '.$iLimitStart.', '.$iLimitCount;
 		}
 		else

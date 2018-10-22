@@ -979,6 +979,28 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * Get the name as defined in the dictionary
+	 * @return string (empty for default name scheme)
+	 */
+	public static function GetClassName($sClass)
+	{
+		$sStringCode = 'Class:'.$sClass;
+		return Dict::S($sStringCode, str_replace('_', ' ', $sClass));
+	}
+
+	/**
+	 * Get the description as defined in the dictionary
+	 * @param string $sClass
+	 *
+	 * @return string
+	 */
+	final static public function GetClassDescription($sClass)
+	{
+		$sStringCode = 'Class:'.$sClass.'+';
+		return Dict::S($sStringCode, '');
+	}
+
+	/**
 	 * Gets the name of an object in a safe manner for displaying inside a web page
 	 * @return string
 	 */
@@ -1198,6 +1220,15 @@ abstract class DBObject implements iDisplay
 	// check if the given (or current) value is suitable for the attribute
 	// return true if successfull
 	// return the error desciption otherwise
+	/**
+	 * @param $sAttCode
+	 * @param null $value
+	 *
+	 * @return bool|string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
 	public function CheckValue($sAttCode, $value = null)
 	{
 		if (!is_null($value))
@@ -1246,6 +1277,57 @@ abstract class DBObject implements iDisplay
 					return "Value not allowed [$toCheck]";
 				}
 			}
+		}
+		elseif ($oAtt instanceof AttributeTagSet)
+		{
+			if (is_string($toCheck))
+			{
+				$oTag = new ormTagSet(get_class($this), $sAttCode);
+				try
+				{
+					$oTag->SetValues(explode(' ', $toCheck));
+				} catch (Exception $e)
+				{
+					return "Tag value '$toCheck' is not a valid tag list";
+				}
+
+				return true;
+			}
+
+			if ($toCheck instanceof ormTagSet)
+			{
+				return true;
+			}
+
+			return "Bad type";
+		}
+		elseif ($oAtt instanceof AttributeClassAttCodeSet)
+		{
+			if (is_string($toCheck))
+			{
+				$oTag = new ormSet(get_class($this), $sAttCode);
+				try
+				{
+					$aValues = array();
+					foreach(explode(',', $toCheck) as $sValue)
+					{
+						$aValues[] = trim($sValue);
+					}
+					$oTag->SetValues($aValues);
+				} catch (Exception $e)
+				{
+					return "Set value '$toCheck' is not a valid set";
+				}
+
+				return true;
+			}
+
+			if ($toCheck instanceof ormSet)
+			{
+				return true;
+			}
+
+			return "Bad type";
 		}
 		elseif ($oAtt->IsScalar())
 		{
@@ -2159,6 +2241,17 @@ abstract class DBObject implements iDisplay
 		if (!MetaModel::DBIsReadOnly())
 		{
 			$this->OnDelete();
+
+			// Activate any existing trigger
+			$sClass = get_class($this);
+			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectDelete AS t WHERE t.target_class IN ('$sClassList')"));
+			while ($oTrigger = $oSet->Fetch())
+			{
+				/** @var \Trigger $oTrigger */
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+
 			$this->RecordObjDeletion($this->m_iKey); // May cause a reload for storing history information
 			
 			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)

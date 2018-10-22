@@ -3,5 +3,4 @@
 # since they are used solely for debugging. The minified version is normally used instead.
 #
 jquery.layout.js
-jquery-migrate-1.2.1.js
 jquery.ba-bbq.js

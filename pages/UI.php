@@ -277,7 +277,7 @@ function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker,
 		$oP->add("<form method=\"post\" action=\"./UI.php\">\n");
 		$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
 		$oP->add("<input type=\"hidden\" name=\"class\" value=\"".$oFilter->GetClass()."\">\n");
-		$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".$oFilter->Serialize()."\">\n");
+	$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".htmlentities($oFilter->Serialize(), ENT_QUOTES, 'UTF-8')."\">\n");
 		$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 		foreach($aExtraFormParams as $sName => $sValue)
 		{
@@ -1205,6 +1205,8 @@ EOF
 
 			$aExpectedAttributes = MetaModel::GetTransitionAttributes($sClass, $sStimulus, $sState);
 			$aDetails = array();
+			$sFormId = 'apply_stimulus';
+			$sFormPrefix = $sFormId.'_';
 			$iFieldIndex = 0;
 			$aFieldsMap = array();
 			$aValues = array();
@@ -1220,6 +1222,7 @@ EOF
 			$sReadyScript = '';
 			foreach($aExpectedAttributes as $sAttCode => $iExpectCode)
 			{
+				$sFieldInputId = $sFormPrefix.$sAttCode;
 				// Prompt for an attribute if
 				// - the attribute must be changed or must be displayed to the user for confirmation
 				// - or the field is mandatory and currently empty
@@ -1232,19 +1235,19 @@ EOF
 					if (count($aPrerequisites) > 0)
 					{
 						// When 'enabling' a field, all its prerequisites must be enabled too
-						$sFieldList = "['".implode("','", $aPrerequisites)."']";
-						$oP->add_ready_script("$('#enable_{$sAttCode}').bind('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, true); } );\n");
+						$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aPrerequisites)."']";
+						$oP->add_ready_script("$('#enable_{$sFieldInputId}').bind('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, true); } );\n");
 					}
 					$aDependents = MetaModel::GetDependentAttributes($sClass, $sAttCode); // List of attributes that are needed for the current one
 					if (count($aDependents) > 0)
 					{
 						// When 'disabling' a field, all its dependent fields must be disabled too
-						$sFieldList = "['".implode("','", $aDependents)."']";
-						$oP->add_ready_script("$('#enable_{$sAttCode}').bind('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, false); } );\n");
+						$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aDependents)."']";
+						$oP->add_ready_script("$('#enable_{$sFieldInputId}').bind('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, false); } );\n");
 					}
 					$aArgs = array('this' => $oObj);
-					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), $sAttCode, '', $iExpectCode, $aArgs);
-					$sComments = '<input type="checkbox" checked id="enable_'.$sAttCode.'"  onClick="ToogleField(this.checked, \''.$sAttCode.'\')"/>';
+					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), $sFieldInputId, '', $iExpectCode, $aArgs);
+					$sComments = '<input type="checkbox" checked id="enable_'.$sFieldInputId.'"  onClick="ToggleField(this.checked, \''.$sFieldInputId.'\')"/>';
 					if (!isset($aValues[$sAttCode]))
 					{
 						$aValues[$sAttCode] = array();
@@ -1272,11 +1275,11 @@ EOF
 						}
 						$sTip .= "</ul></p>";
 						$sTip = addslashes($sTip);
-						$sReadyScript .= "$('#multi_values_$sAttCode').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );\n";
-						$sComments .= '<div class="multi_values" id="multi_values_'.$sAttCode.'">'.count($aValues[$sAttCode]).'</div>';
+						$sReadyScript .= "$('#multi_values_$sFieldInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );\n";
+						$sComments .= '<div class="multi_values" id="multi_values_'.$sFieldInputId.'">'.count($aValues[$sAttCode]).'</div>';
 					}
-					$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_$sAttCode\">$sHTMLValue</span>", 'comments' => $sComments);
-					$aFieldsMap[$sAttCode] = $sAttCode;
+					$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_$sFieldInputId\">$sHTMLValue</span>", 'comments' => $sComments);
+					$aFieldsMap[$sAttCode] = $sFieldInputId;
 					$iFieldIndex++;
 				}
 			}
@@ -1289,7 +1292,7 @@ EOF
 				$oP->add('</div>');
 			}
 			$oP->add("<div class=\"wizContainer\">\n");
-			$oP->add("<form id=\"apply_stimulus\" method=\"post\" onSubmit=\"return OnSubmit('apply_stimulus');\">\n");
+			$oP->add("<form id=\"{$sFormId}\" method=\"post\" onSubmit=\"return OnSubmit('{$sFormId}');\">\n");
 			$oP->add("<table><tr><td>\n");
 			$oP->details($aDetails);
 			$oP->add("</td></tr></table>\n");
@@ -1328,7 +1331,7 @@ EOF
 			$oP->add_ready_script(
 <<<EOF
 			// Starts the validation when the page is ready
-			CheckFields('apply_stimulus', false);
+			CheckFields('{$sFormId}', false);
 			$sReadyScript
 EOF
 );
@@ -1650,7 +1653,7 @@ EOF
 
 		$bDirDown = ($sDirection === 'down');
 		$oObj = MetaModel::GetObject($sClass, $id);
-		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+		$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth');
 		$aSourceObjects = array($oObj);
 
 		$oP->set_title(MetaModel::GetRelationDescription($sRelation, $bDirDown).' '.$oObj->GetName());

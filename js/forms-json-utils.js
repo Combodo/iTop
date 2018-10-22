@@ -154,6 +154,7 @@ function CheckFields(sFormId, bDisplayAlert)
 	{
 		if (bDisplayAlert)
 		{
+			activateFirstTabWithError(sFormId);
 			alert(Dict.S('UI:FillAllMandatoryFields'));
 		}
 		$('#'+sFormId+' :submit').prop('disable', false);
@@ -164,6 +165,21 @@ function CheckFields(sFormId, bDisplayAlert)
 		}
 	}
 	return (oFormErrors['err_'+sFormId] == 0); // If no error, submit the form
+}
+
+function activateFirstTabWithError(sFormId) {
+	var $form = $("#"+sFormId),
+		$tabsContainer = $form.find(".ui-widget.ui-widget-content"),
+		$tabs = $tabsContainer.find(".ui-tabs-panel");
+
+	$tabs.each(function (index, element) {
+		var $fieldsWithError = $(element).find(".form_validation");
+		if ($fieldsWithError.length > 0)
+		{
+			$tabsContainer.tabs("option", "active", index);
+			return;
+		}
+	});
 }
 
 function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)

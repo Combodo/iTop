@@ -464,9 +464,9 @@ class utils
 	{
 		$sSelectionMode = utils::ReadParam('selectionMode', '');
 
-		if ($sSelectionMode === '')
+		if ($sSelectionMode != 'positive' && $sSelectionMode != 'negative')
 		{
-			throw new CoreException('selectionMode is mandatory');
+			throw new CoreException('selectionMode must be either positive or negative');
 		}
 
 		// Paginated selection
@@ -1079,12 +1079,7 @@ class utils
 			// $param is a DBObject
 			$oObj = $param;
 			$sOQL = "SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey();
-			$oFilter = DBObjectSearch::FromOQL($sOQL);
-			$sFilter = $oFilter->serialize();
 			$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
-			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage(get_class($oObj));
-			$oAppContext = new ApplicationContext();
-			$sContext = $oAppContext->GetForLink();
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
 			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
@@ -1104,19 +1099,28 @@ class utils
 			break;
 
 			case iPopupMenuExtension::MENU_DASHBOARD_ACTIONS:
-			// $param is a Dashboard
-			$oAppContext = new ApplicationContext();
-			$aParams = $oAppContext->GetAsHash();
-			$sMenuId = ApplicationMenu::GetActiveNodeId();
-			$sDlgTitle = addslashes(Dict::S('UI:ImportDashboardTitle'));
-			$sDlgText = addslashes(Dict::S('UI:ImportDashboardText'));
-			$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
-			$aResult = array(
-				new SeparatorPopupMenuItem(),
-				new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sMenuId),
-				new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sMenuId', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })"),
-			);
-			break;
+				// $param is a Dashboard
+				/** @var \RuntimeDashboard $oDashboard */
+				$oDashboard = $param;
+				$sDashboardId = $oDashboard->GetId();
+				$sDashboardFile = $oDashboard->GetDefinitionFile();
+				$sDlgTitle = addslashes(Dict::S('UI:ImportDashboardTitle'));
+				$sDlgText = addslashes(Dict::S('UI:ImportDashboardText'));
+				$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
+				$sDashboardFileJS = addslashes($sDashboardFile);
+				$sDashboardFileURL = urlencode($sDashboardFile);
+				$aResult = array(
+					new SeparatorPopupMenuItem(),
+					new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sDashboardId.'&file='.$sDashboardFileURL),
+					new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sDashboardId', file: '$sDashboardFileJS', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })"),
+				);
+				if ($oDashboard->GetReloadURL())
+				{
+					$aResult[] = new SeparatorPopupMenuItem();
+					$aResult[] = new URLPopupMenuItem('UI:Menu:PrintableVersion', Dict::S('UI:Menu:PrintableVersion'), $oDashboard->GetReloadURL().'&printable=1', '_blank');
+				}
+
+				break;
 
 			default:
 			// Unknown type of menu, do nothing
@@ -1969,5 +1973,15 @@ class utils
 		}
 		$aHugeClasses = MetaModel::GetConfig()->Get('high_cardinality_classes');
 		return in_array($sClass, $aHugeClasses);
+	}
+
+	/**
+	 * Check if iTop is in a development environment (VCS vs build number)
+	 *
+	 * @return bool
+	 */
+	public static function IsDevelopmentEnvironment()
+	{
+		return ITOP_REVISION  === 'svn';
 	}
 }

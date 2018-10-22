@@ -101,11 +101,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
         $this->add_linked_script('../js/jquery.mousewheel.js');
         $this->add_linked_script('../js/jquery.magnific-popup.min.js');
         $this->add_linked_script('../js/breadcrumb.js');
-        $this->add_linked_script('../js/moment.min.js');
+	    $this->add_linked_script('../js/moment.min.js');
 
-
-        $sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
-        $sSearchNbSelected = addslashes(Dict::S('UI:SearchValue:NbSelected'));
         $this->add_dict_entry('UI:FillAllMandatoryFields');
 
         $this->add_dict_entries('Error:');
@@ -258,6 +255,38 @@ EOF;
 	}
 EOF
         );
+
+        // Attribute set tooltip on items
+	    $this->add_ready_script(
+<<<EOF
+	$('.attribute-set-item').each(function(){
+		// Encoding only title as the content is already sanitized by the HTML attribute.
+        var sLabel = $('<div/>').text($(this).attr('data-label')).html();
+		var sDescription = $(this).attr('data-description');
+		
+		var oContent = {};
+		
+		// Make nice tooltip if item has a description, otherwise just make a title attribute so the truncated label can be read.
+		if(sDescription !== '')
+		{
+			oContent.title = { text: sLabel };
+			oContent.text = sDescription;
+	    }
+	    else
+	    {
+	    	oContent.text = sLabel;
+	    }
+	    
+	    $(this).qtip({
+	       content: oContent,
+	       show: { delay: 300, when: 'mouseover' },
+	       hide: { delay: 140, when: 'mouseout', fixed: true },
+	       style: { name: 'dark', tip: 'bottomLeft' },
+	       position: { corner: { target: 'topMiddle', tooltip: 'bottomLeft' }}
+	    });
+	});
+EOF
+	    );
 
         $this->add_init_script(
             <<< EOF
@@ -923,9 +952,31 @@ EOF
             $sHtml .= '<p>' . Dict::Format('UI:ExplainPrintable', '<img src="../images/eye-open-555.png" style="vertical-align:middle">') . '</p>';
             $sHtml .= "<div id=\"hiddeable_chapters\"></div>";
             $sHtml .= '<button onclick="window.print()">' . htmlentities(Dict::S('UI:Button:GoPrint'), ENT_QUOTES, 'UTF-8') . '</button>';
-            $sHtml .= '&nbsp;';
-            $sHtml .= '<button onclick="window.close()">' . htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES, 'UTF-8') . '</button>';
+	        $sHtml .= '&nbsp;';
+	        $sHtml .= '<button onclick="window.close()">' . htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES, 'UTF-8') . '</button>';
+	        $sHtml .= '&nbsp;';
+
+	        $aResolutionChoices = array('100%' => Dict::S('UI:PrintResolution:FullSize'),
+		        '19cm' => Dict::S('UI:PrintResolution:A4Portrait'),
+		        '27.7cm' => Dict::S('UI:PrintResolution:A4Landscape'),
+		        '19.6cm' => Dict::S('UI:PrintResolution:LetterPortrait'),
+		        '25.9cm' => Dict::S('UI:PrintResolution:LetterLandscape'),
+	        );
+	        $sHtml .=
+<<<EOF
+<select name="text" onchange='$(".printable-content").width(this.value); $(charts).each(function(i, chart) { $(chart).trigger("resize"); });'>
+EOF
+		        ;
+	        $bIsSelected = true;
+	        foreach ($aResolutionChoices as $sValue => $sText)
+	        {
+		        $sHtml .= '<option value="'.$sValue.'" '.($bIsSelected ? 'selected' : '').'>'.$sText.'</option>';
+		        $bIsSelected = false;
+	        }
+	        $sHtml .= "</select>";
+
             $sHtml .= "</div>";
+	        $sHtml .= "<div class=\"printable-content\">";
         }
 
         // Render the revision number
@@ -946,7 +997,9 @@ EOF
             $sHtml .= ' <!-- Beginning of page content -->';
             $sHtml .= self::FilterXSS($this->s_content);
             $sHtml .= ' <!-- End of page content -->';
-        } elseif ($this->GetOutputFormat() == 'html') {
+        }
+        elseif ($this->GetOutputFormat() == 'html')
+        {
             $oAppContext = new ApplicationContext();
 
             $sUserName = UserRights::GetUser();
@@ -1137,6 +1190,10 @@ EOF;
         } else {
             $sHtml .= self::FilterXSS($this->s_content);
         }
+
+	    if ($this->IsPrintableVersion()) {
+		    $sHtml .= '</div>';
+	    }
 
         $sHtml .= "</body>\n";
         $sHtml .= "</html>\n";

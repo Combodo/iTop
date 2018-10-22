@@ -139,6 +139,7 @@ f_round    = "ROUND"
 f_floor    = "FLOOR"
 f_inet_aton = "INET_ATON"
 f_inet_ntoa = "INET_NTOA"
+matches          = "MATCHES"
 below            = "BELOW"
 below_strict     = "BELOW STRICT"
 not_below        = "NOT BELOW"
@@ -272,6 +273,9 @@ in {
 }
 not_in {
 	$this->token = OQLParser::NOT_IN;
+}
+matches {
+    $this->token = OQLParser::MATCHES;
 }
 interval {
 	$this->token = OQLParser::INTERVAL;
@@ -419,25 +423,25 @@ class OQLLexer extends OQLLexerRaw
 
    function yylex()
    {
-      try
-      {
-      	return parent::yylex();
-		}
-		catch (Exception $e)
-		{
-			$sMessage = $e->getMessage();
-			if (substr($sMessage, 0, strlen(UNEXPECTED_INPUT_AT_LINE)) == UNEXPECTED_INPUT_AT_LINE)
-			{
-				$sLineAndChar = substr($sMessage, strlen(UNEXPECTED_INPUT_AT_LINE));
-				if (preg_match('#^([0-9]+): (.+)$#', $sLineAndChar, $aMatches))
-				{
-					$iLine = $aMatches[1];
-					$sUnexpected = $aMatches[2];
-					throw new OQLLexerException($this->data, $iLine, $this->count, $sUnexpected);
-				}
-			}
-			// Default: forward the exception
-			throw $e;
+        try
+        {
+          return parent::yylex();
+        }
+        catch (Exception $e)
+        {
+            $sMessage = $e->getMessage();
+            if (substr($sMessage, 0, strlen(UNEXPECTED_INPUT_AT_LINE)) == UNEXPECTED_INPUT_AT_LINE)
+            {
+                $sLineAndChar = substr($sMessage, strlen(UNEXPECTED_INPUT_AT_LINE));
+                if (preg_match('#^([0-9]+): (.+)$#', $sLineAndChar, $aMatches))
+                {
+                    $iLine = $aMatches[1];
+                    $sUnexpected = $aMatches[2];
+                    throw new OQLLexerException($this->data, $iLine, $this->count, $sUnexpected);
+                }
+            }
+            // Default: forward the exception
+            throw $e;
 		}
 	}
 }

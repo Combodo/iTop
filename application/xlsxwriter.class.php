@@ -40,7 +40,7 @@ Class XLSXWriter
 	
 	protected function tempFilename()
 	{
-		$filename = tempnam("/tmp", "xlsx_writer_");
+		$filename = tempnam(SetupUtils::GettmpDir(), 'xlsx_writer_');
 		$this->temp_files[] = $filename;
 		return $filename;
 	}

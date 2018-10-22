@@ -117,6 +117,22 @@ class Dict
 	}
 
 	/**
+	 * Check if a dictionary entry exists or not
+	 * @param $sStringCode
+	 *
+	 * @return bool
+	 */
+	public static function Exists($sStringCode)
+	{
+		$sImpossibleString = 'aVlHYKEI3TZuDV5o0pghv7fvhYNYuzYkTk7WL0Zoqw8rggE7aq';
+		if (static::S($sStringCode, $sImpossibleString) === $sImpossibleString)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Returns a localised string from the dictonary
 	 *
 	 * @param string $sStringCode The code identifying the dictionary entry
