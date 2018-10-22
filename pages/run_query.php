@@ -227,7 +227,7 @@ EOF
 		$oP->p('');
 		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'runQuery');
 		$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
-		$oP->p(Dict::S('UI:RunQuery:SerializedFilter').$oFilter->serialize());
+		$oP->p(Dict::S('UI:RunQuery:SerializedFilter').htmlentities($oFilter->serialize(), ENT_QUOTES, 'UTF-8'));
 		$oP->EndCollapsibleSection();
 	}
 	elseif ($sSyntaxError)
