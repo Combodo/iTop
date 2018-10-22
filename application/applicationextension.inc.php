@@ -830,6 +830,10 @@ class RestResult
 
 	/**
 	 * Default constructor - ok!
+	 * 	 
+	 * @param DBObject $oObject The object being reported
+	 * @param string $sAttCode The attribute code (must be valid)
+	 * @return string A scalar representation of the value
 	 */
 	public function __construct()
 	{
@@ -1165,6 +1169,14 @@ class RestUtils
 				}
 				$value = DBObjectSet::FromArray($sLnkClass, $aLinks);
 			}
+            elseif ($oAttDef instanceof AttributeTagSet)
+            {
+                if (!is_array($value))
+                {
+                    throw new Exception("A tag set must be defined by an array of tag codes");
+                }
+                $value = $oAttDef->FromJSONToValue($value);
+            }
 			else
 			{
 				$value = $oAttDef->FromJSONToValue($value);

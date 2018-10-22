@@ -480,6 +480,11 @@ class DBObjectSearch extends DBSearch
 				$oNewCondition = Expression::FromOQL($sOQLCondition);
 				break;
 
+			case 'MATCHES':
+				$oRightExpr = new ScalarExpression($value);
+				$oNewCondition = new MatchExpression($oField, $oRightExpr);
+				break;
+
 			case 'Contains':
 			case 'Begins with':
 			case 'Finishes with':
@@ -1313,6 +1318,13 @@ class DBObjectSearch extends DBSearch
 			$oLeft = $this->OQLExpressionToCondition($sQuery, $oExpression->GetLeftExpr(), $aClassAliases);
 			$oRight = $this->OQLExpressionToCondition($sQuery, $oExpression->GetRightExpr(), $aClassAliases);
 			return new BinaryExpression($oLeft, $sOperator, $oRight);
+		}
+		elseif ($oExpression instanceof MatchOqlExpression)
+		{
+			$oLeft = $this->OQLExpressionToCondition($sQuery, $oExpression->GetLeftExpr(), $aClassAliases);
+			$oRight = $this->OQLExpressionToCondition($sQuery, $oExpression->GetRightExpr(), $aClassAliases);
+
+			return new MatchExpression($oLeft, $oRight);
 		}
 		elseif ($oExpression instanceof FieldOqlExpression)
 		{

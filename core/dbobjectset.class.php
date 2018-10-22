@@ -815,8 +815,8 @@ class DBObjectSet implements iDBObjectSetIterator
 			if ($resQuery)
 			{
 				$aRow = CMDBSource::FetchArray($resQuery);
-				CMDBSource::FreeResult($resQuery);
 				$iCount = intval($aRow['COUNT']);
+				CMDBSource::FreeResult($resQuery);
 			}
 			else
 			{

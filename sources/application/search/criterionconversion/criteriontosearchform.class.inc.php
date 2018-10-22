@@ -71,6 +71,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 			AttributeDefinition::SEARCH_WIDGET_TYPE_EXTERNAL_KEY => 'ExternalKeyToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_HIERARCHICAL_KEY => 'ExternalKeyToSearchForm',
 			AttributeDefinition::SEARCH_WIDGET_TYPE_ENUM => 'EnumToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_SET => 'SetToSearchForm',
+			AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET => 'TagSetToSearchForm',
 		);
 
 		foreach($aAndCriterionRaw as $aCriteria)
@@ -114,7 +116,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				if (array_key_exists($aCriteria['widget'], $aMappingOperatorToFunction))
 				{
 					$sFct = $aMappingOperatorToFunction[$aCriteria['widget']];
-					$aAndCriterion[] = self::$sFct($aCriteria, $aAllFields);
+					$aAndCriterion = array_merge($aAndCriterion, self::$sFct($aCriteria, $aAllFields));
 				}
 				else
 				{
@@ -419,7 +421,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				break;
 		}
 
-		return $aCriteria;
+		return array($aCriteria);
 	}
 
 	protected static function ExternalFieldToSearchForm($aCriteria, $aFields)
@@ -459,7 +461,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				break;
 		}
 
-		return $aCriteria;
+		return array($aCriteria);
 	}
 
 	protected static function DateTimeToSearchForm($aCriterion, $aFields)
@@ -534,6 +536,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 							$sDelta = '1 second';
 							$sAttributeClass = AttributeDateTime::class;
 						}
+						/** @var \AttributeDateTime $sAttributeClass */
+						/** @var \DateTimeFormat $oFormat */
 						$oFormat = $sAttributeClass::GetFormat();
 						$sFirstDate = $aCriterion['values'][0]['value'];
 						$oDate = new DateTime($sFirstDate);
@@ -559,6 +563,8 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 							$sDelta = '1 second';
 							$sAttributeClass = AttributeDateTime::class;
 						}
+						/** @var \AttributeDateTime $sAttributeClass */
+						/** @var \DateTimeFormat $oFormat */
 						$oFormat = $sAttributeClass::GetFormat();
 						$sFirstDate = $aCriterion['values'][0]['value'];
 						$oDate = new DateTime($sFirstDate);
@@ -574,7 +580,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				}
 			}
 
-			return $aCriterion;
+			return array($aCriterion);
 		}
 
 		if (isset($aCriterion['values'][0]['value']))
@@ -602,7 +608,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		// Temporary until the JS widget support relative dates
 		$aCriterion['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
 
-		return $aCriterion;
+		return array($aCriterion);
 	}
 
 	protected static function NumericToSearchForm($aCriteria, $aFields)
@@ -622,7 +628,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				break;
 		}
 
-		return $aCriteria;
+		return array($aCriteria);
 	}
 
 	protected static function EnumToSearchForm($aCriteria, $aFields)
@@ -663,7 +669,75 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				break;
 		}
 
-		return $aCriteria;
+		return array($aCriteria);
+	}
+
+	protected static function TagSetToSearchForm($aCriteria, $aFields)
+	{
+		$aCriterion = array($aCriteria);
+		$sOperator = $aCriteria['operator'];
+		switch ($sOperator)
+		{
+			case 'MATCHES':
+				// Nothing special to do
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
+				{
+					if (!isset($aCriteria['values']))
+					{
+						$aCriteria['values'] = array();
+					}
+					// Convention for 'undefined' tag set
+					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
+				}
+				break;
+
+			case 'OR':
+			case 'ISNULL':
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_EQUALS;
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
+				{
+					if (!isset($aCriteria['values']))
+					{
+						$aCriteria['values'] = array();
+					}
+					// Convention for 'undefined' tag set
+					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
+				}
+				break;
+
+			case '=':
+				$aCriteria['operator'] = CriterionConversionAbstract::OP_MATCHES;
+				if (isset($aCriteria['has_undefined']) && $aCriteria['has_undefined'])
+				{
+					$aCriteria['values'] = array();
+					// Convention for 'undefined' tag set
+					$aCriteria['values'][] = array('value' => '', 'label' => Dict::S('Enum:Undefined'));
+				}
+				else
+				{
+					// Split values into a list of Matches
+					$aCriterion = array();
+					$aValues = $aCriteria['values'];
+					foreach($aValues as $aValue)
+					{
+						$aCriteria['values'] = array($aValue);
+						$aCriterion[] = $aCriteria;
+					}
+				}
+				break;
+
+			default:
+				// Unknown operator
+				$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+				break;
+		}
+		return $aCriterion;
+	}
+
+	protected static function SetToSearchForm($aCriteria, $aFields)
+	{
+		$aCriteria['widget'] = AttributeDefinition::SEARCH_WIDGET_TYPE_RAW;
+		return array($aCriteria);
 	}
 
 	protected static function ExternalKeyToSearchForm($aCriteria, $aFields)
@@ -685,7 +759,7 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 				break;
 		}
 
-		return $aCriteria;
+		return array($aCriteria);
 	}
 
 	/**

@@ -1388,18 +1388,90 @@ EOF
 				{
 					$aParameters['handler_class'] = $this->GetMandatoryPropString($oField, 'handler_class');
 				}
-				else
-				{
-					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
-					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
-					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
-					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-					$aParameters['depends_on'] = $sDependencies;
-				}
-
-				if ($sAttType == 'AttributeTagSet')
+				elseif ($sAttType == 'AttributeTagSet')
 				{
 					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+					$aParameters['tag_code_max_len'] = $this->GetPropNumber($oField, 'tag_code_max_len', 20);
+					if ($aParameters['tag_code_max_len'] > 255)
+					{
+						$aParameters['tag_code_max_len'] = 255;
+					}
+				}
+				elseif ($sAttType == 'AttributeClassAttCodeSet')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+					$aParameters['class_field'] = $this->GetMandatoryPropString($oField, 'class_field');
+					// List of AttributeDefinition Classes to filter class_field (empty means all)
+					$aParameters['attribute_definition_list'] = $this->GetPropString($oField, 'attribute_definition_list', '');
+				}
+				elseif ($sAttType == 'AttributeQueryAttCodeSet')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+					$aParameters['query_field'] = $this->GetMandatoryPropString($oField, 'query_field');
+				}
+				elseif ($sAttType == 'AttributeClassState')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['class_field'] = $this->GetMandatoryPropString($oField, 'class_field');
+				}
+				elseif ($sAttType == 'AttributeDashboard')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['is_user_editable'] = $this->GetPropBoolean($oField, 'is_user_editable', true);
+					$aParameters['definition_file'] = $this->GetPropString($oField, 'definition_file');
+
+					if ($aParameters['definition_file'] == null)
+					{
+						$oDashboardDefinition = $oField->GetOptionalElement('definition');
+						if ($oDashboardDefinition == null)
+						{
+							throw(new DOMFormatException('Missing definition for Dashboard Attribute "'.$sAttCode.'" expecting either a tag "definition_file" or "definition".'));
+						}
+						$sFileName = strtolower($sClass).'__'.strtolower($sAttCode).'_dashboard.xml';
+
+						$oXMLDoc = new DOMDocument('1.0', 'UTF-8');
+						$oXMLDoc->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
+						$oXMLDoc->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
+
+						$oRootNode = $oXMLDoc->createElement('dashboard'); // make sure that the document is not empty
+						$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+						$oXMLDoc->appendChild($oRootNode);
+						foreach($oDashboardDefinition->childNodes as $oNode)
+						{
+							$oDefNode = $oXMLDoc->importNode($oNode, true); // layout, cells, etc Nodes and below
+							$oRootNode->appendChild($oDefNode);
+						}
+						$sFileName = $sModuleRelativeDir.'/'.$sFileName;
+						$oXMLDoc->save($sTempTargetDir.'/'.$sFileName);
+						$aParameters['definition_file'] = "'".str_replace("'", "\\'", $sFileName)."'";
+					}
+				}
+				else
+				{
+                    $aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+                    $aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+                    $aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+                    $aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+                    $aParameters['depends_on'] = $sDependencies;
 				}
 
 				// Optional parameters (more for historical reasons)
@@ -1837,17 +1909,16 @@ EOF;
 			(
 				'category' => 'bizmodel',
 				'key_type' => 'autoincrement',
-				'name_attcode' => array('tag_label'),
+				'name_attcode' => array('label'),
 				'state_attcode' => '',
-				'reconc_keys' => array('tag_code'),
+				'reconc_keys' => array('code'),
 				'db_table' => '', // no need to have a corresponding table : this class exists only for rights, no additional field
 				'db_key_field' => 'id',
 				'db_finalclass_field' => 'finalclass',
 			);
 			foreach ($aTagFieldsInfo as $sTagFieldName)
 			{
-				$sTagSuffix = $sClassName.'_'.$sTagFieldName;
-				$sTagClassName = 'TagSetFieldDataFor_'.$sTagSuffix;
+				$sTagClassName = static::GetTagDataClassName($sClassName, $sTagFieldName);
 				$sTagClassParams = var_export($aTagClassParams, true);
 				$sPHP .= $this->GeneratePhpCodeForClass($sTagClassName, $sTagClassParentClass, $sTagClassParams);
 			}
@@ -1856,6 +1927,12 @@ EOF;
 		return $sPHP;
 	}
 
+	private static function GetTagDataClassName($sClass, $sAttCode)
+	{
+		$sTagSuffix = $sClass.'__'.$sAttCode;
+
+		return 'TagSetFieldDataFor_'.$sTagSuffix;
+	}
 
 	/**
 	 * @param $oMenu
@@ -1925,7 +2002,7 @@ EOF;
 				{
 					throw(new DOMFormatException('Missing definition for Dashboard menu "'.$sMenuId.'" expecting either a tag "definition_file" or "definition".'));
 				}
-				$sFileName = strtolower(str_replace(array(':', '/', '\\', '*'), '_', $sMenuId)).'_dashboard_menu.xml';
+				$sFileName = strtolower(str_replace(array(':', '/', '\\', '*'), '_', $sMenuId)).'_dashboard.xml';
 				$sTemplateSpec = $this->PathToPHP($sFileName, $sModuleRelativeDir);
 
 				$oXMLDoc = new DOMDocument('1.0', 'UTF-8');
@@ -2668,7 +2745,7 @@ EOF;
 	 * @param bool $bIsAbstractClass
 	 * @param string $sMethods
 	 *
-	 * @param string $aRequiredFiles
+	 * @param array $aRequiredFiles
 	 * @param string $sCodeComment
 	 *
 	 * @return string php code for the class

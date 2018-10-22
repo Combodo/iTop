@@ -16,7 +16,7 @@ Example:
 %left TIMES DIVIDE MOD.
 %right EXP NOT.
 
-TODO : solve the 2 remaining shift-reduce conflicts (JOIN)
+later : solve the 2 remaining shift-reduce conflicts (JOIN)
 
 */
 
@@ -108,7 +108,16 @@ expression_prio1(A) ::= expression_basic(X). { A = X; }
 expression_prio1(A) ::= expression_prio1(X) operator1(Y) expression_basic(Z). { A = new BinaryOqlExpression(X, Y, Z); }
 
 expression_prio2(A) ::= expression_prio1(X). { A = X; }
-expression_prio2(A) ::= expression_prio2(X) operator2(Y) expression_prio1(Z). { A = new BinaryOqlExpression(X, Y, Z); }
+expression_prio2(A) ::= expression_prio2(X) operator2(Y) expression_prio1(Z).{
+    if (Y == 'MATCHES')
+    {
+        A = new MatchOqlExpression(X, Z);
+    }
+    else
+    {
+        A = new BinaryOqlExpression(X, Y, Z);
+    }
+}
 
 expression_prio3(A) ::= expression_prio2(X). { A = X; }
 expression_prio3(A) ::= expression_prio3(X) operator3(Y) expression_prio2(Z). { A = new BinaryOqlExpression(X, Y, Z); }
@@ -180,18 +189,22 @@ str_value(A) ::= STRVAL(X). {A=stripslashes(substr(X, 1, strlen(X) - 2));}
 
 operator1(A) ::= num_operator1(X). {A=X;}
 operator1(A) ::= bitwise_operator1(X). {A=X;}
+
 operator2(A) ::= num_operator2(X). {A=X;}
 operator2(A) ::= str_operator(X). {A=X;}
 operator2(A) ::= REGEXP(X). {A=X;}
 operator2(A) ::= EQ(X). {A=X;}
 operator2(A) ::= NOT_EQ(X). {A=X;}
+
 operator3(A) ::= LOG_AND(X). {A=X;}
 operator3(A) ::= bitwise_operator3(X). {A=X;}
+
 operator4(A) ::= LOG_OR(X). {A=X;}
 operator4(A) ::= bitwise_operator4(X). {A=X;}
 
 num_operator1(A) ::= MATH_DIV(X). {A=X;}
 num_operator1(A) ::= MATH_MULT(X). {A=X;}
+
 num_operator2(A) ::= MATH_PLUS(X). {A=X;}
 num_operator2(A) ::= MATH_MINUS(X). {A=X;}
 num_operator2(A) ::= GT(X). {A=X;}
@@ -201,10 +214,13 @@ num_operator2(A) ::= LE(X). {A=X;}
 
 str_operator(A) ::= LIKE(X). {A=X;}
 str_operator(A) ::= NOT_LIKE(X). {A=X;}
+str_operator(A) ::= MATCHES(X). {A=X;}
 
 bitwise_operator1(A) ::= BITWISE_LEFT_SHIFT(X). {A=X;}
 bitwise_operator1(A) ::= BITWISE_RIGHT_SHIFT(X). {A=X;}
+
 bitwise_operator3(A) ::= BITWISE_AND(X). {A=X;}
+
 bitwise_operator4(A) ::= BITWISE_OR(X). {A=X;}
 bitwise_operator4(A) ::= BITWISE_XOR(X). {A=X;}
 

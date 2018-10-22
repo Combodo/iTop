@@ -29,7 +29,7 @@ SetupWebPage::AddModule(
 			//'data.struct.itop-knownerror-mgmt.xml',
 		),
 		'data.sample' => array(
-			//'data.sample.itop-knownerror-mgmt.xml',
+			'data.sample.faq-domains.xml',
 		),
 		
 		// Documentation

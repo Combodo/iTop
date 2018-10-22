@@ -862,7 +862,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:BulkExport:XMLOptions' => 'Opciones XML',
 	'Core:BulkExport:SpreadsheetFormat' => 'Formato hoja tabular HTML (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Opcioens Hoja Tabular',
-	'Core:BulkExport:OptionNoLocalize' => 'No traducir valores (para campos enumerados)',
+	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
 	'Core:BulkExport:OptionLinkSets' => 'Incluir objetos ligados',
 	'Core:BulkExport:OptionFormattedText' => 'Conservar formato de texto',
 	'Core:BulkExport:ScopeDefinition' => 'Definición de los objetos a exportar',

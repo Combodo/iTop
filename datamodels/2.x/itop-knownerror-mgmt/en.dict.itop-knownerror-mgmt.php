@@ -157,6 +157,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:FAQ/Attribute:error_code+' => '',
 	'Class:FAQ/Attribute:key_words' => 'Key words',
 	'Class:FAQ/Attribute:key_words+' => '',
+	'Class:FAQ/Attribute:domains' => 'Domains',
 ));
 
 //

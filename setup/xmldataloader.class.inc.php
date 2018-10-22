@@ -273,6 +273,10 @@ class XMLDataLoader
 						$oDoc = new ormDocument($data, $sMimeType, $sFileName);
 						$oTargetObj->Set($sAttCode, $oDoc);
 					}
+					elseif ($oAttDef instanceof AttributeTagSet)
+					{
+						// TODO
+                    }
 					else
 					{
 						$value = (string)$oSubNode;

@@ -320,8 +320,7 @@ abstract class MetaModel
 	final static public function GetName($sClass)
 	{
 		self::_check_subclass($sClass);
-		$sStringCode = 'Class:'.$sClass;
-		return Dict::S($sStringCode, str_replace('_', ' ', $sClass));
+		return $sClass::GetClassName($sClass);
 	}
 
 	/**
@@ -411,8 +410,7 @@ abstract class MetaModel
 	final static public function GetClassDescription($sClass)
 	{
 		self::_check_subclass($sClass);
-		$sStringCode = 'Class:'.$sClass.'+';
-		return Dict::S($sStringCode, '');
+		return $sClass::GetClassDescription($sClass);
 	}
 
 	/**
@@ -1024,7 +1022,7 @@ abstract class MetaModel
 	/**
 	 * array of ("classname" => array of attributes)
 	 *
-	 * @var array
+	 * @var \AttributeDefinition[]
 	 */
 	private static $m_aAttribDefs = array();
 	/**
@@ -4971,6 +4969,7 @@ abstract class MetaModel
 		$aCreateTableItems = array(); // array of <table> => array of <create definition>
 		$aAlterTableMetaData = array();
 		$aAlterTableItems = array(); // array of <table> => <alter specification>
+		$aPostTableAlteration = array(); // array of <table> => post alteration queries
 
 		foreach(self::GetClasses() as $sClass)
 		{
@@ -5117,9 +5116,14 @@ abstract class MetaModel
 									$sColumns .= ' ('.$aLength[0].')';
 								}
 							}
-
-							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD $sIndexType `$sIndexName` ($sColumns)";
-							if ($bTableToCreate)
+							$sSugFix = "ALTER TABLE `$sTable` ADD $sIndexType `$sIndexName` ($sColumns)";
+							$aSugFix[$sClass][$sAttCode][] = $sSugFix;
+							if ($bFullTextIndexNeeded)
+							{
+								// MySQL does not support multi fulltext index creation in a single query (mysql_errno = 1795)
+								$aPostTableAlteration[$sTable][] = $sSugFix;
+							}
+							elseif ($bTableToCreate)
 							{
 								$aCreateTableItems[$sTable][] = "$sIndexType `$sIndexName` ($sColumns)";
 							}
@@ -5193,7 +5197,15 @@ abstract class MetaModel
 						if (!empty($sSugFixAfterChange))
 						{
 							$aSugFix[$sClass][$sAttCode][] = $sSugFixAfterChange;
-							$aAlterTableItems[$sTable][] = $sAlterTableItemsAfterChange;
+							if ($bFullTextIndexNeeded)
+							{
+								// MySQL does not support multi fulltext index creation in a single query (mysql_errno = 1795)
+								$aPostTableAlteration[$sTable][] = $sSugFixAfterChange;
+							}
+							else
+							{
+								$aAlterTableItems[$sTable][] = $sAlterTableItemsAfterChange;
+							}
 						}
 					}
 				}
@@ -5316,6 +5328,10 @@ abstract class MetaModel
 		{
 			$sChangeList = implode(', ', $aChangeList);
 			$aCondensedQueries[] = "ALTER TABLE `$sTable` $sChangeList";
+		}
+		foreach($aPostTableAlteration  as $sTable => $aChangeList)
+		{
+			$aCondensedQueries = array_merge($aCondensedQueries, $aChangeList);
 		}
 
 		return array($aErrors, $aSugFix, $aCondensedQueries);

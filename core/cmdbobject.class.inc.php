@@ -409,7 +409,19 @@ abstract class CMDBObject extends DBObject
 			$oMyChangeOp->Set("newvalue", $value);
 			$iId = $oMyChangeOp->DBInsertNoReload();
 		}
-		else
+        elseif ($oAttDef instanceOf AttributeTagSet)
+        {
+            // Tag Set
+            //
+            $oMyChangeOp = MetaModel::NewObject("CMDBChangeOpSetAttributeTagSet");
+            $oMyChangeOp->Set("objclass", get_class($this));
+            $oMyChangeOp->Set("objkey", $this->GetKey());
+            $oMyChangeOp->Set("attcode", $sAttCode);
+            $oMyChangeOp->Set("oldvalue", implode(' ', $original->GetValues()));
+            $oMyChangeOp->Set("newvalue", implode(' ', $value->GetValues()));
+            $iId = $oMyChangeOp->DBInsertNoReload();
+        }
+        else
 		{
 			// Scalars
 			//
@@ -551,6 +563,12 @@ abstract class CMDBObject extends DBObject
 		$this->DBUpdate();
 	}
 
+	/**
+	 * @param null $oDeletionPlan
+	 *
+	 * @return \DeletionPlan|null
+	 * @throws \DeleteException
+	 */
 	public function DBDelete(&$oDeletionPlan = null)
 	{
 		return $this->DBDeleteTracked_Internal($oDeletionPlan);
@@ -563,6 +581,12 @@ abstract class CMDBObject extends DBObject
 		$this->DBDeleteTracked_Internal($oDeletionPlan);
 	}
 
+	/**
+	 * @param null $oDeletionPlan
+	 *
+	 * @return \DeletionPlan|null
+	 * @throws \DeleteException
+	 */
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		$prevkey = $this->GetKey();

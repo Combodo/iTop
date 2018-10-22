@@ -8,7 +8,8 @@
     "ext-soap": "*",
     "ext-json": "*",
     "ext-zip": "*",
-    "ext-mysqli": "*"
+    "ext-mysqli": "*",
+    "ext-dom": "*"
   },
   "config": {
     "platform": {

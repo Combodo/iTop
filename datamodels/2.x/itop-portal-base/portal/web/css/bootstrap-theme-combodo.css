@@ -3213,19 +3213,20 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   cursor: not-allowed;
 }
 .label {
-  display: inline;
+  display: inline-block;
   padding: 0.2em 0.6em 0.3em;
   font-size: 75%;
-  font-weight: bold;
   line-height: 1;
-  color: #fff;
+  color: #222;
+  background-color: #fff;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: 0.25em;
+  border-radius: 0px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
 }
 a.label:hover, a.label:focus {
-  color: #fff;
+  color: #222;
   text-decoration: none;
   cursor: pointer;
 }
@@ -3237,10 +3238,11 @@ a.label:hover, a.label:focus {
   top: -1px;
 }
 .label-default {
-  background-color: #474949;
+  color: #222;
+  background-color: #fff;
 }
 .label-default[href]:hover, .label-default[href]:focus {
-  background-color: #2e2f2f;
+  background-color: #f9f9f9;
 }
 .label-primary {
   background-color: #ea7d1e;
@@ -5043,4 +5045,27 @@ table.dataTable tbody tr.selected a, table.dataTable tbody th.selected a, table.
 .grouping_tabs.nav-pills > li.active > a, .grouping_tabs.nav-pills > li.active > a:hover, .grouping_tabs.nav-pills > li.active > a:focus {
   color: #444;
   background-color: #fcfcfc;
+}
+/* Temp */
+.label {
+  margin-right: 0.4em;
+  margin-bottom: 0.4em;
+  padding: 0.5em 0.7em 0.5em;
+  font-size: 85%;
+  font-weight: normal;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
+}
+.label:last-of-type {
+  margin-right: 0;
+}
+.selectize-control.multi .selectize-input .attribute-set-item[data-value] {
+  border-radius: 0;
+  background-color: #fff;
+  background-image: none;
+  border: none;
+  text-shadow: none;
+  color: black;
+}
+.selectize-control.multi .selectize-input .attribute-set-item[data-value] .remove {
+  border-left: none;
 }
