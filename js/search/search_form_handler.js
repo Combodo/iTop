@@ -187,7 +187,7 @@ $(function()
 				}
 
 				var sNewUrl = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search';
-				sNewUrl = sNewUrl + '&filter='+oData['filter'];
+				sNewUrl = sNewUrl + '&filter='+encodeURI(oData['filter']);
                 sNewUrl = sNewUrl + '&c[menu]='+me._extractURLParameter(window.location.href, "c[menu]");
                 sNewUrl = sNewUrl + '&c[org_id]='+me._extractURLParameter(window.location.href, "c[org_id]");
 				if ('' != me._extractURLParameter(window.location.href, "debug"))

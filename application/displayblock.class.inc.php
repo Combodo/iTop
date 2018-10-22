@@ -239,7 +239,7 @@ class DisplayBlock
 			}
 		}
 
-		$sFilter = $this->m_oFilter->serialize(false, $aQueryParams); // Used either for asynchronous or auto_reload
+		$sFilter = addslashes($this->m_oFilter->serialize(false, $aQueryParams)); // Used either for asynchronous or auto_reload
 		if (!$this->m_bAsynchronous)
 		{
 			// render now
@@ -1171,7 +1171,7 @@ EOF
 		}
 		if (($bAutoReload) && ($this->m_sStyle != 'search')) // Search form do NOT auto-reload
 		{
-			$sFilter = $this->m_oFilter->serialize(); // Used either for asynchronous or auto_reload
+			$sFilter = addslashes(str_replace('"', "'", $this->m_oFilter->serialize())); // Used either for asynchronous or auto_reload
 			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
 
 			$oPage->add_script('if (typeof window.oAutoReloadBlock == "undefined") {
@@ -1180,7 +1180,7 @@ EOF
 				if (typeof window.oAutoReloadBlock[\''.$sId.'\'] != "undefined") {
 				    clearInterval(window.oAutoReloadBlock[\''.$sId.'\']);
 				}
-				window.oAutoReloadBlock[\''.$sId.'\'] = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
+				window.oAutoReloadBlock[\''.$sId.'\'] = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \"'.$sFilter.'\", \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
 		}
 
 		return $sHtml;
@@ -1440,7 +1440,7 @@ class HistoryBlock extends DisplayBlock
 			default:
 			if ($bTruncated)
 			{
-				$sFilter = $this->m_oFilter->serialize();
+				$sFilter = htmlentities($this->m_oFilter->serialize(), ENT_QUOTES, 'UTF-8');
 				$sHtml .= '<div id="history_container"><p>';
 				$sHtml .= Dict::Format('UI:TruncatedResults', $this->iLimitCount, $oSet->Count());
 				$sHtml .= ' ';
