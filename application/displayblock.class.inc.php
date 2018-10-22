@@ -226,7 +226,17 @@ class DisplayBlock
 		}
 		else
 		{
-			$aQueryParams = array();
+			if (isset($aExtraParams['this->id']) && isset($aExtraParams['this->class']))
+			{
+				$sClass = $aExtraParams['this->class'];
+				$iKey = $aExtraParams['this->id'];
+				$oObj = MetaModel::GetObject($sClass, $iKey);
+				$aQueryParams = array('this->object()' => $oObj);
+			}
+			else
+			{
+				$aQueryParams = array();
+			}
 		}
 
 		$sFilter = $this->m_oFilter->serialize(false, $aQueryParams); // Used either for asynchronous or auto_reload
@@ -326,13 +336,24 @@ class DisplayBlock
 		$sHtml = '';
 		// Add the extra params into the filter if they make sense for such a filter
 		$bDoSearch = utils::ReadParam('dosearch', false);
+		$aQueryParams = array();
+		if (isset($aExtraParams['query_params']))
+		{
+			$aQueryParams = $aExtraParams['query_params'];
+		}
+		else
+		{
+			if (isset($aExtraParams['this->id']) && isset($aExtraParams['this->class']))
+			{
+				$sClass = $aExtraParams['this->class'];
+				$iKey = $aExtraParams['this->id'];
+				$oObj = MetaModel::GetObject($sClass, $iKey);
+				$aQueryParams = array('this->object()' => $oObj);
+			}
+		}
 		if ($this->m_oSet == null)
 		{
-			$aQueryParams = array();
-			if (isset($aExtraParams['query_params']))
-			{
-				$aQueryParams = $aExtraParams['query_params'];
-			}
+
 			// In case of search, the context filtering is done by the search itself
 			if (($this->m_sStyle != 'links') && ($this->m_sStyle != 'search'))
 			{
@@ -931,7 +952,7 @@ class DisplayBlock
 			$sHtml = "$sTitle<div style=\"height:200px;width:100%\" class=\"dashboard_chart\" id=\"my_chart_$sId{$iChartCounter}\"><div style=\"height:200px;line-height:200px;vertical-align:center;text-align:center;width:100%\"><img src=\"../images/indicator.gif\"></div></div>\n";
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
 			$sGroupByExpr = isset($aExtraParams['group_by_expr']) ? '&params[group_by_expr]='.$aExtraParams['group_by_expr'] : '';
-			$sFilter = $this->m_oFilter->serialize();
+			$sFilter = $this->m_oFilter->serialize(false, $aQueryParams);
 			$oContext = new ApplicationContext();
 			$sContextParam = $oContext->GetForLink();
 			$sAggregationFunction = isset($aExtraParams['aggregation_function']) ? $aExtraParams['aggregation_function'] : '';
