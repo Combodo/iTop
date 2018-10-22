@@ -4583,7 +4583,8 @@ EOF
 				}
 				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
 				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sCustomOperation\">\n");
-				$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".rawurlencode($oFilter->Serialize())."\">\n");
+				$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".htmlentities($oFilter->Serialize(), ENT_QUOTES,
+						'UTF-8')."\">\n");
 				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 				foreach($aObjects as $oObj)
 				{
