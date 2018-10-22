@@ -781,7 +781,7 @@ class DashletObjectList extends Dashlet
 		{
 			$aQueryParams = $aExtraParams['query_params'];
 		}
-		elseif (isset($aExtraParams['this->class']))
+		elseif (isset($aExtraParams['this->class']) && isset($aExtraParams['this->id']))
 		{
 			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aQueryParams = $oObj->ToArgsForQuery();
@@ -1035,7 +1035,7 @@ abstract class DashletGroupBy extends Dashlet
 		{
 			$aQueryParams = $aExtraParams['query_params'];
 		}
-		elseif (isset($aExtraParams['this->class']))
+		elseif (isset($aExtraParams['this->class']) && isset($aExtraParams['this->id']))
 		{
 			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aQueryParams = $oObj->ToArgsForQuery();
