@@ -246,9 +246,11 @@ abstract class DBSearch
 	 */
 	abstract public function ApplyParameters($aArgs);
 
-    public function serialize($bDevelopParams = false, $aContextParams = null)
+    public function serialize($bDevelopParams = false, $aContextParams = array())
 	{
 		$aQueryParams = $this->GetQueryParams();
+
+		$aContextParams = array_merge($this->GetInternalParams(), $aContextParams);
 
 		foreach($aQueryParams as $sParam => $sValue)
 		{
