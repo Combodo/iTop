@@ -63,6 +63,51 @@
           <extkey_attcode>parent_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="overview" xsi:type="AttributeDashboard">
+            <is_user_editable>false</is_user_editable>
+            <definition>
+              <layout>DashboardLayoutTwoCols</layout>
+              <auto_reload>
+                <enabled>false</enabled>
+                <interval>300</interval>
+              </auto_reload>
+              <cells>
+                <cell id="0">
+                  <rank>0</rank>
+                  <dashlets>
+                    <dashlet id="11" xsi:type="DashletHeaderDynamic">
+                      <rank>0</rank>
+                      <title>Organization:Overview:FunctionalCIs</title>
+                      <icon>itop-config-mgmt/images/server.png</icon>
+                      <subtitle>Organization:Overview:FunctionalCIs:subtitle</subtitle>
+                      <query>SELECT FunctionalCI WHERE org_id=:this-&gt;id</query>
+                      <group_by>finalclass</group_by>
+                      <values>NetworkDevice,Server,ApplicationSolution</values>
+                    </dashlet>
+                  </dashlets>
+                </cell>
+                <cell id="2">
+                  <rank>20</rank>
+                  <dashlets>
+                    <dashlet id="12" xsi:type="DashletObjectList">
+                      <rank>0</rank>
+                      <title>Organization:Overview:Users</title>
+                      <query>SELECT Person AS p JOIN User AS u ON u.contactid=p.id WHERE p.org_id=:this-&gt;id</query>
+                      <menu>true</menu>
+                    </dashlet>
+                  </dashlets>
+                </cell>
+                <cell id="9000">
+                  <rank>5</rank>
+                  <dashlets>
+                    <dashlet id="0" xsi:type="DashletEmptyCell">
+                      <rank>0</rank>
+                    </dashlet>
+                  </dashlets>
+                </cell>
+              </cells>
+            </definition>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -79,6 +124,9 @@
             </item>
             <item id="parent_id">
               <rank>40</rank>
+            </item>
+            <item id="overview">
+              <rank>50</rank>
             </item>
           </items>
         </details>

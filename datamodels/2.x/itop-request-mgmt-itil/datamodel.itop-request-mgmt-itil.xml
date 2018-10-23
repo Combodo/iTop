@@ -1708,6 +1708,61 @@
 				</list>
 			</presentation>
 		</class>
+        <class id="Organization">
+            <fields>
+                <field id="overview" xsi:type="AttributeDashboard">
+                    <definition>
+                        <cells>
+                            <cell id="9000" _delta="delete">
+                              <rank>5</rank>
+                              <dashlets>
+                                <dashlet id="0" xsi:type="DashletEmptyCell">
+                                  <rank>0</rank>
+                                </dashlet>
+                              </dashlets>
+                            </cell>
+							<cell id="1" _delta="define">
+                              <rank>10</rank>
+                              <dashlets>
+                                <dashlet id="9" xsi:type="DashletHeaderDynamic">
+                                  <rank>0</rank>
+                                  <title>Organization:Overview:UserRequests</title>
+                                  <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+                                  <subtitle>Menu:UserRequest:OpenRequests</subtitle>
+                                  <query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
+                                  <group_by>status</group_by>
+                                  <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+                                </dashlet>
+                              </dashlets>
+                            </cell>
+							<cell id="3" _delta="define">
+                              <rank>30</rank>
+                              <dashlets>
+                                <dashlet id="10" xsi:type="DashletObjectList">
+                                  <rank>0</rank>
+                                  <title>Organization:Overview:MyUserRequests</title>
+                                  <query>SELECT UserRequest AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")  AND org_id=:this-&gt;id</query>
+                                  <menu>true</menu>
+                                </dashlet>
+                                <dashlet id="13" xsi:type="DashletGroupByPie">
+                                  <rank>1</rank>
+                                  <title>Organization:Overview:Tickets</title>
+                                  <query>SELECT Ticket WHERE org_id = :this-&gt;id</query>
+                                  <group_by>finalclass</group_by>
+                                  <style>pie</style>
+                                  <aggregation_function>count</aggregation_function>
+                                  <aggregation_attribute/>
+                                  <limit/>
+                                  <order_by>attribute</order_by>
+                                  <order_direction>desc</order_direction>
+                                </dashlet>
+                              </dashlets>
+                            </cell>
+                        </cells>
+                    </definition>
+                </field>
+            </fields>
+        </class>
 	</classes>
 	<menus>
 		<menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="must_exist">

@@ -21,7 +21,7 @@
  * Localized data
  *
  * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -97,6 +97,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Organization/Attribute:parent_id+' => 'Bağlı olduğu kurum',
 	'Class:Organization/Attribute:parent_name' => 'Bağlı olduğu kurumun adı',
 	'Class:Organization/Attribute:parent_name+' => 'Bağlı olduğu kurumun adı',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 ));
 
 

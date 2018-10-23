@@ -21,7 +21,7 @@
  * Localized data
  *
  * @author      Robert Deng <denglx@gmail.com>
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -97,6 +97,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Organization/Attribute:parent_id+' => '父级组织',
 	'Class:Organization/Attribute:parent_name' => '父级名称',
 	'Class:Organization/Attribute:parent_name+' => '父级组织名称',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 ));
 
 

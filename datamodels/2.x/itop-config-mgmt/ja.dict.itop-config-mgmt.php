@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -46,6 +46,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Organization/Attribute:parent_id+' => '親組織',
 	'Class:Organization/Attribute:deliverymodel_id' => '提供モデル',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 	'Class:Location' => '場所',
 	'Class:Location+' => '任意の場所のタイプ: リージョン、国、都市、サイト、ビル、フロア、部屋、ラック、...',
 	'Class:Location/Attribute:name' => '名前',

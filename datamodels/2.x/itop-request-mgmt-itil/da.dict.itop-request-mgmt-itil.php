@@ -18,8 +18,7 @@
 
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
-
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -245,4 +244,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));
-?>
+
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
+	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
+	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+));

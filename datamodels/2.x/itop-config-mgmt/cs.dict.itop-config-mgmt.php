@@ -23,7 +23,7 @@
  *
  * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2014 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -102,6 +102,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Class:Organization/Attribute:deliverymodel_name+' => '',
     'Class:Organization/Attribute:parent_id_friendlyname' => 'Mateřská organizace',
     'Class:Organization/Attribute:parent_id_friendlyname+' => '',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 ));
 
 //

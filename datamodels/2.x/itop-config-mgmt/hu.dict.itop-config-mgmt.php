@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -36,6 +36,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Organization/Attribute:status/Value:inactive+' => '',
 	'Class:Organization/Attribute:parent_id' => 'Felérendelt szervezeti egység',
 	'Class:Organization/Attribute:parent_id+' => '',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 	'Class:Location' => 'Helyszín',
 	'Class:Location+' => '',
 	'Class:Location/Attribute:name' => 'Név',

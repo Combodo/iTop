@@ -103,6 +103,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Parent',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Parent organization',
+	'Class:Organization/Attribute:overview' => 'Overview',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type',
+	'Organization:Overview:Users' => 'iTop Users within this organization',
 ));
 
 //

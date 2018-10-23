@@ -20,7 +20,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2013 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
@@ -104,6 +104,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => 'Nombre del Modelo de Entrega',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Organización Padre',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Organización Padre',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 ));
 
 //
