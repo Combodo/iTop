@@ -751,7 +751,7 @@ class DisplayBlock
 			$sClass = $this->m_oFilter->GetClass();
 			$oAppContext = new ApplicationContext();
 			$bContextFilter = isset($aExtraParams['context_filter']) ? isset($aExtraParams['context_filter']) != 0 : false;
-			if ($bContextFilter)
+			if ($bContextFilter && is_null($this->m_oSet))
 			{
 				foreach($oAppContext->GetNames() as $sFilterCode)
 				{
