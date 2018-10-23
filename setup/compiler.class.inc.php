@@ -289,8 +289,7 @@ class MFCompiler
 					$aAllClasses[] = $sClass;
 					try
 					{
-						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir,
-							$sRelativeDir);
+						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
 					}
 					catch (DOMFormatException $e)
 					{

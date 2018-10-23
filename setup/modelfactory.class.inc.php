@@ -1188,7 +1188,7 @@ EOF
 	 */
 	public function ListClasses($sModuleName)
 	{
-		return $this->GetNodes("/itop_design/classes//class[@_created_in='$sModuleName']");
+		return $this->GetNodes("/itop_design/classes//class[@id][@_created_in='$sModuleName']");
 	}
 		
 	/**
@@ -1197,7 +1197,7 @@ EOF
 	 */
 	public function ListAllClasses()
 	{
-		return $this->GetNodes("/itop_design/classes//class");
+		return $this->GetNodes("/itop_design/classes//class[@id]");
 	}
 	
 	/**
@@ -1206,7 +1206,7 @@ EOF
 	 */
 	public function ListRootClasses()
 	{
-		return $this->GetNodes("/itop_design/classes/class/class[class]");
+		return $this->GetNodes("/itop_design/classes/class/class[@id][class]");
 	}
 
 	/**
