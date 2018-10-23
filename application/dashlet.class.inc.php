@@ -1924,7 +1924,7 @@ class DashletHeaderDynamic extends Dashlet
 		$oField = new DesignerTextField('subtitle', Dict::S('UI:DashletHeaderDynamic:Prop-Subtitle'), $this->aProperties['subtitle']);
 		$oForm->AddField($oField);
 
-		$oField = new DesignerTextField('query', Dict::S('UI:DashletHeaderDynamic:Prop-Query'), $this->aProperties['query']);
+		$oField = new DesignerLongTextField('query', Dict::S('UI:DashletHeaderDynamic:Prop-Query'), $this->aProperties['query']);
 		$oField->SetMandatory();
 		$oForm->AddField($oField);
 
