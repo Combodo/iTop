@@ -101,6 +101,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => 'Модель предоставления услуг',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Вышестоящая',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Вышестоящая организация',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 ));
 
 //

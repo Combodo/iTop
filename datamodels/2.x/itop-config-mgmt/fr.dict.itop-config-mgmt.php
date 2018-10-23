@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -47,6 +47,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Organization/Attribute:parent_name+' => 'Nom de l\'organisation parente',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Nom commun',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
+	'Class:Organization/Attribute:overview' => 'Tableau de bord',
+	'Organization:Overview:FunctionalCIs' => 'Infrastructure de cette organisation',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'par type',
+	'Organization:Overview:Users' => 'Utilisateurs iTop dans cette organisation',
 ));
 
 //

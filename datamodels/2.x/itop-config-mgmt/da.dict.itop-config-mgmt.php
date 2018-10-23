@@ -18,8 +18,7 @@
 
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
-
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -48,6 +47,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Organization/Attribute:parent_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_id' => 'Leverings Model Id',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 	'Class:Location' => 'Placering',
 	'Class:Location+' => 'Enhver type af placering: Region, land, by, bygning, rum rack, ...',
 	'Class:Location/Attribute:name' => 'Navn',

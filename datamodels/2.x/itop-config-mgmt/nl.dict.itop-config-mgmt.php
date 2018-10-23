@@ -22,8 +22,8 @@
  * 
  * Linux & Open Source Professionals
  * http://www.linprofs.com
- * 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ *
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -106,6 +106,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Moeder',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Moeder organisatie',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 ));
 
 //
