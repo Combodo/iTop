@@ -503,8 +503,8 @@
 	{
         parent::OnInsert();
         $this->UpdateImpactedItems();
-		$this->Set('creation_date', time());
-		$this->Set('last_update', time());
+		$this->SetIfNull('creation_date', time());
+		$this->SetIfNull('last_update', time());
 	}]]></code>
                 </method>
                 <method id="OnUpdate">

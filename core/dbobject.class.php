@@ -448,6 +448,25 @@ abstract class DBObject implements iDisplay
 		return true;
 	}
 
+	/**
+	 * @param string $sAttCode
+	 * @param mixed $value
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
+	 * @since 2.6
+	 */
+	public function SetIfNull($sAttCode, $value)
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		$oCurrentValue = $this->Get($sAttCode);
+		if ($oAttDef->IsNull($oCurrentValue))
+		{
+			$this->Set($sAttCode, $value);
+		}
+	}
+
 	public function SetTrim($sAttCode, $sValue)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
