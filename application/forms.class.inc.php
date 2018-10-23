@@ -378,9 +378,9 @@ $('#$sDialogId').dialog({
 				}
 			}
 		} },
-		{ text: "$sCancelButtonLabel", click: function() { KillAllMenus(); $(this).dialog( "close" ); $(this).remove(); } },
+		{ text: "$sCancelButtonLabel", click: function() { $(this).dialog( "close" ); $(this).remove(); } },
 		],
-		close: function() { KillAllMenus(); $(this).remove(); }
+		close: function() { $(this).remove(); }
 	});
 	var oForm = $('#$sDialogId form');
 	var sFormId = oForm.attr('id');
