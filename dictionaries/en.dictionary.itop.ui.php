@@ -962,6 +962,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Menu:TagAdminMenu' => 'Tags configuration',
 	'Menu:TagAdminMenu+' => 'Tags values management',
 	'UI:TagAdminMenu:Title' => 'Tags configuration',
+	'UI:TagAdminMenu:NoTags' => 'No Tag field configured',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s',
 
 	'Menu:AuditCategories' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)

@@ -105,7 +105,7 @@ try
 		$oP->P("<b>".Dict::Format('UI:TagSetFieldData:Error', $e->getHtmlDesc())."</b>");
 	}
 
-	if ($oFilter != null)
+	if (!empty($oFilter))
 	{
 		$oSet = new CMDBObjectSet($oFilter);
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
@@ -124,6 +124,12 @@ try
 		// Menu node
 		$sFilter = $oFilter->ToOQL();
 		$oP->add("\n<!-- $sFilter -->\n");
+	}
+	else
+	{
+		$oP->add("<p>");
+		$oP->add(Dict::S('UI:TagAdminMenu:NoTags'));
+		$oP->add("</p>");
 	}
 	$oP->add("</div>\n");
 
