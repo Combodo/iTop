@@ -1344,8 +1344,8 @@
 	{
         parent::OnInsert();    
 		$this->ComputeImpactedItems();
-		$this->Set('last_update', time());
-		$this->Set('start_date', time());
+		$this->SetIfNull('last_update', time());
+		$this->SetIfNull('start_date', time());
 	}]]></code>
 				</method>
 				<method id="OnUpdate">

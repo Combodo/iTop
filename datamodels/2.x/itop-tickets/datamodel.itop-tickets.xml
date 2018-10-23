@@ -851,6 +851,30 @@
 							</argument>
 						</arguments>
 					</method>
+					<method id="SetIfNull">
+						<arguments>
+							<argument id="1">
+								<type>attcode</type>
+								<mandatory>true</mandatory>
+								<type_restrictions>
+									<operation>deny</operation>
+									<types>
+										<type id="AttributeStopWatch"/>
+										<type id="AttributeSubItem"/>
+										<type id="AttributeExternalField"/>
+										<type id="AttributeLinkedSetIndirect"/>
+										<type id="AttributeLinkedSet"/>
+										<type id="AttributeImage"/>
+										<type id="AttributeBlob"/>
+									</types>
+								</type_restrictions>
+							</argument>
+							<argument id="2">
+								<type>string</type>
+								<mandatory>true</mandatory>
+							</argument>
+						</arguments>
+					</method>
 					<method id="SetCurrentDate">
 						<arguments>
 							<argument id="1">

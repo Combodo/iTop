@@ -459,8 +459,8 @@
                     <type>Overload-DBObject</type>
                     <code><![CDATA[	protected function OnInsert()
 	{
-		$this->Set('start_date', time());
-		$this->Set('last_update', time());
+		$this->SetIfNull('start_date', time());
+		$this->SetIfNull('last_update', time());
 	}]]></code>
                 </method>
                 <method id="OnUpdate">
