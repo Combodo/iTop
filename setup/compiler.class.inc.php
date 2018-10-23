@@ -1514,7 +1514,6 @@ EOF
 				}
 				elseif ($sAttType == 'AttributeDashboard')
 				{
-					$aTagFieldsInfo[] = $sAttCode;
 					$aParameters['is_user_editable'] = $this->GetPropBoolean($oField, 'is_user_editable', true);
 					$aParameters['definition_file'] = $this->GetPropString($oField, 'definition_file');
 
