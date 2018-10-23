@@ -720,24 +720,18 @@ EOF
 
 	function GetBareProperties(WebPage $oPage, $bEditMode, $sPrefix, $aExtraParams = array())
 	{
-		$sHtml = '';
-		$oAppContext = new ApplicationContext();
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
-		$aDetails = array();
 		$sClass = get_class($this);
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
-		$aDetailsStruct = self::ProcessZlist($aDetailsList, array('UI:PropertiesTab' => array()), 'UI:PropertiesTab',
-			'col1', '');
+		$aDetailsStruct = self::ProcessZlist($aDetailsList, array('UI:PropertiesTab' => array()), 'UI:PropertiesTab', 'col1', '');
 		// Compute the list of properties to display, first the attributes in the 'details' list, then 
 		// all the remaining attributes that are not external fields
-		$sHtml = '';
 		$sEditMode = ($bEditMode) ? 'edit' : 'view';
 		$aDetails = array();
 		$iInputId = 0;
 		$aFieldsMap = array();
 		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
 		$aExtraFlags = (isset($aExtraParams['fieldsFlags'])) ? $aExtraParams['fieldsFlags'] : array();
-		$bFieldComments = (count($aFieldsComments) > 0);
 
 		foreach($aDetailsStruct as $sTab => $aCols)
 		{
@@ -767,8 +761,6 @@ EOF
 			foreach($aCols as $sColIndex => $aFieldsets)
 			{
 				$oPage->add('<td style="'.implode('; ', $aColStyles).'" class="'.implode(' ', $aColClasses).'">');
-				//$aDetails[$sTab][$sColIndex] = array();
-				$sLabel = '';
 				$sPreviousLabel = '';
 				$aDetails[$sTab][$sColIndex] = array();
 				foreach($aFieldsets as $sFieldsetName => $aFields)
@@ -836,7 +828,6 @@ EOF
 											if ($iFlags & OPT_ATT_SLAVE)
 											{
 												$aReasons = array();
-												$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 												$sTip = '';
 												foreach($aReasons as $aRow)
@@ -1009,7 +1000,7 @@ EOF
 	}
 
 	/**
-	 * Simplifed version of GetDisplaySet() with less "decoration" around the table (and no paging)
+	 * Simplified version of GetDisplaySet() with less "decoration" around the table (and no paging)
 	 * that fits better into a printed document (like a PDF or a printable view)
 	 *
 	 * @param WebPage $oPage
@@ -1021,7 +1012,6 @@ EOF
 	 */
 	public static function GetDisplaySetForPrinting(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$iListId = empty($aExtraParams['currentId']) ? $oPage->GetUniqueId() : $aExtraParams['currentId'];
 		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
 
 		$bViewLink = true;
@@ -1092,7 +1082,6 @@ EOF
 			}
 		}
 		$bDisplayMenu = isset($aExtraParams['menu']) ? $aExtraParams['menu'] == true : true;
-		$bTruncated = isset($aExtraParams['truncated']) ? $aExtraParams['truncated'] == true : true;
 		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
 		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
 
@@ -1116,8 +1105,6 @@ EOF
 				$aExtraFields[] = $sFieldName;
 			}
 		}
-		$sHtml = '';
-		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
 		$sZListName = isset($aExtraParams['zlist']) ? ($aExtraParams['zlist']) : 'list';
 		if ($sZListName !== false)
@@ -1248,8 +1235,6 @@ EOF
 			}
 		}
 
-		$sHtml = '';
-		$oAppContext = new ApplicationContext();
 		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
@@ -1260,7 +1245,6 @@ EOF
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
-		$aAttribs = array();
 		foreach($aAuthorizedClasses as $sAlias => $sClassName)
 		{
 			if (array_key_exists($sAlias, $aExtraFields))
@@ -1292,7 +1276,6 @@ EOF
 
 		$sSelectMode = 'none';
 
-		$sClassAlias = $oSet->GetClassAlias();
 		$oDataTable = new DataTable($iListId, $oSet, $aAuthorizedClasses);
 
 		$oSettings = DataTableSettings::GetDataModelSettings($aAuthorizedClasses, $bViewLink, $aList);
@@ -1339,7 +1322,6 @@ EOF
 
 		$aList = array();
 
-		$oAppContext = new ApplicationContext();
 		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
@@ -1349,7 +1331,6 @@ EOF
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
-		$aAttribs = array();
 		$aHeader = array();
 		foreach($aAuthorizedClasses as $sAlias => $sClassName)
 		{
@@ -1477,7 +1458,6 @@ EOF
 
 		$aList = array();
 
-		$oAppContext = new ApplicationContext();
 		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
@@ -1487,7 +1467,6 @@ EOF
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
-		$aAttribs = array();
 		$aHeader = array();
 		foreach($aAuthorizedClasses as $sAlias => $sClassName)
 		{
@@ -1649,7 +1628,6 @@ EOF
 			$bLocalize = (bool)$aParams['localize_values'];
 		}
 
-		$oAppContext = new ApplicationContext();
 		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
 		$aAuthorizedClasses = array();
 		foreach($aClasses as $sAlias => $sClassName)
@@ -1659,7 +1637,6 @@ EOF
 				$aAuthorizedClasses[$sAlias] = $sClassName;
 			}
 		}
-		$aAttribs = array();
 		$aList = array();
 		$aList[$sAlias] = MetaModel::GetZListItems($sClassName, 'details');
 		$oPage->add("<Set>\n");
@@ -2290,8 +2267,6 @@ EOF
 				{
 					// We're probably inside something like "apply_modify" where the validation failed and we must prompt the user again to edit the object
 					// let's extend our lock
-					$aLockInfo = iTopOwnershipLock::ExtendLock($sClass, $iKey, $sOwnershipToken);
-					$sOwnershipDate = $aLockInfo['acquired'];
 				}
 				else
 				{
@@ -2299,11 +2274,9 @@ EOF
 					if ($aLockInfo['success'])
 					{
 						$sOwnershipToken = $aLockInfo['token'];
-						$sOwnershipDate = $aLockInfo['acquired'];
 					}
 					else
 					{
-						$oOwner = $aLockInfo['lock']->GetOwner();
 						// If the object is locked by the current user, it's worth trying again, since
 						// the lock may be released by 'onunload' which is called AFTER loading the current page.
 						//$bTryAgain = $oOwner->GetKey() == UserRights::GetUserId();
@@ -2333,13 +2306,9 @@ EOF
 		{
 			$sPrefix = $aExtraParams['formPrefix'];
 		}
-		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
 
 		$this->m_iFormId = $sPrefix.self::$iGlobalFormId;
 		$oAppContext = new ApplicationContext();
-		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-		$aDetails = array();
-		$aFieldsMap = array();
 		if (!isset($aExtraParams['action']))
 		{
 			$sFormAction = utils::GetAbsoluteUrlAppRoot().'pages/'.$this->GetUIPage(); // No parameter in the URL, the only parameter will be the ones passed through the form
@@ -2565,14 +2534,9 @@ EOF
 		}
 	}
 
-	public static function DisplayCreationForm(
-		WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array(), $aExtraParams = array()
-	) {
-		$oAppContext = new ApplicationContext();
+	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array(), $aExtraParams = array())
+	{
 		$sClass = ($oObjectToClone == null) ? $sClass : get_class($oObjectToClone);
-		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-		$aStates = MetaModel::EnumStates($sClass);
-		$sStatesSelection = '';
 
 		if ($oObjectToClone == null)
 		{
@@ -2653,16 +2617,13 @@ EOF
 		$sOwnershipToken = null;
 		if ($LockEnabled)
 		{
-			$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
 			$aLockInfo = iTopOwnershipLock::AcquireLock($sClass, $iKey);
 			if ($aLockInfo['success'])
 			{
 				$sOwnershipToken = $aLockInfo['token'];
-				$sOwnershipDate = $aLockInfo['acquired'];
 			}
 			else
 			{
-				$oOwner = $aLockInfo['lock']->GetOwner();
 				// If the object is locked by the current user, it's worth trying again, since
 				// the lock may be released by 'onunload' which is called AFTER loading the current page.
 				//$bTryAgain = $oOwner->GetKey() == UserRights::GetUserId();
@@ -2834,9 +2795,6 @@ EOF
 
 	public static function ProcessZlist($aList, $aDetails, $sCurrentTab, $sCurrentCol, $sCurrentSet)
 	{
-		//echo "<pre>ZList: ";
-		//print_r($aList);
-		//echo "</pre>\n";
 		$index = 0;
 		foreach($aList as $sKey => $value)
 		{
@@ -2849,7 +2807,6 @@ EOF
 					switch ($sCode)
 					{
 						case 'tab':
-							//echo "<p>Found a tab:  $sName ($sKey)</p>\n";
 							if (!isset($aDetails[$sName]))
 							{
 								$aDetails[$sName] = array('col1' => array());
@@ -2858,7 +2815,6 @@ EOF
 							break;
 
 						case 'fieldset':
-							//echo "<p>Found a fieldset: $sName ($sKey)</p>\n";
 							if (!isset($aDetailsStruct[$sCurrentTab][$sCurrentCol][$sName]))
 							{
 								$aDetails[$sCurrentTab][$sCurrentCol][$sName] = array();
@@ -2868,7 +2824,6 @@ EOF
 
 						default:
 						case 'col':
-							//echo "<p>Found a column: $sName ($sKey)</p>\n";
 							if (!isset($aDetails[$sCurrentTab][$sName]))
 							{
 								$aDetails[$sCurrentTab][$sName] = array();
@@ -2880,7 +2835,6 @@ EOF
 			}
 			else
 			{
-				//echo "<p>Scalar value: $value, in [$sCurrentTab][$sCurrentCol][$sCurrentSet][]</p>\n";
 				if (empty($sCurrentSet))
 				{
 					$aDetails[$sCurrentTab][$sCurrentCol]['_'.$index][] = $value;
@@ -3096,7 +3050,6 @@ EOF
 	 */
 	public static function OrderDependentFields($aFields)
 	{
-		$bCircular = false;
 		$aResult = array();
 		$iCount = 0;
 		do
@@ -3982,7 +3935,6 @@ EOF
 						$aArgs).'</span>';
 				$aFieldsMap[$sAttCode] = $sInputId;
 			}
-			//$aVal = array('label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>', 'value' => $sHTMLValue, 'comments' => $sComments, 'infos' => $sInfos);
 			$oPage->add('<fieldset><legend>'.$oAttDef->GetLabel().'</legend>');
 			$oPage->add($sHTMLValue);
 			$oPage->add('</fieldset>');
@@ -4030,7 +3982,7 @@ EOF
 				{
 					$iExpectCode = $iExpectCode & ~(OPT_ATT_MUSTPROMPT | OPT_ATT_MUSTCHANGE); // Already prompted/changed, reset the flags
 				}
-				//TODO: better check if the attribute is not *null*
+				// Later: better check if the attribute is not *null*
 				if (($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) != ''))
 				{
 					$iExpectCode = $iExpectCode & ~(OPT_ATT_MANDATORY); // If the attribute is present, then no need to request its presence
@@ -4067,10 +4019,8 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public static function DisplayBulkModifyForm(
-		$oP, $sClass, $aSelectedObj, $sCustomOperation, $sCancelUrl, $aExcludeAttributes = array(),
-		$aContextData = array()
-	) {
+	public static function DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, $sCustomOperation, $sCancelUrl, $aExcludeAttributes = array(), $aContextData = array())
+	{
 		if (count($aSelectedObj) > 0)
 		{
 			$iAllowedCount = count($aSelectedObj);
@@ -4308,9 +4258,8 @@ EOF
 	/**
 	 * Process the reply made from a form built with DisplayBulkModifyForm
 	 */
-	public static function DoBulkModify(
-		$oP, $sClass, $aSelectedObj, $sCustomOperation, $bPreview, $sCancelUrl, $aContextData = array()
-	) {
+	public static function DoBulkModify($oP, $sClass, $aSelectedObj, $sCustomOperation, $bPreview, $sCancelUrl, $aContextData = array())
+	{
 		$aHeaders = array(
 			'form::select' => array(
 				'label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList:not(:disabled)', this.checked);\"></input>",
@@ -4440,9 +4389,8 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public static function DeleteObjects(
-		WebPage $oP, $sClass, $aObjects, $bPreview, $sCustomOperation, $aContextData = array()
-	) {
+	public static function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bPreview, $sCustomOperation, $aContextData = array())
+	{
 		$oDeletionPlan = new DeletionPlan();
 
 		foreach($aObjects as $oObj)
