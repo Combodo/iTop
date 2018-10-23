@@ -726,7 +726,7 @@ EOF
 		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		$aContext = array('filter' => $sFilter);
+		$aContext = array('filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
 		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
 		break;
 		
@@ -750,7 +750,7 @@ EOF
 		$aSelectedObj = explode(',', $sSelectedObj);
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
 		$aContext = array(
-			'filter' => $sFilter,
+			'filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'),
 			'selectObj' => $sSelectedObj,
 		);
 		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);
