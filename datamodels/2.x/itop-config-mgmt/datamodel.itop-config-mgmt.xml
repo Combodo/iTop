@@ -64,7 +64,7 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="overview" xsi:type="AttributeDashboard">
-            <is_user_editable>false</is_user_editable>
+            <is_user_editable>true</is_user_editable>
             <definition>
               <layout>DashboardLayoutTwoCols</layout>
               <auto_reload>
