@@ -54,6 +54,10 @@ class CriterionToSearchForm extends CriterionConversionAbstract
 		$aAllFields = array();
 		foreach($aFieldsByCategory as $aFields)
 		{
+			if (!is_array($aFields))
+			{
+				continue;
+			}
 			foreach($aFields as $aField)
 			{
 				$sAlias = $aField['class_alias'];
