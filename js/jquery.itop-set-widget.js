@@ -62,7 +62,10 @@
 $.widget('itop.set_widget',
 	{
 		// default options
-		options: {isDebug: false},
+		options: {
+			isDebug: false,
+			inputWidgetIdSuffix: "-setwidget-values"
+		},
 
 		PARENT_CSS_CLASS: "attribute-set",
 		ITEM_CSS_CLASS: "attribute-set-item",
@@ -123,7 +126,7 @@ $.widget('itop.set_widget',
 		_generateSelectionWidget: function ($widgetElement) {
 			var $parentElement = $widgetElement.parent(),
 				isWidgetElementDisabled = $widgetElement.prop("disabled"),
-				inputId = $widgetElement.attr("id") + "-setwidget-values";
+				inputId = $widgetElement.attr("id") + this.options.inputWidgetIdSuffix;
 
 			$parentElement.append("<input id='" + inputId + "' value='" + this.originalValue.join(" ") + "'>");
 			var $inputWidget = $("#" + inputId);
