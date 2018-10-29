@@ -35,7 +35,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachments:History_File_Added' => 'Bijlage %1$s toegevoegd.',
 	'Attachments:History_File_Removed' => 'Bijlage %1$s verwijderd.',
 	'Attachments:AddAttachment' => 'Voeg bijlage toe: ',
-	'Attachments:UploadNotAllowedOnThisSystem' => 'Bestand upload is NIET toegestaan op dit systeem.',
+	'Attachments:UploadNotAllowedOnThisSystem' => 'Bestanden uploaden is NIET toegestaan op dit systeem.',
 	'Attachment:Max_Go' => '(Maximum bestandsgrootte: %1$s GB)',
 	'Attachment:Max_Mo' => '(Maximum bestandsgrootte: %1$s MB)',
 	'Attachment:Max_Ko' => '(Maximum bestandsgrootte: %1$s kB)',
