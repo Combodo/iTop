@@ -130,6 +130,6 @@ We would like to give a special thank you to the people from the community who c
 [57]: https://sourceforge.net/projects/itop/files/itop/2.5.0/iTop-2.5.0-3935.zip/download
 
 [58]: https://www.itophub.io/wiki/page?id=2_6_0:release:change_log
-[59]: https://www.itophub.io/wiki/page?id=2_6_0:release:2_5_whats_new
-[60]: https://www.itophub.io/wiki/page?id=2_6_0:install:240_to_250_migration_notes
-[61]: https://sourceforge.net/projects/itop/files/itop/2.6.0/iTop-2.6.0-TODO.zip/download
+[59]: https://www.itophub.io/wiki/page?id=2_6_0:release:2_6_whats_new
+[60]: https://www.itophub.io/wiki/page?id=2_6_0:install:250_to_260_migration_notes
+[61]: https://sourceforge.net/projects/itop/files/itop/2.6.0-beta/iTop-2.6-beta-4146.zip/download
