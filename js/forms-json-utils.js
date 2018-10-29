@@ -147,6 +147,8 @@ function CheckFields(sFormId, bDisplayAlert)
 	oFormErrors['input_'+sFormId] = null;	// First 'input' with an error, to set the focus to it
 	$('#'+sFormId+' :input').each( function()
 	{
+		// this is synchronous !
+		// each field should register this event to launch ValidateField() if needed
 		validateEventResult = $(this).trigger('validate', sFormId);
 	}
 	);
@@ -210,6 +212,18 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 	}
 }
 
+/**
+ * To be launched on each field from normal event (click, change, ...) and 'validate' event for form submission.
+ * Calls ReportFieldValidationStatus() to update global vars containing fields status
+ * @param sFieldId
+ * @param sPattern
+ * @param bMandatory
+ * @param sFormId
+ * @param nullValue
+ * @param originalValue
+ * @returns {boolean}
+ * @constructor
+ */
 function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue)
 {
 	var bValid = true;

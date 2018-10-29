@@ -1762,7 +1762,12 @@ EOF
 			$sValidationSpan = "<span class=\"form_validation\" id=\"v_{$iId}\"></span>";
 			$sReloadSpan = "<span class=\"field_status\" id=\"fstatus_{$iId}\"></span>";
 			$sHelpText = htmlentities($oAttDef->GetHelpOnEdition(), ENT_QUOTES, 'UTF-8');
-			$aEventsList = array();
+
+			// mandatory field control vars
+			$aEventsList = array(); // contains any native event (like change), plus 'validate' for the form submission
+			$sNullValue = $oAttDef->GetNullValue(); // used for the ValidateField() call in js/forms-json-utils.js
+			$sFieldToValidateId = $iId; // can be different than the displayed field (for example in TagSet)
+
 			switch ($oAttDef->GetEditClass())
 			{
 				case 'Date':
@@ -2139,9 +2144,19 @@ EOF
 					$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
 					$sEscapedJson = htmlentities($sJson, ENT_QUOTES, 'UTF-8');
 					$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
+
+					// handle form validation
+					$aEventsList[] = 'change';
+					$aEventsList[] = 'validate';
+					$sNullValue = '';
+					$sFieldToValidateId = $sFieldToValidateId.AttributeSet::EDITABLE_INPUT_ID_SUFFIX;
+
+					// generate form HTML output
+					$sValidationSpan = "<span class=\"form_validation\" id=\"v_{$sFieldToValidateId}\"></span>";
 					$sHTMLValue = '<div class="field_input_zone field_input_set"><input id="'.$iId.'" name="'.$sSetInputName.'" type="hidden" value="'.$sEscapedJson.'"></div>'.$sValidationSpan.$sReloadSpan;
-					$sScript = "$('#$iId').set_widget();";
+					$sScript = "$('#$iId').set_widget({inputWidgetIdSuffix: '".AttributeSet::EDITABLE_INPUT_ID_SUFFIX."'});";
 					$oPage->add_ready_script($sScript);
+
 					break;
 
 				case 'String':
@@ -2226,14 +2241,13 @@ EOF
 			$sPattern = addslashes($oAttDef->GetValidationPattern()); //'^([0-9]+)$';			
 			if (!empty($aEventsList))
 			{
-				$sNullValue = $oAttDef->GetNullValue();
 				if (!is_numeric($sNullValue))
 				{
 					$sNullValue = "'$sNullValue'"; // Add quotes to turn this into a JS string if it's not a number
 				}
 				$sOriginalValue = ($iFlags & OPT_ATT_MUSTCHANGE) ? json_encode($value) : 'undefined';
-				$oPage->add_ready_script("$('#$iId').bind('".implode(' ',
-						$aEventsList)."', function(evt, sFormId) { return ValidateField('$iId', '$sPattern', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );\n"); // Bind to a custom event: validate
+				$oPage->add_ready_script("$('#$sFieldToValidateId').bind('".implode(' ',
+						$aEventsList)."', function(evt, sFormId) { return ValidateField('$sFieldToValidateId', '$sPattern', $bMandatory, sFormId, $sNullValue, $sOriginalValue) } );\n"); // Bind to a custom event: validate
 			}
 			$aDependencies = MetaModel::GetDependentAttributes($sClass,
 				$sAttCode); // List of attributes that depend on the current one
