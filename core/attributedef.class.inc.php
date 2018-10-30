@@ -2736,13 +2736,17 @@ class AttributeDecimal extends AttributeDBField
 			return null;
 		}
 
-		return (string)$proposedValue;
+		return $this->ScalarToSQL($proposedValue);
 	}
 
 	public function ScalarToSQL($value)
 	{
 		assert(is_null($value) || preg_match('/'.$this->GetValidationPattern().'/', $value));
 
+		if (!is_null($value) && ($value !== ''))
+		{
+			$value = sprintf("%01.".$this->Get('decimals')."f", $value);
+		}
 		return $value; // null or string
 	}
 }
