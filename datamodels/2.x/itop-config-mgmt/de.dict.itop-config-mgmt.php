@@ -23,11 +23,11 @@
 *		
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Relation:impacts/Description' => 'Elemente betroffen von ...',
+	'Relation:impacts/Description' => 'Elemente betroffen von',
 	'Relation:impacts/DownStream' => 'Auswirkung ...',
-	'Relation:impacts/DownStream+' => 'Elements impacted by~~',
+	'Relation:impacts/DownStream+' => 'Elemente betroffen von',
 	'Relation:impacts/UpStream' => 'Hängt ab von ...',
-	'Relation:impacts/UpStream+' => 'Elements impacting~~',
+	'Relation:impacts/UpStream+' => 'Betroffene Elemente',
 	// Legacy entries
 	'Relation:depends on/Description' => 'Elemente, von denen dieses Element abhängt.',
 	'Relation:depends on/DownStream' => 'Hängt ab von ...',
@@ -96,10 +96,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Parent',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => '',
-	'Class:Organization/Attribute:overview' => 'Overview~~',
-	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
-	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
-	'Organization:Overview:Users' => 'iTop Users within this organization~~',
+	'Class:Organization/Attribute:overview' => 'Überblick',
+	'Organization:Overview:FunctionalCIs' => 'CIs dieser Organisation',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'nach Typ',
+	'Organization:Overview:Users' => 'iTop Benutzer innerhalb dieser Organisation',
 ));
 
 //
@@ -203,10 +203,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Bild',
 	'Class:Person/Attribute:picture+' => '',
-	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
-	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
-	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
-	'Class:Person/UniquenessRule:name/Error' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/UniquenessRule:employee_number/Description' => 'Die Personalnummer muss innerhalb dieser Organisation eindeutig sein.',
+	'Class:Person/UniquenessRule:employee_number/Error' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit der gleichen Personalnummer',
+	'Class:Person/UniquenessRule:name/Description' => 'Innerhalb einer Organisation muss der Name einer Person eindeutig sein',
+	'Class:Person/UniquenessRule:name/Error' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit dem gleichen Namen',
 ));
 
 //
@@ -1298,8 +1298,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physische Geräte',
 	'Class:Brand/Attribute:physicaldevices_list+' => '',
-	'Class:Brand/UniquenessRule:name/Description' => 'The name must be unique~~',
-	'Class:Brand/UniquenessRule:name/Error' => 'This brand already exists~~',
+	'Class:Brand/UniquenessRule:name/Description' => 'Der Name muss eindeutig sein',
+	'Class:Brand/UniquenessRule:name/Error' => 'Diese Marke existiert bereits',
 ));
 
 //
@@ -1353,8 +1353,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Model/Attribute:type/Value:Phone+' => '',
 	'Class:Model/Attribute:physicaldevices_list' => 'Phyische Geräte',
 	'Class:Model/Attribute:physicaldevices_list+' => '',
-	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
-	'Class:Model/UniquenessRule:name_brand/Error' => 'this model already exists for this brand~~',
+	'Class:Model/UniquenessRule:name_brand/Description' => 'Der Modellname der für eine Marke muss eindeutig sein',
+	'Class:Model/UniquenessRule:name_brand/Error' => 'Es existiert bereits ein Modell mit diesem Namen für diese Marke',
 ));
 
 //
@@ -1871,7 +1871,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 'Menu:Typology' => 'Typologie-Konfiguration',
 'Menu:Typology+' => '',
 'Menu:OSVersion' => 'OS-Versionen',
-'Menu:OSVersion+' => '~~',
+'Menu:OSVersion+' => '',
 'Menu:Software' => 'Software-Katalog',
 'Menu:Software+' => '',
 'UI_WelcomeMenu_AllConfigItems' => 'Zusammenfassung',
@@ -1889,7 +1889,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 'Server:otherinfo' => 'Sonstige Informationen',
 'Server:power' => 'Stromversorgung',
 'Person:info' => 'Allgemeine Informationen',
-'Person:personal_info' => 'Personal information~~',
+'Person:personal_info' => 'Persönliche Informationen',
 'Person:notifiy' => 'Benachrichtigungen',
 'Class:Subnet/Tab:IPUsage' => 'IP-Nutzung',
 'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces mit einer IP in der Range: <em>%1$s</em> bis <em>%2$s</em>',

@@ -126,7 +126,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FAQ/Attribute:error_code+' => '',
 	'Class:FAQ/Attribute:key_words' => 'Schlüsselwörter',
 	'Class:FAQ/Attribute:key_words+' => '',
-	'Class:FAQ/Attribute:domains' => 'Domains~~',
+	'Class:FAQ/Attribute:domains' => 'Domäne',
 ));
 
 //

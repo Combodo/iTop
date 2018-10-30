@@ -312,7 +312,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'BooleanLabel:yes' => 'Ja',
 	'BooleanLabel:no' => 'Nein',
-    'UI:Login:Title' => 'iTop login~~',
+    'UI:Login:Title' => 'iTop Login',
 	'Menu:WelcomeMenu' => 'Willkommen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'Willkommen bei iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Willkommen', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -361,7 +361,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Speichern',
 	'UI:Button:Cancel' => 'Abbrechen',
-	'UI:Button:Close' => 'Close~~',
+	'UI:Button:Close' => 'Schließen',
 	'UI:Button:Apply' => 'Anwenden',
 	'UI:Button:Back' => ' << Zurück ',
 	'UI:Button:Restart' => ' |<< Neustart ',
@@ -384,7 +384,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:Rename' => 'Umbenennen... ',
 	'UI:Button:ChangePassword' => ' Passwort ändern ',
 	'UI:Button:ResetPassword' => ' Passwort zurücksetzen ',
-	'UI:Button:Insert' => 'Insert~~',
+	'UI:Button:Insert' => 'Einfügen',
 	'UI:Button:More' => 'Mehr',
 	'UI:Button:Less' => 'Weniger',
 	
@@ -392,7 +392,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ClickToCreateNew' => 'Klicken Sie hier, um eine neues Objekt vom Typ %1$s zu erstellen',
 	'UI:SearchFor_Class' => 'Suche nach Objekten vom Typ "%1$s"',
 	'UI:NoObjectToDisplay' => 'Kein Objekt zur Anzeige vorhanden.',
-	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
+	'UI:Error:SaveFailed' => 'Objekt kann nicht gespeichert werden:',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id ist erforderlich, wenn link_attr verwendet wird. Überprüfen Sie die Defintion des Display-Templates.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter target_attr ist erforderlich, wenn link_attr verwendet wird. Überprüfen Sie die Defintion des Display-Templates.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by ist erforderlich. Überprüfen Sie die Defintion des Display-Templates.',
@@ -423,8 +423,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:ObjectAlreadyCloned' => 'Fehler: das Objekt wurde bereits dupliziert!',
 	'UI:Error:ObjectAlreadyCreated' => 'Fehler: das Objekt wurde bereits erstellt!',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Fehler: ungültiger Operation "%1$s" auf Objekt %2$s in Zustand "%3$s".',
-	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
-	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:InvalidDashboardFile' => 'Fehler: Ungültige Dashboard-Datei',
+	'UI:Error:InvalidDashboard' => 'Fehler: Ungültiges Dashboard',
 
 	'UI:GroupBy:Count' => 'Anzahl',
 	'UI:GroupBy:Count+' => 'Anzahl der Elemente',
@@ -936,11 +936,11 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:NotificationsMenu:Actions' => 'Aktionen',
 	'UI:NotificationsMenu:AvailableActions' => 'Verfügbare Aktionen',
 
-	'Menu:TagAdminMenu' => 'Tags configuration~~',
-	'Menu:TagAdminMenu+' => 'Tags values management~~',
-	'UI:TagAdminMenu:Title' => 'Tags configuration~~',
-	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
-	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
+	'Menu:TagAdminMenu' => 'Tag-Konfiguration',
+	'Menu:TagAdminMenu+' => 'Verwaltung der Tag-Werte',
+	'UI:TagAdminMenu:Title' => 'Tag-Konfiguration',
+	'UI:TagAdminMenu:NoTags' => 'Kein tag konfiguriert',
+	'UI:TagSetFieldData:Error' => 'Fehler: %1$s',
 
 	'Menu:AuditCategories' => 'Audit-Kategorien', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => 'Audit-Kategorien', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1109,15 +1109,15 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:OrderByHint_Values' => 'Sortierreihenfolge: %1$s',
 	'UI:Menu:AddToDashboard' => 'Zu Dashboard hinzufügen...',
 	'UI:Button:Refresh' => 'Neu laden',
-	'UI:Button:GoPrint' => 'Print...~~',
-	'UI:ExplainPrintable' => 'Click onto the %1$s icon to hide items from the print.<br/>Use the "print preview" feature of your browser to preview before printing.<br/>Note: this header and the other tuning controls will not be printed.~~',
-	'UI:PrintResolution:FullSize' => 'Full size~~',
-	'UI:PrintResolution:A4Portrait' => 'A4 Portrait~~',
-	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
-	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
-	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Button:GoPrint' => 'Drucken...',
+	'UI:ExplainPrintable' => 'Klicken Sie auf das %1$s icon, um Teile für der Druck auszublenden.<br/>Benutzen Sie die Druckvorschau-Funktion Ihres Browsers, um sich eine Vorschau anzeigen zu lassen.<br/>Hinweis: Dieser Header und die anderen Steuerungsflächen werden nicht gedruckt.',
+	'UI:PrintResolution:FullSize' => 'Gesamte Fläche',
+	'UI:PrintResolution:A4Portrait' => 'A4 Hochformat',
+	'UI:PrintResolution:A4Landscape' => 'A4 Querformat',
+	'UI:PrintResolution:LetterPortrait' => 'Letter Hochformat',
+	'UI:PrintResolution:LetterLandscape' => 'Letter Querformat',
+	'UI:Toggle:StandardDashboard' => 'Standard',
+	'UI:Toggle:CustomDashboard' => 'Angepasst',
 
 	'UI:ConfigureThisList' => 'Liste konfigurieren...',
 	'UI:ListConfigurationTitle' => 'Listenkonfiguration',
@@ -1300,11 +1300,11 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:ShortcutDelete:Confirm' => 'Bitte bestätigen Sie, dass Sie den/die Shortcut(s) löschen möchten. ',
 	'Menu:MyShortcuts' => 'Meine Shortcuts', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Shortcut',
-	'Class:Shortcut+' => '~~',
+	'Class:Shortcut+' => 'Schnellzugriff auf Objekte',
 	'Class:Shortcut/Attribute:name' => 'Name',
 	'Class:Shortcut/Attribute:name+' => 'Label, das im Menü und im Seitentitel verwendet wird',
 	'Class:ShortcutOQL' => 'Suchergebnis-Shortcut',
-	'Class:ShortcutOQL+' => '~~',
+	'Class:ShortcutOQL+' => 'Short für eine OQL-Abfrage',
 	'Class:ShortcutOQL/Attribute:oql' => 'Query',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL-Query, der die zu Suchenden Objekte beschreibt',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatischer Reload',
@@ -1324,25 +1324,25 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:CSVImportCreated_items' => 'Angelegt: %1$d',
 	'UI:CSVImportModified_items' => 'Geändert: %1$d',
 	'UI:CSVImportUnchanged_items' => 'Unverändert: %1$d',
-	'UI:CSVImport:DateAndTimeFormats' => 'Date and time format~~',
-	'UI:CSVImport:DefaultDateTimeFormat_Format_Example' => 'Default format: %1$s (e.g. %2$s)~~',
-	'UI:CSVImport:CustomDateTimeFormat' => 'Custom format: %1$s~~',
-	'UI:CSVImport:CustomDateTimeFormatTooltip' => 'Available placeholders:<table>
-<tr><td>Y</td><td>year (4 digits, e.g. 2016)</td></tr>
-<tr><td>y</td><td>year (2 digits, e.g. 16 for 2016)</td></tr>
-<tr><td>m</td><td>month (2 digits, e.g. 01..12)</td></tr>
-<tr><td>n</td><td>month (1 or 2 digits no leading zero, e.g. 1..12)</td></tr>
-<tr><td>d</td><td>day (2 digits, e.g. 01..31)</td></tr>
-<tr><td>j</td><td>day (1 or 2 digits no leading zero, e.g. 1..31)</td></tr>
-<tr><td>H</td><td>hour (24 hour, 2 digits, e.g. 00..23)</td></tr>
-<tr><td>h</td><td>hour (12 hour, 2 digits, e.g. 01..12)</td></tr>
-<tr><td>G</td><td>hour (24 hour, 1 or 2 digits no leading zero, e.g. 0..23)</td></tr>
-<tr><td>g</td><td>hour (12 hour, 1 or 2 digits no leading zero, e.g. 1..12)</td></tr>
-<tr><td>a</td><td>hour, am or pm (lowercase)</td></tr>
-<tr><td>A</td><td>hour, AM or PM (uppercase)</td></tr>
-<tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
-<tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
-</table>~~',
+	'UI:CSVImport:DateAndTimeFormats' => 'Datum- und Zeitformat',
+	'UI:CSVImport:DefaultDateTimeFormat_Format_Example' => 'Standardformat: %1$s (z.B. %2$s)',
+	'UI:CSVImport:CustomDateTimeFormat' => 'Angepasstes Format: %1$s',
+	'UI:CSVImport:CustomDateTimeFormatTooltip' => 'verfügbare Platzhalter:<table>
+<tr><td>Y</td><td>Jahr (4 Ziffern, z.B. 2016)</td></tr>
+<tr><td>y</td><td>Jahr (2 Ziffern, z.B. 16 für 2016)</td></tr>
+<tr><td>m</td><td>Monat (2 Ziffern, z.B. 01..12)</td></tr>
+<tr><td>n</td><td>Monat (1 oder 2 Ziffern ohne führende Null, z.B. 1..12)</td></tr>
+<tr><td>d</td><td>Tag (2 Ziffern, z.B. 01..31)</td></tr>
+<tr><td>j</td><td>day (1 oder 2 Ziffern ohne führende Null, z.B. 1..31)</td></tr>
+<tr><td>H</td><td>Stunden (24 Stunden, 2 Ziffern, z.B. 00..23)</td></tr>
+<tr><td>h</td><td>Stunden (12 Stunden, 2 Ziffern, z.B. 01..12)</td></tr>
+<tr><td>G</td><td>Stunden (24 Stunden, 1 or 2 Ziffern ohne führende Null, z.B. 0..23)</td></tr>
+<tr><td>g</td><td>Stunden (12 Stunden, 1 or 2 Ziffern ohne führende Null, z.B. 1..12)</td></tr>
+<tr><td>a</td><td>Stunden, am oder pm (lowercase)</td></tr>
+<tr><td>A</td><td>Stunden, AM oder PM (uppercase)</td></tr>
+<tr><td>i</td><td>Minuten (2 Ziffern, z.B. 00..59)</td></tr>
+<tr><td>s</td><td>Sekunden (2 Ziffern, z.B. 00..59)</td></tr>
+</table>',
 		
 	'UI:Button:Remove' => 'Entfernen',
 	'UI:AddAnExisting_Class' => 'Objekte des Typs %1$s hinzufügen...',
@@ -1353,10 +1353,10 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:About:DataModel' => 'Datenmodell',
 	'UI:About:Support' => 'Support-Information',
 	'UI:About:Licenses' => 'Lizenzen',
-	'UI:About:InstallationOptions' => 'Installation options~~',
-	'UI:About:ManualExtensionSource' => 'Extension~~',
-	'UI:About:Extension_Version' => 'Version: %1$s~~',
-	'UI:About:RemoteExtensionSource' => 'Data~~',	
+	'UI:About:InstallationOptions' => 'Installationsoptionen',
+	'UI:About:ManualExtensionSource' => 'Erweiterungen',
+	'UI:About:Extension_Version' => 'Version: %1$s',
+	'UI:About:RemoteExtensionSource' => 'Data',	
 	
 	'UI:DisconnectedDlgMessage' => 'Sie sind abgemeldet. Sie müssen sich identifizeren, um die Anwendung weiter zu benutzen.',
 	'UI:DisconnectedDlgTitle' => 'Warnung!',
@@ -1386,15 +1386,15 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Menu:ExportPDF' => 'Als PDF exportieren... ',
 	'UI:Menu:PrintableVersion' => 'Druckversion',
 	
-	'UI:BrowseInlineImages' => 'Browse images...~~',
-	'UI:UploadInlineImageLegend' => 'Upload a new image~~',
-	'UI:SelectInlineImageToUpload' => 'Select the image to upload~~',
-	'UI:AvailableInlineImagesLegend' => 'Available images~~',
-	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.~~',
+	'UI:BrowseInlineImages' => 'Bilder durchsuchen...',
+	'UI:UploadInlineImageLegend' => 'Neues Bild hochladen',
+	'UI:SelectInlineImageToUpload' => 'Wähle das Bild für den Upload aus',
+	'UI:AvailableInlineImagesLegend' => 'Verfügbare Bilder',
+	'UI:NoInlineImage' => 'Es sind keine Bilder auf dem Server verfügbar. Nutze den "Durchsuchen" Button oben, um ein Bild vom Computer hochzuladen.',
 	
-	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
-	'UI:Button:ResetImage' => 'Recover the previous image~~',
-	'UI:Button:RemoveImage' => 'Remove the image~~',
+	'UI:ToggleFullScreen' => 'Maximieren / Minimieren',
+	'UI:Button:ResetImage' => 'Vorheriges Bild wiederherstellen',
+	'UI:Button:RemoveImage' => 'Bild löschen',
 	'UI:UploadNotSupportedInThisMode' => 'Die Modifizierung von Bildern oder Dateien wird in diesem Modus nicht unterstützt.',
 
 	// Search form
@@ -1440,7 +1440,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s und %3$s andere',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Beliebig',
 	//   - TagSet widget
-	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
+	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
     //   - External key widget
     'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s ist definiert',
     'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s ist nicht definiert',
@@ -1475,7 +1475,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Ist kleiner / gleich',  // > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Ist ungleich',  // => '≠',
 	//   - Tag Set Widget
-	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
+	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Entspricht',
 
 	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...',
@@ -1511,7 +1511,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Expression:Operator:AND' => ' UND ',
 	'Expression:Operator:OR' => ' ODER ',
-	'Expression:Operator:=' => ': ~~',
+	'Expression:Operator:=' => ': ',
 
 	'Expression:Unit:Short:DAY' => 't',
 	'Expression:Unit:Short:WEEK' => 'w',
@@ -1523,5 +1523,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Expression:Unit:Long:MINUTE' => 'Minute(n)',
 
 	'Expression:Verb:NOW' => 'jetzt',
-	'Expression:Verb:ISNULL' => ': undefined~~',
+	'Expression:Verb:ISNULL' => ': nicht definiert',
 ));
