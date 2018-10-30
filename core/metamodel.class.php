@@ -3074,8 +3074,8 @@ abstract class MetaModel
 		$MANDATORY_ATTRIBUTES = array('attributes');
 		$UNIQUENESS_MANDATORY_KEYS_NB = count($MANDATORY_ATTRIBUTES);
 		$bHasDisabledKey = false;
-		$bHasMissingMandatoryKey = false;
-		$iMissingMandatoryKeysNb = 0;
+		$bHasMissingMandatoryKey = true;
+		$iMissingMandatoryKeysNb = $UNIQUENESS_MANDATORY_KEYS_NB;
 		$bHasAllMandatoryKeysMissing = false;
 		$bHasNonDisabledKeys = false;
 
@@ -3085,6 +3085,12 @@ abstract class MetaModel
 			{
 				$bHasDisabledKey = true;
 				continue;
+			}
+			$bHasNonDisabledKeys = true;
+
+			if (in_array($sUniquenessRuleKey, $MANDATORY_ATTRIBUTES, true)) {
+				$bHasMissingMandatoryKey = false;
+				$iMissingMandatoryKeysNb--;
 			}
 
 			if (($sUniquenessRuleKey === 'attributes') && (!empty($aExistingClassFields)))
@@ -3097,21 +3103,6 @@ abstract class MetaModel
 					}
 				}
 			}
-
-			if (!$aUniquenessRuleProperty)
-			{
-				if (!in_array($sUniquenessRuleKey, $MANDATORY_ATTRIBUTES, true))
-				{
-					continue;
-				}
-
-				$bHasMissingMandatoryKey = true;
-				$iMissingMandatoryKeysNb++;
-
-				continue;
-			}
-
-			$bHasNonDisabledKeys = true;
 		}
 
 		if ($iMissingMandatoryKeysNb == $UNIQUENESS_MANDATORY_KEYS_NB)
