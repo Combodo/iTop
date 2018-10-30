@@ -252,7 +252,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+	'Organization:Overview:UserRequests' => 'Benutzeranfragen dieser Organisation',
+	'Organization:Overview:MyUserRequests' => 'Mir zugewiesene Benutzeranfragen dieser Organisation',
+	'Organization:Overview:Tickets' => 'Alle Tickets dieser Organisation',
 ));
