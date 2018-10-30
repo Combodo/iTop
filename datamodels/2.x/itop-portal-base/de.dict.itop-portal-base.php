@@ -82,7 +82,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 // AggregatePageBrick
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard~~',
+	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard',
 ));
 
 // BrowseBrick brick

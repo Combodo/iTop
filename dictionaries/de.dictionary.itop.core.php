@@ -27,20 +27,20 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:UnknownObjectLabel' => 'Objekt nicht gefunden (Klasse: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'Das Objekt konnte nicht gefunden werden. Es könnte bereits vor einiger Zeit gelöscht worden sein und das Log seither bereinigt.',
 
-	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+	'Core:UniquenessDefaultError' => 'Eindeutigkeitsfehler: \'%1$s\'',
 
 	'Core:AttributeLinkedSet' => 'Array von Objekten',
 	'Core:AttributeLinkedSet+' => 'Beliebige Art von Objekten der [subclass] der selben Klasse',
 
-    'Core:AttributeTagSet' => 'List of tags~~',
-    'Core:AttributeTagSet+' => '~~',
-	'Core:AttributeSet:placeholder' => 'click to add~~',
+    'Core:AttributeTagSet' => 'Liste von Tags',
+    'Core:AttributeTagSet+' => 'List von Tags',
+	'Core:AttributeSet:placeholder' => 'Zum Hinzufügen klicken',
 
-    'Core:AttributeCaseLog' => 'Log~~',
-    'Core:AttributeCaseLog+' => '~~',
+    'Core:AttributeCaseLog' => 'Log',
+    'Core:AttributeCaseLog+' => '',
 
-    'Core:AttributeMetaEnum' => 'Computed enum~~',
-    'Core:AttributeMetaEnum+' => '~~',
+    'Core:AttributeMetaEnum' => 'Berechnetes Enum',
+    'Core:AttributeMetaEnum+' => 'Liste berechneter alphanumerischer Strings',
 
     'Core:AttributeLinkedSetIndirect' => 'Array von Objekten (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Beliebige Art von Objekten der [subclass] der selben Klasse',
@@ -92,9 +92,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
  	'Core:AttributeEncryptedString' => 'verschlüsselter String',
 	'Core:AttributeEncryptedString+' => 'mit einem lokalen Schüssel verschlüsselter String',
-	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
-	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
-
+	'Core:AttributeEncryptUnknownLibrary' => 'Angegebene Library zur Verschlüsslung (%1$s) ist unbekannt',
+	'Core:AttributeEncryptFailedToDecrypt' => '** Entschlüsslungsfehler **',
 	'Core:AttributeText' => 'Text',
 	'Core:AttributeText+' => 'Mehrzeiliger String',
 
@@ -188,8 +187,8 @@ Operatoren:<br/>
 	'Core:FriendlyName-Label' => 'Voller Name (Friendly Name)',
 	'Core:FriendlyName-Description' => 'Friendly name',
 
-	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => 'Tags~~',
+	'Core:AttributeTag' => 'Tags',
+	'Core:AttributeTag+' => 'Tags',
 ));
 
 
@@ -362,8 +361,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EventNotificationEmail/Attribute:subject+' => 'Betreff',
 	'Class:EventNotificationEmail/Attribute:body' => 'Inhalt der Nachricht',
 	'Class:EventNotificationEmail/Attribute:body+' => 'Inhalt der Nachricht',
-	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments',
-	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
+	'Class:EventNotificationEmail/Attribute:attachments' => 'Anhänge',
+	'Class:EventNotificationEmail/Attribute:attachments+' => 'Anhänge in der Nachricht',
 ));
 
 //
@@ -534,7 +533,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Zielklasse',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter',
-	'Class:TriggerOnObject/Attribute:filter+' => '~~',
+	'Class:TriggerOnObject/Attribute:filter+' => '',
 	'TriggerOnObject:WrongFilterQuery' => 'Fehlerhafter Filter-Query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Der Filter muss Objekte vom Typ \\"%1$s\\" zurückgeben.',
 ));
@@ -591,8 +590,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
-	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
+	'Class:TriggerOnObjectDelete' => 'Trigger (bei Objektlöschung)',
+	'Class:TriggerOnObjectDelete+' => 'Trigger bei Objektlöschung einer gegebenen Klasse oder Kindklasse',
 ));
 
 //
@@ -600,10 +599,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
-	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+	'Class:TriggerOnObjectUpdate' => 'Trigger (bei Objektanpassung)',
+	'Class:TriggerOnObjectUpdate+' => 'Trigger bei Objektanpassung einer gegebenen Klasse oder Kindklasse',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Ziel-Felder',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //
@@ -906,10 +905,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:BulkExportLegacyExport' => 'Klicken Sie hier, um auf die Legacy-Version des Exports zuzugreifen',
 	'Core:BulkExport:XLSXOptions' => 'Excel-Optionen',
 	'Core:BulkExport:TextFormat' => 'Textfelder enthalten HTML-Markup',
-	'Core:BulkExport:DateTimeFormat' => 'Date and Time format~~',
-	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
-	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
-	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
+	'Core:BulkExport:DateTimeFormat' => 'Datum- und Zeitformat',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Standardformat (%1$s), z.B. %2$s',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Angepasstes format: %1$s',
+	'Core:BulkExport:PDF:PageNumber' => 'Seite %1$s',
 	'Core:DateTime:Placeholder_d' => 'TT', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'T', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
@@ -934,24 +933,24 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // Class: TagSetFieldData
 //
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
-	'Class:TagSetFieldData+' => '~~',
+	'Class:TagSetFieldData' => '%2$s für die Klasse %1$s',
+	'Class:TagSetFieldData+' => '',
 
-	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
-	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
-	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
-	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
-	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:code' => 'Code',
+	'Class:TagSetFieldData/Attribute:code+' => 'Interner code. Muss mindestens 3 alphanumerische Zeichen enthalten',
+	'Class:TagSetFieldData/Attribute:label' => 'Label',
+	'Class:TagSetFieldData/Attribute:label+' => 'Anzeigelabel',
+	'Class:TagSetFieldData/Attribute:description' => 'Beschreibung',
+	'Class:TagSetFieldData/Attribute:description+' => 'Beschreibung',
 
-	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
-	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
-	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
-	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
-	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',
-	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed~~',
-	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
-	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
-	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Verwendete tags können nicht gelöscht werden',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tag-Codes oder Labels müssen eindeutig sein',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags-Code muss zwischen 3 und %1$d alphanumerische Zeichen enthalten',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'der gewählte Tag-Code ist ein reservierter Begriff',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tag-Labels dürfen nicht leer sein oder \'%1$s\' enthalten',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tag-Code kann nicht geändert werden, wenn er in Verwendung ist',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => '"Tag-Objektklasse" kann nicht geändert werden',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tag "Attribute Code" kann nicht geändert werden',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag Verwendung (%1$d)',
+	'Core:TagSetFieldData:NoEntryFound' => 'Kein Eintrag für dieses Tag gefunden',
 ));
