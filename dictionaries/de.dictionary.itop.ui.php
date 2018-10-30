@@ -276,7 +276,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ClickToCreateNew' => 'Klicken Sie hier, um eine neues Objekt vom Typ %1$s zu erstellen',
 	'UI:SearchFor_Class' => 'Suche nach Objekten vom Typ "%1$s"',
 	'UI:NoObjectToDisplay' => 'Kein Objekt zur Anzeige vorhanden.',
-	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
+	'UI:Error:SaveFailed' => 'Objekt kann nicht gespeichert werden:',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id ist erforderlich, wenn link_attr verwendet wird. Überprüfen Sie die Defintion des Display-Templates.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter target_attr ist erforderlich, wenn link_attr verwendet wird. Überprüfen Sie die Defintion des Display-Templates.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by ist erforderlich. Überprüfen Sie die Defintion des Display-Templates.',

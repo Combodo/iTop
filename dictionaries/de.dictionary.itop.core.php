@@ -354,8 +354,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributePassword+' => 'Passwort eines externen Geräts',
 	'Core:AttributeEncryptedString' => 'verschlüsselter String',
 	'Core:AttributeEncryptedString+' => 'mit einem lokalen Schüssel verschlüsselter String',
-	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
-	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+	'Core:AttributeEncryptUnknownLibrary' => 'Angegebene Library zur Verschlüsslung (%1$s) ist unbekannt',
+	'Core:AttributeEncryptFailedToDecrypt' => '** Entschlüsslungsfehler **',
 	'Core:AttributeText' => 'Text',
 	'Core:AttributeText+' => 'Mehrzeiliger String',
 	'Core:AttributeHTML' => 'HTML',
@@ -650,5 +650,5 @@ Operatoren:<br/>
 	'Core:Validator:Mandatory' => 'Bitte dieses Feld ausfüllen',
 	'Core:Validator:MustBeInteger' => 'Muss ein Integer sein',
 	'Core:Validator:MustSelectOne' => 'Min. ein Eintrag muss ausgewählt sein',
-	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+	'Core:UniquenessDefaultError' => 'Eindeutigkeitsfehler: \'%1$s\'',
 ));
