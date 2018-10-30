@@ -144,7 +144,7 @@ abstract class MetaModel
 		// $aBacktrace[1] is the info we want
 		if (!empty($sExpectedFunctionName))
 		{
-			assert('$aBacktrace[2]["function"] == $sExpectedFunctionName');
+			assert($aBacktrace[2]['function'] == $sExpectedFunctionName);
 		}
 		if ($bRecordSourceFile)
 		{
