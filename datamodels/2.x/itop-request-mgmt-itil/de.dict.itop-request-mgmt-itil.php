@@ -19,7 +19,7 @@
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
-* @copyright     Copyright (C) 2017 Combodo SARL
+* @copyright     Copyright (C) 2018 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *		
 */
@@ -249,4 +249,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 	'Class:UserRequest/Attribute:parent_incident_id+' => '',
 	));
-?>
+
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
+	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
+	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+));

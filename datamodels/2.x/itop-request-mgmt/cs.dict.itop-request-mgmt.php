@@ -23,7 +23,7 @@
  *
  * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
- * @copyright   Copyright (C) 2010-2014 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
@@ -295,4 +295,11 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
     'Class:UserRequest/Method:ResolveChildTickets' => 'Vyřešit podřízené tikety',
     'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
+));
+
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
+	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
+	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
 ));

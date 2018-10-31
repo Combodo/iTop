@@ -31,6 +31,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:UnknownObjectLabel' => 'Elemento No Encontrado (Clase: %1$s, Identificador: %2$d)',
 	'Core:UnknownObjectTip' => 'El Elemento no pudo ser encontrado.  Pudo haber sido eliminado hace tiempo y purgado de la Bitácora.',
 
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+
 	'Core:AttributeLinkedSet' => 'Arreglo de objetos',
 	'Core:AttributeLinkedSet+' => 'Cualquier tipo de objetos [subclass] de la misma clase',
 
@@ -862,7 +864,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:BulkExport:XMLOptions' => 'Opciones XML',
 	'Core:BulkExport:SpreadsheetFormat' => 'Formato hoja tabular HTML (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Opcioens Hoja Tabular',
-	'Core:BulkExport:OptionNoLocalize' => 'No traducir valores (para campos enumerados)',
+	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
 	'Core:BulkExport:OptionLinkSets' => 'Incluir objetos ligados',
 	'Core:BulkExport:OptionFormattedText' => 'Conservar formato de texto',
 	'Core:BulkExport:ScopeDefinition' => 'Definición de los objetos a exportar',

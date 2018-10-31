@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
   <classes>
     <class id="Change" _delta="define">
       <parent>Ticket</parent>
@@ -935,8 +935,8 @@
 	{
         parent::OnInsert();
         $this->UpdateImpactedItems();
-		$this->Set('creation_date', time());
-		$this->Set('last_update', time());
+		$this->SetIfNull('creation_date', time());
+		$this->SetIfNull('last_update', time());
 	}]]>
           </code>
         </method>

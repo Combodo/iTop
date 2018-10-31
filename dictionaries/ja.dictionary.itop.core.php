@@ -636,7 +636,7 @@ Operators:<br/>
 	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)~~',
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
 	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
-	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)~~',
+	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
 	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
@@ -652,4 +652,5 @@ Operators:<br/>
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
 ));

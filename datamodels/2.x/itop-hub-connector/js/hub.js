@@ -138,7 +138,7 @@ $(function()
 				if (this.options.redirect_after_completion_url != '')
 				{
 					var sUrl = this.options.redirect_after_completion_url;
-					window.setTimeout(function() { window.location.href = sUrl; }, 500);					
+					window.setTimeout(function() { window.location.href = sUrl; }, 3000);					
 				}
 			}
 			else

@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -46,6 +46,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Organization/Attribute:parent_id+' => '親組織',
 	'Class:Organization/Attribute:deliverymodel_id' => '提供モデル',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 	'Class:Location' => '場所',
 	'Class:Location+' => '任意の場所のタイプ: リージョン、国、都市、サイト、ビル、フロア、部屋、ラック、...',
 	'Class:Location/Attribute:name' => '名前',
@@ -86,6 +90,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Person/Attribute:team_list+' => '',
 	'Class:Person/Attribute:tickets_list' => 'チケット',
 	'Class:Person/Attribute:tickets_list+' => '',
+	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
+	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
+	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
+	'Class:Person/UniquenessRule:name/Error' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Team' => 'チーム',
 	'Class:Team+' => '',
 	'Class:Team/Attribute:persons_list' => 'メンバー',
@@ -254,6 +262,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => '物理デバイス',
 	'Class:Brand/Attribute:physicaldevices_list+' => '',
+	'Class:Brand/UniquenessRule:name/Description' => 'The name must be unique~~',
+	'Class:Brand/UniquenessRule:name/Error' => 'This brand already exists~~',
 	'Class:Model' => 'モデル',
 	'Class:Model+' => '',
 	'Class:Model/Attribute:brand_id' => 'ブランド',
@@ -298,6 +308,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Model/Attribute:type/Value:Phone+' => '電話',
 	'Class:Model/Attribute:physicaldevices_list' => '物理デバイス',
 	'Class:Model/Attribute:physicaldevices_list+' => '',
+	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
+	'Class:Model/UniquenessRule:name_brand/Error' => 'this model already exists for this brand~~',
 	'Class:NetworkDeviceType' => 'ネットワークデバイスタイプ',
 	'Class:NetworkDeviceType+' => '',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'ネットワークデバイス',

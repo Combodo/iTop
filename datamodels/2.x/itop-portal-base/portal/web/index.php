@@ -45,8 +45,8 @@ require_once __DIR__ . '/../src/helpers/lifecyclevalidatorhelper.class.inc.php';
 require_once __DIR__ . '/../src/helpers/securityhelper.class.inc.php';
 require_once __DIR__ . '/../src/helpers/applicationhelper.class.inc.php';
 
-use Silex\Application;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Silex\Application;
 
 // Stacking context tag so it knows we are in the portal
 $oContex = new ContextTag('GUI:Portal');
@@ -141,6 +141,7 @@ $oApp->before(function(Symfony\Component\HttpFoundation\Request $oRequest, Silex
     // Loading portal configuration from the module design
     $oKPI = new ExecutionKPI();
     ApplicationHelper::LoadPortalConfiguration($oApp);
+	ApplicationHelper::LoadSessionMessages($oApp);
     $oKPI->ComputeAndReport('Parsing portal configuration');
     // Loading current user
     ApplicationHelper::LoadCurrentUser($oApp);

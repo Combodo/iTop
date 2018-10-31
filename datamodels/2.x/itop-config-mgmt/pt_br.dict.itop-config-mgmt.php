@@ -20,7 +20,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -103,6 +103,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Principal',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Organização principal',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 ));
 
 //
@@ -204,6 +208,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person/Attribute:tickets_list+' => 'Todos as solicitações que essa pessoa solicitou',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nome amigável gerente',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
+	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
+	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
+	'Class:Person/UniquenessRule:name/Error' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 ));
 
 //
@@ -1276,6 +1284,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Dispositivos físicos',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Todos os dispositivos físicos correspondentes a essa fabricante',
+	'Class:Brand/UniquenessRule:name/Description' => 'The name must be unique~~',
+	'Class:Brand/UniquenessRule:name/Error' => 'This brand already exists~~',
 ));
 
 //
@@ -1329,6 +1339,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Model/Attribute:type/Value:Phone+' => 'Telefone',
 	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo físico',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Todos os dispositivos físicos correspondentes a esse modelo',
+	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
+	'Class:Model/UniquenessRule:name_brand/Error' => 'this model already exists for this brand~~',
 ));
 
 //

@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -36,6 +36,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Organization/Attribute:status/Value:inactive+' => 'Inattivo',
 	'Class:Organization/Attribute:parent_id' => 'Parent',
 	'Class:Organization/Attribute:parent_id+' => 'Parent organization',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 	'Class:Location' => 'Localizzazione',
 	'Class:Location+' => 'Qualsiasi tipo di localizzazione: Regione, Paese, Città, Sito, Edificio, Piano, Stanza, Rack,,...',
 	'Class:Location/Attribute:name' => 'Nome',
@@ -743,6 +747,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Person/Attribute:tickets_list' => 'Tickets~~',
 	'Class:Person/Attribute:tickets_list+' => 'All the tickets this person is the caller~~',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name~~',
+	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
+	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
+	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
+	'Class:Person/UniquenessRule:name/Error' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Team/Attribute:persons_list' => 'Members~~',
 	'Class:Team/Attribute:persons_list+' => 'All the people belonging to this team~~',
 	'Class:Team/Attribute:tickets_list' => 'Tickets~~',
@@ -1106,6 +1114,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Brand' => 'Brand~~',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physical devices~~',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand~~',
+	'Class:Brand/UniquenessRule:name/Description' => 'The name must be unique~~',
+	'Class:Brand/UniquenessRule:name/Error' => 'This brand already exists~~',
 	'Class:Model' => 'Model~~',
 	'Class:Model/Attribute:brand_id' => 'Brand~~',
 	'Class:Model/Attribute:brand_name' => 'Brand name~~',
@@ -1148,6 +1158,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone~~',
 	'Class:Model/Attribute:physicaldevices_list' => 'Physical devices~~',
 	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model~~',
+	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
+	'Class:Model/UniquenessRule:name_brand/Error' => 'this model already exists for this brand~~',
 	'Class:NetworkDeviceType' => 'Network Device Type~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Network devices~~',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type~~',

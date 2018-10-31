@@ -288,7 +288,7 @@ EOF
 			{
 				// TODO
 			}
-			// ... clasic rendering for fields with only one value
+			// ... classic rendering for fields with only one value
 			else
 			{
 				switch ($sFieldClass)

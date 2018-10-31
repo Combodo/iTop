@@ -771,7 +771,7 @@ class DataTableSettings implements Serializable
 			$aTempData = array();
 			foreach($aList as $sAttCode => $oAttDef)
 			{
-				if ( (!array_key_exists($sAttCode, $this->aColumns[$sAlias])) && (!$oAttDef instanceof AttributeLinkSet))
+				if ( (!array_key_exists($sAttCode, $this->aColumns[$sAlias])) && (!($oAttDef instanceof AttributeLinkedSet || $oAttDef instanceof AttributeDashboard)))
 				{
 					$aFieldData = $this->GetFieldData($sAlias, $sAttCode, $oAttDef, false /* bChecked */, 'none');
 					if ($aFieldData) $aTempData[$aFieldData['label']] = $aFieldData;

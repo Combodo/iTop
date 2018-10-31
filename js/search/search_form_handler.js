@@ -187,7 +187,7 @@ $(function()
 				}
 
 				var sNewUrl = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search';
-				sNewUrl = sNewUrl + '&filter='+oData['filter'];
+				sNewUrl = sNewUrl + '&filter='+encodeURI(oData['filter']);
                 sNewUrl = sNewUrl + '&c[menu]='+me._extractURLParameter(window.location.href, "c[menu]");
                 sNewUrl = sNewUrl + '&c[org_id]='+me._extractURLParameter(window.location.href, "c[org_id]");
 				if ('' != me._extractURLParameter(window.location.href, "debug"))
@@ -229,32 +229,38 @@ $(function()
 				}]
 			};
 			// - Retrieve criterion
-			this.elements.criterion_area.find('.sf_criterion_row').each(function(iIdx){
-				var oCriterionRowElem = $(this);
+			var iCurrentCriterionRow = 0;
+			this.elements.criterion_area.find('.sf_criterion_row').each(function (iDomCriterionRowIdx) {
+				var isFirstRow = (iDomCriterionRowIdx === 0),
+					oCriterionRowElem = $(this),
+					oCriteriaRowCriterias = oCriterionRowElem.find('.search_form_criteria');
 
-				if (oCriterionRowElem.find('.search_form_criteria').length == 0 && iIdx > 0)
+				if (oCriteriaRowCriterias.length === 0)
 				{
-					$(this).remove();
+					if (!isFirstRow)
+					{
+						$(this).remove();
+					}
 				}
 				else
 				{
-					oCriterionRowElem.find('.search_form_criteria').each(function ()
-					{
+					oCriteriaRowCriterias.each(function () {
 						var oCriteriaData = $(this).triggerHandler('itop.search.criteria.get_data');
 
 						if (null != oCriteriaData)
 						{
-							if (!oCriterion['or'][iIdx])
+							if (!oCriterion['or'][iCurrentCriterionRow])
 							{
-								oCriterion['or'][iIdx] = {'and': []};
+								oCriterion['or'][iCurrentCriterionRow] = {'and': []};
 							}
-							oCriterion['or'][iIdx]['and'].push(oCriteriaData);
+							oCriterion['or'][iCurrentCriterionRow]['and'].push(oCriteriaData);
 						}
 						else
 						{
 							$(this).remove();
 						}
 					});
+					iCurrentCriterionRow++;
 				}
 			});
 			// - Update search
@@ -745,9 +751,7 @@ $(function()
 			// Make placeholder if nothing yet
 			if(oResultAreaElem.html() === '')
 			{
-				// TODO: Make a good UI for this POC.
-				// TODO: Translate sentence.
-				oResultAreaElem.html('<div class="sf_results_placeholder"><p>Add some criterion on the search box or click the search button to view the objects.</p><p><button type="button">Search<span class="fa fa-search"></span></button></p></div>');
+				oResultAreaElem.html('<div class="sf_results_placeholder"><p>' + Dict.S('UI:Search:NoAutoSubmit:ExplainText') + '</p><p><button type="button">' + Dict.S('UI:Button:Search') + '<span class="fa fa-search"></span></button></p></div>');
 				oResultAreaElem.find('button').on('click', function(){
 					// TODO: Bug: Open "Search for CI", change child classe in the dropdown, click the search button. It submit the search for the original child classe, not the current one; whereas a click on the upper right pictogram does. This might be due to the form reloading.
 					me._onSubmitClick();

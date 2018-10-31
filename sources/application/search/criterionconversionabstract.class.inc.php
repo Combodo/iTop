@@ -37,6 +37,7 @@ abstract class CriterionConversionAbstract
 	const OP_BETWEEN = 'between';
 	const OP_REGEXP = 'REGEXP';
 	const OP_ALL = 'all';
+	const OP_MATCHES = 'MATCHES';
 
 }
 

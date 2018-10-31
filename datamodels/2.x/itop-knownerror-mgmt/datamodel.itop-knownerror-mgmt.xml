@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
   <classes>
     <class id="KnownError" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -444,6 +444,12 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="domains" xsi:type="AttributeTagSet">
+          <sql>domains</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>all</tracking_level>
+          <max_items>12</max_items>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -461,11 +467,14 @@
             <item id="key_words">
               <rank>40</rank>
             </item>
-            <item id="summary">
+            <item id="domains">
               <rank>50</rank>
             </item>
-            <item id="description">
+            <item id="summary">
               <rank>60</rank>
+            </item>
+            <item id="description">
+              <rank>70</rank>
             </item>
           </items>
         </details>
@@ -483,7 +492,7 @@
             <item id="error_code">
               <rank>40</rank>
             </item>
-            <item id="key_words">
+            <item id="domains">
               <rank>50</rank>
             </item>
           </items>
@@ -496,7 +505,7 @@
             <item id="error_code">
               <rank>20</rank>
             </item>
-            <item id="key_words">
+            <item id="domains">
               <rank>30</rank>
             </item>
           </items>
@@ -633,6 +642,7 @@
                   <title>Class:FAQ</title>
                   <fields>
                     <field id="error_code"/>
+					<field id="domains"/>
 					<field id="key_words">
 						<hidden>true</hidden>
 					</field>
@@ -664,6 +674,7 @@
             <field id="title"/>
             <field id="error_code"/>
             <field id="key_words"/>
+            <field id="domains"/>
             <field id="summary"/>
             <field id="description"/>
           </fields>
@@ -674,6 +685,7 @@
                 <div class="form_field" data-field-id="title"></div>
                 <div class="form_field" data-field-id="error_code"></div>
                 <div class="form_field" data-field-id="key_words"></div>
+                <div class="form_field" data-field-id="domains"></div>
                 <div class="form_field" data-field-id="summary"></div>
               </div>
               <div class="col-sm-8">

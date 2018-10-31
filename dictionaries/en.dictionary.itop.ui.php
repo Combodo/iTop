@@ -411,6 +411,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:ClickToCreateNew' => 'Create a new %1$s',
 	'UI:SearchFor_Class' => 'Search for %1$s objects',
 	'UI:NoObjectToDisplay' => 'No object to display.',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id is mandatory when link_attr is specified. Check the definition of the display template.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter target_attr is mandatory when link_attr is specified. Check the definition of the display template.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by is mandatory. Check the definition of the display template.',
@@ -441,8 +442,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:ObjectAlreadyCloned' => 'Error: the object has already been cloned!',
 	'UI:Error:ObjectAlreadyCreated' => 'Error: the object has already been created!',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Error: invalid stimulus "%1$s" on object %2$s in state "%3$s".',
-	
-	
+	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file',
+	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard',
+
 	'UI:GroupBy:Count' => 'Count',
 	'UI:GroupBy:Count+' => 'Number of elements',
 	'UI:CountOfObjects' => '%1$d objects matching the criteria.',
@@ -956,7 +958,13 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:NotificationsMenu:OnStateLeave' => 'When an object leaves a given state',
 	'UI:NotificationsMenu:Actions' => 'Actions',
 	'UI:NotificationsMenu:AvailableActions' => 'Available actions',
-	
+
+	'Menu:TagAdminMenu' => 'Tags configuration',
+	'Menu:TagAdminMenu+' => 'Tags values management',
+	'UI:TagAdminMenu:Title' => 'Tags configuration',
+	'UI:TagAdminMenu:NoTags' => 'No Tag field configured',
+	'UI:TagSetFieldData:Error' => 'Error: %1$s',
+
 	'Menu:AuditCategories' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1127,6 +1135,13 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Button:Refresh' => 'Refresh',
 	'UI:Button:GoPrint' => 'Print...',
 	'UI:ExplainPrintable' => 'Click onto the %1$s icon to hide items from the print.<br/>Use the "print preview" feature of your browser to preview before printing.<br/>Note: this header and the other tuning controls will not be printed.',
+	'UI:PrintResolution:FullSize' => 'Full size',
+	'UI:PrintResolution:A4Portrait' => 'A4 Portrait',
+	'UI:PrintResolution:A4Landscape' => 'A4 Landscape',
+	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait',
+	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape',
+	'UI:Toggle:StandardDashboard' => 'Standard',
+	'UI:Toggle:CustomDashboard' => 'Custom',
 
 	'UI:ConfigureThisList' => 'Configure This List...',
 	'UI:ListConfigurationTitle' => 'List Configuration',
@@ -1409,6 +1424,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class',
+	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria',
 	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Recently used',
@@ -1447,6 +1463,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s and %3$s others',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any',
+	//   - TagSet widget
+	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
     //   - External key widget
     'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',
     'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined',
@@ -1480,6 +1498,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less',  // => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals',  // > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different',  // => '≠',
+	//   - Tag Set Widget
+	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches',
 
 	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filter...',

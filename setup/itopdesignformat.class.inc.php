@@ -34,8 +34,8 @@
  *     echo "Error, failed to upgrade the format, reason(s):\n".implode("\n", $oFormat->GetErrors());
  * }
  */
- 
-define('ITOP_DESIGN_LATEST_VERSION', '1.5'); // iTop >= 2.5.0
+
+define('ITOP_DESIGN_LATEST_VERSION', '1.6'); // iTop >= 2.6.0
  
 class iTopDesignFormat
 {
@@ -73,6 +73,12 @@ class iTopDesignFormat
 		'1.5' => array(
 			'previous' => '1.4',
 			'go_to_previous' => 'From15To14',
+			'next' => '1.6',
+			'go_to_next' => 'From15To16',
+		),
+		'1.6' => array(
+			'previous' => '1.5',
+			'go_to_previous' => 'From16To15',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -628,6 +634,49 @@ class iTopDesignFormat
 	protected function From14To15($oFactory)
 	{
 	}
+
+	/**
+	 * @param $oFactory
+	 *
+	 * @return void (Errors are logged)
+	 */
+	protected function From15To16($oFactory)
+	{
+		// nothing changed !
+	}
+
+	/**
+	 * @param $oFactory
+	 *
+	 * @return void (Errors are logged)
+	 */
+	protected function From16To15($oFactory)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// Remove AttributeTagSet nodes
+		//
+		$sPath = "/itop_design/classes/class/fields/field[@xsi:type='AttributeTagSet']";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// Remove uniqueness rules nodes
+		//
+		$sPath = "/itop_design/classes/class/properties/uniqueness_rules";
+		$this->RemoveNodeFromXPath($sPath);
+	}
+
+	private function RemoveNodeFromXPath($sPath)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		$oNodeList = $oXPath->query($sPath);
+		foreach ($oNodeList as $oNode)
+		{
+			$this->LogWarning('Node '.self::GetItopNodePath($oNode).' is irrelevant in this version, it will be removed.');
+			$this->DeleteNode($oNode);
+		}
+	}
+
 
 	/**
 	 * Delete a node from the DOM and make sure to also remove the immediately following line break (DOMText), if any.

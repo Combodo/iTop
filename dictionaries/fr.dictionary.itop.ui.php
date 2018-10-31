@@ -279,6 +279,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ClickToCreateNew' => 'Créer un nouvel objet de type %1$s',
 	'UI:SearchFor_Class' => 'Rechercher des objets de type %1$s',
 	'UI:NoObjectToDisplay' => 'Aucun objet à afficher.',
+	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Le paramètre object_id est obligatoire quand link_attr est spécifié. Vérifiez la définition du modèle.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Le paramètre taarget_attr est obligatoire quand link_attr est spécifié. Vérifiez la définition du modèle.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Le paramètre group_by est obligatoire. Vérifiez la définition du modèle.',
@@ -308,6 +309,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:ObjectAlreadyCloned' => 'Erreur: l\'objet a déjà été dupliqué !',
 	'UI:Error:ObjectAlreadyCreated' => 'Erreur: l\'objet a déjà été créé !',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erreur: le stimulus "%1$s" n\'est pas valide pour l\'objet %2$s dans l\'état "%3$s".',
+	'UI:Error:InvalidDashboardFile' => 'Erreur: Le fichier tableau de bord est invalide',
+	'UI:Error:InvalidDashboard' => 'Erreur: Le tableau de bord est invalide',
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
 	'UI:CountOfObjects' => '%1$d objets correspondants aux critères.',
@@ -981,7 +984,14 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Button:Refresh' => 'Rafraîchir',
 	'UI:Button:GoPrint' => 'Imprimer...',
 	'UI:ExplainPrintable' => 'Cliquez sur les icones %1$s pour cacher des éléments lors de l\'impression.<br/>Utilisez la fonction "Aperçu avant impression" de votre navigateur pour prévisualiser avant d\'imprimer.<br/>Note: cet en-tête ainsi que les icones %1$s ne seront pas imprimés.',
-	
+	'UI:PrintResolution:FullSize' => 'Pleine largeur',
+	'UI:PrintResolution:A4Portrait' => 'A4 Portrait',
+	'UI:PrintResolution:A4Landscape' => 'A4 Paysage',
+	'UI:PrintResolution:LetterPortrait' => 'US Letter Portrait',
+	'UI:PrintResolution:LetterLandscape' => 'US Letter Paysage',
+	'UI:Toggle:StandardDashboard' => 'Standard',
+	'UI:Toggle:CustomDashboard' => 'Modifié',
+
 	'UI:ConfigureThisList' => 'Configurer Cette Liste...',
 	'UI:ListConfigurationTitle' => 'Configuration de la liste',
 	'UI:ColumnsAndSortOrder' => 'Colonnes et ordre de tri:',
@@ -1242,6 +1252,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	// Search form
 	'UI:Search:Toggle' => 'Réduire / Ouvrir',
     'UI:Search:AutoSubmit:DisabledHint' => 'La soumission automatique a été desactivée pour cette classe',
+	'UI:Search:NoAutoSubmit:ExplainText' => 'Ajoutez des critères dans le formulaire de recherche ou cliquez sur le bouton rechercher pour voir les objets.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Ajouter un critère',
 	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Récents',
@@ -1280,6 +1291,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Title:Enum:In' => '%1$s : %2$s',
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s : %2$s et %3$s autres',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s : Indifférent',
+	//   - TagSet widget
+	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s : %2$s',
 	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s est renseigné',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s n\'est pas renseigné',
@@ -1294,6 +1307,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
     'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s : %2$s',
     'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s : %2$s et %3$s autres',
     'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s : Indifférent',
+	//   - Tag Set Widget
+	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Contient',
 
 	/// - Criteria operators
 	//   - Default widget
@@ -1339,6 +1354,13 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtré',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
+
+	// - Tags admin
+	'Menu:TagAdminMenu' => 'Etiquettes',
+	'Menu:TagAdminMenu+' => 'Gestion des étiquettes',
+	'UI:TagAdminMenu:Title' => 'Gestion des étiquettes',
+	'UI:TagAdminMenu:NoTags' => 'Pas de champ étiquette configuré',
+	'UI:TagSetFieldData:Error' => 'Erreur: %1$s',
 ));
 
 

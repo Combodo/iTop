@@ -19,27 +19,30 @@
 
 namespace Combodo\iTop\Portal\Form;
 
-use Exception;
-use Silex\Application;
-use utils;
-use Dict;
-use IssueLog;
-use UserRights;
-use MetaModel;
-use CMDBSource;
-use DBObject;
-use DBObjectSet;
-use DBSearch;
-use DBObjectSearch;
-use InlineImage;
-use AttributeDateTime;
 use AttachmentPlugIn;
-use Combodo\iTop\Form\FormManager;
-use Combodo\iTop\Form\Form;
+use AttributeDateTime;
+use AttributeTagSet;
+use CMDBSource;
 use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Form\Field\FileUploadField;
 use Combodo\iTop\Form\Field\LabelField;
+use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use CoreCannotSaveObjectException;
+use DBObject;
+use DBObjectSearch;
+use DBObjectSet;
+use DBSearch;
+use Dict;
+use Exception;
+use InlineImage;
+use IssueLog;
+use MetaModel;
+use ormTagSet;
+use Silex\Application;
+use UserRights;
+use utils;
 
 /**
  * Description of objectformmanager
@@ -974,7 +977,14 @@ class ObjectFormManager extends FormManager
 				// Writing object to DB
 				$bActivateTriggers = (!$this->oObject->IsNew() && $this->oObject->IsModified());
 				$bWasModified = $this->oObject->IsModified();
-				$this->oObject->DBWrite();
+				try
+				{
+					$this->oObject->DBWrite();
+				}
+				catch (CoreCannotSaveObjectException $e)
+				{
+					throw new Exception($e->getHtmlMessage());
+				}
 				// Finalizing images link to object, otherwise it will be cleaned by the GC
 				InlineImage::FinalizeInlineImages($this->oObject);
 				// Finalizing attachments link to object
@@ -1120,7 +1130,18 @@ class ObjectFormManager extends FormManager
 							// Setting value in the object
 							$this->oObject->Set($sAttCode, $oLinkSet);
 						}
-					    else if ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+						elseif ($oAttDef instanceof AttributeTagSet)
+						{
+							/** @var \ormTagSet $oTagSet */
+							$oTagSet = $this->oObject->Get($sAttCode);
+							if (is_null($oTagSet))
+							{
+								$oTagSet = new ormTagSet(get_class($this->oObject), $sAttCode);
+							}
+							$oTagSet->ApplyDelta(json_decode($value, true));
+							$this->oObject->Set($sAttCode, $oTagSet);
+						}
+					    elseif ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 					    {
 						    if ($value != null)
 						    {

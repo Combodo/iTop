@@ -116,6 +116,7 @@ class ApplicationInstaller
 	{
 		try
 		{
+			$fStart = microtime(true);
 			switch ($sStep)
 			{
 				case '':
@@ -338,6 +339,8 @@ class ApplicationInstaller
 						'percentage-completed' => 100,
 					);
 			}
+			$fDuration = round(microtime(true) - $fStart, 2);
+			SetupPage::log_info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
 		catch (Exception $e)
 		{

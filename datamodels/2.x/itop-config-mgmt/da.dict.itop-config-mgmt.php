@@ -18,8 +18,7 @@
 
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
-
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -48,6 +47,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Organization/Attribute:parent_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_id' => 'Leverings Model Id',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 	'Class:Location' => 'Placering',
 	'Class:Location+' => 'Enhver type af placering: Region, land, by, bygning, rum rack, ...',
 	'Class:Location/Attribute:name' => 'Navn',
@@ -88,6 +91,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Person/Attribute:team_list+' => '',
 	'Class:Person/Attribute:tickets_list' => 'List Tickets',
 	'Class:Person/Attribute:tickets_list+' => '',
+	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
+	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
+	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
+	'Class:Person/UniquenessRule:name/Error' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 	'Class:Team' => 'Team',
 	'Class:Team+' => '',
 	'Class:Team/Attribute:persons_list' => 'List Medlemmer',
@@ -256,6 +263,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Fysisk enhed',
 	'Class:Brand/Attribute:physicaldevices_list+' => '',
+	'Class:Brand/UniquenessRule:name/Description' => 'The name must be unique~~',
+	'Class:Brand/UniquenessRule:name/Error' => 'This brand already exists~~',
 	'Class:Model' => 'Model',
 	'Class:Model+' => '',
 	'Class:Model/Attribute:brand_id' => 'Mærke',
@@ -300,6 +309,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Model/Attribute:type/Value:Telephone+' => '',
 	'Class:Model/Attribute:physicaldevices_list' => 'Fyisk enhed',
 	'Class:Model/Attribute:physicaldevices_list+' => '',
+	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
+	'Class:Model/UniquenessRule:name_brand/Error' => 'this model already exists for this brand~~',
 	'Class:NetworkDeviceType' => 'Netværksenhed type',
 	'Class:NetworkDeviceType+' => '',
 	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Netværks enheder',

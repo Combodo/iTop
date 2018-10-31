@@ -715,7 +715,8 @@ class iTopExtensionsMap
 	}
 	
 	/**
-	 * Get the list of signatures of some well-known multi-module extensions
+	 * Get the list of signatures of some well-known multi-module extensions without extension.xml file (should not exist anymore)
+	 *
 	 * @return string[][]|string[][][][]
 	 */
 	protected function GetOldExtensionsSignatures()

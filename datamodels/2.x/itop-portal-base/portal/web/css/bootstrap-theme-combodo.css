@@ -3212,35 +3212,37 @@ textarea.input-group-sm > .form-control, textarea.input-group-sm > .input-group-
   background-color: #fff;
   cursor: not-allowed;
 }
-.label {
-  display: inline;
+.label, .attribute-set-item {
+  display: inline-block;
   padding: 0.2em 0.6em 0.3em;
   font-size: 75%;
-  font-weight: bold;
   line-height: 1;
-  color: #fff;
+  color: #222;
+  background-color: #fff;
   text-align: center;
   white-space: nowrap;
   vertical-align: baseline;
-  border-radius: 0.25em;
+  border-radius: 0px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
 }
-a.label:hover, a.label:focus {
-  color: #fff;
+a.label:hover, a.attribute-set-item:hover, a.label:focus, a.attribute-set-item:focus {
+  color: #222;
   text-decoration: none;
   cursor: pointer;
 }
-.label:empty {
+.label:empty, .attribute-set-item:empty {
   display: none;
 }
-.btn .label {
+.btn .label, .btn .attribute-set-item {
   position: relative;
   top: -1px;
 }
-.label-default {
-  background-color: #474949;
+.label-default, .attribute-set-item {
+  color: #222;
+  background-color: #fff;
 }
-.label-default[href]:hover, .label-default[href]:focus {
-  background-color: #2e2f2f;
+.label-default[href]:hover, .attribute-set-item[href]:hover, .label-default[href]:focus, .attribute-set-item[href]:focus {
+  background-color: #f9f9f9;
 }
 .label-primary {
   background-color: #ea7d1e;
@@ -5043,4 +5045,28 @@ table.dataTable tbody tr.selected a, table.dataTable tbody th.selected a, table.
 .grouping_tabs.nav-pills > li.active > a, .grouping_tabs.nav-pills > li.active > a:hover, .grouping_tabs.nav-pills > li.active > a:focus {
   color: #444;
   background-color: #fcfcfc;
+}
+/* Temp */
+.label, .attribute-set-item {
+  margin-right: 0.4em;
+  margin-bottom: 0.4em;
+  padding: 0.5em 0.7em 0.5em;
+  font-size: 90%;
+  font-weight: normal;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
+}
+.label:last-of-type, .attribute-set-item:last-of-type {
+  margin-right: 0;
+}
+.selectize-control.multi .selectize-input .attribute-set-item[data-value] {
+  border-radius: 0;
+  background-color: #fff;
+  background-image: none;
+  border: none;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px #f1f1f1;
+  text-shadow: none;
+  color: black;
+}
+.selectize-control.multi .selectize-input .attribute-set-item[data-value] .remove {
+  border-left: none;
 }

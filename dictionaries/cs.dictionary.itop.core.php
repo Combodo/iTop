@@ -33,6 +33,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:UnknownObjectLabel' => 'Objekt nenalezen (třída: %1$s, id: %2$d)',
     'Core:UnknownObjectTip' => 'Objekt nemohl být nalezen. Je možné, že byl odstraněn před nějakou dobou a protokol byl mezitím vyčištěn.',
 
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+
     'Core:AttributeLinkedSet' => 'Pole objektů',
     'Core:AttributeLinkedSet+' => 'Jakékoli objekty stejné třídy, nebo podtřídy',
 
@@ -879,7 +881,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'Core:BulkExport:XMLOptions' => 'Možnosti XML',
     'Core:BulkExport:SpreadsheetFormat' => 'HTML tabulka (*.html)',
     'Core:BulkExport:SpreadsheetOptions' => 'Možnosti tabulky',
-    'Core:BulkExport:OptionNoLocalize' => 'Nepřekládat hodnoty číselníků',
+	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
     'Core:BulkExport:OptionLinkSets' => 'Zahrnout odkazované objekty',
     'Core:BulkExport:OptionFormattedText' => 'Zachovat formátování textu',
     'Core:BulkExport:ScopeDefinition' => 'Definice objektů k exportu',

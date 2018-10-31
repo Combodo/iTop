@@ -731,9 +731,18 @@ try
 		$sMimeType = $oExporter->GetMimeType();
 		if ($sMimeType == 'text/html')
 		{
-			$oP = new NiceWebPage('iTop export');
+			// Note: Using NiceWebPage only for HTML export as it includes JS scripts & files, which makes no sense in other export formats. More over, it breaks Excel spreadsheet import.
+			if($oExporter instanceof HTMLBulkExport)
+			{
+				$oP = new NiceWebPage('iTop export');
+				$oP->add_ready_script("$('table.listResults').tablesorter({widgets: ['MyZebra']});");
+			}
+			else
+			{
+				$oP = new WebPage('iTop export');
+                $oP->add_style("table br { mso-data-placement:same-cell; }"); // Trick for Excel: keep line breaks inside the same cell !
+			}
 			$oP->add_style("body { overflow: auto; }");
-			$oP->add_ready_script("$('table.listResults').tablesorter({widgets: ['MyZebra']});");
 		}
 		else
 		{

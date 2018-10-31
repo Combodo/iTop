@@ -574,10 +574,12 @@ function ValidateInteger(sFieldId, bMandatory, sFormId, iMin, iMax, sExplainForm
 	{
 		bValid = false;
 	}
-
-	re = new RegExp('^$|^-?[0-9]+$');
-	bValid = re.test(currentVal);
-
+	else
+	{
+		re = new RegExp('^$|^-?[0-9]+$');
+		bValid = re.test(currentVal);
+	}
+	
 	if (bValid && (currentVal != ''))
 	{
 		// It is a valid number, let's check the boundaries

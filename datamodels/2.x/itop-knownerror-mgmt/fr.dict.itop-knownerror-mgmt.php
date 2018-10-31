@@ -129,6 +129,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQ/Attribute:error_code+' => '',
 	'Class:FAQ/Attribute:key_words' => 'Mots clés',
 	'Class:FAQ/Attribute:key_words+' => '',
+	'Class:FAQ/Attribute:domains' => 'Domaines',
 ));
 
 //

@@ -140,6 +140,7 @@ class OQLLexerRaw
                 '/\GNOT LIKE/ ',
                 '/\GIN/ ',
                 '/\GNOT IN/ ',
+                '/\GMATCHES/ ',
                 '/\GINTERVAL/ ',
                 '/\GIF/ ',
                 '/\GELT/ ',
@@ -441,204 +442,209 @@ class OQLLexerRaw
     function yy_r1_33($yy_subpatterns)
     {
 
-	$this->token = OQLParser::INTERVAL;
+    $this->token = OQLParser::MATCHES;
     }
     function yy_r1_34($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_IF;
+	$this->token = OQLParser::INTERVAL;
     }
     function yy_r1_35($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_ELT;
+	$this->token = OQLParser::F_IF;
     }
     function yy_r1_36($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_COALESCE;
+	$this->token = OQLParser::F_ELT;
     }
     function yy_r1_37($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_ISNULL;
+	$this->token = OQLParser::F_COALESCE;
     }
     function yy_r1_38($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_CONCAT;
+	$this->token = OQLParser::F_ISNULL;
     }
     function yy_r1_39($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_SUBSTR;
+	$this->token = OQLParser::F_CONCAT;
     }
     function yy_r1_40($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_TRIM;
+	$this->token = OQLParser::F_SUBSTR;
     }
     function yy_r1_41($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DATE;
+	$this->token = OQLParser::F_TRIM;
     }
     function yy_r1_42($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DATE_FORMAT;
+	$this->token = OQLParser::F_DATE;
     }
     function yy_r1_43($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_CURRENT_DATE;
+	$this->token = OQLParser::F_DATE_FORMAT;
     }
     function yy_r1_44($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_NOW;
+	$this->token = OQLParser::F_CURRENT_DATE;
     }
     function yy_r1_45($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_TIME;
+	$this->token = OQLParser::F_NOW;
     }
     function yy_r1_46($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_TO_DAYS;
+	$this->token = OQLParser::F_TIME;
     }
     function yy_r1_47($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_FROM_DAYS;
+	$this->token = OQLParser::F_TO_DAYS;
     }
     function yy_r1_48($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_YEAR;
+	$this->token = OQLParser::F_FROM_DAYS;
     }
     function yy_r1_49($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_MONTH;
+	$this->token = OQLParser::F_YEAR;
     }
     function yy_r1_50($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DAY;
+	$this->token = OQLParser::F_MONTH;
     }
     function yy_r1_51($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_HOUR;
+	$this->token = OQLParser::F_DAY;
     }
     function yy_r1_52($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_MINUTE;
+	$this->token = OQLParser::F_HOUR;
     }
     function yy_r1_53($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_SECOND;
+	$this->token = OQLParser::F_MINUTE;
     }
     function yy_r1_54($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DATE_ADD;
+	$this->token = OQLParser::F_SECOND;
     }
     function yy_r1_55($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_DATE_SUB;
+	$this->token = OQLParser::F_DATE_ADD;
     }
     function yy_r1_56($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_ROUND;
+	$this->token = OQLParser::F_DATE_SUB;
     }
     function yy_r1_57($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_FLOOR;
+	$this->token = OQLParser::F_ROUND;
     }
     function yy_r1_58($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_INET_ATON;
+	$this->token = OQLParser::F_FLOOR;
     }
     function yy_r1_59($yy_subpatterns)
     {
 
-	$this->token = OQLParser::F_INET_NTOA;
+	$this->token = OQLParser::F_INET_ATON;
     }
     function yy_r1_60($yy_subpatterns)
     {
 
-	$this->token = OQLParser::BELOW;
+	$this->token = OQLParser::F_INET_NTOA;
     }
     function yy_r1_61($yy_subpatterns)
     {
 
-	$this->token = OQLParser::BELOW_STRICT;
+	$this->token = OQLParser::BELOW;
     }
     function yy_r1_62($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NOT_BELOW;
+	$this->token = OQLParser::BELOW_STRICT;
     }
     function yy_r1_63($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NOT_BELOW_STRICT;
+	$this->token = OQLParser::NOT_BELOW;
     }
     function yy_r1_64($yy_subpatterns)
     {
 
-	$this->token = OQLParser::ABOVE;
+	$this->token = OQLParser::NOT_BELOW_STRICT;
     }
     function yy_r1_65($yy_subpatterns)
     {
 
-	$this->token = OQLParser::ABOVE_STRICT;
+	$this->token = OQLParser::ABOVE;
     }
     function yy_r1_66($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NOT_ABOVE;
+	$this->token = OQLParser::ABOVE_STRICT;
     }
     function yy_r1_67($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NOT_ABOVE_STRICT;
+	$this->token = OQLParser::NOT_ABOVE;
     }
     function yy_r1_68($yy_subpatterns)
     {
 
-	$this->token = OQLParser::HEXVAL;
+	$this->token = OQLParser::NOT_ABOVE_STRICT;
     }
     function yy_r1_69($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NUMVAL;
+	$this->token = OQLParser::HEXVAL;
     }
     function yy_r1_70($yy_subpatterns)
     {
 
-	$this->token = OQLParser::STRVAL;
+	$this->token = OQLParser::NUMVAL;
     }
     function yy_r1_71($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NAME;
+	$this->token = OQLParser::STRVAL;
     }
     function yy_r1_72($yy_subpatterns)
     {
 
-	$this->token = OQLParser::VARNAME;
+	$this->token = OQLParser::NAME;
     }
     function yy_r1_73($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::VARNAME;
+    }
+    function yy_r1_74($yy_subpatterns)
     {
 
 	$this->token = OQLParser::DOT;
@@ -666,25 +672,25 @@ class OQLLexer extends OQLLexerRaw
 
    function yylex()
    {
-      try
-      {
-      	return parent::yylex();
-		}
-		catch (Exception $e)
-		{
-			$sMessage = $e->getMessage();
-			if (substr($sMessage, 0, strlen(UNEXPECTED_INPUT_AT_LINE)) == UNEXPECTED_INPUT_AT_LINE)
-			{
-				$sLineAndChar = substr($sMessage, strlen(UNEXPECTED_INPUT_AT_LINE));
-				if (preg_match('#^([0-9]+): (.+)$#', $sLineAndChar, $aMatches))
-				{
-					$iLine = $aMatches[1];
-					$sUnexpected = $aMatches[2];
-					throw new OQLLexerException($this->data, $iLine, $this->count, $sUnexpected);
-				}
-			}
-			// Default: forward the exception
-			throw $e;
+        try
+        {
+          return parent::yylex();
+        }
+        catch (Exception $e)
+        {
+            $sMessage = $e->getMessage();
+            if (substr($sMessage, 0, strlen(UNEXPECTED_INPUT_AT_LINE)) == UNEXPECTED_INPUT_AT_LINE)
+            {
+                $sLineAndChar = substr($sMessage, strlen(UNEXPECTED_INPUT_AT_LINE));
+                if (preg_match('#^([0-9]+): (.+)$#', $sLineAndChar, $aMatches))
+                {
+                    $iLine = $aMatches[1];
+                    $sUnexpected = $aMatches[2];
+                    throw new OQLLexerException($this->data, $iLine, $this->count, $sUnexpected);
+                }
+            }
+            // Default: forward the exception
+            throw $e;
 		}
 	}
 }

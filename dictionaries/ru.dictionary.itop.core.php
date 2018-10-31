@@ -17,6 +17,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:UnknownObjectLabel' => 'Объект не найден (class: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'Не может быть найден. Возможно он был удален и очищен в лог-е.',
 
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+
 	'Core:AttributeLinkedSet' => 'Массив объектов',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 
@@ -860,7 +862,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:BulkExport:XMLOptions' => 'XML Options',
 	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options',
-	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)',
+	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
 	'Core:BulkExport:OptionLinkSets' => 'Include linked objects',
 	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export',

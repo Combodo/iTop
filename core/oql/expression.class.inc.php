@@ -22,6 +22,9 @@ class MissingQueryArgument extends CoreException
 }
 
 
+/**
+ * @method Check($oModelReflection, array $aAliases, $sSourceQuery)
+ */
 abstract class Expression
 {
 	/**
@@ -575,6 +578,7 @@ class BinaryExpression extends Expression
 	 * @param null $oAttDef
 	 *
 	 * @return array
+	 * @throws \MissingQueryArgument
 	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
@@ -673,6 +677,10 @@ class BinaryExpression extends Expression
 					}
 				}
 			}
+			if (isset($aCriteriaLeft['widget']) && isset($aCriteriaRight['widget']) && ($aCriteriaLeft['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET) && ($aCriteriaRight['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_TAG_SET))
+			{
+				$aCriteriaOverride['operator'] = 'MATCHES';
+			}
 		}
 
 		return array_merge($aCriteriaLeft, $aCriteriaRight, $aCriteriaOverride);
@@ -722,7 +730,9 @@ class MatchExpression extends BinaryExpression
 
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
+		/** @var \FieldExpression $oLeft */
 		$oLeft = $this->GetLeftExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+		/** @var \ScalarExpression $oRight */
 		$oRight = $this->GetRightExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 
 		return new static($oLeft, $oRight);
@@ -883,20 +893,20 @@ class ScalarExpression extends UnaryExpression
 
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
-		$aCriteria = array();
+		$aCriterion = array();
 		switch ((string)($this->m_value))
 		{
 			case '%Y-%m-%d':
-				$aCriteria['unit'] = 'DAY';
+				$aCriterion['unit'] = 'DAY';
 				break;
 			case '%Y-%m':
-				$aCriteria['unit'] = 'MONTH';
+				$aCriterion['unit'] = 'MONTH';
 				break;
 			case '%w':
-				$aCriteria['unit'] = 'WEEKDAY';
+				$aCriterion['unit'] = 'WEEKDAY';
 				break;
 			case '%H':
-				$aCriteria['unit'] = 'HOUR';
+				$aCriterion['unit'] = 'HOUR';
 				break;
 			default:
 				$aValue = array();
@@ -907,20 +917,61 @@ class ScalarExpression extends UnaryExpression
 						case ($oAttDef instanceof AttributeExternalField):
 							try
 							{
-								if ($this->GetValue() != 0)
+								$oFinalAttDef = $oAttDef->GetFinalAttDef();
+								if($oFinalAttDef instanceof  AttributeExternalKey)
 								{
-									/** @var AttributeExternalKey $oAttDef */
-									$sTarget = $oAttDef->GetFinalAttDef()->GetTargetClass();
-									$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
-
-									$aValue['label'] = $oObj->Get("friendlyname");
+									if ($this->GetValue() !== 0)
+									{
+										/** @var AttributeExternalKey $oFinalAttDef */
+										$sTarget = $oFinalAttDef->GetTargetClass();
+										$oObj = MetaModel::GetObject($sTarget, $this->GetValue());
+										$aValue['label'] = $oObj->Get("friendlyname");
+										$aValue['value'] = $this->GetValue();
+									}
+									else
+									{
+										$aValue['label'] = Dict::S('Enum:Undefined');
+										$aValue['value'] = $this->GetValue();
+									}
 								}
 								else
 								{
-									$aValue['label'] = Dict::S('Enum:Undefined');
+									$aValue['label'] = $this->GetValue();
+									$aValue['value'] = $this->GetValue();
 								}
+								$aCriterion['values'] = array($aValue);
 							}
 							catch (Exception $e)
+							{
+								IssueLog::Error($e->getMessage());
+							}
+							break;
+						case ($oAttDef instanceof AttributeTagSet):
+							try
+							{
+								if (!empty($this->GetValue()))
+								{
+									$aValues = array();
+									$oValue = $this->GetValue();
+									if (is_string($oValue))
+									{
+										$oValue = $oAttDef->GetExistingTagsFromString($oValue, true);
+									}
+									/** @var \ormTagSet $oValue */
+									$aTags = $oValue->GetTags();
+									foreach($aTags as $oTag)
+									{
+										$aValue['label'] = $oTag->Get('label');
+										$aValue['value'] = $oTag->Get('code');
+										$aValues[] = $aValue;
+									}
+									$aCriterion['values'] = $aValues;
+								}
+								else
+								{
+									$aCriterion['has_undefined'] = true;
+								}
+							} catch (Exception $e)
 							{
 								IssueLog::Error($e->getMessage());
 							}
@@ -934,13 +985,16 @@ class ScalarExpression extends UnaryExpression
 									$sTarget = $oAttDef->GetTargetClass();
 									$oObj = MetaModel::GetObject($sTarget, $this->GetValue(), true, true);
 									$aValue['label'] = $oObj->Get("friendlyname");
+									$aValue['value'] = $this->GetValue();
+									$aCriterion['values'] = array($aValue);
 								}
 								else
 								{
 									$aValue['label'] = Dict::S('Enum:Undefined');
+									$aValue['value'] = $this->GetValue();
+									$aCriterion['values'] = array($aValue);
 								}
-							}
-							catch (Exception $e)
+							} catch (Exception $e)
 							{
 								// This object cannot be seen... ignore
 							}
@@ -949,23 +1003,22 @@ class ScalarExpression extends UnaryExpression
 							try
 							{
 								$aValue['label'] = $oAttDef->GetAsPlainText($this->GetValue());
+								$aValue['value'] = $this->GetValue();
+								$aCriterion['values'] = array($aValue);
 							} catch (Exception $e)
 							{
 								$aValue['label'] = $this->GetValue();
+								$aValue['value'] = $this->GetValue();
+								$aCriterion['values'] = array($aValue);
 							}
 							break;
 					}
 				}
-				if (!empty($aValue))
-                {
-                    // only if a label is found
-                    $aValue['value'] = $this->GetValue();
-                    $aCriteria['values'] = array($aValue);
-                }
 				break;
 		}
-		$aCriteria['oql'] = $this->RenderExpression(false, $aArgs, $bRetrofitParams);
-		return $aCriteria;
+		$aCriterion['oql'] = $this->RenderExpression(false, $aArgs, $bRetrofitParams);
+
+		return $aCriterion;
 	}
 
 }
@@ -1572,7 +1625,7 @@ class ListExpression extends Expression
 		{
 			if ($oExpr instanceof VariableExpression)
 			{
-				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar();
+				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar($aArgs);
 			}
 			else
 			{
@@ -2116,7 +2169,7 @@ class CharConcatExpression extends Expression
 		{
 			if ($oExpr instanceof VariableExpression)
 			{
-				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar();
+				$this->m_aExpressions[$idx] = $oExpr->GetAsScalar($aArgs);
 			}
 			else
 			{

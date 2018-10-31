@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -276,4 +276,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:UserRequest:Provider' => 'Demandes transférées à un fournisseur',
 	'Menu:UserRequest:Provider+' => 'Demandes transférées à un fournisseur',
 	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
+));
+
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Organization:Overview:UserRequests' => 'Demandes Utilisateurs pour cette organisation',
+	'Organization:Overview:MyUserRequests' => 'Mes Demandes Utilisateurs pour cette organisation',
+	'Organization:Overview:Tickets' => 'Les Tickets de cette organisation',
 ));

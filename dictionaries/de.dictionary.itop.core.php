@@ -650,4 +650,5 @@ Operatoren:<br/>
 	'Core:Validator:Mandatory' => 'Bitte dieses Feld ausfüllen',
 	'Core:Validator:MustBeInteger' => 'Muss ein Integer sein',
 	'Core:Validator:MustSelectOne' => 'Min. ein Eintrag muss ausgewählt sein',
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
 ));

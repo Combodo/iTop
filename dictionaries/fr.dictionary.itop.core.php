@@ -27,6 +27,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:UnknownObjectLabel' => 'Classe: %1$s, Identifiant: %2$d',
 	'Core:UnknownObjectTip' => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
 
+	'Core:UniquenessDefaultError' => 'La règle d\'unicité \'%1$s\' renvoie une erreur',
+
 	'Class:ActionEmail' => 'Notification par mél',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinataire de test',
@@ -61,6 +63,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnStateLeave+' => '',
 	'Class:TriggerOnObjectCreate' => 'Déclencheur sur la création d\'un objet',
 	'Class:TriggerOnObjectCreate+' => '',
+	'Class:TriggerOnObjectDelete' => 'Déclencheur sur la suppression d\'un objet',
+	'Class:TriggerOnObjectDelete+' => '',
 	'Class:TriggerOnObjectUpdate' => 'Déclencheur sur la modification d\'un objet',
 	'Class:TriggerOnObjectUpdate+' => '',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Attributs cible',
@@ -430,6 +434,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:appUserPreferences/Attribute:preferences+' => '',
 	'Core:AttributeLinkedSet' => 'Objets liés (1-n)',
 	'Core:AttributeLinkedSet+' => 'Liste d\'objets d\'une classe donnée et pointant sur l\'objet courant',
+    'Core:AttributeTagSet' => 'Liste d\'étiquettes',
+    'Core:AttributeTagSet+' => '',
+	'Core:AttributeSet:placeholder' => 'cliquer pour ajouter',
 	'Core:AttributeLinkedSetIndirect' => 'Objets liés (1-n)',
 	'Core:AttributeLinkedSetIndirect+' => 'Liste d\'objets d\'une classe donnée et liés à l\'objet courant via une classe intermédiaire',
 	'Core:AttributeInteger' => 'Nombre entier',
@@ -728,7 +735,7 @@ Opérateurs :<br/>
 	'Core:BulkExport:XMLOptions' => 'Options XML',
 	'Core:BulkExport:SpreadsheetFormat' => 'Format HTML pour Excel (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Options du format HTML pour Excel',
-	'Core:BulkExport:OptionNoLocalize' => 'Ne pas traduire les valeurs (pour les champs de type "Enum")',
+	'Core:BulkExport:OptionNoLocalize' => 'Exporter les Codes au lieu des Labels',
 	'Core:BulkExport:OptionLinkSets' => 'Inclure les objets liés',
 	'Core:BulkExport:OptionFormattedText' => 'Préserver le formatage du texte',
 	'Core:BulkExport:ScopeDefinition' => 'Définition des objets à exporter',
@@ -766,4 +773,26 @@ Opérateurs :<br/>
 	'Core:Validator:Mandatory' => 'Veuillez remplir ce champ',
 	'Core:Validator:MustBeInteger' => 'Ce champ ne peut contenir qu\'un nombre entier',
 	'Core:Validator:MustSelectOne' => 'Veuillez choisir une valeur',
+
+	'Class:TagSetFieldData' => '%2$s pour la classe %1$s',
+	'Class:TagSetFieldData+' => '',
+
+	'Class:TagSetFieldData/Attribute:code' => 'Code',
+	'Class:TagSetFieldData/Attribute:code+' => 'Code interne. Doit contenir au moins 3 caractères alphanumériques',
+	'Class:TagSetFieldData/Attribute:label' => 'Label',
+	'Class:TagSetFieldData/Attribute:label+' => 'Label',
+	'Class:TagSetFieldData/Attribute:description' => 'Description',
+	'Class:TagSetFieldData/Attribute:description+' => 'Description',
+
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Impossible de supprimer une étiquette utilisée',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Les codes et noms des étiquettes doivent être unique',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Le code de l\'étiquette doit contenir entre 3 et %1$d caractères alphanumériques.',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'Le code de l\'étiquette un mot réservé.',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Le nom de l\'étiquette ne doit pas être vide ni contenir le caractère \'%1$s\'',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Le code de l\'étiquette ne peut pas être changé',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'La classe de l\'étiquette ne peut pas être changée',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'L\'attribut de l\'étiquette ne peut pas être changé',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Utilisation (%1$d)',
+	'Core:TagSetFieldData:NoEntryFound' => 'Pas d\'utilisation de cette étiquette',
+
 ));

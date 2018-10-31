@@ -289,8 +289,7 @@ class MFCompiler
 					$aAllClasses[] = $sClass;
 					try
 					{
-						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir,
-							$sRelativeDir);
+						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
 					}
 					catch (DOMFormatException $e)
 					{
@@ -797,6 +796,37 @@ EOF
 		}	
 	}
 
+	/**
+	 * @param $oNode
+	 * @param $sTag
+	 * @param bool|null $bDefault
+	 *
+	 * @return bool|null
+	 */
+	private function GetPropBooleanConverted($oNode, $sTag, $bDefault = null)
+	{
+		$sValue = $this->GetPropBoolean($oNode, $sTag, $bDefault);
+
+		if ($sValue == null)
+		{
+			return null;
+		}
+		if ($sValue == 'true')
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param $oNode
+	 * @param $sTag
+	 * @param bool|null $bDefault
+	 *
+	 * @return null|string
+	 * @see GetPropBooleanConverted() to get boolean value
+	 */
 	protected function GetPropBoolean($oNode, $sTag, $bDefault = null)
 	{
 		$val = $oNode->GetChildText($sTag);
@@ -936,7 +966,7 @@ EOF
 	}
 
 	/**
-	 * @param \DOMElement $oClass
+	 * @param \MFElement $oClass
 	 * @param string $sTempTargetDir
 	 * @param string $sFinalTargetDir
 	 * @param string $sModuleRelativeDir
@@ -962,8 +992,10 @@ EOF
 		if ($oNaming = $oProperties->GetOptionalElement('naming'))
 		{
 			$oNameAttributes = $oNaming->GetUniqueElement('attributes');
+			/** @var \DOMNodeList $oAttributes */
 			$oAttributes = $oNameAttributes->getElementsByTagName('attribute');
 			$aNameAttCodes = array();
+			/** @var \MFElement $oAttribute */
 			foreach($oAttributes as $oAttribute)
 			{
 				$aNameAttCodes[] = $oAttribute->getAttribute('id');
@@ -1080,6 +1112,7 @@ EOF
 			$bEnabled = $this->GetPropBoolean($oArchive, 'enabled', false);
 			$aClassParams['archive'] = $bEnabled;
 		}
+
 		if ($oObsolescence = $oProperties->GetOptionalElement('obsolescence'))
 		{
 			$sCondition = trim($this->GetPropString($oObsolescence, 'condition', ''));
@@ -1087,6 +1120,51 @@ EOF
 			{
 				$aClassParams['obsolescence_expression'] = $sCondition;
 			}
+		}
+
+		if ($oUniquenessRules = $oProperties->GetOptionalElement('uniqueness_rules'))
+		{
+			$aUniquenessRules = array();
+			/** @var \MFElement $oUniquenessSingleRule */
+			foreach ($oUniquenessRules->GetElementsByTagName('rule') as $oUniquenessSingleRule)
+			{
+				$sCurrentRuleId = $oUniquenessSingleRule->getAttribute('id');
+
+				$oAttributes = $oUniquenessSingleRule->GetUniqueElement('attributes', false);
+				if ($oAttributes)
+				{
+					$aUniquenessAttributes = array();
+					foreach ($oAttributes->getElementsByTagName('attribute') as $oAttribute)
+					{
+						$aUniquenessAttributes[] = $oAttribute->getAttribute('id');
+					}
+					$aUniquenessRules[$sCurrentRuleId]['attributes'] = $aUniquenessAttributes;
+				}
+				else
+				{
+					$aUniquenessRules[$sCurrentRuleId]['attributes'] = null;
+				}
+
+				$aUniquenessRules[$sCurrentRuleId]['filter'] = $oUniquenessSingleRule->GetChildText('filter');
+				$aUniquenessRules[$sCurrentRuleId]['disabled'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'disabled', null);
+				$aUniquenessRules[$sCurrentRuleId]['is_blocking'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'is_blocking',
+					null);
+				$aUniquenessRules[$sCurrentRuleId]['description'] = $oUniquenessSingleRule->GetChildText('description');
+				$aUniquenessRules[$sCurrentRuleId]['error_message'] = $oUniquenessSingleRule->GetChildText('error_message');
+
+				try
+				{
+					// we're just checking all mandatory fields are present right now
+					// we will check for rule overrides validity later (see \MetaModel::InitClasses)
+					MetaModel::CheckUniquenessRuleValidity($aUniquenessRules[$sCurrentRuleId], true);
+				}
+				catch (CoreUnexpectedValue $e)
+				{
+					throw(new DOMFormatException("Invalid uniqueness rule declaration : class={$oClass->getAttribute('id')}, rule=$sCurrentRuleId, reason={$e->getMessage()}"));
+				}
+			}
+
+			$aClassParams['uniqueness_rules'] = var_export($aUniquenessRules, true);
 		}
 
 		// Finalize class params declaration
@@ -1388,18 +1466,89 @@ EOF
 				{
 					$aParameters['handler_class'] = $this->GetMandatoryPropString($oField, 'handler_class');
 				}
-				else
-				{
-					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
-					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
-					$aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
-					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
-					$aParameters['depends_on'] = $sDependencies;
-				}
-
-				if ($sAttType == 'AttributeTagSet')
+				elseif ($sAttType == 'AttributeTagSet')
 				{
 					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+					$aParameters['tag_code_max_len'] = $this->GetPropNumber($oField, 'tag_code_max_len', 20);
+					if ($aParameters['tag_code_max_len'] > 255)
+					{
+						$aParameters['tag_code_max_len'] = 255;
+					}
+				}
+				elseif ($sAttType == 'AttributeClassAttCodeSet')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+					$aParameters['class_field'] = $this->GetMandatoryPropString($oField, 'class_field');
+					// List of AttributeDefinition Classes to filter class_field (empty means all)
+					$aParameters['attribute_definition_list'] = $this->GetPropString($oField, 'attribute_definition_list', '');
+				}
+				elseif ($sAttType == 'AttributeQueryAttCodeSet')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['max_items'] = $this->GetPropNumber($oField, 'max_items', 12);
+					$aParameters['query_field'] = $this->GetMandatoryPropString($oField, 'query_field');
+				}
+				elseif ($sAttType == 'AttributeClassState')
+				{
+					$aTagFieldsInfo[] = $sAttCode;
+					$aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+					$aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+					$aParameters['depends_on'] = $sDependencies;
+					$aParameters['class_field'] = $this->GetMandatoryPropString($oField, 'class_field');
+				}
+				elseif ($sAttType == 'AttributeDashboard')
+				{
+					$aParameters['is_user_editable'] = $this->GetPropBoolean($oField, 'is_user_editable', true);
+					$aParameters['definition_file'] = $this->GetPropString($oField, 'definition_file');
+
+					if ($aParameters['definition_file'] == null)
+					{
+						$oDashboardDefinition = $oField->GetOptionalElement('definition');
+						if ($oDashboardDefinition == null)
+						{
+							throw(new DOMFormatException('Missing definition for Dashboard Attribute "'.$sAttCode.'" expecting either a tag "definition_file" or "definition".'));
+						}
+						$sFileName = strtolower($sClass).'__'.strtolower($sAttCode).'_dashboard.xml';
+
+						$oXMLDoc = new DOMDocument('1.0', 'UTF-8');
+						$oXMLDoc->formatOutput = true; // indent (must be loaded with option LIBXML_NOBLANKS)
+						$oXMLDoc->preserveWhiteSpace = true; // otherwise the formatOutput option would have no effect
+
+						$oRootNode = $oXMLDoc->createElement('dashboard'); // make sure that the document is not empty
+						$oRootNode->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+						$oXMLDoc->appendChild($oRootNode);
+						foreach($oDashboardDefinition->childNodes as $oNode)
+						{
+							$oDefNode = $oXMLDoc->importNode($oNode, true); // layout, cells, etc Nodes and below
+							$oRootNode->appendChild($oDefNode);
+						}
+						$sFileName = $sModuleRelativeDir.'/'.$sFileName;
+						$oXMLDoc->save($sTempTargetDir.'/'.$sFileName);
+						$aParameters['definition_file'] = "'".str_replace("'", "\\'", $sFileName)."'";
+					}
+				}
+				else
+				{
+                    $aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+                    $aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+                    $aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+                    $aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+                    $aParameters['depends_on'] = $sDependencies;
 				}
 
 				// Optional parameters (more for historical reasons)
@@ -1674,7 +1823,7 @@ EOF
 			'details' => 'details',
 			'standard_search' => 'search',
 			'default_search' => 'default_search',
-			'list' => 'list'
+			'list' => 'list',
 		);
 	
 		$oPresentation = $oClass->GetUniqueElement('presentation');
@@ -1837,23 +1986,29 @@ EOF;
 			(
 				'category' => 'bizmodel',
 				'key_type' => 'autoincrement',
-				'name_attcode' => array('tag_label'),
+				'name_attcode' => array('label'),
 				'state_attcode' => '',
-				'reconc_keys' => array('tag_code'),
+				'reconc_keys' => array('code'),
 				'db_table' => '', // no need to have a corresponding table : this class exists only for rights, no additional field
 				'db_key_field' => 'id',
 				'db_finalclass_field' => 'finalclass',
 			);
 			foreach ($aTagFieldsInfo as $sTagFieldName)
 			{
-				$sTagSuffix = $sClassName.'_'.$sTagFieldName;
-				$sTagClassName = 'TagSetFieldDataFor_'.$sTagSuffix;
+				$sTagClassName = static::GetTagDataClassName($sClassName, $sTagFieldName);
 				$sTagClassParams = var_export($aTagClassParams, true);
 				$sPHP .= $this->GeneratePhpCodeForClass($sTagClassName, $sTagClassParentClass, $sTagClassParams);
 			}
 		}
 
 		return $sPHP;
+	}
+
+	private static function GetTagDataClassName($sClass, $sAttCode)
+	{
+		$sTagSuffix = $sClass.'__'.$sAttCode;
+
+		return 'TagSetFieldDataFor_'.$sTagSuffix;
 	}
 
 
@@ -1925,7 +2080,7 @@ EOF;
 				{
 					throw(new DOMFormatException('Missing definition for Dashboard menu "'.$sMenuId.'" expecting either a tag "definition_file" or "definition".'));
 				}
-				$sFileName = strtolower(str_replace(array(':', '/', '\\', '*'), '_', $sMenuId)).'_dashboard_menu.xml';
+				$sFileName = strtolower(str_replace(array(':', '/', '\\', '*'), '_', $sMenuId)).'_dashboard.xml';
 				$sTemplateSpec = $this->PathToPHP($sFileName, $sModuleRelativeDir);
 
 				$oXMLDoc = new DOMDocument('1.0', 'UTF-8');
@@ -2087,7 +2242,7 @@ EOF;
 		// Hardcode the administrator profile
 		$aProfiles[1] = array(
 			'name' => 'Administrator',
-			'description' => 'Has the rights on everything (bypassing any control)'
+			'description' => 'Has the rights on everything (bypassing any control)',
 		); 
 
 		$aGrants = array();
@@ -2147,7 +2302,7 @@ EOF;
 
 			$aProfiles[$iProfile] = array(
 				'name' => $sName,
-				'description' => $sDescription
+				'description' => $sDescription,
 			);
 		}
 
@@ -2668,7 +2823,7 @@ EOF;
 	 * @param bool $bIsAbstractClass
 	 * @param string $sMethods
 	 *
-	 * @param string $aRequiredFiles
+	 * @param array $aRequiredFiles
 	 * @param string $sCodeComment
 	 *
 	 * @return string php code for the class
