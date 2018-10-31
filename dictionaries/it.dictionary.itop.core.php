@@ -860,6 +860,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
 	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
 	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
+	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
 	'Core:DateTime:Placeholder_d' => 'GG', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'G', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12

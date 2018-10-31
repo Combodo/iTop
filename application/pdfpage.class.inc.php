@@ -35,7 +35,7 @@ class iTopPDF extends TCPDF
 		
 		// Display the page number (right aligned)
 		// Warning: the 'R'ight alignment does not work when using placeholders like $this->getAliasNumPage() or $this->getAliasNbPages()
-		$this->MultiCell($iPageNumberWidth, 15, 'Page '.$this->page, 0, 'R', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
+		$this->MultiCell($iPageNumberWidth, 15, Dict::Format('Core:BulkExport:PDF:PageNumber' ,$this->page), 0, 'R', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
 		
 		// Branding logo
 		$sBrandingIcon = APPROOT.'images/itop-logo.png';
