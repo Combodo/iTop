@@ -229,7 +229,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Offene Benutzeranfragen nach Typ',
 	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Offene Benutzeranfragen nach Organisation',
 	'Class:UserRequest:KnownErrorList' => 'Known Errors',
-	'Menu:UserRequest:MyWorkOrders' => 'Mit zugeordnete Arbeitsaufträge',
+	'Menu:UserRequest:MyWorkOrders' => 'Mir zugeordnete Arbeitsaufträge',
 	'Menu:UserRequest:MyWorkOrders+' => '',
 	'Class:Problem:KnownProblemList' => 'Bekannte Problems',
 	'Class:UserRequest/Attribute:approver_email' => 'Genehmiger-Email',
