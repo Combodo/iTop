@@ -880,6 +880,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:BulkExport:DateTimeFormat' => 'Formato de fecha y hora',
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Formato por omisión (%1$s), ej. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Formato personalizado: %1$s',
+	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
 	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12

@@ -623,6 +623,7 @@ Operatoren:<br/>
 	'Core:BulkExportLegacyExport' => 'Klicken Sie hier, um auf die Legacy-Version des Exports zuzugreifen',
 	'Core:BulkExport:XLSXOptions' => 'Excel-Optionen',
 	'Core:BulkExport:TextFormat' => 'Textfelder enthalten HTML-Markup',
+	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
 	'Core:AttributeHierarchicalKey' => 'Hierarischer Key',
 	'Core:AttributeHierarchicalKey+' => 'Externer Key oder Foreign Key zum Parent',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments',

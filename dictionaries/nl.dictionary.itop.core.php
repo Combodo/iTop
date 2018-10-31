@@ -882,6 +882,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
 	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
 	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
+	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
 	'Core:Validator:Default' => 'Wrong format~~',
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
