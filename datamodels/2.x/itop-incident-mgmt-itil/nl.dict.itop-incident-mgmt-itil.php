@@ -60,7 +60,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Attribute:impact+' => '',
 	'Class:Incident/Attribute:impact/Value:1' => 'Een afdeling',
 	'Class:Incident/Attribute:impact/Value:1+' => '',
-	'Class:Incident/Attribute:impact/Value:2' => 'Een dients',
+	'Class:Incident/Attribute:impact/Value:2' => 'Een dienst',
 	'Class:Incident/Attribute:impact/Value:2+' => '',
 	'Class:Incident/Attribute:impact/Value:3' => 'Een persoon',
 	'Class:Incident/Attribute:impact/Value:3+' => '',
