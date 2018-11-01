@@ -1324,6 +1324,7 @@ class UserRights
 		{
 			$_SESSION['profile_list'] = self::ListProfiles();
 		}
+		session_regenerate_id();
 	}
 
 	public static function _ResetSessionCache()
