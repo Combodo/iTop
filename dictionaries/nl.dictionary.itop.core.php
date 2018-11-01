@@ -212,8 +212,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:CMDBChangeOp' => 'Pas de operatie aan',
-	'Class:CMDBChangeOp+' => 'Pas het volgen van de operatie aan',
+	'Class:CMDBChangeOp' => 'Pas de handeling aan',
+	'Class:CMDBChangeOp+' => 'Pas het volgen van de handeling aan',
 	'Class:CMDBChangeOp/Attribute:change' => 'Pas aan',
 	'Class:CMDBChangeOp/Attribute:change+' => 'Pas aan',
 	'Class:CMDBChangeOp/Attribute:date' => 'datum',
@@ -243,7 +243,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChangeOpDelete' => 'verwijderen object',
-	'Class:CMDBChangeOpDelete+' => 'historiek van van het verwijderen van objecten',
+	'Class:CMDBChangeOpDelete+' => 'historiek van het verwijderen van objecten',
 ));
 
 //
@@ -252,7 +252,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChangeOpSetAttribute' => 'aanpassing van het object',
-	'Class:CMDBChangeOpSetAttribute+' => 'historiek van van de aanpassing van de objecteigenschappen',
+	'Class:CMDBChangeOpSetAttribute+' => 'historiek van de aanpassing van de objecteigenschappen',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Attribuut',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'code van de aangepaste eigenschap',
 ));
@@ -393,7 +393,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventWebService' => 'Web service event',
 	'Class:EventWebService+' => 'Log van een webservice-aanroep',
 	'Class:EventWebService/Attribute:verb' => 'Werkwoord',
-	'Class:EventWebService/Attribute:verb+' => 'Naam van de operatie',
+	'Class:EventWebService/Attribute:verb+' => 'Naam van de handeling',
 	'Class:EventWebService/Attribute:result' => 'Resultaat',
 	'Class:EventWebService/Attribute:result+' => 'Totaal succes/falen',
 	'Class:EventWebService/Attribute:log_info' => 'Infolog',
@@ -406,7 +406,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventWebService/Attribute:data+' => 'Resulterende data',
 	'Class:EventRestService' => 'REST/JSON aanroep',
 	'Class:EventRestService+' => 'Log van een aangeroepen REST/JSON-service',
-	'Class:EventRestService/Attribute:operation' => 'Operatie',
+	'Class:EventRestService/Attribute:operation' => 'Handeling',
 	'Class:EventRestService/Attribute:operation+' => 'Argument \'operation\'',
 	'Class:EventRestService/Attribute:version' => 'Versie',
 	'Class:EventRestService/Attribute:version+' => 'Argument \'version\'',
@@ -417,7 +417,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventRestService/Attribute:json_output' => 'Antwoord',
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP-antwoord (JSON)',
 	'Class:EventRestService/Attribute:provider' => 'Provider',
-	'Class:EventRestService/Attribute:provider+' => 'PHP-klasse die de verwachte operatie gebruikt',
+	'Class:EventRestService/Attribute:provider+' => 'PHP-klasse die de verwachte handeling gebruikt',
 ));
 
 //
@@ -669,7 +669,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:SynchroUpdate:No' => 'Nee',
 	'Core:Synchro:LastestStatus' => 'Laatste Status',
 	'Core:Synchro:History' => 'Synchronisatiegeschiedenis',
-	'Core:Synchro:NeverRun' => 'Deze synchro is nog niet gelopen. Er is nog geen log.',
+	'Core:Synchro:NeverRun' => 'Deze synchro heeft nog niet gelopen. Er is nog geen log.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'De laatste synchronisatie eindigde op %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'De synchronisatie is gestart op %1$s en is nog bezig...',
 	'Menu:DataSources' => 'Synchronisatie Databronnen',
@@ -721,9 +721,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:Synchro:TheObjectCannotBeDeletedByUser_Source' => 'U <b>kunt dit object niet verwijderen</b> omdat het eigendom is van de externe databron %1$s',
 	'TitleSynchroExecution' => 'Uitvoering van de synchronisatie',
 	'Class:SynchroDataSource:DataTable' => 'Database tabel: %1$s',
-	'Core:SyncDataSourceObsolete' => 'De databron is gemarkeerd als overbodig. Operatie afgebroken.',
-	'Core:SyncDataSourceAccessRestriction' => 'Alleen administrators of de gebruiker gespecificeerd in de databron kan deze operatie uitvoeren. Operatie afgebroken.',
-	'Core:SyncTooManyMissingReplicas' => 'Alle records zijn een tijd niet verwerkt (alle objecten kunnen worden verwijderd). Controleer alstublieft of het proces dat in de datatabel schrijft nog steeds bezig is. Operatie afgebroken.',
+	'Core:SyncDataSourceObsolete' => 'De databron is gemarkeerd als overbodig. Handeling afgebroken.',
+	'Core:SyncDataSourceAccessRestriction' => 'Alleen administrators of de gebruiker gespecificeerd in de databron kan deze handeling uitvoeren. Handeling afgebroken.',
+	'Core:SyncTooManyMissingReplicas' => 'Alle records zijn een tijd niet verwerkt (alle objecten kunnen worden verwijderd). Controleer alstublieft of het proces dat in de datatabel schrijft nog steeds bezig is. Handeling afgebroken.',
 	'Core:SyncSplitModeCLIOnly' => 'De synchronisatie kan alleen in delen worden uitgevoerd in CLI-mode.',
 	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s replica\'s, %2$s fout(en), %3$s waarschuwing(en).',
 	'Core:SynchroReplica:TargetObject' => 'Gesynchroniseerd Object: %1$s',
