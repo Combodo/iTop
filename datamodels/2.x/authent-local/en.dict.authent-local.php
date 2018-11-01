@@ -44,7 +44,3 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserLocal/Attribute:password' => 'Password',
 	'Class:UserLocal/Attribute:password+' => 'user authentication string',
 ));
-
-
-
-?>
