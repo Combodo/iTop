@@ -295,5 +295,3 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Finish',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
 ));
-
-?>

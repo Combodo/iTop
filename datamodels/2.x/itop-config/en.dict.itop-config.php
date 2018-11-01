@@ -21,4 +21,3 @@ Dict::Add('EN US', 'English', 'English', array(
 	'config-parse-error' => 'Line %2$d: %1$s.<br/>The file has NOT been updated.',
 	'config-current-line' => 'Editing line: %1$s',
 ));
-?>

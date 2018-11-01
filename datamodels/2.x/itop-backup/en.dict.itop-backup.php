@@ -43,4 +43,3 @@ Dict::Add('EN US', 'English', 'English', array(
 	'bkp-wait-restore' => 'Please wait for the restore to complete...',
 	'bkp-success-restore' => 'Restore successfully completed.',
 ));
-?>

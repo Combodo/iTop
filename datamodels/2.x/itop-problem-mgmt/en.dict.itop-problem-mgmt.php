@@ -154,5 +154,3 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Problem/Stimulus:ev_close' => 'Close',
 	'Class:Problem/Stimulus:ev_close+' => '',
 ));
-
-?>

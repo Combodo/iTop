@@ -141,5 +141,3 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Change/Attribute:outage/Value:yes' => 'Yes',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
 ));
-
-?>
