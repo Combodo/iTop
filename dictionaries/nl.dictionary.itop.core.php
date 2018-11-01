@@ -110,13 +110,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeOQL+' => 'Object Query Language-expressie',
 
 	'Core:AttributeEnum' => 'Enum',
-	'Core:AttributeEnum+' => 'Lijst van voorgedefineerde alfanumerieke strings',
+	'Core:AttributeEnum+' => 'Lijst van voorgedefineerde alfanumerieke teksten',
 
 	'Core:AttributeTemplateString' => 'Sjabloon tekstregel',
 	'Core:AttributeTemplateString+' => 'String die de procurators bevat',
 
 	'Core:AttributeTemplateText' => 'Sjabloon tekstvak',
-	'Core:AttributeTemplateText+' => 'Text die de procurators bevat',
+	'Core:AttributeTemplateText+' => 'Tekst die de procurators bevat',
 
 	'Core:AttributeTemplateHTML' => 'Sjabloon HTML',
 	'Core:AttributeTemplateHTML+' => 'HTML die de procurators bevat',
@@ -136,7 +136,7 @@ Operators:<br/>
 	<b>[</b><em>date</em>,<em>date</em><b>]</b>
 </p>
 <p>
-Indien er geen tijd opgegeven wordt, is dit standaard 00:00:00
+Hier wordt standaard \'00:00:00\' van gemaakt als er geen tijd wordt opgegeven.
 </p>',
 
 	'Core:AttributeDate' => 'Datum',
@@ -160,7 +160,7 @@ Operators:<br/>
 	'Core:AttributeExternalKey' => 'Externe key',
 	'Core:AttributeExternalKey+' => 'Externe key',
 
-	'Core:AttributeHierarchicalKey' => 'Hierarchische Key',
+	'Core:AttributeHierarchicalKey' => 'Hiërarchische Key',
 	'Core:AttributeHierarchicalKey+' => 'Externe key naar het hoofdobject',
 
 	'Core:AttributeExternalField' => 'Extern veld',

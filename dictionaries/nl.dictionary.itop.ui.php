@@ -657,7 +657,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:RunQuery:DevelopedQuery' => 'Redevelopped query expression: ',
 	'UI:RunQuery:SerializedFilter' => 'Serialized filter: ',
 	'UI:RunQuery:Error' => 'Een fout is opgetreden tijdens het runnen van query: %1$s',
-	'UI:Query:UrlForExcel' => 'URL om te gebruiken voor MS Excel web-queries',
+	'UI:Query:UrlForExcel' => 'URL om te gebruiken voor MS Excel-webqueries',
 	'UI:Query:UrlV1' => 'De lijst van velden is leeg gelaten. De pagina <em>export-V2.php</em> kan niet aangeroepen worden zonder deze informatie.'.
 		'Daarom verwijst de onderstaande link naar de oude export-pagina:  <em>export.php</em>. '. 
 		'Deze verouderde versie heeft enkele beperkingen: de lijst van geëxporteerde velden kan verschillen afhankelijk van het gekozen export-formaat en het datamodel van iTop. ' 
@@ -667,7 +667,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Schema:Relationships' => 'Relaties',
 	'UI:Schema:AbstractClass' => 'Abstracte klasse: objecten van deze klasse kunnen niet worden geïnstantieerd.',
 	'UI:Schema:NonAbstractClass' => 'Niet abstracte klasse: objecten van deze klasse kunnen worden geïnstantieerd.',
-	'UI:Schema:ClassHierarchyTitle' => 'Klasse hierarchie',
+	'UI:Schema:ClassHierarchyTitle' => 'Hiërarchie van de klasses',
 	'UI:Schema:AllClasses' => 'Alle klassen',
 	'UI:Schema:ExternalKey_To' => 'Externe key voor %1$s',
 	'UI:Schema:Columns_Description' => 'Kolommen: <em>%1$s</em>',
