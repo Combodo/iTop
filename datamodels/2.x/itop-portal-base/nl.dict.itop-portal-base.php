@@ -1,10 +1,9 @@
 <?php
-
 // Copyright (C) 2010-2015 Combodo SARL
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,13 +15,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license	 http://opensource.org/licenses/AGPL-3.0
  */
-
-
 // Portal
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Page:DefaultTitle' => '%1$s Gebruikersportaal',
@@ -38,6 +34,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:Button:Add' => 'Toevoegen',
 	'Portal:Button:Remove' => 'Verwijderen',
 	'Portal:Button:Delete' => 'Verwijderen',
+	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode~~',
+	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode~~',
     'Error:HTTP:401' => 'Authentication~~',
     'Error:HTTP:404' => 'Pagina kan niet worden gevonden',
 	'Error:HTTP:500' => 'Oeps! Er is een fout opgetreden',
@@ -61,6 +59,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:Datatables:Language:Sort:Descending' => 'inschakelen voor een aflopende sortering',
 	'Portal:Autocomplete:NoResult' => 'Geen data',
 	'Portal:Attachments:DropZone:Message' => 'Plaats jouw bestanden om ze bij te voegen',
+	'Portal:File:None' => 'No file~~',
+	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>~~',
+	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>~~',
 ));
 
 // UserProfile brick
@@ -77,11 +78,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
 ));
 
+// AggregatePageBrick
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard~~',
+));
+
 // BrowseBrick brick
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Browse:Name' => 'Bladeren',
 	'Brick:Portal:Browse:Mode:List' => 'Lijst',
 	'Brick:Portal:Browse:Mode:Tree' => 'Boomstructuur',
+    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Drilldown',
 	'Brick:Portal:Browse:Action:View' => 'Details',
 	'Brick:Portal:Browse:Action:Edit' => 'Wijzigen',
@@ -98,16 +105,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Manage:Table:NoData' => 'Geen gegevens',
     'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
     'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
-    'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
-    'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
-    'Brick:Portal:Manage:Others' => 'Others~~',
-    'Brick:Portal:Manage:All' => 'All~~',
-    'Brick:Portal:Manage:Group' => 'Group~~',
-    'Brick:Portal:Manage:fct:count' => 'Total~~',
-    'Brick:Portal:Manage:fct:sum' => 'Sum~~',
-    'Brick:Portal:Manage:fct:avg' => 'Average~~',
-    'Brick:Portal:Manage:fct:min' => 'Min~~',
-    'Brick:Portal:Manage:fct:max' => 'Max~~',
+	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
+	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
+	'Brick:Portal:Manage:Others' => 'Others~~',
+	'Brick:Portal:Manage:All' => 'All~~',
+	'Brick:Portal:Manage:Group' => 'Group~~',
+	'Brick:Portal:Manage:fct:count' => 'Total~~',
+	'Brick:Portal:Manage:fct:sum' => 'Sum~~',
+	'Brick:Portal:Manage:fct:avg' => 'Average~~',
+	'Brick:Portal:Manage:fct:min' => 'Min~~',
+	'Brick:Portal:Manage:fct:max' => 'Max~~',
 ));
 
 // ObjectBrick brick
@@ -125,4 +132,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // CreateBrick brick
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Create:Name' => 'Snel aanmaken',
+    'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
+));
+
+// Filter brick
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
+    'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
 ));

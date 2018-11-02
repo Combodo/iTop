@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,11 +8,9 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
 //
 // Class: KnownError
 //
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:KnownError' => 'Известная ошибка',
 	'Class:KnownError+' => 'Проблема, имеющая задокументированные корневую причину и обходное решение',
@@ -118,6 +115,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:FAQ/Attribute:error_code+' => '',
 	'Class:FAQ/Attribute:key_words' => 'Ключевые слова',
 	'Class:FAQ/Attribute:key_words+' => '',
+	'Class:FAQ/Attribute:domains' => 'Domains~~',
 ));
 
 //
@@ -132,7 +130,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Связанные FAQ',
 ));
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:ProblemManagement' => 'Управление проблемами',
 	'Menu:ProblemManagement+' => 'Управление проблемами',
@@ -141,8 +138,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:NewError+' => 'Создать новую известную ошибку',
 	'Menu:SearchError' => 'Поиск известных ошибок',
 	'Menu:SearchError+' => 'Поиск известных ошибок',
-    'Menu:Problem:KnownErrors' => 'Известные ошибки',
-    'Menu:Problem:KnownErrors+' => 'База известных ошибок',
+	'Menu:Problem:KnownErrors' => 'Известные ошибки',
+	'Menu:Problem:KnownErrors+' => 'База известных ошибок',
 	'Menu:FAQCategory' => 'Категории FAQ',
 	'Menu:FAQCategory+' => 'Категории FAQ',
 	'Menu:FAQ' => 'FAQ',
@@ -151,5 +148,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Часто задаваемые вопросы',
 	'Brick:Portal:FAQ:Title+' => '<p>Торопитесь?</p><p>Проверьте список часто задаваемых вопросов, возможно, ответ уже есть.</p>',
-
 ));

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,7 +8,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:ChangeManagement' => 'Управление изменениями',
 	'Menu:Change:Overview' => 'Обзор',
@@ -34,7 +32,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Изменения по статусу за 7 дней',
 	'Tickets:Related:OpenChanges' => 'Открытые изменения',
 	'Tickets:Related:RecentChanges' => 'Недавние изменения (72ч)',
-
 ));
 
 // Dictionnay conventions

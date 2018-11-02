@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,11 +15,60 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Menu:RequestManagement' => 'ヘルプデスク',
+	'Menu:RequestManagement+' => '',
+	'Menu:RequestManagementProvider' => 'ヘルプデスクプロバイダー',
+	'Menu:RequestManagementProvider+' => '',
+	'Menu:UserRequest:Provider' => 'プロバイダーへ送られた要求をオープン',
+	'Menu:UserRequest:Provider+' => '',
+	'Menu:UserRequest:Overview' => '概要',
+	'Menu:UserRequest:Overview+' => '',
+	'Menu:NewUserRequest' => '新規ユーザ要求',
+	'Menu:NewUserRequest+' => '',
+	'Menu:SearchUserRequests' => 'ユーザ要求検索',
+	'Menu:SearchUserRequests+' => '',
+	'Menu:UserRequest:Shortcuts' => 'ショートカット',
+	'Menu:UserRequest:Shortcuts+' => '',
+	'Menu:UserRequest:MyRequests' => '私に割り当てられた要求',
+	'Menu:UserRequest:MyRequests+' => '',
+	'Menu:UserRequest:MySupportRequests' => '私のサポートコール',
+	'Menu:UserRequest:MySupportRequests+' => '',
+	'Menu:UserRequest:EscalatedRequests' => 'エスカレートされた要求',
+	'Menu:UserRequest:EscalatedRequests+' => '',
+	'Menu:UserRequest:OpenRequests' => '全てのオープンな要求',
+	'Menu:UserRequest:OpenRequests+' => '',
+	'UI:WelcomeMenu:MyAssignedCalls' => '私に割り当てられた要求',
+	'UI-RequestManagementOverview-RequestByType-last-14-days' => '最近14日の要求(タイプ別)',
+	'UI-RequestManagementOverview-Last-14-days' => '最近14日の要求(日別)',
+	'UI-RequestManagementOverview-OpenRequestByStatus' => 'ステータス別のオープンな要求',
+	'UI-RequestManagementOverview-OpenRequestByAgent' => 'エージェント別のオープンな要求',
+	'UI-RequestManagementOverview-OpenRequestByType' => 'タイプ別のオープンな要求',
+	'UI-RequestManagementOverview-OpenRequestByCustomer' => '組織別のオープンな要求',
+	'Class:UserRequest:KnownErrorList' => '既知のエラー',
+	'Menu:UserRequest:MyWorkOrders' => '私に割り当てられた作業指示',
+	'Menu:UserRequest:MyWorkOrders+' => '',
+	'Class:Problem:KnownProblemList' => '既知の問題',
+	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
+));
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+
+//
+// Class: UserRequest
+//
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest' => 'ユーザ要求',
@@ -92,10 +141,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest/Attribute:origin/Value:portal+' => '',
 	'Class:UserRequest/Attribute:approver_id' => '承認者',
 	'Class:UserRequest/Attribute:approver_id+' => '',
+	'Class:UserRequest/Attribute:approver_email' => '承認者電子メール',
+	'Class:UserRequest/Attribute:approver_email+' => '',
 	'Class:UserRequest/Attribute:service_id' => 'サービス',
 	'Class:UserRequest/Attribute:service_id+' => '',
+	'Class:UserRequest/Attribute:service_name' => 'サービス名',
+	'Class:UserRequest/Attribute:service_name+' => '',
 	'Class:UserRequest/Attribute:servicesubcategory_id' => 'サービスサブカテゴリ',
 	'Class:UserRequest/Attribute:servicesubcategory_id+' => '',
+	'Class:UserRequest/Attribute:servicesubcategory_name' => 'サービスサブカテゴリ',
+	'Class:UserRequest/Attribute:servicesubcategory_name+' => '',
 	'Class:UserRequest/Attribute:escalation_flag' => 'エスカレーションフラグ',
 	'Class:UserRequest/Attribute:escalation_flag+' => '',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no' => 'いいえ',
@@ -152,8 +207,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest/Attribute:pending_reason+' => '',
 	'Class:UserRequest/Attribute:parent_request_id' => '親要求',
 	'Class:UserRequest/Attribute:parent_request_id+' => '',
+	'Class:UserRequest/Attribute:parent_request_ref' => '参照要求',
+	'Class:UserRequest/Attribute:parent_request_ref+' => '',
+	'Class:UserRequest/Attribute:parent_problem_id' => '親問題',
+	'Class:UserRequest/Attribute:parent_problem_id+' => '',
+	'Class:UserRequest/Attribute:parent_problem_ref' => '参照問題',
+	'Class:UserRequest/Attribute:parent_problem_ref+' => '',
 	'Class:UserRequest/Attribute:parent_change_id' => '親変更',
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
+	'Class:UserRequest/Attribute:parent_change_ref' => '参照変更',
+	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => '子要求',
 	'Class:UserRequest/Attribute:related_request_list+' => '',
 	'Class:UserRequest/Attribute:public_log' => '公開ログ',
@@ -170,6 +233,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '',
 	'Class:UserRequest/Attribute:user_comment' => 'ユーザコメント',
 	'Class:UserRequest/Attribute:user_comment+' => '',
+	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => '親要求idフレンドリー名',
+	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
 	'Class:UserRequest/Stimulus:ev_assign' => '割り当て',
 	'Class:UserRequest/Stimulus:ev_assign+' => '',
 	'Class:UserRequest/Stimulus:ev_reassign' => '再割り当て',
@@ -194,55 +259,11 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => '承認待ち',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
-	'Menu:RequestManagement' => 'ヘルプデスク',
-	'Menu:RequestManagement+' => '',
-	'Menu:RequestManagementProvider' => 'ヘルプデスクプロバイダー',
-	'Menu:RequestManagementProvider+' => '',
-	'Menu:UserRequest:Provider' => 'プロバイダーへ送られた要求をオープン',
-	'Menu:UserRequest:Provider+' => '',
-	'Menu:UserRequest:Overview' => '概要',
-	'Menu:UserRequest:Overview+' => '',
-	'Menu:NewUserRequest' => '新規ユーザ要求',
-	'Menu:NewUserRequest+' => '',
-	'Menu:SearchUserRequests' => 'ユーザ要求検索',
-	'Menu:SearchUserRequests+' => '',
-	'Menu:UserRequest:Shortcuts' => 'ショートカット',
-	'Menu:UserRequest:Shortcuts+' => '',
-	'Menu:UserRequest:MyRequests' => '私に割り当てられた要求',
-	'Menu:UserRequest:MyRequests+' => '',
-	'Menu:UserRequest:MySupportRequests' => '私のサポートコール',
-	'Menu:UserRequest:MySupportRequests+' => '',
-	'Menu:UserRequest:EscalatedRequests' => 'エスカレートされた要求',
-	'Menu:UserRequest:EscalatedRequests+' => '',
-	'Menu:UserRequest:OpenRequests' => '全てのオープンな要求',
-	'Menu:UserRequest:OpenRequests+' => '',
-	'UI:WelcomeMenu:MyAssignedCalls' => '私に割り当てられた要求',
-	'UI-RequestManagementOverview-RequestByType-last-14-days' => '最近14日の要求(タイプ別)',
-	'UI-RequestManagementOverview-Last-14-days' => '最近14日の要求(日別)',
-	'UI-RequestManagementOverview-OpenRequestByStatus' => 'ステータス別のオープンな要求',
-	'UI-RequestManagementOverview-OpenRequestByAgent' => 'エージェント別のオープンな要求',
-	'UI-RequestManagementOverview-OpenRequestByType' => 'タイプ別のオープンな要求',
-	'UI-RequestManagementOverview-OpenRequestByCustomer' => '組織別のオープンな要求',
-	'Class:UserRequest:KnownErrorList' => '既知のエラー',
-	'Menu:UserRequest:MyWorkOrders' => '私に割り当てられた作業指示',
-	'Menu:UserRequest:MyWorkOrders+' => '',
-	'Class:Problem:KnownProblemList' => '既知の問題',
-	'Class:UserRequest/Attribute:approver_email' => '承認者電子メール',
-	'Class:UserRequest/Attribute:approver_email+' => '',
-	'Class:UserRequest/Attribute:service_name' => 'サービス名',
-	'Class:UserRequest/Attribute:service_name+' => '',
-	'Class:UserRequest/Attribute:servicesubcategory_name' => 'サービスサブカテゴリ',
-	'Class:UserRequest/Attribute:servicesubcategory_name+' => '',
-	'Class:UserRequest/Attribute:parent_request_ref' => '参照要求',
-	'Class:UserRequest/Attribute:parent_request_ref+' => '',
-	'Class:UserRequest/Attribute:parent_problem_id' => '親問題',
-	'Class:UserRequest/Attribute:parent_problem_id+' => '',
-	'Class:UserRequest/Attribute:parent_problem_ref' => '参照問題',
-	'Class:UserRequest/Attribute:parent_problem_ref+' => '',
-	'Class:UserRequest/Attribute:parent_change_ref' => '参照変更',
-	'Class:UserRequest/Attribute:parent_change_ref+' => '',
-	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => '親要求idフレンドリー名',
-	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
+));
+
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:TitleDetailsFor_Request' => '要求の詳細',
 	'Portal:ButtonUpdate' => '更新',
 	'Portal:ButtonClose' => 'クローズ',
@@ -254,7 +275,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:TitleDetailsFor_Service' => 'サービスの詳細',
 	'Portal:Button:CreateRequestFromService' => 'このサービスへの要求を作成',
 	'Portal:ListOpenRequests' => 'オープンな要求のリスト',
-	'Portal:UserRequest:MoreInfo' => '追加情報',
+'Portal:UserRequest:MoreInfo' => '追加情報',
 	'Portal:Details-Service-Element' => 'サービス要素',
 	'Portal:NoClosedTicket' => 'クローズされた要求はありません',
 	'Portal:NoService' => 'サービスはありません',
@@ -265,8 +286,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:SelectLanguage' => '言語変更',
 	'Portal:LanguageChangedTo_Lang' => '言語を変更',
 	'Portal:ChooseYourFavoriteLanguage' => 'お好みの言語を選択ください',
-	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
+
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));

@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * @author	LinProfs <info@linprofs.com>
  * 
@@ -26,9 +24,8 @@
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-'Menu:ChangeManagement' => 'Change management',
+	'Menu:ChangeManagement' => 'Change management',
 	'Menu:Change:Overview' => 'Overzicht',
 	'Menu:Change:Overview+' => '',
 	'Menu:NewChange' => 'Nieuwe change',
@@ -49,6 +46,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ChangeManagementOverview-Last-7-days' => 'Aantal changes van de afgelopen 7 dagen',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes per domein van de afgelopen 7 dagen',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes per status van de afgelopen 7 dagen',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
 
 // Dictionnay conventions
@@ -66,7 +65,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Class: Change
 //
 
-Dict::Add('NL NL', "Dutch", "Nederlands", array(
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Change' => 'Change',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Status',
@@ -141,8 +140,4 @@ Dict::Add('NL NL', "Dutch", "Nederlands", array(
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Yes',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
-
-?>

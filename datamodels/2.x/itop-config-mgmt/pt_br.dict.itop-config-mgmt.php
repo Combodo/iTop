@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,20 +15,16 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 //////////////////////////////////////////////////////////////////////
 // Relations
 //////////////////////////////////////////////////////////////////////
 //
-
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Relation:impacts/Description' => 'Elementos impactados por',
 	'Relation:impacts/DownStream' => 'Impacto...',
@@ -208,6 +204,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person/Attribute:tickets_list+' => 'Todos as solicitações que essa pessoa solicitou',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nome amigável gerente',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+	'Class:Person/Attribute:picture' => 'Picture~~',
+	'Class:Person/Attribute:picture+' => '~~',
 	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
 	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
 	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
@@ -244,6 +242,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Document/Attribute:documenttype_id+' => '',
 	'Class:Document/Attribute:documenttype_name' => 'Nome tipo documento',
 	'Class:Document/Attribute:documenttype_name+' => '',
+	'Class:Document/Attribute:version' => 'Version~~',
+	'Class:Document/Attribute:version+' => '~~',
 	'Class:Document/Attribute:description' => 'Descrição',
 	'Class:Document/Attribute:description+' => '',
 	'Class:Document/Attribute:status' => 'Estado',
@@ -338,6 +338,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Todos as solicitações para este item de configuração',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Tipo CI',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
 ));
 
 //
@@ -489,6 +490,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Todas as portas Fiber Channel para esse dispositivo',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
 	'Class:DatacenterDevice/Attribute:san_list+' => 'Todos os switches SAN vinculados para esse dispositivo',
+	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy~~',
+	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device is up if at least one power connection (A or B) is up~~',
+	// Unused yet
+	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device is up if all its power connections are up~~',
+	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device is up if at least %1$s %% of its power connections are up~~',
 ));
 
 //
@@ -699,6 +705,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'Ativo',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'Inativo',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'Inativo',
+	'Class:ApplicationSolution/Attribute:redundancy' => 'Impact analysis: configuration of the redundancy~~',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up~~',
+	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up~~',
+	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up~~',
 ));
 
 //
@@ -839,6 +849,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:WebApplication/Attribute:url+' => '',
 ));
 
+
 //
 // Class: VirtualDevice
 //
@@ -897,6 +908,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
 	'Class:Farm/Attribute:hypervisor_list+' => 'Todos os hypervisors que compoem esse Cluster/HA',
+	'Class:Farm/Attribute:redundancy' => 'High availability~~',
+	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
+	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
+	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up~~',
 ));
 
 //
@@ -926,6 +941,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:VirtualMachine/Attribute:cpu+' => '',
 	'Class:VirtualMachine/Attribute:ram' => 'RAM',
 	'Class:VirtualMachine/Attribute:ram+' => '',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP~~',
+	'Class:VirtualMachine/Attribute:managementip+' => '~~',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Placas de rede',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Todas as placas de rede',
 ));
@@ -1604,6 +1621,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
 ));
 
+
 //
 // Class: LogicalInterface
 //
@@ -1807,6 +1825,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 'Menu:Document' => 'Documentos',
 'Menu:Document+' => 'Todos documentos',
 'Menu:Location' => 'Localidades',
+
 'Menu:Location+' => 'Todas localidades',
 'Menu:ConfigManagementCI' => 'Itens de configuração',
 'Menu:ConfigManagementCI+' => 'Itens de configuração',
@@ -1871,7 +1890,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 'Server:Date' => 'Data',
 'Server:moreinfo' => 'Mais informações',
 'Server:otherinfo' => 'Outras informações',
+'Server:power' => 'Power supply~~',
 'Person:info' => 'Informações gerais',
+'Person:personal_info' => 'Personal information~~',
 'Person:notifiy' => 'Notificação',
 'Class:Subnet/Tab:IPUsage' => 'IP usado',
 'Class:Subnet/Tab:IPUsage-explain' => 'Placas de rede contendo IP na faixa: <em>%1$s</em> para <em>%2$s</em>',
@@ -1879,21 +1900,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 'Class:Subnet/Tab:FreeIPs-count' => 'IPs livres: %1$s',
 'Class:Subnet/Tab:FreeIPs-explain' => 'Aqui uma faixa de 10 endereços IPs livres',
 'Class:Document:PreviewTab' => 'Visualização',
-	'Class:Document/Attribute:version' => 'Version~~',
-	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
-	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy~~',
-	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device is up if at least one power connection (A or B) is up~~',
-	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device is up if all its power connections are up~~',
-	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device is up if at least %1$s %% of its power connections are up~~',
-	'Class:ApplicationSolution/Attribute:redundancy' => 'Impact analysis: configuration of the redundancy~~',
-	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up~~',
-	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up~~',
-	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up~~',
-	'Class:Farm/Attribute:redundancy' => 'High availability~~',
-	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
-	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
-	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up~~',
-	'Class:VirtualMachine/Attribute:managementip' => 'IP~~',
-	'Server:power' => 'Power supply~~',
 ));
-?>

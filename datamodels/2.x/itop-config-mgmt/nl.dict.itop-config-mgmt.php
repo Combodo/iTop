@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * @author	LinProfs <info@linprofs.com>
  * 
@@ -26,12 +24,10 @@
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 //////////////////////////////////////////////////////////////////////
 // Relations
 //////////////////////////////////////////////////////////////////////
 //
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Relation:impacts/Description' => 'Elementen hebben impact op',
 	'Relation:impacts/DownStream' => 'Impact...',
@@ -211,6 +207,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Person/Attribute:tickets_list+' => 'Alle tickets waarvan deze persoon de aanvrager is',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Volledige naam van de manager',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
+	'Class:Person/Attribute:picture' => 'Picture~~',
+	'Class:Person/Attribute:picture+' => '~~',
 	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
 	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
 	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
@@ -235,7 +233,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-		'Class:Document' => 'Document',
+	'Class:Document' => 'Document',
 	'Class:Document+' => '',
 	'Class:Document/Attribute:name' => 'Naam',
 	'Class:Document/Attribute:name+' => '',
@@ -343,6 +341,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Alle tickets voor dit configuratie item',
 	'Class:FunctionalCI/Attribute:finalclass' => 'CI Type',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
+	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
 ));
 
 //
@@ -494,6 +493,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Alle fiber channel interfaces voor dit apparaat',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
 	'Class:DatacenterDevice/Attribute:san_list+' => 'Alle SAN switches die verbonden zijn met dit apparaat',
+	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy~~',
+	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device is up if at least one power connection (A or B) is up~~',
+	// Unused yet
+	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device is up if all its power connections are up~~',
+	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device is up if at least %1$s %% of its power connections are up~~',
 ));
 
 //
@@ -704,6 +708,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'actief',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'inactief',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'inactief',
+	'Class:ApplicationSolution/Attribute:redundancy' => 'Impact analysis: configuration of the redundancy~~',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up~~',
+	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up~~',
+	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up~~',
 ));
 
 //
@@ -903,6 +911,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
 	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm',
+	'Class:Farm/Attribute:redundancy' => 'High availability~~',
+	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
+	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
+	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up~~',
 ));
 
 //
@@ -1248,13 +1260,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-		'Class:OSVersion' => 'OS Versie',
+	'Class:OSVersion' => 'OS Versie',
 	'Class:OSVersion+' => '',
 	'Class:OSVersion/Attribute:osfamily_id' => 'OS familie',
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => 'OS familie naam',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
-
 ));
 
 //
@@ -1344,8 +1355,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Model/Attribute:type/Value:Tablet+' => 'Tablet',
 	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Tape Bibliotheek',
 	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Tape Bibliotheek',
-	'Class:Model/Attribute:type/Value:Telephone' => 'Telefoon',
-	'Class:Model/Attribute:type/Value:Telephone+' => 'Telefoon',
+	'Class:Model/Attribute:type/Value:Phone' => 'Telephone~~',
+	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone~~',
 	'Class:Model/Attribute:physicaldevices_list' => 'Physical devices',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Alle fysieke apparaten die corresponderen met dit model',
 	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
@@ -1563,6 +1574,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP address',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
+
+
 	'Class:IPInterface/Attribute:macaddress' => 'MAC address',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'Commentaar',
@@ -1752,6 +1765,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Group/Attribute:type' => 'Type',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Hoofd Groep',
+
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Naam',
 	'Class:Group/Attribute:parent_name+' => '',
@@ -1786,87 +1800,88 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Menu:DataAdministration' => 'Data administratie',
-	'Menu:DataAdministration+' => 'Data administratie',
-	'Menu:Catalogs' => 'Catalogus',
-	'Menu:Catalogs+' => 'Data typen',
-	'Menu:Audit' => 'Audit',
-	'Menu:Audit+' => 'Audit',
-	'Menu:CSVImport' => 'CSV import',
-	'Menu:CSVImport+' => 'Grootschalige aanmaak of update',
-	'Menu:Organization' => 'Organisaties',
-	'Menu:Organization+' => 'Alle organisaties',
-	'Menu:Application' => 'Applicaties',
-	'Menu:Application+' => 'Alle Applicaties',
-	'Menu:DBServer' => 'Database servers',
-	'Menu:DBServer+' => 'Database servers',
-	'Menu:ConfigManagement' => 'Configuratie Management',
-	'Menu:ConfigManagement+' => 'Configuratie Management',
-	'Menu:ConfigManagementOverview' => 'Overzicht',
-	'Menu:ConfigManagementOverview+' => 'Overzicht',
-	'Menu:Contact' => 'Contacten',
-	'Menu:Contact+' => 'Contacten',
-	'Menu:Contact:Count' => '%1$d contacten',
-	'Menu:Person' => 'Personen',
-	'Menu:Person+' => 'Alle personen',
-	'Menu:Team' => 'Teams',
-	'Menu:Team+' => 'Alle teams',
-	'Menu:Document' => 'Documenten',
-	'Menu:Document+' => 'Alle documenten',
-	'Menu:Location' => 'Locaties',
-	'Menu:Location+' => 'Alle locaties',
-	'Menu:ConfigManagementCI' => 'Configuratie items',
-	'Menu:ConfigManagementCI+' => 'Configuratie items',
-	'Menu:BusinessProcess' => 'Bedrijfsprocessen',
-	'Menu:BusinessProcess+' => 'Alle bedrijfsprocessen',
-	'Menu:ApplicationSolution' => 'Applicatie oplossing',
-	'Menu:ApplicationSolution+' => 'Alle applicatie oplossingen',
-	'Menu:ConfigManagementSoftware' => 'Applicatie management',
-	'Menu:Licence' => 'Licenties',
-	'Menu:Licence+' => 'Alle licenties',
-	'Menu:Patch' => 'Patches',
-	'Menu:Patch+' => 'Alle patches',
-	'Menu:ApplicationInstance' => 'Geïnstalleerde software',
-	'Menu:ApplicationInstance+' => 'Applicaties en database servers',
-	'Menu:ConfigManagementHardware' => 'Infrastructuur management',
-	'Menu:Subnet' => 'Subnets',
-	'Menu:Subnet+' => 'Alle subnets',
-	'Menu:NetworkDevice' => 'Netwerk apparaten',
-	'Menu:NetworkDevice+' => 'Alle network apparaten',
-	'Menu:Server' => 'Servers',
-	'Menu:Server+' => 'Alle servers',
-	'Menu:Printer' => 'Printers',
-	'Menu:Printer+' => 'Alle printers',
-	'Menu:MobilePhone' => 'Mobiele telefoons',
-	'Menu:MobilePhone+' => 'Alle mobiele telefoons',
-	'Menu:PC' => 'Personal computers',
-	'Menu:PC+' => 'Alle Personal computers',
-	'Menu:NewContact' => 'Nieuw contact',
-	'Menu:NewContact+' => 'Nieuw contact',
-	'Menu:SearchContacts' => 'Zoeken naar contacten',
-	'Menu:SearchContacts+' => 'Zoeken naar contacten',
-	'Menu:NewCI' => 'Nieuw CI',
-	'Menu:NewCI+' => 'Nieuw CI',
-	'Menu:SearchCIs' => 'Zoek naar CIs',
-	'Menu:SearchCIs+' => 'Zoek naar CIs',
-	'Menu:ConfigManagement:Devices' => 'Apparaten',
-	'Menu:ConfigManagement:AllDevices' => 'Infrastructuur',
-	'Menu:ConfigManagement:virtualization' => 'Virtualisatie',
-	'Menu:ConfigManagement:EndUsers' => 'Eindgebruiker apparaten',
-	'Menu:ConfigManagement:SWAndApps' => 'Software en applicaties',
-	'Menu:ConfigManagement:Misc' => 'Diversen',
-	'Menu:Group' => 'Groepen van CIs',
-	'Menu:Group+' => 'Groepen van CIs',
-	'Menu:ConfigManagement:Shortcuts' => 'Snelkoppelingen',
-	'Menu:ConfigManagement:AllContacts' => 'Alle contacten: %1$d',
-	'Menu:Typology' => 'Typologie configuratie',
-	'Menu:Typology+' => 'Typologie configuratie',
-	'Menu:OSVersion' => 'OS versies',
-	'Menu:OSVersion+' => '',
-	'Menu:Software' => 'Software catalogus',
-	'Menu:Software+' => 'Software catalogus',
-	'UI_WelcomeMenu_AllConfigItems' => 'Samenvatting',
-	'Menu:ConfigManagement:Typology' => 'Typologie configuratie',
+'Menu:DataAdministration' => 'Data administratie',
+'Menu:DataAdministration+' => 'Data administratie',
+'Menu:Catalogs' => 'Catalogus',
+'Menu:Catalogs+' => 'Data typen',
+'Menu:Audit' => 'Audit',
+'Menu:Audit+' => 'Audit',
+'Menu:CSVImport' => 'CSV import',
+'Menu:CSVImport+' => 'Grootschalige aanmaak of update',
+'Menu:Organization' => 'Organisaties',
+'Menu:Organization+' => 'Alle organisaties',
+'Menu:Application' => 'Applicaties',
+'Menu:Application+' => 'Alle Applicaties',
+'Menu:DBServer' => 'Database servers',
+'Menu:DBServer+' => 'Database servers',
+'Menu:ConfigManagement' => 'Configuratie Management',
+'Menu:ConfigManagement+' => 'Configuratie Management',
+'Menu:ConfigManagementOverview' => 'Overzicht',
+'Menu:ConfigManagementOverview+' => 'Overzicht',
+'Menu:Contact' => 'Contacten',
+'Menu:Contact+' => 'Contacten',
+'Menu:Contact:Count' => '%1$d contacten',
+'Menu:Person' => 'Personen',
+'Menu:Person+' => 'Alle personen',
+'Menu:Team' => 'Teams',
+'Menu:Team+' => 'Alle teams',
+'Menu:Document' => 'Documenten',
+'Menu:Document+' => 'Alle documenten',
+'Menu:Location' => 'Locaties',
+
+'Menu:Location+' => 'Alle locaties',
+'Menu:ConfigManagementCI' => 'Configuratie items',
+'Menu:ConfigManagementCI+' => 'Configuratie items',
+'Menu:BusinessProcess' => 'Bedrijfsprocessen',
+'Menu:BusinessProcess+' => 'Alle bedrijfsprocessen',
+'Menu:ApplicationSolution' => 'Applicatie oplossing',
+'Menu:ApplicationSolution+' => 'Alle applicatie oplossingen',
+'Menu:ConfigManagementSoftware' => 'Applicatie management',
+'Menu:Licence' => 'Licenties',
+'Menu:Licence+' => 'Alle licenties',
+'Menu:Patch' => 'Patches',
+'Menu:Patch+' => 'Alle patches',
+'Menu:ApplicationInstance' => 'Geïnstalleerde software',
+'Menu:ApplicationInstance+' => 'Applicaties en database servers',
+'Menu:ConfigManagementHardware' => 'Infrastructuur management',
+'Menu:Subnet' => 'Subnets',
+'Menu:Subnet+' => 'Alle subnets',
+'Menu:NetworkDevice' => 'Netwerk apparaten',
+'Menu:NetworkDevice+' => 'Alle network apparaten',
+'Menu:Server' => 'Servers',
+'Menu:Server+' => 'Alle servers',
+'Menu:Printer' => 'Printers',
+'Menu:Printer+' => 'Alle printers',
+'Menu:MobilePhone' => 'Mobiele telefoons',
+'Menu:MobilePhone+' => 'Alle mobiele telefoons',
+'Menu:PC' => 'Personal computers',
+'Menu:PC+' => 'Alle Personal computers',
+'Menu:NewContact' => 'Nieuw contact',
+'Menu:NewContact+' => 'Nieuw contact',
+'Menu:SearchContacts' => 'Zoeken naar contacten',
+'Menu:SearchContacts+' => 'Zoeken naar contacten',
+'Menu:NewCI' => 'Nieuw CI',
+'Menu:NewCI+' => 'Nieuw CI',
+'Menu:SearchCIs' => 'Zoek naar CIs',
+'Menu:SearchCIs+' => 'Zoek naar CIs',
+'Menu:ConfigManagement:Devices' => 'Apparaten',
+'Menu:ConfigManagement:AllDevices' => 'Infrastructuur',
+'Menu:ConfigManagement:virtualization' => 'Virtualisatie',
+'Menu:ConfigManagement:EndUsers' => 'Eindgebruiker apparaten',
+'Menu:ConfigManagement:SWAndApps' => 'Software en applicaties',
+'Menu:ConfigManagement:Misc' => 'Diversen',
+'Menu:Group' => 'Groepen van CIs',
+'Menu:Group+' => 'Groepen van CIs',
+'Menu:ConfigManagement:Shortcuts' => 'Snelkoppelingen',
+'Menu:ConfigManagement:AllContacts' => 'Alle contacten: %1$d',
+'Menu:Typology' => 'Typologie configuratie',
+'Menu:Typology+' => 'Typologie configuratie',
+'Menu:OSVersion' => 'OS versies',
+'Menu:OSVersion+' => '',
+'Menu:Software' => 'Software catalogus',
+'Menu:Software+' => 'Software catalogus',
+'UI_WelcomeMenu_AllConfigItems' => 'Samenvatting',
+'Menu:ConfigManagement:Typology' => 'Typologie configuratie',
 
 ));
 
@@ -1874,33 +1889,18 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Add translation for Fieldsets
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Server:baseinfo' => 'Globale informatie',
-	'Server:Date' => 'Datum',
-	'Server:moreinfo' => 'Meer informatie',
-	'Server:otherinfo' => 'Andere informatie',
-	'Person:info' => 'Globale informatie',
-	'Person:notifiy' => 'Notificatie',
-	'Class:Subnet/Tab:IPUsage' => 'IP Usage',
-	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
-	'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
-	'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
-	'Class:Document:PreviewTab' => 'Preview',
-	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
-	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy~~',
-	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device is up if at least one power connection (A or B) is up~~',
-	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device is up if all its power connections are up~~',
-	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device is up if at least %1$s %% of its power connections are up~~',
-	'Class:ApplicationSolution/Attribute:redundancy' => 'Impact analysis: configuration of the redundancy~~',
-	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up~~',
-	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up~~',
-	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up~~',
-	'Class:Farm/Attribute:redundancy' => 'High availability~~',
-	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
-	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
-	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up~~',
-	'Class:Model/Attribute:type/Value:Phone' => 'Telephone~~',
-	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone~~',
-	'Server:power' => 'Power supply~~',
+'Server:baseinfo' => 'Globale informatie',
+'Server:Date' => 'Datum',
+'Server:moreinfo' => 'Meer informatie',
+'Server:otherinfo' => 'Andere informatie',
+'Server:power' => 'Power supply~~',
+'Person:info' => 'Globale informatie',
+'Person:personal_info' => 'Personal information~~',
+'Person:notifiy' => 'Notificatie',
+'Class:Subnet/Tab:IPUsage' => 'IP Usage',
+'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
+'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
+'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
+'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
+'Class:Document:PreviewTab' => 'Preview',
 ));
-?>

@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
@@ -24,7 +22,6 @@
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ChangeManagement' => '变更管理',
 	'Menu:Change:Overview' => '概览',
@@ -43,6 +40,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Changes+' => '',
 	'Menu:MyChanges' => '指派给我的变更',
 	'Menu:MyChanges+' => '指派给我的变更 (作为办理人)',
+	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes by category for the last 7 days~~',
+	'UI-ChangeManagementOverview-Last-7-days' => 'Number of changes for the last 7 days~~',
+	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes by domain for the last 7 days~~',
+	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes by status for the last 7 days~~',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
 
 // Dictionnay conventions
@@ -63,8 +66,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change' => '变更',
 	'Class:Change+' => '',
-	'Class:Change/Attribute:start_date' => '计划启动',
-	'Class:Change/Attribute:start_date+' => '',
 	'Class:Change/Attribute:status' => '状态',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => '新',
@@ -93,30 +94,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change/Attribute:requestor_id+' => '',
 	'Class:Change/Attribute:requestor_email' => '申请者',
 	'Class:Change/Attribute:requestor_email+' => '',
-	'Class:Change/Attribute:org_id' => '客户',
-	'Class:Change/Attribute:org_id+' => '',
-	'Class:Change/Attribute:org_name' => '客户',
-	'Class:Change/Attribute:org_name+' => '',
-	'Class:Change/Attribute:workgroup_id' => '工作组',
-	'Class:Change/Attribute:workgroup_id+' => '',
-	'Class:Change/Attribute:workgroup_name' => '工作组',
-	'Class:Change/Attribute:workgroup_name+' => '',
 	'Class:Change/Attribute:creation_date' => '创建',
 	'Class:Change/Attribute:creation_date+' => '',
-	'Class:Change/Attribute:last_update' => '最后更新',
-	'Class:Change/Attribute:last_update+' => '',
-	'Class:Change/Attribute:end_date' => '结束',
-	'Class:Change/Attribute:end_date+' => '',
-	'Class:Change/Attribute:close_date' => '关闭',
-	'Class:Change/Attribute:close_date+' => '',
 	'Class:Change/Attribute:impact' => '影响',
 	'Class:Change/Attribute:impact+' => '',
-	'Class:Change/Attribute:agent_id' => '办理人',
-	'Class:Change/Attribute:agent_id+' => '',
-	'Class:Change/Attribute:agent_name' => '办理人',
-	'Class:Change/Attribute:agent_name+' => '',
-	'Class:Change/Attribute:agent_email' => '办理人',
-	'Class:Change/Attribute:agent_email+' => '',
 	'Class:Change/Attribute:supervisor_group_id' => '监督团队',
 	'Class:Change/Attribute:supervisor_group_id+' => '',
 	'Class:Change/Attribute:supervisor_group_name' => '监督团队',
@@ -135,14 +116,28 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change/Attribute:manager_email+' => '',
 	'Class:Change/Attribute:outage' => '停歇',
 	'Class:Change/Attribute:outage+' => '',
-	'Class:Change/Attribute:outage/Value:yes' => '是',
-	'Class:Change/Attribute:outage/Value:yes+' => '',
 	'Class:Change/Attribute:outage/Value:no' => '否',
 	'Class:Change/Attribute:outage/Value:no+' => '',
-	'Class:Change/Attribute:change_request' => '申请',
-	'Class:Change/Attribute:change_request+' => '',
+	'Class:Change/Attribute:outage/Value:yes' => '是',
+	'Class:Change/Attribute:outage/Value:yes+' => '',
 	'Class:Change/Attribute:fallback' => '回退计划',
 	'Class:Change/Attribute:fallback+' => '',
+	'Class:Change/Attribute:parent_id' => 'Parent change~~',
+	'Class:Change/Attribute:parent_id+' => '~~',
+	'Class:Change/Attribute:parent_name' => 'Parent change Ref~~',
+	'Class:Change/Attribute:parent_name+' => '~~',
+	'Class:Change/Attribute:related_request_list' => 'Related requests~~',
+	'Class:Change/Attribute:related_request_list+' => 'All the user requests linked to this change~~',
+	'Class:Change/Attribute:related_problems_list' => 'Related problems~~',
+	'Class:Change/Attribute:related_problems_list+' => 'All the problems linked to this change~~',
+	'Class:Change/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Change/Attribute:related_incident_list+' => 'All the incidents linked to this change~~',
+	'Class:Change/Attribute:child_changes_list' => 'Child changes~~',
+	'Class:Change/Attribute:child_changes_list+' => 'All the sub changes linked to this change~~',
+	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent friendly name~~',
+	'Class:Change/Attribute:parent_id_friendlyname+' => '~~',
+	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Change type~~',
+	'Class:Change/Attribute:parent_id_finalclass_recall+' => '~~',
 	'Class:Change/Stimulus:ev_validate' => '生效',
 	'Class:Change/Stimulus:ev_validate+' => '',
 	'Class:Change/Stimulus:ev_reject' => '拒绝',
@@ -174,30 +169,22 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:RoutineChange' => '例行变更',
 	'Class:RoutineChange+' => '',
-	'Class:RoutineChange/Attribute:status/Value:new' => '新',
-	'Class:RoutineChange/Attribute:status/Value:new+' => '',
-	'Class:RoutineChange/Attribute:status/Value:assigned' => '已指派',
-	'Class:RoutineChange/Attribute:status/Value:assigned+' => '',
-	'Class:RoutineChange/Attribute:status/Value:plannedscheduled' => '已计划和安排',
-	'Class:RoutineChange/Attribute:status/Value:plannedscheduled+' => '',
-	'Class:RoutineChange/Attribute:status/Value:approved' => '已批准',
-	'Class:RoutineChange/Attribute:status/Value:approved+' => '',
-	'Class:RoutineChange/Attribute:status/Value:implemented' => '已实施',
-	'Class:RoutineChange/Attribute:status/Value:implemented+' => '',
-	'Class:RoutineChange/Attribute:status/Value:monitored' => '已监控',
-	'Class:RoutineChange/Attribute:status/Value:monitored+' => '',
-	'Class:RoutineChange/Attribute:status/Value:closed' => '已关闭',
-	'Class:RoutineChange/Attribute:status/Value:closed+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => '生效',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
+	'Class:RoutineChange/Stimulus:ev_reject' => 'Reject~~',
+	'Class:RoutineChange/Stimulus:ev_reject+' => '~~',
 	'Class:RoutineChange/Stimulus:ev_assign' => '指派',
 	'Class:RoutineChange/Stimulus:ev_assign+' => '',
 	'Class:RoutineChange/Stimulus:ev_reopen' => '重开',
 	'Class:RoutineChange/Stimulus:ev_reopen+' => '',
 	'Class:RoutineChange/Stimulus:ev_plan' => '计划',
 	'Class:RoutineChange/Stimulus:ev_plan+' => '',
+	'Class:RoutineChange/Stimulus:ev_approve' => 'Approve~~',
+	'Class:RoutineChange/Stimulus:ev_approve+' => '~~',
 	'Class:RoutineChange/Stimulus:ev_replan' => '重新计划',
 	'Class:RoutineChange/Stimulus:ev_replan+' => '',
+	'Class:RoutineChange/Stimulus:ev_notapprove' => 'Do Not Approve~~',
+	'Class:RoutineChange/Stimulus:ev_notapprove+' => '~~',
 	'Class:RoutineChange/Stimulus:ev_implement' => '实施',
 	'Class:RoutineChange/Stimulus:ev_implement+' => '',
 	'Class:RoutineChange/Stimulus:ev_monitor' => '监控',
@@ -240,6 +227,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ApprovedChange/Stimulus:ev_finish' => '完成',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
 ));
+
 //
 // Class: NormalChange
 //
@@ -247,26 +235,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:NormalChange' => '正常变更',
 	'Class:NormalChange+' => '',
-	'Class:NormalChange/Attribute:status/Value:new' => '新',
-	'Class:NormalChange/Attribute:status/Value:new+' => '',
-	'Class:NormalChange/Attribute:status/Value:validated' => '已生效',
-	'Class:NormalChange/Attribute:status/Value:validated+' => '',
-	'Class:NormalChange/Attribute:status/Value:rejected' => '已拒绝',
-	'Class:NormalChange/Attribute:status/Value:rejected+' => '',
-	'Class:NormalChange/Attribute:status/Value:assigned' => '已指派',
-	'Class:NormalChange/Attribute:status/Value:assigned+' => '',
-	'Class:NormalChange/Attribute:status/Value:plannedscheduled' => '已计划和安排',
-	'Class:NormalChange/Attribute:status/Value:plannedscheduled+' => '',
-	'Class:NormalChange/Attribute:status/Value:approved' => '已批准',
-	'Class:NormalChange/Attribute:status/Value:approved+' => '',
-	'Class:NormalChange/Attribute:status/Value:notapproved' => '不批准',
-	'Class:NormalChange/Attribute:status/Value:notapproved+' => '',
-	'Class:NormalChange/Attribute:status/Value:implemented' => '已实施',
-	'Class:NormalChange/Attribute:status/Value:implemented+' => '',
-	'Class:NormalChange/Attribute:status/Value:monitored' => '已监控',
-	'Class:NormalChange/Attribute:status/Value:monitored+' => '',
-	'Class:NormalChange/Attribute:status/Value:closed' => '已关闭',
-	'Class:NormalChange/Attribute:status/Value:closed+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => '接受日期',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',
 	'Class:NormalChange/Attribute:acceptance_comment' => '接受说明',
@@ -302,26 +270,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EmergencyChange' => '紧急变更',
 	'Class:EmergencyChange+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:new' => '新',
-	'Class:EmergencyChange/Attribute:status/Value:new+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:validated' => '已生效',
-	'Class:EmergencyChange/Attribute:status/Value:validated+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:rejected' => '已拒绝',
-	'Class:EmergencyChange/Attribute:status/Value:rejected+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:assigned' => '已指派',
-	'Class:EmergencyChange/Attribute:status/Value:assigned+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:plannedscheduled' => '已计划和安排',
-	'Class:EmergencyChange/Attribute:status/Value:plannedscheduled+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:approved' => '已批准',
-	'Class:EmergencyChange/Attribute:status/Value:approved+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:notapproved' => '不批准',
-	'Class:EmergencyChange/Attribute:status/Value:notapproved+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:implemented' => '已实施',
-	'Class:EmergencyChange/Attribute:status/Value:implemented+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:monitored' => '已监控',
-	'Class:EmergencyChange/Attribute:status/Value:monitored+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:closed' => '已关闭',
-	'Class:EmergencyChange/Attribute:status/Value:closed+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => '生效',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
 	'Class:EmergencyChange/Stimulus:ev_reject' => '拒绝',
@@ -344,27 +292,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => '完成',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes by category for the last 7 days~~',
-	'UI-ChangeManagementOverview-Last-7-days' => 'Number of changes for the last 7 days~~',
-	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes by domain for the last 7 days~~',
-	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes by status for the last 7 days~~',
-	'Class:Change/Attribute:parent_id' => 'Parent change~~',
-	'Class:Change/Attribute:parent_name' => 'Parent change Ref~~',
-	'Class:Change/Attribute:related_request_list' => 'Related requests~~',
-	'Class:Change/Attribute:related_request_list+' => 'All the user requests linked to this change~~',
-	'Class:Change/Attribute:related_problems_list' => 'Related problems~~',
-	'Class:Change/Attribute:related_problems_list+' => 'All the problems linked to this change~~',
-	'Class:Change/Attribute:related_incident_list' => 'Related incidents~~',
-	'Class:Change/Attribute:related_incident_list+' => 'All the incidents linked to this change~~',
-	'Class:Change/Attribute:child_changes_list' => 'Child changes~~',
-	'Class:Change/Attribute:child_changes_list+' => 'All the sub changes linked to this change~~',
-	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent friendly name~~',
-	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Change type~~',
-	'Class:RoutineChange/Stimulus:ev_reject' => 'Reject~~',
-	'Class:RoutineChange/Stimulus:ev_approve' => 'Approve~~',
-	'Class:RoutineChange/Stimulus:ev_notapprove' => 'Do Not Approve~~',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
-
-?>

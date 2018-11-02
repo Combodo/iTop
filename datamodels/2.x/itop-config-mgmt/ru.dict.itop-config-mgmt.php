@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,12 +8,10 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
 //////////////////////////////////////////////////////////////////////
 // Relations for iTop version >= 2.2.0
 //////////////////////////////////////////////////////////////////////
 //
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Relation:impacts/Description' => 'Элементы, на которые влияет',
 	'Relation:impacts/DownStream' => 'Влияет на...',
@@ -25,18 +22,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Relation:depends on/Description' => 'Элементы, от которых зависит',
 	'Relation:depends on/DownStream' => 'Зависит от...',
 	'Relation:depends on/UpStream' => 'Влияет на...',
-));
-
-//////////////////////////////////////////////////////////////////////
-// Relations for iTop version < 2.2.0
-//////////////////////////////////////////////////////////////////////
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Relation:impacts/VerbUp' => 'Влияние...',
-	'Relation:impacts/VerbDown' => 'Элементы, на которые влияет...',
-	'Relation:depends on/VerbUp' => 'Зависимость...',
-	'Relation:depends on/VerbDown' => 'Влияние...',
 ));
 
 
@@ -1354,8 +1339,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Model/Attribute:type/Value:Tablet+' => 'Планшет',
 	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Ленточная библиотека',
 	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Ленточная библиотека',
-	'Class:Model/Attribute:type/Value:Telephone' => 'Телефон',
-	'Class:Model/Attribute:type/Value:Telephone+' => 'Телефон',
+	'Class:Model/Attribute:type/Value:Phone' => 'Telephone~~',
+	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone~~',
 	'Class:Model/Attribute:physicaldevices_list' => 'Устройства',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Все устройства этой модели',
 	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
@@ -1764,6 +1749,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Group/Attribute:type' => 'Тип',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Родительская группа',
+
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Родительская группа',
 	'Class:Group/Attribute:parent_name+' => '',
@@ -1893,8 +1879,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 'Server:otherinfo' => 'Дополнительно',
 'Server:power' => 'Электропитание',
 'Person:info' => 'Основное',
-'Person:notifiy' => 'Уведомления',
 'Person:personal_info' => 'Персональная информация',
+'Person:notifiy' => 'Уведомления',
 'Class:Subnet/Tab:IPUsage' => 'Использование IP-адресов',
 'Class:Subnet/Tab:IPUsage-explain' => 'Интерфейсы с IP-адресом в диапазоне: <em>%1$s</em> - <em>%2$s</em>',
 'Class:Subnet/Tab:FreeIPs' => 'Свободные IP-адреса',

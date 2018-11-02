@@ -6,7 +6,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @author      Thomas Casteleyn <info@super-visions.com>
  */
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:IncidentManagement' => 'Incident Management',
 	'Menu:IncidentManagement+' => 'Incident Management',
@@ -30,6 +29,19 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Open incidenten per agent',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Open incidenten per klant',
 ));
+
+
+
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
 
 //
 // Class: Incident
@@ -203,7 +215,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Heropen',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Kan het incident niet toewijzen als hoofdincident',
-	
+
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info',
 	'Tickets:Related:OpenIncidents' => 'Open incidenten',

@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
@@ -23,6 +22,46 @@
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *		
 */
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Menu:IncidentManagement' => 'Incident Management',
+	'Menu:IncidentManagement+' => '',
+	'Menu:Incident:Overview' => 'Übersicht',
+	'Menu:Incident:Overview+' => '',
+	'Menu:NewIncident' => 'Neuer Incident',
+	'Menu:NewIncident+' => '',
+	'Menu:SearchIncidents' => 'Nach Incidents suchen',
+	'Menu:SearchIncidents+' => '',
+	'Menu:Incident:Shortcuts' => 'Shortcuts',
+	'Menu:Incident:Shortcuts+' => '',
+	'Menu:Incident:MyIncidents' => 'Mir zugewiesene Incidents',
+	'Menu:Incident:MyIncidents+' => '',
+	'Menu:Incident:EscalatedIncidents' => 'Eskalierte Incidents',
+	'Menu:Incident:EscalatedIncidents+' => '',
+	'Menu:Incident:OpenIncidents' => 'Alle offenen Incidents',
+	'Menu:Incident:OpenIncidents+' => '',
+	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Incidents der letzten 14 Tage nach Priorität',
+	'UI-IncidentManagementOverview-Last-14-days' => 'Anzahl Incidents der letzten 14 Tage',
+	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Offene Incidents nach Status',
+	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Offene Incidents nach Bearbeiter',
+	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Offene Incidents nach Kunde',
+));
+
+
+
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+
+//
+// Class: Incident
+//
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident' => 'Incident',
@@ -37,6 +76,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:status/Value:assigned+' => '',
 	'Class:Incident/Attribute:status/Value:escalated_ttr' => 'Eskaliert TTR',
 	'Class:Incident/Attribute:status/Value:escalated_ttr+' => '',
+	'Class:Incident/Attribute:status/Value:waiting_for_approval' => 'Wartend auf Genehmigung',
+	'Class:Incident/Attribute:status/Value:waiting_for_approval+' => '',
 	'Class:Incident/Attribute:status/Value:pending' => 'Auszeit',
 	'Class:Incident/Attribute:status/Value:pending+' => '',
 	'Class:Incident/Attribute:status/Value:resolved' => 'Gelöst',
@@ -83,8 +124,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:origin/Value:portal+' => '',
 	'Class:Incident/Attribute:service_id' => 'Service',
 	'Class:Incident/Attribute:service_id+' => '',
+	'Class:Incident/Attribute:service_name' => 'Service-Name',
+	'Class:Incident/Attribute:service_name+' => '',
 	'Class:Incident/Attribute:servicesubcategory_id' => 'Service-Unterkategorie',
 	'Class:Incident/Attribute:servicesubcategory_id+' => '',
+	'Class:Incident/Attribute:servicesubcategory_name' => 'Service-Unterkategorie-Name',
+	'Class:Incident/Attribute:servicesubcategory_name+' => '',
 	'Class:Incident/Attribute:escalation_flag' => 'Eskalations-Flag',
 	'Class:Incident/Attribute:escalation_flag+' => '',
 	'Class:Incident/Attribute:escalation_flag/Value:no' => 'Nein',
@@ -141,8 +186,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:pending_reason+' => '',
 	'Class:Incident/Attribute:parent_incident_id' => 'Parent-Incident',
 	'Class:Incident/Attribute:parent_incident_id+' => '',
+	'Class:Incident/Attribute:parent_incident_ref' => 'Parent-Incident-Referenz',
+	'Class:Incident/Attribute:parent_incident_ref+' => '',
 	'Class:Incident/Attribute:parent_change_id' => 'Parent-Change',
 	'Class:Incident/Attribute:parent_change_id+' => '',
+	'Class:Incident/Attribute:parent_change_ref' => 'Parent-Change-Referenz',
+	'Class:Incident/Attribute:parent_change_ref+' => '',
+	'Class:Incident/Attribute:related_request_list' => 'Kind-Requests',
+	'Class:Incident/Attribute:related_request_list+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Abgeleitete Incidents',
 	'Class:Incident/Attribute:child_incidents_list+' => '',
 	'Class:Incident/Attribute:public_log' => 'Öffentliches Log',
@@ -159,6 +210,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Attribute:user_satisfaction/Value:4+' => '',
 	'Class:Incident/Attribute:user_comment' => 'Benutzer-Kommentar',
 	'Class:Incident/Attribute:user_comment+' => '',
+	'Class:Incident/Attribute:parent_incident_id_friendlyname' => 'Parent-Incident-Friendly Name',
+	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '',
 	'Class:Incident/Stimulus:ev_assign' => 'Zuweisen',
 	'Class:Incident/Stimulus:ev_assign+' => '',
 	'Class:Incident/Stimulus:ev_reassign' => 'Erneut zuweisen',
@@ -177,45 +230,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Stimulus:ev_close+' => '',
 	'Class:Incident/Stimulus:ev_reopen' => 'Wiedereröffnen',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
-	'Menu:IncidentManagement' => 'Incident Management',
-	'Menu:IncidentManagement+' => '',
-	'Menu:Incident:Overview' => 'Übersicht',
-	'Menu:Incident:Overview+' => '',
-	'Menu:NewIncident' => 'Neuer Incident',
-	'Menu:NewIncident+' => '',
-	'Menu:SearchIncidents' => 'Nach Incidents suchen',
-	'Menu:SearchIncidents+' => '',
-	'Menu:Incident:Shortcuts' => 'Shortcuts',
-	'Menu:Incident:Shortcuts+' => '',
-	'Menu:Incident:MyIncidents' => 'Mir zugewiesene Incidents',
-	'Menu:Incident:MyIncidents+' => '',
-	'Menu:Incident:EscalatedIncidents' => 'Eskalierte Incidents',
-	'Menu:Incident:EscalatedIncidents+' => '',
-	'Menu:Incident:OpenIncidents' => 'Alle offenen Incidents',
-	'Menu:Incident:OpenIncidents+' => '',
-	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Incidents der letzten 14 Tage nach Priorität',
-	'UI-IncidentManagementOverview-Last-14-days' => 'Anzahl Incidents der letzten 14 Tage',
-	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Offene Incidents nach Status',
-	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Offene Incidents nach Bearbeiter',
-	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Offene Incidents nach Kunde',
-	'Class:Incident/Attribute:status/Value:waiting_for_approval' => 'Wartend auf Genehmigung',
-	'Class:Incident/Attribute:status/Value:waiting_for_approval+' => '',
-	'Class:Incident/Attribute:service_name' => 'Service-Name',
-	'Class:Incident/Attribute:service_name+' => '',
-	'Class:Incident/Attribute:servicesubcategory_name' => 'Service-Unterkategorie-Name',
-	'Class:Incident/Attribute:servicesubcategory_name+' => '',
-	'Class:Incident/Attribute:parent_incident_ref' => 'Parent-Incident-Referenz',
-	'Class:Incident/Attribute:parent_incident_ref+' => '',
-	'Class:Incident/Attribute:parent_change_ref' => 'Parent-Change-Referenz',
-	'Class:Incident/Attribute:parent_change_ref+' => '',
-	'Class:Incident/Attribute:parent_incident_id_friendlyname' => 'Parent-Incident-Friendly Name',
-	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '',
-	'Class:Incident/Attribute:related_request_list' => 'Kind-Requests',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Kann Incident-Ticket nicht als eigenes Parent-Ticket verwenden',
+
 	'Class:Incident/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 	'Tickets:Related:OpenIncidents' => 'Offene Incidents',
-	'Class:Incident/Attribute:related_request_list+' => '',
-	'Class:Incident/Attribute:parent_problem_id' => 'Parent-Problem',
-	));
-?>
+));

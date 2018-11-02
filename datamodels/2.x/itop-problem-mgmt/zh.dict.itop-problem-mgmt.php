@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
@@ -24,7 +22,6 @@
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -34,12 +31,10 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -49,10 +44,6 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
-
-
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
         'Menu:ProblemManagement' => '问题管理',
         'Menu:ProblemManagement+' => '问题管理',
@@ -94,10 +85,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Attribute:status/Value:resolved+' => '',
 	'Class:Problem/Attribute:status/Value:closed' => '已关闭',
 	'Class:Problem/Attribute:status/Value:closed+' => '',
-	'Class:Problem/Attribute:org_id' => '客户',
-	'Class:Problem/Attribute:org_id+' => '',
-	'Class:Problem/Attribute:org_name' => '名称',
-	'Class:Problem/Attribute:org_name+' => '常用名称',
 	'Class:Problem/Attribute:service_id' => '服务',
 	'Class:Problem/Attribute:service_id+' => '',
 	'Class:Problem/Attribute:service_name' => '名称',
@@ -124,6 +111,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Attribute:urgency/Value:2+' => '中',
 	'Class:Problem/Attribute:urgency/Value:3' => '高',
 	'Class:Problem/Attribute:urgency/Value:3+' => '高',
+	'Class:Problem/Attribute:urgency/Value:4' => 'low~~',
+	'Class:Problem/Attribute:urgency/Value:4+' => 'low~~',
 	'Class:Problem/Attribute:priority' => '优先级',
 	'Class:Problem/Attribute:priority+' => '',
 	'Class:Problem/Attribute:priority/Value:1' => '低',
@@ -132,30 +121,22 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Attribute:priority/Value:2+' => '',
 	'Class:Problem/Attribute:priority/Value:3' => '高',
 	'Class:Problem/Attribute:priority/Value:3+' => '',
-	'Class:Problem/Attribute:workgroup_id' => '工作组',
-	'Class:Problem/Attribute:workgroup_id+' => '',
-	'Class:Problem/Attribute:workgroup_name' => '名称',
-	'Class:Problem/Attribute:workgroup_name+' => '',
-	'Class:Problem/Attribute:agent_id' => '办理人',
-	'Class:Problem/Attribute:agent_id+' => '',
-	'Class:Problem/Attribute:agent_name' => '办理人名称',
-	'Class:Problem/Attribute:agent_name+' => '',
-	'Class:Problem/Attribute:agent_email' => '办理人 Email',
-	'Class:Problem/Attribute:agent_email+' => '',
+	'Class:Problem/Attribute:priority/Value:4' => 'Low~~',
+	'Class:Problem/Attribute:priority/Value:4+' => 'Low~~',
 	'Class:Problem/Attribute:related_change_id' => '关联变更',
 	'Class:Problem/Attribute:related_change_id+' => '',
 	'Class:Problem/Attribute:related_change_ref' => '参考',
 	'Class:Problem/Attribute:related_change_ref+' => '',
-	'Class:Problem/Attribute:close_date' => '关闭日期',
-	'Class:Problem/Attribute:close_date+' => '',
-	'Class:Problem/Attribute:last_update' => '最后的更新',
-	'Class:Problem/Attribute:last_update+' => '',
 	'Class:Problem/Attribute:assignment_date' => '指派日期',
 	'Class:Problem/Attribute:assignment_date+' => '',
 	'Class:Problem/Attribute:resolution_date' => '解决日期',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => '已知错误',
 	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:related_request_list' => 'Related requests~~',
+	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem~~',
+	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 	'Class:Problem/Stimulus:ev_assign' => '指派',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => '重新指派',
@@ -164,14 +145,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => '关闭',
 	'Class:Problem/Stimulus:ev_close+' => '',
-	'Class:Problem/Attribute:urgency/Value:4' => 'low~~',
-	'Class:Problem/Attribute:urgency/Value:4+' => 'low~~',
-	'Class:Problem/Attribute:priority/Value:4' => 'Low~~',
-	'Class:Problem/Attribute:priority/Value:4+' => 'Low~~',
-	'Class:Problem/Attribute:related_request_list' => 'Related requests~~',
-	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem~~',
-	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
-	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 ));
-
-?>

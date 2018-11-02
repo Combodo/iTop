@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,12 +15,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Attachments:TabTitle_Count' => '添付 (%1$d)',
 	'Attachments:EmptyTabTitle' => '添付',
@@ -36,4 +34,3 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Attachments:NoAttachment' => '添付はありません。',
 	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.~~',
 ));
-?>

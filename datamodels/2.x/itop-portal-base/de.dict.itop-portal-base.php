@@ -1,10 +1,9 @@
 <?php
-
 // Copyright (C) 2010-2016 Combodo SARL
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,14 +15,11 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @copyright   Copyright (C) 2016 ITOMIG GmbH
  * @license	 http://opensource.org/licenses/AGPL-3.0
  */
-
-
 // Portal
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Page:DefaultTitle' => '%1$s - Benutzer Portal',
@@ -64,11 +60,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:Datatables:Language:Sort:Descending' => 'wähle abfallende Sortierung',
 	'Portal:Autocomplete:NoResult' => 'keine Daten',
 	'Portal:Attachments:DropZone:Message' => 'Legen Sie hier Ihre Files ab, um sie als Anhang dem Ticket hinzuzufügen',
- 	'Portal:File:None' => 'Kein File vorhanden',
+	'Portal:File:None' => 'Kein File vorhanden',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Öffnen</a> / <a href="%4$s" class="file_download_link">Download</a>',
 ));
 
+// UserProfile brick
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:UserProfile:Name' => 'Benutzer Profil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Mein Profil',
@@ -80,6 +77,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Kann das Passwort nicht ändern - bitte kontaktieren Sie Ihren %1$s Administrator',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Persönliche Informationen',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
+));
+
+// AggregatePageBrick
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard~~',
 ));
 
 // BrowseBrick brick
@@ -103,7 +105,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Brick:Portal:Manage:Name' => 'Einträge managen',
 	'Brick:Portal:Manage:Table:NoData' => 'Kein Eintrag.',
     'Brick:Portal:Manage:Table:ItemActions' => 'Aktionen',
-	'Brick:Portal:Manage:DisplayMode:list' => 'Liste',
+    'Brick:Portal:Manage:DisplayMode:list' => 'Liste',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Tortendiagramm',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Balkendiagramm',
 	'Brick:Portal:Manage:Others' => 'Andere',

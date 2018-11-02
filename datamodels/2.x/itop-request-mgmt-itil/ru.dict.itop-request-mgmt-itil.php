@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,7 +8,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:RequestManagement' => 'Управление запросами',
 	'Menu:RequestManagement+' => 'Управление запросами',
@@ -27,8 +25,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:UserRequest:Shortcuts+' => 'Ярлыки',
 	'Menu:UserRequest:MyRequests' => 'Назначенные мне',
 	'Menu:UserRequest:MyRequests+' => 'Назначенные мне запросы',
-	'Menu:UserRequest:MySupportRequests' => "Созданные мной",
-	'Menu:UserRequest:MySupportRequests+' => "Созданные мной запросы",
+	'Menu:UserRequest:MySupportRequests' => 'Созданные мной',
+	'Menu:UserRequest:MySupportRequests+' => 'Созданные мной запросы',
 	'Menu:UserRequest:EscalatedRequests' => 'Эскалированные',
 	'Menu:UserRequest:EscalatedRequests+' => 'Эскалированные запросы',
 	'Menu:UserRequest:OpenRequests' => 'Открытые',
@@ -194,8 +192,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserRequest/Attribute:parent_request_id+' => '',
 	'Class:UserRequest/Attribute:parent_incident_id' => 'Родительский инцидент',
 	'Class:UserRequest/Attribute:parent_incident_id+' => '',
-	'Class:UserRequest/Attribute:parent_incident_ref' => 'Родительский инцидент',
-	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:parent_request_ref' => 'Родительский запрос',
 	'Class:UserRequest/Attribute:parent_request_ref+' => '',
 	'Class:UserRequest/Attribute:parent_problem_id' => 'Родительская проблема',
