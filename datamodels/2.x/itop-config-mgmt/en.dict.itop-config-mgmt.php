@@ -1812,7 +1812,6 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:Application+' => 'All applications',
 'Menu:DBServer' => 'Database servers',
 'Menu:DBServer+' => 'Database servers',
-'Menu:Audit' => 'Audit',
 'Menu:ConfigManagement' => 'Configuration Management',
 'Menu:ConfigManagement+' => 'Configuration Management',
 'Menu:ConfigManagementOverview' => 'Overview',
