@@ -1993,11 +1993,19 @@ EOF;
 				'db_key_field' => 'id',
 				'db_finalclass_field' => 'finalclass',
 			);
+			$sTagInitMethodCalls =
+<<<EOF
+        MetaModel::Init_SetZListItems('default_search', array (
+            0 => 'code',
+            1 => 'label',
+        ));
+EOF
+            ;
 			foreach ($aTagFieldsInfo as $sTagFieldName)
 			{
 				$sTagClassName = static::GetTagDataClassName($sClassName, $sTagFieldName);
 				$sTagClassParams = var_export($aTagClassParams, true);
-				$sPHP .= $this->GeneratePhpCodeForClass($sTagClassName, $sTagClassParentClass, $sTagClassParams);
+				$sPHP .= $this->GeneratePhpCodeForClass($sTagClassName, $sTagClassParentClass, $sTagClassParams, $sTagInitMethodCalls);
 			}
 		}
 
