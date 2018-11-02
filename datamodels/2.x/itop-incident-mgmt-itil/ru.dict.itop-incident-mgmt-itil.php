@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,7 +8,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:IncidentManagement' => 'Управление инцидентами',
 	'Menu:IncidentManagement+' => 'Управление инцидентами',
@@ -33,6 +31,19 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Открытые инциденты по агенту',
 	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Открытые инциденты по заказчику',
 ));
+
+
+
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
 
 //
 // Class: Incident
@@ -161,20 +172,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Incident/Attribute:pending_reason+' => '',
 	'Class:Incident/Attribute:parent_incident_id' => 'Родительский инцидент',
 	'Class:Incident/Attribute:parent_incident_id+' => '',
-	'Class:Incident/Attribute:parent_problem_id' => 'Родительская проблема',
-	'Class:Incident/Attribute:parent_problem_id+' => '',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Родительская проблема',
-	'Class:Incident/Attribute:parent_problem_ref+' => '',
 	'Class:Incident/Attribute:parent_incident_ref' => 'Родительский инцидент',
 	'Class:Incident/Attribute:parent_incident_ref+' => '',
 	'Class:Incident/Attribute:parent_change_id' => 'Родительское изменение',
 	'Class:Incident/Attribute:parent_change_id+' => '',
 	'Class:Incident/Attribute:parent_change_ref' => 'Родительское изменение',
 	'Class:Incident/Attribute:parent_change_ref+' => '',
-	'Class:Incident/Attribute:child_incidents_list' => 'Дочерние инциденты',
-	'Class:Incident/Attribute:child_incidents_list+' => 'Все инциденты, связанные с этим инцидентом',
 	'Class:Incident/Attribute:related_request_list' => 'Запросы',
 	'Class:Incident/Attribute:related_request_list+' => 'Все пользовательские запросы, связанные с этим инцидентом',
+	'Class:Incident/Attribute:child_incidents_list' => 'Дочерние инциденты',
+	'Class:Incident/Attribute:child_incidents_list+' => 'Все инциденты, связанные с этим инцидентом',
 	'Class:Incident/Attribute:public_log' => 'Общий журнал',
 	'Class:Incident/Attribute:public_log+' => 'Информация в общем журнале доступна для пользователей портала',
 	'Class:Incident/Attribute:user_satisfaction' => 'Удовлетворенность пользователя',

@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,12 +15,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2014 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:DataSources' => 'Sorgente di sincronizzazione dei dati',
 	'Menu:DataSources+' => '',
@@ -35,13 +33,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:DataModelMenu+' => '',
 	'Menu:ExportMenu' => 'Esporta',
 	'Menu:ExportMenu+' => '',
-	'Menu:NotificationsMenu' =>  'Notifiche',
+	'Menu:NotificationsMenu' => 'Notifiche',
 	'Menu:NotificationsMenu+' => '',
 	'Menu:AuditCategories' => 'Categorie di Audit',
 	'Menu:AuditCategories+' => '',
 	'Menu:Notifications:Title' => 'Categorie di Audit',
 	'Menu:RunQueriesMenu' => 'Esegui query',
 	'Menu:RunQueriesMenu+' => '',
+	'Menu:QueryMenu' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
 	'Menu:UniversalSearchMenu' => 'Ricerca universale',
 	'Menu:UniversalSearchMenu+' => '',
 	'Menu:UserManagementMenu' => 'Gestione degli utenti',
@@ -52,7 +52,5 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:UserAccountsMenu' => 'Account utente',
 	'Menu:UserAccountsMenu+' => '',
 	'Menu:UserAccountsMenu:Title' => 'Account utente',
-	'Menu:QueryMenu' => 'Query phrasebook~~',
-	'Menu:QueryMenu+' => 'Query phrasebook~~',
 	'Menu:MyShortcuts' => 'My Shortcuts~~',
 ));

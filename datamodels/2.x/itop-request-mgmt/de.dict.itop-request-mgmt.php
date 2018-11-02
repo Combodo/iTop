@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
@@ -23,6 +22,56 @@
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *		
 */
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Menu:RequestManagement' => 'Helpdesk',
+	'Menu:RequestManagement+' => '',
+	'Menu:RequestManagementProvider' => 'Helpdesk-Provider',
+	'Menu:RequestManagementProvider+' => '',
+	'Menu:UserRequest:Provider' => 'Offene Benutzeranfragen beim Provider',
+	'Menu:UserRequest:Provider+' => '',
+	'Menu:UserRequest:Overview' => 'Übersicht',
+	'Menu:UserRequest:Overview+' => '',
+	'Menu:NewUserRequest' => 'Neue Benutzeranfrage',
+	'Menu:NewUserRequest+' => '',
+	'Menu:SearchUserRequests' => 'Nach Benutzeranfrage suchen',
+	'Menu:SearchUserRequests+' => '',
+	'Menu:UserRequest:Shortcuts' => 'Shortcuts',
+	'Menu:UserRequest:Shortcuts+' => '',
+	'Menu:UserRequest:MyRequests' => 'Mir zugewiesene Benutzeranfragen',
+	'Menu:UserRequest:MyRequests+' => '',
+	'Menu:UserRequest:MySupportRequests' => 'Von mir gestellte Anfragen',
+	'Menu:UserRequest:MySupportRequests+' => '',
+	'Menu:UserRequest:EscalatedRequests' => 'Eskalierte Benutzeranfragen',
+	'Menu:UserRequest:EscalatedRequests+' => '',
+	'Menu:UserRequest:OpenRequests' => 'Alle offenen Benutzeranfragen',
+	'Menu:UserRequest:OpenRequests+' => '',
+	'UI:WelcomeMenu:MyAssignedCalls' => 'Mir zugewiesene Benutzeranfragen',
+	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Benutzeranfragen der letzten 14  Tage nach Typ',
+	'UI-RequestManagementOverview-Last-14-days' => 'Benutzeranfragen der letzten 14  Tage nach Tag',
+	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Offene Benutzeranfragen nach Status',
+	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Offene Benutzeranfragen nach Bearbeiter',
+	'UI-RequestManagementOverview-OpenRequestByType' => 'Offene Benutzeranfragen nach Typ',
+	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Offene Benutzeranfragen nach Organisation',
+	'Class:UserRequest:KnownErrorList' => 'Known Errors',
+	'Menu:UserRequest:MyWorkOrders' => 'Mir zugeordnete Arbeitsaufträge',
+	'Menu:UserRequest:MyWorkOrders+' => '',
+	'Class:Problem:KnownProblemList' => 'Bekannte Problems',
+	'Tickets:Related:OpenIncidents' => 'Offene Incidents',
+));
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+
+//
+// Class: UserRequest
+//
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest' => 'Benutzeranfrage',
@@ -95,10 +144,16 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:origin/Value:portal+' => '',
 	'Class:UserRequest/Attribute:approver_id' => 'Genehmiger',
 	'Class:UserRequest/Attribute:approver_id+' => '',
+	'Class:UserRequest/Attribute:approver_email' => 'Genehmiger-Email',
+	'Class:UserRequest/Attribute:approver_email+' => '',
 	'Class:UserRequest/Attribute:service_id' => 'Service',
 	'Class:UserRequest/Attribute:service_id+' => '',
+	'Class:UserRequest/Attribute:service_name' => 'Service-Name',
+	'Class:UserRequest/Attribute:service_name+' => '',
 	'Class:UserRequest/Attribute:servicesubcategory_id' => 'Service-Unterkategorie',
 	'Class:UserRequest/Attribute:servicesubcategory_id+' => '',
+	'Class:UserRequest/Attribute:servicesubcategory_name' => 'Service-Unterkategorie-Name',
+	'Class:UserRequest/Attribute:servicesubcategory_name+' => '',
 	'Class:UserRequest/Attribute:escalation_flag' => 'Eskalations-Flag',
 	'Class:UserRequest/Attribute:escalation_flag+' => '',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no' => 'Nein',
@@ -155,8 +210,16 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:pending_reason+' => '',
 	'Class:UserRequest/Attribute:parent_request_id' => 'Parent-Request',
 	'Class:UserRequest/Attribute:parent_request_id+' => '',
+	'Class:UserRequest/Attribute:parent_request_ref' => 'Referenz Benutzeranfrage',
+	'Class:UserRequest/Attribute:parent_request_ref+' => '',
+	'Class:UserRequest/Attribute:parent_problem_id' => 'Parent-Problem',
+	'Class:UserRequest/Attribute:parent_problem_id+' => '',
+	'Class:UserRequest/Attribute:parent_problem_ref' => 'Referenz Problem',
+	'Class:UserRequest/Attribute:parent_problem_ref+' => '',
 	'Class:UserRequest/Attribute:parent_change_id' => 'Parent-Change',
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
+	'Class:UserRequest/Attribute:parent_change_ref' => 'Referenz Change',
+	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Abgeleitete Requests',
 	'Class:UserRequest/Attribute:related_request_list+' => '',
 	'Class:UserRequest/Attribute:public_log' => 'Öffentliches Log',
@@ -173,6 +236,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '',
 	'Class:UserRequest/Attribute:user_comment' => 'Benutzer-Kommentar',
 	'Class:UserRequest/Attribute:user_comment+' => '',
+	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'Parent Request ID Friendly Name',
+	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
 	'Class:UserRequest/Stimulus:ev_assign' => 'Zuweisen',
 	'Class:UserRequest/Stimulus:ev_assign+' => '',
 	'Class:UserRequest/Stimulus:ev_reassign' => 'Erneut zuweisen',
@@ -197,57 +262,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Auf Genehmigung warten',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
-	'Menu:RequestManagement' => 'Helpdesk',
-	'Menu:RequestManagement+' => '',
-	'Menu:RequestManagementProvider' => 'Helpdesk-Provider',
-	'Menu:RequestManagementProvider+' => '',
-	'Menu:UserRequest:Provider' => 'Offene Benutzeranfragen beim Provider',
-	'Menu:UserRequest:Provider+' => '',
-	'Menu:UserRequest:Overview' => 'Übersicht',
-	'Menu:UserRequest:Overview+' => '',
-	'Menu:NewUserRequest' => 'Neue Benutzeranfrage',
-	'Menu:NewUserRequest+' => '',
-	'Menu:SearchUserRequests' => 'Nach Benutzeranfrage suchen',
-	'Menu:SearchUserRequests+' => '',
-	'Menu:UserRequest:Shortcuts' => 'Shortcuts',
-	'Menu:UserRequest:Shortcuts+' => '',
-	'Menu:UserRequest:MyRequests' => 'Mir zugewiesene Benutzeranfragen',
-	'Menu:UserRequest:MyRequests+' => '',
-	'Menu:UserRequest:MySupportRequests' => 'Von mir gestellte Anfragen',
-	'Menu:UserRequest:MySupportRequests+' => '',
-	'Menu:UserRequest:EscalatedRequests' => 'Eskalierte Benutzeranfragen',
-	'Menu:UserRequest:EscalatedRequests+' => '',
-	'Menu:UserRequest:OpenRequests' => 'Alle offenen Benutzeranfragen',
-	'Menu:UserRequest:OpenRequests+' => '',
-	'Menu:UserRequest:OpenProblems' => 'Alle offenen Probleme',
-	'Menu:UserRequest:OpenProblems+' => '',
-	'UI:WelcomeMenu:MyAssignedCalls' => 'Mir zugewiesene Benutzeranfragen',
-	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Benutzeranfragen der letzten 14  Tage nach Typ',
-	'UI-RequestManagementOverview-Last-14-days' => 'Benutzeranfragen der letzten 14  Tage nach Tag',
-	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Offene Benutzeranfragen nach Status',
-	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Offene Benutzeranfragen nach Bearbeiter',
-	'UI-RequestManagementOverview-OpenRequestByType' => 'Offene Benutzeranfragen nach Typ',
-	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Offene Benutzeranfragen nach Organisation',
-	'Class:UserRequest:KnownErrorList' => 'Known Errors',
-	'Menu:UserRequest:MyWorkOrders' => 'Mir zugeordnete Arbeitsaufträge',
-	'Menu:UserRequest:MyWorkOrders+' => '',
-	'Class:Problem:KnownProblemList' => 'Bekannte Problems',
-	'Class:UserRequest/Attribute:approver_email' => 'Genehmiger-Email',
-	'Class:UserRequest/Attribute:approver_email+' => '',
-	'Class:UserRequest/Attribute:service_name' => 'Service-Name',
-	'Class:UserRequest/Attribute:service_name+' => '',
-	'Class:UserRequest/Attribute:servicesubcategory_name' => 'Service-Unterkategorie-Name',
-	'Class:UserRequest/Attribute:servicesubcategory_name+' => '',
-	'Class:UserRequest/Attribute:parent_request_ref' => 'Referenz Benutzeranfrage',
-	'Class:UserRequest/Attribute:parent_request_ref+' => '',
-	'Class:UserRequest/Attribute:parent_problem_id' => 'Parent-Problem',
-	'Class:UserRequest/Attribute:parent_problem_id+' => '',
-	'Class:UserRequest/Attribute:parent_problem_ref' => 'Referenz Problem',
-	'Class:UserRequest/Attribute:parent_problem_ref+' => '',
-	'Class:UserRequest/Attribute:parent_change_ref' => 'Referenz Change',
-	'Class:UserRequest/Attribute:parent_change_ref+' => '',
-	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'Parent Request ID Friendly Name',
-	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kann Ticket nicht als eigenes Parent-Ticket verwenden',
+));
+
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:TitleDetailsFor_Request' => 'Details für Benutzeranfrage',
 	'Portal:ButtonUpdate' => 'Update',
 	'Portal:ButtonClose' => 'Schließen',
@@ -259,7 +278,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:TitleDetailsFor_Service' => 'Details für Service',
 	'Portal:Button:CreateRequestFromService' => 'EIne Benutzeranfrage betreffend dieses Diensts erzeugen',
 	'Portal:ListOpenRequests' => 'Offene Benutzeranfragen auflisten',
-	'Portal:UserRequest:MoreInfo' => 'Weitere Informationen',
+'Portal:UserRequest:MoreInfo' => 'Weitere Informationen',
 	'Portal:Details-Service-Element' => 'Service-Elemente',
 	'Portal:NoClosedTicket' => 'Keine geschlossene Benutzeranfrage',
 	'Portal:NoService' => 'Kein Service',
@@ -270,11 +289,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:SelectLanguage' => 'Ändern Sie Ihre Spracheinstellung',
 	'Portal:LanguageChangedTo_Lang' => 'Spracheinstellung geändert auf: ',
 	'Portal:ChooseYourFavoriteLanguage' => 'WÄhlen Sie Ihre bevorzugte Sprache',
-	'Tickets:Related:OpenIncidents' => 'Offene Incidents',
-	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Kann Ticket nicht als eigenes Parent-Ticket verwenden',
+
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Kind-Tickets lösen',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
-	));
+));
 
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(

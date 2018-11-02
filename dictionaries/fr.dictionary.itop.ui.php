@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,11 +15,26 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:AuditCategory' => 'Catégorie d\'audit',
+	'Class:AuditCategory+' => 'Une section de l\'audit',
+	'Class:AuditCategory/Attribute:name' => 'Nom',
+	'Class:AuditCategory/Attribute:name+' => 'Nom raccourci',
+	'Class:AuditCategory/Attribute:description' => 'Description',
+	'Class:AuditCategory/Attribute:description+' => 'Description',
+	'Class:AuditCategory/Attribute:definition_set' => 'Ensemble de définition',
+	'Class:AuditCategory/Attribute:definition_set+' => 'Expression OQL qui défini le périmètre d\'application de l\'audit',
+	'Class:AuditCategory/Attribute:rules_list' => 'Règles d\'audit',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Règles d\'audit pour cette catégorie',
+));
+
+//
+// Class: AuditRule
+//
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AuditRule' => 'Règle d\'audit',
@@ -32,24 +47,21 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AuditRule/Attribute:query+' => 'Expression OQL de calcul des éléments incorrects',
 	'Class:AuditRule/Attribute:valid_flag' => 'Interprétation',
 	'Class:AuditRule/Attribute:valid_flag+' => 'La requête définit-elle les éléments valides ?',
-	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'Objets incorrects',
-	'Class:AuditRule/Attribute:valid_flag/Value:false+' => '',
 	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'Objets valides',
 	'Class:AuditRule/Attribute:valid_flag/Value:true+' => '',
+	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'Objets incorrects',
+	'Class:AuditRule/Attribute:valid_flag/Value:false+' => '',
 	'Class:AuditRule/Attribute:category_id' => 'Catégorie',
 	'Class:AuditRule/Attribute:category_id+' => '',
 	'Class:AuditRule/Attribute:category_name' => 'Categorie',
 	'Class:AuditRule/Attribute:category_name+' => '',
-	'Class:AuditCategory' => 'Catégorie d\'audit',
-	'Class:AuditCategory+' => 'Une section de l\'audit',
-	'Class:AuditCategory/Attribute:name' => 'Nom',
-	'Class:AuditCategory/Attribute:name+' => 'Nom raccourci',
-	'Class:AuditCategory/Attribute:description' => 'Description',
-	'Class:AuditCategory/Attribute:description+' => 'Description',
-	'Class:AuditCategory/Attribute:definition_set' => 'Ensemble de définition',
-	'Class:AuditCategory/Attribute:definition_set+' => 'Expression OQL qui défini le périmètre d\'application de l\'audit',
-	'Class:AuditCategory/Attribute:rules_list' => 'Règles d\'audit',
-	'Class:AuditCategory/Attribute:rules_list+' => 'Règles d\'audit pour cette catégorie',
+));
+
+//
+// Class: QueryOQL
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Query' => 'Requête',
 	'Class:Query+' => 'Une requête définit un ensemble d\'information de manière dynamique',
 	'Class:Query/Attribute:name' => 'Nom',
@@ -58,80 +70,23 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Query/Attribute:description+' => 'Description complète (finalité, utilisations, public)',
 	'Class:Query/Attribute:fields' => 'Champs',
 	'Class:Query/Attribute:fields+' => 'Liste CSV des attributs (ou alias.attribut) à exporter',
+
 	'Class:QueryOQL' => 'Requête OQL',
 	'Class:QueryOQL+' => 'Une requête écrite dans le langage "Object Query Language"',
 	'Class:QueryOQL/Attribute:oql' => 'Expression',
 	'Class:QueryOQL/Attribute:oql+' => 'Expression OQL',
-	'Class:URP_Profiles' => 'Profil',
-	'Class:URP_Profiles+' => 'Profil utilisateur',
-	'Class:URP_Profiles/Attribute:name' => 'Nom',
-	'Class:URP_Profiles/Attribute:name+' => '',
-	'Class:URP_Profiles/Attribute:description' => 'Description',
-	'Class:URP_Profiles/Attribute:description+' => '',
-	'Class:URP_Profiles/Attribute:user_list' => 'Utilisateurs',
-	'Class:URP_Profiles/Attribute:user_list+' => 'Comptes utilisateur (logins) ayant ce profil',
-	'Class:URP_UserProfile' => 'Utilisateur/Profil',
-	'Class:URP_UserProfile+' => '',
-	'Class:URP_UserProfile/Attribute:userid' => 'Utilisateur',
-	'Class:URP_UserProfile/Attribute:userid+' => '',
-	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
-	'Class:URP_UserProfile/Attribute:userlogin+' => '',
-	'Class:URP_UserProfile/Attribute:profileid' => 'Profil',
-	'Class:URP_UserProfile/Attribute:profileid+' => '',
-	'Class:URP_UserProfile/Attribute:profile' => 'Profil',
-	'Class:URP_UserProfile/Attribute:profile+' => '',
-	'Class:URP_UserProfile/Attribute:reason' => 'Raison',
-	'Class:URP_UserProfile/Attribute:reason+' => 'Justifie le rôle affecté à cet utilisateur',
-	'Class:URP_UserOrg' => 'Utilisateur/Organisation',
-	'Class:URP_UserOrg+' => 'Organisations permises pour l\'utilisateur',
-	'Class:URP_UserOrg/Attribute:userid' => 'Utilisateur',
-	'Class:URP_UserOrg/Attribute:userid+' => '',
-	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
-	'Class:URP_UserOrg/Attribute:userlogin+' => '',
-	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organisation',
-	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '',
-	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Organisation',
-	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
-	'Class:URP_UserOrg/Attribute:reason' => 'Raison',
-	'Class:URP_UserOrg/Attribute:reason+' => 'Justifie la permission de voir les données de cette organisation',
-	'Class:URP_ActionGrant' => 'action_permission',
-	'Class:URP_ActionGrant+' => 'permissions on classes',
-	'Class:URP_ActionGrant/Attribute:profileid' => 'Profile',
-	'Class:URP_ActionGrant/Attribute:profileid+' => 'usage profile',
-	'Class:URP_ActionGrant/Attribute:profile' => 'Profile',
-	'Class:URP_ActionGrant/Attribute:profile+' => 'usage profile',
-	'Class:URP_ActionGrant/Attribute:class' => 'Class',
-	'Class:URP_ActionGrant/Attribute:class+' => 'Target class',
-	'Class:URP_ActionGrant/Attribute:permission' => 'Permission',
-	'Class:URP_ActionGrant/Attribute:permission+' => 'allowed or not allowed?',
-	'Class:URP_ActionGrant/Attribute:permission/Value:no' => 'non',
-	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'non',
-	'Class:URP_ActionGrant/Attribute:permission/Value:yes' => 'oui',
-	'Class:URP_ActionGrant/Attribute:permission/Value:yes+' => 'oui',
-	'Class:URP_ActionGrant/Attribute:action' => 'Action',
-	'Class:URP_ActionGrant/Attribute:action+' => 'operations to perform on the given class',
-	'Class:URP_StimulusGrant' => 'stimulus_permission',
-	'Class:URP_StimulusGrant+' => 'permissions on stimilus in the life cycle of the object',
-	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profile',
-	'Class:URP_StimulusGrant/Attribute:profileid+' => 'usage profile',
-	'Class:URP_StimulusGrant/Attribute:profile' => 'Profile',
-	'Class:URP_StimulusGrant/Attribute:profile+' => 'usage profile',
-	'Class:URP_StimulusGrant/Attribute:class' => 'Class',
-	'Class:URP_StimulusGrant/Attribute:class+' => 'Target class',
-	'Class:URP_StimulusGrant/Attribute:permission' => 'Permission',
-	'Class:URP_StimulusGrant/Attribute:permission+' => 'allowed or not allowed?',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => 'no',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'yes',
-	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => 'yes',
-	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
-	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimulus code',
-	'Class:URP_AttributeGrant' => 'attribute_permission',
-	'Class:URP_AttributeGrant+' => 'permissions at the attributes level',
-	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Action grant',
-	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant',
-	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribute',
-	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
+));
+
+//////////////////////////////////////////////////////////////////////
+// Classes in 'addon/userrights'
+//////////////////////////////////////////////////////////////////////
+//
+
+//
+// Class: User
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User' => 'Utilisateur',
 	'Class:User+' => 'Compte utilisateur',
 	'Class:User/Attribute:finalclass' => 'Type de compte',
@@ -160,6 +115,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Attribute:status+' => 'Est-ce que ce compte utilisateur est actif, ou non?',
 	'Class:User/Attribute:status/Value:enabled' => 'Actif',
 	'Class:User/Attribute:status/Value:disabled' => 'Désactivé',
+		
 	'Class:User/Error:LoginMustBeUnique' => 'Le login doit être unique - "%1s" est déjà utilisé.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'L\'utilisateur doit avoir au moins un profil.',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'L\'utilisateur doit avoir au moins une organisation.',
@@ -167,6 +123,28 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Error:UserOrganizationNotAllowed' => 'L\'utilisateur n\'appartient pas à vos organisations.',
 	'Class:UserInternal' => 'Utilisateur interne',
 	'Class:UserInternal+' => 'Utilisateur défini dans iTop',
+));
+
+//
+// Class: URP_Profiles
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:URP_Profiles' => 'Profil',
+	'Class:URP_Profiles+' => 'Profil utilisateur',
+	'Class:URP_Profiles/Attribute:name' => 'Nom',
+	'Class:URP_Profiles/Attribute:name+' => '',
+	'Class:URP_Profiles/Attribute:description' => 'Description',
+	'Class:URP_Profiles/Attribute:description+' => '',
+	'Class:URP_Profiles/Attribute:user_list' => 'Utilisateurs',
+	'Class:URP_Profiles/Attribute:user_list+' => 'Comptes utilisateur (logins) ayant ce profil',
+));
+
+//
+// Class: URP_Dimensions
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_Dimensions' => 'Dimension',
 	'Class:URP_Dimensions+' => 'Dimension applicative (défini des silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Nom',
@@ -175,6 +153,52 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_Dimensions/Attribute:description+' => '',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
 	'Class:URP_Dimensions/Attribute:type+' => 'Nom de classe ou type de données (unité de projection)',
+));
+
+//
+// Class: URP_UserProfile
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:URP_UserProfile' => 'Utilisateur/Profil',
+	'Class:URP_UserProfile+' => '',
+	'Class:URP_UserProfile/Attribute:userid' => 'Utilisateur',
+	'Class:URP_UserProfile/Attribute:userid+' => '',
+	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
+	'Class:URP_UserProfile/Attribute:userlogin+' => '',
+	'Class:URP_UserProfile/Attribute:profileid' => 'Profil',
+	'Class:URP_UserProfile/Attribute:profileid+' => '',
+	'Class:URP_UserProfile/Attribute:profile' => 'Profil',
+	'Class:URP_UserProfile/Attribute:profile+' => '',
+	'Class:URP_UserProfile/Attribute:reason' => 'Raison',
+	'Class:URP_UserProfile/Attribute:reason+' => 'Justifie le rôle affecté à cet utilisateur',
+));
+
+//
+// Class: URP_UserOrg
+//
+
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:URP_UserOrg' => 'Utilisateur/Organisation',
+	'Class:URP_UserOrg+' => 'Organisations permises pour l\'utilisateur',
+	'Class:URP_UserOrg/Attribute:userid' => 'Utilisateur',
+	'Class:URP_UserOrg/Attribute:userid+' => '',
+	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
+	'Class:URP_UserOrg/Attribute:userlogin+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organisation',
+	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Organisation',
+	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
+	'Class:URP_UserOrg/Attribute:reason' => 'Raison',
+	'Class:URP_UserOrg/Attribute:reason+' => 'Justifie la permission de voir les données de cette organisation',
+));
+
+//
+// Class: URP_ProfileProjection
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_ProfileProjection' => 'profile_projection',
 	'Class:URP_ProfileProjection+' => 'profile projections',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -189,6 +213,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL expression (using $user) | constant |  | +attribute code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Target attribute code (optional)',
+));
+
+//
+// Class: URP_ClassProjection
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_ClassProjection' => 'class_projection',
 	'Class:URP_ClassProjection+' => 'class projections',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -201,6 +232,83 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL expression (using $this) | constant |  | +attribute code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Target attribute code (optional)',
+));
+
+//
+// Class: URP_ActionGrant
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:URP_ActionGrant' => 'action_permission',
+	'Class:URP_ActionGrant+' => 'permissions on classes',
+	'Class:URP_ActionGrant/Attribute:profileid' => 'Profile',
+	'Class:URP_ActionGrant/Attribute:profileid+' => 'usage profile',
+	'Class:URP_ActionGrant/Attribute:profile' => 'Profile',
+	'Class:URP_ActionGrant/Attribute:profile+' => 'usage profile',
+	'Class:URP_ActionGrant/Attribute:class' => 'Class',
+	'Class:URP_ActionGrant/Attribute:class+' => 'Target class',
+	'Class:URP_ActionGrant/Attribute:permission' => 'Permission',
+	'Class:URP_ActionGrant/Attribute:permission+' => 'allowed or not allowed?',
+	'Class:URP_ActionGrant/Attribute:permission/Value:yes' => 'oui',
+	'Class:URP_ActionGrant/Attribute:permission/Value:yes+' => 'oui',
+	'Class:URP_ActionGrant/Attribute:permission/Value:no' => 'non',
+	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'non',
+	'Class:URP_ActionGrant/Attribute:action' => 'Action',
+	'Class:URP_ActionGrant/Attribute:action+' => 'operations to perform on the given class',
+));
+
+//
+// Class: URP_StimulusGrant
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:URP_StimulusGrant' => 'stimulus_permission',
+	'Class:URP_StimulusGrant+' => 'permissions on stimilus in the life cycle of the object',
+	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profile',
+	'Class:URP_StimulusGrant/Attribute:profileid+' => 'usage profile',
+	'Class:URP_StimulusGrant/Attribute:profile' => 'Profile',
+	'Class:URP_StimulusGrant/Attribute:profile+' => 'usage profile',
+	'Class:URP_StimulusGrant/Attribute:class' => 'Class',
+	'Class:URP_StimulusGrant/Attribute:class+' => 'Target class',
+	'Class:URP_StimulusGrant/Attribute:permission' => 'Permission',
+	'Class:URP_StimulusGrant/Attribute:permission+' => 'allowed or not allowed?',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'yes',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => 'yes',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => 'no',
+	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'no',
+	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
+	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimulus code',
+));
+
+//
+// Class: URP_AttributeGrant
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:URP_AttributeGrant' => 'attribute_permission',
+	'Class:URP_AttributeGrant+' => 'permissions at the attributes level',
+	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Action grant',
+	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant',
+	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribute',
+	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
+));
+
+//
+// Expression to Natural language
+//
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Expression:Unit:Short:DAY' => 'j',
+	'Expression:Unit:Short:WEEK' => 's',
+	'Expression:Unit:Short:MONTH' => 'm',
+	'Expression:Unit:Short:YEAR' => 'a',
+));
+
+
+//
+// String from the User Interface: menu, messages, buttons, etc...
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
 	'BooleanLabel:yes' => 'oui',
 	'BooleanLabel:no' => 'non',
     'UI:Login:Title' => 'iTop login',
@@ -209,6 +317,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:WelcomeMenuPage' => 'Bienvenue', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage+' => 'Bienvenue dans iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Bienvenue dans iTop',
+
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop est un portail opérationnel complet et libre pour gérer votre SI.</p>
 <ul>il contient:
 <li>Une base de gestion des configuration (CMDB - Configuration management database) pour documenter et gérer votre parc informatique.</li>
@@ -219,6 +328,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 <li>Des tableaux de bord pour avoir rapidement une vue synthétique de votre SI.</li>
 </ul>
 <p>Tous ces modules peuvent être installés séparément, à votre rythme.</p>',
+
 	'UI:WelcomeMenu:RightBlock' => '<p>iTop a été conçu pour les fournisseurs de service, il permet à vos équipes IT de gérer facilement de multiples clients et organisations.
 <ul>iTop fournit un riche ensemble de processus métier&nbsp;pour:
 <li>Augmenter l\'efficacité de la gestion de votre SI</li> 
@@ -247,9 +357,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:GlobalSearch' => 'Rechercher',
 	'UI:Button:Search' => 'Rechercher',
 	'UI:Button:Query' => ' Lancer la requête ',
-	'UI:Button:Save' => 'Sauver',
 	'UI:Button:Ok' => 'Ok',
+	'UI:Button:Save' => 'Sauver',
 	'UI:Button:Cancel' => 'Annuler',
+	'UI:Button:Close' => 'Close~~',
 	'UI:Button:Apply' => 'Appliquer',
 	'UI:Button:Back' => ' << Retour ',
 	'UI:Button:Restart' => ' |<< Recommencer ',
@@ -273,8 +384,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:ChangePassword' => ' Changer ! ',
 	'UI:Button:ResetPassword' => ' Ràz du mot de passe ',
 	'UI:Button:Insert' => 'Insérer',
-    'UI:Button:More' => 'Plus',
-    'UI:Button:Less' => 'Moins',
+	'UI:Button:More' => 'Plus',
+	'UI:Button:Less' => 'Moins',
+	
 	'UI:SearchToggle' => 'Recherche',
 	'UI:ClickToCreateNew' => 'Créer un nouvel objet de type %1$s',
 	'UI:SearchFor_Class' => 'Rechercher des objets de type %1$s',
@@ -294,6 +406,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:CannotWriteToTmp_Dir' => 'Impossible d\'écrire le fichier temporaire sur disque. upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Téléchargement arrêté à cause de l\'extension. (Nom du fichier original = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Le téléchargement a échoué pour une raison inconnue. (Code d\'erreur = "%1$s").',
+	
 	'UI:Error:1ParametersMissing' => 'Erreur: Pour effectuer cette opération il manque le paramètre suivant: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Erreur: Pour effectuer cette opération il manque les paramètres suivants: %1$s and %2$s.',
 	'UI:Error:3ParametersMissing' => 'Erreur: Pour effectuer cette opération il manque les paramètres suivants: %1$s, %2$s and %3$s.',
@@ -311,6 +424,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erreur: le stimulus "%1$s" n\'est pas valide pour l\'objet %2$s dans l\'état "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Erreur: Le fichier tableau de bord est invalide',
 	'UI:Error:InvalidDashboard' => 'Erreur: Le tableau de bord est invalide',
+
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
 	'UI:CountOfObjects' => '%1$d objets correspondants aux critères.',
@@ -347,10 +461,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Menu:BulkDelete' => 'Supprimer...',
 	'UI:UndefinedObject' => 'non défini',
 	'UI:Document:OpenInNewWindow:Download' => 'Ouvrir dans un nouvelle fenêtre: %1$s, Télécharger: %2$s',
-	'UI:SelectAllToggle+' => 'Tout sélectionner / Tout déselectionner',
-	'UI:TruncatedResults' => '%1$d objets affichés sur %2$d',
 	'UI:SplitDateTime-Date' => 'date',
 	'UI:SplitDateTime-Time' => 'heure',
+	'UI:TruncatedResults' => '%1$d objets affichés sur %2$d',
 	'UI:DisplayAll' => 'Tout afficher',
 	'UI:CollapseList' => 'Refermer',
 	'UI:CountOfResults' => '%1$d objet(s)',
@@ -362,10 +475,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:SimpleSearchTab' => 'Recherche simple',
 	'UI:Details+' => 'Détails',
 	'UI:SearchValue:Any' => '* Indifférent *',
+	'UI:SearchValue:Mixed' => '* Plusieurs *',
 	'UI:SearchValue:NbSelected' => '# sélectionné(e)s',
 	'UI:SearchValue:CheckAll' => 'Cocher',
 	'UI:SearchValue:UncheckAll' => 'Décocher',
-	'UI:SearchValue:Mixed' => '* Plusieurs *',
 	'UI:SelectOne' => '-- choisir une valeur --',
 	'UI:Login:Welcome' => 'Bienvenue dans iTop!',
 	'UI:Login:IncorrectLoginPassword' => 'Mot de passe ou identifiant incorrect.',
@@ -395,6 +508,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ResetPwd-Ready' => 'Le mot de passe a bien été changé.',
 	'UI:ResetPwd-Login' => 'Cliquez ici pour vous connecter...',
 
+	'UI:Login:About' => '~~',
 	'UI:Login:ChangeYourPassword' => 'Changer de mot de passe',
 	'UI:Login:OldPasswordPrompt' => 'Ancien mot de passe',
 	'UI:Login:NewPasswordPrompt' => 'Nouveau mot de passe',
@@ -469,26 +583,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVImport:AlertIncompleteMapping' => 'Veuillez choisir la correspondance pour chacun des champs.',
 	'UI:CSVImport:AlertMultipleMapping' => 'Veuillez vous assurer que chaque champ cible est sélectionné une seule fois.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Veuillez choisir au moins une clef de recherche.',
-	'UI:CSVImport:Encoding' => 'Encodage des caractères',
-	'UI:CSVImport:DateAndTimeFormats' => 'Format de date et heure',
-	'UI:CSVImport:DefaultDateTimeFormat_Format_Example' => 'Format par défaut: %1$s (ex. %2$s)',
-	'UI:CSVImport:CustomDateTimeFormat' => 'Format spécial: %1$s',
-	'UI:CSVImport:CustomDateTimeFormatTooltip' => 'Codes de format:<table>
-<tr><td>Y</td><td>année (sur 4 chiffres, ex. 2016)</td></tr>
-<tr><td>y</td><td>année (sur 2 chiffres, ex. 16 pour 2016)</td></tr>
-<tr><td>m</td><td>mois (sur 2 chiffres: 01..12)</td></tr>
-<tr><td>n</td><td>month (sur 1 ou 2 chiffres sans le zero au début: 1..12)</td></tr>
-<tr><td>d</td><td>jour (sur 2 chiffres: 01..31)</td></tr>
-<tr><td>j</td><td>jour (sur 1 ou 2 chiffres sans le zero au début: 1..31)</td></tr>
-<tr><td>H</td><td>heure (24 heures sur 2 chiffres: 00..23)</td></tr>
-<tr><td>h</td><td>heure (12 heures sur 2 chiffres: 01..12)</td></tr>
-<tr><td>G</td><td>heure (24 heures sur 1 ou 2 chiffres: 0..23)</td></tr>
-<tr><td>g</td><td>heure (12 heures sur 1 ou 2 chiffres: 1..12)</td></tr>
-<tr><td>a</td><td>am ou pm (en minuscules)</td></tr>
-<tr><td>A</td><td>AM ou PM (en majuscules)</td></tr>
-<tr><td>i</td><td>minutes (sur 2 chiffres: 00..59)</td></tr>
-<tr><td>s</td><td>secondes (sur 2 chiffres: 00..59)</td></tr>
-</table>',
+	'UI:CSVImport:Encoding' => 'Encodage des caractères',	
+	'UI:UniversalSearchTitle' => 'iTop - Recherche Universelle',
+	'UI:UniversalSearch:Error' => 'Erreur : %1$s',
+	'UI:UniversalSearch:LabelSelectTheClass' => 'Sélectionnez le type d\'objets à rechercher : ',
 
 	'UI:CSVReport-Value-Modified' => 'Modifié',
 	'UI:CSVReport-Value-SetIssue' => 'Modification impossible - cause : %1$s',
@@ -536,9 +634,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVExport:LostChars' => 'Problème d\'encodage',
 	'UI:CSVExport:LostChars+' => 'Le fichier téléchargé sera encodé en %1$s. iTop a détecté des caractères incompatible avec ce format. Ces caractères seront soit remplacés par des caractères de substitution (par exemple: \'é\' transformé en \'e\'), soit perdus. Vous pouvez utiliser le copier/coller depuis votre navigateur web, ou bien contacter votre administrateur pour que l\'encodage corresponde mieux à votre besoin (Cf. paramètre \'csv_file_default_charset\').',
 
-	'UI:UniversalSearchTitle' => 'iTop - Recherche Universelle',
-	'UI:UniversalSearch:Error' => 'Erreur : %1$s',
-	'UI:UniversalSearch:LabelSelectTheClass' => 'Sélectionnez le type d\'objets à rechercher : ',
 	'UI:Audit:Title' => 'iTop - Audit de la CMDB',
 	'UI:Audit:InteractiveAudit' => 'Audit Interactif',
 	'UI:Audit:HeaderAuditRule' => 'Règle d\'audit',
@@ -547,6 +642,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Audit:PercentageOk' => '% Ok',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'Erreur OQL dans la règle %1$s: %2$s.',
 	'UI:Audit:ErrorIn_Category_Reason' => 'Erreur OQL dans la catégorie %1$s: %2$s.',
+
 	'UI:RunQuery:Title' => 'iTop - Evaluation de requêtes OQL',
 	'UI:RunQuery:QueryExamples' => 'Exemples de requêtes',
 	'UI:RunQuery:HeaderPurpose' => 'Objectif',
@@ -578,6 +674,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label de l\'attribut',
 	'UI:Schema:Type' => 'Type',
+	
 	'UI:Schema:Type+' => 'Type de données de l\'attribut',
 	'UI:Schema:Origin' => 'Origine',
 	'UI:Schema:Origin+' => 'La classe de base dans laquelle l\'attribut est défini',
@@ -631,6 +728,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Label:SelectedObjects' => 'Objets sélectionnés: ',
 	'UI:Label:AvailableObjects' => 'Objets disponibles: ',
 	'UI:Link_Class_Attributes' => 'Attributs du type %1$s',
+	'UI:SelectAllToggle+' => 'Tout sélectionner / Tout déselectionner',
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Ajouter des objets de type %1$s liés à %3$s (%2$s)',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Ajouter des objets de type %1$s à lier à cet objet de type %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Gérer les objets de type %1$s liés à %3$s (%2$s)',
@@ -665,7 +763,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Devrait être mis à jour automatiquement, mais: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'Va être mis à jour automatiquement (champs impactés : %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objets ou liens font référence à %2$s',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objets ou liens font référence à certain des objets à supprimer',
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objets ou liens font référence à certain des objets à supprimer',	
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'pour garantir l\'intégrité de la base de données, toutes les références doivent être supprimées.',
 	'UI:Delete:Consequence+' => 'Ce qui va être effectué',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Désolé, vous n\'êtes pas autorisé à supprimer cette objet. Voir les explications détaillées ci-dessus.',
@@ -713,7 +811,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:SystemIntrusion' => 'Accès non autorisé. Vous êtes en train de d\'effectuer une opération qui ne vous est pas permise.',
 	'UI:FatalErrorMessage' => 'Erreur fatale, iTop ne peut pas continuer.',
 	'UI:Error_Details' => 'Erreur: %1$s.',
-	'UI:PageTitle:ClassProjections' => 'iTop gestion des utilisateurs - projections des classes',
+
+	'UI:PageTitle:ClassProjections'	=> 'iTop gestion des utilisateurs - projections des classes',
 	'UI:PageTitle:ProfileProjections' => 'iTop gestion des utilisateurs - projections des profils',
 	'UI:UserManagement:Class' => 'Type',
 	'UI:UserManagement:Class+' => 'Type des objets',
@@ -752,9 +851,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:UserManagement:GrantMatrix' => 'Matrice des droits',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Lien entre %1$s et %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Lien entre %1$s et %2$s',
+	
 	'Menu:AdminTools' => 'Outils d\'admin', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Outils d\'administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.', // Duplicated into itop-welcome-itil (will be removed from here...)
+
 	'UI:ChangeManagementMenu' => 'Gestion du Changement',
 	'UI:ChangeManagementMenu+' => 'Gestion du Changement',
 	'UI:ChangeManagementMenu:Title' => 'Résumé des changements',
@@ -762,41 +863,52 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changements par état',
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changements par workgroup',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changements en attente d\'assignation',
+
 	'UI:ConfigurationManagementMenu' => 'Gestion de Configuration',
 	'UI:ConfigurationManagementMenu+' => 'Gestion de Configuration',
 	'UI:ConfigurationManagementMenu:Title' => 'Résumé de l\'Infrastructure',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Nombre d\'éléments par type',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Nombre d\'éléments par état',
-	'UI:ConfigMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion de Configuration',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Actifs par état',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Actifs par type',
-	'UI:RequestMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Demandes Utilisateurs',
-	'UI-RequestManagementOverview-RequestByService' => 'Demandes par service',
-	'UI-RequestManagementOverview-RequestByPriority' => 'Demandes par priorité',
-	'UI-RequestManagementOverview-RequestUnassigned' => 'Demandes non affectées à un agent',
-	'UI:IncidentMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Incidents',
-	'UI-IncidentManagementOverview-IncidentByService' => 'Incidents par service',
-	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents par priorité',
-	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents non affectés à un agent',
-	'UI:ChangeMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Changements',
-	'UI-ChangeManagementOverview-ChangeByType' => 'Changes par type',
-	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes non affectés à un agent',
-	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Interruptions de service liées à un changement',
-	'UI:ServiceMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Services',
-	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Contrats clients à renouveler dans les 30 jours',
-	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Contrats fournisseurs à renouveler dans les 30 jours',
+
+'UI:ConfigMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion de Configuration',
+'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Actifs par état',
+'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Actifs par type',
+
+'UI:RequestMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Demandes Utilisateurs',
+'UI-RequestManagementOverview-RequestByService' => 'Demandes par service',
+'UI-RequestManagementOverview-RequestByPriority' => 'Demandes par priorité',
+'UI-RequestManagementOverview-RequestUnassigned' => 'Demandes non affectées à un agent',
+
+'UI:IncidentMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Incidents',
+'UI-IncidentManagementOverview-IncidentByService' => 'Incidents par service',
+'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents par priorité',
+'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents non affectés à un agent',
+
+'UI:ChangeMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Changements',
+'UI-ChangeManagementOverview-ChangeByType' => 'Changes par type',
+'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes non affectés à un agent',
+'UI-ChangeManagementOverview-ChangeWithOutage' => 'Interruptions de service liées à un changement',
+
+'UI:ServiceMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Services',
+'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Contrats clients à renouveler dans les 30 jours',
+'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Contrats fournisseurs à renouveler dans les 30 jours',
+
 	'UI:ContactsMenu' => 'Contacts',
 	'UI:ContactsMenu+' => 'Contacts',
 	'UI:ContactsMenu:Title' => 'Résumé des contacts',
 	'UI-ContactsMenu-ContactsByLocation' => 'Contacts par emplacement',
 	'UI-ContactsMenu-ContactsByType' => 'Contacts par type',
 	'UI-ContactsMenu-ContactsByStatus' => 'Contacts par état',
+
 	'Menu:CSVImportMenu' => 'Import CSV', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'Import ou mise à jour en masse', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:DataModelMenu' => 'Modèle de Données', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => 'Résumé du Modèle de Données', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:ExportMenu' => 'Exportation', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Exportation des résultats d\'une requête en HTML, CSV ou XML', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:NotificationsMenu' => 'Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuration des Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuration des <span class="hilite">Notifications</span>',
@@ -824,36 +936,53 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:NotificationsMenu:OnStateLeave' => 'Quand un objet quitte un état donné',
 	'UI:NotificationsMenu:Actions' => 'Actions',
 	'UI:NotificationsMenu:AvailableActions' => 'Actions existantes',
+
+	'Menu:TagAdminMenu' => 'Etiquettes',
+	'Menu:TagAdminMenu+' => 'Gestion des étiquettes',
+	'UI:TagAdminMenu:Title' => 'Gestion des étiquettes',
+	'UI:TagAdminMenu:NoTags' => 'Pas de champ étiquette configuré',
+	'UI:TagSetFieldData:Error' => 'Erreur: %1$s',
+
 	'Menu:AuditCategories' => 'Catégories d\'audit', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => 'Catégories d\'audit', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Catégories d\'audit', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:RunQueriesMenu' => 'Requêtes OQL', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:RunQueriesMenu+' => 'Executer une requête OQL', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:QueryMenu' => 'Livre des requêtes', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => 'Livre des requêtes', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:DataAdministration' => 'Administration des données', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => 'Administration des données', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:UniversalSearchMenu' => 'Recherche Universelle', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Rechercher n\'importe quel objet...', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:UserManagementMenu' => 'Gestion des Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserManagementMenu+' => 'Gestion des Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
+
 	'Menu:ProfilesMenu' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
+
 	'Menu:UserAccountsMenu' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)	
+
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s du %4$s',
 	'UI:PropertiesTab' => 'Propriétés',
+
 	'UI:OpenDocumentInNewWindow_' => 'Ouvrir ce document dans une autre fenêtre: %1$s',
 	'UI:DownloadDocument_' => 'Télécharger ce document: %1$s',
 	'UI:Document:NoPreview' => 'L\'aperçu n\'est pas disponible pour ce type de documents',
 	'UI:Download-CSV' => 'Télécharger %1$s',
+
 	'UI:DeadlineMissedBy_duration' => 'Passé de %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 min',
-	'UI:Deadline_Minutes' => '%1$d min',
-	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
+	'UI:Deadline_LessThan1Min' => '< 1 min',		
+	'UI:Deadline_Minutes' => '%1$d min',			
+	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dj %2$dh %3$dmin',
 	'UI:Help' => 'Aide',
 	'UI:PasswordConfirm' => '(Confirmer)',
@@ -862,6 +991,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:RelationshipGraph' => 'Vue graphique',
 	'UI:RelationshipList' => 'Liste',
 	'UI:RelationGroups' => 'Groupes',
+	'UI:OperationCancelled' => 'Opération Annulée',
 	'UI:ElementsDisplayed' => 'Filtrage',
 	'UI:RelationGroupNumber_N' => 'Groupe n°%1$d',
 	'UI:Relation:ExportAsPDF' => 'Exporter en PDF...',
@@ -890,7 +1020,6 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:RelationTooltip:Redundancy' => 'Redondance',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => 'Nb éléments impactés: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Seuil critique: %1$d / %2$d',
-	'UI:OperationCancelled' => 'Opération Annulée',
 	'Portal:Title' => 'Portail utilisateur iTop',
 	'Portal:NoRequestMgmt' => 'Chèr(e) %1$s, vous avez été redirigé(e) vers cette page car votre compte utilisateur est configuré avec le profil \'Utilisateur du Portail\'. Malheureusement, iTop n\'a pas été installé avec le module de \'Gestion des Demandes\'. Merci de contacter votre administrateur iTop.',
 	'Portal:Refresh' => 'Rafraîchir',
@@ -906,7 +1035,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Portal:Disconnect' => 'Déconnexion',
 	'Portal:OpenRequests' => 'Mes requêtes en cours',
 	'Portal:ClosedRequests'  => 'Mes requêtes fermées',
-	'Portal:ResolvedRequests' => 'Mes requêtes résolues',
+	'Portal:ResolvedRequests'  => 'Mes requêtes résolues',
 	'Portal:SelectService' => 'Choisissez un service dans le catalogue:',
 	'Portal:PleaseSelectOneService' => 'Veuillez choisir un service',
 	'Portal:SelectSubcategoryFrom_Service' => 'Choisissez une sous-catégorie du service %1$s:',
@@ -925,7 +1054,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Portal:RemoveAttachment' => ' Enlever la pièce jointe ',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Pièce jointe #%1$d à %2$s (%3$s)',
 	'Portal:SelectRequestTemplate' => 'Sélectionnez un modèle de requête pour %1$s',
-	'Enum:Undefined' => 'Non défini',
+	'Enum:Undefined' => 'Non défini',	
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s J %2$s H %3$s min %4$s s',
 	'UI:ModifyAllPageTitle' => 'Modification par lots',
 	'UI:Modify_N_ObjectsOf_Class' => 'Modification de %1$d objet(s) de type %2$s',
@@ -937,7 +1066,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:BulkModifyStatus' => 'Opération',
 	'UI:BulkModifyStatus+' => '',
 	'UI:BulkModifyErrors' => 'Erreur',
-	'UI:BulkModifyErrors+' => '',
+	'UI:BulkModifyErrors+' => '',	
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => 'Erreur',
 	'UI:BulkModifyStatusModified' => 'Modifié',
@@ -953,7 +1082,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:CaseLog:InitialValue' => 'Valeur initiale:',
 	'UI:AttemptingToSetASlaveAttribute_Name' => 'Le champ %1$s ne peut pas être modifié car il est géré par une synchronisation avec une source de données. Valeur ignorée.',
 	'UI:ActionNotAllowed' => 'Vous n\'êtes pas autorisé à exécuter cette opération sur ces objets.',
-	'UI:BulkAction:NoObjectSelected' => 'Veuillez s\électionner au moins un objet pour cette opération.',
+	'UI:BulkAction:NoObjectSelected' => 'Veuillez s\\électionner au moins un objet pour cette opération.',
 	'UI:AttemptingToChangeASlaveAttribute_Name' => 'Le champ %1$s ne peut pas être modifié car il est géré par une synchronisation avec une source de données. Valeur inchangée.',
 	'UI:Pagination:HeaderSelection' => 'Total: %1$s éléments / %2$s éléments sélectionné(s).',
 	'UI:Pagination:HeaderNoSelection' => 'Total: %1$s éléments.',
@@ -967,8 +1096,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ArchiveMode:Banner' => 'Mode Archive',
 	'UI:ArchiveMode:Banner+' => 'Les objets archivés sont visibles, et aucune modification n\'est possible',
 	'UI:FavoriteOrganizations' => 'Organisations Favorites',
-	'UI:FavoriteOrganizations+' => 'Cochez dans la liste ci-dessous les organisations que vous voulez voir listées dans le menu principal. '.
-								   'Ceci n\'est pas un réglage de sécurité. Les objets de toutes les organisations sont toujours visibles en choisissant "Toutes les Organisations" dans le menu.',
+	'UI:FavoriteOrganizations+' => 'Cochez dans la liste ci-dessous les organisations que vous voulez voir listées dans le menu principal. Ceci n\'est pas un réglage de sécurité. Les objets de toutes les organisations sont toujours visibles en choisissant "Toutes les Organisations" dans le menu.',
 	'UI:FavoriteLanguage' => 'Langue de l\'interface utilisateur',
 	'UI:Favorites:SelectYourLanguage' => 'Choisissez votre langue préférée',
 	'UI:FavoriteOtherSettings' => 'Autres réglages',
@@ -1018,6 +1146,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ImportDashboardTitle' => 'Importation depuis un fichier',
 	'UI:ImportDashboardText' => 'Choisissez un fichier de définition de tableau de bord :',
 
+
 	'UI:DashletCreation:Title' => 'Créer un Indicateur',
 	'UI:DashletCreation:Dashboard' => 'Tableau de bord',
 	'UI:DashletCreation:DashletType' => 'Type d\'Indicateur',
@@ -1028,6 +1157,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashboardEdit:AutoReload' => 'Réactualisation automatique',
 	'UI:DashboardEdit:AutoReloadSec' => 'Réactualisation toutes les (secondes)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'Le minimum permis est de %1$d secondes',
+
 	'UI:DashboardEdit:Layout' => 'Mise en page',
 	'UI:DashboardEdit:Properties' => 'Propriétés du tableau de bord',
 	'UI:DashboardEdit:Dashlets' => 'Indicateurs',	
@@ -1142,7 +1272,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Month-10' => 'Octobre',
 	'Month-11' => 'Novembre',
 	'Month-12' => 'Décembre',
-
+	
 	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Di',
 	'DayOfWeek-Monday-Min' => 'Lu',
@@ -1163,11 +1293,11 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Month-10-Short' => 'Oct',
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Déc',
-	'Calendar-FirstDayOfWeek' => 1, // 0 = Sunday, 1 = Monday, etc...
-
+	'Calendar-FirstDayOfWeek' => '1', // 0 = Sunday, 1 = Monday, etc...
+	
 	'UI:Menu:ShortcutList' => 'Créer un Raccourci...',
-	'UI:ShortcutListDlg:Title' => 'Créer un raccourci pour la liste',
 	'UI:ShortcutRenameDlg:Title' => 'Renommer le raccourci',
+	'UI:ShortcutListDlg:Title' => 'Créer un raccourci pour la liste',
 	'UI:ShortcutDelete:Confirm' => 'Veuillez confirmer la suppression du ou des raccourci(s)',
 	'Menu:MyShortcuts' => 'Mes raccourcis', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Raccourci',
@@ -1188,14 +1318,33 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ValueMustBeSet' => 'Veuillez spécifier une valeur pour ce champ',
 	'UI:ValueMustBeChanged' => 'Veuillez modifier la valeur de ce champ',
 	'UI:ValueInvalidFormat' => 'Format invalide',
-	
+
 	'UI:CSVImportConfirmTitle' => 'Veuillez confirmer cette opération',
 	'UI:CSVImportConfirmMessage' => 'Etes-vous sûr(e) de vouloir faire cela ?',
 	'UI:CSVImportError_items' => 'Erreurs: %1$d',
 	'UI:CSVImportCreated_items' => 'Créations: %1$d',
 	'UI:CSVImportModified_items' => 'Modifications: %1$d',
 	'UI:CSVImportUnchanged_items' => 'Inchangés: %1$d',
-
+	'UI:CSVImport:DateAndTimeFormats' => 'Format de date et heure',
+	'UI:CSVImport:DefaultDateTimeFormat_Format_Example' => 'Format par défaut: %1$s (ex. %2$s)',
+	'UI:CSVImport:CustomDateTimeFormat' => 'Format spécial: %1$s',
+	'UI:CSVImport:CustomDateTimeFormatTooltip' => 'Codes de format:<table>
+<tr><td>Y</td><td>année (sur 4 chiffres, ex. 2016)</td></tr>
+<tr><td>y</td><td>année (sur 2 chiffres, ex. 16 pour 2016)</td></tr>
+<tr><td>m</td><td>mois (sur 2 chiffres: 01..12)</td></tr>
+<tr><td>n</td><td>month (sur 1 ou 2 chiffres sans le zero au début: 1..12)</td></tr>
+<tr><td>d</td><td>jour (sur 2 chiffres: 01..31)</td></tr>
+<tr><td>j</td><td>jour (sur 1 ou 2 chiffres sans le zero au début: 1..31)</td></tr>
+<tr><td>H</td><td>heure (24 heures sur 2 chiffres: 00..23)</td></tr>
+<tr><td>h</td><td>heure (12 heures sur 2 chiffres: 01..12)</td></tr>
+<tr><td>G</td><td>heure (24 heures sur 1 ou 2 chiffres: 0..23)</td></tr>
+<tr><td>g</td><td>heure (12 heures sur 1 ou 2 chiffres: 1..12)</td></tr>
+<tr><td>a</td><td>am ou pm (en minuscules)</td></tr>
+<tr><td>A</td><td>AM ou PM (en majuscules)</td></tr>
+<tr><td>i</td><td>minutes (sur 2 chiffres: 00..59)</td></tr>
+<tr><td>s</td><td>secondes (sur 2 chiffres: 00..59)</td></tr>
+</table>',
+		
 	'UI:Button:Remove' => 'Enlever',
 	'UI:AddAnExisting_Class' => 'Ajouter des objets de type %1$s...',
 	'UI:SelectionOf_Class' => 'Sélection d\'objets de type %1$s',
@@ -1206,15 +1355,15 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:About:Support' => 'Informations pour le support',
 	'UI:About:Licenses' => 'Licences',
 	'UI:About:InstallationOptions' => 'Options d\'installation',
-	'UI:About:Extension_Version' => 'Version: %1$s',
 	'UI:About:ManualExtensionSource' => 'Extension',
-		
+	'UI:About:Extension_Version' => 'Version: %1$s',
+	'UI:About:RemoteExtensionSource' => 'Data~~',	
 	
 	'UI:DisconnectedDlgMessage' => 'Vous êtes déconnecté(e). Vous devez vous identifier pour pouvoir continuer à utiliser l\'application.',
 	'UI:DisconnectedDlgTitle' => 'Attention !',
 	'UI:LoginAgain' => 'S\'identifier',
 	'UI:StayOnThePage' => 'Rester sur cette page',
-		
+	
 	'ExcelExporter:ExportMenu' => 'Exporter pour Excel...',
 	'ExcelExporter:ExportDialogTitle' => 'Export au format Excel',
 	'ExcelExporter:ExportButton' => 'Exporter',
@@ -1224,7 +1373,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'ExcelExporter:Done' => 'Terminé.',
 	'ExcelExport:AutoDownload' => 'Téléchargement automatique dès que le fichier est prêt',
 	'ExcelExport:PreparingExport' => 'Préparation de l\'export...',
-	'ExcelExport:Statistics' => 'Statistiques',	
+	'ExcelExport:Statistics' => 'Statistiques',
 	'portal:legacy_portal' => 'Portail Utilisateurs',
 	'portal:backoffice' => 'Console iTop',
 
@@ -1237,7 +1386,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	
 	'UI:Menu:ExportPDF' => 'Exporter en PDF...',
 	'UI:Menu:PrintableVersion' => 'Version imprimable',
-
+	
 	'UI:BrowseInlineImages' => 'Parcourir les images...',
 	'UI:UploadInlineImageLegend' => 'Ajouter une image',
 	'UI:SelectInlineImageToUpload' => 'Sélectionnez l\'image à ajouter',
@@ -1251,7 +1400,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	// Search form
 	'UI:Search:Toggle' => 'Réduire / Ouvrir',
-    'UI:Search:AutoSubmit:DisabledHint' => 'La soumission automatique a été desactivée pour cette classe',
+	'UI:Search:AutoSubmit:DisabledHint' => 'La soumission automatique a été desactivée pour cette classe',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Ajoutez des critères dans le formulaire de recherche ou cliquez sur le bouton rechercher pour voir les objets.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Ajouter un critère',
 	// - Add new criteria button
@@ -1293,13 +1442,13 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s : Indifférent',
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s : %2$s',
-	//   - External key widget
-	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s est renseigné',
-	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s n\'est pas renseigné',
-	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
-	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s : %2$s',
-	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s : %2$s et %3$s autres',
-	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s : Indifférent',
+    //   - External key widget
+    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s est renseigné',
+    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s n\'est pas renseigné',
+    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s : %2$s',
+    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s : %2$s et %3$s autres',
+    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s : Indifférent',
     //   - Hierarchical key widget
     'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s est renseigné',
     'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s n\'est pas renseigné',
@@ -1307,10 +1456,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
     'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s : %2$s',
     'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s : %2$s et %3$s autres',
     'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s : Indifférent',
-	//   - Tag Set Widget
-	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Contient',
 
-	/// - Criteria operators
+	// - Criteria operators
 	//   - Default widget
 	'UI:Search:Criteria:Operator:Default:Empty' => 'Vide',
 	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Non vide',
@@ -1328,6 +1475,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Inférieur',  // => '<',
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Inf. / égal',  // > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Différent',  // => '≠',
+	//   - Tag Set Widget
+	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Contient',
 
 	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filtrez...',
@@ -1351,18 +1500,11 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:DateTime:PlaceholderFromTime' => 'Indifférent',
 	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Indifférent',
 	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Indifférent',
+	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Children of the selected objects will be included.~~',
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtré',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
-
-	// - Tags admin
-	'Menu:TagAdminMenu' => 'Etiquettes',
-	'Menu:TagAdminMenu+' => 'Gestion des étiquettes',
-	'UI:TagAdminMenu:Title' => 'Gestion des étiquettes',
-	'UI:TagAdminMenu:NoTags' => 'Pas de champ étiquette configuré',
-	'UI:TagSetFieldData:Error' => 'Erreur: %1$s',
 ));
-
 
 //
 // Expression to Natural language

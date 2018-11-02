@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,8 +8,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 'Menu:ServiceManagement' => 'Управление услугами',
 'Menu:ServiceManagement+' => 'Управление услугами',
@@ -322,8 +319,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => 'Устаревшее',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'Эксплуатация',
-	'Class:ServiceSubcategory/Attribute:service_provider' => 'Поставщик',
-	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Поставщик',
 ));
 
 //
