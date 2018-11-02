@@ -522,21 +522,6 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 * @return string a unique param name
-	 */
-	private function GenerateUniqueParamName() {
-		$iExistingParamsNb = count($this->m_aParams);
-		$iCurrentArrayParamNb = $iExistingParamsNb + 1;
-		$sParamName = 'param'.$iCurrentArrayParamNb;
-
-		if (isset($this->m_aParams[$sParamName])) {
-			$sParamName .= '_'.microtime(true) . '_' .rand(0,100);
-		}
-
-		return $sParamName;
-	}
-
-	/**
 	 * Specify a condition on external keys or link sets
 	 * @param string $sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
 	 *                 Example: infra_list->ci_id->location_id->country
