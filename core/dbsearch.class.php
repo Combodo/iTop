@@ -726,6 +726,15 @@ abstract class DBSearch
 	 */
 	public abstract function GetCriteria();
 
+	public abstract function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true);
+
+	/**
+	 * @return string a unique param name
+	 */
+	protected function GenerateUniqueParamName() {
+		return str_replace('.', '', 'param_'.microtime(true).rand(0,100));
+	}
+
 	////////////////////////////////////////////////////////////////////////////
 	//
 	// Cache/Trace/Log queries

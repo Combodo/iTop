@@ -628,4 +628,22 @@ class DBUnionSearch extends DBSearch
 			$oSearch->SetDataFiltered();
 		}
 	}
+
+	public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true)
+	{
+		$sInParamName = $this->GenerateUniqueParamName();
+		foreach ($this->aSearches as $iSearchIndex => $oSearch)
+		{
+			$oFieldExpression = new FieldExpression($sFilterCode, $oSearch->GetClassAlias());
+
+			$sOperator = $bPositiveMatch ? 'IN' : 'NOT IN';
+
+			$oParamExpression = new VariableExpression($sInParamName);
+			$oSearch->GetInternalParamsByRef()[$sInParamName] = $aValues;
+
+			$oListExpression = new ListExpression(array($oParamExpression));
+			$oInCondition = new BinaryExpression($oFieldExpression, $sOperator, $oListExpression);
+			$oSearch->AddConditionExpression($oInCondition);
+		}
+	}
 }
