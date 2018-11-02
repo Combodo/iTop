@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -26,7 +26,7 @@
  * @author Hipska (2018)
  * @author jbostoen (2018)
  * 
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -49,7 +49,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeSet:placeholder' => 'klik om toe te voegen~~',
     'Core:AttributeCaseLog' => 'Log',
     'Core:AttributeCaseLog+' => '',
-    'Core:AttributeMetaEnum' => 'Berekende oplijsting',
+    'Core:AttributeMetaEnum' => 'Afgeleide oplijsting',
     'Core:AttributeMetaEnum+' => '', 
 	
 	'Core:AttributeLinkedSetIndirect' => 'Reeks van objecten (N-N)',
@@ -967,7 +967,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Het label mag niet \'%1$s\' bevatten en mag ook niet leeg zijn',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Codes kunnen niet aangepast worden als tags in gebruik zijn',
 	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" kunnen niet aangepast worden',
-	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribuut Code" kunnen niet aangepast worden',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribuutcode" kunnen niet aangepast worden',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Gebruik tags (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Geen invoer gevorden voor deze tag',
 ));
