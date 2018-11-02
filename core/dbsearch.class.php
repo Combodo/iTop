@@ -674,11 +674,30 @@ abstract class DBSearch
 		return $sRes;
 	}
 
+	protected abstract function IsDataFiltered();
+	protected abstract function SetDataFiltered();
 
 	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
 	{
-		$oSQLQuery = $this->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
-		$oSQLQuery->SetSourceOQL($this->ToOQL());
+		$oSearch = $this;
+		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered())
+		{
+			$oVisibleObjects = UserRights::GetSelectFilter($this->GetClass(), $this->GetModifierProperties('UserRightsGetSelectFilter'));
+			if ($oVisibleObjects === false)
+			{
+				// Make sure this is a valid search object, saying NO for all
+				$oVisibleObjects = DBObjectSearch::FromEmptySet($this->GetClass());
+			}
+			if (is_object($oVisibleObjects))
+			{
+				$oVisibleObjects->AllowAllData();
+				$oSearch = $this->Intersect($oVisibleObjects);
+				/** @var DBSearch $oSearch */
+				$oSearch->SetDataFiltered();
+			}
+		}
+		$oSQLQuery = $oSearch->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
+		$oSQLQuery->SetSourceOQL($oSearch->ToOQL());
 
 		// Join to an additional table, if required...
 		//
@@ -701,6 +720,11 @@ abstract class DBSearch
 	public abstract function GetSQLQueryStructure(
 		$aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null
 	);
+
+	/**
+	 * @return \Expression
+	 */
+	public abstract function GetCriteria();
 
 	////////////////////////////////////////////////////////////////////////////
 	//

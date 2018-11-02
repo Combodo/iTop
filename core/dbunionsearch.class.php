@@ -312,9 +312,9 @@ class DBUnionSearch extends DBSearch
 
 	/**
 	 * Specify a condition on external keys or link sets
-	 * @param sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
+	 * @param String sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
 	 *                 Example: infra_list->ci_id->location_id->country	 
-	 * @param value The value to match (can be an array => IN(val1, val2...)
+	 * @param Object value The value to match (can be an array => IN(val1, val2...)
 	 * @return void
 	 */
 	public function AddConditionAdvanced($sAttSpec, $value)
@@ -597,5 +597,35 @@ class DBUnionSearch extends DBSearch
 		//MyHelpers::var_dump_html($oSQLQuery->RenderSelect(), true);
 		if (self::$m_bDebugQuery) $oSQLQuery->DisplayHtml();
 		return $oSQLQuery;
+	}
+
+	/**
+	 * @return \Expression
+	 */
+	public function GetCriteria()
+	{
+		return new TrueExpression();
+	}
+
+	protected function IsDataFiltered()
+	{
+		$bIsAllDataFiltered = true;
+		foreach ($this->aSearches as $oSearch)
+		{
+			if (!$oSearch->IsDataFiltered())
+			{
+				$bIsAllDataFiltered = false;
+				break;
+			}
+		}
+		return $bIsAllDataFiltered;
+	}
+
+	protected function SetDataFiltered()
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->SetDataFiltered();
+		}
 	}
 }
