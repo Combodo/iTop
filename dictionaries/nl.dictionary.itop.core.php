@@ -22,6 +22,9 @@
  * 
  * Linux & Open Source Professionals
  * http://www.linprofs.com
+ *
+ * @author Hipska (2018)
+ * @author jbostoen (2018)
  * 
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
@@ -40,7 +43,15 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Core:AttributeLinkedSet' => 'Reeks van objecten',
 	'Core:AttributeLinkedSet+' => 'Elke soort objecten van dezelfde klasse of subklasse',
-
+	
+	'Core:AttributeTagSet' => 'Lijst van tags',
+    'Core:AttributeTagSet+' => '',
+	'Core:AttributeSet:placeholder' => 'klik om toe te voegen~~',
+    'Core:AttributeCaseLog' => 'Log',
+    'Core:AttributeCaseLog+' => '',
+    'Core:AttributeMetaEnum' => 'Berekende oplijsting',
+    'Core:AttributeMetaEnum+' => '', 
+	
 	'Core:AttributeLinkedSetIndirect' => 'Reeks van objecten (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Elke soort objecten [subklasse] van dezelfde klasse',
 
@@ -186,6 +197,10 @@ Operators:<br/>
 
 	'Core:FriendlyName-Label' => 'Referentie',
 	'Core:FriendlyName-Description' => 'Referentie',
+	 
+	'Core:AttributeTag' => 'Tags',
+	'Core:AttributeTag+' => 'Tags',
+	
 ));
 
 
@@ -386,7 +401,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 ));
 
 //
-// Classes: EventWebService and EventRestService
+// Class: EventWebService
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -403,7 +418,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventWebService/Attribute:log_error' => 'Foutenlog',
 	'Class:EventWebService/Attribute:log_error+' => 'Resultaat foutenlog',
 	'Class:EventWebService/Attribute:data' => 'Data',
-	'Class:EventWebService/Attribute:data+' => 'Resulterende data',
+	'Class:EventWebService/Attribute:data+' => 'Resulterende data'
+));
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventRestService' => 'REST/JSON aanroep',
 	'Class:EventRestService+' => 'Log van een aangeroepen REST/JSON-service',
 	'Class:EventRestService/Attribute:operation' => 'Handeling',
@@ -576,7 +594,24 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TriggerOnObjectCreate' => 'Trigger (bij het aanmaken van een object)',
-	'Class:TriggerOnObjectCreate+' => 'Trigger bij het aanmaken van een object van [de child klasse van] de bepaalde klasse',
+	'Class:TriggerOnObjectCreate+' => 'Trigger bij het aanmaken van een object van de opgegeven klasse (of subklasse ervan)',
+));
+
+//
+// Class: TriggerOnObjectDelete
+//
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:TriggerOnObjectDelete' => 'Trigger (bij het verwijderen van een object)',
+	'Class:TriggerOnObjectDelete+' => 'Trigger bij het verwijderen van een object van de opgegeven klasse (of subklasse ervan)',
+));
+//
+// Class: TriggerOnObjectUpdate
+//
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:TriggerOnObjectUpdate' => 'Trigger (bij het aanpassen van een object)',
+	'Class:TriggerOnObjectUpdate+' => 'Trigger bij het aanpassen van een object van de opgegeven klasse (of subklasse ervan)',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Doelvelden',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //
@@ -618,7 +653,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Naam',
 	'Class:SynchroDataSource/Attribute:name+' => 'Naam',
 	'Class:SynchroDataSource/Attribute:description' => 'Beschrijving',
-	'Class:SynchroDataSource/Attribute:status' => 'Status', //TODO: enum values
+	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Target klasse',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Gebruiker',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Verwittig dit contact',
@@ -627,7 +662,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink een (kleine) afbeelding die de applicatie waarmee iTop is gesynchroniseerd',
 	'Class:SynchroDataSource/Attribute:url_application' => 'Hyperlink van de applicatie',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink naar het iTop object in de externe applicatie waarmee iTop is gesynchroniseerd (indien van toepassing). Mogelijke procurators: $this->attribute$ and $replica->primary_key$',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation policy', //TODO enum values
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation-beleid',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Vernieuwingsinterval',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Het volledige herladen van alle data moet minstens om deze tijd gebeuren.',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Actie op nul',
@@ -637,8 +672,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Actie op meerdere',
 	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Actie die wordt ondernomen wanneer de zoekopdracht meerdere objecten geeft',
 	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Gebruikers toegestaan',
-	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Wie is geautoriseerd om gesynchroniseerde objecten te verwijderen',
-	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Gebruikers toegestaan',
+	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Wie is geautoriseerd om gesynchroniseerde objecten te verwijderen', 
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Niemand',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Alleen administrators',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'Alle geautoriseerde gebruikers',
@@ -672,8 +706,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:Synchro:NeverRun' => 'Deze synchro heeft nog niet gelopen. Er is nog geen log.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'De laatste synchronisatie eindigde op %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'De synchronisatie is gestart op %1$s en is nog bezig...',
-	'Menu:DataSources' => 'Synchronisatie Databronnen',
-	'Menu:DataSources+' => 'Alle gesynchroniseerde Databronnen',
+	'Menu:DataSources' => 'Synchronisatie Databronnen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'Alle gesynchroniseerde Databronnen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Genegeerd (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Verdwenen (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Bestaand (%1$s)',
@@ -693,8 +727,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica verwerkt: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
-	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Tenminste één reconciliation-sleutel (key) moet worden opgegeven, of de reconciliation policy moet zijn dat de primaire sleutel (key) wordt gebruikt.',			
-	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Een retention period voor het verwijderen moet worden opgegeven, omdat alle objecten verwijderd worden nadat ze gemarkeerd zijn als overbodig',			
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Tenminste één reconciliation-sleutel (key) moet worden opgegeven, of de reconciliation policy moet zijn dat de primaire sleutel (key) wordt gebruikt.',
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Een retention period voor het verwijderen moet worden opgegeven, omdat alle objecten verwijderd worden nadat ze gemarkeerd zijn als overbodig',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Overbodige objecten moeten worden geüpdatet, maar er is geen update opgegeven.',
 	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'De tabel %1$s bestaat al in de database. Gebruik alstublieft een andere naam voor deze synchro-datatabel.',
 	'Core:SynchroReplica:PublicData' => 'Publieke Data',
@@ -827,13 +861,18 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Attribute Duration
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	// Attribute Duration
 	'Core:Duration_Seconds'	=> '%1$ds',	
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',	
-	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',		
-	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',		
+	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
+	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
+	
+	// Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Tijd voorbij (opgeslagen als \"%1$s\")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tijd gespendeerd voor \"%1$s\"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline voor \"%1$s\" at %2$d%%',
+	
+	// Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Ontbrekende parameter \"%1$s\"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Ongeldige waarde voor de parameter \"query\". Er is geen Query Phrasebook die overeenkomt met id: \"%1$s\".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export-formaat:',
@@ -868,8 +907,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:BulkExport:XMLOptions' => 'Opties voor XML',
 	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML-formaat (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Opties voor Spreadsheet',
-	'Core:BulkExport:OptionLinkSets' => 'Voeg gelinkte objecten toe',
 	'Core:BulkExport:OptionNoLocalize' => 'Exporteer code/waarde in plaats van label',
+	'Core:BulkExport:OptionLinkSets' => 'Voeg gelinkte objecten toe',
 	'Core:BulkExport:OptionFormattedText' => 'Behoud tekstopmaak',
 	'Core:BulkExport:ScopeDefinition' => 'Definitie van de te exporteren objecten',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:',
@@ -881,6 +920,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:BulkExportLegacyExport' => 'Klik hier om de oude export te gebruiken',
 	'Core:BulkExport:XLSXOptions' => 'Opties voor Excel',
 	'Core:BulkExport:TextFormat' => 'Tekstvelden die HTML-opmaak bevatten',
+	'Core:BulkExport:DateTimeFormat' => 'Datum- en tijdformaat',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Standaardformaat (%1$s), bv. %2$s',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Aangepast formaat: %1$s',
+	'Core:BulkExport:PDF:PageNumber' => 'Pagina %1$s',
 	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
@@ -902,7 +945,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	
 	
 ));
-
 
 //
 // Class: TagSetFieldData
