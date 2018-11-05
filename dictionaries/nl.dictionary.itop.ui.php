@@ -685,7 +685,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Query:UrlForExcel' => 'URL om te gebruiken voor MS Excel-webqueries',
 	'UI:Query:UrlV1' => 'De lijst van velden is leeg gelaten. De pagina <em>export-V2.php</em> kan niet aangeroepen worden zonder deze informatie.'.
 		'Daarom verwijst de onderstaande link naar de oude export-pagina: <em>export.php</em>. '. 
-		'Deze verouderde versie heeft enkele beperkingen: de lijst van geëxporteerde velden kan verschillen afhankelijk van het gekozen export-formaat en het datamodel van iTop. ' 
+		'Deze verouderde versie heeft enkele beperkingen: de lijst van geëxporteerde velden kan verschillen afhankelijk van het gekozen export-formaat en het datamodel van iTop. ' .
 		'Als je wil dat de lijst van geëxporteerde kolommen hetzelfde blijft over lange tijd, dan moet je een waarde opgeven voor het attribuut "Velden" en de pagina <em>export-V2.php</em> gebruiken.',
 	'UI:Schema:Title' => 'iTop objecten schema',
 	'UI:Schema:CategoryMenuItem' => 'Categorie <b>%1$s</b>',
