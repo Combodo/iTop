@@ -855,17 +855,20 @@ abstract class DBObject implements iDisplay
 		return $oAtt->GetAsCSV($this->GetOriginal($sAttCode), $sSeparator, $sTextQualifier, $this, $bLocalize, $bConvertToPlainText);
 	}
 
-	/**
-	 * @param $sObjClass
-	 * @param $sObjKey
-	 * @param string $sHtmlLabel Label with HTML entities escaped (< escaped as &lt;)
-	 * @param null $sUrlMakerClass
-	 * @param bool|true $bWithNavigationContext
-	 * @param bool|false $bArchived
-	 * @param bool|false $bObsolete
-	 * @return string
-	 * @throws DictExceptionMissingString
-	 */
+    /**
+     * @param string $sObjClass
+     * @param string $sObjKey
+     * @param string $sHtmlLabel Label with HTML entities escaped (< escaped as &lt;)
+     * @param null $sUrlMakerClass
+     * @param bool|true $bWithNavigationContext
+     * @param bool|false $bArchived
+     * @param bool|false $bObsolete
+     *
+     * @return string
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     * @throws \DictExceptionMissingString
+     */
 	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true, $bArchived = false, $bObsolete = false)
 	{
 		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
@@ -936,11 +939,23 @@ abstract class DBObject implements iDisplay
 		return $sRet;
 	}
 
-	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true)
+    /**
+     * @param string $sUrlMakerClass
+     * @param bool $bWithNavigationContext
+     * @param string $sLabel
+     *
+     * @return string
+     * @throws \DictExceptionMissingString
+     */
+	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true, $sLabel = null)
 	{
+	    if($sLabel === null)
+        {
+            $sLabel = $this->GetName();
+        }
 		$bArchived = $this->IsArchived();
 		$bObsolete = $this->IsObsolete();
-		return self::MakeHyperLink(get_class($this), $this->GetKey(), $this->GetName(), $sUrlMakerClass, $bWithNavigationContext, $bArchived, $bObsolete);
+		return self::MakeHyperLink(get_class($this), $this->GetKey(), $sLabel, $sUrlMakerClass, $bWithNavigationContext, $bArchived, $bObsolete);
 	}
 	
 	public static function ComputeStandardUIPage($sClass)
