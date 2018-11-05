@@ -44,7 +44,7 @@ class UniquenessConstraintTest extends ItopTestCase
 		$this->assertEquals($bIsRuleShouldBeValid, $bRuleValidResult, "Validity test returned $bRuleValidResult");
 	}
 
-	public function testUniquenessRuleValidityCheckProvider()
+	public function uniquenessRuleValidityCheckProvider()
 	{
 		return array(
 			'simplest rule' => array(true, false, array('attributes' => array('name'))),
