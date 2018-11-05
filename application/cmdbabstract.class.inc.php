@@ -2008,7 +2008,7 @@ EOF
 					}
 					else
 					{
-						$sUrl = $sDefaultUrl;
+						$sUrl = null;
 					}
 
 					$sHTMLValue = "<div class=\"field_input_zone field_input_image\"><div id=\"edit_$iInputId\" class=\"edit-image\"></div></div>\n";
