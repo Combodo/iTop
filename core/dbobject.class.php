@@ -1406,6 +1406,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 * @since 2.6 N°659 uniqueness constraint
+	 * @api
 	 */
 	protected function DoCheckUniqueness()
 	{
@@ -1471,6 +1472,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 * @since 2.6 N°659 uniqueness constraint
+	 * @api
 	 */
 	protected function GetUniquenessDuplicatesQuery($aUniquenessSingleRule)
 	{
@@ -1503,6 +1505,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
+	 * @api
 	 */
 	public function DoCheckToWrite()
 	{
@@ -1567,6 +1570,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
+	 * @internal do not overwrite ! Use {@link DoCheckToWrite} instead
 	 */
 	final public function CheckToWrite()
 	{
