@@ -7284,10 +7284,13 @@ class AttributeImage extends AttributeBlob
 	 * @param bool $bLocalize
 	 *
 	 * @return string
+	 *
+	 * @see edit_image.js for JS generated markup in form edition
 	 */
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$sRet = '';
+		$bIsCustomImage = false;
 
 		$iMaxWidthPx = $this->Get('display_max_width').'px';
 		$iMaxHeightPx = $this->Get('display_max_height').'px';
@@ -7299,10 +7302,14 @@ class AttributeImage extends AttributeBlob
 
 		$sCustomImageUrl = $this->GetAttributeImageFileUrl($value, $oHostObject);
 		if ($sCustomImageUrl !== null) {
+			$bIsCustomImage = true;
 			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $iMaxWidthPx, $iMaxHeightPx);
 		}
 
-		return '<div class="view-image" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';"><span class="helper-middle"></span>'.$sRet.'</div>';
+		$sCssClasses = 'view-image attribute-image';
+		$sCssClasses .= ' '.(($bIsCustomImage) ? 'attribute-image-custom' : 'attribute-image-default');
+
+		return '<div class="'.$sCssClasses.'" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';"><span class="helper-middle"></span>'.$sRet.'</div>';
 	}
 
 	private function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx) {
