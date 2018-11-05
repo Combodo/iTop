@@ -91,11 +91,11 @@ try
 		$oObj = $oWizardHelper->GetTargetObject();
 		if (array_key_exists('query_params', $aExtraParams))
 		{
-			$aExtraParams['query_params']['this'] = $oObj;
+			$aExtraParams['query_params']['this->object()'] = $oObj;
 		}
 		else
 		{
-			$aExtraParams['query_params'] = array('this' => $oObj);
+			$aExtraParams['query_params'] = array('this->object()' => $oObj);
 		}
 
 //        // Current extkey value, so we can display event if it is not available anymore (eg. archived).

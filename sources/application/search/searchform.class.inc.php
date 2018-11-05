@@ -202,7 +202,7 @@ class SearchForm
 		}
 
 		$oBaseSearch = $oSearch->DeepClone();
-		if (method_exists($oSearch, 'GetCriteria'))
+		if ($oSearch instanceof DBObjectSearch)
 		{
 			$oBaseSearch->ResetCondition();
 		}
@@ -487,7 +487,7 @@ class SearchForm
 		$bIsEmptyExpression = true;
 		$aArgs = MetaModel::PrepareQueryArguments($aArgs, $oSearch->GetInternalParams());
 
-		if (method_exists($oSearch, 'GetCriteria'))
+		if ($oSearch instanceof DBObjectSearch)
 		{
 			$oExpression = $oSearch->GetCriteria();
 
