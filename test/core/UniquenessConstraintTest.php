@@ -23,7 +23,7 @@ class UniquenessConstraintTest extends ItopTestCase
 
 	/**
 	 * @covers       MetaModel::CheckUniquenessRuleValidity
-	 * @dataProvider testUniquenessRuleValidityCheckProvider
+	 * @dataProvider uniquenessRuleValidityCheckProvider
 	 *
 	 * @param bool $bIsRuleShouldBeValid
 	 * @param bool $bIsRuleOverride
