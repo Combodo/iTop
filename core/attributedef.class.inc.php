@@ -3696,11 +3696,19 @@ class AttributeEncryptedString extends AttributeString
 }
 
 
-// Wiki formatting - experimental
-//
-// [[<objClass>:<objName>]]
-// Example: [[Server:db1.tnut.com]]
-define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
+/**
+ * Wiki formatting - experimental
+ *
+ * [[<objClass>:<objName|objId>|<label>]]
+ * <label> is optional
+ *
+ * Examples:
+ * - [[Server:db1.tnut.com]]
+ * - [[Server:123]]
+ * - [[Server:db1.tnut.com|Production server]]
+ * - [[Server:123|Production server]]
+ */
+define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)(\|(.+))?\]\]/U');
 
 
 /**
@@ -3791,21 +3799,34 @@ class AttributeText extends AttributeString
 			{
 				$sClass = trim($aMatches[1]);
 				$sName = trim($aMatches[2]);
+				$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
 				if (MetaModel::IsValidClass($sClass))
 				{
-					$oObj = MetaModel::GetObjectByName($sClass, $sName, false /* MustBeFound */);
-					if (is_object($oObj))
-					{
+				    $bFound = false;
+
+				    // Try to find by name, then by id
+					if (is_object($oObj = MetaModel::GetObjectByName($sClass, $sName, false /* MustBeFound */)))
+                    {
+                        $bFound = true;
+                    }
+                    elseif(is_object($oObj = MetaModel::GetObject($sClass, (int) $sName, false /* MustBeFound */, true)))
+                    {
+                        $bFound = true;
+                    }
+
+                    if($bFound === true)
+                    {
 						// Propose a std link to the object
-						$sText = str_replace($aMatches[0], $oObj->GetHyperlink(), $sText);
+                        $sHyperlinkLabel = (empty($sLabel)) ? $oObj->GetName() : $sLabel;
+                        $sText = str_replace($aMatches[0], $oObj->GetHyperlink(null, true, $sHyperlinkLabel), $sText);
 					}
 					else
 					{
 						// Propose a std link to the object
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sText = str_replace($aMatches[0],
-							"<span class=\"wiki_broken_link\">$sClassLabel:$sName</span>", $sText);
+						$sReplacement = "<span class=\"wiki_broken_link\">$sClassLabel:$sName" . (!empty($sLabel) ? " ($sLabel)" : "") . "</span>";
+						$sText = str_replace($aMatches[0], $sReplacement, $sText);
 						// Later: propose a link to create a new object
 						// Anyhow... there is no easy way to suggest default values based on the given FRIENDLY name
 						//$sText = preg_replace('/\[\[(.+):(.+)\]\]/', '<a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$sClass.'&default[att1]=xxx&default[att2]=yyy">'.$sName.'</a>', $sText);
@@ -3859,13 +3880,15 @@ class AttributeText extends AttributeString
 			{
 				foreach($aAllMatches as $iPos => $aMatches)
 				{
-					$sClass = $aMatches[1];
-					$sName = $aMatches[2];
+					$sClass = trim($aMatches[1]);
+					$sName = trim($aMatches[2]);
+					$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
 					if (MetaModel::IsValidClass($sClass))
 					{
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sValue = str_replace($aMatches[0], "[[$sClassLabel:$sName]]", $sValue);
+						$sReplacement = "[[$sClassLabel:$sName" . (!empty($sLabel) ? " | $sLabel" : "") . "]]";
+						$sValue = str_replace($aMatches[0], $sReplacement, $sValue);
 					}
 				}
 			}
@@ -3916,15 +3939,17 @@ class AttributeText extends AttributeString
 				{
 					foreach($aAllMatches as $iPos => $aMatches)
 					{
-						$sClassLabel = $aMatches[1];
-						$sName = $aMatches[2];
+						$sClassLabel = trim($aMatches[1]);
+						$sName = trim($aMatches[2]);
+                        $sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
 						if (!MetaModel::IsValidClass($sClassLabel))
 						{
 							$sClass = MetaModel::GetClassFromLabel($sClassLabel);
 							if ($sClass)
 							{
-								$sValue = str_replace($aMatches[0], "[[$sClass:$sName]]", $sValue);
+                                $sReplacement = "[[$sClassLabel:$sName" . (!empty($sLabel) ? " | $sLabel" : "") . "]]";
+								$sValue = str_replace($aMatches[0], $sReplacement, $sValue);
 							}
 						}
 					}
