@@ -604,7 +604,9 @@ class DBUnionSearch extends DBSearch
 	 */
 	public function GetCriteria()
 	{
-		return new TrueExpression();
+		// We're at the limit here
+		$oSearch = reset($this->aSearches);
+		return $oSearch->GetCriteria();
 	}
 
 	protected function IsDataFiltered()
