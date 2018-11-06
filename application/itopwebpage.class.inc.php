@@ -104,7 +104,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script('../js/jquery.mousewheel.js');
 		$this->add_linked_script('../js/jquery.magnific-popup.min.js');
 		$this->add_linked_script('../js/breadcrumb.js');
-		$this->add_linked_script('../js/moment.min.js');
+		$this->add_linked_script('../js/moment-with-locales.min.js');
 
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
 
