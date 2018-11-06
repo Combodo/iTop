@@ -1,6 +1,7 @@
 <?php
-use Html2Text\Html2Text;
+
 use Leafo\ScssPhp\Compiler;
+
 // Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
@@ -826,7 +827,7 @@ class utils
 
 	/**
 	 * Helper to handle the variety of HTTP servers
-	 * See #286 (fixed in [896]), and #634 (this fix)
+	 * See N°286 (fixed in [896]), and N°634 (this fix)
 	 * 	 
 	 * Though the official specs says 'a non empty string', some servers like IIS do set it to 'off' !
 	 * nginx set it to an empty string

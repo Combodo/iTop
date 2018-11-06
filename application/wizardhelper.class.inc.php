@@ -154,7 +154,7 @@ class WizardHelper
 					}
 					else
 					{
-						// May happen for security reasons (portal, see ticket #1074)
+						// May happen for security reasons (portal, see ticket N°1074)
 						$oObj->Set($sAttCode, $value);
 					}
 				}
