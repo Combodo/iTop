@@ -167,7 +167,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_character_set' => array( // @deprecated to remove in 2.7 ? #1001 utf8mb4 switch
+		'db_character_set' => array( // @deprecated to remove in 2.7 ? N°1001 utf8mb4 switch
 			'type' => 'string',
 			'description' => 'Deprecated since iTop 2.5 : now using utf8mb4',
 			'default' => 'DEPRECATED_2.5',
@@ -175,7 +175,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_collation' => array( // @deprecated to remove in 2.7 ? #1001 utf8mb4 switch
+		'db_collation' => array( // @deprecated to remove in 2.7 ? N°1001 utf8mb4 switch
 			'type' => 'string',
 			'description' => 'Deprecated since iTop 2.5 : now using utf8mb4_unicode_ci',
 			'default' => 'DEPRECATED_2.5',
@@ -1560,7 +1560,7 @@ class Config
 	/**
 	 * @return string
 	 *
-	 * @deprecated 2.5 will be removed in 2.6 #1001 utf8mb4 switch
+	 * @deprecated 2.5 will be removed in 2.6 N°1001 utf8mb4 switch
 	 * @see Config::DEFAULT_CHARACTER_SET
 	 */
 	public function GetDBCharacterSet()
@@ -1571,7 +1571,7 @@ class Config
 	/**
 	 * @return string
 	 *
-	 * @deprecated 2.5 will be removed in 2.6 #1001 utf8mb4 switch
+	 * @deprecated 2.5 will be removed in 2.6 N°1001 utf8mb4 switch
 	 * @see Config::DEFAULT_COLLATION
 	 */
 	public function GetDBCollation()

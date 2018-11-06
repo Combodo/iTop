@@ -114,12 +114,12 @@ class CMDBSource
 	protected static $m_sDBName;
 	/**
 	 * @var boolean
-	 * @since 2.5 #1260 MySQL TLS first implementation
+	 * @since 2.5 N°1260 MySQL TLS first implementation
 	 */
 	protected static $m_bDBTlsEnabled;
 	/**
 	 * @var string
-	 * @since 2.5 #1260 MySQL TLS first implementation
+	 * @since 2.5 N°1260 MySQL TLS first implementation
 	 */
 	protected static $m_sDBTlsCA;
 
@@ -133,7 +133,7 @@ class CMDBSource
 	 * use expression as value)
 	 *
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-column.html
-	 * @since 2.5 #1001 switch to utf8mb4
+	 * @since 2.5 N°1001 switch to utf8mb4
 	 */
 	public static function GetSqlStringColumnDefinition()
 	{
@@ -1042,7 +1042,7 @@ class CMDBSource
 	 * @return string query to upgrade table charset and collation if needed, null if not
 	 * @throws \MySQLException
 	 *
-	 * @since 2.5 #1001 switch to utf8mb4
+	 * @since 2.5 N°1001 switch to utf8mb4
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-table.html
 	 */
 	public static function DBCheckTableCharsetAndCollation($sTableName)
@@ -1192,7 +1192,7 @@ class CMDBSource
 	 * @return string query to upgrade database charset and collation if needed, null if not
 	 * @throws \MySQLException
 	 *
-	 * @since 2.5 #1001 switch to utf8mb4
+	 * @since 2.5 N°1001 switch to utf8mb4
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
 	 */
 	public static function DBCheckCharsetAndCollation()
