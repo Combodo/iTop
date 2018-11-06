@@ -7109,25 +7109,32 @@ abstract class MetaModel
 				{
 					// Expand the parameters for the object
 					$sName = substr($sSearch, 0, $iPos);
-					if (preg_match_all('/\\$'.$sName.'-(>|&gt;)([^\\$]+)\\$/', $sInput, $aMatches)) // Support both syntaxes: $this->xxx$ or $this-&gt;xxx$ for HTML compatibility
-					{
-						foreach($aMatches[2] as $idx => $sPlaceholderAttCode)
-						{
-							try
-							{
-								$sReplacement = $replace->GetForTemplate($sPlaceholderAttCode);
-								if ($sReplacement !== null)
-								{
-									$aReplacements[] = $sReplacement;
-									$aSearches[] = '$'.$sName.'-'.$aMatches[1][$idx].$sPlaceholderAttCode.'$';
-								}
-							}
-							catch (Exception $e)
-							{
-								// No replacement will occur
-							}
-						}
-					}
+					$aRegExps = array(
+                        '/(\\$)'.$sName.'-(>|&gt;)([^\\$]+)\\$/', // Support both syntaxes: $this->xxx$ or $this-&gt;xxx$ for HTML compatibility
+                        '/(%24)'.$sName.'-(>|&gt;)([^%24]+)%24/', // Support for urlencoded in HTML attributes (%20this-&gt;xxx%20)
+                    );
+					foreach($aRegExps as $sRegExp)
+                    {
+                        if(preg_match_all($sRegExp, $sInput, $aMatches))
+                        {
+                            foreach($aMatches[3] as $idx => $sPlaceholderAttCode)
+                            {
+                                try
+                                {
+                                    $sReplacement = $replace->GetForTemplate($sPlaceholderAttCode);
+                                    if($sReplacement !== null)
+                                    {
+                                        $aReplacements[] = $sReplacement;
+                                        $aSearches[] = $aMatches[1][$idx] . $sName . '-' . $aMatches[2][$idx] . $sPlaceholderAttCode . $aMatches[1][$idx];
+                                    }
+                                }
+                                catch(Exception $e)
+                                {
+                                    // No replacement will occur
+                                }
+                            }
+                        }
+                    }
 				}
 				else
 				{
