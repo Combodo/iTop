@@ -1733,7 +1733,7 @@ EOF
 						if ($bSelected)
 						{
 							$aModules[$sModuleId] = true; // store the Id of the selected module
-							$sDisplayChoices .= '<li><b>'.$aModule['label'].' (auto_select)</b></li>';
+							$sDisplayChoices .= '<li>'.$aModule['label'].' (auto_select)</li>';
 							$bModuleAdded  = true;
 						}
 					}
