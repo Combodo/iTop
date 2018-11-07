@@ -63,6 +63,7 @@ We would like to give a special thank you to the people from the community who c
  - Alves, David
  - Beck, Pedro
  - Bilger, Jean-François
+ - Bostoen, Jeffrey
  - Cardoso, Anderson
  - Cassaro, Bruno
  - Casteleyn, Thomas
@@ -84,8 +85,10 @@ We would like to give a special thank you to the people from the community who c
  - Turrubiates, Miguel
 
 #### Aliases
+ - chifu1234
  - cprobst
  - Karkoff1212
+ - larhip
  - Laura
  - Schlobinux
  - theBigOne
