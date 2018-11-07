@@ -232,6 +232,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'text-align',
 		'vertical-align',
 		'width',
+		'white-space',
 	);
 
 	public function __construct()
