@@ -154,7 +154,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 
 	/**
 	 * @var array
-	 * @see https://www.itophub.io/wiki/page?id=2_5_0%3Aadmin%3Arich_text_limitations
+	 * @see https://www.itophub.io/wiki/page?id=2_6_0%3Aadmin%3Arich_text_limitations
 	 */
 	protected static $aTagsWhiteList = array(
 		'html' => array(),
@@ -211,7 +211,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 
 	/**
 	 * @var array
-	 * @see https://www.itophub.io/wiki/page?id=2_5_0%3Aadmin%3Arich_text_limitations
+	 * @see https://www.itophub.io/wiki/page?id=2_6_0%3Aadmin%3Arich_text_limitations
 	 */
 	protected static $aStylesWhiteList = array(
 		'background-color',
@@ -230,6 +230,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'margin',
 		'padding',
 		'text-align',
+		'vertical-align',
 		'width',
 	);
 
