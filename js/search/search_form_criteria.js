@@ -253,7 +253,9 @@ $(function()
 		_remove: function()
 		{
 			this.element.remove();
-			this.handler.triggerHandler('itop.search.criteria.removed');
+
+			var bHadValues = (Array.isArray(this.options.values) && (this.options.values.length > 0));
+			this.handler.triggerHandler('itop.search.criteria.removed', {had_values: bHadValues});
 		},
 		//   - Mark / Unmark criteria as draft (new value not applied)
 		_markAsDraft: function()

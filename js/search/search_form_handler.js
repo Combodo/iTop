@@ -909,7 +909,7 @@ $(function()
 		_onCriteriaRemoved: function(oData)
 		{
 			this._updateSearch();
-            if(this.options.auto_submit === true)
+            if( (this.options.auto_submit === true) && (oData.had_values === true) )
             {
                 this._submit();
             }
