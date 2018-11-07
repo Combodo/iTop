@@ -4,6 +4,12 @@
 
 {% block pPageBodyClass %}{{ parent() }} page_browse_brick page_browse_brick_as_{{ sBrowseMode }}{% endblock %}
 
+{% block pPageReadyScripts %}
+    {{ parent() }}
+    {% include 'itop-portal-base/portal/src/views/helpers/tagset_clic_handler.js.twig' %}
+{% endblock %}
+
+
 {% block pMainHeaderTitle %}
 	{{ oBrick.GetTitle()|dict_s }}
 {% endblock %}
