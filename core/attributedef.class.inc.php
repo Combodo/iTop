@@ -9991,11 +9991,13 @@ class AttributeTagSet extends AttributeSet
 	 *
 	 * @param array $aValues
 	 * @param string $sCssClass
+	 * @param bool $bWithLink if true will generate a link, otherwise just a "a" tag without href
 	 *
 	 * @return string
 	 * @throws \CoreException
+	 * @throws \OQLException
 	 */
-	private function GenerateViewHtmlForValues($aValues, $sCssClass = '')
+	public function GenerateViewHtmlForValues($aValues, $sCssClass = '', $bWithLink = true)
 	{
 		if (empty($aValues)) {return '';}
 		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
@@ -10013,9 +10015,17 @@ class AttributeTagSet extends AttributeSet
 				$sContext = $oAppContext->GetForLink();
 				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
 				$sFilter = rawurlencode($oFilter->serialize());
-				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 
-				$sHtml .= '<a href="'.$sUrl.'" class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.htmlentities($sTagLabel, ENT_QUOTES, 'UTF-8').'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES, 'UTF-8').'">'.$sTagLabel.'</a>';
+				$sLink = '';
+				if ($bWithLink)
+				{
+					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+					$sLink = 'href="'.$sUrl.'"';
+				}
+
+				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.htmlentities($sTagLabel,
+						ENT_QUOTES, 'UTF-8').'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES,
+						'UTF-8').'">'.$sTagLabel.'</a>';
 			}
 			else
 			{

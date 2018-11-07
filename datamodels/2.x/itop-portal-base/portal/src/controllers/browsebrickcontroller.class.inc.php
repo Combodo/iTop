@@ -19,21 +19,21 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use BinaryExpression;
+use Combodo\iTop\Portal\Brick\AbstractBrick;
+use Combodo\iTop\Portal\Brick\BrowseBrick;
+use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
+use Combodo\iTop\Portal\Helper\SecurityHelper;
+use DBObjectSet;
+use DBSearch;
+use Dict;
+use FieldExpression;
+use MetaModel;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use UserRights;
-use Dict;
-use MetaModel;
-use DBSearch;
-use DBObjectSet;
-use BinaryExpression;
-use FieldExpression;
 use VariableExpression;
-use Combodo\iTop\Portal\Helper\ApplicationHelper;
-use Combodo\iTop\Portal\Helper\SecurityHelper;
-use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
-use Combodo\iTop\Portal\Brick\AbstractBrick;
-use Combodo\iTop\Portal\Brick\BrowseBrick;
 
 /**
  * Class BrowseBrickController
@@ -47,22 +47,22 @@ class BrowseBrickController extends BrickController
 	const LEVEL_SEPARATOR = '-';
 	public static $aOptionalAttributes = array('tooltip_att', 'description_att', 'image_att');
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $oRequest
-     * @param \Silex\Application $oApp
-     * @param string $sBrickId
-     * @param string $sBrowseMode
-     * @param string $sDataLoading
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Exception
-     * @throws \CoreException
-     */
-    public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sBrowseMode = null, $sDataLoading = null)
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 * @param \Silex\Application $oApp
+	 * @param string $sBrickId
+	 * @param string $sBrowseMode
+	 * @param string $sDataLoading
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 *
+	 * @throws \Exception
+	 * @throws \CoreException
+	 */
+	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sBrowseMode = null, $sDataLoading = null)
 	{
-        /** @var \Combodo\iTop\Portal\Brick\BrowseBrick $oBrick */
-        $oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
+		/** @var \Combodo\iTop\Portal\Brick\BrowseBrick $oBrick */
+		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
 
 		// Getting availables browse modes
 		$aBrowseModes = $oBrick->GetAvailablesBrowseModes();
@@ -132,8 +132,7 @@ class BrowseBrickController extends BrickController
 				{
 					// - Cleaning the search value by exploding and trimming spaces
 					$aSearchValues = explode(' ', $sSearchValue);
-					array_walk($aSearchValues, function(&$sSearchValue /*, $sKey*/)
-					{
+					array_walk($aSearchValues, function (&$sSearchValue /*, $sKey*/) {
 						trim($sSearchValue);
 					});
 
@@ -249,7 +248,7 @@ class BrowseBrickController extends BrickController
 
 					break;
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
-                case BrowseBrick::ENUM_BROWSE_MODE_MOSAIC:
+				case BrowseBrick::ENUM_BROWSE_MODE_MOSAIC:
 					// Retrieving parameters
 					$sLevelAlias = $oApp['request_manipulator']->ReadParam('sLevelAlias', '');
 					$sNodeId = $oApp['request_manipulator']->ReadParam('sNodeId', '');
@@ -325,14 +324,14 @@ class BrowseBrickController extends BrickController
 						$aTmpColumnAttrs[] = $aTmpField['code'];
 					}
 				}
-                // Optional attributes
-                foreach(static::$aOptionalAttributes as $sOptionalAttribute)
-                {
-                    if($aTmpLevelProperties[$sOptionalAttribute] !== null)
-                    {
-                        $aTmpColumnAttrs[] = $aTmpLevelProperties[$sOptionalAttribute];
-                    }
-                }
+				// Optional attributes
+				foreach (static::$aOptionalAttributes as $sOptionalAttribute)
+				{
+					if ($aTmpLevelProperties[$sOptionalAttribute] !== null)
+					{
+						$aTmpColumnAttrs[] = $aTmpLevelProperties[$sOptionalAttribute];
+					}
+				}
 
 				$aColumnAttrs[$sTmpClassAlias] = $aTmpColumnAttrs;
 			}
@@ -349,7 +348,7 @@ class BrowseBrickController extends BrickController
 			switch ($sBrowseMode)
 			{
 				case BrowseBrick::ENUM_BROWSE_MODE_TREE:
-                case BrowseBrick::ENUM_BROWSE_MODE_MOSAIC:
+				case BrowseBrick::ENUM_BROWSE_MODE_MOSAIC:
 					static::AddToTreeItems($aItems, $aCurrentRow, $aLevelsProperties, null, $oApp);
 					break;
 
@@ -364,24 +363,24 @@ class BrowseBrickController extends BrickController
 		if ($oRequest->isXmlHttpRequest())
 		{
 			$aData = $aData + array(
-				'data' => $aItems,
-				'levelsProperties' => $aLevelsProperties
-			);
+					'data' => $aItems,
+					'levelsProperties' => $aLevelsProperties,
+				);
 			$oResponse = $oApp->json($aData);
 		}
 		else
 		{
 			$aData = $aData + array(
-				'oBrick' => $oBrick,
-				'sBrickId' => $sBrickId,
-				'sBrowseMode' => $sBrowseMode,
-				'aBrowseButtons' => $aBrowseButtons,
-				'sSearchValue' => $sSearchValue,
-				'sDataLoading' => $sDataLoading,
-				'aItems' => json_encode($aItems),
-				'iItemsCount' => count($aItems),
-				'aLevelsProperties' => json_encode($aLevelsProperties)
-			);
+					'oBrick' => $oBrick,
+					'sBrickId' => $sBrickId,
+					'sBrowseMode' => $sBrowseMode,
+					'aBrowseButtons' => $aBrowseButtons,
+					'sSearchValue' => $sSearchValue,
+					'sDataLoading' => $sDataLoading,
+					'aItems' => json_encode($aItems),
+					'iItemsCount' => count($aItems),
+					'aLevelsProperties' => json_encode($aLevelsProperties),
+				);
 
 			// Note : To extend this brick's template, depending on what you want to do :
 			// a) Modify the whole template :
@@ -404,21 +403,21 @@ class BrowseBrickController extends BrickController
 		return $oResponse;
 	}
 
-    /**
-     * Flattens the $aLevels into $aLevelsProperties in order to be able to build an OQL query from multiple single queries related to each others.
-     * As of now it only keeps search / parent_att / name_att properties.
-     *
-     * Note : This is not in the BrowseBrick class because the classes should not rely on DBObjectSearch.
-     *
-     * @param \Silex\Application $oApp
-     * @param array $aLevels Levels from a BrowseBrick class
-     * @param array $aLevelsProperties Reference to an array that will contain the flattened levels
-     * @param string $sLevelAliasPrefix String that will be prefixed to the level ID as an unique path identifier
-     *
-     * @throws \Exception
-     * @throws \OQLException
-     * @throws \CoreException
-     */
+	/**
+	 * Flattens the $aLevels into $aLevelsProperties in order to be able to build an OQL query from multiple single queries related to each
+	 * others. As of now it only keeps search / parent_att / name_att properties.
+	 *
+	 * Note : This is not in the BrowseBrick class because the classes should not rely on DBObjectSearch.
+	 *
+	 * @param \Silex\Application $oApp
+	 * @param array $aLevels Levels from a BrowseBrick class
+	 * @param array $aLevelsProperties Reference to an array that will contain the flattened levels
+	 * @param string $sLevelAliasPrefix String that will be prefixed to the level ID as an unique path identifier
+	 *
+	 * @throws \Exception
+	 * @throws \OQLException
+	 * @throws \CoreException
+	 */
 	public static function TreeToFlatLevelsProperties(Application $oApp, array $aLevels, array &$aLevelsProperties, $sLevelAliasPrefix = 'L')
 	{
 		foreach ($aLevels as $aLevel)
@@ -442,9 +441,9 @@ class BrowseBrickController extends BrickController
 					'title' => ($aLevel['title'] !== null) ? Dict::S($aLevel['title']) : MetaModel::GetName($oSearch->GetClass()),
 					'parent_att' => $aLevel['parent_att'],
 					'name_att' => $aLevel['name_att'],
-                    'tooltip_att' => $aLevel['tooltip_att'],
-                    'description_att' => $aLevel['description_att'],
-                    'image_att' => $aLevel['image_att'],
+					'tooltip_att' => $aLevel['tooltip_att'],
+					'description_att' => $aLevel['description_att'],
+					'image_att' => $aLevel['image_att'],
 					'search' => $oSearch,
 					'fields' => array(),
 					'actions' => array()
@@ -589,61 +588,61 @@ class BrowseBrickController extends BrickController
 		}
 	}
 
-    /**
-     * Prepares the action rules for an array of DBObject items.
-     *
-     * @param array $aItems
-     * @param string $sLevelsAlias
-     * @param array $aLevelsProperties
-     *
-     * @return array
-     */
+	/**
+	 * Prepares the action rules for an array of DBObject items.
+	 *
+	 * @param array $aItems
+	 * @param string $sLevelsAlias
+	 * @param array $aLevelsProperties
+	 *
+	 * @return array
+	 */
 	public static function PrepareActionRulesForItems(array $aItems, $sLevelsAlias, array &$aLevelsProperties)
-    {
-        $aActionRules = array();
+	{
+		$aActionRules = array();
 
-        foreach ($aLevelsProperties[$sLevelsAlias]['actions'] as $sId => $aAction)
-        {
-            $aActionRules[$sId] = ContextManipulatorHelper::PrepareAndEncodeRulesToken($aAction['rules'], $aItems);
-        }
+		foreach ($aLevelsProperties[$sLevelsAlias]['actions'] as $sId => $aAction)
+		{
+			$aActionRules[$sId] = ContextManipulatorHelper::PrepareAndEncodeRulesToken($aAction['rules'], $aItems);
+		}
 
-        return $aActionRules;
-    }
+		return $aActionRules;
+	}
 
-    /**
-     * Takes $aCurrentRow as a flat array and transform it in another flat array (not objects) with only the necessary informations
-     *
-     * eg:
-     * - $aCurrentRow : array('L-1' => ObjectClass1, 'L-1-1' => ObjectClass2, 'L-1-1-1' => ObjectClass3)
-     * - $aRow will be : array(
-     *      'L1' => array(
-     *          'name' => 'Object class 1 name'
-     *      ),
-     *      'L1-1' => array(
-     *          'name' => 'Object class 2 name',
-     *      ),
-     *      'L1-1-1' => array(
-     *          'name' => 'Object class 3 name',
-     *      ),
-     *      ...
-     *  )
-     *
-     * @param array $aCurrentRow
-     * @param array $aLevelsProperties
-     * @param \Silex\Application $oApp
-     *
-     * @return array
-     *
-     * @throws \Exception
-     */
+	/**
+	 * Takes $aCurrentRow as a flat array and transform it in another flat array (not objects) with only the necessary informations
+	 *
+	 * eg:
+	 * - $aCurrentRow : array('L-1' => ObjectClass1, 'L-1-1' => ObjectClass2, 'L-1-1-1' => ObjectClass3)
+	 * - $aRow will be : array(
+	 *      'L1' => array(
+	 *          'name' => 'Object class 1 name'
+	 *      ),
+	 *      'L1-1' => array(
+	 *          'name' => 'Object class 2 name',
+	 *      ),
+	 *      'L1-1-1' => array(
+	 *          'name' => 'Object class 3 name',
+	 *      ),
+	 *      ...
+	 *  )
+	 *
+	 * @param array $aCurrentRow
+	 * @param array $aLevelsProperties
+	 * @param \Silex\Application $oApp
+	 *
+	 * @return array
+	 *
+	 * @throws \Exception
+	 */
 	public static function AddToFlatItems(array $aCurrentRow, array &$aLevelsProperties, Application $oApp)
 	{
 		$aRow = array();
 
 		foreach ($aCurrentRow as $key => $value)
 		{
-		    // Retrieving objects from all levels
-		    $aItems = array_values($aCurrentRow);
+			// Retrieving objects from all levels
+			$aItems = array_values($aCurrentRow);
 
 			$aRow[$key] = array(
 				'level_alias' => $key,
@@ -654,29 +653,34 @@ class BrowseBrickController extends BrickController
 			);
 
 			// Adding optional attributes if necessary
-            foreach(static::$aOptionalAttributes as $sOptionalAttribute)
-            {
-                if ($aLevelsProperties[$key][$sOptionalAttribute] !== null)
-                {
-                    $sPropertyName = substr($sOptionalAttribute, 0, -4);
-                    $oAttDef = MetaModel::GetAttributeDef(get_class($value), $aLevelsProperties[$key][$sOptionalAttribute]);
+			foreach (static::$aOptionalAttributes as $sOptionalAttribute)
+			{
+				if ($aLevelsProperties[$key][$sOptionalAttribute] !== null)
+				{
+					$sPropertyName = substr($sOptionalAttribute, 0, -4);
+					$oAttDef = MetaModel::GetAttributeDef(get_class($value), $aLevelsProperties[$key][$sOptionalAttribute]);
 
-                    $tmpAttValue = $value->GetAsHTML($aLevelsProperties[$key][$sOptionalAttribute]);
-                    if($sOptionalAttribute === 'image_att')
-                    {
-                        if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
-                        {
-                            $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($value), 'sObjectId' => $value->GetKey(), 'sObjectField' => $aLevelsProperties[$key][$sOptionalAttribute], 'cache' => 86400));
-                        }
-                        else
-                        {
-                            $tmpAttValue = $oAttDef->Get('default_image');
-                        }
-                    }
+					$tmpAttValue = $value->GetAsHTML($aLevelsProperties[$key][$sOptionalAttribute]);
+					if ($sOptionalAttribute === 'image_att')
+					{
+						if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
+						{
+							$tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array(
+								'sObjectClass' => get_class($value),
+								'sObjectId' => $value->GetKey(),
+								'sObjectField' => $aLevelsProperties[$key][$sOptionalAttribute],
+								'cache' => 86400,
+							));
+						}
+						else
+						{
+							$tmpAttValue = $oAttDef->Get('default_image');
+						}
+					}
 
-                    $aRow[$key][$sPropertyName] = $tmpAttValue;
-                }
-            }
+					$aRow[$key][$sPropertyName] = $tmpAttValue;
+				}
+			}
 			// Adding fields attributes if necessary
 			if (!empty($aLevelsProperties[$key]['fields']))
 			{
@@ -684,7 +688,23 @@ class BrowseBrickController extends BrickController
 				foreach ($aLevelsProperties[$key]['fields'] as $aField)
 				{
 					$oAttDef = MetaModel::GetAttributeDef(get_class($value), $aField['code']);
-					$aRow[$key]['fields'][$aField['code']] = $oAttDef->GetAsHTML($value->Get($aField['code']));
+
+					$sHtmlForFieldValue = '';
+					switch (get_class($oAttDef))
+					{
+						case 'AttributeTagSet':
+							/** @var \ormTagSet $oSetValues */
+							$oSetValues = $value->Get($aField['code']);
+							$aCodes = $oSetValues->GetTags();
+							/** @var \AttributeTagSet $oAttDef */
+							$sHtmlForFieldValue = $oAttDef->GenerateViewHtmlForValues($aCodes, '', false);
+							break;
+						default:
+							$sHtmlForFieldValue = $oAttDef->GetAsHTML($value->Get($aField['code']));
+							break;
+					}
+
+					$aRow[$key]['fields'][$aField['code']] = $sHtmlForFieldValue;
 				}
 			}
 		}
@@ -692,40 +712,40 @@ class BrowseBrickController extends BrickController
 		return $aRow;
 	}
 
-    /**
-     * Takes $aCurrentRow as a flat array to recursvily convert and insert it into a tree array $aItems.
-     * This is used to build a tree array from a DBObjectSet retrieved with FetchAssoc().
-     *
-     * eg:
-     * - $aCurrentRow : array('L-1' => ObjectClass1, 'L-1-1' => ObjectClass2, 'L-1-1-1' => ObjectClass3)
-     * - $aItems will be : array(
-     *      'L1' =>
-     *          'name' => 'Object class 1 name',
-     *          'subitems' => array(
-     *              'L1-1' => array(
-     *                  'name' => 'Object class 2 name',
-     *                  'subitems' => array(
-     *                      'L1-1-1' => array(
-     *                          'name' => 'Object class 3 name',
-     *                          'subitems' => array()
-     *                      ),
-     *                      ...
-     *                  )
-     *              ),
-     *              ...
-     *          )
-     *      ),
-     *      ...
-     *  )
-     *
-     * @param array &$aItems Reference to the array to be built
-     * @param array $aCurrentRow
-     * @param array $aLevelsProperties
-     * @param array|null $aCurrentRowObjects
-     * @param \Silex\Application|null $oApp
-     *
-     * @throws \Exception
-     */
+	/**
+	 * Takes $aCurrentRow as a flat array to recursvily convert and insert it into a tree array $aItems.
+	 * This is used to build a tree array from a DBObjectSet retrieved with FetchAssoc().
+	 *
+	 * eg:
+	 * - $aCurrentRow : array('L-1' => ObjectClass1, 'L-1-1' => ObjectClass2, 'L-1-1-1' => ObjectClass3)
+	 * - $aItems will be : array(
+	 *      'L1' =>
+	 *          'name' => 'Object class 1 name',
+	 *          'subitems' => array(
+	 *              'L1-1' => array(
+	 *                  'name' => 'Object class 2 name',
+	 *                  'subitems' => array(
+	 *                      'L1-1-1' => array(
+	 *                          'name' => 'Object class 3 name',
+	 *                          'subitems' => array()
+	 *                      ),
+	 *                      ...
+	 *                  )
+	 *              ),
+	 *              ...
+	 *          )
+	 *      ),
+	 *      ...
+	 *  )
+	 *
+	 * @param array &$aItems Reference to the array to be built
+	 * @param array $aCurrentRow
+	 * @param array $aLevelsProperties
+	 * @param array|null $aCurrentRowObjects
+	 * @param \Silex\Application|null $oApp
+	 *
+	 * @throws \Exception
+	 */
 	public static function AddToTreeItems(array &$aItems, array $aCurrentRow, array &$aLevelsProperties, $aCurrentRowObjects = null, Application $oApp = null)
 	{
 		$aCurrentRowKeys = array_keys($aCurrentRow);
@@ -733,11 +753,11 @@ class BrowseBrickController extends BrickController
 		$sCurrentIndex = $aCurrentRowKeys[0] . '::' . $aCurrentRowValues[0]->GetKey();
 
 		// We make sure to keep all row objects through levels by copying them when processing the first level.
-        // Otherwise they will be sliced through levels, one by one.
+		// Otherwise they will be sliced through levels, one by one.
 		if($aCurrentRowObjects === null)
-        {
-            $aCurrentRowObjects = $aCurrentRowValues;
-        }
+		{
+			$aCurrentRowObjects = $aCurrentRowValues;
+		}
 
 		if (!isset($aItems[$sCurrentIndex]))
 		{
@@ -750,30 +770,36 @@ class BrowseBrickController extends BrickController
 				'action_rules_token' => static::PrepareActionRulesForItems($aCurrentRowObjects, $aCurrentRowKeys[0], $aLevelsProperties)
 			);
 
-            // Adding optional attributes if necessary
-            foreach(static::$aOptionalAttributes as $sOptionalAttribute)
-            {
-                if ($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute] !== null)
-                {
-                    $sPropertyName = substr($sOptionalAttribute, 0, -4);
-                    $oAttDef = MetaModel::GetAttributeDef(get_class($aCurrentRowValues[0]), $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
+			// Adding optional attributes if necessary
+			foreach (static::$aOptionalAttributes as $sOptionalAttribute)
+			{
+				if ($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute] !== null)
+				{
+					$sPropertyName = substr($sOptionalAttribute, 0, -4);
+					$oAttDef = MetaModel::GetAttributeDef(get_class($aCurrentRowValues[0]),
+						$aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
 
-                    $tmpAttValue = $aCurrentRowValues[0]->GetAsHTML($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
-                    if($sOptionalAttribute === 'image_att')
-                    {
-                        if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
-                        {
-                            $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($aCurrentRowValues[0]), 'sObjectId' => $aCurrentRowValues[0]->GetKey(), 'sObjectField' => $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute], 'cache' => 86400));
-                        }
-                        else
-                        {
-                            $tmpAttValue = $oAttDef->Get('default_image');
-                        }
-                    }
+					$tmpAttValue = $aCurrentRowValues[0]->GetAsHTML($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
+					if ($sOptionalAttribute === 'image_att')
+					{
+						if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
+						{
+							$tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array(
+								'sObjectClass' => get_class($aCurrentRowValues[0]),
+								'sObjectId' => $aCurrentRowValues[0]->GetKey(),
+								'sObjectField' => $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute],
+								'cache' => 86400,
+							));
+						}
+						else
+						{
+							$tmpAttValue = $oAttDef->Get('default_image');
+						}
+					}
 
-                    $aItems[$sCurrentIndex][$sPropertyName] = $tmpAttValue;
-                }
-            }
+					$aItems[$sCurrentIndex][$sPropertyName] = $tmpAttValue;
+				}
+			}
 		}
 
 		$aCurrentRowSliced = array_slice($aCurrentRow, 1);

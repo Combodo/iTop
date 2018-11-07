@@ -19,7 +19,6 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use Exception;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
@@ -29,12 +28,13 @@ use CMDBSource;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\ManageBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
-use Combodo\iTop\Portal\Helper\SecurityHelper;
 use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
+use Combodo\iTop\Portal\Helper\SecurityHelper;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
 use Dict;
+use Exception;
 use FieldExpression;
 use iPopupMenuExtension;
 use JSButtonItem;
@@ -615,6 +615,14 @@ class ManageBrickController extends BrickController
                             }
                             $sValue = '<img src="' . $sUrl . '" />';
                         }
+						elseif ($oAttDef instanceof \AttributeTagSet)
+						{
+							/** @var \ormTagSet $oSetValues */
+							$oSetValues = $oCurrentRow->Get($sItemAttr);
+							$aCodes = $oSetValues->GetTags();
+							/** @var \AttributeTagSet $oAttDef */
+							$sValue = $oAttDef->GenerateViewHtmlForValues($aCodes, '', false);
+						}
 						else
 						{
                             $sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
