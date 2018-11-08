@@ -9156,7 +9156,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 
 	static public function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list'));
+		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list', 'attribute_definition_exclusion_list'));
 	}
 
 	public function GetMaxSize()
@@ -9181,6 +9181,17 @@ class AttributeClassAttCodeSet extends AttributeSet
 			{
 				$aAllAttributes = MetaModel::GetAttributesList($sClass);
 			}
+			$sAttDefExclusionList = $this->Get('attribute_definition_exclusion_list');
+			$aExcludeDefs = array();
+			if (!empty($sAttDefExclusionList))
+			{
+				foreach(explode(',', $sAttDefExclusionList) as $sAttDefName)
+				{
+					$sAttDefName = trim($sAttDefName);
+					$aExcludeDefs[$sAttDefName] = $sAttDefName;
+				}
+			}
+
 			$sAttDefList = $this->Get('attribute_definition_list');
 			if (!empty($sAttDefList))
 			{
@@ -9193,7 +9204,8 @@ class AttributeClassAttCodeSet extends AttributeSet
 				foreach($aAllAttributes as $sAttCode)
 				{
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					if (isset($aAllowedDefs[get_class($oAttDef)]))
+					$sAttDef = get_class($oAttDef);
+					if (isset($aAllowedDefs[$sAttDef]) && !isset($aExcludeDefs[$sAttDef]))
 					{
 						$aAllowedAttributes[$sAttCode] = $sAttCode.' ('.MetaModel::GetLabel($sClass, $sAttCode).')';
 					}
@@ -9203,7 +9215,12 @@ class AttributeClassAttCodeSet extends AttributeSet
 			{
 				foreach($aAllAttributes as $sAttCode)
 				{
-					$aAllowedAttributes[$sAttCode] = $sAttCode.' ('.MetaModel::GetLabel($sClass, $sAttCode).')';
+					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+					$sAttDef = get_class($oAttDef);
+					if (!isset($aExcludeDefs[$sAttDef]))
+					{
+						$aAllowedAttributes[$sAttCode] = $sAttCode.' ('.MetaModel::GetLabel($sClass, $sAttCode).')';
+					}
 				}
 			}
 			return $aAllowedAttributes;
