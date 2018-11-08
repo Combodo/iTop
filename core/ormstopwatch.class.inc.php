@@ -402,7 +402,20 @@ class ormStopWatch
 					$sAttCode = $oAttDef->GetCode();
 					WorkingTimeRecorder::Start($oObject, $iComputationRefTime, "ormStopWatch-Deadline-$iPercent-$sAttCode", 'Core:ExplainWTC:StopWatch-Deadline', array("Class:$sClass/Attribute:$sAttCode", $iPercent));
 				}
-				$aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $iPercent, $this->iLastStart, $iThresholdDuration - $this->iTimeSpent);
+				$iRemaining = $iThresholdDuration - $this->iTimeSpent;
+				if ($iRemaining < 0)
+				{
+					if (class_exists('WorkingTimeRecorder'))
+					{
+						$sClass = get_class($oObject);
+						$sKey = $oObject->GetKey();
+						$sAttCode = $oAttDef->GetCode();
+						$sDate = date('Y-m-d H:i:s', $aThresholdData['deadline']);
+						WorkingTimeRecorder::Log(WorkingTimeRecorder::TRACE_INFO, "$sClass($sKey) ormStopWatch-Deadline-$iPercent-$sAttCode ($sDate) already reached, not changed.");
+					}
+					continue;
+				}
+				$aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $iPercent, $this->iLastStart, $iRemaining);
 				// OR $aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $iPercent, $this->iStarted, $iThresholdDuration);
 
 				if (class_exists('WorkingTimeRecorder'))
@@ -472,7 +485,10 @@ class ormStopWatch
 					$aThresholdData['overrun'] = $iOverrun;
 				}
 			}
-			$aThresholdData['deadline'] = null;
+			if ($aThresholdData['overrun'] == 0)
+			{
+				$aThresholdData['deadline'] = null;
+			}
 		}
 
 		$this->iLastStart = null;
