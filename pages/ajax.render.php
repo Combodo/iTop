@@ -2453,7 +2453,9 @@ EOF
 				}
 			} catch (FileUploadException $e)
 			{
-				// fail silently ??
+				$sCurrentUserLogin = UserRights::GetUser();
+				$sErrorMessage = "CKE : error when uploading image in ajax.render.php - operation=cke_upload_and_browse,User='$sCurrentUserLogin', class='$sObjClass',exception=$e";
+				IssueLog::Error($sErrorMessage);
 			}
 		// Fall though !! => browse
 
