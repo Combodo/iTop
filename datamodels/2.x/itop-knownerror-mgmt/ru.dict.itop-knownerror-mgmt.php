@@ -118,6 +118,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:FAQ/Attribute:error_code+' => '',
 	'Class:FAQ/Attribute:key_words' => 'Ключевые слова',
 	'Class:FAQ/Attribute:key_words+' => '',
+	'Class:FAQ/Attribute:domains' => 'Домены',
 ));
 
 //

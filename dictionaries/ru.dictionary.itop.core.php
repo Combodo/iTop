@@ -11,49 +11,53 @@
  */
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Core:DeletedObjectLabel' => '%1ы (удалены)',
+	'Core:DeletedObjectLabel' => '%1ы (удален)',
 	'Core:DeletedObjectTip' => 'Объект был удален %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Объект не найден (class: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'Не может быть найден. Возможно он был удален и очищен в лог-е.',
+	'Core:UnknownObjectTip' => 'Объект не удается найти. Возможно, он был удален некоторое время назад, и журнал с тех пор был очищен.',
 
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
 
-	'Core:AttributeLinkedSet' => 'Массив объектов',
-	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
+	'Core:AttributeLinkedSet' => 'Массив объектов (1-n)',
+	'Core:AttributeLinkedSet+' => 'Список объектов заданного класса, указывающих на текущий объект',
 
-	'Core:AttributeLinkedSetIndirect' => 'Массив объектов (N-N)',
-	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
+	'Core:AttributeTagSet' => 'Список тегов',
+	'Core:AttributeTagSet+' => '',
+	'Core:AttributeSet:placeholder' => 'нажмите, чтобы добавить',
 
-	'Core:AttributeInteger' => 'Целый',
-	'Core:AttributeInteger+' => 'Numeric value (could be negative)',
+	'Core:AttributeLinkedSetIndirect' => 'Массив объектов (n-n)',
+	'Core:AttributeLinkedSetIndirect+' => 'Список объектов заданного класса, связанные с текущим объектом через промежуточный класс',
 
-	'Core:AttributeDecimal' => 'Десятичн.',
-	'Core:AttributeDecimal+' => 'Decimal value (could be negative)',
+	'Core:AttributeInteger' => 'Целое',
+	'Core:AttributeInteger+' => 'Целочисленное значение (может быть отрицательным)',
 
-	'Core:AttributeBoolean' => 'Логич.',
-	'Core:AttributeBoolean+' => 'Boolean',
+	'Core:AttributeDecimal' => 'Десятичное',
+	'Core:AttributeDecimal+' => 'Десятичное значение (может быть отрицательным)',
+
+	'Core:AttributeBoolean' => 'Логическое',
+	'Core:AttributeBoolean+' => 'Да/Нет',
 	'Core:AttributeBoolean/Value:null' => '',
-	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
-	'Core:AttributeBoolean/Value:no' => 'No~~',
+	'Core:AttributeBoolean/Value:yes' => 'Да',
+	'Core:AttributeBoolean/Value:no' => 'Нет',
 
-	'Core:AttributeArchiveFlag' => 'Archive flag~~',
-	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
-	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
-	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
-	'Core:AttributeArchiveFlag/Label' => 'Archived~~',
+	'Core:AttributeArchiveFlag' => 'Архивный флаг',
+	'Core:AttributeArchiveFlag/Value:yes' => 'Да',
+	'Core:AttributeArchiveFlag/Value:yes+' => 'Этот объект виден только в режиме архива',
+	'Core:AttributeArchiveFlag/Value:no' => 'Нет',
+	'Core:AttributeArchiveFlag/Label' => 'Архивный',
 	'Core:AttributeArchiveFlag/Label+' => '',
-	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
+	'Core:AttributeArchiveDate/Label' => 'Дата архивирования',
 	'Core:AttributeArchiveDate/Label+' => '',
 
-	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
-	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
-	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
-	'Core:AttributeObsolescenceFlag/Value:no' => 'No~~',
-	'Core:AttributeObsolescenceFlag/Label' => 'Obsolete~~',
-	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
-	'Core:AttributeObsolescenceDate/Label' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
+	'Core:AttributeObsolescenceFlag' => 'Устаревший флаг',
+	'Core:AttributeObsolescenceFlag/Value:yes' => 'Да',
+	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Этот объект исключен из анализа влияния и скрыт из результатов поиска',
+	'Core:AttributeObsolescenceFlag/Value:no' => 'Нет',
+	'Core:AttributeObsolescenceFlag/Label' => 'Устаревший',
+	'Core:AttributeObsolescenceFlag/Label+' => 'Вычисляется динамически на основании значений других атрибутов',
+	'Core:AttributeObsolescenceDate/Label' => 'Дата устаревания',
+	'Core:AttributeObsolescenceDate/Label+' => 'Приблизительная дата, с которой объект считается устаревшим',
 
 	'Core:AttributeString' => 'Строка',
 	'Core:AttributeString+' => 'Alphanumeric string',
@@ -70,7 +74,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributePassword' => 'Пароль~~',
 	'Core:AttributePassword+' => 'Password of an external device',
 
- 	'Core:AttributeEncryptedString' => 'Шифр.значение',
+	'Core:AttributeEncryptedString' => 'Шифр.значение',
 	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
@@ -273,10 +277,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:CMDBChangeOpSetAttributeBlob' => 'изменение данных',
-	'Class:CMDBChangeOpSetAttributeBlob+' => 'отслеживание изменения данных',
+	'Class:CMDBChangeOpSetAttributeBlob' => 'Изменение данных',
+	'Class:CMDBChangeOpSetAttributeBlob+' => 'Отслеживание изменения данных',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Предыдущие данные',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'предыдущее содержимое атрибута',
+	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'Предыдущее содержимое атрибута',
 ));
 
 //
@@ -284,10 +288,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:CMDBChangeOpSetAttributeText' => 'изменение текста',
-	'Class:CMDBChangeOpSetAttributeText+' => 'отслеживание изменения текста',
+	'Class:CMDBChangeOpSetAttributeText' => 'Изменение текста',
+	'Class:CMDBChangeOpSetAttributeText+' => 'Отслеживание изменения текста',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Предыдущие данные',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'предыдущее содержимое атрибута',
+	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'Предыдущее содержимое атрибута',
 ));
 
 //
@@ -295,7 +299,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:Event' => 'Журнал событий',
+	'Class:Event' => 'Событие',
 	'Class:Event+' => 'Внутренние событие приложения',
 	'Class:Event/Attribute:message' => 'Сообщение',
 	'Class:Event/Attribute:message+' => 'Краткое описание события',
@@ -303,7 +307,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Event/Attribute:date+' => 'Дата и время регистрации события',
 	'Class:Event/Attribute:userinfo' => 'Пользователь',
 	'Class:Event/Attribute:userinfo+' => 'Пользователь, действия которого вызвали это событие',
-	'Class:Event/Attribute:finalclass' => 'тип',
+	'Class:Event/Attribute:finalclass' => 'Тип',
 	'Class:Event/Attribute:finalclass+' => '',
 ));
 
@@ -312,8 +316,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:EventNotification' => 'Уведомление о событии',
-	'Class:EventNotification+' => 'Отслеживание отосланных уведомлений',
+	'Class:EventNotification' => 'Уведомление',
+	'Class:EventNotification+' => 'Отслеживание отправленных уведомлений',
 	'Class:EventNotification/Attribute:trigger_id' => 'Триггер',
 	'Class:EventNotification/Attribute:trigger_id+' => 'Сработавший триггер',
 	'Class:EventNotification/Attribute:action_id' => 'Действие',
@@ -328,7 +332,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:EventNotificationEmail' => 'Уведомление по email',
-	'Class:EventNotificationEmail+' => 'Уведомление по email',
+	'Class:EventNotificationEmail+' => 'Отслеживание уведомлений по email',
 	'Class:EventNotificationEmail/Attribute:to' => 'Кому',
 	'Class:EventNotificationEmail/Attribute:to+' => 'Кому',
 	'Class:EventNotificationEmail/Attribute:cc' => 'Копия',
@@ -350,17 +354,17 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:EventIssue' => 'Выпуск события',
-	'Class:EventIssue+' => 'Отслеживание выпуска (warning, error, др.)',
-	'Class:EventIssue/Attribute:issue' => 'Выпуск',
+	'Class:EventIssue' => 'Ошибка',
+	'Class:EventIssue+' => 'Отслеживание ошибок (warning, error, др.)',
+	'Class:EventIssue/Attribute:issue' => 'Ошибка',
 	'Class:EventIssue/Attribute:issue+' => 'Что произошло',
 	'Class:EventIssue/Attribute:impact' => 'Воздействие',
 	'Class:EventIssue/Attribute:impact+' => 'Последствия',
 	'Class:EventIssue/Attribute:page' => 'Страница',
 	'Class:EventIssue/Attribute:page+' => 'Точка входа HTTP',
-	'Class:EventIssue/Attribute:arguments_post' => 'Отправленные аргументы',
+	'Class:EventIssue/Attribute:arguments_post' => 'Аргументы POST',
 	'Class:EventIssue/Attribute:arguments_post+' => 'Аргументы HTTP POST',
-	'Class:EventIssue/Attribute:arguments_get' => 'Аргументы URL',
+	'Class:EventIssue/Attribute:arguments_get' => 'Аргументы GET',
 	'Class:EventIssue/Attribute:arguments_get+' => 'Аргументы HTTP GET',
 	'Class:EventIssue/Attribute:callstack' => 'Стек вызовов',
 	'Class:EventIssue/Attribute:callstack+' => 'Стек вызовов',
@@ -373,9 +377,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:EventWebService' => 'События Web сервиса',
-	'Class:EventWebService+' => 'Trace of an web service call',
-	'Class:EventWebService/Attribute:verb' => 'Verb',
+	'Class:EventWebService' => 'События Web-сервиса',
+	'Class:EventWebService+' => 'Trace of an web service call~~',
+	'Class:EventWebService/Attribute:verb' => 'Verb~~',
 	'Class:EventWebService/Attribute:verb+' => 'Название операции',
 	'Class:EventWebService/Attribute:result' => 'Результат',
 	'Class:EventWebService/Attribute:result+' => 'Все удачн./неудачн.',
@@ -508,7 +512,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnObject' => 'Триггер (на класс объекта)',
+	'Class:TriggerOnObject' => 'Триггер на класс объекта',
 	'Class:TriggerOnObject+' => 'Триггер на события объектов данного класса',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Целевой класс',
 	'Class:TriggerOnObject/Attribute:target_class+' => 'Класс объектов, для которых будет срабатывать данный триггер',
@@ -523,7 +527,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnPortalUpdate' => 'Триггер (обновление из портала)',
+	'Class:TriggerOnPortalUpdate' => 'Триггер на обновление из портала',
 	'Class:TriggerOnPortalUpdate+' => 'Триггер на обновление объекта пользователем портала',
 ));
 
@@ -532,7 +536,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnStateChange' => 'Триггер (изменение статуса)',
+	'Class:TriggerOnStateChange' => 'Триггер на изменение статуса',
 	'Class:TriggerOnStateChange+' => 'Триггер на изменение статуса объекта',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Статус',
 	'Class:TriggerOnStateChange/Attribute:state+' => 'Код статуса объекта, например \'resolved\'',
@@ -543,7 +547,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnStateEnter' => 'Триггер (на вход в статус)',
+	'Class:TriggerOnStateEnter' => 'Триггер на вход в статус',
 	'Class:TriggerOnStateEnter+' => 'Триггер на вход объекта в статус',
 ));
 
@@ -552,7 +556,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnStateLeave' => 'Триггер (на выход из статуса)',
+	'Class:TriggerOnStateLeave' => 'Триггер на выход из статуса',
 	'Class:TriggerOnStateLeave+' => 'Триггер на выход объекта из статуса',
 ));
 
@@ -561,8 +565,28 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnObjectCreate' => 'Триггер (на создание объекта)',
+	'Class:TriggerOnObjectCreate' => 'Триггер на создание объекта',
 	'Class:TriggerOnObjectCreate+' => 'Триггер на создание объекта данного или дочернего класса',
+));
+
+//
+// Class: TriggerOnObjectDelete
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:TriggerOnObjectDelete' => 'Триггер на удаление объекта',
+	'Class:TriggerOnObjectDelete+' => 'Триггер на удаление объекта данного или дочернего класса',
+));
+
+//
+// Class: TriggerOnObjectUpdate
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:TriggerOnObjectUpdate' => 'Триггер на обновление объекта',
+	'Class:TriggerOnObjectUpdate+' => 'Триггер на обновление объекта данного или дочернего класса',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Отслеживаемые поля',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => 'Поля объекта, при обновлении которых сработает триггер',
 ));
 
 //
@@ -570,7 +594,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:TriggerOnThresholdReached' => 'Триггер (на пороговое значение)',
+	'Class:TriggerOnThresholdReached' => 'Триггер на пороговое значение',
 	'Class:TriggerOnThresholdReached+' => 'Триггер на достижение секундомером порогового значения (TTO, TTR)',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Секундомер',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => 'По умолчанию для Инцидентов и Запросов доступны \'ttr\' и \'tto\'',
@@ -602,72 +626,72 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 
-    'Class:SynchroDataSource' => 'Источник синхронизации данных',
-    'Class:SynchroDataSource/Attribute:name' => 'Название',
-    'Class:SynchroDataSource/Attribute:name+' => 'Название',
-    'Class:SynchroDataSource/Attribute:description' => 'Описание',
-    'Class:SynchroDataSource/Attribute:status' => 'Статус',
-    'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Внедрение',
-    'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Устаревшее',
-    'Class:SynchroDataSource/Attribute:status/Value:production' => 'Эксплуатация',
-    'Class:SynchroDataSource/Attribute:scope_class' => 'Целевой класс',
-    'Class:SynchroDataSource/Attribute:scope_restriction' => 'Объем ограничений', // не используется пока
-    'Class:SynchroDataSource/Attribute:user_id' => 'Пользователь',
-    'Class:SynchroDataSource/Attribute:user_id+' => 'Только этот пользователь (и администраторы) смогут выполнять эту синхронизацию',
-    'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Контакт для уведомления',
-    'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Контакт для уведомления в случае ошибки',
-    'Class:SynchroDataSource/Attribute:url_icon' => 'Иконка (ссылка)',
-    'Class:SynchroDataSource/Attribute:url_icon+' => 'Гиперссылка на иконку приложения-источника данных для отображения на страницах синхронизованных объектов',
-    'Class:SynchroDataSource/Attribute:url_application' => 'Приложение (ссылка)',
-    'Class:SynchroDataSource/Attribute:url_application+' => 'Гиперссылка на объект в приложение-источнике данных. Возможные шаблоны: $this->attribute$ и $replica->primary_key$',
-    'Class:SynchroDataSource/Attribute:database_table_name' => 'Таблица данных',
-    'Class:SynchroDataSource/Attribute:database_table_name+' => 'Имя таблицы для хранения данных синхронизации. Если оставить поле пустым, будет назначено имя по умолчанию.',
-    'Class:SynchroDataSource/Attribute:attribute_list' => 'Атрибуты',
+	'Class:SynchroDataSource' => 'Источник синхронизации данных',
+	'Class:SynchroDataSource/Attribute:name' => 'Название',
+	'Class:SynchroDataSource/Attribute:name+' => 'Название',
+	'Class:SynchroDataSource/Attribute:description' => 'Описание',
+	'Class:SynchroDataSource/Attribute:status' => 'Статус',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Внедрение',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Устаревший',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Эксплуатация',
+	'Class:SynchroDataSource/Attribute:scope_class' => 'Целевой класс',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Объем ограничений', // не используется пока
+	'Class:SynchroDataSource/Attribute:user_id' => 'Пользователь',
+	'Class:SynchroDataSource/Attribute:user_id+' => 'Только этот пользователь (и администраторы) смогут выполнять эту синхронизацию',
+	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Контакт для уведомления',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Контакт для уведомления в случае ошибки',
+	'Class:SynchroDataSource/Attribute:url_icon' => 'Иконка (ссылка)',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Гиперссылка на иконку приложения-источника данных для отображения на страницах синхронизованных объектов',
+	'Class:SynchroDataSource/Attribute:url_application' => 'Приложение (ссылка)',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'Гиперссылка на объект в приложение-источнике данных. Возможные шаблоны: $this->attribute$ и $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:database_table_name' => 'Таблица данных',
+	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Имя таблицы для хранения данных синхронизации. Если оставить поле пустым, будет назначено имя по умолчанию.',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Атрибуты',
 
-    'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Политика сопоставления',
-    'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Использовать атрибуты',
-    'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Использовать primary_key значение',
-    'Class:SynchroDataSource/Attribute:action_on_zero' => 'Действие при нуле',
-    'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Действие, если объект не найдет',
-    'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Создать',
-    'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Ошибка',
-    'Class:SynchroDataSource/Attribute:action_on_one' => 'Действие при единице',
-    'Class:SynchroDataSource/Attribute:action_on_one+' => 'Действие, если найден только один объект',
-    'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Ошибка',
-    'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Обновить',
-    'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Действие при множестве',
-    'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Действие, если найдено несколько объектов',
-    'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Создать',
-    'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Ошибка',
-    'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Использовать первый (случайно)',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Политика сопоставления',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Использовать атрибуты',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Использовать primary_key значение',
+	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Действие при нуле',
+	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Действие, если объект не найдет',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Создать',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Ошибка',
+	'Class:SynchroDataSource/Attribute:action_on_one' => 'Действие при единице',
+	'Class:SynchroDataSource/Attribute:action_on_one+' => 'Действие, если найден только один объект',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Ошибка',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Обновить',
+	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Действие при множестве',
+	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Действие, если найдено несколько объектов',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Создать',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Ошибка',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Использовать первый (случайно)',
 
-    'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Авторизованные пользователи',
-    'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Кому разрешено удаление синхронизируемых объектов',
-    'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Только администраторы',
-    'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Пользователи с правами на удаление',
-    'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Никто',
-    'Class:SynchroDataSource/Attribute:delete_policy' => 'Устаревшие объекты',
-    'Class:SynchroDataSource/Attribute:delete_policy+' => 'Как обрабатывать устаревшие объекты',
-    'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Удалить',
-    'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Игнорировать',
-    'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Обновить',
-    'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Обновить, затем удалить',
-    'Class:SynchroDataSource/Attribute:delete_policy_update' => 'Обновляемые атрибуты',
-    'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'Формат: field_name:value; ... Пример: status:inactive',
-    'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Срок хранения',
-    'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Сколько времени хранятся устаревшие объекты, прежде чем будут удалены',
+	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Авторизованные пользователи',
+	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Кому разрешено удаление синхронизируемых объектов',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Только администраторы',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Пользователи с правами на удаление',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Никто',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Устаревшие объекты',
+	'Class:SynchroDataSource/Attribute:delete_policy+' => 'Как обрабатывать устаревшие объекты',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Удалить',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Игнорировать',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Обновить',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Обновить, затем удалить',
+	'Class:SynchroDataSource/Attribute:delete_policy_update' => 'Обновляемые атрибуты',
+	'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'Формат: field_name:value; ... Пример: status:inactive',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Срок хранения',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Сколько времени хранятся устаревшие объекты, прежде чем будут удалены',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Интервал устаревания',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Объект будет считаться устаревшим, если данные о нем в таблице синхронизации не обновлялись в течение этого интервала.',
-    'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Как минимум один атрибут должен быть выбран для поиска и сопоставления объектов, либо используйте политику сопоставления по primary_key.',
-    'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Срок хранения должен быть указан, поскольку объекты должны быть удалены после того, помечены как устаревшие.',
-    'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Устаревшие объекты должны быть обновлены, но способ обновления не указан.',
-    'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'Таблица %1$s уже существует в базе данных. Пожалуйста, используйте другое имя для таблицы данных из этого источника.',
-    'SynchroDataSource:Description' => 'Описание',
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Как минимум один атрибут должен быть выбран для поиска и сопоставления объектов, либо используйте политику сопоставления по primary_key.',
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Срок хранения должен быть указан, поскольку объекты должны быть удалены после того, помечены как устаревшие.',
+	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Устаревшие объекты должны быть обновлены, но способ обновления не указан.',
+	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'Таблица %1$s уже существует в базе данных. Пожалуйста, используйте другое имя для таблицы данных из этого источника.',
+	'SynchroDataSource:Description' => 'Описание',
 	'SynchroDataSource:Reconciliation' => 'Поиск и сопоставление',
 	'SynchroDataSource:Deletion' => 'Устаревание и удаление',
 	'SynchroDataSource:Status' => 'Статус',
 	'SynchroDataSource:Information' => 'Инфо~~',
-	'SynchroDataSource:Definition' => 'Definition~~',
+	'SynchroDataSource:Definition' => 'Определение~~',
 
 	'Core:SynchroAttributes' => 'Атрибуты',
 	'Core:SynchroStatus' => 'Свойства~~',
@@ -676,17 +700,17 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:Synchro:ModifiedLabel' => 'Изменен~~',
 	'Core:Synchro:UnchangedLabel' => 'Неизменен~~',
 	'Core:Synchro:ReconciledErrorsLabel' => 'Ошибки~~',
-	'Core:Synchro:ReconciledLabel' => 'Reconciled~~',
+	'Core:Synchro:ReconciledLabel' => 'Согласован~~',
 	'Core:Synchro:ReconciledNewLabel' => 'Создан~~',
-	'Core:SynchroReconcile:Yes' => 'Да~~',
-	'Core:SynchroReconcile:No' => 'Нет~~',
-	'Core:SynchroUpdate:Yes' => 'Да~~',
-	'Core:SynchroUpdate:No' => 'Нет~~',
-	'Core:Synchro:LastestStatus' => 'Последний статус~~',
-	'Core:Synchro:History' => 'История синхронизаций~~',
+	'Core:SynchroReconcile:Yes' => 'Да',
+	'Core:SynchroReconcile:No' => 'Нет',
+	'Core:SynchroUpdate:Yes' => 'Да',
+	'Core:SynchroUpdate:No' => 'Нет',
+	'Core:Synchro:LastestStatus' => 'Последний статус',
+	'Core:Synchro:History' => 'История синхронизаций',
 	'Core:Synchro:NeverRun' => 'Синхронизация не запускалась. Логи отсутсвуют.~~',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Синхронизация была закончена в %1$s.~~',
-	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Синхронизация запущена в %1$s сейчас в процессе...~~',
+	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Синхронизация запущена в %1$s, сейчас в процессе...~~',
 	'Menu:DataSources' => 'Источники данных',
 	'Menu:DataSources+' => 'Источники синхронизируемых данных',
 	'Core:Synchro:label_repl_ignored' => 'Игнор. (%1$s)~~',
@@ -704,7 +728,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:Synchro:label_obj_new_updated' => 'Обновлен (%1$s)~~',
 	'Core:Synchro:label_obj_created' => 'Создан (%1$s)~~',
 	'Core:Synchro:label_obj_new_errors' => 'Ошибки (%1$s)~~',
-	'Core:Synchro:History' => 'История синхронизаций',
 	'Core:SynchroLogTitle' => '%1$s - %2$s~~',
 	'Core:Synchro:Nb_Replica' => 'Replica processed: %1$s~~',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s~~',
@@ -817,67 +840,67 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Attribute Duration
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Core:Duration_Seconds'	=> '%1$d с',
-	'Core:Duration_Minutes_Seconds'	=>'%1$d мин %2$d с',
+	'Core:Duration_Seconds' => '%1$d с',
+	'Core:Duration_Minutes_Seconds' => '%1$d мин %2$d с',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$d ч %2$d мин %3$d с',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s д %2$d ч %3$d мин %4$d с',
 
-		// Explain working time computing
+	// Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%',
 
 	// Bulk export
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter "%1$s"',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter "query". There is no Query Phrasebook corresponding to the id: "%1$s".',
-	'Core:BulkExport:ExportFormatPrompt' => 'Export format:',
+	'Core:BulkExport:MissingParameter_Param' => 'Отсутствует параметр "%1$s"',
+	'Core:BulkExport:InvalidParameter_Query' => 'Недопустимое значение параметра "query". В Книге запросов отсутствует запись с id: "%1$s".',
+	'Core:BulkExport:ExportFormatPrompt' => 'Формат экспорта:',
 	'Core:BulkExportOf_Class' => '%1$s Export',
-	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s',
-	'Core:BulkExport:ExportResult' => 'Result of the export:',
-	'Core:BulkExport:RetrievingData' => 'Retrieving data...',
-	'Core:BulkExport:HTMLFormat' => 'Web Page (*.html)',
-	'Core:BulkExport:CSVFormat' => 'Comma Separated Values (*.csv)',
-	'Core:BulkExport:XLSXFormat' => 'Excel 2007 or newer (*.xlsx)',
-	'Core:BulkExport:PDFFormat' => 'PDF Document (*.pdf)',
-	'Core:BulkExport:DragAndDropHelp' => 'Drag and drop the columns\' headers to arrange the columns. Preview of %1$s lines. Total number of lines to export: %2$s.',
-	'Core:BulkExport:EmptyPreview' => 'Select the columns to be exported from the list above',
-	'Core:BulkExport:ColumnsOrder' => 'Columns order',
-	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Available columns from %1$s',
-	'Core:BulkExport:NoFieldSelected' => 'Select at least one column to be exported',
-	'Core:BulkExport:CheckAll' => 'Check All',
-	'Core:BulkExport:UncheckAll' => 'Uncheck All',
-	'Core:BulkExport:ExportCancelledByUser' => 'Export cancelled by the user',
-	'Core:BulkExport:CSVOptions' => 'CSV Options',
-	'Core:BulkExport:CSVLocalization' => 'Localization',
-	'Core:BulkExport:PDFOptions' => 'PDF Options',
-	'Core:BulkExport:PDFPageFormat' => 'Page Format',
-	'Core:BulkExport:PDFPageSize' => 'Page Size:',
+	'Core:BulkExport:ClickHereToDownload_FileName' => 'Нажмите здесь, чтобы скачать %1$s',
+	'Core:BulkExport:ExportResult' => 'Результат экспорта:',
+	'Core:BulkExport:RetrievingData' => 'Извлечение данных...',
+	'Core:BulkExport:HTMLFormat' => 'Web-страница (*.html)',
+	'Core:BulkExport:CSVFormat' => 'Текст с разделителями-запятыми (*.csv)',
+	'Core:BulkExport:XLSXFormat' => 'Excel 2007 или новее (*.xlsx)',
+	'Core:BulkExport:PDFFormat' => 'Документ PDF (*.pdf)',
+	'Core:BulkExport:DragAndDropHelp' => 'Перетащите заголовки столбцов, чтобы упорядочить столбцы. Предварительный просмотр %1$s строк. Общее количество строк для экспорта: %2$s.',
+	'Core:BulkExport:EmptyPreview' => 'Выберите столбцы для экспорта из списка выше',
+	'Core:BulkExport:ColumnsOrder' => 'Порядок столбцов',
+	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Доступные столбцы из класса %1$s',
+	'Core:BulkExport:NoFieldSelected' => 'Выберите хотя бы один столбец для экспорта',
+	'Core:BulkExport:CheckAll' => 'Отметить все',
+	'Core:BulkExport:UncheckAll' => 'Снять все',
+	'Core:BulkExport:ExportCancelledByUser' => 'Экспорт отменен пользователем',
+	'Core:BulkExport:CSVOptions' => 'Параметры CSV',
+	'Core:BulkExport:CSVLocalization' => 'Локализация',
+	'Core:BulkExport:PDFOptions' => 'Параметры PDF',
+	'Core:BulkExport:PDFPageFormat' => 'Формат страницы',
+	'Core:BulkExport:PDFPageSize' => 'Размер:',
 	'Core:BulkExport:PageSize-A4' => 'A4',
 	'Core:BulkExport:PageSize-A3' => 'A3',
-	'Core:BulkExport:PageSize-Letter' => 'Letter',
-	'Core:BulkExport:PDFPageOrientation' => 'Page Orientation:',
-	'Core:BulkExport:PageOrientation-L' => 'Landscape',
-	'Core:BulkExport:PageOrientation-P' => 'Portrait',
-	'Core:BulkExport:XMLFormat' => 'XML file (*.xml)',
-	'Core:BulkExport:XMLOptions' => 'XML Options',
-	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)',
-	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options',
-	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
-	'Core:BulkExport:OptionLinkSets' => 'Include linked objects',
-	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting',
-	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export',
-	'Core:BulkExportLabelOQLExpression' => 'OQL Query:',
-	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:',
-	'Core:BulkExportMessageEmptyOQL' => 'Please enter a valid OQL query.',
-	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.',
-	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...',
-	'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.',
-	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.',
-	'Core:BulkExport:XLSXOptions' => 'Excel Options',
-	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup',
-	'Core:BulkExport:DateTimeFormat' => 'Date and Time format',
-	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s',
-	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s',
+	'Core:BulkExport:PageSize-Letter' => 'Письмо',
+	'Core:BulkExport:PDFPageOrientation' => 'Ориентация:',
+	'Core:BulkExport:PageOrientation-L' => 'Альбомная',
+	'Core:BulkExport:PageOrientation-P' => 'Книжная',
+	'Core:BulkExport:XMLFormat' => 'Файл XML (*.xml)',
+	'Core:BulkExport:XMLOptions' => 'Параметры XML',
+	'Core:BulkExport:SpreadsheetFormat' => 'Таблица HTML (*.html)',
+	'Core:BulkExport:SpreadsheetOptions' => 'Параметры таблицы',
+	'Core:BulkExport:OptionNoLocalize' => 'Не локализовать значения (для полей с выпадающими списками)',
+	'Core:BulkExport:OptionLinkSets' => 'Включить связанные объекты',
+	'Core:BulkExport:OptionFormattedText' => 'Сохранить форматирование текста',
+	'Core:BulkExport:ScopeDefinition' => 'Определение экспортируемых объектов',
+	'Core:BulkExportLabelOQLExpression' => 'Запрос OQL:',
+	'Core:BulkExportLabelPhrasebookEntry' => 'Запись в книге запросов:',
+	'Core:BulkExportMessageEmptyOQL' => 'Пожалуйста, введите OQL-запрос.',
+	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Выберите запись в книге запросов.',
+	'Core:BulkExportQueryPlaceholder' => 'Введите здесь OQL-запрос...',
+	'Core:BulkExportCanRunNonInteractive' => 'Нажмите здесь, чтобы перейти к экспорту в неинтерактивном режиме',
+	'Core:BulkExportLegacyExport' => 'Нажмите здесь, чтобы перейти к устаревшему экспорту',
+	'Core:BulkExport:XLSXOptions' => 'Параметры Excel',
+	'Core:BulkExport:TextFormat' => 'Текстовые поля с HTML-разметкой',
+	'Core:BulkExport:DateTimeFormat' => 'Формат даты и времени',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Формат по умолчанию (%1$s), например %2$s',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Пользовательский формат: %1$s',
 
 	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
@@ -899,3 +922,28 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:Validator:MustSelectOne' => 'Пожалуйста, выберите значение',
 ));
 
+//
+// Class: TagSetFieldData
+//
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:TagSetFieldData' => '%2$s для класса %1$s',
+	'Class:TagSetFieldData+' => '',
+
+	'Class:TagSetFieldData/Attribute:code' => 'Код',
+	'Class:TagSetFieldData/Attribute:code+' => 'Внутренний код. Должен содержать не менее 3 цифробуквенных символа.',
+	'Class:TagSetFieldData/Attribute:label' => 'Метка',
+	'Class:TagSetFieldData/Attribute:label+' => 'Отображаемая метка',
+	'Class:TagSetFieldData/Attribute:description' => 'Описание',
+	'Class:TagSetFieldData/Attribute:description+' => 'Описание',
+
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Используемые теги не могут быть удалены',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Коды и метки тегов должны быть уникальными',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Код тега должен содержать от 3 до %1$d цифробуквенных символов',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'Выбранный код тега является зарезервированным словом',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Метка тега не должна содержать \'%1$s\' или быть пустой',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Код тега не может быть изменен при использовании',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Нельзя изменить "Object Class" тега',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Нельзя изменить "Attribute Code" тега',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Использование тега (%1$d)',
+	'Core:TagSetFieldData:NoEntryFound' => 'Не найдено записей с этим тегом',
+));

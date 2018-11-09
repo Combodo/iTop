@@ -285,7 +285,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+	'Organization:Overview:UserRequests' => 'Запросы пользователей этой организации',
+	'Organization:Overview:MyUserRequests' => 'Мои запросы пользователей этой организации',
+	'Organization:Overview:Tickets' => 'Тикеты этой организации',
 ));
