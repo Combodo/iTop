@@ -10042,7 +10042,7 @@ class AttributeTagSet extends AttributeSet
 
 				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.htmlentities($sTagLabel,
 						ENT_QUOTES, 'UTF-8').'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES,
-						'UTF-8').'">'.$sTagLabel.'</a>';
+						'UTF-8').'">'.htmlentities($sTagLabel, ENT_QUOTES, 'UTF-8').'</a>';
 			}
 			else
 			{
