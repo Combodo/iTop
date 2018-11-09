@@ -86,10 +86,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => 'Модель предоставления услуг',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Вышестоящая',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Вышестоящая организация',
-	'Class:Organization/Attribute:overview' => 'Overview~~',
-	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
-	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
-	'Organization:Overview:Users' => 'iTop Users within this organization~~',
+	'Class:Organization/Attribute:overview' => 'Обзор',
+	'Organization:Overview:FunctionalCIs' => 'Конфигурационные единицы этой организации',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'по типу',
+	'Organization:Overview:Users' => 'Пользователи iTop этой организации',
 ));
 
 //
@@ -173,8 +173,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Имя',
 	'Class:Person/Attribute:first_name+' => '',
-	'Class:Person/Attribute:employee_number' => 'ID сотрудника',
-	'Class:Person/Attribute:employee_number+' => '',
+	'Class:Person/Attribute:employee_number' => 'Номер сотрудника',
+	'Class:Person/Attribute:employee_number+' => 'Табельный номер сотрудника или т.п.',
 	'Class:Person/Attribute:mobile_phone' => 'Мобильный телефон',
 	'Class:Person/Attribute:mobile_phone+' => '',
 	'Class:Person/Attribute:location_id' => 'Расположение',
@@ -193,10 +193,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Фотография',
 	'Class:Person/Attribute:picture+' => '',
-	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
-	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
-	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
-	'Class:Person/UniquenessRule:name/Error' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/UniquenessRule:employee_number/Description' => 'Номер сотрудника должен быть уникальным в организации',
+	'Class:Person/UniquenessRule:employee_number/Error' => 'В организации \'$this->org_name$\' уже есть персона с таким номером сотрудника',
+	'Class:Person/UniquenessRule:name/Description' => 'Имя сотрудника должно быть уникальным внутри организации',
+	'Class:Person/UniquenessRule:name/Error' => 'В организации \'$this->org_name$\' уже есть персона с таким именем',
 ));
 
 //
@@ -345,8 +345,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:PhysicalDevice/Attribute:status+' => '',
 	'Class:PhysicalDevice/Attribute:status/Value:implementation' => 'Внедрение',
 	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => 'Внедрение',
-	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'Устаревшее',
-	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => 'Устаревшее',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'Устаревший',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => 'Устаревший',
 	'Class:PhysicalDevice/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:PhysicalDevice/Attribute:status/Value:production+' => 'Эксплуатация',
 	'Class:PhysicalDevice/Attribute:status/Value:stock' => 'Резерв',
@@ -848,8 +848,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:VirtualDevice/Attribute:status+' => '',
 	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Внедрение',
 	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Внедрение',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Устаревшее',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'устаревшее',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Устаревший',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'Устаревший',
 	'Class:VirtualDevice/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:VirtualDevice/Attribute:status/Value:production+' => 'Эксплуатация',
 	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Резерв',
@@ -1288,8 +1288,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Устройства',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Все устройства этого бренда',
-	'Class:Brand/UniquenessRule:name/Description' => 'The name must be unique~~',
-	'Class:Brand/UniquenessRule:name/Error' => 'This brand already exists~~',
+	'Class:Brand/UniquenessRule:name/Description' => 'Название должно быть уникальным',
+	'Class:Brand/UniquenessRule:name/Error' => 'Этот бренд уже существует',
 ));
 
 //
@@ -1343,8 +1343,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone~~',
 	'Class:Model/Attribute:physicaldevices_list' => 'Устройства',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Все устройства этой модели',
-	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
-	'Class:Model/UniquenessRule:name_brand/Error' => 'this model already exists for this brand~~',
 ));
 
 //
@@ -1736,8 +1734,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Group/Attribute:status+' => '',
 	'Class:Group/Attribute:status/Value:implementation' => 'Внедрение',
 	'Class:Group/Attribute:status/Value:implementation+' => 'Внедрение',
-	'Class:Group/Attribute:status/Value:obsolete' => 'Устаревшее',
-	'Class:Group/Attribute:status/Value:obsolete+' => 'Устаревшее',
+	'Class:Group/Attribute:status/Value:obsolete' => 'Устаревший',
+	'Class:Group/Attribute:status/Value:obsolete+' => 'Устаревший',
 	'Class:Group/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:Group/Attribute:status/Value:production+' => 'Эксплуатация',
 	'Class:Group/Attribute:org_id' => 'Организация',
