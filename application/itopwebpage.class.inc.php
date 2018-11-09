@@ -321,7 +321,16 @@ EOF
 	});
 EOF
 		);
-
+		// Make image attributes zoomable
+		$this->add_ready_script(
+<<<EOF
+		$('.view-image img').each(function(){
+			$(this).attr('href', $(this).attr('src'))
+		})
+		.magnificPopup({type: 'image', closeOnContentClick: true });
+EOF
+		);
+        
 		$this->add_init_script(
 			<<< EOF
 	try
