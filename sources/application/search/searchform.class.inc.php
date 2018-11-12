@@ -480,6 +480,7 @@ class SearchForm
 	 *
 	 * @return array
 	 * @throws \MissingQueryArgument
+	 * @throws \Exception
 	 */
 	public function GetCriterion($oSearch, $aFields, $aArgs = array(), $bIsRemovable = true)
 	{
@@ -554,6 +555,12 @@ class SearchForm
 
 		foreach($aContextParams as $sParamCode => $sParamValue)
 		{
+			// Check that the code exists in the concerned class
+			if (!MetaModel::IsValidAttCode($oSearch->GetClass(), $sParamCode))
+			{
+				continue;
+			}
+
 			// Add Context criteria in read only mode
 			$sAlias = $oSearch->GetClassAlias();
 			$oFieldExpression = new FieldExpression($sParamCode, $sAlias);

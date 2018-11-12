@@ -308,7 +308,7 @@ abstract class User extends cmdbAbstractObject
 				if (count($aOrgs) > 0)
 				{
 					// Check that the modified User belongs to one of our organization
-					if (!in_array($this->GetOriginal('org_id'), $aOrgs) || !in_array($this->Get('org_id'), $aOrgs))
+					if (!in_array($this->GetOriginal('org_id'), $aOrgs) && !in_array($this->Get('org_id'), $aOrgs))
 					{
 						$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:UserOrganizationNotAllowed');
 					}
