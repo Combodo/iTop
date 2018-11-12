@@ -682,6 +682,7 @@ class DesignerFormField
 	protected $sLabel;
 	protected $sCode;
 	protected $defaultValue;
+	/** @var \DesignerForm $oForm */
 	protected $oForm;
 	protected $bMandatory;
 	protected $bReadOnly;
@@ -707,8 +708,11 @@ class DesignerFormField
 	{
 		return $this->sCode;
 	}
-	
-	public function SetForm($oForm)
+
+    /**
+     * @param \DesignerForm $oForm
+     */
+	public function SetForm(\DesignerForm $oForm)
 	{
 		$this->oForm = $oForm;
 	}
