@@ -942,9 +942,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TagSetFieldData/Attribute:label+' => 'Anzeigelabel',
 	'Class:TagSetFieldData/Attribute:description' => 'Beschreibung',
 	'Class:TagSetFieldData/Attribute:description+' => 'Beschreibung',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag-Klasse',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Objekt-Klasse',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Attributscode',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Verwendete tags können nicht gelöscht werden',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tag-Codes oder Labels müssen eindeutig sein',
