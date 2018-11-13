@@ -959,6 +959,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TagSetFieldData/Attribute:label+' => 'Label dat getoond wordt',
 	'Class:TagSetFieldData/Attribute:description' => 'Beschrijving',
 	'Class:TagSetFieldData/Attribute:description+' => 'Beschrijving',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Tags in gebruik kunnen niet verwijderd worden',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Codes en labels voor tags moeten uniek zijn.',
