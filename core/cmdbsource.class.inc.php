@@ -459,6 +459,11 @@ class CMDBSource
 		return $res;
 	}
 
+	public static function CacheReset($sTable)
+	{
+		self::_TablesInfoCacheReset($sTable);
+	}
+
 	/**
 	 * @return \mysqli
 	 */
@@ -967,9 +972,16 @@ class CMDBSource
 	
 	// Cache the information about existing tables, and their fields
 	private static $m_aTablesInfo = array();
-	private static function _TablesInfoCacheReset()
+	private static function _TablesInfoCacheReset($sTableName = null)
 	{
-		self::$m_aTablesInfo = array();
+		if (is_null($sTableName))
+		{
+			self::$m_aTablesInfo = array();
+		}
+		else
+		{
+			self::$m_aTablesInfo[strtolower($sTableName)] = null;
+		}
 	}
 
 	/**
