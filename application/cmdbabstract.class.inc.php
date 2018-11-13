@@ -2190,7 +2190,8 @@ EOF
 						{
 							$oPage->add_ready_script(
 								<<<EOF
-								$('#{$iId}').qtip( { content: $('#{$iId}').val(), show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'bottomLeft' }, position: { corner: { target: 'topLeft', tooltip: 'bottomLeft' }, adjust: { y: -15}} } );
+								var sEscapedVal = $('<div/>').text($('#{$iId}').val()).html();
+								$('#{$iId}').qtip( { content: sEscapedVal, show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'bottomLeft' }, position: { corner: { target: 'topLeft', tooltip: 'bottomLeft' }, adjust: { y: -15}} } );
 								
 								$('#{$iId}').bind('keyup', function(evt, sFormId){ 
 									var oQTipAPI = $(this).qtip('api');
@@ -2204,7 +2205,8 @@ EOF
 									{
 										oQTipAPI.disable(false); 
 									}
-									oQTipAPI.updateContent($(this).val());
+									var sEscapedVal = $('<div/>').text($(this).val()).html();                  
+									oQTipAPI.updateContent(sEscapedVal);
 								});
 EOF
 							);
