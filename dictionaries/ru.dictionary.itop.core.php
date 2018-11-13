@@ -928,9 +928,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:TagSetFieldData/Attribute:label+' => 'Отображаемая метка',
 	'Class:TagSetFieldData/Attribute:description' => 'Описание',
 	'Class:TagSetFieldData/Attribute:description+' => 'Описание',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Класс тега',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Класс объекта',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Код поля',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Используемые теги не могут быть удалены',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Коды и метки тегов должны быть уникальными',
