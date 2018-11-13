@@ -2142,6 +2142,12 @@ class MFElement extends Combodo\iTop\DesignElement
 		$oExisting = $this->_FindChildNode($oNode, $sSearchId);
 		if ($oExisting)
 		{
+            $sOldId = $oExisting->getAttribute('_old_id');
+            if(!empty($sOldId))
+            {
+                $oNode->setAttribute('_old_id', $sOldId);
+            }
+
 			$sPrevFlag = $oExisting->getAttribute('_alteration');
 			if ($sPrevFlag == 'removed')
 			{
