@@ -84,6 +84,7 @@ We would like to give a special thank you to the people from the community who c
  - Turrubiates, Miguel
 
 #### Aliases
+ - chifu1234
  - cprobst
  - Karkoff1212
  - Laura
