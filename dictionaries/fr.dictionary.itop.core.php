@@ -942,6 +942,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TagSetFieldData/Attribute:label+' => 'Label',
 	'Class:TagSetFieldData/Attribute:description' => 'Description',
 	'Class:TagSetFieldData/Attribute:description+' => 'Description',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Type d\'étiquette',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Type d\'objet',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Code du champ',
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Impossible de supprimer une étiquette utilisée',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Les codes et noms des étiquettes doivent être unique',
