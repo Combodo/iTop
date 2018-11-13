@@ -194,7 +194,8 @@ class UILinksWidget
 			$aArgs['prefix'] = $sPrefix;
 			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}_".($iUniqueId < 0 ? -$iUniqueId : $iUniqueId);
 			$aArgs['this'] = $oNewLinkObj;
-			$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"-$iUniqueId\">";
+			$sInputValue = $iUniqueId > 0 ? "-$iUniqueId" : "$iUniqueId";
+			$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$sInputValue\">";
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
 				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.-$iUniqueId.']';
@@ -213,7 +214,7 @@ class UILinksWidget
 			// Rows added before loading the form cannot call OnLinkAdded.
 			if ($iUniqueId > 0)
 			{
-				$oP->add_script(
+				$oP->add_ready_script(
 					<<<EOF
 PrepareWidgets();
 oWidget{$this->m_iInputId}.OnLinkAdded($iUniqueId, $iRemoteObjKey);
@@ -337,6 +338,7 @@ EOF
 		$oValue->Rewind();
 		$aForm = array();
 		$iAddedId = 1; // Unique id for new links
+		$aAddedLinks = array();
 		while($oCurrentLink = $oValue->Fetch())
 		{
 		    // We try to retrieve the remote object as usual
@@ -356,6 +358,7 @@ EOF
             if ($oCurrentLink->IsNew())
             {
                 $key = -($iAddedId++);
+	            $aAddedLinks[] = array('iAddedId' => -$key, 'iRemote' => $oCurrentLink->Get($this->m_sExtKeyToRemote));
             }
             else
             {
@@ -374,6 +377,13 @@ EOF
 		oWidget{$this->m_iInputId}.Init();
 EOF
 );
+		foreach ($aAddedLinks as $aAddedLink)
+		{
+			$oPage->add_ready_script(<<<EOF
+			oWidget{$this->m_iInputId}.AddLink({$aAddedLink['iAddedId']}, {$aAddedLink['iRemote']});
+EOF
+			);
+		}
 		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget{$this->m_iInputId}.RemoveSelected();\" >";
 		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget{$this->m_iInputId}.AddObjects();\"><span id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_indicatorAdd\"></span></span>\n";
 		$sHtmlValue .= "<span style=\"clear:both;\"><p>&nbsp;</p></span>\n";
