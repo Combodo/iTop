@@ -31,6 +31,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeLinkedSet' => 'Objets liés (1-n)',
 	'Core:AttributeLinkedSet+' => 'Liste d\'objets d\'une classe donnée et pointant sur l\'objet courant',
 
+	'Core:AttributeDashboard' => 'Tableau de bord',
+	'Core:AttributeDashboard+' => '',
+
+	'Core:AttributePhoneNumber' => 'Numéro de téléphone',
+	'Core:AttributePhoneNumber+' => '',
+
+	'Core:AttributeObsolescenceDate' => 'Date d\'obsolescence',
+	'Core:AttributeObsolescenceDate+' => '',
+
     'Core:AttributeTagSet' => 'Liste d\'étiquettes',
     'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'cliquer pour ajouter',

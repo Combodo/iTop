@@ -33,6 +33,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeLinkedSet' => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 
+	'Core:AttributeDashboard' => 'Dashboard',
+	'Core:AttributeDashboard+' => '',
+
+	'Core:AttributePhoneNumber' => 'Phone number',
+	'Core:AttributePhoneNumber+' => '',
+
+	'Core:AttributeObsolescenceDate' => 'Obsolescence date',
+	'Core:AttributeObsolescenceDate+' => '',
+
     'Core:AttributeTagSet' => 'List of tags',
     'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'click to add',
