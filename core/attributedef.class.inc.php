@@ -10045,7 +10045,7 @@ class AttributeTagSet extends AttributeSet
 				if ($bWithLink)
 				{
 					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
-					$sLink = 'href="'.$sUrl.'"';
+					$sLink = ' href="'.$sUrl.'"';
 				}
 
 				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.htmlentities($sTagLabel,
