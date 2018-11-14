@@ -792,8 +792,6 @@ EOF
 					{
 						if ($bEditMode)
 						{
-
-
 							$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
 							$sInfos = '';
 							$iFlags = $this->GetFormAttributeFlags($sAttCode);
@@ -803,7 +801,7 @@ EOF
 								$iFlags = $iFlags | $aExtraFlags[$sAttCode];
 							}
 							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard))
+							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
 							{
 								$sInputId = $this->m_iFormId.'_'.$sAttCode;
 								if ($oAttDef->IsWritable())
@@ -2894,7 +2892,7 @@ EOF
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 		}
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-		if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
+		if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard))
 		{
 			// The field is visible in the current state of the object
 			if ($sStateAttCode == $sAttCode)
