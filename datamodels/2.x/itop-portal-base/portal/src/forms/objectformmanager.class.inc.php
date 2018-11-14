@@ -600,13 +600,17 @@ class ObjectFormManager extends FormManager
 		foreach ($aFieldsAtts as $sAttCode => $iFieldFlags)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sAttCode);
-
-			// Failsafe for AttributeType that would not have MakeFormField and therefore could not be used in a form
+			
+			/** @var Field $oField */
+			$oField = null;
 			if (is_callable(get_class($oAttDef) . '::MakeFormField'))
 			{
-			    /** @var Field $oField */
 				$oField = $oAttDef->MakeFormField($this->oObject);
-
+			}
+			
+			// Failsafe for AttributeType that would not have MakeFormField and therefore could not be used in a form
+			if($oField !== null)
+			{
 				if ($this->sMode !== static::ENUM_MODE_VIEW)
 				{
 					// Field dependencies
@@ -816,7 +820,7 @@ class ObjectFormManager extends FormManager
 				$oField = new LabelField($sAttCode);
 				$oField->SetReadOnly(true)
 					->SetHidden(false)
-					->SetCurrentValue(get_class($oAttDef) . ' : Sorry, that AttributeType is not implemented yet.')
+					->SetCurrentValue('Sorry, that AttributeType is not implemented yet.')
 					->SetLabel($oAttDef->GetLabel());
 			}
 

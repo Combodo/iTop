@@ -1299,6 +1299,14 @@ class AttributeDashboard extends AttributeDefinition
 	{
 		return '';
 	}
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		return null;
+	} 
 }
 
 /**
