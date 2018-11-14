@@ -1428,6 +1428,16 @@ class utils
 	}
 	
 	/**
+	 * Helper to encapsulation iTop's htmlentities
+	 * @param string $sValue
+	 * @return string
+	 */
+	static public function HtmlEntities($sValue)
+	{
+		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+	}
+	
+	/**
 	 * Convert a string containing some (valid) HTML markup to plain text
 	 * @param string $sHtml
 	 * @return string

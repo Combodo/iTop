@@ -1299,7 +1299,7 @@ EOF
 			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_apply_stimulus\">\n");
 			$oP->add("<input type=\"hidden\" name=\"preview_mode\" value=\"1\">\n");
-			$oP->add("<input type=\"hidden\" name=\"filter\" value=\"$sFilter\">\n");
+			$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".utils::HtmlEntities($sFilter)."\">\n");
 			$oP->add("<input type=\"hidden\" name=\"stimulus\" value=\"$sStimulus\">\n");
 			$oP->add("<input type=\"hidden\" name=\"state\" value=\"$sState\">\n");
 			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
