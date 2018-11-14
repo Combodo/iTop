@@ -108,6 +108,10 @@ class MySQLHasGoneAwayException extends MySQLException
  */
 class CMDBSource
 {
+	const ENUM_DB_VENDOR_MYSQL = 'MySQL';
+	const ENUM_DB_VENDOR_MARIADB = 'MariaDB';
+	const ENUM_DB_VENDOR_PERCONA = 'Percona';
+	
 	protected static $m_sDBHost;
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
@@ -404,6 +408,27 @@ class CMDBSource
 	{
 		$aVersions = self::QueryToCol('SELECT Version() as version', 'version');
 		return $aVersions[0];
+	}
+
+	/**
+	 * Get the DB vendor between MySQL and its main forks
+	 * @return string
+	 */
+	static public function GetDBVendor()
+	{
+		$sDBVendor = static::ENUM_DB_VENDOR_MYSQL;
+		
+		$sVersionComment = strtolower(static::GetServerVariable('version_comment'));
+		if(preg_match('/mariadb/', $sVersionComment) === 1)
+		{
+			$sDBVendor = static::ENUM_DB_VENDOR_MARIADB;
+		}
+		else if(preg_match('/percona/', $sVersionComment) === 1)
+		{
+			$sDBVendor = static::ENUM_DB_VENDOR_PERCONA;
+		}
+		
+		return $sDBVendor;
 	}
 
 	/**
