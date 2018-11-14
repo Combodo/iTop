@@ -204,9 +204,16 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		
 		$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
 		$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
+
+		$iTransactionId = $oPage->GetTransactionId();
+		$sTempId = session_id().'_'.$iTransactionId;
+		$oSearchTemp = DBObjectSearch::FromOQL("SELECT Attachment WHERE temp_id = :temp_id");
+		$oSetTemp = new DBObjectSet($oSearchTemp, array(), array('temp_id' => $sTempId));
+
 		if ($this->GetAttachmentsPosition() == 'relations')
 		{
-			$sTitle = ($oSet->Count() > 0)? Dict::Format('Attachments:TabTitle_Count', $oSet->Count()) : Dict::S('Attachments:EmptyTabTitle');
+			$iCount = $oSet->Count() + $oSetTemp->Count();
+			$sTitle = ($iCount > 0)? Dict::Format('Attachments:TabTitle_Count', $iCount) : Dict::S('Attachments:EmptyTabTitle');
 			$oPage->SetCurrentTab($sTitle);
 		}
 		$oPage->add_style(
@@ -249,9 +256,7 @@ EOF
 		if ($bEditMode && !static::IsReadonlyState($oObject, $oObject->GetState(), static::ENUM_GUI_BACKOFFICE) )
 		{
 			$sIsDeleteEnabled = $this->m_bDeleteEnabled ? 'true' : 'false';
-			$iTransactionId = $oPage->GetTransactionId();
 			$sClass = get_class($oObject);
-			$sTempId = session_id().'_'.$iTransactionId;
 			$sDeleteBtn = Dict::S('Attachments:DeleteBtn');
 			$oPage->add_script(
 <<<EOF
@@ -275,15 +280,16 @@ EOF
 			$oPage->add('<span id="attachments">');
 			while ($oAttachment = $oSet->Fetch())
 			{
-				$iAttId = $oAttachment->GetKey();
-				$oDoc = $oAttachment->Get('contents');
-				$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
-				$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
-				$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
-				$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttId;
-				$oPage->add('<div class="attachment" id="display_attachment_' . $iAttId . '"><a data-preview="' . $sPreview . '" href="' . $sDownloadLink . '"><img src="' . $sIcon . '"><br/>' . $sFileName . '<input id="attachment_' . $iAttId . '" type="hidden" name="attachments[]" value="' . $iAttId . '"/></a><br/>&nbsp;<input id="btn_remove_' . $iAttId . '" type="button" class="btn_hidden" value="' . Dict::S('Attachments:DeleteBtn') . '" onClick="RemoveAttachment(' . $iAttId . ');"/>&nbsp;</div>');
+				$this->DisplayOneAttachment($oPage, $oAttachment);
 			}
-			
+
+			// Display Temporary attachments
+			while ($oAttachment = $oSetTemp->Fetch())
+			{
+				$this->DisplayOneAttachment($oPage, $oAttachment, true);
+			}
+
+
 			// Suggested attachments are listed here but treated as temporary
 			$aDefault = utils::ReadParam('default', array(), false, 'raw_data');
 			if (array_key_exists('suggested_attachments', $aDefault))
@@ -303,18 +309,11 @@ EOF
 						$oAttachment->Set('temp_id', $sTempId);
 						$oAttachment->DBUpdate();
 						// Display them
-						$iAttId = $oAttachment->GetKey();
-						$oDoc = $oAttachment->Get('contents');
-						$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
-						$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
-						$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttId;
-						$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
-						$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input id="attachment_'.$iAttId.'" type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="Delete" onClick="RemoveAttachment('.$iAttId.');"/>&nbsp;</div>');
-						$oPage->add_ready_script("$('#attachment_plugin').trigger('add_attachment', [$iAttId, '".addslashes($sFileName)."', false /* not an line image */]);");
+						$this->DisplayOneAttachment($oPage, $oAttachment, true);
 					}
 				}
 			}
-			
+
 			$oPage->add('</span>');			
 			$oPage->add('<div style="clear:both"></div>');			
 			$sMaxUpload = $this->GetMaxUpload();
@@ -474,8 +473,8 @@ EOF
 			// Leave silently if there is no trace of the attachment form
 			return;
 		}
-		$iTransactionId = utils::ReadParam('transaction_id', null);
-		if (!is_null($iTransactionId))
+		$sTransactionId = utils::ReadParam('transaction_id', null);
+		if (!is_null($sTransactionId))
 		{
 			$aActions = array();
 			$aAttachmentIds = utils::ReadParam('attachments', array());
@@ -494,8 +493,8 @@ EOF
 				}
 			}			
 
-			// Attach new (temporary) attachements
-			$sTempId = session_id().'_'.$iTransactionId;
+			// Attach new (temporary) attachments
+			$sTempId = session_id().'_'.$sTransactionId;
 			// The object is being created from a form, check if there are pending attachments
 			// for this object, but deleting the "new" ones that were already removed from the form
 			$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
@@ -528,6 +527,21 @@ EOF
 				}
 				self::$m_bIsModified = true;
 			}
+		}
+	}
+
+	public static function CopyAttachments($oObject, $sTransactionId)
+	{
+		$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
+		$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
+		// Attach new (temporary) attachments
+		$sTempId = session_id().'_'.$sTransactionId;
+		while ($oAttachment = $oSet->Fetch())
+		{
+			$oTempAttachment = clone $oAttachment;
+			$oTempAttachment->Set('item_id', null);
+			$oTempAttachment->Set('temp_id', $sTempId);
+			$oTempAttachment->DBInsert();
 		}
 	}
 	
@@ -707,6 +721,28 @@ EOF
 
         return $bReadonly;
     }
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param $oAttachment
+	 * @param bool $bIsTemporary
+	 *
+	 * @throws \Exception
+	 */
+	protected function DisplayOneAttachment(WebPage $oPage, $oAttachment, $bIsTemporary = false)
+	{
+		$iAttId = $oAttachment->GetKey();
+		$oDoc = $oAttachment->Get('contents');
+		$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
+		$sIcon = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
+		$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL.$iAttId;
+		$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
+		$oPage->add('<div class="attachment" id="display_attachment_'.$iAttId.'"><a data-preview="'.$sPreview.'" href="'.$sDownloadLink.'"><img src="'.$sIcon.'"><br/>'.$sFileName.'<input id="attachment_'.$iAttId.'" type="hidden" name="attachments[]" value="'.$iAttId.'"/></a><br/>&nbsp;<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="'.Dict::S('Attachments:DeleteBtn').'" onClick="RemoveAttachment('.$iAttId.');"/>&nbsp;</div>');
+		if ($bIsTemporary)
+		{
+			$oPage->add_ready_script("$('#attachment_plugin').trigger('add_attachment', [$iAttId, '".addslashes($sFileName)."', false /* not an line image */]);");
+		}
+	}
 }
 
 /**
