@@ -419,39 +419,6 @@ EOF
 
 	/**
 	 * @param \iTopWebPage $oPage
-	 * @param $bEditMode
-	 *
-	 * @throws \CoreException
-	 */
-	protected function DisplayDashboardTabs($oPage, $bEditMode)
-	{
-		if ($bEditMode || $this->IsNew())
-		{
-			return;
-		}
-
-		$aList = $this->FlattenZList(MetaModel::GetZListItems(get_class($this), 'details'));
-		if (count($aList) == 0)
-		{
-			// Empty ZList defined, display all the dashboard attributes defined
-			$aList = array_keys(MetaModel::ListAttributeDefs(get_class($this)));
-		}
-		$sClass = get_class($this);
-		foreach($aList as $sAttCode)
-		{
-			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			// Display mode
-			if (!$oAttDef instanceof AttributeDashboard)
-			{
-				continue;
-			} // Process only dashboards attributes...
-
-			$oPage->AddAjaxTab($oAttDef->GetLabel(), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode());
-		}
-	}
-
-	/**
-	 * @param \iTopWebPage $oPage
 	 * @param $sAttCode
 	 *
 	 * @throws \Exception
@@ -509,6 +476,16 @@ EOF
 		foreach($aList as $sAttCode)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			if ($oAttDef instanceof AttributeDashboard)
+			{
+				if ($bEditMode)
+				{
+					continue;
+				}
+				$oPage->AddAjaxTab($oAttDef->GetLabel(), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode());
+				continue;
+			}
+
 			// Display mode
 			if (!$oAttDef->IsLinkset())
 			{
@@ -968,7 +945,6 @@ EOF
 			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 			$this->DisplayBareProperties($oPage, $bEditMode);
 			$this->DisplayBareRelations($oPage, $bEditMode);
-			$this->DisplayDashboardTabs($oPage, $bEditMode);
 			//$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
 			//$this->DisplayBareHistory($oPage, $bEditMode);
 			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'),
