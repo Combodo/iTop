@@ -26,8 +26,9 @@ use Leafo\ScssPhp\Compiler;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT.'/core/config.class.inc.php');
-require_once(APPROOT.'/application/transaction.class.inc.php');
+require_once(APPROOT.'core/metamodel.class.php');
+require_once(APPROOT.'core/config.class.inc.php');
+require_once(APPROOT.'application/transaction.class.inc.php');
 require_once(APPROOT.'application/Html2Text.php');
 require_once(APPROOT.'application/Html2TextException.php');
 
