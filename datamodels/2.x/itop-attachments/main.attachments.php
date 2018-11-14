@@ -209,7 +209,6 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 			$sTitle = ($oSet->Count() > 0)? Dict::Format('Attachments:TabTitle_Count', $oSet->Count()) : Dict::S('Attachments:EmptyTabTitle');
 			$oPage->SetCurrentTab($sTitle);
 		}
-		$sMaxWidth = MetaModel::GetModuleSetting('itop-attachment', 'inline_image_max_width', '450px');
 		$oPage->add_style(
 <<<EOF
 .attachment {
@@ -252,7 +251,6 @@ EOF
 			$sIsDeleteEnabled = $this->m_bDeleteEnabled ? 'true' : 'false';
 			$iTransactionId = $oPage->GetTransactionId();
 			$sClass = get_class($oObject);
-			$iObjectId = $oObject->Getkey();
 			$sTempId = session_id().'_'.$iTransactionId;
 			$sDeleteBtn = Dict::S('Attachments:DeleteBtn');
 			$oPage->add_script(
@@ -626,7 +624,7 @@ EOF
 		}
 		$oMyChangeOp->Set("objclass", get_class($oTargetObject));
 		$oMyChangeOp->Set("objkey", $oTargetObject->GetKey());
-		$iId = $oMyChangeOp->DBInsertNoReload();
+		$oMyChangeOp->DBInsertNoReload();
 	}
 
 	/////////////////////////////////////////////////////////////////////////
@@ -649,14 +647,17 @@ EOF
 	}
 
 	/////////////////////////////////////////////////////////////////////////
-    /**
-     * Returns if Attachments should be readonly for $oObject in the $sState state for the $sGUI GUI
-     *
-     * @param DBObject $oObject
-     * @param string $sState
-     * @param string $sGUI
-     * @return bool
-     */
+
+	/**
+	 * Returns if Attachments should be readonly for $oObject in the $sState state for the $sGUI GUI
+	 *
+	 * @param DBObject $oObject
+	 * @param string $sState
+	 * @param string $sGUI
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 */
     public static function IsReadonlyState(DBObject $oObject, $sState, $sGUI = self::ENUM_GUI_ALL)
     {
         $aParamDefaultValue = array(
@@ -747,9 +748,6 @@ class CMDBChangeOpAttachmentAdded extends CMDBChangeOp
 	public function GetDescription()
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
-		$bIsHtml = true;
-		
-		$sResult = '';
 		$sTargetObjectClass = 'Attachment';
 		$iTargetObjectKey = $this->Get('attachment_id');
 		$sFilename = htmlentities($this->Get('filename'), ENT_QUOTES, 'UTF-8');
@@ -802,8 +800,6 @@ class CMDBChangeOpAttachmentRemoved extends CMDBChangeOp
 	public function GetDescription()
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
-		$bIsHtml = true;
-
 		$sResult = Dict::Format('Attachments:History_File_Removed', '<span class="attachment-history-deleted">'.htmlentities($this->Get('filename'), ENT_QUOTES, 'UTF-8').'</span>');
 		return $sResult;
 	}
