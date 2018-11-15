@@ -89,7 +89,7 @@ class SearchForm
 		{
 			$sRootClass = $sClassName;
 		}
-		//should the search be opend on load?
+		//should the search be opened on load?
 		if (isset($aExtraParams['open']))
 		{
 			$bOpen = $aExtraParams['open'];
@@ -192,9 +192,16 @@ class SearchForm
 			$bIsRemovable = false;
 		}
 
+		$bUseApplicationContext = true;
+		if (isset($aExtraParams['selection_mode']) && ($aExtraParams['selection_mode']))
+		{
+			// Don't use application context for selections
+			$bUseApplicationContext = false;
+		}
+
 		$aFields = $this->GetFields($oSet);
 		$oSearch = $oSet->GetFilter();
-		$aCriterion = $this->GetCriterion($oSearch, $aFields, $aArgs, $bIsRemovable);
+		$aCriterion = $this->GetCriterion($oSearch, $aFields, $aArgs, $bIsRemovable, $bUseApplicationContext);
 		$aClasses = $oSearch->GetSelectedClasses();
 		$sClassAlias = '';
 		foreach($aClasses as $sAlias => $sClass)
@@ -478,18 +485,19 @@ class SearchForm
 		return array('values' => $aAllowedValues);
 	}
 
-    /**
-     * @param \DBObjectSearch $oSearch
-     * @param array $aFields
-     * @param array $aArgs
-     * @param bool $bIsRemovable
-     *
-     * @return array
-     *
-     * @throws \CoreException
-     * @throws \MissingQueryArgument
-     */
-	public function GetCriterion($oSearch, $aFields, $aArgs = array(), $bIsRemovable = true)
+	/**
+	 * @param \DBObjectSearch $oSearch
+	 * @param array $aFields
+	 * @param array $aArgs
+	 * @param bool $bIsRemovable
+	 * @param bool $bUseApplicationContext
+	 *
+	 * @return array
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 */
+	public function GetCriterion($oSearch, $aFields, $aArgs = array(), $bIsRemovable = true, $bUseApplicationContext = true)
 	{
 		$aOrCriterion = array();
 		$bIsEmptyExpression = true;
@@ -533,55 +541,56 @@ class SearchForm
 			}
 		}
 
-		// Context induced criteria are read-only
-		$oAppContext = new ApplicationContext();
-		$sClass = $oSearch->GetClass();
-		$aCallSpec = array($sClass, 'MapContextParam');
-		$aContextParams = array();
-		if (is_callable($aCallSpec))
-		{
-			foreach($oAppContext->GetNames() as $sContextParam)
-			{
-				$sParamCode = call_user_func($aCallSpec, $sContextParam); //Map context parameter to the value/filter code depending on the class
-				if (!is_null($sParamCode))
-				{
-					$sParamValue = $oAppContext->GetCurrentValue($sContextParam, null);
-					if (!is_null($sParamValue))
-					{
-						$aContextParams[$sParamCode] = $sParamValue;
-					}
-				}
-			}
-		}
-
 		if ($bIsEmptyExpression)
 		{
 			// Add default criterion
 			$aOrCriterion = $this->GetDefaultCriterion($oSearch, $aContextParams);
 		}
 
-		foreach($aContextParams as $sParamCode => $sParamValue)
+		if ($bUseApplicationContext)
 		{
-			// Check that the code exists in the concerned class
-			if (!MetaModel::IsValidAttCode($oSearch->GetClass(), $sParamCode))
+			// Context induced criteria are read-only
+			$oAppContext = new ApplicationContext();
+			$sClass = $oSearch->GetClass();
+			$aCallSpec = array($sClass, 'MapContextParam');
+			$aContextParams = array();
+			if (is_callable($aCallSpec))
 			{
-				continue;
+				foreach ($oAppContext->GetNames() as $sContextParam)
+				{
+					$sParamCode = call_user_func($aCallSpec, $sContextParam); //Map context parameter to the value/filter code depending on the class
+					if (!is_null($sParamCode))
+					{
+						$sParamValue = $oAppContext->GetCurrentValue($sContextParam, null);
+						if (!is_null($sParamValue))
+						{
+							$aContextParams[$sParamCode] = $sParamValue;
+						}
+					}
+				}
 			}
 
-			// Add Context criteria in read only mode
-			$sAlias = $oSearch->GetClassAlias();
-			$oFieldExpression = new FieldExpression($sParamCode, $sAlias);
-			$oScalarExpression = new \ScalarExpression($sParamValue);
-			$oExpression = new \BinaryExpression($oFieldExpression, '=', $oScalarExpression);
-			$aCriterion = $oExpression->GetCriterion($oSearch, $aArgs);
-			$aCriterion['is_removable'] = false;
-			foreach($aOrCriterion as &$aAndExpression)
+			foreach ($aContextParams as $sParamCode => $sParamValue)
 			{
-				$aAndExpression['and'][] = $aCriterion;
+				// Check that the code exists in the concerned class
+				if (!MetaModel::IsValidAttCode($oSearch->GetClass(), $sParamCode))
+				{
+					continue;
+				}
+
+				// Add Context criteria in read only mode
+				$sAlias = $oSearch->GetClassAlias();
+				$oFieldExpression = new FieldExpression($sParamCode, $sAlias);
+				$oScalarExpression = new \ScalarExpression($sParamValue);
+				$oExpression = new \BinaryExpression($oFieldExpression, '=', $oScalarExpression);
+				$aCriterion = $oExpression->GetCriterion($oSearch, $aArgs);
+				$aCriterion['is_removable'] = false;
+				foreach ($aOrCriterion as &$aAndExpression)
+				{
+					$aAndExpression['and'][] = $aCriterion;
+				}
 			}
 		}
-
-
 
 		return array('or' => $aOrCriterion);
 	}
