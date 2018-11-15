@@ -536,7 +536,10 @@ abstract class MetaModel
 	 */
 	final static public function GetUniquenessRules($sClass)
 	{
-		self::_check_subclass($sClass);
+		if (!isset(self::$m_aClassParams[$sClass]))
+		{
+			return array();
+		}
 
 		$aCurrentUniquenessRules = array();
 
