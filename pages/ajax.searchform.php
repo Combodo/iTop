@@ -71,7 +71,7 @@ try
 	}
 
 	//IssueLog::Info('Search OQL: "'.$oFilter->ToOQL().'"');
-	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
+	$oDisplayBlock = new DisplayBlock($oFilter, 'list_search', false);
 
 	foreach($aListParams as $key => $value)
     {
