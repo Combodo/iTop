@@ -1379,7 +1379,8 @@ class ObjectController extends AbstractController
         }
 
         // Checking security layers
-        if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sHostClass, $sHostId))
+	    // Note: Checking if host object already exists as we can try to download document from an object that is being created
+        if (($sHostId > 0) && !SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sHostClass, $sHostId))
         {
             IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to retrieve document from attribute ' . $sObjectField . ' as it not allowed to read ' . $sHostClass . '::' . $sHostId . ' object.');
             $oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
