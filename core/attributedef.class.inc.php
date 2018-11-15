@@ -6506,6 +6506,9 @@ class AttributeExternalField extends AttributeDefinition
 			{
 				$oRemoteAtt = $this->GetExtAttDef();
 				$sLabel = $oRemoteAtt->GetLabel($this->m_sCode);
+				$oKeyAtt = $this->GetKeyAttDef();
+				$sKeyLabel = $oKeyAtt->GetLabel($this->GetKeyAttCode());
+				$sLabel = "{$sKeyLabel}->{$sLabel}";
 			}
 		}
 
