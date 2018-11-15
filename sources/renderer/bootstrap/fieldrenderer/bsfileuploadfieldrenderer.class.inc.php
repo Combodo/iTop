@@ -115,7 +115,7 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 
 						$(this).closest('.fileupload_field_content').find('.attachments_container').append(
 							'<div class="attachment col-xs-6 col-sm-3 col-md-2" id="display_attachment_'+data.result.att_id+'">'+
-							'	<a data-preview="'+data.result.preview+'" href="'+sDownloadLink+'" title="'+data.result.msg+'">'+
+							'	<a data-preview="'+data.result.preview+'" href="'+sDownloadLink+'" target="_blank" title="'+data.result.msg+'">'+
 							'		<div class="attachment_icon"><img src="'+data.result.icon+'"></div>'+
 							'		<div class="attachment_name">'+data.result.msg+'</div>'+
 							'		<input id="attachment_'+data.result.att_id+'" type="hidden" name="attachments[]" value="'+data.result.att_id+'"/>'+
@@ -127,7 +127,7 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 						if(data.result.preview){
 							$('#display_attachment_'+data.result.att_id).tooltip({
 								html: true,
-								title: function(){ return '<img src="'+sDownloadLink+'" style="max-width: 100%;" />'; }
+								title: function(){ return '<div style="width: 350px; height: 300px;"><img src="'+sDownloadLink+'" style="max-width: 100%; max-height: 100%;" /></div>'; }
 							});
 						}
 						// Showing remove button on hover
@@ -163,7 +163,7 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 			$('.attachment [data-preview="true"]').each(function(iIndex, oElem){
 				$(oElem).parent().tooltip({
 					html: true,
-					title: function(){ return '<img src="'+$(oElem).attr('href')+'" style="max-width: 100%;" />'; }
+					title: function(){ return '<div style="width: 350px; height: 300px;"><img src="'+$(oElem).attr('href')+'" style="max-width: 100%; max-height: 100%;" /></div>'; }
 				});
 			});
 			// Remove button handler
@@ -229,10 +229,14 @@ EOF
 		return $oOutput;
 	}
 
-	/**
-	 * 
-	 * @param RenderingOutput $oOutput
-	 */
+    /**
+     *
+     * @param \Combodo\iTop\Renderer\RenderingOutput $oOutput
+     *
+     * @throws \Exception
+     * @throws \CoreException
+     * @throws \OQLException
+     */
 	protected function PrepareExistingFiles(RenderingOutput &$oOutput)
 	{
 		$sObjectClass = get_class($this->oField->GetObject());
@@ -262,7 +266,7 @@ EOF
 				$oOutput->Addhtml(
 <<<EOF
 				<div class="attachment col-xs-6 col-sm-3 col-md-2" id="display_attachment_{$iAttId}">
-					<a data-preview="{$sPreview}" href="{$sDownloadLink}" title="{$sFileName}">
+					<a data-preview="{$sPreview}" href="{$sDownloadLink}" target="_blank" title="{$sFileName}" >
 						<div class="attachment_icon"><img src="{$sIcon}"></div>
 						<div class="attachment_name">{$sFileName}</div>
 						<input id="attachment_{$iAttId}" type="hidden" name="attachments[]" value="{$iAttId}"/>
