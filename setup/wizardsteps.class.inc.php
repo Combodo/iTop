@@ -433,8 +433,13 @@ class WizStepDetectedInfo extends WizardStep
 		}
 		return $aRet;
 	}
-	
-	public function Display(WebPage $oPage)
+
+	/**
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \Exception
+	 */
+	public function Display(\WebPage $oPage)
 	{
 		$oPage->add_style(
 <<<EOF
@@ -634,8 +639,7 @@ EOF
 				$this->oWizard->GetParameter('db_user', ''),
 				$this->oWizard->GetParameter('db_pwd', ''),
 				$this->oWizard->GetParameter('db_tls_enabled', ''),
-				$this->oWizard->GetParameter('db_tls_ca', ''),
-				false
+				$this->oWizard->GetParameter('db_tls_ca', '')
 			);
 			if ($oMutex->IsLocked())
 			{
