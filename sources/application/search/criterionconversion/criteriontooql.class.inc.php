@@ -387,8 +387,9 @@ class CriterionToOQL extends CriterionConversionAbstract
 		// Hierarchical keys
 		try
 		{
-			if ($sHierarchicalKeyCode !== false)
+			if (($sHierarchicalKeyCode !== false) && ($oSearch instanceof DBObjectSearch))
 			{
+				// NOTE: The hierarchy does not work for unions for now. It'll be done with the full support of unions in search.
 				// Add all the joins for hierarchical key
 				$oFilter = new DBObjectSearch($sTargetClass);
 				$sFilterAlias = $oFilter->GetClassAlias();
