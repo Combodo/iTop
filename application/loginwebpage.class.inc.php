@@ -378,6 +378,7 @@ EOF
 			{
 				// Trash the token and change the password
 				$oUser->Set('reset_pwd_token', '');
+				$oUser->AllowWrite(true);
 				$oUser->SetPassword($sNewPwd); // Does record the change into the DB
 	
 				$this->add("<p>".Dict::S('UI:ResetPwd-Ready')."</p>");
