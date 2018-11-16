@@ -3291,65 +3291,67 @@ EOF
 					$this->Set($sAttCode, $value);
 					break;
 				case 'LinkedSet':
-					$oLinkSet = $this->Get($sAttCode);
-					$sLinkedClass = $oAttDef->GetLinkedClass();
-					if (array_key_exists('to_be_created', $value) && (count($value['to_be_created']) > 0))
+					if ($this->IsValueModified($value))
 					{
-						// Now handle the links to be created
-						foreach($value['to_be_created'] as $aData)
+						$oLinkSet = $this->Get($sAttCode);
+						$sLinkedClass = $oAttDef->GetLinkedClass();
+						if (array_key_exists('to_be_created', $value) && (count($value['to_be_created']) > 0))
 						{
-							$sSubClass = $aData['class'];
-							if (($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass)))
+							// Now handle the links to be created
+							foreach ($value['to_be_created'] as $aData)
 							{
-								$aObjData = $aData['data'];
-
-								$oLink = MetaModel::NewObject($sSubClass);
-								$oLink->UpdateObjectFromArray($aObjData);
-								$oLinkSet->AddItem($oLink);
+								$sSubClass = $aData['class'];
+								if (($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass)))
+								{
+									$aObjData = $aData['data'];
+									$oLink = MetaModel::NewObject($sSubClass);
+									$oLink->UpdateObjectFromArray($aObjData);
+									$oLinkSet->AddItem($oLink);
+								}
 							}
 						}
-					}
-					if (array_key_exists('to_be_added', $value) && (count($value['to_be_added']) > 0))
-					{
-						// Now handle the links to be added by making the remote object point to self
-						foreach($value['to_be_added'] as $iObjKey)
+						if (array_key_exists('to_be_added', $value) && (count($value['to_be_added']) > 0))
 						{
-							$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
-							if ($oLink)
+							// Now handle the links to be added by making the remote object point to self
+							foreach ($value['to_be_added'] as $iObjKey)
 							{
-								$oLinkSet->AddItem($oLink);
+								$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
+								if ($oLink)
+								{
+									$oLinkSet->AddItem($oLink);
+								}
 							}
 						}
-					}
-					if (array_key_exists('to_be_modified', $value) && (count($value['to_be_modified']) > 0))
-					{
-						// Now handle the links to be added by making the remote object point to self
-						foreach($value['to_be_modified'] as $iObjKey => $aData)
+						if (array_key_exists('to_be_modified', $value) && (count($value['to_be_modified']) > 0))
 						{
-							$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
-							if ($oLink)
+							// Now handle the links to be added by making the remote object point to self
+							foreach ($value['to_be_modified'] as $iObjKey => $aData)
 							{
-								$aObjData = $aData['data'];
-								$oLink->UpdateObjectFromArray($aObjData);
-								$oLinkSet->ModifyItem($oLink);
+								$oLink = MetaModel::GetObject($sLinkedClass, $iObjKey, false);
+								if ($oLink)
+								{
+									$aObjData = $aData['data'];
+									$oLink->UpdateObjectFromArray($aObjData);
+									$oLinkSet->ModifyItem($oLink);
+								}
 							}
 						}
-					}
-					if (array_key_exists('to_be_removed', $value) && (count($value['to_be_removed']) > 0))
-					{
-						foreach($value['to_be_removed'] as $iObjKey)
+						if (array_key_exists('to_be_removed', $value) && (count($value['to_be_removed']) > 0))
 						{
-							$oLinkSet->RemoveItem($iObjKey);
+							foreach ($value['to_be_removed'] as $iObjKey)
+							{
+								$oLinkSet->RemoveItem($iObjKey);
+							}
 						}
-					}
-					if (array_key_exists('to_be_deleted', $value) && (count($value['to_be_deleted']) > 0))
-					{
-						foreach($value['to_be_deleted'] as $iObjKey)
+						if (array_key_exists('to_be_deleted', $value) && (count($value['to_be_deleted']) > 0))
 						{
-							$oLinkSet->RemoveItem($iObjKey);
+							foreach ($value['to_be_deleted'] as $iObjKey)
+							{
+								$oLinkSet->RemoveItem($iObjKey);
+							}
 						}
+						$this->Set($sAttCode, $oLinkSet);
 					}
-					$this->Set($sAttCode, $oLinkSet);
 					break;
 
 				case 'TagSet':
@@ -3386,6 +3388,31 @@ EOF
 					}
 			}
 		}
+	}
+
+	private function IsValueModified($value)
+	{
+		if (array_key_exists('to_be_created', $value) && (count($value['to_be_created']) > 0))
+		{
+			return true;
+		}
+		if (array_key_exists('to_be_added', $value) && (count($value['to_be_added']) > 0))
+		{
+			return true;
+		}
+		if (array_key_exists('to_be_modified', $value) && (count($value['to_be_modified']) > 0))
+		{
+			return true;
+		}
+		if (array_key_exists('to_be_removed', $value) && (count($value['to_be_removed']) > 0))
+		{
+			return true;
+		}
+		if (array_key_exists('to_be_deleted', $value) && (count($value['to_be_deleted']) > 0))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	/**
