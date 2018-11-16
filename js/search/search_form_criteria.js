@@ -289,16 +289,17 @@ $(function()
 			// Update widget
 			this.options.operator = oActiveOpElem.find('.sfc_op_radio').val();
 
-			// TODO: Better modification check. The previous if has been removed as it caused a regression.
-			this.is_modified = true;
-			this.options.oql = '';
-			this.options.values = aValues;
-			this._setTitle();
-			this._unmarkAsDraft();
+			if(this._getValuesAsText() != this._getValuesAsText(aValues))
+			{
+				this.is_modified = true;
+				this.options.oql = '';
+				this.options.values = aValues;
+				this._setTitle();
+				this._unmarkAsDraft();
 
-
-			// Trigger event to handler
-			this.handler.triggerHandler('itop.search.criteria.value_changed');
+				// Trigger event to handler
+				this.handler.triggerHandler('itop.search.criteria.value_changed');
+			}
 		},
 
 
