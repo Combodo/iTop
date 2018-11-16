@@ -473,13 +473,14 @@
 
 		function matchSubset(s, sub) {
 			if (!options.matchCase)
-				s = s.toLowerCase();
+				s = s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+            	sub = sub.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 			var i = s.indexOf(sub);
-			if (options.matchContains == "word"){
+			if (options.matchContains === "word"){
 				i = s.toLowerCase().search("\\b" + sub.toLowerCase());
 			}
-			if (i == -1) return false;
-			return i == 0 || options.matchContains;
+			if (i === -1) return false;
+			return i === 0 || options.matchContains;
 		};
 
 		function add(q, value) {
