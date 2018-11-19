@@ -31,13 +31,13 @@ require_once(APPROOT."/application/utils.inc.php");
  */ 
 interface iDBObjectURLMaker
 {
-	/**
-	 * @param string $sClass
-	 * @param string $iId
-	 *
-	 * @return string
-	 */
-	static public function MakeObjectURL($sClass, $iId);
+    /**
+     * @param string $sClass
+     * @param string $iId
+     *
+     * @return string
+     */
+	public static function MakeObjectURL($sClass, $iId);
 }
 
 /**
@@ -45,14 +45,14 @@ interface iDBObjectURLMaker
  */ 
 class iTopStandardURLMaker implements iDBObjectURLMaker
 {
-	/**
-	 * @param string $sClass
-	 * @param string $iId
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	static public function MakeObjectURL($sClass, $iId)
+    /**
+     * @param string $sClass
+     * @param string $iId
+     *
+     * @return string
+     * @throws \Exception
+     */
+	public static function MakeObjectURL($sClass, $iId)
 	{
 		$sPage = DBObject::ComputeStandardUIPage($sClass);
 		$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
@@ -66,14 +66,14 @@ class iTopStandardURLMaker implements iDBObjectURLMaker
  */ 
 class PortalURLMaker implements iDBObjectURLMaker
 {
-	/**
-	 * @param string $sClass
-	 * @param string $iId
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	static public function MakeObjectURL($sClass, $iId)
+    /**
+     * @param string $sClass
+     * @param string $iId
+     *
+     * @return string
+     * @throws \Exception
+     */
+	public static function MakeObjectURL($sClass, $iId)
 	{
 		$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
 		$sUrl = "{$sAbsoluteUrl}portal/index.php?operation=details&class=$sClass&id=$iId";
@@ -120,11 +120,12 @@ class ApplicationContext
 
 	}
 
-	/**
-	 * Read the context directly in the PHP parameters (either POST or GET)
-	 *
-	 * @throws \Exception
-	 */
+    /**
+     * Read the context directly in the PHP parameters (either POST or GET)
+     * return nothing
+     *
+     * @throws \Exception
+     */
 	protected function ReadContext()
 	{
 		if (!isset(self::$aDefaultValues))
@@ -163,14 +164,14 @@ class ApplicationContext
 		$this->aValues = self::$aDefaultValues;
 	}
 
-	/**
-	 * Returns the current value for the given parameter
-	 *
-	 * @param string $sParamName Name of the parameter to read
-	 * @param string $defaultValue
-	 *
-	 * @return mixed The value for this parameter
-	 */
+    /**
+     * Returns the current value for the given parameter
+     *
+     * @param string $sParamName Name of the parameter to read
+     * @param string $defaultValue
+     *
+     * @return mixed The value for this parameter
+     */
 	public function GetCurrentValue($sParamName, $defaultValue = '')
 	{
 		if (isset($this->aValues[$sParamName]))
@@ -282,7 +283,7 @@ class ApplicationContext
 	 * @param string $sClass Class implementing iDBObjectURLMaker
 	 * @return string
 	 */
-	static public function SetUrlMakerClass($sClass = 'iTopStandardURLMaker')
+	public static function SetUrlMakerClass($sClass = 'iTopStandardURLMaker')
 	{
 		$sPrevious = self::GetUrlMakerClass();
 
@@ -296,7 +297,7 @@ class ApplicationContext
 	 * Get the current application url provider
 	 * @return string the name of the class
 	 */
-	static public function GetUrlMakerClass()
+	public static function GetUrlMakerClass()
 	{
 		if (is_null(self::$m_sUrlMakerClass))
 		{
@@ -353,7 +354,7 @@ class ApplicationContext
 	 * Load plugin properties for the current session
 	 * @return void
 	 */
-	static protected function LoadPluginProperties()
+	protected static function LoadPluginProperties()
 	{
 		if (isset($_SESSION['PluginProperties']))
 		{
@@ -372,7 +373,7 @@ class ApplicationContext
 	 * @param mixed $value Value (numeric or string)
 	 * @return void
 	 */
-	static public function SetPluginProperty($sPluginClass, $sProperty, $value)
+	public static function SetPluginProperty($sPluginClass, $sProperty, $value)
 	{
 		if (is_null(self::$m_aPluginProperties)) self::LoadPluginProperties();
 
@@ -385,7 +386,7 @@ class ApplicationContext
 	 * @param string $sPluginClass Class implementing any plugin interface
 	 * @return array of sProperty=>value pairs
 	 */
-	static public function GetPluginProperties($sPluginClass)
+	public static function GetPluginProperties($sPluginClass)
 	{
 		if (is_null(self::$m_aPluginProperties)) self::LoadPluginProperties();
 
