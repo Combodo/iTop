@@ -21,7 +21,7 @@
  * Abstract class that implements some common and useful methods for displaying
  * the objects
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -3392,25 +3392,12 @@ EOF
 
 	private function IsValueModified($value)
 	{
-		if (array_key_exists('to_be_created', $value) && (count($value['to_be_created']) > 0))
-		{
-			return true;
-		}
-		if (array_key_exists('to_be_added', $value) && (count($value['to_be_added']) > 0))
-		{
-			return true;
-		}
-		if (array_key_exists('to_be_modified', $value) && (count($value['to_be_modified']) > 0))
-		{
-			return true;
-		}
-		if (array_key_exists('to_be_removed', $value) && (count($value['to_be_removed']) > 0))
-		{
-			return true;
-		}
-		if (array_key_exists('to_be_deleted', $value) && (count($value['to_be_deleted']) > 0))
-		{
-			return true;
+		$aModifiedKeys = ['to_be_created', 'to_be_added', 'to_be_modified', 'to_be_removed', 'to_be_deleted'];
+		foreach ($aModifiedKeys as $sModifiedKey) {
+			if (array_key_exists( $sModifiedKey, $value) && (count($value[$sModifiedKey]) > 0))
+			{
+				return true;
+			}
 		}
 		return false;
 	}
