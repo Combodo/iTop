@@ -94,20 +94,20 @@ class PortalURLMaker implements iDBObjectURLMaker
  */
 class ApplicationContext
 {
-	static public $m_sUrlMakerClass = null;
-	static protected $m_aPluginProperties = null;
-	static protected $aDefaultValues; // Cache shared among all instances
+    public static $m_sUrlMakerClass = null;
+    protected static $m_aPluginProperties = null;
+    protected static $aDefaultValues; // Cache shared among all instances
 
 	protected $aNames;
 	protected $aValues;
 
-	/**
-	 * ApplicationContext constructor.
-	 *
-	 * @param bool $bReadContext
-	 *
-	 * @throws \Exception
-	 */
+    /**
+     * ApplicationContext constructor.
+     *
+     * @param bool $bReadContext
+     *
+     * @throws \Exception
+     */
 	public function __construct($bReadContext = true)
 	{
 		$this->aNames = array(
