@@ -300,7 +300,7 @@ abstract class User extends cmdbAbstractObject
 
 		if (!UserRights::IsAdministrator())
 		{
-			if (empty($this->GetOriginal('org_id')) || empty($this->Get('org_id')))
+			if ((empty($this->GetOriginal('contactid')) && !($this->IsNew())) || empty($this->Get('contactid')))
 			{
 				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
 			}
