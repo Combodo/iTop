@@ -200,10 +200,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Picture~~',
 	'Class:Person/Attribute:picture+' => '~~',
-	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
-	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
-	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
-	'Class:Person/UniquenessRule:name/Error' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
+	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
+	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
+	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 ));
 
 //
@@ -1295,8 +1295,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => '物理デバイス',
 	'Class:Brand/Attribute:physicaldevices_list+' => '',
-	'Class:Brand/UniquenessRule:name/Description' => 'The name must be unique~~',
-	'Class:Brand/UniquenessRule:name/Error' => 'This brand already exists~~',
+	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
+	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
 ));
 
 //
@@ -1350,8 +1350,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Model/Attribute:type/Value:Phone+' => '電話',
 	'Class:Model/Attribute:physicaldevices_list' => '物理デバイス',
 	'Class:Model/Attribute:physicaldevices_list+' => '',
-	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
-	'Class:Model/UniquenessRule:name_brand/Error' => 'this model already exists for this brand~~',
+	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
 ));
 
 //

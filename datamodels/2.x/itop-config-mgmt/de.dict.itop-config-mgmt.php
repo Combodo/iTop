@@ -203,10 +203,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Bild',
 	'Class:Person/Attribute:picture+' => '',
-	'Class:Person/UniquenessRule:employee_number/Description' => 'Die Personalnummer muss innerhalb dieser Organisation eindeutig sein.',
-	'Class:Person/UniquenessRule:employee_number/Error' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit der gleichen Personalnummer',
-	'Class:Person/UniquenessRule:name/Description' => 'Innerhalb einer Organisation muss der Name einer Person eindeutig sein',
-	'Class:Person/UniquenessRule:name/Error' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit dem gleichen Namen',
+	'Class:Person/UniquenessRule:employee_number+' => 'Die Personalnummer muss innerhalb dieser Organisation eindeutig sein.',
+	'Class:Person/UniquenessRule:employee_number' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit der gleichen Personalnummer',
+	'Class:Person/UniquenessRule:name+' => 'Innerhalb einer Organisation muss der Name einer Person eindeutig sein',
+	'Class:Person/UniquenessRule:name' => 'In der Organisation \'$this->org_name$\' existiert bereits eine Person mit dem gleichen Namen',
 ));
 
 //
@@ -1298,8 +1298,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physische Geräte',
 	'Class:Brand/Attribute:physicaldevices_list+' => '',
-	'Class:Brand/UniquenessRule:name/Description' => 'Der Name muss eindeutig sein',
-	'Class:Brand/UniquenessRule:name/Error' => 'Diese Marke existiert bereits',
+	'Class:Brand/UniquenessRule:name+' => 'Der Name muss eindeutig sein',
+	'Class:Brand/UniquenessRule:name' => 'Diese Marke existiert bereits',
 ));
 
 //
@@ -1353,8 +1353,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Model/Attribute:type/Value:Phone+' => '',
 	'Class:Model/Attribute:physicaldevices_list' => 'Phyische Geräte',
 	'Class:Model/Attribute:physicaldevices_list+' => '',
-	'Class:Model/UniquenessRule:name_brand/Description' => 'Der Modellname der für eine Marke muss eindeutig sein',
-	'Class:Model/UniquenessRule:name_brand/Error' => 'Es existiert bereits ein Modell mit diesem Namen für diese Marke',
+	'Class:Model/UniquenessRule:name_brand+' => 'Der Modellname der für eine Marke muss eindeutig sein',
+	'Class:Model/UniquenessRule:name_brand' => 'Es existiert bereits ein Modell mit diesem Namen für diese Marke',
 ));
 
 //

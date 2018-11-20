@@ -193,10 +193,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Фотография',
 	'Class:Person/Attribute:picture+' => '',
-	'Class:Person/UniquenessRule:employee_number/Description' => 'Номер сотрудника должен быть уникальным в организации',
-	'Class:Person/UniquenessRule:employee_number/Error' => 'В организации \'$this->org_name$\' уже есть персона с таким номером сотрудника',
-	'Class:Person/UniquenessRule:name/Description' => 'Имя сотрудника должно быть уникальным внутри организации',
-	'Class:Person/UniquenessRule:name/Error' => 'В организации \'$this->org_name$\' уже есть персона с таким именем',
+	'Class:Person/UniquenessRule:employee_number+' => 'Номер сотрудника должен быть уникальным в организации',
+	'Class:Person/UniquenessRule:employee_number' => 'В организации \'$this->org_name$\' уже есть персона с таким номером сотрудника',
+	'Class:Person/UniquenessRule:name+' => 'Имя сотрудника должно быть уникальным внутри организации',
+	'Class:Person/UniquenessRule:name' => 'В организации \'$this->org_name$\' уже есть персона с таким именем',
 ));
 
 //
@@ -1288,8 +1288,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Устройства',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Все устройства этого бренда',
-	'Class:Brand/UniquenessRule:name/Description' => 'Название должно быть уникальным',
-	'Class:Brand/UniquenessRule:name/Error' => 'Этот бренд уже существует',
+	'Class:Brand/UniquenessRule:name+' => 'Название должно быть уникальным',
+	'Class:Brand/UniquenessRule:name' => 'Этот бренд уже существует',
 ));
 
 //
