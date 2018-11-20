@@ -200,10 +200,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '~~',
 	'Class:Person/Attribute:picture' => 'Picture~~',
 	'Class:Person/Attribute:picture+' => '~~',
-	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization~~',
-	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
-	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization~~',
-	'Class:Person/UniquenessRule:name/Error' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
+	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
+	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
+	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 ));
 
 //
@@ -1295,8 +1295,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Brand+' => '~~',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physical devices~~',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand~~',
-	'Class:Brand/UniquenessRule:name/Description' => 'The name must be unique~~',
-	'Class:Brand/UniquenessRule:name/Error' => 'This brand already exists~~',
+	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
+	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
 ));
 
 //
@@ -1350,8 +1350,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone~~',
 	'Class:Model/Attribute:physicaldevices_list' => 'Physical devices~~',
 	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model~~',
-	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand~~',
-	'Class:Model/UniquenessRule:name_brand/Error' => 'this model already exists for this brand~~',
+	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
 ));
 
 //

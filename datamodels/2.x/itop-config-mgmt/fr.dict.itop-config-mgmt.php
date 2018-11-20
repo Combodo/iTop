@@ -203,11 +203,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Photo',
 	'Class:Person/Attribute:picture+' => '',
-	'Class:Person/UniquenessRule:employee_number/Description' => 'Le numéro d\'employé doit être unique dans l\'organisation',
-	'Class:Person/UniquenessRule:employee_number/Error' => 'il y a déjà une personne avec ce numéro d\'employé dans l\'organisation 
+	'Class:Person/UniquenessRule:employee_number+' => 'Le numéro d\'employé doit être unique dans l\'organisation',
+	'Class:Person/UniquenessRule:employee_number' => 'il y a déjà une personne avec ce numéro d\'employé dans l\'organisation 
 	\'$this->org_name$\'',
-	'Class:Person/UniquenessRule:name/Description' => 'Le nom de l\'employé devrait être unique dans l\'organisation',
-	'Class:Person/UniquenessRule:name/Error' => 'Il y a déjà une personne avec ce nom dans l\'organisation \'$this->org_name$\'',
+	'Class:Person/UniquenessRule:name+' => 'Le nom de l\'employé devrait être unique dans l\'organisation',
+	'Class:Person/UniquenessRule:name' => 'Il y a déjà une personne avec ce nom dans l\'organisation \'$this->org_name$\'',
 ));
 
 //
@@ -1299,8 +1299,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Matériels',
 	'Class:Brand/Attribute:physicaldevices_list+' => '',
-	'Class:Brand/UniquenessRule:name/Description' => 'Le nom doit être unique',
-	'Class:Brand/UniquenessRule:name/Error' => 'cette marque existe déjà',
+	'Class:Brand/UniquenessRule:name+' => 'Le nom doit être unique',
+	'Class:Brand/UniquenessRule:name' => 'cette marque existe déjà',
 ));
 
 //
@@ -1354,8 +1354,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Model/Attribute:type/Value:Phone+' => 'Téléphone',
 	'Class:Model/Attribute:physicaldevices_list' => 'Matériels',
 	'Class:Model/Attribute:physicaldevices_list+' => '',
-	'Class:Model/UniquenessRule:name_brand/Description' => 'Le nom doit être unique dans une marque',
-	'Class:Model/UniquenessRule:name_brand/Error' => 'ce modèle existe déjà dans cette marque',
+	'Class:Model/UniquenessRule:name_brand+' => 'Le nom doit être unique dans une marque',
+	'Class:Model/UniquenessRule:name_brand' => 'ce modèle existe déjà dans cette marque',
 ));
 
 //

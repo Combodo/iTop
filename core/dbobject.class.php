@@ -1427,7 +1427,7 @@ abstract class DBObject implements iDisplay
 		$sCurrentClass = get_class($this);
 		$aUniquenessRules = MetaModel::GetUniquenessRules($sCurrentClass);
 
-		foreach ($aUniquenessRules as $sUniquenessRuleName => $aUniquenessRuleProperties)
+		foreach ($aUniquenessRules as $sUniquenessRuleId => $aUniquenessRuleProperties)
 		{
 			if ($aUniquenessRuleProperties['disabled'] === true)
 			{
@@ -1445,8 +1445,7 @@ abstract class DBObject implements iDisplay
 					$bIsBlockingRule = true;
 				}
 
-				$sErrorKey = $aUniquenessRuleProperties['error_message'];
-				$sErrorMessage = $this->GetUniquenessRuleMessage($sErrorKey, $sUniquenessRuleName);
+				$sErrorMessage = $this->GetUniquenessRuleMessage($sUniquenessRuleId);
 
 				if ($bIsBlockingRule)
 				{
@@ -1460,20 +1459,26 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * @param string $sMessageKey string or dictionnary key, could be empty
-	 * @param string $sUniquenessRuleName
+	 * @param string $sUniquenessRuleId
 	 *
-	 * @return string
+	 * @return string dict key : Class:$sClassName/UniquenessRule:$sUniquenessRuleId
+	 *          if none then will use Core:UniquenessDefaultError
+	 *         Dictionary keys can contain "$this" placeholders
+	 *
 	 * @since 2.6 N°659 uniqueness constraint
 	 */
-	protected function GetUniquenessRuleMessage($sMessageKey, $sUniquenessRuleName)
+	protected function GetUniquenessRuleMessage($sUniquenessRuleId)
 	{
-		if (empty($sMessageKey))
+		$sCurrentClass = get_class($this);
+		$sMessageKey = "Class:$sCurrentClass/UniquenessRule:$sUniquenessRuleId";
+		$sTemplate = Dict::S($sMessageKey, '');
+
+		if (empty($sTemplate))
 		{
-			return Dict::Format('Core:UniquenessDefaultError', $sUniquenessRuleName);
+			//TODO if admin add message key is missing
+			return Dict::Format('Core:UniquenessDefaultError', $sUniquenessRuleId);
 		}
 
-		$sTemplate = Dict::S($sMessageKey);
 		$oString = new TemplateString($sTemplate);
 
 		return $oString->Render(array('this' => $this));

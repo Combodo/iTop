@@ -1149,8 +1149,6 @@ EOF
 				$aUniquenessRules[$sCurrentRuleId]['disabled'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'disabled', null);
 				$aUniquenessRules[$sCurrentRuleId]['is_blocking'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'is_blocking',
 					null);
-				$aUniquenessRules[$sCurrentRuleId]['description'] = $oUniquenessSingleRule->GetChildText('description');
-				$aUniquenessRules[$sCurrentRuleId]['error_message'] = $oUniquenessSingleRule->GetChildText('error_message');
 
 				try
 				{
