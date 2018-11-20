@@ -121,6 +121,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'L\'utilisateur doit avoir au moins une organisation.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organisation non autorisée.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'L\'utilisateur n\'appartient pas à vos organisations.',
+	'Class:User/Error:PersonIsMandatory' => 'Le Contact est obligatoire.',
 	'Class:UserInternal' => 'Utilisateur interne',
 	'Class:UserInternal+' => 'Utilisateur défini dans iTop',
 ));
