@@ -141,6 +141,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.',
+	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.',
 	'Class:UserInternal' => 'User Internal',
 	'Class:UserInternal+' => 'User defined within iTop',
 ));
