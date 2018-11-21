@@ -155,10 +155,10 @@ class CoreCannotSaveObjectException extends CoreException
 		}
 		else
 		{
-			$sContent .= '\n<ul>';
+			$sContent .= '<ul>';
 			foreach ($this->aIssues as $sError)
 			{
-				$sContent .= "\n<li>$sError";
+				$sContent .= "<li>$sError</li>";
 			}
 			$sContent .= '</ul>';
 		}
