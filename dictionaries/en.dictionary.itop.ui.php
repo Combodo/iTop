@@ -1550,3 +1550,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Expression:Verb:NOW' => 'now',
 	'Expression:Verb:ISNULL' => ': undefined',
 ));
+
+//
+// iTop Newsroom menu
+//
+Dict::Add('EN US', 'English', 'English', array(
+	'UI:Newsroom:NoNewMessage' => 'No new message',
+	'UI:Newsroom:MarkAllAsRead' => 'Mark all as messages read',
+	'UI:Newsroom:ViewAllMessages' => 'View all messages',
+	'UI:Newsroom:Preferences' => 'Newsroom preferences',
+	'UI:Newsroom:ConfigurationLink' => 'Configuration',
+	'UI:Newsroom:ResetCache' => 'Reset cache',
+	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s',
+	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.',
+));

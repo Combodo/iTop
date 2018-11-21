@@ -1530,3 +1530,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Expression:Verb:NOW' => 'maintenant',
 	'Expression:Verb:ISNULL' => ' : non défini',
 ));
+
+//
+// iTop Newsroom menu
+//
+Dict::Add('FR FR', 'French', 'Français', array(
+	'UI:Newsroom:NoNewMessage' => 'Aucun nouveau message',
+	'UI:Newsroom:MarkAllAsRead' => 'Marquer tous les messages comme lus',
+	'UI:Newsroom:ViewAllMessages' => 'Voir tous les messages',
+	'UI:Newsroom:Preferences' => 'Préférences du centre d\'information',
+	'UI:Newsroom:ConfigurationLink' => 'Configuration',
+	'UI:Newsroom:ResetCache' => 'Ràz du cache',
+	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Afficher les messages de %1$s',
+	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Afficher au plus %1$s messages dans le menu %2$s.',
+));

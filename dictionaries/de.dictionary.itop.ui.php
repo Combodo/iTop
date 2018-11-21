@@ -1529,3 +1529,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Expression:Verb:NOW' => 'jetzt',
 	'Expression:Verb:ISNULL' => ': nicht definiert',
 ));
+
+//
+// iTop Newsroom menu
+//
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'UI:Newsroom:NoNewMessage' => 'Keine neue Nachricht',
+	'UI:Newsroom:MarkAllAsRead' => 'Alle Nachrichten als gelesen markieren',
+	'UI:Newsroom:ViewAllMessages' => 'Alle Nachrichten anzeigen',
+	'UI:Newsroom:Preferences' => 'Newsroom-Einstellungen',
+	'UI:Newsroom:ConfigurationLink' => 'Konfiguration',
+	'UI:Newsroom:ResetCache' => 'Cache zurücksetzen',
+	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Nachrichten von  %1$s anzeigen',
+	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Zeigen Sie höchstens %1$s Beiträge im Menü (%2$s) an.',
+));

@@ -1549,3 +1549,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Expression:Verb:NOW' => 'nu',
 	'Expression:Verb:ISNULL' => ': ongedefinieerd (NULL)',
 ));
+
+//
+// iTop Newsroom menu
+//
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'UI:Newsroom:NoNewMessage' => 'Geen nieuw bericht',
+	'UI:Newsroom:MarkAllAsRead' => 'Markeer alle berichten als gelezen',
+	'UI:Newsroom:ViewAllMessages' => 'Bekijk alle berichten',
+	'UI:Newsroom:Preferences' => 'Newsroom preferences',
+	'UI:Newsroom:ConfigurationLink' => 'Configuratie',
+	'UI:Newsroom:ResetCache' => 'Reset cache',
+	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Bekijk berichten van %1$s',
+	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Toon maximaal %1$s berichten in het %2$s menu.',
+));
