@@ -1343,12 +1343,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Model/Attribute:type/Value:Tablet+' => 'Планшет',
 	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Ленточная библиотека',
 	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Ленточная библиотека',
-	'Class:Model/Attribute:type/Value:Phone' => 'Telephone~~',
-	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone~~',
+	'Class:Model/Attribute:type/Value:Phone' => 'Телефон',
+	'Class:Model/Attribute:type/Value:Phone+' => 'Телефон',
 	'Class:Model/Attribute:physicaldevices_list' => 'Устройства',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Все устройства этой модели',
-	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
-	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
+	'Class:Model/UniquenessRule:name_brand+' => 'Название должно быть уникальным внутри бренда',
+	'Class:Model/UniquenessRule:name_brand' => 'эта модель уже существует для этого бренда',
 ));
 
 //
