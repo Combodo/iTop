@@ -636,9 +636,6 @@ try
 					$sLabel = Dict::S('UI:SearchResultsTitle');
 					$sDescription = Dict::S('UI:SearchResultsTitle+');
 					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', utils::GetAbsoluteUrlAppRoot().'images/search.png');
-					$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-					$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-					$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');					
 					$oP->add("<div style=\"padding: 10px;\">\n");
 					$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
 					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', htmlentities($sFullText, ENT_QUOTES, 'UTF-8')).'</span>');
@@ -1702,9 +1699,6 @@ EOF
 				}
 			}
 		}
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
 		
 		// Display the tabs
 		if ($sFirstTab == 'list')
