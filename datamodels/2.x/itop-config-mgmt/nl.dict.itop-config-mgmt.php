@@ -50,6 +50,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+// Class:<class_name>/UniquenessRule:<rule_code>
+// Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
@@ -65,6 +67,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+// Class:<class_name>/UniquenessRule:<rule_code>
+// Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel

@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify 
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * @author	LinProfs <info@linprofs.com>
  * 
@@ -29,9 +27,6 @@
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
-
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:DeletedObjectLabel' => '%1s (verwijderd)',
 	'Core:DeletedObjectTip' => 'Het object is verwijderd op %1$s (%2$s)',
@@ -44,15 +39,26 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeLinkedSet' => 'Reeks van objecten',
 	'Core:AttributeLinkedSet+' => 'Elke soort objecten van dezelfde klasse of subklasse',
 
-	'Core:AttributeTagSet' => 'Lijst van tags',
+	'Core:AttributeDashboard' => 'Dashboard~~',
+	'Core:AttributeDashboard+' => '~~',
+
+	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber+' => '~~',
+
+	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
+	'Core:AttributeObsolescenceDate+' => '~~',
+
+    'Core:AttributeTagSet' => 'Lijst van tags',
     'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'klik om toe te voegen',
+
     'Core:AttributeCaseLog' => 'Log',
     'Core:AttributeCaseLog+' => '',
+
     'Core:AttributeMetaEnum' => 'Afgeleide oplijsting',
     'Core:AttributeMetaEnum+' => '',
 
-	'Core:AttributeLinkedSetIndirect' => 'Reeks van objecten (N-N)',
+    'Core:AttributeLinkedSetIndirect' => 'Reeks van objecten (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Elke soort objecten [subklasse] van dezelfde klasse',
 
 	'Core:AttributeInteger' => 'Integer',
@@ -197,10 +203,9 @@ Operators:<br/>
 
 	'Core:FriendlyName-Label' => 'Referentie',
 	'Core:FriendlyName-Description' => 'Referentie',
-	 
+
 	'Core:AttributeTag' => 'Tags',
 	'Core:AttributeTag+' => 'Tags',
-
 ));
 
 
@@ -418,7 +423,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:EventWebService/Attribute:log_error' => 'Foutenlog',
 	'Class:EventWebService/Attribute:log_error+' => 'Resultaat foutenlog',
 	'Class:EventWebService/Attribute:data' => 'Data',
-	'Class:EventWebService/Attribute:data+' => 'Resulterende data'
+	'Class:EventWebService/Attribute:data+' => 'Resulterende data',
 ));
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -600,13 +605,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 // Class: TriggerOnObjectDelete
 //
+
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TriggerOnObjectDelete' => 'Trigger (bij het verwijderen van een object)',
 	'Class:TriggerOnObjectDelete+' => 'Trigger bij het verwijderen van een object van de opgegeven klasse (of subklasse ervan)',
 ));
+
 //
 // Class: TriggerOnObjectUpdate
 //
+
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TriggerOnObjectUpdate' => 'Trigger (bij het aanpassen van een object)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger bij het aanpassen van een object van de opgegeven klasse (of subklasse ervan)',
@@ -723,7 +731,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:Synchro:label_obj_new_updated' => 'Geüpdatet (%1$s)',
 	'Core:Synchro:label_obj_created' => 'Aangemaakt (%1$s)',
 	'Core:Synchro:label_obj_new_errors' => 'Fouten (%1$s)',
-	'Core:Synchro:History' => 'Synchronisatiegeschiedenis',
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica verwerkt: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
@@ -855,12 +862,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Voorkeuren',
 	'Core:ExecProcess:Code1' => 'Verkeerde commando of commando beëindigd met fouten (bijvoorbeeld verkeerde scriptnaam)',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, of runtime)',
-));
 
-//
-// Attribute Duration
-//
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	// Attribute Duration
 	'Core:Duration_Seconds'	=> '%1$ds',
 	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
@@ -868,13 +870,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
 	// Explain working time computing
-	'Core:ExplainWTC:ElapsedTime' => 'Tijd voorbij (opgeslagen als \"%1$s\")',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tijd gespendeerd voor \"%1$s\"',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline voor \"%1$s\" at %2$d%%',
+	'Core:ExplainWTC:ElapsedTime' => 'Tijd voorbij (opgeslagen als \\"%1$s\\")',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tijd gespendeerd voor \\"%1$s\\"',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline voor \\"%1$s\\" at %2$d%%',
 
 	// Bulk export
-	'Core:BulkExport:MissingParameter_Param' => 'Ontbrekende parameter \"%1$s\"',
-	'Core:BulkExport:InvalidParameter_Query' => 'Ongeldige waarde voor de parameter \"query\". Er is geen Query Phrasebook die overeenkomt met id: \"%1$s\".',
+	'Core:BulkExport:MissingParameter_Param' => 'Ontbrekende parameter \\"%1$s\\"',
+	'Core:BulkExport:InvalidParameter_Query' => 'Ongeldige waarde voor de parameter \\"query\\". Er is geen Query Phrasebook die overeenkomt met id: \\"%1$s\\".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export-formaat:',
 	'Core:BulkExportOf_Class' => '%1$s Export',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Download %1$s',
@@ -942,8 +944,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:Validator:Mandatory' => 'Gelieve dit veld in te vullen',
 	'Core:Validator:MustBeInteger' => 'Dit moet een integer (geheel getal) zijn',
 	'Core:Validator:MustSelectOne' => 'Gelieve één optie te kiezen',
-
-
 ));
 
 //

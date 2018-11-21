@@ -43,6 +43,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:AuditRule/Attribute:name+' => '',
 	'Class:AuditRule/Attribute:description' => 'Auditálási szabály leírása',
 	'Class:AuditRule/Attribute:description+' => '',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
 	'Class:AuditRule/Attribute:query' => 'Futtatandó lekérdezés',
 	'Class:AuditRule/Attribute:query+' => '',
 	'Class:AuditRule/Attribute:valid_flag' => 'Érvényes objektum?',
@@ -121,6 +124,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
+	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
 	'Class:UserInternal' => 'User Internal~~',
 	'Class:UserInternal+' => 'User defined within iTop~~',
 ));
