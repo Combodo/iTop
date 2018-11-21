@@ -142,20 +142,26 @@ class ApplicationContext
 				}
 				// Hmm, there must be a better (more generic) way to handle the case below:
 				// When there is only one possible (allowed) organization, the context must be
-				// fixed to this org
+				// fixed to this org unless there is only one organization in the system then
+				// no filter is applied
 				if ($sName == 'org_id')
 				{
 					if (MetaModel::IsValidClass('Organization'))
 					{
 						$oSearchFilter = new DBObjectSearch('Organization');
-						$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 						$oSet = new CMDBObjectSet($oSearchFilter);
 						$iCount = $oSet->CountWithLimit(2);
-						if ($iCount == 1)
+						if ($iCount > 1)
 						{
-							// Only one possible value for org_id, set it in the context
-							$oOrg = $oSet->Fetch();
-							self::$aDefaultValues[$sName] = $oOrg->GetKey();
+							$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
+							$oSet = new CMDBObjectSet($oSearchFilter);
+							$iCount = $oSet->CountWithLimit(2);
+							if ($iCount == 1)
+							{
+								// Only one possible value for org_id, set it in the context
+								$oOrg = $oSet->Fetch();
+								self::$aDefaultValues[$sName] = $oOrg->GetKey();
+							}
 						}
 					}					
 				}
