@@ -15,29 +15,29 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:UnknownObjectLabel' => 'Объект не найден (class: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'Объект не удается найти. Возможно, он был удален некоторое время назад, и журнал с тех пор был очищен.',
 
-	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+	'Core:UniquenessDefaultError' => 'Ошибка правила уникальности \'%1$s\'',
 
 	'Core:AttributeLinkedSet' => 'Массив объектов (1-n)',
 	'Core:AttributeLinkedSet+' => 'Список объектов заданного класса, указывающих на текущий объект',
 
-	'Core:AttributeDashboard' => 'Dashboard~~',
-	'Core:AttributeDashboard+' => '~~',
+	'Core:AttributeDashboard' => 'Дашборд',
+	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Phone number~~',
-	'Core:AttributePhoneNumber+' => '~~',
+	'Core:AttributePhoneNumber' => 'Номер телефона',
+	'Core:AttributePhoneNumber+' => '',
 
-	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate+' => '~~',
+	'Core:AttributeObsolescenceDate' => 'Дата устаревания',
+	'Core:AttributeObsolescenceDate+' => '',
 
     'Core:AttributeTagSet' => 'Список тегов',
     'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'нажмите, чтобы добавить',
 
     'Core:AttributeCaseLog' => 'Журнал',
-    'Core:AttributeCaseLog+' => '~~',
+    'Core:AttributeCaseLog+' => '',
 
-    'Core:AttributeMetaEnum' => 'Computed enum~~',
-    'Core:AttributeMetaEnum+' => '~~',
+    'Core:AttributeMetaEnum' => 'Вычисляемый enum',
+    'Core:AttributeMetaEnum+' => '',
 
     'Core:AttributeLinkedSetIndirect' => 'Массив объектов (n-n)',
 	'Core:AttributeLinkedSetIndirect+' => 'Список объектов заданного класса, связанные с текущим объектом через промежуточный класс',
@@ -73,59 +73,59 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeObsolescenceDate/Label+' => 'Приблизительная дата, с которой объект считается устаревшим',
 
 	'Core:AttributeString' => 'Строка',
-	'Core:AttributeString+' => 'Alphanumeric string',
+	'Core:AttributeString+' => 'Текстовая строка',
 
 	'Core:AttributeClass' => 'Класс',
-	'Core:AttributeClass+' => 'Class',
+	'Core:AttributeClass+' => 'Класс объекта',
 
 	'Core:AttributeApplicationLanguage' => 'Язык пользователя',
 	'Core:AttributeApplicationLanguage+' => 'Язык и страна (EN US)',
 
 	'Core:AttributeFinalClass' => 'Класс (авто)',
-	'Core:AttributeFinalClass+' => 'Real class of the object (automatically created by the core)',
+	'Core:AttributeFinalClass+' => 'Реальный класс объекта (автоматически создаваемый ядром)',
 
-	'Core:AttributePassword' => 'Пароль~~',
-	'Core:AttributePassword+' => 'Password of an external device',
+	'Core:AttributePassword' => 'Пароль',
+	'Core:AttributePassword+' => 'Пароль внешнего устройства',
 
- 	'Core:AttributeEncryptedString' => 'Шифр.значение',
-	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
-	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
-	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+ 	'Core:AttributeEncryptedString' => 'Зашифрованная строка',
+	'Core:AttributeEncryptedString+' => 'Строка, зашифрованная локальным ключом',
+	'Core:AttributeEncryptUnknownLibrary' => 'Заданная библиотека шифрования (%1$s) неизвестна',
+	'Core:AttributeEncryptFailedToDecrypt' => '** ошибка расшифровки **',
 
-	'Core:AttributeText' => 'Текст~~',
-	'Core:AttributeText+' => 'Multiline character string',
+	'Core:AttributeText' => 'Текст',
+	'Core:AttributeText+' => 'Многострочный текст',
 
-	'Core:AttributeHTML' => 'HTML~~',
-	'Core:AttributeHTML+' => 'HTML string',
+	'Core:AttributeHTML' => 'HTML',
+	'Core:AttributeHTML+' => 'HTML',
 
-	'Core:AttributeEmailAddress' => 'Email~~',
-	'Core:AttributeEmailAddress+' => 'Email address',
+	'Core:AttributeEmailAddress' => 'Email',
+	'Core:AttributeEmailAddress+' => 'Email адрес',
 
-	'Core:AttributeIPAddress' => 'IP адрес~~',
+	'Core:AttributeIPAddress' => 'IP адрес',
 	'Core:AttributeIPAddress+' => 'IP адрес',
 
-	'Core:AttributeOQL' => 'OQL~~',
-	'Core:AttributeOQL+' => 'Object Query Langage expression',
+	'Core:AttributeOQL' => 'OQL',
+	'Core:AttributeOQL+' => 'Выражение языка запроса объекта (Object Query Language)',
 
-	'Core:AttributeEnum' => 'Enum~~',
-	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings',
+	'Core:AttributeEnum' => 'Enum',
+	'Core:AttributeEnum+' => 'Список предопределенных тестовых строк',
 
 	'Core:AttributeTemplateString' => 'Шаблон строки',
-	'Core:AttributeTemplateString+' => 'String containing placeholders',
+	'Core:AttributeTemplateString+' => 'Строка, содержащая плейсхолдеры',
 
 	'Core:AttributeTemplateText' => 'Шаблон текста',
-	'Core:AttributeTemplateText+' => 'Text containing placeholders',
+	'Core:AttributeTemplateText+' => 'Текст, содержащий плейсхолдеры',
 
-	'Core:AttributeTemplateHTML' => 'HTML шаблон~~',
-	'Core:AttributeTemplateHTML+' => 'HTML containing placeholders',
+	'Core:AttributeTemplateHTML' => 'Шаблон HTML',
+	'Core:AttributeTemplateHTML+' => 'HTML, содержащий плейсхолдеры',
 
 	'Core:AttributeDateTime' => 'Дата/время',
-	'Core:AttributeDateTime+' => 'Date and time (year-month-day hh:mm:ss)',
+	'Core:AttributeDateTime+' => 'Дата и время (гггг-мм-дд чч:мм:сс)',
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	Формат даты:<br/>
 	<b>гггг-мм-дд чч:мм:сс</b><br/>
-	Пример: 2017-07-19 18:40:00
+	Пример: 2017-11-27 19:17:00
 </p>
 <p>
 Операторы:<br/>
@@ -138,12 +138,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 </p>',
 
 	'Core:AttributeDate' => 'Дата',
-	'Core:AttributeDate+' => 'Дата (год-месяц-день)',
+	'Core:AttributeDate+' => 'Дата (гггг-мм-дд)',
 	'Core:AttributeDate?SmartSearch' => '
 <p>
 	Формат даты:<br/>
 	<b>гггг-мм-дд</b><br/>
-	Пример: 2017-07-19
+	Пример: 2017-11-27
 </p>
 <p>
 Операторы:<br/>
@@ -152,32 +152,32 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	<b>[</b><em>дата</em>,<em>дата</em><b>]</b>
 </p>',
 
-	'Core:AttributeDeadline' => 'Deadline~~',
-	'Core:AttributeDeadline+' => 'Date, displayed relatively to the current time',
+	'Core:AttributeDeadline' => 'Крайний срок',
+	'Core:AttributeDeadline+' => 'Дата, отображаемая относительно текущего времени',
 
-	'Core:AttributeExternalKey' => 'External key~~',
-	'Core:AttributeExternalKey+' => 'External (or foreign) key',
+	'Core:AttributeExternalKey' => 'Внешний ключ',
+	'Core:AttributeExternalKey+' => 'Внешний ключ',
 
-	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
-	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent',
+	'Core:AttributeHierarchicalKey' => 'Иерархический ключ',
+	'Core:AttributeHierarchicalKey+' => 'Внешний ключ к родителю',
 
-	'Core:AttributeExternalField' => 'External field~~',
-	'Core:AttributeExternalField+' => 'Field mapped to an external key',
+	'Core:AttributeExternalField' => 'Внешнее поле',
+	'Core:AttributeExternalField+' => 'Поле, сопоставленное с внешним ключом',
 
-	'Core:AttributeURL' => 'URL~~',
-	'Core:AttributeURL+' => 'Absolute or relative URL as a text string',
+	'Core:AttributeURL' => 'URL',
+	'Core:AttributeURL+' => 'Абсолютный или относительный URL в виде текстовой строки',
 
-	'Core:AttributeBlob' => 'Blob~~',
-	'Core:AttributeBlob+' => 'Any binary content (document)',
+	'Core:AttributeBlob' => 'Blob',
+	'Core:AttributeBlob+' => 'Любой двоичный контент (документ)',
 
-	'Core:AttributeOneWayPassword' => 'Одноразовый пароль',
-	'Core:AttributeOneWayPassword+' => 'One way encrypted (hashed) password',
+	'Core:AttributeOneWayPassword' => 'Хэшированный пароль',
+	'Core:AttributeOneWayPassword+' => 'Зашифрованный (хэшированный) пароль',
 
-	'Core:AttributeTable' => 'Table~~',
-	'Core:AttributeTable+' => 'Indexed array having two dimensions',
+	'Core:AttributeTable' => 'Таблица',
+	'Core:AttributeTable+' => 'Индексированный массив с двумя измерениями',
 
-	'Core:AttributePropertySet' => 'Свойства~~',
-	'Core:AttributePropertySet+' => 'List of untyped properties (name and value)',
+	'Core:AttributePropertySet' => 'Свойства',
+	'Core:AttributePropertySet+' => 'Список нетипизированных свойств (имя и значение)',
 
 	'Core:AttributeFriendlyName' => 'Полное название',
 	'Core:AttributeFriendlyName+' => 'Атрибут создается автоматически; полное название вычисляется из нескольких атрибутов',
@@ -185,8 +185,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:FriendlyName-Label' => 'Полное название',
 	'Core:FriendlyName-Description' => 'Полное название',
 
-	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => 'Tags~~',
+	'Core:AttributeTag' => 'Тег',
+	'Core:AttributeTag+' => 'Тег',
 ));
 
 
