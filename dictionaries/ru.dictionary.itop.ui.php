@@ -116,7 +116,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Этому пользователю должна быть назначена хотя бы одна организация.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Организация не разрешена.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'Учетная запись пользователя не принадлежит вашим разрешенным организациям.',
-	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
+	'Class:User/Error:PersonIsMandatory' => 'Необходимо выбрать персону.',
 	'Class:UserInternal' => 'Внутренний пользователь',
 	'Class:UserInternal+' => 'Учетная запись создана внутри iTop',
 ));
