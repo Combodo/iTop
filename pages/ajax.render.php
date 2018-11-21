@@ -25,16 +25,25 @@
  */
 
 require_once('../approot.inc.php');
-require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
-require_once(APPROOT.'/application/pdfpage.class.inc.php');
-require_once(APPROOT.'/application/wizardhelper.class.inc.php');
-require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
-require_once(APPROOT.'/application/ui.searchformforeignkeys.class.inc.php');
-require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
-require_once(APPROOT.'/application/datatable.class.inc.php');
-require_once(APPROOT.'/application/excelexporter.class.inc.php');
+require_once(APPROOT.'application/application.inc.php');
+require_once(APPROOT.'application/webpage.class.inc.php');
+require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
+require_once(APPROOT.'application/pdfpage.class.inc.php');
+require_once(APPROOT.'application/wizardhelper.class.inc.php');
+require_once(APPROOT.'application/ui.linkswidget.class.inc.php');
+require_once(APPROOT.'application/ui.searchformforeignkeys.class.inc.php');
+require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
+require_once(APPROOT.'application/datatable.class.inc.php');
+require_once(APPROOT.'application/excelexporter.class.inc.php');
+
+
+function LogErrorMessage($sMsgPrefix, $aContextInfo) {
+	$sCurrentUserLogin = UserRights::GetUser();
+	$sContextInfo = urldecode(http_build_query($aContextInfo, '', ', '));
+	$sErrorMessage = "$sMsgPrefix - User='$sCurrentUserLogin', $sContextInfo";
+	IssueLog::Error($sErrorMessage);
+}
+
 
 try
 {
@@ -2506,8 +2515,16 @@ EOF
 			try
 			{
 				$oDoc = utils::ReadPostedDocument('upload');
-				if (InlineImage::IsImage($oDoc->GetMimeType()))
+				$sDocMimeType = $oDoc->GetMimeType();
+				if (!InlineImage::IsImage($sDocMimeType))
 				{
+					LogErrorMessage('CKE : error when uploading image in ajax.render.php, not an image',
+						array(
+							'operation' => 'cke_upload_and_browse',
+							'class' => $sObjClass,
+							'ImgMimeType' => $sDocMimeType,
+						));
+				} else {
 					$aDimensions = null;
 					$oDoc = InlineImage::ResizeImageToFit($oDoc, $aDimensions);
 					$oAttachment = MetaModel::NewObject('InlineImage');
@@ -2518,13 +2535,16 @@ EOF
 					$oAttachment->Set('contents', $oDoc);
 					$oAttachment->Set('secret', sprintf('%06x', mt_rand(0, 0xFFFFFF))); // something not easy to guess
 					$iAttId = $oAttachment->DBInsert();
-
 				}
+
 			} catch (FileUploadException $e)
 			{
-				$sCurrentUserLogin = UserRights::GetUser();
-				$sErrorMessage = "CKE : error when uploading image in ajax.render.php - operation=cke_upload_and_browse,User='$sCurrentUserLogin', class='$sObjClass',exception=$e";
-				IssueLog::Error($sErrorMessage);
+				LogErrorMessage('CKE : error when uploading image in ajax.render.php, exception occured',
+					array(
+						'operation' => 'cke_upload_and_browse',
+						'class' => $sObjClass,
+						'exceptionMsg' => $e,
+					));
 			}
 		// Fall though !! => browse
 
