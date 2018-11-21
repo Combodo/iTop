@@ -900,6 +900,20 @@ class CMDBSource
 		return ($aFieldData["Type"]);
 	}
 
+	private static function IsNumericType($aFieldData)
+	{
+		$aNumericTypes = array('tinyint(', 'decimal(', 'int(' );
+		$sType = strtolower($aFieldData["Type"]);
+		foreach ($aNumericTypes as $sNumericType)
+		{
+			if (strpos($sType, $sNumericType) === 0)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * @param string $sTable
 	 * @param string $sField
@@ -938,8 +952,15 @@ class CMDBSource
 			}
 			else
 			{
-				$default = $aFieldData["Default"] + 0; // Coerce to a numeric variable
-				$sRet .= ' DEFAULT '.self::Quote($default);
+				if (self::IsNumericType($aFieldData))
+				{
+					$sRet .= ' DEFAULT '.$aFieldData["Default"];
+				}
+				else
+				{
+					$default = $aFieldData["Default"] + 0; // Coerce to a numeric variable
+					$sRet .= ' DEFAULT '.self::Quote($default);
+				}
 			}
 		}
 		elseif (is_string($aFieldData["Default"]) == 'string')
