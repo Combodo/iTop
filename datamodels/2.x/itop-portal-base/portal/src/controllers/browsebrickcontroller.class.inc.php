@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use UserRights;
 use Dict;
 use MetaModel;
+use AttributeImage;
 use DBSearch;
 use DBObjectSet;
 use BinaryExpression;
@@ -633,18 +634,30 @@ class BrowseBrickController extends BrickController
                     $sPropertyName = substr($sOptionalAttribute, 0, -4);
                     $oAttDef = MetaModel::GetAttributeDef(get_class($value), $aLevelsProperties[$key][$sOptionalAttribute]);
 
-                    $tmpAttValue = $value->GetAsHTML($aLevelsProperties[$key][$sOptionalAttribute]);
-                    if($sOptionalAttribute === 'image_att')
-                    {
-                        if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
-                        {
-                            $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($value), 'sObjectId' => $value->GetKey(), 'sObjectField' => $aLevelsProperties[$key][$sOptionalAttribute], 'cache' => 86400));
-                        }
-                        else
-                        {
-                            $tmpAttValue = $oAttDef->Get('default_image');
-                        }
-                    }
+	                if($oAttDef instanceof AttributeImage)
+	                {
+		                $tmpAttValue = $value->Get($aLevelsProperties[$key][$sOptionalAttribute]);
+		                if ($sOptionalAttribute === 'image_att')
+		                {
+			                if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
+			                {
+				                $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array(
+					                'sObjectClass' => get_class($value),
+					                'sObjectId' => $value->GetKey(),
+					                'sObjectField' => $aLevelsProperties[$key][$sOptionalAttribute],
+					                'cache' => 86400
+				                ));
+			                }
+			                else
+			                {
+				                $tmpAttValue = $oAttDef->Get('default_image');
+			                }
+		                }
+	                }
+	                else
+	                {
+		                $tmpAttValue = $value->GetAsHTML($aLevelsProperties[$key][$sOptionalAttribute]);
+	                }
 
                     $aRow[$key][$sPropertyName] = $tmpAttValue;
                 }
@@ -726,17 +739,24 @@ class BrowseBrickController extends BrickController
                     $sPropertyName = substr($sOptionalAttribute, 0, -4);
                     $oAttDef = MetaModel::GetAttributeDef(get_class($aCurrentRowValues[0]), $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
 
-                    $tmpAttValue = $aCurrentRowValues[0]->GetAsHTML($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
-                    if($sOptionalAttribute === 'image_att')
+                    if($oAttDef instanceof AttributeImage)
                     {
-                        if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
-                        {
-                            $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($aCurrentRowValues[0]), 'sObjectId' => $aCurrentRowValues[0]->GetKey(), 'sObjectField' => $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute], 'cache' => 86400));
-                        }
-                        else
-                        {
-                            $tmpAttValue = $oAttDef->Get('default_image');
-                        }
+	                    $tmpAttValue = $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
+	                    if($sOptionalAttribute === 'image_att')
+	                    {
+	                        if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
+	                        {
+	                            $tmpAttValue = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($aCurrentRowValues[0]), 'sObjectId' => $aCurrentRowValues[0]->GetKey(), 'sObjectField' => $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute], 'cache' => 86400));
+	                        }
+	                        else
+	                        {
+	                            $tmpAttValue = $oAttDef->Get('default_image');
+	                        }
+	                    }
+                    }
+                    else
+                    {
+	                    $tmpAttValue = $aCurrentRowValues[0]->GetAsHTML($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
                     }
 
                     $aItems[$sCurrentIndex][$sPropertyName] = $tmpAttValue;
