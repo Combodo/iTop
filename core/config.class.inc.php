@@ -1142,6 +1142,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'newsroom_enabled' => array(
+			'type' => 'bool',
+			'description' => 'Whether or not the whole newsroom is enabled',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
