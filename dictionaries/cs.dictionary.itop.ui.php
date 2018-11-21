@@ -58,6 +58,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AuditRule/Attribute:name+' => 'Krátký název pro toto pravidlo',
 	'Class:AuditRule/Attribute:description' => 'Popis pravidla',
 	'Class:AuditRule/Attribute:description+' => 'Dlouhý popis tohoto pravidla auditu',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
 	'Class:AuditRule/Attribute:query' => 'Dotaz ke spuštění',
 	'Class:AuditRule/Attribute:query+' => 'OQL výraz ke spuštění',
 	'Class:AuditRule/Attribute:valid_flag' => 'Interpretace',
@@ -136,6 +139,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
+	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
 	'Class:UserInternal' => 'Interní uživatel',
 	'Class:UserInternal+' => 'Uživatel definovaný v iTop',
 ));

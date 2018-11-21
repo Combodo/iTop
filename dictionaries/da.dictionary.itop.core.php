@@ -33,6 +33,15 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:AttributeLinkedSet' => 'Array af objekter',
 	'Core:AttributeLinkedSet+' => '',
 
+	'Core:AttributeDashboard' => 'Dashboard~~',
+	'Core:AttributeDashboard+' => '~~',
+
+	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber+' => '~~',
+
+	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
+	'Core:AttributeObsolescenceDate+' => '~~',
+
     'Core:AttributeTagSet' => 'List of tags~~',
     'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',

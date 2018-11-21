@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Attachments:TabTitle_Count' => 'Attachments (%1$d)~~',
 	'Attachments:EmptyTabTitle' => 'Attachments~~',

@@ -15,9 +15,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Page:Home' => 'Домашняя страница',
 	'Page:GoPortalHome' => 'Домашняя страница',
 	'Page:GoPreviousPage' => 'Предыдущяя страница',
-	'Page:ReloadPage' => 'Перезагрузить страницу',
+    'Page:ReloadPage' => 'Перезагрузить страницу',
 	'Portal:Button:Submit' => 'Применить',
-	'Portal:Button:Apply' => 'Обновить',
+    'Portal:Button:Apply' => 'Обновить',
 	'Portal:Button:Cancel' => 'Отменить',
 	'Portal:Button:Close' => 'Закрыть',
 	'Portal:Button:Add' => 'Добавить',
@@ -25,13 +25,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:Button:Delete' => 'Удалить',
 	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode~~',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode~~',
-	'Error:HTTP:401' => 'Ошибка аутентификации',
-	'Error:HTTP:404' => 'Страница не найдена',
+    'Error:HTTP:401' => 'Ошибка аутентификации',
+    'Error:HTTP:404' => 'Страница не найдена',
 	'Error:HTTP:500' => 'Упс! Произошла ошибка.',
 	'Error:HTTP:GetHelp' => 'Пожалуйста, свяжитесь с вашим администратором %1$s, если проблема сохраняется.',
 	'Error:XHR:Fail' => 'Не удалось загрузить данные. Пожалуйста, свяжитесь с вашим администратором %1$s.',
-	'Portal:ErrorUserLoggedOut' => 'Вы вышли из системы. Выполните вход, чтобы продолжить работу.',
-	'Portal:Datatables:Language:Processing' => 'Пожалуйста, подождите...',
+    'Portal:ErrorUserLoggedOut' => 'Вы вышли из системы. Выполните вход, чтобы продолжить работу.',
+    'Portal:Datatables:Language:Processing' => 'Пожалуйста, подождите...',
 	'Portal:Datatables:Language:Search' => 'Фильтр :',
 	'Portal:Datatables:Language:LengthMenu' => 'Показывать _MENU_ элементов на странице',
 	'Portal:Datatables:Language:ZeroRecords' => 'Нет записей',
@@ -78,7 +78,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Browse:Name' => 'Просмотр элементов',
 	'Brick:Portal:Browse:Mode:List' => 'Список',
 	'Brick:Portal:Browse:Mode:Tree' => 'Дерево',
-	'Brick:Portal:Browse:Mode:Mosaic' => 'Плитки',
+    'Brick:Portal:Browse:Mode:Mosaic' => 'Плитки',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Детализация',
 	'Brick:Portal:Browse:Action:View' => 'Подробно',
 	'Brick:Portal:Browse:Action:Edit' => 'Изменить',
@@ -93,8 +93,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Manage:Name' => 'Управление элементами',
 	'Brick:Portal:Manage:Table:NoData' => 'Нет элементов',
-	'Brick:Portal:Manage:Table:ItemActions' => 'Действия',
-	'Brick:Portal:Manage:DisplayMode:list' => 'Список',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Действия',
+    'Brick:Portal:Manage:DisplayMode:list' => 'Список',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Круговая диаграмма',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Столбчатая диаграмма',
 	'Brick:Portal:Manage:Others' => 'Другие',
@@ -122,12 +122,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // CreateBrick brick
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Create:Name' => 'Быстрое создание',
-	'Brick:Portal:Create:ChooseType' => 'Пожалуйста, выберите тип',
+    'Brick:Portal:Create:ChooseType' => 'Пожалуйста, выберите тип',
 ));
 
 // Filter brick
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Brick:Portal:Filter:Name' => 'Фильтр',
-	'Brick:Portal:Filter:SearchInput:Placeholder' => 'например, подключить wi-fi',
-	'Brick:Portal:Filter:SearchInput:Submit' => 'Искать',
+    'Brick:Portal:Filter:Name' => 'Фильтр',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'например, подключить wi-fi',
+    'Brick:Portal:Filter:SearchInput:Submit' => 'Искать',
 ));

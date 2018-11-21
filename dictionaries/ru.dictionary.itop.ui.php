@@ -35,6 +35,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AuditRule/Attribute:name+' => 'Краткое название этого правила',
 	'Class:AuditRule/Attribute:description' => 'Описание правила аудита',
 	'Class:AuditRule/Attribute:description+' => 'Полное описание этого правила аудита',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
 	'Class:AuditRule/Attribute:query' => 'Запрос для выполнения',
 	'Class:AuditRule/Attribute:query+' => 'OQL выражение, выполняющее проверку набора объектов категории аудита',
 	'Class:AuditRule/Attribute:valid_flag' => 'Валидные объекты?',
@@ -107,12 +110,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:User/Attribute:status+' => 'Учетная запись пользователя включена или отключена.',
 	'Class:User/Attribute:status/Value:enabled' => 'Включен',
 	'Class:User/Attribute:status/Value:disabled' => 'Отключен',
-
+		
 	'Class:User/Error:LoginMustBeUnique' => 'Логин должен быть уникальным - "%1s" уже используется.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Как минимум один профиль должен быть назначен данному пользователю.',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Этому пользователю должна быть назначена хотя бы одна организация.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Организация не разрешена.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'Учетная запись пользователя не принадлежит вашим разрешенным организациям.',
+	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
 	'Class:UserInternal' => 'Внутренний пользователь',
 	'Class:UserInternal+' => 'Учетная запись создана внутри iTop',
 ));
@@ -289,10 +293,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Expression to Natural language
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Expression:Unit:Short:DAY' => 'd~~',
-	'Expression:Unit:Short:WEEK' => 'w~~',
-	'Expression:Unit:Short:MONTH' => 'm~~',
-	'Expression:Unit:Short:YEAR' => 'y~~',
+	'Expression:Unit:Short:DAY' => 'd',
+	'Expression:Unit:Short:WEEK' => 'w',
+	'Expression:Unit:Short:MONTH' => 'm',
+	'Expression:Unit:Short:YEAR' => 'y',
 ));
 
 
@@ -378,6 +382,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:Insert' => 'Вставить',
 	'UI:Button:More' => 'Больше',
 	'UI:Button:Less' => 'Меньше',
+	
 	'UI:SearchToggle' => 'Поиск',
 	'UI:ClickToCreateNew' => 'Создать: %1$s',
 	'UI:SearchFor_Class' => 'Поиск: %1$s',
@@ -397,7 +402,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Error:CannotWriteToTmp_Dir' => ' Невозможно записать временный файл на диск. upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Загрузка остановлена по расширению. (Имя файла = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Загрузка файла не удалась по неизвестной причине. (Код ошибки = "%1$s").',
-
+	
 	'UI:Error:1ParametersMissing' => 'Ошибка: следующий параметр должен быть указан для этой операции: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Ошибка: следующие параметры должен быть указан для этой операции: %1$s и %2$s.',
 	'UI:Error:3ParametersMissing' => 'Ошибка: следующие параметры должен быть указан для этой операции: %1$s, %2$s и %3$s.',
@@ -574,7 +579,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVImport:AlertIncompleteMapping' => 'Необходимо выбрать распределение для каждой ячейки.',
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Необходимо выбрать, по крайней мере один критерий',
-	'UI:CSVImport:Encoding' => 'Кодировка символов',
+	'UI:CSVImport:Encoding' => 'Кодировка символов',	
 	'UI:UniversalSearchTitle' => 'iTop - Универсальный поиск',
 	'UI:UniversalSearch:Error' => 'Ошибка: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Выбор класса для поиска: ',
@@ -665,7 +670,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Schema:Label' => 'Метка',
 	'UI:Schema:Label+' => 'Метка атрибута',
 	'UI:Schema:Type' => 'Тип',
-
+	
 	'UI:Schema:Type+' => 'Тип данных атрибута',
 	'UI:Schema:Origin' => 'Происхождение',
 	'UI:Schema:Origin+' => 'Базовый класс, в котором этот атрибут определен',
@@ -754,7 +759,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Должно быть автоматически обновлено, но: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'Будет обновлено автоматически (сброс: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d объектов/связей ссылаются на %2$s.',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d объектов/связей ссылаются на удаляемые объекты.',
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d объектов/связей ссылаются на удаляемые объекты.',	
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Для обеспечения целостности базы данных необходимо очистить все ссылки на удаляемые объекты.',
 	'UI:Delete:Consequence+' => 'Влияние',
 	'UI:Delete:SorryDeletionNotAllowed' => 'К сожалению, вы не можете удалить этот объект, см. подробное объяснение выше',
@@ -803,7 +808,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:FatalErrorMessage' => 'Критическая ошибка, iTop не может продолжать работу.',
 	'UI:Error_Details' => 'Ошибка: %1$s.',
 
-	'UI:PageTitle:ClassProjections' => 'iTop управление пользователями - проектирование классов',
+	'UI:PageTitle:ClassProjections'	=> 'iTop управление пользователями - проектирование классов',
 	'UI:PageTitle:ProfileProjections' => 'iTop управление пользователями - проектирование профилей',
 	'UI:UserManagement:Class' => 'Классs',
 	'UI:UserManagement:Class+' => 'Класс объектов',
@@ -842,7 +847,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:UserManagement:GrantMatrix' => 'Матрица разрешений',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Связь между %1$s и %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Связь между %1$s и %2$s',
-
+	
 	'Menu:AdminTools' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей, имеющих профиль администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -861,28 +866,28 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Объекты инфраструктуры по типу',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Объекты инфраструктуры по статусу',
 
-	'UI:ConfigMgmtMenuOverview:Title' => 'Панель управления конфигурациями',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Элементы конфигурации по статусу',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Элементы конфигурации по типу',
+'UI:ConfigMgmtMenuOverview:Title' => 'Панель управления конфигурациями',
+'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Элементы конфигурации по статусу',
+'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Элементы конфигурации по типу',
 
-	'UI:RequestMgmtMenuOverview:Title' => 'Панель управления запросами',
-	'UI-RequestManagementOverview-RequestByService' => 'Пользовательские запросы по сервису',
-	'UI-RequestManagementOverview-RequestByPriority' => 'Пользовательские запросы по приоритету',
-	'UI-RequestManagementOverview-RequestUnassigned' => 'Пользовательские запросы не назначенные не на один агент',
+'UI:RequestMgmtMenuOverview:Title' => 'Панель управления запросами',
+'UI-RequestManagementOverview-RequestByService' => 'Пользовательские запросы по сервису',
+'UI-RequestManagementOverview-RequestByPriority' => 'Пользовательские запросы по приоритету',
+'UI-RequestManagementOverview-RequestUnassigned' => 'Пользовательские запросы не назначенные не на один агент',
 
-	'UI:IncidentMgmtMenuOverview:Title' => 'Панель управления инцидентами',
-	'UI-IncidentManagementOverview-IncidentByService' => 'Инциденты по сервису',
-	'UI-IncidentManagementOverview-IncidentByPriority' => 'Инциденты по приоритету',
-	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Инциденты не назначенные не на один агент',
+'UI:IncidentMgmtMenuOverview:Title' => 'Панель управления инцидентами',
+'UI-IncidentManagementOverview-IncidentByService' => 'Инциденты по сервису',
+'UI-IncidentManagementOverview-IncidentByPriority' => 'Инциденты по приоритету',
+'UI-IncidentManagementOverview-IncidentUnassigned' => 'Инциденты не назначенные не на один агент',
 
-	'UI:ChangeMgmtMenuOverview:Title' => 'Панель управления изменениями',
-	'UI-ChangeManagementOverview-ChangeByType' => 'Изменения по типу',
-	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Изменения не назначенные не на один агент',
-	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Отключения в связи с изменениями',
+'UI:ChangeMgmtMenuOverview:Title' => 'Панель управления изменениями',
+'UI-ChangeManagementOverview-ChangeByType' => 'Изменения по типу',
+'UI-ChangeManagementOverview-ChangeUnassigned' => 'Изменения не назначенные не на один агент',
+'UI-ChangeManagementOverview-ChangeWithOutage' => 'Отключения в связи с изменениями',
 
-	'UI:ServiceMgmtMenuOverview:Title' => 'Панель управления сервисами',
-	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Договоры с клиентами, которые будут обновлены в течении 30 дней',
-	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Договоры с провайдерами, которые будут обновлены в течении 30 дней',
+'UI:ServiceMgmtMenuOverview:Title' => 'Панель управления сервисами',
+'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Договоры с клиентами, которые будут обновлены в течении 30 дней',
+'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Договоры с провайдерами, которые будут обновлены в течении 30 дней',
 
 	'UI:ContactsMenu' => 'Договора',
 	'UI:ContactsMenu+' => 'Договора',
@@ -893,13 +898,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Menu:CSVImportMenu' => 'Импорт CSV', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'Пакетное создание или обновление', // Duplicated into itop-welcome-itil (will be removed from here...)
-
+	
 	'Menu:DataModelMenu' => 'Модель данных', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => 'Обзор модели данных', // Duplicated into itop-welcome-itil (will be removed from here...)
-
+	
 	'Menu:ExportMenu' => 'Экспорт', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Экспорт результатов любого запроса в HTML, CSV или XML', // Duplicated into itop-welcome-itil (will be removed from here...)
-
+	
 	'Menu:NotificationsMenu' => 'Уведомления', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Конфигурация уведомлений', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Конфигурация <span class="hilite">Уведомлений</span>',
@@ -933,6 +938,33 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:TagAdminMenu:NoTags' => 'Не настроены поля тегов',
 	'UI:TagSetFieldData:Error' => 'Ошибка: %1$s',
 
+	'Menu:AuditCategories' => 'Audit Categories~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Audit Categories~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Audit Categories~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
+	'Menu:RunQueriesMenu' => 'Run Queries~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Run any query~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
+	'Menu:QueryMenu' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
+	'Menu:DataAdministration' => 'Data administration~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Data administration~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
+	'Menu:UniversalSearchMenu' => 'Universal Search~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Search for anything...~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
+	'Menu:UserManagementMenu' => 'User Management~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'User management~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+
+	'Menu:ProfilesMenu' => 'Profiles~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Profiles~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profiles~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+
+	'Menu:UserAccountsMenu' => 'User Accounts~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'User Accounts~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'User Accounts~~', // Duplicated into itop-welcome-itil (will be removed from here...)	
+
 	'UI:iTopVersion:Short' => '%1$s версия %2$s',
 	'UI:iTopVersion:Long' => '%1$s версия %2$s-%3$s основан на %4$s',
 	'UI:PropertiesTab' => 'Свойства',
@@ -943,9 +975,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Download-CSV' => 'Загрузка %1$s~~',
 
 	'UI:DeadlineMissedBy_duration' => 'Пропущен %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 мин',
-	'UI:Deadline_Minutes' => '%1$d мин',
-	'UI:Deadline_Hours_Minutes' => '%1$d ч %2$d мин',
+	'UI:Deadline_LessThan1Min' => '< 1 мин',		
+	'UI:Deadline_Minutes' => '%1$d мин',			
+	'UI:Deadline_Hours_Minutes' => '%1$d ч %2$d мин',			
 	'UI:Deadline_Days_Hours_Minutes' => '%1$d д %2$d ч %3$d мин',
 	'UI:Help' => 'Помощь',
 	'UI:PasswordConfirm' => '(Подтвердить)',
@@ -997,8 +1029,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:ChangeMyPassword' => 'Изменить пароль',
 	'Portal:Disconnect' => 'Выйти',
 	'Portal:OpenRequests' => 'Мои открытые запросы',
-	'Portal:ClosedRequests' => 'Мои закрытые запросы',
-	'Portal:ResolvedRequests' => 'Мои решённые запросы',
+	'Portal:ClosedRequests'  => 'Мои закрытые запросы',
+	'Portal:ResolvedRequests'  => 'Мои решённые запросы',
 	'Portal:SelectService' => 'Выберите услугу из каталога:',
 	'Portal:PleaseSelectOneService' => 'Пожалуйста, выберите услугу для создания запроса',
 	'Portal:SelectSubcategoryFrom_Service' => 'Выберите подкатегорию услуги %1$s:',
@@ -1029,7 +1061,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:BulkModifyStatus' => 'Операция',
 	'UI:BulkModifyStatus+' => 'Статус операции',
 	'UI:BulkModifyErrors' => 'Ошибки (если есть)',
-	'UI:BulkModifyErrors+' => 'Errors preventing the modification~~',
+	'UI:BulkModifyErrors+' => 'Errors preventing the modification~~',	
 	'UI:BulkModifyStatusOk' => 'Ok~~',
 	'UI:BulkModifyStatusError' => 'Ошибка',
 	'UI:BulkModifyStatusModified' => 'Изменен',
@@ -1257,7 +1289,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Month-11-Short' => 'Ноя.',
 	'Month-12-Short' => 'Дек.',
 	'Calendar-FirstDayOfWeek' => '1', // 0 = Sunday, 1 = Monday, etc...
-
+	
 	'UI:Menu:ShortcutList' => 'Добавить в избранное...',
 	'UI:ShortcutRenameDlg:Title' => 'Переименовать ссылку',
 	'UI:ShortcutListDlg:Title' => 'Добавить в избранное ссылку на список',
@@ -1276,6 +1308,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Custom rate',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Интервал обновления (секунды)',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'Минимальное значение %1$d секунд(ы)',
+
 	'UI:FillAllMandatoryFields' => 'Пожалуйста, заполните все обязательные поля.',
 	'UI:ValueMustBeSet' => 'Пожалуйста, укажите значение',
 	'UI:ValueMustBeChanged' => 'Пожалуйста, измените значение',
@@ -1404,20 +1437,20 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: все',
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
-	//   - External key widget
-	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s определён',
-	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s неопределён',
-	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
-	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
-	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s и %3$s других',
-	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: все',
-	//   - Hierarchical key widget
-	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s определён',
-	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s неопределён',
-	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
-	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
-	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s и %3$s других',
-	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: все',
+    //   - External key widget
+    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s определён',
+    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s неопределён',
+    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
+    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s и %3$s других',
+    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: все',
+    //   - Hierarchical key widget
+    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s определён',
+    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s неопределён',
+    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
+    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s и %3$s других',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: все',
 
 	// - Criteria operators
 	//   - Default widget
@@ -1431,18 +1464,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Заканч. на',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Регуляр. выраж.',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Равно',
-	// => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Больше',
-	// => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Больше / равно',
-	// > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Меньше',
-	// => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Меньше / равно',
-	// > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Не равно',
-	// => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Равно',  // => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Больше',  // => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Больше / равно',  // > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Меньше',  // => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Меньше / равно',  // > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Не равно',  // => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Совпадает',
 
@@ -1480,6 +1507,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Expression:Operator:AND' => ' AND ',
 	'Expression:Operator:OR' => ' OR ',
+	'Expression:Operator:=' => ': ~~',
 
 	'Expression:Unit:Short:DAY' => 'd',
 	'Expression:Unit:Short:WEEK' => 'w',

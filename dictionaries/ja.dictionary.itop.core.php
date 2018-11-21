@@ -31,6 +31,15 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributeLinkedSet' => 'オブジェクト配列',
 	'Core:AttributeLinkedSet+' => '同一あるいはサブクラスに属するオブジェクト',
 
+	'Core:AttributeDashboard' => 'Dashboard~~',
+	'Core:AttributeDashboard+' => '~~',
+
+	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber+' => '~~',
+
+	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
+	'Core:AttributeObsolescenceDate+' => '~~',
+
     'Core:AttributeTagSet' => 'List of tags~~',
     'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
