@@ -402,6 +402,7 @@ abstract class DBSearch
 			}
 		}
 
+		/** @var DBObjectSearch | null $oResultFilter */
 		if (!isset($oResultFilter))
 		{
 			$oKPI = new ExecutionKPI();
@@ -440,11 +441,20 @@ abstract class DBSearch
 		return $oResultFilter;
 	}
 
-	// Alternative to object mapping: the data are transfered directly into an array
-	// This is 10 times faster than creating a set of objects, and makes sense when optimization is required
 	/**
-	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
-	 */	
+	 * Alternative to object mapping: the data are transfered directly into an array
+	 * This is 10 times faster than creating a set of objects, and makes sense when optimization is required
+	 *
+	 * @param array $aColumns
+	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 * @param array $aArgs
+	 *
+	 * @return array|void
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public function ToDataArray($aColumns = array(), $aOrderBy = array(), $aArgs = array())
 	{
 		$sSQL = $this->MakeSelectQuery($aOrderBy, $aArgs);
