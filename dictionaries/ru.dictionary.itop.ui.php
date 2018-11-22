@@ -1521,3 +1521,17 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Expression:Verb:NOW' => 'now',
 	'Expression:Verb:ISNULL' => ': undefined~~',
 ));
+
+//
+// iTop Newsroom menu
+//
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'UI:Newsroom:NoNewMessage' => 'Нет новых сообщений',
+	'UI:Newsroom:MarkAllAsRead' => 'Отметить все как прочитанные сообщения',
+	'UI:Newsroom:ViewAllMessages' => 'Посмотреть все сообщения',
+	'UI:Newsroom:Preferences' => 'Настройки новостей',
+	'UI:Newsroom:ConfigurationLink' => 'конфигурация',
+	'UI:Newsroom:ResetCache' => 'Сбросить кеш',
+	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Показать сообщения от %1$s',
+	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Отобразите не более %1$s сообщений в меню %2$s.',
+));
