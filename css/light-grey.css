@@ -405,7 +405,7 @@ input.textSearch {
 }
 .ui-accordion-content ul {
   list-style: none;
-  list-style-image: url(data:0);
+  list-style-image: none;
   padding-left: 16px;
   margin-top: 8px;
 }
@@ -416,7 +416,7 @@ input.textSearch {
   padding: 8px 0px 8px 8px;
   margin: 0;
   list-style: none;
-  list-style-image: url(data:0);
+  list-style-image: none;
   border: 0;
 }
 .nothing {
