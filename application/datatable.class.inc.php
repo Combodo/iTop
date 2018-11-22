@@ -756,6 +756,10 @@ class DataTableSettings implements Serializable
 	{
 		foreach($this->aClassAliases as $sAlias => $sClass)
 		{
+			if (!isset($this->aColumns[$sAlias]))
+			{
+				continue;
+			}
 			foreach($this->aColumns[$sAlias] as $sAttCode => $aData)
 			{
 				// Remove non-existent columns
