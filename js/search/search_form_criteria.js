@@ -287,13 +287,14 @@ $(function()
 			var aValues = this[sCallback](oActiveOpElem);
 
 			// Update widget
-			this.options.operator = oActiveOpElem.find('.sfc_op_radio').val();
+			var sOperator = oActiveOpElem.find('.sfc_op_radio').val();
 
-			if(this._getValuesAsText() != this._getValuesAsText(aValues))
+			if( (this._getValuesAsText() !== this._getValuesAsText(aValues)) || (this.options.operator !== sOperator) )
 			{
 				this.is_modified = true;
 				this.options.oql = '';
 				this.options.values = aValues;
+				this.options.operator = sOperator;
 				this._setTitle();
 				this._unmarkAsDraft();
 
