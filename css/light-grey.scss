@@ -3444,8 +3444,8 @@ table.listResults .originColor{
 .switch {
 	position: relative;
 	display: inline-block;
-	width: 41px;
-	height: 23px;
+	width: 36px;
+	height: 20px;
 	vertical-align: baseline;
 }
 
@@ -3461,19 +3461,17 @@ table.listResults .originColor{
 	right: 0;
 	bottom: 0;
 	background-color: #ccc;
-	-webkit-transition: .4s;
 	transition: .4s;
 }
 
 .slider:before {
 	position: absolute;
 	content: "";
-	height: 17px;
-	width: 17px;
-	left: 4px;
+	height: 15px;
+	width: 15px;
+	left: 3px;
 	bottom: 3px;
 	background-color: white;
-	-webkit-transition: .4s;
 	transition: .4s;
 }
 
@@ -3486,18 +3484,16 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-	-webkit-transform: translateX(16px);
-	-ms-transform: translateX(16px);
-	transform: translateX(16px);
+	transform: translateX(14.5px);
 }
 
 /* Rounded sliders */
 .slider.round {
-	border-radius: 34px;
+	border-radius: 20px;
 }
 
 .slider.round:before {
-	border-radius: 50%;
+	border-radius: 7px;
 }
 
 ///////////////////////////
