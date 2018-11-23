@@ -1331,7 +1331,15 @@ class UserRights
 		{
 			$_SESSION['profile_list'] = self::ListProfiles();
 		}
+		// Protection against session fixation/injection: generate a new session id.
+		
+		// Alas a PHP bug (technically a bug in the memcache session handler, https://bugs.php.net/bug.php?id=71187)
+		// causes session_regenerate_id to fail with a catchable fatal error in PHP 7.0 if the session handler is memcache(d).
+		// The bug has been fixed in PHP 7.2, but in case session_regenerate_id()
+		// fails we just silently ignore the error and keep the same session id...
+		$old_error_handler = set_error_handler(array(__CLASS__, 'VoidErrorHandler'));
 		session_regenerate_id();
+		if ($old_error_handler !== null) set_error_handler($old_error_handler);
 	}
 
 	public static function _ResetSessionCache()
@@ -1344,6 +1352,19 @@ class UserRights
 		{
 			unset($_SESSION['archive_allowed']);
 		}
+	}
+	
+	/**
+	 * Fake error handler to silently discard fatal errors
+	 * @param int $iErrNo
+	 * @param string $sErrStr
+	 * @param string $sErrFile
+	 * @param int $iErrLine
+	 * @return boolean
+	 */
+	public static function VoidErrorHandler($iErrno, $sErrStr, $sErrFile, $iErrLine)
+	{
+		return true; // Ignore the error
 	}
 }
 
