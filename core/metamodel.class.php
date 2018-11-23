@@ -534,7 +534,7 @@ abstract class MetaModel
 	 *
 	 * @since 2.6 N°659 uniqueness constraint
 	 */
-	final static public function GetUniquenessRules($sClass)
+	final public static function GetUniquenessRules($sClass)
 	{
 		if (!isset(self::$m_aClassParams[$sClass]))
 		{
@@ -579,6 +579,33 @@ abstract class MetaModel
 		}
 
 		return $aCurrentUniquenessRules;
+	}
+
+	/**
+	 * @param string $sRuleId
+	 * @param string $sLeafClassName
+	 *
+	 * @return string name of the class, null if not present
+	 */
+	final public static function GetRootClassForUniquenessRule($sRuleId, $sLeafClassName)
+	{
+		$sFirstClassWithRuleId = null;
+		if (isset(self::$m_aClassParams[$sLeafClassName]['uniqueness_rules'][$sRuleId]))
+		{
+			$sFirstClassWithRuleId = $sLeafClassName;
+		}
+
+		$sParentClass = self::GetParentClass($sLeafClassName);
+		if ($sParentClass)
+		{
+			$sParentClassWithRuleId = self::GetRootClassForUniquenessRule($sRuleId, $sParentClass);
+			if (!is_null($sParentClassWithRuleId))
+			{
+				$sFirstClassWithRuleId = $sParentClassWithRuleId;
+			}
+		}
+
+		return $sFirstClassWithRuleId;
 	}
 
 	/**
