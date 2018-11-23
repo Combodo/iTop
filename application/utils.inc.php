@@ -1,6 +1,7 @@
 <?php
-use Html2Text\Html2Text;
+
 use Leafo\ScssPhp\Compiler;
+
 // Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
@@ -1398,7 +1399,17 @@ class utils
 		asort($aPossibleEncodings);
 		return $aPossibleEncodings;
 	}
-	
+
+	/**
+	 * Helper to encapsulation iTop's htmlentities
+	 * @param string $sValue
+	 * @return string
+	 */
+	static public function HtmlEntities($sValue)
+	{
+		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+	}
+
 	/**
 	 * Convert a string containing some (valid) HTML markup to plain text
 	 * @param string $sHtml

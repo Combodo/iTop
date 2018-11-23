@@ -212,11 +212,13 @@ catch(Exception $e)
 }
 
 $sZipArchiveFile = MakeArchiveFileName().'.tar.gz';
-echo date('Y-m-d H:i:s')." - Checking file: $sZipArchiveFile\n";
+$sZipArchiveFileForDisplay = utils::HtmlEntities($sZipArchiveFile);
+echo date('Y-m-d H:i:s')." - Checking file: $sZipArchiveFileForDisplay\n";
+
 
 if (!file_exists($sZipArchiveFile))
 {
-	RaiseAlarm("Missing backup file '$sZipArchiveFile'");
+	RaiseAlarm("Missing backup file '$sZipArchiveFileForDisplay'");
 
 	return;
 }
@@ -224,7 +226,7 @@ if (!file_exists($sZipArchiveFile))
 $aStat = stat($sZipArchiveFile);
 if (!$aStat)
 {
-	RaiseAlarm("Failed to stat backup file '$sZipArchiveFile'");
+	RaiseAlarm("Failed to stat backup file '$sZipArchiveFileForDisplay'");
 
 	return;
 }
@@ -233,7 +235,7 @@ $iSize = (int)$aStat['size'];
 $iMIN = utils::ReadParam('check_size_min', 0);
 if ($iSize <= $iMIN)
 {
-	RaiseAlarm("Backup file '$sZipArchiveFile' too small (Found: $iSize, while expecting $iMIN bytes)");
+	RaiseAlarm("Backup file '$sZipArchiveFileForDisplay' too small (Found: $iSize, while expecting $iMIN bytes)");
 
 	return;
 }
@@ -241,11 +243,12 @@ if ($iSize <= $iMIN)
 
 echo "Found the archive\n";
 $sOldArchiveFile = MakeArchiveFileName(time() - 86400).'.tar.gz'; // yesterday's archive
+$sOldArchiveFileForDisplay = utils::HtmlEntities($sOldArchiveFile);
 if (file_exists($sOldArchiveFile))
 {
 	if ($aOldStat = stat($sOldArchiveFile))
 	{
-		echo "Comparing its size with older file: $sOldArchiveFile\n";
+		echo "Comparing its size with older file: $sOldArchiveFileForDisplay\n";
 		$iOldSize = (int)$aOldStat['size'];
 		$fVariationPercent = 100 * ($iSize - $iOldSize) / $iOldSize;
 		$sVariation = round($fVariationPercent, 2)." percent(s)";
@@ -253,7 +256,7 @@ if (file_exists($sOldArchiveFile))
 		$iREDUCTIONMAX = utils::ReadParam('check_size_reduction_max');
 		if ($fVariationPercent < -$iREDUCTIONMAX)
 		{
-			RaiseAlarm("Backup file '$sZipArchiveFile' changed by $sVariation, expecting a reduction limited to $iREDUCTIONMAX percents of the original size");
+			RaiseAlarm("Backup file '$sZipArchiveFileForDisplay' changed by $sVariation, expecting a reduction limited to $iREDUCTIONMAX percents of the original size");
 		}
 		elseif ($fVariationPercent < 0)
 		{
