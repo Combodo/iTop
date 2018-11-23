@@ -1470,12 +1470,13 @@ abstract class DBObject implements iDisplay
 	protected function GetUniquenessRuleMessage($sUniquenessRuleId)
 	{
 		$sCurrentClass = get_class($this);
-		$sMessageKey = "Class:$sCurrentClass/UniquenessRule:$sUniquenessRuleId";
+		$sClass = MetaModel::GetRootClassForUniquenessRule($sUniquenessRuleId, $sCurrentClass);
+		$sMessageKey = "Class:$sClass/UniquenessRule:$sUniquenessRuleId";
 		$sTemplate = Dict::S($sMessageKey, '');
 
 		if (empty($sTemplate))
 		{
-			//TODO if admin add message key is missing
+			// we could add also a specific message if user is admin ("dict key is missing")
 			return Dict::Format('Core:UniquenessDefaultError', $sUniquenessRuleId);
 		}
 
