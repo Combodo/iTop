@@ -1434,9 +1434,7 @@ abstract class DBObject implements iDisplay
 				continue;
 			}
 
-			$oUniquenessQuery = $this->GetUniquenessDuplicatesQuery($aUniquenessRuleProperties);
-			$oUniquenessDuplicates = new DBObjectSet($oUniquenessQuery);
-			$bHasDuplicates = $oUniquenessDuplicates->CountExceeds(0);
+			$bHasDuplicates = $this->HasObjectsInDbForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties);
 			if ($bHasDuplicates)
 			{
 				$bIsBlockingRule = $aUniquenessRuleProperties['is_blocking'];
@@ -1486,18 +1484,39 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * @param array $aUniquenessSingleRule
+	 * @param string $sUniquenessRuleId uniqueness rule ID
+	 * @param array $aUniquenessRuleProperties uniqueness rule properties
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	protected function HasObjectsInDbForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties)
+	{
+		$oUniquenessQuery = $this->GetSearchForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties);
+		$oUniquenessDuplicates = new DBObjectSet($oUniquenessQuery);
+		$bHasDuplicates = $oUniquenessDuplicates->CountExceeds(0);
+
+		return $bHasDuplicates;
+	}
+
+	/**
+	 * @param string $sUniquenessRuleId uniqueness rule ID
+	 * @param array $aUniquenessRuleProperties uniqueness rule properties
 	 *
 	 * @return \DBSearch
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 * @since 2.6 N°659 uniqueness constraint
 	 */
-	protected function GetUniquenessDuplicatesQuery($aUniquenessSingleRule)
+	protected function GetSearchForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties)
 	{
 		$sCurrentClass = get_class($this);
 		$sOqlUniquenessQuery = "SELECT $sCurrentClass";
-		if (!(empty($sUniquenessFilter = $aUniquenessSingleRule['filter'])))
+		if (!(empty($sUniquenessFilter = $aUniquenessRuleProperties['filter'])))
 		{
 			$sOqlUniquenessQuery .= ' WHERE '.$sUniquenessFilter;
 		}
@@ -1508,7 +1527,7 @@ abstract class DBObject implements iDisplay
 			$oUniquenessQuery->AddCondition('id', $this->GetKey(), '<>');
 		}
 
-		foreach ($aUniquenessSingleRule['attributes'] as $sAttributeCode)
+		foreach ($aUniquenessRuleProperties['attributes'] as $sAttributeCode)
 		{
 			$attributeValue = $this->Get($sAttributeCode);
 			$oUniquenessQuery->AddCondition($sAttributeCode, $attributeValue, '=');
