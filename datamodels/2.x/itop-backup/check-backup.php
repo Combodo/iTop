@@ -23,10 +23,29 @@
 // Recommended usage in CRON
 // /usr/bin/php -q /var/www/combodo/modules/itop-backup/backup.php --backup_file=/home/backups/combodo-crm-%Y-%m-%d
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
-require_once(__DIR__.'/../../approot.inc.php');
-require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/core/config.class.inc.php');
+if (file_exists(__DIR__.'/../../approot.inc.php'))
+{
+	require_once __DIR__.'/../../approot.inc.php';   // When in env-xxxx folder
+}
+else
+{
+	require_once __DIR__.'/../../../approot.inc.php';   // When in datamodels/x.x folder
+}
+require_once(APPROOT.'application/utils.inc.php');
+require_once(APPROOT.'core/config.class.inc.php');
+
+
+/**
+ * Uses production env
+ *
+ * @return \Config
+ */
+function GetConfig()
+{
+	$oConfig = new Config(APPCONF.'production/config-itop.php');
+
+	return $oConfig;
+}
 
 
 function ReadMandatoryParam($sParam)
@@ -84,8 +103,8 @@ function MakeArchiveFileName($iRefTime = null)
 {
 	$sDefaultBackupFileName = sys_get_temp_dir().'/'."__DB__-%Y-%m-%d";
 	$sBackupFile =  utils::ReadParam('backup_file', $sDefaultBackupFileName, true, 'raw_data');
-	
-	$oConfig = new Config(APPCONF.'production/config-itop.php');
+
+	$oConfig = GetConfig();
 
 	$sBackupFile = str_replace('__HOST__', $oConfig->Get('db_host'), $sBackupFile);
 	$sBackupFile = str_replace('__DB__', $oConfig->Get('db_name'), $sBackupFile);
@@ -126,28 +145,39 @@ function RaiseAlarm($sMessage)
 		return;
 	}
 
-   $sMessage = "Server: [[Server:".$sTicketImpactedServer."]]\n".$sMessage;
+	$sMessage = "Server: [[Server:".$sTicketImpactedServer."]]\n".$sMessage;
 
 	require_once(APPROOT.'webservices/itopsoaptypes.class.inc.php');
-	
-	//$sItopRootDefault = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../..';
-	//$sItopRoot = utils::ReadParam('check_ticket_itop', $sItopRootDefault);
-	$sItopRoot = ReadMandatoryParam('check_ticket_itop');
 
-	$sWsdlUri = $sItopRoot.'/webservices/itop.wsdl.php';
-	//$sWsdlUri .= '?service_category=';
-	
-	$aSOAPMapping = SOAPMapping::GetMapping();
-	
-	ini_set("soap.wsdl_cache_enabled","0");
-	$oSoapClient = new SoapClient(
-		$sWsdlUri,
-		array(
-			'trace' => 1,
-			'classmap' => $aSOAPMapping, // defined in itopsoaptypes.class.inc.php
-		)
-	);
-	
+	$oConfig = GetConfig();
+	$sItopRootConfig = $oConfig->GetModuleSetting('itop-backup', 'itop_root');
+	if (empty($sItopRootConfig))
+	{
+		// by default getting self !
+		// we could have '' as config value...
+		$sItopRootConfig = $oConfig->Get('app_root_url');
+	}
+
+	try
+	{
+		$sWsdlUri = $sItopRootConfig.'/webservices/itop.wsdl.php';
+		$aSOAPMapping = SOAPMapping::GetMapping();
+		ini_set("soap.wsdl_cache_enabled", "0");
+		$oSoapClient = new SoapClient(
+			$sWsdlUri,
+			array(
+				'trace' => 1,
+				'classmap' => $aSOAPMapping, // defined in itopsoaptypes.class.inc.php
+			)
+		);
+	}
+	catch (Exception $e)
+	{
+		echo "ERROR: Failed to read WSDL of the target iTop ($sItopRootConfig)\n";
+
+		return;
+	}
+
 	try
 	{
 		$oRes = $oSoapClient->CreateIncidentTicket
@@ -176,6 +206,8 @@ function RaiseAlarm($sMessage)
 	catch(Exception $e)
 	{
 		echo "The ticket could not be created: SOAP Exception = '".$e->getMessage()."'\n";
+
+		return;
 	}
 
 	//echo "<pre>\n";
@@ -189,7 +221,7 @@ function RaiseAlarm($sMessage)
 	}
 	else
 	{
-		echo "ERROR: Failed to create the ticket in target iTop ($sItopRoot)\n";
+		echo "ERROR: Failed to create the ticket in target iTop ($sItopRootConfig)\n";
 		foreach ($oRes->errors->messages as $oMessage)
 		{
 			echo $oMessage->text."\n";
@@ -210,6 +242,17 @@ catch(Exception $e)
 	echo "Error: ".$e->GetMessage()."\n";
 	exit;
 }
+
+
+// N°1802 : was moved from script param to config file (avoid direct call with untrusted param value)
+$sItopRootParam = utils::ReadParam('check_ticket_itop', null, true, 'raw_data');
+if (!empty($sItopRootParam))
+{
+	echo 'ERROR: parameter \'check_ticket_itop\' should now be specified in the config file\n';
+
+	return;
+}
+
 
 $sZipArchiveFile = MakeArchiveFileName().'.tar.gz';
 $sZipArchiveFileForDisplay = utils::HtmlEntities($sZipArchiveFile);
