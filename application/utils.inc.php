@@ -1090,10 +1090,12 @@ class utils
 			$sDlgTitle = addslashes(Dict::S('UI:ImportDashboardTitle'));
 			$sDlgText = addslashes(Dict::S('UI:ImportDashboardText'));
 			$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
+				$sUploadDashboardTransactId = utils::GetNewTransactionId();
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
 				new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sMenuId),
-				new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sMenuId', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })"),
+				new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'),
+					"UploadDashboard({dashboard_id: '$sMenuId', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn', transaction: '$sUploadDashboardTransactId' })"),
 			);
 			break;
 

@@ -1190,6 +1190,11 @@ EOF
 			break;
 
 		case 'import_dashboard':
+			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'raw_data');
+			if (!utils::IsTransactionValid($sTransactionId, true))
+			{
+				throw new SecurityException('ajax.render.php import_dashboard : invalid transaction_id');
+			}
 			$sMenuId = utils::ReadParam('id', '', false, 'raw_data');
 			ApplicationMenu::LoadAdditionalMenus();
 			$index = ApplicationMenu::GetMenuIndexById($sMenuId);
