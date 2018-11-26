@@ -212,56 +212,59 @@ catch(Exception $e)
 }
 
 $sZipArchiveFile = MakeArchiveFileName().'.tar.gz';
-echo date('Y-m-d H:i:s')." - Checking file: $sZipArchiveFile\n";
+$sZipArchiveFileForDisplay = utils::HtmlEntities($sZipArchiveFile);
+echo date('Y-m-d H:i:s')." - Checking file: $sZipArchiveFileForDisplay\n";
 
-if (file_exists($sZipArchiveFile))
+
+if (!file_exists($sZipArchiveFile))
 {
-	if ($aStat = stat($sZipArchiveFile))
-	{
-		$iSize = (int) $aStat['size'];
-		$iMIN = utils::ReadParam('check_size_min', 0);
-		if ($iSize > $iMIN)
-		{
-			echo "Found the archive\n";
-			$sOldArchiveFile = MakeArchiveFileName(time() - 86400).'.tar.gz'; // yesterday's archive
-			if (file_exists($sOldArchiveFile))
-			{
-				if ($aOldStat = stat($sOldArchiveFile))
-				{
-					echo "Comparing its size with older file: $sOldArchiveFile\n";
-					$iOldSize = (int) $aOldStat['size'];
-					$fVariationPercent = 100 * ($iSize - $iOldSize) / $iOldSize;
-					$sVariation = round($fVariationPercent, 2)." percent(s)";
+	RaiseAlarm("Missing backup file '$sZipArchiveFileForDisplay'");
 
-					$iREDUCTIONMAX = utils::ReadParam('check_size_reduction_max');
-					if ($fVariationPercent < -$iREDUCTIONMAX)
-					{
-						RaiseAlarm("Backup file '$sZipArchiveFile' changed by $sVariation, expecting a reduction limited to $iREDUCTIONMAX percents of the original size");
-					}
-					elseif ($fVariationPercent < 0)
-					{
-						echo "Size variation: $sVariation (the maximum allowed reduction is $iREDUCTIONMAX) \n";
-					}
-					else
-					{
-						echo "The archive grew by: $sVariation\n";
-					}
-				}
-			}
+	return;
+}
+
+$aStat = stat($sZipArchiveFile);
+if (!$aStat)
+{
+	RaiseAlarm("Failed to stat backup file '$sZipArchiveFileForDisplay'");
+
+	return;
+}
+
+$iSize = (int)$aStat['size'];
+$iMIN = utils::ReadParam('check_size_min', 0);
+if ($iSize <= $iMIN)
+{
+	RaiseAlarm("Backup file '$sZipArchiveFileForDisplay' too small (Found: $iSize, while expecting $iMIN bytes)");
+
+	return;
+}
+
+
+echo "Found the archive\n";
+$sOldArchiveFile = MakeArchiveFileName(time() - 86400).'.tar.gz'; // yesterday's archive
+$sOldArchiveFileForDisplay = utils::HtmlEntities($sOldArchiveFile);
+if (file_exists($sOldArchiveFile))
+{
+	if ($aOldStat = stat($sOldArchiveFile))
+	{
+		echo "Comparing its size with older file: $sOldArchiveFileForDisplay\n";
+		$iOldSize = (int)$aOldStat['size'];
+		$fVariationPercent = 100 * ($iSize - $iOldSize) / $iOldSize;
+		$sVariation = round($fVariationPercent, 2)." percent(s)";
+
+		$iREDUCTIONMAX = utils::ReadParam('check_size_reduction_max');
+		if ($fVariationPercent < -$iREDUCTIONMAX)
+		{
+			RaiseAlarm("Backup file '$sZipArchiveFileForDisplay' changed by $sVariation, expecting a reduction limited to $iREDUCTIONMAX percents of the original size");
+		}
+		elseif ($fVariationPercent < 0)
+		{
+			echo "Size variation: $sVariation (the maximum allowed reduction is $iREDUCTIONMAX) \n";
 		}
 		else
 		{
-			RaiseAlarm("Backup file '$sZipArchiveFile' too small (Found: $iSize, while expecting $iMIN bytes)");
+			echo "The archive grew by: $sVariation\n";
 		}
 	}
-	else
-	{
-		RaiseAlarm("Failed to stat backup file '$sZipArchiveFile'");
-	}
 }
-else
-{
-	RaiseAlarm("Missing backup file '$sZipArchiveFile'");
-}
-
-?>
