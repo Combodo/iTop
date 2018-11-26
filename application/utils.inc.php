@@ -1111,10 +1111,11 @@ class utils
 				$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
 				$sDashboardFileJS = addslashes($sDashboardFile);
 				$sDashboardFileURL = urlencode($sDashboardFile);
+				$sUploadDashboardTransactId = utils::GetNewTransactionId();
 				$aResult = array(
 					new SeparatorPopupMenuItem(),
 					new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sDashboardId.'&file='.$sDashboardFileURL),
-					new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sDashboardId', file: '$sDashboardFileJS', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })"),
+					new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sDashboardId', file: '$sDashboardFileJS', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn', transaction: '$sUploadDashboardTransactId' })"),
 				);
 				if ($oDashboard->GetReloadURL())
 				{
@@ -1426,7 +1427,7 @@ class utils
 		asort($aPossibleEncodings);
 		return $aPossibleEncodings;
 	}
-	
+
 	/**
 	 * Helper to encapsulation iTop's htmlentities
 	 * @param string $sValue
@@ -1436,7 +1437,7 @@ class utils
 	{
 		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
 	}
-	
+
 	/**
 	 * Convert a string containing some (valid) HTML markup to plain text
 	 * @param string $sHtml

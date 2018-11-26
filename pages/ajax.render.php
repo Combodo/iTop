@@ -942,6 +942,11 @@ try
 			break;
 
 		case 'import_dashboard':
+			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'raw_data');
+			if (!utils::IsTransactionValid($sTransactionId, true))
+			{
+				throw new SecurityException('ajax.render.php import_dashboard : invalid transaction_id');
+			}
 			$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
@@ -2297,7 +2302,12 @@ EOF
 			try
 			{
 				$token = utils::ReadParam('token', null);
-				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => "Export not found for token: '$token'"); // Fallback error, just in case
+				$sTokenForDisplay = utils::HtmlEntities($token);
+				$aResult = array( // Fallback error, just in case
+					'code' => 'error',
+					'percentage' => 100,
+					'message' => "Export not found for token: '$sTokenForDisplay'",
+				);
 				$data = '';
 				if ($token === null)
 				{
@@ -2372,11 +2382,11 @@ EOF
 				$oPage->add(json_encode($aResult));
 			} catch (BulkExportException $e)
 			{
-				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => $e->GetLocalizedMessage());
+				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->GetLocalizedMessage()));
 				$oPage->add(json_encode($aResult));
 			} catch (Exception $e)
 			{
-				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => $e->getMessage());
+				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->getMessage()));
 				$oPage->add(json_encode($aResult));
 			}
 			break;

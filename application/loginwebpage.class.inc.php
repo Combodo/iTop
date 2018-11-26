@@ -303,6 +303,9 @@ class LoginWebPage extends NiceWebPage
 		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 		$sToken = utils::ReadParam('token', '', false, 'raw_data');
 
+		$sAuthUserForDisplay = utils::HtmlEntities($sAuthUser);
+		$sTokenForDisplay = utils::HtmlEntities($sToken);
+
 		UserRights::Login($sAuthUser); // Set the user's language
 		$oUser = UserRights::GetUserObject();
 
@@ -311,7 +314,7 @@ class LoginWebPage extends NiceWebPage
 		$this->add("<h1>".Dict::S('UI:ResetPwd-Title')."</h1>\n");
 		if ($oUser == null)
 		{
-			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser)."</p>\n");
+			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUserForDisplay)."</p>\n");
 		}
 		else
 		{
@@ -323,7 +326,8 @@ class LoginWebPage extends NiceWebPage
 			}
 			else
 			{
-				$this->add("<p>".Dict::Format('UI:ResetPwd-Error-EnterPassword', $oUser->GetFriendlyName())."</p>\n");
+				$sUserNameForDisplay = utils::HtmlEntities($oUser->GetFriendlyName());
+				$this->add("<p>".Dict::Format('UI:ResetPwd-Error-EnterPassword', $sUserNameForDisplay)."</p>\n");
 	
 				$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');
 				$this->add_script(
@@ -346,8 +350,8 @@ EOF
 				$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"submit\" onClick=\"return DoCheckPwd();\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></span></td></tr>\n");
 				$this->add("</table>\n");
 				$this->add("<input type=\"hidden\" name=\"loginop\" value=\"do_reset_pwd\" />\n");
-				$this->add("<input type=\"hidden\" name=\"auth_user\" value=\"".htmlentities($sAuthUser, ENT_QUOTES, 'UTF-8')."\" />\n");
-				$this->add("<input type=\"hidden\" name=\"token\" value=\"".htmlentities($sToken, ENT_QUOTES, 'UTF-8')."\" />\n");
+				$this->add("<input type=\"hidden\" name=\"auth_user\" value=\"".$sAuthUserForDisplay."\" />\n");
+				$this->add("<input type=\"hidden\" name=\"token\" value=\"".$sTokenForDisplay."\" />\n");
 				$this->add("</form>\n");
 				$this->add("</div\n");
 			}
