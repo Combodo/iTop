@@ -2245,6 +2245,7 @@ abstract class DBObject implements iDisplay
 
 		try
 		{
+			$this->DoComputeValues();
 			// Stop watches
 			$sState = $this->GetState();
 			if ($sState != '')
@@ -2263,8 +2264,6 @@ abstract class DBObject implements iDisplay
 					}
 				}
 			}
-
-			$this->DoComputeValues();
 			$this->OnUpdate();
 
 			$aChanges = $this->ListChanges();
