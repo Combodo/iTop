@@ -956,6 +956,7 @@ input.dp-applied {
 .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group {
   /* Form group (operators) is displayed only when the criteria is toggled to opened state */
   display: none;
+  max-width: 450px;
   max-height: 520px;
   overflow: auto;
   /* Show only first operator in simple mode */
@@ -1420,7 +1421,7 @@ div#logo {
 div#logo div {
   height: 88px;
   width: 244px;
-  background: url(../images/itop-logo-2.png?v=v2.5.0-beta) left no-repeat;
+  background: url(../images/itop-logo-2.png?v=v2.5.0) left no-repeat;
 }
 #left-pane .ui-layout-north {
   overflow: hidden;
@@ -1512,7 +1513,7 @@ div#logo div {
 }
 #global-search-image {
   vertical-align: middle;
-  background: url(../images/search.png?v=v2.5.0-beta) center center no-repeat;
+  background: url(../images/search.png?v=v2.5.0) center center no-repeat;
   display: inline-block;
   width: 28px;
   height: 30px;
@@ -1541,7 +1542,7 @@ span.ui-icon {
   margin: 0 2px;
 }
 .ui-layout-button-pin-down {
-  background: url(../images/splitter-bkg.png?v=v2.5.0-beta) transparent;
+  background: url(../images/splitter-bkg.png?v=v2.5.0) transparent;
   width: 16px;
   background-position: -144px -144px;
 }
@@ -2041,7 +2042,7 @@ img.prev, img.first, img.next, img.last {
 }
 div.actions_button {
   float: right;
-  background: #ea7d1e url("../images/actions_left.png?v=v2.5.0-beta") no-repeat scroll left top;
+  background: #ea7d1e url("../images/actions_left.png?v=v2.5.0") no-repeat scroll left top;
   padding-left: 5px;
   margin-top: 0;
   margin-right: 10px;
@@ -2049,7 +2050,7 @@ div.actions_button {
   vertical-align: middle;
 }
 div.actions_button a, .actions_button a:hover, .actions_button a:visited {
-  background: #ea7d1e url(../images/actions_bkg.png?v=v2.5.0-beta) no-repeat scroll right top;
+  background: #ea7d1e url(../images/actions_bkg.png?v=v2.5.0) no-repeat scroll right top;
   color: #fff;
   padding-right: 8px;
   cursor: pointer;
@@ -2073,10 +2074,10 @@ select#org_id {
   cursor: not-allowed;
 }
 .dragHover {
-  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.5.0-beta);
+  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.5.0);
 }
 .edit_mode .dashlet {
-  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.5.0-beta);
+  background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=v2.5.0);
   padding: 5px;
   margin: 0;
   position: relative;
@@ -2110,7 +2111,7 @@ table.prop_table {
   top: 0;
   right: 0;
   z-index: 10;
-  background: transparent url(../images/delete.png?v=v2.5.0-beta) no-repeat center;
+  background: transparent url(../images/delete.png?v=v2.5.0) no-repeat center;
 }
 td.prop_value {
   text-align: left;
@@ -2312,17 +2313,17 @@ a.summary, a.summary:hover {
 }
 .message_info {
   border: 1px solid #993;
-  background: url(../images/info-mini.png?v=v2.5.0-beta) 1em 1em no-repeat #ffc;
+  background: url(../images/info-mini.png?v=v2.5.0) 1em 1em no-repeat #ffc;
   padding-left: 3em;
 }
 .message_ok {
   border: 1px solid #393;
-  background: url(../images/ok.png?v=v2.5.0-beta) 1em 1em no-repeat #cfc;
+  background: url(../images/ok.png?v=v2.5.0) 1em 1em no-repeat #cfc;
   padding-left: 3em;
 }
 .message_error {
   border: 1px solid #933;
-  background: url(../images/error.png?v=v2.5.0-beta) 1em 1em no-repeat #fcc;
+  background: url(../images/error.png?v=v2.5.0) 1em 1em no-repeat #fcc;
   padding-left: 3em;
 }
 .fg-menu a img {
@@ -2453,18 +2454,18 @@ div.explain-printable {
 }
 #hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter span {
   padding-left: 20px;
-  background: url(../images/eye-open-555.png?v=v2.5.0-beta) 2px center no-repeat;
+  background: url(../images/eye-open-555.png?v=v2.5.0) 2px center no-repeat;
 }
 #hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter.strikethrough span {
   text-decoration: line-through;
-  background: url(../images/eye-closed-555.png?v=v2.5.0-beta) 2px center no-repeat;
+  background: url(../images/eye-closed-555.png?v=v2.5.0) 2px center no-repeat;
 }
 .printable-version legend {
   padding-left: 26px;
-  background: #1c94c4 url(../images/eye-open-fff.png?v=v2.5.0-beta) 8px center no-repeat;
+  background: #1c94c4 url(../images/eye-open-fff.png?v=v2.5.0) 8px center no-repeat;
 }
 .printable-version .strikethrough legend {
-  background: #1c94c4 url(../images/eye-closed-fff.png?v=v2.5.0-beta) 8px center no-repeat;
+  background: #1c94c4 url(../images/eye-closed-fff.png?v=v2.5.0) 8px center no-repeat;
 }
 .printable-version fieldset.strikethrough span {
   display: none;
@@ -2616,7 +2617,7 @@ span.search-button, span.refresh-button {
 #itop-breadcrumb .breadcrumb-item a::after {
   content: '';
   position: absolute;
-  background-image: url(../images/breadcrumb-separator.png?v=v2.5.0-beta);
+  background-image: url(../images/breadcrumb-separator.png?v=v2.5.0);
   background-repeat: no-repeat;
   width: 8px;
   height: 16px;
