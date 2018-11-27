@@ -1306,7 +1306,18 @@ class AttributeDashboard extends AttributeDefinition
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
 		return null;
-	} 
+	}
+
+	// if this verb returns false, then GetValue must be implemented
+	static public function LoadInObject()
+	{
+		return false;
+	}
+
+	public function GetValue($oHostObject)
+	{
+		return '';
+	}
 }
 
 /**
