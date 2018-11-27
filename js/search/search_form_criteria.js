@@ -760,7 +760,8 @@ $(function()
 			var aValues = [];
 			for(var iValueIdx in aRawValues)
 			{
-				aValues.push(aRawValues[iValueIdx].label);
+				var sEscapedLabel = $('<div />').text(aRawValues[iValueIdx].label).html();
+				aValues.push(sEscapedLabel);
 			}
 
 			return aValues.join(', ');
