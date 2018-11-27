@@ -1077,6 +1077,7 @@ input.dp-applied {
 			.sfc_form_group{
 				/* Form group (operators) is displayed only when the criteria is toggled to opened state */
 				display: none;
+				max-width: 450px;
 				max-height: 520px;
 				overflow: auto;
 
