@@ -111,7 +111,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 			return null;
 		}
 
-		return $aValues[$iIndex]['value'];
+		return addslashes($aValues[$iIndex]['value']);
 	}
 
 	protected static function ContainsToOql($oSearch, $sRef, $aCriteria)
