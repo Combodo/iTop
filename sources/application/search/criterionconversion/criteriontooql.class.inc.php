@@ -110,7 +110,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 			return null;
 		}
 
-		return addslashes($aValues[$iIndex]['value']);
+		return \CMDBSource::Quote($aValues[$iIndex]['value']);
 	}
 
 	protected static function ContainsToOql($oSearch, $sRef, $aCriteria)
