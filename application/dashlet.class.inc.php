@@ -34,6 +34,12 @@ abstract class Dashlet
 	protected $aCSSClasses;
 	protected $sDashletType;
 
+	/**
+	 * Dashlet constructor.
+	 *
+	 * @param \ModelReflection $oModelReflection
+	 * @param string $sId
+	 */
 	public function __construct(ModelReflection $oModelReflection, $sId)
 	{
 		$this->oModelReflection = $oModelReflection;
@@ -45,8 +51,14 @@ abstract class Dashlet
 		$this->sDashletType = get_class($this);
 	}
 
-	// Assuming that a property has the type of its default value, set in the constructor
-	//
+	/**
+	 * Assuming that a property has the type of its default value, set in the constructor
+	 *
+	 * @param string $sProperty
+	 * @param string $sValue
+	 *
+	 * @return mixed
+	 */
 	public function Str2Prop($sProperty, $sValue)
 	{
 		$refValue = $this->aProperties[$sProperty];
@@ -72,6 +84,11 @@ abstract class Dashlet
 		return $ret;
 	}
 
+	/**
+	 * @param mixed $value
+	 *
+	 * @return string
+	 */
 	public function Prop2Str($value)
 	{
 		$sType = gettype($value);
@@ -123,7 +140,12 @@ abstract class Dashlet
 		}
 	}
 
-
+	/**
+	 * @param \DOMElement $oDOMNode
+	 * @param string $sProperty
+	 *
+	 * @return mixed
+	 */
 	protected function PropertyFromDOMNode($oDOMNode, $sProperty)
 	{
 		$res = $this->Str2Prop($sProperty, $oDOMNode->textContent);
@@ -132,8 +154,8 @@ abstract class Dashlet
 
 	/**
 	 * @param \DOMElement $oDOMNode
-	 * @param $sProperty
-	 * @param $value
+	 * @param string $sProperty
+	 * @param mixed $value
 	 */
 	protected function PropertyToDOMNode($oDOMNode, $sProperty, $value)
 	{
@@ -142,6 +164,11 @@ abstract class Dashlet
 		$oDOMNode->appendChild($oTextNode);
 	}
 
+	/**
+	 * @param string $sXml
+	 *
+	 * @throws \DOMException
+	 */
 	public function FromXml($sXml)
 	{
 		$oDomDoc = new DOMDocument('1.0', 'UTF-8');
@@ -156,6 +183,9 @@ abstract class Dashlet
 		$this->FromDOMNode($oDomDoc->firstChild);
 	}
 
+	/**
+	 * @param array $aParams
+	 */
 	public function FromParams($aParams)
 	{
 		foreach ($this->aProperties as $sProperty => $value)
@@ -249,11 +279,17 @@ EOF
 		}
 	}
 
+	/**
+	 * @param string $sId
+	 */
 	public function SetID($sId)
 	{
 		$this->sId = $sId;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetID()
 	{
 		return $this->sId;
@@ -280,13 +316,27 @@ EOF
 		$this->Render($oPage, $bEditMode, $aExtraParams);
 	}
 
-	abstract public function GetPropertiesFields(DesignerForm $oForm);
+	/**
+	 * @param \DesignerForm $oForm
+	 *
+	 * @return mixed
+	 */
+	abstract public function GetPropertiesFields(\DesignerForm $oForm);
 
+	/**
+	 * @param \DOMNode $oContainerNode
+	 */
 	public function ToXml(DOMNode $oContainerNode)
 	{
 
 	}
 
+	/**
+	 * @param array $aValues
+	 * @param array $aUpdatedFields
+	 *
+	 * @return \Dashlet
+	 */
 	public function Update($aValues, $aUpdatedFields)
 	{
 		foreach($aUpdatedFields as $sProp)
@@ -300,17 +350,25 @@ EOF
 		return $this;
 	}
 
-
+	/**
+	 * @return bool
+	 */
 	public function IsRedrawNeeded()
 	{
 		return $this->bRedrawNeeded;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function IsFormRedrawNeeded()
 	{
 		return $this->bFormRedrawNeeded;
 	}
 
+	/**
+	 * @return array
+	 */
 	static public function GetInfo()
 	{
 		return array(
@@ -320,6 +378,11 @@ EOF
 		);
 	}
 
+	/**
+	 * @param array $aInfo
+	 *
+	 * @return \DesignerForm
+	 */
 	public function GetForm($aInfo = array())
 	{
 		$oForm = new DesignerForm();
@@ -342,22 +405,36 @@ EOF
 		return $oForm;
 	}
 
+	/**
+	 * @return bool
+	 */
 	static public function IsVisible()
 	{
 		return true;
 	}
 
+	/**
+	 * @return bool
+	 */
 	static public function CanCreateFromOQL()
 	{
 		return false;
 	}
 
+	/**
+	 * @param \DesignerForm $oForm
+	 * @param string|null $sOQL
+	 */
 	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL = null)
 	{
 		// Default: do nothing since it's not supported
 	}
 
-
+	/**
+	 * @param string $sOql
+	 *
+	 * @return array
+	 */
 	protected function GetGroupByOptions($sOql)
 	{
 		$aGroupBy = array();
@@ -446,6 +523,9 @@ class DashletUnknown extends Dashlet
 
 	protected $sOriginalDashletXML;
 
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
@@ -453,6 +533,9 @@ class DashletUnknown extends Dashlet
 		$this->aCSSClasses[] = 'dashlet-unknown';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function FromDOMNode($oDOMNode)
 	{
 		// Parent won't do anything as there is no property declared
@@ -483,8 +566,9 @@ class DashletUnknown extends Dashlet
 	}
 
 	/**
-	 * @param $oDOMNode
+	 * @inheritdoc
 	 *
+	 * @throws \Exception
 	 * @throws \DOMFormatException
 	 */
 	public function ToDOMNode($oDOMNode)
@@ -504,7 +588,12 @@ class DashletUnknown extends Dashlet
 		}
 	}
 
-    public function FromParams($aParams)
+	/**
+	 * @inheritdoc
+	 *
+	 * @throws \DOMException
+	 */
+	public function FromParams($aParams)
     {
         // For unknown dashlet, parameters are not parsed but passed as a raw xml
         if(array_key_exists('xml', $aParams))
@@ -517,9 +606,7 @@ class DashletUnknown extends Dashlet
     }
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
-	 * @param array $aExtraParams
+	 * @inheritdoc
 	 *
 	 * @throws \Exception
 	 */
@@ -539,9 +626,7 @@ class DashletUnknown extends Dashlet
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
-	 * @param array $aExtraParams
+	 * @inheritdoc
 	 *
 	 * @throws \Exception
 	 */
@@ -560,6 +645,9 @@ class DashletUnknown extends Dashlet
 		$oPage->add('</div>');
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function GetForm($aInfo = array())
 	{
 		if (isset($aInfo['configuration']) && empty($this->sOriginalDashletXML))
@@ -569,12 +657,18 @@ class DashletUnknown extends Dashlet
 		return parent::GetForm($aInfo);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
 		$oField = new DesignerLongTextField('xml', Dict::S('UI:DashletUnknown:Prop-XMLConfiguration'), $this->sOriginalDashletXML);
 		$oForm->AddField($oField);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	protected function PropertyFromDOMNode($oDOMNode, $sProperty)
 	{
 		$bHasSubProperties = false;
@@ -599,6 +693,9 @@ class DashletUnknown extends Dashlet
 		}
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	protected function PropertyToDOMNode($oDOMNode, $sProperty, $value)
 	{
 		// Save subnodes
@@ -615,13 +712,21 @@ class DashletUnknown extends Dashlet
 		}
 	}
 
-    public function Update($aValues, $aUpdatedFields)
+	/**
+	 * @inheritdoc
+	 *
+	 * @throws \DOMException
+	 */
+	public function Update($aValues, $aUpdatedFields)
     {
         $this->FromParams($aValues);
         // OnUpdate() already done in FromParams()
         return $this;
     }
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		return array(
@@ -634,6 +739,9 @@ class DashletUnknown extends Dashlet
 
 class DashletProxy extends DashletUnknown
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
@@ -647,6 +755,9 @@ class DashletProxy extends DashletUnknown
 		$this->aCSSClasses[] = 'dashlet-proxy';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		// This should never be called.
@@ -655,6 +766,11 @@ class DashletProxy extends DashletUnknown
 		$oPage->add('</div>');
 	}
 
+	/**
+	 * @inheritdoc
+	 *
+	 * @throws \Exception
+	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$aInfos = static::GetInfo();
@@ -670,6 +786,9 @@ class DashletProxy extends DashletUnknown
 		$oPage->add('</div>');
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		return array(
@@ -682,25 +801,32 @@ class DashletProxy extends DashletUnknown
 
 class DashletEmptyCell extends Dashlet
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
-	 * @param array $aExtraParams
+	 * @inheritdoc
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$oPage->add('&nbsp;');
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		return array(
@@ -710,6 +836,9 @@ class DashletEmptyCell extends Dashlet
 		);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function IsVisible()
 	{
 		return false;
@@ -718,6 +847,9 @@ class DashletEmptyCell extends Dashlet
 
 class DashletPlainText extends Dashlet
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
@@ -725,9 +857,7 @@ class DashletPlainText extends Dashlet
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
-	 * @param array $aExtraParams
+	 * @inheritdoc
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
@@ -738,6 +868,9 @@ class DashletPlainText extends Dashlet
 		$oPage->add('<div id="'.$sId.'" class="dashlet-content">'.$sText.'</div>');
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
 		$oField = new DesignerLongTextField('text', Dict::S('UI:DashletPlainText:Prop-Text'), $this->aProperties['text']);
@@ -745,6 +878,9 @@ class DashletPlainText extends Dashlet
 		$oForm->AddField($oField);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		return array(
@@ -757,6 +893,9 @@ class DashletPlainText extends Dashlet
 
 class DashletObjectList extends Dashlet
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
@@ -765,6 +904,13 @@ class DashletObjectList extends Dashlet
 		$this->aProperties['menu'] = false;
 	}
 
+	/**
+	 * @inheritdoc
+	 *
+	 * @throws \OQLException
+	 * @throws \CoreException
+	 * @throws \ArchivedObjectException
+	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
@@ -801,6 +947,9 @@ class DashletObjectList extends Dashlet
 		$oPage->add('</div>');
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
@@ -825,6 +974,9 @@ class DashletObjectList extends Dashlet
 		$oPage->add('</div>');
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
 		$oField = new DesignerTextField('title', Dict::S('UI:DashletObjectList:Prop-Title'), $this->aProperties['title']);
@@ -838,6 +990,9 @@ class DashletObjectList extends Dashlet
 		$oForm->AddField($oField);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		return array(
@@ -847,11 +1002,17 @@ class DashletObjectList extends Dashlet
 		);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function CanCreateFromOQL()
 	{
 		return true;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL = null)
 	{
 		$oField = new DesignerTextField('title', Dict::S('UI:DashletObjectList:Prop-Title'), '');
@@ -895,6 +1056,8 @@ abstract class DashletGroupBy extends Dashlet
 
 	/**
 	 * Compute Grouping
+	 *
+	 * @inheritdoc
 	 */
 	public function OnUpdate()
 	{
@@ -1016,13 +1179,10 @@ abstract class DashletGroupBy extends Dashlet
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
-	 * @param array $aExtraParams
+	 * @inheritdoc
 	 *
-	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-	 * @throws \OQLException
+	 * @throws \ArchivedObjectException
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
@@ -1116,6 +1276,9 @@ abstract class DashletGroupBy extends Dashlet
 		}
 	}
 
+	/**
+	 * @return array
+	 */
 	protected function MakeSimulatedData()
 	{
 		$sQuery = $this->aProperties['query'];
@@ -1188,6 +1351,9 @@ abstract class DashletGroupBy extends Dashlet
 		return $aDisplayValues;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$oPage->add('<div class="dashlet-content">');
@@ -1196,8 +1362,7 @@ abstract class DashletGroupBy extends Dashlet
 	}
 
 	/**
-	 * @param DesignerForm $oForm
-	 * @throws DictExceptionMissingString
+	 * @inheritdoc
 	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
@@ -1297,7 +1462,6 @@ abstract class DashletGroupBy extends Dashlet
 
 	/**
 	 * @return array
-	 * @throws DictExceptionMissingString
 	 */
 	protected function GetOrderBy()
 	{
@@ -1311,8 +1475,9 @@ abstract class DashletGroupBy extends Dashlet
 	}
 
 	/**
+	 * @param array $aFunctionAttributes
+	 *
 	 * @return array
-	 * @throws DictExceptionMissingString
 	 */
 	protected function GetAllowedFunctions($aFunctionAttributes)
 	{
@@ -1330,6 +1495,8 @@ abstract class DashletGroupBy extends Dashlet
 	}
 
 	/**
+	 * @param string $sOql
+	 *
 	 * @return array
 	 */
 	protected function GetNumericAttributes($sOql)
@@ -1366,6 +1533,9 @@ abstract class DashletGroupBy extends Dashlet
 		return $aFunctionAttributes;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function Update($aValues, $aUpdatedFields)
 	{
 		if (in_array('query', $aUpdatedFields))
@@ -1427,6 +1597,9 @@ abstract class DashletGroupBy extends Dashlet
 		return $oDashlet;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		// Note: no need to translate, should never be visible to the end-user!
@@ -1437,11 +1610,17 @@ abstract class DashletGroupBy extends Dashlet
 		);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function CanCreateFromOQL()
 	{
 		return true;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function GetPropertiesFieldsFromOQL(DesignerForm $oForm, $sOQL = null)
 	{
 		$oField = new DesignerTextField('title', Dict::S('UI:DashletGroupBy:Prop-Title'), '');
@@ -1474,12 +1653,18 @@ abstract class DashletGroupBy extends Dashlet
 
 class DashletGroupByPie extends DashletGroupBy
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['style'] = 'pie';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		return array(
@@ -1489,6 +1674,9 @@ class DashletGroupByPie extends DashletGroupBy
 		);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
@@ -1537,12 +1725,18 @@ EOF
 
 class DashletGroupByBars extends DashletGroupBy
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['style'] = 'bars';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		return array(
@@ -1552,6 +1746,9 @@ class DashletGroupByBars extends DashletGroupBy
 		);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
@@ -1625,12 +1822,18 @@ EOF
 
 class DashletGroupByTable extends DashletGroupBy
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['style'] = 'table';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		return array(
@@ -1640,6 +1843,9 @@ class DashletGroupByTable extends DashletGroupBy
 		);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 
@@ -1682,6 +1888,9 @@ class DashletGroupByTable extends DashletGroupBy
 
 class DashletHeaderStatic extends Dashlet
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
@@ -1690,6 +1899,9 @@ class DashletHeaderStatic extends Dashlet
 		$this->aProperties['icon'] = $oIconSelect->GetDefaultValue('Contact');
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
@@ -1708,6 +1920,9 @@ class DashletHeaderStatic extends Dashlet
 		$oPage->add('</div>');
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
 		$oField = new DesignerTextField('title', Dict::S('UI:DashletHeaderStatic:Prop-Title'), $this->aProperties['title']);
@@ -1717,6 +1932,9 @@ class DashletHeaderStatic extends Dashlet
 		$oForm->AddField($oField);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	protected function PropertyFromDOMNode($oDOMNode, $sProperty)
 	{
 		if ($sProperty == 'icon')
@@ -1730,6 +1948,9 @@ class DashletHeaderStatic extends Dashlet
 		}
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	protected function PropertyToDOMNode($oDOMNode, $sProperty, $value)
 	{
 		if ($sProperty == 'icon')
@@ -1743,6 +1964,9 @@ class DashletHeaderStatic extends Dashlet
 		}
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		return array(
@@ -1756,6 +1980,9 @@ class DashletHeaderStatic extends Dashlet
 
 class DashletHeaderDynamic extends Dashlet
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
@@ -1768,6 +1995,9 @@ class DashletHeaderDynamic extends Dashlet
 		$this->aProperties['values'] = array('active', 'inactive');
 	}
 
+	/**
+	 * @return array
+	 */
 	protected function GetValues()
 	{
 		$sQuery = $this->aProperties['query'];
@@ -1796,6 +2026,12 @@ class DashletHeaderDynamic extends Dashlet
 		return $aValues;
 	}
 
+	/**
+	 * @inheritdoc
+	 *
+	 * @throws \CoreException
+	 * @throws \ArchivedObjectException
+	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
@@ -1857,6 +2093,9 @@ class DashletHeaderDynamic extends Dashlet
 		$oPage->add('</div>');
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sTitle = $this->aProperties['title'];
@@ -1913,6 +2152,9 @@ class DashletHeaderDynamic extends Dashlet
 		$oPage->add('</div>');
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
 		$oField = new DesignerTextField('title', Dict::S('UI:DashletHeaderDynamic:Prop-Title'), $this->aProperties['title']);
@@ -1959,6 +2201,9 @@ class DashletHeaderDynamic extends Dashlet
 		$oForm->AddField($oField);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function Update($aValues, $aUpdatedFields)
 	{
 		if (in_array('query', $aUpdatedFields))
@@ -1994,6 +2239,9 @@ class DashletHeaderDynamic extends Dashlet
 		return parent::Update($aValues, $aUpdatedFields);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	protected function PropertyFromDOMNode($oDOMNode, $sProperty)
 	{
 		if ($sProperty == 'icon')
@@ -2007,6 +2255,9 @@ class DashletHeaderDynamic extends Dashlet
 		}
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	protected function PropertyToDOMNode($oDOMNode, $sProperty, $value)
 	{
 		if ($sProperty == 'icon')
@@ -2020,6 +2271,9 @@ class DashletHeaderDynamic extends Dashlet
 		}
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		return array(
@@ -2033,6 +2287,9 @@ class DashletHeaderDynamic extends Dashlet
 
 class DashletBadge extends Dashlet
 {
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($oModelReflection, $sId)
 	{
 		parent::__construct($oModelReflection, $sId);
@@ -2041,6 +2298,11 @@ class DashletBadge extends Dashlet
 		$this->aCSSClasses[] = 'dashlet-badge';
 	}
 
+	/**
+	 * @inheritdoc
+	 *
+	 * @throws \Exception
+	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sClass = $this->aProperties['class'];
@@ -2056,6 +2318,9 @@ class DashletBadge extends Dashlet
 		$oPage->add('</div>');
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sClass = $this->aProperties['class'];
@@ -2081,6 +2346,11 @@ class DashletBadge extends Dashlet
 
 	static protected $aClassList = null;
 
+	/**
+	 * @inheritdoc
+	 *
+	 * @throws \Exception
+	 */
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
 		if (is_null(self::$aClassList))
@@ -2114,6 +2384,9 @@ class DashletBadge extends Dashlet
 		$oForm->AddField($oField);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	static public function GetInfo()
 	{
 		return array(
