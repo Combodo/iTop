@@ -300,15 +300,15 @@ abstract class User extends cmdbAbstractObject
 
 		if (!UserRights::IsAdministrator())
 		{
-			if ((empty($this->GetOriginal('contactid')) && !($this->IsNew())) || empty($this->Get('contactid')))
+			$oUser = UserRights::GetUserObject();
+			$oAddon = UserRights::GetModuleInstance();
+			if (!is_null($oUser) && method_exists($oAddon, 'GetUserOrgs'))
 			{
-				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
-			}
-			else
-			{
-				$oUser = UserRights::GetUserObject();
-				$oAddon = UserRights::GetModuleInstance();
-				if (!is_null($oUser) && method_exists($oAddon, 'GetUserOrgs'))
+				if ((empty($this->GetOriginal('contactid')) && !($this->IsNew())) || empty($this->Get('contactid')))
+				{
+					$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
+				}
+				else
 				{
 					$aOrgs = $oAddon->GetUserOrgs($oUser, '');
 					if (count($aOrgs) > 0)
