@@ -436,8 +436,10 @@ class CoreServices implements iRestServiceProvider
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
 			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
+			$limit = (int) RestUtils::GetOptionalParam($aParams, 'limit', 0);
+			$page = (int) RestUtils::GetOptionalParam($aParams, 'page', 0);
 
-			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
+			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key, $limit, $this->getOffsetFromLimitAndPage($limit, $page));
 			$sTargetClass = $oObjectSet->GetFilter()->GetClass();
 	
 			if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ) != UR_ALLOWED_YES)
@@ -774,4 +776,16 @@ class CoreServices implements iRestServiceProvider
 			$oResult->message = $sRes;
 		}
 	}
+
+    /**
+     * Returns the Offset for a given page number
+     *
+     * @param int $limit
+     * @param int $page
+     * @return int
+     */
+	private function getOffsetFromLimitAndPage($limit, $page)
+    {
+        return $limit * max(0, $page - 1);
+    }
 }
