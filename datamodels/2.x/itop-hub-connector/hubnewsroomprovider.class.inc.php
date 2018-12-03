@@ -50,7 +50,7 @@ class HubNewsroomProvider extends NewsroomProviderBase
 	
 	public function GetViewAllURL()
 	{
-		return $this->MakeURL('route_view_all_messages');
+		return $sBaseUrl = $this->oConfig->GetModuleSetting('itop-hub-connector', 'url').MetaModel::GetModuleSetting('itop-hub-connector', 'route_view_all_messages');
 	}
 	/**
 	 * {@inheritDoc}
