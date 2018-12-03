@@ -932,11 +932,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:NotificationsMenu:Title' => '<span class="hilite">Uyarıların</span> yapılandırılması',
 	'UI:NotificationsMenu:Help' => 'Yardım',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop uyarı mekanizması ihtiyaca göre uyarlanabilir. Uyarılar iki tip nesne üzerine kurulmuştur: <i>tetikleme (triggers) ve işlemler (actions)</i>.</p>
-<p><i><b>Triggers</b></i> uyarının ne zaman yapılacağını belirler. 3 tip tetikleme vardır ve nesnenin 3 durumuna ilişkilendirilmiştir:
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
-	<li>the "OnCreate" tetikleme nesne yaratıldığı zaman çalışır</li>
-	<li>the "OnStateEnter" tetikleme nesne belli bir duruma girişinde  çalışır</li>
-	<li>the "OnStateLeave" tetikleme nesne belli bir durumdan çıkışında  çalışır</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
@@ -945,7 +945,7 @@ E-posta için şablon tanımlanabilmektedir. Şablona parametreler girilebilmekt
 </p>
 <p>Özel sayfa: <a href="../setup/email.test.php" target="_blank">email.test.php</a> PHP e-posta konfigürnunu test ediniz.</p>
 <p>İşlemin gerçekleşmesi için bir tetikleme ile ilişkilendirilmesi gerekir.
-Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçekleştirilir.</p>',
+Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçekleştirilir.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Tetikleyiciler',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Kullanılabilir tetikleyiciler',
 	'UI:NotificationsMenu:OnCreate' => 'Nesne yaratıldığında',

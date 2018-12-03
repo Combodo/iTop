@@ -931,13 +931,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:NotificationsMenu:Title' => 'Configuración de las <span class="hilite">Notificaciones</span>',
 	'UI:NotificationsMenu:Help' => 'Ayuda',
 	'UI:NotificationsMenu:HelpContent' => '<p>En iTop las notificaciones son completamente personalizables. Están basadas en dos conjuntos de objetos: <i>Disparadores y Acciones</i>.</p>
-<p>Los <i><b>disparadores</b></i> definen cuando una notificación debe ser ejecutada.  Existen 3 tipos de disparadores para cubrir las 3 diferentes fases del ciclo de vida de un objeto:
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
-	<li>Los disparadores "OnCreate" son ejecutados cuando un objeto de la clase especificada es creado</li>
-	<li>Los disparadores "OnStateEnter" son ejecutados antes de que un determinado objeto entre un estado especificado (viniendo de otro estado)</li>
-	<li>Los disparadores "OnStateLeave" son ejecutados cuando un objeto de clase determinada deja un estado especificado</li>
-	<li>Los disparadores "On threshold" son ejecutados cuando un umbral para TDA o TDS es alcanzado</li>
-	<li>Los disparadores "On portal update" son ejecutados cuando un ticket es actualizado desde el portal</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
@@ -946,7 +944,7 @@ Tales acciones tambien definen la plantilla a ser usada para enviar el correo as
 </p>
 <p>Una página especial: <a href="../setup/email.test.php" target="_blank">email.test.php</a> está disponible para probar y diagnosticar su configuración de correo de PHP.</p>
 <p>Para ser ejecutadas, las acciones deben estar asociadas con los disparadores.
-Cuando se asocien con un disparador, cada acción recibe un número de "orden", esto especifica en que orden se ejecutaran las acciones.</p>',
+Cuando se asocien con un disparador, cada acción recibe un número de "orden", esto especifica en que orden se ejecutaran las acciones.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Disparadores',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Disparadores disponibles',
 	'UI:NotificationsMenu:OnCreate' => 'Cuando un objeto es creado',

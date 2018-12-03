@@ -910,11 +910,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:NotificationsMenu:Title' => 'Конфигурация <span class="hilite">Уведомлений</span>',
 	'UI:NotificationsMenu:Help' => 'Помощь',
 	'UI:NotificationsMenu:HelpContent' => '<p>В iTop уведомления полностью настраиваемые. Они основаны на двух наборах объектов: <i>триггеры</i> и <i>действия</i>.</p>
-<p><i><b>Триггеры</b></i> оперделяют когда уведомление будет выполнено. Есть 3 типа триггеров обробатывающих 3 разных фазы жизненного цикла объекта:
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
-	<li>"OnCreate" триггеры сработают когда объект заданного класса будет создан</li>
-	<li>"OnStateEnter" триггеры сработают перед тем как объект заданного класса войдёт в заданное состояние (выйдет из другого состояния)</li>
-	<li>"OnStateLeave" триггеры сработают когда объекты заданного класса выйдут из заданного состояния</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
@@ -923,7 +923,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 </p>
 <p>Специальная страница: <a href="../setup/email.test.php" target="_blank">email.test.php</a> доступна для тестирования и устранения неполадок в настройках почты.</p>
 <p>Чтобы быть выполненными, действия необходимо ассоциировать с триггерами.
-При ассоциации с триггером, каждое действие получает "порядковый" номер, который определяет порядок выполнения действий.</p>',
+При ассоциации с триггером, каждое действие получает "порядковый" номер, который определяет порядок выполнения действий.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Триггеры',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Доступные триггеры',
 	'UI:NotificationsMenu:OnCreate' => 'При создании объекта',

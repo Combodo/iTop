@@ -920,13 +920,11 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:NotificationsMenu:Title' => 'Konfiguration af <span class="hilite">Notifikationer</span>~~',
 	'UI:NotificationsMenu:Help' => 'Hjælp',
 	'UI:NotificationsMenu:HelpContent' => '<p>I iTop er notifikationer fuldt modificerbare. De er baseret på to sæt af objekter: <i>triggers og handlinger</i>.</p>
-<p><i><b>Triggers</b></i> definerer hvornår en notifikation skal udføres. Der er 5 typer af triggers til at dække 3 forskellige faser for et objekts livscyclus:
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
-	<li>the "Ved objekts oprettelse" triggers udføres når et objekt af den specificerede klasse oprettes</li>
-	<li>the "Ved indtræden i en tilstand" triggers udløses før et objekt af den givne klasse indtræder i en specifik tilstand (kommende fra en anden tilstand)</li>
-	<li>the "Ved forladelse af en tilstand" triggers udløses når et objekt af den givne klasse forlader en specifik tilstand</li>
-	<li>the "Ved grænseværdi" triggers udløses når en grænseværdi for TTR eller TTO er nået</li>
-	<li>the "Ved portal opdatering" triggers udløses når en ticket opdateres fra portalen</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
@@ -935,7 +933,7 @@ Sådanne handlinger definerer den skabelon som bruges til afsendelse af email s�
 </p>
 <p>En speciel side: <a href="../setup/email.test.php" target="_blank">email.test.php</a> er til rådighed for test og problemløsning af PHP mail konfigurationen.</p>
 <p>For udførelse, handlinger skal være knyttet til triggers.
-Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge" nummer, der specificerer i hvilken rækkefølge handlingerne udføres.</p>',
+Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge" nummer, der specificerer i hvilken rækkefølge handlingerne udføres.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Triggers',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Tilgængelige triggers',
 	'UI:NotificationsMenu:OnCreate' => 'Når et objekt oprettes',

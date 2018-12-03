@@ -932,11 +932,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:NotificationsMenu:Title' => '配置 <span class="hilite">通知</span>',
 	'UI:NotificationsMenu:Help' => '帮助',
 	'UI:NotificationsMenu:HelpContent' => '<p>在 iTop 中, 通知可以被完全客户化定制. 它们是基于两个对象集: <i>触发器和动作</i>.</p>
-<p><i><b>触发器</b></i> 定义了什么时候一个通知将被执行. 有3种触发器, 覆盖了一个对象生命周期的3个阶段:
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
-	<li>"OnCreate" 触发器, 当某个特定类的对象创建时将触发</li>
-	<li>"OnStateEnter" 触发器, 在某个给定类的对象进入某个特定状态前将触发(从另外一个状态而来)</li>
-	<li>"OnStateLeave" 触发器, 在某个给定类的对象离开某个特定状态时将触发</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
@@ -945,7 +945,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 </p>
 <p>一个专门页面: <a href="../setup/email.test.php" target="_blank">email.test.php</a> 可用于测试和调试您的 PHP mail 配置.</p>
 <p>若要执行, 动作必须和触发器相关联.
-当与一个触发器关联时, 每个动作都被赋予一个顺序号, 规定了按什么样的顺序执行这些动作.</p>',
+当与一个触发器关联时, 每个动作都被赋予一个顺序号, 规定了按什么样的顺序执行这些动作.</p>~~',
 	'UI:NotificationsMenu:Triggers' => '触发器',
 	'UI:NotificationsMenu:AvailableTriggers' => '可用的触发器',
 	'UI:NotificationsMenu:OnCreate' => '当一个对象被创建',
