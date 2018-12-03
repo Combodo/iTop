@@ -4,6 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
+ * @author jbostoen (2018)
  *
  * This file is part of iTop.
  *
@@ -33,6 +34,6 @@
 // Class: UserExternal
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:UserExternal' => 'External user~~',
-	'Class:UserExternal+' => 'User authentified outside of iTop~~',
+	'Class:UserExternal' => 'Externe gebruiker',
+	'Class:UserExternal+' => 'Gebruiker aangemeld buiten iTop om',
 ));

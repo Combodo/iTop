@@ -182,7 +182,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Attribute:child_incidents_list+' => 'Alle sub incidenten gerelateerd aan dit incident',
 	'Class:Incident/Attribute:public_log' => 'Publieke log',
 	'Class:Incident/Attribute:public_log+' => '',
-	'Class:Incident/Attribute:user_satisfaction' => 'Klant tevredenheid',
+	'Class:Incident/Attribute:user_satisfaction' => 'Klanttevredenheid',
 	'Class:Incident/Attribute:user_satisfaction+' => '',
 	'Class:Incident/Attribute:user_satisfaction/Value:1' => 'Erg tevreden',
 	'Class:Incident/Attribute:user_satisfaction/Value:1+' => 'Erg tevreden',

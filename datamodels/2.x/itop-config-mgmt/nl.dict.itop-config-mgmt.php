@@ -17,6 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author	LinProfs <info@linprofs.com>
+ * @author jbostoen (2018)
  * 
  * Linux & Open Source Professionals
  * http://www.linprofs.com
@@ -37,7 +38,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	// Legacy entries
 	'Relation:depends on/Description' => 'Elementen waarvan dit element afhankelijk van is',
 	'Relation:depends on/DownStream' => 'Is afhankelijk van...',
-	'Relation:depends on/UpStream' => 'Impacts...',
+	'Relation:depends on/UpStream' => 'Impact op...',
 ));
 
 

@@ -4,6 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
+ * @author jbostoen (2018)	
  *
  * This file is part of iTop.
  *
@@ -33,8 +34,8 @@
 // Class: UserLocal
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:UserLocal' => 'iTop user~~',
-	'Class:UserLocal+' => 'User authentified by iTop~~',
-	'Class:UserLocal/Attribute:password' => 'Password~~',
-	'Class:UserLocal/Attribute:password+' => 'user authentication string~~',
+	'Class:UserLocal' => 'iTop-gebruiker',
+	'Class:UserLocal+' => 'Gebruiker geauthenticeerd door iTop',
+	'Class:UserLocal/Attribute:password' => 'Wachtwoord',
+	'Class:UserLDAP/Attribute:password+' => 'String voor authenticatie',
 ));
