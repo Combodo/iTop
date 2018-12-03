@@ -1071,6 +1071,7 @@ EOF
 		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
 		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+		$aErrors = array();
 		if ( empty($sClass) ) // TO DO: check that the class name is valid !
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
@@ -1091,7 +1092,7 @@ EOF
 					$oObj->Set($sStateAttCode, $sTargetState);
 				}
 			}
-			$oObj->UpdateObjectFromPostedForm();
+			$aErrors = $oObj->UpdateObjectFromPostedForm();
 		}
 		if (isset($oObj) && is_object($oObj))
 		{
@@ -1100,6 +1101,11 @@ EOF
 
 			try
 			{
+				if (!empty($aErrors))
+				{
+					throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
+				}
+
 				$oObj->DBInsertNoReload();// No need to reload
 
 				utils::RemoveTransaction($sTransactionId);
