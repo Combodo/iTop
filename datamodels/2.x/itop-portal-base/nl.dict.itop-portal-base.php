@@ -18,6 +18,7 @@
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license	 http://opensource.org/licenses/AGPL-3.0
+ * @author jbostoen (2018)
  */
 // Portal
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -26,22 +27,22 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Page:Home' => 'Welkom',
 	'Page:GoPortalHome' => 'Startpagina',
 	'Page:GoPreviousPage' => 'Vorige pagina',
-    'Page:ReloadPage' => 'Reload page~~',
+    'Page:ReloadPage' => 'Pagina herladen',
 	'Portal:Button:Submit' => 'Verstuur',
-    'Portal:Button:Apply' => 'Update~~',
+    'Portal:Button:Apply' => 'Update',
 	'Portal:Button:Cancel' => 'Afbreken',
 	'Portal:Button:Close' => 'Sluiten',
 	'Portal:Button:Add' => 'Toevoegen',
 	'Portal:Button:Remove' => 'Verwijderen',
 	'Portal:Button:Delete' => 'Verwijderen',
-	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode~~',
-	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode~~',
-    'Error:HTTP:401' => 'Authentication~~',
+	'Portal:EnvironmentBanner:Title' => 'Je werkt momenteel in de <strong>%1$s</strong>-omgeving',
+	'Portal:EnvironmentBanner:GoToProduction' => 'Keer terug naar de productie-omgeving',
+    'Error:HTTP:401' => 'Authenticatie vereist',
     'Error:HTTP:404' => 'Pagina kan niet worden gevonden',
 	'Error:HTTP:500' => 'Oeps! Er is een fout opgetreden',
 	'Error:HTTP:GetHelp' => 'Neem contact op met de beheerder als dit probleem zich blijft voordoen',
 	'Error:XHR:Fail' => 'De data kan niet worden geladen, neem contact op met de beheerder',
-    'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.~~',
+    'Portal:ErrorUserLoggedOut' => 'Je bent afgemeld en moet opnieuw aanmelden om verder te kunnen werken.',
     'Portal:Datatables:Language:Processing' => 'Even geduld...',
 	'Portal:Datatables:Language:Search' => 'Filter :',
 	'Portal:Datatables:Language:LengthMenu' => 'Toon _MENU_ items per pagina',
@@ -59,9 +60,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:Datatables:Language:Sort:Descending' => 'inschakelen voor een aflopende sortering',
 	'Portal:Autocomplete:NoResult' => 'Geen data',
 	'Portal:Attachments:DropZone:Message' => 'Plaats jouw bestanden om ze bij te voegen',
-	'Portal:File:None' => 'No file~~',
-	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>~~',
-	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>~~',
+	'Portal:File:None' => 'Geen bestand',
+	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
+	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'nl', //work with moment.js locales
 ));
 
@@ -81,7 +82,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 // AggregatePageBrick
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard~~',
+	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard',
 ));
 
 // BrowseBrick brick
@@ -89,7 +90,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Browse:Name' => 'Bladeren',
 	'Brick:Portal:Browse:Mode:List' => 'Lijst',
 	'Brick:Portal:Browse:Mode:Tree' => 'Boomstructuur',
-    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
+    'Brick:Portal:Browse:Mode:Mosaic' => 'Mozaïek',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Drilldown',
 	'Brick:Portal:Browse:Action:View' => 'Details',
 	'Brick:Portal:Browse:Action:Edit' => 'Wijzigen',
@@ -104,18 +105,18 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Manage:Name' => 'Beheer items',
 	'Brick:Portal:Manage:Table:NoData' => 'Geen gegevens',
-    'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
-    'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
-	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
-	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
-	'Brick:Portal:Manage:Others' => 'Others~~',
-	'Brick:Portal:Manage:All' => 'All~~',
-	'Brick:Portal:Manage:Group' => 'Group~~',
-	'Brick:Portal:Manage:fct:count' => 'Total~~',
-	'Brick:Portal:Manage:fct:sum' => 'Sum~~',
-	'Brick:Portal:Manage:fct:avg' => 'Average~~',
-	'Brick:Portal:Manage:fct:min' => 'Min~~',
-	'Brick:Portal:Manage:fct:max' => 'Max~~',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Acties',
+    'Brick:Portal:Manage:DisplayMode:list' => 'Lijst',
+	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Taartgrafiek',
+	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Staafgrafiek',
+	'Brick:Portal:Manage:Others' => 'Andere',
+	'Brick:Portal:Manage:All' => 'Alles',
+	'Brick:Portal:Manage:Group' => 'Groep',
+	'Brick:Portal:Manage:fct:count' => 'Totaal',
+	'Brick:Portal:Manage:fct:sum' => 'Som',
+	'Brick:Portal:Manage:fct:avg' => 'Gemiddelde',
+	'Brick:Portal:Manage:fct:min' => 'Min',
+	'Brick:Portal:Manage:fct:max' => 'Max',
 ));
 
 // ObjectBrick brick
@@ -133,12 +134,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // CreateBrick brick
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Create:Name' => 'Snel aanmaken',
-    'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
+    'Brick:Portal:Create:ChooseType' => 'Geef een type op.',
 ));
 
 // Filter brick
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
     'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
-    'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
+    'Brick:Portal:Filter:SearchInput:Placeholder' => 'bv. wifi-verbinding',
+    'Brick:Portal:Filter:SearchInput:Submit' => 'Zoek',
 ));

@@ -32,7 +32,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'bkp-mysqldump-ok' => 'mysqldump is present: %1$s',
 	'bkp-mysqldump-notfound' => 'mysqldump could not be found: %1$s - Please make sure it is installed and in the path, or edit the configuration file to tune mysql_bindir.',
 	'bkp-mysqldump-issue' => 'mysqldump could not be executed (retcode=%1$d): Please make sure it is installed and in the path, or edit the configuration file to tune mysql_bindir',
-	'bkp-missing-dir' => 'The target directory %1$s count not be found',
+	'bkp-missing-dir' => 'The target directory %1$s could not be found',
 	'bkp-free-disk-space' => '<b>%1$s free</b> in %2$s',
 	'bkp-dir-not-writeable' => '%1$s is not writeable',
 	'bkp-wrong-format-spec' => 'The current specification to format the file names is wrong (%1$s). A default specification will apply: %2$s',

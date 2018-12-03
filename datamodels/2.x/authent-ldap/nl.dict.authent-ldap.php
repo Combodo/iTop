@@ -4,6 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
+ * @author jbostoen (2018)
  *
  * This file is part of iTop.
  *
@@ -33,8 +34,8 @@
 // Class: UserLDAP
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:UserLDAP' => 'LDAP user~~',
-	'Class:UserLDAP+' => 'User authentified by LDAP~~',
-	'Class:UserLDAP/Attribute:password' => 'Password~~',
-	'Class:UserLDAP/Attribute:password+' => 'user authentication string~~',
+	'Class:UserLDAP' => 'LDAP-gebruiker',
+	'Class:UserLDAP+' => 'Gebruiker geauthenticeerd door LDAP',
+	'Class:UserLDAP/Attribute:password' => 'Wachtwoord',
+	'Class:UserLDAP/Attribute:password+' => 'String voor authenticatie',
 ));
