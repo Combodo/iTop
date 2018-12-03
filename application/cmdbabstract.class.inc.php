@@ -3370,7 +3370,7 @@ EOF
 					$oSet = $this->Get($sAttCode);
 					if (is_null($oSet))
 					{
-						$oSet = new ormSet(get_class($this), $sAttCode);
+						$oSet = new ormSet(get_class($this), $sAttCode, $oAttDef->GetMaxItems());
 					}
 					$oSet->ApplyDelta($value);
 					$this->Set($sAttCode, $oSet);
@@ -3427,7 +3427,14 @@ EOF
 		{
 			$aFinalValues[$sAttCode] = $aValues[$sAttCode];
 		}
-		$this->UpdateObjectFromArray($aFinalValues);
+		try
+		{
+			$this->UpdateObjectFromArray($aFinalValues);
+		}
+		catch (CoreException $e)
+		{
+			$aErrors[] = $e->getMessage();
+		}
 		if (!$this->IsNew()) // for new objects this is performed in DBInsertNoReload()
 		{
 			InlineImage::FinalizeInlineImages($this);
@@ -3660,8 +3667,14 @@ EOF
 				$aFinalValues[$sAttCode] = $aValues[$sAttCode];
 			}
 		}
-		$this->UpdateObjectFromArray($aFinalValues);
-
+		try
+		{
+			$this->UpdateObjectFromArray($aFinalValues);
+		}
+		catch (CoreException $e)
+		{
+			$aErrors[] = $e->getMessage();
+		}
 		return $aErrors;
 	}
 

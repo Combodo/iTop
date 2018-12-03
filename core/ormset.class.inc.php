@@ -195,7 +195,7 @@ class ormSet
 	 */
 	public function GetDelta(ormSet $oOtherSet)
 	{
-		$oSet = new ormSet($this->sClass, $this->sAttCode);
+		$oSet = new ormSet($this->sClass, $this->sAttCode, $this->iLimit);
 		// Set the initial value
 		$aOrigItems = $this->GetValues();
 		$oSet->SetValues($aOrigItems);
