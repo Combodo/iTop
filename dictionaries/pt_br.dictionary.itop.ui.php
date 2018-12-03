@@ -931,13 +931,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:NotificationsMenu:Title' => 'Configuração de <span class="hilite">Notificações</span>',
 	'UI:NotificationsMenu:Help' => 'Ajuda',
 	'UI:NotificationsMenu:HelpContent' => '<p>As Notificações são totalmente personalizáveis​​. Elas são baseadas em dois conjuntos de objetos: <i>Gatilhos e Ações</i>.</p>
-<p><i><b>Gatilhos</b></i> define quando uma notificação será executado. Existem 3 tipos de gatilhos para cobrir três fases diferentes de um ciclo de vida do objeto:
+<p><i><b>Gatilhos</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
-	<li>o "on object creation" é executado quando um objeto da classe especificada é criado</li>
-	<li>the "on entering a state" triggers get executed before an object of the given class enters a specified state (coming from another state)</li>
-	<li>the "on leaving a state" triggers get executed when an object of the given class is leaving a specified state</li>
-	<li>the "on threshold" triggers get executed when a threshold for TTR or TTO as been reached</li>
-	<li>the "on portal update" triggers get executed when a ticket is updated from the portal</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
@@ -946,7 +944,7 @@ Such actions also define the template to be used for sending the email as well a
 </p>
 <p>A special page: <a href="../setup/email.test.php" target="_blank">email.test.php</a> is available for testing and troubleshooting your PHP mail configuration.</p>
 <p>To be executed, actions must be associated to triggers.
-When associated with a trigger, each action is given an "order" number, specifying in which order the actions are to be executed.</p>',
+When associated with a trigger, each action is given an "order" number, specifying in which order the actions are to be executed.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Gatilhos',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Available triggers',
 	'UI:NotificationsMenu:OnCreate' => 'When an object is created',

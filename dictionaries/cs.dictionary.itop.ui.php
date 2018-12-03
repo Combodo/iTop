@@ -933,20 +933,18 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:NotificationsMenu:Title' => 'Konfigurace <span class="hilite">upozornění</span>',
 	'UI:NotificationsMenu:Help' => 'Nápověda',
 	'UI:NotificationsMenu:HelpContent' => '<p>Upozornění v iTop jsou plně nastavitelné. Jsou založena na dvou druzích objektů: <i>triggery (spouštěče) a akce</i>.</p>
-<p><i><b>Triggery</b></i> definují, kdy bude příslušné upozornění spuštěno. V iTop nalezneme 5 typů triggerů, které pokrývají 3 různé fáze životního cyklu objektu:
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
-	<li>trigger "vytvoření objektu" je spuštěn ve chvíli, kdy je vytvořen objekt uvedené třídy</li>
-	<li>trigger "změna stavu na" je spuštěn předtím, než předmět dané třídy změní stav na uvedený stav (z původního stavu)</li>
-	<li>trigger "změna stavu z" je spuštěn ve chvíli, kdy objekt dané třídy opustí specifický stav</li>
-	<li>trigger "prahová hodnota"  je spuštěn ve chvíli, kdy je hodnota pro TTR (time to resolve) a TTO (time to own) dosažena</li>
-	<li>trigger "aktualizace přes portál" je spuštěn ve chvíli, kdy je tiket aktualizován z portálu</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
 <i><b>Akce</b></i> definují činnosti, které mají být provedeny, když se triggery spustí. V současné verzi iTop je definována jedna akce spočívající v zaslání emailové zprávy. Tato akce také definuje šablonu, která se použije pro zasílání emailových zpráv a také pro definici dalších parametrů (příjemci, důležitost apod.).
 </p>
 <p>Speciální stránka <a href="../setup/email.test.php" target="_blank">email.test.php</a> je dostupná pro testování a řešení problémů s configurací PHP mailu.</p>
-<p>Aby mohly být akce spuštěny, musí být přiřazeny ke triggerům. Každá akce pak dostane své "pořadové" číslo, které určí v jakém pořadí se akce spustí.</p>',
+<p>Aby mohly být akce spuštěny, musí být přiřazeny ke triggerům. Každá akce pak dostane své "pořadové" číslo, které určí v jakém pořadí se akce spustí.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Triggery',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostupné triggery',
 	'UI:NotificationsMenu:OnCreate' => 'Při vytvoření objektu',

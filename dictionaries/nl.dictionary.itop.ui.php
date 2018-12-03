@@ -937,13 +937,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:NotificationsMenu:Title' => 'Configuratie van <span class="hilite">Notificaties</span>',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop zijn de notificaties volledig aan te passen. Ze zijn gebaseerd op twee sets van objecten: <i>triggers and actions</i>.</p>
-<p><i><b>Triggers</b></i> definieren wanneer een notificatie wordt verzonden. Er zijn 5 types triggers, die 3 verschillende fases in de levenscyclus van een object beslaan:
+<p><i><b>Triggers</b></i> bepalen wanneer een melding wordt uitgevoerd. Er zijn verschillende triggers als onderdeel van iTop core, maar andere kunnen door middel van uitbreidingen worden gebracht:
 <ol>
-	<li>de "on object creation" triggers worden uitgevoerd wanneer een object van een specifieke klasse is aangemaakt</li>
-	<li>de "on entering a state" triggers worden uitgevoerd voordat een object van een bepaalde klasse een gespecificeerde state ingaat (komend van een andere state)</li>
-	<li>de "on leaving a state" triggers worden uitgevoerd wanneer een object van een bepaalde klasse een gespecificeerde state verlaat</li>
-	<li>de "on threshold" triggers worden uitgevoerd wanneer een threshold voor TTR of TTO is bereikt</li>
-	<li>de "on portal update" triggers worden uitgevoerd wanneer een ticket is geupdatet vanuit het portal</li>
+	<li>Sommige triggers worden uitgevoerd wanneer een object van de gespecificeerde klasse wordt <b>aangemaakt</b>, <b>bijgewerkt</b> of <b>verwijderd</b>.</li>
+	<li>Sommige triggers worden uitgevoerd wanneer een object van een bepaalde klasse een gespecificeerde <b>status</b> <b>binnenkomt</b> of <b>verlaat</b>.</li>
+	<li>Sommige triggers worden uitgevoerd wanneer een <b>drempelwaarde</b> op <b>TTO</b> of <b>TTR</b> is <b>bereikt</b>.</li>
 </ol>
 </p>
 <p>

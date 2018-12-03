@@ -918,11 +918,11 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:NotificationsMenu:Title' => '<span class="hilite">Értesítések</span> beállítása',
 	'UI:NotificationsMenu:Help' => 'Segítség',
 	'UI:NotificationsMenu:HelpContent' => '<p>Az iTop alkalmazásban az értesítések teljesen testreszabhatók. Értesítések az objektumok két csoportjára épülnek: <i>kiváltó okok és akciók</i>.</p>
-<p><i><b>Kiváltó ok</b></i> határozza meg mikor kell az értesítést végrehajtani. Kiváltó okoknak 2 típusa van az objektum életciklius három fázisának lefedésére:
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
-	<li>"OnCreate" kiváltó ok egy objektum létrehozása</li>
-	<li>"OnStateEnter" kiváltó ok egy adott objektum állapot változása - az új objektum állapot elérése előtt váltódik ki</li>
-	<li>"OnStateLeave" kiváltó ok egy adott objektum állapot változása - az új objektum állapot elhagyása után váltódik ki</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
@@ -930,7 +930,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 </p>
 <p>Speciális oldal: <a href="../setup/email.test.php" target="_blank">email.test.php</a> oldalon keresztül a PHP mail konfiguráció tesztelhető.</p>
 <p>Akció végrehjatásához azt kiváltó okhoz kell rendelni.
-Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az akciók végrehatási sorrendjét.</p>',
+Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az akciók végrehatási sorrendjét.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Kiváltó okok',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Lehetséges kiváltó okok',
 	'UI:NotificationsMenu:OnCreate' => 'Objektum létrehozás',

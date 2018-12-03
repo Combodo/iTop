@@ -919,11 +919,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:NotificationsMenu:Title' => 'Einstellungen der <span class="hilite">Benachrichtigungen</span>',
 	'UI:NotificationsMenu:Help' => 'Hilfe',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop sind Benachrichtigungen vollständig anpassbar. Sie basieren auf zwei Gruppen an Objekten: <i>Trigger und Aktionen</i>.</p>
-<p><i><b>Trigger</b></i> legen fest, wann eine Benachrichtigung erfolgen soll. Es gibt drei Typen von Trigger um drei verscheidene Phasen eines Objekt-Lebenszyklus abzubilden:
+<p><i><b>Trigger</b></i> definieren, wann eine Benachrichtigung ausgeführt wird. Es gibt verschiedene Auslöser als Teil des iTop-Kerns, aber andere können durch Erweiterungen eingebracht werden:
 <ol>
-	<li>Der "OnCreate" Trigger wird ausgeführt, wenn ein Objekt der spezifizierten Klasse erstellt wird.</li>
-	<li>Der "OnStateEnter" Trigger wird ausgeführt, bevor ein Objekt einer gegebenen Klasse einen spezifizierten Status erlangt (aus einem anderen Status kommend)</li>
-	<li>Der "OnStateLeave" Trigger wird ausgeführt, sobald ein Objekt einer gegebenen Klasse einen spezifizierten Status verlässt</li>
+	<li>Einige Trigger werden ausgeführt, wenn ein Objekt der angegebenen Klasse <b>angelegt</b>, <b>aktualisiert</b> oder <b>gelöscht wird</b>.</li>
+	<li>Einige Trigger werden ausgeführt, wenn ein Objekt einer bestimmten Klasse einen bestimmten <b>Zustand</b> <b>erreicht</b> oder <b>verlässt</b>.</li>
+	<li>Einige Trigger werden ausgeführt, wenn ein <b>Schwellenwert</b> auf <b>TTO</b> oder <b>TTR</b> <b>erreicht</b> ist.</li>
 </ol>
 </p>
 <p>

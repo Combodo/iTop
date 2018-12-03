@@ -918,22 +918,20 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:NotificationsMenu:Title' => '<span class="hilite">通知</span>の設定',
 	'UI:NotificationsMenu:Help' => 'ヘルプ',
 	'UI:NotificationsMenu:HelpContent' => '<p>iTopでは、通知はすべてカスタマイズが可能です。通知は<i>トリガーとアクション</i>という二つのオブジェクトがベースになっています。
-<p><i><b>トリガー</b></i>は、ある通知がいつ実行されるのか、を定義します。トリガーは3つのタイプに分類され、オブジェクトライフサイクルにおける3つの異なるフェーズに対応します：
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
-	<li>"onCreate"トリガーは、指定されたクラスのオブジェクトが作成されたときに実行されます。</li>
-	<li>"onStateEnter"トリガーは、指定されたクラスのオブジェクトが(他の状態から)指定された状態に入る前に実行されます。</li>
-	<li>"onStateLeave"トリガーは、指定されたクラスのオブジェクトが指定された状態から出る際に実行されます。</li>
-	<li>"onThreshold" トリガーは、TTR や TTO が閾値に達した時に実行されます。</li>
-	<li>the "on portal update" トリガーは、ポータルからチケットが更新された時に実行されます。</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
 <i><b>アクション</b></i>はトリガーが実行される際の動作を定義します。例えば今、「メールを送信する」という動作で構成されるたった1種類だけのアクションがあるとします。
 このようなアクションは、受信者、重要度といったメッセージに付随する他のパラメータと同様、メール送信に利用されるテンプレートも定義します。
 </p>
-<p>特別なページ: <a href="../setup/email.test.php" target="_blank">email.test.php</p>は、PHPのメール設定をテストしたりトラブルシュートするのに利用可能であす。</p>
+<p>特別なページ: <a href="../setup/email.test.php" target="_blank">email.test.php</a> は、PHPのメール設定をテストしたりトラブルシュートするのに利用可能であす。</p>
 <p>実行するには、アクションがトリガーに関連づけられている必要があります。
-トリガーに関連づけられると、各々のアクションは順番が与えられ、どの順序でアクションが実行されるかが指定されます。</p>',
+トリガーに関連づけられると、各々のアクションは順番が与えられ、どの順序でアクションが実行されるかが指定されます。</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'トリガー',
 	'UI:NotificationsMenu:AvailableTriggers' => '利用可能トリガー',
 	'UI:NotificationsMenu:OnCreate' => 'オブジェクトが作成された時',

@@ -931,11 +931,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:NotificationsMenu:Title' => 'Configurazione delle <span class="hilite">Notifiche</span>',
 	'UI:NotificationsMenu:Help' => 'Aiuto',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop le notifiche sono completamente personalizzabili. Essi si basano su due serie di oggetti: <i>trigger e azioni</i>.</p>
-<p><i><b>Triggers</b></i> per definire quando una notifica verrà eseguita. Ci sono 3 tipi di trigger per la copertura di 3 fasi differenti del ciclo di vita di un oggetto:
+<p><i>I <b>trigger</b></i> definiscono quando verrà eseguita una notifica. Ci sono diversi trigger come parte del nucleo di iTop, ma altri possono essere portati da estensioni:
 <ol>
-	 <li>the "OnCreate" trigger vengono eseguiti quando un oggetto della classe specificata viene creata</li>
-	 <li>the "OnStateEnter" trigger vengono eseguiti prima che un oggetto della classe data entra in uno stato specifico (provenienti da un altro Stato)</li>
-	 <li>the "OnStateLeave" trigger vengono eseguiti quando un oggetto della classe lascia uno stato specificato</li>
+	 <li>Alcuni trigger sono eseguiti quando un oggetto della classe specificata viene <b>creato</b>, <b>aggiornato</b> o <b>cancellato</b>.</li>
+	 <li>Alcuni trigger sono eseguiti quando un oggetto di una data classe <b>entra</b> o <b>lascia</b> uno <b>stato specificato</b>.</li>
+	 <li>Alcuni trigger sono eseguiti quando una <b>soglia</b> su <b>TTO</b> o <b>TTR</b> è stata <b>raggiunta</b>.</li>
 </ol>
 
 </p>

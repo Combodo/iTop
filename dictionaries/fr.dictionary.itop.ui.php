@@ -918,13 +918,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:NotificationsMenu:Title' => 'Configuration des <span class="hilite">Notifications</span>',
 	'UI:NotificationsMenu:Help' => 'Aide',
 	'UI:NotificationsMenu:HelpContent' => '<p>Dans iTop les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
-<p><i><b>Les déclencheurs</b></i> définissent quand une notification doit être exécutée. Il y a 5 types de déclencheurs pour couvrir les 3 différentes phases du cycle de vie d\'un objet:
+<p><i><b>Les déclencheurs</b></i> définissent quand une notification sera exécutée. Il y a différents déclencheurs qui font partie du noyau d\'iTop, mais d\'autres peuvent être apportés par des extensions :
 <ol>
-	<li>un déclencheur "sur création d\'un objet" est exécuté quand un objet d\'une classe spécifique est créé.</li>
-	<li>un déclencheur "sur objet entrant dans un état" est exécuté avant que l\'objet n\'entre dans un état donné (en venant d\'un autre état du cycle de vie)</li>
-	<li>un déclencheur "sur objet quittant un état" est exécuté  quand l\'objet quitte un état spécifié</li>
-	<li>un déclencheur "sur dépassement de seuil" est exécuté quand un seuil prédéfini pour TTO/TTR est dépassé</li>
-	<li>un déclencheur "sur mise à jour depuis le portail" est exécuté quand un ticket est modifié depuis le portail dédié aux clients externes</li>
+	<li>Certains déclencheurs sont exécutés lorsqu\'un objet de la classe spécifiée est <b>créé</b>, <b>mis à jour</b> ou <b>supprimé</b>.</li>
+	<li>Certains déclencheurs sont exécutés lorsqu\'un objet d\'une classe donnée <b>entre</b> ou <b>sort</b> d\'un <b>état</b> spécifié.</li>
+	<li>Certains déclencheurs sont exécutés lorsqu\'un <b>seuil</b> sur <b>TTO</b> ou <b>TTR</b>a été <b>atteint</b>.</li>
 </ol>
 </p>
 <p>
