@@ -2404,7 +2404,8 @@ abstract class DBObject implements iDisplay
 		}
 		catch (Exception $e)
 		{
-			throw $e;
+			$aErrors = array($e->getMessage());
+			throw new CoreCannotSaveObjectException(array('id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 		}
 		finally
 		{
