@@ -905,11 +905,11 @@ EOF
 			}
 			else
 			{
-				$oObj->UpdateObjectFromPostedForm();
+				$aErrors = $oObj->UpdateObjectFromPostedForm();
 				$sMessage = '';
 				$sSeverity = 'ok';
 
-				if (!$oObj->IsModified())
+				if (!$oObj->IsModified() && empty($aErrors))
 				{
 					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 					$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
@@ -920,6 +920,10 @@ EOF
 					try
 					{
 						CMDBSource::Query('START TRANSACTION');
+						if (!empty($aErrors))
+						{
+							throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
+						}
 						$oObj->DBUpdate();
 						CMDBSource::Query('COMMIT');
 						$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
