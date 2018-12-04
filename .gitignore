@@ -121,3 +121,5 @@ local.properties
 .scala_dependencies
 .worksheet
 
+# visual studio
+.vs
