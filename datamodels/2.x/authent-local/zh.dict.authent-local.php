@@ -20,7 +20,6 @@
 /**
  * Localized data
  *
- * @author      Robert Deng <denglx@gmail.com>
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -41,9 +40,9 @@
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserLocal' => 'iTop 用户',
-	'Class:UserLocal+' => '用户由 iTop 验证身份',
+	'Class:UserLocal+' => '用户身份由iTop 验证',
 	'Class:UserLocal/Attribute:password' => '密码',
-	'Class:UserLocal/Attribute:password+' => '用户身份验证串',
+	'Class:UserLocal/Attribute:password+' => '用户身份验证字符串',
 ));
 
 
