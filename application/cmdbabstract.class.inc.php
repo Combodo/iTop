@@ -3359,7 +3359,7 @@ EOF
 					$oTagSet = $this->Get($sAttCode);
 					if (is_null($oTagSet))
 					{
-						$oTagSet = new ormTagSet(get_class($this), $sAttCode);
+						$oTagSet = new ormTagSet(get_class($this), $sAttCode, $oAttDef->GetMaxItems());
 					}
 					$oTagSet->ApplyDelta($value);
 					$this->Set($sAttCode, $oTagSet);
