@@ -321,23 +321,10 @@ $.widget('itop.set_widget',
 		},
 
 		_partialCodeRemove: function (setItemCode) {
-			this.partialValues = this.partialValues.filter(this._filterArrayOnItem, setItemCode);
-		},
-
-		/**
-		 * Used in _partialCodeRemove, as arrow functions can't be used in MSIE :(
-		 *
-		 * Must provide the value to filter on as the filter thisArg parameter
-		 * see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/filter
-		 *
-		 * @param element
-		 * @param index
-		 * @param array
-		 * @returns {boolean}
-		 * @private
-		 */
-		_filterArrayOnItem: function (element, index, array) {
-			return (item !== this);
+			this.partialValues = this.partialValues.filter(function (element, index, array) {
+				var setItemCode = this.valueOf();
+				return (element !== setItemCode);
+			}, setItemCode);
 		},
 
 		_isCodeInPartialValues: function (setItemCode) {
