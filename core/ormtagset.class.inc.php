@@ -227,7 +227,7 @@ final class ormTagSet extends ormSet
 	 */
 	public function GetDelta(ormSet $oOtherTagSet)
 	{
-		$oTag = new ormTagSet($this->sClass, $this->sAttCode);
+		$oTag = new ormTagSet($this->sClass, $this->sAttCode, 0);
 		// Set the initial value
 		$aOrigTagCodes = $this->GetValues();
 		$oTag->SetValues($aOrigTagCodes);
@@ -263,7 +263,7 @@ final class ormTagSet extends ormSet
 	 */
 	public function GetDeltaTags(ormTagSet $oOtherTagSet)
 	{
-		$oTag = new ormTagSet($this->sClass, $this->sAttCode);
+		$oTag = new ormTagSet($this->sClass, $this->sAttCode, 0);
 		// Set the initial value
 		$aOrigTagCodes = $this->GetValues();
 		$oTag->SetValues($aOrigTagCodes);

@@ -1334,7 +1334,7 @@ abstract class DBObject implements iDisplay
 		{
 			if (is_string($toCheck))
 			{
-				$oTag = new ormTagSet(get_class($this), $sAttCode);
+				$oTag = new ormTagSet(get_class($this), $sAttCode, $oAtt->GetMaxItems());
 				try
 				{
 					$oTag->SetValues(explode(' ', $toCheck));
