@@ -30,7 +30,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'config-apply' => 'Anwenden (Ctrl+S)',
 	'config-apply-title' => 'Anwenden (Ctrl+S)',
 	'config-cancel' => 'Zurücksetzen',
-    'config-saved' => 'Erfolgreich gesprichert',
+    'config-saved' => 'Erfolgreich gespeichert',
 	'config-confirm-cancel' => 'Ihre Änderungen werden nicht gespeichert.',
 	'config-no-change' => 'Keine Änderungen: Die Datei wurde nicht verändert.',
     'config-reverted' => 'Die Konfiguration wurde zurückgesetzt',
