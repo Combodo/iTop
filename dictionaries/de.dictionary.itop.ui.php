@@ -72,9 +72,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Query/Attribute:name+' => '',
 	'Class:Query/Attribute:description' => 'Beschreibung',
 	'Class:Query/Attribute:description+' => '',
-	'Class:Query/Attribute:fields' => 'Felder',
-	'Class:Query/Attribute:fields+' => '',
-
+	'Class:QueryOQL/Attribute:fields' => 'Felder',
+	'Class:QueryOQL/Attribute:fields+' => '',
 	'Class:QueryOQL' => 'OQL Abfrage',
 	'Class:QueryOQL+' => '',
 	'Class:QueryOQL/Attribute:oql' => 'Ausdruck',

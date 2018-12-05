@@ -84,9 +84,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Query/Attribute:name+' => 'Identificar a consulta',
 	'Class:Query/Attribute:description' => 'Descrição',
 	'Class:Query/Attribute:description+' => 'Descrição longa para a consulta (finalidade, uso, etc)',
-	'Class:Query/Attribute:fields' => 'Campos',
-	'Class:Query/Attribute:fields+' => 'Vírgula separando a lista de atributos (ou alias.attribute) para exportar.',
-
+	'Class:QueryOQL/Attribute:fields' => 'Campos',
+	'Class:QueryOQL/Attribute:fields+' => 'Vírgula separando a lista de atributos (ou alias.attribute) para exportar.',
 	'Class:QueryOQL' => 'Consulta OQL',
 	'Class:QueryOQL+' => 'Uma consulta baseada no Object Query Language OQL',
 	'Class:QueryOQL/Attribute:oql' => 'Expressão',

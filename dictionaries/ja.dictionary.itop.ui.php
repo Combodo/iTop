@@ -71,9 +71,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Query/Attribute:name+' => 'クエリを識別します。',
 	'Class:Query/Attribute:description' => '説明',
 	'Class:Query/Attribute:description+' => 'クエリの長い説明（目的、使用方法等）',
-	'Class:Query/Attribute:fields' => 'フィールド',
-	'Class:Query/Attribute:fields+' => 'エクスポートする属性（またはエイリアス属性,alias.attribute）のコンマ区切り(CSV)リスト',
-
+	'Class:QueryOQL/Attribute:fields' => 'フィールド',
+	'Class:QueryOQL/Attribute:fields+' => 'エクスポートする属性（またはエイリアス属性,alias.attribute）のコンマ区切り(CSV)リスト',
 	'Class:QueryOQL' => 'OQL クエリ',
 	'Class:QueryOQL+' => ' Object Query Language に基づいたクエリ',
 	'Class:QueryOQL/Attribute:oql' => '式',

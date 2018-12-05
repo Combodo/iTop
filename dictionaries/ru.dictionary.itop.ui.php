@@ -63,9 +63,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Query/Attribute:name+' => 'Идентифицирует запрос',
 	'Class:Query/Attribute:description' => 'Описание',
 	'Class:Query/Attribute:description+' => 'Длинное описание запроса (назначение, использование и т.д.)',
-	'Class:Query/Attribute:fields' => 'Экспорт. поля',
-	'Class:Query/Attribute:fields+' => 'Список атрибутов для экспорта, разделённых запятыми (или alias.attribute)',
-
+	'Class:QueryOQL/Attribute:fields' => 'Экспорт. поля',
+	'Class:QueryOQL/Attribute:fields+' => 'Список атрибутов для экспорта, разделённых запятыми (или alias.attribute)',
 	'Class:QueryOQL' => 'OQL запрос',
 	'Class:QueryOQL+' => 'Запрос, основанный на OQL (Object Query Language)',
 	'Class:QueryOQL/Attribute:oql' => 'Выражение',

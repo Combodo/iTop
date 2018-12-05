@@ -71,9 +71,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Query/Attribute:name+' => 'Identification de la requête',
 	'Class:Query/Attribute:description' => 'Description',
 	'Class:Query/Attribute:description+' => 'Description complète (finalité, utilisations, public)',
-	'Class:Query/Attribute:fields' => 'Champs',
-	'Class:Query/Attribute:fields+' => 'Liste CSV des attributs (ou alias.attribut) à exporter',
-
+	'Class:QueryOQL/Attribute:fields' => 'Champs',
+	'Class:QueryOQL/Attribute:fields+' => 'Liste CSV des attributs (ou alias.attribut) à exporter',
 	'Class:QueryOQL' => 'Requête OQL',
 	'Class:QueryOQL+' => 'Une requête écrite dans le langage "Object Query Language"',
 	'Class:QueryOQL/Attribute:oql' => 'Expression',

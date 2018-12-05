@@ -88,9 +88,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Query/Attribute:name+' => 'Identifies the query',
 	'Class:Query/Attribute:description' => 'Description',
 	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)',
-	'Class:Query/Attribute:fields' => 'Fields',
-	'Class:Query/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export',
-
+	'Class:QueryOQL/Attribute:fields' => 'Fields',
+	'Class:QueryOQL/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export',
 	'Class:QueryOQL' => 'OQL Query',
 	'Class:QueryOQL+' => 'A query based on the Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expression',
