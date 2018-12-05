@@ -53,7 +53,7 @@ SetupWebPage::AddModule(
 			'retention_count' => 5, 
 			'enabled' => true,
 			'debug' => false,
-			'itop_root' => '',
+			'itop_backup_incident' => '',
 		),
 	)
 );
