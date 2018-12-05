@@ -22,6 +22,7 @@
 
 // Recommended usage in CRON
 // /usr/bin/php -q /var/www/combodo/modules/itop-backup/backup.php --backup_file=/home/backups/combodo-crm-%Y-%m-%d
+// Do not forget to set the 'itop_backup_incident' configuration file parameter !
 
 if (file_exists(__DIR__.'/../../approot.inc.php'))
 {
@@ -150,7 +151,7 @@ function RaiseAlarm($sMessage)
 	require_once(APPROOT.'webservices/itopsoaptypes.class.inc.php');
 
 	$oConfig = GetConfig();
-	$sItopRootConfig = $oConfig->GetModuleSetting('itop-backup', 'itop_root');
+	$sItopRootConfig = $oConfig->GetModuleSetting('itop-backup', 'itop_backup_incident');
 	if (empty($sItopRootConfig))
 	{
 		// by default getting self !
