@@ -221,8 +221,13 @@
 
 		function selectCurrent() {
 			var selected = select.selected();
-			if( !selected )
-				return false;
+			if (!selected)	{
+				// Select the first entry by default
+				selected = select.getFirst();
+				if (!selected) {
+					return false;
+				}
+			}
 
 			var v = selected.result;
 			previousValue = v;
@@ -815,6 +820,10 @@
 					}
 
 				}
+			},
+			getFirst: function() {
+				let first = listItems && listItems.slice(0, 1);
+				return first && $.data(first[0], "ac_data");
 			},
 			selected: function() {
 				var selected = listItems && listItems.filter("." + CLASSES.ACTIVE).removeClass(CLASSES.ACTIVE);
