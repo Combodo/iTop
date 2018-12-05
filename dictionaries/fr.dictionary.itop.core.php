@@ -957,7 +957,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Impossible de supprimer une étiquette utilisée',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Les codes et noms des étiquettes doivent être unique',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Le code de l\'étiquette doit contenir entre 3 et %1$d caractères alphanumériques.',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Le code de l\'étiquette doit contenir entre 3 et %1$d caractères alphanumériques, et commencer par une lettre.',
 	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'Le code de l\'étiquette un mot réservé.',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Le nom de l\'étiquette ne doit pas être vide ni contenir le caractère \'%1$s\'',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Le code de l\'étiquette ne peut pas être changé',
