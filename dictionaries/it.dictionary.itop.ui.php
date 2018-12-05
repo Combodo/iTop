@@ -84,9 +84,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Query/Attribute:name+' => 'Identificativi della query',
 	'Class:Query/Attribute:description' => 'Descrizione',
 	'Class:Query/Attribute:description+' => 'Descrizione dettagliata della query(scopo, usagoetc.)',
-	'Class:Query/Attribute:fields' => 'Campi',
-	'Class:Query/Attribute:fields+' => 'Lista di attributi separati da virgola (o alias.attributo) per l\'esportazione',
-
+	'Class:QueryOQL/Attribute:fields' => 'Campi',
+	'Class:QueryOQL/Attribute:fields+' => 'Lista di attributi separati da virgola (o alias.attributo) per l\'esportazione',
 	'Class:QueryOQL' => 'OQL Query',
 	'Class:QueryOQL+' => 'Una query basata su Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Espressione',

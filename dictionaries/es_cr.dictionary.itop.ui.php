@@ -84,9 +84,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Query/Attribute:name+' => 'Identifica la consulta',
 	'Class:Query/Attribute:description' => 'Descripción',
 	'Class:Query/Attribute:description+' => 'Descripción larga de la consulta (propósito, uso, etc.)',
-	'Class:Query/Attribute:fields' => 'Campos',
-	'Class:Query/Attribute:fields+' => 'Lista de atributos separados por coma (o alias.attribute) para exportación',
-
+	'Class:QueryOQL/Attribute:fields' => 'Campos',
+	'Class:QueryOQL/Attribute:fields+' => 'Lista de atributos separados por coma (o alias.attribute) para exportación',
 	'Class:QueryOQL' => 'Consulta OQL',
 	'Class:QueryOQL+' => 'Una consulta basada en Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expresión',

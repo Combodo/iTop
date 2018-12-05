@@ -86,9 +86,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Query/Attribute:name+' => 'Název dotazu',
 	'Class:Query/Attribute:description' => 'Popis',
 	'Class:Query/Attribute:description+' => 'Dlouhý popis dotazu',
-	'Class:Query/Attribute:fields' => 'Atributy',
-	'Class:Query/Attribute:fields+' => 'Seznam atributů oddělených čárkami',
-
+	'Class:QueryOQL/Attribute:fields' => 'Atributy',
+	'Class:QueryOQL/Attribute:fields+' => 'Seznam atributů oddělených čárkami',
 	'Class:QueryOQL' => 'OQL dotaz',
 	'Class:QueryOQL+' => '',
 	'Class:QueryOQL/Attribute:oql' => 'Výraz',
