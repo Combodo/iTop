@@ -21,7 +21,7 @@
 //   Duplicated code: sys_get_temp_dir, the computation of the target filename, etc.
 
 // Recommended usage in CRON
-// /usr/bin/php -q /var/www/combodo/modules/itop-backup/backup.php --backup_file=/home/backups/combodo-crm-%Y-%m-%d
+// /usr/bin/php -q /var/www/combodo/modules/itop-backup/check-backup.php --backup_file=/home/backups/combodo-crm-%Y-%m-%d
 // Do not forget to set the 'itop_backup_incident' configuration file parameter !
 
 if (file_exists(__DIR__.'/../../approot.inc.php'))
@@ -249,7 +249,7 @@ catch(Exception $e)
 $sItopRootParam = utils::ReadParam('check_ticket_itop', null, true, 'raw_data');
 if (!empty($sItopRootParam))
 {
-	echo 'ERROR: parameter \'check_ticket_itop\' should now be specified in the config file\n';
+	echo "ERROR: parameter 'check_ticket_itop' should now be specified in the config file 'itop_backup_incident' parameter\n";
 
 	return;
 }
