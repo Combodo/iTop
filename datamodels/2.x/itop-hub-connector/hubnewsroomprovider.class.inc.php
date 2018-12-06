@@ -52,6 +52,18 @@ class HubNewsroomProvider extends NewsroomProviderBase
 	{
 		return $sBaseUrl = $this->oConfig->GetModuleSetting('itop-hub-connector', 'url').MetaModel::GetModuleSetting('itop-hub-connector', 'route_view_all_messages');
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see iNewsroomProvider::GetPlaceholders()
+	 */
+	public function GetPlaceholders()
+	{
+		return array(
+			'%connect_to_itop_hub%' => utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'launch.php', array('target' => 'view_dashboard')),
+		);
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * @see NewsroomProviderBase::GetPreferencesUrl()

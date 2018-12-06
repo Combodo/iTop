@@ -835,6 +835,7 @@ EOF
 					'fetch_url' => $oProvider->GetFetchURL(),
 					'view_all_url' => $oProvider->GetViewAllURL(),
 					'mark_all_as_read_url' => $oProvider->GetMarkAllAsReadURL(),
+					'placeholders' => $oProvider->GetPlaceholders(),
 					'ttl' => $oProvider->GetTTL(),
 				);
 			}
@@ -842,7 +843,7 @@ EOF
 		if (count($aProviderParams) > 0)
 		{
 			$sImageUrl= '../images/newsroom_menu.png';
-			$sPlaceholderImageUrl= '../images/news-32x32.png';
+			$sPlaceholderImageUrl= '../images/newsroom-message.svg';
 			$aParams = array(
 				'image_url' => $sImageUrl,
 				'placeholder_image_url' => $sPlaceholderImageUrl,
