@@ -965,7 +965,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Tags in gebruik kunnen niet verwijderd worden',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Codes en labels voor tags moeten uniek zijn.',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Codes voor tags bestaan uit 3 tot %1$d alfanumerieke tekens',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Codes voor tags bestaan uit 3 tot %1$d alfanumerieke tekens, startend met een letter.',
 	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'De gekozen code is een gereserveerd woord',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Het label mag niet \'%1$s\' bevatten en mag ook niet leeg zijn',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Codes kunnen niet aangepast worden als tags in gebruik zijn',

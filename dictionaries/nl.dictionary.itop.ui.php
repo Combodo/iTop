@@ -90,9 +90,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Query/Attribute:name+' => 'Identificeert de query',
 	'Class:Query/Attribute:description' => 'Beschrijving',
 	'Class:Query/Attribute:description+' => 'Uitgebreide beschrijving voor de query (doel, gebruik, enz.)',
-	'Class:Query/Attribute:fields' => 'Velden',
-	'Class:Query/Attribute:fields+' => 'Kommagescheiden lijst van attributen (of alias.attribute) om te exporteren',
-
+	
+	'Class:QueryOQL/Attribute:fields' => 'Velden',
+	'Class:QueryOQL/Attribute:fields+' => 'Kommagescheiden lijst van attributen (of alias.attribute) om te exporteren',
 	'Class:QueryOQL' => 'OQL-query',
 	'Class:QueryOQL+' => 'Een query gebaseerd op de Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expressie',
