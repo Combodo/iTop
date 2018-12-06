@@ -3075,6 +3075,7 @@ input:checked + .slider:before {
   font-size: 8pt;
   background-color: #1c94c4;
   color: #fff;
+  cursor: pointer;
 }
 .newsroom_extra_messages_counter {
   display: inline-block !important;
@@ -3143,4 +3144,32 @@ input:checked + .slider:before {
 #newsroom_display_size {
   height: 1em;
   width: 3em;
+}
+#newsroom_no_new_message p {
+  text-align: center !important;
+  cursor: default !important;
+  font-style: italic;
+}
+#newsroom_no_new_message {
+  color: #444 !important;
+}
+#newsroom_no_new_message:hover {
+  cursor: default !important;
+  color: #444 !important;
+  background-color: #fff !important;
+}
+#newsroom_menu h1 {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 0.5em;
+}
+#newsroom_menu h2 {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 0.5em;
+}
+#newsroom_menu h3, #newsroom_menu h4, #newsroom_menu h5 {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 0.5em;
 }

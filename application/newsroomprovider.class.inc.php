@@ -66,6 +66,13 @@ interface iNewsroomProvider
 	public function GetPreferencesUrl();
 	
 	/**
+	 * Return an array key => value to be replaced in URL of the messages
+	 * Example: '%itop_root%' => utils::GetAbsoluteUrlAppRoot();
+	 * @return string[]
+	 */
+	public function GetPlaceholders();
+	
+	/**
 	 * The duration between to refreshes of the cache (in seconds)
 	 * @return int
 	 */
@@ -134,6 +141,15 @@ abstract class NewsroomProviderBase implements iNewsroomProvider
 	public function IsApplicable(User $oUser = null)
 	{
 		return false;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see iNewsroomProvider::GetPlaceholders()
+	 */
+	public function GetPlaceholders()
+	{
+		return array(); // By default, empty set of placeholders
 	}
 	
 	public function GetTTL()
