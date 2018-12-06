@@ -419,7 +419,7 @@
                 }, 300);
             }
 			
-			{% if sSearchValue is not null %}
+			{% if (sSearchValue is not null) and (sSearchValue != '') %}
 				// Filters from default value
 				$('#brick_search_field').trigger('change');
 			{% endif %}
