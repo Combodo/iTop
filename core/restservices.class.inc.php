@@ -439,7 +439,7 @@ class CoreServices implements iRestServiceProvider
 			$limit = (int) RestUtils::GetOptionalParam($aParams, 'limit', 0);
 			$page = (int) RestUtils::GetOptionalParam($aParams, 'page', 0);
 
-			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key, $limit, $this->getOffsetFromLimitAndPage($limit, $page));
+			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key, $limit, self::getOffsetFromLimitAndPage($limit, $page));
 			$sTargetClass = $oObjectSet->GetFilter()->GetClass();
 	
 			if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ) != UR_ALLOWED_YES)
@@ -784,7 +784,7 @@ class CoreServices implements iRestServiceProvider
      * @param int $page
      * @return int
      */
-	private function getOffsetFromLimitAndPage($limit, $page)
+	protected static function getOffsetFromLimitAndPage($limit, $page)
     {
         return $limit * max(0, $page - 1);
     }
