@@ -803,6 +803,7 @@ EOF
 											if ($iFlags & OPT_ATT_SLAVE)
 											{
 												$aReasons = array();
+												$this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 												$sTip = '';
 												foreach($aReasons as $aRow)
