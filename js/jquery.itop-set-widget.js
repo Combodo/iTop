@@ -321,7 +321,10 @@ $.widget('itop.set_widget',
 		},
 
 		_partialCodeRemove: function (setItemCode) {
-			this.partialValues = this.partialValues.filter(item => (item !== setItemCode));
+			this.partialValues = this.partialValues.filter(function (element, index, array) {
+				var setItemCode = this.valueOf();
+				return (element !== setItemCode);
+			}, setItemCode);
 		},
 
 		_isCodeInPartialValues: function (setItemCode) {

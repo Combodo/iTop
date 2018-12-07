@@ -900,8 +900,6 @@ $(function()
 				items: '.popupMenuTarget',
 				tooltipClass: 'tooltip-simple-graph',
 				position: {
-					my: "center bottom-10",
-					at: "center  top",	
 					using: function( position, feedback ) { 
 						$(this).css( position );  
 						$( "<div>" )
@@ -914,13 +912,13 @@ $(function()
 			.off( "mouseover mouseout" )
 			.on( "mouseover", function(event){
 				event.stopImmediatePropagation();
-				var jMe = $(this);
+				var jMe = $('text[data-id="'+$(this).attr('data-id')+'"]');
 				jMe.data('openTimeoutId', setTimeout(function() {
 					var sDataId = jMe.attr('data-id');
-					if ($('.tooltip-close-button[data-id="'+sDataId+'"]').length == 0)
+					if (jMe.tooltip())
 					{
 						jMe.data('openTimeoutId', 0);
-						jMe.tooltip('open');						
+						jMe.tooltip('open');
 					}
 				}, 1000));					
 			})

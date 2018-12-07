@@ -803,6 +803,7 @@ EOF
 											if ($iFlags & OPT_ATT_SLAVE)
 											{
 												$aReasons = array();
+												$this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 												$sSynchroIcon = "&nbsp;<img id=\"synchro_$sInputId\" src=\"../images/transp-lock.png\" style=\"vertical-align:middle\"/>";
 												$sTip = '';
 												foreach($aReasons as $aRow)
@@ -3359,7 +3360,7 @@ EOF
 					$oTagSet = $this->Get($sAttCode);
 					if (is_null($oTagSet))
 					{
-						$oTagSet = new ormTagSet(get_class($this), $sAttCode);
+						$oTagSet = new ormTagSet(get_class($this), $sAttCode, $oAttDef->GetMaxItems());
 					}
 					$oTagSet->ApplyDelta($value);
 					$this->Set($sAttCode, $oTagSet);

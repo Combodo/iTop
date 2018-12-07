@@ -1140,7 +1140,7 @@ class ObjectFormManager extends FormManager
 							$oTagSet = $this->oObject->Get($sAttCode);
 							if (is_null($oTagSet))
 							{
-								$oTagSet = new ormTagSet(get_class($this->oObject), $sAttCode);
+								$oTagSet = new ormTagSet(get_class($this->oObject), $sAttCode, $oAttDef->GetMaxItems());
 							}
 							$oTagSet->ApplyDelta(json_decode($value, true));
 							$this->oObject->Set($sAttCode, $oTagSet);

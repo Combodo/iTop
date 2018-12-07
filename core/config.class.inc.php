@@ -1065,7 +1065,7 @@ class Config
 		'draft_attachments_lifetime' => array(
 			'type' => 'integer',
 			'description' => 'Lifetime (in seconds) of drafts\' attachments and inline images: after this duration, the garbage collector will delete them.',
-			'default' => 3600,
+			'default' => 86400,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,

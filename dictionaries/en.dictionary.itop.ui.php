@@ -88,9 +88,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Query/Attribute:name+' => 'Identifies the query',
 	'Class:Query/Attribute:description' => 'Description',
 	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)',
-	'Class:Query/Attribute:fields' => 'Fields',
-	'Class:Query/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export',
-
+	'Class:QueryOQL/Attribute:fields' => 'Fields',
+	'Class:QueryOQL/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export',
 	'Class:QueryOQL' => 'OQL Query',
 	'Class:QueryOQL+' => 'A query based on the Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expression',
@@ -312,6 +311,20 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribute',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
+));
+
+//
+// Class: UserDashboard
+//
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:UserDashboard' => 'User dashboard',
+	'Class:UserDashboard+' => '',
+	'Class:UserDashboard/Attribute:user_id' => 'User',
+	'Class:UserDashboard/Attribute:user_id+' => '',
+	'Class:UserDashboard/Attribute:menu_code' => 'Menu code',
+	'Class:UserDashboard/Attribute:menu_code+' => '',
+	'Class:UserDashboard/Attribute:contents' => 'Contents',
+	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
 //
@@ -1554,7 +1567,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:Newsroom:NoNewMessage' => 'No new message',
-	'UI:Newsroom:MarkAllAsRead' => 'Mark all as messages read',
+	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read',
 	'UI:Newsroom:ViewAllMessages' => 'View all messages',
 	'UI:Newsroom:Preferences' => 'Newsroom preferences',
 	'UI:Newsroom:ConfigurationLink' => 'Configuration',

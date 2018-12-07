@@ -21,7 +21,8 @@
 //   Duplicated code: sys_get_temp_dir, the computation of the target filename, etc.
 
 // Recommended usage in CRON
-// /usr/bin/php -q /var/www/combodo/modules/itop-backup/backup.php --backup_file=/home/backups/combodo-crm-%Y-%m-%d
+// /usr/bin/php -q /var/www/combodo/modules/itop-backup/check-backup.php --backup_file=/home/backups/combodo-crm-%Y-%m-%d
+// Do not forget to set the 'itop_backup_incident' configuration file parameter !
 
 if (file_exists(__DIR__.'/../../approot.inc.php'))
 {
@@ -32,7 +33,7 @@ else
 	require_once __DIR__.'/../../../approot.inc.php';   // When in datamodels/x.x folder
 }
 require_once(APPROOT.'application/utils.inc.php');
-require_once(APPROOT.'core/config.class.inc.php');
+require_once(APPROOT.'application/startup.inc.php');
 
 
 /**
@@ -150,7 +151,7 @@ function RaiseAlarm($sMessage)
 	require_once(APPROOT.'webservices/itopsoaptypes.class.inc.php');
 
 	$oConfig = GetConfig();
-	$sItopRootConfig = $oConfig->GetModuleSetting('itop-backup', 'itop_root');
+	$sItopRootConfig = $oConfig->GetModuleSetting('itop-backup', 'itop_backup_incident');
 	if (empty($sItopRootConfig))
 	{
 		// by default getting self !
@@ -244,11 +245,50 @@ catch(Exception $e)
 }
 
 
+if (utils::IsModeCLI())
+{
+	echo date('Y-m-d H:i:s')." - running check-backup utility\n";
+	try
+	{
+		$sAuthUser = ReadMandatoryParam('auth_user');
+		$sAuthPwd = ReadMandatoryParam('auth_pwd');
+	}
+	catch (Exception $e)
+	{
+		$sMessage = $e->getMessage();
+		ToolsLog::Error($sMessage);
+		echo $sMessage;
+		exit;
+	}
+	$bDownloadBackup = false;
+	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
+	{
+		UserRights::Login($sAuthUser); // Login & set the user's language
+	}
+	else
+	{
+		ExitError($oP, "Access restricted or wrong credentials ('$sAuthUser')");
+	}
+}
+else
+{
+	require_once(APPROOT.'application/loginwebpage.class.inc.php');
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+	$bDownloadBackup = utils::ReadParam('download', false);
+}
+
+if (!UserRights::IsAdministrator())
+{
+	ExitError($oP, "Access restricted to administors");
+}
+
+
+
 // N°1802 : was moved from script param to config file (avoid direct call with untrusted param value)
 $sItopRootParam = utils::ReadParam('check_ticket_itop', null, true, 'raw_data');
 if (!empty($sItopRootParam))
 {
-	echo 'ERROR: parameter \'check_ticket_itop\' should now be specified in the config file\n';
+	echo "ERROR: parameter 'check_ticket_itop' should now be specified in the config file 'itop_backup_incident' parameter\n";
 
 	return;
 }

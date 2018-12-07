@@ -1334,7 +1334,7 @@ abstract class DBObject implements iDisplay
 		{
 			if (is_string($toCheck))
 			{
-				$oTag = new ormTagSet(get_class($this), $sAttCode);
+				$oTag = new ormTagSet(get_class($this), $sAttCode, $oAtt->GetMaxItems());
 				try
 				{
 					$oTag->SetValues(explode(' ', $toCheck));
@@ -2404,7 +2404,8 @@ abstract class DBObject implements iDisplay
 		}
 		catch (Exception $e)
 		{
-			throw $e;
+			$aErrors = array($e->getMessage());
+			throw new CoreCannotSaveObjectException(array('id' => $this->GetKey(), 'class' => get_class($this), 'issues' => $aErrors));
 		}
 		finally
 		{

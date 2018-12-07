@@ -22,16 +22,16 @@
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
-	'Menu:ConfigEditor' => 'Configuration~~',
-	'config-edit-title' => 'Configuration File Editor~~',
-	'config-edit-intro' => 'Be very cautious when editing the configuration file.~~',
-	'config-apply' => 'Apply~~',
-	'config-apply-title' => 'Apply (Ctrl+S)~~',
-	'config-cancel' => 'Reset~~',
-    'config-saved' => 'Successfully recorded.~~',
-	'config-confirm-cancel' => 'Your changes will be lost.~~',
-	'config-no-change' => 'No change: the file has been left unchanged.~~',
-    'config-reverted' => 'The configuration has been reverted.~~',
-	'config-parse-error' => 'Line %2$d: %1$s.<br/>The file has NOT been updated.~~',
-	'config-current-line' => 'Editing line: %1$s~~',
+	'Menu:ConfigEditor' => 'Configuración',
+	'config-edit-title' => 'Editor de Archivo de Configuración',
+	'config-edit-intro' => 'Sea muy cuidadoso cuando edite el archivo de configuración. En particular, sólo los elementos superiores (ejem.: the global configuration y modules settings) deberian ser editados.',
+	'config-apply' => 'Aplicar',
+	'config-apply-title' => 'Aplicar (Ctrl+S)',
+	'config-cancel' => 'Restablecer',
+	'config-saved' => 'Exitosamente registrado.',
+	'config-confirm-cancel' => 'Sus cambiso se perderán.',
+	'config-no-change' => 'Sin cambio: el archivo permanece sin cambios.',
+	'config-reverted' => 'La configuración ha sido revertida.',
+	'config-parse-error' => 'Línea %2$d: %1$s.<br/>El archivo NO ha sido actualizado.',
+	'config-current-line' => 'Editando línea: %1$s',
 ));

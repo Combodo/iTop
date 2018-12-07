@@ -73,9 +73,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Query/Attribute:name+' => '',
 	'Class:Query/Attribute:description' => 'Beskrivelse',
 	'Class:Query/Attribute:description+' => '',
-	'Class:Query/Attribute:fields' => 'Felter',
-	'Class:Query/Attribute:fields+' => '',
-
+	'Class:QueryOQL/Attribute:fields' => 'Felter',
+	'Class:QueryOQL/Attribute:fields+' => '',
 	'Class:QueryOQL' => 'OQL forespørgsel',
 	'Class:QueryOQL+' => '',
 	'Class:QueryOQL/Attribute:oql' => 'Udtryk',

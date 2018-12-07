@@ -72,9 +72,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Query/Attribute:name+' => '',
 	'Class:Query/Attribute:description' => 'Beschreibung',
 	'Class:Query/Attribute:description+' => '',
-	'Class:Query/Attribute:fields' => 'Felder',
-	'Class:Query/Attribute:fields+' => '',
-
+	'Class:QueryOQL/Attribute:fields' => 'Felder',
+	'Class:QueryOQL/Attribute:fields+' => '',
 	'Class:QueryOQL' => 'OQL Abfrage',
 	'Class:QueryOQL+' => '',
 	'Class:QueryOQL/Attribute:oql' => 'Ausdruck',
@@ -1225,8 +1224,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 
 	'UI:GroupBy:count' => 'Anzahl',
 	'UI:GroupBy:count+' => 'Anzahl der Elemente',
-	'UI:GroupBy:sum' => 'Suumme',
-	'UI:GroupBy:sum+' => 'Suumme von %1$s',
+	'UI:GroupBy:sum' => 'Summe',
+	'UI:GroupBy:sum+' => 'Summe von %1$s',
 	'UI:GroupBy:avg' => 'Durchschnitt',
 	'UI:GroupBy:avg+' => 'Durchschnitt von %1$s',
 	'UI:GroupBy:min' => 'Minimum',

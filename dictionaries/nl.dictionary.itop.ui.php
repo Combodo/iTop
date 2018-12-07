@@ -93,6 +93,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	
 	'Class:QueryOQL/Attribute:fields' => 'Velden',
 	'Class:QueryOQL/Attribute:fields+' => 'Kommagescheiden lijst van attributen (of alias.attribuut) om te exporteren',
+
 	'Class:QueryOQL' => 'OQL-query',
 	'Class:QueryOQL+' => 'Een query gebaseerd op de Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expressie',
