@@ -20,32 +20,23 @@
 /**
  * Localized data
  *
- * @author      Robert Deng <denglx@gmail.com>
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
-// Dictionnay conventions
-// Class:<class_name>
-// Class:<class_name>+
-// Class:<class_name>/Attribute:<attribute_code>
-// Class:<class_name>/Attribute:<attribute_code>+
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
-// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
-// Class:<class_name>/Stimulus:<stimulus_code>
-// Class:<class_name>/Stimulus:<stimulus_code>+
-
-//
-// Class: UserLocal
-//
-
+ 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:UserLocal' => 'iTop 用户',
-	'Class:UserLocal+' => '用户由 iTop 验证身份',
-	'Class:UserLocal/Attribute:password' => '密码',
-	'Class:UserLocal/Attribute:password+' => '用于验证用户身份的字符串',
+	'Attachments:TabTitle_Count' => '附件 (%1$d)',
+	'Attachments:EmptyTabTitle' => '附件',
+	'Attachments:FieldsetTitle' => '附件',
+	'Attachments:DeleteBtn' => '删除',
+	'Attachments:History_File_Added' => '附件 %1$s 已添加.',
+	'Attachments:History_File_Removed' => '附件 %1$s 已移除.',
+	'Attachments:AddAttachment' => '添加附件: ',
+	'Attachments:UploadNotAllowedOnThisSystem' => '本系统不支持文件上传.',
+	'Attachment:Max_Go' => '(最大文件尺寸: %1$s GB)',
+	'Attachment:Max_Mo' => '(最大文件尺寸: %1$s MB)',
+	'Attachment:Max_Ko' => '(最大文件尺寸: %1$s KB)',
+	'Attachments:NoAttachment' => '没有附件. ',
+	'Attachments:PreviewNotAvailable' => '该附件类型不支持预览.',
 ));
-
-
-
 ?>
