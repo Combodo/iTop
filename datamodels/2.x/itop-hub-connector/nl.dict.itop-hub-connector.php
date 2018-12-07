@@ -25,7 +25,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
     'Menu:iTopHub:Register' => 'Verbinding maken met iTop Hub',
-    'Menu:iTopHub:Register+' => 'Ga naar de iTop Hub om je iTop te updaten.',
+    'Menu:iTopHub:Register+' => 'Ga naar de iTop Hub om je iTop bij te werken.',
     'Menu:iTopHub:Register:Description' => '<p>Verkrijg toegang tot jouw iTop Hub (community platform)!</br>Je vindt er alle informatie die je nodig hebt, je kan je omgevingen beheren met gepersonaliseerde tools en extensies.</br><br/>Door van hieruit te verbinden met de Hub, stuur je informatie over deze iTop-mgeving naar de Hub.</p>',
     'Menu:iTopHub:MyExtensions' => 'Mijn extensies',
     'Menu:iTopHub:MyExtensions+' => 'Bekijk de lijst van extensies die je gebruikt in deze iTop-omgeving.',

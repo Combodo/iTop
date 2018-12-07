@@ -37,7 +37,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:Button:Delete' => 'Verwijderen',
 	'Portal:EnvironmentBanner:Title' => 'Je werkt momenteel in de <strong>%1$s</strong>-omgeving',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Keer terug naar de productie-omgeving',
-    'Error:HTTP:401' => 'Authenticatie vereist',
+    'Error:HTTP:401' => 'Aanmelden is vereist',
     'Error:HTTP:404' => 'Pagina kan niet worden gevonden',
 	'Error:HTTP:500' => 'Oeps! Er is een fout opgetreden',
 	'Error:HTTP:GetHelp' => 'Neem contact op met de beheerder als dit probleem zich blijft voordoen',
@@ -59,7 +59,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:Datatables:Language:Sort:Ascending' => 'inschakelen voor een oplopende sortering',
 	'Portal:Datatables:Language:Sort:Descending' => 'inschakelen voor een aflopende sortering',
 	'Portal:Autocomplete:NoResult' => 'Geen data',
-	'Portal:Attachments:DropZone:Message' => 'Plaats jouw bestanden om ze bij te voegen',
+	'Portal:Attachments:DropZone:Message' => 'Sleep jouw bestanden hier om ze toe te voegen',
 	'Portal:File:None' => 'Geen bestand',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
@@ -73,9 +73,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Uitloggen',
 	'Brick:Portal:UserProfile:Password:Title' => 'Wachtwoord',
 	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Nieuw wachtwoord',
-	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Bevestig nieuwe wachtwoord',
-	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Neem contact op met de beheerder om uw wachtwoord te wijzgen',
-	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Uw wachtwoord kan niet worden gewijzigd, neem contact op met de beheerder',
+	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Bevestig nieuw wachtwoord',
+	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Neem contact op met de beheerder om jouw wachtwoord te wijzgen',
+	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Jouw wachtwoord kan niet worden gewijzigd, neem contact op met de beheerder',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Persoonlijke informatie',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
 ));
@@ -125,7 +125,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Object:Form:Create:Title' => 'Nieuw %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Verwerken %2$s (%1$s)',
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
-	'Brick:Portal:Object:Form:Stimulus:Title' => 'Vul alstublieft de volgende informatie in:',
+	'Brick:Portal:Object:Form:Stimulus:Title' => 'Vul de volgende informatie in:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Opgeslagen',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Geselecteerd %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecteer %1$s (%2$s)',
@@ -139,7 +139,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 // Filter brick
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
+    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~', // @todo review where this is used
     'Brick:Portal:Filter:SearchInput:Placeholder' => 'bv. wifi-verbinding',
     'Brick:Portal:Filter:SearchInput:Submit' => 'Zoek',
 ));
