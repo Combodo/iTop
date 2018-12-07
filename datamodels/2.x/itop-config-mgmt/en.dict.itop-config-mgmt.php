@@ -538,9 +538,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Server/Attribute:osversion_id+' => '',
 	'Class:Server/Attribute:osversion_name' => 'OS version name',
 	'Class:Server/Attribute:osversion_name+' => '',
-	'Class:Server/Attribute:oslicence_id' => 'OS licence',
+	'Class:Server/Attribute:oslicence_id' => 'OS license',
 	'Class:Server/Attribute:oslicence_id+' => '',
-	'Class:Server/Attribute:oslicence_name' => 'OS licence name',
+	'Class:Server/Attribute:oslicence_name' => 'OS license name',
 	'Class:Server/Attribute:oslicence_name+' => '',
 	'Class:Server/Attribute:cpu' => 'CPU',
 	'Class:Server/Attribute:cpu+' => '',
@@ -748,9 +748,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareInstance/Attribute:software_id+' => '',
 	'Class:SoftwareInstance/Attribute:software_name' => 'Software name',
 	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software licence',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software license',
 	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software licence name',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software license name',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
 	'Class:SoftwareInstance/Attribute:path' => 'Path',
 	'Class:SoftwareInstance/Attribute:path+' => '',
@@ -938,9 +938,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VirtualMachine/Attribute:osversion_id+' => '',
 	'Class:VirtualMachine/Attribute:osversion_name' => 'OS version name',
 	'Class:VirtualMachine/Attribute:osversion_name+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS licence',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS license',
 	'Class:VirtualMachine/Attribute:oslicence_id+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS licence name',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS license name',
 	'Class:VirtualMachine/Attribute:oslicence_name+' => '',
 	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
 	'Class:VirtualMachine/Attribute:cpu+' => '',
@@ -1109,8 +1109,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software',
 	'Class:Software/Attribute:softwarepatch_list' => 'Software Patches',
 	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software',
-	'Class:Software/Attribute:softwarelicence_list' => 'Software Licences',
-	'Class:Software/Attribute:softwarelicence_list+' => 'All the licences for this software',
+	'Class:Software/Attribute:softwarelicence_list' => 'Software Licenses',
+	'Class:Software/Attribute:softwarelicence_list+' => 'All the licenses for this software',
 ));
 
 //
@@ -1170,7 +1170,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Licence/Attribute:name' => 'Name',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Documents',
-	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this licence',
+	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this license',
 	'Class:Licence/Attribute:org_id' => 'Organization',
 	'Class:Licence/Attribute:org_id+' => '',
 	'Class:Licence/Attribute:organization_name' => 'Organization name',
@@ -1191,7 +1191,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'no',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'yes',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes',
-	'Class:Licence/Attribute:finalclass' => 'Licence sub-class',
+	'Class:Licence/Attribute:finalclass' => 'License sub-class',
 	'Class:Licence/Attribute:finalclass+' => 'Name of the final class',
 ));
 
@@ -1200,16 +1200,16 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:OSLicence' => 'OS Licence',
+	'Class:OSLicence' => 'OS License',
 	'Class:OSLicence+' => '',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS version',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'OS version name',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtual machines',
-	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this licence is used',
-	'Class:OSLicence/Attribute:servers_list' => 'servers',
-	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this licence is used',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this license is used',
+	'Class:OSLicence/Attribute:servers_list' => 'Servers',
+	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this license is used',
 ));
 
 //
@@ -1217,14 +1217,14 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:SoftwareLicence' => 'Software Licence',
+	'Class:SoftwareLicence' => 'Software License',
 	'Class:SoftwareLicence+' => '',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
 	'Class:SoftwareLicence/Attribute:software_name' => 'Software name',
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software instances',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this licence is used',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this license is used',
 ));
 
 //
@@ -1232,11 +1232,11 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkDocumentToLicence' => 'Link Document / Licence',
+	'Class:lnkDocumentToLicence' => 'Link Document / License',
 	'Class:lnkDocumentToLicence+' => '',
-	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
+	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'License',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
-	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Licence name',
+	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'License name',
 	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
 	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
@@ -1839,8 +1839,8 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:ApplicationSolution' => 'Application solutions',
 'Menu:ApplicationSolution+' => 'All application solutions',
 'Menu:ConfigManagementSoftware' => 'Application management',
-'Menu:Licence' => 'Licences',
-'Menu:Licence+' => 'All licences',
+'Menu:Licence' => 'Licenses',
+'Menu:Licence+' => 'All licenses',
 'Menu:Patch' => 'Patches',
 'Menu:Patch+' => 'All patches',
 'Menu:ApplicationInstance' => 'Installed software',

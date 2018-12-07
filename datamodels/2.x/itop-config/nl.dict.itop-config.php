@@ -24,14 +24,14 @@
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Menu:ConfigEditor' => 'Configuratie',
-	'config-edit-title' => 'Editor configuratie',
+	'config-edit-title' => 'Configuratie-editor',
 	'config-edit-intro' => 'Wees uiterst voorzichtig bij het aanpassen van de configuratie.',
 	'config-apply' => 'Opslaan',
 	'config-apply-title' => 'Opslaan (Ctrl+S)',
-	'config-cancel' => 'Reset',
+	'config-cancel' => 'Herbeginnen',
     'config-saved' => 'Wijzigingen opgeslagen',
 	'config-confirm-cancel' => 'Je wijzigingen zullen verloren gaan',
-	'config-no-change' => 'Er zijn geen wijzigingen gebeurd.',
+	'config-no-change' => 'Er zijn geen wijzigingen vastgesteld.',
     'config-reverted' => 'De wijzigingen zijn ongedaan gemaakt.',
 	'config-parse-error' => 'Regel %2$d: %1$s.<br/>Het bestand werd <b>NIET</b> opgeslagen.',
 	'config-current-line' => 'Huidige regel: %1$s',

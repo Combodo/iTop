@@ -56,23 +56,23 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:AuditRule' => 'Audit Regel',
-	'Class:AuditRule+' => 'Een regel voor het controleren van een bepaalde Audit categorie',
+	'Class:AuditRule' => 'Auditregel',
+	'Class:AuditRule+' => 'Een regel voor het controleren van een bepaalde Auditcategorie',
 	'Class:AuditRule/Attribute:name' => 'Naam van de regel',
 	'Class:AuditRule/Attribute:name+' => 'Afkorting van de regel',
 	'Class:AuditRule/Attribute:description' => 'Audit Regel beschrijving',
 	'Class:AuditRule/Attribute:description+' => 'Uitgebreide beschrijving van deze Audit regel',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tagklasse',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Objectklasse',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Veldcode',
 	'Class:AuditRule/Attribute:query' => 'Query om uit te voeren',
 	'Class:AuditRule/Attribute:query+' => 'De OQL-expressie voor het uitvoeren',
 	'Class:AuditRule/Attribute:valid_flag' => 'Geldige objecten?',
-	'Class:AuditRule/Attribute:valid_flag+' => 'True als de regel de geldige objecten teruggeeft, anders false',
-	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'true',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'true',
-	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'false',
-	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'false',
+	'Class:AuditRule/Attribute:valid_flag+' => 'Waar als de regel de geldige objecten teruggeeft, anders onwaar',
+	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'waar',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'waar',
+	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'onwaar',
+	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'onwaar',
 	'Class:AuditRule/Attribute:category_id' => 'Categorie',
 	'Class:AuditRule/Attribute:category_id+' => 'De categorie voor deze regel',
 	'Class:AuditRule/Attribute:category_name' => 'Categorie',
@@ -95,7 +95,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	
 >>>>>>> Version 20181206-1752
 	'Class:QueryOQL/Attribute:fields' => 'Velden',
-	'Class:QueryOQL/Attribute:fields+' => 'Kommagescheiden lijst van attributen (of alias.attribute) om te exporteren',
+	'Class:QueryOQL/Attribute:fields+' => 'Kommagescheiden lijst van attributen (of alias.attribuut) om te exporteren',
 	'Class:QueryOQL' => 'OQL-query',
 	'Class:QueryOQL+' => 'Een query gebaseerd op de Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expressie',
@@ -172,7 +172,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_Dimensions' => 'Dimensie',
-	'Class:URP_Dimensions+' => 'Dimensie van de applicatie (definieert silos)',
+	'Class:URP_Dimensions+' => 'Dimensie van de applicatie (definieert silo\'s)',
 	'Class:URP_Dimensions/Attribute:name' => 'Naam',
 	'Class:URP_Dimensions/Attribute:name+' => 'label',
 	'Class:URP_Dimensions/Attribute:description' => 'Beschrijving',

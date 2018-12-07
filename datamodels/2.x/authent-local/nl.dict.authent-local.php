@@ -35,7 +35,7 @@
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserLocal' => 'iTop-gebruiker',
-	'Class:UserLocal+' => 'Gebruiker geauthenticeerd door iTop',
+	'Class:UserLocal+' => 'Gebruiker aangemeld via iTop',
 	'Class:UserLocal/Attribute:password' => 'Wachtwoord',
-	'Class:UserLDAP/Attribute:password+' => 'String voor authenticatie',
+	'Class:UserLocal/Attribute:password+' => 'String voor authenticatie',
 ));
