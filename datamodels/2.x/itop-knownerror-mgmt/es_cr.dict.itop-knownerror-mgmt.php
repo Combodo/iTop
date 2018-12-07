@@ -187,7 +187,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:FAQ' => 'Preguntas y Respuestas Frecuentes',
 	'Menu:FAQ+' => 'Preguntas y Respuestas Frecuentes',
 
-	'Brick:Portal:FAQ:Menu' => 'Preguntas y Respuetas',
+	'Brick:Portal:FAQ:Menu' => 'Preguntas y Respuestas',
 	'Brick:Portal:FAQ:Title' => 'Preguntas y Respuestas Frecuentes',
 	'Brick:Portal:FAQ:Title+' => '<p>¿En una prisa?</p><p>Vea la lista de las preguntas más comunes y encontrará (tal vez) la respuesta inmediata a sus necesidades.</p>',
 ));

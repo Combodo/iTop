@@ -42,8 +42,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:UserRequest:Shortcuts+' => 'Acceso Rápido',
 	'Menu:UserRequest:MyRequests' => 'Requerimientos Asignados a Mí',
 	'Menu:UserRequest:MyRequests+' => 'Requerimientos Asignados a Mí (como Analista)',
-	'Menu:UserRequest:MySupportRequests' => "Llamadas de Soporte Asignadas a Mí",
-	'Menu:UserRequest:MySupportRequests+' => "Llamadas de Soporte Asignadas a Mí (como Analista)",
+	'Menu:UserRequest:MySupportRequests' => 'Llamadas de Soporte Asignadas a Mí',
+	'Menu:UserRequest:MySupportRequests+' => 'Llamadas de Soporte Asignadas a Mí (como Analista)',
   'Menu:UserRequest:EscalatedRequests' => 'Requerimientos Escalados',
 	'Menu:UserRequest:EscalatedRequests+' => 'Requerimientos Escalados',
 	'Menu:UserRequest:OpenRequests' => 'Requerimientos Abiertos',
@@ -61,6 +61,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:UserRequest:MyWorkOrders' => 'Ordenes de Trabajo asignadas a Mí',
 	'Menu:UserRequest:MyWorkOrders+' => 'Ordenes de Trabajo asignadas a Mí',
 	'Class:Problem:KnownProblemList' => 'Problemas Conocidos',
+	'Tickets:Related:OpenIncidents' => 'Incidentes Abiertos',
 ));
 
 // Dictionnay conventions
@@ -268,6 +269,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => 'Reabrir',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Esperando Aprobación',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => 'Esperando Aprobación',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'No puede asignarse el requerimiento Padre a si mismo',
 ));
 
 
@@ -291,11 +293,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Portal:ShowProblem' => 'Problemas',
 	'Portal:ShowFaqs' => 'Preguntas Frecuentes',
 	'Portal:NoOpenProblem' => 'Problema No Abierto',
-	'Portal:SelectLanguage' => "Seleccione un Idioma",
+	'Portal:SelectLanguage' => 'Seleccione un Idioma',
 	'Portal:LanguageChangedTo_Lang' => 'Idioma Cambiado a ',
 	'Portal:ChooseYourFavoriteLanguage' => 'Seleccione su Idioma Favorito',
-	'Tickets:Related:OpenIncidents' => 'Incidentes Abiertos',
-	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'No puede asignarse el requerimiento Padre a si mismo',
+
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Resolver tickets hijos',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
 ));
