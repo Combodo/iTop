@@ -55,59 +55,11 @@ class WizardHelper
 			if ( ($sAttCode !='id') && ($value !== '$$NULL$$'))
 			{
 				$oAttDef = MetaModel::GetAttributeDef($this->m_aData['m_sClass'], $sAttCode);
-				if (($oAttDef->IsLinkSet()) && ($value != '') )
+				if ($oAttDef->IsLinkSet())
 				{
-					// special handling for lists
-					// assumes this is handled as an array of objects
-					// thus encoded in json like: [ { name:'link1', 'id': 123}, { name:'link2', 'id': 124}...]
-					$aData = json_decode($value, true); // true means decode as a hash array (not an object)
-					// Check what are the meaningful attributes
-					$aFields = $this->GetLinkedWizardStructure($oAttDef);
-					$sLinkedClass = $oAttDef->GetLinkedClass();
-					$aLinkedObjectsArray = array();
-					if (!is_array($aData))
-					{
-						echo ("aData: '$aData' (value: '$value')\n");
-					}
-					foreach($aData as $aLinkedObject)
-					{
-						$oLinkedObj = MetaModel::NewObject($sLinkedClass);
-						foreach($aFields as $sLinkedAttCode)
-						{
-							if ( isset($aLinkedObject[$sLinkedAttCode]) && ($aLinkedObject[$sLinkedAttCode] !== null) )
-							{
-								$sLinkedAttDef = MetaModel::GetAttributeDef($sLinkedClass, $sLinkedAttCode);
-								if (($sLinkedAttDef->IsExternalKey()) && ($aLinkedObject[$sLinkedAttCode] != '') && ($aLinkedObject[$sLinkedAttCode] > 0) )
-								{
-									// For external keys: load the target object so that external fields
-									// get filled too
-									$oTargetObj = MetaModel::GetObject($sLinkedAttDef->GetTargetClass(), $aLinkedObject[$sLinkedAttCode]);
-									$oLinkedObj->Set($sLinkedAttCode, $oTargetObj);
-								}
-								elseif($sLinkedAttDef instanceof AttributeDateTime)
-                                {
-                                    $sDate = $aLinkedObject[$sLinkedAttCode];
-                                    if($sDate !== null && $sDate !== '')
-                                    {
-                                        $oDateTimeFormat = AttributeDateTime::GetFormat();
-                                        $oDate = $oDateTimeFormat->Parse($sDate);
-                                        $sDate = $oDate->format('Y-m-d H:i:s');
-                                    }
-
-                                    $oLinkedObj->Set($sLinkedAttCode, $sDate);
-                                }
-								else
-								{
-									$oLinkedObj->Set($sLinkedAttCode, $aLinkedObject[$sLinkedAttCode]);
-								}
-							}
-						}
-						$aLinkedObjectsArray[] = $oLinkedObj;
-					}
-					$oSet = DBObjectSet::FromArray($sLinkedClass, $aLinkedObjectsArray);
-					$oObj->Set($sAttCode, $oSet);
-				}
-				else if ( $oAttDef->GetEditClass() == 'Document' )
+				    continue;
+ 				}
+				else if ($oAttDef->GetEditClass() == 'Document' )
 				{
 					if ($bReadUploadedFiles)
 					{

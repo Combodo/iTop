@@ -214,62 +214,69 @@ PrepareWidgets();
 EOF
 			);
 		}
+		$sHtml = '';
         $s_captured_output = $this->ob_get_clean_safe();
 		  if (($this->sContentType == 'text/html') &&  ($this->sContentDisposition == 'inline'))
         {
         	// inline content != attachment && html => filter all scripts for malicious XSS scripts
-        	echo self::FilterXSS($this->s_content);
+        	$sHtml .= self::FilterXSS($this->s_content);
         }
         else
         {
-        	echo $this->s_content;
+            $sHtml .= $this->s_content;
         }
         if (!empty($this->m_sMenu))
         {
            $uid = time();
-           echo "<div id=\"accordion_temp_$uid\">\n";
-           echo "<div id=\"accordion\">\n";
-           echo "<!-- Beginning of the accordion menu -->\n";
-           echo self::FilterXSS($this->m_sMenu);
-           echo "<!-- End of the accordion menu-->\n";
-           echo "</div>\n";
-           echo "</div>\n";
+            $sHtml .= "<div id=\"accordion_temp_$uid\">\n";
+            $sHtml .= "<div id=\"accordion\">\n";
+            $sHtml .= "<!-- Beginning of the accordion menu -->\n";
+            $sHtml .= self::FilterXSS($this->m_sMenu);
+            $sHtml .= "<!-- End of the accordion menu-->\n";
+           $sHtml .= "</div>\n";
+           $sHtml .= "</div>\n";
 
-	        echo "<script type=\"text/javascript\">\n";
-	        echo "$('#inner_menu').html($('#accordion_temp_$uid').html());\n";
-	        echo "$('#accordion_temp_$uid').remove();\n";
-	        echo "\n</script>\n";
+	        $sHtml .= "<script type=\"text/javascript\">\n";
+	        $sHtml .= "$('#inner_menu').html($('#accordion_temp_$uid').html());\n";
+	        $sHtml .= "$('#accordion_temp_$uid').remove();\n";
+	        $sHtml .= "\n</script>\n";
         }
 
-        //echo $this->s_deferred_content;
+        //$sHtml .= $this->s_deferred_content;
         if (count($this->a_scripts) > 0)
         {
-            echo "<script type=\"text/javascript\">\n";
-            echo implode("\n", $this->a_scripts);
-            echo "\n</script>\n";
+            $sHtml .= "<script type=\"text/javascript\">\n";
+            $sHtml .= implode("\n", $this->a_scripts);
+            $sHtml .= "\n</script>\n";
         }
         if (!empty($this->s_deferred_content))
         {
-            echo "<script type=\"text/javascript\">\n";
-            echo "\$('body').append('".addslashes(str_replace("\n", '', $this->s_deferred_content))."');\n";
-            echo "\n</script>\n";
+            $sHtml .= "<script type=\"text/javascript\">\n";
+            $sHtml .= "\$('body').append('".addslashes(str_replace("\n", '', $this->s_deferred_content))."');\n";
+            $sHtml .= "\n</script>\n";
         }
         if (!empty($this->m_sReadyScript))
         {
-	        echo "<script type=\"text/javascript\">\n";
-	        echo $this->m_sReadyScript; // Ready Scripts are output as simple scripts
-	        echo "\n</script>\n";
+	        $sHtml .= "<script type=\"text/javascript\">\n";
+	        $sHtml .= $this->m_sReadyScript; // Ready Scripts are output as simple scripts
+	        $sHtml .= "\n</script>\n";
         }
         
 		if (trim($s_captured_output) != "")
         {
-        	echo self::FilterXSS($s_captured_output);
+        	$sHtml .= self::FilterXSS($s_captured_output);
         }
+
+        $oKPI = new ExecutionKPI();
+        echo $sHtml;
+        $oKPI->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
 
         if (class_exists('DBSearch'))
         {
             DBSearch::RecordQueryTrace();
         }
+
+        ExecutionKPI::ReportStats();
     }
 
     /**
