@@ -40,9 +40,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 'Menu:ServiceManagement+' => '服务管理概况',
 'Menu:Service:Overview' => '概况',
 'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => '合同(按服务等级)',
+'UI-ServiceManagementMenu-ContractsBySrvLevel' => '合同 (按服务等级)',
 'UI-ServiceManagementMenu-ContractsByStatus' => '合同(按状态)',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracts ending in less then 30 days',
+'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30天内截止的合同',
 
 'Menu:ProviderContract' => '供应商合同',
 'Menu:ProviderContract+' => '供应商合同',
@@ -60,14 +60,18 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 'Menu:SLT+' => '服务等级目标',
 'Menu:DeliveryModel' => '交付模式',
 'Menu:DeliveryModel+' => '交付模式',
-'Menu:ServiceFamily' => '服务族',
-'Menu:ServiceFamily+' => '服务族',
-'Menu:Procedure' => '流程清单',
-'Menu:Procedure+' => '所有流程清单',
-
-
 
 ));
+
+
+/*
+	'UI:ServiceManagementMenu' => 'Gestion des Services',
+	'UI:ServiceManagementMenu+' => 'Gestion des Services',
+	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
+*/
 
 //
 // Class: Organization
@@ -77,8 +81,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Organization/Attribute:deliverymodel_id' => '交付模式',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => '交付模式名称',
-
+	'Class:Organization/Attribute:deliverymodel_name+' => '',
 ));
+
 
 
 //
@@ -90,6 +95,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ContractType+' => '',
 ));
 
+
 //
 // Class: Contract
 //
@@ -99,9 +105,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Contract+' => '',
 	'Class:Contract/Attribute:name' => '名称',
 	'Class:Contract/Attribute:name+' => '',
-	'Class:Contract/Attribute:org_id' => '客户',
+	'Class:Contract/Attribute:org_id' => '组织',
 	'Class:Contract/Attribute:org_id+' => '',
-	'Class:Contract/Attribute:organization_name' => '客户名称',
+	'Class:Contract/Attribute:organization_name' => '组织名称',
 	'Class:Contract/Attribute:organization_name+' => '通用名称',
 	'Class:Contract/Attribute:contacts_list' => '联系人',
 	'Class:Contract/Attribute:contacts_list+' => '该客户合同相关的所有联系人',
@@ -132,18 +138,19 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Contract/Attribute:provider_id' => '供应商',
 	'Class:Contract/Attribute:provider_id+' => '',
 	'Class:Contract/Attribute:provider_name' => '供应商名称',
-	'Class:Contract/Attribute:provider_name+' => '通用名称',
+	'Class:Contract/Attribute:provider_name+' => '',
 	'Class:Contract/Attribute:status' => '状态',
 	'Class:Contract/Attribute:status+' => '',
 	'Class:Contract/Attribute:status/Value:implementation' => '启用',
 	'Class:Contract/Attribute:status/Value:implementation+' => '启用',
 	'Class:Contract/Attribute:status/Value:obsolete' => '废弃',
 	'Class:Contract/Attribute:status/Value:obsolete+' => '废弃',
-	'Class:Contract/Attribute:status/Value:production' => '生产',
-	'Class:Contract/Attribute:status/Value:production+' => '生产',
-	'Class:Contract/Attribute:finalclass' => '类型',
+	'Class:Contract/Attribute:status/Value:production' => '正式',
+	'Class:Contract/Attribute:status/Value:production+' => '正式',
+	'Class:Contract/Attribute:finalclass' => '合同类型',
 	'Class:Contract/Attribute:finalclass+' => '',
 ));
+
 //
 // Class: CustomerContract
 //
@@ -153,6 +160,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => '服务',
 	'Class:CustomerContract/Attribute:services_list+' => '该合同包含的所有服务',
+	'Class:CustomerContract/Attribute:functionalcis_list' => '配置项',
+	'Class:CustomerContract/Attribute:functionalcis_list+' => '该合同包含的所有配置项',
+	'Class:CustomerContract/Attribute:providercontracts_list' => '供应商合同',
+	'Class:CustomerContract/Attribute:providercontracts_list+' => '所有提供服务的供应商合同(支持合同)',
 ));
 
 //
@@ -163,15 +174,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ProviderContract' => '供应商合同',
 	'Class:ProviderContract+' => '',
 	'Class:ProviderContract/Attribute:functionalcis_list' => '配置项',
-	'Class:ProviderContract/Attribute:functionalcis_list+' => '该供应商合同包含的所有配置项',
+	'Class:ProviderContract/Attribute:functionalcis_list+' => '该合同包含的所有配置项',
 	'Class:ProviderContract/Attribute:sla' => 'SLA',
 	'Class:ProviderContract/Attribute:sla+' => '服务等级协议',
 	'Class:ProviderContract/Attribute:coverage' => '服务时间',
 	'Class:ProviderContract/Attribute:coverage+' => '',
-	'Class:ProviderContract/Attribute:contracttype_id' => '合同类型',
-	'Class:ProviderContract/Attribute:contracttype_id+' => '',
-	'Class:ProviderContract/Attribute:contracttype_name' => '合同类型名称',
-	'Class:ProviderContract/Attribute:contracttype_name+' => '',
 ));
 
 //
@@ -234,10 +241,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => '名称',
 	'Class:ServiceFamily/Attribute:name+' => '',
-	'Class:ServiceFamily/Attribute:services_list' => '服务',
 	'Class:ServiceFamily/Attribute:icon' => '图标',
 	'Class:ServiceFamily/Attribute:icon+' => '',
-	'Class:ServiceFamily/Attribute:services_list+' => '所有的服务',
+	'Class:ServiceFamily/Attribute:services_list' => '服务',
+	'Class:ServiceFamily/Attribute:services_list+' => '列表中包含的所有服务',
 ));
 
 //
@@ -253,10 +260,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Service/Attribute:org_id+' => '',
 	'Class:Service/Attribute:organization_name' => '供应商名称',
 	'Class:Service/Attribute:organization_name+' => '',
-	'Class:Service/Attribute:servicefamily_id' => '服务族',
-	'Class:Service/Attribute:servicefamily_id+' => '',
-	'Class:Service/Attribute:servicefamily_name' => '服务族名称',
-	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:description' => '描述',
 	'Class:Service/Attribute:description+' => '',
 	'Class:Service/Attribute:documents_list' => '文档',
@@ -274,11 +277,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Service/Attribute:icon' => '图标',
 	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => '客户合同',
-	'Class:Service/Attribute:customercontracts_list+' => '所有包含该服务的客户合同',
-	'Class:Service/Attribute:providercontracts_list' => '供应商合同',
-	'Class:Service/Attribute:providercontracts_list+' => '所有包含该服务的供应商合同',
-	'Class:Service/Attribute:functionalcis_list' => '配置项',
-	'Class:Service/Attribute:functionalcis_list+' => '提供该服务所需的所有配置项',
+	'Class:Service/Attribute:customercontracts_list+' => '购买该服务的所有客户合同',
 	'Class:Service/Attribute:servicesubcategories_list' => '子服务',
 	'Class:Service/Attribute:servicesubcategories_list+' => '该服务的所有子服务',
 ));
@@ -332,12 +331,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ServiceSubcategory/Attribute:service_id+' => '',
 	'Class:ServiceSubcategory/Attribute:service_name' => '服务名称',
 	'Class:ServiceSubcategory/Attribute:service_name+' => '',
-	'Class:ServiceSubcategory/Attribute:request_type' => '需求类型',
-	'Class:ServiceSubcategory/Attribute:request_type+' => '',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => '事件',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '事件',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => '服务需求',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => '服务需求',
 	'Class:ServiceSubcategory/Attribute:status' => '状态',
 	'Class:ServiceSubcategory/Attribute:status+' => '',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => '启用',
@@ -346,6 +339,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => '废弃',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => '生产',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => '生产',
+	'Class:ServiceSubcategory/Attribute:request_type' => '需求类型',
+	'Class:ServiceSubcategory/Attribute:request_type+' => '',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => '事件',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => '事件',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => '服务需求',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => '服务需求',
+	'Class:ServiceSubcategory/Attribute:service_provider' => '供应商名称',
+	'Class:ServiceSubcategory/Attribute:service_org_id' => '供应商',
 ));
 
 //
@@ -359,14 +360,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SLA/Attribute:name+' => '',
 	'Class:SLA/Attribute:description' => '描述',
 	'Class:SLA/Attribute:description+' => '',
-	'Class:SLA/Attribute:org_id' => '供应商',
+	'Class:SLA/Attribute:org_id' => '组织',
 	'Class:SLA/Attribute:org_id+' => '',
-	'Class:SLA/Attribute:organization_name' => '供应商名称',
-	'Class:SLA/Attribute:organization_name+' => '通用名称',
+	'Class:SLA/Attribute:organization_name' => '组织名称',
+	'Class:SLA/Attribute:organization_name+' => '',
 	'Class:SLA/Attribute:slts_list' => 'SLT',
 	'Class:SLA/Attribute:slts_list+' => '该SLA 包含的所有服务等级目标',
 	'Class:SLA/Attribute:customercontracts_list' => '客户合同',
-	'Class:SLA/Attribute:customercontracts_list+' => '使用这个SLA 的所有客户合同',
+	'Class:SLA/Attribute:customercontracts_list+' => '使用该SLA 的所有客户合同',
 ));
 
 //
@@ -449,37 +450,37 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 ));
 
 //
-// Class: lnkProviderContractToService
+// Class: lnkCustomerContractToProviderContract
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkProviderContractToService' => '关联 供应商合同/服务',
-	'Class:lnkProviderContractToService+' => '',
-	'Class:lnkProviderContractToService/Attribute:service_id' => '服务',
-	'Class:lnkProviderContractToService/Attribute:service_id+' => '',
-	'Class:lnkProviderContractToService/Attribute:service_name' => '服务名称',
-	'Class:lnkProviderContractToService/Attribute:service_name+' => '',
-	'Class:lnkProviderContractToService/Attribute:providercontract_id' => '供应商合同',
-	'Class:lnkProviderContractToService/Attribute:providercontract_id+' => '',
-	'Class:lnkProviderContractToService/Attribute:providercontract_name' => '供应商合同名称',
-	'Class:lnkProviderContractToService/Attribute:providercontract_name+' => '',
+	'Class:lnkCustomerContractToProviderContract' => '关联 客户合同/供应商合同',
+	'Class:lnkCustomerContractToProviderContract+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => '客户合同',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name' => '客户合同名称',
+	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id' => '供应商合同',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_id+' => '',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name' => '供应商合同名称',
+	'Class:lnkCustomerContractToProviderContract/Attribute:providercontract_name+' => '',
 ));
 
 //
-// Class: lnkFunctionalCIToService
+// Class: lnkCustomerContractToFunctionalCI
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkFunctionalCIToService' => '关联 功能配置项/服务',
-	'Class:lnkFunctionalCIToService+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_id' => '服务',
-	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => '服务名称',
-	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => '配置项',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => '配置项名称',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
+	'Class:lnkCustomerContractToFunctionalCI' => '关联 客户合同/功能配置项',
+	'Class:lnkCustomerContractToFunctionalCI+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => '客户合同',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => '客户合同名称',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id' => '配置项',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name' => '配置项名称',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_name+' => '',
 ));
 
 //
@@ -494,13 +495,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:DeliveryModel/Attribute:org_id' => '组织',
 	'Class:DeliveryModel/Attribute:org_id+' => '',
 	'Class:DeliveryModel/Attribute:organization_name' => '组织名称',
-	'Class:DeliveryModel/Attribute:organization_name+' => '通用名称',
+	'Class:DeliveryModel/Attribute:organization_name+' => '',
 	'Class:DeliveryModel/Attribute:description' => '描述',
 	'Class:DeliveryModel/Attribute:description+' => '',
 	'Class:DeliveryModel/Attribute:contacts_list' => '联系人',
-	'Class:DeliveryModel/Attribute:contacts_list+' => '该交付模式相关的所有联系人 (包括团队和个体)',
+	'Class:DeliveryModel/Attribute:contacts_list+' => '该交付模式的所有联系人 (包括团队和个体)',
 	'Class:DeliveryModel/Attribute:customers_list' => '客户',
-	'Class:DeliveryModel/Attribute:customers_list+' => '所有使用该交付模式的客户',
+	'Class:DeliveryModel/Attribute:customers_list+' => '使用该交付模式的所有客户',
 ));
 
 //
@@ -523,6 +524,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => '角色名称',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
 ));
-
 
 ?>
