@@ -104,10 +104,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => 'Nombre del Modelo de Entrega',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Organización Padre',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Organización Padre',
-	'Class:Organization/Attribute:overview' => 'Overview~~',
-	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
-	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
-	'Organization:Overview:Users' => 'iTop Users within this organization~~',
+	'Class:Organization/Attribute:overview' => 'Resumen',
+	'Organization:Overview:FunctionalCIs' => 'Elementos de Configuración de esta Organización',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'por tipo',
+	'Organization:Overview:Users' => 'Usuarios de iTop en esta organización',
 ));
 
 //
@@ -211,10 +211,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => 'Nombre del Jefe',
 	'Class:Person/Attribute:picture' => 'Fotografía',
 	'Class:Person/Attribute:picture+' => 'Fotografía',
-	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
-	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
-	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
-	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/UniquenessRule:employee_number/Description' => 'El número de empleado debe ser único en la organización',
+	'Class:Person/UniquenessRule:employee_number/Error' => 'Existe una persona en la organización \'$this->org_name$\' con el mismo número de empleado',
+	'Class:Person/UniquenessRule:name/Description' => 'El empleado debe ser único dentro de su organización',
+	'Class:Person/UniquenessRule:name/Error' => 'Existe una persona en la organización \'$this->org_name$\' con el mismo nombre',
 ));
 
 //
@@ -275,7 +275,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:DocumentFile' => 'Documento de Archivo',
-	'Class:DocumentFile+' => '~~',
+	'Class:DocumentFileDoc+' => 'Documento de Archivo',
 	'Class:DocumentFile/Attribute:file' => 'Archivo',
 	'Class:DocumentFile/Attribute:file+' => 'Archivo',
 ));
@@ -700,6 +700,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:ApplicationSolution' => 'Solución Aplicativa',
 	'Class:ApplicationSolution+' => 'Solución Aplicativa',
+	'Class:ApplicationSolution/Attribute:contacts_list' => 'Contactos',
+	'Class:ApplicationSolution/Attribute:contacts_list+' => 'Contactos',
+	'Class:ApplicationSolution/Attribute:documents_list' => 'Documentos',
+	'Class:ApplicationSolution/Attribute:documents_list+' => 'Documentos',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'ECs',
 	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'ECs',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Procesos de Negocio',
@@ -1306,8 +1310,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Brand+' => 'Marca',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Dispositivo Físico',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Dispositivo Físico',
-	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
-	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
+	'Class:Brand/UniquenessRule:name+' => 'El nombre dese ser único',
+	'Class:Brand/UniquenessRule:name' => 'Esta marca ya existe',
 ));
 
 //
@@ -1361,8 +1365,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Model/Attribute:type/Value:Phone+' => 'Teléfono',
 	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo Físico',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Dispositivo Físico',
-	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
-	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
+	'Class:Model/UniquenessRule:name_brand+' => 'El nombre debe ser único en la marca',
+	'Class:Model/UniquenessRule:name_brand' => 'Este modelo ya existe dentro de la marca',
 ));
 
 //
@@ -1878,8 +1882,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 'Menu:ConfigManagement:AllContacts' => 'Contactos: %1$d',
 'Menu:Typology' => 'Configuración de Tipos',
 'Menu:Typology+' => 'Configuración de Tipos',
-'Menu:OSVersion' => 'Versiones de SO',
-'Menu:OSVersion+' => '~~',
+'Menu:OSversion' => 'Versiones de SO',
+'Menu:OSversion+' => 'Versiones de SO',
 'Menu:Software' => 'Catálogo de Software',
 'Menu:Software+' => 'Catálogo de Software',
 'UI_WelcomeMenu_AllConfigItems' => 'Resumen',

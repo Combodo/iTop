@@ -314,6 +314,20 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: UserDashboard
+//
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:UserDashboard' => 'User dashboard',
+	'Class:UserDashboard+' => '',
+	'Class:UserDashboard/Attribute:user_id' => 'User',
+	'Class:UserDashboard/Attribute:user_id+' => '',
+	'Class:UserDashboard/Attribute:menu_code' => 'Menu code',
+	'Class:UserDashboard/Attribute:menu_code+' => '',
+	'Class:UserDashboard/Attribute:contents' => 'Contents',
+	'Class:UserDashboard/Attribute:contents+' => '',
+));
+
+//
 // Expression to Natural language
 //
 Dict::Add('EN US', 'English', 'English', array(

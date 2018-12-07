@@ -122,6 +122,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:User/Attribute:language/Value:EN US+' => 'English (U.S.)',
 	'Class:User/Attribute:language/Value:FR FR' => 'Frances',
 	'Class:User/Attribute:language/Value:FR FR+' => 'Frances (Francia)',
+	'Class:User/Attribute:language/Value:ES CR' => 'Español',
+	'Class:User/Attribute:language/Value:ES CR+' => 'Español, Castellano',
 	'Class:User/Attribute:profile_list' => 'Perfiles',
 	'Class:User/Attribute:profile_list+' => 'Roles, y permisos otorgados a esa persona',
 	'Class:User/Attribute:allowed_org_list' => 'Organizaciones Permitidas',
@@ -135,10 +137,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Al menos un Perfil debe ser asignado a este usuario.',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Al menos una organización debe ser asignada a este usuario.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organización no permitida.',
-	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
+	'Class:User/Error:UserOrganizationNotAllowed' => 'El usuario no pertenece a las oganizaciones permitidas.',
 	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
 	'Class:UserInternal' => 'Usuario Interno',
-	'Class:UserInternal+' => 'Usuario definido dentro de iTop',
+	'Class:UserInternal+' => 'Usuario definido en iTop',
 ));
 
 //
@@ -310,6 +312,20 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 //
+// Class: UserDashboard
+//
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:UserDashboard' => 'Tablero de Usuario',
+	'Class:UserDashboard+' => 'Tablero de Usuario',
+	'Class:UserDashboard/Attribute:user_id' => 'Usuario',
+	'Class:UserDashboard/Attribute:user_id+' => 'Usuario',
+	'Class:UserDashboard/Attribute:menu_code' => 'Código de Menú',
+	'Class:UserDashboard/Attribute:menu_code+' => 'Código de Menú',
+	'Class:UserDashboard/Attribute:contents' => 'Contenidos',
+	'Class:UserDashboard/Attribute:contents+' => 'Contenidos',
+));
+
+//
 // Expression to Natural language
 //
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
@@ -325,9 +341,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'BooleanLabel:yes' => 'si',
-	'BooleanLabel:no' => 'no',
-    'UI:Login:Title' => 'iTop login~~',
+	'BooleanLabel:yes' => 'Si',
+	'BooleanLabel:no' => 'No',
+    'UI:Login:Title' => 'Inicio de Sesión',
 	'Menu:WelcomeMenu' => 'Bienvenido', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'Bienvenido a iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Bienvenido', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -407,7 +423,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:ClickToCreateNew' => 'Crear %1$s',
 	'UI:SearchFor_Class' => 'Buscar %1$s',
 	'UI:NoObjectToDisplay' => 'Ninguna Información por Visualizar.',
-	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
+	'UI:Error:SaveFailed' => 'El objeto no puede ser guardado :',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'El parámetro object_id es obligatorio cuando link_attr es especificado. Verifique la definición de la plantilla de visualización.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'El parámetro target_attr es obligatorio cuando link_attr es especificado. Verifique la definición de la plantilla de visualización.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'El parámetro group_by es obligatorio. Verifique la definición de la plantilla de visualización.',
@@ -423,10 +439,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Carga de archivo interrumpida por la extension. (Nombre de archivo original = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Carga de archivo fallida, causa desconocida. (Codigo de error = "%1$s").',
 	
-	'UI:Error:1ParametersMissing' => 'Error: El siguiente parametro debe ser especificado para esta operacion: %1$s.',
-	'UI:Error:2ParametersMissing' => 'Error: Los siguientes parametros deben ser especificados para esta operacion: %1$s y %2$s.',
-	'UI:Error:3ParametersMissing' => 'Error: Los siguientes parametros deben ser especificados para esta operacion: %1$s, %2$s y %3$s.',
-	'UI:Error:4ParametersMissing' => 'Error: Los siguientes parametros deben ser especificados para esta operacion: %1$s, %2$s, %3$s y %4$s.',
+	'UI:Error:1ParametersMissing' => 'Error: El siguiente parámetro debe ser especificado para esta operacion: %1$s.',
+	'UI:Error:2ParametersMissing' => 'Error: Los siguientes parámetros deben ser especificados para esta operacion: %1$s y %2$s.',
+	'UI:Error:3ParametersMissing' => 'Error: Los siguientes parámetros deben ser especificados para esta operacion: %1$s, %2$s y %3$s.',
+	'UI:Error:4ParametersMissing' => 'Error: Los siguientes parámetros deben ser especificados para esta operacion: %1$s, %2$s, %3$s y %4$s.',
 	'UI:Error:IncorrectOQLQuery_Message' => 'Error: Consulta OQL incorrecta: %1$s',
 	'UI:Error:AnErrorOccuredWhileRunningTheQuery_Message' => 'Se ha producido un error al ejecutar la consulta: %1$s',
 	'UI:Error:ObjectAlreadyUpdated' => 'Error: el objeta ha sido previamente actualizado.',
@@ -732,19 +748,19 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Schema:LifeCycleAttributeMustPrompt' => 'Se le pedira al usuario que cambie el valor',
 	'UI:Schema:LifeCycleEmptyList' => 'Lista Vacía',
 	'UI:Schema:ClassFilter' => 'Clase:',
-	'UI:Schema:DisplayLabel' => 'Despliegue:',
+	'UI:Schema:DisplayLabel' => 'Visualización:',
 	'UI:Schema:DisplaySelector/LabelAndCode' => 'Etiqueta y código',
 	'UI:Schema:DisplaySelector/Label' => 'Etiqueta',
 	'UI:Schema:DisplaySelector/Code' => 'Código',
 	'UI:Schema:Attribute/Filter' => 'Filtro',
-	'UI:Schema:DefaultNullValue' => 'Nulo por Omisión : "%1$s"~~',
+	'UI:Schema:DefaultNullValue' => 'Nulo por Omisión : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Escriba los primeros 3 caracteres...',
 	'UI:Edit:TestQuery' => 'Consulta de Prueba',
 	'UI:Combo:SelectValue' => '--- seleccione un valor ---',
 	'UI:Label:SelectedObjects' => 'Objetos seleccionados: ',
 	'UI:Label:AvailableObjects' => 'Objetos disponibles: ',
 	'UI:Link_Class_Attributes' => '%1$s atributos',
-	'UI:SelectAllToggle+' => 'Seleccionar todo / Deseleccionar todo',
+	'UI:SelectAllToggle+' => 'Seleccionar / Deseleccionar todo',
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Agregar %1$s objetos vinculados con %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Agregar %1$s objetos a vincular con %2$s',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Administrar %1$s objetos vinculados con %2$s: %3$s',
@@ -802,16 +818,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:SearchResultsTitle' => 'Resultados de la Búsqueda',
 	'UI:SearchResultsTitle+' => 'Resultados de la Búsqueda',
 	'UI:Search:NoSearch' => 'Nada para buscar',
-	'UI:Search:NeedleTooShort' => 'La cadena de búsqueda \\"%1$s\\" es demasiado corta. Por favor escriba al menos %2$d caracteres.',
-	'UI:Search:Ongoing' => 'Buscando por \\"%1$s\\"',
+	'UI:Search:NeedleTooShort' => 'La cadena de búsqueda "%1$s" es demasiado corta. Por favor escriba al menos %2$d caracteres.',
+	'UI:Search:Ongoing' => 'Buscando por "%1$s"',
 	'UI:Search:Enlarge' => 'Ampliar la búsqueda',
 	'UI:FullTextSearchTitle_Text' => 'Resultados para "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d objeto(s) de la clase %2$s encontrado(s).',
 	'UI:Search:NoObjectFound' => 'No se encontraron objetos.',
 	'UI:ModificationPageTitle_Object_Class' => 'iTop - %1$s - %2$s modificación',
-	'UI:ModificationTitle_Class_Object' => 'Modificación de %1$s: <span class=\\"hilite\\">%2$s</span>',
+	'UI:ModificationTitle_Class_Object' => 'Modificación de %1$s: <span class=\"hilite\">%2$s</span>',
 	'UI:ClonePageTitle_Object_Class' => 'iTop - Duplicar %1$s - %2$s modificación',
-	'UI:CloneTitle_Class_Object' => 'Duplicado de %1$s: <span class=\\"hilite\\">%2$s</span>',
+	'UI:CloneTitle_Class_Object' => 'Duplicado de %1$s: <span class=\"hilite\">%2$s</span>',
 	'UI:CreationPageTitle_Class' => 'iTop - Creación de %1$s ',
 	'UI:CreationTitle_Class' => 'Creación de %1$s',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Seleccione el tipo de %1$s a crear:',
@@ -906,7 +922,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 'UI-ChangeManagementOverview-ChangeWithOutage' => 'Interrupciones de Servicios debida a Cambios',
 
 'UI:ServiceMgmtMenuOverview:Title' => 'Panel de Control para Administración de Servicios',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Acuerdos con Usuarios a ser Renovados en 30 días',
+'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Contratos de Clientes a ser Renovados en 30 días',
 'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Contratos de Proveedores a ser Renovados en 30 días',
 
 	'UI:ContactsMenu' => 'Contactos',
@@ -930,11 +946,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:NotificationsMenu:Title' => 'Configuración de las <span class="hilite">Notificaciones</span>',
 	'UI:NotificationsMenu:Help' => 'Ayuda',
 	'UI:NotificationsMenu:HelpContent' => '<p>En iTop las notificaciones son completamente personalizables. Están basadas en dos conjuntos de objetos: <i>Disparadores y Acciones</i>.</p>
-<p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
+<p>Los <i><b>disparadores</b></i> definen cuando una notificación debe ser ejecutada.  Existen 3 tipos de disparadores para cubrir las 3 diferentes fases del ciclo de vida de un objeto:
 <ol>
-	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
-	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
-	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
+	<li>Los disparadores "OnCreate" son ejecutados cuando un objeto de la clase especificada es creado</li>
+	<li>Los disparadores "OnStateEnter" son ejecutados antes de que un determinado objeto entre un estado especificado (viniendo de otro estado)</li>
+	<li>Los disparadores "OnStateLeave" son ejecutados cuando un objeto de clase determinada deja un estado especificado</li>
+	<li>Los disparadores "On threshold" son ejecutados cuando un umbral para TDA o TDS es alcanzado</li>
+	<li>Los disparadores "On portal update" son ejecutados cuando un ticket es actualizado desde el portal</li>
 </ol>
 </p>
 <p>
@@ -943,7 +961,7 @@ Tales acciones tambien definen la plantilla a ser usada para enviar el correo as
 </p>
 <p>Una página especial: <a href="../setup/email.test.php" target="_blank">email.test.php</a> está disponible para probar y diagnosticar su configuración de correo de PHP.</p>
 <p>Para ser ejecutadas, las acciones deben estar asociadas con los disparadores.
-Cuando se asocien con un disparador, cada acción recibe un número de "orden", esto especifica en que orden se ejecutaran las acciones.</p>~~',
+Cuando se asocien con un disparador, cada acción recibe un número de "orden", esto especifica en que orden se ejecutaran las acciones.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Disparadores',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Disparadores disponibles',
 	'UI:NotificationsMenu:OnCreate' => 'Cuando un objeto es creado',
@@ -1213,7 +1231,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfWeek' => 'Día de la semana por %1$s',
 	'UI:DashletGroupBy:Prop-GroupBy:DayOfMonth' => 'Día del mes por %1$s',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-Hour' => '%1$s (hora)',
-	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (me)',
+	'UI:DashletGroupBy:Prop-GroupBy:Select-Month' => '%1$s (mes)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (día de la semana)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (día del mes)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Por favor seleccione los campos por los cuales los objetos serán agrupados',
@@ -1226,10 +1244,10 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:DashletGroupByTable:Description' => 'Lista (Campos de agrupación)',
 
 	// New in 2.5
-	'UI:DashletGroupBy:Prop-Function' => 'Función de Agregación',
+	'UI:DashletGroupBy:Prop-Function' => 'Función de Agrupación',
 	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Atributo de Función',
 	'UI:DashletGroupBy:Prop-OrderDirection' => 'Dirección',
-	'UI:DashletGroupBy:Prop-OrderField' => 'Order by~~',
+	'UI:DashletGroupBy:Prop-OrderField' => 'Ordenar por',
 	'UI:DashletGroupBy:Prop-Limit' => 'Límite',
 
 	'UI:DashletGroupBy:Order:asc' => 'Ascendente',
@@ -1456,7 +1474,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s y %3$s otros',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Cualquier',
 	//   - TagSet widget
-	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
+	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
     //   - External key widget
     'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s está definido',
     'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s no está definido',
@@ -1527,7 +1545,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Expression:Operator:AND' => ' Y ',
 	'Expression:Operator:OR' => ' O ',
-	'Expression:Operator:=' => ': ~~',
+	'Expression:Operator:=' => ': ',
 
 	'Expression:Unit:Short:DAY' => 'd',
 	'Expression:Unit:Short:WEEK' => 's',
