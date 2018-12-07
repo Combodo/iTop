@@ -2433,6 +2433,10 @@ EOF
 		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
 
 		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
+		if (!is_array($aFieldsMap))
+		{
+			$aFieldsMap = array();
+		}
 		if ($iKey > 0)
 		{
 			$aFieldsMap['id'] = $sPrefix.'_id';
