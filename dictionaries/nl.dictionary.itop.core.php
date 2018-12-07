@@ -873,13 +873,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
 	// Explain working time computing
-	'Core:ExplainWTC:ElapsedTime' => 'Tijd voorbij (opgeslagen als \\"%1$s\\")',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tijd gespendeerd voor \\"%1$s\\"',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline voor \\"%1$s\\" at %2$d%%',
+	'Core:ExplainWTC:ElapsedTime' => 'Tijd voorbij (opgeslagen als "%1$s")',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tijd gespendeerd voor "%1$s"',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline voor "%1$s" at %2$d%%',
 
 	// Bulk export
-	'Core:BulkExport:MissingParameter_Param' => 'Ontbrekende parameter \\"%1$s\\"',
-	'Core:BulkExport:InvalidParameter_Query' => 'Ongeldige waarde voor de parameter \\"query\\". Er is geen Query Phrasebook die overeenkomt met id: \\"%1$s\\".',
+	'Core:BulkExport:MissingParameter_Param' => 'Ontbrekende parameter "%1$s"',
+	'Core:BulkExport:InvalidParameter_Query' => 'Ongeldige waarde voor de parameter "query". Er is geen Query Phrasebook die overeenkomt met id: "%1$s".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export-formaat:',
 	'Core:BulkExportOf_Class' => '%1$s Export',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Download %1$s',
