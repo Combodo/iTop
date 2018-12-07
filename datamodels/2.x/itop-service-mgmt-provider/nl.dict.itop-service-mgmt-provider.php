@@ -21,6 +21,7 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  * 
+ * @author jbostoen (2018)
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
@@ -48,13 +49,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 'Menu:CustomerContract+' => 'Klantencontracten',
 'Menu:ServiceSubcategory' => 'Subcategorieën services',
 'Menu:ServiceSubcategory+' => 'Subcategorieën services',
-'Menu:Service' => 'Diensten',
-'Menu:Service+' => 'Diensten',
-'Menu:ServiceElement' => 'Dienstelementen',
-'Menu:ServiceElement+' => 'Dienstelementen',
-'Menu:SLA' => 'SLAs',
+'Menu:Service' => 'Services',
+'Menu:Service+' => 'Services',
+'Menu:ServiceElement' => 'Service-elementen',
+'Menu:ServiceElement+' => 'Service-elementen',
+'Menu:SLA' => 'SLA\'s',
 'Menu:SLA+' => 'Service Level Agreements',
-'Menu:SLT' => 'SLTs',
+'Menu:SLT' => 'SLT\'s',
 'Menu:SLT+' => 'Service Level Targets',
 'Menu:DeliveryModel' => 'Leveringsmodellen',
 'Menu:DeliveryModel+' => 'Leveringsmodellen',
@@ -108,16 +109,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Contract/Attribute:organization_name' => 'Naam klant',
 	'Class:Contract/Attribute:organization_name+' => 'Naam van de klant',
 	'Class:Contract/Attribute:contacts_list' => 'Contacten',
-	'Class:Contract/Attribute:contacts_list+' => 'Alle contacten voor dit klant contract',
+	'Class:Contract/Attribute:contacts_list+' => 'Alle contacten voor dit klantencontract',
 	'Class:Contract/Attribute:documents_list' => 'Documenten',
-	'Class:Contract/Attribute:documents_list+' => 'Alle documenten voor dit klant contract',
+	'Class:Contract/Attribute:documents_list+' => 'Alle documenten voor dit klantencontract',
 	'Class:Contract/Attribute:description' => 'Omschrijving',
 	'Class:Contract/Attribute:description+' => '',
 	'Class:Contract/Attribute:start_date' => 'Startdatum',
 	'Class:Contract/Attribute:start_date+' => '',
 	'Class:Contract/Attribute:end_date' => 'Einddatum',
 	'Class:Contract/Attribute:end_date+' => '',
-	'Class:Contract/Attribute:cost' => 'Kosten',
+	'Class:Contract/Attribute:cost' => 'Kostprijs',
 	'Class:Contract/Attribute:cost+' => '',
 	'Class:Contract/Attribute:cost_currency' => 'Valuta',
 	'Class:Contract/Attribute:cost_currency+' => '',
@@ -129,7 +130,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Contract/Attribute:contracttype_id+' => '',
 	'Class:Contract/Attribute:contracttype_name' => 'Naam soort contract',
 	'Class:Contract/Attribute:contracttype_name+' => '',
-	'Class:Contract/Attribute:billing_frequency' => 'Frequentie facturering',
+	'Class:Contract/Attribute:billing_frequency' => 'Frequentie facturatie',
 	'Class:Contract/Attribute:billing_frequency+' => '',
 	'Class:Contract/Attribute:cost_unit' => 'Eenheid kostprijs',
 	'Class:Contract/Attribute:cost_unit+' => '',
@@ -157,7 +158,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CustomerContract' => 'Klantencontract',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Services',
-	'Class:CustomerContract/Attribute:services_list+' => 'Alle diensten die aangeschaft zijn voor dit contract',
+	'Class:CustomerContract/Attribute:services_list+' => 'Alle services die aangeschaft zijn voor dit contract',
 	'Class:CustomerContract/Attribute:functionalcis_list' => 'CI\'s',
 	'Class:CustomerContract/Attribute:functionalcis_list+' => 'Alle configuratie-items die onder dit contract vallen',
 	'Class:CustomerContract/Attribute:providercontracts_list' => 'Leverancierscontracten',
@@ -218,7 +219,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / Leverancierscontract',
+	'Class:lnkFunctionalCIToProviderContract' => 'Link Functioneel CI / Leverancierscontract',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Leverancierscontract',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
@@ -242,7 +243,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ServiceFamily/Attribute:icon' => 'Pictogram',
 	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Services',
-	'Class:ServiceFamily/Attribute:services_list+' => 'Alle diensten in deze categorie',
+	'Class:ServiceFamily/Attribute:services_list+' => 'Alle services in deze categorie',
 ));
 
 //
@@ -325,9 +326,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ServiceSubcategory/Attribute:name+' => '',
 	'Class:ServiceSubcategory/Attribute:description' => 'Omschrijving',
 	'Class:ServiceSubcategory/Attribute:description+' => '',
-	'Class:ServiceSubcategory/Attribute:service_id' => 'Dienst',
+	'Class:ServiceSubcategory/Attribute:service_id' => 'Service',
 	'Class:ServiceSubcategory/Attribute:service_id+' => '',
-	'Class:ServiceSubcategory/Attribute:service_name' => 'Naam dienst',
+	'Class:ServiceSubcategory/Attribute:service_name' => 'Naam service',
 	'Class:ServiceSubcategory/Attribute:service_name+' => '',
 	'Class:ServiceSubcategory/Attribute:status' => 'Status',
 	'Class:ServiceSubcategory/Attribute:status+' => '',
@@ -341,8 +342,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ServiceSubcategory/Attribute:request_type+' => '',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident' => 'Incident',
 	'Class:ServiceSubcategory/Attribute:request_type/Value:incident+' => 'Incident',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Service-verzoek',
-	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'Service-verzoek',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request' => 'Serviceverzoek',
+	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'Serviceverzoek',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Naam service-rovider',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Service-provider',
 ));
@@ -362,7 +363,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SLA/Attribute:org_id+' => '',
 	'Class:SLA/Attribute:organization_name' => 'Naam leverancier',
 	'Class:SLA/Attribute:organization_name+' => 'Naam van de leverancier',
-	'Class:SLA/Attribute:slts_list' => 'SLTs',
+	'Class:SLA/Attribute:slts_list' => 'SLT\'s',
 	'Class:SLA/Attribute:slts_list+' => 'Alle service level-doelstellingen voor deze SLA',
 	'Class:SLA/Attribute:customercontracts_list' => 'Klantencontracten',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Alle klantencontracten die gebruik maken van deze SLA',
@@ -391,8 +392,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:SLT/Attribute:request_type+' => '',
 	'Class:SLT/Attribute:request_type/Value:incident' => 'Incident',
 	'Class:SLT/Attribute:request_type/Value:incident+' => 'Incident',
-	'Class:SLT/Attribute:request_type/Value:service_request' => 'Service-verzoek',
-	'Class:SLT/Attribute:request_type/Value:service_request+' => 'Service-verzoek',
+	'Class:SLT/Attribute:request_type/Value:service_request' => 'Serviceverzoek',
+	'Class:SLT/Attribute:request_type/Value:service_request+' => 'Serviceverzoek',
 	'Class:SLT/Attribute:metric' => 'Maatstaf',
 	'Class:SLT/Attribute:metric+' => '',
 	'Class:SLT/Attribute:metric/Value:tto' => 'TTO',
@@ -437,9 +438,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkCustomerContractToService/Attribute:customercontract_id+' => '',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name' => 'Naam klantencontract',
 	'Class:lnkCustomerContractToService/Attribute:customercontract_name+' => '',
-	'Class:lnkCustomerContractToService/Attribute:service_id' => 'Dienst',
+	'Class:lnkCustomerContractToService/Attribute:service_id' => 'Service',
 	'Class:lnkCustomerContractToService/Attribute:service_id+' => '',
-	'Class:lnkCustomerContractToService/Attribute:service_name' => 'Naam dienst',
+	'Class:lnkCustomerContractToService/Attribute:service_name' => 'Naam service',
 	'Class:lnkCustomerContractToService/Attribute:service_name+' => '',
 	'Class:lnkCustomerContractToService/Attribute:sla_id' => 'SLA',
 	'Class:lnkCustomerContractToService/Attribute:sla_id+' => '',
@@ -469,11 +470,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:lnkCustomerContractToFunctionalCI' => 'Link Klantcontract / Functionele CI',
+	'Class:lnkCustomerContractToFunctionalCI' => 'Link Klantencontract / Functioneel CI',
 	'Class:lnkCustomerContractToFunctionalCI+' => '',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Klantcontract',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id' => 'Klantencontract',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_id+' => '',
-	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => 'Naam klantcontract',
+	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name' => 'Naam klantencontract',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:customercontract_name+' => '',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkCustomerContractToFunctionalCI/Attribute:functionalci_id+' => '',
