@@ -39,14 +39,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeLinkedSet' => 'Reeks van objecten',
 	'Core:AttributeLinkedSet+' => 'Elke soort objecten van dezelfde klasse of subklasse',
 
-	'Core:AttributeDashboard' => 'Dashboard~~',
-	'Core:AttributeDashboard+' => '~~',
+	'Core:AttributeDashboard' => 'Dashboard',
+	'Core:AttributeDashboard+' => 'Dashboard',
 
-	'Core:AttributePhoneNumber' => 'Phone number~~',
-	'Core:AttributePhoneNumber+' => '~~',
+	'Core:AttributePhoneNumber' => 'Telefoonnummer',
+	'Core:AttributePhoneNumber+' => 'Telefoonnummer',
 
-	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate+' => '~~',
+	'Core:AttributeObsolescenceDate' => 'Buiten gebruik sinds',
+	'Core:AttributeObsolescenceDate+' => 'Tijdstip sinds wanneer dit object buiten gebruik is',
 
     'Core:AttributeTagSet' => 'Lijst van tags',
     'Core:AttributeTagSet+' => '',

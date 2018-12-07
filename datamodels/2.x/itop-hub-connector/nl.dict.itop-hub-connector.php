@@ -74,7 +74,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:InstallationProgress:DatabaseBackup' => 'Backup iTop-omgeving...',
 	'iTopHub:InstallationProgress:ExtensionsInstallation' => 'Installatie van de extensies',
 	'iTopHub:InstallationEffect:MissingDependencies' => 'Deze extensie kan niet geïnstalleerd worden omdat er niet aan vereisten voldaan is.',
-	'iTopHub:InstallationEffect:MissingDependencies_Details' => 'De extensie vereist de module(s): %1$s~~',
+	'iTopHub:InstallationEffect:MissingDependencies_Details' => 'De extensie vereist de module(s): %1$s',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => 'Installatie gelukt!',
 	
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s versie: %2$s.',

@@ -167,7 +167,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:RoutineChange' => 'Routine Change~~',
+	'Class:RoutineChange' => 'Routine Change',
 	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Valideer',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
