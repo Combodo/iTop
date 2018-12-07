@@ -45,6 +45,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:UserRequest:EscalatedRequests+' => 'Requerimientos Escalados',
 	'Menu:UserRequest:OpenRequests' => 'Requerimientos Abiertos',
 	'Menu:UserRequest:OpenRequests+' => 'Requerimientos Abiertos',
+	'Menu:UserRequest:OpenProblems' => 'Problemas Abiertos',
+	'Menu:UserRequest:OpenProblems+' => 'Problemas Abiertos',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Requerimientos asignados a Mí',
 	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Requerimientos por Tipo de los Últimos 14 días',
 	'UI-RequestManagementOverview-Last-14-days' => 'Número de Requerimientos de los Últimos 14 días',
@@ -214,6 +216,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:UserRequest/Attribute:parent_request_ref+' => 'Ref. Requerimiento',
 	'Class:UserRequest/Attribute:parent_problem_id' => 'Problema Padre',
 	'Class:UserRequest/Attribute:parent_problem_id+' => 'Problema Padre',
+	'Class:UserRequest/Attribute:parent_incident_id' => 'Incidente Padre',
+	'Class:UserRequest/Attribute:parent_incident_id+' => 'Incidente Padre',
 	'Class:UserRequest/Attribute:parent_problem_ref' => 'Ref. Problema',
 	'Class:UserRequest/Attribute:parent_problem_ref+' => 'Ref. Problema',
 	'Class:UserRequest/Attribute:parent_change_id' => 'Cambio Padre',
@@ -296,7 +300,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+	'Organization:Overview:UserRequests' => 'Requerimientos de esta organización',
+	'Organization:Overview:MyUserRequests' => 'Mis requerimientos para esta organización',
+	'Organization:Overview:Tickets' => 'Tickets para esta organización',
 ));

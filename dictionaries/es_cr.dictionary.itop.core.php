@@ -28,7 +28,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:UnknownObjectLabel' => 'Elemento No Encontrado (Clase: %1$s, Identificador: %2$d)',
 	'Core:UnknownObjectTip' => 'El Elemento no pudo ser encontrado.  Pudo haber sido eliminado hace tiempo y purgado de la Bitácora.',
 
-	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+	'Core:UniquenessDefaultError' => 'Regla de unicidad \'%1$s\' en error',
 
 	'Core:AttributeLinkedSet' => 'Arreglo de objetos',
 	'Core:AttributeLinkedSet+' => 'Cualquier tipo de objetos [subclass] de la misma clase',
@@ -102,8 +102,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
  	'Core:AttributeEncryptedString' => 'Cadena encriptada',
 	'Core:AttributeEncryptedString+' => 'Cadena encriptada con llave local',
-	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
-	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+	'Core:AttributeEncryptUnknownLibrary' => 'Librería de Encriptación especificada (%1$s) es desconocida',
+	'Core:AttributeEncryptFailedToDecrypt' => '** Error de Desencripción **',
 
 	'Core:AttributeText' => 'Texto',
 	'Core:AttributeText+' => 'Cadena de Múltiples Líneas de Caracteres',
@@ -546,7 +546,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtro',
 	'Class:TriggerOnObject/Attribute:filter+' => '',
 	'TriggerOnObject:WrongFilterQuery' => 'Filtro de consulta incorrecto: %1$s',
-	'TriggerOnObject:WrongFilterClass' => 'El filtro de consulta debe regresar un objeto de la clase \\"%1$s\\"',
+	'TriggerOnObject:WrongFilterClass' => 'El filtro de consulta debe regresar un objeto de la clase "%1$s"',
 ));
 
 //
@@ -725,6 +725,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:Synchro:label_obj_new_updated' => 'Actualizados (%1$s)',
 	'Core:Synchro:label_obj_created' => 'Creados (%1$s)',
 	'Core:Synchro:label_obj_new_errors' => 'Errores (%1$s)',
+	'Core:Synchro:History' => 'Historia de Sincronización',
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica Procesada: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
@@ -864,13 +865,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
 	// Explain working time computing
-	'Core:ExplainWTC:ElapsedTime' => 'Tiempo transcurrido (almacenado como \\"%1$s\\")',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tiempo invertido para \\"%1$s\\"',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Límite para \\"%1$s\\" at %2$d%%',
+	'Core:ExplainWTC:ElapsedTime' => 'Tiempo transcurrido (almacenado como \"%1$s\")',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tiempo invertido para \"%1$s\"',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Límite para \"%1$s\" at %2$d%%',
 
 	// Bulk export
-	'Core:BulkExport:MissingParameter_Param' => 'Parámetro faltante \\"%1$s\\"',
-	'Core:BulkExport:InvalidParameter_Query' => 'Valor inválido para parámetro \\"query\\". No existe en la libreta de consulta el Id: \\"%1$s\\".',
+	'Core:BulkExport:MissingParameter_Param' => 'Parámetro faltante \"%1$s\"',
+	'Core:BulkExport:InvalidParameter_Query' => 'Valor inválido para parámetro \"query\". No existe en la libreta de consulta el Id: \"%1$s\".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Formato de Exportación:',
 	'Core:BulkExportOf_Class' => '%1$s Exportar',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click aquí para descargar %1$s',
@@ -903,7 +904,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:BulkExport:XMLOptions' => 'Opciones XML',
 	'Core:BulkExport:SpreadsheetFormat' => 'Formato hoja tabular HTML (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Opcioens Hoja Tabular',
-	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
+	'Core:BulkExport:OptionNoLocalize' => 'Código de exportación en lugar de etiqueta',
 	'Core:BulkExport:OptionLinkSets' => 'Incluir objetos ligados',
 	'Core:BulkExport:OptionFormattedText' => 'Conservar formato de texto',
 	'Core:BulkExport:ScopeDefinition' => 'Definición de los objetos a exportar',
@@ -967,4 +968,70 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
 	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
+));
+
+//
+// Class: DBProperty
+//
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:DBProperty' => 'Propiedad BD',
+	'Class:DBProperty+' => 'Propiedad de Base de Datos',
+	'Class:DBProperty/Attribute:name' => 'Nombre',
+	'Class:DBProperty/Attribute:name+' => 'Nombre',
+	'Class:DBProperty/Attribute:description' => 'Descripción',
+	'Class:DBProperty/Attribute:description+' => 'Descripción',
+	'Class:DBProperty/Attribute:value' => 'Valor',
+	'Class:DBProperty/Attribute:value+' => 'Valor',
+	'Class:DBProperty/Attribute:change_date' => 'Fecha de Cambio',
+	'Class:DBProperty/Attribute:change_date+' => 'Fecha de Cambio',
+	'Class:DBProperty/Attribute:change_comment' => 'Comentario Cambio',
+	'Class:DBProperty/Attribute:change_comment+' => 'Comentario del Cambio',
+));
+
+//
+// Class: BackgroundTask
+//
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:BackgroundTask' => 'Tarea en Segundo Plano',
+	'Class:BackgroundTask+' => 'Tarea en Segundo Plano',
+	'Class:BackgroundTask/Attribute:class_name' => 'Nombre de Clase',
+	'Class:BackgroundTask/Attribute:class_name+' => 'Nombre corto para esta clase',
+	'Class:BackgroundTask/Attribute:first_run_date' => 'Primera Ejecución',
+	'Class:BackgroundTask/Attribute:first_run_date+' => 'Fecha de la Primera Ejecución',
+	'Class:BackgroundTask/Attribute:latest_run_date' => 'Última Ejecución',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => 'Fecha de la Última Ejecución',
+	'Class:BackgroundTask/Attribute:next_run_date' => 'Siguiente Ejecución',
+	'Class:BackgroundTask/Attribute:next_run_date+' => 'Fecha de la Siguiente Ejecución',
+	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total de Ejecuciones',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => 'Contador del Total de Ejecuciones',
+	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Duración Última Ejecución',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => 'Duración de la Última Ejecución',
+	'Class:BackgroundTask/Attribute:min_run_duration' => 'Mínima Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => 'Mínima Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:max_run_duration' => 'Máxima Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => 'Máxima Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:average_run_duration' => 'Promedio Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => 'Promedio Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:running' => 'En Ejecución',
+	'Class:BackgroundTask/Attribute:running+' => 'Indicador de proceso en Ejecución',
+	'Class:BackgroundTask/Attribute:status' => 'Estatus',
+	'Class:BackgroundTask/Attribute:status+' => 'Estatus',
+));
+
+//
+// Class: AsyncTask
+//
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:AsyncTask' => 'Tarea Asíncrona',
+	'Class:AsyncTask+' => 'Tarea Asíncrona',
+	'Class:AsyncTask/Attribute:created' => 'Creado',
+	'Class:AsyncTask/Attribute:created+' => 'Creado',
+	'Class:AsyncTask/Attribute:started' => 'Iniciado',
+	'Class:AsyncTask/Attribute:started+' => 'Iniciado',
+	'Class:AsyncTask/Attribute:planned' => 'Planeado',
+	'Class:AsyncTask/Attribute:planned+' => 'Planeado',
+	'Class:AsyncTask/Attribute:event_id' => 'Evento',
+	'Class:AsyncTask/Attribute:event_id+' => 'Evento',
+	'Class:AsyncTask/Attribute:finalclass' => 'Clase',
+	'Class:AsyncTask/Attribute:finalclass+' => 'Clase',
 ));
