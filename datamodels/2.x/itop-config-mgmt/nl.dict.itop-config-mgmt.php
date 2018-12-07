@@ -1695,13 +1695,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:lnkApplicationSolutionToFunctionalCI' => 'Link Applicatie-oplossing / Functionele CI',
+	'Class:lnkApplicationSolutionToFunctionalCI' => 'Link Applicatie-oplossing / Functioneel CI',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Applicatie-oplossing',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Naam pplicatie-oplossing',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id' => 'Functionele CI',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id' => 'Functioneel CI',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Naam functionele CI',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '',

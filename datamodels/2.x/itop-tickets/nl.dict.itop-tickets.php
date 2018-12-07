@@ -246,7 +246,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Page:DefaultTitle' => '%1$s - Gebruikersportaal',
 	'Brick:Portal:UserProfile:Title' => 'Mijn profiel',
 	'Brick:Portal:NewRequest:Title' => 'Nieuw verzoek',
-	'Brick:Portal:NewRequest:Title+' => '<p>Hulp nodig?</p><p>Selecteer de categorie uit de dienstencatalogus en verstuur jouw verzoek naar onze support teams.</p>',
+	'Brick:Portal:NewRequest:Title+' => '<p>Hulp nodig?</p><p>Selecteer de categorie uit de servicecatalogus en verstuur jouw verzoek naar onze support teams.</p>',
 	'Brick:Portal:OngoingRequests:Title' => 'Lopende verzoeken',
 	'Brick:Portal:OngoingRequests:Title+' => '<p>Verder gaan met jouw openstaande verzoeken.</p><p>Controleer de voortgang, voeg commentaar of documenten toe, bevestig de geboden oplossing.</p>',
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Openstaand',
