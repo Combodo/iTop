@@ -142,6 +142,9 @@ $.Autocompleter = function(input, options) {
 					blockSubmit = true;
 					return false;
 				}
+                if ($(options.keyHolder).val() === "") {
+                    return false;
+                }
 				break;
 				
 			case KEY.ESC:
