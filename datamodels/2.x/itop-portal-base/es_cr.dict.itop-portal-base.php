@@ -27,8 +27,8 @@
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Page:DefaultTitle' => '%1$s - Portal de Usuario',
 	'Page:PleaseWait' => 'Por favor espere...',
-	'Page:Home' => 'Bienvenido',
-	'Page:GoPortalHome' => 'Regresar a bienvenida',
+	'Page:Home' => 'Inicio',
+	'Page:GoPortalHome' => 'Regresar a Inicio',
 	'Page:GoPreviousPage' => 'Página anterior',
     'Page:ReloadPage' => 'Recargar página',
 	'Portal:Button:Submit' => 'Enviar',
@@ -78,8 +78,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirmar contraseña',
 	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Para cambiar su contraseña, póngase en contacto con su administrador de %1$s',
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'No se puede cambiar la contraseña, póngase en contacto con el administrador de %1$s',
-	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Informaciones personales',
+	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Información Personal',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
+));
+
+// AggregatePageBrick
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Brick:Portal:AggregatePage:DefaultTitle' => 'Tablero de Control',
 ));
 
 // BrowseBrick brick
@@ -95,25 +100,25 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Browse:Action:CreateObjectFromThis' => 'Nuevo %1$s',
 	'Brick:Portal:Browse:Tree:ExpandAll' => 'Expandir todo',
 	'Brick:Portal:Browse:Tree:CollapseAll' => 'Desplegar todo',
-	'Brick:Portal:Browse:Filter:NoData' => 'Sin objeto',
+	'Brick:Portal:Browse:Filter:NoData' => 'Sin elementos',
 ));
 
 // ManageBrick brick
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Manage:Name' => 'Administrar elementos',
-	'Brick:Portal:Manage:Table:NoData' => 'Sin objeto.',
+	'Brick:Portal:Manage:Table:NoData' => 'Sin elementos',
     'Brick:Portal:Manage:Table:ItemActions' => 'Acciones',
-    'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
-    'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
-    'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
-    'Brick:Portal:Manage:Others' => 'Others~~',
-    'Brick:Portal:Manage:All' => 'All~~',
-    'Brick:Portal:Manage:Group' => 'Group~~',
-    'Brick:Portal:Manage:fct:count' => 'Total~~',
-    'Brick:Portal:Manage:fct:sum' => 'Sum~~',
-    'Brick:Portal:Manage:fct:avg' => 'Average~~',
-    'Brick:Portal:Manage:fct:min' => 'Min~~',
-    'Brick:Portal:Manage:fct:max' => 'Max~~',
+    'Brick:Portal:Manage:DisplayMode:list' => 'Lista',
+    'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Gráfica de Pastel',
+	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Gráfica de Barra',
+	'Brick:Portal:Manage:Others' => 'Otros',
+	'Brick:Portal:Manage:All' => 'Todos',
+	'Brick:Portal:Manage:Group' => 'Grupo',
+	'Brick:Portal:Manage:fct:count' => 'Total',
+	'Brick:Portal:Manage:fct:sum' => 'Suma',
+	'Brick:Portal:Manage:fct:avg' => 'Promedio',
+	'Brick:Portal:Manage:fct:min' => 'Mínimo',
+	'Brick:Portal:Manage:fct:max' => 'Máximo',
 ));
 
 // ObjectBrick brick

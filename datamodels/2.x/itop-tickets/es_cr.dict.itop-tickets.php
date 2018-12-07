@@ -83,6 +83,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Ticket/Attribute:workorders_list+' => 'Ordenes de Trabajo',
 	'Class:Ticket/Attribute:finalclass' => 'Clase',
 	'Class:Ticket/Attribute:finalclass+' => 'Clase',
+	'Class:Ticket/Attribute:operational_status' => 'Estatus Operativo',
+	'Class:Ticket/Attribute:operational_status+' => 'Calculado despues del status detallado',
+	'Class:Ticket/Attribute:operational_status/Value:ongoing' => 'En Proceso',
+	'Class:Ticket/Attribute:operational_status/Value:ongoing+' => 'En Proceso',
+	'Class:Ticket/Attribute:operational_status/Value:resolved' => 'Solucionado',
+	'Class:Ticket/Attribute:operational_status/Value:resolved+' => 'Solucionado',
+	'Class:Ticket/Attribute:operational_status/Value:closed' => 'Cerrado',
+	'Class:Ticket/Attribute:operational_status/Value:closed+' => 'Cerrado',
+	'Ticket:ImpactAnalysis' => 'Análisis de Impacto',
 ));
 
 
@@ -103,6 +112,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkContactToTicket/Attribute:contact_email+' => 'Correo Electrónico',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rol',
 	'Class:lnkContactToTicket/Attribute:role+' => 'Rol',
+	'Class:lnkContactToTicket/Attribute:role_code' => 'Rol',
+	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Agregado Manualmente',
+	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Calculado',
+	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'No notificar',
 ));
 
 //
@@ -122,6 +135,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => 'Elemanto de Configuración',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impacto',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => 'Impacto',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impacto',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Agregado Manualmente',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Calculado',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'No impactado',
 ));
 
 
@@ -180,17 +197,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Ticket:SLA' => 'Reporte de SLA',
 	'WorkOrder:Details' => 'Detalles',
 	'WorkOrder:Moreinfo' => 'Más Información',
+	'Tickets:ResolvedFrom' => 'Automáticamente resuelto de %1$s',
 
-	'Ticket:ImpactAnalysis' => 'Análisis de Impacto',
-	'Class:lnkContactToTicket/Attribute:role_code' => 'Rol',
-	'Class:lnkContactToTicket/Attribute:role_code/Value:manual' => 'Agregado manualmente',
-	'Class:lnkContactToTicket/Attribute:role_code/Value:computed' => 'Calculado',
-	'Class:lnkContactToTicket/Attribute:role_code/Value:do_not_notify' => 'No notificar',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code' => 'Impacto',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:manual' => 'Agregado manualmente',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:computed' => 'Calculado',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:not_impacted' => 'No impactado',
-	'Tickets:ResolvedFrom' => 'Automaticamente resuelto de %1$s',
 	'Class:cmdbAbstractObject/Method:Set' => 'Asignar',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Asignar campo con valor estático',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Campo Destino',
@@ -227,11 +235,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:cmdbAbstractObject/Method:Copy/Param:1+' => 'Campo a asignar',
 	'Class:cmdbAbstractObject/Method:Copy/Param:2' => 'Campo Origen',
 	'Class:cmdbAbstractObject/Method:Copy/Param:2+' => 'Campo de donde se obtendrá valor',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus' => 'Aplicar Stimulus',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus+' => 'Apply the specified stimulus to the current object',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1' => 'Código Stimulus',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1+' => 'A valid stimulus code for the current class',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'Tiempo a Pertenencia',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Objetivo basado en SLT de tipo TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Tiempo a Resolución',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Objetivo basado en SLT de tipo TTR',
-	'portal:itop-portal' => 'Portal de Usuario',
+
+	'portal:itop-portal' => 'Portal de Usuario', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
 	'Page:DefaultTitle' => 'ITop - Portal de Usuario',
 	'Brick:Portal:UserProfile:Title' => 'Mi perfil',
 	'Brick:Portal:NewRequest:Title' => 'Nuevo Requerimiento',
@@ -239,6 +252,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:OngoingRequests:Title' => 'Requerimientos en Proceso',
 	'Brick:Portal:OngoingRequests:Title+' => 'Revise sus requerimientos en proceso. Compruebe el progreso, agregue comentarios, adjunte documentos, entienda la solución. </ P>',
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'En proceso',
-	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resuelto',
+	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Solucionado',
 	'Brick:Portal:ClosedRequests:Title' => 'Requerimientos Cerrados',
 ));

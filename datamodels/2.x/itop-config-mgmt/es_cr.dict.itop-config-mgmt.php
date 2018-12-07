@@ -205,6 +205,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Person/Attribute:tickets_list+' => 'Tickets',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nombre del Jefe',
 	'Class:Person/Attribute:manager_id_friendlyname+' => 'Nombre del Jefe',
+	'Class:Person/Attribute:picture' => 'Fotografía',
+	'Class:Person/Attribute:picture+' => 'Fotografía',
 ));
 
 //
@@ -333,6 +335,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Tickets relacionados con este EC',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Clase',
 	'Class:FunctionalCI/Attribute:finalclass+' => 'Clase',
+	'Class:FunctionalCI/Tab:OpenedTickets' => 'Tickets Activos',
 ));
 
 //
@@ -484,6 +487,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Puertos de Fibra Óptica',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
 	'Class:DatacenterDevice/Attribute:san_list+' => 'SANs',
+	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancia',
+	'Class:DatacenterDevice/Attribute:redundancy/count' => 'El dispositivo está arriba si almenos una conexión eléctrica (A o B) está arriba',
+	// Unused yet
+	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'El dispositivo está arriba si todas la conexiones eléctricas están arriba',
+	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'El dispositivo está arriba si al menos %1$s %% de sus conexiones eléctricas están arriba',
 ));
 
 //
@@ -698,6 +706,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'Activo',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'Inactivo',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'Inactivo',
+	'Class:ApplicationSolution/Attribute:redundancy' => 'Análisis de Impacto: Configuración de la redundancia',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'La solución está arriba si todos los ECs están arriba',
+	'Class:ApplicationSolution/Attribute:redundancy/count' => 'La solución está arriba si al menos %1$s EC(s) está(n) arriba',
+	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'La solución está arriba si al menos %1$s %% de los ECs están arriba',
 ));
 
 //
@@ -896,6 +908,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Farm+' => 'Granja',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisores',
 	'Class:Farm/Attribute:hypervisor_list+' => 'Hypervisores',
+	'Class:Farm/Attribute:redundancy' => 'Alta Disponibilidad',
+	'Class:Farm/Attribute:redundancy/disabled' => 'La granja está arriba si todos los hipervisores están arriba',
+	'Class:Farm/Attribute:redundancy/count' => 'La granja está arriba si al menos %1$s hipervisor(es) está(n) arriba',
+	'Class:Farm/Attribute:redundancy/percent' => 'La granja está arriba si al menos %1$s %% de los hipervisores están arriba',
 ));
 
 //
@@ -1864,7 +1880,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'Server:Date' => 'Fecha',
 'Server:moreinfo' => 'Más Información',
 'Server:otherinfo' => 'Otra Información',
+'Server:power' => 'Fuente de Poder',
 'Person:info' => 'Información General',
+'Person:personal_info' => 'Información Personal',
 'Person:notifiy' => 'Notificación',
 'Class:Subnet/Tab:IPUsage' => 'Uso de IP',
 'Class:Subnet/Tab:IPUsage-explain' => 'Interfases con IP en el rango: <em>%1$s</em> a <em>%2$s</em>',
@@ -1872,20 +1890,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 'Class:Subnet/Tab:FreeIPs-count' => 'IPs Libres: %1$s',
 'Class:Subnet/Tab:FreeIPs-explain' => 'Aquí está un extracto de 10 direcciones IP Libres',
 'Class:Document:PreviewTab' => 'Vista Previa',
-	'Class:FunctionalCI/Tab:OpenedTickets' => 'Tickets Activos',
-	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancia',
-	'Class:DatacenterDevice/Attribute:redundancy/count' => 'El dispositivo está arriba si almenos una conexión eléctrica (A o B) está arriba',
-	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'El dispositivo está arriba si todas la conexiones eléctricas están arriba',
-	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'El dispositivo está arriba si al menos %1$s %% de sus conexiones eléctricas están arriba',
-	'Class:ApplicationSolution/Attribute:redundancy' => 'Análisis de Impacto: Configuración de la redundancia',
-	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'La solución está arriba si todos los ECs están arriba',
-	'Class:ApplicationSolution/Attribute:redundancy/count' => 'La solución está arriba si al menos %1$s EC(s) está(n) arriba',
-	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'La solución está arriba si al menos %1$s %% de los ECs están arriba',
-	'Class:Farm/Attribute:redundancy' => 'Alta Disponibilidad',
-	'Class:Farm/Attribute:redundancy/disabled' => 'La granja está arriba si todos los hipervisores están arriba',
-	'Class:Farm/Attribute:redundancy/count' => 'La granja está arriba si al menos %1$s hipervisor(es) está(n) arriba',
-	'Class:Farm/Attribute:redundancy/percent' => 'La granja está arriba si al menos %1$s %% de los hipervisores están arriba',
-	'Class:Subnet/Attribute:subnet_name' => 'Nombre Subred',
-	'Menu:OSVersion' => 'Versiones de SO',
-	'Server:power' => 'Fuente de Poder',
 ));
