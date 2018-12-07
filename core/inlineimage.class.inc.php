@@ -499,49 +499,67 @@ class InlineImageGC implements iBackgroundProcess
 {
     public function GetPeriodicity()
     {
-        return 3600; // Runs every hour
+        return 1; // Runs every 8 hours
     }
 
+	/**
+	 * @param int $iTimeLimit
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
 	public function Process($iTimeLimit)
 	{
 		$sDateLimit = date(AttributeDateTime::GetSQLFormat(), time()); // Every temporary InlineImage/Attachment expired will be deleted
 
-		$iProcessed = 0;
-		$sOQL = "SELECT InlineImage WHERE (item_id = 0) AND (expire < '$sDateLimit')";
-		while (time() < $iTimeLimit)
+		$aResults = array();
+		$aClasses = array('InlineImage', 'Attachment');
+		foreach($aClasses as $sClass)
 		{
-			// Next one ?
-			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('expire' => true) /* order by*/, array(), null, 1 /* limit count */);
-			$oSet->OptimizeColumnLoad(array());
-			$oResult = $oSet->Fetch();
-			if (is_null($oResult))
+			$iProcessed = 0;
+			if(class_exists($sClass))
 			{
-				// Nothing to be done
-				break;
+				$iProcessed = $this->DeleteExpiredDocuments($sClass, $iTimeLimit, $sDateLimit);
 			}
-			$iProcessed++;
-			$oResult->DBDelete();
+			$aResults[] = "$iProcessed old temporary $sClass(s)";
 		}
-		
-		$iProcessed2 = 0;
-		if (class_exists('Attachment'))
-		{
-			$sOQL = "SELECT Attachment WHERE (item_id = 0) AND (expire < '$sDateLimit')";
-			while (time() < $iTimeLimit)
-			{
-				// Next one ?
-				$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('expire' => true) /* order by*/, array(), null, 1 /* limit count */);
-				$oSet->OptimizeColumnLoad(array());
-				$oResult = $oSet->Fetch();
-				if (is_null($oResult))
-				{
-					// Nothing to be done
-					break;
-				}
-				$iProcessed2++;
-				$oResult->DBDelete();
-			}		
-		}
-		return "Cleaned $iProcessed old temporary InlineImage(s) and $iProcessed2 old temporary Attachment(s).";
+
+		return "Cleaned ".implode(' and ', $aResults).".";
 	}
+
+	/**
+	 * @param string $sClass
+	 * @param int $iTimeLimit
+	 * @param string $sDateLimit
+	 *
+	 * @return int
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	protected function DeleteExpiredDocuments($sClass, $iTimeLimit, $sDateLimit)
+	{
+		$iProcessed = 0;
+		$sOQL = "SELECT $sClass WHERE (item_id = 0) AND (expire < '$sDateLimit')";
+		// Next one ?
+		$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('expire' => true) /* order by*/, array(), null,
+			1 /* limit count */);
+		$oSet->OptimizeColumnLoad(array());
+		while ((time() < $iTimeLimit) && ($oResult = $oSet->Fetch()))
+		{
+			/** @var \ormDocument $oDocument */
+			$oDocument = $oResult->Get('contents');
+			IssueLog::Info($sClass.' GC: Removed temp. file '.$oDocument->GetFileName().' on "'.$oResult->Get('item_class').'" #'.$oResult->Get('item_id').' as it has expired.');
+			$oResult->DBDelete();
+			$iProcessed++;
+		}
+
+		return $iProcessed;
+}
 }
