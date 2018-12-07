@@ -153,6 +153,9 @@
 						blockSubmit = true;
 						return false;
 					}
+                    if ($(options.keyHolder).val() === "") {
+                        return false;
+                    }
 					break;
 
 				case KEY.ESC:
@@ -222,11 +225,7 @@
 		function selectCurrent() {
 			var selected = select.selected();
 			if (!selected)	{
-				// Select the first entry by default
-				selected = select.getFirst();
-				if (!selected) {
-					return false;
-				}
+			    return false;
 			}
 
 			var v = selected.result;
@@ -820,10 +819,6 @@
 					}
 
 				}
-			},
-			getFirst: function() {
-				let first = listItems && listItems.slice(0, 1);
-				return first && $.data(first[0], "ac_data");
 			},
 			selected: function() {
 				var selected = listItems && listItems.filter("." + CLASSES.ACTIVE).removeClass(CLASSES.ACTIVE);
