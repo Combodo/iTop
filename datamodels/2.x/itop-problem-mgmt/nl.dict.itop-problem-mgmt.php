@@ -54,7 +54,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Problem:Overview' => 'Overzicht',
 	'Menu:Problem:Overview+' => 'Overzicht',
 	'Menu:NewProblem' => 'Nieuw probleem',
-	'Menu:NewProblem+' => 'Nieuw probleem',
+	'Menu:NewProblem+' => 'Maak nieuw probleem aan',
 	'Menu:SearchProblems' => 'Zoek naar problemen',
 	'Menu:SearchProblems+' => 'Zoek naar problemen',
 	'Menu:Problem:Shortcuts' => 'Snelkoppelingen',
