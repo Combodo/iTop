@@ -21,10 +21,21 @@ class ExpressionCache
 {
 	static private $aCache = array();
 
+	protected function GetLanguge() {
+		return str_replace(" ", "", Dict::GetUserLanguage());
+	}
+
+	protected function GetCacheClass() {
+		$lang = self::GetLanguge();
+		return "ExpressionCacheData" . $lang;
+	}
+
 	static public function GetCachedExpression($sClass, $sAttCode)
 	{
 		// read current cache
 		@include_once (static::GetCacheFileName());
+
+		$className = self::GetCacheClass();
 
 		$oExpr = null;
 		$sKey = static::GetKey($sClass, $sAttCode);
@@ -34,11 +45,11 @@ class ExpressionCache
 		}
 		else
 		{
-			if (class_exists('ExpressionCacheData'))
+			if (class_exists($className))
 			{
-				if (array_key_exists($sKey, ExpressionCacheData::$aCache))
+				if (array_key_exists($sKey, $className::$aCache))
 				{
-					$sVal = ExpressionCacheData::$aCache[$sKey];
+					$sVal = $className::$aCache[$sKey];
 					$oExpr = unserialize($sVal);
 					static::$aCache[$sKey] = $oExpr;
 				}
@@ -47,9 +58,9 @@ class ExpressionCache
 		return $oExpr;
 	}
 
-
 	static public function Warmup()
 	{
+		$className = self::GetCacheClass();
 		$sFilePath = static::GetCacheFileName();
 
 		if (!is_file($sFilePath))
@@ -59,7 +70,7 @@ class ExpressionCache
 // Copyright (c) 2010-2017 Combodo SARL
 // Generated Expression Cache file
 
-class ExpressionCacheData
+class $className
 {
 	static \$aCache =  array(
 EOF;
@@ -101,7 +112,8 @@ EOF;
 
 	public static function GetCacheFileName()
 	{
-		return utils::GetCachePath().'expressioncache.php';
+		$lang = self::GetLanguge();
+		return utils::GetCachePath().'expressioncache-' . $lang . '.php';
 	}
 
 }

@@ -6096,7 +6096,7 @@ abstract class MetaModel
             $oPHPClass::OnMetaModelStarted();
         }
 
-		ExpressionCache::Warmup();
+		//ExpressionCache::Warmup();
 	}
 
 	/**

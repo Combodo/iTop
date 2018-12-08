@@ -357,6 +357,7 @@ try
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	$sLoginMessage = LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+	ExpressionCache::Warmup();
 	$oAppContext = new ApplicationContext();
 
 	$oKPI->ComputeAndReport('User login');
