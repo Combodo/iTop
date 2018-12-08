@@ -34,14 +34,14 @@ class ExpressionCache
 	{
 		// read current cache
 		@include_once (static::GetCacheFileName());
-
+		$sLang = self::GetLanguage();
 		$sClassName = self::GetCacheClass();
 
 		$oExpr = null;
 		$sKey = static::GetKey($sClass, $sAttCode);
-		if (array_key_exists($sKey, static::$aCache))
+		if (array_key_exists($sLang, static::$aCache) && array_key_exists($sKey, static::$aCache[$sLang]))
 		{
-			$oExpr =  static::$aCache[$sKey];
+			$oExpr =  static::$aCache[$sLang][$sKey];
 		}
 		else
 		{
@@ -51,7 +51,7 @@ class ExpressionCache
 				{
 					$sVal = $sClassName::$aCache[$sKey];
 					$oExpr = unserialize($sVal);
-					static::$aCache[$sKey] = $oExpr;
+					static::$aCache[$sLang][$sKey] = $oExpr;
 				}
 			}
 		}
