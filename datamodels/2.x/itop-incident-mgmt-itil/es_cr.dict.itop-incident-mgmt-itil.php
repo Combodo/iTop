@@ -192,8 +192,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Incident/Attribute:parent_change_id+' => 'Cambio Padre',
 	'Class:Incident/Attribute:parent_change_ref' => 'Ref. Cambio Padre',
 	'Class:Incident/Attribute:parent_change_ref+' => 'Ref. Cambio Padre',
-	'Class:Incident/Attribute:parent_problem_id' => 'Problema Padre',
-	'Class:Incident/Attribute:parent_problem_id+' => 'Problema Padre',
 	'Class:Incident/Attribute:related_request_list' => 'Requerimientos Relacionados',
 	'Class:Incident/Attribute:related_request_list+' => 'Requerimientos Relacionados',
 	'Class:Incident/Attribute:child_incidents_list' => 'Incidentes Hijos',

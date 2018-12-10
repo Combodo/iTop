@@ -123,8 +123,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Contract/Attribute:cost_currency/Value:dollars+' => 'Dólares de E.U.A',
 	'Class:Contract/Attribute:cost_currency/Value:euros' => 'Euros',
 	'Class:Contract/Attribute:cost_currency/Value:euros+' => '~~',
-	'Class:Contract/Attribute:cost_currency/Value:pesos' => 'Pesos',
-	'Class:Contract/Attribute:cost_currency/Value:pesos+' => 'Pesos',
 	'Class:Contract/Attribute:contracttype_id' => 'Tipo de Contrato',
 	'Class:Contract/Attribute:contracttype_id+' => 'Tipo de Contrato',
 	'Class:Contract/Attribute:contracttype_name' => 'Tipo de Contrato',

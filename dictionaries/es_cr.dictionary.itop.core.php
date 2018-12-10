@@ -725,7 +725,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:Synchro:label_obj_new_updated' => 'Actualizados (%1$s)',
 	'Core:Synchro:label_obj_created' => 'Creados (%1$s)',
 	'Core:Synchro:label_obj_new_errors' => 'Errores (%1$s)',
-	'Core:Synchro:History' => 'Historia de Sincronización',
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica Procesada: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
@@ -865,13 +864,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
 	// Explain working time computing
-	'Core:ExplainWTC:ElapsedTime' => 'Tiempo transcurrido (almacenado como \"%1$s\")',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tiempo invertido para \"%1$s\"',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Límite para \"%1$s\" at %2$d%%',
+	'Core:ExplainWTC:ElapsedTime' => 'Tiempo transcurrido (almacenado como \\"%1$s\\")',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tiempo invertido para \\"%1$s\\"',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Límite para \\"%1$s\\" at %2$d%%',
 
 	// Bulk export
-	'Core:BulkExport:MissingParameter_Param' => 'Parámetro faltante \"%1$s\"',
-	'Core:BulkExport:InvalidParameter_Query' => 'Valor inválido para parámetro \"query\". No existe en la libreta de consulta el Id: \"%1$s\".',
+	'Core:BulkExport:MissingParameter_Param' => 'Parámetro faltante \\"%1$s\\"',
+	'Core:BulkExport:InvalidParameter_Query' => 'Valor inválido para parámetro \\"query\\". No existe en la libreta de consulta el Id: \\"%1$s\\".',
 	'Core:BulkExport:ExportFormatPrompt' => 'Formato de Exportación:',
 	'Core:BulkExportOf_Class' => '%1$s Exportar',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click aquí para descargar %1$s',
@@ -973,7 +972,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: DBProperty
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:DBProperty' => 'Propiedad BD',
 	'Class:DBProperty+' => 'Propiedad de Base de Datos',
 	'Class:DBProperty/Attribute:name' => 'Nombre',
@@ -991,7 +990,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: BackgroundTask
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:BackgroundTask' => 'Tarea en Segundo Plano',
 	'Class:BackgroundTask+' => 'Tarea en Segundo Plano',
 	'Class:BackgroundTask/Attribute:class_name' => 'Nombre de Clase',
@@ -1021,7 +1020,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: AsyncTask
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:AsyncTask' => 'Tarea Asíncrona',
 	'Class:AsyncTask+' => 'Tarea Asíncrona',
 	'Class:AsyncTask/Attribute:created' => 'Creado',

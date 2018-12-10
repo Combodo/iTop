@@ -77,7 +77,9 @@ class QueryOQL extends Query
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeOQL("oql", array("allowed_values"=>null, "sql"=>"oql", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
-		MetaModel::Init_AddAttribute(new AttributeQueryAttCodeSet("fields", array("allowed_values"=>null,"max_items" => 1000, "query_field" => "oql", "sql"=>"fields", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array('oql'))));
+		MetaModel::Init_AddAttribute(new AttributeText("fields", array("allowed_values"=>null, "sql"=>"fields", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array())));
+		// Rolled back to AttributeText until AttributeQueryAttCodeSet can manage fields order correctly
+		//MetaModel::Init_AddAttribute(new AttributeQueryAttCodeSet("fields", array("allowed_values"=>null,"max_items" => 1000, "query_field" => "oql", "sql"=>"fields", "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array('oql'))));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'description', 'oql', 'fields')); // Attributes to be displayed for the complete details

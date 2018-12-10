@@ -297,6 +297,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
+// Class: UserDashboard
+//
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:UserDashboard' => 'User dashboard~~',
+	'Class:UserDashboard+' => '~~',
+	'Class:UserDashboard/Attribute:user_id' => 'User~~',
+	'Class:UserDashboard/Attribute:user_id+' => '~~',
+	'Class:UserDashboard/Attribute:menu_code' => 'Menu code~~',
+	'Class:UserDashboard/Attribute:menu_code+' => '~~',
+	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
+	'Class:UserDashboard/Attribute:contents+' => '~~',
+));
+
+//
 // Expression to Natural language
 //
 Dict::Add('FR FR', 'French', 'Français', array(
