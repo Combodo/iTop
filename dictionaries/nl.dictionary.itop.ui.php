@@ -41,7 +41,7 @@
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AuditCategory' => 'Auditcategorie',
 	'Class:AuditCategory+' => 'Een onderdeel van de gehele audit',
-	'Class:AuditCategory/Attribute:name' => 'Categorienaam',
+	'Class:AuditCategory/Attribute:name' => 'Naam categorie',
 	'Class:AuditCategory/Attribute:name+' => 'Afkorting van de naam van deze categorie',
 	'Class:AuditCategory/Attribute:description' => 'Audit categorie beschrijving',
 	'Class:AuditCategory/Attribute:description+' => 'Uitgebreide beschrijving van deze Audit categorie',
@@ -58,7 +58,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AuditRule' => 'Auditregel',
 	'Class:AuditRule+' => 'Een regel voor het controleren van een bepaalde Auditcategorie',
-	'Class:AuditRule/Attribute:name' => 'Naam van de regel',
+	'Class:AuditRule/Attribute:name' => 'Naam regel',
 	'Class:AuditRule/Attribute:name+' => 'Afkorting van de regel',
 	'Class:AuditRule/Attribute:description' => 'Audit Regel beschrijving',
 	'Class:AuditRule/Attribute:description+' => 'Uitgebreide beschrijving van deze Audit regel',
@@ -122,8 +122,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:User/Attribute:last_name+' => 'Naam van het overeenkomende contact',
 	'Class:User/Attribute:first_name' => 'Voornaam',
 	'Class:User/Attribute:first_name+' => 'Voornaam van het overeenkomende contact',
-	'Class:User/Attribute:email' => 'Email',
-	'Class:User/Attribute:email+' => 'Email van het overeenkomende contact',
+	'Class:User/Attribute:email' => 'E-mailadres',
+	'Class:User/Attribute:email+' => 'E-mailadres van het overeenkomende contact',
 	'Class:User/Attribute:login' => 'Login',
 	'Class:User/Attribute:login+' => 'Identificatie van de gebruiker',
 	'Class:User/Attribute:language' => 'Taal',
@@ -135,17 +135,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:User/Attribute:profile_list' => 'Profielen',
 	'Class:User/Attribute:profile_list+' => 'Rollen, verlenen rechten aan deze persoon',
 	'Class:User/Attribute:allowed_org_list' => 'Mijn organisaties',
-	'Class:User/Attribute:allowed_org_list+' => 'De eindgebruiker heeft toestemming om data te zien van de volgende organisaties. Als er geen organisatie is gespecificeerd, is er geen restrictie.',
+	'Class:User/Attribute:allowed_org_list+' => 'De eindgebruiker heeft toestemming om data te bekijken van de volgende organisaties. Als er geen organisatie is gespecificeerd, is er geen beperking.',
 	'Class:User/Attribute:status' => 'Status',
 	'Class:User/Attribute:status+' => 'Of de gebruikersaccount in- of uitgeschakeld is.',
 	'Class:User/Attribute:status/Value:enabled' => 'Ingeschakeld',
 	'Class:User/Attribute:status/Value:disabled' => 'Uitgeschakeld',
 		
-	'Class:User/Error:LoginMustBeUnique' => 'Login moet uniek zijn- "%1s" is al in gebruik',
+	'Class:User/Error:LoginMustBeUnique' => 'Login moet uniek zijn - "%1s" is al in gebruik',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Er moet minstens één profiel toegewezen zijn aan deze gebruiker',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Minstens één organisatie moet toegewezen zijn aan deze gebruiker',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organisatie is niet toegestaan.',
-	'Class:User/Error:UserOrganizationNotAllowed' => 'Het gebruikersaccount behoort niet tot de organisaties waar je zelf rechten voor hebt.',
+	'Class:User/Error:UserOrganizationNotAllowed' => 'De gebruikersaccount behoort niet tot de organisaties waar je zelf rechten voor hebt.',
 	'Class:User/Error:PersonIsMandatory' => 'Het contact is verplicht.',
 	'Class:UserInternal' => 'Interne gebruiker',
 	'Class:UserInternal+' => 'Gebruiker gedefinieerd in iTop',
@@ -189,7 +189,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_UserProfile' => 'Gebruiker naar profiel',
 	'Class:URP_UserProfile+' => 'Gebruikerprofielen',
 	'Class:URP_UserProfile/Attribute:userid' => 'Gebruiker',
-	'Class:URP_UserProfile/Attribute:userid+' => 'Gebruiker account',
+	'Class:URP_UserProfile/Attribute:userid+' => 'De gebruiker gekoppeld aan dit profiel',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
 	'Class:URP_UserProfile/Attribute:userlogin+' => 'Login van de gebruiker',
 	'Class:URP_UserProfile/Attribute:profileid' => 'Profiel',
@@ -297,13 +297,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_StimulusGrant/Attribute:class' => 'Klasse',
 	'Class:URP_StimulusGrant/Attribute:class+' => 'Target-klasse',
 	'Class:URP_StimulusGrant/Attribute:permission' => 'Toestemming',
-	'Class:URP_StimulusGrant/Attribute:permission+' => 'Toestemming of geen toestemming',
+	'Class:URP_StimulusGrant/Attribute:permission+' => 'Al dan niet toestemming',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:yes' => 'Ja',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:yes+' => 'Ja',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no' => 'Nee',
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'Nee',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
-	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'stimuluscode',
+	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Stimuluscode',
 ));
 
 //
@@ -314,23 +314,23 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_AttributeGrant' => 'attribute_permission',
 	'Class:URP_AttributeGrant+' => 'Toestemming op het niveau van de attributen',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Actie verleen',
-	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'actie verleen',
+	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'Actie verleen',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribuut',
-	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribuutcode',
+	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Attribuutcode',
 ));
 
 //
 // Class: UserDashboard
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:UserDashboard' => 'User dashboard~~',
-	'Class:UserDashboard+' => '~~',
-	'Class:UserDashboard/Attribute:user_id' => 'User~~',
-	'Class:UserDashboard/Attribute:user_id+' => '~~',
-	'Class:UserDashboard/Attribute:menu_code' => 'Menu code~~',
-	'Class:UserDashboard/Attribute:menu_code+' => '~~',
-	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
-	'Class:UserDashboard/Attribute:contents+' => '~~',
+	'Class:UserDashboard' => 'Dashboard gebruiker',
+	'Class:UserDashboard+' => '',
+	'Class:UserDashboard/Attribute:user_id' => 'Gebruiker',
+	'Class:UserDashboard/Attribute:user_id+' => '',
+	'Class:UserDashboard/Attribute:menu_code' => 'Code menu',
+	'Class:UserDashboard/Attribute:menu_code+' => '',
+	'Class:UserDashboard/Attribute:contents' => 'Inhoud',
+	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
 //
@@ -358,30 +358,30 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:WelcomeMenuPage+' => 'Welkom in iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Welkom in iTop',
 
-	'UI:WelcomeMenu:LeftBlock' => '<p>iTop is een compleet, open source, IT-operationeel Portaal.</p>
-<ul>Inclusief:
-<li>Een complete CMDB (Configuration management database) voor het documenteren en beheren van de IT-inventaris.</li>
-<li>Een Incident Management-module voor het vinden van en communiceren over alle problemen die optreden binnen de IT.</li>
-<li>Een change Management-module voor het plannen en natrekken van de veranderingen in de IT-omgeving.</li>
+	'UI:WelcomeMenu:LeftBlock' => '<p>iTop is een compleet en open source Portaal voor IT-operaties.</p>
+<ul>Inclusief op maat van jouw IT-omgeving:
+<li>Een complete CMDB (Configuration Management Database) voor het documenteren en beheren van de IT-inventaris.</li>
+<li>Een Incident Management-module voor het vinden van en communiceren over alle problemen die optreden .</li>
+<li>Een Change Management-module voor het plannen en opvolgen van de veranderingen.</li>
 <li>Een database met gekende problemen om de oplossing van incidenten te versnellen.</li>
 <li>Een storingsmodule voor het documenteren van alle geplande storingen en voor het informeren van de juiste contacten.</li>
-<li>Dashboards om snel een overzicht te krijgen van jouw IT.</li>
+<li>Dashboards om snel een overzicht te krijgen.</li>
 </ul>
-<p>Alle modules kunnen apart, stap voor stap, volledig onafhankelijk van elkaar, worden opgezet.</p>',
+<p>Alle modules kunnen volledig onafhankelijk van elkaar worden opgezet, stap voor stap.</p>',
 
-	'UI:WelcomeMenu:RightBlock' => '<p>iTop is georiënteerd op serviceproviders, het zorgt ervoor dat IT-engineers gemakkelijk meerdere klanten of organisaties kunnen beheren.
+	'UI:WelcomeMenu:RightBlock' => '<p>iTop is gericht op serviceproviders, het zorgt ervoor dat IT-engineers gemakkelijk meerdere klanten of organisaties kunnen beheren.
 <ul>iTop levert een uitgebreide set van bedrijfsprocessen die:
 <li>De effectiviteit van het IT-management verbetert</li> 
 <li>De prestatie van IT-operaties verbetert</li> 
 <li>De klanttevredenheid verhoogt en leidinggevenden inzicht biedt in hun bedrijfsperformantie.</li>
 </ul>
 </p>
-<p>iTop is klaar om te worden geïntegreerd met jouw huidige IT Management infrastructuur.</p>
+<p>iTop is klaar om te worden geïntegreerd met jouw huidige infrastructuur rond IT Management.</p>
 <p>
 <ul>De adoptie van dit IT-operationele portaal zal je helpen met:
 <li>Het beter beheren van een steeds complexere IT-omgeving.</li>
-<li>Het implementeren van ITIL-processen in jouw eigen tempo.</li>
-<li>Het beheren van het belangrijkste middel van jouw IT: Documentatie.</li>
+<li>Het implementeren van ITIL-processen op jouw eigen tempo.</li>
+<li>Het beheren van het belangrijkste middel: documentatie.</li>
 </ul>
 </p>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open aanvragen: %1$d',
@@ -439,8 +439,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Error:UnsupportedStyleOfBlock' => 'Fout: style of block wordt niet ondersteund: "%1$s".',
 	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Incorrecte linkdefinitie: de klasse %1$s om objecten te beheren werd niet gevonden als externe sleutel (key) in de klasse %2$s',
 	'UI:Error:Object_Class_Id_NotFound' => 'Object: %1$s:%2$d niet gevonden',
-	'UI:Error:WizardCircularReferenceInDependencies' => 'Fout: Circulaire verwijzing in de afhankelijke variabelen tussen de velden. Controleer het datamodel.',
-	'UI:Error:UploadedFileTooBig' => 'Het geüploade bestand is te groot. (Maximale grootte is %1$s). Contacteer jouw iTop-beheerder om deze limiet aan te passen. (Check de PHP-configuratie voor upload_max_filesize en post_max_size op de server).',
+	'UI:Error:WizardCircularReferenceInDependencies' => 'Fout: cirkelverwijzing in de afhankelijke variabelen tussen de velden. Controleer het datamodel.',
+	'UI:Error:UploadedFileTooBig' => 'Het geüploade bestand is te groot. De maximale grootte is %1$s. Contacteer jouw iTop-beheerder om deze limiet aan te passen. (Check de PHP-configuratie voor upload_max_filesize en post_max_size op de server).',
 	'UI:Error:UploadedFileTruncated.' => 'Het geüploade bestand is ingekort!',
 	'UI:Error:NoTmpDir' => 'De tijdelijke opslagruimte is niet gedefinieerd.',
 	'UI:Error:CannotWriteToTmp_Dir' => 'Niet mogelijk om het tijdelijke bestand naar een tijdelijke map weg te schrijven. upload_tmp_dir = "%1$s".',
