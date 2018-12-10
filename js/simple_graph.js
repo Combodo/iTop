@@ -924,7 +924,7 @@ $(function()
 			})
 			.on( "mouseout", function(event){
 				event.stopImmediatePropagation();
-				clearTimeout($(this).data('openTimeoutId'));					
+				clearTimeout($('text[data-id="'+$(this).attr('data-id')+'"]').data('openTimeoutId'));					
 			});
 			/* Happens at every on_drag_end !!!
 			.on( "click", function(){
