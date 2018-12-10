@@ -955,3 +955,69 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Использование тега (%1$d)',
 	'Core:TagSetFieldData:NoEntryFound' => 'Не найдено записей с этим тегом',
 ));
+
+//
+// Class: DBProperty
+//
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:DBProperty' => 'DB property~~',
+	'Class:DBProperty+' => '~~',
+	'Class:DBProperty/Attribute:name' => 'Name~~',
+	'Class:DBProperty/Attribute:name+' => '~~',
+	'Class:DBProperty/Attribute:description' => 'Description~~',
+	'Class:DBProperty/Attribute:description+' => '~~',
+	'Class:DBProperty/Attribute:value' => 'Value~~',
+	'Class:DBProperty/Attribute:value+' => '~~',
+	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
+	'Class:DBProperty/Attribute:change_date+' => '~~',
+	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
+	'Class:DBProperty/Attribute:change_comment+' => '~~',
+));
+
+//
+// Class: BackgroundTask
+//
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:BackgroundTask' => 'Background task~~',
+	'Class:BackgroundTask+' => '~~',
+	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
+	'Class:BackgroundTask/Attribute:class_name+' => '~~',
+	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:running' => 'Running~~',
+	'Class:BackgroundTask/Attribute:running+' => '~~',
+	'Class:BackgroundTask/Attribute:status' => 'Status~~',
+	'Class:BackgroundTask/Attribute:status+' => '~~',
+));
+
+//
+// Class: AsyncTask
+//
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:AsyncTask' => 'Async. task~~',
+	'Class:AsyncTask+' => '~~',
+	'Class:AsyncTask/Attribute:created' => 'Created~~',
+	'Class:AsyncTask/Attribute:created+' => '~~',
+	'Class:AsyncTask/Attribute:started' => 'Started~~',
+	'Class:AsyncTask/Attribute:started+' => '~~',
+	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
+	'Class:AsyncTask/Attribute:planned+' => '~~',
+	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
+	'Class:AsyncTask/Attribute:event_id+' => '~~',
+	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
+	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+));

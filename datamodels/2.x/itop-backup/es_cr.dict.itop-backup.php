@@ -21,6 +21,7 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+
 	'bkp-backup-running' => 'Un respaldo está en ejecuión.  Por favor espere...',
 	'bkp-restore-running' => 'Una restauración está en ejecución. Por favor espere...',
 

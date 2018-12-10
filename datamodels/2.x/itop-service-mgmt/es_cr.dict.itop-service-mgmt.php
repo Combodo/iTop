@@ -73,7 +73,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Modelo de Entrega',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'Modelo de Entrega',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nombre del Modelo de Entrega',
-	'Class:Organization/Attribute:deliverymodel_name+' => 'Nombre del Modelo de Entrega',
+
 ));
 
 
@@ -117,8 +117,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Contract/Attribute:cost_currency/Value:dollars+' => 'Dólares de E.U.A',
 	'Class:Contract/Attribute:cost_currency/Value:euros' => 'Euros',
 	'Class:Contract/Attribute:cost_currency/Value:euros+' => '~~',
-	'Class:Contract/Attribute:cost_currency/Value:pesos' => 'Pesos',
-	'Class:Contract/Attribute:cost_currency/Value:pesos+' => 'Pesos',
 	'Class:Contract/Attribute:contracttype_id' => 'Tipo de Contrato',
 	'Class:Contract/Attribute:contracttype_id+' => 'Tipo de Contrato',
 	'Class:Contract/Attribute:contracttype_name' => 'Tipo de Contrato',
@@ -151,10 +149,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:CustomerContract+' => 'Acuerdo con Cliente',
 	'Class:CustomerContract/Attribute:services_list' => 'Servicios',
 	'Class:CustomerContract/Attribute:services_list+' => 'Servicios',
-	'Class:CustomerContract/Attribute:functionalcis_list' => 'ECs',
-	'Class:CustomerContract/Attribute:functionalcis_list+' => 'Todos los Elementos de Configuración cubiertos por este Contrato',
-	'Class:CustomerContract/Attribute:providercontracts_list' => 'Contratos con Proveedores',
-	'Class:CustomerContract/Attribute:providercontracts_list+' => 'Todos los contratos con proveedores para la entrega del Servicio (underpinning contract)',
 ));
 
 //

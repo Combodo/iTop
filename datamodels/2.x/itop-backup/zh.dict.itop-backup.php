@@ -5,9 +5,8 @@
  * @copyright   Copyright (C) 2013 Combodo
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	
+
 	'bkp-backup-running' => '备份正在进行，请稍后...',
 	'bkp-restore-running' => '还原正在进行，请稍等...',
 
@@ -43,4 +42,3 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'bkp-wait-restore' => '请等待还原完成...',
 	'bkp-success-restore' => '还原成功.',
 ));
-?>

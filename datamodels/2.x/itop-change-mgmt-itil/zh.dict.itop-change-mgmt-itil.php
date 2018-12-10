@@ -15,15 +15,11 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
-
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ChangeManagement' => '变更管理',
 	'Menu:Change:Overview' => '概况',
@@ -118,10 +114,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change/Attribute:manager_email+' => '',
 	'Class:Change/Attribute:outage' => '停机',
 	'Class:Change/Attribute:outage+' => '',
-	'Class:Change/Attribute:outage/Value:yes' => '是',
-	'Class:Change/Attribute:outage/Value:yes+' => '',
 	'Class:Change/Attribute:outage/Value:no' => '否',
 	'Class:Change/Attribute:outage/Value:no+' => '',
+	'Class:Change/Attribute:outage/Value:yes' => '是',
+	'Class:Change/Attribute:outage/Value:yes+' => '',
 	'Class:Change/Attribute:fallback' => '回滚计划',
 	'Class:Change/Attribute:fallback+' => '',
 	'Class:Change/Attribute:parent_id' => '父级变更',
@@ -295,5 +291,3 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EmergencyChange/Stimulus:ev_finish' => '完成',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
 ));
-
-?>

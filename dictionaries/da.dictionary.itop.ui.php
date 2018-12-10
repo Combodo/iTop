@@ -299,6 +299,20 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 ));
 
 //
+// Class: UserDashboard
+//
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:UserDashboard' => 'User dashboard~~',
+	'Class:UserDashboard+' => '~~',
+	'Class:UserDashboard/Attribute:user_id' => 'User~~',
+	'Class:UserDashboard/Attribute:user_id+' => '~~',
+	'Class:UserDashboard/Attribute:menu_code' => 'Menu code~~',
+	'Class:UserDashboard/Attribute:menu_code+' => '~~',
+	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
+	'Class:UserDashboard/Attribute:contents+' => '~~',
+));
+
+//
 // Expression to Natural language
 //
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
@@ -1529,4 +1543,18 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 
 	'Expression:Verb:NOW' => 'now~~',
 	'Expression:Verb:ISNULL' => ': undefined~~',
+));
+
+//
+// iTop Newsroom menu
+//
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'UI:Newsroom:NoNewMessage' => 'No new message~~',
+	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
+	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
+	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
+	'UI:Newsroom:ConfigurationLink' => 'Configuration~~',
+	'UI:Newsroom:ResetCache' => 'Reset cache~~',
+	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
+	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
 ));

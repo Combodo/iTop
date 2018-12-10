@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,20 +15,16 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 //////////////////////////////////////////////////////////////////////
 // Relations
 //////////////////////////////////////////////////////////////////////
 //
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Relation:impacts/Description' => '被影响的元素',
 	'Relation:impacts/DownStream' => '影响...',
@@ -51,6 +47,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+// Class:<class_name>/UniquenessRule:<rule_code>
+// Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
@@ -66,6 +64,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+// Class:<class_name>/UniquenessRule:<rule_code>
+// Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
@@ -103,6 +103,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:Organization/Attribute:parent_id_friendlyname' => '上级组织',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => '上级组织',
+	'Class:Organization/Attribute:overview' => 'Overview~~',
+	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
+	'Organization:Overview:Users' => 'iTop Users within this organization~~',
 ));
 
 //
@@ -206,6 +210,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => '头像',
 	'Class:Person/Attribute:picture+' => '',
+	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
+	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
+	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
+	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
 ));
 
 //
@@ -231,7 +239,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document/Attribute:name' => '名称',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => '组织',
-	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:org_id+' => '~~',
 	'Class:Document/Attribute:org_name' => '组织名称',
 	'Class:Document/Attribute:org_name+' => '',
 	'Class:Document/Attribute:documenttype_id' => 'Document type',
@@ -250,12 +258,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document/Attribute:status/Value:obsolete+' => '',
 	'Class:Document/Attribute:status/Value:published' => '已发布',
 	'Class:Document/Attribute:status/Value:published+' => '',
-	'Class:Document/Attribute:ci_list' => 'CI',
-	'Class:Document/Attribute:ci_list+' => '参照该文档的CI',
-	'Class:Document/Attribute:contract_list' => '合同',
-	'Class:Document/Attribute:contract_list+' => '参照该文档的合同',
-	'Class:Document/Attribute:service_list' => '服务',
-	'Class:Document/Attribute:service_list+' => '参照该文档的服务',
+	'Class:Document/Attribute:cis_list' => 'CIs~~',
+	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
+	'Class:Document/Attribute:contracts_list' => 'Contracts~~',
+	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
+	'Class:Document/Attribute:services_list' => 'Services~~',
+	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Document sub-class',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class',
 ));
@@ -1297,6 +1305,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => '物理设备',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand',
+	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
+	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
 ));
 
 //
@@ -1350,6 +1360,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Model/Attribute:type/Value:Phone+' => '电话',
 	'Class:Model/Attribute:physicaldevices_list' => '物理设备',
 	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model',
+	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
+	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
 ));
 
 //
@@ -1563,6 +1575,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP地址',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
+
+
 	'Class:IPInterface/Attribute:macaddress' => 'MAC地址',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => '注释',
@@ -1801,7 +1815,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 'Menu:Application+' => '所有应用',
 'Menu:DBServer' => '数据库服务器',
 'Menu:DBServer+' => 'Database servers',
-'Menu:Audit' => '审计',
 'Menu:ConfigManagement' => '配置管理',
 'Menu:ConfigManagement+' => '配置管理',
 'Menu:ConfigManagementOverview' => '概览',
@@ -1892,4 +1905,3 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 'Class:Subnet/Tab:FreeIPs-explain' => '以下是抽取的10个空闲IP',
 'Class:Document:PreviewTab' => '预览',
 ));
-?>
