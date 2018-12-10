@@ -473,7 +473,7 @@ EOF
 			// Leave silently if there is no trace of the attachment form
 			return;
 		}
-		$sTransactionId = utils::ReadParam('transaction_id', null);
+		$sTransactionId = utils::ReadParam('transaction_id', null, false, 'transaction_id');
 		if (!is_null($sTransactionId))
 		{
 			$aActions = array();
