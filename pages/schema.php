@@ -889,7 +889,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		}
 		elseif (is_object($oAllowedValuesDef = $oAttDef->GetValuesDef()))
 		{
-			$sAllowedValues = trim( $oAllowedValuesDef->GetValuesDescription(), "Filter : ");
+			$sAllowedValues = str_replace("Filter: ", "", $oAllowedValuesDef->GetValuesDescription());
             $sAllowedValuesEscpd = json_encode($sAllowedValues);
 
             $sFilterURL = urlencode($sAllowedValues);
