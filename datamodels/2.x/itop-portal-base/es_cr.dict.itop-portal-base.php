@@ -106,7 +106,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:Manage:Table:NoData' => 'Sin elementos',
     'Brick:Portal:Manage:Table:ItemActions' => 'Acciones',
     'Brick:Portal:Manage:DisplayMode:list' => 'Lista',
-    'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Gráfica de Pastel',
+	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Gráfica de Pastel',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Gráfica de Barra',
 	'Brick:Portal:Manage:Others' => 'Otros',
 	'Brick:Portal:Manage:All' => 'Todos',

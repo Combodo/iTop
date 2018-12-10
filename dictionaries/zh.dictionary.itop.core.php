@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,15 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)',
@@ -31,10 +28,31 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:UnknownObjectLabel' => '对象找不到 (class: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.',
 
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+
 	'Core:AttributeLinkedSet' => '对象数组',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 
-	'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
+	'Core:AttributeDashboard' => 'Dashboard~~',
+	'Core:AttributeDashboard+' => '~~',
+
+	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber+' => '~~',
+
+	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
+	'Core:AttributeObsolescenceDate+' => '~~',
+
+    'Core:AttributeTagSet' => 'List of tags~~',
+    'Core:AttributeTagSet+' => '~~',
+	'Core:AttributeSet:placeholder' => 'click to add~~',
+
+    'Core:AttributeCaseLog' => 'Log~~',
+    'Core:AttributeCaseLog+' => '~~',
+
+    'Core:AttributeMetaEnum' => 'Computed enum~~',
+    'Core:AttributeMetaEnum+' => '~~',
+
+    'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
 
 	'Core:AttributeInteger' => '整数',
@@ -84,6 +102,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
  	'Core:AttributeEncryptedString' => '加密字符串',
 	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
 
 	'Core:AttributeText' => '文本',
 	'Core:AttributeText+' => '多行字符串',
@@ -177,6 +197,9 @@ Operators:<br/>
 
 	'Core:FriendlyName-Label' => '全称',
 	'Core:FriendlyName-Description' => 'Full name',
+
+	'Core:AttributeTag' => 'Tags~~',
+	'Core:AttributeTag+' => 'Tags~~',
 ));
 
 
@@ -574,6 +597,26 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 ));
 
 //
+// Class: TriggerOnObjectDelete
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
+	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
+));
+
+//
+// Class: TriggerOnObjectUpdate
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
+	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 
@@ -612,7 +655,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:name' => '名称',
 	'Class:SynchroDataSource/Attribute:name+' => '名称',
 	'Class:SynchroDataSource/Attribute:description' => '描述',
-	'Class:SynchroDataSource/Attribute:status' => '状态', //TODO: enum values
+	'Class:SynchroDataSource/Attribute:status' => '状态',
 	'Class:SynchroDataSource/Attribute:scope_class' => '目标类',
 	'Class:SynchroDataSource/Attribute:user_id' => 'User',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => '要通知的人',
@@ -621,7 +664,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which iTop is synchronized',
 	'Class:SynchroDataSource/Attribute:url_application' => '应用的超链接',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink to the iTop object in the external application with which iTop is synchronized (if applicable). Possible placeholders: $this->attribute$ and $replica->primary_key$',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation policy', //TODO enum values
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation policy',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Full load interval',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'A complete reload of all data must occur at least as often as specified here',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => '执行结果成功时',
@@ -632,7 +675,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Action taken when the search returns more than one object',
 	'Class:SynchroDataSource/Attribute:user_delete_policy' => '授权用户',
 	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Who is allowed to delete synchronized objects',
-	'Class:SynchroDataSource/Attribute:user_delete_policy' => '授权用户',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Nobody',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => '仅限管理员',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => '所有授权用户',
@@ -677,18 +719,17 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:Synchro:label_obj_disappeared_errors' => '错误 (%1$s)',
 	'Core:Synchro:label_obj_disappeared_no_action' => 'No Action (%1$s)',
 	'Core:Synchro:label_obj_unchanged' => '保持不变 (%1$s)',
-	'Core:Synchro:label_obj_updated' => '已更新 (%1$s)', 
+	'Core:Synchro:label_obj_updated' => '已更新 (%1$s)',
 	'Core:Synchro:label_obj_updated_errors' => 'Errors (%1$s)',
 	'Core:Synchro:label_obj_new_unchanged' => '保持不变 (%1$s)',
 	'Core:Synchro:label_obj_new_updated' => '已更新 (%1$s)',
 	'Core:Synchro:label_obj_created' => '已创建 (%1$s)',
 	'Core:Synchro:label_obj_new_errors' => '错误 (%1$s)',
-	'Core:Synchro:History' => '同步历史',
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica processed: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
-	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'At Least one reconciliation key must be specified, or the reconciliation policy must be to use the primary key.',			
-	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete',			
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'At Least one reconciliation key must be specified, or the reconciliation policy must be to use the primary key.',
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete objects are to be updated, but no update is specified.',
 	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'The table %1$s already exists in the database. Please use another name for the synchro data table.',
 	'Core:SynchroReplica:PublicData' => 'Public Data',
@@ -878,6 +919,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:BulkExport:DateTimeFormat' => '日期和时间格式',
 	'Core:BulkExport:DateTimeFormatDefault_Example' => '默认格式 (%1$s), e.g. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => '自定义格式: %1$s',
+	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
 	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
@@ -896,4 +938,99 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:Validator:Mandatory' => '这里必填',
 	'Core:Validator:MustBeInteger' => '必须是整数',
 	'Core:Validator:MustSelectOne' => '请选择一个',
+));
+
+//
+// Class: TagSetFieldData
+//
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
+	'Class:TagSetFieldData+' => '~~',
+
+	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
+	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
+	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
+	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
+	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~~~',
+
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters, starting with a letter.~~',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed~~',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
+	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
+));
+
+//
+// Class: DBProperty
+//
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:DBProperty' => 'DB property~~',
+	'Class:DBProperty+' => '~~',
+	'Class:DBProperty/Attribute:name' => 'Name~~',
+	'Class:DBProperty/Attribute:name+' => '~~',
+	'Class:DBProperty/Attribute:description' => 'Description~~',
+	'Class:DBProperty/Attribute:description+' => '~~',
+	'Class:DBProperty/Attribute:value' => 'Value~~',
+	'Class:DBProperty/Attribute:value+' => '~~',
+	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
+	'Class:DBProperty/Attribute:change_date+' => '~~',
+	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
+	'Class:DBProperty/Attribute:change_comment+' => '~~',
+));
+
+//
+// Class: BackgroundTask
+//
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:BackgroundTask' => 'Background task~~',
+	'Class:BackgroundTask+' => '~~',
+	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
+	'Class:BackgroundTask/Attribute:class_name+' => '~~',
+	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:running' => 'Running~~',
+	'Class:BackgroundTask/Attribute:running+' => '~~',
+	'Class:BackgroundTask/Attribute:status' => 'Status~~',
+	'Class:BackgroundTask/Attribute:status+' => '~~',
+));
+
+//
+// Class: AsyncTask
+//
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:AsyncTask' => 'Async. task~~',
+	'Class:AsyncTask+' => '~~',
+	'Class:AsyncTask/Attribute:created' => 'Created~~',
+	'Class:AsyncTask/Attribute:created+' => '~~',
+	'Class:AsyncTask/Attribute:started' => 'Started~~',
+	'Class:AsyncTask/Attribute:started+' => '~~',
+	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
+	'Class:AsyncTask/Attribute:planned+' => '~~',
+	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
+	'Class:AsyncTask/Attribute:event_id+' => '~~',
+	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
+	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 ));

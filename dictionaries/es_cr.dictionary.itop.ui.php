@@ -122,8 +122,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:User/Attribute:language/Value:EN US+' => 'English (U.S.)',
 	'Class:User/Attribute:language/Value:FR FR' => 'Frances',
 	'Class:User/Attribute:language/Value:FR FR+' => 'Frances (Francia)',
-	'Class:User/Attribute:language/Value:ES CR' => 'Español',
-	'Class:User/Attribute:language/Value:ES CR+' => 'Español, Castellano',
 	'Class:User/Attribute:profile_list' => 'Perfiles',
 	'Class:User/Attribute:profile_list+' => 'Roles, y permisos otorgados a esa persona',
 	'Class:User/Attribute:allowed_org_list' => 'Organizaciones Permitidas',
@@ -314,7 +312,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: UserDashboard
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:UserDashboard' => 'Tablero de Usuario',
 	'Class:UserDashboard+' => 'Tablero de Usuario',
 	'Class:UserDashboard/Attribute:user_id' => 'Usuario',
@@ -825,9 +823,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d objeto(s) de la clase %2$s encontrado(s).',
 	'UI:Search:NoObjectFound' => 'No se encontraron objetos.',
 	'UI:ModificationPageTitle_Object_Class' => 'iTop - %1$s - %2$s modificación',
-	'UI:ModificationTitle_Class_Object' => 'Modificación de %1$s: <span class=\"hilite\">%2$s</span>',
+	'UI:ModificationTitle_Class_Object' => 'Modificación de %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:ClonePageTitle_Object_Class' => 'iTop - Duplicar %1$s - %2$s modificación',
-	'UI:CloneTitle_Class_Object' => 'Duplicado de %1$s: <span class=\"hilite\">%2$s</span>',
+	'UI:CloneTitle_Class_Object' => 'Duplicado de %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:CreationPageTitle_Class' => 'iTop - Creación de %1$s ',
 	'UI:CreationTitle_Class' => 'Creación de %1$s',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Seleccione el tipo de %1$s a crear:',
@@ -1558,4 +1556,18 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 	'Expression:Verb:NOW' => 'Ahora',
 	'Expression:Verb:ISNULL' => ': undefined~~',
+));
+
+//
+// iTop Newsroom menu
+//
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'UI:Newsroom:NoNewMessage' => 'No new message~~',
+	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
+	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
+	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
+	'UI:Newsroom:ConfigurationLink' => 'Configuration~~',
+	'UI:Newsroom:ResetCache' => 'Reset cache~~',
+	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
+	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
 ));

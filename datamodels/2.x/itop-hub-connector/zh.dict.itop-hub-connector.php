@@ -5,19 +5,18 @@
  * @copyright   Copyright (C) 2013 XXXXX
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
-	'Menu:iTopHub:Register' => '进入 iTop Hub ',
-	'Menu:iTopHub:Register+' => '进入 iTop Hub 更新您的组件',
-	'Menu:iTopHub:Register:Description' => '<p>进入 iTop Hub 社区平台!</br>寻找您想要的内容和信息, 管理本机扩展或安装新的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
-	'Menu:iTopHub:MyExtensions' => '已安装的扩展',
-	'Menu:iTopHub:MyExtensions+' => '查看本机已安装的扩展',
-	'Menu:iTopHub:BrowseExtensions' => '从 iTop Hub 获取扩展',
-	'Menu:iTopHub:BrowseExtensions+' => '去 iTop Hub 浏览更多的扩展',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>进入 iTop Hub 商店, 一站式查找各式各样 iTop 扩展的地方 !</br>寻找符合您要求的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
-	'iTopHub:GoBtn' => '进入 iTop Hub',
+    'Menu:iTopHub:Register' => '进入 iTop Hub ',
+    'Menu:iTopHub:Register+' => '进入 iTop Hub 更新您的组件',
+    'Menu:iTopHub:Register:Description' => '<p>进入 iTop Hub 社区平台!</br>寻找您想要的内容和信息, 管理本机扩展或安装新的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
+    'Menu:iTopHub:MyExtensions' => '已安装的扩展',
+    'Menu:iTopHub:MyExtensions+' => '查看本机已安装的扩展',
+    'Menu:iTopHub:BrowseExtensions' => '从 iTop Hub 获取扩展',
+    'Menu:iTopHub:BrowseExtensions+' => '去 iTop Hub 浏览更多的扩展',
+    'Menu:iTopHub:BrowseExtensions:Description' => '<p>进入 iTop Hub 商店, 一站式查找各式各样 iTop 扩展的地方 !</br>寻找符合您要求的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
+    'iTopHub:GoBtn' => '进入 iTop Hub',
 	'iTopHub:CloseBtn' => '关闭',
 	'iTopHub:GoBtn:Tooltip' => '跳到 www.itophub.io',
 	'iTopHub:OpenInNewWindow' => '从新窗口打开 iTop Hub',
@@ -25,15 +24,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:About:RemoteExtensionSource' => 'iTop Hub',
 	'iTopHub:Explanation' => '点击这个按钮您将被引导至 iTop Hub.',
 
-	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s free disk space in %2$s.',
-	'iTopHub:FailedToCheckFreeDiskSpace' => '检查空闲的磁盘空间失败.',
-	'iTopHub:BackupOk' => '备份成功.',
-	'iTopHub:BackupFailed' => '备份失败!',
-	'iTopHub:Landing:Status' => '安装状态',
+    'iTopHub:BackupFreeDiskSpaceIn' => '%1$s free disk space in %2$s.',
+    'iTopHub:FailedToCheckFreeDiskSpace' => '检查空闲的磁盘空间失败.',
+    'iTopHub:BackupOk' => '备份成功.',
+    'iTopHub:BackupFailed' => '备份失败!',
+    'iTopHub:Landing:Status' => '安装状态',
 	'iTopHub:Landing:Install' => '扩展安装进行中...',
 	'iTopHub:CompiledOK' => 'Compilation successful.',
 	'iTopHub:ConfigurationSafelyReverted' => '安装时发生错误!<br/>iTop 配置将不会改变.',
-
+	
 	'iTopHub:InstalledExtensions' => '本机已安装的扩展',
 	'iTopHub:ExtensionCategory:Manual' => '手动安装的扩展',
 	'iTopHub:ExtensionCategory:Manual+' => '下列已安装的扩展是手动将文件放置到 %1$s 目录的:',
@@ -42,7 +41,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:NoExtensionInThisCategory' => '尚未安装扩展.<br/><br/>浏览 iTop Hub ,去寻找符合您要求的扩展.',
 	'iTopHub:ExtensionNotInstalled' => '未安装',
 	'iTopHub:GetMoreExtensions' => '从 iTop Hub 获取扩展...',
-
+	
 	'iTopHub:LandingWelcome' => '恭喜! 下列来自 iTop Hub 的扩展已被下载并安装到本机.',
 	'iTopHub:GoBackToITopBtn' => '返回 iTop',
 	'iTopHub:Uncompressing' => '扩展解压中...',
@@ -51,7 +50,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:DBBackupSentence' => '在升级之前,备份数据库和 iTop 配置文件',
 	'iTopHub:DeployBtn' => '安装 !',
 	'iTopHub:DatabaseBackupProgress' => '本机备份...',
-
+	
 	'iTopHub:InstallationEffect:Install' => 'Version: %1$s 将被安装.',
 	'iTopHub:InstallationEffect:NoChange' => 'Version: %1$s 已安装. 保持不变.',
 	'iTopHub:InstallationEffect:Upgrade' => '将从 version %1$s <b>升级</b> 到 version %2$s.',
@@ -61,9 +60,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:InstallationEffect:MissingDependencies' => '扩展无法安装,因为未知的依赖.',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => '该扩展依赖模块: %1$s',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => '安装成功!',
-
+	
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => '已安装',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>未</b> 安装.',
 ));
+
 
