@@ -709,7 +709,7 @@ try
 			$oObj = $oWizardHelper->GetTargetObject();
 			$sClass = $oWizardHelper->GetTargetClass();
 			$sTargetState = utils::ReadParam('target_state', '');
-			$iTransactionId = utils::ReadParam('transaction_id', '');
+			$iTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 			$oObj->Set(MetaModel::GetStateAttributeCode($sClass), $sTargetState);
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sClass, $oObj, array(), array('action' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php', 'transaction_id' => $iTransactionId));
 			break;
@@ -903,7 +903,7 @@ try
 		case 'on_form_cancel':
 			// Called when a creation/modification form is cancelled by the end-user
 			// Let's take this opportunity to inform the plug-ins so that they can perform some cleanup
-			$iTransactionId = utils::ReadParam('transaction_id', 0);
+			$iTransactionId = utils::ReadParam('transaction_id', 0, false, 'transaction_id');
 			$sTempId = session_id().'_'.$iTransactionId;
 			InlineImage::OnFormCancel($sTempId);
 			foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
@@ -942,7 +942,7 @@ try
 			break;
 
 		case 'import_dashboard':
-			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'raw_data');
+			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId, true))
 			{
 				throw new SecurityException('ajax.render.php import_dashboard : invalid transaction_id');

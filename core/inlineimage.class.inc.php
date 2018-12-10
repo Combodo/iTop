@@ -161,7 +161,7 @@ class InlineImage extends DBObject
 	 */
 	public static function FinalizeInlineImages(DBObject $oObject)
 	{
-		$iTransactionId = utils::ReadParam('transaction_id', null);
+		$iTransactionId = utils::ReadParam('transaction_id', null, false, 'transaction_id');
 		if (!is_null($iTransactionId))
 		{
 			// Attach new (temporary) inline images

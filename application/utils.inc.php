@@ -314,10 +314,20 @@ class utils
 			{
 				switch($sSanitizationFilter)
 				{
-					case 'parameter':
-					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^([ A-Za-z0-9_=-]|%3D|%2B|%2F)*$/'))); // the '=', '%3D, '%2B', '%2F' characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
+					case 'transaction_id':
+						// same as parameter type but keep the dot character
+						// see N°1835 : when using file transaction_id on Windows you get *.tmp tokens
+						// it must be included at the regexp beginning otherwise you'll get an invalid character error
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+							array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
 					break;
-					
+
+					case 'parameter':
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+							array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
+						// characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
+						break;
+
 					case 'field_name':
 					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
 					break;

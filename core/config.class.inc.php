@@ -993,7 +993,7 @@ class Config
 		'transaction_storage' => array(
 			'type' => 'string',
 			'description' => 'The type of mechanism to use for storing the unique identifiers for transactions (Session|File).',
-			'default' => 'Session',
+			'default' => 'File',
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
@@ -1145,6 +1145,14 @@ class Config
 		'newsroom_enabled' => array(
 			'type' => 'bool',
 			'description' => 'Whether or not the whole newsroom is enabled',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'regenerate_session_id_enabled' => array(
+			'type' => 'bool',
+			'description' => 'If true then session id will be regenerated on each login, to prevent session fixation.',
 			'default' => true,
 			'value' => true,
 			'source_of_value' => '',

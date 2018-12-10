@@ -885,7 +885,7 @@ EOF
 			$sClass = utils::ReadPostedParam('class', '');
 			$sClassLabel = MetaModel::GetName($sClass);
 			$id = utils::ReadPostedParam('id', '');
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
@@ -1006,7 +1006,7 @@ EOF
 
 		case 'bulk_delete_confirmed': // Confirm bulk deletion of objects
 			$oP->DisableBreadCrumb();
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
 				throw new ApplicationException(Dict::S('UI:Error:ObjectsAlreadyDeleted'));
@@ -1074,7 +1074,7 @@ EOF
 		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		$aErrors = array();
 		if ( empty($sClass) ) // TO DO: check that the class name is valid !
 		{
@@ -1358,7 +1358,7 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'filter', 'stimulus', 'state'));
 		}
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		if (!utils::IsTransactionValid($sTransactionId))
 		{
 			$oP->p(Dict::S('UI:Error:ObjectAlreadyUpdated'));
@@ -1510,7 +1510,7 @@ EOF
 		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadPostedParam('class', '');
 		$id = utils::ReadPostedParam('id', '');
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		$sStimulus = utils::ReadPostedParam('stimulus', '');
 		if ( empty($sClass) || empty($id) ||  empty($sStimulus) ) // TO DO: check that the class name is valid !
 		{

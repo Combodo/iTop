@@ -4303,7 +4303,7 @@ EOF
 		if (!$bPreview)
 		{
 			// Not in preview mode, do the update for real
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId, false))
 			{
 				throw new Exception(Dict::S('UI:Error:ObjectAlreadyUpdated'));
@@ -4555,7 +4555,9 @@ EOF
 				}
 				$oAppContext = new ApplicationContext();
 				$oP->add("<form method=\"post\">\n");
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id')."\">\n");
+				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id', '', false,
+						'transaction_id')
+					."\">\n");
 				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
 				$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
 				$oP->add($oAppContext->GetForForm());
