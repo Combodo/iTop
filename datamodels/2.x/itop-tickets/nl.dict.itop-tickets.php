@@ -106,7 +106,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkContactToTicket/Attribute:ticket_ref+' => '',
 	'Class:lnkContactToTicket/Attribute:contact_id' => 'Contact',
 	'Class:lnkContactToTicket/Attribute:contact_id+' => '',
-	'Class:lnkContactToTicket/Attribute:contact_email' => 'Emailadres contact',
+	'Class:lnkContactToTicket/Attribute:contact_email' => 'E-mailadres contact',
 	'Class:lnkContactToTicket/Attribute:contact_email+' => '',
 	'Class:lnkContactToTicket/Attribute:role' => 'Rol',
 	'Class:lnkContactToTicket/Attribute:role+' => '',

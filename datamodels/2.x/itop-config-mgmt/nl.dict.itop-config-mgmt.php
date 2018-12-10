@@ -166,7 +166,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Contact/Attribute:org_id+' => '',
 	'Class:Contact/Attribute:org_name' => 'Naam organisatie',
 	'Class:Contact/Attribute:org_name+' => '',
-	'Class:Contact/Attribute:email' => 'Email',
+	'Class:Contact/Attribute:email' => 'E-mailadres',
 	'Class:Contact/Attribute:email+' => '',
 	'Class:Contact/Attribute:phone' => 'Telefoon',
 	'Class:Contact/Attribute:phone+' => '',
