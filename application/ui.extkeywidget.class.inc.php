@@ -434,41 +434,14 @@ EOF
 		$oValuesSet->SetLimit($iMax);
 		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
-
-		if (empty($sOperation) || 'equals_start_with' == $sOperation)
-        {
-            $aValues = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'equals');
-            asort($aValues);
-
-            $iMax -= count($aValues);
-            if ($iMax > 0 ) {
-                $oValuesSet->SetLimit($iMax);
-                $aValuesStartWith = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
-                asort($aValuesStartWith);
-                foreach ($aValuesStartWith as $sKey => $sFriendlyName) {
-                    if (!isset($aValues[$sKey])) {
-                        $aValues[$sKey] = $sFriendlyName;
-                    }
-                }
-            }
-        }
-        else
-        {
-            $aValues = array();
-        }
-
-		$iMax -= count($aValues);
-		if ($iMax > 0 && (empty($sOperation) || 'contains' == $sOperation))
+		$oValuesSet->SetLimit($iMax);
+		$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
+		asort($aValuesContains);
+		foreach($aValuesContains as $sKey => $sFriendlyName)
 		{
-			$oValuesSet->SetLimit($iMax);
-			$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
-			asort($aValuesContains);
-			foreach($aValuesContains as $sKey => $sFriendlyName)
+			if (!isset($aValues[$sKey]))
 			{
-				if (!isset($aValues[$sKey]))
-				{
-					$aValues[$sKey] = $sFriendlyName;
-				}
+				$aValues[$sKey] = $sFriendlyName;
 			}
 		}
 
