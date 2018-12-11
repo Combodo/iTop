@@ -171,7 +171,7 @@ EOF
 			$_SESSION['obj_messages'][$sMessageKey][$sMessageId] = array(
 				'rank' => $fRank,
 				'severity' => $sSeverity,
-				'message' => $sMessage
+				'message' => $sMessage,
 			);
 		}
 	}
@@ -792,7 +792,7 @@ EOF
 											'value' => $sHTMLValue,
 											'comments' => $sComments,
 											'infos' => $sInfos,
-											'attcode' => $sAttCode
+											'attcode' => $sAttCode,
 										);
 									}
 									else
@@ -839,7 +839,7 @@ EOF
 											'value' => $sHTMLValue,
 											'comments' => $sComments,
 											'infos' => $sInfos,
-											'attcode' => $sAttCode
+											'attcode' => $sAttCode,
 										);
 									}
 								}
@@ -850,7 +850,7 @@ EOF
 										'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>",
 										'comments' => $sComments,
 										'infos' => $sInfos,
-										'attcode' => $sAttCode
+										'attcode' => $sAttCode,
 									);
 									$aFieldsMap[$sAttCode] = $sInputId;
 								}
@@ -932,7 +932,7 @@ EOF
 				'class' => get_class($this),
 				'pkey' => $this->GetKey(),
 				'id' => $this->GetKey(),
-				'name' => $this->GetName()
+				'name' => $this->GetName(),
 			));
 		}
 		else
@@ -963,7 +963,7 @@ EOF
 		{
 			$aDetails[] = array(
 				'label' => MetaModel::GetLabel($sClass, $sAttCode),
-				'value' => $this->GetAsHTML($sAttCode)
+				'value' => $this->GetAsHTML($sAttCode),
 			);
 		}
 		$oPage->details($aDetails);
@@ -1999,8 +1999,8 @@ EOF
 						'labels' => array(
 							'reset_button' => htmlentities(Dict::S('UI:Button:ResetImage'), ENT_QUOTES, 'UTF-8'),
 							'remove_button' => htmlentities(Dict::S('UI:Button:RemoveImage'), ENT_QUOTES, 'UTF-8'),
-							'upload_button' => $sHelpText
-						)
+							'upload_button' => $sHelpText,
+						),
 					);
 					$sEditImageOptions = json_encode($aEditImage);
 					$oPage->add_ready_script("$('#edit_$iInputId').edit_image($sEditImageOptions);");
@@ -2077,7 +2077,7 @@ EOF
 
 					$aFormHandlerOptions = array(
 						'wizard_helper_var_name' => 'oWizardHelper'.$sFormPrefix,
-						'custom_field_attcode' => $sAttCode
+						'custom_field_attcode' => $sAttCode,
 					);
 					$sFormHandlerOptions = json_encode($aFormHandlerOptions);
 					$aFieldSetOptions = array(
@@ -2085,7 +2085,7 @@ EOF
 						// convention: fields are rendered into a div and are identified by this attribute
 						'fields_list' => $aRenderRes,
 						'fields_impacts' => $oForm->GetFieldsImpacts(),
-						'form_path' => $oForm->GetId()
+						'form_path' => $oForm->GetId(),
 					);
 					$sFieldSetOptions = json_encode($aFieldSetOptions);
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_handler.js');
@@ -2721,7 +2721,7 @@ EOF
 						$aArgs);
 					$aDetails[] = array(
 						'label' => '<span>'.$oAttDef->GetLabel().'</span>',
-						'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>"
+						'value' => "<span id=\"field_att_$iFieldIndex\">$sHTMLValue</span>",
 					);
 					$aFieldsMap[$sAttCode] = 'att_'.$iFieldIndex;
 					$iFieldIndex++;
@@ -2907,7 +2907,7 @@ EOF
 				'label' => '<span title="'.MetaModel::GetDescription($sClass,
 						$sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>',
 				'value' => $sDisplayValue,
-				'attcode' => $sAttCode
+				'attcode' => $sAttCode,
 			);
 
 			// Checking how the field should be rendered
@@ -3586,7 +3586,7 @@ EOF
 					'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]',
 						'raw_data'), true),
 					'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]',
-						'raw_data'), true)
+						'raw_data'), true),
 				);
 				break;
 
@@ -3690,6 +3690,7 @@ EOF
 		$this->SetWarningsAsSessionMessages('create');
 
 		// Invoke extensions after insertion (the object must exist, have an id, etc.)
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnDBInsert($this, self::GetCurrentChange());
@@ -3711,6 +3712,7 @@ EOF
 		$oNewObj = parent::DBCloneTracked_Internal($newKey);
 
 		// Invoke extensions after insertion (the object must exist, have an id, etc.)
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnDBInsert($oNewObj, self::GetCurrentChange());
@@ -3738,6 +3740,7 @@ EOF
 		try
 		{
 			// Invoke extensions after the update (could be before)
+			/** @var \iApplicationObjectExtension $oExtensionInstance */
 			foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 			{
 				$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
@@ -3781,6 +3784,7 @@ EOF
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnDBDelete($this, self::GetCurrentChange());
@@ -3798,6 +3802,7 @@ EOF
 
 		// Plugins
 		//
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			if ($oExtensionInstance->OnIsModified($this))
@@ -3825,6 +3830,7 @@ EOF
 
 		// Plugins
 		//
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$aNewIssues = $oExtensionInstance->OnCheckToWrite($this);
@@ -3869,6 +3875,7 @@ EOF
 
 		// Plugins
 		//
+		/** @var \iApplicationObjectExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 		{
 			$aNewIssues = $oExtensionInstance->OnCheckToDelete($this);
@@ -4084,7 +4091,7 @@ EOF
 						{
 							$aValues[$sAttCode][$currValue] = array(
 								'count' => 1,
-								'display' => $oObj->GetAsHTML($sAttCode)
+								'display' => $oObj->GetAsHTML($sAttCode),
 							);
 						}
 						else
@@ -4172,7 +4179,7 @@ EOF
 							{
 								$sDisplayValue = empty($aVal['display']) ? '<i>'.Dict::S('Enum:Undefined').'</i>' : str_replace(array(
 									"\n",
-									"\r"
+									"\r",
 								), " ", $aVal['display']);
 								$sTip .= "<li>".Dict::Format('UI:BulkModify:Value_Exists_N_Times', $sDisplayValue,
 										$aVal['count'])."</li>";
@@ -4256,7 +4263,7 @@ EOF
 				'selectObj' => $sSelectedObj,
 				'preview_mode' => true,
 				'disabled_fields' => $sDisableFields,
-				'disable_plugins' => true
+				'disable_plugins' => true,
 			);
 			$aParams = $aParams + $aContextData; // merge keeping associations
 
@@ -4285,16 +4292,16 @@ EOF
 		$aHeaders = array(
 			'form::select' => array(
 				'label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList:not(:disabled)', this.checked);\"></input>",
-				'description' => Dict::S('UI:SelectAllToggle+')
+				'description' => Dict::S('UI:SelectAllToggle+'),
 			),
 			'object' => array('label' => MetaModel::GetName($sClass), 'description' => Dict::S('UI:ModifiedObject')),
 			'status' => array(
 				'label' => Dict::S('UI:BulkModifyStatus'),
-				'description' => Dict::S('UI:BulkModifyStatus+')
+				'description' => Dict::S('UI:BulkModifyStatus+'),
 			),
 			'errors' => array(
 				'label' => Dict::S('UI:BulkModifyErrors'),
-				'description' => Dict::S('UI:BulkModifyErrors+')
+				'description' => Dict::S('UI:BulkModifyErrors+'),
 			),
 		);
 		$aRows = array();
@@ -4538,7 +4545,7 @@ EOF
 				$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
 				$aDisplayConfig['consequence'] = array(
 					'label' => 'Consequence',
-					'description' => Dict::S('UI:Delete:Consequence+')
+					'description' => Dict::S('UI:Delete:Consequence+'),
 				);
 				$oP->table($aDisplayConfig, $aDisplayData);
 			}
