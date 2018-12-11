@@ -900,6 +900,8 @@ EOF
 			}
 			elseif (!utils::IsTransactionValid($sTransactionId, false))
 			{
+				$sUser = UserRights::GetUser();
+				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
 			}
@@ -1009,6 +1011,8 @@ EOF
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
+				$sUser = UserRights::GetUser();
+				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				throw new ApplicationException(Dict::S('UI:Error:ObjectsAlreadyDeleted'));
 			}
 		// Fall through
@@ -1082,10 +1086,13 @@ EOF
 		}
 		if (!utils::IsTransactionValid($sTransactionId, false))
 		{
+			$sUser = UserRights::GetUser();
+			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 			$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyCreated')."</strong>\n");
 		}
 		else
 		{
+			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::NewObject($sClass);
 			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 			if (!empty($sStateAttCode))
@@ -1361,6 +1368,8 @@ EOF
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		if (!utils::IsTransactionValid($sTransactionId))
 		{
+			$sUser = UserRights::GetUser();
+			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 			$oP->p(Dict::S('UI:Error:ObjectAlreadyUpdated'));
 		}
 		else
@@ -1530,6 +1539,8 @@ EOF
 			}
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
+				$sUser = UserRights::GetUser();
+				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				$sMessage = Dict::S('UI:Error:ObjectAlreadyUpdated');
 				$sSeverity = 'info';
 			}
