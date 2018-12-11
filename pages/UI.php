@@ -1012,6 +1012,7 @@ EOF
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
 				$sUser = UserRights::GetUser();
+				$sClass = utils::ReadParam('class', '', false, 'class');
 				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				throw new ApplicationException(Dict::S('UI:Error:ObjectsAlreadyDeleted'));
 			}
@@ -1369,7 +1370,7 @@ EOF
 		if (!utils::IsTransactionValid($sTransactionId))
 		{
 			$sUser = UserRights::GetUser();
-			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
+			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser'");
 			$oP->p(Dict::S('UI:Error:ObjectAlreadyUpdated'));
 		}
 		else
