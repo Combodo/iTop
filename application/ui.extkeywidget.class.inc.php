@@ -437,6 +437,7 @@ EOF
 		$oValuesSet->SetLimit($iMax);
 		$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
 		asort($aValuesContains);
+		$aValues = array();
 		foreach($aValuesContains as $sKey => $sFriendlyName)
 		{
 			if (!isset($aValues[$sKey]))
