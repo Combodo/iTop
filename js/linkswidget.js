@@ -78,6 +78,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			else
 			{
 				var iUniqueId = $(this).attr('data-unique-id');
+				if (iUniqueId < 0)
+				{
+					iUniqueId = -iUniqueId;
+				}
 				me.aAdded[iUniqueId] = null;
 			}
 		});
