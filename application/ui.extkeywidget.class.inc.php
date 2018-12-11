@@ -418,19 +418,6 @@ EOF
 		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 
-		$aValuesEquals = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'equals_start_with');
-		//asort($aValuesEquals);
-		foreach($aValuesEquals as $sKey => $sFriendlyName)
-		{
-			$oP->add(trim($sFriendlyName)."\t".$sKey."\n");
-			$iMax--;
-		}
-		if ($iMax <= 0)
-		{
-			return;
-		}
-
-		$oValuesSet->SetLimit($iMax);
 		$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
 		asort($aValuesContains);
 		foreach($aValuesContains as $sKey => $sFriendlyName)
