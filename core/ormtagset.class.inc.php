@@ -49,6 +49,10 @@ final class ormTagSet extends ormSet
 	 */
 	public function SetValues($aTagCodes)
 	{
+		if (is_null($aTagCodes))
+		{
+			$aTagCodes = array();
+		}
 		if (!is_array($aTagCodes))
 		{
 			throw new CoreUnexpectedValue("Wrong value {$aTagCodes} for {$this->sClass}:{$this->sAttCode}");
