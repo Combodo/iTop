@@ -227,11 +227,6 @@ EOF;
 			$sJSLangShort = json_encode(strtolower(substr($sUserLang, 0, 2)));
 		}
 
-		// zh should be zh-CN
-		if($sJSLangShort == '"zh"') {
-			$sJSLangShort = '"zh-CN"';
-		}
-
 		// Date picker options
 		$aPickerOptions = array(
 			'showOn' => 'button',
