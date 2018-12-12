@@ -1134,6 +1134,21 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'jquery_i18n_map' => array(
+			'type' => 'array',
+			'description' => 'Special case for jQuery timepicker regional code.Associative array of sLanguageCode => jQuery timepicker regional code',
+			// examples... not used
+			'default' => array(
+				'ZH CN' => 'zh-CN',
+				'ZH TW' => 'zh-TW',
+				'PT BR' => 'pt-BR',
+				'SR RS' => 'sr-RS',
+				'SR YU' => 'sr-YU',
+			),
+			'value' => array(),
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 	);
 
 	public function IsProperty($sPropCode)

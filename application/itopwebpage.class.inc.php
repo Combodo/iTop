@@ -219,7 +219,13 @@ EOF;
 		);
 		$sTimeFormat = AttributeDateTime::GetFormat()->ToTimeFormat();
 		$oTimeFormat = new DateTimeFormat($sTimeFormat);
-		$sJSLangShort = json_encode(strtolower(substr(Dict::GetUserLanguage(), 0, 2)));
+		$aI18nMap = MetaModel::GetConfig()->Get('jquery_i18n_map');
+		$sUserLang = Dict::GetUserLanguage();
+		if(array_key_exists($sUserLang, $aI18nMap)) {
+			$sJSLangShort = json_encode($aI18nMap[$sUserLang]);
+		} else {
+			$sJSLangShort = json_encode(strtolower(substr($sUserLang, 0, 2)));
+		}
 
 		// zh should be zh-CN
 		if($sJSLangShort == '"zh"') {
