@@ -18,6 +18,7 @@
 /**
  * Localized data
  *
+ * @author Hipska (2018)
  * @author jbostoen (2018)
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -218,7 +219,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Subverzoeken',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Alle verzoeken die gerelateerd zijn aan dit hoofdverzoek',
-	'Class:UserRequest/Attribute:public_log' => 'Publiek commentaar',
+	'Class:UserRequest/Attribute:public_log' => 'Publieke log',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Gebruikerstevredenheid',
 	'Class:UserRequest/Attribute:user_satisfaction+' => '',

@@ -226,7 +226,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Subverzoeken',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Alle verzoeken die gerelateerd zijn aan dit hoofdverzoek',
-	'Class:UserRequest/Attribute:public_log' => 'Publieke commentaar',
+	'Class:UserRequest/Attribute:public_log' => 'Publieke log',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Klant tevredenheid',
 	'Class:UserRequest/Attribute:user_satisfaction+' => '',

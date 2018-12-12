@@ -21,6 +21,7 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  *
+ * @author Hipska (2018)
  * @author jbostoen (2018)
  *
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
@@ -650,8 +651,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:PowerSource' => 'Stroombron',
 	'Class:PowerSource+' => '',
-	'Class:PowerSource/Attribute:pdus_list' => 'PDUs',
-	'Class:PowerSource/Attribute:pdus_list+' => 'Alle PDUs die gebruikt worden door deze stroombron',
+	'Class:PowerSource/Attribute:pdus_list' => 'PDU\'s',
+	'Class:PowerSource/Attribute:pdus_list+' => 'Alle PDU\'s die gebruik maken van deze stroombron',
 ));
 
 //
@@ -705,7 +706,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ApplicationSolution' => 'Applicatie-oplossing',
 	'Class:ApplicationSolution+' => '',
 	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
-	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Alle configuratie-items die deze applicatie oplossing tot stand brengen',
+	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Alle configuratie-items die deze applicatie-oplossing tot stand brengen',
 	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Bedrijfsprocessen',
 	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Alle bedrijfsprocessen die afhankelijk zijn van deze applicatie-oplossing',
 	'Class:ApplicationSolution/Attribute:status' => 'Status',

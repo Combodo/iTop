@@ -21,6 +21,7 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  *
+ * @author Hipska (2018)
  * @author jbostoen (2018)
  * 
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
@@ -62,8 +63,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Problem:MyProblems+' => 'Mijn problemen',
 	'Menu:Problem:OpenProblems' => 'Alle open problemen',
 	'Menu:Problem:OpenProblems+' => 'Alle open problemen',
-	'UI-ProblemManagementOverview-ProblemByService' => 'Problemen per dienst',
-	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemen per dienst',
+	'UI-ProblemManagementOverview-ProblemByService' => 'Problemen per service',
+	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemen per service',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemen per prioriteit',
 	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problemen per prioriteit',
 	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Niet toegewezen problemen',
@@ -93,9 +94,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Problem/Attribute:service_id+' => '',
 	'Class:Problem/Attribute:service_name' => 'Naam service',
 	'Class:Problem/Attribute:service_name+' => '',
-	'Class:Problem/Attribute:servicesubcategory_id' => 'Subcategorie dienst',
+	'Class:Problem/Attribute:servicesubcategory_id' => 'Subcategorie service',
 	'Class:Problem/Attribute:servicesubcategory_id+' => '',
-	'Class:Problem/Attribute:servicesubcategory_name' => 'Naam subcategorie dienst',
+	'Class:Problem/Attribute:servicesubcategory_name' => 'Naam subcategorie service',
 	'Class:Problem/Attribute:servicesubcategory_name+' => '',
 	'Class:Problem/Attribute:product' => 'Product',
 	'Class:Problem/Attribute:product+' => '',
@@ -103,7 +104,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Problem/Attribute:impact+' => '',
 	'Class:Problem/Attribute:impact/Value:1' => 'Afdeling',
 	'Class:Problem/Attribute:impact/Value:1+' => '',
-	'Class:Problem/Attribute:impact/Value:2' => 'Dienst',
+	'Class:Problem/Attribute:impact/Value:2' => 'Service',
 	'Class:Problem/Attribute:impact/Value:2+' => '',
 	'Class:Problem/Attribute:impact/Value:3' => 'Persoon',
 	'Class:Problem/Attribute:impact/Value:3+' => '',
