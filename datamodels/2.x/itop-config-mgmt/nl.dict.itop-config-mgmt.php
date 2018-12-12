@@ -1515,7 +1515,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Subnet/Attribute:ip+' => '',
 	'Class:Subnet/Attribute:ip_mask' => 'IP Mask',
 	'Class:Subnet/Attribute:ip_mask+' => '',
-	'Class:Subnet/Attribute:vlans_list' => 'VLANs',
+	'Class:Subnet/Attribute:vlans_list' => 'VLAN\'s',
 	'Class:Subnet/Attribute:vlans_list+' => '',
 ));
 
@@ -1526,7 +1526,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:VLAN' => 'VLAN',
 	'Class:VLAN+' => '',
-	'Class:VLAN/Attribute:vlan_tag' => 'Tag VLAN',
+	'Class:VLAN/Attribute:vlan_tag' => 'VLAN-tag',
 	'Class:VLAN/Attribute:vlan_tag+' => '',
 	'Class:VLAN/Attribute:description' => 'Omschrijving',
 	'Class:VLAN/Attribute:description+' => '',
