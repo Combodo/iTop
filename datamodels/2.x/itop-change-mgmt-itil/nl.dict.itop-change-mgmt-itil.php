@@ -5,6 +5,9 @@
  * @copyright Copyright (C) 2010-2018 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
+ * @author Hipska (2018)
+ * @author jbostoen (2018)
+ *
  * This file is part of iTop.
  *
  * iTop is free software; you can redistribute it and/or modify
@@ -17,7 +20,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
- * @author jbostoen (2018)
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
@@ -72,7 +74,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Change/Attribute:status/Value:new+' => '',
 	'Class:Change/Attribute:status/Value:validated' => 'Gevalideerd',
 	'Class:Change/Attribute:status/Value:validated+' => '',
-	'Class:Change/Attribute:status/Value:rejected' => 'Afgekeurd',
+	'Class:Change/Attribute:status/Value:rejected' => 'Geweigerd',
 	'Class:Change/Attribute:status/Value:rejected+' => '',
 	'Class:Change/Attribute:status/Value:assigned' => 'Toegewezen',
 	'Class:Change/Attribute:status/Value:assigned+' => '',

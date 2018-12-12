@@ -759,7 +759,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:Synchro:ThisObjectIsSynchronized' => 'Dit object is gesynchroniseerd met een externe databron',
 	'Core:Synchro:TheObjectWasCreatedBy_Source' => 'Dit object is <b>aangemaakt</b> door een externe databron %1$s',
 	'Core:Synchro:TheObjectCanBeDeletedBy_Source' => 'Dit object <b>kan worden verwijderd</b> door de externe databron %1$s',
-	'Core:Synchro:TheObjectCannotBeDeletedByUser_Source' => 'Je <b>kunt dit object niet verwijderen</b> omdat het eigendom is van de externe databron %1$s',
+	'Core:Synchro:TheObjectCannotBeDeletedByUser_Source' => '<b>Je kan dit object niet verwijderen</b> omdat het eigendom is van de externe databron %1$s',
 	'TitleSynchroExecution' => 'Uitvoering van de synchronisatie',
 	'Class:SynchroDataSource:DataTable' => 'Database tabel: %1$s',
 	'Core:SyncDataSourceObsolete' => 'De databron is gemarkeerd als overbodig. Handeling afgebroken.',
@@ -1027,7 +1027,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 // Class: AsyncTask
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:AsyncTask' => 'Async. taak',
+	'Class:AsyncTask' => 'Asynchrone taak',
 	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Gemaakt',
 	'Class:AsyncTask/Attribute:created+' => '',
