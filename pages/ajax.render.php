@@ -2470,7 +2470,7 @@ EOF
 			);
 
 			$sObjClass = stripslashes(utils::ReadParam('obj_class', '', false, 'class'));
-			$sTempId = utils::ReadParam('temp_id', '');
+			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			if (empty($sObjClass))
 			{
 				$aResult['error'] = "Missing argument 'obj_class'";
