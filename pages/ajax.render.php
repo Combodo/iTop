@@ -2520,7 +2520,7 @@ EOF
 			break;
 
 		case 'cke_upload_and_browse':
-			$sTempId = utils::ReadParam('temp_id');
+			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
 			try
 			{
@@ -2564,7 +2564,7 @@ EOF
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
 			$sImgUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
 
-			$sTempId = utils::ReadParam('temp_id');
+			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sClass = utils::ReadParam('obj_class', '', false, 'class');
 			$iObjectId = utils::ReadParam('obj_key', 0, false, 'integer');
 			$sCKEditorFuncNum = utils::ReadParam('CKEditorFuncNum', '');
