@@ -50,7 +50,7 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 		$sObjectClass = get_class($this->oField->GetObject());
 		$sIsDeleteAllowed = ($this->oField->GetAllowDelete() && !$this->oField->GetReadOnly()) ? 'true' : 'false';
 		$sDeleteBtn = Dict::S('Portal:Button:Delete');
-		$sTempId = session_id() . '_' . $this->oField->GetTransactionId();
+		$sTempId = utils::GetUploadTempId($this->oField->GetTransactionId());
 		$sUploadDropZoneLabel = Dict::S('Portal:Attachments:DropZone:Message');
 
 		// Starting field container
