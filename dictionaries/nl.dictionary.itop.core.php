@@ -40,10 +40,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeLinkedSet+' => 'Elke soort objecten van dezelfde klasse of subklasse',
 
 	'Core:AttributeDashboard' => 'Dashboard',
-	'Core:AttributeDashboard+' => 'Dashboard',
+	'Core:AttributeDashboard+' => '',
 
 	'Core:AttributePhoneNumber' => 'Telefoonnummer',
-	'Core:AttributePhoneNumber+' => 'Telefoonnummer',
+	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Buiten gebruik sinds',
 	'Core:AttributeObsolescenceDate+' => 'Tijdstip sinds wanneer dit object buiten gebruik is',
