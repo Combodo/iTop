@@ -102,6 +102,10 @@ class ObjectResult
 					$value[] = $aLnkValues;
 				}
 			}
+			elseif ($oAttDef instanceof AttributeCustomFields)
+			{
+				$value = $oObject->Get($sAttCode)->GetValues();
+			}
 			else
 			{
 				$value = $oAttDef->GetForJSON($oObject->Get($sAttCode));

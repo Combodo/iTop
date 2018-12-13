@@ -1169,6 +1169,10 @@ class RestUtils
 				}
 				$value = DBObjectSet::FromArray($sLnkClass, $aLinks);
 			}
+			elseif ($oAttDef instanceof AttributeCustomFields)
+			{
+				$value = json_decode(json_encode($value), true);
+			}
             elseif ($oAttDef instanceof AttributeTagSet)
             {
                 if (!is_array($value))
