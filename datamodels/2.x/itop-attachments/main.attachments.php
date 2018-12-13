@@ -197,7 +197,20 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		$this->m_bDeleteEnabled = $bEnabled;
 	}
 
-	public function DisplayAttachments($oObject, WebPage $oPage, $bEditMode = false)
+	/**
+	 * @param \DBObject $oObject
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 *
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function DisplayAttachments(DBObject $oObject, WebPage $oPage, $bEditMode = false)
 	{
 		// Exit here if the class is not allowed
 		if (!$this->IsTargetObject($oObject)) return;
@@ -206,7 +219,7 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
 
 		$iTransactionId = $oPage->GetTransactionId();
-		$sTempId = session_id().'_'.$iTransactionId;
+		$sTempId = utils::GetUploadTempId($iTransactionId);
 		$oSearchTemp = DBObjectSearch::FromOQL("SELECT Attachment WHERE temp_id = :temp_id");
 		$oSetTemp = new DBObjectSet($oSearchTemp, array(), array('temp_id' => $sTempId));
 
@@ -494,7 +507,7 @@ EOF
 			}			
 
 			// Attach new (temporary) attachments
-			$sTempId = session_id().'_'.$sTransactionId;
+			$sTempId = utils::GetUploadTempId($sTransactionId);
 			// The object is being created from a form, check if there are pending attachments
 			// for this object, but deleting the "new" ones that were already removed from the form
 			$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
@@ -535,7 +548,7 @@ EOF
 		$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_class = :class AND item_id = :item_id");
 		$oSet = new DBObjectSet($oSearch, array(), array('class' => get_class($oObject), 'item_id' => $oObject->GetKey()));
 		// Attach new (temporary) attachments
-		$sTempId = session_id().'_'.$sTransactionId;
+		$sTempId = utils::GetUploadTempId($sTransactionId);
 		while ($oAttachment = $oSet->Fetch())
 		{
 			$oTempAttachment = clone $oAttachment;

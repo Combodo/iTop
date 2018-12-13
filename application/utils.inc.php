@@ -527,7 +527,7 @@ class utils
 	/**
 	 * Returns a unique tmp id for the current upload based on the transaction system (db).
 	 *
-	 * Build as session_id() . '_' . static::GetNewTransactionId()
+	 * Build as static::GetNewTransactionId()
 	 *
 	 * @return string
 	 */
@@ -537,7 +537,7 @@ class utils
 		{
 			$sTransactionId = static::GetNewTransactionId();
 		}
-		return session_id() . '_' . $sTransactionId;
+		return $sTransactionId;
 	}
 
 	public static function ReadFromFile($sFileName)
