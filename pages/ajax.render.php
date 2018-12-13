@@ -904,7 +904,7 @@ try
 			// Called when a creation/modification form is cancelled by the end-user
 			// Let's take this opportunity to inform the plug-ins so that they can perform some cleanup
 			$iTransactionId = utils::ReadParam('transaction_id', 0, false, 'transaction_id');
-			$sTempId = session_id().'_'.$iTransactionId;
+			$sTempId = utils::GetUploadTempId($iTransactionId);
 			InlineImage::OnFormCancel($sTempId);
 			foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 			{

@@ -416,9 +416,11 @@ EOF
 	 * Get the fragment of javascript needed to complete the initialization of
 	 * CKEditor when creating/modifying an object
 	 *
-	 * @param DBObject $oObject The object being edited
-	 * @param string $sTempId The concatenation of session_id().'_'.$iTransactionId.
+	 * @param \DBObject $oObject The object being edited
+	 * @param string $sTempId Generated through utils::GetUploadTempId($iTransactionId)
+	 *
 	 * @return string The JS fragment to insert in "on document ready"
+	 * @throws \Exception
 	 */
 	public static function EnableCKEditorImageUpload(DBObject $oObject, $sTempId)
 	{

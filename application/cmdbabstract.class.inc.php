@@ -2485,7 +2485,7 @@ EOF
 		$sJsonFieldsMap = json_encode($aFieldsMap);
 		$sState = $this->GetState();
 		$sSessionStorageKey = $sClass.'_'.$iKey;
-		$sTempId = session_id().'_'.$iTransactionId;
+		$sTempId = utils::GetUploadTempId($iTransactionId);
 		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
 
 		$oPage->add_script(
@@ -2784,7 +2784,7 @@ EOF
 		}
 
 		// Note: This part (inline images activation) is duplicated in self::DisplayModifyForm and several other places. Maybe it should be refactored so it automatically activates when an HTML field is present, or be an option of the attribute. See bug n°1240.
-		$sTempId = session_id().'_'.$iTransactionId;
+		$sTempId = utils::GetUploadTempId($iTransactionId);
 		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
 	}
 

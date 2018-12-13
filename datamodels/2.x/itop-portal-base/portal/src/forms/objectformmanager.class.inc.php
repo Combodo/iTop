@@ -1224,7 +1224,7 @@ class ObjectFormManager extends FormManager
 		}
 
 		// Processing temporary attachments
-		$sTempId = session_id() . '_' . $this->oForm->GetTransactionId();
+		$sTempId = utils::GetUploadTempId($this->oForm->GetTransactionId());
 		$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
 		$oSearch = DBObjectSearch::FromOQL($sOQL);
 		$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
@@ -1254,7 +1254,7 @@ class ObjectFormManager extends FormManager
 	protected function CancelAttachments()
 	{
 		// Processing temporary attachments
-		$sTempId = session_id() . '_' . $this->oForm->GetTransactionId();
+		$sTempId = utils::GetUploadTempId($this->oForm->GetTransactionId());
 		$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
 		$oSearch = DBObjectSearch::FromOQL($sOQL);
 		$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
