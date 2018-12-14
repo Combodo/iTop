@@ -1131,11 +1131,10 @@ EOF
 				<<<EOF
 <select name="text" onchange='$(".printable-content").width(this.value); $(charts).each(function(i, chart) { $(chart).trigger("resize"); });'>
 EOF;
-			$bIsSelected = true;
+			$sDefaultResolution = '27.7cm';
 			foreach ($aResolutionChoices as $sValue => $sText)
 			{
-				$sHtml .= '<option value="'.$sValue.'" '.($bIsSelected ? 'selected' : '').'>'.$sText.'</option>';
-				$bIsSelected = false;
+				$sHtml .= '<option value="'.$sValue.'" '.(($sValue === $sDefaultResolution) ? 'selected' : '').'>'.$sText.'</option>';
 			}
 			$sHtml .= "</select>";
 
