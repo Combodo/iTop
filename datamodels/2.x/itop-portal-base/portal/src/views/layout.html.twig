@@ -351,7 +351,7 @@
 		</footer>
 	
 		{% block pModalForAllWrapper %}
-			<div class="modal fade" id="modal-for-all" role="dialog">
+			<div class="modal fade" id="modal-for-all" role="dialog" tabindex="-1">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
 						{% include 'itop-portal-base/portal/src/views/helpers/loader.html.twig' %}
@@ -360,7 +360,7 @@
 			</div>
 		{% endblock %}
 		{% block pModalForAlert %}
-			<div class="modal fade" id="modal-for-alert" role="dialog">
+			<div class="modal fade" id="modal-for-alert" role="dialog" tabindex="-1">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
