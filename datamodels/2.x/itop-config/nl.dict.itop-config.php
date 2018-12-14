@@ -4,6 +4,7 @@
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
+ * @author jbostoen (2018)
  *
  * This file is part of iTop.
  *
@@ -22,16 +23,16 @@
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
-	'Menu:ConfigEditor' => 'Configuration~~',
-	'config-edit-title' => 'Configuration File Editor~~',
-	'config-edit-intro' => 'Be very cautious when editing the configuration file.~~',
-	'config-apply' => 'Apply~~',
-	'config-apply-title' => 'Apply (Ctrl+S)~~',
-	'config-cancel' => 'Reset~~',
-    'config-saved' => 'Successfully recorded.~~',
-	'config-confirm-cancel' => 'Your changes will be lost.~~',
-	'config-no-change' => 'No change: the file has been left unchanged.~~',
-    'config-reverted' => 'The configuration has been reverted.~~',
-	'config-parse-error' => 'Line %2$d: %1$s.<br/>The file has NOT been updated.~~',
-	'config-current-line' => 'Editing line: %1$s~~',
+	'Menu:ConfigEditor' => 'Configuratie',
+	'config-edit-title' => 'Configuratie-editor',
+	'config-edit-intro' => 'Wees uiterst voorzichtig bij het aanpassen van de configuratie.',
+	'config-apply' => 'Opslaan',
+	'config-apply-title' => 'Opslaan (Ctrl+S)',
+	'config-cancel' => 'Herbeginnen',
+    'config-saved' => 'Wijzigingen opgeslagen',
+	'config-confirm-cancel' => 'Je wijzigingen zullen verloren gaan',
+	'config-no-change' => 'Er zijn geen wijzigingen vastgesteld.',
+    'config-reverted' => 'De wijzigingen zijn ongedaan gemaakt.',
+	'config-parse-error' => 'Regel %2$d: %1$s.<br/>Het bestand werd <b>NIET</b> opgeslagen.',
+	'config-current-line' => 'Huidige regel: %1$s',
 ));
