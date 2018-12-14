@@ -155,6 +155,7 @@ table.listResults > tbody > tr:hover > * {
   vertical-align: middle;
   max-width: 90% !important;
   max-height: 90% !important;
+  cursor: zoom-in;
 }
 .details .view-image .helper-middle {
   display: inline-block;
