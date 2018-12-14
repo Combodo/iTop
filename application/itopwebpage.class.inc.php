@@ -1120,6 +1120,7 @@ EOF
 			$sHtml .= '<button onclick="window.close()">'.htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES, 'UTF-8').'</button>';
 			$sHtml .= '&nbsp;';
 
+			$sDefaultResolution = '27.7cm';
 			$aResolutionChoices = array(
 				'100%' => Dict::S('UI:PrintResolution:FullSize'),
 				'19cm' => Dict::S('UI:PrintResolution:A4Portrait'),
@@ -1131,7 +1132,6 @@ EOF
 				<<<EOF
 <select name="text" onchange='$(".printable-content").width(this.value); $(charts).each(function(i, chart) { $(chart).trigger("resize"); });'>
 EOF;
-			$sDefaultResolution = '27.7cm';
 			foreach ($aResolutionChoices as $sValue => $sText)
 			{
 				$sHtml .= '<option value="'.$sValue.'" '.(($sValue === $sDefaultResolution) ? 'selected' : '').'>'.$sText.'</option>';
@@ -1139,7 +1139,7 @@ EOF;
 			$sHtml .= "</select>";
 
 			$sHtml .= "</div>";
-			$sHtml .= "<div class=\"printable-content\">";
+			$sHtml .= "<div class=\"printable-content\" style=\"width: $sDefaultResolution;\">";
 		}
 
 		// Render the revision number
