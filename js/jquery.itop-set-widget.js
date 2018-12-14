@@ -278,6 +278,13 @@ $.widget('itop.set_widget',
 				}
 			}
 
+			// When only one item allowed, selectize doesn't trigger the _onTagRemove callback so we have to clean ourselves.
+			if((this.maxItemsAllowed === 1) && (this.originalValue.length > 0)) {
+				if(setItemCode !== this.originalValue[0]) {
+					this.setItemsCodesStatus[this.originalValue[0]] = this.STATUS_REMOVED;
+				}
+			}
+
 			this.refresh();
 		},
 
