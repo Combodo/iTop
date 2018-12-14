@@ -119,7 +119,7 @@ class privUITransactionSession
 		// Strictly speaking, the two lines below should be grouped together
 		// by a critical section
 		// sem_acquire($rSemIdentified);
-		$id = str_replace(array('.', ' '), '', microtime()); //1 + count($_SESSION['transactions']);
+		$id = static::GetUserPrefix() . str_replace(array('.', ' '), '', microtime()); //1 + count($_SESSION['transactions']);
 		$_SESSION['transactions'][$id] = true;
 		// sem_release($rSemIdentified);
 		
@@ -174,6 +174,17 @@ class privUITransactionSession
 			// sem_release($rSemIdentified);
 		}		
 	}
+
+	/**
+	 * Returns a string to prefix transaction ID with info from the current user.
+	 *
+	 * @return string
+	 */
+	protected static function GetUserPrefix()
+	{
+		$sPrefix = 'u'.UserRights::GetUserId();
+		return $sPrefix.'-';
+	}
 }
 
 /**
@@ -206,7 +217,7 @@ class privUITransactionFile
 			throw new Exception('The directory "'.APPROOT.'data/transactions" must be writable to the application.');
 		}
 		self::CleanupOldTransactions();
-		$id = basename(tempnam(APPROOT.'data/transactions', self::GetUserPrefix()));
+		$id = basename(tempnam(APPROOT.'data/transactions', static::GetUserPrefix()));
 		self::Info('GetNewTransactionId: Created transaction: '.$id);
 
 		return (string)$id;
@@ -310,6 +321,11 @@ class privUITransactionFile
 		return $aResult;
 	}
 
+	/**
+	 * Returns a prefix based on the user login instead of its ID for a better usage in tempnam()
+	 *
+	 * @inheritdoc
+	 */
 	protected static function GetUserPrefix()
 	{
 		$sPrefix = substr(UserRights::GetUser(), 0, 10);

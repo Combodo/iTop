@@ -1331,15 +1331,24 @@ class UserRights
 		{
 			$_SESSION['profile_list'] = self::ListProfiles();
 		}
-		// Protection against session fixation/injection: generate a new session id.
-		
-		// Alas a PHP bug (technically a bug in the memcache session handler, https://bugs.php.net/bug.php?id=71187)
-		// causes session_regenerate_id to fail with a catchable fatal error in PHP 7.0 if the session handler is memcache(d).
-		// The bug has been fixed in PHP 7.2, but in case session_regenerate_id()
-		// fails we just silently ignore the error and keep the same session id...
-		$old_error_handler = set_error_handler(array(__CLASS__, 'VoidErrorHandler'));
-		session_regenerate_id();
-		if ($old_error_handler !== null) set_error_handler($old_error_handler);
+
+		$oConfig = MetaModel::GetConfig();
+		$bSessionIdRegeneration = $oConfig->Get('regenerate_session_id_enabled');
+		if ($bSessionIdRegeneration)
+		{
+			// Protection against session fixation/injection: generate a new session id.
+
+			// Alas a PHP bug (technically a bug in the memcache session handler, https://bugs.php.net/bug.php?id=71187)
+			// causes session_regenerate_id to fail with a catchable fatal error in PHP 7.0 if the session handler is memcache(d).
+			// The bug has been fixed in PHP 7.2, but in case session_regenerate_id()
+			// fails we just silently ignore the error and keep the same session id...
+			$old_error_handler = set_error_handler(array(__CLASS__, 'VoidErrorHandler'));
+			session_regenerate_id();
+			if ($old_error_handler !== null)
+			{
+				set_error_handler($old_error_handler);
+			}
+		}
 	}
 
 	public static function _ResetSessionCache()

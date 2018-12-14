@@ -358,7 +358,8 @@ EOF
             if ($oCurrentLink->IsNew())
             {
                 $key = -($iAddedId++);
-	            $aAddedLinks[] = array('iAddedId' => -$key, 'iRemote' => $oCurrentLink->Get($this->m_sExtKeyToRemote));
+                $iUniqueId = -$key;
+	            $aAddedLinks[] = array('iAddedId' => $iUniqueId, 'iRemote' => $oCurrentLink->Get($this->m_sExtKeyToRemote));
             }
             else
             {
@@ -377,6 +378,7 @@ EOF
 		oWidget{$this->m_iInputId}.Init();
 EOF
 );
+
 		foreach ($aAddedLinks as $aAddedLink)
 		{
 			$oPage->add_ready_script(<<<EOF
@@ -384,6 +386,7 @@ EOF
 EOF
 			);
 		}
+
 		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget{$this->m_iInputId}.RemoveSelected();\" >";
 		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget{$this->m_iInputId}.AddObjects();\"><span id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_indicatorAdd\"></span></span>\n";
 		$sHtmlValue .= "<span style=\"clear:both;\"><p>&nbsp;</p></span>\n";

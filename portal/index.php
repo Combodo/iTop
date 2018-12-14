@@ -619,7 +619,7 @@ EOF
 function DoCreateRequest($oP, $oUserOrg)
 {
 	$aParameters = $oP->ReadAllParams(PORTAL_ALL_PARAMS.',template_id');
-	$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+	$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 	if (!utils::IsTransactionValid($sTransactionId))
 	{
 		$oP->add("<h1>".Dict::S('UI:Error:ObjectAlreadyCreated')."</h1>\n");

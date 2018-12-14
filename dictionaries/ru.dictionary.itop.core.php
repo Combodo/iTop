@@ -32,6 +32,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
     'Core:AttributeTagSet' => 'Список тегов',
     'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'нажмите, чтобы добавить',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
     'Core:AttributeCaseLog' => 'Журнал',
     'Core:AttributeCaseLog+' => '',

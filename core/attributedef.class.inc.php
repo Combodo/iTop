@@ -9170,6 +9170,8 @@ class AttributeClassAttCodeSet extends AttributeSet
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
+	const DEFAULT_PARAM_INCLUDE_CHILD_CLASSES_ATTRIBUTES = false;
+
 	public function __construct($sCode, array $aParams)
 	{
 		parent::__construct($sCode, $aParams);
@@ -9186,69 +9188,111 @@ class AttributeClassAttCodeSet extends AttributeSet
 		return max(255, 15 * $this->GetMaxItems());
 	}
 
+	/**
+	 * @param array $aArgs
+	 * @param string $sContains
+	 *
+	 * @return array|null
+	 * @throws \CoreException
+	 */
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
-		if (isset($aArgs['this']))
+		if (!isset($aArgs['this']))
 		{
-			$oHostObj = $aArgs['this'];
-			$sTargetClass = $this->Get('class_field');
-			$sClass = $oHostObj->Get($sTargetClass);
-
-			$aAllowedAttributes = array();
-			if (empty($sClass))
-			{
-				$aAllAttributes = array();
-			}
-			else
-			{
-				$aAllAttributes = MetaModel::GetAttributesList($sClass);
-			}
-			$sAttDefExclusionList = $this->Get('attribute_definition_exclusion_list');
-			$aExcludeDefs = array();
-			if (!empty($sAttDefExclusionList))
-			{
-				foreach(explode(',', $sAttDefExclusionList) as $sAttDefName)
-				{
-					$sAttDefName = trim($sAttDefName);
-					$aExcludeDefs[$sAttDefName] = $sAttDefName;
-				}
-			}
-
-			$sAttDefList = $this->Get('attribute_definition_list');
-			if (!empty($sAttDefList))
-			{
-				$aAllowedDefs = array();
-				foreach(explode(',', $sAttDefList) as $sAttDefName)
-				{
-					$sAttDefName = trim($sAttDefName);
-					$aAllowedDefs[$sAttDefName] = $sAttDefName;
-				}
-				foreach($aAllAttributes as $sAttCode)
-				{
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					$sAttDef = get_class($oAttDef);
-					if (isset($aAllowedDefs[$sAttDef]) && !isset($aExcludeDefs[$sAttDef]))
-					{
-						$aAllowedAttributes[$sAttCode] = $sAttCode.' ('.MetaModel::GetLabel($sClass, $sAttCode).')';
-					}
-				}
-			}
-			else
-			{
-				foreach($aAllAttributes as $sAttCode)
-				{
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					$sAttDef = get_class($oAttDef);
-					if (!isset($aExcludeDefs[$sAttDef]))
-					{
-						$aAllowedAttributes[$sAttCode] = $sAttCode.' ('.MetaModel::GetLabel($sClass, $sAttCode).')';
-					}
-				}
-			}
-			return $aAllowedAttributes;
+			return null;
 		}
 
-		return null;
+		$oHostObj = $aArgs['this'];
+		$sTargetClass = $this->Get('class_field');
+		$sRootClass = $oHostObj->Get($sTargetClass);
+		$bIncludeChildClasses = $this->GetOptional('include_child_classes_attributes', static::DEFAULT_PARAM_INCLUDE_CHILD_CLASSES_ATTRIBUTES);
+
+		$aExcludeDefs = array();
+		$sAttDefExclusionList = $this->Get('attribute_definition_exclusion_list');
+		if (!empty($sAttDefExclusionList))
+		{
+			foreach(explode(',', $sAttDefExclusionList) as $sAttDefName)
+			{
+				$sAttDefName = trim($sAttDefName);
+				$aExcludeDefs[$sAttDefName] = $sAttDefName;
+			}
+		}
+
+		$aAllowedDefs = array();
+		$sAttDefList = $this->Get('attribute_definition_list');
+		if (!empty($sAttDefList))
+		{
+			foreach(explode(',', $sAttDefList) as $sAttDefName)
+			{
+				$sAttDefName = trim($sAttDefName);
+				$aAllowedDefs[$sAttDefName] = $sAttDefName;
+			}
+		}
+
+		$aAllAttributes = array();
+		if (!empty($sRootClass))
+		{
+			$aClasses = array($sRootClass);
+			if($bIncludeChildClasses === true)
+			{
+				$aClasses = $aClasses + MetaModel::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP);
+			}
+
+			foreach($aClasses as $sClass)
+			{
+				foreach(MetaModel::GetAttributesList($sClass) as $sAttCode)
+				{
+					// Add attribute only if not already there (can be in leaf classes but not the root)
+					if(!array_key_exists($sAttCode, $aAllAttributes))
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+						$sAttDefClass = get_class($oAttDef);
+
+						// Skip excluded attdefs
+						if(isset($aExcludeDefs[$sAttDefClass]))
+						{
+							continue;
+						}
+						// Skip not allowed attdefs only if list specified
+						if(!empty($aAllowedDefs) && !isset($aAllowedDefs[$sAttDefClass]))
+						{
+							continue;
+						}
+
+						$aAllAttributes[$sAttCode] = array(
+							'classes' => array($sClass),
+						);
+					}
+					else
+					{
+						$aAllAttributes[$sAttCode]['classes'][] = $sClass;
+					}
+				}
+			}
+		}
+
+		$aAllowedAttributes = array();
+		foreach($aAllAttributes as $sAttCode => $aAttData)
+		{
+			$iAttClassesCount = count($aAttData['classes']);
+			$sAttFirstClass = $aAttData['classes'][0];
+			$sAttLabel = MetaModel::GetLabel($sAttFirstClass, $sAttCode);
+
+			if($sAttFirstClass === $sRootClass)
+			{
+				$sLabel = Dict::Format('Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass', $sAttCode, $sAttLabel);
+			}
+			elseif($iAttClassesCount === 1)
+			{
+				$sLabel = Dict::Format('Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass', $sAttCode, $sAttLabel, MetaModel::GetName($sAttFirstClass));
+			}
+			else
+			{
+				$sLabel = Dict::Format('Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses', $sAttCode, $sAttLabel);
+			}
+			$aAllowedAttributes[$sAttCode] = $sLabel;
+		}
+		return $aAllowedAttributes;
 	}
 
 	/**
@@ -9338,7 +9382,19 @@ class AttributeClassAttCodeSet extends AttributeSet
 				{
 					try
 					{
-						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.MetaModel::GetLabel($sClass, $sAttCode)." ($sAttCode)".'" data-description="">'.$sAttCode.'</span>';
+						$sAttClass = $sClass;
+
+						// Look for the first class (current or children) that have this attcode
+						foreach(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
+						{
+							if(MetaModel::IsValidAttCode($sChildClass, $sAttCode))
+							{
+								$sAttClass = $sChildClass;
+								break;
+							}
+						}
+
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)".'" data-description="">'.$sAttCode.'</span>';
 					} catch (Exception $e)
 					{
 						// Ignore bad values

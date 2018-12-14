@@ -885,7 +885,7 @@ EOF
 			$sClass = utils::ReadPostedParam('class', '');
 			$sClassLabel = MetaModel::GetName($sClass);
 			$id = utils::ReadPostedParam('id', '');
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
@@ -900,6 +900,8 @@ EOF
 			}
 			elseif (!utils::IsTransactionValid($sTransactionId, false))
 			{
+				$sUser = UserRights::GetUser();
+				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
 			}
@@ -1006,9 +1008,12 @@ EOF
 
 		case 'bulk_delete_confirmed': // Confirm bulk deletion of objects
 			$oP->DisableBreadCrumb();
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
+				$sUser = UserRights::GetUser();
+				$sClass = utils::ReadParam('class', '', false, 'class');
+				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				throw new ApplicationException(Dict::S('UI:Error:ObjectsAlreadyDeleted'));
 			}
 		// Fall through
@@ -1074,7 +1079,7 @@ EOF
 		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		$aErrors = array();
 		if ( empty($sClass) ) // TO DO: check that the class name is valid !
 		{
@@ -1082,10 +1087,13 @@ EOF
 		}
 		if (!utils::IsTransactionValid($sTransactionId, false))
 		{
+			$sUser = UserRights::GetUser();
+			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 			$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyCreated')."</strong>\n");
 		}
 		else
 		{
+			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::NewObject($sClass);
 			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 			if (!empty($sStateAttCode))
@@ -1358,9 +1366,11 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'filter', 'stimulus', 'state'));
 		}
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		if (!utils::IsTransactionValid($sTransactionId))
 		{
+			$sUser = UserRights::GetUser();
+			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser'");
 			$oP->p(Dict::S('UI:Error:ObjectAlreadyUpdated'));
 		}
 		else
@@ -1510,7 +1520,7 @@ EOF
 		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadPostedParam('class', '');
 		$id = utils::ReadPostedParam('id', '');
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		$sStimulus = utils::ReadPostedParam('stimulus', '');
 		if ( empty($sClass) || empty($id) ||  empty($sStimulus) ) // TO DO: check that the class name is valid !
 		{
@@ -1530,6 +1540,8 @@ EOF
 			}
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
+				$sUser = UserRights::GetUser();
+				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				$sMessage = Dict::S('UI:Error:ObjectAlreadyUpdated');
 				$sSeverity = 'info';
 			}

@@ -161,7 +161,7 @@ class InlineImage extends DBObject
 	 */
 	public static function FinalizeInlineImages(DBObject $oObject)
 	{
-		$iTransactionId = utils::ReadParam('transaction_id', null);
+		$iTransactionId = utils::ReadParam('transaction_id', null, false, 'transaction_id');
 		if (!is_null($iTransactionId))
 		{
 			// Attach new (temporary) inline images
@@ -177,6 +177,18 @@ class InlineImage extends DBObject
 				$oInlineImage->Set('temp_id', '');
 				$oInlineImage->DBUpdate();
 			}
+		}
+		else
+		{
+			IssueLog::Error('InlineImage: Error during FinalizeInlineImages(), no transaction ID for object '.get_class($oObject).'#'.$oObject->GetKey().'.');
+
+			IssueLog::Error('|- Call stack:');
+			$oException = new Exception();
+			$sStackTrace = $oException->getTraceAsString();
+			IssueLog::Error($sStackTrace);
+
+			IssueLog::Error('|- POST vars:');
+			IssueLog::Error(print_r($_POST, true));
 		}
 	}
 	
@@ -404,9 +416,11 @@ EOF
 	 * Get the fragment of javascript needed to complete the initialization of
 	 * CKEditor when creating/modifying an object
 	 *
-	 * @param DBObject $oObject The object being edited
-	 * @param string $sTempId The concatenation of session_id().'_'.$iTransactionId.
+	 * @param \DBObject $oObject The object being edited
+	 * @param string $sTempId Generated through utils::GetUploadTempId($iTransactionId)
+	 *
 	 * @return string The JS fragment to insert in "on document ready"
+	 * @throws \Exception
 	 */
 	public static function EnableCKEditorImageUpload(DBObject $oObject, $sTempId)
 	{

@@ -807,7 +807,7 @@ EOF
 	 */
 	public function DoUpdateObjectFromPostedForm(DBObject $oObj, $aAttList = null)
 	{
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+		$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		if (!utils::IsTransactionValid($sTransactionId))
 		{
 			throw new TransactionException();
