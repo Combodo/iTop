@@ -189,7 +189,7 @@
 						<div class="collapse navbar-collapse" id="navbar">
 							<ul class="nav navbar-nav">
 								{% block pNavigationTopBricks %}
-									<li class="{% if oBrick is not defined %}active{% endif %}">
+									<li class="brick_menu_item {% if oBrick is not defined %}active{% endif %}">
 										<a href="{{ app.url_generator.generate('p_home') }}">
 											<span class="brick_icon fa fa-home fa-2x"></span>
 											{{ 'Page:Home'|dict_s }}
@@ -197,7 +197,7 @@
 									</li>
 									{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
 										{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
-											<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
+											<li class="brick_menu_item {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}" data-brick-id="{{ brick.GetId }}">
 												<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
 													<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
 													{{ brick.GetTitleNavigationMenu|dict_s }}
@@ -266,7 +266,7 @@
 					<div class="menu">
 						{% block pNavigationSideMenu %}
 							<ul class="nav navbar-nav">
-								<li class="{% if oBrick is not defined %}active{% endif %}">
+								<li class="brick_menu_item {% if oBrick is not defined %}active{% endif %}">
 									<a href="{{ app.url_generator.generate('p_home') }}">
 										<span class="brick_icon fa fa-home fa-2x"></span>
 										{{ 'Page:Home'|dict_s }}
@@ -274,7 +274,7 @@
 								</li>
 								{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
 									{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
-										<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
+										<li class="brick_menu_item {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}" data-brick-id="{{ brick.GetId }}">
 											<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
 												<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
 												{{ brick.GetTitleNavigationMenu|dict_s }}
