@@ -45,6 +45,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
     'Core:AttributeTagSet' => 'List of tags~~',
     'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
     'Core:AttributeCaseLog' => 'Log~~',
     'Core:AttributeCaseLog+' => '~~',

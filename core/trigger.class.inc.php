@@ -595,7 +595,7 @@ class TriggerOnThresholdReached extends TriggerOnObject
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
-		MetaModel::Init_AddAttribute(new AttributeString("stop_watch_code", array("allowed_values" => null, "sql" => "stop_watch_code", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeClassAttCodeSet('stop_watch_code', array("allowed_values" => null, "class_field" => "target_class", "sql" => "stop_watch_code", "default_value" => null, "is_null_allowed" => false, "max_items" => 1, "min_items" => 1, "attribute_definition_exclusion_list" => null, "attribute_definition_list" => "AttributeStopWatch", "include_child_classes_attributes" => true, "depends_on" => array('target_class'))));
 		MetaModel::Init_AddAttribute(new AttributeString("threshold_index", array("allowed_values" => null, "sql" => "threshold_index", "default_value" => null, "is_null_allowed" => false, "depends_on" => array())));
 
 		// Display lists
@@ -606,5 +606,3 @@ class TriggerOnThresholdReached extends TriggerOnObject
 		//		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
 	}
 }
-
-?>
