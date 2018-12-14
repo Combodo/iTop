@@ -299,7 +299,7 @@
 								{% if app['debug'] %}
 									<div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug : Taille <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
 								{% endif %}
-								<a href="{{ app.url_generator.generate('p_home') }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
+								<a href="{{ get_config_parameter('app_icon_url') }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
 									<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
 								</a>
 							{% endblock %}
