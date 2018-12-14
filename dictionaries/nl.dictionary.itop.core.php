@@ -51,9 +51,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
     'Core:AttributeTagSet' => 'Lijst van tags',
     'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'klik om toe te voegen',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s van %3$s)',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s van subclasses)',
 
     'Core:AttributeCaseLog' => 'Log',
     'Core:AttributeCaseLog+' => '',
