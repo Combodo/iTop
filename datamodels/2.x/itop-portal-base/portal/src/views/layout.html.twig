@@ -171,7 +171,7 @@
 								<span class="icon-bar"></span>
 							</button>
 							{% block pNavigationTopMenuLogo %}
-								<a class="navbar-brand pull-right" href="{{ app.url_generator.generate('p_home') }}">
+								<a class="navbar-brand pull-right" href="{{ get_config_parameter('app_icon_url') }}">
 									{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
 										<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
 									{% else %}
