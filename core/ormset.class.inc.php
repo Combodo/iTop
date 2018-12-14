@@ -123,7 +123,7 @@ class ormSet
 			throw new CoreUnexpectedValue("Wrong value {$aItems} for {$this->sClass}:{$this->sAttCode}");
 		}
 
-		$oValues = array();
+		$aValues = array();
 		$iCount = 0;
 		$bError = false;
 		foreach($aItems as $oItem)
@@ -134,14 +134,14 @@ class ormSet
 				$bError = true;
 				continue;
 			}
-			$oValues[] = $oItem;
+			$aValues[] = $oItem;
 		}
 
-		$this->aPreserved = &$oValues;
+		$this->aPreserved = &$aValues;
 		$this->aRemoved = array();
 		$this->aAdded = array();
 		$this->aModified = array();
-		$this->aOriginalObjects = $oValues;
+		$this->aOriginalObjects = $aValues;
 
 		if ($bError)
 		{
