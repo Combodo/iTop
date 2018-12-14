@@ -264,7 +264,7 @@ class ormSet
 	 */
 	public function Add($oItem)
 	{
-		if (($this->iLimit != 0) && ($this->Count() === $this->iLimit))
+		if (($this->iLimit != 0) && ($this->Count() > $this->iLimit))
 		{
 			throw new CoreException("Maximum number of items ({$this->iLimit}) reached for {$this->sClass}:{$this->sAttCode}");
 		}
