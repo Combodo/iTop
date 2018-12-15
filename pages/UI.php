@@ -949,8 +949,10 @@ EOF
 						// Found issues, explain and give the user a second chance
 						//
 						$oObj->DisplayModifyForm($oP, array('wizard_container' => true)); // wizard_container: display the wizard border and the title
-						$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten', implode(', ', $aIssues));
-						$oP->add_ready_script("alert('".addslashes($sIssueDesc)."');");
+						$sIssueTitle = addslashes(Dict::Format('UI:ObjectCouldNotBeWritten', ''));
+						$sIssueDesc = addslashes(Dict::Format(implode(', ', $aIssues)));
+						$sButtonOK = addslashes(Dict::S('UI:Button:Ok'));
+						$oP->add_ready_script("jQueryAlert('$sIssueTitle','$sIssueDesc','$sButtonOK');");
 					}
 				}
 			}
@@ -1132,8 +1134,10 @@ EOF
 				$oP->add("<div class=\"wizContainer\">\n");
 				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
 				$oP->add("</div>\n");
-				$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten', implode(', ', $aIssues));
-				$oP->add_ready_script("alert('".addslashes($sIssueDesc)."');");
+				$sIssueTitle = addslashes(Dict::Format('UI:ObjectCouldNotBeWritten', ''));
+				$sIssueDesc = addslashes(Dict::Format(implode(', ', $aIssues)));
+				$sButtonOK = addslashes(Dict::S('UI:Button:Ok'));
+				$oP->add_ready_script("jQueryAlert('$sIssueTitle','$sIssueDesc','$sButtonOK');");
 			}
 		}
 		break;
@@ -1591,8 +1595,10 @@ EOF
 						// Found issues, explain and give the user a second chance
 						//
 						$oObj->DisplayStimulusForm($oP, $sStimulus);
-						$sIssueDesc = Dict::Format('UI:ObjectCouldNotBeWritten',$sIssues);
-						$oP->add_ready_script("alert('".addslashes($sIssueDesc)."');");
+						$sIssueTitle = addslashes(Dict::Format('UI:ObjectCouldNotBeWritten', ''));
+						$sIssueDesc = addslashes(Dict::Format(implode(', ', $aIssues)));
+						$sButtonOK = addslashes(Dict::S('UI:Button:Ok'));
+						$oP->add_ready_script("jQueryAlert('$sIssueTitle','$sIssueDesc','$sButtonOK');");
 					}
 					else
 					{

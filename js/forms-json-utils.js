@@ -154,7 +154,7 @@ function CheckFields(sFormId, bDisplayAlert)
 	{
 		if (bDisplayAlert)
 		{
-			alert(Dict.S('UI:FillAllMandatoryFields'));
+			jQueryAlert(Dict.S('UI:FillAllMandatoryFields'),'',Dict.S('UI:Button:Ok'),'modern');
 		}
 		$('#'+sFormId+' :submit').attr('disable', '');
 		$('#'+sFormId+' :button[type=submit]').attr('disable', '');

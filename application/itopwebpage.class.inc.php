@@ -78,6 +78,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
         $this->add_linked_stylesheet("../css/magnific-popup.css");
         $this->add_linked_stylesheet("../css/c3.min.css");
         $this->add_linked_stylesheet("../css/font-awesome/css/font-awesome.min.css");
+        $this->add_linked_stylesheet("../css/jquery-confirm.min.css");
 
         $this->add_linked_script('../js/jquery.layout.min.js');
         $this->add_linked_script('../js/jquery.ba-bbq.min.js');
@@ -104,6 +105,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
         $this->add_linked_script('../js/jquery.magnific-popup.min.js');
         $this->add_linked_script('../js/breadcrumb.js');
         $this->add_linked_script('../js/moment.min.js');
+        $this->add_linked_script('../js/jquery-confirm.min.js');
+        $this->add_linked_script('../js/jquery-confirm-function.js');
 
 
         $sSearchAny = addslashes(Dict::S('UI:SearchValue:Any'));
