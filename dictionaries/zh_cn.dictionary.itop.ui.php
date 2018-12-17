@@ -1,37 +1,41 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * Localized data
- * @author      Robert Deng <denglx@gmail.com>
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ *
+ * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @license	http://opensource.org/licenses/AGPL-3.0
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
+
 //////////////////////////////////////////////////////////////////////
 // Classes in 'gui'
 //////////////////////////////////////////////////////////////////////
 //
+
 //////////////////////////////////////////////////////////////////////
 // Classes in 'application'
 //////////////////////////////////////////////////////////////////////
 //
+
 //
 // Class: AuditCategory
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AuditCategory' => '审计类别',
 	'Class:AuditCategory+' => '全部审计中的一个区段',
@@ -341,7 +345,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'BooleanLabel:yes' => '是',
 	'BooleanLabel:no' => '否',
-    'UI:Login:Title' => 'iTop 登录',
+	'UI:Login:Title' => 'iTop 登录',
 	'Menu:WelcomeMenu' => '欢迎', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => '欢迎使用iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => '欢迎', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -606,6 +610,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:CSVImport:SelectClass' => '选择要导入的类别:',
 	'UI:CSVImport:AdvancedMode' => '高级模式',
 	'UI:CSVImport:AdvancedMode+' => '在高级模式中,对象的"id" (主键) 可以被用来修改和重命名对象.不管怎样,列 "id" (如果存在) 只能被用做一个搜索条件,不能与其它搜索条件混用.',
+	
 	'UI:CSVImport:SelectAClassFirst' => '首先选择一个类以配置映射.',
 	'UI:CSVImport:HeaderFields' => '栏目',
 	'UI:CSVImport:HeaderMappings' => '映射',
@@ -900,28 +905,28 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => '按类别划分基础架构对象',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => '按状态划分基础架构对象',
 
-'UI:ConfigMgmtMenuOverview:Title' => '配置管理仪表盘',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '按状态配置项目',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => '按类别配置项目',
+	'UI:ConfigMgmtMenuOverview:Title' => '配置管理仪表盘',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '按状态配置项目',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => '按类别配置项目',
 
-'UI:RequestMgmtMenuOverview:Title' => '需求管理仪表盘',
-'UI-RequestManagementOverview-RequestByService' => '按服务划分用户需求',
-'UI-RequestManagementOverview-RequestByPriority' => '按优先级划分用户需求',
-'UI-RequestManagementOverview-RequestUnassigned' => '尚未分配给办理人的用户需求',
+	'UI:RequestMgmtMenuOverview:Title' => '需求管理仪表盘',
+	'UI-RequestManagementOverview-RequestByService' => '按服务划分用户需求',
+	'UI-RequestManagementOverview-RequestByPriority' => '按优先级划分用户需求',
+	'UI-RequestManagementOverview-RequestUnassigned' => '尚未分配给办理人的用户需求',
 
-'UI:IncidentMgmtMenuOverview:Title' => '事件管理仪表盘',
-'UI-IncidentManagementOverview-IncidentByService' => '按服务级划分事件',
-'UI-IncidentManagementOverview-IncidentByPriority' => '按优先级划分事件',
-'UI-IncidentManagementOverview-IncidentUnassigned' => '尚未分配给办理人的事件',
+	'UI:IncidentMgmtMenuOverview:Title' => '事件管理仪表盘',
+	'UI-IncidentManagementOverview-IncidentByService' => '按服务级划分事件',
+	'UI-IncidentManagementOverview-IncidentByPriority' => '按优先级划分事件',
+	'UI-IncidentManagementOverview-IncidentUnassigned' => '尚未分配给办理人的事件',
 
-'UI:ChangeMgmtMenuOverview:Title' => '变更管理仪表盘',
-'UI-ChangeManagementOverview-ChangeByType' => '按类别划分变更',
-'UI-ChangeManagementOverview-ChangeUnassigned' => '尚未分配给办理人的变更',
-'UI-ChangeManagementOverview-ChangeWithOutage' => '变更引起的停机',
+	'UI:ChangeMgmtMenuOverview:Title' => '变更管理仪表盘',
+	'UI-ChangeManagementOverview-ChangeByType' => '按类别划分变更',
+	'UI-ChangeManagementOverview-ChangeUnassigned' => '尚未分配给办理人的变更',
+	'UI-ChangeManagementOverview-ChangeWithOutage' => '变更引起的停机',
 
-'UI:ServiceMgmtMenuOverview:Title' => '服务管理仪表盘',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => '客户合同需在30日内更新',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => '供应商合同需在30日内更新',
+	'UI:ServiceMgmtMenuOverview:Title' => '服务管理仪表盘',
+	'UI-ServiceManagementOverview-CustomerContractToRenew' => '客户合同需在30日内更新',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => '供应商合同需在30日内更新',
 
 	'UI:ContactsMenu' => '联系人',
 	'UI:ContactsMenu+' => '联系人',
@@ -942,15 +947,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:NotificationsMenu' => '通知', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => '通知的配置', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => '配置 <span class="hilite">通知</span>',
-	'UI:NotificationsMenu:Help' => '帮助',
-	'UI:NotificationsMenu:HelpContent' => '<p>在iTop 中, 通知可以被自定义. 它们是基于两个对象集: <i>触发器和操作</i>.</p>
-<p><i><b>触发器</b></i> 定义了什么时候通知将被发送. 有3种触发器, 覆盖了对象生命周期的3个阶段:
+	'UI:NotificationsMenu:Help' => 'Help',
+	'UI:NotificationsMenu:HelpContent' => '<p>In iTop the notifications are fully customizable. They are based on two sets of objects: <i>triggers and actions</i>.</p>
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
-	<li> "当对象创建时" ，即对象创建时会触发的操作.</li>
-	<li> "进入指定状态时" ，即对象变为指定状态之前触发的操作(状态从一个变为另一个)</li>
-	<li> "离开指定状态时" ，即对象的指定状态转变成其它状态时触发的操作</li>
-	<li> "基于阀值" ，即对象的TTR 或 TTO 达到某个阀值时</li>
-	<li> "当对象更新时" ，即工单发生变化时触发的操作</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
@@ -1128,6 +1131,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ArchiveMode:Banner+' => '已归档的对象可见但不允许修改',
 	'UI:FavoriteOrganizations' => '快速访问',
 	'UI:FavoriteOrganizations+' => '为了能够通过首页左侧菜单快速访问，请检查下面的组织列表. 请注意，这并不是一个安全设置, 其他组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
+	
 	'UI:FavoriteLanguage' => '用户界面',
 	'UI:Favorites:SelectYourLanguage' => '选择语言',
 	'UI:FavoriteOtherSettings' => '其他设置',
@@ -1148,8 +1152,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:StandardDashboard' => '标准',
+	'UI:Toggle:CustomDashboard' => '定制',
 
 	'UI:ConfigureThisList' => '配置这个列表...',
 	'UI:ListConfigurationTitle' => '列表配置',
