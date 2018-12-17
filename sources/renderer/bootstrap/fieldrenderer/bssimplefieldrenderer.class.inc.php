@@ -511,8 +511,6 @@ EOF
                         });
 EOF
                         );
-                        // MagnificPopup on images
-                        $oOutput->AddJs(InlineImage::FixImagesWidth());
                     }
                     else
                     {
@@ -525,6 +523,20 @@ EOF
                     break;
             }
         }
+
+        // Finally, no matter the field mode
+		switch ($sFieldClass)
+		{
+			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+			case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
+				$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
+				if($bRichEditor)
+				{
+					// MagnificPopup on images
+					$oOutput->AddJs(InlineImage::FixImagesWidth());
+				}
+				break;
+		}
 
 		return $oOutput;
 	}
