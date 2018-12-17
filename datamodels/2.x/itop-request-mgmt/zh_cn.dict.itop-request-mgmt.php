@@ -1,26 +1,26 @@
 <?php
-// Copyright (C) 2010-2014 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * Localized data
- * 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ *
+ * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @license	http://opensource.org/licenses/AGPL-3.0
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:RequestManagement' => '服务台',
 	'Menu:RequestManagement+' => '服务台',
@@ -277,7 +277,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Portal:TitleDetailsFor_Service' => '服务详细信息',
 	'Portal:Button:CreateRequestFromService' => '新建服务需求',
 	'Portal:ListOpenRequests' => '列出打开需求',
-'Portal:UserRequest:MoreInfo' => '更多详细信息',
+	'Portal:UserRequest:MoreInfo' => '更多详细信息',
 	'Portal:Details-Service-Element' => '服务元素',
 	'Portal:NoClosedTicket' => '没有关闭的需求',
 	'Portal:NoService' => '',
@@ -295,7 +295,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+	'Organization:Overview:UserRequests' => '该组织的所有用户需求',
+	'Organization:Overview:MyUserRequests' => '该组织内我的需求',
+	'Organization:Overview:Tickets' => '该组织的所有工单',
 ));
