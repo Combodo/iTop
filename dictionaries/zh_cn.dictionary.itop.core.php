@@ -1,26 +1,26 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @license	http://opensource.org/licenses/AGPL-3.0
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)',
@@ -42,17 +42,17 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate+' => '~~',
 
-    'Core:AttributeTagSet' => 'List of tags~~',
-    'Core:AttributeTagSet+' => '~~',
+	'Core:AttributeTagSet' => 'List of tags~~',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
 
-    'Core:AttributeCaseLog' => 'Log~~',
-    'Core:AttributeCaseLog+' => '~~',
+	'Core:AttributeCaseLog' => 'Log~~',
+	'Core:AttributeCaseLog+' => '~~',
 
-    'Core:AttributeMetaEnum' => 'Computed enum~~',
-    'Core:AttributeMetaEnum+' => '~~',
+	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum+' => '~~',
 
-    'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
+	'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
 
 	'Core:AttributeInteger' => '整数',
@@ -196,7 +196,7 @@ Operators:<br/>
 	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes',
 
 	'Core:FriendlyName-Label' => '全称',
-	'Core:FriendlyName-Description' => 'Full name',
+	'Core:FriendlyName-Description' => '全称',
 
 	'Core:AttributeTag' => 'Tags~~',
 	'Core:AttributeTag+' => 'Tags~~',
@@ -846,7 +846,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroReplica/Attribute:status/Value:obsolete' => '废弃',
 	'Class:SynchroReplica/Attribute:status/Value:orphan' => 'Orphan',
 	'Class:SynchroReplica/Attribute:status/Value:synchronized' => '已同步',
-	'Class:SynchroReplica/Attribute:status_dest_creator' => 'Object Created ?',
+	'Class:SynchroReplica/Attribute:status_dest_creator' => '对象是否已创建 ?',
 	'Class:SynchroReplica/Attribute:status_last_error' => 'Last Error',
 	'Class:SynchroReplica/Attribute:status_last_warning' => '警告',
 	'Class:SynchroReplica/Attribute:info_creation_date' => '创建日期',
@@ -951,8 +951,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
-	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:description' => '描述',
+	'Class:TagSetFieldData/Attribute:description+' => '描述',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~~~',
@@ -975,11 +975,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:DBProperty' => 'DB property~~',
 	'Class:DBProperty+' => '~~',
-	'Class:DBProperty/Attribute:name' => 'Name~~',
+	'Class:DBProperty/Attribute:name' => '名称',
 	'Class:DBProperty/Attribute:name+' => '~~',
-	'Class:DBProperty/Attribute:description' => 'Description~~',
+	'Class:DBProperty/Attribute:description' => '描述',
 	'Class:DBProperty/Attribute:description+' => '~~',
-	'Class:DBProperty/Attribute:value' => 'Value~~',
+	'Class:DBProperty/Attribute:value' => '值',
 	'Class:DBProperty/Attribute:value+' => '~~',
 	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
 	'Class:DBProperty/Attribute:change_date+' => '~~',
@@ -991,29 +991,29 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class: BackgroundTask
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:BackgroundTask' => 'Background task~~',
+	'Class:BackgroundTask' => '后台任务',
 	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
 	'Class:BackgroundTask/Attribute:class_name+' => '~~',
-	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
+	'Class:BackgroundTask/Attribute:first_run_date' => '首次运行时间',
 	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
-	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
+	'Class:BackgroundTask/Attribute:latest_run_date' => '最近运行时间',
 	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
-	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
+	'Class:BackgroundTask/Attribute:next_run_date' => '下次运行时间',
 	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
 	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
 	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
-	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration' => '最近运行时长',
 	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
+	'Class:BackgroundTask/Attribute:min_run_duration' => '最小运行时长',
 	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
+	'Class:BackgroundTask/Attribute:max_run_duration' => '最大运行时长',
 	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
+	'Class:BackgroundTask/Attribute:average_run_duration' => '平均运行时长',
 	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:running' => 'Running~~',
+	'Class:BackgroundTask/Attribute:running' => '正在运行',
 	'Class:BackgroundTask/Attribute:running+' => '~~',
-	'Class:BackgroundTask/Attribute:status' => 'Status~~',
+	'Class:BackgroundTask/Attribute:status' => '状态',
 	'Class:BackgroundTask/Attribute:status+' => '~~',
 ));
 
@@ -1023,13 +1023,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncTask' => 'Async. task~~',
 	'Class:AsyncTask+' => '~~',
-	'Class:AsyncTask/Attribute:created' => 'Created~~',
+	'Class:AsyncTask/Attribute:created' => '已创建',
 	'Class:AsyncTask/Attribute:created+' => '~~',
-	'Class:AsyncTask/Attribute:started' => 'Started~~',
+	'Class:AsyncTask/Attribute:started' => '已开始',
 	'Class:AsyncTask/Attribute:started+' => '~~',
-	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
+	'Class:AsyncTask/Attribute:planned' => '已计划',
 	'Class:AsyncTask/Attribute:planned+' => '~~',
-	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
+	'Class:AsyncTask/Attribute:event_id' => '事件',
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
