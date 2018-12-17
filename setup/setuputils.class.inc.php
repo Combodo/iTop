@@ -107,10 +107,15 @@ class SetupUtils
 			'gd', // used to test image type (always returns false if not installed), image resizing, PDF export
 		);
 		$aOptionalExtensions = array(
-			'sodium' => 'Strong encryption will not be used.',
-			'openssl' => 'Strong encryption will not be used.',),
+			'mcrypt, sodium or openssl' =>
+				array(
+					'mcrypt' => 'Strong encryption will not be used.',
+					'sodium' => 'Strong encryption will not be used.',
+					'openssl' => 'Strong encryption will not be used.',
+				),
 			'ldap' => 'LDAP authentication will be disabled.',
 		);
+
 		asort($aMandatoryExtensions); // Sort the list to look clean !
 		ksort($aOptionalExtensions); // Sort the list to look clean !
 		$aExtensionsOk = array();
