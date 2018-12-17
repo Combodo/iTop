@@ -29,10 +29,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'config-apply' => 'Apply',
 	'config-apply-title' => 'Apply (Ctrl+S)',
 	'config-cancel' => 'Reset',
-    'config-saved' => 'Successfully recorded.',
+	'config-saved' => 'Successfully recorded.',
 	'config-confirm-cancel' => 'Your changes will be lost.',
 	'config-no-change' => 'No change: the file has been left unchanged.',
-    'config-reverted' => 'The configuration has been reverted.',
+	'config-reverted' => 'The configuration has been reverted.',
 	'config-parse-error' => 'Line %2$d: %1$s.<br/>The file has NOT been updated.',
 	'config-current-line' => 'Editing line: %1$s',
 ));
