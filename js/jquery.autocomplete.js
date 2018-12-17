@@ -90,6 +90,8 @@
 
 		var blockSubmit;
 
+		var bPendingRequest = false;
+
 		// prevent form submit in opera when selecting with return key
 		navigator.userAgent.indexOf("Opera") != -1 && $(input.form).bind("submit.autocomplete", function() {
 			if (blockSubmit) {
@@ -147,15 +149,17 @@
 				case options.multiple && $.trim(options.multipleSeparator) == "," && KEY.COMMA:
 				case KEY.TAB:
 				case KEY.RETURN:
+					// Do not select value while background request pending
+					if(bPendingRequest === true) {
+						return false;
+					}
+
 					if( selectCurrent() ) {
 						// stop default to prevent a form submit, Opera needs special handling
 						event.preventDefault();
 						blockSubmit = true;
 						return false;
 					}
-                    if ($(options.keyHolder).val() === "") {
-                        return false;
-                    }
 					break;
 
 				case KEY.ESC:
@@ -367,6 +371,8 @@
 		function request(term, success, failure) {
 			if (!options.matchCase)
 				term = term.toLowerCase();
+
+			bPendingRequest = true;
 			var data = cache.load(term);
 			// recieve the cached data
 			if (data) {
@@ -436,6 +442,7 @@
 
 		function stopLoading() {
 			$input.removeClass(options.loadingClass);
+			bPendingRequest = false;
 		};
 
 	};
