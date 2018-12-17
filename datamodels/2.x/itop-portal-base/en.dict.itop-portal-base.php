@@ -28,9 +28,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Page:Home' => 'Home',
 	'Page:GoPortalHome' => 'Home page',
 	'Page:GoPreviousPage' => 'Previous page',
-    'Page:ReloadPage' => 'Reload page',
+	'Page:ReloadPage' => 'Reload page',
 	'Portal:Button:Submit' => 'Submit',
-    'Portal:Button:Apply' => 'Update',
+	'Portal:Button:Apply' => 'Update',
 	'Portal:Button:Cancel' => 'Cancel',
 	'Portal:Button:Close' => 'Close',
 	'Portal:Button:Add' => 'Add',
@@ -38,13 +38,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Portal:Button:Delete' => 'Delete',
 	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode',
-    'Error:HTTP:401' => 'Authentication',
-    'Error:HTTP:404' => 'Page not found',
+	'Error:HTTP:401' => 'Authentication',
+	'Error:HTTP:404' => 'Page not found',
 	'Error:HTTP:500' => 'Oops! An error has occured.',
 	'Error:HTTP:GetHelp' => 'Please contact your %1$s administrator if the problem keeps happening.',
 	'Error:XHR:Fail' => 'Could not load data, please contact your %1$s administrator',
-    'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.',
-    'Portal:Datatables:Language:Processing' => 'Please wait...',
+	'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.',
+	'Portal:Datatables:Language:Processing' => 'Please wait...',
 	'Portal:Datatables:Language:Search' => 'Filter:',
 	'Portal:Datatables:Language:LengthMenu' => 'Display _MENU_ items per page',
 	'Portal:Datatables:Language:ZeroRecords' => 'No result',
@@ -91,7 +91,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Browse:Name' => 'Browse throught items',
 	'Brick:Portal:Browse:Mode:List' => 'List',
 	'Brick:Portal:Browse:Mode:Tree' => 'Tree',
-    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic',
+	'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Drilldown',
 	'Brick:Portal:Browse:Action:View' => 'Details',
 	'Brick:Portal:Browse:Action:Edit' => 'Edit',
@@ -106,8 +106,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Manage:Name' => 'Manage items',
 	'Brick:Portal:Manage:Table:NoData' => 'No item.',
-    'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
-    'Brick:Portal:Manage:DisplayMode:list' => 'List',
+	'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
+	'Brick:Portal:Manage:DisplayMode:list' => 'List',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
 	'Brick:Portal:Manage:Others' => 'Others',
@@ -135,7 +135,7 @@ Dict::Add('EN US', 'English', 'English', array(
 // CreateBrick brick
 Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Create:Name' => 'Quick creation',
-    'Brick:Portal:Create:ChooseType' => 'Please, choose a type',
+	'Brick:Portal:Create:ChooseType' => 'Please, choose a type',
 ));
 
 // Filter brick
