@@ -92,12 +92,25 @@ class SetupUtils
 		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 
-		$aMandatoryExtensions = array('mysqli', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom', 'zlib', 'zip');
-		$aOptionalExtensions = array( 'mcrypt, sodium or openssl' => array(  'mcrypt' => 'Strong encryption will not be used.',
+		$aMandatoryExtensions = array(
+			'mysqli',
+			'iconv',
+			'simplexml',
+			'soap',
+			'hash',
+			'json',
+			'session',
+			'pcre',
+			'dom',
+			'zlib',
+			'zip',
+			'gd', // used to test image type (always returns false if not installed), image resizing, PDF export
+		);
+		$aOptionalExtensions = array(
 			'sodium' => 'Strong encryption will not be used.',
 			'openssl' => 'Strong encryption will not be used.',),
 			'ldap' => 'LDAP authentication will be disabled.',
-			'gd' => 'PDF export will be disabled. Also, image resizing will be disabled on profile pictures (May increase database size).');
+		);
 		asort($aMandatoryExtensions); // Sort the list to look clean !
 		ksort($aOptionalExtensions); // Sort the list to look clean !
 		$aExtensionsOk = array();
