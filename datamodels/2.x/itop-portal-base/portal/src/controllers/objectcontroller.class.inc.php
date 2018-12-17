@@ -558,7 +558,7 @@ class ObjectController extends AbstractController
                 // Add plugin buttons
                 foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
                 {
-                    foreach($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJDETAILS_ACTIONS, array('portal_id' => $oApp['combodo.portal.instance.id'], 'object' => $oObject)) as $oMenuItem)
+                    foreach($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJDETAILS_ACTIONS, array('portal_id' => $oApp['combodo.portal.instance.id'], 'object' => $oObject, 'mode' => $sMode)) as $oMenuItem)
                     {
                         if (is_object($oMenuItem))
                         {
