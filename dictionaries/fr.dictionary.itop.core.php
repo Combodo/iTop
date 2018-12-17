@@ -45,7 +45,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeSet:placeholder' => 'cliquer pour ajouter',
     'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
     'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s de la classe %3$s)',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s d\'une sous-classe)',
 
     'Core:AttributeCaseLog' => 'Log~~',
     'Core:AttributeCaseLog+' => '~~',
