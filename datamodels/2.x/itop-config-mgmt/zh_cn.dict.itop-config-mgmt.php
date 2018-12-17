@@ -1,30 +1,31 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @license	http://opensource.org/licenses/AGPL-3.0
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 //////////////////////////////////////////////////////////////////////
 // Relations
 //////////////////////////////////////////////////////////////////////
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Relation:impacts/Description' => '被影响的元素',
 	'Relation:impacts/DownStream' => '影响...',
@@ -103,10 +104,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:Organization/Attribute:parent_id_friendlyname' => '上级组织',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => '上级组织',
-	'Class:Organization/Attribute:overview' => 'Overview~~',
-	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
-	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
-	'Organization:Overview:Users' => 'iTop Users within this organization~~',
+	'Class:Organization/Attribute:overview' => '预览',
+	'Organization:Overview:FunctionalCIs' => '该组织的配置项',
+	'Organization:Overview:FunctionalCIs:subtitle' => '按种类',
+	'Organization:Overview:Users' => '该组织包含的iTop 用户',
 ));
 
 //
@@ -174,8 +175,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Contact/Attribute:function' => '职责',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => '配置项',
-	'Class:Contact/Attribute:cis_list+' => 'All the configuration items linked to this contact',
-	'Class:Contact/Attribute:finalclass' => 'Contact sub-class',
+	'Class:Contact/Attribute:cis_list+' => '该联系人关联的所有配置项',
+	'Class:Contact/Attribute:finalclass' => '联系人子类别',
 	'Class:Contact/Attribute:finalclass+' => 'Name of the final class',
 ));
 
@@ -206,14 +207,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person/Attribute:team_list+' => '这个人归属的所有团队',
 	'Class:Person/Attribute:tickets_list' => '工单',
 	'Class:Person/Attribute:tickets_list+' => '这个人发起的所有工单',
-	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager friendly name',
+	'Class:Person/Attribute:manager_id_friendlyname' => '经理名称',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => '头像',
 	'Class:Person/Attribute:picture+' => '',
-	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
-	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
-	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
-	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/UniquenessRule:employee_number+' => '相同组织内的员工编号必须是唯一的',
+	'Class:Person/UniquenessRule:employee_number' => '\'$this->org_name$\' 内已经有人占用了这个员工编号',
+	'Class:Person/UniquenessRule:name+' => '相同组织内的员工编号必须是唯一的',
+	'Class:Person/UniquenessRule:name' => '\'$this->org_name$\' 内已经有人占用了这个员工编号',
 ));
 
 //
@@ -244,7 +245,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document/Attribute:org_name+' => '',
 	'Class:Document/Attribute:documenttype_id' => '文档类型',
 	'Class:Document/Attribute:documenttype_id+' => '',
-	'Class:Document/Attribute:documenttype_name' => 'Document type name',
+	'Class:Document/Attribute:documenttype_name' => '文档类型名称',
 	'Class:Document/Attribute:documenttype_name+' => '',
 	'Class:Document/Attribute:version' => '版本',
 	'Class:Document/Attribute:version+' => '',
@@ -258,13 +259,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document/Attribute:status/Value:obsolete+' => '',
 	'Class:Document/Attribute:status/Value:published' => '已发布',
 	'Class:Document/Attribute:status/Value:published+' => '',
-	'Class:Document/Attribute:cis_list' => 'CIs~~',
-	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
-	'Class:Document/Attribute:contracts_list' => 'Contracts~~',
-	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
-	'Class:Document/Attribute:services_list' => 'Services~~',
-	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
-	'Class:Document/Attribute:finalclass' => 'Document sub-class',
+	'Class:Document/Attribute:cis_list' => '配置项',
+	'Class:Document/Attribute:cis_list+' => '该文档关联的所有配置项',
+	'Class:Document/Attribute:contracts_list' => '合同',
+	'Class:Document/Attribute:contracts_list+' => '该文档关联的所有合同',
+	'Class:Document/Attribute:services_list' => '服务',
+	'Class:Document/Attribute:services_list+' => '该文档关联的所有服务',
+	'Class:Document/Attribute:finalclass' => '文档子类别',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class',
 ));
 
@@ -404,7 +405,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TelephonyCI' => 'Telephony CI',
+	'Class:TelephonyCI' => '电话配置项',
 	'Class:TelephonyCI+' => '',
 	'Class:TelephonyCI/Attribute:phonenumber' => '电话号码',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '',
@@ -529,17 +530,17 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Server' => '服务器',
 	'Class:Server+' => '',
-	'Class:Server/Attribute:osfamily_id' => 'OS家族',
+	'Class:Server/Attribute:osfamily_id' => 'OS 家族',
 	'Class:Server/Attribute:osfamily_id+' => '',
-	'Class:Server/Attribute:osfamily_name' => 'OS家族名称',
+	'Class:Server/Attribute:osfamily_name' => 'OS 家族名称',
 	'Class:Server/Attribute:osfamily_name+' => '',
-	'Class:Server/Attribute:osversion_id' => 'OS版本',
+	'Class:Server/Attribute:osversion_id' => 'OS 版本',
 	'Class:Server/Attribute:osversion_id+' => '',
-	'Class:Server/Attribute:osversion_name' => 'OS版本名称',
+	'Class:Server/Attribute:osversion_name' => 'OS 版本名称',
 	'Class:Server/Attribute:osversion_name+' => '',
-	'Class:Server/Attribute:oslicence_id' => 'OS许可证',
+	'Class:Server/Attribute:oslicence_id' => 'OS 许可证',
 	'Class:Server/Attribute:oslicence_id+' => '',
-	'Class:Server/Attribute:oslicence_name' => 'OS许可证名称',
+	'Class:Server/Attribute:oslicence_name' => 'OS 许可证名称',
 	'Class:Server/Attribute:oslicence_name+' => '',
 	'Class:Server/Attribute:cpu' => 'CPU',
 	'Class:Server/Attribute:cpu+' => '',
@@ -1125,7 +1126,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Patch/Attribute:documents_list+' => '该补丁关联的所有文档',
 	'Class:Patch/Attribute:description' => '描述',
 	'Class:Patch/Attribute:description+' => '',
-	'Class:Patch/Attribute:finalclass' => 'Patch sub-class',
+	'Class:Patch/Attribute:finalclass' => '补丁子类别',
 	'Class:Patch/Attribute:finalclass+' => 'Name of the final class',
 ));
 
@@ -1187,10 +1188,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Licence/Attribute:perpetual' => '永久有效',
 	'Class:Licence/Attribute:perpetual+' => '',
 	'Class:Licence/Attribute:perpetual/Value:no' => '否',
-	'Class:Licence/Attribute:perpetual/Value:no+' => 'no',
+	'Class:Licence/Attribute:perpetual/Value:no+' => '否',
 	'Class:Licence/Attribute:perpetual/Value:yes' => '是',
-	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes',
-	'Class:Licence/Attribute:finalclass' => 'Licence sub-class',
+	'Class:Licence/Attribute:perpetual/Value:yes+' => '是',
+	'Class:Licence/Attribute:finalclass' => '许可证子类别',
 	'Class:Licence/Attribute:finalclass+' => 'Name of the final class',
 ));
 
@@ -1216,7 +1217,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:SoftwareLicence' => 'Software Licence',
+	'Class:SoftwareLicence' => '软件许可证',
 	'Class:SoftwareLicence+' => '',
 	'Class:SoftwareLicence/Attribute:software_id' => '软件',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
@@ -1263,7 +1264,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:OSVersion' => 'OS 版本',
 	'Class:OSVersion+' => '',
-	'Class:OSVersion/Attribute:osfamily_id' => 'OS家族',
+	'Class:OSVersion/Attribute:osfamily_id' => 'OS 家族',
 	'Class:OSVersion/Attribute:osfamily_id+' => '',
 	'Class:OSVersion/Attribute:osfamily_name' => '名称',
 	'Class:OSVersion/Attribute:osfamily_name+' => '',
@@ -1274,7 +1275,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:OSFamily' => 'OS家族',
+	'Class:OSFamily' => 'OS 家族',
 	'Class:OSFamily+' => '',
 ));
 
@@ -1292,7 +1293,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:ContactType' => '合同类型',
+	'Class:ContactType' => '联系人类型',
 	'Class:ContactType+' => '',
 ));
 
@@ -1305,8 +1306,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => '物理设备',
 	'Class:Brand/Attribute:physicaldevices_list+' => '该品牌的所有物理设备',
-	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
-	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
+	'Class:Brand/UniquenessRule:name+' => '名称必须唯一',
+	'Class:Brand/UniquenessRule:name' => '该品牌已存在',
 ));
 
 //
@@ -1349,7 +1350,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Model/Attribute:type/Value:SANSwitch' => 'SAN 交换机',
 	'Class:Model/Attribute:type/Value:SANSwitch+' => 'SAN 交换机',
 	'Class:Model/Attribute:type/Value:Server' => '服务器',
-	'Class:Model/Attribute:type/Value:Server+' => 'Server',
+	'Class:Model/Attribute:type/Value:Server+' => '服务器',
 	'Class:Model/Attribute:type/Value:StorageSystem' => '存储系统',
 	'Class:Model/Attribute:type/Value:StorageSystem+' => '存储系统',
 	'Class:Model/Attribute:type/Value:Tablet' => '平板',
@@ -1360,8 +1361,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Model/Attribute:type/Value:Phone+' => '电话',
 	'Class:Model/Attribute:physicaldevices_list' => '物理设备',
 	'Class:Model/Attribute:physicaldevices_list+' => '该型号的所有物理设备',
-	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
-	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
+	'Class:Model/UniquenessRule:name_brand+' => '品牌中型号名称必须唯一',
+	'Class:Model/UniquenessRule:name_brand' => '该品牌中的该型号已存在',
 ));
 
 //
@@ -1504,10 +1505,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Subnet/Attribute:org_id' => '所属组织',
 	'Class:Subnet/Attribute:org_id+' => '',
 	'Class:Subnet/Attribute:org_name' => '名称',
-	'Class:Subnet/Attribute:org_name+' => 'Common name',
+	'Class:Subnet/Attribute:org_name+' => '名称',
 	'Class:Subnet/Attribute:ip' => 'IP',
 	'Class:Subnet/Attribute:ip+' => '',
-	'Class:Subnet/Attribute:ip_mask' => 'IP 掩码',
+	'Class:Subnet/Attribute:ip_mask' => '掩码',
 	'Class:Subnet/Attribute:ip_mask+' => '',
 	'Class:Subnet/Attribute:vlans_list' => 'VLAN',
 	'Class:Subnet/Attribute:vlans_list+' => '',
@@ -1562,7 +1563,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:NetworkInterface+' => '',
 	'Class:NetworkInterface/Attribute:name' => '名称',
 	'Class:NetworkInterface/Attribute:name+' => '',
-	'Class:NetworkInterface/Attribute:finalclass' => 'NetworkInterface sub-class',
+	'Class:NetworkInterface/Attribute:finalclass' => '网卡子类别',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'Name of the final class',
 ));
 
@@ -1571,7 +1572,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:IPInterface' => 'IP Interface',
+	'Class:IPInterface' => '网卡',
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP 地址',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
@@ -1680,9 +1681,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type' => '连接类型',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink' => '下联',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'down link',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => '下联',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => '上联',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'up link',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => '上联',
 ));
 
 //
