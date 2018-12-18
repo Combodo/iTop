@@ -78,7 +78,7 @@
 		// Create $ object for input element
 		var $input = $(input).attr("autocomplete", "off").addClass(options.inputClass);
 
-		var timeout;
+		var timeout = new Timer(function() {}, 1);
 		var previousValue = "";
 		var cache = $.Autocompleter.Cache(options);
 		var hasFocus = 0;
@@ -149,15 +149,14 @@
 				case options.multiple && $.trim(options.multipleSeparator) == "," && KEY.COMMA:
 				case KEY.TAB:
 				case KEY.RETURN:
-					// Do not select value while background request pending
-					if(bPendingRequest === true) {
-						return false;
-					}
-
 					if( selectCurrent() ) {
 						// stop default to prevent a form submit, Opera needs special handling
 						event.preventDefault();
 						blockSubmit = true;
+						return false;
+					}
+					// Do not select value while background request pending
+					if ((bPendingRequest === true) || timeout.isRunning()) {
 						return false;
 					}
 					break;
@@ -167,8 +166,8 @@
 					break;
 
 				default:
-					clearTimeout(timeout);
-					timeout = setTimeout(onChange, options.delay);
+					timeout.stop();
+					timeout = new Timer(onChange, options.delay);
 					break;
 			}
 		}).focus(function(){
@@ -279,8 +278,10 @@
 			currentValue = lastWord(currentValue);
 			if ( currentValue.length >= options.minChars) {
 				$input.addClass(options.loadingClass);
-				if (!options.matchCase)
+				if (!options.matchCase) {
 					currentValue = currentValue.toLowerCase();
+				}
+				bPendingRequest = true; // used for autocomplete requests only
 				request(currentValue, receiveData, hideResultsNow);
 			} else {
 				stopLoading();
@@ -328,14 +329,14 @@
 		};
 
 		function hideResults() {
-			clearTimeout(timeout);
-			timeout = setTimeout(hideResultsNow, 200);
+			timeout.stop();
+			timeout = new Timer(hideResultsNow, 200);
 		};
 
 		function hideResultsNow() {
 			var wasVisible = select.visible();
 			select.hide();
-			clearTimeout(timeout);
+			timeout.stop();
 			stopLoading();
 			if (options.mustMatch) {
 				// call search and run callback
@@ -372,7 +373,6 @@
 			if (!options.matchCase)
 				term = term.toLowerCase();
 
-			bPendingRequest = true;
 			var data = cache.load(term);
 			// recieve the cached data
 			if (data) {
@@ -443,6 +443,31 @@
 		function stopLoading() {
 			$input.removeClass(options.loadingClass);
 			bPendingRequest = false;
+		};
+
+		function Timer(callback, delay) {
+			let id, running;
+
+			this.start = function() {
+				running = true;
+				id = setTimeout(this.doCallback, delay);
+			};
+
+			this.doCallback = function () {
+				running = false;
+				callback();
+			};
+
+			this.stop = function() {
+				running = false;
+				clearTimeout(id);
+			};
+
+			this.isRunning = function() {
+				return running;
+			};
+
+			this.start();
 		};
 
 	};
