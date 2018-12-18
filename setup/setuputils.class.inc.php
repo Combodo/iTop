@@ -102,11 +102,11 @@ class SetupUtils
 			'dom',
 			'zlib',
 			'zip',
-			'gd', // used to test image type (always returns false if not installed), image resizing, PDF export
 		);
 		$aOptionalExtensions = array(
 			'mcrypt' => 'Strong encryption will not be used.',
 			'ldap' => 'LDAP authentication will be disabled.',
+			'gd' => 'test image type (always returns false if not installed), image resizing, PDF export',
 		);
 		asort($aMandatoryExtensions); // Sort the list to look clean !
 		ksort($aOptionalExtensions); // Sort the list to look clean !
