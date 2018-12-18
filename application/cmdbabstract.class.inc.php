@@ -2075,11 +2075,6 @@ EOF
 					$oRenderer = new \Combodo\iTop\Renderer\Console\ConsoleFormRenderer($oForm);
 					$aRenderRes = $oRenderer->Render();
 
-					$aFormHandlerOptions = array(
-						'wizard_helper_var_name' => 'oWizardHelper'.$sFormPrefix,
-						'custom_field_attcode' => $sAttCode,
-					);
-					$sFormHandlerOptions = json_encode($aFormHandlerOptions);
 					$aFieldSetOptions = array(
 						'field_identifier_attr' => 'data-field-id',
 						// convention: fields are rendered into a div and are identified by this attribute
@@ -2088,23 +2083,35 @@ EOF
 						'form_path' => $oForm->GetId(),
 					);
 					$sFieldSetOptions = json_encode($aFieldSetOptions);
+					$aFormHandlerOptions = array(
+						'wizard_helper_var_name' => 'oWizardHelper'.$sFormPrefix,
+						'custom_field_attcode' => $sAttCode,
+					);
+					$sFormHandlerOptions = json_encode($aFormHandlerOptions);
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_handler.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/console_form_handler.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_set.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/form_field.js');
 					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/subform_field.js');
-					$oPage->add_ready_script("$('#{$iId}_console_form').console_form_handler($sFormHandlerOptions);");
-					$oPage->add_ready_script("$('#{$iId}_field_set').field_set($sFieldSetOptions);");
-					$oPage->add_ready_script("$('#{$iId}_console_form').console_form_handler('alignColumns');");
-					$oPage->add_ready_script("$('#{$iId}_console_form').console_form_handler('option', 'field_set', $('#{$iId}_field_set'));");
-					// field_change must be processed to refresh the hidden value at anytime
-					$oPage->add_ready_script("$('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });");
-					// Initialize the hidden value with current state
-					$oPage->add_ready_script("$('#{$iId}_console_form').trigger('value_change');");
-					// update_value is triggered when preparing the wizard helper object for ajax calls
-					$oPage->add_ready_script("$('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });");
-					// validate is triggered by CheckFields, on all the input fields, once at page init and once before submitting the form
-					$oPage->add_ready_script("$('#{$iId}').bind('validate', function(evt, sFormId) { return ValidateCustomFields('$iId', sFormId) } );"); // Custom validation function
+					$oPage->add_ready_script(
+<<<EOF
+    $('#{$iId}_field_set').field_set($sFieldSetOptions);
+    
+    $('#{$iId}_console_form').console_form_handler($sFormHandlerOptions);
+    $('#{$iId}_console_form').console_form_handler('alignColumns');
+	$('#{$iId}_console_form').console_form_handler('option', 'field_set', $('#{$iId}_field_set'));
+    // field_change must be processed to refresh the hidden value at anytime
+    $('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); console.error($('#{$iId}').val()); });
+    // Initialize the hidden value with current state
+    // update_value is triggered when preparing the wizard helper object for ajax calls
+    $('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
+    // validate is triggered by CheckFields, on all the input fields, once at page init and once before submitting the form
+    $('#{$iId}').bind('validate', function(evt, sFormId) {
+        $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values')));
+        return ValidateCustomFields('$iId', sFormId); // Custom validation function
+    });
+EOF
+);
 					break;
 
 				case 'Set':
