@@ -269,8 +269,12 @@ EOF
 	
 	/**
 	 * Check if an the given mimeType is an image that can be processed by the system
+	 *
 	 * @param string $sMimeType
-	 * @return boolean
+	 *
+	 * @return boolean always false if php-gd not installed
+	 *                 otherwise true if file is one of those type : image/gif, image/jpeg, image/png
+	 * @uses php-gd extension
 	 */
 	public static function IsImage($sMimeType)
 	{
