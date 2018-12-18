@@ -1,26 +1,26 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @license	http://opensource.org/licenses/AGPL-3.0
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -30,31 +30,33 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-'Menu:ServiceManagement' => '服务管理',
-'Menu:ServiceManagement+' => '服务管理概况',
-'Menu:Service:Overview' => '概况',
-'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => '合同 (按服务等级)',
-'UI-ServiceManagementMenu-ContractsByStatus' => '合同(按状态)',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30天内截止的合同',
 
-'Menu:ProviderContract' => '供应商合同',
-'Menu:ProviderContract+' => '供应商合同',
-'Menu:CustomerContract' => '客户合同',
-'Menu:CustomerContract+' => '客户合同',
-'Menu:ServiceSubcategory' => '子服务',
-'Menu:ServiceSubcategory+' => '子服务',
-'Menu:Service' => '服务',
-'Menu:Service+' => '服务',
-'Menu:ServiceElement' => '服务元素',
-'Menu:ServiceElement+' => '服务元素',
-'Menu:SLA' => 'SLA',
-'Menu:SLA+' => '服务等级协议',
-'Menu:SLT' => 'SLT',
-'Menu:SLT+' => '服务等级目标',
-'Menu:DeliveryModel' => '交付模式',
-'Menu:DeliveryModel+' => '交付模式',
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Menu:ServiceManagement' => '服务管理',
+	'Menu:ServiceManagement+' => '服务管理概况',
+	'Menu:Service:Overview' => '概况',
+	'Menu:Service:Overview+' => '',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => '合同 (按服务等级)',
+	'UI-ServiceManagementMenu-ContractsByStatus' => '合同(按状态)',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30天内截止的合同',
+
+	'Menu:ProviderContract' => '供应商合同',
+	'Menu:ProviderContract+' => '供应商合同',
+	'Menu:CustomerContract' => '客户合同',
+	'Menu:CustomerContract+' => '客户合同',
+	'Menu:ServiceSubcategory' => '子服务',
+	'Menu:ServiceSubcategory+' => '子服务',
+	'Menu:Service' => '服务',
+	'Menu:Service+' => '服务',
+	'Menu:ServiceElement' => '服务元素',
+	'Menu:ServiceElement+' => '服务元素',
+	'Menu:SLA' => 'SLA',
+	'Menu:SLA+' => '服务等级协议',
+	'Menu:SLT' => 'SLT',
+	'Menu:SLT+' => '服务等级目标',
+	'Menu:DeliveryModel' => '交付模式',
+	'Menu:DeliveryModel+' => '交付模式',
 
 ));
 
