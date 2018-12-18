@@ -778,7 +778,7 @@ EOF
 								$iFlags = $iFlags | $aExtraFlags[$sAttCode];
 							}
 							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0))
+							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard))
 							{
 								$sInputId = $this->m_iFormId.'_'.$sAttCode;
 								if ($oAttDef->IsWritable())
