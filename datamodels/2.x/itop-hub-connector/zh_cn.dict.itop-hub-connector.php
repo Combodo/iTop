@@ -2,21 +2,37 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2013 XXXXX
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @license	http://opensource.org/licenses/AGPL-3.0
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
-    'Menu:iTopHub:Register' => '进入 iTop Hub ',
-    'Menu:iTopHub:Register+' => '进入 iTop Hub 更新您的组件',
-    'Menu:iTopHub:Register:Description' => '<p>进入 iTop Hub 社区平台!</br>寻找您想要的内容和信息, 管理本机扩展或安装新的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
-    'Menu:iTopHub:MyExtensions' => '已安装的扩展',
-    'Menu:iTopHub:MyExtensions+' => '查看本机已安装的扩展',
-    'Menu:iTopHub:BrowseExtensions' => '从 iTop Hub 获取扩展',
-    'Menu:iTopHub:BrowseExtensions+' => '去 iTop Hub 浏览更多的扩展',
-    'Menu:iTopHub:BrowseExtensions:Description' => '<p>进入 iTop Hub 商店, 一站式查找各式各样 iTop 扩展的地方 !</br>寻找符合您要求的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
-    'iTopHub:GoBtn' => '进入 iTop Hub',
+	'Menu:iTopHub:Register' => '进入 iTop Hub ',
+	'Menu:iTopHub:Register+' => '进入 iTop Hub 更新您的组件',
+	'Menu:iTopHub:Register:Description' => '<p>进入 iTop Hub 社区平台!</br>寻找您想要的内容和信息, 管理本机扩展或安装新的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
+	'Menu:iTopHub:MyExtensions' => '已安装的扩展',
+	'Menu:iTopHub:MyExtensions+' => '查看本机已安装的扩展',
+	'Menu:iTopHub:BrowseExtensions' => '从 iTop Hub 获取扩展',
+	'Menu:iTopHub:BrowseExtensions+' => '去 iTop Hub 浏览更多的扩展',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>进入 iTop Hub 商店, 一站式查找各式各样 iTop 扩展的地方 !</br>寻找符合您要求的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
+	'iTopHub:GoBtn' => '进入 iTop Hub',
 	'iTopHub:CloseBtn' => '关闭',
 	'iTopHub:GoBtn:Tooltip' => '跳到 www.itophub.io',
 	'iTopHub:OpenInNewWindow' => '从新窗口打开 iTop Hub',
@@ -24,11 +40,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:About:RemoteExtensionSource' => 'iTop Hub',
 	'iTopHub:Explanation' => '点击这个按钮您将被引导至 iTop Hub.',
 
-    'iTopHub:BackupFreeDiskSpaceIn' => '%1$s free disk space in %2$s.',
-    'iTopHub:FailedToCheckFreeDiskSpace' => '检查空闲的磁盘空间失败.',
-    'iTopHub:BackupOk' => '备份成功.',
-    'iTopHub:BackupFailed' => '备份失败!',
-    'iTopHub:Landing:Status' => '安装状态',
+	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s free disk space in %2$s.',
+	'iTopHub:FailedToCheckFreeDiskSpace' => '检查空闲的磁盘空间失败.',
+	'iTopHub:BackupOk' => '备份成功.',
+	'iTopHub:BackupFailed' => '备份失败!',
+	'iTopHub:Landing:Status' => '安装状态',
 	'iTopHub:Landing:Install' => '扩展安装进行中...',
 	'iTopHub:CompiledOK' => 'Compilation successful.',
 	'iTopHub:ConfigurationSafelyReverted' => '安装时发生错误!<br/>iTop 配置将不会改变.',
