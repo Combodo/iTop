@@ -158,7 +158,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Change/Stimulus:ev_notapprove+' => '',
 	'Class:Change/Stimulus:ev_implement' => 'Implementeer',
 	'Class:Change/Stimulus:ev_implement+' => '',
-	'Class:Change/Stimulus:ev_monitor' => 'Monitor'
+	'Class:Change/Stimulus:ev_monitor' => 'Monitor',
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Sluit af',
 	'Class:Change/Stimulus:ev_finish+' => '',
