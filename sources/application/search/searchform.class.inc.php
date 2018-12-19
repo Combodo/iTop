@@ -28,6 +28,7 @@ use AttributeDefinition;
 use AttributeExternalField;
 use AttributeFriendlyName;
 use AttributeSubItem;
+use AttributeTagSet;
 use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use CoreException;
@@ -466,6 +467,16 @@ class SearchForm
 				}
 				return array('values' => $aAllowedValues);
 			}
+		}
+		elseif ($oAttrDef instanceof AttributeTagSet)
+		{
+			$aAllowedValues = array();
+			foreach($oAttrDef->GetAllowedValues() as $sCode => $sRawValue)
+			{
+				$aAllowedValues[$sCode] = utils::HtmlEntities($sRawValue);
+			}
+
+			return array('values' => $aAllowedValues);
 		}
 		else
 		{

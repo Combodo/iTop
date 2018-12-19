@@ -829,7 +829,7 @@ $(function()
 		// - Make a jQuery element for a list item
 		_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden)
 		{
-			var sEscapedLabel = $('<div />').text(sLabel).html();
+			var sEscapedLabel = sLabel; // Note: We don't escape this anymore as there is an issue with AttributeExternalKey being already escaped. This will be put back in iTop 2.7 with the AttributeDefinition::GetAllowedValues() refactoring. $('<div />').text(sLabel).html();
 			var oItemElem = $('<div></div>')
 				.addClass('sfc_opc_mc_item')
 				.attr('data-value-code', sValue)
