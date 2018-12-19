@@ -446,25 +446,25 @@
 		};
 
 		function Timer(callback, delay) {
-			let id, running;
+			var iId, bRunning;
 
 			this.start = function() {
-				running = true;
-				id = setTimeout(this.doCallback, delay);
+				bRunning = true;
+				iId = setTimeout(this.doCallback, delay);
 			};
 
 			this.doCallback = function () {
-				running = false;
+				bRunning = false;
 				callback();
 			};
 
 			this.stop = function() {
-				running = false;
-				clearTimeout(id);
+				bRunning = false;
+				clearTimeout(iId);
 			};
 
 			this.isRunning = function() {
-				return running;
+				return bRunning;
 			};
 
 			this.start();
