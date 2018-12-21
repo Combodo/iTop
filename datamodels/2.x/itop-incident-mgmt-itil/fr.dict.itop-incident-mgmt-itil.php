@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,11 +15,49 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+//
+// Class: Incident
+//
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Menu:IncidentManagement' => 'Gestion des incidents',
+	'Menu:IncidentManagement+' => 'Gestion des incidents',
+	'Menu:Incident:Overview' => 'Vue d\'ensemble',
+	'Menu:Incident:Overview+' => 'Vue d\'ensemble',
+	'Menu:NewIncident' => 'Nouvel incident',
+	'Menu:NewIncident+' => 'Créer un nouveau ticket d\'incident',
+	'Menu:SearchIncidents' => 'Rechercher des incidents',
+	'Menu:SearchIncidents+' => 'Rechercher parmi les tickets d\'incidents',
+	'Menu:Incident:Shortcuts' => 'Raccourcis',
+	'Menu:Incident:Shortcuts+' => '',
+	'Menu:Incident:MyIncidents' => 'Mes incidents',
+	'Menu:Incident:MyIncidents+' => 'Tickets d\'incident qui me sont assignés',
+	'Menu:Incident:EscalatedIncidents' => 'Incidents en cours d\'escalade',
+	'Menu:Incident:EscalatedIncidents+' => 'Ticket d\'incident en cours d\'escalade',
+	'Menu:Incident:OpenIncidents' => 'Incidents ouverts',
+	'Menu:Incident:OpenIncidents+' => 'Tous les tickets d\'incident ouverts',
+	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Incidents des 14 derniers jours par priorité',
+	'UI-IncidentManagementOverview-Last-14-days' => 'Incidents des 14 derniers jours',
+	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidents ouverts par statut',
+	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Incidents ouverts par agent',
+	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Incidents ouverts par client',
+));
+
+
+
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
 
 //
 // Class: Incident
@@ -148,8 +186,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Attribute:pending_reason+' => '',
 	'Class:Incident/Attribute:parent_incident_id' => 'Incident parent',
 	'Class:Incident/Attribute:parent_incident_id+' => '',
-	'Class:Incident/Attribute:parent_problem_id' => 'Problème lié',
-	'Class:Incident/Attribute:parent_problem_id+' => '',
 	'Class:Incident/Attribute:parent_incident_ref' => 'Référence incident parent',
 	'Class:Incident/Attribute:parent_incident_ref+' => '',
 	'Class:Incident/Attribute:parent_change_id' => 'Changement parent',
@@ -164,14 +200,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'Satisfaction client',
 	'Class:Incident/Attribute:user_satisfaction+' => '',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:1' => 'Très satisfait',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:1+' => 'Très satisfait',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:2' => 'Plutôt satisfait',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:2+' => 'Plutôt satisfait',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:3' => 'Plutôt mécontent',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:3+' => 'Plutôt mécontent',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:4' => 'Très mécontent',
-	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => 'Très mécontent',
+	'Class:Incident/Attribute:user_satisfaction/Value:1' => 'Très satisfait',
+	'Class:Incident/Attribute:user_satisfaction/Value:1+' => 'Très satisfait',
+	'Class:Incident/Attribute:user_satisfaction/Value:2' => 'Plutôt satisfait',
+	'Class:Incident/Attribute:user_satisfaction/Value:2+' => 'Plutôt satisfait',
+	'Class:Incident/Attribute:user_satisfaction/Value:3' => 'Plutôt mécontent',
+	'Class:Incident/Attribute:user_satisfaction/Value:3+' => 'Plutôt mécontent',
+	'Class:Incident/Attribute:user_satisfaction/Value:4' => 'Très mécontent',
+	'Class:Incident/Attribute:user_satisfaction/Value:4+' => 'Très mécontent',
 	'Class:Incident/Attribute:user_comment' => 'Commentaire client',
 	'Class:Incident/Attribute:user_comment+' => '',
 	'Class:Incident/Attribute:parent_incident_id_friendlyname' => 'Nom usuel de l\'incident parent',
@@ -195,41 +231,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Ré-ouvrir',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'L\'Incident parent ne peut pas être assigné à lui même',
-));
-
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Menu:IncidentManagement' => 'Gestion des incidents',
-	'Menu:IncidentManagement+' => 'Gestion des incidents',
-	'Menu:Incident:Overview' => 'Vue d\'ensemble',
-	'Menu:Incident:Overview+' => 'Vue d\'ensemble',
-	'Menu:NewIncident' => 'Nouvel incident',
-	'Menu:NewIncident+' => 'Créer un nouveau ticket d\'incident',
-	'Menu:SearchIncidents' => 'Rechercher des incidents',
-	'Menu:SearchIncidents+' => 'Rechercher parmi les tickets d\'incidents',
-	'Menu:Incident:Shortcuts' => 'Raccourcis',
-	'Menu:Incident:Shortcuts+' => '',
-	'Menu:Incident:MyIncidents' => 'Mes incidents',
-	'Menu:Incident:MyIncidents+' => 'Tickets d\'incident qui me sont assignés',
-	'Menu:Incident:EscalatedIncidents' => 'Incidents en cours d\'escalade',
-	'Menu:Incident:EscalatedIncidents+' => 'Ticket d\'incident en cours d\'escalade',
-	'Menu:Incident:OpenIncidents' => 'Incidents ouverts',
-	'Menu:Incident:OpenIncidents+' => 'Tous les tickets d\'incident ouverts',
-	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => 'Incidents des 14 derniers jours par priorité',
-	'UI-IncidentManagementOverview-Last-14-days' => 'Incidents des 14 derniers jours',
-	'UI-IncidentManagementOverview-OpenIncidentByStatus' => 'Incidents ouverts par statut',
-	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'Incidents ouverts par agent',
-	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => 'Incidents ouverts par client',
 
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution du ticket (ev_autoresolve) vers les requêtes et incidents fils, et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
-	'Class:Incident/Attribute:user_satisfaction/Value:1' => 'Très satisfait',
-	'Class:Incident/Attribute:user_satisfaction/Value:1+' => 'Très satisfait',
-	'Class:Incident/Attribute:user_satisfaction/Value:2' => 'Plutôt satisfait',
-	'Class:Incident/Attribute:user_satisfaction/Value:2+' => 'Plutôt satisfait',
-	'Class:Incident/Attribute:user_satisfaction/Value:3' => 'Plutôt mécontent',
-	'Class:Incident/Attribute:user_satisfaction/Value:3+' => 'Plutôt mécontent',
-	'Class:Incident/Attribute:user_satisfaction/Value:4' => 'Très mécontent',
-	'Class:Incident/Attribute:user_satisfaction/Value:4+' => 'Très mécontent',
 	'Tickets:Related:OpenIncidents' => 'Open incidents',
 ));

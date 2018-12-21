@@ -62,7 +62,10 @@
 $.widget('itop.set_widget',
 	{
 		// default options
-		options: {isDebug: false},
+		options: {
+			isDebug: false,
+			inputWidgetIdSuffix: "-setwidget-values"
+		},
 
 		PARENT_CSS_CLASS: "attribute-set",
 		ITEM_CSS_CLASS: "attribute-set-item",
@@ -123,7 +126,7 @@ $.widget('itop.set_widget',
 		_generateSelectionWidget: function ($widgetElement) {
 			var $parentElement = $widgetElement.parent(),
 				isWidgetElementDisabled = $widgetElement.prop("disabled"),
-				inputId = $widgetElement.attr("id") + "-setwidget-values";
+				inputId = $widgetElement.attr("id") + this.options.inputWidgetIdSuffix;
 
 			$parentElement.append("<input id='" + inputId + "' value='" + this.originalValue.join(" ") + "'>");
 			var $inputWidget = $("#" + inputId);
@@ -275,6 +278,13 @@ $.widget('itop.set_widget',
 				}
 			}
 
+			// When only one item allowed, selectize doesn't trigger the _onTagRemove callback so we have to clean ourselves.
+			if((this.maxItemsAllowed === 1) && (this.originalValue.length > 0)) {
+				if(setItemCode !== this.originalValue[0]) {
+					this.setItemsCodesStatus[this.originalValue[0]] = this.STATUS_REMOVED;
+				}
+			}
+
 			this.refresh();
 		},
 
@@ -318,7 +328,10 @@ $.widget('itop.set_widget',
 		},
 
 		_partialCodeRemove: function (setItemCode) {
-			this.partialValues = this.partialValues.filter(item => (item !== setItemCode));
+			this.partialValues = this.partialValues.filter(function (element, index, array) {
+				var setItemCode = this.valueOf();
+				return (element !== setItemCode);
+			}, setItemCode);
 		},
 
 		_isCodeInPartialValues: function (setItemCode) {

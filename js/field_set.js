@@ -330,6 +330,7 @@ $(function()
 			eval(this.options.script_element.text());
 			
 			// Sending event to let know that form is built
+			// Warning: It seems that the event is triggered before form_field widgets are initialized on fields, which can lead to erratic behavior
 			this.element.trigger('form_built');
 		},
 		hasTouchedFields: function()

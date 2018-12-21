@@ -534,9 +534,12 @@ abstract class MetaModel
 	 *
 	 * @since 2.6 N°659 uniqueness constraint
 	 */
-	final static public function GetUniquenessRules($sClass)
+	final public static function GetUniquenessRules($sClass)
 	{
-		self::_check_subclass($sClass);
+		if (!isset(self::$m_aClassParams[$sClass]))
+		{
+			return array();
+		}
 
 		$aCurrentUniquenessRules = array();
 
@@ -576,6 +579,33 @@ abstract class MetaModel
 		}
 
 		return $aCurrentUniquenessRules;
+	}
+
+	/**
+	 * @param string $sRuleId
+	 * @param string $sLeafClassName
+	 *
+	 * @return string name of the class, null if not present
+	 */
+	final public static function GetRootClassForUniquenessRule($sRuleId, $sLeafClassName)
+	{
+		$sFirstClassWithRuleId = null;
+		if (isset(self::$m_aClassParams[$sLeafClassName]['uniqueness_rules'][$sRuleId]))
+		{
+			$sFirstClassWithRuleId = $sLeafClassName;
+		}
+
+		$sParentClass = self::GetParentClass($sLeafClassName);
+		if ($sParentClass)
+		{
+			$sParentClassWithRuleId = self::GetRootClassForUniquenessRule($sRuleId, $sParentClass);
+			if (!is_null($sParentClassWithRuleId))
+			{
+				$sFirstClassWithRuleId = $sParentClassWithRuleId;
+			}
+		}
+
+		return $sFirstClassWithRuleId;
 	}
 
 	/**
@@ -2665,7 +2695,7 @@ abstract class MetaModel
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface');
+		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider');
 		foreach($aInterfaces as $sInterface)
 		{
 			self::$m_aExtensionClasses[$sInterface] = array();
@@ -3074,8 +3104,8 @@ abstract class MetaModel
 		$MANDATORY_ATTRIBUTES = array('attributes');
 		$UNIQUENESS_MANDATORY_KEYS_NB = count($MANDATORY_ATTRIBUTES);
 		$bHasDisabledKey = false;
-		$bHasMissingMandatoryKey = false;
-		$iMissingMandatoryKeysNb = 0;
+		$bHasMissingMandatoryKey = true;
+		$iMissingMandatoryKeysNb = $UNIQUENESS_MANDATORY_KEYS_NB;
 		$bHasAllMandatoryKeysMissing = false;
 		$bHasNonDisabledKeys = false;
 
@@ -3085,6 +3115,12 @@ abstract class MetaModel
 			{
 				$bHasDisabledKey = true;
 				continue;
+			}
+			$bHasNonDisabledKeys = true;
+
+			if (in_array($sUniquenessRuleKey, $MANDATORY_ATTRIBUTES, true)) {
+				$bHasMissingMandatoryKey = false;
+				$iMissingMandatoryKeysNb--;
 			}
 
 			if (($sUniquenessRuleKey === 'attributes') && (!empty($aExistingClassFields)))
@@ -3097,21 +3133,6 @@ abstract class MetaModel
 					}
 				}
 			}
-
-			if (!$aUniquenessRuleProperty)
-			{
-				if (!in_array($sUniquenessRuleKey, $MANDATORY_ATTRIBUTES, true))
-				{
-					continue;
-				}
-
-				$bHasMissingMandatoryKey = true;
-				$iMissingMandatoryKeysNb++;
-
-				continue;
-			}
-
-			$bHasNonDisabledKeys = true;
 		}
 
 		if ($iMissingMandatoryKeysNb == $UNIQUENESS_MANDATORY_KEYS_NB)
@@ -7118,25 +7139,32 @@ abstract class MetaModel
 				{
 					// Expand the parameters for the object
 					$sName = substr($sSearch, 0, $iPos);
-					if (preg_match_all('/\\$'.$sName.'-(>|&gt;)([^\\$]+)\\$/', $sInput, $aMatches)) // Support both syntaxes: $this->xxx$ or $this-&gt;xxx$ for HTML compatibility
-					{
-						foreach($aMatches[2] as $idx => $sPlaceholderAttCode)
-						{
-							try
-							{
-								$sReplacement = $replace->GetForTemplate($sPlaceholderAttCode);
-								if ($sReplacement !== null)
-								{
-									$aReplacements[] = $sReplacement;
-									$aSearches[] = '$'.$sName.'-'.$aMatches[1][$idx].$sPlaceholderAttCode.'$';
-								}
-							}
-							catch (Exception $e)
-							{
-								// No replacement will occur
-							}
-						}
-					}
+					$aRegExps = array(
+                        '/(\\$)'.$sName.'-(>|&gt;)([^\\$]+)\\$/', // Support both syntaxes: $this->xxx$ or $this-&gt;xxx$ for HTML compatibility
+                        '/(%24)'.$sName.'-(>|&gt;)([^%24]+)%24/', // Support for urlencoded in HTML attributes (%20this-&gt;xxx%20)
+                    );
+					foreach($aRegExps as $sRegExp)
+                    {
+                        if(preg_match_all($sRegExp, $sInput, $aMatches))
+                        {
+                            foreach($aMatches[3] as $idx => $sPlaceholderAttCode)
+                            {
+                                try
+                                {
+                                    $sReplacement = $replace->GetForTemplate($sPlaceholderAttCode);
+                                    if($sReplacement !== null)
+                                    {
+                                        $aReplacements[] = $sReplacement;
+                                        $aSearches[] = $aMatches[1][$idx] . $sName . '-' . $aMatches[2][$idx] . $sPlaceholderAttCode . $aMatches[1][$idx];
+                                    }
+                                }
+                                catch(Exception $e)
+                                {
+                                    // No replacement will occur
+                                }
+                            }
+                        }
+                    }
 				}
 				else
 				{

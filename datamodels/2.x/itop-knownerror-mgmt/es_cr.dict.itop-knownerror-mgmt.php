@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
@@ -24,7 +22,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -34,12 +31,10 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -49,12 +44,10 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //
 // Class: KnownError
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:KnownError' => 'Error Conocido',
 	'Class:KnownError+' => 'Documentación para un error conocido',
 	'Class:KnownError/Attribute:name' => 'Nombre',
@@ -103,7 +96,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkErrorToFunctionalCI' => 'Relación Error Conocido y EC Funcional',
 	'Class:lnkErrorToFunctionalCI+' => 'Relación Error Conocido y EC Funcional',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'EC',
@@ -122,7 +115,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: lnkDocumentToError
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkDocumentToError' => 'Relación Documento y Error Conocido',
 	'Class:lnkDocumentToError+' => 'Relación Documento y Error Conocido',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Documento',
@@ -141,7 +134,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: FAQ
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:FAQ' => 'Preguntas y Respuestas Frecuentes',
 	'Class:FAQ+' => 'Preguntas y Respuestas Frecuentes',
 	'Class:FAQ/Attribute:title' => 'Asunto',
@@ -158,13 +151,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQ/Attribute:error_code+' => 'Código de Error',
 	'Class:FAQ/Attribute:key_words' => 'Palabras Clave',
 	'Class:FAQ/Attribute:key_words+' => 'Palabras Clave',
+	'Class:FAQ/Attribute:domains' => 'Domains~~',
 ));
 
 //
-// Class: FAQcategory
+// Class: FAQCategory
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:FAQCategory' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory+' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory/Attribute:name' => 'Nombre',
@@ -172,7 +166,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'FAQs',
 ));
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:ProblemManagement' => 'Gestión de problemas',
 	'Menu:ProblemManagement+' => 'Gestión de problemas',
 	'Menu:Problem:Shortcuts' => 'Acceso Rápido',
@@ -180,8 +174,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:NewError+' => 'Nuevo Error Conocido',
 	'Menu:SearchError' => 'Búsqueda de Errores Conocidos',
 	'Menu:SearchError+' => 'Búsqueda de Errores Conocidos',
-        'Menu:Problem:KnownErrors' => 'Errores Conocidos',
-        'Menu:Problem:KnownErrors+' => 'Errores Conocidos',
+	'Menu:Problem:KnownErrors' => 'Errores Conocidos',
+	'Menu:Problem:KnownErrors+' => 'Errores Conocidos',
 	'Menu:FAQCategory' => 'Categorías de FAQ',
 	'Menu:FAQCategory+' => 'Categorías FAQ',
 	'Menu:FAQ' => 'Preguntas y Respuestas Frecuentes',

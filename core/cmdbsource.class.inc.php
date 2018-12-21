@@ -108,18 +108,22 @@ class MySQLHasGoneAwayException extends MySQLException
  */
 class CMDBSource
 {
+	const ENUM_DB_VENDOR_MYSQL = 'MySQL';
+	const ENUM_DB_VENDOR_MARIADB = 'MariaDB';
+	const ENUM_DB_VENDOR_PERCONA = 'Percona';
+	
 	protected static $m_sDBHost;
 	protected static $m_sDBUser;
 	protected static $m_sDBPwd;
 	protected static $m_sDBName;
 	/**
 	 * @var boolean
-	 * @since 2.5 #1260 MySQL TLS first implementation
+	 * @since 2.5 N°1260 MySQL TLS first implementation
 	 */
 	protected static $m_bDBTlsEnabled;
 	/**
 	 * @var string
-	 * @since 2.5 #1260 MySQL TLS first implementation
+	 * @since 2.5 N°1260 MySQL TLS first implementation
 	 */
 	protected static $m_sDBTlsCA;
 
@@ -133,7 +137,7 @@ class CMDBSource
 	 * use expression as value)
 	 *
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-column.html
-	 * @since 2.5 #1001 switch to utf8mb4
+	 * @since 2.5 N°1001 switch to utf8mb4
 	 */
 	public static function GetSqlStringColumnDefinition()
 	{
@@ -407,6 +411,27 @@ class CMDBSource
 	}
 
 	/**
+	 * Get the DB vendor between MySQL and its main forks
+	 * @return string
+	 */
+	static public function GetDBVendor()
+	{
+		$sDBVendor = static::ENUM_DB_VENDOR_MYSQL;
+		
+		$sVersionComment = static::GetServerVariable('version') .  ' - ' . static::GetServerVariable('version_comment');
+		if(preg_match('/mariadb/i', $sVersionComment) === 1)
+		{
+			$sDBVendor = static::ENUM_DB_VENDOR_MARIADB;
+		}
+		else if(preg_match('/percona/i', $sVersionComment) === 1)
+		{
+			$sDBVendor = static::ENUM_DB_VENDOR_PERCONA;
+		}
+		
+		return $sDBVendor;
+	}
+
+	/**
 	 * @param string $sSource
 	 *
 	 * @throws \MySQLException
@@ -457,6 +482,11 @@ class CMDBSource
 		$res = self::Query("DROP TABLE `$sTable`");
 		self::_TablesInfoCacheReset(); // reset the table info cache!
 		return $res;
+	}
+
+	public static function CacheReset($sTable)
+	{
+		self::_TablesInfoCacheReset($sTable);
 	}
 
 	/**
@@ -870,6 +900,20 @@ class CMDBSource
 		return ($aFieldData["Type"]);
 	}
 
+	private static function IsNumericType($aFieldData)
+	{
+		$aNumericTypes = array('tinyint(', 'decimal(', 'int(' );
+		$sType = strtolower($aFieldData["Type"]);
+		foreach ($aNumericTypes as $sNumericType)
+		{
+			if (strpos($sType, $sNumericType) === 0)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * @param string $sTable
 	 * @param string $sField
@@ -908,8 +952,15 @@ class CMDBSource
 			}
 			else
 			{
-				$default = $aFieldData["Default"] + 0; // Coerce to a numeric variable
-				$sRet .= ' DEFAULT '.self::Quote($default);
+				if (self::IsNumericType($aFieldData))
+				{
+					$sRet .= ' DEFAULT '.$aFieldData["Default"];
+				}
+				else
+				{
+					$default = $aFieldData["Default"] + 0; // Coerce to a numeric variable
+					$sRet .= ' DEFAULT '.self::Quote($default);
+				}
 			}
 		}
 		elseif (is_string($aFieldData["Default"]) == 'string')
@@ -967,9 +1018,16 @@ class CMDBSource
 	
 	// Cache the information about existing tables, and their fields
 	private static $m_aTablesInfo = array();
-	private static function _TablesInfoCacheReset()
+	private static function _TablesInfoCacheReset($sTableName = null)
 	{
-		self::$m_aTablesInfo = array();
+		if (is_null($sTableName))
+		{
+			self::$m_aTablesInfo = array();
+		}
+		else
+		{
+			self::$m_aTablesInfo[strtolower($sTableName)] = null;
+		}
 	}
 
 	/**
@@ -1042,7 +1100,7 @@ class CMDBSource
 	 * @return string query to upgrade table charset and collation if needed, null if not
 	 * @throws \MySQLException
 	 *
-	 * @since 2.5 #1001 switch to utf8mb4
+	 * @since 2.5 N°1001 switch to utf8mb4
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-table.html
 	 */
 	public static function DBCheckTableCharsetAndCollation($sTableName)
@@ -1192,7 +1250,7 @@ class CMDBSource
 	 * @return string query to upgrade database charset and collation if needed, null if not
 	 * @throws \MySQLException
 	 *
-	 * @since 2.5 #1001 switch to utf8mb4
+	 * @since 2.5 N°1001 switch to utf8mb4
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-database.html
 	 */
 	public static function DBCheckCharsetAndCollation()

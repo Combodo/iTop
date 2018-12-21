@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,12 +15,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2014 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:DataSources' => 'Szinkronizált adatforrások',
 	'Menu:DataSources+' => '',
@@ -42,6 +40,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:Notifications:Title' => 'Audit kategóriák',
 	'Menu:RunQueriesMenu' => 'Lekérdezés futtatás',
 	'Menu:RunQueriesMenu+' => '',
+	'Menu:QueryMenu' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
 	'Menu:UniversalSearchMenu' => 'Univerzális keresés',
 	'Menu:UniversalSearchMenu+' => '',
 	'Menu:UserManagementMenu' => 'Felhasználó menedzsment',
@@ -52,7 +52,5 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:UserAccountsMenu' => 'Felhasználói fiókok',
 	'Menu:UserAccountsMenu+' => '',
 	'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok',
-	'Menu:QueryMenu' => 'Query phrasebook~~',
-	'Menu:QueryMenu+' => 'Query phrasebook~~',
 	'Menu:MyShortcuts' => 'My Shortcuts~~',
 ));

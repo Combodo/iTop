@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,14 +8,10 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
 //
 // Class: UserLDAP
 //
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserLDAP' => 'Пользователь LDAP',
 	'Class:UserLDAP+' => 'Пользователь, аутентифицируемый через LDAP',
-	'Class:UserLDAP/Attribute:password' => 'Пароль',
-	'Class:UserLDAP/Attribute:password+' => 'Строка аутентификации пользователя',
 ));

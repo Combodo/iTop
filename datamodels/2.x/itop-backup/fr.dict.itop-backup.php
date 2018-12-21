@@ -5,7 +5,6 @@
  * @copyright   Copyright (C) 2013 Combodo
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('FR FR', 'French', 'Français', array(
 
 	'bkp-backup-running' => 'Une sauvegarde est en cours. Veuillez patienter...',
@@ -43,4 +42,3 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'bkp-wait-restore' => 'Restauration des données en cours...',
 	'bkp-success-restore' => 'Restauration des données terminée.',
 ));
-?>

@@ -1,6 +1,7 @@
 <?php
-use Html2Text\Html2Text;
+
 use Leafo\ScssPhp\Compiler;
+
 // Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
@@ -26,8 +27,9 @@ use Leafo\ScssPhp\Compiler;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT.'/core/config.class.inc.php');
-require_once(APPROOT.'/application/transaction.class.inc.php');
+require_once(APPROOT.'core/metamodel.class.php');
+require_once(APPROOT.'core/config.class.inc.php');
+require_once(APPROOT.'application/transaction.class.inc.php');
 require_once(APPROOT.'application/Html2Text.php');
 require_once(APPROOT.'application/Html2TextException.php');
 
@@ -312,10 +314,20 @@ class utils
 			{
 				switch($sSanitizationFilter)
 				{
-					case 'parameter':
-					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^([ A-Za-z0-9_=-]|%3D|%2B|%2F)*$/'))); // the '=', '%3D, '%2B', '%2F' characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
+					case 'transaction_id':
+						// same as parameter type but keep the dot character
+						// see N°1835 : when using file transaction_id on Windows you get *.tmp tokens
+						// it must be included at the regexp beginning otherwise you'll get an invalid character error
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+							array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
 					break;
-					
+
+					case 'parameter':
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+							array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
+						// characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
+						break;
+
 					case 'field_name':
 					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
 					break;
@@ -515,7 +527,7 @@ class utils
 	/**
 	 * Returns a unique tmp id for the current upload based on the transaction system (db).
 	 *
-	 * Build as session_id() . '_' . static::GetNewTransactionId()
+	 * Build as static::GetNewTransactionId()
 	 *
 	 * @return string
 	 */
@@ -525,7 +537,7 @@ class utils
 		{
 			$sTransactionId = static::GetNewTransactionId();
 		}
-		return session_id() . '_' . $sTransactionId;
+		return $sTransactionId;
 	}
 
 	public static function ReadFromFile($sFileName)
@@ -826,7 +838,7 @@ class utils
 
 	/**
 	 * Helper to handle the variety of HTTP servers
-	 * See #286 (fixed in [896]), and #634 (this fix)
+	 * See N°286 (fixed in [896]), and N°634 (this fix)
 	 * 	 
 	 * Though the official specs says 'a non empty string', some servers like IIS do set it to 'off' !
 	 * nginx set it to an empty string
@@ -1109,10 +1121,11 @@ class utils
 				$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
 				$sDashboardFileJS = addslashes($sDashboardFile);
 				$sDashboardFileURL = urlencode($sDashboardFile);
+				$sUploadDashboardTransactId = utils::GetNewTransactionId();
 				$aResult = array(
 					new SeparatorPopupMenuItem(),
 					new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sDashboardId.'&file='.$sDashboardFileURL),
-					new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sDashboardId', file: '$sDashboardFileJS', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })"),
+					new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sDashboardId', file: '$sDashboardFileJS', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn', transaction: '$sUploadDashboardTransactId' })"),
 				);
 				if ($oDashboard->GetReloadURL())
 				{
@@ -1424,7 +1437,17 @@ class utils
 		asort($aPossibleEncodings);
 		return $aPossibleEncodings;
 	}
-	
+
+	/**
+	 * Helper to encapsulation iTop's htmlentities
+	 * @param string $sValue
+	 * @return string
+	 */
+	static public function HtmlEntities($sValue)
+	{
+		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+	}
+
 	/**
 	 * Convert a string containing some (valid) HTML markup to plain text
 	 * @param string $sHtml
@@ -1466,7 +1489,7 @@ class utils
 	static public function GetCSSFromSASS($sSassRelPath, $aImportPaths = null)
 	{
 		// Avoiding compilation if file is already a css file.
-		if (preg_match('/\.css$/', $sSassRelPath))
+		if (preg_match('/\.css(\?.*)?$/', $sSassRelPath))
 		{
 			return $sSassRelPath;
 		}

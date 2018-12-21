@@ -49,6 +49,10 @@ final class ormTagSet extends ormSet
 	 */
 	public function SetValues($aTagCodes)
 	{
+		if (is_null($aTagCodes))
+		{
+			$aTagCodes = array();
+		}
 		if (!is_array($aTagCodes))
 		{
 			throw new CoreUnexpectedValue("Wrong value {$aTagCodes} for {$this->sClass}:{$this->sAttCode}");
@@ -227,7 +231,7 @@ final class ormTagSet extends ormSet
 	 */
 	public function GetDelta(ormSet $oOtherTagSet)
 	{
-		$oTag = new ormTagSet($this->sClass, $this->sAttCode);
+		$oTag = new ormTagSet($this->sClass, $this->sAttCode, 0);
 		// Set the initial value
 		$aOrigTagCodes = $this->GetValues();
 		$oTag->SetValues($aOrigTagCodes);
@@ -263,7 +267,7 @@ final class ormTagSet extends ormSet
 	 */
 	public function GetDeltaTags(ormTagSet $oOtherTagSet)
 	{
-		$oTag = new ormTagSet($this->sClass, $this->sAttCode);
+		$oTag = new ormTagSet($this->sClass, $this->sAttCode, 0);
 		// Set the initial value
 		$aOrigTagCodes = $this->GetValues();
 		$oTag->SetValues($aOrigTagCodes);
@@ -323,7 +327,7 @@ final class ormTagSet extends ormSet
 	 */
 	public function Add($sTagCode)
 	{
-		if ($this->Count() === $this->iLimit)
+		if (($this->iLimit != 0) && ($this->Count() == $this->iLimit))
 		{
 			throw new CoreException("Maximum number of tags ({$this->iLimit}) reached for {$this->sClass}:{$this->sAttCode}");
 		}

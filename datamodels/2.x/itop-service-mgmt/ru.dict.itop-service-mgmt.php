@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,8 +8,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 'Menu:ServiceManagement' => 'Управление услугами',
 'Menu:ServiceManagement+' => 'Управление услугами',
@@ -113,8 +110,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Contract/Attribute:status+' => '',
 	'Class:Contract/Attribute:status/Value:implementation' => 'Внедрение',
 	'Class:Contract/Attribute:status/Value:implementation+' => 'Внедрение',
-	'Class:Contract/Attribute:status/Value:obsolete' => 'Устаревшее',
-	'Class:Contract/Attribute:status/Value:obsolete+' => 'Устаревшее',
+	'Class:Contract/Attribute:status/Value:obsolete' => 'Устаревший',
+	'Class:Contract/Attribute:status/Value:obsolete+' => 'Устаревший',
 	'Class:Contract/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:Contract/Attribute:status/Value:production+' => 'Эксплуатация',
 	'Class:Contract/Attribute:finalclass' => 'Тип',
@@ -210,8 +207,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Название',
 	'Class:ServiceFamily/Attribute:name+' => '',
-	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
-	'Class:ServiceFamily/Attribute:icon+' => '',
+	'Class:ServiceFamily/Attribute:icon' => 'Иконка',
+	'Class:ServiceFamily/Attribute:icon+' => 'Используется на клиентском портале',
 	'Class:ServiceFamily/Attribute:services_list' => 'Услуги',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Связанные услуги',
 ));
@@ -243,12 +240,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Service/Attribute:status+' => '',
 	'Class:Service/Attribute:status/Value:implementation' => 'Внедрение',
 	'Class:Service/Attribute:status/Value:implementation+' => 'Внедрение',
-	'Class:Service/Attribute:status/Value:obsolete' => 'Устаревшее',
-	'Class:Service/Attribute:status/Value:obsolete+' => 'Устаревшее',
+	'Class:Service/Attribute:status/Value:obsolete' => 'Устаревший',
+	'Class:Service/Attribute:status/Value:obsolete+' => 'Устаревший',
 	'Class:Service/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:Service/Attribute:status/Value:production+' => 'Эксплуатация',
-	'Class:Service/Attribute:icon' => 'Icon~~',
-	'Class:Service/Attribute:icon+' => '',
+	'Class:Service/Attribute:icon' => 'Иконка',
+	'Class:Service/Attribute:icon+' => 'Используется на клиентском портале',
 	'Class:Service/Attribute:customercontracts_list' => 'Договоры с заказчиками',
 	'Class:Service/Attribute:customercontracts_list+' => 'Договоры с заказчиками, по которым предоставляется услуга',
 	'Class:Service/Attribute:providercontracts_list' => 'Договоры с поставщиками',
@@ -318,12 +315,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ServiceSubcategory/Attribute:status+' => '',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation' => 'Внедрение',
 	'Class:ServiceSubcategory/Attribute:status/Value:implementation+' => 'Внедрение',
-	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'Устаревшее',
-	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => 'Устаревшее',
+	'Class:ServiceSubcategory/Attribute:status/Value:obsolete' => 'Устаревший',
+	'Class:ServiceSubcategory/Attribute:status/Value:obsolete+' => 'Устаревший',
 	'Class:ServiceSubcategory/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:ServiceSubcategory/Attribute:status/Value:production+' => 'Эксплуатация',
-	'Class:ServiceSubcategory/Attribute:service_provider' => 'Поставщик',
-	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Поставщик',
 ));
 
 //

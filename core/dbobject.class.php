@@ -148,6 +148,31 @@ abstract class DBObject implements iDisplay
 				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
 		}
+
+		$this->UpdateMetaAttributes();
+	}
+
+	/**
+	 * Update meta-attributes depending on the given attribute list
+	 *
+	 * @param array|null $aAttCodes List of att codes
+	 *
+	 * @throws \CoreException
+	 */
+	protected function UpdateMetaAttributes($aAttCodes = null)
+	{
+		if (is_null($aAttCodes))
+		{
+			$aAttCodes = MetaModel::GetAttributesList(get_class($this));
+		}
+		foreach ($aAttCodes as $sAttCode)
+		{
+			foreach (MetaModel::ListMetaAttributes(get_class($this), $sAttCode) as $sMetaAttCode => $oMetaAttDef)
+			{
+				/** @var \AttributeMetaEnum $oMetaAttDef */
+				$this->_Set($sMetaAttCode, $oMetaAttDef->MapValue($this));
+			}
+		}
 	}
 
 	// Read-only <=> Written once (archive)
@@ -432,11 +457,7 @@ abstract class DBObject implements iDisplay
 		}
 		$this->_Set($sAttCode, $realvalue);
 
-		foreach (MetaModel::ListMetaAttributes(get_class($this), $sAttCode) as $sMetaAttCode => $oMetaAttDef)
-		{
-			/** @var \AttributeMetaEnum $oMetaAttDef */
-			$this->_Set($sMetaAttCode, $oMetaAttDef->MapValue($this));
-		}
+		$this->UpdateMetaAttributes(array($sAttCode));
 
 		// The object has changed, reset caches
 		$this->m_bCheckStatus = null;
@@ -855,17 +876,20 @@ abstract class DBObject implements iDisplay
 		return $oAtt->GetAsCSV($this->GetOriginal($sAttCode), $sSeparator, $sTextQualifier, $this, $bLocalize, $bConvertToPlainText);
 	}
 
-	/**
-	 * @param $sObjClass
-	 * @param $sObjKey
-	 * @param string $sHtmlLabel Label with HTML entities escaped (< escaped as &lt;)
-	 * @param null $sUrlMakerClass
-	 * @param bool|true $bWithNavigationContext
-	 * @param bool|false $bArchived
-	 * @param bool|false $bObsolete
-	 * @return string
-	 * @throws DictExceptionMissingString
-	 */
+    /**
+     * @param string $sObjClass
+     * @param string $sObjKey
+     * @param string $sHtmlLabel Label with HTML entities escaped (< escaped as &lt;)
+     * @param null $sUrlMakerClass
+     * @param bool|true $bWithNavigationContext
+     * @param bool|false $bArchived
+     * @param bool|false $bObsolete
+     *
+     * @return string
+     * @throws \ArchivedObjectException
+     * @throws \CoreException
+     * @throws \DictExceptionMissingString
+     */
 	public static function MakeHyperLink($sObjClass, $sObjKey, $sHtmlLabel = '', $sUrlMakerClass = null, $bWithNavigationContext = true, $bArchived = false, $bObsolete = false)
 	{
 		if ($sObjKey <= 0) return '<em>'.Dict::S('UI:UndefinedObject').'</em>'; // Objects built in memory have negative IDs
@@ -936,11 +960,23 @@ abstract class DBObject implements iDisplay
 		return $sRet;
 	}
 
-	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true)
+    /**
+     * @param string $sUrlMakerClass
+     * @param bool $bWithNavigationContext
+     * @param string $sLabel
+     *
+     * @return string
+     * @throws \DictExceptionMissingString
+     */
+	public function GetHyperlink($sUrlMakerClass = null, $bWithNavigationContext = true, $sLabel = null)
 	{
+	    if($sLabel === null)
+        {
+            $sLabel = $this->GetName();
+        }
 		$bArchived = $this->IsArchived();
 		$bObsolete = $this->IsObsolete();
-		return self::MakeHyperLink(get_class($this), $this->GetKey(), $this->GetName(), $sUrlMakerClass, $bWithNavigationContext, $bArchived, $bObsolete);
+		return self::MakeHyperLink(get_class($this), $this->GetKey(), $sLabel, $sUrlMakerClass, $bWithNavigationContext, $bArchived, $bObsolete);
 	}
 	
 	public static function ComputeStandardUIPage($sClass)
@@ -1319,7 +1355,7 @@ abstract class DBObject implements iDisplay
 		{
 			if (is_string($toCheck))
 			{
-				$oTag = new ormTagSet(get_class($this), $sAttCode);
+				$oTag = new ormTagSet(get_class($this), $sAttCode, $oAtt->GetMaxItems());
 				try
 				{
 					$oTag->SetValues(explode(' ', $toCheck));
@@ -1342,7 +1378,7 @@ abstract class DBObject implements iDisplay
 		{
 			if (is_string($toCheck))
 			{
-				$oTag = new ormSet(get_class($this), $sAttCode);
+				$oTag = new ormSet(get_class($this), $sAttCode, $oAtt->GetMaxItems());
 				try
 				{
 					$aValues = array();
@@ -1413,16 +1449,14 @@ abstract class DBObject implements iDisplay
 		$sCurrentClass = get_class($this);
 		$aUniquenessRules = MetaModel::GetUniquenessRules($sCurrentClass);
 
-		foreach ($aUniquenessRules as $sUniquenessRuleName => $aUniquenessRuleProperties)
+		foreach ($aUniquenessRules as $sUniquenessRuleId => $aUniquenessRuleProperties)
 		{
 			if ($aUniquenessRuleProperties['disabled'] === true)
 			{
 				continue;
 			}
 
-			$oUniquenessQuery = $this->GetUniquenessDuplicatesQuery($aUniquenessRuleProperties);
-			$oUniquenessDuplicates = new DBObjectSet($oUniquenessQuery);
-			$bHasDuplicates = $oUniquenessDuplicates->CountExceeds(0);
+			$bHasDuplicates = $this->HasObjectsInDbForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties);
 			if ($bHasDuplicates)
 			{
 				$bIsBlockingRule = $aUniquenessRuleProperties['is_blocking'];
@@ -1431,8 +1465,7 @@ abstract class DBObject implements iDisplay
 					$bIsBlockingRule = true;
 				}
 
-				$sErrorKey = $aUniquenessRuleProperties['error_message'];
-				$sErrorMessage = $this->GetUniquenessRuleMessage($sErrorKey, $sUniquenessRuleName);
+				$sErrorMessage = $this->GetUniquenessRuleMessage($sUniquenessRuleId);
 
 				if ($bIsBlockingRule)
 				{
@@ -1446,27 +1479,55 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * @param string $sMessageKey string or dictionnary key, could be empty
-	 * @param string $sUniquenessRuleName
+	 * @param string $sUniquenessRuleId
 	 *
-	 * @return string
+	 * @return string dict key : Class:$sClassName/UniquenessRule:$sUniquenessRuleId
+	 *          if none then will use Core:UniquenessDefaultError
+	 *         Dictionary keys can contain "$this" placeholders
+	 *
 	 * @since 2.6 N°659 uniqueness constraint
 	 */
-	protected function GetUniquenessRuleMessage($sMessageKey, $sUniquenessRuleName)
+	protected function GetUniquenessRuleMessage($sUniquenessRuleId)
 	{
-		if (empty($sMessageKey))
+		$sCurrentClass = get_class($this);
+		$sClass = MetaModel::GetRootClassForUniquenessRule($sUniquenessRuleId, $sCurrentClass);
+		$sMessageKey = "Class:$sClass/UniquenessRule:$sUniquenessRuleId";
+		$sTemplate = Dict::S($sMessageKey, '');
+
+		if (empty($sTemplate))
 		{
-			return Dict::Format('Core:UniquenessDefaultError', $sUniquenessRuleName);
+			// we could add also a specific message if user is admin ("dict key is missing")
+			return Dict::Format('Core:UniquenessDefaultError', $sUniquenessRuleId);
 		}
 
-		$sTemplate = Dict::S($sMessageKey);
 		$oString = new TemplateString($sTemplate);
 
 		return $oString->Render(array('this' => $this));
 	}
 
 	/**
-	 * @param array $aUniquenessSingleRule
+	 * @param string $sUniquenessRuleId uniqueness rule ID
+	 * @param array $aUniquenessRuleProperties uniqueness rule properties
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	protected function HasObjectsInDbForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties)
+	{
+		$oUniquenessQuery = $this->GetSearchForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties);
+		$oUniquenessDuplicates = new DBObjectSet($oUniquenessQuery);
+		$bHasDuplicates = $oUniquenessDuplicates->CountExceeds(0);
+
+		return $bHasDuplicates;
+	}
+
+	/**
+	 * @param string $sUniquenessRuleId uniqueness rule ID
+	 * @param array $aUniquenessRuleProperties uniqueness rule properties
 	 *
 	 * @return \DBSearch
 	 * @throws \CoreException
@@ -1474,11 +1535,11 @@ abstract class DBObject implements iDisplay
 	 * @since 2.6 N°659 uniqueness constraint
 	 * @api
 	 */
-	protected function GetUniquenessDuplicatesQuery($aUniquenessSingleRule)
+	protected function GetSearchForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties)
 	{
 		$sCurrentClass = get_class($this);
 		$sOqlUniquenessQuery = "SELECT $sCurrentClass";
-		if (!(empty($sUniquenessFilter = $aUniquenessSingleRule['filter'])))
+		if (!(empty($sUniquenessFilter = $aUniquenessRuleProperties['filter'])))
 		{
 			$sOqlUniquenessQuery .= ' WHERE '.$sUniquenessFilter;
 		}
@@ -1489,7 +1550,7 @@ abstract class DBObject implements iDisplay
 			$oUniquenessQuery->AddCondition('id', $this->GetKey(), '<>');
 		}
 
-		foreach ($aUniquenessSingleRule['attributes'] as $sAttributeCode)
+		foreach ($aUniquenessRuleProperties['attributes'] as $sAttributeCode)
 		{
 			$attributeValue = $this->Get($sAttributeCode);
 			$oUniquenessQuery->AddCondition($sAttributeCode, $attributeValue, '=');
@@ -2209,6 +2270,7 @@ abstract class DBObject implements iDisplay
 
 		try
 		{
+			$this->DoComputeValues();
 			// Stop watches
 			$sState = $this->GetState();
 			if ($sState != '')
@@ -2227,8 +2289,6 @@ abstract class DBObject implements iDisplay
 					}
 				}
 			}
-
-			$this->DoComputeValues();
 			$this->OnUpdate();
 
 			$aChanges = $this->ListChanges();
@@ -2369,7 +2429,8 @@ abstract class DBObject implements iDisplay
 		}
 		catch (Exception $e)
 		{
-			throw $e;
+			$aErrors = array($e->getMessage());
+			throw new CoreCannotSaveObjectException(array('id' => $this->GetKey(), 'class' => get_class($this), 'issues' => $aErrors));
 		}
 		finally
 		{
@@ -2477,7 +2538,8 @@ abstract class DBObject implements iDisplay
 			$this->AfterDelete();
 
 			$this->m_bIsInDB = false;
-			// Fix for #926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete objects, reported as bug #926)
+			// Fix for N°926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete
+			// objects, reported as bug N°926)
 			// Thought the key is not reset, using DBInsert or DBWrite will create an object having the same characteristics and a new ID. DBUpdate is protected
 		}
 	}

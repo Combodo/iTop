@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,17 +15,14 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2013 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:RequestManagement' => 'Administración de Requerimientos',
 	'Menu:RequestManagement+' => 'Administración de Requerimientos',
 	'Menu:RequestManagementProvider' => 'Proveedor de Mesa de Ayuda',
@@ -42,14 +39,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:UserRequest:Shortcuts+' => 'Acceso Rápido',
 	'Menu:UserRequest:MyRequests' => 'Requerimientos Asignados a Mí',
 	'Menu:UserRequest:MyRequests+' => 'Requerimientos Asignados a Mí (como Analista)',
-	'Menu:UserRequest:MySupportRequests' => "Llamadas de Soporte Asignadas a Mí",
-	'Menu:UserRequest:MySupportRequests+' => "Llamadas de Soporte Asignadas a Mí (como Analista)",
-  'Menu:UserRequest:EscalatedRequests' => 'Requerimientos Escalados',
+	'Menu:UserRequest:MySupportRequests' => 'Llamadas de Soporte Asignadas a Mí',
+	'Menu:UserRequest:MySupportRequests+' => 'Llamadas de Soporte Asignadas a Mí (como Analista)',
+	'Menu:UserRequest:EscalatedRequests' => 'Requerimientos Escalados',
 	'Menu:UserRequest:EscalatedRequests+' => 'Requerimientos Escalados',
 	'Menu:UserRequest:OpenRequests' => 'Requerimientos Abiertos',
 	'Menu:UserRequest:OpenRequests+' => 'Requerimientos Abiertos',
-	'Menu:UserRequest:OpenProblems' => 'Problemas Abiertos',
-	'Menu:UserRequest:OpenProblems+' => 'Problemas Abiertos',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Requerimientos asignados a Mí',
 	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Requerimientos por Tipo de los Últimos 14 días',
 	'UI-RequestManagementOverview-Last-14-days' => 'Número de Requerimientos de los Últimos 14 días',
@@ -61,6 +56,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:UserRequest:MyWorkOrders' => 'Ordenes de Trabajo asignadas a Mí',
 	'Menu:UserRequest:MyWorkOrders+' => 'Ordenes de Trabajo asignadas a Mí',
 	'Class:Problem:KnownProblemList' => 'Problemas Conocidos',
+	'Tickets:Related:OpenIncidents' => 'Incidentes Abiertos',
 ));
 
 // Dictionnay conventions
@@ -77,7 +73,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: UserRequest
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:UserRequest' => 'Requerimiento',
 	'Class:UserRequest+' => 'Requerimiento',
 	'Class:UserRequest/Attribute:status' => 'Estatus',
@@ -102,7 +98,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Attribute:status/Value:resolved+' => 'Solucionado',
 	'Class:UserRequest/Attribute:status/Value:closed' => 'Cerrado',
 	'Class:UserRequest/Attribute:status/Value:closed+' => 'Cerrado',
-  'Class:UserRequest/Attribute:request_type' => 'Tipo de Reporte',
+	'Class:UserRequest/Attribute:request_type' => 'Tipo de Reporte',
 	'Class:UserRequest/Attribute:request_type+' => 'Tipo de Reporte',
 	'Class:UserRequest/Attribute:request_type/Value:incident' => 'Incidente',
 	'Class:UserRequest/Attribute:request_type/Value:incident+' => 'Incidente',
@@ -218,8 +214,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Attribute:parent_request_ref+' => 'Ref. Requerimiento',
 	'Class:UserRequest/Attribute:parent_problem_id' => 'Problema Padre',
 	'Class:UserRequest/Attribute:parent_problem_id+' => 'Problema Padre',
-	'Class:UserRequest/Attribute:parent_incident_id' => 'Incidente Padre',
-	'Class:UserRequest/Attribute:parent_incident_id+' => 'Incidente Padre',
 	'Class:UserRequest/Attribute:parent_problem_ref' => 'Ref. Problema',
 	'Class:UserRequest/Attribute:parent_problem_ref+' => 'Ref. Problema',
 	'Class:UserRequest/Attribute:parent_change_id' => 'Cambio Padre',
@@ -268,10 +262,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => 'Reabrir',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Esperando Aprobación',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => 'Esperando Aprobación',
+	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'No puede asignarse el requerimiento Padre a si mismo',
 ));
 
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Portal:TitleDetailsFor_Request' => 'Detalles del Requerimiento',
 	'Portal:ButtonUpdate' => 'Actualizar',
 	'Portal:ButtonClose' => 'Cerrar',
@@ -291,17 +286,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Portal:ShowProblem' => 'Problemas',
 	'Portal:ShowFaqs' => 'Preguntas Frecuentes',
 	'Portal:NoOpenProblem' => 'Problema No Abierto',
-	'Portal:SelectLanguage' => "Seleccione un Idioma",
+	'Portal:SelectLanguage' => 'Seleccione un Idioma',
 	'Portal:LanguageChangedTo_Lang' => 'Idioma Cambiado a ',
 	'Portal:ChooseYourFavoriteLanguage' => 'Seleccione su Idioma Favorito',
-	'Tickets:Related:OpenIncidents' => 'Incidentes Abiertos',
-	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'No puede asignarse el requerimiento Padre a si mismo',
+
 	'Class:UserRequest/Method:ResolveChildTickets' => 'Resolver tickets hijos',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
 ));
 
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
 	'Organization:Overview:Tickets' => 'Tickets for this organization~~',

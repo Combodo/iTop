@@ -409,7 +409,7 @@ abstract class CMDBObject extends DBObject
 			$oMyChangeOp->Set("newvalue", $value);
 			$iId = $oMyChangeOp->DBInsertNoReload();
 		}
-        elseif ($oAttDef instanceOf AttributeTagSet)
+        elseif ($oAttDef instanceOf AttributeSet)
         {
             // Tag Set
             //

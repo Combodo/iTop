@@ -52,6 +52,8 @@ class SetupUtils
 	// -- Minimum versions (requirements : forbids installation if not met)
 	const PHP_MIN_VERSION = '5.6.0'; // 5.6 will be supported until the end of 2018 (see http://php.net/supported-versions.php)
 	const MYSQL_MIN_VERSION = '5.6.0'; // 5.6 to have fulltext on InnoDB for Tags fields (N°931)
+	const MYSQL_NOT_VALIDATED_VERSION = '8.0.0'; //Mysql 8 not validated as of iTop 2.6
+
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
 	const PHP_NEXT_MIN_VERSION = ''; // no new PHP requirement for next iTop version
 	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for next iTop version
@@ -90,12 +92,30 @@ class SetupUtils
 		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 
-		$aMandatoryExtensions = array('mysqli', 'iconv', 'simplexml', 'soap', 'hash', 'json', 'session', 'pcre', 'dom', 'zlib', 'zip');
-		$aOptionalExtensions = array( 'mcrypt, sodium or openssl' => array(  'mcrypt' => 'Strong encryption will not be used.',
-			'sodium' => 'Strong encryption will not be used.',
-			'openssl' => 'Strong encryption will not be used.',),
+		$aMandatoryExtensions = array(
+			'mysqli',
+			'iconv',
+			'simplexml',
+			'soap',
+			'hash',
+			'json',
+			'session',
+			'pcre',
+			'dom',
+			'zlib',
+			'zip',
+		);
+		$aOptionalExtensions = array(
+			'mcrypt, sodium or openssl' =>
+				array(
+					'mcrypt' => 'Strong encryption will not be used.',
+					'sodium' => 'Strong encryption will not be used.',
+					'openssl' => 'Strong encryption will not be used.',
+				),
 			'ldap' => 'LDAP authentication will be disabled.',
-			'gd' => 'PDF export will be disabled. Also, image resizing will be disabled on profile pictures (May increase database size).');
+			'gd' => 'test image type (always returns false if not installed), image resizing, PDF export',
+		);
+
 		asort($aMandatoryExtensions); // Sort the list to look clean !
 		ksort($aOptionalExtensions); // Sort the list to look clean !
 		$aExtensionsOk = array();
@@ -1215,10 +1235,19 @@ EOF
 	 *
 	 * @return boolean false if DB doesn't meet the minimum version requirement
 	 */
-	private static function CheckDbServerVersion(&$aResult, $oDBSource)
+	static private function CheckDbServerVersion(&$aResult, $oDBSource)
 	{
+		$sDBVendor= $oDBSource->GetDBVendor();
 		$sDBVersion = $oDBSource->GetDBVersion();
-		if (version_compare($sDBVersion, self::MYSQL_MIN_VERSION, '>='))
+		$bRet = false;
+		
+		if (version_compare($sDBVersion, self::MYSQL_NOT_VALIDATED_VERSION, '>=') && ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL)) 
+		{
+			$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
+				"Error: Current MySQL version is $sDBVersion. iTop doesn't yet support MySQL ".self::MYSQL_NOT_VALIDATED_VERSION." and above.");
+			$bRet = false;
+		}
+		else if (version_compare($sDBVersion, self::MYSQL_MIN_VERSION, '>='))
 		{
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO,
 				"Current MySQL version ($sDBVersion), greater than minimum required version (".self::MYSQL_MIN_VERSION.")");
@@ -1238,13 +1267,16 @@ EOF
 				}
 			}
 
-			return true;
+			$bRet = true;
+		}
+		else
+		{
+			$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
+				"Error: Current MySQL version is $sDBVersion, minimum required version is ".self::MYSQL_MIN_VERSION);
+			$bRet = false;
 		}
 
-		$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
-			"Error: Current MySQL version is $sDBVersion, minimum required version is ".self::MYSQL_MIN_VERSION);
-
-		return false;
+		return $bRet;
 	}
 
 	/**
