@@ -58,7 +58,7 @@ try
 
 
 	$operation = utils::ReadParam('operation', '');
-	$sFilter = stripslashes(utils::ReadParam('filter', '', false, 'raw_data'));
+	$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 	$sEncoding = utils::ReadParam('encoding', 'serialize');
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
 	$sStyle = utils::ReadParam('style', 'list');
