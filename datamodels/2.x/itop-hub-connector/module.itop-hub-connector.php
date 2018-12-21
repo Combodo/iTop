@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-hub-connector/2.5.0',
+	'itop-hub-connector/2.6.0',
 	array(
 		// Identification
 		//
@@ -24,7 +24,8 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'menus.php',
-			'model.itop-hub-connector.php'
+		    'hubnewsroomprovider.class.inc.php',
+		    'model.itop-hub-connector.php'
 		),
 		'webservice' => array(
 			

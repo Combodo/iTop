@@ -19,7 +19,7 @@
 
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
-define('ITOP_VERSION', '2.6.0-dev');
+define('ITOP_VERSION', '2.7.0-dev');
 define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');
 
@@ -94,7 +94,7 @@ class Config
 	protected $m_aSettings = array(
 		'app_env_label' => array(
 			'type' => 'string',
-			'description' => 'Label displayed to describe the current application environnment, defaults to the environment name (e.g. "production")',
+			'description' => 'Label displayed to describe the current application environment, defaults to the environment name (e.g. "production")',
 			'default' => '',
 			'value' => '',
 			'source_of_value' => '',
@@ -167,7 +167,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_character_set' => array( // @deprecated to remove in 2.7 ? #1001 utf8mb4 switch
+		'db_character_set' => array( // @deprecated to remove in 2.7 ? N°1001 utf8mb4 switch
 			'type' => 'string',
 			'description' => 'Deprecated since iTop 2.5 : now using utf8mb4',
 			'default' => 'DEPRECATED_2.5',
@@ -175,7 +175,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_collation' => array( // @deprecated to remove in 2.7 ? #1001 utf8mb4 switch
+		'db_collation' => array( // @deprecated to remove in 2.7 ? N°1001 utf8mb4 switch
 			'type' => 'string',
 			'description' => 'Deprecated since iTop 2.5 : now using utf8mb4_unicode_ci',
 			'default' => 'DEPRECATED_2.5',
@@ -201,7 +201,7 @@ class Config
 		),
 		'skip_strong_security' => array(
 			'type' => 'bool',
-			'description' => 'Disable strong security - TEMPORY: this flag should be removed when we are more confident in the recent change in security',
+			'description' => 'Disable strong security - TEMPORARY: this flag should be removed when we are more confident in the recent change in security',
 			'default' => true,
 			'value' => true,
 			'source_of_value' => '',
@@ -217,7 +217,7 @@ class Config
 		),
 		'query_indentation_enabled' => array(
 			'type' => 'bool',
-			'description' => 'For developpers: format the SQL queries for human analysis',
+			'description' => 'For developers: format the SQL queries for human analysis',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
@@ -225,7 +225,7 @@ class Config
 		),
 		'disable_mandatory_ext_keys' => array(
 			'type' => 'bool',
-			'description' => 'For developpers: allow every external keys to be undefined',
+			'description' => 'For developers: allow every external keys to be undefined',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
@@ -450,7 +450,7 @@ class Config
 		),
 		'email_transport' => array(
 			'type' => 'string',
-			'description' => 'Mean to send emails: PHPMail (uses the function mail()) or SMTP (implements the client protocole)',
+			'description' => 'Mean to send emails: PHPMail (uses the function mail()) or SMTP (implements the client protocol)',
 			'default' => "PHPMail",
 			'value' => "PHPMail",
 			'source_of_value' => '',
@@ -546,7 +546,7 @@ class Config
 		),
 		'timezone' => array(
 			'type' => 'string',
-			'description' => 'Timezone (reference: http://php.net/manual/en/timezones.php). If empty, it will be left unchanged and MUST be explicitely configured in PHP',
+			'description' => 'Timezone (reference: http://php.net/manual/en/timezones.php). If empty, it will be left unchanged and MUST be explicitly configured in PHP',
 			// examples... not used (nor 'description')
 			'examples' => array(
 				'America/Sao_Paulo',
@@ -944,7 +944,7 @@ class Config
 		),
 		'tracking_level_linked_set_default' => array(
 			'type' => 'integer',
-			'description' => 'Default tracking level if not explicitely set at the attribute level, for AttributeLinkedSet (defaults to NONE in case of a fresh install, LIST otherwise - this to preserve backward compatibility while upgrading from a version older than 2.0.3 - see TRAC #936)',
+			'description' => 'Default tracking level if not explicitly set at the attribute level, for AttributeLinkedSet (defaults to NONE in case of a fresh install, LIST otherwise - this to preserve backward compatibility while upgrading from a version older than 2.0.3 - see TRAC #936)',
 			'default' => LINKSET_TRACKING_LIST,
 			'value' => LINKSET_TRACKING_LIST,
 			'source_of_value' => '',
@@ -952,7 +952,7 @@ class Config
 		),
 		'tracking_level_linked_set_indirect_default' => array(
 			'type' => 'integer',
-			'description' => 'Default tracking level if not explicitely set at the attribute level, for AttributeLinkedSetIndirect',
+			'description' => 'Default tracking level if not explicitly set at the attribute level, for AttributeLinkedSetIndirect',
 			'default' => LINKSET_TRACKING_ALL,
 			'value' => LINKSET_TRACKING_ALL,
 			'source_of_value' => '',
@@ -993,7 +993,7 @@ class Config
 		'transaction_storage' => array(
 			'type' => 'string',
 			'description' => 'The type of mechanism to use for storing the unique identifiers for transactions (Session|File).',
-			'default' => 'Session',
+			'default' => 'File',
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
@@ -1065,7 +1065,7 @@ class Config
 		'draft_attachments_lifetime' => array(
 			'type' => 'integer',
 			'description' => 'Lifetime (in seconds) of drafts\' attachments and inline images: after this duration, the garbage collector will delete them.',
-			'default' => 3600,
+			'default' => 86400,
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
@@ -1126,6 +1126,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
+		'optimize_requests_for_join_count' => array(
+			'type' => 'bool',
+			'description' => 'Optimize request joins to minimize the count (default is true, try to set it to false in case of performance issues)',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
 		'high_cardinality_classes' => array(
 			'type' => 'array',
 			'description' => 'List of classes with high cardinality (Force manual submit of search)',
@@ -1133,6 +1141,22 @@ class Config
 			'value' => array(),
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
+		),
+		'newsroom_enabled' => array(
+			'type' => 'bool',
+			'description' => 'Whether or not the whole newsroom is enabled',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'regenerate_session_id_enabled' => array(
+			'type' => 'bool',
+			'description' => 'If true then session id will be regenerated on each login, to prevent session fixation.',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
 		),
 	);
 

@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,12 +15,37 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+//
+// Class: Problem
+//
+Dict::Add('FR FR', 'French', 'Français', array(
+        'Menu:ProblemManagement' => 'Gestion des problèmes',
+        'Menu:ProblemManagement+' => 'Gestion des problèmes',
+    	'Menu:Problem:Overview' => 'Vue d\'ensemble',
+    	'Menu:Problem:Overview+' => 'Vue d\'ensemble',
+    	'Menu:NewProblem' => 'Nouveau problème',
+    	'Menu:NewProblem+' => 'Nouveau problème',
+    	'Menu:SearchProblems' => 'Rechercher des problèmes',
+    	'Menu:SearchProblems+' => 'Rechercher des problèmes',
+    	'Menu:Problem:Shortcuts' => 'Raccourcis',
+        'Menu:Problem:MyProblems' => 'Mes problèmes',
+        'Menu:Problem:MyProblems+' => 'Mes problèmes',
+        'Menu:Problem:OpenProblems' => 'Problèmes ouverts',
+        'Menu:Problem:OpenProblems+' => 'Problèmes ouverts',
+	'UI-ProblemManagementOverview-ProblemByService' => 'Problèmes par service',
+	'UI-ProblemManagementOverview-ProblemByService+' => 'Problèmes par service',
+	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problèmes par priorité',
+	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problèmes par priorité',
+	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Problèmes non affectés à un agent',
+	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Problèmes non affectés à un agent',
+	'UI:ProblemMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Problèmes',
+	'UI:ProblemMgmtMenuOverview:Title+' => 'Tableau de bord de la Gestion des Problèmes',
 
+));
 //
 // Class: Problem
 //
@@ -99,30 +124,3 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Problem/Stimulus:ev_close' => 'Fermer',
 	'Class:Problem/Stimulus:ev_close+' => '',
 ));
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Menu:Problem:KnownErrors' => 'Erreurs connues',
-	'Menu:Problem:KnownErrors+' => 'Erreurs connues',
-	'Menu:ProblemManagement' => 'Gestion des problèmes',
-	'Menu:ProblemManagement+' => 'Gestion des problèmes',
-	'Menu:Problem:Overview' => 'Vue d\'ensemble',
-	'Menu:Problem:Overview+' => 'Vue d\'ensemble',
-	'Menu:NewProblem' => 'Nouveau problème',
-	'Menu:NewProblem+' => 'Nouveau problème',
-	'Menu:SearchProblems' => 'Rechercher des problèmes',
-	'Menu:SearchProblems+' => 'Rechercher des problèmes',
-	'Menu:Problem:Shortcuts' => 'Raccourcis',
-	'Menu:Problem:MyProblems' => 'Mes problèmes',
-	'Menu:Problem:MyProblems+' => 'Mes problèmes',
-	'Menu:Problem:OpenProblems' => 'Problèmes ouverts',
-	'Menu:Problem:OpenProblems+' => 'Problèmes ouverts',
-	'UI-ProblemManagementOverview-ProblemByService' => 'Problèmes par service',
-	'UI-ProblemManagementOverview-ProblemByService+' => 'Problèmes par service',
-	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problèmes par priorité',
-	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problèmes par priorité',
-	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Problèmes non affectés à un agent',
-	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Problèmes non affectés à un agent',
-	'UI:ProblemMgmtMenuOverview:Title' => 'Tableau de bord de la Gestion des Problèmes',
-	'UI:ProblemMgmtMenuOverview:Title+' => 'Tableau de bord de la Gestion des Problèmes',
-));
-?>

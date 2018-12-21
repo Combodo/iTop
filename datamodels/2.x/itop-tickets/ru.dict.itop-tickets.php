@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,11 +8,9 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
 //
 // Class: Ticket
 //
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Ticket' => 'Тикет',
 	'Class:Ticket+' => '',
@@ -49,7 +46,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Ticket/Attribute:close_date+' => '',
 	'Class:Ticket/Attribute:private_log' => 'Внутренний журнал',
 	'Class:Ticket/Attribute:private_log+' => 'Информация внутреннего журнала недоступна пользователям портала',
-	'Class:Ticket/Attribute:contacts_list' => 'Контакты',
+    'Class:Ticket/Attribute:contacts_list' => 'Контакты',
 	'Class:Ticket/Attribute:contacts_list+' => 'Все контакты, связанные с этим тикетом',
 	'Class:Ticket/Attribute:functionalcis_list' => 'КЕ',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Все конфигурационные единицы, на которые влияет этот тикет. Элементы, отмеченные как "Вычислено" автоматически считаются затронутыми и участвуют в анализе влияния. Элементы, отмеченные как "Не влияет" исключены из анализа.',
@@ -209,6 +206,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:cmdbAbstractObject/Method:Copy/Param:1+' => 'The field to set, in the current object~~',
 	'Class:cmdbAbstractObject/Method:Copy/Param:2' => 'Source Field~~',
 	'Class:cmdbAbstractObject/Method:Copy/Param:2+' => 'The field to get the value from, in the current object~~',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus' => 'ApplyStimulus~~',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus+' => 'Apply the specified stimulus to the current object~~',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1' => 'Stimulus code~~',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1+' => 'A valid stimulus code for the current class~~',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'Time To Own~~',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTO~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
@@ -224,5 +225,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'В работе',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Решенные',
 	'Brick:Portal:ClosedRequests:Title' => 'Закрытые запросы',
-
-	));
+));

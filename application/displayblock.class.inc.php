@@ -355,7 +355,7 @@ class DisplayBlock
 		{
 
 			// In case of search, the context filtering is done by the search itself
-			if (($this->m_sStyle != 'links') && ($this->m_sStyle != 'search'))
+			if (($this->m_sStyle != 'links') && ($this->m_sStyle != 'search') && ($this->m_sStyle != 'list_search'))
 			{
 				$oAppContext = new ApplicationContext();
 				$sClass = $this->m_oFilter->GetClass();
@@ -616,6 +616,7 @@ class DisplayBlock
 			}
 			break;
 
+			case 'list_search':
 			case 'list':
 			$aClasses = $this->m_oSet->GetSelectedClasses();
 			$aAuthorizedClasses = array();

@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,13 +15,13 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2014 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Menu:DataSources' => 'Synchronization Data Sources~~',
+	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
 	'Menu:WelcomeMenu' => 'Hoşgeldiniz',
 	'Menu:WelcomeMenu+' => 'iTop\'a Hoşgeldiniz',
 	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',
@@ -40,6 +40,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
 	'Menu:RunQueriesMenu' => 'Sorgu çalıştır',
 	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',
+	'Menu:QueryMenu' => 'Query phrasebook~~',
+	'Menu:QueryMenu+' => 'Query phrasebook~~',
 	'Menu:UniversalSearchMenu' => 'Genel sorgu',
 	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',
 	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi',
@@ -50,9 +52,5 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
-	'Menu:DataSources' => 'Synchronization Data Sources~~',
-	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
-	'Menu:QueryMenu' => 'Query phrasebook~~',
-	'Menu:QueryMenu+' => 'Query phrasebook~~',
 	'Menu:MyShortcuts' => 'My Shortcuts~~',
 ));

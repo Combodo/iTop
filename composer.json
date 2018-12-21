@@ -9,7 +9,9 @@
     "ext-json": "*",
     "ext-zip": "*",
     "ext-mysqli": "*",
-    "ext-dom": "*"
+    "ext-dom": "*",
+    "ext-iconv": "*",
+    "ext-gd": "*"
   },
   "config": {
     "platform": {

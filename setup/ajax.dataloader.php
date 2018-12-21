@@ -147,6 +147,11 @@ header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
 $sOperation = Utils::ReadParam('operation', '');
 try
 {
+	if (is_file(utils::GetConfigFilePath()) && !is_writable(utils::GetConfigFilePath()))
+	{
+		throw new Exception('Setup operations are not allowed outside of the setup');
+	}
+
 	switch($sOperation)
 	{
 		case 'async_action':

@@ -1,10 +1,9 @@
 <?php
-
 // Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,13 +15,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license	 http://opensource.org/licenses/AGPL-3.0
  */
-
-
 // Portal
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Page:DefaultTitle' => 'Portal do usuário iTop',
@@ -66,6 +62,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:File:None' => 'Nenhum arquivo',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Abrir</a> / <a href="%4$s" class="file_download_link">Download</a>',
+	'Portal:Calendar-FirstDayOfWeek' => 'pt-br', //work with moment.js locales
 ));
 
 // UserProfile brick
@@ -80,6 +77,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Não é possível alterar a senha, entre em contato com a T.I.',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Informações pessoais',
 	'Brick:Portal:UserProfile:Photo:Title' => 'Foto',
+));
+
+// AggregatePageBrick
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard~~',
 ));
 
 // BrowseBrick brick
@@ -104,16 +106,16 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Manage:Table:NoData' => 'Sem dados.',
     'Brick:Portal:Manage:Table:ItemActions' => 'Ações',
     'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
-    'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
-    'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
-    'Brick:Portal:Manage:Others' => 'Others~~',
-    'Brick:Portal:Manage:All' => 'All~~',
-    'Brick:Portal:Manage:Group' => 'Group~~',
-    'Brick:Portal:Manage:fct:count' => 'Total~~',
-    'Brick:Portal:Manage:fct:sum' => 'Sum~~',
-    'Brick:Portal:Manage:fct:avg' => 'Average~~',
-    'Brick:Portal:Manage:fct:min' => 'Min~~',
-    'Brick:Portal:Manage:fct:max' => 'Max~~',
+	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
+	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
+	'Brick:Portal:Manage:Others' => 'Others~~',
+	'Brick:Portal:Manage:All' => 'All~~',
+	'Brick:Portal:Manage:Group' => 'Group~~',
+	'Brick:Portal:Manage:fct:count' => 'Total~~',
+	'Brick:Portal:Manage:fct:sum' => 'Sum~~',
+	'Brick:Portal:Manage:fct:avg' => 'Average~~',
+	'Brick:Portal:Manage:fct:min' => 'Min~~',
+	'Brick:Portal:Manage:fct:max' => 'Max~~',
 ));
 
 // ObjectBrick brick
@@ -126,7 +128,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Object:Form:Message:Saved' => 'Salvo',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Selecionar %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecinar %1$s (%2$s)',
-	));
+));
 
 // CreateBrick brick
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(

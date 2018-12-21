@@ -180,7 +180,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		/**
 		 * utf8mb4 was added in MySQL 5.5.3 but works with programs like mysqldump only since MySQL 5.5.33
 		 *
-		 * @since 2.5 see #1001
+		 * @since 2.5 see N°1001
 		 */
 		const MYSQL_VERSION_WITH_UTF8MB4_IN_PROGRAMS = '5.5.33';
 

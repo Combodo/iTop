@@ -403,7 +403,7 @@ EOF
 		// Current extkey value, so we can display event if it is not available anymore (eg. archived).
 		$iCurrentExtKeyId = (is_null($oObj)) ? 0 : $oObj->Get($this->sAttCode);
 
-		$oBlock = new DisplayBlock($oFilter, 'list', false, array('query_params' => array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId)));
+		$oBlock = new DisplayBlock($oFilter, 'list_search', false, array('query_params' => array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId)));
 		$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'table_id' => 'select_'.$this->sAttCode)); // Don't display the 'Actions' menu on the results
 	}
 
@@ -435,41 +435,15 @@ EOF
 		$oValuesSet->SetLimit($iMax);
 		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
-
-		if (empty($sOperation) || 'equals_start_with' == $sOperation)
-        {
-            $aValues = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'equals');
-            asort($aValues);
-
-            $iMax -= count($aValues);
-            if ($iMax > 0 ) {
-                $oValuesSet->SetLimit($iMax);
-                $aValuesStartWith = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
-                asort($aValuesStartWith);
-                foreach ($aValuesStartWith as $sKey => $sFriendlyName) {
-                    if (!isset($aValues[$sKey])) {
-                        $aValues[$sKey] = $sFriendlyName;
-                    }
-                }
-            }
-        }
-        else
-        {
-            $aValues = array();
-        }
-
-		$iMax -= count($aValues);
-		if ($iMax > 0 && (empty($sOperation) || 'contains' == $sOperation))
+		$oValuesSet->SetLimit($iMax);
+		$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
+		asort($aValuesContains);
+		$aValues = array();
+		foreach($aValuesContains as $sKey => $sFriendlyName)
 		{
-			$oValuesSet->SetLimit($iMax);
-			$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
-			asort($aValuesContains);
-			foreach($aValuesContains as $sKey => $sFriendlyName)
+			if (!isset($aValues[$sKey]))
 			{
-				if (!isset($aValues[$sKey]))
-				{
-					$aValues[$sKey] = $sFriendlyName;
-				}
+				$aValues[$sKey] = $sFriendlyName;
 			}
 		}
 

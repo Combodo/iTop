@@ -99,8 +99,8 @@
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-visible/js/jquery.visible.min.js'|add_itop_version }}"></script>
         {# Base64.js #}
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-base64/js/jquery.base64.min.js'|add_itop_version }}"></script>
-		{# Moment.js #}
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/moment/js/moment.min.js'|add_itop_version }}"></script>
+		{# Moment.js with locales#}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/moment-with-locales.min.js'|add_itop_version }}"></script>
 		{# Datatables #}
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/jquery.dataTables.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.bootstrap.min.js'|add_itop_version }}"></script>
@@ -171,7 +171,7 @@
 								<span class="icon-bar"></span>
 							</button>
 							{% block pNavigationTopMenuLogo %}
-								<a class="navbar-brand pull-right" href="{{ app.url_generator.generate('p_home') }}">
+								<a class="navbar-brand pull-right" href="{{ get_config_parameter('app_icon_url') }}">
 									{% if app['combodo.portal.instance.conf'].properties.logo is not null %}
 										<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
 									{% else %}
@@ -189,7 +189,7 @@
 						<div class="collapse navbar-collapse" id="navbar">
 							<ul class="nav navbar-nav">
 								{% block pNavigationTopBricks %}
-									<li class="{% if oBrick is not defined %}active{% endif %}">
+									<li class="brick_menu_item {% if oBrick is not defined %}active{% endif %}">
 										<a href="{{ app.url_generator.generate('p_home') }}">
 											<span class="brick_icon fa fa-home fa-2x"></span>
 											{{ 'Page:Home'|dict_s }}
@@ -197,7 +197,7 @@
 									</li>
 									{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
 										{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
-											<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
+											<li class="brick_menu_item {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}" data-brick-id="{{ brick.GetId }}">
 												<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
 													<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
 													{{ brick.GetTitleNavigationMenu|dict_s }}
@@ -266,7 +266,7 @@
 					<div class="menu">
 						{% block pNavigationSideMenu %}
 							<ul class="nav navbar-nav">
-								<li class="{% if oBrick is not defined %}active{% endif %}">
+								<li class="brick_menu_item {% if oBrick is not defined %}active{% endif %}">
 									<a href="{{ app.url_generator.generate('p_home') }}">
 										<span class="brick_icon fa fa-home fa-2x"></span>
 										{{ 'Page:Home'|dict_s }}
@@ -274,7 +274,7 @@
 								</li>
 								{% for brick in app['combodo.portal.instance.conf'].bricks_ordering.navigation_menu %}
 									{% if brick.GetActive and brick.GetVisibleNavigationMenu and brick.GetRouteName is not null %}
-										<li class="{% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}">
+										<li class="brick_menu_item {% if oBrick is defined and brick.id == oBrick.id %}active{% endif %}" data-brick-id="{{ brick.GetId }}">
 											<a href="{{ app.url_generator.generate(brick.GetRouteName, {sBrickId: brick.GetId}) }}{% if app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] is defined %}#{{ app['combodo.portal.instance.routes'][brick.GetRouteName]['hash'] }}{% endif %}" {% if app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] is defined %}{% for key, value in app['combodo.portal.instance.routes'][brick.GetRouteName]['navigation_menu_attr'] %} {{ key }}="{{ value }}"{% endfor %}{% endif %} {% if brick.GetModal %}data-toggle="modal" data-target="#modal-for-all"{% endif %}>
 												<span class="brick_icon {{ brick.GetDecorationClassNavigationMenu }}"></span>
 												{{ brick.GetTitleNavigationMenu|dict_s }}
@@ -299,7 +299,7 @@
 								{% if app['debug'] %}
 									<div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug : Taille <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
 								{% endif %}
-								<a href="{{ app.url_generator.generate('p_home') }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
+								<a href="{{ get_config_parameter('app_icon_url') }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">
 									<img src="{{ app['combodo.portal.instance.conf'].properties.logo }}" alt="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}" />
 								</a>
 							{% endblock %}
@@ -351,7 +351,7 @@
 		</footer>
 	
 		{% block pModalForAllWrapper %}
-			<div class="modal fade" id="modal-for-all" role="dialog">
+			<div class="modal fade" id="modal-for-all" role="dialog" tabindex="-1">
 				<div class="modal-dialog modal-lg" role="document">
 					<div class="modal-content">
 						{% include 'itop-portal-base/portal/src/views/helpers/loader.html.twig' %}
@@ -360,7 +360,7 @@
 			</div>
 		{% endblock %}
 		{% block pModalForAlert %}
-			<div class="modal fade" id="modal-for-alert" role="dialog">
+			<div class="modal fade" id="modal-for-alert" role="dialog" tabindex="-1">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">

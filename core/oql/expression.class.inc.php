@@ -2022,6 +2022,9 @@ class FunctionExpression extends Expression
 	}
 }
 
+/**
+ * @see https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
+ */
 class IntervalExpression extends Expression
 {
 	protected $m_oValue; // expression
