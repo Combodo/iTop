@@ -148,6 +148,31 @@ abstract class DBObject implements iDisplay
 				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
 		}
+
+		$this->UpdateMetaAttributes();
+	}
+
+	/**
+	 * Update meta-attributes depending on the given attribute list
+	 *
+	 * @param array|null $aAttCodes List of att codes
+	 *
+	 * @throws \CoreException
+	 */
+	protected function UpdateMetaAttributes($aAttCodes = null)
+	{
+		if (is_null($aAttCodes))
+		{
+			$aAttCodes = MetaModel::GetAttributesList(get_class($this));
+		}
+		foreach ($aAttCodes as $sAttCode)
+		{
+			foreach (MetaModel::ListMetaAttributes(get_class($this), $sAttCode) as $sMetaAttCode => $oMetaAttDef)
+			{
+				/** @var \AttributeMetaEnum $oMetaAttDef */
+				$this->_Set($sMetaAttCode, $oMetaAttDef->MapValue($this));
+			}
+		}
 	}
 
 	// Read-only <=> Written once (archive)
@@ -432,11 +457,7 @@ abstract class DBObject implements iDisplay
 		}
 		$this->_Set($sAttCode, $realvalue);
 
-		foreach (MetaModel::ListMetaAttributes(get_class($this), $sAttCode) as $sMetaAttCode => $oMetaAttDef)
-		{
-			/** @var \AttributeMetaEnum $oMetaAttDef */
-			$this->_Set($sMetaAttCode, $oMetaAttDef->MapValue($this));
-		}
+		$this->UpdateMetaAttributes(array($sAttCode));
 
 		// The object has changed, reset caches
 		$this->m_bCheckStatus = null;
