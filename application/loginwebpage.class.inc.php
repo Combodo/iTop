@@ -564,12 +564,15 @@ EOF
 
 				case 'external':
 				// Web server supplied authentication
-				$bExternalAuth = false;
-				$sExtAuthVar = MetaModel::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the info passed ?
+				$sExtAuthVar = MetaModel::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the username passed?
+				$sExtAuthTokenVar = MetaModel::GetConfig()->GetExternalAuthenticationTokenVariable(); // In which variable is the token passed?
 				eval('$sAuthUser = isset('.$sExtAuthVar.') ? '.$sExtAuthVar.' : false;'); // Retrieve the value
-				if ($sAuthUser && (strlen($sAuthUser) > 0))
+				eval('$sAuthPwd = isset('.$sExtAuthTokenVar.') ? '.$sExtAuthTokenVar.' : false;'); // Retrieve the value. Named 'password' here to be in line with other authentication methods for further processing.
+
+				// Either the user variable is set; or if this is the only method (external) enabled to authenticate: make sure redirect URL can be used if set.
+				// The count is one and it is obviously an external case, so login mode is external (only). This is important later to check if redirect to a URL is needed.
+				if ( ($sAuthUser && (strlen($sAuthUser) > 0)) || count($aAllowedLoginTypes) == 1 ) 
 				{
-					$sAuthPwd = ''; // No password in this case the web server already authentified the user...
 					$sLoginMode = 'external';
 					$sAuthentication = 'external';
 				}
@@ -652,9 +655,27 @@ EOF
 				}
 				else
 				{
-					$oPage = self::NewLoginWebPage();
-					$oPage->DisplayLoginForm( $sLoginMode, true /* failed attempt */);
-					$oPage->output();
+					switch($sAuthentication)
+					{
+						case 'external':
+						 
+							$sExtAuthUrl = MetaModel::GetConfig()->GetExternalAuthenticationUrl();
+							if($sExtAuthUrl != '')
+							{
+								// Redirect URL is set. Show external login page instead of internal login form.
+								header('Location: '.$sExtAuthUrl);
+								break;
+							}
+							
+							// Else, fallthrough 
+						
+						default:
+								
+							$oPage = self::NewLoginWebPage();
+							$oPage->DisplayLoginForm( $sLoginMode, true /* failed attempt */);
+							$oPage->output();
+							
+					}
 					exit;
 				}
 			}

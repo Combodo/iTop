@@ -36,4 +36,6 @@
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserExternal' => 'Externe gebruiker',
 	'Class:UserExternal+' => 'Gebruiker aangemeld via externe authenticatie',
+	'Class:UserExternal/Attribute:token' => 'Token',
+	'Class:UserExternal/Attribute:token+' => 'Token of andere verificatiestring',
 ));

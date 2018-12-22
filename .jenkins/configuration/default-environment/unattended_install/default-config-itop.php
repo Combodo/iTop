@@ -140,8 +140,15 @@ $MySettings = array(
 
 	'encryption_key' => '@iT0pEncr1pti0n!',
 
+	// ext_auth_variable: specify a PHP variable which contains the username when external authentication is used.
 	'ext_auth_variable' => '$_SERVER[\'REMOTE_USER\']',
 
+	// ext_auth_token_variable: specify a variable which contains the /authentication string/token when external authentication is used. For compatibility reasons, this is empty (=unused) by default.
+	'ext_auth_token_variable' => '',
+	
+	// ext_auth_url: specify a URL where the user should authenticate. For compatibility reasons, this is empty (=unused) by default.
+	'ext_auth_url' => '',
+	
 	'fast_reload_interval' => '60',
 
 	// graphviz_path: Path to the Graphviz "dot" executable for graphing objects lifecycle

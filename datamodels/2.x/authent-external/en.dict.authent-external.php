@@ -38,4 +38,6 @@
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserExternal' => 'External user',
 	'Class:UserExternal+' => 'User authentified outside of iTop',
+	'Class:UserExternal/Attribute:token' => 'Token',
+	'Class:UserExternal/Attribute:token+' => 'User authentication string',
 ));

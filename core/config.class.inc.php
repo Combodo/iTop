@@ -65,6 +65,8 @@ define('DEFAULT_FAST_RELOAD_INTERVAL', 1 * 60);
 define('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
 define('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|basic|external');
 define('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
+define('DEFAULT_EXT_AUTH_TOKEN_VARIABLE', ''); // For backward compatibility, this is empty by default.
+define('DEFAULT_EXT_AUTH_URL', ''); // For backward compatibility, this is empty by default.
 define('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random generated key later (if possible)
 define('DEFAULT_ENCRYPTION_LIB', 'Mcrypt'); // We'll define the best encryption available later
 /**
@@ -1273,10 +1275,20 @@ class Config
 	protected $m_sAllowedLoginTypes;
 
 	/**
-	 * @var string Name of the PHP variable in which external authentication information is passed by the web server
+	 * @var string Name of the PHP variable in which external authentication information (username) is passed by the web server
 	 */
 	protected $m_sExtAuthVariable;
 
+	/**
+	 * @var string Name of the PHP variable in which external authentication information (token) is passed by the web server
+	 */
+	protected $m_sExtAuthTokenVariable;
+	
+	/**
+	 * @var string Optional: external URL where user should authenticate.
+	 */
+	protected $m_sExtAuthUrl;
+		
 	/**
 	 * @var string Encryption key used for all attributes of type "encrypted string". Can be set to a random value
 	 *             unless you want to import a database from another iTop instance, in which case you must use
@@ -1336,6 +1348,8 @@ class Config
 		$this->m_sDefaultLanguage = 'EN US';
 		$this->m_sAllowedLoginTypes = DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
+		$this->m_sExtAuthTokenVariable = DEFAULT_EXT_AUTH_TOKEN_VARIABLE;
+		$this->m_sExtAuthUrl = DEFAULT_EXT_AUTH_URL;
 		$this->m_aCharsets = array();
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
 
@@ -1489,6 +1503,8 @@ class Config
 		$this->m_sDefaultLanguage = isset($MySettings['default_language']) ? trim($MySettings['default_language']) : 'EN US';
 		$this->m_sAllowedLoginTypes = isset($MySettings['allowed_login_types']) ? trim($MySettings['allowed_login_types']) : DEFAULT_ALLOWED_LOGIN_TYPES;
 		$this->m_sExtAuthVariable = isset($MySettings['ext_auth_variable']) ? trim($MySettings['ext_auth_variable']) : DEFAULT_EXT_AUTH_VARIABLE;
+		$this->m_sExtAuthTokenVariable = isset($MySettings['ext_auth_token_variable']) ? trim($MySettings['ext_auth_token_variable']) : DEFAULT_EXT_AUTH_TOKEN_VARIABLE;
+		$this->m_sExtAuthUrl = isset($MySettings['ext_auth_url']) ? trim($MySettings['ext_auth_url']) : DEFAULT_EXT_AUTH_URL;
 		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : $this->m_sEncryptionKey;
 		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
 		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : array();
@@ -1628,6 +1644,16 @@ class Config
 		return $this->m_sExtAuthVariable;
 	}
 
+	public function GetExternalAuthenticationTokenVariable()
+	{
+		return $this->m_sExtAuthTokenVariable;
+	}
+
+	public function GetExternalAuthenticationUrl()
+	{
+		return $this->m_sExtAuthUrl;
+	}
+	
 	public function GetCSVImportCharsets()
 	{
 		return $this->m_aCharsets;
@@ -1693,6 +1719,16 @@ class Config
 		$this->m_sExtAuthVariable = $sExtAuthVariable;
 	}
 
+	public function SetExternalAuthenticationTokenVariable($sExtAuthTokenVariable)
+	{
+		$this->m_sExtAuthTokenVariable = $sExtAuthTokenVariable;
+	}
+	
+	public function SetExternalAuthenticationUrl($sExtAuthUrl)
+	{
+		$this->m_sExtAuthUrl = $sExtAuthUrl;
+	}
+	
 	public function SetEncryptionKey($sKey)
 	{
 		$this->m_sEncryptionKey = $sKey;
@@ -1745,6 +1781,8 @@ class Config
 		$aSettings['default_language'] = $this->m_sDefaultLanguage;
 		$aSettings['allowed_login_types'] = $this->m_sAllowedLoginTypes;
 		$aSettings['ext_auth_variable'] = $this->m_sExtAuthVariable;
+		$aSettings['ext_auth_token_variable'] = $this->m_sExtAuthTokenVariable;
+		$aSettings['ext_auth_url'] = $this->m_sExtAuthUrl;
 		$aSettings['encryption_key'] = $this->m_sEncryptionKey;
 		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
@@ -1834,6 +1872,8 @@ class Config
 				'default_language' => $this->m_sDefaultLanguage,
 				'allowed_login_types' => $this->m_sAllowedLoginTypes,
 				'ext_auth_variable' => $this->m_sExtAuthVariable,
+				'ext_auth_token_variable' => $this->m_sExtAuthTokenVariable,
+				'ext_auth_url' => $this->m_sExtAuthUrl,
 				'encryption_key' => $this->m_sEncryptionKey,
 				'encryption_library' => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
