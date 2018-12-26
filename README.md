@@ -88,7 +88,6 @@ We would like to give a special thank you to the people from the community who c
 #### Aliases
  - chifu1234
  - cprobst
- - jbostoen
  - Karkoff1212
  - larhip
  - Laura
