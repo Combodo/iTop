@@ -33,46 +33,46 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeLinkedSet' => '对象数组',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 
-	'Core:AttributeDashboard' => 'Dashboard~~',
+	'Core:AttributeDashboard' => '面板',
 	'Core:AttributeDashboard+' => '~~',
 
-	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber' => '电话号码',
 	'Core:AttributePhoneNumber+' => '~~',
 
-	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
+	'Core:AttributeObsolescenceDate' => '报废日期',
 	'Core:AttributeObsolescenceDate+' => '~~',
 
-    'Core:AttributeTagSet' => 'List of tags~~',
-    'Core:AttributeTagSet+' => '~~',
-	'Core:AttributeSet:placeholder' => 'click to add~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+	'Core:AttributeTagSet' => '清单',
+	'Core:AttributeTagSet+' => '',
+	'Core:AttributeSet:placeholder' => '请点击这里添加',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
-    'Core:AttributeCaseLog' => 'Log~~',
-    'Core:AttributeCaseLog+' => '~~',
+	'Core:AttributeCaseLog' => '日志',
+	'Core:AttributeCaseLog+' => '',
 
-    'Core:AttributeMetaEnum' => 'Computed enum~~',
-    'Core:AttributeMetaEnum+' => '~~',
+	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum+' => '~~',
 
-    'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)',
+	'Core:AttributeLinkedSetIndirect' => '对象数组(N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
 
 	'Core:AttributeInteger' => '整数',
-	'Core:AttributeInteger+' => 'Numeric value (could be negative)',
+	'Core:AttributeInteger+' => '整数值(可以为负)',
 
-	'Core:AttributeDecimal' => 'Decimal',
-	'Core:AttributeDecimal+' => 'Decimal value (could be negative)',
+	'Core:AttributeDecimal' => '小数',
+	'Core:AttributeDecimal+' => '小数(可以为负)',
 
 	'Core:AttributeBoolean' => '布尔',
-	'Core:AttributeBoolean+' => 'Boolean',
+	'Core:AttributeBoolean+' => '布尔',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => '是',
 	'Core:AttributeBoolean/Value:no' => '否',
 
 	'Core:AttributeArchiveFlag' => '是否归档',
 	'Core:AttributeArchiveFlag/Value:yes' => '是',
-	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode',
+	'Core:AttributeArchiveFlag/Value:yes+' => '该对象仅在归档模式可见',
 	'Core:AttributeArchiveFlag/Value:no' => '否',
 	'Core:AttributeArchiveFlag/Label' => '已归档',
 	'Core:AttributeArchiveFlag/Label+' => '',
@@ -89,13 +89,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete',
 
 	'Core:AttributeString' => '字符串',
-	'Core:AttributeString+' => 'Alphanumeric string',
+	'Core:AttributeString+' => '字符串',
 
 	'Core:AttributeClass' => '类',
-	'Core:AttributeClass+' => 'Class',
+	'Core:AttributeClass+' => '类别',
 
 	'Core:AttributeApplicationLanguage' => '用户语言',
-	'Core:AttributeApplicationLanguage+' => 'Language and country (EN US)',
+	'Core:AttributeApplicationLanguage+' => '语言和国家地区(EN US)',
 
 	'Core:AttributeFinalClass' => '类 (auto)',
 	'Core:AttributeFinalClass+' => 'Real class of the object (automatically created by the core)',
@@ -126,11 +126,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeEnum' => 'Enum',
 	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings',
 
-	'Core:AttributeTemplateString' => 'Template string',
-	'Core:AttributeTemplateString+' => 'String containing placeholders',
+	'Core:AttributeTemplateString' => '字符模板',
+	'Core:AttributeTemplateString+' => '包含占位符的字符串',
 
 	'Core:AttributeTemplateText' => '文字模板',
-	'Core:AttributeTemplateText+' => 'Text containing placeholders',
+	'Core:AttributeTemplateText+' => '包含占位符的文本',
 
 	'Core:AttributeTemplateHTML' => 'HTML 模板',
 	'Core:AttributeTemplateHTML+' => 'HTML containing placeholders',
@@ -169,7 +169,7 @@ Operators:<br/>
 </p>',
 
 	'Core:AttributeDeadline' => '截止日期',
-	'Core:AttributeDeadline+' => 'Date, displayed relatively to the current time',
+	'Core:AttributeDeadline+' => '日期, 显示与当前的相对时间',
 
 	'Core:AttributeExternalKey' => '外键',
 	'Core:AttributeExternalKey+' => 'External (or foreign) key',
@@ -184,10 +184,10 @@ Operators:<br/>
 	'Core:AttributeURL+' => 'Absolute or relative URL as a text string',
 
 	'Core:AttributeBlob' => 'Blob',
-	'Core:AttributeBlob+' => 'Any binary content (document)',
+	'Core:AttributeBlob+' => '任何二进制内容(文档)',
 
-	'Core:AttributeOneWayPassword' => 'One way password',
-	'Core:AttributeOneWayPassword+' => 'One way encrypted (hashed) password',
+	'Core:AttributeOneWayPassword' => '单向密码',
+	'Core:AttributeOneWayPassword+' => '单向加密(或哈希) 的密码',
 
 	'Core:AttributeTable' => 'Table',
 	'Core:AttributeTable+' => 'Indexed array having two dimensions',
@@ -199,10 +199,10 @@ Operators:<br/>
 	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes',
 
 	'Core:FriendlyName-Label' => '全称',
-	'Core:FriendlyName-Description' => 'Full name',
+	'Core:FriendlyName-Description' => '全称',
 
-	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => 'Tags~~',
+	'Core:AttributeTag' => '标签',
+	'Core:AttributeTag+' => '标签',
 ));
 
 
@@ -279,12 +279,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:CMDBChangeOpSetAttributeScalar' => '属性变更',
-	'Class:CMDBChangeOpSetAttributeScalar+' => 'Object scalar properties change tracking',
+	'Class:CMDBChangeOpSetAttributeScalar' => '属性更改跟踪',
+	'Class:CMDBChangeOpSetAttributeScalar+' => '对象属性更改跟踪',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => '旧值',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'previous value of the attribute',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '以前该属性的值',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => '新值',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'new value of the attribute',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '属性的新值',
 ));
 // Used by CMDBChangeOp... & derived classes
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
@@ -307,10 +307,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:CMDBChangeOpSetAttributeBlob' => '数据修改',
-	'Class:CMDBChangeOpSetAttributeBlob+' => 'data change tracking',
+	'Class:CMDBChangeOpSetAttributeBlob' => '数据变更跟踪',
+	'Class:CMDBChangeOpSetAttributeBlob+' => '数据变更跟踪',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => '之前的值',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'previous contents of the attribute',
+	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '该数据之前的内容',
 ));
 
 //
@@ -318,10 +318,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:CMDBChangeOpSetAttributeText' => '文本修改',
-	'Class:CMDBChangeOpSetAttributeText+' => '跟踪文本修改',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Previous data',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'previous contents of the attribute',
+	'Class:CMDBChangeOpSetAttributeText' => '文本变更跟踪',
+	'Class:CMDBChangeOpSetAttributeText+' => '文本变更跟踪',
+	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => '旧值',
+	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '该文本之前的内容',
 ));
 
 //
@@ -330,14 +330,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Event' => '日志事件',
-	'Class:Event+' => 'An application internal event',
+	'Class:Event+' => '应用程序的内部事件',
 	'Class:Event/Attribute:message' => '消息',
 	'Class:Event/Attribute:message+' => 'short description of the event',
 	'Class:Event/Attribute:date' => '日期',
-	'Class:Event/Attribute:date+' => 'date and time at which the changes have been recorded',
+	'Class:Event/Attribute:date+' => '记录的日期和时间',
 	'Class:Event/Attribute:userinfo' => '用户信息',
 	'Class:Event/Attribute:userinfo+' => 'identification of the user that was doing the action that triggered this event',
-	'Class:Event/Attribute:finalclass' => 'Event sub-class',
+	'Class:Event/Attribute:finalclass' => '事件子类别',
 	'Class:Event/Attribute:finalclass+' => 'Name of the final class',
 ));
 
@@ -496,7 +496,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ActionEmail' => '邮件通知',
 	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:test_recipient' => 'Test recipient',
+	'Class:ActionEmail/Attribute:test_recipient' => '测试收件人',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Detination in case status is set to "Test"',
 	'Class:ActionEmail/Attribute:from' => '发件人',
 	'Class:ActionEmail/Attribute:from+' => 'Will be sent into the email header',
@@ -505,15 +505,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ActionEmail/Attribute:to' => '收件人',
 	'Class:ActionEmail/Attribute:to+' => 'Destination of the email',
 	'Class:ActionEmail/Attribute:cc' => '抄送',
-	'Class:ActionEmail/Attribute:cc+' => 'Carbon Copy',
+	'Class:ActionEmail/Attribute:cc+' => '明文抄送',
 	'Class:ActionEmail/Attribute:bcc' => '密抄',
-	'Class:ActionEmail/Attribute:bcc+' => 'Blind Carbon Copy',
+	'Class:ActionEmail/Attribute:bcc+' => '加密抄送',
 	'Class:ActionEmail/Attribute:subject' => '主题',
-	'Class:ActionEmail/Attribute:subject+' => 'Title of the email',
+	'Class:ActionEmail/Attribute:subject+' => '邮件主题',
 	'Class:ActionEmail/Attribute:body' => '正文',
-	'Class:ActionEmail/Attribute:body+' => 'Contents of the email',
+	'Class:ActionEmail/Attribute:body+' => '邮件内容',
 	'Class:ActionEmail/Attribute:importance' => '重要性',
-	'Class:ActionEmail/Attribute:importance+' => 'Importance flag',
+	'Class:ActionEmail/Attribute:importance+' => '重要性标记',
 	'Class:ActionEmail/Attribute:importance/Value:low' => '低',
 	'Class:ActionEmail/Attribute:importance/Value:low+' => '低',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => '普通',
@@ -530,10 +530,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Trigger' => '触发器',
 	'Class:Trigger+' => 'Custom event handler',
 	'Class:Trigger/Attribute:description' => '描述',
-	'Class:Trigger/Attribute:description+' => 'one line description',
+	'Class:Trigger/Attribute:description+' => '一行描述',
 	'Class:Trigger/Attribute:action_list' => '触发的行为',
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
-	'Class:Trigger/Attribute:finalclass' => 'Trigger sub-class',
+	'Class:Trigger/Attribute:finalclass' => '触发器子类别',
 	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class',
 ));
 
@@ -604,7 +604,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
+	'Class:TriggerOnObjectDelete' => '触发器 (对象删除时)',
 	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
 ));
 
@@ -613,7 +613,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
+	'Class:TriggerOnObjectUpdate' => '触发器 (对象更新时)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
@@ -626,7 +626,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnThresholdReached' => '触发器 (基于阀值)',
 	'Class:TriggerOnThresholdReached+' => '当达到某个阀值时触发',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => '秒表',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => '阀值',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
@@ -660,7 +660,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:description' => '描述',
 	'Class:SynchroDataSource/Attribute:status' => '状态',
 	'Class:SynchroDataSource/Attribute:scope_class' => '目标类',
-	'Class:SynchroDataSource/Attribute:user_id' => 'User',
+	'Class:SynchroDataSource/Attribute:user_id' => '用户',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => '要通知的人',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact to notify in case of error',
 	'Class:SynchroDataSource/Attribute:url_icon' => '图标的超链接',
@@ -777,7 +777,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Case Log',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Last Entry',
 	'Class:SynchroDataSource' => '同步数据源',
-	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Implementation',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => '上线',
 	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => '废弃',
 	'Class:SynchroDataSource/Attribute:status/Value:production' => '生产',
 	'Class:SynchroDataSource/Attribute:scope_restriction' => '范围限制',
@@ -801,13 +801,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Nobody',
 	'Class:SynchroAttribute' => '同步属性',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => '同步数据源',
-	'Class:SynchroAttribute/Attribute:attcode' => 'Attribute Code',
+	'Class:SynchroAttribute/Attribute:attcode' => '属性代码',
 	'Class:SynchroAttribute/Attribute:update' => '更新',
 	'Class:SynchroAttribute/Attribute:reconcile' => 'Reconcile',
 	'Class:SynchroAttribute/Attribute:update_policy' => '更新策略',
 	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => '加锁',
 	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => '解锁',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Initialize if empty',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => '如果为空则初始化',
 	'Class:SynchroAttribute/Attribute:finalclass' => 'Class',
 	'Class:SynchroAttExtKey' => 'Synchro Attribute (ExtKey)',
 	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => 'Reconciliation Attribute',
@@ -952,15 +952,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
 	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
-	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
-	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
-	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:label' => '标签',
+	'Class:TagSetFieldData/Attribute:label+' => '显示的标签',
+	'Class:TagSetFieldData/Attribute:description' => '描述',
+	'Class:TagSetFieldData/Attribute:description+' => '描述',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~~~',
 
-	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => '已使用的标签无法删除',
 	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
 	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters, starting with a letter.~~',
 	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
@@ -976,63 +976,63 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class: DBProperty
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:DBProperty' => 'DB property~~',
+	'Class:DBProperty' => 'DB 属性',
 	'Class:DBProperty+' => '~~',
-	'Class:DBProperty/Attribute:name' => 'Name~~',
-	'Class:DBProperty/Attribute:name+' => '~~',
-	'Class:DBProperty/Attribute:description' => 'Description~~',
-	'Class:DBProperty/Attribute:description+' => '~~',
-	'Class:DBProperty/Attribute:value' => 'Value~~',
-	'Class:DBProperty/Attribute:value+' => '~~',
-	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
-	'Class:DBProperty/Attribute:change_date+' => '~~',
-	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
-	'Class:DBProperty/Attribute:change_comment+' => '~~',
+	'Class:DBProperty/Attribute:name' => '名称',
+	'Class:DBProperty/Attribute:name+' => '',
+	'Class:DBProperty/Attribute:description' => '描述',
+	'Class:DBProperty/Attribute:description+' => '',
+	'Class:DBProperty/Attribute:value' => '值',
+	'Class:DBProperty/Attribute:value+' => '',
+	'Class:DBProperty/Attribute:change_date' => '修改日期',
+	'Class:DBProperty/Attribute:change_date+' => '',
+	'Class:DBProperty/Attribute:change_comment' => '备注',
+	'Class:DBProperty/Attribute:change_comment+' => '',
 ));
 
 //
 // Class: BackgroundTask
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:BackgroundTask' => 'Background task~~',
+	'Class:BackgroundTask' => '后台任务',
 	'Class:BackgroundTask+' => '~~',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
 	'Class:BackgroundTask/Attribute:class_name+' => '~~',
-	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
+	'Class:BackgroundTask/Attribute:first_run_date' => '首次运行时间',
 	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
-	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
+	'Class:BackgroundTask/Attribute:latest_run_date' => '最近运行时间',
 	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
-	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
+	'Class:BackgroundTask/Attribute:next_run_date' => '下次运行时间',
 	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
-	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
+	'Class:BackgroundTask/Attribute:total_exec_count' => '一共执行的次数',
 	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
-	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration' => '最近运行时长',
 	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
+	'Class:BackgroundTask/Attribute:min_run_duration' => '最少运行时长',
 	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
+	'Class:BackgroundTask/Attribute:max_run_duration' => '最多运行时长',
 	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
+	'Class:BackgroundTask/Attribute:average_run_duration' => '平均运行时长',
 	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:running' => 'Running~~',
-	'Class:BackgroundTask/Attribute:running+' => '~~',
-	'Class:BackgroundTask/Attribute:status' => 'Status~~',
-	'Class:BackgroundTask/Attribute:status+' => '~~',
+	'Class:BackgroundTask/Attribute:running' => '运行中',
+	'Class:BackgroundTask/Attribute:running+' => '',
+	'Class:BackgroundTask/Attribute:status' => '状态',
+	'Class:BackgroundTask/Attribute:status+' => '',
 ));
 
 //
 // Class: AsyncTask
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:AsyncTask' => 'Async. task~~',
-	'Class:AsyncTask+' => '~~',
-	'Class:AsyncTask/Attribute:created' => 'Created~~',
-	'Class:AsyncTask/Attribute:created+' => '~~',
-	'Class:AsyncTask/Attribute:started' => 'Started~~',
-	'Class:AsyncTask/Attribute:started+' => '~~',
-	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
-	'Class:AsyncTask/Attribute:planned+' => '~~',
-	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
+	'Class:AsyncTask' => '异步任务',
+	'Class:AsyncTask+' => '',
+	'Class:AsyncTask/Attribute:created' => '已创建',
+	'Class:AsyncTask/Attribute:created+' => '',
+	'Class:AsyncTask/Attribute:started' => '已开始',
+	'Class:AsyncTask/Attribute:started+' => '',
+	'Class:AsyncTask/Attribute:planned' => '已计划',
+	'Class:AsyncTask/Attribute:planned+' => '',
+	'Class:AsyncTask/Attribute:event_id' => '事件',
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
