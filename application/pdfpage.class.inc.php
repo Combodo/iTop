@@ -23,7 +23,7 @@ class iTopPDF extends TCPDF
 	{
 		// Title
 		// Set font
-		$this->SetFont('dejavusans', 'B', 10);
+		$this->SetFont('DroidSansFallback', 'B', 10);
 		
 		$iPageNumberWidth = 25;
 		$aMargins = $this->getMargins();
@@ -31,7 +31,7 @@ class iTopPDF extends TCPDF
 		// Display the title (centered)
 		$this->SetXY($aMargins['left'] + $iPageNumberWidth, 0);
 		$this->MultiCell($this->getPageWidth() - $aMargins['left'] - $aMargins['right'] - 2*$iPageNumberWidth, 15, $this->sDocumentTitle, 0, 'C', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
-		$this->SetFont('dejavusans', '', 10);
+		$this->SetFont('DroidSansFallback', '', 10);
 		
 		// Display the page number (right aligned)
 		// Warning: the 'R'ight alignment does not work when using placeholders like $this->getAliasNumPage() or $this->getAliasNbPages()
@@ -80,7 +80,7 @@ class PDFPage extends WebPage
 		
 		// Set font
 		// dejavusans is a UTF-8 Unicode font. Standard PDF fonts like helvetica or times new roman are NOT UTF-8
-		$this->oPdf->SetFont('dejavusans', '', 10, '', true);
+		$this->oPdf->SetFont('DroidSansFallback', '', 10, '', true);
 		
 		// set auto page breaks
 		$this->oPdf->SetAutoPageBreak(true, 15); // 15 mm break margin at the bottom
