@@ -104,6 +104,7 @@ class SetupUtils
 			'dom',
 			'zlib',
 			'zip',
+			'gd', // test image type (always returns false if not installed), image resizing, PDF export
 		);
 		$aOptionalExtensions = array(
 			'mcrypt, sodium or openssl' =>
@@ -113,7 +114,6 @@ class SetupUtils
 					'openssl' => 'Strong encryption will not be used.',
 				),
 			'ldap' => 'LDAP authentication will be disabled.',
-			'gd' => 'test image type (always returns false if not installed), image resizing, PDF export',
 		);
 
 		asort($aMandatoryExtensions); // Sort the list to look clean !
