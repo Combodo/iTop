@@ -20,7 +20,6 @@
 /**
  * Localized data
  *
- * @author      Robert Deng <denglx@gmail.com>
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -36,14 +35,12 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
 //
-// Class: UserLDAP
+// Class: UserExternal
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:UserLDAP' => 'LDAP 用户',
-	'Class:UserLDAP+' => '用户由 LDAP 鉴别身份',
-	'Class:UserLDAP/Attribute:password' => '密码',
-	'Class:UserLDAP/Attribute:password+' => '用户身份验证串',
+	'Class:UserExternal' => '外部用户',
+	'Class:UserExternal+' => '用户在iTop 之外验证身份',
 ));
 
 

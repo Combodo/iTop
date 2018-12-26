@@ -280,7 +280,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Portal:TitleDetailsFor_Service' => 'Details for Service',
 	'Portal:Button:CreateRequestFromService' => 'Create a Request for this service',
 	'Portal:ListOpenRequests' => 'List open requests',
-'Portal:UserRequest:MoreInfo' => 'More information',
+	'Portal:UserRequest:MoreInfo' => 'More information',
 	'Portal:Details-Service-Element' => 'Service elements',
 	'Portal:NoClosedTicket' => 'No closed request',
 	'Portal:NoService' => '',
