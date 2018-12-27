@@ -188,6 +188,16 @@ abstract class CMDBObject extends DBObject
 		self::$m_oCurrChange->DBInsert();
 	}
 
+	/**
+	 * @inheritdoc
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
 	protected function RecordObjCreation()
 	{
 		// Delete any existing change tracking about the current object (IDs can be reused due to InnoDb bug; see TRAC #886)
@@ -206,6 +216,7 @@ abstract class CMDBObject extends DBObject
 		MetaModel::PurgeData($oFilter);
 
 		parent::RecordObjCreation();
+
 		$oMyChangeOp = MetaModel::NewObject("CMDBChangeOpCreate");
 		$oMyChangeOp->Set("objclass", get_class($this));
 		$oMyChangeOp->Set("objkey", $this->GetKey());
@@ -232,9 +243,17 @@ abstract class CMDBObject extends DBObject
 	}
 
 	/**
-	 * @param $sAttCode
+	 * @param string $sAttCode
 	 * @param $original Original value
 	 * @param $value Current value
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	protected function RecordAttChange($sAttCode, $original, $value)
 	{
@@ -438,6 +457,14 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * @param array $aValues
 	 * @param array $aOrigValues
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	protected function RecordAttChanges(array $aValues, array $aOrigValues)
 	{
