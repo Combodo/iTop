@@ -1184,15 +1184,18 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 *
 	 * @param string $sAttCode $sAttCode The code of the attribute
 	 * @param array $aReasons To store the reasons why the attribute is read-only (info about the synchro replicas)
 	 * @param string $sTargetState The target state in which to evalutate the flags, if empty the current state will be
 	 *     used
 	 *
-	 * @return integer the binary combination of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...) for the
-	 *     given attribute in the given state of the object
+	 * @return integer the binary combination of flags for the given attribute in the given state of the object<br>
+	 *         Values can be one of the OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY, ... (see define in metamodel.class.php)
 	 * @throws \CoreException
+	 *
+	 * @api
+	 *
+	 * @see GetInitialStateAttributeFlags for creation
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
@@ -1300,16 +1303,17 @@ abstract class DBObject implements iDisplay
     }
 
 	/**
-	 * Returns the set of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...)
-	 * for the given attribute for the current state of the object considered as an INITIAL state
-	 *
 	 * @param string $sAttCode The code of the attribute
 	 * @param array $aReasons
 	 *
-	 * @return integer Flags: the binary combination of the flags applicable to this attribute
+	 * @return integer The binary combination of the flags for the given attribute for the current state of the object
+	 *         considered as an INITIAL state.<br>
+	 *         Values can be one of the OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY, ... (see define in metamodel.class.php)
 	 * @throws \CoreException
 	 *
 	 * @api
+	 *
+	 * @see GetAttributeFlags when modifying the object
 	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
 	{
