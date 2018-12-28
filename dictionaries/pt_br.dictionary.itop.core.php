@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,15 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:DeletedObjectLabel' => '%1s (excluído)',
 	'Core:DeletedObjectTip' => 'O objeto foi excluído em %1$s (%2$s)',
@@ -36,7 +33,29 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeLinkedSet' => 'Array de objetos',
 	'Core:AttributeLinkedSet+' => 'Qualquer tipo de objetos da mesma classe ou subclasses',
 
-	'Core:AttributeLinkedSetIndirect' => 'Array de objetos (N-N)',
+	'Core:AttributeDashboard' => 'Dashboard~~',
+	'Core:AttributeDashboard+' => '~~',
+
+	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber+' => '~~',
+
+	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
+	'Core:AttributeObsolescenceDate+' => '~~',
+
+    'Core:AttributeTagSet' => 'List of tags~~',
+    'Core:AttributeTagSet+' => '~~',
+	'Core:AttributeSet:placeholder' => 'click to add~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+
+    'Core:AttributeCaseLog' => 'Log~~',
+    'Core:AttributeCaseLog+' => '~~',
+
+    'Core:AttributeMetaEnum' => 'Computed enum~~',
+    'Core:AttributeMetaEnum+' => '~~',
+
+    'Core:AttributeLinkedSetIndirect' => 'Array de objetos (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Qualquer tipo de objetos [sub-classe] da mesma classe',
 
 	'Core:AttributeInteger' => 'Inteiro',
@@ -181,6 +200,9 @@ Operadores:<br/>
 
 	'Core:FriendlyName-Label' => 'Nome amigável',
 	'Core:FriendlyName-Description' => 'Nome amigável',
+
+	'Core:AttributeTag' => 'Tags~~',
+	'Core:AttributeTag+' => 'Tags~~',
 ));
 
 
@@ -381,7 +403,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 ));
 
 //
-// Classes: EventWebService and EventRestService
+// Class: EventWebService
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
@@ -399,6 +421,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventWebService/Attribute:log_error+' => 'Resultado log de erro',
 	'Class:EventWebService/Attribute:data' => 'Dado',
 	'Class:EventWebService/Attribute:data+' => 'Resultado dado',
+));
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventRestService' => 'REST/JSON call~~',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
 	'Class:EventRestService/Attribute:operation' => 'Operation~~',
@@ -521,6 +546,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TriggerOnObject+' => 'Gatilho em uma determinada classe de objetos',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe alvo',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
+	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
+	'Class:TriggerOnObject/Attribute:filter+' => '~~',
+	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
+	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \\"%1$s\\"~~',
 ));
 
 //
@@ -562,12 +591,32 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 ));
 
 //
-// Class: TriggerOnObjectCreates
+// Class: TriggerOnObjectCreate
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TriggerOnObjectCreate' => 'Gatilho (na criação do objeto)',
 	'Class:TriggerOnObjectCreate+' => 'Gatilho de criação do objeto de [a classe filha] determinada classe',
+));
+
+//
+// Class: TriggerOnObjectDelete
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
+	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
+));
+
+//
+// Class: TriggerOnObjectUpdate
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
+	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
 ));
 
 //
@@ -609,7 +658,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Nome',
 	'Class:SynchroDataSource/Attribute:name+' => 'Nome',
 	'Class:SynchroDataSource/Attribute:description' => 'Descrição',
-	'Class:SynchroDataSource/Attribute:status' => 'Status', //TODO: enum values
+	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Classe alvo',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Usuário',
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contato para notificação',
@@ -618,7 +667,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hiperlink de uma pequena imagem representando o aplicativo com o qual o iTop é sincronizado',
 	'Class:SynchroDataSource/Attribute:url_application' => 'Hiperlink aplicativo',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hiperlink para o objeto na aplicação externa com a qual o iTop é sincronizado (se aplicável). As substituições possíveis: $this->attribute$ e $replica->primary_key$',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Política reconciliação', //TODO enum values
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Política reconciliação',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervalo da carga plena',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'A recarga completa de todos os dados devem ocorrer pelo menos tão frequentemente como especificado aqui',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Ação sobre zero',
@@ -629,7 +678,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Medidas tomadas quando a busca retorna mais de um objeto',
 	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Usuários permitidos',
 	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Quem tem permissão para excluir objetos sincronizados',
-	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Usuários permitidos',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Ninguém',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Somente Administradores',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'Todos os usuários permitidos',
@@ -647,7 +695,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'SynchroDataSource:Definition' => 'Definição',
 	'Core:SynchroAttributes' => 'Atributos',
 	'Core:SynchroStatus' => 'Status',
-	'Core:Synchro:ErrorsLabel' => 'Erros',	
+	'Core:Synchro:ErrorsLabel' => 'Erros',
 	'Core:Synchro:CreatedLabel' => 'Criado',
 	'Core:Synchro:ModifiedLabel' => 'Modificado',
 	'Core:Synchro:UnchangedLabel' => 'Inalterado',
@@ -674,18 +722,17 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:Synchro:label_obj_disappeared_errors' => 'Erros (%1$s)',
 	'Core:Synchro:label_obj_disappeared_no_action' => 'Nenhuma ação (%1$s)',
 	'Core:Synchro:label_obj_unchanged' => 'Inalterado (%1$s)',
-	'Core:Synchro:label_obj_updated' => 'Atualizado (%1$s)', 
+	'Core:Synchro:label_obj_updated' => 'Atualizado (%1$s)',
 	'Core:Synchro:label_obj_updated_errors' => 'Erros (%1$s)',
 	'Core:Synchro:label_obj_new_unchanged' => 'Inalterado (%1$s)',
 	'Core:Synchro:label_obj_new_updated' => 'Atualizado (%1$s)',
 	'Core:Synchro:label_obj_created' => 'Criado (%1$s)',
 	'Core:Synchro:label_obj_new_errors' => 'Erros (%1$s)',
-	'Core:Synchro:History' => 'Histórico sincronização',
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica processado: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
-	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Pelo menos uma chave de reconciliação deve ser especificado, ou a política de reconciliação deve ser a de usar a chave primária.',			
-	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Um período de retenção excluir deve ser especificado, já que objetos devem ser excluídos depois de ser marcado como obsoleto.',			
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Pelo menos uma chave de reconciliação deve ser especificado, ou a política de reconciliação deve ser a de usar a chave primária.',
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Um período de retenção excluir deve ser especificado, já que objetos devem ser excluídos depois de ser marcado como obsoleto.',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Objetos obsoletos devem ser atualizados, mas nenhuma atualização é especificado.',
 	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'A tabela %1$s já existe na base de dados. Por favor, use um outro nome para a tabela de dados sincronizada.',
 	'Core:SynchroReplica:PublicData' => 'Dados públicos',
@@ -812,24 +859,21 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Preferências',
 	'Core:ExecProcess:Code1' => 'Comando errado ou comando terminou com erros (por exemplo, nome do script errado)',
 	'Core:ExecProcess:Code255' => 'PHP erro (parsing, or runtime)',
-));
 
-//
-// Attribute Duration
-//
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Core:Duration_Seconds'	=> '%1$ds',	
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',	
-	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',		
-	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',		
-	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
-	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \"%1$s\"~~',
-	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \"%1$s\")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \"%1$s\"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \"%1$s\" at %2$d%%~~',
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \"%1$s\"~~',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \"query\". There is no Query Phrasebook corresponding to the id: \"%1$s\".~~',
+	// Attribute Duration
+	'Core:Duration_Seconds'	=> '%1$ds',
+	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
+	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
+
+	// Explain working time computing
+	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \\"%1$s\\")~~',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \\"%1$s\\"~~',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \\"%1$s\\" at %2$d%%~~',
+
+	// Bulk export
+	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \\"%1$s\\"~~',
+	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \\"query\\". There is no Query Phrasebook corresponding to the id: \\"%1$s\\".~~',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
 	'Core:BulkExportOf_Class' => '%1$s Export~~',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
@@ -862,8 +906,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:BulkExport:XMLOptions' => 'XML Options~~',
 	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)~~',
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
-	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
 	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
+	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
 	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
@@ -875,8 +919,121 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
 	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
 	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
+	'Core:BulkExport:DateTimeFormat' => 'Date and Time format~~',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
+	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
+	'Core:DateTime:Placeholder_d' => 'DD~~', // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D~~', // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM~~', // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M~~', // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY~~', // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY~~', // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh~~', // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h~~', // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh~~', // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h~~', // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm~~', // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM~~', // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm~~', // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss~~', // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Wrong format~~',
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
+));
+
+//
+// Class: TagSetFieldData
+//
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
+	'Class:TagSetFieldData+' => '~~',
+
+	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
+	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
+	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
+	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
+	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed~~',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
+	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
+));
+
+//
+// Class: DBProperty
+//
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:DBProperty' => 'DB property~~',
+	'Class:DBProperty+' => '~~',
+	'Class:DBProperty/Attribute:name' => 'Name~~',
+	'Class:DBProperty/Attribute:name+' => '~~',
+	'Class:DBProperty/Attribute:description' => 'Description~~',
+	'Class:DBProperty/Attribute:description+' => '~~',
+	'Class:DBProperty/Attribute:value' => 'Value~~',
+	'Class:DBProperty/Attribute:value+' => '~~',
+	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
+	'Class:DBProperty/Attribute:change_date+' => '~~',
+	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
+	'Class:DBProperty/Attribute:change_comment+' => '~~',
+));
+
+//
+// Class: BackgroundTask
+//
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:BackgroundTask' => 'Background task~~',
+	'Class:BackgroundTask+' => '~~',
+	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
+	'Class:BackgroundTask/Attribute:class_name+' => '~~',
+	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:running' => 'Running~~',
+	'Class:BackgroundTask/Attribute:running+' => '~~',
+	'Class:BackgroundTask/Attribute:status' => 'Status~~',
+	'Class:BackgroundTask/Attribute:status+' => '~~',
+));
+
+//
+// Class: AsyncTask
+//
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:AsyncTask' => 'Async. task~~',
+	'Class:AsyncTask+' => '~~',
+	'Class:AsyncTask/Attribute:created' => 'Created~~',
+	'Class:AsyncTask/Attribute:created+' => '~~',
+	'Class:AsyncTask/Attribute:started' => 'Started~~',
+	'Class:AsyncTask/Attribute:started+' => '~~',
+	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
+	'Class:AsyncTask/Attribute:planned+' => '~~',
+	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
+	'Class:AsyncTask/Attribute:event_id+' => '~~',
+	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
+	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 ));

@@ -165,7 +165,7 @@ try
 	
 	if ($sJsonString == null)
 	{
-		throw new Exception("Missing parameter 'json_data", RestResult::MISSING_JSON);
+		throw new Exception("Missing parameter 'json_data'", RestResult::MISSING_JSON);
 	}
 	$aJsonData = @json_decode($sJsonString);
 	if ($aJsonData == null)

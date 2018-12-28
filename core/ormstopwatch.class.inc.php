@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -85,8 +85,12 @@ class ormStopWatch
 	/**
 	 * Get the working elapsed time since the start of the stop watch
 	 * even if it is currently running
-	 * @param oAttDef	AttributeDefinition Attribute hosting the stop watch
-	 * @param oObject	Hosting object (used for query parameters)
+	 *
+	 * @param AttributeDefinition oAttDef  Attribute hosting the stop watch
+	 * @param Object oObject    Hosting object (used for query parameters)
+	 *
+	 * @return int|mixed
+	 * @throws \CoreException
 	 */
 	public function GetElapsedTime($oAttDef, $oObject)
 	{
@@ -260,17 +264,22 @@ class ormStopWatch
 		return $iRet;
 	}
 
+	/**
+	 * @param $oObject
+	 * @param $oAttDef
+	 * @param $iPercent
+	 * @param $iStartTime
+	 * @param $iDurationSec
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 */
 	protected function ComputeDeadline($oObject, $oAttDef, $iPercent, $iStartTime, $iDurationSec)
 	{
 		$sWorkingTimeComputer = $oAttDef->Get('working_time_computing');
 		if ($sWorkingTimeComputer == '')
 		{
 			$sWorkingTimeComputer = class_exists('SLAComputation') ? 'SLAComputation' : 'DefaultWorkingTimeComputer';
-		}
-		$aCallSpec = array($sWorkingTimeComputer, '__construct');
-		if (!is_callable($aCallSpec))
-		{
-			//throw new CoreException("Pas de constructeur pour $sWorkingTimeComputer!");
 		}
 		$oComputer = new $sWorkingTimeComputer();
 		$aCallSpec = array($oComputer, 'GetDeadline');
@@ -285,6 +294,15 @@ class ormStopWatch
 		return $iRet;
 	}
 
+	/**
+	 * @param $oObject
+	 * @param $oAttDef
+	 * @param $iStartTime
+	 * @param $iEndTime
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 */
 	protected function ComputeDuration($oObject, $oAttDef, $iStartTime, $iEndTime)
 	{
 		$sWorkingTimeComputer = $oAttDef->Get('working_time_computing');
@@ -384,7 +402,20 @@ class ormStopWatch
 					$sAttCode = $oAttDef->GetCode();
 					WorkingTimeRecorder::Start($oObject, $iComputationRefTime, "ormStopWatch-Deadline-$iPercent-$sAttCode", 'Core:ExplainWTC:StopWatch-Deadline', array("Class:$sClass/Attribute:$sAttCode", $iPercent));
 				}
-				$aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $iPercent, $this->iLastStart, $iThresholdDuration - $this->iTimeSpent);
+				$iRemaining = $iThresholdDuration - $this->iTimeSpent;
+				if ($iRemaining < 0)
+				{
+					if (class_exists('WorkingTimeRecorder'))
+					{
+						$sClass = get_class($oObject);
+						$sKey = $oObject->GetKey();
+						$sAttCode = $oAttDef->GetCode();
+						$sDate = date('Y-m-d H:i:s', $aThresholdData['deadline']);
+						WorkingTimeRecorder::Log(WorkingTimeRecorder::TRACE_INFO, "$sClass($sKey) ormStopWatch-Deadline-$iPercent-$sAttCode ($sDate) already reached, not changed.");
+					}
+					continue;
+				}
+				$aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $iPercent, $this->iLastStart, $iRemaining);
 				// OR $aThresholdData['deadline'] = $this->ComputeDeadline($oObject, $oAttDef, $iPercent, $this->iStarted, $iThresholdDuration);
 
 				if (class_exists('WorkingTimeRecorder'))
@@ -398,7 +429,7 @@ class ormStopWatch
 				$aThresholdData['triggered'] = false;
 				$aThresholdData['overrun'] = null;
 			}
-			else
+			// else
 			{
 				// The new threshold is in the past
 				// Note: the overrun can be wrong, but the correct algorithm to compute
@@ -454,7 +485,10 @@ class ormStopWatch
 					$aThresholdData['overrun'] = $iOverrun;
 				}
 			}
-			$aThresholdData['deadline'] = null;
+			if ($aThresholdData['overrun'] == 0)
+			{
+				$aThresholdData['deadline'] = null;
+			}
 		}
 
 		$this->iLastStart = null;
@@ -558,7 +592,7 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 								CMDBObject::SetTrackInfo("Automatic - threshold triggered");
 					
 								$oMyChange = CMDBObject::GetCurrentChange();
-								$oObj->DBUpdateTracked($oMyChange, true /*skip security*/);
+								$oObj->DBUpdateTracked($oMyChange);
 							}
 
 							// Activate any existing trigger

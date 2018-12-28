@@ -365,7 +365,7 @@ class CriterionConversionTest extends ItopDataTestCase
 			),
 			'string regexp' => array(
 				'OQL' => "SELECT Server WHERE name REGEXP '^dbserver[0-9]+\\\\\\\\..+\\\\\\\\.[a-z]{2,3}$'",
-				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE (`Server`.`name` REGEXP '^dbserver[0-9]+\\\\..+\\\\.[a-z]{2,3}$')",
+				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE (`Server`.`name` REGEXP '^dbserver[0-9]+\\\\\\\\..+\\\\\\\\.[a-z]{2,3}$')",
 				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'REGEXP')),
 			),
 			'enum + key =' => array(

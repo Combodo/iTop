@@ -289,13 +289,13 @@ abstract class User extends cmdbAbstractObject
 			$oSet = $this->Get('profile_list');
 			if ($oSet->Count() == 0)
 			{
-				$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:AtLeastOneProfileIsNeeded');
+				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneProfileIsNeeded');
 			}
 		}
 		// Only administrators can manage administrators
 		if (UserRights::IsAdministrator($this) && !UserRights::IsAdministrator())
 		{
-			$this->m_aCheckIssues[] = Dict::Format('UI:Login:Error:AccessRestricted');
+			$this->m_aCheckIssues[] = Dict::S('UI:Login:Error:AccessRestricted');
 		}
 
 		if (!UserRights::IsAdministrator())
@@ -304,30 +304,37 @@ abstract class User extends cmdbAbstractObject
 			$oAddon = UserRights::GetModuleInstance();
 			if (!is_null($oUser) && method_exists($oAddon, 'GetUserOrgs'))
 			{
-				$aOrgs = $oAddon->GetUserOrgs($oUser, '');
-				if (count($aOrgs) > 0)
+				if ((empty($this->GetOriginal('contactid')) && !($this->IsNew())) || empty($this->Get('contactid')))
 				{
-					// Check that the modified User belongs to one of our organization
-					if (!in_array($this->GetOriginal('org_id'), $aOrgs) || !in_array($this->Get('org_id'), $aOrgs))
+					$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
+				}
+				else
+				{
+					$aOrgs = $oAddon->GetUserOrgs($oUser, '');
+					if (count($aOrgs) > 0)
 					{
-						$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:UserOrganizationNotAllowed');
-					}
-					// Check users with restricted organizations when allowed organizations have changed
-					if ($this->IsNew() || array_key_exists('allowed_org_list', $aChanges))
-					{
-						$oSet = $this->get('allowed_org_list');
-						if ($oSet->Count() == 0)
+						// Check that the modified User belongs to one of our organization
+						if (!in_array($this->GetOriginal('org_id'), $aOrgs) && !in_array($this->Get('org_id'), $aOrgs))
 						{
-							$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:AtLeastOneOrganizationIsNeeded');
+							$this->m_aCheckIssues[] = Dict::S('Class:User/Error:UserOrganizationNotAllowed');
 						}
-						else
+						// Check users with restricted organizations when allowed organizations have changed
+						if ($this->IsNew() || array_key_exists('allowed_org_list', $aChanges))
 						{
-							$aModifiedLinks = $oSet->ListModifiedLinks();
-							foreach($aModifiedLinks as $oLink)
+							$oSet = $this->get('allowed_org_list');
+							if ($oSet->Count() == 0)
 							{
-								if (!in_array($oLink->Get('allowed_org_id'), $aOrgs))
+								$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneOrganizationIsNeeded');
+							}
+							else
+							{
+								$aModifiedLinks = $oSet->ListModifiedLinks();
+								foreach ($aModifiedLinks as $oLink)
 								{
-									$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:OrganizationNotAllowed');
+									if (!in_array($oLink->Get('allowed_org_id'), $aOrgs))
+									{
+										$this->m_aCheckIssues[] = Dict::S('Class:User/Error:OrganizationNotAllowed');
+									}
 								}
 							}
 						}
@@ -1324,6 +1331,24 @@ class UserRights
 		{
 			$_SESSION['profile_list'] = self::ListProfiles();
 		}
+
+		$oConfig = MetaModel::GetConfig();
+		$bSessionIdRegeneration = $oConfig->Get('regenerate_session_id_enabled');
+		if ($bSessionIdRegeneration)
+		{
+			// Protection against session fixation/injection: generate a new session id.
+
+			// Alas a PHP bug (technically a bug in the memcache session handler, https://bugs.php.net/bug.php?id=71187)
+			// causes session_regenerate_id to fail with a catchable fatal error in PHP 7.0 if the session handler is memcache(d).
+			// The bug has been fixed in PHP 7.2, but in case session_regenerate_id()
+			// fails we just silently ignore the error and keep the same session id...
+			$old_error_handler = set_error_handler(array(__CLASS__, 'VoidErrorHandler'));
+			session_regenerate_id();
+			if ($old_error_handler !== null)
+			{
+				set_error_handler($old_error_handler);
+			}
+		}
 	}
 
 	public static function _ResetSessionCache()
@@ -1336,6 +1361,19 @@ class UserRights
 		{
 			unset($_SESSION['archive_allowed']);
 		}
+	}
+	
+	/**
+	 * Fake error handler to silently discard fatal errors
+	 * @param int $iErrNo
+	 * @param string $sErrStr
+	 * @param string $sErrFile
+	 * @param int $iErrLine
+	 * @return boolean
+	 */
+	public static function VoidErrorHandler($iErrno, $sErrStr, $sErrFile, $iErrLine)
+	{
+		return true; // Ignore the error
 	}
 }
 

@@ -556,8 +556,6 @@
             <filter><![CDATA[employee_number != '']]></filter>
             <disabled>false</disabled>
             <is_blocking>true</is_blocking>
-            <description>Class:Person/UniquenessRule:employee_number/Description</description>
-            <error_message>Class:Person/UniquenessRule:employee_number/Error</error_message>
           </rule>
           <rule id="name">
             <attributes>
@@ -568,8 +566,6 @@
             <filter/>
             <disabled>false</disabled>
             <is_blocking>false</is_blocking>
-            <description>Class:Person/UniquenessRule:name/Description</description>
-            <error_message>Class:Person/UniquenessRule:name/Error</error_message>
           </rule>
         </uniqueness_rules>
       </properties>
@@ -5871,8 +5867,6 @@
               <attribute id="name"/>
             </attributes>
             <is_blocking>true</is_blocking>
-            <description>Class:Brand/UniquenessRule:name/Description</description>
-            <error_message>Class:Brand/UniquenessRule:name/Error</error_message>
           </rule>
         </uniqueness_rules>
       </properties>
@@ -5945,8 +5939,6 @@
               <attribute id="brand_id"/>
             </attributes>
             <is_blocking>true</is_blocking>
-            <description>Class:Model/UniquenessRule:name_brand/Description</description>
-            <error_message>Class:Model/UniquenessRule:name_brand/Error</error_message>
           </rule>
         </uniqueness_rules>
       </properties>

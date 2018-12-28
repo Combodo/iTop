@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,11 +15,59 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+//
+// Class: UserRequest
+//
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Menu:RequestManagement' => 'Gestion des demandes',
+	'Menu:RequestManagement+' => 'Gestion des demandes utilisateurs',
+	'Menu:RequestManagementProvider' => 'Gestion des demandes fournisseurs',
+	'Menu:RequestManagementProvider+' => 'Gestion des demandes fournisseurs',
+	'Menu:UserRequest:Provider' => 'Demandes transférées à un fournisseur',
+	'Menu:UserRequest:Provider+' => 'Demandes transférées à un fournisseur',
+	'Menu:UserRequest:Overview' => 'Vue d\'ensemble',
+	'Menu:UserRequest:Overview+' => 'Vue d\'ensemble des demandes utilisateurs',
+	'Menu:NewUserRequest' => 'Nouvelle demande utilisateur',
+	'Menu:NewUserRequest+' => 'Créer un nouveau ticket de demande utilisateur',
+	'Menu:SearchUserRequests' => 'Rechercher des demandes utilisateur',
+	'Menu:SearchUserRequests+' => 'Rechercher parmi les demandes utilisateur',
+	'Menu:UserRequest:Shortcuts' => 'Raccourcis',
+	'Menu:UserRequest:Shortcuts+' => '',
+	'Menu:UserRequest:MyRequests' => 'Demandes utilisateurs qui me sont assignées',
+	'Menu:UserRequest:MyRequests+' => 'Demandes utilisateurs qui me sont assignées',
+	'Menu:UserRequest:MySupportRequests' => 'Mes appels Support',
+	'Menu:UserRequest:MySupportRequests+' => 'Les appels que j\'ai passés',
+	'Menu:UserRequest:EscalatedRequests' => 'Demandes en escalade',
+	'Menu:UserRequest:EscalatedRequests+' => 'Demandes utilisateurs en escalade',
+	'Menu:UserRequest:OpenRequests' => 'Demandes en cours',
+	'Menu:UserRequest:OpenRequests+' => 'Toutes les demandes utilisateurs en cours',
+	'UI:WelcomeMenu:MyAssignedCalls' => 'Demandes utilisateurs qui me sont assignées',
+	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Requêtes des 14 derniers jours par type',
+	'UI-RequestManagementOverview-Last-14-days' => 'Requêtes des 14 derniers jours',
+	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Requêtes ouvertes par statut',
+	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Requêtes ouvertes par agent',
+	'UI-RequestManagementOverview-OpenRequestByType' => 'Requêtes ouvertes par type',
+	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requêtes ouvertes par organisation',
+	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
+	'Menu:UserRequest:MyWorkOrders' => 'Tâches qui me sont assignées',
+	'Menu:UserRequest:MyWorkOrders+' => 'Tâches qui me sont assignées',
+	'Class:Problem:KnownProblemList' => 'Problèmes connus',
+	'Tickets:Related:OpenIncidents' => 'Incidents en cours',
+));
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
 
 //
 // Class: UserRequest
@@ -215,49 +263,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Attendre une approbation',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'La Requête parente ne peut pas être assignée à elle même',
-	'Tickets:Related:OpenIncidents' => 'Incidents en cours',
 ));
 
 
 Dict::Add('FR FR', 'French', 'Français', array(
-
-	'Menu:RequestManagement' => 'Gestion des demandes',
-	'Menu:RequestManagement+' => 'Gestion des demandes utilisateurs',
-	'Menu:RequestManagementProvider' => 'Gestion des demandes fournisseurs',
-	'Menu:RequestManagementProvider+' => 'Gestion des demandes fournisseurs',
-	'Menu:UserRequest:Provider' => 'Demandes transférées à un fournisseur',
-	'Menu:UserRequest:Provider+' => 'Demandes transférées à un fournisseur',
-	'Menu:UserRequest:Overview' => 'Vue d\'ensemble',
-	'Menu:UserRequest:Overview+' => 'Vue d\'ensemble des demandes utilisateurs',
-	'Menu:NewUserRequest' => 'Nouvelle demande utilisateur',
-	'Menu:NewUserRequest+' => 'Créer un nouveau ticket de demande utilisateur',
-	'Menu:SearchUserRequests' => 'Rechercher des demandes utilisateur',
-	'Menu:SearchUserRequests+' => 'Rechercher parmi les demandes utilisateur',
-	'Menu:UserRequest:Shortcuts' => 'Raccourcis',
-	'Menu:UserRequest:Shortcuts+' => '',
-	'Menu:UserRequest:MyRequests' => 'Demandes utilisateurs qui me sont assignées',
-	'Menu:UserRequest:MyRequests+' => 'Demandes utilisateurs qui me sont assignées',
-	'Menu:UserRequest:MySupportRequests' => "Mes appels Support",
-	'Menu:UserRequest:MySupportRequests+' => "Les appels que j'ai passés",
-	'Menu:UserRequest:EscalatedRequests' => 'Demandes en escalade',
-	'Menu:UserRequest:EscalatedRequests+' => 'Demandes utilisateurs en escalade',
-	'Menu:UserRequest:OpenRequests' => 'Demandes en cours',
-	'Menu:UserRequest:OpenRequests+' => 'Toutes les demandes utilisateurs en cours',
-	'Menu:UserRequest:OpenProblems' => 'Tous les problèmes en cours',
-	'Menu:UserRequest:OpenProblems+' => '',
-	'Menu:UserRequest:MyWorkOrders' => 'Tâches qui me sont assignées',
-	'Menu:UserRequest:MyWorkOrders+' => 'Tâches qui me sont assignées',
-	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Requêtes des 14 derniers jours par type',
-	'UI-RequestManagementOverview-Last-14-days' => 'Requêtes des 14 derniers jours',
-	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Requêtes ouvertes par statut',
-	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Requêtes ouvertes par agent',
-	'UI-RequestManagementOverview-OpenRequestByType' => 'Requêtes ouvertes par type',
-	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Requêtes ouvertes par organisation',
-	'UI:WelcomeMenu:MyAssignedCalls' => 'Demandes utilisateurs qui me sont assignées',
-	'Menu:NewWorkOrder' => 'Nouvelle tâche',
-	'Menu:UserRequest:MyWorkorders' => 'Mes tâches',
-	'Menu:UserRequest:MyWorkorders+' => 'Les tâches qui me sont assignées',
-	'Class:Problem:KnownProblemList' => 'Problèmes connus',
 	'Portal:TitleDetailsFor_Request' => 'Détail de la requête',
 	'Portal:ButtonUpdate' => 'Mettre à jour',
 	'Portal:ButtonClose' => 'Fermer',
@@ -269,8 +278,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:TitleDetailsFor_Service' => 'Détail d\'un service',
 	'Portal:Button:CreateRequestFromService' => 'Créer une requête pour ce service',
 	'Portal:ListOpenRequests' => 'Requêtes ouverts',
-	'Portal:ListResolvedRequests' => 'Requêtes résolues',
-	'Portal:UserRequest:MoreInfo' => 'Informations complémentaires',
+'Portal:UserRequest:MoreInfo' => 'Informations complémentaires',
 	'Portal:Details-Service-Element' => 'Eléments de service',
 	'Portal:NoClosedTicket' => 'Pas de requête fermée',
 	'Portal:NoService' => '',
@@ -278,17 +286,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:ShowProblem' => 'Problèmes',
 	'Portal:ShowFaqs' => 'FAQs',
 	'Portal:NoOpenProblem' => 'Pas de problème en cours',
-	'Portal:SelectLanguage' => "Changer ma langue",
+	'Portal:SelectLanguage' => 'Changer ma langue',
 	'Portal:LanguageChangedTo_Lang' => 'Langue changée en',
 	'Portal:ChooseYourFavoriteLanguage' => 'Choisissez votre langue',
 
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets (résoudre les tickets fils)',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution de la demande (ev_autoresolve), et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
-	'Class:UserRequest:KnownErrorList' => 'Erreurs connues',
 ));
 
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Organization:Overview:UserRequests' => 'Demandes Utilisateurs pour cette organisation',
 	'Organization:Overview:MyUserRequests' => 'Mes Demandes Utilisateurs pour cette organisation',
 	'Organization:Overview:Tickets' => 'Les Tickets de cette organisation',

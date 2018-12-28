@@ -15,7 +15,17 @@
 //   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
-if (!defined('APPROOT')) require_once(__DIR__.'/../../approot.inc.php');
+if (!defined('APPROOT'))
+{
+	if (file_exists(__DIR__.'/../../approot.inc.php'))
+	{
+		require_once __DIR__.'/../../approot.inc.php';   // When in env-xxxx folder
+	}
+	else
+	{
+		require_once __DIR__.'/../../../approot.inc.php';   // When in datamodels/x.x folder
+	}
+}
 require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'application/webpage.class.inc.php');
 require_once(APPROOT.'application/csvpage.class.inc.php');

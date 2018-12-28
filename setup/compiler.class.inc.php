@@ -1149,8 +1149,6 @@ EOF
 				$aUniquenessRules[$sCurrentRuleId]['disabled'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'disabled', null);
 				$aUniquenessRules[$sCurrentRuleId]['is_blocking'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'is_blocking',
 					null);
-				$aUniquenessRules[$sCurrentRuleId]['description'] = $oUniquenessSingleRule->GetChildText('description');
-				$aUniquenessRules[$sCurrentRuleId]['error_message'] = $oUniquenessSingleRule->GetChildText('error_message');
 
 				try
 				{
@@ -1491,6 +1489,8 @@ EOF
 					$aParameters['class_field'] = $this->GetMandatoryPropString($oField, 'class_field');
 					// List of AttributeDefinition Classes to filter class_field (empty means all)
 					$aParameters['attribute_definition_list'] = $this->GetPropString($oField, 'attribute_definition_list', '');
+					// Exclusion list of AttributeDefinition Classes to filter class_field (empty means no exclusion)
+					$aParameters['attribute_definition_exclusion_list'] = $this->GetPropString($oField, 'attribute_definition_exclusion_list', '');
 				}
 				elseif ($sAttType == 'AttributeQueryAttCodeSet')
 				{
@@ -1993,11 +1993,19 @@ EOF;
 				'db_key_field' => 'id',
 				'db_finalclass_field' => 'finalclass',
 			);
+			$sTagInitMethodCalls =
+<<<EOF
+        MetaModel::Init_SetZListItems('default_search', array (
+            0 => 'code',
+            1 => 'label',
+        ));
+EOF
+            ;
 			foreach ($aTagFieldsInfo as $sTagFieldName)
 			{
 				$sTagClassName = static::GetTagDataClassName($sClassName, $sTagFieldName);
 				$sTagClassParams = var_export($aTagClassParams, true);
-				$sPHP .= $this->GeneratePhpCodeForClass($sTagClassName, $sTagClassParentClass, $sTagClassParams);
+				$sPHP .= $this->GeneratePhpCodeForClass($sTagClassName, $sTagClassParentClass, $sTagClassParams, $sTagInitMethodCalls);
 			}
 		}
 

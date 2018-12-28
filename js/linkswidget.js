@@ -78,6 +78,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			else
 			{
 				var iUniqueId = $(this).attr('data-unique-id');
+				if (iUniqueId < 0)
+				{
+					iUniqueId = -iUniqueId;
+				}
 				me.aAdded[iUniqueId] = null;
 			}
 		});
@@ -330,15 +334,20 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		return false;
 	};
 
-    this.OnLinkAdded = function(iAddedId, iRemote)
-    {
+	this.AddLink = function (iAddedId, iRemote)
+	{
         // Assumption: this identifier will be higher than the previous one
         me.iMaxAddedId = iAddedId;
-		var sFormPrefix = me.iInputId;
-		oAdded = {};
-		oAdded['formPrefix'] = sFormPrefix;
-		oAdded['attr_' + sFormPrefix + this.sExtKeyToRemote] = iRemote;
+        var sFormPrefix = me.iInputId;
+        oAdded = {};
+        oAdded['formPrefix'] = sFormPrefix;
+        oAdded['attr_' + sFormPrefix + this.sExtKeyToRemote] = iRemote;
         me.aAdded[iAddedId] = oAdded;
+    };
+
+    this.OnLinkAdded = function(iAddedId, iRemote)
+    {
+		this.AddLink(iAddedId, iRemote);
         $('#linkedset_'+me.id+' :input').off('change').on('change', function() {
 			if (!($(this).hasClass('selection'))) {
 				var oCheckbox = $(this).closest('tr').find('.selection');

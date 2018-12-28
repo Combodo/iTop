@@ -104,7 +104,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script('../js/jquery.mousewheel.js');
 		$this->add_linked_script('../js/jquery.magnific-popup.min.js');
 		$this->add_linked_script('../js/breadcrumb.js');
-		$this->add_linked_script('../js/moment.min.js');
+		$this->add_linked_script('../js/moment-with-locales.min.js');
+		$this->add_linked_script('../js/showdown.min.js');
+		$this->add_linked_script('../js/newsroom_menu.js');
 
 		$this->add_dict_entry('UI:FillAllMandatoryFields');
 
@@ -263,6 +265,10 @@ EOF;
 		}
 		$this->add_script(
 			<<< EOF
+	function GetUserLanguage()
+	{
+		return $sJSLangShort;
+	}
 	function PrepareWidgets()
 	{
 		// note: each action implemented here must be idempotent,
@@ -336,13 +342,13 @@ EOF
 		.magnificPopup({type: 'image', closeOnContentClick: true });
 EOF
 		);
-        
+
 		$this->add_init_script(
 			<<< EOF
 	try
 	{
 		var myLayout; // a var is required because this page utilizes: myLayout.allowOverflow() method
-	
+
 		// Layout
 		paneSize = GetUserPreference('menu_size', 300);
 		if ($('body').length > 0)
@@ -810,6 +816,70 @@ EOF
 	}
 
 	/**
+	* Handles the "newsroom" menu at the top-right of the screen
+	*/
+	protected function InitNewsroom()
+	{
+		$sNewsroomInitialImage = '';
+		if (MetaModel::GetConfig()->Get('newsroom_enabled') !== false)
+	 	{
+			$oUser = UserRights::GetUserObject();
+			/**
+			 * @var iNewsroomProvider[] $aProviders
+			 */
+			$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
+			$aProviderParams = array();
+			foreach($aProviders as $oProvider)
+			{
+				$oProvider->SetConfig(MetaModel::GetConfig());
+				$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider), true);
+			if ($bProviderEnabled && $oProvider->IsApplicable($oUser))
+			{
+				$aProviderParams[] = array(
+					'label' => $oProvider->GetLabel(),
+					'fetch_url' => $oProvider->GetFetchURL(),
+					'view_all_url' => $oProvider->GetViewAllURL(),
+					'mark_all_as_read_url' => $oProvider->GetMarkAllAsReadURL(),
+					'placeholders' => $oProvider->GetPlaceholders(),
+					'ttl' => $oProvider->GetTTL(),
+				);
+			}
+		}
+		if (count($aProviderParams) > 0)
+		{
+			$sImageUrl= '../images/newsroom_menu.png';
+			$sPlaceholderImageUrl= '../images/newsroom-message.svg';
+			$aParams = array(
+				'image_url' => $sImageUrl,
+				'placeholder_image_url' => $sPlaceholderImageUrl,
+				'cache_uuid' => 'itop-newsroom-'.md5(APPROOT),
+				'providers' => $aProviderParams,
+				'display_limit' => (int)appUserPreferences::GetPref('newsroom_display_size', 7),
+				'labels' => array(
+					'no_message' => Dict::S('UI:Newsroom:NoNewMessage'),
+					'mark_all_as_read' => Dict::S('UI:Newsroom:MarkAllAsRead'),
+					'view_all' => Dict::S('UI:Newsroom:ViewAllMessages'),
+				),
+			);
+			$sParams = json_encode($aParams);
+			$this->add_ready_script(
+<<<EOF
+	$('#top-left-newsroom-cell').newsroom_menu($sParams);
+EOF
+			);
+			$sNewsroomInitialImage = '<img style="opacity:0.4" src="../images/newsroom_menu.png">';
+		}
+		else
+		{
+			// No newsroom menu at all
+		}
+	}
+	// else no newsroom menu
+	return $sNewsroomInitialImage;
+	}
+
+
+	/**
 	 * Outputs (via some echo) the complete HTML page by assembling all its elements
 	 */
 	public function output()
@@ -905,6 +975,8 @@ EOF
 EOF
 			);
 		}
+
+		$sNewsRoomInitialImage = $this->InitNewsroom();
 
 		$this->outputCollapsibleSectionInit();
 
@@ -1053,6 +1125,7 @@ EOF
 			$sHtml .= '<button onclick="window.close()">'.htmlentities(Dict::S('UI:Button:Cancel'), ENT_QUOTES, 'UTF-8').'</button>';
 			$sHtml .= '&nbsp;';
 
+			$sDefaultResolution = '27.7cm';
 			$aResolutionChoices = array(
 				'100%' => Dict::S('UI:PrintResolution:FullSize'),
 				'19cm' => Dict::S('UI:PrintResolution:A4Portrait'),
@@ -1064,16 +1137,14 @@ EOF
 				<<<EOF
 <select name="text" onchange='$(".printable-content").width(this.value); $(charts).each(function(i, chart) { $(chart).trigger("resize"); });'>
 EOF;
-			$bIsSelected = true;
 			foreach ($aResolutionChoices as $sValue => $sText)
 			{
-				$sHtml .= '<option value="'.$sValue.'" '.($bIsSelected ? 'selected' : '').'>'.$sText.'</option>';
-				$bIsSelected = false;
+				$sHtml .= '<option value="'.$sValue.'" '.(($sValue === $sDefaultResolution) ? 'selected' : '').'>'.$sText.'</option>';
 			}
 			$sHtml .= "</select>";
 
 			$sHtml .= "</div>";
-			$sHtml .= "<div class=\"printable-content\">";
+			$sHtml .= "<div class=\"printable-content\" style=\"width: $sDefaultResolution;\">";
 		}
 
 		// Render the revision number
@@ -1288,6 +1359,7 @@ EOF;
 			$sHtml .= '		<table id="top-left-buttons-area"><tr>';
 			$sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sDefaultPlaceHolder.'" value="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"><input type="hidden" name="operation" value="full_text"/></div></div></td>';
 			$sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?t='.utils::GetCacheBusterTimestamp().'"/></td>';
+			$sHtml .= '		<td id="top-left-newsroom-cell">'.$sNewsRoomInitialImage.'</td>';
 			$sHtml .= '     	<td id="top-left-logoff-cell">'.self::FilterXSS($sLogOffMenu).'</td>';
 			$sHtml .= '     </tr></table></form></div>';
 			$sHtml .= ' </td>';

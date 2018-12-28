@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
@@ -24,8 +22,6 @@
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
-
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:ChangeManagement' => 'Değişiklik Yönetimi',
 	'Menu:Change:Overview' => 'Özet',
@@ -44,6 +40,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Changes+' => '',
 	'Menu:MyChanges' => 'Bana atanan değişiklik istekleri',
 	'Menu:MyChanges+' => 'Bana atanan değişiklik istekleri',
+	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes by category for the last 7 days~~',
+	'UI-ChangeManagementOverview-Last-7-days' => 'Number of changes for the last 7 days~~',
+	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes by domain for the last 7 days~~',
+	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes by status for the last 7 days~~',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
 
 // Dictionnay conventions
@@ -64,8 +66,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Change' => 'Değişiklik',
 	'Class:Change+' => '',
-	'Class:Change/Attribute:start_date' => 'Planlanan başlama tarihi',
-	'Class:Change/Attribute:start_date+' => '',
 	'Class:Change/Attribute:status' => 'Durumu',
 	'Class:Change/Attribute:status+' => '',
 	'Class:Change/Attribute:status/Value:new' => 'Yeni',
@@ -94,30 +94,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Change/Attribute:requestor_id+' => '',
 	'Class:Change/Attribute:requestor_email' => 'İstek sahibi',
 	'Class:Change/Attribute:requestor_email+' => '',
-	'Class:Change/Attribute:org_id' => 'Müşteri',
-	'Class:Change/Attribute:org_id+' => '',
-	'Class:Change/Attribute:org_name' => 'Müşteri',
-	'Class:Change/Attribute:org_name+' => '',
-	'Class:Change/Attribute:workgroup_id' => 'İş grubu',
-	'Class:Change/Attribute:workgroup_id+' => '',
-	'Class:Change/Attribute:workgroup_name' => 'İş grubu',
-	'Class:Change/Attribute:workgroup_name+' => '',
 	'Class:Change/Attribute:creation_date' => 'Yaratıldı',
 	'Class:Change/Attribute:creation_date+' => '',
-	'Class:Change/Attribute:last_update' => 'Son güncelleme',
-	'Class:Change/Attribute:last_update+' => '',
-	'Class:Change/Attribute:end_date' => 'Bitiş tarihi',
-	'Class:Change/Attribute:end_date+' => '',
-	'Class:Change/Attribute:close_date' => 'Bitirilme tarihi',
-	'Class:Change/Attribute:close_date+' => '',
 	'Class:Change/Attribute:impact' => 'Etkisi',
 	'Class:Change/Attribute:impact+' => '',
-	'Class:Change/Attribute:agent_id' => 'Yetkili',
-	'Class:Change/Attribute:agent_id+' => '',
-	'Class:Change/Attribute:agent_name' => 'Yetkili',
-	'Class:Change/Attribute:agent_name+' => '',
-	'Class:Change/Attribute:agent_email' => 'Yetkili',
-	'Class:Change/Attribute:agent_email+' => '',
 	'Class:Change/Attribute:supervisor_group_id' => 'Supervizör ekip',
 	'Class:Change/Attribute:supervisor_group_id+' => '',
 	'Class:Change/Attribute:supervisor_group_name' => 'Supervizör ekip',
@@ -136,14 +116,28 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Change/Attribute:manager_email+' => '',
 	'Class:Change/Attribute:outage' => 'Servis kesilmesi',
 	'Class:Change/Attribute:outage+' => '',
-	'Class:Change/Attribute:outage/Value:yes' => 'Evet',
-	'Class:Change/Attribute:outage/Value:yes+' => '',
 	'Class:Change/Attribute:outage/Value:no' => 'Hayır',
 	'Class:Change/Attribute:outage/Value:no+' => '',
-	'Class:Change/Attribute:change_request' => 'İstek',
-	'Class:Change/Attribute:change_request+' => '',
+	'Class:Change/Attribute:outage/Value:yes' => 'Evet',
+	'Class:Change/Attribute:outage/Value:yes+' => '',
 	'Class:Change/Attribute:fallback' => 'Geridönüş planı',
 	'Class:Change/Attribute:fallback+' => '',
+	'Class:Change/Attribute:parent_id' => 'Parent change~~',
+	'Class:Change/Attribute:parent_id+' => '~~',
+	'Class:Change/Attribute:parent_name' => 'Parent change Ref~~',
+	'Class:Change/Attribute:parent_name+' => '~~',
+	'Class:Change/Attribute:related_request_list' => 'Related requests~~',
+	'Class:Change/Attribute:related_request_list+' => 'All the user requests linked to this change~~',
+	'Class:Change/Attribute:related_problems_list' => 'Related problems~~',
+	'Class:Change/Attribute:related_problems_list+' => 'All the problems linked to this change~~',
+	'Class:Change/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Change/Attribute:related_incident_list+' => 'All the incidents linked to this change~~',
+	'Class:Change/Attribute:child_changes_list' => 'Child changes~~',
+	'Class:Change/Attribute:child_changes_list+' => 'All the sub changes linked to this change~~',
+	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent friendly name~~',
+	'Class:Change/Attribute:parent_id_friendlyname+' => '~~',
+	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Change type~~',
+	'Class:Change/Attribute:parent_id_finalclass_recall+' => '~~',
 	'Class:Change/Stimulus:ev_validate' => 'Doğrula',
 	'Class:Change/Stimulus:ev_validate+' => '',
 	'Class:Change/Stimulus:ev_reject' => 'Ret',
@@ -175,30 +169,22 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:RoutineChange' => 'Sıradan değişiklik',
 	'Class:RoutineChange+' => '',
-	'Class:RoutineChange/Attribute:status/Value:new' => 'Yeni',
-	'Class:RoutineChange/Attribute:status/Value:new+' => '',
-	'Class:RoutineChange/Attribute:status/Value:assigned' => 'Atanmış',
-	'Class:RoutineChange/Attribute:status/Value:assigned+' => '',
-	'Class:RoutineChange/Attribute:status/Value:plannedscheduled' => 'Planlanan',
-	'Class:RoutineChange/Attribute:status/Value:plannedscheduled+' => '',
-	'Class:RoutineChange/Attribute:status/Value:approved' => 'Onaylanan',
-	'Class:RoutineChange/Attribute:status/Value:approved+' => '',
-	'Class:RoutineChange/Attribute:status/Value:implemented' => 'Uygulanan',
-	'Class:RoutineChange/Attribute:status/Value:implemented+' => '',
-	'Class:RoutineChange/Attribute:status/Value:monitored' => 'İzlenen',
-	'Class:RoutineChange/Attribute:status/Value:monitored+' => '',
-	'Class:RoutineChange/Attribute:status/Value:closed' => 'Kapatılan',
-	'Class:RoutineChange/Attribute:status/Value:closed+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Doğrulanan',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
+	'Class:RoutineChange/Stimulus:ev_reject' => 'Reject~~',
+	'Class:RoutineChange/Stimulus:ev_reject+' => '~~',
 	'Class:RoutineChange/Stimulus:ev_assign' => 'Atanan',
 	'Class:RoutineChange/Stimulus:ev_assign+' => '',
 	'Class:RoutineChange/Stimulus:ev_reopen' => 'Tekrar açılan',
 	'Class:RoutineChange/Stimulus:ev_reopen+' => '',
 	'Class:RoutineChange/Stimulus:ev_plan' => 'Planlanan',
 	'Class:RoutineChange/Stimulus:ev_plan+' => '',
+	'Class:RoutineChange/Stimulus:ev_approve' => 'Approve~~',
+	'Class:RoutineChange/Stimulus:ev_approve+' => '~~',
 	'Class:RoutineChange/Stimulus:ev_replan' => 'Tekrar planlanan',
 	'Class:RoutineChange/Stimulus:ev_replan+' => '',
+	'Class:RoutineChange/Stimulus:ev_notapprove' => 'Do Not Approve~~',
+	'Class:RoutineChange/Stimulus:ev_notapprove+' => '~~',
 	'Class:RoutineChange/Stimulus:ev_implement' => 'Uygula',
 	'Class:RoutineChange/Stimulus:ev_implement+' => '',
 	'Class:RoutineChange/Stimulus:ev_monitor' => 'İzle',
@@ -241,6 +227,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Bitir',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
 ));
+
 //
 // Class: NormalChange
 //
@@ -248,26 +235,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:NormalChange' => 'Normal değişiklik',
 	'Class:NormalChange+' => '',
-	'Class:NormalChange/Attribute:status/Value:new' => 'Yeni',
-	'Class:NormalChange/Attribute:status/Value:new+' => '',
-	'Class:NormalChange/Attribute:status/Value:validated' => 'Doğrulanan',
-	'Class:NormalChange/Attribute:status/Value:validated+' => '',
-	'Class:NormalChange/Attribute:status/Value:rejected' => 'Reddedilen',
-	'Class:NormalChange/Attribute:status/Value:rejected+' => '',
-	'Class:NormalChange/Attribute:status/Value:assigned' => 'Atanan',
-	'Class:NormalChange/Attribute:status/Value:assigned+' => '',
-	'Class:NormalChange/Attribute:status/Value:plannedscheduled' => 'Planlanan',
-	'Class:NormalChange/Attribute:status/Value:plannedscheduled+' => '',
-	'Class:NormalChange/Attribute:status/Value:approved' => 'Onaylanan',
-	'Class:NormalChange/Attribute:status/Value:approved+' => '',
-	'Class:NormalChange/Attribute:status/Value:notapproved' => 'Onaylanmayan',
-	'Class:NormalChange/Attribute:status/Value:notapproved+' => '',
-	'Class:NormalChange/Attribute:status/Value:implemented' => 'Uygulanan',
-	'Class:NormalChange/Attribute:status/Value:implemented+' => '',
-	'Class:NormalChange/Attribute:status/Value:monitored' => 'İzlenen',
-	'Class:NormalChange/Attribute:status/Value:monitored+' => '',
-	'Class:NormalChange/Attribute:status/Value:closed' => 'Kapatılan',
-	'Class:NormalChange/Attribute:status/Value:closed+' => '',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Kabul tarihi',
 	'Class:NormalChange/Attribute:acceptance_date+' => '',
 	'Class:NormalChange/Attribute:acceptance_comment' => 'Kabul yorumu',
@@ -303,26 +270,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:EmergencyChange' => 'Acil değişiklik',
 	'Class:EmergencyChange+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:new' => 'Yeni',
-	'Class:EmergencyChange/Attribute:status/Value:new+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:validated' => 'Doğrulanan',
-	'Class:EmergencyChange/Attribute:status/Value:validated+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:rejected' => 'Reddedilen',
-	'Class:EmergencyChange/Attribute:status/Value:rejected+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:assigned' => 'Atanan',
-	'Class:EmergencyChange/Attribute:status/Value:assigned+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:plannedscheduled' => 'Planan',
-	'Class:EmergencyChange/Attribute:status/Value:plannedscheduled+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:approved' => 'Onaylanan',
-	'Class:EmergencyChange/Attribute:status/Value:approved+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:notapproved' => 'Onaylanmayan',
-	'Class:EmergencyChange/Attribute:status/Value:notapproved+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:implemented' => 'Uygulanan',
-	'Class:EmergencyChange/Attribute:status/Value:implemented+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:monitored' => 'İzlenen',
-	'Class:EmergencyChange/Attribute:status/Value:monitored+' => '',
-	'Class:EmergencyChange/Attribute:status/Value:closed' => 'Kapatılan',
-	'Class:EmergencyChange/Attribute:status/Value:closed+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Doğrula',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
 	'Class:EmergencyChange/Stimulus:ev_reject' => 'Reddet',
@@ -345,27 +292,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Bitir',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes by category for the last 7 days~~',
-	'UI-ChangeManagementOverview-Last-7-days' => 'Number of changes for the last 7 days~~',
-	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes by domain for the last 7 days~~',
-	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes by status for the last 7 days~~',
-	'Class:Change/Attribute:parent_id' => 'Parent change~~',
-	'Class:Change/Attribute:parent_name' => 'Parent change Ref~~',
-	'Class:Change/Attribute:related_request_list' => 'Related requests~~',
-	'Class:Change/Attribute:related_request_list+' => 'All the user requests linked to this change~~',
-	'Class:Change/Attribute:related_problems_list' => 'Related problems~~',
-	'Class:Change/Attribute:related_problems_list+' => 'All the problems linked to this change~~',
-	'Class:Change/Attribute:related_incident_list' => 'Related incidents~~',
-	'Class:Change/Attribute:related_incident_list+' => 'All the incidents linked to this change~~',
-	'Class:Change/Attribute:child_changes_list' => 'Child changes~~',
-	'Class:Change/Attribute:child_changes_list+' => 'All the sub changes linked to this change~~',
-	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent friendly name~~',
-	'Class:Change/Attribute:parent_id_finalclass_recall' => 'Change type~~',
-	'Class:RoutineChange/Stimulus:ev_reject' => 'Reject~~',
-	'Class:RoutineChange/Stimulus:ev_approve' => 'Approve~~',
-	'Class:RoutineChange/Stimulus:ev_notapprove' => 'Do Not Approve~~',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
-
-?>

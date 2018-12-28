@@ -40,8 +40,7 @@ check_size_reduction_max = 10 # percentage
 # If the backup has failed, a ticket will be created
 # This process relies on the SOAP service "CreateIncident"
 #
-# Root URL of an instance of iTop, into which the ticket will be created
-check_ticket_itop = http://localhost/myiTop 
+# Root URL of an instance of iTop, into which the ticket will be created : config file param 'itop_backup_incident'
 # Any of the above paramaters are mandatory
 check_ticket_login = admin # must have the right to create an Incident Ticket
 check_ticket_pwd = admin
@@ -51,4 +50,3 @@ check_ticket_service = Computers and peripherals
 check_ticket_service_subcategory = Repair
 check_ticket_workgroup = Hardware support
 check_ticket_impacted_server = dbserver1.demo.com
-	

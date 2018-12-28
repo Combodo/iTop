@@ -16,7 +16,7 @@ $(function()
 
 		menus : [],
 
-		_cleanAllMenus()
+		_cleanAllMenus: function()
 		{
 			var me = this;
 			$.each(this.menus, function(i){
@@ -44,7 +44,7 @@ $(function()
 			}
 			this.oImg = $('<img src="'+sIcon+'" style="vertical-align: middle;" foo="bar">');								
 			this.oLabel = $('<span>'+sLabel+'</span>');
-			this.oButton = $('<button type="button" class="icon-select"><div style="display: inline-block;vertical-align: middle;"><span class="ui-icon ui-icon-triangle-1-s"/></div></button>');
+			this.oButton = $('<button type="button" class="icon-select icon-select-dropdown"><div style="display: inline-block;vertical-align: middle;"><span class="ui-icon ui-icon-triangle-1-s"/></div></button>');
 			this.oButton.prepend(this.oLabel).prepend(this.oImg);
 			this.oButton.click(function(event, ui) {
 				//me._cleanAllMenus();
@@ -63,7 +63,7 @@ $(function()
 			});
 			if (this.options.post_upload_to != null)
 			{
-				this.oUploadBtn = $('<button class="icon-select" type="button" title="'+this.options.labels['upload']+'"><div style="display: inline-block;position: relative;vertical-align:middle;height:48px; line-height:48px; width:16px"><span style="height:16px;display:block;position:absolute;top:50%;margin-top:-8px" class="ui-icon ui-icon-circle-plus"/></div></button>');
+				this.oUploadBtn = $('<button class="icon-select icon-select-upload" type="button" title="'+this.options.labels['upload']+'"><div style="display: inline-block;position: relative;vertical-align:middle;height:48px; line-height:48px; width:16px"><span style="height:16px;display:block;position:absolute;top:50%;margin-top:-8px" class="ui-icon ui-icon-circle-plus"/></div></button>');
 				this.oUploadBtn.click( function() { me._upload_dlg(); } );
 				this.oButton.after(this.oUploadBtn);
 			}
@@ -77,7 +77,6 @@ $(function()
 				}
 			});
 			this.oUploadDlg = null;
-			this._refresh();
 		},
 	
 		// called when created, and later when changing options
@@ -133,7 +132,7 @@ $(function()
 			this._create_menu();
 		},
 
-		_cleanMenu(menu)
+		_cleanMenu: function(menu)
 		{
 			menu.hide();
 			menu.remove();

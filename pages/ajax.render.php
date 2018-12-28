@@ -25,16 +25,25 @@
  */
 
 require_once('../approot.inc.php');
-require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
-require_once(APPROOT.'/application/pdfpage.class.inc.php');
-require_once(APPROOT.'/application/wizardhelper.class.inc.php');
-require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
-require_once(APPROOT.'/application/ui.searchformforeignkeys.class.inc.php');
-require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
-require_once(APPROOT.'/application/datatable.class.inc.php');
-require_once(APPROOT.'/application/excelexporter.class.inc.php');
+require_once(APPROOT.'application/application.inc.php');
+require_once(APPROOT.'application/webpage.class.inc.php');
+require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
+require_once(APPROOT.'application/pdfpage.class.inc.php');
+require_once(APPROOT.'application/wizardhelper.class.inc.php');
+require_once(APPROOT.'application/ui.linkswidget.class.inc.php');
+require_once(APPROOT.'application/ui.searchformforeignkeys.class.inc.php');
+require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
+require_once(APPROOT.'application/datatable.class.inc.php');
+require_once(APPROOT.'application/excelexporter.class.inc.php');
+
+
+function LogErrorMessage($sMsgPrefix, $aContextInfo) {
+	$sCurrentUserLogin = UserRights::GetUser();
+	$sContextInfo = urldecode(http_build_query($aContextInfo, '', ', '));
+	$sErrorMessage = "$sMsgPrefix - User='$sCurrentUserLogin', $sContextInfo";
+	IssueLog::Error($sErrorMessage);
+}
+
 
 try
 {
@@ -49,7 +58,7 @@ try
 
 
 	$operation = utils::ReadParam('operation', '');
-	$sFilter = stripslashes(utils::ReadParam('filter', '', false, 'raw_data'));
+	$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 	$sEncoding = utils::ReadParam('encoding', 'serialize');
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
 	$sStyle = utils::ReadParam('style', 'list');
@@ -700,7 +709,7 @@ try
 			$oObj = $oWizardHelper->GetTargetObject();
 			$sClass = $oWizardHelper->GetTargetClass();
 			$sTargetState = utils::ReadParam('target_state', '');
-			$iTransactionId = utils::ReadParam('transaction_id', '');
+			$iTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 			$oObj->Set(MetaModel::GetStateAttributeCode($sClass), $sTargetState);
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sClass, $oObj, array(), array('action' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php', 'transaction_id' => $iTransactionId));
 			break;
@@ -894,8 +903,8 @@ try
 		case 'on_form_cancel':
 			// Called when a creation/modification form is cancelled by the end-user
 			// Let's take this opportunity to inform the plug-ins so that they can perform some cleanup
-			$iTransactionId = utils::ReadParam('transaction_id', 0);
-			$sTempId = session_id().'_'.$iTransactionId;
+			$iTransactionId = utils::ReadParam('transaction_id', 0, false, 'transaction_id');
+			$sTempId = utils::GetUploadTempId($iTransactionId);
 			InlineImage::OnFormCancel($sTempId);
 			foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 			{
@@ -933,6 +942,11 @@ try
 			break;
 
 		case 'import_dashboard':
+			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
+			if (!utils::IsTransactionValid($sTransactionId, true))
+			{
+				throw new SecurityException('ajax.render.php import_dashboard : invalid transaction_id');
+			}
 			$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
@@ -2288,7 +2302,12 @@ EOF
 			try
 			{
 				$token = utils::ReadParam('token', null);
-				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => "Export not found for token: '$token'"); // Fallback error, just in case
+				$sTokenForDisplay = utils::HtmlEntities($token);
+				$aResult = array( // Fallback error, just in case
+					'code' => 'error',
+					'percentage' => 100,
+					'message' => "Export not found for token: '$sTokenForDisplay'",
+				);
 				$data = '';
 				if ($token === null)
 				{
@@ -2363,11 +2382,11 @@ EOF
 				$oPage->add(json_encode($aResult));
 			} catch (BulkExportException $e)
 			{
-				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => $e->GetLocalizedMessage());
+				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->GetLocalizedMessage()));
 				$oPage->add(json_encode($aResult));
 			} catch (Exception $e)
 			{
-				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => $e->getMessage());
+				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->getMessage()));
 				$oPage->add(json_encode($aResult));
 			}
 			break;
@@ -2451,7 +2470,7 @@ EOF
 			);
 
 			$sObjClass = stripslashes(utils::ReadParam('obj_class', '', false, 'class'));
-			$sTempId = utils::ReadParam('temp_id', '');
+			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			if (empty($sObjClass))
 			{
 				$aResult['error'] = "Missing argument 'obj_class'";
@@ -2501,13 +2520,21 @@ EOF
 			break;
 
 		case 'cke_upload_and_browse':
-			$sTempId = utils::ReadParam('temp_id');
+			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
 			try
 			{
 				$oDoc = utils::ReadPostedDocument('upload');
-				if (InlineImage::IsImage($oDoc->GetMimeType()))
+				$sDocMimeType = $oDoc->GetMimeType();
+				if (!InlineImage::IsImage($sDocMimeType))
 				{
+					LogErrorMessage('CKE : error when uploading image in ajax.render.php, not an image',
+						array(
+							'operation' => 'cke_upload_and_browse',
+							'class' => $sObjClass,
+							'ImgMimeType' => $sDocMimeType,
+						));
+				} else {
 					$aDimensions = null;
 					$oDoc = InlineImage::ResizeImageToFit($oDoc, $aDimensions);
 					$oAttachment = MetaModel::NewObject('InlineImage');
@@ -2518,11 +2545,16 @@ EOF
 					$oAttachment->Set('contents', $oDoc);
 					$oAttachment->Set('secret', sprintf('%06x', mt_rand(0, 0xFFFFFF))); // something not easy to guess
 					$iAttId = $oAttachment->DBInsert();
-
 				}
+
 			} catch (FileUploadException $e)
 			{
-				// fail silently ??
+				LogErrorMessage('CKE : error when uploading image in ajax.render.php, exception occured',
+					array(
+						'operation' => 'cke_upload_and_browse',
+						'class' => $sObjClass,
+						'exceptionMsg' => $e,
+					));
 			}
 		// Fall though !! => browse
 
@@ -2532,7 +2564,7 @@ EOF
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
 			$sImgUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
 
-			$sTempId = utils::ReadParam('temp_id');
+			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sClass = utils::ReadParam('obj_class', '', false, 'class');
 			$iObjectId = utils::ReadParam('obj_key', 0, false, 'integer');
 			$sCKEditorFuncNum = utils::ReadParam('CKEditorFuncNum', '');

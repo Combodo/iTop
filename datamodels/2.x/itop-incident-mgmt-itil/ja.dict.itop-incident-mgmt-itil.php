@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,11 +15,50 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Menu:IncidentManagement' => 'インシデント管理',
+	'Menu:IncidentManagement+' => 'インシデント管理',
+	'Menu:Incident:Overview' => '概要',
+	'Menu:Incident:Overview+' => '概要',
+	'Menu:NewIncident' => '新規インシデント',
+	'Menu:NewIncident+' => 'インシデントチケット作成',
+	'Menu:SearchIncidents' => 'インシデント検索',
+	'Menu:SearchIncidents+' => 'インシデントチケット検索',
+	'Menu:Incident:Shortcuts' => 'ショートカット',
+	'Menu:Incident:Shortcuts+' => '',
+	'Menu:Incident:MyIncidents' => '担当しているインシデント',
+	'Menu:Incident:MyIncidents+' => '担当しているインシデント(エージェント)',
+	'Menu:Incident:EscalatedIncidents' => 'エスカレーションされたインシデント',
+	'Menu:Incident:EscalatedIncidents+' => 'エスカレーションされたインシデント',
+	'Menu:Incident:OpenIncidents' => '全オープンインシデント',
+	'Menu:Incident:OpenIncidents+' => '全オープンインシデント',
+	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => '最近14日の優先度別インシデント',
+	'UI-IncidentManagementOverview-Last-14-days' => '最近14日のインシデント数',
+	'UI-IncidentManagementOverview-OpenIncidentByStatus' => '状態別オープンインシデント',
+	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'エージェント別オープンインシデント',
+	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => '顧客別オープンインシデント',
+));
+
+
+
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+
+//
+// Class: Incident
+//
 
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident' => 'インシデント',
@@ -34,6 +73,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Attribute:status/Value:assigned+' => '',
 	'Class:Incident/Attribute:status/Value:escalated_ttr' => 'エスカレートTTR',
 	'Class:Incident/Attribute:status/Value:escalated_ttr+' => '',
+	'Class:Incident/Attribute:status/Value:waiting_for_approval' => '承認待ち',
+	'Class:Incident/Attribute:status/Value:waiting_for_approval+' => '',
 	'Class:Incident/Attribute:status/Value:pending' => '保留中',
 	'Class:Incident/Attribute:status/Value:pending+' => '',
 	'Class:Incident/Attribute:status/Value:resolved' => '解決済み',
@@ -80,8 +121,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Attribute:origin/Value:portal+' => 'ポータル',
 	'Class:Incident/Attribute:service_id' => 'サービス',
 	'Class:Incident/Attribute:service_id+' => '',
+	'Class:Incident/Attribute:service_name' => 'サービス名',
+	'Class:Incident/Attribute:service_name+' => '',
 	'Class:Incident/Attribute:servicesubcategory_id' => 'サービス中分類',
 	'Class:Incident/Attribute:servicesubcategory_id+' => '',
+	'Class:Incident/Attribute:servicesubcategory_name' => 'サービス中分類名',
+	'Class:Incident/Attribute:servicesubcategory_name+' => '',
 	'Class:Incident/Attribute:escalation_flag' => 'エスカレーションフラグ',
 	'Class:Incident/Attribute:escalation_flag+' => '',
 	'Class:Incident/Attribute:escalation_flag/Value:no' => 'いいえ',
@@ -138,8 +183,14 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Attribute:pending_reason+' => '',
 	'Class:Incident/Attribute:parent_incident_id' => '親インシデント',
 	'Class:Incident/Attribute:parent_incident_id+' => '',
+	'Class:Incident/Attribute:parent_incident_ref' => '親インシデント参照',
+	'Class:Incident/Attribute:parent_incident_ref+' => '',
 	'Class:Incident/Attribute:parent_change_id' => '親変更',
 	'Class:Incident/Attribute:parent_change_id+' => '',
+	'Class:Incident/Attribute:parent_change_ref' => '親変更参照',
+	'Class:Incident/Attribute:parent_change_ref+' => '',
+	'Class:Incident/Attribute:related_request_list' => 'Child requests~~',
+	'Class:Incident/Attribute:related_request_list+' => '~~',
 	'Class:Incident/Attribute:child_incidents_list' => '子インシデント',
 	'Class:Incident/Attribute:child_incidents_list+' => '',
 	'Class:Incident/Attribute:public_log' => 'パブリックログ',
@@ -156,6 +207,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Attribute:user_satisfaction/Value:4+' => '非常に不満',
 	'Class:Incident/Attribute:user_comment' => 'ユーザコメント',
 	'Class:Incident/Attribute:user_comment+' => '',
+	'Class:Incident/Attribute:parent_incident_id_friendlyname' => '親インシデント名',
+	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '',
 	'Class:Incident/Stimulus:ev_assign' => '割り当て',
 	'Class:Incident/Stimulus:ev_assign+' => '',
 	'Class:Incident/Stimulus:ev_reassign' => '再割り当て',
@@ -174,43 +227,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Stimulus:ev_close+' => '',
 	'Class:Incident/Stimulus:ev_reopen' => '再オープン',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
-	'Menu:IncidentManagement' => 'インシデント管理',
-	'Menu:IncidentManagement+' => 'インシデント管理',
-	'Menu:Incident:Overview' => '概要',
-	'Menu:Incident:Overview+' => '概要',
-	'Menu:NewIncident' => '新規インシデント',
-	'Menu:NewIncident+' => 'インシデントチケット作成',
-	'Menu:SearchIncidents' => 'インシデント検索',
-	'Menu:SearchIncidents+' => 'インシデントチケット検索',
-	'Menu:Incident:Shortcuts' => 'ショートカット',
-	'Menu:Incident:Shortcuts+' => '',
-	'Menu:Incident:MyIncidents' => '担当しているインシデント',
-	'Menu:Incident:MyIncidents+' => '担当しているインシデント(エージェント)',
-	'Menu:Incident:EscalatedIncidents' => 'エスカレーションされたインシデント',
-	'Menu:Incident:EscalatedIncidents+' => 'エスカレーションされたインシデント',
-	'Menu:Incident:OpenIncidents' => '全オープンインシデント',
-	'Menu:Incident:OpenIncidents+' => '全オープンインシデント',
-	'UI-IncidentManagementOverview-IncidentByPriority-last-14-days' => '最近14日の優先度別インシデント',
-	'UI-IncidentManagementOverview-Last-14-days' => '最近14日のインシデント数',
-	'UI-IncidentManagementOverview-OpenIncidentByStatus' => '状態別オープンインシデント',
-	'UI-IncidentManagementOverview-OpenIncidentByAgent' => 'エージェント別オープンインシデント',
-	'UI-IncidentManagementOverview-OpenIncidentByCustomer' => '顧客別オープンインシデント',
-	'Class:Incident/Attribute:status/Value:waiting_for_approval' => '承認待ち',
-	'Class:Incident/Attribute:status/Value:waiting_for_approval+' => '',
-	'Class:Incident/Attribute:service_name' => 'サービス名',
-	'Class:Incident/Attribute:service_name+' => '',
-	'Class:Incident/Attribute:servicesubcategory_name' => 'サービス中分類名',
-	'Class:Incident/Attribute:servicesubcategory_name+' => '',
-	'Class:Incident/Attribute:parent_incident_ref' => '親インシデント参照',
-	'Class:Incident/Attribute:parent_incident_ref+' => '',
-	'Class:Incident/Attribute:parent_change_ref' => '親変更参照',
-	'Class:Incident/Attribute:parent_change_ref+' => '',
-	'Class:Incident/Attribute:parent_incident_id_friendlyname' => '親インシデント名',
-	'Class:Incident/Attribute:parent_incident_id_friendlyname+' => '',
-	'Class:Incident/Attribute:related_request_list' => 'Child requests~~',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Cannot assign the Parent incident to the incident itself~~',
+
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
 ));
-?>
