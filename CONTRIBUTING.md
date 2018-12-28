@@ -12,13 +12,13 @@ You are welcome to create pull requests on any of those subjects:
 
 * 🐛 `:bug:` bug fix
 * 🔒 `:lock:` security
-* 🌐 `:globe_with_meridians:` translation
+* 🌐 `:globe_with_meridians:` translation / i18n / l10n
 
 If you want to implement a **new feature**, please [create a corresponding ticket](https://sourceforge.net/p/itop/tickets/new/) for review.   
-If you ever want to begin implementation, do so in a fork, and add a link to the corresponding commits in the ticket. 
+If you ever want to begin implementation, do so in a fork, and add a link to the corresponding commits in the ticket.
 
 ### License
-iTop is distributed under the AGPL-3.0 license (see the [license.txt] file), 
+iTop is distributed under the AGPL-3.0 license (see the [license.txt] file),
 your code must comply with this license.
 
 If you want to use another license, you may [create an extension][wiki new ext].
@@ -33,28 +33,29 @@ TL;DR:
 > **create a fork from iTop main repository,  
 > create a branch based on either release branch if present, or develop otherwise**
 
-We are using the [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/) branch model. That means we have in our repo those 
+We are using the [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/) branch model. That means we have in our repo those
 main branches:
 
 - develop: ongoing development version
-- release/*: if present, that means we are working on a beta version
+- release/\*: if present, that means we are working on a beta version
 - master: previous stable version
 
 For example, if no beta version is currently ongoing we could have:
 
-- develop containing 2.8 version
-- master containing 2.7 version
+- develop containing future 2.8.0 version
+- master containing 2.7.x maintenance version
 
-In this example, when 2.8 beta is shipped that will become:
+In this example, when 2.8.0-beta is shipped that will become:
 
-- develop: 2.9 version
-- release/2.8: 2.8 beta
-- master: 2.7 version
+- develop: future 2.9.0 version
+- release/2.8: 2.8.0-beta
+- master: 2.7.x maintenance version
 
-And when 2.8 final will be out:
+And when 2.8.0 final will be out:
 
-- develop: 2.9 version
-- master: 2.8 version
+- develop: future 2.9.0 version
+- master: 2.8.x maintenance version
+- support/2.7 : 2.7.x maintenance version
 
 
 ## Coding
@@ -75,7 +76,7 @@ Our tests are located in the `test/` directory, containing a PHPUnit config file
 * Use the present tense ("Add feature" not "Added feature")
 * Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
 * Limit the first line to 72 characters or less
-* Please start the commit message with an applicable emoji (following the [Gitmoji guide](https://gitmoji.carloscuesta.me/).). For example :
+* Please start the commit message with an applicable emoji code (following the [Gitmoji guide](https://gitmoji.carloscuesta.me/)). For example :
     * 🌐 `:globe_with_meridians:` for translations
     * 🎨 `:art:` when improving the format/structure of the code
     * ⚡️ `:zap:` when improving performance
