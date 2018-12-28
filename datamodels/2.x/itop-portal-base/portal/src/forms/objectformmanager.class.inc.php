@@ -600,13 +600,17 @@ class ObjectFormManager extends FormManager
 		foreach ($aFieldsAtts as $sAttCode => $iFieldFlags)
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sAttCode);
-
-			// Failsafe for AttributeType that would not have MakeFormField and therefore could not be used in a form
+			
+			/** @var Field $oField */
+			$oField = null;
 			if (is_callable(get_class($oAttDef) . '::MakeFormField'))
 			{
-			    /** @var Field $oField */
 				$oField = $oAttDef->MakeFormField($this->oObject);
-
+			}
+			
+			// Failsafe for AttributeType that would not have MakeFormField and therefore could not be used in a form
+			if($oField !== null)
+			{
 				if ($this->sMode !== static::ENUM_MODE_VIEW)
 				{
 					// Field dependencies
@@ -816,7 +820,7 @@ class ObjectFormManager extends FormManager
 				$oField = new LabelField($sAttCode);
 				$oField->SetReadOnly(true)
 					->SetHidden(false)
-					->SetCurrentValue(get_class($oAttDef) . ' : Sorry, that AttributeType is not implemented yet.')
+					->SetCurrentValue('Sorry, that AttributeType is not implemented yet.')
 					->SetLabel($oAttDef->GetLabel());
 			}
 
@@ -1136,7 +1140,7 @@ class ObjectFormManager extends FormManager
 							$oTagSet = $this->oObject->Get($sAttCode);
 							if (is_null($oTagSet))
 							{
-								$oTagSet = new ormTagSet(get_class($this->oObject), $sAttCode);
+								$oTagSet = new ormTagSet(get_class($this->oObject), $sAttCode, $oAttDef->GetMaxItems());
 							}
 							$oTagSet->ApplyDelta(json_decode($value, true));
 							$this->oObject->Set($sAttCode, $oTagSet);
@@ -1220,7 +1224,7 @@ class ObjectFormManager extends FormManager
 		}
 
 		// Processing temporary attachments
-		$sTempId = session_id() . '_' . $this->oForm->GetTransactionId();
+		$sTempId = utils::GetUploadTempId($this->oForm->GetTransactionId());
 		$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
 		$oSearch = DBObjectSearch::FromOQL($sOQL);
 		$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
@@ -1250,7 +1254,7 @@ class ObjectFormManager extends FormManager
 	protected function CancelAttachments()
 	{
 		// Processing temporary attachments
-		$sTempId = session_id() . '_' . $this->oForm->GetTransactionId();
+		$sTempId = utils::GetUploadTempId($this->oForm->GetTransactionId());
 		$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
 		$oSearch = DBObjectSearch::FromOQL($sOQL);
 		$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));

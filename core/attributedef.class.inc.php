@@ -1299,6 +1299,25 @@ class AttributeDashboard extends AttributeDefinition
 	{
 		return '';
 	}
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function MakeFormField(DBObject $oObject, $oFormField = null)
+	{
+		return null;
+	}
+
+	// if this verb returns false, then GetValue must be implemented
+	static public function LoadInObject()
+	{
+		return false;
+	}
+
+	public function GetValue($oHostObject)
+	{
+		return '';
+	}
 }
 
 /**
@@ -2736,13 +2755,17 @@ class AttributeDecimal extends AttributeDBField
 			return null;
 		}
 
-		return (string)$proposedValue;
+		return $this->ScalarToSQL($proposedValue);
 	}
 
 	public function ScalarToSQL($value)
 	{
 		assert(is_null($value) || preg_match('/'.$this->GetValidationPattern().'/', $value));
 
+		if (!is_null($value) && ($value !== ''))
+		{
+			$value = sprintf("%01.".$this->Get('decimals')."f", $value);
+		}
 		return $value; // null or string
 	}
 }
@@ -3692,11 +3715,19 @@ class AttributeEncryptedString extends AttributeString
 }
 
 
-// Wiki formatting - experimental
-//
-// [[<objClass>:<objName>]]
-// Example: [[Server:db1.tnut.com]]
-define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)\]\]/U');
+/**
+ * Wiki formatting - experimental
+ *
+ * [[<objClass>:<objName|objId>|<label>]]
+ * <label> is optional
+ *
+ * Examples:
+ * - [[Server:db1.tnut.com]]
+ * - [[Server:123]]
+ * - [[Server:db1.tnut.com|Production server]]
+ * - [[Server:123|Production server]]
+ */
+define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)(\|(.+))?\]\]/U');
 
 
 /**
@@ -3787,21 +3818,34 @@ class AttributeText extends AttributeString
 			{
 				$sClass = trim($aMatches[1]);
 				$sName = trim($aMatches[2]);
+				$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
 				if (MetaModel::IsValidClass($sClass))
 				{
-					$oObj = MetaModel::GetObjectByName($sClass, $sName, false /* MustBeFound */);
-					if (is_object($oObj))
-					{
+				    $bFound = false;
+
+				    // Try to find by name, then by id
+					if (is_object($oObj = MetaModel::GetObjectByName($sClass, $sName, false /* MustBeFound */)))
+                    {
+                        $bFound = true;
+                    }
+                    elseif(is_object($oObj = MetaModel::GetObject($sClass, (int) $sName, false /* MustBeFound */, true)))
+                    {
+                        $bFound = true;
+                    }
+
+                    if($bFound === true)
+                    {
 						// Propose a std link to the object
-						$sText = str_replace($aMatches[0], $oObj->GetHyperlink(), $sText);
+                        $sHyperlinkLabel = (empty($sLabel)) ? $oObj->GetName() : $sLabel;
+                        $sText = str_replace($aMatches[0], $oObj->GetHyperlink(null, true, $sHyperlinkLabel), $sText);
 					}
 					else
 					{
 						// Propose a std link to the object
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sText = str_replace($aMatches[0],
-							"<span class=\"wiki_broken_link\">$sClassLabel:$sName</span>", $sText);
+						$sReplacement = "<span class=\"wiki_broken_link\">$sClassLabel:$sName" . (!empty($sLabel) ? " ($sLabel)" : "") . "</span>";
+						$sText = str_replace($aMatches[0], $sReplacement, $sText);
 						// Later: propose a link to create a new object
 						// Anyhow... there is no easy way to suggest default values based on the given FRIENDLY name
 						//$sText = preg_replace('/\[\[(.+):(.+)\]\]/', '<a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=new&class='.$sClass.'&default[att1]=xxx&default[att2]=yyy">'.$sName.'</a>', $sText);
@@ -3855,13 +3899,15 @@ class AttributeText extends AttributeString
 			{
 				foreach($aAllMatches as $iPos => $aMatches)
 				{
-					$sClass = $aMatches[1];
-					$sName = $aMatches[2];
+					$sClass = trim($aMatches[1]);
+					$sName = trim($aMatches[2]);
+					$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
 					if (MetaModel::IsValidClass($sClass))
 					{
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sValue = str_replace($aMatches[0], "[[$sClassLabel:$sName]]", $sValue);
+						$sReplacement = "[[$sClassLabel:$sName" . (!empty($sLabel) ? " | $sLabel" : "") . "]]";
+						$sValue = str_replace($aMatches[0], $sReplacement, $sValue);
 					}
 				}
 			}
@@ -3912,15 +3958,17 @@ class AttributeText extends AttributeString
 				{
 					foreach($aAllMatches as $iPos => $aMatches)
 					{
-						$sClassLabel = $aMatches[1];
-						$sName = $aMatches[2];
+						$sClassLabel = trim($aMatches[1]);
+						$sName = trim($aMatches[2]);
+                        $sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
 						if (!MetaModel::IsValidClass($sClassLabel))
 						{
 							$sClass = MetaModel::GetClassFromLabel($sClassLabel);
 							if ($sClass)
 							{
-								$sValue = str_replace($aMatches[0], "[[$sClass:$sName]]", $sValue);
+                                $sReplacement = "[[$sClassLabel:$sName" . (!empty($sLabel) ? " | $sLabel" : "") . "]]";
+								$sValue = str_replace($aMatches[0], $sReplacement, $sValue);
 							}
 						}
 					}
@@ -6469,6 +6517,9 @@ class AttributeExternalField extends AttributeDefinition
 			{
 				$oRemoteAtt = $this->GetExtAttDef();
 				$sLabel = $oRemoteAtt->GetLabel($this->m_sCode);
+				$oKeyAtt = $this->GetKeyAttDef();
+				$sKeyLabel = $oKeyAtt->GetLabel($this->GetKeyAttCode());
+				$sLabel = "{$sKeyLabel}->{$sLabel}";
 			}
 		}
 
@@ -7249,29 +7300,67 @@ class AttributeImage extends AttributeBlob
 		return true;
 	}
 
+	/**
+	 * @param \ormDocument $value
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 *
+	 * @return string
+	 *
+	 * @see edit_image.js for JS generated markup in form edition
+	 */
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
+		$sRet = '';
+		$bIsCustomImage = false;
+
 		$iMaxWidthPx = $this->Get('display_max_width').'px';
 		$iMaxHeightPx = $this->Get('display_max_height').'px';
-		$sUrl = $this->Get('default_image');
-		$sRet = ($sUrl !== null) ? '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">' : '';
-		if (is_object($value) && !$value->IsEmpty())
-		{
-			if ($oHostObject->IsNew() || ($oHostObject->IsModified() && (array_key_exists($this->GetCode(),
-						$oHostObject->ListChanges()))))
-			{
-				// If the object is modified (or not yet stored in the database) we must serve the content of the image directly inline
-				// otherwise (if we just give an URL) the browser will be given the wrong content... and may cache it
-				$sUrl = 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
-			}
-			else
-			{
-				$sUrl = $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
-			}
-			$sRet = '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">';
+
+		$sDefaultImageUrl = $this->Get('default_image');
+		if ($sDefaultImageUrl !== null) {
+			$sRet = $this->GetHtmlForImageUrl($sDefaultImageUrl, $iMaxWidthPx, $iMaxHeightPx);
 		}
 
-		return '<div class="view-image" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';"><span class="helper-middle"></span>'.$sRet.'</div>';
+		$sCustomImageUrl = $this->GetAttributeImageFileUrl($value, $oHostObject);
+		if ($sCustomImageUrl !== null) {
+			$bIsCustomImage = true;
+			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $iMaxWidthPx, $iMaxHeightPx);
+		}
+
+		$sCssClasses = 'view-image attribute-image';
+		$sCssClasses .= ' '.(($bIsCustomImage) ? 'attribute-image-custom' : 'attribute-image-default');
+
+		return '<div class="'.$sCssClasses.'" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';"><span class="helper-middle"></span>'.$sRet.'</div>';
+	}
+
+	private function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx) {
+		return  '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">';
+	}
+
+	/**
+	 * @param \ormDocument $value
+	 * @param \DBObject $oHostObject
+	 *
+	 * @return null|string
+	 */
+	private function GetAttributeImageFileUrl($value, $oHostObject) {
+		if (!is_object($value)) {
+			return null;
+		}
+		if ($value->IsEmpty()) {
+			return null;
+		}
+
+		$bExistingImageModified = ($oHostObject->IsModified() && (array_key_exists($this->GetCode(), $oHostObject->ListChanges())));
+		if ($oHostObject->IsNew() || ($bExistingImageModified))
+		{
+			// If the object is modified (or not yet stored in the database) we must serve the content of the image directly inline
+			// otherwise (if we just give an URL) the browser will be given the wrong content... and may cache it
+			return 'data:'.$value->GetMimeType().';base64,'.base64_encode($value->GetData());
+		}
+
+		return $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
 	}
 
 	static public function GetFormFieldClass()
@@ -8734,6 +8823,7 @@ class AttributePropertySet extends AttributeTable
 abstract class AttributeSet extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+	const EDITABLE_INPUT_ID_SUFFIX = '-setwidget-values'; // used client side, see js/jquery.itop-set-widget.js
 
 	public function __construct($sCode, array $aParams)
 	{
@@ -9080,6 +9170,8 @@ class AttributeClassAttCodeSet extends AttributeSet
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
+	const DEFAULT_PARAM_INCLUDE_CHILD_CLASSES_ATTRIBUTES = false;
+
 	public function __construct($sCode, array $aParams)
 	{
 		parent::__construct($sCode, $aParams);
@@ -9088,7 +9180,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 
 	static public function ListExpectedParams()
 	{
-		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list'));
+		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list', 'attribute_definition_exclusion_list'));
 	}
 
 	public function GetMaxSize()
@@ -9096,52 +9188,111 @@ class AttributeClassAttCodeSet extends AttributeSet
 		return max(255, 15 * $this->GetMaxItems());
 	}
 
+	/**
+	 * @param array $aArgs
+	 * @param string $sContains
+	 *
+	 * @return array|null
+	 * @throws \CoreException
+	 */
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
-		if (isset($aArgs['this']))
+		if (!isset($aArgs['this']))
 		{
-			$oHostObj = $aArgs['this'];
-			$sTargetClass = $this->Get('class_field');
-			$sClass = $oHostObj->Get($sTargetClass);
+			return null;
+		}
 
-			$aAllowedAttributes = array();
-			if (empty($sClass))
+		$oHostObj = $aArgs['this'];
+		$sTargetClass = $this->Get('class_field');
+		$sRootClass = $oHostObj->Get($sTargetClass);
+		$bIncludeChildClasses = $this->GetOptional('include_child_classes_attributes', static::DEFAULT_PARAM_INCLUDE_CHILD_CLASSES_ATTRIBUTES);
+
+		$aExcludeDefs = array();
+		$sAttDefExclusionList = $this->Get('attribute_definition_exclusion_list');
+		if (!empty($sAttDefExclusionList))
+		{
+			foreach(explode(',', $sAttDefExclusionList) as $sAttDefName)
 			{
-				$aAllAttributes = array();
+				$sAttDefName = trim($sAttDefName);
+				$aExcludeDefs[$sAttDefName] = $sAttDefName;
 			}
-			else
+		}
+
+		$aAllowedDefs = array();
+		$sAttDefList = $this->Get('attribute_definition_list');
+		if (!empty($sAttDefList))
+		{
+			foreach(explode(',', $sAttDefList) as $sAttDefName)
 			{
-				$aAllAttributes = MetaModel::GetAttributesList($sClass);
+				$sAttDefName = trim($sAttDefName);
+				$aAllowedDefs[$sAttDefName] = $sAttDefName;
 			}
-			$sAttDefList = $this->Get('attribute_definition_list');
-			if (!empty($sAttDefList))
+		}
+
+		$aAllAttributes = array();
+		if (!empty($sRootClass))
+		{
+			$aClasses = array($sRootClass);
+			if($bIncludeChildClasses === true)
 			{
-				$aAllowedDefs = array();
-				foreach(explode(',', $sAttDefList) as $sAttDefName)
+				$aClasses = $aClasses + MetaModel::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP);
+			}
+
+			foreach($aClasses as $sClass)
+			{
+				foreach(MetaModel::GetAttributesList($sClass) as $sAttCode)
 				{
-					$sAttDefName = trim($sAttDefName);
-					$aAllowedDefs[$sAttDefName] = $sAttDefName;
-				}
-				foreach($aAllAttributes as $sAttCode)
-				{
-					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-					if (isset($aAllowedDefs[get_class($oAttDef)]))
+					// Add attribute only if not already there (can be in leaf classes but not the root)
+					if(!array_key_exists($sAttCode, $aAllAttributes))
 					{
-						$aAllowedAttributes[$sAttCode] = $sAttCode.' ('.MetaModel::GetLabel($sClass, $sAttCode).')';
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+						$sAttDefClass = get_class($oAttDef);
+
+						// Skip excluded attdefs
+						if(isset($aExcludeDefs[$sAttDefClass]))
+						{
+							continue;
+						}
+						// Skip not allowed attdefs only if list specified
+						if(!empty($aAllowedDefs) && !isset($aAllowedDefs[$sAttDefClass]))
+						{
+							continue;
+						}
+
+						$aAllAttributes[$sAttCode] = array(
+							'classes' => array($sClass),
+						);
+					}
+					else
+					{
+						$aAllAttributes[$sAttCode]['classes'][] = $sClass;
 					}
 				}
 			}
-			else
-			{
-				foreach($aAllAttributes as $sAttCode)
-				{
-					$aAllowedAttributes[$sAttCode] = $sAttCode.' ('.MetaModel::GetLabel($sClass, $sAttCode).')';
-				}
-			}
-			return $aAllowedAttributes;
 		}
 
-		return null;
+		$aAllowedAttributes = array();
+		foreach($aAllAttributes as $sAttCode => $aAttData)
+		{
+			$iAttClassesCount = count($aAttData['classes']);
+			$sAttFirstClass = $aAttData['classes'][0];
+			$sAttLabel = MetaModel::GetLabel($sAttFirstClass, $sAttCode);
+
+			if($sAttFirstClass === $sRootClass)
+			{
+				$sLabel = Dict::Format('Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass', $sAttCode, $sAttLabel);
+			}
+			elseif($iAttClassesCount === 1)
+			{
+				$sLabel = Dict::Format('Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass', $sAttCode, $sAttLabel, MetaModel::GetName($sAttFirstClass));
+			}
+			else
+			{
+				$sLabel = Dict::Format('Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses', $sAttCode, $sAttLabel);
+			}
+			$aAllowedAttributes[$sAttCode] = $sLabel;
+		}
+		return $aAllowedAttributes;
 	}
 
 	/**
@@ -9231,7 +9382,19 @@ class AttributeClassAttCodeSet extends AttributeSet
 				{
 					try
 					{
-						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.MetaModel::GetLabel($sClass, $sAttCode)." ($sAttCode)".'" data-description="">'.$sAttCode.'</span>';
+						$sAttClass = $sClass;
+
+						// Look for the first class (current or children) that have this attcode
+						foreach(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
+						{
+							if(MetaModel::IsValidAttCode($sChildClass, $sAttCode))
+							{
+								$sAttClass = $sChildClass;
+								break;
+							}
+						}
+
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)".'" data-description="">'.$sAttCode.'</span>';
 					} catch (Exception $e)
 					{
 						// Ignore bad values
@@ -9923,11 +10086,13 @@ class AttributeTagSet extends AttributeSet
 	 *
 	 * @param array $aValues
 	 * @param string $sCssClass
+	 * @param bool $bWithLink if true will generate a link, otherwise just a "a" tag without href
 	 *
 	 * @return string
 	 * @throws \CoreException
+	 * @throws \OQLException
 	 */
-	private function GenerateViewHtmlForValues($aValues, $sCssClass = '')
+	public function GenerateViewHtmlForValues($aValues, $sCssClass = '', $bWithLink = true)
 	{
 		if (empty($aValues)) {return '';}
 		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
@@ -9945,9 +10110,17 @@ class AttributeTagSet extends AttributeSet
 				$sContext = $oAppContext->GetForLink();
 				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
 				$sFilter = rawurlencode($oFilter->serialize());
-				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 
-				$sHtml .= '<a href="'.$sUrl.'" class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.htmlentities($sTagLabel, ENT_QUOTES, 'UTF-8').'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES, 'UTF-8').'">'.$sTagLabel.'</a>';
+				$sLink = '';
+				if ($bWithLink)
+				{
+					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+					$sLink = ' href="'.$sUrl.'"';
+				}
+
+				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.htmlentities($sTagLabel,
+						ENT_QUOTES, 'UTF-8').'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES,
+						'UTF-8').'">'.htmlentities($sTagLabel, ENT_QUOTES, 'UTF-8').'</a>';
 			}
 			else
 			{

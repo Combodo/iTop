@@ -402,6 +402,7 @@ abstract class DBSearch
 			}
 		}
 
+		/** @var DBObjectSearch | null $oResultFilter */
 		if (!isset($oResultFilter))
 		{
 			$oKPI = new ExecutionKPI();
@@ -440,11 +441,20 @@ abstract class DBSearch
 		return $oResultFilter;
 	}
 
-	// Alternative to object mapping: the data are transfered directly into an array
-	// This is 10 times faster than creating a set of objects, and makes sense when optimization is required
 	/**
-	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
-	 */	
+	 * Alternative to object mapping: the data are transfered directly into an array
+	 * This is 10 times faster than creating a set of objects, and makes sense when optimization is required
+	 *
+	 * @param array $aColumns
+	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 * @param array $aArgs
+	 *
+	 * @return array|void
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public function ToDataArray($aColumns = array(), $aOrderBy = array(), $aArgs = array())
 	{
 		$sSQL = $this->MakeSelectQuery($aOrderBy, $aArgs);
@@ -674,11 +684,30 @@ abstract class DBSearch
 		return $sRes;
 	}
 
+	protected abstract function IsDataFiltered();
+	protected abstract function SetDataFiltered();
 
 	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
 	{
-		$oSQLQuery = $this->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
-		$oSQLQuery->SetSourceOQL($this->ToOQL());
+		$oSearch = $this;
+		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered())
+		{
+			$oVisibleObjects = UserRights::GetSelectFilter($this->GetClass(), $this->GetModifierProperties('UserRightsGetSelectFilter'));
+			if ($oVisibleObjects === false)
+			{
+				// Make sure this is a valid search object, saying NO for all
+				$oVisibleObjects = DBObjectSearch::FromEmptySet($this->GetClass());
+			}
+			if (is_object($oVisibleObjects))
+			{
+				$oVisibleObjects->AllowAllData();
+				$oSearch = $this->Intersect($oVisibleObjects);
+				/** @var DBSearch $oSearch */
+				$oSearch->SetDataFiltered();
+			}
+		}
+		$oSQLQuery = $oSearch->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
+		$oSQLQuery->SetSourceOQL($oSearch->ToOQL());
 
 		// Join to an additional table, if required...
 		//
@@ -701,6 +730,20 @@ abstract class DBSearch
 	public abstract function GetSQLQueryStructure(
 		$aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null
 	);
+
+	/**
+	 * @return \Expression
+	 */
+	public abstract function GetCriteria();
+
+	public abstract function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true);
+
+	/**
+	 * @return string a unique param name
+	 */
+	protected function GenerateUniqueParamName() {
+		return str_replace('.', '', 'param_'.microtime(true).rand(0,100));
+	}
 
 	////////////////////////////////////////////////////////////////////////////
 	//

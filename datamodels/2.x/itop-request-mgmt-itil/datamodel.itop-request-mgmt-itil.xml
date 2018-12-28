@@ -1315,21 +1315,36 @@
 					<static>false</static>
 					<access>public</access>
 					<type>Internal</type>
-					<code><![CDATA[	public function ResolveFrom($oParentTicket)
+                    <code><![CDATA[	public function ResolveFrom($oParentTicket)
 	{
-		if ($this->Get('status') != 'resolved')
+		if ($this->Get('status') != 'resolved' && $this->Get('status') != 'closed' )
 		{
-			$this->Set('servicesubcategory_id', $oParentTicket->Get('servicesubcategory_id'));
-			$this->Set('service_id', $oParentTicket->Get('service_id'));		
-			$this->Set('team_id', $oParentTicket->Get('team_id'));
-			$this->Set('agent_id', $oParentTicket->Get('agent_id'));	
-			$this->Set('resolution_code', $oParentTicket->Get('resolution_code'));
+			$aDummy = array();
+			$aExcludedAttributes = array('team_id', 'agent_id');
+		    foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+		    {
+		    	// Exclude inter dependant attributes to keep consistency
+		    	if(in_array($sAttCode, $aExcludedAttributes))
+		    	{
+		    		continue;
+		    	}
+		    	
+		         if (($this->GetAttributeFlags($sAttCode, $aDummy, 'resolved') & OPT_ATT_MANDATORY) && empty($this->Get($sAttCode)))
+		         {
+		            $this->Set($sAttCode, $oParentTicket->Get($sAttCode));
+		         }
+		    }
+		  if (($this->Get('team_id') == 0) || ($this->Get('agent_id') ==0))  
+           {  
+                  $this->Set('team_id', $oParentTicket->Get('team_id'));
+                  $this->Set('agent_id', $oParentTicket->Get('agent_id'));
+           }
 			$sParent = '[['.get_class($oParentTicket).':'.$oParentTicket->Get('ref').']]';
 			$this->Set('solution', Dict::Format('Tickets:ResolvedFrom', $sParent, MetaModel::GetName(get_class($oParentTicket))));
 			$this->ApplyStimulus('ev_autoresolve');
 			$this->DBUpdate();
 		}
-	}]]></code>
+	}]]></code>	
 				</method>
 				<method id="UpdateChildRequestLog">
 					<static>false</static>

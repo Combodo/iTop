@@ -19,22 +19,23 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use Exception;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
 use AttributeImage;
+use AttributeTagSet;
 use BinaryExpression;
 use CMDBSource;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\ManageBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
-use Combodo\iTop\Portal\Helper\SecurityHelper;
 use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
+use Combodo\iTop\Portal\Helper\SecurityHelper;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
 use Dict;
+use Exception;
 use FieldExpression;
 use iPopupMenuExtension;
 use JSButtonItem;
@@ -585,6 +586,7 @@ class ManageBrickController extends BrickController
 						if ($oAttDef->IsExternalKey())
 						{
 							$sValue = $oCurrentRow->GetAsHTML($sItemAttr.'_friendlyname');
+							$sSortValue = $oCurrentRow->Get($sItemAttr.'_friendlyname');
 
 							// Adding a view action on the external keys
 							if ($oCurrentRow->Get($sItemAttr) !== $oAttDef->GetNullValue())
@@ -614,16 +616,28 @@ class ManageBrickController extends BrickController
                                 $sUrl = $oAttDef->Get('default_image');
                             }
                             $sValue = '<img src="' . $sUrl . '" />';
+                            $sSortValue = null;
                         }
+						elseif ($oAttDef instanceof AttributeTagSet)
+						{
+							/** @var \ormTagSet $oSetValues */
+							$oSetValues = $oCurrentRow->Get($sItemAttr);
+							$aCodes = $oSetValues->GetTags();
+							/** @var \AttributeTagSet $oAttDef */
+							$sValue = $oAttDef->GenerateViewHtmlForValues($aCodes, '', false);
+							$sSortValue = implode(' ', $aCodes);
+						}
 						else
 						{
                             $sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
+                            $sSortValue = $oCurrentRow->Get($sItemAttr);
 						}
 						unset($oAttDef);
 
 						$aItemAttrs[$sItemAttr] = array(
 							'att_code' => $sItemAttr,
 							'value' => $sValue,
+							'sort_value' => $sSortValue,
 							'actions' => $aActions
 						);
 					}

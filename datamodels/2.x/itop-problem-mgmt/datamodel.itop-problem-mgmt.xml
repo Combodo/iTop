@@ -313,6 +313,9 @@
                             <attribute id="description">
                                 <read_only/>
                             </attribute>
+                            <attribute id="resolution_date">
+                                <read_only/>
+                            </attribute>
                         </flags>
                         <transitions>
                             <transition id="ev_reassign">

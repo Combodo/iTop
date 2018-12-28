@@ -1,27 +1,24 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @license	http://opensource.org/licenses/AGPL-3.0
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
 //////////////////////////////////////////////////////////////////////
@@ -51,6 +48,8 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+// Class:<class_name>/UniquenessRule:<rule_code>
+// Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
@@ -66,6 +65,8 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+// Class:<class_name>/UniquenessRule:<rule_code>
+// Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
@@ -210,10 +211,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Picture',
 	'Class:Person/Attribute:picture+' => '',
-	'Class:Person/UniquenessRule:employee_number/Description' => 'The employee number must be unique in the organization',
-	'Class:Person/UniquenessRule:employee_number/Error' => 'there is already a person in \'$this->org_name$\' organization with the same employee number',
-	'Class:Person/UniquenessRule:name/Description' => 'The employee name should be unique inside its organization',
-	'Class:Person/UniquenessRule:name/Error' => 'There is already a person in \'$this->org_name$\' organization with the same name',
+	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization',
+	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number',
+	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization',
+	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name',
 ));
 
 //
@@ -537,9 +538,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Server/Attribute:osversion_id+' => '',
 	'Class:Server/Attribute:osversion_name' => 'OS version name',
 	'Class:Server/Attribute:osversion_name+' => '',
-	'Class:Server/Attribute:oslicence_id' => 'OS licence',
+	'Class:Server/Attribute:oslicence_id' => 'OS license',
 	'Class:Server/Attribute:oslicence_id+' => '',
-	'Class:Server/Attribute:oslicence_name' => 'OS licence name',
+	'Class:Server/Attribute:oslicence_name' => 'OS license name',
 	'Class:Server/Attribute:oslicence_name+' => '',
 	'Class:Server/Attribute:cpu' => 'CPU',
 	'Class:Server/Attribute:cpu+' => '',
@@ -747,9 +748,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SoftwareInstance/Attribute:software_id+' => '',
 	'Class:SoftwareInstance/Attribute:software_name' => 'Software name',
 	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software licence',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software license',
 	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software licence name',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software license name',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '',
 	'Class:SoftwareInstance/Attribute:path' => 'Path',
 	'Class:SoftwareInstance/Attribute:path+' => '',
@@ -937,9 +938,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VirtualMachine/Attribute:osversion_id+' => '',
 	'Class:VirtualMachine/Attribute:osversion_name' => 'OS version name',
 	'Class:VirtualMachine/Attribute:osversion_name+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS licence',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS license',
 	'Class:VirtualMachine/Attribute:oslicence_id+' => '',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS licence name',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS license name',
 	'Class:VirtualMachine/Attribute:oslicence_name+' => '',
 	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
 	'Class:VirtualMachine/Attribute:cpu+' => '',
@@ -1108,8 +1109,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software',
 	'Class:Software/Attribute:softwarepatch_list' => 'Software Patches',
 	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software',
-	'Class:Software/Attribute:softwarelicence_list' => 'Software Licences',
-	'Class:Software/Attribute:softwarelicence_list+' => 'All the licences for this software',
+	'Class:Software/Attribute:softwarelicence_list' => 'Software Licenses',
+	'Class:Software/Attribute:softwarelicence_list+' => 'All the licenses for this software',
 ));
 
 //
@@ -1169,7 +1170,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Licence/Attribute:name' => 'Name',
 	'Class:Licence/Attribute:name+' => '',
 	'Class:Licence/Attribute:documents_list' => 'Documents',
-	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this licence',
+	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this license',
 	'Class:Licence/Attribute:org_id' => 'Organization',
 	'Class:Licence/Attribute:org_id+' => '',
 	'Class:Licence/Attribute:organization_name' => 'Organization name',
@@ -1190,7 +1191,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Licence/Attribute:perpetual/Value:no+' => 'no',
 	'Class:Licence/Attribute:perpetual/Value:yes' => 'yes',
 	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes',
-	'Class:Licence/Attribute:finalclass' => 'Licence sub-class',
+	'Class:Licence/Attribute:finalclass' => 'License sub-class',
 	'Class:Licence/Attribute:finalclass+' => 'Name of the final class',
 ));
 
@@ -1199,16 +1200,16 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:OSLicence' => 'OS Licence',
+	'Class:OSLicence' => 'OS License',
 	'Class:OSLicence+' => '',
 	'Class:OSLicence/Attribute:osversion_id' => 'OS version',
 	'Class:OSLicence/Attribute:osversion_id+' => '',
 	'Class:OSLicence/Attribute:osversion_name' => 'OS version name',
 	'Class:OSLicence/Attribute:osversion_name+' => '',
 	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtual machines',
-	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this licence is used',
-	'Class:OSLicence/Attribute:servers_list' => 'servers',
-	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this licence is used',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this license is used',
+	'Class:OSLicence/Attribute:servers_list' => 'Servers',
+	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this license is used',
 ));
 
 //
@@ -1216,14 +1217,14 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:SoftwareLicence' => 'Software Licence',
+	'Class:SoftwareLicence' => 'Software License',
 	'Class:SoftwareLicence+' => '',
 	'Class:SoftwareLicence/Attribute:software_id' => 'Software',
 	'Class:SoftwareLicence/Attribute:software_id+' => '',
 	'Class:SoftwareLicence/Attribute:software_name' => 'Software name',
 	'Class:SoftwareLicence/Attribute:software_name+' => '',
 	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software instances',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this licence is used',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this license is used',
 ));
 
 //
@@ -1231,11 +1232,11 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkDocumentToLicence' => 'Link Document / Licence',
+	'Class:lnkDocumentToLicence' => 'Link Document / License',
 	'Class:lnkDocumentToLicence+' => '',
-	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
+	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'License',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
-	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Licence name',
+	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'License name',
 	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
 	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
@@ -1305,8 +1306,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Physical devices',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand',
-	'Class:Brand/UniquenessRule:name/Description' => 'The name must be unique',
-	'Class:Brand/UniquenessRule:name/Error' => 'This brand already exists',
+	'Class:Brand/UniquenessRule:name+' => 'The name must be unique',
+	'Class:Brand/UniquenessRule:name' => 'This brand already exists',
 ));
 
 //
@@ -1360,8 +1361,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone',
 	'Class:Model/Attribute:physicaldevices_list' => 'Physical devices',
 	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model',
-	'Class:Model/UniquenessRule:name_brand/Description' => 'Name must be unique in the brand',
-	'Class:Model/UniquenessRule:name_brand/Error' => 'this model already exists for this brand',
+	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand',
+	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand',
 ));
 
 //
@@ -1801,89 +1802,88 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-'Menu:DataAdministration' => 'Data administration',
-'Menu:DataAdministration+' => 'Data administration',
-'Menu:Catalogs' => 'Catalogs',
-'Menu:Catalogs+' => 'Data types',
-'Menu:Audit' => 'Audit',
-'Menu:Audit+' => 'Audit',
-'Menu:CSVImport' => 'CSV import',
-'Menu:CSVImport+' => 'Bulk creation or update',
-'Menu:Organization' => 'Organizations',
-'Menu:Organization+' => 'All organizations',
-'Menu:Application' => 'Applications',
-'Menu:Application+' => 'All applications',
-'Menu:DBServer' => 'Database servers',
-'Menu:DBServer+' => 'Database servers',
-'Menu:Audit' => 'Audit',
-'Menu:ConfigManagement' => 'Configuration Management',
-'Menu:ConfigManagement+' => 'Configuration Management',
-'Menu:ConfigManagementOverview' => 'Overview',
-'Menu:ConfigManagementOverview+' => 'Overview',
-'Menu:Contact' => 'Contacts',
-'Menu:Contact+' => 'Contacts',
-'Menu:Contact:Count' => '%1$d contacts',
-'Menu:Person' => 'Persons',
-'Menu:Person+' => 'All persons',
-'Menu:Team' => 'Teams',
-'Menu:Team+' => 'All teams',
-'Menu:Document' => 'Documents',
-'Menu:Document+' => 'All documents',
-'Menu:Location' => 'Locations',
+	'Menu:DataAdministration' => 'Data administration',
+	'Menu:DataAdministration+' => 'Data administration',
+	'Menu:Catalogs' => 'Catalogs',
+	'Menu:Catalogs+' => 'Data types',
+	'Menu:Audit' => 'Audit',
+	'Menu:Audit+' => 'Audit',
+	'Menu:CSVImport' => 'CSV import',
+	'Menu:CSVImport+' => 'Bulk creation or update',
+	'Menu:Organization' => 'Organizations',
+	'Menu:Organization+' => 'All organizations',
+	'Menu:Application' => 'Applications',
+	'Menu:Application+' => 'All applications',
+	'Menu:DBServer' => 'Database servers',
+	'Menu:DBServer+' => 'Database servers',
+	'Menu:ConfigManagement' => 'Configuration Management',
+	'Menu:ConfigManagement+' => 'Configuration Management',
+	'Menu:ConfigManagementOverview' => 'Overview',
+	'Menu:ConfigManagementOverview+' => 'Overview',
+	'Menu:Contact' => 'Contacts',
+	'Menu:Contact+' => 'Contacts',
+	'Menu:Contact:Count' => '%1$d contacts',
+	'Menu:Person' => 'Persons',
+	'Menu:Person+' => 'All persons',
+	'Menu:Team' => 'Teams',
+	'Menu:Team+' => 'All teams',
+	'Menu:Document' => 'Documents',
+	'Menu:Document+' => 'All documents',
+	'Menu:Location' => 'Locations',
 
-'Menu:Location+' => 'All locations',
-'Menu:ConfigManagementCI' => 'Configuration items',
-'Menu:ConfigManagementCI+' => 'Configuration items',
-'Menu:BusinessProcess' => 'Business processes',
-'Menu:BusinessProcess+' => 'All business processes',
-'Menu:ApplicationSolution' => 'Application solutions',
-'Menu:ApplicationSolution+' => 'All application solutions',
-'Menu:ConfigManagementSoftware' => 'Application management',
-'Menu:Licence' => 'Licences',
-'Menu:Licence+' => 'All licences',
-'Menu:Patch' => 'Patches',
-'Menu:Patch+' => 'All patches',
-'Menu:ApplicationInstance' => 'Installed software',
-'Menu:ApplicationInstance+' => 'Applications and database servers',
-'Menu:ConfigManagementHardware' => 'Infrastructure management',
-'Menu:Subnet' => 'Subnets',
-'Menu:Subnet+' => 'All subnets',
-'Menu:NetworkDevice' => 'Network devices',
-'Menu:NetworkDevice+' => 'All network devices',
-'Menu:Server' => 'Servers',
-'Menu:Server+' => 'All servers',
-'Menu:Printer' => 'Printers',
-'Menu:Printer+' => 'All printers',
-'Menu:MobilePhone' => 'Mobile phones',
-'Menu:MobilePhone+' => 'All mobile phones',
-'Menu:PC' => 'Personal computers',
-'Menu:PC+' => 'All Personal computers',
-'Menu:NewContact' => 'New contact',
-'Menu:NewContact+' => 'New contact',
-'Menu:SearchContacts' => 'Search for contacts',
-'Menu:SearchContacts+' => 'Search for contacts',
-'Menu:NewCI' => 'New CI',
-'Menu:NewCI+' => 'New CI',
-'Menu:SearchCIs' => 'Search for CIs',
-'Menu:SearchCIs+' => 'Search for CIs',
-'Menu:ConfigManagement:Devices' => 'Devices',
-'Menu:ConfigManagement:AllDevices' => 'Infrastructure',
-'Menu:ConfigManagement:virtualization' => 'Virtualization',
-'Menu:ConfigManagement:EndUsers' => 'End user devices',
-'Menu:ConfigManagement:SWAndApps' => 'Software and applications',
-'Menu:ConfigManagement:Misc' => 'Miscellaneous',
-'Menu:Group' => 'Groups of CIs',
-'Menu:Group+' => 'Groups of CIs',
-'Menu:ConfigManagement:Shortcuts' => 'Shortcuts',
-'Menu:ConfigManagement:AllContacts' => 'All contacts: %1$d',
-'Menu:Typology' => 'Typology configuration',
-'Menu:Typology+' => 'Typology configuration',
-'Menu:OSVersion' => 'OS versions',
-'Menu:OSVersion+' => '',
-'Menu:Software' => 'Software catalog',
-'Menu:Software+' => 'Software catalog',
-'UI_WelcomeMenu_AllConfigItems' => 'Summary',
-'Menu:ConfigManagement:Typology' => 'Typology configuration',
+	'Menu:Location+' => 'All locations',
+	'Menu:ConfigManagementCI' => 'Configuration items',
+	'Menu:ConfigManagementCI+' => 'Configuration items',
+	'Menu:BusinessProcess' => 'Business processes',
+	'Menu:BusinessProcess+' => 'All business processes',
+	'Menu:ApplicationSolution' => 'Application solutions',
+	'Menu:ApplicationSolution+' => 'All application solutions',
+	'Menu:ConfigManagementSoftware' => 'Application management',
+	'Menu:Licence' => 'Licenses',
+	'Menu:Licence+' => 'All licenses',
+	'Menu:Patch' => 'Patches',
+	'Menu:Patch+' => 'All patches',
+	'Menu:ApplicationInstance' => 'Installed software',
+	'Menu:ApplicationInstance+' => 'Applications and database servers',
+	'Menu:ConfigManagementHardware' => 'Infrastructure management',
+	'Menu:Subnet' => 'Subnets',
+	'Menu:Subnet+' => 'All subnets',
+	'Menu:NetworkDevice' => 'Network devices',
+	'Menu:NetworkDevice+' => 'All network devices',
+	'Menu:Server' => 'Servers',
+	'Menu:Server+' => 'All servers',
+	'Menu:Printer' => 'Printers',
+	'Menu:Printer+' => 'All printers',
+	'Menu:MobilePhone' => 'Mobile phones',
+	'Menu:MobilePhone+' => 'All mobile phones',
+	'Menu:PC' => 'Personal computers',
+	'Menu:PC+' => 'All Personal computers',
+	'Menu:NewContact' => 'New contact',
+	'Menu:NewContact+' => 'New contact',
+	'Menu:SearchContacts' => 'Search for contacts',
+	'Menu:SearchContacts+' => 'Search for contacts',
+	'Menu:NewCI' => 'New CI',
+	'Menu:NewCI+' => 'New CI',
+	'Menu:SearchCIs' => 'Search for CIs',
+	'Menu:SearchCIs+' => 'Search for CIs',
+	'Menu:ConfigManagement:Devices' => 'Devices',
+	'Menu:ConfigManagement:AllDevices' => 'Infrastructure',
+	'Menu:ConfigManagement:virtualization' => 'Virtualization',
+	'Menu:ConfigManagement:EndUsers' => 'End user devices',
+	'Menu:ConfigManagement:SWAndApps' => 'Software and applications',
+	'Menu:ConfigManagement:Misc' => 'Miscellaneous',
+	'Menu:Group' => 'Groups of CIs',
+	'Menu:Group+' => 'Groups of CIs',
+	'Menu:ConfigManagement:Shortcuts' => 'Shortcuts',
+	'Menu:ConfigManagement:AllContacts' => 'All contacts: %1$d',
+	'Menu:Typology' => 'Typology configuration',
+	'Menu:Typology+' => 'Typology configuration',
+	'Menu:OSVersion' => 'OS versions',
+	'Menu:OSVersion+' => '',
+	'Menu:Software' => 'Software catalog',
+	'Menu:Software+' => 'Software catalog',
+	'UI_WelcomeMenu_AllConfigItems' => 'Summary',
+	'Menu:ConfigManagement:Typology' => 'Typology configuration',
 
 ));
 
@@ -1891,19 +1891,18 @@ Dict::Add('EN US', 'English', 'English', array(
 // Add translation for Fieldsets
 
 Dict::Add('EN US', 'English', 'English', array(
-'Server:baseinfo' => 'General information',
-'Server:Date' => 'Dates',
-'Server:moreinfo' => 'More information',
-'Server:otherinfo' => 'Other information',
-'Server:power' => 'Power supply',
-'Person:info' => 'General information',
-'Person:personal_info' => 'Personal information',
-'Person:notifiy' => 'Notification',
-'Class:Subnet/Tab:IPUsage' => 'IP Usage',
-'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
-'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
-'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
-'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
-'Class:Document:PreviewTab' => 'Preview',
+	'Server:baseinfo' => 'General information',
+	'Server:Date' => 'Dates',
+	'Server:moreinfo' => 'More information',
+	'Server:otherinfo' => 'Other information',
+	'Server:power' => 'Power supply',
+	'Person:info' => 'General information',
+	'Person:personal_info' => 'Personal information',
+	'Person:notifiy' => 'Notification',
+	'Class:Subnet/Tab:IPUsage' => 'IP Usage',
+	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces having an IP in the range: <em>%1$s</em> to <em>%2$s</em>',
+	'Class:Subnet/Tab:FreeIPs' => 'Free IPs',
+	'Class:Subnet/Tab:FreeIPs-count' => 'Free IPs: %1$s',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Here is an extract of 10 free IP addresses',
+	'Class:Document:PreviewTab' => 'Preview',
 ));
-?>

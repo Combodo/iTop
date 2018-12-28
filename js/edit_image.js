@@ -32,9 +32,25 @@ $(function()
 
 				var sMarkup = '';
 				sMarkup += '<input type="hidden" id="do_remove_' + me.options.input_name + '" name="' + me.options.input_name + '[remove]" value="0"/>';
-				sMarkup += '<div id="preview_' + me.options.input_name + '" class="view-image" style="width: ' + me.options.max_width_px + 'px; height: ' + me.options.max_height_px + 'px;">';
+
+				var sCssClasses = "view-image attribute-image";
+				console.debug("edit_image", me.options.current_image_url);
+				var sCssClassToAdd, sImageUrl;
+				if (me.options.current_image_url === null)
+				{
+					sCssClassToAdd = "attribute-image-default";
+					sImageUrl = me.options.default_image_url;
+				}
+				else
+				{
+					sCssClassToAdd = "attribute-image-custom";
+					sImageUrl = me.options.current_image_url;
+				}
+				sCssClasses += ' '+sCssClassToAdd;
+				sMarkup += '<div id="preview_'+me.options.input_name+'" class="'+sCssClasses+'" style="width: '+me.options.max_width_px+'px; height: '+me.options.max_height_px+'px;">';
+
 				sMarkup += '<span class="helper-middle"></span>';
-				sMarkup += '<img src="' + me.options.current_image_url + '" data-original-src="' + me.options.current_image_url + '" data-default-src="' + me.options.default_image_url + '" style="max-width: ' + me.options.max_width_px + 'px; max-height: ' + me.options.max_height_px + 'px">';
+				sMarkup += '<img src="'+sImageUrl+'" data-original-src="'+sImageUrl+'" data-default-src="'+me.options.default_image_url+'" style="max-width: '+me.options.max_width_px+'px; max-height: '+me.options.max_height_px+'px">';
 				sMarkup += '</div>';
 				sMarkup += '<div id="buttons_' + me.options.input_name + '" class="edit-buttons">';
 				sMarkup += '<div title="' + me.options.labels.reset_button + '" id="reset_' + me.options.input_name + '" class="button disabled"><div class="ui-icon ui-icon-arrowreturnthick-1-w"></div></div>';

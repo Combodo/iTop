@@ -1,27 +1,24 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @license	http://opensource.org/licenses/AGPL-3.0
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
 
@@ -63,6 +60,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AuditRule/Attribute:name+' => 'Short name for this rule',
 	'Class:AuditRule/Attribute:description' => 'Audit Rule Description',
 	'Class:AuditRule/Attribute:description+' => 'Long description for this audit rule',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code',
 	'Class:AuditRule/Attribute:query' => 'Query to Run',
 	'Class:AuditRule/Attribute:query+' => 'The OQL expression to run',
 	'Class:AuditRule/Attribute:valid_flag' => 'Valid objects?',
@@ -88,9 +88,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Query/Attribute:name+' => 'Identifies the query',
 	'Class:Query/Attribute:description' => 'Description',
 	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)',
-	'Class:Query/Attribute:fields' => 'Fields',
-	'Class:Query/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export',
-
+	'Class:QueryOQL/Attribute:fields' => 'Fields',
+	'Class:QueryOQL/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export',
 	'Class:QueryOQL' => 'OQL Query',
 	'Class:QueryOQL+' => 'A query based on the Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => 'Expression',
@@ -141,6 +140,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.',
+	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.',
 	'Class:UserInternal' => 'User Internal',
 	'Class:UserInternal+' => 'User defined within iTop',
 ));
@@ -311,6 +311,20 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'action grant',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribute',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'attribute code',
+));
+
+//
+// Class: UserDashboard
+//
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:UserDashboard' => 'User dashboard',
+	'Class:UserDashboard+' => '',
+	'Class:UserDashboard/Attribute:user_id' => 'User',
+	'Class:UserDashboard/Attribute:user_id+' => '',
+	'Class:UserDashboard/Attribute:menu_code' => 'Menu code',
+	'Class:UserDashboard/Attribute:menu_code+' => '',
+	'Class:UserDashboard/Attribute:contents' => 'Contents',
+	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
 //
@@ -676,7 +690,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:RunQuery:SerializedFilter' => 'Serialized filter: ',
 	'UI:RunQuery:Error' => 'An error occured while running the query: %1$s',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries',
-	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. <br/>Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
+	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
 	'UI:Schema:Title' => 'iTop objects schema',
 	'UI:Schema:CategoryMenuItem' => 'Category <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relationships',
@@ -935,13 +949,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:NotificationsMenu:Title' => 'Configuration of the <span class="hilite">Notifications</span>',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop the notifications are fully customizable. They are based on two sets of objects: <i>triggers and actions</i>.</p>
-<p><i><b>Triggers</b></i> define when a notification will be executed. There are 5 types of triggers for covering 3 differents phases of an object life cycle:
+<p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
-	<li>the "on object creation" triggers get executed when an object of the specified class is created</li>
-	<li>the "on entering a state" triggers get executed before an object of the given class enters a specified state (coming from another state)</li>
-	<li>the "on leaving a state" triggers get executed when an object of the given class is leaving a specified state</li>
-	<li>the "on threshold" triggers get executed when a threshold for TTR or TTO has been reached</li>
-	<li>the "on portal update" triggers get executed when a ticket is updated from the portal</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
@@ -1548,4 +1560,18 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Expression:Verb:NOW' => 'now',
 	'Expression:Verb:ISNULL' => ': undefined',
+));
+
+//
+// iTop Newsroom menu
+//
+Dict::Add('EN US', 'English', 'English', array(
+	'UI:Newsroom:NoNewMessage' => 'No new message',
+	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read',
+	'UI:Newsroom:ViewAllMessages' => 'View all messages',
+	'UI:Newsroom:Preferences' => 'Newsroom preferences',
+	'UI:Newsroom:ConfigurationLink' => 'Configuration',
+	'UI:Newsroom:ResetCache' => 'Reset cache',
+	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s',
+	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.',
 ));

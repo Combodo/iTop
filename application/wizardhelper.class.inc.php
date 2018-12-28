@@ -154,7 +154,7 @@ class WizardHelper
 					}
 					else
 					{
-						// May happen for security reasons (portal, see ticket #1074)
+						// May happen for security reasons (portal, see ticket N°1074)
 						$oObj->Set($sAttCode, $value);
 					}
 				}
@@ -176,8 +176,16 @@ class WizardHelper
 				}
 				else if ($oAttDef instanceof AttributeTagSet) // AttributeDate is derived from AttributeDateTime
 				{
-					$value = json_decode($value, true);
-					$oTagSet = new ormTagSet(get_class($oObj), $sAttCode);
+					if (is_null($value))
+					{
+						// happens if field is hidden (see N°1827)
+						$value = array();
+					}
+					else
+					{
+						$value = json_decode($value, true);
+					}
+					$oTagSet = new ormTagSet(get_class($oObj), $sAttCode, $oAttDef->GetMaxItems());
 					$oTagSet->SetValues($value['orig_value']);
 					$oTagSet->ApplyDelta($value);
 					$oObj->Set($sAttCode, $oTagSet);
@@ -185,7 +193,7 @@ class WizardHelper
 				else if ($oAttDef instanceof AttributeSet) // AttributeDate is derived from AttributeDateTime
 				{
 					$value = json_decode($value, true);
-					$oTagSet = new ormSet(get_class($oObj), $sAttCode);
+					$oTagSet = new ormSet(get_class($oObj), $sAttCode, $oAttDef->GetMaxItems());
 					$oTagSet->SetValues($value['orig_value']);
 					$oTagSet->ApplyDelta($value);
 					$oObj->Set($sAttCode, $oTagSet);

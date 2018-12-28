@@ -84,7 +84,7 @@ class OqlInterpreter
 	}
 
 	/**
-	 * @return OqlQuery
+	 * @return \OqlObjectQuery|\OqlUnionQuery
 	 * @throws \OQLException
 	 */
 	public function ParseQuery()

@@ -211,6 +211,7 @@ class ApplicationMenu
 		// Sort the root menu based on the rank
 		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
 		$iAccordion = 0;
+		$iActiveAccordion = $iAccordion;
 		$iActiveMenu = self::GetMenuIndexById(self::GetActiveNodeId());
 		foreach(self::$aRootMenus as $aMenu)
 		{
@@ -224,16 +225,18 @@ class ApplicationMenu
 			$oPage->AddToMenu('</ul>');
 			if ($bActive)
 			{
-$oPage->add_ready_script(
-<<<EOF
-	// Accordion Menu
-	$("#accordion").css({display:'block'}).accordion({ header: "h3", navigation: true, heightStyle: "content", collapsible: true,  active: $iAccordion, icons: false, animate:true }); // collapsible will be enabled once the item will be selected
-EOF
-				);
+				$iActiveAccordion = $iAccordion;
 			}
 			$oPage->AddToMenu('</div>');
 			$iAccordion++;
 		}
+
+		$oPage->add_ready_script(
+<<<EOF
+	// Accordion Menu
+	$("#accordion").css({display:'block'}).accordion({ header: "h3", heightStyle: "content", collapsible: true,  active: $iActiveAccordion, icons: false, animate: true }); // collapsible will be enabled once the item will be selected
+EOF
+		);
 	}
 
 	/**

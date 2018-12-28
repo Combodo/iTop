@@ -558,7 +558,7 @@ class ObjectController extends AbstractController
                 // Add plugin buttons
                 foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
                 {
-                    foreach($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJDETAILS_ACTIONS, array('portal_id' => $oApp['combodo.portal.instance.id'], 'object' => $oObject)) as $oMenuItem)
+                    foreach($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJDETAILS_ACTIONS, array('portal_id' => $oApp['combodo.portal.instance.id'], 'object' => $oObject, 'mode' => $sMode)) as $oMenuItem)
                     {
                         if (is_object($oMenuItem))
                         {
@@ -723,6 +723,8 @@ class ObjectController extends AbstractController
 		$aFormData['formmanager_data'] = $oFormManager->ToJSON();
 		$aFormData['renderer'] = $oFormManager->GetRenderer();
 		$aFormData['object_name'] = $oFormManager->GetObject()->GetName();
+		$aFormData['object_class'] = get_class($oFormManager->GetObject());
+		$aFormData['object_id'] = $oFormManager->GetObject()->GetKey();
 		$aFormData['object_state'] = $oFormManager->GetObject()->GetState();
 		$aFormData['fieldset'] = $aFieldSetData;
         $aFormData['display_mode'] = (isset($aFormProperties['properties'])) ? $aFormProperties['properties']['display_mode'] : ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
@@ -1249,7 +1251,8 @@ class ObjectController extends AbstractController
         }
 
         // Checking security layers
-        if (!SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sHostClass, $sHostId))
+	    // Note: Checking if host object already exists as we can try to download document from an object that is being created
+        if (($sHostId > 0) && !SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sHostClass, $sHostId))
         {
             IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to retrieve document from attribute ' . $sObjectField . ' as it not allowed to read ' . $sHostClass . '::' . $sHostId . ' object.');
             $oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));

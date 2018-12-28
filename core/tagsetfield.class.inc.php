@@ -57,7 +57,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			"default_value" => '',
 			"is_null_allowed" => false,
 			"depends_on" => array(),
-			"validation_pattern" => '^[a-zA-Z0-9]{3,}$',
+			"validation_pattern" => '^[a-zA-Z][a-zA-Z0-9]{3,}$',
 		)));
 		MetaModel::Init_AddAttribute(new AttributeString("label", array(
 			"allowed_values" => null,
@@ -176,7 +176,8 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 
 		$sTagCode = $this->Get('code');
 		// Check code syntax
-		if (!preg_match("@^[a-zA-Z0-9]{3,$iMaxLen}$@", $sTagCode))
+		$iMax = $iMaxLen - 1;
+		if (!preg_match("@^[a-zA-Z][a-zA-Z0-9]{2,$iMax}$@", $sTagCode))
 		{
 			$this->m_aCheckIssues[] = Dict::Format('Core:TagSetFieldData:ErrorTagCodeSyntax', $iMaxLen);
 		}

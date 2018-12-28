@@ -373,6 +373,7 @@ $(function()
 			dashboard_id: '',
 			file_id: '',
 			file: '',
+			transaction: '',
 			text: 'Select a dashboard file to import',
 			title: 'Dahsboard Import',
 			close_btn: 'Close',
@@ -390,7 +391,7 @@ $(function()
 				//me.onClose();
 			};
 			$('#'+this.options.file_id).fileupload({
-				url: me.options.submit_to+'&id='+me.options.dashboard_id+'&file='+me.options.file,
+				url: me.options.submit_to+'&id='+me.options.dashboard_id+'&file='+me.options.file+'&transaction_id='+me.options.transaction,
 		        dataType: 'json',
 				pasteZone: null, // Don't accept files via Chrome's copy/paste
 		        done: function (e, data) {

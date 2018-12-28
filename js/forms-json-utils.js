@@ -147,6 +147,8 @@ function CheckFields(sFormId, bDisplayAlert)
 	oFormErrors['input_'+sFormId] = null;	// First 'input' with an error, to set the focus to it
 	$('#'+sFormId+' :input').each( function()
 	{
+		// this is synchronous !
+		// each field should register this event to launch ValidateField() if needed
 		validateEventResult = $(this).trigger('validate', sFormId);
 	}
 	);
@@ -200,16 +202,32 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 		}
 		// Visual feedback
 		$('#v_'+sFieldId).html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
-		$('#v_'+sFieldId).tooltip({
-			items: 'span',
-			tooltipClass: 'form_field_error',
-			content: function() {
-				return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
-			}
-		});
+		//Avoid replacing exisiting tooltip for periodically checked element (like CKeditor fields) 
+		if($('#v_'+sFieldId).tooltip( "instance" ) === undefined)
+		{
+			$('#v_'+sFieldId).tooltip({
+				items: 'span',
+				tooltipClass: 'form_field_error',
+				content: function() {
+					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
+				}
+			});
+		}
 	}
 }
 
+/**
+ * To be launched on each field from normal event (click, change, ...) and 'validate' event for form submission.
+ * Calls ReportFieldValidationStatus() to update global vars containing fields status
+ * @param sFieldId
+ * @param sPattern
+ * @param bMandatory
+ * @param sFormId
+ * @param nullValue
+ * @param originalValue
+ * @returns {boolean}
+ * @constructor
+ */
 function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue)
 {
 	var bValid = true;

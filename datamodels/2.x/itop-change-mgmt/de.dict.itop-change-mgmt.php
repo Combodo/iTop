@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
@@ -23,6 +22,46 @@
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *		
 */
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Menu:ChangeManagement' => 'Change Management',
+	'Menu:Change:Overview' => 'Übersicht',
+	'Menu:Change:Overview+' => '',
+	'Menu:NewChange' => 'Neuer Change',
+	'Menu:NewChange+' => '',
+	'Menu:SearchChanges' => 'Suche nach Changes',
+	'Menu:SearchChanges+' => '',
+	'Menu:Change:Shortcuts' => 'Shortcuts',
+	'Menu:Change:Shortcuts+' => '',
+	'Menu:WaitingAcceptance' => 'Changes, die auf Annahme warten',
+	'Menu:WaitingAcceptance+' => '',
+	'Menu:WaitingApproval' => 'Changes, die auf Genehmigung warten',
+	'Menu:WaitingApproval+' => '',
+	'Menu:Changes' => 'Offene Changes',
+	'Menu:Changes+' => '',
+	'Menu:MyChanges' => 'Changes, die mir zugewiesen sind',
+	'Menu:MyChanges+' => '',
+	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes der letzten sieben Tage nach Kategorie',
+	'UI-ChangeManagementOverview-Last-7-days' => 'Zahl der Changes in den letzten sieben Tagen',
+	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes der letzten sieben Tage nach Typ',
+	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes der letzten sieben Tage nach Status',
+	'Tickets:Related:OpenChanges' => 'Offene Changes',
+	'Tickets:Related:RecentChanges' => 'Kürzlich erfolgte Changes (72h)',
+));
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+
+
+//
+// Class: Change
+//
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change' => 'Change',
@@ -59,8 +98,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:reject_reason+' => '',
 	'Class:Change/Attribute:changemanager_id' => 'Change Manager',
 	'Class:Change/Attribute:changemanager_id+' => '',
+	'Class:Change/Attribute:changemanager_email' => 'Change Manager Email',
+	'Class:Change/Attribute:changemanager_email+' => '',
 	'Class:Change/Attribute:parent_id' => 'Parent Change',
 	'Class:Change/Attribute:parent_id+' => '',
+	'Class:Change/Attribute:parent_name' => 'Parent Change Referenz',
+	'Class:Change/Attribute:parent_name+' => '',
 	'Class:Change/Attribute:creation_date' => 'Erstellungsdatum',
 	'Class:Change/Attribute:creation_date+' => '',
 	'Class:Change/Attribute:approval_date' => 'Genehmigungsdatum',
@@ -69,8 +112,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Attribute:fallback_plan+' => '',
 	'Class:Change/Attribute:related_request_list' => 'Verwandte Requests',
 	'Class:Change/Attribute:related_request_list+' => '',
+	'Class:Change/Attribute:related_incident_list' => 'Verwandte Incidents',
+	'Class:Change/Attribute:related_incident_list+' => '',
+	'Class:Change/Attribute:related_problems_list' => 'Verwandte Probleme',
+	'Class:Change/Attribute:related_problems_list+' => '',
 	'Class:Change/Attribute:child_changes_list' => 'Abgeleitete Changes',
 	'Class:Change/Attribute:child_changes_list+' => '',
+	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change',
+	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Stimulus:ev_assign' => 'Zuweisen',
 	'Class:Change/Stimulus:ev_assign+' => '',
 	'Class:Change/Stimulus:ev_plan' => 'Planen',
@@ -83,44 +132,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Change/Stimulus:ev_approve+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Schließen',
 	'Class:Change/Stimulus:ev_finish+' => '',
-	'Menu:ChangeManagement' => 'Change Management',
-	'Menu:Change:Overview' => 'Übersicht',
-	'Menu:Change:Overview+' => '',
-	'Menu:NewChange' => 'Neuer Change',
-	'Menu:NewChange+' => '',
-	'Menu:SearchChanges' => 'Suche nach Changes',
-	'Menu:SearchChanges+' => '',
-	'Menu:Change:Shortcuts' => 'Shortcuts',
-	'Menu:Change:Shortcuts+' => '',
-	'Menu:WaitingAcceptance' => 'Changes, die auf Annahme warten',
-	'Menu:WaitingAcceptance+' => '',
-	'Menu:WaitingApproval' => 'Changes, die auf Genehmigung warten',
-	'Menu:WaitingApproval+' => '',
-	'Menu:Changes' => 'Offene Changes',
-	'Menu:Changes+' => '',
-	'Menu:MyChanges' => 'Changes, die mir zugewiesen sind',
-	'Menu:MyChanges+' => '',
-	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes der letzten sieben Tage nach Kategorie',
-	'UI-ChangeManagementOverview-Last-7-days' => 'Zahl der Changes in den letzten sieben Tagen',
-	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes der letzten sieben Tage nach Typ',
-	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes der letzten sieben Tage nach Status',
-	'Tickets:Related:OpenChanges' => 'Offene Changes',
-	'Tickets:Related:RecentChanges' => 'Kürzlich erfolgte Changes (72h)',
-	'Class:Change/Attribute:changemanager_email' => 'Change Manager Email',
-	'Class:Change/Attribute:changemanager_email+' => '',
-	'Class:Change/Attribute:parent_name' => 'Parent Change Referenz',
-	'Class:Change/Attribute:parent_name+' => '',
-	'Class:Change/Attribute:related_incident_list' => 'Verwandte Incidents',
-	'Class:Change/Attribute:related_incident_list+' => '',
-	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change',
-	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Attribute:outage' => 'Ausfall',
 	'Class:Change/Attribute:outage+' => '',
 	'Class:Change/Attribute:outage/Value:no' => 'Nein',
 	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Ja',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
-	'Class:Change/Attribute:related_problems_list' => 'Verwandte Probleme',
-	'Class:Change/Attribute:related_problems_list+' => '',
-	));
-?>
+));

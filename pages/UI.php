@@ -636,9 +636,6 @@ try
 					$sLabel = Dict::S('UI:SearchResultsTitle');
 					$sDescription = Dict::S('UI:SearchResultsTitle+');
 					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', utils::GetAbsoluteUrlAppRoot().'images/search.png');
-					$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-					$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-					$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');					
 					$oP->add("<div style=\"padding: 10px;\">\n");
 					$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
 					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', htmlentities($sFullText, ENT_QUOTES, 'UTF-8')).'</span>');
@@ -888,7 +885,7 @@ EOF
 			$sClass = utils::ReadPostedParam('class', '');
 			$sClassLabel = MetaModel::GetName($sClass);
 			$id = utils::ReadPostedParam('id', '');
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			if ( empty($sClass) || empty($id)) // TO DO: check that the class name is valid !
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
@@ -903,16 +900,18 @@ EOF
 			}
 			elseif (!utils::IsTransactionValid($sTransactionId, false))
 			{
+				$sUser = UserRights::GetUser();
+				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
 			}
 			else
 			{
-				$oObj->UpdateObjectFromPostedForm();
+				$aErrors = $oObj->UpdateObjectFromPostedForm();
 				$sMessage = '';
 				$sSeverity = 'ok';
 
-				if (!$oObj->IsModified())
+				if (!$oObj->IsModified() && empty($aErrors))
 				{
 					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 					$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
@@ -923,6 +922,10 @@ EOF
 					try
 					{
 						CMDBSource::Query('START TRANSACTION');
+						if (!empty($aErrors))
+						{
+							throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
+						}
 						$oObj->DBUpdate();
 						CMDBSource::Query('COMMIT');
 						$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
@@ -1005,9 +1008,12 @@ EOF
 
 		case 'bulk_delete_confirmed': // Confirm bulk deletion of objects
 			$oP->DisableBreadCrumb();
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
+				$sUser = UserRights::GetUser();
+				$sClass = utils::ReadParam('class', '', false, 'class');
+				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				throw new ApplicationException(Dict::S('UI:Error:ObjectsAlreadyDeleted'));
 			}
 		// Fall through
@@ -1073,17 +1079,21 @@ EOF
 		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
+		$aErrors = array();
 		if ( empty($sClass) ) // TO DO: check that the class name is valid !
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 		}
 		if (!utils::IsTransactionValid($sTransactionId, false))
 		{
+			$sUser = UserRights::GetUser();
+			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 			$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyCreated')."</strong>\n");
 		}
 		else
 		{
+			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::NewObject($sClass);
 			$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 			if (!empty($sStateAttCode))
@@ -1094,7 +1104,7 @@ EOF
 					$oObj->Set($sStateAttCode, $sTargetState);
 				}
 			}
-			$oObj->UpdateObjectFromPostedForm();
+			$aErrors = $oObj->UpdateObjectFromPostedForm();
 		}
 		if (isset($oObj) && is_object($oObj))
 		{
@@ -1103,6 +1113,11 @@ EOF
 
 			try
 			{
+				if (!empty($aErrors))
+				{
+					throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
+				}
+
 				$oObj->DBInsertNoReload();// No need to reload
 
 				utils::RemoveTransaction($sTransactionId);
@@ -1299,7 +1314,7 @@ EOF
 			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
 			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_apply_stimulus\">\n");
 			$oP->add("<input type=\"hidden\" name=\"preview_mode\" value=\"1\">\n");
-			$oP->add("<input type=\"hidden\" name=\"filter\" value=\"$sFilter\">\n");
+			$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".utils::HtmlEntities($sFilter)."\">\n");
 			$oP->add("<input type=\"hidden\" name=\"stimulus\" value=\"$sStimulus\">\n");
 			$oP->add("<input type=\"hidden\" name=\"state\" value=\"$sState\">\n");
 			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
@@ -1323,7 +1338,7 @@ EOF
 			$oP->add_script(
 <<<EOF
 			// Initializes the object once at the beginning of the page...
-			var oWizardHelper = new WizardHelper('$sClass', '', '$sTargetState');
+			var oWizardHelper = new WizardHelper('$sClass', '', '$sTargetState', '$sState', '$sStimulus');
 			oWizardHelper.SetFieldsMap($sJsonFieldsMap);
 			oWizardHelper.SetFieldsCount($iFieldsCount);
 EOF
@@ -1351,9 +1366,11 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'filter', 'stimulus', 'state'));
 		}
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		if (!utils::IsTransactionValid($sTransactionId))
 		{
+			$sUser = UserRights::GetUser();
+			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser'");
 			$oP->p(Dict::S('UI:Error:ObjectAlreadyUpdated'));
 		}
 		else
@@ -1503,7 +1520,7 @@ EOF
 		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadPostedParam('class', '');
 		$id = utils::ReadPostedParam('id', '');
-		$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		$sStimulus = utils::ReadPostedParam('stimulus', '');
 		if ( empty($sClass) || empty($id) ||  empty($sStimulus) ) // TO DO: check that the class name is valid !
 		{
@@ -1523,6 +1540,8 @@ EOF
 			}
 			if (!utils::IsTransactionValid($sTransactionId))
 			{
+				$sUser = UserRights::GetUser();
+				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				$sMessage = Dict::S('UI:Error:ObjectAlreadyUpdated');
 				$sSeverity = 'info';
 			}
@@ -1702,9 +1721,6 @@ EOF
 				}
 			}
 		}
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
 		
 		// Display the tabs
 		if ($sFirstTab == 'list')

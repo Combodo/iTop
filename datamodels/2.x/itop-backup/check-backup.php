@@ -21,12 +21,32 @@
 //   Duplicated code: sys_get_temp_dir, the computation of the target filename, etc.
 
 // Recommended usage in CRON
-// /usr/bin/php -q /var/www/combodo/modules/itop-backup/backup.php --backup_file=/home/backups/combodo-crm-%Y-%m-%d
+// /usr/bin/php -q /var/www/combodo/modules/itop-backup/check-backup.php --backup_file=/home/backups/combodo-crm-%Y-%m-%d
+// Do not forget to set the 'itop_backup_incident' configuration file parameter !
 
-if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
-require_once(__DIR__.'/../../approot.inc.php');
-require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/core/config.class.inc.php');
+if (file_exists(__DIR__.'/../../approot.inc.php'))
+{
+	require_once __DIR__.'/../../approot.inc.php';   // When in env-xxxx folder
+}
+else
+{
+	require_once __DIR__.'/../../../approot.inc.php';   // When in datamodels/x.x folder
+}
+require_once(APPROOT.'application/utils.inc.php');
+require_once(APPROOT.'application/startup.inc.php');
+
+
+/**
+ * Uses production env
+ *
+ * @return \Config
+ */
+function GetConfig()
+{
+	$oConfig = new Config(APPCONF.'production/config-itop.php');
+
+	return $oConfig;
+}
 
 
 function ReadMandatoryParam($sParam)
@@ -84,8 +104,8 @@ function MakeArchiveFileName($iRefTime = null)
 {
 	$sDefaultBackupFileName = sys_get_temp_dir().'/'."__DB__-%Y-%m-%d";
 	$sBackupFile =  utils::ReadParam('backup_file', $sDefaultBackupFileName, true, 'raw_data');
-	
-	$oConfig = new Config(APPCONF.'production/config-itop.php');
+
+	$oConfig = GetConfig();
 
 	$sBackupFile = str_replace('__HOST__', $oConfig->Get('db_host'), $sBackupFile);
 	$sBackupFile = str_replace('__DB__', $oConfig->Get('db_name'), $sBackupFile);
@@ -126,28 +146,39 @@ function RaiseAlarm($sMessage)
 		return;
 	}
 
-   $sMessage = "Server: [[Server:".$sTicketImpactedServer."]]\n".$sMessage;
+	$sMessage = "Server: [[Server:".$sTicketImpactedServer."]]\n".$sMessage;
 
 	require_once(APPROOT.'webservices/itopsoaptypes.class.inc.php');
-	
-	//$sItopRootDefault = 'http'.((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS']!='off')) ? 's' : '').'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].dirname($_SERVER['SCRIPT_NAME']).'/../..';
-	//$sItopRoot = utils::ReadParam('check_ticket_itop', $sItopRootDefault);
-	$sItopRoot = ReadMandatoryParam('check_ticket_itop');
 
-	$sWsdlUri = $sItopRoot.'/webservices/itop.wsdl.php';
-	//$sWsdlUri .= '?service_category=';
-	
-	$aSOAPMapping = SOAPMapping::GetMapping();
-	
-	ini_set("soap.wsdl_cache_enabled","0");
-	$oSoapClient = new SoapClient(
-		$sWsdlUri,
-		array(
-			'trace' => 1,
-			'classmap' => $aSOAPMapping, // defined in itopsoaptypes.class.inc.php
-		)
-	);
-	
+	$oConfig = GetConfig();
+	$sItopRootConfig = $oConfig->GetModuleSetting('itop-backup', 'itop_backup_incident');
+	if (empty($sItopRootConfig))
+	{
+		// by default getting self !
+		// we could have '' as config value...
+		$sItopRootConfig = $oConfig->Get('app_root_url');
+	}
+
+	try
+	{
+		$sWsdlUri = $sItopRootConfig.'/webservices/itop.wsdl.php';
+		$aSOAPMapping = SOAPMapping::GetMapping();
+		ini_set("soap.wsdl_cache_enabled", "0");
+		$oSoapClient = new SoapClient(
+			$sWsdlUri,
+			array(
+				'trace' => 1,
+				'classmap' => $aSOAPMapping, // defined in itopsoaptypes.class.inc.php
+			)
+		);
+	}
+	catch (Exception $e)
+	{
+		echo "ERROR: Failed to read WSDL of the target iTop ($sItopRootConfig)\n";
+
+		return;
+	}
+
 	try
 	{
 		$oRes = $oSoapClient->CreateIncidentTicket
@@ -176,6 +207,8 @@ function RaiseAlarm($sMessage)
 	catch(Exception $e)
 	{
 		echo "The ticket could not be created: SOAP Exception = '".$e->getMessage()."'\n";
+
+		return;
 	}
 
 	//echo "<pre>\n";
@@ -189,7 +222,7 @@ function RaiseAlarm($sMessage)
 	}
 	else
 	{
-		echo "ERROR: Failed to create the ticket in target iTop ($sItopRoot)\n";
+		echo "ERROR: Failed to create the ticket in target iTop ($sItopRootConfig)\n";
 		foreach ($oRes->errors->messages as $oMessage)
 		{
 			echo $oMessage->text."\n";
@@ -211,57 +244,110 @@ catch(Exception $e)
 	exit;
 }
 
-$sZipArchiveFile = MakeArchiveFileName().'.tar.gz';
-echo date('Y-m-d H:i:s')." - Checking file: $sZipArchiveFile\n";
 
-if (file_exists($sZipArchiveFile))
+if (utils::IsModeCLI())
 {
-	if ($aStat = stat($sZipArchiveFile))
+	echo date('Y-m-d H:i:s')." - running check-backup utility\n";
+	try
 	{
-		$iSize = (int) $aStat['size'];
-		$iMIN = utils::ReadParam('check_size_min', 0);
-		if ($iSize > $iMIN)
-		{
-			echo "Found the archive\n";
-			$sOldArchiveFile = MakeArchiveFileName(time() - 86400).'.tar.gz'; // yesterday's archive
-			if (file_exists($sOldArchiveFile))
-			{
-				if ($aOldStat = stat($sOldArchiveFile))
-				{
-					echo "Comparing its size with older file: $sOldArchiveFile\n";
-					$iOldSize = (int) $aOldStat['size'];
-					$fVariationPercent = 100 * ($iSize - $iOldSize) / $iOldSize;
-					$sVariation = round($fVariationPercent, 2)." percent(s)";
-
-					$iREDUCTIONMAX = utils::ReadParam('check_size_reduction_max');
-					if ($fVariationPercent < -$iREDUCTIONMAX)
-					{
-						RaiseAlarm("Backup file '$sZipArchiveFile' changed by $sVariation, expecting a reduction limited to $iREDUCTIONMAX percents of the original size");
-					}
-					elseif ($fVariationPercent < 0)
-					{
-						echo "Size variation: $sVariation (the maximum allowed reduction is $iREDUCTIONMAX) \n";
-					}
-					else
-					{
-						echo "The archive grew by: $sVariation\n";
-					}
-				}
-			}
-		}
-		else
-		{
-			RaiseAlarm("Backup file '$sZipArchiveFile' too small (Found: $iSize, while expecting $iMIN bytes)");
-		}
+		$sAuthUser = ReadMandatoryParam('auth_user');
+		$sAuthPwd = ReadMandatoryParam('auth_pwd');
+	}
+	catch (Exception $e)
+	{
+		$sMessage = $e->getMessage();
+		ToolsLog::Error($sMessage);
+		echo $sMessage;
+		exit;
+	}
+	$bDownloadBackup = false;
+	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
+	{
+		UserRights::Login($sAuthUser); // Login & set the user's language
 	}
 	else
 	{
-		RaiseAlarm("Failed to stat backup file '$sZipArchiveFile'");
+		ExitError($oP, "Access restricted or wrong credentials ('$sAuthUser')");
 	}
 }
 else
 {
-	RaiseAlarm("Missing backup file '$sZipArchiveFile'");
+	require_once(APPROOT.'application/loginwebpage.class.inc.php');
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+	$bDownloadBackup = utils::ReadParam('download', false);
 }
 
-?>
+if (!UserRights::IsAdministrator())
+{
+	ExitError($oP, "Access restricted to administors");
+}
+
+
+
+// N°1802 : was moved from script param to config file (avoid direct call with untrusted param value)
+$sItopRootParam = utils::ReadParam('check_ticket_itop', null, true, 'raw_data');
+if (!empty($sItopRootParam))
+{
+	echo "ERROR: parameter 'check_ticket_itop' should now be specified in the config file 'itop_backup_incident' parameter\n";
+
+	return;
+}
+
+
+$sZipArchiveFile = MakeArchiveFileName().'.tar.gz';
+$sZipArchiveFileForDisplay = utils::HtmlEntities($sZipArchiveFile);
+echo date('Y-m-d H:i:s')." - Checking file: $sZipArchiveFileForDisplay\n";
+
+
+if (!file_exists($sZipArchiveFile))
+{
+	RaiseAlarm("Missing backup file '$sZipArchiveFileForDisplay'");
+
+	return;
+}
+
+$aStat = stat($sZipArchiveFile);
+if (!$aStat)
+{
+	RaiseAlarm("Failed to stat backup file '$sZipArchiveFileForDisplay'");
+
+	return;
+}
+
+$iSize = (int)$aStat['size'];
+$iMIN = utils::ReadParam('check_size_min', 0);
+if ($iSize <= $iMIN)
+{
+	RaiseAlarm("Backup file '$sZipArchiveFileForDisplay' too small (Found: $iSize, while expecting $iMIN bytes)");
+
+	return;
+}
+
+
+echo "Found the archive\n";
+$sOldArchiveFile = MakeArchiveFileName(time() - 86400).'.tar.gz'; // yesterday's archive
+$sOldArchiveFileForDisplay = utils::HtmlEntities($sOldArchiveFile);
+if (file_exists($sOldArchiveFile))
+{
+	if ($aOldStat = stat($sOldArchiveFile))
+	{
+		echo "Comparing its size with older file: $sOldArchiveFileForDisplay\n";
+		$iOldSize = (int)$aOldStat['size'];
+		$fVariationPercent = 100 * ($iSize - $iOldSize) / $iOldSize;
+		$sVariation = round($fVariationPercent, 2)." percent(s)";
+
+		$iREDUCTIONMAX = utils::ReadParam('check_size_reduction_max');
+		if ($fVariationPercent < -$iREDUCTIONMAX)
+		{
+			RaiseAlarm("Backup file '$sZipArchiveFileForDisplay' changed by $sVariation, expecting a reduction limited to $iREDUCTIONMAX percents of the original size");
+		}
+		elseif ($fVariationPercent < 0)
+		{
+			echo "Size variation: $sVariation (the maximum allowed reduction is $iREDUCTIONMAX) \n";
+		}
+		else
+		{
+			echo "The archive grew by: $sVariation\n";
+		}
+	}
+}

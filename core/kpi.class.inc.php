@@ -107,7 +107,7 @@ class ExecutionKPI
 		self::Report("<div style=\"background-color: grey; padding: 10px;\">");
 		self::Report("<h3><a name=\"".md5($sExecId)."\">KPIs</a> - ".$_SERVER['REQUEST_URI']." (".$_SERVER['REQUEST_METHOD'].")</h3>");
 		self::Report("<p>".date('Y-m-d H:i:s', $fItopStarted)."</p>");
-		self::Report("<p>log_kpi_user_id: ".MetaModel::GetConfig()->Get('log_kpi_user_id')."</p>");
+		self::Report("<p>log_kpi_user_id: ".UserRights::GetUserId()."</p>");
 		self::Report("<div>");
 		self::Report("<table border=\"1\" style=\"$sTableStyle\">");
 		self::Report("<thead>");

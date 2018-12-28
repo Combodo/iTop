@@ -192,6 +192,19 @@
             </item>
           </items>
         </search>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="error_code">
+              <rank>20</rank>
+            </item>
+            <item id="symptom">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <list>
           <items>
             <item id="org_id">
@@ -497,6 +510,19 @@
             </item>
           </items>
         </search>
+        <default_search>
+          <items>
+            <item id="title">
+              <rank>10</rank>
+            </item>
+            <item id="summary">
+              <rank>20</rank>
+            </item>
+            <item id="category_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <list>
           <items>
             <item id="category_id">
@@ -567,6 +593,13 @@
             </item>
           </items>
         </search>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
       </presentation>
     </class>
   </classes>
