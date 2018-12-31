@@ -1,4 +1,5 @@
 <?php
+require_once(APPROOT.'application/utils.inc.php');
 require_once(APPROOT.'lib/tcpdf/tcpdf.php');
 
 /**
@@ -9,7 +10,7 @@ require_once(APPROOT.'lib/tcpdf/tcpdf.php');
 class iTopPDF extends TCPDF
 {
 	protected $sDocumentTitle;
-	
+
 	public function SetDocumentTitle($sDocumentTitle)
 	{
 		$this->sDocumentTitle = $sDocumentTitle;
@@ -23,20 +24,20 @@ class iTopPDF extends TCPDF
 	{
 		// Title
 		// Set font
-		$this->SetFont('dejavusans', 'B', 10);
-		
+		$this->SetFont(self::GetPdfFont(), 'B', 10);
+
 		$iPageNumberWidth = 25;
 		$aMargins = $this->getMargins();
-		
+
 		// Display the title (centered)
 		$this->SetXY($aMargins['left'] + $iPageNumberWidth, 0);
 		$this->MultiCell($this->getPageWidth() - $aMargins['left'] - $aMargins['right'] - 2*$iPageNumberWidth, 15, $this->sDocumentTitle, 0, 'C', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
-		$this->SetFont('dejavusans', '', 10);
-		
+		$this->SetFont(self::GetPdfFont(), '', 10);
+
 		// Display the page number (right aligned)
 		// Warning: the 'R'ight alignment does not work when using placeholders like $this->getAliasNumPage() or $this->getAliasNbPages()
 		$this->MultiCell($iPageNumberWidth, 15, Dict::Format('Core:BulkExport:PDF:PageNumber' ,$this->page), 0, 'R', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
-		
+
 		// Branding logo
 		$sBrandingIcon = APPROOT.'images/itop-logo.png';
 		if (file_exists(MODULESROOT.'branding/main-logo.png'))
@@ -51,6 +52,17 @@ class iTopPDF extends TCPDF
 	{
 		// No footer
 	}
+
+	/**
+	 * @return string font in the config file (export_pdf_font)
+	 */
+	public static function GetPdfFont()
+	{
+		$oConfig = utils::GetConfig();
+		$sPdfFont = $oConfig->Get('export_pdf_font');
+
+		return $sPdfFont;
+	}
 }
 
 /**
@@ -58,42 +70,39 @@ class iTopPDF extends TCPDF
  */
 class PDFPage extends WebPage
 {
-	/**
-	 * Instance of the TCPDF object for creating the PDF
-	 * @var TCPDF
-	 */
+	/** @var \iTopPDF Instance of the TCPDF object for creating the PDF */
 	protected $oPdf;
-	
+
 	public function __construct($s_title, $sPageFormat = 'A4', $sPageOrientation = 'L')
 	{
 		parent::__construct($s_title);
 		define(K_PATH_FONTS, APPROOT.'lib/tcpdf/fonts');
 		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, 'UTF-8', false);
-		
+
 		// set document information
 		$this->oPdf->SetCreator(PDF_CREATOR);
 		$this->oPdf->SetAuthor('iTop');
 		$this->oPdf->SetTitle($s_title);
 		$this->oPdf->SetDocumentTitle($s_title);
-		
+
 		$this->oPdf->setFontSubsetting(true);
-		
+
 		// Set font
 		// dejavusans is a UTF-8 Unicode font. Standard PDF fonts like helvetica or times new roman are NOT UTF-8
-		$this->oPdf->SetFont('dejavusans', '', 10, '', true);
-		
+		$this->oPdf->SetFont(iTopPDF::GetPdfFont(), '', 10, '', true);
+
 		// set auto page breaks
 		$this->oPdf->SetAutoPageBreak(true, 15); // 15 mm break margin at the bottom
 		$this->oPdf->SetTopMargin(15);
-		
+
 		// Add a page, we're ready to start
 		$this->oPdf->AddPage();
-		
+
 		$this->SetContentDisposition('inline', $s_title.'.pdf');
 		$this->SetDefaultStyle();
-		
+
 	}
-	
+
 	/**
 	 * Sets a default style (suitable for printing) to be included each time $this->oPdf->writeHTML() is called
 	 */
@@ -124,9 +133,9 @@ td.icon {
 	width: 30px;
 }
 EOF
-		);		
+		);
 	}
-	
+
 	/**
 	 * Get access to the underlying TCPDF object
 	 * @return TCPDF
@@ -136,7 +145,7 @@ EOF
 		$this->flush();
 		return $this->oPdf;
 	}
-	
+
 	/**
 	 * Writes the currently buffered HTML content into the PDF. This can be useful:
 	 * - to sync the flow in case you want to access the underlying TCPDF object for some specific/graphic output
@@ -156,7 +165,7 @@ EOF
 			$this->s_content = '';
 		}
 	}
-	
+
 	/**
 	 * Whether or not the page is a PDF page
 	 * @return boolean
@@ -165,7 +174,7 @@ EOF
 	{
 		return true;
 	}
-	
+
 	/**
 	 * Generates the PDF document and returns the PDF content as a string
 	 * @return string
@@ -185,7 +194,7 @@ EOF
         $this->flush();
 		echo $this->oPdf->Output($this->s_title.'.pdf', 'S');
 	}
-	
+
 	public function get_pdf()
 	{
 		$this->flush();

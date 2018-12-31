@@ -89,7 +89,8 @@ class Config
 	 * New way to store the settings !
 	 *
 	 * @var array
-	 * @since 2.5 db* variables
+	 * @since 2.5.0 db* variables
+	 * @since 2.7.0 export_pdf_font param
 	 */
 	protected $m_aSettings = array(
 		'app_env_label' => array(
@@ -327,6 +328,14 @@ class Config
 			'value' => false,
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
+		),
+		'export_pdf_font' => array( // @since 2.7 PR #49
+			'type' => 'string',
+			'description' => 'Font used when generating a PDF file',
+			'default' => 'DejaVuSans',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
 		),
 		'access_mode' => array(
 			'type' => 'integer',

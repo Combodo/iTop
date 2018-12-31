@@ -161,8 +161,8 @@ class DisplayableNode extends GraphNode
 				$idx++;
 			}
 		}
-				
-		$oPdf->SetFont('dejavusans', '', 24 * $fScale, '', true);
+
+		$oPdf->SetFont(iTopPDF::GetPdfFont(), '', 24 * $fScale, '', true);
 		$width = $oPdf->GetStringWidth($this->GetProperty('label'));
 		$height = $oPdf->GetStringHeight(1000, $this->GetProperty('label'));
 		$oPdf->setAlpha(0.6 * $Alpha);
@@ -547,9 +547,9 @@ class DisplayableRedundancyNode extends DisplayableNode
 		$oPdf->Circle($this->x*$fScale, $this->y*$fScale, 16*$fScale, 0, 360, 'DF');
 
 		$oPdf->SetTextColor(255, 255, 255);
-		$oPdf->SetFont('dejavusans', '', 28 * $fScale, '', true);
+		$oPdf->SetFont(iTopPDF::GetPdfFont(), '', 28 * $fScale, '', true);
 		$sLabel  = (string)$this->GetProperty('label');
-		$width = $oPdf->GetStringWidth($sLabel, 'dejavusans', 'B', 24*$fScale);
+		$width = $oPdf->GetStringWidth($sLabel, iTopPDF::GetPdfFont(), 'B', 24 * $fScale);
 		$height = $oPdf->GetStringHeight(1000, $sLabel);
 		$xPos = (float)$this->x*$fScale - $width/2;
 		$yPos = (float)$this->y*$fScale - $height/2;
@@ -794,7 +794,7 @@ class DisplayableGroupNode extends DisplayableNode
 		$oPdf->Image($sIconPath, ($this->x - 17)*$fScale, ($this->y - 17)*$fScale, 16*$fScale, 16*$fScale);
 		$oPdf->Image($sIconPath, ($this->x + 1)*$fScale, ($this->y - 17)*$fScale, 16*$fScale, 16*$fScale);
 		$oPdf->Image($sIconPath, ($this->x -8)*$fScale, ($this->y +1)*$fScale, 16*$fScale, 16*$fScale);
-		$oPdf->SetFont('dejavusans', '', 24 * $fScale, '', true);
+		$oPdf->SetFont(iTopPDF::GetPdfFont(), '', 24 * $fScale, '', true);
 		$width = $oPdf->GetStringWidth($this->GetProperty('label'));
 		$oPdf->SetTextColor(0, 0, 0);
 		$oPdf->Text($this->x*$fScale - $width/2, ($this->y + 25)*$fScale, $this->GetProperty('label'));
@@ -1295,7 +1295,7 @@ class DisplayableGraph extends SimpleGraph
 		$aIcons = array();
 		$aContexts = array();
 		$aContextIcons = array();
-		$oPdf->SetFont('dejavusans', '', $fFontSize, '', true);
+		$oPdf->SetFont(iTopPDF::GetPdfFont(), '', $fFontSize, '', true);
 		foreach($oIterator as $sId => $oNode)
 		{
 			if ($sClass = $oNode->GetObjectClass())
