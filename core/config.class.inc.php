@@ -72,6 +72,9 @@ define('DEFAULT_ENCRYPTION_LIB', 'Mcrypt'); // We'll define the best encryption 
  * configuration data (this class cannot not be localized, because it is responsible for loading the dictionaries)
  *
  * @package     iTopORM
+ *
+ * @see \MetaModel::GetConfig() to get the config, if the metamodel was already loaded
+ * @see utils::GetConfig() to load config from the current env, if metamodel is not loaded
  */
 class Config
 {
