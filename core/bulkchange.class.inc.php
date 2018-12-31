@@ -336,7 +336,6 @@ class BulkChange
 	 * @param \DBObject $oTargetObj
 	 * @param array $aRowData
 	 * @param array $aErrors
-	 * @param bool $bIsNewObject
 	 *
 	 * @return array
 	 * @throws \CoreException
@@ -345,7 +344,7 @@ class BulkChange
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	protected function PrepareObject(&$oTargetObj, $aRowData, &$aErrors, $bIsNewObject = false)
+	protected function PrepareObject(&$oTargetObj, $aRowData, &$aErrors)
 	{
 		$aResults = array();
 		$aErrors = array();
@@ -490,7 +489,7 @@ class BulkChange
 			if (!$oAttDef->IsWritable() && in_array($sAttCode, $this->m_aReconcilKeys)){ continue; }
 
 			$aReasons = array();
-			$iFlags = ($bIsNewObject)
+			$iFlags = ($oTargetObj->IsNew())
 				? $oTargetObj->GetInitialStateAttributeFlags($sAttCode, $aReasons)
 				: $oTargetObj->GetAttributeFlags($sAttCode, $aReasons);
 			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) )
@@ -700,7 +699,7 @@ class BulkChange
 			}
 		}
 
-		$aResult[$iRow] = $this->PrepareObject($oTargetObj, $aRowData, $aErrors, true);
+		$aResult[$iRow] = $this->PrepareObject($oTargetObj, $aRowData, $aErrors);
 	
 		if (count($aErrors) > 0)
 		{
@@ -748,7 +747,7 @@ class BulkChange
 	
 	protected function UpdateObject(&$aResult, $iRow, $oTargetObj, $aRowData, CMDBChange $oChange = null)
 	{
-		$aResult[$iRow] = $this->PrepareObject($oTargetObj, $aRowData, $aErrors, false);
+		$aResult[$iRow] = $this->PrepareObject($oTargetObj, $aRowData, $aErrors);
 
 		// Reporting
 		//
