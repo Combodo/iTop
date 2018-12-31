@@ -64,6 +64,10 @@ And when 2.8.0 final will be out:
 
 Please follow [our guidelines](https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Acoding_standards).
 
+### 🌐 Translations
+
+A [dedicated page](https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Atranslation) is available in the official wiki.
+
 ### Tests
 
 Please create tests that covers as much as possible the code you're submitting.
