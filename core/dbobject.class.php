@@ -2093,8 +2093,8 @@ abstract class DBObject implements iDisplay
 
 		// Activate any existing trigger 
 		$sClass = get_class($this);
-		$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN ('$sClassList')"));
+		$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
 		while ($oTrigger = $oSet->Fetch())
 		{
 			/** @var \Trigger $oTrigger */
@@ -2311,8 +2311,8 @@ abstract class DBObject implements iDisplay
 
 			// Activate any existing trigger
 			$sClass = get_class($this);
-			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN ('$sClassList')"));
+			$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
 			while ($oTrigger = $oSet->Fetch())
 			{
 				/** @var \Trigger $oTrigger */
@@ -2486,8 +2486,8 @@ abstract class DBObject implements iDisplay
 
 			// Activate any existing trigger
 			$sClass = get_class($this);
-			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectDelete AS t WHERE t.target_class IN ('$sClassList')"));
+			$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectDelete AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
 			while ($oTrigger = $oSet->Fetch())
 			{
 				/** @var \Trigger $oTrigger */
@@ -2764,15 +2764,18 @@ abstract class DBObject implements iDisplay
 			}
 
 			// Change state triggers...
-			$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateLeave AS t WHERE t.target_class IN ('$sClassList') AND t.state='$sPreviousState'"));
+			$aParams = array(
+				'class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL),
+				'previous_state' => $sPreviousState,
+				'new_state' => $sNewState);
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateLeave AS t WHERE t.target_class IN (:class_list) AND t.state=:previous_state"), array(), $aParams);
 			while ($oTrigger = $oSet->Fetch())
 			{
 				/** @var \Trigger $oTrigger */
 				$oTrigger->DoActivate($this->ToArgs('this'));
 			}
 
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateEnter AS t WHERE t.target_class IN ('$sClassList') AND t.state='$sNewState'"));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateEnter AS t WHERE t.target_class IN (:class_list) AND t.state=:new_state"), array(), $aParams);
 			while ($oTrigger = $oSet->Fetch())
 			{
 				/** @var \Trigger $oTrigger */
