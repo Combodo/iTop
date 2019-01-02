@@ -1518,34 +1518,28 @@ class ArchiveTar
 	 */
 	public function _writeLongHeader($p_filename)
 	{
-		$v_size = sprintf("%11s ", DecOct(strlen($p_filename)));
-
+		$v_uid = sprintf("%07s", 0);
+		$v_gid = sprintf("%07s", 0);
+		$v_perms = sprintf("%07s", 0);
+		$v_size = sprintf("%'011s", DecOct(strlen($p_filename)));
+		$v_mtime = sprintf("%011s", 0);
 		$v_typeflag = 'L';
-
 		$v_linkname = '';
-
-		$v_magic = '';
-
-		$v_version = '';
-
+		$v_magic = 'ustar ';
+		$v_version = ' ';
 		$v_uname = '';
-
 		$v_gname = '';
-
 		$v_devmajor = '';
-
 		$v_devminor = '';
-
 		$v_prefix = '';
-
 		$v_binary_data_first = pack(
 			"a100a8a8a8a12a12",
 			'././@LongLink',
-			0,
-			0,
-			0,
+			$v_perms,
+			$v_uid,
+			$v_gid,
 			$v_size,
-			0
+			$v_mtime
 		);
 		$v_binary_data_last = pack(
 			"a1a100a6a2a32a32a8a8a155a12",
@@ -1725,6 +1719,9 @@ class ArchiveTar
 	 */
 	private function _maliciousFilename($file)
 	{
+		if (strpos($file, 'phar://') === 0) {
+			return true;
+		}
 		if (strpos($file, '/../') !== false) {
 			return true;
 		}
