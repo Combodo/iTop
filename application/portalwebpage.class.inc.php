@@ -572,7 +572,6 @@ EOF
 			// $sAttSpec is an attribute code
 			//
 			$this->add('<span style="white-space: nowrap;padding:5px;display:inline-block;">');
-			$sFilterValue = '';
 			$sFilterValue = utils::ReadParam($sPrefix.$sFieldName, '', false, 'raw_data');
 			$sFilterOpCode = null; // Use the default 'loose' OpCode
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttSpec);
@@ -590,7 +589,7 @@ EOF
 					}
 					catch(OQLException $e)
 					{
-						throw new Exception("Incorrect filter '$sFilterDefName' for attribute '$sAttcode': ".$e->getMessage());
+						throw new Exception("Incorrect filter '$sFilterDefName' for attribute '$sAttSpec': ".$e->getMessage());
 					}
 				}
 				else
@@ -850,8 +849,8 @@ EOF
 			// Trigger ?
 			//
 			$aClasses = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL);
-			$sClassList = implode(", ", CMDBSource::Quote($aClasses));
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnPortalUpdate AS t WHERE t.target_class IN ($sClassList)"));
+			$aParams = array('class_list' => CMDBSource::Quote($aClasses));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnPortalUpdate AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
 			while ($oTrigger = $oSet->Fetch())
 			{
 				$oTrigger->DoActivate($oObj->ToArgs('this'));
@@ -863,7 +862,7 @@ EOF
 		if ($bLockEnabled)
 		{
 			// Release the concurrent lock, if any
-			$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, false, 'raw_data');
+			$sOwnershipToken = utils::ReadPostedParam('ownership_token', null, 'raw_data');
 			if ($sOwnershipToken !== null)
 			{
 				// We're done, let's release the lock

@@ -671,14 +671,14 @@ EOF
 			if (count($aTriggers) > 0)
 			{
 				$iId = $this->GetKey();
-				$sTriggersList = implode(',', $aTriggers);
+				$aParams = array('triggers' => $aTriggers, 'id' => $iId);
 				$aNotifSearches = array();
 				$iNotifsCount = 0;
 				$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification', ENUM_CHILD_CLASSES_EXCLUDETOP);
 				foreach($aNotificationClasses as $sNotifClass)
 				{
-					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN ($sTriggersList) AND Ev.object_id = $iId");
-					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass]);
+					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
+					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array(), $aParams);
 					$iNotifsCount += $oNotifSet->Count();
 				}
 				// Display notifications regarding the object: on block per subclass to have the intersting columns

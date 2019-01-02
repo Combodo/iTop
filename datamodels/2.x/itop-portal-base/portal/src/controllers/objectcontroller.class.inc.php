@@ -1428,12 +1428,13 @@ class ObjectController extends AbstractController
 
 		// Building the search
 		$bIgnoreSilos = $oApp['scope_validator']->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass);
-		$oSearch = DBObjectSearch::FromOQL("SELECT " . $sObjectClass . " WHERE id IN ('" . implode("','", $aObjectIds) . "')");
+		$aParams = array('objects_id' => $aObjectIds);
+		$oSearch = DBObjectSearch::FromOQL("SELECT $sObjectClass WHERE id IN (:objects_id)");
 		if ($bIgnoreSilos === true)
 		{
 			$oSearch->AllowAllData();
 		}
-		$oSet = new DBObjectSet($oSearch);
+		$oSet = new DBObjectSet($oSearch, array(), $aParams);
 		$oSet->OptimizeColumnLoad($aObjectAttCodes);
 
 		// Retrieving objects
