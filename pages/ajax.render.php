@@ -2063,7 +2063,7 @@ EOF
 				}
 
 				$oPage->get_tcpdf()->AddPage();
-				$oPage->get_tcpdf()->SetFont(iTopPDF::GetPdfFont(), '', 10, '', true); // Reset the font size to its default
+				$oPage->get_tcpdf()->SetFontParams('', 10); // Reset the font size to its default
 				$oPage->add('<div class="page_header"><h1>'.Dict::S('UI:RelationshipList').'</h1></div>');
 				$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 				foreach($aResults as $sListClass => $aObjects)

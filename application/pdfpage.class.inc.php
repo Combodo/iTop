@@ -11,6 +11,21 @@ class iTopPDF extends TCPDF
 {
 	protected $sDocumentTitle;
 
+	/**
+	 * Shortcut to set only weight and size
+	 *
+	 * @param string $style
+	 * @param int $size
+	 *
+	 * @uses \TCPDF::SetFont()
+	 * @since 2.7
+	 */
+	public function SetFontParams($style, $size)
+	{
+		$siTopFont = self::GetPdfFont();
+		$this->SetFont($siTopFont, $style, $size);
+	}
+
 	public function SetDocumentTitle($sDocumentTitle)
 	{
 		$this->sDocumentTitle = $sDocumentTitle;
@@ -24,7 +39,7 @@ class iTopPDF extends TCPDF
 	{
 		// Title
 		// Set font
-		$this->SetFont(self::GetPdfFont(), 'B', 10);
+		$this->SetFontParams('B', 10);
 
 		$iPageNumberWidth = 25;
 		$aMargins = $this->getMargins();
@@ -32,7 +47,7 @@ class iTopPDF extends TCPDF
 		// Display the title (centered)
 		$this->SetXY($aMargins['left'] + $iPageNumberWidth, 0);
 		$this->MultiCell($this->getPageWidth() - $aMargins['left'] - $aMargins['right'] - 2*$iPageNumberWidth, 15, $this->sDocumentTitle, 0, 'C', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
-		$this->SetFont(self::GetPdfFont(), '', 10);
+		$this->SetFontParams('', 10);
 
 		// Display the page number (right aligned)
 		// Warning: the 'R'ight alignment does not work when using placeholders like $this->getAliasNumPage() or $this->getAliasNbPages()
@@ -138,7 +153,8 @@ EOF
 
 	/**
 	 * Get access to the underlying TCPDF object
-	 * @return TCPDF
+	 *
+	 * @return \iTopPDF
 	 */
 	public function get_tcpdf()
 	{

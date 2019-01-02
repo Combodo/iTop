@@ -180,7 +180,7 @@ EOF
 		require_once(APPROOT.'application/pdfpage.class.inc.php');
 		$oPage = new PDFPage(Dict::Format('Core:BulkExportOf_Class', MetaModel::GetName($this->oSearch->GetClass())), $this->aStatusInfo['page_size'], $this->aStatusInfo['page_orientation']);
 		$oPDF = $oPage->get_tcpdf();
-		$oPDF->SetFont(iTopPDF::GetPdfFont(), '', 8, '', true);
+		$oPDF->SetFontParams('', 8);
 
 		$oPage->add(file_get_contents($this->aStatusInfo['tmp_file']));
 		$oPage->add($sData);
