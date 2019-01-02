@@ -554,9 +554,15 @@ class SearchForm
 
 		if ($bIsEmptyExpression)
 		{
-			// Add default criterion
-			$aOrCriterion = $this->GetDefaultCriterion($oSearch, $aContextParams);
+			$aOrCriterion = array(array('and' => array()));
 		}
+		$aTempCriteria = array();
+		foreach ($aOrCriterion as $aExistingCriteria)
+		{
+			// Add default criteria to all the OR criteria
+			$aTempCriteria[] = $this->GetDefaultCriteria($oSearch, $aExistingCriteria, $aContextParams);
+		}
+		$aOrCriterion = $aTempCriteria;
 
 		if ($bUseApplicationContext)
 		{
@@ -720,17 +726,18 @@ class SearchForm
 		return $aFields;
 	}
 
-    /**
-     * @param \DBObjectSearch $oSearch
-     * @param array $aContextParams
-     *
-     * @return array
-     *
-     * @throws \CoreException
-     */
-	protected function GetDefaultCriterion($oSearch, &$aContextParams = array())
+	/**
+	 * @param \DBObjectSearch $oSearch
+	 * @param array $aExistingCriteria
+	 * @param array $aContextParams
+	 *
+	 * @return array Current AND criteria list
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 */
+	protected function GetDefaultCriteria($oSearch, $aExistingCriteria, &$aContextParams = array())
 	{
-		$aAndCriterion = array();
 		$sClass = $oSearch->GetClass();
 		$aList = MetaModel::GetZListItems($sClass, 'default_search');
 		while (empty($aList))
@@ -739,12 +746,12 @@ class SearchForm
 			$sClass = MetaModel::GetParentClass($sClass);
 			if (is_null($sClass))
 			{
-				$aOrCriterion = array(array('and' => $aAndCriterion));
-				return $aOrCriterion;
+				return $aExistingCriteria;
 			}
 			$aList = MetaModel::GetZListItems($sClass, 'default_search');
 		}
 		$sAlias = $oSearch->GetClassAlias();
+		$aAndCriteria = $aExistingCriteria['and'];
 		foreach($aList as $sAttCode)
 		{
 			$oExpression = new FieldExpression($sAttCode, $sAlias);
@@ -761,14 +768,38 @@ class SearchForm
 			}
 			$aCriterion = $oExpression->GetCriterion($oSearch);
 			$aCriterion['is_removable'] = $bIsRemovable;
-			if (isset($aCriterion['widget']) && ($aCriterion['widget'] != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
-			{
-				$aAndCriterion[] = $aCriterion;
-			}
+			$this->AddCriterion($aCriterion, $aAndCriteria);
 		}
 		// Overwrite with default criterion
-		$aOrCriterion = array(array('and' => $aAndCriterion));
-		return $aOrCriterion;
+		$aCriteria = array('and' => $aAndCriteria);
+		return $aCriteria;
+	}
+
+	/** Add the criterion to the existing list of criteria avoiding duplicates
+	 * @param array $aCriterion
+	 * @param array $aAndCriterion
+	 *
+	 */
+	private function AddCriterion($aCriterion, &$aAndCriterion)
+	{
+		if ($aCriterion['is_removable'])
+		{
+			// Check if the criterion is already present
+			// Non-removable criteria are mandatory
+			$ref = $aCriterion['ref'];
+			foreach ($aAndCriterion as $aExistingCriterion)
+			{
+				if (isset($aExistingCriterion['ref']) && ($ref === $aExistingCriterion['ref']))
+				{
+					// Already present do nothing
+					return;
+				}
+			}
+		}
+		if (isset($aCriterion['widget']) && ($aCriterion['widget'] != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
+		{
+			$aAndCriterion[] = $aCriterion;
+		}
 	}
 
 }
