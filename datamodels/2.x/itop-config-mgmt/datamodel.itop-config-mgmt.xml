@@ -6869,7 +6869,7 @@
         </reconciliation>
       </properties>
       <fields>
-        <field id="vlan_tag" xsi:type="AttributeString">
+        <field id="vlan_tag" xsi:type="AttributeInteger">
           <sql>vlan_tag</sql>
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
