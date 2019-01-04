@@ -1167,6 +1167,11 @@ class RestUtils
 				foreach($value as $oValues)
 				{
 					$oLnk = static::MakeObjectFromFields($sLnkClass, $oValues);
+					// Fix for N°1939
+					if(($oAttDef instanceof AttributeLinkedSetIndirect) && ($oLnk->Get($oAttDef->GetExtKeyToRemote()) == 0))
+					{
+						continue;
+					}
 					$aLinks[] = $oLnk;
 				}
 				$value = DBObjectSet::FromArray($sLnkClass, $aLinks);
