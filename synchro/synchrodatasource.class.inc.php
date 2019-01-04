@@ -844,7 +844,7 @@ EOF
 		$sTriggerUpdate .= "   FOR EACH ROW";
 		$sTriggerUpdate .= "   BEGIN";
 		$sTriggerUpdate .= "      IF @itopuser is null THEN";
-		$sTriggerUpdate .= "         UPDATE `{$sReplicaTable}` SET status_last_seen = NOW(), `status` = IF(`status` = 'obsolete', IF(`dest_id` IS NULL, 'new', 'modified'), IF(`status` IN ('synchronized') AND ($sIsModified), 'modified', `status`)) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
+		$sTriggerUpdate .= "         UPDATE `{$sReplicaTable}` SET status_last_seen = NOW(), `status` = IF(`status` = 'obsolete', IF(`dest_id` IS NULL OR `dest_id` = 0, 'new', 'modified'), IF(`status` IN ('synchronized') AND ($sIsModified), 'modified', `status`)) WHERE sync_source_id = {$this->GetKey()} AND id = OLD.id;";
 		$sTriggerUpdate .= "         SET NEW.id = OLD.id;"; // make sure this id won't change
 		$sTriggerUpdate .= "      END IF;";
 		$sTriggerUpdate .= "   END;";
