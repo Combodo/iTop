@@ -50,6 +50,9 @@
         <testsuite name="Application">
             <directory>application</directory>
         </testsuite>
+        <testsuite name="Synchro">
+            <directory>synchro</directory>
+        </testsuite>
     </testsuites>
 
     <!-- Code coverage white list -->
