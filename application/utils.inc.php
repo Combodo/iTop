@@ -1135,7 +1135,7 @@ class utils
 		}
 	}
 	/**
-	 * Get target configuration file name (including full path)
+	 * @return string target configuration file name (including full path)
 	 */
 	public static function GetConfigFilePath($sEnvironment = null)
 	{
@@ -1144,6 +1144,17 @@ class utils
 			$sEnvironment = self::GetCurrentEnvironment();
 		}
 		return APPCONF.$sEnvironment.'/'.ITOP_CONFIG_FILE;
+	}
+	/**
+	 * @return string target configuration file name (including relative path)
+	 */
+	public static function GetConfigFilePathRelative($sEnvironment = null)
+	{
+		if (is_null($sEnvironment))
+		{
+			$sEnvironment = self::GetCurrentEnvironment();
+		}
+		return "conf/".$sEnvironment.'/'.ITOP_CONFIG_FILE;
 	}
 
     /**

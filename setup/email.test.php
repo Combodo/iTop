@@ -124,7 +124,7 @@ function CheckEmailSetting($oP)
 		$oP->info("SMTP configuration (from config-itop.php): host: $sHost, port: $sPort, user: $sDisplayUserName, password: $sDisplayPassword, encryption: $sDisplayEncryption.");
 		if (($sHost == 'localhost') && ($sPort == '25') && ($sUserName == '') && ($sPassword == '') )
 		{
-			$oP->warning("The default settings may not be suitable for your environment. You may want to ajust these values by editing iTop's configuration file (".APPROOT."conf/production/config-itop.php).");
+			$oP->warning("The default settings may not be suitable for your environment. You may want to adjust these values by editing iTop's configuration file (".utils::GetConfigFilePathRelative().").");
 		}
 		break;
 		
@@ -134,7 +134,7 @@ function CheckEmailSetting($oP)
 		break;
 		
 		case 'LogFile':
-		$oP->warning("iTop is configured to use the <b>LogFile</b> transport: emails will <em>not</em> be sent but logged to the file: '".APPROOT."/log/mail.log'.");
+		$oP->warning("iTop is configured to use the <b>LogFile</b> transport: emails will <em>not</em> be sent but logged to the file: 'log/mail.log'.");
 		$bRet = true;
 		break;
 		
