@@ -214,7 +214,9 @@ PrepareWidgets();
 EOF
 			);
 		}
-        $s_captured_output = $this->ob_get_clean_safe();
+	    $this->outputCollapsibleSectionInit();
+
+	    $s_captured_output = $this->ob_get_clean_safe();
 		  if (($this->sContentType == 'text/html') &&  ($this->sContentDisposition == 'inline'))
         {
         	// inline content != attachment && html => filter all scripts for malicious XSS scripts

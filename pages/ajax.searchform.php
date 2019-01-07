@@ -64,12 +64,6 @@ try
 	}
 	$oFilter = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion'], $sHiddenCriteria);
 
-	if (isset($aListParams['debug']))
-	{
-		$sOQL = $oFilter->ToOQL();
-		$oPage->add("<div class=\"header_message message_info\">$sOQL</div>\n");
-	}
-
 	//IssueLog::Info('Search OQL: "'.$oFilter->ToOQL().'"');
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list_search', false);
 
@@ -121,6 +115,13 @@ try
 		$oDisplayBlock->RenderContent($oPage, $aExtraParams);
 	}
 
+
+	if (isset($aListParams['debug']) || UserRights::IsAdministrator())
+	{
+		$oPage->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'SearchQuery');
+		$oPage->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
+		$oPage->EndCollapsibleSection();
+	}
 
 	$oPage->output();
 
