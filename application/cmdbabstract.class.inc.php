@@ -3288,7 +3288,7 @@ EOF
 					$aDurationData = $value;
 					if (!is_array($aDurationData))
 					{
-						continue;
+						break;
 					}
 
 					$iValue = (((24 * $aDurationData['d']) + $aDurationData['h']) * 60 + $aDurationData['m']) * 60 + $aDurationData['s'];
