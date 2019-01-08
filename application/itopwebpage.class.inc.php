@@ -844,7 +844,7 @@ EOF
 			$aParams = array(
 				'image_url' => $sImageUrl,
 				'placeholder_image_url' => $sPlaceholderImageUrl,
-				'cache_uuid' => 'itop-newsroom-'.md5(APPROOT),
+				'cache_uuid' => 'itop-newsroom-'.UserRights::GetUserId().'-'.md5(APPROOT),
 				'providers' => $aProviderParams,
 				'display_limit' => (int)appUserPreferences::GetPref('newsroom_display_size', 7),
 				'labels' => array(
