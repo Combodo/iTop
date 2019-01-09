@@ -332,6 +332,18 @@ class BulkChange
 		return true;
 	}
 
+	/**
+	 * @param \DBObject $oTargetObj
+	 * @param array $aRowData
+	 * @param array $aErrors
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	protected function PrepareObject(&$oTargetObj, $aRowData, &$aErrors)
 	{
 		$aResults = array();
@@ -477,7 +489,9 @@ class BulkChange
 			if (!$oAttDef->IsWritable() && in_array($sAttCode, $this->m_aReconcilKeys)){ continue; }
 
 			$aReasons = array();
-			$iFlags = $oTargetObj->GetAttributeFlags($sAttCode, $aReasons);
+			$iFlags = ($oTargetObj->IsNew())
+				? $oTargetObj->GetInitialStateAttributeFlags($sAttCode, $aReasons)
+				: $oTargetObj->GetAttributeFlags($sAttCode, $aReasons);
 			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) )
 			{
 					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Readonly', $sAttCode, $oTargetObj->Get($sAttCode), $aRowData[$iCol]);

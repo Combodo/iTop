@@ -117,6 +117,22 @@ class Dict
 	}
 
 	/**
+	 * Check if a dictionary entry exists or not
+	 * @param $sStringCode
+	 *
+	 * @return bool
+	 */
+	public static function Exists($sStringCode)
+	{
+		$sImpossibleString = 'aVlHYKEI3TZuDV5o0pghv7fvhYNYuzYkTk7WL0Zoqw8rggE7aq';
+		if (static::S($sStringCode, $sImpossibleString) === $sImpossibleString)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Returns a localised string from the dictonary
 	 *
 	 * @param string $sStringCode The code identifying the dictionary entry
@@ -197,7 +213,7 @@ class Dict
 	/**
 	 * Initialize a the entries for a given language (replaces the former Add() method)
 	 * @param string $sLanguageCode Code identifying the language i.e. 'FR-FR', 'EN-US'
-	 * @param hash $aEntries Hash array of dictionnary entries
+	 * @param array $aEntries Hash array of dictionnary entries
 	 */
 	public static function SetEntries($sLanguageCode, $aEntries)
 	{

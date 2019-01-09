@@ -220,9 +220,26 @@ class DisplayBlock
 		$aExtraParams['currentId'] = $sId;
 		$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
 		
+		if (isset($aExtraParams['query_params']))
+		{
+			$aQueryParams = $aExtraParams['query_params'];
+		}
+		else
+		{
+			if (isset($aExtraParams['this->id']) && isset($aExtraParams['this->class']))
+			{
+				$sClass = $aExtraParams['this->class'];
+				$iKey = $aExtraParams['this->id'];
+				$oObj = MetaModel::GetObject($sClass, $iKey);
+				$aQueryParams = array('this->object()' => $oObj);
+			}
+			else
+			{
+				$aQueryParams = array();
+			}
+		}
 
-
-		$sFilter = $this->m_oFilter->serialize(); // Used either for asynchronous or auto_reload
+		$sFilter = addslashes($this->m_oFilter->serialize(false, $aQueryParams)); // Used either for asynchronous or auto_reload
 		if (!$this->m_bAsynchronous)
 		{
 			// render now
@@ -314,20 +331,31 @@ class DisplayBlock
 	 * @throws MySQLException
 	 * @throws Exception
 	 */
-	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), $sId)
+	public function GetRenderContent(WebPage $oPage, $aExtraParams, $sId)
 	{
 		$sHtml = '';
 		// Add the extra params into the filter if they make sense for such a filter
 		$bDoSearch = utils::ReadParam('dosearch', false);
+		$aQueryParams = array();
+		if (isset($aExtraParams['query_params']))
+		{
+			$aQueryParams = $aExtraParams['query_params'];
+		}
+		else
+		{
+			if (isset($aExtraParams['this->id']) && isset($aExtraParams['this->class']))
+			{
+				$sClass = $aExtraParams['this->class'];
+				$iKey = $aExtraParams['this->id'];
+				$oObj = MetaModel::GetObject($sClass, $iKey);
+				$aQueryParams = array('this->object()' => $oObj);
+			}
+		}
 		if ($this->m_oSet == null)
 		{
-			$aQueryParams = array();
-			if (isset($aExtraParams['query_params']))
-			{
-				$aQueryParams = $aExtraParams['query_params'];
-			}
+
 			// In case of search, the context filtering is done by the search itself
-			if (($this->m_sStyle != 'links') && ($this->m_sStyle != 'search'))
+			if (($this->m_sStyle != 'links') && ($this->m_sStyle != 'search') && ($this->m_sStyle != 'list_search'))
 			{
 				$oAppContext = new ApplicationContext();
 				$sClass = $this->m_oFilter->GetClass();
@@ -457,7 +485,15 @@ class DisplayBlock
 					$oSubsetSearch = $this->m_oFilter->DeepClone();
 					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($aValues[$iRow]));
 					$oSubsetSearch->AddConditionExpression($oCondition);
-					$sFilter = urlencode($oSubsetSearch->serialize());
+					if (isset($aExtraParams['query_params']))
+					{
+						$aQueryParams = $aExtraParams['query_params'];
+					}
+					else
+					{
+						$aQueryParams = array();
+					}
+					$sFilter = rawurlencode($oSubsetSearch->serialize(false, $aQueryParams));
 
 					$aData[] = array ('group' => $aLabels[$iRow],
 									  'value' => "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&dosearch=1&$sParams&filter=$sFilter\">$iCount</a>"); // TO DO: add the context information
@@ -580,6 +616,7 @@ class DisplayBlock
 			}
 			break;
 
+			case 'list_search':
 			case 'list':
 			$aClasses = $this->m_oSet->GetSelectedClasses();
 			$aAuthorizedClasses = array();
@@ -652,16 +689,21 @@ class DisplayBlock
 
 				if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history'])
 				{
+					$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
+					// Limit the size of the URL (N°1585 - request uri too long)
+					if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH)
+					{
+						$seventAttachedData = json_encode(array(
+							'filter' => $sSearchFilter,
+							'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
+							'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
+							'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
+							'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
+							'breadcrumb_icon' => utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png'
+						));
 
-					$seventAttachedData = json_encode(array(
-						'filter'                => $this->m_oSet->GetFilter()->serialize(),
-						'breadcrumb_id'         => "ui-search-".$this->m_oSet->GetClass(),
-						'breadcrumb_label'      => MetaModel::GetName($this->m_oSet->GetClass()),
-						'breadcrumb_max_count'  => utils::GetConfig()->Get('breadcrumb.max_count'),
-						'breadcrumb_instance_id'=> MetaModel::GetConfig()->GetItopInstanceid(),
-						'breadcrumb_icon'       => utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png'
-					));
-					$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
+						$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
+					}
 				}
 			}
 			break;
@@ -710,7 +752,7 @@ class DisplayBlock
 			$sClass = $this->m_oFilter->GetClass();
 			$oAppContext = new ApplicationContext();
 			$bContextFilter = isset($aExtraParams['context_filter']) ? isset($aExtraParams['context_filter']) != 0 : false;
-			if ($bContextFilter)
+			if ($bContextFilter && is_null($this->m_oSet))
 			{
 				foreach($oAppContext->GetNames() as $sFilterCode)
 				{
@@ -729,7 +771,7 @@ class DisplayBlock
 				$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
 			}
 			$iCount = $this->m_oSet->Count();
-			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize());
+			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize());
 			$sHtml .= '<p><a class="actions" href="'.$sHyperlink.'">';
 			// Note: border set to 0 due to various browser interpretations (IE9 adding a 2px border)
 			$sHtml .= MetaModel::GetClassIcon($sClass, true, 'float;left;margin-right:10px;border:0;');
@@ -818,7 +860,7 @@ class DisplayBlock
 						}
 						$sHyperlink = utils::GetAbsoluteUrlAppRoot()
 							.'pages/UI.php?operation=search&'.$oAppContext->GetForLink()
-							.'&filter='.urlencode($oSingleGroupByValueFilter->serialize());
+							.'&filter='.rawurlencode($oSingleGroupByValueFilter->serialize());
 						$aCounts[$sStateValue] = "<a href=\"$sHyperlink\">{$aCounts[$sStateValue]}</a>";
 					}
 				}
@@ -827,7 +869,7 @@ class DisplayBlock
 			$sHtml .= '<tr><td>'.implode('</td><td>', $aCounts).'</td></tr></table></div>';
 			// Title & summary
 			$iCount = $this->m_oSet->Count();
-			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize());
+			$sHyperlink = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize());
 			$sHtml .= '<h1>'.Dict::S(str_replace('_', ':', $sTitle)).'</h1>';
 			$sHtml .= '<a class="summary" href="'.$sHyperlink.'">'.Dict::Format(str_replace('_', ':', $sLabel), $iCount).'</a>';
 			$sHtml .= '<div style="clear:both;"></div>';
@@ -838,7 +880,7 @@ class DisplayBlock
 
 			$sCsvFile = strtolower($this->m_oFilter->GetClass()).'.csv'; 
 			$sDownloadLink = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?expression='.urlencode($this->m_oFilter->ToOQL(true)).'&format=csv&filename='.urlencode($sCsvFile);
-			$sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.urlencode($this->m_oFilter->serialize()).'&format=csv';
+			$sLinkToToggle = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search&'.$oAppContext->GetForLink().'&filter='.rawurlencode($this->m_oFilter->serialize()).'&format=csv';
 			// Pass the parameters via POST, since expression may be very long
 			$aParamsToPost = array(
 				'expression' => $this->m_oFilter->ToOQL(true),
@@ -908,10 +950,10 @@ class DisplayBlock
 	
 			$sChartType = isset($aExtraParams['chart_type']) ? $aExtraParams['chart_type'] : 'pie';
 			$sTitle = isset($aExtraParams['chart_title']) ? '<h1 style="text-align:center">'.htmlentities(Dict::S($aExtraParams['chart_title']), ENT_QUOTES, 'UTF-8').'</h1>' : '';
-			$sHtml = "$sTitle<div style=\"height:200px;width:100%\" id=\"my_chart_$sId{$iChartCounter}\"><div style=\"height:200px;line-height:200px;vertical-align:center;text-align:center;width:100%\"><img src=\"../images/indicator.gif\"></div></div>\n";
+			$sHtml = "$sTitle<div style=\"height:200px;width:100%\" class=\"dashboard_chart\" id=\"my_chart_$sId{$iChartCounter}\"><div style=\"height:200px;line-height:200px;vertical-align:center;text-align:center;width:100%\"><img src=\"../images/indicator.gif\"></div></div>\n";
 			$sGroupBy = isset($aExtraParams['group_by']) ? $aExtraParams['group_by'] : '';
 			$sGroupByExpr = isset($aExtraParams['group_by_expr']) ? '&params[group_by_expr]='.$aExtraParams['group_by_expr'] : '';
-			$sFilter = $this->m_oFilter->serialize();
+			$sFilter = $this->m_oFilter->serialize(false, $aQueryParams);
 			$oContext = new ApplicationContext();
 			$sContextParam = $oContext->GetForLink();
 			$sAggregationFunction = isset($aExtraParams['aggregation_function']) ? $aExtraParams['aggregation_function'] : '';
@@ -922,11 +964,11 @@ class DisplayBlock
 
 			if (isset($aExtraParams['group_by_label']))
 			{
-				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
+				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[group_by_label]={$aExtraParams['group_by_label']}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam);
 			}
 			else
 			{
-				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".urlencode($sFilter).'&'.$sContextParam);
+				$sUrl = json_encode(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=chart&params[group_by]=$sGroupBy{$sGroupByExpr}&params[chart_type]=$sChartType&params[currentId]=$sId{$iChartCounter}&params[order_direction]=$sOrderDirection&params[order_by]=$sOrderBy&params[limit]=$sLimit&params[aggregation_function]=$sAggregationFunction&params[aggregation_attribute]=$sAggregationAttr&id=$sId{$iChartCounter}&filter=".rawurlencode($sFilter).'&'.$sContextParam);
 			}
 
 			$oPage->add_ready_script(
@@ -966,7 +1008,7 @@ EOF
 					$oSubsetSearch = $this->m_oFilter->DeepClone();
 					$oCondition = new BinaryExpression($oGroupByExp, '=', new ScalarExpression($sValue));
 					$oSubsetSearch->AddConditionExpression($oCondition);
-					$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".urlencode($oSubsetSearch->serialize()).'&'.$sContextParam;
+					$aURLs[] = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&format=html&filter=".rawurlencode($oSubsetSearch->serialize()).'&'.$sContextParam;
 				}
 				$sJSURLs = json_encode($aURLs);
 			}
@@ -984,6 +1026,7 @@ EOF
 				$sJson = json_encode($aValues);
 				$oPage->add_ready_script(
 <<<EOF
+
 var chart = c3.generate({
     bindto: d3.select('#my_chart_$sId'),
     data: {
@@ -1031,6 +1074,12 @@ var chart = c3.generate({
 	  }
 	}
 });
+
+if (typeof(charts) === "undefined")
+{
+  charts = [];
+}
+charts.push(chart);
 EOF
 				);
 				break;
@@ -1069,6 +1118,12 @@ var chart = c3.generate({
 	  }
 	}
 });
+
+if (typeof(charts) === "undefined")
+{
+  charts = [];
+}
+charts.push(chart);
 EOF
 				);
 				break;				
@@ -1117,7 +1172,7 @@ EOF
 		}
 		if (($bAutoReload) && ($this->m_sStyle != 'search')) // Search form do NOT auto-reload
 		{
-			$sFilter = $this->m_oFilter->serialize(); // Used either for asynchronous or auto_reload
+			$sFilter = addslashes(str_replace('"', "'", $this->m_oFilter->serialize())); // Used either for asynchronous or auto_reload
 			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
 
 			$oPage->add_script('if (typeof window.oAutoReloadBlock == "undefined") {
@@ -1126,7 +1181,7 @@ EOF
 				if (typeof window.oAutoReloadBlock[\''.$sId.'\'] != "undefined") {
 				    clearInterval(window.oAutoReloadBlock[\''.$sId.'\']);
 				}
-				window.oAutoReloadBlock[\''.$sId.'\'] = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \''.$sFilter.'\', \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
+				window.oAutoReloadBlock[\''.$sId.'\'] = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \"'.$sFilter.'\", \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
 		}
 
 		return $sHtml;
@@ -1386,7 +1441,7 @@ class HistoryBlock extends DisplayBlock
 			default:
 			if ($bTruncated)
 			{
-				$sFilter = $this->m_oFilter->serialize();
+				$sFilter = htmlentities($this->m_oFilter->serialize(), ENT_QUOTES, 'UTF-8');
 				$sHtml .= '<div id="history_container"><p>';
 				$sHtml .= Dict::Format('UI:TruncatedResults', $this->iLimitCount, $oSet->Count());
 				$sHtml .= ' ';

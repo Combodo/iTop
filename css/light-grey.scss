@@ -117,7 +117,6 @@ table.listResults td .view-image {
 }
 
 table.listResults > tbody > tr.selected > * {
-	background-color: $combodo-orange;
 }
 
 table.listResults > tbody > tr > * {
@@ -131,6 +130,13 @@ table.listResults > tbody > tr:hover > * {
 table.listResults > tbody > tr.selected:hover > * {
 	/* hover on lines is currently done toggling td.hover, and having a rule for links */
 	background-color: lighten($combodo-orange, 20%);
+	color: $text-color;
+}
+
+table.listResults > tbody > tr:hover > * {
+	/* hover on lines is currently done toggling td.hover, and having a rule for links */
+	background-color: #fdf5d0;
+	color: $text-color;
 }
 
 .edit-image {
@@ -196,6 +202,7 @@ table.listResults > tbody > tr.selected:hover > * {
 	  vertical-align: middle;
 	  max-width: 90% !important;
 	  max-height: 90% !important;
+	  cursor: zoom-in;
   }
   .helper-middle {
 	// Helper to center the image (requires a span dedicated to this)
@@ -242,7 +249,7 @@ tr.green td, .wizContainer tr.green td {
 } 
 
 tr td.hover, tr.even td.hover, .hover a, .hover a:visited, .hover a:hover, .wizContainer tr.even td.hover,  .wizContainer tr td.hover {
-	background-color: #fdf5d0;
+	//background-color: #fdf5d0;
 	color: $text-color;
 }
 
@@ -474,7 +481,7 @@ input.textSearch {
 
 .ui-accordion-content ul {
     list-style:none;
-    list-style-image: url(data:0);
+    list-style-image: none;
     padding-left:16px;
 	margin-top: 8px;
 }	
@@ -487,7 +494,7 @@ input.textSearch {
 	padding: 8px 0px 8px 8px;
 	margin:0;
     list-style:none;
-    list-style-image: url(data:0);
+    list-style-image: none;
     border: 0;
 }	
 	
@@ -622,7 +629,9 @@ div.actions_menu > ul > li {
 	padding: 0;
 	height: 25px;
 }
-	
+.itop_popup > ul > li > ul, #logOffBtn > ul > li > ul {
+	box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.5);
+}	
 .itop_popup li a, #logOffBtn li a {
 	display: block;
 	padding: 5px 12px;
@@ -991,6 +1000,10 @@ input.dp-applied {
 				min-width: 100%;
 				left: 0px;
 				margin-top: -1px;
+
+				.sfc_fg_buttons{
+					white-space: nowrap;
+				}
 			}
 		}
 
@@ -1094,6 +1107,7 @@ input.dp-applied {
 			.sfc_form_group{
 				/* Form group (operators) is displayed only when the criteria is toggled to opened state */
 				display: none;
+				max-width: 450px;
 				max-height: 520px;
 				overflow: auto;
 
@@ -1289,6 +1303,22 @@ input.dp-applied {
 				}
 			}
 			&.search_form_criteria_enum{
+				.sfc_form_group{
+					.sfc_fg_operator_in{
+						> label{
+							display: inline-block;
+							width: 100%;
+							line-height: initial;
+							white-space: nowrap;
+
+							.sfc_op_content{
+								width: 100%;
+							}
+						}
+					}
+				}
+			}
+			&.search_form_criteria_tag_set{
 				.sfc_form_group{
 					.sfc_fg_operator_in{
 						> label{
@@ -2238,6 +2268,28 @@ fieldset .details>.field_container {
 								}
 							}
 						}
+
+						&.field_input_set{
+							.selectize-control{
+								width: 100%;
+
+								.selectize-dropdown,
+								.selectize-input,
+								.selectize-input input{
+									font-size: 12px;
+								}
+								.selectize-input{
+									padding: 2px 2px 0px 2px; /* padding-bottom = padding-top - item margin-bottom */
+									border: 1px solid #ABABAB;
+									border-radius: 0;
+
+									.attribute-set-item.partial-code{
+										color: transparentize($gray-darker, 0.4);
+										background-color: lighten($gray-lighter, 5%);
+									}
+								}
+							}
+						}
 					}
 				}
 			}
@@ -2426,6 +2478,16 @@ select#org_id {
 	padding: 5px;
 	margin:0;
 }
+/* Prevent cursor clicking on the calendar (eg. While editing dashlet) */
+.dashlet-blocker {
+	position: absolute;
+	z-index: 9; /* To be above calendar links & all, but below .close-box (9) */
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	cursor: not-allowed;
+}
 td.layout_cell {
 	height: 50px; /* min-height does not work */
 	vertical-align: top;
@@ -2542,6 +2604,48 @@ a.summary,  a.summary:hover {
     text-align: center;
 }
 
+.dashboard-title-line {
+}
+
+.dashboard-title {
+	display: block;
+	float: left;
+
+	color: $text-color;
+	font-weight: bold;
+	font-size: 1.2em;
+
+	margin: 10px;
+}
+
+.dashboard_contents {
+	width: 100%;
+	background-color: $white;
+}
+
+
+.dashboard-selector {
+	display: block;
+	float: right;
+	margin-top: 10px;
+
+	.selector-label {
+		display: inline-block;
+		margin-left: 10px;
+		margin-right: 10px;
+		vertical-align: super;
+	}
+}
+
+
+
+#DashboardMenu {
+	display: block;
+	float: right;
+	font-size: 12px;
+	margin: 10px;
+}
+
 #DashboardMenu > ul > li {
 	list-style: none;
 	vertical-align: middle;
@@ -2637,16 +2741,6 @@ a.summary,  a.summary:hover {
 }
 .itop-deleted-object {
 	text-decoration: line-through;
-}
-.header_message {
-	padding: 1em;
-	font-size: 10pt;
-	background: #fff;
-	border: 1px solid #999;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	margin-bottom: 10px;
 }
 .header_message {
 	padding: 1em;
@@ -3260,3 +3354,320 @@ table.listResults .originColor{
 .menu-icon-select > .ui-menu-item{
 	padding: .3em 3%;
 }
+
+//////////////////////
+// Set attribute //
+// - Readonly (object viewing, objects list)
+.attribute {
+	&.attribute-set {
+		.attribute-set-item{
+			&::after{
+				content: ",";
+				margin-right: 0.5em;
+			}
+			&:last-of-type::after{
+				content: "";
+				margin-right: 0;
+			}
+		}
+
+		&.history-added {
+			.attribute-set-item {
+				font-weight: bold;
+			}
+		}
+		&.history-removed {
+			.attribute-set-item {
+				text-decoration: line-through;
+				font-style: italic;
+			}
+		}
+	}
+}
+// - Edit is always styled like the selectize items, see below.
+%attribute-set-item-edition{
+	display: inline-block;
+	margin-right: 3px;
+	margin-bottom: 3px;
+	padding: 4px 6px;
+	max-width: 120px;
+
+	background: #fdfdfd none;
+	border-radius: 2px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgb(241, 241, 241, 0.7);
+
+	color: $gray-darker;
+	text-shadow: none;
+	vertical-align: middle;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+
+	&::after{
+		content: "";
+		margin-right: 0;
+	}
+}
+.attribute-edit .attribute-set .attribute-set-item{
+	@extend %attribute-set-item-edition;
+}
+//////////////////////
+// TagSet attribute //
+// Always styled like the selectize items, see below.
+.attribute-tag-set.attribute-set{
+	.attribute-set-item{
+		@extend %attribute-set-item-edition;
+	}
+}
+
+//////////////////////
+// Selectize widget //
+//
+.selectize-control,
+.selectize-control.multi{
+	> .selectize-input{
+		&.has-items:after {
+			content: "+";
+			display: inline-block;
+			font-size: 17px;
+			font-weight: bold;
+			color: $gray-darker;
+		}
+
+		> .item[data-value]{
+			@extend %attribute-set-item-edition;
+
+			padding-right: 1.5em !important;
+			border: 1px solid $gray-lighter;
+
+			&.active{
+				@extend %attribute-set-item-edition;
+			}
+			> .remove {
+				padding-top: 0.3em;
+				border: none;
+			}
+		}
+	}
+}
+
+// Round Toggle
+/* The switch - the box around the slider */
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 36px;
+	height: 20px;
+	vertical-align: baseline;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	transition: .4s;
+}
+
+.slider:before {
+	position: absolute;
+	content: "";
+	height: 15px;
+	width: 15px;
+	left: 3px;
+	bottom: 3px;
+	background-color: white;
+	transition: .4s;
+}
+
+input:checked + .slider {
+	background-color: $combodo-orange;
+}
+
+input:focus + .slider {
+	box-shadow: 0 0 1px $combodo-orange;
+}
+
+input:checked + .slider:before {
+	transform: translateX(14.5px);
+}
+
+/* Rounded sliders */
+.slider.round {
+	border-radius: 20px;
+}
+
+.slider.round:before {
+	border-radius: 7px;
+}
+
+///////////////////////////
+// Newsroom menu
+
+#newsroom_menu li span {
+	display: block;
+	padding: 5px 12px;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+#newsroom_menu li li p {
+	text-align: left;
+	margin: 2px;
+	margin-left: 5px;
+	margin-right: 5px;
+	cursor: pointer;
+	background-color: transparent;
+}
+#newsroom_menu > ul > li > ul {
+	margin-top: 8px;
+}
+#newsroom_menu > ul > li > ul > li {
+	display: block;
+	border-bottom: 1px #ddd solid;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: left;
+}
+#newsroom_menu > ul > li > ul > li:hover, #newsroom_menu > ul > li > ul > li:hover h1, #newsroom_menu > ul > li > ul > li:hover h2, #newsroom_menu > ul > li > ul > li:hover h3 {
+	background: $popup-menu-highlight-color;
+	color: $popup-menu-text-higlight-color;
+}
+#newsroom_menu li li:last-of-type {
+	border-bottom: 0;
+}
+#newsroom_menu li {
+	list-style: none;
+	cursor: pointer;
+	color: $popup-menu-text-color;
+}
+#newsroom_menu li ul {
+	width: 300px;
+}
+#top-left-newsroom-cell {
+	padding-right: 11px !important;
+}
+#newsroom_menu_icon {
+	position:relative;
+	top:8px;	
+}
+#newsroom_menu_counter_container {
+	position:relative;
+	top:-26px;
+	left:4px;
+}
+#newsroom_menu_counter {
+	display:inline-block;
+	padding:2px;
+	border-radius:8px;
+	text-align:center;
+	width: 12px;
+	box-shadow: 1px 1px 2px 0px $gray;
+	font-size: 8pt;
+	background-color:$complement-color;
+	color: $white;
+	cursor: pointer;
+}
+.newsroom_extra_messages_counter {
+	display:inline-block !important;
+	padding:2px !important;
+	border-radius:8px;
+	text-align:center;
+	font-size: 8pt;
+	min-width: 12px;
+	background-color:$gray-light;
+	color: $white;
+	float: right;
+	margin-right: 5px;
+}
+.newsroom_menu_item > div > img {
+	float:left;
+	width:32px;
+	max-height:32px;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left:5px;
+	margin-right: 5px; 
+}
+#newsroom_menu_dismiss_all, #newsroom_menu_show_all {
+	text-align: center !important;
+}
+#newsroom_show_all_submenu {
+	text-align: center;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+#newsroom_show_all_submenu > ul {
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+#newsroom_show_all_submenu > ul > li > ul {
+	margin-top: 8px;
+}
+#newsroom_show_all_submenu > ul > li > ul > li {
+	display: block;
+	border-bottom: 1px #ddd solid;
+	padding-left: 5px;
+	padding-top: 4px;
+	padding-bottom: 6px;
+	text-align: left;
+}
+#newsroom_show_all_submenu > ul > li > ul > li:hover {
+	background: $popup-menu-highlight-color;
+	color: $popup-menu-text-higlight-color;
+}
+#newsroom_show_all_submenu li ul {
+	width: 200px;
+	color:#000;
+}
+.no-padding {
+	padding: 0 !important;
+}
+.newsroom_menu_item_date {
+	padding: 0 !important;
+	margin-bottom: -10px;
+	font-size: 8pt;
+	text-align: right;
+	margin-top: -2px;
+	margin-right: 5px;
+	color: $white;
+}
+#newsroom_display_size {
+	height: 1em;
+	width: 3em;
+}
+#newsroom_no_new_message p {
+	text-align: center !important;
+	cursor: default !important;
+	font-style: italic;
+}
+#newsroom_no_new_message {
+	color: $gray-dark !important;
+}
+#newsroom_no_new_message:hover {
+	cursor: default !important;
+	color: $gray-dark !important;
+	background-color: $white !important; 
+}
+#newsroom_menu h1 {
+	font-weight: 700;
+	font-size: 16px;
+	margin-bottom: 0.5em;
+} 
+#newsroom_menu h2 {
+	font-weight: 700;
+	font-size: 14px;
+	margin-bottom: 0.5em;
+} 
+#newsroom_menu h3, #newsroom_menu h4, #newsroom_menu h5 {
+	font-weight: 700;
+	font-size: 12px;
+	margin-bottom: 0.5em;
+} 

@@ -38,7 +38,7 @@ class UrlGenerator extends SymfonyUrlGenerator
      * Overloading of the parent function to add the $_REQUEST parameters to the url parameters.
      * This is used to keep additionnal parameters in the url, especially when portal is accessed from the /pages/exec.php
      *
-     * Note : As of now, it only adds the exec_module and exec_page parameters. Any other parameter will be ignored.
+     * Note: As of now, it only adds the exec_module/exec_page/portal_id/env_switch/debug parameters. Any other parameter will be ignored.
      *
      * @param string $name
      * @param array $parameters

@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-knownerror-mgmt/2.5.0',
+	'itop-knownerror-mgmt/2.6.0',
 	array(
 		// Identification
 		//
@@ -29,7 +29,7 @@ SetupWebPage::AddModule(
 			//'data.struct.itop-knownerror-mgmt.xml',
 		),
 		'data.sample' => array(
-			//'data.sample.itop-knownerror-mgmt.xml',
+			'data.sample.faq-domains.xml',
 		),
 		
 		// Documentation

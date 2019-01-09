@@ -2,8 +2,23 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2013 Combodo
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @license	http://opensource.org/licenses/AGPL-3.0
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 
 Dict::Add('EN US', 'English', 'English', array(
@@ -17,7 +32,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'bkp-mysqldump-ok' => 'mysqldump is present: %1$s',
 	'bkp-mysqldump-notfound' => 'mysqldump could not be found: %1$s - Please make sure it is installed and in the path, or edit the configuration file to tune mysql_bindir.',
 	'bkp-mysqldump-issue' => 'mysqldump could not be executed (retcode=%1$d): Please make sure it is installed and in the path, or edit the configuration file to tune mysql_bindir',
-	'bkp-missing-dir' => 'The target directory %1$s count not be found',
+	'bkp-missing-dir' => 'The target directory %1$s could not be found',
 	'bkp-free-disk-space' => '<b>%1$s free</b> in %2$s',
 	'bkp-dir-not-writeable' => '%1$s is not writeable',
 	'bkp-wrong-format-spec' => 'The current specification to format the file names is wrong (%1$s). A default specification will apply: %2$s',
@@ -43,4 +58,3 @@ Dict::Add('EN US', 'English', 'English', array(
 	'bkp-wait-restore' => 'Please wait for the restore to complete...',
 	'bkp-success-restore' => 'Restore successfully completed.',
 ));
-?>

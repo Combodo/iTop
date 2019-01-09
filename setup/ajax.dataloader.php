@@ -62,7 +62,7 @@ else
 	// Check that the limit will allow us to load the data
 	//
 	$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-	if ($iMemoryLimit < SAFE_MINIMUM_MEMORY)
+	if (!utils::IsMemoryLimitOk($iMemoryLimit, SAFE_MINIMUM_MEMORY))
 	{
 		if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === FALSE)
 		{
@@ -147,6 +147,11 @@ header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
 $sOperation = Utils::ReadParam('operation', '');
 try
 {
+	if (is_file(utils::GetConfigFilePath()) && !is_writable(utils::GetConfigFilePath()))
+	{
+		throw new Exception('Setup operations are not allowed outside of the setup');
+	}
+
 	switch($sOperation)
 	{
 		case 'async_action':
@@ -171,8 +176,9 @@ try
 			$sConfigFile = utils::GetConfigFilePath();
 			if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig())
 			{
-				$oPage->error("<b>Error:</b> the configuration file '".$sConfigFile."' already exists and cannot be overwritten.");
-				$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".realpath($sConfigFile)."</b>' can be modified by the web server.");
+				$sRelativePath = utils::GetConfigFilePathRelative();
+				$oPage->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
+				$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
 				$oPage->output();
 			}
 			else

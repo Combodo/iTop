@@ -1,6 +1,7 @@
 <?php
-use Html2Text\Html2Text;
+
 use Leafo\ScssPhp\Compiler;
+
 // Copyright (C) 2010-2017 Combodo SARL
 //
 //   This file is part of iTop.
@@ -26,8 +27,9 @@ use Leafo\ScssPhp\Compiler;
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT.'/core/config.class.inc.php');
-require_once(APPROOT.'/application/transaction.class.inc.php');
+require_once(APPROOT.'core/metamodel.class.php');
+require_once(APPROOT.'core/config.class.inc.php');
+require_once(APPROOT.'application/transaction.class.inc.php');
 require_once(APPROOT.'application/Html2Text.php');
 require_once(APPROOT.'application/Html2TextException.php');
 
@@ -35,6 +37,8 @@ define('ITOP_CONFIG_FILE', 'config-itop.php');
 define('ITOP_DEFAULT_CONFIG_FILE', APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE);
 
 define('SERVER_NAME_PLACEHOLDER', '$SERVER_NAME$');
+
+define('SERVER_MAX_URL_LENGTH', 2048);
 
 class FileUploadException extends Exception
 {
@@ -310,10 +314,20 @@ class utils
 			{
 				switch($sSanitizationFilter)
 				{
-					case 'parameter':
-					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^([ A-Za-z0-9_=-]|%3D|%2B|%2F)*$/'))); // the '=', '%3D, '%2B', '%2F' characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
+					case 'transaction_id':
+						// same as parameter type but keep the dot character
+						// see N°1835 : when using file transaction_id on Windows you get *.tmp tokens
+						// it must be included at the regexp beginning otherwise you'll get an invalid character error
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+							array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
 					break;
-					
+
+					case 'parameter':
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+							array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
+						// characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
+						break;
+
 					case 'field_name':
 					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
 					break;
@@ -462,9 +476,9 @@ class utils
 	{
 		$sSelectionMode = utils::ReadParam('selectionMode', '');
 
-		if ($sSelectionMode === '')
+		if ($sSelectionMode != 'positive' && $sSelectionMode != 'negative')
 		{
-			throw new CoreException('selectionMode is mandatory');
+			throw new CoreException('selectionMode must be either positive or negative');
 		}
 
 		// Paginated selection
@@ -513,7 +527,7 @@ class utils
 	/**
 	 * Returns a unique tmp id for the current upload based on the transaction system (db).
 	 *
-	 * Build as session_id() . '_' . static::GetNewTransactionId()
+	 * Build as static::GetNewTransactionId()
 	 *
 	 * @return string
 	 */
@@ -523,7 +537,7 @@ class utils
 		{
 			$sTransactionId = static::GetNewTransactionId();
 		}
-		return session_id() . '_' . $sTransactionId;
+		return $sTransactionId;
 	}
 
 	public static function ReadFromFile($sFileName)
@@ -558,6 +572,18 @@ class utils
 	    }
         return $iReturn;
     }
+  
+  /**
+   * Checks if the memory limit is at least what is required
+   *
+   * @param int $memoryLimit set limit in bytes
+   * @param int $requiredLimit required limit in bytes
+   * @return bool
+   */
+  public static function IsMemoryLimitOk($memoryLimit, $requiredLimit)
+  {
+      return ($memoryLimit >= $requiredLimit) || ($memoryLimit == -1);
+  }
 
 	/**
 	 * Format a value into a more friendly format (KB, MB, GB, TB) instead a juste a Bytes amount.
@@ -812,7 +838,7 @@ class utils
 
 	/**
 	 * Helper to handle the variety of HTTP servers
-	 * See #286 (fixed in [896]), and #634 (this fix)
+	 * See N°286 (fixed in [896]), and N°634 (this fix)
 	 * 	 
 	 * Though the official specs says 'a non empty string', some servers like IIS do set it to 'off' !
 	 * nginx set it to an empty string
@@ -1034,12 +1060,16 @@ class utils
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
 			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
-			
-			$aResult = array(
-				new SeparatorPopupMenuItem(),
+
+			$aResult = array();
+			if (strlen($sUrl) < SERVER_MAX_URL_LENGTH)
+			{
+				$aResult[] = new SeparatorPopupMenuItem();
 				// Static menus: Email this page, CSV Export & Add to Dashboard
-				new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'), "mailto:?body=".urlencode($sUrl).' '), // Add an extra space to make it work in Outlook
-			);
+				$aResult[] = new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'),
+						"mailto:?body=".urlencode($sUrl).' ' // Add an extra space to make it work in Outlook
+				);
+			}
 			
 			if (UserRights::IsActionAllowed($param->GetFilter()->GetClass(), UR_ACTION_BULK_READ, $param) != UR_ALLOWED_NO)
 			{
@@ -1061,12 +1091,7 @@ class utils
 			// $param is a DBObject
 			$oObj = $param;
 			$sOQL = "SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey();
-			$oFilter = DBObjectSearch::FromOQL($sOQL);
-			$sFilter = $oFilter->serialize();
 			$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
-			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage(get_class($oObj));
-			$oAppContext = new ApplicationContext();
-			$sContext = $oAppContext->GetForLink();
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
 			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
@@ -1086,19 +1111,29 @@ class utils
 			break;
 
 			case iPopupMenuExtension::MENU_DASHBOARD_ACTIONS:
-			// $param is a Dashboard
-			$oAppContext = new ApplicationContext();
-			$aParams = $oAppContext->GetAsHash();
-			$sMenuId = ApplicationMenu::GetActiveNodeId();
-			$sDlgTitle = addslashes(Dict::S('UI:ImportDashboardTitle'));
-			$sDlgText = addslashes(Dict::S('UI:ImportDashboardText'));
-			$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
-			$aResult = array(
-				new SeparatorPopupMenuItem(),
-				new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sMenuId),
-				new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sMenuId', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn' })"),
-			);
-			break;
+				// $param is a Dashboard
+				/** @var \RuntimeDashboard $oDashboard */
+				$oDashboard = $param;
+				$sDashboardId = $oDashboard->GetId();
+				$sDashboardFile = $oDashboard->GetDefinitionFile();
+				$sDlgTitle = addslashes(Dict::S('UI:ImportDashboardTitle'));
+				$sDlgText = addslashes(Dict::S('UI:ImportDashboardText'));
+				$sCloseBtn = addslashes(Dict::S('UI:Button:Cancel'));
+				$sDashboardFileJS = addslashes($sDashboardFile);
+				$sDashboardFileURL = urlencode($sDashboardFile);
+				$sUploadDashboardTransactId = utils::GetNewTransactionId();
+				$aResult = array(
+					new SeparatorPopupMenuItem(),
+					new URLPopupMenuItem('UI:ExportDashboard', Dict::S('UI:ExportDashBoard'), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=export_dashboard&id='.$sDashboardId.'&file='.$sDashboardFileURL),
+					new JSPopupMenuItem('UI:ImportDashboard', Dict::S('UI:ImportDashBoard'), "UploadDashboard({dashboard_id: '$sDashboardId', file: '$sDashboardFileJS', title: '$sDlgTitle', text: '$sDlgText', close_btn: '$sCloseBtn', transaction: '$sUploadDashboardTransactId' })"),
+				);
+				if ($oDashboard->GetReloadURL())
+				{
+					$aResult[] = new SeparatorPopupMenuItem();
+					$aResult[] = new URLPopupMenuItem('UI:Menu:PrintableVersion', Dict::S('UI:Menu:PrintableVersion'), $oDashboard->GetReloadURL().'&printable=1', '_blank');
+				}
+
+				break;
 
 			default:
 			// Unknown type of menu, do nothing
@@ -1136,7 +1171,7 @@ class utils
 		}
 	}
 	/**
-	 * Get target configuration file name (including full path)
+	 * @return string target configuration file name (including full path)
 	 */
 	public static function GetConfigFilePath($sEnvironment = null)
 	{
@@ -1145,6 +1180,17 @@ class utils
 			$sEnvironment = self::GetCurrentEnvironment();
 		}
 		return APPCONF.$sEnvironment.'/'.ITOP_CONFIG_FILE;
+	}
+	/**
+	 * @return string target configuration file name (including relative path)
+	 */
+	public static function GetConfigFilePathRelative($sEnvironment = null)
+	{
+		if (is_null($sEnvironment))
+		{
+			$sEnvironment = self::GetCurrentEnvironment();
+		}
+		return "conf/".$sEnvironment.'/'.ITOP_CONFIG_FILE;
 	}
 
     /**
@@ -1402,7 +1448,17 @@ class utils
 		asort($aPossibleEncodings);
 		return $aPossibleEncodings;
 	}
-	
+
+	/**
+	 * Helper to encapsulation iTop's htmlentities
+	 * @param string $sValue
+	 * @return string
+	 */
+	static public function HtmlEntities($sValue)
+	{
+		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+	}
+
 	/**
 	 * Convert a string containing some (valid) HTML markup to plain text
 	 * @param string $sHtml
@@ -1444,7 +1500,7 @@ class utils
 	static public function GetCSSFromSASS($sSassRelPath, $aImportPaths = null)
 	{
 		// Avoiding compilation if file is already a css file.
-		if (preg_match('/\.css$/', $sSassRelPath))
+		if (preg_match('/\.css(\?.*)?$/', $sSassRelPath))
 		{
 			return $sSassRelPath;
 		}
@@ -1951,5 +2007,15 @@ class utils
 		}
 		$aHugeClasses = MetaModel::GetConfig()->Get('high_cardinality_classes');
 		return in_array($sClass, $aHugeClasses);
+	}
+
+	/**
+	 * Check if iTop is in a development environment (VCS vs build number)
+	 *
+	 * @return bool
+	 */
+	public static function IsDevelopmentEnvironment()
+	{
+		return ITOP_REVISION  === 'svn';
 	}
 }

@@ -1,3 +1,6 @@
+// Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
+$version: "v2.6.0";
+
 // Base colors
 $gray-base:              #000 !default;
 $gray-darker:            lighten($gray-base, 13.5%) !default; // #222
@@ -26,13 +29,12 @@ $frame-background-color: $gray-extra-light;
 $text-color: #000;
 $box-radius: 0px;
 $box-shadow-regular: 0 1px 1px rgba(0, 0, 0, 0.15);
-// - Boxes
-//$search-criteria-box-color: #2D2D2D;
-//$search-criteria-box-bg-color: #f0f3f5;
-//$search-criteria-box-border-color: #3f7294;
-//$search-criteria-box-border: 1px solid $search-criteria-box-border-color;
-//$search-criteria-box-radius: 1px;
-//
+
+$hyperlink-color: $complement-color;
+$hyperlink-text-decoration: none;
+
+////////////
+// Search //
 $search-criteria-box-color: #2D2D2D;
 $search-criteria-box-picto-color: #E87C1E;
 $search-criteria-box-bg-color: #EEEEEE;
@@ -48,6 +50,3 @@ $search-add-criteria-box-hover-color: $gray-extra-light;
 $search-button-box-color: $combodo-orange;
 $search-button-box-bg-color: $white;
 $search-button-box-bg-hover-color: $gray-extra-light;
-
-// Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
-$version: "v2.5.0-beta";

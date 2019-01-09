@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
@@ -24,7 +22,196 @@
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+//////////////////////////////////////////////////////////////////////
+// Classes in 'core/cmdb'
+//////////////////////////////////////////////////////////////////////
+//
+//
+// Class: CMDBChange
+//
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Core:DeletedObjectLabel' => '%1s (deleted)~~',
+	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)~~',
 
+	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)~~',
+	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
+
+	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+
+	'Core:AttributeLinkedSet' => 'Array of objects~~',
+	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass~~',
+
+	'Core:AttributeDashboard' => 'Dashboard~~',
+	'Core:AttributeDashboard+' => '~~',
+
+	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber+' => '~~',
+
+	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
+	'Core:AttributeObsolescenceDate+' => '~~',
+
+    'Core:AttributeTagSet' => 'List of tags~~',
+    'Core:AttributeTagSet+' => '~~',
+	'Core:AttributeSet:placeholder' => 'click to add~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+
+    'Core:AttributeCaseLog' => 'Log~~',
+    'Core:AttributeCaseLog+' => '~~',
+
+    'Core:AttributeMetaEnum' => 'Computed enum~~',
+    'Core:AttributeMetaEnum+' => '~~',
+
+    'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)~~',
+	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class~~',
+
+	'Core:AttributeInteger' => 'Integer~~',
+	'Core:AttributeInteger+' => 'Numeric value (could be negative)~~',
+
+	'Core:AttributeDecimal' => 'Decimal~~',
+	'Core:AttributeDecimal+' => 'Decimal value (could be negative)~~',
+
+	'Core:AttributeBoolean' => 'Boolean~~',
+	'Core:AttributeBoolean+' => 'Boolean~~',
+	'Core:AttributeBoolean/Value:null' => '',
+	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
+	'Core:AttributeBoolean/Value:no' => 'No~~',
+
+	'Core:AttributeArchiveFlag' => 'Archive flag~~',
+	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
+	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
+	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
+	'Core:AttributeArchiveFlag/Label' => 'Archived~~',
+	'Core:AttributeArchiveFlag/Label+' => '',
+	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
+	'Core:AttributeArchiveDate/Label+' => '',
+
+	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
+	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
+	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
+	'Core:AttributeObsolescenceFlag/Value:no' => 'No~~',
+	'Core:AttributeObsolescenceFlag/Label' => 'Obsolete~~',
+	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
+	'Core:AttributeObsolescenceDate/Label' => 'Obsolescence date~~',
+	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
+
+	'Core:AttributeString' => 'String~~',
+	'Core:AttributeString+' => 'Alphanumeric string~~',
+
+	'Core:AttributeClass' => 'Class~~',
+	'Core:AttributeClass+' => 'Class~~',
+
+	'Core:AttributeApplicationLanguage' => 'User language~~',
+	'Core:AttributeApplicationLanguage+' => 'Language and country (EN US)~~',
+
+	'Core:AttributeFinalClass' => 'Class (auto)~~',
+	'Core:AttributeFinalClass+' => 'Real class of the object (automatically created by the core)~~',
+
+	'Core:AttributePassword' => 'Password~~',
+	'Core:AttributePassword+' => 'Password of an external device~~',
+
+ 	'Core:AttributeEncryptedString' => 'Encrypted string~~',
+	'Core:AttributeEncryptedString+' => 'String encrypted with a local key~~',
+	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
+	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+
+	'Core:AttributeText' => 'Text~~',
+	'Core:AttributeText+' => 'Multiline character string~~',
+
+	'Core:AttributeHTML' => 'HTML~~',
+	'Core:AttributeHTML+' => 'HTML string~~',
+
+	'Core:AttributeEmailAddress' => 'Email address~~',
+	'Core:AttributeEmailAddress+' => 'Email address~~',
+
+	'Core:AttributeIPAddress' => 'IP address~~',
+	'Core:AttributeIPAddress+' => 'IP address~~',
+
+	'Core:AttributeOQL' => 'OQL~~',
+	'Core:AttributeOQL+' => 'Object Query Langage expression~~',
+
+	'Core:AttributeEnum' => 'Enum~~',
+	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings~~',
+
+	'Core:AttributeTemplateString' => 'Template string~~',
+	'Core:AttributeTemplateString+' => 'String containing placeholders~~',
+
+	'Core:AttributeTemplateText' => 'Template text~~',
+	'Core:AttributeTemplateText+' => 'Text containing placeholders~~',
+
+	'Core:AttributeTemplateHTML' => 'Template HTML~~',
+	'Core:AttributeTemplateHTML+' => 'HTML containing placeholders~~',
+
+	'Core:AttributeDateTime' => 'Date/time~~',
+	'Core:AttributeDateTime+' => 'Date and time (year-month-day hh:mm:ss)~~',
+	'Core:AttributeDateTime?SmartSearch' => '
+<p>
+	Date format:<br/>
+	<b>%1$ss</b><br/>
+	Example: %2$s
+</p>
+<p>
+Operators:<br/>
+	<b>&gt;</b><em>date</em><br/>
+	<b>&lt;</b><em>date</em><br/>
+	<b>[</b><em>date</em>,<em>date</em><b>]</b>
+</p>
+<p>
+If the time is omitted, it defaults to 00:00:00
+</p>~~',
+
+	'Core:AttributeDate' => 'Date~~',
+	'Core:AttributeDate+' => 'Date (year-month-day)~~',
+	'Core:AttributeDate?SmartSearch' => '
+<p>
+	Date format:<br/>
+	<b>%1$s</b><br/>
+	Example: %2$s
+</p>
+<p>
+Operators:<br/>
+	<b>&gt;</b><em>date</em><br/>
+	<b>&lt;</b><em>date</em><br/>
+	<b>[</b><em>date</em>,<em>date</em><b>]</b>
+</p>~~',
+
+	'Core:AttributeDeadline' => 'Deadline~~',
+	'Core:AttributeDeadline+' => 'Date, displayed relatively to the current time~~',
+
+	'Core:AttributeExternalKey' => 'External key~~',
+	'Core:AttributeExternalKey+' => 'External (or foreign) key~~',
+
+	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
+	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
+
+	'Core:AttributeExternalField' => 'External field~~',
+	'Core:AttributeExternalField+' => 'Field mapped to an external key~~',
+
+	'Core:AttributeURL' => 'URL~~',
+	'Core:AttributeURL+' => 'Absolute or relative URL as a text string~~',
+
+	'Core:AttributeBlob' => 'Blob~~',
+	'Core:AttributeBlob+' => 'Any binary content (document)~~',
+
+	'Core:AttributeOneWayPassword' => 'One way password~~',
+	'Core:AttributeOneWayPassword+' => 'One way encrypted (hashed) password~~',
+
+	'Core:AttributeTable' => 'Table~~',
+	'Core:AttributeTable+' => 'Indexed array having two dimensions~~',
+
+	'Core:AttributePropertySet' => 'Properties~~',
+	'Core:AttributePropertySet+' => 'List of untyped properties (name and value)~~',
+
+	'Core:AttributeFriendlyName' => 'Friendly name~~',
+	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes~~',
+
+	'Core:FriendlyName-Label' => 'Friendly name~~',
+	'Core:FriendlyName-Description' => 'Friendly name~~',
+
+	'Core:AttributeTag' => 'Tags~~',
+	'Core:AttributeTag+' => 'Tags~~',
+));
 
 
 //////////////////////////////////////////////////////////////////////
@@ -111,11 +298,16 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Change:ObjectCreated' => 'Nesne yaratıldı',
 	'Change:ObjectDeleted' => 'Nesne silindi',
+	'Change:ObjectModified' => 'Object modified~~',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s\'nin değeri %2$s olarak atandı (önceki değer: %3$s)',
 	'Change:AttName_SetTo' => '%1$s\'nin değeri %2$s olarak atandı',
 	'Change:Text_AppendedTo_AttName' => '%2$s\'ye %1$s eklendi',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$\'nin değeri deiştirildi, önceki değer: %2$s',
 	'Change:AttName_Changed' => '%1$s değiştirildi',
+	'Change:AttName_EntryAdded' => '%1$s modified, new entry added.~~',
+	'Change:LinkSet:Added' => 'added %1$s~~',
+	'Change:LinkSet:Removed' => 'removed %1$s~~',
+	'Change:LinkSet:Modified' => 'modified %1$s~~',
 ));
 
 //
@@ -191,6 +383,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:EventNotificationEmail/Attribute:subject+' => 'Konu',
 	'Class:EventNotificationEmail/Attribute:body' => 'Mesaj',
 	'Class:EventNotificationEmail/Attribute:body+' => 'Mesaj',
+	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments~~',
+	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
 ));
 
 //
@@ -217,7 +411,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 ));
 
 //
-// Classes: EventWebService and EventRestService
+// Class: EventWebService
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
@@ -235,6 +429,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:EventWebService/Attribute:log_error+' => 'Sonuç hata kaydı',
 	'Class:EventWebService/Attribute:data' => 'Veri',
 	'Class:EventWebService/Attribute:data+' => 'Sonuç veri',
+));
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:EventRestService' => 'REST/JSON call~~',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
 	'Class:EventRestService/Attribute:operation' => 'Operation~~',
@@ -249,6 +446,21 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)~~',
 	'Class:EventRestService/Attribute:provider' => 'Provider~~',
 	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation~~',
+));
+
+//
+// Class: EventLoginUsage
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:EventLoginUsage' => 'Login Usage~~',
+	'Class:EventLoginUsage+' => 'Connection to the application~~',
+	'Class:EventLoginUsage/Attribute:user_id' => 'Login~~',
+	'Class:EventLoginUsage/Attribute:user_id+' => 'Login~~',
+	'Class:EventLoginUsage/Attribute:contact_name' => 'User Name~~',
+	'Class:EventLoginUsage/Attribute:contact_name+' => 'User Name~~',
+	'Class:EventLoginUsage/Attribute:contact_email' => 'User Email~~',
+	'Class:EventLoginUsage/Attribute:contact_email+' => 'Email Address of the User~~',
 ));
 
 //
@@ -302,9 +514,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ActionEmail/Attribute:to+' => 'E-posta alıcısı',
 	'Class:ActionEmail/Attribute:cc' => 'Kopya',
 	'Class:ActionEmail/Attribute:cc+' => 'Kopya',
-	'Class:ActionEmail/Attribute:bcc' => 'gizli kopya',
+	'Class:ActionEmail/Attribute:bcc' => 'Gizli kopya',
 	'Class:ActionEmail/Attribute:bcc+' => 'Gizli alıcı',
-	'Class:ActionEmail/Attribute:subject' => 'konu',
+	'Class:ActionEmail/Attribute:subject' => 'Konu',
 	'Class:ActionEmail/Attribute:subject+' => 'E-posta konusu',
 	'Class:ActionEmail/Attribute:body' => 'E-posta içeriği',
 	'Class:ActionEmail/Attribute:body+' => 'E-posta içeriği',
@@ -342,6 +554,19 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:TriggerOnObject+' => 'Verilen sınıflar üzerinde işlemleri gerçekleştir',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Hedef sınıf',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
+	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
+	'Class:TriggerOnObject/Attribute:filter+' => '~~',
+	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
+	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \\"%1$s\\"~~',
+));
+
+//
+// Class: TriggerOnPortalUpdate
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:TriggerOnPortalUpdate' => 'Trigger (when updated from the portal)~~',
+	'Class:TriggerOnPortalUpdate+' => 'Trigger on a end-user\'s update from the portal~~',
 ));
 
 //
@@ -383,6 +608,39 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 ));
 
 //
+// Class: TriggerOnObjectDelete
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
+	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
+));
+
+//
+// Class: TriggerOnObjectUpdate
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
+	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+));
+
+//
+// Class: TriggerOnThresholdReached
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:TriggerOnThresholdReached' => 'Trigger (on threshold)~~',
+	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached~~',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch~~',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '~~',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Threshold~~',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '~~',
+));
+
+//
 // Class: lnkTriggerAction
 //
 
@@ -399,147 +657,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => 'Order',
 	'Class:lnkTriggerAction/Attribute:order+' => 'İşlem uygulama sırası',
-	'Core:DeletedObjectLabel' => '%1s (deleted)~~',
-	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)~~',
-	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)~~',
-	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
-	'Core:AttributeLinkedSet' => 'Array of objects~~',
-	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass~~',
-	'Core:AttributeLinkedSetIndirect' => 'Array of objects (N-N)~~',
-	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class~~',
-	'Core:AttributeInteger' => 'Integer~~',
-	'Core:AttributeInteger+' => 'Numeric value (could be negative)~~',
-	'Core:AttributeDecimal' => 'Decimal~~',
-	'Core:AttributeDecimal+' => 'Decimal value (could be negative)~~',
-	'Core:AttributeBoolean' => 'Boolean~~',
-	'Core:AttributeBoolean+' => 'Boolean~~',
-	'Core:AttributeBoolean/Value:null' => '',
-	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
-	'Core:AttributeBoolean/Value:no' => 'No~~',
-	'Core:AttributeArchiveFlag' => 'Archive flag~~',
-	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
-	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
-	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
-	'Core:AttributeArchiveFlag/Label' => 'Archived~~',
-	'Core:AttributeArchiveFlag/Label+' => '',
-	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
-	'Core:AttributeArchiveDate/Label+' => '',
-	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
-	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
-	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
-	'Core:AttributeObsolescenceFlag/Value:no' => 'No~~',
-	'Core:AttributeObsolescenceFlag/Label' => 'Obsolete~~',
-	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
-	'Core:AttributeObsolescenceDate/Label' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
-	'Core:AttributeString' => 'String~~',
-	'Core:AttributeString+' => 'Alphanumeric string~~',
-	'Core:AttributeClass' => 'Class~~',
-	'Core:AttributeClass+' => 'Class~~',
-	'Core:AttributeApplicationLanguage' => 'User language~~',
-	'Core:AttributeApplicationLanguage+' => 'Language and country (EN US)~~',
-	'Core:AttributeFinalClass' => 'Class (auto)~~',
-	'Core:AttributeFinalClass+' => 'Real class of the object (automatically created by the core)~~',
-	'Core:AttributePassword' => 'Password~~',
-	'Core:AttributePassword+' => 'Password of an external device~~',
-	'Core:AttributeEncryptedString' => 'Encrypted string~~',
-	'Core:AttributeEncryptedString+' => 'String encrypted with a local key~~',
-	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
-	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
-	'Core:AttributeText' => 'Text~~',
-	'Core:AttributeText+' => 'Multiline character string~~',
-	'Core:AttributeHTML' => 'HTML~~',
-	'Core:AttributeHTML+' => 'HTML string~~',
-	'Core:AttributeEmailAddress' => 'Email address~~',
-	'Core:AttributeEmailAddress+' => 'Email address~~',
-	'Core:AttributeIPAddress' => 'IP address~~',
-	'Core:AttributeIPAddress+' => 'IP address~~',
-	'Core:AttributeOQL' => 'OQL~~',
-	'Core:AttributeOQL+' => 'Object Query Langage expression~~',
-	'Core:AttributeEnum' => 'Enum~~',
-	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings~~',
-	'Core:AttributeTemplateString' => 'Template string~~',
-	'Core:AttributeTemplateString+' => 'String containing placeholders~~',
-	'Core:AttributeTemplateText' => 'Template text~~',
-	'Core:AttributeTemplateText+' => 'Text containing placeholders~~',
-	'Core:AttributeTemplateHTML' => 'Template HTML~~',
-	'Core:AttributeTemplateHTML+' => 'HTML containing placeholders~~',
-	'Core:AttributeDateTime' => 'Date/time~~',
-	'Core:AttributeDateTime+' => 'Date and time (year-month-day hh:mm:ss)~~',
-	'Core:AttributeDateTime?SmartSearch' => '
-<p>
-	Date format:<br/>
-	<b>%1$ss</b><br/>
-	Example: %2$s
-</p>
-<p>
-Operators:<br/>
-	<b>&gt;</b><em>date</em><br/>
-	<b>&lt;</b><em>date</em><br/>
-	<b>[</b><em>date</em>,<em>date</em><b>]</b>
-</p>
-<p>
-If the time is omitted, it defaults to 00:00:00
-</p>~~',
-	'Core:AttributeDate' => 'Date~~',
-	'Core:AttributeDate+' => 'Date (year-month-day)~~',
-	'Core:AttributeDate?SmartSearch' => '
-<p>
-	Date format:<br/>
-	<b>%1$s</b><br/>
-	Example: %2$s
-</p>
-<p>
-Operators:<br/>
-	<b>&gt;</b><em>date</em><br/>
-	<b>&lt;</b><em>date</em><br/>
-	<b>[</b><em>date</em>,<em>date</em><b>]</b>
-</p>~~',
-	'Core:AttributeDeadline' => 'Deadline~~',
-	'Core:AttributeDeadline+' => 'Date, displayed relatively to the current time~~',
-	'Core:AttributeExternalKey' => 'External key~~',
-	'Core:AttributeExternalKey+' => 'External (or foreign) key~~',
-	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
-	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
-	'Core:AttributeExternalField' => 'External field~~',
-	'Core:AttributeExternalField+' => 'Field mapped to an external key~~',
-	'Core:AttributeURL' => 'URL~~',
-	'Core:AttributeURL+' => 'Absolute or relative URL as a text string~~',
-	'Core:AttributeBlob' => 'Blob~~',
-	'Core:AttributeBlob+' => 'Any binary content (document)~~',
-	'Core:AttributeOneWayPassword' => 'One way password~~',
-	'Core:AttributeOneWayPassword+' => 'One way encrypted (hashed) password~~',
-	'Core:AttributeTable' => 'Table~~',
-	'Core:AttributeTable+' => 'Indexed array having two dimensions~~',
-	'Core:AttributePropertySet' => 'Properties~~',
-	'Core:AttributePropertySet+' => 'List of untyped properties (name and value)~~',
-	'Core:AttributeFriendlyName' => 'Friendly name~~',
-	'Core:AttributeFriendlyName+' => 'Attribute created automatically ; the friendly name is computed after several attributes~~',
-	'Core:FriendlyName-Label' => 'Friendly name~~',
-	'Core:FriendlyName-Description' => 'Friendly name~~',
-	'Change:ObjectModified' => 'Object modified~~',
-	'Change:AttName_EntryAdded' => '%1$s modified, new entry added.~~',
-	'Change:LinkSet:Added' => 'added %1$s~~',
-	'Change:LinkSet:Removed' => 'removed %1$s~~',
-	'Change:LinkSet:Modified' => 'modified %1$s~~',
-	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments~~',
-	'Class:EventLoginUsage' => 'Login Usage~~',
-	'Class:EventLoginUsage+' => 'Connection to the application~~',
-	'Class:EventLoginUsage/Attribute:user_id' => 'Login~~',
-	'Class:EventLoginUsage/Attribute:user_id+' => 'Login~~',
-	'Class:EventLoginUsage/Attribute:contact_name' => 'User Name~~',
-	'Class:EventLoginUsage/Attribute:contact_name+' => 'User Name~~',
-	'Class:EventLoginUsage/Attribute:contact_email' => 'User Email~~',
-	'Class:EventLoginUsage/Attribute:contact_email+' => 'Email Address of the User~~',
-	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
-	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \"%1$s\"~~',
-	'Class:TriggerOnPortalUpdate' => 'Trigger (when updated from the portal)~~',
-	'Class:TriggerOnPortalUpdate+' => 'Trigger on a end-user\'s update from the portal~~',
-	'Class:TriggerOnThresholdReached' => 'Trigger (on threshold)~~',
-	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached~~',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch~~',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Threshold~~',
+));
+
+//
+// Synchro Data Source
+//
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Name~~',
 	'Class:SynchroDataSource/Attribute:name+' => 'Name~~',
 	'Class:SynchroDataSource/Attribute:description' => 'Description~~',
@@ -596,8 +719,8 @@ Operators:<br/>
 	'Core:Synchro:NeverRun' => 'This synchro was never run. No log yet.~~',
 	'Core:Synchro:SynchroEndedOn_Date' => 'The latest synchronization ended on %1$s.~~',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'The synchronization started on %1$s is still running...~~',
-	'Menu:DataSources' => 'Synchronization Data Sources~~',
-	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
+	'Menu:DataSources' => 'Synchronization Data Sources~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'All Synchronization Data Sources~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Ignored (%1$s)~~',
 	'Core:Synchro:label_repl_disappeared' => 'Disappeared (%1$s)~~',
 	'Core:Synchro:label_repl_existing' => 'Existing (%1$s)~~',
@@ -744,15 +867,21 @@ Operators:<br/>
 	'Class:appUserPreferences/Attribute:preferences' => 'Prefs~~',
 	'Core:ExecProcess:Code1' => 'Wrong command or command finished with errors (e.g. wrong script name)~~',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)~~',
-	'Core:Duration_Seconds' => '%1$ds~~',
-	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds~~',
+
+	// Attribute Duration
+	'Core:Duration_Seconds'	=> '%1$ds~~',
+	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds~~',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds~~',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds~~',
-	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \"%1$s\")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \"%1$s\"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \"%1$s\" at %2$d%%~~',
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \"%1$s\"~~',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \"query\". There is no Query Phrasebook corresponding to the id: \"%1$s\".~~',
+
+	// Explain working time computing
+	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \\"%1$s\\")~~',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \\"%1$s\\"~~',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \\"%1$s\\" at %2$d%%~~',
+
+	// Bulk export
+	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \\"%1$s\\"~~',
+	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \\"query\\". There is no Query Phrasebook corresponding to the id: \\"%1$s\\".~~',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
 	'Core:BulkExportOf_Class' => '%1$s Export~~',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
@@ -785,8 +914,8 @@ Operators:<br/>
 	'Core:BulkExport:XMLOptions' => 'XML Options~~',
 	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)~~',
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
+	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
 	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
-	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)~~',
 	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
@@ -798,8 +927,121 @@ Operators:<br/>
 	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
 	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
 	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
+	'Core:BulkExport:DateTimeFormat' => 'Date and Time format~~',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
+	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
+	'Core:DateTime:Placeholder_d' => 'DD~~', // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D~~', // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM~~', // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M~~', // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY~~', // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY~~', // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh~~', // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h~~', // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh~~', // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h~~', // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm~~', // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM~~', // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm~~', // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss~~', // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Wrong format~~',
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
 	'Core:Validator:MustSelectOne' => 'Please, select one~~',
+));
+
+//
+// Class: TagSetFieldData
+//
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
+	'Class:TagSetFieldData+' => '~~',
+
+	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
+	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
+	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
+	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
+	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed~~',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
+	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
+));
+
+//
+// Class: DBProperty
+//
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:DBProperty' => 'DB property~~',
+	'Class:DBProperty+' => '~~',
+	'Class:DBProperty/Attribute:name' => 'Name~~',
+	'Class:DBProperty/Attribute:name+' => '~~',
+	'Class:DBProperty/Attribute:description' => 'Description~~',
+	'Class:DBProperty/Attribute:description+' => '~~',
+	'Class:DBProperty/Attribute:value' => 'Value~~',
+	'Class:DBProperty/Attribute:value+' => '~~',
+	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
+	'Class:DBProperty/Attribute:change_date+' => '~~',
+	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
+	'Class:DBProperty/Attribute:change_comment+' => '~~',
+));
+
+//
+// Class: BackgroundTask
+//
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:BackgroundTask' => 'Background task~~',
+	'Class:BackgroundTask+' => '~~',
+	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
+	'Class:BackgroundTask/Attribute:class_name+' => '~~',
+	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:running' => 'Running~~',
+	'Class:BackgroundTask/Attribute:running+' => '~~',
+	'Class:BackgroundTask/Attribute:status' => 'Status~~',
+	'Class:BackgroundTask/Attribute:status+' => '~~',
+));
+
+//
+// Class: AsyncTask
+//
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:AsyncTask' => 'Async. task~~',
+	'Class:AsyncTask+' => '~~',
+	'Class:AsyncTask/Attribute:created' => 'Created~~',
+	'Class:AsyncTask/Attribute:created+' => '~~',
+	'Class:AsyncTask/Attribute:started' => 'Started~~',
+	'Class:AsyncTask/Attribute:started+' => '~~',
+	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
+	'Class:AsyncTask/Attribute:planned+' => '~~',
+	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
+	'Class:AsyncTask/Attribute:event_id+' => '~~',
+	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
+	'Class:AsyncTask/Attribute:finalclass+' => '~~',
 ));

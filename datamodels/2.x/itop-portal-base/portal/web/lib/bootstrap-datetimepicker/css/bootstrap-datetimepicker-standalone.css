@@ -1,6 +1,6 @@
 /*!
  * Datetimepicker for Bootstrap 3
- * version : 4.17.37
+ * version : 4.17.47
  * https://github.com/Eonasdan/bootstrap-datetimepicker/
  */
 @font-face {
@@ -71,9 +71,9 @@
     display: none;
 }
 
-    .collapse.in {
-        display: block;
-    }
+.collapse.in {
+    display: block;
+}
 
 .dropdown-menu {
     position: absolute;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
   <constants>
   </constants>
   <classes>
@@ -17,7 +17,9 @@
   		<url>https://www.itophub.io</url>
  		<route_landing>/my-instances/landing-from-remote</route_landing>
  		<route_landing_stateless>/stateless-remote-itop/landing-from-remote-stateless</route_landing_stateless>
- 		<route_notifications>/api/notifications</route_notifications>
+ 		<route_fetch_unread_messages>/api/messages</route_fetch_unread_messages>
+		<route_mark_all_messages_as_read>/api/messages/mark-all-as-read</route_mark_all_messages_as_read>
+		<route_view_all_messages>/messages</route_view_all_messages>
    		<setup_url>../pages/exec.php?exec_module=itop-hub-connector&amp;exec_page=launch.php&amp;target=inform_after_setup</setup_url>
   	</parameters>
   </module_parameters>

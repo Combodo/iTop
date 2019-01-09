@@ -311,7 +311,10 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add a script (as an include, i.e. link) to the header of the page
+	 * Add a script (as an include, i.e. link) to the header of the page.<br>
+	 * Handles duplicates : calling twice with the same script will add the script only once
+	 *
+	 * @param string $s_linked_script
 	 */
 	public function add_linked_script($s_linked_script)
 	{

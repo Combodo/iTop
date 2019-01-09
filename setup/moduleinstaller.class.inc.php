@@ -224,4 +224,56 @@ abstract class ModuleInstallerAPI
 		}
 	}
 
+	/**
+	 * Move a column from a table to another table providing:
+	 *  - The id matches
+	 *  - The original column exists
+	 *  - The destination column does not exist
+	 *
+	 * The values are copied as is.
+	 *
+	 * @param $sOrigTable
+	 * @param $sOrigColumn
+	 * @param $sDstTable
+	 * @param $sDstColumn
+	 *
+	 * @throws \MySQLException
+	 * @throws \CoreException
+	 */
+	public static function MoveColumnInDB($sOrigTable, $sOrigColumn, $sDstTable, $sDstColumn)
+	{
+		if (!MetaModel::DBExists(false))
+		{
+			// Install from scratch, no migration
+			return;
+		}
+
+		if (!CMDBSource::IsTable($sOrigTable) || !CMDBSource::IsField($sOrigTable, $sOrigColumn))
+		{
+			// Original field is not present
+			return;
+		}
+
+		if (!CMDBSource::IsTable($sDstTable) || CMDBSource::IsField($sDstTable, $sDstColumn))
+		{
+			// Destination field is already created
+			return;
+		}
+
+		// Create the destination field
+		$sSpec = CMDBSource::GetFieldSpec($sOrigTable, $sOrigColumn);
+		$sQueryAdd = "ALTER TABLE `{$sDstTable}` ADD `{$sDstColumn}` {$sSpec}";
+		CMDBSource::Query($sQueryAdd);
+
+		// Copy the data
+		$sQueryUpdate = "UPDATE `{$sDstTable}` AS d LEFT JOIN `{$sOrigTable}` AS o ON d.id = o.id SET d.`{$sDstColumn}` = o.`{$sOrigColumn}` WHERE 1";
+		CMDBSource::Query($sQueryUpdate);
+
+		// Drop original field
+		$sQueryDrop = "ALTER TABLE `{$sOrigTable}` DROP `{$sOrigColumn}`";
+		CMDBSource::Query($sQueryDrop);
+
+		CMDBSource::CacheReset($sOrigTable);
+		CMDBSource::CacheReset($sDstTable);
+	}
 }

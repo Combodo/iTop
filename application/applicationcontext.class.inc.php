@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2018 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class ApplicationContext
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -31,6 +31,12 @@ require_once(APPROOT."/application/utils.inc.php");
  */ 
 interface iDBObjectURLMaker
 {
+    /**
+     * @param string $sClass
+     * @param string $iId
+     *
+     * @return string
+     */
 	public static function MakeObjectURL($sClass, $iId);
 }
 
@@ -39,6 +45,13 @@ interface iDBObjectURLMaker
  */ 
 class iTopStandardURLMaker implements iDBObjectURLMaker
 {
+    /**
+     * @param string $sClass
+     * @param string $iId
+     *
+     * @return string
+     * @throws \Exception
+     */
 	public static function MakeObjectURL($sClass, $iId)
 	{
 		$sPage = DBObject::ComputeStandardUIPage($sClass);
@@ -53,6 +66,13 @@ class iTopStandardURLMaker implements iDBObjectURLMaker
  */ 
 class PortalURLMaker implements iDBObjectURLMaker
 {
+    /**
+     * @param string $sClass
+     * @param string $iId
+     *
+     * @return string
+     * @throws \Exception
+     */
 	public static function MakeObjectURL($sClass, $iId)
 	{
 		$sAbsoluteUrl = utils::GetAbsoluteUrlAppRoot();
@@ -74,10 +94,20 @@ class PortalURLMaker implements iDBObjectURLMaker
  */
 class ApplicationContext
 {
+    public static $m_sUrlMakerClass = null;
+    protected static $m_aPluginProperties = null;
+    protected static $aDefaultValues; // Cache shared among all instances
+
 	protected $aNames;
 	protected $aValues;
-	protected static $aDefaultValues; // Cache shared among all instances
-	
+
+    /**
+     * ApplicationContext constructor.
+     *
+     * @param bool $bReadContext
+     *
+     * @throws \Exception
+     */
 	public function __construct($bReadContext = true)
 	{
 		$this->aNames = array(
@@ -89,11 +119,13 @@ class ApplicationContext
 		}
 
 	}
-	
-	/**
-	 * Read the context directly in the PHP parameters (either POST or GET)
-	 * return nothing
-	 */
+
+    /**
+     * Read the context directly in the PHP parameters (either POST or GET)
+     * return nothing
+     *
+     * @throws \Exception
+     */
 	protected function ReadContext()
 	{
 		if (!isset(self::$aDefaultValues))
@@ -110,20 +142,26 @@ class ApplicationContext
 				}
 				// Hmm, there must be a better (more generic) way to handle the case below:
 				// When there is only one possible (allowed) organization, the context must be
-				// fixed to this org
+				// fixed to this org unless there is only one organization in the system then
+				// no filter is applied
 				if ($sName == 'org_id')
 				{
 					if (MetaModel::IsValidClass('Organization'))
 					{
 						$oSearchFilter = new DBObjectSearch('Organization');
-						$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 						$oSet = new CMDBObjectSet($oSearchFilter);
 						$iCount = $oSet->CountWithLimit(2);
-						if ($iCount == 1)
+						if ($iCount > 1)
 						{
-							// Only one possible value for org_id, set it in the context
-							$oOrg = $oSet->Fetch();
-							self::$aDefaultValues[$sName] = $oOrg->GetKey();
+							$oSearchFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
+							$oSet = new CMDBObjectSet($oSearchFilter);
+							$iCount = $oSet->CountWithLimit(2);
+							if ($iCount == 1)
+							{
+								// Only one possible value for org_id, set it in the context
+								$oOrg = $oSet->Fetch();
+								self::$aDefaultValues[$sName] = $oOrg->GetKey();
+							}
 						}
 					}					
 				}
@@ -131,12 +169,15 @@ class ApplicationContext
 		}
 		$this->aValues = self::$aDefaultValues;
 	}
-	
-	/**
-	 * Returns the current value for the given parameter
-	 * @param string $sParamName Name of the parameter to read
-	 * @return mixed The value for this parameter
-	 */
+
+    /**
+     * Returns the current value for the given parameter
+     *
+     * @param string $sParamName Name of the parameter to read
+     * @param string $defaultValue
+     *
+     * @return mixed The value for this parameter
+     */
 	public function GetCurrentValue($sParamName, $defaultValue = '')
 	{
 		if (isset($this->aValues[$sParamName]))
@@ -148,7 +189,7 @@ class ApplicationContext
 	
 	/**
 	 * Returns the context as string with the format name1=value1&name2=value2....
-	 * return string The context as a string to be appended to an href property
+	 * @return string The context as a string to be appended to an href property
 	 */
 	public function GetForLink()
 	{
@@ -162,7 +203,7 @@ class ApplicationContext
 	
 	/**
 	 * Returns the context as sequence of input tags to be inserted inside a <form> tag
-	 * return string The context as a sequence of <input type="hidden" /> tags
+	 * @return string The context as a sequence of <input type="hidden" /> tags
 	 */
 	public function GetForForm()
 	{
@@ -176,7 +217,7 @@ class ApplicationContext
 
 	/**
 	 * Returns the context as a hash array 'parameter_name' => value
-	 * return array The context information
+	 * @return array The context information
 	 */
 	public function GetAsHash()
 	{
@@ -199,8 +240,7 @@ class ApplicationContext
 	/**
 	 * Removes the specified parameter from the context, for example when the same parameter
 	 * is already a search parameter
-	 * @param string $sParamName Name of the parameter to remove	 	 
-	 * @return none
+	 * @param string $sParamName Name of the parameter to remove
 	 */	
 	public function Reset($sParamName)
 	{
@@ -212,6 +252,11 @@ class ApplicationContext
 
 	/**
 	 * Initializes the given object with the default values provided by the context
+	 *
+	 * @param \DBObject $oObj
+	 *
+	 * @throws \Exception
+	 * @throws \CoreUnexpectedValue
 	 */
 	public function InitObjectFromContext(DBObject &$oObj)
 	{
@@ -238,13 +283,11 @@ class ApplicationContext
 			}
 		}		
 	}
-	
-	static $m_sUrlMakerClass = null;
 
 	/**
 	 * Set the current application url provider
-	 * @param sClass string Class implementing iDBObjectURLMaker	 
-	 * @return void
+	 * @param string $sClass Class implementing iDBObjectURLMaker
+	 * @return string
 	 */
 	public static function SetUrlMakerClass($sClass = 'iTopStandardURLMaker')
 	{
@@ -278,7 +321,14 @@ class ApplicationContext
 
 	/**
 	 * Get the current application url provider
+	 *
+	 * @param string $sObjClass
+	 * @param string $sObjKey
+	 * @param null $sUrlMakerClass
+	 * @param bool $bWithNavigationContext
+	 *
 	 * @return string the name of the class
+	 * @throws \Exception
 	 */
    public static function MakeObjectUrl($sObjClass, $sObjKey, $sUrlMakerClass = null, $bWithNavigationContext = true)
    {
@@ -306,8 +356,6 @@ class ApplicationContext
 		}	
 	}
 
-	protected static $m_aPluginProperties = null;
-
 	/**
 	 * Load plugin properties for the current session
 	 * @return void
@@ -326,9 +374,9 @@ class ApplicationContext
 
 	/**
 	 * Set plugin properties
-	 * @param sPluginClass string Class implementing any plugin interface
-	 * @param sProperty string Name of the property
-	 * @param value scalar Value (numeric or string)
+	 * @param string $sPluginClass Class implementing any plugin interface
+	 * @param string $sProperty Name of the property
+	 * @param mixed $value Value (numeric or string)
 	 * @return void
 	 */
 	public static function SetPluginProperty($sPluginClass, $sProperty, $value)
@@ -341,7 +389,7 @@ class ApplicationContext
 
 	/**
 	 * Get plugin properties
-	 * @param sPluginClass string Class implementing any plugin interface
+	 * @param string $sPluginClass Class implementing any plugin interface
 	 * @return array of sProperty=>value pairs
 	 */
 	public static function GetPluginProperties($sPluginClass)
@@ -359,4 +407,3 @@ class ApplicationContext
 	}
 
 }
-?>

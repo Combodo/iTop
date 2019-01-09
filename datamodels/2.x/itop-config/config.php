@@ -126,7 +126,7 @@ try
         }
         if ($sOperation == 'save')
         {
-            $sTransactionId = utils::ReadParam('transaction_id', '');
+	        $sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
             if (!utils::IsTransactionValid($sTransactionId, true))
             {
                 $oP->add("<div class=\"header_message message_info\">Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.</div>");

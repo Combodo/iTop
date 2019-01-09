@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,12 +8,10 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
 //////////////////////////////////////////////////////////////////////
 // Relations for iTop version >= 2.2.0
 //////////////////////////////////////////////////////////////////////
 //
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Relation:impacts/Description' => 'Элементы, на которые влияет',
 	'Relation:impacts/DownStream' => 'Влияет на...',
@@ -27,18 +24,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Relation:depends on/UpStream' => 'Влияет на...',
 ));
 
-//////////////////////////////////////////////////////////////////////
-// Relations for iTop version < 2.2.0
-//////////////////////////////////////////////////////////////////////
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Relation:impacts/VerbUp' => 'Влияние...',
-	'Relation:impacts/VerbDown' => 'Элементы, на которые влияет...',
-	'Relation:depends on/VerbUp' => 'Зависимость...',
-	'Relation:depends on/VerbDown' => 'Влияние...',
-));
-
 
 // Dictionnay conventions
 // Class:<class_name>
@@ -49,6 +34,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+// Class:<class_name>/UniquenessRule:<rule_code>
+// Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
@@ -64,6 +51,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
+// Class:<class_name>/UniquenessRule:<rule_code>
+// Class:<class_name>/UniquenessRule:<rule_code>+
 
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
@@ -101,6 +90,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => 'Модель предоставления услуг',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Вышестоящая',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Вышестоящая организация',
+	'Class:Organization/Attribute:overview' => 'Обзор',
+	'Organization:Overview:FunctionalCIs' => 'Конфигурационные единицы этой организации',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'по типу',
+	'Organization:Overview:Users' => 'Пользователи iTop этой организации',
 ));
 
 //
@@ -184,8 +177,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => 'Имя',
 	'Class:Person/Attribute:first_name+' => '',
-	'Class:Person/Attribute:employee_number' => 'ID сотрудника',
-	'Class:Person/Attribute:employee_number+' => '',
+	'Class:Person/Attribute:employee_number' => 'Номер сотрудника',
+	'Class:Person/Attribute:employee_number+' => 'Табельный номер сотрудника или т.п.',
 	'Class:Person/Attribute:mobile_phone' => 'Мобильный телефон',
 	'Class:Person/Attribute:mobile_phone+' => '',
 	'Class:Person/Attribute:location_id' => 'Расположение',
@@ -204,6 +197,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Фотография',
 	'Class:Person/Attribute:picture+' => '',
+	'Class:Person/UniquenessRule:employee_number+' => 'Номер сотрудника должен быть уникальным в организации',
+	'Class:Person/UniquenessRule:employee_number' => 'В организации \'$this->org_name$\' уже есть персона с таким номером сотрудника',
+	'Class:Person/UniquenessRule:name+' => 'Имя сотрудника должно быть уникальным внутри организации',
+	'Class:Person/UniquenessRule:name' => 'В организации \'$this->org_name$\' уже есть персона с таким именем',
 ));
 
 //
@@ -352,8 +349,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:PhysicalDevice/Attribute:status+' => '',
 	'Class:PhysicalDevice/Attribute:status/Value:implementation' => 'Внедрение',
 	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => 'Внедрение',
-	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'Устаревшее',
-	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => 'Устаревшее',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'Устаревший',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => 'Устаревший',
 	'Class:PhysicalDevice/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:PhysicalDevice/Attribute:status/Value:production+' => 'Эксплуатация',
 	'Class:PhysicalDevice/Attribute:status/Value:stock' => 'Резерв',
@@ -855,8 +852,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:VirtualDevice/Attribute:status+' => '',
 	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Внедрение',
 	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Внедрение',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Устаревшее',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'устаревшее',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'Устаревший',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'Устаревший',
 	'Class:VirtualDevice/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:VirtualDevice/Attribute:status/Value:production+' => 'Эксплуатация',
 	'Class:VirtualDevice/Attribute:status/Value:stock' => 'Резерв',
@@ -1295,6 +1292,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Устройства',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Все устройства этого бренда',
+	'Class:Brand/UniquenessRule:name+' => 'Название должно быть уникальным',
+	'Class:Brand/UniquenessRule:name' => 'Этот бренд уже существует',
 ));
 
 //
@@ -1344,10 +1343,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Model/Attribute:type/Value:Tablet+' => 'Планшет',
 	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Ленточная библиотека',
 	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Ленточная библиотека',
-	'Class:Model/Attribute:type/Value:Telephone' => 'Телефон',
-	'Class:Model/Attribute:type/Value:Telephone+' => 'Телефон',
+	'Class:Model/Attribute:type/Value:Phone' => 'Телефон',
+	'Class:Model/Attribute:type/Value:Phone+' => 'Телефон',
 	'Class:Model/Attribute:physicaldevices_list' => 'Устройства',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Все устройства этой модели',
+	'Class:Model/UniquenessRule:name_brand+' => 'Название должно быть уникальным внутри бренда',
+	'Class:Model/UniquenessRule:name_brand' => 'эта модель уже существует для этого бренда',
 ));
 
 //
@@ -1739,8 +1740,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Group/Attribute:status+' => '',
 	'Class:Group/Attribute:status/Value:implementation' => 'Внедрение',
 	'Class:Group/Attribute:status/Value:implementation+' => 'Внедрение',
-	'Class:Group/Attribute:status/Value:obsolete' => 'Устаревшее',
-	'Class:Group/Attribute:status/Value:obsolete+' => 'Устаревшее',
+	'Class:Group/Attribute:status/Value:obsolete' => 'Устаревший',
+	'Class:Group/Attribute:status/Value:obsolete+' => 'Устаревший',
 	'Class:Group/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:Group/Attribute:status/Value:production+' => 'Эксплуатация',
 	'Class:Group/Attribute:org_id' => 'Организация',
@@ -1752,6 +1753,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Group/Attribute:type' => 'Тип',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Родительская группа',
+
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Родительская группа',
 	'Class:Group/Attribute:parent_name+' => '',
@@ -1881,8 +1883,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 'Server:otherinfo' => 'Дополнительно',
 'Server:power' => 'Электропитание',
 'Person:info' => 'Основное',
-'Person:notifiy' => 'Уведомления',
 'Person:personal_info' => 'Персональная информация',
+'Person:notifiy' => 'Уведомления',
 'Class:Subnet/Tab:IPUsage' => 'Использование IP-адресов',
 'Class:Subnet/Tab:IPUsage-explain' => 'Интерфейсы с IP-адресом в диапазоне: <em>%1$s</em> - <em>%2$s</em>',
 'Class:Subnet/Tab:FreeIPs' => 'Свободные IP-адреса',

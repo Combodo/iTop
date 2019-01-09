@@ -173,6 +173,7 @@ class CriterionConversionTest extends ItopDataTestCase
 	 * @param $aCriterion
 	 * @param $sExpectedOperator
 	 *
+	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
 	function testToSearchForm($aCriterion, $sExpectedOperator)
@@ -311,22 +312,27 @@ class CriterionConversionTest extends ItopDataTestCase
 		);
 	}
 
-    /**
-     * @dataProvider OqlProvider
-     *
-     * @param      $sOQL
-     *
-     * @param      $sExpectedOQL
-     *
-     * @param      $aExpectedCriterion
-     *
-     * @throws \DictExceptionUnknownLanguage
-     * @throws \MissingQueryArgument
-     * @throws \OQLException
-     */
-	function testOqlToForSearchToOql($sOQL, $sExpectedOQL, $aExpectedCriterion)
+	/**
+	 * @dataProvider OqlProvider
+	 *
+	 * @param      $sOQL
+	 *
+	 * @param      $sExpectedOQL
+	 *
+	 * @param      $aExpectedCriterion
+	 *
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 * @throws \CoreException
+	 */
+	function testOqlToSearchToOql($sOQL, $sExpectedOQL, $aExpectedCriterion)
 	{
-        $this->OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
+		// For tests on tags
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag1', 'First');
+		$this->CreateTagData(TAG_CLASS, TAG_ATTCODE, 'tag2', 'Second');
+
+		$this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
 	}
 
 	function OqlProvider()
@@ -359,7 +365,7 @@ class CriterionConversionTest extends ItopDataTestCase
 			),
 			'string regexp' => array(
 				'OQL' => "SELECT Server WHERE name REGEXP '^dbserver[0-9]+\\\\\\\\..+\\\\\\\\.[a-z]{2,3}$'",
-				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE (`Server`.`name` REGEXP '^dbserver[0-9]+\\\\..+\\\\.[a-z]{2,3}$')",
+				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE (`Server`.`name` REGEXP '^dbserver[0-9]+\\\\\\\\..+\\\\\\\\.[a-z]{2,3}$')",
 				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'REGEXP')),
 			),
 			'enum + key =' => array(
@@ -412,6 +418,11 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` JOIN Organization AS `Organization` ON `Contact`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = '1')",
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN')),
 			),
+			'key IN 2' => array(
+				'OQL' => "SELECT Contact WHERE org_id IN ('1', '999999')",
+				'ExpectedOQL' => "SELECT `Contact` FROM Contact AS `Contact` JOIN Organization AS `Organization` ON `Contact`.org_id = `Organization`.id JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = '1')",
+				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key', 'operator' => 'IN')),
+			),
 			'key empty' => array(
 				'OQL' => "SELECT Person WHERE location_id = '0'",
 				'ExpectedOQL' => "SELECT `Person` FROM Person AS `Person` WHERE (`Person`.`location_id` = '0')",
@@ -438,8 +449,8 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
 			),
 			'Hierarchical below 2' => array(
-				'OQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('2', '4')) OR (`Organization`.`parent_id` = '0')) AND 1)",
-				'ExpectedOQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('2', '4')) OR (`Organization`.`parent_id` = '0')) AND 1)",
+				'OQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('1', '2')) OR (`Organization`.`parent_id` = '0')) AND 1)",
+				'ExpectedOQL' => "SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id = `Organization1`.id JOIN Organization AS `Organization11` ON `Organization1`.parent_id BELOW `Organization11`.id WHERE (((`Organization11`.`id` IN ('1', '2')) OR (`Organization`.`parent_id` = '0')) AND 1)",
 				'ExpectedCriterion' => array(array('widget' => 'hierarchical_key')),
 			),
 			'IP range' => array(
@@ -447,46 +458,72 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedOQL' => "SELECT `dev` FROM DatacenterDevice AS `dev` WHERE ((INET_ATON(`dev`.`managementip`) < INET_ATON('10.22.32.255')) AND (INET_ATON(`dev`.`managementip`) > INET_ATON('10.22.32.224')))",
 				'ExpectedCriterion' => array(array('widget' => 'raw')),
 			),
-
+			'TagSet Matches' => array(
+				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." MATCHES 'tag1'",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1'",
+				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
+			),
+			'TagSet Matches2' => array(
+				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." MATCHES 'tag1 tag2'",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE `".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1 tag2'",
+				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
+			),
+			'TagSet Undefined' => array(
+				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." = ''",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE (`".TAG_CLASS."`.`".TAG_ATTCODE."` = '')",
+				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
+			),
+			'TagSet Undefined and tag' => array(
+				'OQL' => "SELECT ".TAG_CLASS." WHERE (((".TAG_ATTCODE." MATCHES 'tag1 tag2') OR (".TAG_ATTCODE." = '')) AND 1)",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE ((`".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1 tag2' OR (`".TAG_CLASS."`.`".TAG_ATTCODE."` = '')) AND 1)",
+				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
+			),
+			'TagSet equals' => array(
+				'OQL' => "SELECT ".TAG_CLASS." WHERE ".TAG_ATTCODE." = 'tag1 tag2'",
+				'ExpectedOQL' => "SELECT `".TAG_CLASS."` FROM ".TAG_CLASS." AS `".TAG_CLASS."` WHERE (`".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag1' AND `".TAG_CLASS."`.`".TAG_ATTCODE."` MATCHES 'tag2')",
+				'ExpectedCriterion' => array(array('widget' => 'tag_set')),
+			),
 
 		);
 	}
 
-    /**
-     * @dataProvider OqlProviderDates
-     *
-     * @param      $sOQL
-     *
-     * @param      $sExpectedOQL
-     *
-     * @param      $aExpectedCriterion
-     *
-     * @throws \DictExceptionUnknownLanguage
-     * @throws \MissingQueryArgument
-     * @throws \OQLException
-     */
+	/**
+	 * @dataProvider OqlProviderDates
+	 *
+	 * @param      $sOQL
+	 *
+	 * @param      $sExpectedOQL
+	 *
+	 * @param      $aExpectedCriterion
+	 *
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 * @throws \CoreException
+	 */
     function testOqlToForSearchToOqlAltLanguageFR($sOQL, $sExpectedOQL, $aExpectedCriterion)
     {
-        $this->OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "FR FR");
+        $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "FR FR");
     }
 
 
-    /**
-     * @dataProvider OqlProviderDates
-     *
-     * @param      $sOQL
-     *
-     * @param      $sExpectedOQL
-     *
-     * @param      $aExpectedCriterion
-     *
-     * @throws \DictExceptionUnknownLanguage
-     * @throws \MissingQueryArgument
-     * @throws \OQLException
-     */
+	/**
+	 * @dataProvider OqlProviderDates
+	 *
+	 * @param      $sOQL
+	 *
+	 * @param      $sExpectedOQL
+	 *
+	 * @param      $aExpectedCriterion
+	 *
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 * @throws \CoreException
+	 */
     function testOqlToForSearchToOqlAltLanguageEN($sOQL, $sExpectedOQL, $aExpectedCriterion)
     {
-        $this->OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
+        $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
     }
 
 
@@ -567,21 +604,22 @@ class CriterionConversionTest extends ItopDataTestCase
         );
     }
 
-    /**
-     *
-     * @param      $sOQL
-     *
-     * @param      $sExpectedOQL
-     *
-     * @param      $aExpectedCriterion
-     *
-     * @param      $sLanguageCode
-     *
-     * @throws \DictExceptionUnknownLanguage
-     * @throws \MissingQueryArgument
-     * @throws \OQLException
-     */
-    function OqlToForSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, $sLanguageCode )
+	/**
+	 *
+	 * @param      $sOQL
+	 *
+	 * @param      $sExpectedOQL
+	 *
+	 * @param      $aExpectedCriterion
+	 *
+	 * @param      $sLanguageCode
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 */
+    function OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, $sLanguageCode )
     {
         $this->debug($sOQL);
 
@@ -622,7 +660,9 @@ class CriterionConversionTest extends ItopDataTestCase
             {
                 $sAttributeClass = ($aCriteria['widget'] == AttributeDefinition::SEARCH_WIDGET_TYPE_DATE_TIME) ? AttributeDateTime::class : AttributeDate::class;
 
-                $oFormat = $sAttributeClass::GetFormat();
+	            /** @var \AttributeDateTime $sAttributeClass */
+	            /** @var \DateTimeFormat $oFormat */
+	            $oFormat = $sAttributeClass::GetFormat();
 
                 foreach($aCriteria['values'] as $i => $aValue)
                 {

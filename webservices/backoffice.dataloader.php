@@ -59,7 +59,7 @@ function SetMemoryLimit($oP)
 		// Check that the limit will allow us to load the data
 		//
 		$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-		if ($iMemoryLimit < SAFE_MINIMUM_MEMORY)
+		if (!utils::IsMemoryLimitOk($iMemoryLimit, SAFE_MINIMUM_MEMORY))
 		{
 			if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === FALSE)
 			{

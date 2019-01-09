@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
@@ -24,8 +22,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Attachments:TabTitle_Count' => 'Anexos (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Anexos',
 	'Attachments:FieldsetTitle' => 'Anexos',
@@ -38,7 +35,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Attachment:Max_Mo' => '(Tamaño Máximo de Archivo: %1$s Mb)',
 	'Attachment:Max_Ko' => '(Tamaño Máximo de Archivo: %1$s Kb)',
 	'Attachments:NoAttachment' => 'No hay Anexo. ',
-	'Class:Attachment' => 'Anexo',
-	'Class:Attachment+' => 'Anexo',
-  'Attachments:PreviewNotAvailable' => 'Vista preliminar no disponible para este tipo de Anexo.',
-  ));
+	'Attachments:PreviewNotAvailable' => 'Vista preliminar no disponible para este tipo de Anexo.',
+));

@@ -139,8 +139,8 @@ footer {
     text-align: center;
   }
   #sidebar .logo img {
-    width: 40%;
     max-width: 100%;
+    max-height: 50px;
   }
   #main-wrapper {
     margin-top: 20px;
@@ -1010,7 +1010,7 @@ table .group-actions {
 }
 .caselog_field_entry_header {
   padding: 6px;
-  font-size: 1em;
+  font-size: 0.9em;
   border-bottom: 1px solid #fff;
   background-color: #f2f2f2;
 }

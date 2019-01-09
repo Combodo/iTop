@@ -28,6 +28,7 @@ use AttributeDefinition;
 use AttributeExternalField;
 use AttributeFriendlyName;
 use AttributeSubItem;
+use AttributeTagSet;
 use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
 use CoreException;
@@ -46,7 +47,6 @@ use WebPage;
 
 class SearchForm
 {
-
 	/**
 	 * @param \WebPage $oPage
 	 * @param \CMDBObjectSet $oSet
@@ -55,6 +55,7 @@ class SearchForm
 	 * @return string
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
 	public function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
@@ -89,7 +90,7 @@ class SearchForm
 		{
 			$sRootClass = $sClassName;
 		}
-		//should the search be opend on load?
+		//should the search be opened on load?
 		if (isset($aExtraParams['open']))
 		{
 			$bOpen = $aExtraParams['open'];
@@ -136,7 +137,8 @@ class SearchForm
 				ksort($aOptions);
 				$sContext = $oAppContext->GetForLink();
 				$sJsonExtraParams = htmlentities(json_encode($aListParams), ENT_QUOTES);
-				$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '{$aExtraParams['result_list_outer_selector']}', $sJsonExtraParams)\">\n".implode('',
+				$sOuterSelector = $aExtraParams['result_list_outer_selector'];
+				$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '$sOuterSelector', $sJsonExtraParams)\">\n".implode('',
 						$aOptions)."</select>\n";
 			}
 			else
@@ -191,9 +193,16 @@ class SearchForm
 			$bIsRemovable = false;
 		}
 
+		$bUseApplicationContext = true;
+		if (isset($aExtraParams['selection_mode']) && ($aExtraParams['selection_mode']))
+		{
+			// Don't use application context for selections
+			$bUseApplicationContext = false;
+		}
+
 		$aFields = $this->GetFields($oSet);
 		$oSearch = $oSet->GetFilter();
-		$aCriterion = $this->GetCriterion($oSearch, $aFields, $aArgs, $bIsRemovable);
+		$aCriterion = $this->GetCriterion($oSearch, $aFields, $aArgs, $bIsRemovable, $bUseApplicationContext);
 		$aClasses = $oSearch->GetSelectedClasses();
 		$sClassAlias = '';
 		foreach($aClasses as $sAlias => $sClass)
@@ -202,7 +211,7 @@ class SearchForm
 		}
 
 		$oBaseSearch = $oSearch->DeepClone();
-		if (method_exists($oSearch, 'GetCriteria'))
+		if ($oSearch instanceof DBObjectSearch)
 		{
 			$oBaseSearch->ResetCondition();
 		}
@@ -311,11 +320,16 @@ class SearchForm
 		$aSelectedClasses = $oSearch->GetSelectedClasses();
 		foreach($aSelectedClasses as $sAlias => $sClassName)
 		{
-			$aAllFields['zlist'] = array_merge($aAllFields['zlist'], $aAllFields[$sAlias.'_zlist']);
-			unset($aAllFields[$sAlias.'_zlist']);
-			$aAllFields['others'] = array_merge($aAllFields['others'], $aAllFields[$sAlias.'_others']);
-			unset($aAllFields[$sAlias.'_others']);
-
+			if(array_key_exists($sAlias.'_zlist', $aAllFields))
+			{
+				$aAllFields['zlist'] = array_merge($aAllFields['zlist'], $aAllFields[$sAlias.'_zlist']);
+				unset($aAllFields[$sAlias.'_zlist']);
+			}
+			if(array_key_exists($sAlias.'_others', $aAllFields))
+			{
+				$aAllFields['others'] = array_merge($aAllFields['others'], $aAllFields[$sAlias.'_others']);
+				unset($aAllFields[$sAlias.'_others']);
+			}
 		}
 
 		return $aAllFields;
@@ -454,6 +468,16 @@ class SearchForm
 				return array('values' => $aAllowedValues);
 			}
 		}
+		elseif ($oAttrDef instanceof AttributeTagSet)
+		{
+			$aAllowedValues = array();
+			foreach($oAttrDef->GetAllowedValues() as $sCode => $sRawValue)
+			{
+				$aAllowedValues[$sCode] = utils::HtmlEntities($sRawValue);
+			}
+
+			return array('values' => $aAllowedValues);
+		}
 		else
 		{
 			if (method_exists($oAttrDef, 'GetAllowedValuesAsObjectSet'))
@@ -472,24 +496,25 @@ class SearchForm
 		return array('values' => $aAllowedValues);
 	}
 
-    /**
-     * @param \DBObjectSearch $oSearch
-     * @param array $aFields
-     * @param array $aArgs
-     * @param bool $bIsRemovable
-     *
-     * @return array
-     *
-     * @throws \CoreException
-     * @throws \MissingQueryArgument
-     */
-	public function GetCriterion($oSearch, $aFields, $aArgs = array(), $bIsRemovable = true)
+	/**
+	 * @param \DBObjectSearch $oSearch
+	 * @param array $aFields
+	 * @param array $aArgs
+	 * @param bool $bIsRemovable
+	 * @param bool $bUseApplicationContext
+	 *
+	 * @return array
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 */
+	public function GetCriterion($oSearch, $aFields, $aArgs = array(), $bIsRemovable = true, $bUseApplicationContext = true)
 	{
 		$aOrCriterion = array();
 		$bIsEmptyExpression = true;
 		$aArgs = MetaModel::PrepareQueryArguments($aArgs, $oSearch->GetInternalParams());
 
-		if (method_exists($oSearch, 'GetCriteria'))
+		if ($oSearch instanceof DBObjectSearch)
 		{
 			$oExpression = $oSearch->GetCriteria();
 
@@ -497,7 +522,7 @@ class SearchForm
 			{
 				try
 				{
-					$sOQL = $oExpression->Render($aArgs);
+					$sOQL = $oExpression->RenderExpression(false, $aArgs);
 					$oExpression = Expression::FromOQL($sOQL);
 				}
 				catch (MissingQueryArgument $e)
@@ -515,7 +540,7 @@ class SearchForm
 				foreach($aAndExpressions as $oAndSubExpr)
 				{
 					/** @var Expression $oAndSubExpr */
-					if (($oAndSubExpr instanceof TrueExpression) || ($oAndSubExpr->Render() == 1))
+					if (($oAndSubExpr instanceof TrueExpression) || ($oAndSubExpr->RenderExpression(false) == 1))
 					{
 						continue;
 					}
@@ -527,49 +552,62 @@ class SearchForm
 			}
 		}
 
-		// Context induced criteria are read-only
-		$oAppContext = new ApplicationContext();
-		$sClass = $oSearch->GetClass();
-		$aCallSpec = array($sClass, 'MapContextParam');
-		$aContextParams = array();
-		if (is_callable($aCallSpec))
+		if ($bIsEmptyExpression)
 		{
-			foreach($oAppContext->GetNames() as $sContextParam)
+			$aOrCriterion = array(array('and' => array()));
+		}
+		$aTempCriteria = array();
+		foreach ($aOrCriterion as $aExistingCriteria)
+		{
+			// Add default criteria to all the OR criteria
+			$aTempCriteria[] = $this->GetDefaultCriteria($oSearch, $aExistingCriteria, $aContextParams);
+		}
+		$aOrCriterion = $aTempCriteria;
+
+		if ($bUseApplicationContext)
+		{
+			// Context induced criteria are read-only
+			$oAppContext = new ApplicationContext();
+			$sClass = $oSearch->GetClass();
+			$aCallSpec = array($sClass, 'MapContextParam');
+			$aContextParams = array();
+			if (is_callable($aCallSpec))
 			{
-				$sParamCode = call_user_func($aCallSpec, $sContextParam); //Map context parameter to the value/filter code depending on the class
-				if (!is_null($sParamCode))
+				foreach ($oAppContext->GetNames() as $sContextParam)
 				{
-					$sParamValue = $oAppContext->GetCurrentValue($sContextParam, null);
-					if (!is_null($sParamValue))
+					$sParamCode = call_user_func($aCallSpec, $sContextParam); //Map context parameter to the value/filter code depending on the class
+					if (!is_null($sParamCode))
 					{
-						$aContextParams[$sParamCode] = $sParamValue;
+						$sParamValue = $oAppContext->GetCurrentValue($sContextParam, null);
+						if (!is_null($sParamValue))
+						{
+							$aContextParams[$sParamCode] = $sParamValue;
+						}
 					}
 				}
 			}
-		}
 
-		if ($bIsEmptyExpression)
-		{
-			// Add default criterion
-			$aOrCriterion = $this->GetDefaultCriterion($oSearch, $aContextParams);
-		}
-
-		foreach($aContextParams as $sParamCode => $sParamValue)
-		{
-			// Add Context criteria in read only mode
-			$sAlias = $oSearch->GetClassAlias();
-			$oFieldExpression = new FieldExpression($sParamCode, $sAlias);
-			$oScalarExpression = new \ScalarExpression($sParamValue);
-			$oExpression = new \BinaryExpression($oFieldExpression, '=', $oScalarExpression);
-			$aCriterion = $oExpression->GetCriterion($oSearch, $aArgs);
-			$aCriterion['is_removable'] = false;
-			foreach($aOrCriterion as &$aAndExpression)
+			foreach ($aContextParams as $sParamCode => $sParamValue)
 			{
-				$aAndExpression['and'][] = $aCriterion;
+				// Check that the code exists in the concerned class
+				if (!MetaModel::IsValidAttCode($oSearch->GetClass(), $sParamCode))
+				{
+					continue;
+				}
+
+				// Add Context criteria in read only mode
+				$sAlias = $oSearch->GetClassAlias();
+				$oFieldExpression = new FieldExpression($sParamCode, $sAlias);
+				$oScalarExpression = new \ScalarExpression($sParamValue);
+				$oExpression = new \BinaryExpression($oFieldExpression, '=', $oScalarExpression);
+				$aCriterion = $oExpression->GetCriterion($oSearch, $aArgs);
+				$aCriterion['is_removable'] = false;
+				foreach ($aOrCriterion as &$aAndExpression)
+				{
+					$aAndExpression['and'][] = $aCriterion;
+				}
 			}
 		}
-
-
 
 		return array('or' => $aOrCriterion);
 	}
@@ -595,21 +633,22 @@ class SearchForm
 		return $aFields;
 	}
 
-    /**
-     * @param string $sClass
-     * @param string $sClassAlias
-     * @param string $sAttCode
-     * @param \AttributeDefinition $oAttDef
-     * @param array $aFields
-     * @param bool $bHasIndex
-     *
-     * @return mixed
-     *
-     * @throws \CoreException
-     * @throws \MissingQueryArgument
-     * @throws \MySQLException
-     * @throws \MySQLHasGoneAwayException
-     */
+	/**
+	 * @param string $sClass
+	 * @param string $sClassAlias
+	 * @param string $sAttCode
+	 * @param \AttributeDefinition $oAttDef
+	 * @param array $aFields
+	 * @param bool $bHasIndex
+	 *
+	 * @return mixed
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
+	 */
 	private function AppendField($sClass, $sClassAlias, $sAttCode, $oAttDef, $aFields, $bHasIndex = false)
 	{
 		if (!is_null($oAttDef) && ($oAttDef->GetSearchType() != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
@@ -687,17 +726,18 @@ class SearchForm
 		return $aFields;
 	}
 
-    /**
-     * @param \DBObjectSearch $oSearch
-     * @param array $aContextParams
-     *
-     * @return array
-     *
-     * @throws \CoreException
-     */
-	protected function GetDefaultCriterion($oSearch, &$aContextParams = array())
+	/**
+	 * @param \DBObjectSearch $oSearch
+	 * @param array $aExistingCriteria
+	 * @param array $aContextParams
+	 *
+	 * @return array Current AND criteria list
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 */
+	protected function GetDefaultCriteria($oSearch, $aExistingCriteria, &$aContextParams = array())
 	{
-		$aAndCriterion = array();
 		$sClass = $oSearch->GetClass();
 		$aList = MetaModel::GetZListItems($sClass, 'default_search');
 		while (empty($aList))
@@ -706,12 +746,12 @@ class SearchForm
 			$sClass = MetaModel::GetParentClass($sClass);
 			if (is_null($sClass))
 			{
-				$aOrCriterion = array(array('and' => $aAndCriterion));
-				return $aOrCriterion;
+				return $aExistingCriteria;
 			}
 			$aList = MetaModel::GetZListItems($sClass, 'default_search');
 		}
 		$sAlias = $oSearch->GetClassAlias();
+		$aAndCriteria = $aExistingCriteria['and'];
 		foreach($aList as $sAttCode)
 		{
 			$oExpression = new FieldExpression($sAttCode, $sAlias);
@@ -728,14 +768,38 @@ class SearchForm
 			}
 			$aCriterion = $oExpression->GetCriterion($oSearch);
 			$aCriterion['is_removable'] = $bIsRemovable;
-			if (isset($aCriterion['widget']) && ($aCriterion['widget'] != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
-			{
-				$aAndCriterion[] = $aCriterion;
-			}
+			$this->AddCriterion($aCriterion, $aAndCriteria);
 		}
 		// Overwrite with default criterion
-		$aOrCriterion = array(array('and' => $aAndCriterion));
-		return $aOrCriterion;
+		$aCriteria = array('and' => $aAndCriteria);
+		return $aCriteria;
+	}
+
+	/** Add the criterion to the existing list of criteria avoiding duplicates
+	 * @param array $aCriterion
+	 * @param array $aAndCriterion
+	 *
+	 */
+	private function AddCriterion($aCriterion, &$aAndCriterion)
+	{
+		if ($aCriterion['is_removable'])
+		{
+			// Check if the criterion is already present
+			// Non-removable criteria are mandatory
+			$ref = $aCriterion['ref'];
+			foreach ($aAndCriterion as $aExistingCriterion)
+			{
+				if (isset($aExistingCriterion['ref']) && ($ref === $aExistingCriterion['ref']))
+				{
+					// Already present do nothing
+					return;
+				}
+			}
+		}
+		if (isset($aCriterion['widget']) && ($aCriterion['widget'] != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW))
+		{
+			$aAndCriterion[] = $aCriterion;
+		}
 	}
 
 }

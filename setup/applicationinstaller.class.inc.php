@@ -116,6 +116,7 @@ class ApplicationInstaller
 	{
 		try
 		{
+			$fStart = microtime(true);
 			switch ($sStep)
 			{
 				case '':
@@ -338,6 +339,8 @@ class ApplicationInstaller
 						'percentage-completed' => 100,
 					);
 			}
+			$fDuration = round(microtime(true) - $fStart, 2);
+			SetupPage::log_info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
 		catch (Exception $e)
 		{
@@ -562,9 +565,19 @@ class ApplicationInstaller
 		}
 	}
 
-	protected static function DoUpdateDBSchema(
-		$aSelectedModules, $sModulesDir, $aParamValues, $sTargetEnvironment = '', $bOldAddon = false, $sAppRootUrl = ''
-	)
+	/**
+	 * @param $aSelectedModules
+	 * @param $sModulesDir
+	 * @param $aParamValues
+	 * @param string $sTargetEnvironment
+	 * @param bool $bOldAddon
+	 * @param string $sAppRootUrl
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 */
+	protected static function DoUpdateDBSchema($aSelectedModules, $sModulesDir, $aParamValues, $sTargetEnvironment = '', $bOldAddon = false, $sAppRootUrl = '')
 	{
 		SetupPage::log_info("Update Database Schema for environment '$sTargetEnvironment'.");
 		$sMode = $aParamValues['mode'];
@@ -584,6 +597,9 @@ class ApplicationInstaller
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
+
+		// Migrate columns
+		self::MoveColumns($sDBPrefix);
 
 		// Migrate application data format
 		//
@@ -738,6 +754,18 @@ class ApplicationInstaller
 		}
 
 		SetupPage::log_info("Database Schema Successfully Updated for environment '$sTargetEnvironment'.");
+	}
+
+	/**
+	 * @param string $sDBPrefix
+	 *
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 */
+	protected static function MoveColumns($sDBPrefix)
+	{
+		// In 2.6.0 the 'fields' attribute has been moved from Query to QueryOQL for dependencies reasons
+		ModuleInstallerAPI::MoveColumnInDB($sDBPrefix.'priv_query', 'fields', $sDBPrefix.'priv_query_oql', 'fields');
 	}
 
 	protected static function AfterDBCreate(

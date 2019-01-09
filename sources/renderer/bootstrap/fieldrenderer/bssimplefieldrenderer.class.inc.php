@@ -91,9 +91,10 @@ class BsSimpleFieldRenderer extends FieldRenderer
                             $oOutput->AddHtml('<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>');
                             $oOutput->AddHtml('</div>');
                             $sJSFormat = json_encode($this->oField->GetJSDateTimeFormat());
+                            $sLocale = Dict::S('Portal:Calendar-FirstDayOfWeek');
                             $oOutput->AddJs(
                                 <<<EOF
-                                					$('#datepicker_{$this->oField->GetGlobalId()}').datetimepicker({format: $sJSFormat});
+                                					$('#datepicker_{$this->oField->GetGlobalId()}').datetimepicker({format: $sJSFormat, locale: '$sLocale'});
 EOF
                             );
                             break;
@@ -288,7 +289,7 @@ EOF
 			{
 				// TODO
 			}
-			// ... clasic rendering for fields with only one value
+			// ... classic rendering for fields with only one value
 			else
 			{
 				switch ($sFieldClass)
@@ -510,8 +511,6 @@ EOF
                         });
 EOF
                         );
-                        // MagnificPopup on images
-                        $oOutput->AddJs(InlineImage::FixImagesWidth());
                     }
                     else
                     {
@@ -524,6 +523,20 @@ EOF
                     break;
             }
         }
+
+        // Finally, no matter the field mode
+		switch ($sFieldClass)
+		{
+			case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+			case 'Combodo\\iTop\\Form\\Field\\CaseLogField':
+				$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
+				if($bRichEditor)
+				{
+					// MagnificPopup on images
+					$oOutput->AddJs(InlineImage::FixImagesWidth());
+				}
+				break;
+		}
 
 		return $oOutput;
 	}

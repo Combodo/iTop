@@ -78,7 +78,7 @@
 		// Create $ object for input element
 		var $input = $(input).attr("autocomplete", "off").addClass(options.inputClass);
 
-		var timeout;
+		var timeout = new Timer(function() {}, 1);
 		var previousValue = "";
 		var cache = $.Autocompleter.Cache(options);
 		var hasFocus = 0;
@@ -89,6 +89,8 @@
 		var select = $.Autocompleter.Select(options, input, selectCurrent, config);
 
 		var blockSubmit;
+
+		var bPendingRequest = false;
 
 		// prevent form submit in opera when selecting with return key
 		navigator.userAgent.indexOf("Opera") != -1 && $(input.form).bind("submit.autocomplete", function() {
@@ -153,6 +155,10 @@
 						blockSubmit = true;
 						return false;
 					}
+					// Do not select value while background request pending
+					if ((bPendingRequest === true) || timeout.isRunning()) {
+						return false;
+					}
 					break;
 
 				case KEY.ESC:
@@ -160,8 +166,8 @@
 					break;
 
 				default:
-					clearTimeout(timeout);
-					timeout = setTimeout(onChange, options.delay);
+					timeout.stop();
+					timeout = new Timer(onChange, options.delay);
 					break;
 			}
 		}).focus(function(){
@@ -193,7 +199,7 @@
 				var result;
 				if( data && data.length ) {
 					for (var i=0; i < data.length; i++) {
-						if( data[i].result.toLowerCase() == q.toLowerCase() ) {
+						if( data[i].result.toLowerCase() === q.toLowerCase() ) {
 							result = data[i];
 							break;
 						}
@@ -221,8 +227,9 @@
 
 		function selectCurrent() {
 			var selected = select.selected();
-			if( !selected )
-				return false;
+			if (!selected)	{
+			    return false;
+			}
 
 			var v = selected.result;
 			previousValue = v;
@@ -271,8 +278,10 @@
 			currentValue = lastWord(currentValue);
 			if ( currentValue.length >= options.minChars) {
 				$input.addClass(options.loadingClass);
-				if (!options.matchCase)
+				if (!options.matchCase) {
 					currentValue = currentValue.toLowerCase();
+				}
+				bPendingRequest = true; // used for autocomplete requests only
 				request(currentValue, receiveData, hideResultsNow);
 			} else {
 				stopLoading();
@@ -320,14 +329,14 @@
 		};
 
 		function hideResults() {
-			clearTimeout(timeout);
-			timeout = setTimeout(hideResultsNow, 200);
+			timeout.stop();
+			timeout = new Timer(hideResultsNow, 200);
 		};
 
 		function hideResultsNow() {
 			var wasVisible = select.visible();
 			select.hide();
-			clearTimeout(timeout);
+			timeout.stop();
 			stopLoading();
 			if (options.mustMatch) {
 				// call search and run callback
@@ -363,6 +372,7 @@
 		function request(term, success, failure) {
 			if (!options.matchCase)
 				term = term.toLowerCase();
+
 			var data = cache.load(term);
 			// recieve the cached data
 			if (data) {
@@ -386,6 +396,7 @@
 				$.ajax({
 					// try to leverage ajaxQueue plugin to abort previous requests
 					mode: "abort",
+                    method: "POST",
 					// limit abortion to this input
 					port: "autocomplete" + input.name,
 					dataType: options.dataType,
@@ -431,6 +442,32 @@
 
 		function stopLoading() {
 			$input.removeClass(options.loadingClass);
+			bPendingRequest = false;
+		};
+
+		function Timer(callback, delay) {
+			var iId, bRunning;
+
+			this.start = function() {
+				bRunning = true;
+				iId = setTimeout(this.doCallback, delay);
+			};
+
+			this.doCallback = function () {
+				bRunning = false;
+				callback();
+			};
+
+			this.stop = function() {
+				bRunning = false;
+				clearTimeout(iId);
+			};
+
+			this.isRunning = function() {
+				return bRunning;
+			};
+
+			this.start();
 		};
 
 	};
@@ -472,15 +509,39 @@
 
 		function matchSubset(s, sub) {
 			if (!options.matchCase)
-				s = s.toLowerCase();
+				if (typeof s.normalize === 'function'){
+					s = s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+	            	sub = sub.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");					
+				}
+				else {
+					s = ie_normalize(s.toLowerCase());
+	            	sub = ie_normalize(sub.toLowerCase());										
+				}
 			var i = s.indexOf(sub);
-			if (options.matchContains == "word"){
+			if (options.matchContains === "word"){
 				i = s.toLowerCase().search("\\b" + sub.toLowerCase());
 			}
-			if (i == -1) return false;
-			return i == 0 || options.matchContains;
+			if (i === -1) return false;
+			return i === 0 || options.matchContains;
 		};
-
+		
+		function ie_normalize(s)
+		{
+			//Cheap replacement for normalize on IE. Works only on a (small) subset of what's possible in unicode
+		    var r = s.toLowerCase();
+		    r = r.replace(new RegExp(/[àáâãäå]/g),"a");
+		    r = r.replace(new RegExp(/æ/g),"ae");
+		    r = r.replace(new RegExp(/ç/g),"c");
+		    r = r.replace(new RegExp(/[èéêë]/g),"e");
+		    r = r.replace(new RegExp(/[ìíîï]/g),"i");
+		    r = r.replace(new RegExp(/ñ/g),"n");                
+		    r = r.replace(new RegExp(/[òóôõö]/g),"o");
+		    r = r.replace(new RegExp(/œ/g),"oe");
+		    r = r.replace(new RegExp(/[ùúûü]/g),"u");
+		    r = r.replace(new RegExp(/[ýÿ]/g),"y");
+		    return r;			
+		}
+		
 		function add(q, value) {
 			if (length > options.cacheLength){
 				flush();

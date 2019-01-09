@@ -56,6 +56,11 @@ abstract class ModelReflection
 	abstract public function GetFiltersList($sClass);
 	abstract public function IsValidFilterCode($sClass, $sFilterCode);
 
+	/**
+	 * @param string $sOQL
+	 *
+	 * @return \DBObjectSearch
+	 */
 	abstract public function GetQuery($sOQL);
 
 	abstract public function DictString($sStringCode, $sDefault = null, $bUserLanguageOnly = false);
@@ -75,6 +80,13 @@ abstract class ModelReflection
 		return vsprintf($sLocalizedFormat, $aArguments);
 	}
 
+	/**
+	 * @param $sCode
+	 * @param string $sLabel
+	 * @param string $defaultValue
+	 *
+	 * @return \RunTimeIconSelectionField
+	 */
 	abstract public function GetIconSelectionField($sCode, $sLabel = '', $defaultValue = '');
 	
 	abstract public function GetRootClass($sClass);

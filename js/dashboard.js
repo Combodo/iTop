@@ -304,12 +304,17 @@ $(function()
 		{
 			$('#dashboard_editor .ui-layout-east .itop-property-field-modified').trigger('apply_changes');
 		},
-		save: function()
+		save: function(dialog)
 		{
 			var oParams = this._get_state(this.options.submit_parameters);
 			var me = this;
 			$.post(this.options.submit_to, oParams, function(data){
 				me.ajax_div.html(data);
+				if(dialog)
+				{
+                    dialog.dialog( "close" );
+                    dialog.remove();
+                }
 			});
 		},
 		add_dashlet_ajax: function(options, sDashletId)
@@ -342,6 +347,7 @@ $(function()
 function UploadDashboard(oOptions)
 {
 	var sFileId = 'dashboard_upload_file';
+
 	var oDlg = $('<div id="dashboard_upload_dlg"><form><p>'+oOptions.text+'</p><p><input type="file" id="'+sFileId+'" name="dashboard_upload_file"></p></form></div>');
 	$('body').append(oDlg);
 	oOptions.file_id = sFileId;
@@ -366,6 +372,8 @@ $(function()
 		{
 			dashboard_id: '',
 			file_id: '',
+			file: '',
+			transaction: '',
 			text: 'Select a dashboard file to import',
 			title: 'Dahsboard Import',
 			close_btn: 'Close',
@@ -383,13 +391,13 @@ $(function()
 				//me.onClose();
 			};
 			$('#'+this.options.file_id).fileupload({
-				url: me.options.submit_to+'&id='+me.options.dashboard_id,
+				url: me.options.submit_to+'&id='+me.options.dashboard_id+'&file='+me.options.file+'&transaction_id='+me.options.transaction,
 		        dataType: 'json',
 				pasteZone: null, // Don't accept files via Chrome's copy/paste
 		        done: function (e, data) {
-					if(typeof(data.result.error) != 'undefined')
+					if(typeof(data.result.error) !== 'undefined')
 					{
-						if(data.result.error != '')
+						if(data.result.error !== '')
 						{
 							alert(data.result.error);
 							me.element.dialog('close');

@@ -154,7 +154,7 @@ class WizardHelper
 					}
 					else
 					{
-						// May happen for security reasons (portal, see ticket #1074)
+						// May happen for security reasons (portal, see ticket N°1074)
 						$oObj->Set($sAttCode, $value);
 					}
 				}
@@ -173,6 +173,30 @@ class WizardHelper
 						}
 					}
 					$oObj->Set($sAttCode, $value);
+				}
+				else if ($oAttDef instanceof AttributeTagSet) // AttributeDate is derived from AttributeDateTime
+				{
+					if (is_null($value))
+					{
+						// happens if field is hidden (see N°1827)
+						$value = array();
+					}
+					else
+					{
+						$value = json_decode($value, true);
+					}
+					$oTagSet = new ormTagSet(get_class($oObj), $sAttCode, $oAttDef->GetMaxItems());
+					$oTagSet->SetValues($value['orig_value']);
+					$oTagSet->ApplyDelta($value);
+					$oObj->Set($sAttCode, $oTagSet);
+				}
+				else if ($oAttDef instanceof AttributeSet) // AttributeDate is derived from AttributeDateTime
+				{
+					$value = json_decode($value, true);
+					$oTagSet = new ormSet(get_class($oObj), $sAttCode, $oAttDef->GetMaxItems());
+					$oTagSet->SetValues($value['orig_value']);
+					$oTagSet->ApplyDelta($value);
+					$oObj->Set($sAttCode, $oTagSet);
 				}
 				else
 				{
@@ -205,11 +229,10 @@ class WizardHelper
 				// this as to be handled as an array of objects
 				// thus encoded in json like: [ { name:'link1', 'id': 123}, { name:'link2', 'id': 124}...]
 				// NOT YET IMPLEMENTED !!
-				$sLinkedClass = $oAttDef->GetLinkedClass();
 				$oSet = $value;
 				$aData = array();
 				$aFields = $this->GetLinkedWizardStructure($oAttDef);
-				while($oSet->fetch())
+				while($oLinkedObj = $oSet->fetch())
 				{
 					foreach($aFields as $sLinkedAttCode)
 					{

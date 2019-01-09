@@ -43,6 +43,7 @@ class SearchFormTest extends ItopDataTestCase
 	/**
 	 * @dataProvider GetFieldsProvider
 	 * @throws \OQLException
+	 * @throws \CoreException
 	 */
 	public function testGetFields($sOQL)
 	{
@@ -74,6 +75,8 @@ class SearchFormTest extends ItopDataTestCase
 	 * @param $sOQL
 	 * @param $iOrCount
 	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
 	 */
 	public function testGetCriterion($sOQL, $iOrCount)
 	{

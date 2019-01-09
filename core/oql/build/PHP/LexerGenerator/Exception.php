@@ -42,7 +42,7 @@
  * @copyright  2006 Gregory Beaver
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
  */
-require_once 'PEAR/Exception.php';
+//require_once 'PEAR/Exception.php';
 /**
  * @package    PHP_LexerGenerator
  * @author     Gregory Beaver <cellog@php.net>
@@ -51,5 +51,5 @@ require_once 'PEAR/Exception.php';
  * @version    @package_version@
  * @since      File available since Release 0.1.0
  */
-class PHP_LexerGenerator_Exception extends PEAR_Exception {}
+class PHP_LexerGenerator_Exception extends Exception {}
 ?>

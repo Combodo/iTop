@@ -253,7 +253,9 @@ $(function()
 		_remove: function()
 		{
 			this.element.remove();
-			this.handler.triggerHandler('itop.search.criteria.removed');
+
+			var bHadValues = (Array.isArray(this.options.values) && (this.options.values.length > 0));
+			this.handler.triggerHandler('itop.search.criteria.removed', {had_values: bHadValues});
 		},
 		//   - Mark / Unmark criteria as draft (new value not applied)
 		_markAsDraft: function()
@@ -285,18 +287,20 @@ $(function()
 			var aValues = this[sCallback](oActiveOpElem);
 
 			// Update widget
-			this.options.operator = oActiveOpElem.find('.sfc_op_radio').val();
+			var sOperator = oActiveOpElem.find('.sfc_op_radio').val();
 
-			// TODO: Better modification check. The previous if has been removed as it caused a regression.
-			this.is_modified = true;
-			this.options.oql = '';
-			this.options.values = aValues;
-			this._setTitle();
-			this._unmarkAsDraft();
+			if( (this._getValuesAsText() !== this._getValuesAsText(aValues)) || (this.options.operator !== sOperator) )
+			{
+				this.is_modified = true;
+				this.options.oql = '';
+				this.options.values = aValues;
+				this.options.operator = sOperator;
+				this._setTitle();
+				this._unmarkAsDraft();
 
-
-			// Trigger event to handler
-			this.handler.triggerHandler('itop.search.criteria.value_changed');
+				// Trigger event to handler
+				this.handler.triggerHandler('itop.search.criteria.value_changed');
+			}
 		},
 
 
@@ -756,7 +760,8 @@ $(function()
 			var aValues = [];
 			for(var iValueIdx in aRawValues)
 			{
-				aValues.push(aRawValues[iValueIdx].label);
+				var sEscapedLabel = $('<div />').text(aRawValues[iValueIdx].label).html();
+				aValues.push(sEscapedLabel);
 			}
 
 			return aValues.join(', ');

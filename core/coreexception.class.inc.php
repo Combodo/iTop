@@ -107,6 +107,81 @@ class CoreException extends Exception
 	}
 }
 
+/**
+ * Class CoreCannotSaveObjectException
+ *
+ * Specialized exception to raise if {@link DBObject::CheckToWrite()} fails, which allow easy data retrieval
+ *
+ * @see \DBObject::DBInsertNoReload()
+ * @see \DBObject::DBUpdate()
+ *
+ * @since 2.6 N°659 uniqueness constraint
+ */
+class CoreCannotSaveObjectException extends CoreException
+{
+	/** @var string[] */
+	private $aIssues;
+	/** @var int */
+	private $iObjectId;
+	/** @var string */
+	private $sObjectClass;
+
+	/**
+	 * CoreCannotSaveObjectException constructor.
+	 *
+	 * @param array $aContextData containing at least those keys : issues, id, class
+	 */
+	public function __construct($aContextData)
+	{
+		$this->aIssues = $aContextData['issues'];
+		$this->iObjectId = $aContextData['id'];
+		$this->sObjectClass = $aContextData['class'];
+
+		$sIssues = implode(', ', $this->aIssues);
+		parent::__construct($sIssues, $aContextData);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getHtmlMessage()
+	{
+		$sTitle = Dict::S('UI:Error:SaveFailed');
+		$sContent = "<span><strong>{$sTitle}</strong></span>";
+
+		if (count($this->aIssues) == 1)
+		{
+			$sContent .= " <span>{$this->aIssues[0]}</span>";
+		}
+		else
+		{
+			$sContent .= '<ul>';
+			foreach ($this->aIssues as $sError)
+			{
+				$sContent .= "<li>$sError</li>";
+			}
+			$sContent .= '</ul>';
+		}
+
+		return $sContent;
+	}
+
+	public function getIssues()
+	{
+		return $this->aIssues;
+	}
+
+	public function getObjectId()
+	{
+		return $this->iObjectId;
+	}
+
+	public function getObjectClass()
+	{
+		return $this->sObjectClass;
+	}
+}
+
 class CoreWarning extends CoreException
 {
 }

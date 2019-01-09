@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,83 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
-
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:RoutineChange' => 'Rutine Ændring',
-	'Class:RoutineChange+' => '',
-	'Class:RoutineChange/Stimulus:ev_assign' => 'Tildel',
-	'Class:RoutineChange/Stimulus:ev_assign+' => '',
-	'Class:RoutineChange/Stimulus:ev_reopen' => 'Genåben',
-	'Class:RoutineChange/Stimulus:ev_reopen+' => '',
-	'Class:RoutineChange/Stimulus:ev_plan' => 'Planlæg',
-	'Class:RoutineChange/Stimulus:ev_plan+' => '',
-	'Class:RoutineChange/Stimulus:ev_approve' => 'Godkend',
-	'Class:RoutineChange/Stimulus:ev_approve+' => '',
-	'Class:RoutineChange/Stimulus:ev_replan' => 'Genplanlæg',
-	'Class:RoutineChange/Stimulus:ev_replan+' => '',
-	'Class:RoutineChange/Stimulus:ev_notapprove' => 'Godkend Ikke',
-	'Class:RoutineChange/Stimulus:ev_notapprove+' => '',
-	'Class:RoutineChange/Stimulus:ev_implement' => 'Implementer',
-	'Class:RoutineChange/Stimulus:ev_implement+' => '',
-	'Class:RoutineChange/Stimulus:ev_monitor' => 'Overvåg',
-	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
-	'Class:RoutineChange/Stimulus:ev_finish' => 'Afslut',
-	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-	'Class:NormalChange' => 'Normal Ændring',
-	'Class:NormalChange+' => '',
-	'Class:NormalChange/Attribute:acceptance_date' => 'Dato for accept',
-	'Class:NormalChange/Attribute:acceptance_date+' => '',
-	'Class:NormalChange/Attribute:acceptance_comment' => 'Kommentar til accept',
-	'Class:NormalChange/Attribute:acceptance_comment+' => '',
-	'Class:NormalChange/Stimulus:ev_validate' => 'Valider',
-	'Class:NormalChange/Stimulus:ev_validate+' => '',
-	'Class:NormalChange/Stimulus:ev_reject' => 'Afslå',
-	'Class:NormalChange/Stimulus:ev_reject+' => '',
-	'Class:NormalChange/Stimulus:ev_assign' => 'Tildel',
-	'Class:NormalChange/Stimulus:ev_assign+' => '',
-	'Class:NormalChange/Stimulus:ev_reopen' => 'Genåben',
-	'Class:NormalChange/Stimulus:ev_reopen+' => '',
-	'Class:NormalChange/Stimulus:ev_plan' => 'Planlæg',
-	'Class:NormalChange/Stimulus:ev_plan+' => '',
-	'Class:NormalChange/Stimulus:ev_approve' => 'Godkend',
-	'Class:NormalChange/Stimulus:ev_approve+' => '',
-	'Class:NormalChange/Stimulus:ev_replan' => 'Genplanlæg',
-	'Class:NormalChange/Stimulus:ev_replan+' => '',
-	'Class:NormalChange/Stimulus:ev_notapprove' => 'Godkent Ikke',
-	'Class:NormalChange/Stimulus:ev_notapprove+' => '',
-	'Class:NormalChange/Stimulus:ev_implement' => 'Implementer',
-	'Class:NormalChange/Stimulus:ev_implement+' => '',
-	'Class:NormalChange/Stimulus:ev_monitor' => 'Overvåg',
-	'Class:NormalChange/Stimulus:ev_monitor+' => '',
-	'Class:NormalChange/Stimulus:ev_finish' => 'Afslut',
-	'Class:NormalChange/Stimulus:ev_finish+' => '',
-	'Class:EmergencyChange' => 'Emergency Ændring',
-	'Class:EmergencyChange+' => '',
-	'Class:EmergencyChange/Stimulus:ev_assign' => 'Tildel',
-	'Class:EmergencyChange/Stimulus:ev_assign+' => '',
-	'Class:EmergencyChange/Stimulus:ev_reopen' => 'Genåben',
-	'Class:EmergencyChange/Stimulus:ev_reopen+' => '',
-	'Class:EmergencyChange/Stimulus:ev_plan' => 'Planlæg',
-	'Class:EmergencyChange/Stimulus:ev_plan+' => '',
-	'Class:EmergencyChange/Stimulus:ev_approve' => 'Godkend',
-	'Class:EmergencyChange/Stimulus:ev_approve+' => '',
-	'Class:EmergencyChange/Stimulus:ev_replan' => 'Genplanlæg',
-	'Class:EmergencyChange/Stimulus:ev_replan+' => '',
-	'Class:EmergencyChange/Stimulus:ev_notapprove' => 'Godkend Ikke',
-	'Class:EmergencyChange/Stimulus:ev_notapprove+' => '',
-	'Class:EmergencyChange/Stimulus:ev_implement' => 'Implementer',
-	'Class:EmergencyChange/Stimulus:ev_implement+' => '',
-	'Class:EmergencyChange/Stimulus:ev_monitor' => 'Overvåg',
-	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
-	'Class:EmergencyChange/Stimulus:ev_finish' => 'Afslut',
-	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
 	'Menu:ChangeManagement' => 'Change Management',
 	'Menu:Change:Overview' => 'Oversigt',
 	'Menu:Change:Overview+' => '',
@@ -113,6 +42,26 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI-ChangeManagementOverview-Last-7-days' => 'Antal Changes de sidste 7 dage',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes de sidste 7 dage efter type',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes de sidste 7 dage efter status',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+));
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+
+
+//
+// Class: Change
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Change' => 'Change',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => 'Status',
@@ -179,6 +128,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Change/Attribute:related_request_list+' => '',
 	'Class:Change/Attribute:related_problems_list' => 'Relaterede Problemer',
 	'Class:Change/Attribute:related_problems_list+' => '',
+	'Class:Change/Attribute:related_incident_list' => 'Relaterede incidents',
+	'Class:Change/Attribute:related_incident_list+' => '',
 	'Class:Change/Attribute:child_changes_list' => 'Afledte Changes',
 	'Class:Change/Attribute:child_changes_list+' => '',
 	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Friendly Name',
@@ -207,10 +158,44 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Afslut',
 	'Class:Change/Stimulus:ev_finish+' => '',
+));
+
+//
+// Class: RoutineChange
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:RoutineChange' => 'Rutine Ændring',
+	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Valider',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
 	'Class:RoutineChange/Stimulus:ev_reject' => 'Afslå',
 	'Class:RoutineChange/Stimulus:ev_reject+' => '',
+	'Class:RoutineChange/Stimulus:ev_assign' => 'Tildel',
+	'Class:RoutineChange/Stimulus:ev_assign+' => '',
+	'Class:RoutineChange/Stimulus:ev_reopen' => 'Genåben',
+	'Class:RoutineChange/Stimulus:ev_reopen+' => '',
+	'Class:RoutineChange/Stimulus:ev_plan' => 'Planlæg',
+	'Class:RoutineChange/Stimulus:ev_plan+' => '',
+	'Class:RoutineChange/Stimulus:ev_approve' => 'Godkend',
+	'Class:RoutineChange/Stimulus:ev_approve+' => '',
+	'Class:RoutineChange/Stimulus:ev_replan' => 'Genplanlæg',
+	'Class:RoutineChange/Stimulus:ev_replan+' => '',
+	'Class:RoutineChange/Stimulus:ev_notapprove' => 'Godkend Ikke',
+	'Class:RoutineChange/Stimulus:ev_notapprove+' => '',
+	'Class:RoutineChange/Stimulus:ev_implement' => 'Implementer',
+	'Class:RoutineChange/Stimulus:ev_implement+' => '',
+	'Class:RoutineChange/Stimulus:ev_monitor' => 'Overvåg',
+	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
+	'Class:RoutineChange/Stimulus:ev_finish' => 'Afslut',
+	'Class:RoutineChange/Stimulus:ev_finish+' => '',
+));
+
+//
+// Class: ApprovedChange
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ApprovedChange' => 'Godkendte Changes',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Dato for godkendelse',
@@ -239,13 +224,70 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => 'Afslut',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
+));
+
+//
+// Class: NormalChange
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:NormalChange' => 'Normal Ændring',
+	'Class:NormalChange+' => '',
+	'Class:NormalChange/Attribute:acceptance_date' => 'Dato for accept',
+	'Class:NormalChange/Attribute:acceptance_date+' => '',
+	'Class:NormalChange/Attribute:acceptance_comment' => 'Kommentar til accept',
+	'Class:NormalChange/Attribute:acceptance_comment+' => '',
+	'Class:NormalChange/Stimulus:ev_validate' => 'Valider',
+	'Class:NormalChange/Stimulus:ev_validate+' => '',
+	'Class:NormalChange/Stimulus:ev_reject' => 'Afslå',
+	'Class:NormalChange/Stimulus:ev_reject+' => '',
+	'Class:NormalChange/Stimulus:ev_assign' => 'Tildel',
+	'Class:NormalChange/Stimulus:ev_assign+' => '',
+	'Class:NormalChange/Stimulus:ev_reopen' => 'Genåben',
+	'Class:NormalChange/Stimulus:ev_reopen+' => '',
+	'Class:NormalChange/Stimulus:ev_plan' => 'Planlæg',
+	'Class:NormalChange/Stimulus:ev_plan+' => '',
+	'Class:NormalChange/Stimulus:ev_approve' => 'Godkend',
+	'Class:NormalChange/Stimulus:ev_approve+' => '',
+	'Class:NormalChange/Stimulus:ev_replan' => 'Genplanlæg',
+	'Class:NormalChange/Stimulus:ev_replan+' => '',
+	'Class:NormalChange/Stimulus:ev_notapprove' => 'Godkent Ikke',
+	'Class:NormalChange/Stimulus:ev_notapprove+' => '',
+	'Class:NormalChange/Stimulus:ev_implement' => 'Implementer',
+	'Class:NormalChange/Stimulus:ev_implement+' => '',
+	'Class:NormalChange/Stimulus:ev_monitor' => 'Overvåg',
+	'Class:NormalChange/Stimulus:ev_monitor+' => '',
+	'Class:NormalChange/Stimulus:ev_finish' => 'Afslut',
+	'Class:NormalChange/Stimulus:ev_finish+' => '',
+));
+
+//
+// Class: EmergencyChange
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:EmergencyChange' => 'Emergency Ændring',
+	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Valider',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
 	'Class:EmergencyChange/Stimulus:ev_reject' => 'Afslå',
 	'Class:EmergencyChange/Stimulus:ev_reject+' => '',
-	'Class:Change/Attribute:related_incident_list' => 'Relaterede incidents',
-	'Class:Change/Attribute:related_incident_list+' => '',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+	'Class:EmergencyChange/Stimulus:ev_assign' => 'Tildel',
+	'Class:EmergencyChange/Stimulus:ev_assign+' => '',
+	'Class:EmergencyChange/Stimulus:ev_reopen' => 'Genåben',
+	'Class:EmergencyChange/Stimulus:ev_reopen+' => '',
+	'Class:EmergencyChange/Stimulus:ev_plan' => 'Planlæg',
+	'Class:EmergencyChange/Stimulus:ev_plan+' => '',
+	'Class:EmergencyChange/Stimulus:ev_approve' => 'Godkend',
+	'Class:EmergencyChange/Stimulus:ev_approve+' => '',
+	'Class:EmergencyChange/Stimulus:ev_replan' => 'Genplanlæg',
+	'Class:EmergencyChange/Stimulus:ev_replan+' => '',
+	'Class:EmergencyChange/Stimulus:ev_notapprove' => 'Godkend Ikke',
+	'Class:EmergencyChange/Stimulus:ev_notapprove+' => '',
+	'Class:EmergencyChange/Stimulus:ev_implement' => 'Implementer',
+	'Class:EmergencyChange/Stimulus:ev_implement+' => '',
+	'Class:EmergencyChange/Stimulus:ev_monitor' => 'Overvåg',
+	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
+	'Class:EmergencyChange/Stimulus:ev_finish' => 'Afslut',
+	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
 ));
-?>

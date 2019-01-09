@@ -235,29 +235,96 @@ abstract class DBSearch
 	abstract public function GetInternalParams();
 	abstract public function GetQueryParams($bExcludeMagicParams = true);
 	abstract public function ListConstantFields();
-	
+
 	/**
 	 * Turn the parameters (:xxx) into scalar values in order to easily
 	 * serialize a search
+	 *
+	 * @param array $aArgs
+	 *
+	 * @return string
 	 */
 	abstract public function ApplyParameters($aArgs);
 
-    public function serialize($bDevelopParams = false, $aContextParams = null)
+    public function serialize($bDevelopParams = false, $aContextParams = array())
 	{
+		$aQueryParams = $this->GetQueryParams();
+
+		$aContextParams = array_merge($this->GetInternalParams(), $aContextParams);
+
+		foreach($aQueryParams as $sParam => $sValue)
+		{
+			if (isset($aContextParams[$sParam]))
+			{
+				$aQueryParams[$sParam] = $aContextParams[$sParam];
+			}
+			elseif (($iPos = strpos($sParam, '->')) !== false)
+			{
+				$sParamName = substr($sParam, 0, $iPos);
+				if (isset($aContextParams[$sParamName.'->object()']))
+				{
+					$sAttCode = substr($sParam, $iPos + 2);
+					/** @var \DBObject $oObj */
+					$oObj = $aContextParams[$sParamName.'->object()'];
+					if ($oObj->IsModified())
+					{
+						if ($sAttCode == 'id')
+						{
+							$aQueryParams[$sParam] = $oObj->GetKey();
+						}
+						else
+						{
+							$aQueryParams[$sParam] = $oObj->Get($sAttCode);
+						}
+					}
+					else
+					{
+						unset($aQueryParams[$sParam]);
+						// For database objects, serialize only class, key
+						$aQueryParams[$sParamName.'->id'] = $oObj->GetKey();
+						$aQueryParams[$sParamName.'->class'] = get_class($oObj);
+					}
+				}
+			}
+		}
+
 		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
-		return rawurlencode(base64_encode(serialize(array($sOql, $this->GetInternalParams(), $this->m_aModifierProperties))));
+		return json_encode(array($sOql, $aQueryParams, $this->m_aModifierProperties));
 	}
 
 	/**
 	 * @param string $sValue Serialized OQL query
 	 *
 	 * @return \DBSearch
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
 	 */
 	static public function unserialize($sValue)
 	{
-		$aData = unserialize(base64_decode(rawurldecode($sValue)));
+		$aData = json_decode($sValue, true);
+		if (is_null($aData))
+		{
+			throw new CoreException("Invalid filter parameter");
+		}
 		$sOql = $aData[0];
 		$aParams = $aData[1];
+		$aExtraParams = array();
+		foreach($aParams as $sParam => $sValue)
+		{
+			if (($iPos = strpos($sParam, '->class')) !== false)
+			{
+				$sParamName = substr($sParam, 0, $iPos);
+				if (isset($aParams[$sParamName.'->id']))
+				{
+					$sClass = $aParams[$sParamName.'->class'];
+					$iKey = $aParams[$sParamName.'->id'];
+					$oObj = MetaModel::GetObject($sClass, $iKey);
+					$aExtraParams[$sParamName.'->object()'] = $oObj;
+				}
+			}
+		}
+		$aParams = array_merge($aExtraParams, $aParams);
 		// We've tried to use gzcompress/gzuncompress, but for some specific queries
 		// it was not working at all (See Trac #193)
 		// gzuncompress was issuing a warning "data error" and the return object was null
@@ -335,6 +402,7 @@ abstract class DBSearch
 			}
 		}
 
+		/** @var DBObjectSearch | null $oResultFilter */
 		if (!isset($oResultFilter))
 		{
 			$oKPI = new ExecutionKPI();
@@ -373,11 +441,20 @@ abstract class DBSearch
 		return $oResultFilter;
 	}
 
-	// Alternative to object mapping: the data are transfered directly into an array
-	// This is 10 times faster than creating a set of objects, and makes sense when optimization is required
 	/**
-	 * @param hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
-	 */	
+	 * Alternative to object mapping: the data are transfered directly into an array
+	 * This is 10 times faster than creating a set of objects, and makes sense when optimization is required
+	 *
+	 * @param array $aColumns
+	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 * @param array $aArgs
+	 *
+	 * @return array|void
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public function ToDataArray($aColumns = array(), $aOrderBy = array(), $aArgs = array())
 	{
 		$sSQL = $this->MakeSelectQuery($aOrderBy, $aArgs);
@@ -607,11 +684,30 @@ abstract class DBSearch
 		return $sRes;
 	}
 
+	protected abstract function IsDataFiltered();
+	protected abstract function SetDataFiltered();
 
 	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
 	{
-		$oSQLQuery = $this->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
-		$oSQLQuery->SetSourceOQL($this->ToOQL());
+		$oSearch = $this;
+		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered())
+		{
+			$oVisibleObjects = UserRights::GetSelectFilter($this->GetClass(), $this->GetModifierProperties('UserRightsGetSelectFilter'));
+			if ($oVisibleObjects === false)
+			{
+				// Make sure this is a valid search object, saying NO for all
+				$oVisibleObjects = DBObjectSearch::FromEmptySet($this->GetClass());
+			}
+			if (is_object($oVisibleObjects))
+			{
+				$oVisibleObjects->AllowAllData();
+				$oSearch = $this->Intersect($oVisibleObjects);
+				/** @var DBSearch $oSearch */
+				$oSearch->SetDataFiltered();
+			}
+		}
+		$oSQLQuery = $oSearch->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
+		$oSQLQuery->SetSourceOQL($oSearch->ToOQL());
 
 		// Join to an additional table, if required...
 		//
@@ -634,6 +730,20 @@ abstract class DBSearch
 	public abstract function GetSQLQueryStructure(
 		$aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null
 	);
+
+	/**
+	 * @return \Expression
+	 */
+	public abstract function GetCriteria();
+
+	public abstract function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true);
+
+	/**
+	 * @return string a unique param name
+	 */
+	protected function GenerateUniqueParamName() {
+		return str_replace('.', '', 'param_'.microtime(true).rand(0,100));
+	}
 
 	////////////////////////////////////////////////////////////////////////////
 	//

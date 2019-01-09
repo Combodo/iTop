@@ -480,6 +480,11 @@ class DBObjectSearch extends DBSearch
 				$oNewCondition = Expression::FromOQL($sOQLCondition);
 				break;
 
+			case 'MATCHES':
+				$oRightExpr = new ScalarExpression($value);
+				$oNewCondition = new MatchExpression($oField, $oRightExpr);
+				break;
+
 			case 'Contains':
 			case 'Begins with':
 			case 'Finishes with':
@@ -514,21 +519,6 @@ class DBObjectSearch extends DBSearch
 
 		$oInCondition = new BinaryExpression($oFieldExpression, $sOperator, $oListExpression);
 		$this->AddConditionExpression($oInCondition);
-	}
-
-	/**
-	 * @return string a unique param name
-	 */
-	private function GenerateUniqueParamName() {
-		$iExistingParamsNb = count($this->m_aParams);
-		$iCurrentArrayParamNb = $iExistingParamsNb + 1;
-		$sParamName = 'param'.$iCurrentArrayParamNb;
-
-		if (isset($this->m_aParams[$sParamName])) {
-			$sParamName .= '_'.microtime(true) . '_' .rand(0,100);
-		}
-
-		return $sParamName;
 	}
 
 	/**
@@ -1314,6 +1304,13 @@ class DBObjectSearch extends DBSearch
 			$oRight = $this->OQLExpressionToCondition($sQuery, $oExpression->GetRightExpr(), $aClassAliases);
 			return new BinaryExpression($oLeft, $sOperator, $oRight);
 		}
+		elseif ($oExpression instanceof MatchOqlExpression)
+		{
+			$oLeft = $this->OQLExpressionToCondition($sQuery, $oExpression->GetLeftExpr(), $aClassAliases);
+			$oRight = $this->OQLExpressionToCondition($sQuery, $oExpression->GetRightExpr(), $aClassAliases);
+
+			return new MatchExpression($oLeft, $oRight);
+		}
 		elseif ($oExpression instanceof FieldOqlExpression)
 		{
 			$sClassAlias = $oExpression->GetParent();
@@ -1940,46 +1937,86 @@ class DBObjectSearch extends DBSearch
 			}
 		}
 
-		// First query built from the root, adding all tables including the leaf
-		//   Before N.1065 we were joining from the leaf first, but this wasn't a good choice :
-		//   most of the time (obsolescence, friendlyname, ...) we want to get a root attribute !
-		//
-		$oSelectBase = null;
-		$aClassHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, true);
-		$bIsClassStandaloneClass = (count($aClassHierarchy) == 1);
-		foreach($aClassHierarchy as $sSomeClass)
+		$bRootFirst = MetaModel::GetConfig()->Get('optimize_requests_for_join_count');
+		if ($bRootFirst)
 		{
-			if (!MetaModel::HasTable($sSomeClass))
+			// First query built from the root, adding all tables including the leaf
+			//   Before N.1065 we were joining from the leaf first, but this wasn't a good choice :
+			//   most of the time (obsolescence, friendlyname, ...) we want to get a root attribute !
+			//
+			$oSelectBase = null;
+			$aClassHierarchy = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, true);
+			$bIsClassStandaloneClass = (count($aClassHierarchy) == 1);
+			foreach($aClassHierarchy as $sSomeClass)
 			{
-				continue;
-			}
-
-			self::DbgTrace("Adding join from root to leaf: $sSomeClass... let's call MakeSQLObjectQuerySingleTable()");
-			$oSelectParentTable = $this->MakeSQLObjectQuerySingleTable($oBuild, $aAttToLoad, $sSomeClass, $aExtKeys, $aValues);
-			if (is_null($oSelectBase))
-			{
-				$oSelectBase = $oSelectParentTable;
-				if (!$bIsClassStandaloneClass && (MetaModel::IsRootClass($sSomeClass)))
+				if (!MetaModel::HasTable($sSomeClass))
 				{
-					// As we're linking to root class first, we're adding a where clause on the finalClass attribute :
-					//      COALESCE($sRootClassFinalClass IN ('$sExpectedClasses'), 1)
-					// If we don't, the child classes can be removed in the query optimisation phase, including the leaf that was queried
-					// So we still need to filter records to only those corresponding to the child classes !
-					// The coalesce is mandatory if we have a polymorphic query (left join)
-					$oClassListExpr = ListExpression::FromScalars(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL));
-					$sFinalClassSqlColumnName = MetaModel::DBGetClassField($sSomeClass);
-					$oClassExpr = new FieldExpression($sFinalClassSqlColumnName, $oSelectBase->GetTableAlias());
-					$oInExpression = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
-					$oTrueExpression = new TrueExpression();
-					$aCoalesceAttr = array($oInExpression, $oTrueExpression);
-					$oFinalClassRestriction = new FunctionExpression("COALESCE", $aCoalesceAttr);
-
-					$oBuild->m_oQBExpressions->AddCondition($oFinalClassRestriction);
+					continue;
 				}
+
+				self::DbgTrace("Adding join from root to leaf: $sSomeClass... let's call MakeSQLObjectQuerySingleTable()");
+				$oSelectParentTable = $this->MakeSQLObjectQuerySingleTable($oBuild, $aAttToLoad, $sSomeClass, $aExtKeys, $aValues);
+				if (is_null($oSelectBase))
+				{
+					$oSelectBase = $oSelectParentTable;
+					if (!$bIsClassStandaloneClass && (MetaModel::IsRootClass($sSomeClass)))
+					{
+						// As we're linking to root class first, we're adding a where clause on the finalClass attribute :
+						//      COALESCE($sRootClassFinalClass IN ('$sExpectedClasses'), 1)
+						// If we don't, the child classes can be removed in the query optimisation phase, including the leaf that was queried
+						// So we still need to filter records to only those corresponding to the child classes !
+						// The coalesce is mandatory if we have a polymorphic query (left join)
+						$oClassListExpr = ListExpression::FromScalars(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL));
+						$sFinalClassSqlColumnName = MetaModel::DBGetClassField($sSomeClass);
+						$oClassExpr = new FieldExpression($sFinalClassSqlColumnName, $oSelectBase->GetTableAlias());
+						$oInExpression = new BinaryExpression($oClassExpr, 'IN', $oClassListExpr);
+						$oTrueExpression = new TrueExpression();
+						$aCoalesceAttr = array($oInExpression, $oTrueExpression);
+						$oFinalClassRestriction = new FunctionExpression("COALESCE", $aCoalesceAttr);
+
+						$oBuild->m_oQBExpressions->AddCondition($oFinalClassRestriction);
+					}
+				}
+				else
+				{
+					$oSelectBase->AddInnerJoin($oSelectParentTable, $sKeyField, MetaModel::DBGetKey($sSomeClass));
+				}
+			}
+		}
+		else
+		{
+			// First query built upon on the leaf (ie current) class
+			//
+			self::DbgTrace("Main (=leaf) class, call MakeSQLObjectQuerySingleTable()");
+			if (MetaModel::HasTable($sClass))
+			{
+				$oSelectBase = $this->MakeSQLObjectQuerySingleTable($oBuild, $aAttToLoad, $sClass, $aExtKeys, $aValues);
 			}
 			else
 			{
-				$oSelectBase->AddInnerJoin($oSelectParentTable, $sKeyField, MetaModel::DBGetKey($sSomeClass));
+				$oSelectBase = null;
+
+				// As the join will not filter on the expected classes, we have to specify it explicitely
+				$sExpectedClasses = implode("', '", MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL));
+				$oFinalClassRestriction = Expression::FromOQL("`$sClassAlias`.finalclass IN ('$sExpectedClasses')");
+				$oBuild->m_oQBExpressions->AddCondition($oFinalClassRestriction);
+			}
+
+			// Then we join the queries of the eventual parent classes (compound model)
+			foreach(MetaModel::EnumParentClasses($sClass) as $sParentClass)
+			{
+				if (!MetaModel::HasTable($sParentClass)) continue;
+
+				self::DbgTrace("Parent class: $sParentClass... let's call MakeSQLObjectQuerySingleTable()");
+				$oSelectParentTable = $this->MakeSQLObjectQuerySingleTable($oBuild, $aAttToLoad, $sParentClass, $aExtKeys, $aValues);
+				if (is_null($oSelectBase))
+				{
+					$oSelectBase = $oSelectParentTable;
+				}
+				else
+				{
+					$oSelectBase->AddInnerJoin($oSelectParentTable, $sKeyField, MetaModel::DBGetKey($sParentClass));
+				}
 			}
 		}
 

@@ -25,16 +25,25 @@
  */
 
 require_once('../approot.inc.php');
-require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
-require_once(APPROOT.'/application/pdfpage.class.inc.php');
-require_once(APPROOT.'/application/wizardhelper.class.inc.php');
-require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
-require_once(APPROOT.'/application/ui.searchformforeignkeys.class.inc.php');
-require_once(APPROOT.'/application/ui.extkeywidget.class.inc.php');
-require_once(APPROOT.'/application/datatable.class.inc.php');
-require_once(APPROOT.'/application/excelexporter.class.inc.php');
+require_once(APPROOT.'application/application.inc.php');
+require_once(APPROOT.'application/webpage.class.inc.php');
+require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
+require_once(APPROOT.'application/pdfpage.class.inc.php');
+require_once(APPROOT.'application/wizardhelper.class.inc.php');
+require_once(APPROOT.'application/ui.linkswidget.class.inc.php');
+require_once(APPROOT.'application/ui.searchformforeignkeys.class.inc.php');
+require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
+require_once(APPROOT.'application/datatable.class.inc.php');
+require_once(APPROOT.'application/excelexporter.class.inc.php');
+
+
+function LogErrorMessage($sMsgPrefix, $aContextInfo) {
+	$sCurrentUserLogin = UserRights::GetUser();
+	$sContextInfo = urldecode(http_build_query($aContextInfo, '', ', '));
+	$sErrorMessage = "$sMsgPrefix - User='$sCurrentUserLogin', $sContextInfo";
+	IssueLog::Error($sErrorMessage);
+}
+
 
 try
 {
@@ -49,7 +58,7 @@ try
 
 
 	$operation = utils::ReadParam('operation', '');
-	$sFilter = stripslashes(utils::ReadParam('filter', '', false, 'raw_data'));
+	$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 	$sEncoding = utils::ReadParam('encoding', 'serialize');
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
 	$sStyle = utils::ReadParam('style', 'list');
@@ -700,7 +709,7 @@ try
 			$oObj = $oWizardHelper->GetTargetObject();
 			$sClass = $oWizardHelper->GetTargetClass();
 			$sTargetState = utils::ReadParam('target_state', '');
-			$iTransactionId = utils::ReadParam('transaction_id', '');
+			$iTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 			$oObj->Set(MetaModel::GetStateAttributeCode($sClass), $sTargetState);
 			cmdbAbstractObject::DisplayCreationForm($oPage, $sClass, $oObj, array(), array('action' => utils::GetAbsoluteUrlAppRoot().'pages/UI.php', 'transaction_id' => $iTransactionId));
 			break;
@@ -894,8 +903,8 @@ try
 		case 'on_form_cancel':
 			// Called when a creation/modification form is cancelled by the end-user
 			// Let's take this opportunity to inform the plug-ins so that they can perform some cleanup
-			$iTransactionId = utils::ReadParam('transaction_id', 0);
-			$sTempId = session_id().'_'.$iTransactionId;
+			$iTransactionId = utils::ReadParam('transaction_id', 0, false, 'transaction_id');
+			$sTempId = utils::GetUploadTempId($iTransactionId);
 			InlineImage::OnFormCancel($sTempId);
 			foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 			{
@@ -910,24 +919,186 @@ try
 			}
 			break;
 
+		case 'dashboard':
+			$oPage->SetContentType('text/html');
+			$id = (int)utils::ReadParam('id', 0);
+			$sAttCode = utils::ReadParam('attcode', '');
+			/** @var \cmdbAbstractObject $oObj */
+			$oObj = MetaModel::GetObject($sClass, $id);
+			$oObj->DisplayDashboard($oPage, $sAttCode);
+			break;
+
+		case 'export_dashboard':
+			$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
+			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
+			if (!is_null($oDashboard))
+			{
+				$oPage->TrashUnexpectedOutput();
+				$oPage->SetContentType('text/xml');
+				$oPage->SetContentDisposition('attachment', 'dashboard_'.$oDashboard->GetTitle().'.xml');
+				$oPage->add($oDashboard->ToXml());
+			}
+			break;
+
+		case 'import_dashboard':
+			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
+			if (!utils::IsTransactionValid($sTransactionId, true))
+			{
+				throw new SecurityException('ajax.render.php import_dashboard : invalid transaction_id');
+			}
+			$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
+			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
+			$aResult = array('error' => '');
+			if (!is_null($oDashboard))
+			{
+				try
+				{
+					$oDoc = utils::ReadPostedDocument('dashboard_upload_file');
+					$oDashboard->FromXml($oDoc->GetData());
+					$oDashboard->Save();
+				} catch (DOMException $e)
+				{
+					$aResult = array('error' => Dict::S('UI:Error:InvalidDashboardFile'));
+				} catch (Exception $e)
+				{
+					$aResult = array('error' => $e->getMessage());
+				}
+			}
+			else
+			{
+				$aResult['error'] = 'Dashboard id="'.$sDashboardId.'" not found.';
+			}
+			$oPage->add(json_encode($aResult));
+			break;
+
+		case 'toggle_dashboard':
+			$oPage->SetContentType('text/html');
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+
+			$bStandardSelected = appUserPreferences::GetPref('display_original_dashboard_'.$sDashboardId, false);
+			appUserPreferences::UnsetPref('display_original_dashboard_'.$sDashboardId);
+			appUserPreferences::SetPref('display_original_dashboard_'.$sDashboardId, !$bStandardSelected);
+
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
+			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
+			$aResult = array('error' => '');
+			if (!is_null($oDashboard))
+			{
+				if (!empty($sReloadURL))
+				{
+					$oDashboard->SetReloadURL($sReloadURL);
+				}
+				$oDashboard->Render($oPage, false, $aExtraParams);
+			}
+			$oPage->add_ready_script("$('.dashboard_contents table.listResults').tableHover(); $('.dashboard_contents table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
+			break;
+
 		case 'reload_dashboard':
 			$oPage->SetContentType('text/html');
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
-			$aExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
-			ApplicationMenu::LoadAdditionalMenus();
-			$idx = ApplicationMenu::GetMenuIndexById($sDashboardId);
-			$oMenu = ApplicationMenu::GetMenuNode($idx);
-			$oDashboard = $oMenu->GetDashboard();
-			$oDashboard->Render($oPage, false, $aExtraParams);
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
+			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
+			$aResult = array('error' => '');
+			if (!is_null($oDashboard))
+			{
+				if (!empty($sReloadURL))
+				{
+					$oDashboard->SetReloadURL($sReloadURL);
+				}
+				$oDashboard->Render($oPage, false, $aExtraParams);
+			}
 			$oPage->add_ready_script("$('.dashboard_contents table.listResults').tableHover(); $('.dashboard_contents table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
+			break;
+
+		case 'save_dashboard':
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sJSExtraParams = json_encode($aExtraParams);
+			$aParams = array();
+			$aParams['layout_class'] = utils::ReadParam('layout_class', '');
+			$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
+			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
+			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
+			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
+			$oDashboard = new RuntimeDashboard($sDashboardId);
+			$oDashboard->FromParams($aParams);
+			$oDashboard->Save();
+			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'raw_data'));
+			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
+			// trigger a reload of the current page since the dashboard just changed
+			$oPage->add_script(
+<<<EOF
+			$('.dashboard_contents#$sDivId').block();
+			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sDashboardFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+			   function(data){
+				 $('.dashboard_contents#$sDivId').html(data);
+				 $('.dashboard_contents#$sDivId').unblock();
+				}
+			 );
+EOF
+			);
+			break;
+
+		case 'revert_dashboard':
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+			appUserPreferences::UnsetPref('display_original_dashboard_'.$sDashboardId);
+			$oDashboard = new RuntimeDashboard($sDashboardId);
+			$oDashboard->Revert();
+			$sFile = addslashes($oDashboard->GetDefinitionFile());
+			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
+			// trigger a reload of the current page since the dashboard just changed
+			$oPage->add_script(
+<<<EOF
+			$('.dashboard_contents#$sDivId').block();
+			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sFile', reload_url: '$sReloadURL'},
+			   function(data){
+				 $('.dashboard_contents#$sDivId').html(data);
+				 $('.dashboard_contents#$sDivId').unblock();
+				}
+			 );
+EOF
+			);
+			break;
+
+		case 'render_dashboard':
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
+			$aParams = array();
+			$aParams['layout_class'] = utils::ReadParam('layout_class', '');
+			$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
+			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
+			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
+			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$oDashboard = new RuntimeDashboard($sDashboardId);
+			$oDashboard->FromParams($aParams);
+			$oDashboard->SetReloadURL($sReloadURL);
+			$oDashboard->Render($oPage, true /* bEditMode */, $aExtraParams);
 			break;
 
 		case 'dashboard_editor':
 			$sId = utils::ReadParam('id', '', false, 'raw_data');
-			ApplicationMenu::LoadAdditionalMenus();
-			$idx = ApplicationMenu::GetMenuIndexById($sId);
-			$oMenu = ApplicationMenu::GetMenuNode($idx);
-			$oMenu->RenderEditor($oPage);
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
+			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sId);
+			if (!is_null($oDashboard))
+			{
+				if (!empty($sReloadURL))
+				{
+					$oDashboard->SetReloadURL($sReloadURL);
+				}
+				$oDashboard->RenderEditor($oPage, $aExtraParams);
+			}
 			break;
 
 		case 'new_dashlet':
@@ -957,6 +1128,7 @@ try
 		case 'update_dashlet_property':
 			require_once(APPROOT.'application/forms.class.inc.php');
 			require_once(APPROOT.'application/dashlet.class.inc.php');
+			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$aParams = utils::ReadParam('params', '', false, 'raw_data');
 			$sDashletClass = $aParams['attr_dashlet_class'];
 			$sDashletType = $aParams['attr_dashlet_type'];
@@ -965,6 +1137,7 @@ try
 			$aPreviousValues = $aParams['previous_values']; // hash array: 'attr_xxx' => 'old_value'
 			if (is_subclass_of($sDashletClass, 'Dashlet'))
 			{
+				/** @var \Dashlet $oDashlet */
 				$oDashlet = new $sDashletClass(new ModelReflectionRuntime(), $sDashletId);
 				$oDashlet->SetDashletType($sDashletType);
 				$oForm = $oDashlet->GetForm();
@@ -990,7 +1163,7 @@ try
 				if ($oDashlet->IsRedrawNeeded())
 				{
 					$offset = $oPage->start_capture();
-					$oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */);
+					$oDashlet->DoRender($oPage, true /* bEditMode */, false /* bEnclosingDiv */, $aExtraParams);
 					$sHtml = addslashes($oPage->end_capture($offset));
 					$sHtml = str_replace("\n", '', $sHtml);
 					$sHtml = str_replace("\r", '', $sHtml);
@@ -1001,7 +1174,7 @@ try
 				if ($oDashlet->IsFormRedrawNeeded())
 				{
 					$oForm = $oDashlet->GetForm(); // Rebuild the form since the values/content changed
-					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property'));
+					$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
 					$sHtml = addslashes($oForm->RenderAsPropertySheet($oPage, true /* bReturnHtml */, '.itop-dashboard'));
 					$sHtml = str_replace("\n", '', $sHtml);
 					$sHtml = str_replace("\r", '', $sHtml);
@@ -1009,51 +1182,6 @@ try
 					// but is executed BEFORE all 'ready_scripts'
 				}
 			}
-			break;
-
-		case 'save_dashboard':
-			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
-			$aParams = array();
-			$aParams['layout_class'] = utils::ReadParam('layout_class', '');
-			$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
-			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
-			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
-			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
-			$oDashboard = new RuntimeDashboard($sDashboardId);
-			$oDashboard->FromParams($aParams);
-			$oDashboard->Save();
-			// trigger a reload of the current page since the dashboard just changed
-			$oPage->add_ready_script(
-				<<<EOF
-	var sLocation = new String(window.location.href);
-	var sNewLocation = sLocation.replace('&edit=1', '');
-	sNewLocation = sLocation.replace(/#(.?)$/, ''); // Strips everything after the hash, since IF the URL does not change AND contains a hash, then Chrome does not reload the page
-	window.location.href = sNewLocation;
-EOF
-			);
-			$oPage->add_ready_script("sLocation = new String(window.location.href); window.location.href=sLocation.replace('&edit=1', '');"); // reloads the page, doing a GET even if we arrived via a POST
-			break;
-
-		case 'revert_dashboard':
-			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
-			$oDashboard = new RuntimeDashboard($sDashboardId);
-			$oDashboard->Revert();
-
-			// trigger a reload of the current page since the dashboard just changed
-			$oPage->add_ready_script("window.location.href=window.location.href;"); // reloads the page, doing a GET even if we arrived via a POST
-			break;
-
-		case 'render_dashboard':
-			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
-			$aParams = array();
-			$aParams['layout_class'] = utils::ReadParam('layout_class', '');
-			$aParams['title'] = utils::ReadParam('title', '', false, 'raw_data');
-			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
-			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
-			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
-			$oDashboard = new RuntimeDashboard($sDashboardId);
-			$oDashboard->FromParams($aParams);
-			$oDashboard->Render($oPage, true /* bEditMode */);
 			break;
 
 		case 'dashlet_creation_dlg':
@@ -1162,51 +1290,6 @@ EOF
 				utils::PopArchiveMode();
 				$oPage->add_ready_script('window.location.reload();');
 			}
-			break;
-
-		case 'export_dashboard':
-			$sMenuId = utils::ReadParam('id', '', false, 'raw_data');
-			ApplicationMenu::LoadAdditionalMenus();
-			$index = ApplicationMenu::GetMenuIndexById($sMenuId);
-			$oMenu = ApplicationMenu::GetMenuNode($index);
-			if ($oMenu instanceof DashboardMenuNode)
-			{
-				$oDashboard = $oMenu->GetDashboard();
-
-				$oPage->TrashUnexpectedOutput();
-				$oPage->SetContentType('text/xml');
-				$oPage->SetContentDisposition('attachment', $oMenu->GetLabel().'.xml');
-				$oPage->add($oDashboard->ToXml());
-			}
-			break;
-
-		case 'import_dashboard':
-			$sMenuId = utils::ReadParam('id', '', false, 'raw_data');
-			ApplicationMenu::LoadAdditionalMenus();
-			$index = ApplicationMenu::GetMenuIndexById($sMenuId);
-			$oMenu = ApplicationMenu::GetMenuNode($index);
-			$aResult = array('error' => '');
-			try
-			{
-				if ($oMenu instanceof DashboardMenuNode)
-				{
-					$oDoc = utils::ReadPostedDocument('dashboard_upload_file');
-					$oDashboard = $oMenu->GetDashboard();
-					$oDashboard->FromXml($oDoc->GetData());
-					$oDashboard->Save();
-				}
-				else
-				{
-					$aResult['error'] = 'Dashboard id="'.$sMenuId.'" not found.';
-				}
-			} catch (DOMException $e)
-			{
-				$aResult = array('error' => Dict::S('UI:Error:InvalidDashboardFile'));
-			} catch (Exception $e)
-			{
-				$aResult = array('error' => $e->getMessage());
-			}
-			$oPage->add(json_encode($aResult));
 			break;
 
 		case 'about_box':
@@ -1419,7 +1502,7 @@ EOF
 			$oPage->SetContentType('text/html');
 			$id = (int)utils::ReadParam('id', 0);
 			$iStart = (int)utils::ReadParam('start', 0);
-			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length', '50'));
+			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
 			$oObj = MetaModel::GetObject($sClass, $id);
 			$oObj->DisplayBareHistory($oPage, false, $iCount, $iStart);
 			$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
@@ -1429,7 +1512,7 @@ EOF
 			$oPage->SetContentType('text/html');
 			$oHistoryFilter = DBSearch::unserialize($sFilter);
 			$iStart = (int)utils::ReadParam('start', 0);
-			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length', '50'));
+			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
 			$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
 			$oBlock->SetLimit($iCount, $iStart);
 			$oBlock->Display($oPage, 'history');
@@ -1914,7 +1997,7 @@ EOF
 				}
 			}
 
-			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth');
 			if ($sDirection == 'up')
 			{
 				$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aContexts);
@@ -2084,7 +2167,7 @@ EOF
 			}
 
 			// Compute the graph
-			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth');
 			if ($sDirection == 'up')
 			{
 				$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aContexts);
@@ -2189,7 +2272,7 @@ EOF
 			}
 
 			// Compute the graph
-			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth', 20);
+			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth');
 			if ($sDirection == 'up')
 			{
 				$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth);
@@ -2219,7 +2302,12 @@ EOF
 			try
 			{
 				$token = utils::ReadParam('token', null);
-				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => "Export not found for token: '$token'"); // Fallback error, just in case
+				$sTokenForDisplay = utils::HtmlEntities($token);
+				$aResult = array( // Fallback error, just in case
+					'code' => 'error',
+					'percentage' => 100,
+					'message' => "Export not found for token: '$sTokenForDisplay'",
+				);
 				$data = '';
 				if ($token === null)
 				{
@@ -2294,11 +2382,11 @@ EOF
 				$oPage->add(json_encode($aResult));
 			} catch (BulkExportException $e)
 			{
-				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => $e->GetLocalizedMessage());
+				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->GetLocalizedMessage()));
 				$oPage->add(json_encode($aResult));
 			} catch (Exception $e)
 			{
-				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => $e->getMessage());
+				$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->getMessage()));
 				$oPage->add(json_encode($aResult));
 			}
 			break;
@@ -2382,7 +2470,7 @@ EOF
 			);
 
 			$sObjClass = stripslashes(utils::ReadParam('obj_class', '', false, 'class'));
-			$sTempId = utils::ReadParam('temp_id', '');
+			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			if (empty($sObjClass))
 			{
 				$aResult['error'] = "Missing argument 'obj_class'";
@@ -2432,13 +2520,21 @@ EOF
 			break;
 
 		case 'cke_upload_and_browse':
-			$sTempId = utils::ReadParam('temp_id');
+			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
 			try
 			{
 				$oDoc = utils::ReadPostedDocument('upload');
-				if (InlineImage::IsImage($oDoc->GetMimeType()))
+				$sDocMimeType = $oDoc->GetMimeType();
+				if (!InlineImage::IsImage($sDocMimeType))
 				{
+					LogErrorMessage('CKE : error when uploading image in ajax.render.php, not an image',
+						array(
+							'operation' => 'cke_upload_and_browse',
+							'class' => $sObjClass,
+							'ImgMimeType' => $sDocMimeType,
+						));
+				} else {
 					$aDimensions = null;
 					$oDoc = InlineImage::ResizeImageToFit($oDoc, $aDimensions);
 					$oAttachment = MetaModel::NewObject('InlineImage');
@@ -2449,11 +2545,16 @@ EOF
 					$oAttachment->Set('contents', $oDoc);
 					$oAttachment->Set('secret', sprintf('%06x', mt_rand(0, 0xFFFFFF))); // something not easy to guess
 					$iAttId = $oAttachment->DBInsert();
-
 				}
+
 			} catch (FileUploadException $e)
 			{
-				// fail silently ??
+				LogErrorMessage('CKE : error when uploading image in ajax.render.php, exception occured',
+					array(
+						'operation' => 'cke_upload_and_browse',
+						'class' => $sObjClass,
+						'exceptionMsg' => $e,
+					));
 			}
 		// Fall though !! => browse
 
@@ -2463,7 +2564,7 @@ EOF
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
 			$sImgUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
 
-			$sTempId = utils::ReadParam('temp_id');
+			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sClass = utils::ReadParam('obj_class', '', false, 'class');
 			$iObjectId = utils::ReadParam('obj_key', 0, false, 'integer');
 			$sCKEditorFuncNum = utils::ReadParam('CKEditorFuncNum', '');

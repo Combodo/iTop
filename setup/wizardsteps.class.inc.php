@@ -77,7 +77,7 @@ class WizStepWelcome extends WizardStep
 EOF
 		);
 		$oPage->add('<h1>'.ITOP_APPLICATION.' Installation Wizard</h1>');
-		$aResults = SetupUtils::CheckPhpAndExtensions($oPage);
+		$aResults = SetupUtils::CheckPhpAndExtensions();
 		$this->bCanMoveForward = true;
 		$aInfo = array();
 		$aWarnings = array();
@@ -433,8 +433,13 @@ class WizStepDetectedInfo extends WizardStep
 		}
 		return $aRet;
 	}
-	
-	public function Display(WebPage $oPage)
+
+	/**
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \Exception
+	 */
+	public function Display(\WebPage $oPage)
 	{
 		$oPage->add_style(
 <<<EOF
@@ -634,8 +639,7 @@ EOF
 				$this->oWizard->GetParameter('db_user', ''),
 				$this->oWizard->GetParameter('db_pwd', ''),
 				$this->oWizard->GetParameter('db_tls_enabled', ''),
-				$this->oWizard->GetParameter('db_tls_ca', ''),
-				false
+				$this->oWizard->GetParameter('db_tls_ca', '')
 			);
 			if ($oMutex->IsLocked())
 			{
@@ -693,6 +697,14 @@ class WizStepLicense extends WizardStep
     public function Display(WebPage $oPage)
     {
         $aLicenses = SetupUtils::GetLicenses();
+		$oPage->add_style(
+<<<EOF
+fieldset {
+	max-height: 18em;
+	overflow: auto;
+}
+EOF
+		);
 
 		$oPage->add('<h2>Licenses agreements for the components of '.ITOP_APPLICATION.'</h2>');
 		$oPage->add_style('div a.no-arrow { background:transparent; padding-left:0;}');
@@ -1733,7 +1745,7 @@ EOF
 						if ($bSelected)
 						{
 							$aModules[$sModuleId] = true; // store the Id of the selected module
-							$sDisplayChoices .= '<li><b>'.$aModule['label'].' (auto_select)</b></li>';
+							$sDisplayChoices .= '<li>'.$aModule['label'].' (auto_select)</li>';
 							$bModuleAdded  = true;
 						}
 					}

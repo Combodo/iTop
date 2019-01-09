@@ -144,7 +144,7 @@ abstract class MetaModel
 		// $aBacktrace[1] is the info we want
 		if (!empty($sExpectedFunctionName))
 		{
-			assert('$aBacktrace[2]["function"] == $sExpectedFunctionName');
+			assert($aBacktrace[2]['function'] == $sExpectedFunctionName);
 		}
 		if ($bRecordSourceFile)
 		{
@@ -320,8 +320,7 @@ abstract class MetaModel
 	final static public function GetName($sClass)
 	{
 		self::_check_subclass($sClass);
-		$sStringCode = 'Class:'.$sClass;
-		return Dict::S($sStringCode, str_replace('_', ' ', $sClass));
+		return $sClass::GetClassName($sClass);
 	}
 
 	/**
@@ -411,8 +410,7 @@ abstract class MetaModel
 	final static public function GetClassDescription($sClass)
 	{
 		self::_check_subclass($sClass);
-		$sStringCode = 'Class:'.$sClass.'+';
-		return Dict::S($sStringCode, '');
+		return $sClass::GetClassDescription($sClass);
 	}
 
 	/**
@@ -527,6 +525,104 @@ abstract class MetaModel
 
 		return $oRet;
 	}
+
+	/**
+	 * @param string $sClass
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 *
+	 * @since 2.6 N°659 uniqueness constraint
+	 */
+	final public static function GetUniquenessRules($sClass)
+	{
+		if (!isset(self::$m_aClassParams[$sClass]))
+		{
+			return array();
+		}
+
+		$aCurrentUniquenessRules = array();
+
+		if (array_key_exists('uniqueness_rules', self::$m_aClassParams[$sClass]))
+		{
+			$aCurrentUniquenessRules = self::$m_aClassParams[$sClass]['uniqueness_rules'];
+		}
+
+		$sParentClass = self::GetParentClass($sClass);
+		if ($sParentClass)
+		{
+			$aParentUniquenessRules = self::GetUniquenessRules($sParentClass);
+			foreach ($aParentUniquenessRules as $sUniquenessRuleId => $aParentUniquenessRuleProperties)
+			{
+				$bCopyDisabledKey = true;
+				$bCurrentDisabledValue = null;
+
+				if (array_key_exists($sUniquenessRuleId, $aCurrentUniquenessRules))
+				{
+					if (self::IsUniquenessRuleContainingOnlyDisabledKey($aCurrentUniquenessRules[$sUniquenessRuleId]))
+					{
+						$bCopyDisabledKey = false;
+					}
+					else
+					{
+						continue;
+					}
+				}
+
+				$aMergedUniquenessProperties = $aParentUniquenessRuleProperties;
+				if (!$bCopyDisabledKey)
+				{
+					$aMergedUniquenessProperties['disabled'] = $aCurrentUniquenessRules[$sUniquenessRuleId]['disabled'];
+				}
+				$aCurrentUniquenessRules[$sUniquenessRuleId] = $aMergedUniquenessProperties;
+			}
+		}
+
+		return $aCurrentUniquenessRules;
+	}
+
+	/**
+	 * @param string $sRuleId
+	 * @param string $sLeafClassName
+	 *
+	 * @return string name of the class, null if not present
+	 */
+	final public static function GetRootClassForUniquenessRule($sRuleId, $sLeafClassName)
+	{
+		$sFirstClassWithRuleId = null;
+		if (isset(self::$m_aClassParams[$sLeafClassName]['uniqueness_rules'][$sRuleId]))
+		{
+			$sFirstClassWithRuleId = $sLeafClassName;
+		}
+
+		$sParentClass = self::GetParentClass($sLeafClassName);
+		if ($sParentClass)
+		{
+			$sParentClassWithRuleId = self::GetRootClassForUniquenessRule($sRuleId, $sParentClass);
+			if (!is_null($sParentClassWithRuleId))
+			{
+				$sFirstClassWithRuleId = $sParentClassWithRuleId;
+			}
+		}
+
+		return $sFirstClassWithRuleId;
+	}
+
+	/**
+	 * @param array $aRuleProperties
+	 *
+	 * @return bool
+	 * @since 2.6 N°659 uniqueness constraint
+	 */
+	private static function IsUniquenessRuleContainingOnlyDisabledKey($aRuleProperties)
+	{
+		$aNonNullRuleProperties = array_filter($aRuleProperties, function ($v) {
+			return (!is_null($v));
+		});
+
+		return ((count($aNonNullRuleProperties) == 1) && (array_key_exists('disabled', $aNonNullRuleProperties)));
+	}
+
 
 	/**
 	 * @param string $sClass
@@ -1024,7 +1120,7 @@ abstract class MetaModel
 	/**
 	 * array of ("classname" => array of attributes)
 	 *
-	 * @var array
+	 * @var \AttributeDefinition[]
 	 */
 	private static $m_aAttribDefs = array();
 	/**
@@ -2599,7 +2695,7 @@ abstract class MetaModel
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface');
+		$aInterfaces = array('iApplicationUIExtension', 'iApplicationObjectExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider');
 		foreach($aInterfaces as $sInterface)
 		{
 			self::$m_aExtensionClasses[$sInterface] = array();
@@ -2682,6 +2778,25 @@ abstract class MetaModel
 							$oClassInit->OnAfterClassInitialization($sPHPClass);
 						}
 					}
+
+					$aCurrentClassUniquenessRules = MetaModel::GetUniquenessRules($sPHPClass);
+					if (!empty($aCurrentClassUniquenessRules))
+					{
+						$aClassFields = self::GetAttributesList($sPHPClass);
+						foreach ($aCurrentClassUniquenessRules as $sUniquenessRuleId => $aUniquenessRuleProperties)
+						{
+							$bHasSameRuleInParent = self::HasSameUniquenessRuleInParent($sPHPClass, $sUniquenessRuleId);
+							try
+							{
+								self::CheckUniquenessRuleValidity($aUniquenessRuleProperties, $bHasSameRuleInParent, $aClassFields);
+							}
+							catch (CoreUnexpectedValue $e)
+							{
+								throw new Exception("Invalid uniqueness rule declaration : class={$sPHPClass}, rule=$sUniquenessRuleId, reason={$e->getMessage()}");
+							}
+						}
+					}
+
 				}
 				catch (ReflectionException $e)
 				{
@@ -2947,6 +3062,101 @@ abstract class MetaModel
 			$oFilter = new FilterPrivateKey('id', array('id_field' => self::DBGetKey($sClass)));
 			self::$m_aFilterDefs[$sClass]['id'] = $oFilter;
 			self::$m_aFilterOrigins[$sClass]['id'] = $sClass;
+		}
+	}
+
+	/**
+	 * @param string $sClassName
+	 * @param string $sUniquenessRuleId
+	 *
+	 * @return bool true if one of the parent class (recursive) has the same rule defined
+	 * @throws \CoreException
+	 */
+	private static function HasSameUniquenessRuleInParent($sClassName, $sUniquenessRuleId)
+	{
+		$sParentClass = self::GetParentClass($sClassName);
+		if (empty($sParentClass))
+		{
+			return false;
+		}
+
+		$aParentClassUniquenessRules = self::GetUniquenessRules($sParentClass);
+		if (array_key_exists($sUniquenessRuleId, $aParentClassUniquenessRules))
+		{
+			return true;
+		}
+
+		return self::HasSameUniquenessRuleInParent($sParentClass, $sUniquenessRuleId);
+	}
+
+	/**
+	 * @param array $aUniquenessRuleProperties
+	 * @param bool $bRuleOverride if false then control an original declaration validity,
+	 *                   otherwise an override validity (can have only the disabled key)
+	 * @param string[] $aExistingClassFields if non empty, will check that all fields declared in the rules exists in the class
+	 *
+	 * @throws \CoreUnexpectedValue if the rule is invalid
+	 *
+	 * @since 2.6 N°659 uniqueness constraint
+	 */
+	public static function CheckUniquenessRuleValidity($aUniquenessRuleProperties, $bRuleOverride = true, $aExistingClassFields = array())
+	{
+		$MANDATORY_ATTRIBUTES = array('attributes');
+		$UNIQUENESS_MANDATORY_KEYS_NB = count($MANDATORY_ATTRIBUTES);
+		$bHasDisabledKey = false;
+		$bHasMissingMandatoryKey = true;
+		$iMissingMandatoryKeysNb = $UNIQUENESS_MANDATORY_KEYS_NB;
+		$bHasAllMandatoryKeysMissing = false;
+		$bHasNonDisabledKeys = false;
+
+		foreach ($aUniquenessRuleProperties as $sUniquenessRuleKey => $aUniquenessRuleProperty)
+		{
+			if (($sUniquenessRuleKey === 'disabled') && (!is_null($aUniquenessRuleProperty)))
+			{
+				$bHasDisabledKey = true;
+				continue;
+			}
+			$bHasNonDisabledKeys = true;
+
+			if (in_array($sUniquenessRuleKey, $MANDATORY_ATTRIBUTES, true)) {
+				$bHasMissingMandatoryKey = false;
+				$iMissingMandatoryKeysNb--;
+			}
+
+			if (($sUniquenessRuleKey === 'attributes') && (!empty($aExistingClassFields)))
+			{
+				foreach ($aUniquenessRuleProperties[$sUniquenessRuleKey] as $sRuleAttribute)
+				{
+					if (!in_array($sRuleAttribute, $aExistingClassFields, true))
+					{
+						throw new CoreUnexpectedValue("Uniqueness rule : non existing field '$sRuleAttribute'");
+					}
+				}
+			}
+		}
+
+		if ($iMissingMandatoryKeysNb == $UNIQUENESS_MANDATORY_KEYS_NB)
+		{
+			$bHasAllMandatoryKeysMissing = true;
+		}
+
+		if ($bHasDisabledKey)
+		{
+			if ($bRuleOverride && $bHasAllMandatoryKeysMissing && !$bHasNonDisabledKeys)
+			{
+				return;
+			}
+			if ($bHasMissingMandatoryKey)
+			{
+				throw new CoreUnexpectedValue('Uniqueness rule : missing mandatory properties');
+			}
+
+			return;
+		}
+
+		if ($bHasMissingMandatoryKey)
+		{
+			throw new CoreUnexpectedValue('Uniqueness rule : missing mandatory properties');
 		}
 	}
 
@@ -4505,7 +4715,7 @@ abstract class MetaModel
 				}
 			}
 
-			// Check unicity of the SQL columns
+			// Check SQL columns uniqueness
 			//
 			if (self::HasTable($sClass))
 			{
@@ -4971,6 +5181,7 @@ abstract class MetaModel
 		$aCreateTableItems = array(); // array of <table> => array of <create definition>
 		$aAlterTableMetaData = array();
 		$aAlterTableItems = array(); // array of <table> => <alter specification>
+		$aPostTableAlteration = array(); // array of <table> => post alteration queries
 
 		foreach(self::GetClasses() as $sClass)
 		{
@@ -5117,9 +5328,14 @@ abstract class MetaModel
 									$sColumns .= ' ('.$aLength[0].')';
 								}
 							}
-
-							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` ADD $sIndexType `$sIndexName` ($sColumns)";
-							if ($bTableToCreate)
+							$sSugFix = "ALTER TABLE `$sTable` ADD $sIndexType `$sIndexName` ($sColumns)";
+							$aSugFix[$sClass][$sAttCode][] = $sSugFix;
+							if ($bFullTextIndexNeeded)
+							{
+								// MySQL does not support multi fulltext index creation in a single query (mysql_errno = 1795)
+								$aPostTableAlteration[$sTable][] = $sSugFix;
+							}
+							elseif ($bTableToCreate)
 							{
 								$aCreateTableItems[$sTable][] = "$sIndexType `$sIndexName` ($sColumns)";
 							}
@@ -5193,7 +5409,15 @@ abstract class MetaModel
 						if (!empty($sSugFixAfterChange))
 						{
 							$aSugFix[$sClass][$sAttCode][] = $sSugFixAfterChange;
-							$aAlterTableItems[$sTable][] = $sAlterTableItemsAfterChange;
+							if ($bFullTextIndexNeeded)
+							{
+								// MySQL does not support multi fulltext index creation in a single query (mysql_errno = 1795)
+								$aPostTableAlteration[$sTable][] = $sSugFixAfterChange;
+							}
+							else
+							{
+								$aAlterTableItems[$sTable][] = $sAlterTableItemsAfterChange;
+							}
 						}
 					}
 				}
@@ -5316,6 +5540,10 @@ abstract class MetaModel
 		{
 			$sChangeList = implode(', ', $aChangeList);
 			$aCondensedQueries[] = "ALTER TABLE `$sTable` $sChangeList";
+		}
+		foreach($aPostTableAlteration  as $sTable => $aChangeList)
+		{
+			$aCondensedQueries = array_merge($aCondensedQueries, $aChangeList);
 		}
 
 		return array($aErrors, $aSugFix, $aCondensedQueries);
@@ -6911,25 +7139,32 @@ abstract class MetaModel
 				{
 					// Expand the parameters for the object
 					$sName = substr($sSearch, 0, $iPos);
-					if (preg_match_all('/\\$'.$sName.'-(>|&gt;)([^\\$]+)\\$/', $sInput, $aMatches)) // Support both syntaxes: $this->xxx$ or $this-&gt;xxx$ for HTML compatibility
-					{
-						foreach($aMatches[2] as $idx => $sPlaceholderAttCode)
-						{
-							try
-							{
-								$sReplacement = $replace->GetForTemplate($sPlaceholderAttCode);
-								if ($sReplacement !== null)
-								{
-									$aReplacements[] = $sReplacement;
-									$aSearches[] = '$'.$sName.'-'.$aMatches[1][$idx].$sPlaceholderAttCode.'$';
-								}
-							}
-							catch (Exception $e)
-							{
-								// No replacement will occur
-							}
-						}
-					}
+					$aRegExps = array(
+                        '/(\\$)'.$sName.'-(>|&gt;)([^\\$]+)\\$/', // Support both syntaxes: $this->xxx$ or $this-&gt;xxx$ for HTML compatibility
+                        '/(%24)'.$sName.'-(>|&gt;)([^%24]+)%24/', // Support for urlencoded in HTML attributes (%20this-&gt;xxx%20)
+                    );
+					foreach($aRegExps as $sRegExp)
+                    {
+                        if(preg_match_all($sRegExp, $sInput, $aMatches))
+                        {
+                            foreach($aMatches[3] as $idx => $sPlaceholderAttCode)
+                            {
+                                try
+                                {
+                                    $sReplacement = $replace->GetForTemplate($sPlaceholderAttCode);
+                                    if($sReplacement !== null)
+                                    {
+                                        $aReplacements[] = $sReplacement;
+                                        $aSearches[] = $aMatches[1][$idx] . $sName . '-' . $aMatches[2][$idx] . $sPlaceholderAttCode . $aMatches[1][$idx];
+                                    }
+                                }
+                                catch(Exception $e)
+                                {
+                                    // No replacement will occur
+                                }
+                            }
+                        }
+                    }
 				}
 				else
 				{

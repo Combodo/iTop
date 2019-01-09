@@ -15,35 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @author	Stephan Rosenke <stephan.rosenke@itomig.de>
-
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:QueryOQL' => 'OQL Abfrage',
-	'Class:QueryOQL+' => '',
-	'Class:QueryOQL/Attribute:oql' => 'Ausdruck',
-	'Class:QueryOQL/Attribute:oql+' => '',
-	'Class:AuditRule' => 'Audit-Regel',
-	'Class:AuditRule+' => 'Eine Regel um eine gegebene Audit-Kategorie zu überprüfen',
-	'Class:AuditRule/Attribute:name' => 'Regelname',
-	'Class:AuditRule/Attribute:name+' => 'Kurzname für diese Regel',
-	'Class:AuditRule/Attribute:description' => 'Beschreibung der Audit-Regel',
-	'Class:AuditRule/Attribute:description+' => 'Ausführliche Beschreibung dieser Audit-Regel',
-	'Class:AuditRule/Attribute:query' => 'Durchzuführende Abfrage',
-	'Class:AuditRule/Attribute:query+' => 'Die auszuführende OQL-Abfrage',
-	'Class:AuditRule/Attribute:valid_flag' => 'Gültiges Objekt?',
-	'Class:AuditRule/Attribute:valid_flag+' => 'true falls die Regel ein gültiges Objekt zurückgibt, andernfalls false',
-	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'false',
-	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'false',
-	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'true',
-	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'true',
-	'Class:AuditRule/Attribute:category_id' => 'Kategorie',
-	'Class:AuditRule/Attribute:category_id+' => 'Kategorie für diese Regel',
 	'Class:AuditCategory' => 'Audit-Kategorie',
 	'Class:AuditCategory+' => 'Ein Abschnitt aller Audits',
 	'Class:AuditCategory/Attribute:name' => 'Kategorienname',
@@ -54,40 +31,65 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AuditCategory/Attribute:definition_set+' => 'OQL-Ausdrücke, die den Umfang der zu auditierenden Objekte festlegen',
 	'Class:AuditCategory/Attribute:rules_list' => 'Audit-Regeln',
 	'Class:AuditCategory/Attribute:rules_list+' => 'Audit-Regeln für diese Kategorie',
-	'Class:URP_Profiles' => 'Profile',
-	'Class:URP_Profiles+' => 'Benutzerprofile',
-	'Class:URP_Profiles/Attribute:name' => 'Name',
-	'Class:URP_Profiles/Attribute:name+' => 'Label',
-	'Class:URP_Profiles/Attribute:description' => 'Beschreibung',
-	'Class:URP_Profiles/Attribute:description+' => 'Kurze Beschreibung',
-	'Class:URP_Profiles/Attribute:user_list' => 'Benutzer',
-	'Class:URP_Profiles/Attribute:user_list+' => 'Personen, die diese Rolle haben',
-	'Class:URP_UserProfile' => 'Benutzerprofil',
-	'Class:URP_UserProfile+' => 'Benutzerprofil',
-	'Class:URP_UserProfile/Attribute:userid' => 'Benutzer',
-	'Class:URP_UserProfile/Attribute:userid+' => 'Benutzerkonto',
-	'Class:URP_UserProfile/Attribute:profileid' => 'Profile',
-	'Class:URP_UserProfile/Attribute:profileid+' => 'Verwende Profil',
-	'Class:URP_UserProfile/Attribute:reason' => 'Begründung',
-	'Class:URP_UserProfile/Attribute:reason+' => 'Erklären Sie, warum diese Person diese Rolle haben soll',
-	'Class:URP_UserOrg' => 'Benutzerorganisationen',
-	'Class:URP_UserOrg+' => 'Zulässige Organisationen',
-	'Class:URP_UserOrg/Attribute:userid' => 'User',
-	'Class:URP_UserOrg/Attribute:userid+' => '',
-	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organisation',
-	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '',
-	'Class:URP_UserOrg/Attribute:reason' => 'Begründung',
-	'Class:URP_UserOrg/Attribute:reason+' => '',
+));
+
+//
+// Class: AuditRule
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:AuditRule' => 'Audit-Regel',
+	'Class:AuditRule+' => 'Eine Regel um eine gegebene Audit-Kategorie zu überprüfen',
+	'Class:AuditRule/Attribute:name' => 'Regelname',
+	'Class:AuditRule/Attribute:name+' => 'Kurzname für diese Regel',
+	'Class:AuditRule/Attribute:description' => 'Beschreibung der Audit-Regel',
+	'Class:AuditRule/Attribute:description+' => 'Ausführliche Beschreibung dieser Audit-Regel',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:AuditRule/Attribute:query' => 'Durchzuführende Abfrage',
+	'Class:AuditRule/Attribute:query+' => 'Die auszuführende OQL-Abfrage',
+	'Class:AuditRule/Attribute:valid_flag' => 'Gültiges Objekt?',
+	'Class:AuditRule/Attribute:valid_flag+' => 'true falls die Regel ein gültiges Objekt zurückgibt, andernfalls false',
+	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'true',
+	'Class:AuditRule/Attribute:valid_flag/Value:true+' => 'true',
+	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'false',
+	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'false',
+	'Class:AuditRule/Attribute:category_id' => 'Kategorie',
+	'Class:AuditRule/Attribute:category_id+' => 'Kategorie für diese Regel',
 	'Class:AuditRule/Attribute:category_name' => 'Kategorie',
 	'Class:AuditRule/Attribute:category_name+' => 'Kategorienname für diese Regel',
+));
+
+//
+// Class: QueryOQL
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Query' => 'Query',
 	'Class:Query+' => '',
 	'Class:Query/Attribute:name' => 'Name',
 	'Class:Query/Attribute:name+' => '',
 	'Class:Query/Attribute:description' => 'Beschreibung',
 	'Class:Query/Attribute:description+' => '',
-	'Class:Query/Attribute:fields' => 'Felder',
-	'Class:Query/Attribute:fields+' => '',
+	'Class:QueryOQL/Attribute:fields' => 'Felder',
+	'Class:QueryOQL/Attribute:fields+' => '',
+	'Class:QueryOQL' => 'OQL Abfrage',
+	'Class:QueryOQL+' => '',
+	'Class:QueryOQL/Attribute:oql' => 'Ausdruck',
+	'Class:QueryOQL/Attribute:oql+' => '',
+));
+
+//////////////////////////////////////////////////////////////////////
+// Classes in 'addon/userrights'
+//////////////////////////////////////////////////////////////////////
+//
+
+//
+// Class: User
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:User' => 'Benutzer',
 	'Class:User+' => 'Benutzer-Login',
 	'Class:User/Attribute:finalclass' => 'Typ des Benutzerkontos',
@@ -108,20 +110,46 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:User/Attribute:language/Value:EN US+' => 'English (U.S.)',
 	'Class:User/Attribute:language/Value:FR FR' => 'French',
 	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
-	'Class:User/Attribute:status' => 'Status',
-	'Class:User/Attribute:status+' => 'Ist das Benutzer aktiviert oder deaktiviert ?',
-	'Class:User/Attribute:status/Value:enabled' => 'Aktiv',
-	'Class:User/Attribute:status/Value:disabled' => 'Inaktiv',
 	'Class:User/Attribute:profile_list' => 'Profile',
 	'Class:User/Attribute:profile_list+' => 'Rollen, Rechtemanagement für diese Person',
 	'Class:User/Attribute:allowed_org_list' => 'Erlaubte Organisationen',
 	'Class:User/Attribute:allowed_org_list+' => 'Der Endbenutzer ist berechtigt, die Daten der folgenden Organisationen zu sehen. Wenn keine Organisation zu sehen ist, gibt es keine Beschränkung.',
+	'Class:User/Attribute:status' => 'Status',
+	'Class:User/Attribute:status+' => 'Ist das Benutzer aktiviert oder deaktiviert ?',
+	'Class:User/Attribute:status/Value:enabled' => 'Aktiv',
+	'Class:User/Attribute:status/Value:disabled' => 'Inaktiv',
+		
 	'Class:User/Error:LoginMustBeUnique' => 'Login-Namen müssen unterschiedlich sein - "%1s" benutzt diesen Login-Name bereits.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Mindestens ein Profil muss diesem Benutzer zugewiesen sein.',
-    'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Mindestens eine Organisation muss diesem Benutzer zugewiesen sein.',
-    'Class:User/Error:OrganizationNotAllowed' => 'Diese Organisation ist nicht erlaubt.',
-    'Class:User/Error:UserOrganizationNotAllowed' => 'Das Benutzerkonto gehört nicht zu den für Sie freigegebenen Organisationen',
-    'Class:URP_Dimensions' => 'Dimension',
+	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Mindestens eine Organisation muss diesem Benutzer zugewiesen sein.',
+	'Class:User/Error:OrganizationNotAllowed' => 'Diese Organisation ist nicht erlaubt.',
+	'Class:User/Error:UserOrganizationNotAllowed' => 'Das Benutzerkonto gehört nicht zu den für Sie freigegebenen Organisationen',
+	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
+	'Class:UserInternal' => 'Interner Benutzer',
+	'Class:UserInternal+' => 'Benutzer, der innerhalb iTop definiert wird',
+));
+
+//
+// Class: URP_Profiles
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:URP_Profiles' => 'Profile',
+	'Class:URP_Profiles+' => 'Benutzerprofile',
+	'Class:URP_Profiles/Attribute:name' => 'Name',
+	'Class:URP_Profiles/Attribute:name+' => 'Label',
+	'Class:URP_Profiles/Attribute:description' => 'Beschreibung',
+	'Class:URP_Profiles/Attribute:description+' => 'Kurze Beschreibung',
+	'Class:URP_Profiles/Attribute:user_list' => 'Benutzer',
+	'Class:URP_Profiles/Attribute:user_list+' => 'Personen, die diese Rolle haben',
+));
+
+//
+// Class: URP_Dimensions
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:URP_Dimensions' => 'Dimension',
 	'Class:URP_Dimensions+' => 'Anwendungsdimension (Festlegen von Silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Name',
 	'Class:URP_Dimensions/Attribute:name+' => 'Label',
@@ -129,14 +157,52 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_Dimensions/Attribute:description+' => 'Kurzbeschreibung',
 	'Class:URP_Dimensions/Attribute:type' => 'Typ',
 	'Class:URP_Dimensions/Attribute:type+' => 'Klassenname oder Datentyp (Abbildungseinheit)',
+));
+
+//
+// Class: URP_UserProfile
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:URP_UserProfile' => 'Benutzerprofil',
+	'Class:URP_UserProfile+' => 'Benutzerprofil',
+	'Class:URP_UserProfile/Attribute:userid' => 'Benutzer',
+	'Class:URP_UserProfile/Attribute:userid+' => 'Benutzerkonto',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
 	'Class:URP_UserProfile/Attribute:userlogin+' => 'Benutzer-Login',
+	'Class:URP_UserProfile/Attribute:profileid' => 'Profile',
+	'Class:URP_UserProfile/Attribute:profileid+' => 'Verwende Profil',
 	'Class:URP_UserProfile/Attribute:profile' => 'Profil',
 	'Class:URP_UserProfile/Attribute:profile+' => 'Profil-Name',
+	'Class:URP_UserProfile/Attribute:reason' => 'Begründung',
+	'Class:URP_UserProfile/Attribute:reason+' => 'Erklären Sie, warum diese Person diese Rolle haben soll',
+));
+
+//
+// Class: URP_UserOrg
+//
+
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:URP_UserOrg' => 'Benutzerorganisationen',
+	'Class:URP_UserOrg+' => 'Zulässige Organisationen',
+	'Class:URP_UserOrg/Attribute:userid' => 'User',
+	'Class:URP_UserOrg/Attribute:userid+' => '',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
 	'Class:URP_UserOrg/Attribute:userlogin+' => '',
+	'Class:URP_UserOrg/Attribute:allowed_org_id' => 'Organisation',
+	'Class:URP_UserOrg/Attribute:allowed_org_id+' => '',
 	'Class:URP_UserOrg/Attribute:allowed_org_name' => 'Organisation',
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '',
+	'Class:URP_UserOrg/Attribute:reason' => 'Begründung',
+	'Class:URP_UserOrg/Attribute:reason+' => '',
+));
+
+//
+// Class: URP_ProfileProjection
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ProfileProjection' => 'Profilabbildung',
 	'Class:URP_ProfileProjection+' => 'Profilabbildungen',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimension',
@@ -151,6 +217,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL-Ausdruck (Benutzung von $user) | konstant | | + Attribut-Code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => 'Ziel des Attribut-Codes (optional)',
+));
+
+//
+// Class: URP_ClassProjection
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ClassProjection' => 'Klassenabbildung',
 	'Class:URP_ClassProjection+' => 'Klassenabbildungen',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimension',
@@ -163,6 +236,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ClassProjection/Attribute:value+' => 'OQL-Audsdruck (Benutzung von $this) | konstant | | + Attribut-Code',
 	'Class:URP_ClassProjection/Attribute:attribute' => 'Attribute',
 	'Class:URP_ClassProjection/Attribute:attribute+' => 'Ziel des Attribut-Codes (optional)',
+));
+
+//
+// Class: URP_ActionGrant
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ActionGrant' => 'Autorisierungen von Aktionen',
 	'Class:URP_ActionGrant+' => 'Autorisierungen auf Klassen',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Profil',
@@ -179,6 +259,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_ActionGrant/Attribute:permission/Value:no+' => 'Nein',
 	'Class:URP_ActionGrant/Attribute:action' => 'Aktion',
 	'Class:URP_ActionGrant/Attribute:action+' => 'Operationen, die auf die gegebene Klasse ausgeführt werden sollen',
+));
+
+//
+// Class: URP_StimulusGrant
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_StimulusGrant' => 'Autorisierung des Stimulus',
 	'Class:URP_StimulusGrant+' => 'Autorisierungen auf den Stimulus des Lebenszyklus des Objektes',
 	'Class:URP_StimulusGrant/Attribute:profileid' => 'Profil',
@@ -195,19 +282,60 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_StimulusGrant/Attribute:permission/Value:no+' => 'Nein',
 	'Class:URP_StimulusGrant/Attribute:stimulus' => 'Stimulus',
 	'Class:URP_StimulusGrant/Attribute:stimulus+' => 'Stimulus-Code',
+));
+
+//
+// Class: URP_AttributeGrant
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_AttributeGrant' => 'Autorisierung des Attribute',
 	'Class:URP_AttributeGrant+' => 'Autorisierungen auf Attributebene',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Aktion gewähren',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid+' => 'Aktion gewähren',
 	'Class:URP_AttributeGrant/Attribute:attcode' => 'Attribut',
 	'Class:URP_AttributeGrant/Attribute:attcode+' => 'Attribut-Code',
+));
+
+//
+// Class: UserDashboard
+//
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:UserDashboard' => 'User dashboard~~',
+	'Class:UserDashboard+' => '~~',
+	'Class:UserDashboard/Attribute:user_id' => 'User~~',
+	'Class:UserDashboard/Attribute:user_id+' => '~~',
+	'Class:UserDashboard/Attribute:menu_code' => 'Menu code~~',
+	'Class:UserDashboard/Attribute:menu_code+' => '~~',
+	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
+	'Class:UserDashboard/Attribute:contents+' => '~~',
+));
+
+//
+// Expression to Natural language
+//
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Expression:Unit:Short:DAY' => 't',
+	'Expression:Unit:Short:WEEK' => 'w',
+	'Expression:Unit:Short:MONTH' => 'm',
+	'Expression:Unit:Short:YEAR' => 'j',
+));
+
+
+//
+// String from the User Interface: menu, messages, buttons, etc...
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'BooleanLabel:yes' => 'Ja',
 	'BooleanLabel:no' => 'Nein',
+    'UI:Login:Title' => 'iTop Login',
 	'Menu:WelcomeMenu' => 'Willkommen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'Willkommen bei iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Willkommen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage+' => 'Willkommen bei iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Willkommen bei iTop',
+
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop ist ein ein vollständiges, ITIL- und webbasiertes IT-Service-Management-Tool (ITSM)</p>
 <ul>Es umfasst...
 <li>eine vollständige CMDB (Configuration Management Database), um das IT-Portfolio zu dokumentieren und zu managen,</li>
@@ -218,6 +346,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 <li>unterschiedliche Dashboards, um sich einen schnellen Überblick über Ihre IT zu verschaffen.</li>
 </ul>
 <p>Alle Module können nacheinander und vollständig unabhängig voneinander eingerichtet werden.</p>',
+
 	'UI:WelcomeMenu:RightBlock' => '<p>iTop ist mandantenfähig, es erlaubt IT-Technikern, auf einfache Art eine Vielzahl an Kunden und Firmen zu verwalten.
 <ul>iTop bietet ein umfangreiches Set an Business-Prozessen, die
 <li>die Effizienz des IT-Managements steigern,</li>
@@ -249,6 +378,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Speichern',
 	'UI:Button:Cancel' => 'Abbrechen',
+	'UI:Button:Close' => 'Schließen',
 	'UI:Button:Apply' => 'Anwenden',
 	'UI:Button:Back' => ' << Zurück ',
 	'UI:Button:Restart' => ' |<< Neustart ',
@@ -268,14 +398,18 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:FilterList' => ' Filter... ',
 	'UI:Button:Create' => ' Erstellen ',
 	'UI:Button:Delete' => ' Löschen! ',
+	'UI:Button:Rename' => 'Umbenennen... ',
 	'UI:Button:ChangePassword' => ' Passwort ändern ',
 	'UI:Button:ResetPassword' => ' Passwort zurücksetzen ',
-    'UI:Button:More' => 'Mehr',
-    'UI:Button:Less' => 'Weniger',
+	'UI:Button:Insert' => 'Einfügen',
+	'UI:Button:More' => 'Mehr',
+	'UI:Button:Less' => 'Weniger',
+	
 	'UI:SearchToggle' => 'Suche',
 	'UI:ClickToCreateNew' => 'Klicken Sie hier, um eine neues Objekt vom Typ %1$s zu erstellen',
 	'UI:SearchFor_Class' => 'Suche nach Objekten vom Typ "%1$s"',
 	'UI:NoObjectToDisplay' => 'Kein Objekt zur Anzeige vorhanden.',
+	'UI:Error:SaveFailed' => 'Objekt kann nicht gespeichert werden:',
 	'UI:Error:MandatoryTemplateParameter_object_id' => 'Parameter object_id ist erforderlich, wenn link_attr verwendet wird. Überprüfen Sie die Defintion des Display-Templates.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => 'Parameter target_attr ist erforderlich, wenn link_attr verwendet wird. Überprüfen Sie die Defintion des Display-Templates.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => 'Parameter group_by ist erforderlich. Überprüfen Sie die Defintion des Display-Templates.',
@@ -290,6 +424,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:CannotWriteToTmp_Dir' => 'Nicht möglich, die tempöräre Datei auf die Festplatte zu speichern: upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Der Upload wurde von der Erweiterung gestoppt. (urspünglicher Dateiname = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Dateiupload fehlgeschlagen, unbekannte Ursache (Fehlercode = "%1$s").',
+	
 	'UI:Error:1ParametersMissing' => 'Fehler: der folgende Parameter muss für diese Operation spezifiziert sein: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Fehler: die folgenden Parameter müssen für diese Operation spezifiziert sein: %1$s und %2$s.',
 	'UI:Error:3ParametersMissing' => 'Fehler: die folgenden Parameter müssen für diese Operation spezifiziert sein: %1$s, %2$s und %3$s.',
@@ -305,6 +440,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:ObjectAlreadyCloned' => 'Fehler: das Objekt wurde bereits dupliziert!',
 	'UI:Error:ObjectAlreadyCreated' => 'Fehler: das Objekt wurde bereits erstellt!',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Fehler: ungültiger Operation "%1$s" auf Objekt %2$s in Zustand "%3$s".',
+	'UI:Error:InvalidDashboardFile' => 'Fehler: Ungültige Dashboard-Datei',
+	'UI:Error:InvalidDashboard' => 'Fehler: Ungültiges Dashboard',
+
 	'UI:GroupBy:Count' => 'Anzahl',
 	'UI:GroupBy:Count+' => 'Anzahl der Elemente',
 	'UI:CountOfObjects' => '%1$d Objekte, die das Kriterium erfüllen.',
@@ -341,7 +479,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Menu:BulkDelete' => 'Löschen...',
 	'UI:UndefinedObject' => 'nicht definiert',
 	'UI:Document:OpenInNewWindow:Download' => 'In neuem Fenster öffnen: %1$s, Download: %2$s',
-	'UI:SelectAllToggle+' => 'Alle auswählen/deselektieren',
 	'UI:SplitDateTime-Date' => 'Datum',
 	'UI:SplitDateTime-Time' => 'Zeit',
 	'UI:TruncatedResults' => '%1$d angezeigte Objekte von %2$d',
@@ -358,12 +495,37 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:SearchValue:Any' => '*beliebig*',
 	'UI:SearchValue:Mixed' => '*gemischt*',
 	'UI:SearchValue:NbSelected' => '# ausgewählt',
+	'UI:SearchValue:CheckAll' => 'Alle auswählen',
+	'UI:SearchValue:UncheckAll' => 'Auswahl aufheben',
 	'UI:SelectOne' => 'bitte wählen',
 	'UI:Login:Welcome' => 'Willkommen bei iTop!',
 	'UI:Login:IncorrectLoginPassword' => 'Ungültiges Passwort oder Login-Daten. Bitte versuchen Sie es erneut.',
 	'UI:Login:IdentifyYourself' => 'Bitte identifizieren Sie sich, bevor Sie fortfahren.',
 	'UI:Login:UserNamePrompt' => 'Benutzername',
 	'UI:Login:PasswordPrompt' => 'Passwort',
+	'UI:Login:ForgotPwd' => 'Neues Passwort zusenden',
+	'UI:Login:ForgotPwdForm' => 'Neues Passwort zusenden',
+	'UI:Login:ForgotPwdForm+' => 'iTop kann Ihnen eine Mail senden mit Anweisungen, wie Sie Ihren Account/Passwort zurücksetzen können',
+	'UI:Login:ResetPassword' => 'Jetzt senden!',
+	'UI:Login:ResetPwdFailed' => 'Konnte keine Email versenden: %1$s',
+
+	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' ist kein gültiger Login',
+	'UI:ResetPwd-Error-NotPossible' => 'Passwort-Reset bei externem Benutzerkonto nicht möglich',
+	'UI:ResetPwd-Error-FixedPwd' => 'das Benutzerkonto erlaubt keinen Passwort-Reset. ',
+	'UI:ResetPwd-Error-NoContact' => 'das Benutzerkonto ist nicht mit einer Person verknüpft. ',
+	'UI:ResetPwd-Error-NoEmailAtt' => 'das Benutzerkonto ist nicht mit einer Person verknüpft, die eine Mailadresse besitzt. Bitte wenden Sie sich an Ihren Administrator. ',
+	'UI:ResetPwd-Error-NoEmail' => 'die email Adresse dieses Accounts fehlt. Bitte kontaktieren Sie Ihren Administrator.',
+	'UI:ResetPwd-Error-Send' => 'Beim Versenden der Email trat ein technisches Problem auf. Bitte kontaktieren Sie Ihren Administrator.',
+	'UI:ResetPwd-EmailSent' => 'Bitte schauen Sie in Ihre Mailbox und folgen Sie den Anweisungen.',
+	'UI:ResetPwd-EmailSubject' => 'Zurücksetzen Ihres iTop-Passworts',
+	'UI:ResetPwd-EmailBody' => '<body><p>Sie haben das Zurücksetzen Ihres iTop Passworts angefordert.</p><p>Bitte folgen Sie diesem Link (funktioniert nur einmalig) : <a href="%1$s">neues Passwort eingeben</a></p>.',
+
+	'UI:ResetPwd-Title' => 'Passwort zurücksetzen',
+	'UI:ResetPwd-Error-InvalidToken' => 'Entschuldigung, aber entweder das passwort wurde bereits zurückgesetzt, oder Sie haben mehrere eMails für das Zurücksetzen erhalten. Bitte nutzen Sie den link in der letzten Mail, die Sie erhalten haben.',
+	'UI:ResetPwd-Error-EnterPassword' => 'Geben Sie ein neues Passwort für das Konto \'%1$s\' ein.',
+	'UI:ResetPwd-Ready' => 'Das Passwort wurde geändert. ',
+	'UI:ResetPwd-Login' => 'Klicken Sie hier um sich einzuloggen...',
+
 	'UI:Login:About' => 'Über',
 	'UI:Login:ChangeYourPassword' => 'Ändern Sie Ihr Passwort',
 	'UI:Login:OldPasswordPrompt' => 'Altes Passwort',
@@ -437,11 +599,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:CSVImport:HeaderMappings' => 'Mappings',
 	'UI:CSVImport:HeaderSearch' => 'Suchen?',
 	'UI:CSVImport:AlertIncompleteMapping' => 'Bitte wählen Sie ein Mapping für jedes Feld aus.',
+	'UI:CSVImport:AlertMultipleMapping' => 'Bitte stellen Sie sicher, dass jedes Zielfeld nur einmal gemapped wird. ',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Bitte wählen Sie mindestens ein Suchkriterium aus.',
-	'UI:CSVImport:Encoding' => 'Buchstaben-Codierung',
+	'UI:CSVImport:Encoding' => 'Buchstaben-Codierung',	
 	'UI:UniversalSearchTitle' => 'iTop - universelle Suche',
 	'UI:UniversalSearch:Error' => 'Fehler: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Wählen Sie für die Suche die Klasse aus: ',
+
 	'UI:CSVReport-Value-Modified' => 'Modifiziert',
 	'UI:CSVReport-Value-SetIssue' => 'Konnte nicht geändert werden - Grund: %1$s',
 	'UI:CSVReport-Value-ChangeIssue' => 'Konnte nicht zu %1$s  geändert werden - Grund: %2$s',
@@ -467,6 +631,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:CSVReport-Row-Issue-Reconciliation' => 'Abgleich fehlgeschlagen',
 	'UI:CSVReport-Row-Issue-Ambiguous' => 'doppeldeutiger Abgleich (Reconcilation)',
 	'UI:CSVReport-Row-Issue-Internal' => 'Interner Fehler: %1$s, %2$s',
+
 	'UI:CSVReport-Icon-Unchanged' => 'Unverändert',
 	'UI:CSVReport-Icon-Modified' => 'Modifiziert',
 	'UI:CSVReport-Icon-Missing' => 'Fehlend',
@@ -481,10 +646,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:CSVReport-Stats-Errors' => '%1$.0f %% der geladenen Objekte haben Fehler und werden ignoriert werden.',
 	'UI:CSVReport-Stats-Created' => '%1$.0f %% der geladenen Objekte werden erzeugt werden.',
 	'UI:CSVReport-Stats-Modified' => '%1$.0f %% der geladenen Objekte werden modifiziert,',
+
 	'UI:CSVExport:AdvancedMode' => 'Erweiterter Modus',
 	'UI:CSVExport:AdvancedMode+' => '',
 	'UI:CSVExport:LostChars' => 'Kodierungsproblem',
 	'UI:CSVExport:LostChars+' => '',
+
 	'UI:Audit:Title' => 'iTop - CMDB-Audit',
 	'UI:Audit:InteractiveAudit' => 'Interaktives Audit',
 	'UI:Audit:HeaderAuditRule' => 'Audit-Regel',
@@ -493,6 +660,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Audit:PercentageOk' => '% Ok',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL Fehler in der Regel %1$s: %2$s.',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL Fehler in der Kategorie %1$s: %2$s.',
+
 	'UI:RunQuery:Title' => 'iTop - OQL-Abfrage-Auswertung',
 	'UI:RunQuery:QueryExamples' => 'Abfragebeispiele',
 	'UI:RunQuery:HeaderPurpose' => 'Verwendungszweck',
@@ -524,6 +692,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label des Attributes',
 	'UI:Schema:Type' => 'Typ',
+	
 	'UI:Schema:Type+' => 'Datentyp des Attributes',
 	'UI:Schema:Origin' => 'Ursprung',
 	'UI:Schema:Origin+' => 'Die Basisklasse, in welcher dieses Attribut definiert ist.',
@@ -577,6 +746,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Label:SelectedObjects' => 'Ausgewählte Objekte: ',
 	'UI:Label:AvailableObjects' => 'Verfügbare Objekte: ',
 	'UI:Link_Class_Attributes' => '%1$s kennzeichnet',
+	'UI:SelectAllToggle+' => 'Alle auswählen/deselektieren',
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => 'Fügen Sie %1$s Objekte verbunden mit %2$s hinzu: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => 'Fügen Sie %1$s Objekte verbunden mit %2$s hinzu',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => 'Verwalten Sie %1$s Objekte verbunden mit %2$s: %3$s',
@@ -611,7 +781,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Sollte automatisch aktualisiert werden, aber: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'Wird automatisch aktualisiert (Reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d Objekte/Links referenzieren %2$s',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d Objekte/Links referenzieren einige der zu löschenden Objekte',
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d Objekte/Links referenzieren einige der zu löschenden Objekte',	
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Um Datenbankintegrität sicherzustellen sollten alle weiteren Referenzen entfernt werden.',
 	'UI:Delete:Consequence+' => 'Was getan wird',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Leider ist Ihnen nicht gestattet, dieses Objekt zu löschen. Eine ausführliche Erklärung dazu finden Sie oben',
@@ -634,13 +804,16 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:SearchResultsTitle' => 'Suchergebnisse',
 	'UI:SearchResultsTitle+' => 'Volltext-Suchresultate',
 	'UI:Search:NoSearch' => 'Kein Suchbegriff eingegeben',
+	'UI:Search:NeedleTooShort' => 'Der Such-String \\"%1$s\\" ist zu kurz. Bitte geben Sie mindestens %2$d Zeichen ein.',
+	'UI:Search:Ongoing' => 'Suche nach \\"%1$s\\"',
+	'UI:Search:Enlarge' => 'Suche ausweiten',
 	'UI:FullTextSearchTitle_Text' => 'Ergebnisse für "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d Objekt(e) der Klasse %2$s gefunden.',
 	'UI:Search:NoObjectFound' => 'Kein Objekt gefunden',
 	'UI:ModificationPageTitle_Object_Class' => 'iTop - %1$s - %2$s Änderungen',
-	'UI:ModificationTitle_Class_Object' => 'Änderungen von %1$s: <span class=\"hilite\">%2$s</span>',
+	'UI:ModificationTitle_Class_Object' => 'Änderungen von %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:ClonePageTitle_Object_Class' => 'iTop - Dupliziere %1$s - %2$s Änderung',
-	'UI:CloneTitle_Class_Object' => 'Duplizieren von %1$s: <span class=\"hilite\">%2$s</span>',
+	'UI:CloneTitle_Class_Object' => 'Duplizieren von %1$s: <span class=\\"hilite\\">%2$s</span>',
 	'UI:CreationPageTitle_Class' => 'iTop - Erstellung eines neuen Objekts vom Typ "%1$s" ',
 	'UI:CreationTitle_Class' => 'Erstellung eines neuen Objekts vom Typ "%1$s"',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Wählen Sie den Typ vom Objekt "%1$s" aus, den Sie erstellen möchten:',
@@ -656,7 +829,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:SystemIntrusion' => 'Zugriff verweigert. Sie haben versucht, eine Aktion auszuführen, für die Sie keine ausreichende Berechtigungen besitzen.',
 	'UI:FatalErrorMessage' => 'Fataler Fehler! iTop kann leider nicht fortfahren.',
 	'UI:Error_Details' => 'Fehler: %1$s.',
-	'UI:PageTitle:ClassProjections' => 'iTop Benutzerverwaltung - Klassenabbildung',
+
+	'UI:PageTitle:ClassProjections'	=> 'iTop Benutzerverwaltung - Klassenabbildung',
 	'UI:PageTitle:ProfileProjections' => 'iTop Benutzerverwaltung - Profilabbildung',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => 'Klasse von Objekten',
@@ -695,9 +869,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:UserManagement:GrantMatrix' => 'Zugriffsmatrix',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Verbindung zwischen %1$s und %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Verbindung zwischen %1$s und %2$s',
+	
 	'Menu:AdminTools' => 'Admin-Tools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administrationswerkzeuge', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Werkzeuge, die nur für Benutzer mit Adminstratorprofil zugänglich sind', // Duplicated into itop-welcome-itil (will be removed from here...)
+
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => 'Change Management',
 	'UI:ChangeManagementMenu:Title' => 'Übersicht an Changes',
@@ -705,51 +881,62 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-ChangeManagementMenu-ChangesByStatus' => 'Changes nach Status',
 	'UI-ChangeManagementMenu-ChangesByWorkgroup' => 'Changes nach Arbeitsgruppen',
 	'UI-ChangeManagementMenu-ChangesNotYetAssigned' => 'Changes, die noch nicht zugeordnet wurden',
+
 	'UI:ConfigurationManagementMenu' => 'Configuration Management',
 	'UI:ConfigurationManagementMenu+' => 'Configuration Management',
 	'UI:ConfigurationManagementMenu:Title' => 'Übersicht der Infrastruktur',
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Infrastrukturbestandteile nach Typ',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Infrastrukturbestandteile nach Status',
-	'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard für das Configuration Management',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuration Items nach Status',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuration Items nach Typ',
-	'UI:RequestMgmtMenuOverview:Title' => 'Dashboard für das Request Management',
-	'UI-RequestManagementOverview-RequestByService' => 'Benutzeranfragen nach Service gegliedert',
-	'UI-RequestManagementOverview-RequestByPriority' => 'Benutzeranfragen nach Priorität gegliedert',
-	'UI-RequestManagementOverview-RequestUnassigned' => 'Benutzeranfragen, die noch nicht an einen Bearbeiter zugeteilt wurden',
-	'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard für Incident Management',
-	'UI-IncidentManagementOverview-IncidentByService' => 'Incidents nach Service',
-	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents nach Priorität',
-	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents, die noch nicht an einen Bearbeiter zugeteilt wurden',
-	'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard für das Change Management',
-	'UI-ChangeManagementOverview-ChangeByType' => 'Changes nach Typ',
-	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes, die noch nicht an einen Bearbeiter zugeteilt wurden',
-	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Ausfälle bedingt durch Changes',
-	'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard für das Service Management',
-	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Kundenverträge, die in weniger als 30 Tagen erneuert werden müssen',
-	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Provider-Verträge, die in weniger als 30 Tagen erneuert werden müssen',
+
+'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard für das Configuration Management',
+'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuration Items nach Status',
+'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuration Items nach Typ',
+
+'UI:RequestMgmtMenuOverview:Title' => 'Dashboard für das Request Management',
+'UI-RequestManagementOverview-RequestByService' => 'Benutzeranfragen nach Service gegliedert',
+'UI-RequestManagementOverview-RequestByPriority' => 'Benutzeranfragen nach Priorität gegliedert',
+'UI-RequestManagementOverview-RequestUnassigned' => 'Benutzeranfragen, die noch nicht an einen Bearbeiter zugeteilt wurden',
+
+'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard für Incident Management',
+'UI-IncidentManagementOverview-IncidentByService' => 'Incidents nach Service',
+'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents nach Priorität',
+'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents, die noch nicht an einen Bearbeiter zugeteilt wurden',
+
+'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard für das Change Management',
+'UI-ChangeManagementOverview-ChangeByType' => 'Changes nach Typ',
+'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes, die noch nicht an einen Bearbeiter zugeteilt wurden',
+'UI-ChangeManagementOverview-ChangeWithOutage' => 'Ausfälle bedingt durch Changes',
+
+'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard für das Service Management',
+'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Kundenverträge, die in weniger als 30 Tagen erneuert werden müssen',
+'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Provider-Verträge, die in weniger als 30 Tagen erneuert werden müssen',
+
 	'UI:ContactsMenu' => 'Kontakte',
 	'UI:ContactsMenu+' => 'Kontakte',
 	'UI:ContactsMenu:Title' => 'Kontaktübersicht',
 	'UI-ContactsMenu-ContactsByLocation' => 'Kontakte nach Standort',
 	'UI-ContactsMenu-ContactsByType' => 'Kontakte nach Typ',
 	'UI-ContactsMenu-ContactsByStatus' => 'Kontakte nach Status',
+
 	'Menu:CSVImportMenu' => 'CSV-Import', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'Massenerstellung oder -aktualisierung', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:DataModelMenu' => 'Datenmodell', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => 'Übersicht des Datenmodells', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:ExportMenu' => 'Export', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Export einer beliebigen Abfrage in HTML, CSV oder XML', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:NotificationsMenu' => 'Benachrichtigungen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Einstellungen der Benachrichtigungen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Einstellungen der <span class="hilite">Benachrichtigungen</span>',
 	'UI:NotificationsMenu:Help' => 'Hilfe',
 	'UI:NotificationsMenu:HelpContent' => '<p>In iTop sind Benachrichtigungen vollständig anpassbar. Sie basieren auf zwei Gruppen an Objekten: <i>Trigger und Aktionen</i>.</p>
-<p><i><b>Trigger</b></i> legen fest, wann eine Benachrichtigung erfolgen soll. Es gibt drei Typen von Trigger um drei verscheidene Phasen eines Objekt-Lebenszyklus abzubilden:
+<p><i><b>Trigger</b></i> definieren, wann eine Benachrichtigung ausgeführt wird. Es gibt verschiedene Auslöser als Teil des iTop-Kerns, aber andere können durch Erweiterungen eingebracht werden:
 <ol>
-	<li>Der "OnCreate" Trigger wird ausgeführt, wenn ein Objekt der spezifizierten Klasse erstellt wird.</li>
-	<li>Der "OnStateEnter" Trigger wird ausgeführt, bevor ein Objekt einer gegebenen Klasse einen spezifizierten Status erlangt (aus einem anderen Status kommend)</li>
-	<li>Der "OnStateLeave" Trigger wird ausgeführt, sobald ein Objekt einer gegebenen Klasse einen spezifizierten Status verlässt</li>
+	<li>Einige Trigger werden ausgeführt, wenn ein Objekt der angegebenen Klasse <b>angelegt</b>, <b>aktualisiert</b> oder <b>gelöscht wird</b>.</li>
+	<li>Einige Trigger werden ausgeführt, wenn ein Objekt einer bestimmten Klasse einen bestimmten <b>Zustand</b> <b>erreicht</b> oder <b>verlässt</b>.</li>
+	<li>Einige Trigger werden ausgeführt, wenn ein <b>Schwellenwert</b> auf <b>TTO</b> oder <b>TTR</b> <b>erreicht</b> ist.</li>
 </ol>
 </p>
 <p>
@@ -765,36 +952,53 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:NotificationsMenu:OnStateLeave' => 'Wenn ein Objekt einen gegebenen Status verlässt',
 	'UI:NotificationsMenu:Actions' => 'Aktionen',
 	'UI:NotificationsMenu:AvailableActions' => 'Verfügbare Aktionen',
+
+	'Menu:TagAdminMenu' => 'Tag-Konfiguration',
+	'Menu:TagAdminMenu+' => 'Verwaltung der Tag-Werte',
+	'UI:TagAdminMenu:Title' => 'Tag-Konfiguration',
+	'UI:TagAdminMenu:NoTags' => 'Kein tag konfiguriert',
+	'UI:TagSetFieldData:Error' => 'Fehler: %1$s',
+
 	'Menu:AuditCategories' => 'Audit-Kategorien', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => 'Audit-Kategorien', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Audit-Kategorien', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:RunQueriesMenu' => 'Abfrage ausführen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:RunQueriesMenu+' => 'Eine beliebige Abfrage ausführen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:QueryMenu' => 'Query-Bibliothek', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:DataAdministration' => 'Data Management', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => 'Data Management', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:UniversalSearchMenu' => 'Universelle Suche', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Suchen Sie nach beliebigen Inhalt...', // Duplicated into itop-welcome-itil (will be removed from here...)
+	
 	'Menu:UserManagementMenu' => 'User-Management', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserManagementMenu+' => 'User-Management', // Duplicated into itop-welcome-itil (will be removed from here...)
+
 	'Menu:ProfilesMenu' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
+
 	'Menu:UserAccountsMenu' => 'Benutzerkonten', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu+' => 'Benutzerkonten', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten', // Duplicated into itop-welcome-itil (will be removed from here...)	
+
 	'UI:iTopVersion:Short' => '%1$s Version %2$s',
 	'UI:iTopVersion:Long' => '%1$s Version %2$s-%3$s compiliert am %4$s',
 	'UI:PropertiesTab' => 'Eigenschaften',
+
 	'UI:OpenDocumentInNewWindow_' => 'Dieses Dokument in einem neuen Fenster öffnen: %1$s',
 	'UI:DownloadDocument_' => 'Dieses Dokument herunterladen: %1$s',
 	'UI:Document:NoPreview' => 'Für diesen Typ Dokument ist keine Vorschau vorhanden',
 	'UI:Download-CSV' => '%1$s herunterladen',
+
 	'UI:DeadlineMissedBy_duration' => 'Verpasst um %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 Minute',
-	'UI:Deadline_Minutes' => '%1$d Minuten',
-	'UI:Deadline_Hours_Minutes' => '%1$dStunden %2$dMinuten',
+	'UI:Deadline_LessThan1Min' => '< 1 Minute',		
+	'UI:Deadline_Minutes' => '%1$d Minuten',			
+	'UI:Deadline_Hours_Minutes' => '%1$dStunden %2$dMinuten',			
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dTage %2$dStunden %3$dMinuten',
 	'UI:Help' => 'Hilfe',
 	'UI:PasswordConfirm' => '(Bestätigen)',
@@ -803,13 +1007,15 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:RelationshipGraph' => 'Grafische Ansicht',
 	'UI:RelationshipList' => 'Liste',
 	'UI:RelationGroups' => 'Gruppen',
+	'UI:OperationCancelled' => 'Operation abgebrochen',
+	'UI:ElementsDisplayed' => 'Filtere',
 	'UI:RelationGroupNumber_N' => 'Gruppe #%1$d',
 	'UI:Relation:ExportAsPDF' => 'Als PDF exportieren...',
 	'UI:RelationOption:GroupingThreshold' => 'Schwellwert der Gruppierung',
 	'UI:Relation:AdditionalContextInfo' => 'Zusätzliche Kontextinformation',
 	'UI:Relation:NoneSelected' => 'Nichts ausgewählt',
 	'UI:Relation:Zoom' => 'Zoom',
-	'UI:Relation:ExportAsDocument' => 'Als Dokument exportieren...',
+	'UI:Relation:ExportAsAttachment' => 'Als Attachment exportieren... ',
 	'UI:Relation:DrillDown' => 'Details...',
 	'UI:Relation:PDFExportOptions' => 'PDF Export Optionen',
 	'UI:Relation:AttachmentExportOptions_Name' => 'Optionen für Anhänge zu %1$s',
@@ -830,8 +1036,6 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:RelationTooltip:Redundancy' => 'Redundanz',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# der betroffenen Items: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Kritischer Schwellwert: %1$d / %2$d',
-	'UI:OperationCancelled' => 'Operation abgebrochen',
-	'UI:ElementsDisplayed' => 'Filtere',
 	'Portal:Title' => 'iTop-Benutzerportal',
 	'Portal:NoRequestMgmt' => 'Lieber %1$s, Sie wurden hierher umgeleitet, weil Ihr Account mit dem Profil \'Portal user\' konfiguriert wurde. Leider wurde in iTop aber das \'Request Management\'-Feature nicht installiert. Bitte kontaktieren Sie Ihren Administrator.',
 	'Portal:Refresh' => 'Neu laden',
@@ -846,8 +1050,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Portal:ChangeMyPassword' => 'Mein Passwort ändern',
 	'Portal:Disconnect' => 'Abmelden',
 	'Portal:OpenRequests' => 'Meine offenen Requests',
-	'Portal:ClosedRequests' => 'Meine geschlossenen Requests',
-	'Portal:ResolvedRequests' => 'Meine gelösten Requests',
+	'Portal:ClosedRequests'  => 'Meine geschlossenen Requests',
+	'Portal:ResolvedRequests'  => 'Meine gelösten Requests',
 	'Portal:SelectService' => 'Wählen Sie einen Service aus dem Katalog:',
 	'Portal:PleaseSelectOneService' => 'Bitte wählen Sie einen Service',
 	'Portal:SelectSubcategoryFrom_Service' => 'Wählen Sie einen Unterkategorie für diesen Service vom Typ "%1$s":',
@@ -866,7 +1070,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Portal:RemoveAttachment' => 'Attachment entfernen',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Attachment #%1$d an %2$s (%3$s)',
 	'Portal:SelectRequestTemplate' => 'Wählen Sie eine Template für %1$s',
-	'Enum:Undefined' => 'Nicht definiert',
+	'Enum:Undefined' => 'Nicht definiert',	
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s Tage %2$s Stunden %3$s Minuten %4$s Sekunden',
 	'UI:ModifyAllPageTitle' => 'Alle modifizieren',
 	'UI:Modify_N_ObjectsOf_Class' => 'Modifiziere %1$d Objekte der Klasse %2$s',
@@ -878,7 +1082,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:BulkModifyStatus' => 'Operation',
 	'UI:BulkModifyStatus+' => '',
 	'UI:BulkModifyErrors' => 'Fehler (falls vorhanden)',
-	'UI:BulkModifyErrors+' => '',
+	'UI:BulkModifyErrors+' => '',	
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => 'Fehler',
 	'UI:BulkModifyStatusModified' => 'Modifiziert',
@@ -922,6 +1126,16 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:OrderByHint_Values' => 'Sortierreihenfolge: %1$s',
 	'UI:Menu:AddToDashboard' => 'Zu Dashboard hinzufügen...',
 	'UI:Button:Refresh' => 'Neu laden',
+	'UI:Button:GoPrint' => 'Drucken...',
+	'UI:ExplainPrintable' => 'Klicken Sie auf das %1$s icon, um Teile für der Druck auszublenden.<br/>Benutzen Sie die Druckvorschau-Funktion Ihres Browsers, um sich eine Vorschau anzeigen zu lassen.<br/>Hinweis: Dieser Header und die anderen Steuerungsflächen werden nicht gedruckt.',
+	'UI:PrintResolution:FullSize' => 'Gesamte Fläche',
+	'UI:PrintResolution:A4Portrait' => 'A4 Hochformat',
+	'UI:PrintResolution:A4Landscape' => 'A4 Querformat',
+	'UI:PrintResolution:LetterPortrait' => 'Letter Hochformat',
+	'UI:PrintResolution:LetterLandscape' => 'Letter Querformat',
+	'UI:Toggle:StandardDashboard' => 'Standard',
+	'UI:Toggle:CustomDashboard' => 'Angepasst',
+
 	'UI:ConfigureThisList' => 'Liste konfigurieren...',
 	'UI:ListConfigurationTitle' => 'Listenkonfiguration',
 	'UI:ColumnsAndSortOrder' => 'Spalten und Sortierrheienfolge:',
@@ -936,8 +1150,10 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:ExtField_AsRemoteField' => '%1$s (%2$s)',
 	'UI:Button:MoveUp' => 'Nach oben',
 	'UI:Button:MoveDown' => 'Nach unten',
+
 	'UI:OQL:UnknownClassAndFix' => 'Unbekannte Klasse "%1$s". Sie könnten stattdessen "%2$s" versuchen.',
 	'UI:OQL:UnknownClassNoFix' => 'Unbekannte Klasse "%1$s"',
+
 	'UI:Dashboard:Edit' => 'Diese Seite bearbeiten...',
 	'UI:Dashboard:Revert' => 'Auf Originalversion zurücksetzen...',
 	'UI:Dashboard:RevertConfirm' => 'Alle gemachten Änderungen gehen verloren. Bitte bestätigen Sie, daß Sie dies so wünschen.',
@@ -945,38 +1161,50 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:ImportDashBoard' => 'Aus Datei importieren...',
 	'UI:ImportDashboardTitle' => 'Import aus einer Datei',
 	'UI:ImportDashboardText' => 'Wählen Sie eine Dashboard-Datei zum Import:',
+
+
 	'UI:DashletCreation:Title' => 'Neues ashlet erzeugen',
 	'UI:DashletCreation:Dashboard' => 'Dashboard',
 	'UI:DashletCreation:DashletType' => 'Dashlet-Typ',
 	'UI:DashletCreation:EditNow' => 'Dashboard bearbeiten',
+
 	'UI:DashboardEdit:Title' => 'Dashboard-Editor',
 	'UI:DashboardEdit:DashboardTitle' => 'Titel',
+	'UI:DashboardEdit:AutoReload' => 'Automatischer Reload',
+	'UI:DashboardEdit:AutoReloadSec' => 'Intervall für automatischen Reload (Sekunden)',
+	'UI:DashboardEdit:AutoReloadSec+' => 'Der Mindestwert beträgt %1$d Sekunden',
+
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Dashboard-Einstellungen',
-	'UI:DashboardEdit:Dashlets' => 'Verfügbare Dashlets',
-	'UI:DashboardEdit:DashletProperties' => 'Dashlet-Einstellungen',
+	'UI:DashboardEdit:Dashlets' => 'Verfügbare Dashlets',	
+	'UI:DashboardEdit:DashletProperties' => 'Dashlet-Einstellungen',	
+
 	'UI:Form:Property' => 'Einstellung',
 	'UI:Form:Value' => 'Wert',
-    'UI:DashletUnknown:Label' => 'Unbekannt',
-    'UI:DashletUnknown:Description' => 'Unbekanntes Dashlet (ggf. wurde es deinstalliert)',
-    'UI:DashletUnknown:RenderText:View' => 'Dieses Dashlet kann nicht dargestellt werden.',
-    'UI:DashletUnknown:RenderText:Edit' => 'Dieses Dashlet kann nicht dargestellt werden (Klasse "%1$s"). Bitte kontaktieren Sie Ihren Administrator, ob es noch verfügbar ist.',
-    'UI:DashletUnknown:RenderNoDataText:Edit' => 'Keine Vorschau für dieses Dashlet verfügbar (Klasse "%1$s").',
-    'UI:DashletUnknown:Prop-XMLConfiguration' => 'Konfiguration (Anzeige des XML als einfacher Text)',
 
-    'UI:DashletProxy:Label' => 'Proxy',
-    'UI:DashletProxy:Description' => 'Proxy Dashlet',
-    'UI:DashletProxy:RenderNoDataText:Edit' => 'Keine Vorschau für dieses externe Dashlet verfügbar (Klasse "%1$s").',
-    'UI:DashletProxy:Prop-XMLConfiguration' => 'Konfiguration (Anzeige des XML als einfacher Text)',
+	'UI:DashletUnknown:Label' => 'Unbekannt',
+	'UI:DashletUnknown:Description' => 'Unbekanntes Dashlet (ggf. wurde es deinstalliert)',
+	'UI:DashletUnknown:RenderText:View' => 'Dieses Dashlet kann nicht dargestellt werden.',
+	'UI:DashletUnknown:RenderText:Edit' => 'Dieses Dashlet kann nicht dargestellt werden (Klasse "%1$s"). Bitte kontaktieren Sie Ihren Administrator, ob es noch verfügbar ist.',
+	'UI:DashletUnknown:RenderNoDataText:Edit' => 'Keine Vorschau für dieses Dashlet verfügbar (Klasse "%1$s").',
+	'UI:DashletUnknown:Prop-XMLConfiguration' => 'Konfiguration (Anzeige des XML als einfacher Text)',
+
+	'UI:DashletProxy:Label' => 'Proxy',
+	'UI:DashletProxy:Description' => 'Proxy Dashlet',
+	'UI:DashletProxy:RenderNoDataText:Edit' => 'Keine Vorschau für dieses externe Dashlet verfügbar (Klasse "%1$s").',
+	'UI:DashletProxy:Prop-XMLConfiguration' => 'Konfiguration (Anzeige des XML als einfacher Text)',
+
 	'UI:DashletPlainText:Label' => 'Text',
 	'UI:DashletPlainText:Description' => 'Reiner Text (ohne Formatierung)',
 	'UI:DashletPlainText:Prop-Text' => 'Text',
 	'UI:DashletPlainText:Prop-Text:Default' => 'Bitte Text hier eingeben...',
+
 	'UI:DashletObjectList:Label' => 'Objektliste',
 	'UI:DashletObjectList:Description' => 'Objektlisten-Dashlet',
 	'UI:DashletObjectList:Prop-Title' => 'Titel',
 	'UI:DashletObjectList:Prop-Query' => 'Query',
 	'UI:DashletObjectList:Prop-Menu' => 'Menü',
+
 	'UI:DashletGroupBy:Prop-Title' => 'Titel',
 	'UI:DashletGroupBy:Prop-Query' => 'Query',
 	'UI:DashletGroupBy:Prop-Style' => 'Stil',
@@ -990,6 +1218,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek' => '%1$s (Wochentag)',
 	'UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth' => '%1$s (Wochentag)',
 	'UI:DashletGroupBy:MissingGroupBy' => 'Bitte wählen Sie das Feld, nach dem die Objekte gruppiert werden',
+
 	'UI:DashletGroupByPie:Label' => 'Tortendiagramm',
 	'UI:DashletGroupByPie:Description' => 'Tortendiagramm',
 	'UI:DashletGroupByBars:Label' => 'Balkendiagramm',
@@ -997,33 +1226,34 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:DashletGroupByTable:Label' => 'Gruppieren nach (Tabelle)',
 	'UI:DashletGroupByTable:Description' => 'Liste (gruppiert nach einem Feld)',
 
-    // New in 2.5
-    'UI:DashletGroupBy:Prop-Function' => 'Aggregatfunktion',
-    'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Funktionsattribut',
-    'UI:DashletGroupBy:Prop-OrderDirection' => 'Richtung',
-    'UI:DashletGroupBy:Prop-OrderField' => 'Sortieren nach',
-    'UI:DashletGroupBy:Prop-Limit' => 'Limit',
+	// New in 2.5
+	'UI:DashletGroupBy:Prop-Function' => 'Aggregatfunktion',
+	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Funktionsattribut',
+	'UI:DashletGroupBy:Prop-OrderDirection' => 'Richtung',
+	'UI:DashletGroupBy:Prop-OrderField' => 'Sortieren nach',
+	'UI:DashletGroupBy:Prop-Limit' => 'Limit',
 
-    'UI:DashletGroupBy:Order:asc' => 'Aufsteigend',
-    'UI:DashletGroupBy:Order:desc' => 'Absteigend',
+	'UI:DashletGroupBy:Order:asc' => 'Aufsteigend',
+	'UI:DashletGroupBy:Order:desc' => 'Absteigend',
 
-    'UI:GroupBy:count' => 'Anzahl',
-    'UI:GroupBy:count+' => 'Anzahl der Elemente',
-    'UI:GroupBy:sum' => 'Suumme',
-    'UI:GroupBy:sum+' => 'Suumme von %1$s',
-    'UI:GroupBy:avg' => 'Durchschnitt',
-    'UI:GroupBy:avg+' => 'Durchschnitt von %1$s',
-    'UI:GroupBy:min' => 'Minimum',
-    'UI:GroupBy:min+' => 'Minimum von %1$s',
-    'UI:GroupBy:max' => 'Maximum',
-    'UI:GroupBy:max+' => 'Maximum von %1$s',
-    // ---
+	'UI:GroupBy:count' => 'Anzahl',
+	'UI:GroupBy:count+' => 'Anzahl der Elemente',
+	'UI:GroupBy:sum' => 'Summe',
+	'UI:GroupBy:sum+' => 'Summe von %1$s',
+	'UI:GroupBy:avg' => 'Durchschnitt',
+	'UI:GroupBy:avg+' => 'Durchschnitt von %1$s',
+	'UI:GroupBy:min' => 'Minimum',
+	'UI:GroupBy:min+' => 'Minimum von %1$s',
+	'UI:GroupBy:max' => 'Maximum',
+	'UI:GroupBy:max+' => 'Maximum von %1$s',
+	// ---
 
 	'UI:DashletHeaderStatic:Label' => 'Header',
 	'UI:DashletHeaderStatic:Description' => 'Zeigt einen horizontalen Trenner',
 	'UI:DashletHeaderStatic:Prop-Title' => 'Titel',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => 'Kontakte',
 	'UI:DashletHeaderStatic:Prop-Icon' => 'Icon',
+
 	'UI:DashletHeaderDynamic:Label' => 'Header mit Statistiken',
 	'UI:DashletHeaderDynamic:Description' => 'Header mit Statistiken (gruppiert nach...)',
 	'UI:DashletHeaderDynamic:Prop-Title' => 'Titel',
@@ -1034,9 +1264,11 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:DashletHeaderDynamic:Prop-Query' => 'Query',
 	'UI:DashletHeaderDynamic:Prop-GroupBy' => 'Gruppieren nach',
 	'UI:DashletHeaderDynamic:Prop-Values' => 'Werte',
+
 	'UI:DashletBadge:Label' => 'Badge',
 	'UI:DashletBadge:Description' => 'Objekt-Icon bei \'Neu/Suche\'',
 	'UI:DashletBadge:Prop-Class' => 'Klasse',
+
 	'DayOfWeek-Sunday' => 'Sonntag',
 	'DayOfWeek-Monday' => 'Montag',
 	'DayOfWeek-Tuesday' => 'Dienstag',
@@ -1056,7 +1288,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Month-10' => 'Oktober',
 	'Month-11' => 'November',
 	'Month-12' => 'Dezember',
-
+	
 	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'So',
 	'DayOfWeek-Monday-Min' => 'Mo',
@@ -1077,64 +1309,19 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Month-10-Short' => 'Okt',
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Dez',
-	'Calendar-FirstDayOfWeek' => 1, // 0 = Sunday, 1 = Monday, etc...
-
-	'UI:FillAllMandatoryFields' => 'Bitte füllen Sie alle Pflichtfelder',
-	'UI:DisconnectedDlgMessage' => 'Sie sind abgemeldet. Sie müssen sich identifizeren, um die Anwendung weiter zu benutzen.',
-	'UI:DisconnectedDlgTitle' => 'Warnung!',
-	'UI:LoginAgain' => 'Erneut einloggen',
-	'UI:StayOnThePage' => 'Auf dieser Seite bleiben',
-	'UI:CurrentObjectIsLockedBy_User' => 'Das Objekt ist gesperrt, da es derzeit durch %1$s bearbeitet wird.',
-	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Das Objekt wird derzeit durch %1$s bearbeitet. Ihre Änderungen können nicht abgesendet werden, da sie überschrieben würden.',
-	'UI:CurrentObjectLockExpired' => 'Die Sperre um simultane Änderungen des Objekts zu verhindern ist abgelaufen.',
-	'UI:CurrentObjectLockExpired_Explanation' => 'Die Sperre um simultane Änderungen des Objekts zu verhindern ist abgelaufen. Sie können Ihre Änderungen nicht mehr absenden, da andere User jetzt das Objekt verändern können. ',
-	'UI:ConcurrentLockKilled' => 'Die Sperre um simultane Änderungen an dem Objekt zu verhindern ist gelöscht worden. ',
-	'UI:Menu:KillConcurrentLock' => 'Sperre für simultane Änderungen löschen! ',
-
-	'UI:Menu:ExportPDF' => 'Als PDF exportieren... ',
-	'UI:Menu:PrintableVersion' => 'Druckversion',
-	'Class:UserInternal' => 'Interner Benutzer',
-	'Class:UserInternal+' => 'Benutzer, der innerhalb iTop definiert wird',
-	'UI:Button:Rename' => 'Umbenennen... ',
-	'UI:SearchValue:CheckAll' => 'Alle auswählen',
-	'UI:SearchValue:UncheckAll' => 'Auswahl aufheben',
-	'UI:Login:ForgotPwd' => 'Neues Passwort zusenden',
-	'UI:Login:ForgotPwdForm' => 'Neues Passwort zusenden',
-	'UI:Login:ForgotPwdForm+' => 'iTop kann Ihnen eine Mail senden mit Anweisungen, wie Sie Ihren Account/Passwort zurücksetzen können',
-	'UI:Login:ResetPassword' => 'Jetzt senden!',
-	'UI:Login:ResetPwdFailed' => 'Konnte keine Email versenden: %1$s',
-	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' ist kein gültiger Login',
-	'UI:ResetPwd-Error-NotPossible' => 'Passwort-Reset bei externem Benutzerkonto nicht möglich',
-	'UI:ResetPwd-Error-FixedPwd' => 'das Benutzerkonto erlaubt keinen Passwort-Reset. ',
-	'UI:ResetPwd-Error-NoContact' => 'das Benutzerkonto ist nicht mit einer Person verknüpft. ',
-	'UI:ResetPwd-Error-NoEmailAtt' => 'das Benutzerkonto ist nicht mit einer Person verknüpft, die eine Mailadresse besitzt. Bitte wenden Sie sich an Ihren Administrator. ',
-	'UI:ResetPwd-Error-NoEmail' => 'die email Adresse dieses Accounts fehlt. Bitte kontaktieren Sie Ihren Administrator.',
-	'UI:ResetPwd-Error-Send' => 'Beim Versenden der Email trat ein technisches Problem auf. Bitte kontaktieren Sie Ihren Administrator.',
-	'UI:ResetPwd-EmailSent' => 'Bitte schauen Sie in Ihre Mailbox und folgen Sie den Anweisungen.',
-	'UI:ResetPwd-EmailSubject' => 'Zurücksetzen Ihres iTop-Passworts',
-	'UI:ResetPwd-EmailBody' => '<body><p>Sie haben das Zurücksetzen Ihres iTop Passworts angefordert.</p><p>Bitte folgen Sie diesem Link (funktioniert nur einmalig) : <a href="%1$s">neues Passwort eingeben</a></p>.',
-	'UI:ResetPwd-Title' => 'Passwort zurücksetzen',
-	'UI:ResetPwd-Error-InvalidToken' => 'Entschuldigung, aber entweder das passwort wurde bereits zurückgesetzt, oder Sie haben mehrere eMails für das Zurücksetzen erhalten. Bitte nutzen Sie den link in der letzten Mail, die Sie erhalten haben.',
-	'UI:ResetPwd-Error-EnterPassword' => 'Geben Sie ein neues Passwort für das Konto \'%1$s\' ein.',
-	'UI:ResetPwd-Ready' => 'Das Passwort wurde geändert. ',
-	'UI:ResetPwd-Login' => 'Klicken Sie hier um sich einzuloggen...',
-	'UI:CSVImport:AlertMultipleMapping' => 'Bitte stellen Sie sicher, dass jedes Zielfeld nur einmal gemapped wird. ',
-	'UI:Search:NeedleTooShort' => 'Der Such-String \"%1$s\" ist zu kurz. Bitte geben Sie mindestens %2$d Zeichen ein.',
-	'UI:Search:Ongoing' => 'Suche nach \"%1$s\"',
-	'UI:Search:Enlarge' => 'Suche ausweiten',
-	'UI:Relation:ExportAsAttachment' => 'Als Attachment exportieren... ',
-	'UI:DashboardEdit:AutoReload' => 'Automatischer Reload',
-	'UI:DashboardEdit:AutoReloadSec' => 'Intervall für automatischen Reload (Sekunden)',
-	'UI:DashboardEdit:AutoReloadSec+' => 'Der Mindestwert beträgt %1$d Sekunden',
+	'Calendar-FirstDayOfWeek' => '1', // 0 = Sunday, 1 = Monday, etc...
+	
 	'UI:Menu:ShortcutList' => 'Shortcut anlegen',
 	'UI:ShortcutRenameDlg:Title' => 'Shortcut umbenennen',
 	'UI:ShortcutListDlg:Title' => 'Shortcut für die Liste anlegen',
 	'UI:ShortcutDelete:Confirm' => 'Bitte bestätigen Sie, dass Sie den/die Shortcut(s) löschen möchten. ',
-	'Menu:MyShortcuts' => 'Meine Shortcuts',
+	'Menu:MyShortcuts' => 'Meine Shortcuts', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Shortcut',
+	'Class:Shortcut+' => 'Schnellzugriff auf Objekte',
 	'Class:Shortcut/Attribute:name' => 'Name',
 	'Class:Shortcut/Attribute:name+' => 'Label, das im Menü und im Seitentitel verwendet wird',
 	'Class:ShortcutOQL' => 'Suchergebnis-Shortcut',
+	'Class:ShortcutOQL+' => 'Short für eine OQL-Abfrage',
 	'Class:ShortcutOQL/Attribute:oql' => 'Query',
 	'Class:ShortcutOQL/Attribute:oql+' => 'OQL-Query, der die zu Suchenden Objekte beschreibt',
 	'Class:ShortcutOQL/Attribute:auto_reload' => 'Automatischer Reload',
@@ -1142,24 +1329,57 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Class:ShortcutOQL/Attribute:auto_reload/Value:custom' => 'Eigene Einstellung',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec' => 'Intervall für automatischen Reload (Sekunden)',
 	'Class:ShortcutOQL/Attribute:auto_reload_sec/tip' => 'Der Mindestwert beträgt %1$d Sekunden',
+
+	'UI:FillAllMandatoryFields' => 'Bitte füllen Sie alle Pflichtfelder',
 	'UI:ValueMustBeSet' => 'Bitte geben Sie einen Wert an',
 	'UI:ValueMustBeChanged' => 'Bitte ändern Sie den Wert',
 	'UI:ValueInvalidFormat' => 'Ungültiges Format',
+
 	'UI:CSVImportConfirmTitle' => 'Bitte bestätigen Sie die Operation',
 	'UI:CSVImportConfirmMessage' => 'Sind Sie sicher, dass Sie dies durchführen möchten?',
 	'UI:CSVImportError_items' => 'Fehler: %1$d',
 	'UI:CSVImportCreated_items' => 'Angelegt: %1$d',
 	'UI:CSVImportModified_items' => 'Geändert: %1$d',
 	'UI:CSVImportUnchanged_items' => 'Unverändert: %1$d',
+	'UI:CSVImport:DateAndTimeFormats' => 'Datum- und Zeitformat',
+	'UI:CSVImport:DefaultDateTimeFormat_Format_Example' => 'Standardformat: %1$s (z.B. %2$s)',
+	'UI:CSVImport:CustomDateTimeFormat' => 'Angepasstes Format: %1$s',
+	'UI:CSVImport:CustomDateTimeFormatTooltip' => 'verfügbare Platzhalter:<table>
+<tr><td>Y</td><td>Jahr (4 Ziffern, z.B. 2016)</td></tr>
+<tr><td>y</td><td>Jahr (2 Ziffern, z.B. 16 für 2016)</td></tr>
+<tr><td>m</td><td>Monat (2 Ziffern, z.B. 01..12)</td></tr>
+<tr><td>n</td><td>Monat (1 oder 2 Ziffern ohne führende Null, z.B. 1..12)</td></tr>
+<tr><td>d</td><td>Tag (2 Ziffern, z.B. 01..31)</td></tr>
+<tr><td>j</td><td>day (1 oder 2 Ziffern ohne führende Null, z.B. 1..31)</td></tr>
+<tr><td>H</td><td>Stunden (24 Stunden, 2 Ziffern, z.B. 00..23)</td></tr>
+<tr><td>h</td><td>Stunden (12 Stunden, 2 Ziffern, z.B. 01..12)</td></tr>
+<tr><td>G</td><td>Stunden (24 Stunden, 1 or 2 Ziffern ohne führende Null, z.B. 0..23)</td></tr>
+<tr><td>g</td><td>Stunden (12 Stunden, 1 or 2 Ziffern ohne führende Null, z.B. 1..12)</td></tr>
+<tr><td>a</td><td>Stunden, am oder pm (lowercase)</td></tr>
+<tr><td>A</td><td>Stunden, AM oder PM (uppercase)</td></tr>
+<tr><td>i</td><td>Minuten (2 Ziffern, z.B. 00..59)</td></tr>
+<tr><td>s</td><td>Sekunden (2 Ziffern, z.B. 00..59)</td></tr>
+</table>',
+		
 	'UI:Button:Remove' => 'Entfernen',
 	'UI:AddAnExisting_Class' => 'Objekte des Typs %1$s hinzufügen...',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s',
+
 	'UI:AboutBox' => 'Über iTop...',
 	'UI:About:Title' => 'Über iTop',
 	'UI:About:DataModel' => 'Datenmodell',
 	'UI:About:Support' => 'Support-Information',
 	'UI:About:Licenses' => 'Lizenzen',
-	'UI:About:Modules' => 'Installierte Module',
+	'UI:About:InstallationOptions' => 'Installationsoptionen',
+	'UI:About:ManualExtensionSource' => 'Erweiterungen',
+	'UI:About:Extension_Version' => 'Version: %1$s',
+	'UI:About:RemoteExtensionSource' => 'Data',	
+	
+	'UI:DisconnectedDlgMessage' => 'Sie sind abgemeldet. Sie müssen sich identifizeren, um die Anwendung weiter zu benutzen.',
+	'UI:DisconnectedDlgTitle' => 'Warnung!',
+	'UI:LoginAgain' => 'Erneut einloggen',
+	'UI:StayOnThePage' => 'Auf dieser Seite bleiben',
+	
 	'ExcelExporter:ExportMenu' => 'Excel-Export...',
 	'ExcelExporter:ExportDialogTitle' => 'Excel-Export',
 	'ExcelExporter:ExportButton' => 'Export',
@@ -1172,49 +1392,72 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'ExcelExport:Statistics' => 'Statistik',
 	'portal:legacy_portal' => 'Endbenutzer-Portal',
 	'portal:backoffice' => 'iTop Backend',
+
+	'UI:CurrentObjectIsLockedBy_User' => 'Das Objekt ist gesperrt, da es derzeit durch %1$s bearbeitet wird.',
+	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Das Objekt wird derzeit durch %1$s bearbeitet. Ihre Änderungen können nicht abgesendet werden, da sie überschrieben würden.',
+	'UI:CurrentObjectLockExpired' => 'Die Sperre um simultane Änderungen des Objekts zu verhindern ist abgelaufen.',
+	'UI:CurrentObjectLockExpired_Explanation' => 'Die Sperre um simultane Änderungen des Objekts zu verhindern ist abgelaufen. Sie können Ihre Änderungen nicht mehr absenden, da andere User jetzt das Objekt verändern können. ',
+	'UI:ConcurrentLockKilled' => 'Die Sperre um simultane Änderungen an dem Objekt zu verhindern ist gelöscht worden. ',
+	'UI:Menu:KillConcurrentLock' => 'Sperre für simultane Änderungen löschen! ',
+	
+	'UI:Menu:ExportPDF' => 'Als PDF exportieren... ',
+	'UI:Menu:PrintableVersion' => 'Druckversion',
+	
+	'UI:BrowseInlineImages' => 'Bilder durchsuchen...',
+	'UI:UploadInlineImageLegend' => 'Neues Bild hochladen',
+	'UI:SelectInlineImageToUpload' => 'Wähle das Bild für den Upload aus',
+	'UI:AvailableInlineImagesLegend' => 'Verfügbare Bilder',
+	'UI:NoInlineImage' => 'Es sind keine Bilder auf dem Server verfügbar. Nutze den "Durchsuchen" Button oben, um ein Bild vom Computer hochzuladen.',
+	
+	'UI:ToggleFullScreen' => 'Maximieren / Minimieren',
+	'UI:Button:ResetImage' => 'Vorheriges Bild wiederherstellen',
+	'UI:Button:RemoveImage' => 'Bild löschen',
 	'UI:UploadNotSupportedInThisMode' => 'Die Modifizierung von Bildern oder Dateien wird in diesem Modus nicht unterstützt.',
 
-    // Search form
-    'UI:Search:Toggle' => 'Ein-/Ausklappen',
-    'UI:Search:AutoSubmit:DisabledHint' => 'Automatische Eingabe für diese Klasse deaktiviert',
-    'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Kriterium hinzufügen',
-    // - Add new criteria button
-    'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Kürzlich verwendet',
-    'UI:Search:AddCriteria:List:MostPopular:Title' => 'Am beliebtesten',
-    'UI:Search:AddCriteria:List:Others:Title' => 'Andere',
-    'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Noch keine',
+	// Search form
+	'UI:Search:Toggle' => 'Ein-/Ausklappen',
+	'UI:Search:AutoSubmit:DisabledHint' => 'Automatische Eingabe für diese Klasse deaktiviert',
+	'UI:Search:NoAutoSubmit:ExplainText' => 'Fügen Sie ein Kriterium in das Suchfeld ein oder klicken Sie auf die Suchschaltfläche, um die Objekte anzuzeigen.',
+	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Kriterium hinzufügen',
+	// - Add new criteria button
+	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => 'Kürzlich verwendet',
+	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Am beliebtesten',
+	'UI:Search:AddCriteria:List:Others:Title' => 'Andere',
+	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Noch keine',
 
-    // - Criteria titles
-    //   - Default widget
-    'UI:Search:Criteria:Title:Default:Any' => '%1$s: Beliebig',
-    'UI:Search:Criteria:Title:Default:Empty' => '%1$s ist leer',
-    'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s ist nicht leer',
-    'UI:Search:Criteria:Title:Default:Equals' => '%1$s is gleich %2$s',
-    'UI:Search:Criteria:Title:Default:Contains' => '%1$s enthält %2$s',
-    'UI:Search:Criteria:Title:Default:StartsWith' => '%1$s startet mit %2$s',
-    'UI:Search:Criteria:Title:Default:EndsWith' => '%1$s endet mit %2$s',
-    'UI:Search:Criteria:Title:Default:RegExp' => '%1$s passt zu %2$s',
-    'UI:Search:Criteria:Title:Default:GreaterThan' => '%1$s > %2$s',
-    'UI:Search:Criteria:Title:Default:GreaterThanOrEquals' => '%1$s >= %2$s',
-    'UI:Search:Criteria:Title:Default:LessThan' => '%1$s < %2$s',
-    'UI:Search:Criteria:Title:Default:LessThanOrEquals' => '%1$s <= %2$s',
-    'UI:Search:Criteria:Title:Default:Different' => '%1$s ≠ %2$s',
-    'UI:Search:Criteria:Title:Default:Between' => '%1$s zwischen [%2$s]',
-    'UI:Search:Criteria:Title:Default:BetweenDates' => '%1$s [%2$s]',
-    'UI:Search:Criteria:Title:Default:BetweenDates:All' => '%1$s: Beliebig',
-    'UI:Search:Criteria:Title:Default:BetweenDates:From' => '%1$s von %2$s',
-    'UI:Search:Criteria:Title:Default:BetweenDates:Until' => '%1$s bis %2$s',
-    'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Beliebig',
-    'UI:Search:Criteria:Title:Default:Between:From' => '%1$s von %2$s',
-    'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s bis %2$s',
-    //   - Numeric widget
-    //   None yet
-    //   - DateTime widget
-    'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
-    //   - Enum widget
-    'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
-    'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s und %3$s andere',
-    'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Beliebig',
+	// - Criteria titles
+	//   - Default widget
+	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Beliebig',
+	'UI:Search:Criteria:Title:Default:Empty' => '%1$s ist leer',
+	'UI:Search:Criteria:Title:Default:NotEmpty' => '%1$s ist nicht leer',
+	'UI:Search:Criteria:Title:Default:Equals' => '%1$s is gleich %2$s',
+	'UI:Search:Criteria:Title:Default:Contains' => '%1$s enthält %2$s',
+	'UI:Search:Criteria:Title:Default:StartsWith' => '%1$s startet mit %2$s',
+	'UI:Search:Criteria:Title:Default:EndsWith' => '%1$s endet mit %2$s',
+	'UI:Search:Criteria:Title:Default:RegExp' => '%1$s passt zu %2$s',
+	'UI:Search:Criteria:Title:Default:GreaterThan' => '%1$s > %2$s',
+	'UI:Search:Criteria:Title:Default:GreaterThanOrEquals' => '%1$s >= %2$s',
+	'UI:Search:Criteria:Title:Default:LessThan' => '%1$s < %2$s',
+	'UI:Search:Criteria:Title:Default:LessThanOrEquals' => '%1$s <= %2$s',
+	'UI:Search:Criteria:Title:Default:Different' => '%1$s ≠ %2$s',
+	'UI:Search:Criteria:Title:Default:Between' => '%1$s zwischen [%2$s]',
+	'UI:Search:Criteria:Title:Default:BetweenDates' => '%1$s [%2$s]',
+	'UI:Search:Criteria:Title:Default:BetweenDates:All' => '%1$s: Beliebig',
+	'UI:Search:Criteria:Title:Default:BetweenDates:From' => '%1$s von %2$s',
+	'UI:Search:Criteria:Title:Default:BetweenDates:Until' => '%1$s bis %2$s',
+	'UI:Search:Criteria:Title:Default:Between:All' => '%1$s: Beliebig',
+	'UI:Search:Criteria:Title:Default:Between:From' => '%1$s von %2$s',
+	'UI:Search:Criteria:Title:Default:Between:Until' => '%1$s bis %2$s',
+	//   - Numeric widget
+	//   None yet
+	//   - DateTime widget
+	'UI:Search:Criteria:Title:DateTime:Between' => '%2$s <= 1$s <= %3$s',
+	//   - Enum widget
+	'UI:Search:Criteria:Title:Enum:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s und %3$s andere',
+	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Beliebig',
+	//   - TagSet widget
+	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
     //   - External key widget
     'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s ist definiert',
     'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s ist nicht definiert',
@@ -1230,68 +1473,86 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
     'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s und %3$s andere',
     'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Beliebig',
 
-    // - Criteria operators
-    //   - Default widget
-    'UI:Search:Criteria:Operator:Default:Empty' => 'Ist leer',
-    'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Ist nicht leer',
-    'UI:Search:Criteria:Operator:Default:Equals' => 'Ist gleich',
-    'UI:Search:Criteria:Operator:Default:Between' => 'Ist zwischen',
-    //   - String widget
-    'UI:Search:Criteria:Operator:String:Contains' => 'Enthält',
-    'UI:Search:Criteria:Operator:String:StartsWith' => 'Startet mit',
-    'UI:Search:Criteria:Operator:String:EndsWith' => 'Endet mit',
-    'UI:Search:Criteria:Operator:String:RegExp' => 'Reg. Ausdruck',
-    //   - Numeric widget
-    'UI:Search:Criteria:Operator:Numeric:Equals' => 'Ist gleich',
-    'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Ist größer',
-    'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Ist größer / gleich',
-    'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Ist kleiner',
-    'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Ist kleiner / gleich',
-    'UI:Search:Criteria:Operator:Numeric:Different' => 'Ist ungleich',
+	// - Criteria operators
+	//   - Default widget
+	'UI:Search:Criteria:Operator:Default:Empty' => 'Ist leer',
+	'UI:Search:Criteria:Operator:Default:NotEmpty' => 'Ist nicht leer',
+	'UI:Search:Criteria:Operator:Default:Equals' => 'Ist gleich',
+	'UI:Search:Criteria:Operator:Default:Between' => 'Ist zwischen',
+	//   - String widget
+	'UI:Search:Criteria:Operator:String:Contains' => 'Enthält',
+	'UI:Search:Criteria:Operator:String:StartsWith' => 'Startet mit',
+	'UI:Search:Criteria:Operator:String:EndsWith' => 'Endet mit',
+	'UI:Search:Criteria:Operator:String:RegExp' => 'Reg. Ausdruck',
+	//   - Numeric widget
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Ist gleich',  // => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Ist größer',  // => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Ist größer / gleich',  // > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Ist kleiner',  // => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Ist kleiner / gleich',  // > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Ist ungleich',  // => '≠',
+	//   - Tag Set Widget
+	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Entspricht',
 
-    // - Other translations
-    'UI:Search:Value:Filter:Placeholder' => 'Filter...',
-    'UI:Search:Value:Search:Placeholder' => 'Suche...',
-    'UI:Search:Value:Autocomplete:StartTyping' => 'Geben Sie mögliche Werte ein.',
-    'UI:Search:Value:Autocomplete:Wait' => 'Bitte warten...',
-    'UI:Search:Value:Autocomplete:NoResult' => 'Kein Ergebnis',
-    'UI:Search:Value:Toggler:CheckAllNone' => 'Alles aus- / abwählen',
-    'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Alle Sichtbaren aus- / abwählen',
+	// - Other translations
+	'UI:Search:Value:Filter:Placeholder' => 'Filter...',
+	'UI:Search:Value:Search:Placeholder' => 'Suche...',
+	'UI:Search:Value:Autocomplete:StartTyping' => 'Geben Sie mögliche Werte ein.',
+	'UI:Search:Value:Autocomplete:Wait' => 'Bitte warten...',
+	'UI:Search:Value:Autocomplete:NoResult' => 'Kein Ergebnis',
+	'UI:Search:Value:Toggler:CheckAllNone' => 'Alles aus- / abwählen',
+	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => 'Alle Sichtbaren aus- / abwählen',
 
-    // - Widget other translations
-    'UI:Search:Criteria:Numeric:From' => 'Von',
-    'UI:Search:Criteria:Numeric:Until' => 'Bis',
-    'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Beliebig',
-    'UI:Search:Criteria:Numeric:PlaceholderUntil' => 'Beliebig',
-    'UI:Search:Criteria:DateTime:From' => 'Von',
-    'UI:Search:Criteria:DateTime:FromTime' => 'Von',
-    'UI:Search:Criteria:DateTime:Until' => 'Bis',
-    'UI:Search:Criteria:DateTime:UntilTime' => 'Bis',
-    'UI:Search:Criteria:DateTime:PlaceholderFrom' => 'Beliebig',
-    'UI:Search:Criteria:DateTime:PlaceholderFromTime' => 'Beliebig',
-    'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Beliebig',
-    'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Beliebig',
-    'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Kinderelemente ausgewählter Objekte werden berücksichtigt.',
+	// - Widget other translations
+	'UI:Search:Criteria:Numeric:From' => 'Von',
+	'UI:Search:Criteria:Numeric:Until' => 'Bis',
+	'UI:Search:Criteria:Numeric:PlaceholderFrom' => 'Beliebig',
+	'UI:Search:Criteria:Numeric:PlaceholderUntil' => 'Beliebig',
+	'UI:Search:Criteria:DateTime:From' => 'Von',
+	'UI:Search:Criteria:DateTime:FromTime' => 'Von',
+	'UI:Search:Criteria:DateTime:Until' => 'Bis',
+	'UI:Search:Criteria:DateTime:UntilTime' => 'Bis',
+	'UI:Search:Criteria:DateTime:PlaceholderFrom' => 'Beliebig',
+	'UI:Search:Criteria:DateTime:PlaceholderFromTime' => 'Beliebig',
+	'UI:Search:Criteria:DateTime:PlaceholderUntil' => 'Beliebig',
+	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Beliebig',
+	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Kinderelemente ausgewählter Objekte werden berücksichtigt.',
 
-    'UI:Search:Criteria:Raw:Filtered' => 'Gefiltert',
-    'UI:Search:Criteria:Raw:FilteredOn' => 'Gefiltert über %1$s',
+	'UI:Search:Criteria:Raw:Filtered' => 'Gefiltert',
+	'UI:Search:Criteria:Raw:FilteredOn' => 'Gefiltert über %1$s',
 ));
 
 //
 // Expression to Natural language
 //
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-    'Expression:Operator:AND' => ' UND ',
-    'Expression:Operator:OR' => ' ODER ',
+	'Expression:Operator:AND' => ' UND ',
+	'Expression:Operator:OR' => ' ODER ',
+	'Expression:Operator:=' => ': ',
 
-    'Expression:Unit:Short:DAY' => 't',
-    'Expression:Unit:Short:WEEK' => 'w',
-    'Expression:Unit:Short:MONTH' => 'm',
-    'Expression:Unit:Short:YEAR' => 'j',
+	'Expression:Unit:Short:DAY' => 't',
+	'Expression:Unit:Short:WEEK' => 'w',
+	'Expression:Unit:Short:MONTH' => 'm',
+	'Expression:Unit:Short:YEAR' => 'j',
 
-    'Expression:Unit:Long:DAY' => 'Tag(e)',
-    'Expression:Unit:Long:HOUR' => 'Stunde(n)',
-    'Expression:Unit:Long:MINUTE' => 'Minute(n)',
+	'Expression:Unit:Long:DAY' => 'Tag(e)',
+	'Expression:Unit:Long:HOUR' => 'Stunde(n)',
+	'Expression:Unit:Long:MINUTE' => 'Minute(n)',
 
-    'Expression:Verb:NOW' => 'jetzt',
+	'Expression:Verb:NOW' => 'jetzt',
+	'Expression:Verb:ISNULL' => ': nicht definiert',
+));
+
+//
+// iTop Newsroom menu
+//
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'UI:Newsroom:NoNewMessage' => 'Keine neue Nachricht',
+	'UI:Newsroom:MarkAllAsRead' => 'Alle Nachrichten als gelesen markieren',
+	'UI:Newsroom:ViewAllMessages' => 'Alle Nachrichten anzeigen',
+	'UI:Newsroom:Preferences' => 'Newsroom-Einstellungen',
+	'UI:Newsroom:ConfigurationLink' => 'Konfiguration',
+	'UI:Newsroom:ResetCache' => 'Cache zurücksetzen',
+	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Nachrichten von  %1$s anzeigen',
+	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Zeigen Sie höchstens %1$s Beiträge im Menü (%2$s) an.',
 ));

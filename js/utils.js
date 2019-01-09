@@ -333,7 +333,7 @@ function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent) {
  */
 function GetUserPreference(sPreferenceCode, sDefaultValue) {
 	var value = sDefaultValue;
-	if (oUserPreferences[sPreferenceCode] != undefined) {
+	if ((typeof(oUserPreferences) !== 'undefined') && (typeof(oUserPreferences[sPreferenceCode]) !== 'undefined')) {
 		value = oUserPreferences[sPreferenceCode];
 	}
 	return value;
@@ -356,7 +356,7 @@ function CheckAll(sSelector, bValue) {
 /**
  * Toggle (enabled/disabled) the specified field of a form
  */
-function ToogleField(value, field_id) {
+function ToggleField(value, field_id) {
 	if (value) {
 		$('#'+field_id).prop('disabled', false);
 		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
@@ -409,8 +409,12 @@ function ToggleDurationField(field_id) {
 function PropagateCheckBox(bCurrValue, aFieldsList, bCheck) {
 	if (bCurrValue == bCheck) {
 		for (var i = 0; i < aFieldsList.length; i++) {
-			$('#enable_'+aFieldsList[i]).prop('checked', bCheck);
-			ToogleField(bCheck, aFieldsList[i]);
+			var sFieldId = aFieldsList[i];
+			$('#enable_'+sFieldId).prop('checked', bCheck);
+			ToggleField(bCheck, sFieldId);
+
+			// Cascade propagation
+            $('#enable_'+sFieldId).trigger('change');
 		}
 	}
 }

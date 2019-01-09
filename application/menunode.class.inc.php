@@ -84,7 +84,8 @@ class ApplicationMenu
 		{
 			// Build menus from module handlers
 			//
-            foreach(MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass)
+			/** @var \ModuleHandlerApiInterface $oPHPClass */
+			foreach(MetaModel::EnumPlugins('ModuleHandlerApiInterface') as $oPHPClass)
             {
                 $oPHPClass::OnMenuCreation();
             }
@@ -121,9 +122,11 @@ class ApplicationMenu
 	}
 
 	/**
-	 * Check wether a menu Id is enabled or not
+	 * Check whether a menu Id is enabled or not
+	 *
 	 * @param $sMenuId
-	 * @throws DictExceptionMissingString
+	 *
+	 * @throws \Exception
 	 */
 	static public function CheckMenuIdEnabled($sMenuId)
 	{
@@ -163,7 +166,9 @@ class ApplicationMenu
 			}
 			else
 			{
-				$sParentId = self::$aMenusIndex[$iParentIndex]['node']->GetMenuId();
+				/** @var \MenuNode $oNode */
+				$oNode = self::$aMenusIndex[$iParentIndex]['node'];
+				$sParentId = $oNode->GetMenuId();
 				self::$aMenusIndex[$iParentIndex]['children'][] = array ('rank' => $fRank, 'index' => $index);
 			}
 
@@ -177,7 +182,9 @@ class ApplicationMenu
 		else
 		{
 			// the menu already exists, let's combine the conditions that make it visible
-			self::$aMenusIndex[$index]['node']->AddCondition($oMenuNode);
+			/** @var \MenuNode $oNode */
+			$oNode = self::$aMenusIndex[$index]['node'];
+			$oNode->AddCondition($oMenuNode);
 		}
 
 		return $index;
@@ -194,7 +201,7 @@ class ApplicationMenu
 
 	/**
 	 * Entry point to display the whole menu into the web page, used by iTopWebPage
-	 * @param $oPage
+	 * @param \iTopWebPage $oPage
 	 * @param $aExtraParams
 	 * @throws DictExceptionMissingString
 	 */
@@ -204,6 +211,7 @@ class ApplicationMenu
 		// Sort the root menu based on the rank
 		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
 		$iAccordion = 0;
+		$iActiveAccordion = $iAccordion;
 		$iActiveMenu = self::GetMenuIndexById(self::GetActiveNodeId());
 		foreach(self::$aRootMenus as $aMenu)
 		{
@@ -217,16 +225,18 @@ class ApplicationMenu
 			$oPage->AddToMenu('</ul>');
 			if ($bActive)
 			{
-$oPage->add_ready_script(
-<<<EOF
-	// Accordion Menu
-	$("#accordion").css({display:'block'}).accordion({ header: "h3", navigation: true, heightStyle: "content", collapsible: true,  active: $iAccordion, icons: false, animate:true }); // collapsible will be enabled once the item will be selected
-EOF
-				);
+				$iActiveAccordion = $iAccordion;
 			}
 			$oPage->AddToMenu('</div>');
 			$iAccordion++;
 		}
+
+		$oPage->add_ready_script(
+<<<EOF
+	// Accordion Menu
+	$("#accordion").css({display:'block'}).accordion({ header: "h3", heightStyle: "content", collapsible: true,  active: $iActiveAccordion, icons: false, animate: true }); // collapsible will be enabled once the item will be selected
+EOF
+		);
 	}
 
 	/**
@@ -260,7 +270,7 @@ EOF
 
 	/**
 	 * Handles the display of the sub-menus (called recursively if necessary)
-	 * @param WebPage $oPage
+	 * @param \iTopWebPage $oPage
 	 * @param array $aMenus
 	 * @param array $aExtraParams
 	 * @param int $iActiveMenu
@@ -352,6 +362,7 @@ EOF
 	static public function GetMenuIndexById($sTitle)
 	{
 		$index = -1;
+		/** @var MenuNode[] $aMenu */
 		foreach(self::$aMenusIndex as $aMenu)
 		{
 			if ($aMenu['node']->GetMenuId() == $sTitle)
@@ -833,7 +844,7 @@ class OQLMenuNode extends MenuNode
 	
 	/**
 	 * Set some extra parameters to be passed to the display block to fine tune its appearence
-	 * @param Hash $aParams paramCode => value. See DisplayBlock::GetDisplay for the meaning of the parameters
+	 * @param array $aParams paramCode => value. See DisplayBlock::GetDisplay for the meaning of the parameters
 	 */
 	public function SetParameters($aParams)
 	{
@@ -946,7 +957,7 @@ class SearchMenuNode extends MenuNode
 	}
 
 	/**
-	 * @param WebPage $oPage
+	 * @param \iTopWebPage $oPage
 	 * @param array $aExtraParams
 	 * @return mixed|void
 	 * @throws DictExceptionMissingString
@@ -1050,7 +1061,9 @@ class NewObjectMenuNode extends MenuNode
 
 	/**
 	 * @param string[] $aExtraParams
+	 *
 	 * @return string
+	 * @throws \Exception
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
@@ -1139,37 +1152,11 @@ class DashboardMenuNode extends MenuNode
 	 */
 	public function GetDashboard()
 	{
-		$sDashboardDefinition = @file_get_contents($this->sDashboardFile);		
-		if ($sDashboardDefinition !== false)
-		{
-			$bCustomized = false;
-			
-			// Search for an eventual user defined dashboard, overloading the existing one
-			$oUDSearch = new DBObjectSearch('UserDashboard');
-			$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
-			$oUDSearch->AddCondition('menu_code', $this->sMenuId, '=');
-			$oUDSet = new DBObjectSet($oUDSearch);
-			if ($oUDSet->Count() > 0)
-			{
-				// Assuming there is at most one couple {user, menu}!
-				$oUserDashboard = $oUDSet->Fetch();
-				$sDashboardDefinition = $oUserDashboard->Get('contents');
-				$bCustomized = true;
-				
-			}
-			$oDashboard = new RuntimeDashboard($this->sMenuId);
-			$oDashboard->FromXml($sDashboardDefinition);
-			$oDashboard->SetCustomFlag($bCustomized);
-		}
-		else
-		{
-			$oDashboard = null;
-		}
-		return $oDashboard;
+		return RuntimeDashboard::GetDashboard($this->sDashboardFile, $this->sMenuId);
 	}
 
 	/**
-	 * @param WebPage $oPage
+	 * @param \iTopWebPage $oPage
 	 * @param string[] $aExtraParams
 	 * @throws CoreException
 	 * @throws Exception
@@ -1182,38 +1169,9 @@ class DashboardMenuNode extends MenuNode
 		{
 			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $this->sMenuId);
 			$oPage->add('<div class="dashboard_contents" id="'.$sDivId.'">');
+			$oDashboard->SetReloadURL($this->GetHyperlink($aExtraParams));
 			$oDashboard->Render($oPage, false, $aExtraParams);
 			$oPage->add('</div>');
-			$oDashboard->RenderEditionTools($oPage);
-
-			if ($oDashboard->GetAutoReload())
-			{
-				$sId = $this->sMenuId;
-				$sExtraParams = json_encode($aExtraParams);
-				$iReloadInterval = 1000 * $oDashboard->GetAutoReloadInterval();
-				$oPage->add_script(
-<<<EOF
-					setInterval("ReloadDashboard('$sDivId');", $iReloadInterval);
-
-					function ReloadDashboard(sDivId)
-					{
-						var oExtraParams = $sExtraParams;
-						// Do not reload when a dialog box is active
-						if (!($('.ui-dialog:visible').length > 0))
-						{
-							$('.dashboard_contents#'+sDivId).block();
-							$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-							   { operation: 'reload_dashboard', dashboard_id: '$sId', extra_params: oExtraParams},
-							   function(data){
-								 $('.dashboard_contents#'+sDivId).html(data);
-								 $('.dashboard_contents#'+sDivId).unblock();
-								}
-							 );
-						}
-					}
-EOF
-				);
-			}
 
 			$bEdit = utils::ReadParam('edit', false);
 			if ($bEdit)

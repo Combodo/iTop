@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Portal\Helper;
 
 use ApplicationContext;
+use cmdbAbstractObject;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\PortalBrick;
 use DBObjectSearch;
@@ -30,15 +31,14 @@ use Exception;
 use iPortalUIExtension;
 use IssueLog;
 use MetaModel;
-use cmdbAbstractObject;
 use ModuleDesign;
 use Silex\Application;
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\Debug\ExceptionHandler;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Twig_Environment;
 use Twig_SimpleFilter;
+use Twig_SimpleFunction;
 use UserRights;
 use utils;
 
@@ -213,7 +213,7 @@ class ApplicationHelper
 	public static function RegisterTwigExtensions(Twig_Environment &$oTwigEnv)
 	{
 		// Filter to translate a string via the Dict::S function
-		// Usage in twig : {{ 'String:ToTranslate'|dict_s }}
+		// Usage in twig: {{ 'String:ToTranslate'|dict_s }}
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('dict_s',
 				function ($sStringCode, $sDefault = null, $bUserLanguageOnly = false) {
 					return Dict::S($sStringCode, $sDefault, $bUserLanguageOnly);
@@ -221,7 +221,7 @@ class ApplicationHelper
 		);
 
 		// Filter to format a string via the Dict::Format function
-		// Usage in twig : {{ 'String:ToTranslate'|dict_format() }}
+		// Usage in twig: {{ 'String:ToTranslate'|dict_format() }}
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('dict_format',
 				function ($sStringCode, $sParam01 = null, $sParam02 = null, $sParam03 = null, $sParam04 = null) {
 					return Dict::Format($sStringCode, $sParam01, $sParam02, $sParam03, $sParam04);
@@ -229,12 +229,12 @@ class ApplicationHelper
 		);
 
 		// Filter to enable base64 encode/decode
-		// Usage in twig : {{ 'String to encode'|base64_encode }}
+		// Usage in twig: {{ 'String to encode'|base64_encode }}
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('base64_encode', 'base64_encode'));
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('base64_decode', 'base64_decode'));
 
 		// Filter to enable json decode  (encode already exists)
-		// Usage in twig : {{ aSomeArray|json_decode }}
+		// Usage in twig: {{ aSomeArray|json_decode }}
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('json_decode', function ($sJsonString, $bAssoc = false) {
 				return json_decode($sJsonString, $bAssoc);
 			})
@@ -268,6 +268,21 @@ class ApplicationHelper
 			}
 
 			return $sUrl;
+		}));
+
+		// Function to check our current environment
+		// Usage in twig:   {% if is_development_environment() %}
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('is_development_environment', function()
+		{
+			return utils::IsDevelopmentEnvironment();
+		}));
+
+		// Function to get configuration parameter
+		// Usage in twig: {{ get_config_parameter('foo') }}
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_config_parameter', function($sParamName)
+		{
+			$oConfig = MetaModel::GetConfig();
+			return $oConfig->Get($sParamName);
 		}));
 	}
 
@@ -1333,6 +1348,45 @@ class ApplicationHelper
 		}
 
 		return $aUIExtensions;
+	}
+
+	public static function LoadSessionMessages(Application $oApp)
+	{
+		$aAllMessages = array();
+		if ((array_key_exists('obj_messages', $_SESSION)) && (!empty($_SESSION['obj_messages'])))
+		{
+			foreach ($_SESSION['obj_messages'] as $sMessageKey => $aMessageObjectData)
+			{
+				$aObjectMessages = array();
+				$aRanks = array();
+				foreach ($aMessageObjectData as $sMessageId => $aMessageData)
+				{
+					$sMsgClass = 'alert alert-';
+					switch ($aMessageData['severity'])
+					{
+						case 'info':
+							$sMsgClass .= 'info';
+							break;
+						case 'error':
+							$sMsgClass .= 'danger';
+							break;
+						case 'ok':
+						default:
+							$sMsgClass .= 'success';
+							break;
+					}
+					$aObjectMessages[] = array('cssClass' => $sMsgClass, 'message' => $aMessageData['message']);
+					$aRanks[] = $aMessageData['rank'];
+				}
+				unset($_SESSION['obj_messages'][$sMessageKey]);
+				array_multisort($aRanks, $aObjectMessages);
+				foreach ($aObjectMessages as $aObjectMessage)
+				{
+					$aAllMessages[] = $aObjectMessage;
+				}
+			}
+		}
+		$oApp['combodo.current_user.session_messages'] = $aAllMessages;
 	}
 
     /**

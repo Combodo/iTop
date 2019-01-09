@@ -38,7 +38,14 @@ class NiceWebPage extends WebPage
         parent::__construct($s_title, $bPrintable);
 		$this->m_aReadyScripts = array();
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-3.3.1.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-3.0.1.min.js'); // Needed since many other plugins still rely on oldies like $.browser
+		if(utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
+		{
+			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-3.0.1.dev.js');
+		}
+		else
+		{
+			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate-3.0.1.prod.min.js');
+		}
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/ui-lightness/jquery-ui-1.11.4.custom.css');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.11.4.custom.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
@@ -62,6 +69,7 @@ class NiceWebPage extends WebPage
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_field.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_numeric.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_enum.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_tag_set.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_key.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_hierarchical_key.js');
 	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_abstract.js');

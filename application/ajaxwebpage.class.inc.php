@@ -269,6 +269,16 @@ EOF
 	        echo $this->m_sReadyScript; // Ready Scripts are output as simple scripts
 	        echo "\n</script>\n";
         }
+        if(count($this->a_linked_stylesheets) > 0)
+        {
+        	echo "<script type=\"text/javascript\">";
+        	foreach($this->a_linked_stylesheets as $aStylesheet)
+	        {
+		        $sStylesheetUrl = $aStylesheet['link'];
+	        	echo "if (!$('link[href=\"{$sStylesheetUrl}\"]').length) $('<link href=\"{$sStylesheetUrl}\" rel=\"stylesheet\">').appendTo('head');\n";
+	        }
+        	echo "\n</script>\n";
+        }
         
 		if (trim($s_captured_output) != "")
         {

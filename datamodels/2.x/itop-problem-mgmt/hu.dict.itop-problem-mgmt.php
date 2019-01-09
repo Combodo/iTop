@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,11 +15,37 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+        'Menu:ProblemManagement' => 'Probléma menedzsment',
+        'Menu:ProblemManagement+' => '',
+    	'Menu:Problem:Overview' => 'Áttekintő',
+    	'Menu:Problem:Overview+' => '',
+    	'Menu:NewProblem' => 'Új probléma',
+    	'Menu:NewProblem+' => '',
+    	'Menu:SearchProblems' => 'Probléma keresés',
+    	'Menu:SearchProblems+' => '',
+    	'Menu:Problem:Shortcuts' => 'Gyorsmenü',
+        'Menu:Problem:MyProblems' => 'Saját problémák',
+        'Menu:Problem:MyProblems+' => '',
+        'Menu:Problem:OpenProblems' => 'Összes nyitott probléma',
+        'Menu:Problem:OpenProblems+' => '',
+	'UI-ProblemManagementOverview-ProblemByService' => 'Problémák szolgáltatásonként',
+	'UI-ProblemManagementOverview-ProblemByService+' => '',
+	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problémák prioritás szerint',
+	'UI-ProblemManagementOverview-ProblemByPriority+' => '',
+	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Nem kiosztott problémák',
+	'UI-ProblemManagementOverview-ProblemUnassigned+' => '',
+	'UI:ProblemMgmtMenuOverview:Title' => 'Probléma menedzsment dashboard',
+	'UI:ProblemMgmtMenuOverview:Title+' => '',
+
+));
+//
+// Class: Problem
+//
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Problem' => 'Probléma',
@@ -34,12 +60,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Problem/Attribute:status/Value:resolved+' => '',
 	'Class:Problem/Attribute:status/Value:closed' => 'Lezárt',
 	'Class:Problem/Attribute:status/Value:closed+' => '',
-	'Class:Problem/Attribute:org_id' => 'Ügyfél',
-	'Class:Problem/Attribute:org_id+' => '',
 	'Class:Problem/Attribute:service_id' => 'Szolgáltatás',
 	'Class:Problem/Attribute:service_id+' => '',
+	'Class:Problem/Attribute:service_name' => 'Neve',
+	'Class:Problem/Attribute:service_name+' => '',
 	'Class:Problem/Attribute:servicesubcategory_id' => 'Szolgáltatás kategória',
 	'Class:Problem/Attribute:servicesubcategory_id+' => '',
+	'Class:Problem/Attribute:servicesubcategory_name' => 'Neve',
+	'Class:Problem/Attribute:servicesubcategory_name+' => '',
 	'Class:Problem/Attribute:product' => 'Termék',
 	'Class:Problem/Attribute:product+' => '',
 	'Class:Problem/Attribute:impact' => 'Hatás',
@@ -58,6 +86,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Problem/Attribute:urgency/Value:2+' => '',
 	'Class:Problem/Attribute:urgency/Value:3' => 'Nagyon fontos',
 	'Class:Problem/Attribute:urgency/Value:3+' => '',
+	'Class:Problem/Attribute:urgency/Value:4' => 'low~~',
+	'Class:Problem/Attribute:urgency/Value:4+' => 'low~~',
 	'Class:Problem/Attribute:priority' => 'Prioritás',
 	'Class:Problem/Attribute:priority+' => '',
 	'Class:Problem/Attribute:priority/Value:1' => 'Alacsony',
@@ -66,22 +96,22 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Problem/Attribute:priority/Value:2+' => '',
 	'Class:Problem/Attribute:priority/Value:3' => 'Magas',
 	'Class:Problem/Attribute:priority/Value:3+' => '',
-	'Class:Problem/Attribute:workgroup_id' => 'Csoport',
-	'Class:Problem/Attribute:workgroup_id+' => '',
-	'Class:Problem/Attribute:agent_id' => 'Felelős',
-	'Class:Problem/Attribute:agent_id+' => '',
+	'Class:Problem/Attribute:priority/Value:4' => 'Low~~',
+	'Class:Problem/Attribute:priority/Value:4+' => 'Low~~',
 	'Class:Problem/Attribute:related_change_id' => 'Kapcsolódó változások',
 	'Class:Problem/Attribute:related_change_id+' => '',
-	'Class:Problem/Attribute:close_date' => 'Lezárás dátuma',
-	'Class:Problem/Attribute:close_date+' => '',
-	'Class:Problem/Attribute:last_update' => 'Utolsó módosítás dátuma',
-	'Class:Problem/Attribute:last_update+' => '',
+	'Class:Problem/Attribute:related_change_ref' => 'Referencia',
+	'Class:Problem/Attribute:related_change_ref+' => '',
 	'Class:Problem/Attribute:assignment_date' => 'Felelőshöz rendelés',
 	'Class:Problem/Attribute:assignment_date+' => '',
 	'Class:Problem/Attribute:resolution_date' => 'Megoldás dátuma',
 	'Class:Problem/Attribute:resolution_date+' => '',
 	'Class:Problem/Attribute:knownerrors_list' => 'Ismert hibák',
 	'Class:Problem/Attribute:knownerrors_list+' => '',
+	'Class:Problem/Attribute:related_request_list' => 'Related requests~~',
+	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem~~',
+	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 	'Class:Problem/Stimulus:ev_assign' => 'Hozzárendelés',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Átrendelés',
@@ -90,48 +120,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Lezárás',
 	'Class:Problem/Stimulus:ev_close+' => '',
-	'Menu:ProblemManagement' => 'Probléma menedzsment',
-	'Menu:ProblemManagement+' => '',
-	'Menu:Problem:Overview' => 'Áttekintő',
-	'Menu:Problem:Overview+' => '',
-	'Menu:NewProblem' => 'Új probléma',
-	'Menu:NewProblem+' => '',
-	'Menu:SearchProblems' => 'Probléma keresés',
-	'Menu:SearchProblems+' => '',
-	'Menu:Problem:Shortcuts' => 'Gyorsmenü',
-	'Menu:Problem:MyProblems' => 'Saját problémák',
-	'Menu:Problem:MyProblems+' => '',
-	'Menu:Problem:OpenProblems' => 'Összes nyitott probléma',
-	'Menu:Problem:OpenProblems+' => '',
-	'UI-ProblemManagementOverview-ProblemByService' => 'Problémák szolgáltatásonként',
-	'UI-ProblemManagementOverview-ProblemByService+' => '',
-	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problémák prioritás szerint',
-	'UI-ProblemManagementOverview-ProblemByPriority+' => '',
-	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Nem kiosztott problémák',
-	'UI-ProblemManagementOverview-ProblemUnassigned+' => '',
-	'UI:ProblemMgmtMenuOverview:Title' => 'Probléma menedzsment dashboard',
-	'UI:ProblemMgmtMenuOverview:Title+' => '',
-	'Class:Problem/Attribute:org_name' => 'Neve',
-	'Class:Problem/Attribute:org_name+' => '',
-	'Class:Problem/Attribute:service_name' => 'Neve',
-	'Class:Problem/Attribute:service_name+' => '',
-	'Class:Problem/Attribute:servicesubcategory_name' => 'Neve',
-	'Class:Problem/Attribute:servicesubcategory_name+' => '',
-	'Class:Problem/Attribute:workgroup_name' => 'Neve',
-	'Class:Problem/Attribute:workgroup_name+' => '',
-	'Class:Problem/Attribute:agent_name' => 'Agent Neve',
-	'Class:Problem/Attribute:agent_name+' => '',
-	'Class:Problem/Attribute:agent_email' => 'Agent E-mail',
-	'Class:Problem/Attribute:agent_email+' => '',
-	'Class:Problem/Attribute:related_change_ref' => 'Referencia',
-	'Class:Problem/Attribute:related_change_ref+' => '',
-	'Class:Problem/Attribute:urgency/Value:4' => 'low~~',
-	'Class:Problem/Attribute:urgency/Value:4+' => 'low~~',
-	'Class:Problem/Attribute:priority/Value:4' => 'Low~~',
-	'Class:Problem/Attribute:priority/Value:4+' => 'Low~~',
-	'Class:Problem/Attribute:related_request_list' => 'Related requests~~',
-	'Class:Problem/Attribute:related_request_list+' => 'All the requests that are related to this problem~~',
-	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
-	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 ));
-?>
