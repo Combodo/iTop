@@ -184,7 +184,15 @@ EOF
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oBackup = new DBBackupScheduled();
 			$sBackupDir = APPROOT.'data/backups/';
-			$oBackup->DownloadBackup($sBackupDir.$sFile);
+			$sPathNoDotDotPattern = '/^((?!\/\.\.\/).)*$/';
+			if(preg_match($sPathNoDotDotPattern, $sBackupDir.$sFile) == 1)
+			{
+				$oBackup->DownloadBackup($sBackupDir.$sFile);
+			}
+			else
+			{
+				throw new InvalidParameterException('Invalid file path');
+			}
 			break;
 	}
 }
