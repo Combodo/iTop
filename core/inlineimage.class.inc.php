@@ -178,18 +178,19 @@ class InlineImage extends DBObject
 				$oInlineImage->DBUpdate();
 			}
 		}
-		else
-		{
-			IssueLog::Error('InlineImage: Error during FinalizeInlineImages(), no transaction ID for object '.get_class($oObject).'#'.$oObject->GetKey().'.');
-
-			IssueLog::Error('|- Call stack:');
-			$oException = new Exception();
-			$sStackTrace = $oException->getTraceAsString();
-			IssueLog::Error($sStackTrace);
-
-			IssueLog::Error('|- POST vars:');
-			IssueLog::Error(print_r($_POST, true));
-		}
+// For tracing issues with Inline Images... but beware not all updates are interactive, so this trace happens when creating objects non-interactively (REST, Synchro...)
+// 		else
+//		{
+//			IssueLog::Error('InlineImage: Error during FinalizeInlineImages(), no transaction ID for object '.get_class($oObject).'#'.$oObject->GetKey().'.');
+//
+//			IssueLog::Error('|- Call stack:');
+//			$oException = new Exception();
+//			$sStackTrace = $oException->getTraceAsString();
+//			IssueLog::Error($sStackTrace);
+//
+//			IssueLog::Error('|- POST vars:');
+//			IssueLog::Error(print_r($_POST, true));
+//		}
 	}
 	
 	/**

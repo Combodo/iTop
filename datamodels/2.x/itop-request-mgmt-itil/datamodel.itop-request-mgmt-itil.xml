@@ -1725,7 +1725,7 @@
 		</class>
         <class id="Organization">
             <fields>
-                <field id="overview" xsi:type="AttributeDashboard">
+                <field id="overview" xsi:type="AttributeDashboard" _delta="if_exists">
                     <definition>
                         <cells>
                             <cell id="9000" _delta="delete">
