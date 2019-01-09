@@ -35,7 +35,7 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [Changes since the previous version][58]
  - [New features][59]
  - [Migration notes][60]
- - [Download iTop 2.6.0-beta][61]
+ - [Download iTop 2.6.0][61]
 
 
 ### Version 2.5  
@@ -127,14 +127,14 @@ We would like to give a special thank you to the people from the community who c
 [50]: https://www.itophub.io/wiki/page?id=2_4_0:release:change_log
 [51]: https://www.itophub.io/wiki/page?id=2_4_0:release:2_4_whats_new
 [52]: https://www.itophub.io/wiki/page?id=2_4_0:install:230_to_240_migration_notes
-[53]: https://sourceforge.net/projects/itop/files/itop/2.4.1/iTop-2.4.1-3714.zip/download
+[53]: https://sourceforge.net/projects/itop/files/itop/2.4.1
 
 [54]: https://www.itophub.io/wiki/page?id=2_5_0:release:change_log
 [55]: https://www.itophub.io/wiki/page?id=2_5_0:release:2_5_whats_new
 [56]: https://www.itophub.io/wiki/page?id=2_5_0:install:240_to_250_migration_notes
-[57]: https://sourceforge.net/projects/itop/files/itop/2.5.0/iTop-2.5.0-3935.zip/download
+[57]: https://sourceforge.net/projects/itop/files/itop/2.5.0
 
 [58]: https://www.itophub.io/wiki/page?id=2_6_0:release:change_log
 [59]: https://www.itophub.io/wiki/page?id=2_6_0:release:2_6_whats_new
 [60]: https://www.itophub.io/wiki/page?id=2_6_0:install:250_to_260_migration_notes
-[61]: https://sourceforge.net/projects/itop/files/itop/2.6.0-beta/iTop-2.6-beta-4146.zip/download
+[61]: https://sourceforge.net/projects/itop/files/itop/2.6.0
