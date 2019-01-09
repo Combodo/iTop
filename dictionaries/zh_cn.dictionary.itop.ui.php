@@ -64,7 +64,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
 	'Class:AuditRule/Attribute:query' => '要运行的查询',
-	'Class:AuditRule/Attribute:query+' => '要运行的OQL表达式',
+	'Class:AuditRule/Attribute:query+' => '要运行的OQL 表达式',
 	'Class:AuditRule/Attribute:valid_flag' => '是否有效?',
 	'Class:AuditRule/Attribute:valid_flag+' => '若规则返回有效对象则True,否则False',
 	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'true',
@@ -83,13 +83,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Query' => '查询',
-	'Class:Query+' => 'A query is a data set defined in a dynamic way',
+	'Class:Query+' => '查询是一种动态的数据集',
 	'Class:Query/Attribute:name' => '名称',
-	'Class:Query/Attribute:name+' => 'Identifies the query',
+	'Class:Query/Attribute:name+' => '查询的名称',
 	'Class:Query/Attribute:description' => '描述',
-	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)',
-	'Class:QueryOQL/Attribute:fields' => 'Fields~~',
-	'Class:QueryOQL/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export~~',
+	'Class:Query/Attribute:description+' => '请描述本查询 (目的、用法等等.)',
+	'Class:QueryOQL/Attribute:fields' => '区域',
+	'Class:QueryOQL/Attribute:fields+' => '属性之间使用逗号分隔 (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL 查询',
 	'Class:QueryOQL+' => 'A query based on the Object Query Language',
 	'Class:QueryOQL/Attribute:oql' => '表达式',
@@ -137,12 +137,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 		
 	'Class:User/Error:LoginMustBeUnique' => '登录名必须唯一 - "%1s" 已经被使用.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => '必须指定至少一个角色给该用户.',
-	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.',
-	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.',
-	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.',
-	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
+	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => '必须为该用户指定一个组织.',
+	'Class:User/Error:OrganizationNotAllowed' => '该组织不被允许.',
+	'Class:User/Error:UserOrganizationNotAllowed' => '该用户账户不属于那个组织.',
+	'Class:User/Error:PersonIsMandatory' => '联系人必填.',
 	'Class:UserInternal' => '内部用户',
-	'Class:UserInternal+' => 'User defined within iTop',
+	'Class:UserInternal+' => 'iTop 内部定义的用户',
 ));
 
 //
@@ -317,14 +317,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class: UserDashboard
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:UserDashboard' => 'User dashboard~~',
-	'Class:UserDashboard+' => '~~',
-	'Class:UserDashboard/Attribute:user_id' => 'User~~',
-	'Class:UserDashboard/Attribute:user_id+' => '~~',
-	'Class:UserDashboard/Attribute:menu_code' => 'Menu code~~',
-	'Class:UserDashboard/Attribute:menu_code+' => '~~',
-	'Class:UserDashboard/Attribute:contents' => 'Contents~~',
-	'Class:UserDashboard/Attribute:contents+' => '~~',
+	'Class:UserDashboard' => '用户面板',
+	'Class:UserDashboard+' => '',
+	'Class:UserDashboard/Attribute:user_id' => '用户',
+	'Class:UserDashboard/Attribute:user_id+' => '',
+	'Class:UserDashboard/Attribute:menu_code' => '菜单代码',
+	'Class:UserDashboard/Attribute:menu_code+' => '',
+	'Class:UserDashboard/Attribute:contents' => '内容',
+	'Class:UserDashboard/Attribute:contents+' => '',
 ));
 
 //
@@ -352,30 +352,30 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:WelcomeMenuPage+' => '欢迎使用iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => '欢迎使用iTop',
 
-	'UI:WelcomeMenu:LeftBlock' => '<p>iTop是完全开源的IT操作门户.</p>
+	'UI:WelcomeMenu:LeftBlock' => '<p>iTop 是完全开源的IT 操作门户.</p>
 <ul>它包括:
-<li>完整的CMDB(Configuration management database)，用于登记和管理您的IT资产.</li>
-<li>事件管理模块用于跟踪和传递所有发生在IT系统中的事件.</li>
-<li>变更管理模块用于规划和跟踪IT环境中发生的变化.</li>
+<li>完整的CMDB(Configuration management database)，用于登记和管理您的IT 资产.</li>
+<li>事件管理模块用于跟踪和传递所有发生在IT 系统中的事件.</li>
+<li>变更管理模块用于规划和跟踪IT 环境中发生的变化.</li>
 <li>已知错误数据库可加速事件的处理.</li>
 <li>停机模块记录所有计划内的停机并通知对应的联系人.</li>
-<li>通过仪表盘迅速获得IT状态的概况.</li>
+<li>通过仪表盘迅速获得IT 状态的概况.</li>
 </ul>
 <p>所有模块可以各自独立地、一步步地部署.</p>',
 
-	'UI:WelcomeMenu:RightBlock' => '<p>iTop是面向服务供应商的, 它使得IT工程师能够更方便地管理多客户和多组织.
+	'UI:WelcomeMenu:RightBlock' => '<p>iTop 是面向服务供应商的, 它使得IT 工程师能够更方便地管理多客户和多组织.
 <ul>iTop 提供功能丰富的业务处理流程:
-<li>提高IT管理效率</li> 
-<li>提升IT可操作能力</li> 
+<li>提高IT 管理效率</li> 
+<li>提升IT 可操作能力</li> 
 <li>提高用户满意度,提升业务能力.</li>
 </ul>
 </p>
-<p>iTop是完全开放的,可被集成到现有的IT管理架构之中.</p>
+<p>iTop 是完全开放的,可被集成到现有的IT 管理架构之中.</p>
 <p>
-<ul>利用这个新一代的IT操作门户, 可以帮助您:
-<li>更好地管理越来越复杂的IT环境.</li>
-<li>逐步实现ITIL流程.</li>
-<li>管理IT中最重要的资产: 文档.</li>
+<ul>利用这个新一代的IT 操作门户, 可以帮助您:
+<li>更好地管理越来越复杂的IT 环境.</li>
+<li>逐步实现ITIL 流程.</li>
+<li>管理IT 中最重要的资产: 文档.</li>
 </ul>
 </p>',
 	'UI:WelcomeMenu:AllOpenRequests' => '所有打开的需求: %1$d',
@@ -516,7 +516,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:SelectOne' => '-- 请选择 --',
 	'UI:Login:Welcome' => '欢迎使用iTop!',
 	'UI:Login:IncorrectLoginPassword' => '用户名或密码错误, 请重试.',
-	'UI:Login:IdentifyYourself' => '在登录之前，请完成身份认证',
+	'UI:Login:IdentifyYourself' => '请完成身份认证',
 	'UI:Login:UserNamePrompt' => '用户名',
 	'UI:Login:PasswordPrompt' => '密码',
 	'UI:Login:ForgotPwd' => '忘记密码?',
@@ -609,13 +609,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:CSVImport:CommentsAndHeader' => '注释和头',
 	'UI:CSVImport:SelectClass' => '选择要导入的类别:',
 	'UI:CSVImport:AdvancedMode' => '高级模式',
-	'UI:CSVImport:AdvancedMode+' => '在高级模式中,对象的"id" (主键) 可以被用来修改和重命名对象.不管怎样,列 "id" (如果存在) 只能被用做一个搜索条件,不能与其它搜索条件混用.',
-	'UI:CSVImport:SelectAClassFirst' => '首先选择一个类以配置映射.',
+	'UI:CSVImport:AdvancedMode+' => 'In advanced mode the "id" (primary key) of the objects can be used to update and rename objects.' .
+									'However the column "id" (if present) can only be used as a search criteria and can not be combined with any other search criteria.',
+	'UI:CSVImport:SelectAClassFirst' => '要配置映射，请先选择一个类.',
 	'UI:CSVImport:HeaderFields' => '栏目',
 	'UI:CSVImport:HeaderMappings' => '映射',
 	'UI:CSVImport:HeaderSearch' => '搜索?',
 	'UI:CSVImport:AlertIncompleteMapping' => '请为每个栏选择一个映射.',
-	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.',
+	'UI:CSVImport:AlertMultipleMapping' => '请确保目标区域仅被映射一次.',
 	'UI:CSVImport:AlertNoSearchCriteria' => '请选择至少一个搜索条件',
 	'UI:CSVImport:Encoding' => '字符编码',	
 	'UI:UniversalSearchTitle' => 'iTop - 全局搜索',
@@ -904,28 +905,28 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => '按类别划分基础架构对象',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => '按状态划分基础架构对象',
 
-'UI:ConfigMgmtMenuOverview:Title' => '配置管理仪表盘',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '按状态配置项目',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => '按类别配置项目',
+	'UI:ConfigMgmtMenuOverview:Title' => '配置管理仪表盘',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '按状态配置项目',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => '按类别配置项目',
 
-'UI:RequestMgmtMenuOverview:Title' => '需求管理仪表盘',
-'UI-RequestManagementOverview-RequestByService' => '按服务划分用户需求',
-'UI-RequestManagementOverview-RequestByPriority' => '按优先级划分用户需求',
-'UI-RequestManagementOverview-RequestUnassigned' => '尚未分配给办理人的用户需求',
+	'UI:RequestMgmtMenuOverview:Title' => '需求管理仪表盘',
+	'UI-RequestManagementOverview-RequestByService' => '按服务划分用户需求',
+	'UI-RequestManagementOverview-RequestByPriority' => '按优先级划分用户需求',
+	'UI-RequestManagementOverview-RequestUnassigned' => '尚未分配给办理人的用户需求',
 
-'UI:IncidentMgmtMenuOverview:Title' => '事件管理仪表盘',
-'UI-IncidentManagementOverview-IncidentByService' => '按服务级划分事件',
-'UI-IncidentManagementOverview-IncidentByPriority' => '按优先级划分事件',
-'UI-IncidentManagementOverview-IncidentUnassigned' => '尚未分配给办理人的事件',
+	'UI:IncidentMgmtMenuOverview:Title' => '事件管理仪表盘',
+	'UI-IncidentManagementOverview-IncidentByService' => '按服务级划分事件',
+	'UI-IncidentManagementOverview-IncidentByPriority' => '按优先级划分事件',
+	'UI-IncidentManagementOverview-IncidentUnassigned' => '尚未分配给办理人的事件',
 
-'UI:ChangeMgmtMenuOverview:Title' => '变更管理仪表盘',
-'UI-ChangeManagementOverview-ChangeByType' => '按类别划分变更',
-'UI-ChangeManagementOverview-ChangeUnassigned' => '尚未分配给办理人的变更',
-'UI-ChangeManagementOverview-ChangeWithOutage' => '变更引起的停机',
+	'UI:ChangeMgmtMenuOverview:Title' => '变更管理仪表盘',
+	'UI-ChangeManagementOverview-ChangeByType' => '按类别划分变更',
+	'UI-ChangeManagementOverview-ChangeUnassigned' => '尚未分配给办理人的变更',
+	'UI-ChangeManagementOverview-ChangeWithOutage' => '变更引起的停机',
 
-'UI:ServiceMgmtMenuOverview:Title' => '服务管理仪表盘',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => '客户合同需在30日内更新',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => '供应商合同需在30日内更新',
+	'UI:ServiceMgmtMenuOverview:Title' => '服务管理仪表盘',
+	'UI-ServiceManagementOverview-CustomerContractToRenew' => '客户合同需在30日内更新',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => '供应商合同需在30日内更新',
 
 	'UI:ContactsMenu' => '联系人',
 	'UI:ContactsMenu+' => '联系人',
@@ -948,13 +949,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:NotificationsMenu:Title' => '配置 <span class="hilite">通知</span>',
 	'UI:NotificationsMenu:Help' => '帮助',
 	'UI:NotificationsMenu:HelpContent' => '<p>在iTop 中, 通知可以被自定义. 它们是基于两个对象集: <i>触发器和操作</i>.</p>
-<p><i><b>触发器</b></i> 定义了什么时候通知将被发送. 有3种触发器, 覆盖了对象生命周期的3个阶段:
+<p><i><b>触发器</b></i> 定义了什么时候发送通知. iTop core 自带一些触发器, 另一些触发器可由扩展提供:
 <ol>
-	<li> "当对象创建时" ，即对象创建时会触发的操作.</li>
-	<li> "进入指定状态时" ，即对象变为指定状态之前触发的操作(状态从一个变为另一个)</li>
-	<li> "离开指定状态时" ，即对象的指定状态转变成其它状态时触发的操作</li>
-	<li> "基于阀值" ，即对象的TTR 或 TTO 达到某个阀值时</li>
-	<li> "当对象更新时" ，即工单发生变化时触发的操作</li>
+	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
+	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
+	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
 <p>
@@ -972,11 +971,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:NotificationsMenu:Actions' => '操作',
 	'UI:NotificationsMenu:AvailableActions' => '有效的操作',
 
-	'Menu:TagAdminMenu' => 'Tags configuration~~',
-	'Menu:TagAdminMenu+' => 'Tags values management~~',
-	'UI:TagAdminMenu:Title' => 'Tags configuration~~',
-	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
-	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
+	'Menu:TagAdminMenu' => '标签配置',
+	'Menu:TagAdminMenu+' => '标签值管理',
+	'UI:TagAdminMenu:Title' => '标签配置',
+	'UI:TagAdminMenu:NoTags' => '未配置标签',
+	'UI:TagSetFieldData:Error' => '错误: %1$s',
 
 	'Menu:AuditCategories' => '审计类别', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => '审计类别', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1005,8 +1004,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:UserAccountsMenu+' => '用户帐户', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => '用户帐户', // Duplicated into itop-welcome-itil (will be removed from here...)	
 
-	'UI:iTopVersion:Short' => 'iTop-CN version %1$s',
-	'UI:iTopVersion:Long' => 'iTop-CN version %1$s-%2$s built on %3$s by Purple_Grape',
+	'UI:iTopVersion:Short' => '%1$s version %2$s',
+	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => '属性',
 
 	'UI:OpenDocumentInNewWindow_' => '在新窗口打开文档: %1$s',
@@ -1015,7 +1014,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Download-CSV' => '下载 %1$s',
 
 	'UI:DeadlineMissedBy_duration' => '超过 %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 min',		
+	'UI:Deadline_LessThan1Min' => '< 1 分钟',		
 	'UI:Deadline_Minutes' => '%1$d min',			
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
@@ -1131,7 +1130,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ArchiveMode:Banner' => '归档模式',
 	'UI:ArchiveMode:Banner+' => '已归档的对象可见但不允许修改',
 	'UI:FavoriteOrganizations' => '快速访问',
-	'UI:FavoriteOrganizations+' => '为了能够通过首页左侧菜单快速访问，请检查下面的组织列表. 请注意，这并不是一个安全设置, 其他组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
+	'UI:FavoriteOrganizations+' => '进入组织下的列表，可实现通过下拉菜单快速访问.'.
+								   '请注意，这并不是一个安全设置, 其他组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
 	'UI:FavoriteLanguage' => '用户界面',
 	'UI:Favorites:SelectYourLanguage' => '选择语言',
 	'UI:FavoriteOtherSettings' => '其他设置',
@@ -1147,13 +1147,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Button:Refresh' => '刷新',
 	'UI:Button:GoPrint' => '打印...',
 	'UI:ExplainPrintable' => '点击 %1$s 图标可隐藏打印内容.<br/>在打印之前可使用浏览器的 "打印预览" 功能.<br/>注: 这个页首和其他控制面板不会被打印.',
-	'UI:PrintResolution:FullSize' => 'Full size~~',
-	'UI:PrintResolution:A4Portrait' => 'A4 Portrait~~',
-	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
+	'UI:PrintResolution:FullSize' => '全尺寸',
+	'UI:PrintResolution:A4Portrait' => 'A4 纵向',
+	'UI:PrintResolution:A4Landscape' => 'A4 横向',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:StandardDashboard' => '标准',
+	'UI:Toggle:CustomDashboard' => '自定义',
 
 	'UI:ConfigureThisList' => '配置这个列表...',
 	'UI:ListConfigurationTitle' => '列表配置',
@@ -1201,16 +1201,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Form:Property' => '属性',
 	'UI:Form:Value' => '值',
 
-	'UI:DashletUnknown:Label' => 'Unknown',
+	'UI:DashletUnknown:Label' => '未知',
 	'UI:DashletUnknown:Description' => 'Unknown dashlet (might have been uninstalled)',
 	'UI:DashletUnknown:RenderText:View' => 'Unable to render this dashlet.',
 	'UI:DashletUnknown:RenderText:Edit' => 'Unable to render this dashlet (class "%1$s"). Check with your administrator if it is still available.',
 	'UI:DashletUnknown:RenderNoDataText:Edit' => 'No preview available for this dashlet (class "%1$s").',
 	'UI:DashletUnknown:Prop-XMLConfiguration' => '配置 (显示为纯 XML)',
 
-	'UI:DashletProxy:Label' => 'Proxy',
+	'UI:DashletProxy:Label' => '代理',
 	'UI:DashletProxy:Description' => 'Proxy dashlet',
-	'UI:DashletProxy:RenderNoDataText:Edit' => 'No preview available for this third-party dashlet (class "%1$s").',
+	'UI:DashletProxy:RenderNoDataText:Edit' => '第三方组件无法预览(class "%1$s").',
 	'UI:DashletProxy:Prop-XMLConfiguration' => '配置 (显示为纯 XML)',
 
 	'UI:DashletPlainText:Label' => '文本',
@@ -1243,12 +1243,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:DashletGroupByBars:Label' => '柱状图',
 	'UI:DashletGroupByBars:Description' => '柱状图',
 	'UI:DashletGroupByTable:Label' => '分组 (表)',
-	'UI:DashletGroupByTable:Description' => 'List (Grouped by a field)',
+	'UI:DashletGroupByTable:Description' => '列表 (Grouped by a field)',
 
 	// New in 2.5
-	'UI:DashletGroupBy:Prop-Function' => 'Aggregation function',
-	'UI:DashletGroupBy:Prop-FunctionAttribute' => 'Function attribute',
-	'UI:DashletGroupBy:Prop-OrderDirection' => 'Direction',
+	'UI:DashletGroupBy:Prop-Function' => '聚合函数',
+	'UI:DashletGroupBy:Prop-FunctionAttribute' => '函数属性',
+	'UI:DashletGroupBy:Prop-OrderDirection' => '方向',
 	'UI:DashletGroupBy:Prop-OrderField' => '排序',
 	'UI:DashletGroupBy:Prop-Limit' => 'Limit',
 
@@ -1256,7 +1256,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:DashletGroupBy:Order:desc' => '降序',
 
 	'UI:GroupBy:count' => '个数',
-	'UI:GroupBy:count+' => 'Number of elements',
+	'UI:GroupBy:count+' => '元件的个数',
 	'UI:GroupBy:sum' => '总数',
 	'UI:GroupBy:sum+' => 'Sum of %1$s',
 	'UI:GroupBy:avg' => '平均',
@@ -1268,7 +1268,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// ---
 
 	'UI:DashletHeaderStatic:Label' => 'Header',
-	'UI:DashletHeaderStatic:Description' => 'Displays an horizontal separator',
+	'UI:DashletHeaderStatic:Description' => '显示水平分隔符',
 	'UI:DashletHeaderStatic:Prop-Title' => '标题',
 	'UI:DashletHeaderStatic:Prop-Title:Default' => '联系人',
 	'UI:DashletHeaderStatic:Prop-Icon' => '图标',
@@ -1278,7 +1278,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:DashletHeaderDynamic:Prop-Title' => '标题',
 	'UI:DashletHeaderDynamic:Prop-Title:Default' => '联系人',
 	'UI:DashletHeaderDynamic:Prop-Icon' => '图标',
-	'UI:DashletHeaderDynamic:Prop-Subtitle' => 'Subtitle',
+	'UI:DashletHeaderDynamic:Prop-Subtitle' => '副标题',
 	'UI:DashletHeaderDynamic:Prop-Subtitle:Default' => '联系人',
 	'UI:DashletHeaderDynamic:Prop-Query' => '查询',
 	'UI:DashletHeaderDynamic:Prop-GroupBy' => 'Group by',
@@ -1419,7 +1419,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ConcurrentLockKilled' => '阻止并发修改当前对象的锁已被删除.',
 	'UI:Menu:KillConcurrentLock' => '消除并发修改锁定!',
 
-	'UI:Menu:ExportPDF' => '导出 PDF...',
+	'UI:Menu:ExportPDF' => '导出PDF...',
 	'UI:Menu:PrintableVersion' => '打印',
 	
 	'UI:BrowseInlineImages' => '浏览图片...',
@@ -1440,7 +1440,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => '添加条件',
 	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => '最近使用',
-	'UI:Search:AddCriteria:List:MostPopular:Title' => '最热门',
+	'UI:Search:AddCriteria:List:MostPopular:Title' => '最常用',
 	'UI:Search:AddCriteria:List:Others:Title' => '其它',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => '还没有.',
 
@@ -1477,20 +1477,20 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: 任何',
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-    //   - External key widget
-    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s 已定义',
-    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s 未被定义',
-    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
-    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
-    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s 和 %3$s others',
-    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: 任何',
-    //   - Hierarchical key widget
-    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s 已定义',
-    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s 未被定义',
-    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
-    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s 和 %3$s others',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: 任何',
+	//   - External key widget
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s 已定义',
+	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s 未被定义',
+	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s 和 %3$s others',
+	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: 任何',
+	//   - Hierarchical key widget
+	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s 已定义',
+	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s 未被定义',
+	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
+	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s 和 %3$s others',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: 任何',
 
 	// - Criteria operators
 	//   - Default widget
@@ -1559,19 +1559,19 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Expression:Unit:Long:MINUTE' => '分钟',
 
 	'Expression:Verb:NOW' => '现在',
-	'Expression:Verb:ISNULL' => ': undefined~~',
+	'Expression:Verb:ISNULL' => ': 未定义',
 ));
 
 //
 // iTop Newsroom menu
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'UI:Newsroom:NoNewMessage' => 'No new message~~',
-	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
-	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
-	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
-	'UI:Newsroom:ConfigurationLink' => 'Configuration~~',
-	'UI:Newsroom:ResetCache' => 'Reset cache~~',
-	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
-	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+	'UI:Newsroom:NoNewMessage' => '没有新消息',
+	'UI:Newsroom:MarkAllAsRead' => '标记所有消息为已读',
+	'UI:Newsroom:ViewAllMessages' => '查看全部消息',
+	'UI:Newsroom:Preferences' => '消息选项',
+	'UI:Newsroom:ConfigurationLink' => '配置',
+	'UI:Newsroom:ResetCache' => '重置缓存',
+	'UI:Newsroom:DisplayMessagesFor_Provider' => '显示来自 %1$s 的消息',
+	'UI:Newsroom:DisplayAtMost_X_Messages' => '在 %2$s 菜单中最多显示 %1$s 条消息.',
 ));

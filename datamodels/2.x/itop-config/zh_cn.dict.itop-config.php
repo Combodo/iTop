@@ -23,9 +23,9 @@
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
-	'Menu:ConfigEditor' => '配置文件编辑',
+	'Menu:ConfigEditor' => '编辑配置文件',
 	'config-edit-title' => '配置文件编辑器',
-	'config-edit-intro' => '编辑配置文件时请格外小心.',
+	'config-edit-intro' => '编辑配置文件时请务必格外小心.',
 	'config-apply' => '应用',
 	'config-apply-title' => '应用 (Ctrl+S)',
 	'config-cancel' => '重置',

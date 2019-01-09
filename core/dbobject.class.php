@@ -70,11 +70,14 @@ abstract class DBObject implements iDisplay
 {
 	private static $m_aMemoryObjectsByClass = array();
 
-  	private static $m_aBulkInsertItems = array(); // class => array of ('table' => array of (array of <sql_value>))
-  	private static $m_aBulkInsertCols = array(); // class => array of ('table' => array of <sql_column>)
+	/** @var array class => array of ('table' => array of (array of <sql_value>)) */
+	private static $m_aBulkInsertItems = array();
+	/** @var array class => array of ('table' => array of <sql_column>) */
+	private static $m_aBulkInsertCols = array();
   	private static $m_bBulkInsert = false;
 
-	protected $m_bIsInDB = false; // true IIF the object is mapped to a DB record
+	/** @var bool true IIF the object is mapped to a DB record */
+	protected $m_bIsInDB = false;
 	protected $m_iKey = null;
 	private $m_aCurrValues = array();
 	protected $m_aOrigValues = array();
@@ -232,7 +235,9 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * @param bool $bAllowAllData DEPRECATED: the reload must never fail!
+	 *
 	 * @throws CoreException
+	 * @internal 
 	 */
 	public function Reload($bAllowAllData = false)
 	{
@@ -748,12 +753,24 @@ abstract class DBObject implements iDisplay
 			}
 		}
 	}
-	
+
+	/**
+	 * Overridable callback, called by \DBObject::DoComputeValues
+	 *
+	 * @api
+	 */
 	public function ComputeValues()
 	{
 	}
 
-	// Compute scalar attributes that depend on any other type of attribute
+	/**
+	 * Compute scalar attributes that depend on any other type of attribute
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 *
+	 * @internal
+	 */
 	final public function DoComputeValues()
 	{
 		// TODO - use a flag rather than checking the call stack -> this will certainly accelerate things
@@ -1075,7 +1092,9 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Gets the name of an object in a safe manner for displaying inside a web page
+	 *
 	 * @return string
+	 * @throws \CoreException
 	 */
 	public function GetName()
 	{
@@ -1087,13 +1106,20 @@ abstract class DBObject implements iDisplay
 	 * since the " < > characters are not escaped and the name may contain some XSS script
 	 * instructions.
 	 * Use this function only for internal computations or for an output to a non-HTML destination
+	 *
 	 * @return string
+	 * @throws \CoreException
 	 */
 	public function GetRawName()
 	{
 		return $this->Get('friendlyname');
 	}
 
+	/**
+	 * @return mixed|string '' if no state attribute, object representing its value otherwise
+	 * @throws \CoreException
+	 * @internal
+	 */
 	public function GetState()
 	{
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
@@ -1158,15 +1184,18 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 *
 	 * @param string $sAttCode $sAttCode The code of the attribute
 	 * @param array $aReasons To store the reasons why the attribute is read-only (info about the synchro replicas)
 	 * @param string $sTargetState The target state in which to evalutate the flags, if empty the current state will be
 	 *     used
 	 *
-	 * @return integer the binary combination of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...) for the
-	 *     given attribute in the given state of the object
+	 * @return integer the binary combination of flags for the given attribute in the given state of the object<br>
+	 *         Values can be one of the OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY, ... (see define in metamodel.class.php)
 	 * @throws \CoreException
+	 *
+	 * @api
+	 *
+	 * @see GetInitialStateAttributeFlags for creation
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
@@ -1274,11 +1303,18 @@ abstract class DBObject implements iDisplay
     }
 
 	/**
-	 * Returns the set of flags (OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY...)
-	 * for the given attribute for the current state of the object considered as an INITIAL state
 	 * @param string $sAttCode The code of the attribute
-	 * @return integer Flags: the binary combination of the flags applicable to this attribute
-	 */	 	  	 	
+	 * @param array $aReasons
+	 *
+	 * @return integer The binary combination of the flags for the given attribute for the current state of the object
+	 *         considered as an INITIAL state.<br>
+	 *         Values can be one of the OPT_ATT_HIDDEN, OPT_ATT_READONLY, OPT_ATT_MANDATORY, ... (see define in metamodel.class.php)
+	 * @throws \CoreException
+	 *
+	 * @api
+	 *
+	 * @see GetAttributeFlags when modifying the object
+	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
 	{
 		$iFlags = 0;
@@ -1290,17 +1326,18 @@ abstract class DBObject implements iDisplay
 		return $iFlags; // No need to care about the synchro flags since we'll be creating a new object anyway
 	}
 
-	// check if the given (or current) value is suitable for the attribute
-	// return true if successfull
-	// return the error desciption otherwise
 	/**
+	 * Check if the given (or current) value is suitable for the attribute
+	 *
 	 * @param $sAttCode
-	 * @param null $value
+	 * @param boolean|string $value true if successfull, the error desciption otherwise
 	 *
 	 * @return bool|string
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
+	 *
+	 * @internal
 	 */
 	public function CheckValue($sAttCode, $value = null)
 	{
@@ -1431,8 +1468,13 @@ abstract class DBObject implements iDisplay
 		}
 		return true;
 	}
-	
-	// check attributes together
+
+	/**
+	 * check attributes together
+	 *
+	 * @return bool
+	 * @api
+	 */
 	public function CheckConsistency()
 	{
 		return true;
@@ -1560,12 +1602,14 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * check integrity rules (before inserting or updating the object)
-	 * a displayable error is returned
+	 * Check integrity rules (before inserting or updating the object)
+	 *
+	 * Errors should be inserted in {@link $m_aCheckIssues} and {@link $m_aCheckWarnings} arrays
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
+	 *
 	 * @api
 	 */
 	public function DoCheckToWrite()
@@ -1631,6 +1675,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
+	 *
 	 * @internal do not overwrite ! Use {@link DoCheckToWrite} instead
 	 */
 	final public function CheckToWrite()
@@ -1661,6 +1706,10 @@ abstract class DBObject implements iDisplay
 	// check if it is allowed to delete the existing object from the database
 	// a displayable error is returned
 	/**
+	 * check if it is allowed to delete the existing object from the database
+	 *
+	 * a displayable error is added in {@link $m_aDeleteIssues}
+	 *
 	 * @param \DeletionPlan $oDeletionPlan
 	 *
 	 * @throws \CoreException
@@ -1782,10 +1831,14 @@ abstract class DBObject implements iDisplay
 			}
 		}
 		return $aDelta;
-	} 
+	}
 
-	// List the attributes that have been changed
-	// Returns an array of attname => currentvalue
+	/**
+	 * List the attributes that have been changed
+	 *
+	 * @return array attname => currentvalue
+	 * @internal
+	 */
 	public function ListChanges()
 	{
 		if ($this->m_bIsInDB)
@@ -1845,13 +1898,21 @@ abstract class DBObject implements iDisplay
 		return true;
 	}
 
-	// used only by insert
+	/**
+	 * Used only by insert, Meant to be overloaded
+	 *
+	 * @api
+	 */
 	protected function OnObjectKeyReady()
     {
-        // Meant to be overloaded
     }
 
-	// used both by insert/update
+	/**
+	 * used both by insert/update
+	 *
+	 * @throws \CoreException
+	 * @internal
+	 */
 	private function DBWriteLinks()
 	{
 		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
@@ -1860,12 +1921,18 @@ abstract class DBObject implements iDisplay
 			if (!array_key_exists($sAttCode, $this->m_aTouchedAtt)) continue;
 			if (array_key_exists($sAttCode, $this->m_aModifiedAtt) && ($this->m_aModifiedAtt[$sAttCode] == false)) continue;
 
+			/** @var \ormLinkSet $oLinkSet */
 			$oLinkSet = $this->m_aCurrValues[$sAttCode];
 			$oLinkSet->DBWrite($this);
 		}
 	}
 
-	// used both by insert/update
+	/**
+	 * Used both by insert/update
+	 *
+	 * @throws \CoreException
+	 * @internal
+	 */
 	private function WriteExternalAttributes()
 	{
 		foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
@@ -1906,8 +1973,18 @@ abstract class DBObject implements iDisplay
 		self::$m_aBulkInsertItems = array();
 		self::$m_aBulkInsertCols = array();
 		self::$m_bBulkInsert = false;
-	} 
+	}
 
+	/**
+	 * Persists new object in the DB
+	 *
+	 * @param $sTableClass
+	 *
+	 * @return bool|int false if nothing to persist (no change), new key value otherwise
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @internal
+	 */
 	private function DBInsertSingleTable($sTableClass)
 	{
 		$sTable = MetaModel::DBGetTable($sTableClass);
@@ -1990,7 +2067,7 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * Insert of record for the new object into the database
+	 * Persists object to new records in the DB
 	 *
 	 * @return int key of the newly created object
 	 * @throws \ArchivedObjectException
@@ -2000,6 +2077,8 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreWarning
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 *
+	 * @internal
 	 */
 	public function DBInsertNoReload()
 	{
@@ -2048,6 +2127,7 @@ abstract class DBObject implements iDisplay
 					if (in_array($sState, $oAttDef->GetStates()))
 					{
 						// Start the stop watch and compute the deadlines
+						/** @var \ormStopWatch $oSW */
 						$oSW = $this->Get($sAttCode);
 						$oSW->Start($this, $oAttDef);
 						$oSW->ComputeDeadlines($this, $oAttDef);
@@ -2203,6 +2283,17 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
+	/**
+	 * @return int|null inserted object key
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @internal
+	 */
 	public function DBInsert()
 	{
 		$this->DBInsertNoReload();
@@ -3021,32 +3112,56 @@ abstract class DBObject implements iDisplay
 		self::$aPortalToURLMaker[$sPortalId] = $sUrlMakerClass;
 	}
 
-	// To be optionaly overloaded
+	/**
+	 * Can be overloaded
+	 *
+	 * @api
+	 */
 	protected function OnInsert()
 	{
 	}
-	
-	// To be optionaly overloaded
+
+	/**
+	 * Can be overloaded
+	 *
+	 * @api
+	 */
 	protected function AfterInsert()
 	{
 	}
 
-	// To be optionaly overloaded
+	/**
+	 * Can be overloaded
+	 *
+	 * @api
+	 */
 	protected function OnUpdate()
 	{
 	}
 
-	// To be optionaly overloaded
+	/**
+	 * Can be overloaded
+	 *
+	 * @api
+	 */
 	protected function AfterUpdate()
 	{
 	}
 
-	// To be optionaly overloaded
+	/**
+	 * Can be overloaded
+	 *
+	 * @api
+	 */
 	protected function OnDelete()
 	{
 	}
 
-	// To be optionaly overloaded
+	/**
+	 * Can be overloaded
+	 *
+	 * @api
+	 */
 	protected function AfterDelete()
 	{
 	}
@@ -3128,8 +3243,10 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 *  This object has been created/deleted, record that as a change in link sets pointing to this (if any)
-	 */	
+	 * This object has been created/deleted, record that as a change in link sets pointing to this (if any)
+	 *
+	 * @internal
+	 */
 	private function RecordLinkSetListChange($bAdd = true)
 	{
 		foreach(MetaModel::GetTrackForwardExternalKeys(get_class($this)) as $sExtKeyAttCode => $oLinkSet)
@@ -3154,6 +3271,9 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
+	/**
+	 * @internal
+	 */
 	protected function RecordObjCreation()
 	{
 		$this->RecordLinkSetListChange(true);
@@ -3527,6 +3647,15 @@ abstract class DBObject implements iDisplay
 		return $iFlags;
 	}
 
+	/**
+	 * @return bool true if this object is used in a data synchro
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @internal
+	 * @see \SynchroDataSource
+	 */
 	public function InSyncScope()
 	{
 		//

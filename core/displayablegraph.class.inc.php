@@ -1273,6 +1273,7 @@ class DisplayableGraph extends SimpleGraph
 
 		$oPdf->SetAutoPageBreak(true, $fBreakMargin);
 		$oPdf->SetAlpha(1);
+		$oPdf->SetTextColor(0, 0, 0);
 	}
 	
 	/**

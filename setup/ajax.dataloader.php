@@ -176,8 +176,9 @@ try
 			$sConfigFile = utils::GetConfigFilePath();
 			if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig())
 			{
-				$oPage->error("<b>Error:</b> the configuration file '".$sConfigFile."' already exists and cannot be overwritten.");
-				$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".realpath($sConfigFile)."</b>' can be modified by the web server.");
+				$sRelativePath = utils::GetConfigFilePathRelative();
+				$oPage->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
+				$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
 				$oPage->output();
 			}
 			else

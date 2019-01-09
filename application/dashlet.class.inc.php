@@ -1272,6 +1272,10 @@ abstract class DashletGroupBy extends Dashlet
 			$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 			$oBlock = new DisplayBlock($oFilter, $sType);
 			$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
+			if($bEditMode)
+			{
+				$oPage->add('<div class="dashlet-blocker"></div>');
+			}
 			$oPage->add('</div>');
 		}
 	}

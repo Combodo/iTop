@@ -2478,6 +2478,16 @@ select#org_id {
 	padding: 5px;
 	margin:0;
 }
+/* Prevent cursor clicking on the calendar (eg. While editing dashlet) */
+.dashlet-blocker {
+	position: absolute;
+	z-index: 9; /* To be above calendar links & all, but below .close-box (9) */
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	cursor: not-allowed;
+}
 td.layout_cell {
 	height: 50px; /* min-height does not work */
 	vertical-align: top;

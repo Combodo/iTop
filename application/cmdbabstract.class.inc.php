@@ -3690,6 +3690,9 @@ EOF
 		return $aErrors;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function DBInsertNoReload()
 	{
 		$res = parent::DBInsertNoReload();
@@ -3707,6 +3710,7 @@ EOF
 	}
 
 	/**
+	 * @inheritdoc
 	 * Attaches InlineImages to the current object
 	 */
 	protected function OnObjectKeyReady()
@@ -3831,6 +3835,12 @@ EOF
 		$this->bAllowWrite = $bAllow;
 	}
 
+	/**
+	 * @inheritdoc
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
 	public function DoCheckToWrite()
 	{
 		parent::DoCheckToWrite();

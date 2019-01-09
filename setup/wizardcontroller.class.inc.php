@@ -173,10 +173,11 @@ class WizardController
 				// The configuration file already exists
 				if (!is_writable($sConfigFile))
 				{
+					$sRelativePath = utils::GetConfigFilePathRelative();
 					$oP = new SetupPage('Installation Cannot Continue');
 					$oP->add("<h2>Fatal error</h2>\n");
-					$oP->error("<b>Error:</b> the configuration file '".$sConfigFile."' already exists and cannot be overwritten.");
-					$oP->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".realpath($sConfigFile)."</b>' can be modified by the web server.");
+					$oP->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
+					$oP->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
 					$oP->p('<button type="button" onclick="window.location.reload()">Reload</button>');
 					$oP->output();
 					return;

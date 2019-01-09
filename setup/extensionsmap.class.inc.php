@@ -308,12 +308,12 @@ class iTopExtensionsMap
 							$sModuleVersion = '0.0.1';
 						}
 						
-						if ($sParentExtensionId !== null)
+						if (($sParentExtensionId !== null) && (array_key_exists($sParentExtensionId, $this->aExtensions)) && ($this->aExtensions[$sParentExtensionId] instanceof iTopExtension))
 						{
 							// Already inside an extension, let's add this module the list of modules belonging to this extension
 							$this->aExtensions[$sParentExtensionId]->aModules[] = $sModuleName;
 							$this->aExtensions[$sParentExtensionId]->aModuleVersion[$sModuleName] = $sModuleVersion;
-							}
+						}
 						else
 						{
 							// Not already inside an folder containing an 'extension.xml' file
