@@ -42,7 +42,7 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [Changes since the previous version][54]
  - [New features][55]
  - [Migration notes][56]
- - [Download iTop 2.5.0][57]
+ - [Download iTop 2.5.1][57]
  
 
 ### Version 2.4  
@@ -132,7 +132,7 @@ We would like to give a special thank you to the people from the community who c
 [54]: https://www.itophub.io/wiki/page?id=2_5_0:release:change_log
 [55]: https://www.itophub.io/wiki/page?id=2_5_0:release:2_5_whats_new
 [56]: https://www.itophub.io/wiki/page?id=2_5_0:install:240_to_250_migration_notes
-[57]: https://sourceforge.net/projects/itop/files/itop/2.5.0
+[57]: https://sourceforge.net/projects/itop/files/itop/2.5.1
 
 [58]: https://www.itophub.io/wiki/page?id=2_6_0:release:change_log
 [59]: https://www.itophub.io/wiki/page?id=2_6_0:release:2_6_whats_new
