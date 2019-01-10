@@ -49,22 +49,25 @@ iTop also offers mass import tools and web services to integrate with your IT
 
 
 
-## Releases
-### Version 2.6  
+## Last releases
+### Versions 2.6.*
+ - 2.6.0 published on January 9, 2019  
  - [Changes since the previous version][58]
  - [New features][59]
  - [Migration notes][60]
  - [Download iTop 2.6.0][61]
 
 
-### Version 2.5  
+### Versions 2.5.*
+ - 2.5.0 published on July 11, 2018
  - [Changes since the previous version][54]
  - [New features][55]
  - [Migration notes][56]
  - [Download iTop 2.5.1][57]
  
 
-### Version 2.4  
+### Versions 2.4.*
+ - 2.4.0 published on November 16, 2017
  - [Changes since the previous version][50]
  - [New features][51]
  - [Migration notes][52]
