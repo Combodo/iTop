@@ -29,7 +29,26 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [iTop documentation][4] for iTop and official extensions
  - [iTop extensions][5] for discovering and installing extensions
 
- 
+
+
+[1]: https://sourceforge.net/p/itop/discussion/
+[2]: https://sourceforge.net/p/itop/tickets/
+[3]: https://sourceforge.net/projects/itop/files/itop/
+[4]: https://www.itophub.io/wiki
+[5]: https://store.itophub.io/en_US/
+
+[10]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#configuration_management_cmdb
+[11]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#ticketing
+[12]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#service_management
+[13]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#change_management
+[14]: https://www.itophub.io/wiki/page?id=2_5_0%3Aimplementation%3Astart#service_level_agreements_and_targets
+[15]: https://www.itophub.io/wiki/page?id=2_5_0%3Auser%3Aactions#relations
+[16]: https://www.itophub.io/wiki/page?id=2_5_0%3Auser%3Abulk_modify#uploading_data
+[17]: https://www.itophub.io/wiki/page?id=2_5_0%3Aadmin%3Aaudit
+[18]: https://www.itophub.io/wiki/page?id=2_5_0%3Aadvancedtopics%3Adata_synchro_overview
+
+
+
 ## Releases
 ### Version 2.6  
  - [Changes since the previous version][58]
@@ -52,9 +71,29 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [Download iTop 2.4.1][53]
 
 
+
+[50]: https://www.itophub.io/wiki/page?id=2_4_0:release:change_log
+[51]: https://www.itophub.io/wiki/page?id=2_4_0:release:2_4_whats_new
+[52]: https://www.itophub.io/wiki/page?id=2_4_0:install:230_to_240_migration_notes
+[53]: https://sourceforge.net/projects/itop/files/itop/2.4.1
+
+[54]: https://www.itophub.io/wiki/page?id=2_5_0:release:change_log
+[55]: https://www.itophub.io/wiki/page?id=2_5_0:release:2_5_whats_new
+[56]: https://www.itophub.io/wiki/page?id=2_5_0:install:240_to_250_migration_notes
+[57]: https://sourceforge.net/projects/itop/files/itop/2.5.1
+
+[58]: https://www.itophub.io/wiki/page?id=2_6_0:release:change_log
+[59]: https://www.itophub.io/wiki/page?id=2_6_0:release:2_6_whats_new
+[60]: https://www.itophub.io/wiki/page?id=2_6_0:install:250_to_260_migration_notes
+[61]: https://sourceforge.net/projects/itop/files/itop/2.6.0
+
+
+
 # About Us
 
 iTop development is sponsored, led and supported by [Combodo][0].
+
+[0]: https://www.combodo.com
 
 
 # Contributors
@@ -100,41 +139,3 @@ We would like to give a special thank you to the people from the community who c
  - Hardis
  - ITOMIG
 
-
-
-[0]: https://www.combodo.com
-
-[1]: https://sourceforge.net/p/itop/discussion/
-[2]: https://sourceforge.net/p/itop/tickets/
-[3]: https://sourceforge.net/projects/itop/files/itop/
-[4]: https://www.itophub.io/wiki
-[5]: https://store.itophub.io/en_US/
-
-
-
-[10]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#configuration_management_cmdb
-[11]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#ticketing
-[12]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#service_management
-[13]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#change_management
-[14]: https://www.itophub.io/wiki/page?id=2_5_0%3Aimplementation%3Astart#service_level_agreements_and_targets
-[15]: https://www.itophub.io/wiki/page?id=2_5_0%3Auser%3Aactions#relations
-[16]: https://www.itophub.io/wiki/page?id=2_5_0%3Auser%3Abulk_modify#uploading_data
-[17]: https://www.itophub.io/wiki/page?id=2_5_0%3Aadmin%3Aaudit
-[18]: https://www.itophub.io/wiki/page?id=2_5_0%3Aadvancedtopics%3Adata_synchro_overview
-
-
-
-[50]: https://www.itophub.io/wiki/page?id=2_4_0:release:change_log
-[51]: https://www.itophub.io/wiki/page?id=2_4_0:release:2_4_whats_new
-[52]: https://www.itophub.io/wiki/page?id=2_4_0:install:230_to_240_migration_notes
-[53]: https://sourceforge.net/projects/itop/files/itop/2.4.1
-
-[54]: https://www.itophub.io/wiki/page?id=2_5_0:release:change_log
-[55]: https://www.itophub.io/wiki/page?id=2_5_0:release:2_5_whats_new
-[56]: https://www.itophub.io/wiki/page?id=2_5_0:install:240_to_250_migration_notes
-[57]: https://sourceforge.net/projects/itop/files/itop/2.5.1
-
-[58]: https://www.itophub.io/wiki/page?id=2_6_0:release:change_log
-[59]: https://www.itophub.io/wiki/page?id=2_6_0:release:2_6_whats_new
-[60]: https://www.itophub.io/wiki/page?id=2_6_0:install:250_to_260_migration_notes
-[61]: https://sourceforge.net/projects/itop/files/itop/2.6.0
