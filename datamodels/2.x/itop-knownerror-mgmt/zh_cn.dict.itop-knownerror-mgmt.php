@@ -186,5 +186,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'FAQ',
-	'Brick:Portal:FAQ:Title+' => '<p>需要帮助?</p><p>查阅列表中的常见问题，或许可以立即找到令您满意的答案.</p>',
+	'Brick:Portal:FAQ:Title+' => '<p>需要帮助?</p><p>查阅列表中的常见问题,或许可以立即找到令您满意的答案.</p>',
 ));
