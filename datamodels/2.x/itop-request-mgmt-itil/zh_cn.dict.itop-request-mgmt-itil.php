@@ -265,7 +265,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+	'Organization:Overview:UserRequests' => '该组织的所有用户需求',
+	'Organization:Overview:MyUserRequests' => '我在该组织内发起的需求',
+	'Organization:Overview:Tickets' => '该组织内的所有工单',
 ));
