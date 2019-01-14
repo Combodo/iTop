@@ -1595,7 +1595,7 @@ class DBObjectSearch extends DBSearch
 			}
 			$aContextData['sModifierProperties'] = $sModifierProperties;
 
-			$sRawId = $sOqlQuery.$sModifierProperties;
+			$sRawId = Dict::GetUserLanguage().'-'.$sOqlQuery.$sModifierProperties;
 			if (!is_null($aAttToLoad))
 			{
 				$sRawId .= json_encode($aAttToLoad);
