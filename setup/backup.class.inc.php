@@ -528,14 +528,21 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		 */
 		public function DownloadBackup($sFile)
 		{
-			header('Content-Description: File Transfer');
-			header('Content-Type: multipart/x-zip');
-			header('Content-Disposition: inline; filename="'.basename($sFile).'"');
-			header('Expires: 0');
-			header('Cache-Control: must-revalidate');
-			header('Pragma: public');
-			header('Content-Length: '.filesize($sFile));
-			readfile($sFile);
+			if (file_exists($sFile))
+			{
+				header('Content-Description: File Transfer');
+				header('Content-Type: multipart/x-zip');
+				header('Content-Disposition: inline; filename="'.basename($sFile).'"');
+				header('Expires: 0');
+				header('Cache-Control: must-revalidate');
+				header('Pragma: public');
+				header('Content-Length: '.filesize($sFile));
+				readfile($sFile) ;
+			}
+			else
+			{
+				throw new InvalidParameterException('Invalid file path'); 
+			}
 		}
 
 		/**
