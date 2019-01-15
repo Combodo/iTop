@@ -363,6 +363,11 @@ class CriterionConversionTest extends ItopDataTestCase
 				'ExpectedOQL' => "SELECT `B` FROM Person AS `B` WHERE (`B`.`name` LIKE '%A%')",
 				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'contains', 'values' => array(array('value' => 'A')))),
 			),
+			'string NOT contains' => array(
+				'OQL' => "SELECT Person AS B WHERE B.name NOT LIKE '%A%'",
+				'ExpectedOQL' => "SELECT `B` FROM Person AS `B` WHERE (`B`.`name` NOT LIKE '%A%')",
+				'ExpectedCriterion' => array(array('widget' => 'string', 'operator' => 'NOT LIKE', 'values' => array(array('value' => '%A%')))),
+			),
 			'string regexp' => array(
 				'OQL' => "SELECT Server WHERE name REGEXP '^dbserver[0-9]+\\\\\\\\..+\\\\\\\\.[a-z]{2,3}$'",
 				'ExpectedOQL' => "SELECT `Server` FROM Server AS `Server` WHERE (`Server`.`name` REGEXP '^dbserver[0-9]+\\\\\\\\..+\\\\\\\\.[a-z]{2,3}$')",
