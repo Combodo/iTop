@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+ @copyright   Copyright (C) 2010-2019 Combodo SARL
+ @license     https://www.combodo.com/documentation/combodo-software-license.html
+ -->
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3">
     <classes>
         <class id="ExpirationRule" _delta="define">

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<licenses>
+	<license>
+		<product>Notify on expiration</product>
+		<author>2010-2019 Combodo SARL</author>
+		<license_type>Combodo Software License</license_type>
+		<text><![CDATA[
+<h3>Combodo Software License</h3>
+<p>Version 1.0</p>
+<p>Copyright (c) 2018 Combodo SARL. All rights reserved.</p>
+<p>Redistribution and use in source and binary forms, with or without modification, of this software is permitted provided that the following conditions are met:</p>
+<ol>
+<li>Combodo grants you a non-exclusive, non-sublicensable and non-transferable license to install and use the software for your own business purposes, in accordance with this agreement, the documentation and all laws.</li>
+<li>Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</li>
+<li>Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.</li>
+<li>The redistribution of the software covered by this license is limited to the individual or the company who purchased the software and its affiliates.</li>
+<li>You cannot rent, lease, distribute, sell, sublicense, or transfer the software.</li>
+<li>The use of the software is <b>limited to only one set of production data</b> (i.e. only one instance of iTop managing production data).</li>
+<li>In the context of this license, the interaction with the installed software across a computer network is not considered as a redistribution.</li>
+<li>Combodo SARL may publish revised and/or new versions of the license from time to time. Each version will be given a distinguishing version number.</li>
+Once covered code has been published under a particular version of the license, you may always continue to use it under the terms of that version. You may also choose to use such covered code under the terms of any subsequent version of the license published by Combodo SARL. No one other than Combodo SARL has the right to modify the terms applicable to covered code created under this License.</li>
+</ol>
+<p>THIS SOFTWARE IS PROVIDED BY COMBODO SARL “AS IS” AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL COMBODO SARL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+For more information on Combodo SARL, please see <a href="https://www.combodo.com">https://www.combodo.com</a>.</p>
+]]></text>
+    </license>
+</licenses>
