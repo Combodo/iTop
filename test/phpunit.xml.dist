@@ -41,6 +41,9 @@
          verbose="false">
 
     <testsuites>
+        <testsuite name="Extensions">
+            <directory>../env-production/*/test</directory>
+        </testsuite>
         <testsuite name="Core">
             <directory>core</directory>
         </testsuite>
