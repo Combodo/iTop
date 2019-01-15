@@ -27,11 +27,12 @@ class ExpressionCache
 
 		$oExpr = null;
 		$sKey = static::GetKey($sClass, $sAttCode);
-		if (class_exists('ExpressionCacheData'))
+		$sCacheClass = self::GetCacheClassName();
+		if (class_exists($sCacheClass))
 		{
-			if (array_key_exists($sKey, ExpressionCacheData::$aCache))
+			if (array_key_exists($sKey, $sCacheClass::$aCache))
 			{
-				$sVal = ExpressionCacheData::$aCache[$sKey];
+				$sVal = $sCacheClass::$aCache[$sKey];
 				$oExpr = unserialize($sVal);
 			}
 		}
@@ -48,6 +49,7 @@ class ExpressionCache
 		{
 			Dict::SetUserLanguage($sLang);
 			$sFilePath = static::GetCacheFileName();
+			$sCacheClass = self::GetCacheClassName();
 
 			if (!is_file($sFilePath))
 			{
@@ -56,7 +58,7 @@ class ExpressionCache
 // Copyright (c) 2010-2019 Combodo SARL
 // Generated Expression Cache file for $sLang
 
-class ExpressionCacheData
+class $sCacheClass
 {
 	static \$aCache =  array(
 EOF;
@@ -101,9 +103,28 @@ EOF;
 
 	public static function GetCacheFileName()
 	{
+		$sLangName = self::GetLangName();
+		return utils::GetCachePath().'expressioncache-' . $sLangName . '.php';
+	}
+
+	/**
+	 * @return string
+	 */
+	private static function GetCacheClassName()
+	{
+		$sLangName = self::GetLangName();
+		$sCacheClass = "ExpressionCacheData$sLangName";
+		return $sCacheClass;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	private static function GetLangName()
+	{
 		$sLang = Dict::GetUserLanguage();
-		$sLang = str_replace(" ", "", $sLang);
-		return utils::GetCachePath().'expressioncache-' . $sLang . '.php';
+		$sLangName = str_replace(" ", "", $sLang);
+		return $sLangName;
 	}
 }
 
