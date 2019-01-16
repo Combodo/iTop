@@ -107,7 +107,7 @@ function DoLanding(WebPage $oPage)
     $sPath = APPROOT.'data/downloaded-extensions/';
     if (!is_dir($sPath))
     {
-        if (!mkdir($sPath)) throw new Exception("ERROR: Unable to create the directory '$sPath'. Cannot download any extension. Check the access rights on '".dirname($sPath)."'");
+        if (!mkdir($sPath)) throw new Exception("ERROR: Unable to create the directory '$sPath'. Cannot download any extension. Check the access rights on '".dirname('data/downloaded-extensions/')."'");
     }
     else
     {
@@ -126,7 +126,7 @@ function DoLanding(WebPage $oPage)
         $oZip = new ZipArchive();
         if (!$oZip->open($sZipArchiveFile))
         {
-            throw new Exception('Unable to open "'.$sZipArchiveFile.'" for extraction. Make sure that the directory "'.$sPath.'" is writable for the web server.');
+            throw new Exception('Unable to open "'.$sZipArchiveFile.'" for extraction. Make sure that the directory "'.'data/downloaded-extensions/'.'" is writable for the web server.');
         }
         for($idx  = 0; $idx < $oZip->numFiles; $idx++)
         {
