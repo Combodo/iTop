@@ -70,7 +70,7 @@ class NotifyOnExpiration implements iScheduledProcess
 			}
 			$oNow = new DateTime();
 			$iNextPos = false;
-			for ($iDay = $oNow->format('N') ; $iDay <= 7 ; $iDay++)
+			for ($iDay = $oNow->format('N'); $iDay <= 7; $iDay++)
 			{
 				$iNextPos = array_search($iDay, $aDays);
 				if ($iNextPos !== false)
@@ -101,8 +101,9 @@ class NotifyOnExpiration implements iScheduledProcess
 				$oRet = clone $oNow;
 				$oRet->modify('+'.$iMove.' days');
 			}
-			$oRet->setTime((int)$aMatches[1], (int) $aMatches[2]);
+			$oRet->setTime((int)$aMatches[1], (int)$aMatches[2]);
 		}
+
 		return $oRet;
 	}
 
@@ -123,11 +124,11 @@ class NotifyOnExpiration implements iScheduledProcess
 		$this->Trace('Processing '.$oRulesSet->Count().' active expiration rules...');
 
 		$iTotalProcessedObjectsCount = 0;
-		while($oRule = $oRulesSet->Fetch())
+		while ($oRule = $oRulesSet->Fetch())
 		{
 			$iRuleProcessedObjectsCount = 0;
 			$this->Trace('Processing rule "'.$oRule->Get('friendlyname').'" (#'.$oRule->GetKey().')...');
-			
+
 			try
 			{
 				// Retrieving rule's params
@@ -139,11 +140,11 @@ class NotifyOnExpiration implements iScheduledProcess
 
 				// Prepare the Rule information to be passed to the notification
 				$aRuleContext = $oRule->ToArgs('rule');
-				
-                // Get applicable Triggers for this object class
+
+				// Get applicable Triggers for this object class
 				$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
 				$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnExpirationRule AS t WHERE t.target_class IN ('$sClassList')"));
-				
+
 				$oSet = new DBObjectSet($oSearch);
 				$this->Trace('|- Objects:');
 				/** @var $oToTrigger DBObject */
@@ -162,9 +163,9 @@ class NotifyOnExpiration implements iScheduledProcess
 						{
 							$oTrigger->DoActivate($aContext);
 						}
-                        // The same set of Triggers is reused for each object returned by the Rule as they all belongs to the same class
+						// The same set of Triggers is reused for each object returned by the Rule as they all belongs to the same class
 						$oTriggerSet->Rewind();
-						
+
 						$iRuleProcessedObjectsCount++;
 						$iTotalProcessedObjectsCount++;
 
@@ -187,14 +188,14 @@ class NotifyOnExpiration implements iScheduledProcess
 					$this->Trace('Stopped because time limit exceeded!');
 				}
 			}
-			catch(Exception $e)
+			catch (Exception $e)
 			{
 				$this->Trace('Skipping rule as there was an exception! ('.$e->getMessage().')');
 			}
 		}
 
 		// Report
-		if($aReport['reached_deadline'] === 0)
+		if ($aReport['reached_deadline'] === 0)
 		{
 			return 'No object to process';
 		}
@@ -203,17 +204,18 @@ class NotifyOnExpiration implements iScheduledProcess
 			$iClosedCount = count($aReport['triggered']);
 			$iNotClosedCount = count($aReport['not_triggered']);
 
-			$sReport = $aReport['reached_deadline'] . " objects reached triggering date";
+			$sReport = $aReport['reached_deadline']." objects reached triggering date";
 			$sReport .= " - ".$iClosedCount." were triggered";
-			if($iClosedCount > 0)
+			if ($iClosedCount > 0)
 			{
 				$sReport .= " (".implode(", ", $aReport['triggered']).")";
 			}
 			$sReport .= " - ".$iNotClosedCount." were not triggered";
-			if($iNotClosedCount > 0)
+			if ($iNotClosedCount > 0)
 			{
 				$sReport .= " (".implode(", ", $aReport['not_triggered']).")";
 			}
+
 			return $sReport;
 		}
 	}
@@ -227,7 +229,15 @@ class NotifyOnExpiration implements iScheduledProcess
 	 */
 	public function InterpretWeekDays()
 	{
-		static $aWEEKDAYTON = array('monday' => 1, 'tuesday' => 2, 'wednesday' => 3, 'thursday' => 4, 'friday' => 5, 'saturday' => 6, 'sunday' => 7);
+		static $aWEEKDAYTON = array(
+			'monday' => 1,
+			'tuesday' => 2,
+			'wednesday' => 3,
+			'thursday' => 4,
+			'friday' => 5,
+			'saturday' => 6,
+			'sunday' => 7,
+		);
 		$aDays = array();
 		$sWeekDays = MetaModel::GetConfig()->GetModuleSetting(static::MODULE_CODE, static::KEY_MODULE_SETTING_WEEKDAYS,
 			static::DEFAULT_MODULE_SETTING_WEEKDAYS);
@@ -253,6 +263,7 @@ class NotifyOnExpiration implements iScheduledProcess
 		}
 		$aDays = array_unique($aDays);
 		sort($aDays);
+
 		return $aDays;
 	}
 
