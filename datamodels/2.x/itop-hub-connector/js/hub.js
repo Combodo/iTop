@@ -18,7 +18,8 @@ $(function()
 				extensions_installation: 'Installation of the extensions...',
 				installation_successful: 'Installation successful!',
 				rollback: 'iTop configuration has NOT been modified.'
-			}
+			},
+			authent : ''
 		},
 	
 		// the constructor
@@ -106,7 +107,7 @@ $(function()
 			var aExtensionCodes = [];
 			var aExtensionDirs = [];
 			$('.choice :input:checked').each(function() { aExtensionCodes.push($(this).attr('data-extension-code'));  aExtensionDirs.push($(this).attr('data-extension-dir')); });
-			$.post(this.options.self_url, {operation: 'compile', extension_codes: aExtensionCodes, extension_dirs: aExtensionDirs}, function(data) { me._on_compile(data) }, 'json');			
+			$.post(this.options.self_url, {operation: 'compile', extension_codes: aExtensionCodes, extension_dirs: aExtensionDirs, authent: this.options.authent}, function(data) { me._on_compile(data) }, 'json');			
 		},
 		_on_compile: function(data)
 		{
@@ -125,7 +126,7 @@ $(function()
 		{
 			$('#hub-installation-progress-text').html('<i class="fa fa-cogs"></i> '+this.options.labels.extensions_installation);
 			var me = this;
-			$.post(this.options.self_url, {operation: 'move_to_production'}, function(data) { me._on_move_to_prod(data) }, 'json');			
+			$.post(this.options.self_url, {operation: 'move_to_production', authent: this.options.authent}, function(data) { me._on_move_to_prod(data) }, 'json');
 		},
 		_on_move_to_prod: function(data)
 		{

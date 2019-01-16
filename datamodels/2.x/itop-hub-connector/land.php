@@ -146,6 +146,9 @@ function DoLanding(WebPage $oPage)
 
 function DoInstall(WebPage $oPage)
 {
+	$sUID = hash('sha256', rand());
+	file_put_contents(APPROOT.'data/hub/compile_authent', $sUID);
+	
     $oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/css/hub.css');
     $oPage->add('<table class="module-selection-banner"><tr>');
     $sBannerUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-hub-connector/images/landing-extension.png';
@@ -259,6 +262,7 @@ function DoInstall(WebPage $oPage)
     		'installation_successful' => Dict::S('iTopHub:InstallationProgress:InstallationSuccessful'),
     		'rollback' => Dict::S('iTopHub:ConfigurationSafelyReverted'),
     	),
+	    'authent' => $sUID,
     );
     
     $sWidgetParams = json_encode($aWidgetParams);
@@ -301,6 +305,10 @@ try
         break;
         
         case 'install':
+        if (!file_exists(APPROOT.'data/hub'))
+        {
+	        mkdir(APPROOT.'data/hub');
+        }
         DoInstall($oPage);
         break;
             
