@@ -19,10 +19,11 @@
 class NotifyOnExpiration implements iScheduledProcess
 {
 	const MODULE_CODE = 'combodo-notify-on-expiration';
-	const MODULE_SETTING_ENABLED = 'enabled';
-	const MODULE_SETTING_DEBUG = 'debug';
-	const MODULE_SETTING_WEEKDAYS = 'week_days';
-	const MODULE_SETTING_TIME = 'time';
+
+	const KEY_MODULE_SETTING_ENABLED = 'enabled';
+	const KEY_MODULE_SETTING_DEBUG = 'debug';
+	const KEY_MODULE_SETTING_WEEKDAYS = 'week_days';
+	const KEY_MODULE_SETTING_TIME = 'time';
 
 	const DEFAULT_MODULE_SETTING_ENABLED = true;
 	const DEFAULT_MODULE_SETTING_DEBUG = false;
@@ -36,7 +37,8 @@ class NotifyOnExpiration implements iScheduledProcess
 	 */
 	function __construct()
 	{
-		$this->bDebug = (bool) MetaModel::GetModuleSetting(static::MODULE_CODE, static::MODULE_SETTING_DEBUG, static::DEFAULT_MODULE_SETTING_DEBUG);
+		$this->bDebug = (bool)MetaModel::GetModuleSetting(static::MODULE_CODE, static::KEY_MODULE_SETTING_DEBUG,
+			static::DEFAULT_MODULE_SETTING_DEBUG);
 	}
 
 	/**
@@ -46,7 +48,8 @@ class NotifyOnExpiration implements iScheduledProcess
 	 */
 	public function GetNextOccurrence()
 	{
-		$bEnabled = MetaModel::GetConfig()->GetModuleSetting(static::MODULE_CODE, static::MODULE_SETTING_ENABLED, static::DEFAULT_MODULE_SETTING_ENABLED);
+		$bEnabled = MetaModel::GetConfig()->GetModuleSetting(static::MODULE_CODE, static::KEY_MODULE_SETTING_ENABLED,
+			static::DEFAULT_MODULE_SETTING_ENABLED);
 		if (!$bEnabled)
 		{
 			$oRet = new DateTime('3000-01-01');
@@ -59,7 +62,8 @@ class NotifyOnExpiration implements iScheduledProcess
 
 			// 2nd - Find the next active week day
 			//
-			$sRunTime = MetaModel::GetConfig()->GetModuleSetting(static::MODULE_CODE, static::MODULE_SETTING_TIME, static::DEFAULT_MODULE_SETTING_TIME);
+			$sRunTime = MetaModel::GetConfig()->GetModuleSetting(static::MODULE_CODE, static::KEY_MODULE_SETTING_TIME,
+				static::DEFAULT_MODULE_SETTING_TIME);
 			if (!preg_match('/^([01]?\d|2[0-3]):[0-5]?\d(:[0-5]?\d)?$/', $sRunTime, $aMatches))
 			{
 				throw new Exception(static::MODULE_CODE.": wrong format for setting 'time' (found '$sRunTime')");
@@ -225,7 +229,8 @@ class NotifyOnExpiration implements iScheduledProcess
 	{
 		static $aWEEKDAYTON = array('monday' => 1, 'tuesday' => 2, 'wednesday' => 3, 'thursday' => 4, 'friday' => 5, 'saturday' => 6, 'sunday' => 7);
 		$aDays = array();
-		$sWeekDays = MetaModel::GetConfig()->GetModuleSetting(static::MODULE_CODE, static::MODULE_SETTING_WEEKDAYS, static::DEFAULT_MODULE_SETTING_WEEKDAYS);
+		$sWeekDays = MetaModel::GetConfig()->GetModuleSetting(static::MODULE_CODE, static::KEY_MODULE_SETTING_WEEKDAYS,
+			static::DEFAULT_MODULE_SETTING_WEEKDAYS);
 		if ($sWeekDays != '')
 		{
 			$aWeekDaysRaw = explode(',', $sWeekDays);
