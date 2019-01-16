@@ -45,6 +45,7 @@ class NotifyOnExpiration implements iScheduledProcess
 	 * Gives the exact time at which the process must be run next time
 	 *
 	 * @return \DateTime
+	 * @throws \Exception
 	 */
 	public function GetNextOccurrence()
 	{
@@ -109,6 +110,13 @@ class NotifyOnExpiration implements iScheduledProcess
 
 	/**
 	 * @inheritdoc
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function Process($iTimeLimit)
 	{
@@ -147,18 +155,19 @@ class NotifyOnExpiration implements iScheduledProcess
 
 				$oSet = new DBObjectSet($oSearch);
 				$this->Trace('|- Objects:');
-				/** @var $oToTrigger DBObject */
+				/** @var DBObject $oToTrigger */
 				while ((time() < $iTimeLimit) && $oToTrigger = $oSet->Fetch())
 				{
 					// Catching exceptions so the process don't get stucked on this object
 					try
 					{
 						$aReport['reached_deadline']++;
-						// 
+						//
 						// $aContext['ruleName'] = $oRule->Get('name');
 						// Combine the current object :this and :rule to be available in the notification
 						$aContext = $oToTrigger->ToArgs('this');
 						$aContext = array_merge($aContext, $aRuleContext);
+						/** @var TriggerOnExpirationRule $oTrigger */
 						while ($oTrigger = $oTriggerSet->Fetch())
 						{
 							$oTrigger->DoActivate($aContext);
@@ -226,6 +235,7 @@ class NotifyOnExpiration implements iScheduledProcess
 	 * Note: This comes from itop-backup scheduled task.
 	 *
 	 * @returns array of int (monday = 1)
+	 * @throws \Exception
 	 */
 	public function InterpretWeekDays()
 	{
