@@ -8,7 +8,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'combodo-notify-on-expiration/0.1.0',
+	'combodo-notify-on-expiration/1.0.0',
 	array(
 		// Identification
 		//
