@@ -48,7 +48,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:Landing:Install' => '扩展安装进行中...',
 	'iTopHub:CompiledOK' => '编译成功.',
 	'iTopHub:ConfigurationSafelyReverted' => '安装时发生错误!<br/>iTop 配置将不会改变.',
-	
+
 	'iTopHub:InstalledExtensions' => '本机已安装的扩展',
 	'iTopHub:ExtensionCategory:Manual' => '手动安装的扩展',
 	'iTopHub:ExtensionCategory:Manual+' => '下列已安装的扩展是手动将文件放置到 %1$s 目录的:',
@@ -57,7 +57,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:NoExtensionInThisCategory' => '尚未安装扩展.<br/><br/>浏览iTop Hub ,去寻找符合您要求的扩展.',
 	'iTopHub:ExtensionNotInstalled' => '未安装',
 	'iTopHub:GetMoreExtensions' => '从iTop Hub 获取扩展...',
-	
+
 	'iTopHub:LandingWelcome' => '恭喜! 下列来自iTop Hub 的扩展已被下载并安装到本机.',
 	'iTopHub:GoBackToITopBtn' => '返回iTop',
 	'iTopHub:Uncompressing' => '扩展解压中...',
@@ -66,7 +66,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:DBBackupSentence' => '在升级之前,备份数据库和iTop 配置文件',
 	'iTopHub:DeployBtn' => '安装 !',
 	'iTopHub:DatabaseBackupProgress' => '本机备份...',
-	
+
 	'iTopHub:InstallationEffect:Install' => 'Version: %1$s 将被安装.',
 	'iTopHub:InstallationEffect:NoChange' => 'Version: %1$s 已安装. 保持不变.',
 	'iTopHub:InstallationEffect:Upgrade' => '将从 version %1$s <b>升级</b> 到 version %2$s.',
@@ -76,7 +76,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:InstallationEffect:MissingDependencies' => '扩展无法安装,因为未知的依赖.',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => '该扩展依赖模块: %1$s',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => '安装成功!',
-	
+
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => '已安装',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>未</b> 安装.',
