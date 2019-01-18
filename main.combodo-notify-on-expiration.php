@@ -45,7 +45,7 @@ class NotifyOnExpiration implements iScheduledProcess
 	 * Gives the exact time at which the process must be run next time
 	 *
 	 * @return \DateTime
-	 * @throws \Exception
+	 * @throws \CoreUnexpectedValue
 	 */
 	public function GetNextOccurrence()
 	{
@@ -67,7 +67,7 @@ class NotifyOnExpiration implements iScheduledProcess
 				static::DEFAULT_MODULE_SETTING_TIME);
 			if (!preg_match('/^([01]?\d|2[0-3]):[0-5]?\d(:[0-5]?\d)?$/', $sRunTime, $aMatches))
 			{
-				throw new Exception(static::MODULE_CODE.": wrong format for setting 'time' (found '$sRunTime')");
+				throw new CoreUnexpectedValue(static::MODULE_CODE.": wrong format for setting 'time' (found '$sRunTime')");
 			}
 			$oNow = new DateTime();
 			$iNextPos = false;
@@ -235,7 +235,7 @@ class NotifyOnExpiration implements iScheduledProcess
 	 * Note: This comes from itop-backup scheduled task.
 	 *
 	 * @returns array of int (monday = 1)
-	 * @throws \Exception
+	 * @throws \CoreUnexpectedValue
 	 */
 	public function InterpretWeekDays()
 	{
@@ -263,13 +263,13 @@ class NotifyOnExpiration implements iScheduledProcess
 				}
 				else
 				{
-					throw new Exception(static::MODULE_CODE.": wrong format for setting 'week_days' (found '$sWeekDay')");
+					throw new CoreUnexpectedValue(static::MODULE_CODE.": wrong format for setting 'week_days' (found '$sWeekDay')");
 				}
 			}
 		}
 		if (count($aDays) == 0)
 		{
-			throw new Exception(static::MODULE_CODE.": missing setting 'week_days'");
+			throw new CoreUnexpectedValue(static::MODULE_CODE.": missing setting 'week_days'");
 		}
 		$aDays = array_unique($aDays);
 		sort($aDays);
