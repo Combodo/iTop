@@ -184,7 +184,7 @@ class NotifyOnExpiration implements iScheduledProcess
 					} // Trigger was NOT applied because of an exception, which is NOT normal
 					catch (Exception $e)
 					{
-						$aReport['not_triggered'][] = $oToClose->Get('friendlyname');
+						$aReport['not_triggered'][] = $oToTrigger->Get('friendlyname');
 						$this->Trace('|  |- [KO] /!\\ '.$sClass.' #'.$oToTrigger->GetKey().' exception raised! Error message: '.$e->getMessage());
 					}
 
