@@ -27,7 +27,6 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
-			'model.combodo-notify-on-expiration.php',
 			'main.combodo-notify-on-expiration.php',
 			'triggerexpirationrule.class.inc.php',
 		),
