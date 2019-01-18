@@ -198,7 +198,17 @@ class SecurityException extends CoreException
  * Throwned when querying on an object that exists in the database but is archived
  *
  * @see N.1108
+ * @since 2.5.1
  */
 class ArchivedObjectException extends CoreException
+{
+}
+
+/**
+ * A parameter stored in the {@link Config} is invalid
+ *
+ * @since 2.7.0
+ */
+class InvalidConfigParamException extends CoreException
 {
 }
