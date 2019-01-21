@@ -1,5 +1,5 @@
 /*!
- * Combodo portal theme v1.0.0
+ * Combodo portal theme v2.7.0
  * Based on Bootswatch Simplex
  */
 /*!
@@ -4116,6 +4116,7 @@ button.close {
   left: 0;
   z-index: 1040;
   background-color: #000;
+  transition: all 0.3s linear;
 }
 .modal-backdrop.fade {
   opacity: 0;
@@ -4124,6 +4125,8 @@ button.close {
 .modal-backdrop.in {
   opacity: 0.5;
   filter: alpha(opacity=50);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
 }
 .modal-header {
   padding: 15px;
