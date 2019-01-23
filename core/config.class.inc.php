@@ -335,7 +335,9 @@ class Config
 		'export_pdf_font' => array( // @since 2.7 PR #49
 			'type' => 'string',
 			'description' => 'Font used when generating a PDF file',
-			'default' => 'DejaVuSans',
+			'default' => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using
+										// Standard PDF fonts like helvetica or times newroman are NOT Unicode
+										// A new DroidSansFallback can be used to improve CJK support (se PR #49)
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
