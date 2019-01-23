@@ -4,6 +4,7 @@ require_once(APPROOT.'lib/tcpdf/tcpdf.php');
 
 /**
  * Custom class derived from TCPDF for providing custom headers and footers
+ *
  * @author denis
  *
  */
@@ -26,6 +27,21 @@ class iTopPDF extends TCPDF
 		$this->SetFont($siTopFont, $style, $size);
 	}
 
+	/**
+	 * Shortcut to set only the font size
+	 *
+	 * @param int $size
+	 *
+	 * @uses \TCPDF::getFontStyle()
+	 * @uses \iTopPDF::SetFontParams()
+	 * @since 2.7
+	 */
+	public function SetFontSize($size)
+	{
+		$style = $this->getFontStyle();
+		$this->SetFontParams($style, $size);
+	}
+
 	public function SetDocumentTitle($sDocumentTitle)
 	{
 		$this->sDocumentTitle = $sDocumentTitle;
@@ -33,6 +49,7 @@ class iTopPDF extends TCPDF
 
 	/**
 	 * Builds the custom header. Called for each new page.
+	 *
 	 * @see TCPDF::Header()
 	 */
 	public function Header()
@@ -46,12 +63,14 @@ class iTopPDF extends TCPDF
 
 		// Display the title (centered)
 		$this->SetXY($aMargins['left'] + $iPageNumberWidth, 0);
-		$this->MultiCell($this->getPageWidth() - $aMargins['left'] - $aMargins['right'] - 2*$iPageNumberWidth, 15, $this->sDocumentTitle, 0, 'C', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
+		$this->MultiCell($this->getPageWidth() - $aMargins['left'] - $aMargins['right'] - 2 * $iPageNumberWidth, 15, $this->sDocumentTitle,
+			0, 'C', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
 		$this->SetFontParams('', 10);
 
 		// Display the page number (right aligned)
 		// Warning: the 'R'ight alignment does not work when using placeholders like $this->getAliasNumPage() or $this->getAliasNbPages()
-		$this->MultiCell($iPageNumberWidth, 15, Dict::Format('Core:BulkExport:PDF:PageNumber' ,$this->page), 0, 'R', false, 0 /* $ln */, '', '', true, 0, false, true, 15, 'M' /* $valign */);
+		$this->MultiCell($iPageNumberWidth, 15, Dict::Format('Core:BulkExport:PDF:PageNumber', $this->page), 0, 'R', false, 0 /* $ln */, '',
+			'', true, 0, false, true, 15, 'M' /* $valign */);
 
 		// Branding logo
 		$sBrandingIcon = APPROOT.'images/itop-logo.png';
@@ -124,7 +143,7 @@ class PDFPage extends WebPage
 	protected function SetDefaultStyle()
 	{
 		$this->add_style(
-<<<EOF
+			<<<EOF
 table {
 	padding: 2pt;
 }
@@ -159,6 +178,7 @@ EOF
 	public function get_tcpdf()
 	{
 		$this->flush();
+
 		return $this->oPdf;
 	}
 
@@ -184,6 +204,7 @@ EOF
 
 	/**
 	 * Whether or not the page is a PDF page
+	 *
 	 * @return boolean
 	 */
 	public function is_pdf()
@@ -193,27 +214,29 @@ EOF
 
 	/**
 	 * Generates the PDF document and returns the PDF content as a string
+	 *
 	 * @return string
 	 * @see WebPage::output()
 	 */
 	public function output()
 	{
 		$this->add_header('Content-type: application/x-pdf');
-    	if (!empty($this->sContentDisposition))
-    	{
+		if (!empty($this->sContentDisposition))
+		{
 			$this->add_header('Content-Disposition: '.$this->sContentDisposition.'; filename="'.$this->sContentFileName.'"');
-    	}
-    	foreach($this->a_headers as $s_header)
-        {
-            header($s_header);
-        }
-        $this->flush();
+		}
+		foreach ($this->a_headers as $s_header)
+		{
+			header($s_header);
+		}
+		$this->flush();
 		echo $this->oPdf->Output($this->s_title.'.pdf', 'S');
 	}
 
 	public function get_pdf()
 	{
 		$this->flush();
+
 		return $this->oPdf->Output($this->s_title.'.pdf', 'S');
 	}
 }
