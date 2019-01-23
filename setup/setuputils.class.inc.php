@@ -674,13 +674,10 @@ class SetupUtils
 	 */
 	public static function builddir($dir)
 	{
-		$parent = dirname($dir);
-		if(!is_dir($parent))
-		{
-			self::builddir($parent);
-		}
 		if (!is_dir($dir))
 		{
+			$parent = dirname($dir);
+			self::builddir($parent);
 			mkdir($dir);
 		}
 	}
