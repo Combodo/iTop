@@ -13,18 +13,22 @@ class iTopPDF extends TCPDF
 	protected $sDocumentTitle;
 
 	/**
-	 * Shortcut to set only weight and size
+	 * Shortcut for {@link TCPDF::SetFont}, to use the font configured
 	 *
 	 * @param string $style
 	 * @param int $size
+	 * @param string $fontfile
+	 * @param string $subset
+	 * @param bool $out
 	 *
 	 * @uses \TCPDF::SetFont()
+	 * @uses \iTopPDF::GetPdfFont()
 	 * @since 2.7
 	 */
-	public function SetFontParams($style, $size)
+	public function SetFontParams($style, $size, $fontfile='', $subset='default', $out=true)
 	{
 		$siTopFont = self::GetPdfFont();
-		$this->SetFont($siTopFont, $style, $size);
+		$this->SetFont($siTopFont, $style, $size, $fontfile, $subset, $out);
 	}
 
 	/**
@@ -88,6 +92,7 @@ class iTopPDF extends TCPDF
 	}
 
 	/**
+	 * dejavusans is a UTF-8 Unicode font. Standard PDF fonts like helvetica or times new roman are NOT UTF-8
 	 * @return string font in the config file (export_pdf_font)
 	 */
 	public static function GetPdfFont()
@@ -121,9 +126,8 @@ class PDFPage extends WebPage
 
 		$this->oPdf->setFontSubsetting(true);
 
-		// Set font
 		// dejavusans is a UTF-8 Unicode font. Standard PDF fonts like helvetica or times new roman are NOT UTF-8
-		$this->oPdf->SetFont(iTopPDF::GetPdfFont(), '', 10, '', true);
+		$this->oPdf->SetFontParams('', 10, '', true);
 
 		// set auto page breaks
 		$this->oPdf->SetAutoPageBreak(true, 15); // 15 mm break margin at the bottom
