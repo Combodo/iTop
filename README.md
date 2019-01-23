@@ -23,11 +23,11 @@ iTop also offers mass import tools and web services to integrate with your IT
 
 ## Resources
 
- - [iTop Forums][1]: for support request
+ - [iTop Forums][1]: community support
  - [iTop Tickets][2]: for feature requests and bug reports
  - [Releases download][3]
- - [iTop documentation][4] for iTop and official extensions
- - [iTop extensions][5] for discovering and installing extensions
+ - [Documentation][4] covering both iTop and its official extensions
+ - [iTop Hub][5] : discover and install extensions !
 
 
 
@@ -50,12 +50,18 @@ iTop also offers mass import tools and web services to integrate with your IT
 
 
 ## Last releases
+
 ### Versions 2.6.*
  - 2.6.0 published on January 9, 2019  
  - [Changes since the previous version][58]
  - [New features][59]
  - [Migration notes][60]
  - [Download iTop 2.6.0][61]
+
+[58]: https://www.itophub.io/wiki/page?id=2_6_0:release:change_log
+[59]: https://www.itophub.io/wiki/page?id=2_6_0:release:2_6_whats_new
+[60]: https://www.itophub.io/wiki/page?id=2_6_0:install:250_to_260_migration_notes
+[61]: https://sourceforge.net/projects/itop/files/itop/2.6.0
 
 
 ### Versions 2.5.*
@@ -64,6 +70,11 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [New features][55]
  - [Migration notes][56]
  - [Download iTop 2.5.1][57]
+
+[54]: https://www.itophub.io/wiki/page?id=2_5_0:release:change_log
+[55]: https://www.itophub.io/wiki/page?id=2_5_0:release:2_5_whats_new
+[56]: https://www.itophub.io/wiki/page?id=2_5_0:install:240_to_250_migration_notes
+[57]: https://sourceforge.net/projects/itop/files/itop/2.5.1
  
 
 ### Versions 2.4.*
@@ -73,35 +84,25 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [Migration notes][52]
  - [Download iTop 2.4.1][53]
 
-
-
 [50]: https://www.itophub.io/wiki/page?id=2_4_0:release:change_log
 [51]: https://www.itophub.io/wiki/page?id=2_4_0:release:2_4_whats_new
 [52]: https://www.itophub.io/wiki/page?id=2_4_0:install:230_to_240_migration_notes
 [53]: https://sourceforge.net/projects/itop/files/itop/2.4.1
 
-[54]: https://www.itophub.io/wiki/page?id=2_5_0:release:change_log
-[55]: https://www.itophub.io/wiki/page?id=2_5_0:release:2_5_whats_new
-[56]: https://www.itophub.io/wiki/page?id=2_5_0:install:240_to_250_migration_notes
-[57]: https://sourceforge.net/projects/itop/files/itop/2.5.1
-
-[58]: https://www.itophub.io/wiki/page?id=2_6_0:release:change_log
-[59]: https://www.itophub.io/wiki/page?id=2_6_0:release:2_6_whats_new
-[60]: https://www.itophub.io/wiki/page?id=2_6_0:install:250_to_260_migration_notes
-[61]: https://sourceforge.net/projects/itop/files/itop/2.6.0
 
 
-
-# About Us
+## About Us
 
 iTop development is sponsored, led and supported by [Combodo][0].
 
 [0]: https://www.combodo.com
 
 
-# Contributors
+## Contributors
 
 We would like to give a special thank you to the people from the community who contributed to this project, including:
+
+### Names
  - Alves, David
  - Beck, Pedro
  - Bilger, Jean-François
@@ -127,7 +128,7 @@ We would like to give a special thank you to the people from the community who c
  - Tulio, Marco
  - Turrubiates, Miguel
 
-#### Aliases
+### Aliases
  - chifu1234
  - cprobst
  - Karkoff1212
@@ -138,7 +139,7 @@ We would like to give a special thank you to the people from the community who c
  - theBigOne
  - ulmerspatz
 
-#### Companies
+### Companies
  - Hardis
  - ITOMIG
 
