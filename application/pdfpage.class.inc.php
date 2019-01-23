@@ -31,21 +31,6 @@ class iTopPDF extends TCPDF
 		$this->SetFont($siTopFont, $style, $size, $fontfile, $subset, $out);
 	}
 
-	/**
-	 * Shortcut to set only the font size
-	 *
-	 * @param int $size
-	 *
-	 * @uses \TCPDF::getFontStyle()
-	 * @uses \iTopPDF::SetFontParams()
-	 * @since 2.7
-	 */
-	public function SetFontSize($size)
-	{
-		$style = $this->getFontStyle();
-		$this->SetFontParams($style, $size);
-	}
-
 	public function SetDocumentTitle($sDocumentTitle)
 	{
 		$this->sDocumentTitle = $sDocumentTitle;
