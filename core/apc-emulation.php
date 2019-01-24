@@ -173,6 +173,10 @@ class apcFile
 					return false;
 				}
 			}
+			else
+			{
+				return false;
+			}
 		}
 
 		self::ResetFileCount();
