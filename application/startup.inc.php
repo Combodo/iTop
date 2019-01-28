@@ -1,26 +1,9 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 
 /**
  * File to include to initialize the datamodel in memory
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2019 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -32,10 +15,16 @@ register_shutdown_function(function()
 	$sReservedMemory = null;
 	if (!is_null($err = error_get_last()) && ($err['type'] == E_ERROR))
 	{
+		IssueLog::error($err['message']);
 		if (strpos($err['message'], 'Allowed memory size of') !== false)
 		{
 			$sLimit = ini_get('memory_limit');
-			echo "<p>iTop: Allowed memory size of $sLimit exhausted, contact your administrator to increase memory_limit in php.ini</p>\n";
+			echo "<p>iTop: Allowed memory size of $sLimit exhausted, contact your administrator to increase 'memory_limit' in php.ini</p>\n";
+		}
+		elseif (strpos($err['message'], 'Maximum execution time') !== false)
+		{
+			$sLimit = ini_get('max_execution_time');
+			echo "<p>iTop: Maximum execution time of $sLimit exceeded, contact your administrator to increase 'max_execution_time' in php.ini</p>\n";
 		}
 		else
 		{
@@ -43,6 +32,16 @@ register_shutdown_function(function()
 		}
 	}
 });
+
+// Use 'maintenance' parameter to bypass maintenance mode
+$bMaintenanceAction = !is_null(Utils::ReadParam('maintenance', null));
+
+// Maintenance mode
+if (file_exists(APPROOT.'.maintenance') && !$bMaintenanceAction)
+{
+	require_once (APPROOT.'/pages/maintenance.php');
+	exit();
+}
 
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
