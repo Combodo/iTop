@@ -7334,7 +7334,7 @@ class AttributeImage extends AttributeBlob
 		return '<div class="'.$sCssClasses.'" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';"><span class="helper-middle"></span>'.$sRet.'</div>';
 	}
 
-	private function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx) {
+	protected function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx) {
 		return  '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">';
 	}
 
@@ -7344,7 +7344,7 @@ class AttributeImage extends AttributeBlob
 	 *
 	 * @return null|string
 	 */
-	private function GetAttributeImageFileUrl($value, $oHostObject) {
+	protected function GetAttributeImageFileUrl($value, $oHostObject) {
 		if (!is_object($value)) {
 			return null;
 		}
