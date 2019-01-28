@@ -62,11 +62,11 @@ class utils
 	{
 		if (!file_exists($sParamFile))
 		{
-			throw new Exception("Could not find the parameter file: '$sParamFile'");
+			throw new Exception("Could not find the parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
 		if (!is_readable($sParamFile))
 		{
-			throw new Exception("Could not load parameter file: '$sParamFile'");
+			throw new Exception("Could not load parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
 		$sParams = file_get_contents($sParamFile);
 

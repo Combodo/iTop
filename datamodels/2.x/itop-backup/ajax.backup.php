@@ -184,7 +184,7 @@ EOF
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oBackup = new DBBackupScheduled();
 			$sBackupDir = APPROOT.'data/backups/';
-			$sPathNoDotDotPattern = '/^((?!\/\.\.\/).)*$/';
+			$sPathNoDotDotPattern = "/^((?![\/\\\\]\.\.[\/\\\\]).)*$/";
 			if(preg_match($sPathNoDotDotPattern, $sBackupDir.$sFile) == 1)
 			{
 				$oBackup->DownloadBackup($sBackupDir.$sFile);

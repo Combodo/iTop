@@ -619,7 +619,7 @@ class DashletUnknown extends Dashlet
 
 		$oPage->add('<div class="dashlet-content">');
 
-		$oPage->add('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div>');
+		$oPage->add('<div class="dashlet-ukn-image"><img src="'.utils::HtmlEntities($sIconUrl).'" /></div>');
 		$oPage->add('<div class="dashlet-ukn-text">'.$sExplainText.'</div>');
 
 		$oPage->add('</div>');
@@ -639,7 +639,7 @@ class DashletUnknown extends Dashlet
 
 		$oPage->add('<div class="dashlet-content">');
 
-		$oPage->add('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div>');
+		$oPage->add('<div class="dashlet-ukn-image"><img src="'.utils::HtmlEntities($sIconUrl).'" /></div>');
 		$oPage->add('<div class="dashlet-ukn-text">'.$sExplainText.'</div>');
 
 		$oPage->add('</div>');
@@ -780,7 +780,7 @@ class DashletProxy extends DashletUnknown
 
 		$oPage->add('<div class="dashlet-content">');
 
-		$oPage->add('<div class="dashlet-pxy-image"><img src="'.$sIconUrl.'" /></div>');
+		$oPage->add('<div class="dashlet-pxy-image"><img src="'.utils::HtmlEntities($sIconUrl).'" /></div>');
 		$oPage->add('<div class="dashlet-pxy-text">'.$sExplainText.'</div>');
 
 		$oPage->add('</div>');
@@ -1917,7 +1917,7 @@ class DashletHeaderStatic extends Dashlet
 		$oPage->add('<div class="dashlet-content">');
 		$oPage->add('<div class="main_header">');
 
-		$oPage->add('<img src="'.$sIconPath.'">');
+		$oPage->add('<img src="'.utils::HtmlEntities($sIconPath).'">');
 		$oPage->add('<h1>'.$this->oModelReflection->DictString($sTitle).'</h1>');
 
 		$oPage->add('</div>');
@@ -2073,7 +2073,7 @@ class DashletHeaderDynamic extends Dashlet
 		$oPage->add('<div class="dashlet-content">');
 		$oPage->add('<div class="main_header">');
 
-		$oPage->add('<img src="'.$sIconPath.'">');
+		$oPage->add('<img src="'.utils::HtmlEntities($sIconPath).'">');
 
 		if (isset($aExtraParams['query_params']))
 		{
@@ -2117,7 +2117,7 @@ class DashletHeaderDynamic extends Dashlet
 		$oPage->add('<div class="dashlet-content">');
 		$oPage->add('<div class="main_header">');
 
-		$oPage->add('<img src="'.$sIconPath.'">');
+		$oPage->add('<img src="'.utils::HtmlEntities($sIconPath).'">');
 
 		$sBlockId = 'block_fake_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 
@@ -2336,7 +2336,7 @@ class DashletBadge extends Dashlet
 
 		$oPage->add('<div id="block_fake_'.$this->sId.'" class="display_block">');
 		$oPage->add('<p>');
-		$oPage->add('   <a class="actions"><img src="'.$sIconUrl.'" style="vertical-align:middle;float;left;margin-right:10px;border:0;">'.$sClassLabel.': 947</a>');
+		$oPage->add('   <a class="actions"><img src="'.utils::HtmlEntities($sIconUrl).'" style="vertical-align:middle;float;left;margin-right:10px;border:0;">'.$sClassLabel.': 947</a>');
 		$oPage->add('</p>');
 		$oPage->add('<p>');
 		$oPage->add('   <a>'.Dict::Format('UI:ClickToCreateNew', $sClassLabel).'</a>');
