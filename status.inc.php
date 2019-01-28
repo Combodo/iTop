@@ -16,7 +16,7 @@ function StatusGetAppRoot($sAppRootFilename = 'approot.inc.php')
         */
         if (!file_exists($sAppRootFile) || !is_readable($sAppRootFile)) 
         {
-            throw new \Exception($sAppRootFile . ' is not readable');
+            throw new \Exception($sAppRootFilename . ' is not readable');
         }
         require_once($sAppRootFile);
 }
@@ -39,7 +39,7 @@ function StatusCheckConfigFile($sConfigFilename = 'config-itop.php')
          */  
         if (!file_exists($sConfigFile) || !is_readable($sConfigFile)) 
         {
-                throw new \Exception($sConfigFile . ' is not readable');
+                throw new \Exception($sConfigFilename . ' is not readable');
         }
 }
 
