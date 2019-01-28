@@ -107,7 +107,7 @@ function DoLanding(WebPage $oPage)
     $sPath = APPROOT.'data/downloaded-extensions/';
     if (!is_dir($sPath))
     {
-        if (!mkdir($sPath)) throw new Exception("ERROR: Unable to create the directory '$sPath'. Cannot download any extension. Check the access rights on '".dirname($sPath)."'");
+        if (!mkdir($sPath)) throw new Exception("ERROR: Unable to create the directory '$sPath'. Cannot download any extension. Check the access rights on '".dirname('data/downloaded-extensions/')."'");
     }
     else
     {
@@ -126,7 +126,7 @@ function DoLanding(WebPage $oPage)
         $oZip = new ZipArchive();
         if (!$oZip->open($sZipArchiveFile))
         {
-            throw new Exception('Unable to open "'.$sZipArchiveFile.'" for extraction. Make sure that the directory "'.$sPath.'" is writable for the web server.');
+            throw new Exception('Unable to open "'.$sZipArchiveFile.'" for extraction. Make sure that the directory "'.'data/downloaded-extensions/'.'" is writable for the web server.');
         }
         for($idx  = 0; $idx < $oZip->numFiles; $idx++)
         {
@@ -146,6 +146,9 @@ function DoLanding(WebPage $oPage)
 
 function DoInstall(WebPage $oPage)
 {
+	$sUID = hash('sha256', rand());
+	file_put_contents(APPROOT.'data/hub/compile_authent', $sUID);
+	
     $oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'itop-hub-connector/css/hub.css');
     $oPage->add('<table class="module-selection-banner"><tr>');
     $sBannerUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-hub-connector/images/landing-extension.png';
@@ -259,6 +262,7 @@ function DoInstall(WebPage $oPage)
     		'installation_successful' => Dict::S('iTopHub:InstallationProgress:InstallationSuccessful'),
     		'rollback' => Dict::S('iTopHub:ConfigurationSafelyReverted'),
     	),
+	    'authent' => $sUID,
     );
     
     $sWidgetParams = json_encode($aWidgetParams);
@@ -301,6 +305,10 @@ try
         break;
         
         case 'install':
+        if (!file_exists(APPROOT.'data/hub'))
+        {
+	        mkdir(APPROOT.'data/hub');
+        }
         DoInstall($oPage);
         break;
             

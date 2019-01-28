@@ -135,7 +135,7 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 	$oSynchroDataSource = MetaModel::GetObject('SynchroDataSource', $iSDS, false);
 	if ($oSynchroDataSource == null)
 	{
-		$oP->p("ERROR: The data source (id=$iSDS) does not exist. Exiting...");
+		$oP->p("ERROR: The data source (id=".utils::HtmlEntities($iSDS).") does not exist. Exiting...");
 		$oP->output();
 		exit -3;
 	}

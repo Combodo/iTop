@@ -48,7 +48,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:Landing:Install' => '扩展安装进行中...',
 	'iTopHub:CompiledOK' => '编译成功.',
 	'iTopHub:ConfigurationSafelyReverted' => '安装时发生错误!<br/>iTop 配置将不会改变.',
-	
+	'iTopHub:FailAuthent' => 'Authentication failed for this action.~~',
+
 	'iTopHub:InstalledExtensions' => '本机已安装的扩展',
 	'iTopHub:ExtensionCategory:Manual' => '手动安装的扩展',
 	'iTopHub:ExtensionCategory:Manual+' => '下列已安装的扩展是手动将文件放置到 %1$s 目录的:',

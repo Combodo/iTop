@@ -256,7 +256,11 @@ try
 		
 		case 'compile':
 		SetupPage::log_info('Deployment starts...');
-		    
+		$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
+		if (!file_exists(APPROOT.'data/hub/compile_authent') || $sAuthent !== file_get_contents(APPROOT.'data/hub/compile_authent'))
+		{
+				throw new SecurityException(Dict::S('iTopHub:FailAuthent'));
+		}
 		// First step: prepare the datamodel, if it fails, roll-back
 		$aSelectedExtensionCodes = utils::ReadParam('extension_codes', array());
 		$aSelectedExtensionDirs = utils::ReadParam('extension_dirs', array());
@@ -295,7 +299,13 @@ try
 		try
 		{
 		    SetupPage::log_info('Move to production starts...');
-		    // Load the "production" config file to clone & update it
+		    $sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
+			if (!file_exists(APPROOT.'data/hub/compile_authent') || $sAuthent !== file_get_contents(APPROOT.'data/hub/compile_authent'))
+			{
+				throw new SecurityException(Dict::S('iTopHub:FailAuthent'));
+			}
+			unlink(APPROOT.'data/hub/compile_authent');
+			// Load the "production" config file to clone & update it
 			$oConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
 			
 			$oRuntimeEnv->InitDataModel($oConfig, true /* model only */);
@@ -357,6 +367,10 @@ try
 		}
 		catch (Exception $e)
 		{
+			if(file_exists(APPROOT.'data/hub/compile_authent'))
+			{
+				unlink(APPROOT.'data/hub/compile_authent');
+			}
 			// Note: at this point, the dictionnary is not necessarily loaded
 			SetupPage::log_error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());
 			SetupPage::log_error('Debug trace: '.$e->getTraceAsString());

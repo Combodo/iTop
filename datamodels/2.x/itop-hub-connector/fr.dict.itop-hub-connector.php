@@ -32,6 +32,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopHub:Landing:Install' => 'Déploiement des extensions...',
 	'iTopHub:CompiledOK' => 'Compilation réussie.',
 	'iTopHub:ConfigurationSafelyReverted' => 'Une erreur a été détectée durant le déploiement!<br/>La configuration d\'iTop n\'a PAS été modifiée.',
+	'iTopHub:FailAuthent' => 'Échec d\'authentification pour cette action',
 	
 	'iTopHub:InstalledExtensions' => 'Extensions déployées sur cette instance',
 	'iTopHub:ExtensionCategory:Manual' => 'Extensions déployées manuellement',
