@@ -1100,7 +1100,7 @@ class ObjectFormManager extends FormManager
 						}
 						elseif ($oAttDef->GetEditClass() === 'CustomFields')
 						{
-							if (isset($value['template_data']) && $value['template_data'] !== '')
+							if (!empty($value['template_data']) && !empty($value['user_data']))
 							{
 								$this->oObject->Set($sAttCode, $value);
 							}
