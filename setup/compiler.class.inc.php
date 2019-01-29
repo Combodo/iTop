@@ -598,10 +598,18 @@ EOF
 
 	/**
 	 * Helper to form a valid ZList from the array built by GetNodeAsArrayOfItems()
+	 *
+	 * @param array $aItems
 	 */	 	
 	protected function ArrayOfItemsToZList(&$aItems)
 	{
+		// Note: $aItems can be null in some cases so we have to protect it otherwise a PHP warning will be thrown during the foreach
+		if(!is_array($aItems))
+		{
+			$aItems = array();
+		}
 		$aTransformed = array();
+
 		foreach ($aItems as $key => $value)
 		{
 			if (is_null($value))
@@ -1834,6 +1842,10 @@ EOF
 			if ($oListNode)
 			{
 				$aAttributes = $oListNode->GetNodeAsArrayOfItems();
+				if(!is_array($aAttributes))
+				{
+					$aAttributes = array();
+				}
 				$this->ArrayOfItemsToZList($aAttributes);
 		
 				$sZAttributes = var_export($aAttributes, true);
