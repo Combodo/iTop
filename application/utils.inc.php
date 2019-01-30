@@ -706,9 +706,8 @@ class utils
 	}
 
     /**
-     * Returns the absolute URL to the application root path
-     * @return string The absolute URL to the application root, without the first slash
-     */                   
+     * @return string The absolute URL to the application, including host and path
+     */
 	static public function GetAbsoluteUrlAppRoot()
 	{
 		static $sUrl = null;
