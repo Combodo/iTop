@@ -572,7 +572,7 @@ class utils
 	    }
         return $iReturn;
     }
-  
+
   /**
    * Checks if the memory limit is at least what is required
    *
