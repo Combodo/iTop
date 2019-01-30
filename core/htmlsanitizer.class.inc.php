@@ -346,7 +346,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 					$this->CleanNode($oNode);
 					if (($oNode instanceof DOMElement) && (strtolower($oNode->tagName) == 'img'))
 					{
-						$this->ProcessImage($oNode);
+						InlineImage::ProcessImageTag($oNode);
 					}
 				}
 			}
@@ -357,24 +357,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 			}
 		}
 	}
-	
-	/**
-	 * Add an extra attribute data-img-id for images which are based on an actual InlineImage
-	 * so that we can later reconstruct the full "src" URL when needed
-	 * @param DOMNode $oElement
-	 */
-	protected function ProcessImage(DOMNode $oElement)
-	{
-		$sSrc = $oElement->getAttribute('src');
-		$sDownloadUrl = str_replace(array('.', '?'), array('\.', '\?'), INLINEIMAGE_DOWNLOAD_URL); // Escape . and ?
-		$sUrlPattern = '|'.$sDownloadUrl.'([0-9]+)&s=([0-9a-f]+)|';
-		if (preg_match($sUrlPattern, $sSrc, $aMatches))
-		{
-			$oElement->setAttribute('data-img-id', $aMatches[1]);
-			$oElement->setAttribute('data-img-secret', $aMatches[2]);
-		}
-	}
-	
+
 	protected function CleanStyle($sStyle)
 	{
 		$aAllowedStyles = array();

@@ -27,6 +27,11 @@ define('INLINEIMAGE_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_i
 
 class InlineImage extends DBObject
 {
+	/** @var string attribute to be added to IMG tags to contain ID */
+	const DOM_ATTR_ID = 'data-img-id';
+	/** @var string attribute to be added to IMG tags to contain secret */
+	const DOM_ATTR_SECRET = 'data-img-secret';
+
 	public static function Init()
 	{
 		$aParams = array
@@ -208,7 +213,8 @@ class InlineImage extends DBObject
 		$aNeedles = array();
 		$aReplacements = array();
 		// Find img tags with an attribute data-img-id
-		if (preg_match_all('/<img ([^>]*)data-img-id="([0-9]+)"([^>]*)>/i', $sHtml, $aMatches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE))
+		if (preg_match_all('/<img ([^>]*)'.self::DOM_ATTR_ID.'="([0-9]+)"([^>]*)>/i',
+			$sHtml, $aMatches, PREG_SET_ORDER | PREG_OFFSET_CAPTURE))
 		{
 			$sUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
 			foreach($aMatches as $aImgInfo)
@@ -228,6 +234,42 @@ class InlineImage extends DBObject
 			$sHtml = str_replace($aNeedles, $aReplacements, $sHtml);
 		}
 		return $sHtml;
+	}
+
+	/**
+	 * Add an extra attribute data-img-id for images which are based on an actual InlineImage
+	 * so that we can later reconstruct the full "src" URL when needed
+	 *
+	 * @param \DOMElement $oElement
+	 */
+	public static function ProcessImageTag(DOMElement $oElement)
+	{
+		$sSrc = $oElement->getAttribute('src');
+		$sDownloadUrl = str_replace(array('.', '?'), array('\.', '\?'), INLINEIMAGE_DOWNLOAD_URL); // Escape . and ?
+		$sUrlPattern = '|'.$sDownloadUrl.'([0-9]+)&s=([0-9a-f]+)|';
+		$bIsInlineImage = preg_match($sUrlPattern, $sSrc, $aMatches);
+		if (!$bIsInlineImage)
+		{
+			return;
+		}
+		$iInlineImageId = $aMatches[1];
+		$sInlineIMageSecret = $aMatches[2];
+
+		$sAppRoot = utils::GetAbsoluteUrlAppRoot();
+		$sAppRootPattern = '/^'.preg_quote($sAppRoot, '/').'/';
+		$bIsSameItop = preg_match($sAppRootPattern, $sSrc);
+		if (!$bIsSameItop)
+		{
+			// @see N°1921
+			// image from another iTop should be treated as external images
+			$oElement->removeAttribute(self::DOM_ATTR_ID);
+			$oElement->removeAttribute(self::DOM_ATTR_SECRET);
+
+			return;
+		}
+
+		$oElement->setAttribute(self::DOM_ATTR_ID, $iInlineImageId);
+		$oElement->setAttribute(self::DOM_ATTR_SECRET, $sInlineIMageSecret);
 	}
 
 	/**
