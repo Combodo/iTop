@@ -234,19 +234,28 @@ class EMail
 			$oDOMDoc = new DOMDocument();
 			$oDOMDoc->preserveWhitespace = true;
 			@$oDOMDoc->loadHTML('<?xml encoding="UTF-8"?>'.$this->m_aData['body']['body']); // For loading HTML chunks where the character set is not specified
-			
+
 			$oXPath = new DOMXPath($oDOMDoc);
-			$sXPath = "//img[@data-img-id]";
+			$sXPath = '//img[@'.InlineImage::DOM_ATTR_ID.']';
 			$oImagesList = $oXPath->query($sXPath);
-			
+
 			if ($oImagesList->length != 0)
 			{
 				foreach($oImagesList as $oImg)
 				{
-					$iAttId = $oImg->getAttribute('data-img-id');
+					$iAttId = $oImg->getAttribute(InlineImage::DOM_ATTR_ID);
 					$oAttachment = MetaModel::GetObject('InlineImage', $iAttId, false, true /* Allow All Data */);
 					if ($oAttachment)
 					{
+						$sImageSecret = $oImg->getAttribute('data-img-secret');
+						$sAttachmentSecret = $oAttachment->Get('secret');
+						if ($sImageSecret !== $sAttachmentSecret)
+						{
+							// @see N°1921
+							// If copying from another iTop we could get an IMG pointing to an InlineImage with wrong secret
+							continue;
+						}
+
 						$oDoc = $oAttachment->Get('contents');
 						$oSwiftImage = new Swift_Image($oDoc->GetData(), $oDoc->GetFileName(), $oDoc->GetMimeType());
 						$sCid = $this->m_oMessage->embed($oSwiftImage);
