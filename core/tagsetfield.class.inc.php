@@ -183,7 +183,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		}
 
 		// Check that the code is not a MySQL stop word
-		$sSQL = "SELECT * FROM INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD";
+		$sSQL = "SELECT value FROM information_schema.INNODB_FT_DEFAULT_STOPWORD";
 		try
 		{
 			$aResults = CMDBSource::QueryToArray($sSQL);

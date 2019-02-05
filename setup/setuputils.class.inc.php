@@ -534,7 +534,7 @@ class SetupUtils
 		// to do... evaluate how we can correlate the DB size with the size of the dump (and the zip!)
 		// E.g. 2,28 Mb after a full install, giving a zip of 26 Kb (data = 26 Kb)
 		// Example of query (DB without a suffix)
-		//$sDBSize = "SELECT SUM(ROUND(DATA_LENGTH/1024/1024, 2)) AS size_mb FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = `$sDBName`";
+		//$sDBSize = "SELECT SUM(ROUND(DATA_LENGTH/1024/1024, 2)) AS size_mb FROM information_schema.TABLES WHERE TABLE_SCHEMA = `$sDBName`";
 
 		return $aResult;
 	}
