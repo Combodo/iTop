@@ -1536,7 +1536,19 @@ class VariableExpression extends UnaryExpression
 		$oRet = null;
 		if (array_key_exists($this->m_sName, $aArgs))
 		{
-			$oRet = new ScalarExpression($aArgs[$this->m_sName]);
+			if(is_array($aArgs[$this->m_sName]))
+			{
+				$aExpressions = array();
+				foreach($aArgs[$this->m_sName] as $sValue)
+				{
+					$aExpressions[] = new ScalarExpression($sValue);
+				}
+				$oRet = new ListExpression($aExpressions);
+			}
+			else
+			{
+				$oRet = new ScalarExpression($aArgs[$this->m_sName]);
+			}
 		}
 		elseif (($iPos = strpos($this->m_sName, '->')) !== false)
 		{
