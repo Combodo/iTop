@@ -137,7 +137,7 @@ class CMDBSource
 	 * use expression as value)
 	 *
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-column.html
-	 * @since 2.5 N°1001 switch to utf8mb4
+	 * @since 2.5.1 N°1001 switch to utf8mb4
 	 */
 	public static function GetSqlStringColumnDefinition()
 	{
