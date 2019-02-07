@@ -928,7 +928,7 @@ EOD
 		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault,	$sSectionStateStorageBusinessKey));
 	}
 
-	private function GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
+	public function GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
 	{
 		$this->bHasCollapsibleSection = true;
 		$sHtml = '';
