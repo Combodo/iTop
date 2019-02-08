@@ -151,7 +151,8 @@ class CoreCannotSaveObjectException extends CoreException
 
 		if (count($this->aIssues) == 1)
 		{
-			$sContent .= " <span>{$this->aIssues[0]}</span>";
+			$sIssue = reset($this->aIssues);
+			$sContent .= " <span>{$sIssue}</span>";
 		}
 		else
 		{
