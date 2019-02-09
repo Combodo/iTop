@@ -437,7 +437,7 @@ class CoreServices implements iRestServiceProvider
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
 			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
 			$limit = (int) RestUtils::GetOptionalParam($aParams, 'limit', 0);
-			$page = (int) RestUtils::GetOptionalParam($aParams, 'page', 0);
+			$page = (int) RestUtils::GetOptionalParam($aParams, 'page', 1);
 
 			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key, $limit, self::getOffsetFromLimitAndPage($limit, $page));
 			$sTargetClass = $oObjectSet->GetFilter()->GetClass();
@@ -452,6 +452,11 @@ class CoreServices implements iRestServiceProvider
 				$oResult->code = RestResult::UNAUTHORIZED;
 				$oResult->message = "The current user does not have enough permissions for exporting data of class $sTargetClass";
 			}
+			elseif ($page < 1)
+            {
+			    $oResult->code = RestResult::INVALID_PAGE;
+			    $oResult->message = "The request page number is not valid. It must be an integer greater than 0";
+            }
 			else
 			{
 				while ($oObject = $oObjectSet->Fetch())

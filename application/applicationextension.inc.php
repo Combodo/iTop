@@ -825,6 +825,10 @@ class RestResult
 	 * Result: the requested operation cannot be performed because it can cause data (integrity) loss 
 	 */
 	const UNSAFE = 12;
+    /**
+     * Result: the request page number is not valid. It must be an integer greater than 0
+     */
+    const INVALID_PAGE = 13;
 	/**
 	 * Result: the operation could not be performed, see the message for troubleshooting
 	 */
