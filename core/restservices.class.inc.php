@@ -436,8 +436,10 @@ class CoreServices implements iRestServiceProvider
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$aShowFields = RestUtils::GetFieldList($sClass, $aParams, 'output_fields');
 			$bExtendedOutput = (RestUtils::GetOptionalParam($aParams, 'output_fields', '*') == '*+');
+			$limit = (int) RestUtils::GetOptionalParam($aParams, 'limit', 0);
+			$page = (int) RestUtils::GetOptionalParam($aParams, 'page', 1);
 
-			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key);
+			$oObjectSet = RestUtils::GetObjectSetFromKey($sClass, $key, $limit, self::getOffsetFromLimitAndPage($limit, $page));
 			$sTargetClass = $oObjectSet->GetFilter()->GetClass();
 	
 			if (UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ) != UR_ALLOWED_YES)
@@ -450,6 +452,11 @@ class CoreServices implements iRestServiceProvider
 				$oResult->code = RestResult::UNAUTHORIZED;
 				$oResult->message = "The current user does not have enough permissions for exporting data of class $sTargetClass";
 			}
+			elseif ($page < 1)
+            {
+			    $oResult->code = RestResult::INVALID_PAGE;
+			    $oResult->message = "The request page number is not valid. It must be an integer greater than 0";
+            }
 			else
 			{
 				while ($oObject = $oObjectSet->Fetch())
@@ -774,4 +781,16 @@ class CoreServices implements iRestServiceProvider
 			$oResult->message = $sRes;
 		}
 	}
+
+    /**
+     * Returns the Offset for a given page number
+     *
+     * @param int $limit
+     * @param int $page
+     * @return int
+     */
+	protected static function getOffsetFromLimitAndPage($limit, $page)
+    {
+        return $limit * max(0, $page - 1);
+    }
 }
