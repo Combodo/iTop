@@ -826,6 +826,10 @@ class RestResult
 	 */
 	const UNSAFE = 12;
 	/**
+	 * Result: the request page number is not valid. It must be an integer greater than 0
+	 */
+	const INVALID_PAGE = 13;
+	/**
 	 * Result: the operation could not be performed, see the message for troubleshooting
 	 */
 	const INTERNAL_ERROR = 100;
@@ -1091,10 +1095,12 @@ class RestUtils
 	 * 	 
 	 * @param string $sClass Name of the class
 	 * @param mixed $key Either search criteria (substructure), or an object or an OQL string.
+     * @param int $limit The limit of results to return
+     * @param int $offset The offset of results to return
 	 * @return DBObjectSet The search result set
 	 * @throws Exception If the input structure is not valid
 	 */
-	public static function GetObjectSetFromKey($sClass, $key)
+	public static function GetObjectSetFromKey($sClass, $key, $limit = 0, $offset = 0)
 	{
 		if (is_object($key))
 		{
@@ -1128,7 +1134,7 @@ class RestUtils
 		{
 			throw new Exception("Wrong format for key");
 		}
-		$oObjectSet = new DBObjectSet($oSearch);
+		$oObjectSet = new DBObjectSet($oSearch, array(), array(), null, $limit, $offset);
 		return $oObjectSet;
 	}
 
