@@ -33,6 +33,20 @@ register_shutdown_function(function()
 	}
 });
 
+function __clear_cache()
+{
+	if (function_exists('opcache_reset'))
+	{
+		// Zend opcode cache
+		opcache_reset();
+	}
+	if (function_exists('apc_clear_cache'))
+	{
+		// APC(u) cache
+		apc_clear_cache();
+	}
+}
+
 // Use 'maintenance' parameter to bypass maintenance mode
 $bMaintenanceAction = !is_null(Utils::ReadParam('maintenance', null));
 
@@ -42,6 +56,7 @@ if (file_exists(APPROOT.'.maintenance') && !$bMaintenanceAction)
 	require_once(APPROOT.'core/dict.class.inc.php');
 	$sMessage = Dict::S('UI:Error:MaintenanceMode', 'Application is currently in maintenance mode');
 	$sTitle = Dict::S('UI:Error:MaintenanceTitle', 'Maintenance');
+	__clear_cache();
 	throw new MaintenanceException($sMessage, $sTitle);
 }
 
@@ -58,16 +73,7 @@ if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FI
 	$sEnv = $sSwitchEnv;
     $bAllowCache = false;
     // Reset the opcache since otherwise the PHP "model" files may still be cached !!
-    if (function_exists('opcache_reset'))
-    {
-        // Zend opcode cache
-        opcache_reset();
-    }
-    if (function_exists('apc_clear_cache'))
-    {
-        // APC(u) cache
-        apc_clear_cache();
-    }
+	__clear_cache();
 	// TODO: reset the credentials as well ??
 }
 else if (isset($_SESSION['itop_env']))
