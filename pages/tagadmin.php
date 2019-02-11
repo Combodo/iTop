@@ -27,11 +27,11 @@
 require_once('../approot.inc.php');
 require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'application/itopwebpage.class.inc.php');
-require_once(APPROOT.'application/startup.inc.php');
-require_once(APPROOT.'application/loginwebpage.class.inc.php');
 
 try
 {
+	require_once(APPROOT.'application/startup.inc.php');
+	require_once(APPROOT.'application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin();
 	// Check user rights and prompt if needed
 	ApplicationMenu::CheckMenuIdEnabled("TagAdminMenu");
@@ -133,6 +133,15 @@ try
 	}
 	$oP->add("</div>\n");
 
+	$oP->output();
+}
+catch(MaintenanceException $e)
+{
+	require_once(APPROOT."/setup/setuppage.class.inc.php");
+
+	http_response_code(503);
+	$oP = new SetupPage(htmlentities($e->GetTitle(), ENT_QUOTES, 'utf-8'));
+	$oP->p("<h2>".htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8')."</h2>");
 	$oP->output();
 }
 catch (Exception $e)

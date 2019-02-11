@@ -39,8 +39,10 @@ $bMaintenanceAction = !is_null(Utils::ReadParam('maintenance', null));
 // Maintenance mode
 if (file_exists(APPROOT.'.maintenance') && !$bMaintenanceAction)
 {
-	require_once (APPROOT.'/pages/maintenance.php');
-	exit();
+	require_once(APPROOT.'core/dict.class.inc.php');
+	$sMessage = Dict::S('UI:Error:MaintenanceMode', 'Application is currently in maintenance mode');
+	$sTitle = Dict::S('UI:Error:MaintenanceTitle', 'Maintenance');
+	throw new MaintenanceException($sMessage, $sTitle);
 }
 
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');

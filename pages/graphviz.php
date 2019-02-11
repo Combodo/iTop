@@ -28,11 +28,6 @@ require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
-require_once(APPROOT.'/application/startup.inc.php');
-require_once(APPROOT.'/application/utils.inc.php');
-
-require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 /**
  * Escape a label (string) in a manner suitable for use with graphviz' DOT syntax
@@ -109,55 +104,69 @@ function GraphvizLifecycle($sClass)
 	return $sDotFileContent;
 }
 
-$sClass = utils::ReadParam('class', '', false, 'class');
-$oReflection = new ReflectionClass($sClass);
-$sDeclarationFile = $oReflection->getFileName();
-$sModuleDir = dirname($sDeclarationFile);
-
-$sImageFilePath = $sModuleDir."/lifecycle/".$sClass.".png";
-$sDotExecutable = MetaModel::GetConfig()->Get('graphviz_path');
-if (file_exists($sDotExecutable))
+try
 {
-	// create the file with Graphviz
-	$sImageFilePath = APPROOT."data/lifecycle/".$sClass.".png";
-	if (!is_dir(APPROOT."data"))
+	require_once(APPROOT.'/application/startup.inc.php');
+	require_once(APPROOT.'/application/utils.inc.php');
+
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+
+	$sClass = utils::ReadParam('class', '', false, 'class');
+	$oReflection = new ReflectionClass($sClass);
+	$sDeclarationFile = $oReflection->getFileName();
+	$sModuleDir = dirname($sDeclarationFile);
+
+	$sImageFilePath = $sModuleDir."/lifecycle/".$sClass.".png";
+	$sDotExecutable = MetaModel::GetConfig()->Get('graphviz_path');
+	if (file_exists($sDotExecutable))
 	{
-		@mkdir(APPROOT."data");
-	}
-	if (!is_dir(APPROOT."data/lifecycle"))
-	{
-		@mkdir(APPROOT."data/lifecycle");
-	}
-	$sDotDescription = GraphvizLifecycle($sClass);
-	$sDotFilePath = APPROOT."data/lifecycle/{$sClass}.dot";
-	
-	$rFile = @fopen($sDotFilePath, "w");
-	@fwrite($rFile, $sDotDescription);
-	@fclose($rFile);
-	$aOutput = array();
-	$CommandLine = "\"$sDotExecutable\" -v -Tpng < \"$sDotFilePath\" -o \"$sImageFilePath\" 2>&1";
-	
-	exec($CommandLine, $aOutput, $iRetCode);
-	if ($iRetCode != 0)
-	{
-		header('Content-type: text/html');
-		echo "<p><b>Error:</b></p>";
-		echo "<p>The command: <pre>$CommandLine</pre> returned $iRetCode</p>";
-		echo "<p>The output of the command is:<pre>\n".implode("\n", $aOutput)."</pre></p>";
-		echo "<hr>";
-		echo "<p>Content of the '".basename($sDotFilePath)."' file:<pre>\n$sDotDescription</pre>";
+		// create the file with Graphviz
+		$sImageFilePath = APPROOT."data/lifecycle/".$sClass.".png";
+		if (!is_dir(APPROOT."data"))
+		{
+			@mkdir(APPROOT."data");
+		}
+		if (!is_dir(APPROOT."data/lifecycle"))
+		{
+			@mkdir(APPROOT."data/lifecycle");
+		}
+		$sDotDescription = GraphvizLifecycle($sClass);
+		$sDotFilePath = APPROOT."data/lifecycle/{$sClass}.dot";
+
+		$rFile = @fopen($sDotFilePath, "w");
+		@fwrite($rFile, $sDotDescription);
+		@fclose($rFile);
+		$aOutput = array();
+		$CommandLine = "\"$sDotExecutable\" -v -Tpng < \"$sDotFilePath\" -o \"$sImageFilePath\" 2>&1";
+
+		exec($CommandLine, $aOutput, $iRetCode);
+		if ($iRetCode != 0)
+		{
+			header('Content-type: text/html');
+			echo "<p><b>Error:</b></p>";
+			echo "<p>The command: <pre>$CommandLine</pre> returned $iRetCode</p>";
+			echo "<p>The output of the command is:<pre>\n".implode("\n", $aOutput)."</pre></p>";
+			echo "<hr>";
+			echo "<p>Content of the '".basename($sDotFilePath)."' file:<pre>\n$sDotDescription</pre>";
+		}
+		else
+		{
+			header('Content-type: image/png');
+			echo file_get_contents($sImageFilePath);
+		}
+		@unlink($sDotFilePath);
 	}
 	else
 	{
 		header('Content-type: image/png');
 		echo file_get_contents($sImageFilePath);
 	}
-	@unlink($sDotFilePath);
 }
-else
+catch (MaintenanceException $e)
 {
-	header('Content-type: image/png');
-	echo file_get_contents($sImageFilePath);
+	http_response_code(503);
+	require_once(APPROOT.'core/dict.class.inc.php');
+	$sMessage = Dict::S('UI:Error:MaintenanceMode', 'Application is currently in maintenance mode');
+	echo "$sMessage";
 }
-
-?>

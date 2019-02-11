@@ -28,11 +28,6 @@ require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
-require_once(APPROOT.'/application/startup.inc.php');
-
-require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-ApplicationMenu::CheckMenuIdEnabled('DataModelMenu');
 
 /**
  * Helper for this page -> link to a class
@@ -1063,65 +1058,81 @@ function DisplayClassHeader($oPage, $sClass){
 //                                             MAIN BLOCK                                                             //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Display the menu on the left
-$oAppContext = new ApplicationContext();
-$sContext = $oAppContext->GetForLink();
-if (!empty($sContext))
+try
 {
-	$sContext = '&'.$sContext;
-}
-$operation = utils::ReadParam('operation', '');
+	require_once(APPROOT.'/application/startup.inc.php');
 
-$oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
-$oPage->no_cache();
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+	ApplicationMenu::CheckMenuIdEnabled('DataModelMenu');
+// Display the menu on the left
+	$oAppContext = new ApplicationContext();
+	$sContext = $oAppContext->GetForLink();
+	if (!empty($sContext))
+	{
+		$sContext = '&'.$sContext;
+	}
+	$operation = utils::ReadParam('operation', '');
 
-$oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
-$oPage->add_script(
-    <<<EOF
+	$oPage = new iTopWebPage(Dict::S('UI:Schema:Title'));
+	$oPage->no_cache();
+
+	$oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+	$oPage->add_script(
+		<<<EOF
 	var autocompleteClassLabelAndCode = [];
 	var autocompleteClassLabel = [];
 	var autocompleteClassCode = [];
 EOF
-);
+	);
 
-$oPage->add(" <div class='ui-widget'> </div><div id='dataModelSplitPane'>");
-$oPage->add("<div class='ui-layout-west data-model-viewer'> ");
-DisplayClassesList($oPage, $sContext);
-$oPage->add("</div>");
-$oPage->add("<div class='ui-layout-center data-model-viewer'>");
+	$oPage->add(" <div class='ui-widget'> </div><div id='dataModelSplitPane'>");
+	$oPage->add("<div class='ui-layout-west data-model-viewer'> ");
+	DisplayClassesList($oPage, $sContext);
+	$oPage->add("</div>");
+	$oPage->add("<div class='ui-layout-center data-model-viewer'>");
 
-switch($operation)
-{
-	case 'details_class':
-	$sClass = utils::ReadParam('class', '', false, 'class');
-	//if we want to see class details & class is given then display it, otherwise act default (just show the class list)
-	if($sClass != '')
+	switch ($operation)
 	{
-		$oPage->add_ready_script(
-			<<<EOF
+		case 'details_class':
+			$sClass = utils::ReadParam('class', '', false, 'class');
+			//if we want to see class details & class is given then display it, otherwise act default (just show the class list)
+			if ($sClass != '')
+			{
+				$oPage->add_ready_script(
+					<<<EOF
 $('#search-model').val('$sClass');
 $('#search-model').trigger("input");
 
 EOF
-);
-		DisplayClassDetails($oPage, $sClass, $sContext);
-		break;
+				);
+				DisplayClassDetails($oPage, $sClass, $sContext);
+				break;
+			}
+		default:
+			DisplayGranularityDisplayer($oPage);
 	}
-	default:
-		DisplayGranularityDisplayer($oPage);
-}
-$oPage->add("</div>");
-$oPage->add("</div>");
+	$oPage->add("</div>");
+	$oPage->add("</div>");
 //split the page in 2 panels
-$oPage->add_init_script(
-<<<EOF
+	$oPage->add_init_script(
+		<<<EOF
 		$('#dataModelSplitPane').layout({
 		west : {size: "20%", minSize : 200,paneSize : 600}
 		});
 		// Layout
 EOF
 
-);
+	);
 
-$oPage->output();
-?>
+	$oPage->output();
+}
+catch(MaintenanceException $e)
+{
+	require_once(APPROOT."/setup/setuppage.class.inc.php");
+
+	http_response_code(503);
+	$oP = new SetupPage(htmlentities($e->GetTitle(), ENT_QUOTES, 'utf-8'));
+	$oP->p("<h2>".htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8')."</h2>");
+	$oP->output();
+}

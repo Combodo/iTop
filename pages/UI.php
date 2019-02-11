@@ -343,10 +343,10 @@ require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
-require_once(APPROOT.'/application/startup.inc.php');
-
 try
 {
+	require_once(APPROOT.'/application/startup.inc.php');
+
 	$operation = utils::ReadParam('operation', '');
 	$bPrintable = (utils::ReadParam('printable', 0) == '1');
 
@@ -1819,6 +1819,15 @@ catch(CoreException $e)
 
 	// For debugging only
 	//throw $e;
+}
+catch(MaintenanceException $e)
+{
+	require_once(APPROOT."/setup/setuppage.class.inc.php");
+
+	http_response_code(503);
+	$oP = new SetupPage(htmlentities($e->GetTitle(), ENT_QUOTES, 'utf-8'));
+	$oP->p("<h2>".htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8')."</h2>");
+	$oP->output();
 }
 catch(Exception $e)
 {

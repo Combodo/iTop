@@ -310,6 +310,12 @@ function CronExec($oP, $aProcesses, $bVerbose)
 			$oP->p("Sleeping");
 		}
 		sleep($iCronSleep);
+		// Maintenance mode
+		if (file_exists(APPROOT.'.maintenance'))
+		{
+			$oP->p("Maintenance mode detected");
+			return;
+		}
 	}
 	if ($bVerbose)
 	{

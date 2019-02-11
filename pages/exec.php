@@ -70,6 +70,16 @@ if (!file_exists($sTargetPage))
 	exit;
 }
 
+// Maintenance mode
+if (file_exists(APPROOT.'.maintenance'))
+{
+	http_response_code(503);
+	require_once(APPROOT.'core/dict.class.inc.php');
+	$sMessage = Dict::S('UI:Error:MaintenanceMode', 'Application is currently in maintenance mode');
+	echo "$sMessage";
+	exit();
+}
+
 /////////////////////////////////////////
 //
 // GO!

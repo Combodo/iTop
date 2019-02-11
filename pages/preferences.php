@@ -26,7 +26,6 @@
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/itopwebpage.class.inc.php');
-require_once(APPROOT.'/application/startup.inc.php');
 
 /**
  * Displays the user's changeable preferences
@@ -383,17 +382,17 @@ EOF
 //
 /////////////////////////////////////////////////////////////////////////////
 
-require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-
-$iStep = utils::ReadParam('step', 1);
-
-$oPage = new iTopWebPage(Dict::S('UI:Preferences'));
-$oPage->DisableBreadCrumb();
-$sOperation = utils::ReadParam('operation', ''); 
-	
 try
 {
+	require_once(APPROOT.'/application/startup.inc.php');
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+
+	$iStep = utils::ReadParam('step', 1);
+
+	$oPage = new iTopWebPage(Dict::S('UI:Preferences'));
+	$oPage->DisableBreadCrumb();
+	$sOperation = utils::ReadParam('operation', '');
 	switch($sOperation)
 	{
 		case 'apply':
@@ -491,6 +490,15 @@ try
 		DisplayPreferences($oPage);
 	}
 	$oPage->output();
+}
+catch(MaintenanceException $e)
+{
+	require_once(APPROOT."/setup/setuppage.class.inc.php");
+
+	http_response_code(503);
+	$oP = new SetupPage(htmlentities($e->GetTitle(), ENT_QUOTES, 'utf-8'));
+	$oP->p("<h2>".htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8')."</h2>");
+	$oP->output();
 }
 catch(CoreException $e)
 {

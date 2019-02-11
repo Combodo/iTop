@@ -406,4 +406,3 @@ class Dict
 		return $aEntries;
 	}
 }
-?>

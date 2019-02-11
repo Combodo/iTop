@@ -2702,7 +2702,13 @@ EOF
 	}
 
 	$oPage->output();
-} catch (Exception $e)
+}
+catch (MaintenanceException $e)
+{
+	http_response_code(503);
+	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
+}
+catch (Exception $e)
 {
 	// note: transform to cope with XSS attacks
 	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');

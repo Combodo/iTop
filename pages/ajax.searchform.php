@@ -26,15 +26,16 @@ require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
-require_once(APPROOT.'/application/startup.inc.php');
-require_once(APPROOT.'/application/user.preferences.class.inc.php');
-require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-require_once(APPROOT.'/sources/application/search/ajaxsearchexception.class.inc.php');
-require_once(APPROOT.'/sources/application/search/criterionparser.class.inc.php');
-require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 try
 {
+	require_once(APPROOT.'/application/startup.inc.php');
+	require_once(APPROOT.'/application/user.preferences.class.inc.php');
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+	require_once(APPROOT.'/sources/application/search/ajaxsearchexception.class.inc.php');
+	require_once(APPROOT.'/sources/application/search/criterionparser.class.inc.php');
+	require_once(APPROOT.'/application/wizardhelper.class.inc.php');
+
 	if (LoginWebPage::EXIT_CODE_OK != LoginWebPage::DoLoginEx(null /* any portal */, false, LoginWebPage::EXIT_RETURN))
 	{
 		throw new SecurityException('You must be logged in');
@@ -145,6 +146,12 @@ try
 	$sMsg = preg_replace("@^.* mysql_error = @", '', $sMsg);
 	// note: transform to cope with XSS attacks
 	echo '<html><head></head><body><div>'.htmlentities($sMsg, ENT_QUOTES, 'utf-8').'</div></body></html>';
+	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
+} catch (MaintenanceException $e)
+{
+	http_response_code(503);
+	// note: transform to cope with XSS attacks
+	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 } catch (Exception $e)
 {

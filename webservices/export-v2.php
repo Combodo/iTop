@@ -35,7 +35,6 @@ require_once(APPROOT.'/application/clipage.class.inc.php');
 require_once(APPROOT.'/application/excelexporter.class.inc.php');
 require_once(APPROOT.'/core/bulkexport.class.inc.php');
 
-require_once(APPROOT.'/application/startup.inc.php');
 
 
 function ReportErrorAndExit($sErrorMessage)
@@ -573,6 +572,8 @@ if (utils::IsModeCLI())
 {
 	try
 	{
+		require_once(APPROOT.'/application/startup.inc.php');
+
 		// Do this before loging, in order to allow setting user credentials from within the file
 		utils::UseParamFile();
 	}
@@ -707,6 +708,7 @@ if (utils::IsModeCLI())
 
 try
 {
+	require_once(APPROOT.'/application/startup.inc.php');
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	
 	// Main parameters
@@ -752,6 +754,15 @@ try
 		DoExport($oP, $oExporter, false);
 		$oP->output();
 	}
+}
+catch(MaintenanceException $e)
+{
+	require_once(APPROOT."/setup/setuppage.class.inc.php");
+
+	http_response_code(503);
+	$oP = new SetupPage(htmlentities($e->GetTitle(), ENT_QUOTES, 'utf-8'));
+	$oP->p("<h2>".htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8')."</h2>");
+	$oP->output();
 }
 catch (BulkExportMissingParameterException $e)
 {

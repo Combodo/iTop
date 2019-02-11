@@ -24,23 +24,23 @@ require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
-require_once(APPROOT.'/application/startup.inc.php');
-
-require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-
-$sOperation = utils::ReadParam('operation', 'menu');
-$oAppContext = new ApplicationContext();
-
-$oP = new iTopWebPage("iTop - Navigator");
-
-// Main program
-$sClass = utils::ReadParam('class', '');
-$id = utils::ReadParam('id', 0);
-$sRelation = utils::ReadParam('relation', 'neighbours');
-
 try
 {
+	require_once(APPROOT.'/application/startup.inc.php');
+
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+
+	$sOperation = utils::ReadParam('operation', 'menu');
+	$oAppContext = new ApplicationContext();
+
+	$oP = new iTopWebPage("iTop - Navigator");
+
+	// Main program
+	$sClass = utils::ReadParam('class', '');
+	$id = utils::ReadParam('id', 0);
+	$sRelation = utils::ReadParam('relation', 'neighbours');
+
 	$width = 1000;
 	$height = 700;
 	$sDrillUrl = urlencode(utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details');
@@ -71,6 +71,15 @@ catch(CoreException $e)
 	$oP->p('<b>An error occured while running the query:</b>');
 	$oP->p($e->getHtmlDesc());
 }
+catch(MaintenanceException $e)
+{
+	require_once(APPROOT."/setup/setuppage.class.inc.php");
+
+	http_response_code(503);
+	$oP = new SetupPage(htmlentities($e->GetTitle(), ENT_QUOTES, 'utf-8'));
+	$oP->p("<h2>".htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8')."</h2>");
+	$oP->output();
+}
 catch(Exception $e)
 {
 	$oP->p('<b>An error occured while running the query:</b>');
@@ -78,4 +87,4 @@ catch(Exception $e)
 }
 
 $oP->output();
-?>
+

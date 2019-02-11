@@ -212,3 +212,23 @@ class ArchivedObjectException extends CoreException
 class InvalidConfigParamException extends CoreException
 {
 }
+
+class MaintenanceException extends Exception
+{
+	private $sTitle;
+
+	public function __construct($message = "", $sTitle, $code = 0, \Throwable $previous = null)
+	{
+		$this->sTitle = $sTitle;
+		parent::__construct($message, $code, $previous);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetTitle()
+	{
+		return $this->sTitle;
+	}
+
+}

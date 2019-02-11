@@ -41,7 +41,6 @@ require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/csvpage.class.inc.php');
 require_once(APPROOT.'/application/clipage.class.inc.php');
 
-require_once(APPROOT.'/application/startup.inc.php');
 
 class BulkLoadException extends Exception
 {
@@ -215,6 +214,20 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 
 /////////////////////////////////
 // Main program
+
+try
+{
+	require_once(APPROOT.'/application/startup.inc.php');
+}
+catch(MaintenanceException $e)
+{
+	require_once(APPROOT."/setup/setuppage.class.inc.php");
+
+	http_response_code(503);
+	$oP = new SetupPage(htmlentities($e->GetTitle(), ENT_QUOTES, 'utf-8'));
+	$oP->p("<h2>".htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8')."</h2>");
+	$oP->output();
+}
 
 if (utils::IsModeCLI())
 {

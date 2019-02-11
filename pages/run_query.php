@@ -27,11 +27,6 @@
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/itopwebpage.class.inc.php');
-require_once(APPROOT.'/application/startup.inc.php');
-require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-
-LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-ApplicationMenu::CheckMenuIdEnabled('RunQueriesMenu');
 
 function ShowExamples($oP, $sExpression)
 {
@@ -95,20 +90,25 @@ function ShowExamples($oP, $sExpression)
 	}
 }
 
-$sOperation = utils::ReadParam('operation', 'menu');
-$oAppContext = new ApplicationContext();
-
-$oP = new iTopWebPage(Dict::S('UI:RunQuery:Title'));
-$oP->SetBreadCrumbEntry('ui-tool-runquery', Dict::S('Menu:RunQueriesMenu'), Dict::S('Menu:RunQueriesMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
-
-// Main program
-$sExpression = utils::ReadParam('expression', '', false, 'raw_data');
-$sEncoding = utils::ReadParam('encoding', 'oql');
-
-ShowExamples($oP, $sExpression);
-
 try
 {
+	require_once(APPROOT.'/application/startup.inc.php');
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+
+	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
+	ApplicationMenu::CheckMenuIdEnabled('RunQueriesMenu');
+	$sOperation = utils::ReadParam('operation', 'menu');
+	$oAppContext = new ApplicationContext();
+
+	$oP = new iTopWebPage(Dict::S('UI:RunQuery:Title'));
+	$oP->SetBreadCrumbEntry('ui-tool-runquery', Dict::S('Menu:RunQueriesMenu'), Dict::S('Menu:RunQueriesMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+
+// Main program
+	$sExpression = utils::ReadParam('expression', '', false, 'raw_data');
+	$sEncoding = utils::ReadParam('encoding', 'oql');
+
+	ShowExamples($oP, $sExpression);
+
 	if ($sEncoding == 'crypted')
 	{
 		// Translate $sExpression into a oql expression
@@ -265,6 +265,16 @@ EOF
 			$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getMessage()).'</b>');
 		}
 	}
+}
+catch(MaintenanceException $e)
+{
+	require_once(APPROOT."/setup/setuppage.class.inc.php");
+
+	http_response_code(503);
+	$oP = new SetupPage(htmlentities($e->GetTitle(), ENT_QUOTES, 'utf-8'));
+	$oP->p("<h2>".htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8')."</h2>");
+	$oP->output();
+	exit();
 }
 catch(Exception $e)
 {
