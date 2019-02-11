@@ -54,8 +54,8 @@ $bMaintenanceAction = !is_null(Utils::ReadParam('maintenance', null));
 if (file_exists(APPROOT.'.maintenance') && !$bMaintenanceAction)
 {
 	require_once(APPROOT.'core/dict.class.inc.php');
-	$sMessage = Dict::S('UI:Error:MaintenanceMode', 'Application is currently in maintenance mode');
-	$sTitle = Dict::S('UI:Error:MaintenanceTitle', 'Maintenance');
+	$sMessage = Dict::S('UI:Error:MaintenanceMode');
+	$sTitle = Dict::S('UI:Error:MaintenanceTitle');
 	__clear_cache();
 	throw new MaintenanceException($sMessage, $sTitle);
 }

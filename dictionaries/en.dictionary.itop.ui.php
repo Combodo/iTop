@@ -1539,6 +1539,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance mode',
+	'UI:Error:MaintenanceTitle' =>  'Maintenance',
 ));
 
 //
