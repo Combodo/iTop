@@ -197,7 +197,8 @@ function sprintf(format, etc) {
 						  end: end,
 						  sort_col: s_col,
 						  sort_order: s_order,
-						  select_mode: c.select_mode,
+						  select_mode: c.select_mode, 
+						  list_id: c.table_id,
 						  display_key: c.displayKey,
 						  columns: c.columns,
 						  class_aliases: c.class_aliases
@@ -443,6 +444,7 @@ function sprintf(format, etc) {
 				filter: '',
 				extra_params: '',
 				select_mode: '',
+				table_id: 0,
 				totalSelected: 0,
 				selectionMode: 'positive',
 				displayKey: true,
