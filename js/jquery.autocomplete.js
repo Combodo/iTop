@@ -384,7 +384,7 @@
 					success(term,parsed);
 				}
 				// if an AJAX url has been supplied, try loading the data now
-			} else if( (typeof options.url == "string") && (options.url.length > 0) ){
+			} else if( (typeof options.url == "string") && (options.url.length > 0) && (term.length > 0) ){
 
 				var extraParams = {
 					timestamp: +new Date()
@@ -479,7 +479,7 @@
 		minChars: 1,
 		delay: 400,
 		matchCase: false,
-		matchSubset: true,
+		matchSubset: false,
 		matchContains: false,
 		cacheLength: 100,
 		max: 1000,
@@ -640,7 +640,10 @@
 							});
 						}
 					}
-					return csub;
+					if ( csub.length > 0 ) {
+						return csub;
+					}
+					return null;
 				} else
 				// if the exact item exists, use it
 				if (data[q]){
