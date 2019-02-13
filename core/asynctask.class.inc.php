@@ -168,6 +168,7 @@ abstract class AsyncTask extends DBObject
 			$aConfig = $aRetries[get_class($this)];
 			$iMaxRetries = $aConfig['max_retries'];
 		}
+		return $iMaxRetries;
 	}
 
 	/**
