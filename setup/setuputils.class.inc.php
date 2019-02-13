@@ -1307,7 +1307,7 @@ EOF
 		$sDBName = $aParameters['db_name'];
 
 		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
-		if ($bIsWindows && strpos($sDBPwd, '%'))
+		if ($bIsWindows && (strpos($sDBPwd, '%') !== false))
 		{
 			// Unsuported Password, disable the "Next" button
 			$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
