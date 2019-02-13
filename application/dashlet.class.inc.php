@@ -444,44 +444,40 @@ EOF
 			$sClass = $oQuery->GetClass();
 			foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
 			{
-				if ($sAttType == 'AttributeLinkedSet')
+				if (is_a($sAttType, 'AttributeLinkedSet', true))
 				{
 					continue;
 				}
-				if (is_subclass_of($sAttType, 'AttributeLinkedSet'))
+				if (is_a($sAttType, 'AttributeFriendlyName', true))
 				{
 					continue;
 				}
-				if ($sAttType == 'AttributeFriendlyName')
+				if (is_a($sAttType, 'AttributeOneWayPassword', true))
 				{
 					continue;
 				}
-				if (is_subclass_of($sAttType, 'AttributeFriendlyName'))
+				// For external fields, find the real type of the target
+				while (is_a($sAttType, 'AttributeExternalField', true))
 				{
-					continue;
-				}
-				if ($sAttType == 'AttributeExternalField')
-				{
-					continue;
-				}
-				if (is_subclass_of($sAttType, 'AttributeExternalField'))
-				{
-					continue;
-				}
-				if ($sAttType == 'AttributeOneWayPassword')
-				{
-					continue;
+					$sExtKeyAttCode = $this->oModelReflection->GetAttributeProperty($sClass, $sAttCode, 'extkey_attcode');
+					$sTargetClass = $this->oModelReflection->GetAttributeProperty($sClass, $sExtKeyAttCode, 'targetclass');
+					$sTargetAttCode = $this->oModelReflection->GetAttributeProperty($sClass, $sAttCode, 'target_attcode');
+					$aTargetAttCodes = $this->oModelReflection->ListAttributes($sTargetClass);
+					$sAttType = $aTargetAttCodes[$sTargetAttCode];
 				}
 
 				$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);
-				$aGroupBy[$sAttCode] = $sLabel;
-
-				if (is_subclass_of($sAttType, 'AttributeDateTime') || $sAttType == 'AttributeDateTime')
+				if (!in_array($sLabel, $aGroupBy))
 				{
-					$aGroupBy[$sAttCode.':hour'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel);
-					$aGroupBy[$sAttCode.':month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel);
-					$aGroupBy[$sAttCode.':day_of_week'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek', $sLabel);
-					$aGroupBy[$sAttCode.':day_of_month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth', $sLabel);
+					$aGroupBy[$sAttCode] = $sLabel;
+
+					if (is_a($sAttType, 'AttributeDateTime', true))
+					{
+						$aGroupBy[$sAttCode.':hour'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Hour', $sLabel);
+						$aGroupBy[$sAttCode.':month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-Month', $sLabel);
+						$aGroupBy[$sAttCode.':day_of_week'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfWeek', $sLabel);
+						$aGroupBy[$sAttCode.':day_of_month'] = Dict::Format('UI:DashletGroupBy:Prop-GroupBy:Select-DayOfMonth', $sLabel);
+					}
 				}
 			}
 			asort($aGroupBy);
