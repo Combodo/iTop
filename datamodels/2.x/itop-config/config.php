@@ -74,6 +74,17 @@ function TestConfig($sContents, $oP)
 	}
 }
 
+function ConfigCheckDBPassword(iTopWebPage $oP, &$iEditorTopMargin)
+{
+	$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
+	$sDBPwd = MetaModel::GetConfig()->Get('db_pwd');
+	if ($bIsWindows && (strpos($sDBPwd, '%') !== false))
+	{
+		// Unsupported Password
+		$iEditorTopMargin += 5;
+		$oP->add("<div class=\"header_message message_error\">Database password should not contain % character (backups won't work)...</div>");
+	}
+}
 
 /////////////////////////////////////////////////////////////////////
 // Main program
@@ -94,6 +105,7 @@ $oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/ext-searchbox.js');
 try
 {
 	$sOperation = utils::ReadParam('operation', '');
+	$iEditorTopMargin = 0;
 
 	$oP->add("<h1>".Dict::S('config-edit-title')."</h1>");
 
@@ -104,18 +116,20 @@ try
 	else if (MetaModel::GetModuleSetting('itop-config', 'config_editor', '') == 'disabled')
 	{
 		$oP->add("<div class=\"header_message message_info\">iTop interactive edition of the configuration as been disabled. See <tt>'config_editor' => 'disabled'</tt> in the configuration file.</div>");
+		ConfigCheckDBPassword($oP, $iEditorTopMargin);
 	}
 	else
 	{
+		ConfigCheckDBPassword($oP, $iEditorTopMargin);
 		$sConfigFile = APPROOT.'conf/'.utils::GetCurrentEnvironment().'/config-itop.php';
 
-        $iEditorTopMargin = 9;
+        $iEditorTopMargin += 9;
         $sConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
         $sOrginalConfig = $sConfig;
 
         if (!empty($sOperation))
         {
-            $iEditorTopMargin = 14;
+            $iEditorTopMargin += 5;
             $sConfig = utils::ReadParam('new_config', '', false, 'raw_data');
             $sOrginalConfig = utils::ReadParam('prev_config', '', false, 'raw_data');
         }
