@@ -42,6 +42,7 @@ function TestConfig($sContents, $oP)
         eval('if(0){'.trim($sSafeContent).'}');
         $sNoise = trim(ob_get_contents());
 		ob_end_clean();
+		CheckDBPasswordInNewConfig($sSafeContent);
     }
     catch (Error $e)
     {
@@ -74,15 +75,19 @@ function TestConfig($sContents, $oP)
 	}
 }
 
-function ConfigCheckDBPassword(iTopWebPage $oP, &$iEditorTopMargin)
+/**
+ * @param $sSafeContent
+ *
+ * @throws \Exception
+ */
+function CheckDBPasswordInNewConfig($sSafeContent)
 {
 	$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
-	$sDBPwd = MetaModel::GetConfig()->Get('db_pwd');
-	if ($bIsWindows && (strpos($sDBPwd, '%') !== false))
+
+	if ($bIsWindows && (preg_match("@'db_pwd' => '[^%']+',@", $sSafeContent) === 0))
 	{
 		// Unsupported Password
-		$iEditorTopMargin += 5;
-		$oP->add("<div class=\"header_message message_error\">Database password should not contain % character (backups won't work)...</div>");
+		throw new Exception("Database password should not contain % character (backups won't work)...");
 	}
 }
 
@@ -116,22 +121,20 @@ try
 	else if (MetaModel::GetModuleSetting('itop-config', 'config_editor', '') == 'disabled')
 	{
 		$oP->add("<div class=\"header_message message_info\">iTop interactive edition of the configuration as been disabled. See <tt>'config_editor' => 'disabled'</tt> in the configuration file.</div>");
-		ConfigCheckDBPassword($oP, $iEditorTopMargin);
 	}
 	else
 	{
-		ConfigCheckDBPassword($oP, $iEditorTopMargin);
 		$sConfigFile = APPROOT.'conf/'.utils::GetCurrentEnvironment().'/config-itop.php';
 
         $iEditorTopMargin += 9;
         $sConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
-        $sOrginalConfig = $sConfig;
+        $sOriginalConfig = $sConfig;
 
         if (!empty($sOperation))
         {
             $iEditorTopMargin += 5;
             $sConfig = utils::ReadParam('new_config', '', false, 'raw_data');
-            $sOrginalConfig = utils::ReadParam('prev_config', '', false, 'raw_data');
+            $sOriginalConfig = utils::ReadParam('prev_config', '', false, 'raw_data');
         }
 
         if ($sOperation == 'revert')
@@ -147,7 +150,7 @@ try
             }
             else
             {
-                if ($sConfig == $sOrginalConfig)
+                if ($sConfig == $sOriginalConfig)
                 {
                     $oP->add('<div id="save_result" class="header_message">'.Dict::S('config-no-change').'</div>');
                 }
@@ -177,7 +180,7 @@ try
                         @chmod($sConfigFile, 0444); // Read-only
 
                         $oP->p('<div id="save_result" class="header_message message_ok">'.Dict::S('config-saved').'</div>');
-                        $sOrginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
+                        $sOriginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
                     }
                     catch (Exception $e)
                     {
@@ -189,7 +192,7 @@ try
 
 
 		$sConfigEscaped = htmlentities($sConfig, ENT_QUOTES, 'UTF-8');
-		$sOriginalConfigEscaped = htmlentities($sOrginalConfig, ENT_QUOTES, 'UTF-8');
+		$sOriginalConfigEscaped = htmlentities($sOriginalConfig, ENT_QUOTES, 'UTF-8');
 		$oP->p(Dict::S('config-edit-intro'));
 		$oP->add("<form method=\"POST\">");
         $oP->add("<input id=\"operation\" type=\"hidden\" name=\"operation\" value=\"save\">");
