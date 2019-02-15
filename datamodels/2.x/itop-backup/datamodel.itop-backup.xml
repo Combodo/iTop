@@ -5,8 +5,7 @@
       <rank>15</rank>
       <parent>AdminTools</parent>
       <url>status.php</url>
-      <enable_class>ResourceAdminMenu</enable_class>
-      <enable_action>UR_ACTION_MODIFY</enable_action>
+      <enable_admin_only>1</enable_admin_only>
     </menu>
   </menus>
 </itop_design>
