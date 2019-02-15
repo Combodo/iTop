@@ -44,17 +44,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			$('#dlg_'+me.id).remove();
 		});
 
-        $('#linkedset_'+me.id+' :input').off('change').on('change', function() {
-			if (!($(this).hasClass('selection')) && !($(this).hasClass('select_all'))) {
-				var oCheckbox = $(this).closest('tr').find('.selection');
-				var iLink = oCheckbox.attr('data-link-id');
-				var iUniqueId = oCheckbox.attr('data-unique-id');
-				var sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
-				var value = $(this).val();
-				return me.OnValueChange(iLink, iUniqueId, sAttCode, value);
-			}
-			return true;
-        });
+        me.RegisterChange();
 
 		var oInput = $('#'+this.iInputId);
 		oInput.bind('update_value', function() { $(this).val(me.GetUpdatedValue()); });
@@ -348,17 +338,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
     this.OnLinkAdded = function(iAddedId, iRemote)
     {
 		this.AddLink(iAddedId, iRemote);
-        $('#linkedset_'+me.id+' :input').off('change').on('change', function() {
-			if (!($(this).hasClass('selection'))) {
-				var oCheckbox = $(this).closest('tr').find('.selection');
-				var iLink = oCheckbox.attr('data-link-id');
-				var iUniqueId = oCheckbox.attr('data-unique-id');
-				var sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
-				var value = $(this).val();
-				return me.OnValueChange(iLink, iUniqueId, sAttCode, value);
-			}
-			return true;
-        });
+		me.RegisterChange();
     };
 
 	this.UpdateSizes = function(event, ui)
@@ -435,6 +415,22 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		return JSON.stringify(aValues);
 	};
 
+	this.RegisterChange = function()
+	{
+		// Listen only used inputs
+		$('#linkedset_'+me.id+' :input[name^="attr_'+me.sAttCode+'["]').off('change').on('change', function() {
+			if (!($(this).hasClass('selection'))) {
+				var oCheckbox = $(this).closest('tr').find('.selection');
+				var iLink = oCheckbox.attr('data-link-id');
+				var iUniqueId = oCheckbox.attr('data-unique-id');
+				var sAttCode = $(this).closest('.attribute-edit').attr('data-attcode');
+				var value = $(this).val();
+				return me.OnValueChange(iLink, iUniqueId, sAttCode, value);
+			}
+			return true;
+		});
+	};
+
 	this.OnValueChange = function(iLink, iUniqueId, sAttCode, value)
 	{
 		var sFormPrefix = me.iInputId;
@@ -476,5 +472,8 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		});
 		var sToBeCreated = JSON.stringify(aToBeCreated);
 		$('<input type="hidden" name="attr_'+me.sAttCode+'_tbc">').val(sToBeCreated).appendTo(oDiv);
+
+		// Remove unused inputs
+		$('#linkedset_'+me.id+' :input[name^="attr_'+me.sAttCode+'["]').prop("disabled", true);
 	};
 }
