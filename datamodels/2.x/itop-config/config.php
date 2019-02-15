@@ -84,7 +84,7 @@ function CheckDBPasswordInNewConfig($sSafeContent)
 {
 	$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
 
-	if ($bIsWindows && (preg_match("@'db_pwd' => '[^%!\"']+',@", $sSafeContent) === 0))
+	if ($bIsWindows && (preg_match("@'db_pwd' => '[^%!\"]+',@U", $sSafeContent) === 0))
 	{
 		// Unsupported Password
 		throw new Exception("On Windows, database password must not contain %, ! or \" character (backups won't work)...");
