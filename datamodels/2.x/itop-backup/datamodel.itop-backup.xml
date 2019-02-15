@@ -6,7 +6,6 @@
       <parent>AdminTools</parent>
       <url>status.php</url>
       <enable_admin_only>1</enable_admin_only>
-      <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
   </menus>
 </itop_design>
