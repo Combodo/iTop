@@ -57,6 +57,13 @@ class WizStepWelcome extends WizardStep
 	
 	public function ProcessParams($bMoveForward = true)
 	{
+		if (!file_exists(APPROOT.'data/setup'))
+		{
+			mkdir(APPROOT.'data/setup');
+		}
+		$sUID = hash('sha256', rand());
+		file_put_contents(APPROOT.'data/setup/authent', $sUID);
+		$this->oWizard->SetParameter('authent', $sUID);
 		return array('class' => 'WizStepInstallOrUpgrade', 'state' => '');
 	}
 	
@@ -284,6 +291,8 @@ class WizStepInstallOrUpgrade extends WizardStep
 		$oPage->add('<tr><td colspan="2">');
 		$oPage->add($sMySQLDumpMessage.'<br/><span id="backup_info" style="font-size:small;color:#696969;">'.$sMessage.'</span></td></tr>');
 		$oPage->add('</table>');
+		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
+		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		//$oPage->add('</fieldset>');
 		$oPage->add_ready_script(
 <<<EOF
@@ -802,6 +811,8 @@ class WizStepDBParams extends WizardStep
 		$oPage->add('<table>');
 		SetupUtils::DisplayDBParameters($oPage, true, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $sTlsEnabled,
 			$sTlsCA, $sNewDBName);
+		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
+		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		$oPage->add('</table>');
 		$sCreateDB = $this->oWizard->GetParameter('create_db', 'yes');
 		if ($sCreateDB == 'no')
@@ -996,6 +1007,8 @@ class WizStepMiscParams extends WizardStep
         $sChecked = ($sSampleData == 'no') ? 'checked ' : '';
         $oPage->p('<input id="sample_data_no" name="sample_data" type="radio" value="no" '.$sChecked.'><label for="sample_data_no">&nbsp;I am installing a <b>production</b> instance, create an empty database to start from.');
 		$oPage->add('</fieldset>');
+		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
+		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		$oPage->add_ready_script(
 <<<EOF
 		$('#application_url').bind('change keyup', function() { WizardUpdateButtons(); } );
@@ -2240,6 +2253,9 @@ EOF
 		$sJSONData = json_encode($aInstallParams);
 		$oPage->add('<input type="hidden" id="installer_parameters" value="'.htmlentities($sJSONData, ENT_QUOTES, 'UTF-8').'"/>');
 
+		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
+		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
+
 		if (!$this->CheckDependencies())
 		{
 			$oPage->error($this->sDependencyIssue);
@@ -2252,7 +2268,8 @@ EOF
 	$("#btn_next").bind("click.install", function(event) {
 			$('#summary').hide();
 			$('#installation_progress').show();
-			$(this).prop('disabled', true);	 event.preventDefault(); ExecuteStep("");
+			$(this).prop("disabled", true);
+			 event.preventDefault(); ExecuteStep("");
 	});
 	$("#wiz_form").data("installation_status", "not started")
 EOF
@@ -2494,14 +2511,14 @@ class WizStepDone extends WizardStep
 			$oPage->ok("The installation completed successfully.");
 		}
 
-		if (($this->oWizard->GetParameter('mode', '') == 'upgrade') && $this->oWizard->GetParameter('db_backup', false))
+		if (($this->oWizard->GetParameter('mode', '') == 'upgrade') && $this->oWizard->GetParameter('db_backup', false) && $this->oWizard->GetParameter('authent', false))
 		{
 			$sBackupDestination = $this->oWizard->GetParameter('db_backup_path', '');
 			if (file_exists($sBackupDestination.'.tar.gz'))
 			{
 				// To mitigate security risks: pass only the filename without the extension, the download will add the extension itself
 				$oPage->p('Your backup is ready');
-				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot().'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sBackupDestination).'" target="_blank"><img src="../images/tar.png" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
+				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot().'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sBackupDestination).'&authent='.$this->oWizard->GetParameter('authent','').'" target="_blank"><img src="../images/tar.png" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
 			}
 			else
 			{
