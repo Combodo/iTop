@@ -1224,6 +1224,10 @@ abstract class DBObject implements iDisplay
 		if ($this->InSyncScope())
 		{
 			$iSynchroFlags = $this->GetSynchroReplicaFlags($sAttCode, $aReasons);
+			if ($iSynchroFlags & OPT_ATT_SLAVE)
+			{
+				$iSynchroFlags |= OPT_ATT_READONLY;
+			}
 		}
 		return $iFlags | $iSynchroFlags; // Combine both sets of flags
 	}
