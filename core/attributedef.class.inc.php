@@ -9668,14 +9668,27 @@ class AttributeTagSet extends AttributeSet
 		{
 			$aJson['partial_values'] = array();
 			$aJson['orig_value'] = array();
+			$aJson['added'] = array();
+			$aJson['removed'] = array();
 		}
 		else
 		{
-			$aJson['partial_values'] = $oValue->GetModified();
 			$aJson['orig_value'] = array_merge($oValue->GetValues(), $oValue->GetModified());
+			$aJson['added'] = $oValue->GetAdded();
+			$aJson['removed'] = $oValue->GetRemoved();
+
+			if ($oValue->DisplayPartial())
+			{
+				// For bulk updates
+				$aJson['partial_values'] = $oValue->GetModified();
+			}
+			else
+			{
+				// For simple updates
+				$aJson['partial_values'] = array();
+			}
 		}
-		$aJson['added'] = array();
-		$aJson['removed'] = array();
+
 
 		$iMaxTags = $this->GetMaxItems();
 		$aJson['max_items_allowed'] = $iMaxTags;
