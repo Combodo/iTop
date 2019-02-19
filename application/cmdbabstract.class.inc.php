@@ -4221,6 +4221,7 @@ EOF
 								$oDummyObj->Set($sAttCode, $currValue);
 								/** @var ormTagSet $oTagSet */
 								$oTagSet = $oDummyObj->Get($sAttCode);
+								$oTagSet->SetDisplayPartial(true);
 								foreach($aKeys as $iIndex => $sValues)
 								{
 									if ($iIndex == 0)
