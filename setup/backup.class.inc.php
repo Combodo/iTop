@@ -313,8 +313,11 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$sTmpFolder = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
 			$aFiles = $this->PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder);
 
+			$sFilesList = var_export($aFiles, true);
+			$this->LogInfo("backup: adding to archive files '$sFilesList'");
 			$oArchive->createModify($aFiles, '', $sTmpFolder);
 
+			$this->LogInfo("backup: removing tmp folder '$sTmpFolder'");
 			SetupUtils::rrmdir($sTmpFolder);
 		}
 
@@ -334,6 +337,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			{
 				SetupUtils::rrmdir($sTmpFolder);
 			}
+			$this->LogInfo("backup: creating tmp dir '$sTmpFolder'");
 			@mkdir($sTmpFolder, 0777, true);
 			if (is_null($sSourceConfigFile))
 			{
@@ -342,6 +346,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			if (!empty($sSourceConfigFile))
 			{
 				$sFile = $sTmpFolder.'/config-itop.php';
+				$this->LogInfo("backup: adding resource '$sSourceConfigFile'");
 				copy($sSourceConfigFile, $sFile);
 				$aRet[] = $sFile;
 			}
@@ -350,6 +355,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			if (file_exists($sDeltaFile))
 			{
 				$sFile = $sTmpFolder.'/delta.xml';
+				$this->LogInfo("backup: adding resource '$sDeltaFile'");
 				copy($sDeltaFile, $sFile);
 				$aRet[] = $sFile;
 			}
@@ -358,6 +364,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			{
 				$sModules = utils::GetCurrentEnvironment().'-modules';
 				$sFile = $sTmpFolder.'/'.$sModules;
+				$this->LogInfo("backup: adding resource '$sExtraDir'");
 				SetupUtils::copydir($sExtraDir, $sFile);
 				$aRet[] = $sFile;
 			}
@@ -434,7 +441,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$sCommandDisplay = "$sMySQLDump --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
 
 			// Now run the command for real
-			$this->LogInfo("Executing command: $sCommandDisplay");
+			$this->LogInfo("backup: generate data file with command: $sCommandDisplay");
 			$aOutput = array();
 			$iRetCode = 0;
 			exec($sCommand, $aOutput, $iRetCode);
