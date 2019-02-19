@@ -3868,7 +3868,7 @@ abstract class DBObject implements iDisplay
 				foreach(MetaModel::ListAttributeDefs($sLinkClass) as $sAttCode => $oAttDef)
 				{
 					// As of now, ignore other attribute (do not attempt to recurse!)
-					if ($oAttDef->IsScalar())
+					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
 					{
 						$oLinkClone->Set($sAttCode, $oSourceLink->Get($sAttCode));
 					}
@@ -3931,7 +3931,7 @@ abstract class DBObject implements iDisplay
 				$oObjectToRead = $aSourceObjects['source'];
 				foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 				{
-					if ($oAttDef->IsScalar())
+					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
 					{
 						$this->CopyAttribute($oObjectToRead, $sAttCode, $sAttCode);
 					}
