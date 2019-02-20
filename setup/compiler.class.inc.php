@@ -330,8 +330,9 @@ EOF;
 					$aMenusToLoad[] = $sMenuId;
 				}
 				$aMenusToLoad = array_unique($aMenusToLoad);
-				$aMenusForAll = array();
-				$aMenusForAdmins = array();
+				$aMenuLinesForAll = array();
+				$aMenuLinesForAdmins = array();
+				$aAdminMenus = array();
 				foreach($aMenusToLoad as $sMenuId)
 				{
 					$oMenuNode = $aMenuNodes[$sMenuId];
@@ -362,25 +363,27 @@ EOF;
 					{
 						throw new Exception("Failed to process menu '$sMenuId', from '$sModuleRootDir': ".$e->getMessage());
 					}
-					if ($oMenuNode->GetChildText('enable_admin_only') == '1')
+					$sParent = $oMenuNode->GetChildText('parent', null);
+					if (($oMenuNode->GetChildText('enable_admin_only') == '1') || isset($aAdminMenus[$sParent]))
 					{
-						$aMenusForAdmins = array_merge($aMenusForAdmins, $aMenuLines);
+						$aMenuLinesForAdmins = array_merge($aMenuLinesForAdmins, $aMenuLines);
+						$aAdminMenus[$oMenuNode->getAttribute("id")] = true;
 					}
 					else
 					{
-						$aMenusForAll = array_merge($aMenusForAll, $aMenuLines);
+						$aMenuLinesForAll = array_merge($aMenuLinesForAll, $aMenuLines);
 					}
 				}
 				$sIndent = "\t\t";
-				foreach ($aMenusForAll as $sPHPLine)
+				foreach ($aMenuLinesForAll as $sPHPLine)
 				{
 					$sCompiledCode .= $sIndent.$sPHPLine."\n";
 				}
-				if (count($aMenusForAdmins) > 0)
+				if (count($aMenuLinesForAdmins) > 0)
 				{
 					$sCompiledCode .= $sIndent."if (UserRights::IsAdministrator())\n";
 					$sCompiledCode .= $sIndent."{\n";
-					foreach ($aMenusForAdmins as $sPHPLine)
+					foreach ($aMenuLinesForAdmins as $sPHPLine)
 					{
 						$sCompiledCode .= $sIndent."\t".$sPHPLine."\n";
 					}
