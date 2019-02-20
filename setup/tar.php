@@ -1214,7 +1214,7 @@ class ArchiveTar
 				$iBufferLen = strlen("$v_buffer");
 				if ($iBufferLen != $iLen)
 				{
-					$iPack = ((int)($iBufferLen / 512) + 1) * 512;
+					$iPack = ((int)(($iBufferLen - 1) / 512) + 1) * 512;
 					$sPack = sprintf('a%d', $iPack);
 				}
 				else
