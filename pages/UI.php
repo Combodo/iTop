@@ -1497,7 +1497,15 @@ EOF
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
 		}
-		$oObj = MetaModel::GetObject($sClass, $id, false);
+		$aStimuli = MetaModel::EnumStimuli($sClass);
+		if ((get_class($aStimuli[$sStimulus]) !== 'StimulusUserAction') || (UserRights::IsStimulusAllowed($sClass, $sStimulus) === UR_ALLOWED_NO))
+		{
+			$sUser = UserRights::GetUser();
+			IssueLog::Error("UI.php '$operation' : Stimulus '$sStimulus' not allowed ! data: user='$sUser', class='$sClass'");
+			throw new ApplicationException(Dict::S('UI:Error:ActionNotAllowed'));
+		}
+
+			$oObj = MetaModel::GetObject($sClass, $id, false);
 		if ($oObj != null)
 		{
 			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
@@ -1544,6 +1552,13 @@ EOF
 				IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 				$sMessage = Dict::S('UI:Error:ObjectAlreadyUpdated');
 				$sSeverity = 'info';
+			}
+			elseif ((get_class($aStimuli[$sStimulus]) !== 'StimulusUserAction') || (UserRights::IsStimulusAllowed($sClass, $sStimulus) === UR_ALLOWED_NO))
+			{
+				$sUser = UserRights::GetUser();
+				IssueLog::Error("UI.php '$operation' : Stimulus '$sStimulus' not allowed ! data: user='$sUser', class='$sClass'");
+				$sMessage = Dict::S('UI:Error:ActionNotAllowed');
+				$sSeverity = 'error';
 			}
 			else
 			{

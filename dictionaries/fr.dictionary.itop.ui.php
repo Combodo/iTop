@@ -758,6 +758,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Suppression massive de %1$d objets de type %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Vous n\'êtes pas autorisé à supprimer cet objet',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Vous n\'êtes pas autorisé à mettre à jour les champs suivants : %1$s',
+	'UI:Error:ActionNotAllowed' => 'Vous n\'êtes pas autorisé à effectuer cette action',
 	'UI:Error:NotEnoughRightsToDelete' => 'Cet objet ne peut pas être supprimé car l\'utilisateur courant n\'a pas les droits nécessaires.',
 	'UI:Error:CannotDeleteBecause' => 'Cet objet ne peut pas être effacé. Raison: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Cet objet ne peut pas être supprimé, des opérations manuelles sont nécessaire avant sa suppression.',
