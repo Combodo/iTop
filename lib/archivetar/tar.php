@@ -680,7 +680,7 @@ class ArchiveTar
 	 */
 	public function _error($p_message)
 	{
-		IssueLog::Error($p_message);
+		$this->error_object = $this->raiseError($p_message);
 	}
 
 	/**
@@ -688,7 +688,7 @@ class ArchiveTar
 	 */
 	public function _warning($p_message)
 	{
-		IssueLog::Warning($p_message);
+		$this->error_object = $this->raiseError($p_message);
 	}
 
 	/**
@@ -1209,6 +1209,10 @@ class ArchiveTar
 				return false;
 			}
 
+			// --- START COMBODO modification
+			// (see commit 2706ebf6)
+			// read/write files with a bigger buffer to increase drastically performances
+			// to still get a valid archive, last bytes are still read/write using a 512 byte buffer
 			$iLen = 1024*1024;
 			while (($v_buffer = fread($v_file, $iLen)) != '') {
 				$iBufferLen = strlen("$v_buffer");
@@ -1224,6 +1228,7 @@ class ArchiveTar
 				$v_binary_data = pack($sPack, "$v_buffer");
 				$this->_writeBlock($v_binary_data);
 			}
+			// --- END COMBODO modification
 
 			fclose($v_file);
 		} else {
@@ -1518,28 +1523,34 @@ class ArchiveTar
 	 */
 	public function _writeLongHeader($p_filename)
 	{
-		$v_uid = sprintf("%07s", 0);
-		$v_gid = sprintf("%07s", 0);
-		$v_perms = sprintf("%07s", 0);
-		$v_size = sprintf("%'011s", DecOct(strlen($p_filename)));
-		$v_mtime = sprintf("%011s", 0);
+		$v_size = sprintf("%11s ", DecOct(strlen($p_filename)));
+
 		$v_typeflag = 'L';
+
 		$v_linkname = '';
-		$v_magic = 'ustar ';
-		$v_version = ' ';
+
+		$v_magic = '';
+
+		$v_version = '';
+
 		$v_uname = '';
+
 		$v_gname = '';
+
 		$v_devmajor = '';
+
 		$v_devminor = '';
+
 		$v_prefix = '';
+
 		$v_binary_data_first = pack(
 			"a100a8a8a8a12a12",
 			'././@LongLink',
-			$v_perms,
-			$v_uid,
-			$v_gid,
+			0,
+			0,
+			0,
 			$v_size,
-			$v_mtime
+			0
 		);
 		$v_binary_data_last = pack(
 			"a1a100a6a2a32a32a8a8a155a12",
@@ -1722,6 +1733,7 @@ class ArchiveTar
 		if (strpos($file, 'phar://') === 0) {
 			return true;
 		}
+
 		if (strpos($file, '/../') !== false) {
 			return true;
 		}
