@@ -77,8 +77,9 @@ EOF;
 }
 EOF;
 
-			SetupUtils::builddir(dirname($sFilePath));
-			file_put_contents($sFilePath, $content);
+				SetupUtils::builddir(dirname($sFilePath));
+				file_put_contents($sFilePath, $content);
+			}
 		}
 		// Restore original user language
 		Dict::SetUserLanguage($sUserLang);
