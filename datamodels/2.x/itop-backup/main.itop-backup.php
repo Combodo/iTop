@@ -47,31 +47,14 @@ class DBBackupScheduled extends DBBackup
 {
 	protected function LogInfo($sMsg)
 	{
-		static $bDebug = null;
-		if ($bDebug == null)
-		{
-			$bDebug = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'debug', false);
-		}
-
-		if ($bDebug)
-		{
-			echo $sMsg."\n";
-		}
+		echo $sMsg."\n";
+		IssueLog::Info($sMsg);
 	}
 
 	protected function LogError($sMsg)
 	{
-		static $bDebug = null;
-		if ($bDebug == null)
-		{
-			$bDebug = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'debug', false);
-		}
-
 		IssueLog::Error($sMsg);
-		if ($bDebug)
-		{
-			echo 'Error: '.$sMsg."\n";
-		}
+		echo 'Error: '.$sMsg."\n";
 	}
 
 	/**

@@ -26,6 +26,9 @@
  */
 final class ormTagSet extends ormSet
 {
+	private $m_bDisplayPartial = false;
+
+
 	/**
 	 * ormTagSet constructor.
 	 *
@@ -300,6 +303,82 @@ final class ormTagSet extends ormSet
 	}
 
 	/**
+	 * @return string[] list of codes for added entries
+	 */
+	public function GetAdded()
+	{
+		$aAddedTagCodes = array_keys($this->aAdded);
+		sort($aAddedTagCodes);
+
+		return $aAddedTagCodes;
+	}
+
+	/**
+	 * @return string[] list of codes for removed entries
+	 */
+	public function GetRemoved()
+	{
+		$aRemovedTagCodes = array_keys($this->aRemoved);
+		sort($aRemovedTagCodes);
+
+		return $aRemovedTagCodes;
+	}
+
+	/**
+	 * Apply a delta to the current ItemSet
+	 *  $aDelta['added] = array of added items
+	 *  $aDelta['removed'] = array of removed items
+	 *
+	 * @param $aDelta
+	 *
+	 * @throws \CoreException
+	 */
+	public function ApplyDelta($aDelta)
+	{
+		if (isset($aDelta['removed']))
+		{
+			foreach($aDelta['removed'] as $oItem)
+			{
+				$this->Remove($oItem);
+			}
+		}
+		if (isset($aDelta['added']))
+		{
+			foreach($aDelta['added'] as $oItem)
+			{
+				$this->Add($oItem);
+			}
+		}
+	}
+
+	/**
+	 * Populates the added and removed arrays for bulk edit
+	 *
+	 * @param string[] $aItems
+	 *
+	 * @throws \CoreException
+	 */
+	public function GenerateDiffFromArray($aItems)
+	{
+		foreach($this->GetValues() as $oCurrentItem)
+		{
+			if (!in_array($oCurrentItem, $aItems))
+			{
+				$this->Remove($oCurrentItem);
+			}
+		}
+
+		foreach($aItems as $oNewItem)
+		{
+			$this->Add($oNewItem);
+		}
+
+		// Keep only the aModified list
+		$this->aRemoved = array();
+		$this->aAdded = array();
+	}
+
+	/**
 	 * Check whether a tag code is valid or not for this TagSet
 	 *
 	 * @param string $sTagCode
@@ -477,6 +556,23 @@ final class ormTagSet extends ormSet
 	public function GetTagDataClass()
 	{
 		return TagSetFieldData::GetTagDataClassName($this->sClass, $this->sAttCode);
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function DisplayPartial()
+	{
+		return $this->m_bDisplayPartial;
+	}
+
+	/**
+	 * @param bool $m_bDisplayPartial
+	 */
+	public function SetDisplayPartial($m_bDisplayPartial)
+	{
+		$this->m_bDisplayPartial = $m_bDisplayPartial;
 	}
 
 }
