@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-require_once('tar.php');
+require_once(APPROOT.'core/tar-itop.class.inc.php');
 
 interface BackupArchive
 {
@@ -308,7 +308,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		{
 			$this->LogInfo("Creating backup: '$sTargetFile.tar.gz'");
 
-			$oArchive = new ArchiveTar($sTargetFile.'.tar.gz');
+			$oArchive = new ITopArchiveTar($sTargetFile.'.tar.gz');
 
 			$sTmpFolder = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
 			$aFiles = $this->PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder);
@@ -717,18 +717,14 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 class TarGzArchive implements BackupArchive
 {
-	/*
-	 * @var ArchiveTar
-	 */
+	/** @var \ITopArchiveTar $oArchive */
 	protected $oArchive;
-	/*
-	 * string[]
-	 */
+	/** @var string[] $aFiles */
 	protected $aFiles = null;
 
 	public function __construct($sFile)
 	{
-		$this->oArchive = new ArchiveTar($sFile);
+		$this->oArchive = new ITopArchiveTar($sFile);
 	}
 
 	/**
