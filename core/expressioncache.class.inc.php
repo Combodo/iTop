@@ -81,6 +81,7 @@ EOF;
 				file_put_contents($sFilePath, $content);
 			}
 		}
+		Dict::SetUserLanguage($sUserLang);
 	}
 
 	static private function GetSerializedExpression($sClass, $sAttCode)
