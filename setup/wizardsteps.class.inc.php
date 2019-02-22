@@ -1000,7 +1000,7 @@ class WizStepMiscParams extends WizardStep
 		$oPage->add_ready_script(
 <<<EOF
 		$('#application_url').bind('change keyup', function() { WizardUpdateButtons(); } );
-		$('#graphviz_path').bind('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val() }); } ).trigger('init');
+		$('#graphviz_path').bind('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val(), authent: $('#authent_token').val()}); } ).trigger('init');
 		$('#btn_next').click(function() {
 			bRet = true;
 			if ($(this).attr('data-graphviz') != 'ok')
@@ -1122,10 +1122,12 @@ class WizStepUpgradeMiscParams extends WizardStep
 		$oPage->add('<tr><td colspan="2"><span id="graphviz_status"></span></td><tr>');
 		$oPage->add('</table>');
 		$oPage->add('</fieldset>');
+		$sAuthentToken = $this->oWizard->GetParameter('authent', '');
+		$oPage->add('<input type="hidden" id="authent_token" value="'.$sAuthentToken.'"/>');
 		$oPage->add_ready_script(
 <<<EOF
 		$('#application_url').bind('change keyup', function() { WizardUpdateButtons(); } );
-		$('#graphviz_path').bind('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val() }); } ).trigger('init');
+		$('#graphviz_path').bind('change keyup init', function() { WizardUpdateButtons();  WizardAsyncAction('check_graphviz', { graphviz_path: $('#graphviz_path').val(), authent: $('#authent_token').val() }); } ).trigger('init');
 		$('#btn_next').click(function() {
 			bRet = true;
 			if ($(this).attr('data-graphviz') != 'ok')
