@@ -843,8 +843,8 @@ EOF
 		{
 			$sAuthUser = $_SESSION['auth_user'];
 			UserRights::Login($sAuthUser); // Set the user's language
-			$sOldPwd = utils::ReadPostedParam('old_pwd', '', false, 'raw_data');
-			$sNewPwd = utils::ReadPostedParam('new_pwd', '', false, 'raw_data');
+			$sOldPwd = utils::ReadPostedParam('old_pwd', '', 'raw_data');
+			$sNewPwd = utils::ReadPostedParam('new_pwd', '', 'raw_data');
 			if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
 			{
 				$oPage = self::NewLoginWebPage();
