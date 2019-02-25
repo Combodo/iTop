@@ -58,3 +58,24 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Attachment/Attribute:contents' => 'Contenu',
 	'Class:Attachment/Attribute:contents+' => '',
 ));
+
+//
+// Class: Attachment
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Attachment' => 'Attachement',
+	'Class:Attachment+' => '',
+	'Class:Attachment/Attribute:expire' => 'Expire',
+	'Class:Attachment/Attribute:expire+' => '',
+	'Class:Attachment/Attribute:temp_id' => 'Id Temporaire',
+	'Class:Attachment/Attribute:temp_id+' => '',
+	'Class:Attachment/Attribute:item_class' => 'Classe d\'Item',
+	'Class:Attachment/Attribute:item_class+' => '',
+	'Class:Attachment/Attribute:item_id' => 'Item',
+	'Class:Attachment/Attribute:item_id+' => '',
+	'Class:Attachment/Attribute:item_org_id' => 'Organisation de l\'Item',
+	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:contents' => 'Contenu',
+	'Class:Attachment/Attribute:contents+' => '',
+));
