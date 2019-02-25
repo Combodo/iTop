@@ -48,7 +48,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:Landing:Install' => 'Bezig met extensies te installeren...',
 	'iTopHub:CompiledOK' => 'Compilatie geslaagd.',
 	'iTopHub:ConfigurationSafelyReverted' => 'Er trad een fout op bij de installatie!<br/>iTop-configuratie werd NIET aangepast.',
-	
+	'iTopHub:FailAuthent' => 'Authentication failed for this action.~~',
+
 	'iTopHub:InstalledExtensions' => 'Manueel geïnstalleerde extensies',
 	'iTopHub:ExtensionCategory:Manual' => 'Manueel geïnstalleerde extensies',
 	'iTopHub:ExtensionCategory:Manual+' => 'Deze extensies werden geïnstalleerd door ze manueel in de map %1$s te plaatsen:',

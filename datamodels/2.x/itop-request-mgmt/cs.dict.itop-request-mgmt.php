@@ -279,7 +279,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Portal:TitleDetailsFor_Service' => 'Detaily služby',
 	'Portal:Button:CreateRequestFromService' => 'Vytvořit požadavek k této službě',
 	'Portal:ListOpenRequests' => 'Seznam otevřených požadavků',
-'Portal:UserRequest:MoreInfo' => 'Více informací',
+	'Portal:UserRequest:MoreInfo' => 'Více informací',
 	'Portal:Details-Service-Element' => 'Prvky služby',
 	'Portal:NoClosedTicket' => 'Žádné uzavřené požadavky',
 	'Portal:NoService' => '',

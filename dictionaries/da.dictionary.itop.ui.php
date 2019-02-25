@@ -760,6 +760,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Massesletning af %1$d objekter af klassen %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Du har ikke tilladelse til at slette dette objekt',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Du har ikke tilladelse til at opdatere følgende felt(er): %1$s',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => 'Dette objekt kunne ikke slettes, fordi den nuværende bruger ikke har tilstrækkelige rettigheder',
 	'UI:Error:CannotDeleteBecause' => 'Dette objekt kunne ikke slettes fordi: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Dette objekt kunne ikke slettes, fordi nogle manuelle operationer skal udføres først',

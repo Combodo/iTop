@@ -57,3 +57,30 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten',
 	'Menu:MyShortcuts' => 'Meine Shortcuts',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));

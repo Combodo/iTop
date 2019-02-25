@@ -276,7 +276,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Portal:TitleDetailsFor_Service' => 'Detaljer for ydelser',
 	'Portal:Button:CreateRequestFromService' => 'Opret henvendelse fra Service',
 	'Portal:ListOpenRequests' => 'List åbne brugerhenvendelser',
-'Portal:UserRequest:MoreInfo' => 'Yderligere informationer',
+	'Portal:UserRequest:MoreInfo' => 'Yderligere informationer',
 	'Portal:Details-Service-Element' => 'Service Elementer',
 	'Portal:NoClosedTicket' => 'Ingen lukkede brugerhenvendelser',
 	'Portal:NoService' => 'Ingen ydelse',

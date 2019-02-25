@@ -771,6 +771,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Exclusão em massa de %1$d objetos da classe %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Você não tem permissão para excluir este objeto.',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Você não tem permissão para atualizar o(s) seguinte(s) campo(s): %1$s',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => 'Este objeto não pode ser apagado porque o usuário atual não tem direitos suficientes',
 	'UI:Error:CannotDeleteBecause' => 'Este objeto não pode ser excluído porque: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Este objeto não pode ser excluído porque algumas operações manuais devem ser realizadas antes de que',

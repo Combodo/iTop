@@ -202,6 +202,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Родительское изменение',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
 	'Class:UserRequest/Attribute:related_request_list' => 'Дочерние запросы',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Дочерние запросы',
 	'Class:UserRequest/Attribute:public_log' => 'Общий журнал',

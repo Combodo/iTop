@@ -592,7 +592,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVImport:AlertIncompleteMapping' => 'Необходимо выбрать распределение для каждой ячейки.',
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Необходимо выбрать, по крайней мере один критерий',
-	'UI:CSVImport:Encoding' => 'Кодировка символов',
+	'UI:CSVImport:Encoding' => 'Кодировка символов',	
 	'UI:UniversalSearchTitle' => 'iTop - Универсальный поиск',
 	'UI:UniversalSearch:Error' => 'Ошибка: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Выбор класса для поиска: ',
@@ -683,7 +683,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Schema:Label' => 'Метка',
 	'UI:Schema:Label+' => 'Метка атрибута',
 	'UI:Schema:Type' => 'Тип',
-
+	
 	'UI:Schema:Type+' => 'Тип данных атрибута',
 	'UI:Schema:Origin' => 'Происхождение',
 	'UI:Schema:Origin+' => 'Базовый класс, в котором этот атрибут определен',
@@ -750,6 +750,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Пакетное удаление %1$d объектов класса %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Вы не можете удалить этот объект',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Вы не можете обновить следующее(ие) поле(я): %1$s',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => 'Этот объект не может быть удален, потому что текущий пользователь не имеет достаточных прав',
 	'UI:Error:CannotDeleteBecause' => 'This object could not be deleted because: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Этот объект не может быть удален, потому что некоторые ручные операции должны быть выполнены до этого',
@@ -879,28 +880,28 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Объекты инфраструктуры по типу',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Объекты инфраструктуры по статусу',
 
-	'UI:ConfigMgmtMenuOverview:Title' => 'Панель управления конфигурациями',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Элементы конфигурации по статусу',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Элементы конфигурации по типу',
+'UI:ConfigMgmtMenuOverview:Title' => 'Панель управления конфигурациями',
+'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Элементы конфигурации по статусу',
+'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Элементы конфигурации по типу',
 
-	'UI:RequestMgmtMenuOverview:Title' => 'Панель управления запросами',
-	'UI-RequestManagementOverview-RequestByService' => 'Пользовательские запросы по сервису',
-	'UI-RequestManagementOverview-RequestByPriority' => 'Пользовательские запросы по приоритету',
-	'UI-RequestManagementOverview-RequestUnassigned' => 'Пользовательские запросы не назначенные не на один агент',
+'UI:RequestMgmtMenuOverview:Title' => 'Панель управления запросами',
+'UI-RequestManagementOverview-RequestByService' => 'Пользовательские запросы по сервису',
+'UI-RequestManagementOverview-RequestByPriority' => 'Пользовательские запросы по приоритету',
+'UI-RequestManagementOverview-RequestUnassigned' => 'Пользовательские запросы не назначенные не на один агент',
 
-	'UI:IncidentMgmtMenuOverview:Title' => 'Панель управления инцидентами',
-	'UI-IncidentManagementOverview-IncidentByService' => 'Инциденты по сервису',
-	'UI-IncidentManagementOverview-IncidentByPriority' => 'Инциденты по приоритету',
-	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Инциденты не назначенные не на один агент',
+'UI:IncidentMgmtMenuOverview:Title' => 'Панель управления инцидентами',
+'UI-IncidentManagementOverview-IncidentByService' => 'Инциденты по сервису',
+'UI-IncidentManagementOverview-IncidentByPriority' => 'Инциденты по приоритету',
+'UI-IncidentManagementOverview-IncidentUnassigned' => 'Инциденты не назначенные не на один агент',
 
-	'UI:ChangeMgmtMenuOverview:Title' => 'Панель управления изменениями',
-	'UI-ChangeManagementOverview-ChangeByType' => 'Изменения по типу',
-	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Изменения не назначенные не на один агент',
-	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Отключения в связи с изменениями',
+'UI:ChangeMgmtMenuOverview:Title' => 'Панель управления изменениями',
+'UI-ChangeManagementOverview-ChangeByType' => 'Изменения по типу',
+'UI-ChangeManagementOverview-ChangeUnassigned' => 'Изменения не назначенные не на один агент',
+'UI-ChangeManagementOverview-ChangeWithOutage' => 'Отключения в связи с изменениями',
 
-	'UI:ServiceMgmtMenuOverview:Title' => 'Панель управления сервисами',
-	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Договоры с клиентами, которые будут обновлены в течении 30 дней',
-	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Договоры с провайдерами, которые будут обновлены в течении 30 дней',
+'UI:ServiceMgmtMenuOverview:Title' => 'Панель управления сервисами',
+'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Договоры с клиентами, которые будут обновлены в течении 30 дней',
+'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Договоры с провайдерами, которые будут обновлены в течении 30 дней',
 
 	'UI:ContactsMenu' => 'Договора',
 	'UI:ContactsMenu+' => 'Договора',
@@ -911,13 +912,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Menu:CSVImportMenu' => 'Импорт CSV', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'Пакетное создание или обновление', // Duplicated into itop-welcome-itil (will be removed from here...)
-
+	
 	'Menu:DataModelMenu' => 'Модель данных', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => 'Обзор модели данных', // Duplicated into itop-welcome-itil (will be removed from here...)
-
+	
 	'Menu:ExportMenu' => 'Экспорт', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Экспорт результатов любого запроса в HTML, CSV или XML', // Duplicated into itop-welcome-itil (will be removed from here...)
-
+	
 	'Menu:NotificationsMenu' => 'Уведомления', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Конфигурация уведомлений', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Конфигурация <span class="hilite">Уведомлений</span>',
@@ -954,19 +955,19 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:AuditCategories' => 'Категории аудита', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => 'Категории аудита', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Категории аудита', // Duplicated into itop-welcome-itil (will be removed from here...)
-
+	
 	'Menu:RunQueriesMenu' => 'Выполнение запросов', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:RunQueriesMenu+' => 'Выполнение любых запросов', // Duplicated into itop-welcome-itil (will be removed from here...)
-
+	
 	'Menu:QueryMenu' => 'Книга запросов', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => 'Книга запросов', // Duplicated into itop-welcome-itil (will be removed from here...)
-
+	
 	'Menu:DataAdministration' => 'Администрирование данных', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => 'Администрирование данных', // Duplicated into itop-welcome-itil (will be removed from here...)
-
+	
 	'Menu:UniversalSearchMenu' => 'Универсальный поиск', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Поиск чего угодно...', // Duplicated into itop-welcome-itil (will be removed from here...)
-
+	
 	'Menu:UserManagementMenu' => 'Управление пользователями', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserManagementMenu+' => 'Управление пользователями', // Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -988,9 +989,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Download-CSV' => 'Загрузка %1$s',
 
 	'UI:DeadlineMissedBy_duration' => 'Пропущен %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 мин',
-	'UI:Deadline_Minutes' => '%1$d мин',
-	'UI:Deadline_Hours_Minutes' => '%1$d ч %2$d мин',
+	'UI:Deadline_LessThan1Min' => '< 1 мин',		
+	'UI:Deadline_Minutes' => '%1$d мин',			
+	'UI:Deadline_Hours_Minutes' => '%1$d ч %2$d мин',			
 	'UI:Deadline_Days_Hours_Minutes' => '%1$d д %2$d ч %3$d мин',
 	'UI:Help' => 'Помощь',
 	'UI:PasswordConfirm' => '(Подтвердить)',
@@ -1062,7 +1063,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:RemoveAttachment' => ' Удалить вложения',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Вложение #%1$d to %2$s (%3$s)',
 	'Portal:SelectRequestTemplate' => 'Выберите шаблон для %1$s',
-	'Enum:Undefined' => 'Неопределён',
+	'Enum:Undefined' => 'Неопределён',	
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s д %2$s ч %3$s мин %4$s с',
 	'UI:ModifyAllPageTitle' => 'Изменить все',
 	'UI:Modify_N_ObjectsOf_Class' => 'Изменение %1$d объектов класса %2$s',
@@ -1168,8 +1169,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'UI:DashboardEdit:Layout' => 'Макет',
 	'UI:DashboardEdit:Properties' => 'Свойства дашборда',
-	'UI:DashboardEdit:Dashlets' => 'Доступные дашлеты',
-	'UI:DashboardEdit:DashletProperties' => 'Свойства дашлета',
+	'UI:DashboardEdit:Dashlets' => 'Доступные дашлеты',	
+	'UI:DashboardEdit:DashletProperties' => 'Свойства дашлета',	
 
 	'UI:Form:Property' => 'Свойство',
 	'UI:Form:Value' => 'Значение',
@@ -1280,7 +1281,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Month-10' => 'Октябрь',
 	'Month-11' => 'Ноябрь',
 	'Month-12' => 'Декабрь',
-
+	
 	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Вс',
 	'DayOfWeek-Monday-Min' => 'Пн',
@@ -1302,7 +1303,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Month-11-Short' => 'Ноя.',
 	'Month-12-Short' => 'Дек.',
 	'Calendar-FirstDayOfWeek' => '1', // 0 = Sunday, 1 = Monday, etc...
-
+	
 	'UI:Menu:ShortcutList' => 'Добавить в избранное...',
 	'UI:ShortcutRenameDlg:Title' => 'Переименовать ссылку',
 	'UI:ShortcutListDlg:Title' => 'Добавить в избранное ссылку на список',
@@ -1352,7 +1353,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 <tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
 <tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
 </table>',
-
+		
 	'UI:Button:Remove' => 'Удалить',
 	'UI:AddAnExisting_Class' => 'Добавить объекты класса %1$s...',
 	'UI:SelectionOf_Class' => 'Выбор объектов класса %1$s',
@@ -1365,13 +1366,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:About:InstallationOptions' => 'Installation options~~',
 	'UI:About:ManualExtensionSource' => 'Extension~~',
 	'UI:About:Extension_Version' => 'Version: %1$s~~',
-	'UI:About:RemoteExtensionSource' => 'Data~~',
-
+	'UI:About:RemoteExtensionSource' => 'Data~~',	
+	
 	'UI:DisconnectedDlgMessage' => 'Вы отключены. Вы должны идентифицировать себя для продолжения использования приложения.',
 	'UI:DisconnectedDlgTitle' => 'Внимание!',
 	'UI:LoginAgain' => 'Войти снова',
 	'UI:StayOnThePage' => 'Остаться на этой странице',
-
+	
 	'ExcelExporter:ExportMenu' => 'Экспорт в Excel...',
 	'ExcelExporter:ExportDialogTitle' => 'Экспорт в Excel',
 	'ExcelExporter:ExportButton' => 'Экспорт',
@@ -1391,16 +1392,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CurrentObjectLockExpired_Explanation' => 'Срок блокировки для предотвращения одновременного изменения объекта истек. Вы больше не можете сохранить свои изменения, поскольку другим пользователям теперь разрешено изменять данный объект.',
 	'UI:ConcurrentLockKilled' => 'Блокировка для предотвращения изменений текущего объекта снята.',
 	'UI:Menu:KillConcurrentLock' => 'Снять блокировку одноврем. измен.!',
-
+	
 	'UI:Menu:ExportPDF' => 'Экспорт в PDF...',
 	'UI:Menu:PrintableVersion' => 'Версия для печати',
-
+	
 	'UI:BrowseInlineImages' => 'Обзор...',
 	'UI:UploadInlineImageLegend' => 'Загрузить новое изображение',
 	'UI:SelectInlineImageToUpload' => 'Выберите изображение для загрузки',
 	'UI:AvailableInlineImagesLegend' => 'Доступные изображения',
 	'UI:NoInlineImage' => 'На сервере нет доступных изображений. С помощью кнопки "Обзор..." выше выберите изображение на вашем компьютере, чтобы загрузить его на сервер.',
-
+	
 	'UI:ToggleFullScreen' => 'Развернуть / Свернуть',
 	'UI:Button:ResetImage' => 'Восстановить предыдущее изображение',
 	'UI:Button:RemoveImage' => 'Удалить изображение',

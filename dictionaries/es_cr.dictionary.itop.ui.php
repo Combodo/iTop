@@ -771,6 +771,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Borrado por lote de %1$d objetos de la clase %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'No esta autorizado para borrar este objeto',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'No esta autorizado para actualizar el siguiente campo(s): %1$s',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => 'Este objeto no pudo ser borrado porque el usuario actual no posee suficientes permisos',
 	'UI:Error:CannotDeleteBecause' => 'Esto objeto no puede ser borrado debido a: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Este objeto no pudo ser borrado porque algunas operaciones manuales deben ser ejecutadas antes de eso',

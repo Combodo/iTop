@@ -47,7 +47,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'iTopHub:Landing:Install' => 'Instalando extensiones...',
 	'iTopHub:CompiledOK' => 'Compilación éxitosa.',
 	'iTopHub:ConfigurationSafelyReverted' => 'Error detectado durante la instalación!<br/>La configuración de iTop NO fue modificada.',
-	
+	'iTopHub:FailAuthent' => 'Authentication failed for this action.~~',
+
 	'iTopHub:InstalledExtensions' => 'Extensiones instaladas en esta instancia',
 	'iTopHub:ExtensionCategory:Manual' => 'Extensiones instaladas manualmente',
 	'iTopHub:ExtensionCategory:Manual+' => 'Las siguientes extensiones fueron instaladas copiandolas manualmente en el directorio %1$s de iTop:',
