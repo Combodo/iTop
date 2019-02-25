@@ -772,6 +772,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => '%2$s sınıfına ait çoklu %1$d nesne silimi',
 	'UI:Delete:NotAllowedToDelete' => 'Bu nesneyi silmek için yetkiniz yok',
 	'UI:Delete:NotAllowedToUpdate_Fields' => '%1$s alanlarını güncellemek için yetkiniz yok',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => 'Nesne yetersiz yetki nedeniyle silinemedi',
 	'UI:Error:CannotDeleteBecause' => 'This object could not be deleted because: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Bu nesneyi silmek için öncelikli dışarıdan yapılması gereken işlemler var',

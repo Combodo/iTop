@@ -758,6 +758,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => '%2$s クラスの%1$d個のオブジェクトをバルク削除',
 	'UI:Delete:NotAllowedToDelete' => 'このオブジェクトの削除は、許可されていません。',
 	'UI:Delete:NotAllowedToUpdate_Fields' => '以下のフィールドの更新は、許可されていません。: %1$s',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => 'カレントユーザは十分な権限を持っていないので、このオブジェクトは削除することができません。',
 	'UI:Error:CannotDeleteBecause' => 'このオブジェクトは、削除できません。理由: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'いくつかの手動操作を先に実行する必要があるので、このオブジェクトは削除できません。',

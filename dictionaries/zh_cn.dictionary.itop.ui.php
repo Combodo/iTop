@@ -20,22 +20,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'gui'
 //////////////////////////////////////////////////////////////////////
 //
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'application'
 //////////////////////////////////////////////////////////////////////
 //
-
 //
 // Class: AuditCategory
 //
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AuditCategory' => '审计类别',
 	'Class:AuditCategory+' => '全部审计中的一个区段',
@@ -420,7 +415,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Button:Insert' => '插入',
 	'UI:Button:More' => '更多',
 	'UI:Button:Less' => '更少',
-
+	
 	'UI:SearchToggle' => '搜索',
 	'UI:ClickToCreateNew' => '新建 %1$s',
 	'UI:SearchFor_Class' => '搜索 %1$s ',
@@ -609,8 +604,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:CSVImport:CommentsAndHeader' => '注释和头',
 	'UI:CSVImport:SelectClass' => '选择要导入的类别:',
 	'UI:CSVImport:AdvancedMode' => '高级模式',
-	'UI:CSVImport:AdvancedMode+' => 'In advanced mode the "id" (primary key) of the objects can be used to update and rename objects.' .
-									'However the column "id" (if present) can only be used as a search criteria and can not be combined with any other search criteria.',
+	'UI:CSVImport:AdvancedMode+' => 'In advanced mode the "id" (primary key) of the objects can be used to update and rename objects.However the column "id" (if present) can only be used as a search criteria and can not be combined with any other search criteria.',
 	'UI:CSVImport:SelectAClassFirst' => '要配置映射，请先选择一个类.',
 	'UI:CSVImport:HeaderFields' => '栏目',
 	'UI:CSVImport:HeaderMappings' => '映射',
@@ -776,6 +770,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => '批量删除 %1$d 个 %2$s 类的对象',
 	'UI:Delete:NotAllowedToDelete' => '您无权删除该对象',
 	'UI:Delete:NotAllowedToUpdate_Fields' => '您无权更新以下栏目: %1$s',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => '无法删除该对象, 因为当前用户没有足够的权限',
 	'UI:Error:CannotDeleteBecause' => '无法删除该对象，因为: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => '无法删除该对象, 因为必须事先完成一些手动操作',
@@ -905,28 +900,28 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => '按类别划分基础架构对象',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => '按状态划分基础架构对象',
 
-	'UI:ConfigMgmtMenuOverview:Title' => '配置管理仪表盘',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '按状态配置项目',
-	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => '按类别配置项目',
+'UI:ConfigMgmtMenuOverview:Title' => '配置管理仪表盘',
+'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => '按状态配置项目',
+'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => '按类别配置项目',
 
-	'UI:RequestMgmtMenuOverview:Title' => '需求管理仪表盘',
-	'UI-RequestManagementOverview-RequestByService' => '按服务划分用户需求',
-	'UI-RequestManagementOverview-RequestByPriority' => '按优先级划分用户需求',
-	'UI-RequestManagementOverview-RequestUnassigned' => '尚未分配给办理人的用户需求',
+'UI:RequestMgmtMenuOverview:Title' => '需求管理仪表盘',
+'UI-RequestManagementOverview-RequestByService' => '按服务划分用户需求',
+'UI-RequestManagementOverview-RequestByPriority' => '按优先级划分用户需求',
+'UI-RequestManagementOverview-RequestUnassigned' => '尚未分配给办理人的用户需求',
 
-	'UI:IncidentMgmtMenuOverview:Title' => '事件管理仪表盘',
-	'UI-IncidentManagementOverview-IncidentByService' => '按服务级划分事件',
-	'UI-IncidentManagementOverview-IncidentByPriority' => '按优先级划分事件',
-	'UI-IncidentManagementOverview-IncidentUnassigned' => '尚未分配给办理人的事件',
+'UI:IncidentMgmtMenuOverview:Title' => '事件管理仪表盘',
+'UI-IncidentManagementOverview-IncidentByService' => '按服务级划分事件',
+'UI-IncidentManagementOverview-IncidentByPriority' => '按优先级划分事件',
+'UI-IncidentManagementOverview-IncidentUnassigned' => '尚未分配给办理人的事件',
 
-	'UI:ChangeMgmtMenuOverview:Title' => '变更管理仪表盘',
-	'UI-ChangeManagementOverview-ChangeByType' => '按类别划分变更',
-	'UI-ChangeManagementOverview-ChangeUnassigned' => '尚未分配给办理人的变更',
-	'UI-ChangeManagementOverview-ChangeWithOutage' => '变更引起的停机',
+'UI:ChangeMgmtMenuOverview:Title' => '变更管理仪表盘',
+'UI-ChangeManagementOverview-ChangeByType' => '按类别划分变更',
+'UI-ChangeManagementOverview-ChangeUnassigned' => '尚未分配给办理人的变更',
+'UI-ChangeManagementOverview-ChangeWithOutage' => '变更引起的停机',
 
-	'UI:ServiceMgmtMenuOverview:Title' => '服务管理仪表盘',
-	'UI-ServiceManagementOverview-CustomerContractToRenew' => '客户合同需在30日内更新',
-	'UI-ServiceManagementOverview-ProviderContractToRenew' => '供应商合同需在30日内更新',
+'UI:ServiceMgmtMenuOverview:Title' => '服务管理仪表盘',
+'UI-ServiceManagementOverview-CustomerContractToRenew' => '客户合同需在30日内更新',
+'UI-ServiceManagementOverview-ProviderContractToRenew' => '供应商合同需在30日内更新',
 
 	'UI:ContactsMenu' => '联系人',
 	'UI:ContactsMenu+' => '联系人',
@@ -1100,7 +1095,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:BulkModifyStatus' => '操作',
 	'UI:BulkModifyStatus+' => '操作状态',
 	'UI:BulkModifyErrors' => 'Errors (if any)',
-	'UI:BulkModifyErrors+' => '阻止修改时报错',
+	'UI:BulkModifyErrors+' => '阻止修改时报错',	
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => '错误',
 	'UI:BulkModifyStatusModified' => '已修改',
@@ -1130,8 +1125,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ArchiveMode:Banner' => '归档模式',
 	'UI:ArchiveMode:Banner+' => '已归档的对象可见但不允许修改',
 	'UI:FavoriteOrganizations' => '快速访问',
-	'UI:FavoriteOrganizations+' => '进入组织下的列表，可实现通过下拉菜单快速访问.'.
-								   '请注意，这并不是一个安全设置, 其他组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
+	'UI:FavoriteOrganizations+' => '进入组织下的列表，可实现通过下拉菜单快速访问.请注意，这并不是一个安全设置, 其他组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
 	'UI:FavoriteLanguage' => '用户界面',
 	'UI:Favorites:SelectYourLanguage' => '选择语言',
 	'UI:FavoriteOtherSettings' => '其他设置',
@@ -1393,7 +1387,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:About:ManualExtensionSource' => '扩展',
 	'UI:About:Extension_Version' => '版本: %1$s',
 	'UI:About:RemoteExtensionSource' => '数据',	
-
+	
 	'UI:DisconnectedDlgMessage' => '您已断开. 要继续使用，需要重新验证您的用户名和密码.',
 	'UI:DisconnectedDlgTitle' => '警告!',
 	'UI:LoginAgain' => '再次登录',
@@ -1418,7 +1412,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.',
 	'UI:ConcurrentLockKilled' => '阻止并发修改当前对象的锁已被删除.',
 	'UI:Menu:KillConcurrentLock' => '消除并发修改锁定!',
-
+	
 	'UI:Menu:ExportPDF' => '导出PDF...',
 	'UI:Menu:PrintableVersion' => '打印',
 	
@@ -1477,20 +1471,20 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: 任何',
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
-	//   - External key widget
-	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s 已定义',
-	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s 未被定义',
-	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
-	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
-	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s 和 %3$s others',
-	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: 任何',
-	//   - Hierarchical key widget
-	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s 已定义',
-	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s 未被定义',
-	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
-	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
-	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s 和 %3$s others',
-	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: 任何',
+    //   - External key widget
+    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s 已定义',
+    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s 未被定义',
+    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
+    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s 和 %3$s others',
+    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: 任何',
+    //   - Hierarchical key widget
+    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s 已定义',
+    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s 未被定义',
+    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
+    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s 和 %3$s others',
+    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: 任何',
 
 	// - Criteria operators
 	//   - Default widget

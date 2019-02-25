@@ -409,6 +409,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkSLAToSLT/Attribute:slt_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_name' => 'SLT名',
 	'Class:lnkSLAToSLT/Attribute:slt_name+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Slt metric~~',
+	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Slt request type~~',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Slt ticket priority~~',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Slt value~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Slt value unit~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
 ));
 
 //

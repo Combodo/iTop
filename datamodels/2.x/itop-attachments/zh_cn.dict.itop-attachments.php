@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:TabTitle_Count' => '附件 (%1$d)',
 	'Attachments:EmptyTabTitle' => '附件',
@@ -35,4 +34,25 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachment:Max_Ko' => '(最大文件尺寸: %1$s KB)',
 	'Attachments:NoAttachment' => '没有附件. ',
 	'Attachments:PreviewNotAvailable' => '该附件类型不支持预览.',
+));
+
+//
+// Class: Attachment
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:Attachment' => 'Attachment~~',
+	'Class:Attachment+' => '~~',
+	'Class:Attachment/Attribute:expire' => 'Expire~~',
+	'Class:Attachment/Attribute:expire+' => '~~',
+	'Class:Attachment/Attribute:temp_id' => 'Temporary id~~',
+	'Class:Attachment/Attribute:temp_id+' => '~~',
+	'Class:Attachment/Attribute:item_class' => 'Item class~~',
+	'Class:Attachment/Attribute:item_class+' => '~~',
+	'Class:Attachment/Attribute:item_id' => 'Item~~',
+	'Class:Attachment/Attribute:item_id+' => '~~',
+	'Class:Attachment/Attribute:item_org_id' => 'Item organization~~',
+	'Class:Attachment/Attribute:item_org_id+' => '~~',
+	'Class:Attachment/Attribute:contents' => 'Contents~~',
+	'Class:Attachment/Attribute:contents+' => '~~',
 ));

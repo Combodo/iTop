@@ -20,19 +20,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
-	'Menu:iTopHub:Register' => '进入iTop Hub ',
-	'Menu:iTopHub:Register+' => '进入iTop Hub 更新您的组件',
-	'Menu:iTopHub:Register:Description' => '<p>进入iTop Hub 社区平台!</br>寻找您想要的内容和信息, 管理本机扩展或安装新的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
-	'Menu:iTopHub:MyExtensions' => '已安装的扩展',
-	'Menu:iTopHub:MyExtensions+' => '查看本机已安装的扩展',
-	'Menu:iTopHub:BrowseExtensions' => '从iTop Hub 获取扩展',
-	'Menu:iTopHub:BrowseExtensions+' => '去iTop Hub 浏览更多的扩展',
-	'Menu:iTopHub:BrowseExtensions:Description' => '<p>进入iTop Hub 商店, 一站式查找各种iTop 扩展的地方 !</br>寻找符合您要求的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
-	'iTopHub:GoBtn' => '进入iTop Hub',
+    'Menu:iTopHub:Register' => '进入iTop Hub ',
+    'Menu:iTopHub:Register+' => '进入iTop Hub 更新您的组件',
+    'Menu:iTopHub:Register:Description' => '<p>进入iTop Hub 社区平台!</br>寻找您想要的内容和信息, 管理本机扩展或安装新的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
+    'Menu:iTopHub:MyExtensions' => '已安装的扩展',
+    'Menu:iTopHub:MyExtensions+' => '查看本机已安装的扩展',
+    'Menu:iTopHub:BrowseExtensions' => '从iTop Hub 获取扩展',
+    'Menu:iTopHub:BrowseExtensions+' => '去iTop Hub 浏览更多的扩展',
+    'Menu:iTopHub:BrowseExtensions:Description' => '<p>进入iTop Hub 商店, 一站式查找各种iTop 扩展的地方 !</br>寻找符合您要求的扩展.</br><br/>通过这个页面连接到iTop Hub, 本机的信息也会被推送到 iTop Hub 上.</p>',
+    'iTopHub:GoBtn' => '进入iTop Hub',
 	'iTopHub:CloseBtn' => '关闭',
 	'iTopHub:GoBtn:Tooltip' => '跳到 www.itophub.io',
 	'iTopHub:OpenInNewWindow' => '从新窗口打开iTop Hub',
@@ -40,11 +39,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:About:RemoteExtensionSource' => 'iTop Hub',
 	'iTopHub:Explanation' => '点击这个按钮您将被引导至iTop Hub.',
 
-	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s free disk space in %2$s.',
-	'iTopHub:FailedToCheckFreeDiskSpace' => '检查空闲的磁盘空间失败.',
-	'iTopHub:BackupOk' => '备份成功.',
-	'iTopHub:BackupFailed' => '备份失败!',
-	'iTopHub:Landing:Status' => '安装状态',
+    'iTopHub:BackupFreeDiskSpaceIn' => '%1$s free disk space in %2$s.',
+    'iTopHub:FailedToCheckFreeDiskSpace' => '检查空闲的磁盘空间失败.',
+    'iTopHub:BackupOk' => '备份成功.',
+    'iTopHub:BackupFailed' => '备份失败!',
+    'iTopHub:Landing:Status' => '安装状态',
 	'iTopHub:Landing:Install' => '扩展安装进行中...',
 	'iTopHub:CompiledOK' => '编译成功.',
 	'iTopHub:ConfigurationSafelyReverted' => '安装时发生错误!<br/>iTop 配置将不会改变.',

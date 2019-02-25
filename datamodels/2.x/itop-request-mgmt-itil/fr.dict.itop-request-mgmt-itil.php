@@ -216,6 +216,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref Changement parent',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Référence Incident parent',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Requêtes filles',
 	'Class:UserRequest/Attribute:related_request_list+' => '',
 	'Class:UserRequest/Attribute:public_log' => 'Journal public',

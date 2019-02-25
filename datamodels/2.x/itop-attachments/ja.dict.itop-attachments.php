@@ -34,3 +34,24 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Attachments:NoAttachment' => '添付はありません。',
 	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.~~',
 ));
+
+//
+// Class: Attachment
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:Attachment' => 'Attachment~~',
+	'Class:Attachment+' => '~~',
+	'Class:Attachment/Attribute:expire' => 'Expire~~',
+	'Class:Attachment/Attribute:expire+' => '~~',
+	'Class:Attachment/Attribute:temp_id' => 'Temporary id~~',
+	'Class:Attachment/Attribute:temp_id+' => '~~',
+	'Class:Attachment/Attribute:item_class' => 'Item class~~',
+	'Class:Attachment/Attribute:item_class+' => '~~',
+	'Class:Attachment/Attribute:item_id' => 'Item~~',
+	'Class:Attachment/Attribute:item_id+' => '~~',
+	'Class:Attachment/Attribute:item_org_id' => 'Item organization~~',
+	'Class:Attachment/Attribute:item_org_id+' => '~~',
+	'Class:Attachment/Attribute:contents' => 'Contents~~',
+	'Class:Attachment/Attribute:contents+' => '~~',
+));

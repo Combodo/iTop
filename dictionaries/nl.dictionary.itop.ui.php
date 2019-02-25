@@ -777,6 +777,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Verwijderen van %1$d objecten van klasse %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Je bent niet gemachtigd om dit object te verwijderen',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Je bent niet gemachtigd om het/de volgende veld(en) te updaten: %1$s',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => 'Dit object kon niet worden verwijderd omdat de huidige gebruiker niet de juiste rechten heeft',
 	'UI:Error:CannotDeleteBecause' => 'Dit object kon niet worden verwijderd. Reden: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Dit object kon niet worden verwijderd omdat eerst enkele manuele handelingen moeten worden verricht',

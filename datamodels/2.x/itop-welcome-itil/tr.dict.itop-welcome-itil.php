@@ -54,3 +54,30 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
 	'Menu:MyShortcuts' => 'My Shortcuts~~',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));

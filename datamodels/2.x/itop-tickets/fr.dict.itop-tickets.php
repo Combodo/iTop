@@ -111,6 +111,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Référence',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Titre Ticket',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CI',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Nom CI',
