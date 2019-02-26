@@ -444,6 +444,16 @@ EOF
 			$sClass = $oQuery->GetClass();
 			foreach($this->oModelReflection->ListAttributes($sClass) as $sAttCode => $sAttType)
 			{
+				// For external fields, find the real type of the target
+				$sTargetClass = $sClass;
+				while (is_a($sAttType, 'AttributeExternalField', true))
+				{
+					$sExtKeyAttCode = $this->oModelReflection->GetAttributeProperty($sTargetClass, $sAttCode, 'extkey_attcode');
+					$sTargetAttCode = $this->oModelReflection->GetAttributeProperty($sTargetClass, $sAttCode, 'target_attcode');
+					$sTargetClass = $this->oModelReflection->GetAttributeProperty($sTargetClass, $sExtKeyAttCode, 'targetclass');
+					$aTargetAttCodes = $this->oModelReflection->ListAttributes($sTargetClass);
+					$sAttType = $aTargetAttCodes[$sTargetAttCode];
+				}
 				if (is_a($sAttType, 'AttributeLinkedSet', true))
 				{
 					continue;
@@ -455,15 +465,6 @@ EOF
 				if (is_a($sAttType, 'AttributeOneWayPassword', true))
 				{
 					continue;
-				}
-				// For external fields, find the real type of the target
-				while (is_a($sAttType, 'AttributeExternalField', true))
-				{
-					$sExtKeyAttCode = $this->oModelReflection->GetAttributeProperty($sClass, $sAttCode, 'extkey_attcode');
-					$sTargetClass = $this->oModelReflection->GetAttributeProperty($sClass, $sExtKeyAttCode, 'targetclass');
-					$sTargetAttCode = $this->oModelReflection->GetAttributeProperty($sClass, $sAttCode, 'target_attcode');
-					$aTargetAttCodes = $this->oModelReflection->ListAttributes($sTargetClass);
-					$sAttType = $aTargetAttCodes[$sTargetAttCode];
 				}
 
 				$sLabel = $this->oModelReflection->GetLabel($sClass, $sAttCode);

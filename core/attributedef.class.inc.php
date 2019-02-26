@@ -6242,6 +6242,15 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oFormField;
 	}
 
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	{
+		if (!is_null($oHostObject))
+		{
+			return $oHostObject->GetAsHTML($this->GetCode(), $oHostObject);
+		}
+
+		return DBObject::MakeHyperLink($this->GetTargetClass(), $sValue);
+	}
 }
 
 /**
