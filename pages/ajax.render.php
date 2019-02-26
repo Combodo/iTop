@@ -1049,6 +1049,7 @@ EOF
 
 		case 'revert_dashboard':
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			appUserPreferences::UnsetPref('display_original_dashboard_'.$sDashboardId);
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->Revert();
