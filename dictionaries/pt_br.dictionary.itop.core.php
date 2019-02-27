@@ -22,6 +22,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'INTERNAL:JQuery-DatePicker:LangCode' => 'pt-BR',
+));
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:DeletedObjectLabel' => '%1s (excluído)',
 	'Core:DeletedObjectTip' => 'O objeto foi excluído em %1$s (%2$s)',
 

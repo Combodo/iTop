@@ -22,6 +22,10 @@
  */
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
+));
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)',
 
