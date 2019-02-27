@@ -219,7 +219,6 @@ EOF;
 		);
 		$sTimeFormat = AttributeDateTime::GetFormat()->ToTimeFormat();
 		$oTimeFormat = new DateTimeFormat($sTimeFormat);
-		$sJSLangShort = json_encode(strtolower(substr(Dict::GetUserLanguage(), 0, 2)));
 
 		// Date picker options
 		$aPickerOptions = array(
@@ -237,21 +236,23 @@ EOF;
 		$sJSDatePickerOptions = json_encode($aPickerOptions);
 
 		// Time picker additional options
+		$sUserLang = Dict::GetUserLanguage();
+		$sTimePickerLang = json_encode(Dict::S('INTERNAL:JQuery-DatePicker:LangCode', $sUserLang));
 		$aPickerOptions['showOn'] = '';
 		$aPickerOptions['buttonImage'] = null;
 		$aPickerOptions['timeFormat'] = $oTimeFormat->ToDatePicker();
 		$aPickerOptions['controlType'] = 'select';
 		$aPickerOptions['closeText'] = Dict::S('UI:Button:Ok');
 		$sJSDateTimePickerOptions = json_encode($aPickerOptions);
-		if ($sJSLangShort != '"en"')
+		if ($sTimePickerLang != '"en"')
 		{
 			// More options that cannot be passed via json_encode since they must be evaluated client-side
 			$aMoreJSOptions = ",
-				'timeText': $.timepicker.regional[$sJSLangShort].timeText,
-				'hourText': $.timepicker.regional[$sJSLangShort].hourText,
-				'minuteText': $.timepicker.regional[$sJSLangShort].minuteText,
-				'secondText': $.timepicker.regional[$sJSLangShort].secondText,
-				'currentText': $.timepicker.regional[$sJSLangShort].currentText
+				'timeText': $.timepicker.regional[$sTimePickerLang].timeText,
+				'hourText': $.timepicker.regional[$sTimePickerLang].hourText,
+				'minuteText': $.timepicker.regional[$sTimePickerLang].minuteText,
+				'secondText': $.timepicker.regional[$sTimePickerLang].secondText,
+				'currentText': $.timepicker.regional[$sTimePickerLang].currentText
 			}";
 			$sJSDateTimePickerOptions = substr($sJSDateTimePickerOptions, 0, -1).$aMoreJSOptions;
 		}
@@ -259,7 +260,7 @@ EOF;
 			<<< EOF
 	function GetUserLanguage()
 	{
-		return $sJSLangShort;
+		return $sTimePickerLang;
 	}
 	function PrepareWidgets()
 	{
