@@ -1374,6 +1374,11 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
+		if ($oHostObject === null)
+		{
+			return null;
+		}
+
 		$sLinkClass = $this->GetLinkedClass();
 		$sExtKeyToMe = $this->GetExtKeyToMe();
 
