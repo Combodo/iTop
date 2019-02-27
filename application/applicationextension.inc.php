@@ -1095,12 +1095,13 @@ class RestUtils
 	 * 	 
 	 * @param string $sClass Name of the class
 	 * @param mixed $key Either search criteria (substructure), or an object or an OQL string.
-     * @param int $limit The limit of results to return
-     * @param int $offset The offset of results to return
+	 * @param int $iLimit The limit of results to return
+	 * @param int $iOffset The offset of results to return
+	 *
 	 * @return DBObjectSet The search result set
 	 * @throws Exception If the input structure is not valid
 	 */
-	public static function GetObjectSetFromKey($sClass, $key, $limit = 0, $offset = 0)
+	public static function GetObjectSetFromKey($sClass, $key, $iLimit = 0, $iOffset = 0)
 	{
 		if (is_object($key))
 		{
@@ -1134,7 +1135,7 @@ class RestUtils
 		{
 			throw new Exception("Wrong format for key");
 		}
-		$oObjectSet = new DBObjectSet($oSearch, array(), array(), null, $limit, $offset);
+		$oObjectSet = new DBObjectSet($oSearch, array(), array(), null, $iLimit, $iOffset);
 		return $oObjectSet;
 	}
 
