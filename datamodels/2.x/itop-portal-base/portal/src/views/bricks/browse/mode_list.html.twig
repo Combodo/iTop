@@ -242,33 +242,32 @@
 					}
 				},
 				{% if sDataLoading == constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') %}
-					"data": oRawDatas,
+				"data": oRawDatas,
 				{% else %}
-					"processing": true,
-					"serverSide": true,
-					"ajax": {
-						"url": "{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_BROWSE_MODE_LIST')})|raw }}",
-						"data": function(d){
-							d.iPageNumber = Math.floor(d.start/d.length) + 1;
-							d.iListLength = d.length;
-							d.sDataLoading = "{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_LAZY') }}";
-							d.columns = null;
-							d.orders = null;
-							{% if sSearchValue is not null %}
-								// Sets default filter value
-								if(d.draw === 1)
-								{
-									$('#brick-content-table_filter input').val('{{ sSearchValue }}');
-									d.search.value = $('#brick-content-table_filter input').val();
-								}
-							{% endif %}
-							if(d.search.value)
-							{
-								d.sSearchValue = d.search.value;
-							}
+				"processing": true,
+				"serverSide": true,
+				"ajax": {
+					"url": "{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_BROWSE_MODE_LIST')})|raw }}",
+					"data": function (d) {
+						d.iPageNumber = Math.floor(d.start / d.length)+1;
+						d.iListLength = d.length;
+						d.sDataLoading = "{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_LAZY') }}";
+						d.columns = null;
+						d.orders = null;
+
+						if (d.search.value)
+						{
+							d.sSearchValue = d.search.value;
 						}
 					}
+				},
 				{% endif %}
+				"search": {
+					"caseInsensitive": true,
+					{% if sSearchValue is not null %}
+					"search": "{{ sSearchValue|escape('js') }}",
+					{% endif %}
+				},
 			});
 			// Overrides filter input to apply throttle. Otherwise, an ajax request is send each time a key is pressed
 			// Also removes accents from search string
