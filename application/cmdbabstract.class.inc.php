@@ -3526,20 +3526,13 @@ EOF
 						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
 						{
 							$sLinkClass = $oAttDef->GetLinkedClass();
-							if ($oAttDef->IsIndirect())
+							$oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
+							// Recursing over n:n link datetime attributes
+							// Note: We might need to do it with other attribute types, like Document or redundancy setting.
+							if ($oLinkAttDef instanceof AttributeDateTime)
 							{
-								$oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
-								// Recursing over n:n link datetime attributes
-								// Note: We might need to do it with other attribute types, like Document or redundancy setting.
-								if ($oLinkAttDef instanceof AttributeDateTime)
-								{
-									$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
-										$aMatches[1], $sLinkClass, $aData);
-								}
-								else
-								{
-									$aObjData[$aMatches[1]] = $value;
-								}
+								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
+									$aMatches[1], $sLinkClass, $aData);
 							}
 							else
 							{
