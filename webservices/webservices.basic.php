@@ -36,8 +36,8 @@ class BasicServices extends WebServicesBase
 
 	/**
 	 * Get the server version (TODO: get it dynamically, where ?)
-	 *	 
-	 * @return WebServiceResult
+	 *
+	 * @return string WebServiceResult
 	 */
 	static public function GetVersion()
 	{

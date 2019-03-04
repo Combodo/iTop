@@ -299,9 +299,16 @@ class CoreServices implements iRestServiceProvider
 
 	/**
 	 * Enumerate services delivered by this class
+	 *
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
+	 * @param string $sVerb
+	 * @param $aParams
+	 *
 	 * @return RestResult The standardized result structure (at least a message)
-	 * @throws Exception in case of internal failure.	 
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \SimpleGraphException
+	 * @throws \Exception
 	 */
 	public function ExecOperation($sVersion, $sVerb, $aParams)
 	{
