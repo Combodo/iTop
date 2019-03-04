@@ -869,7 +869,8 @@ class RestUtils
 	 * 	 
 	 * @param StdClass $oData Structured input data. Must contain the entry defined by sParamName.
 	 * @param string $sParamName Name of the parameter to fetch from the input data
-	 * @return void
+	 *
+	 * @return string
 	 * @throws Exception If the parameter is missing
 	 * @api
 	 */
@@ -914,7 +915,8 @@ class RestUtils
 	 *
 	 * @param StdClass $oData Structured input data. Must contain the entry defined by sParamName.
 	 * @param string $sParamName Name of the parameter to fetch from the input data
-	 * @return void
+	 *
+	 * @return string
 	 * @throws Exception If the parameter is missing or the class is unknown
 	 * @api
 	 */
