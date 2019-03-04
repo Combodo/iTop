@@ -54,3 +54,30 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
 	'Menu:MyShortcuts' => '私のショートカット',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));

@@ -54,3 +54,30 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:UserAccountsMenu:Title' => 'Contas usuários',
 	'Menu:MyShortcuts' => 'Meus atalhos',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));

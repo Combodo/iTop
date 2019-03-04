@@ -771,6 +771,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Cancellazione collettiva di %1$d oggetti della classe %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Non ti è permesso di eliminare l\'oggetto',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Non hai i permessi per aggiornare il seguente campo(i): %1$s',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => 'Questo oggetto non può essere cancellato perché l\'utente corrente non dispone dei diritti necessari',
 	'UI:Error:CannotDeleteBecause' => 'Questo oggetto non può essere cancellato perchè: %1$s~~',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Questo oggetto non può essere cancellato perché alcune operazioni manuali devono essere effettuate prima di questo',

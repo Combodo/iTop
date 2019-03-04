@@ -177,6 +177,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Attribute:parent_change_id+' => '',
 	'Class:Incident/Attribute:parent_change_ref' => 'Ref. hoofdchange',
 	'Class:Incident/Attribute:parent_change_ref+' => '',
+	'Class:Incident/Attribute:parent_problem_id' => 'Parent problem id~~',
+	'Class:Incident/Attribute:parent_problem_id+' => '~~',
+	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref~~',
+	'Class:Incident/Attribute:parent_problem_ref+' => '~~',
 	'Class:Incident/Attribute:related_request_list' => 'Subverzoeken',
 	'Class:Incident/Attribute:related_request_list+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Subincidenten',
@@ -217,7 +221,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Kan het incident niet toewijzen als hoofdincident',
 
-	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets', // also one word in English translation, why?
+	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem de kenmerken over wat betreft service, team, agent, oplossing',
 	'Tickets:Related:OpenIncidents' => 'Open incidenten',
 ));

@@ -54,3 +54,30 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs',
 	'Menu:MyShortcuts' => 'Mes raccourcis',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:AbstractResource' => 'Ressource',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ResourceAdminMenu' => 'Menu Administration',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:ResourceRunQueriesMenu' => 'Menu Requête OQL',
+	'Class:ResourceRunQueriesMenu+' => '',
+));

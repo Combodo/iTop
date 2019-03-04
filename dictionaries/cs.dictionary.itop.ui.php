@@ -773,6 +773,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Hromadné odstranění %1$d objektů třídy %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Nemáte oprávnění k odstranění tohoto objektu',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Nemáte oprávnění upravovat následující pole: %1$s',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => 'Tento objekt nemůže být odstraněn, protože stávající uživatel nemá dostatečná oprávnění',
 	'UI:Error:CannotDeleteBecause' => 'Tento objekt nemůže být odstraněn, protože: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Tento objekt nelze odstranit, protože před tím musí být provedeny nějaké manuální operace',

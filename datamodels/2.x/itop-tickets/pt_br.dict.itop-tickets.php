@@ -122,6 +122,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Ref',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CIs',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Nome CI',

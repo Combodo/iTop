@@ -275,7 +275,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Portal:TitleDetailsFor_Service' => 'サービスの詳細',
 	'Portal:Button:CreateRequestFromService' => 'このサービスへの要求を作成',
 	'Portal:ListOpenRequests' => 'オープンな要求のリスト',
-'Portal:UserRequest:MoreInfo' => '追加情報',
+	'Portal:UserRequest:MoreInfo' => '追加情報',
 	'Portal:Details-Service-Element' => 'サービス要素',
 	'Portal:NoClosedTicket' => 'クローズされた要求はありません',
 	'Portal:NoService' => 'サービスはありません',

@@ -216,6 +216,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:UserRequest/Attribute:parent_change_id+' => 'Cambio Padre',
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref. Cambio',
 	'Class:UserRequest/Attribute:parent_change_ref+' => 'Ref. Cambio',
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
 	'Class:UserRequest/Attribute:related_request_list' => 'Requerimientos Hijo',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Requerimientos Hijo',
 	'Class:UserRequest/Attribute:public_log' => 'Bitácora Pública',

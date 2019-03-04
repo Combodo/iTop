@@ -278,7 +278,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:TitleDetailsFor_Service' => 'Détail d\'un service',
 	'Portal:Button:CreateRequestFromService' => 'Créer une requête pour ce service',
 	'Portal:ListOpenRequests' => 'Requêtes ouverts',
-'Portal:UserRequest:MoreInfo' => 'Informations complémentaires',
+	'Portal:UserRequest:MoreInfo' => 'Informations complémentaires',
 	'Portal:Details-Service-Element' => 'Eléments de service',
 	'Portal:NoClosedTicket' => 'Pas de requête fermée',
 	'Portal:NoService' => '',

@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -30,33 +29,31 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Menu:ServiceManagement' => '服务管理',
-	'Menu:ServiceManagement+' => '服务管理概况',
-	'Menu:Service:Overview' => '概况',
-	'Menu:Service:Overview+' => '',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => '合同 (按服务等级)',
-	'UI-ServiceManagementMenu-ContractsByStatus' => '合同(按状态)',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30天内截止的合同',
+'Menu:ServiceManagement' => '服务管理',
+'Menu:ServiceManagement+' => '服务管理概况',
+'Menu:Service:Overview' => '概况',
+'Menu:Service:Overview+' => '',
+'UI-ServiceManagementMenu-ContractsBySrvLevel' => '合同 (按服务等级)',
+'UI-ServiceManagementMenu-ContractsByStatus' => '合同(按状态)',
+'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30天内截止的合同',
 
-	'Menu:ProviderContract' => '供应商合同',
-	'Menu:ProviderContract+' => '供应商合同',
-	'Menu:CustomerContract' => '客户合同',
-	'Menu:CustomerContract+' => '客户合同',
-	'Menu:ServiceSubcategory' => '子服务',
-	'Menu:ServiceSubcategory+' => '子服务',
-	'Menu:Service' => '服务',
-	'Menu:Service+' => '服务',
-	'Menu:ServiceElement' => '服务元素',
-	'Menu:ServiceElement+' => '服务元素',
-	'Menu:SLA' => 'SLA',
-	'Menu:SLA+' => '服务等级协议',
-	'Menu:SLT' => 'SLT',
-	'Menu:SLT+' => '服务等级目标',
-	'Menu:DeliveryModel' => '交付模式',
-	'Menu:DeliveryModel+' => '交付模式',
+'Menu:ProviderContract' => '供应商合同',
+'Menu:ProviderContract+' => '供应商合同',
+'Menu:CustomerContract' => '客户合同',
+'Menu:CustomerContract+' => '客户合同',
+'Menu:ServiceSubcategory' => '子服务',
+'Menu:ServiceSubcategory+' => '子服务',
+'Menu:Service' => '服务',
+'Menu:Service+' => '服务',
+'Menu:ServiceElement' => '服务元素',
+'Menu:ServiceElement+' => '服务元素',
+'Menu:SLA' => 'SLA',
+'Menu:SLA+' => '服务等级协议',
+'Menu:SLT' => 'SLT',
+'Menu:SLT+' => '服务等级目标',
+'Menu:DeliveryModel' => '交付模式',
+'Menu:DeliveryModel+' => '交付模式',
 
 ));
 
@@ -423,6 +420,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkSLAToSLT/Attribute:slt_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_name' => 'SLT 名称',
 	'Class:lnkSLAToSLT/Attribute:slt_name+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'SLT metric~~',
+	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'SLT request type~~',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'SLT ticket priority~~',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value' => 'SLT value~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'SLT value unit~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
 ));
 
 //

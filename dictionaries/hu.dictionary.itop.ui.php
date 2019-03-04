@@ -758,6 +758,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => '%2$s osztály %1$d objektumának tömeges törlése',
 	'UI:Delete:NotAllowedToDelete' => 'Nem enegedélyezett az objektum törlése',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'A következő mező módosítása nem engedélyezett: %1$s',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => 'Az objektum nem törölhető, mert a felhasználónak nincs elegendő joga',
 	'UI:Error:CannotDeleteBecause' => 'Az objektum nem törölhető, mert: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Az objektum nem törölhető, mert néhány hozzá kapcsolódó magasabb prioritású manuális művelet végrehajtásra vár',

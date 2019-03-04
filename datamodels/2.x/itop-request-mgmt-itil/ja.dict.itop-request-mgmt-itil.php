@@ -213,6 +213,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
 	'Class:UserRequest/Attribute:parent_change_ref' => '参照変更',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
 	'Class:UserRequest/Attribute:related_request_list' => '子要求',
 	'Class:UserRequest/Attribute:related_request_list+' => '',
 	'Class:UserRequest/Attribute:public_log' => '公開ログ',

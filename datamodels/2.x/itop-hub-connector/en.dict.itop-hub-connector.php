@@ -50,7 +50,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopHub:ConfigurationSafelyReverted' => 'Error detected during deployment!<br/>iTop configuration has NOT been modified.',
 	'iTopHub:FailAuthent' => 'Authentication failed for this action.',
 
-
 	'iTopHub:InstalledExtensions' => 'Extensions deployed on this instance',
 	'iTopHub:ExtensionCategory:Manual' => 'Extensions deployed manually',
 	'iTopHub:ExtensionCategory:Manual+' => 'The following extensions have been deployed by copying them manually in the %1$s directory of iTop:',

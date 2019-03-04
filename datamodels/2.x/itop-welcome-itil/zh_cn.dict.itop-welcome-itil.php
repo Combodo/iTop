@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:DataSources' => '同步数据源',
 	'Menu:DataSources+' => '所有同步数据源',
@@ -55,4 +54,31 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:UserAccountsMenu+' => '用户帐户',
 	'Menu:UserAccountsMenu:Title' => '用户帐户',
 	'Menu:MyShortcuts' => '我的快捷方式',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
 ));

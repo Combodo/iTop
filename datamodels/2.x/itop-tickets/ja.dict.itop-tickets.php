@@ -108,6 +108,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => '参照',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CI',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'CI名',
