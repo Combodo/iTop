@@ -1,36 +1,37 @@
 
-/toolkit/
-/conf/*
-/env-*/*
+# no slash at the end to handle also symlinks
+/toolkit
+/conf
+/env-*
 
 # composer reserver directory, from sources, populate/update using "composer install"
 vendor/*
 test/vendor/*
 
 # all datas but listing prevention
-data/*
-!data/.htaccess
-!data/index.php
-!data/web.config
+/data/**
+!/data/.htaccess
+!/data/index.php
+!/data/web.config
 
 # iTop extensions
-extensions/*
-!extensions/readme.txt
+/extensions/**
+!/extensions/readme.txt
 
 # all logs but listing prevention
-log/*
-!log/.htaccess
-!log/index.php
-!log/web.config
+/log/**
+!/log/.htaccess
+!/log/index.php
+!/log/web.config
 
 
 # Jetbrains
-.idea/**
-!.idea/encodings.xml
-!.idea/codeStyles
-!.idea/codeStyles/*
-!.idea/inspectionProfiles
-!.idea/inspectionProfiles/*
+/.idea/**
+!/.idea/encodings.xml
+!/.idea/codeStyles
+!/.idea/codeStyles/*
+!/.idea/inspectionProfiles
+!/.idea/inspectionProfiles/*
 
 
 
