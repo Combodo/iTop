@@ -1100,10 +1100,30 @@ class ObjectFormManager extends FormManager
 						}
 						elseif ($oAttDef->GetEditClass() === 'CustomFields')
 						{
-							if (!empty($value['template_data']) && !empty($value['user_data']))
+							// We don't update attribute as ormCustomField comparaison is not working as excepted.
+							// When several templates available, "template_id" is not sent by the portal has it is a read-only select input
+							// therefore, the TemplateFieldsHandler::CompareValues() doesn't work.
+							// This use case works in the console as it always send all fields, even hidden and read-only.
+
+							// Different templates
+							if( isset($value['template_id'])
+								&& ($value['template_id'] != $value['current_template_id']) )
 							{
 								$this->oObject->Set($sAttCode, $value);
 							}
+							// Same template, different fields
+							elseif(isset($value['template_id'], $value['template_data'])
+								&& ($value['template_id'] == $value['current_template_id'])
+								&& ($value['template_data'] != $value['current_template_data']) )
+							{
+								$this->oObject->Set($sAttCode, $value);
+							}
+							// Update of current values
+							elseif(isset($value['user_data']))
+							{
+								$this->oObject->Set($sAttCode, $value);
+							}
+							// Else don't update! Otherwise we might loose current value
 						}
 						else
 						{
