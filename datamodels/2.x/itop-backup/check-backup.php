@@ -267,7 +267,7 @@ if (utils::IsModeCLI())
 	}
 	else
 	{
-		ExitError($oP, "Access restricted or wrong credentials ('$sAuthUser')");
+		ExitError($oPage, "Access restricted or wrong credentials ('$sAuthUser')");
 	}
 }
 else
@@ -279,7 +279,7 @@ else
 
 if (!UserRights::IsAdministrator())
 {
-	ExitError($oP, "Access restricted to administors");
+	ExitError($oPage, "Access restricted to administors");
 }
 
 
