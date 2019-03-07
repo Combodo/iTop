@@ -1306,9 +1306,8 @@ EOF
 		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
 		if ($bIsWindows && (preg_match('@([%!"])@',$sDBPwd) > 0))
 		{
-			// Unsuported Password, disable the "Next" button
-			$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
-			$oPage->add_ready_script('$("#db_info").html("<img src=\'../images/error.png\'/>&nbsp;On Windows, database password must not contain %, ! or &quot; character");');
+			// Unsuported Password, warn the user
+			$oPage->add_ready_script('$("#db_info").html("<img src=\'../images/error.png\'/>&nbsp;On Windows, the backup won\'t work because database password contains %, ! or &quot; character");');
 		}
 		else
 		{
