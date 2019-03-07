@@ -3746,17 +3746,19 @@ EOF
 		{
 			// Invoke extensions after the update (could be before)
 			/** @var \iApplicationObjectExtension $oExtensionInstance */
-			foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 			{
 				$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
 			}
-		} catch (Exception $e)
+		}
+		catch (Exception $e)
 		{
-			unset($aUpdateReentrance[$sKey]);
 			throw $e;
 		}
-
-		unset($aUpdateReentrance[$sKey]);
+		finally
+		{
+			unset($aUpdateReentrance[$sKey]);
+		}
 
 		return $res;
 	}
