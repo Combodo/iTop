@@ -42,7 +42,6 @@ function TestConfig($sContents, $oP)
         eval('if(0){'.trim($sSafeContent).'}');
         $sNoise = trim(ob_get_contents());
 		ob_end_clean();
-		CheckDBPasswordInNewConfig($sSafeContent);
     }
     catch (Error $e)
     {
@@ -78,17 +77,17 @@ function TestConfig($sContents, $oP)
 /**
  * @param $sSafeContent
  *
- * @throws \Exception
+ * @return bool
  */
-function CheckDBPasswordInNewConfig($sSafeContent)
+function DBPasswordInNewConfigIsOk($sSafeContent)
 {
 	$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
 
 	if ($bIsWindows && (preg_match("@'db_pwd' => '[^%!\"]+',@U", $sSafeContent) === 0))
 	{
-		// Unsupported Password
-		throw new Exception("On Windows, database password must not contain %, ! or \" character (backups won't work)...");
+		return false;
 	}
+	return true;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -179,7 +178,14 @@ try
                         @unlink($sTmpFile);
                         @chmod($sConfigFile, 0444); // Read-only
 
-                        $oP->p('<div id="save_result" class="header_message message_ok">'.Dict::S('config-saved').'</div>');
+	                    if (DBPasswordInNewConfigIsOk($sConfig))
+	                    {
+		                    $oP->p('<div id="save_result" class="header_message message_ok">'.Dict::S('config-saved').'</div>');
+	                    }
+	                    else
+	                    {
+		                    $oP->p('<div id="save_result" class="header_message message_info">'.Dict::S('config-saved-warning-db-password').'</div>');
+	                    }
                         $sOriginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
                     }
                     catch (Exception $e)

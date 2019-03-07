@@ -19,4 +19,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'config-reverted' => 'Vos modifications ont été écrasées par la version enregistrée.',
 	'config-parse-error' => 'Ligne %2$d: %1$s.<br/>Le fichier n\'a PAS été modifié.',
 	'config-current-line' => 'Ligne en édition : %1$s',
+	'config-saved-warning-db-password' => 'Configuration enregistrée. Les sauvegardes ne fonctionneront pas à cause du format du pot de passe de la base.',
 ));
