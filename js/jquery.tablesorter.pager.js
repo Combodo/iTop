@@ -90,7 +90,7 @@ function sprintf(format, etc) {
 			function checkAll(table, pager, value)
 			{
 				// Mark all the displayed items as check or unchecked depending on the value
-				$(table).find(':checkbox[name^=selectObj]:not([disabled]').each(function (index, element) {
+				$(table).find(':checkbox[name^=selectObj]:not([disabled])').each(function (index, element) {
 					var $currentCheckbox = $(this);
 					$currentCheckbox.prop('checked', value);
 					$currentLine = $currentCheckbox.closest("tr");
