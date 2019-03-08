@@ -571,10 +571,11 @@ try
 	{
 		// Note: testing this now in case some of the background processes forces the read-only mode for a while
 		//       in that case it is better to exit with the check on reentrance (mutex)
-		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
+		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE) || file_exists(APPROOT.'.maintenance'))
 		{
 			$oP->p("A database maintenance is ongoing (read-only mode even for admins).");
 			$oP->Output();
+			$oMutex->Unlock();
 			exit(EXIT_CODE_ERROR);
 		}
 
