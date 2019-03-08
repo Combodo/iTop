@@ -2377,6 +2377,7 @@ abstract class DBObject implements iDisplay
 						if (in_array($sState, $oAttDef->GetStates()))
 						{
 							// Compute or recompute the deadlines
+							/** @var \ormStopWatch $oSW */
 							$oSW = $this->Get($sAttCode);
 							$oSW->ComputeDeadlines($this, $oAttDef);
 							$this->Set($sAttCode, $oSW);
