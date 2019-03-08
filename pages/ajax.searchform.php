@@ -149,10 +149,9 @@ try
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 } catch (MaintenanceException $e)
 {
-	http_response_code(503);
 	// note: transform to cope with XSS attacks
 	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
-	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
+	die();
 } catch (Exception $e)
 {
 	http_response_code(500);

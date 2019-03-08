@@ -2705,8 +2705,8 @@ EOF
 }
 catch (MaintenanceException $e)
 {
-	http_response_code(503);
 	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
+	die();
 }
 catch (Exception $e)
 {

@@ -48,7 +48,14 @@ function __clear_cache()
 }
 
 // Use 'maintenance' parameter to bypass maintenance mode
-$bMaintenanceAction = !is_null(Utils::ReadParam('maintenance', null));
+if (defined('bMAINTENANCE_BYPASS'))
+{
+	$bMaintenanceAction = bMAINTENANCE_BYPASS;
+}
+else
+{
+	$bMaintenanceAction = Utils::ReadParam('maintenance', false);
+}
 
 // Maintenance mode
 if (file_exists(APPROOT.'.maintenance') && !$bMaintenanceAction)
@@ -57,6 +64,8 @@ if (file_exists(APPROOT.'.maintenance') && !$bMaintenanceAction)
 	$sMessage = Dict::S('UI:Error:MaintenanceMode');
 	$sTitle = Dict::S('UI:Error:MaintenanceTitle');
 	__clear_cache();
+
+	http_response_code(503);
 	throw new MaintenanceException($sMessage, $sTitle);
 }
 

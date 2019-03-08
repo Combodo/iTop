@@ -1519,7 +1519,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtré',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
-	'UI:Error:MaintenanceMode' => 'L\'application est en mode maintenance',
+	'UI:Error:MaintenanceMode' => 'L\'application est en maintenance',
 	'UI:Error:MaintenanceTitle' =>  'Maintenance',
 ));
 

@@ -165,8 +165,6 @@ try
 }
 catch (MaintenanceException $e)
 {
-	http_response_code(503);
-	require_once(APPROOT.'core/dict.class.inc.php');
-	$sMessage = Dict::S('UI:Error:MaintenanceMode', 'Application is currently in maintenance mode');
-	echo "$sMessage";
+	echo $e->getMessage();
+	die();
 }

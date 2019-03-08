@@ -70,14 +70,24 @@ if (!file_exists($sTargetPage))
 	exit;
 }
 
+// Use 'maintenance' parameter to bypass maintenance mode
+if (defined('bMAINTENANCE_BYPASS'))
+{
+	$bMaintenanceAction = bMAINTENANCE_BYPASS;
+}
+else
+{
+	$bMaintenanceAction = Utils::ReadParam('maintenance', false);
+}
+
 // Maintenance mode
-if (file_exists(APPROOT.'.maintenance'))
+if (file_exists(APPROOT.'.maintenance') && !$bMaintenanceAction)
 {
 	http_response_code(503);
 	require_once(APPROOT.'core/dict.class.inc.php');
 	$sMessage = Dict::S('UI:Error:MaintenanceMode', 'Application is currently in maintenance mode');
 	echo "$sMessage";
-	exit();
+	die();
 }
 
 /////////////////////////////////////////
