@@ -1,0 +1,17 @@
+{% if title_level is not defined %}
+    {% set title_level = '==' %}
+{% endif %}
+
+{% if sub_title_level is not defined %}
+    {% set sub_title_level = title_level|slice(1) %}
+{% endif %}
+
+{% for tagName,tags in structure.tags if tagName in ['example'] %}
+{% if loop.first %}
+{{title_level}} Examples {{title_level}}
+{% endif %}
+{% for tag in tags %}
+{{ sub_title_level }} {{ tag.description|escape }}{{ sub_title_level }}
+<code php>{{ tag.example|escape }}</code>
+{% endfor %}
+{% endfor %}

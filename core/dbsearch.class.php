@@ -22,24 +22,35 @@ require_once('dbunionsearch.class.php');
 
 /**
  * An object search
- * 
+ *
+ * DBSearch provides an API that leverage the possibility to construct a search against iTop's persisted objects.
+ * In order to do so, it let you declare the classes you want to fetch, the conditions you want to apply, ...
+ *
  * Note: in the ancient times of iTop, a search was named after DBObjectSearch.
- *  When the UNION has been introduced, it has been decided to:
- *  - declare a hierarchy of search classes, with two leafs :
- *    - one class to cope with a single query (A JOIN B... WHERE...)
- *    - and the other to cope with several queries (query1 UNION query2)
- *  - in order to preserve forward/backward compatibility of the existing modules 
- *    - keep the name of DBObjectSearch even if it a little bit confusing
- *    - do not provide a type-hint for function parameters defined in the modules
- *    - leave the statements DBObjectSearch::FromOQL in the modules, though DBSearch is more relevant 
+ * When the UNION has been introduced, it has been decided to:
+ *   * declare a hierarchy of search classes : `DBObjectSearch` & `DBUnionSearch`
+ *     * DBObjectSearch cope with single query (A JOIN B... WHERE...)
+ *     * DBUnionSearch cope with several queries (query1 UNION query2)
+ *   * in order to preserve forward/backward compatibility of the existing modules
+ *     * keep the name of DBObjectSearch even if it a little bit confusing
+ *     * do not provide a type-hint for function parameters defined in the modules
+ *     * leave the statements DBObjectSearch::FromOQL in the modules, though DBSearch is more relevant
  *
  * @copyright   Copyright (C) 2015-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ *
+ *
+ * @package     iTopORM
+ * @api
+ * @see DBObjectSearch::__construct()
+ * @see DBUnionSearch::__construct()
  */
  
 abstract class DBSearch
 {
+    /** @internal */
 	const JOIN_POINTING_TO = 0;
+    /** @internal */
 	const JOIN_REFERENCED_BY = 1;
 
 	protected $m_bNoContextParameters = false;
@@ -47,14 +58,23 @@ abstract class DBSearch
 	protected $m_bArchiveMode = false;
 	protected $m_bShowObsoleteData = true;
 
+    /**
+     * DBSearch constructor.
+     *
+     * @api
+     * @see DBSearch::FromOQL()
+     */
 	public function __construct()
 	{
 		$this->Init();
 	}
 
+    /**
+     * called by the constructor
+     * @internal Set the obsolete and archive modes to the default ones
+     */
 	protected function Init()
 	{
-		// Set the obsolete and archive modes to the default ones
 		$this->m_bArchiveMode = utils::IsArchiveMode();
 		$this->m_bShowObsoleteData = true;
 	}
@@ -62,6 +82,8 @@ abstract class DBSearch
 	/**
 	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects)
 	 *
+     * @internal
+     *
 	 * @return \DBSearch
 	 **/	 	
 	public function DeepClone()
@@ -69,22 +91,62 @@ abstract class DBSearch
 		return unserialize(serialize($this)); // Beware this serializes/unserializes the search and its parameters as well
 	}
 
+    /**
+     * whether or not some information should be hidden to the current user.
+     *
+     * @api
+     * @see IsAllDataAllowed()
+     *
+     * @return mixed
+     */
 	abstract public function AllowAllData();
+
+    /**
+     * Current state of AllowAllData
+     *
+     * @internal
+     * @see AllowAllData()
+     *
+     * @return mixed
+     */
 	abstract public function IsAllDataAllowed();
 
+    /**
+     * Should the archives be fetched
+     *
+     * @internal
+     *
+     * @param $bEnable
+     */
 	public function SetArchiveMode($bEnable)
 	{
 		$this->m_bArchiveMode = $bEnable;
 	}
+
+    /**
+     * @internal
+     * @return bool
+     */
 	public function GetArchiveMode()
 	{
 		return $this->m_bArchiveMode;
 	}
 
+    /**
+     * Should the obsolete data be fetched
+     *
+     * @internal
+     * @param $bShow
+     */
 	public function SetShowObsoleteData($bShow)
 	{
 		$this->m_bShowObsoleteData = $bShow;
 	}
+
+    /**
+     * @internal
+     * @return bool
+     */
 	public function GetShowObsoleteData()
 	{
 		if ($this->m_bArchiveMode || $this->IsAllDataAllowed())
@@ -99,14 +161,36 @@ abstract class DBSearch
 		return $bRet;
 	}
 
+    /**
+     * @internal
+     */
 	public function NoContextParameters() {$this->m_bNoContextParameters = true;}
+
+    /**
+     * @internal
+     * @return bool
+     */
 	public function HasContextParameters() {return $this->m_bNoContextParameters;}
 
+    /**
+     * @internal
+     *
+     * @param $sPluginClass
+     * @param $sProperty
+     * @param $value
+     */
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
 	{
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
 	}
 
+    /**
+     * @internal
+     *
+     * @param $sPluginClass
+     *
+     * @return array|mixed
+     */
 	public function GetModifierProperties($sPluginClass)
 	{
 		if (array_key_exists($sPluginClass, $this->m_aModifierProperties))
@@ -119,18 +203,44 @@ abstract class DBSearch
 		}
 	}
 
+    /**
+     * @internal
+     * @param $sAlias
+     *
+     * @return mixed
+     */
 	abstract public function GetClassName($sAlias);
+
+    /**
+     * @internal
+     * @return mixed
+     */
 	abstract public function GetClass();
+
+    /**
+     * @internal
+     * @return mixed
+     */
 	abstract public function GetClassAlias();
 
 	/**
-	 * Change the class (only subclasses are supported as of now, because the conditions must fit the new class)
-	 * Defaults to the first selected class (most of the time it is also the first joined class	 
-	 */	 	
+     * Change the class
+     *
+     * Defaults to the first selected class (most of the time it is also the first joined class
+     * only subclasses are supported as of now, because the conditions must fit the new class
+     *
+     * @internal
+     */
 	abstract public function ChangeClass($sNewClass, $sAlias = null);
+
+    /**
+     * @internal
+     * @return mixed
+     */
 	abstract public function GetSelectedClasses();
 
 	/**
+     * @internal
 	 * @param array $aSelectedClasses array of aliases
 	 * @throws CoreException
 	 */
@@ -139,47 +249,164 @@ abstract class DBSearch
 	/**
 	 * Change any alias of the query tree
 	 *
+     * @internal
+     *
 	 * @param $sOldName
 	 * @param $sNewName
 	 * @return bool True if the alias has been found and changed
 	 */
 	abstract public function RenameAlias($sOldName, $sNewName);
 
+    /**
+     * @internal
+     * @return mixed
+     */
 	abstract public function IsAny();
 
+    /**
+     * @deprecated use ToOQL() instead
+     * @internal
+     * @return string
+     */
 	public function Describe(){return 'deprecated - use ToOQL() instead';}
+    /**
+     * @deprecated use ToOQL() instead
+     * @internal
+     * @return string
+     */
 	public function DescribeConditionPointTo($sExtKeyAttCode, $aPointingTo){return 'deprecated - use ToOQL() instead';}
+    /**
+     * @deprecated use ToOQL() instead
+     * @internal
+     * @return string
+     */
 	public function DescribeConditionRefBy($sForeignClass, $sForeignExtKeyAttCode){return 'deprecated - use ToOQL() instead';}
+    /**
+     * @deprecated use ToOQL() instead
+     * @internal
+     * @return string
+     */
 	public function DescribeConditionRelTo($aRelInfo){return 'deprecated - use ToOQL() instead';}
+    /**
+     * @deprecated use ToOQL() instead
+     * @internal
+     * @return string
+     */
 	public function DescribeConditions(){return 'deprecated - use ToOQL() instead';}
+    /**
+     * @deprecated use ToOQL() instead
+     * @internal
+     * @return string
+     */
 	public function __DescribeHTML(){return 'deprecated - use ToOQL() instead';}
 
+    /**
+     * @internal
+     * @return mixed
+     */
 	abstract public function ResetCondition();
+
+    /**
+     * add $oExpression as a OR
+     *
+     * @api
+     * @see DBSearch::AddConditionExpression()
+     *
+     * @param Expression $oExpression
+     *
+     * @return mixed
+     */
 	abstract public function MergeConditionExpression($oExpression);
+
+    /**
+     * add $oExpression as a AND
+     *
+     * @api
+     * @see DBSearch::MergeConditionExpression()
+     *
+     * @param Expression $oExpression
+     *
+     * @return mixed
+     */
 	abstract public function AddConditionExpression($oExpression);
+
+    /**
+     * Condition on the friendlyname
+     *
+     * Restrict the query to only the corresponding selected class' friendlyname
+     *
+     * @internal
+     *
+     * @param string $sName the desired friendlyname
+     *
+     * @return mixed
+     */
   	abstract public function AddNameCondition($sName);
+
+    /**
+     * Add a condition
+     *
+     * This is the simplest way to express a AND condition. for complex use case, you should use MergeConditionExpression and  AddConditionExpression
+     *
+     * @api
+     * @see AttributeDefinition::GetBasicFilterOperators() and all its descendents (core/attributedef.class.inc.php)
+     * @link https://github.com/Combodo/iTop/blob/develop/core/attributedef.class.inc.php
+     *
+     * @param string $sFilterCode
+     * @param mixed  $value
+     * @param string $sOpCode operator to use : 'IN', 'NOT IN', 'Contains',' Begins with', 'Finishes with', ... the possibility vary according to the AttributeDefinition implementation
+     *
+     * @throws \CoreException
+     *
+     */
 	abstract public function AddCondition($sFilterCode, $value, $sOpCode = null);
 	/**
 	 * Specify a condition on external keys or link sets
-	 * @param sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
+     *
+     * @internal
+     *
+	 * @param string $sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
 	 *                 Example: infra_list->ci_id->location_id->country	 
-	 * @param value The value to match (can be an array => IN(val1, val2...)
+	 * @param mixed $value The value to match (can be an array => IN(val1, val2...)
 	 * @return void
 	 */
 	abstract public function AddConditionAdvanced($sAttSpec, $value);
+
+    /**
+     * @internal
+     *
+     * @param string $sFullText
+     *
+     * @return mixed
+     */
 	abstract public function AddCondition_FullText($sFullText);
 
 	/**
+     * Perform a join
+     *
+     * The join is performed
+     *   * from the current DBSearch, using the selected class' $sExtKeyAttCode field
+     *   * against the selected class' primary key of the $oFilter selected class
+     *
+     * @api
+     * @see AddCondition_ReferencedBy()
+     *
 	 * @param DBObjectSearch $oFilter
-	 * @param $sExtKeyAttCode
-	 * @param int $iOperatorCode
-	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @param string $sExtKeyAttCode
+	 * @param int $iOperatorCode the comparison operator to use. For the list of all possible values, see the constant defined in core/oql/oqlquery.class.inc.php
+	 * @param array|null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+     *
 	 * @throws CoreException
 	 * @throws CoreWarning
 	 */
 	abstract public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null);
 
 	/**
+     * Inverse operation of AddCondition_PointingTo
+     *
+     * @api
+     * @see AddCondition_PointingTo()
+     *
 	 * @param DBObjectSearch $oFilter
 	 * @param $sForeignExtKeyAttCode
 	 * @param int $iOperatorCode
@@ -187,16 +414,37 @@ abstract class DBSearch
 	 */
 	abstract public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null);
 
+    /**
+     * Filter the result
+     *
+     * The filter is performed by returning only the values in common with the given $oFilter
+     * The impact on the resulting query performance/viability can be significant.
+     *
+     * @internal
+     *
+     * @param DBSearch $oFilter
+     *
+     * @return mixed
+     */
 	abstract public function Intersect(DBSearch $oFilter);
 
-	/**
-	 * @param DBSearch $oFilter
-	 * @param integer $iDirection
-	 * @param string $sExtKeyAttCode
-	 * @param integer $iOperatorCode
-	 * @param array &$RealisasingMap  Map of aliases from the attached query, that could have been renamed by the optimization process
-	 * @return DBSearch
-	 */
+    /**
+     * Perform a join
+     *
+     * The join is performed against $oFilter selected class using $sExtKeyAttCode of the current selected class
+     *
+     * @internal
+     *
+     * @param DBSearch   $oFilter        The join is performed against $oFilter selected class
+     * @param integer    $iDirection     can be either DBSearch::JOIN_POINTING_TO or DBSearch::JOIN_REFERENCED_BY
+     * @param string     $sExtKeyAttCode The join is performed against $sExtKeyAttCode wetheir it is compared aginst the current DBSearch or $oFilter depend of $iDirection
+     * @param integer    $iOperatorCode  See DBSearch::AddCondition_PointingTo()
+     * @param array|null $aRealiasingMap Map of aliases from the attached query, that could have been renamed by the optimization process
+     *
+     * @return DBSearch
+     * @throws CoreException
+     * @throws CoreWarning
+     */
 	public function Join(DBSearch $oFilter, $iDirection, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		$oSourceFilter = $this->DeepClone();
@@ -231,21 +479,68 @@ abstract class DBSearch
 		return $oRet;
 	}
 
+    /**
+     * Set the internal params.
+     *
+     * If any params pre-existed, they are lost.
+     *
+     * @internal
+     *
+     * @param mixed[string] $aParams array of mixed params index by string name
+     *
+     * @return mixed
+     */
 	abstract public function SetInternalParams($aParams);
+
+    /**
+     * @internal
+     * @return mixed
+     */
 	abstract public function GetInternalParams();
+
+    /**
+     * @internal
+     *
+     * @param bool $bExcludeMagicParams
+     *
+     * @return mixed
+     */
 	abstract public function GetQueryParams($bExcludeMagicParams = true);
+
+    /**
+     * @internal
+     * @return mixed
+     */
 	abstract public function ListConstantFields();
 
 	/**
-	 * Turn the parameters (:xxx) into scalar values in order to easily
-	 * serialize a search
+     * Turn the parameters (:xxx) into scalar values
+     *
+     * The goal is to easily serialize a search
 	 *
+     * @internal
+     *
 	 * @param array $aArgs
 	 *
 	 * @return string
 	 */
 	abstract public function ApplyParameters($aArgs);
 
+    /**
+     * Convert a query to a string representation
+     *
+     * This operation can be revert back to a DBSearch using DBSearch::unserialize()
+     *
+     * @api
+     * @see DBSearch::unserialize()
+     *
+     * @param bool  $bDevelopParams
+     * @param array $aContextParams
+     *
+     * @return false|string
+     * @throws ArchivedObjectException
+     * @throws CoreException
+     */
     public function serialize($bDevelopParams = false, $aContextParams = array())
 	{
 		$aQueryParams = $this->GetQueryParams();
@@ -293,6 +588,10 @@ abstract class DBSearch
 	}
 
 	/**
+     * Convert a serialized query back to an instance of DBSearch
+     *
+     * @api
+     *
 	 * @param string $sValue Serialized OQL query
 	 *
 	 * @return \DBSearch
@@ -336,11 +635,13 @@ abstract class DBSearch
     /**
      * Create a new DBObjectSearch from $oSearch with a new alias $sAlias
      *
-     * Note : This has not be tested with UNION queries.
+     * @internal Note : This has not be tested with UNION queries.
      *
      * @param DBSearch $oSearch
-     * @param string $sAlias
+     * @param string   $sAlias
+     *
      * @return DBObjectSearch
+     * @throws CoreException
      */
     static public function CloneWithAlias(DBSearch $oSearch, $sAlias)
     {
@@ -349,12 +650,37 @@ abstract class DBSearch
         return $oSearchWithAlias;
     }
 
+    /**
+     * Convert the DBSearch to an OQL representation
+     *
+     * @api
+     * @see DBSearch::FromOQL()
+     *
+     * @param bool $bDevelopParams
+     * @param null $aContextParams
+     * @param bool $bWithAllowAllFlag
+     *
+     * @return mixed
+     */
     abstract public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false);
 
 	static protected $m_aOQLQueries = array();
 
-	// Do not filter out depending on user rights
-	// In particular when we are currently in the process of evaluating the user rights...
+    /**
+     * FromOQL with AllowAllData enabled
+     *
+     * The goal is to  not filter out depending on user rights.
+     * In particular when we are currently in the process of evaluating the user rights...
+     *
+     * @internal
+     * @see DBSearch::FromOQL()
+     *
+     * @param string $sQuery
+     * @param null   $aParams
+     *
+     * @return DBSearch
+     * @throws OQLException
+     */
 	static public function FromOQL_AllData($sQuery, $aParams = null)
 	{
 		$oRes = self::FromOQL($sQuery, $aParams);
@@ -363,9 +689,19 @@ abstract class DBSearch
 	}
 
 	/**
-	 * @param string $sQuery
-	 * @param array $aParams
-	 * @return self
+     * Create a new DBSearch from the given OQL.
+     *
+     * This is the simplest way to create a DBSearch.
+     * For almost every cases, this is the easiest way.
+     *
+     * @api
+     * @see DBSearch::ToOQL()
+     *
+	 * @param string $sQuery The OQL to convert to a DBSearch
+	 * @param mixed[string]  $aParams array of <mixed> params index by <string> name
+     *
+	 * @return DBObjectSearch|DBUnionSearch
+     *
 	 * @throws OQLException
 	 */
 	static public function FromOQL($sQuery, $aParams = null)
@@ -442,14 +778,20 @@ abstract class DBSearch
 	}
 
 	/**
+     * Fetch the result has an array structure.
+     *
 	 * Alternative to object mapping: the data are transfered directly into an array
 	 * This is 10 times faster than creating a set of objects, and makes sense when optimization is required
+     * But this speed comes at the cost of not obtaining the easy to manipulates DBObject instances but simple array structure.
+     *
+     * @internal
 	 *
-	 * @param array $aColumns
+	 * @param array $aColumns The columns you'd like to fetch.
 	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
 	 * @param array $aArgs
 	 *
 	 * @return array|void
+     *
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
@@ -506,7 +848,11 @@ abstract class DBSearch
 	protected static $m_aQueryStructCache = array();
 
 
-	/** Generate a Group By SQL request from a search
+    /**
+     * Generate a Group By SQL query from the current search
+     *
+     * @internal
+     *
 	 * @param array $aArgs
 	 * @param array $aGroupByExpr array('alias' => Expression)
 	 * @param bool $bExcludeNullValues
@@ -514,7 +860,9 @@ abstract class DBSearch
 	 * @param array $aOrderBy array('alias' => bool) true = ASC false = DESC
 	 * @param int $iLimitCount
 	 * @param int $iLimitStart
+     *
 	 * @return string SQL query generated
+     *
 	 * @throws Exception
 	 */
 	public function MakeGroupByQuery($aArgs, $aGroupByExpr, $bExcludeNullValues = false, $aSelectExpr = array(), $aOrderBy = array(), $iLimitCount = 0, $iLimitStart = 0)
@@ -590,6 +938,10 @@ abstract class DBSearch
 
 
 	/**
+     * Generate a SQL query from the current search
+     *
+     * @internal
+     *
 	 * @param array|hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
 	 * @param array $aArgs
 	 * @param null $aAttToLoad
@@ -684,9 +1036,33 @@ abstract class DBSearch
 		return $sRes;
 	}
 
+    /**
+     * @internal
+     * @return mixed
+     */
 	protected abstract function IsDataFiltered();
+
+    /**
+     * @internal
+     * @return mixed
+     */
 	protected abstract function SetDataFiltered();
 
+    /**
+     * @internal
+     *
+     * @param      $aOrderBy
+     * @param      $aArgs
+     * @param      $aAttToLoad
+     * @param      $aExtendedDataSpec
+     * @param      $iLimitCount
+     * @param      $iLimitStart
+     * @param      $bGetCount
+     * @param null $aGroupByExpr
+     * @param null $aSelectExpr
+     *
+     * @return mixed
+     */
 	protected function GetSQLQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $aGroupByExpr = null, $aSelectExpr = null)
 	{
 		$oSearch = $this;
@@ -727,18 +1103,46 @@ abstract class DBSearch
 		return $oSQLQuery;
 	}
 
+    /**
+     * @internal
+     *
+     * @param      $aAttToLoad
+     * @param      $bGetCount
+     * @param null $aGroupByExpr
+     * @param null $aSelectedClasses
+     * @param null $aSelectExpr
+     *
+     * @return mixed
+     */
 	public abstract function GetSQLQueryStructure(
 		$aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null
 	);
 
 	/**
+     * Get the current search conditions
+     *
+     * @internal
+     * @see DBSearch $m_oSearchCondition
+     *
 	 * @return \Expression
 	 */
 	public abstract function GetCriteria();
 
+    /**
+     * Shortcut to add efficient IN condition
+     *
+     * @internal
+     *
+     * @param      $sFilterCode
+     * @param      $aValues
+     * @param bool $bPositiveMatch if true a `IN` is performed, if false, a `NOT IN` is performed
+     *
+     * @return mixed
+     */
 	public abstract function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true);
 
 	/**
+     * @internal
 	 * @return string a unique param name
 	 */
 	protected function GenerateUniqueParamName() {
@@ -759,36 +1163,78 @@ abstract class DBSearch
 	protected static $m_bIndentQueries = false;
 	protected static $m_bOptimizeQueries = false;
 
+    /**
+     * @internal
+     */
 	public static function StartDebugQuery()
 	{
 		$aBacktrace = debug_backtrace();
 		self::$m_bDebugQuery = true;
 	}
+
+    /**
+     * @internal
+     */
 	public static function StopDebugQuery()
 	{
 		self::$m_bDebugQuery = false;
 	}
-	
+
+    /**
+     * @internal
+     *
+     * @param bool $bEnabled
+     * @param bool $bUseAPC
+     * @param int  $iTimeToLive
+     */
 	public static function EnableQueryCache($bEnabled, $bUseAPC, $iTimeToLive = 3600)
 	{
 		self::$m_bQueryCacheEnabled = $bEnabled;
 		self::$m_bUseAPCCache = $bUseAPC;
 		self::$m_iQueryCacheTTL = $iTimeToLive;
 	}
+
+    /**
+     * @internal
+     * @param $bEnabled
+     */
 	public static function EnableQueryTrace($bEnabled)
 	{
 		self::$m_bTraceQueries = $bEnabled;
 	}
+
+    /**
+     * @internal
+     * @param $bEnabled
+     */
 	public static function EnableQueryIndentation($bEnabled)
 	{
 		self::$m_bIndentQueries = $bEnabled;
 	}
+
+    /**
+     * @internal
+     * @param $bEnabled
+     */
 	public static function EnableOptimizeQuery($bEnabled)
 	{
 		self::$m_bOptimizeQueries = $bEnabled;
 	}
 
-
+    /**
+     * @internal
+     *
+     * @param $aOrderBy
+     * @param $aArgs
+     * @param $aAttToLoad
+     * @param $aExtendedDataSpec
+     * @param $iLimitCount
+     * @param $iLimitStart
+     * @param $bGetCount
+     * @param $sSql
+     *
+     * @throws MySQLException
+     */
 	protected function AddQueryTraceSelect($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sSql)
 	{
 		if (self::$m_bTraceQueries)
@@ -808,7 +1254,16 @@ abstract class DBSearch
 			self::AddQueryTrace($aQueryData, $sOql, $sSql);
 		}
 	}
-	
+
+    /**
+     * @internal
+     *
+     * @param $aArgs
+     * @param $aGroupByExpr
+     * @param $sSql
+     *
+     * @throws MySQLException
+     */
 	protected function AddQueryTraceGroupBy($aArgs, $aGroupByExpr, $sSql)
 	{
 		if (self::$m_bTraceQueries)
@@ -824,6 +1279,15 @@ abstract class DBSearch
 		}
 	}
 
+    /**
+     * @internal
+     *
+     * @param $aQueryData
+     * @param $sOql
+     * @param $sSql
+     *
+     * @throws MySQLException
+     */
 	protected static function AddQueryTrace($aQueryData, $sOql, $sSql)
 	{
 		if (self::$m_bTraceQueries)
@@ -854,6 +1318,9 @@ abstract class DBSearch
 		}
 	}
 
+    /**
+     * @internal
+     */
 	public static function RecordQueryTrace()
 	{
 		if (!self::$m_bTraceQueries)
@@ -914,6 +1381,10 @@ abstract class DBSearch
 		file_put_contents($sAllQueries, $sLog);
 	}
 
+    /**
+     * @internal
+     * @param $value
+     */
 	protected static function DbgTrace($value)
 	{
 		if (!self::$m_bDebugQuery)
@@ -949,7 +1420,9 @@ abstract class DBSearch
 
 	/**
 	 * Experimental!
-	 * todo: implement the change tracking
+	 * @todo implement the change tracking
+     *
+     * @internal
 	 *
 	 * @param $bArchive
 	 * @throws Exception
@@ -1025,6 +1498,9 @@ abstract class DBSearch
 		}
 	}
 
+    /**
+     * @internal
+     */
 	public function UpdateContextFromUser()
 	{
 		$this->SetShowObsoleteData(utils::ShowObsoleteData());

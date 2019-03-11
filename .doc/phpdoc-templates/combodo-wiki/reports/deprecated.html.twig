@@ -1,0 +1,49 @@
+
+====== Deprecated elements ======
+
+{#{% for element in project.indexes.elements if element.deprecated %}#}
+    {#{% if element.file.path != previousPath %}#}
+        {#<li><a href="#{{ element.file.path }}"><i class="icon-file"></i> {{ element.file.path }}</a></li>#}
+    {#{% endif %}#}
+    {#{% set previousPath = element.file.path %}#}
+{#{% endfor %}#}
+
+{% for element in project.indexes.elements if element.deprecated %}
+    {% if element.file.path != previousPath %}
+    {% if previousPath %}
+</WRAP>{# group #}
+    {% endif %}
+    {#<a name="{{ element.file.path }}" id="{{ element.file.path }}"></a>#}
+===== {{ element.file.path }} ({{ element.tags.deprecated.count }} found)=====
+
+<WRAP group >
+<WRAP third column >
+Element
+</WRAP>{# third column#}
+<WRAP third column >
+Line
+</WRAP>{# third column#}
+<WRAP third column >
+Description
+</WRAP>{# third column#}
+
+{% endif %}
+{% for tag in element.tags.deprecated %}
+<WRAP group >
+<WRAP third column >
+    {{ element.fullyQualifiedStructuralElementName }}
+</WRAP>{# third column#}
+<WRAP third column >
+    {{ element.line }}
+</WRAP>{# third column#}
+<WRAP third column >
+    {{ tag.description }}
+</WRAP>{# third column#}
+
+{% endfor %}
+</WRAP>{# group #}
+{% set previousPath = element.file.path %}
+{% else %}
+<WRAP info>No deprecated elements have been found in this project.</WRAP>
+{% endfor %}
+

@@ -1,0 +1,24 @@
+{% if title_level is not defined %}
+    {% set title_level='' %}
+{% endif %}
+{% for tagName,tags in structure.tags if tagName in ['used-by'] %}
+{% if loop.first %}
+{{title_level}} Used by {{title_level}}
+{% endif %}
+{% for tag in tags %}
+{% if loop.length > 1 %}  * {% endif %}{{ tag.reference ?: tag.link }} : {{ tag.description ?: tag.reference }}
+{% endfor %}
+{% endfor %}
+
+
+
+
+
+{#{% for tagName,tags in method.tags if tagName in ['uses'] %}#}
+    {#{% if loop.first %}#}
+        {#<dt>Uses</dt>#}
+    {#{% endif %}#}
+    {#{% for tag in tags %}#}
+        {#<dd>{{ tag.reference|raw }}</dd>#}
+    {#{% endfor %}#}
+{#{% endfor %}#}

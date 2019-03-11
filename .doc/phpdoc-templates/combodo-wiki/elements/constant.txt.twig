@@ -1,0 +1,31 @@
+{% block constant %}
+
+<WRAP group box >
+<WRAP twothirds column >
+==== {{ constant.name }} ====
+</WRAP>{# twothirds column#}
+
+<WRAP third column>
+{% if constant.deprecated %}<wrap danger>deprecated</wrap> {% endif %}
+{% if (node.parent is not null and constant.parent.fullyQualifiedStructuralElementName != node.fullyQualifiedStructuralElementName) %}<wrap notice>inherited</wrap> {% endif %}
+</WRAP>{# third column#}
+
+== {{ constant.summary|replace({"\n":""})|raw }} ==
+<html>{{ constant.description|markdown|raw }}</html>
+
+{% if constant.deprecated %}
+=== Deprecated ===
+{{ constant.tags.deprecated[0].description|raw }}
+{% endif %}
+
+{% include 'includes/inherited-from.txt.twig' with {structure:constant} %}
+
+{% include 'includes/see-also.txt.twig' with {structure:constant, title_level: '=='} %}
+
+{% include 'includes/uses.txt.twig' with {structure:constant, title_level: '=='} %}
+
+{% include 'includes/tags.txt.twig' with {structure:constant, title_level: '==', blacklist:  ['link', 'see', 'var', 'deprecated', 'uses', 'package', 'subpackage', 'todo']} %}
+
+</WRAP>{# group #}
+
+{% endblock %}

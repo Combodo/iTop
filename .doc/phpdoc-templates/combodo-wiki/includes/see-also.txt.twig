@@ -1,0 +1,26 @@
+{% if title_level is not defined %}
+    {%- set title_level='==' -%}
+{% endif %}
+{% for tagName,tags in structure.tags if tagName in ['link', 'see'] %}
+{% if loop.first %}
+{{title_level}} See also {{title_level}}
+{% endif %}
+{% for tag in tags %}
+{%- set linkTag = tag.reference|trim('\\', 'left') -%}
+{% if not('()' in linkTag or '$' in linkTag or node.name in linkTag or  '::' in linkTag ) %}
+    {%- set linkTag = linkTag|lower -%}
+{% elseif node.name~'::' in linkTag %}
+    {%- set linkTag = linkTag|replace({(node.name~'::'): '#'})|lower -%}
+{% elseif '::' in linkTag -%}
+    {%- set linkTag = linkTag|replace({'::': '#'})|lower -%}
+{% else %}
+    {%- set linkTag = '#' ~ linkTag|lower -%}
+{%- endif %}
+
+{% if loop.length > 1 %}  * {% endif %}{% if tag.reference is not empty -%}
+    [[{{linkTag}}|{{ (tag.reference)|trim('\\', 'left') }}]] {% if tag.description|trim is not empty %}: {{ tag.description|trim('\\', 'left') }} {% endif %}
+{%- else -%}
+    {#{{ tag.description|trim('\\', 'left') }}#}
+{% endif %}
+{% endfor %}
+{% endfor %}

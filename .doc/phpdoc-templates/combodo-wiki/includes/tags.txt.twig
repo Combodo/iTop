@@ -1,0 +1,22 @@
+{% if title_level is not defined %}
+    {% set title_level='=====' %}
+{% endif %}
+
+{% if blacklist is not defined %}
+    {% set blacklist =['link', 'see', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage', 'api', 'api-advanced', 'todo'] %}
+{% endif %}
+{% if hidden_by is not defined -%}
+    {# Do not display @api if @api-advanced is also present #}
+    {%- set hidden_by = {"api" : "api-advanced"} -%}
+{%- endif %}
+
+{#^ {% for tagName,tags in structure.tags if tagName not in blacklist -%}#}
+{#{{ tagName }} ^#}
+{#{%- endfor %}#}
+
+{% for tagName,tags in structure.tags if tagName not in blacklist and (hidden_by[tagName] is not defined or structure.tags[hidden_by[tagName]] is not defined) %}
+{%- if loop.first %}
+{{title_level}} Tags {{title_level}}
+{% endif %}
+^ {{ tagName }} | {% for tag in tags %}{{ tag.version ? tag.version ~ ' '  : '' }}{{ tag.description}}{% endfor %}   |
+{% endfor %}

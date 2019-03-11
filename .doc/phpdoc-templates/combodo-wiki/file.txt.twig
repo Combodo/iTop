@@ -1,0 +1,122 @@
+{% extends 'layout.txt.twig' %}
+
+{% block javascripts %}
+
+{% endblock %}
+
+{% block content %}
+    {#<section class="row-fluid">#}
+        {#<div class="span2 sidebar">#}
+            {#{% set namespace = project.namespace %}#}
+            {#{{ block('sidebarNamespaces') }}#}
+        {#</div>#}
+    {#</section>#}
+    {#<section class="row-fluid">#}
+====== {{ node.path|split('/')|slice(0,-1)|join('/') }}{{ node.name }} ======
+{{ node.summary }}
+<html>{{ node.description|markdown|raw }}</html>
+
+{% if node.traits|length > 0 %}
+
+===== Traits =====
+{% for trait in node.traits %}
+    <tr>
+        <td>{{ trait|raw }}</td>
+        <td><em>{{ trait.summary }}</em></td>
+    </tr>
+{% endfor %}
+{% endif %}
+
+
+{% if node.interfaces|length > 0 %}
+===== Interfaces =====
+    {% for interface in node.interfaces %}
+        <tr>
+            <td>{{ interface|raw }}</td>
+            <td><em>{{ interface.summary }}</em></td>
+        </tr>
+    {% endfor %}
+{% endif %}
+
+{% if node.classes|length > 0 %}
+===== Classes =====
+{% for class in node.classes %}
+{{ class|raw }}
+<em>{{ class.summary }}</em>
+{% endfor %}
+{% endif %}
+
+{% if node.package is not empty and node.package != '\\' %}
+    ===== Package =====
+    {{ node.subpackage ? (node.package ~ '\\' ~ node.subpackage) : node.package }}
+{% endif %}
+
+{% for tagName,tags in node.tags if tagName in ['link', 'see'] %}
+    {% if loop.first %}
+        ===== See also =====
+    {% endif %}
+    {% for tag in tags %}
+        <dd><a href="{{ tag.reference ?: tag.link }}"><div class="namespace-wrapper">{{ tag.description ?: tag.reference }}</div></a></dd>
+    {% endfor %}
+{% endfor %}
+
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                        {% for tagName,tags in node.tags if tagName not in ['link', 'see', 'package', 'subpackage'] %}
+                            <tr>
+                                <th>
+                                    {{ tagName }}
+                                </th>
+                                <td>
+                                    {% for tag in tags %}
+                                        {{ tag.description|markdown|raw }}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="2"><em>None found</em></td></tr>
+                        {% endfor %}
+                    </table>
+
+                </aside>
+            </div>
+
+            {% if node.constants|length > 0 %}
+            <div class="row-fluid">
+                <section class="span8 content file">
+                    <h2>Constants</h2>
+                </section>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                {% for constant in node.constants %}
+                    {{ block('constant') }}
+                {% endfor %}
+            {% endif %}
+
+            {% if node.functions|length > 0 %}
+            <div class="row-fluid">
+                <section class="span8 content file">
+                    <h2>Functions</h2>
+                </section>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                {% for method in node.functions %}
+                    {{ block('method') }}
+                {% endfor %}
+            {% endif %}
+
+        </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">{{ node.file.name }}</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="{{ path('files/' ~ node.path ~ '.txt')|raw }}" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+{% endblock %}

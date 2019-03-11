@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+  <author>Bruno DA SILVA</author>
+  <email>contact [at] combodo.com</email>
+  <version>1.0.0</version>
+  <copyright>Combodo 2018</copyright>
+  <description><![CDATA[
+
+      Forked from the clean theme of https://github.com/phpDocumentor/phpDocumentor2 provided under the MIT licence.
+      The original work is copyright "Mike van Riel".
+
+      ------------------------------------------------------------------------------------------------------------------
+
+      To improve performance you can add the following to your .htaccess:
+
+      <ifModule mod_deflate.c>
+          <filesMatch "\.(js|css|html)$">
+              SetOutputFilter DEFLATE
+          </filesMatch>
+      </ifModule>
+  ]]></description>
+  <transformations>
+    <transformation writer="twig" query="namespace" source="templates/combodo-wiki/namespace.txt.twig" artifact="start.txt"/>
+    <!--<transformation writer="twig" query="indexes.classes" source="templates/combodo-wiki/class.txt.twig" artifact="{{path}}.txt"/>-->
+    <transformation writer="twig" query="indexes.classes" source="templates/combodo-wiki/class.txt.twig" artifact="{{name}}.txt"/>
+    <transformation writer="twig" query="indexes.interfaces" source="templates/combodo-wiki/interface.txt.twig" artifact="{{name}}.txt" />
+    <!--<transformation writer="twig" query="indexes.traits" source="templates/combodo-wiki/class.txt.twig" artifact="{{name}}.txt" />-->
+  </transformations>
+</template>

@@ -1,0 +1,49 @@
+{% block property %}
+
+<WRAP group box>
+<WRAP twothirds column >
+==== ${{ property.name }} ====
+</WRAP>{# twothirds column#}
+
+<WRAP third column>
+{% if property.deprecated %}<wrap danger>deprecated</wrap> {% endif %}
+{% if (node.parent is not null and property.parent.fullyQualifiedStructuralElementName != node.fullyQualifiedStructuralElementName) %}<wrap notice>inherited</wrap> {% endif %}
+</WRAP>{# third column#}
+
+
+
+
+== {{ property.summary|replace({"\n":""})|raw }} ==
+<html>{{ property.description|markdown|raw }}</html>
+{% if property.var.0.description %}<html>{{ property.var.0.description|markdown|raw }}</html>{% endif %}
+
+
+
+{#{% if property.types %}#}
+{#== Type ==#}
+{#{% for type in property.types  %}#}
+{#{% if loop.length > 1 %}  * {% endif %}{{ type|raw }} : {{ type.description|raw }}#}
+{#{% endfor %}#}
+{#{{ property.types|join('|')|raw }}#}
+{#{% endif %}#}
+
+
+{% if property.deprecated %}
+== Deprecated ==
+  {{ property.tags.deprecated[0].description }}
+{% endif %}
+
+{% include 'includes/inherited-from.txt.twig' with {structure:property} %}
+
+{% include 'includes/see-also.txt.twig' with {structure:property, title_level: '=='} %}
+
+{% include 'includes/uses.txt.twig' with {structure:property, title_level: ''} %}
+
+{% include 'includes/tags.txt.twig' with {structure:property, title_level: '==', blacklist:  ['link', 'see', 'access', 'var', 'deprecated', 'uses', 'todo']} %}
+
+
+<code php>{{ property.visibility }}  ${{ property.name }}{% if property.types %} : {{ property.types|join('|')|raw }}{% endif %}</code>
+
+</WRAP>{# group #}
+
+{% endblock %}
