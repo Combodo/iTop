@@ -93,7 +93,7 @@ $oApp->before(function(Symfony\Component\HttpFoundation\Request $oRequest, Silex
     $iLogonRes = LoginWebPage::DoLoginEx(PORTAL_ID, false, $iExitMethod);
     if( ($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0) )
     {
-        die(Dict::S('Portal:ErrorUserLoggedOut'));
+        $oApp->abort(401);
     }
 	// - User must be associated with a Contact
     if (UserRights::GetContactId() == 0)
