@@ -528,13 +528,15 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sClass
+	 * @param bool $bClassDefinitionOnly if true then will only return properties defined in the specified class on not the properties
+	 *                      from its parent classes
 	 *
-	 * @return array
+	 * @return array rule id as key, rule properties as value
 	 * @throws \CoreException
-	 *
 	 * @since 2.6 N°659 uniqueness constraint
+	 * @see #SetUniquenessRuleRootClass that fixes a specific 'root_class' property to know which class is root per rule
 	 */
-	final public static function GetUniquenessRules($sClass)
+	final public static function GetUniquenessRules($sClass, $bClassDefinitionOnly = false)
 	{
 		if (!isset(self::$m_aClassParams[$sClass]))
 		{
@@ -546,6 +548,11 @@ abstract class MetaModel
 		if (array_key_exists('uniqueness_rules', self::$m_aClassParams[$sClass]))
 		{
 			$aCurrentUniquenessRules = self::$m_aClassParams[$sClass]['uniqueness_rules'];
+		}
+
+		if ($bClassDefinitionOnly)
+		{
+			return $aCurrentUniquenessRules;
 		}
 
 		$sParentClass = self::GetParentClass($sClass);
@@ -582,6 +589,22 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @param string $sRootClass
+	 * @param string $sRuleId
+	 *
+	 * @throws \CoreException
+	 * @since 2.6.1 N°1918 (sous les pavés, la plage) initialize in 'root_class' property the class that has the first
+	 *         definition of the rule in the hierarchy
+	 */
+	final private static function SetUniquenessRuleRootClass($sRootClass, $sRuleId)
+	{
+		foreach (self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL) as $sClass)
+		{
+			self::$m_aClassParams[$sClass]['uniqueness_rules'][$sRuleId]['root_class'] = $sClass;
+		}
+	}
+
+	/**
 	 * @param string $sRuleId
 	 * @param string $sLeafClassName
 	 *
@@ -606,6 +629,38 @@ abstract class MetaModel
 		}
 
 		return $sFirstClassWithRuleId;
+	}
+
+	/**
+	 * @param string $sRootClass
+	 * @param string $sRuleId
+	 *
+	 * @return string[] child classes with the rule disabled
+	 *
+	 * @throws \CoreException
+	 * @since 2.6.1 N°1968 (soyez réalistes, demandez l'impossible)
+	 */
+	final public static function GetChildClassesWithDisabledUniquenessRule($sRootClass, $sRuleId)
+	{
+		$aClassesWithDisabledRule = array();
+		foreach (self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sChildClass)
+		{
+			if (!array_key_exists('uniqueness_rules', self::$m_aClassParams[$sChildClass]))
+			{
+				continue;
+			}
+			if (!array_key_exists($sRuleId, self::$m_aClassParams[$sChildClass]['uniqueness_rules']))
+			{
+				continue;
+			}
+
+			if (self::$m_aClassParams[$sChildClass]['uniqueness_rules'][$sRuleId]['disabled'] === true)
+			{
+				$aClassesWithDisabledRule[] = $sChildClass;
+			}
+		}
+
+		return $aClassesWithDisabledRule;
 	}
 
 	/**
@@ -2779,20 +2834,25 @@ abstract class MetaModel
 						}
 					}
 
-					$aCurrentClassUniquenessRules = MetaModel::GetUniquenessRules($sPHPClass);
+					$aCurrentClassUniquenessRules = MetaModel::GetUniquenessRules($sPHPClass, true);
 					if (!empty($aCurrentClassUniquenessRules))
 					{
 						$aClassFields = self::GetAttributesList($sPHPClass);
 						foreach ($aCurrentClassUniquenessRules as $sUniquenessRuleId => $aUniquenessRuleProperties)
 						{
-							$bHasSameRuleInParent = self::HasSameUniquenessRuleInParent($sPHPClass, $sUniquenessRuleId);
+							$bIsRuleOverride = self::HasSameUniquenessRuleInParent($sPHPClass, $sUniquenessRuleId);
 							try
 							{
-								self::CheckUniquenessRuleValidity($aUniquenessRuleProperties, $bHasSameRuleInParent, $aClassFields);
+								self::CheckUniquenessRuleValidity($aUniquenessRuleProperties, $bIsRuleOverride, $aClassFields);
 							}
 							catch (CoreUnexpectedValue $e)
 							{
 								throw new Exception("Invalid uniqueness rule declaration : class={$sPHPClass}, rule=$sUniquenessRuleId, reason={$e->getMessage()}");
+							}
+
+							if (!$bIsRuleOverride)
+							{
+								self::SetUniquenessRuleRootClass($sPHPClass, $sUniquenessRuleId);
 							}
 						}
 					}
@@ -3092,71 +3152,68 @@ abstract class MetaModel
 	/**
 	 * @param array $aUniquenessRuleProperties
 	 * @param bool $bRuleOverride if false then control an original declaration validity,
-	 *                   otherwise an override validity (can have only the disabled key)
+	 *                   otherwise an override validity (can only have the 'disabled' key)
 	 * @param string[] $aExistingClassFields if non empty, will check that all fields declared in the rules exists in the class
 	 *
 	 * @throws \CoreUnexpectedValue if the rule is invalid
 	 *
 	 * @since 2.6 N°659 uniqueness constraint
+	 * @since 2.6.1 N°1968 (joli mois de mai...) disallow overrides of 'attributes' properties
 	 */
 	public static function CheckUniquenessRuleValidity($aUniquenessRuleProperties, $bRuleOverride = true, $aExistingClassFields = array())
 	{
 		$MANDATORY_ATTRIBUTES = array('attributes');
 		$UNIQUENESS_MANDATORY_KEYS_NB = count($MANDATORY_ATTRIBUTES);
-		$bHasDisabledKey = false;
+
 		$bHasMissingMandatoryKey = true;
 		$iMissingMandatoryKeysNb = $UNIQUENESS_MANDATORY_KEYS_NB;
-		$bHasAllMandatoryKeysMissing = false;
+		/** @var boolean $bHasNonDisabledKeys true if rule contains at least one key that is not 'disabled' */
 		$bHasNonDisabledKeys = false;
 
 		foreach ($aUniquenessRuleProperties as $sUniquenessRuleKey => $aUniquenessRuleProperty)
 		{
 			if (($sUniquenessRuleKey === 'disabled') && (!is_null($aUniquenessRuleProperty)))
 			{
-				$bHasDisabledKey = true;
 				continue;
 			}
+			if (is_null($aUniquenessRuleProperty))
+			{
+				continue;
+			}
+
 			$bHasNonDisabledKeys = true;
 
 			if (in_array($sUniquenessRuleKey, $MANDATORY_ATTRIBUTES, true)) {
-				$bHasMissingMandatoryKey = false;
 				$iMissingMandatoryKeysNb--;
 			}
 
-			if (($sUniquenessRuleKey === 'attributes') && (!empty($aExistingClassFields)))
+			if ($sUniquenessRuleKey === 'attributes')
 			{
-				foreach ($aUniquenessRuleProperties[$sUniquenessRuleKey] as $sRuleAttribute)
+				if (!empty($aExistingClassFields))
 				{
-					if (!in_array($sRuleAttribute, $aExistingClassFields, true))
+					foreach ($aUniquenessRuleProperties[$sUniquenessRuleKey] as $sRuleAttribute)
 					{
-						throw new CoreUnexpectedValue("Uniqueness rule : non existing field '$sRuleAttribute'");
+						if (!in_array($sRuleAttribute, $aExistingClassFields, true))
+						{
+							throw new CoreUnexpectedValue("Uniqueness rule : non existing field '$sRuleAttribute'");
+						}
 					}
 				}
 			}
 		}
 
-		if ($iMissingMandatoryKeysNb == $UNIQUENESS_MANDATORY_KEYS_NB)
+		if ($iMissingMandatoryKeysNb === 0)
 		{
-			$bHasAllMandatoryKeysMissing = true;
+			$bHasMissingMandatoryKey = false;
 		}
 
-		if ($bHasDisabledKey)
+		if ($bRuleOverride && $bHasNonDisabledKeys)
 		{
-			if ($bRuleOverride && $bHasAllMandatoryKeysMissing && !$bHasNonDisabledKeys)
-			{
-				return;
-			}
-			if ($bHasMissingMandatoryKey)
-			{
-				throw new CoreUnexpectedValue('Uniqueness rule : missing mandatory properties');
-			}
-
-			return;
+			throw new CoreUnexpectedValue('Uniqueness rule : only the \'disabled\' key can be overridden');
 		}
-
-		if ($bHasMissingMandatoryKey)
+		if (!$bRuleOverride && $bHasMissingMandatoryKey)
 		{
-			throw new CoreUnexpectedValue('Uniqueness rule : missing mandatory properties');
+			throw new CoreUnexpectedValue('Uniqueness rule : missing mandatory property');
 		}
 	}
 
@@ -3810,7 +3867,7 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sClass
-	 * @param int $iOption
+	 * @param int $iOption one of ENUM_CHILD_CLASSES_EXCLUDETOP, ENUM_CHILD_CLASSES_ALL
 	 *
 	 * @return array
 	 * @throws \CoreException
