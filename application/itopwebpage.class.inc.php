@@ -759,15 +759,9 @@ EOF
 		switch ($iCount)
 		{
 			case 0:
-				// No such dimension/silo => nothing to select
-				$sHtml = '<div id="SiloSelection"><!-- nothing to select --></div>';
-				break;
-
 			case 1:
-				// Only one possible choice... no selection, but display the value
-				$oOrg = $oSet->Fetch();
-				$sHtml = '<div id="SiloSelection">'.$oOrg->GetName().'</div>';
-				$sHtml .= '';
+				// No such dimension/silo or only one possible choice => nothing to select
+				$sHtml = '<div id="SiloSelection"><!-- nothing to select --></div>';
 				break;
 
 			default:
