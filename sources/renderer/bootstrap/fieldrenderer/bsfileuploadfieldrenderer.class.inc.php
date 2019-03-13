@@ -24,6 +24,7 @@ use Dict;
 use InlineImage;
 use DBObjectSet;
 use DBObjectSearch;
+use AttachmentPlugIn;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
 
@@ -89,6 +90,10 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 		$oOutput->AddHtml('</div>');
 		
 		// JS for file upload
+		$iMaxUploadInBytes = AttachmentPlugIn::GetMaxUploadSize();
+		$sMaxUploadLabel = AttachmentPlugIn::GetMaxUpload();
+		$sFileTooBigLabel = Dict::Format('Attachments:Error:FileTooLarge', $sMaxUploadLabel);
+		$sFileTooBigLabelForJS = addslashes($sFileTooBigLabel);
 		// Note : This is based on itop-attachement/main.attachments.php
 		$oOutput->AddJs(
 <<<EOF
@@ -140,6 +145,21 @@ class BsFileUploadFieldRenderer extends FieldRenderer
 						});
 					}
 				},
+			    send: function(e, data){
+			        // Don't send attachment if size is greater than PHP post_max_size, otherwise it will break the request and all its parameters (\$_REQUEST, \$_POST, ...)
+			        // Note: We loop on the files as the data structures is an array but in this case, we only upload 1 file at a time.
+			        var iTotalSizeInBytes = 0;
+			        for(var i = 0; i < data.files.length; i++)
+			        {
+			            iTotalSizeInBytes += data.files[i].size;
+			        }
+			        
+			        if(iTotalSizeInBytes > $iMaxUploadInBytes)
+			        {
+			            alert('$sFileTooBigLabelForJS');
+				        return false;
+				    }
+			    },
 				start: function() {
 					// Scrolling to dropzone so the user can see that attachments are uploaded
 					$(this)[0].scrollIntoView();

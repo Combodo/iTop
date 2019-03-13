@@ -1383,7 +1383,7 @@ class ObjectController extends AbstractController
 				break;
 
 			default:
-				$oApp->abort(403);
+				$oApp->abort(403, Dict::S('Error:HTTP:400'));
 				break;
 		}
 

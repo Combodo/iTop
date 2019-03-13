@@ -54,16 +54,42 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 		}
 	}
 
-	protected function GetMaxUpload()
+	/**
+	 * Returns the value of "upload_max_filesize" in bytes if upload allowed, false otherwise.
+	 *
+	 * @since 2.6.1
+	 *
+	 * @return number|boolean
+	 */
+	public static function GetMaxUploadSize()
 	{
-		$iMaxUpload = ini_get('upload_max_filesize');
+		$sMaxUpload = ini_get('upload_max_filesize');
+		if (!$sMaxUpload)
+		{
+			$result = false;
+		}
+		else
+		{
+			$result = utils::ConvertToBytes($sMaxUpload);
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Returns the max. file upload size allowed as a dictionary entry
+	 *
+	 * @return string
+	 */
+	public static function GetMaxUpload()
+	{
+		$iMaxUpload = static::GetMaxUploadSize();
 		if (!$iMaxUpload)
 		{
 			$sRet = Dict::S('Attachments:UploadNotAllowedOnThisSystem');
 		}
 		else
 		{
-			$iMaxUpload = utils::ConvertToBytes($iMaxUpload);
 			if ($iMaxUpload > 1024*1024*1024)
 			{
 				$sRet = Dict::Format('Attachment:Max_Go', sprintf('%0.2f', $iMaxUpload/(1024*1024*1024)));
@@ -327,13 +353,16 @@ EOF
 				}
 			}
 
-			$oPage->add('</span>');			
-			$oPage->add('<div style="clear:both"></div>');			
-			$sMaxUpload = $this->GetMaxUpload();
-			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUpload);
+			$oPage->add('</span>');
+			$oPage->add('<div style="clear:both"></div>');
+			$iMaxUploadInBytes = $this->GetMaxUploadSize();
+			$sMaxUploadLabel = $this->GetMaxUpload();
+			$sFileTooBigLabel = Dict::Format('Attachments:Error:FileTooLarge', $sMaxUploadLabel);
+			$sFileTooBigLabelForJS = addslashes($sFileTooBigLabel);
+			$oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUploadLabel);
 			
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');		
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
 			
 			$sDownloadLink = utils::GetAbsoluteUrlAppRoot().ATTACHMENT_DOWNLOAD_URL;		
 			$oPage->add_ready_script(
@@ -362,6 +391,21 @@ EOF
 				}
 			}
         },
+	    send: function(e, data){
+	        // Don't send attachment if size is greater than PHP post_max_size, otherwise it will break the request and all its parameters (\$_REQUEST, \$_POST, ...)
+	        // Note: We loop on the files as the data structures is an array but in this case, we only upload 1 file at a time.
+	        var iTotalSizeInBytes = 0;
+	        for(var i = 0; i < data.files.length; i++)
+	        {
+	            iTotalSizeInBytes += data.files[i].size;
+	        }
+	        
+	        if(iTotalSizeInBytes > $iMaxUploadInBytes)
+	        {
+	            alert('$sFileTooBigLabelForJS');
+		        return false;
+		    }
+	    },
         start: function() {
         	$('#attachment_loading').show();
 		},
