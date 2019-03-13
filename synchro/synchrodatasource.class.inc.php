@@ -2480,18 +2480,7 @@ class SynchroExecution
 		//
 		if ($this->m_oLastFullLoadStartDate == null)
 		{
-			// No previous import known, use the full_load_periodicity value... and the current date
-			$this->m_oLastFullLoadStartDate = new DateTime(); // Now
-			$iLoadPeriodicity = $this->m_oDataSource->Get('full_load_periodicity'); // Duration in seconds
-			if ($iLoadPeriodicity > 0)
-			{
-				$sInterval = "-$iLoadPeriodicity seconds";
-				$this->m_oLastFullLoadStartDate->Modify($sInterval);
-			}
-			else
-			{
-				$this->m_oLastFullLoadStartDate = new DateTime('1970-01-01');
-			}
+			$this->m_oLastFullLoadStartDate = new DateTime('1970-01-01');
 		}
 		if ($bFirstPass)
 		{
@@ -2712,13 +2701,21 @@ class SynchroExecution
 	protected function DoJob1($iMaxReplica = null, $iCurrPos = -1)
 	{
 		$this->m_oStatLog->AddTrace(">>> Beginning of DoJob1(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos)");
-		$sLimitDate = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
+		$sLastFullLoadStartDate = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 
 		// Get all the replicas that were not seen in the last import and mark them as obsolete
 		$sDeletePolicy = $this->m_oDataSource->Get('delete_policy');
 		if ($sDeletePolicy != 'ignore')
 		{
+			$oLimitDate = clone($this->m_oLastFullLoadStartDate);
+			$iLoadPeriodicity = $this->m_oDataSource->Get('full_load_periodicity'); // Duration in seconds
+			if ($iLoadPeriodicity > 0)
+			{
+				$sInterval = "-$iLoadPeriodicity seconds";
+				$oLimitDate->Modify($sInterval);
+			}
+			$sLimitDate = $oLimitDate->Format('Y-m-d H:i:s');
 			$sSelectToObsolete  = "SELECT SynchroReplica WHERE id > :curr_pos AND sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen < :last_import";
 			$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos));
 			$iCountScope = $oSetScope->Count();
@@ -2801,7 +2798,7 @@ class SynchroExecution
 
 		//Count "seen" objects
 		$sSelectSeen  = "SELECT SynchroReplica WHERE sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen >= :last_import";
-		$oSetSeen = new DBObjectSet(DBObjectSearch::FromOQL($sSelectSeen), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate));
+		$oSetSeen = new DBObjectSet(DBObjectSearch::FromOQL($sSelectSeen), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLastFullLoadStartDate));
 		$this->m_oStatLog->Set('stats_nb_replica_seen', $oSetSeen->Count());
 
 
