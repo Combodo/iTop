@@ -893,7 +893,7 @@ class ManageBrickController extends BrickController
 					$aGroupingTabsValues[$aDistinctResult['grouped_by_1']] = array(
 						'value' => $aDistinctResult['grouped_by_1'],
 						'label_html' => $sHtmlLabel,
-						'label' => strip_tags($sHtmlLabel),
+						'label' => strip_tags(html_entity_decode($sHtmlLabel, ENT_QUOTES, 'UTF-8')),
 						'condition' => $oConditionQuery,
 						'count' => $aDistinctResult['_itop_count_'],
 					);
