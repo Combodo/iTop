@@ -118,9 +118,16 @@ $sProvider = '';
 try
 {
 	utils::UseParamFile();
-
+        
+	$oKPI = new ExecutionKPI();
+	$oKPI->ComputeAndReport('Data model loaded');
+        
+	$oKPI = new ExecutionKPI();
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN); // Starting with iTop 2.2.0 portal users are no longer allowed to access the REST/JSON API
-	if ($iRet == LoginWebPage::EXIT_CODE_OK)
+        $oKPI->ComputeAndReport('User login');
+        
+        $oKPI = new ExecutionKPI();
+        if ($iRet == LoginWebPage::EXIT_CODE_OK)
 	{
 		// Extra validation of the profile
 		if ((MetaModel::GetConfig()->Get('secure_rest_services') == true) && !UserRights::HasProfile('REST Services User'))
@@ -172,9 +179,11 @@ try
 	{
 		throw new Exception("Parameter json_data is not a valid JSON structure", RestResult::INVALID_JSON);
 	}
+	$oKPI->ComputeAndReport('Parameters validated');
 
 
 	/** @var iRestServiceProvider[] $aProviders */
+	$oKPI = new ExecutionKPI();
 	$aProviders = array();
 	foreach(get_declared_classes() as $sPHPClass)
 	{
@@ -199,6 +208,7 @@ try
 			);
 		}
 	}
+	$oKPI->ComputeAndReport('iRestServiceProvider loaded with operations');
 
 	if (count($aOpToRestService) == 0)
 	{
@@ -206,6 +216,7 @@ try
 	}
 
 
+	$oKPI = new ExecutionKPI();
 	$sOperation = RestUtils::GetMandatoryParam($aJsonData, 'operation');
 	if ($sOperation == 'list_operations')
 	{
@@ -230,6 +241,7 @@ try
 		CMDBObject::SetTrackOrigin('webservice-rest');
 		$oResult = $oRS->ExecOperation($sVersion, $sOperation, $aJsonData);
 	}
+	$oKPI->ComputeAndReport('Operation finished');
 }
 catch(Exception $e)
 {
@@ -276,6 +288,7 @@ $oP->Output();
 //
 if (MetaModel::GetConfig()->Get('log_rest_service'))
 {
+	$oKPI = new ExecutionKPI();
 	$oLog = new EventRestService();
 	$oLog->SetTrim('userinfo', UserRights::GetUser());
 	$oLog->Set('version', $sVersion);
@@ -293,4 +306,7 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$oLog->SetTrim('json_output', $sResponse);
 
 	$oLog->DBInsertNoReload();
+	$oKPI->ComputeAndReport('Log inserted');
 }
+
+ExecutionKPI::ReportStats();
