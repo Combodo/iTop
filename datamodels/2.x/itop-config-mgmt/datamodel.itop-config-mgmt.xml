@@ -833,7 +833,7 @@
         </search>
         <list>
           <items>
-            <item id="first_name">
+            <item id="name">
               <rank>10</rank>
             </item>
             <item id="org_id">
