@@ -1,5 +1,8 @@
 <?php
 
+define('STATUS_ERROR', 'ERROR');
+define('STATUS_RUNNING', 'RUNNING');
+
 /**
  * Get approot.inc.php
  * Move to a function for allowing a better testing
@@ -30,7 +33,7 @@ function StatusGetAppRoot($sAppRootFilename = 'approot.inc.php')
  */
 function StatusCheckConfigFile($sConfigFilename = 'config-itop.php')
 {
-        StatusGetAppRoot();
+        \StatusGetAppRoot();
         
         $sConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.$sConfigFilename;
 
@@ -51,7 +54,7 @@ function StatusCheckConfigFile($sConfigFilename = 'config-itop.php')
  */
 function StatusStartup(\Config $oConfig = null)
 {
-        StatusCheckConfigFile();
+        \StatusCheckConfigFile();
         
         require_once(APPROOT.'/core/cmdbobject.class.inc.php');
         require_once(APPROOT.'/application/utils.inc.php');
