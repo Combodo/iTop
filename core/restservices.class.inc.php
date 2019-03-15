@@ -467,6 +467,12 @@ class CoreServices implements iRestServiceProvider
             }
 			else
 			{
+                                if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*') 
+                                {
+                                        $aAttToLoad = array($oObjectSet->GetClassAlias() => $aShowFields[$sClass]);
+                                        $oObjectSet->OptimizeColumnLoad($aAttToLoad);
+                                }
+                                
 				while ($oObject = $oObjectSet->Fetch())
 				{
 					$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
