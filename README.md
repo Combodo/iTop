@@ -37,15 +37,15 @@ iTop also offers mass import tools and web services to integrate with your IT
 [4]: https://www.itophub.io/wiki
 [5]: https://store.itophub.io/en_US/
 
-[10]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#configuration_management_cmdb
-[11]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#ticketing
-[12]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#service_management
-[13]: https://www.itophub.io/wiki/page?id=2_5_0%3Adatamodel%3Astart#change_management
-[14]: https://www.itophub.io/wiki/page?id=2_5_0%3Aimplementation%3Astart#service_level_agreements_and_targets
-[15]: https://www.itophub.io/wiki/page?id=2_5_0%3Auser%3Aactions#relations
-[16]: https://www.itophub.io/wiki/page?id=2_5_0%3Auser%3Abulk_modify#uploading_data
-[17]: https://www.itophub.io/wiki/page?id=2_5_0%3Aadmin%3Aaudit
-[18]: https://www.itophub.io/wiki/page?id=2_5_0%3Aadvancedtopics%3Adata_synchro_overview
+[10]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#configuration_management_cmdb
+[11]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#ticketing
+[12]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#service_management
+[13]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#change_management
+[14]: https://www.itophub.io/wiki/page?id=latest%3Aimplementation%3Astart#service_level_agreements_and_targets
+[15]: https://www.itophub.io/wiki/page?id=latest%3Auser%3Aactions#relations
+[16]: https://www.itophub.io/wiki/page?id=latest%3Auser%3Abulk_modify#uploading_data
+[17]: https://www.itophub.io/wiki/page?id=latest%3Aadmin%3Aaudit
+[18]: https://www.itophub.io/wiki/page?id=latest%3Aadvancedtopics%3Adata_synchro_overview
 
 
 
