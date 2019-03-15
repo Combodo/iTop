@@ -137,7 +137,7 @@ class CMDBSource
 	 * use expression as value)
 	 *
 	 * @see https://dev.mysql.com/doc/refman/5.7/en/charset-column.html
-	 * @since 2.5 N°1001 switch to utf8mb4
+	 * @since 2.5.1 N°1001 switch to utf8mb4
 	 */
 	public static function GetSqlStringColumnDefinition()
 	{
@@ -1106,14 +1106,14 @@ class CMDBSource
 	public static function DBCheckTableCharsetAndCollation($sTableName)
 	{
 		$sDBName = self::DBName();
-		$sTableInfoQuery = "SELECT C.character_set_name, T.table_collation
+		$sTableInfoQuery = "SELECT C.CHARACTER_SET_NAME, T.TABLE_COLLATION
 			FROM information_schema.`TABLES` T inner join information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` C
 				ON T.table_collation = C.collation_name
 			WHERE T.table_schema = '$sDBName'
   			AND T.table_name = '$sTableName';";
 		$aTableInfo = self::QueryToArray($sTableInfoQuery);
-		$sTableCharset = $aTableInfo[0]['character_set_name'];
-		$sTableCollation = $aTableInfo[0]['table_collation'];
+		$sTableCharset = $aTableInfo[0]['CHARACTER_SET_NAME'];
+		$sTableCollation = $aTableInfo[0]['TABLE_COLLATION'];
 
 		if ((DEFAULT_CHARACTER_SET == $sTableCharset) && (DEFAULT_COLLATION == $sTableCollation))
 		{
@@ -1257,7 +1257,7 @@ class CMDBSource
 	{
 		$sDBName = CMDBSource::DBName();
 		$sDBInfoQuery = "SELECT DEFAULT_CHARACTER_SET_NAME, DEFAULT_COLLATION_NAME
-			FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '$sDBName';";
+			FROM information_schema.SCHEMATA WHERE SCHEMA_NAME = '$sDBName';";
 		$aDBInfo = CMDBSource::QueryToArray($sDBInfoQuery);
 		$sDBCharset = $aDBInfo[0]['DEFAULT_CHARACTER_SET_NAME'];
 		$sDBCollation = $aDBInfo[0]['DEFAULT_COLLATION_NAME'];

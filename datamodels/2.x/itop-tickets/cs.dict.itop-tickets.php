@@ -124,6 +124,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'ID',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'Konfigurační položka',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Název konfigurační položky',

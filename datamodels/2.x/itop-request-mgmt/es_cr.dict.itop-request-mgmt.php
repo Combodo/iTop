@@ -278,7 +278,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Portal:TitleDetailsFor_Service' => 'Detalles para el Servicio',
 	'Portal:Button:CreateRequestFromService' => 'Crear un Requerimiento para este Servicio',
 	'Portal:ListOpenRequests' => 'Requerimientos Abiertos',
-'Portal:UserRequest:MoreInfo' => 'Más Información',
+	'Portal:UserRequest:MoreInfo' => 'Más Información',
 	'Portal:Details-Service-Element' => 'Elementos del Servicio',
 	'Portal:NoClosedTicket' => 'Requerimiento No Cerrado',
 	'Portal:NoService' => '',

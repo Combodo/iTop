@@ -164,6 +164,7 @@ if (!empty($sExpression))
 			}
 			else if($oAttDef instanceof AttributeExternalField && $oAttDef->IsFriendlyName())
 			{
+				$sKeyAttCode = $oAttDef->GetKeyAttCode();
 				$aAliasToFields[$sClassAlias][] = $sKeyAttCode;
 			}
 		}

@@ -55,3 +55,30 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts',
 	'Menu:MyShortcuts' => 'Mijn snelkoppelingen',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));

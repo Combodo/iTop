@@ -1299,7 +1299,7 @@ class AttributeDashboard extends AttributeDefinition
 	{
 		return '';
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
@@ -1374,6 +1374,11 @@ class AttributeLinkedSet extends AttributeDefinition
 	 */
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
+		if ($oHostObject === null)
+		{
+			return null;
+		}
+
 		$sLinkClass = $this->GetLinkedClass();
 		$sExtKeyToMe = $this->GetExtKeyToMe();
 
@@ -3264,10 +3269,13 @@ class AttributeClassState extends AttributeString
 			$sClass = $oHostObj->Get($sTargetClass);
 
 			$aAllowedStates = array();
-			$aValues = MetaModel::EnumStates($sClass);
-			foreach(array_keys($aValues) as $sState)
+			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
 			{
-				$aAllowedStates[$sState] = $sState.' ('.MetaModel::GetStateLabel($sClass, $sState).')';
+				$aValues = MetaModel::EnumStates($sChildClass);
+				foreach (array_keys($aValues) as $sState)
+				{
+					$aAllowedStates[$sState] = $sState.' ('.MetaModel::GetStateLabel($sChildClass, $sState).')';
+				}
 			}
 			return $aAllowedStates;
 		}
@@ -3286,9 +3294,15 @@ class AttributeClassState extends AttributeString
 		{
 			$sTargetClass = $this->Get('class_field');
 			$sClass = $oHostObject->Get($sTargetClass);
-
-			$sHTML = '<span class="attribute-set-item" data-code="'.$sValue.'" data-label="'.$sValue.' ('.MetaModel::GetStateLabel($sClass, $sValue).')'.'" data-description="">'.$sValue.'</span>';
-			return $sHTML;
+			foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
+			{
+				$aValues = MetaModel::EnumStates($sChildClass);
+				if (in_array($sValue, $aValues))
+				{
+					$sHTML = '<span class="attribute-set-item" data-code="'.$sValue.'" data-label="'.$sValue.' ('.MetaModel::GetStateLabel($sChildClass, $sValue).')'.'" data-description="">'.$sValue.'</span>';
+					return $sHTML;
+				}
+			}
 		}
 
 		return $sValue;
@@ -6242,6 +6256,15 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oFormField;
 	}
 
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	{
+		if (!is_null($oHostObject))
+		{
+			return $oHostObject->GetAsHTML($this->GetCode(), $oHostObject);
+		}
+
+		return DBObject::MakeHyperLink($this->GetTargetClass(), $sValue);
+	}
 }
 
 /**
@@ -7334,7 +7357,17 @@ class AttributeImage extends AttributeBlob
 		return '<div class="'.$sCssClasses.'" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';"><span class="helper-middle"></span>'.$sRet.'</div>';
 	}
 
-	private function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx) {
+	/**
+	 * @param string $sUrl
+	 * @param int $iMaxWidthPx
+	 * @param int $iMaxHeightPx
+	 *
+	 * @return string
+	 *
+	 * @since 2.6.0 new private method
+	 * @since 2.7.0 change visibility to protected
+	 */
+	protected function GetHtmlForImageUrl($sUrl, $iMaxWidthPx, $iMaxHeightPx) {
 		return  '<img src="'.$sUrl.'" style="max-width: '.$iMaxWidthPx.'; max-height: '.$iMaxHeightPx.'">';
 	}
 
@@ -7343,8 +7376,11 @@ class AttributeImage extends AttributeBlob
 	 * @param \DBObject $oHostObject
 	 *
 	 * @return null|string
+	 *
+	 * @since 2.6.0 new private method
+	 * @since 2.7.0 change visibility to protected
 	 */
-	private function GetAttributeImageFileUrl($value, $oHostObject) {
+	protected function GetAttributeImageFileUrl($value, $oHostObject) {
 		if (!is_object($value)) {
 			return null;
 		}
@@ -9655,14 +9691,27 @@ class AttributeTagSet extends AttributeSet
 		{
 			$aJson['partial_values'] = array();
 			$aJson['orig_value'] = array();
+			$aJson['added'] = array();
+			$aJson['removed'] = array();
 		}
 		else
 		{
-			$aJson['partial_values'] = $oValue->GetModified();
 			$aJson['orig_value'] = array_merge($oValue->GetValues(), $oValue->GetModified());
+			$aJson['added'] = $oValue->GetAdded();
+			$aJson['removed'] = $oValue->GetRemoved();
+
+			if ($oValue->DisplayPartial())
+			{
+				// For bulk updates
+				$aJson['partial_values'] = $oValue->GetModified();
+			}
+			else
+			{
+				// For simple updates
+				$aJson['partial_values'] = array();
+			}
 		}
-		$aJson['added'] = array();
-		$aJson['removed'] = array();
+
 
 		$iMaxTags = $this->GetMaxItems();
 		$aJson['max_items_allowed'] = $iMaxTags;

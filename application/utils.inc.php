@@ -62,11 +62,11 @@ class utils
 	{
 		if (!file_exists($sParamFile))
 		{
-			throw new Exception("Could not find the parameter file: '$sParamFile'");
+			throw new Exception("Could not find the parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
 		if (!is_readable($sParamFile))
 		{
-			throw new Exception("Could not load parameter file: '$sParamFile'");
+			throw new Exception("Could not load parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
 		$sParams = file_get_contents($sParamFile);
 
@@ -1705,7 +1705,8 @@ class utils
 	}
 	
 	/**
-	 * Returns the relative (to APPROOT) path of the root directory of the module containing the file where the call to this function is made
+	 * Returns the relative (to MODULESROOT) path of the root directory of the module containing the file where the call to
+	 * this function is made
 	 * or an empty string if no such module is found (or not called within a module file)
 	 * @param number $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
 	 * @return string

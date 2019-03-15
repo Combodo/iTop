@@ -150,7 +150,7 @@ abstract class AsyncTask extends DBObject
 	public function GetRetryDelay($iErrorCode = null)
 	{
 		$iRetryDelay = 600;
-		$aRetries = MetaModel::GetConfig()->Get('async_task_retries', array());
+		$aRetries = MetaModel::GetConfig()->Get('async_task_retries');
 		if (is_array($aRetries) && array_key_exists(get_class($this), $aRetries))
 		{
 			$aConfig = $aRetries[get_class($this)];
@@ -162,12 +162,13 @@ abstract class AsyncTask extends DBObject
 	public function GetMaxRetries($iErrorCode = null)
 	{
 		$iMaxRetries = 0;
-		$aRetries = MetaModel::GetConfig()->Get('async_task_retries', array());
+		$aRetries = MetaModel::GetConfig()->Get('async_task_retries');
 		if (is_array($aRetries) && array_key_exists(get_class($this), $aRetries))
 		{
 			$aConfig = $aRetries[get_class($this)];
 			$iMaxRetries = $aConfig['max_retries'];
 		}
+		return $iMaxRetries;
 	}
 
 	/**
@@ -380,6 +381,6 @@ class AsyncSendEmail extends AsyncTask
 		case EMAIL_SEND_ERROR:
 			return "Failed: ".implode(', ', $aIssues);
 		}
+		return '';
 	}
 }
-?>

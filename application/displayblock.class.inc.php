@@ -249,7 +249,7 @@ class DisplayBlock
 				$sHtml .= $this->GetRenderContent($oPage, $aExtraParams, $sId);
 			} catch (Exception $e)
 			{
-
+				IssueLog::Error('Exception during GetDisplay: ' . $e->getMessage());
 			}
 			$sHtml .= "</div>\n";
 		}

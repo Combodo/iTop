@@ -47,7 +47,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopHub:Landing:Install' => 'Erweiterungen werden installiert...',
 	'iTopHub:CompiledOK' => 'Installation erfolgreich',
 	'iTopHub:ConfigurationSafelyReverted' => 'Fehler während der Installation!<br/>iTop Konfiguration wurde NICHT angepasst.',
-	
+	'iTopHub:FailAuthent' => 'Authentication failed for this action.~~',
+
 	'iTopHub:InstalledExtensions' => 'Erweiterung, die auf dieser Instanz installiert sind',
 	'iTopHub:ExtensionCategory:Manual' => 'Manuell installierte Erweiterungen',
 	'iTopHub:ExtensionCategory:Manual+' => 'Die folgenden Erweiterungen installiert, indem sie manuell in das iTop-Verzeichnis %1$s kopiert wurden:',

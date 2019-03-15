@@ -264,7 +264,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:TitleDetailsFor_Service' => 'Детали услуги',
 	'Portal:Button:CreateRequestFromService' => 'Создать запрос по услуге',
 	'Portal:ListOpenRequests' => 'Открытые запросы',
-'Portal:UserRequest:MoreInfo' => 'Дополнительная информация',
+	'Portal:UserRequest:MoreInfo' => 'Дополнительная информация',
 	'Portal:Details-Service-Element' => 'Элементы услуги',
 	'Portal:NoClosedTicket' => 'Нет закрытых запросов',
 	'Portal:NoService' => '',

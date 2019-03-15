@@ -90,7 +90,7 @@ function sprintf(format, etc) {
 			function checkAll(table, pager, value)
 			{
 				// Mark all the displayed items as check or unchecked depending on the value
-				$(table).find(':checkbox[name^=selectObj]').each(function (index, element) {
+				$(table).find(':checkbox[name^=selectObj]:not([disabled])').each(function (index, element) {
 					var $currentCheckbox = $(this);
 					$currentCheckbox.prop('checked', value);
 					$currentLine = $currentCheckbox.closest("tr");
@@ -108,6 +108,7 @@ function sprintf(format, etc) {
 				$(pager).find(':input[name=selectionMode]').val(table.config.selectionMode);
 				// Reset the list of saved selection...
 				resetStoredSelection(pager);
+				$(table).find(':checkbox[name^=selectObj]').trigger("change");
 				updateCounter(table, pager);
 				return true;
 			}
@@ -117,7 +118,7 @@ function sprintf(format, etc) {
 				$(':input[name^=storedSelection]', pager).remove();
 			}
 			
-			function storeSelection(table, pager, id, value)
+			function storeSelection(table, pager, id, value, disabled=false)
 			{
 				var valueToStore = value;
 				if (table.config.selectionMode == 'negative')
@@ -132,7 +133,7 @@ function sprintf(format, etc) {
 					}
 					if ($('#'+id, pager).length ==0)
 					{
-						$(pager).append($('<input type="hidden" id="'+id+'" name="storedSelection[]" value="'+id+'"></input>'));
+						$(pager).append($('<input type="hidden" id="'+id+'" name="storedSelection[]" value="'+id+'"'+ (disabled ? ' disabled ' : '') +'/>'));
 					}
 				}	
 				else
@@ -202,7 +203,8 @@ function sprintf(format, etc) {
 						  end: end,
 						  sort_col: s_col,
 						  sort_order: s_order,
-						  select_mode: c.select_mode,
+						  select_mode: c.select_mode, 
+						  list_id: c.table_id,
 						  display_key: c.displayKey,
 						  columns: c.columns,
 						  class_aliases: c.class_aliases
@@ -258,33 +260,33 @@ function sprintf(format, etc) {
 				
 				if (c.selectionMode == 'negative')
 				{
-					$(table).find(':checkbox[name^=selectObj]').prop('checked', true);;
+					$(table).find(':checkbox[name^=selectObj]:not([disabled])').prop('checked', true);
 				}
 				
 				if (table.config.select_mode == 'multiple')
 				{
-					$(table).find(':checkbox[name^=selectObj]').each(function() {
+					$(table).find(':checkbox[name^=selectObj]:not([disabled])').each(function() {
 						var id = parseInt(this.value, 10);
 						if ($('#'+id, table.config.container).length > 0)
 						{
 							if (c.selectionMode == 'positive')
 							{
-								$(this).prop('checked', true);;
+								$(this).prop('checked', true);
 							}
 							else
 							{
-								$(this).prop('checked', false);;
+								$(this).prop('checked', false);
 							}
 						}
 					});
 
 					$(table).find(':checkbox[name^=selectObj]').change(function() {
-						storeSelection(table, table.config.container, this.value, this.checked);
-					});
+						storeSelection(table, table.config.container, this.value, this.checked, this.disabled);
+					}).trigger("change");
 				}
 				else if (table.config.select_mode == 'single')
 				{
-					$(table).find('input[name^=selectObject]:radio').each(function() {
+					$(table).find('input[name^=selectObject]:radio:not([disabled])').each(function() {
 						var id = parseInt(this.value, 10);
 						if ($('#'+id, table.config.container).length > 0)
 						{
@@ -448,6 +450,7 @@ function sprintf(format, etc) {
 				filter: '',
 				extra_params: '',
 				select_mode: '',
+				table_id: 0,
 				totalSelected: 0,
 				selectionMode: 'positive',
 				displayKey: true,

@@ -534,7 +534,7 @@ class SetupUtils
 		// to do... evaluate how we can correlate the DB size with the size of the dump (and the zip!)
 		// E.g. 2,28 Mb after a full install, giving a zip of 26 Kb (data = 26 Kb)
 		// Example of query (DB without a suffix)
-		//$sDBSize = "SELECT SUM(ROUND(DATA_LENGTH/1024/1024, 2)) AS size_mb FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = `$sDBName`";
+		//$sDBSize = "SELECT SUM(ROUND(DATA_LENGTH/1024/1024, 2)) AS size_mb FROM information_schema.TABLES WHERE TABLE_SCHEMA = `$sDBName`";
 
 		return $aResult;
 	}
@@ -1302,72 +1302,88 @@ EOF
 		$sDBUser = $aParameters['db_user'];
 		$sDBPwd = $aParameters['db_pwd'];
 		$sDBName = $aParameters['db_name'];
-		$sTlsEnabled = (isset($aParameters['db_tls_enabled'])) ? $aParameters['db_tls_enabled'] : null;
-		$sTlsCA = (isset($aParameters['db_tls_ca'])) ? $aParameters['db_tls_ca'] : null;
 
-		$oPage->add_ready_script('oXHRCheckDB = null;');
-
-		$checks = SetupUtils::CheckDbServer($sDBServer, $sDBUser, $sDBPwd, $sTlsEnabled, $sTlsCA);
-
-		if ($checks === false)
+		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
+		if ($bIsWindows && (preg_match('@([%!"])@',$sDBPwd) > 0))
 		{
-			// Connection failed, disable the "Next" button
-			$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
-			$oPage->add_ready_script('$("#db_info").html("<img src=\'../images/error.png\'/>&nbsp;No connection to the database...");');
+			// Unsuported Password, warn the user
+			$oPage->add_ready_script('$("#db_info").html("<img src=\'../images/error.png\'/>&nbsp;On Windows, the backup won\'t work because database password contains %, ! or &quot; character");');
 		}
 		else
 		{
-			$aErrors = array();
-			$aWarnings = array();
-			foreach($checks['checks'] as $oCheck)
-			{
-				if ($oCheck->iSeverity == CheckResult::ERROR)
-				{
-					$aErrors[] = $oCheck->sLabel;
-				}
-				else if ($oCheck->iSeverity == CheckResult::WARNING)
-				{
-					$aWarnings[] = $oCheck->sLabel;
-				}
-			}
-			if (count($aErrors) > 0)
-			{
-				$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
-				$oPage->add_ready_script('$("#db_info").html(\'<img src="../images/validation_error.png"/>&nbsp;<b>Error:</b> '.htmlentities(implode('<br/>', $aErrors), ENT_QUOTES, 'UTF-8').'\');');
-			}
-			else if (count($aWarnings) > 0)
-			{
-				$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
-				$oPage->add_ready_script('$("#db_info").html(\'<img src="../images/error.png"/>&nbsp;<b>Warning:</b> '.htmlentities(implode('<br/>', $aWarnings), ENT_QUOTES, 'UTF-8').'\');');
-			}
-			else
-			{
-				$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
-				$oPage->add_ready_script('$("#db_info").html(\'<img src="../images/validation_ok.png"/>&nbsp;Database server connection Ok.\');');
-			}
+			$sTlsEnabled = (isset($aParameters['db_tls_enabled'])) ? $aParameters['db_tls_enabled'] : null;
+			$sTlsCA = (isset($aParameters['db_tls_ca'])) ? $aParameters['db_tls_ca'] : null;
 
-			if ($checks['databases'] == null)
+			$oPage->add_ready_script('oXHRCheckDB = null;');
+
+			$checks = SetupUtils::CheckDbServer($sDBServer, $sDBUser, $sDBPwd, $sTlsEnabled, $sTlsCA);
+
+			if ($checks === false)
 			{
-				$sDBNameInput = '<input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span>';
-				$oPage->add_ready_script('$("#table_info").html(\'<img src="../images/error.png"/>&nbsp;Not enough rights to enumerate the databases\');');
+				// Connection failed, disable the "Next" button
+				$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
+				$oPage->add_ready_script('$("#db_info").html("<img src=\'../images/error.png\'/>&nbsp;No connection to the database...");');
 			}
 			else
 			{
-				$sDBNameInput = '<select id="db_name" name="db_name">';
-				foreach($checks['databases'] as $sDatabaseName)
+				$aErrors = array();
+				$aWarnings = array();
+				foreach ($checks['checks'] as $oCheck)
 				{
-					if ($sDatabaseName != 'information_schema')
+					if ($oCheck->iSeverity == CheckResult::ERROR)
 					{
-						$sEncodedName = htmlentities($sDatabaseName, ENT_QUOTES, 'UTF-8');
-						$sSelected = ($sDatabaseName == $sDBName) ? ' selected ' : '';
-						$sDBNameInput .= '<option value="'.$sEncodedName.'" '.$sSelected.'>'.$sEncodedName.'</option>';
+						$aErrors[] = $oCheck->sLabel;
+					}
+					else
+					{
+						if ($oCheck->iSeverity == CheckResult::WARNING)
+						{
+							$aWarnings[] = $oCheck->sLabel;
+						}
 					}
 				}
-				$sDBNameInput .= '</select>';
-			}
-			$oPage->add_ready_script('$("#db_name_container").html("'.addslashes($sDBNameInput).'");');
-			$oPage->add_ready_script('$("#db_name").bind("click keyup change", function() { $("#existing_db").prop("checked", true); WizardUpdateButtons(); });');
+				if (count($aErrors) > 0)
+				{
+					$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
+					$oPage->add_ready_script('$("#db_info").html(\'<img src="../images/validation_error.png"/>&nbsp;<b>Error:</b> '.htmlentities(implode('<br/>', $aErrors), ENT_QUOTES, 'UTF-8').'\');');
+				}
+				else
+				{
+					if (count($aWarnings) > 0)
+					{
+						$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
+						$oPage->add_ready_script('$("#db_info").html(\'<img src="../images/error.png"/>&nbsp;<b>Warning:</b> '.htmlentities(implode('<br/>', $aWarnings), ENT_QUOTES, 'UTF-8').'\');');
+					}
+					else
+					{
+						$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
+						$oPage->add_ready_script('$("#db_info").html(\'<img src="../images/validation_ok.png"/>&nbsp;Database server connection Ok.\');');
+					}
+				}
 
+				if ($checks['databases'] == null)
+				{
+					$sDBNameInput = '<input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span>';
+					$oPage->add_ready_script('$("#table_info").html(\'<img src="../images/error.png"/>&nbsp;Not enough rights to enumerate the databases\');');
+				}
+				else
+				{
+					$sDBNameInput = '<select id="db_name" name="db_name">';
+					foreach ($checks['databases'] as $sDatabaseName)
+					{
+						if ($sDatabaseName != 'information_schema')
+						{
+							$sEncodedName = htmlentities($sDatabaseName, ENT_QUOTES, 'UTF-8');
+							$sSelected = ($sDatabaseName == $sDBName) ? ' selected ' : '';
+							$sDBNameInput .= '<option value="'.$sEncodedName.'" '.$sSelected.'>'.$sEncodedName.'</option>';
+						}
+					}
+					$sDBNameInput .= '</select>';
+				}
+				$oPage->add_ready_script('$("#db_name_container").html("'.addslashes($sDBNameInput).'");');
+				$oPage->add_ready_script('$("#db_name").bind("click keyup change", function() { $("#existing_db").prop("checked", true); WizardUpdateButtons(); });');
+
+			}
 		}
 		$oPage->add_ready_script('WizardUpdateButtons();');
 	}

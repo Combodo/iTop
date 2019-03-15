@@ -928,7 +928,7 @@ EOD
 		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault,	$sSectionStateStorageBusinessKey));
 	}
 
-	private function GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
+	public function GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
 	{
 		$this->bHasCollapsibleSection = true;
 		$sHtml = '';
@@ -1110,8 +1110,10 @@ class TabManager
 	 *
 	 * @param string $sTabLabel The (localised) label of the tab
 	 * @param string $sUrl The URL to load (on the same server)
-	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. flase will cause
+	 * @param boolean $bCache Whether or not to cache the content of the tab once it has been loaded. false will cause
 	 *     the tab to be reloaded upon each activation.
+	 *
+	 * @return string
 	 *
 	 * @since 2.0.3
 	 */

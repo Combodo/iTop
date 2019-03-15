@@ -139,7 +139,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 // Filter brick
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~', // @todo review where this is used
+    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
     'Brick:Portal:Filter:SearchInput:Placeholder' => 'bv. wifi-verbinding',
     'Brick:Portal:Filter:SearchInput:Submit' => 'Zoek',
 ));

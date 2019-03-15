@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:RequestManagement' => '服务台',
 	'Menu:RequestManagement+' => '服务台',
@@ -215,6 +214,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
 	'Class:UserRequest/Attribute:parent_change_ref' => '变更编号',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
 	'Class:UserRequest/Attribute:related_request_list' => '子需求',
 	'Class:UserRequest/Attribute:related_request_list+' => '该父级需求相关的所有子需求',
 	'Class:UserRequest/Attribute:public_log' => '评论',

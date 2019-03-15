@@ -74,6 +74,21 @@ function TestConfig($sContents, $oP)
 	}
 }
 
+/**
+ * @param $sSafeContent
+ *
+ * @return bool
+ */
+function DBPasswordInNewConfigIsOk($sSafeContent)
+{
+	$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
+
+	if ($bIsWindows && (preg_match("@'db_pwd' => '[^%!\"]+',@U", $sSafeContent) === 0))
+	{
+		return false;
+	}
+	return true;
+}
 
 /////////////////////////////////////////////////////////////////////
 // Main program
@@ -94,6 +109,7 @@ $oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/ext-searchbox.js');
 try
 {
 	$sOperation = utils::ReadParam('operation', '');
+	$iEditorTopMargin = 0;
 
 	$oP->add("<h1>".Dict::S('config-edit-title')."</h1>");
 
@@ -109,15 +125,15 @@ try
 	{
 		$sConfigFile = APPROOT.'conf/'.utils::GetCurrentEnvironment().'/config-itop.php';
 
-        $iEditorTopMargin = 9;
+        $iEditorTopMargin += 9;
         $sConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
-        $sOrginalConfig = $sConfig;
+        $sOriginalConfig = $sConfig;
 
         if (!empty($sOperation))
         {
-            $iEditorTopMargin = 14;
+            $iEditorTopMargin += 5;
             $sConfig = utils::ReadParam('new_config', '', false, 'raw_data');
-            $sOrginalConfig = utils::ReadParam('prev_config', '', false, 'raw_data');
+            $sOriginalConfig = utils::ReadParam('prev_config', '', false, 'raw_data');
         }
 
         if ($sOperation == 'revert')
@@ -133,7 +149,7 @@ try
             }
             else
             {
-                if ($sConfig == $sOrginalConfig)
+                if ($sConfig == $sOriginalConfig)
                 {
                     $oP->add('<div id="save_result" class="header_message">'.Dict::S('config-no-change').'</div>');
                 }
@@ -162,8 +178,15 @@ try
                         @unlink($sTmpFile);
                         @chmod($sConfigFile, 0444); // Read-only
 
-                        $oP->p('<div id="save_result" class="header_message message_ok">'.Dict::S('config-saved').'</div>');
-                        $sOrginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
+	                    if (DBPasswordInNewConfigIsOk($sConfig))
+	                    {
+		                    $oP->p('<div id="save_result" class="header_message message_ok">'.Dict::S('config-saved').'</div>');
+	                    }
+	                    else
+	                    {
+		                    $oP->p('<div id="save_result" class="header_message message_info">'.Dict::S('config-saved-warning-db-password').'</div>');
+	                    }
+                        $sOriginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
                     }
                     catch (Exception $e)
                     {
@@ -175,7 +198,7 @@ try
 
 
 		$sConfigEscaped = htmlentities($sConfig, ENT_QUOTES, 'UTF-8');
-		$sOriginalConfigEscaped = htmlentities($sOrginalConfig, ENT_QUOTES, 'UTF-8');
+		$sOriginalConfigEscaped = htmlentities($sOriginalConfig, ENT_QUOTES, 'UTF-8');
 		$oP->p(Dict::S('config-edit-intro'));
 		$oP->add("<form method=\"POST\">");
         $oP->add("<input id=\"operation\" type=\"hidden\" name=\"operation\" value=\"save\">");

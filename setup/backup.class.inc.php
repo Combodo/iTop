@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-require_once('tar.php');
+require_once(APPROOT.'core/tar-itop.class.inc.php');
 
 interface BackupArchive
 {
@@ -308,13 +308,16 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		{
 			$this->LogInfo("Creating backup: '$sTargetFile.tar.gz'");
 
-			$oArchive = new ArchiveTar($sTargetFile.'.tar.gz');
+			$oArchive = new ITopArchiveTar($sTargetFile.'.tar.gz');
 
 			$sTmpFolder = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
 			$aFiles = $this->PrepareFilesToBackup($sSourceConfigFile, $sTmpFolder);
 
+			$sFilesList = var_export($aFiles, true);
+			$this->LogInfo("backup: adding to archive files '$sFilesList'");
 			$oArchive->createModify($aFiles, '', $sTmpFolder);
 
+			$this->LogInfo("backup: removing tmp folder '$sTmpFolder'");
 			SetupUtils::rrmdir($sTmpFolder);
 		}
 
@@ -334,6 +337,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			{
 				SetupUtils::rrmdir($sTmpFolder);
 			}
+			$this->LogInfo("backup: creating tmp dir '$sTmpFolder'");
 			@mkdir($sTmpFolder, 0777, true);
 			if (is_null($sSourceConfigFile))
 			{
@@ -342,6 +346,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			if (!empty($sSourceConfigFile))
 			{
 				$sFile = $sTmpFolder.'/config-itop.php';
+				$this->LogInfo("backup: adding resource '$sSourceConfigFile'");
 				copy($sSourceConfigFile, $sFile);
 				$aRet[] = $sFile;
 			}
@@ -350,6 +355,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			if (file_exists($sDeltaFile))
 			{
 				$sFile = $sTmpFolder.'/delta.xml';
+				$this->LogInfo("backup: adding resource '$sDeltaFile'");
 				copy($sDeltaFile, $sFile);
 				$aRet[] = $sFile;
 			}
@@ -358,6 +364,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			{
 				$sModules = utils::GetCurrentEnvironment().'-modules';
 				$sFile = $sTmpFolder.'/'.$sModules;
+				$this->LogInfo("backup: adding resource '$sExtraDir'");
 				SetupUtils::copydir($sExtraDir, $sFile);
 				$aRet[] = $sFile;
 			}
@@ -434,7 +441,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$sCommandDisplay = "$sMySQLDump --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
 
 			// Now run the command for real
-			$this->LogInfo("Executing command: $sCommandDisplay");
+			$this->LogInfo("backup: generate data file with command: $sCommandDisplay");
 			$aOutput = array();
 			$iRetCode = 0;
 			exec($sCommand, $aOutput, $iRetCode);
@@ -528,14 +535,21 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		 */
 		public function DownloadBackup($sFile)
 		{
-			header('Content-Description: File Transfer');
-			header('Content-Type: multipart/x-zip');
-			header('Content-Disposition: inline; filename="'.basename($sFile).'"');
-			header('Expires: 0');
-			header('Cache-Control: must-revalidate');
-			header('Pragma: public');
-			header('Content-Length: '.filesize($sFile));
-			readfile($sFile);
+			if (file_exists($sFile))
+			{
+				header('Content-Description: File Transfer');
+				header('Content-Type: multipart/x-zip');
+				header('Content-Disposition: inline; filename="'.basename($sFile).'"');
+				header('Expires: 0');
+				header('Cache-Control: must-revalidate');
+				header('Pragma: public');
+				header('Content-Length: '.filesize($sFile));
+				readfile($sFile) ;
+			}
+			else
+			{
+				throw new InvalidParameterException('Invalid file path'); 
+			}
 		}
 
 		/**
@@ -703,18 +717,14 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 class TarGzArchive implements BackupArchive
 {
-	/*
-	 * @var ArchiveTar
-	 */
+	/** @var \ITopArchiveTar $oArchive */
 	protected $oArchive;
-	/*
-	 * string[]
-	 */
+	/** @var string[] $aFiles */
 	protected $aFiles = null;
 
 	public function __construct($sFile)
 	{
-		$this->oArchive = new ArchiveTar($sFile);
+		$this->oArchive = new ITopArchiveTar($sFile);
 	}
 
 	/**

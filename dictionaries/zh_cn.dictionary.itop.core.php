@@ -20,6 +20,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
+));
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
@@ -42,20 +45,20 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeObsolescenceDate' => '报废日期',
 	'Core:AttributeObsolescenceDate+' => '',
 
-	'Core:AttributeTagSet' => '清单',
-	'Core:AttributeTagSet+' => '',
+    'Core:AttributeTagSet' => '清单',
+    'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => '请点击这里添加',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)',
-	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
-	'Core:AttributeCaseLog' => '日志',
-	'Core:AttributeCaseLog+' => '',
+    'Core:AttributeCaseLog' => '日志',
+    'Core:AttributeCaseLog+' => '',
 
-	'Core:AttributeMetaEnum' => 'Computed enum~~',
-	'Core:AttributeMetaEnum+' => '',
+    'Core:AttributeMetaEnum' => 'Computed enum~~',
+    'Core:AttributeMetaEnum+' => '~~',
 
-	'Core:AttributeLinkedSetIndirect' => '对象数组(N-N)',
+    'Core:AttributeLinkedSetIndirect' => '对象数组(N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Any kind of objects [subclass] of the same class',
 
 	'Core:AttributeInteger' => '整数',

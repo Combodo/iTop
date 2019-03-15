@@ -678,7 +678,8 @@ EOF
 				foreach($aNotificationClasses as $sNotifClass)
 				{
 					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
-					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array(), $aParams);
+					$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
+					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
 					$iNotifsCount += $oNotifSet->Count();
 				}
 				// Display notifications regarding the object: on block per subclass to have the intersting columns
@@ -3525,20 +3526,13 @@ EOF
 						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
 						{
 							$sLinkClass = $oAttDef->GetLinkedClass();
-							if ($oAttDef->IsIndirect())
+							$oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
+							// Recursing over n:n link datetime attributes
+							// Note: We might need to do it with other attribute types, like Document or redundancy setting.
+							if ($oLinkAttDef instanceof AttributeDateTime)
 							{
-								$oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
-								// Recursing over n:n link datetime attributes
-								// Note: We might need to do it with other attribute types, like Document or redundancy setting.
-								if ($oLinkAttDef instanceof AttributeDateTime)
-								{
-									$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
-										$aMatches[1], $sLinkClass, $aData);
-								}
-								else
-								{
-									$aObjData[$aMatches[1]] = $value;
-								}
+								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
+									$aMatches[1], $sLinkClass, $aData);
 							}
 							else
 							{
@@ -3752,17 +3746,19 @@ EOF
 		{
 			// Invoke extensions after the update (could be before)
 			/** @var \iApplicationObjectExtension $oExtensionInstance */
-			foreach(MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
+			foreach (MetaModel::EnumPlugins('iApplicationObjectExtension') as $oExtensionInstance)
 			{
 				$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
 			}
-		} catch (Exception $e)
+		}
+		catch (Exception $e)
 		{
-			unset($aUpdateReentrance[$sKey]);
 			throw $e;
 		}
-
-		unset($aUpdateReentrance[$sKey]);
+		finally
+		{
+			unset($aUpdateReentrance[$sKey]);
+		}
 
 		return $res;
 	}
@@ -4221,6 +4217,7 @@ EOF
 								$oDummyObj->Set($sAttCode, $currValue);
 								/** @var ormTagSet $oTagSet */
 								$oTagSet = $oDummyObj->Get($sAttCode);
+								$oTagSet->SetDisplayPartial(true);
 								foreach($aKeys as $iIndex => $sValues)
 								{
 									if ($iIndex == 0)

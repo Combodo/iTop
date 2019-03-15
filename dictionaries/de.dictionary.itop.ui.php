@@ -759,6 +759,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => 'Massenlöschung von %1$d Objekten der %2$s',
 	'UI:Delete:NotAllowedToDelete' => 'Sie sind nicht berechtigt, dieses Objekt zu löschen.',
 	'UI:Delete:NotAllowedToUpdate_Fields' => 'Sie sind nicht berechtigt, die folgenden Felder zu aktualisieren: %1$s',
+	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
 	'UI:Error:NotEnoughRightsToDelete' => 'Dieses Objekt konnte nicht gelöscht werden, da der derzeitige Benutzer nicht die notwendigen Rechte dazu besitzt.',
 	'UI:Error:CannotDeleteBecause' => 'Dieses Objekt konnte aus folgendem Grund nicht gelöscht werden: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => 'Dieses Objekt konnte nicht gelöscht werden, da zuerst einige Manuelle Operationen ausgeführt werden müssen (bzgl. Abhängigkeiten des Objekts).',

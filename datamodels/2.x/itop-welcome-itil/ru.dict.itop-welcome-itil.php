@@ -43,3 +43,30 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей',
 	'Menu:MyShortcuts' => 'Избранное',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));

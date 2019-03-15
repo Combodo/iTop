@@ -278,7 +278,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:TitleDetailsFor_Service' => 'Details für Service',
 	'Portal:Button:CreateRequestFromService' => 'EIne Benutzeranfrage betreffend dieses Diensts erzeugen',
 	'Portal:ListOpenRequests' => 'Offene Benutzeranfragen auflisten',
-'Portal:UserRequest:MoreInfo' => 'Weitere Informationen',
+	'Portal:UserRequest:MoreInfo' => 'Weitere Informationen',
 	'Portal:Details-Service-Element' => 'Service-Elemente',
 	'Portal:NoClosedTicket' => 'Keine geschlossene Benutzeranfrage',
 	'Portal:NoService' => 'Kein Service',

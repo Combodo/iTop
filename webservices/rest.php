@@ -83,7 +83,7 @@ class RestResultListOperations extends RestResult
 		$this->operations[] = array(
 			'verb' => $sVerb,
 			'description' => $sDescription,
-			'extension' => $sServiceProviderClass
+			'extension' => $sServiceProviderClass,
 		);
 	}
 }
@@ -96,7 +96,7 @@ if (!function_exists('json_last_error_msg')) {
 			JSON_ERROR_STATE_MISMATCH => 'State mismatch (invalid or malformed JSON)',
 			JSON_ERROR_CTRL_CHAR => 'Control character error, possibly incorrectly encoded',
 			JSON_ERROR_SYNTAX => 'Syntax error',
-			JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded'
+			JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded',
 		);
 
 		$error = json_last_error();
@@ -186,6 +186,7 @@ try
 	}
 
 	$aOpToRestService = array(); // verb => $oRestServiceProvider
+	/** @var iRestServiceProvider $oRestSP */
 	foreach ($aProviders as $oRestSP)
 	{
 		$aOperations = $oRestSP->ListOperations($sVersion);

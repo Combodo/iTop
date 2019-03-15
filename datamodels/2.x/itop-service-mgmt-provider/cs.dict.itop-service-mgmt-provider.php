@@ -423,6 +423,16 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkSLAToSLT/Attribute:slt_id+' => '',
 	'Class:lnkSLAToSLT/Attribute:slt_name' => 'Název SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_name+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'SLT metric~~',
+	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'SLT request type~~',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'SLT ticket priority~~',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value' => 'SLT value~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value+' => '~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'SLT value unit~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '~~',
 ));
 
 //
