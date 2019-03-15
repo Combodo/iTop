@@ -34,6 +34,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachment:Max_Ko' => '(最大文件尺寸: %1$s KB)',
 	'Attachments:NoAttachment' => '没有附件. ',
 	'Attachments:PreviewNotAvailable' => '该附件类型不支持预览.',
+	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
 ));
 
 //

@@ -35,4 +35,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
     'config-reverted' => 'De wijzigingen zijn ongedaan gemaakt.',
 	'config-parse-error' => 'Regel %2$d: %1$s.<br/>Het bestand werd <b>NIET</b> opgeslagen.',
 	'config-current-line' => 'Huidige regel: %1$s',
+	'config-saved-warning-db-password' => 'Successfully recorded, but the backup won\'t work due to unsupported characters in the database password.~~',
 ));

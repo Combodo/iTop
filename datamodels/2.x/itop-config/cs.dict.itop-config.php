@@ -21,4 +21,5 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
     'config-reverted' => 'The configuration has been reverted.~~',
 	'config-parse-error' => 'Řádek %2$d: %1$s.<br/>Soubor nebyl uložen.',
 	'config-current-line' => 'Řádek: %1$s',
+	'config-saved-warning-db-password' => 'Successfully recorded, but the backup won\'t work due to unsupported characters in the database password.~~',
 ));

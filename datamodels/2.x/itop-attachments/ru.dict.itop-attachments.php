@@ -22,6 +22,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Attachment:Max_Ko' => '(Максимальный размер файла: %1$s кБ)',
 	'Attachments:NoAttachment' => 'Нет вложений.',
 	'Attachments:PreviewNotAvailable' => 'Предварительный просмотр не доступен для этого типа вложений.',
+	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
 ));
 
 //

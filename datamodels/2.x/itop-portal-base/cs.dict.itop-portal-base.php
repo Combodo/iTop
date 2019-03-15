@@ -40,6 +40,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Portal:Button:Delete' => 'Smazat',
 	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode~~',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode~~',
+    'Error:HTTP:400' => 'Bad request~~',
     'Error:HTTP:401' => 'Authentication~~',
     'Error:HTTP:404' => 'Stránka nenalezena',
 	'Error:HTTP:500' => 'Jejda! Nastal problém',

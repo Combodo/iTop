@@ -36,7 +36,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:Button:Delete' => 'Supprimer',
 	'Portal:EnvironmentBanner:Title' => 'Vous êtes dans le mode <strong>%1$s</strong>',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Retourner au mode PRODUCTION',
-	'Error:HTTP:400' => 'Requête incorrecte',
+    'Error:HTTP:400' => 'Requête incorrecte',
     'Error:HTTP:401' => 'Authentification',
     'Error:HTTP:404' => 'Page non trouvée',
 	'Error:HTTP:500' => 'Oups ! Une erreur est survenue.',
