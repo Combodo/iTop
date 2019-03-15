@@ -17,6 +17,11 @@ You are welcome to create pull requests on any of those subjects:
 If you want to implement a **new feature**, please [create a corresponding ticket](https://sourceforge.net/p/itop/tickets/new/) for review.   
 If you ever want to begin implementation, do so in a fork, and add a link to the corresponding commits in the ticket.
 
+Please do so also if you need **default datamodel modifications**. 
+Such changes would impact all existing customers, and could prevent them from upgrading. 
+Combodo has a long experience of datamodel changes : they are very disruptive ! 
+This is why we avoid them in iTop core, especially the changes on existing object/field. 
+
 ### License
 iTop is distributed under the AGPL-3.0 license (see the [license.txt] file),
 your code must comply with this license.
