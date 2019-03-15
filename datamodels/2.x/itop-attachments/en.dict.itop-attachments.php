@@ -35,6 +35,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Attachment:Max_Ko' => '(Maximum file size: %1$s Ko)',
 	'Attachments:NoAttachment' => 'No attachment. ',
 	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.',
+	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s',
 ));
 
 //

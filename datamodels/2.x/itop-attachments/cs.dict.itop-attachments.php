@@ -37,6 +37,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Attachment:Max_Ko' => '(Maximální velikost souboru: %1$s KiB)',
 	'Attachments:NoAttachment' => 'Žádná příloha. ',
 	'Attachments:PreviewNotAvailable' => 'Pro tento typ přílohy není náhled k dispozici.',
+	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
 ));
 
 //

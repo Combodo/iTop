@@ -25,6 +25,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:Button:Delete' => 'Удалить',
 	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode~~',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode~~',
+    'Error:HTTP:400' => 'Bad request~~',
     'Error:HTTP:401' => 'Ошибка аутентификации',
     'Error:HTTP:404' => 'Страница не найдена',
 	'Error:HTTP:500' => 'Упс! Произошла ошибка.',

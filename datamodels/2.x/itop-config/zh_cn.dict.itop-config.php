@@ -34,4 +34,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'config-reverted' => '配置文件已恢复.',
 	'config-parse-error' => '第 %2$d 行: %1$s.<br/>配置文件尚未更新.',
 	'config-current-line' => '正在编辑第 %1$s 行',
+	'config-saved-warning-db-password' => 'Successfully recorded, but the backup won\'t work due to unsupported characters in the database password.~~',
 ));

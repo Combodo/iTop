@@ -34,4 +34,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
     'config-reverted' => 'La configuración ha sido revertida.',
 	'config-parse-error' => 'Línea %2$d: %1$s.<br/>El archivo NO ha sido actualizado.',
 	'config-current-line' => 'Editando línea: %1$s',
+	'config-saved-warning-db-password' => 'Successfully recorded, but the backup won\'t work due to unsupported characters in the database password.~~',
 ));

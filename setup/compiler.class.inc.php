@@ -1160,19 +1160,9 @@ EOF
 				$aUniquenessRules[$sCurrentRuleId]['disabled'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'disabled', null);
 				$aUniquenessRules[$sCurrentRuleId]['is_blocking'] = $this->GetPropBooleanConverted($oUniquenessSingleRule, 'is_blocking',
 					null);
-
-				try
-				{
-					// we're just checking all mandatory fields are present right now
-					// we will check for rule overrides validity later (see \MetaModel::InitClasses)
-					MetaModel::CheckUniquenessRuleValidity($aUniquenessRules[$sCurrentRuleId], true);
-				}
-				catch (CoreUnexpectedValue $e)
-				{
-					throw(new DOMFormatException("Invalid uniqueness rule declaration : class={$oClass->getAttribute('id')}, rule=$sCurrentRuleId, reason={$e->getMessage()}"));
-				}
 			}
 
+			// we will check for rules validity later as for now we don't have objects hierarchy (see \MetaModel::InitClasses)
 			$aClassParams['uniqueness_rules'] = var_export($aUniquenessRules, true);
 		}
 

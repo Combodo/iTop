@@ -35,6 +35,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Attachment:Max_Ko' => '(Taille de fichier max.: %1$s Kb)',
 	'Attachments:NoAttachment' => 'Aucune pièce jointe.',
 	'Attachments:PreviewNotAvailable' => 'Pas d\'aperçu pour ce type de pièce jointe.',
+	'Attachments:Error:FileTooLarge' => 'Le fichier est trop gros pour être chargé. %1$s',
 ));
 
 //
