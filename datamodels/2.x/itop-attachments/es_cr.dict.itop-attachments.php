@@ -36,6 +36,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Attachment:Max_Ko' => '(Tamaño Máximo de Archivo: %1$s Kb)',
 	'Attachments:NoAttachment' => 'No hay Anexo. ',
 	'Attachments:PreviewNotAvailable' => 'Vista preliminar no disponible para este tipo de Anexo.',
+	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
 ));
 
 //

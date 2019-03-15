@@ -36,6 +36,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Portal:Button:Delete' => 'Borrar',
 	'Portal:EnvironmentBanner:Title' => 'Se encuentra en modo <strong>%1$s</strong>',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Regresar a modo PRODUCTION',
+    'Error:HTTP:400' => 'Bad request~~',
     'Error:HTTP:401' => 'Autenticación',
     'Error:HTTP:404' => 'Página no encontrada',
 	'Error:HTTP:500' => '¡Vaya! Ha ocurrido un error.',

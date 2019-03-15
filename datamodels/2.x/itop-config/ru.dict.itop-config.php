@@ -22,4 +22,5 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
     'config-reverted' => 'The configuration has been reverted.~~',
 	'config-parse-error' => 'Строка %2$d: %1$s.<br/>Файл не был обновлен.',
 	'config-current-line' => 'Редактируемая строка: %1$s',
+	'config-saved-warning-db-password' => 'Successfully recorded, but the backup won\'t work due to unsupported characters in the database password.~~',
 ));

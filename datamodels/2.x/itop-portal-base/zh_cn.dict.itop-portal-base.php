@@ -37,6 +37,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Portal:Button:Delete' => '删除',
 	'Portal:EnvironmentBanner:Title' => '您目前处于 <strong>%1$s</strong> 模式',
 	'Portal:EnvironmentBanner:GoToProduction' => '回到产品模式',
+    'Error:HTTP:400' => 'Bad request~~',
     'Error:HTTP:401' => '认证',
     'Error:HTTP:404' => '页面找不到',
 	'Error:HTTP:500' => 'Oops! 发生了一个错误.',

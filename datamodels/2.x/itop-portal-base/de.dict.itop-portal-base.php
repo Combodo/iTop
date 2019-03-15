@@ -37,6 +37,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:Button:Delete' => 'Löschen',
 	'Portal:EnvironmentBanner:Title' => 'Sie sind im Moment im <strong>%1$s</strong> Modus',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Zurück zum PRODUCTION Modus',
+    'Error:HTTP:400' => 'Bad request~~',
     'Error:HTTP:401' => 'Authentifizierung',
     'Error:HTTP:404' => 'Seite nicht gefunden.',
 	'Error:HTTP:500' => 'Oops! Es ist ein Fehler aufgetreten.',

@@ -39,6 +39,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachment:Max_Ko' => '(Maximale bestandsgrootte: %1$s kB)',
 	'Attachments:NoAttachment' => 'Geen bijlage. ',
 	'Attachments:PreviewNotAvailable' => 'Een voorbeeld is niet beschikbaar voor dit type bijlage.',
+	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
 ));
 
 //

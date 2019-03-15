@@ -37,6 +37,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Portal:Button:Delete' => 'Delete~~',
 	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode~~',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode~~',
+    'Error:HTTP:400' => 'Bad request~~',
     'Error:HTTP:401' => 'Authentication~~',
     'Error:HTTP:404' => 'Page not found~~',
 	'Error:HTTP:500' => 'Oops! An error has occured.~~',

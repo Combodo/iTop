@@ -36,6 +36,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:Button:Delete' => 'Deletar',
 	'Portal:EnvironmentBanner:Title' => 'Você está atualmente em <strong>%1$s</strong>',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Volte para o modo PRODUÇÃO',
+    'Error:HTTP:400' => 'Bad request~~',
     'Error:HTTP:401' => 'Autenticação',
     'Error:HTTP:404' => 'Está página não existe',
 	'Error:HTTP:500' => 'Oops! Ocorreu um erro, informe a T.I.',
