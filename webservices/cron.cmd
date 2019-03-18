@@ -2,7 +2,7 @@
 REM
 REM To be scheduled by the following command:
 REM
-REM schtasks /create /tn "iTop Cron" /sc minute /tr "\"C:\www\iTop\webservices\cron.cmd\""
+REM schtasks /create /tn "iTop Cron" /sc minute /tr "C:\www\iTop\webservices\cron.cmd C:\php\php.exe"
 REM
 REM
 REM PHP_COMMAND must point to php.exe, adjust the first to suit your own installation
