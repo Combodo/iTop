@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-full-itil/2.6.0', array(
+	'itop-full-itil/2.6.1', array(
 	// Identification
 	//
 		'label' => 'Bridge - Request management ITIL + Incident management ITIL',
