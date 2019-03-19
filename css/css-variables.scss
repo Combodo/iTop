@@ -1,3 +1,6 @@
+// Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
+$version: "v2.5.2";
+
 // Base colors
 $gray-base:              #000 !default;
 $gray-darker:            lighten($gray-base, 13.5%) !default; // #222
@@ -48,6 +51,3 @@ $search-add-criteria-box-hover-color: $gray-extra-light;
 $search-button-box-color: $combodo-orange;
 $search-button-box-bg-color: $white;
 $search-button-box-bg-hover-color: $gray-extra-light;
-
-// Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
-$version: "v2.5.0";
