@@ -512,21 +512,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 
-?>
 
 //
 // Class: lnkSLAToSLT
 //
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Slt metric',
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Slt metric~~',
 	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Slt request type',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Slt request type~~',
 	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Slt ticket priority',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Slt ticket priority~~',
 	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Slt value',
+	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Slt value~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Slt value unit',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Slt value unit~~',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
 ));

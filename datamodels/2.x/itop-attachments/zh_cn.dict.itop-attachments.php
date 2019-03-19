@@ -36,25 +36,24 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachments:NoAttachment' => '没有附件. ',
 	'Attachments:PreviewNotAvailable' => '该附件类型不支持预览.',
 ));
-?>
 
 //
 // Class: Attachment
 //
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:Attachment' => 'Attachment',
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:Attachment' => 'Attachment~~',
 	'Class:Attachment+' => '',
-	'Class:Attachment/Attribute:expire' => 'Expire',
+	'Class:Attachment/Attribute:expire' => 'Expire~~',
 	'Class:Attachment/Attribute:expire+' => '',
-	'Class:Attachment/Attribute:temp_id' => 'Temp id',
+	'Class:Attachment/Attribute:temp_id' => 'Temp id~~',
 	'Class:Attachment/Attribute:temp_id+' => '',
-	'Class:Attachment/Attribute:item_class' => 'Item class',
+	'Class:Attachment/Attribute:item_class' => 'Item class~~',
 	'Class:Attachment/Attribute:item_class+' => '',
-	'Class:Attachment/Attribute:item_id' => 'Item id',
+	'Class:Attachment/Attribute:item_id' => 'Item id~~',
 	'Class:Attachment/Attribute:item_id+' => '',
-	'Class:Attachment/Attribute:item_org_id' => 'Item org id',
+	'Class:Attachment/Attribute:item_org_id' => 'Item org id~~',
 	'Class:Attachment/Attribute:item_org_id+' => '',
-	'Class:Attachment/Attribute:contents' => 'Contents',
+	'Class:Attachment/Attribute:contents' => 'Contents~~',
 	'Class:Attachment/Attribute:contents+' => '',
 ));

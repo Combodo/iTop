@@ -525,8 +525,6 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 
-?>
-
 //
 // Class: lnkSLAToSLT
 //

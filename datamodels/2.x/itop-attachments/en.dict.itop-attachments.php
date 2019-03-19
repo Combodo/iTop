@@ -39,7 +39,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Attachments:NoAttachment' => 'No attachment. ',
 	'Attachments:PreviewNotAvailable' => 'Preview not available for this type of attachment.',
 ));
-?>
 
 //
 // Class: Attachment

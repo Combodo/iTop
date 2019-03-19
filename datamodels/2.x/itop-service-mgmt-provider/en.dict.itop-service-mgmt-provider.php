@@ -525,7 +525,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
 ));
 
-?>
 
 //
 // Class: lnkSLAToSLT
