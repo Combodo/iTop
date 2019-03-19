@@ -277,7 +277,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:TitleDetailsFor_Service' => 'Detalhes dos serviços',
 	'Portal:Button:CreateRequestFromService' => 'Criar uma solicitação para esse serviço',
 	'Portal:ListOpenRequests' => 'Lista solicitações abertas',
-'Portal:UserRequest:MoreInfo' => 'Mais informações',
+	'Portal:UserRequest:MoreInfo' => 'Mais informações',
 	'Portal:Details-Service-Element' => 'Elementos do Serviço',
 	'Portal:NoClosedTicket' => 'Nenhuma solicitação fechada',
 	'Portal:NoService' => '',

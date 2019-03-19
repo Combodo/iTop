@@ -294,5 +294,3 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Ukončit',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
 ));
-
-?>

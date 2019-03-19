@@ -40,7 +40,3 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:UserLocal/Attribute:password' => 'Contraseña',
 	'Class:UserLocal/Attribute:password+' => 'Contraseña',
 ));
-
-
-
-?>

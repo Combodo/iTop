@@ -239,12 +239,3 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Résolues',
 	'Brick:Portal:ClosedRequests:Title' => 'Requêtes fermées',
 ));
-
-//
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
-));

@@ -139,5 +139,3 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Change/Attribute:outage/Value:yes' => 'Si',
 	'Class:Change/Attribute:outage/Value:yes+' => 'Si',
 ));
-
-?>

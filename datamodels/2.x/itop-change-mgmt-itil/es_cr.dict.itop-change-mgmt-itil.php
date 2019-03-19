@@ -293,5 +293,3 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => 'Finalizar',
 ));
-
-?>

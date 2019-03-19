@@ -23,4 +23,3 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'config-current-line' => 'Řádek: %1$s',
 	'config-saved-warning-db-password' => 'Successfully recorded, but the backup won\'t work due to unsupported characters in the database password.~~',
 ));
-?>
