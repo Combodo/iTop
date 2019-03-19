@@ -240,3 +240,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Incident/Method:ResolveChildTickets+' => 'Lösung auf Kind-Tickets übertragen (ev_autoresolve), und folgende Ticket-Eigenschaften angleichen: Service, Team, Agent, Lösungsinformationen',
 	'Tickets:Related:OpenIncidents' => 'Offene Incidents',
 ));
+
+//
+// Class: Incident
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:Incident/Attribute:parent_problem_id' => 'Parent-Problem',
+	'Class:Incident/Attribute:parent_problem_id+' => '',
+	'Class:Incident/Attribute:parent_problem_ref' => 'Parent-Problem-Referenz',
+	'Class:Incident/Attribute:parent_problem_ref+' => '',
+));

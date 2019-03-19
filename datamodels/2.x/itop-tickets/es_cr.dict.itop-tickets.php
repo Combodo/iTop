@@ -251,3 +251,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Solucionado',
 	'Brick:Portal:ClosedRequests:Title' => 'Requerimientos Cerrados',
 ));
+
+//
+// Class: lnkFunctionalCIToTicket
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
+));

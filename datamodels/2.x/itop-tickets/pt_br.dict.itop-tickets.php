@@ -250,3 +250,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolvido',
 	'Brick:Portal:ClosedRequests:Title' => 'Fechar solicitações',
 ));
+
+//
+// Class: lnkFunctionalCIToTicket
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
+));

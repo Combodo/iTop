@@ -3169,12 +3169,17 @@ abstract class MetaModel
 		$iMissingMandatoryKeysNb = $UNIQUENESS_MANDATORY_KEYS_NB;
 		/** @var boolean $bHasNonDisabledKeys true if rule contains at least one key that is not 'disabled' */
 		$bHasNonDisabledKeys = false;
+		$bDisabledKeyValue = null;
 
 		foreach ($aUniquenessRuleProperties as $sUniquenessRuleKey => $aUniquenessRuleProperty)
 		{
-			if (($sUniquenessRuleKey === 'disabled') && (!is_null($aUniquenessRuleProperty)))
+			if ($sUniquenessRuleKey === 'disabled')
 			{
-				continue;
+				$bDisabledKeyValue = $aUniquenessRuleProperty;
+				if (!is_null($aUniquenessRuleProperty))
+				{
+					continue;
+				}
 			}
 			if (is_null($aUniquenessRuleProperty))
 			{
@@ -3210,6 +3215,10 @@ abstract class MetaModel
 		if ($bRuleOverride && $bHasNonDisabledKeys)
 		{
 			throw new CoreUnexpectedValue('Uniqueness rule : only the \'disabled\' key can be overridden');
+		}
+		if ($bRuleOverride && is_null($bDisabledKeyValue))
+		{
+			throw new CoreUnexpectedValue('Uniqueness rule : when overriding a rule, value must be set for the \'disabled\' key');
 		}
 		if (!$bRuleOverride && $bHasMissingMandatoryKey)
 		{

@@ -240,3 +240,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
 	'Tickets:Related:OpenIncidents' => 'Incidentes Abiertos',
 ));
+
+//
+// Class: Incident
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:Incident/Attribute:parent_problem_id' => 'Problema Padre',
+	'Class:Incident/Attribute:parent_problem_id+' => 'Problema Padre',
+	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref~~',
+	'Class:Incident/Attribute:parent_problem_ref+' => '~~',
+));

@@ -1,6 +1,21 @@
 {
   "require": {
-    "php": ">=5.6.0"
+    "php": ">=5.6.0",
+    "ext-soap": "*",
+    "ext-json": "*",
+    "ext-zip": "*",
+    "ext-mysqli": "*",
+    "ext-dom": "*",
+    "ext-iconv": "*",
+    "ext-gd": "*"
+  },
+  "suggest": {
+    "ext-libsodium": "Required to use the AttributeEncryptedString.",
+    "ext-openssl": "Can be used as a polyfill if libsodium is not installed",
+    "ext-mcrypt": "Can be used as a polyfill if either libsodium and openssl are not installed (libsodium and openssl are more secure)",
+    "ext-ldap": "Required to use LDAP as an identity provider",
+    "ext-posix": "Not required by the core, but some extensions uses it.",
+    "ext-imap": "Required by the extension \"Mail to ticket automation\""
   },
   "config": {
     "platform": {
