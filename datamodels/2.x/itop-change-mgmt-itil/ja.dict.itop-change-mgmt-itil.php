@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,81 +15,11 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:RoutineChange' => 'ルーチン変更',
-	'Class:RoutineChange+' => '',
-	'Class:RoutineChange/Stimulus:ev_assign' => '割り当て',
-	'Class:RoutineChange/Stimulus:ev_assign+' => '',
-	'Class:RoutineChange/Stimulus:ev_reopen' => '再オープン',
-	'Class:RoutineChange/Stimulus:ev_reopen+' => '',
-	'Class:RoutineChange/Stimulus:ev_plan' => '計画',
-	'Class:RoutineChange/Stimulus:ev_plan+' => '',
-	'Class:RoutineChange/Stimulus:ev_approve' => '承認',
-	'Class:RoutineChange/Stimulus:ev_approve+' => '',
-	'Class:RoutineChange/Stimulus:ev_replan' => '再計画',
-	'Class:RoutineChange/Stimulus:ev_replan+' => '',
-	'Class:RoutineChange/Stimulus:ev_notapprove' => '否認',
-	'Class:RoutineChange/Stimulus:ev_notapprove+' => '',
-	'Class:RoutineChange/Stimulus:ev_implement' => '実施',
-	'Class:RoutineChange/Stimulus:ev_implement+' => '',
-	'Class:RoutineChange/Stimulus:ev_monitor' => '経過観察',
-	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
-	'Class:RoutineChange/Stimulus:ev_finish' => '終了',
-	'Class:RoutineChange/Stimulus:ev_finish+' => '',
-	'Class:NormalChange' => '通常変更',
-	'Class:NormalChange+' => '',
-	'Class:NormalChange/Attribute:acceptance_date' => '受理日',
-	'Class:NormalChange/Attribute:acceptance_date+' => '',
-	'Class:NormalChange/Attribute:acceptance_comment' => '受理コメント',
-	'Class:NormalChange/Attribute:acceptance_comment+' => '',
-	'Class:NormalChange/Stimulus:ev_validate' => '受け付け',
-	'Class:NormalChange/Stimulus:ev_validate+' => '',
-	'Class:NormalChange/Stimulus:ev_reject' => '却下',
-	'Class:NormalChange/Stimulus:ev_reject+' => '',
-	'Class:NormalChange/Stimulus:ev_assign' => '割り当て',
-	'Class:NormalChange/Stimulus:ev_assign+' => '',
-	'Class:NormalChange/Stimulus:ev_reopen' => '再オープン',
-	'Class:NormalChange/Stimulus:ev_reopen+' => '',
-	'Class:NormalChange/Stimulus:ev_plan' => '計画',
-	'Class:NormalChange/Stimulus:ev_plan+' => '',
-	'Class:NormalChange/Stimulus:ev_approve' => '承認',
-	'Class:NormalChange/Stimulus:ev_approve+' => '',
-	'Class:NormalChange/Stimulus:ev_replan' => '再計画',
-	'Class:NormalChange/Stimulus:ev_replan+' => '',
-	'Class:NormalChange/Stimulus:ev_notapprove' => '否認',
-	'Class:NormalChange/Stimulus:ev_notapprove+' => '',
-	'Class:NormalChange/Stimulus:ev_implement' => '実施',
-	'Class:NormalChange/Stimulus:ev_implement+' => '',
-	'Class:NormalChange/Stimulus:ev_monitor' => '経過観察',
-	'Class:NormalChange/Stimulus:ev_monitor+' => '',
-	'Class:NormalChange/Stimulus:ev_finish' => '終了',
-	'Class:NormalChange/Stimulus:ev_finish+' => '',
-	'Class:EmergencyChange' => '緊急変更',
-	'Class:EmergencyChange+' => '',
-	'Class:EmergencyChange/Stimulus:ev_assign' => '割り当て',
-	'Class:EmergencyChange/Stimulus:ev_assign+' => '',
-	'Class:EmergencyChange/Stimulus:ev_reopen' => '再オープン',
-	'Class:EmergencyChange/Stimulus:ev_reopen+' => '',
-	'Class:EmergencyChange/Stimulus:ev_plan' => '計画',
-	'Class:EmergencyChange/Stimulus:ev_plan+' => '',
-	'Class:EmergencyChange/Stimulus:ev_approve' => '承認',
-	'Class:EmergencyChange/Stimulus:ev_approve+' => '',
-	'Class:EmergencyChange/Stimulus:ev_replan' => '再計画',
-	'Class:EmergencyChange/Stimulus:ev_replan+' => '',
-	'Class:EmergencyChange/Stimulus:ev_notapprove' => '否認',
-	'Class:EmergencyChange/Stimulus:ev_notapprove+' => '',
-	'Class:EmergencyChange/Stimulus:ev_implement' => '実施',
-	'Class:EmergencyChange/Stimulus:ev_implement+' => '',
-	'Class:EmergencyChange/Stimulus:ev_monitor' => '経過観察',
-	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
-	'Class:EmergencyChange/Stimulus:ev_finish' => '終了',
-	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
 	'Menu:ChangeManagement' => '変更管理',
 	'Menu:Change:Overview' => '概要',
 	'Menu:Change:Overview+' => '',
@@ -111,6 +41,26 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI-ChangeManagementOverview-Last-7-days' => '最近7日間の変更数',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => '最近7日間のドメイン別変更',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => '最近7日間の状態別変更',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+));
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+
+
+//
+// Class: Change
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Change' => '変更',
 	'Class:Change+' => '',
 	'Class:Change/Attribute:status' => '状態',
@@ -177,6 +127,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Change/Attribute:related_request_list+' => '',
 	'Class:Change/Attribute:related_problems_list' => '関連問題',
 	'Class:Change/Attribute:related_problems_list+' => '',
+	'Class:Change/Attribute:related_incident_list' => '関連するインシデント',
+	'Class:Change/Attribute:related_incident_list+' => '',
 	'Class:Change/Attribute:child_changes_list' => '子変更',
 	'Class:Change/Attribute:child_changes_list+' => '',
 	'Class:Change/Attribute:parent_id_friendlyname' => '親のフレンドリー名',
@@ -205,10 +157,44 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Change/Stimulus:ev_monitor+' => '',
 	'Class:Change/Stimulus:ev_finish' => '終了',
 	'Class:Change/Stimulus:ev_finish+' => '',
+));
+
+//
+// Class: RoutineChange
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:RoutineChange' => 'ルーチン変更',
+	'Class:RoutineChange+' => '',
 	'Class:RoutineChange/Stimulus:ev_validate' => '受け付け',
 	'Class:RoutineChange/Stimulus:ev_validate+' => '',
 	'Class:RoutineChange/Stimulus:ev_reject' => '却下',
 	'Class:RoutineChange/Stimulus:ev_reject+' => '',
+	'Class:RoutineChange/Stimulus:ev_assign' => '割り当て',
+	'Class:RoutineChange/Stimulus:ev_assign+' => '',
+	'Class:RoutineChange/Stimulus:ev_reopen' => '再オープン',
+	'Class:RoutineChange/Stimulus:ev_reopen+' => '',
+	'Class:RoutineChange/Stimulus:ev_plan' => '計画',
+	'Class:RoutineChange/Stimulus:ev_plan+' => '',
+	'Class:RoutineChange/Stimulus:ev_approve' => '承認',
+	'Class:RoutineChange/Stimulus:ev_approve+' => '',
+	'Class:RoutineChange/Stimulus:ev_replan' => '再計画',
+	'Class:RoutineChange/Stimulus:ev_replan+' => '',
+	'Class:RoutineChange/Stimulus:ev_notapprove' => '否認',
+	'Class:RoutineChange/Stimulus:ev_notapprove+' => '',
+	'Class:RoutineChange/Stimulus:ev_implement' => '実施',
+	'Class:RoutineChange/Stimulus:ev_implement+' => '',
+	'Class:RoutineChange/Stimulus:ev_monitor' => '経過観察',
+	'Class:RoutineChange/Stimulus:ev_monitor+' => '',
+	'Class:RoutineChange/Stimulus:ev_finish' => '終了',
+	'Class:RoutineChange/Stimulus:ev_finish+' => '',
+));
+
+//
+// Class: ApprovedChange
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ApprovedChange' => '承認済の変更',
 	'Class:ApprovedChange+' => '',
 	'Class:ApprovedChange/Attribute:approval_date' => '承認日',
@@ -237,13 +223,72 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ApprovedChange/Stimulus:ev_monitor+' => '',
 	'Class:ApprovedChange/Stimulus:ev_finish' => '終了',
 	'Class:ApprovedChange/Stimulus:ev_finish+' => '',
+));
+
+//
+// Class: NormalChange
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:NormalChange' => '通常変更',
+	'Class:NormalChange+' => '',
+	'Class:NormalChange/Attribute:acceptance_date' => '受理日',
+	'Class:NormalChange/Attribute:acceptance_date+' => '',
+	'Class:NormalChange/Attribute:acceptance_comment' => '受理コメント',
+	'Class:NormalChange/Attribute:acceptance_comment+' => '',
+	'Class:NormalChange/Stimulus:ev_validate' => '受け付け',
+	'Class:NormalChange/Stimulus:ev_validate+' => '',
+	'Class:NormalChange/Stimulus:ev_reject' => '却下',
+	'Class:NormalChange/Stimulus:ev_reject+' => '',
+	'Class:NormalChange/Stimulus:ev_assign' => '割り当て',
+	'Class:NormalChange/Stimulus:ev_assign+' => '',
+	'Class:NormalChange/Stimulus:ev_reopen' => '再オープン',
+	'Class:NormalChange/Stimulus:ev_reopen+' => '',
+	'Class:NormalChange/Stimulus:ev_plan' => '計画',
+	'Class:NormalChange/Stimulus:ev_plan+' => '',
+	'Class:NormalChange/Stimulus:ev_approve' => '承認',
+	'Class:NormalChange/Stimulus:ev_approve+' => '',
+	'Class:NormalChange/Stimulus:ev_replan' => '再計画',
+	'Class:NormalChange/Stimulus:ev_replan+' => '',
+	'Class:NormalChange/Stimulus:ev_notapprove' => '否認',
+	'Class:NormalChange/Stimulus:ev_notapprove+' => '',
+	'Class:NormalChange/Stimulus:ev_implement' => '実施',
+	'Class:NormalChange/Stimulus:ev_implement+' => '',
+	'Class:NormalChange/Stimulus:ev_monitor' => '経過観察',
+	'Class:NormalChange/Stimulus:ev_monitor+' => '',
+	'Class:NormalChange/Stimulus:ev_finish' => '終了',
+	'Class:NormalChange/Stimulus:ev_finish+' => '',
+));
+
+//
+// Class: EmergencyChange
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:EmergencyChange' => '緊急変更',
+	'Class:EmergencyChange+' => '',
 	'Class:EmergencyChange/Stimulus:ev_validate' => '受け付け',
 	'Class:EmergencyChange/Stimulus:ev_validate+' => '',
 	'Class:EmergencyChange/Stimulus:ev_reject' => '却下',
 	'Class:EmergencyChange/Stimulus:ev_reject+' => '',
-	'Class:Change/Attribute:related_incident_list' => '関連するインシデント',
-	'Class:Change/Attribute:related_incident_list+' => '',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+	'Class:EmergencyChange/Stimulus:ev_assign' => '割り当て',
+	'Class:EmergencyChange/Stimulus:ev_assign+' => '',
+	'Class:EmergencyChange/Stimulus:ev_reopen' => '再オープン',
+	'Class:EmergencyChange/Stimulus:ev_reopen+' => '',
+	'Class:EmergencyChange/Stimulus:ev_plan' => '計画',
+	'Class:EmergencyChange/Stimulus:ev_plan+' => '',
+	'Class:EmergencyChange/Stimulus:ev_approve' => '承認',
+	'Class:EmergencyChange/Stimulus:ev_approve+' => '',
+	'Class:EmergencyChange/Stimulus:ev_replan' => '再計画',
+	'Class:EmergencyChange/Stimulus:ev_replan+' => '',
+	'Class:EmergencyChange/Stimulus:ev_notapprove' => '否認',
+	'Class:EmergencyChange/Stimulus:ev_notapprove+' => '',
+	'Class:EmergencyChange/Stimulus:ev_implement' => '実施',
+	'Class:EmergencyChange/Stimulus:ev_implement+' => '',
+	'Class:EmergencyChange/Stimulus:ev_monitor' => '経過観察',
+	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
+	'Class:EmergencyChange/Stimulus:ev_finish' => '終了',
+	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
 ));
+
 ?>

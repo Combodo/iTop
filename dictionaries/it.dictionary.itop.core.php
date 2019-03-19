@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,16 +15,19 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Core:DeletedObjectLabel' => '%1s (deleted)~~',
+	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)~~',
+
+	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)~~',
+	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
+
 	'Core:AttributeLinkedSet' => 'Array di oggetti',
 	'Core:AttributeLinkedSet+' => 'Ogni tipo di oggetto della stessa classe o sottoclasse',
 
@@ -145,6 +148,9 @@ Operatori:<br/>
 	'Core:AttributeExternalKey' => 'Chiave esterna',
 	'Core:AttributeExternalKey+' => 'Chiave esterna (o straniera)',
 
+	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
+	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
+
 	'Core:AttributeExternalField' => 'Campo esterno',
 	'Core:AttributeExternalField+' => 'Campo mappato con una chiave esterna',
 
@@ -262,6 +268,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modificato, valore precedente: %2$s',
 	'Change:AttName_Changed' => '%1$s modificato',
 	'Change:AttName_EntryAdded' => '%1$s modificato, nuova voce aggiunta: %2$s',
+	'Change:LinkSet:Added' => 'added %1$s~~',
+	'Change:LinkSet:Removed' => 'removed %1$s~~',
+	'Change:LinkSet:Modified' => 'modified %1$s~~',
 ));
 
 //
@@ -337,6 +346,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:EventNotificationEmail/Attribute:subject+' => 'Oggetto',
 	'Class:EventNotificationEmail/Attribute:body' => 'Corpo',
 	'Class:EventNotificationEmail/Attribute:body+' => 'Corpo',
+	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments~~',
+	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
 ));
 
 //
@@ -363,7 +374,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 ));
 
 //
-// Classes: EventWebService and EventWebService
+// Class: EventWebService
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
@@ -381,6 +392,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:EventWebService/Attribute:log_error+' => 'Risultati error log',
 	'Class:EventWebService/Attribute:data' => 'Dati',
 	'Class:EventWebService/Attribute:data+' => 'Risultati dei dati',
+));
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:EventRestService' => 'REST/JSON call~~',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
 	'Class:EventRestService/Attribute:operation' => 'Operation~~',
@@ -503,6 +517,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:TriggerOnObject+' => 'Trigger su una determinata classe di oggetti',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe Bersaglio',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
+	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
+	'Class:TriggerOnObject/Attribute:filter+' => '~~',
+	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
+	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \\"%1$s\\"~~',
 ));
 
 //
@@ -550,6 +568,19 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:TriggerOnObjectCreate' => 'Trigger (sulla creazione)',
 	'Class:TriggerOnObjectCreate+' => 'Trigger sulla creazione di un oggetto [una classe figlia di] di una data classe',
+));
+
+//
+// Class: TriggerOnThresholdReached
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:TriggerOnThresholdReached' => 'Trigger (on threshold)~~',
+	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached~~',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch~~',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '~~',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Threshold~~',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '~~',
 ));
 
 //
@@ -606,6 +637,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'Sintassi: nome_del_campo:valore; ...',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Durata della conservazione',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Quanto tempo un oggetto obsoleto è tenuto prima di essere eliminato',
+	'Class:SynchroDataSource/Attribute:database_table_name' => 'Data table~~',
+	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Name of the table to store the synchronization data. If left empty, a default name will be computed.~~',
 	'SynchroDataSource:Description' => 'Descrizione',
 	'SynchroDataSource:Reconciliation' => 'Ricerca &amp; reconciliazione',
 	'SynchroDataSource:Deletion' => 'Regole di cancellazione',
@@ -641,7 +674,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Core:Synchro:label_obj_disappeared_errors' => 'Errori (%1$s)',
 	'Core:Synchro:label_obj_disappeared_no_action' => 'Nessuna Azione (%1$s)',
 	'Core:Synchro:label_obj_unchanged' => 'Non modificato(%1$s)',
-	'Core:Synchro:label_obj_updated' => 'Aggiornato (%1$s)',
+	'Core:Synchro:label_obj_updated' => 'Aggiornato (%1$s)', 
 	'Core:Synchro:label_obj_updated_errors' => 'Errori (%1$s)',
 	'Core:Synchro:label_obj_new_unchanged' => 'Non modificato (%1$s)',
 	'Core:Synchro:label_obj_new_updated' => 'Aggiornato (%1$s)',
@@ -651,9 +684,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica processata: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
-	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Almeno una chiave riconciliazione deve essere specificata, o la policy di conciliazione deve essere quella di utilizzare la chiave primaria',
-	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Deve essere specificato un periodo di conservazione di cancellazione , dato che gli oggetti devono essere eliminati dopo essere contrassegnati come obsoleti ',
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Almeno una chiave riconciliazione deve essere specificata, o la policy di conciliazione deve essere quella di utilizzare la chiave primaria',			
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Deve essere specificato un periodo di conservazione di cancellazione , dato che gli oggetti devono essere eliminati dopo essere contrassegnati come obsoleti ',			
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Oggetti obsoleti devono essere aggiornati, ma nessun aggiornamento è specificato',
+	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'The table %1$s already exists in the database. Please use another name for the synchro data table.~~',
 	'Core:SynchroReplica:PublicData' => 'Dati Pubblici',
 	'Core:SynchroReplica:PrivateDetails' => 'Dettagli Privati',
 	'Core:SynchroReplica:BackToDataSource' => 'Torna indietro alla sorgente di sincronizzazione dei dati: %1$s~~',
@@ -681,7 +715,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Core:SyncDataSourceObsolete' => 'La fonte dei dati è contrassegnata come obsoleta. Operazione annullata',
 	'Core:SyncDataSourceAccessRestriction' => 'Solo amministratori o l\'utente specificato nella fonte dei dati può eseguire questa operazione. Operazione annullata',
 	'Core:SyncTooManyMissingReplicas' => 'Tutte le repliche sono mancanti dall\'importazione. Hai eseguito realmente l\'importazione? Operazione annullata',
-'Core:SyncSplitModeCLIOnly' => 'La sincronizzazione può essere eseguita in blocchi solo se eseguito in modalità CLI',
+	'Core:SyncSplitModeCLIOnly' => 'La sincronizzazione può essere eseguita in blocchi solo se eseguito in modalità CLI',
 	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s repliche, %2$s errore(i), %3$s warning(s).',
 	'Core:SynchroReplica:TargetObject' => 'Oggetto Sincronizzato: %1$s',
 	'Class:AsyncSendEmail' => 'Email (asincrono)',
@@ -778,41 +812,21 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Prefs',
 	'Core:ExecProcess:Code1' => 'Comando errato o comando finito con errori (es. errato nome dello script)',
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
-));
 
-//
-// Attribute Duration
-//
-Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Core:Duration_Seconds' => '%1$ds',
-	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
-	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$sec',
-	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sg %2$dh %3$dmin %4$ds',
-	'Core:DeletedObjectLabel' => '%1s (deleted)~~',
-	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)~~',
-	'Core:UnknownObjectLabel' => 'Object not found (class: %1$s, id: %2$d)~~',
-	'Core:UnknownObjectTip' => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.~~',
-	'Core:AttributeHierarchicalKey' => 'Hierarchical Key~~',
-	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent~~',
-	'Change:LinkSet:Added' => 'added %1$s~~',
-	'Change:LinkSet:Removed' => 'removed %1$s~~',
-	'Change:LinkSet:Modified' => 'modified %1$s~~',
-	'Class:EventNotificationEmail/Attribute:attachments' => 'Attachments~~',
-	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
-	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \"%1$s\"~~',
-	'Class:TriggerOnThresholdReached' => 'Trigger (on threshold)~~',
-	'Class:TriggerOnThresholdReached+' => 'Trigger on Stop-Watch threshold reached~~',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Stop watch~~',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Threshold~~',
-	'Class:SynchroDataSource/Attribute:database_table_name' => 'Data table~~',
-	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Name of the table to store the synchronization data. If left empty, a default name will be computed.~~',
-	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'The table %1$s already exists in the database. Please use another name for the synchro data table.~~',
-	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \"%1$s\")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \"%1$s\"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \"%1$s\" at %2$d%%~~',
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \"%1$s\"~~',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \"query\". There is no Query Phrasebook corresponding to the id: \"%1$s\".~~',
+	// Attribute Duration
+	'Core:Duration_Seconds'	=> '%1$ds',	
+	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',	
+	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$sec',		
+	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sg %2$dh %3$dmin %4$ds',		
+
+	// Explain working time computing
+	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \\"%1$s\\")~~',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \\"%1$s\\"~~',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \\"%1$s\\" at %2$d%%~~',
+	
+	// Bulk export
+	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \\"%1$s\\"~~',
+	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \\"query\\". There is no Query Phrasebook corresponding to the id: \\"%1$s\\".~~',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
 	'Core:BulkExportOf_Class' => '%1$s Export~~',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
@@ -858,6 +872,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
 	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
 	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
+	'Core:BulkExport:DateTimeFormat' => 'Date and Time format~~',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
 	'Core:DateTime:Placeholder_d' => 'GG', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'G', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12

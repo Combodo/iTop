@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,15 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:IncidentManagement' => 'Gerenciamento Incidentes',
 	'Menu:IncidentManagement+' => 'Gerenciamento Incidentes',
@@ -190,14 +187,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Attribute:parent_incident_id+' => '',
 	'Class:Incident/Attribute:parent_incident_ref' => 'Ref Incidente principal',
 	'Class:Incident/Attribute:parent_incident_ref+' => '',
-	'Class:Incident/Attribute:parent_problem_id' => 'Problema principal',
-	'Class:Incident/Attribute:parent_problem_id+' => '',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Ref problema principal',
-	'Class:Incident/Attribute:parent_problem_ref+' => '',
 	'Class:Incident/Attribute:parent_change_id' => 'Mudança principal',
 	'Class:Incident/Attribute:parent_change_id+' => '',
 	'Class:Incident/Attribute:parent_change_ref' => 'Ref mudança principal',
 	'Class:Incident/Attribute:parent_change_ref+' => '',
+	'Class:Incident/Attribute:related_request_list' => 'Child requests~~',
+	'Class:Incident/Attribute:related_request_list+' => '~~',
 	'Class:Incident/Attribute:child_incidents_list' => 'Sub-Incidentes',
 	'Class:Incident/Attribute:child_incidents_list+' => 'Todos os sub-incidentes vinculados a esse incidente',
 	'Class:Incident/Attribute:public_log' => 'Log público',
@@ -235,11 +230,19 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Re-abrir',
 	'Class:Incident/Stimulus:ev_reopen+' => '',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Não é possível atribuir o incidente principal ao próprio incidente',
-	'Class:Incident/Attribute:related_request_list' => 'Child requests~~',
+
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
 ));
 
+//
+// Class: Incident
+//
 
-?>
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:Incident/Attribute:parent_problem_id' => 'Problema principal',
+	'Class:Incident/Attribute:parent_problem_id+' => '',
+	'Class:Incident/Attribute:parent_problem_ref' => 'Ref problema principal',
+	'Class:Incident/Attribute:parent_problem_ref+' => '',
+));

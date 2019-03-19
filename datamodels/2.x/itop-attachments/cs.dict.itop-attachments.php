@@ -1,5 +1,4 @@
 <?php
-
 // Copyright (C) 2010-2012 Combodo SARL
 //
 //   This file is part of iTop.
@@ -16,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data.
  *
@@ -27,19 +24,39 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-    'Attachments:TabTitle_Count' => 'Přílohy (%1$d)',
-    'Attachments:EmptyTabTitle' => 'Přílohy',
-    'Attachments:FieldsetTitle' => 'Přílohy',
-    'Attachments:DeleteBtn' => 'Odstranit',
-    'Attachments:History_File_Added' => 'Příloha %1$s byla přidána.',
-    'Attachments:History_File_Removed' => 'Příloha %1$s byla odstraněna.',
-    'Attachments:AddAttachment' => 'Přidat přílohu: ',
-    'Attachments:UploadNotAllowedOnThisSystem' => 'Na tomto systému není povoleno nahrávání souborů.',
-    'Attachment:Max_Go' => '(Maximální velikost souboru: %1$s GiB)',
-    'Attachment:Max_Mo' => '(Maximální velikost souboru: %1$s MiB)',
-    'Attachment:Max_Ko' => '(Maximální velikost souboru: %1$s KiB)',
-    'Attachments:NoAttachment' => 'Žádná příloha. ',
-    'Attachments:PreviewNotAvailable' => 'Pro tento typ přílohy není náhled k dispozici.',
-    'Class:Attachment' => 'Příloha',
-    'Class:Attachment+' => 'Příloha',
+	'Attachments:TabTitle_Count' => 'Přílohy (%1$d)',
+	'Attachments:EmptyTabTitle' => 'Přílohy',
+	'Attachments:FieldsetTitle' => 'Přílohy',
+	'Attachments:DeleteBtn' => 'Odstranit',
+	'Attachments:History_File_Added' => 'Příloha %1$s byla přidána.',
+	'Attachments:History_File_Removed' => 'Příloha %1$s byla odstraněna.',
+	'Attachments:AddAttachment' => 'Přidat přílohu: ',
+	'Attachments:UploadNotAllowedOnThisSystem' => 'Na tomto systému není povoleno nahrávání souborů.',
+	'Attachment:Max_Go' => '(Maximální velikost souboru: %1$s GiB)',
+	'Attachment:Max_Mo' => '(Maximální velikost souboru: %1$s MiB)',
+	'Attachment:Max_Ko' => '(Maximální velikost souboru: %1$s KiB)',
+	'Attachments:NoAttachment' => 'Žádná příloha. ',
+	'Attachments:PreviewNotAvailable' => 'Pro tento typ přílohy není náhled k dispozici.',
+));
+?>
+
+//
+// Class: Attachment
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:Attachment' => 'Attachment',
+	'Class:Attachment+' => '',
+	'Class:Attachment/Attribute:expire' => 'Expire',
+	'Class:Attachment/Attribute:expire+' => '',
+	'Class:Attachment/Attribute:temp_id' => 'Temp id',
+	'Class:Attachment/Attribute:temp_id+' => '',
+	'Class:Attachment/Attribute:item_class' => 'Item class',
+	'Class:Attachment/Attribute:item_class+' => '',
+	'Class:Attachment/Attribute:item_id' => 'Item id',
+	'Class:Attachment/Attribute:item_id+' => '',
+	'Class:Attachment/Attribute:item_org_id' => 'Item org id',
+	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:contents' => 'Contents',
+	'Class:Attachment/Attribute:contents+' => '',
 ));

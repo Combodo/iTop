@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,15 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)',
@@ -650,7 +647,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'SynchroDataSource:Definition' => '定义',
 	'Core:SynchroAttributes' => '属性',
 	'Core:SynchroStatus' => '状态',
-	'Core:Synchro:ErrorsLabel' => 'Errors',
+	'Core:Synchro:ErrorsLabel' => 'Errors',	
 	'Core:Synchro:CreatedLabel' => '已创建',
 	'Core:Synchro:ModifiedLabel' => '已修改',
 	'Core:Synchro:UnchangedLabel' => '保持不变',
@@ -817,16 +814,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
-	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
-	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
+	'Core:Duration_Seconds'	=> '%1$ds',	
+	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',	
+	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',		
+	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',		
 
 	// Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%',
-
+	
 	// Bulk export
 	'Core:BulkExport:MissingParameter_Param' => '缺少参数 "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter "query". There is no Query Phrasebook corresponding to the id: "%1$s".',

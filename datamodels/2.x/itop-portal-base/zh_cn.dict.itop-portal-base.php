@@ -16,13 +16,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license	 http://opensource.org/licenses/AGPL-3.0
  */
-
-
 // Portal
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Page:DefaultTitle' => 'iTop 用户门户',
@@ -30,9 +27,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Page:Home' => '主页',
 	'Page:GoPortalHome' => '主页面',
 	'Page:GoPreviousPage' => '上一页',
-	'Page:ReloadPage' => '重新加载',
+    'Page:ReloadPage' => '重新加载',
 	'Portal:Button:Submit' => '提交',
-	'Portal:Button:Apply' => '更新',
+    'Portal:Button:Apply' => '更新',
 	'Portal:Button:Cancel' => '取消',
 	'Portal:Button:Close' => '关闭',
 	'Portal:Button:Add' => '添加',
@@ -40,13 +37,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Portal:Button:Delete' => '删除',
 	'Portal:EnvironmentBanner:Title' => '您目前处于 <strong>%1$s</strong> 模式',
 	'Portal:EnvironmentBanner:GoToProduction' => '回到产品模式',
-	'Error:HTTP:401' => '认证',
-	'Error:HTTP:404' => '页面找不到',
+    'Error:HTTP:401' => '认证',
+    'Error:HTTP:404' => '页面找不到',
 	'Error:HTTP:500' => 'Oops! 发生了一个错误.',
 	'Error:HTTP:GetHelp' => '如果问题仍然存在，请联系管理员.',
 	'Error:XHR:Fail' => '无法加载数据, 请联系管理员',
-	'Portal:ErrorUserLoggedOut' => '您已退出，请重新登录.',
-	'Portal:Datatables:Language:Processing' => '请稍后...',
+    'Portal:ErrorUserLoggedOut' => '您已退出，请重新登录.',
+    'Portal:Datatables:Language:Processing' => '请稍后...',
 	'Portal:Datatables:Language:Search' => '过滤器:',
 	'Portal:Datatables:Language:LengthMenu' => '每页显示 _MENU_ 项',
 	'Portal:Datatables:Language:ZeroRecords' => '没有结果',
@@ -92,7 +89,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Browse:Name' => '浏览项目',
 	'Brick:Portal:Browse:Mode:List' => '列表',
 	'Brick:Portal:Browse:Mode:Tree' => '树形',
-	'Brick:Portal:Browse:Mode:Mosaic' => '嵌套',
+    'Brick:Portal:Browse:Mode:Mosaic' => '嵌套',
 	'Brick:Portal:Browse:Action:Drilldown' => '明细',
 	'Brick:Portal:Browse:Action:View' => '详情',
 	'Brick:Portal:Browse:Action:Edit' => '编辑',
@@ -107,8 +104,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Manage:Name' => '管理项目',
 	'Brick:Portal:Manage:Table:NoData' => '没有项目.',
-	'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
-	'Brick:Portal:Manage:DisplayMode:list' => '列表',
+    'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
+    'Brick:Portal:Manage:DisplayMode:list' => '列表',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => '饼图',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => '条形图',
 	'Brick:Portal:Manage:Others' => 'Others',
@@ -136,7 +133,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // CreateBrick brick
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Create:Name' => '快速创建',
-	'Brick:Portal:Create:ChooseType' => 'Please, choose a type',
+    'Brick:Portal:Create:ChooseType' => 'Please, choose a type',
 ));
 
 // Filter brick

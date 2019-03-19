@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,7 +8,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Attachments:TabTitle_Count' => 'Вложения (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Вложения',
@@ -24,4 +22,26 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Attachment:Max_Ko' => '(Максимальный размер файла: %1$s кБ)',
 	'Attachments:NoAttachment' => 'Нет вложений.',
 	'Attachments:PreviewNotAvailable' => 'Предварительный просмотр не доступен для этого типа вложений.',
+));
+?>
+
+//
+// Class: Attachment
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:Attachment' => 'Attachment',
+	'Class:Attachment+' => '',
+	'Class:Attachment/Attribute:expire' => 'Expire',
+	'Class:Attachment/Attribute:expire+' => '',
+	'Class:Attachment/Attribute:temp_id' => 'Temp id',
+	'Class:Attachment/Attribute:temp_id+' => '',
+	'Class:Attachment/Attribute:item_class' => 'Item class',
+	'Class:Attachment/Attribute:item_class+' => '',
+	'Class:Attachment/Attribute:item_id' => 'Item id',
+	'Class:Attachment/Attribute:item_id+' => '',
+	'Class:Attachment/Attribute:item_org_id' => 'Item org id',
+	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:contents' => 'Contents',
+	'Class:Attachment/Attribute:contents+' => '',
 ));

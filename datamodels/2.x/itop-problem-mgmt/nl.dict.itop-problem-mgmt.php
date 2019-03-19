@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * @author	LinProfs <info@linprofs.com>
  * 
@@ -35,12 +33,10 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -50,34 +46,20 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
-
-
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Menu:ProblemManagement' => 'Probleem Management',
-	'Menu:ProblemManagement+' => 'Probleem Management',
-	'Menu:Problem:Shortcuts' => 'Snelkoppelingen',
-	'Menu:NewError' => 'Nieuwe bekende fout',
-	'Menu:NewError+' => 'Creatie van een nieuwe bekende fout',
-	'Menu:SearchError' => 'Zoek naar bekende fouten',
-	'Menu:SearchError+' => 'Zoek naar bekende fouten',
-	'Menu:Problem:KnownErrors' => 'Alle bekende fouten',
-	'Menu:Problem:KnownErrors+' => 'Alle bekende fouten',
-	'Menu:FAQCategory' => 'FAQ categorieen',
-	'Menu:FAQCategory+' => 'Alle FAQ categorieen',
-	'Menu:FAQ' => 'FAQs',
-	'Menu:FAQ+' => 'Alle FAQs',
-	'Menu:Problem:Overview' => 'Overzicht',
-	'Menu:Problem:Overview+' => 'Overzicht',
-	'Menu:NewProblem' => 'Nieuw probleem',
-	'Menu:NewProblem+' => 'Nieuw probleem',
-	'Menu:SearchProblems' => 'Zoek naar problemen',
-	'Menu:SearchProblems+' => 'Zoek naar problemen',
-	'Menu:Problem:MyProblems' => 'Mijn problemen',
-	'Menu:Problem:MyProblems+' => 'Mijn problemen',
-	'Menu:Problem:OpenProblems' => 'Alle open problemen',
-	'Menu:Problem:OpenProblems+' => 'Alle open problemen',
+        'Menu:ProblemManagement' => 'Probleem Management',
+        'Menu:ProblemManagement+' => 'Probleem Management',
+    	'Menu:Problem:Overview' => 'Overzicht',
+    	'Menu:Problem:Overview+' => 'Overzicht',
+    	'Menu:NewProblem' => 'Nieuw probleem',
+    	'Menu:NewProblem+' => 'Nieuw probleem',
+    	'Menu:SearchProblems' => 'Zoek naar problemen',
+    	'Menu:SearchProblems+' => 'Zoek naar problemen',
+    	'Menu:Problem:Shortcuts' => 'Snelkoppelingen',
+        'Menu:Problem:MyProblems' => 'Mijn problemen',
+        'Menu:Problem:MyProblems+' => 'Mijn problemen',
+        'Menu:Problem:OpenProblems' => 'Alle open problemen',
+        'Menu:Problem:OpenProblems+' => 'Alle open problemen',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Problemen per dienst',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemen per dienst',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemen per prioriteit',
@@ -155,6 +137,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Problem/Attribute:knownerrors_list+' => 'Alle bekende fouten die gelinkt zijn aan dit probleem',
 	'Class:Problem/Attribute:related_request_list' => 'Gerelateerde verzoeken',
 	'Class:Problem/Attribute:related_request_list+' => 'Alle verzoeken die gerelateerd zijn aan dit probleem',
+	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 	'Class:Problem/Stimulus:ev_assign' => 'Wijs toe',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Wijs opnieuw toe',
@@ -163,8 +147,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Sluit',
 	'Class:Problem/Stimulus:ev_close+' => '',
-	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
-	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 ));
 
 ?>

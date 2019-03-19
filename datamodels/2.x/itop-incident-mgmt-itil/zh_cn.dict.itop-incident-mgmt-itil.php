@@ -15,15 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:IncidentManagement' => '事件管理',
 	'Menu:IncidentManagement+' => '事件管理',
@@ -237,4 +234,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Method:ResolveChildTickets' => '解决子工单',
 	'Class:Incident/Method:ResolveChildTickets+' => '级联解决子Ticket(事件自动解决),和调整以下内容保持一至: 服务, 团队, 办理人, 解决方案',
 	'Tickets:Related:OpenIncidents' => '打开的事件',
+));
+
+//
+// Class: Incident
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:Incident/Attribute:parent_problem_id' => 'Parent problem id~~',
+	'Class:Incident/Attribute:parent_problem_id+' => '~~',
+	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref~~',
+	'Class:Incident/Attribute:parent_problem_ref+' => '~~',
 ));

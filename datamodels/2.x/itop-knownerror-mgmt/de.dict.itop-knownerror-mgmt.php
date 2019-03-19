@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,7 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /*
 * @author ITOMIG GmbH <martin.raenker@itomig.de>
 
@@ -23,7 +22,6 @@
 * @licence	http://opensource.org/licenses/AGPL-3.0
 *		
 */
-
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError' => 'Known Error',
 	'Class:KnownError+' => 'Dokumentierter Fehler für ein Issue',
@@ -31,8 +29,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError/Attribute:name+' => '',
 	'Class:KnownError/Attribute:org_id' => 'Kunde',
 	'Class:KnownError/Attribute:org_id+' => '',
+	'Class:KnownError/Attribute:cust_name' => 'Kundenname',
+	'Class:KnownError/Attribute:cust_name+' => '',
 	'Class:KnownError/Attribute:problem_id' => 'Zugehöriges Problem',
 	'Class:KnownError/Attribute:problem_id+' => '',
+	'Class:KnownError/Attribute:problem_ref' => 'Referenz',
+	'Class:KnownError/Attribute:problem_ref+' => '',
 	'Class:KnownError/Attribute:symptom' => 'Symptom',
 	'Class:KnownError/Attribute:symptom+' => '',
 	'Class:KnownError/Attribute:root_cause' => 'Grundursache',
@@ -63,22 +65,51 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:KnownError/Attribute:ci_list+' => '',
 	'Class:KnownError/Attribute:document_list' => 'Dokumente',
 	'Class:KnownError/Attribute:document_list+' => '',
+));
+
+//
+// Class: lnkErrorToFunctionalCI
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkErrorToFunctionalCI' => 'Verknüpfung KnownError/FunctionalCI',
 	'Class:lnkErrorToFunctionalCI+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI-Name',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Fehler',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Known Error-Name',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Begründung',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
+));
+
+//
+// Class: lnkDocumentToError
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkDocumentToError' => 'Verknüpfung Dokumente/KnownError',
 	'Class:lnkDocumentToError+' => '',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Dokument',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
+	'Class:lnkDocumentToError/Attribute:document_name' => 'Dokumentname',
+	'Class:lnkDocumentToError/Attribute:document_name+' => '',
 	'Class:lnkDocumentToError/Attribute:error_id' => 'Known Error',
 	'Class:lnkDocumentToError/Attribute:error_id+' => '',
+	'Class:lnkDocumentToError/Attribute:error_name' => 'Known Error-Name',
+	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => 'Verknüpfungstyp',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
+));
+
+//
+// Class: FAQ
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => '',
 	'Class:FAQ/Attribute:title' => 'Titel',
@@ -89,16 +120,27 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FAQ/Attribute:description+' => '',
 	'Class:FAQ/Attribute:category_id' => 'Kategorie',
 	'Class:FAQ/Attribute:category_id+' => '',
+	'Class:FAQ/Attribute:category_name' => 'Kategoriename',
+	'Class:FAQ/Attribute:category_name+' => '',
 	'Class:FAQ/Attribute:error_code' => 'Fehlercode',
 	'Class:FAQ/Attribute:error_code+' => '',
 	'Class:FAQ/Attribute:key_words' => 'Schlüsselwörter',
 	'Class:FAQ/Attribute:key_words+' => '',
+));
+
+//
+// Class: FAQCategory
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FAQCategory' => 'FAQ-Kategorie',
 	'Class:FAQCategory+' => '',
 	'Class:FAQCategory/Attribute:name' => 'Name',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => '',
+));
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ProblemManagement' => 'Problem Management',
 	'Menu:ProblemManagement+' => 'Problem Management',
 	'Menu:Problem:Shortcuts' => 'Shortcuts',
@@ -112,22 +154,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:FAQCategory+' => '',
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => '',
-	'Class:KnownError/Attribute:cust_name' => 'Kundenname',
-	'Class:KnownError/Attribute:cust_name+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'Referenz',
-	'Class:KnownError/Attribute:problem_ref+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI-Name',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Known Error-Name',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
-	'Class:lnkDocumentToError/Attribute:document_name' => 'Dokumentname',
-	'Class:lnkDocumentToError/Attribute:document_name+' => '',
-	'Class:lnkDocumentToError/Attribute:error_name' => 'Known Error-Name',
-	'Class:lnkDocumentToError/Attribute:error_name+' => '',
-	'Class:FAQ/Attribute:category_name' => 'Kategoriename',
-	'Class:FAQ/Attribute:category_name+' => '',
+
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Oft gestellte Fragen (FAQs)',
 	'Brick:Portal:FAQ:Title+' => '<p>In Eile?</p><p>Sehen Sie sich die meistgestellten Fragen an (FAQs) und finden Sie (eventuell) die Antwort direkt dort.</p>',
-	));
-?>
+));

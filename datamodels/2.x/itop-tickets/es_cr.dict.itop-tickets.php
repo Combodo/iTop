@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
@@ -24,7 +22,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -34,13 +31,10 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
-
 //
 // Class: Ticket
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => 'Ticket',
 	'Class:Ticket/Attribute:ref' => 'Ref',
@@ -99,7 +93,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: lnkContactToTicket
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkContactToTicket' => 'Relación Contacto y Ticket',
 	'Class:lnkContactToTicket+' => 'Relación Contacto y Ticket',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket',
@@ -122,7 +116,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: lnkFunctionalCIToTicket
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkFunctionalCIToTicket' => 'Relación EC Funcional y Ticket',
 	'Class:lnkFunctionalCIToTicket+' => 'Relación EC Funcional y Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
@@ -146,7 +140,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: WorkOrder
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:WorkOrder' => 'Orden de Trabajo',
 	'Class:WorkOrder+' => 'Orden de Trabajo',
 	'Class:WorkOrder/Attribute:name' => 'Nombre',
@@ -183,7 +177,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 
 // Fieldset translation
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 	'Ticket:baseinfo' => 'Información General',
 	'Ticket:date' => 'Fechas',
@@ -254,4 +248,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'En proceso',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Solucionado',
 	'Brick:Portal:ClosedRequests:Title' => 'Requerimientos Cerrados',
+));
+
+//
+// Class: lnkFunctionalCIToTicket
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
 ));

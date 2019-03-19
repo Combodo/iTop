@@ -15,15 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:RequestManagement' => '服务台',
 	'Menu:RequestManagement+' => '服务台',
@@ -264,4 +261,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Class:UserRequest/Method:ResolveChildTickets' => '解决子工单',
 	'Class:UserRequest/Method:ResolveChildTickets+' => '将该解决方案直接挪给子需求(自动解决), 包括下列字段: 服务, 团队, 办理人, 解决方案信息',
+));
+
+//
+// Class: UserRequest
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
 ));

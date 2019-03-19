@@ -5,7 +5,6 @@
  * @copyright   Copyright (C) 2013 Combodo
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Menu:ConfigEditor' => '配置文件编辑',

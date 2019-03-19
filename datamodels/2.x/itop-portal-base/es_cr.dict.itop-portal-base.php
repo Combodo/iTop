@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,15 +16,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license	 http://opensource.org/licenses/AGPL-3.0
  */
-
-
 // Portal
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Page:DefaultTitle' => '%1$s - Portal de Usuario',
 	'Page:PleaseWait' => 'Por favor espere...',
 	'Page:Home' => 'Inicio',
@@ -69,7 +66,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 // UserProfile brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:UserProfile:Name' => 'Perfil del usuario',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Mi perfil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Cerrar Sesión',
@@ -88,7 +85,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 // BrowseBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:Browse:Name' => 'Buscar en todos los elementos',
 	'Brick:Portal:Browse:Mode:List' => 'Lista',
 	'Brick:Portal:Browse:Mode:Tree' => 'Árbol',
@@ -104,12 +101,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 // ManageBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:Manage:Name' => 'Administrar elementos',
 	'Brick:Portal:Manage:Table:NoData' => 'Sin elementos',
     'Brick:Portal:Manage:Table:ItemActions' => 'Acciones',
     'Brick:Portal:Manage:DisplayMode:list' => 'Lista',
-    'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Gráfica de Pastel',
+	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Gráfica de Pastel',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Gráfica de Barra',
 	'Brick:Portal:Manage:Others' => 'Otros',
 	'Brick:Portal:Manage:All' => 'Todos',
@@ -122,7 +119,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 // ObjectBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:Object:Name' => 'Objecto',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nuevo %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Actualizando %2$s (%1$s)',
@@ -134,13 +131,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 // CreateBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:Create:Name' => 'Creación rápida',
     'Brick:Portal:Create:ChooseType' => 'Por favor, seleccione un tipo',
 ));
 
 // Filter brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
     'Brick:Portal:Filter:Name' => 'Prefiltre un bloquek',
     'Brick:Portal:Filter:SearchInput:Placeholder' => 'Ej.:. Conectar a WiFi',
     'Brick:Portal:Filter:SearchInput:Submit' => 'Buscar',

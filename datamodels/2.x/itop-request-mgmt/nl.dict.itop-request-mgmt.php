@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * @author	LinProfs <info@linprofs.com>
  * 
@@ -26,7 +24,6 @@
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => 'Helpdesk',
@@ -61,6 +58,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:UserRequest:MyWorkOrders' => 'Work orders toegewezen aan mij',
 	'Menu:UserRequest:MyWorkOrders+' => 'Alle work orders toegewezen aan mij',
 	'Class:Problem:KnownProblemList' => 'Bekende fouten',
+	'Tickets:Related:OpenIncidents' => 'Open incidenten~~',
 ));
 
 // Dictionnay conventions
@@ -282,7 +280,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:TitleDetailsFor_Service' => 'Details van de Dienst',
 	'Portal:Button:CreateRequestFromService' => 'Maak een verzoek aan voor deze dienst',
 	'Portal:ListOpenRequests' => 'Lijst met open verzoeken',
-	'Portal:UserRequest:MoreInfo' => 'Meer informatie',
+'Portal:UserRequest:MoreInfo' => 'Meer informatie',
 	'Portal:Details-Service-Element' => 'Dienst elementen',
 	'Portal:NoClosedTicket' => 'Geen gesloten verzoeken',
 	'Portal:NoService' => '',
@@ -293,9 +291,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:SelectLanguage' => 'Verander je Taal',
 	'Portal:LanguageChangedTo_Lang' => 'Taal veranderd naar',
 	'Portal:ChooseYourFavoriteLanguage' => 'Kies je favoriete taal',
-	'Tickets:Related:OpenIncidents' => 'Open incidenten~~',
+
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));
-
-?>

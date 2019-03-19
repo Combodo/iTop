@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * @author	LinProfs <info@linprofs.com>
  * 
@@ -26,7 +24,6 @@
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -36,12 +33,10 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -51,11 +46,9 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //
 // Class: KnownError
 //
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:KnownError' => 'Bekende Fout',
 	'Class:KnownError+' => 'Error documented for a known issue',
@@ -189,5 +182,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => 'Alle FAQs',
 
+	'Brick:Portal:FAQ:Menu' => 'FAQ~~',
+	'Brick:Portal:FAQ:Title' => 'Frequently Asked Questions~~',
+	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>~~',
 ));
-?>

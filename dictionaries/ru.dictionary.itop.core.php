@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,7 +8,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:DeletedObjectLabel' => '%1ы (удалены)',
 	'Core:DeletedObjectTip' => 'Объект был удален %1$s (%2$s)',
@@ -180,8 +178,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:CMDBChange+' => 'Отслеживание изменений CMDB',
 	'Class:CMDBChange/Attribute:date' => 'Дата',
 	'Class:CMDBChange/Attribute:date+' => 'Дата и время изменения',
-	'Class:CMDBChange/Attribute:origin' => 'Источник',
-	'Class:CMDBChange/Attribute:origin+' => 'Источник приосхождения изменения',
 	'Class:CMDBChange/Attribute:userinfo' => 'Пользователь',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Кто произвёл изменение',
 ));
@@ -597,77 +593,48 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 // Synchro Data Source
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-
-    'Class:SynchroDataSource' => 'Источник синхронизации данных',
-    'Class:SynchroDataSource/Attribute:name' => 'Название',
-    'Class:SynchroDataSource/Attribute:name+' => 'Название',
-    'Class:SynchroDataSource/Attribute:description' => 'Описание',
-    'Class:SynchroDataSource/Attribute:status' => 'Статус',
-    'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Внедрение',
-    'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Устаревшее',
-    'Class:SynchroDataSource/Attribute:status/Value:production' => 'Эксплуатация',
-    'Class:SynchroDataSource/Attribute:scope_class' => 'Целевой класс',
-    'Class:SynchroDataSource/Attribute:scope_restriction' => 'Объем ограничений', // не используется пока
-    'Class:SynchroDataSource/Attribute:user_id' => 'Пользователь',
-    'Class:SynchroDataSource/Attribute:user_id+' => 'Только этот пользователь (и администраторы) смогут выполнять эту синхронизацию',
-    'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Контакт для уведомления',
-    'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Контакт для уведомления в случае ошибки',
-    'Class:SynchroDataSource/Attribute:url_icon' => 'Иконка (ссылка)',
-    'Class:SynchroDataSource/Attribute:url_icon+' => 'Гиперссылка на иконку приложения-источника данных для отображения на страницах синхронизованных объектов',
-    'Class:SynchroDataSource/Attribute:url_application' => 'Приложение (ссылка)',
-    'Class:SynchroDataSource/Attribute:url_application+' => 'Гиперссылка на объект в приложение-источнике данных. Возможные шаблоны: $this->attribute$ и $replica->primary_key$',
-    'Class:SynchroDataSource/Attribute:database_table_name' => 'Таблица данных',
-    'Class:SynchroDataSource/Attribute:database_table_name+' => 'Имя таблицы для хранения данных синхронизации. Если оставить поле пустым, будет назначено имя по умолчанию.',
-    'Class:SynchroDataSource/Attribute:attribute_list' => 'Атрибуты',
-
-    'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Политика сопоставления',
-    'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Использовать атрибуты',
-    'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Использовать primary_key значение',
-    'Class:SynchroDataSource/Attribute:action_on_zero' => 'Действие при нуле',
-    'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Действие, если объект не найдет',
-    'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Создать',
-    'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Ошибка',
-    'Class:SynchroDataSource/Attribute:action_on_one' => 'Действие при единице',
-    'Class:SynchroDataSource/Attribute:action_on_one+' => 'Действие, если найден только один объект',
-    'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Ошибка',
-    'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Обновить',
-    'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Действие при множестве',
-    'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Действие, если найдено несколько объектов',
-    'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Создать',
-    'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Ошибка',
-    'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Использовать первый (случайно)',
-
-    'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Авторизованные пользователи',
-    'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Кому разрешено удаление синхронизируемых объектов',
-    'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Только администраторы',
-    'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Пользователи с правами на удаление',
-    'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Никто',
-    'Class:SynchroDataSource/Attribute:delete_policy' => 'Устаревшие объекты',
-    'Class:SynchroDataSource/Attribute:delete_policy+' => 'Как обрабатывать устаревшие объекты',
-    'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Удалить',
-    'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Игнорировать',
-    'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Обновить',
-    'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Обновить, затем удалить',
-    'Class:SynchroDataSource/Attribute:delete_policy_update' => 'Обновляемые атрибуты',
-    'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'Формат: field_name:value; ... Пример: status:inactive',
-    'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Срок хранения',
-    'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Сколько времени хранятся устаревшие объекты, прежде чем будут удалены',
+	'Class:SynchroDataSource/Attribute:name' => 'Название',
+	'Class:SynchroDataSource/Attribute:name+' => 'Название',
+	'Class:SynchroDataSource/Attribute:description' => 'Описание',
+	'Class:SynchroDataSource/Attribute:status' => 'Статус', //TODO: enum values
+	'Class:SynchroDataSource/Attribute:scope_class' => 'Целевой класс',
+	'Class:SynchroDataSource/Attribute:user_id' => 'Пользователь',
+	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Контакт для уведомления',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Контакт для уведомления в случае ошибки',
+	'Class:SynchroDataSource/Attribute:url_icon' => 'Иконка (ссылка)',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Гиперссылка на иконку приложения-источника данных для отображения на страницах синхронизованных объектов',
+	'Class:SynchroDataSource/Attribute:url_application' => 'Приложение (ссылка)',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'Гиперссылка на объект в приложение-источнике данных. Возможные шаблоны: $this->attribute$ и $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Политика сопоставления', //TODO enum values
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Интервал устаревания',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Объект будет считаться устаревшим, если данные о нем в таблице синхронизации не обновлялись в течение этого интервала.',
-    'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Как минимум один атрибут должен быть выбран для поиска и сопоставления объектов, либо используйте политику сопоставления по primary_key.',
-    'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Срок хранения должен быть указан, поскольку объекты должны быть удалены после того, помечены как устаревшие.',
-    'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Устаревшие объекты должны быть обновлены, но способ обновления не указан.',
-    'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'Таблица %1$s уже существует в базе данных. Пожалуйста, используйте другое имя для таблицы данных из этого источника.',
-    'SynchroDataSource:Description' => 'Описание',
+	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Действие при нуле',
+	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Действие, если объект не найдет',
+	'Class:SynchroDataSource/Attribute:action_on_one' => 'Действие при единице',
+	'Class:SynchroDataSource/Attribute:action_on_one+' => 'Действие, если найден только один объект',
+	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Действие при множестве',
+	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Действие, если найдено несколько объектов',
+	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Авторизованные пользователи',
+	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Кому разрешено удаление синхронизируемых объектов',
+	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Авторизованные пользователи',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Nobody~~',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'Administrators only~~',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => 'All allowed users~~',
+	'Class:SynchroDataSource/Attribute:delete_policy_update' => 'Обновляемые атрибуты',
+	'Class:SynchroDataSource/Attribute:delete_policy_update+' => 'Формат: field_name:value; ... Пример: status:inactive',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Срок хранения',
+	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Сколько времени хранятся устаревшие объекты, прежде чем будут удалены',
+	'Class:SynchroDataSource/Attribute:database_table_name' => 'Таблица данных',
+	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Имя таблицы для хранения данных синхронизации. Если оставить поле пустым, будет назначено имя по умолчанию.',
+	'SynchroDataSource:Description' => 'Описание',
 	'SynchroDataSource:Reconciliation' => 'Поиск и сопоставление',
 	'SynchroDataSource:Deletion' => 'Устаревание и удаление',
 	'SynchroDataSource:Status' => 'Статус',
 	'SynchroDataSource:Information' => 'Инфо~~',
 	'SynchroDataSource:Definition' => 'Definition~~',
-
 	'Core:SynchroAttributes' => 'Атрибуты',
 	'Core:SynchroStatus' => 'Свойства~~',
-	'Core:Synchro:ErrorsLabel' => 'Ошибки~~',
+	'Core:Synchro:ErrorsLabel' => 'Ошибки~~',	
 	'Core:Synchro:CreatedLabel' => 'Создан~~',
 	'Core:Synchro:ModifiedLabel' => 'Изменен~~',
 	'Core:Synchro:UnchangedLabel' => 'Неизменен~~',
@@ -679,12 +646,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:SynchroUpdate:Yes' => 'Да~~',
 	'Core:SynchroUpdate:No' => 'Нет~~',
 	'Core:Synchro:LastestStatus' => 'Последний статус~~',
-	'Core:Synchro:History' => 'История синхронизаций~~',
+	'Core:Synchro:History' => 'История синхронизаций',
 	'Core:Synchro:NeverRun' => 'Синхронизация не запускалась. Логи отсутсвуют.~~',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Синхронизация была закончена в %1$s.~~',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Синхронизация запущена в %1$s сейчас в процессе...~~',
-	'Menu:DataSources' => 'Источники данных',
-	'Menu:DataSources+' => 'Источники синхронизируемых данных',
+	'Menu:DataSources' => 'Источники данных', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => 'Источники синхронизируемых данных', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Игнор. (%1$s)~~',
 	'Core:Synchro:label_repl_disappeared' => 'Невид. (%1$s)~~',
 	'Core:Synchro:label_repl_existing' => 'Existing (%1$s)~~',
@@ -694,7 +661,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:Synchro:label_obj_disappeared_errors' => 'Ошибки (%1$s)~~',
 	'Core:Synchro:label_obj_disappeared_no_action' => 'No Action (%1$s)~~',
 	'Core:Synchro:label_obj_unchanged' => 'Unchanged (%1$s)~~',
-	'Core:Synchro:label_obj_updated' => 'Обновлен (%1$s)~~',
+	'Core:Synchro:label_obj_updated' => 'Обновлен (%1$s)~~', 
 	'Core:Synchro:label_obj_updated_errors' => 'Ошибки (%1$s)~~',
 	'Core:Synchro:label_obj_new_unchanged' => 'Unchanged (%1$s)~~',
 	'Core:Synchro:label_obj_new_updated' => 'Обновлен (%1$s)~~',
@@ -704,7 +671,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:SynchroLogTitle' => '%1$s - %2$s~~',
 	'Core:Synchro:Nb_Replica' => 'Replica processed: %1$s~~',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s~~',
-
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Как минимум один атрибут должен быть выбран для поиска и сопоставления объектов, либо используйте политику сопоставления по primary_key.',			
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Срок хранения должен быть указан, поскольку объекты должны быть удалены после того, помечены как устаревшие.',			
+	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Устаревшие объекты должны быть обновлены, но способ обновления не указан.',
+	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'Таблица %1$s уже существует в базе данных. Пожалуйста, используйте другое имя для таблицы данных из этого источника.',
 	'Core:SynchroReplica:PublicData' => 'Public Data~~',
 	'Core:SynchroReplica:PrivateDetails' => 'Private Details~~',
 	'Core:SynchroReplica:BackToDataSource' => 'Go Back to the Synchro Data Source: %1$s~~',
@@ -746,7 +716,29 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => 'Предыдущее значение~~',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Лог',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Посл.значение',
-
+	'Class:SynchroDataSource' => 'Источник синхронизации данных',
+	'Class:SynchroDataSource/Attribute:status/Value:implementation' => 'Внедрение',
+	'Class:SynchroDataSource/Attribute:status/Value:obsolete' => 'Устаревшее',
+	'Class:SynchroDataSource/Attribute:status/Value:production' => 'Эксплуатация',
+	'Class:SynchroDataSource/Attribute:scope_restriction' => 'Объем ограничений',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_attributes' => 'Использовать атрибуты',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy/Value:use_primary_key' => 'Использовать primary_key значение',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:create' => 'Создать',
+	'Class:SynchroDataSource/Attribute:action_on_zero/Value:error' => 'Ошибка',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:error' => 'Ошибка',
+	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Обновить',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Создать',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Ошибка',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Использовать первый (случайно)',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Устаревшие объекты',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Удалить',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Игнорировать',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Обновить',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Обновить, затем удалить',
+	'Class:SynchroDataSource/Attribute:attribute_list' => 'Атрибуты',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Только администраторы',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Пользователи с правами на удаление',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Никто',
 	'Class:SynchroAttribute' => 'Синх.характеристики~~',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => 'Синхронизация данных',
 	'Class:SynchroAttribute/Attribute:attcode' => 'Код атрибута',
@@ -807,22 +799,18 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Предпочтения',
 	'Core:ExecProcess:Code1' => 'Неверная команда или команда завершена с ошибкой (возможно, неверное имя скрипта)',
 	'Core:ExecProcess:Code255' => 'Ошибка PHP (parsing, or runtime)~~',
-));
 
-//
-// Attribute Duration
-//
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Core:Duration_Seconds'	=> '%1$d с',
-	'Core:Duration_Minutes_Seconds'	=>'%1$d мин %2$d с',
-	'Core:Duration_Hours_Minutes_Seconds' => '%1$d ч %2$d мин %3$d с',
-	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s д %2$d ч %3$d мин %4$d с',
+	// Attribute Duration
+	'Core:Duration_Seconds'	=> '%1$d с',	
+	'Core:Duration_Minutes_Seconds'	=>'%1$d мин %2$d с',	
+	'Core:Duration_Hours_Minutes_Seconds' => '%1$d ч %2$d мин %3$d с',		
+	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s д %2$d ч %3$d мин %4$d с',		
 
-		// Explain working time computing
+	// Explain working time computing
 	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as "%1$s")',
 	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for "%1$s"',
 	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for "%1$s" at %2$d%%',
-
+	
 	// Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter "%1$s"',
 	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter "query". There is no Query Phrasebook corresponding to the id: "%1$s".',
@@ -874,7 +862,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:BulkExport:DateTimeFormat' => 'Date and Time format',
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s',
-
 	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
 	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
 	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
@@ -894,4 +881,3 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:Validator:MustBeInteger' => 'Должно быть целым числом',
 	'Core:Validator:MustSelectOne' => 'Пожалуйста, выберите значение',
 ));
-

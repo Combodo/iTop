@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * @author	LinProfs <info@linprofs.com>
  * 
@@ -26,7 +24,6 @@
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -36,36 +33,37 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Menu:ServiceManagement' => 'Service Management',
-	'Menu:ServiceManagement+' => 'Service Management Overzicht',
-	'Menu:Service:Overview' => 'Overzicht',
-	'Menu:Service:Overview+' => '',
-	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per service level',
-	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten met status',
-	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracten die in minder dan 30 dagen eindigen',
-	'Menu:ProviderContract' => 'Leveranciers contracten',
-	'Menu:ProviderContract+' => 'Leveranciers contracten',
-	'Menu:CustomerContract' => 'Klant contracten',
-	'Menu:CustomerContract+' => 'Klant contracten',
-	'Menu:ServiceSubcategory' => 'Dienst subcategorieën',
-	'Menu:ServiceSubcategory+' => 'Dienst subcategorieën',
-	'Menu:Service' => 'Diensten',
-	'Menu:Service+' => 'Diensten',
-	'Menu:ServiceElement' => 'Dienst elementen',
-	'Menu:ServiceElement+' => 'Dienst elementen',
-	'Menu:SLA' => 'SLAs',
-	'Menu:SLA+' => 'Service Level Agreements',
-	'Menu:SLT' => 'SLTs',
-	'Menu:SLT+' => 'Service Level Targets',
-	'Menu:DeliveryModel' => 'Delivery models',
-	'Menu:DeliveryModel+' => 'Delivery models',
-	'Menu:ServiceFamily' => 'Dienst families',
-	'Menu:ServiceFamily+' => 'Dienst families',
-	'Menu:Procedure' => 'Proceduren catalog',
-	'Menu:Procedure+' => 'Alle proceduren catalog',
+'Menu:ServiceManagement' => 'Service Management',
+'Menu:ServiceManagement+' => 'Service Management Overzicht',
+'Menu:Service:Overview' => 'Overzicht',
+'Menu:Service:Overview+' => '',
+'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per service level',
+'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten met status',
+'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracten die in minder dan 30 dagen eindigen',
+
+'Menu:ProviderContract' => 'Leveranciers contracten',
+'Menu:ProviderContract+' => 'Leveranciers contracten',
+'Menu:CustomerContract' => 'Klant contracten',
+'Menu:CustomerContract+' => 'Klant contracten',
+'Menu:ServiceSubcategory' => 'Dienst subcategorieën',
+'Menu:ServiceSubcategory+' => 'Dienst subcategorieën',
+'Menu:Service' => 'Diensten',
+'Menu:Service+' => 'Diensten',
+'Menu:ServiceElement' => 'Dienst elementen',
+'Menu:ServiceElement+' => 'Dienst elementen',
+'Menu:SLA' => 'SLAs',
+'Menu:SLA+' => 'Service Level Agreements',
+'Menu:SLT' => 'SLTs',
+'Menu:SLT+' => 'Service Level Targets',
+'Menu:DeliveryModel' => 'Delivery models',
+'Menu:DeliveryModel+' => 'Delivery models',
+'Menu:ServiceFamily' => 'Dienst families',
+'Menu:ServiceFamily+' => 'Dienst families',
+'Menu:Procedure' => 'Proceduren catalog',
+'Menu:Procedure+' => 'Alle proceduren catalog',
+
+
 
 ));
 
@@ -95,8 +93,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:ContractType' => 'Contract Type',
-	'Class:ContractType+' => '',
 	'Class:Contract' => 'Contract',
 	'Class:Contract+' => '',
 	'Class:Contract/Attribute:name' => 'Naam',
@@ -215,7 +211,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / ProviderContract',
+	'Class:lnkFunctionalCIToProviderContract' => 'Link FunctionalCI / ProviderContract',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider contract',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
@@ -528,3 +524,20 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 
 ?>
+
+//
+// Class: lnkSLAToSLT
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Slt metric',
+	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Slt request type',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Slt ticket priority',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Slt value',
+	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Slt value unit',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
+));

@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,15 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ChangeManagement' => 'Gerenciamento Mudanças',
 	'Menu:Change:Overview' => 'Visão geral',
@@ -46,6 +43,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-ChangeManagementOverview-Last-7-days' => 'Número de mudanças nos últimos 7 dias',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Mudanças por domínio nos últimos 7 dias',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Mudanças por domínio nos últimos 7 dias',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
 
 // Dictionnay conventions
@@ -292,8 +291,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EmergencyChange/Stimulus:ev_monitor+' => '',
 	'Class:EmergencyChange/Stimulus:ev_finish' => 'Finalizar',
 	'Class:EmergencyChange/Stimulus:ev_finish+' => '',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
 ));
 
 ?>

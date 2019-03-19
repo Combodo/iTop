@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,15 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:DeletedObjectLabel' => '%1s (excluído)',
 	'Core:DeletedObjectTip' => 'O objeto foi excluído em %1$s (%2$s)',
@@ -377,7 +374,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 ));
 
 //
-// Classes: EventWebService and EventRestService
+// Class: EventWebService
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
@@ -395,6 +392,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventWebService/Attribute:log_error+' => 'Resultado log de erro',
 	'Class:EventWebService/Attribute:data' => 'Dado',
 	'Class:EventWebService/Attribute:data+' => 'Resultado dado',
+));
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventRestService' => 'REST/JSON call~~',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
 	'Class:EventRestService/Attribute:operation' => 'Operation~~',
@@ -517,6 +517,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TriggerOnObject+' => 'Gatilho em uma determinada classe de objetos',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe alvo',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
+	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
+	'Class:TriggerOnObject/Attribute:filter+' => '~~',
+	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
+	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \\"%1$s\\"~~',
 ));
 
 //
@@ -558,7 +562,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 ));
 
 //
-// Class: TriggerOnObjectCreates
+// Class: TriggerOnObjectCreate
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
@@ -808,24 +812,21 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:appUserPreferences/Attribute:preferences' => 'Preferências',
 	'Core:ExecProcess:Code1' => 'Comando errado ou comando terminou com erros (por exemplo, nome do script errado)',
 	'Core:ExecProcess:Code255' => 'PHP erro (parsing, or runtime)',
-));
 
-//
-// Attribute Duration
-//
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	// Attribute Duration
 	'Core:Duration_Seconds'	=> '%1$ds',	
 	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',	
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',		
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',		
-	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
-	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \"%1$s\"~~',
-	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \"%1$s\")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \"%1$s\"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \"%1$s\" at %2$d%%~~',
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \"%1$s\"~~',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \"query\". There is no Query Phrasebook corresponding to the id: \"%1$s\".~~',
+
+	// Explain working time computing
+	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \\"%1$s\\")~~',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \\"%1$s\\"~~',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \\"%1$s\\" at %2$d%%~~',
+	
+	// Bulk export
+	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \\"%1$s\\"~~',
+	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \\"query\\". There is no Query Phrasebook corresponding to the id: \\"%1$s\\".~~',
 	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
 	'Core:BulkExportOf_Class' => '%1$s Export~~',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
@@ -858,8 +859,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:BulkExport:XMLOptions' => 'XML Options~~',
 	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)~~',
 	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
-	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
 	'Core:BulkExport:OptionNoLocalize' => 'Do not localize the values (for Enumerated fields)~~',
+	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
 	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
 	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
@@ -871,6 +872,23 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
 	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
 	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
+	'Core:BulkExport:DateTimeFormat' => 'Date and Time format~~',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
+	'Core:DateTime:Placeholder_d' => 'DD~~', // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D~~', // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM~~', // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M~~', // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY~~', // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY~~', // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh~~', // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h~~', // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh~~', // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h~~', // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm~~', // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM~~', // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm~~', // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss~~', // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Wrong format~~',
 	'Core:Validator:Mandatory' => 'Please, fill this field~~',
 	'Core:Validator:MustBeInteger' => 'Must be an integer~~',

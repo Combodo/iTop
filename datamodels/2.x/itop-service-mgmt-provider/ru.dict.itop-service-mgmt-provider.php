@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -9,8 +8,6 @@
  * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
  *
  */
-
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 'Menu:ServiceManagement' => 'Управление услугами',
 'Menu:ServiceManagement+' => 'Управление услугами',
@@ -39,6 +36,15 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 ));
 
+
+/*
+	'UI:ServiceManagementMenu' => 'Gestion des Services',
+	'UI:ServiceManagementMenu+' => 'Gestion des Services',
+	'UI:ServiceManagementMenu:Title' => 'Résumé des services & contrats',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contrats par niveau de service',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contrats par état',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contrats se terminant dans moins de 30 jours',
+*/
 
 //
 // Class: Organization
@@ -208,6 +214,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Название',
 	'Class:ServiceFamily/Attribute:name+' => '',
+	'Class:ServiceFamily/Attribute:icon' => 'Icon~~',
+	'Class:ServiceFamily/Attribute:icon+' => '',
 	'Class:ServiceFamily/Attribute:services_list' => 'Услуги',
 	'Class:ServiceFamily/Attribute:services_list+' => 'Связанные услуги',
 ));
@@ -227,10 +235,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Service/Attribute:organization_name+' => '',
 	'Class:Service/Attribute:description' => 'Описание',
 	'Class:Service/Attribute:description+' => '',
-	'Class:Service/Attribute:servicefamily_id' => 'Пакет услуг',
-	'Class:Service/Attribute:servicefamily_id+' => '',
-	'Class:Service/Attribute:servicefamily_name' => 'Пакет услуг',
-	'Class:Service/Attribute:servicefamily_name+' => '',
 	'Class:Service/Attribute:documents_list' => 'Документы',
 	'Class:Service/Attribute:documents_list+' => 'Связанные документы',
 	'Class:Service/Attribute:contacts_list' => 'Контакты',
@@ -243,6 +247,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Service/Attribute:status/Value:obsolete+' => 'Устаревшее',
 	'Class:Service/Attribute:status/Value:production' => 'Эксплуатация',
 	'Class:Service/Attribute:status/Value:production+' => 'Эксплуатация',
+	'Class:Service/Attribute:icon' => 'Icon~~',
+	'Class:Service/Attribute:icon+' => '',
 	'Class:Service/Attribute:customercontracts_list' => 'Договоры с заказчиками',
 	'Class:Service/Attribute:customercontracts_list+' => 'Договоры с заказчиками, по которым предоставляется услуга',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Подкатегории услуги',
@@ -314,7 +320,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ServiceSubcategory/Attribute:request_type/Value:service_request+' => 'Запрос на обслуживание',
 	'Class:ServiceSubcategory/Attribute:service_provider' => 'Поставщик',
 	'Class:ServiceSubcategory/Attribute:service_org_id' => 'Поставщик',
-
 ));
 
 //
@@ -491,4 +496,23 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Роль',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
+));
+
+?>
+
+//
+// Class: lnkSLAToSLT
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Slt metric',
+	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Slt request type',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Slt ticket priority',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Slt value',
+	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Slt value unit',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
 ));

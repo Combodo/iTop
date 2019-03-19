@@ -265,3 +265,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info',
 ));
+
+//
+// Class: UserRequest
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
+));

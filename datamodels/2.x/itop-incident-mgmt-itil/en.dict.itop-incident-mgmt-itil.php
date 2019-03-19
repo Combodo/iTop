@@ -238,3 +238,14 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info',
 	'Tickets:Related:OpenIncidents' => 'Open incidents',
 ));
+
+//
+// Class: Incident
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:Incident/Attribute:parent_problem_id' => 'Parent problem id',
+	'Class:Incident/Attribute:parent_problem_id+' => '',
+	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref',
+	'Class:Incident/Attribute:parent_problem_ref+' => '',
+));

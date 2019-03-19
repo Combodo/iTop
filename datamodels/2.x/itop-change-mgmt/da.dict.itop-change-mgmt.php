@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,13 +15,51 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
-
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Menu:ChangeManagement' => 'Change Management',
+	'Menu:Change:Overview' => 'Oversigt',
+	'Menu:Change:Overview+' => '',
+	'Menu:NewChange' => 'Ny Change',
+	'Menu:NewChange+' => '',
+	'Menu:SearchChanges' => 'Søg efter Changes',
+	'Menu:SearchChanges+' => '',
+	'Menu:Change:Shortcuts' => 'Genveje',
+	'Menu:Change:Shortcuts+' => '',
+	'Menu:WaitingAcceptance' => 'Changes der afventer accept',
+	'Menu:WaitingAcceptance+' => '',
+	'Menu:WaitingApproval' => 'Changes der afventer godkendelse',
+	'Menu:WaitingApproval+' => '',
+	'Menu:Changes' => 'Åbne Changes',
+	'Menu:Changes+' => '',
+	'Menu:MyChanges' => 'Changes tildelt til mig',
+	'Menu:MyChanges+' => '',
+	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes de sidste 7 dage efter kategori',
+	'UI-ChangeManagementOverview-Last-7-days' => 'Antal Changes i de sidste 7 dage',
+	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes de sidste 7 dage efter type',
+	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes de sidste 7 dage efter status',
+	'Tickets:Related:OpenChanges' => 'Open changes~~',
+	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+));
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+
+
+//
+// Class: Change
+//
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Change' => 'Change',
@@ -58,8 +96,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Change/Attribute:reject_reason+' => '',
 	'Class:Change/Attribute:changemanager_id' => 'Change Manager',
 	'Class:Change/Attribute:changemanager_id+' => '',
+	'Class:Change/Attribute:changemanager_email' => 'Change Manager Email',
+	'Class:Change/Attribute:changemanager_email+' => '',
 	'Class:Change/Attribute:parent_id' => 'Parent Change',
 	'Class:Change/Attribute:parent_id+' => '',
+	'Class:Change/Attribute:parent_name' => 'Parent Change ref',
+	'Class:Change/Attribute:parent_name+' => '',
 	'Class:Change/Attribute:creation_date' => 'Oprettelsesdato',
 	'Class:Change/Attribute:creation_date+' => '',
 	'Class:Change/Attribute:approval_date' => 'Godkendelsesdato',
@@ -68,8 +110,14 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Change/Attribute:fallback_plan+' => '',
 	'Class:Change/Attribute:related_request_list' => 'Relaterede Requests',
 	'Class:Change/Attribute:related_request_list+' => '',
+	'Class:Change/Attribute:related_incident_list' => 'Relaterede Incidents',
+	'Class:Change/Attribute:related_incident_list+' => '',
+	'Class:Change/Attribute:related_problems_list' => 'Relaterede problemer',
+	'Class:Change/Attribute:related_problems_list+' => '',
 	'Class:Change/Attribute:child_changes_list' => 'Afledte Changes',
 	'Class:Change/Attribute:child_changes_list+' => '',
+	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change Friendly Name',
+	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Stimulus:ev_assign' => 'Tildel',
 	'Class:Change/Stimulus:ev_assign+' => '',
 	'Class:Change/Stimulus:ev_plan' => 'Planlæg',
@@ -82,41 +130,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Change/Stimulus:ev_approve+' => '',
 	'Class:Change/Stimulus:ev_finish' => 'Luk',
 	'Class:Change/Stimulus:ev_finish+' => '',
-	'Menu:ChangeManagement' => 'Change Management',
-	'Menu:Change:Overview' => 'Oversigt',
-	'Menu:Change:Overview+' => '',
-	'Menu:NewChange' => 'Ny Change',
-	'Menu:NewChange+' => '',
-	'Menu:SearchChanges' => 'Søg efter Changes',
-	'Menu:SearchChanges+' => '',
-	'Menu:Change:Shortcuts' => 'Genveje',
-	'Menu:Change:Shortcuts+' => '',
-	'Menu:WaitingAcceptance' => 'Changes der afventer accept',
-	'Menu:WaitingAcceptance+' => '',
-	'Menu:WaitingApproval' => 'Changes der afventer godkendelse',
-	'Menu:WaitingApproval+' => '',
-	'Menu:Changes' => 'Åbne Changes',
-	'Menu:Changes+' => '',
-	'Menu:MyChanges' => 'Changes tildelt til mig',
-	'Menu:MyChanges+' => '',
-	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes de sidste 7 dage efter kategori',
-	'UI-ChangeManagementOverview-Last-7-days' => 'Antal Changes i de sidste 7 dage',
-	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes de sidste 7 dage efter type',
-	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes de sidste 7 dage efter status',
-	'Class:Change/Attribute:changemanager_email' => 'Change Manager Email',
-	'Class:Change/Attribute:changemanager_email+' => '',
-	'Class:Change/Attribute:parent_name' => 'Parent Change ref',
-	'Class:Change/Attribute:parent_name+' => '',
-	'Class:Change/Attribute:related_incident_list' => 'Relaterede Incidents',
-	'Class:Change/Attribute:related_incident_list+' => '',
-	'Class:Change/Attribute:parent_id_friendlyname' => 'Parent Change Friendly Name',
-	'Class:Change/Attribute:parent_id_friendlyname+' => '',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
-	'Class:Change/Attribute:related_problems_list' => 'Relaterede problemer',
-	'Class:Change/Attribute:related_problems_list+' => '',
 	'Class:Change/Attribute:outage' => 'Nedetid',
+	'Class:Change/Attribute:outage+' => '',
 	'Class:Change/Attribute:outage/Value:no' => 'Nej',
+	'Class:Change/Attribute:outage/Value:no+' => '',
 	'Class:Change/Attribute:outage/Value:yes' => 'Ja',
+	'Class:Change/Attribute:outage/Value:yes+' => '',
 ));
+
 ?>

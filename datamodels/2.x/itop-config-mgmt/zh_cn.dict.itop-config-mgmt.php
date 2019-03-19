@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,20 +15,16 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 //////////////////////////////////////////////////////////////////////
 // Relations
 //////////////////////////////////////////////////////////////////////
 //
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Relation:impacts/Description' => '被影响的元素',
 	'Relation:impacts/DownStream' => '影响...',
@@ -231,7 +227,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document/Attribute:name' => '名称',
 	'Class:Document/Attribute:name+' => '',
 	'Class:Document/Attribute:org_id' => '组织',
-	'Class:Document/Attribute:description+' => '',
+	'Class:Document/Attribute:org_id+' => '~~',
 	'Class:Document/Attribute:org_name' => '组织名称',
 	'Class:Document/Attribute:org_name+' => '',
 	'Class:Document/Attribute:documenttype_id' => '文档类型',
@@ -250,12 +246,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document/Attribute:status/Value:obsolete+' => '',
 	'Class:Document/Attribute:status/Value:published' => '已发布',
 	'Class:Document/Attribute:status/Value:published+' => '',
-	'Class:Document/Attribute:ci_list' => 'CI',
-	'Class:Document/Attribute:ci_list+' => '参照该文档的CI',
-	'Class:Document/Attribute:contract_list' => '合同',
-	'Class:Document/Attribute:contract_list+' => '参照该文档的合同',
-	'Class:Document/Attribute:service_list' => '服务',
-	'Class:Document/Attribute:service_list+' => '参照该文档的服务',
+	'Class:Document/Attribute:cis_list' => 'CIs~~',
+	'Class:Document/Attribute:cis_list+' => 'All the configuration items linked to this document~~',
+	'Class:Document/Attribute:contracts_list' => 'Contracts~~',
+	'Class:Document/Attribute:contracts_list+' => 'All the contracts linked to this document~~',
+	'Class:Document/Attribute:services_list' => 'Services~~',
+	'Class:Document/Attribute:services_list+' => 'All the services linked to this document~~',
 	'Class:Document/Attribute:finalclass' => 'Document sub-class',
 	'Class:Document/Attribute:finalclass+' => 'Name of the final class',
 ));
@@ -1563,8 +1559,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP 地址',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
-	
-	
+
+
 	'Class:IPInterface/Attribute:macaddress' => 'MAC 地址',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => '注释',

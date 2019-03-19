@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -16,13 +16,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license	 http://opensource.org/licenses/AGPL-3.0
  */
-
-
 // Portal
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Page:DefaultTitle' => 'Portail utilisateur %1$s',
@@ -31,7 +28,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Page:GoPortalHome' => 'Revenir à l\'accueil',
 	'Page:GoPreviousPage' => 'Page précédente',
     'Page:ReloadPage' => 'Recharger la page',
-    'Portal:Button:Submit' => 'Valider',
+	'Portal:Button:Submit' => 'Valider',
     'Portal:Button:Apply' => 'Mettre à jour',
 	'Portal:Button:Cancel' => 'Annuler',
 	'Portal:Button:Close' => 'Fermer',
@@ -46,7 +43,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Error:HTTP:GetHelp' => 'Si le problème persiste, veuillez contacter votre administrateur %1$s.',
 	'Error:XHR:Fail' => 'Impossible de charger les données, veuillez contacter votre administrateur %1$s si le problème persiste.',
     'Portal:ErrorUserLoggedOut' => 'Vous êtes déconnecté et devez vous reconnecter pour continuer.',
-	'Portal:Datatables:Language:Processing' => 'Veuillez patienter...',
+    'Portal:Datatables:Language:Processing' => 'Veuillez patienter...',
 	'Portal:Datatables:Language:Search' => 'Filtrer :',
 	'Portal:Datatables:Language:LengthMenu' => 'Afficher _MENU_ éléments par page',
 	'Portal:Datatables:Language:ZeroRecords' => 'Aucun résultat',
@@ -91,7 +88,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:Browse:Name' => 'Navigation dans les éléments',
 	'Brick:Portal:Browse:Mode:List' => 'Liste',
-    'Brick:Portal:Browse:Mode:Tree' => 'Hiérarchie',
+	'Brick:Portal:Browse:Mode:Tree' => 'Hiérarchie',
     'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaïque',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Parcourir',
 	'Brick:Portal:Browse:Action:View' => 'Détails',
@@ -145,4 +142,3 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'Brick:Portal:Filter:SearchInput:Placeholder' => 'ex : connecter wifi',
     'Brick:Portal:Filter:SearchInput:Submit' => 'Rechercher',
 ));
-

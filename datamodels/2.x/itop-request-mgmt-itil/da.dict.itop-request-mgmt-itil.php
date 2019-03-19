@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,13 +15,57 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
-
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Menu:RequestManagement' => 'Helpdesk',
+	'Menu:RequestManagement+' => '',
+	'Menu:RequestManagementProvider' => 'Helpdesk Leverandør',
+	'Menu:RequestManagementProvider+' => '',
+	'Menu:UserRequest:Provider' => 'Åbne brugerhenvendelser ved leverandør',
+	'Menu:UserRequest:Provider+' => '',
+	'Menu:UserRequest:Overview' => 'Oversigt',
+	'Menu:UserRequest:Overview+' => '',
+	'Menu:NewUserRequest' => 'Ny Bruger henvendelse',
+	'Menu:NewUserRequest+' => '',
+	'Menu:SearchUserRequests' => 'Søg efter brugerhenvendelser',
+	'Menu:SearchUserRequests+' => '',
+	'Menu:UserRequest:Shortcuts' => 'Genveje',
+	'Menu:UserRequest:Shortcuts+' => '',
+	'Menu:UserRequest:MyRequests' => 'Mine henvendelser',
+	'Menu:UserRequest:MyRequests+' => '',
+	'Menu:UserRequest:MySupportRequests' => 'Mine Support henvendelser',
+	'Menu:UserRequest:MySupportRequests+' => '',
+	'Menu:UserRequest:EscalatedRequests' => 'Eskalerede Brugerhenvendelser',
+	'Menu:UserRequest:EscalatedRequests+' => '',
+	'Menu:UserRequest:OpenRequests' => 'Alle åbne brugerhenvendelser',
+	'Menu:UserRequest:OpenRequests+' => '',
+	'UI:WelcomeMenu:MyAssignedCalls' => 'Mine tildelte henvendelser',
+	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Brugerhenvendelser de sidste 14 dage efter type',
+	'UI-RequestManagementOverview-Last-14-days' => 'Antal Brugerhenvendelser de sidste 14 dage',
+	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Åbne brugerhenvendelser efter status',
+	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Åbne brugerhenvendelser efter tildelt til',
+	'UI-RequestManagementOverview-OpenRequestByType' => 'Åbne brugerhenvendelser efter type',
+	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Åbne brugerhenvendelser efter bruger',
+	'Class:UserRequest:KnownErrorList' => 'Known Errors',
+));
+
+// Dictionnay conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+
+//
+// Class: UserRequest
+//
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserRequest' => 'Brugerhenvendelse',
@@ -84,16 +128,24 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserRequest/Attribute:origin+' => '',
 	'Class:UserRequest/Attribute:origin/Value:mail' => 'Mail',
 	'Class:UserRequest/Attribute:origin/Value:mail+' => '',
+	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoring',
+	'Class:UserRequest/Attribute:origin/Value:monitoring+' => '',
 	'Class:UserRequest/Attribute:origin/Value:phone' => 'Telefon',
 	'Class:UserRequest/Attribute:origin/Value:phone+' => '',
 	'Class:UserRequest/Attribute:origin/Value:portal' => 'Portal',
 	'Class:UserRequest/Attribute:origin/Value:portal+' => '',
 	'Class:UserRequest/Attribute:approver_id' => 'Godkender',
 	'Class:UserRequest/Attribute:approver_id+' => '',
+	'Class:UserRequest/Attribute:approver_email' => 'Godkender Email',
+	'Class:UserRequest/Attribute:approver_email+' => '',
 	'Class:UserRequest/Attribute:service_id' => 'Ydelse',
 	'Class:UserRequest/Attribute:service_id+' => '',
+	'Class:UserRequest/Attribute:service_name' => 'Ydelses navn',
+	'Class:UserRequest/Attribute:service_name+' => '',
 	'Class:UserRequest/Attribute:servicesubcategory_id' => 'Ydelse underkategori',
 	'Class:UserRequest/Attribute:servicesubcategory_id+' => '',
+	'Class:UserRequest/Attribute:servicesubcategory_name' => 'Ydelse underkategori navn',
+	'Class:UserRequest/Attribute:servicesubcategory_name+' => '',
 	'Class:UserRequest/Attribute:escalation_flag' => 'Eskalations Flag',
 	'Class:UserRequest/Attribute:escalation_flag+' => '',
 	'Class:UserRequest/Attribute:escalation_flag/Value:no' => 'Nej',
@@ -150,10 +202,18 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserRequest/Attribute:pending_reason+' => '',
 	'Class:UserRequest/Attribute:parent_request_id' => 'Parent Anmodning',
 	'Class:UserRequest/Attribute:parent_request_id+' => '',
+	'Class:UserRequest/Attribute:parent_incident_id' => 'Parent incident~~',
+	'Class:UserRequest/Attribute:parent_incident_id+' => '~~',
+	'Class:UserRequest/Attribute:parent_request_ref' => 'Parent Brugerhenvendelse Reference',
+	'Class:UserRequest/Attribute:parent_request_ref+' => '',
 	'Class:UserRequest/Attribute:parent_problem_id' => 'Parent Problem',
 	'Class:UserRequest/Attribute:parent_problem_id+' => '',
+	'Class:UserRequest/Attribute:parent_problem_ref' => 'Parent Incident Reference',
+	'Class:UserRequest/Attribute:parent_problem_ref+' => '',
 	'Class:UserRequest/Attribute:parent_change_id' => 'Parent Change',
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
+	'Class:UserRequest/Attribute:parent_change_ref' => 'Parent Change Reference',
+	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Afledte Anmodninger',
 	'Class:UserRequest/Attribute:related_request_list+' => '',
 	'Class:UserRequest/Attribute:public_log' => 'Offentlig Log',
@@ -170,6 +230,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserRequest/Attribute:user_satisfaction/Value:4+' => '',
 	'Class:UserRequest/Attribute:user_comment' => 'Bruger kommentar',
 	'Class:UserRequest/Attribute:user_comment+' => '',
+	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'Parent Brugerhenvendelse Id Friendly Name',
+	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
 	'Class:UserRequest/Stimulus:ev_assign' => 'Tildelt',
 	'Class:UserRequest/Stimulus:ev_assign+' => '',
 	'Class:UserRequest/Stimulus:ev_reassign' => 'Forny tildeling',
@@ -194,55 +256,17 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:UserRequest/Stimulus:ev_reopen+' => '',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval' => 'Afventer godkendelse',
 	'Class:UserRequest/Stimulus:ev_wait_for_approval+' => '',
-	'Menu:RequestManagement' => 'Helpdesk',
-	'Menu:RequestManagement+' => '',
-	'Menu:RequestManagementProvider' => 'Helpdesk Leverandør',
-	'Menu:RequestManagementProvider+' => '',
-	'Menu:UserRequest:Provider' => 'Åbne brugerhenvendelser ved leverandør',
-	'Menu:UserRequest:Provider+' => '',
-	'Menu:UserRequest:Overview' => 'Oversigt',
-	'Menu:UserRequest:Overview+' => '',
-	'Menu:NewUserRequest' => 'Ny Bruger henvendelse',
-	'Menu:NewUserRequest+' => '',
-	'Menu:SearchUserRequests' => 'Søg efter brugerhenvendelser',
-	'Menu:SearchUserRequests+' => '',
-	'Menu:UserRequest:Shortcuts' => 'Genveje',
-	'Menu:UserRequest:Shortcuts+' => '',
-	'Menu:UserRequest:MyRequests' => 'Mine henvendelser',
-	'Menu:UserRequest:MyRequests+' => '',
-	'Menu:UserRequest:MySupportRequests' => 'Mine Support henvendelser',
-	'Menu:UserRequest:MySupportRequests+' => '',
-	'Menu:UserRequest:EscalatedRequests' => 'Eskalerede Brugerhenvendelser',
-	'Menu:UserRequest:EscalatedRequests+' => '',
-	'Menu:UserRequest:OpenRequests' => 'Alle åbne brugerhenvendelser',
-	'Menu:UserRequest:OpenRequests+' => '',
-	'UI:WelcomeMenu:MyAssignedCalls' => 'Mine tildelte henvendelser',
-	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Brugerhenvendelser de sidste 14 dage efter type',
-	'UI-RequestManagementOverview-Last-14-days' => 'Antal Brugerhenvendelser de sidste 14 dage',
-	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Åbne brugerhenvendelser efter status',
-	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Åbne brugerhenvendelser efter tildelt til',
-	'UI-RequestManagementOverview-OpenRequestByType' => 'Åbne brugerhenvendelser efter type',
-	'UI-RequestManagementOverview-OpenRequestByCustomer' => 'Åbne brugerhenvendelser efter bruger',
-	'Class:UserRequest:KnownErrorList' => 'Known Errors',
-	'Class:UserRequest/Attribute:origin/Value:monitoring' => 'Monitoring',
-	'Class:UserRequest/Attribute:origin/Value:monitoring+' => '',
-	'Class:UserRequest/Attribute:approver_email' => 'Godkender Email',
-	'Class:UserRequest/Attribute:approver_email+' => '',
-	'Class:UserRequest/Attribute:service_name' => 'Ydelses navn',
-	'Class:UserRequest/Attribute:service_name+' => '',
-	'Class:UserRequest/Attribute:servicesubcategory_name' => 'Ydelse underkategori navn',
-	'Class:UserRequest/Attribute:servicesubcategory_name+' => '',
-	'Class:UserRequest/Attribute:parent_request_ref' => 'Parent Brugerhenvendelse Reference',
-	'Class:UserRequest/Attribute:parent_request_ref+' => '',
-	'Class:UserRequest/Attribute:parent_problem_ref' => 'Parent Incident Reference',
-	'Class:UserRequest/Attribute:parent_problem_ref+' => '',
-	'Class:UserRequest/Attribute:parent_change_ref' => 'Parent Change Reference',
-	'Class:UserRequest/Attribute:parent_change_ref+' => '',
-	'Class:UserRequest/Attribute:parent_request_id_friendlyname' => 'Parent Brugerhenvendelse Id Friendly Name',
-	'Class:UserRequest/Attribute:parent_request_id_friendlyname+' => '',
-	'Class:UserRequest/Attribute:parent_incident_id' => 'Parent incident~~',
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Cannot assign the Parent request to the request itself~~',
+
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));
-?>
+
+//
+// Class: UserRequest
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
+));

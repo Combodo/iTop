@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,12 +15,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @copyright   Copyright (C) 2010-2014 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:DataSources' => '同期データソース',
 	'Menu:DataSources+' => '全ての同期データソース',
@@ -55,4 +53,31 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:UserAccountsMenu+' => 'ユーザアカウント',
 	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
 	'Menu:MyShortcuts' => '私のショートカット',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:AbstractResource' => 'AbstractResource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:ResourceAdminMenu' => 'ResourceAdminMenu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:ResourceRunQueriesMenu' => 'ResourceRunQueriesMenu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
 ));

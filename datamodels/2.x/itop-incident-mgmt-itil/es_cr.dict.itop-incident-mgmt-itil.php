@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
@@ -24,8 +22,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:IncidentManagement' => 'Administración de Incidentes',
 	'Menu:IncidentManagement+' => 'Administración de Incidentes',
 	'Menu:Incident:Overview' => 'Resumen de Incidentes',
@@ -66,7 +63,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: Incident
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Incident' => 'Incidente',
 	'Class:Incident+' => 'Incidente',
 	'Class:Incident/Attribute:status' => 'Estatus',
@@ -195,8 +192,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Attribute:parent_change_id+' => 'Cambio Padre',
 	'Class:Incident/Attribute:parent_change_ref' => 'Ref. Cambio Padre',
 	'Class:Incident/Attribute:parent_change_ref+' => 'Ref. Cambio Padre',
-	'Class:Incident/Attribute:parent_problem_id' => 'Problema Padre',
-	'Class:Incident/Attribute:parent_problem_id+' => 'Problema Padre',
 	'Class:Incident/Attribute:related_request_list' => 'Requerimientos Relacionados',
 	'Class:Incident/Attribute:related_request_list+' => 'Requerimientos Relacionados',
 	'Class:Incident/Attribute:child_incidents_list' => 'Incidentes Hijos',
@@ -236,7 +231,19 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident/Stimulus:ev_reopen' => 'Reabrir',
 	'Class:Incident/Stimulus:ev_reopen+' => 'Reabrir',
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'No puede asignarse el incidente Padre a si mismo',
+
 	'Class:Incident/Method:ResolveChildTickets' => 'Resolver tickets hijos',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascadear la solución a los tickets hijos (ev_autoresolve), y alinear las siguientes características: servicio, equipo, agente, información de solución',
 	'Tickets:Related:OpenIncidents' => 'Incidentes Abiertos',
+));
+
+//
+// Class: Incident
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:Incident/Attribute:parent_problem_id' => 'Problema Padre',
+	'Class:Incident/Attribute:parent_problem_id+' => 'Problema Padre',
+	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref~~',
+	'Class:Incident/Attribute:parent_problem_ref+' => '~~',
 ));

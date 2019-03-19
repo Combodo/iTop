@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,13 +15,38 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
  * @author	Erik Bøg <erik@boegmoeller.dk>
-
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+        'Menu:ProblemManagement' => 'Problem Management',
+        'Menu:ProblemManagement+' => 'Problem Management',
+    	'Menu:Problem:Overview' => 'Oversigt',
+    	'Menu:Problem:Overview+' => 'Oversigt',
+    	'Menu:NewProblem' => 'Nyt Problem',
+    	'Menu:NewProblem+' => 'Nyt Problem',
+    	'Menu:SearchProblems' => 'Søg efter problem',
+    	'Menu:SearchProblems+' => 'Søg efter problem',
+    	'Menu:Problem:Shortcuts' => 'Genvej',
+        'Menu:Problem:MyProblems' => 'Mine Problemer',
+        'Menu:Problem:MyProblems+' => 'Mine Problemer',
+        'Menu:Problem:OpenProblems' => 'Alle uløste problemer',
+        'Menu:Problem:OpenProblems+' => 'Alle uløste problemer',
+	'UI-ProblemManagementOverview-ProblemByService' => 'Problemer efter ydelse',
+	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemer efter ydelse',
+	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemer efter prioritet',
+	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problemer efter prioritet',
+	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Ikke tildelte problemer',
+	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Ikke tildelte problemer',
+	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard for problem Management',
+	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard for problem Management',
+
+));
+//
+// Class: Problem
+//
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Problem' => 'Problem',
@@ -38,8 +63,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Problem/Attribute:status/Value:closed+' => '',
 	'Class:Problem/Attribute:service_id' => 'Service',
 	'Class:Problem/Attribute:service_id+' => '',
+	'Class:Problem/Attribute:service_name' => 'Navn',
+	'Class:Problem/Attribute:service_name+' => '',
 	'Class:Problem/Attribute:servicesubcategory_id' => 'Service Kategori',
 	'Class:Problem/Attribute:servicesubcategory_id+' => '',
+	'Class:Problem/Attribute:servicesubcategory_name' => 'Navn',
+	'Class:Problem/Attribute:servicesubcategory_name+' => '',
 	'Class:Problem/Attribute:product' => 'Produkt',
 	'Class:Problem/Attribute:product+' => '',
 	'Class:Problem/Attribute:impact' => 'Påvirkning',
@@ -72,6 +101,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Problem/Attribute:priority/Value:4+' => '',
 	'Class:Problem/Attribute:related_change_id' => 'Relateret Change',
 	'Class:Problem/Attribute:related_change_id+' => '',
+	'Class:Problem/Attribute:related_change_ref' => 'Ref',
+	'Class:Problem/Attribute:related_change_ref+' => '',
 	'Class:Problem/Attribute:assignment_date' => 'Dato tildelt',
 	'Class:Problem/Attribute:assignment_date+' => '',
 	'Class:Problem/Attribute:resolution_date' => 'Dato løst',
@@ -80,6 +111,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Problem/Attribute:knownerrors_list+' => '',
 	'Class:Problem/Attribute:related_request_list' => 'Relateret Requests',
 	'Class:Problem/Attribute:related_request_list+' => '',
+	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
+	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 	'Class:Problem/Stimulus:ev_assign' => 'Tildel',
 	'Class:Problem/Stimulus:ev_assign+' => '',
 	'Class:Problem/Stimulus:ev_reassign' => 'Forny tildeling',
@@ -88,34 +121,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Problem/Stimulus:ev_resolve+' => '',
 	'Class:Problem/Stimulus:ev_close' => 'Luk',
 	'Class:Problem/Stimulus:ev_close+' => '',
-	'Menu:ProblemManagement' => 'Problem Management',
-	'Menu:ProblemManagement+' => 'Problem Management',
-	'Menu:Problem:Overview' => 'Oversigt',
-	'Menu:Problem:Overview+' => 'Oversigt',
-	'Menu:NewProblem' => 'Nyt Problem',
-	'Menu:NewProblem+' => 'Nyt Problem',
-	'Menu:SearchProblems' => 'Søg efter problem',
-	'Menu:SearchProblems+' => 'Søg efter problem',
-	'Menu:Problem:Shortcuts' => 'Genvej',
-	'Menu:Problem:MyProblems' => 'Mine Problemer',
-	'Menu:Problem:MyProblems+' => 'Mine Problemer',
-	'Menu:Problem:OpenProblems' => 'Alle uløste problemer',
-	'Menu:Problem:OpenProblems+' => 'Alle uløste problemer',
-	'UI-ProblemManagementOverview-ProblemByService' => 'Problemer efter ydelse',
-	'UI-ProblemManagementOverview-ProblemByService+' => 'Problemer efter ydelse',
-	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problemer efter prioritet',
-	'UI-ProblemManagementOverview-ProblemByPriority+' => 'Problemer efter prioritet',
-	'UI-ProblemManagementOverview-ProblemUnassigned' => 'Ikke tildelte problemer',
-	'UI-ProblemManagementOverview-ProblemUnassigned+' => 'Ikke tildelte problemer',
-	'UI:ProblemMgmtMenuOverview:Title' => 'Dashboard for problem Management',
-	'UI:ProblemMgmtMenuOverview:Title+' => 'Dashboard for problem Management',
-	'Class:Problem/Attribute:service_name' => 'Navn',
-	'Class:Problem/Attribute:service_name+' => '',
-	'Class:Problem/Attribute:servicesubcategory_name' => 'Navn',
-	'Class:Problem/Attribute:servicesubcategory_name+' => '',
-	'Class:Problem/Attribute:related_change_ref' => 'Ref',
-	'Class:Problem/Attribute:related_change_ref+' => '',
-	'Class:Problem/Attribute:related_incident_list' => 'Related incidents~~',
-	'Class:Problem/Attribute:related_incident_list+' => 'All the incidents that are related to this problem~~',
 ));
+
 ?>

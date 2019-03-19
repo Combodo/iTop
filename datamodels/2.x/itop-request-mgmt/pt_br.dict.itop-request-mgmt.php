@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -15,15 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
  * Localized data
  *
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:RequestManagement' => 'Gerenciamento Solicitações',
 	'Menu:RequestManagement+' => 'Gerenciamento Solicitações',
@@ -41,8 +38,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:UserRequest:Shortcuts+' => '',
 	'Menu:UserRequest:MyRequests' => 'Solicitações abertas por mim',
 	'Menu:UserRequest:MyRequests+' => 'Solicitações abertas por mim (como agente)',
-	'Menu:UserRequest:MySupportRequests' => "Minhas solicitações de suporte",
-	'Menu:UserRequest:MySupportRequests+' => "Minhas solicitações de suporte",
+	'Menu:UserRequest:MySupportRequests' => 'Minhas solicitações de suporte',
+	'Menu:UserRequest:MySupportRequests+' => 'Minhas solicitações de suporte',
 	'Menu:UserRequest:EscalatedRequests' => 'Hot requests',
 	'Menu:UserRequest:EscalatedRequests+' => 'Hot requests',
 	'Menu:UserRequest:OpenRequests' => 'Todas solicitações abertas',
@@ -58,6 +55,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:UserRequest:MyWorkOrders' => 'Ordens de serviço atribuídas a mim',
 	'Menu:UserRequest:MyWorkOrders+' => 'Todas as Ordens de serviço atribuídos a min',
 	'Class:Problem:KnownProblemList' => 'Problemas conhecidos',
+	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
 ));
 
 // Dictionnay conventions
@@ -275,12 +273,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:ShowServices' => 'Catálogo dos serviços',
 	'Portal:SelectRequestType' => 'Selecione um tipo de solicitação',
 	'Portal:SelectServiceElementFrom_Service' => 'Selecione um serviço para %1$s',
-	'Portal:SelectRequestTemplate' => 'Selecione um modelo para %1$s',
 	'Portal:ListServices' => 'Lista dos serviços',
 	'Portal:TitleDetailsFor_Service' => 'Detalhes dos serviços',
 	'Portal:Button:CreateRequestFromService' => 'Criar uma solicitação para esse serviço',
 	'Portal:ListOpenRequests' => 'Lista solicitações abertas',
-	'Portal:UserRequest:MoreInfo' => 'Mais informações',
+'Portal:UserRequest:MoreInfo' => 'Mais informações',
 	'Portal:Details-Service-Element' => 'Elementos do Serviço',
 	'Portal:NoClosedTicket' => 'Nenhuma solicitação fechada',
 	'Portal:NoService' => '',
@@ -288,10 +285,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:ShowProblem' => 'Problemas',
 	'Portal:ShowFaqs' => 'FAQs',
 	'Portal:NoOpenProblem' => 'Nenhum problema aberto',
-	'Portal:SelectLanguage' => "Alterar sua linguagem",
+	'Portal:SelectLanguage' => 'Alterar sua linguagem',
 	'Portal:LanguageChangedTo_Lang' => 'Linguagem alterada para',
 	'Portal:ChooseYourFavoriteLanguage' => 'Escolha sua linguagem favorita',
-	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
+
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
 ));
