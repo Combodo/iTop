@@ -146,3 +146,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Problem/Stimulus:ev_close' => 'Cerrar',
 	'Class:Problem/Stimulus:ev_close+' => 'Cerrar',
 ));
+
+?>

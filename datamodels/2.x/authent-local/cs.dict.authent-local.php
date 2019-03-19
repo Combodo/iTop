@@ -41,3 +41,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:UserLocal/Attribute:password' => 'Heslo',
 	'Class:UserLocal/Attribute:password+' => '',
 ));
+
+
+
+?>

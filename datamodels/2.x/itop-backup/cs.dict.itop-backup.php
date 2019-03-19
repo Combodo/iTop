@@ -44,3 +44,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'bkp-wait-restore' => 'Vyčkejte prosím na dokončení obnovy',
 	'bkp-success-restore' => 'Obnova úspěšně dokončena.',
 ));
+?>

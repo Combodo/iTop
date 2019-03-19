@@ -147,3 +147,5 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Problem/Stimulus:ev_close' => 'Uzavřít',
 	'Class:Problem/Stimulus:ev_close+' => '',
 ));
+
+?>

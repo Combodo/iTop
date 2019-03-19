@@ -240,3 +240,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascader l\'action de résolution du ticket (ev_autoresolve) vers les requêtes et incidents fils, et aligner les caractéristiques suivantes : service, équipe, agent, information de résolution',
 	'Tickets:Related:OpenIncidents' => 'Open incidents',
 ));
+
+//
+// Class: Incident
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Incident/Attribute:parent_problem_id' => 'Problème lié',
+	'Class:Incident/Attribute:parent_problem_id+' => '',
+	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref~~',
+	'Class:Incident/Attribute:parent_problem_ref+' => '~~',
+));

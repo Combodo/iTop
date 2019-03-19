@@ -253,3 +253,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolved',
 	'Brick:Portal:ClosedRequests:Title' => 'Closed requests',
 ));
+
+//
+// Class: lnkFunctionalCIToTicket
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
+));

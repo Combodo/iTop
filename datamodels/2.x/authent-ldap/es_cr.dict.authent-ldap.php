@@ -38,3 +38,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:UserLDAP' => 'Usuario LDAP',
 	'Class:UserLDAP+' => 'Usuario Autenticado vía LDAP',
 ));
+
+
+
+?>

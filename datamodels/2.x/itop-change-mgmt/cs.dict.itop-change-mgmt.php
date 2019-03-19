@@ -140,3 +140,5 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Change/Attribute:outage/Value:yes' => 'Ano',
 	'Class:Change/Attribute:outage/Value:yes+' => '',
 ));
+
+?>

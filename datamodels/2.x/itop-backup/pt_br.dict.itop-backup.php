@@ -42,3 +42,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'bkp-wait-restore' => 'Por favor, aguarde a restauração concluir...',
 	'bkp-success-restore' => 'Restauração concluída com sucesso.',
 ));
+?>
