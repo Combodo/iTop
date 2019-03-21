@@ -273,79 +273,93 @@ class utils
 		}
 		return $retValue;		
 	}
-	
+
+	/**
+	 * @param string|string[] $value
+	 * @param string $sSanitizationFilter one of : integer, class, string, context_param, parameter, field_name,
+	 *               transaction_id, parameter, raw_data
+	 *
+	 * @return string|string[]|bool boolean for :
+	 *   * the 'class' filter (true if valid, false otherwise)
+	 *   * if the filter fails (@see \filter_var())
+	 *
+	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
+	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
-		switch($sSanitizationFilter)
+		switch ($sSanitizationFilter)
 		{
 			case 'integer':
-			$retValue = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
-			break;
-			
+				$retValue = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+				break;
+
 			case 'class':
-			$retValue = $value;
-			if (!MetaModel::IsValidClass($value))
-			{
-				$retValue = false;
-			}
-			break;
+				$retValue = $value;
+				if (!MetaModel::IsValidClass($value))
+				{
+					$retValue = false;
+				}
+				break;
 
 			case 'string':
-			$retValue = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
-			break;
-			
+				$retValue = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
+				break;
+
 			case 'context_param':
 			case 'parameter':
 			case 'field_name':
-			if (is_array($value))
-			{
-				$retValue = array();
-				foreach($value as $key => $val)
+				if (is_array($value))
 				{
-					$retValue[$key] = self::Sanitize_Internal($val, $sSanitizationFilter); // recursively check arrays
-					if ($retValue[$key] === false)
+					$retValue = array();
+					foreach ($value as $key => $val)
 					{
-						$retValue = false;
-						break;
+						$retValue[$key] = self::Sanitize_Internal($val, $sSanitizationFilter); // recursively check arrays
+						if ($retValue[$key] === false)
+						{
+							$retValue = false;
+							break;
+						}
 					}
 				}
-			}
-			else
-			{
-				switch($sSanitizationFilter)
+				else
 				{
-					case 'transaction_id':
-						// same as parameter type but keep the dot character
-						// see N°1835 : when using file transaction_id on Windows you get *.tmp tokens
-						// it must be included at the regexp beginning otherwise you'll get an invalid character error
-						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
-							array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
-					break;
+					switch ($sSanitizationFilter)
+					{
+						case 'transaction_id':
+							// same as parameter type but keep the dot character
+							// see N°1835 : when using file transaction_id on Windows you get *.tmp tokens
+							// it must be included at the regexp beginning otherwise you'll get an invalid character error
+							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+								array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
+							break;
 
-					case 'parameter':
-						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
-							array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
-						// characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
-						break;
+						case 'parameter':
+							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+								array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
+							// characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
+							break;
 
-					case 'field_name':
-					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
-					break;
-					
-					case 'context_param':
-					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^[ A-Za-z0-9_=%:+-]*$/')));
-					break;
-						
+						case 'field_name':
+							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+								array("options" => array("regexp" => '/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
+							break;
+
+						case 'context_param':
+							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+								array("options" => array("regexp" => '/^[ A-Za-z0-9_=%:+-]*$/')));
+							break;
+
+					}
 				}
-			}
-			break;
-						
+				break;
+
 			default:
 			case 'raw_data':
-			$retValue = $value;
+				$retValue = $value;
 			// Do nothing
 		}
-		return $retValue;		
+
+		return $retValue;
 	}
 	
 	/**
