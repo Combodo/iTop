@@ -273,7 +273,18 @@ class utils
 		}
 		return $retValue;		
 	}
-	
+
+	/**
+	 * @param string|string[] $value
+	 * @param string $sSanitizationFilter one of : integer, class, string, context_param, parameter, field_name,
+	 *               transaction_id, parameter, raw_data
+	 *
+	 * @return string|string[]|bool boolean for :
+	 *   * the 'class' filter (true if valid, false otherwise)
+	 *   * if the filter fails (@see \filter_var())
+	 *
+	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
+	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
 		switch($sSanitizationFilter)
@@ -314,6 +325,14 @@ class utils
 			{
 				switch($sSanitizationFilter)
 				{
+					case 'transaction_id':
+						// same as parameter type but keep the dot character
+						// see N°1835 : when using file transaction_id on Windows you get *.tmp tokens
+						// it must be included at the regexp beginning otherwise you'll get an invalid character error
+						$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
+							array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
+						break;
+
 					case 'parameter':
 					$retValue = filter_var($value, FILTER_VALIDATE_REGEXP, array("options"=>array("regexp"=>'/^([ A-Za-z0-9_=-]|%3D|%2B|%2F)*$/'))); // the '=', '%3D, '%2B', '%2F' characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
 					break;
