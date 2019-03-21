@@ -635,7 +635,7 @@ abstract class MetaModel
 	 * @param string $sRootClass
 	 * @param string $sRuleId
 	 *
-	 * @return string[] child classes with the rule disabled
+	 * @return string[] child classes with the rule disabled, and that are concrete classes
 	 *
 	 * @throws \CoreException
 	 * @since 2.6.1 N°1968 (soyez réalistes, demandez l'impossible)
@@ -645,6 +645,10 @@ abstract class MetaModel
 		$aClassesWithDisabledRule = array();
 		foreach (self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_EXCLUDETOP) as $sChildClass)
 		{
+			if (array_key_exists($sChildClass, $aClassesWithDisabledRule))
+			{
+				continue;
+			}
 			if (!array_key_exists('uniqueness_rules', self::$m_aClassParams[$sChildClass]))
 			{
 				continue;
@@ -656,7 +660,14 @@ abstract class MetaModel
 
 			if (self::$m_aClassParams[$sChildClass]['uniqueness_rules'][$sRuleId]['disabled'] === true)
 			{
-				$aClassesWithDisabledRule[] = $sChildClass;
+				$aDisabledClassChildren = self::EnumChildClasses($sChildClass, ENUM_CHILD_CLASSES_ALL);
+				foreach ($aDisabledClassChildren as $sDisabledClassChild)
+				{
+					if (!self::IsAbstract($sDisabledClassChild))
+					{
+						$aClassesWithDisabledRule[] = $sDisabledClassChild;
+					}
+				}
 			}
 		}
 
