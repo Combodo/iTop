@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-hub-connector/2.6.0',
+	'itop-hub-connector/2.6.1',
 	array(
 		// Identification
 		//
