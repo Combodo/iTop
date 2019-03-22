@@ -223,7 +223,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Невозможно назначить этот же инцидент в качестве родительского',
 
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
-	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Каскадное решение дочерних тикетов (ev_autoresolve) с установкой следующих параметров: услуга, команда, агент, информация о решении.',
 	'Tickets:Related:OpenIncidents' => 'Открытые инциденты',
 ));
 

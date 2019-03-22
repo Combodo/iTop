@@ -202,8 +202,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Родительское изменение',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
-	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
-	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Родительский инцидент',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Дочерние запросы',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Дочерние запросы',
 	'Class:UserRequest/Attribute:public_log' => 'Общий журнал',
@@ -249,7 +249,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Невозможно назначить этот же запрос в качестве родительского',
 
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Каскадное решение дочерних запросов (ev_autoresolve) с установкой следующих параметров: услуга, команда, агент, информация о решении.',
 ));
 
 
