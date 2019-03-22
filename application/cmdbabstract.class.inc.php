@@ -3524,14 +3524,13 @@ EOF
 					{
 						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
 						{
-							$sLinkClass = $oAttDef->GetLinkedClass();
-							$oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
+							$oLinkAttDef = MetaModel::GetAttributeDef($sObjClass, $aMatches[1]);
 							// Recursing over n:n link datetime attributes
 							// Note: We might need to do it with other attribute types, like Document or redundancy setting.
 							if ($oLinkAttDef instanceof AttributeDateTime)
 							{
 								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
-									$aMatches[1], $sLinkClass, $aData);
+									$aMatches[1], $sObjClass, $aData);
 							}
 							else
 							{
@@ -3548,26 +3547,19 @@ EOF
 				foreach($aRawToBeModified as $iObjKey => $aData)
 				{
 					$sSubFormPrefix = $aData['formPrefix'];
+					$sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
 					$aObjData = array();
 					foreach($aData as $sKey => $value)
 					{
 						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
 						{
-							$sLinkClass = $oAttDef->GetLinkedClass();
-							if ($oAttDef->IsIndirect())
+							$oLinkAttDef = MetaModel::GetAttributeDef($sObjClass, $aMatches[1]);
+							// Recursing over n:n link datetime attributes
+							// Note: We might need to do it with other attribute types, like Document or redundancy setting.
+							if ($oLinkAttDef instanceof AttributeDateTime)
 							{
-								$oLinkAttDef = MetaModel::GetAttributeDef($sLinkClass, $aMatches[1]);
-								// Recursing over n:n link datetime attributes
-								// Note: We might need to do it with other attribute types, like Document or redundancy setting.
-								if ($oLinkAttDef instanceof AttributeDateTime)
-								{
-									$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
-										$aMatches[1], $sLinkClass, $aData);
-								}
-								else
-								{
-									$aObjData[$aMatches[1]] = $value;
-								}
+								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
+									$aMatches[1], $sObjClass, $aData);
 							}
 							else
 							{
