@@ -22,7 +22,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Attachment:Max_Ko' => '(Максимальный размер файла: %1$s кБ)',
 	'Attachments:NoAttachment' => 'Нет вложений.',
 	'Attachments:PreviewNotAvailable' => 'Предварительный просмотр не доступен для этого типа вложений.',
-	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
+	'Attachments:Error:FileTooLarge' => 'Файл слишком велик для загрузки. %1$s',
 ));
 
 //
@@ -30,18 +30,18 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:Attachment' => 'Attachment~~',
+	'Class:Attachment' => 'Вложение',
 	'Class:Attachment+' => '',
-	'Class:Attachment/Attribute:expire' => 'Expire~~',
+	'Class:Attachment/Attribute:expire' => 'Истекает',
 	'Class:Attachment/Attribute:expire+' => '',
-	'Class:Attachment/Attribute:temp_id' => 'Temp id~~',
+	'Class:Attachment/Attribute:temp_id' => 'Временный Id',
 	'Class:Attachment/Attribute:temp_id+' => '',
-	'Class:Attachment/Attribute:item_class' => 'Item class~~',
+	'Class:Attachment/Attribute:item_class' => 'Класс объекта',
 	'Class:Attachment/Attribute:item_class+' => '',
-	'Class:Attachment/Attribute:item_id' => 'Item id~~',
+	'Class:Attachment/Attribute:item_id' => 'Id объекта',
 	'Class:Attachment/Attribute:item_id+' => '',
-	'Class:Attachment/Attribute:item_org_id' => 'Item org id~~',
+	'Class:Attachment/Attribute:item_org_id' => 'Id организации объекта',
 	'Class:Attachment/Attribute:item_org_id+' => '',
-	'Class:Attachment/Attribute:contents' => 'Contents~~',
+	'Class:Attachment/Attribute:contents' => 'Содержимое',
 	'Class:Attachment/Attribute:contents+' => '',
 ));

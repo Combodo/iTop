@@ -277,7 +277,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Выберите язык',
 
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Каскадное решение дочерних запросов (ev_autoresolve) с установкой следующих параметров: услуга, команда, агент, информация о решении.',
 ));
 
 

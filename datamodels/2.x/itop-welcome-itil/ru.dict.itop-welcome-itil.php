@@ -49,8 +49,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:AbstractResource' => 'Abstract Resource~~',
-	'Class:AbstractResource+' => '~~',
+	'Class:AbstractResource' => 'Ресурс',
+	'Class:AbstractResource+' => '',
 ));
 
 //
@@ -58,8 +58,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
-	'Class:ResourceAdminMenu+' => '~~',
+	'Class:ResourceAdminMenu' => 'Меню Инструменты администратора',
+	'Class:ResourceAdminMenu+' => '',
 ));
 
 //
@@ -67,6 +67,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu' => 'Меню Выполнение запросов',
 	'Class:ResourceRunQueriesMenu+' => '~~',
 ));
