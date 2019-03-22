@@ -460,11 +460,12 @@ class SetupUtils
 
 	/**
 	 * Check that the backup could be executed
-	 * @param $sDestDir
+	 * @param $sDBBackupPath
+	 * @param $sMySQLBinDir
 	 * @return array An array of CheckResults objects
 	 * @internal param Page $oP The page used only for its 'log' method
 	 */
-	static function CheckBackupPrerequisites($sDestDir, $sMySQLBinDir = null)
+	static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null)
 	{
 		$aResult = array();
 		SetupPage::log('Info - CheckBackupPrerequisites');
@@ -528,6 +529,15 @@ class SetupUtils
 		foreach($aOutput as $sLine)
 		{
 			SetupPage::log('Info - mysqldump -V said: '.$sLine);
+		}
+		
+		// create and test destination location
+		//
+		$sDestDir = dirname($sDBBackupPath);
+		setuputils::builddir($sDestDir);
+		if (!is_dir($sDestDir))
+		{
+			$aResult[] = new CheckResult(CheckResult::ERROR, "$sDestDir does not exist and could not be created.");
 		}
 
 		// check disk space
