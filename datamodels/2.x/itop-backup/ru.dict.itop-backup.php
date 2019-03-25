@@ -5,7 +5,7 @@
  * @author      Vladimir Kunin <v.b.kunin@gmail.com>
  * @link        http://community.itop-itsm.ru  iTop Russian Community
  * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', array(
@@ -27,7 +27,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'bkp-week-days' => 'Резервное копирование будет выполняться <b>каждый %1$s в %2$s</b>',
 	'bkp-retention' => 'Не более <b>%1$d файлов резервных копий будут храниться</b> в целевом каталоге.',
 	'bkp-next-to-delete' => 'Будет удалена при следующем запуске резервного копирования (см. параметр \\"retention_count\\")',
-	'bkp-table-file' => 'Файл', 
+	'bkp-table-file' => 'Файл',
 	'bkp-table-file+' => 'Только файлы с расширением .zip считаются файлами резервных копий.',
 	'bkp-table-size' => 'Размер',
 	'bkp-table-size+' => '',

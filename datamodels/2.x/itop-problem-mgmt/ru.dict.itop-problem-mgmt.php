@@ -5,23 +5,23 @@
  * @author      Vladimir Kunin <v.b.kunin@gmail.com>
  * @link        http://community.itop-itsm.ru  iTop Russian Community
  * @link        https://github.com/itop-itsm-ru/itop-rus
- * @license     http://www.opensource.org/licenses/gpl-3.0.html LGPL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  *
  */
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-        'Menu:ProblemManagement' => 'Управление проблемами',
-        'Menu:ProblemManagement+' => 'Управление проблемами',
-    	'Menu:Problem:Overview' => 'Обзор',
-    	'Menu:Problem:Overview+' => 'Управление проблемами - Обзор',
-    	'Menu:NewProblem' => 'Новая проблема',
-    	'Menu:NewProblem+' => 'Создать новую проблему',
-    	'Menu:SearchProblems' => 'Поиск проблем',
-    	'Menu:SearchProblems+' => 'Поиск проблем',
-    	'Menu:Problem:Shortcuts' => 'Ярлыки',
-        'Menu:Problem:MyProblems' => 'Назначенные мне',
-        'Menu:Problem:MyProblems+' => 'Назначенные мне проблемы',
-        'Menu:Problem:OpenProblems' => 'Открытые',
-        'Menu:Problem:OpenProblems+' => 'Все открытые проблемы',
+	'Menu:ProblemManagement' => 'Управление проблемами',
+	'Menu:ProblemManagement+' => 'Управление проблемами',
+	'Menu:Problem:Overview' => 'Обзор',
+	'Menu:Problem:Overview+' => 'Управление проблемами - Обзор',
+	'Menu:NewProblem' => 'Новая проблема',
+	'Menu:NewProblem+' => 'Создать новую проблему',
+	'Menu:SearchProblems' => 'Поиск проблем',
+	'Menu:SearchProblems+' => 'Поиск проблем',
+	'Menu:Problem:Shortcuts' => 'Ярлыки',
+	'Menu:Problem:MyProblems' => 'Назначенные мне',
+	'Menu:Problem:MyProblems+' => 'Назначенные мне проблемы',
+	'Menu:Problem:OpenProblems' => 'Открытые',
+	'Menu:Problem:OpenProblems+' => 'Все открытые проблемы',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Проблемы по услугам',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'Проблемы по услугам',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Проблемы по приоритету',
