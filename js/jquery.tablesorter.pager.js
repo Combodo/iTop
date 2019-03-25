@@ -113,8 +113,13 @@ function sprintf(format, etc) {
 				$(':input[name^=storedSelection]', pager).remove();
 			}
 			
-			function storeSelection(table, pager, id, value, disabled=false)
+			function storeSelection(table, pager, id, value, disabled)
 			{
+				if(disabled == undefined)
+				{
+					disabled = false;
+				}
+
 				var valueToStore = value;
 				if (table.config.selectionMode == 'negative')
 				{
