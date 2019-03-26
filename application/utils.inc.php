@@ -602,17 +602,19 @@ class utils
 	/**
 	 * Format a value into a more friendly format (KB, MB, GB, TB) instead a juste a Bytes amount.
 	 *
-	 * @param type $value
+	 * @param int $value
 	 * @return string
 	 */
 	public static function BytesToFriendlyFormat($value)
 	{
 		$sReturn = '';
+		$iPrecision = 0;
 		// Kilobytes
 		if ($value >= 1024)
 		{
 			$sReturn = 'K';
 			$value = $value / 1024;
+			$iPrecision = 1;
 		}
 		// Megabytes
 		if ($value >= 1024)
@@ -633,7 +635,7 @@ class utils
 			$value = $value / 1024;
 		}
 
-		$value = round($value, 1);
+		$value = round($value, $iPrecision);
 
 		return $value . '' . $sReturn . 'B';
 	}
