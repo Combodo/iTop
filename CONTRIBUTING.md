@@ -19,7 +19,7 @@ If you ever want to begin implementation, do so in a fork, and add a link to the
 
 Please do so also if you need **default datamodel modifications**. 
 Such changes would impact all existing customers, and could prevent them from upgrading. 
-Combodo has a long experience of datamodel changes : they are very disruptive ! 
+Combodo has a long experience of datamodel changes: they are very disruptive! 
 This is why we avoid them in iTop core, especially the changes on existing object/field. 
 
 ### License
