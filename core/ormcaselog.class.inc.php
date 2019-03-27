@@ -16,7 +16,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-define('CASELOG_VISIBLE_ITEMS', 2);
 define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\n\n");
 
 
@@ -30,6 +29,7 @@ class ormCaseLog {
 	protected $m_sLog;
 	protected $m_aIndex;
 	protected $m_bModified;
+	protected $iVisibleItems;
 	
 	/**
 	 * Initializes the log with the first (initial) entry
@@ -41,6 +41,7 @@ class ormCaseLog {
 		$this->m_sLog = $sLog;
 		$this->m_aIndex = $aIndex;
 		$this->m_bModified = false;
+		$this->iVisibleItems = MetaModel::GetConfig()->Get('case_log_visible_items');
 	}
 	
 	public function GetText($bConvertToPlainText = false)
@@ -401,7 +402,7 @@ class ormCaseLog {
 		}
 		for($index=count($aIndex)-1 ; $index >= 0 ; $index--)
 		{
-			if (!$bPrintableVersion && ($index < count($aIndex) - CASELOG_VISIBLE_ITEMS))
+			if (!$bPrintableVersion && ($index < count($aIndex) - $this->iVisibleItems))
 			{
 				$sOpen = '';
 				$sDisplay = 'style="display:none;"';
@@ -483,7 +484,7 @@ class ormCaseLog {
 			}
 			else
 			{
-				if (!$bPrintableVersion && (count($this->m_aIndex) - CASELOG_VISIBLE_ITEMS > 0))
+				if (!$bPrintableVersion && (count($this->m_aIndex) - $this->iVisibleItems > 0))
 				{
 					$sOpen = '';
 					$sDisplay = 'style="display:none;"';

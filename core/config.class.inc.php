@@ -693,6 +693,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'case_log_visible_items' => array(
+			'type' => 'integer',
+			'description' => 'Number of items which are visible by default in CaseLogAttributes',
+			// examples... not used (nor 'description')
+			'default' => 2,
+			'value' => 2,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'forgot_password' => array(
 			'type' => 'bool',
 			'description' => 'Enable the "Forgot password" feature',
