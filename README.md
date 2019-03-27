@@ -117,6 +117,7 @@ We would like to give a special thank you to the people from the community who c
  - Gumble, David
  - Hippler, Lars
  - Khamit, Shamil
+ - Kincel, Martin
  - Konečný, Kamil
  - Kunin, Vladimir
  - Lassiter, Dennis
