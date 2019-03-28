@@ -56,7 +56,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 'Menu:SLT+' => 'Objetivos de Nivel de Servicio',
 'Menu:DeliveryModel' => 'Modelos de Entrega',
 'Menu:DeliveryModel+' => 'Modelos de Entrega',
-
+'Menu:ServiceFamily' => 'Familias de Servicio',
+'Menu:ServiceFamily+' => 'Familias de Servicio',
 ));
 
 

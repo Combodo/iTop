@@ -59,7 +59,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 'Menu:SLT+' => 'Service Level Targets',
 'Menu:DeliveryModel' => 'Leveringsmodellen',
 'Menu:DeliveryModel+' => 'Leveringsmodellen',
-
+'Menu:ServiceFamily' => 'Servicecategorieën',
+'Menu:ServiceFamily+' => 'Servicecategorieën',
 ));
 
 

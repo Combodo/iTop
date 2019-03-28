@@ -55,7 +55,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 'Menu:SLT+' => 'Lista Nível de Metas de Serviço',
 'Menu:DeliveryModel' => 'Modelos entrega',
 'Menu:DeliveryModel+' => 'Modelos entrega',
-
+'Menu:ServiceFamily' => 'Família serviços',
+'Menu:ServiceFamily+' => 'Família serviços',
 ));
 
 

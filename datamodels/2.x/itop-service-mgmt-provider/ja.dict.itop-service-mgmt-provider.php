@@ -44,7 +44,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 'Menu:SLT+' => '',
 'Menu:DeliveryModel' => '提供モデル',
 'Menu:DeliveryModel+' => '',
-
+'Menu:ServiceFamily' => 'サービスファミリ',
+'Menu:ServiceFamily+' => 'サービスファミリ',
 ));
 
 

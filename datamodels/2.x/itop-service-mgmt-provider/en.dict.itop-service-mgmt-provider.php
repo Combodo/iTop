@@ -57,6 +57,8 @@ Dict::Add('EN US', 'English', 'English', array(
 'Menu:SLT+' => 'Service Level Targets',
 'Menu:DeliveryModel' => 'Delivery models',
 'Menu:DeliveryModel+' => 'Delivery models',
+'Menu:ServiceFamily' => 'Service families',
+'Menu:ServiceFamily+' => 'Service families',
 
 ));
 

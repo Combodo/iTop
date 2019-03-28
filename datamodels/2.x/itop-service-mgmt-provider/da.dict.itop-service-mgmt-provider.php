@@ -45,6 +45,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 'Menu:SLT+' => '',
 'Menu:DeliveryModel' => 'Leveringsmodel',
 'Menu:DeliveryModel+' => '',
+'Menu:ServiceFamily' => 'Ydelses familie(r)',
+'Menu:ServiceFamily+' => '',
 
 ));
 

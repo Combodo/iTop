@@ -47,7 +47,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 'Menu:SLT+' => '',
 'Menu:DeliveryModel' => 'Delivery-Modelle',
 'Menu:DeliveryModel+' => '',
-
+'Menu:ServiceFamily' => 'Service-Familien',
+'Menu:ServiceFamily+' => '',
 ));
 
 

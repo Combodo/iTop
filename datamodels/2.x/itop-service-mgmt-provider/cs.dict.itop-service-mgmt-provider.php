@@ -57,7 +57,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 'Menu:SLT+' => 'Cíle úrovní služeb',
 'Menu:DeliveryModel' => 'Modely poskytování služeb',
 'Menu:DeliveryModel+' => 'Modely poskytování služeb',
-
+'Menu:ServiceFamily' => 'Balíčky (kategorie) služeb',
+'Menu:ServiceFamily+' => 'Balíčky (kategorie) služeb',
 ));
 
 

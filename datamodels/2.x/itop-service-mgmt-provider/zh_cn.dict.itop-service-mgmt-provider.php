@@ -54,7 +54,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 'Menu:SLT+' => '服务等级目标',
 'Menu:DeliveryModel' => '交付模式',
 'Menu:DeliveryModel+' => '交付模式',
-
+'Menu:ServiceFamily' => '服务族',
+'Menu:ServiceFamily+' => '服务族',
 ));
 
 
