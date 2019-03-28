@@ -32,37 +32,34 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-'Menu:ServiceManagement' => 'Hizmet Yönetimi',
-'Menu:ServiceManagement+' => 'Hizmet Yönetimi',
-'Menu:Service:Overview' => 'Özet',
-'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Hizmet seviyesine göre sözleşmeler',
-'UI-ServiceManagementMenu-ContractsByStatus' => 'Durumuna göre sözleşmeler',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 gün çinde biten sözleşmeler',
+	'Menu:ServiceManagement' => 'Hizmet Yönetimi',
+	'Menu:ServiceManagement+' => 'Hizmet Yönetimi',
+	'Menu:Service:Overview' => 'Özet',
+	'Menu:Service:Overview+' => '',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Hizmet seviyesine göre sözleşmeler',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Durumuna göre sözleşmeler',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30 gün çinde biten sözleşmeler',
 
-'Menu:ProviderContract' => 'Tedarikçi Sözleşmeleri',
-'Menu:ProviderContract+' => 'Tedarikçi Sözleşmeleri',
-'Menu:CustomerContract' => 'Müşteri Sözleşmeleri',
-'Menu:CustomerContract+' => 'Müşteri Sözleşmeleri',
-'Menu:ServiceSubcategory' => 'Hizmet alt kategorileri',
-'Menu:ServiceSubcategory+' => 'Hizmet alt kategorileri',
-'Menu:Service' => 'Hizmetler',
-'Menu:Service+' => 'Hizmetler',
-'Menu:ServiceElement' => 'Sevice elements~~',
-'Menu:ServiceElement+' => 'Sevice elements~~',
-'Menu:SLA' => 'SLAs',
-'Menu:SLA+' => 'Hizmet Seviyesi Anlaşmaları',
-'Menu:SLT' => 'SLTs',
-'Menu:SLT+' => 'Hizmet Seviyesi Taahütleri',
-'Menu:DeliveryModel' => 'Delivery models~~',
-'Menu:DeliveryModel+' => 'Delivery models~~',
-'Menu:ServiceFamily' => 'Service families~~',
-'Menu:ServiceFamily+' => 'Service families~~',
-'Menu:Procedure' => 'Procedures catalog~~',
-'Menu:Procedure+' => 'All procedures catalog~~',
-
-
-
+	'Menu:ProviderContract' => 'Tedarikçi Sözleşmeleri',
+	'Menu:ProviderContract+' => 'Tedarikçi Sözleşmeleri',
+	'Menu:CustomerContract' => 'Müşteri Sözleşmeleri',
+	'Menu:CustomerContract+' => 'Müşteri Sözleşmeleri',
+	'Menu:ServiceSubcategory' => 'Hizmet alt kategorileri',
+	'Menu:ServiceSubcategory+' => 'Hizmet alt kategorileri',
+	'Menu:Service' => 'Hizmetler',
+	'Menu:Service+' => 'Hizmetler',
+	'Menu:ServiceElement' => 'Sevice elements~~',
+	'Menu:ServiceElement+' => 'Sevice elements~~',
+	'Menu:SLA' => 'SLAs',
+	'Menu:SLA+' => 'Hizmet Seviyesi Anlaşmaları',
+	'Menu:SLT' => 'SLTs',
+	'Menu:SLT+' => 'Hizmet Seviyesi Taahütleri',
+	'Menu:DeliveryModel' => 'Delivery models~~',
+	'Menu:DeliveryModel+' => 'Delivery models~~',
+	'Menu:ServiceFamily' => 'Service families~~',
+	'Menu:ServiceFamily+' => 'Service families~~',
+	'Menu:Procedure' => 'Procedures catalog~~',
+	'Menu:Procedure+' => 'All procedures catalog~~',
 ));
 
 //
@@ -73,7 +70,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery model~~',
 	'Class:Organization/Attribute:deliverymodel_id+' => '~~',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery model name~~',
-
 ));
 
 

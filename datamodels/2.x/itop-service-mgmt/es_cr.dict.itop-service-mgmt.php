@@ -32,37 +32,34 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-'Menu:ServiceManagement' => 'Administración de Servicios',
-'Menu:ServiceManagement+' => 'Administración de Servicios',
-'Menu:Service:Overview' => 'Resumen de Servicios',
-'Menu:Service:Overview+' => 'Resumen de Servicios',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratos por Nivel de Servicio',
-'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por Estatus',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos Finalizando en menos de 30 días',
+	'Menu:ServiceManagement' => 'Administración de Servicios',
+	'Menu:ServiceManagement+' => 'Administración de Servicios',
+	'Menu:Service:Overview' => 'Resumen de Servicios',
+	'Menu:Service:Overview+' => 'Resumen de Servicios',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratos por Nivel de Servicio',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por Estatus',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos Finalizando en menos de 30 días',
 
-'Menu:ProviderContract' => 'Contratos con Proveedores',
-'Menu:ProviderContract+' => 'Contratos con Proveedores',
-'Menu:CustomerContract' => 'Acuerdos con Clientes',
-'Menu:CustomerContract+' => 'Acuerdos con Clientes',
-'Menu:ServiceSubcategory' => 'Subcategorías de Servicio',
-'Menu:ServiceSubcategory+' => 'Subcategorías de Servicio',
-'Menu:Service' => 'Servicios',
-'Menu:Service+' => 'Servicios',
-'Menu:ServiceElement' => 'Elementos del Servicio',
-'Menu:ServiceElement+' => 'Elementos del Servicio',
-'Menu:SLA' => 'SLAs - Acuerdos de Nivel de Servicio',
-'Menu:SLA+' => 'Acuerdos de Nivel de Servicio',
-'Menu:SLT' => 'SLTs - Objetivos de Nivel de Servicio',
-'Menu:SLT+' => 'Objetivos de Nivel de Servicio',
-'Menu:DeliveryModel' => 'Modelos de Entrega',
-'Menu:DeliveryModel+' => 'Modelos de Entrega',
-'Menu:ServiceFamily' => 'Familias de Servicio',
-'Menu:ServiceFamily+' => 'Familias de Servicio',
-'Menu:Procedure' => 'Catálogo de Procedimientos',
-'Menu:Procedure+' => 'Catálogo de Procedimientos',
-
-
-
+	'Menu:ProviderContract' => 'Contratos con Proveedores',
+	'Menu:ProviderContract+' => 'Contratos con Proveedores',
+	'Menu:CustomerContract' => 'Acuerdos con Clientes',
+	'Menu:CustomerContract+' => 'Acuerdos con Clientes',
+	'Menu:ServiceSubcategory' => 'Subcategorías de Servicio',
+	'Menu:ServiceSubcategory+' => 'Subcategorías de Servicio',
+	'Menu:Service' => 'Servicios',
+	'Menu:Service+' => 'Servicios',
+	'Menu:ServiceElement' => 'Elementos del Servicio',
+	'Menu:ServiceElement+' => 'Elementos del Servicio',
+	'Menu:SLA' => 'SLAs - Acuerdos de Nivel de Servicio',
+	'Menu:SLA+' => 'Acuerdos de Nivel de Servicio',
+	'Menu:SLT' => 'SLTs - Objetivos de Nivel de Servicio',
+	'Menu:SLT+' => 'Objetivos de Nivel de Servicio',
+	'Menu:DeliveryModel' => 'Modelos de Entrega',
+	'Menu:DeliveryModel+' => 'Modelos de Entrega',
+	'Menu:ServiceFamily' => 'Familias de Servicio',
+	'Menu:ServiceFamily+' => 'Familias de Servicio',
+	'Menu:Procedure' => 'Catálogo de Procedimientos',
+	'Menu:Procedure+' => 'Catálogo de Procedimientos',
 ));
 
 //
@@ -73,7 +70,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Modelo de Entrega',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'Modelo de Entrega',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nombre del Modelo de Entrega',
-
 ));
 
 

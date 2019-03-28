@@ -37,9 +37,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:ServiceFamily+' => 'Пакеты услуг',
 	'Menu:Procedure' => 'Каталог процедур',
 	'Menu:Procedure+' => 'Каталог процедур',
-
-
-
 ));
 
 //
@@ -50,7 +47,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Модель предоставления услуг',
 	'Class:Organization/Attribute:deliverymodel_id+' => 'Модель предоставления услуг (Delivery Model)',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Модель предоставления услуг',
-
 ));
 
 

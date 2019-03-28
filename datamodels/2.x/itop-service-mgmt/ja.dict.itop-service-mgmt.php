@@ -20,37 +20,34 @@
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-'Menu:ServiceManagement' => 'サービス管理',
-'Menu:ServiceManagement+' => 'サービス管理概要',
-'Menu:Service:Overview' => '概要',
-'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'サービスレベル別契約',
-'UI-ServiceManagementMenu-ContractsByStatus' => 'ステータス別契約',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30日以内に終了する契約',
+	'Menu:ServiceManagement' => 'サービス管理',
+	'Menu:ServiceManagement+' => 'サービス管理概要',
+	'Menu:Service:Overview' => '概要',
+	'Menu:Service:Overview+' => '',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'サービスレベル別契約',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'ステータス別契約',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => '30日以内に終了する契約',
 
-'Menu:ProviderContract' => 'プロバイダー契約',
-'Menu:ProviderContract+' => 'プロバイダー契約',
-'Menu:CustomerContract' => '顧客契約',
-'Menu:CustomerContract+' => '顧客契約',
-'Menu:ServiceSubcategory' => 'サービスサブカテゴリ',
-'Menu:ServiceSubcategory+' => 'サービスサブカテゴリ',
-'Menu:Service' => 'サービス',
-'Menu:Service+' => 'サービス',
-'Menu:ServiceElement' => 'サービス要素',
-'Menu:ServiceElement+' => 'サービス要素',
-'Menu:SLA' => 'SLA',
-'Menu:SLA+' => 'サービスレベルアグリーメント',
-'Menu:SLT' => 'SLT',
-'Menu:SLT+' => 'サービスレベルターゲット',
-'Menu:DeliveryModel' => '提供モデル',
-'Menu:DeliveryModel+' => '提供モデル',
-'Menu:ServiceFamily' => 'サービスファミリ',
-'Menu:ServiceFamily+' => 'サービスファミリ',
-'Menu:Procedure' => '手順カタログ',
-'Menu:Procedure+' => '全ての手順カタログ',
-
-
-
+	'Menu:ProviderContract' => 'プロバイダー契約',
+	'Menu:ProviderContract+' => 'プロバイダー契約',
+	'Menu:CustomerContract' => '顧客契約',
+	'Menu:CustomerContract+' => '顧客契約',
+	'Menu:ServiceSubcategory' => 'サービスサブカテゴリ',
+	'Menu:ServiceSubcategory+' => 'サービスサブカテゴリ',
+	'Menu:Service' => 'サービス',
+	'Menu:Service+' => 'サービス',
+	'Menu:ServiceElement' => 'サービス要素',
+	'Menu:ServiceElement+' => 'サービス要素',
+	'Menu:SLA' => 'SLA',
+	'Menu:SLA+' => 'サービスレベルアグリーメント',
+	'Menu:SLT' => 'SLT',
+	'Menu:SLT+' => 'サービスレベルターゲット',
+	'Menu:DeliveryModel' => '提供モデル',
+	'Menu:DeliveryModel+' => '提供モデル',
+	'Menu:ServiceFamily' => 'サービスファミリ',
+	'Menu:ServiceFamily+' => 'サービスファミリ',
+	'Menu:Procedure' => '手順カタログ',
+	'Menu:Procedure+' => '全ての手順カタログ',
 ));
 
 //
@@ -61,7 +58,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Organization/Attribute:deliverymodel_id' => '提供モデル',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => '提供モデル名',
-
 ));
 
 

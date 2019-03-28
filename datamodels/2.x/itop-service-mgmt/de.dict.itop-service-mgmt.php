@@ -23,37 +23,34 @@
 *		
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-'Menu:ServiceManagement' => 'Service Management',
-'Menu:ServiceManagement+' => 'Service Management-Übersicht',
-'Menu:Service:Overview' => 'Übersicht',
-'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Verträge nach Service Level',
-'UI-ServiceManagementMenu-ContractsByStatus' => 'Verträge nach Status',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Verträge, die in weniger als 30 Tagen enden',
+	'Menu:ServiceManagement' => 'Service Management',
+	'Menu:ServiceManagement+' => 'Service Management-Übersicht',
+	'Menu:Service:Overview' => 'Übersicht',
+	'Menu:Service:Overview+' => '',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Verträge nach Service Level',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Verträge nach Status',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Verträge, die in weniger als 30 Tagen enden',
 
-'Menu:ProviderContract' => 'Provider-Verträge',
-'Menu:ProviderContract+' => 'Provider-Verträge',
-'Menu:CustomerContract' => 'Kundenverträge',
-'Menu:CustomerContract+' => 'Kundenverträge',
-'Menu:ServiceSubcategory' => 'Service-Unterkategorien',
-'Menu:ServiceSubcategory+' => 'Service-Unterkategorien',
-'Menu:Service' => 'Services',
-'Menu:Service+' => 'Services',
-'Menu:ServiceElement' => 'Sevice-Elemente',
-'Menu:ServiceElement+' => '',
-'Menu:SLA' => 'SLAs',
-'Menu:SLA+' => 'Service Level Agreements',
-'Menu:SLT' => 'SLTs',
-'Menu:SLT+' => 'Service Level Targets',
-'Menu:DeliveryModel' => 'Delivery-Modelle',
-'Menu:DeliveryModel+' => '',
-'Menu:ServiceFamily' => 'Service-Familien',
-'Menu:ServiceFamily+' => '',
-'Menu:Procedure' => 'Verfahrens-Katalog',
-'Menu:Procedure+' => '',
-
-
-
+	'Menu:ProviderContract' => 'Provider-Verträge',
+	'Menu:ProviderContract+' => 'Provider-Verträge',
+	'Menu:CustomerContract' => 'Kundenverträge',
+	'Menu:CustomerContract+' => 'Kundenverträge',
+	'Menu:ServiceSubcategory' => 'Service-Unterkategorien',
+	'Menu:ServiceSubcategory+' => 'Service-Unterkategorien',
+	'Menu:Service' => 'Services',
+	'Menu:Service+' => 'Services',
+	'Menu:ServiceElement' => 'Sevice-Elemente',
+	'Menu:ServiceElement+' => '',
+	'Menu:SLA' => 'SLAs',
+	'Menu:SLA+' => 'Service Level Agreements',
+	'Menu:SLT' => 'SLTs',
+	'Menu:SLT+' => 'Service Level Targets',
+	'Menu:DeliveryModel' => 'Delivery-Modelle',
+	'Menu:DeliveryModel+' => '',
+	'Menu:ServiceFamily' => 'Service-Familien',
+	'Menu:ServiceFamily+' => '',
+	'Menu:Procedure' => 'Verfahrens-Katalog',
+	'Menu:Procedure+' => '',
 ));
 
 //
@@ -64,7 +61,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Delivery-Modell',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Delivery-Modell-Name',
-
 ));
 
 

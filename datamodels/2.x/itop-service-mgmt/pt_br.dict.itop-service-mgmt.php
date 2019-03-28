@@ -31,37 +31,34 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-'Menu:ServiceManagement' => 'Gerenciamento Serviços',
-'Menu:ServiceManagement+' => 'Gerenciamento Serviços',
-'Menu:Service:Overview' => 'Visão geral',
-'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratos por nível serviço',
-'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por estado',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos finalizando em menos de 30 dias',
+	'Menu:ServiceManagement' => 'Gerenciamento Serviços',
+	'Menu:ServiceManagement+' => 'Gerenciamento Serviços',
+	'Menu:Service:Overview' => 'Visão geral',
+	'Menu:Service:Overview+' => '',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contratos por nível serviço',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por estado',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos finalizando em menos de 30 dias',
 
-'Menu:ProviderContract' => 'Contratos Provedor(as)',
-'Menu:ProviderContract+' => 'Contratos Provedor(as)',
-'Menu:CustomerContract' => 'Contratos Clientes',
-'Menu:CustomerContract+' => 'Contratos Clientes',
-'Menu:ServiceSubcategory' => 'Sub-categorias serviços',
-'Menu:ServiceSubcategory+' => 'Sub-categorias serviços',
-'Menu:Service' => 'Serviços',
-'Menu:Service+' => 'Serviços',
-'Menu:ServiceElement' => 'Elementos seviços',
-'Menu:ServiceElement+' => 'Elementos seviços',
-'Menu:SLA' => 'SLAs',
-'Menu:SLA+' => 'Lista Nível de Serviço Acordados',
-'Menu:SLT' => 'SLTs',
-'Menu:SLT+' => 'Lista Nível de Metas de Serviço',
-'Menu:DeliveryModel' => 'Modelos entrega',
-'Menu:DeliveryModel+' => 'Modelos entrega',
-'Menu:ServiceFamily' => 'Família serviços',
-'Menu:ServiceFamily+' => 'Família serviços',
-'Menu:Procedure' => 'Catálogos procedimentos',
-'Menu:Procedure+' => 'Todos catálogos procedimentos',
-
-
-
+	'Menu:ProviderContract' => 'Contratos Provedor(as)',
+	'Menu:ProviderContract+' => 'Contratos Provedor(as)',
+	'Menu:CustomerContract' => 'Contratos Clientes',
+	'Menu:CustomerContract+' => 'Contratos Clientes',
+	'Menu:ServiceSubcategory' => 'Sub-categorias serviços',
+	'Menu:ServiceSubcategory+' => 'Sub-categorias serviços',
+	'Menu:Service' => 'Serviços',
+	'Menu:Service+' => 'Serviços',
+	'Menu:ServiceElement' => 'Elementos seviços',
+	'Menu:ServiceElement+' => 'Elementos seviços',
+	'Menu:SLA' => 'SLAs',
+	'Menu:SLA+' => 'Lista Nível de Serviço Acordados',
+	'Menu:SLT' => 'SLTs',
+	'Menu:SLT+' => 'Lista Nível de Metas de Serviço',
+	'Menu:DeliveryModel' => 'Modelos entrega',
+	'Menu:DeliveryModel+' => 'Modelos entrega',
+	'Menu:ServiceFamily' => 'Família serviços',
+	'Menu:ServiceFamily+' => 'Família serviços',
+	'Menu:Procedure' => 'Catálogos procedimentos',
+	'Menu:Procedure+' => 'Todos catálogos procedimentos',
 ));
 
 //
@@ -72,7 +69,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Modelo entrega',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Nome modelo entrega',
-
 ));
 
 
