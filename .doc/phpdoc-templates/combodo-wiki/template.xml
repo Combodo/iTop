@@ -21,9 +21,7 @@
   ]]></description>
   <transformations>
     <transformation writer="twig" query="namespace" source="templates/combodo-wiki/namespace.txt.twig" artifact="start.txt"/>
-    <!--<transformation writer="twig" query="indexes.classes" source="templates/combodo-wiki/class.txt.twig" artifact="{{path}}.txt"/>-->
     <transformation writer="twig" query="indexes.classes" source="templates/combodo-wiki/class.txt.twig" artifact="{{name}}.txt"/>
     <transformation writer="twig" query="indexes.interfaces" source="templates/combodo-wiki/interface.txt.twig" artifact="{{name}}.txt" />
-    <!--<transformation writer="twig" query="indexes.traits" source="templates/combodo-wiki/class.txt.twig" artifact="{{name}}.txt" />-->
   </transformations>
 </template>

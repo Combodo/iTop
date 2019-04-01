@@ -16,7 +16,7 @@
 {% if node.deprecated %}<wrap danger>deprecated</wrap>{% endif %}
 {% if node.abstract %}<wrap warning>abstract</wrap>{% endif %}
 {% if node.final %}<wrap notice>final</wrap>{% endif %}
-{% include 'includes/wrap-tags.txt.twig' with {structure:node, wrap: 'safety', wrapTags: ['api' 'api-advanced', 'overwritable-hook', 'extension-hook']} %}
+{% include 'includes/wrap-tags.txt.twig' with {structure:node, wrap: 'safety', wrapTags: ['api', 'api-advanced', 'overwritable-hook', 'extension-hook']} %}
 
 
 
@@ -26,7 +26,7 @@
 {% endif %}
 
 
-{{ node.summary }}
+== {{  node.summary|replace({"\n":""})|raw }} ==
 <html>{{ node.description|markdown|raw }}</html>
 
 
@@ -64,15 +64,18 @@
 
 {% include 'includes/see-also.txt.twig' with {structure:node, title_level: '==='} %}
 
-{% include 'includes/tags.txt.twig' with {structure:node, title_level: '=====', blacklist:  ['link', 'see', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage', 'api', 'api-advanced', 'overwritable-hook', 'extension-hook', 'copyright', 'license']} %}
-
-
-
-
-
+{% include 'includes/tags.txt.twig' with {structure:node, title_level: '=====', blacklist:  ['link', 'see', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage', 'phpdoc-tunning-exclude-inherited', 'api', 'api-advanced', 'overwritable-hook', 'extension-hook', 'copyright', 'license']} %}
 
 
 {% set methods = node.inheritedMethods.merge(node.methods) %}
+{% include 'includes/tag-synthesys.txt.twig' with {methods:methods, tag:'api'} %}
+{% include 'includes/tag-synthesys.txt.twig' with {methods:methods, tag:'api-advanced'} %}
+{% include 'includes/tag-synthesys.txt.twig' with {methods:methods, tag:'overwritable-hook'} %}
+{% include 'includes/tag-synthesys.txt.twig' with {methods:methods, tag:'extension-hook'} %}
+
+<WRAP clear />
+
+
 {% for method in methods|sort_asc if method.visibility == 'public' %}
 {%- if loop.first %}
 ===== Public methods =====
