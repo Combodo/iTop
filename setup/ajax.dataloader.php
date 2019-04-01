@@ -150,8 +150,8 @@ try
 	$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
 	if (!file_exists(APPROOT.'data/setup/authent') || $sAuthent !== file_get_contents(APPROOT.'data/setup/authent'))
 	{
-		throw new SecurityException('Setup operations are not allowed outside of the setup');
 		SetupPage::log_error("Setup operations are not allowed outside of the setup");
+		throw new SecurityException('Setup operations are not allowed outside of the setup');
 	}
 
 	switch($sOperation)
