@@ -1318,12 +1318,15 @@ class utils
 	 * Does not require cUrl but requires openssl for performing https POSTs.
 	 * 
 	 * @param string $sUrl The URL to POST the data to
-	 * @param hash $aData The data to POST as an array('param_name' => value)
+	 * @param array $aData The data to POST as an array('param_name' => value)
 	 * @param string $sOptionnalHeaders Additional HTTP headers as a string with newlines between headers
-	 * @param hash	$aResponseHeaders An array to be filled with reponse headers: WARNING: the actual content of the array depends on the library used: cURL or fopen, test with both !! See: http://fr.php.net/manual/en/function.curl-getinfo.php
-	 * @param hash $aCurlOptions An (optional) array of options to pass to curl_init. The format is 'option_code' => 'value'. These values have precedence over the default ones. Example: CURLOPT_SSLVERSION => CURL_SSLVERSION_SSLv3
+	 * @param array $aResponseHeaders An array to be filled with reponse headers: WARNING: the actual content of the array depends on the
+	 * library used: cURL or fopen, test with both !! See: http://fr.php.net/manual/en/function.curl-getinfo.php
+	 * @param array $aCurlOptions An (optional) array of options to pass to curl_init. The format is 'option_code' => 'value'. These values
+	 * have precedence over the default ones. Example: CURLOPT_SSLVERSION => CURL_SSLVERSION_SSLv3
+	 *
 	 * @return string The result of the POST request
-	 * @throws Exception
+	 * @throws Exception with a specific error message depending on the cause
 	 */ 
 	static public function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null, $aCurlOptions = array())
 	{
