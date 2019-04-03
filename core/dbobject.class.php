@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
+// Copyright (C) 2010-2019 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -107,12 +107,12 @@ abstract class DBObject implements iDisplay
 	 */
 	protected $m_bSecurityIssue = null;
 	/**
-	 * @var null|string[] list of issues preventing object save
+	 * @var null|string[] list of issues preventing DB write
 	 * @see CheckToWrite()
 	 */
 	protected $m_aCheckIssues = null;
 	/**
-	 * @var null|string[] list of warnings throws during object save
+	 * @var null|string[] list of warnings thrown during DB write
 	 * @see CheckToWrite()
 	 * @since 2.6 N°659 uniqueness constraints
 	 */
@@ -153,7 +153,8 @@ abstract class DBObject implements iDisplay
      * You should preferably use MetaModel::NewObject() instead of this constructor.
      * The whole collection of parameters is [*optional*] please refer to DBObjectSet::FromRow()
      *
-     * @api The availability of this method is not guaranteed in the long term, you should preferably use MetaModel::NewObject().
+     * @deprecated The availability of this method is not guaranteed in the long term, you should preferably use MetaModel::NewObject().
+     * @see MetaModel::NewObject()
      *
      * @param null|array   $aRow                If given : DBObjectSet::FromRow() will be used to fetch the object
      * @param string       $sClassAlias
