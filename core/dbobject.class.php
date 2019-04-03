@@ -2363,7 +2363,7 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * List the attributes that have been changed
+     * List the attributes that have been changed since the object has been loaded from the DB
      *
      * @api
      * @api-advanced
@@ -2384,7 +2384,7 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Whether or not an object was modified since last read
+     * Whether or not an object was modified since last read from the DB
      * (ie: does it differ from the DB ?)
      * 
      * @api
@@ -2858,8 +2858,11 @@ abstract class DBObject implements iDisplay
 		}
 	}
 
-	/**
+	/*
+	* Persist an object to the DB, for the first time
+	*
      * @api
+     * @see DBWrite
      *
 	 * @return int|null inserted object key
      *
@@ -2962,6 +2965,7 @@ abstract class DBObject implements iDisplay
 	 * Update an object in DB
 	 *
      * @api
+     * @see DBWrite
      * 
 	 * @return int object key
      *
@@ -3293,13 +3297,14 @@ abstract class DBObject implements iDisplay
     /**
      * Delete an object
      *
-     * And guarantee data integrity
+     * Pior to the delete the object, it checks if this is feasible to guarantee the DB integrity.
+     * If so, it performs any required cleanup (delete other objects or reset external keys) in addition to the object deletion.
      * 
      * @api
      * 
-     * @param null $oDeletionPlan
+     * @param null $oDeletionPlan Do not use: aims at dealing with recursion
      *
-     * @return DeletionPlan
+     * @return DeletionPlan The detailed description of cleanup operation that have been performed
      *
      * @throws ArchivedObjectException
      * @throws CoreCannotSaveObjectException
@@ -3414,7 +3419,8 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Designed as an action to be called when a stop watch threshold times out
+     * Helper to reset a stop-watch
+     * Suitable for use as a lifecycle action
      *
      * @api
      *
@@ -3440,7 +3446,7 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * Designed as an action to be called when a stop watch threshold times out or from within the framework
+	 * Apply a stimulus (workflow)
      *
      * @api
      *
@@ -3586,11 +3592,10 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * Lifecycle action: Recover the default value (aka when an object is being created)
+	 * Helper to recover the default value (aka when an object is being created)
+     * Suitable for use as a lifecycle action
      *
      * @api
-     *
-     * @todo: check if this is used
      *
 	 */	 	
 	public function Reset($sAttCode)
@@ -3600,9 +3605,10 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * Lifecycle action: Copy an attribute to another
+     * Helper to copy the value of an attribute to another one
+     * Suitable for use as a lifecycle action
      *
-     * @internal
+     * @api
 	 */	 	
 	public function Copy($sDestAttCode, $sSourceAttCode)
 	{
@@ -3611,7 +3617,8 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Lifecycle action: Set the current date/time for the given attribute
+     * Helper to set the current date/time for the given attribute
+     * Suitable for use as a lifecycle action
      *
      * @api
      *
@@ -3629,7 +3636,8 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Lifecycle action: Set the current logged in user for the given attribute
+     * Helper to set the current logged in user for the given attribute
+     * Suitable for use as a lifecycle action
      *
      * @api
      *
@@ -3664,7 +3672,8 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Lifecycle action: Set the current logged in CONTACT for the given attribute
+     * Helper to set the current logged in CONTACT for the given attribute
+     * Suitable for use as a lifecycle action
      *
      * @api
      *
@@ -3707,7 +3716,8 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Lifecycle action: Set the time elapsed since a reference point
+     * Helper to set the time elapsed since a reference point
+     * Suitable for use as a lifecycle action
      *
      * @api
      *
@@ -3789,8 +3799,7 @@ abstract class DBObject implements iDisplay
     /**
      * Get various representations of the value, for insertion into a template (e.g. in Notifications)
      *
-     * @api
-     * @api-advanced
+     * @internal
      *
      * @param string $sPlaceholderAttCode
      *
@@ -4126,6 +4135,7 @@ abstract class DBObject implements iDisplay
      * this way of implementing the relations suffers limitations (not handling the redundancy)
      * and you should consider defining those things in XML
      *
+     * @internal
      * @deprecated
      */
 	public static function GetRelationQueries($sRelCode)
@@ -4144,9 +4154,10 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * Will be deprecated soon - use GetRelatedObjectsDown/Up instead to take redundancy into account
+	 * Use GetRelatedObjectsDown/Up instead to take redundancy into account
      *
      * @internal
+     * @deprecated
 	 */
 	public function GetRelatedObjects($sRelCode, $iMaxDepth = 99, &$aResults = array())
 	{
@@ -4366,13 +4377,13 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * WILL DEPRECATED SOON
 	 * Caching relying on an object set is not efficient since 2.0.3
 	 * Use GetSynchroData instead
 	 *
 	 * Get all the synchro replica related to this object
      *
      * @internal
+     * @deprecated
 	 *
 	 * @return DBObjectSet Set with two columns: R=SynchroReplica S=SynchroDataSource
 	 * @throws \OQLException
@@ -5002,7 +5013,7 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Is the instance archived
+     * Is the object archived
      *
      * @api
      *
@@ -5024,7 +5035,7 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * is the instance obsolete
+     * Is the object obsolete
      *
      * @param string|null $sKeyAttCode
      *
