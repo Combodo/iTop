@@ -1065,6 +1065,9 @@ abstract class DBObject implements iDisplay
     /**
      * Get $sAttCode formatted as HTML
      * 
+     * The returned string is already escaped, and as such is protected against XSS
+     * The markup relies on a few assumptions (CSS) that could change without notice
+     * 
      * @api
      * 
      * @param string $sAttCode
@@ -1106,8 +1109,10 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Get the value as it must be in the edit areas (forms)  
+     * Get the value as it must be in the edit areas (forms)
      * 
+     * Makes a raw text representation of the value.
+     *
      * @internal
      * 
      * @param string $sAttCode
@@ -1156,6 +1161,11 @@ abstract class DBObject implements iDisplay
     /**
      * Get $sAttCode formatted as XML
      * 
+     * The returned value is a text that is suitable for insertion into an XML node.
+     * Depending on the type of attribute, the returned text is either:
+     *   * A literal, with XML entities already escaped,
+     *   * XML
+     *
      * @api
      * 
      * @param string $sAttCode
@@ -1198,7 +1208,6 @@ abstract class DBObject implements iDisplay
      * 
      * @see GetAsHTML()
      * @see GetOriginal()
-     * @protected                            
      * 
      * @param string $sAttCode
      * @param bool   $bLocalize
@@ -1216,7 +1225,6 @@ abstract class DBObject implements iDisplay
      *
      * @see GetAsXML()
      * @see GetOriginal()
-     * @protected
      *
      * @param string $sAttCode
      * @param bool   $bLocalize
@@ -1234,8 +1242,6 @@ abstract class DBObject implements iDisplay
      *
      * @see GetAsCSV()
      * @see GetOriginal()
-     * @protected
-     *
      *
      * @param string $sAttCode
      * @param string $sSeparator
@@ -1420,7 +1426,9 @@ abstract class DBObject implements iDisplay
 
     /**
      * Primary key Getter
-     * 
+     *
+     * Get the id
+     *
      * @api
      * 
      * @return int|null
@@ -1488,9 +1496,11 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * Get the name as defined in the dictionary
+	 * Get the label of a class
+	 *
+	 * Returns the label as defined in the dictionary for the language of the current user
      *
-     * @internal 
+     * @api 
      *
 	 * @return string (empty for default name scheme)
 	 */
@@ -1501,7 +1511,9 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * Get the description as defined in the dictionary
+	 * Get the description of a class
+	 *
+	 * Returns the label as defined in the dictionary for the language of the current user
      *
      * @internal
      *
@@ -1516,8 +1528,8 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * Gets the name of an object in a safe manner for displaying inside a web page
-     *
+	 * Helper to get the friendly name in a safe manner for displaying inside a web page
+	 *
      * @api
 	 *
 	 * @return string
@@ -1529,7 +1541,7 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     * Gets the raw name of an object.
+     * Helper to get the friendly name
      *
      * This is not safe for displaying inside a web page since the " < > characters are not escaped.
      * In example, the name may contain some XSS script instructions.
@@ -1546,7 +1558,7 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     * Getter of the state of this DBObject
+     * Helper to get the state
      * 
      * @api
      *
@@ -1567,7 +1579,7 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Get the label of the state
+     * Get the label of the current state
      * 
      * @api
      * 
@@ -1615,10 +1627,7 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Define attributes read-only from the end-user perspective
-     *
-     * @api
-     * @api-advanced
-     *
+	 *
 	 * @return array|null List of attcodes
 	 */	 	  	 	
 	public static function GetReadOnlyAttributes()
