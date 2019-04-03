@@ -153,7 +153,7 @@ abstract class DBObject implements iDisplay
      * You should preferably use MetaModel::NewObject() instead of this constructor.
      * The whole collection of parameters is [*optional*] please refer to DBObjectSet::FromRow()
      *
-     * @deprecated The availability of this method is not guaranteed in the long term, you should preferably use MetaModel::NewObject().
+     * @internal The availability of this method is not guaranteed in the long term, you should preferably use MetaModel::NewObject().
      * @see MetaModel::NewObject()
      *
      * @param null|array   $aRow                If given : DBObjectSet::FromRow() will be used to fetch the object
@@ -271,12 +271,11 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * String representation of the object
+     * HTML String representation of the object
      *
      * Only a few meaningful information will be returned.
-     * This representation is subject to change.
-     *
-     * @internal
+     * This representation is for debugging purposes, and is subject to change.
+     * The returned string is raw HTML
      *
      * @return string
      * @throws CoreException
@@ -287,7 +286,7 @@ abstract class DBObject implements iDisplay
         $sClass = get_class($this);
         $sRootClass = MetaModel::GetRootClass($sClass);
         $iPKey = $this->GetKey();
-        $sFriendlyname = $this->Get('friendlyname');
+        $sFriendlyname = $this->GetAsHTML('friendlyname');
         $sRet .= "<b title=\"$sRootClass\">$sClass</b>::$iPKey ($sFriendlyname)<br/>\n";
         return $sRet;
 	}
@@ -297,7 +296,6 @@ abstract class DBObject implements iDisplay
      *
      * Restore initial values
      *
-     * @internal
      * @see Reload()
      *
      * @throws CoreException
@@ -308,7 +306,7 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Is the current instance is fully or partially loaded.
+     * Is the current instance fully or partially loaded.
      *
      * This method compute the state in realtime.
      * In almost every case it is preferable to use DBObject::m_bFullyLoaded.
@@ -333,12 +331,10 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     * Fetch the object from the DB.
+     * Reload the object from the DB.
      *
+     * This is mostly used after a lazy load (automatically performed by the framework)
      * This will erase any pending changes.
-     *
-     * @api
-     * @api-advanced
      *
 	 * @param bool $bAllowAllData @deprecated This parameter is ignored!!
 	 *
@@ -371,10 +367,9 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Initialize the instance against a given structured array.
+     * Initialize the instance against a given structured array
      *
      * @internal
-     * @todo the documentation of this method can be improved
      * @see GetExtendedData() extended data
      *
      * @param array        $aRow                an array under the form: `<AttributeCode> => <value>`
@@ -504,8 +499,8 @@ abstract class DBObject implements iDisplay
     /**
      * Protected raw Setter
      *
-     * This method is an internal plumbing : it set the value without doing any of the required processes.
-     * The exposed API Setter is DBObject::>Set()
+     * This method is an internal plumbing : it sets the value without doing any of the required processes.
+     * The exposed API Setter is DBObject::Set()
      *
      * @internal
      * @see Set()
@@ -525,13 +520,11 @@ abstract class DBObject implements iDisplay
      * Attributes setter
      *
      * Set $sAttCode to $value.
-     * The value must be valid according to the underlying AttributeDefinition
-     * - **persist**: Use DBObject::DBWrite() in order to persist the changes into the DB.
-     * - **Performance**: If the object is not fully loaded, a DBObject::reload() will be triggered.
+     * The value must be valid according to the type of attribute.
+     * The value will not be recorded into the DB until DBObject::DBWrite() is called.
      *
      * @api
      * @see DBWrite()
-     * @see reload()
      *
      * @param string $sAttCode
      * @param mixed $value
@@ -627,7 +620,7 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     * Attributes setter "if null"
+     * Helper to set a value only if it is currently undefined
      *
      * Call Set() only of the internal representation of the attribute is null.
      *
@@ -653,7 +646,7 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Attributes setter "trim"
+     * Helper to set a value that fits the attribute max size
      *
      * compare $sValue against the field's max size in the database, and truncate it's ending in order to make it fit.
      * If $sValue is short enough, nothing is done.
@@ -678,7 +671,7 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Get the AttributeDefinition's label.
+     * Get the label of an attribute.
      * 
      * Shortcut to the field's AttributeDefinition->GetLabel()
      *
@@ -697,13 +690,14 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Getter
+     * Getter : get a value from the current object of from a related object
      * 
-     * Get the $sAttCode
+     * Get the value of the attribute $sAttCode
+     * This call may involve an object reload if the object was not completely loaded (lazy loading)
      * 
      * @api
      * 
-     * @param string $sAttCode
+     * @param string $sAttCode Could be an extended attribute code in the form extkey_id->anotherkey_id->remote_attr
      *
      * @return mixed|string
      *
@@ -750,9 +744,10 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * @todo: document this method.
+     * Getter : get values from the current object
      *
      * @internal
+     * @see Get
      * 
      * @param string $sAttCode
      *
@@ -848,17 +843,15 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * Get the original value
+     * Get the value as it was before change with Set
      * 
      * The original value vary according to the persisted state 
      *   - not persisted: NULL
      *   - persisted: the "in DB" value
      * 
-     * @api
-     * 
      * @param string $sAttCode
      *
-     * @return mixed|null the origninal value
+     * @return mixed|null the original value
      *
      * @throws CoreException
      */
@@ -875,10 +868,9 @@ abstract class DBObject implements iDisplay
     /**
      * Returns the default value of the $sAttCode.
      *
-     * Returns the default value of the AttributeDefinition.
-     * Overridable.
+     * Returns the default value of the given attribute.
      * 
-     * @overwritable-hook You can extend this method in order to provide your own default value.
+     * @internal
      *
      * @param string $sAttCode
      *
@@ -895,8 +887,7 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Returns data loaded by the mean of a dynamic and explicit JOIN
      *
-     * @internal 
-     * @todo: better document this method
+     * @internal
      *
      * @return array|null
 	 */	 
@@ -908,9 +899,9 @@ abstract class DBObject implements iDisplay
 	/**
      * Set the HighlightCode
      *
-     * Switch to $sCode if it has a greater rank than DBObject::m_sHighlightCode
+     * Switch to $sCode if it has a greater rank than the current code
      *
-     * @interal
+     * @internal
      * @used-by DBObject::ComputeHighlightCode()
      * @see m_sHighlightCode
      *
@@ -940,7 +931,7 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Get the current HighlightCode
      * 
-     * @interal
+     * @internal
      * @used-by DBObject::ComputeHighlightCode()
      * 
 	 * @return string|null The Hightlight code (null if none set, meaning rank = 0)
