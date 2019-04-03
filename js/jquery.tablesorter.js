@@ -299,14 +299,29 @@
 
                 if (!node) return "";
 
-                if (!config.supportsTextContent) config.supportsTextContent = node.textContent || false;
+                if (!config.supportsTextContent) config.supportsTextContent = ( node.textContent == node.innerHTML ? node.textContent : false );
 
                 if (config.textExtraction == "simple") {
                     if (config.supportsTextContent) {
                         text = node.textContent;
                     } else {
                         if (node.childNodes[0] && node.childNodes[0].hasChildNodes()) {
-                            text = node.childNodes[0].innerHTML;
+							// User is editing links (example: relations between Network Devices)
+							// Set default fallback to textContent (as before), then check for editions (text inputs, selects) and retrieve the values
+							text = node.textContent;
+							if( $('.attribute-edit', node).length == 1 ) {
+								if( $('.attribute-edit select', node).length == 1 ) {
+									text = $('.attribute-edit select', node).val();
+								}
+									
+								if( $('.attribute-edit input', node).length == 1 ) {
+									text = $('.attribute-edit input', node).val();
+								}
+							}
+							else {
+								text = node.childNodes[0].innerHTML;
+							}
+							
                         } else {
                             text = node.innerHTML;
                         }
