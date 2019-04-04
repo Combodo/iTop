@@ -1078,13 +1078,17 @@ class ModelFactory
 	
 	/**
 	 * Check if the class specified by the given name already exists in the loaded DOM
+	 *
 	 * @param string $sClassName The node corresponding to the class to load
-	 * @throws Exception
+	 * @param bool $bIncludeMetas Look for $sClassName also in meta declaration (PHP classes) if not found in XML classes
+	 *
+	 * @throws \Exception
+	 *
 	 * @return bool True if the class exists, false otherwise
 	 */
-	protected function ClassNameExists($sClassName)
+	protected function ClassNameExists($sClassName, $bIncludeMetas = false)
 	{
-		return !is_null($this->GetClass($sClassName));
+		return !is_null($this->GetClass($sClassName, $bIncludeMetas));
 	}
 
 	/**
@@ -1190,14 +1194,22 @@ EOF
 	{
 		return $this->GetNodes("/itop_design/classes//class[@id][@_created_in='$sModuleName']");
 	}
-		
+
 	/**
 	 * List all classes from the DOM
-	 * @throws Exception
+	 *
+	 * @param bool $bIncludeMetas Also look for meta declaration (PHP classes) in addition to XML classes
+	 *
+	 * @return \DOMNodeList
 	 */
-	public function ListAllClasses()
+	public function ListAllClasses($bIncludeMetas = false)
 	{
-		return $this->GetNodes("/itop_design/classes//class[@id]");
+		$sXPath = "/itop_design/classes//class[@id]";
+		if($bIncludeMetas === true)
+		{
+			$sXPath .= "|/itop_design/meta/classes/class[@id]";
+		}
+		return $this->GetNodes($sXPath);
 	}
 	
 	/**
@@ -1210,13 +1222,22 @@ EOF
 	}
 
 	/**
-	 * @param $sClassName
+	 * @param string $sClassName
+	 * @param bool $bIncludeMetas Look for $sClassName also in meta declaration (PHP classes) if not found in XML classes
 	 *
-	 * @return \DOMElement
+	 * @return null|\DOMElement
 	 */
-	public function GetClass($sClassName)
+	public function GetClass($sClassName, $bIncludeMetas = false)
 	{
+		// Check if class among XML classes
 		$oClassNode = $this->GetNodes("/itop_design/classes//class[@id='$sClassName']")->item(0);
+
+		// If not, check if class among exposed meta classes (PHP classes)
+		if(is_null($oClassNode) && ($bIncludeMetas === true))
+		{
+			$oClassNode = $this->GetNodes("/itop_design/meta/classes/class[@id='$sClassName']")->item(0);
+		}
+
 		return $oClassNode;
 	}
 
