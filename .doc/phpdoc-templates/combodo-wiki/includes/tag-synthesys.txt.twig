@@ -15,7 +15,7 @@
     and (
         method.tags[tag] is defined
         and (
-            hidden_by[tag] is not defined or structure.tags[hidden_by[tag]] is not defined
+            hidden_by[tag] is not defined or method.tags[hidden_by[tag]] is not defined
         )
     )
 %}

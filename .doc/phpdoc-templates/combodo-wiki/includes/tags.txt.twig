@@ -3,7 +3,7 @@
 {% endif %}
 
 {% if blacklist is not defined %}
-    {% set blacklist =['link', 'see', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage', 'api', 'api-advanced', 'todo'] %}
+    {% set blacklist =['link', 'see', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage', 'api', 'api-advanced', 'todo', 'code-example'] %}
 {% endif %}
 {% if hidden_by is not defined -%}
     {# Do not display @api if @api-advanced is also present #}

@@ -8,7 +8,7 @@ some tags where added :
  * `@overwritable-hook`: used to mark a method as "designed to be extended"
  * `@extension-hook`: not used for now 
  * `@phpdoc-tunning-exclude-inherited`: tunning tag that inform this template to ignere inherited methods in the rendrering.
-
+ * `@code-example` : the sentence in the first line (next to the tag) is the title, the following lines are the sample code   
 
 some behaviours where added :
  * only public `@api` and `@api-advanced` are showed

@@ -39,7 +39,7 @@
 
 {% include 'includes/uses.txt.twig' with {structure:property, title_level: ''} %}
 
-{% include 'includes/tags.txt.twig' with {structure:property, title_level: '==', blacklist:  ['link', 'see', 'access', 'var', 'deprecated', 'uses', 'todo']} %}
+{% include 'includes/tags.txt.twig' with {structure:property, title_level: '==', blacklist:  ['link', 'see', 'access', 'var', 'deprecated', 'uses', 'todo', 'code-example']} %}
 
 
 <code php>{{ property.visibility }}  ${{ property.name }}{% if property.types %} : {{ property.types|join('|')|raw }}{% endif %}</code>
