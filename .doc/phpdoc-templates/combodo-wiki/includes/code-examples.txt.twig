@@ -9,26 +9,26 @@
     {%- set sub_title_level = '' -%}
 {% endif %}
 
-{% for tagName,tags in structure.tags if tagName in ['code-example'] %}
-{% if loop.first %}
-{{title_level}} Examples {{title_level}}
-{% endif %}
-{% for tag in tags %}
-{%- set descToken = tag.description|split("\n", 2) -%}
-{%- set title = descToken[0] -%}
-{%- set code = descToken[1] -%}
-{{sub_title_level}} {{ title }} {{sub_title_level}}
-<code php>{{ code|raw }}</code>
-{% endfor %}
-{% endfor %}
-
-
-{#{% for tagName,tags in structure.tags if tagName in ['example'] %}#}
+{#{% for tagName,tags in structure.tags if tagName in ['code-example'] %}#}
 {#{% if loop.first %}#}
 {#{{title_level}} Examples {{title_level}}#}
 {#{% endif %}#}
 {#{% for tag in tags %}#}
-{#{{ sub_title_level }} {{ tag.filePath|escape }}{{ sub_title_level }}#}
-{#<code php>{{ tag.description|raw }}</code>#}
+{#{%- set descToken = tag.description|split("\n", 2) -%}#}
+{#{%- set title = descToken[0] -%}#}
+{#{%- set code = descToken[1] -%}#}
+{#{{sub_title_level}} {{ title }} {{sub_title_level}}#}
+{#<code php>{{ code|raw }}</code>#}
 {#{% endfor %}#}
 {#{% endfor %}#}
+
+
+{% for tagName,tags in structure.tags if tagName in ['example'] %}
+{% if loop.first %}
+{{title_level}} Examples {{title_level}}
+{% endif %}
+{% for tag in tags %}
+{{ sub_title_level }} {{ tag.filePath|escape }}{{ sub_title_level }}
+<code php>{{ tag.description|raw }}</code>
+{% endfor %}
+{% endfor %}
