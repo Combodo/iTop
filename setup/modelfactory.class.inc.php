@@ -615,8 +615,8 @@ class ModelFactory
 	
 				if (!$oTargetParentNode)
 				{
-					echo "Dumping target doc - looking for '$sParentId'<br/>\n";
-					$this->oDOMDocument->firstChild->Dump();
+					// echo "Dumping target doc - looking for '$sParentId'<br/>\n";
+					// $this->oDOMDocument->firstChild->Dump();
 					$sPath = MFDocument::GetItopNodePath($oSourceNode);
 					$iLine = $oSourceNode->getLineNo();
 					throw new MFException($sPath.' at line '.$iLine.": parent class '$sParentId' could not be found", MFException::PARENT_NOT_FOUND, $iLine, $sPath, $sParentId);
@@ -633,8 +633,8 @@ class ModelFactory
 					}
 					else
 					{
-						echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
-						$this->oDOMDocument->firstChild->Dump();
+						// echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
+						// $this->oDOMDocument->firstChild->Dump();
 						$sPath = MFDocument::GetItopNodePath($oSourceNode);
 						$iLine = $oSourceNode->getLineNo();
 						throw new MFException($sPath.' at line '.$iLine.": could not be found", MFException::NOT_FOUND, $iLine, $sPath);
@@ -2307,8 +2307,8 @@ class MFElement extends Combodo\iTop\DesignElement
 		{
 			if ($bMustExist)
 			{
-				echo "Dumping parent node<br/>\n";
-				$oContainer->Dump();
+				//echo "Dumping parent node<br/>\n";
+				//$oContainer->Dump();
 				throw new Exception(MFDocument::GetItopNodePath($this).' at line '.$this->getLineNo().": could not be found");
 			}
 			if (!$bIfExists)
