@@ -35,37 +35,34 @@
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-'Menu:ServiceManagement' => 'Service Management',
-'Menu:ServiceManagement+' => 'Overzicht van Service Management',
-'Menu:Service:Overview' => 'Overzicht',
-'Menu:Service:Overview+' => '',
-'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per service level',
-'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten met status',
-'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracten die in minder dan 30 dagen verlopen',
+	'Menu:ServiceManagement' => 'Service Management',
+	'Menu:ServiceManagement+' => 'Overzicht van Service Management',
+	'Menu:Service:Overview' => 'Overzicht',
+	'Menu:Service:Overview+' => '',
+	'UI-ServiceManagementMenu-ContractsBySrvLevel' => 'Contracten per service level',
+	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contracten met status',
+	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contracten die in minder dan 30 dagen verlopen',
 
-'Menu:ProviderContract' => 'Leverancierscontracten',
-'Menu:ProviderContract+' => 'Leverancierscontracten',
-'Menu:CustomerContract' => 'Klantencontracten',
-'Menu:CustomerContract+' => 'Klantencontracten',
-'Menu:ServiceSubcategory' => 'Dienst subcategorieën',
-'Menu:ServiceSubcategory+' => 'Dienst subcategorieën',
-'Menu:Service' => 'Services',
-'Menu:Service+' => 'Services',
-'Menu:ServiceElement' => 'Dienstelementen',
-'Menu:ServiceElement+' => 'Dienstelementen',
-'Menu:SLA' => 'SLA\'s',
-'Menu:SLA+' => 'Service Level Agreements',
-'Menu:SLT' => 'SLT\'s',
-'Menu:SLT+' => 'Service Level Targets',
-'Menu:DeliveryModel' => 'Leveringsmodellen',
-'Menu:DeliveryModel+' => 'Leveringsmodellen',
-'Menu:ServiceFamily' => 'Servicecategorieën',
-'Menu:ServiceFamily+' => 'Servicecategorieën',
-'Menu:Procedure' => 'Procedurecatalogus',
-'Menu:Procedure+' => 'Alle procedures in een catalogus',
-
-
-
+	'Menu:ProviderContract' => 'Leverancierscontracten',
+	'Menu:ProviderContract+' => 'Leverancierscontracten',
+	'Menu:CustomerContract' => 'Klantencontracten',
+	'Menu:CustomerContract+' => 'Klantencontracten',
+	'Menu:ServiceSubcategory' => 'Dienst subcategorieën',
+	'Menu:ServiceSubcategory+' => 'Dienst subcategorieën',
+	'Menu:Service' => 'Services',
+	'Menu:Service+' => 'Services',
+	'Menu:ServiceElement' => 'Dienstelementen',
+	'Menu:ServiceElement+' => 'Dienstelementen',
+	'Menu:SLA' => 'SLA\'s',
+	'Menu:SLA+' => 'Service Level Agreements',
+	'Menu:SLT' => 'SLT\'s',
+	'Menu:SLT+' => 'Service Level Targets',
+	'Menu:DeliveryModel' => 'Leveringsmodellen',
+	'Menu:DeliveryModel+' => 'Leveringsmodellen',
+	'Menu:ServiceFamily' => 'Servicecategorieën',
+	'Menu:ServiceFamily+' => 'Servicecategorieën',
+	'Menu:Procedure' => 'Procedurecatalogus',
+	'Menu:Procedure+' => 'Alle procedures in een catalogus',
 ));
 
 //
@@ -76,7 +73,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Organization/Attribute:deliverymodel_id' => 'Leveringsmodel',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
 	'Class:Organization/Attribute:deliverymodel_name' => 'Naam leveringsmodel',
-
 ));
 
 

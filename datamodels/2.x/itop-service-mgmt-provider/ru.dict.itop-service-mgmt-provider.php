@@ -33,7 +33,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:SLT+' => 'Целевые показатели уровня услуг',
 	'Menu:DeliveryModel' => 'Модели предоставления услуг',
 	'Menu:DeliveryModel+' => 'Модели предоставления услуг (Delivery Models)',
-
+	'Menu:ServiceFamily' => 'Пакеты услуг',
+	'Menu:ServiceFamily+' => 'Пакеты услуг',
 ));
 
 
