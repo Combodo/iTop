@@ -344,8 +344,7 @@
                     <is_null_allowed>true</is_null_allowed>
                 </field>
                 <field id="parent_request_id" xsi:type="AttributeExternalKey">
-                    <filter>
-                        <![CDATA[SELECT UserRequest WHERE id != :this->id AND status NOT IN ('rejected','resolved','closed')]]></filter>
+                    <filter><![CDATA[SELECT UserRequest WHERE id != :this->id AND operational_status 'ongoing']]></filter>
                     <dependencies>
                     </dependencies>
                     <sql>parent_request_id</sql>
@@ -372,7 +371,7 @@
                     <is_null_allowed>true</is_null_allowed>
                 </field>
                 <field id="parent_change_id" xsi:type="AttributeExternalKey">
-                    <filter><![CDATA[SELECT Change WHERE status != "closed"]]></filter>
+                    <filter><![CDATA[SELECT Change WHERE operational_status != 'closed']]></filter>
                     <sql>parent_change_id</sql>
                     <target_class>Change</target_class>
                     <is_null_allowed>true</is_null_allowed>
@@ -1766,7 +1765,7 @@
                                   <title>Organization:Overview:UserRequests</title>
                                   <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
                                   <subtitle>Menu:UserRequest:OpenRequests</subtitle>
-                                  <query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
+                                  <query>SELECT UserRequest WHERE operational_status != 'closed' AND org_id=:this-&gt;id</query>
                                   <group_by>status</group_by>
                                   <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
                                 </dashlet>
@@ -1778,7 +1777,7 @@
                                 <dashlet id="10" xsi:type="DashletObjectList">
                                   <rank>0</rank>
                                   <title>Organization:Overview:MyUserRequests</title>
-                                  <query>SELECT UserRequest AS i WHERE i.agent_id = :current_contact_id AND status NOT IN ("closed", "resolved")  AND org_id=:this-&gt;id</query>
+                                  <query>SELECT UserRequest WHERE agent_id = :current_contact_id AND operational_status = 'ongoing' AND org_id=:this-&gt;id</query>
                                   <menu>true</menu>
                                 </dashlet>
                                 <dashlet id="13" xsi:type="DashletGroupByPie">
@@ -1813,16 +1812,14 @@
                                 <title>Menu:RequestManagement</title>
                                 <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
                                 <subtitle>Menu:UserRequest:OpenRequests</subtitle>
-                                <query>SELECT UserRequest WHERE status != "closed"</query>
+                                <query>SELECT UserRequest WHERE operational_status != 'closed'</query>
                                 <group_by>status</group_by>
                                 <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
                             </dashlet>
                             <dashlet id="10" xsi:type="DashletObjectList">
                                 <rank>1</rank>
                                 <title>UI:WelcomeMenu:MyCalls</title>
-                                <query>SELECT UserRequest AS i WHERE i.agent_id = :current_contact_id AND status NOT IN
-                                    ("closed", "resolved")
-                                </query>
+                                <query>SELECT UserRequest WHERE agent_id = :current_contact_id AND operational_status = 'ongoing'</query>
                                 <menu>true</menu>
                             </dashlet>
                         </dashlets>
@@ -1871,7 +1868,7 @@
                             <dashlet id="3" xsi:type="DashletGroupByTable">
                                 <rank>0</rank>
                                 <title>UI-RequestManagementOverview-OpenRequestByStatus</title>
-                                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+                                <query>SELECT UserRequest WHERE operational_status != 'closed'</query>
                                 <group_by>status</group_by>
                                 <style>table</style>
                             </dashlet>
@@ -1883,7 +1880,7 @@
                             <dashlet id="4" xsi:type="DashletGroupByTable">
                                 <rank>0</rank>
                                 <title>UI-RequestManagementOverview-OpenRequestByAgent</title>
-                                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+                                <query>SELECT UserRequest WHERE operational_status != 'closed'</query>
                                 <group_by>agent_id</group_by>
                                 <style>table</style>
                             </dashlet>
@@ -1895,7 +1892,7 @@
                             <dashlet id="5" xsi:type="DashletGroupByTable">
                                 <rank>0</rank>
                                 <title>UI-RequestManagementOverview-OpenRequestByType</title>
-                                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+                                <query>SELECT UserRequest WHERE operational_status != 'closed'</query>
                                 <group_by>finalclass</group_by>
                                 <style>table</style>
                             </dashlet>
@@ -1907,7 +1904,7 @@
                             <dashlet id="6" xsi:type="DashletGroupByTable">
                                 <rank>0</rank>
                                 <title>UI-RequestManagementOverview-OpenRequestByCustomer</title>
-                                <query>SELECT UserRequest WHERE status NOT IN ('closed','rejected')</query>
+                                <query>SELECT UserRequest WHERE operational_status != 'closed'</query>
                                 <group_by>org_id</group_by>
                                 <style>table</style>
                             </dashlet>
@@ -1934,30 +1931,28 @@
         <menu id="UserRequest:MyRequests" xsi:type="OQLMenuNode" _delta="define">
             <rank>0</rank>
             <parent>UserRequest:Shortcuts</parent>
-            <oql>
-                <![CDATA[SELECT UserRequest WHERE agent_id = :current_contact_id AND status NOT IN ("closed","resolved")]]></oql>
+            <oql><![CDATA[SELECT UserRequest WHERE agent_id = :current_contact_id AND operational_status = 'ongoing']]></oql>
             <do_search/>
             <auto_reload>fast</auto_reload>
         </menu>
         <menu id="UserRequest:EscalatedRequests" xsi:type="OQLMenuNode" _delta="define">
             <rank>1</rank>
             <parent>UserRequest:Shortcuts</parent>
-            <oql>
-                <![CDATA[SELECT UserRequest WHERE status IN ("escalated_tto", "escalated_ttr") OR escalation_flag="yes"]]></oql>
+            <oql><![CDATA[SELECT UserRequest WHERE status IN ("escalated_tto", "escalated_ttr") OR escalation_flag="yes"]]></oql>
             <do_search/>
             <auto_reload>fast</auto_reload>
         </menu>
         <menu id="UserRequest:OpenRequests" xsi:type="OQLMenuNode" _delta="define">
             <rank>2</rank>
             <parent>UserRequest:Shortcuts</parent>
-            <oql><![CDATA[SELECT UserRequest WHERE status NOT IN ("closed")]]></oql>
+            <oql><![CDATA[SELECT UserRequest WHERE operational_status != 'closed']]></oql>
             <do_search>1</do_search>
             <auto_reload>fast</auto_reload>
         </menu>
         <menu id="UserRequest:MySupportRequests" xsi:type="OQLMenuNode" _delta="define">
             <rank>3</rank>
             <parent>UserRequest:Shortcuts</parent>
-            <oql><![CDATA[SELECT UserRequest WHERE caller_id = :current_contact_id AND status NOT IN ("closed")]]></oql>
+            <oql><![CDATA[SELECT UserRequest WHERE caller_id = :current_contact_id AND operational_status != 'closed']]></oql>
             <do_search/>
             <auto_reload>fast</auto_reload>
         </menu>
@@ -1970,8 +1965,7 @@
                         <down>
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
-                                    <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
+                                    <oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.operational_status = 'ongoing') AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
                                     <icon>itop-request-mgmt/images/incident-red.png</icon>
                                     <default>yes</default>
@@ -1985,8 +1979,7 @@
                         <down>
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
-                                    <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
+                                    <oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.operational_status = 'ongoing') AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
                                     <icon>itop-request-mgmt/images/incident-red.png</icon>
                                     <default>yes</default>
@@ -2004,8 +1997,7 @@
                         <down>
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
-                                    <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
+                                    <oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.operational_status = 'ongoing') AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
                                     <icon>itop-request-mgmt/images/incident-red.png</icon>
                                     <default>yes</default>
@@ -2015,8 +2007,7 @@
                         <up>
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
-                                    <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
+                                    <oql><![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.operational_status = 'ongoing') AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
                                     <icon>itop-request-mgmt/images/incident-red.png</icon>
                                     <default>yes</default>
