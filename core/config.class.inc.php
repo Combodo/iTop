@@ -1514,6 +1514,14 @@ class Config
 		// (we have their final path at that point)
 	}
 
+	/**
+	 * @param string $sModule
+	 * @param string $sProperty
+	 * @param mixed $defaultvalue
+	 *
+	 * @return mixed|null if present, value defined in the configuration file, if not module parameter from XML
+	 * @see \MetaModel::GetModuleParameter()
+	 */
 	public function GetModuleSetting($sModule, $sProperty, $defaultvalue = null)
 	{
 		if (isset($this->m_aModuleSettings[$sModule][$sProperty]))
@@ -1528,9 +1536,11 @@ class Config
     /**
      * @param string $sModule
      * @param string $sProperty
-     * @param mixed|null $defaultvalue
+     * @param mixed $defaultvalue
      *
-     * @return mixed|null
+     * @return mixed|null parameter value defined in the XML
+     * @see \MetaModel::GetModuleSetting() to get from the configuration file first
+     * @link https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Axml_reference#modules_parameters
      */
     public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
 	{
