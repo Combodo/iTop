@@ -2379,6 +2379,7 @@ class MFElement extends Combodo\iTop\DesignElement
 				case 'added':
 				case 'replaced':
 				case 'needed':
+				case 'forced':
 				// marked as added or modified, just reset the flag
 				$oNode->removeAttribute('_alteration');
 				break;
