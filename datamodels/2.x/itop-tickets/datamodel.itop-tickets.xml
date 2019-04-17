@@ -223,24 +223,21 @@
 					<code><![CDATA[
         protected function MakeTicketRef($iNextId)
         {
-                switch(get_class($this))
+                switch(true)
                 {
-                        case 'UserRequest':
+                        case $this instanceof UserRequest:
                         $sFormat = 'R-%06d';
                         break;
 
-                        case 'Incident':
+                        case $this instanceof Incident:
                         $sFormat = 'I-%06d';
                         break;
 
-                        case 'Change':
-                        case 'RoutineChange':
-                        case 'EmergencyChange':
-                        case 'NormalChange':
+                        case $this instanceof Change:
                         $sFormat = 'C-%06d';
                         break;
 
-                        case 'Problem':
+                        case $this instanceof Problem:
                         $sFormat = 'P-%06d';
                         break;
 
