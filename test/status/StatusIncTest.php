@@ -11,6 +11,10 @@ namespace Combodo\iTop\Test\UnitTest\Status;
  * User: Guy Couronné (guy.couronne@gmail.com)
  * Date: 25/01/2019
  */
+
+use function Combodo\iTop\Application\Status\StatusCheckConfigFile;
+use function Combodo\iTop\Application\Status\StatusGetAppRoot;
+use function Combodo\iTop\Application\Status\StatusStartup;
 use PHPUnit\Framework\TestCase;
 
 if (!defined('DEBUG_UNIT_TEST')) {
@@ -36,7 +40,7 @@ class StatusIncTest extends TestCase {
     protected function setUp() {
         //AppRoot is the directory containing the directory 
         //Assume getcwd() is runned inside APPROOT/test
-        $this->sAppRoot = dirname(getcwd());
+        $this->sAppRoot = __DIR__ . '/../../sources/application/status';
     }
 
     /**
@@ -89,7 +93,7 @@ class StatusIncTest extends TestCase {
     public function testStatusStartupWrongDbPwd() {
         include_once($this->sAppRoot . '/status.inc.php');
 
-        \StatusCheckConfigFile();
+        StatusCheckConfigFile();
         require_once(APPROOT . '/core/cmdbobject.class.inc.php');
         require_once(APPROOT . '/application/utils.inc.php');
         require_once(APPROOT . '/core/contexttag.class.inc.php');
