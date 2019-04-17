@@ -223,28 +223,18 @@
 					<code><![CDATA[
         protected function MakeTicketRef($iNextId)
         {
-                switch(true)
-                {
-                        case $this instanceof UserRequest:
-                        $sFormat = 'R-%06d';
-                        break;
-
-                        case $this instanceof Incident:
-                        $sFormat = 'I-%06d';
-                        break;
-
-                        case $this instanceof Change:
-                        $sFormat = 'C-%06d';
-                        break;
-
-                        case $this instanceof Problem:
-                        $sFormat = 'P-%06d';
-                        break;
-
-                        default:
-                        $sFormat = 'T-%06d';
-                }
-                return sprintf($sFormat, $iNextId);
+                return sprintf(static::GetTicketRefFormat(), $iNextId);
+        }
+        ]]></code>
+				</method>
+				<method id="GetTicketRefFormat">
+					<static>true</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
+        public static function GetTicketRefFormat()
+        {
+                return 'T-%06d';
         }
         ]]></code>
 				</method>

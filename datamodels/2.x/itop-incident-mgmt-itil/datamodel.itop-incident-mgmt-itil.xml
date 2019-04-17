@@ -947,6 +947,17 @@
 				</states>
 			</lifecycle>
 			<methods>
+				<method id="GetTicketRefFormat">
+					<static>true</static>
+					<access>public</access>
+					<type>Overload-DBObject</type>
+					<code><![CDATA[
+        public static function GetTicketRefFormat()
+        {
+                return 'I-%06d';
+        }
+        ]]></code>
+				</method>
 				<method id="SetAssignedDate">
 					<comment><![CDATA[/**
 	 * To be deprecated: use SetCurrentDate() instead
