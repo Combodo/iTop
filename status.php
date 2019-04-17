@@ -1,12 +1,12 @@
 <?php
 
 //Include status functions
-require_once(dirname(__FILE__) . '/status.inc.php');
+require_once(__DIR__ . '/sources/application/status/status.inc.php');
 
 //Do check Status
 try 
 {
-        \StatusStartup();
+        \Combodo\iTop\Application\Status\StatusStartup();
         $aResult = array('status' => STATUS_RUNNING, 'code' => \RestResult::OK, 'message' => '');
 } 
 catch (\Exception $e) 
