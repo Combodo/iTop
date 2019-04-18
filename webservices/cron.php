@@ -591,6 +591,22 @@ catch (Exception $e)
 		$oP->p($e->getTraceAsString());
 	}
 }
+finally
+{
+	try
+	{
+		unset($oMutex);
+	}
+	catch (Exception $e)
+	{
+		$oP->p("ERROR: '".$e->getMessage()."'");
+		if ($bDebug)
+		{
+			// Might contain verb parameters such a password...
+			$oP->p($e->getTraceAsString());
+		}
+	}
+}
 
 $oP->p("Exiting: ".time().' ('.date('Y-m-d H:i:s').')');
 
