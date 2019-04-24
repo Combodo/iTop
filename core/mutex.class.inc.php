@@ -45,7 +45,7 @@ class iTopMutex
 	static protected $aAcquiredLocks = array(); // Number of instances of the Mutex, having the lock, in this page
 
 	public function __construct(
-		$sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null, $bDBTlsEnabled = false, $sDBTlsCA = null
+		$sName, $sDBHost = null, $sDBUser = null, $sDBPwd = null, $bDBTlsEnabled = null, $sDBTlsCA = null
 	)
 	{
 		// Compute the name of a lock for mysql
