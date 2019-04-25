@@ -679,18 +679,34 @@ class DesignerTabularForm extends DesignerForm
 
 class DesignerFormField
 {
+	/** @var string $sLabel */
 	protected $sLabel;
+	/** @var string $sCode */
 	protected $sCode;
+	/** @var mixed $defaultValue */
 	protected $defaultValue;
 	/** @var \DesignerForm $oForm */
 	protected $oForm;
+	/** @var bool $bMandatory */
 	protected $bMandatory;
+	/** @var bool $bReadOnly */
 	protected $bReadOnly;
+	/** @var bool $bAutoApply */
 	protected $bAutoApply;
+	/** @var array $aCSSClasses */
 	protected $aCSSClasses;
+	/** @var bool $bDisplayed */
 	protected $bDisplayed;
+	/** @var array $aWidgetExtraParams */
 	protected $aWidgetExtraParams;
-	
+
+	/**
+	 * DesignerFormField constructor.
+	 *
+	 * @param string $sCode
+	 * @param string $sLabel
+	 * @param mixed $defaultValue
+	 */
 	public function __construct($sCode, $sLabel, $defaultValue)
 	{
 		$this->sLabel = $sLabel;
@@ -703,7 +719,10 @@ class DesignerFormField
 		$this->bDisplayed = true;
 		$this->aWidgetExtraParams = array();
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	public function GetCode()
 	{
 		return $this->sCode;
@@ -712,69 +731,108 @@ class DesignerFormField
     /**
      * @param \DesignerForm $oForm
      */
-	public function SetForm(\DesignerForm $oForm)
+	public function SetForm(DesignerForm $oForm)
 	{
 		$this->oForm = $oForm;
 	}
-	
 
+	/**
+	 * @param bool $bMandatory
+	 */
 	public function SetMandatory($bMandatory = true)
 	{
 		$this->bMandatory = $bMandatory;
 	}
 
+	/**
+	 * @param bool $bReadOnly
+	 */
 	public function SetReadOnly($bReadOnly = true)
 	{
 		$this->bReadOnly = $bReadOnly;
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function IsReadOnly()
 	{
 		return ($this->oForm->IsReadOnly() || $this->bReadOnly);
 	}
 
+	/**
+	 * @param bool $bAutoApply
+	 */
 	public function SetAutoApply($bAutoApply)
 	{
 		$this->bAutoApply = $bAutoApply;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function IsAutoApply()
 	{
 		return $this->bAutoApply;
 	}
 
+	/**
+	 * @param bool $bDisplayed
+	 */
 	public function SetDisplayed($bDisplayed)
 	{
 		$this->bDisplayed = $bDisplayed;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function IsDisplayed()
 	{
 		return $this->bDisplayed;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetFieldId()
 	{
 		return $this->oForm->GetFieldId($this->sCode);
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	public function GetWidgetClass()
 	{
 		return 'property_field';
 	}
-	
+
+	/**
+	 * @return array
+	 */
 	public function GetWidgetExtraParams()
 	{
 		return $this->aWidgetExtraParams;
 	}
-	
+
+	/**
+	 * @param \WebPage $oP
+	 * @param string $sFormId
+	 * @param string $sRenderMode
+	 *
+	 * @return array
+	 */
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		return array('label' => $this->sLabel, 'value' => "<input type=\"text\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
 	}
-	
+
+	/**
+	 * @param array $aValues
+	 */
 	public function ReadParam(&$aValues)
 	{
 		if ($this->IsReadOnly())
@@ -801,12 +859,18 @@ class DesignerFormField
 			}
 		}
 	}
-	
+
+	/**
+	 * @return bool
+	 */
 	public function IsVisible()
 	{
 		return true;
 	}
-	
+
+	/**
+	 * @param string $sCSSClass
+	 */
 	public function AddCSSClass($sCSSClass)
 	{
 		$this->aCSSClasses[] = $sCSSClass;
@@ -814,6 +878,8 @@ class DesignerFormField
 	
 	/**
 	 * A way to set/change the default value after constructing the field
+	 *
+	 * @param array $aAllDefaultValue
 	 */
 	public function SetDefaultValueFrom($aAllDefaultValue)
 	{
@@ -822,7 +888,12 @@ class DesignerFormField
 			$this->defaultValue = $aAllDefaultValue[$this->GetCode()];
 		}
 	}
-	
+
+	/**
+	 * @param $sFieldCode
+	 *
+	 * @return \DesignerFormField|false
+	 */
 	public function FindField($sFieldCode)
 	{
 		if ($this->sCode == $sFieldCode)
@@ -832,11 +903,17 @@ class DesignerFormField
 		return false;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetHandlerEquals()
 	{
 		return 'null';
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetHandlerGetValue()
 	{
 		return 'null';
@@ -863,11 +940,7 @@ class DesignerLabelField extends DesignerFormField
 	}
 
 	/**
-	 * @param \WebPage $oP
-	 * @param string $sFormId
-	 * @param string $sRenderMode
-	 *
-	 * @return array
+	 * @inheritdoc
 	 */
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
@@ -877,7 +950,7 @@ class DesignerLabelField extends DesignerFormField
 	}
 
 	/**
-	 * @param array $aValues
+	 * @inheritdoc
 	 */
 	public function ReadParam(&$aValues)
 	{
