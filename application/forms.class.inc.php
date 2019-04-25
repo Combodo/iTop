@@ -845,25 +845,47 @@ class DesignerFormField
 
 class DesignerLabelField extends DesignerFormField
 {
+	/** @var int $iCount A counter to automatically make the field code */
+	protected static $iCount = 0;
+	/** @var string $sDescription */
 	protected $sDescription;
-	
+
+	/**
+	 * @inheritdoc
+	 */
 	public function __construct($sLabel, $sDescription)
 	{
-		parent::__construct('', $sLabel, '');
+		// Increase counter
+		static::$iCount++;
+
+		parent::__construct('label_number_' . static::$iCount, $sLabel, '');
 		$this->sDescription = $sDescription;
 	}
-	
+
+	/**
+	 * @param \WebPage $oP
+	 * @param string $sFormId
+	 * @param string $sRenderMode
+	 *
+	 * @return array
+	 */
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		return array('label' => $this->sLabel, 'value' => $this->sDescription);
 	}
-	
+
+	/**
+	 * @param array $aValues
+	 */
 	public function ReadParam(&$aValues)
 	{
 	}
-	
+
+	/**
+	 * @inheritdoc
+	 */
 	public function IsVisible()
 	{
 		return true;
