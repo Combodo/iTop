@@ -573,8 +573,6 @@ try
 		}
 
 		CronExec($oP, $aProcesses, $bVerbose);
-
-		$oMutex->Unlock();
 	}
 	else
 	{
@@ -595,7 +593,7 @@ finally
 {
 	try
 	{
-		unset($oMutex);
+		$oMutex->Unlock();
 	}
 	catch (Exception $e)
 	{
