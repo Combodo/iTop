@@ -344,7 +344,7 @@
                     <is_null_allowed>true</is_null_allowed>
                 </field>
                 <field id="parent_request_id" xsi:type="AttributeExternalKey">
-                    <filter><![CDATA[SELECT UserRequest WHERE id != :this->id AND operational_status 'ongoing']]></filter>
+                    <filter><![CDATA[SELECT UserRequest WHERE id != :this->id AND operational_status = 'ongoing']]></filter>
                     <dependencies>
                     </dependencies>
                     <sql>parent_request_id</sql>
