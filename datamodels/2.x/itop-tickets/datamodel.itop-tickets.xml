@@ -209,7 +209,7 @@
           $oMutex->Lock();
           $iNextId = MetaModel::GetNextKey(get_class($this));
           $sRef = $this->MakeTicketRef($iNextId);
-          $this->Set('ref', $sRef);
+          $this->SetIfNull('ref', $sRef);
           $iKey = parent::DBInsertNoReload();
           $oMutex->Unlock();
           return $iKey;
