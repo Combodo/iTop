@@ -291,14 +291,22 @@ EOF
 				$aChildren = self::GetChildren($index);
 				$sCSSClass = (count($aChildren) > 0) ? ' class="submenu"' : '';
 				$sHyperlink = $oMenu->GetHyperlink($aExtraParams);
+				$sItemHtml = '<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" '.$sCSSClass.'>';
 				if ($sHyperlink != '')
 				{
-					$oPage->AddToMenu('<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" '.$sCSSClass.'><a href="'.$oMenu->GetHyperlink($aExtraParams).'">'.$oMenu->GetTitle().'</a></li>');
+					$sLinkTarget = '';
+					if ($oMenu->IsHyperLinkInNewWindow())
+					{
+						$sLinkTarget .= ' target="_blank"';
+					}
+					$sItemHtml .= '<a href="'.$oMenu->GetHyperlink($aExtraParams).'"'.$sLinkTarget.'>'.$oMenu->GetTitle().'</a>';
 				}
 				else
 				{
-					$oPage->AddToMenu('<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" '.$sCSSClass.'>'.$oMenu->GetTitle().'</li>');
+					$sItemHtml .= $oMenu->GetTitle();
 				}
+				$sItemHtml .= '</li>';
+				$oPage->AddToMenu($sItemHtml);
 				if ($iActiveMenu == $index)
 				{
 					$bActive = true;
@@ -605,6 +613,15 @@ abstract class MenuNode
 	{
 		$aExtraParams['c[menu]'] = $this->GetMenuId();
 		return $this->AddParams(utils::GetAbsoluteUrlAppRoot().'pages/UI.php', $aExtraParams);
+	}
+
+	/**
+	 * @return bool true if the link should be opened in a new window
+	 * @since 2.7.0 N°1283
+	 */
+	public function IsHyperLinkInNewWindow()
+	{
+		return false;
 	}
 	
 	/**
@@ -989,8 +1006,12 @@ class WebPageMenuNode extends MenuNode
 	 */
 	protected $sHyperlink;
 
+	/** @var bool */
+	protected $bIsLinkInNewWindow;
+
 	/**
 	 * Create a menu item that points to any web page (not only UI.php)
+	 *
 	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param string $sHyperlink URL to the page to load. Use relative URL if you want to keep the application portable !
 	 * @param integer $iParentIndex ID of the parent menu
@@ -999,12 +1020,17 @@ class WebPageMenuNode extends MenuNode
 	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
 	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @param string $sEnableStimulus
+	 * @param bool $bIsLinkInNewWindow for the {@link WebPageMenuNode::IsHyperLinkInNewWindow} method
 	 */
-	public function __construct($sMenuId, $sHyperlink, $iParentIndex, $fRank = 0.0, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
+	public function __construct(
+		$sMenuId, $sHyperlink, $iParentIndex, $fRank = 0.0, $sEnableClass = null, $iActionCode = null,
+		$iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null, $bIsLinkInNewWindow = false
+	)
 	{
 		parent::__construct($sMenuId, $iParentIndex, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
 		$this->sHyperlink = $sHyperlink;
 		$this->aReflectionProperties['url'] = $sHyperlink;
+		$this->bIsLinkInNewWindow = $bIsLinkInNewWindow;
 	}
 
 	/**
@@ -1015,6 +1041,11 @@ class WebPageMenuNode extends MenuNode
 	{
 		$aExtraParams['c[menu]'] = $this->GetMenuId();
 		return $this->AddParams( $this->sHyperlink, $aExtraParams);
+	}
+
+	public function IsHyperLinkInNewWindow()
+	{
+		return $this->bIsLinkInNewWindow;
 	}
 
 	/**

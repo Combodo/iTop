@@ -17,6 +17,8 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 
+use Combodo\iTop\DesignElement;
+
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/modelfactory.class.inc.php');
 require_once(APPROOT.'core/moduledesign.class.inc.php');
@@ -2026,11 +2028,11 @@ EOF
 
 
 	/**
-	 * @param $oMenu
-	 * @param $sTempTargetDir
-	 * @param $sFinalTargetDir
-	 * @param $sModuleRelativeDir
-	 * @param $oP
+	 * @param DesignElement $oMenu
+	 * @param string $sTempTargetDir
+	 * @param string $sFinalTargetDir
+	 * @param string $sModuleRelativeDir
+	 * @param \iTopWebPage $oP
 	 *
 	 * @return array
 	 * @throws \DOMFormatException
@@ -2077,6 +2079,11 @@ EOF
 		case 'WebPageMenuNode':
 			$sUrl = $oMenu->GetChildText('url');
 			$sUrlSpec = $this->PathToPHP($sUrl, $sModuleRelativeDir, true /* Url */);
+			$bIsLinkInNewWindow = $this->GetPropBooleanConverted($oMenu, 'in_new_window', false);
+			if ($bIsLinkInNewWindow)
+			{
+				$sOptionalEnableParams .= ', true';
+			}
 			$sNewMenu = "new WebPageMenuNode('$sMenuId', $sUrlSpec, $sParentSpec, $fRank {$sOptionalEnableParams});";
 			break;
 
