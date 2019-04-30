@@ -573,8 +573,6 @@ try
 		}
 
 		CronExec($oP, $aProcesses, $bVerbose);
-
-		$oMutex->Unlock();
 	}
 	else
 	{
@@ -589,6 +587,22 @@ catch (Exception $e)
 	{
 		// Might contain verb parameters such a password...
 		$oP->p($e->getTraceAsString());
+	}
+}
+finally
+{
+	try
+	{
+		$oMutex->Unlock();
+	}
+	catch (Exception $e)
+	{
+		$oP->p("ERROR: '".$e->getMessage()."'");
+		if ($bDebug)
+		{
+			// Might contain verb parameters such a password...
+			$oP->p($e->getTraceAsString());
+		}
 	}
 }
 
