@@ -259,11 +259,11 @@ $(function()
 					oData[oVal.name] = oVal.value;
 				}
 			});
-			oPostedData = this.options.submit_parameters;
+			var oPostedData = this.options.submit_parameters;
 			oPostedData.params = oData;
 			oPostedData.params.updated = [ $('#'+this.options.field_id, this.element).attr('name') ]; // only one field updated in this case
 			oPostedData.params.previous_values = {};
-			oPostedData.params.previous_values[oPostedData.params.updated] = this.previous_value; // pass also the previous value(s)		
+			oPostedData.params.previous_values[$('#'+this.options.field_id, this.element).attr('name')] = this.previous_value; // pass also the previous value(s)
 			$.post(this.options.submit_to, oPostedData, function(data)
 			{
 				$('#prop_submit_result').html(data);

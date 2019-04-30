@@ -395,6 +395,7 @@ EOF
 		{
 			foreach($aFields as $oField)
 			{
+				/** @var \DesignerFormField $oField */
 				$oField->ReadParam($aValues);
 			}
 		}
