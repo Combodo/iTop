@@ -59,8 +59,14 @@ $(document).ready(function () {
 		$lineClickedInput.click();
 	});
 
-	$(document).on('change', TABLE_SELECTOR+':has('+LINE_WITH_INPUT_IN_FIRST_CELL_SELECTOR+')', function (event) {
+	$(document).on('change', 'table.listResults', function (event) {
 		var $eventTarget = $(event.target);
+		if (!$eventTarget.has(LINE_WITH_INPUT_IN_FIRST_CELL_SELECTOR))
+		// Originally we had :has in the handler selector but performances were very bad :(
+		// Filtering directly in JQuery is far much quicker ! => N°2192
+		{
+			return;
+		}
 		if (!$eventTarget.is(INPUT_SELECTOR)) {
 			return;
 		}
@@ -105,8 +111,9 @@ $(document).ready(function () {
 	function updateLines($inputChanged) {
 		var $selectedLine = $inputChanged.closest("tr");
 
-		if ($inputChanged.is('input:radio')) {
-			// didn't find a proper event fired when radio is deselected... so doing this !
+		// didn't find a proper event fired when radio is deselected... so doing this !
+		if ($inputChanged.is('input:radio'))
+		{
 			$selectedLine
 				.closest('table')
 				.find('tr')

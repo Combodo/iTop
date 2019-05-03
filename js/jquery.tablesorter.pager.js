@@ -285,9 +285,9 @@ function sprintf(format, etc) {
 						}
 					});
 
-					$(table).find(':checkbox[name^=selectObj]').change(function() {
+					$(table).find(':checkbox[name^=selectObj]').on("change init-selection", function () {
 						storeSelection(table, table.config.container, this.value, this.checked, this.disabled);
-					}).trigger("change");
+					}).trigger("init-selection"); // don't need to trigger the very generic change event !
 				}
 				else if (table.config.select_mode == 'single')
 				{
