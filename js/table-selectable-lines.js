@@ -59,7 +59,7 @@ $(document).ready(function () {
 		$lineClickedInput.click();
 	});
 
-	$(document).on('change', 'table.listResults', function (event) {
+	$(document).on('change', TABLE_SELECTOR, function (event) {
 		var $eventTarget = $(event.target);
 		if (!$eventTarget.has(LINE_WITH_INPUT_IN_FIRST_CELL_SELECTOR))
 		// Originally we had :has in the handler selector but performances were very bad :(
@@ -75,7 +75,14 @@ $(document).ready(function () {
 	});
 
 	// check_all event is fired for tableSorter JQuery plugin
-	$(document).on("check_all", TABLE_SELECTOR+':has('+LINE_WITH_INPUT_IN_FIRST_CELL_SELECTOR+')', function () {
+	$(document).on("check_all", TABLE_SELECTOR, function () {
+		var $eventTarget = $(event.target);
+		if (!$eventTarget.has(LINE_WITH_INPUT_IN_FIRST_CELL_SELECTOR))
+		// Originally we had :has in the handler selector but performances were very bad :(
+		// Filtering directly in JQuery is far much quicker ! => N°2192
+		{
+			return;
+		}
 		$(this).find("tbody>tr").addClass(SELECTED_CLASS);
 	});
 
