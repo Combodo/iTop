@@ -1172,16 +1172,21 @@ EOF
 		}
 		if (($bAutoReload) && ($this->m_sStyle != 'search')) // Search form do NOT auto-reload
 		{
-			$sFilter = addslashes(str_replace('"', "'", $this->m_oFilter->serialize())); // Used either for asynchronous or auto_reload
-			$sExtraParams = addslashes(str_replace('"', "'", json_encode($aExtraParams))); // JSON encode, change the style of the quotes and escape them
+			// Used either for asynchronous or auto_reload
+			$sFilter = addslashes(str_replace("'", "\'", $this->m_oFilter->serialize()));
+			$sExtraParams = addslashes(str_replace("'", "\'", json_encode($aExtraParams)));
 
-			$oPage->add_script('if (typeof window.oAutoReloadBlock == "undefined") {
-				    window.oAutoReloadBlock = {};
-				}
-				if (typeof window.oAutoReloadBlock[\''.$sId.'\'] != "undefined") {
-				    clearInterval(window.oAutoReloadBlock[\''.$sId.'\']);
-				}
-				window.oAutoReloadBlock[\''.$sId.'\'] = setInterval("ReloadBlock(\''.$sId.'\', \''.$this->m_sStyle.'\', \"'.$sFilter.'\", \"'.$sExtraParams.'\")", '.$iReloadInterval.');');
+			$oPage->add_script(
+				<<<JS
+if (typeof window.oAutoReloadBlock == "undefined") {
+    window.oAutoReloadBlock = {};
+}
+if (typeof window.oAutoReloadBlock['$sId'] != "undefined") {
+    clearInterval(window.oAutoReloadBlock['$sId']);
+}
+window.oAutoReloadBlock['$sId'] = setInterval("ReloadBlock('$sId', '{$this->m_sStyle}', '$sFilter', '$sExtraParams')", '$iReloadInterval');
+JS
+			);
 		}
 
 		return $sHtml;
