@@ -5534,7 +5534,7 @@ class AttributeDateTime extends AttributeDBField
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		return Str::pure2html(static::GetFormat()->format($value));
+		return sprintf('<time datetime="%s">%s</time>', $value, Str::pure2html(static::GetFormat()->format($value)));
 	}
 
 	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
