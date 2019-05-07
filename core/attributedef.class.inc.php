@@ -5727,7 +5727,7 @@ class AttributeDuration extends AttributeInteger
 
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
-		return Str::pure2html(self::FormatDuration($value));
+		return sprintf('<time datetime="PT%dS">%s</time>', $value, Str::pure2html(self::FormatDuration($value)));
 	}
 
 	public static function FormatDuration($duration)
