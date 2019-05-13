@@ -743,7 +743,16 @@ try
 				}
 				else
 				{
-					$oFilter = DBSearch::unserialize($sFilter);
+					try
+					{
+						$oFilter = DBSearch::unserialize($sFilter);
+					}
+					catch (CoreException $e)
+					{
+						$oPage->p("Invalid query (invalid filter) : <code>$sFilter</code>");
+						IssueLog::Error("ajax.render operation='ajax', invalid DBSearch filter param : $sFilter");
+						break;
+					}
 				}
 				$oDisplayBlock = new DisplayBlock($oFilter, $sStyle, false);
 				$aExtraParams['display_limit'] = true;
