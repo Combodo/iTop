@@ -33,19 +33,19 @@
 
 
 
-{% if node.constants|length > 0 %}
-===== Constants =====
-{% for constant in node.constants|sort_asc %}
-    {{ block('constant') }}
-{% endfor %}
-{% endif %}
+{#{% if node.constants|length > 0 %}#}
+{#===== Constants =====#}
+{#{% for constant in node.constants|sort_asc %}#}
+{#    {{ block('constant') }}#}
+{#{% endfor %}#}
+{#{% endif %}#}
 
-{% if node.functions|length > 0 %}
-===== Functions =====
+{#{% if node.functions|length > 0 %}#}
+{#===== Functions =====#}
 
-{% for method in node.functions|sort_asc %}
-    {{ block('method') }}
-{% endfor %}
-{% endif %}
+{#{% for method in node.functions|sort_asc %}#}
+{#    {{ block('method') }}#}
+{#{% endfor %}#}
+{#{% endif %}#}
 
 {% endblock %}
