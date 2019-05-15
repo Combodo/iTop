@@ -2762,6 +2762,12 @@ a.summary,  a.summary:hover {
 	background: url(../images/ok.png?v=#{$version}) 1em 1em no-repeat #cfc;
 	padding-left: 3em;
 }
+.message_warning {
+	border: 1px solid #ec9800;
+	background: url(../images/error.png?v=#{$version}) 1em 1em no-repeat #ffd78d;
+	color: #000;
+	padding-left: 3em;
+}
 .message_error {
 	border: 1px solid #933;
 	background: url(../images/error.png?v=#{$version}) 1em 1em no-repeat #fcc;
