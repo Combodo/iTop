@@ -1,6 +1,8 @@
 # phpdoc dokuwiki template
 This directory contains a template rendering iTop phpdoc as wiki pages.
 
+
+
 ## special instructions
 
 some tags where added : 
@@ -34,6 +36,11 @@ known limitations:
  * the generated files have to be placed under an arbitrary directory of `[/path/to/dokuwiki]/data/pages`.
  * the html as to be activated [config:htmlok](https://www.dokuwiki.org/config:htmlok)
  * the generated files have to be in lowercase
+
+## installation
+```
+composer require phpdocumentor/phpdocumentor:~2 --dev
+```
 
 ## bin
 `.doc/bin/build-doc-object-manipulation` and `.doc/bin/build-doc-extensions` contains examples of doc. generation, beware: they have to be called from iTop root directory:
