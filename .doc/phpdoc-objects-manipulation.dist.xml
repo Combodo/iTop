@@ -49,6 +49,7 @@
   <files>
     <file>../core/dbobject.class.php</file>
     <file>../core/dbobjectsearch.class.php</file>
+    <file>../core/metamodel.class.php</file>
     <file>../core/dbobjectset.class.php</file>
     <file>../core/dbsearch.class.php</file>
     <file>../core/dbunionsearch.class.php</file>
