@@ -346,15 +346,13 @@ abstract class DBSearch
     /**
      * Add a condition
      *
-     * This is the simplest way to express a AND condition. for complex use case, you should use MergeConditionExpression and  AddConditionExpression
+     * This is the simplest way to express a AND condition. For complex use cases, use MergeConditionExpression or AddConditionExpression instead
      *
      * @api
-     * @see AttributeDefinition::GetBasicFilterOperators() and all its descendents (core/attributedef.class.inc.php)
-     * @link https://github.com/Combodo/iTop/blob/develop/core/attributedef.class.inc.php
      *
      * @param string $sFilterCode
      * @param mixed  $value
-     * @param string $sOpCode operator to use : 'IN', 'NOT IN', 'Contains',' Begins with', 'Finishes with', ... the possibility vary according to the AttributeDefinition implementation
+     * @param string $sOpCode operator to use : '=' (default), '!=', 'IN', 'NOT IN'
      *
      * @throws \CoreException
      *
@@ -382,11 +380,12 @@ abstract class DBSearch
 	abstract public function AddCondition_FullText($sFullText);
 
 	/**
-     * Perform a join
+     * Perform a join, the remote class being matched by the mean of its primary key
      *
      * The join is performed
-     *   * from the current DBSearch, using the selected class' $sExtKeyAttCode field
-     *   * against the selected class' primary key of the $oFilter selected class
+     *   * from the searched class, based on the $sExtKeyAttCode attribute
+     *   * against the oFilter searched class, based on its primary key
+     * Note : if several classes have already being joined (SELECT a join b ON...), the first joined class (a in the example) is considered as being the searched class.
      *
      * @api
      * @see AddCondition_ReferencedBy()
@@ -394,7 +393,7 @@ abstract class DBSearch
 	 * @param DBObjectSearch $oFilter
 	 * @param string $sExtKeyAttCode
 	 * @param int $iOperatorCode the comparison operator to use. For the list of all possible values, see the constant defined in core/oql/oqlquery.class.inc.php
-	 * @param array|null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @param array|null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed in the newly attached oFilter (in case of collisions between the two filters)
      *
 	 * @throws CoreException
 	 * @throws CoreWarning
@@ -404,13 +403,19 @@ abstract class DBSearch
 	/**
      * Inverse operation of AddCondition_PointingTo
      *
+     * The join is performed
+     *   * from the olFilter searched class, based on the $sExtKeyAttCode attribute
+     *   * against the searched class, based on its primary key
+     * Note : if several classes have already being joined (SELECT a join b ON...), the first joined class (a in the example) is considered as being the searched class.
+     *
+     *
      * @api
      * @see AddCondition_PointingTo()
      *
 	 * @param DBObjectSearch $oFilter
 	 * @param $sForeignExtKeyAttCode
 	 * @param int $iOperatorCode
-	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @param array|null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed in the newly attached oFilter (in case of collisions between the two filters)
 	 */
 	abstract public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null);
 
