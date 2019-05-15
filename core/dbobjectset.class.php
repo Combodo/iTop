@@ -822,6 +822,7 @@ class DBObjectSet implements iDBObjectSetIterator
      * May actually perform the SQL query SELECT COUNT... if the set was not previously loaded, or loaded with a
      * SetLimit
      *
+     * @api
      * @return int The total number of rows for this set.
      *
      * @throws \CoreException
@@ -845,11 +846,13 @@ class DBObjectSet implements iDBObjectSetIterator
 		return $this->m_iNumTotalDBRows + count($this->m_aAddedObjects); // Does it fix Trac #887 ??
 	}
 
-	/** Check if the count exceeds a given limit
+	/**
+	 * Check if the count exceeds a given limit
+	 *
 	 * @param $iLimit
 	 *
 	 * @return bool
-     *
+	 *
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
@@ -880,11 +883,13 @@ class DBObjectSet implements iDBObjectSetIterator
 		return ($iCount > $iLimit);
 	}
 
-	/** Count only up to the given limit
+	/**
+	 * Count only up to the given limit
+	 *
 	 * @param $iLimit
 	 *
 	 * @return int
-     *
+	 *
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
@@ -926,9 +931,11 @@ class DBObjectSet implements iDBObjectSetIterator
 	}
 
     /**
-     * Fetch the object (with the given class alias) at the current position in the set and move the cursor to the next position.
+     * Fetch an object (with the given class alias) at the current position in the set and move the cursor to the next position.
      *
-     * @param string $sRequestedClassAlias The class alias to fetch (if there are several objects/classes per row)
+     * @api
+     *
+     * @param string $sRequestedClassAlias The class alias to fetch (defaults to the first selected class)
      *
      * @return \DBObject The fetched object or null when at the end
      *
@@ -982,6 +989,8 @@ class DBObjectSet implements iDBObjectSetIterator
     /**
      * Fetch the whole row of objects (if several classes have been specified in the query) and move the cursor to the next position
      *
+     * @api
+     *
      * @return array An associative with the format 'classAlias' => $oObj representing the current row of the set. Returns null when at the end.
      *
      * @throws \CoreException
@@ -1030,8 +1039,10 @@ class DBObjectSet implements iDBObjectSetIterator
 
 	/**
 	 * Position the cursor (for iterating in the set) to the first position (equivalent to Seek(0))
-     *
-     * @throws \Exception
+	 *
+	 * @api
+	 *
+	 * @throws \Exception
 	 */
 	public function Rewind()
 	{
@@ -1249,9 +1260,9 @@ class DBObjectSet implements iDBObjectSetIterator
 	 * @param \DBObjectSet $oObjectSet
 	 * 
 	 * @return \DBObjectSet The "delta" set.
-     *
-     * @throws \Exception
-     * @throws \CoreException
+	 *
+	 * @throws \Exception
+	 * @throws \CoreException
 	 */
 	public function CreateDelta(DBObjectSet $oObjectSet)
 	{
