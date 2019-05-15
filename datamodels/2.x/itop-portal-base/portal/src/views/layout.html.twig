@@ -94,6 +94,7 @@
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/d3.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/c3.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap/js/bootstrap.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/bootstrap-patches.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/latinise/latinise.min.js'|add_itop_version }}"></script>
 		{# Visible.js to check if an element is visible on screen #}
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-visible/js/jquery.visible.min.js'|add_itop_version }}"></script>
@@ -457,13 +458,6 @@
 					$('body').on('hidden.bs.modal', '.modal#modal-for-all', function () {
 						$(this).removeData('bs.modal');
 						$(this).find('.modal-content').html(GetContentLoaderTemplate());
-					});
-					// Hack to enable multiple modals by making sure the .modal-open class is set to the <body> when there is at least one modal open left
-					$('body').on('hidden.bs.modal', function () {
-						if($('.modal.in').length > 0)
-						{
-							$('body').addClass('modal-open');
-						}
 					});
 					// Hide tooltips when a modal is opening, otherwise it might be overlapping it
 					$('body').on('show.bs.modal', function () {
