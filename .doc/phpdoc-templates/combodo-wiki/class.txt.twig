@@ -30,7 +30,7 @@
 <html>{{ node.description|markdown|raw }}</html>
 
 
-{% include 'includes/examples.txt.twig' with {structure:node, title_level: '====='} %}
+{% include 'includes/code-examples.txt.twig' with {structure:node, title_level: '====='} %}
 
 
 {% set class = node.parent %}
