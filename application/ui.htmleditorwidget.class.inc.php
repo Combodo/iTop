@@ -74,7 +74,7 @@ class UIHTMLEditorWidget
 		$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
 		$aConfig['language'] = $sLanguage;
 		$aConfig['contentsLanguage'] = $sLanguage;
-		$aConfig['extraPlugins'] = 'disabler';
+		$aConfig['extraPlugins'] = 'disabler,codesnippet';
 		$sWidthSpec = addslashes(trim($this->m_oAttDef->GetWidth()));
 		if ($sWidthSpec != '')
 		{

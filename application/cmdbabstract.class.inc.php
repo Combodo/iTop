@@ -1900,7 +1900,7 @@ EOF
 					$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
 					$aConfig['language'] = $sLanguage;
 					$aConfig['contentsLanguage'] = $sLanguage;
-					$aConfig['extraPlugins'] = 'disabler';
+					$aConfig['extraPlugins'] = 'disabler,codesnippet';
 					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
 					$sConfigJS = json_encode($aConfig);
 
