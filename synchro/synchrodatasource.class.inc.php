@@ -2275,22 +2275,32 @@ class SynchroReplica extends DBObject implements iDisplay
 }
 
 /**
- * Context of an ongoing synchronization
+ * Handles the execution phase of datasynchro (updates iTop objects from replicas)
+ *
  * Two usages:
- * 1) Public usage: execute the synchronization
+ *
+ * 1. Public usage: execute the synchronization
+ * ```php
  *    $oSynchroExec = new SynchroExecution($oDataSource[, $iLastFullLoad]);
- *    $oSynchroExec->Process($iMaxChunkSize); 
- *      
- * 2) Internal usage: continue the synchronization (split into chunks, each performed in a separate process)
- *    This is implemented in the page priv_sync_chunk.php 
- *    $oSynchroExec = SynchroExecution::Resume($oDataSource, $iLastFullLoad, $iSynchroLog, $iChange, $iMaxToProcess, $iJob, $iNextInJob);    
- *    $oSynchroExec->Process() 
- */	
+ *    $oSynchroExec->Process($iMaxChunkSize);
+ * ```
+ * 2. Internal usage: continue the synchronization (split into chunks, each performed in a separate process)
+ *    This is implemented in the page priv_sync_chunk.php
+ * ```php
+ *    $oSynchroExec = SynchroExecution::Resume($oDataSource, $iLastFullLoad, $iSynchroLog, $iChange, $iMaxToProcess, $iJob, $iNextInJob);
+ *    $oSynchroExec->Process()
+ * ```
+ */
 class SynchroExecution
 {
+	/** @var \SynchroDataSource */
 	protected $m_oDataSource = null;
+	/** @var \DateTime */
 	protected $m_oLastFullLoadStartDate = null;
+	/** @var bool true if the caller script did instantiate using a date (the datetime before import phase was launched) */
+	protected $m_bIsDoingImportAndExecInSameScript;
 
+	/** @var \CMDBChange */
 	protected $m_oChange = null;
 	/** @var SynchroLog */
 	protected $m_oStatLog = null;
@@ -2302,24 +2312,50 @@ class SynchroExecution
 	protected $m_iCountAllReplicas = 0;
 	protected $m_oCtx;
 	protected $m_oCtx1;
-	
+
 	/**
-	 * Constructor
 	 * @param SynchroDataSource $oDataSource Synchronization task
-	 * @param DateTime $oLastFullLoadStartDate Date of the last full load (start date/time), if known
+	 * @param DateTime $oLastFullLoadStartDate when doing both import and exec phases in the same script, this parameter should contain
+	 *       the current datetime when the script was launched (before import phase).<br>
+	 *       This is used by `synchro_import.php --synchronize=1`
+	 *
+	 * @throws \CoreException
 	 */
 	public function __construct($oDataSource, $oLastFullLoadStartDate = null)
 	{
 		$this->m_oDataSource = $oDataSource;
+
+		$this->m_bIsDoingImportAndExecInSameScript = ($this->m_oLastFullLoadStartDate != null);
+		if (!$this->m_bIsDoingImportAndExecInSameScript)
+		{
+			$oLastFullLoadStartDate = self::GetDataBaseCurrentDateTime();
+		}
 		$this->m_oLastFullLoadStartDate = $oLastFullLoadStartDate;
+
 		$this->m_oCtx = new ContextTag('Synchro');
 		$this->m_oCtx1 = new ContextTag('Synchro:'.$oDataSource->GetRawName()); // More precise context information
 	}
 
 	/**
-	* Create the persistant information records, for the current synchronization
-	* In fact, those records ARE defining what is the "current" synchronization	
-	*/	
+	 * When in execution datasynchro phase, we are comparing date with the \SynchroReplica status_last_seen attribute. This attribute is
+	 * populated using database trigger, who are therefore using the database datetime : in consequence we need database datetime as
+	 * reference to do a proper comparison !
+	 *
+	 * @throws \MySQLException
+	 * @throws \MySQLQueryHasNoResultException
+	 * @throws \Exception
+	 */
+	public static function GetDataBaseCurrentDateTime()
+	{
+		$sDataBaseCurrentDateTime = CMDBSource::QueryToScalar('SELECT NOW()');
+
+		return new DateTime($sDataBaseCurrentDateTime);
+	}
+
+	/**
+	 * Create the persistent information records, for the current synchronization
+	 * In fact, those records ARE defining what is the "current" synchronization
+	 */
 	protected function PrepareLogs()
 	{
 		if (!is_null($this->m_oChange))
@@ -2361,18 +2397,18 @@ class SynchroExecution
 		$this->m_oStatLog->Set('stats_nb_obj_new_updated_warnings', 0);
 		$this->m_oStatLog->Set('stats_nb_obj_new_unchanged',0);
 		$this->m_oStatLog->Set('stats_nb_obj_new_unchanged_warnings',0);
-		
+
 		$sSelectTotal  = "SELECT SynchroReplica WHERE sync_source_id = :source_id";
 		$oSetTotal = new DBObjectSet(DBObjectSearch::FromOQL($sSelectTotal), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey()));
 		$this->m_iCountAllReplicas = $oSetTotal->Count();
 		$this->m_oStatLog->Set('stats_nb_replica_total', $this->m_iCountAllReplicas);
 
 		$this->m_oStatLog->DBInsertTracked($this->m_oChange);
-		$sLastFullLoad = is_object($this->m_oLastFullLoadStartDate) ? $this->m_oLastFullLoadStartDate->format('Y-m-d H:i:s') : 'not specified';
+		$sLastFullLoad = ($this->m_bIsDoingImportAndExecInSameScript) ? $this->m_oLastFullLoadStartDate->format('Y-m-d H:i:s') : 'not specified';
 		$this->m_oStatLog->AddTrace("###### STARTING SYNCHRONIZATION ##### Total: {$this->m_iCountAllReplicas} replica(s). Last full load: '$sLastFullLoad' ");
 		$sSql = 'SELECT NOW();';
 		$sDBNow = CMDBSource::QueryToScalar($sSql);
-		$this->m_oStatLog->AddTrace("Database server current date/time is '$sDBNow', web server current date/time is: '".date('Y-m-d H:i:s')."'");		
+		$this->m_oStatLog->AddTrace("Database server current date/time is '$sDBNow', web server current date/time is: '".date('Y-m-d H:i:s')."'");
 	}
 
 	/**
@@ -2396,6 +2432,10 @@ class SynchroExecution
 	 *
 	 * @param bool $bFirstPass
 	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 * @throws \SynchroExceptionNotStarted
 	 */
 	public function PrepareProcessing($bFirstPass = true)
@@ -2476,12 +2516,8 @@ class SynchroExecution
 			}
 		}
 
-		// Compute and keep track of the limit date taken into account for obsoleting replicas
+		// keep track of the limit date taken into account for obsoleting replicas
 		//
-		if ($this->m_oLastFullLoadStartDate == null)
-		{
-			$this->m_oLastFullLoadStartDate = new DateTime('1970-01-01');
-		}
 		if ($bFirstPass)
 		{
 			$this->m_oStatLog->AddTrace("Limit Date: ".$this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s'));
@@ -2490,11 +2526,11 @@ class SynchroExecution
 
 
 	/**
-	 * Perform a synchronization between the data stored in the replicas (&synchro_data_xxx_xx table)
-	 * and the iTop objects. If the lastFullLoadStartDate is NOT specified then the full_load_periodicity
-	 * is used to determine which records are obsolete.
+	 * Perform a synchronization between the data stored in the replicas (synchro_data_xxx_xx table)
+	 * and the iTop objects.
 	 *
 	 * @return SynchroLog
+	 * @throws \CoreUnexpectedValue
 	 */
 	public function Process()
 	{
@@ -2572,7 +2608,16 @@ class SynchroExecution
 	}
 
 	/**
-	 * Do the entire synchronization job
+	 * Do the execution phase
+	 *
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \SynchroExceptionNotStarted
 	 */
 	protected function DoSynchronize()
 	{
@@ -2594,7 +2639,7 @@ class SynchroExecution
 			$aArguments['log'] = $this->m_oStatLog->GetKey();
 			$aArguments['change'] = $this->m_oChange->GetKey();
 			$aArguments['chunk'] = $iMaxChunkSize;
-			if ($this->m_oLastFullLoadStartDate)
+			if ($this->m_bIsDoingImportAndExecInSameScript)
 			{
 				$aArguments['last_full_load'] = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
 			}
@@ -2603,7 +2648,7 @@ class SynchroExecution
 				$aArguments['last_full_load'] = '';
 			}
 
-			$this->m_oStatLog->DBUpdate($this->m_oChange);
+			$this->m_oStatLog->DBUpdate();
 
 			$iStepCount = 0;
 			do
@@ -2652,8 +2697,20 @@ class SynchroExecution
 
 	/**
 	 * Do the synchronization job, limited to some amount of work
-	 * This verb has been designed to be called from within a separate process	 
+	 * This verb has been designed to be called from within a separate process
+	 *
+	 * @param \SynchroLog $oLog
+	 * @param \CMDBChange $oChange
+	 * @param int $iMaxChunkSize
+	 *
 	 * @return true if the process has to be continued
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \SynchroExceptionNotStarted
 	 */
 	public function DoSynchronizeChunk($oLog, $oChange, $iMaxChunkSize)
 	{
@@ -2694,28 +2751,52 @@ class SynchroExecution
 
 	/**
 	 * Do the synchronization job #1: Obsolete replica "untouched" for some time
-	 * @param integer $iMaxReplica Limit the number of replicas to process 
-	 * @param integer $iCurrPos Current position where to resume the processing 
+	 *
+	 * @param integer $iMaxReplica Limit the number of replicas to process
+	 * @param integer $iCurrPos Current position where to resume the processing
+	 *
 	 * @return true if the process must be continued
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \SynchroExceptionNotStarted
 	 */
 	protected function DoJob1($iMaxReplica = null, $iCurrPos = -1)
 	{
 		$this->m_oStatLog->AddTrace(">>> Beginning of DoJob1(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos)");
-		$sLastFullLoadStartDate = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
+		if ($this->m_bIsDoingImportAndExecInSameScript)
+		{
+			$sLastFullLoadStartDate = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
+		}
+		else
+		{
+			$sLastFullLoadStartDate = '';
+		}
+
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 
 		// Get all the replicas that were not seen in the last import and mark them as obsolete
 		$sDeletePolicy = $this->m_oDataSource->Get('delete_policy');
-		if ($sDeletePolicy != 'ignore')
+		if ($sDeletePolicy !== 'ignore')
 		{
-			$oLimitDate = clone($this->m_oLastFullLoadStartDate);
 			$iLoadPeriodicity = $this->m_oDataSource->Get('full_load_periodicity'); // Duration in seconds
-			if ($iLoadPeriodicity > 0)
+			if ($this->m_bIsDoingImportAndExecInSameScript && ($iLoadPeriodicity <= 0))
 			{
+				// we are doing exec phase alone, and the full load interval is set to 0 => we should not update !!
+				$oLimitDate = new DateTime('1970-01-01');
+			}
+			else
+			{
+				$oLimitDate = clone $this->m_oLastFullLoadStartDate;
 				$sInterval = "-$iLoadPeriodicity seconds";
 				$oLimitDate->Modify($sInterval);
 			}
 			$sLimitDate = $oLimitDate->Format('Y-m-d H:i:s');
+			$sLastFullLoadStartDate = $sLimitDate;
+
 			$sSelectToObsolete  = "SELECT SynchroReplica WHERE id > :curr_pos AND sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen < :last_import";
 			$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos));
 			$iCountScope = $oSetScope->Count();

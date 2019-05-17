@@ -347,10 +347,9 @@ try
 		$sSep = "\t";
 	}
 
-	// In case there is a difference between the web server time and the DB server time,
-	// use the DB server time as a reference since this date/time will be compared with the "status_last_seen"
-	// column, which is populated by MySQL triggers (and so based on the DB server time)
-	$oLoadStartDate = new DateTime(CMDBSource::QueryToScalar('SELECT NOW()')); // Now... but as read from the database 
+	// Saving script launch datetime : if we're doing both import AND exec phases (--synchronize=1 parameter)
+	// then exec phase will need this !
+	$oLoadStartDate = SynchroExecution::GetDataBaseCurrentDateTime();
 
    // Note about date formatting: These MySQL settings are read-only... and in fact unused :-(
 	// SET SESSION date_format = '%d/%m/%Y';
@@ -375,6 +374,7 @@ try
 		throw new ExchangeException("Missing data - at least one line is expected");
 	}
 
+	/** @var \SynchroDataSource $oDataSource */
 	$oDataSource = MetaModel::GetObject('SynchroDataSource', $iDataSourceId, false);
 	if (is_null($oDataSource))
 	{
