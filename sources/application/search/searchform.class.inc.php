@@ -387,7 +387,7 @@ class SearchForm
 
 		foreach($aAttributeDefs as $sAttCode => $oAttDef)
 		{
-			if ($this->IsSubAttribute($oAttDef)) continue;
+			if ($oAttDef instanceof AttributeFriendlyName) continue; //it was already forced into $aZList in the code above
 
             $bHasIndex =  isset($aIndexes[$sAttCode]);
 			$aOthers = $this->AppendField($sClass, $sAlias, $sAttCode, $oAttDef, $aOthers, $bHasIndex);
@@ -414,10 +414,6 @@ class SearchForm
 		return $aDBIndexes;
 	}
 
-	protected function IsSubAttribute($oAttDef)
-	{
-		return (($oAttDef instanceof AttributeFriendlyName) || ($oAttDef instanceof AttributeSubItem));
-	}
 
     /**
      * @param \AttributeDefinition $oAttrDef
