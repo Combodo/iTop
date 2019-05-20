@@ -135,6 +135,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 					{
 						// When there is only once choice, select it by default
 						$sSelected = 'checked';
+                        $value = $iObject;
 					}
 					else
 					{
