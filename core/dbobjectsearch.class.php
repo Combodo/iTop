@@ -17,9 +17,22 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 //
 
-// Dev hack for disabling the some query build optimizations (Folding/Merging)
+/** @internal Dev hack for disabling some query build optimizations (Folding/Merging) */
 define('ENABLE_OPT', true);
 
+/**
+ * A search over a DBObject
+ *
+ * This is the most common search cases, the other class representing a search is DBUnionSearch.
+ * For clarity purpose, since only the constructor vary between DBObjectSearch and DBUnionSearch, all the API is documented on the common ancestor: DBSearch
+ * Please refer to DBSearch's documentation
+ *
+ * @package     iTopORM
+ * @phpdoc-tunning-exclude-inherited this tag prevent PHPdoc from displaying inherited methods. This is done in order to force the API doc. location into DBSearch only.
+ * @api
+ * @see DBSearch
+ * @see DBUnionSearch
+ */
 class DBObjectSearch extends DBSearch
 {
 	private $m_aClasses; // queried classes (alias => class name), the first item is the class corresponding to this filter (the rest is coming from subfilters)
@@ -29,11 +42,23 @@ class DBObjectSearch extends DBSearch
 	private $m_aPointingTo;
 	private $m_aReferencedBy;
 
-	// By default, some information may be hidden to the current user
-	// But it may happen that we need to disable that feature
+    /**
+     * @var bool whether or not some information should be hidden to the current user. Default to false == hide information.
+     * @see AllowAllData()
+     */
 	protected $m_bAllowAllData = false;
 	protected $m_bDataFiltered = false;
 
+    /**
+     * DBObjectSearch constructor.
+     *
+     * @api
+     *
+     * @param string      $sClass
+     * @param string|null $sClassAlias
+     *
+     * @throws Exception
+     */
 	public function __construct($sClass, $sClassAlias = null)
 	{
 		parent::__construct();
@@ -524,7 +549,7 @@ class DBObjectSearch extends DBSearch
 	/**
 	 * Specify a condition on external keys or link sets
 	 * @param string $sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
-	 *                 Example: infra_list->ci_id->location_id->country
+	 * Example: infra_list->ci_id->location_id->country
 	 * @param $value
 	 * @return void
 	 * @throws \CoreException
@@ -2344,8 +2369,8 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 *    Get the expression for the class and its subclasses (if finalclass = 'subclass' ...)
-	 *    Simplifies the final expression by grouping classes having the same expression
+	 * Get the expression for the class and its subclasses (if finalclass = 'subclass' ...)
+	 * Simplifies the final expression by grouping classes having the same expression
 	 * @param $sClass
 	 * @param $sAttCode
 	 * @return \FunctionExpression|mixed|null

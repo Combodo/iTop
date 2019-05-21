@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+
+  <!--
+    /**
+    The documentation of this file can be found here : https://docs.phpdoc.org/references/configuration.html
+    it has to be completed by the CLI parameters documentation which is more comprehensive: https://docs.phpdoc.org/references/commands/project_run.html#usage
+
+    usage:
+    vendor/bin/phpdoc -c phpdoc-objects-manipulation.dist.xml
+
+    */
+  -->
+
+  <title><![CDATA[iTop's objects manipulation API]]></title>
+
+  <parser>
+    <default-package-name>iTopORM</default-package-name>
+    <target>../data/phpdocumentor/temp/objects-manipulation</target>
+    <visibility>public,protected</visibility>
+    <markers>
+      <!--<item>TODO</item>-->
+      <!--<item>FIXME</item>-->
+    </markers>
+      <extensions>
+          <extension>php</extension>
+      </extensions>
+  </parser>
+
+  <transformer>
+    <target>../data/phpdocumentor/output/objects-manipulation</target>
+  </transformer>
+
+  <transformations>
+    <template name="phpdoc-templates/combodo-wiki"/>
+  </transformations>
+
+  <!--<logging>-->
+    <!--<level>warn</level>-->
+    <!--<paths>-->
+      <!--&lt;!&ndash;<default>data/phpdocumentor/log/objects-manipulation/{DATE}.log</default>&ndash;&gt;-->
+      <!--&lt;!&ndash;<errors>data/phpdocumentor/log/objects-manipulation/{DATE}.errors.log</errors>&ndash;&gt;-->
+
+      <!--<default>{APP_ROOT}/data/log/{DATE}.log</default>-->
+      <!--<errors>{APP_ROOT}/data/log/{DATE}.errors.log</errors>-->
+    <!--</paths>-->
+  <!--</logging>-->
+
+  <files>
+    <file>../core/dbobject.class.php</file>
+    <file>../core/dbobjectsearch.class.php</file>
+    <file>../core/metamodel.class.php</file>
+    <file>../core/dbobjectset.class.php</file>
+    <file>../core/dbsearch.class.php</file>
+    <file>../core/dbunionsearch.class.php</file>
+  </files>
+
+</phpdoc>

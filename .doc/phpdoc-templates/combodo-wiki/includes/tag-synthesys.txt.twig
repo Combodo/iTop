@@ -1,0 +1,56 @@
+{% if tag is not defined -%}
+    {# Do not display @api if @api-advanced is also present #}
+    {%- set tag = "api" -%}
+{%- endif %}
+
+{% if hidden_by is not defined -%}
+    {# Do not display @api if @api-advanced is also present #}
+    {%- set hidden_by = {"api" : "api-advanced"} -%}
+{%- endif %}
+
+
+
+{% for method in methods|sort_asc
+    if (method.visibility == 'public')
+    and (
+        method.tags[tag] is defined
+        and (
+            hidden_by[tag] is not defined or method.tags[hidden_by[tag]] is not defined
+        )
+    )
+%}
+{%- if loop.first %}
+{% if tag == 'api' %}
+===== API synthesis =====
+<WRAP>
+List of the public API methods.
+When manipulating {{ node.name }}, You can call those methods:
+</WRAP>
+{% elseif tag == 'api-advanced' %}
+===== Advanced API synthesis =====
+<WRAP>
+List of advanced API methods
+Beware they usage is recommended to advanced users only.
+</WRAP>
+{% elseif tag == 'overwritable-hook' %}
+===== overwritable-hook synthesis =====
+<WRAP >When inheriting from {{ node.name }},
+you can overwrite those methods in order to add custom logic:
+</WRAP>
+{% elseif tag == 'extension-hook' %}
+===== extension-hook synthesis =====
+<WRAP >
+When inheriting from {{ node.name }},
+you can extend the behaviour of iTop by implementing:
+</WRAP>
+{% endif %}
+{% endif %}
+{% set sanitizedMethod = method|trim('\\', 'left')|replace({(node.name~'::'): ''}) %}
+{% if '::' in sanitizedMethod -%}
+{%- if node.tags['phpdoc-tunning-exclude-inherited'] is not defined %}
+  * [[{{sanitizedMethod|replace({'::': '#'})|lower}}|↪{{sanitizedMethod}}]] — {{  method.summary|replace({"\n":""})|raw }}
+{% endif %}
+{%- else %}
+  * [[#{{sanitizedMethod}}|{{sanitizedMethod}}]] — {{  method.summary|replace({"\n":""})|raw }}
+{% endif %}
+{% endfor %}
