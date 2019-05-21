@@ -243,10 +243,15 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		{
 			// Regular urls
 			$sUrlPattern = utils::GetConfig()->Get('url_validation_pattern');
+
 			// Mailto urls
 			$sMailtoPattern = '(mailto:(' . utils::GetConfig()->Get('email_validation_pattern') . ')(?:\?(?:subject|body)=([a-zA-Z0-9+\$_.-]*)(?:&(?:subject|body)=([a-zA-Z0-9+\$_.-]*))?)?)';
 
-			$sPattern = $sUrlPattern . '|' . $sMailtoPattern;
+			// Notification placeholders
+			// eg. $this->caller_id$, $this->hyperlink()$, $this->hyperlink(portal)$, $APP_URL$, $MODULES_URL$, ...
+			$sPlaceholderPattern = '\$[\w-]*(->[\w]*(\([\w-]*?\))?)?\$';
+
+			$sPattern = $sUrlPattern . '|' . $sMailtoPattern . '|' . $sPlaceholderPattern;
 			$sPattern = '/'.str_replace('/', '\/', $sPattern).'/i';
 			self::$aAttrsWhiteList['href'] = $sPattern;
 		}
