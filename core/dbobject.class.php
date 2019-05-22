@@ -3297,12 +3297,13 @@ abstract class DBObject implements iDisplay
     /**
      * Delete an object
      *
-     * Pior to the delete the object, it checks if this is feasible to guarantee the DB integrity.
-     * If so, it performs any required cleanup (delete other objects or reset external keys) in addition to the object deletion.
+     * First, checks if the object can be deleted regarding database integrity.
+     * If the answer is yes, it performs any required cleanup (delete other objects or reset external keys) in addition to the object
+     * deletion.
      * 
      * @api
-     * 
-     * @param null $oDeletionPlan Do not use: aims at dealing with recursion
+     *
+     * @param \DeletionPlan $oDeletionPlan Do not use: aims at dealing with recursion
      *
      * @return DeletionPlan The detailed description of cleanup operation that have been performed
      *
