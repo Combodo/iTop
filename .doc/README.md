@@ -12,11 +12,11 @@ some tags where added :
  * `@phpdoc-tunning-exclude-inherited`: tunning tag that inform this template to ignere inherited methods in the rendrering.
 
 some behaviours where added :
- * only public `@api` and `@api-advanced` are showed
+ * only public `@api` and `@api-advanced` are shown
  * class properties are hidden (subject to change, but will require to white list them using `@api` tag)
  
 known limitations:
- * inline tag do not work properly
+ * inline tags do not work properly
  * links are hardcoded instead of using phpdoc routes (adding our own routes was too complex)
  * `@see` tags must be very specific: 
    * always prefix class members with `Class::` (ie: `DBObject::Get()`) 
@@ -32,9 +32,9 @@ known limitations:
  
 
 ## dokuwiki requirements
- * the templates uses the [wrap plugin](https://www.dokuwiki.org/plugin:wrap).
+ * the template uses the [wrap plugin](https://www.dokuwiki.org/plugin:wrap).
  * the generated files have to be placed under an arbitrary directory of `[/path/to/dokuwiki]/data/pages`.
- * the html as to be activated [config:htmlok](https://www.dokuwiki.org/config:htmlok)
+ * the html has to be activated [config:htmlok](https://www.dokuwiki.org/config:htmlok)
  * the generated files have to be in lowercase
 
 ## installation
