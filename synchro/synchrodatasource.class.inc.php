@@ -2296,9 +2296,19 @@ class SynchroExecution
 	/** @var \SynchroDataSource */
 	protected $m_oDataSource = null;
 	/** @var \DateTime */
+	protected $m_oImportPhaseStartDate = null;
+	/**
+	 * @var \DateTime The reference that will be used to query replicas.<br>
+	 *     Value is either :
+	 *     <ul>
+	 *     <li>specified by the caller (if it is doing both import and exec phases)
+	 *     <li>computed using current date minus the 'full load interval' datasource field
+	 *     <li>a dumb date if full load interval is 0 and doing only exec phase
+	 *     </ul>
+	 */
 	protected $m_oLastFullLoadStartDate = null;
-	/** @var bool true if the caller script did instantiate using a date (the datetime before import phase was launched) */
-	protected $m_bIsDoingImportAndExecInSameScript;
+	/** @var bool true if the caller script gave the datetime before import phase was launched */
+	protected $m_bIsImportPhaseDateKnown;
 
 	/** @var \CMDBChange */
 	protected $m_oChange = null;
@@ -2315,22 +2325,18 @@ class SynchroExecution
 
 	/**
 	 * @param SynchroDataSource $oDataSource Synchronization task
-	 * @param DateTime $oLastFullLoadStartDate when doing both import and exec phases in the same script, this parameter should contain
+	 * @param DateTime $oImportPhaseStartDate when doing both import and exec phases in the same script, this parameter should contain
 	 *       the current datetime when the script was launched (before import phase).<br>
 	 *       This is used by `synchro_import.php --synchronize=1`
 	 *
 	 * @throws \CoreException
 	 */
-	public function __construct($oDataSource, $oLastFullLoadStartDate = null)
+	public function __construct($oDataSource, $oImportPhaseStartDate = null)
 	{
 		$this->m_oDataSource = $oDataSource;
 
-		$this->m_bIsDoingImportAndExecInSameScript = ($this->m_oLastFullLoadStartDate != null);
-		if (!$this->m_bIsDoingImportAndExecInSameScript)
-		{
-			$oLastFullLoadStartDate = self::GetDataBaseCurrentDateTime();
-		}
-		$this->m_oLastFullLoadStartDate = $oLastFullLoadStartDate;
+		$this->m_bIsImportPhaseDateKnown = ($this->m_oLastFullLoadStartDate != null);
+		$this->m_oImportPhaseStartDate = $oImportPhaseStartDate;
 
 		$this->m_oCtx = new ContextTag('Synchro');
 		$this->m_oCtx1 = new ContextTag('Synchro:'.$oDataSource->GetRawName()); // More precise context information
@@ -2404,7 +2410,7 @@ class SynchroExecution
 		$this->m_oStatLog->Set('stats_nb_replica_total', $this->m_iCountAllReplicas);
 
 		$this->m_oStatLog->DBInsertTracked($this->m_oChange);
-		$sLastFullLoad = ($this->m_bIsDoingImportAndExecInSameScript) ? $this->m_oLastFullLoadStartDate->format('Y-m-d H:i:s') : 'not specified';
+		$sLastFullLoad = ($this->m_bIsImportPhaseDateKnown) ? $this->m_oImportPhaseStartDate->format('Y-m-d H:i:s') : 'not specified';
 		$this->m_oStatLog->AddTrace("###### STARTING SYNCHRONIZATION ##### Total: {$this->m_iCountAllReplicas} replica(s). Last full load: '$sLastFullLoad' ");
 		$sSql = 'SELECT NOW();';
 		$sDBNow = CMDBSource::QueryToScalar($sSql);
@@ -2516,8 +2522,29 @@ class SynchroExecution
 			}
 		}
 
-		// keep track of the limit date taken into account for obsoleting replicas
+		// Compute and keep track of the limit date taken into account for obsoleting replicas
 		//
+		if ($this->m_bIsImportPhaseDateKnown)
+		{
+			$oLimitDate = clone $this->m_oImportPhaseStartDate;
+		}
+		else
+		{
+			$iLoadPeriodicity = $this->m_oDataSource->Get('full_load_periodicity'); // Duration in seconds
+			if ($iLoadPeriodicity <= 0)
+			{
+				// we are doing exec phase alone, and the full load interval is set to 0 => we should not update/delete replicas !!
+				// This will prevent actions in DoJob1() method
+				$oLimitDate = new DateTime('1970-01-01');
+			}
+			else
+			{
+				$oLimitDate = self::GetDataBaseCurrentDateTime();
+				$sInterval = "-$iLoadPeriodicity seconds";
+				$oLimitDate->Modify($sInterval);
+			}
+		}
+		$this->m_oLastFullLoadStartDate = $oLimitDate;
 		if ($bFirstPass)
 		{
 			$this->m_oStatLog->AddTrace("Limit Date: ".$this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s'));
@@ -2639,9 +2666,9 @@ class SynchroExecution
 			$aArguments['log'] = $this->m_oStatLog->GetKey();
 			$aArguments['change'] = $this->m_oChange->GetKey();
 			$aArguments['chunk'] = $iMaxChunkSize;
-			if ($this->m_bIsDoingImportAndExecInSameScript)
+			if ($this->m_bIsImportPhaseDateKnown)
 			{
-				$aArguments['last_full_load'] = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
+				$aArguments['last_full_load'] = $this->m_oImportPhaseStartDate->Format('Y-m-d H:i:s');
 			}
 			else
 			{
@@ -2767,38 +2794,19 @@ class SynchroExecution
 	protected function DoJob1($iMaxReplica = null, $iCurrPos = -1)
 	{
 		$this->m_oStatLog->AddTrace(">>> Beginning of DoJob1(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos)");
-		if ($this->m_bIsDoingImportAndExecInSameScript)
-		{
-			$sLastFullLoadStartDate = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
-		}
-		else
-		{
-			$sLastFullLoadStartDate = '';
-		}
-
+		$sLastFullLoadStartDate = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 
 		// Get all the replicas that were not seen in the last import and mark them as obsolete
 		$sDeletePolicy = $this->m_oDataSource->Get('delete_policy');
 		if ($sDeletePolicy !== 'ignore')
 		{
-			$iLoadPeriodicity = $this->m_oDataSource->Get('full_load_periodicity'); // Duration in seconds
-			if ($this->m_bIsDoingImportAndExecInSameScript && ($iLoadPeriodicity <= 0))
-			{
-				// we are doing exec phase alone, and the full load interval is set to 0 => we should not update !!
-				$oLimitDate = new DateTime('1970-01-01');
-			}
-			else
-			{
-				$oLimitDate = clone $this->m_oLastFullLoadStartDate;
-				$sInterval = "-$iLoadPeriodicity seconds";
-				$oLimitDate->Modify($sInterval);
-			}
-			$sLimitDate = $oLimitDate->Format('Y-m-d H:i:s');
-			$sLastFullLoadStartDate = $sLimitDate;
-
 			$sSelectToObsolete  = "SELECT SynchroReplica WHERE id > :curr_pos AND sync_source_id = :source_id AND status IN ('new', 'synchronized', 'modified', 'orphan') AND status_last_seen < :last_import";
-			$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos));
+			$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array() /* order by*/, array(
+				'source_id' => $this->m_oDataSource->GetKey(),
+				'last_import' => $sLastFullLoadStartDate,
+				'curr_pos' => $iCurrPos,
+			));
 			$iCountScope = $oSetScope->Count();
 			$sDebugOql = $oSetScope->GetFilter()->ToOQL(true);
 			$this->m_oStatLog->AddTrace("Searching for replicas to mark as obsolete using query: '$sDebugOql', returned $iCountScope replica(s).");
@@ -2811,7 +2819,11 @@ class SynchroExecution
 			{
 				// Consider a given subset, starting from replica iCurrPos, limited to the count of iMaxReplica
 				// The replica have to be ordered by id
-				$oSetToProcess = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array('id'=>true) /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos));
+				$oSetToProcess = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToObsolete), array('id' => true) /* order by*/, array(
+					'source_id' => $this->m_oDataSource->GetKey(),
+					'last_import' => $sLastFullLoadStartDate,
+					'curr_pos' => $iCurrPos,
+				));
 				$oSetToProcess->SetLimit($iMaxReplica);
 			}
 			else
