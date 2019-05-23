@@ -3311,9 +3311,9 @@ class SynchroExecution
 		else
 		{
 			$this->PrepareProcessing(/* first pass */);
-			$this->DoJob1();
-			$this->DoJob2();
-			$this->DoJob3();
+			$this->DoJob1UpdateReplicas();
+			$this->DoJob2CreateOrUpdateItopObjects();
+			$this->DoJob3DeleteItopObjectsAndReplicas();
 		}
 	}
 
@@ -3353,17 +3353,17 @@ class SynchroExecution
 		{
 			case 1:
 			default:
-				$this->DoJob1($iMaxChunkSize, $iCurrPos);
+				$this->DoJob1UpdateReplicas($iMaxChunkSize, $iCurrPos);
 				$bContinue = true;
 				break;
 
 			case 2:
-				$this->DoJob2($iMaxChunkSize, $iCurrPos);
+				$this->DoJob2CreateOrUpdateItopObjects($iMaxChunkSize, $iCurrPos);
 				$bContinue = true;
 				break;
 
 			case 3:
-				$bContinue = $this->DoJob3($iMaxChunkSize, $iCurrPos);
+				$bContinue = $this->DoJob3DeleteItopObjectsAndReplicas($iMaxChunkSize, $iCurrPos);
 				break;
 		}
 		$this->m_oStatLog->DBUpdate($this->m_oChange);
@@ -3387,7 +3387,7 @@ class SynchroExecution
 	 * @throws \OQLException
 	 * @throws \SynchroExceptionNotStarted
 	 */
-	protected function DoJob1($iMaxReplica = null, $iCurrPos = -1)
+	protected function DoJob1UpdateReplicas($iMaxReplica = null, $iCurrPos = -1)
 	{
 		$this->m_oStatLog->AddTrace(">>> Beginning of DoJob1(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos)");
 		if ($this->m_bIsDoingImportAndExecInSameScript)
@@ -3526,8 +3526,15 @@ class SynchroExecution
 	 * @param integer $iCurrPos Current position where to resume the processing
 	 *
 	 * @return true if the process must be continued
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
-	protected function DoJob2($iMaxReplica = null, $iCurrPos = -1)
+	protected function DoJob2CreateOrUpdateItopObjects($iMaxReplica = null, $iCurrPos = -1)
 	{
 		$this->m_oStatLog->AddTrace(">>> Beginning of DoJob2(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos)");
 		$sLimitDate = $this->m_oLastFullLoadStartDate->Format('Y-m-d H:i:s');
@@ -3597,14 +3604,21 @@ class SynchroExecution
 	 * @param integer $iCurrPos Current position where to resume the processing
 	 *
 	 * @return true if the process must be continued
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
-	protected function DoJob3($iMaxReplica = null, $iCurrPos = -1)
+	protected function DoJob3DeleteItopObjectsAndReplicas($iMaxReplica = null, $iCurrPos = -1)
 	{
 		$this->m_oStatLog->AddTrace(">>> Beginning of DoJob3(\$iMaxReplica = $iMaxReplica, \$iCurrPos = $iCurrPos)");
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 
 		$sDeletePolicy = $this->m_oDataSource->Get('delete_policy');
-		if ($sDeletePolicy != 'update_then_delete')
+		if ($sDeletePolicy !== 'update_then_delete')
 		{
 			$this->m_oStatLog->AddTrace("\$sDeletePoliciy = $sDeletePolicy != 'update_then_delete', nothing to do!");
 			// Job complete!
@@ -3615,7 +3629,7 @@ class SynchroExecution
 			return false;
 		}
 
-		$bFirstPass = ($iCurrPos == -1);
+		$bFirstPass = ($iCurrPos === -1);
 
 		// Get all the replicas that are to be deleted
 		//
