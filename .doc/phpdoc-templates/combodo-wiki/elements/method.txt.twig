@@ -1,0 +1,95 @@
+{% block method %}
+
+
+<WRAP group box >
+<WRAP twothirds column >
+==== {{ method.name }} ====
+</WRAP>{# twothirds column#}
+<WRAP third column >
+{% include 'includes/wrap-tags.txt.twig' with {structure:method, wrap: 'safety', wrapTags: ['api', 'api-advanced', 'overwritable-hook', 'extension-hook']} %}
+{% if method.deprecated %}<wrap danger>deprecated</wrap> {% endif %}
+{% if (node.parent is not null and method.parent.fullyQualifiedStructuralElementName != node.fullyQualifiedStructuralElementName) %}<wrap notice>inherited</wrap> {% endif %}
+{% if method.abstract %}<wrap warning>abstract</wrap> {% endif %}
+{% if method.final %}<wrap notice>final</wrap> {% endif %}
+<wrap notice>{{ method.visibility }}</wrap>
+{% if method.static %}<wrap warning>static</wrap> {% endif %}
+</WRAP>{# third column#}
+
+
+== {{  method.summary|replace({"\n":""})|raw }} ==
+<html>{{ method.description|markdown|raw }}</html>
+
+<code php>{% if method.abstract %}abstract {% endif %}{% if method.final %}final {% endif %}{{ method.visibility }} {% if method.static %}static {% endif %}{{ method.name }}({% for argument in method.arguments %}{{ argument.isVariadic ? '...' }}{{ argument.name }}{{ argument.default ? (' = '~argument.default)|raw }}{% if not loop.last %}, {% endif %}{% endfor %})</code>
+
+<WRAP twothirds column >
+
+
+=== Parameters ===
+{% if method.arguments|length > 0 -%}
+^ types ^ name ^ default ^ description ^
+{% for argument in method.arguments -%}
+| **<nowiki>{{ argument.types|join('|')|raw }}</nowiki>** | {{ argument.name }} {{ argument.isVariadic ? '<small style="color: gray">variadic</small>' }}  |   <nowiki>{{ argument.default|raw }}</nowiki>   | {{ argument.description|trim|replace("\n", ' ')|raw }} |{{ "\r\n" }}
+{%- endfor %}
+{% else %}
+//none//
+{% endif %}
+
+
+{#=== Parameters ===#}
+{#{% if method.arguments|length > 0 -%}#}
+{#{% for argument in method.arguments -%}#}
+{#== {{ argument.name }} ==#}
+
+
+{#{% set varDesc %}#}
+    {#<span style="margin:0 10px; 0 20px; font-weight: bold;">{{ argument.types|join('|') }}</span>#}
+    {#{{ argument.isVariadic ? '<small style="color: gray">variadic</small>' }}#}
+    {#{{ argument.description|raw }}#}
+{#{% endset %}#}
+{#<html>{{ varDesc|markdown|raw }}</html>#}
+{#{%- endfor %}#}
+{#{% else %}#}
+{#<wrap tip>This method has no parameter</wrap>#}
+{#{% endif %}#}
+
+
+{% if method.response and method.response.types|join() != 'void' %}
+=== Returns ===
+<html>{{ ('**' ~ method.response.types|join('|')|trim ~ '** ' ~ method.response.description)|markdown|raw }}</html>
+{% endif %}
+
+</WRAP>{# twothirds column#}
+
+<WRAP third column >
+
+{% if method.tags.throws|length > 0 or method.tags.throw|length > 0 %}
+=== Throws ===
+{% for exception in method.tags.throws -%}
+{% if loop.length > 1 %}  * {% endif %}''{{ exception.types|join('|')|raw }}'' <nowiki>{{ exception.description|raw }}</nowiki>
+{% endfor %}
+{% endif %}
+
+{% include 'includes/inherited-from.txt.twig' with {structure:method} %}
+
+{% include 'includes/see-also.txt.twig' with {structure:method, title_level: '==='} %}
+
+{% include 'includes/uses.txt.twig' with {structure:method, title_level: '==='} %}
+
+{% include 'includes/used-by.txt.twig' with {structure:method, title_level: '==='} %}
+
+{% include 'includes/tags-with-description.txt.twig' with {structure:method, title_level: '===', WRAP: 'info', tagsWithDescription: ['api', 'api-advanced', 'overwritable-hook', 'extension-hook']} %}
+
+{% include 'includes/tags.txt.twig' with {structure:method, title_level: '===', blacklist:  ['todo', 'link', 'see', 'abstract', 'example', 'param', 'return', 'access', 'deprecated', 'throws', 'throw', 'uses', 'api', 'api-advanced', 'overwritable-hook', 'extension-hook', 'used-by', 'inheritdoc', 'code-example']} %}
+
+</WRAP>{# third column#}
+
+
+
+{% include 'includes/code-examples.txt.twig' with {structure:method, title_level: '==='} %}
+
+</WRAP>{# group #}
+
+
+
+
+{% endblock %}

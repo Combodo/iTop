@@ -365,7 +365,7 @@ interface iPopupMenuExtension
  * Base class for the various types of custom menus
  * 
  * @package     Extensibility
- * @internal
+ * @api
  * @since 2.0
  */
 abstract class ApplicationPopupMenuItem
@@ -378,8 +378,10 @@ abstract class ApplicationPopupMenuItem
 	protected $aCssClasses;
 	
 	/**
-	 *	Constructor
-	 *	
+	 * Constructor
+	 *
+     * @api
+     *
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
      * @param string $sLabel The display label of the menu (must be localized)
      * @param array $aCssClasses The CSS classes to add to the menu
@@ -509,6 +511,9 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	
 	/**
 	 * Class for adding an item that triggers some Javascript code
+     *
+     * @api
+     *
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
 	 * @param string $sJSCode In case the menu consists in executing some havascript code inside the page, pass it here. If supplied $sURL ans $sTarget will be ignored

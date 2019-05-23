@@ -18,10 +18,21 @@
 
 
 /**
- * A union of DBObjectSearches 
+ * A union of DBObjectSearches
+ *
+ * This search class represent an union over a collection of DBObjectSearch.
+ * For clarity purpose, since only the constructor vary between DBObjectSearch and DBUnionSearch, all the API is documented on the common ancestor: DBSearch
+ * Please refer to DBSearch's documentation
  *
  * @copyright   Copyright (C) 2015-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ *
+ *
+ * @package     iTopORM
+ * @phpdoc-tunning-exclude-inherited this tag prevent PHPdoc from displaying inherited methods. This is done in order to force the API doc. location into DBSearch only.
+ * @api
+ * @see DBSearch
+ * @see DBObjectSearch
  */
  
 class DBUnionSearch extends DBSearch
@@ -29,6 +40,15 @@ class DBUnionSearch extends DBSearch
 	protected $aSearches; // source queries
 	protected $aSelectedClasses; // alias => classes (lowest common ancestors) computed at construction
 
+    /**
+     * DBUnionSearch constructor.
+     *
+     * @api
+     *
+     * @param $aSearches
+     *
+     * @throws CoreException
+     */
 	public function __construct($aSearches)
 	{
 		if (count ($aSearches) == 0)

@@ -38,7 +38,8 @@ test/vendor/*
 !/.idea/inspectionProfiles
 !/.idea/inspectionProfiles/*
 
-
+#phpdocumentor temp file
+ast.dump
 
 # CMake
 cmake-build-*/

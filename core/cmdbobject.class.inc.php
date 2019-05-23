@@ -696,6 +696,8 @@ abstract class CMDBObject extends DBObject
  * TODO: investigate how to get rid of this class that was made to workaround some language limitation... or a poor design!
  *
  * @package     iTopORM
+ *
+ * @internal
  */
 class CMDBObjectSet extends DBObjectSet
 {

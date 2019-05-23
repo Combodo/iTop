@@ -163,6 +163,7 @@ EOF
 							{
 								// When there is only once choice, select it by default
 								$sSelected = 'checked';
+							    $value = $sChoice;
 							}
 							else
 							{

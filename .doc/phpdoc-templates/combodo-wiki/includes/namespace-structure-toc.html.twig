@@ -1,0 +1,26 @@
+{% for structure in structures|sort_asc if structure.tags['internal'] is not defined and (structure.tags['api'] is defined or structure.tags['api-advanced'] is  defined or structure.tags['overwritable-hook'] is  defined or structure.tags['extension-hook'] is  defined ) %}
+{#{{ structure|raw }}#}
+
+{% set structureName = structure|trim('\\', 'left') %}
+
+<WRAP group box>
+<WRAP twothirds column >
+==== {{ structureName }} ====
+</WRAP>{# twothirds column#}
+
+<WRAP third column>
+{% if structure.deprecated %}<wrap danger>deprecated</wrap>{% endif %}
+{% if structure.abstract %}<wrap warning>abstract</wrap>{% endif %}
+{% if structure.final %}<wrap notice>final</wrap>{% endif %}
+{% if (node.parent is not null and structure.parent.fullyQualifiedStructuralElementName != node.fullyQualifiedStructuralElementName) %}<wrap notice>inherited</wrap> {% endif %}
+{% include 'includes/wrap-tags.txt.twig' with {structure:structure, wrap: 'safety', wrapTags: ['api', 'api-advanced', 'overwritable-hook', 'extension-hook']} %}
+</WRAP>{# third column#}
+
+
+{{ structure.summary|raw }}
+[[{{structureName}}|More informations]]
+
+</WRAP>{# group #}
+
+{% endfor %}
+

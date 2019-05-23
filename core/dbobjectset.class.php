@@ -27,9 +27,13 @@ require_once('dbobjectiterator.php');
 
 
 /**
- * A set of persistent objects, could be heterogeneous as long as the objects in the set have a common ancestor class 
+ * A set of persistent objects
+ *
+ * Created against a DBObjectSearch with additional information not relevant for the  DBObjectSearch (ie: order, limit, ...)
+ * This set could be heterogeneous as long as the objects in the set have a common ancestor class.
  *
  * @package     iTopORM
+ * @api
  */
 class DBObjectSet implements iDBObjectSetIterator
 {
@@ -81,6 +85,8 @@ class DBObjectSet implements iDBObjectSetIterator
 
 	/**
 	 * Create a new set based on a Search definition.
+     *
+     * @api
 	 * 
 	 * @param DBSearch $oFilter The search filter defining the objects which are part of the set (multiple columns/objects per row are supported)
 	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
@@ -110,6 +116,9 @@ class DBObjectSet implements iDBObjectSetIterator
 		$this->m_oSQLResult = null;
 	}
 
+    /**
+     * @internal
+     */
 	public function __destruct()
 	{
 		if (is_object($this->m_oSQLResult))
@@ -119,6 +128,8 @@ class DBObjectSet implements iDBObjectSetIterator
 	}
 
     /**
+     * @internal
+     *
      * @return string
      *
      * @throws \Exception
@@ -145,6 +156,9 @@ class DBObjectSet implements iDBObjectSetIterator
 		return $sRet;
 	}
 
+    /**
+     * @internal
+     */
 	public function __clone()
 	{
 		$this->m_oFilter = $this->m_oFilter->DeepClone();
@@ -158,6 +172,7 @@ class DBObjectSet implements iDBObjectSetIterator
 
 	/**
 	 * Called when unserializing a DBObjectSet
+     * @internal
 	 */
 	public function __wakeup()
 	{
@@ -168,18 +183,30 @@ class DBObjectSet implements iDBObjectSetIterator
 		$this->m_oSQLResult = null;
 	}
 
+    /**
+     * @internal
+     * @param $bShow
+     */
 	public function SetShowObsoleteData($bShow)
 	{
 		$this->m_oFilter->SetShowObsoleteData($bShow);
 	}
 
+    /**
+     * @internal
+     * @return bool
+     */
 	public function GetShowObsoleteData()
 	{
 		return $this->m_oFilter->GetShowObsoleteData();
 	}
 
     /**
-     * Specify the subset of attributes to load (for each class of objects) before performing the SQL query for retrieving the rows from the DB
+     * Specify the subset of attributes to load
+     * this subset is specified for each class of objects,
+     * this has to be done before the actual fetch.
+     *
+     * @api
      *
      * @param array $aAttToLoad Format: alias => array of attribute_codes
      *
@@ -262,6 +289,8 @@ class DBObjectSet implements iDBObjectSetIterator
     /**
      * Create a set (in-memory) containing just the given object
      *
+     * @internal
+     *
      * @param \DBobject $oObject
      *
      * @return \DBObjectSet The singleton set
@@ -277,6 +306,8 @@ class DBObjectSet implements iDBObjectSetIterator
 
     /**
      * Create an empty set (in-memory), for the given class (and its subclasses) of objects
+     *
+     * @internal
      *
      * @param string $sClass The class (or an ancestor) for the objects to be added in this set
      *
@@ -297,6 +328,8 @@ class DBObjectSet implements iDBObjectSetIterator
     /**
      * Create a set (in-memory) with just one column (i.e. one object per row) and filled with the given array of objects
      *
+     * @internal
+     *
      * @param string $sClass The class of the objects (must be a common ancestor to all objects in the set)
      * @param array $aObjects The list of objects to add into the set
      *
@@ -314,8 +347,10 @@ class DBObjectSet implements iDBObjectSetIterator
     /**
      * Create a set in-memory with several classes of objects per row (with one alias per "column")
      *
-     * Limitation:
+     * **Limitation:**
      * The filter/OQL query representing such a set can not be rebuilt (only the first column will be taken into account)
+     *
+     * @internal
      *
      * @param array $aClasses Format: array of (alias => class)
      * @param array $aObjects Format: array of (array of (classalias => object))
@@ -345,6 +380,9 @@ class DBObjectSet implements iDBObjectSetIterator
 	}
 
     /**
+     *
+     * @internal
+     *
      * @param $oObject
      * @param string $sLinkSetAttCode
      * @param string $sExtKeyToRemote
@@ -371,11 +409,15 @@ class DBObjectSet implements iDBObjectSetIterator
 	}
 
     /**
+     * Fetch all as array of DBObject
+     *
      * Note: After calling this method, the set cursor will be at the end of the set. You might want to rewind it.
+     *
+     * @api
      *
      * @param bool $bWithId
      *
-     * @return array
+     * @return DBObject[]
      *
      * @throws \Exception
      * @throws \CoreException
@@ -401,7 +443,14 @@ class DBObjectSet implements iDBObjectSetIterator
 	}
 
     /**
-     * @return array
+     * Fetch all as a structured array
+     *
+     * Unlike ToArray, ToArrayOfValues return the objects as an array.
+     * Only the scalar values will be presents (see AttributeDefinition::IsScalar())
+     *
+     * @api
+     *
+     * @return array[]
      *
      * @throws \Exception
      * @throws \CoreException
@@ -773,6 +822,7 @@ class DBObjectSet implements iDBObjectSetIterator
      * May actually perform the SQL query SELECT COUNT... if the set was not previously loaded, or loaded with a
      * SetLimit
      *
+     * @api
      * @return int The total number of rows for this set.
      *
      * @throws \CoreException
@@ -796,11 +846,13 @@ class DBObjectSet implements iDBObjectSetIterator
 		return $this->m_iNumTotalDBRows + count($this->m_aAddedObjects); // Does it fix Trac #887 ??
 	}
 
-	/** Check if the count exceeds a given limit
+	/**
+	 * Check if the count exceeds a given limit
+	 *
 	 * @param $iLimit
 	 *
 	 * @return bool
-     *
+	 *
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
@@ -831,11 +883,13 @@ class DBObjectSet implements iDBObjectSetIterator
 		return ($iCount > $iLimit);
 	}
 
-	/** Count only up to the given limit
+	/**
+	 * Count only up to the given limit
+	 *
 	 * @param $iLimit
 	 *
 	 * @return int
-     *
+	 *
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
@@ -877,9 +931,11 @@ class DBObjectSet implements iDBObjectSetIterator
 	}
 
     /**
-     * Fetch the object (with the given class alias) at the current position in the set and move the cursor to the next position.
+     * Fetch an object (with the given class alias) at the current position in the set and move the cursor to the next position.
      *
-     * @param string $sRequestedClassAlias The class alias to fetch (if there are several objects/classes per row)
+     * @api
+     *
+     * @param string $sRequestedClassAlias The class alias to fetch (defaults to the first selected class)
      *
      * @return \DBObject The fetched object or null when at the end
      *
@@ -933,6 +989,8 @@ class DBObjectSet implements iDBObjectSetIterator
     /**
      * Fetch the whole row of objects (if several classes have been specified in the query) and move the cursor to the next position
      *
+     * @api
+     *
      * @return array An associative with the format 'classAlias' => $oObj representing the current row of the set. Returns null when at the end.
      *
      * @throws \CoreException
@@ -981,8 +1039,10 @@ class DBObjectSet implements iDBObjectSetIterator
 
 	/**
 	 * Position the cursor (for iterating in the set) to the first position (equivalent to Seek(0))
-     *
-     * @throws \Exception
+	 *
+	 * @api
+	 *
+	 * @throws \Exception
 	 */
 	public function Rewind()
 	{
@@ -1200,9 +1260,9 @@ class DBObjectSet implements iDBObjectSetIterator
 	 * @param \DBObjectSet $oObjectSet
 	 * 
 	 * @return \DBObjectSet The "delta" set.
-     *
-     * @throws \Exception
-     * @throws \CoreException
+	 *
+	 * @throws \Exception
+	 * @throws \CoreException
 	 */
 	public function CreateDelta(DBObjectSet $oObjectSet)
 	{
@@ -1445,6 +1505,8 @@ class DBObjectSet implements iDBObjectSetIterator
 
 /**
  * Helper function to perform a custom sort of a hash array
+ *
+ * @internal
  */
 function HashCountComparison($a, $b) // Sort descending on 'count'
 {
@@ -1464,6 +1526,11 @@ function HashCountComparison($a, $b) // Sort descending on 'count'
  * LIMITATIONS:
  *  - only DBObjectSets with one column (i.e. one class of object selected) are supported
  *  - the first set must be the one loaded from the database
+ *
+ * @internal
+ *
+ * @package iTopORM
+ *
  */
 class DBObjectSetComparator
 {
@@ -1507,6 +1574,8 @@ class DBObjectSetComparator
 
     /**
      * Builds the lists of fingerprints and initializes internal structures, if it was not already done
+     *
+     * @internal
      *
      * @throws \CoreException
      */
@@ -1557,6 +1626,9 @@ class DBObjectSetComparator
 
     /**
      * Tells if the sets are equivalent or not. Returns as soon as the first difference is found.
+     *
+     * @internal
+     *
      * @return boolean true if the set have an equivalent content, false otherwise
      *
      * @throws \CoreException
@@ -1603,8 +1675,10 @@ class DBObjectSetComparator
     /**
      * Get the list of differences between the two sets. In ordeer to write back into the database only the minimum changes
      * THE FIRST SET MUST BE THE ONE LOADED FROM THE DATABASE
-     * Returns a hash: 'added' => DBObject(s), 'removed' => DBObject(s), 'modified' => DBObjects(s)
-     * @return array
+     *
+     * @internal
+     *
+     * @return array 'added' => DBObject(s), 'removed' => DBObject(s), 'modified' => DBObjects(s)
      *
      * @throws \Exception
      * @throws \CoreException
@@ -1659,7 +1733,9 @@ class DBObjectSetComparator
 	}
 
     /**
-     * Helpr to clone (in memory) an object and to apply to it the values taken from a second object
+     * Helper to clone (in memory) an object and to apply to it the values taken from a second object
+     *
+     * @internal
      *
      * @param \DBObject $oObjToClone
      * @param \DBObject $oObjWithValues

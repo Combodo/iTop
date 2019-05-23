@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+  <title><![CDATA[iTop extensions]]></title>
+
+  <parser>
+    <target>../data/phpdocumentor/temp/extensions</target>
+  </parser>
+
+  <transformer>
+    <target>../data/phpdocumentor/output/extensions</target>
+  </transformer>
+
+  <transformations>
+    <template name="phpdoc-templates/combodo-wiki"/>
+  </transformations>
+
+  <files>
+    <file>../application/applicationextension.inc.php</file>
+  </files>
+</phpdoc>

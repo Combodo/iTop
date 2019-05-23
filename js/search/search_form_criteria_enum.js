@@ -42,6 +42,16 @@ $(function()
 		{
 			var me = this;
 
+			// when the allowed valued indexes has  sequentially & numerical keys, they are passed has an array which break some further code, let's enforce them as an object.
+			if (Array.isArray(this.options.field.allowed_values.values))
+			{
+				var arrayValues = this.options.field.allowed_values.values;
+				this.options.field.allowed_values.values = {};
+				for (var i = 0; i < arrayValues.length; i++) {
+					this.options.field.allowed_values.values[i] = arrayValues[i];
+				}
+			}
+
 			this._super();
 			this.element.addClass('search_form_criteria_enum');
 		},

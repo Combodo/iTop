@@ -7849,6 +7849,87 @@ class AttributeStopWatch extends AttributeDefinition
 		throw new CoreException("Unknown item code '$sItemCode' for attribute ".$this->GetHostClass().'::'.$this->GetCode());
 	}
 
+
+    public function GetSubItemSearchType($sItemCode)
+    {
+        switch ($sItemCode)
+        {
+            case 'timespent':
+                return static::SEARCH_WIDGET_TYPE_NUMERIC;  //seconds
+            case 'started':
+            case 'laststart':
+            case 'stopped':
+                return static::SEARCH_WIDGET_TYPE_DATE_TIME; //timestamp
+        }
+
+        foreach($this->ListThresholds() as $iThreshold => $aFoo)
+        {
+            $sThPrefix = $iThreshold.'_';
+            if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+            {
+                // The current threshold is concerned
+                $sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+                switch ($sThresholdCode)
+                {
+                    case 'deadline':
+                        return static::SEARCH_WIDGET_TYPE_DATE_TIME; //timestamp
+                    case 'passed':
+                    case 'triggered':
+                        return static::SEARCH_WIDGET_TYPE_ENUM; //booleans, used in conjuction with GetSubItemAllowedValues and IsSubItemNullAllowed
+                    case 'overrun':
+                        return static::SEARCH_WIDGET_TYPE_NUMERIC; //seconds
+                }
+            }
+        }
+
+        return static::SEARCH_WIDGET_TYPE_RAW;
+    }
+
+    public function GetSubItemAllowedValues($sItemCode, $aArgs = array(), $sContains = '')
+    {
+        foreach($this->ListThresholds() as $iThreshold => $aFoo)
+        {
+            $sThPrefix = $iThreshold.'_';
+            if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+            {
+                // The current threshold is concerned
+                $sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+                switch ($sThresholdCode)
+                {
+                    case 'passed':
+                    case 'triggered':
+                        return array(
+                            0 => $this->GetBooleanLabel(0),
+                            1 => $this->GetBooleanLabel(1),
+                        );
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function IsSubItemNullAllowed($sItemCode, $bDefaultValue)
+    {
+        foreach($this->ListThresholds() as $iThreshold => $aFoo)
+        {
+            $sThPrefix = $iThreshold.'_';
+            if (substr($sItemCode, 0, strlen($sThPrefix)) == $sThPrefix)
+            {
+                // The current threshold is concerned
+                $sThresholdCode = substr($sItemCode, strlen($sThPrefix));
+                switch ($sThresholdCode)
+                {
+                    case 'passed':
+                    case 'triggered':
+                       return false;
+                }
+            }
+        }
+
+        return $bDefaultValue;
+    }
+
 	protected function GetBooleanLabel($bValue)
 	{
 		$sDictKey = $bValue ? 'yes' : 'no';
@@ -8198,9 +8279,39 @@ class AttributeStopWatch extends AttributeDefinition
  */
 class AttributeSubItem extends AttributeDefinition
 {
-	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
+    /**
+     * Return the search widget type corresponding to this attribute
+     * the computation is made by AttributeStopWatch::GetSubItemSearchType
+     *
+     * @return string
+     */
+    public function GetSearchType()
+    {
+        /** @var AttributeStopWatch $oParent */
+        $oParent = $this->GetTargetAttDef();
 
-	static public function ListExpectedParams()
+        return $oParent->GetSubItemSearchType($this->Get('item_code'));
+    }
+
+    public function GetAllowedValues($aArgs = array(), $sContains = '')
+    {
+        /** @var AttributeStopWatch $oParent */
+        $oParent = $this->GetTargetAttDef();
+
+        return $oParent->GetSubItemAllowedValues($this->Get('item_code'), $aArgs, $sContains);
+    }
+
+    public function IsNullAllowed()
+    {
+        /** @var AttributeStopWatch $oParent */
+        $oParent = $this->GetTargetAttDef();
+
+        $bDefaultValue = parent::IsNullAllowed();
+
+        return $oParent->IsSubItemNullAllowed($this->Get('item_code'), $bDefaultValue);
+    }
+
+    static public function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('target_attcode', 'item_code'));
 	}

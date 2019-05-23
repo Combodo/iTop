@@ -97,8 +97,9 @@ define('MYSQL_ENGINE', 'innodb');
 
 
 /**
- * (API) The objects definitions as well as their mapping to the database
+ * The objects definitions as well as their mapping to the database
  *
+ * @api
  * @package     iTopORM
  */
 abstract class MetaModel
@@ -1233,6 +1234,7 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
 	 * @param string $sClass
 	 *
 	 * @return array
@@ -1285,9 +1287,12 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @param string $sClass
-	 * @param string $sAttCode
-	 * @param bool $bExtended
+	 * Check it the given attribute exists in the specified class
+	 *
+	 * @api
+	 * @param string $sClass Class name
+	 * @param string $sAttCode Attribute code
+	 * @param bool $bExtended Allow the extended syntax: extkey_id->remote_attcode
 	 *
 	 * @return bool
 	 * @throws \Exception
@@ -1341,6 +1346,7 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1356,6 +1362,9 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Check if the given class name is actually a persistent class
+	 *
+	 * @api
 	 * @param string $sClass
 	 *
 	 * @return bool
@@ -1630,17 +1639,20 @@ abstract class MetaModel
 	/**
 	 * array of ("classname" => array filterdef)
 	 *
+	 * @deprecated
 	 * @var array
 	 */
 	private static $m_aFilterDefs = array();
 	/**
 	 * array of ("classname" => array of ("attcode"=>"sourceclass"))
 	 *
+	 * @deprecated
 	 * @var array
 	 */
 	private static $m_aFilterOrigins = array();
 
 	/**
+	 * @deprecated
 	 * @param string $sClass
 	 *
 	 * @return mixed
@@ -1653,6 +1665,7 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1670,6 +1683,7 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1688,6 +1702,7 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1705,6 +1720,7 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1722,6 +1738,7 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 *
@@ -1740,6 +1757,7 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
 	 * @param string $sClass
 	 * @param string $sFilterCode
 	 * @param string $sOpCode
@@ -1759,6 +1777,7 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated
 	 * @param string $sFilterCode
 	 *
 	 * @return string
@@ -1856,7 +1875,7 @@ abstract class MetaModel
 	private static $m_aRelationInfos = array();
 
 	/**
-	 * TO BE DEPRECATED: use EnumRelationsEx instead
+	 * @deprecated Use EnumRelationsEx instead
 	 *
 	 * @param string $sClass
 	 *
@@ -6643,12 +6662,13 @@ abstract class MetaModel
 	}
 
 	/**
-	 * Search for the specified class and id.
+	 * Instantiate an object already persisted to the Database.
 	 *
+	 * @api
 	 * @param string $sClass
 	 * @param int $iKey id value of the object to retrieve
 	 * @param bool $bMustBeFound see throws ArchivedObjectException
-	 * @param bool $bAllowAllData if true then no rights filtering
+	 * @param bool $bAllowAllData if true then user rights will be bypassed - use with care!
 	 * @param null $aModifierProperties
 	 *
 	 * @return DBObject|null null if : (the object is not found) or (archive mode disabled and object is archived and
@@ -6859,8 +6879,11 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @param string $sClass
-	 * @param array|null $aValues array of attcode => value
+	 * Instantiate a persistable object (not yet persisted)
+	 *
+	 * @api
+	 * @param string $sClass A persistable class
+	 * @param array|null $aValues array of attcode => attribute value to preset
 	 *
 	 * @return DBObject
 	 * @throws \CoreException
@@ -6905,6 +6928,8 @@ abstract class MetaModel
 	 * @todo: protect it against forbidden usages (in such a case, delete objects one by one)
 	 *
 	 * @param \DBObjectSearch $oFilter
+	 * @deprecated
+	 * @experimental
 	 *
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
@@ -6922,6 +6947,8 @@ abstract class MetaModel
 	 * @param DBObjectSearch $oFilter
 	 * @param array $aValues array of attcode => value
 	 *
+	 * @deprecated
+	 * @experimental
 	 * @return int Modified objects
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
