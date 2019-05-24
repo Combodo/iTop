@@ -47,7 +47,7 @@ you can extend the behaviour of iTop by implementing:
 {% endif %}
 {% set sanitizedMethod = method|trim('\\', 'left')|replace({(node.name~'::'): ''}) %}
 {% if '::' in sanitizedMethod -%}
-{%- if node.tags['phpdoc-tunning-exclude-inherited'] is not defined %}
+{%- if node.tags['phpdoc-tuning-exclude-inherited'] is not defined %}
   * [[{{sanitizedMethod|replace({'::': '#'})|lower}}|↪{{sanitizedMethod}}]] — {{  method.summary|replace({"\n":""})|raw }}
 {% endif %}
 {%- else %}
