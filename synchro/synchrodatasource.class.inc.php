@@ -2275,20 +2275,14 @@ class SynchroReplica extends DBObject implements iDisplay
 }
 
 /**
- * Handles the execution phase of datasynchro (updates iTop objects from replicas)
+ * Handles the execution phase of datasynchro (create, update, delete iTop objects from replicas)
  *
- * Two usages:
+ * Usage:
  *
- * 1. Public usage: execute the synchronization
+ * Execute the synchronization
  * ```php
  *    $oSynchroExec = new SynchroExecution($oDataSource[, $iLastFullLoad]);
  *    $oSynchroExec->Process($iMaxChunkSize);
- * ```
- * 2. Internal usage: continue the synchronization (split into chunks, each performed in a separate process)
- *    This is implemented in the page priv_sync_chunk.php
- * ```php
- *    $oSynchroExec = SynchroExecution::Resume($oDataSource, $iLastFullLoad, $iSynchroLog, $iChange, $iMaxToProcess, $iJob, $iNextInJob);
- *    $oSynchroExec->Process()
  * ```
  */
 class SynchroExecution
@@ -2325,9 +2319,8 @@ class SynchroExecution
 
 	/**
 	 * @param SynchroDataSource $oDataSource Synchronization task
-	 * @param DateTime $oImportPhaseStartDate when doing both import and exec phases in the same script, this parameter should contain
-	 *       the current datetime when the script was launched (before import phase).<br>
-	 *       This is used by `synchro_import.php --synchronize=1`
+	 * @param DateTime $oImportPhaseStartDate Start of the import when doing both import and exec phases in the same script. (This is used by `synchro_import.php --synchronize=1`)
+	 *          null when exec phase is used alone and the import start date is unknown.
 	 *
 	 * @throws \CoreException
 	 */
@@ -2335,7 +2328,7 @@ class SynchroExecution
 	{
 		$this->m_oDataSource = $oDataSource;
 
-		$this->m_bIsImportPhaseDateKnown = ($this->m_oLastFullLoadStartDate != null);
+		$this->m_bIsImportPhaseDateKnown = ($oImportPhaseStartDate != null);
 		$this->m_oImportPhaseStartDate = $oImportPhaseStartDate;
 
 		$this->m_oCtx = new ContextTag('Synchro');
@@ -2524,14 +2517,16 @@ class SynchroExecution
 
 		// Compute and keep track of the limit date taken into account for obsoleting replicas
 		//
+		$iFullLoadInterval = $this->m_oDataSource->Get('full_load_periodicity'); // Duration in seconds
 		if ($this->m_bIsImportPhaseDateKnown)
 		{
 			$oLimitDate = clone $this->m_oImportPhaseStartDate;
+			$sInterval = "-$iFullLoadInterval seconds";
+			$oLimitDate->Modify($sInterval);
 		}
 		else
 		{
-			$iLoadPeriodicity = $this->m_oDataSource->Get('full_load_periodicity'); // Duration in seconds
-			if ($iLoadPeriodicity <= 0)
+			if ($iFullLoadInterval <= 0)
 			{
 				// we are doing exec phase alone, and the full load interval is set to 0 => we should not update/delete replicas !!
 				// This will prevent actions in DoJob1() method
@@ -2540,7 +2535,7 @@ class SynchroExecution
 			else
 			{
 				$oLimitDate = self::GetDataBaseCurrentDateTime();
-				$sInterval = "-$iLoadPeriodicity seconds";
+				$sInterval = "-$iFullLoadInterval seconds";
 				$oLimitDate->Modify($sInterval);
 			}
 		}
@@ -2771,13 +2766,15 @@ class SynchroExecution
 				$bContinue = $this->DoJob3($iMaxChunkSize, $iCurrPos);
 				break;
 		}
-		$this->m_oStatLog->DBUpdate($this->m_oChange);
+		$this->m_oStatLog->DBUpdate();
 		self::$m_oCurrentTask = null;
 		return $bContinue;
 	}
 
 	/**
-	 * Do the synchronization job #1: Obsolete replica "untouched" for some time
+	 * Do the synchronization job #1: Execute action on replicas "untouched" for some time
+	 *  - Obsolete entries if delete_policy is 'update' or 'update_then_delete'
+	 *  - Delete entries if delete_policy is 'delete'
 	 *
 	 * @param integer $iMaxReplica Limit the number of replicas to process
 	 * @param integer $iCurrPos Current position where to resume the processing
@@ -2872,9 +2869,13 @@ class SynchroExecution
 					break;
 	
 	         	case 'delete':
-	         	default:
+	         		// delete_policy_retention is not used here only full_load_interval
 					$this->m_oStatLog->AddTrace("Destination object to be DELETED", $oReplica);
 					$oReplica->DeleteDestObject($this->m_oChange, $this->m_oStatLog);
+					break;
+
+				default:
+					break;
 				}
 			}
 			if ($iMaxReplica)
@@ -2904,9 +2905,18 @@ class SynchroExecution
 
 	/**
 	 * Do the synchronization job #2: Create and modify object for new/modified replicas
-	 * @param integer $iMaxReplica Limit the number of replicas to process 
-	 * @param integer $iCurrPos Current position where to resume the processing 
+	 *
+	 * @param integer $iMaxReplica Limit the number of replicas to process
+	 * @param integer $iCurrPos Current position where to resume the processing
+	 *
 	 * @return true if the process must be continued
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	protected function DoJob2($iMaxReplica = null, $iCurrPos = -1)
 	{
@@ -2936,6 +2946,7 @@ class SynchroExecution
 		}
 
 		$iLastReplicaProcessed = -1;
+		/** @var \SynchroReplica $oReplica */
 		while($oReplica = $oSetToProcess->Fetch())
 		{
 			set_time_limit($iLoopTimeLimit);
@@ -2965,10 +2976,19 @@ class SynchroExecution
 	}
 
 	/**
-	 * Do the synchronization job #3: Delete replica depending on the obsolescence scheme
-	 * @param integer $iMaxReplica Limit the number of replicas to process 
-	 * @param integer $iCurrPos Current position where to resume the processing 
+	 * Do the synchronization job #3: Delete replica depending on the obsolescence scheme if delete_policy is 'update_then_delete'
+	 *
+	 * @param integer $iMaxReplica Limit the number of replicas to process
+	 * @param integer $iCurrPos Current position where to resume the processing
+	 *
 	 * @return true if the process must be continued
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	protected function DoJob3($iMaxReplica = null, $iCurrPos = -1)
 	{
