@@ -2670,7 +2670,7 @@ class SynchroExecution
 				$aArguments['last_full_load'] = '';
 			}
 
-			$this->m_oStatLog->DBUpdate();
+			$this->m_oStatLog->DBUpdate($this->m_oChange);
 
 			$iStepCount = 0;
 			do
@@ -2766,7 +2766,7 @@ class SynchroExecution
 				$bContinue = $this->DoJob3($iMaxChunkSize, $iCurrPos);
 				break;
 		}
-		$this->m_oStatLog->DBUpdate();
+		$this->m_oStatLog->DBUpdate($this->m_oChange);
 		self::$m_oCurrentTask = null;
 		return $bContinue;
 	}
@@ -2875,6 +2875,7 @@ class SynchroExecution
 					break;
 
 				default:
+					$this->m_oStatLog->AddTrace("Unknown delete policy : $sDeletePolicy");
 					break;
 				}
 			}
