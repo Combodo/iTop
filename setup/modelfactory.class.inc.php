@@ -1785,6 +1785,7 @@ EOF;
 /**
  * MFElement: helper to read/change the DOM
  * @package ModelFactory
+ * @property \MFDocument $ownerDocument This is only here for type hinting as iTop replaces \DOMDocument with \MFDocument
  */
 class MFElement extends Combodo\iTop\DesignElement
 {
