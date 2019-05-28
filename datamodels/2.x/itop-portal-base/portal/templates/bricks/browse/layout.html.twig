@@ -1,0 +1,40 @@
+{# itop-portal-base/portal/templates/bricks/browse/layout.html.twig #}
+{# Browse brick base layout #}
+{% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
+
+{% block pPageBodyClass %}{{ parent() }} page_browse_brick page_browse_brick_as_{{ sBrowseMode }}{% endblock %}
+
+{% block pPageReadyScripts %}
+    {{ parent() }}
+    {% include 'itop-portal-base/portal/templates/helpers/tagset_clic_handler.js.twig' %}
+{% endblock %}
+
+
+{% block pMainHeaderTitle %}
+	{{ oBrick.GetTitle()|dict_s }}
+{% endblock %}
+
+{% block pMainHeaderActions %}
+	{% if aBrowseButtons|length > 1 %}
+		<div class="btn-group {#btn-group-sm#} btn_group_explicit">
+			{% for sBrowseButton in aBrowseButtons %}
+			<a href="{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseButton}) }}" class="btn btn-default {% if sBrowseMode == sBrowseButton %}active{% endif %}">{{ ('Brick:Portal:Browse:Mode:'~sBrowseButton|capitalize)|dict_s }}</a>
+			{% endfor %}
+		</div>
+	{% endif %}
+{% endblock %}
+
+{% block pMainContentHolder%}
+	{% if iItemsCount > 0 or sSearchValue is not null %}
+		<div class="panel panel-default">
+			{% block bBrowseMainContent %}
+			{% endblock %}
+		</div>
+	{% else %}
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<h3 class="text-center">{{ 'Brick:Portal:Browse:Filter:NoData'|dict_s }}</h3>
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}

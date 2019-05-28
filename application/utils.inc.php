@@ -1054,6 +1054,15 @@ class utils
 		return APPROOT.'data/cache-'.MetaModel::GetEnvironment().'/';
 	}
 	/**
+	 * Returns a path to a folder into which any module can store log
+	 * @return string
+	 * @since 2.7.0
+	 */
+	public static function GetLogPath()
+	{
+		return APPROOT.'log/';
+	}
+	/**
 	 * Merge standard menu items with plugin provided menus items
 	 */
 	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions, $sTableId = null, $sDataTableId = null)

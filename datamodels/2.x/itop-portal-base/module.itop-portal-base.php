@@ -13,11 +13,10 @@ SetupWebPage::AddModule(
 	'visible' => true,
 	// Components
 	'datamodel' => array(
-		'portal/src/controllers/abstractcontroller.class.inc.php',
-		'portal/src/controllers/brickcontroller.class.inc.php',
-		'portal/src/entities/abstractbrick.class.inc.php',
-		'portal/src/entities/portalbrick.class.inc.php',
-		'portal/src/routers/abstractrouter.class.inc.php',
+//		'portal/src/controllers/brickcontroller.class.inc.php',
+//		'portal/src/entities/abstractbrick.class.inc.php',
+//		'portal/src/entities/portalbrick.class.inc.php',
+//		'portal/src/routers/abstractrouter.class.inc.php',
 	),
 	'webservice' => array(
 	//'webservices.itop-portal-base.php',

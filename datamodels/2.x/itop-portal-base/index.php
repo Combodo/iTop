@@ -44,8 +44,17 @@ if(!defined('PORTAL_ID'))
     }
 
     // Defining portal constants
-    define('PORTAL_MODULE_ID', $sPortalId);
     define('PORTAL_ID', $sPortalId);
 }
 
-require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/web/index.php';
+define('PORTAL_CACHE_PATH', utils::GetCachePath() . '/portals/' . PORTAL_ID . '/');
+
+// Constants to be used in templates and others
+define('COMBODO_CURRENT_ENVIRONMENT', utils::GetCurrentEnvironment());
+define('COMBODO_ABSOLUTE_URL', utils::GetAbsoluteUrlAppRoot());
+define('COMBODO_MODULES_ABSOLUTE_URL',  utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment());
+define('COMBODO_PORTAL_BASE_ABSOLUTE_URL', utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/public/');
+define('COMBODO_PORTAL_BASE_ABSOLUTE_PATH',  MODULESROOT . '/itop-portal-base/portal/public/');
+define('COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL', utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/' . PORTAL_ID . '/');
+
+require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/public/index.php';

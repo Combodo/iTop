@@ -28,6 +28,13 @@
  * - PortalDispatcher uses the new url "pages/exec.php?exec_module=itop-portal-base&amp;exec_page=index.php&amp;portal_id=itop-portal"
  * - Portal xml has a //properties/urlmaker_class tag (or doesn't need to register a UrlMakerClass)
  */
+@trigger_error(
+	sprintf(
+		'Usage of "%s" is deprecated. You should stop using it and use /itop-portal-base/index.php instead.',
+		__FILE__
+	),
+	E_USER_DEPRECATED
+);
 
 if (file_exists(__DIR__ . '/../../approot.inc.php'))
 {
@@ -47,7 +54,6 @@ if (!class_exists('UserRequest') && !class_exists('Incident'))
 
 // Defining portal constants
 $sDir = basename(__DIR__);
-define('PORTAL_MODULE_ID', $sDir);
 define('PORTAL_ID', $sDir);
 
 require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/index.php';

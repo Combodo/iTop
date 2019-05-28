@@ -1,0 +1,428 @@
+{# itop-portal-base/portal/templates/bricks/browse/mode_tree.html.twig #}
+{# Browse brick tree mode layout #}
+{% extends 'itop-portal-base/portal/templates/bricks/browse/layout.html.twig' %}
+
+{#
+	Documentation : 
+	#brick_content_tree is populated by JS
+
+	#brick_search_field works differently regarding the brick data loading mode :
+		- When set to "full", all the tree is already populated and the search looks through it.
+		- When set to "lazy", if the tree is partially loaded, the search will first load it completely, then only perform the search.
+#}
+
+{% block pPageScripts %}
+	{{ parent() }}
+	<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] }}lib/jquery-treelistfilter/js/TreeListFilter.js"></script>
+{% endblock %}
+
+{% block bBrowseMainContent %}
+	<div class="row" id="brick_content_toolbar">
+		<div class="col-xs-4 col-sm-2 col-lg-1">
+			<div class="btn-group btn-group-justified btn-group-sm">
+				<a href="#" class="btn btn-default" id="btn-collapse-all" title="{{ 'Brick:Portal:Browse:Tree:CollapseAll'|dict_s }}">-</a>
+				<a href="#" class="btn btn-default" id="btn-expand-all" title="{{ 'Brick:Portal:Browse:Tree:ExpandAll'|dict_s }}">+</a>
+			</div>
+		</div>
+		<div class="col-xs-8 col-sm-10 col-lg-11 text-right">
+			<label>{{ 'Portal:Datatables:Language:Search'|dict_s }}<input type="search" class="form-control input-sm" id="brick_search_field" placeholder="" aria-controls="brick_main_table" value="{{ sSearchValue }}"></label>
+		</div>
+	</div>
+	<ul class="list-group tree" id="brick_content_tree" data-level-id="L">
+	</ul>
+
+	<div id="brick_content_empty" class="text-center">
+		{{ 'Brick:Portal:Browse:Filter:NoData'|dict_s }}
+	</div>
+	<div id="brick_tree_overlay">
+		<div class="overlay_content">
+            {% include 'itop-portal-base/portal/templates/helpers/loader.html.twig' %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block pPageLiveScripts %}
+	{{ parent() }}
+	
+	<script type="text/javascript">
+		var sNodeCollapsedClass = 'glyphicon-menu-right';
+		var sNodeExpandedClass = 'glyphicon-menu-down';
+		var sNodeLoadingClass = 'glyphicon-refresh keep-spinning';
+		var iSearchDelay = 500;
+		var sBrowseMode = '{{ sBrowseMode }}';
+		var oLevelsProperties = {{ aLevelsProperties|raw }};
+		var oRawDatas = {{ aItems|raw }};
+		var bIsFullyLoaded = ('{{ sDataLoading }}' === '{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') }}') ? true : false;
+			
+		// Collapses / Expands all the tree nodes
+		var collapseAll = function()
+		{
+			$('#brick_content_tree .tree').toggle(false);
+			$('#brick_content_tree .tree-toggle .glyphicon').removeClass(sNodeExpandedClass+' '+sNodeLoadingClass).addClass(sNodeCollapsedClass);
+		};
+		var expandAll = function()
+		{
+			$('#brick_content_tree .tree').toggle(true);
+			$('#brick_content_tree .tree-toggle .glyphicon').removeClass(sNodeCollapsedClass+' '+sNodeLoadingClass).addClass(sNodeExpandedClass);
+		};
+		// Show a loader over the tree
+		var showTreeLoader = function()
+		{
+			$("#brick_content_tree").hide();
+			$('#brick_tree_overlay').show();
+		};
+		// Hide the loader over the tree
+		var hideTreeLoader = function()
+		{
+			$('#brick_tree_overlay').hide();
+			$("#brick_content_tree").show();
+		};
+		// Registers the toggle listeners on the tree nodes. Used after every AJAX calls.
+		var registerToggleListeners = function()
+		{
+			$('#brick_content_tree .tree-toggle').off('click').on('click', function (oEvent) {
+				oEvent.preventDefault();
+				
+				// Forcing subitems to expand after a filter, so we can browse subitems of a filtered item. Else is the regular toggle
+				if($(this).parent().children('ul.tree:visible').length > 0 && $(this).parent().children('ul.tree:visible').children('li:visible').length === 0)
+				{
+					$(this).parent().children('ul.tree').children('li').toggle(true);
+				}else{
+					$(this).parent().children('ul.tree').toggle(200);
+				}
+				
+				// Toggling glyphicon class
+				if($(this).find('.glyphicon').hasClass(sNodeCollapsedClass))
+				{
+					$(this).find('.glyphicon').removeClass(sNodeCollapsedClass+' '+sNodeLoadingClass).addClass(sNodeExpandedClass);
+				}
+				else
+				{
+					$(this).find('.glyphicon').removeClass(sNodeExpandedClass+' '+sNodeLoadingClass).addClass(sNodeCollapsedClass);
+				}
+				
+				// Check if the node has no children, if so we try to load them through AJAX (Only for the current item)
+				if($(this).parent().children('ul.tree').children('li').length === 0)
+				{
+					$(this).find('.glyphicon').removeClass(sNodeCollapsedClass+' '+sNodeExpandedClass).addClass(sNodeLoadingClass);
+					loadChildNodes($(this).attr('data-level-alias'), $(this).attr('data-item-id'));
+				}
+			});
+
+            // Allows link in item's description to work. Otherwise, the predentDefault of the item takes over.
+            $('#brick_content_tree .list-group-item-description a').off('click').on('click', function(oEvent){
+                oEvent.stopPropagation();
+            });
+		};
+		// Registers the filter listeners on the tree.
+		var registerFilterListeners = function()
+		{
+			$('#brick_search_field').treeListFilter('#brick_content_tree', iSearchDelay, filterResultsHandler);
+		};
+		var filterResultsHandler = function()
+		{
+			// If results shows intermediate levels without any leaves under, we show all its children.
+			$('#brick_content_tree .list-group-item:visible').each(function(iIndex, oElement){
+				if($(oElement).find('.list-group.tree:visible').length === 0)
+				{
+					$(oElement).find('.list-group.tree:not(:visible)').show();
+					$(oElement).find('.list-group.tree:not(:visible) .list-group-item').show();
+				}
+				else if($(oElement).find('.list-group.tree:visible .list-group-item:visible').length === 0)
+				{
+					$(oElement).find('.list-group.tree:visible .list-group-item:not(:visible)').show();
+				}
+			});
+			
+			// Show / hide empty data message
+			if(bIsFullyLoaded)
+			{
+				hideTreeLoader();
+				
+				if($('#brick_content_tree > .list-group-item:visible').length > 0)
+				{
+					$('#brick_content_empty').hide();
+				}
+				else
+				{
+					$('#brick_content_empty').show();
+				}
+			}
+			
+			expandAll();
+		};
+		// Load current node childnodes throught AJAX
+		var loadChildNodes = function(sLevelAlias, sNodeId)
+		{
+			var sUrl = '{{ app.url_generator.generate('p_browse_brick_mode_tree', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseMode, 'sLevelAlias': '-sLevelAlias-', 'sNodeId': '-sNodeId-'})|raw }}';
+			sUrl = sUrl.replace(/-sLevelAlias-/, sLevelAlias).replace(/-sNodeId-/, sNodeId);
+			
+			$.ajax(sUrl)
+			.done(function(data) {
+				$('#brick_content_tree .tree-toggle[data-level-alias="'+sLevelAlias+'"][data-item-id="'+sNodeId+'"] .glyphicon').removeClass(sNodeCollapsedClass+' '+sNodeLoadingClass).addClass(sNodeExpandedClass);
+				for(index in data.data)
+				{
+					var sublevel = data.data[index];
+					var sublevelData = {};
+					sublevelData[sublevel.level_alias+"::"+sublevel.id] = sublevel;
+					buildTree(sublevelData, sLevelAlias+"::"+sNodeId, false);
+				}
+				registerToggleListeners();
+			})
+			.fail(function() {
+				alert('{{ 'Error:XHR:Fail'|dict_format(constant('ITOP_APPLICATION_SHORT')) }}');
+			});
+		};
+		// Build tree nodes from data under the nodeId
+		var buildTree = function(data, nodeId, isRootLevel)
+		{
+			if(nodeId === undefined)
+			{
+				// We are on the root node
+				nodeId = 'L';
+				$('ul[data-level-id="'+nodeId+'"]').html('');
+			}
+			if(isRootLevel === undefined)
+			{
+				isRootLevel = true;
+			}
+			
+			$.each(data, function(i, item){
+				var levelId = item.level_alias+'::'+item.id;
+				var levelAltId = item.level_alias+'_'+item.id;
+				var levelActions = oLevelsProperties[item.level_alias].actions;
+				var levelActionsKeys = Object.keys(levelActions);
+				var levelPrimaryAction = levelActions[levelActionsKeys[0]];
+				var url = '';
+
+				var liElem  = $('<li></li>').addClass('list-group-item');
+				var aElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
+				var nameElem   = $('<a></a>').addClass('tree-item').text(item.name);
+				// Building node
+				$('ul[data-level-id="'+nodeId+'"]').append(liElem);
+				aElem.append(nameElem);
+				liElem.append(aElem);
+				
+				// Building tooltip for the node
+				if( (item.tooltip !== undefined) && (item.tooltip !== '') )
+				{
+					nameElem.attr('title', item.tooltip).attr('data-toggle', 'tooltip').tooltip({html: true, trigger: 'hover', placement: 'right'});
+				}
+				// Building description for the node
+				if( (item.description !== undefined) && (item.description !== '') )
+				{
+					aElem.append( $('<span class="list-group-item-description">'+item.description+'</span>') );
+				}
+				
+				// Building actions for that node
+				switch(levelPrimaryAction.type)
+				{
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_DRILLDOWN') }}':
+                        aElem.addClass('tree-toggle');
+                        nameElem.html('<span class="glyphicon '+sNodeCollapsedClass+'" aria-hidden="true"></span><span class="list-group-item-text">'+nameElem.text()+'</span>');
+                        break;
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
+						url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+						SetActionUrl(aElem, url);
+                        SetActionOpeningTarget(aElem, levelPrimaryAction.opening_target);
+                        break;
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
+						url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+						SetActionUrl(aElem, url);
+                        SetActionOpeningTarget(aElem, levelPrimaryAction.opening_target);
+                        break;
+					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
+						url = levelPrimaryAction.url.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+						url = AddParameterToUrl(url, 'ar_token', item.action_rules_token[levelPrimaryAction.type]);
+						SetActionUrl(aElem, url);
+                        SetActionOpeningTarget(aElem, levelPrimaryAction.opening_target);
+						break;
+					default:
+						//console.log('Action "'+levelPrimaryAction.type+'" not implemented for primary action');
+						break;
+				}
+				
+				if(levelActionsKeys.length > 1)
+				{
+					// Retrieving secondary action (Now we also display primary action)
+					var actionsButtons = {};
+					for(j = 0; j < levelActionsKeys.length; j++)
+					{
+						actionsButtons[levelActionsKeys[j]] = levelActions[levelActionsKeys[j]];
+					}
+					
+					// Preparing secondary actions container
+					var actionsElem = $('<div></div>').addClass('list-group-item-actions');
+					liElem.append(actionsElem);
+					// Checking if a menu is necessary
+					var actionsSSTogglerElem = $('<a class="glyphicon glyphicon-menu-hamburger" data-toggle="collapse" data-target="#item-actions-menu-'+levelAltId+'"></a>');
+					var actionsSSMenuElem = $('<div id="item-actions-menu-'+levelAltId+'" class="item-action-wrapper panel panel-default"></div>');
+					var actionsSSMenuContainerElem = $('<div class="panel-body"></div>');
+					actionsSSMenuElem.append(actionsSSMenuContainerElem);
+					actionsElem.append(actionsSSTogglerElem);
+					actionsElem.append(actionsSSMenuElem);
+
+					// Adding secondary actions
+					for(j in actionsButtons)
+					{
+						var action = actionsButtons[j];
+						var actionElem = $('<a></a>');
+						var actionIconElem = $('<span></span>').appendTo(actionElem);
+						
+						switch(action.type)
+						{
+							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_VIEW') }}':
+								url = '{{ app.url_generator.generate('p_object_view', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+								break;
+							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_EDIT') }}':
+								url = '{{ app.url_generator.generate('p_object_edit', {'sObjectClass': '-objectClass-', 'sObjectId': '-objectId-'})|raw }}'.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+								break;
+							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
+								url = action.url.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
+								url = AddParameterToUrl(url, 'ar_token', item.action_rules_token[action.type]);
+								break;
+							default:
+							    url = '#';
+								//console.log('Action "'+action.type+'" not implemented for secondary action');
+								break;
+						}
+                        SetActionUrl(actionElem, url);
+                        SetActionOpeningTarget(actionElem, action.opening_target);
+
+                        // Adding title if present
+						if(action.title !== undefined)
+						{
+							actionElem.attr('title', action.title);
+						}
+						// Adding icon class if present
+						if(action.icon_class !== undefined)
+						{
+							actionIconElem.addClass(action.icon_class);
+						}
+						
+						actionElem.append(action.title);
+						actionsSSMenuContainerElem.append( $('<p></p>').append(actionElem) );
+					}
+				}
+				
+				// Building subnodes if necessary
+				var ulElem  = $('<ul></ul>').addClass('list-group').addClass('tree').attr('data-level-id', levelId);
+				liElem.append(ulElem);
+				if(item.subitems.length !== 0)
+				{
+					buildTree(item.subitems, levelId, false);
+				}				
+			});
+			
+			// Update listeners
+			if(isRootLevel)
+			{
+				registerToggleListeners();
+			}
+		};
+
+		$(document).ready(function(){
+			// Init expand/collapse all buttons
+			$('#btn-collapse-all').on('click', function (oEvent) {
+			    oEvent.preventDefault();
+				collapseAll();
+			});
+			$('#btn-expand-all').on('click', function (oEvent) {
+                oEvent.preventDefault();
+                if(!bIsFullyLoaded)
+				{
+					// Show a loader while fetching results
+					showTreeLoader();
+					
+					// If we don't do that now, we have have several calls
+					bIsFullyLoaded = true;
+					
+					// Display loader by toggling glyphicon class
+					$('#brick_content_tree .tree-toggle .glyphicon.'+sNodeCollapsedClass).removeClass(sNodeCollapsedClass).addClass(sNodeLoadingClass);
+					
+					// Load the whole tree
+					$.ajax('{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseMode, 'sDataLoading': constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL')})|raw }}')
+					.done(function(data)
+					{
+						buildTree(data.data);
+					})
+					.fail(function(){
+						bIsFullyLoaded = false;
+					})
+					.always(function(){
+						$('#brick_content_tree .tree-toggle .glyphicon').removeClass(sNodeCollapsedClass+' '+sNodeLoadingClass).addClass(sNodeExpandedClass);
+						// Hide loader no matter what
+						hideTreeLoader();
+					});
+				}
+				else
+				{
+					$('#brick_content_tree .tree-toggle .glyphicon').removeClass(sNodeCollapsedClass+' '+sNodeLoadingClass).addClass(sNodeExpandedClass);
+				}
+				expandAll();
+			});
+			
+			// Init filter field
+			// Note : If placed in the registerFilterListeners function, must be before the .treeListFilter as the off('change') will remove .treeListFilter
+			$('#brick_search_field').on('change', function(oEvent){
+				// Show a loader while fetching/filtering results
+				showTreeLoader();
+				
+				if(!bIsFullyLoaded)
+				{
+					
+					// We don't want to trigger TreeListFilter yet
+					oEvent.stopPropagation();
+					
+					// Load the whole tree
+					$.ajax('{{ app.url_generator.generate('p_browse_brick_mode', {'sBrickId': sBrickId, 'sBrowseMode': sBrowseMode, 'sDataLoading': constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL')})|raw }}')
+					.done(function(data)
+					{
+						bIsFullyLoaded = true;
+						// Updating tree
+						buildTree(data.data);
+						// Trigerring filter
+						$('#brick_search_field').trigger('change');
+					})
+					.fail(function(){
+						bIsFullyLoaded = false;
+					})
+					.always(function(){
+						// We don't need to call this because it will be called as a callback when "change" event is triggered on treeListFilter
+						//filterResultsHandler();
+					});
+				}				
+				else
+				{
+					// // We don't need to call this because it will be called as a callback when "change" event is triggered on treeListFilter
+					filterResultsHandler();
+				}				
+			});
+			
+			// Auto collapse item actions popup
+			$('body').click(function(){
+				$('#brick_content_tree .item-action-wrapper.collapse.in').collapse('hide');
+			});
+			
+			// Build the tree (collapsed)
+			showTreeLoader();
+			buildTree(oRawDatas);
+			hideTreeLoader();
+			registerFilterListeners();
+			collapseAll();
+
+            // Open first level if only one item and not pre-filtering
+            if( ($('#brick_content_tree > .list-group-item').length == 1) && ($('#brick_search_field').val() === '') )
+            {
+                setTimeout(function(){
+                    $('#brick_content_tree > .list-group-item > .tree-toggle').trigger('click');
+                }, 300);
+            }
+			
+			{% if (sSearchValue is not null) and (sSearchValue != '') %}
+				// Filters from default value
+				$('#brick_search_field').trigger('change');
+			{% endif %}
+		});
+	</script>
+{% endblock %}
