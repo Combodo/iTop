@@ -915,6 +915,7 @@ try
 			$iTransactionId = utils::ReadParam('transaction_id', 0, false, 'transaction_id');
 			$sTempId = utils::GetUploadTempId($iTransactionId);
 			InlineImage::OnFormCancel($sTempId);
+			/** @var \iApplicationUIExtension $oExtensionInstance */
 			foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 			{
 				$oExtensionInstance->OnFormCancel($sTempId);
