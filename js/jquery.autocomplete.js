@@ -829,7 +829,7 @@
 			show: function() {
 				var offset = $(input).offset();
 				element.css({
-					width: typeof options.width == "string" || options.width > 0 ? options.width : $(input).width(),
+					'min-width': typeof options.width == "string" || options.width > 0 ? options.width : $(input).width(),
 					top: offset.top + input.offsetHeight,
 					left: offset.left
 				}).show();
