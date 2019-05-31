@@ -105,6 +105,7 @@ class SetupUtils
 			'zlib',
 			'zip',
 			'gd', // test image type (always returns false if not installed), image resizing, PDF export
+			'ctype', // for iTop Portal 
 		);
 		$aOptionalExtensions = array(
 			'mcrypt, sodium or openssl' =>
