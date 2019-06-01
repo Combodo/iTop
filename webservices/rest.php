@@ -115,18 +115,17 @@ $sVersion = utils::ReadParam('version', null, false, 'raw_data');
 $sOperation = utils::ReadParam('operation', null);
 $sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
 $sProvider = '';
+
+$oKPI = new ExecutionKPI();
 try
 {
 	utils::UseParamFile();
         
-	$oKPI = new ExecutionKPI();
 	$oKPI->ComputeAndReport('Data model loaded');
         
-	$oKPI = new ExecutionKPI();
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN); // Starting with iTop 2.2.0 portal users are no longer allowed to access the REST/JSON API
         $oKPI->ComputeAndReport('User login');
         
-        $oKPI = new ExecutionKPI();
         if ($iRet == LoginWebPage::EXIT_CODE_OK)
 	{
 		// Extra validation of the profile
@@ -216,7 +215,6 @@ try
 	}
 
 
-	$oKPI = new ExecutionKPI();
 	$sOperation = RestUtils::GetMandatoryParam($aJsonData, 'operation');
 	if ($sOperation == 'list_operations')
 	{
@@ -255,6 +253,7 @@ catch(Exception $e)
 		$oResult->code = $e->GetCode();
 	}
 	$oResult->message = "Error: ".$e->GetMessage();
+	$oKPI->ComputeAndReport('Exception catched');
 }
 
 // Output the results
@@ -284,11 +283,12 @@ else
 }
 $oP->Output();
 
+$oKPI->ComputeAndReport('REST outputed');
+
 // Log usage
 //
 if (MetaModel::GetConfig()->Get('log_rest_service'))
 {
-	$oKPI = new ExecutionKPI();
 	$oLog = new EventRestService();
 	$oLog->SetTrim('userinfo', UserRights::GetUser());
 	$oLog->Set('version', $sVersion);
