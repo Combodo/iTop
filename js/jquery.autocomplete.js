@@ -349,7 +349,10 @@
 								$input.val( words.join(options.multipleSeparator) + (words.length ? options.multipleSeparator : "") );
 							}
 							else {
-								$input.val( "" );
+								// N°532
+								// do NOT clear the typed text when the value does not match one of the possible values, but clear the
+								// actual underlying value so that the input field gets marked as "invalid" if it is mandatory.
+								// $input.val("");
 								$input.trigger("result", null);
 							}
 						}
@@ -491,7 +494,7 @@
 		autoFill: false,
 		width: 0,
 		multiple: false,
-		multipleSeparator: " ",
+		multipleSeparator: ", ",
 		inputFocus: true,
 		clickFire: false,
 		highlight: function(value, term) {
@@ -775,6 +778,8 @@
 				var formatted = options.formatItem(data[i].data, i+1, max, data[i].value, term);
 				if ( formatted === false )
 					continue;
+				// Escape dangerous characters to prevent XSS vulnerabilities
+				formatted = formatted.replace('&', '&amp;').replace('"', '&quot;').replace('>', '&gt;').replace('<', '&lt;');
 				var li = $("<li/>").html( options.highlight(formatted, term) ).addClass(i%2 == 0 ? "ac_even" : "ac_odd").appendTo(list)[0];
 				$.data(li, "ac_data", data[i]);
 			}
