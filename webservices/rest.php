@@ -115,12 +115,18 @@ $sVersion = utils::ReadParam('version', null, false, 'raw_data');
 $sOperation = utils::ReadParam('operation', null);
 $sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
 $sProvider = '';
+
+$oKPI = new ExecutionKPI();
 try
 {
 	utils::UseParamFile();
-
+        
+	$oKPI->ComputeAndReport('Data model loaded');
+        
 	$iRet = LoginWebPage::DoLogin(false, false, LoginWebPage::EXIT_RETURN); // Starting with iTop 2.2.0 portal users are no longer allowed to access the REST/JSON API
-	if ($iRet == LoginWebPage::EXIT_CODE_OK)
+        $oKPI->ComputeAndReport('User login');
+        
+        if ($iRet == LoginWebPage::EXIT_CODE_OK)
 	{
 		// Extra validation of the profile
 		if ((MetaModel::GetConfig()->Get('secure_rest_services') == true) && !UserRights::HasProfile('REST Services User'))
@@ -172,9 +178,11 @@ try
 	{
 		throw new Exception("Parameter json_data is not a valid JSON structure", RestResult::INVALID_JSON);
 	}
+	$oKPI->ComputeAndReport('Parameters validated');
 
 
 	/** @var iRestServiceProvider[] $aProviders */
+	$oKPI = new ExecutionKPI();
 	$aProviders = array();
 	foreach(get_declared_classes() as $sPHPClass)
 	{
@@ -199,6 +207,7 @@ try
 			);
 		}
 	}
+	$oKPI->ComputeAndReport('iRestServiceProvider loaded with operations');
 
 	if (count($aOpToRestService) == 0)
 	{
@@ -230,6 +239,7 @@ try
 		CMDBObject::SetTrackOrigin('webservice-rest');
 		$oResult = $oRS->ExecOperation($sVersion, $sOperation, $aJsonData);
 	}
+	$oKPI->ComputeAndReport('Operation finished');
 }
 catch(Exception $e)
 {
@@ -243,6 +253,7 @@ catch(Exception $e)
 		$oResult->code = $e->GetCode();
 	}
 	$oResult->message = "Error: ".$e->GetMessage();
+	$oKPI->ComputeAndReport('Exception catched');
 }
 
 // Output the results
@@ -272,6 +283,8 @@ else
 }
 $oP->Output();
 
+$oKPI->ComputeAndReport('REST outputed');
+
 // Log usage
 //
 if (MetaModel::GetConfig()->Get('log_rest_service'))
@@ -293,4 +306,7 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$oLog->SetTrim('json_output', $sResponse);
 
 	$oLog->DBInsertNoReload();
+	$oKPI->ComputeAndReport('Log inserted');
 }
+
+ExecutionKPI::ReportStats();
