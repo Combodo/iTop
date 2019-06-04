@@ -500,7 +500,10 @@ class DisplayBlock
 				}
 				$aAttribs =array(
 					'group' => array('label' => $sGroupByLabel, 'description' => ''),
-					'value' => array('label'=> Dict::S('UI:GroupBy:'.$sAggregationFunction), 'description' => Dict::Format('UI:GroupBy:'.$sAggregationFunction.'+', $sAggregationAttr))
+					'value' => array(
+						'label' => Dict::S('UI:GroupBy:'.$sAggregationFunction),
+						'description' => Dict::Format('UI:GroupBy:'.$sAggregationFunction.'+', $sAggregationAttr),
+					),
 				);
 				$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
 				$sHtml .= $oPage->GetP(Dict::Format($sFormat, $iTotalCount));
@@ -699,7 +702,7 @@ class DisplayBlock
 							'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
 							'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
 							'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
-							'breadcrumb_icon' => utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png'
+							'breadcrumb_icon' => utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png',
 						));
 
 						$oPage->add_ready_script("$('body').trigger('update_history.itop', [$seventAttachedData])");
@@ -1729,6 +1732,7 @@ class MenuBlock extends DisplayBlock
 					*/
 				}
 				$this->AddMenuSeparator($aActions);
+				/** @var \iApplicationUIExtension $oExtensionInstance */
 				foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 				{
 					$oSet->Rewind();
@@ -1824,6 +1828,7 @@ class MenuBlock extends DisplayBlock
 		}
 		
 		$this->AddMenuSeparator($aActions);
+		/** @var \iApplicationUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$oSet->Rewind();

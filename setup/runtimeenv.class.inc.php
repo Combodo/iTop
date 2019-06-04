@@ -944,7 +944,7 @@ class RunTimeEnvironment
 				{
 					// Make a "previous" file
 					copy(
-						APPROOT.'data/'.$this->sTargetEnv.'.delta.xml',
+						APPROOT.'data/'.$this->sFinalEnv.'.delta.xml',
 						APPROOT.'data/'.$this->sFinalEnv.'.delta.prev.xml'
 					);
 				}

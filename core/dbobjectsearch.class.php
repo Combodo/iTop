@@ -28,7 +28,7 @@ define('ENABLE_OPT', true);
  * Please refer to DBSearch's documentation
  *
  * @package     iTopORM
- * @phpdoc-tunning-exclude-inherited this tag prevent PHPdoc from displaying inherited methods. This is done in order to force the API doc. location into DBSearch only.
+ * @phpdoc-tuning-exclude-inherited this tag prevent PHPdoc from displaying inherited methods. This is done in order to force the API doc. location into DBSearch only.
  * @api
  * @see DBSearch
  * @see DBUnionSearch

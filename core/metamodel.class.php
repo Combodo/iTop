@@ -6665,20 +6665,21 @@ abstract class MetaModel
 	 * Instantiate an object already persisted to the Database.
 	 *
 	 * @api
+	 * @see MetaModel::GetObjectWithArchive to get object even if it's archived
+	 * @see utils::PushArchiveMode() to enable search on archived objects
+	 *
 	 * @param string $sClass
 	 * @param int $iKey id value of the object to retrieve
 	 * @param bool $bMustBeFound see throws ArchivedObjectException
 	 * @param bool $bAllowAllData if true then user rights will be bypassed - use with care!
 	 * @param null $aModifierProperties
 	 *
-	 * @return DBObject|null null if : (the object is not found) or (archive mode disabled and object is archived and
+	 * @return \cmdbAbstractObject null if : (the object is not found) or (archive mode disabled and object is archived and
 	 *     $bMustBeFound=false)
 	 * @throws CoreException if no result found and $bMustBeFound=true
 	 * @throws ArchivedObjectException if archive mode disabled and result is archived and $bMustBeFound=true
 	 * @throws \Exception
 	 *
-	 * @see MetaModel::GetObjectWithArchive to get object even if it's archived
-	 * @see utils::PushArchiveMode() to enable search on archived objects
 	 */
 	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{

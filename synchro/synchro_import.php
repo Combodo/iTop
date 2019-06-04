@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * Data Exchange web service
+ * Data Exchange web service 
  *
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -28,17 +28,14 @@
 // - reconciliation is made on the column primary_key
 //
 
-if (!defined('__DIR__'))
-{
-	/** @noinspection DirectoryConstantCanBeUsedInspection */
-	define('__DIR__', dirname(__FILE__));
-}
-require_once __DIR__.'/../approot.inc.php';
-require_once APPROOT.'/application/application.inc.php';
-require_once APPROOT.'/application/webpage.class.inc.php';
-require_once APPROOT.'/application/csvpage.class.inc.php';
-require_once APPROOT.'/application/clipage.class.inc.php';
-require_once APPROOT.'/application/startup.inc.php';
+if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+require_once(__DIR__.'/../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/webpage.class.inc.php');
+require_once(APPROOT.'/application/csvpage.class.inc.php');
+require_once(APPROOT.'/application/clipage.class.inc.php');
+
+require_once(APPROOT.'/application/startup.inc.php');
 
 class ExchangeException extends Exception
 {
@@ -130,15 +127,15 @@ $aPageParams = array
 		'default' => '0',
 		'description' => 'Limit on the count of records that can be loaded at once while performing the synchronization',
 	),
-	/*
-		'reportlevel' => array
-		(
-			'mandatory' => false,
-			'modes' => 'http,cli',
-			'default' => 'errors|warnings|created|changed|unchanged',
-			'description' => 'combination of flags to limit the detailed output',
-		),
-	*/
+/*
+	'reportlevel' => array
+	(
+		'mandatory' => false,
+		'modes' => 'http,cli',
+		'default' => 'errors|warnings|created|changed|unchanged',
+		'description' => 'combination of flags to limit the detailed output',
+	),
+*/
 	'simulate' => array
 	(
 		'mandatory' => false,
@@ -168,12 +165,12 @@ function UsageAndExit($oP)
 	$bModeCLI = utils::IsModeCLI();
 
 	$oP->p("USAGE:\n");
-	foreach ($aPageParams as $sParam => $aParamData)
+	foreach($aPageParams as $sParam => $aParamData)
 	{
 		$aModes = explode(',', $aParamData['modes']);
 		if ($bModeCLI)
 		{
-			if (in_array('cli', $aModes, false))
+			if (in_array('cli', $aModes))
 			{
 				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
 				$oP->p("$sParam = $sDesc");
@@ -181,7 +178,7 @@ function UsageAndExit($oP)
 		}
 		else
 		{
-			if (in_array('http', $aModes, false))
+			if (in_array('http', $aModes))
 			{
 				$sDesc = $aParamData['description'].', '.($aParamData['mandatory'] ? 'mandatory' : 'optional, defaults to ['.$aParamData['default'].']');
 				$oP->p("$sParam = $sDesc");
@@ -199,7 +196,6 @@ function ReadParam($oP, $sParam, $sSanitizationFilter = 'parameter')
 	assert(isset($aPageParams[$sParam]));
 	assert(!$aPageParams[$sParam]['mandatory']);
 	$sValue = utils::ReadParam($sParam, $aPageParams[$sParam]['default'], true /* Allow CLI */, $sSanitizationFilter);
-
 	return trim($sValue);
 }
 
@@ -210,18 +206,17 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 	assert($aPageParams[$sParam]['mandatory']);
 
 	$sValue = utils::ReadParam($sParam, null, true /* Allow CLI */, $sSanitizationFilter);
-	if ($sValue === null)
+	if (is_null($sValue))
 	{
 		$oP->p("ERROR: Missing argument '$sParam'\n");
 		UsageAndExit($oP);
 	}
-
 	return trim($sValue);
 }
 
 function ChangeDateFormat($sProposedDate, $sFormat, $bDateOnly)
 {
-	if ($sProposedDate === '')
+	if ($sProposedDate == '')
 	{
 		// An empty string means 'reset'
 		return '';
@@ -231,19 +226,22 @@ function ChangeDateFormat($sProposedDate, $sFormat, $bDateOnly)
 	$sRegExpr = $oFormat->ToRegExpr('/');
 	if (!preg_match($sRegExpr, $sProposedDate))
 	{
-		return false;
+		return false;	
 	}
-
-	$oDate = $oFormat->Parse($sProposedDate);
-	if ($oDate !== null)
+	else
 	{
-		$oTargetFormat = $bDateOnly ? AttributeDate::GetInternalFormat() : AttributeDateTime::GetInternalFormat();
-		$sDate = $oDate->format($oTargetFormat);
-
-		return $sDate;
+		$oDate = $oFormat->Parse($sProposedDate);
+		if ($oDate !== null)
+		{
+			$oTargetFormat = $bDateOnly ? AttributeDate::GetInternalFormat() : AttributeDateTime::GetInternalFormat();
+			$sDate = $oDate->format($oTargetFormat);
+			return $sDate;
+		}
+		else
+		{
+			return false;
+		}
 	}
-
-	return false;
 }
 
 
@@ -260,18 +258,18 @@ class CLILikeWebPage extends WebPage
 
 if (utils::IsModeCLI())
 {
-	$oP = new CLIPage(Dict::S('TitleSynchroExecution'));
+	$oP = new CLIPage(Dict::S("TitleSynchroExecution"));
 }
 else
 {
-	$oP = new CLILikeWebPage(Dict::S('TitleSynchroExecution'));
+	$oP = new CLILikeWebPage(Dict::S("TitleSynchroExecution"));
 }
 
 try
 {
 	utils::UseParamFile();
 }
-catch (Exception $e)
+catch(Exception $e)
 {
 	$oP->p("Error: ".$e->GetMessage());
 	$oP->output();
@@ -309,10 +307,10 @@ if (utils::IsModeCLI())
 else
 {
 	$_SESSION['login_mode'] = 'basic';
-	require_once APPROOT.'/application/loginwebpage.class.inc.php';
+	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-	$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
+	$sCSVData = utils::ReadPostedParam('csvdata', '', false, 'raw_data');
 }
 
 
@@ -328,7 +326,7 @@ try
 	$sQualifier = ReadParam($oP, 'qualifier', 'raw_data');
 	$sCharSet = ReadParam($oP, 'charset', 'raw_data');
 	$sDateTimeFormat = ReadParam($oP, 'date_format', 'raw_data');
-	if ($sDateTimeFormat === '')
+	if ($sDateTimeFormat == '')
 	{
 		$sDateTimeFormat = 'Y-m-d H:i:s'; // By default use the SQL date & time format
 	}
@@ -344,7 +342,7 @@ try
 	$sComment = ReadParam($oP, 'comment', 'raw_data');
 	$sNoStopOnImportError = ReadParam($oP, 'no_stop_on_import_error');
 
-	if (strtolower(trim($sSep)) === 'tab')
+	if (strtolower(trim($sSep)) == 'tab')
 	{
 		$sSep = "\t";
 	}
@@ -353,10 +351,10 @@ try
 	// then exec phase will need this !
 	$oLoadStartDate = SynchroExecution::GetDataBaseCurrentDateTime();
 
-	// Note about date formatting: These MySQL settings are read-only... and in fact unused :-(
+   // Note about date formatting: These MySQL settings are read-only... and in fact unused :-(
 	// SET SESSION date_format = '%d/%m/%Y';
-	// SET SESSION datetime_format = '%d/%m/%Y %H:%i:%s';
-	// Therefore, we have to allow users to transform the format according to a given specification: date_format
+   // SET SESSION datetime_format = '%d/%m/%Y %H:%i:%s';
+   // Therefore, we have to allow users to transform the format according to a given specification: date_format
 
 
 	//////////////////////////////////////////////////
@@ -371,14 +369,14 @@ try
 	//
 	// Check parameters format/consistency
 	//
-	if (strlen($sCSVData) === 0)
+	if (strlen($sCSVData) == 0)
 	{
-		throw new ExchangeException('Missing data - at least one line is expected');
+		throw new ExchangeException("Missing data - at least one line is expected");
 	}
 
 	/** @var \SynchroDataSource $oDataSource */
 	$oDataSource = MetaModel::GetObject('SynchroDataSource', $iDataSourceId, false);
-	if ($oDataSource === null)
+	if (is_null($oDataSource))
 	{
 		throw new ExchangeException("Unknown data source id: '$iDataSourceId'");
 	}
@@ -399,18 +397,18 @@ try
 		throw new ExchangeException("Unknown output format: '$sOutput'");
 	}
 
-	/*
-		$aReportLevels = explode('|', $sReportLevel);
-		foreach($aReportLevels as $sLevel)
+/*
+	$aReportLevels = explode('|', $sReportLevel);
+	foreach($aReportLevels as $sLevel)
+	{
+		if (!in_array($sLevel, explode('|', 'errors|warnings|created|changed|unchanged')))
 		{
-			if (!in_array($sLevel, explode('|', 'errors|warnings|created|changed|unchanged')))
-			{
-				throw new ExchangeException("Unknown level in reporting level: '$sLevel'");
-			}
+			throw new ExchangeException("Unknown level in reporting level: '$sLevel'");
 		}
-	*/
+	}
+*/
 
-	if ($sSimulate === '1')
+	if ($sSimulate == '1')
 	{
 		$bSimulate = true;
 	}
@@ -419,7 +417,7 @@ try
 		$bSimulate = false;
 	}
 
-	if ($sSynchronize === '1')
+	if ($sSynchronize == '1')
 	{
 		$bSynchronize = true;
 	}
@@ -432,15 +430,15 @@ try
 	//
 	// Parse first line, check attributes, analyse the request
 	//
-	if ($sCharSet === 'UTF-8')
+	if ($sCharSet == 'UTF-8')
 	{
-		$sUTF8Data = $sCSVData;
+		$sUTF8Data = $sCSVData;		
 	}
 	else
 	{
 		$sUTF8Data = iconv($sCharSet, 'UTF-8//IGNORE//TRANSLIT', $sCSVData);
 	}
-	$oCSVParser = new CSVParser($sUTF8Data, $sSep, $sQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
+	$oCSVParser = new CSVParser($sUTF8Data, $sSep, $sQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop')); 
 
 	$aInputColumns = $oCSVParser->ListFields();
 	$iColCount = count($aInputColumns);
@@ -449,7 +447,7 @@ try
 	$aColumns = $oDataSource->GetSQLColumns();
 
 	$aDateColumns = array();
-	foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+	foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 	{
 		if ($oAttDef instanceof AttributeDate)
 		{
@@ -463,7 +461,7 @@ try
 
 	$aIsDateToTransform = array();
 	$aDateToTransformReport = array();
-	foreach ($aInputColumns as $iFieldId => $sInputColumn)
+	foreach($aInputColumns as $iFieldId => $sInputColumn)
 	{
 		if (array_key_exists($sInputColumn, $aDateColumns))
 		{
@@ -475,7 +473,7 @@ try
 			$aIsDateToTransform[$iFieldId] = false;
 		}
 
-		if ($sInputColumn === 'primary_key')
+		if ($sInputColumn == 'primary_key')
 		{
 			$iPrimaryKeyCol = $iFieldId;
 			continue;
@@ -496,51 +494,51 @@ try
 	//
 	try
 	{
-		if ($sOutput === 'details')
+		if ($sOutput == 'details')
 		{
 			$oP->add_comment('------------------------------------------------------------');
 			$oP->add_comment(' Import phase');
 			$oP->add_comment('------------------------------------------------------------');
 		}
-
+		
 		if ($bSimulate)
 		{
 			CMDBSource::Query('START TRANSACTION');
 		}
 		$aData = $oCSVParser->ToArray();
 		$iLineCount = count($aData);
-
+	
 		$sTable = $oDataSource->GetDataTable();
-
-		// Prepare insert columns
+	
+	   // Prepare insert columns
 		$sInsertColumns = '`'.implode('`, `', $aInputColumns).'`';
-
+	
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		$oMutex = new iTopMutex('synchro_import_'.$oDataSource->GetKey());
 		$oMutex->Lock();
-		set_time_limit($iLoopTimeLimit);
-		foreach ($aData as $iRow => $aRow)
-		{
-			$sReconciliationCondition = '`primary_key` = '.CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
-			$sSelect = "SELECT COUNT(*) FROM `$sTable` WHERE $sReconciliationCondition";
+		foreach($aData as $iRow => $aRow)
+	  	{
+	  		set_time_limit($iLoopTimeLimit);
+	      	$sReconciliationCondition = "`primary_key` = ".CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
+			$sSelect = "SELECT COUNT(*) FROM `$sTable` WHERE $sReconciliationCondition"; 
 			$aRes = CMDBSource::QueryToArray($sSelect);
 			$iCount = $aRes[0]['COUNT(*)'];
-
-			if ($iCount === 0)
+	
+			if ($iCount == 0)
 			{
 				// No record... create it
 				//
 				$iCountCreations++;
-				if ($sOutput === 'details')
+				if ($sOutput == 'details')
 				{
 					$oP->add("$iRow: New entry, reconciliation: '$sReconciliationCondition'\n");
 				}
-
+	
 				$aValues = array(); // Used to build the insert query
 				foreach ($aRow as $iCol => $value)
 				{
-					if ($value === null)
+					if (is_null($value))
 					{
 						$aValues[] = 'NULL';
 					}
@@ -548,7 +546,7 @@ try
 					{
 						$bDateOnly = false;
 						$sFormat = $sDateTimeFormat;
-						if ($aIsDateToTransform[$iCol] === 'DATE')
+						if ($aIsDateToTransform[$iCol] == 'DATE')
 						{
 							$bDateOnly = true;
 							$sFormat = $sDateFormat;
@@ -557,7 +555,7 @@ try
 						if ($sDate === false)
 						{
 							$aValues[] = CMDBSource::Quote('');
-							if ($sOutput === 'details')
+							if ($sOutput == 'details')
 							{
 								$oP->add("$iRow: Wrong format for {$aIsDateToTransform[$iCol]} column $iCol: '$value' does not match the expected format: '$sFormat' (column skipped)\n");
 							}
@@ -578,9 +576,9 @@ try
 				{
 					CMDBSource::Query($sInsert);
 				}
-				catch (Exception $e)
+				catch(Exception $e)
 				{
-					if ($sNoStopOnImportError === '1')
+					if ($sNoStopOnImportError == '1')
 					{
 						$iCountErrors++;
 						$oP->add("$iRow: Import error '".$e->getMessage()."' (continuing)...\n");
@@ -591,30 +589,28 @@ try
 					}
 				}
 			}
-			elseif ($iCount === 1)
+			elseif ($iCount == 1)
 			{
 				// Found a match... update it
 				//
 				$iCountUpdates++;
-				if ($sOutput === 'details')
+				if ($sOutput == 'details')
 				{
 					$oP->add("$iRow: Update entry, reconciliation: '$sReconciliationCondition'\n");
 				}
+	
 				$aValuePairs = array(); // Used to build the update query
 				foreach ($aRow as $iCol => $value)
 				{
 					// Skip reconciliation column
-					if ($iCol === $iPrimaryKeyCol)
-					{
-						continue;
-					}
-
+					if ($iCol == $iPrimaryKeyCol) continue;
+		
 					$sCol = $aInputColumns[$iCol];
 					if ($aIsDateToTransform[$iCol] !== false)
 					{
 						$bDateOnly = false;
 						$sFormat = $sDateTimeFormat;
-						if ($aIsDateToTransform[$iCol] === 'DATE')
+						if ($aIsDateToTransform[$iCol] == 'DATE')
 						{
 							$bDateOnly = true;
 							$sFormat = $sDateFormat;
@@ -622,7 +618,7 @@ try
 						$sDate = ChangeDateFormat($value, $sFormat, $bDateOnly);
 						if ($sDate === false)
 						{
-							if ($sOutput === 'details')
+							if ($sOutput == 'details')
 							{
 								$oP->add("$iRow: Wrong format for {$aIsDateToTransform[$iCol]} column $iCol: '$value' does not match the expected format: '$sFormat' (column skipped)\n");
 							}
@@ -643,9 +639,9 @@ try
 				{
 					CMDBSource::Query($sUpdateQuery);
 				}
-				catch (Exception $e)
+				catch(Exception $e)
 				{
-					if ($sNoStopOnImportError === '1')
+					if ($sNoStopOnImportError == '1')
 					{
 						$iCountErrors++;
 						$oP->add("$iRow: Import error '".$e->getMessage()."' (continuing)...\n");
@@ -666,29 +662,29 @@ try
 		}
 		$oMutex->Unlock();
 		set_time_limit($iPreviousTimeLimit);
-
-		if (($sOutput === 'summary') || ($sOutput === 'details'))
+		
+		if (($sOutput == "summary") || ($sOutput == 'details'))
 		{
 			$oP->add_comment('------------------------------------------------------------');
 			$oP->add_comment(' Import phase summary');
 			$oP->add_comment('------------------------------------------------------------');
-			$oP->add_comment('Data Source: '.$iDataSourceId);
-			$oP->add_comment('Synchronize: '.($bSynchronize ? '1' : '0'));
-			$oP->add_comment('Class: '.$sClass);
-			$oP->add_comment('Separator: '.$sSep);
-			$oP->add_comment('Qualifier: '.$sQualifier);
-			$oP->add_comment('Charset Encoding:'.$sCharSet);
+			$oP->add_comment("Data Source: ".$iDataSourceId);
+			$oP->add_comment("Synchronize: ".($bSynchronize ? '1' : '0'));
+			$oP->add_comment("Class: ".$sClass);
+			$oP->add_comment("Separator: ".$sSep);
+			$oP->add_comment("Qualifier: ".$sQualifier);
+			$oP->add_comment("Charset Encoding:".$sCharSet);
 
 			if (strlen($sDateTimeFormat) > 0)
 			{
 				$aDateTimeColumns = array();
 				$aDateColumns = array();
-				foreach ($aIsDateToTransform as $iCol => $sType)
+				foreach($aIsDateToTransform as $iCol => $sType)
 				{
 					if ($sType !== false)
 					{
 						$sCol = $aInputColumns[$iCol];
-						if ($sType === 'DATE')
+						if ($sType == 'DATE')
 						{
 							$aDateColumns[] = $sCol;
 						}
@@ -698,8 +694,7 @@ try
 						}
 					}
 				}
-				$sFormatedDateTimeColumns = (count($aDateTimeColumns) > 0) ? ', applied to columns ['.implode(', ',
-						$aDateTimeColumns).']' : '';
+				$sFormatedDateTimeColumns = (count($aDateTimeColumns) > 0) ? ', applied to columns ['.implode(', ', $aDateTimeColumns).']' : '';
 				$sFormatedDateColumns = (count($aDateColumns) > 0) ? ', applied to columns ['.implode(', ', $aDateColumns).']' : '';
 				$oP->add_comment("Date and time format: '$sDateTimeFormat' $sFormatedDateTimeColumns");
 				$oP->add_comment("Date only format: '$sDateFormat' $sFormatedDateColumns");
@@ -707,19 +702,19 @@ try
 			else
 			{
 				// shall never get there
-				$oP->add_comment('Date format: <none>');
+				$oP->add_comment("Date format: <none>");
 			}
-			$oP->add_comment('Data Size: '.strlen($sCSVData));
-			$oP->add_comment('Data Lines: '.$iLineCount);
-			$oP->add_comment('Columns: '.implode(', ', $aInputColumns));
-			$oP->add_comment('Output format: '.$sOutput);
-			//		$oP->add_comment("Report level: ".$sReportLevel);
-			$oP->add_comment('Simulate: '.($bSimulate ? '1' : '0'));
-			$oP->add_comment('Change tracking comment: '.$sComment);
-			$oP->add_comment('Issues (before synchro): '.$iCountErrors);
-			//		$oP->add_comment("Warnings: ".$iCountWarnings);
-			$oP->add_comment('Created (before synchro): '.$iCountCreations);
-			$oP->add_comment('Updated (before synchro): '.$iCountUpdates);
+			$oP->add_comment("Data Size: ".strlen($sCSVData));
+			$oP->add_comment("Data Lines: ".$iLineCount);
+			$oP->add_comment("Columns: ".implode(', ', $aInputColumns));
+			$oP->add_comment("Output format: ".$sOutput);
+	//		$oP->add_comment("Report level: ".$sReportLevel);
+			$oP->add_comment("Simulate: ".($bSimulate ? '1' : '0'));
+			$oP->add_comment("Change tracking comment: ".$sComment);
+			$oP->add_comment("Issues (before synchro): ".$iCountErrors);
+	//		$oP->add_comment("Warnings: ".$iCountWarnings);
+			$oP->add_comment("Created (before synchro): ".$iCountCreations);
+			$oP->add_comment("Updated (before synchro): ".$iCountUpdates);
 		}
 
 		//////////////////////////////////////////////////
@@ -730,7 +725,7 @@ try
 		{
 			$oSynchroExec = new SynchroExecution($oDataSource, $oLoadStartDate);
 			$oStatLog = $oSynchroExec->Process();
-			if ($sOutput === 'details')
+			if ($sOutput == 'details')
 			{
 				$oP->add_comment('------------------------------------------------------------');
 				$oP->add_comment(' Synchronization phase');
@@ -741,35 +736,35 @@ try
 					$iCount++;
 					$oP->add_comment($sMessage);
 				}
-				if ($iCount === 0)
+				if ($iCount == 0)
 				{
 					$oP->add_comment(' No traces. (To activate the traces set "synchro_trace" => true in the configuration file)');
 				}
 			}
-			if ($oStatLog->Get('status') === 'error')
+			if ($oStatLog->Get('status') == 'error')
 			{
-				$oP->p('ERROR: '.$oStatLog->Get('last_error'));
+				$oP->p("ERROR: ".$oStatLog->Get('last_error'));
 			}
 			$oP->add_comment('------------------------------------------------------------');
 			$oP->add_comment(' Synchronization phase summary');
 			$oP->add_comment('------------------------------------------------------------');
-			$oP->add_comment('Replicas: '.$oStatLog->Get('stats_nb_replica_total'));
-			$oP->add_comment('Replicas touched since last synchro: '.$oStatLog->Get('stats_nb_replica_seen'));
-			$oP->add_comment('Objects deleted: '.$oStatLog->Get('stats_nb_obj_deleted'));
-			$oP->add_comment('Objects deletion errors: '.$oStatLog->Get('stats_nb_obj_deleted_errors'));
-			$oP->add_comment('Objects obsoleted: '.$oStatLog->Get('stats_nb_obj_obsoleted'));
-			$oP->add_comment('Objects obsolescence errors: '.$oStatLog->Get('stats_nb_obj_obsoleted_errors'));
-			$oP->add_comment('Objects created: '.$oStatLog->Get('stats_nb_obj_created').' ('.$oStatLog->Get('stats_nb_obj_created_warnings').' warnings)');
-			$oP->add_comment('Objects creation errors: '.$oStatLog->Get('stats_nb_obj_created_errors'));
-			$oP->add_comment('Objects updated: '.$oStatLog->Get('stats_nb_obj_updated').' ('.$oStatLog->Get('stats_nb_obj_updated_warnings')." warnings)");
-			$oP->add_comment('Objects update errors: '.$oStatLog->Get('stats_nb_obj_updated_errors'));
-			$oP->add_comment('Objects reconciled (updated): '.$oStatLog->Get('stats_nb_obj_new_updated').' ('.$oStatLog->Get('stats_nb_obj_new_updated_warnings').' warnings)');
-			$oP->add_comment('Objects reconciled (unchanged): '.$oStatLog->Get('stats_nb_obj_new_unchanged').' ('.$oStatLog->Get('stats_nb_obj_new_updated_warnings').' warnings)');
-			$oP->add_comment('Objects reconciliation errors: '.$oStatLog->Get('stats_nb_replica_reconciled_errors'));
-			$oP->add_comment('Replica disappeared, no action taken: '.$oStatLog->Get('stats_nb_replica_disappeared_no_action'));
+			$oP->add_comment("Replicas: ".$oStatLog->Get('stats_nb_replica_total'));
+			$oP->add_comment("Replicas touched since last synchro: ".$oStatLog->Get('stats_nb_replica_seen'));
+			$oP->add_comment("Objects deleted: ".$oStatLog->Get('stats_nb_obj_deleted'));
+			$oP->add_comment("Objects deletion errors: ".$oStatLog->Get('stats_nb_obj_deleted_errors'));
+			$oP->add_comment("Objects obsoleted: ".$oStatLog->Get('stats_nb_obj_obsoleted'));
+			$oP->add_comment("Objects obsolescence errors: ".$oStatLog->Get('stats_nb_obj_obsoleted_errors'));
+			$oP->add_comment("Objects created: ".$oStatLog->Get('stats_nb_obj_created')." (".$oStatLog->Get('stats_nb_obj_created_warnings')." warnings)");
+			$oP->add_comment("Objects creation errors: ".$oStatLog->Get('stats_nb_obj_created_errors'));
+			$oP->add_comment("Objects updated: ".$oStatLog->Get('stats_nb_obj_updated')." (".$oStatLog->Get('stats_nb_obj_updated_warnings')." warnings)");
+			$oP->add_comment("Objects update errors: ".$oStatLog->Get('stats_nb_obj_updated_errors'));
+			$oP->add_comment("Objects reconciled (updated): ".$oStatLog->Get('stats_nb_obj_new_updated')." (".$oStatLog->Get('stats_nb_obj_new_updated_warnings')." warnings)");
+			$oP->add_comment("Objects reconciled (unchanged): ".$oStatLog->Get('stats_nb_obj_new_unchanged')." (".$oStatLog->Get('stats_nb_obj_new_updated_warnings')." warnings)");
+			$oP->add_comment("Objects reconciliation errors: ".$oStatLog->Get('stats_nb_replica_reconciled_errors'));
+			$oP->add_comment("Replica disappeared, no action taken: ".$oStatLog->Get('stats_nb_replica_disappeared_no_action'));
 		}
 	}
-	catch (Exception $e)
+	catch(Exception $e)
 	{
 		if ($bSimulate)
 		{
@@ -786,18 +781,23 @@ try
 	//
 	// Summary of settings and results
 	//
-	if ($sOutput === 'retcode')
+	if ($sOutput == 'retcode')
 	{
 		$oP->add($iCountErrors);
 	}
 }
-catch (ExchangeException $e)
+catch(ExchangeException $e)
 {
-	$oP->add_comment($e->getMessage());
+	$oP->add_comment($e->getMessage());		
 }
-catch (Exception $e)
+catch(SecurityException $e)
 {
-	$oP->add_comment((string)$e);
+	$oP->add_comment($e->getMessage());		
+}
+catch(Exception $e)
+{
+	$oP->add_comment((string)$e);		
 }
 
 $oP->output();
+?>

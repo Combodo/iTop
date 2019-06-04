@@ -382,8 +382,16 @@ try
 			$iInputId = utils::ReadParam('iInputId', '');
 			$iCurrObjectId = utils::ReadParam('iObjId', 0);
 			$oPage->SetContentType('text/html');
+			$oAppContext = new ApplicationContext();
+			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+				'context' => $oAppContext->GetAsHash(),
+				'att_code' => $sAttCode,
+				'origin' => 'console',
+				'source_obj' => $oObj,
+			);
+			$aPrefillFormParam['dest_class'] = ($oObj === null ? '' : $oObj->Get($sAttCode)->GetClass());
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
-			$oWidget->GetObjectsSelectionDlg($oPage, $oObj, $aAlreadyLinked);
+			$oWidget->GetObjectsSelectionDlg($oPage, $oObj, $aAlreadyLinked, $aPrefillFormParam);
 			break;
 
 		// ui.linksdirectwidget
@@ -915,6 +923,7 @@ try
 			$iTransactionId = utils::ReadParam('transaction_id', 0, false, 'transaction_id');
 			$sTempId = utils::GetUploadTempId($iTransactionId);
 			InlineImage::OnFormCancel($sTempId);
+			/** @var \iApplicationUIExtension $oExtensionInstance */
 			foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 			{
 				$oExtensionInstance->OnFormCancel($sTempId);

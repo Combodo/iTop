@@ -184,6 +184,10 @@ class DataTable
 	 */
 	public function GetAsHTMLTableRows(WebPage $oPage, $iPageSize, $aColumns, $sSelectMode, $bViewLink, $aExtraParams)
 	{
+		if ($iPageSize < 1)
+		{
+			$iPageSize = -1; // convention: no pagination
+		}
 		$aAttribs = $this->GetHTMLTableConfig($aColumns, $sSelectMode, $bViewLink);
 		$aValues = $this->GetHTMLTableValues($aColumns, $sSelectMode, $iPageSize, $bViewLink, $aExtraParams);
 		
@@ -222,14 +226,21 @@ class DataTable
 		}
 		
 		$sCombo = '<select class="pagesize">';
-		for($iPage = 1; $iPage < 5; $iPage++)
+		if($iPageSize < 1)
 		{
-			$iNbItems = $iPage * $iDefaultPageSize;
-			$sSelected = ($iNbItems == $iPageSize) ? 'selected="selected"' : '';
-			$sCombo .= "<option  $sSelected value=\"$iNbItems\">$iNbItems</option>";
+			$sCombo .= "<option selected=\"selected\" value=\"-1\">".Dict::S('UI:Pagination:All')."</option>";
 		}
-		$sSelected = ($iPageSize < 1) ? 'selected="selected"' : '';
-		$sCombo .= "<option  $sSelected value=\"-1\">".Dict::S('UI:Pagination:All')."</option>";
+		else
+		{
+			for($iPage = 1; $iPage < 5; $iPage++)
+			{
+				$iNbItems = $iPage * $iDefaultPageSize;
+				$sSelected = ($iNbItems == $iPageSize) ? 'selected="selected"' : '';
+				$sCombo .= "<option  $sSelected value=\"$iNbItems\">$iNbItems</option>";
+			}
+			$sCombo .= "<option value=\"-1\">".Dict::S('UI:Pagination:All')."</option>";
+		}
+
 		$sCombo .= '</select>';
 		
 		$sPages = Dict::S('UI:Pagination:PagesLabel');
@@ -577,8 +588,8 @@ EOF
 	
 	public function UpdatePager(WebPage $oPage, $iDefaultPageSize, $iStart)
 	{
-		$iPageSize = ($iDefaultPageSize < 1) ? 1 : $iDefaultPageSize;
-		$iPageIndex = 1 + floor($iStart / $iPageSize);
+		$iPageSize = $iDefaultPageSize;
+		$iPageIndex = 0;
 		$sHtml = $this->GetPager($oPage, $iPageSize, $iDefaultPageSize, $iPageIndex);
 		$oPage->add_ready_script("$('#pager{$this->iListId}').html('".json_encode($sHtml)."');");
 		if ($iDefaultPageSize < 1)

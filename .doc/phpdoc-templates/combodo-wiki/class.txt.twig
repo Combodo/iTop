@@ -64,7 +64,7 @@
 
 {% include 'includes/see-also.txt.twig' with {structure:node, title_level: '==='} %}
 
-{% include 'includes/tags.txt.twig' with {structure:node, title_level: '=====', blacklist:  ['link', 'see', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage', 'phpdoc-tunning-exclude-inherited', 'api', 'api-advanced', 'overwritable-hook', 'extension-hook', 'copyright', 'license', 'code-example']} %}
+{% include 'includes/tags.txt.twig' with {structure:node, title_level: '=====', blacklist:  ['link', 'see', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage', 'phpdoc-tuning-exclude-inherited', 'api', 'api-advanced', 'overwritable-hook', 'extension-hook', 'copyright', 'license', 'code-example']} %}
 
 {% set methods = node.inheritedMethods.merge(node.methods.merge(node.magicMethods)) %}
 {% include 'includes/tag-synthesys.txt.twig' with {methods:methods, tag:'api'} %}
@@ -86,7 +86,7 @@
         or method.tags['extension-hook'] is defined
     )
     and (
-        node.tags['phpdoc-tunning-exclude-inherited'] is not defined
+        node.tags['phpdoc-tuning-exclude-inherited'] is not defined
         or method.parent.name == node.name
     )
 %}

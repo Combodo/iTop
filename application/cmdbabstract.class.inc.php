@@ -385,6 +385,7 @@ EOF
 
 		if (!isset($aExtraParams['disable_plugins']) || !$aExtraParams['disable_plugins'])
 		{
+			/** @var iApplicationUIExtension $oExtensionInstance */
 			foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 			{
 				$oExtensionInstance->OnDisplayProperties($this, $oPage, $bEditMode);
@@ -648,6 +649,7 @@ EOF
 		}
 		$oPage->SetCurrentTab('');
 
+		/** @var \iApplicationUIExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnDisplayRelations($this, $oPage, $bEditMode);
@@ -3033,6 +3035,7 @@ EOF
 		$current = parent::GetHilightClass(); // Default computation
 
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
+		/** @var \iApplicationUIExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$new = $oExtensionInstance->GetHilightClass($this);
@@ -3454,6 +3457,7 @@ EOF
 		}
 
 		// Invoke extensions after the update of the object from the form
+		/** @var \iApplicationUIExtension $oExtensionInstance */
 		foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
 		{
 			$oExtensionInstance->OnFormSubmit($this, $sFormPrefix);

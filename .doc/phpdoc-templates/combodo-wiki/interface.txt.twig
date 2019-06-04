@@ -64,7 +64,7 @@
 
 {% include 'includes/see-also.txt.twig' with {structure:node, title_level: '==='} %}
 
-{% include 'includes/tags.txt.twig' with {structure:node, title_level: '=====', blacklist:  ['link', 'see', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage', 'phpdoc-tunning-exclude-inherited', 'api', 'api-advanced', 'overwritable-hook', 'extension-hook', 'copyright', 'license', 'code-example']} %}
+{% include 'includes/tags.txt.twig' with {structure:node, title_level: '=====', blacklist:  ['link', 'see', 'abstract', 'example', 'method', 'property', 'property-read', 'property-write', 'package', 'subpackage', 'phpdoc-tuning-exclude-inherited', 'api', 'api-advanced', 'overwritable-hook', 'extension-hook', 'copyright', 'license', 'code-example']} %}
 
 
 {% set methods = node.inheritedMethods.merge(node.methods) %}
