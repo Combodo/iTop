@@ -286,11 +286,13 @@ class UILinksWidgetDirect
 	 * @param DBObject $oCurrentObj
 	 * @param $aAlreadyLinked
 	 *
+	 * @param array $aPrefillFormParam
+	 *
 	 * @throws \CoreException
-	 * @throws \Exception
+	 * @throws \MissingQueryArgument
 	 * @throws \OQLException
 	 */
-	public function GetObjectsSelectionDlg($oPage, $oCurrentObj, $aAlreadyLinked)
+	public function GetObjectsSelectionDlg($oPage, $oCurrentObj, $aAlreadyLinked, $aPrefillFormParam = array())
 	{
 		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
 
@@ -333,6 +335,7 @@ class UILinksWidgetDirect
 
 			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
 			$oFilter->SetInternalParams($aArgs);
+			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
 		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}",
