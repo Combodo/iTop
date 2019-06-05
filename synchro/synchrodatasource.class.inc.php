@@ -2829,6 +2829,7 @@ class SynchroExecution
 			}
 
 			$iLastReplicaProcessed = -1;
+			/** @var SynchroReplica $oReplica */
 			while($oReplica = $oSetToProcess->Fetch())
 			{
 				set_time_limit($iLoopTimeLimit);
@@ -2929,7 +2930,11 @@ class SynchroExecution
 		// Get all the replicas that are 'new' or modified or synchronized with a warning
 		//
 		$sSelectToSync  = "SELECT SynchroReplica WHERE id > :curr_pos AND (status = 'new' OR status = 'modified' OR (status = 'synchronized' AND status_last_warning != '')) AND sync_source_id = :source_id AND status_last_seen >= :last_import";
-		$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToSync), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sLimitDate, 'curr_pos' => $iCurrPos), $this->m_aExtDataSpec);
+		$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToSync), array(), array(
+			'source_id' => $this->m_oDataSource->GetKey(),
+			'last_import' => $sLimitDate,
+			'curr_pos' => $iCurrPos,
+		), $this->m_aExtDataSpec);
 		$iCountScope = $oSetScope->Count();
 		$sDebugOQL = $oSetScope->GetFilter()->ToOQL(true);
 		$this->m_oStatLog->AddTrace("Looking for - new, modified or synchonized with a warning - replicas using the OQL query: '$sDebugOQL', returned $iCountScope replicas.");
@@ -2955,7 +2960,7 @@ class SynchroExecution
 			$this->m_oStatLog->AddTrace("Synchronizing replica id=$iLastReplicaProcessed.");
 			$oReplica->Synchro($this->m_oDataSource, $this->m_aReconciliationKeys, $this->m_aAttributes, $this->m_oChange, $this->m_oStatLog);
 			$this->m_oStatLog->AddTrace("Updating replica id=$iLastReplicaProcessed.");
-			$oReplica->DBUpdateTracked($this->m_oChange);			
+			$oReplica->DBUpdateTracked($this->m_oChange);
 		}
 		
 		if ($iMaxReplica)
@@ -3018,13 +3023,17 @@ class SynchroExecution
 			$sInterval = "-$iDeleteRetention seconds";
 			$oDeletionDate->Modify($sInterval);
 		}
-		$sDeletionDate = $oDeletionDate->Format('Y-m-d H:i:s');	
+		$sDeletionDate = $oDeletionDate->Format('Y-m-d H:i:s');
 		if ($bFirstPass)
 		{
 			$this->m_oStatLog->AddTrace("Deletion date: $sDeletionDate");
 		}
 		$sSelectToDelete = "SELECT SynchroReplica WHERE id > :curr_pos AND sync_source_id = :source_id AND status IN ('obsolete') AND status_last_seen < :last_import";
-		$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToDelete), array() /* order by*/, array('source_id' => $this->m_oDataSource->GetKey(), 'last_import' => $sDeletionDate, 'curr_pos' => $iCurrPos));
+		$oSetScope = new DBObjectSet(DBObjectSearch::FromOQL($sSelectToDelete), array(), array(
+			'source_id' => $this->m_oDataSource->GetKey(),
+			'last_import' => $sDeletionDate,
+			'curr_pos' => $iCurrPos,
+		));
 		$iCountScope = $oSetScope->Count();
 
 		if ($iMaxReplica)
@@ -3040,6 +3049,7 @@ class SynchroExecution
 		}
 
 		$iLastReplicaProcessed = -1;
+		/** @var SynchroReplica $oReplica */
 		while($oReplica = $oSetToProcess->Fetch())
 		{
 			set_time_limit($iLoopTimeLimit);
