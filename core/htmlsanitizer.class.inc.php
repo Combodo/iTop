@@ -261,7 +261,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		// We have to transform that into <p><br></p> (which is how Thunderbird implements empty lines)
 		// Unfortunately, DOMDocument::loadHTML does not take the tag namespaces into account (once loaded there is no way to know if the tag did have a namespace)
 		// therefore we have to do the transformation upfront
-		$sHTML = preg_replace('@<o:p>\s*</o:p>@', '<br>', $sHTML);
+		$sHTML = preg_replace('@<o:p>(\s|&nbsp;)*</o:p>@', '<br>', $sHTML);
 
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
 		
