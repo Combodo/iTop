@@ -335,6 +335,7 @@ class UILinksWidgetDirect
 
 			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
 			$oFilter->SetInternalParams($aArgs);
+			$aPrefillFormParam['filter'] = $oFilter;
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
