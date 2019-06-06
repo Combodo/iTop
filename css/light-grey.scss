@@ -2115,6 +2115,11 @@ fieldset .details>.field_container {
 						padding-left: 0.4em;
 						vertical-align: middle;
 					}
+					.form-field-container .form-field-content{
+						> .form_validation, > .field_status {
+							display: inline;
+						}
+					}
 
 					.field_input_zone{
 						width: 100%; /* auto; */

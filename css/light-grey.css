@@ -1830,6 +1830,9 @@ fieldset .details > .field_container {
   padding-left: 0.4em;
   vertical-align: middle;
 }
+.field_container > div > div.field_value .attribute-edit .form-field-container .form-field-content > .form_validation, .field_container > div > div.field_value .attribute-edit .form-field-container .form-field-content > .field_status {
+  display: inline;
+}
 .field_container > div > div.field_value .attribute-edit .field_input_zone {
   width: 100%;
   /* auto; */
