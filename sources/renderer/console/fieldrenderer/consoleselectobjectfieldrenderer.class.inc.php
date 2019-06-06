@@ -259,7 +259,11 @@ EOF
 			default:
 				// Not editable
 		}
-
+		$oOutput->AddJs(
+			<<<JS
+                   $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").trigger('validate');
+JS
+		);
 		return $oOutput;
 	}
 }
