@@ -2103,7 +2103,7 @@ EOF
     $('#{$iId}_console_form').console_form_handler('alignColumns');
 	$('#{$iId}_console_form').console_form_handler('option', 'field_set', $('#{$iId}_field_set'));
     // field_change must be processed to refresh the hidden value at anytime
-    $('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); console.error($('#{$iId}').val()); });
+    $('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
     // Initialize the hidden value with current state
     // update_value is triggered when preparing the wizard helper object for ajax calls
     $('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
