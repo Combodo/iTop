@@ -7244,6 +7244,10 @@ abstract class MetaModel
 				{
 					// Expand the parameters for the object
 					$sName = substr($sSearch, 0, $iPos);
+					// Note: Capturing
+					// 1 - The delimiter
+					// 2 - The arrow
+					// 3 - The attribute code
 					$aRegExps = array(
                         '/(\\$)'.$sName.'-(>|&gt;)([^\\$]+)\\$/', // Support both syntaxes: $this->xxx$ or $this-&gt;xxx$ for HTML compatibility
                         '/(%24)'.$sName.'-(>|&gt;)([^%24]+)%24/', // Support for urlencoded in HTML attributes (%20this-&gt;xxx%20)
@@ -7278,8 +7282,28 @@ abstract class MetaModel
 			}
 			else
 			{
-				$aSearches[] = '$'.$sSearch.'$';
-				$aReplacements[] = (string)$replace;
+				$aRegExps = array(
+					'/(\$)'.$sSearch.'\$/',   // Support for regular placeholders (eg. $APP_URL$)
+					'/(%24)'.$sSearch.'%24/', // Support for urlencoded in HTML attributes (eg. %24APP_URL%24)
+				);
+				foreach($aRegExps as $sRegExp)
+				{
+					if(preg_match_all($sRegExp, $sInput, $aMatches))
+					{
+						foreach($aMatches[1] as $idx => $sDelimiter)
+						{
+							try
+							{
+								$aReplacements[] = (string) $replace;
+								$aSearches[] = $aMatches[1][$idx] . $sSearch . $aMatches[1][$idx];
+							}
+							catch(Exception $e)
+							{
+								// No replacement will occur
+							}
+						}
+					}
+				}
 			}
 		}
 		return str_replace($aSearches, $aReplacements, $sInput);
