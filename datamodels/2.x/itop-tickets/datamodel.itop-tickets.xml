@@ -53,6 +53,14 @@
 				   </attributes>
 				 </index>
 				</indexes>
+				<uniqueness_rules>
+					<rule if="ref">
+						<attributes>
+							<attribute id="ref"/>
+						</attributes>
+						<is_blocking>false</is_blocking>
+					</rule>
+				</uniqueness_rules>
 			</properties>
 			<fields>
 				<field id="operational_status" xsi:type="AttributeMetaEnum">
@@ -209,7 +217,7 @@
           $oMutex->Lock();
           $iNextId = MetaModel::GetNextKey(get_class($this));
           $sRef = $this->MakeTicketRef($iNextId);
-          $this->Set('ref', $sRef);
+          $this->SetIfNull('ref', $sRef);
           $iKey = parent::DBInsertNoReload();
           $oMutex->Unlock();
           return $iKey;
