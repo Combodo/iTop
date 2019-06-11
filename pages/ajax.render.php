@@ -765,6 +765,7 @@ try
 					}
 					catch (CoreException $e)
 					{
+						$sFilter = utils::HtmlEntities($sFilter);
 						$oPage->p("Invalid query (invalid filter) : <code>$sFilter</code>");
 						IssueLog::Error("ajax.render operation='ajax', invalid DBSearch filter param : $sFilter");
 						break;
