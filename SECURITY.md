@@ -1,6 +1,6 @@
 # 🔒 Reporting vulnerabilities
 
-We take all security bugs seriously. Thank you for improving the security of iTop ! We appreciate your efforts and
+We take all security bugs seriously. Thank you for improving the security of iTop! We appreciate your efforts and
 responsible disclosure and will make every effort to acknowledge your contributions.
 
 
