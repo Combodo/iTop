@@ -1667,7 +1667,7 @@ class DBObjectSearch extends DBSearch
 		// Query caching
 		//
 		$sOqlAPCCacheId = null;
-		if (self::$m_bQueryCacheEnabled)
+		if (self::$m_bQueryCacheEnabled && $bCanCache)
 		{
 			// Warning: using directly the query string as the key to the hash array can FAIL if the string
 			// is long and the differences are only near the end... so it's safer (but not bullet proof?)
@@ -1815,7 +1815,7 @@ class DBObjectSearch extends DBSearch
 		if ($bIsOnQueriedClass)
 		{
 			// default to the whole list of attributes + the very std id/finalclass
-			$oBuild->m_oQBExpressions->AddSelect($sClassAlias.'id', new FieldExpression('id', $sClassAlias));
+			$oBuild->m_oQBExpressions->AddSelect($sClassAlias.$sKeyField, new FieldExpression($sKeyField, $sClassAlias));
 			if (is_null($aAttToLoad) || !array_key_exists($sClassAlias, $aAttToLoad))
 			{
 				$sSelectedClass = $oBuild->GetSelectedClass($sClassAlias);
