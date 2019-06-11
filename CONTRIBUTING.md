@@ -11,11 +11,12 @@ Here are some guidelines that will help us integrate your work!
 You are welcome to create pull requests on any of those subjects:
 
 * 🐛 `:bug:` bug fix
-* 🔒 `:lock:` security
 * 🌐 `:globe_with_meridians:` translation / i18n / l10n
 
 If you want to implement a **new feature**, please [create a corresponding ticket](https://sourceforge.net/p/itop/tickets/new/) for review.   
 If you ever want to begin implementation, do so in a fork, and add a link to the corresponding commits in the ticket.
+
+For all security related subjects, please see our [security policy](SECURITY.md).
 
 All **datamodel modification** should be done in an extension. Beware that such change would 
 impact all existing customers, and could prevent them from 
