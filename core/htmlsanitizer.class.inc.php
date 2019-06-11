@@ -249,7 +249,8 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 
 			// Notification placeholders
 			// eg. $this->caller_id$, $this->hyperlink()$, $this->hyperlink(portal)$, $APP_URL$, $MODULES_URL$, ...
-			$sPlaceholderPattern = '\$[\w-]*(->[\w]*(\([\w-]*?\))?)?\$';
+			// Note: Authorize both $xxx$ and %24xxx%24 as the latter one is encoded when used in HTML attributes (eg. a[href])
+			$sPlaceholderPattern = '(\$|%24)[\w-]*(->[\w]*(\([\w-]*?\))?)?(\$|%24)';
 
 			$sPattern = $sUrlPattern . '|' . $sMailtoPattern . '|' . $sPlaceholderPattern;
 			$sPattern = '/'.str_replace('/', '\/', $sPattern).'/i';
