@@ -54,7 +54,7 @@
 				 </index>
 				</indexes>
 				<uniqueness_rules>
-					<rule if="ref">
+					<rule id="ref">
 						<attributes>
 							<attribute id="ref"/>
 						</attributes>
