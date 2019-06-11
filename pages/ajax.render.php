@@ -409,8 +409,16 @@ try
 				$oWizardHelper = WizardHelper::FromJSON($sJson);
 				$oObj = $oWizardHelper->GetTargetObject();
 			}
+			$oAppContext = new ApplicationContext();
+			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+				'context' => $oAppContext->GetAsHash(),
+				'att_code' => $sAttCode,
+				'origin' => 'console',
+				'source_obj' => $oObj,
+			);
+			$aPrefillFormParam['dest_class'] = ($oObj === null ? '' : $oObj->Get($sAttCode)->GetClass());
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
-			$oWidget->SearchObjectsToAdd($oPage, $sRealClass, $aAlreadyLinked, $oObj);
+			$oWidget->SearchObjectsToAdd($oPage, $sRealClass, $aAlreadyLinked, $oObj, $aPrefillFormParam);
 			break;
 
 		// ui.linksdirectwidget
