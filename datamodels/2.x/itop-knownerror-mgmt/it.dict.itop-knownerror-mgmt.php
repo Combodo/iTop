@@ -182,5 +182,5 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 	'Brick:Portal:FAQ:Menu' => 'FAQ~~',
 	'Brick:Portal:FAQ:Title' => 'Frequently Asked Questions~~',
-	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>~~',
+	'Brick:Portal:FAQ:Title+' => '<p>Sei di fretta ?</p><p>Verifica nella lista delle FAQ, potresti trovare una soluzione veloce al tuo problema.</p>',
 ));
