@@ -7,7 +7,7 @@ responsible disclosure and will make every effort to acknowledge your contributi
 ## ✉️ How to report
 
 ### iTop vulnerabilities
-Please send iTop vulnerabilities a procedure to reproduce to security@combodo.com.
+Please send a procedure to reproduce iTop vulnerabilities to security@combodo.com.
 
 You can send us a standard given / then / when, including iTop version, impacts, and maybe installed modules or datas if they are needed to reproduce.
 
