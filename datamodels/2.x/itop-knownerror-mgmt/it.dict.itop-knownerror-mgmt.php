@@ -96,17 +96,17 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:lnkErrorToFunctionalCI' => 'Link Error / FunctionalCI~~',
-	'Class:lnkErrorToFunctionalCI+' => 'Infra related to a known error~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI~~',
+	'Class:lnkErrorToFunctionalCI' => 'Link Errore /CIFunzionale',
+	'Class:lnkErrorToFunctionalCI+' => 'Infra impattata dal errore conosciuto',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI name~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI Nome',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Error~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Errore',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Error name~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Nome Errore',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reason~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Ragione',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
 ));
 
@@ -115,17 +115,17 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:lnkDocumentToError' => 'Link Documents / Errors~~',
-	'Class:lnkDocumentToError+' => 'A link between a document and a known error~~',
-	'Class:lnkDocumentToError/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToError' => 'Link Documento / Errore',
+	'Class:lnkDocumentToError+' => 'Link tra il documento e l\'errore conosciuto',
+	'Class:lnkDocumentToError/Attribute:document_id' => 'Documenti',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '~~',
-	'Class:lnkDocumentToError/Attribute:document_name' => 'Document Name~~',
+	'Class:lnkDocumentToError/Attribute:document_name' => 'Nome dei documenti',
 	'Class:lnkDocumentToError/Attribute:document_name+' => '~~',
-	'Class:lnkDocumentToError/Attribute:error_id' => 'Error~~',
+	'Class:lnkDocumentToError/Attribute:error_id' => 'Errore',
 	'Class:lnkDocumentToError/Attribute:error_id+' => '~~',
-	'Class:lnkDocumentToError/Attribute:error_name' => 'Error name~~',
+	'Class:lnkDocumentToError/Attribute:error_name' => 'Nome Errore',
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
-	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type~~',
+	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
 ));
 
@@ -134,23 +134,23 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:FAQ' => 'FAQ~~',
-	'Class:FAQ+' => 'Frequently asked questions~~',
-	'Class:FAQ/Attribute:title' => 'Title~~',
+	'Class:FAQ' => 'FAQ',
+	'Class:FAQ+' => 'Domande frequenti',
+	'Class:FAQ/Attribute:title' => 'Titolo',
 	'Class:FAQ/Attribute:title+' => '~~',
-	'Class:FAQ/Attribute:summary' => 'Summary~~',
+	'Class:FAQ/Attribute:summary' => 'Riepilogo',
 	'Class:FAQ/Attribute:summary+' => '~~',
-	'Class:FAQ/Attribute:description' => 'Description~~',
+	'Class:FAQ/Attribute:description' => 'Descrizione',
 	'Class:FAQ/Attribute:description+' => '~~',
-	'Class:FAQ/Attribute:category_id' => 'Category~~',
+	'Class:FAQ/Attribute:category_id' => 'Categoria',
 	'Class:FAQ/Attribute:category_id+' => '~~',
-	'Class:FAQ/Attribute:category_name' => 'Category name~~',
+	'Class:FAQ/Attribute:category_name' => 'Nome della Categoria',
 	'Class:FAQ/Attribute:category_name+' => '~~',
-	'Class:FAQ/Attribute:error_code' => 'Error code~~',
+	'Class:FAQ/Attribute:error_code' => 'Codice errore',
 	'Class:FAQ/Attribute:error_code+' => '~~',
-	'Class:FAQ/Attribute:key_words' => 'Key words~~',
+	'Class:FAQ/Attribute:key_words' => 'Parola Chiave',
 	'Class:FAQ/Attribute:key_words+' => '~~',
-	'Class:FAQ/Attribute:domains' => 'Domains~~',
+	'Class:FAQ/Attribute:domains' => 'Dominio',
 ));
 
 //
@@ -158,12 +158,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:FAQCategory' => 'FAQ Category~~',
-	'Class:FAQCategory+' => 'Category for FAQ~~',
-	'Class:FAQCategory/Attribute:name' => 'Name~~',
+	'Class:FAQCategory' => 'Fategoria FAQ',
+	'Class:FAQCategory+' => 'Categoria per FAQ',
+	'Class:FAQCategory/Attribute:name' => 'Nome',
 	'Class:FAQCategory/Attribute:name+' => '~~',
-	'Class:FAQCategory/Attribute:faq_list' => 'FAQs~~',
-	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
+	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
+	'Class:FAQCategory/Attribute:faq_list+' => 'Tutte le faq legate a questa categoria',
 ));
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:ProblemManagement' => 'Gestione dei Problemi',
@@ -175,12 +175,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:SearchError+' => 'Ricerca per Errori Conosciuti',
 	'Menu:Problem:KnownErrors' => 'Tutti gli errori conosciuti',
 	'Menu:Problem:KnownErrors+' => 'Tutti gli errori conosciuti',
-	'Menu:FAQCategory' => 'FAQ categories~~',
-	'Menu:FAQCategory+' => 'All FAQ categories~~',
-	'Menu:FAQ' => 'FAQs~~',
-	'Menu:FAQ+' => 'All FAQs~~',
+	'Menu:FAQCategory' => 'Categoria FAQ',
+	'Menu:FAQCategory+' => 'Tutte le categorie FAQ',
+	'Menu:FAQ' => 'FAQs',
+	'Menu:FAQ+' => 'Tutte le FAQs',
 
-	'Brick:Portal:FAQ:Menu' => 'FAQ~~',
-	'Brick:Portal:FAQ:Title' => 'Frequently Asked Questions~~',
-	'Brick:Portal:FAQ:Title+' => '<p>Sei di fretta ?</p><p>Verifica nella lista delle FAQ, potresti trovare una soluzione veloce al tuo problema.</p>',
+	'Brick:Portal:FAQ:Menu' => 'FAQ',
+	'Brick:Portal:FAQ:Title' => 'Domande frequenti',
+	'Brick:Portal:FAQ:Title+' => '<p>Sei di fretta?</p><p>Verifica nella lista delle FAQ se trovi la risposta al tuo problema.</p>',
 ));
