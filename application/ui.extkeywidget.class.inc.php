@@ -208,6 +208,11 @@ class UIExtKeyWidget
 					{
 						// When there is only once choice, select it by default
 						$sSelected = 'selected';
+						$oPage->add_ready_script(
+							<<<EOF
+$('#$this->iId').attr('data-validate','dependencies');
+EOF
+						);
 					}
 					else
 					{

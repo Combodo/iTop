@@ -190,6 +190,7 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 	{
 		// Visual feedback - none when it's Ok
 		$('#v_'+sFieldId).html(''); //<img src="../images/validation_ok.png" />');
+		$('#'+sFieldId+'[data-validate*="dependencies"]').trigger('change.dependencies').removeAttr('data-validate');
 	}
 	else
 	{
