@@ -910,7 +910,7 @@ EOF
 
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param bool $bEditMode
 	 *
 	 * @throws \CoreException
@@ -920,8 +920,9 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
-	function DisplayDetails(WebPage $oPage, $bEditMode = false)
+	public function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
 		$sTemplate = Utils::ReadFromFile(MetaModel::GetDisplayTemplate(get_class($this)));
 		if (!empty($sTemplate))
@@ -943,6 +944,7 @@ EOF
 			// template not found display the object using the *old style*
 			$oPage->add('<div id="search-widget-results-outer">');
 			$this->DisplayBareHeader($oPage, $bEditMode);
+			/** @var \iTopWebPage $oPage */
 			$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 			$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
