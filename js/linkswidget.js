@@ -448,6 +448,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
         }
         else {
             // Modifying a newly added link - the structure should already be up to date
+			if (iUniqueId < 0)
+			{
+				iUniqueId = -iUniqueId;
+			}
             me.aAdded[iUniqueId]['attr_' + sFormPrefix + sAttCode] = value;
         }
 	};
