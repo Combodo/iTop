@@ -133,14 +133,15 @@ class UILinksWidget
 		$sPrefix = "$this->m_sAttCode{$this->m_sNameSuffix}";
 		$aRow = array();
 		$aFieldsMap = array();
+		$iKey = 0;
 		if(is_object($linkObjOrId) && (!$linkObjOrId->IsNew()))
 		{
-			$key = $linkObjOrId->GetKey();
+			$iKey = $linkObjOrId->GetKey();
 			$iRemoteObjKey =  $linkObjOrId->Get($this->m_sExtKeyToRemote);
-			$sPrefix .= "[$key][";
+			$sPrefix .= "[$iKey][";
 			$sNameSuffix = "]"; // To make a tabular form
 			$aArgs['prefix'] = $sPrefix;
-			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}{$key}";
+			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}{$iKey}";
 			$aArgs['this'] = $linkObjOrId;
 
 			if($bReadOnly)
@@ -154,7 +155,7 @@ class UILinksWidget
             }
             else
             {
-                $aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$key\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$key\">";
+                $aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"$iKey\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$iKey\">";
                 foreach($this->m_aEditableFields as $sFieldCode)
                 {
                     $sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.$linkObjOrId->GetKey().']';
@@ -195,7 +196,30 @@ class UILinksWidget
 			$aArgs['wizHelper'] = "oWizardHelper{$this->m_iInputId}_".($iUniqueId < 0 ? -$iUniqueId : $iUniqueId);
 			$aArgs['this'] = $oNewLinkObj;
 			$sInputValue = $iUniqueId > 0 ? "-$iUniqueId" : "$iUniqueId";
-			$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$sInputValue\">";
+			$aRow['form::checkbox'] = "<input class=\"selection\" data-remote-id=\"$iRemoteObjKey\" data-link-id=\"0\" data-unique-id=\"$iUniqueId\" type=\"checkbox\" onClick=\"oWidget".$this->m_iInputId.".OnSelectChange();\" value=\"$sInputValue\">";
+
+			if ($iUniqueId > 0)
+			{
+				// Rows created with ajax call need OnLinkAdded call.
+				//
+				$oP->add_ready_script(
+					<<<EOF
+PrepareWidgets();
+oWidget{$this->m_iInputId}.OnLinkAdded($iUniqueId, $iRemoteObjKey);
+EOF
+				);
+			}
+			else
+			{
+				// Rows added before loading the form don't have to call OnLinkAdded.
+				// Listeners are already present and DOM is not recreated
+				$iPositiveUniqueId = -$iUniqueId;
+				$oP->add_ready_script(<<<EOF
+oWidget{$this->m_iInputId}.AddLink($iPositiveUniqueId, $iRemoteObjKey);
+EOF
+				);
+			}
+
 			foreach($this->m_aEditableFields as $sFieldCode)
 			{
 				$sFieldId = $this->m_iInputId.'_'.$sFieldCode.'['.-$iUniqueId.']';
@@ -207,20 +231,12 @@ class UILinksWidget
 					cmdbAbstractObject::GetFormElementForField($oP, $this->m_sLinkedClass, $sFieldCode, $oAttDef, $sValue, $sDisplayValue, $sSafeId /* id */, $sNameSuffix, 0, $aArgs).
 					'</div></div></div>';
 				$aFieldsMap[$sFieldCode] = $sSafeId;
+				$oP->add_ready_script(<<<EOF
+oWidget{$this->m_iInputId}.OnValueChange($iKey, $iUniqueId, '$sFieldCode', '$sValue');
+EOF
+					);
 			}
 			$sState = '';
-
-			// Rows created with ajax call need OnLinkAdded call.
-			// Rows added before loading the form cannot call OnLinkAdded.
-			if ($iUniqueId > 0)
-			{
-				$oP->add_ready_script(
-					<<<EOF
-PrepareWidgets();
-oWidget{$this->m_iInputId}.OnLinkAdded($iUniqueId, $iRemoteObjKey);
-EOF
-				);
-			}
 		}
 
 		if(!$bReadOnly)
@@ -337,8 +353,19 @@ EOF
 		$sHtmlValue .= "<input type=\"hidden\" id=\"{$sFormPrefix}{$this->m_iInputId}\">\n";
 		$oValue->Rewind();
 		$aForm = array();
-		$iAddedId = 1; // Unique id for new links
-		$aAddedLinks = array();
+		$iAddedId = -1; // Unique id for new links
+
+		$sDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
+		// Don't automatically launch the search if the table is huge
+		$bDoSearch = !utils::IsHighCardinality($this->m_sRemoteClass);
+		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
+		$sWizHelper = 'oWizardHelper'.$sFormPrefix;
+		$oPage->add_ready_script(<<<EOF
+		oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper, '{$this->m_sExtKeyToRemote}', $sJSDoSearch);
+		oWidget{$this->m_iInputId}.Init();
+EOF
+		);
+
 		while($oCurrentLink = $oValue->Fetch())
 		{
 		    // We try to retrieve the remote object as usual
@@ -357,9 +384,7 @@ EOF
 
             if ($oCurrentLink->IsNew())
             {
-                $key = -($iAddedId++);
-                $iUniqueId = -$key;
-	            $aAddedLinks[] = array('iAddedId' => $iUniqueId, 'iRemote' => $oCurrentLink->Get($this->m_sExtKeyToRemote));
+                $key = $iAddedId--;
             }
             else
             {
@@ -368,24 +393,6 @@ EOF
             $aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
 		}
 		$sHtmlValue .= $this->DisplayFormTable($oPage, $this->m_aTableConfig, $aForm);
-		$sDuplicates = ($this->m_bDuplicatesAllowed) ? 'true' : 'false';
-		// Don't automatically launch the search if the table is huge
-		$bDoSearch = !utils::IsHighCardinality($this->m_sRemoteClass);
-		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
-		$sWizHelper = 'oWizardHelper'.$sFormPrefix;
-		$oPage->add_ready_script(<<<EOF
-		oWidget{$this->m_iInputId} = new LinksWidget('{$this->m_sAttCode}{$this->m_sNameSuffix}', '{$this->m_sClass}', '{$this->m_sAttCode}', '{$this->m_iInputId}', '{$this->m_sNameSuffix}', $sDuplicates, $sWizHelper, '{$this->m_sExtKeyToRemote}', $sJSDoSearch);
-		oWidget{$this->m_iInputId}.Init();
-EOF
-);
-
-		foreach ($aAddedLinks as $aAddedLink)
-		{
-			$oPage->add_ready_script(<<<EOF
-			oWidget{$this->m_iInputId}.AddLink({$aAddedLink['iAddedId']}, {$aAddedLink['iRemote']});
-EOF
-			);
-		}
 
 		$sHtmlValue .= "<span style=\"float:left;\">&nbsp;&nbsp;&nbsp;<img src=\"../images/tv-item-last.gif\">&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnRemove\" type=\"button\" value=\"".Dict::S('UI:RemoveLinkedObjectsOf_Class')."\" onClick=\"oWidget{$this->m_iInputId}.RemoveSelected();\" >";
 		$sHtmlValue .= "&nbsp;&nbsp;&nbsp;<input id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_btnAdd\" type=\"button\" value=\"".Dict::Format('UI:AddLinkedObjectsOf_Class', MetaModel::GetName($this->m_sRemoteClass))."\" onClick=\"oWidget{$this->m_iInputId}.AddObjects();\"><span id=\"{$this->m_sAttCode}{$this->m_sNameSuffix}_indicatorAdd\"></span></span>\n";
