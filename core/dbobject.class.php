@@ -346,7 +346,11 @@ abstract class DBObject implements iDisplay
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, true /* AllowAllData */);
 		if (empty($aRow))
 		{
-			throw new CoreException("Failed to reload object of class '".get_class($this)."', id = ".$this->m_iKey);
+            $sErrorMessage = "Failed to reload object of class '".get_class($this)."', id = ".$this->m_iKey.', DBIsReadOnly = '.(int) MetaModel::DBIsReadOnly();
+
+		    IssueLog::Error("$sErrorMessage:\n".MyHelpers::get_callstack_text(1));
+            throw new CoreException("$sErrorMessage (see the log for more information)");
+
 		}
 		$this->FromRow($aRow);
 
@@ -2876,7 +2880,17 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBInsert()
 	{
-		$this->DBInsertNoReload();
+	    $this->DBInsertNoReload();
+
+        if (MetaModel::DBIsReadOnly())
+        {
+            $sClass = get_class($this);
+            $sErrorMessage = "Cannot Insert object of class '$sClass' because of an ongoing maintenance: the database is in ReadOnly mode";
+
+            IssueLog::Error("$sErrorMessage\n".MyHelpers::get_callstack_text(1));
+            throw new CoreException("$sErrorMessage (see the log for more information)");
+        }
+
 		$this->Reload();
 		return $this->m_iKey;
 	}
