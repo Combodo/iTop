@@ -609,6 +609,16 @@ button.ui-button::-moz-focus-inner {
 	background: none;
 	overflow: auto;
 }
+.ui-dialog .ui-dialog-content .treecontrol {
+	padding-bottom:0.3em;
+	padding-left: 0.2em;
+	margin-top: -0.3em;
+	padding-top: 0;
+
+}
+.ui-dialog .ui-dialog-content .treecontrol a {
+	font-size: small;
+}
 .ui-dialog .ui-dialog-buttonpane {
 	text-align: left;
 	border-width: 1px 0 0 0;
