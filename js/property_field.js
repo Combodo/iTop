@@ -294,7 +294,7 @@ $(function()
 			}
 			return oWidget;
 		},
-		_get_value_for_post(value)
+		_get_value_for_post: function(value)
 		{
 			if ((typeof value == "object") && (Object.keys(value).length === 0))
 			{
