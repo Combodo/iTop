@@ -548,7 +548,7 @@ class lnkTriggerAction extends cmdbAbstractObject
 			"state_attcode" => "",
 			"reconc_keys" => array('action_id', 'trigger_id'),
 			"db_table" => "priv_link_action_trigger",
-			"db_key_field" => "id",
+			"db_key_field" => "link_id",
 			"db_finalclass_field" => "",
 			"display_template" => "",
 			"is_link" => true,

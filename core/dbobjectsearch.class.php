@@ -1815,7 +1815,7 @@ class DBObjectSearch extends DBSearch
 		if ($bIsOnQueriedClass)
 		{
 			// default to the whole list of attributes + the very std id/finalclass
-			$oBuild->m_oQBExpressions->AddSelect($sClassAlias.$sKeyField, new FieldExpression($sKeyField, $sClassAlias));
+			$oBuild->m_oQBExpressions->AddSelect($sClassAlias.'id', new FieldExpression('id', $sClassAlias));
 			if (is_null($aAttToLoad) || !array_key_exists($sClassAlias, $aAttToLoad))
 			{
 				$sSelectedClass = $oBuild->GetSelectedClass($sClassAlias);
