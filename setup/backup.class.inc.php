@@ -435,16 +435,28 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 			// Delete the file created by tempnam() so that the spawned process can write into it (Windows/IIS)
 			@unlink($sBackupFileName);
+
+			// Store the password into a temporary file to avoid mysql complaint
+			$sMySQLDumpCnfFile = tempnam(SetupUtils::GetTmpDir(), 'itop-mysqldump-');
+			$sMySQLDumpCnf = <<<EOF
+[mysqldump]
+password=$sPwd
+EOF;
+			touch($sMySQLDumpCnfFile);
+			chmod($sMySQLDumpCnfFile, 0600);
+			file_put_contents($sMySQLDumpCnfFile, $sMySQLDumpCnf, LOCK_EX);
+
 			// Note: opt implicitely sets lock-tables... which cancels the benefit of single-transaction!
 			//       skip-lock-tables compensates and allows for writes during a backup
-			$sCommand = "$sMySQLDump --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser --password=$sPwd $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
-			$sCommandDisplay = "$sMySQLDump --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx --password=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
+			$sCommand = "$sMySQLDump --defaults-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+			$sCommandDisplay = "$sMySQLDump --defaults-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
 
 			// Now run the command for real
 			$this->LogInfo("backup: generate data file with command: $sCommandDisplay");
 			$aOutput = array();
 			$iRetCode = 0;
 			exec($sCommand, $aOutput, $iRetCode);
+			@unlink($sMySQLDumpCnfFile);
 			foreach ($aOutput as $sLine)
 			{
 				$this->LogInfo("mysqldump said: $sLine");
@@ -468,7 +480,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 				}
 				else
 				{
-					$sMoreInfo = "Check the log files '".realpath(APPROOT.'/log/setup.log or error.log')."' for more information.";
+					$sMoreInfo = "Check the log files 'log/setup.log' or 'log/error.log' for more information.";
 				}
 				throw new BackupException("Failed to execute mysqldump: ".$sMoreInfo);
 			}
