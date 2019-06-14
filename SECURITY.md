@@ -18,7 +18,7 @@ Report security bugs in third-party modules to the person or team maintaining th
 
 ## 📆 Disclosure Policy
 
-Report sent to us will be acknowledge within the week. Then, a developer will be assigned to it and will:
+Report sent to us will be acknowledge within the week. Then, a Combodo developer will be assigned to it and will:
 
 * confirm the problem and determine the affected versions
 * audit the code to find any potential similar problems
