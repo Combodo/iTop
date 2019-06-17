@@ -51,13 +51,26 @@ try
 	require_once(APPROOT.'/application/user.preferences.class.inc.php');
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-	LoginWebPage::DoLoginEx(null /* any portal */, false);
+	$operation = utils::ReadParam('operation', '');
+
+	// Only allow export functions to portal users
+	switch ($operation)
+	{
+		case 'export_build':
+		case 'export_cancel':
+		case 'export_download':
+			$sRequestedPortalId = null;
+			break;
+
+		default:
+			$sRequestedPortalId = (MetaModel::GetConfig()->Get('disable_attachments_download_legacy_portal') === true) ? 'backoffice' : null;
+	}
+	LoginWebPage::DoLoginEx($sRequestedPortalId, false);
 
 	$oPage = new ajax_page("");
 	$oPage->no_cache();
 
 
-	$operation = utils::ReadParam('operation', '');
 	$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 	$sEncoding = utils::ReadParam('encoding', 'serialize');
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
