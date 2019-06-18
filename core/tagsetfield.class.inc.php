@@ -57,7 +57,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 			"default_value" => '',
 			"is_null_allowed" => false,
 			"depends_on" => array(),
-			"validation_pattern" => '^[a-zA-Z][a-zA-Z0-9]{3,}$',
+			"validation_pattern" => '^[a-zA-Z][a-zA-Z0-9]{2,}$',
 		)));
 		MetaModel::Init_AddAttribute(new AttributeString("label", array(
 			"allowed_values" => null,
