@@ -793,6 +793,21 @@ class ObjectFormManager extends FormManager
                         $oField->SetDisplayOpened(true);
                     }
 				}
+				// - BlobField
+				if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\BlobField')))
+				{
+					//   - Overriding attributes to display
+					if ($this->oApp !== null)
+					{
+						// Override hardcoded URLs in ormDocument pointing to back office console
+						$sDisplayUrl = $this->oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($this->oObject), 'sObjectId' => $this->oObject->GetKey(), 'sObjectField' => $sAttCode, 'cache' => 86400));
+						$sDownloadUrl = $this->oApp['url_generator']->generate('p_object_document_download', array('sObjectClass' => get_class($this->oObject), 'sObjectId' => $this->oObject->GetKey(), 'sObjectField' => $sAttCode, 'cache' => 86400));
+						/** @var \Combodo\iTop\Form\Field\BlobField $oField */
+						$oField->SetDisplayUrl($sDisplayUrl)
+							->SetDownloadUrl($sDownloadUrl);
+					}
+				}
+
 			}
 			else
 			{
