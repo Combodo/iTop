@@ -6525,26 +6525,43 @@ class AttributeExternalField extends AttributeDefinition
 		}
 	}
 
+	/**
+	 * @see N°2174
+	 *
+	 * @param string $sDefault
+	 *
+	 * @return string dict entry if defined, otherwise the class hierarchy -> field name<br>
+	 *    <p>For example, having this :
+	 *
+	 * <pre>
+	 *       +---------------------+     +--------------------+      +--------------+
+	 *       | Class A             |     | Class B            |      | Class C      |
+	 *       +---------------------+     +--------------------+      +--------------+
+	 *       | foo <ExternalField>-------->c_id_friendly_name--------->friendlyname |
+	 *       +---------------------+     +--------------------+      +--------------+
+	 * </pre>
+	 *
+	 *       <p>The ExternalField foo points to a magical field that is brought by c_id ExternalKey in class B.
+	 *
+	 *       <p>The foo label will be : B -> C -> friendlyname<br>
+	 *       This can be overrided with dict key Class:ClassA/Attribute:foo
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public function GetLabel($sDefault = null)
 	{
-		if ($this->IsFriendlyName())
+		$sLabel = parent::GetLabel(null);
+		if (!is_null($sLabel))
 		{
-			$sKeyAttCode = $this->Get("extkey_attcode");
-			$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
-			$sLabel = $oExtKeyAttDef->GetLabel($this->m_sCode);
+			return $sLabel;
 		}
-		else
-		{
-			$sLabel = parent::GetLabel('');
-			if (strlen($sLabel) == 0)
-			{
-				$oRemoteAtt = $this->GetExtAttDef();
-				$sLabel = $oRemoteAtt->GetLabel($this->m_sCode);
-				$oKeyAtt = $this->GetKeyAttDef();
-				$sKeyLabel = $oKeyAtt->GetLabel($this->GetKeyAttCode());
-				$sLabel = "{$sKeyLabel}->{$sLabel}";
-			}
-		}
+
+		$oRemoteAtt = $this->GetExtAttDef();
+		$sLabel = $oRemoteAtt->GetLabel($this->m_sCode);
+		$oKeyAtt = $this->GetKeyAttDef();
+		$sKeyLabel = $oKeyAtt->GetLabel($this->GetKeyAttCode());
+		$sLabel = "{$sKeyLabel}->{$sLabel}";
 
 		return $sLabel;
 	}
