@@ -403,10 +403,6 @@ class UILinksWidgetDirect
 				$oFilter->AddCondition('id', $oCurrentObj->GetKey(), '!=');
 			}
 		}
-		if (count($aAlreadyLinked) > 0)
-		{
-			$oFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
-		}
 		if ($oCurrentObj != null)
 		{
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
@@ -416,6 +412,10 @@ class UILinksWidgetDirect
 			
 			$aPrefillFormParam['filter'] = $oFilter;
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
+		}
+		if (count($aAlreadyLinked) > 0)
+		{
+			$oFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
 		}
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
 		$oBlock->Display($oP, "ResultsToAdd_{$this->sInputid}", array('menu' => false, 'cssCount'=> '#count_'.$this->sInputid , 'selection_mode' => true, 'table_id' => 'add_'.$this->sInputid)); // Don't display the 'Actions' menu on the results
