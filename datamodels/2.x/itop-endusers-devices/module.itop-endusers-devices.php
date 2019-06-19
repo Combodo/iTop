@@ -25,7 +25,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-endusers-devices/2.6.1',
+	'itop-endusers-devices/'.ITOP_VERSION,
 	array(
 		// Identification
 		//
@@ -108,4 +108,3 @@ if (!class_exists('EndUserMgmtInstaller'))
 	}
 }
 
-?>

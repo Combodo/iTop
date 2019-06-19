@@ -18,7 +18,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-datacenter-mgmt/2.6.1',
+	'itop-datacenter-mgmt/'.ITOP_VERSION,
 	array(
 		// Identification
 		//
@@ -63,5 +63,3 @@ SetupWebPage::AddModule(
 	)
 );
 
-
-?>
