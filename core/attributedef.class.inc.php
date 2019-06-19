@@ -512,7 +512,7 @@ abstract class AttributeDefinition
 	}
 
 	/**
-	 * @param string|null $sDefault
+	 * @param string|null $sDefault if null, will return the attribute code replacing "_" by " "
 	 *
 	 * @return string
 	 *
@@ -6551,8 +6551,9 @@ class AttributeExternalField extends AttributeDefinition
 	 */
 	public function GetLabel($sDefault = null)
 	{
-		$sLabel = parent::GetLabel(null);
-		if (!is_null($sLabel))
+		$sLabelDefaultValue = '';
+		$sLabel = parent::GetLabel($sLabelDefaultValue);
+		if ($sLabelDefaultValue !== $sLabel)
 		{
 			return $sLabel;
 		}
