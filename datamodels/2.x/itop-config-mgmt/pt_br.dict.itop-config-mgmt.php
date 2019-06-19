@@ -103,10 +103,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Principal',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Organização principal',
-	'Class:Organization/Attribute:overview' => 'Overview~~',
-	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
-	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
-	'Organization:Overview:Users' => 'iTop Users within this organization~~',
+	'Class:Organization/Attribute:overview' => 'Visão geral',
+	'Organization:Overview:FunctionalCIs' => 'Itens de configuração desta organização',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'por tipo',
+	'Organization:Overview:Users' => 'Usuários iTop dentro desta organização',
 ));
 
 //
@@ -208,12 +208,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person/Attribute:tickets_list+' => 'Todos as solicitações que essa pessoa solicitou',
 	'Class:Person/Attribute:manager_id_friendlyname' => 'Nome amigável gerente',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
-	'Class:Person/Attribute:picture' => 'Picture~~',
-	'Class:Person/Attribute:picture+' => '~~',
-	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
-	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
-	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
-	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/Attribute:picture' => 'Foto',
+	'Class:Person/Attribute:picture+' => '',
+	'Class:Person/UniquenessRule:employee_number+' => 'O número de funcionário deve ser único na organização',
+	'Class:Person/UniquenessRule:employee_number' => 'Já existe uma pessoa na organização \'$this->org_name$\' com o mesmo número de funcionário',
+	'Class:Person/UniquenessRule:name+' => 'O nome do funcionário deve ser único dentro de sua organização',
+	'Class:Person/UniquenessRule:name' => 'Já existe uma pessoa na organização \'$this->org_name$\' com o mesmo nome',
 ));
 
 //
@@ -246,8 +246,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Document/Attribute:documenttype_id+' => '',
 	'Class:Document/Attribute:documenttype_name' => 'Nome tipo documento',
 	'Class:Document/Attribute:documenttype_name+' => '',
-	'Class:Document/Attribute:version' => 'Version~~',
-	'Class:Document/Attribute:version+' => '~~',
+	'Class:Document/Attribute:version' => 'Versão',
+	'Class:Document/Attribute:version+' => '',
 	'Class:Document/Attribute:description' => 'Descrição',
 	'Class:Document/Attribute:description+' => '',
 	'Class:Document/Attribute:status' => 'Estado',
@@ -342,7 +342,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Todos as solicitações para este item de configuração',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Tipo CI',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
-	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
+	'Class:FunctionalCI/Tab:OpenedTickets' => 'Ingressos Ativos',
 ));
 
 //
@@ -494,11 +494,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Todas as portas Fiber Channel para esse dispositivo',
 	'Class:DatacenterDevice/Attribute:san_list' => 'SANs',
 	'Class:DatacenterDevice/Attribute:san_list+' => 'Todos os switches SAN vinculados para esse dispositivo',
-	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy~~',
-	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device is up if at least one power connection (A or B) is up~~',
+	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundância',
+	'Class:DatacenterDevice/Attribute:redundancy/count' => 'O dispositivo está ativo se pelo menos uma conexão de energia (A ou B) estiver ativa',
 	// Unused yet
-	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device is up if all its power connections are up~~',
-	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device is up if at least %1$s %% of its power connections are up~~',
+	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'O dispositivo está ativo se todas as conexões de energia estiverem ativadas',
+	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'O dispositivo está ativo se pelo menos %1$s %% de suas conexões de energia estiverem funcionando',
 ));
 
 //
@@ -912,10 +912,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Farm+' => '',
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors',
 	'Class:Farm/Attribute:hypervisor_list+' => 'Todos os hypervisors que compoem esse Cluster/HA',
-	'Class:Farm/Attribute:redundancy' => 'High availability~~',
-	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
-	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
-	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up~~',
+	'Class:Farm/Attribute:redundancy' => 'Alta disponibilidade',
+	'Class:Farm/Attribute:redundancy/disabled' => 'A fazenda está em pé se todos os hipervisores estiverem em alta',
+	'Class:Farm/Attribute:redundancy/count' => 'O farm está ativo se pelo menos %1$s hypervisor(es) estiver (ão) para cima',
+	'Class:Farm/Attribute:redundancy/percent' => 'A fazenda está ativa se pelo menos %1$s %% dos hipervisores estiverem em alta',
 ));
 
 //
@@ -945,8 +945,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:VirtualMachine/Attribute:cpu+' => '',
 	'Class:VirtualMachine/Attribute:ram' => 'RAM',
 	'Class:VirtualMachine/Attribute:ram+' => '',
-	'Class:VirtualMachine/Attribute:managementip' => 'IP~~',
-	'Class:VirtualMachine/Attribute:managementip+' => '~~',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP',
+	'Class:VirtualMachine/Attribute:managementip+' => '',
 	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Placas de rede',
 	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Todas as placas de rede',
 ));
@@ -1305,8 +1305,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Brand+' => '',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Dispositivos físicos',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Todos os dispositivos físicos correspondentes a essa fabricante',
-	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
-	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
+	'Class:Brand/UniquenessRule:name+' => 'O nome deve ser único',
+	'Class:Brand/UniquenessRule:name' => 'Essa marca já existe',
 ));
 
 //
@@ -1360,8 +1360,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Model/Attribute:type/Value:Phone+' => 'Telefone',
 	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo físico',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Todos os dispositivos físicos correspondentes a esse modelo',
-	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
-	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
+	'Class:Model/UniquenessRule:name_brand+' => 'O nome deve ser único na marca',
+	'Class:Model/UniquenessRule:name_brand' => 'este modelo já existe para essa marca',
 ));
 
 //
@@ -1894,9 +1894,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Server:Date' => 'Data',
 	'Server:moreinfo' => 'Mais informações',
 	'Server:otherinfo' => 'Outras informações',
-	'Server:power' => 'Power supply~~',
+	'Server:power' => 'Fonte de alimentação',
 	'Person:info' => 'Informações gerais',
-	'Person:personal_info' => 'Personal information~~',
+	'Person:personal_info' => 'Informação pessoal',
 	'Person:notifiy' => 'Notificação',
 	'Class:Subnet/Tab:IPUsage' => 'IP usado',
 	'Class:Subnet/Tab:IPUsage-explain' => 'Placas de rede contendo IP na faixa: <em>%1$s</em> para <em>%2$s</em>',

@@ -36,7 +36,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:Button:Delete' => 'Deletar',
 	'Portal:EnvironmentBanner:Title' => 'Você está atualmente em <strong>%1$s</strong>',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Volte para o modo PRODUÇÃO',
-    'Error:HTTP:400' => 'Bad request~~',
+	'Error:HTTP:400' => 'Pedido ruim',
     'Error:HTTP:401' => 'Autenticação',
     'Error:HTTP:404' => 'Está página não existe',
 	'Error:HTTP:500' => 'Oops! Ocorreu um erro, informe a T.I.',
@@ -82,7 +82,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 // AggregatePageBrick
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard~~',
+	'Brick:Portal:AggregatePage:DefaultTitle' => 'Painel de controle',
 ));
 
 // BrowseBrick brick
@@ -106,17 +106,17 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Manage:Name' => 'Gerenciar itens',
 	'Brick:Portal:Manage:Table:NoData' => 'Sem dados.',
     'Brick:Portal:Manage:Table:ItemActions' => 'Ações',
-    'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
-	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
+	'Brick:Portal:Manage:DisplayMode:list' => 'List',
+	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Gráfico de pizza',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
-	'Brick:Portal:Manage:Others' => 'Others~~',
-	'Brick:Portal:Manage:All' => 'All~~',
-	'Brick:Portal:Manage:Group' => 'Group~~',
-	'Brick:Portal:Manage:fct:count' => 'Total~~',
+	'Brick:Portal:Manage:Others' => 'Outros',
+	'Brick:Portal:Manage:All' => 'Todos',
+	'Brick:Portal:Manage:Group' => 'Group',
+	'Brick:Portal:Manage:fct:count' => 'Total',
 	'Brick:Portal:Manage:fct:sum' => 'Sum~~',
-	'Brick:Portal:Manage:fct:avg' => 'Average~~',
-	'Brick:Portal:Manage:fct:min' => 'Min~~',
-	'Brick:Portal:Manage:fct:max' => 'Max~~',
+	'Brick:Portal:Manage:fct:avg' => 'Média',
+	'Brick:Portal:Manage:fct:min' => 'Min',
+	'Brick:Portal:Manage:fct:max' => 'Max',
 ));
 
 // ObjectBrick brick
