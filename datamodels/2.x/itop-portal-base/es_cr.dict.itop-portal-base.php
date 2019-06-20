@@ -26,9 +26,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Page:Home' => 'Inicio',
 	'Page:GoPortalHome' => 'Regresar a Inicio',
 	'Page:GoPreviousPage' => 'Página anterior',
-    'Page:ReloadPage' => 'Recargar página',
+	'Page:ReloadPage' => 'Recargar página',
 	'Portal:Button:Submit' => 'Enviar',
-    'Portal:Button:Apply' => 'Actualizar',
+	'Portal:Button:Apply' => 'Actualizar',
 	'Portal:Button:Cancel' => 'Cancelar',
 	'Portal:Button:Close' => 'Cerrar',
 	'Portal:Button:Add' => 'Añadir',
@@ -36,14 +36,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Portal:Button:Delete' => 'Borrar',
 	'Portal:EnvironmentBanner:Title' => 'Se encuentra en modo <strong>%1$s</strong>',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Regresar a modo PRODUCTION',
-    'Error:HTTP:400' => 'Bad request~~',
-    'Error:HTTP:401' => 'Autenticación',
-    'Error:HTTP:404' => 'Página no encontrada',
+	'Error:HTTP:400' => 'Bad request~~',
+	'Error:HTTP:401' => 'Autenticación',
+	'Error:HTTP:404' => 'Página no encontrada',
 	'Error:HTTP:500' => '¡Vaya! Ha ocurrido un error.',
 	'Error:HTTP:GetHelp' => 'Póngase en contacto con el administrador de %1$s si el problema persiste.',
 	'Error:XHR:Fail' => 'No se pudieron cargar datos, póngase en contacto con su administrador de %1$s',
-    'Portal:ErrorUserLoggedOut' => 'Se encuentra desconectado y necesita volver a identificarse para continuar.',
-    'Portal:Datatables:Language:Processing' => 'Por favor esperar...',
+	'Portal:ErrorUserLoggedOut' => 'Se encuentra desconectado y necesita volver a identificarse para continuar.',
+	'Portal:Datatables:Language:Processing' => 'Por favor esperar...',
 	'Portal:Datatables:Language:Search' => 'Filtrar:',
 	'Portal:Datatables:Language:LengthMenu' => 'Mostrar _MENU_ elementos por página',
 	'Portal:Datatables:Language:ZeroRecords' => 'Sin resultados',
@@ -90,7 +90,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:Browse:Name' => 'Buscar en todos los elementos',
 	'Brick:Portal:Browse:Mode:List' => 'Lista',
 	'Brick:Portal:Browse:Mode:Tree' => 'Árbol',
-    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaico',
+	'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaico',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Desglose',
 	'Brick:Portal:Browse:Action:View' => 'Detalles',
 	'Brick:Portal:Browse:Action:Edit' => 'Editar',
@@ -105,8 +105,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:Manage:Name' => 'Administrar elementos',
 	'Brick:Portal:Manage:Table:NoData' => 'Sin elementos',
-    'Brick:Portal:Manage:Table:ItemActions' => 'Acciones',
-    'Brick:Portal:Manage:DisplayMode:list' => 'Lista',
+	'Brick:Portal:Manage:Table:ItemActions' => 'Acciones',
+	'Brick:Portal:Manage:DisplayMode:list' => 'Lista',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Gráfica de Pastel',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Gráfica de Barra',
 	'Brick:Portal:Manage:Others' => 'Otros',
@@ -134,12 +134,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // CreateBrick brick
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:Create:Name' => 'Creación rápida',
-    'Brick:Portal:Create:ChooseType' => 'Por favor, seleccione un tipo',
+	'Brick:Portal:Create:ChooseType' => 'Por favor, seleccione un tipo',
 ));
 
 // Filter brick
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-    'Brick:Portal:Filter:Name' => 'Prefiltre un bloquek',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'Ej.:. Conectar a WiFi',
-    'Brick:Portal:Filter:SearchInput:Submit' => 'Buscar',
+	'Brick:Portal:Filter:Name' => 'Prefiltre un bloquek',
+	'Brick:Portal:Filter:SearchInput:Placeholder' => 'Ej.:. Conectar a WiFi',
+	'Brick:Portal:Filter:SearchInput:Submit' => 'Buscar',
 ));

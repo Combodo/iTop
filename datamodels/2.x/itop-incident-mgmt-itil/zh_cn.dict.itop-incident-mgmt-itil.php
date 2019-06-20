@@ -45,8 +45,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 ));
 
 
-
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -237,15 +235,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Method:ResolveChildTickets' => '解决子工单',
 	'Class:Incident/Method:ResolveChildTickets+' => '级联解决子Ticket(事件自动解决),和调整以下内容保持一至: 服务, 团队, 办理人, 解决方案',
 	'Tickets:Related:OpenIncidents' => '打开的事件',
-));
-
-//
-// Class: Incident
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:Incident/Attribute:parent_problem_id' => 'Parent problem id~~',
-	'Class:Incident/Attribute:parent_problem_id+' => '~~',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref~~',
-	'Class:Incident/Attribute:parent_problem_ref+' => '~~',
 ));

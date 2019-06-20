@@ -416,7 +416,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Button:Insert' => 'Inserir',
 	'UI:Button:More' => 'Mais',
 	'UI:Button:Less' => 'Menos',
-	
+
 	'UI:SearchToggle' => 'Pesquisar',
 	'UI:ClickToCreateNew' => 'Criar um(a) novo(a) %1$s',
 	'UI:SearchFor_Class' => 'Pesquisar por objeto(s) %1$s',
@@ -436,7 +436,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Error:CannotWriteToTmp_Dir' => 'Não foi possível gravar o arquivo temporário para o disco. upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Upload parou por extensão. (Nome do arquivo original = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'Arquivo carregado falhou, causa desconhecida. (Código erro = "%1$s").',
-	
+
 	'UI:Error:1ParametersMissing' => 'Erro: o parâmetro a seguir deve ser especificado para esta operação: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Erro: os seguintes parâmetros devem ser especificados para esta operação: %1$s e %2$s.',
 	'UI:Error:3ParametersMissing' => 'Erro: os seguintes parâmetros devem ser especificados para esta operação: %1$s, %2$s e %3$s.',
@@ -613,7 +613,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:CSVImport:AlertIncompleteMapping' => 'Por favor, selecione um mapeamento para cada campo.',
 	'UI:CSVImport:AlertMultipleMapping' => 'Por favor, certifique-se que um campo de destino é mapeado apenas uma vez.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Selecione ao menos um critério de busca',
-	'UI:CSVImport:Encoding' => 'Codificação de caracteres',	
+	'UI:CSVImport:Encoding' => 'Codificação de caracteres',
 	'UI:UniversalSearchTitle' => 'Pesquisa Universal',
 	'UI:UniversalSearch:Error' => 'Erro: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Selecione a classe para pesquisar: ',
@@ -704,7 +704,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label of the attribute',
 	'UI:Schema:Type' => 'Tipo',
-	
+
 	'UI:Schema:Type+' => 'Tipo dado do atributo',
 	'UI:Schema:Origin' => 'Origem',
 	'UI:Schema:Origin+' => 'The base class in which this attribute is defined',
@@ -794,7 +794,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Devem ser atualizados automaticamente, mas: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'será automaticamente atualizada (redefinir: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objetos/links são referências %2$s',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objetos/links fazem referências a alguns dos objetos a serem excluídos',	
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objetos/links fazem referências a alguns dos objetos a serem excluídos',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'Para garantir a integridade do banco de dados, qualquer referência deve ser eliminada',
 	'UI:Delete:Consequence+' => 'O que será feito',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Por favor, realize as operações manuais listados acima antes de solicitar a exclusão do referido objeto',
@@ -843,7 +843,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:FatalErrorMessage' => 'Erro fatal, o sistema não pode continuar.',
 	'UI:Error_Details' => 'Erro: %1$s.',
 
-	'UI:PageTitle:ClassProjections'	=> 'Gerenciamento Usuários - projeções de classe',
+	'UI:PageTitle:ClassProjections' => 'Gerenciamento Usuários - projeções de classe',
 	'UI:PageTitle:ProfileProjections' => 'Gerenciamento Usuários - projeções de classe',
 	'UI:UserManagement:Class' => 'Classe',
 	'UI:UserManagement:Class+' => 'Classe de objetos',
@@ -882,7 +882,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:UserManagement:GrantMatrix' => 'Permissões concedidas',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link entre %1$s e %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link entre %1$s e %2$s',
-	
+
 	'Menu:AdminTools' => 'Ferramentas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Ferramentas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Ferramentas acessíveis apenas para usuários com o perfil do administrador', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -901,28 +901,28 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Objetos Infra-estrutura por tipo',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Objetos Infra-estrutura por status',
 
-'UI:ConfigMgmtMenuOverview:Title' => 'Painel para Gerenciamento Configurações',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Itens de configuração por status',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Itens de configuração por tipo',
+	'UI:ConfigMgmtMenuOverview:Title' => 'Painel para Gerenciamento Configurações',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Itens de configuração por status',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Itens de configuração por tipo',
 
-'UI:RequestMgmtMenuOverview:Title' => 'Painel para Gerenciamento Solicitações',
-'UI-RequestManagementOverview-RequestByService' => 'Solicitações usuários por serviço',
-'UI-RequestManagementOverview-RequestByPriority' => 'Solicitações usuários por prioridade',
-'UI-RequestManagementOverview-RequestUnassigned' => 'Solicitações usuários não atribuídos a um agente',
+	'UI:RequestMgmtMenuOverview:Title' => 'Painel para Gerenciamento Solicitações',
+	'UI-RequestManagementOverview-RequestByService' => 'Solicitações usuários por serviço',
+	'UI-RequestManagementOverview-RequestByPriority' => 'Solicitações usuários por prioridade',
+	'UI-RequestManagementOverview-RequestUnassigned' => 'Solicitações usuários não atribuídos a um agente',
 
-'UI:IncidentMgmtMenuOverview:Title' => 'Painel para Gerenciamento Incidentes',
-'UI-IncidentManagementOverview-IncidentByService' => 'Incidentes por serviço',
-'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidentes por prioridade',
-'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidentes por ainda atribuído a um agente',
+	'UI:IncidentMgmtMenuOverview:Title' => 'Painel para Gerenciamento Incidentes',
+	'UI-IncidentManagementOverview-IncidentByService' => 'Incidentes por serviço',
+	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidentes por prioridade',
+	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidentes por ainda atribuído a um agente',
 
-'UI:ChangeMgmtMenuOverview:Title' => 'Painel para Gerenciamento Mudanças',
-'UI-ChangeManagementOverview-ChangeByType' => 'Mudanças por tipo',
-'UI-ChangeManagementOverview-ChangeUnassigned' => 'Mudanças ainda não atribuído a um agente',
-'UI-ChangeManagementOverview-ChangeWithOutage' => 'Interrupções devido a alterações',
+	'UI:ChangeMgmtMenuOverview:Title' => 'Painel para Gerenciamento Mudanças',
+	'UI-ChangeManagementOverview-ChangeByType' => 'Mudanças por tipo',
+	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Mudanças ainda não atribuído a um agente',
+	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Interrupções devido a alterações',
 
-'UI:ServiceMgmtMenuOverview:Title' => 'Painel para Gerenciamento Serviços',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Contratos clientes a serem renovados em 30 dias',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Contratos provedores a serem renovados em 30 dias',
+	'UI:ServiceMgmtMenuOverview:Title' => 'Painel para Gerenciamento Serviços',
+	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Contratos clientes a serem renovados em 30 dias',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Contratos provedores a serem renovados em 30 dias',
 
 	'UI:ContactsMenu' => 'Contatos',
 	'UI:ContactsMenu+' => 'Contatos',
@@ -933,13 +933,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 	'Menu:CSVImportMenu' => 'Importar CSV', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'Criação ou atualização em massa', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataModelMenu' => 'Modelo Dados', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => 'Visão geral do Modelo Dados', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:ExportMenu' => 'Exportar', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Exportar o resultado de qualquer consulta em HTML, CSV ou XML', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:NotificationsMenu' => 'Notificações', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuração de Notificações', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuração de <span class="hilite">Notificações</span>',
@@ -976,19 +976,19 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Menu:AuditCategories' => 'Categoria Auditorias', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => 'Categoria Auditorias', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Categoria Auditorias', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:RunQueriesMenu' => 'Executar consultas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:RunQueriesMenu+' => 'Executar qualquer consulta', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:QueryMenu' => 'Consulta  definida', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => 'Consulta  definida', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataAdministration' => 'Administração Dados', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => 'Administração Dados', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UniversalSearchMenu' => 'Pesquisa Universal', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Pesquisar por nada...', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UserManagementMenu' => 'Gerenciamento Usuários', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserManagementMenu+' => 'Gerenciamento Usuários', // Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -1010,9 +1010,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Download-CSV' => 'Download %1$s',
 
 	'UI:DeadlineMissedBy_duration' => 'Perdida por %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 min',		
-	'UI:Deadline_Minutes' => '%1$d min',			
-	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
+	'UI:Deadline_LessThan1Min' => '< 1 min',
+	'UI:Deadline_Minutes' => '%1$d min',
+	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Ajuda',
 	'UI:PasswordConfirm' => '(Confirmar)',
@@ -1064,8 +1064,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:ChangeMyPassword' => 'Alterar minha senha',
 	'Portal:Disconnect' => 'Sair',
 	'Portal:OpenRequests' => 'Minhas solicitações abertas',
-	'Portal:ClosedRequests'  => 'Minhas solicitações fechadas',
-	'Portal:ResolvedRequests'  => 'Minhas solicitações resolvidas',
+	'Portal:ClosedRequests' => 'Minhas solicitações fechadas',
+	'Portal:ResolvedRequests' => 'Minhas solicitações resolvidas',
 	'Portal:SelectService' => 'Selecione um serviço de um catálogo:',
 	'Portal:PleaseSelectOneService' => 'Selecione um serviço',
 	'Portal:SelectSubcategoryFrom_Service' => 'Selecione um sub-serviço do serviço %1$s:',
@@ -1084,7 +1084,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:RemoveAttachment' => ' Remover anexo ',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Anexo #%1$d para %2$s (%3$s)',
 	'Portal:SelectRequestTemplate' => 'Selecione um modelo para %1$s',
-	'Enum:Undefined' => 'Indefinido',	
+	'Enum:Undefined' => 'Indefinido',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s dias %2$s horas %3$s minutos %4$s segundos',
 	'UI:ModifyAllPageTitle' => 'Modificar todos',
 	'UI:Modify_N_ObjectsOf_Class' => 'Modificando objeto %1$d da classe %2$s',
@@ -1096,7 +1096,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:BulkModifyStatus' => 'Operação',
 	'UI:BulkModifyStatus+' => 'Status da operação',
 	'UI:BulkModifyErrors' => 'Erros (se qualquer)',
-	'UI:BulkModifyErrors+' => 'Erros que impedem a modificação',	
+	'UI:BulkModifyErrors+' => 'Erros que impedem a modificação',
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => 'Erro',
 	'UI:BulkModifyStatusModified' => 'Modificado',
@@ -1190,8 +1190,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Propriedades',
-	'UI:DashboardEdit:Dashlets' => 'Painel disponível',	
-	'UI:DashboardEdit:DashletProperties' => 'Propriedades',	
+	'UI:DashboardEdit:Dashlets' => 'Painel disponível',
+	'UI:DashboardEdit:DashletProperties' => 'Propriedades',
 
 	'UI:Form:Property' => 'Propriedade',
 	'UI:Form:Value' => 'Valor',
@@ -1302,7 +1302,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Month-10' => 'Outubro',
 	'Month-11' => 'Novembro',
 	'Month-12' => 'Dezembro',
-	
+
 	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su~~',
 	'DayOfWeek-Monday-Min' => 'Mo~~',
@@ -1323,7 +1323,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Month-10-Short' => 'Oct~~',
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
-	'Calendar-FirstDayOfWeek' => '0', // 0 = domingo, 1 = segunda-feira, etc …
+	'Calendar-FirstDayOfWeek' => '0', // 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Criar um atalho...',
 	'UI:ShortcutRenameDlg:Title' => 'Renomear o atalho',
@@ -1374,7 +1374,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 <tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
 <tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
 </table>~~',
-		
+
 	'UI:Button:Remove' => 'Excluir',
 	'UI:AddAnExisting_Class' => 'Adicionar objetos do tipo %1$s...',
 	'UI:SelectionOf_Class' => 'Selecionar objetos do tipo %1$s',
@@ -1472,14 +1472,14 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: qualquer',
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
-    //   - External key widget
+	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s está definido',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s não está definido',
 	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s = %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
 	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s e %3$s outros',
 	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: qualquer',
-    //   - Hierarchical key widget
+	//   - Hierarchical key widget
 	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s está definido',
 	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s não está definido',
 	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s = %2$s',
@@ -1499,12 +1499,12 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Termina com',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Exp. Regular ',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~', // => '='
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Maior', // => '>'
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Maior', // => '>'
-    'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Menos', // => '<'
-    'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Menos / igual a', // => '<='
-    'UI:Search:Criteria:Operator:Numeric:Different' => 'Diferente', // => '≠'
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',  // => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Maior',  // => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Maior',  // > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Menos',  // => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Menos / igual a',  // > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Diferente',  // => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
 

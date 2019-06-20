@@ -37,6 +37,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Portal:Button:Delete' => 'Elimina',
 	'Portal:EnvironmentBanner:Title' => 'Sei attualmente in modalità <strong>%1$s</strong>',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Ritorna alla modalità Produzione',
+	'Error:HTTP:400' => 'Bad request~~',
 	'Error:HTTP:401' => 'Autenticazione',
 	'Error:HTTP:404' => 'La Pagina non funziona',
 	'Error:HTTP:500' => 'Oops, si è presentato un errore',
@@ -90,7 +91,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Brick:Portal:Browse:Name' => 'Browse throught items~~',
 	'Brick:Portal:Browse:Mode:List' => 'List~~',
 	'Brick:Portal:Browse:Mode:Tree' => 'Tree~~',
-    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
+	'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Drilldown~~',
 	'Brick:Portal:Browse:Action:View' => 'Details~~',
 	'Brick:Portal:Browse:Action:Edit' => 'Edit~~',
@@ -105,8 +106,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Brick:Portal:Manage:Name' => 'Manage items~~',
 	'Brick:Portal:Manage:Table:NoData' => 'No item.~~',
-    'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
-    'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
+	'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
+	'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart~~',
 	'Brick:Portal:Manage:Others' => 'Others~~',
@@ -134,12 +135,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // CreateBrick brick
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Brick:Portal:Create:Name' => 'Quick creation~~',
-    'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
+	'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
 ));
 
 // Filter brick
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
-    'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
+	'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
+	'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
+	'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
 ));

@@ -72,7 +72,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Ticket/Attribute:close_date+' => '~~',
 	'Class:Ticket/Attribute:private_log' => 'Private log~~',
 	'Class:Ticket/Attribute:private_log+' => '~~',
-    'Class:Ticket/Attribute:contacts_list' => 'Contacts~~',
+	'Class:Ticket/Attribute:contacts_list' => 'Contacts~~',
 	'Class:Ticket/Attribute:contacts_list+' => 'All the contacts linked to this ticket~~',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CIs~~',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'All the configuration items impacted for this ticket~~',

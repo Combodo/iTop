@@ -40,20 +40,20 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate+' => '~~',
 
-    'Core:AttributeTagSet' => 'List of tags~~',
-    'Core:AttributeTagSet+' => '~~',
+	'Core:AttributeTagSet' => 'List of tags~~',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
-    'Core:AttributeCaseLog' => 'Log~~',
-    'Core:AttributeCaseLog+' => '~~',
+	'Core:AttributeCaseLog' => 'Log~~',
+	'Core:AttributeCaseLog+' => '~~',
 
-    'Core:AttributeMetaEnum' => 'Computed enum~~',
-    'Core:AttributeMetaEnum+' => '~~',
+	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum+' => '~~',
 
-    'Core:AttributeLinkedSetIndirect' => 'オブジェクト配列 (N-N)',
+	'Core:AttributeLinkedSetIndirect' => 'オブジェクト配列 (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => '同一クラスの任意のオブジェクト(サブクラス)',
 
 	'Core:AttributeInteger' => 'Int型',
@@ -101,7 +101,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributePassword' => 'パスワード',
 	'Core:AttributePassword+' => '外部デバイス用パスワード',
 
- 	'Core:AttributeEncryptedString' => '暗号化文字列',
+	'Core:AttributeEncryptedString' => '暗号化文字列',
 	'Core:AttributeEncryptedString+' => 'ローカルキーで暗号化された文字列',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
@@ -859,8 +859,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:ExecProcess:Code255' => 'PHP エラー (parsing, or runtime)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$d分 %2$d秒',
+	'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Minutes_Seconds' => '%1$d分 %2$d秒',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$d時 %2$d分 %3$d秒',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s日 %2$d時 %3$d分 %4$d秒',
 

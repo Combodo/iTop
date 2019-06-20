@@ -39,7 +39,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'bkp-week-days' => 'Respaldos se realizaran <b>cada %1$s a %2$s</b>',
 	'bkp-retention' => 'Al menos <b>%1$d archivos de respaldo serán conservados</b> en el directorio destino.',
 	'bkp-next-to-delete' => 'Serán borrados cuando el siguiente respaldo ocurra (ver configuración "retention_count")',
-	'bkp-table-file' => 'Archivo', 
+	'bkp-table-file' => 'Archivo',
 	'bkp-table-file+' => 'Solo archivos con la extensión .zip son considerados como archivos de respaldos',
 	'bkp-table-size' => 'Tamaño',
 	'bkp-table-size+' => '',

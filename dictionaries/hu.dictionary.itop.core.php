@@ -40,20 +40,20 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate+' => '~~',
 
-    'Core:AttributeTagSet' => 'List of tags~~',
-    'Core:AttributeTagSet+' => '~~',
+	'Core:AttributeTagSet' => 'List of tags~~',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
-    'Core:AttributeCaseLog' => 'Log~~',
-    'Core:AttributeCaseLog+' => '~~',
+	'Core:AttributeCaseLog' => 'Log~~',
+	'Core:AttributeCaseLog+' => '~~',
 
-    'Core:AttributeMetaEnum' => 'Computed enum~~',
-    'Core:AttributeMetaEnum+' => '~~',
+	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum+' => '~~',
 
-    'Core:AttributeLinkedSetIndirect' => 'Objektum tömbök (N-N)',
+	'Core:AttributeLinkedSetIndirect' => 'Objektum tömbök (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => '',
 
 	'Core:AttributeInteger' => 'Integer',
@@ -101,7 +101,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:AttributePassword' => 'Jelszó',
 	'Core:AttributePassword+' => '',
 
- 	'Core:AttributeEncryptedString' => 'Encrypted string',
+	'Core:AttributeEncryptedString' => 'Encrypted string',
 	'Core:AttributeEncryptedString+' => '',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
@@ -859,8 +859,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)~~',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$sds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$sdmin %2$sds',
+	'Core:Duration_Seconds' => '%1$sds',
+	'Core:Duration_Minutes_Seconds' => '%1$sdmin %2$sds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$sdh %2$sdmin %3$sds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$sdh %3$sdmin %4$ds',
 

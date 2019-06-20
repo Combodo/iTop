@@ -121,4 +121,3 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Problem/Stimulus:ev_close' => 'Chiudere',
 	'Class:Problem/Stimulus:ev_close+' => '',
 ));
-

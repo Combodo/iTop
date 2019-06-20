@@ -68,7 +68,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Ticket/Attribute:close_date+' => '',
 	'Class:Ticket/Attribute:private_log' => 'Log privado',
 	'Class:Ticket/Attribute:private_log+' => '',
-    'Class:Ticket/Attribute:contacts_list' => 'Contatos',
+	'Class:Ticket/Attribute:contacts_list' => 'Contatos',
 	'Class:Ticket/Attribute:contacts_list+' => 'Todos os contatos vinculados a essa solicitação',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CIs',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Todos os itens de configuração afetados por essa solicitação',
@@ -122,8 +122,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Ref',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Título do bilhete',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CIs',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Nome CI',
@@ -249,13 +249,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Abrir',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolvido',
 	'Brick:Portal:ClosedRequests:Title' => 'Fechar solicitações',
-));
-
-//
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Título do bilhete',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
 ));

@@ -26,9 +26,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Page:Home' => 'Home',
 	'Page:GoPortalHome' => 'Página Inicial',
 	'Page:GoPreviousPage' => 'Página anterior',
-    'Page:ReloadPage' => 'Atualizar página',
+	'Page:ReloadPage' => 'Atualizar página',
 	'Portal:Button:Submit' => 'Enviar',
-    'Portal:Button:Apply' => 'Alterar',
+	'Portal:Button:Apply' => 'Alterar',
 	'Portal:Button:Cancel' => 'Cancelar',
 	'Portal:Button:Close' => 'Fechar',
 	'Portal:Button:Add' => 'Adicionar',
@@ -37,13 +37,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:EnvironmentBanner:Title' => 'Você está atualmente em <strong>%1$s</strong>',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Volte para o modo PRODUÇÃO',
 	'Error:HTTP:400' => 'Pedido ruim',
-    'Error:HTTP:401' => 'Autenticação',
-    'Error:HTTP:404' => 'Está página não existe',
+	'Error:HTTP:401' => 'Autenticação',
+	'Error:HTTP:404' => 'Está página não existe',
 	'Error:HTTP:500' => 'Oops! Ocorreu um erro, informe a T.I.',
 	'Error:HTTP:GetHelp' => 'Por favor, entre em contato com a T.I para verificar este problema.',
 	'Error:XHR:Fail' => 'Não foi possível carregar dados, entre em contato com o T.I.',
-    'Portal:ErrorUserLoggedOut' => 'Você está desconectado e precisa fazer o login novamente para continuar.',
-    'Portal:Datatables:Language:Processing' => 'Aguarde...',
+	'Portal:ErrorUserLoggedOut' => 'Você está desconectado e precisa fazer o login novamente para continuar.',
+	'Portal:Datatables:Language:Processing' => 'Aguarde...',
 	'Portal:Datatables:Language:Search' => 'Filtro:',
 	'Portal:Datatables:Language:LengthMenu' => 'Lista _MENU_ itens por página',
 	'Portal:Datatables:Language:ZeroRecords' => 'Sem resultados',
@@ -90,7 +90,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Browse:Name' => 'Navegar por itens',
 	'Brick:Portal:Browse:Mode:List' => 'Lista',
 	'Brick:Portal:Browse:Mode:Tree' => 'Cascata',
-    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaico',
+	'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaico',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Detalhamento',
 	'Brick:Portal:Browse:Action:View' => 'Detalhes',
 	'Brick:Portal:Browse:Action:Edit' => 'Editar',
@@ -105,7 +105,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Manage:Name' => 'Gerenciar itens',
 	'Brick:Portal:Manage:Table:NoData' => 'Sem dados.',
-    'Brick:Portal:Manage:Table:ItemActions' => 'Ações',
+	'Brick:Portal:Manage:Table:ItemActions' => 'Ações',
 	'Brick:Portal:Manage:DisplayMode:list' => 'List',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Gráfico de pizza',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
@@ -134,12 +134,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // CreateBrick brick
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Create:Name' => 'Criação rápida',
-    'Brick:Portal:Create:ChooseType' => 'Por favor, escolha um tipo:',
+	'Brick:Portal:Create:ChooseType' => 'Por favor, escolha um tipo:',
 ));
 
 // Filter brick
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-    'Brick:Portal:Filter:Name' => 'Filtro ativado',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi',
-    'Brick:Portal:Filter:SearchInput:Submit' => 'Pesquisa',
+	'Brick:Portal:Filter:Name' => 'Filtro ativado',
+	'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi',
+	'Brick:Portal:Filter:SearchInput:Submit' => 'Pesquisa',
 ));

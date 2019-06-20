@@ -46,8 +46,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 ));
 
 
-
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -238,15 +236,4 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Conecte a resolução ao ticket filho (ev_autoresolve) e alinhe as seguintes características: service, team, agent, resolution info',
 	'Tickets:Related:OpenIncidents' => 'Incidentes abertos',
-));
-
-//
-// Class: Incident
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:Incident/Attribute:parent_problem_id' => 'Problema principal',
-	'Class:Incident/Attribute:parent_problem_id+' => '',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Ref problema principal',
-	'Class:Incident/Attribute:parent_problem_ref+' => '',
 ));

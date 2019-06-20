@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -71,7 +71,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Ticket/Attribute:close_date+' => '',
 	'Class:Ticket/Attribute:private_log' => 'Private log',
 	'Class:Ticket/Attribute:private_log+' => '',
-    'Class:Ticket/Attribute:contacts_list' => 'Contacts',
+	'Class:Ticket/Attribute:contacts_list' => 'Contacts',
 	'Class:Ticket/Attribute:contacts_list+' => 'All the contacts linked to this ticket',
 	'Class:Ticket/Attribute:functionalcis_list' => 'CIs',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'All the configuration items impacted by this ticket. Items marked as "Computed" have been automatically marked as impacted. Items marked as "Not impacted" are excluded from the impact.',
@@ -252,13 +252,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Open',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolved',
 	'Brick:Portal:ClosedRequests:Title' => 'Closed requests',
-));
-
-//
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
 ));

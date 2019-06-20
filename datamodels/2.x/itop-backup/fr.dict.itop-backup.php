@@ -24,7 +24,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'bkp-week-days' => 'Les sauvegardes seront effectuées <b>tous les %1$s à %2$s</b>',
 	'bkp-retention' => 'Au plus <b>%1$d fichiers de sauvegardes seront conservés</b> dans le répertoire cible.',
 	'bkp-next-to-delete' => 'Sera effacé lors de la prochaine sauvegarde (Cf. réglage "retention_count")',
-	'bkp-table-file' => 'Fichier', 
+	'bkp-table-file' => 'Fichier',
 	'bkp-table-file+' => 'Seuls les fichiers ayant l\'extension .zip sont considérés comme étant des fichiers de sauvegarde',
 	'bkp-table-size' => 'Taille',
 	'bkp-table-size+' => '',

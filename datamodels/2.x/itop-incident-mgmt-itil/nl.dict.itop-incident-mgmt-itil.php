@@ -32,8 +32,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 ));
 
 
-
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -224,15 +222,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem de kenmerken over wat betreft service, team, agent, oplossing',
 	'Tickets:Related:OpenIncidents' => 'Open incidenten',
-));
-
-//
-// Class: Incident
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:Incident/Attribute:parent_problem_id' => 'Parent problem id~~',
-	'Class:Incident/Attribute:parent_problem_id+' => '~~',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref~~',
-	'Class:Incident/Attribute:parent_problem_ref+' => '~~',
 ));

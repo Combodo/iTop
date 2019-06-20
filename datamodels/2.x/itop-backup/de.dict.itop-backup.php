@@ -41,7 +41,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'bkp-week-days' => 'Backups werden <b>jeden %1$s um %2$s durchgeführt</b>',
 	'bkp-retention' => 'Mindestens <b>%1$d Backups werden im Zielverzeichniss vorgehalten</b>',
 	'bkp-next-to-delete' => 'Wird gelöscht, wenn das nächste Backup angelegt wird (unter Einstellungen "Menge vorhalten")',
-	'bkp-table-file' => 'Datei', 
+	'bkp-table-file' => 'Datei',
 	'bkp-table-file+' => 'Nur Dateien mit der Endung .zip werden als Backup-Dateien berücksichtigt.',
 	'bkp-table-size' => 'Grösse',
 	'bkp-table-size+' => '',

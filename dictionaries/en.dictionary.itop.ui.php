@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -134,7 +134,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:User/Attribute:status+' => 'Whether the user account is enabled or disabled.',
 	'Class:User/Attribute:status/Value:enabled' => 'Enabled',
 	'Class:User/Attribute:status/Value:disabled' => 'Disabled',
-		
+
 	'Class:User/Error:LoginMustBeUnique' => 'Login must be unique - "%1s" is already being used.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'At least one profile must be assigned to this user.',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.',
@@ -345,7 +345,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'BooleanLabel:yes' => 'yes',
 	'BooleanLabel:no' => 'no',
-    'UI:Login:Title' => 'iTop login',
+	'UI:Login:Title' => 'iTop login',
 	'Menu:WelcomeMenu' => 'Welcome', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'Welcome to iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Welcome', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -420,7 +420,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Button:Insert' => 'Insert',
 	'UI:Button:More' => 'More',
 	'UI:Button:Less' => 'Less',
-	
+
 	'UI:SearchToggle' => 'Search',
 	'UI:ClickToCreateNew' => 'Create a new %1$s',
 	'UI:SearchFor_Class' => 'Search for %1$s objects',
@@ -440,7 +440,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Error:CannotWriteToTmp_Dir' => 'Unable to write the temporary file to the disk. upload_tmp_dir = "%1$s".',
 	'UI:Error:UploadStoppedByExtension_FileName' => 'Upload stopped  by extension. (Original file name = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => 'File upload failed, unknown cause. (Error code = "%1$s").',
-	
+
 	'UI:Error:1ParametersMissing' => 'Error: the following parameter must be specified for this operation: %1$s.',
 	'UI:Error:2ParametersMissing' => 'Error: the following parameters must be specified for this operation: %1$s and %2$s.',
 	'UI:Error:3ParametersMissing' => 'Error: the following parameters must be specified for this operation: %1$s, %2$s and %3$s.',
@@ -609,8 +609,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:CSVImport:CommentsAndHeader' => 'Comments and header',
 	'UI:CSVImport:SelectClass' => 'Select the class to import:',
 	'UI:CSVImport:AdvancedMode' => 'Advanced mode',
-	'UI:CSVImport:AdvancedMode+' => 'In advanced mode the "id" (primary key) of the objects can be used to update and rename objects.' .
-									'However the column "id" (if present) can only be used as a search criteria and can not be combined with any other search criteria.',
+	'UI:CSVImport:AdvancedMode+' => 'In advanced mode the "id" (primary key) of the objects can be used to update and rename objects.'.
+		'However the column "id" (if present) can only be used as a search criteria and can not be combined with any other search criteria.',
 	'UI:CSVImport:SelectAClassFirst' => 'To configure the mapping, select a class first.',
 	'UI:CSVImport:HeaderFields' => 'Fields',
 	'UI:CSVImport:HeaderMappings' => 'Mappings',
@@ -618,7 +618,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:CSVImport:AlertIncompleteMapping' => 'Please select a mapping for every field.',
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Please select at least one search criteria',
-	'UI:CSVImport:Encoding' => 'Character encoding',	
+	'UI:CSVImport:Encoding' => 'Character encoding',
 	'UI:UniversalSearchTitle' => 'iTop - Universal Search',
 	'UI:UniversalSearch:Error' => 'Error: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Select the class to search: ',
@@ -709,7 +709,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Schema:Label' => 'Label',
 	'UI:Schema:Label+' => 'Label of the attribute',
 	'UI:Schema:Type' => 'Type',
-	
+
 	'UI:Schema:Type+' => 'Data type of the attribute',
 	'UI:Schema:Origin' => 'Origin',
 	'UI:Schema:Origin+' => 'The base class in which this attribute is defined',
@@ -799,7 +799,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Delete:CannotUpdateBecause_Issue' => 'Should be automatically updated, but: %1$s',
 	'UI:Delete:WillAutomaticallyUpdate_Fields' => 'will be automaticaly updated (reset: %1$s)',
 	'UI:Delete:Count_Objects/LinksReferencing_Object' => '%1$d objects/links are referencing %2$s',
-	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objects/links are referencing some of the objects to be deleted',	
+	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d objects/links are referencing some of the objects to be deleted',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => 'To ensure Database integrity, any reference should be further eliminated',
 	'UI:Delete:Consequence+' => 'What will be done',
 	'UI:Delete:SorryDeletionNotAllowed' => 'Sorry, you are not allowed to delete this object, see the detailed explanations above',
@@ -848,7 +848,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:FatalErrorMessage' => 'Fatal error, iTop cannot continue.',
 	'UI:Error_Details' => 'Error: %1$s.',
 
-	'UI:PageTitle:ClassProjections'	=> 'iTop user management - class projections',
+	'UI:PageTitle:ClassProjections' => 'iTop user management - class projections',
 	'UI:PageTitle:ProfileProjections' => 'iTop user management - profile projections',
 	'UI:UserManagement:Class' => 'Class',
 	'UI:UserManagement:Class+' => 'Class of objects',
@@ -887,7 +887,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link between %1$s and %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link between %1$s and %2$s',
-	
+
 	'Menu:AdminTools' => 'Admin tools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administration tools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -906,28 +906,28 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI-ConfigurationManagementMenu-InfraByType' => 'Infrastructure objects by type',
 	'UI-ConfigurationManagementMenu-InfraByStatus' => 'Infrastructure objects by status',
 
-'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard for Configuration Management',
-'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuration Items by status',
-'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuration Items by type',
+	'UI:ConfigMgmtMenuOverview:Title' => 'Dashboard for Configuration Management',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIbyStatus' => 'Configuration Items by status',
+	'UI-ConfigMgmtMenuOverview-FunctionalCIByType' => 'Configuration Items by type',
 
-'UI:RequestMgmtMenuOverview:Title' => 'Dashboard for Request Management',
-'UI-RequestManagementOverview-RequestByService' => 'User Requests by service',
-'UI-RequestManagementOverview-RequestByPriority' => 'User Requests by priority',
-'UI-RequestManagementOverview-RequestUnassigned' => 'User Requests not yet assigned to an agent',
+	'UI:RequestMgmtMenuOverview:Title' => 'Dashboard for Request Management',
+	'UI-RequestManagementOverview-RequestByService' => 'User Requests by service',
+	'UI-RequestManagementOverview-RequestByPriority' => 'User Requests by priority',
+	'UI-RequestManagementOverview-RequestUnassigned' => 'User Requests not yet assigned to an agent',
 
-'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard for Incident Management',
-'UI-IncidentManagementOverview-IncidentByService' => 'Incidents by service',
-'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents by priority',
-'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents not yet assigned to an agent',
+	'UI:IncidentMgmtMenuOverview:Title' => 'Dashboard for Incident Management',
+	'UI-IncidentManagementOverview-IncidentByService' => 'Incidents by service',
+	'UI-IncidentManagementOverview-IncidentByPriority' => 'Incidents by priority',
+	'UI-IncidentManagementOverview-IncidentUnassigned' => 'Incidents not yet assigned to an agent',
 
-'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard for Change Management',
-'UI-ChangeManagementOverview-ChangeByType' => 'Changes by type',
-'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes not yet assigned to an agent',
-'UI-ChangeManagementOverview-ChangeWithOutage' => 'Outages due to changes',
+	'UI:ChangeMgmtMenuOverview:Title' => 'Dashboard for Change Management',
+	'UI-ChangeManagementOverview-ChangeByType' => 'Changes by type',
+	'UI-ChangeManagementOverview-ChangeUnassigned' => 'Changes not yet assigned to an agent',
+	'UI-ChangeManagementOverview-ChangeWithOutage' => 'Outages due to changes',
 
-'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard for Service Management',
-'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Customer contracts to be renewed in 30 days',
-'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Provider contracts to be renewed in 30 days',
+	'UI:ServiceMgmtMenuOverview:Title' => 'Dashboard for Service Management',
+	'UI-ServiceManagementOverview-CustomerContractToRenew' => 'Customer contracts to be renewed in 30 days',
+	'UI-ServiceManagementOverview-ProviderContractToRenew' => 'Provider contracts to be renewed in 30 days',
 
 	'UI:ContactsMenu' => 'Contacts',
 	'UI:ContactsMenu+' => 'Contacts',
@@ -938,13 +938,13 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Menu:CSVImportMenu' => 'CSV import', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => 'Bulk creation or update', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataModelMenu' => 'Data Model', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataModelMenu+' => 'Overview of the Data Model', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:ExportMenu' => 'Export', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:NotificationsMenu' => 'Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:NotificationsMenu+' => 'Configuration of the Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuration of the <span class="hilite">Notifications</span>',
@@ -981,19 +981,19 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Menu:AuditCategories' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AuditCategories+' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Audit Categories', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:RunQueriesMenu' => 'Run Queries', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:RunQueriesMenu+' => 'Run any query', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:QueryMenu' => 'Query phrasebook', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:QueryMenu+' => 'Query phrasebook', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:DataAdministration' => 'Data administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => 'Data administration', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UniversalSearchMenu' => 'Universal Search', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Search for anything...', // Duplicated into itop-welcome-itil (will be removed from here...)
-	
+
 	'Menu:UserManagementMenu' => 'User Management', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserManagementMenu+' => 'User management', // Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -1015,9 +1015,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Download-CSV' => 'Download %1$s',
 
 	'UI:DeadlineMissedBy_duration' => 'Missed  by %1$s',
-	'UI:Deadline_LessThan1Min' => '< 1 min',		
-	'UI:Deadline_Minutes' => '%1$d min',			
-	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',			
+	'UI:Deadline_LessThan1Min' => '< 1 min',
+	'UI:Deadline_Minutes' => '%1$d min',
+	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Help',
 	'UI:PasswordConfirm' => '(Confirm)',
@@ -1069,8 +1069,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:ChangeMyPassword' => 'Change my password',
 	'Portal:Disconnect' => 'Disconnect',
 	'Portal:OpenRequests' => 'My open requests',
-	'Portal:ClosedRequests'  => 'My closed requests',
-	'Portal:ResolvedRequests'  => 'My resolved requests',
+	'Portal:ClosedRequests' => 'My closed requests',
+	'Portal:ResolvedRequests' => 'My resolved requests',
 	'Portal:SelectService' => 'Select a service from the catalog:',
 	'Portal:PleaseSelectOneService' => 'Please select one service',
 	'Portal:SelectSubcategoryFrom_Service' => 'Select a sub-category for the service %1$s:',
@@ -1089,7 +1089,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Portal:RemoveAttachment' => ' Remove Attachment ',
 	'Portal:Attachment_No_To_Ticket_Name' => 'Attachment #%1$d to %2$s (%3$s)',
 	'Portal:SelectRequestTemplate' => 'Select a template for %1$s',
-	'Enum:Undefined' => 'Undefined',	
+	'Enum:Undefined' => 'Undefined',
 	'UI:DurationForm_Days_Hours_Minutes_Seconds' => '%1$s d %2$s h %3$s min %4$s s',
 	'UI:ModifyAllPageTitle' => 'Modify All',
 	'UI:Modify_N_ObjectsOf_Class' => 'Modifying %1$d objects of class %2$s',
@@ -1101,7 +1101,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:BulkModifyStatus' => 'Operation',
 	'UI:BulkModifyStatus+' => 'Status of the operation',
 	'UI:BulkModifyErrors' => 'Errors (if any)',
-	'UI:BulkModifyErrors+' => 'Errors preventing the modification',	
+	'UI:BulkModifyErrors+' => 'Errors preventing the modification',
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => 'Error',
 	'UI:BulkModifyStatusModified' => 'Modified',
@@ -1132,7 +1132,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed',
 	'UI:FavoriteOrganizations' => 'Favorite Organizations',
 	'UI:FavoriteOrganizations+' => 'Check in the list below the organizations that you want to see in the drop-down menu for a quick access. '.
-								   'Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting "All Organizations" in the drop-down list.',
+		'Note that this is not a security setting, objects from any organization are still visible and can be accessed by selecting "All Organizations" in the drop-down list.',
 	'UI:FavoriteLanguage' => 'Language of the User Interface',
 	'UI:Favorites:SelectYourLanguage' => 'Select your preferred language',
 	'UI:FavoriteOtherSettings' => 'Other Settings',
@@ -1196,8 +1196,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Dashboard Properties',
-	'UI:DashboardEdit:Dashlets' => 'Available Dashlets',	
-	'UI:DashboardEdit:DashletProperties' => 'Dashlet Properties',	
+	'UI:DashboardEdit:Dashlets' => 'Available Dashlets',
+	'UI:DashboardEdit:DashletProperties' => 'Dashlet Properties',
 
 	'UI:Form:Property' => 'Property',
 	'UI:Form:Value' => 'Value',
@@ -1308,7 +1308,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Month-10' => 'October',
 	'Month-11' => 'November',
 	'Month-12' => 'December',
-	
+
 	// Short version for the DatePicker
 	'DayOfWeek-Sunday-Min' => 'Su',
 	'DayOfWeek-Monday-Min' => 'Mo',
@@ -1330,7 +1330,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Dec',
 	'Calendar-FirstDayOfWeek' => 0, // 0 = Sunday, 1 = Monday, etc...
-	
+
 	'UI:Menu:ShortcutList' => 'Create a Shortcut...',
 	'UI:ShortcutRenameDlg:Title' => 'Rename the shortcut',
 	'UI:ShortcutListDlg:Title' => 'Create a shortcut for the list',
@@ -1380,7 +1380,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 <tr><td>i</td><td>minutes (2 digits, e.g. 00..59)</td></tr>
 <tr><td>s</td><td>seconds (2 digits, e.g. 00..59)</td></tr>
 </table>',
-		
+
 	'UI:Button:Remove' => 'Remove',
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s',
@@ -1393,13 +1393,13 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:About:InstallationOptions' => 'Installation options',
 	'UI:About:ManualExtensionSource' => 'Extension',
 	'UI:About:Extension_Version' => 'Version: %1$s',
-	'UI:About:RemoteExtensionSource' => 'Data',	
-	
+	'UI:About:RemoteExtensionSource' => 'Data',
+
 	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.',
 	'UI:DisconnectedDlgTitle' => 'Warning!',
 	'UI:LoginAgain' => 'Login again',
 	'UI:StayOnThePage' => 'Stay on this page',
-	
+
 	'ExcelExporter:ExportMenu' => 'Excel Export...',
 	'ExcelExporter:ExportDialogTitle' => 'Excel Export',
 	'ExcelExporter:ExportButton' => 'Export',
@@ -1419,16 +1419,16 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.',
 	'UI:Menu:KillConcurrentLock' => 'Kill the Concurrent Modification Lock !',
-	
+
 	'UI:Menu:ExportPDF' => 'Export as PDF...',
 	'UI:Menu:PrintableVersion' => 'Printer friendly version',
-	
+
 	'UI:BrowseInlineImages' => 'Browse images...',
 	'UI:UploadInlineImageLegend' => 'Upload a new image',
 	'UI:SelectInlineImageToUpload' => 'Select the image to upload',
 	'UI:AvailableInlineImagesLegend' => 'Available images',
 	'UI:NoInlineImage' => 'There is no image available on the server. Use the "Browse" button above to select an image from your computer and upload it to the server.',
-	
+
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize',
 	'UI:Button:ResetImage' => 'Recover the previous image',
 	'UI:Button:RemoveImage' => 'Remove the image',
@@ -1478,20 +1478,20 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: Any',
 	//   - TagSet widget
 	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
-    //   - External key widget
-    'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',
-    'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined',
-    'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
-    'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
-    'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others',
-    'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any',
-    //   - Hierarchical key widget
-    'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined',
-    'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined',
-    'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
-    'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others',
-    'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any',
+	//   - External key widget
+	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s is defined',
+	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s is not defined',
+	'UI:Search:Criteria:Title:ExternalKey:Equals' => '%1$s %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:ExternalKey:In:Many' => '%1$s: %2$s and %3$s others',
+	'UI:Search:Criteria:Title:ExternalKey:In:All' => '%1$s: Any',
+	//   - Hierarchical key widget
+	'UI:Search:Criteria:Title:HierarchicalKey:Empty' => '%1$s is defined',
+	'UI:Search:Criteria:Title:HierarchicalKey:NotEmpty' => '%1$s is not defined',
+	'UI:Search:Criteria:Title:HierarchicalKey:Equals' => '%1$s %2$s',
+	'UI:Search:Criteria:Title:HierarchicalKey:In' => '%1$s: %2$s',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:Many' => '%1$s: %2$s and %3$s others',
+	'UI:Search:Criteria:Title:HierarchicalKey:In:All' => '%1$s: Any',
 
 	// - Criteria operators
 	//   - Default widget

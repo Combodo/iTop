@@ -67,7 +67,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Ticket/Attribute:close_date+' => '',
 	'Class:Ticket/Attribute:private_log' => '私信',
 	'Class:Ticket/Attribute:private_log+' => '',
-    'Class:Ticket/Attribute:contacts_list' => '联系人',
+	'Class:Ticket/Attribute:contacts_list' => '联系人',
 	'Class:Ticket/Attribute:contacts_list+' => '该工单相关的所有联系人',
 	'Class:Ticket/Attribute:functionalcis_list' => '配置项',
 	'Class:Ticket/Attribute:functionalcis_list+' => '该工单相关的所有配置项.',

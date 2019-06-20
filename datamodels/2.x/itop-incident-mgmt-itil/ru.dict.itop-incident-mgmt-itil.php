@@ -33,8 +33,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 ));
 
 
-
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -225,15 +223,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Каскадное решение дочерних тикетов (ev_autoresolve) с установкой следующих параметров: услуга, команда, агент, информация о решении.',
 	'Tickets:Related:OpenIncidents' => 'Открытые инциденты',
-));
-
-//
-// Class: Incident
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:Incident/Attribute:parent_problem_id' => 'Родительская проблема',
-	'Class:Incident/Attribute:parent_problem_id+' => '',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Родительская проблема',
-	'Class:Incident/Attribute:parent_problem_ref+' => '',
 ));

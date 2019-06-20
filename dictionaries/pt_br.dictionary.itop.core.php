@@ -55,7 +55,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeMetaEnum' => 'Computed enum~~',
 	'Core:AttributeMetaEnum+' => '',
 
-    'Core:AttributeLinkedSetIndirect' => 'Array de objetos (N-N)',
+	'Core:AttributeLinkedSetIndirect' => 'Array de objetos (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Qualquer tipo de objetos [sub-classe] da mesma classe',
 
 	'Core:AttributeInteger' => 'Inteiro',
@@ -103,7 +103,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributePassword' => 'Senha',
 	'Core:AttributePassword+' => 'Senha para o dispositivo externo',
 
- 	'Core:AttributeEncryptedString' => 'String encriptada',
+	'Core:AttributeEncryptedString' => 'String encriptada',
 	'Core:AttributeEncryptedString+' => 'String encriptada com uma chave local',
 	'Core:AttributeEncryptUnknownLibrary' => 'Biblioteca de criptografia especificada (%1$s) desconhecida',
 	'Core:AttributeEncryptFailedToDecrypt' => '** erro de decriptação **',
@@ -861,8 +861,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:ExecProcess:Code255' => 'PHP erro (parsing, or runtime)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
@@ -923,20 +923,20 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Formato padrão (%1$s), por ex. %2$s',
 	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Formato personalizado: %1$s',
 	'Core:BulkExport:PDF:PageNumber' => 'Página %1$s',
-	'Core:DateTime:Placeholder_d' => 'DD', // Dia do mês: 2 dígitos (com zero à esquerda)
-	'Core:DateTime:Placeholder_j' => 'D', // Dia do mês: 1 ou 2 dígitos (sem zero)
-	'Core:DateTime:Placeholder_m' => 'MM', // Mês com 2 dígitos, ou seja, 01-12
-	'Core:DateTime:Placeholder_n' => 'M', // Mês em 1 ou 2 dígitos 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY', // Ano com 4 dígitos
-	'Core:DateTime:Placeholder_y' => 'YY', // Ano em 2 dígitos
-	'Core:DateTime:Placeholder_H' => 'hh', // Hora 00..23
-	'Core:DateTime:Placeholder_h' => 'h', // Hora 01..12
-	'Core:DateTime:Placeholder_G' => 'hh', // Hora 0..23
-	'Core:DateTime:Placeholder_g' => 'h', // Hora 1.12
-	'Core:DateTime:Placeholder_a' => 'am/pm', // am / pm (minúscula)
-	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM / PM (maiúscula)
-	'Core:DateTime:Placeholder_i' => 'mm', // minutos, 2 dígitos: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss', // segundos, 2 dígitos 00..59
+	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY', // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY', // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
 	'Core:Validator:Default' => 'Formato errado',
 	'Core:Validator:Mandatory' => 'Por favor, preencha este campo',
 	'Core:Validator:MustBeInteger' => 'Deve ser um inteiro',
