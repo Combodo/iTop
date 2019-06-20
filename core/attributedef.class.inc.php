@@ -5900,7 +5900,7 @@ class AttributeDeadline extends AttributeDateTime
 	{
 		$sResult = self::FormatDeadline($value);
 
-		return $sResult;
+		return sprintf('<time datetime="%s">%s</time>', $value, Str::pure2html($sResult));
 	}
 
 	public static function FormatDeadline($value)
