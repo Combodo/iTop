@@ -51,13 +51,26 @@ try
 	require_once(APPROOT.'/application/user.preferences.class.inc.php');
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-	LoginWebPage::DoLoginEx(null /* any portal */, false);
+	$operation = utils::ReadParam('operation', '');
+
+	// Only allow export functions to portal users
+	switch ($operation)
+	{
+		case 'export_build':
+		case 'export_cancel':
+		case 'export_download':
+			$sRequestedPortalId = null;
+			break;
+
+		default:
+			$sRequestedPortalId = (MetaModel::GetConfig()->Get('disable_attachments_download_legacy_portal') === true) ? 'backoffice' : null;
+	}
+	LoginWebPage::DoLoginEx($sRequestedPortalId, false);
 
 	$oPage = new ajax_page("");
 	$oPage->no_cache();
 
 
-	$operation = utils::ReadParam('operation', '');
 	$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 	$sEncoding = utils::ReadParam('encoding', 'serialize');
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
@@ -409,8 +422,16 @@ try
 				$oWizardHelper = WizardHelper::FromJSON($sJson);
 				$oObj = $oWizardHelper->GetTargetObject();
 			}
+			$oAppContext = new ApplicationContext();
+			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+				'context' => $oAppContext->GetAsHash(),
+				'att_code' => $sAttCode,
+				'origin' => 'console',
+				'source_obj' => $oObj,
+			);
+			$aPrefillFormParam['dest_class'] = ($oObj === null ? '' : $oObj->Get($sAttCode)->GetClass());
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
-			$oWidget->SearchObjectsToAdd($oPage, $sRealClass, $aAlreadyLinked, $oObj);
+			$oWidget->SearchObjectsToAdd($oPage, $sRealClass, $aAlreadyLinked, $oObj, $aPrefillFormParam);
 			break;
 
 		// ui.linksdirectwidget
@@ -757,6 +778,7 @@ try
 					}
 					catch (CoreException $e)
 					{
+						$sFilter = utils::HtmlEntities($sFilter);
 						$oPage->p("Invalid query (invalid filter) : <code>$sFilter</code>");
 						IssueLog::Error("ajax.render operation='ajax', invalid DBSearch filter param : $sFilter");
 						break;

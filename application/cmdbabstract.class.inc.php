@@ -911,7 +911,7 @@ EOF
 
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param bool $bEditMode
 	 *
 	 * @throws \CoreException
@@ -921,8 +921,9 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
-	function DisplayDetails(WebPage $oPage, $bEditMode = false)
+	public function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
 		$sTemplate = Utils::ReadFromFile(MetaModel::GetDisplayTemplate(get_class($this)));
 		if (!empty($sTemplate))
@@ -944,6 +945,7 @@ EOF
 			// template not found display the object using the *old style*
 			$oPage->add('<div id="search-widget-results-outer">');
 			$this->DisplayBareHeader($oPage, $bEditMode);
+			/** @var \iTopWebPage $oPage */
 			$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 			$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 			$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
@@ -2104,7 +2106,7 @@ EOF
     $('#{$iId}_console_form').console_form_handler('alignColumns');
 	$('#{$iId}_console_form').console_form_handler('option', 'field_set', $('#{$iId}_field_set'));
     // field_change must be processed to refresh the hidden value at anytime
-    $('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); console.error($('#{$iId}').val()); });
+    $('#{$iId}_console_form').bind('value_change', function() { $('#{$iId}').val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
     // Initialize the hidden value with current state
     // update_value is triggered when preparing the wizard helper object for ajax calls
     $('#{$iId}').bind('update_value', function() { $(this).val(JSON.stringify($('#{$iId}_field_set').triggerHandler('get_current_values'))); });
@@ -2177,6 +2179,11 @@ EOF
 									if ((count($aAllowedValues) == 1) && ($bMandatory == 'true'))
 									{
 										// When there is only once choice, select it by default
+										$oPage->add_ready_script(
+											<<<EOF
+$('#$iId').attr('data-validate','dependencies');
+EOF
+										);
 										$sSelected = ' selected';
 									}
 									else

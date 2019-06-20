@@ -19,7 +19,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-attachments/2.6.1',
+	'itop-attachments/'.ITOP_VERSION,
 	array(
 		// Identification
 		//

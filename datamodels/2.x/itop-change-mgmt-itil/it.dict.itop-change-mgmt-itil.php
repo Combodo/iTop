@@ -37,7 +37,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:Changes+' => 'Tutte le Modifiche aperte',
 	'Menu:MyChanges' => 'Modifiche assegnate a me',
 	'Menu:MyChanges+' => 'Modifiche assegnato a me (come Agent)',
-	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Changes by category for the last 7 days~~',
+	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Evoluzioni',
 	'UI-ChangeManagementOverview-Last-7-days' => 'Number of changes for the last 7 days~~',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Changes by domain for the last 7 days~~',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Changes by status for the last 7 days~~',

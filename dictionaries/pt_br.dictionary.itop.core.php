@@ -32,34 +32,34 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:UnknownObjectLabel' => 'Objeto não encontrado (classe: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip' => 'O objeto não pode ser encontrado. Ele pode ter sido eliminado há algum tempo e o log foi removido desde então.',
 
-	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+	'Core:UniquenessDefaultError' => 'Regra de exclusividade \'%1$s\' com erro',
 
 	'Core:AttributeLinkedSet' => 'Array de objetos',
 	'Core:AttributeLinkedSet+' => 'Qualquer tipo de objetos da mesma classe ou subclasses',
 
-	'Core:AttributeDashboard' => 'Dashboard~~',
-	'Core:AttributeDashboard+' => '~~',
+	'Core:AttributeDashboard' => 'Painel de controle',
+	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Phone number~~',
-	'Core:AttributePhoneNumber+' => '~~',
+	'Core:AttributePhoneNumber' => 'Número de telefone',
+	'Core:AttributePhoneNumber+' => '',
 
-	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate+' => '~~',
+	'Core:AttributeObsolescenceDate' => 'Obsolescência data',
+	'Core:AttributeObsolescenceDate+' => '',
 
-    'Core:AttributeTagSet' => 'List of tags~~',
-    'Core:AttributeTagSet+' => '~~',
-	'Core:AttributeSet:placeholder' => 'click to add~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+	'Core:AttributeTagSet' => 'Lista de etiquetas',
+	'Core:AttributeTagSet+' => '',
+	'Core:AttributeSet:placeholder' => 'clique para adicionar',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s de %3$s)',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s de classes filhas)',
 
-    'Core:AttributeCaseLog' => 'Log~~',
-    'Core:AttributeCaseLog+' => '~~',
+	'Core:AttributeCaseLog' => 'Log',
+	'Core:AttributeCaseLog+' => '',
 
-    'Core:AttributeMetaEnum' => 'Computed enum~~',
-    'Core:AttributeMetaEnum+' => '~~',
+	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum+' => '',
 
-    'Core:AttributeLinkedSetIndirect' => 'Array de objetos (N-N)',
+	'Core:AttributeLinkedSetIndirect' => 'Array de objetos (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Qualquer tipo de objetos [sub-classe] da mesma classe',
 
 	'Core:AttributeInteger' => 'Inteiro',
@@ -71,26 +71,26 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeBoolean' => 'Boolean',
 	'Core:AttributeBoolean+' => 'Boolean',
 	'Core:AttributeBoolean/Value:null' => '',
-	'Core:AttributeBoolean/Value:yes' => 'Yes~~',
-	'Core:AttributeBoolean/Value:no' => 'No~~',
+	'Core:AttributeBoolean/Value:yes' => 'Sim',
+	'Core:AttributeBoolean/Value:no' => 'Não',
 
-	'Core:AttributeArchiveFlag' => 'Archive flag~~',
-	'Core:AttributeArchiveFlag/Value:yes' => 'Yes~~',
-	'Core:AttributeArchiveFlag/Value:yes+' => 'This object is visible only in archive mode~~',
-	'Core:AttributeArchiveFlag/Value:no' => 'No~~',
-	'Core:AttributeArchiveFlag/Label' => 'Archived~~',
+	'Core:AttributeArchiveFlag' => 'Arquivar bandeira',
+	'Core:AttributeArchiveFlag/Value:yes' => 'Sim',
+	'Core:AttributeArchiveFlag/Value:yes+' => 'Este objeto é visível apenas no modo de arquivo',
+	'Core:AttributeArchiveFlag/Value:no' => 'Não',
+	'Core:AttributeArchiveFlag/Label' => 'Arquivado',
 	'Core:AttributeArchiveFlag/Label+' => '',
-	'Core:AttributeArchiveDate/Label' => 'Archive date~~',
+	'Core:AttributeArchiveDate/Label' => 'Data de arquivamento',
 	'Core:AttributeArchiveDate/Label+' => '',
 
 	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
-	'Core:AttributeObsolescenceFlag/Value:yes' => 'Yes~~',
-	'Core:AttributeObsolescenceFlag/Value:yes+' => 'This object is excluded from the impact analysis, and hidden from search results~~',
-	'Core:AttributeObsolescenceFlag/Value:no' => 'No~~',
-	'Core:AttributeObsolescenceFlag/Label' => 'Obsolete~~',
-	'Core:AttributeObsolescenceFlag/Label+' => 'Computed dynamically on other attributes~~',
-	'Core:AttributeObsolescenceDate/Label' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate/Label+' => 'Approximative date at which the object has been considered obsolete~~',
+	'Core:AttributeObsolescenceFlag/Value:yes' => 'Sim',
+	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Este objeto é excluído da análise de impacto e oculto dos resultados de pesquisa',
+	'Core:AttributeObsolescenceFlag/Value:no' => 'Não',
+	'Core:AttributeObsolescenceFlag/Label' => 'Obsoleto',
+	'Core:AttributeObsolescenceFlag/Label+' => 'Computado dinamicamente em outros atributos',
+	'Core:AttributeObsolescenceDate/Label' => 'Obsolescência data',
+	'Core:AttributeObsolescenceDate/Label+' => 'Data aproximada em que o objeto foi considerado obsoleto',
 
 	'Core:AttributeString' => 'String',
 	'Core:AttributeString+' => 'Seqüência alfanumérica',
@@ -107,10 +107,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributePassword' => 'Senha',
 	'Core:AttributePassword+' => 'Senha para o dispositivo externo',
 
- 	'Core:AttributeEncryptedString' => 'String encriptada',
+	'Core:AttributeEncryptedString' => 'String encriptada',
 	'Core:AttributeEncryptedString+' => 'String encriptada com uma chave local',
-	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
-	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+	'Core:AttributeEncryptUnknownLibrary' => 'Biblioteca de criptografia especificada (%1$s) desconhecida',
+	'Core:AttributeEncryptFailedToDecrypt' => '** erro de decriptação **',
 
 	'Core:AttributeText' => 'Texto',
 	'Core:AttributeText+' => 'Cadeia de caracteres Multi-linha',
@@ -205,8 +205,8 @@ Operadores:<br/>
 	'Core:FriendlyName-Label' => 'Nome amigável',
 	'Core:FriendlyName-Description' => 'Nome amigável',
 
-	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => 'Tags~~',
+	'Core:AttributeTag' => 'Etiquetas',
+	'Core:AttributeTag+' => 'Etiquetas',
 ));
 
 
@@ -428,20 +428,20 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 ));
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:EventRestService' => 'REST/JSON call~~',
-	'Class:EventRestService+' => 'Trace of a REST/JSON service call~~',
-	'Class:EventRestService/Attribute:operation' => 'Operation~~',
-	'Class:EventRestService/Attribute:operation+' => 'Argument \'operation\'~~',
-	'Class:EventRestService/Attribute:version' => 'Version~~',
-	'Class:EventRestService/Attribute:version+' => 'Argument \'version\'~~',
-	'Class:EventRestService/Attribute:json_input' => 'Input~~',
-	'Class:EventRestService/Attribute:json_input+' => 'Argument \'json_data\'~~',
-	'Class:EventRestService/Attribute:code' => 'Code~~',
-	'Class:EventRestService/Attribute:code+' => 'Result code~~',
-	'Class:EventRestService/Attribute:json_output' => 'Response~~',
-	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)~~',
-	'Class:EventRestService/Attribute:provider' => 'Provider~~',
-	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation~~',
+	'Class:EventRestService' => 'Chamada REST/JSON',
+	'Class:EventRestService+' => 'Rastreio de uma chamada de serviço REST/JSON',
+	'Class:EventRestService/Attribute:operation' => 'Operation',
+	'Class:EventRestService/Attribute:operation+' => 'Argument \'operation\'',
+	'Class:EventRestService/Attribute:version' => 'Versão',
+	'Class:EventRestService/Attribute:version+' => 'Argument \'version\'',
+	'Class:EventRestService/Attribute:json_input' => 'Input',
+	'Class:EventRestService/Attribute:json_input+' => 'Argumento \'json_data\'',
+	'Class:EventRestService/Attribute:code' => 'Code',
+	'Class:EventRestService/Attribute:code+' => 'Código de resultado',
+	'Class:EventRestService/Attribute:json_output' => 'Response',
+	'Class:EventRestService/Attribute:json_output+' => 'Resposta HTTP (json)',
+	'Class:EventRestService/Attribute:provider' => 'Provedor',
+	'Class:EventRestService/Attribute:provider+' => 'Classe PHP implementando a operação esperada',
 ));
 
 //
@@ -550,10 +550,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TriggerOnObject+' => 'Gatilho em uma determinada classe de objetos',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe alvo',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
-	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
-	'Class:TriggerOnObject/Attribute:filter+' => '~~',
-	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
-	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \\"%1$s\\"~~',
+	'Class:TriggerOnObject/Attribute:filter' => 'Filtro',
+	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'TriggerOnObject:WrongFilterQuery' => 'Consulta de filtro incorreta: %1$s',
+	'TriggerOnObject:WrongFilterClass' => 'A consulta de filtro deve retornar objetos da classe \\"%1$s\\"',
 ));
 
 //
@@ -608,8 +608,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TriggerOnObjectDelete' => 'Trigger (on object deletion)~~',
-	'Class:TriggerOnObjectDelete+' => 'Trigger on object deletion of [a child class of] the given class~~',
+	'Class:TriggerOnObjectDelete' => 'Trigger (na exclusão de objetos)',
+	'Class:TriggerOnObjectDelete+' => 'Trigger na exclusão de objeto de [uma classe filho] da classe dada',
 ));
 
 //
@@ -617,10 +617,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
-	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+	'Class:TriggerOnObjectUpdate' => 'Trigger (na atualização do objeto)',
+	'Class:TriggerOnObjectUpdate+' => 'Trigger na atualização de objeto de [uma classe filho] da classe dada',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Campos de destino',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //
@@ -865,86 +865,86 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:ExecProcess:Code255' => 'PHP erro (parsing, or runtime)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 
 	// Explain working time computing
-	'Core:ExplainWTC:ElapsedTime' => 'Time elapsed (stored as \\"%1$s\\")~~',
-	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Time spent for \\"%1$s\\"~~',
-	'Core:ExplainWTC:StopWatch-Deadline' => 'Deadline for \\"%1$s\\" at %2$d%%~~',
+	'Core:ExplainWTC:ElapsedTime' => 'Tempo decorrido (armazenado como \\"%1$s\\")',
+	'Core:ExplainWTC:StopWatch-TimeSpent' => 'Tempo gasto para \\"%1$s\\"',
+	'Core:ExplainWTC:StopWatch-Deadline' => 'Prazo para \\"%1$s\\" em %2$d%%',
 
 	// Bulk export
-	'Core:BulkExport:MissingParameter_Param' => 'Missing parameter \\"%1$s\\"~~',
-	'Core:BulkExport:InvalidParameter_Query' => 'Invalid value for the parameter \\"query\\". There is no Query Phrasebook corresponding to the id: \\"%1$s\\".~~',
-	'Core:BulkExport:ExportFormatPrompt' => 'Export format:~~',
-	'Core:BulkExportOf_Class' => '%1$s Export~~',
-	'Core:BulkExport:ClickHereToDownload_FileName' => 'Click here to download %1$s~~',
-	'Core:BulkExport:ExportResult' => 'Result of the export:~~',
-	'Core:BulkExport:RetrievingData' => 'Retrieving data...~~',
-	'Core:BulkExport:HTMLFormat' => 'Web Page (*.html)~~',
-	'Core:BulkExport:CSVFormat' => 'Comma Separated Values (*.csv)~~',
-	'Core:BulkExport:XLSXFormat' => 'Excel 2007 or newer (*.xlsx)~~',
-	'Core:BulkExport:PDFFormat' => 'PDF Document (*.pdf)~~',
-	'Core:BulkExport:DragAndDropHelp' => 'Drag and drop the columns\' headers to arrange the columns. Preview of %1$s lines. Total number of lines to export: %2$s.~~',
-	'Core:BulkExport:EmptyPreview' => 'Select the columns to be exported from the list above~~',
-	'Core:BulkExport:ColumnsOrder' => 'Columns order~~',
-	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Available columns from %1$s~~',
-	'Core:BulkExport:NoFieldSelected' => 'Select at least one column to be exported~~',
+	'Core:BulkExport:MissingParameter_Param' => 'Parâmetro ausente \\"%1$s\\"',
+	'Core:BulkExport:InvalidParameter_Query' => 'Valor inválido para o parâmetro \\"query\\". Não há nenhum Phrasebook de consulta correspondente ao id: \\"%1$s\\".',
+	'Core:BulkExport:ExportFormatPrompt' => 'Formato de exportação:',
+	'Core:BulkExportOf_Class' => '%1$s Export',
+	'Core:BulkExport:ClickHereToDownload_FileName' => 'Clique aqui para baixar %1$s',
+	'Core:BulkExport:ExportResult' => 'Resultado da exportação:',
+	'Core:BulkExport:RetrievingData' => 'Recuperando dados ...',
+	'Core:BulkExport:HTMLFormat' => 'Página da Web (*.html)',
+	'Core:BulkExport:CSVFormat' => 'Valores separados por vírgula (*.csv)',
+	'Core:BulkExport:XLSXFormat' => 'Excel 2007 ou mais recente (*.xlsx)',
+	'Core:BulkExport:PDFFormat' => 'Documento PDF (*.pdf)',
+	'Core:BulkExport:DragAndDropHelp' => 'Arrastar e soltar os cabeçalhos das colunas para organizar as colunas. Visualização de %1$s linhas. Número total de linhas para exportar: %2$s.',
+	'Core:BulkExport:EmptyPreview' => 'Selecione as colunas a serem exportadas da lista acima',
+	'Core:BulkExport:ColumnsOrder' => 'Ordem das colunas',
+	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Colunas disponíveis de %1$s',
+	'Core:BulkExport:NoFieldSelected' => 'Selecione pelo menos uma coluna para ser exportada',
 	'Core:BulkExport:CheckAll' => 'Check All~~',
-	'Core:BulkExport:UncheckAll' => 'Uncheck All~~',
-	'Core:BulkExport:ExportCancelledByUser' => 'Export cancelled by the user~~',
-	'Core:BulkExport:CSVOptions' => 'CSV Options~~',
-	'Core:BulkExport:CSVLocalization' => 'Localization~~',
-	'Core:BulkExport:PDFOptions' => 'PDF Options~~',
-	'Core:BulkExport:PDFPageFormat' => 'Page Format~~',
-	'Core:BulkExport:PDFPageSize' => 'Page Size:~~',
-	'Core:BulkExport:PageSize-A4' => 'A4~~',
-	'Core:BulkExport:PageSize-A3' => 'A3~~',
-	'Core:BulkExport:PageSize-Letter' => 'Letter~~',
-	'Core:BulkExport:PDFPageOrientation' => 'Page Orientation:~~',
+	'Core:BulkExport:UncheckAll' => 'Desmarque tudo',
+	'Core:BulkExport:ExportCancelledByUser' => 'Exportação cancelada pelo usuário',
+	'Core:BulkExport:CSVOptions' => 'CSV Options',
+	'Core:BulkExport:CSVLocalization' => 'Localização',
+	'Core:BulkExport:PDFOptions' => 'Opções de PDF',
+	'Core:BulkExport:PDFPageFormat' => 'Formato da página',
+	'Core:BulkExport:PDFPageSize' => 'Tamanho da página:',
+	'Core:BulkExport:PageSize-A4' => 'A4',
+	'Core:BulkExport:PageSize-A3' => 'A3',
+	'Core:BulkExport:PageSize-Letter' => 'Carta',
+	'Core:BulkExport:PDFPageOrientation' => 'Orientação de Página:',
 	'Core:BulkExport:PageOrientation-L' => 'Landscape~~',
 	'Core:BulkExport:PageOrientation-P' => 'Portrait~~',
-	'Core:BulkExport:XMLFormat' => 'XML file (*.xml)~~',
-	'Core:BulkExport:XMLOptions' => 'XML Options~~',
-	'Core:BulkExport:SpreadsheetFormat' => 'Spreadsheet HTML format (*.html)~~',
-	'Core:BulkExport:SpreadsheetOptions' => 'Spreadsheet Options~~',
-	'Core:BulkExport:OptionNoLocalize' => 'Export Code instead of Label~~',
-	'Core:BulkExport:OptionLinkSets' => 'Include linked objects~~',
-	'Core:BulkExport:OptionFormattedText' => 'Preserve text formatting~~',
-	'Core:BulkExport:ScopeDefinition' => 'Definition of the objects to export~~',
+	'Core:BulkExport:XMLFormat' => 'Arquivo XML (*.xml)',
+	'Core:BulkExport:XMLOptions' => 'Opções XML',
+	'Core:BulkExport:SpreadsheetFormat' => 'Formato HTML de planilha (*.html)',
+	'Core:BulkExport:SpreadsheetOptions' => 'Opções de planilha',
+	'Core:BulkExport:OptionNoLocalize' => 'Código de exportação em vez de Label',
+	'Core:BulkExport:OptionLinkSets' => 'Incluir objetos vinculados',
+	'Core:BulkExport:OptionFormattedText' => 'Preservar formatação de texto',
+	'Core:BulkExport:ScopeDefinition' => 'Definição dos objetos a exportar',
 	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',
-	'Core:BulkExportMessageEmptyOQL' => 'Please enter a valid OQL query.~~',
-	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.~~',
-	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...~~',
-	'Core:BulkExportCanRunNonInteractive' => 'Click here to run the export in non-interactive mode.~~',
-	'Core:BulkExportLegacyExport' => 'Click here to access the legacy export.~~',
-	'Core:BulkExport:XLSXOptions' => 'Excel Options~~',
-	'Core:BulkExport:TextFormat' => 'Text fields containing some HTML markup~~',
-	'Core:BulkExport:DateTimeFormat' => 'Date and Time format~~',
-	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Default format (%1$s), e.g. %2$s~~',
-	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Custom format: %1$s~~',
-	'Core:BulkExport:PDF:PageNumber' => 'Page %1$s~~',
-	'Core:DateTime:Placeholder_d' => 'DD~~', // Day of the month: 2 digits (with leading zero)
-	'Core:DateTime:Placeholder_j' => 'D~~', // Day of the month: 1 or 2 digits (without leading zero)
-	'Core:DateTime:Placeholder_m' => 'MM~~', // Month on 2 digits i.e. 01-12
-	'Core:DateTime:Placeholder_n' => 'M~~', // Month on 1 or 2 digits 1-12
-	'Core:DateTime:Placeholder_Y' => 'YYYY~~', // Year on 4 digits
-	'Core:DateTime:Placeholder_y' => 'YY~~', // Year on 2 digits
-	'Core:DateTime:Placeholder_H' => 'hh~~', // Hour 00..23
-	'Core:DateTime:Placeholder_h' => 'h~~', // Hour 01..12
-	'Core:DateTime:Placeholder_G' => 'hh~~', // Hour 0..23
-	'Core:DateTime:Placeholder_g' => 'h~~', // Hour 1..12
-	'Core:DateTime:Placeholder_a' => 'am/pm~~', // am/pm (lowercase)
-	'Core:DateTime:Placeholder_A' => 'AM/PM~~', // AM/PM (uppercase)
-	'Core:DateTime:Placeholder_i' => 'mm~~', // minutes, 2 digits: 00..59
-	'Core:DateTime:Placeholder_s' => 'ss~~', // seconds, 2 digits 00..59
-	'Core:Validator:Default' => 'Wrong format~~',
-	'Core:Validator:Mandatory' => 'Please, fill this field~~',
-	'Core:Validator:MustBeInteger' => 'Must be an integer~~',
-	'Core:Validator:MustSelectOne' => 'Please, select one~~',
+	'Core:BulkExportMessageEmptyOQL' => 'Por favor insira uma consulta OQL válida.',
+	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Por favor, selecione uma entrada de livro de frases válida.',
+	'Core:BulkExportQueryPlaceholder' => 'Digite uma consulta OQL aqui ...',
+	'Core:BulkExportCanRunNonInteractive' => 'Clique aqui para executar a exportação no modo não interativo.',
+	'Core:BulkExportLegacyExport' => 'Clique aqui para acessar a exportação legada.',
+	'Core:BulkExport:XLSXOptions' => 'Opções do Excel',
+	'Core:BulkExport:TextFormat' => 'Campos de texto contendo alguma marcação HTML',
+	'Core:BulkExport:DateTimeFormat' => 'Formato de data e hora',
+	'Core:BulkExport:DateTimeFormatDefault_Example' => 'Formato padrão (%1$s), por ex. %2$s',
+	'Core:BulkExport:DateTimeFormatCustom_Format' => 'Formato personalizado: %1$s',
+	'Core:BulkExport:PDF:PageNumber' => 'Página %1$s',
+	'Core:DateTime:Placeholder_d' => 'DD', // Day of the month: 2 digits (with leading zero)
+	'Core:DateTime:Placeholder_j' => 'D', // Day of the month: 1 or 2 digits (without leading zero)
+	'Core:DateTime:Placeholder_m' => 'MM', // Month on 2 digits i.e. 01-12
+	'Core:DateTime:Placeholder_n' => 'M', // Month on 1 or 2 digits 1-12
+	'Core:DateTime:Placeholder_Y' => 'YYYY', // Year on 4 digits
+	'Core:DateTime:Placeholder_y' => 'YY', // Year on 2 digits
+	'Core:DateTime:Placeholder_H' => 'hh', // Hour 00..23
+	'Core:DateTime:Placeholder_h' => 'h', // Hour 01..12
+	'Core:DateTime:Placeholder_G' => 'hh', // Hour 0..23
+	'Core:DateTime:Placeholder_g' => 'h', // Hour 1..12
+	'Core:DateTime:Placeholder_a' => 'am/pm', // am/pm (lowercase)
+	'Core:DateTime:Placeholder_A' => 'AM/PM', // AM/PM (uppercase)
+	'Core:DateTime:Placeholder_i' => 'mm', // minutes, 2 digits: 00..59
+	'Core:DateTime:Placeholder_s' => 'ss', // seconds, 2 digits 00..59
+	'Core:Validator:Default' => 'Formato errado',
+	'Core:Validator:Mandatory' => 'Por favor, preencha este campo',
+	'Core:Validator:MustBeInteger' => 'Deve ser um inteiro',
+	'Core:Validator:MustSelectOne' => 'Por favor, selecione um',
 ));
 
 //
@@ -952,92 +952,92 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
-	'Class:TagSetFieldData+' => '~~',
+	'Class:TagSetFieldData+' => '',
 
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
-	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
+	'Class:TagSetFieldData/Attribute:code+' => 'Código interno. Deve conter pelo menos 3 caracteres alfanuméricos',
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
-	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
-	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:label+' => 'Rótulo exibido',
+	'Class:TagSetFieldData/Attribute:description' => 'Descrição',
+	'Class:TagSetFieldData/Attribute:description+' => 'Descrição',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
-	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
+	'Class:TagSetFieldData/Attribute:obj_class' => 'Classe de objeto',
+	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Código de campo',
 
-	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Used tags cannot be deleted~~',
-	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags codes or labels must be unique~~',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags code must contain between 3 and %1$d alphanumeric characters~~',
-	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'The chosen tag code is a reserved word~~',
-	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tags label must not contain \'%1$s\' nor be empty~~',
-	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Code cannot be changed when used~~',
-	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" cannot be changed~~',
-	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Attribute Code" cannot be changed~~',
-	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Tag usage (%1$d)~~',
-	'Core:TagSetFieldData:NoEntryFound' => 'No entry found for this tag~~',
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Tags usadas não podem ser deletadas',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tags códigos ou rótulos devem ser únicos',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'O código de tags deve conter entre 3 e %1$d caracteres alfanuméricos',
+	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'O código de tag escolhido é uma palavra reservada',
+	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'O rótulo de etiquetas não deve conter \'%1$s\'nem estar vazio',
+	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tags Código não pode ser alterado quando usado',
+	'Core:TagSetFieldData:ErrorClassUpdateNotAllowed' => 'Tags "Object Class" não pode ser alterado',
+	'Core:TagSetFieldData:ErrorAttCodeUpdateNotAllowed' => 'Tags "Código do atributo" não pode ser alterado',
+	'Core:TagSetFieldData:WhereIsThisTagTab' => 'Uso de tags (%1$d)',
+	'Core:TagSetFieldData:NoEntryFound' => 'Nenhuma entrada encontrada para esta tag',
 ));
 
 //
 // Class: DBProperty
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:DBProperty' => 'DB property~~',
-	'Class:DBProperty+' => '~~',
-	'Class:DBProperty/Attribute:name' => 'Name~~',
-	'Class:DBProperty/Attribute:name+' => '~~',
-	'Class:DBProperty/Attribute:description' => 'Description~~',
-	'Class:DBProperty/Attribute:description+' => '~~',
-	'Class:DBProperty/Attribute:value' => 'Value~~',
-	'Class:DBProperty/Attribute:value+' => '~~',
-	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
-	'Class:DBProperty/Attribute:change_date+' => '~~',
-	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
-	'Class:DBProperty/Attribute:change_comment+' => '~~',
+	'Class:DBProperty' => 'Propriedade do DB',
+	'Class:DBProperty+' => '',
+	'Class:DBProperty/Attribute:name' => 'Nome',
+	'Class:DBProperty/Attribute:name+' => '',
+	'Class:DBProperty/Attribute:description' => 'Descrição',
+	'Class:DBProperty/Attribute:description+' => '',
+	'Class:DBProperty/Attribute:value' => 'Valor',
+	'Class:DBProperty/Attribute:value+' => '',
+	'Class:DBProperty/Attribute:change_date' => 'Data de mudança',
+	'Class:DBProperty/Attribute:change_date+' => '',
+	'Class:DBProperty/Attribute:change_comment' => 'Alterar comentário',
+	'Class:DBProperty/Attribute:change_comment+' => '',
 ));
 
 //
 // Class: BackgroundTask
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:BackgroundTask' => 'Background task~~',
-	'Class:BackgroundTask+' => '~~',
-	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
-	'Class:BackgroundTask/Attribute:class_name+' => '~~',
-	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
-	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
-	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
-	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
-	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
-	'Class:BackgroundTask/Attribute:running' => 'Running~~',
-	'Class:BackgroundTask/Attribute:running+' => '~~',
-	'Class:BackgroundTask/Attribute:status' => 'Status~~',
-	'Class:BackgroundTask/Attribute:status+' => '~~',
+	'Class:BackgroundTask' => 'Tarefa de fundo',
+	'Class:BackgroundTask+' => '',
+	'Class:BackgroundTask/Attribute:class_name' => 'Nome da turma',
+	'Class:BackgroundTask/Attribute:class_name+' => '',
+	'Class:BackgroundTask/Attribute:first_run_date' => 'Primeira data de execução',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_date' => 'Data de execução mais recente',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
+	'Class:BackgroundTask/Attribute:next_run_date' => 'Próxima data de execução',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '',
+	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. conte',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
+	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Duração de execução mais recente',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. duração de execução',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. duração de execução',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:average_run_duration' => 'Duração média de execução',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
+	'Class:BackgroundTask/Attribute:running' => 'Correndo',
+	'Class:BackgroundTask/Attribute:running+' => '',
+	'Class:BackgroundTask/Attribute:status' => 'Status',
+	'Class:BackgroundTask/Attribute:status+' => '',
 ));
 
 //
 // Class: AsyncTask
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:AsyncTask' => 'Async. task~~',
-	'Class:AsyncTask+' => '~~',
-	'Class:AsyncTask/Attribute:created' => 'Created~~',
-	'Class:AsyncTask/Attribute:created+' => '~~',
-	'Class:AsyncTask/Attribute:started' => 'Started~~',
-	'Class:AsyncTask/Attribute:started+' => '~~',
-	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
-	'Class:AsyncTask/Attribute:planned+' => '~~',
-	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
-	'Class:AsyncTask/Attribute:event_id+' => '~~',
-	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
-	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask' => 'Assíncrono. tarefa',
+	'Class:AsyncTask+' => '',
+	'Class:AsyncTask/Attribute:created' => 'Criado',
+	'Class:AsyncTask/Attribute:created+' => '',
+	'Class:AsyncTask/Attribute:started' => 'Iniciado',
+	'Class:AsyncTask/Attribute:started+' => '',
+	'Class:AsyncTask/Attribute:planned' => 'Planejado',
+	'Class:AsyncTask/Attribute:planned+' => '',
+	'Class:AsyncTask/Attribute:event_id' => 'Evento',
+	'Class:AsyncTask/Attribute:event_id+' => '',
+	'Class:AsyncTask/Attribute:finalclass' => 'Aula final',
+	'Class:AsyncTask/Attribute:finalclass+' => '',
 ));

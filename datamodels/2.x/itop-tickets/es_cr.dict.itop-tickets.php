@@ -69,7 +69,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Ticket/Attribute:close_date+' => 'Fecha de Cierre',
 	'Class:Ticket/Attribute:private_log' => 'Bitácora Privada',
 	'Class:Ticket/Attribute:private_log+' => 'Bitácora Privada',
-    'Class:Ticket/Attribute:contacts_list' => 'Contactos',
+	'Class:Ticket/Attribute:contacts_list' => 'Contactos',
 	'Class:Ticket/Attribute:contacts_list+' => 'Contactos',
 	'Class:Ticket/Attribute:functionalcis_list' => 'ECs',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Elementos de Configuración',
@@ -250,13 +250,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'En proceso',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Solucionado',
 	'Brick:Portal:ClosedRequests:Title' => 'Requerimientos Cerrados',
-));
-
-//
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
 ));

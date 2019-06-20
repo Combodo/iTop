@@ -335,6 +335,7 @@ class UILinksWidgetDirect
 
 			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
 			$oFilter->SetInternalParams($aArgs);
+			$aPrefillFormParam['filter'] = $oFilter;
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
@@ -362,13 +363,17 @@ class UILinksWidgetDirect
 
 	/**
 	 * Search for objects to be linked to the current object (i.e "remote" objects)
+	 *
 	 * @param WebPage $oP The page used for the output (usually an AjaxWebPage)
 	 * @param string $sRemoteClass Name of the "remote" class to perform the search on, must be a derived class of $this->sLinkedClass
 	 * @param array $aAlreadyLinked Array of indentifiers of objects which are already linke to the current object (or about to be linked)
 	 * @param DBObject $oCurrentObj The object currently being edited... if known...
-	 * @throws Exception
+	 * @param array $aPrefillFormParam
+	 *
+	 * @throws \CoreException
+	 * @throws \OQLException
 	 */
-	public function SearchObjectsToAdd(WebPage $oP, $sRemoteClass = '', $aAlreadyLinked = array(), $oCurrentObj = null)
+	public function SearchObjectsToAdd(WebPage $oP, $sRemoteClass = '', $aAlreadyLinked = array(), $oCurrentObj = null, $aPrefillFormParam = array())
 	{
 		if ($sRemoteClass == '')
 		{
@@ -398,16 +403,19 @@ class UILinksWidgetDirect
 				$oFilter->AddCondition('id', $oCurrentObj->GetKey(), '!=');
 			}
 		}
-		if (count($aAlreadyLinked) > 0)
-		{
-			$oFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
-		}
 		if ($oCurrentObj != null)
 		{
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 
 			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
 			$oFilter->SetInternalParams($aArgs);
+			
+			$aPrefillFormParam['filter'] = $oFilter;
+			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
+		}
+		if (count($aAlreadyLinked) > 0)
+		{
+			$oFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
 		}
 		$oBlock = new DisplayBlock($oFilter, 'list', false);
 		$oBlock->Display($oP, "ResultsToAdd_{$this->sInputid}", array('menu' => false, 'cssCount'=> '#count_'.$this->sInputid , 'selection_mode' => true, 'table_id' => 'add_'.$this->sInputid)); // Don't display the 'Actions' menu on the results

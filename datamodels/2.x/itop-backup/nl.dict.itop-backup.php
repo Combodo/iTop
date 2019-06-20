@@ -40,7 +40,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'bkp-week-days' => 'Backups gebeuren <b>elke %1$s om %2$s</b>',
 	'bkp-retention' => 'Maximaal <b>%1$d backup-bestanden blijven bewaard</b> in de doelmap.',
 	'bkp-next-to-delete' => 'Zal verwijderd worden bij de volgende backuptaak (volgens de instelling "retention_count")',
-	'bkp-table-file' => 'Bestand', 
+	'bkp-table-file' => 'Bestand',
 	'bkp-table-file+' => 'Enkel .ZIP-bestanden worden beschouwd als backupbestanden.',
 	'bkp-table-size' => 'Grootte',
 	'bkp-table-size+' => '',

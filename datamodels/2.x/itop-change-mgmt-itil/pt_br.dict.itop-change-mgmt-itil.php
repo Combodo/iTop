@@ -43,8 +43,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-ChangeManagementOverview-Last-7-days' => 'Número de mudanças nos últimos 7 dias',
 	'UI-ChangeManagementOverview-ChangeByDomain-last-7-days' => 'Mudanças por domínio nos últimos 7 dias',
 	'UI-ChangeManagementOverview-ChangeByStatus-last-7-days' => 'Mudanças por domínio nos últimos 7 dias',
-	'Tickets:Related:OpenChanges' => 'Open changes~~',
-	'Tickets:Related:RecentChanges' => 'Recent changes (72h)~~',
+	'Tickets:Related:OpenChanges' => 'Abrir alterações',
+	'Tickets:Related:RecentChanges' => 'Mudanças recentes (72h)',
 ));
 
 // Dictionnay conventions

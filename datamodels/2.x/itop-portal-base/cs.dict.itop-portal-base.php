@@ -30,9 +30,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Page:Home' => 'Domů',
 	'Page:GoPortalHome' => 'Domů',
 	'Page:GoPreviousPage' => 'Předchozí stránka',
-    'Page:ReloadPage' => 'Reload page~~',
+	'Page:ReloadPage' => 'Reload page~~',
 	'Portal:Button:Submit' => 'Odeslat',
-    'Portal:Button:Apply' => 'Update~~',
+	'Portal:Button:Apply' => 'Update~~',
 	'Portal:Button:Cancel' => 'Zrušit',
 	'Portal:Button:Close' => 'Zavřít',
 	'Portal:Button:Add' => 'Přidat',
@@ -40,14 +40,14 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Portal:Button:Delete' => 'Smazat',
 	'Portal:EnvironmentBanner:Title' => 'You are currently in <strong>%1$s</strong> mode~~',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Go back to PRODUCTION mode~~',
-    'Error:HTTP:400' => 'Bad request~~',
-    'Error:HTTP:401' => 'Authentication~~',
-    'Error:HTTP:404' => 'Stránka nenalezena',
+	'Error:HTTP:400' => 'Bad request~~',
+	'Error:HTTP:401' => 'Authentication~~',
+	'Error:HTTP:404' => 'Stránka nenalezena',
 	'Error:HTTP:500' => 'Jejda! Nastal problém',
 	'Error:HTTP:GetHelp' => 'Kontaktujte prosím administrátora, pokud problém přetrvá.',
 	'Error:XHR:Fail' => 'Data se nepodařilo načíst, kontaktujte prosím administrátora.',
-    'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.~~',
-    'Portal:Datatables:Language:Processing' => 'Počkejte prosím',
+	'Portal:ErrorUserLoggedOut' => 'You are logged out and need to log in again in order to continue.~~',
+	'Portal:Datatables:Language:Processing' => 'Počkejte prosím',
 	'Portal:Datatables:Language:Search' => 'Filtr :',
 	'Portal:Datatables:Language:LengthMenu' => 'Zobrazit _MENU_ položek na stránku',
 	'Portal:Datatables:Language:ZeroRecords' => 'Žádný výsledek',
@@ -94,7 +94,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Browse:Name' => 'Procházet položky',
 	'Brick:Portal:Browse:Mode:List' => 'Seznam',
 	'Brick:Portal:Browse:Mode:Tree' => 'Strom',
-    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
+	'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaic~~',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Rozpad',
 	'Brick:Portal:Browse:Action:View' => 'Podrobnosti',
 	'Brick:Portal:Browse:Action:Edit' => 'Upravit',
@@ -109,8 +109,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Manage:Name' => 'Spravovat položky',
 	'Brick:Portal:Manage:Table:NoData' => 'Žádná položka',
-    'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
-    'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
+	'Brick:Portal:Manage:Table:ItemActions' => 'Actions~~',
+	'Brick:Portal:Manage:DisplayMode:list' => 'List~~',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Pie Chart~~',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Bar Chart',
 	'Brick:Portal:Manage:Others' => 'Others~~',
@@ -138,12 +138,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 // CreateBrick brick
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Create:Name' => 'Rychlé vytvoření',
-    'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
+	'Brick:Portal:Create:ChooseType' => 'Please, choose a type~~',
 ));
 
 // Filter brick
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-    'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
-    'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
+	'Brick:Portal:Filter:Name' => 'Prefilter a brick~~',
+	'Brick:Portal:Filter:SearchInput:Placeholder' => 'eg. connect wifi~~',
+	'Brick:Portal:Filter:SearchInput:Submit' => 'Search~~',
 ));

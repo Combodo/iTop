@@ -70,7 +70,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Ticket/Attribute:close_date+' => '',
 	'Class:Ticket/Attribute:private_log' => 'Interní záznam',
 	'Class:Ticket/Attribute:private_log+' => '',
-    'Class:Ticket/Attribute:contacts_list' => 'Kontakty',
+	'Class:Ticket/Attribute:contacts_list' => 'Kontakty',
 	'Class:Ticket/Attribute:contacts_list+' => 'Všechny kontakty spojené s tímto tiketem',
 	'Class:Ticket/Attribute:functionalcis_list' => 'Konfigurační položky',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Všechny konfigurační položky ovlivněné tímto tiketem',

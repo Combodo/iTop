@@ -331,7 +331,8 @@ class UserProfileBrickController extends BrickController
 				$aFormData['error'] = $e->GetMessage();
 			}
 
-			$aFormData['picture_url'] = $oImage->GetDownloadURL(get_class($oCurContact), $oCurContact->GetKey(), $sPictureAttCode);
+			// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 2.8
+			$aFormData['picture_url'] = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($oCurContact), 'sObjectId' => $oCurContact->GetKey(), 'sObjectField' => $sPictureAttCode, 'cache' => 86400, 't' => time()));
 			$aFormData['validation'] = array(
 				'valid' => true,
 				'messages' => array()

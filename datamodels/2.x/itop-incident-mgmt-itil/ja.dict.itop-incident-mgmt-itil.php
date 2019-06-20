@@ -44,8 +44,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 ));
 
 
-
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -236,15 +234,4 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
 	'Class:Incident/Method:ResolveChildTickets+' => 'Cascade the resolution to child ticket (ev_autoresolve), and align the following characteristics: service, team, agent, resolution info~~',
 	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
-));
-
-//
-// Class: Incident
-//
-
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:Incident/Attribute:parent_problem_id' => 'Parent problem id~~',
-	'Class:Incident/Attribute:parent_problem_id+' => '~~',
-	'Class:Incident/Attribute:parent_problem_ref' => 'Parent problem ref~~',
-	'Class:Incident/Attribute:parent_problem_ref+' => '~~',
 ));

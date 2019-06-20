@@ -215,7 +215,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Attribute:parent_change_id+' => '',
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref mudança',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
-	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Incidente pai ref',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
 	'Class:UserRequest/Attribute:related_request_list' => 'Sub-Solicitação',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Todas as solicitações vinculadas a essa solicitação principal',
@@ -262,12 +262,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => 'Não é possível atribuir a solicitação principal para a própria solicitação',
 
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a resolução a pedidos filhos (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de resolução',
 ));
 
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+	'Organization:Overview:UserRequests' => 'Solicitações de usuários desta organização',
+	'Organization:Overview:MyUserRequests' => 'Meu usuário solicita para esta organização',
+	'Organization:Overview:Tickets' => 'Ingressos para esta organização',
 ));

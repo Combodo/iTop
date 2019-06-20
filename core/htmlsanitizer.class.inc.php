@@ -249,7 +249,8 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 
 			// Notification placeholders
 			// eg. $this->caller_id$, $this->hyperlink()$, $this->hyperlink(portal)$, $APP_URL$, $MODULES_URL$, ...
-			$sPlaceholderPattern = '\$[\w-]*(->[\w]*(\([\w-]*?\))?)?\$';
+			// Note: Authorize both $xxx$ and %24xxx%24 as the latter one is encoded when used in HTML attributes (eg. a[href])
+			$sPlaceholderPattern = '(\$|%24)[\w-]*(->[\w]*(\([\w-]*?\))?)?(\$|%24)';
 
 			$sPattern = $sUrlPattern . '|' . $sMailtoPattern . '|' . $sPlaceholderPattern;
 			$sPattern = '/'.str_replace('/', '\/', $sPattern).'/i';
@@ -266,7 +267,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		// We have to transform that into <p><br></p> (which is how Thunderbird implements empty lines)
 		// Unfortunately, DOMDocument::loadHTML does not take the tag namespaces into account (once loaded there is no way to know if the tag did have a namespace)
 		// therefore we have to do the transformation upfront
-		$sHTML = preg_replace('@<o:p>\s*</o:p>@', '<br>', $sHTML);
+		$sHTML = preg_replace('@<o:p>(\s|&nbsp;)*</o:p>@', '<br>', $sHTML);
 
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
 		

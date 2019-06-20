@@ -42,20 +42,20 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate+' => '~~',
 
-    'Core:AttributeTagSet' => 'List of tags~~',
-    'Core:AttributeTagSet+' => '~~',
+	'Core:AttributeTagSet' => 'List of tags~~',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
-    'Core:AttributeCaseLog' => 'Log~~',
-    'Core:AttributeCaseLog+' => '~~',
+	'Core:AttributeCaseLog' => 'Log~~',
+	'Core:AttributeCaseLog+' => '~~',
 
-    'Core:AttributeMetaEnum' => 'Computed enum~~',
-    'Core:AttributeMetaEnum+' => '~~',
+	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum+' => '~~',
 
-    'Core:AttributeLinkedSetIndirect' => 'Arreglo de objetos (N-N)',
+	'Core:AttributeLinkedSetIndirect' => 'Arreglo de objetos (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Cualquier tipo de objetos [subclass] de la misma clase',
 
 	'Core:AttributeInteger' => 'Entero',
@@ -103,7 +103,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:AttributePassword' => 'Contraseña',
 	'Core:AttributePassword+' => 'Contraseña para dispositivo externo',
 
- 	'Core:AttributeEncryptedString' => 'Cadena encriptada',
+	'Core:AttributeEncryptedString' => 'Cadena encriptada',
 	'Core:AttributeEncryptedString+' => 'Cadena encriptada con llave local',
 	'Core:AttributeEncryptUnknownLibrary' => 'Librería de Encriptación especificada (%1$s) es desconocida',
 	'Core:AttributeEncryptFailedToDecrypt' => '** Error de Desencripción **',
@@ -549,7 +549,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtro',
 	'Class:TriggerOnObject/Attribute:filter+' => '',
 	'TriggerOnObject:WrongFilterQuery' => 'Filtro de consulta incorrecto: %1$s',
-	'TriggerOnObject:WrongFilterClass' => 'El filtro de consulta debe regresar un objeto de la clase "%1$s"',
+	'TriggerOnObject:WrongFilterClass' => 'El filtro de consulta debe regresar un objeto de la clase \\"%1$s\\"',
 ));
 
 //
@@ -861,8 +861,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 

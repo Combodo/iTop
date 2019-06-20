@@ -67,7 +67,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Ticket/Attribute:close_date+' => '',
 	'Class:Ticket/Attribute:private_log' => 'Skrytý záznam',
 	'Class:Ticket/Attribute:private_log+' => '',
-    'Class:Ticket/Attribute:contacts_list' => 'Kontakty',
+	'Class:Ticket/Attribute:contacts_list' => 'Kontakty',
 	'Class:Ticket/Attribute:contacts_list+' => '',
 	'Class:Ticket/Attribute:functionalcis_list' => 'Komponenty',
 	'Class:Ticket/Attribute:functionalcis_list+' => '',
@@ -248,13 +248,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Brick:Portal:OngoingRequests:Tab:OnGoing' => 'Open~~',
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Resolved~~',
 	'Brick:Portal:ClosedRequests:Title' => 'Closed requests~~',
-));
-
-//
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
 ));

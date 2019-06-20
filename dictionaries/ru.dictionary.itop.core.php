@@ -848,8 +848,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:ExecProcess:Code255' => 'Ошибка PHP (parsing, or runtime)~~',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$d с',
-	'Core:Duration_Minutes_Seconds'	=>'%1$d мин %2$d с',
+	'Core:Duration_Seconds' => '%1$d с',
+	'Core:Duration_Minutes_Seconds' => '%1$d мин %2$d с',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$d ч %2$d мин %3$d с',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$s д %2$d ч %3$d мин %4$d с',
 

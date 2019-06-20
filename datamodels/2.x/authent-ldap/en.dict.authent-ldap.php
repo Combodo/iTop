@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -38,4 +38,6 @@
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserLDAP' => 'LDAP user',
 	'Class:UserLDAP+' => 'User authentified by LDAP',
+	'Class:UserLDAP/Attribute:password' => 'Password',
+	'Class:UserLDAP/Attribute:password+' => 'user authentication string',
 ));

@@ -55,7 +55,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:UserRequest:MyWorkOrders' => 'Ordens de serviço atribuídas a mim',
 	'Menu:UserRequest:MyWorkOrders+' => 'Todas as Ordens de serviço atribuídos a min',
 	'Class:Problem:KnownProblemList' => 'Problemas conhecidos',
-	'Tickets:Related:OpenIncidents' => 'Open incidents~~',
+	'Tickets:Related:OpenIncidents' => 'Incidentes abertos',
 ));
 
 // Dictionnay conventions
@@ -290,12 +290,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:ChooseYourFavoriteLanguage' => 'Escolha sua linguagem favorita',
 
 	'Class:UserRequest/Method:ResolveChildTickets' => 'ResolveChildTickets~~',
-	'Class:UserRequest/Method:ResolveChildTickets+' => 'Cascade the resolution to child requests (ev_autoresolve), and align the following characteristics of the request: service, team, agent, resolution info~~',
+	'Class:UserRequest/Method:ResolveChildTickets+' => 'Conecte a resolução a pedidos filhos (ev_autoresolve) e alinhe as seguintes características da requisição: serviço, equipe, agente, info de resolução',
 ));
 
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+	'Organization:Overview:UserRequests' => 'Solicitações de usuários desta organização',
+	'Organization:Overview:MyUserRequests' => 'Meu usuário solicita para esta organização',
+	'Organization:Overview:Tickets' => 'Ingressos para esta organização',
 ));

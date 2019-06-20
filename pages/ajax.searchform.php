@@ -35,6 +35,10 @@ require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 try
 {
+	$oKPI = new ExecutionKPI();
+	$oKPI->ComputeAndReport('Data model loaded');
+	$oKPI = new ExecutionKPI();
+
 	if (LoginWebPage::EXIT_CODE_OK != LoginWebPage::DoLoginEx(null /* any portal */, false, LoginWebPage::EXIT_RETURN))
 	{
 		throw new SecurityException('You must be logged in');
@@ -153,3 +157,5 @@ try
 	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
+
+ExecutionKPI::ReportStats();

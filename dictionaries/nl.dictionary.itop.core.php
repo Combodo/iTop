@@ -48,20 +48,20 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributeObsolescenceDate' => 'Buiten gebruik sinds',
 	'Core:AttributeObsolescenceDate+' => 'Tijdstip sinds wanneer dit object buiten gebruik is',
 
-    'Core:AttributeTagSet' => 'Lijst van tags',
-    'Core:AttributeTagSet+' => '',
+	'Core:AttributeTagSet' => 'Lijst van tags',
+	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'klik om toe te voegen',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s van %3$s)',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s van subklasses)',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s van %3$s)',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s van subklasses)',
 
-    'Core:AttributeCaseLog' => 'Log',
-    'Core:AttributeCaseLog+' => '',
+	'Core:AttributeCaseLog' => 'Log',
+	'Core:AttributeCaseLog+' => '',
 
-    'Core:AttributeMetaEnum' => 'Afgeleide oplijsting',
-    'Core:AttributeMetaEnum+' => '',
+	'Core:AttributeMetaEnum' => 'Afgeleide oplijsting',
+	'Core:AttributeMetaEnum+' => '',
 
-    'Core:AttributeLinkedSetIndirect' => 'Reeks van objecten (N-N)',
+	'Core:AttributeLinkedSetIndirect' => 'Reeks van objecten (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => 'Elke soort objecten [subklasse] van dezelfde klasse',
 
 	'Core:AttributeInteger' => 'Integer',
@@ -109,7 +109,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:AttributePassword' => 'Wachtwoord',
 	'Core:AttributePassword+' => 'Wachtwoord van een extern apparaat',
 
- 	'Core:AttributeEncryptedString' => 'Gecodeerde string',
+	'Core:AttributeEncryptedString' => 'Gecodeerde string',
 	'Core:AttributeEncryptedString+' => 'String gecodeerd met een lokale sleutel (key)',
 	'Core:AttributeEncryptUnknownLibrary' => 'De encryptie-bibliotheek (%1$s) is onbekend',
 	'Core:AttributeEncryptFailedToDecrypt' => '** fout bij decryptie **',
@@ -867,8 +867,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, of runtime)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 

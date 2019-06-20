@@ -11,15 +11,15 @@
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
-    'Menu:iTopHub:Register' => 'Подключение к iTop Hub',
-    'Menu:iTopHub:Register+' => 'Перейдите в iTop Hub, чтобы обновить ваш экземпляр iTop',
-    'Menu:iTopHub:Register:Description' => '<p>Get access to your community platform iTop Hub!</br>Find all the content and information you need, manage your instances through personalized tools & install more extensions.</br><br/>By connecting to the Hub from this page, you will push information about this iTop instance into the Hub.</p>~~',
-    'Menu:iTopHub:MyExtensions' => 'Установленные расширения',
-    'Menu:iTopHub:MyExtensions+' => 'Расширения, развернутые на данном экземпляре iTop',
-    'Menu:iTopHub:BrowseExtensions' => 'Получить расширения из iTop Hub',
-    'Menu:iTopHub:BrowseExtensions+' => 'Найдите дополнительные расширения на iTop Hub',
-    'Menu:iTopHub:BrowseExtensions:Description' => '<p>Look into iTop Hub’s store, your one stop place to find wonderful iTop extensions !</br>Find the ones that will help you customize and adapt iTop to your processes.</br><br/>By connecting to the Hub from this page, you will push information about this iTop instance into the Hub.</p>~~',
-    'iTopHub:GoBtn' => 'Go To iTop Hub~~',
+	'Menu:iTopHub:Register' => 'Подключение к iTop Hub',
+	'Menu:iTopHub:Register+' => 'Перейдите в iTop Hub, чтобы обновить ваш экземпляр iTop',
+	'Menu:iTopHub:Register:Description' => '<p>Get access to your community platform iTop Hub!</br>Find all the content and information you need, manage your instances through personalized tools & install more extensions.</br><br/>By connecting to the Hub from this page, you will push information about this iTop instance into the Hub.</p>~~',
+	'Menu:iTopHub:MyExtensions' => 'Установленные расширения',
+	'Menu:iTopHub:MyExtensions+' => 'Расширения, развернутые на данном экземпляре iTop',
+	'Menu:iTopHub:BrowseExtensions' => 'Получить расширения из iTop Hub',
+	'Menu:iTopHub:BrowseExtensions+' => 'Найдите дополнительные расширения на iTop Hub',
+	'Menu:iTopHub:BrowseExtensions:Description' => '<p>Look into iTop Hub’s store, your one stop place to find wonderful iTop extensions !</br>Find the ones that will help you customize and adapt iTop to your processes.</br><br/>By connecting to the Hub from this page, you will push information about this iTop instance into the Hub.</p>~~',
+	'iTopHub:GoBtn' => 'Go To iTop Hub~~',
 	'iTopHub:CloseBtn' => 'Close~~',
 	'iTopHub:GoBtn:Tooltip' => 'Jump to www.itophub.io~~',
 	'iTopHub:OpenInNewWindow' => 'Open iTop Hub in a new window~~',
@@ -27,11 +27,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:About:RemoteExtensionSource' => 'iTop Hub~~',
 	'iTopHub:Explanation' => 'By clicking this button you will be redirected to iTop Hub.~~',
 
-    'iTopHub:BackupFreeDiskSpaceIn' => '%1$s free disk space in %2$s.~~',
-    'iTopHub:FailedToCheckFreeDiskSpace' => 'Failed to check free disk space.~~',
-    'iTopHub:BackupOk' => 'Backup Ok.~~',
-    'iTopHub:BackupFailed' => 'Backup failed!~~',
-    'iTopHub:Landing:Status' => 'Deployment status~~',
+	'iTopHub:BackupFreeDiskSpaceIn' => '%1$s free disk space in %2$s.~~',
+	'iTopHub:FailedToCheckFreeDiskSpace' => 'Failed to check free disk space.~~',
+	'iTopHub:BackupOk' => 'Backup Ok.~~',
+	'iTopHub:BackupFailed' => 'Backup failed!~~',
+	'iTopHub:Landing:Status' => 'Deployment status~~',
 	'iTopHub:Landing:Install' => 'Deploying extensions...~~',
 	'iTopHub:CompiledOK' => 'Compilation successful.~~',
 	'iTopHub:ConfigurationSafelyReverted' => 'Error detected during deployment!<br/>iTop configuration has NOT been modified.~~',
@@ -45,7 +45,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'iTopHub:NoExtensionInThisCategory' => 'There is no extension in this category.<br/><br/>Browse iTop Hub to find the extensions that will help you customize and adapt iTop to your processes.~~',
 	'iTopHub:ExtensionNotInstalled' => 'Not installed~~',
 	'iTopHub:GetMoreExtensions' => 'Get extensions from iTop Hub...~~',
-	
+
 	'iTopHub:LandingWelcome' => 'Congratulations! The following extensions were downloaded from iTop Hub and deployed into your iTop.~~',
 	'iTopHub:GoBackToITopBtn' => 'Go Back to iTop~~',
 	'iTopHub:Uncompressing' => 'Uncompressing extensions...~~',
@@ -54,7 +54,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'iTopHub:DBBackupSentence' => 'Do a backup of the database and iTop configuration before updating~~',
 	'iTopHub:DeployBtn' => 'Deploy !~~',
 	'iTopHub:DatabaseBackupProgress' => 'Instance backup...~~',
-	
+
 	'iTopHub:InstallationEffect:Install' => 'Version: %1$s will be installed.~~',
 	'iTopHub:InstallationEffect:NoChange' => 'Version: %1$s already installed. Nothing will change.~~',
 	'iTopHub:InstallationEffect:Upgrade' => 'Will be <b>upgraded</b> from version %1$s to version %2$s.~~',
@@ -64,7 +64,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'iTopHub:InstallationEffect:MissingDependencies' => 'This extension cannot be installed because of unmet dependencies.~~',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => 'The extension requires the module(s): %1$s~~',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => 'Installation successful!~~',
-	
+
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.~~',
 	'iTopHub:InstallationStatus:Installed' => 'Installed~~',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>NOT</b> installed.~~',

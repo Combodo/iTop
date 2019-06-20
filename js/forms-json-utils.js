@@ -190,6 +190,7 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 	{
 		// Visual feedback - none when it's Ok
 		$('#v_'+sFieldId).html(''); //<img src="../images/validation_ok.png" />');
+		$('#'+sFieldId+'[data-validate*="dependencies"]').trigger('change.dependencies').removeAttr('data-validate');
 	}
 	else
 	{
@@ -200,11 +201,16 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 			// Let's remember the first input with an error, so that we can put back the focus on it later
 			oFormErrors['input_'+sFormId] = sFieldId;
 		}
-		// Visual feedback
-		$('#v_'+sFieldId).html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
-		//Avoid replacing exisiting tooltip for periodically checked element (like CKeditor fields) 
+
+		if ($('#v_'+sFieldId+' img').length == 0)
+		{
+			$('#v_'+sFieldId).html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
+		}
+		//Avoid replacing exisiting tooltip for periodically checked element (like CKeditor fields)
 		if($('#v_'+sFieldId).tooltip( "instance" ) === undefined)
 		{
+			// Visual feedback
+
 			$('#v_'+sFieldId).tooltip({
 				items: 'span',
 				tooltipClass: 'form_field_error',
@@ -343,8 +349,13 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 
 	ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
 
-	// We need to check periodically as CKEditor doesn't trigger our events. More details in UIHTMLEditorWidget::Display() @ line 92
-	setTimeout(function(){ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);}, 500);
+	if ($('#'+sFieldId).data('timeout_validate') == undefined) {
+		// We need to check periodically as CKEditor doesn't trigger our events. More details in UIHTMLEditorWidget::Display() @ line 92
+		var iTimeoutValidate = setInterval(function () {
+			ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);
+		}, 500);
+		$('#'+sFieldId).data('timeout_validate', iTimeoutValidate);
+	}
 }
 
 /*

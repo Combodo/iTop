@@ -1667,7 +1667,7 @@ class DBObjectSearch extends DBSearch
 		// Query caching
 		//
 		$sOqlAPCCacheId = null;
-		if (self::$m_bQueryCacheEnabled)
+		if (self::$m_bQueryCacheEnabled && $bCanCache)
 		{
 			// Warning: using directly the query string as the key to the hash array can FAIL if the string
 			// is long and the differences are only near the end... so it's safer (but not bullet proof?)

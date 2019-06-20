@@ -42,20 +42,20 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
 	'Core:AttributeObsolescenceDate+' => '~~',
 
-    'Core:AttributeTagSet' => 'List of tags~~',
-    'Core:AttributeTagSet+' => '~~',
+	'Core:AttributeTagSet' => 'List of tags~~',
+	'Core:AttributeTagSet+' => '~~',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
-    'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
+	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
-    'Core:AttributeCaseLog' => 'Log~~',
-    'Core:AttributeCaseLog+' => '~~',
+	'Core:AttributeCaseLog' => 'Log~~',
+	'Core:AttributeCaseLog+' => '~~',
 
-    'Core:AttributeMetaEnum' => 'Computed enum~~',
-    'Core:AttributeMetaEnum+' => '~~',
+	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum+' => '~~',
 
-    'Core:AttributeLinkedSetIndirect' => 'Array af objekter (N-N)',
+	'Core:AttributeLinkedSetIndirect' => 'Array af objekter (N-N)',
 	'Core:AttributeLinkedSetIndirect+' => '',
 
 	'Core:AttributeInteger' => 'Integer',
@@ -103,7 +103,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:AttributePassword' => 'Password',
 	'Core:AttributePassword+' => '',
 
- 	'Core:AttributeEncryptedString' => 'Krypteret streng',
+	'Core:AttributeEncryptedString' => 'Krypteret streng',
 	'Core:AttributeEncryptedString+' => '',
 	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
 	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
@@ -861,8 +861,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)',
 
 	// Attribute Duration
-	'Core:Duration_Seconds'	=> '%1$ds',
-	'Core:Duration_Minutes_Seconds'	=>'%1$dmin %2$ds',
+	'Core:Duration_Seconds' => '%1$ds',
+	'Core:Duration_Minutes_Seconds' => '%1$dmin %2$ds',
 	'Core:Duration_Hours_Minutes_Seconds' => '%1$dh %2$dmin %3$ds',
 	'Core:Duration_Days_Hours_Minutes_Seconds' => '%1$sd %2$dh %3$dmin %4$ds',
 

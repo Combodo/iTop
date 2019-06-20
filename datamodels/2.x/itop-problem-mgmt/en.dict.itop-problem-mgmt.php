@@ -3,7 +3,7 @@
  * Localized data
  *
  * @copyright Copyright (C) 2010-2018 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -47,22 +47,20 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 
 
-
-
 Dict::Add('EN US', 'English', 'English', array(
-        'Menu:ProblemManagement' => 'Problem Management',
-        'Menu:ProblemManagement+' => 'Problem Management',
-    	'Menu:Problem:Overview' => 'Overview',
-    	'Menu:Problem:Overview+' => 'Overview',
-    	'Menu:NewProblem' => 'New problem',
-    	'Menu:NewProblem+' => 'New problem',
-    	'Menu:SearchProblems' => 'Search for problems',
-    	'Menu:SearchProblems+' => 'Search for problems',
-    	'Menu:Problem:Shortcuts' => 'Shortcuts',
-        'Menu:Problem:MyProblems' => 'My problems',
-        'Menu:Problem:MyProblems+' => 'My problems',
-        'Menu:Problem:OpenProblems' => 'All open problems',
-        'Menu:Problem:OpenProblems+' => 'All open problems',
+	'Menu:ProblemManagement' => 'Problem Management',
+	'Menu:ProblemManagement+' => 'Problem Management',
+	'Menu:Problem:Overview' => 'Overview',
+	'Menu:Problem:Overview+' => 'Overview',
+	'Menu:NewProblem' => 'New problem',
+	'Menu:NewProblem+' => 'New problem',
+	'Menu:SearchProblems' => 'Search for problems',
+	'Menu:SearchProblems+' => 'Search for problems',
+	'Menu:Problem:Shortcuts' => 'Shortcuts',
+	'Menu:Problem:MyProblems' => 'My problems',
+	'Menu:Problem:MyProblems+' => 'My problems',
+	'Menu:Problem:OpenProblems' => 'All open problems',
+	'Menu:Problem:OpenProblems+' => 'All open problems',
 	'UI-ProblemManagementOverview-ProblemByService' => 'Problems by service',
 	'UI-ProblemManagementOverview-ProblemByService+' => 'Problems by service',
 	'UI-ProblemManagementOverview-ProblemByPriority' => 'Problems by priority',

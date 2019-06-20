@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-problem-mgmt/2.6.1',
+	'itop-problem-mgmt/'.ITOP_VERSION,
 	array(
 		// Identification
 		//

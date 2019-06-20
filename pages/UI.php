@@ -125,10 +125,12 @@ function ReloadAndDisplay($oPage, $oObj, $sMessageId = '', $sMessage = '', $sSev
 
 /**
  * Displays the details of an object
- * @param $oP WebPage Page for the output
- * @param $sClass string The name of the class of the object
- * @param $oObj DBObject The object to display
- * @param $id mixed Identifier of the object (name or ID)
+ *
+ * @param WebPage $oP Page for the output
+ * @param string $sClass The name of the class of the object
+ * @param \cmdbAbstractObject $oObj The object to display
+ * @param mixed $id Identifier of the object (name or ID)
+ *
  * @throws \CoreException
  * @throws \DictExceptionMissingString
  * @throws \SecurityException

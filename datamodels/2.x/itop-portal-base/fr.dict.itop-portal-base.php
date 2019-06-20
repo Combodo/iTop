@@ -26,9 +26,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Page:Home' => 'Accueil',
 	'Page:GoPortalHome' => 'Revenir à l\'accueil',
 	'Page:GoPreviousPage' => 'Page précédente',
-    'Page:ReloadPage' => 'Recharger la page',
+	'Page:ReloadPage' => 'Recharger la page',
 	'Portal:Button:Submit' => 'Valider',
-    'Portal:Button:Apply' => 'Mettre à jour',
+	'Portal:Button:Apply' => 'Mettre à jour',
 	'Portal:Button:Cancel' => 'Annuler',
 	'Portal:Button:Close' => 'Fermer',
 	'Portal:Button:Add' => 'Ajouter',
@@ -36,14 +36,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Portal:Button:Delete' => 'Supprimer',
 	'Portal:EnvironmentBanner:Title' => 'Vous êtes dans le mode <strong>%1$s</strong>',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Retourner au mode PRODUCTION',
-    'Error:HTTP:400' => 'Requête incorrecte',
-    'Error:HTTP:401' => 'Authentification',
-    'Error:HTTP:404' => 'Page non trouvée',
+	'Error:HTTP:400' => 'Requête incorrecte',
+	'Error:HTTP:401' => 'Authentification',
+	'Error:HTTP:404' => 'Page non trouvée',
 	'Error:HTTP:500' => 'Oups ! Une erreur est survenue.',
 	'Error:HTTP:GetHelp' => 'Si le problème persiste, veuillez contacter votre administrateur %1$s.',
 	'Error:XHR:Fail' => 'Impossible de charger les données, veuillez contacter votre administrateur %1$s si le problème persiste.',
-    'Portal:ErrorUserLoggedOut' => 'Vous êtes déconnecté et devez vous reconnecter pour continuer.',
-    'Portal:Datatables:Language:Processing' => 'Veuillez patienter...',
+	'Portal:ErrorUserLoggedOut' => 'Vous êtes déconnecté et devez vous reconnecter pour continuer.',
+	'Portal:Datatables:Language:Processing' => 'Veuillez patienter...',
 	'Portal:Datatables:Language:Search' => 'Filtrer :',
 	'Portal:Datatables:Language:LengthMenu' => 'Afficher _MENU_ éléments par page',
 	'Portal:Datatables:Language:ZeroRecords' => 'Aucun résultat',
@@ -90,7 +90,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:Browse:Name' => 'Navigation dans les éléments',
 	'Brick:Portal:Browse:Mode:List' => 'Liste',
 	'Brick:Portal:Browse:Mode:Tree' => 'Hiérarchie',
-    'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaïque',
+	'Brick:Portal:Browse:Mode:Mosaic' => 'Mosaïque',
 	'Brick:Portal:Browse:Action:Drilldown' => 'Parcourir',
 	'Brick:Portal:Browse:Action:View' => 'Détails',
 	'Brick:Portal:Browse:Action:Edit' => 'Modifier',
@@ -105,8 +105,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:Manage:Name' => 'Gestion d\'éléments',
 	'Brick:Portal:Manage:Table:NoData' => 'Aucun élément',
-    'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
-    'Brick:Portal:Manage:DisplayMode:list' => 'Liste',
+	'Brick:Portal:Manage:Table:ItemActions' => 'Actions',
+	'Brick:Portal:Manage:DisplayMode:list' => 'Liste',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Secteur',
 	'Brick:Portal:Manage:DisplayMode:bar-chart' => 'Histogramme',
 	'Brick:Portal:Manage:Others' => 'Autres',
@@ -134,12 +134,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // CreateBrick brick
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Brick:Portal:Create:Name' => 'Création rapide',
-    'Brick:Portal:Create:ChooseType' => 'Veuillez choisir le type',
+	'Brick:Portal:Create:ChooseType' => 'Veuillez choisir le type',
 ));
 
 // Filter brick
 Dict::Add('FR FR', 'French', 'Français', array(
-    'Brick:Portal:Filter:Name' => 'Préfiltre une brique',
-    'Brick:Portal:Filter:SearchInput:Placeholder' => 'ex : connecter wifi',
-    'Brick:Portal:Filter:SearchInput:Submit' => 'Rechercher',
+	'Brick:Portal:Filter:Name' => 'Préfiltre une brique',
+	'Brick:Portal:Filter:SearchInput:Placeholder' => 'ex : connecter wifi',
+	'Brick:Portal:Filter:SearchInput:Submit' => 'Rechercher',
 ));
