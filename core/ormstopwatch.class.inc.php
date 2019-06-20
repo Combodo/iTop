@@ -198,6 +198,11 @@ class ormStopWatch
 		return $sCode;
 	}
 
+	/**
+	 * @param \AttributeStopWatch $oAttDef
+	 * @param \DBObject $oHostObject
+	 * @return string
+	 */
 	public function GetAsHTML($oAttDef, $oHostObject = null)
 	{
 		$aProperties = array();
@@ -219,14 +224,21 @@ class ormStopWatch
 		{
 			$aProperties['Elapsed'] = 'running <img src="../images/indicator.gif">';
 		}
+		
+		$oDateTimeFormat = AttributeDateTime::GetFormat();
+		$sHtml5Time = '<time datetime="%s">%s</time>';
 
-		$aProperties['Started'] = $oAttDef->SecondsToDate($this->iStarted);
-		$aProperties['LastStart'] = $oAttDef->SecondsToDate($this->iLastStart);
-		$aProperties['Stopped'] = $oAttDef->SecondsToDate($this->iStopped);
+		$sStarted = $oAttDef->SecondsToDate($this->iStarted);
+		$aProperties['Started'] = is_null($sStarted)?'':sprintf($sHtml5Time, $sStarted, str::pure2html($oDateTimeFormat->Format($sStarted)));
+		$sLastStart = $oAttDef->SecondsToDate($this->iLastStart);
+		$aProperties['LastStart'] = is_null($sLastStart)?'':sprintf($sHtml5Time, $sLastStart, str::pure2html($oDateTimeFormat->Format($sLastStart)));
+		$sStopped = $oAttDef->SecondsToDate($this->iStopped);
+		$aProperties['Stopped'] = is_null($sStopped)?'':sprintf($sHtml5Time, $sStopped, str::pure2html($oDateTimeFormat->Format($sStopped)));
 
 		foreach ($this->aThresholds as $iPercent => $aThresholdData)
 		{
-			$sThresholdDesc = $oAttDef->SecondsToDate($aThresholdData['deadline']);
+			$sThresholdDeadline = $oAttDef->SecondsToDate($aThresholdData['deadline']);
+			$sThresholdDesc = sprintf($sHtml5Time, $sThresholdDeadline, str::pure2html($oDateTimeFormat->Format($sThresholdDeadline)));
 			if ($aThresholdData['triggered'])
 			{
 				$sThresholdDesc .= " <b>TRIGGERED</b>";

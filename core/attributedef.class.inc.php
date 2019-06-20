@@ -7968,7 +7968,7 @@ class AttributeStopWatch extends AttributeDefinition
 		switch ($sItemCode)
 		{
 			case 'timespent':
-				$sHtml = Str::pure2html(AttributeDuration::FormatDuration($value));
+				$sHtml = sprintf('<time datetime="PT%dS">%s</time>', $value, Str::pure2html(AttributeDuration::FormatDuration($value)));
 				break;
 			case 'started':
 			case 'laststart':
@@ -7979,10 +7979,9 @@ class AttributeStopWatch extends AttributeDefinition
 				}
 				else
 				{
-					$oDateTime = new DateTime();
-					$oDateTime->setTimestamp($value);
+					$sDate = static::SecondsToDate($value);
 					$oDateTimeFormat = AttributeDateTime::GetFormat();
-					$sHtml = Str::pure2html($oDateTimeFormat->Format($oDateTime));
+					$sHtml = sprintf('<time datetime="%s">%s</time>', $sDate, Str::pure2html($oDateTimeFormat->Format($sDate)));
 				}
 				break;
 
@@ -7999,8 +7998,8 @@ class AttributeStopWatch extends AttributeDefinition
 							case 'deadline':
 								if ($value)
 								{
-									$sDate = date(AttributeDateTime::GetInternalFormat(), $value);
-									$sHtml = Str::pure2html(AttributeDeadline::FormatDeadline($sDate));
+									$sDate = static::SecondsToDate($value);
+									$sHtml = sprintf('<time datetime="%s">%s</time>', $sDate, Str::pure2html(AttributeDeadline::FormatDeadline($sDate)));
 								}
 								else
 								{
@@ -8012,7 +8011,7 @@ class AttributeStopWatch extends AttributeDefinition
 								$sHtml = $this->GetBooleanLabel($value);
 								break;
 							case 'overrun':
-								$sHtml = Str::pure2html(AttributeDuration::FormatDuration($value));
+								$sHtml = sprintf('<time datetime="PT%dS">%s</time>', $value, Str::pure2html(AttributeDuration::FormatDuration($value)));
 								break;
 						}
 					}
