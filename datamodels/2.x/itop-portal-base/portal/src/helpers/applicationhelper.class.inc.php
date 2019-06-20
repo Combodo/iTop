@@ -632,7 +632,10 @@ class ApplicationHelper
 				$oImage = $oContact->Get('picture');
 				if (is_object($oImage) && !$oImage->IsEmpty())
 				{
-					$sContactPhotoUrl = $oImage->GetDownloadURL(get_class($oContact), $oContact->GetKey(), 'picture');
+					// Note: At this stage of runtime, the UrlGenerator context is not properly initialized (lacks the baseurl among other things).
+					// The Context is set later by the RouterListener during an event, so we manually put the base url with utils::GetAbsoluteUrlExecPage()
+					// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 2.8
+					$sContactPhotoUrl = utils::GetAbsoluteUrlExecPage().$oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($oContact), 'sObjectId' => $oContact->GetKey(), 'sObjectField' => 'picture', 'cache' => 86400));
 				}
 				else
 				{
