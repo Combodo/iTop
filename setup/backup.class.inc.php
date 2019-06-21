@@ -656,7 +656,7 @@ EOF;
 			$sMysqlSSLModeVersion = '5.7.0'; //Mysql 5.7.0 and upper deprecated --ssl and uses --ssl-mode instead
 			if ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL && version_compare($sDBVersion, $sMysqlSSLModeVersion, '>='))
 			{
-				$sTlsOptions .= ' --ssl-mode';
+				$sTlsOptions .= ' --ssl-mode=VERIFY_CA';
 			}
 			else
 			{
