@@ -88,7 +88,8 @@ class SimpleCrypt
 			    }
 			    break;
 		    case 'OpenSSL':
-			    if(!function_exists('openssl_decrypt')){
+		    case 'OpenSSLMcryptCompatibility':
+		    if(!function_exists('openssl_decrypt')){
 				    $sEngineName = 'Simple';
 			    }
 			    break;
