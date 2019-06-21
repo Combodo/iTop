@@ -59,6 +59,9 @@ try
 		case 'export_build':
 		case 'export_cancel':
 		case 'export_download':
+		case 'cke_img_upload':
+		case 'cke_upload_and_browse':
+		case 'cke_browse':
 			$sRequestedPortalId = null;
 			break;
 
