@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-	"http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML>
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -39,6 +38,25 @@ defines default values for dialog fields.</p>
 	</li>
   <li>1.8.3: 30-November-2014. Force SCAYT to use the language that it's specified as the language for the contents.<br>
 			<a href="https://github.com/AlfonsoML/confighelper/pull/13">Listen to the contentDom event to avoid problems when calling setData in WYSIWYG mode</a>. Thanks to noam-si.
+	</li>
+  <li>1.8.4: 25-November-2018:
+	<a href="https://github.com/AlfonsoML/confighelper/pull/16">Catch errors from localStorage</a> Thanks to <a href="https://github.com/nikgt">nikgt</a><br>
+	Fix UTF-8 issue<br>
+	Fix missing assigment with tableProperties dialog<br>
+	Add license file<br>
+	<a href="https://github.com/AlfonsoML/confighelper/pull/23">Prevent editing the placeholder text if startupFocus is true</a>. Thanks to <a href="https://github.com/albincepa">Albince Paliakkara</a><br>
+	<a href="https://github.com/AlfonsoML/confighelper/pull/24">Prevent leaking editor instances on destroy</a>. Thanks to <a href="https://github.com/bendemboski">Ben Demboski </a>
+  <li>1.9.0: Removed compatibility with CKEditor 3.<br>
+			Code clean up with EsLint<br>
+			Safety check that requested dialog tabs exist before trying to work with them.<br>
+			<a href="https://github.com/AlfonsoML/confighelper/pull/25">Check editor.enterMode in removePlaceholder</a>. Thanks to <a href="https://github.com/JulesAchiel">Jules Achiel</a>.
+	</li>
+	<li>1.10: 16-June-2019<br>
+			<a href="https://github.com/AlfonsoML/confighelper/pull/26">removePlaceholder adds carriage return in Firefox and IE</a>. Thanks to <a href="https://github.com/JulesAchiel">Jules Achiel</a>.<br>
+			<a href="https://github.com/AlfonsoML/confighelper/pull/28">Do not add placeholder when CKE is readOnly</a>. Thanks to <a href="https://github.com/JulesAchiel">Jules Achiel</a>.<br>
+	</li>
+	<li>1.10.1: 17-June-2019<br>
+			Fix unterminated string error.
 	</li>
 </ol>
 
