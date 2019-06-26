@@ -794,7 +794,7 @@ class ObjectFormManager extends FormManager
                     }
 				}
 				// - BlobField
-				if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\BlobField')))
+				if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\BlobField', 'Combodo\\iTop\\Form\\Field\\ImageField')))
 				{
 					//   - Overriding attributes to display
 					if ($this->oApp !== null)
