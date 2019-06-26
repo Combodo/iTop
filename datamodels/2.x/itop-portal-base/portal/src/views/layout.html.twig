@@ -80,11 +80,11 @@
 	{% endblock %}
 
 	{% block pPageScripts %}
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-3.3.1.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.min.js'|add_itop_version }}"></script>
 		{% if is_development_environment() %}
-				<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-migrate-3.0.1.dev.js'|add_itop_version }}"></script>
+				<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-migrate.dev.js'|add_itop_version }}"></script>
 		{% else %}
-				<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-migrate-3.0.1.prod.min.js'|add_itop_version }}"></script>
+				<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-migrate.prod.min.js'|add_itop_version }}"></script>
 		{% endif %}
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-ui-1.11.4.custom.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.magnific-popup.min.js'|add_itop_version }}"></script>
