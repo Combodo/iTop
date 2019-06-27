@@ -1,0 +1,48 @@
+# Copyright (C) 2010-2018 Combodo SARL
+#
+#  This file is part of iTop.
+#
+#  iTop is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  iTop is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+p_manage_brick:
+  path: '/manage/{sBrickId}/{sGroupingTab}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ManageBrickController::DisplayAction'
+    sGroupingTab: ~
+
+p_manage_brick_display_as:
+  path: '/manage/{sBrickId}/display-as/{sDisplayMode}/{sGroupingTab}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ManageBrickController::DisplayAction'
+    sGroupingTab: ~
+  requirements:
+    sDisplayMode: 'list|pie-chart|bar-chart'
+
+p_manage_brick_lazy:
+  path: '/manage/{sBrickId}/{sGroupingTab}/{sGroupingArea}/page/{iPageNumber}/show/{iListLength}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ManageBrickController::DisplayAction'
+    sDataLoading: 'lazy'
+    iPageNumber: 1
+    iListLength: 20
+  requirements:
+    iPageNumber: '\d+'
+    iListLength: '\d+'
+
+p_manage_brick_excel_export_start:
+  path: '/manage/export/excel/start/{sBrickId}/{sGroupingTab}/{sGroupingArea}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ManageBrickController::ExcelExportStartAction'
+
+
