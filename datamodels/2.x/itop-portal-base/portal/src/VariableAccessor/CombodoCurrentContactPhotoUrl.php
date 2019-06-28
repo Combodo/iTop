@@ -28,13 +28,84 @@
 namespace Combodo\iTop\Portal\VariableAccessor;
 
 
-class CombodoCurrentContactPhotoUrl extends AbstractVariableAccessor
+use Exception;
+use MetaModel;
+use User;
+use UserRights;
+
+class CombodoCurrentContactPhotoUrl
 {
+	/**
+	 * @var \User
+	 */
+	private $oUser;
+	private $sCombodoPortalInstanceAbsoluteUrl;
+	private $sContactPhotoUrl;
+
+	public function __construct(User $oUser, $sCombodoPortalInstanceAbsoluteUrl)
+	{
+		$this->oUser = $oUser;
+		$this->sCombodoPortalInstanceAbsoluteUrl = $sCombodoPortalInstanceAbsoluteUrl;
+		$this->sContactPhotoUrl = null;
+	}
+
 	/**
 	 * @return string
 	 */
 	public function __toString()
 	{
-		return $this->getVariable()->getContactPhotoUrl();
+		if($this->sContactPhotoUrl === null)
+		{
+			$this->sContactPhotoUrl = $this->ComputeContactPhotoUrl();
+		}
+
+		return $this->sContactPhotoUrl;
+	}
+
+	/**
+	 * @return string
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	private function ComputeContactPhotoUrl()
+	{
+		// Contact
+		$sContactPhotoUrl = "{$this->sCombodoPortalInstanceAbsoluteUrl}img/user-profile-default-256px.png";
+		// - Checking if we can load the contact
+		try
+		{
+			$oContact = UserRights::GetContactObject();
+		}
+		catch (Exception $e)
+		{
+			$oAllowedOrgSet = $this->oUser->Get('allowed_org_list');
+			if ($oAllowedOrgSet->Count() > 0)
+			{
+				throw new Exception('Could not load contact related to connected user. (Tip: Make sure the contact\'s organization is among the user\'s allowed organizations)');
+			}
+			else
+			{
+				throw new Exception('Could not load contact related to connected user.');
+			}
+		}
+		// - Retrieving picture
+		if ($oContact)
+		{
+			if (MetaModel::IsValidAttCode(get_class($oContact), 'picture'))
+			{
+				$oImage = $oContact->Get('picture');
+				if (is_object($oImage) && !$oImage->IsEmpty())
+				{
+					$sContactPhotoUrl = $oImage->GetDownloadURL(get_class($oContact), $oContact->GetKey(), 'picture');
+				}
+				else
+				{
+					$sContactPhotoUrl = MetaModel::GetAttributeDef(get_class($oContact), 'picture')->Get('default_image');
+				}
+			}
+		}
+
+		return $sContactPhotoUrl;
 	}
 }

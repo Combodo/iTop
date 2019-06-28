@@ -20,7 +20,6 @@ abstract class AbstractVariableAccessor
      */
     public function __construct($mVariableToStore)
     {
-
         $this->mStoredVariable = $mVariableToStore;
     }
     

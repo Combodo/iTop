@@ -21,14 +21,11 @@
 
 namespace Combodo\iTop\Portal\EventListener;
 
-use Combodo\iTop\Portal\Security\ItopUser;
-use Combodo\iTop\Portal\VariableAccessor\CombodoCurrentContactPhotoUrl;
-use MetaModel;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Exception;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use utils;
+use User;
 use Dict;
 use LoginWebPage;
 use UserRights;
@@ -40,27 +37,24 @@ use ModuleDesign;
  * @package Combodo\iTop\Portal\EventListener
  * @since 2.7.0
  */
-class UserProvider
+class UserProvider implements ContainerAwareInterface
 {
     /** @var \ModuleDesign */
     private $oModuleDesign;
-	/** @var ItopUser */
-	private $oItopUser;
-    /** @var string */
-    private $sCombodoPortalBaseAbsoluteUrl;
+	/**
+	 * @var \Symfony\Component\DependencyInjection\ContainerInterface
+	 */
+	private $container;
 
 	/**
 	 * UserProvider constructor.
 	 *
 	 * @param \ModuleDesign $oModuleDesign
-	 * @param \Combodo\iTop\Portal\Security\ItopUser $oItopUser
-	 * @param string $sCombodoPortalBaseAbsolutePath Automatically bind to parameter of the name (see services.yml for other examples)
+	 * @param \User $oUser
 	 */
-    public function __construct(ModuleDesign $oModuleDesign, ItopUser $oItopUser, $sCombodoPortalBaseAbsolutePath)
+    public function __construct(ModuleDesign $oModuleDesign)
     {
         $this->oModuleDesign = $oModuleDesign;
-	    $this->oItopUser = $oItopUser;
-        $this->sCombodoPortalBaseAbsoluteUrl = $sCombodoPortalBaseAbsolutePath;
     }
 
 	/**
@@ -89,47 +83,16 @@ class UserProvider
         $oUser = UserRights::GetUserObject();
         if ($oUser === null)
         {
-            throw new \Exception('Could not load connected user.');
+            throw new Exception('Could not load connected user.');
         }
-	    $this->oItopUser->setUser($oUser);
-
-        // Contact
-        $sContactPhotoUrl = "{$this->sCombodoPortalBaseAbsoluteUrl}img/user-profile-default-256px.png";
-        // - Checking if we can load the contact
-        try
-        {
-            $oContact = UserRights::GetContactObject();
-        }
-        catch (Exception $e)
-        {
-            $oAllowedOrgSet = $oUser->Get('allowed_org_list');
-            if ($oAllowedOrgSet->Count() > 0)
-            {
-                throw new Exception('Could not load contact related to connected user. (Tip: Make sure the contact\'s organization is among the user\'s allowed organizations)');
-            }
-            else
-            {
-                throw new Exception('Could not load contact related to connected user.');
-            }
-        }
-        // - Retrieving picture
-        if ($oContact)
-        {
-            if (MetaModel::IsValidAttCode(get_class($oContact), 'picture'))
-            {
-                $oImage = $oContact->Get('picture');
-                if (is_object($oImage) && !$oImage->IsEmpty())
-                {
-                    $sContactPhotoUrl = $oImage->GetDownloadURL(get_class($oContact), $oContact->GetKey(), 'picture');
-                }
-                else
-                {
-                    $sContactPhotoUrl = MetaModel::GetAttributeDef(get_class($oContact), 'picture')->Get('default_image');
-                }
-            }
-        }
-	    $this->oItopUser->setContactPhotoUrl($sContactPhotoUrl);
+        $this->container->set('combodo.current_user', $oUser);
     }
 
-
+	/**
+	 * Sets the container.
+	 */
+	public function setContainer(ContainerInterface $container = null)
+	{
+		$this->container = $container;
+	}
 }
