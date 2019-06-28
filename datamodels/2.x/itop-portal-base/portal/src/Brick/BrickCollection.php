@@ -96,6 +96,7 @@ class BrickCollection
     {
         $aRawBrickList = $this->GetRawBrickList();
 
+        // TODO: Are bricks_* still used? Didn't find any references in files. Maybe they could be deprecated.
         $this->aAllowedBricksData = array(
             'bricks' => array(),
             'bricks_total_width' => 0,
