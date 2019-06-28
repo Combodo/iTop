@@ -6526,11 +6526,13 @@ class AttributeExternalField extends AttributeDefinition
 	}
 
 	/**
-	 * @see N°2174
-	 *
 	 * @param string $sDefault
 	 *
-	 * @return string dict entry if defined, otherwise the class hierarchy -> field name<br>
+	 * @return string dict entry if defined, otherwise :
+	 *    <ul>
+	 *    <li>if field is a friendlyname then display the label of the ExternalKey
+	 *    <li>the class hierarchy -> field name
+	 *
 	 *    <p>For example, having this :
 	 *
 	 * <pre>
@@ -6543,7 +6545,8 @@ class AttributeExternalField extends AttributeDefinition
 	 *
 	 *       <p>The ExternalField foo points to a magical field that is brought by c_id ExternalKey in class B.
 	 *
-	 *       <p>The foo label will be : B -> C -> friendlyname<br>
+	 *       <p>In the normal case the foo label would be : B -> C -> friendlyname<br>
+	 *       But as foo is a friendlyname its label will be the same as the one on A.b_id field
 	 *       This can be overrided with dict key Class:ClassA/Attribute:foo
 	 *
 	 * @throws \CoreException
@@ -6555,6 +6558,19 @@ class AttributeExternalField extends AttributeDefinition
 		$sLabel = parent::GetLabel($sLabelDefaultValue);
 		if ($sLabelDefaultValue !== $sLabel)
 		{
+			return $sLabel;
+		}
+
+		if ($this->IsFriendlyName())
+		{
+			// This will be used even if we are pointing to a friendlyname in a distance > 1
+			// For example we can link to a magic friendlyname (like org_id_friendlyname)
+			// If a specific label is needed, use a Dict key !
+			// See N°2174
+			$sKeyAttCode = $this->Get("extkey_attcode");
+			$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
+			$sLabel = $oExtKeyAttDef->GetLabel($this->m_sCode);
+
 			return $sLabel;
 		}
 
