@@ -2,13 +2,14 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2015 Leaf Corcoran
+ * @copyright 2012-2019 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
- * @link http://leafo.github.io/scssphp
+ * @link http://scssphp.github.io/scssphp
  */
-namespace Leafo\ScssPhp;
+
+namespace ScssPhp\ScssPhp;
 
 /**
  * Base node
@@ -21,14 +22,17 @@ abstract class Node
      * @var string
      */
     public $type;
+
     /**
      * @var integer
      */
     public $sourceIndex;
+
     /**
      * @var integer
      */
     public $sourceLine;
+
     /**
      * @var integer
      */

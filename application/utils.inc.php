@@ -1,6 +1,6 @@
 <?php
 
-use Leafo\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\Compiler;
 
 // Copyright (C) 2010-2017 Combodo SARL
 //
@@ -1538,7 +1538,7 @@ class utils
 			require_once(APPROOT.'lib/scssphp/scss.inc.php');
 			$oScss = new Compiler();
 			$oScss->setImportPaths($aImportPaths);
-			$oScss->setFormatter('Leafo\\ScssPhp\\Formatter\\Expanded');
+			$oScss->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Expanded');
 			// Temporary disabling max exec time while compiling
 			$iCurrentMaxExecTime = (int) ini_get('max_execution_time');
 			set_time_limit(0);

@@ -1,12 +1,12 @@
 # scssphp
-### <http://leafo.github.io/scssphp>
+### <http://scssphp.github.io/scssphp>
 
-[![Build](https://travis-ci.org/leafo/scssphp.svg?branch=master)](http://travis-ci.org/leafo/scssphp)
-[![License](https://poser.pugx.org/leafo/scssphp/license.svg)](https://packagist.org/packages/leafo/scssphp)
+[![Build](https://travis-ci.org/scssphp/scssphp.svg?branch=master)](http://travis-ci.org/scssphp/scssphp)
+[![License](https://poser.pugx.org/scssphp/scssphp/license.svg)](https://packagist.org/packages/scssphp/scssphp)
 
 `scssphp` is a compiler for SCSS written in PHP.
 
-Checkout the homepage, <http://leafo.github.io/scssphp>, for directions on how to use.
+Checkout the homepage, <http://scssphp.github.io/scssphp>, for directions on how to use.
 
 ## Running Tests
 

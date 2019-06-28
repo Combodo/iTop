@@ -2,15 +2,17 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2015 Leaf Corcoran
+ * @copyright 2012-2019 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
- * @link http://leafo.github.io/scssphp
+ * @link http://scssphp.github.io/scssphp
  */
-namespace Leafo\ScssPhp\Formatter;
 
-use Leafo\ScssPhp\Formatter;
+namespace ScssPhp\ScssPhp\Formatter;
+
+use ScssPhp\ScssPhp\Formatter;
+
 /**
  * Compact formatter
  *
@@ -27,13 +29,12 @@ class Compact extends Formatter
         $this->indentChar = '';
         $this->break = '';
         $this->open = ' {';
-        $this->close = '}
-
-';
+        $this->close = "}\n\n";
         $this->tagSeparator = ',';
         $this->assignSeparator = ':';
         $this->keepSemicolons = true;
     }
+
     /**
      * {@inheritdoc}
      */

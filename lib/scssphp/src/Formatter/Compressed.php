@@ -2,16 +2,18 @@
 /**
  * SCSSPHP
  *
- * @copyright 2012-2015 Leaf Corcoran
+ * @copyright 2012-2019 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
- * @link http://leafo.github.io/scssphp
+ * @link http://scssphp.github.io/scssphp
  */
-namespace Leafo\ScssPhp\Formatter;
 
-use Leafo\ScssPhp\Formatter;
-use Leafo\ScssPhp\Formatter\OutputBlock;
+namespace ScssPhp\ScssPhp\Formatter;
+
+use ScssPhp\ScssPhp\Formatter;
+use ScssPhp\ScssPhp\Formatter\OutputBlock;
+
 /**
  * Compressed formatter
  *
@@ -33,13 +35,16 @@ class Compressed extends Formatter
         $this->assignSeparator = ':';
         $this->keepSemicolons = false;
     }
+
     /**
      * {@inheritdoc}
      */
     public function blockLines(OutputBlock $block)
     {
         $inner = $this->indentStr();
+
         $glue = $this->break . $inner;
+
         foreach ($block->lines as $index => $line) {
             if (substr($line, 0, 2) === '/*' && substr($line, 2, 1) !== '!') {
                 unset($block->lines[$index]);
@@ -47,9 +52,30 @@ class Compressed extends Formatter
                 $block->lines[$index] = '/*' . substr($line, 3);
             }
         }
-        echo $inner . implode($glue, $block->lines);
-        if (!empty($block->children)) {
-            echo $this->break;
+
+        $this->write($inner . implode($glue, $block->lines));
+
+        if (! empty($block->children)) {
+            $this->write($this->break);
         }
+    }
+
+    /**
+     * Output block selectors
+     *
+     * @param \ScssPhp\ScssPhp\Formatter\OutputBlock $block
+     */
+    protected function blockSelectors(OutputBlock $block)
+    {
+        $inner = $this->indentStr();
+
+        $this->write(
+            $inner
+            . implode(
+                $this->tagSeparator,
+                str_replace([' > ', ' + ', ' ~ '], ['>', '+', '~'], $block->selectors)
+            )
+            . $this->open . $this->break
+        );
     }
 }
