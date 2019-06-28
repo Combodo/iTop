@@ -296,7 +296,7 @@
 						<div class="logo">
 							{% block pNavigationSideMenuLogo %}
 								{# This is a debug helper to know in which screen size we are #}
-								{% if app['debug'] %}
+								{% if app['kernel'].debug == true %}
 									<div style="position: fixed; bottom: 0px; left: 0px; z-index: 9999;">Debug : Taille <span class="hidden-sm hidden-md hidden-lg">XS</span><span class="hidden-xs hidden-md hidden-lg">SM</span><span class="hidden-xs hidden-sm hidden-lg">MD</span><span class="hidden-xs hidden-sm hidden-md">LG</span></div>
 								{% endif %}
 								<a href="{{ get_config_parameter('app_icon_url') }}" title="{{ app['combodo.portal.instance.conf'].properties.name|dict_s }}">

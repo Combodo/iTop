@@ -48,7 +48,7 @@
 			</p>
 		</div>
 
-		{% if app['debug'] == true %}
+		{% if app['kernel'].debug == true %}
 			<div class="well">
 				<ol class="traces list_exception">
 					{% for aStep in debug_trace_steps %}

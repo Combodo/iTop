@@ -47,6 +47,12 @@ if(!defined('PORTAL_ID'))
     define('PORTAL_ID', $sPortalId);
 }
 
+// Set debug mode only when necessary
+if (utils::ReadParam('debug', 'false') === 'true')
+{
+	$_SERVER['APP_DEBUG'] = true;
+}
+
 define('PORTAL_CACHE_PATH', utils::GetCachePath() . '/portals/' . PORTAL_ID . '/');
 
 // Constants to be used in templates and others
