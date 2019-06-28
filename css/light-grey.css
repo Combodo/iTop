@@ -386,13 +386,13 @@ input.textSearch {
   background-color: #eee;
 }
 .csvimport_ok {
-  color: #000 0;
+  color: #000;
   background-color: #bfb;
 }
 .csvimport_reconkey {
   font-style: italic;
   color: #888;
-  background-color: #fff FF;
+  background-color: #fff;
 }
 .csvimport_extreconkey {
   color: #888;
@@ -1830,6 +1830,9 @@ fieldset .details > .field_container {
   padding-left: 0.4em;
   vertical-align: middle;
 }
+.field_container > div > div.field_value .attribute-edit .form-field-container .form-field-content > .form_validation, .field_container > div > div.field_value .attribute-edit .form-field-container .form-field-content > .field_status {
+  display: inline;
+}
 .field_container > div > div.field_value .attribute-edit .field_input_zone {
   width: 100%;
   /* auto; */
@@ -1965,10 +1968,8 @@ fieldset .details > .field_container {
   color: rgba(34, 34, 34, 0.6);
   background-color: #eaeaea;
 }
-.one-col-details .details .field_container.field_small {
-  /* On a single column, field labels can take more width but they are limited so it doesn't feel weird when all labels are short */
-}
 .one-col-details .details .field_container.field_small div.field_label {
+  /* On a single column, field labels can take more width but they are limited so it doesn't feel weird when all labels are short */
   width: 175px;
   max-width: inherit;
 }
