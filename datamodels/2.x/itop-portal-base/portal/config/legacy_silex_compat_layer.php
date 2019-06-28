@@ -27,7 +27,6 @@ use Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfig
 
 // Note: ModuleDesign service is not available yet as this script is processed before service generation,
 // that's why we have to instantiate it manually.
-require_once APPROOT . 'core/moduledesign.class.inc.php';
 $moduleDesign = new \ModuleDesign(PORTAL_ID);
 
 // TODO: The following code needs to be refactored to more independent and atomic services.

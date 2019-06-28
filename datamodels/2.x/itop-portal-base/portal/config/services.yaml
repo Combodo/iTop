@@ -88,7 +88,8 @@ services:
 
     # Legacy code as a service: since it is not in the auto-wiring path, it needs to be explicitly declared
     ModuleDesign:
-        class: 'ModuleDesign'
+        public: true
+        class: ModuleDesign
         arguments:
             - '%combodo.portal.instance.id%'
 
