@@ -5,12 +5,12 @@
 		"php": ">=5.6.0",
 		"ext-ctype": "*",
 		"ext-iconv": "*",
-		"symfony/console": "3.4.12",
-		"symfony/dotenv": "3.4.12",
-		"symfony/framework-bundle": "3.4.12",
-		"symfony/twig-bundle": "3.4.12",
-		"symfony/yaml": "3.4.12",
-		"symfony/http-foundation": "3.4.12"
+		"symfony/console": "3.4.*",
+		"symfony/dotenv": "3.4.*",
+		"symfony/framework-bundle": "3.4.*",
+		"symfony/twig-bundle": "3.4.*",
+		"symfony/yaml": "3.4.*",
+		"symfony/polyfill-php70": "1.*"
 	},
 	"config": {
 		"vendor-dir": "../../../../lib/composer-vendor",
@@ -25,19 +25,15 @@
 	"autoload": {
 		"psr-4": {
 			"Combodo\\iTop\\Portal\\": "src/"
-		}
+		},
+		"classmap": [
+			"../../../../core"
+		]
 	},
 	"autoload-dev": {
 		"psr-4": {
 			"Combodo\\iTop\\Portal\\Tests\\": "tests/"
 		}
-	},
-	"replace": {
-		"paragonie/random_compat": "2.*",
-		"symfony/polyfill-ctype": "*",
-		"symfony/polyfill-iconv": "*",
-		"symfony/polyfill-php70": "*",
-		"symfony/polyfill-php56": "*"
 	},
 	"conflict": {
 		"symfony/symfony": "*"
