@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-config-mgmt/'.ITOP_VERSION,
+	'itop-config-mgmt/2.6.2',
 	array(
 		// Identification
 		//

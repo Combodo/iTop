@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-welcome-itil/'.ITOP_VERSION,
+	'itop-welcome-itil/2.6.2',
 	array(
 		// Identification
 		//

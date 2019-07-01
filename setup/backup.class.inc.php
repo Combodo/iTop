@@ -649,10 +649,20 @@ EOF;
 			{
 				return '';
 			}
-
 			$sTlsOptions = '';
-			$sTlsOptions .= ' --ssl';
 
+			$sDBVendor= CMDBSource::GetDBVendor();
+			$sDBVersion = CMDBSource::GetDBVersion();
+			$sMysqlSSLModeVersion = '5.7.0'; //Mysql 5.7.0 and upper deprecated --ssl and uses --ssl-mode instead
+			if ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL && version_compare($sDBVersion, $sMysqlSSLModeVersion, '>='))
+			{
+				$sTlsOptions .= ' --ssl-mode=VERIFY_CA';
+			}
+			else
+			{
+				$sTlsOptions .= ' --ssl';
+			}
+			
 			// ssl-key parameter : not implemented
 			// ssl-cert parameter : not implemented
 

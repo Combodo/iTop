@@ -2,7 +2,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-portal-base/'.ITOP_VERSION,
+	'itop-portal-base/2.6.2',
 	array(
 		// Identification
 		'label' => 'Portal Development Library',
