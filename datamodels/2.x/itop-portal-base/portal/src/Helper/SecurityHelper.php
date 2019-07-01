@@ -4,7 +4,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -44,35 +44,56 @@ class SecurityHelper
         UR_ACTION_MODIFY => array(),
     );
 
-    /**
+	/**
+	 * @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper
+	 */
+	private $oScopeValidator;
+	/**
+	 * @var \Combodo\iTop\Portal\Helper\LifecycleValidatorHelper
+	 */
+	private $oLifecycleValidator;
+	/** @var bool $bDebug */
+	private $bDebug;
+
+	/**
+	 * SecurityHelper constructor.
+	 *
+	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper     $oScopeValidator
+	 * @param \Combodo\iTop\Portal\Helper\LifecycleValidatorHelper $oLifecycleValidator
+	 * @param                                                      $bDebug
+	 */
+	public function __construct(ScopeValidatorHelper $oScopeValidator, LifecycleValidatorHelper $oLifecycleValidator, $bDebug)
+	{
+		$this->oScopeValidator = $oScopeValidator;
+		$this->oLifecycleValidator = $oLifecycleValidator;
+		$this->bDebug = $bDebug;
+	}
+
+
+	/**
      * Returns true if the current user is allowed to do the $sAction on an $sObjectClass object (with optionnal $sObjectId id)
      * Checks are:
      * - Has a scope query for the $sObjectClass / $sAction
      * - Optionally, if $sObjectId provided: Is object within scope for $sObjectClass / $sObjectId / $sAction
      * - Is allowed by datamodel for $sObjectClass / $sAction
      *
-     * @param ScopeValidatorHelper $scopeValidator
-     * @param boolean              $isDebugEnabled
-     * @param string               $sAction Must be in UR_ACTION_READ|UR_ACTION_MODIFY|UR_ACTION_CREATE
-     * @param string               $sObjectClass
-     * @param string               $sObjectId
+     * @param \Silex\Application $oApp
+     * @param string $sAction Must be in UR_ACTION_READ|UR_ACTION_MODIFY|UR_ACTION_CREATE
+     * @param string $sObjectClass
+     * @param string $sObjectId
      *
      * @return boolean
      *
      * @throws \CoreException
-     * @throws \MissingQueryArgument
-     * @throws \MySQLException
-     * @throws \MySQLHasGoneAwayException
-     * @throws \OQLException
      */
-	public static function IsActionAllowed(ScopeValidatorHelper $scopeValidator, $isDebugEnabled, $sAction, $sObjectClass, $sObjectId = null)
+	public function IsActionAllowed($sAction, $sObjectClass, $sObjectId = null)
 	{
 		$sDebugTracePrefix = __CLASS__ . ' / ' . __METHOD__ . ' : Returned false for action ' . $sAction . ' on ' . $sObjectClass . '::' . $sObjectId;
 
 		// Checking action type
 		if (!in_array($sAction, array(UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_CREATE)))
 		{
-			if ($isDebugEnabled)
+			if ($this->bDebug)
 			{
 				IssueLog::Info($sDebugTracePrefix . ' as the action value could not be understood (' . UR_ACTION_READ . '/' . UR_ACTION_MODIFY . '/' . UR_ACTION_CREATE . ' expected');
 			}
@@ -83,10 +104,10 @@ class SecurityHelper
 		// - Transforming scope action as there is only 2 values
 		$sScopeAction = ($sAction === UR_ACTION_READ) ? UR_ACTION_READ : UR_ACTION_MODIFY;
 		// - Retrieving the query. If user has no scope, it can't access that kind of objects
-		$oScopeQuery = $scopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sObjectClass, $sScopeAction);
+		$oScopeQuery = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sObjectClass, $sScopeAction);
 		if ($oScopeQuery === null)
 		{
-			if ($isDebugEnabled)
+			if ($this->bDebug)
 			{
 				IssueLog::Info($sDebugTracePrefix . ' as there was no scope defined for action ' . $sScopeAction . ' and profiles ' . implode('/', UserRights::ListProfiles()));
 			}
@@ -103,7 +124,7 @@ class SecurityHelper
                 {
                     if(static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId] === false)
                     {
-                        if ($isDebugEnabled)
+                        if ($this->bDebug)
                         {
                             IssueLog::Info($sDebugTracePrefix . ' as it was denied in the scope objects cache');
                         }
@@ -131,7 +152,7 @@ class SecurityHelper
                         // Updating cache
                         static::$aAllowedScopeObjectsCache[$sScopeAction][$sObjectClass][$sObjectId] = false;
 
-                        if ($isDebugEnabled)
+                        if ($this->bDebug)
                         {
                             IssueLog::Info($sDebugTracePrefix . ' as there was no result for the following scope query : ' . $oScopeQuery->ToOQL(true));
                         }
@@ -149,7 +170,7 @@ class SecurityHelper
 		{
 			// For security reasons, we don't want to give the user too many informations on why he cannot access the object.
 			//throw new SecurityException('User not allowed to view this object', array('class' => $sObjectClass, 'id' => $sObjectId));
-			if ($isDebugEnabled)
+			if ($this->bDebug)
 			{
 				IssueLog::Info($sDebugTracePrefix . ' as the user is not allowed to access this object according to the datamodel security (cf. Console settings)');
 			}
@@ -159,16 +180,7 @@ class SecurityHelper
 		return true;
 	}
 
-    /**
-     * @param LifecycleValidatorHelper $lifecycleValidator
-     * @param                          $sStimulusCode
-     * @param                          $sObjectClass
-     * @param null                     $oInstanceSet
-     *
-     * @return bool
-     * @throws \Exception
-     */
-	public static function IsStimulusAllowed(LifecycleValidatorHelper $lifecycleValidator, $sStimulusCode, $sObjectClass, $oInstanceSet = null)
+	public function IsStimulusAllowed($sStimulusCode, $sObjectClass, $oInstanceSet = null)
 	{
 	    // Checking DataModel layer
         $aStimuliFromDatamodel = Metamodel::EnumStimuli($sObjectClass);
@@ -179,7 +191,7 @@ class SecurityHelper
         }
 
         // Checking portal security layer
-        $aStimuliFromPortal = $lifecycleValidator->GetStimuliForProfiles(UserRights::ListProfiles(), $sObjectClass);
+        $aStimuliFromPortal = $this->oLifecycleValidator->GetStimuliForProfiles(UserRights::ListProfiles(), $sObjectClass);
 		if(!in_array($sStimulusCode, $aStimuliFromPortal))
         {
             return false;
@@ -188,19 +200,18 @@ class SecurityHelper
         return true;
 	}
 
-    /**
-     * Preloads scope objects cache with objects from $oQuery
-     *
-     * @param ScopeValidatorHelper $scopeValidator
-     * @param \DBSearch            $oSearch
-     * @param array                $aExtKeysToPreload
-     *
-     * @throws \CoreException
-     * @throws \CoreUnexpectedValue
-     * @throws \MySQLException
-     * @throws \OQLException
-     */
-	public static function PreloadForCache(ScopeValidatorHelper $scopeValidator, DBSearch $oSearch, $aExtKeysToPreload = null)
+	/**
+	 * Preloads scope objects cache with objects from $oQuery
+	 *
+	 * @param \DBSearch $oSearch
+	 * @param array     $aExtKeysToPreload
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public function PreloadForCache(DBSearch $oSearch, $aExtKeysToPreload = null)
     {
         $sObjectClass = $oSearch->GetClass();
         $aObjectIds = array();
@@ -250,7 +261,7 @@ class SecurityHelper
         {
             // Retrieving scope query
             /** @var DBSearch $oScopeQuery */
-            $oScopeQuery = $scopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sObjectClass, $sScopeAction);
+            $oScopeQuery = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sObjectClass, $sScopeAction);
             if($oScopeQuery !== null)
             {
                 // Restricting scope if specified
@@ -290,7 +301,7 @@ class SecurityHelper
                 $oTargetSearch = new DBObjectSearch($sTargetClass);
                 $oTargetSearch->AddCondition('id', $aTargetIds, 'IN');
 
-                static::PreloadForCache($scopeValidator, $oTargetSearch);
+                static::PreloadForCache($oTargetSearch);
             }
         }
     }

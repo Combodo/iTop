@@ -46,8 +46,9 @@ services:
                             # fetching services directly from the container via $container->get() won't work.
                             # The best practice is to be explicit about your dependencies anyway.
         bind:
+            $bDebug:            '%kernel.debug%'
             $sPortalCachePath:  !php/const PORTAL_CACHE_PATH
-            $sPortalId:          !php/const PORTAL_ID
+            $sPortalId:         !php/const PORTAL_ID
             $sCombodoPortalInstanceAbsoluteUrl:  !php/const COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL
 
     # Makes classes in src/ available to be used as services
@@ -124,4 +125,7 @@ services:
         public: true
     url_generator:
         alias: router
+        public: true
+    browse_brick:
+        alias: Combodo\iTop\Portal\Helper\BrowseBrickHelper
         public: true
