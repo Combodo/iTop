@@ -19,7 +19,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-profiles-itil/2.5.2',
+	'itop-profiles-itil/2.5.3',
 	array(
 		// Identification
 		//
