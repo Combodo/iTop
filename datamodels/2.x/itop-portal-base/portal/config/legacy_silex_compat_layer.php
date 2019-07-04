@@ -27,21 +27,21 @@ use Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfig
 
 // Note: ModuleDesign service is not available yet as this script is processed before service generation,
 // that's why we have to instantiate it manually.
-$moduleDesign = new \ModuleDesign(PORTAL_ID);
+$oModuleDesign = new ModuleDesign(PORTAL_ID);
 
 // TODO: The following code needs to be refactored to more independent and atomic services.
 
-//append into %combodo.portal.instance.conf%
-$basicCompat = new Basic($moduleDesign);
-$basicCompat->process($container);
+// Append into %combodo.portal.instance.conf%
+$oBasicCompat = new Basic($oModuleDesign);
+$oBasicCompat->Process($container);
 
-//create %combodo.portal.instance.conf%
-$formsCompat = new Forms($moduleDesign);
-$formsCompat->process($container);
+// Append into %combodo.portal.instance.conf%
+$oFormsCompat = new Forms($oModuleDesign);
+$oFormsCompat->Process($container);
 
-//append into %combodo.portal.instance.conf%
-$listesCompat = new Lists($moduleDesign);
-$listesCompat->process($container);
+// Append into %combodo.portal.instance.conf%
+$oListsCompat = new Lists($oModuleDesign);
+$oListsCompat->Process($container);
 
 // - Generating CSS files
 $aImportPaths = array(COMBODO_PORTAL_BASE_ABSOLUTE_PATH.'css/');
@@ -55,9 +55,9 @@ foreach ($aPortalConf['properties']['themes'] as $key => $value)
 	else
 	{
 		$aValues = array();
-		foreach ($value as $sSubvalue)
+		foreach ($value as $sSubValue)
 		{
-			$aValues[] = COMBODO_ABSOLUTE_URL.utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$sSubvalue, $aImportPaths);
+			$aValues[] = COMBODO_ABSOLUTE_URL.utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$sSubValue, $aImportPaths);
 		}
 		$aPortalConf['properties']['themes'][$key] = $aValues;
 	}

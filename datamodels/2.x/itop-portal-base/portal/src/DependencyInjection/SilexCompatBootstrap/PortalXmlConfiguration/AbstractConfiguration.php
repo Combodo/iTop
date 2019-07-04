@@ -1,31 +1,57 @@
 <?php
+
 /**
- * Created by Bruno DA SILVA, working for Combodo
- * Date: 24/01/19
- * Time: 16:59
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ *
+ *
  */
 
 namespace Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration;
 
+use ModuleDesign;
 
+/**
+ * Class AbstractConfiguration
+ *
+ * @package Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.7.0
+ */
 class AbstractConfiguration
 {
-    /**
-     * @var \ModuleDesign
-     */
-    private $moduleDesign;
+    /** @var \ModuleDesign $oModuleDesign */
+    private $oModuleDesign;
 
-    public function __construct(\ModuleDesign $moduleDesign)
+	/**
+	 * AbstractConfiguration constructor.
+	 *
+	 * @param \ModuleDesign $oModuleDesign
+	 */
+    public function __construct(ModuleDesign $oModuleDesign)
     {
-        $this->moduleDesign = $moduleDesign;
+        $this->oModuleDesign = $oModuleDesign;
     }
 
     /**
      * @return \ModuleDesign
      */
-    public function getModuleDesign()
+    public function GetModuleDesign()
     {
-        return $this->moduleDesign;
+        return $this->oModuleDesign;
     }
 
 }

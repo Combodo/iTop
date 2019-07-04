@@ -134,7 +134,7 @@
 			<div class="form_buttons">
 				{% block pUserProfileFormButtons %}
 					<div class="form_btn_regular">
-						{% if sFormMode == constant('\\Combodo\\iTop\\Portal\\Controller\\ObjectController::ENUM_MODE_EDIT') %}
+						{% if sFormMode == constant('\\Combodo\\iTop\\Portal\\Helper\\ObjectFormHandlerHelper::ENUM_MODE_EDIT') %}
 							<input class="btn btn-primary form_btn_submit" type="submit" value="{{ 'Portal:Button:Submit'|dict_s }}">
 						{% endif %}
 					</div>

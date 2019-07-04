@@ -1,27 +1,52 @@
 <?php
 /**
- * Created by Bruno DA SILVA, working for Combodo
- * Date: 24/01/19
- * Time: 16:52
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ *
+ *
  */
 
 namespace Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration;
 
+use DOMFormatException;
+use Symfony\Component\DependencyInjection\Container;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Exception;
-use utils;
-
+/**
+ * Class Lists
+ *
+ * @package Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.7.0
+ */
 class Lists extends AbstractConfiguration
 {
-    public function process(ContainerBuilder $container)
+	/**
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
+	 *
+	 * @throws \DOMFormatException
+	 */
+    public function Process(Container $oContainer)
     {
         $iDefaultItemRank = 0;
         $aClassesLists = array();
 
         // Parsing XML file
         // - Each classes
-        foreach ($this->getModuleDesign()->GetNodes('/module_design/classes/class') as $oClassNode)
+	    /** @var \MFElement $oClassNode */
+	    foreach ($this->GetModuleDesign()->GetNodes('/module_design/classes/class') as $oClassNode)
         {
             $aClassLists = array();
             $sClassId = $oClassNode->getAttribute('id');
@@ -31,7 +56,8 @@ class Lists extends AbstractConfiguration
             }
 
             // - Each lists
-            foreach ($oClassNode->GetNodes('./lists/list') as $oListNode)
+	        /** @var \MFElement $oListNode */
+	        foreach ($oClassNode->GetNodes('./lists/list') as $oListNode)
             {
                 $aListItems = array();
                 $sListId = $oListNode->getAttribute('id');
@@ -42,7 +68,8 @@ class Lists extends AbstractConfiguration
                 }
 
                 // - Each items
-                foreach ($oListNode->GetNodes('./items/item') as $oItemNode)
+	            /** @var \MFElement $oItemNode */
+	            foreach ($oListNode->GetNodes('./items/item') as $oItemNode)
                 {
                     $sItemId = $oItemNode->getAttribute('id');
                     if ($sItemId === null)
@@ -53,7 +80,7 @@ class Lists extends AbstractConfiguration
 
                     $aItem = array(
                         'att_code' => $sItemId,
-                        'rank' => $iDefaultItemRank
+                        'rank' => $iDefaultItemRank,
                     );
 
                     $oRankNode = $oItemNode->GetOptionalElement('rank');
@@ -77,10 +104,9 @@ class Lists extends AbstractConfiguration
                 $aClassesLists[$sClassId] = $aClassLists;
             }
         }
-        $aPortalConf = $container->getParameter('combodo.portal.instance.conf');
-        $aPortalConf['lists']  = $aClassLists;
-        $container->setParameter('combodo.portal.instance.conf', $aPortalConf);
+        $aPortalConf = $oContainer->getParameter('combodo.portal.instance.conf');
+        $aPortalConf['lists'] = $aClassLists;
+        $oContainer->setParameter('combodo.portal.instance.conf', $aPortalConf);
     }
-
 
 }

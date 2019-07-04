@@ -37,19 +37,19 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends AbstractController
 {
 	/**
-	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
-	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $bricksCollection
+	 * @param \Symfony\Component\HttpFoundation\Request  $oRequest
+	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBricksCollection
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
 	 */
-	public function homeAction(Request $oRequest, BrickCollection $bricksCollection)
+	public function HomeAction(Request $oRequest, BrickCollection $oBricksCollection)
 	{
 		$aData = array();
 
 		// Rendering tiles
 		$aData['aTilesRendering'] = array();
-		/** @var \Combodo\iTop\Portal\Brick\PortalBrick $oBrick */
-        foreach($bricksCollection->getBricks()['bricks'] as $oBrick)
+        foreach($oBricksCollection->GetBricks() as $oBrick)
 		{
 			// Doing it only for tile visible on home page to avoid unnecessary rendering
 			if (($oBrick->GetVisibleHome() === true) && ($oBrick->GetTileControllerAction() !== null))
@@ -76,9 +76,9 @@ class DefaultController extends AbstractController
 		}
 
 		// Home page template
-		$template = $this->getParameter('combodo.portal.instance.conf')['properties']['templates']['home'];
+		$sTemplatePath = $this->getParameter('combodo.portal.instance.conf')['properties']['templates']['home'];
 
-		return $this->render($template, $aData);
+		return $this->render($sTemplatePath, $aData);
 	}
 
 }

@@ -59,13 +59,6 @@ p_object_search_autocomplete:
     sHostObjectClass: ~
     sHostObjectId: ~
 
-p_object_search_hierarchy:
-  path: '/object/search/hierarchy/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'
-  defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::SearchHierarchyAction'
-    sHostObjectClass: ~
-    sHostObjectId: ~
-
 
 p_object_search_generic:
   path: '/object/search/{sMode}/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'

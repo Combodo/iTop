@@ -126,6 +126,9 @@ services:
     url_generator:
         alias: router
         public: true
+    object_form_handler:
+        alias: Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper
+        public: true
     browse_brick:
         alias: Combodo\iTop\Portal\Helper\BrowseBrickHelper
         public: true

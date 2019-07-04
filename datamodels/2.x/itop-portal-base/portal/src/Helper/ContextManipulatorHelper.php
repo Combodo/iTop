@@ -412,7 +412,7 @@ class ContextManipulatorHelper
 								break;
 
 							case static::ENUM_RULE_CALLBACK_GOTO:
-								$oBrick = $this->oBrickCollection->getBrickById($aRule[$sCallbackName]['brick_id']);
+								$oBrick = $this->oBrickCollection->GetBrickById($aRule[$sCallbackName]['brick_id']);
 								$sCallbackUrl = $this->oRouter->generate($oBrick->GetRouteName(), array('sBrickId' => $oBrick->GetId()));
 								break;
 

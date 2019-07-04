@@ -17,11 +17,11 @@
 
 p_home:
   path: '/'
-  controller: 'Combodo\iTop\Portal\Controller\DefaultController::homeAction'
+  controller: 'Combodo\iTop\Portal\Controller\DefaultController::HomeAction'
 
 # Example route
 #p_example:
 #  path: /url-pattern
-#  controller: 'Combodo\iTop\Portal\Controller\DefaultController::exampleAction'
+#  controller: 'Combodo\iTop\Portal\Controller\DefaultController::ExampleAction'
 #  _defaults:
 #    _fragment: 'string-to-be-append-to-the-pattern-after-a-#'

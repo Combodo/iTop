@@ -19,14 +19,10 @@
  *
  */
 
-/**
- * Created by Bruno DA SILVA, working for Combodo
- * Date: 24/01/19
- * Time: 17:28
- */
-
 namespace Combodo\iTop\Portal\Brick;
 
+use DOMFormatException;
+use Exception;
 use UserRights;
 use ModuleDesign;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
@@ -35,111 +31,155 @@ use Combodo\iTop\Portal\Helper\ApplicationHelper;
  * Class BrickCollection
  *
  * @package Combodo\iTop\Portal\Brick
+ * @author Bruno Da Silva <bruno.dasilva@combodo.com>
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since 2.7.0
  */
 class BrickCollection
 {
-    /** @var array|null Lazily computed */
-    private $aAllowedBricksData;
-    /** @var \ModuleDesign */
-    private $oModuleDesign;
+	/** @var \ModuleDesign */
+	private $oModuleDesign;
+    /** @var array|null $aAllowedBricks Lazily computed */
+    private $aAllowedBricks;
+    /** @var int $iDisplayedInHome Lazily computed */
+    private $iDisplayedInHome;
+    /** @var int $iDisplayedInNavigationMenu Lazily computed */
+    private $iDisplayedInNavigationMenu;
+    /** @var array $aHomeOrdering */
+    private $aHomeOrdering;
+    /** @var array $aNavigationMenuOrdering */
+    private $aNavigationMenuOrdering;
 
-    public function __construct(ModuleDesign $oModuleDesign)
+	/**
+	 * BrickCollection constructor.
+	 *
+	 * @param \ModuleDesign $oModuleDesign
+	 *
+	 * @throws \Exception
+	 */
+	public function __construct(ModuleDesign $oModuleDesign)
     {
         $this->oModuleDesign = $oModuleDesign;
+        $this->aAllowedBricks = null;
+        $this->iDisplayedInHome = 0;
+        $this->iDisplayedInNavigationMenu = 0;
+        $this->aHomeOrdering = array();
+        $this->aNavigationMenuOrdering = array();
+
+	    $this->Load();
     }
 
-    public function __call($method, $arguments)
+	/**
+	 * @param $method
+	 * @param $arguments
+	 *
+	 * @return array|\Combodo\iTop\Portal\Brick\PortalBrick[]|null
+	 * @throws \Combodo\iTop\Portal\Brick\PropertyNotFoundException
+	 * @throws \Exception
+	 */
+	public function __call($method, $arguments)
     {
-        return $this->GetBrickProperty($method);
+    	// Made for cleaner/easier access from twig (eg. app['brick_collection'].bricks)
+    	switch($method)
+	    {
+		    case 'bricks':
+		    	return $this->GetBricks();
+		    	break;
+		    case 'home_ordering':
+		    	return $this->GetHomeOrdering();
+		    	break;
+		    case 'navigation_menu_ordering':
+		    	return $this->GetNavigationMenuOrdering();
+		    	break;
+		    default:
+			    throw new PropertyNotFoundException("The property '$method' do not exists in BricksCollection");
+	    }
     }
 
-    /**
-     * @param string $sId
-     *
-     * @return mixed
-     * @throws PropertyNotFoundException
-     */
-    private function GetBrickProperty($sId)
+	/**
+	 * @return \Combodo\iTop\Portal\Brick\PortalBrick[]|null
+	 * @throws \Exception
+	 */
+    public function GetBricks()
     {
-        if (array_key_exists($sId, $this->getBricks())) {
-            return $this->getBricks()[$sId];
-        }
-
-        throw new PropertyNotFoundException(
-            "The property '$sId' do not exists in BricksCollection with keys: ".array_keys($this->getBricks())
-        );
+        return $this->aAllowedBricks;
     }
 
-    public function getBricks()
-    {
-        if (! isset($this->aAllowedBricksData)) {
-            $this->LazyLoad();
-        }
+	public function GetHomeOrdering()
+	{
+		return $this->aHomeOrdering;
+	}
 
-        return $this->aAllowedBricksData;
-    }
+	public function GetNavigationMenuOrdering()
+	{
+		return $this->aNavigationMenuOrdering;
+	}
 
-    public function getBrickById($id)
+	/**
+	 * @param string $sId
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\PortalBrick
+	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+	 * @throws \Exception
+	 */
+    public function GetBrickById($sId)
     {
-        foreach ($this->getBricks()['bricks'] as $brick) {
-            if ($brick->GetId() === $id)
+        foreach ($this->GetBricks() as $oBrick) {
+            if ($oBrick->GetId() === $sId)
             {
-                return $brick;
+                return $oBrick;
             }
         }
 
-        throw new BrickNotFoundException('Brick with id = "'.$id.'" was not found among loaded bricks.');
+        throw new BrickNotFoundException('Brick with id = "'.$sId.'" was not found among loaded bricks.');
     }
 
-    private function LazyLoad()
+	/**
+	 * @throws \Exception
+	 */
+	private function Load()
     {
         $aRawBrickList = $this->GetRawBrickList();
-
-        // TODO: Are bricks_* still used? Didn't find any references in files. Maybe they could be deprecated.
-        $this->aAllowedBricksData = array(
-            'bricks' => array(),
-            'bricks_total_width' => 0,
-            'bricks_home_count' => 0,
-            'bricks_navigation_menu_count' => 0
-        );
 
         foreach ($aRawBrickList as $oBrick) {
             ApplicationHelper::LoadBrickSecurity($oBrick);
 
             if ($oBrick->GetActive() && $oBrick->IsGrantedForProfiles(UserRights::ListProfiles()))
             {
-                $this->aAllowedBricksData['bricks'][] = $oBrick;
-                $this->aAllowedBricksData['bricks_total_width'] += $oBrick->GetWidth();
+                $this->aAllowedBricks[] = $oBrick;
                 if ($oBrick->GetVisibleHome())
                 {
-                    $this->aAllowedBricksData['bricks_home_count']++;
+                    $this->iDisplayedInHome++;
                 }
                 if ($oBrick->GetVisibleNavigationMenu())
                 {
-                    $this->aAllowedBricksData['bricks_navigation_menu_count']++;
+                    $this->iDisplayedInNavigationMenu++;
                 }
             }
         }
 
         // - Sorting bricks by rank
-        $this->aAllowedBricksData['bricks_ordering'] = array();
         //   - Home
-        $this->aAllowedBricksData['bricks_ordering']['home'] = $this->aAllowedBricksData['bricks'];
-        usort($this->aAllowedBricksData['bricks_ordering']['home'], function (PortalBrick $a, PortalBrick $b) {
+        $this->aHomeOrdering = $this->aAllowedBricks;
+        usort($this->aHomeOrdering, function (PortalBrick $a, PortalBrick $b) {
             return $a->GetRankHome() > $b->GetRankHome();
         });
         //    - Navigation menu
-        $this->aAllowedBricksData['bricks_ordering']['navigation_menu'] = $this->aAllowedBricksData['bricks'];
-        usort($this->aAllowedBricksData['bricks_ordering']['navigation_menu'], function (PortalBrick $a, PortalBrick $b) {
+        $this->aNavigationMenuOrdering = $this->aAllowedBricks;
+        usort($this->aNavigationMenuOrdering, function (PortalBrick $a, PortalBrick $b) {
             return $a->GetRankNavigationMenu() > $b->GetRankNavigationMenu();
         });
     }
 
-    private function GetRawBrickList()
+	/**
+	 * @return array
+	 * @throws \Exception
+	 */
+	private function GetRawBrickList()
     {
         $aBricks = array();
-        foreach ($this->oModuleDesign->GetNodes('/module_design/bricks/brick') as $oBrickNode)
+        /** @var \Combodo\iTop\DesignElement $oBrickNode */
+	    foreach ($this->oModuleDesign->GetNodes('/module_design/bricks/brick') as $oBrickNode)
         {
             $sBrickClass = $oBrickNode->getAttribute('xsi:type');
             try

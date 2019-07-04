@@ -19,19 +19,21 @@
  *
  */
 
-/**
- * Created by Bruno DA SILVA, working for Combodo
- * Date: 30/01/19
- * Time: 16:38
- */
-
 namespace Combodo\iTop\Portal\Twig;
 
+use ArrayAccess;
 use Symfony\Bridge\Twig\AppVariable as DecoratedAppVariable;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class AppVariable implements \ArrayAccess
+/**
+ * Class AppVariable
+ *
+ * @package Combodo\iTop\Portal\Twig
+ * @author Bruno Da Silva <bruno.dasilva@combodo.com>
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.7.0
+ */
+class AppVariable implements ArrayAccess
 {
     /** @var ContainerInterface */
     private $container;

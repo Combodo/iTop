@@ -19,28 +19,34 @@
  *
  */
 
-/**
- * Created by Bruno DA SILVA, working for Combodo
- * Date: 24/01/19
- * Time: 16:52
- */
-
 namespace Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration;
 
-
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Container;
+use DOMFormatException;
 use Exception;
-use utils;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use MetaModel;
 
+/**
+ * Class Forms
+ *
+ * @package Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.7.0
+ */
 class Forms extends AbstractConfiguration
 {
-    public function process(ContainerBuilder $container)
+	/**
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
+	 *
+	 * @throws \Exception
+	 */
+    public function Process(Container $oContainer)
     {
         $aForms = array();
 
-        foreach ($this->getModuleDesign()->GetNodes('/module_design/forms/form') as $oFormNode)
+        /** @var \MFElement $oFormNode */
+	    foreach ($this->GetModuleDesign()->GetNodes('/module_design/forms/form') as $oFormNode)
         {
             try
             {
@@ -63,7 +69,8 @@ class Forms extends AbstractConfiguration
                     );
                     if ($oFormNode->GetOptionalElement('properties') !== null)
                     {
-                        foreach ($oFormNode->GetOptionalElement('properties')->childNodes as $oPropertyNode)
+                    	/** @var \MFElement $oPropertyNode */
+	                    foreach ($oFormNode->GetOptionalElement('properties')->childNodes as $oPropertyNode)
                         {
                             switch ($oPropertyNode->nodeName)
                             {
@@ -77,12 +84,13 @@ class Forms extends AbstractConfiguration
                         }
                     }
 
-                    // Parsing availables modes for that form (view, edit, create, apply_stimulus)
+                    // Parsing available modes for that form (view, edit, create, apply_stimulus)
                     $aFormStimuli = array();
                     if (($oFormNode->GetOptionalElement('modes') !== null) && ($oFormNode->GetOptionalElement('modes')->GetNodes('mode')->length > 0))
                     {
                         $aModes = array();
-                        foreach ($oFormNode->GetOptionalElement('modes')->GetNodes('mode') as $oModeNode)
+                        /** @var \MFElement $oModeNode */
+	                    foreach ($oFormNode->GetOptionalElement('modes')->GetNodes('mode') as $oModeNode)
                         {
                             if ($oModeNode->getAttribute('id') !== '')
                             {
@@ -101,7 +109,8 @@ class Forms extends AbstractConfiguration
                                 // if stimuli are defined, we overwrite the form that could have been set by the generic form
                                 if ($oStimuliNode !== null)
                                 {
-                                    foreach ($oStimuliNode->GetNodes('stimulus') as $oStimulusNode)
+                                	/** @var \MFElement $oStimulusNode */
+	                                foreach ($oStimuliNode->GetNodes('stimulus') as $oStimulusNode)
                                     {
                                         $sStimulusCode = $oStimulusNode->getAttribute('id');
 
@@ -130,7 +139,7 @@ class Forms extends AbstractConfiguration
                         'type' => null,
                         'properties' => $aFormProperties,
                         'fields' => null,
-                        'layout' => null
+                        'layout' => null,
                     );
                     // ... either enumerated fields ...
                     if ($oFormNode->GetOptionalElement('fields') !== null)
@@ -138,7 +147,8 @@ class Forms extends AbstractConfiguration
                         $aFields['type'] = 'custom_list';
                         $aFields['fields'] = array();
 
-                        foreach ($oFormNode->GetOptionalElement('fields')->GetNodes('field') as $oFieldNode)
+                        /** @var \MFElement $oFieldNode */
+	                    foreach ($oFormNode->GetOptionalElement('fields')->GetNodes('field') as $oFieldNode)
                         {
                             $sFieldId = $oFieldNode->getAttribute('id');
                             if ($sFieldId !== '')
@@ -178,13 +188,13 @@ class Forms extends AbstractConfiguration
                     if ($oFormNode->GetOptionalElement('twig') !== null)
                     {
                         // Extracting the twig template and removing the first and last lines (twig tags)
-                        $sXml = $this->getModuleDesign()->saveXML($oFormNode->GetOptionalElement('twig'));
+                        $sXml = $this->GetModuleDesign()->saveXML($oFormNode->GetOptionalElement('twig'));
                         $sXml = preg_replace('/^.+\n/', '', $sXml);
                         $sXml = preg_replace('/\n.+$/', '', $sXml);
 
                         $aFields['layout'] = array(
                             'type' => (preg_match('/\{\{|\{\#|\{\%/', $sXml) === 1) ? 'twig' : 'xhtml',
-                            'content' => $sXml
+                            'content' => $sXml,
                         );
                     }
 
@@ -242,30 +252,28 @@ class Forms extends AbstractConfiguration
                         }
                         else
                         {
-                            throw new \DOMFormatException('There is already a form for the class "'.$sFormClass.'" in "'.$sMode.'"',
+                            throw new DOMFormatException('There is already a form for the class "'.$sFormClass.'" in "'.$sMode.'"',
                                 null, null, $oFormNode);
                         }
                     }
                 }
                 else
                 {
-                    throw new \DOMFormatException('Class tag must be defined', null, null, $oFormNode);
+                    throw new DOMFormatException('Class tag must be defined', null, null, $oFormNode);
                 }
             }
-            catch (\DOMFormatException $e)
+            catch (DOMFormatException $e)
             {
-                throw new \Exception('Could not create from [id="'.$oFormNode->getAttribute('id').'"] from XML because of a DOM problem : '.$e->getMessage());
+                throw new Exception('Could not create from [id="'.$oFormNode->getAttribute('id').'"] from XML because of a DOM problem : '.$e->getMessage());
             }
-            catch (\Exception $e)
+            catch (Exception $e)
             {
-                throw new \Exception('Could not create from from XML : '.$oFormNode->Dump().' '.$e->getMessage());
+                throw new Exception('Could not create from from XML : '.$oFormNode->Dump().' '.$e->getMessage());
             }
         }
 
-        $aPortalConf = $container->getParameter('combodo.portal.instance.conf');
+        $aPortalConf = $oContainer->getParameter('combodo.portal.instance.conf');
 	    $aPortalConf['forms']  = $aForms;
-	    $container->setParameter('combodo.portal.instance.conf', $aPortalConf);
+	    $oContainer->setParameter('combodo.portal.instance.conf', $aPortalConf);
     }
-
-
 }

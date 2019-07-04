@@ -709,7 +709,7 @@ class ApplicationHelper
      * @param string $sClass Object class to find a list for
      * @param string $sList  List name to find
      *
-     * @return array Array of attribute codes
+     * @return string[] Array of attribute codes
      *
      * @throws \CoreException
      */

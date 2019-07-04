@@ -19,15 +19,10 @@
  *
  */
 
-/**
- * Created by Bruno DA SILVA, working for Combodo
- * Date: 24/01/19
- * Time: 15:55
- */
-
 namespace Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration;
 
-
+use Combodo\iTop\DesignElement;
+use iPortalUIExtension;
 use Symfony\Component\DependencyInjection\Container;
 use Exception;
 use utils;
@@ -35,39 +30,51 @@ use UserRights;
 use MetaModel;
 use DOMFormatException;
 
+/**
+ * Class Basic
+ *
+ * @package Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.7.0
+ */
 class Basic extends AbstractConfiguration
 {
-    public function process(Container $container)
+	/**
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
+	 *
+	 * @throws \Exception
+	 */
+    public function Process(Container $oContainer)
     {
         try
         {
             // Parsing file
             // - Default values
-            $aPortalConf = $this->getInitialPortalConf();
+            $aPortalConf = $this->GetInitialPortalConf();
             // - Global portal properties
             $aPortalConf = $this->ParseGlobalProperties($aPortalConf);
             // - Rectifying portal logo url
-            $aPortalConf = $this->appendLogoUri($aPortalConf);
+            $aPortalConf = $this->AppendLogoUri($aPortalConf);
             // - User allowed portals
             $aPortalConf['portals'] = UserRights::GetAllowedPortals();
 
             // - class list
-            $aPortalConf['ui_extensions'] = $this->getUiExtensions($container);
+            $aPortalConf['ui_extensions'] = $this->GetUiExtensions($oContainer);
         }
-        catch (Exception $e)
+        catch (Exception $oException)
         {
-            throw new Exception('Error while parsing portal configuration file : '.$e->getMessage());
+            throw new Exception('Error while parsing portal configuration file : '.$oException->getMessage());
         }
 
-        $container->setParameter('combodo.portal.instance.conf', $aPortalConf);
+        $oContainer->setParameter('combodo.portal.instance.conf', $aPortalConf);
     }
 
-
-
     /**
+     * Returns an array containing the initial portal configuration with all default values
+     *
      * @return array
      */
-    private function getInitialPortalConf()
+    private function GetInitialPortalConf()
     {
         $aPortalConf = array(
             'properties' => array(
@@ -81,12 +88,12 @@ class Basic extends AbstractConfiguration
                 ),
                 'templates' => array(
                     'layout' => 'itop-portal-base/portal/templates/layout.html.twig',
-                    'home' => 'itop-portal-base/portal/templates/home/layout.html.twig'
+                    'home' => 'itop-portal-base/portal/templates/home/layout.html.twig',
                 ),
                 'urlmaker_class' => null,
                 'triggers_query' => null,
                 'attachments' => array(
-                    'allow_delete' => true
+                    'allow_delete' => true,
                 ),
                 'allowed_portals' => array(
                     'opening_mode' => null,
@@ -108,16 +115,19 @@ class Basic extends AbstractConfiguration
         return $aPortalConf;
     }
 
-    /**
-     * @param ModuleDesign $oDesign
-     * @param array        $aPortalConf
-     *
-     * @return array
-     */
+	/**
+	 * @param array $aPortalConf
+	 *
+	 * @return array
+	 * @throws \DOMFormatException
+	 */
     private function ParseGlobalProperties(array $aPortalConf)
     {
-        foreach ($this->getModuleDesign()->GetNodes('/module_design/properties/*') as $oPropertyNode) {
-            switch ($oPropertyNode->nodeName) {
+    	/** @var \MFElement $oPropertyNode */
+	    foreach ($this->GetModuleDesign()->GetNodes('/module_design/properties/*') as $oPropertyNode)
+	    {
+            switch ($oPropertyNode->nodeName)
+            {
                 case 'name':
                 case 'urlmaker_class':
                 case 'triggers_query':
@@ -146,26 +156,32 @@ class Basic extends AbstractConfiguration
         return $aPortalConf;
     }
 
-    /**
-     * @param array $aPortalConf
-     * @param       $oPropertyNode
-     *
-     * @return array
-     */
-    private function ParseTemplateAndTheme(array $aPortalConf, $oPropertyNode)
+	/**
+	 * @param array                       $aPortalConf
+	 * @param \Combodo\iTop\DesignElement $oPropertyNode
+	 *
+	 * @return array
+	 * @throws \DOMFormatException
+	 */
+    private function ParseTemplateAndTheme(array $aPortalConf, DesignElement $oPropertyNode)
     {
-        foreach ($oPropertyNode->GetNodes('template|theme') as $oSubNode) {
-            if (!$oSubNode->hasAttribute('id') || $oSubNode->GetText(null) === null) {
+    	/** @var \MFElement $oSubNode */
+	    foreach ($oPropertyNode->GetNodes('template|theme') as $oSubNode)
+	    {
+            if (!$oSubNode->hasAttribute('id') || $oSubNode->GetText(null) === null)
+            {
                 throw new DOMFormatException(
-                    'Tag '.$oSubNode->nodeName.' must have a "id" attribute as well as a value',
+                    'Tag ' . $oSubNode->nodeName.' must have a "id" attribute as well as a value',
                     null, null, $oSubNode
                 );
             }
 
             $sNodeId = $oSubNode->getAttribute('id');
-            switch ($oSubNode->nodeName) {
+            switch ($oSubNode->nodeName)
+            {
                 case 'theme':
-                    switch ($sNodeId) {
+                    switch ($sNodeId)
+                    {
                         case 'bootstrap':
                         case 'portal':
                         case 'custom':
@@ -177,7 +193,8 @@ class Basic extends AbstractConfiguration
                     }
                     break;
                 case 'template':
-                    switch ($sNodeId) {
+                    switch ($sNodeId)
+                    {
                         case 'layout':
                         case 'home':
                             $aPortalConf['properties']['templates'][$sNodeId] = $oSubNode->GetText(null);
@@ -194,23 +211,27 @@ class Basic extends AbstractConfiguration
         }
 
         return $aPortalConf;
-}
+	}
 
-    /**
-     * @param array $aPortalConf
-     * @param       $oPropertyNode
-     *
-     * @return array
-     */
-    private function ParseAttachments(array $aPortalConf, $oPropertyNode)
+	/**
+	 * @param array                       $aPortalConf
+	 * @param \Combodo\iTop\DesignElement $oPropertyNode
+	 *
+	 * @return array
+	 */
+    private function ParseAttachments(array $aPortalConf, DesignElement $oPropertyNode)
     {
-        foreach ($oPropertyNode->GetNodes('*') as $oSubNode) {
-            switch ($oSubNode->nodeName) {
+    	/** @var \MFElement $oSubNode */
+	    foreach ($oPropertyNode->GetNodes('*') as $oSubNode)
+	    {
+            switch ($oSubNode->nodeName)
+            {
                 case 'allow_delete':
                     $sValue = $oSubNode->GetText();
                     // If the text is null, we keep the default value
                     // Else we set it
-                    if ($sValue !== null) {
+                    if ($sValue !== null)
+                    {
                         $aPortalConf['properties']['attachments'][$oSubNode->nodeName] = ($sValue === 'true') ? true : false;
                     }
                     break;
@@ -218,23 +239,27 @@ class Basic extends AbstractConfiguration
         }
 
         return$aPortalConf;
-}
+	}
 
-    /**
-     * @param array $aPortalConf
-     * @param       $oPropertyNode
-     *
-     * @return array
-     */
-    private function ParseAllowedPortals(array $aPortalConf, $oPropertyNode)
+	/**
+	 * @param array                       $aPortalConf
+	 * @param \Combodo\iTop\DesignElement $oPropertyNode
+	 *
+	 * @return array
+	 */
+    private function ParseAllowedPortals(array $aPortalConf, DesignElement $oPropertyNode)
     {
-        foreach ($oPropertyNode->GetNodes('*') as $oSubNode) {
-            switch ($oSubNode->nodeName) {
+    	/** @var \MFElement $oSubNode */
+	    foreach ($oPropertyNode->GetNodes('*') as $oSubNode)
+	    {
+            switch ($oSubNode->nodeName)
+            {
                 case 'opening_mode':
                     $sValue = $oSubNode->GetText();
                     // If the text is null, we keep the default value
                     // Else we set it
-                    if ($sValue !== null) {
+                    if ($sValue !== null)
+                    {
                         $aPortalConf['properties']['allowed_portals'][$oSubNode->nodeName] = ($sValue === 'self') ? 'self' : 'tab';
                     }
                     break;
@@ -242,17 +267,19 @@ class Basic extends AbstractConfiguration
         }
 
         return $aPortalConf;
-}
+	}
 
-    /**
-     * @param array $aPortalConf
-     *
-     * @return array
-     */
-    private function appendLogoUri(array $aPortalConf)
+	/**
+	 * @param array $aPortalConf
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+    private function AppendLogoUri(array $aPortalConf)
     {
         $sLogoUri = $aPortalConf['properties']['logo'];
-        if (!preg_match('/^http/', $sLogoUri)) {
+        if (!preg_match('/^http/', $sLogoUri))
+        {
             // We prefix it with the server base url
             $sLogoUri = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/'.$sLogoUri;
         }
@@ -261,7 +288,13 @@ class Basic extends AbstractConfiguration
         return $aPortalConf;
 	}
 
-    private function getUiExtensions($container)
+	/**
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
+	private function GetUiExtensions(Container $oContainer)
     {
         $aUIExtensions = array(
             'css_files' => array(),
@@ -271,22 +304,22 @@ class Basic extends AbstractConfiguration
             'html' => array(),
         );
         $aUIExtensionHooks = array(
-            \iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY,
-            \iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU,
-            \iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT,
+            iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY,
+            iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU,
+            iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT,
         );
 
         /** @var iPortalUIExtension $oExtensionInstance */
         foreach (MetaModel::EnumPlugins('iPortalUIExtension') as $oExtensionInstance)
         {
             // Adding CSS files
-            $aImportPaths = array($container->getParameter('combodo.portal.base.absolute_path').'css/');
-            foreach($oExtensionInstance->GetCSSFiles($container) as $sCSSFile)
+            $aImportPaths = array($oContainer->getParameter('combodo.portal.base.absolute_path').'css/');
+            foreach($oExtensionInstance->GetCSSFiles($oContainer) as $sCSSFile)
             {
                 // Removing app root url as we need to pass a path on the file system (relative to app root)
                 $sCSSFilePath = str_replace(utils::GetAbsoluteUrlAppRoot(), '', $sCSSFile);
                 // Compiling SCSS file
-                $sCSSFileCompiled = $container->getParameter('combodo.absolute_url').utils::GetCSSFromSASS($sCSSFilePath,
+                $sCSSFileCompiled = $oContainer->getParameter('combodo.absolute_url').utils::GetCSSFromSASS($sCSSFilePath,
                         $aImportPaths);
 
                 if(!in_array($sCSSFileCompiled, $aUIExtensions['css_files']))
@@ -296,7 +329,7 @@ class Basic extends AbstractConfiguration
             }
 
             // Adding CSS inline
-            $sCSSInline = $oExtensionInstance->GetCSSInline($container);
+            $sCSSInline = $oExtensionInstance->GetCSSInline($oContainer);
             if ($sCSSInline !== null)
             {
                 $aUIExtensions['css_inline'] .= "\n\n".$sCSSInline;
@@ -304,10 +337,10 @@ class Basic extends AbstractConfiguration
 
             // Adding JS files
             $aUIExtensions['js_files'] = array_merge($aUIExtensions['js_files'],
-                $oExtensionInstance->GetJSFiles($container));
+                $oExtensionInstance->GetJSFiles($oContainer));
 
             // Adding JS inline
-            $sJSInline = $oExtensionInstance->GetJSInline($container);
+            $sJSInline = $oExtensionInstance->GetJSInline($oContainer);
             if ($sJSInline !== null)
             {
                 // Note: Semi-colon is to prevent previous script that would have omitted it.
@@ -318,7 +351,7 @@ class Basic extends AbstractConfiguration
             foreach ($aUIExtensionHooks as $sUIExtensionHook)
             {
                 $sFunctionName = 'Get'.$sUIExtensionHook.'HTML';
-                $sHTML = $oExtensionInstance->$sFunctionName($container);
+                $sHTML = $oExtensionInstance->$sFunctionName($oContainer);
                 if ($sHTML !== null)
                 {
                     if (!array_key_exists($sUIExtensionHook, $aUIExtensions['html']))
