@@ -144,7 +144,7 @@ class ObjectController extends AbstractController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render('itop-portal-base/portal/src/views/bricks/object/modal.html.twig', $aData);
+				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
 			}
 			else
 			{
@@ -164,7 +164,7 @@ class ObjectController extends AbstractController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render('itop-portal-base/portal/src/views/bricks/object/layout.html.twig', $aData);
+			$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
 		}
 
 		return $oResponse;
@@ -234,7 +234,7 @@ class ObjectController extends AbstractController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render('itop-portal-base/portal/src/views/bricks/object/modal.html.twig', $aData);
+				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
 			}
 			else
 			{
@@ -254,7 +254,7 @@ class ObjectController extends AbstractController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render('itop-portal-base/portal/src/views/bricks/object/layout.html.twig', $aData);
+			$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
 		}
 
 		return $oResponse;
@@ -304,7 +304,7 @@ class ObjectController extends AbstractController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render('itop-portal-base/portal/src/views/bricks/object/modal.html.twig', $aData);
+				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
 			}
 			else
 			{
@@ -324,7 +324,7 @@ class ObjectController extends AbstractController
 				}
 			}
 			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render('itop-portal-base/portal/src/views/bricks/object/layout.html.twig', $aData);
+			$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
 		}
 
 		return $oResponse;
@@ -499,11 +499,11 @@ class ObjectController extends AbstractController
 			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
 			if (empty($sOperation))
 			{
-				$oResponse = $this->render('itop-portal-base/portal/src/views/bricks/object/modal.html.twig', $aData);
+				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
 			}
 			elseif ($sOperation === 'redirect')
 			{
-				$oResponse = $this->render('itop-portal-base/portal/src/views/modal/mode_loader.html.twig', $aData);
+				$oResponse = $this->render('itop-portal-base/portal/templates/modal/mode_loader.html.twig', $aData);
 			}
 			else
 			{
@@ -512,7 +512,7 @@ class ObjectController extends AbstractController
 		}
 		else
 		{
-			$oResponse = $this->render('itop-portal-base/portal/src/views/bricks/object/layout.html.twig', $aData);
+			$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
 		}
 
 		return $oResponse;
@@ -601,7 +601,7 @@ class ObjectController extends AbstractController
 		{
 			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			$oFormManager->SetApplication($oApp); // TODO: How do we do that?
+			$oFormManager->SetContainer($this->container);
 			$oFormManager->SetObject($oHostObject);
 
 			// Applying action rules if present
@@ -767,7 +767,7 @@ class ObjectController extends AbstractController
 		{
 			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			$oFormManager->SetApplication($oApp); // TODO: How do we do that?
+			$oFormManager->SetContainer($this->container);
 			$oFormManager->SetObject($oHostObject);
 
 			// Applying action rules if present
@@ -990,12 +990,12 @@ class ObjectController extends AbstractController
 			
 			if ($oRequest->isXmlHttpRequest())
 			{
-				$oResponse = $this->render('itop-portal-base/portal/src/views/bricks/object/modal.html.twig', $aData);
+				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
 			}
 			else
 			{
 				//throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
-				$oResponse = $this->render('itop-portal-base/portal/src/views/bricks/object/layout.html.twig', $aData);
+				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
 			}
 		}
 		else
