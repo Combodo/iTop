@@ -24,8 +24,6 @@
 namespace Combodo\iTop\Portal\Helper;
 
 use Combodo\iTop\Portal\Form\ObjectFormManager;
-use Combodo\iTop\Portal\Routing\UrlGenerator;
-use Combodo\iTop\Portal\VariableAccessor\CombodoPortalInstanceConf;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 use DBObjectSet;
 use Dict;
@@ -33,6 +31,7 @@ use iPopupMenuExtension;
 use IssueLog;
 use JSButtonItem;
 use MetaModel;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -63,10 +62,12 @@ class ObjectFormHandlerHelper
 	private $oSecurityHelper;
 	/** @var \Combodo\iTop\Portal\Routing\UrlGenerator */
 	private $oUrlGenerator;
-	/** @var \Combodo\iTop\Portal\VariableAccessor\CombodoPortalInstanceConf */
+	/** @var array */
 	private $aCombodoPortalInstanceConf;
 	/** @var string $sPortalId */
 	private $sPortalId;
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+	private $oContainer;
 
 	/**
 	 * ObjectFormHandlerHelper constructor.
@@ -75,11 +76,12 @@ class ObjectFormHandlerHelper
 	 * @param \Combodo\iTop\Portal\Helper\ContextManipulatorHelper            $oContextManipulator
 	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper                $oScopeValidator
 	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper                      $oSecurityHelper
-	 * @param \Combodo\iTop\Portal\Routing\UrlGenerator                       $oUrlGenerator
-	 * @param \Combodo\iTop\Portal\VariableAccessor\CombodoPortalInstanceConf $aCombodoPortalInstanceConf
+	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface      $oUrlGenerator
+	 * @param array                                                           $aCombodoPortalInstanceConf
 	 * @param string                                                          $sPortalId
+	 * @param \Symfony\Component\DependencyInjection\ContainerInterface       $oContainer
 	 */
-	public function __construct(RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, CombodoPortalInstanceConf $aCombodoPortalInstanceConf, $sPortalId)
+	public function __construct(RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, $aCombodoPortalInstanceConf, $sPortalId, ContainerInterface $oContainer)
 	{
 		$this->oRequestManipulator = $oRequestManipulator;
 		$this->oContextManipulator = $oContextManipulator;
@@ -88,6 +90,7 @@ class ObjectFormHandlerHelper
 		$this->oUrlGenerator = $oUrlGenerator;
 		$this->aCombodoPortalInstanceConf = $aCombodoPortalInstanceConf;
 		$this->sPortalId = $sPortalId;
+		$this->oContainer = $oContainer;
 	}
 
 	/**
@@ -224,10 +227,8 @@ class ObjectFormHandlerHelper
 			$oFormRenderer = new BsFormRenderer();
 			$oFormRenderer->SetEndpoint($sFormEndpoint);
 
-			// TODO: Remove this when ObjectFormManager fixed.
-			$oApp = null;
 			$oFormManager = new ObjectFormManager();
-			$oFormManager->SetApplication($oApp)
+			$oFormManager->SetContainer($this->oContainer)
 				->SetObject($oObject)
 				->SetMode($sMode)
 				->SetActionRulesToken($sActionRulesToken)
@@ -250,11 +251,9 @@ class ObjectFormHandlerHelper
 				throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameters formmanager_class and formmanager_data must be defined.');
 			}
 
-			// TODO: Remove this when ObjectFormManager fixed.
-			$oApp = null;
 			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			$oFormManager->SetApplication($oApp);
+			$oFormManager->SetContainer($this->oContainer);
 
 			// Applying action rules if present
 			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== ''))

@@ -27,8 +27,6 @@
 
 namespace Combodo\iTop\Portal\EventListener;
 
-
-use Combodo\iTop\Portal\VariableAccessor\CombodoPortalInstanceConf;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class ApplicationContextSetUrlMakerClass
@@ -39,11 +37,11 @@ class ApplicationContextSetUrlMakerClass
     private $aCombodoPortalInstanceConf;
 
     /**
-     * @param string $oCombodoPortalInstanceConf
+     * @param array $aCombodoPortalInstanceConf
      */
-    public function __construct(CombodoPortalInstanceConf $oCombodoPortalInstanceConf)
+    public function __construct($aCombodoPortalInstanceConf)
     {
-        $this->aCombodoPortalInstanceConf = $oCombodoPortalInstanceConf->getVariable();
+        $this->aCombodoPortalInstanceConf = $aCombodoPortalInstanceConf;
     }
 
     public function onKernelRequest(GetResponseEvent $oGetResponseEvent)

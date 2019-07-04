@@ -18,44 +18,44 @@
 p_object_create:
   path: '/object/create/{sObjectClass}'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::CreateAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::CreateAction'
 
 p_object_create_from_factory:
   path: '/object/create-from-factory/{sObjectClass}/{sObjectId}/{sEncodedMethodName}'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::CreateFromFactoryAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::CreateFromFactoryAction'
 
 p_object_edit:
   path: '/object/edit/{sObjectClass}/{sObjectId}'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::EditAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::EditAction'
 
 p_object_view:
   path: '/object/view/{sObjectClass}/{sObjectId}'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::ViewAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::ViewAction'
 
 p_object_apply_stimulus:
   path: '/object/apply-stimulus/{sStimulusCode}/{sObjectClass}/{sObjectId}'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::ApplyStimulusAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::ApplyStimulusAction'
 
 p_object_search_regular:
   path: '/object/search'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::SearchRegularAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::SearchRegularAction'
 
 p_object_search_from_attribute:
   path: '/object/search/from-attribute/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::SearchFromAttributeAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::SearchFromAttributeAction'
     sHostObjectClass: ~
     sHostObjectId: ~
 
 p_object_search_autocomplete:
   path: '/object/search'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::SearchAutocompleteAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::SearchAutocompleteAction'
     sHostObjectClass: ~
     sHostObjectId: ~
 
@@ -63,7 +63,7 @@ p_object_search_autocomplete:
 p_object_search_generic:
   path: '/object/search/{sMode}/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::SearchAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::SearchAction'
     sMode: '-sMode-'
     sHostObjectClass: ~
     sHostObjectId: ~
@@ -71,27 +71,27 @@ p_object_search_generic:
 p_object_get_informations_json:
   path: '/object/get-informations/json'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::GetInformationsAsJsonAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::GetInformationsAsJsonAction'
 
 p_object_document_display:
   path: '/object/document/display/{sObjectClass}/{sObjectId}/{sObjectField}'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::DocumentAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::DocumentAction'
     sOperation: 'display'
 
 p_object_document_download:
   path: '/object/document/download/{sObjectClass}/{sObjectId}/{sObjectField}'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::DocumentAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::DocumentAction'
     sOperation: 'download'
 
 p_object_attachment_add:
   path: '/object/attachment/add'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::AttachmentAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::AttachmentAction'
 
 p_object_attachment_download:
   path: '/object/attachment/download/{sAttachmentId}'
   defaults:
-    _controller: 'Combodo\\iTop\\Portal\\Controller\\ObjectController::AttachmentAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::AttachmentAction'
     sOperation: 'download'

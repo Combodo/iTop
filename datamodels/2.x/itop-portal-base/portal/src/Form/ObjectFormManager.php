@@ -43,7 +43,9 @@ use InlineImage;
 use IssueLog;
 use MetaModel;
 use ormTagSet;
-use Silex\Application;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
 use utils;
 
@@ -60,8 +62,8 @@ class ObjectFormManager extends FormManager
 	const ENUM_MODE_CREATE = 'create';
 	const ENUM_MODE_APPLY_STIMULUS = 'apply_stimulus';
 
-	/** @var \Silex\Application $oApp */
-	protected $oApp;
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $oContainer */
+	protected $oContainer;
     /** @var \DBObject $oObject */
 	protected $oObject;
 	protected $sMode;
@@ -150,21 +152,22 @@ class ObjectFormManager extends FormManager
 
 	/**
 	 *
-	 * @return \Silex\Application
+	 * @return \Symfony\Component\DependencyInjection\ContainerInterface
 	 */
-	public function GetApplication()
+	public function GetContainer()
 	{
-		return $this->oApp;
+		return $this->oContainer;
 	}
 
 	/**
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $oContainer
+	 *
 	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
 	 */
-	public function SetApplication($oApp)
+	public function SetContainer(ContainerInterface $oContainer)
 	{
-		$this->oApp = $oApp;
+		$this->oContainer = $oContainer;
 		return $this;
 	}
 
@@ -687,10 +690,9 @@ class ObjectFormManager extends FormManager
 					// - Field that require a search endpoint
 					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\SelectObjectField', 'Combodo\\iTop\\Form\\Field\\LinkedSetField')))
 					{
-						if ($this->oApp !== null)
+						if ($this->oContainer !== null)
 						{
-
-							$sSearchEndpoint = $this->oApp['url_generator']->generate('p_object_search_generic', array(
+							$sSearchEndpoint = $this->oContainer->get('url_generator')->generate('p_object_search_generic', array(
 								'sTargetAttCode' => $oAttDef->GetCode(),
 								'sHostObjectClass' => get_class($this->oObject),
 								'sHostObjectId' => ($this->oObject->IsNew()) ? null : $this->oObject->GetKey(),
@@ -702,23 +704,23 @@ class ObjectFormManager extends FormManager
 					// - Field that require an information endpoint
 					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\LinkedSetField')))
 					{
-						if ($this->oApp !== null)
+						if ($this->oContainer !== null)
 						{
-							$oField->SetInformationEndpoint($this->oApp['url_generator']->generate('p_object_get_informations_json'));
+							$oField->SetInformationEndpoint($this->oContainer->get('url_generator')->generate('p_object_get_informations_json'));
 						}
 					}
 					// - Field that require to apply scope on its DM OQL
 					if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\SelectObjectField')))
 					{
-						if ($this->oApp !== null)
+						if ($this->oContainer !== null)
 						{
 							$oScopeOriginal = ($oField->GetSearch() !== null) ? $oField->GetSearch() : DBSearch::FromOQL($oAttDef->GetValuesDef()->GetFilterExpression());
 
-							$oScopeSearch = $this->oApp['scope_validator']->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oScopeOriginal->GetClass(), UR_ACTION_READ);
+							$oScopeSearch = $this->oContainer->get('scope_validator')->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oScopeOriginal->GetClass(), UR_ACTION_READ);
 							if ($oScopeSearch === null)
 							{
 								IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' has no scope query for ' . $oScopeOriginal->GetClass() . ' class.');
-								$this->oApp->abort(404, Dict::S('UI:ObjectDoesNotExist'));
+								throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 							}
 							$oScopeOriginal = $oScopeOriginal->Intersect($oScopeSearch);
 							// Note : This is to skip the silo restriction on the final query
@@ -753,10 +755,10 @@ class ObjectFormManager extends FormManager
 									// - Field that require a search endpoint (OQL based dropdown list fields)
 									if (in_array(get_class($oCustomField), array('Combodo\\iTop\\Form\\Field\\SelectObjectField')))
 									{
-										if ($this->oApp !== null)
+										if ($this->oContainer !== null)
 										{
 
-											$sSearchEndpoint = $this->oApp['url_generator']->generate('p_object_search_generic', array(
+											$sSearchEndpoint = $this->oContainer->get('url_generator')->generate('p_object_search_generic', array(
 												'sTargetAttCode' => $oAttDef->GetCode(),
 												'sHostObjectClass' => get_class($this->oObject),
 												'sHostObjectId' => ($this->oObject->IsNew()) ? null : $this->oObject->GetKey(),
@@ -792,10 +794,10 @@ class ObjectFormManager extends FormManager
 				if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\LinkedSetField')))
 				{
                     //   - Overriding attributes to display
-					if ($this->oApp !== null)
+					if ($this->oContainer !== null)
 					{
 						// Note : This snippet is inspired from AttributeLinkedSet::MakeFormField()
-						$aAttCodesToDisplay = ApplicationHelper::GetLoadedListFromClass($this->oApp, $oField->GetTargetClass(), 'list');
+						$aAttCodesToDisplay = ApplicationHelper::GetLoadedListFromClass($this->oContainer->getParameter('combodo.portal.instance.conf'), $oField->GetTargetClass(), 'list');
 						// - Adding friendlyname attribute to the list is not already in it
 						$sTitleAttCode = 'friendlyname';
 						if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay))
@@ -873,10 +875,10 @@ class ObjectFormManager extends FormManager
 			{
 				$oField = new FileUploadField('attachments_for_form_' . $oForm->GetId());
 				$oField->SetLabel(Dict::S('Portal:Attachments'))
-					->SetUploadEndpoint($this->oApp['url_generator']->generate('p_object_attachment_add'))
-					->SetDownloadEndpoint($this->oApp['url_generator']->generate('p_object_attachment_download', array('sAttachmentId' => '-sAttachmentId-')))
+					->SetUploadEndpoint($this->oContainer->get('url_generator')->generate('p_object_attachment_add'))
+					->SetDownloadEndpoint($this->oContainer->get('url_generator')->generate('p_object_attachment_download', array('sAttachmentId' => '-sAttachmentId-')))
 					->SetTransactionId($oForm->GetTransactionId())
-					->SetAllowDelete($this->oApp['combodo.portal.instance.conf']['properties']['attachments']['allow_delete'])
+					->SetAllowDelete($this->oContainer->getParameter('combodo.portal.instance.conf')['properties']['attachments']['allow_delete'])
 					->SetObject($this->oObject);
 
 				// Checking if we can edit attachments in the current state
@@ -1008,7 +1010,7 @@ class ObjectFormManager extends FormManager
 				// Activating triggers only on update
 				if ($bActivateTriggers)
 				{
-					$sTriggersQuery = $this->oApp['combodo.portal.instance.conf']['properties']['triggers_query'];
+					$sTriggersQuery = $this->oContainer->getParameter('combodo.portal.instance.conf')['properties']['triggers_query'];
 					if ($sTriggersQuery !== null)
 					{
 						$aParentClasses = MetaModel::EnumParentClasses($sObjectClass, ENUM_PARENT_CLASSES_ALL);
