@@ -1,21 +1,24 @@
 <?php
 
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ *
+ *
+ */
 
 namespace Combodo\iTop\Portal\Controller;
 
@@ -28,9 +31,6 @@ use BinaryExpression;
 use CMDBSource;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\ManageBrick;
-use Combodo\iTop\Portal\Helper\ApplicationHelper;
-use Combodo\iTop\Portal\Helper\ScopeValidatorHelper;
-use Combodo\iTop\Portal\Helper\SecurityHelper;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
@@ -40,7 +40,7 @@ use FieldExpression;
 use iPopupMenuExtension;
 use JSButtonItem;
 use MetaModel;
-use Silex\Application;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use UnaryExpression;
 use URLButtonItem;
@@ -50,40 +50,46 @@ use VariableExpression;
  * Class ManageBrickController
  *
  * @package Combodo\iTop\Portal\Controller
+ * @author Bruno Da Silva <bruno.dasilva@combodo.com>
+ * @author Eric Espie <eric.espie@combodo.com>
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @author Pierre Goiffon <pierre.goiffon@combodo.com>
- * @author Eric Espie <eric.espie@combodo.com>
  * @since 2.3.0
  */
 class ManageBrickController extends BrickController
 {
-	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/src/views/bricks/manage/popup-export-excel.html.twig';
+	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/popup-export-excel.html.twig';
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $oRequest
-     * @param \Silex\Application $oApp
-     * @param string $sBrickId
-     * @param string $sGroupingTab
-     * @param string $sDisplayMode
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Exception
-     * @throws \CoreException
-     * @throws \DictExceptionMissingString
-     * @throws \MySQLException
-     * @throws \OQLException
-     */
-	public function DisplayAction(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sDisplayMode = null)
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 * @param string                                    $sBrickId
+	 * @param string                                    $sGroupingTab
+	 * @param string                                    $sDisplayMode
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 *
+	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function DisplayAction(Request $oRequest, $sBrickId, $sGroupingTab, $sDisplayMode = null)
     {
+	    /** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
+	    $oBrickCollection = $this->get('brick_collection');
+
 		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
-		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
+		$oBrick = $oBrickCollection->GetBrickById($sBrickId);
 
 		if (is_null($sDisplayMode))
 		{
 			$sDisplayMode = $oBrick->GetDefaultDisplayMode();
 		}
-		$aData = $this->GetData($oRequest, $oApp, $sBrickId, $sGroupingTab, $oBrick::AreDetailsNeededForDisplayMode($sDisplayMode));
+		$aData = $this->GetData($oRequest, $sBrickId, $sGroupingTab, $oBrick::AreDetailsNeededForDisplayMode($sDisplayMode));
 
 		$aExportFields = $oBrick->GetExportFields();
 		$aData = $aData + array(
@@ -93,36 +99,38 @@ class ManageBrickController extends BrickController
 		// Preparing response
 		if ($oRequest->isXmlHttpRequest())
 		{
-			$oResponse = $oApp->json($aData);
+			$oResponse = new JsonResponse($aData);
 		}
 		else
 		{
 			$sLayoutTemplate = $oBrick::GetPageTemplateFromDisplayMode($sDisplayMode);
-			$oResponse = $oApp['twig']->render($sLayoutTemplate, $aData);
+			$oResponse = $this->render($sLayoutTemplate, $aData);
 		}
 
 		return $oResponse;
 	}
 
-    /**
-     * Method for the brick's tile on home page
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $oRequest
-     * @param \Silex\Application $oApp
-     * @param string $sBrickId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Exception
-     */
-	public function TileAction(Request $oRequest, Application $oApp, $sBrickId)
+	/**
+	 * Method for the brick's tile on home page
+	 *
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 * @param string                                    $sBrickId
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 *
+	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+	 */
+	public function TileAction(Request $oRequest, $sBrickId)
 	{
+		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
+		$oBrickCollection = $this->get('brick_collection');
+
 		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
-		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
+		$oBrick = $oBrickCollection->GetBrickById($sBrickId);
 
 		try
 		{
-			$aData = $this->GetData($oRequest, $oApp, $sBrickId, null);
+			$aData = $this->GetData($oRequest, $sBrickId, null);
 		}
 		catch (Exception $e)
 		{
@@ -130,31 +138,38 @@ class ManageBrickController extends BrickController
 			$aData = array();
 		}
 
-		return $oApp['twig']->render($oBrick->GetTileTemplatePath(), $aData);
+		return $this->render($oBrick->GetTileTemplatePath(), $aData);
 	}
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $oRequest
-     * @param \Silex\Application $oApp
-     * @param string $sBrickId
-     * @param string $sGroupingTab
-     * @param string $sGroupingArea
-     *
-     * @return \Symfony\Component\HttpFoundation\Request
-     *
-     * @throws \Exception
-     * @throws \DictExceptionMissingString
-     * @throws \MySQLException
-     * @throws \OQLException
-     */
-	public function ExcelExportStartAction(
-		Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $sGroupingArea
-	) {
-		/** @var ManageBrick $oBrick */
-		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 * @param string                                    $sBrickId
+	 * @param string                                    $sGroupingTab
+	 * @param string                                    $sGroupingArea
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 *
+	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function ExcelExportStartAction(Request $oRequest, $sBrickId, $sGroupingTab, $sGroupingArea)
+	{
+		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
+		$oScopeValidator = $this->get('scope_validator');
+		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
+		$oBrickCollection = $this->get('brick_collection');
+
+		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
+		$oBrick = $oBrickCollection->GetBrickById($sBrickId);
 		$oQuery = DBSearch::FromOQL($oBrick->GetOql());
 		$sClass = $oQuery->GetClass();
-		$aData = $this->GetData($oRequest, $oApp, $sBrickId, $sGroupingTab, true);
+		$aData = $this->GetData($oRequest, $sBrickId, $sGroupingTab, true);
 
 		if (isset($aData['aQueries']) && count($aData['aQueries']) === 1)
 		{
@@ -165,11 +180,9 @@ class ManageBrickController extends BrickController
 		}
 		else
 		{
-			/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
-			$oScopeHelper = $oApp['scope_validator'];
-			$oScopeHelper->AddScopeToQuery($oQuery, $sClass);
+			$oScopeValidator->AddScopeToQuery($oQuery, $sClass);
 			$aData = array();
-			$this->ManageSearchValue($oApp, $aData, $oQuery, $sClass);
+			$this->ManageSearchValue($aData, $oQuery, $sClass);
 
 			// Grouping tab
 			if ($oBrick->HasGroupingTabs())
@@ -180,7 +193,7 @@ class ManageBrickController extends BrickController
 				if ($oBrick->IsGroupingTabsByDistinctValues())
 				{
 					$sGroupingTabAttCode = $aGroupingTabs['attribute'];
-					$aGroupingTabsValues = $this->GroupByAttribute($oQuery, $sGroupingTabAttCode, $oApp, $oBrick);
+					$aGroupingTabsValues = $this->GroupByAttribute($oQuery, $sGroupingTabAttCode, $oBrick);
 					$oQuery = $oQuery->Intersect($aGroupingTabsValues[$sGroupingTab]['condition']);
 				}
 				else
@@ -234,28 +247,44 @@ class ManageBrickController extends BrickController
 			'sOQL' => $oSearch->ToOQL(),
 		);
 
-		return $oApp['twig']->render(static::EXCEL_EXPORT_TEMPLATE_PATH, $aData);
+		return $this->render(static::EXCEL_EXPORT_TEMPLATE_PATH, $aData);
 	}
 
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $oRequest
-     * @param \Silex\Application $oApp
-     * @param string $sBrickId
-     * @param string $sGroupingTab
-     * @param bool $bNeedDetails
-     *
-     * @return array
-     *
-     * @throws \Exception
-     * @throws \CoreException
-     * @throws \DictExceptionMissingString
-     * @throws \MySQLException
-     * @throws \OQLException
-     */
-	public function GetData(Request $oRequest, Application $oApp, $sBrickId, $sGroupingTab, $bNeedDetails = false)
+	/**
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 * @param string                                    $sBrickId
+	 * @param string                                    $sGroupingTab
+	 * @param bool                                      $bNeedDetails
+	 *
+	 * @return array
+	 *
+	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function GetData(Request $oRequest, $sBrickId, $sGroupingTab, $bNeedDetails = false)
 	{
+		/** @var string $sPortalId */
+		$sPortalId = $this->getParameter('combodo.portal.instance.id');
+
+		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
+		$oRequestManipulator = $this->get('request_manipulator');
+		/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
+		$oUrlGenerator = $this->get('url_generator');
+		/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
+		$oSecurityHelper = $this->get('security_helper');
+		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
+		$oScopeValidator = $this->get('scope_validator');
+		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
+		$oBrickCollection = $this->get('brick_collection');
+
 		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
-		$oBrick = ApplicationHelper::GetLoadedBrickFromId($oApp, $sBrickId);
+		$oBrick = $oBrickCollection->GetBrickById($sBrickId);
 
 		$aData = array();
 		$aGroupingTabsValues = array();
@@ -263,11 +292,11 @@ class ManageBrickController extends BrickController
 		$aQueries = array();
 		$bHasScope = true;
 
-		// Getting current dataloading mode (First from router parameter, then query parameter, then default brick value)
-		$sDataLoading = $oApp['request_manipulator']->ReadParam('sDataLoading', $oBrick->GetDataLoading());
+		// Getting current data loading mode (First from router parameter, then query parameter, then default brick value)
+		$sDataLoading = $oRequestManipulator->ReadParam('sDataLoading', $oBrick->GetDataLoading());
 
 		// - Retrieving the grouping areas to display
-		$sGroupingArea = $oApp['request_manipulator']->ReadParam('sGroupingArea', '');
+		$sGroupingArea = $oRequestManipulator->ReadParam('sGroupingArea', '');
 		if (!empty($sGroupingArea))
 		{
 			$bNeedDetails = true;
@@ -298,7 +327,7 @@ class ManageBrickController extends BrickController
 			if ($oBrick->IsGroupingTabsByDistinctValues())
 			{
 				$sGroupingTabAttCode = $aGroupingTabs['attribute'];
-				$aGroupingTabsValues = $this->GroupByAttribute($oQuery, $sGroupingTabAttCode, $oApp, $oBrick);
+				$aGroupingTabsValues = $this->GroupByAttribute($oQuery, $sGroupingTabAttCode, $oBrick);
 				foreach ($aGroupingTabsValues as $aResult)
 				{
 					$iCount += $aResult['count'];
@@ -312,9 +341,7 @@ class ManageBrickController extends BrickController
 					$oConditionQuery = $oQuery->Intersect(DBSearch::FromOQL($aGroup['condition']));
 					// - Restricting query to scope
 
-					/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
-					$oScopeHelper = $oApp['scope_validator'];
-					$bHasScope = $oScopeHelper->AddScopeToQuery($oConditionQuery, $oConditionQuery->GetClass());
+					$bHasScope = $oScopeValidator->AddScopeToQuery($oConditionQuery, $oConditionQuery->GetClass());
 					if ($bHasScope)
 					{
 						// - Building ObjectSet
@@ -339,7 +366,7 @@ class ManageBrickController extends BrickController
 		}
 		else
 		{
-			$oConditionQuery = $this->GetScopedQuery($oApp, $oBrick, $sClass);
+			$oConditionQuery = $this->GetScopedQuery($oBrick, $sClass);
 			if (!is_null($oConditionQuery))
 			{
 				$oSet = new DBObjectSet($oConditionQuery);
@@ -369,7 +396,7 @@ class ManageBrickController extends BrickController
 		}
 
         // - Adding search clause if necessary
-        $this->ManageSearchValue($oApp, $aData, $oQuery, $sClass, $aColumnsAttrs);
+        $this->ManageSearchValue($aData, $oQuery, $sClass, $aColumnsAttrs);
 
 		// Preparing areas
 		// - We need to retrieve distinct values for the grouping attribute
@@ -382,7 +409,7 @@ class ManageBrickController extends BrickController
 			// For root classes
 			if (MetaModel::IsValidAttCode($sClass, $sGroupingAreaAttCode))
 			{
-				$oDistinctQuery = $this->GetScopedQuery($oApp, $oBrick, $sClass);
+				$oDistinctQuery = $this->GetScopedQuery($oBrick, $sClass);
 				// Adding grouping conditions
 				$oFieldExp = new FieldExpression($sGroupingAreaAttCode, $oDistinctQuery->GetClassAlias());
 				$sDistinctSql = $oDistinctQuery->MakeGroupByQuery(array(), array('grouped_by_1' => $oFieldExp), true);
@@ -435,9 +462,7 @@ class ManageBrickController extends BrickController
 				// Restricting query to allowed scope on each classes
 				// Note: Will need to moved the scope restriction on queries elsewhere when we consider grouping on something else than finalclass
 				// Note: We now get view scope instead of edit scope as we allowed users to view/edit objects in the brick regarding their rights
-				/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeHelper */
-				$oScopeHelper = $oApp['scope_validator'];
-				$bHasScope = $oScopeHelper->AddScopeToQuery($oAreaQuery, $aGroupingAreasValue['value']);
+				$bHasScope = $oScopeValidator->AddScopeToQuery($oAreaQuery, $aGroupingAreasValue['value']);
 				if (!$bHasScope)
 				{
 					// if no scope apply does not allow any data
@@ -457,7 +482,7 @@ class ManageBrickController extends BrickController
 				// - Update $sDataLoading with its new value regarding the number of record and the threshold
 				$oCountSet = new DBObjectSet($oQuery);
 				$oCountSet->OptimizeColumnLoad(array());
-				$fThreshold = (float)MetaModel::GetModuleSetting($oApp['combodo.portal.instance.id'],
+				$fThreshold = (float)MetaModel::GetModuleSetting($sPortalId,
 					'lazy_loading_threshold');
 				$sDataLoading = ($oCountSet->Count() > $fThreshold) ? AbstractBrick::ENUM_DATA_LOADING_LAZY : AbstractBrick::ENUM_DATA_LOADING_FULL;
 				unset($oCountSet);
@@ -475,8 +500,8 @@ class ManageBrickController extends BrickController
 					if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY)
 					{
 						// Retrieving parameters
-						$iPageNumber = (int)$oApp['request_manipulator']->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
-						$iListLength = (int)$oApp['request_manipulator']->ReadParam('iListLength', ManageBrick::DEFAULT_LIST_LENGTH, FILTER_SANITIZE_NUMBER_INT);
+						$iPageNumber = (int)$oRequestManipulator->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
+						$iListLength = (int)$oRequestManipulator->ReadParam('iListLength', ManageBrick::DEFAULT_LIST_LENGTH, FILTER_SANITIZE_NUMBER_INT);
 
 						// Getting total records number
 						$oCountSet = new DBObjectSet($oQuery);
@@ -509,7 +534,7 @@ class ManageBrickController extends BrickController
 
 					$oSet->OptimizeColumnLoad($aColumnsToLoad);
 					$oSet->SetOrderByClasses();
-					SecurityHelper::PreloadForCache($oApp, $oSet->GetFilter(),
+					$oSecurityHelper->PreloadForCache($oSet->GetFilter(),
 						$aColumnsToLoad[$oQuery->GetClassAlias()] /* preloading only extkeys from the main class */);
 					$aSets[$sKey] = $oSet;
 				}
@@ -554,13 +579,12 @@ class ManageBrickController extends BrickController
 						if ($sItemAttr === $sMainActionAttrCode)
 						{
 							// Checking if we can edit the object
-							if (($oBrick->GetOpeningMode() === ManageBrick::ENUM_ACTION_EDIT) && SecurityHelper::IsActionAllowed($oApp,
-									UR_ACTION_MODIFY, $sCurrentClass, $oCurrentRow->GetKey()))
+							if (($oBrick->GetOpeningMode() === ManageBrick::ENUM_ACTION_EDIT) && $oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sCurrentClass, $oCurrentRow->GetKey()))
 							{
 								$sActionType = ManageBrick::ENUM_ACTION_EDIT;
 							}
 							// - Otherwise, check if view is allowed
-							elseif (SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $sCurrentClass,
+							elseif ($oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sCurrentClass,
 								$oCurrentRow->GetKey()))
 							{
 								$sActionType = ManageBrick::ENUM_ACTION_VIEW;
@@ -592,7 +616,7 @@ class ManageBrickController extends BrickController
 							if ($oCurrentRow->Get($sItemAttr) !== $oAttDef->GetNullValue())
 							{
 								// Checking if we can view the object
-								if ((SecurityHelper::IsActionAllowed($oApp, UR_ACTION_READ, $oAttDef->GetTargetClass(),
+								if (($oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $oAttDef->GetTargetClass(),
 									$oCurrentRow->Get($sItemAttr))))
 								{
 									$aActions[] = array(
@@ -609,7 +633,7 @@ class ManageBrickController extends BrickController
                             $oOrmDoc = $oCurrentRow->Get($sItemAttr);
                             if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
                             {
-                                $sUrl = $oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($oCurrentRow), 'sObjectId' => $oCurrentRow->GetKey(), 'sObjectField' => $sItemAttr, 'cache' => 86400));
+                                $sUrl = $oUrlGenerator->generate('p_object_document_display', array('sObjectClass' => get_class($oCurrentRow), 'sObjectId' => $oCurrentRow->GetKey(), 'sObjectField' => $sItemAttr, 'cache' => 86400));
                             }
                             else
                             {
@@ -648,7 +672,7 @@ class ManageBrickController extends BrickController
                     foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
 					{
 						foreach ($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJLISTITEM_ACTIONS, array(
-							'portal_id' => $oApp['combodo.portal.instance.id'],
+							'portal_id' => $sPortalId,
 							'object' => $oCurrentRow
 						)) as $oMenuItem)
 						{
@@ -730,7 +754,7 @@ class ManageBrickController extends BrickController
 						'label' => $aValues['label'],
 						'label_html' => $aValues['label_html'],
 					);
-					$aUrls[] = $oApp['url_generator']->generate('p_manage_brick', array(
+					$aUrls[] = $oUrlGenerator->generate('p_manage_brick', array(
 						'sBrickId' => $sBrickId,
 						'sDisplayMode' => 'default',
 						'sGroupingTab' => $aValues['value']
@@ -767,20 +791,22 @@ class ManageBrickController extends BrickController
 		return $aData;
 	}
 
-    /**
-     * @param \Silex\Application $oApp
-     * @param array $aData
-     * @param \DBSearch $oQuery
-     * @param string $sClass
-     * @param array $aColumnsAttrs
-     *
-     * @throws \Exception
-     * @throws \CoreException
-     */
-	protected function ManageSearchValue(Application $oApp, &$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs = array())
+	/**
+	 * @param array     $aData
+	 * @param \DBSearch $oQuery
+	 * @param string    $sClass
+	 * @param array     $aColumnsAttrs
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	protected function ManageSearchValue(&$aData, DBSearch &$oQuery, $sClass, $aColumnsAttrs = array())
 	{
+		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
+		$oRequestManipulator = $this->get('request_manipulator');
+
 		// Getting search value
-		$sSearchValue = $oApp['request_manipulator']->ReadParam('sSearchValue', '');
+		$sSearchValue = $oRequestManipulator->ReadParam('sSearchValue', '');
 
 		// - Adding search clause if necessary
 		// Note : This is a very naive search at the moment
@@ -829,30 +855,30 @@ class ManageBrickController extends BrickController
 		$aData['sSearchValue'] = $sSearchValue;
 	}
 
-    /**
-     * Get the groups using a given attribute code.
-     * If a limit is given, the remaining groups are aggregated (groupby result and search request).
-     *
-     * @param \DBSearch $oQuery Initial query
-     * @param string $sGroupingTabAttCode Attribute code to group by
-     * @param \Silex\Application $oApp
-     * @param \Combodo\iTop\Portal\Brick\ManageBrick $oBrick
-     *
-     * @return array of results from the groupby request and the corrsponding search.
-     *
-     * @throws \MySQLException
-     * @throws \OQLException
-     * @throws \Exception
-     */
+	/**
+	 * Get the groups using a given attribute code.
+	 * If a limit is given, the remaining groups are aggregated (groupby result and search request).
+	 *
+	 * @param \DBSearch                              $oQuery              Initial query
+	 * @param string                                 $sGroupingTabAttCode Attribute code to group by
+	 * @param \Combodo\iTop\Portal\Brick\ManageBrick $oBrick
+	 *
+	 * @return array of results from the groupby request and the corrsponding search.
+	 *
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
 	protected function GroupByAttribute(
-		DBSearch $oQuery, $sGroupingTabAttCode, Application $oApp, ManageBrick $oBrick
+		DBSearch $oQuery, $sGroupingTabAttCode, ManageBrick $oBrick
 	) {
+		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
+		$oScopeValidator = $this->get('scope_validator');
+
 		$aGroupingTabsValues = array();
 		$aDistinctResults = array();
 		$oDistinctQuery = DBSearch::FromOQL($oBrick->GetOql());
-		/** @var ScopeValidatorHelper $oScopeHelper */
-		$oScopeHelper = $oApp['scope_validator'];
-		$bHasScope = $oScopeHelper->AddScopeToQuery($oDistinctQuery, $oDistinctQuery->GetClass());
+		$bHasScope = $oScopeValidator->AddScopeToQuery($oDistinctQuery, $oDistinctQuery->GetClass());
 		if ($bHasScope)
 		{
 			// - Adding field condition
@@ -948,22 +974,22 @@ class ManageBrickController extends BrickController
 		return $aGroupingTabsValues;
 	}
 
-    /**
-     * @param \Silex\Application $oApp
-     * @param \Combodo\iTop\Portal\Brick\ManageBrick $oBrick
-     * @param string $sClass
-     *
-     * @return \DBSearch
-     *
-     * @throws \CoreException
-     * @throws \OQLException
-     */
-	protected function GetScopedQuery(Application $oApp, ManageBrick $oBrick, $sClass)
+	/**
+	 * @param \Combodo\iTop\Portal\Brick\ManageBrick $oBrick
+	 * @param string                                 $sClass
+	 *
+	 * @return \DBSearch
+	 *
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	protected function GetScopedQuery(ManageBrick $oBrick, $sClass)
 	{
+		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
+		$oScopeValidator = $this->get('scope_validator');
+
 		$oQuery = DBSearch::FromOQL($oBrick->GetOql());
-		/** @var ScopeValidatorHelper $oScopeHelper */
-		$oScopeHelper = $oApp['scope_validator'];
-		$oScopeHelper->AddScopeToQuery($oQuery, $sClass);
+		$oScopeValidator->AddScopeToQuery($oQuery, $sClass);
 
 		return $oQuery;
 	}

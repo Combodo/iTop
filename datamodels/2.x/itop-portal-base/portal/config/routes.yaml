@@ -36,7 +36,7 @@ browse_brick:
 manage_brick:
   resource: 'routes/manage_brick.yaml'
 
-p_aggregatepage_brick:
+aggregatepage_brick:
   resource: 'routes/aggregatepage_brick.yaml'
 
 extensions_extra_routes:

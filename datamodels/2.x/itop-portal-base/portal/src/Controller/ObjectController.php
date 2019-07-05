@@ -380,12 +380,8 @@ class ObjectController extends AbstractController
 		$aRouteParams = array(
 			'sObjectClass' => get_class($oTargetObject)
 		);
-		$sRedirectRoute = $oUrlGenerator->generate('p_object_create', $aRouteParams);
-		// - Request
-		$oSubRequest = Request::create($sRedirectRoute, 'GET', $oRequest->query->all(), $oRequest->cookies->all(), array(), $oRequest->server->all());
 
-		// TODO: How do we do that in Symfony?
-		return $oApp->handle($oSubRequest, HttpKernelInterface::SUB_REQUEST, true);
+		return $this->forward($this->GetControllerNameFromRoute('p_object_create'), $aRouteParams, $oRequest->query->all());
 	}
 
 	/**
@@ -405,6 +401,9 @@ class ObjectController extends AbstractController
 	 */
 	public function ApplyStimulusAction(Request $oRequest, $sObjectClass, $sObjectId, $sStimulusCode)
 	{
+		/** @var array $aCombodoPortalInstanceConf */
+		$aCombodoPortalInstanceConf = $this->getParameter('combodo.portal.instance.conf');
+
 		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 		$oRequestManipulator = $this->get('request_manipulator');
 		/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
@@ -442,7 +441,7 @@ class ObjectController extends AbstractController
 		$sOperation = $oRequestManipulator->ReadParam('operation', '');
 
 		// Retrieving form properties
-        $aStimuliForms = ApplicationHelper::GetLoadedFormFromClass($this->getParameter('combodo.portal.instance.conf')['forms'], $sObjectClass, 'apply_stimulus');
+		$aStimuliForms = ApplicationHelper::GetLoadedFormFromClass($aCombodoPortalInstanceConf['forms'], $sObjectClass, 'apply_stimulus');
         if(array_key_exists($sStimulusCode, $aStimuliForms))
         {
             $aFormProperties = $aStimuliForms[$sStimulusCode];
@@ -717,6 +716,9 @@ class ObjectController extends AbstractController
 	 */
 	public function SearchFromAttributeAction(Request $oRequest, $sTargetAttCode, $sHostObjectClass, $sHostObjectId = null)
 	{
+		/** @var array $aCombodoPortalInstanceConf */
+		$aCombodoPortalInstanceConf = $this->getParameter('combodo.portal.instance.conf');
+
 		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 		$oRequestManipulator = $this->get('request_manipulator');
 		/** @var \Combodo\iTop\Portal\Helper\ContextManipulatorHelper $oContextManipulator */
@@ -829,7 +831,7 @@ class ObjectController extends AbstractController
 		}
 		
 		// - Retrieving class attribute list
-		$aAttCodes = ApplicationHelper::GetLoadedListFromClass($sTargetObjectClass, 'list');
+		$aAttCodes = ApplicationHelper::GetLoadedListFromClass($aCombodoPortalInstanceConf['lists'], $sTargetObjectClass, 'list');
 		// - Adding friendlyname attribute to the list is not already in it
 		$sTitleAttCode = 'friendlyname';
 		if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodes))
@@ -1362,4 +1364,20 @@ class ObjectController extends AbstractController
 		return $aObjectData;
 	}
 
+	/**
+	 * Returns a string containing the controller and action name of a specific route, typically used for request forwarding.
+	 *
+	 * Example: 'p_object_create' returns 'Combodo\iTop\Portal\Controller\ObjectController::CreateAction'
+	 *
+	 * @param string $sRouteName
+	 *
+	 * @return string
+	 */
+	private function GetControllerNameFromRoute($sRouteName)
+	{
+		$oRouteCollection = $this->get('router')->getRouteCollection();
+		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
+
+		return $aRouteDefaults['_controller'];
+	}
 }

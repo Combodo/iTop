@@ -699,35 +699,34 @@ class ApplicationHelper
 		return $aForm;
 	}
 
-    /**
-     * Return the attribute list for the $sClassname in $sList.
-     *
-     * If not found, tries to find one from the closest parent class.
-     * Else returns a default attribute list based on zlist 'list'
-     *
-     * @param array  $combodoPortalInstanceConf
-     * @param string $sClass Object class to find a list for
-     * @param string $sList  List name to find
-     *
-     * @return string[] Array of attribute codes
-     *
-     * @throws \CoreException
-     */
-	public static function GetLoadedListFromClass($combodoPortalInstanceConf, $sClass, $sList = 'default')
+	/**
+	 * Return the attribute list for the $sClassname in $sList.
+	 *
+	 * If not found, tries to find one from the closest parent class.
+	 * Else returns a default attribute list based on zlist 'list'
+	 *
+	 * @param array  $aLists
+	 * @param string $sClass Object class to find a list for
+	 * @param string $sList  List name to find
+	 *
+	 * @return string[] Array of attribute codes
+	 *
+	 * @throws \CoreException
+	 */
+	public static function GetLoadedListFromClass($aLists, $sClass, $sList = 'default')
 	{
-		$aLists = $combodoPortalInstanceConf['lists'];
-		$aList = null;
+		$aFoundList = null;
 		$aAttCodes = array();
 
 		// We try to find the list for that class
 		if (isset($aLists[$sClass]) && isset($aLists[$sClass][$sList]))
 		{
-			$aList = $aLists[$sClass][$sList];
+			$aFoundList = $aLists[$sClass][$sList];
 		}
 		// Else we try to found the default list for that class
 		elseif (isset($aLists[$sClass]) && isset($aLists[$sClass]['default']))
 		{
-			$aList = $aLists[$sClass]['default'];
+			$aFoundList = $aLists[$sClass]['default'];
 		}
 		// If not found, we try find one from the closest parent class
 		else
@@ -737,22 +736,22 @@ class ApplicationHelper
 				// Trying to find the right list
 				if (isset($aLists[$sParentClass]) && isset($aLists[$sParentClass][$sList]))
 				{
-					$aList = $aLists[$sParentClass][$sList];
+					$aFoundList = $aLists[$sParentClass][$sList];
 					break;
 				}
 				// Or the default list
 				elseif (isset($aLists[$sParentClass]) && isset($aLists[$sParentClass]['default']))
 				{
-					$aList = $aLists[$sParentClass]['default'];
+					$aFoundList = $aLists[$sParentClass]['default'];
 					break;
 				}
 			}
 		}
 
 		// If found, we flatten the list to keep only the attribute codes (not the rank)
-		if ($aList !== null)
+		if ($aFoundList !== null)
 		{
-			foreach ($aList as $aItem)
+			foreach ($aFoundList as $aItem)
 			{
 				$aAttCodes[] = $aItem['att_code'];
 			}

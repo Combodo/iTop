@@ -24,6 +24,7 @@
 namespace Combodo\iTop\Portal\Helper;
 
 use Combodo\iTop\Portal\Form\ObjectFormManager;
+use Combodo\iTop\Portal\Twig\AppExtension;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 use DBObjectSet;
 use Dict;
@@ -36,6 +37,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig_Environment;
+use Twig_Loader_Array;
 use URLButtonItem;
 use UserRights;
 
@@ -66,22 +69,25 @@ class ObjectFormHandlerHelper
 	private $aCombodoPortalInstanceConf;
 	/** @var string $sPortalId */
 	private $sPortalId;
+	/** @var \Combodo\iTop\Portal\Twig\AppExtension */
+	private $oAppExtension;
 	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
 	private $oContainer;
 
 	/**
 	 * ObjectFormHandlerHelper constructor.
 	 *
-	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper            $oRequestManipulator
-	 * @param \Combodo\iTop\Portal\Helper\ContextManipulatorHelper            $oContextManipulator
-	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper                $oScopeValidator
-	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper                      $oSecurityHelper
-	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface      $oUrlGenerator
-	 * @param array                                                           $aCombodoPortalInstanceConf
-	 * @param string                                                          $sPortalId
-	 * @param \Symfony\Component\DependencyInjection\ContainerInterface       $oContainer
+	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper       $oRequestManipulator
+	 * @param \Combodo\iTop\Portal\Helper\ContextManipulatorHelper       $oContextManipulator
+	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper           $oScopeValidator
+	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper                 $oSecurityHelper
+	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $oUrlGenerator
+	 * @param array                                                      $aCombodoPortalInstanceConf
+	 * @param string                                                     $sPortalId
+	 * @param \Combodo\iTop\Portal\Twig\AppExtension                     $oAppExtension
+	 * @param \Symfony\Component\DependencyInjection\ContainerInterface  $oContainer
 	 */
-	public function __construct(RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, $aCombodoPortalInstanceConf, $sPortalId, ContainerInterface $oContainer)
+	public function __construct(RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, $aCombodoPortalInstanceConf, $sPortalId, AppExtension $oAppExtension, ContainerInterface $oContainer)
 	{
 		$this->oRequestManipulator = $oRequestManipulator;
 		$this->oContextManipulator = $oContextManipulator;
@@ -90,6 +96,7 @@ class ObjectFormHandlerHelper
 		$this->oUrlGenerator = $oUrlGenerator;
 		$this->aCombodoPortalInstanceConf = $aCombodoPortalInstanceConf;
 		$this->sPortalId = $sPortalId;
+		$this->oAppExtension = $oAppExtension;
 		$this->oContainer = $oContainer;
 	}
 
@@ -353,5 +360,25 @@ class ObjectFormHandlerHelper
 		$aFormData['display_mode'] = (isset($aFormProperties['properties'])) ? $aFormProperties['properties']['display_mode'] : ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
 
 		return $aFormData;
+	}
+
+	public function RenderFormFromTwig($sId, $sTwigString, $aData)
+	{
+		// Creating sandbox twig env. to load and test the custom form template
+		$oTwig = new Twig_Environment(new Twig_Loader_Array( array($sId => $sTwigString) ));
+
+		// Manually registering filters and functions as we didn't find how to do it automatically
+		$aFilters = $this->oAppExtension->getFilters();
+		foreach($aFilters as $oFilter)
+		{
+			$oTwig->addFilter($oFilter);
+		}
+		$aFunctions = $this->oAppExtension->getFunctions();
+		foreach($aFunctions as $oFunction)
+		{
+			$oTwig->addFunction($oFunction);
+		}
+
+		return $oTwig->render($sId, $aData);
 	}
 }

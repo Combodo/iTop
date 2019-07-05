@@ -247,10 +247,6 @@ class ObjectFormManager extends FormManager
 	 */
 	public function SetFormProperties($aFormProperties)
 	{
-//		echo '<pre>';
-//		print_r($aFormProperties);
-//		echo '</pre>';
-//		die();
 		$this->aFormProperties = $aFormProperties;
 		return $this;
 	}
@@ -399,10 +395,20 @@ class ObjectFormManager extends FormManager
 			// Checking if we need to render the template from twig to html in order to parse the fields
 			if ($this->aFormProperties['layout']['type'] === 'twig')
 			{
-				// Creating sandbox twig env. to load and test the custom form template
-				$oTwig = new \Twig_Environment(new \Twig_Loader_Array( array($oForm->GetId() => $this->aFormProperties['layout']['content']) ));
-				ApplicationHelper::RegisterTwigExtensions($oTwig);
-				$sRendered = $oTwig->render($oForm->GetId(), array('oRenderer' => $this->oRenderer, 'oObject' => $this->oObject));
+				if($this->oContainer !== null)
+				{
+					/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oObjectFormHandler */
+					$oObjectFormHandler = $this->oContainer->get('object_form_handler');
+					$sRendered = $oObjectFormHandler->RenderFormFromTwig(
+						$oForm->GetId(),
+						$this->aFormProperties['layout']['content'],
+						array('oRenderer' => $this->oRenderer, 'oObject' => $this->oObject)
+					);
+				}
+				else
+				{
+					$sRendered = 'Form not rendered because of missing container';
+				}
 			}
 			else
 			{
@@ -797,7 +803,7 @@ class ObjectFormManager extends FormManager
 					if ($this->oContainer !== null)
 					{
 						// Note : This snippet is inspired from AttributeLinkedSet::MakeFormField()
-						$aAttCodesToDisplay = ApplicationHelper::GetLoadedListFromClass($this->oContainer->getParameter('combodo.portal.instance.conf'), $oField->GetTargetClass(), 'list');
+						$aAttCodesToDisplay = ApplicationHelper::GetLoadedListFromClass($this->oContainer->getParameter('combodo.portal.instance.conf')['lists'], $oField->GetTargetClass(), 'list');
 						// - Adding friendlyname attribute to the list is not already in it
 						$sTitleAttCode = 'friendlyname';
 						if (($sTitleAttCode !== null) && !in_array($sTitleAttCode, $aAttCodesToDisplay))

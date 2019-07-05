@@ -69,7 +69,7 @@ abstract class PortalBrick extends AbstractBrick
 	protected $sTitleHome;
 	protected $sTitleNavigationMenu;
 
-	static function GetRouteName()
+	public static function GetRouteName()
 	{
 		return static::$sRouteName;
 	}
@@ -77,7 +77,7 @@ abstract class PortalBrick extends AbstractBrick
 	/**
 	 * Default attributes values of AbstractBrick are specified in the definition, not the constructor.
 	 */
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 
