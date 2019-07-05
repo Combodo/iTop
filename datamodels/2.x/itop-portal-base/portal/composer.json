@@ -27,7 +27,8 @@
 			"Combodo\\iTop\\Portal\\": "src/"
 		},
 		"classmap": [
-			"../../../../core"
+			"../../../../core",
+			"../../../../application"
 		]
 	},
 	"autoload-dev": {

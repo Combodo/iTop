@@ -1,10 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-use App\Kernel;
+use Combodo\iTop\Portal\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Debug\Debug;
 
 if (false === in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
     echo 'Warning: The console should be invoked via the CLI version of PHP, not the '.\PHP_SAPI.' SAPI'.\PHP_EOL;
@@ -12,13 +11,36 @@ if (false === in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
 
 set_time_limit(0);
 
-require dirname(__DIR__).'/vendor/autoload.php';
+if(!defined('APPROOT'))
+{
+	if (file_exists(__DIR__ . '/../../../../approot.inc.php'))
+	{
+		require_once __DIR__ . '/../../../../approot.inc.php';   // When in env-xxxx folder
+	}
+	else
+	{
+		require_once __DIR__ . '/../../../../../approot.inc.php';   // When in datamodels/x.x folder
+	}
+}
+require_once APPROOT . 'lib/composer-vendor/autoload.php';
 
 if (!class_exists(Application::class)) {
     throw new RuntimeException('You need to add "symfony/framework-bundle" as a Composer dependency.');
 }
 
-$input = new ArgvInput();
+// Remove --portal_id from CLI params to avoid SF CLI conflicts
+// Note: The parameter is needed when calling the bin/console to determine which portal to select
+$aCleanedArgv = $_SERVER['argv'];
+foreach($aCleanedArgv as $iArg => $sArg)
+{
+	if (preg_match('/^--portal_id=(.*)$/', $sArg, $aMatches))
+	{
+		unset($aCleanedArgv[$iArg]);
+		break;
+	}
+}
+
+$input = new ArgvInput($aCleanedArgv);
 if (null !== $env = $input->getParameterOption(['--env', '-e'], null, true)) {
     putenv('APP_ENV='.$_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $env);
 }
@@ -27,15 +49,7 @@ if ($input->hasParameterOption('--no-debug', true)) {
     putenv('APP_DEBUG='.$_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = '0');
 }
 
-require dirname(__DIR__).'/config/bootstrap.php';
-
-if ($_SERVER['APP_DEBUG']) {
-    umask(0000);
-
-    if (class_exists(Debug::class)) {
-        Debug::enable();
-    }
-}
+require_once MODULESROOT . 'itop-portal-base/portal/config/bootstrap.php';
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
 $application = new Application($kernel);

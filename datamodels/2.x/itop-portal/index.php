@@ -36,6 +36,7 @@
 	E_USER_DEPRECATED
 );
 
+// Load current environment
 if (file_exists(__DIR__ . '/../../approot.inc.php'))
 {
 	require_once __DIR__ . '/../../approot.inc.php';   // When in env-xxxx folder
@@ -44,7 +45,7 @@ else
 {
 	require_once __DIR__ . '/../../../approot.inc.php';   // When in datamodels/x.x folder
 }
-require_once APPROOT . '/application/startup.inc.php';
+require_once APPROOT . 'application/startup.inc.php';
 
 // Protection against setup in the following configuration : ITIL Ticket with Enhanced Portal selected but neither UserRequest or Incident. Which would crash the portal.
 if (!class_exists('UserRequest') && !class_exists('Incident'))
@@ -56,4 +57,5 @@ if (!class_exists('UserRequest') && !class_exists('Incident'))
 $sDir = basename(__DIR__);
 define('PORTAL_ID', $sDir);
 
-require_once APPROOT . '/env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/index.php';
+// Load frontal
+require_once MODULESROOT . 'itop-portal-base/index.php';
