@@ -27,7 +27,7 @@ use Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfig
 
 // Note: ModuleDesign service is not available yet as this script is processed before service generation,
 // that's why we have to instantiate it manually.
-$oModuleDesign = new ModuleDesign(PORTAL_ID);
+$oModuleDesign = new ModuleDesign($_ENV['PORTAL_ID']);
 
 // TODO: The following code needs to be refactored to more independent and atomic services.
 
@@ -44,20 +44,20 @@ $oListsCompat = new Lists($oModuleDesign);
 $oListsCompat->Process($container);
 
 // - Generating CSS files
-$aImportPaths = array(COMBODO_PORTAL_BASE_ABSOLUTE_PATH.'css/');
+$aImportPaths = array($_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/');
 $aPortalConf = $container->getParameter('combodo.portal.instance.conf');
 foreach ($aPortalConf['properties']['themes'] as $key => $value)
 {
 	if (!is_array($value))
 	{
-		$aPortalConf['properties']['themes'][$key] = COMBODO_ABSOLUTE_URL.utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$value, $aImportPaths);
+		$aPortalConf['properties']['themes'][$key] = $_ENV['COMBODO_ABSOLUTE_URL'].utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$value, $aImportPaths);
 	}
 	else
 	{
 		$aValues = array();
 		foreach ($value as $sSubValue)
 		{
-			$aValues[] = COMBODO_ABSOLUTE_URL.utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$sSubValue, $aImportPaths);
+			$aValues[] = $_ENV['COMBODO_ABSOLUTE_URL'].utils::GetCSSFromSASS('env-'.utils::GetCurrentEnvironment().'/'.$sSubValue, $aImportPaths);
 		}
 		$aPortalConf['properties']['themes'][$key] = $aValues;
 	}

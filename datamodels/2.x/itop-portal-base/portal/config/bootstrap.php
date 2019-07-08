@@ -79,22 +79,18 @@ if ($_SERVER['APP_DEBUG']) {
 	}
 }
 
-// If PORTAL_ID is not already defined, we look for it in a parameter
-if(!defined('PORTAL_ID'))
+if(isset($_ENV['PORTAL_ID']))
 {
-	// Retrieving portal id from request params
-	$sPortalId = utils::ReadParam('portal_id', '', true);
-	if ($sPortalId == '')
-	{
-		echo "Missing argument 'portal_id'";
-		exit;
-	}
-
-	// Defining portal constants
-	define('PORTAL_ID', $sPortalId);
+	// Nothing to do
 }
-else
+// Note: Default value is set to "false" to differentiate an empty value from a non given parameter
+elseif($sPortalId = utils::ReadParam('portal_id', false, true)) {
+
+	$_ENV['PORTAL_ID'] = $sPortalId;
+}
+elseif(defined('PORTAL_ID'))
 {
+	$_ENV['PORTAL_ID'] = PORTAL_ID;
 	@trigger_error(
 		sprintf(
 			'Usage of legacy "PORTAL_ID" constant ("%s") is deprecated. You should pass "portal_id" in the URL as GET parameter.',
@@ -104,12 +100,16 @@ else
 	);
 }
 
-define('PORTAL_CACHE_PATH', utils::GetCachePath() . '/portals/' . PORTAL_ID . '/');
+if(empty($_ENV['PORTAL_ID']))
+{
+	echo "Missing argument 'portal_id'";
+	exit;
+}
 
-// Constants to be used in templates and others
-define('COMBODO_CURRENT_ENVIRONMENT', utils::GetCurrentEnvironment());
-define('COMBODO_ABSOLUTE_URL', utils::GetAbsoluteUrlAppRoot());
-define('COMBODO_MODULES_ABSOLUTE_URL',  utils::GetAbsoluteUrlModulesRoot());
-define('COMBODO_PORTAL_BASE_ABSOLUTE_URL', utils::GetAbsoluteUrlModulesRoot() . 'itop-portal-base/portal/public/');
-define('COMBODO_PORTAL_BASE_ABSOLUTE_PATH',  MODULESROOT . '/itop-portal-base/portal/public/');
-define('COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL', utils::GetAbsoluteUrlModulesRoot() . PORTAL_ID . '/');
+// Env. vars to be used in templates and others
+$_ENV['COMBODO_CURRENT_ENVIRONMENT'] = utils::GetCurrentEnvironment();
+$_ENV['COMBODO_ABSOLUTE_URL'] = utils::GetAbsoluteUrlAppRoot();
+$_ENV['COMBODO_MODULES_ABSOLUTE_URL'] =  utils::GetAbsoluteUrlModulesRoot();
+$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_URL'] = utils::GetAbsoluteUrlModulesRoot() . 'itop-portal-base/portal/public/';
+$_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'] =  MODULESROOT . '/itop-portal-base/portal/public/';
+$_ENV['COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL'] = utils::GetAbsoluteUrlModulesRoot() . $_ENV['PORTAL_ID'] . '/';

@@ -18,14 +18,14 @@ class Kernel extends BaseKernel
 
     public function getCacheDir()
     {
-	    $cacheDir = PORTAL_ID . '-' . $this->environment;
+	    $cacheDir = $_ENV['PORTAL_ID'] . '-' . $this->environment;
 
 	    return utils::GetCachePath() . "/portals/$cacheDir";
     }
 
     public function getLogDir()
     {
-	    $logDir = PORTAL_ID . '-' . $this->environment;
+	    $logDir = $_ENV['PORTAL_ID'] . '-' . $this->environment;
 
 	    return utils::GetLogPath() . "/portals/$logDir";
     }

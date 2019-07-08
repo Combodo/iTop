@@ -28,14 +28,14 @@ parameters:
     router.options.generator_base_class: Combodo\iTop\Portal\Routing\UrlGenerator
 
     # Used in templates
-    combodo.current_environment:        !php/const COMBODO_CURRENT_ENVIRONMENT
-    combodo.absolute_url:               !php/const COMBODO_ABSOLUTE_URL
-    combodo.modules.absolute_url:       !php/const COMBODO_MODULES_ABSOLUTE_URL
+    combodo.current_environment:        '%env(string:COMBODO_CURRENT_ENVIRONMENT)%'
+    combodo.absolute_url:               '%env(string:COMBODO_ABSOLUTE_URL)%'
+    combodo.modules.absolute_url:       '%env(string:COMBODO_MODULES_ABSOLUTE_URL)%'
     combodo.modules.absolute_path:      !php/const MODULESROOT
-    combodo.portal.base.absolute_url:   !php/const COMBODO_PORTAL_BASE_ABSOLUTE_URL
-    combodo.portal.base.absolute_path:  !php/const COMBODO_PORTAL_BASE_ABSOLUTE_PATH
-    combodo.portal.instance.absolute_url: !php/const COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL
-    combodo.portal.instance.id:         !php/const PORTAL_ID
+    combodo.portal.base.absolute_url:   '%env(string:COMBODO_PORTAL_BASE_ABSOLUTE_URL)%'
+    combodo.portal.base.absolute_path:  '%env(string:COMBODO_PORTAL_BASE_ABSOLUTE_PATH)%'
+    combodo.portal.instance.absolute_url: '%env(string:COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL)%'
+    combodo.portal.instance.id:         '%env(string:PORTAL_ID)%'
 
 services:
     # Default configuration for services in *this* file
@@ -47,10 +47,10 @@ services:
                             # The best practice is to be explicit about your dependencies anyway.
         bind:
             $bDebug:            '%kernel.debug%'
-            $sPortalCachePath:  !php/const PORTAL_CACHE_PATH
-            $sPortalId:         !php/const PORTAL_ID
+            $sPortalCachePath:  '%kernel.cache_dir%/'
+            $sPortalId:         '%env(string:PORTAL_ID)%'
             $aCombodoPortalInstanceConf:        '%combodo.portal.instance.conf%'
-            $sCombodoPortalInstanceAbsoluteUrl: !php/const COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL
+            $sCombodoPortalInstanceAbsoluteUrl: '%env(string:COMBODO_PORTAL_INSTANCE_ABSOLUTE_URL)%'
 
     # Makes classes in src/ available to be used as services
     # This creates a service per class whose id is the fully-qualified class name

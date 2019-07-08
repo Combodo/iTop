@@ -78,7 +78,7 @@ class Basic extends AbstractConfiguration
     {
         $aPortalConf = array(
             'properties' => array(
-                'id' => PORTAL_ID,
+                'id' => $_ENV['PORTAL_ID'],
                 'name' => 'Page:DefaultTitle',
                 'logo' => (file_exists(MODULESROOT.'branding/portal-logo.png')) ? utils::GetAbsoluteUrlModulesRoot().'branding/portal-logo.png' : '../images/logo-itop-dark-bg.svg',
                 'themes' => array(

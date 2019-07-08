@@ -41,9 +41,9 @@ class UserProvider implements ContainerAwareInterface
 {
     /** @var \ModuleDesign */
     private $oModuleDesign;
-	/**
-	 * @var \Symfony\Component\DependencyInjection\ContainerInterface
-	 */
+    /** @var string $sPortalId */
+	private $sPortalId;
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
 	private $container;
 
 	/**
@@ -52,9 +52,10 @@ class UserProvider implements ContainerAwareInterface
 	 * @param \ModuleDesign $oModuleDesign
 	 * @param \User $oUser
 	 */
-    public function __construct(ModuleDesign $oModuleDesign)
+    public function __construct(ModuleDesign $oModuleDesign, $sPortalId)
     {
         $this->oModuleDesign = $oModuleDesign;
+	    $this->sPortalId = $sPortalId;
     }
 
 	/**
@@ -68,7 +69,7 @@ class UserProvider implements ContainerAwareInterface
         // Note: At this point the Exception handler is not registered, so we can't use $oApp::abort() method, hence the die().
         // - Checking user rights and prompt if needed (401 HTTP code returned if XHR request)
         $iExitMethod = ($oGetResponseEvent->getRequest()->isXmlHttpRequest()) ? LoginWebPage::EXIT_RETURN : LoginWebPage::EXIT_PROMPT;
-        $iLogonRes = LoginWebPage::DoLoginEx(PORTAL_ID, false, $iExitMethod);
+        $iLogonRes = LoginWebPage::DoLoginEx($this->sPortalId, false, $iExitMethod);
         if( ($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0) )
         {
             die(Dict::S('Portal:ErrorUserLoggedOut'));
@@ -90,6 +91,8 @@ class UserProvider implements ContainerAwareInterface
 
 	/**
 	 * Sets the container.
+	 *
+	 * @param \Symfony\Component\DependencyInjection\ContainerInterface|null $container
 	 */
 	public function setContainer(ContainerInterface $container = null)
 	{
