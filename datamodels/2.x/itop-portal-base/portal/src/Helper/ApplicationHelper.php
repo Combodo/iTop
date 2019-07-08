@@ -254,9 +254,9 @@ class ApplicationHelper
 	 * If not found, tries to find one from the closest parent class.
 	 * Else returns a default form based on zlist 'details'
 	 *
-	 * @param Application $oApp
+	 * @param array  $aForms
 	 * @param string $sClass Object class to find a form for
-	 * @param string $sMode Form mode to find (view|edit|create)
+	 * @param string $sMode  Form mode to find (view|edit|create)
 	 *
 	 * @return array
 	 *
