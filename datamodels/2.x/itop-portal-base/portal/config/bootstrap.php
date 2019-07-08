@@ -84,7 +84,8 @@ if(isset($_ENV['PORTAL_ID']))
 	// Nothing to do
 }
 // Note: Default value is set to "false" to differentiate an empty value from a non given parameter
-elseif($sPortalId = utils::ReadParam('portal_id', false, true)) {
+elseif($sPortalId = utils::ReadParam('portal_id', false, true))
+{
 
 	$_ENV['PORTAL_ID'] = $sPortalId;
 }

@@ -12,6 +12,10 @@
 		"symfony/yaml": "3.4.*",
 		"symfony/polyfill-php70": "1.*"
 	},
+	"require-dev": {
+		"symfony/stopwatch": "3.4.*",
+		"symfony/web-profiler-bundle": "3.4.*"
+	},
 	"config": {
 		"vendor-dir": "../../../../lib/composer-vendor",
 		"preferred-install": {
