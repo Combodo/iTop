@@ -2,13 +2,13 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-portal/2.6.1', array(
+	'itop-portal/2.7.0', array(
 	// Identification
 	'label' => 'Enhanced Customer Portal',
 	'category' => 'Portal',
 	// Setup
 	'dependencies' => array(
-		'itop-portal-base/1.0.0'
+		'itop-portal-base/2.7.0'
 	),
 	'mandatory' => false,
 	'visible' => true,

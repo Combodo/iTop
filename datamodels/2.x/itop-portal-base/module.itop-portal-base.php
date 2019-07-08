@@ -2,7 +2,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-portal-base/2.6.1', array(
+	'itop-portal-base/2.7.0', array(
 	// Identification
 	'label' => 'Portal Development Library',
 		'category' => 'Portal',
@@ -13,10 +13,7 @@ SetupWebPage::AddModule(
 	'visible' => true,
 	// Components
 	'datamodel' => array(
-//		'portal/src/controllers/brickcontroller.class.inc.php',
-//		'portal/src/entities/abstractbrick.class.inc.php',
-//		'portal/src/entities/portalbrick.class.inc.php',
-//		'portal/src/routers/abstractrouter.class.inc.php',
+		'model.itop-portal-base.php',
 	),
 	'webservice' => array(
 	//'webservices.itop-portal-base.php',
