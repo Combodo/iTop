@@ -187,6 +187,11 @@ abstract class DBSearch
 	 */
 	abstract public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null);
 
+	/**
+	 * @param \DBSearch $oFilter
+	 *
+	 * @return \DBSearch
+	 */
 	abstract public function Intersect(DBSearch $oFilter);
 
 	/**
