@@ -58,8 +58,8 @@ use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
  * Controller to handle basic view / edit / create of cmdbAbstractObjectClass ManageBrickController
  *
  * @package Combodo\iTop\Portal\Controller
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.3.0
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since   2.3.0
  */
 class ObjectController extends AbstractController
 {
@@ -100,23 +100,24 @@ class ObjectController extends AbstractController
 		// Checking parameters
 		if ($sObjectClass === '' || $sObjectId === '')
 		{
-			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : sObjectClass and sObjectId expected, "' . $sObjectClass . '" and "' . $sObjectId . '" given.');
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass and sObjectId expected, "'.$sObjectClass.'" and "'.$sObjectId.'" given.');
 			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 		}
 
 		// Checking security layers
 		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sObjectClass, $sObjectId))
 		{
-			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to read ' . $sObjectClass . '::' . $sObjectId . ' object.');
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to read '.$sObjectClass.'::'.$sObjectId.' object.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, $oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */,
+			$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
-			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : Could not load object ' . $sObjectClass . '::' . $sObjectId . '.');
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -124,18 +125,19 @@ class ObjectController extends AbstractController
 
 		$aData = array('sMode' => 'view');
 		$aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
-		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:View:Title', MetaModel::GetName($sObjectClass), $oObject->GetName());
+		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:View:Title', MetaModel::GetName($sObjectClass),
+			$oObject->GetName());
 
 		// Add an edit button if user is allowed
 		if ($oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId))
 		{
-		    $oModifyButton = new URLButtonItem(
-		        'modify_object',
-                Dict::S('UI:Menu:Modify'),
+			$oModifyButton = new URLButtonItem(
+				'modify_object',
+				Dict::S('UI:Menu:Modify'),
 				$oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId))
-            );
-		    // Putting this one first
-		    $aData['form']['buttons']['links'][] = $oModifyButton->GetMenuItem();
+			);
+			// Putting this one first
+			$aData['form']['buttons']['links'][] = $oModifyButton->GetMenuItem();
 		}
 
 		// Preparing response
@@ -200,25 +202,26 @@ class ObjectController extends AbstractController
 		// Checking parameters
 		if ($sObjectClass === '' || $sObjectId === '')
 		{
-			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : sObjectClass and sObjectId expected, "' . $sObjectClass . '" and "' . $sObjectId . '" given.');
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass and sObjectId expected, "'.$sObjectClass.'" and "'.$sObjectId.'" given.');
 			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 		}
-		
+
 		// Checking security layers
 		// Warning : This is a dirty quick fix to allow editing its own contact information
 		$bAllowWrite = ($sObjectClass === 'Person' && $sObjectId == UserRights::GetContactId());
 		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId) && !$bAllowWrite)
 		{
-			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to modify ' . $sObjectClass . '::' . $sObjectId . ' object.');
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to modify '.$sObjectClass.'::'.$sObjectId.' object.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, $oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */,
+			$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
-			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : Could not load object ' . $sObjectClass . '::' . $sObjectId . '.');
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -226,7 +229,8 @@ class ObjectController extends AbstractController
 
 		$aData = array('sMode' => 'edit');
 		$aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
-		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:Edit:Title', MetaModel::GetName($sObjectClass), $aData['form']['object_name']);
+		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:Edit:Title', MetaModel::GetName($sObjectClass),
+			$aData['form']['object_name']);
 
 		// Preparing response
 		if ($oRequest->isXmlHttpRequest())
@@ -288,7 +292,7 @@ class ObjectController extends AbstractController
 		// Checking security layers
 		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_CREATE, $sObjectClass))
 		{
-			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to create ' . $sObjectClass . ' object.');
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to create '.$sObjectClass.' object.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -346,18 +350,16 @@ class ObjectController extends AbstractController
 	 */
 	public function CreateFromFactoryAction(Request $oRequest, $sObjectClass, $sObjectId, $sEncodedMethodName)
 	{
-		/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
-		$oUrlGenerator = $this->get('url_generator');
-
 		$sMethodName = base64_decode($sEncodedMethodName);
 
 		// Checking that the factory method is valid
 		if (!is_callable($sMethodName))
 		{
-			IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Invalid factory method "' . $sMethodName . '" used when creating an object.');
-			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid factory method "' . $sMethodName . '" used when creating an object');
+			IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Invalid factory method "'.$sMethodName.'" used when creating an object.');
+			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
+				'Invalid factory method "'.$sMethodName.'" used when creating an object');
 		}
-		
+
 		// Retrieving origin object
 		// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
 		$oOriginObject = MetaModel::GetObject($sObjectClass, $sObjectId, true, true);
@@ -378,7 +380,7 @@ class ObjectController extends AbstractController
 		// Preparing redirection
 		// - Route
 		$aRouteParams = array(
-			'sObjectClass' => get_class($oTargetObject)
+			'sObjectClass' => get_class($oTargetObject),
 		);
 
 		return $this->forward($this->GetControllerNameFromRoute('p_object_create'), $aRouteParams, $oRequest->query->all());
@@ -418,22 +420,24 @@ class ObjectController extends AbstractController
 		// Checking parameters
 		if ($sObjectClass === '' || $sObjectId === '' || $sStimulusCode === '')
 		{
-			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : sObjectClass, sObjectId and $sStimulusCode expected, "' . $sObjectClass . '", "' . $sObjectId . '" and "' . $sStimulusCode . '" given.');
-			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass, sObjectId and $sStimulusCode expected, "'.$sObjectClass.'", "'.$sObjectId.'" and "'.$sStimulusCode.'" given.');
+			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
+				Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'stimulus'));
 		}
 
 		// Checking security layers
-        if(!$oSecurityHelper->IsStimulusAllowed($sStimulusCode, $sObjectClass))
+		if (!$oSecurityHelper->IsStimulusAllowed($sStimulusCode, $sObjectClass))
 		{
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
-		
+
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, $oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */,
+			$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
-			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : Could not load object ' . $sObjectClass . '::' . $sObjectId . '.');
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -442,24 +446,24 @@ class ObjectController extends AbstractController
 
 		// Retrieving form properties
 		$aStimuliForms = ApplicationHelper::GetLoadedFormFromClass($aCombodoPortalInstanceConf['forms'], $sObjectClass, 'apply_stimulus');
-        if(array_key_exists($sStimulusCode, $aStimuliForms))
-        {
-            $aFormProperties = $aStimuliForms[$sStimulusCode];
-        }
-        // Or preparing a default form for the stimulus application
-        else
-        {
-            // Preparing default form
-            $aFormProperties = array(
-                'id' => 'apply-stimulus',
-                'type' => 'custom_list',
-                'fields' => array(),
-                'layout' => null
-            );
-        }
+		if (array_key_exists($sStimulusCode, $aStimuliForms))
+		{
+			$aFormProperties = $aStimuliForms[$sStimulusCode];
+		}
+		// Or preparing a default form for the stimulus application
+		else
+		{
+			// Preparing default form
+			$aFormProperties = array(
+				'id' => 'apply-stimulus',
+				'type' => 'custom_list',
+				'fields' => array(),
+				'layout' => null,
+			);
+		}
 
-        // Adding stimulus code to form
-        $aFormProperties['stimulus_code'] = $sStimulusCode;
+		// Adding stimulus code to form
+		$aFormProperties['stimulus_code'] = $sStimulusCode;
 
 		// Adding target_state to current_values
 		$oRequest->request->set('apply_stimulus', array('code' => $sStimulusCode));
@@ -468,7 +472,7 @@ class ObjectController extends AbstractController
 		$aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId, $aFormProperties);
 		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:Stimulus:Title');
 		$aData['form']['validation']['redirection'] = array(
-			'url' => $oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId))
+			'url' => $oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId)),
 		);
 
 		// TODO : This is a ugly patch to avoid showing a modal with a readonly form to the user as it would prevent user from finishing the transition.
@@ -482,12 +486,17 @@ class ObjectController extends AbstractController
 				$oSubRequest = $oRequest;
 				$oSubRequest->request->set('operation', 'submit');
 				$oSubRequest->request->set('stimulus_code', '');
-				
+
 				$aData = array('sMode' => 'apply_stimulus');
-				$aData['form'] = $oObjectFormHandler->HandleForm($oSubRequest, $aData['sMode'], $sObjectClass, $sObjectId, $aFormProperties);
+				$aData['form'] = $oObjectFormHandler->HandleForm($oSubRequest, $aData['sMode'], $sObjectClass, $sObjectId,
+					$aFormProperties);
 				// Redefining the array to be as simple as possible :
-				$aData = array('redirection' =>
-					array('url' => $oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId)))
+				$aData = array(
+					'redirection' =>
+						array(
+							'url' => $oUrlGenerator->generate('p_object_edit',
+								array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId)),
+						),
 				);
 			}
 		}
@@ -549,8 +558,8 @@ class ObjectController extends AbstractController
 		$aData = array(
 			'results' => array(
 				'count' => 0,
-				'items' => array()
-			)
+				'items' => array(),
+			),
 		);
 
 		// Parsing parameters from request payload
@@ -559,7 +568,7 @@ class ObjectController extends AbstractController
 		// Checking parameters
 		if (!isset($aRequestContent['sQuery']))
 		{
-			IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameter sQuery missing.');
+			IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameter sQuery missing.');
 			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, Dict::Format('UI:Error:ParameterMissing', 'sQuery'));
 		}
 
@@ -570,7 +579,7 @@ class ObjectController extends AbstractController
 		// Checking security layers
 		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostObjectClass, $sHostObjectId))
 		{
-			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : Could not load object ' . $sHostObjectClass . '::' . $sHostObjectId . '.');
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sHostObjectClass.'::'.$sHostObjectId.'.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -587,7 +596,7 @@ class ObjectController extends AbstractController
 			//
 			// Note : The action rules must be a base64-encoded JSON object, this is just so users are tempted to changes values.
 			// But it would not be a security issue as it only presets values in the form.
-            $sActionRulesToken = $oRequestManipulator->ReadParam('ar_token', '');
+			$sActionRulesToken = $oRequestManipulator->ReadParam('ar_token', '');
 			$aActionRules = (!empty($sActionRulesToken)) ? $oContextManipulator->DecodeRulesToken($sActionRulesToken) : array();
 			// Preparing object
 			$oContextManipulator->PrepareObject($aActionRules, $oHostObject);
@@ -611,7 +620,7 @@ class ObjectController extends AbstractController
 				$oContextManipulator->PrepareObject($aActionRules, $oObj);
 				$oFormManager->SetObject($oObj);
 			}
-			
+
 			// Updating host object
 			$oFormManager->OnUpdate(array('currentValues' => $aRequestContent['current_values']));
 			$oHostObject = $oFormManager->GetObject();
@@ -629,7 +638,7 @@ class ObjectController extends AbstractController
 		}
 		elseif ($oTargetAttDef->IsLinkSet())
 		{
-			throw new Exception('Search autocomplete cannot apply on AttributeLinkedSet objects, ' . get_class($oTargetAttDef) . ' (' . $sHostObjectClass . '->' . $sTargetAttCode . ') given.');
+			throw new Exception('Search autocomplete cannot apply on AttributeLinkedSet objects, '.get_class($oTargetAttDef).' ('.$sHostObjectClass.'->'.$sTargetAttCode.') given.');
 		}
 		else
 		{
@@ -645,7 +654,8 @@ class ObjectController extends AbstractController
 			$oSearch = DBSearch::FromOQL($oTargetAttDef->GetValuesDef()->GetFilterExpression());
 		}
 		// - Adding query condition
-		$oSearch->AddConditionExpression(new BinaryExpression(new FieldExpression('friendlyname', $oSearch->GetClassAlias()), 'LIKE', new VariableExpression('ac_query')));
+		$oSearch->AddConditionExpression(new BinaryExpression(new FieldExpression('friendlyname', $oSearch->GetClassAlias()), 'LIKE',
+			new VariableExpression('ac_query')));
 		// - Intersecting with scope constraints
 		// Note : This do NOT apply to custom fields as the portal administrator is not supposed to know which objects will be put in the templates.
 		// It is the responsibility of the template designer to write the right query so the user see only what he should.
@@ -662,7 +672,7 @@ class ObjectController extends AbstractController
 
 		// Retrieving results
 		// - Preparing object set
-		$oSet = new DBObjectSet($oSearch, array(), array('this' => $oHostObject, 'ac_query' => '%' . $sQuery . '%'));
+		$oSet = new DBObjectSet($oSearch, array(), array('this' => $oHostObject, 'ac_query' => '%'.$sQuery.'%'));
 		$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 		// Note : This limit is also used in the field renderer by typeahead to determine how many suggestions to display
 		if ($oTargetAttDef->GetEditClass() === 'CustomFields')
@@ -676,8 +686,11 @@ class ObjectController extends AbstractController
 		// - Retrieving objects
 		while ($oItem = $oSet->Fetch())
 		{
-			$aData['results']['items'][] = array('id' => $oItem->GetKey(), 'name' => html_entity_decode($oItem->GetName(), ENT_QUOTES, 'UTF-8'));
-			$aData['results']['count'] ++;
+			$aData['results']['items'][] = array(
+				'id' => $oItem->GetKey(),
+				'name' => html_entity_decode($oItem->GetName(), ENT_QUOTES, 'UTF-8'),
+			);
+			$aData['results']['count']++;
 		}
 
 		// Preparing response
@@ -740,7 +753,7 @@ class ObjectController extends AbstractController
 		// Checking security layers
 		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostObjectClass, $sHostObjectId))
 		{
-			IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to read ' . $sHostObjectClass . '::' . $sHostObjectId . ' object.');
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to read '.$sHostObjectClass.'::'.$sHostObjectId.' object.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -765,7 +778,7 @@ class ObjectController extends AbstractController
 		// Updating host object with form data / values
 		$sFormManagerClass = $oRequestManipulator->ReadParam('formmanager_class', '', FILTER_UNSAFE_RAW);
 		$sFormManagerData = $oRequestManipulator->ReadParam('formmanager_data', '', FILTER_UNSAFE_RAW);
-		if ( !empty($sFormManagerClass) && !empty($sFormManagerData) )
+		if (!empty($sFormManagerClass) && !empty($sFormManagerData))
 		{
 			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
@@ -780,12 +793,14 @@ class ObjectController extends AbstractController
 				$oContextManipulator->PrepareObject($aActionRules, $oObj);
 				$oFormManager->SetObject($oObj);
 			}
-			
+
 			// Updating host object
-			$oFormManager->OnUpdate(array('currentValues' => $oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW)));
+			$oFormManager->OnUpdate(array(
+				'currentValues' => $oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
+			));
 			$oHostObject = $oFormManager->GetObject();
 		}
-		
+
 		// Retrieving request parameters
 		$iPageNumber = $oRequestManipulator->ReadParam('iPageNumber', static::DEFAULT_PAGE_NUMBER, FILTER_SANITIZE_NUMBER_INT);
 		$iListLength = $oRequestManipulator->ReadParam('iListLength', static::DEFAULT_LIST_LENGTH, FILTER_SANITIZE_NUMBER_INT);
@@ -827,9 +842,9 @@ class ObjectController extends AbstractController
 		}
 		else
 		{
-			throw new Exception('Search from attribute can only apply on AttributeExternalKey or AttributeLinkedSet objects, ' . get_class($oTargetAttDef) . ' given.');
+			throw new Exception('Search from attribute can only apply on AttributeExternalKey or AttributeLinkedSet objects, '.get_class($oTargetAttDef).' given.');
 		}
-		
+
 		// - Retrieving class attribute list
 		$aAttCodes = ApplicationHelper::GetLoadedListFromClass($aCombodoPortalInstanceConf['lists'], $sTargetObjectClass, 'list');
 		// - Adding friendlyname attribute to the list is not already in it
@@ -846,7 +861,7 @@ class ObjectController extends AbstractController
 		$aInternalParams = array();
 		if (($oScopeSearch === null) && ($oTargetAttDef->GetEditClass() !== 'CustomFields'))
 		{
-			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' has no scope query for ' . $sTargetObjectClass . ' class.');
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' has no scope query for '.$sTargetObjectClass.' class.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -875,9 +890,10 @@ class ObjectController extends AbstractController
 			{
 				$aExpressions[] = new ScalarExpression($sObjectIdToIgnore);
 			}
-			$oSearch->AddConditionExpression(new BinaryExpression(new FieldExpression('id', $oSearch->GetClassAlias()), 'NOT IN', new ListExpression($aExpressions)));
+			$oSearch->AddConditionExpression(new BinaryExpression(new FieldExpression('id', $oSearch->GetClassAlias()), 'NOT IN',
+				new ListExpression($aExpressions)));
 		}
-		
+
 		// - Adding query condition
 		$aInternalParams['this'] = $oHostObject;
 		if (!empty($sQuery))
@@ -887,7 +903,7 @@ class ObjectController extends AbstractController
 			{
 				// Checking if the current attcode is an external key in order to search on the friendlyname
 				$oAttDef = MetaModel::GetAttributeDef($sTargetObjectClass, $aAttCodes[$i]);
-				$sAttCode = (!$oAttDef->IsExternalKey()) ? $aAttCodes[$i] : $aAttCodes[$i] . '_friendlyname';
+				$sAttCode = (!$oAttDef->IsExternalKey()) ? $aAttCodes[$i] : $aAttCodes[$i].'_friendlyname';
 				// Building expression for the current attcode
 				// - For attributes that need conversion from their display value to storage value
 				//   Note : This is dirty hack that will need to be refactored in the OQL core in order to be nicer and to be extended to other types such as dates etc...
@@ -906,7 +922,8 @@ class ObjectController extends AbstractController
 					if (!empty($aMatchedCodes))
 					{
 						$oEnumeratedListExpr = ListExpression::FromScalars($aMatchedCodes);
-						$oBinExpr = new BinaryExpression(new FieldExpression($sAttCode, $oSearch->GetClassAlias()), 'IN', $oEnumeratedListExpr);
+						$oBinExpr = new BinaryExpression(new FieldExpression($sAttCode, $oSearch->GetClassAlias()), 'IN',
+							$oEnumeratedListExpr);
 					}
 					else
 					{
@@ -916,7 +933,8 @@ class ObjectController extends AbstractController
 				// - For regular attributes
 				else
 				{
-					$oBinExpr = new BinaryExpression(new FieldExpression($sAttCode, $oSearch->GetClassAlias()), 'LIKE', new VariableExpression('re_query'));
+					$oBinExpr = new BinaryExpression(new FieldExpression($sAttCode, $oSearch->GetClassAlias()), 'LIKE',
+						new VariableExpression('re_query'));
 				}
 				// Adding expression to the full expression (all attcodes)
 				if ($i === 0)
@@ -930,7 +948,7 @@ class ObjectController extends AbstractController
 			}
 			// Adding full expression to the search object
 			$oSearch->AddConditionExpression($oFullExpr);
-			$aInternalParams['re_query'] = '%' . $sQuery . '%';
+			$aInternalParams['re_query'] = '%'.$sQuery.'%';
 		}
 
 		// - Intersecting with scope constraints
@@ -957,7 +975,7 @@ class ObjectController extends AbstractController
 		{
 			$oAttDef = MetaModel::GetAttributeDef($sTargetObjectClass, $sAttCode);
 			$aColumnProperties[$sAttCode] = array(
-				'title' => $oAttDef->GetLabel()
+				'title' => $oAttDef->GetLabel(),
 			);
 		}
 		// - Retrieving objects
@@ -966,30 +984,31 @@ class ObjectController extends AbstractController
 		{
 			$aItems[] = $this->PrepareObjectInformation($oItem, $aAttCodes);
 		}
-		
+
 		// Preparing response
 		if ($bInitialPass)
 		{
 			$aData = $aData + array(
-				'form' => array(
-					'id' => 'object_search_form_' . time(),
-					'title' => Dict::Format('Brick:Portal:Object:Search:Regular:Title', $oTargetAttDef->GetLabel(), MetaModel::GetName($sTargetObjectClass))
-				),
-				'aColumnProperties' => json_encode($aColumnProperties),
-				'aResults' => array(
-					'aItems' => json_encode($aItems),
-					'iCount' => count($aItems)
-				),
-				'bMultipleSelect' => $oTargetAttDef->IsLinkSet(),
-				'aSource' => array(
-					'sFormPath' => $sFormPath,
-					'sFieldId' => $sFieldId,
-					'aObjectIdsToIgnore' => $aObjectIdsToIgnore,
-					'sFormManagerClass' => $sFormManagerClass,
-					'sFormManagerData' => $sFormManagerData
-				)
-			);
-			
+					'form' => array(
+						'id' => 'object_search_form_'.time(),
+						'title' => Dict::Format('Brick:Portal:Object:Search:Regular:Title', $oTargetAttDef->GetLabel(),
+							MetaModel::GetName($sTargetObjectClass)),
+					),
+					'aColumnProperties' => json_encode($aColumnProperties),
+					'aResults' => array(
+						'aItems' => json_encode($aItems),
+						'iCount' => count($aItems),
+					),
+					'bMultipleSelect' => $oTargetAttDef->IsLinkSet(),
+					'aSource' => array(
+						'sFormPath' => $sFormPath,
+						'sFieldId' => $sFieldId,
+						'aObjectIdsToIgnore' => $aObjectIdsToIgnore,
+						'sFormManagerClass' => $sFormManagerClass,
+						'sFormManagerData' => $sFormManagerData,
+					),
+				);
+
 			if ($oRequest->isXmlHttpRequest())
 			{
 				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
@@ -1003,11 +1022,11 @@ class ObjectController extends AbstractController
 		else
 		{
 			$aData = $aData + array(
-				'levelsProperties' => $aColumnProperties,
-				'data' => $aItems,
-				'recordsTotal' => $oSet->Count(),
-				'recordsFiltered' => $oSet->Count()
-			);
+					'levelsProperties' => $aColumnProperties,
+					'data' => $aItems,
+					'recordsTotal' => $oSet->Count(),
+					'recordsFiltered' => $oSet->Count(),
+				);
 
 			$oResponse = new JsonResponse($aData);
 		}
@@ -1027,87 +1046,89 @@ class ObjectController extends AbstractController
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public function DocumentAction(Request $oRequest, $sOperation = null)
-    {
-	    /** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
-	    $oRequestManipulator = $this->get('request_manipulator');
-	    /** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
-	    $oSecurityHelper = $this->get('security_helper');
-	    /** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
-	    $oScopeValidator = $this->get('scope_validator');
+	{
+		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
+		$oRequestManipulator = $this->get('request_manipulator');
+		/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
+		$oSecurityHelper = $this->get('security_helper');
+		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
+		$oScopeValidator = $this->get('scope_validator');
 
-        // Setting default operation
-        if($sOperation === null)
-        {
-            $sOperation = 'display';
-        }
+		// Setting default operation
+		if ($sOperation === null)
+		{
+			$sOperation = 'display';
+		}
 
-        // Retrieving ormDocument's host object
-        $sObjectClass = $oRequestManipulator->ReadParam('sObjectClass', '');
-        $sObjectId = $oRequestManipulator->ReadParam('sObjectId', '');
-        $sObjectField = $oRequestManipulator->ReadParam('sObjectField', '');
+		// Retrieving ormDocument's host object
+		$sObjectClass = $oRequestManipulator->ReadParam('sObjectClass', '');
+		$sObjectId = $oRequestManipulator->ReadParam('sObjectId', '');
+		$sObjectField = $oRequestManipulator->ReadParam('sObjectField', '');
 
-        // When reaching to an Attachment, we have to check security on its host object instead of the Attachment itself
-        if($sObjectClass === 'Attachment')
-        {
-            $oAttachment = MetaModel::GetObject($sObjectClass, $sObjectId, true, true);
-            $sHostClass = $oAttachment->Get('item_class');
-            $sHostId = $oAttachment->Get('item_id');
-        }
-        else
-        {
-            $sHostClass = $sObjectClass;
-            $sHostId = $sObjectId;
-        }
+		// When reaching to an Attachment, we have to check security on its host object instead of the Attachment itself
+		if ($sObjectClass === 'Attachment')
+		{
+			$oAttachment = MetaModel::GetObject($sObjectClass, $sObjectId, true, true);
+			$sHostClass = $oAttachment->Get('item_class');
+			$sHostId = $oAttachment->Get('item_id');
+		}
+		else
+		{
+			$sHostClass = $sObjectClass;
+			$sHostId = $sObjectId;
+		}
 
-        // Checking security layers
-	    // Note: Checking if host object already exists as we can try to download document from an object that is being created
-        if (($sHostId > 0) && !$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostClass, $sHostId))
-        {
-            IssueLog::Warning(__METHOD__ . ' at line ' . __LINE__ . ' : User #' . UserRights::GetUserId() . ' not allowed to retrieve document from attribute ' . $sObjectField . ' as it not allowed to read ' . $sHostClass . '::' . $sHostId . ' object.');
-	        throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
-        }
+		// Checking security layers
+		// Note: Checking if host object already exists as we can try to download document from an object that is being created
+		if (($sHostId > 0) && !$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostClass, $sHostId))
+		{
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to retrieve document from attribute '.$sObjectField.' as it not allowed to read '.$sHostClass.'::'.$sHostId.' object.');
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
 
-        // Retrieving object
-        $oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* Must not be found */, $oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sHostClass));
-        if ($oObject === null)
-        {
-            // We should never be there as the security helper makes sure that the object exists, but just in case.
-            IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : Could not load object ' . $sObjectClass . '::' . $sObjectId . '.');
-	        throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
-        }
+		// Retrieving object
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* Must not be found */,
+			$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sHostClass));
+		if ($oObject === null)
+		{
+			// We should never be there as the security helper makes sure that the object exists, but just in case.
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
 
-        // Setting cache timeout
-        // Note: Attachment download should be handle through AttachmentAction()
-        if($sObjectClass === 'Attachment')
-        {
-            // One year ahead: an attachment cannot change
-            $iCacheSec = 31556926;
-        }
-        else
-        {
-            $iCacheSec = $oRequestManipulator->ReadParam('cache', 0, FILTER_SANITIZE_NUMBER_INT);
-        }
+		// Setting cache timeout
+		// Note: Attachment download should be handle through AttachmentAction()
+		if ($sObjectClass === 'Attachment')
+		{
+			// One year ahead: an attachment cannot change
+			$iCacheSec = 31556926;
+		}
+		else
+		{
+			$iCacheSec = $oRequestManipulator->ReadParam('cache', 0, FILTER_SANITIZE_NUMBER_INT);
+		}
 
-        $aHeaders = array();
-        if($iCacheSec > 0)
-        {
-            $aHeaders['Expires'] = '';
-            $aHeaders['Cache-Control'] = 'no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec;
-            // Reset the value set previously
-            $aHeaders['Pragma'] = 'cache';
-            // An arbitrary date in the past is ok
-            $aHeaders['Last-Modified'] = 'Wed, 15 Jun 2015 13:21:15 GMT';
-        }
+		$aHeaders = array();
+		if ($iCacheSec > 0)
+		{
+			$aHeaders['Expires'] = '';
+			$aHeaders['Cache-Control'] = 'no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec;
+			// Reset the value set previously
+			$aHeaders['Pragma'] = 'cache';
+			// An arbitrary date in the past is ok
+			$aHeaders['Last-Modified'] = 'Wed, 15 Jun 2015 13:21:15 GMT';
+		}
 
-        /** @var \ormDocument $oDocument */
-        $oDocument = $oObject->Get($sObjectField);
-        $aHeaders['Content-Type'] = $oDocument->GetMimeType();
-        $aHeaders['Content-Disposition'] = (($sOperation === 'display') ? 'inline' : 'attachment') . ';filename="'.$oDocument->GetFileName().'"';
+		/** @var \ormDocument $oDocument */
+		$oDocument = $oObject->Get($sObjectField);
+		$aHeaders['Content-Type'] = $oDocument->GetMimeType();
+		$aHeaders['Content-Disposition'] = (($sOperation === 'display') ? 'inline' : 'attachment').';filename="'.$oDocument->GetFileName().'"';
 
-        return new Response($oDocument->GetData(), Response::HTTP_OK, $aHeaders);
-    }
+		return new Response($oDocument->GetData(), Response::HTTP_OK, $aHeaders);
+	}
 
 	/**
 	 * Handles attachment add/remove on an object
@@ -1138,7 +1159,7 @@ class ObjectController extends AbstractController
 		$aData = array(
 			'att_id' => 0,
 			'preview' => false,
-			'msg' => ''
+			'msg' => '',
 		);
 
 		// Retrieving sOperation from request only if it wasn't forced (determined by the route)
@@ -1173,7 +1194,7 @@ class ObjectController extends AbstractController
 						$aData['msg'] = htmlentities($oDocument->GetFileName(), ENT_QUOTES, 'UTF-8');
 						// TODO : Change icon location when itop-attachment is refactored
 						//$aData['icon'] = utils::GetAbsoluteUrlAppRoot() . AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
-						$aData['icon'] = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-attachments/icons/image.png';
+						$aData['icon'] = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/itop-attachments/icons/image.png';
 						$aData['att_id'] = $iAttId;
 						$aData['preview'] = $oDocument->IsPreviewAvailable() ? 'true' : 'false';
 					}
@@ -1189,18 +1210,15 @@ class ObjectController extends AbstractController
 
 			case 'download':
 				// Preparing redirection
-                // - Route
-                $aRouteParams = array(
-                    'sObjectClass' => 'Attachment',
-                    'sObjectId' => $oRequestManipulator->ReadParam('sAttachmentId', null),
-                    'sObjectField' => 'contents',
-                );
-                $sRedirectRoute = $oUrlGenerator->generate('p_object_document_download', $aRouteParams);
-                // - Request
-                $oSubRequest = Request::create($sRedirectRoute, 'GET', $oRequest->query->all(), $oRequest->cookies->all(), array(), $oRequest->server->all());
+				// - Route
+				$aRouteParams = array(
+					'sObjectClass' => 'Attachment',
+					'sObjectId' => $oRequestManipulator->ReadParam('sAttachmentId', null),
+					'sObjectField' => 'contents',
+				);
 
-                // TODO: How do we do that?
-                $oResponse = $oApp->handle($oSubRequest, HttpKernelInterface::SUB_REQUEST, true);
+				$oResponse = $this->forward($this->GetControllerNameFromRoute('p_object_document_download'), $aRouteParams, $oRequest->query->all());
+
 				break;
 
 			default:
@@ -1242,9 +1260,10 @@ class ObjectController extends AbstractController
 		$sObjectClass = $oRequestManipulator->ReadParam('sObjectClass', '');
 		$aObjectIds = $oRequestManipulator->ReadParam('aObjectIds', array(), FILTER_UNSAFE_RAW);
 		$aObjectAttCodes = $oRequestManipulator->ReadParam('aObjectAttCodes', array(), FILTER_UNSAFE_RAW);
-		if ( empty($sObjectClass) || empty($aObjectIds) || empty($aObjectAttCodes) )
+		if (empty($sObjectClass) || empty($aObjectIds) || empty($aObjectAttCodes))
 		{
-			IssueLog::Info(__METHOD__ . ' at line ' . __LINE__ . ' : sObjectClass, aObjectIds and aObjectAttCodes expected, "' . $sObjectClass . '", "' . implode('/', $aObjectIds) . '" given.');
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : sObjectClass, aObjectIds and aObjectAttCodes expected, "'.$sObjectClass.'", "'.implode('/',
+					$aObjectIds).'" given.');
 			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid request data, some information are missing');
 		}
 
@@ -1304,7 +1323,9 @@ class ObjectController extends AbstractController
 		foreach ($aAttCodes as $sAttCode)
 		{
 			if ($sAttCode === 'id')
+			{
 				continue;
+			}
 
 			$aAttDefs[$sAttCode] = MetaModel::GetAttributeDef($sObjectClass, $sAttCode);
 		}
@@ -1313,17 +1334,18 @@ class ObjectController extends AbstractController
 		foreach ($aAttDefs as $oAttDef)
 		{
 			$aAttData = array(
-				'att_code' => $oAttDef->GetCode()
+				'att_code' => $oAttDef->GetCode(),
 			);
 
 			if ($oAttDef->IsExternalKey())
 			{
-				$aAttData['value'] = $oObject->GetAsHTML($oAttDef->GetCode() . '_friendlyname');
+				$aAttData['value'] = $oObject->GetAsHTML($oAttDef->GetCode().'_friendlyname');
 
 				// Checking if user can access object's external key
 				if ($oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $oAttDef->GetTargetClass()))
 				{
-					$aAttData['url'] = $oUrlGenerator->generate('p_object_view', array('sObjectClass' => $oAttDef->GetTargetClass(), 'sObjectId' => $oObject->Get($oAttDef->GetCode())));
+					$aAttData['url'] = $oUrlGenerator->generate('p_object_view',
+						array('sObjectClass' => $oAttDef->GetTargetClass(), 'sObjectId' => $oObject->Get($oAttDef->GetCode())));
 				}
 			}
 			elseif ($oAttDef->IsLinkSet())
@@ -1332,18 +1354,23 @@ class ObjectController extends AbstractController
 				continue;
 			}
 			elseif ($oAttDef instanceof AttributeImage)
-            {
-                $oOrmDoc = $oObject->Get($oAttDef->GetCode());
-                if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
-                {
-                    $sUrl = $oUrlGenerator->generate('p_object_document_display', array('sObjectClass' => get_class($oObject), 'sObjectId' => $oObject->GetKey(), 'sObjectField' => $oAttDef->GetCode(), 'cache' => 86400));
-                }
-                else
-                {
-                    $sUrl = $oAttDef->Get('default_image');
-                }
-                $aAttData['value'] = '<img src="' . $sUrl . '" />';
-            }
+			{
+				$oOrmDoc = $oObject->Get($oAttDef->GetCode());
+				if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
+				{
+					$sUrl = $oUrlGenerator->generate('p_object_document_display', array(
+						'sObjectClass' => get_class($oObject),
+						'sObjectId' => $oObject->GetKey(),
+						'sObjectField' => $oAttDef->GetCode(),
+						'cache' => 86400,
+					));
+				}
+				else
+				{
+					$sUrl = $oAttDef->Get('default_image');
+				}
+				$aAttData['value'] = '<img src="'.$sUrl.'" />';
+			}
 			else
 			{
 				$aAttData['value'] = $oAttDef->GetAsHTML($oObject->Get($oAttDef->GetCode()));
@@ -1351,9 +1378,10 @@ class ObjectController extends AbstractController
 				if ($oAttDef instanceof AttributeFriendlyName)
 				{
 					// Checking if user can access object
-					if($oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sObjectClass))
+					if ($oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sObjectClass))
 					{
-						$aAttData['url'] = $oUrlGenerator->generate('p_object_view', array('sObjectClass' => $sObjectClass, 'sObjectId' => $oObject->GetKey()));
+						$aAttData['url'] = $oUrlGenerator->generate('p_object_view',
+							array('sObjectClass' => $sObjectClass, 'sObjectId' => $oObject->GetKey()));
 					}
 				}
 			}
