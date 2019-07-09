@@ -28,13 +28,16 @@ use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
  * Class UrlGenerator
  *
  * @package Combodo\iTop\Portal\Routing
- * @since 2.7.0
+ * @since   2.7.0
+ * @author  Bruno Da Silva <bruno.dasilva@combodo.com>
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
 class UrlGenerator extends BaseUrlGenerator
 {
+	/** @noinspection PhpTooManyParametersInspection */
 	/**
 	 * Overloading of the parent function to add the $_REQUEST parameters to the url parameters.
-	 * This is used to keep additionnal parameters in the url, especially when portal is accessed from the /pages/exec.php
+	 * This is used to keep additional parameters in the url, especially when portal is accessed from the /pages/exec.php
 	 *
 	 * Note: As of now, it only adds the exec_module/exec_page/portal_id/env_switch/debug parameters. Any other parameter will be ignored.
 	 *
@@ -66,22 +69,26 @@ class UrlGenerator extends BaseUrlGenerator
 	{
 		$sExecModule = utils::ReadParam('exec_module', '', false, 'string');
 		$sExecPage = utils::ReadParam('exec_page', '', false, 'string');
-		if ($sExecModule !== '' && $sExecPage !== '') {
+		if ($sExecModule !== '' && $sExecPage !== '')
+		{
 			$aParameters['exec_module'] = $sExecModule;
 			$aParameters['exec_page'] = $sExecPage;
 		}
 
 		// Optional parameters
 		$sPortalId = utils::ReadParam('portal_id', '', false, 'string');
-		if ($sPortalId !== '') {
+		if ($sPortalId !== '')
+		{
 			$aParameters['portal_id'] = $sPortalId;
 		}
 		$sEnvSwitch = utils::ReadParam('env_switch', '', false, 'string');
-		if ($sEnvSwitch !== '') {
+		if ($sEnvSwitch !== '')
+		{
 			$aParameters['env_switch'] = $sEnvSwitch;
 		}
 		$sDebug = utils::ReadParam('debug', '', false, 'string');
-		if ($sDebug !== '') {
+		if ($sDebug !== '')
+		{
 			$aParameters['debug'] = $sDebug;
 		}
 

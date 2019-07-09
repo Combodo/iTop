@@ -50,14 +50,15 @@ use VariableExpression;
  * Class ManageBrickController
  *
  * @package Combodo\iTop\Portal\Controller
- * @author Bruno Da Silva <bruno.dasilva@combodo.com>
- * @author Eric Espie <eric.espie@combodo.com>
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @author Pierre Goiffon <pierre.goiffon@combodo.com>
- * @since 2.3.0
+ * @author  Bruno Da Silva <bruno.dasilva@combodo.com>
+ * @author  Eric Espie <eric.espie@combodo.com>
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @author  Pierre Goiffon <pierre.goiffon@combodo.com>
+ * @since   2.3.0
  */
 class ManageBrickController extends BrickController
 {
+	/** @var string EXCEL_EXPORT_TEMPLATE_PATH */
 	const EXCEL_EXPORT_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/popup-export-excel.html.twig';
 
 	/**
@@ -78,9 +79,9 @@ class ManageBrickController extends BrickController
 	 * @throws \OQLException
 	 */
 	public function DisplayAction(Request $oRequest, $sBrickId, $sGroupingTab, $sDisplayMode = null)
-    {
-	    /** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
-	    $oBrickCollection = $this->get('brick_collection');
+	{
+		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
+		$oBrickCollection = $this->get('brick_collection');
 
 		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
 		$oBrick = $oBrickCollection->GetBrickById($sBrickId);
@@ -157,6 +158,7 @@ class ManageBrickController extends BrickController
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function ExcelExportStartAction(Request $oRequest, $sBrickId, $sGroupingTab, $sGroupingArea)
 	{
@@ -266,6 +268,7 @@ class ManageBrickController extends BrickController
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function GetData(Request $oRequest, $sBrickId, $sGroupingTab, $bNeedDetails = false)
 	{
@@ -395,8 +398,8 @@ class ManageBrickController extends BrickController
 			}
 		}
 
-        // - Adding search clause if necessary
-        $this->ManageSearchValue($aData, $oQuery, $sClass, $aColumnsAttrs);
+		// - Adding search clause if necessary
+		$this->ManageSearchValue($aData, $oQuery, $sClass, $aColumnsAttrs);
 
 		// Preparing areas
 		// - We need to retrieve distinct values for the grouping attribute
@@ -427,7 +430,7 @@ class ManageBrickController extends BrickController
 						'label' => MetaModel::GetName($aDistinctResult['grouped_by_1']),
 						// Caution : This works only because we froze the grouping areas on the finalclass attribute.
 						'condition' => $oConditionQuery,
-						'count' => $aDistinctResult['_itop_count_']
+						'count' => $aDistinctResult['_itop_count_'],
 					);
 					unset($oConditionQuery);
 				}
@@ -441,7 +444,7 @@ class ManageBrickController extends BrickController
 					'label' => MetaModel::GetName($sClass),
 					// Caution : This works only because we froze the grouping areas on the finalclass attribute.
 					'condition' => null,
-					'count' => 0
+					'count' => 0,
 				);
 			}
 
@@ -501,7 +504,8 @@ class ManageBrickController extends BrickController
 					{
 						// Retrieving parameters
 						$iPageNumber = (int)$oRequestManipulator->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
-						$iListLength = (int)$oRequestManipulator->ReadParam('iListLength', ManageBrick::DEFAULT_LIST_LENGTH, FILTER_SANITIZE_NUMBER_INT);
+						$iListLength = (int)$oRequestManipulator->ReadParam('iListLength', ManageBrick::DEFAULT_LIST_LENGTH,
+							FILTER_SANITIZE_NUMBER_INT);
 
 						// Getting total records number
 						$oCountSet = new DBObjectSet($oQuery);
@@ -579,7 +583,8 @@ class ManageBrickController extends BrickController
 						if ($sItemAttr === $sMainActionAttrCode)
 						{
 							// Checking if we can edit the object
-							if (($oBrick->GetOpeningMode() === ManageBrick::ENUM_ACTION_EDIT) && $oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sCurrentClass, $oCurrentRow->GetKey()))
+							if (($oBrick->GetOpeningMode() === ManageBrick::ENUM_ACTION_EDIT) && $oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY,
+									$sCurrentClass, $oCurrentRow->GetKey()))
 							{
 								$sActionType = ManageBrick::ENUM_ACTION_EDIT;
 							}
@@ -605,10 +610,11 @@ class ManageBrickController extends BrickController
 							}
 						}
 
-						/** @var AttributeDefinition $oAttDef */
+						/** @var \AttributeDefinition $oAttDef */
 						$oAttDef = MetaModel::GetAttributeDef($sCurrentClass, $sItemAttr);
 						if ($oAttDef->IsExternalKey())
 						{
+							/** @var \AttributeExternalKey $oAttDef */
 							$sValue = $oCurrentRow->GetAsHTML($sItemAttr.'_friendlyname');
 							$sSortValue = $oCurrentRow->Get($sItemAttr.'_friendlyname');
 
@@ -629,19 +635,24 @@ class ManageBrickController extends BrickController
 							}
 						}
 						elseif ($oAttDef instanceof AttributeImage)
-                        {
-                            $oOrmDoc = $oCurrentRow->Get($sItemAttr);
-                            if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
-                            {
-                                $sUrl = $oUrlGenerator->generate('p_object_document_display', array('sObjectClass' => get_class($oCurrentRow), 'sObjectId' => $oCurrentRow->GetKey(), 'sObjectField' => $sItemAttr, 'cache' => 86400));
-                            }
-                            else
-                            {
-                                $sUrl = $oAttDef->Get('default_image');
-                            }
-                            $sValue = '<img src="' . $sUrl . '" />';
-                            $sSortValue = null;
-                        }
+						{
+							$oOrmDoc = $oCurrentRow->Get($sItemAttr);
+							if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
+							{
+								$sUrl = $oUrlGenerator->generate('p_object_document_display', array(
+									'sObjectClass' => get_class($oCurrentRow),
+									'sObjectId' => $oCurrentRow->GetKey(),
+									'sObjectField' => $sItemAttr,
+									'cache' => 86400,
+								));
+							}
+							else
+							{
+								$sUrl = $oAttDef->Get('default_image');
+							}
+							$sValue = '<img src="'.$sUrl.'" />';
+							$sSortValue = null;
+						}
 						elseif ($oAttDef instanceof AttributeTagSet)
 						{
 							/** @var \ormTagSet $oSetValues */
@@ -653,8 +664,8 @@ class ManageBrickController extends BrickController
 						}
 						else
 						{
-                            $sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
-                            $sSortValue = $oCurrentRow->Get($sItemAttr);
+							$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
+							$sSortValue = $oCurrentRow->Get($sItemAttr);
 						}
 						unset($oAttDef);
 
@@ -662,18 +673,18 @@ class ManageBrickController extends BrickController
 							'att_code' => $sItemAttr,
 							'value' => $sValue,
 							'sort_value' => $sSortValue,
-							'actions' => $aActions
+							'actions' => $aActions,
 						);
 					}
 
 					// ... Checking menu extensions
 					$aItemButtons = array();
 					/** @var iPopupMenuExtension $oExtensionInstance */
-                    foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
+					foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
 					{
 						foreach ($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJLISTITEM_ACTIONS, array(
 							'portal_id' => $sPortalId,
-							'object' => $oCurrentRow
+							'object' => $oCurrentRow,
 						)) as $oMenuItem)
 						{
 							if (is_object($oMenuItem))
@@ -682,7 +693,7 @@ class ManageBrickController extends BrickController
 								{
 									$aItemButtons[] = $oMenuItem->GetMenuItem() + array(
 											'js_files' => $oMenuItem->GetLinkedScripts(),
-											'type' => 'button'
+											'type' => 'button',
 										);
 								}
 								elseif ($oMenuItem instanceof URLButtonItem)
@@ -722,7 +733,7 @@ class ManageBrickController extends BrickController
 					'sTitle' => $aGroupingAreasValues[$sKey]['label'],
 					'aItems' => $aItems,
 					'iItemsCount' => $oSet->Count(),
-					'aColumnsDefinition' => $aColumnsDefinition
+					'aColumnsDefinition' => $aColumnsDefinition,
 				);
 			}
 		}
@@ -736,7 +747,7 @@ class ManageBrickController extends BrickController
 		if ($oRequest->isXmlHttpRequest())
 		{
 			$aData = $aData + array(
-					'data' => $aGroupingAreasData[$sGroupingArea]['aItems']
+					'data' => $aGroupingAreasData[$sGroupingArea]['aItems'],
 				);
 		}
 		else
@@ -757,7 +768,7 @@ class ManageBrickController extends BrickController
 					$aUrls[] = $oUrlGenerator->generate('p_manage_brick', array(
 						'sBrickId' => $sBrickId,
 						'sDisplayMode' => 'default',
-						'sGroupingTab' => $aValues['value']
+						'sGroupingTab' => $aValues['value'],
 					));
 				}
 
@@ -812,16 +823,16 @@ class ManageBrickController extends BrickController
 		// Note : This is a very naive search at the moment
 		if (!empty($sSearchValue))
 		{
-		    // Putting only valid attributes as one can define attributes of leaf classes in the brick definition (<fields>), but at this stage we are working on the abstract class.
-            // Note: This won't fix everything as the search will not be looking in all fields.
-		    $aSearchListItems = array();
-		    foreach($aColumnsAttrs as $sColumnAttr)
-            {
-                if(MetaModel::IsValidAttCode($sClass, $sColumnAttr))
-                {
-                    $aSearchListItems[] = $sColumnAttr;
-                }
-            }
+			// Putting only valid attributes as one can define attributes of leaf classes in the brick definition (<fields>), but at this stage we are working on the abstract class.
+			// Note: This won't fix everything as the search will not be looking in all fields.
+			$aSearchListItems = array();
+			foreach ($aColumnsAttrs as $sColumnAttr)
+			{
+				if (MetaModel::IsValidAttCode($sClass, $sColumnAttr))
+				{
+					$aSearchListItems[] = $sColumnAttr;
+				}
+			}
 
 			$oFullBinExpr = null;
 			foreach ($aSearchListItems as $sSearchItemAttr)
@@ -857,17 +868,18 @@ class ManageBrickController extends BrickController
 
 	/**
 	 * Get the groups using a given attribute code.
-	 * If a limit is given, the remaining groups are aggregated (groupby result and search request).
+	 * If a limit is given, the remaining groups are aggregated (group by result and search request).
 	 *
 	 * @param \DBSearch                              $oQuery              Initial query
 	 * @param string                                 $sGroupingTabAttCode Attribute code to group by
 	 * @param \Combodo\iTop\Portal\Brick\ManageBrick $oBrick
 	 *
-	 * @return array of results from the groupby request and the corrsponding search.
+	 * @return array of results from the group by request and the corresponding search.
 	 *
 	 * @throws \CoreException
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	protected function GroupByAttribute(
 		DBSearch $oQuery, $sGroupingTabAttCode, ManageBrick $oBrick
@@ -912,7 +924,7 @@ class ManageBrickController extends BrickController
 				{
 					$oConditionQuery = DBSearch::CloneWithAlias($oQuery, 'GTAB');
 					$oExpression = new BinaryExpression(new FieldExpression($sGroupingTabAttCode,
-                        $oConditionQuery->GetClassAlias()), '=', new UnaryExpression($aDistinctResult['grouped_by_1']));
+						$oConditionQuery->GetClassAlias()), '=', new UnaryExpression($aDistinctResult['grouped_by_1']));
 					$oConditionQuery->AddConditionExpression($oExpression);
 
 					$sHtmlLabel = $oFieldExp->MakeValueLabel($oDistinctQuery, $aDistinctResult['grouped_by_1'], '');
@@ -935,7 +947,7 @@ class ManageBrickController extends BrickController
 					{
 						$iOtherCount += $aResult['_itop_count_'];
 						$oExpr = new BinaryExpression(new FieldExpression($sGroupingTabAttCode,
-                            $oConditionQuery->GetClassAlias()), '=', new UnaryExpression($aResult['grouped_by_1']));
+							$oConditionQuery->GetClassAlias()), '=', new UnaryExpression($aResult['grouped_by_1']));
 						if (is_null($oExpression))
 						{
 							$oExpression = $oExpr;

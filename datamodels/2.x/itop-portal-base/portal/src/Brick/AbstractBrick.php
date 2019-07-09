@@ -1,26 +1,29 @@
 <?php
 
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ *
+ *
+ */
 
 namespace Combodo\iTop\Portal\Brick;
 
-require_once APPROOT . '/core/moduledesign.class.inc.php';
-require_once APPROOT . '/setup/compiler.class.inc.php';
+require_once APPROOT.'/core/moduledesign.class.inc.php';
+require_once APPROOT.'/setup/compiler.class.inc.php';
 
 use DOMFormatException;
 use ModuleDesign;
@@ -28,40 +31,68 @@ use Combodo\iTop\DesignElement;
 
 /**
  * Description of AbstractBrick
- * 
- * Bricks are used mostly in the portal for now, not the console. 
- * This class defines common functionnalities for the extended classes.
+ *
+ * Bricks are used mostly in the portal for now, not the console.
+ * This class defines common functionalities for the extended classes.
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since  2.3.0
  */
 abstract class AbstractBrick
 {
+	/** @var string ENUM_DATA_LOADING_LAZY */
 	const ENUM_DATA_LOADING_LAZY = 'lazy';
+	/** @var string ENUM_DATA_LOADING_FULL */
 	const ENUM_DATA_LOADING_FULL = 'full';
+	/** @var string ENUM_DATA_LOADING_AUTO */
 	const ENUM_DATA_LOADING_AUTO = 'auto';
+
+	/** @var bool DEFAULT_MANDATORY */
 	const DEFAULT_MANDATORY = true;
+	/** @var bool DEFAULT_ACTIVE */
 	const DEFAULT_ACTIVE = true;
+	/** @var bool DEFAULT_VISIBLE */
 	const DEFAULT_VISIBLE = true;
+	/** @var float DEFAULT_RANK */
 	const DEFAULT_RANK = 1.0;
+	/** @var string|null DEFAULT_PAGE_TEMPLATE_PATH */
 	const DEFAULT_PAGE_TEMPLATE_PATH = null;
+	/** @var string DEFAULT_TITLE */
 	const DEFAULT_TITLE = '';
+	/** @var string|null DEFAULT_DESCRIPTION */
 	const DEFAULT_DESCRIPTION = null;
+	/** @var string DEFAULT_DATA_LOADING */
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_AUTO;
+	/** @var string DEFAULT_ALLOWED_PROFILES_OQL */
 	const DEFAULT_ALLOWED_PROFILES_OQL = '';
+	/** @var string DEFAULT_DENIED_PROFILES_OQL */
 	const DEFAULT_DENIED_PROFILES_OQL = '';
 
+	/** @var string $sId */
 	protected $sId;
+	/** @var bool $bMandatory */
 	protected $bMandatory;
+	/** @var bool $bActive */
 	protected $bActive;
+	/** @var bool $bVisible */
 	protected $bVisible;
+	/** @var float $fRank */
 	protected $fRank;
+	/** @var string|null $sPageTemplatePath */
 	protected $sPageTemplatePath;
+	/** @var string $sTitle */
 	protected $sTitle;
+	/** @var string|null $sDescription */
 	protected $sDescription;
+	/** @var string $sDataLoading */
 	protected $sDataLoading;
+	/** @var array $aAllowedProfiles */
 	protected $aAllowedProfiles;
+	/** @var array $aDeniedProfiles */
 	protected $aDeniedProfiles;
+	/** @var string $sAllowedProfilesOql */
 	protected $sAllowedProfilesOql;
+	/** @var string $sDeniedProfilesOql */
 	protected $sDeniedProfilesOql;
 
 	/**
@@ -77,7 +108,7 @@ abstract class AbstractBrick
 	/**
 	 * Default attributes values of AbstractBrick are specified in the definition, not the constructor.
 	 */
-	function __construct()
+	public function __construct()
 	{
 		$this->bMandatory = static::DEFAULT_MANDATORY;
 		$this->bActive = static::DEFAULT_ACTIVE;
@@ -253,8 +284,8 @@ abstract class AbstractBrick
 	 * Sets if the brick is visible
 	 *
 	 * @param boolean $bVisible
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetVisible($bVisible)
 	{
@@ -344,12 +375,13 @@ abstract class AbstractBrick
 	 * Sets the allowed profiles for the brick
 	 *
 	 * @param array $aAllowedProfiles
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetAllowedProfiles($aAllowedProfiles)
 	{
 		$this->aAllowedProfiles = $aAllowedProfiles;
+
 		return $this;
 	}
 
@@ -357,8 +389,8 @@ abstract class AbstractBrick
 	 * Sets the denied profiles for the brick
 	 *
 	 * @param array $aDeniedProfiles
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function SetDeniedProfiles($aDeniedProfiles)
 	{
@@ -382,7 +414,7 @@ abstract class AbstractBrick
 	/**
 	 * Sets the denied profiles oql query for the brick
 	 *
-	 * @param array $sDeniedProfilesOql
+	 * @param string $sDeniedProfilesOql
      *
      * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
@@ -396,12 +428,13 @@ abstract class AbstractBrick
 	 * Adds $sProfile to the list of allowed profiles for that brick
 	 *
 	 * @param string $sProfile
-     *
+	 *
 	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function AddAllowedProfile($sProfile)
 	{
 		$this->aAllowedProfiles[] = $sProfile;
+
 		return $this;
 	}
 
@@ -409,7 +442,7 @@ abstract class AbstractBrick
 	 * Removes $sProfile from the list of allowed profiles
 	 *
 	 * @param string $sProfile
-     *
+	 *
 	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function RemoveAllowedProfile($sProfile)
@@ -418,6 +451,7 @@ abstract class AbstractBrick
 		{
 			unset($this->aAllowedProfiles[$sProfile]);
 		}
+
 		return $this;
 	}
 
@@ -435,12 +469,13 @@ abstract class AbstractBrick
 	 * Adds $sProfile to the list of denied profiles for that brick
 	 *
 	 * @param string $sProfile
-     *
+	 *
 	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function AddDeniedProfile($sProfile)
 	{
 		$this->aDeniedProfiles[] = $sProfile;
+
 		return $this;
 	}
 
@@ -448,7 +483,7 @@ abstract class AbstractBrick
 	 * Removes $sProfile from the list of denied profiles
 	 *
 	 * @param string $sProfile
-     *
+	 *
 	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
 	 */
 	public function RemoveDeniedProfile($sProfile)
@@ -457,6 +492,7 @@ abstract class AbstractBrick
 		{
 			unset($this->aDeniedProfiles[$sProfile]);
 		}
+
 		return $this;
 	}
 
@@ -477,7 +513,7 @@ abstract class AbstractBrick
 	 * Priority is deny/allow
 	 *
 	 * @param string $sProfile
-     *
+	 *
 	 * @return boolean
 	 */
 	public function IsGrantedForProfile($sProfile)
@@ -492,7 +528,7 @@ abstract class AbstractBrick
 	 * Priority is deny/allow
 	 *
 	 * @param array $aProfiles
-     *
+	 *
 	 * @return boolean
 	 */
 	public function IsGrantedForProfiles($aProfiles)
@@ -543,9 +579,9 @@ abstract class AbstractBrick
 	 * This is used to set all the brick attributes at once.
 	 *
 	 * @param \Combodo\iTop\DesignElement $oMDElement
-     *
-     * @return \Combodo\iTop\Portal\Brick\AbstractBrick
-     *
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\AbstractBrick
+	 *
 	 * @throws \DOMFormatException
 	 */
 	public function LoadFromXml(DesignElement $oMDElement)
@@ -558,28 +594,31 @@ abstract class AbstractBrick
 		$this->SetId($oMDElement->getAttribute('id'));
 
 		// Checking others elements
+		/** @var \Combodo\iTop\DesignElement $oBrickSubNode */
 		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
 		{
 			switch ($oBrickSubNode->nodeName)
 			{
 				case 'mandatory':
-					$this->SetMandatory(($oBrickSubNode->GetText() === 'no') ? false : true );
+					$this->SetMandatory(($oBrickSubNode->GetText() === 'no') ? false : true);
 					break;
 				case 'active':
-					$this->SetActive(($oBrickSubNode->GetText() === 'false') ? false : true );
+					$this->SetActive(($oBrickSubNode->GetText() === 'false') ? false : true);
 					break;
 				case 'rank':
 					$oOptionalNode = $oBrickSubNode->GetOptionalElement('default');
 					if ($oOptionalNode !== null)
 					{
-						$this->SetRank((float) $oOptionalNode->GetText(static::DEFAULT_RANK));
+						$this->SetRank((float)$oOptionalNode->GetText(static::DEFAULT_RANK));
 					}
 					break;
 				case 'templates':
-					$oTemplateNodeList = $oBrickSubNode->GetNodes('template[@id=' . ModuleDesign::XPathQuote('page') . ']');
+					$oTemplateNodeList = $oBrickSubNode->GetNodes('template[@id='.ModuleDesign::XPathQuote('page').']');
 					if ($oTemplateNodeList->length > 0)
 					{
-						$this->SetPageTemplatePath($oTemplateNodeList->item(0)->GetText(static::DEFAULT_PAGE_TEMPLATE_PATH));
+						/** @var \Combodo\iTop\DesignElement $oTemplateNode */
+						$oTemplateNode = $oTemplateNodeList->item(0);
+						$this->SetPageTemplatePath($oTemplateNode->GetText(static::DEFAULT_PAGE_TEMPLATE_PATH));
 					}
 					break;
 				case 'title':
@@ -596,11 +635,13 @@ abstract class AbstractBrick
 					$this->SetDataLoading($oBrickSubNode->GetText(static::DEFAULT_DATA_LOADING));
 					break;
 				case 'security':
+					/** @var \Combodo\iTop\DesignElement $oSecurityNode */
 					foreach ($oBrickSubNode->childNodes as $oSecurityNode)
 					{
 						if ($oSecurityNode->nodeType === XML_TEXT_NODE && $oSecurityNode->GetText() === '')
 						{
-							throw new DOMFormatException('Brick security node "' . $oSecurityNode->nodeName . '" must contain an OQL query, it cannot be empty', null, null, $oMDElement);
+							throw new DOMFormatException('Brick security node "'.$oSecurityNode->nodeName.'" must contain an OQL query, it cannot be empty',
+								null, null, $oMDElement);
 						}
 
 						switch ($oSecurityNode->nodeName)

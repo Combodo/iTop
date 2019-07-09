@@ -31,24 +31,26 @@ use Dict;
 use MetaModel;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use UserRights;
-use Combodo\iTop\Portal\Routing\UrlGenerator;
 
+/**
+ * Class BrowseBrickHelper
+ *
+ * @package Combodo\iTop\Portal\Helper
+ * @since   2.7.0
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ */
 class BrowseBrickHelper
 {
+	/** @var string LEVEL_SEPARATOR */
 	const LEVEL_SEPARATOR = '-';
+	/** @var array OPTIONAL_ATTRIBUTES */
 	const OPTIONAL_ATTRIBUTES = array('tooltip_att', 'description_att', 'image_att');
 
-	/**
-	 * @var \Combodo\iTop\Portal\Helper\SecurityHelper
-	 */
+	/** @var \Combodo\iTop\Portal\Helper\SecurityHelper */
 	private $oSecurityHelper;
-	/**
-	 * @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper
-	 */
+	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper */
 	private $oScopeValidator;
-	/**
-	 * @var \Combodo\iTop\Portal\Routing\UrlGenerator
-	 */
+	/** @var \Combodo\iTop\Portal\Routing\UrlGenerator */
 	private $oUrlGenerator;
 
 	/**
@@ -58,8 +60,8 @@ class BrowseBrickHelper
 	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper           $oScopeValidator
 	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $oUrlGenerator
 	 */
-	public function __construct(SecurityHelper $oSecurityHelper, ScopeValidatorHelper $oScopeValidator, UrlGeneratorInterface $oUrlGenerator)
-	{
+	public function __construct(SecurityHelper $oSecurityHelper, ScopeValidatorHelper $oScopeValidator, UrlGeneratorInterface $oUrlGenerator
+	) {
 		$this->oSecurityHelper = $oSecurityHelper;
 		$this->oScopeValidator = $oScopeValidator;
 		$this->oUrlGenerator = $oUrlGenerator;
@@ -81,16 +83,18 @@ class BrowseBrickHelper
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function TreeToFlatLevelsProperties(array $aLevels, array &$aLevelsProperties, $sLevelAliasPrefix = 'L')
 	{
 		foreach ($aLevels as $aLevel)
 		{
-			$sCurrentLevelAlias = $sLevelAliasPrefix . static::LEVEL_SEPARATOR . $aLevel['id'];
+			$sCurrentLevelAlias = $sLevelAliasPrefix.static::LEVEL_SEPARATOR.$aLevel['id'];
 			$oSearch = DBSearch::CloneWithAlias(DBSearch::FromOQL($aLevel['oql']), $sCurrentLevelAlias);
 
 			// Restricting to the allowed scope
-			$oScopeSearch = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oSearch->GetClass(), UR_ACTION_READ);
+			$oScopeSearch = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $oSearch->GetClass(),
+				UR_ACTION_READ);
 			$oSearch = ($oScopeSearch !== null) ? $oSearch->Intersect($oScopeSearch) : null;
 			// - Allowing all data if necessary
 			if ($oScopeSearch !== null && $oScopeSearch->IsAllDataAllowed())
@@ -110,7 +114,7 @@ class BrowseBrickHelper
 					'image_att' => $aLevel['image_att'],
 					'search' => $oSearch,
 					'fields' => array(),
-					'actions' => array()
+					'actions' => array(),
 				);
 
 				// Adding current level's fields
@@ -123,24 +127,24 @@ class BrowseBrickHelper
 						$aLevelsProperties[$sCurrentLevelAlias]['fields'][] = array(
 							'code' => $sFieldAttCode,
 							'label' => MetaModel::GetAttributeDef($oSearch->GetClass(), $sFieldAttCode)->GetLabel(),
-							'hidden' => $aFieldProperties['hidden']
+							'hidden' => $aFieldProperties['hidden'],
 						);
 					}
 				}
 
-				// Flattening and adding sublevels
+				// Flattening and adding sub levels
 				if (isset($aLevel['levels']))
 				{
 					foreach ($aLevel['levels'] as $aChildLevel)
 					{
-						// Checking if the sublevel if allowed
+						// Checking if the sub level if allowed
 						$oChildSearch = DBSearch::FromOQL($aChildLevel['oql']);
 						if ($this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $oChildSearch->GetClass()))
 						{
-							// Adding the sublevel to this one
-							$aLevelsProperties[$sCurrentLevelAlias]['levels'][] = $sCurrentLevelAlias . static::LEVEL_SEPARATOR . $aChildLevel['id'];
+							// Adding the sub level to this one
+							$aLevelsProperties[$sCurrentLevelAlias]['levels'][] = $sCurrentLevelAlias.static::LEVEL_SEPARATOR.$aChildLevel['id'];
 
-							// Adding drilldown action if necessary
+							// Adding drill down action if necessary
 							foreach ($aLevel['actions'] as $sId => $aAction)
 							{
 								if ($aAction['type'] === BrowseBrick::ENUM_ACTION_DRILLDOWN)
@@ -162,11 +166,13 @@ class BrowseBrickHelper
 					if (!array_key_exists($sId, $aLevelsProperties[$sCurrentLevelAlias]['actions']))
 					{
 						// Adding action only if allowed
-						if (($aAction['type'] === BrowseBrick::ENUM_ACTION_VIEW) && !$this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $oSearch->GetClass()))
+						if (($aAction['type'] === BrowseBrick::ENUM_ACTION_VIEW) && !$this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ,
+								$oSearch->GetClass()))
 						{
 							continue;
 						}
-						elseif (($aAction['type'] === BrowseBrick::ENUM_ACTION_EDIT) && !$this->oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $oSearch->GetClass()))
+						elseif (($aAction['type'] === BrowseBrick::ENUM_ACTION_EDIT) && !$this->oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY,
+								$oSearch->GetClass()))
 						{
 							continue;
 						}
@@ -190,8 +196,10 @@ class BrowseBrickHelper
 									// We can only make translate a dictionnary entry with a class placeholder when the action has a class tag. if it has a factory method, we don't know yet what class is going to be created
 									if ($aAction['factory']['type'] === BrowseBrick::ENUM_FACTORY_TYPE_CLASS)
 									{
-										$aAction['title'] = Dict::Format('Brick:Portal:Browse:Action:CreateObjectFromThis', MetaModel::GetName($aAction['factory']['value']));
-										$aAction['url'] = $this->oUrlGenerator->generate('p_object_create', array('sObjectClass' => $aAction['factory']['value']));
+										$aAction['title'] = Dict::Format('Brick:Portal:Browse:Action:CreateObjectFromThis',
+											MetaModel::GetName($aAction['factory']['value']));
+										$aAction['url'] = $this->oUrlGenerator->generate('p_object_create',
+											array('sObjectClass' => $aAction['factory']['value']));
 									}
 									else
 									{
@@ -236,11 +244,16 @@ class BrowseBrickHelper
 							case BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS:
 								if ($aAction['factory']['type'] === BrowseBrick::ENUM_FACTORY_TYPE_CLASS)
 								{
-									$aAction['url'] = $this->oUrlGenerator->generate('p_object_create', array('sObjectClass' => $aAction['factory']['value']));
+									$aAction['url'] = $this->oUrlGenerator->generate('p_object_create',
+										array('sObjectClass' => $aAction['factory']['value']));
 								}
 								else
 								{
-									$aAction['url'] = $this->oUrlGenerator->generate('p_object_create_from_factory', array('sEncodedMethodName' => base64_encode($aAction['factory']['value']), 'sObjectClass' => '-objectClass-', 'sObjectId' => '-objectId-'));
+									$aAction['url'] = $this->oUrlGenerator->generate('p_object_create_from_factory', array(
+										'sEncodedMethodName' => base64_encode($aAction['factory']['value']),
+										'sObjectClass' => '-objectClass-',
+										'sObjectId' => '-objectId-',
+									));
 								}
 								break;
 						}
@@ -255,9 +268,9 @@ class BrowseBrickHelper
 	/**
 	 * Prepares the action rules for an array of DBObject items.
 	 *
-	 * @param array $aItems
+	 * @param array  $aItems
 	 * @param string $sLevelsAlias
-	 * @param array $aLevelsProperties
+	 * @param array  $aLevelsProperties
 	 *
 	 * @return array
 	 */
@@ -298,11 +311,13 @@ class BrowseBrickHelper
 	 *
 	 * @throws \CoreException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function AddToFlatItems(array $aCurrentRow, array &$aLevelsProperties)
 	{
 		$aRow = array();
 
+		/** @var \DBObject $value */
 		foreach ($aCurrentRow as $key => $value)
 		{
 			// Retrieving objects from all levels
@@ -313,18 +328,18 @@ class BrowseBrickHelper
 				'id' => $value->GetKey(),
 				'name' => $value->Get($aLevelsProperties[$key]['name_att']),
 				'class' => get_class($value),
-				'action_rules_token' => $this->PrepareActionRulesForItems($aItems, $key, $aLevelsProperties)
+				'action_rules_token' => $this->PrepareActionRulesForItems($aItems, $key, $aLevelsProperties),
 			);
 
 			// Adding optional attributes if necessary
-			foreach(static::OPTIONAL_ATTRIBUTES as $sOptionalAttribute)
+			foreach (static::OPTIONAL_ATTRIBUTES as $sOptionalAttribute)
 			{
 				if ($aLevelsProperties[$key][$sOptionalAttribute] !== null)
 				{
 					$sPropertyName = substr($sOptionalAttribute, 0, -4);
 					$oAttDef = MetaModel::GetAttributeDef(get_class($value), $aLevelsProperties[$key][$sOptionalAttribute]);
 
-					if($oAttDef instanceof AttributeImage)
+					if ($oAttDef instanceof AttributeImage)
 					{
 						$tmpAttValue = $value->Get($aLevelsProperties[$key][$sOptionalAttribute]);
 						if ($sOptionalAttribute === 'image_att')
@@ -335,7 +350,7 @@ class BrowseBrickHelper
 									'sObjectClass' => get_class($value),
 									'sObjectId' => $value->GetKey(),
 									'sObjectField' => $aLevelsProperties[$key][$sOptionalAttribute],
-									'cache' => 86400
+									'cache' => 86400,
 								));
 							}
 							else
@@ -360,7 +375,6 @@ class BrowseBrickHelper
 				{
 					$oAttDef = MetaModel::GetAttributeDef(get_class($value), $aField['code']);
 
-					$sHtmlForFieldValue = '';
 					switch (get_class($oAttDef))
 					{
 						case 'AttributeTagSet':
@@ -420,11 +434,12 @@ class BrowseBrickHelper
 	{
 		$aCurrentRowKeys = array_keys($aCurrentRow);
 		$aCurrentRowValues = array_values($aCurrentRow);
-		$sCurrentIndex = $aCurrentRowKeys[0] . '::' . $aCurrentRowValues[0]->GetKey();
+		/** @var \DBObject[] $aCurrentRowValues */
+		$sCurrentIndex = $aCurrentRowKeys[0].'::'.$aCurrentRowValues[0]->GetKey();
 
 		// We make sure to keep all row objects through levels by copying them when processing the first level.
 		// Otherwise they will be sliced through levels, one by one.
-		if($aCurrentRowObjects === null)
+		if ($aCurrentRowObjects === null)
 		{
 			$aCurrentRowObjects = $aCurrentRowValues;
 		}
@@ -437,25 +452,31 @@ class BrowseBrickHelper
 				'name' => $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]]['name_att']),
 				'class' => get_class($aCurrentRowValues[0]),
 				'subitems' => array(),
-				'action_rules_token' => $this->PrepareActionRulesForItems($aCurrentRowObjects, $aCurrentRowKeys[0], $aLevelsProperties)
+				'action_rules_token' => $this->PrepareActionRulesForItems($aCurrentRowObjects, $aCurrentRowKeys[0], $aLevelsProperties),
 			);
 
 			// Adding optional attributes if necessary
-			foreach(static::OPTIONAL_ATTRIBUTES as $sOptionalAttribute)
+			foreach (static::OPTIONAL_ATTRIBUTES as $sOptionalAttribute)
 			{
 				if ($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute] !== null)
 				{
 					$sPropertyName = substr($sOptionalAttribute, 0, -4);
-					$oAttDef = MetaModel::GetAttributeDef(get_class($aCurrentRowValues[0]), $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
+					$oAttDef = MetaModel::GetAttributeDef(get_class($aCurrentRowValues[0]),
+						$aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
 
-					if($oAttDef instanceof AttributeImage)
+					if ($oAttDef instanceof AttributeImage)
 					{
 						$tmpAttValue = $aCurrentRowValues[0]->Get($aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute]);
-						if($sOptionalAttribute === 'image_att')
+						if ($sOptionalAttribute === 'image_att')
 						{
 							if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
 							{
-								$tmpAttValue = $this->oUrlGenerator->generate('p_object_document_display', array('sObjectClass' => get_class($aCurrentRowValues[0]), 'sObjectId' => $aCurrentRowValues[0]->GetKey(), 'sObjectField' => $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute], 'cache' => 86400));
+								$tmpAttValue = $this->oUrlGenerator->generate('p_object_document_display', array(
+									'sObjectClass' => get_class($aCurrentRowValues[0]),
+									'sObjectId' => $aCurrentRowValues[0]->GetKey(),
+									'sObjectField' => $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute],
+									'cache' => 86400,
+								));
 							}
 							else
 							{

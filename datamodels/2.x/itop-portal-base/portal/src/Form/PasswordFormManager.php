@@ -35,16 +35,17 @@ use Combodo\iTop\Form\Field\PasswordField;
  * Description of PasswordFormManager
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.3.0
+ * @since  2.3.0
  */
 class PasswordFormManager extends FormManager
 {
+	/** @var string FORM_TYPE */
 	const FORM_TYPE = 'change_password';
 
-    /**
-     * @throws \Exception
-     */
-    public function Build()
+	/**
+	 * @throws \Exception
+	 */
+	public function Build()
 	{
 		// Building the form
 		$oForm = new Form('change_password');
@@ -75,23 +76,23 @@ class PasswordFormManager extends FormManager
 		$this->oRenderer->SetForm($this->oForm);
 	}
 
-    /**
-     * Validates the form and returns an array with the validation status and the messages.
-     * If the form is valid, creates/updates the object.
-     *
-     * eg :
-     *  array(
-     *      'status' => true|false
-     *      'messages' => array(
-     *          'errors' => array()
-     *    )
-     *
-     * @param array $aArgs
-     *
-     * @return array
-     *
-     * @throws \Exception
-     */
+	/**
+	 * Validates the form and returns an array with the validation status and the messages.
+	 * If the form is valid, creates/updates the object.
+	 *
+	 * eg :
+	 *  array(
+	 *      'status' => true|false
+	 *      'messages' => array(
+	 *          'errors' => array()
+	 *    )
+	 *
+	 * @param array $aArgs
+	 *
+	 * @return array
+	 *
+	 * @throws \Exception
+	 */
 	public function OnSubmit($aArgs = null)
 	{
 		$aData = array(
@@ -99,8 +100,8 @@ class PasswordFormManager extends FormManager
 			'messages' => array(
 				'success' => array(),
 				'warnings' => array(), // Not used as of today, just to show that the structure is ready for change like this.
-				'error' => array()
-			)
+				'error' => array(),
+			),
 		);
 
 		// Update object and form
@@ -117,32 +118,50 @@ class PasswordFormManager extends FormManager
 				$sOldPassword = $this->oForm->GetField('old_password')->GetCurrentValue();
 				$sNewPassword = $this->oForm->GetField('new_password')->GetCurrentValue();
 				$sConfirmPassword = $this->oForm->GetField('confirm_password')->GetCurrentValue();
-				
+
 				if ($sOldPassword !== '' && $sNewPassword !== '' && $sConfirmPassword !== '')
 				{
 					if (!UserRights::CanChangePassword())
 					{
 						$aData['valid'] = false;
-						$aData['messages']['error'] += array('_main' => array(Dict::Format('Brick:Portal:UserProfile:Password:CantChangeContactAdministrator', ITOP_APPLICATION_SHORT)));
-					}
-					else if (!UserRights::CheckCredentials($sAuthUser, $sOldPassword))
-					{
-						$aData['valid'] = false;
-						$aData['messages']['error'] += array('old_password' => array(Dict::S('UI:Login:IncorrectOldPassword')));
-					}
-					else if ($sNewPassword !== $sConfirmPassword)
-					{
-						$aData['valid'] = false;
-						$aData['messages']['error'] += array('confirm_password' => array(Dict::S('UI:Login:RetypePwdDoesNotMatch')));
-					}
-					else if (!UserRights::ChangePassword($sOldPassword, $sNewPassword))
-					{
-						$aData['valid'] = false;
-						$aData['messages']['error'] += array('confirm_password' => array(Dict::Format('Brick:Portal:UserProfile:Password:CantChangeForUnknownReason', ITOP_APPLICATION_SHORT)));
+						$aData['messages']['error'] += array(
+							'_main' => array(
+								Dict::Format('Brick:Portal:UserProfile:Password:CantChangeContactAdministrator', ITOP_APPLICATION_SHORT),
+							),
+						);
 					}
 					else
 					{
-						$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
+						if (!UserRights::CheckCredentials($sAuthUser, $sOldPassword))
+						{
+							$aData['valid'] = false;
+							$aData['messages']['error'] += array('old_password' => array(Dict::S('UI:Login:IncorrectOldPassword')));
+						}
+						else
+						{
+							if ($sNewPassword !== $sConfirmPassword)
+							{
+								$aData['valid'] = false;
+								$aData['messages']['error'] += array('confirm_password' => array(Dict::S('UI:Login:RetypePwdDoesNotMatch')));
+							}
+							else
+							{
+								if (!UserRights::ChangePassword($sOldPassword, $sNewPassword))
+								{
+									$aData['valid'] = false;
+									$aData['messages']['error'] += array(
+										'confirm_password' => array(
+											Dict::Format('Brick:Portal:UserProfile:Password:CantChangeForUnknownReason',
+												ITOP_APPLICATION_SHORT),
+										),
+									);
+								}
+								else
+								{
+									$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
+								}
+							}
+						}
 					}
 				}
 			}
@@ -150,7 +169,7 @@ class PasswordFormManager extends FormManager
 			{
 				$aData['valid'] = false;
 				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
-				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Exception during submit (' . $e->getMessage() . ')');
+				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Exception during submit ('.$e->getMessage().')');
 			}
 		}
 		else
@@ -159,16 +178,16 @@ class PasswordFormManager extends FormManager
 			$aData['valid'] = false;
 			$aData['messages']['error'] += $this->oForm->GetErrorMessages();
 		}
-		
+
 		return $aData;
 	}
 
-    /**
-     * @param array $aArgs
-     *
-     * @throws \Exception
-     */
-    public function OnUpdate($aArgs = null)
+	/**
+	 * @param array $aArgs
+	 *
+	 * @throws \Exception
+	 */
+	public function OnUpdate($aArgs = null)
 	{
 
 		// We build the form
@@ -187,12 +206,12 @@ class PasswordFormManager extends FormManager
 		}
 	}
 
-    /**
-     * @param array $aArgs
-     */
+	/**
+	 * @param array $aArgs
+	 */
 	public function OnCancel($aArgs = null)
 	{
-		
+
 	}
 
 }

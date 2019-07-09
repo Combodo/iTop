@@ -30,91 +30,91 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Handle basic requests manipulation.
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.5.1
+ * @since  2.5.1
  */
 class RequestManipulatorHelper
 {
-    /** @var \Symfony\Component\HttpFoundation\RequestStack $oRequestStack */
-    protected $oRequestStack;
+	/** @var \Symfony\Component\HttpFoundation\RequestStack $oRequestStack */
+	protected $oRequestStack;
 
-    /**
-     * RequestManipulatorHelper constructor.
-     *
-     * @param \Symfony\Component\HttpFoundation\RequestStack $oRequestStack
-     */
-    public function __construct(RequestStack $oRequestStack)
-    {
-        $this->oRequestStack = $oRequestStack;
-    }
+	/**
+	 * RequestManipulatorHelper constructor.
+	 *
+	 * @param \Symfony\Component\HttpFoundation\RequestStack $oRequestStack
+	 */
+	public function __construct(RequestStack $oRequestStack)
+	{
+		$this->oRequestStack = $oRequestStack;
+	}
 
-    /**
-     * @return \Symfony\Component\HttpFoundation\Request
-     */
-    public function GetCurrentRequest()
-    {
-        return $this->oRequestStack->getCurrentRequest();
-    }
+	/**
+	 * @return \Symfony\Component\HttpFoundation\Request
+	 */
+	public function GetCurrentRequest()
+	{
+		return $this->oRequestStack->getCurrentRequest();
+	}
 
-    /**
-     * Returns if the request has a $sKey parameter.
-     * This looks in the GET arguments first, then PATH and finally the POST data.
-     *
-     * @param string $sKey
-     *
-     * @return bool
-     */
-    public function HasParam($sKey)
-    {
-        if ($this->GetCurrentRequest()->query->has($sKey))
-        {
-            return true;
-        }
+	/**
+	 * Returns if the request has a $sKey parameter.
+	 * This looks in the GET arguments first, then PATH and finally the POST data.
+	 *
+	 * @param string $sKey
+	 *
+	 * @return bool
+	 */
+	public function HasParam($sKey)
+	{
+		if ($this->GetCurrentRequest()->query->has($sKey))
+		{
+			return true;
+		}
 
-        if ($this->GetCurrentRequest()->attributes->has($sKey))
-        {
-            return true;
-        }
+		if ($this->GetCurrentRequest()->attributes->has($sKey))
+		{
+			return true;
+		}
 
-        if ($this->GetCurrentRequest()->request->has($sKey))
-        {
-            return true;
-        }
+		if ($this->GetCurrentRequest()->request->has($sKey))
+		{
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    /**
-     * Returns the $sKey parameter from the request filtered with $iFilter.
-     * This looks in the GET arguments first, then the PATH and finally the POST data.
-     *
-     * Note: It is inspired by the \Symfony\Component\HttpFoundation\ParameterBag::filter() function and was necessary as we sometimes have parameters that can be either in the GET/PATH/POST arguments and need to be filtered. Silex only offer the possibility to filter parameter from a single ParameterBag, so we created this helper.
-     *
-     * @param string $sKey
-     * @param mixed $default
-     * @param int $iFilter Default is FILTER_SANITIZE_STRING
-     *
-     * @return mixed|null
-     *
-     * @since 2.5.1
-     */
-    public function ReadParam($sKey, $default = null, $iFilter = FILTER_SANITIZE_STRING)
-    {
-        if ($this->GetCurrentRequest()->query->has($sKey))
-        {
-            return $this->GetCurrentRequest()->query->filter($sKey, $default, $iFilter);
-        }
+	/**
+	 * Returns the $sKey parameter from the request filtered with $iFilter.
+	 * This looks in the GET arguments first, then the PATH and finally the POST data.
+	 *
+	 * Note: It is inspired by the \Symfony\Component\HttpFoundation\ParameterBag::filter() function and was necessary as we sometimes have parameters that can be either in the GET/PATH/POST arguments and need to be filtered. Silex only offer the possibility to filter parameter from a single ParameterBag, so we created this helper.
+	 *
+	 * @param string $sKey
+	 * @param mixed  $default
+	 * @param int    $iFilter Default is FILTER_SANITIZE_STRING
+	 *
+	 * @return mixed|null
+	 *
+	 * @since 2.5.1
+	 */
+	public function ReadParam($sKey, $default = null, $iFilter = FILTER_SANITIZE_STRING)
+	{
+		if ($this->GetCurrentRequest()->query->has($sKey))
+		{
+			return $this->GetCurrentRequest()->query->filter($sKey, $default, $iFilter);
+		}
 
-        if ($this->GetCurrentRequest()->attributes->has($sKey))
-        {
-            return $this->GetCurrentRequest()->attributes->filter($sKey, $default, $iFilter);
-        }
+		if ($this->GetCurrentRequest()->attributes->has($sKey))
+		{
+			return $this->GetCurrentRequest()->attributes->filter($sKey, $default, $iFilter);
+		}
 
-        if ($this->GetCurrentRequest()->request->has($sKey))
-        {
-            return $this->GetCurrentRequest()->request->filter($sKey, $default, $iFilter);
-        }
+		if ($this->GetCurrentRequest()->request->has($sKey))
+		{
+			return $this->GetCurrentRequest()->request->filter($sKey, $default, $iFilter);
+		}
 
-        return $default;
-    }
+		return $default;
+	}
 
 }

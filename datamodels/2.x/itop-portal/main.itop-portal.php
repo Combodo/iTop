@@ -25,14 +25,14 @@ require_once APPROOT.'/lib/composer-vendor/autoload.php';
 
 /**
  * iTopPortalEditUrlMaker
- * 
+ *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @author Bruno Da Silva <bruno.dasilva@combodo.com>
- * @since 2.3.0
+ * @since  2.3.0
  */
 class iTopPortalEditUrlMaker extends AbstractPortalUrlMaker
 {
-	/** @var string PORTAL_ID  */
+	/** @var string PORTAL_ID */
 	const PORTAL_ID = 'itop-portal';
 }
 
@@ -41,7 +41,7 @@ class iTopPortalEditUrlMaker extends AbstractPortalUrlMaker
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @author Bruno Da Silva <bruno.dasilva@combodo.com>
- * @since 2.3.0
+ * @since  2.3.0
  */
 class iTopPortalViewUrlMaker extends iTopPortalEditUrlMaker
 {
@@ -52,7 +52,7 @@ class iTopPortalViewUrlMaker extends iTopPortalEditUrlMaker
 	{
 		return static::PrepareObjectURL($sClass, $iId, 'view');
 	}
-	
+
 }
 
 // Default portal hyperlink (for notifications) is the edit hyperlink

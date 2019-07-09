@@ -26,8 +26,8 @@ namespace Combodo\iTop\Portal\Controller;
  * Class BrickController
  *
  * @package Combodo\iTop\Portal\Controller
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.3.0
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since   2.3.0
  */
 abstract class BrickController extends AbstractController
 {

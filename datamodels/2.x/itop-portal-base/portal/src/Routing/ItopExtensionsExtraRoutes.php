@@ -19,12 +19,6 @@
  *
  */
 
-/**
- * Created by Bruno DA SILVA, working for Combodo
- * Date: 31/01/19
- * Time: 16:44
- */
-
 namespace Combodo\iTop\Portal\Routing;
 
 
@@ -34,38 +28,45 @@ use Exception;
  * Class ItopExtensionsExtraRoutes
  *
  * @deprecated Compatibility layer for migrating brick's routes to iTop 2.7+
- * @package Combodo\iTop\Portal\Routing
+ * @package    Combodo\iTop\Portal\Routing
+ * @since      2.7.0
+ * @author     Bruno Da Silva <bruno.dasilva@combodo.com>
  */
 class ItopExtensionsExtraRoutes
 {
-    static private $routes = array();
+	/** @var array $aRoutes */
+	static private $aRoutes = array();
 
-    /**
-     * @deprecated Since 2.7.0
-     *
-     * @param array $extraRoutes
-     *
-     * @throws Exception
-     */
-    public static function addRoutes($extraRoutes)
-    {
-	    @trigger_error(
-		    sprintf(
-			    'Usage of legacy route "%s" is deprecated. You should declare routes in YAML format.',
-			    __FILE__
-		    ),
-		    E_USER_DEPRECATED
-	    );
+	/**
+	 * @param array $extraRoutes
+	 *
+	 * @throws Exception
+	 * @deprecated Since 2.7.0
+	 *
+	 */
+	public static function AddRoutes($extraRoutes)
+	{
+		@trigger_error(
+			sprintf(
+				'Usage of legacy route "%s" is deprecated. You should declare routes in YAML format.',
+				__FILE__
+			),
+			E_USER_DEPRECATED
+		);
 
-        if (!is_array($extraRoutes)) {
-            throw new Exception('Only array are allowed as parameter to '.__METHOD__);
-        }
+		if (!is_array($extraRoutes))
+		{
+			throw new Exception('Only array are allowed as parameter to '.__METHOD__);
+		}
 
-        self::$routes = array_merge(self::$routes, $extraRoutes);
-    }
+		self::$aRoutes = array_merge(self::$aRoutes, $extraRoutes);
+	}
 
-    public static function getRoutes()
-    {
-        return self::$routes;
-    }
+	/**
+	 * @return array
+	 */
+	public static function GetRoutes()
+	{
+		return self::$aRoutes;
+	}
 }

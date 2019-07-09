@@ -27,27 +27,43 @@ use Combodo\iTop\DesignElement;
 /**
  * Description of UserProfileBrick
  * 
+ * @package Combodo\iTop\Portal\Brick
+ * @since 2.7.0
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
 class UserProfileBrick extends PortalBrick
 {
-    const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/user-profile/layout.html.twig';
+	// Overloaded constants
+	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/user-profile/layout.html.twig';
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/user-profile/tile.html.twig';
 	const DEFAULT_VISIBLE_NAVIGATION_MENU = false;
 	const DEFAULT_VISIBLE_HOME = false;
 	const DEFAUT_TITLE = 'Brick:Portal:UserProfile:Title';
 	const DEFAULT_DECORATION_CLASS_HOME = 'glyphicon glyphicon-user';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'glyphicon glyphicon-user';
-    const DEFAULT_SHOW_PICTURE_FORM = true;
+
+	/** @var bool DEFAULT_SHOW_PICTURE_FORM */
+	const DEFAULT_SHOW_PICTURE_FORM = true;
+	/** @var bool DEFAULT_SHOW_PREFERENCES_FORM */
     const DEFAULT_SHOW_PREFERENCES_FORM = true;
+    /** @var bool DEFAULT_SHOW_PASSWORD_FORM */
     const DEFAULT_SHOW_PASSWORD_FORM = true;
 
+	// Overloaded variables
 	static $sRouteName = 'p_user_profile_brick';
+
+	/** @var array $aForm */
 	protected $aForm;
+	/** @var bool $bShowPictureForm */
 	protected $bShowPictureForm;
+	/** @var bool $bShowPreferencesForm */
 	protected $bShowPreferencesForm;
+	/** @var bool $bShowPasswordForm */
 	protected $bShowPasswordForm;
 
+	/**
+	 * UserProfileBrick constructor.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -56,7 +72,7 @@ class UserProfileBrick extends PortalBrick
 			'id' => 'default-user-profile',
 			'type' => 'zlist',
 			'fields' => 'details',
-			'layout' => null
+			'layout' => null,
 		);
 		$this->bShowPictureForm = static::DEFAULT_SHOW_PICTURE_FORM;
 		$this->bShowPreferencesForm = static::DEFAULT_SHOW_PREFERENCES_FORM;
@@ -142,14 +158,17 @@ class UserProfileBrick extends PortalBrick
 	 * This is used to set all the brick attributes at once.
 	 *
 	 * @param \Combodo\iTop\DesignElement $oMDElement
+	 *
 	 * @return UserProfileBrick
-	 * @throws DOMFormatException
+	 * @throws DOMFormatException*@throws \Exception
+	 * @throws \Exception
 	 */
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
 		parent::LoadFromXml($oMDElement);
 
 		// Checking specific elements
+		/** @var \Combodo\iTop\DesignElement $oBrickSubNode */
 		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
 		{
 			switch ($oBrickSubNode->nodeName)
@@ -162,6 +181,7 @@ class UserProfileBrick extends PortalBrick
 						$this->aForm['type'] = 'custom_list';
 						$this->aForm['fields'] = array();
 
+						/** @var \Combodo\iTop\DesignElement $oFieldNode */
 						foreach ($oBrickSubNode->GetOptionalElement('fields')->GetNodes('field') as $oFieldNode)
 						{
 							$sFieldId = $oFieldNode->getAttribute('id');
@@ -201,7 +221,7 @@ class UserProfileBrick extends PortalBrick
 
 						$this->aForm['layout'] = array(
 							'type' => (preg_match('/\{\{|\{\#|\{\%/', $sXml) === 1) ? 'twig' : 'xhtml',
-							'content' => $sXml
+							'content' => $sXml,
 						);
 					}
 					break;

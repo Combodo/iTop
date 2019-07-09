@@ -31,8 +31,8 @@ use Symfony\Component\HttpFoundation\Response;
  * Class DefaultController
  *
  * @package Combodo\iTop\Portal\Controller
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.3.0
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since   2.3.0
  */
 class DefaultController extends AbstractController
 {
@@ -49,7 +49,7 @@ class DefaultController extends AbstractController
 
 		// Rendering tiles
 		$aData['aTilesRendering'] = array();
-        foreach($oBricksCollection->GetBricks() as $oBrick)
+		foreach ($oBricksCollection->GetBricks() as $oBrick)
 		{
 			// Doing it only for tile visible on home page to avoid unnecessary rendering
 			if (($oBrick->GetVisibleHome() === true) && ($oBrick->GetTileControllerAction() !== null))
@@ -57,16 +57,17 @@ class DefaultController extends AbstractController
 				$aControllerActionParts = explode('::', $oBrick->GetTileControllerAction());
 				if (count($aControllerActionParts) !== 2)
 				{
-					return new Response('Tile controller action must be of form "\Namespace\ControllerClass::FunctionName" for brick "' . $oBrick->GetId() . '"', 500);
+					return new Response('Tile controller action must be of form "\Namespace\ControllerClass::FunctionName" for brick "'.$oBrick->GetId().'"',
+						500);
 				}
 
 				$sControllerName = $aControllerActionParts[0];
 				$sControllerAction = $aControllerActionParts[1];
 
 				$oController = new $sControllerName();
-				if(!$oController instanceof ContainerAwareInterface)
+				if (!$oController instanceof ContainerAwareInterface)
 				{
-					return new Response('Tile controller must be implement ContainerAwareInterface for brick "' . $oBrick->GetId() . '"', 500);
+					return new Response('Tile controller must be implement ContainerAwareInterface for brick "'.$oBrick->GetId().'"', 500);
 				}
 				$oController->setContainer($this->container);
 				/** @var Response $oResponse */

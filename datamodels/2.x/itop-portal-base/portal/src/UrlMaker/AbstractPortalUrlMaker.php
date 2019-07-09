@@ -31,42 +31,42 @@ use utils;
 
 /**
  * AbstractPortalUrlMaker
- * 
+ *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @author Bruno Da Silva <bruno.dasilva@combodo.com>
- * @since 2.3.0
+ * @since  2.3.0
  */
 abstract class AbstractPortalUrlMaker implements iDBObjectURLMaker
 {
-	/** @var string PORTAL_ID  */
+	/** @var string PORTAL_ID */
 	const PORTAL_ID = '';
 
 	/** @var \Combodo\iTop\Portal\Kernel[] $aKernels */
 	private static $aKernels = array();
 
-    /**
-     * Generate an (absolute) URL to an object, either in view or edit mode.
-     * Returns null if the current user is not allowed to view / edit object.
-     *
-     * @param string $sClass The class of the object
-     * @param int $iId The identifier of the object
-     * @param string $sMode edit|view
-     *
-     * @return string | null
-     *
-     * @throws Exception
-     * @throws CoreException
-     */
+	/**
+	 * Generate an (absolute) URL to an object, either in view or edit mode.
+	 * Returns null if the current user is not allowed to view / edit object.
+	 *
+	 * @param string $sClass The class of the object
+	 * @param int    $iId    The identifier of the object
+	 * @param string $sMode  edit|view
+	 *
+	 * @return string | null
+	 *
+	 * @throws Exception
+	 * @throws CoreException
+	 */
 	public static function PrepareObjectURL($sClass, $iId, $sMode)
 	{
 		$sPreviousPortalId = (isset($_ENV['PORTAL_ID'])) ? $_ENV['PORTAL_ID'] : '';
 		$_ENV['PORTAL_ID'] = static::PORTAL_ID;
 
-		require MODULESROOT . 'itop-portal-base/portal/config/bootstrap.php';
+		require MODULESROOT.'itop-portal-base/portal/config/bootstrap.php';
 
 		$sUrl = self::DoPrepareObjectURL($sClass, $iId, $sMode);
 
-		if(!empty($sPreviousPortalId))
+		if (!empty($sPreviousPortalId))
 		{
 			$_ENV['PORTAL_ID'] = $sPreviousPortalId;
 		}
@@ -76,7 +76,7 @@ abstract class AbstractPortalUrlMaker implements iDBObjectURLMaker
 
 	/**
 	 * @param string $sClass
-	 * @param int $iId
+	 * @param int    $iId
 	 * @param string $sMode
 	 *
 	 * @return string|null
@@ -155,9 +155,9 @@ abstract class AbstractPortalUrlMaker implements iDBObjectURLMaker
 	 */
 	private static function GetKernelInstance()
 	{
-		if(!array_key_exists(static::PORTAL_ID, self::$aKernels))
+		if (!array_key_exists(static::PORTAL_ID, self::$aKernels))
 		{
-			self::$aKernels[static::PORTAL_ID] = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
+			self::$aKernels[static::PORTAL_ID] = new Kernel($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
 			self::$aKernels[static::PORTAL_ID]->boot();
 		}
 

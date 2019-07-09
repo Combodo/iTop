@@ -19,12 +19,6 @@
  *
  */
 
-/**
- * Created by Bruno DA SILVA, working for Combodo
- * Date: 28/02/19
- * Time: 16:59
- */
-
 namespace Combodo\iTop\Portal\VariableAccessor;
 
 
@@ -33,15 +27,28 @@ use MetaModel;
 use User;
 use UserRights;
 
+/**
+ * Class CombodoCurrentContactPhotoUrl
+ *
+ * @package Combodo\iTop\Portal\VariableAccessor
+ * @since   2.7.0
+ * @author  Bruno Da Silva <bruno.dasilva@combodo.com>
+ */
 class CombodoCurrentContactPhotoUrl
 {
-	/**
-	 * @var \User
-	 */
+	/** @var \User $oUser */
 	private $oUser;
+	/** @var string $sCombodoPortalInstanceAbsoluteUrl */
 	private $sCombodoPortalInstanceAbsoluteUrl;
+	/** @var string|null $sContactPhotoUrl */
 	private $sContactPhotoUrl;
 
+	/**
+	 * CombodoCurrentContactPhotoUrl constructor.
+	 *
+	 * @param \User  $oUser
+	 * @param string $sCombodoPortalInstanceAbsoluteUrl
+	 */
 	public function __construct(User $oUser, $sCombodoPortalInstanceAbsoluteUrl)
 	{
 		$this->oUser = $oUser;
@@ -51,10 +58,11 @@ class CombodoCurrentContactPhotoUrl
 
 	/**
 	 * @return string
+	 * @throws \CoreException
 	 */
 	public function __toString()
 	{
-		if($this->sContactPhotoUrl === null)
+		if ($this->sContactPhotoUrl === null)
 		{
 			$this->sContactPhotoUrl = $this->ComputeContactPhotoUrl();
 		}
@@ -75,6 +83,7 @@ class CombodoCurrentContactPhotoUrl
 		// - Checking if we can load the contact
 		try
 		{
+			/** @var \cmdbAbstractObject $oContact */
 			$oContact = UserRights::GetContactObject();
 		}
 		catch (Exception $e)
@@ -94,6 +103,7 @@ class CombodoCurrentContactPhotoUrl
 		{
 			if (MetaModel::IsValidAttCode(get_class($oContact), 'picture'))
 			{
+				/** @var \ormDocument $oImage */
 				$oImage = $oContact->Get('picture');
 				if (is_object($oImage) && !$oImage->IsEmpty())
 				{

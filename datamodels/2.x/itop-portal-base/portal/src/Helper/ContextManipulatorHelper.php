@@ -36,52 +36,64 @@ use BinaryExpression;
 use FieldExpression;
 use ScalarExpression;
 
+/**
+ * Class ContextManipulatorHelper
+ *
+ * @package Combodo\iTop\Portal\Helper
+ * @since 2.3.0
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ */
 class ContextManipulatorHelper
 {
+	/** @var string ENUM_RULE_CALLBACK_BACK */
 	const ENUM_RULE_CALLBACK_BACK = 'back';
+	/** @var string ENUM_RULE_CALLBACK_GOTO */
 	const ENUM_RULE_CALLBACK_GOTO = 'goto';
+	/** @var string ENUM_RULE_CALLBACK_OPEN */
 	const ENUM_RULE_CALLBACK_OPEN = 'open';
+	/** @var string ENUM_RULE_CALLBACK_OPEN_VIEW */
 	const ENUM_RULE_CALLBACK_OPEN_VIEW = 'view';
+	/** @var string ENUM_RULE_CALLBACK_OPEN_EDIT */
 	const ENUM_RULE_CALLBACK_OPEN_EDIT = 'edit';
+	/** @var string DEFAULT_RULE_CALLBACK_OPEN */
 	const DEFAULT_RULE_CALLBACK_OPEN = self::ENUM_RULE_CALLBACK_OPEN_VIEW;
 
+	/** @var array $aRules */
 	protected $aRules;
-
-    /** @var \Symfony\Component\Routing\RouterInterface */
-    private $oRouter;
-    /** @var \Combodo\iTop\Portal\Brick\BrickCollection */
-    private $oBrickCollection;
-    /**
-     * @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper
-     */
-    private $oScopeValidator;
+	/** @var \Symfony\Component\Routing\RouterInterface */
+	private $oRouter;
+	/** @var \Combodo\iTop\Portal\Brick\BrickCollection */
+	private $oBrickCollection;
+	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper */
+	private $oScopeValidator;
 
 	/**
 	 * ContextManipulatorHelper constructor.
 	 *
-	 * @param \ModuleDesign $oModuleDesign
-	 * @param \Symfony\Component\Routing\RouterInterface $oRouter
-	 * @param \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection
+	 * @param \ModuleDesign                                    $oModuleDesign
+	 * @param \Symfony\Component\Routing\RouterInterface       $oRouter
+	 * @param \Combodo\iTop\Portal\Brick\BrickCollection       $oBrickCollection
 	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator
 	 *
 	 * @throws \DOMFormatException
 	 */
-    public function __construct(ModuleDesign $oModuleDesign, RouterInterface $oRouter, BrickCollection $oBrickCollection, ScopeValidatorHelper $oScopeValidator)
-	{
+	public function __construct(
+		ModuleDesign $oModuleDesign, RouterInterface $oRouter, BrickCollection $oBrickCollection, ScopeValidatorHelper $oScopeValidator
+	) {
 		$this->aRules = array();
-        $this->oRouter = $oRouter;
-        $this->oBrickCollection = $oBrickCollection;
+		$this->oRouter = $oRouter;
+		$this->oBrickCollection = $oBrickCollection;
 
-        $this->Init($oModuleDesign->GetNodes('/module_design/action_rules/action_rule'));
-        $this->oScopeValidator = $oScopeValidator;
-    }
+		$this->Init($oModuleDesign->GetNodes('/module_design/action_rules/action_rule'));
+		$this->oScopeValidator = $oScopeValidator;
+	}
 
 	/**
 	 * Initializes the ScopeValidator by generating and caching the scopes compilation in the $this->sCachePath.$this->sFilename file.
 	 *
 	 * @param \DOMNodeList $oNodes
-     *
-     * @throws \Exception
+	 *
+	 * @throws \Exception
 	 * @throws \DOMFormatException
 	 */
 	public function Init(DOMNodeList $oNodes)
@@ -89,7 +101,8 @@ class ContextManipulatorHelper
 		$this->aRules = array();
 
 		// Iterating over the scope nodes
-        foreach ($oNodes as $oRuleNode)
+		/** @var \Combodo\iTop\DesignElement $oRuleNode */
+		foreach ($oNodes as $oRuleNode)
 		{
 			// Retrieving mandatory id attribute
 			$sRuleId = $oRuleNode->getAttribute('id');
@@ -107,17 +120,18 @@ class ContextManipulatorHelper
 				'preset' => array(),
 				'retrofit' => array(),
 				'submit' => null,
-				'cancel' => null
+				'cancel' => null,
 			);
 
 			// Iterating over the rule's nodes
+			/** @var \Combodo\iTop\DesignElement $oSubNode */
 			foreach ($oRuleNode->childNodes as $oSubNode)
 			{
 				$sSubNodeName = $oSubNode->nodeName;
 				switch ($sSubNodeName)
 				{
 					case 'source_class':
-						$aRule['source_oql'] = 'SELECT ' . $oSubNode->GetText();
+						$aRule['source_oql'] = 'SELECT '.$oSubNode->GetText();
 						break;
 
 					case 'source_oql':
@@ -127,6 +141,7 @@ class ContextManipulatorHelper
 
 					case 'presets':
 					case 'retrofits':
+						/** @var \Combodo\iTop\DesignElement $oActionNode */
 						foreach ($oSubNode->childNodes as $oActionNode)
 						{
 							// Note : Caution, the index of $aRule is now $oActionNode->nodeName instead of $sSubNodeName, as we want to match iTopObjectCopier specs like told previously
@@ -150,11 +165,11 @@ class ContextManipulatorHelper
 						$sType = $oSubNode->getAttribute('xsi:type');
 						if ($sType === '')
 						{
-							throw new DOMFormatException($sSubNodeName . ' must have an xsi:type attribute.', null, null, $oSubNode);
+							throw new DOMFormatException($sSubNodeName.' must have an xsi:type attribute.', null, null, $oSubNode);
 						}
 						if (($sType === static::ENUM_RULE_CALLBACK_OPEN) && ($sSubNodeName === 'cancel'))
 						{
-							throw new DOMFormatException('Cancel tag cannot be of type ' . $sType . '.', null, null, $oSubNode);
+							throw new DOMFormatException('Cancel tag cannot be of type '.$sType.'.', null, null, $oSubNode);
 						}
 
 						$aRule[$sSubNodeName] = array('type' => $sType);
@@ -220,47 +235,48 @@ class ContextManipulatorHelper
 		return $this->aRules;
 	}
 
-    /**
-     * Return the rule identified by its ID, as a hash array
-     *
-     * @param string $sId
-     *
-     * @return array
-     * @throws \Exception
-     */
+	/**
+	 * Return the rule identified by its ID, as a hash array
+	 *
+	 * @param string $sId
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
 	public function GetRule($sId)
 	{
 		if (!array_key_exists($sId, $this->aRules))
 		{
-			throw new Exception('Context creator : Could not find "' . $sId . '" in the rules list');
+			throw new Exception('Context creator : Could not find "'.$sId.'" in the rules list');
 		}
+
 		return $this->aRules[$sId];
 	}
 
-    /**
-     * Prepare the $oObject passed as a reference with the $aData
-     *
-     * $aData must be of the form :
-     * array(
-     *   'rules' => array(
-     *     'rule-id-1',
-     *     'rule-id-2',
-     *     ...
-     *   ),
-     *   'sources' => array(
-     *     <DBObject1 class> => <DBObject1 id>,
-     *     <DBObject2 class> => <DBObject2 id>,
-     *     ...
-     *   )
-     * )
-     *
-     * @param array $aData
-     * @param \DBObject $oObject
-     *
-     * @throws \Exception
-     * @throws \CoreException
-     * @throws \OQLException
-     */
+	/**
+	 * Prepare the $oObject passed as a reference with the $aData
+	 *
+	 * $aData must be of the form :
+	 * array(
+	 *   'rules' => array(
+	 *     'rule-id-1',
+	 *     'rule-id-2',
+	 *     ...
+	 *   ),
+	 *   'sources' => array(
+	 *     <DBObject1 class> => <DBObject1 id>,
+	 *     <DBObject2 class> => <DBObject2 id>,
+	 *     ...
+	 *   )
+	 * )
+	 *
+	 * @param array     $aData
+	 * @param \DBObject $oObject
+	 *
+	 * @throws \Exception
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
 	public function PrepareObject(array $aData, DBObject &$oObject)
 	{
 		if (isset($aData['rules']) && isset($aData['sources']))
@@ -289,7 +305,7 @@ class ContextManipulatorHelper
 						{
 							if (is_array($sourceId))
 							{
-								throw new Exception('Context creator : ":id" parameter in rule "' . $sId . '" cannot be an array (This is a limitation of DBSearch)');
+								throw new Exception('Context creator : ":id" parameter in rule "'.$sId.'" cannot be an array (This is a limitation of DBSearch)');
 							}
 
 							$aSearchParams['id'] = $sourceId;
@@ -306,7 +322,8 @@ class ContextManipulatorHelper
 							for ($i = 0; $i < $iLoopMax; $i++)
 							{
 								// - Building full search expression
-								$oBinExpr = new BinaryExpression(new FieldExpression('id', $oSearch->GetClassAlias()), '=', new ScalarExpression($sourceId[$i]));
+								$oBinExpr = new BinaryExpression(new FieldExpression('id', $oSearch->GetClassAlias()), '=',
+									new ScalarExpression($sourceId[$i]));
 								if ($i === 0)
 								{
 									$oFullBinExpr = $oBinExpr;
@@ -326,7 +343,8 @@ class ContextManipulatorHelper
 					}
 
 					// Checking for silos
-					$oScopeSearch = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sSearchClass, UR_ACTION_READ);
+					$oScopeSearch = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sSearchClass,
+						UR_ACTION_READ);
 					if ($oScopeSearch->IsAllDataAllowed())
 					{
 						$oSearch->AllowAllData();
@@ -364,28 +382,28 @@ class ContextManipulatorHelper
 		}
 	}
 
-    /**
-     * Returns a hash array of urls for each type of callback
-     *
-     * eg :
-     * array(
-     *     'submit' => 'http://localhost/',
-     *     'cancel' => null
-     * );
-     *
-     * @param array $aData
-     * @param \DBObject $oObject
-     * @param boolean $bModal
-     *
-     * @return array
-     *
-     * @throws \Exception
-     */
+	/**
+	 * Returns a hash array of urls for each type of callback
+	 *
+	 * eg :
+	 * array(
+	 *     'submit' => 'http://localhost/',
+	 *     'cancel' => null
+	 * );
+	 *
+	 * @param array     $aData
+	 * @param \DBObject $oObject
+	 * @param boolean   $bModal
+	 *
+	 * @return array
+	 *
+	 * @throws \Exception
+	 */
 	public function GetCallbackUrls(array $aData, DBObject $oObject, $bModal = false)
 	{
 		$aResults = array(
 			'submit' => null,
-			'cancel' => null
+			'cancel' => null,
 		);
 
 		if (isset($aData['rules']))
@@ -417,7 +435,8 @@ class ContextManipulatorHelper
 								break;
 
 							case static::ENUM_RULE_CALLBACK_OPEN:
-								$sCallbackUrl = ($oObject->IsNew()) ? null : $this->oRouter->generate('p_object_' . $aRule[$sCallbackName]['mode'], array('sObjectClass' => get_class($oObject), 'sObjectId' => $oObject->GetKey()));
+								$sCallbackUrl = ($oObject->IsNew()) ? null : $this->oRouter->generate('p_object_'.$aRule[$sCallbackName]['mode'],
+									array('sObjectClass' => get_class($oObject), 'sObjectId' => $oObject->GetKey()));
 								break;
 						}
 
@@ -430,30 +449,31 @@ class ContextManipulatorHelper
 		return $aResults;
 	}
 
-    /**
-     * Prepares the rules as an array of rules and source objects so it can be tokenised
-     *
-     * @param array $aRules
-     * @param array $aObjects
-     * @return array
-     */
+	/**
+	 * Prepares the rules as an array of rules and source objects so it can be tokenised
+	 *
+	 * @param array $aRules
+	 * @param array $aObjects
+	 *
+	 * @return array
+	 */
 	public static function PrepareRulesForToken($aRules, $aObjects = array())
-    {
-        // Getting necessary information from objects
-        $aSources = array();
-        foreach ($aObjects as $oObject)
-        {
-            $aSources[get_class($oObject)] = $oObject->GetKey();
-        }
+	{
+		// Getting necessary information from objects
+		$aSources = array();
+		foreach ($aObjects as $oObject)
+		{
+			$aSources[get_class($oObject)] = $oObject->GetKey();
+		}
 
-        // Preparing data
-        $aTokenRules = array(
-            'rules' => $aRules,
-            'sources' => $aSources
-        );
+		// Preparing data
+		$aTokenRules = array(
+			'rules' => $aRules,
+			'sources' => $aSources,
+		);
 
-        return $aTokenRules;
-    }
+		return $aTokenRules;
+	}
 
 	/**
 	 * Encodes a token made out of the rules.
@@ -463,33 +483,35 @@ class ContextManipulatorHelper
 	 * To retrieve it has
 	 *
 	 * @param array $aTokenRules
-     *
+	 *
 	 * @return string
 	 */
 	public static function EncodeRulesToken($aTokenRules)
 	{
-	    // Returning tokenised data
+		// Returning tokenised data
 		return base64_encode(json_encode($aTokenRules));
 	}
 
-    /**
-     * @param array $aRules
-     * @param array $aObjects
-     * @return string
-     */
+	/**
+	 * @param array $aRules
+	 * @param array $aObjects
+	 *
+	 * @return string
+	 */
 	public static function PrepareAndEncodeRulesToken($aRules, $aObjects = array())
-    {
-        // Preparing rules before making a token
-        $aTokenRules = static::PrepareRulesForToken($aRules, $aObjects);
+	{
+		// Preparing rules before making a token
+		$aTokenRules = static::PrepareRulesForToken($aRules, $aObjects);
 
-        // Returning tokenised data
-        return static::EncodeRulesToken($aTokenRules);
-    }
+		// Returning tokenised data
+		return static::EncodeRulesToken($aTokenRules);
+	}
 
 	/**
 	 * Decodes a token made out of the rules
 	 *
 	 * @param string $sToken
+	 *
 	 * @return array
 	 */
 	public static function DecodeRulesToken($sToken)

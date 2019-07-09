@@ -28,8 +28,8 @@ use Symfony\Component\DependencyInjection\Container;
  * Class Lists
  *
  * @package Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.7.0
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since   2.7.0
  */
 class Lists extends AbstractConfiguration
 {
@@ -38,75 +38,75 @@ class Lists extends AbstractConfiguration
 	 *
 	 * @throws \DOMFormatException
 	 */
-    public function Process(Container $oContainer)
-    {
-        $iDefaultItemRank = 0;
-        $aClassesLists = array();
+	public function Process(Container $oContainer)
+	{
+		$iDefaultItemRank = 0;
+		$aClassesLists = array();
 
-        // Parsing XML file
-        // - Each classes
-	    /** @var \MFElement $oClassNode */
-	    foreach ($this->GetModuleDesign()->GetNodes('/module_design/classes/class') as $oClassNode)
-        {
-            $aClassLists = array();
-            $sClassId = $oClassNode->getAttribute('id');
-            if ($sClassId === null)
-            {
-                throw new DOMFormatException('Class tag must have an id attribute', null, null, $oClassNode);
-            }
+		// Parsing XML file
+		// - Each classes
+		/** @var \MFElement $oClassNode */
+		foreach ($this->GetModuleDesign()->GetNodes('/module_design/classes/class') as $oClassNode)
+		{
+			$aClassLists = array();
+			$sClassId = $oClassNode->getAttribute('id');
+			if ($sClassId === null)
+			{
+				throw new DOMFormatException('Class tag must have an id attribute', null, null, $oClassNode);
+			}
 
-            // - Each lists
-	        /** @var \MFElement $oListNode */
-	        foreach ($oClassNode->GetNodes('./lists/list') as $oListNode)
-            {
-                $aListItems = array();
-                $sListId = $oListNode->getAttribute('id');
-                if ($sListId === null)
-                {
-                    throw new DOMFormatException('List tag of "'.$sClassId.'" class must have an id attribute', null,
-                        null, $oListNode);
-                }
+			// - Each lists
+			/** @var \MFElement $oListNode */
+			foreach ($oClassNode->GetNodes('./lists/list') as $oListNode)
+			{
+				$aListItems = array();
+				$sListId = $oListNode->getAttribute('id');
+				if ($sListId === null)
+				{
+					throw new DOMFormatException('List tag of "'.$sClassId.'" class must have an id attribute', null,
+						null, $oListNode);
+				}
 
-                // - Each items
-	            /** @var \MFElement $oItemNode */
-	            foreach ($oListNode->GetNodes('./items/item') as $oItemNode)
-                {
-                    $sItemId = $oItemNode->getAttribute('id');
-                    if ($sItemId === null)
-                    {
-                        throw new DOMFormatException('Item tag of "'.$sItemId.'" list must have an id attribute', null,
-                            null, $oItemNode);
-                    }
+				// - Each items
+				/** @var \MFElement $oItemNode */
+				foreach ($oListNode->GetNodes('./items/item') as $oItemNode)
+				{
+					$sItemId = $oItemNode->getAttribute('id');
+					if ($sItemId === null)
+					{
+						throw new DOMFormatException('Item tag of "'.$sItemId.'" list must have an id attribute', null,
+							null, $oItemNode);
+					}
 
-                    $aItem = array(
-                        'att_code' => $sItemId,
-                        'rank' => $iDefaultItemRank,
-                    );
+					$aItem = array(
+						'att_code' => $sItemId,
+						'rank' => $iDefaultItemRank,
+					);
 
-                    $oRankNode = $oItemNode->GetOptionalElement('rank');
-                    if ($oRankNode !== null)
-                    {
-                        $aItem['rank'] = $oRankNode->GetText($iDefaultItemRank);
-                    }
+					$oRankNode = $oItemNode->GetOptionalElement('rank');
+					if ($oRankNode !== null)
+					{
+						$aItem['rank'] = $oRankNode->GetText($iDefaultItemRank);
+					}
 
-                    $aListItems[] = $aItem;
-                }
-                // - Sorting list items by rank
-                usort($aListItems, function ($a, $b) {
-                    return $a['rank'] > $b['rank'];
-                });
-                $aClassLists[$sListId] = $aListItems;
-            }
+					$aListItems[] = $aItem;
+				}
+				// - Sorting list items by rank
+				usort($aListItems, function ($a, $b) {
+					return $a['rank'] > $b['rank'];
+				});
+				$aClassLists[$sListId] = $aListItems;
+			}
 
-            // - Adding class only if it has at least one list
-            if (!empty($aClassLists))
-            {
-                $aClassesLists[$sClassId] = $aClassLists;
-            }
-        }
-        $aPortalConf = $oContainer->getParameter('combodo.portal.instance.conf');
-        $aPortalConf['lists'] = $aClassLists;
-        $oContainer->setParameter('combodo.portal.instance.conf', $aPortalConf);
-    }
+			// - Adding class only if it has at least one list
+			if (!empty($aClassLists))
+			{
+				$aClassesLists[$sClassId] = $aClassLists;
+			}
+		}
+		$aPortalConf = $oContainer->getParameter('combodo.portal.instance.conf');
+		$aPortalConf['lists'] = $aClassLists;
+		$oContainer->setParameter('combodo.portal.instance.conf', $aPortalConf);
+	}
 
 }

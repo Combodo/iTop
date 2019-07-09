@@ -22,52 +22,47 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
-use ApplicationContext;
 use cmdbAbstractObject;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
-use Combodo\iTop\Portal\Brick\PortalBrick;
 use DBObjectSearch;
 use DBObjectSet;
 use Dict;
-use DOMFormatException;
 use Exception;
-use iPortalUIExtension;
 use IssueLog;
 use MetaModel;
-use ModuleDesign;
 use Silex\Application;
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\Debug\ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Twig_Environment;
-use Twig_SimpleFilter;
-use Twig_SimpleFunction;
-use UserRights;
-use utils;
 
 /**
  * Contains static methods to help loading / registering classes of the application.
  * Mostly used for Controllers / Routers / Entities initialization.
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since  2.7.0
  */
 class ApplicationHelper
 {
+	/** @var string FORM_ENUM_DISPLAY_MODE_COSY */
 	const FORM_ENUM_DISPLAY_MODE_COSY = 'cosy';
+	/** @var string FORM_ENUM_DISPLAY_MODE_COMPACT */
 	const FORM_ENUM_DISPLAY_MODE_COMPACT = 'compact';
+	/** @var string FORM_DEFAULT_DISPLAY_MODE */
 	const FORM_DEFAULT_DISPLAY_MODE = self::FORM_ENUM_DISPLAY_MODE_COSY;
+	/** @var bool FORM_DEFAULT_ALWAYS_SHOW_SUBMIT */
 	const FORM_DEFAULT_ALWAYS_SHOW_SUBMIT = false;
 
 	/**
 	 * Loads classes from the base portal
 	 *
-	 * @deprecated Since 2.7.0
-	 *
-	 * @param string $sScannedDir Directory to load the files from
+	 * @param string $sScannedDir  Directory to load the files from
 	 * @param string $sFilePattern Pattern of files to load
-	 * @param string $sType Type of files to load, used only in the Exception message, can be anything
+	 * @param string $sType        Type of files to load, used only in the Exception message, can be anything
 	 *
 	 * @throws \Exception
+	 * @deprecated Since 2.7.0
+	 *
 	 */
 	public static function LoadClasses($sScannedDir, $sFilePattern, $sType)
 	{
@@ -101,6 +96,8 @@ class ApplicationHelper
 	 * Note : It is only active when $oApp['debug'] is false
 	 *
 	 * @param Application $oApp
+	 *
+	 * @todo
 	 */
 	public static function RegisterExceptionHandler(Application $oApp)
 	{
@@ -118,7 +115,7 @@ class ApplicationHelper
 					'exception' => $oException,
 					'code' => $iErrorCode,
 					'error_title' => '',
-					'error_message' => $oException->getMessage()
+					'error_message' => $oException->getMessage(),
 				);
 
 				switch ($iErrorCode)
@@ -264,6 +261,7 @@ class ApplicationHelper
 	 */
 	public static function GetLoadedFormFromClass($aForms, $sClass, $sMode)
 	{
+		$aForm = null;
 
 		// We try to find the form for that class
 		if (isset($aForms[$sClass]) && isset($aForms[$sClass][$sMode]))
@@ -364,7 +362,7 @@ class ApplicationHelper
 	 * Form will look like the "Properties" tab of a $sClass object in the console.
 	 *
 	 * @param string $sClass
-	 * @param bool $bAddLinksets
+	 * @param bool   $bAddLinksets
 	 *
 	 * @return array
 	 */
@@ -394,13 +392,13 @@ class ApplicationHelper
 
 		// Count cols (not linksets)
 		$iColCount = 0;
-		foreach($aPropertiesStruct as $sColId => $aColFieldsets)
+		foreach ($aPropertiesStruct as $sColId => $aColFieldsets)
 		{
-			if(substr($sColId, 0, 1) !== '_')
+			if (substr($sColId, 0, 1) !== '_')
 			{
-				foreach($aColFieldsets as $sFieldsetName => $aAttCodes)
+				foreach ($aColFieldsets as $sFieldsetName => $aAttCodes)
 				{
-					if(substr($sFieldsetName, 0, 1) !== '_')
+					if (substr($sFieldsetName, 0, 1) !== '_')
 					{
 						$iColCount++;
 						break;
@@ -409,32 +407,32 @@ class ApplicationHelper
 			}
 		}
 		// If no cols, return a default form with all fields one after another
-		if($iColCount === 0)
+		if ($iColCount === 0)
 		{
 			return array(
 				'id' => 'default',
 				'type' => 'zlist',
 				'fields' => 'details',
-				'layout' => null
+				'layout' => null,
 			);
 		}
 		// Warning, this might not be great when 12 modulo $iColCount is greater than 0.
-		$sColCSSClass = 'col-sm-'.floor(12/$iColCount);
+		$sColCSSClass = 'col-sm-'.floor(12 / $iColCount);
 
 		$sLinksetsHTML = "";
 		$sRowHTML = "<div class=\"row\">\n";
-		foreach($aPropertiesStruct as $sColId => $aColFieldsets)
+		foreach ($aPropertiesStruct as $sColId => $aColFieldsets)
 		{
 			$sColsHTML = "\t<div class=\"".$sColCSSClass."\">\n";
-			foreach($aColFieldsets as $sFieldsetName => $aAttCodes)
+			foreach ($aColFieldsets as $sFieldsetName => $aAttCodes)
 			{
 				// Add fieldset, not linkset
-				if(substr($sFieldsetName, 0, 1) !== '_')
+				if (substr($sFieldsetName, 0, 1) !== '_')
 				{
 					$sFieldsetHTML = "\t\t<fieldset>\n";
 					$sFieldsetHTML .= "\t\t\t<legend>".htmlentities(Dict::S($sFieldsetName), ENT_QUOTES, 'UTF-8')."</legend>\n";
 
-					foreach($aAttCodes as $sAttCode)
+					foreach ($aAttCodes as $sAttCode)
 					{
 						$sFieldsetHTML .= "\t\t\t<div class=\"form_field\" data-field-id=\"".$sAttCode."\"></div>\n";
 					}
@@ -444,9 +442,9 @@ class ApplicationHelper
 					// Add to col
 					$sColsHTML .= $sFieldsetHTML;
 				}
-				elseif($bAddLinksets)
+				elseif ($bAddLinksets)
 				{
-					foreach($aAttCodes as $sAttCode)
+					foreach ($aAttCodes as $sAttCode)
 					{
 						$sLinksetsHTML .= "<div class=\"form_field\" data-field-id=\"".$sAttCode."\"></div>\n";
 					}

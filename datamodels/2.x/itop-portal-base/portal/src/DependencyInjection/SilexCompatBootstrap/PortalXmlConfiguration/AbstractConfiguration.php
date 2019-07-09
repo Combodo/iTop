@@ -28,30 +28,30 @@ use ModuleDesign;
  * Class AbstractConfiguration
  *
  * @package Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.7.0
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since   2.7.0
  */
 class AbstractConfiguration
 {
-    /** @var \ModuleDesign $oModuleDesign */
-    private $oModuleDesign;
+	/** @var \ModuleDesign $oModuleDesign */
+	private $oModuleDesign;
 
 	/**
 	 * AbstractConfiguration constructor.
 	 *
 	 * @param \ModuleDesign $oModuleDesign
 	 */
-    public function __construct(ModuleDesign $oModuleDesign)
-    {
-        $this->oModuleDesign = $oModuleDesign;
-    }
+	public function __construct(ModuleDesign $oModuleDesign)
+	{
+		$this->oModuleDesign = $oModuleDesign;
+	}
 
-    /**
-     * @return \ModuleDesign
-     */
-    public function GetModuleDesign()
-    {
-        return $this->oModuleDesign;
-    }
+	/**
+	 * @return \ModuleDesign
+	 */
+	public function GetModuleDesign()
+	{
+		return $this->oModuleDesign;
+	}
 
 }

@@ -40,8 +40,8 @@ use Combodo\iTop\Portal\Brick\BrowseBrick;
  * Class BrowseBrickController
  *
  * @package Combodo\iTop\Portal\Controller
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.3.0
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since   2.3.0
  */
 class BrowseBrickController extends BrickController
 {
@@ -60,6 +60,7 @@ class BrowseBrickController extends BrickController
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function DisplayAction(Request $oRequest, $sBrickId, $sBrowseMode = null, $sDataLoading = null)
 	{
@@ -77,7 +78,8 @@ class BrowseBrickController extends BrickController
 		// Getting current browse mode (First from router pamater, then default brick value)
 		$sBrowseMode = (!empty($sBrowseMode)) ? $sBrowseMode : $oBrick->GetDefaultBrowseMode();
 		// Getting current dataloading mode (First from router parameter, then query parameter, then default brick value)
-		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $oRequestManipulator->ReadParam('sDataLoading', $oBrick->GetDataLoading());
+		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $oRequestManipulator->ReadParam('sDataLoading',
+			$oBrick->GetDataLoading());
 		// Getting search value
 		$sSearchValue = $oRequestManipulator->ReadParam('sSearchValue', '');
 		if (!empty($sSearchValue))
@@ -93,17 +95,22 @@ class BrowseBrickController extends BrickController
 		// Consistency checks
 		if (!in_array($sBrowseMode, array_keys($aBrowseModes)))
 		{
-			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Browse brick "' . $sBrickId . '" : Unknown browse mode "' . $sBrowseMode . '", availables are ' . implode(' / ', array_keys($aBrowseModes)));
+			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
+				'Browse brick "'.$sBrickId.'" : Unknown browse mode "'.$sBrowseMode.'", availables are '.implode(' / ',
+					array_keys($aBrowseModes)));
 		}
 		if (empty($aLevelsProperties))
 		{
-			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Browse brick "' . $sBrickId . '" : No levels to display.');
+			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Browse brick "'.$sBrickId.'" : No levels to display.');
 		}
 
 		// Building DBObjectSearch
 		$oQuery = null;
 		// ... In this case only we have to build a specific query for the current level only
-		if (in_array($sBrowseMode, array(BrowseBrick::ENUM_BROWSE_MODE_TREE, BrowseBrick::ENUM_BROWSE_MODE_MOSAIC)) && ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY))
+		if (in_array($sBrowseMode, array(
+				BrowseBrick::ENUM_BROWSE_MODE_TREE,
+				BrowseBrick::ENUM_BROWSE_MODE_MOSAIC,
+			)) && ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY))
 		{
 			// Will be handled later in the pagination part
 		}
@@ -123,12 +130,15 @@ class BrowseBrickController extends BrickController
 				if ($i < $iLoopMax)
 				{
 					$aRealiasingMap = array();
-					$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->Join($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'], DBSearch::JOIN_REFERENCED_BY, $aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att'], TREE_OPERATOR_EQUALS, $aRealiasingMap);
+					$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->Join($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'],
+						DBSearch::JOIN_REFERENCED_BY, $aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att'],
+						TREE_OPERATOR_EQUALS, $aRealiasingMap);
 					foreach ($aLevelsPropertiesKeys as $sLevelAlias)
 					{
 						if (array_key_exists($sLevelAlias, $aRealiasingMap))
 						{
-							$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->RenameAlias($aRealiasingMap[$sLevelAlias], $sLevelAlias);
+							$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->RenameAlias($aRealiasingMap[$sLevelAlias],
+								$sLevelAlias);
 						}
 					}
 				}
@@ -164,7 +174,8 @@ class BrowseBrickController extends BrickController
 
 						for ($k = 0; $k <= $iSearchLoopMax; $k++)
 						{
-							$oSearchBinExpr = new BinaryExpression(new FieldExpression($sTmpFieldAttCode, $aLevelsPropertiesKeys[$i]), 'LIKE', new VariableExpression('search_value_' . $k));
+							$oSearchBinExpr = new BinaryExpression(new FieldExpression($sTmpFieldAttCode, $aLevelsPropertiesKeys[$i]),
+								'LIKE', new VariableExpression('search_value_'.$k));
 							if ($k === 0)
 							{
 								$oFieldBinExpr = $oSearchBinExpr;
@@ -214,7 +225,7 @@ class BrowseBrickController extends BrickController
 						// Note : $iSearchloopMax was initialized on the previous loop
 						for ($j = 0; $j <= $iSearchLoopMax; $j++)
 						{
-							$aQueryParams['search_value_' . $j] = '%' . $aSearchValues[$j] . '%';
+							$aQueryParams['search_value_'.$j] = '%'.$aSearchValues[$j].'%';
 						}
 						$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->SetInternalParams($aQueryParams);
 					}
@@ -228,7 +239,8 @@ class BrowseBrickController extends BrickController
 				// - Check how many records there is.
 				// - Update $sDataLoading with its new value regarding the number of record and the threshold
 				$oCountSet = new DBObjectSet($oQuery);
-				$fThreshold = (float) MetaModel::GetModuleSetting($this->getParameter('combodo.portal.instance.id'), 'lazy_loading_threshold');
+				$fThreshold = (float)MetaModel::GetModuleSetting($this->getParameter('combodo.portal.instance.id'),
+					'lazy_loading_threshold');
 				$sDataLoading = ($oCountSet->Count() > $fThreshold) ? AbstractBrick::ENUM_DATA_LOADING_LAZY : AbstractBrick::ENUM_DATA_LOADING_FULL;
 				unset($oCountSet);
 			}
@@ -241,8 +253,9 @@ class BrowseBrickController extends BrickController
 			{
 				case BrowseBrick::ENUM_BROWSE_MODE_LIST:
 					// Retrieving parameters
-					$iPageNumber = (int) $oRequestManipulator->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
-					$iListLength = (int) $oRequestManipulator->ReadParam('iListLength', BrowseBrick::DEFAULT_LIST_LENGTH, FILTER_SANITIZE_NUMBER_INT);
+					$iPageNumber = (int)$oRequestManipulator->ReadParam('iPageNumber', 1, FILTER_SANITIZE_NUMBER_INT);
+					$iListLength = (int)$oRequestManipulator->ReadParam('iListLength', BrowseBrick::DEFAULT_LIST_LENGTH,
+						FILTER_SANITIZE_NUMBER_INT);
 
 					// Getting total records number
 					$oCountSet = new DBObjectSet($oQuery);
@@ -293,7 +306,8 @@ class BrowseBrickController extends BrickController
 
 						if (!$bFoundLevel)
 						{
-							throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Browse brick "' . $sBrickId . '" : Level alias "' . $sLevelAlias . '" is not defined for that brick.');
+							throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
+								'Browse brick "'.$sBrickId.'" : Level alias "'.$sLevelAlias.'" is not defined for that brick.');
 						}
 					}
 

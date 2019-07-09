@@ -28,8 +28,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * Class AbstractController
  *
  * @package Combodo\iTop\Portal\Controller
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.3.0
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since   2.3.0
  */
 abstract class AbstractController extends Controller
 {

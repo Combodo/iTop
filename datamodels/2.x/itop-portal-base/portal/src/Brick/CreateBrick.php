@@ -27,18 +27,27 @@ use Combodo\iTop\DesignElement;
 
 /**
  * Description of CreateBrick
- * 
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ *
+ * @package Combodo\iTop\Portal\Brick
+ * @since   2.4.0
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
 class CreateBrick extends PortalBrick
 {
+	// Overloaded constants
 	const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-plus';
 	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-plus fa-2x';
-    const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/create/modal.html.twig';
+	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/create/modal.html.twig';
+
+	/** @var string DEFAULT_CLASS */
 	const DEFAULT_CLASS = '';
 
-	static $sRouteName = 'p_create_brick';
+	// Overloaded variables
+	public static $sRouteName = 'p_create_brick';
+
+	/** @var string $sClass */
 	protected $sClass;
+	/** @var array $aRules */
 	protected $aRules;
 
 	/**
@@ -62,16 +71,17 @@ class CreateBrick extends PortalBrick
 		return $this->sClass;
 	}
 
-    /**
-     * Sets the class of the brick
-     *
-     * @param string $sClass
-     *
-     * @return \Combodo\iTop\Portal\Brick\CreateBrick
-     */
+	/**
+	 * Sets the class of the brick
+	 *
+	 * @param string $sClass
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\CreateBrick
+	 */
 	public function SetClass($sClass)
 	{
 		$this->sClass = $sClass;
+
 		return $this;
 	}
 
@@ -89,30 +99,32 @@ class CreateBrick extends PortalBrick
 	 * Sets the rules of the brick
 	 *
 	 * @param array $aRules
-     *
-     * @return \Combodo\iTop\Portal\Brick\CreateBrick
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\CreateBrick
 	 */
 	public function SetRules($aRules)
 	{
 		$this->aRules = $aRules;
+
 		return $this;
 	}
 
-    /**
-     * Load the brick's data from the xml passed as a ModuleDesignElement.
-     * This is used to set all the brick attributes at once.
-     *
-     * @param \Combodo\iTop\DesignElement $oMDElement
-     *
-     * @return \Combodo\iTop\Portal\Brick\CreateBrick
-     *
-     * @throws \DOMFormatException
-     */
+	/**
+	 * Load the brick's data from the xml passed as a ModuleDesignElement.
+	 * This is used to set all the brick attributes at once.
+	 *
+	 * @param \Combodo\iTop\DesignElement $oMDElement
+	 *
+	 * @return \Combodo\iTop\Portal\Brick\CreateBrick
+	 *
+	 * @throws \DOMFormatException
+	 */
 	public function LoadFromXml(DesignElement $oMDElement)
 	{
 		parent::LoadFromXml($oMDElement);
 
 		// Checking specific elements
+		/** @var \Combodo\iTop\DesignElement $oBrickSubNode */
 		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
 		{
 			switch ($oBrickSubNode->nodeName)
@@ -122,6 +134,7 @@ class CreateBrick extends PortalBrick
 					break;
 
 				case 'rules':
+					/** @var \Combodo\iTop\DesignElement $oRuleNode */
 					foreach ($oBrickSubNode->childNodes as $oRuleNode)
 					{
 						if ($oRuleNode->hasAttribute('id') && $oRuleNode->getAttribute('id') !== '')
@@ -130,7 +143,8 @@ class CreateBrick extends PortalBrick
 						}
 						else
 						{
-							throw new DOMFormatException('CreateBrick:  /rules/rule tag must have an "id" attribute and it must not be empty', null, null, $oRuleNode);
+							throw new DOMFormatException('CreateBrick:  /rules/rule tag must have an "id" attribute and it must not be empty',
+								null, null, $oRuleNode);
 						}
 					}
 					break;

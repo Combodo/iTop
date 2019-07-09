@@ -36,16 +36,17 @@ use Combodo\iTop\Form\Field\SelectField;
  * Description of PreferencesFormManager
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.3.0
+ * @since  2.3.0
  */
 class PreferencesFormManager extends FormManager
 {
+	/** @var string FORM_TYPE */
 	const FORM_TYPE = 'preferences';
 
-    /**
-     * @throws \Exception
-     */
-    public function Build()
+	/**
+	 * @throws \Exception
+	 */
+	public function Build()
 	{
 		// Building the form
 		$oForm = new Form('preferences');
@@ -65,7 +66,7 @@ class PreferencesFormManager extends FormManager
 		$aChoices = array();
 		foreach (Dict::GetLanguages() as $sCode => $aLanguage)
 		{
-			$aChoices[$sCode] = $aLanguage['description'] . ' (' . $aLanguage['localized_description'] . ')';
+			$aChoices[$sCode] = $aLanguage['description'].' ('.$aLanguage['localized_description'].')';
 		}
 		asort($aChoices);
 		$oField->SetChoices($aChoices);
@@ -77,25 +78,25 @@ class PreferencesFormManager extends FormManager
 		$this->oRenderer->SetForm($this->oForm);
 	}
 
-    /**
-     * Validates the form and returns an array with the validation status and the messages.
-     * If the form is valid, creates/updates the object.
-     *
-     * eg :
-     *  array(
-     *      'status' => true|false
-     *      'messages' => array(
-     *          'errors' => array()
-     *    )
-     *
-     * @param array $aArgs
-     *
-     * @return array
-     *
-     * @throws \Exception
-     * @throws \MySQLException
-     * @throws \MySQLHasGoneAwayException
-     */
+	/**
+	 * Validates the form and returns an array with the validation status and the messages.
+	 * If the form is valid, creates/updates the object.
+	 *
+	 * eg :
+	 *  array(
+	 *      'status' => true|false
+	 *      'messages' => array(
+	 *          'errors' => array()
+	 *    )
+	 *
+	 * @param array $aArgs
+	 *
+	 * @return array
+	 *
+	 * @throws \Exception
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public function OnSubmit($aArgs = null)
 	{
 		$aData = array(
@@ -103,8 +104,8 @@ class PreferencesFormManager extends FormManager
 			'messages' => array(
 				'success' => array(),
 				'warnings' => array(), // Not used as of today, just to show that the structure is ready for change like this.
-				'error' => array()
-			)
+				'error' => array(),
+			),
 		);
 
 		// Update object and form
@@ -130,7 +131,7 @@ class PreferencesFormManager extends FormManager
 					$oCurUser->Set('language', $sLanguage);
 					$iFieldChanged++;
 				}
-				
+
 				// Updating only if preferences changed
 				if ($iFieldChanged > 0)
 				{
@@ -148,7 +149,7 @@ class PreferencesFormManager extends FormManager
 				CMDBSource::Query('ROLLBACK');
 				$aData['valid'] = false;
 				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
-				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Rollback during submit (' . $e->getMessage() . ')');
+				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Rollback during submit ('.$e->getMessage().')');
 			}
 		}
 		else
@@ -157,16 +158,16 @@ class PreferencesFormManager extends FormManager
 			$aData['valid'] = false;
 			$aData['messages']['error'] += $this->oForm->GetErrorMessages();
 		}
-		
+
 		return $aData;
 	}
 
-    /**
-     * @param array $aArgs
-     *
-     * @throws \Exception
-     */
-    public function OnUpdate($aArgs = null)
+	/**
+	 * @param array $aArgs
+	 *
+	 * @throws \Exception
+	 */
+	public function OnUpdate($aArgs = null)
 	{
 
 		// We build the form
@@ -185,12 +186,12 @@ class PreferencesFormManager extends FormManager
 		}
 	}
 
-    /**
-     * @param array $aArgs
-     */
+	/**
+	 * @param array $aArgs
+	 */
 	public function OnCancel($aArgs = null)
 	{
-		
+
 	}
 
 }

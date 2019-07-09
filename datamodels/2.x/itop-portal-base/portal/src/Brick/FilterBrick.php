@@ -27,28 +27,44 @@ use Combodo\iTop\DesignElement;
 
 /**
  * Description of FilterBrick
- * 
+ *
+ * @package Combodo\iTop\Portal\Brick
+ * @since   2.4.0
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
 class FilterBrick extends PortalBrick
 {
+	// Overloaded constants
 	const DEFAULT_VISIBLE_NAVIGATION_MENU = false;
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/filter/tile.html.twig';
     const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-search';
     const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-search fa-2x';
 
+    /** @var string DEFAULT_TARGET_BRICK_CLASS */
 	const DEFAULT_TARGET_BRICK_CLASS = 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick';
+	/** @var string DEFAULT_SEARCH_PLACEHOLDER_VALUE */
 	const DEFAULT_SEARCH_PLACEHOLDER_VALUE = 'Brick:Portal:Filter:SearchInput:Placeholder';
+	/** @var string DEFAULT_SEARCH_SUBMIT_LABEL */
 	const DEFAULT_SEARCH_SUBMIT_LABEL = 'Brick:Portal:Filter:SearchInput:Submit';
+	/** @var string DEFAULT_SEARCH_SUBMIT_CLASS */
 	const DEFAULT_SEARCH_SUBMIT_CLASS = '';
 
+	/** @var string $sTargetBrickId */
 	protected $sTargetBrickId;
+	/** @var string $sTargetBrickClass */
 	protected $sTargetBrickClass;
+	/** @var string $sTargetBrickTab */
 	protected $sTargetBrickTab;
+	/** @var string $sSearchPlaceholderValue */
 	protected $sSearchPlaceholderValue;
+	/** @var string $sSearchSubmitLabel */
 	protected $sSearchSubmitLabel;
+	/** @var string $sSearchSubmitClass */
 	protected $sSearchSubmitClass;
 
+	/**
+	 * FilterBrick constructor.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -59,65 +75,111 @@ class FilterBrick extends PortalBrick
 		$this->sSearchSubmitClass = static::DEFAULT_SEARCH_SUBMIT_CLASS;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetTargetBrickId()
 	{
 		return $this->sTargetBrickId;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetTargetBrickClass()
     {
         return $this->sTargetBrickClass;
     }
 
+	/**
+	 * @return string
+	 */
 	public function GetTargetBrickTab()
 	{
 		return $this->sTargetBrickTab;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetSearchPlaceholderValue()
 	{
 		return $this->sSearchPlaceholderValue;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetSearchSubmitLabel()
 	{
 		return $this->sSearchSubmitLabel;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetSearchSubmitClass()
 	{
 		return $this->sSearchSubmitClass;
 	}
 
+	/**
+	 * @param string $sTargetBrickId
+	 *
+	 * @return $this
+	 */
 	public function SetTargetBrickId($sTargetBrickId)
 	{
 		$this->sTargetBrickId = $sTargetBrickId;
 		return $this;
 	}
 
+	/**
+	 * @param string $sTargetBrickClass
+	 */
 	public function SetTargetBrickClass($sTargetBrickClass)
     {
         $this->sTargetBrickClass = $sTargetBrickClass;
     }
 
+	/**
+	 * @param string $sTargetBrickTab
+	 *
+	 * @return $this
+	 */
 	public function SetTargetBrickTab($sTargetBrickTab)
 	{
 		$this->sTargetBrickTab = $sTargetBrickTab;
 		return $this;
 	}
 
+	/**
+	 * @param string $sSearchPlaceholderValue
+	 *
+	 * @return $this
+	 */
 	public function SetSearchPlaceholderValue($sSearchPlaceholderValue)
 	{
 		$this->sSearchPlaceholderValue = $sSearchPlaceholderValue;
 		return $this;
 	}
 
+	/**
+	 * @param string $sSearchSubmitLabel
+	 *
+	 * @return $this
+	 */
 	public function SetSearchSubmitLabel($sSearchSubmitLabel)
 	{
 		$this->sSearchSubmitLabel = $sSearchSubmitLabel;
 		return $this;
 	}
 
+	/**
+	 * @param string $sSearchSubmitClass
+	 *
+	 * @return $this
+	 */
 	public function SetSearchSubmitClass($sSearchSubmitClass)
 	{
 		$this->sSearchSubmitClass = $sSearchSubmitClass;
@@ -139,11 +201,13 @@ class FilterBrick extends PortalBrick
 		parent::LoadFromXml($oMDElement);
 
 		// Checking specific elements
+		/** @var \Combodo\iTop\DesignElement $oBrickSubNode */
 		foreach ($oMDElement->GetNodes('./*') as $oBrickSubNode)
 		{
 			switch ($oBrickSubNode->nodeName)
 			{
 				case 'target_brick':
+					/** @var \Combodo\iTop\DesignElement $oTargetBrickNode */
 					foreach ($oBrickSubNode->childNodes as $oTargetBrickNode)
 					{
 						switch ($oTargetBrickNode->nodeName)

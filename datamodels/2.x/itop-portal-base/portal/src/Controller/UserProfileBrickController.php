@@ -42,11 +42,12 @@ use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
  * Class UserProfileBrickController
  *
  * @package Combodo\iTop\Portal\Controller
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.3.0
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since   2.3.0
  */
 class UserProfileBrickController extends BrickController
 {
+	/** @var string ENUM_FORM_TYPE_PICTURE */
 	const ENUM_FORM_TYPE_PICTURE = 'picture';
 
 	/**
@@ -133,16 +134,17 @@ class UserProfileBrickController extends BrickController
 			$sCurContactId = $oCurContact->GetKey();
 
 			// Preparing forms
-			$aData['forms']['contact'] = $ObjectFormHandler->HandleForm($oRequest, $sFormMode, $sCurContactClass, $sCurContactId, $oBrick->GetForm());
+			$aData['forms']['contact'] = $ObjectFormHandler->HandleForm($oRequest, $sFormMode, $sCurContactClass, $sCurContactId,
+				$oBrick->GetForm());
 			$aData['forms']['preferences'] = $this->HandlePreferencesForm($oRequest, $sFormMode);
 			// - If user can change password, we display the form
 			$aData['forms']['password'] = (UserRights::CanChangePassword()) ? $this->HandlePasswordForm($oRequest, $sFormMode) : null;
 
 			$aData = $aData + array(
-				'oBrick' => $oBrick,
-				'sFormMode' => $sFormMode,
-				'bDemoMode' => $bDemoMode,
-			);
+					'oBrick' => $oBrick,
+					'sFormMode' => $sFormMode,
+					'bDemoMode' => $bDemoMode,
+				);
 
 			$oResponse = $this->render($oBrick->GetPageTemplatePath(), $aData);
 		}
@@ -186,29 +188,36 @@ class UserProfileBrickController extends BrickController
 			}
 		}
 		// - Submit
-		else if ($sOperation === 'submit')
+		else
 		{
-			$sFormManagerClass = $oRequestManipulator->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
-			$sFormManagerData = $oRequestManipulator->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
-			if ($sFormManagerClass === null || $sFormManagerData === null)
+			if ($sOperation === 'submit')
 			{
-				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameters formmanager_class and formamanager_data must be defined.');
-				throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameters formmanager_class and formmanager_data must be defined.');
-			}
+				$sFormManagerClass = $oRequestManipulator->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
+				$sFormManagerData = $oRequestManipulator->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
+				if ($sFormManagerClass === null || $sFormManagerData === null)
+				{
+					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formamanager_data must be defined.');
+					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
+						'Parameters formmanager_class and formmanager_data must be defined.');
+				}
 
-			// Rebuilding manager from json
-			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			// Applying modification to object
-			$aFormData['validation'] = $oFormManager->OnSubmit(array('currentValues' => $oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW)));
-			// Reloading page only if preferences were changed
-			if (($aFormData['validation']['valid'] === true) && !empty($aFormData['validation']['messages']['success']))
-			{
-				$aFormData['validation']['redirection'] = array(
-					'url' => $oUrlGenerator->generate('p_user_profile_brick'),
-				);
+				// Rebuilding manager from json
+				/** @var \Combodo\iTop\Form\FormManager $oFormManager */
+				$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
+				// Applying modification to object
+				$aFormData['validation'] = $oFormManager->OnSubmit(array(
+					'currentValues' => $oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
+				));
+				// Reloading page only if preferences were changed
+				if (($aFormData['validation']['valid'] === true) && !empty($aFormData['validation']['messages']['success']))
+				{
+					$aFormData['validation']['redirection'] = array(
+						'url' => $oUrlGenerator->generate('p_user_profile_brick'),
+					);
+				}
 			}
 		}
-        // Else, submit from another form
+		// Else, submit from another form
 
 		// Preparing field_set data
 		$aFieldSetData = array(
@@ -244,7 +253,7 @@ class UserProfileBrickController extends BrickController
 
 		// Handling form
 		$sOperation = /** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
-		$oRequestManipulator->ReadParam('operation', null);
+			$oRequestManipulator->ReadParam('operation', null);
 		// - Create
 		if ($sOperation === null)
 		{
@@ -255,27 +264,34 @@ class UserProfileBrickController extends BrickController
 			$oFormManager = new PasswordFormManager();
 			$oFormManager->SetRenderer($oFormRenderer)
 				->Build();
-            // - Checking if we have to make the form read only
-            if ($sFormMode === ObjectFormHandlerHelper::ENUM_MODE_VIEW)
-            {
-                $oFormManager->GetForm()->MakeReadOnly();
-            }
+			// - Checking if we have to make the form read only
+			if ($sFormMode === ObjectFormHandlerHelper::ENUM_MODE_VIEW)
+			{
+				$oFormManager->GetForm()->MakeReadOnly();
+			}
 		}
 		// - Submit
-		else if ($sOperation === 'submit')
+		else
 		{
-			$sFormManagerClass = $oRequestManipulator->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
-			$sFormManagerData = $oRequestManipulator->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
-			if ($sFormManagerClass === null || $sFormManagerData === null)
+			if ($sOperation === 'submit')
 			{
-				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameters formmanager_class and formamanager_data must be defined.');
-				throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameters formmanager_class and formmanager_data must be defined.');
-			}
+				$sFormManagerClass = $oRequestManipulator->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
+				$sFormManagerData = $oRequestManipulator->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
+				if ($sFormManagerClass === null || $sFormManagerData === null)
+				{
+					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formamanager_data must be defined.');
+					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
+						'Parameters formmanager_class and formmanager_data must be defined.');
+				}
 
-			// Rebuilding manager from json
-			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			// Applying modification to object
-			$aFormData['validation'] = $oFormManager->OnSubmit(array('currentValues' => $oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW)));
+				// Rebuilding manager from json
+				/** @var \Combodo\iTop\Form\FormManager $oFormManager */
+				$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
+				// Applying modification to object
+				$aFormData['validation'] = $oFormManager->OnSubmit(array(
+					'currentValues' => $oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
+				));
+			}
 		}
 		// Else, submit from another form
 
@@ -316,48 +332,53 @@ class UserProfileBrickController extends BrickController
 		// - No operation specified
 		if ($sOperation === null)
 		{
-			IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Operation parameter must be specified.');
+			IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Operation parameter must be specified.');
 			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Operation parameter must be specified.');
 		}
 		// - Submit
-		else if ($sOperation === 'submit')
+		else
 		{
-			$oRequestFiles = $oRequest->files;
-			$oPictureFile = $oRequestFiles->get($sPictureAttCode);
-			if ($oPictureFile === null)
+			if ($sOperation === 'submit')
 			{
-				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameter picture must be defined.');
-				throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameter picture must be defined.');
-			}
+				$oRequestFiles = $oRequest->files;
+				$oPictureFile = $oRequestFiles->get($sPictureAttCode);
+				if ($oPictureFile === null)
+				{
+					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameter picture must be defined.');
+					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameter picture must be defined.');
+				}
 
-			try
-			{
-				// Retrieving image as an ORMDocument
-				$oImage = utils::ReadPostedDocument($sPictureAttCode);
-				// Retrieving current contact
-				/** @var \DBObject $oCurContact */
-				$oCurContact = UserRights::GetContactObject();
-				// Resizing image
-				$oAttDef = MetaModel::GetAttributeDef(get_class($oCurContact), $sPictureAttCode);
-				$aSize = utils::GetImageSize($oImage->GetData());
-				$oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'), $oAttDef->Get('storage_max_height'));
-				// Setting it to the contact
-				$oCurContact->Set($sPictureAttCode, $oImage);
-				// Forcing allowed writing on the object if necessary.
-				$oCurContact->AllowWrite(true);
-				$oCurContact->DBUpdate();
-			}
-			catch (FileUploadException $e)
-			{
-				$aFormData['error'] = $e->GetMessage();
-			}
+				try
+				{
+					// Retrieving image as an ORMDocument
+					$oImage = utils::ReadPostedDocument($sPictureAttCode);
+					// Retrieving current contact
+					/** @var \cmdbAbstractObject $oCurContact */
+					$oCurContact = UserRights::GetContactObject();
+					// Resizing image
+					$oAttDef = MetaModel::GetAttributeDef(get_class($oCurContact), $sPictureAttCode);
+					$aSize = utils::GetImageSize($oImage->GetData());
+					$oImage = utils::ResizeImageToFit($oImage, $aSize[0], $aSize[1], $oAttDef->Get('storage_max_width'),
+						$oAttDef->Get('storage_max_height'));
+					// Setting it to the contact
+					$oCurContact->Set($sPictureAttCode, $oImage);
+					// Forcing allowed writing on the object if necessary.
+					$oCurContact->AllowWrite(true);
+					$oCurContact->DBUpdate();
+				}
+				catch (FileUploadException $e)
+				{
+					$aFormData['error'] = $e->GetMessage();
+				}
 
-			$aFormData['picture_url'] = $oImage->GetDownloadURL(get_class($oCurContact), $oCurContact->GetKey(), $sPictureAttCode);
-			$aFormData['validation'] = array(
-				'valid' => true,
-				'messages' => array(),
-			);
+				$aFormData['picture_url'] = $oImage->GetDownloadURL(get_class($oCurContact), $oCurContact->GetKey(), $sPictureAttCode);
+				$aFormData['validation'] = array(
+					'valid' => true,
+					'messages' => array(),
+				);
+			}
 		}
+
 		// Else, submit from another form
 
 		return $aFormData;

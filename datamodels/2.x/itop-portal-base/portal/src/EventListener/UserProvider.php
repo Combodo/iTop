@@ -25,7 +25,6 @@ use Exception;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use User;
 use Dict;
 use LoginWebPage;
 use UserRights;
@@ -39,18 +38,18 @@ use ModuleDesign;
  */
 class UserProvider implements ContainerAwareInterface
 {
-    /** @var \ModuleDesign */
+    /** @var \ModuleDesign $oModuleDesign */
     private $oModuleDesign;
     /** @var string $sPortalId */
 	private $sPortalId;
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
-	private $container;
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $container */
+	private $oContainer;
 
 	/**
 	 * UserProvider constructor.
 	 *
 	 * @param \ModuleDesign $oModuleDesign
-	 * @param \User $oUser
+	 * @param string        $sPortalId
 	 */
     public function __construct(ModuleDesign $oModuleDesign, $sPortalId)
     {
@@ -86,16 +85,16 @@ class UserProvider implements ContainerAwareInterface
         {
             throw new Exception('Could not load connected user.');
         }
-        $this->container->set('combodo.current_user', $oUser);
+        $this->oContainer->set('combodo.current_user', $oUser);
     }
 
 	/**
 	 * Sets the container.
 	 *
-	 * @param \Symfony\Component\DependencyInjection\ContainerInterface|null $container
+	 * @param \Symfony\Component\DependencyInjection\ContainerInterface|null $oContainer
 	 */
-	public function setContainer(ContainerInterface $container = null)
+	public function setContainer(ContainerInterface $oContainer = null)
 	{
-		$this->container = $container;
+		$this->oContainer = $oContainer;
 	}
 }

@@ -46,13 +46,16 @@ use UserRights;
  * Class ObjectFormHandlerHelper
  *
  * @package Combodo\iTop\Portal\Helper
- * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.7.0
+ * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since   2.7.0
  */
 class ObjectFormHandlerHelper
 {
+	/** @var string ENUM_MODE_VIEW */
 	const ENUM_MODE_VIEW = 'view';
+	/** @var string ENUM_MODE_EDIT */
 	const ENUM_MODE_EDIT = 'edit';
+	/** @var string ENUM_MODE_CREATE */
 	const ENUM_MODE_CREATE = 'create';
 
 	/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper */
@@ -145,8 +148,10 @@ class ObjectFormHandlerHelper
 				// Retrieve action rules information to auto-fill the form if available
 				// Preparing object
 				$this->oContextManipulator->PrepareObject($aActionRules, $oObject);
-				$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
-					'origin' => 'portal');
+				$aPrefillFormParam = array(
+					'user' => $_SESSION["auth_user"],
+					'origin' => 'portal',
+				);
 				$oObject->PrefillForm('creation_from_0', $aPrefillFormParam);
 			}
 			else
@@ -170,7 +175,7 @@ class ObjectFormHandlerHelper
 				$aStimuli = Metamodel::EnumStimuli($sObjectClass);
 				foreach ($oObject->EnumTransitions() as $sStimulusCode => $aTransitionDef)
 				{
-					if($this->oSecurityHelper->IsStimulusAllowed($sStimulusCode, $sObjectClass, $oSetToCheckRights))
+					if ($this->oSecurityHelper->IsStimulusAllowed($sStimulusCode, $sObjectClass, $oSetToCheckRights))
 					{
 						$aFormData['buttons']['transitions'][$sStimulusCode] = $aStimuli[$sStimulusCode]->GetLabel();
 					}
@@ -180,15 +185,15 @@ class ObjectFormHandlerHelper
 				/** @var \iPopupMenuExtension $oExtensionInstance */
 				foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
 				{
-					foreach($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJDETAILS_ACTIONS, array('portal_id' => $this->sPortalId, 'object' => $oObject, 'mode' => $sMode)) as $oMenuItem)
+					foreach ($oExtensionInstance->EnumItems(iPopupMenuExtension::PORTAL_OBJDETAILS_ACTIONS, array('portal_id' => $this->sPortalId, 'object' => $oObject, 'mode' => $sMode)) as $oMenuItem)
 					{
 						if (is_object($oMenuItem))
 						{
-							if($oMenuItem instanceof JSButtonItem)
+							if ($oMenuItem instanceof JSButtonItem)
 							{
 								$aFormData['buttons']['actions'][] = $oMenuItem->GetMenuItem() + array('js_files' => $oMenuItem->GetLinkedScripts());
 							}
-							elseif($oMenuItem instanceof URLButtonItem)
+							elseif ($oMenuItem instanceof URLButtonItem)
 							{
 								$aFormData['buttons']['links'][] = $oMenuItem->GetMenuItem();
 							}
@@ -197,11 +202,11 @@ class ObjectFormHandlerHelper
 				}
 
 				// Hiding submit button or changing its label if necessary
-				if(!empty($aFormData['buttons']['transitions']) && isset($aFormProperties['properties']) &&$aFormProperties['properties']['always_show_submit'] === false)
+				if (!empty($aFormData['buttons']['transitions']) && isset($aFormProperties['properties']) && $aFormProperties['properties']['always_show_submit'] === false)
 				{
 					unset($aFormData['buttons']['submit']);
 				}
-				elseif($sMode === static::ENUM_MODE_EDIT)
+				elseif ($sMode === static::ENUM_MODE_EDIT)
 				{
 					$aFormData['buttons']['submit']['label'] = Dict::S('Portal:Button:Apply');
 				}
@@ -225,7 +230,7 @@ class ObjectFormHandlerHelper
 			// Note : We might need to distinguish form & renderer endpoints
 			if (in_array($sMode, array('create', 'edit', 'view')))
 			{
-				$sFormEndpoint = $this->oUrlGenerator->generate('p_object_' . $sMode, array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId));
+				$sFormEndpoint = $this->oUrlGenerator->generate('p_object_'.$sMode, array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId));
 			}
 			else
 			{
@@ -252,9 +257,9 @@ class ObjectFormHandlerHelper
 			// Update / Submit / Cancel
 			$sFormManagerClass = $this->oRequestManipulator->ReadParam('formmanager_class', '', FILTER_UNSAFE_RAW);
 			$sFormManagerData = $this->oRequestManipulator->ReadParam('formmanager_data', '', FILTER_UNSAFE_RAW);
-			if ( empty($sFormManagerClass) || empty($sFormManagerData) )
+			if (empty($sFormManagerClass) || empty($sFormManagerData))
 			{
-				IssueLog::Error(__METHOD__ . ' at line ' . __LINE__ . ' : Parameters formmanager_class and formamanager_data must be defined.');
+				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formamanager_data must be defined.');
 				throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameters formmanager_class and formmanager_data must be defined.');
 			}
 
@@ -280,7 +285,7 @@ class ObjectFormHandlerHelper
 							'currentValues' => $this->oRequestManipulator->ReadParam('current_values', array(), FILTER_UNSAFE_RAW),
 							'attachmentIds' => $this->oRequestManipulator->ReadParam('attachment_ids', array(), FILTER_UNSAFE_RAW),
 							'formProperties' => $aFormProperties,
-							'applyStimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null)
+							'applyStimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null),
 						)
 					);
 					if ($aFormData['validation']['valid'] === true)
@@ -329,7 +334,7 @@ class ObjectFormHandlerHelper
 			$sFormPath = $this->oRequestManipulator->ReadParam('form_path', '');
 
 			// Checking if the update was on a subform, if so we need to make the rendering for that part only
-			if ( !empty($sFormPath) && $sFormPath !== $oFormManager->GetForm()->GetId() )
+			if (!empty($sFormPath) && $sFormPath !== $oFormManager->GetForm()->GetId())
 			{
 				$oSubForm = $oFormManager->GetForm()->FindSubForm($sFormPath);
 				$oSubFormRenderer = new BsFormRenderer($oSubForm);
@@ -362,19 +367,32 @@ class ObjectFormHandlerHelper
 		return $aFormData;
 	}
 
+	/**
+	 * @param $sId
+	 * @param $sTwigString
+	 * @param $aData
+	 *
+	 * @return string
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 * @throws \Twig_Error_Loader
+	 * @throws \Twig_Error_Runtime
+	 * @throws \Twig_Error_Syntax
+	 */
 	public function RenderFormFromTwig($sId, $sTwigString, $aData)
 	{
 		// Creating sandbox twig env. to load and test the custom form template
-		$oTwig = new Twig_Environment(new Twig_Loader_Array( array($sId => $sTwigString) ));
+		$oTwig = new Twig_Environment(new Twig_Loader_Array(array($sId => $sTwigString)));
 
 		// Manually registering filters and functions as we didn't find how to do it automatically
 		$aFilters = $this->oAppExtension->getFilters();
-		foreach($aFilters as $oFilter)
+		foreach ($aFilters as $oFilter)
 		{
 			$oTwig->addFilter($oFilter);
 		}
 		$aFunctions = $this->oAppExtension->getFunctions();
-		foreach($aFunctions as $oFunction)
+		foreach ($aFunctions as $oFunction)
 		{
 			$oTwig->addFunction($oFunction);
 		}
