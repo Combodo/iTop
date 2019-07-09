@@ -40,11 +40,6 @@ p_object_apply_stimulus:
   defaults:
     _controller: 'Combodo\iTop\Portal\Controller\ObjectController::ApplyStimulusAction'
 
-p_object_search_regular:
-  path: '/object/search'
-  defaults:
-    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::SearchRegularAction'
-
 p_object_search_from_attribute:
   path: '/object/search/from-attribute/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'
   defaults:
@@ -53,17 +48,19 @@ p_object_search_from_attribute:
     sHostObjectId: ~
 
 p_object_search_autocomplete:
-  path: '/object/search'
+  path: '/object/search/autocomplete/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'
   defaults:
     _controller: 'Combodo\iTop\Portal\Controller\ObjectController::SearchAutocompleteAction'
     sHostObjectClass: ~
     sHostObjectId: ~
 
-
+# This one has the same path pattern as p_object_search_from_attribute and p_object_search_autocomplete
+# It is used to render search URL dynamically without knowing the route name
+#
+# Warning: It has NO default controller!
 p_object_search_generic:
   path: '/object/search/{sMode}/{sTargetAttCode}/{sHostObjectClass}/{sHostObjectId}'
   defaults:
-    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::SearchAction'
     sMode: '-sMode-'
     sHostObjectClass: ~
     sHostObjectId: ~
