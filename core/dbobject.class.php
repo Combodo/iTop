@@ -2629,8 +2629,6 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Persists object to new records in the DB
-     *
-     * @internal
 	 *
 	 * @return int key of the newly created object
 	 * @throws \ArchivedObjectException
@@ -2640,6 +2638,9 @@ abstract class DBObject implements iDisplay
 	 * @throws \CoreWarning
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 * @throws \Exception
+	 *
+	 * @internal
 	 *
 	 */
 	public function DBInsertNoReload()
@@ -2699,20 +2700,35 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		// First query built upon on the root class, because the ID must be created first
-		$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
-
-		// Then do the leaf class, if different from the root class
-		if ($sClass != $sRootClass)
+		try
 		{
-			$this->DBInsertSingleTable($sClass);
+			CMDBSource::Query('START TRANSACTION');
+
+			// First query built upon on the root class, because the ID must be created first
+			$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
+
+			// Then do the leaf class, if different from the root class
+			if ($sClass != $sRootClass)
+			{
+				$this->DBInsertSingleTable($sClass);
+			}
+
+			// Then do the other classes
+			foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass)
+			{
+				if ($sParentClass == $sRootClass)
+				{
+					continue;
+				}
+				$this->DBInsertSingleTable($sParentClass);
+			}
+
+			CMDBSource::Query('COMMIT');
 		}
-
-		// Then do the other classes
-		foreach(MetaModel::EnumParentClasses($sClass) as $sParentClass)
+		catch (Exception $e)
 		{
-			if ($sParentClass == $sRootClass) continue;
-			$this->DBInsertSingleTable($sParentClass);
+			CMDBSource::Query('ROLLBACK');
+			throw $e;
 		}
 
 		$this->OnObjectKeyReady();
