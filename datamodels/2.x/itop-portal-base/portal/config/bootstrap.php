@@ -55,7 +55,7 @@ elseif (!class_exists(Dotenv::class))
 else
 {
 	$sPath = dirname(__DIR__).'/.env';
-	$oDotenv = new Dotenv(false);
+	$oDotenv = new Dotenv();
 
 	// load all the .env files
 	if (method_exists($oDotenv, 'loadEnv'))
