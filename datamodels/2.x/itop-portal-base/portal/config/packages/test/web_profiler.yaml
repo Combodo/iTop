@@ -3,4 +3,4 @@ web_profiler:
   intercept_redirects: false
 
 framework:
-  profiler: { collect: falseS }
+  profiler: { collect: false }
