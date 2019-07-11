@@ -20,10 +20,17 @@ require_once(APPROOT.'lib/archivetar/tar.php');
 
 /**
  * Class ITopArchiveTar
- * Custom Combodo code added to the {@link ArchiveTar} class
+ * Custom Combodo code added to the {@link Archive_Tar} class
  */
-class ITopArchiveTar extends ArchiveTar
+class ITopArchiveTar extends Archive_Tar
 {
+	const READ_BUFFER_SIZE = 1024*1024;
+
+	public function __construct($p_tarname, $p_compress = null)
+	{
+		parent::__construct($p_tarname, $p_compress, self::READ_BUFFER_SIZE);
+	}
+
 	/**
 	 * @param string $p_message
 	 */

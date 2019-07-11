@@ -1,4 +1,6 @@
 <?php
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+
 /**
  * File::CSV
  *
@@ -31,12 +33,17 @@
  * @category  File_Formats
  * @package   Archive_Tar
  * @author    Vincent Blavet <vincent@phpconcept.net>
- * @author    Combodo
- * @copyright 1997-2018 The Authors
+ * @copyright 1997-2010 The Authors
  * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version   CVS: $Id$
  * @link      http://pear.php.net/package/Archive_Tar
  */
+
+// If the PEAR class cannot be loaded via the autoloader,
+// then try to require_once it from the PHP include path.
+if (!class_exists('PEAR')) {
+	require_once 'PEAR.php';
+}
 
 define('ARCHIVE_TAR_ATT_SEPARATOR', 90001);
 define('ARCHIVE_TAR_END_BLOCK', pack("a512", ''));
@@ -70,7 +77,7 @@ if (!function_exists('gzseek') && function_exists('gzseek64')) {
  * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
  * @version $Revision$
  */
-class ArchiveTar
+class Archive_Tar extends PEAR
 {
 	/**
 	 * @var string Name of the Tar
@@ -93,7 +100,7 @@ class ArchiveTar
 	public $_separator = ' ';
 
 	/**
-	 * @var resource file descriptor
+	 * @var file descriptor
 	 */
 	public $_file = 0;
 
@@ -117,7 +124,13 @@ class ArchiveTar
 	 *
 	 * @var string
 	 */
-	public $_fmt ='';
+	public $_fmt = '';
+
+	/**
+	 * @var int Length of the read buffer in bytes
+	 */
+	protected $buffer_length;
+
 	/**
 	 * Archive_Tar Class constructor. This flavour of the constructor only
 	 * declare a new Archive_Tar object, identifying it by the name of the
@@ -130,10 +143,14 @@ class ArchiveTar
 	 *               parameter indicates if gzip, bz2 or lzma2 compression
 	 *               is required.  For compatibility reason the
 	 *               boolean value 'true' means 'gz'.
+	 * @param int $buffer_length Length of the read buffer in bytes
 	 *
+	 * @return bool
 	 */
-	public function __construct($p_tarname, $p_compress = null)
+	public function __construct($p_tarname, $p_compress = null, $buffer_length = 512)
 	{
+		parent::__construct();
+
 		$this->_compress = false;
 		$this->_compress_type = 'none';
 		if (($p_compress === null) || ($p_compress == '')) {
@@ -189,12 +206,38 @@ class ArchiveTar
 							"Unsupported compression type '$p_compress'\n" .
 							"Supported types are 'gz', 'bz2' and 'lzma2'.\n"
 						);
-						return;
+						return false;
 					}
 				}
 			}
 		}
 		$this->_tarname = $p_tarname;
+		if ($this->_compress) { // assert zlib or bz2 or xz extension support
+			if ($this->_compress_type == 'gz') {
+				$extname = 'zlib';
+			} else {
+				if ($this->_compress_type == 'bz2') {
+					$extname = 'bz2';
+				} else {
+					if ($this->_compress_type == 'lzma2') {
+						$extname = 'xz';
+					}
+				}
+			}
+
+			if (!extension_loaded($extname)) {
+				PEAR::loadExtension($extname);
+			}
+			if (!extension_loaded($extname)) {
+				$this->_error(
+					"The extension '$extname' couldn't be found.\n" .
+					"Please make sure your version of PHP was built " .
+					"with '$extname' support.\n"
+				);
+				return false;
+			}
+		}
+
 
 		if (version_compare(PHP_VERSION, "5.5.0-dev") < 0) {
 			$this->_fmt = "a100filename/a8mode/a8uid/a8gid/a12size/a12mtime/" .
@@ -206,6 +249,8 @@ class ArchiveTar
 				"Z32uname/Z32gname/Z8devmajor/Z8devminor/Z131prefix";
 		}
 
+
+		$this->buffer_length = $buffer_length;
 	}
 
 	public function __destruct()
@@ -401,6 +446,8 @@ class ArchiveTar
 	 */
 	public function addModify($p_filelist, $p_add_dir, $p_remove_dir = '')
 	{
+		$v_result = true;
+
 		if (!$this->_isArchive()) {
 			$v_result = $this->createModify(
 				$p_filelist,
@@ -452,6 +499,13 @@ class ArchiveTar
 	 */
 	public function addString($p_filename, $p_string, $p_datetime = false, $p_params = array())
 	{
+		$p_stamp = @$p_params["stamp"] ? $p_params["stamp"] : ($p_datetime ? $p_datetime : time());
+		$p_mode = @$p_params["mode"] ? $p_params["mode"] : 0600;
+		$p_type = @$p_params["type"] ? $p_params["type"] : "";
+		$p_uid = @$p_params["uid"] ? $p_params["uid"] : "";
+		$p_gid = @$p_params["gid"] ? $p_params["gid"] : "";
+		$v_result = true;
+
 		if (!$this->_isArchive()) {
 			if (!$this->_openWrite()) {
 				return false;
@@ -509,6 +563,7 @@ class ArchiveTar
 	 */
 	public function extractModify($p_path, $p_remove_path, $p_preserve = false)
 	{
+		$v_result = true;
 		$v_list_detail = array();
 
 		if ($v_result = $this->_openRead()) {
@@ -532,7 +587,7 @@ class ArchiveTar
 	 *
 	 * @param string $p_filename The path of the file to extract in a string.
 	 *
-	 * @return string with the file content or NULL.
+	 * @return a string with the file content or NULL.
 	 */
 	public function extractInString($p_filename)
 	{
@@ -553,7 +608,7 @@ class ArchiveTar
 	 * If indicated the $p_remove_path can be used in the same way as it is
 	 * used in extractModify() method.
 	 *
-	 * @param array|string $p_filelist An array of filenames and directory names,
+	 * @param array $p_filelist An array of filenames and directory names,
 	 *                               or a single string with names separated
 	 *                               by a single blank space.
 	 * @param string $p_path The path of the directory where the
@@ -568,6 +623,7 @@ class ArchiveTar
 	 */
 	public function extractList($p_filelist, $p_path = '', $p_remove_path = '', $p_preserve = false)
 	{
+		$v_result = true;
 		$v_list_detail = array();
 
 		if (is_array($p_filelist)) {
@@ -670,7 +726,7 @@ class ArchiveTar
 	 */
 	public function setIgnoreList($list)
 	{
-		//$regexp = str_replace(array('#', '.', '^', '$'), array('\#', '\.', '\^', '\$'), $list);
+		$regexp = str_replace(array('#', '.', '^', '$'), array('\#', '\.', '\^', '\$'), $list);
 		$regexp = '#/' . join('$|/', $list) . '#';
 		$this->setIgnoreRegexp($regexp);
 	}
@@ -891,7 +947,7 @@ class ArchiveTar
 		}
 
 		// ----- Look if a local copy need to be erase
-		// Note that it might be interesting to keep the url for a time.
+		// Note that it might be interesting to keep the url for a time : ToDo
 		if ($this->_temp_tarname != '') {
 			@unlink($this->_temp_tarname);
 			$this->_temp_tarname = '';
@@ -1209,26 +1265,17 @@ class ArchiveTar
 				return false;
 			}
 
-			// --- START COMBODO modification
-			// (see commit 2706ebf6)
-			// read/write files with a bigger buffer to increase drastically performances
-			// to still get a valid archive, last bytes are still read/write using a 512 byte buffer
-			$iLen = 1024*1024;
-			while (($v_buffer = fread($v_file, $iLen)) != '') {
-				$iBufferLen = strlen("$v_buffer");
-				if ($iBufferLen != $iLen)
-				{
-					$iPack = (ceil($iBufferLen / 512)) * 512;
-					$sPack = sprintf('a%d', $iPack);
+			while (($v_buffer = fread($v_file, $this->buffer_length)) != '') {
+				$buffer_length = strlen("$v_buffer");
+				if ($buffer_length != $this->buffer_length) {
+					$pack_size = ((int)($buffer_length / 512) + 1) * 512;
+					$pack_format = sprintf('a%d', $pack_size);
+				} else {
+					$pack_format = sprintf('a%d', $this->buffer_length);
 				}
-				else
-				{
-					$sPack = sprintf('a%d', $iLen);
-				}
-				$v_binary_data = pack($sPack, "$v_buffer");
+				$v_binary_data = pack($pack_format, "$v_buffer");
 				$this->_writeBlock($v_binary_data);
 			}
-			// --- END COMBODO modification
 
 			fclose($v_file);
 		} else {
@@ -1268,6 +1315,11 @@ class ArchiveTar
 		// ----- Calculate the stored filename
 		$p_filename = $this->_translateWinPath($p_filename, false);
 
+		// ----- If datetime is not specified, set current time
+		if ($p_datetime === false) {
+			$p_datetime = time();
+		}
+
 		if (!$this->_writeHeaderBlock(
 			$p_filename,
 			strlen($p_string),
@@ -1300,10 +1352,22 @@ class ArchiveTar
 		if ($p_stored_filename == '') {
 			$p_stored_filename = $p_filename;
 		}
-		$v_reduce_filename = $this->_pathReduction($p_stored_filename);
 
-		if (strlen($v_reduce_filename) > 99) {
-			if (!$this->_writeLongHeader($v_reduce_filename)) {
+		$v_reduced_filename = $this->_pathReduction($p_stored_filename);
+
+		if (strlen($v_reduced_filename) > 99) {
+			if (!$this->_writeLongHeader($v_reduced_filename, false)) {
+				return false;
+			}
+		}
+
+		$v_linkname = '';
+		if (@is_link($p_filename)) {
+			$v_linkname = readlink($p_filename);
+		}
+
+		if (strlen($v_linkname) > 99) {
+			if (!$this->_writeLongHeader($v_linkname, true)) {
 				return false;
 			}
 		}
@@ -1312,14 +1376,10 @@ class ArchiveTar
 		$v_uid = sprintf("%07s", DecOct($v_info[4]));
 		$v_gid = sprintf("%07s", DecOct($v_info[5]));
 		$v_perms = sprintf("%07s", DecOct($v_info['mode'] & 000777));
-
 		$v_mtime = sprintf("%011s", DecOct($v_info['mtime']));
-
-		$v_linkname = '';
 
 		if (@is_link($p_filename)) {
 			$v_typeflag = '2';
-			$v_linkname = readlink($p_filename);
 			$v_size = sprintf("%011s", DecOct(0));
 		} elseif (@is_dir($p_filename)) {
 			$v_typeflag = "5";
@@ -1331,7 +1391,6 @@ class ArchiveTar
 		}
 
 		$v_magic = 'ustar ';
-
 		$v_version = ' ';
 
 		if (function_exists('posix_getpwuid')) {
@@ -1346,14 +1405,12 @@ class ArchiveTar
 		}
 
 		$v_devmajor = '';
-
 		$v_devminor = '';
-
 		$v_prefix = '';
 
 		$v_binary_data_first = pack(
 			"a100a8a8a8a12a12",
-			$v_reduce_filename,
+			$v_reduced_filename,
 			$v_perms,
 			$v_uid,
 			$v_gid,
@@ -1393,7 +1450,7 @@ class ArchiveTar
 		$this->_writeBlock($v_binary_data_first, 148);
 
 		// ----- Write the calculated checksum
-		$v_checksum = sprintf("%06s ", DecOct($v_checksum));
+		$v_checksum = sprintf("%06s\0 ", DecOct($v_checksum));
 		$v_binary_data = pack("a8", $v_checksum);
 		$this->_writeBlock($v_binary_data, 8);
 
@@ -1421,11 +1478,12 @@ class ArchiveTar
 		$p_type = '',
 		$p_uid = 0,
 		$p_gid = 0
-	) {
+	)
+	{
 		$p_filename = $this->_pathReduction($p_filename);
 
 		if (strlen($p_filename) > 99) {
-			if (!$this->_writeLongHeader($p_filename)) {
+			if (!$this->_writeLongHeader($p_filename, false)) {
 				return false;
 			}
 		}
@@ -1521,36 +1579,31 @@ class ArchiveTar
 	 * @param string $p_filename
 	 * @return bool
 	 */
-	public function _writeLongHeader($p_filename)
+	public function _writeLongHeader($p_filename, $is_link = false)
 	{
-		$v_size = sprintf("%11s ", DecOct(strlen($p_filename)));
-
-		$v_typeflag = 'L';
-
+		$v_uid = sprintf("%07s", 0);
+		$v_gid = sprintf("%07s", 0);
+		$v_perms = sprintf("%07s", 0);
+		$v_size = sprintf("%'011s", DecOct(strlen($p_filename)));
+		$v_mtime = sprintf("%011s", 0);
+		$v_typeflag = ($is_link ? 'K' : 'L');
 		$v_linkname = '';
-
-		$v_magic = '';
-
-		$v_version = '';
-
+		$v_magic = 'ustar ';
+		$v_version = ' ';
 		$v_uname = '';
-
 		$v_gname = '';
-
 		$v_devmajor = '';
-
 		$v_devminor = '';
-
 		$v_prefix = '';
 
 		$v_binary_data_first = pack(
 			"a100a8a8a8a12a12",
 			'././@LongLink',
-			0,
-			0,
-			0,
+			$v_perms,
+			$v_uid,
+			$v_gid,
 			$v_size,
-			0
+			$v_mtime
 		);
 		$v_binary_data_last = pack(
 			"a1a100a6a2a32a32a8a8a155a12",
@@ -1585,7 +1638,7 @@ class ArchiveTar
 		$this->_writeBlock($v_binary_data_first, 148);
 
 		// ----- Write the calculated checksum
-		$v_checksum = sprintf("%06s ", DecOct($v_checksum));
+		$v_checksum = sprintf("%06s\0 ", DecOct($v_checksum));
 		$v_binary_data = pack("a8", $v_checksum);
 		$this->_writeBlock($v_binary_data, 8);
 
@@ -1691,7 +1744,7 @@ class ArchiveTar
 	 * Convert Tar record size to actual size
 	 *
 	 * @param string $tar_size
-	 * @return float|int size of tar record in bytes
+	 * @return size of tar record in bytes
 	 */
 	private function _tarRecToSize($tar_size)
 	{
@@ -1733,11 +1786,7 @@ class ArchiveTar
 		if (strpos($file, 'phar://') === 0) {
 			return true;
 		}
-
-		if (strpos($file, '/../') !== false) {
-			return true;
-		}
-		if (strpos($file, '../') === 0) {
+		if (strpos($file, '../') !== false || strpos($file, '..\\') !== false) {
 			return true;
 		}
 		return false;
@@ -1787,7 +1836,7 @@ class ArchiveTar
 	 *
 	 * @param string $p_filename The path of the file to extract in a string.
 	 *
-	 * @return string with the file content or null.
+	 * @return a string with the file content or null.
 	 */
 	private function _extractInString($p_filename)
 	{
@@ -1802,11 +1851,24 @@ class ArchiveTar
 				continue;
 			}
 
-			// ----- Look for long filename
-			if ($v_header['typeflag'] == 'L') {
-				if (!$this->_readLongHeader($v_header)) {
-					return null;
-				}
+			switch ($v_header['typeflag']) {
+				case 'L':
+					{
+						if (!$this->_readLongHeader($v_header)) {
+							return null;
+						}
+					}
+					break;
+
+				case 'K':
+					{
+						$v_link_header = $v_header;
+						if (!$this->_readLongHeader($v_link_header)) {
+							return null;
+						}
+						$v_header['link'] = $v_link_header['filename'];
+					}
+					break;
 			}
 
 			if ($v_header['filename'] == $p_filename) {
@@ -1841,9 +1903,9 @@ class ArchiveTar
 
 	/**
 	 * @param string $p_path
-	 * @param string|array $p_list_detail
+	 * @param string $p_list_detail
 	 * @param string $p_mode
-	 * @param string|array $p_file_list
+	 * @param string $p_file_list
 	 * @param string $p_remove_path
 	 * @param bool $p_preserve
 	 * @return bool
@@ -1855,8 +1917,12 @@ class ArchiveTar
 		$p_file_list,
 		$p_remove_path,
 		$p_preserve = false
-	) {
+	)
+	{
+		$v_result = true;
 		$v_nb = 0;
+		$v_extract_all = true;
+		$v_listing = false;
 
 		$p_path = $this->_translateWinPath($p_path, false);
 		if ($p_path == '' || (substr($p_path, 0, 1) != '/'
@@ -1893,6 +1959,7 @@ class ArchiveTar
 		clearstatcache();
 
 		while (strlen($v_binary_data = $this->_readBlock()) != 0) {
+			$v_extract_file = false;
 			$v_extraction_stopped = 0;
 
 			if (!$this->_readHeader($v_binary_data, $v_header)) {
@@ -1903,11 +1970,24 @@ class ArchiveTar
 				continue;
 			}
 
-			// ----- Look for long filename
-			if ($v_header['typeflag'] == 'L') {
-				if (!$this->_readLongHeader($v_header)) {
-					return false;
-				}
+			switch ($v_header['typeflag']) {
+				case 'L':
+					{
+						if (!$this->_readLongHeader($v_header)) {
+							return null;
+						}
+					}
+					break;
+
+				case 'K':
+					{
+						$v_link_header = $v_header;
+						if (!$this->_readLongHeader($v_link_header)) {
+							return null;
+						}
+						$v_header['link'] = $v_link_header['filename'];
+					}
+					break;
 			}
 
 			// ignore extended / pax headers
@@ -1991,6 +2071,9 @@ class ArchiveTar
 							. ' already exists and is write protected'
 						);
 						return false;
+					}
+					if (filemtime($v_header['filename']) > $v_header['mtime']) {
+						// To be completed : An error or silent no replace ?
 					}
 				} // ----- Check the directory availability and create it if necessary
 				elseif (($v_result
@@ -2097,6 +2180,16 @@ class ArchiveTar
 			  */
 
 			if ($v_listing || $v_extract_file || $v_extraction_stopped) {
+				// ----- Log extracted files
+				if (($v_file_dir = dirname($v_header['filename']))
+					== $v_header['filename']
+				) {
+					$v_file_dir = '';
+				}
+				if ((substr($v_header['filename'], 0, 1) == '/') && ($v_file_dir == '')) {
+					$v_file_dir = '/';
+				}
+
 				$p_list_detail[$v_nb++] = $v_header;
 				if (is_array($p_file_list) && (count($p_list_detail) == count($p_file_list))) {
 					return true;
@@ -2127,7 +2220,7 @@ class ArchiveTar
 				);
 				return false;
 			}
-			$v_temp_tar = 0;
+
 			if ($this->_compress_type == 'gz') {
 				$v_temp_tar = @gzopen($this->_tarname . ".tmp", "rb");
 			} elseif ($this->_compress_type == 'bz2') {
