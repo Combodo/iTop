@@ -65,16 +65,16 @@ if (file_exists(APPROOT.'.maintenance') && !$bBypassMaintenance)
 	// Display message depending on the request
 	switch (true)
 	{
-		case EndsWith($_SERVER['REQUEST_URI'], '/pages/ajax.searchform.php'):
+		case isset($_SERVER['REQUEST_URI']) && EndsWith($_SERVER['REQUEST_URI'], '/pages/ajax.searchform.php'):
 			_MaintenanceHtmlMessage($sMessage);
 			break;
 
 		case array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER):
-		case EndsWith($_SERVER['REQUEST_URI'], '/webservices/rest.php'):
+		case isset($_SERVER['REQUEST_URI']) && EndsWith($_SERVER['REQUEST_URI'], '/webservices/rest.php'):
 			_MaintenanceTextMessage($sMessage);
 			break;
 
-		case $_SERVER['CONTENT_TYPE'] == 'application/json':
+		case isset($_SERVER['CONTENT_TYPE']) && ($_SERVER['CONTENT_TYPE'] == 'application/json'):
 			_MaintenanceJsonMessage($sTitle, $sMessage);
 			break;
 
