@@ -3,7 +3,7 @@
 //
 //   This file is part of iTop.
 //
-//   iTop is free software; you can redistribute it and/or modify	
+//   iTop is free software; you can redistribute it and/or modify
 //   it under the terms of the GNU Affero General Public License as published by
 //   the Free Software Foundation, either version 3 of the License, or
 //   (at your option) any later version.
@@ -20,7 +20,7 @@
 /**
  * File to include to initialize the datamodel in memory
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2019 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -32,10 +32,16 @@ register_shutdown_function(function()
 	$sReservedMemory = null;
 	if (!is_null($err = error_get_last()) && ($err['type'] == E_ERROR))
 	{
+		IssueLog::error($err['message']);
 		if (strpos($err['message'], 'Allowed memory size of') !== false)
 		{
 			$sLimit = ini_get('memory_limit');
-			echo "<p>iTop: Allowed memory size of $sLimit exhausted, contact your administrator to increase memory_limit in php.ini</p>\n";
+			echo "<p>iTop: Allowed memory size of $sLimit exhausted, contact your administrator to increase 'memory_limit' in php.ini</p>\n";
+		}
+		elseif (strpos($err['message'], 'Maximum execution time') !== false)
+		{
+			$sLimit = ini_get('max_execution_time');
+			echo "<p>iTop: Maximum execution time of $sLimit exceeded, contact your administrator to increase 'max_execution_time' in php.ini</p>\n";
 		}
 		else
 		{
@@ -43,6 +49,37 @@ register_shutdown_function(function()
 		}
 	}
 });
+
+// Use 'maintenance' parameter to bypass maintenance mode
+$bBypassMaintenance = !is_null(Utils::ReadParam('maintenance', null));
+
+// Maintenance mode
+if (file_exists(APPROOT.'.maintenance') && !$bBypassMaintenance)
+{
+	require_once(APPROOT.'core/dict.class.inc.php');
+	$sMessage = Dict::S('UI:Error:MaintenanceMode', 'Application is currently in maintenance');
+	$sTitle = Dict::S('UI:Error:MaintenanceTitle', 'Maintenance');
+	//	throw new MaintenanceException($sMessage, $sTitle);
+
+	http_response_code(503);
+	// Display message depending on the request
+	switch (true)
+	{
+		case array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER):
+		case EndsWith($_SERVER['REQUEST_URI'], '/webservices/rest.php'):
+			_MaintenanceTextMessage($sMessage);
+			break;
+
+		case EndsWith($_SERVER['REQUEST_URI'], '/pages/ajax.searchform.php'):
+			_MaintenanceHtmlMessage($sMessage);
+			break;
+
+		default:
+			_MaintenanceSetupPageMessage($sTitle, $sMessage);
+			break;
+	}
+	exit();
+}
 
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
@@ -80,3 +117,50 @@ else
 }
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
 MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);
+
+//
+// Maintenance message display functions
+//
+
+/**
+ * Use a setup page to display the maintenance message
+ * @param $sTitle
+ * @param $sMessage
+ */
+function _MaintenanceSetupPageMessage($sTitle, $sMessage)
+{
+	// Web Page
+	require_once(APPROOT."/setup/setuppage.class.inc.php");
+	$oP = new SetupPage($sTitle);
+	$oP->p("<h2>$sMessage</h2>");
+	$oP->output();
+}
+
+/**
+ * Use simple text to display the maintenance message
+ * @param $sMessage
+ */
+function _MaintenanceTextMessage($sMessage)
+{
+	echo $sMessage;
+}
+
+/**
+ * Use a simple HTML to display the maintenance message
+ * @param $sMessage
+ */
+function _MaintenanceHtmlMessage($sMessage)
+{
+	echo '<html><body><div>'.$sMessage.'</div></body></html>';
+}
+
+/**
+ * helper to test if a string ends with another
+ * @param $haystack
+ * @param $needle
+ *
+ * @return bool
+ */
+function EndsWith($haystack, $needle) {
+	return substr_compare($haystack, $needle, -strlen($needle)) === 0;
+}

@@ -442,6 +442,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Fehler: ungültiger Operation "%1$s" auf Objekt %2$s in Zustand "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Fehler: Ungültige Dashboard-Datei',
 	'UI:Error:InvalidDashboard' => 'Fehler: Ungültiges Dashboard',
+	'UI:Error:MaintenanceMode' => 'Die Anwendung befindet sich derzeit in der Wartung.',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Anzahl',
 	'UI:GroupBy:Count+' => 'Anzahl der Elemente',

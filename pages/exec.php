@@ -40,6 +40,16 @@ require_once(APPROOT.'core/metamodel.class.php');
 
 utils::InitTimeZone();
 
+// Maintenance mode
+if (file_exists(APPROOT.'.maintenance'))
+{
+	http_response_code(503);
+	require_once(APPROOT.'core/dict.class.inc.php');
+	$sMessage = Dict::S('UI:Error:MaintenanceMode', 'Application is currently in maintenance');
+	echo "$sMessage";
+	exit;
+}
+
 $sModule = utils::ReadParam('exec_module', '');
 if ($sModule == '')
 {

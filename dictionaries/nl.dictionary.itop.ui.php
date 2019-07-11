@@ -460,6 +460,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Fout: ongeldige stimulus "%1$s" op object %2$s in staat "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Fout: ongeldig dashboard-bestand',
 	'UI:Error:InvalidDashboard' => 'Fout: ongeldig dashboard',
+	'UI:Error:MaintenanceMode' => 'Toepassing is momenteel in onderhoud',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Tel',
 	'UI:GroupBy:Count+' => 'Aantal elementen',
