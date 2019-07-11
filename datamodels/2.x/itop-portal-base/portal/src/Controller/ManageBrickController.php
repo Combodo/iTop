@@ -881,9 +881,7 @@ class ManageBrickController extends BrickController
 	 * @throws \OQLException
 	 * @throws \Exception
 	 */
-	protected function GroupByAttribute(
-		DBSearch $oQuery, $sGroupingTabAttCode, ManageBrick $oBrick
-	) {
+	protected function GroupByAttribute(DBSearch $oQuery, $sGroupingTabAttCode, ManageBrick $oBrick) {
 		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 		$oScopeValidator = $this->get('scope_validator');
 
