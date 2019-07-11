@@ -33,5 +33,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 abstract class AbstractController extends Controller
 {
+	/**
+	 * @param string $sRouteName
+	 * @param array  $aRouteParams
+	 * @param array  $aQueryParameters
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	protected function ForwardFromRoute($sRouteName, $aRouteParams, $aQueryParameters)
+	{
+		return $this->forward($this->GetControllerNameFromRoute($sRouteName), $aRouteParams, $aQueryParameters);
+	}
 
+	/**
+	 * Returns a string containing the controller and action name of a specific route, typically used for request forwarding.
+	 *
+	 * Example: 'p_object_create' returns 'Combodo\iTop\Portal\Controller\ObjectController::CreateAction'
+	 *
+	 * @param string $sRouteName
+	 *
+	 * @return string
+	 */
+	protected function GetControllerNameFromRoute($sRouteName)
+	{
+		$oRouteCollection = $this->get('router')->getRouteCollection();
+		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
+
+		return $aRouteDefaults['_controller'];
+	}
 }

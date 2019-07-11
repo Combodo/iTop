@@ -32,7 +32,6 @@ use Symfony\Component\HttpFoundation\Request;
  * @package Combodo\iTop\Portal\Controller
  * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since   2.3.0
- * @method GetControllerNameFromRoute(string $string)
  */
 class CreateBrickController extends BrickController
 {
@@ -82,7 +81,7 @@ class CreateBrickController extends BrickController
 			// - Adding brick id to the params
 			$aRouteParams['sBrickId'] = $sBrickId;
 
-			$oResponse = $this->forward($this->GetControllerNameFromRoute('p_object_create'), $aRouteParams, $oRequest->query->all());
+			$oResponse = $this->ForwardFromRoute('p_object_create', $aRouteParams, $oRequest->query->all());
 		}
 		// - Else, we list the leaf classes as an intermediate step
 		else

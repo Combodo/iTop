@@ -382,7 +382,7 @@ class ObjectController extends BrickController
 			'sObjectClass' => get_class($oTargetObject),
 		);
 
-		return $this->forward($this->GetControllerNameFromRoute('p_object_create'), $aRouteParams, $oRequest->query->all());
+		return $this->ForwardFromRoute('p_object_create', $aRouteParams, $oRequest->query->all());
 	}
 
 	/**
@@ -1389,22 +1389,5 @@ class ObjectController extends BrickController
 		}
 
 		return $aObjectData;
-	}
-
-	/**
-	 * Returns a string containing the controller and action name of a specific route, typically used for request forwarding.
-	 *
-	 * Example: 'p_object_create' returns 'Combodo\iTop\Portal\Controller\ObjectController::CreateAction'
-	 *
-	 * @param string $sRouteName
-	 *
-	 * @return string
-	 */
-	private function GetControllerNameFromRoute($sRouteName)
-	{
-		$oRouteCollection = $this->get('router')->getRouteCollection();
-		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
-
-		return $aRouteDefaults['_controller'];
 	}
 }

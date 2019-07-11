@@ -23,7 +23,6 @@
 namespace Combodo\iTop\Portal\Controller;
 
 use Combodo\iTop\Portal\Brick\BrickCollection;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -61,17 +60,15 @@ class DefaultController extends AbstractController
 						500);
 				}
 
-				$sControllerName = $aControllerActionParts[0];
-				$sControllerAction = $aControllerActionParts[1];
-
-				$oController = new $sControllerName();
-				if (!$oController instanceof ContainerAwareInterface)
+				$aRouteParams = array();
+				// Add sBrickId in the route params as it is necessary for each brick actions
+				if (is_a($aControllerActionParts[0], BrickController::class, true))
 				{
-					return new Response('Tile controller must be implement ContainerAwareInterface for brick "'.$oBrick->GetId().'"', 500);
+					$aRouteParams['sBrickId'] = $oBrick->GetId();
 				}
-				$oController->setContainer($this->container);
-				/** @var Response $oResponse */
-				$oResponse = $oController->$sControllerAction($oRequest, $oBrick->GetId());
+
+				/** @var \Symfony\Component\HttpFoundation\Response $oResponse */
+				$oResponse = $this->forward($oBrick->GetTileControllerAction(), $aRouteParams, $oRequest->query->all());
 				$aData['aTilesRendering'][$oBrick->GetId()] = $oResponse->getContent();
 			}
 		}
