@@ -26,7 +26,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Exception;
 use FileUploadException;
 use utils;
@@ -61,7 +60,7 @@ use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
  * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @since   2.3.0
  */
-class ObjectController extends AbstractController
+class ObjectController extends BrickController
 {
 	const DEFAULT_PAGE_NUMBER = 1;
 	const DEFAULT_LIST_LENGTH = 10;
