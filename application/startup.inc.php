@@ -65,13 +65,17 @@ if (file_exists(APPROOT.'.maintenance') && !$bBypassMaintenance)
 	// Display message depending on the request
 	switch (true)
 	{
+		case EndsWith($_SERVER['REQUEST_URI'], '/pages/ajax.searchform.php'):
+			_MaintenanceHtmlMessage($sMessage);
+			break;
+
 		case array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER):
 		case EndsWith($_SERVER['REQUEST_URI'], '/webservices/rest.php'):
 			_MaintenanceTextMessage($sMessage);
 			break;
 
-		case EndsWith($_SERVER['REQUEST_URI'], '/pages/ajax.searchform.php'):
-			_MaintenanceHtmlMessage($sMessage);
+		case $_SERVER['CONTENT_TYPE'] == 'application/json':
+			_MaintenanceJsonMessage($sTitle, $sMessage);
 			break;
 
 		default:
@@ -152,6 +156,19 @@ function _MaintenanceTextMessage($sMessage)
 function _MaintenanceHtmlMessage($sMessage)
 {
 	echo '<html><body><div>'.$sMessage.'</div></body></html>';
+}
+
+/**
+ * Use a simple JSON to display the maintenance message
+ * @param $sMessage
+ */
+function _MaintenanceJsonMessage($sTitle, $sMessage)
+{
+	$oP = new ajax_page($sTitle);
+	$oP->add_header('Access-Control-Allow-Origin: *');
+	$oP->SetContentType('application/json');
+	$oP->add('{"code":100, "message":"'.$sMessage.'"}');
+	$oP->Output();
 }
 
 /**
