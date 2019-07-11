@@ -238,8 +238,12 @@ function DoInstall(WebPage $oPage)
     $oPage->add('</div>');
     
     $oPage->add('</div>'); // module-selection-body
-    
-    
+
+
+	$oPage->add_linked_stylesheet('../lib/font-awesome/css/all.css');
+	$oPage->add_linked_stylesheet('../lib/font-awesome/css/v4-shims.css');
+
+
     $oPage->add('<div id="hub_installation_widget"></div>');
     $oPage->add('<fieldset id="database-backup-fieldset"><legend>'.Dict::S('iTopHub:DBBackupLabel').'</legend>');
     $oPage->add('<div id="backup_form"><input id="backup_checkbox" type="checkbox" checked><label for="backup_checkbox"> '.Dict::S('iTopHub:DBBackupSentence').'</label></div>');
