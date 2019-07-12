@@ -8,6 +8,9 @@ function WizardAsyncAction(sActionCode, oParams, OnErrorFunction)
 	
 	var ErrorFn = OnErrorFunction;
 	$(document).ajaxError(function(event, request, settings) {
+		// update progressbar
+		// not calling a dedicated plugin method as it is overdated and will be replaced soon
+		$("#progress .progress").css("background-image", "none");
 		$('#async_action').html('<pre>'+request.responseText+'</pre>').show();
 		if (ErrorFn)
 		{
