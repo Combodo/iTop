@@ -38,8 +38,8 @@ use DOMFormatException;
 class AggregatePageBrick extends PortalBrick
 {
 	// Overloaded constants
-	const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-dashboard';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-dashboard fa-2x';
+	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-tachometer-alt';
+	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-tachometer-alt fa-2x';
 	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/aggregate-page/layout.html.twig';
 
 	// Overloaded variables

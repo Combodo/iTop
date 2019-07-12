@@ -42,9 +42,11 @@
 			<p>{{ error_message }}</p>
 			<p>{{ 'Error:HTTP:GetHelp'|dict_format(constant('ITOP_APPLICATION_SHORT')) }}</p>
 			<p>
-				<a class="btn btn-default" href="#" onclick="history.back(); return false;"><span class="fa fa-arrow-left"></span> {{ 'Page:GoPreviousPage'|dict_s }}</a>
-				<a class="btn btn-default" href=""><span class="fa fa-repeat"></span> {{ 'Page:ReloadPage'|dict_s }}</a>
-				<a class="btn btn-default" href="{{ app.url_generator.generate('p_home') }}"><span class="fa fa-home"></span> {{ 'Page:GoPortalHome'|dict_s }}</a>
+				<a class="btn btn-default" href="#" onclick="history.back(); return false;"><span class="fas fa-arrow-left"></span> {{
+                    'Page:GoPreviousPage'|dict_s }}</a>
+				<a class="btn btn-default" href=""><span class="fas fa-redo"></span> {{ 'Page:ReloadPage'|dict_s }}</a>
+				<a class="btn btn-default" href="{{ app.url_generator.generate('p_home') }}"><span class="fas fa-home"></span> {{
+                    'Page:GoPortalHome'|dict_s }}</a>
 			</p>
 		</div>
 

@@ -59,8 +59,8 @@ class ManageBrick extends PortalBrick
 	const ENUM_PAGE_TEMPLATE_PATH_CHART = 'itop-portal-base/portal/templates/bricks/manage/layout-chart.html.twig';
 
 	// Overloaded constants
-	const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-pencil-square';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-pencil-square fa-2x';
+	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-pen-square';
+	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-pen-square fa-2x';
 	const DEFAULT_PAGE_TEMPLATE_PATH = self::ENUM_PAGE_TEMPLATE_PATH_TABLE;
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_LAZY;
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/manage/tile-default.html.twig';
@@ -102,35 +102,35 @@ class ManageBrick extends PortalBrick
 	/** @var array $aPresentationData */
 	public static $aPresentationData = array(
 		self::ENUM_TILE_MODE_BADGE => array(
-			'decorationCssClass' => 'fa fa-id-card-o fa-2x',
+			'decorationCssClass' => 'fas fa-id-card fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-badge.html.twig',
 			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
 			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
 			'need_details' => true,
 		),
 		self::ENUM_TILE_MODE_TOP => array(
-			'decorationCssClass' => 'fa fa-signal fa-rotate-270 fa-2x',
+			'decorationCssClass' => 'fas fa-signal fa-rotate-270 fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-top-list.html.twig',
 			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
 			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,
 			'need_details' => true,
 		),
 		self::ENUM_TILE_MODE_PIE => array(
-			'decorationCssClass' => 'fa fa-pie-chart fa-2x',
+			'decorationCssClass' => 'fas fa-chart-pie fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-chart.html.twig',
 			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
 			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_PIE,
 			'need_details' => false,
 		),
 		self::ENUM_TILE_MODE_BAR => array(
-			'decorationCssClass' => 'fa fa-bar-chart fa-2x',
+			'decorationCssClass' => 'fas fa-chart-bar fa-2x',
 			'tileTemplate' => 'itop-portal-base/portal/templates/bricks/manage/tile-chart.html.twig',
 			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_CHART,
 			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_BAR,
 			'need_details' => false,
 		),
 		self::ENUM_TILE_MODE_TEXT => array(
-			'decorationCssClass' => 'fa fa-pencil-square fa-2x',
+			'decorationCssClass' => 'fas fa-pen-square fa-2x',
 			'tileTemplate' => self::DEFAULT_TILE_TEMPLATE_PATH,
 			'layoutTemplate' => self::ENUM_PAGE_TEMPLATE_PATH_TABLE,
 			'layoutDisplayMode' => self::ENUM_DISPLAY_MODE_LIST,

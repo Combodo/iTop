@@ -371,7 +371,7 @@ EOF
 			$sHierarchicalButtonId = 's_hi_' . $this->oField->GetGlobalId();
 			$sEndpoint = str_replace('-sMode-', 'hierarchy', $this->oField->GetSearchEndpoint());
 
-			$oOutput->AddHtml('<div class="input-group-addon" id="' . $sHierarchicalButtonId . '"><span class="fa fa-sitemap"></span></div>');
+			$oOutput->AddHtml('<div class="input-group-addon" id="' . $sHierarchicalButtonId . '"><span class="fas fa-sitemap"></span></div>');
 
 			$oOutput->AddJs(
 <<<EOF

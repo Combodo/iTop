@@ -35,8 +35,8 @@ use Combodo\iTop\DesignElement;
 class CreateBrick extends PortalBrick
 {
 	// Overloaded constants
-	const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-plus';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-plus fa-2x';
+	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-plus';
+	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-plus fa-2x';
 	const DEFAULT_PAGE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/create/modal.html.twig';
 
 	/** @var string DEFAULT_CLASS */

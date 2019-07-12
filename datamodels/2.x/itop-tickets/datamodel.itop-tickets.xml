@@ -1081,7 +1081,7 @@
 						<default>Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil</default>
 					</title>
 					<decoration_class>
-						<default>fa fa-user fa-2x</default>
+						<default>fas fa-user fa-2x</default>
 					</decoration_class>
 					<!-- Show / hide some of the user profile forms by setting the tag value to true|false -->
 					<!--<show_picture_form>true</show_picture_form>-->

@@ -65,8 +65,8 @@ class BrowseBrick extends PortalBrick
 	const ENUM_FACTORY_TYPE_CLASS = 'class';
 
 	// Overloaded constants
-	const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-map';
-	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-map fa-2x';
+	const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-map';
+	const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-map fa-2x';
 	const DEFAULT_DATA_LOADING = self::ENUM_DATA_LOADING_FULL;
 
 	/** @var string DEFAULT_LEVEL_NAME_ATT */

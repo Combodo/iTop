@@ -37,8 +37,8 @@ class FilterBrick extends PortalBrick
 	// Overloaded constants
 	const DEFAULT_VISIBLE_NAVIGATION_MENU = false;
 	const DEFAULT_TILE_TEMPLATE_PATH = 'itop-portal-base/portal/templates/bricks/filter/tile.html.twig';
-    const DEFAULT_DECORATION_CLASS_HOME = 'fa fa-search';
-    const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fa fa-search fa-2x';
+    const DEFAULT_DECORATION_CLASS_HOME = 'fas fa-search';
+    const DEFAULT_DECORATION_CLASS_NAVIGATION_MENU = 'fas fa-search fa-2x';
 
     /** @var string DEFAULT_TARGET_BRICK_CLASS */
 	const DEFAULT_TARGET_BRICK_CLASS = 'Combodo\\iTop\\Portal\\Brick\\BrowseBrick';

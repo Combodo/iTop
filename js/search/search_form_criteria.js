@@ -379,7 +379,8 @@ $(function()
 
 			// Prepare base DOM structure
 			this.element
-				.append('<div class="sfc_header"><div class="sfc_title"></div><span class="sfc_toggle"><a class="fa fa-caret-down" href="#"></a></span></div>')
+				.append('<div class="sfc_header"><div class="sfc_title"></div><span class="sfc_toggle"><a class="fas fa-caret-down"' +
+					' href="#"></a></span></div>')
 				.append('<div class="sfc_form_group"><div class="sfc_fg_operators"></div><div class="sfc_fg_buttons"></div></div>');
 
 			// Bind events
@@ -422,7 +423,7 @@ $(function()
 			// Removable / locked decoration
 			if(this.options.is_removable === true)
 			{
-				this.element.find('.sfc_header').append('<span class="sfc_close"><a class="fa fa-times" href="#"></a></span>');
+				this.element.find('.sfc_header').append('<span class="sfc_close"><a class="fas fa-times" href="#"></a></span>');
 				this.element.find('.sfc_close').on('click', function(oEvent){
 					// Prevent anchor
 					oEvent.preventDefault();
@@ -433,7 +434,7 @@ $(function()
 			else
 			{
 				this.element.addClass('locked');
-				this.element.find('.sfc_header').append('<span class="sfc_locked"><span class="fa fa-lock"></span></span>');
+				this.element.find('.sfc_header').append('<span class="sfc_locked"><span class="fas fa-lock"></span></span>');
 			}
 
 			// Form group
@@ -489,8 +490,10 @@ $(function()
 				.append('<button type="button" name="search" class="sfc_fg_button sfc_fg_search">' + Dict.S('UI:Button:Search') + '</button>')
 				.append('<button type="button" name="apply" class="sfc_fg_button sfc_fg_apply">' + Dict.S('UI:Button:Apply') + '</button>')
 				.append('<button type="button" name="cancel" class="sfc_fg_button sfc_fg_cancel">' + Dict.S('UI:Button:Cancel') + '</button>')
-				.append('<button type="button" name="more" class="sfc_fg_button sfc_fg_more">' + Dict.S('UI:Button:More') + '<span class="fa fa-angle-double-down"></span></button>')
-				.append('<button type="button" name="less" class="sfc_fg_button sfc_fg_less">' + Dict.S('UI:Button:Less') + '<span class="fa fa-angle-double-up"></span></button>');
+				.append('<button type="button" name="more" class="sfc_fg_button sfc_fg_more">' + Dict.S('UI:Button:More') + '<span' +
+					' class="fas fa-angle-double-down"></span></button>')
+				.append('<button type="button" name="less" class="sfc_fg_button sfc_fg_less">' + Dict.S('UI:Button:Less') + '<span' +
+					' class="fas fa-angle-double-up"></span></button>');
 
 			// Events
 			this.element.find('.sfc_fg_button').on('click', function(oEvent){

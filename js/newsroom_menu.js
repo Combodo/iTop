@@ -158,7 +158,7 @@ $(function()
 			var iTotalCount = aAllMessages.length;
 			var iCount = 0;
 			var sHtml = '<span id="newsroom_menu" class="itop_popup toolkit_menu"><ul><li><img id="newsroom_menu_icon" src="'+this.options.image_url+'"><ul>';
-			sHtml += '<li class="newsroom_menu_item" id="newsroom_menu_dismiss_all"><i class="fa fa-fw fa-check"></i>'+this.options.labels.mark_all_as_read+'</li>';
+			sHtml += '<li class="newsroom_menu_item" id="newsroom_menu_dismiss_all"><i class="fas fa-fw fa-check"></i>'+this.options.labels.mark_all_as_read+'</li>';
 			moment.locale(GetUserLanguage());
 			var aUnreadMessagesByProvider = [];
 			for(var k in this.options.providers)

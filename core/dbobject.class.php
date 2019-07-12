@@ -1331,11 +1331,11 @@ abstract class DBObject implements iDisplay
 		{
 			if ($bClickable)
 			{
-				$sIcon = "<span class=\"object-ref-icon fa $sFA fa-1x fa-fw\"></span>";
+				$sIcon = "<span class=\"object-ref-icon fas $sFA fa-1x fa-fw\"></span>";
 			}
 			else
 			{
-				$sIcon = "<span class=\"object-ref-icon-disabled fa $sFA fa-1x fa-fw\"></span>";
+				$sIcon = "<span class=\"object-ref-icon-disabled fas $sFA fa-1x fa-fw\"></span>";
 			}
 		}
 

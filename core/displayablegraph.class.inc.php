@@ -1446,7 +1446,8 @@ class DisplayableGraph extends SimpleGraph
 <<<EOF
  <div id="ds_flash" class="search_box">
 	<form id="dh_flash" class="search_form_handler closed">
-	<h2 class="sf_title"><span class="sft_long">$sSftShort</span><span class="sft_short">$sSftShort</span><span class="sft_toggler fa fa-caret-down pull-right" title="$sSearchToggle"></span></h2>
+	<h2 class="sf_title"><span class="sft_long">$sSftShort</span><span class="sft_short">$sSftShort</span><span class="sft_toggler fas 
+	fa-caret-down pull-right" title="$sSearchToggle"></span></h2>
 	<div id="dh_flash_criterion_outer" class="sf_criterion_area"><div class="sf_criterion_row">
 EOF
 		);

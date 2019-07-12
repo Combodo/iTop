@@ -75,7 +75,7 @@ $(function()
 			{
                 var oChildrenHintElem = $('<div></div>')
                     .addClass('sfc_opc_mc_items_hint')
-                    .append('<span class="fa fa-info"></span>')
+                    .append('<span class="fas fa-info"></span>')
                     .append(Dict.S('UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint'))
                     .appendTo(oOpElem.find('.sfc_opc_mc_items_wrapper'));
 			}

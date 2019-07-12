@@ -813,8 +813,8 @@ class Config
         ),
         'email_decoration_class' => array(
             'type' => 'string',
-            'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fa fa-envelope" will put a mail icon.',
-            'default' => 'fa fa-envelope',
+            'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-envelope" will put a mail icon.',
+            'default' => 'fas fa-envelope',
             'value' => '',
             'source_of_value' => '',
             'show_in_conf_sample' => false,
@@ -837,8 +837,8 @@ class Config
         ),
         'phone_number_decoration_class' => array(
             'type' => 'string',
-            'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fa fa-phone" will put a phone icon.',
-            'default' => 'fa fa-phone',
+            'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-phone" will put a phone icon.',
+            'default' => 'fas fa-phone',
             'value' => '',
             'source_of_value' => '',
             'show_in_conf_sample' => false,

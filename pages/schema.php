@@ -233,7 +233,7 @@ function DisplayClassesList($oPage, $sContext)
 	$oPage->add("<h1>".Dict::S('UI:Schema:Title')."</h1>\n");
 
     $oPage->add("<label for='search-model'>" . Dict::S('UI:Schema:ClassFilter') ."</label><br/><input type=\"text\" id=\"search-model\" autofocus=\"autofocus\"/>");
-    $oPage->add("<div id=\"delDataModelSearch\"> <i class=\"fa fa-times-circle\"></i></div>");
+    $oPage->add("<div id=\"delDataModelSearch\"> <i class=\"fas fa-times-circle\"></i></div>");
 	$oPage->add("<ul id=\"ClassesList\" class=\"treeview fileview\">\n");
 	$oPage->add_ready_script(
 		<<<EOF
@@ -721,9 +721,11 @@ field.filter(function(d) {
 			.style("opacity","1");
 		divD3.style("left", (d3.event.pageX - 7*d['tooltip_data']['class'].length/2) + "px");
 		divD3.style("top", (d3.event.pageY - 65) + "px");
-		divD3.html( '<div id="tooltipD3_top">' + d['tooltip_data']['class'] + '</div><span id="tooltipD3_left"> <i class="fa fa-caret-left"></i> '
+		divD3.html( '<div id="tooltipD3_top">' + d['tooltip_data']['class'] + '</div><span id="tooltipD3_left"> <i class="fas 
+		fa-caret-left"></i> '
 		 			+  ( (d.related_position < 0) ? d['tooltip_data']['to_remote'] : d['tooltip_data']['to_me'] ) +  '</span><span id="tooltipD3_right"> <br/>'
-		 			+ ( (d.related_position < 0) ? d['tooltip_data']['to_me'] : d['tooltip_data']['to_remote'] ) + ' <i class="fa fa-caret-right"></i></span>');
+		 			+ ( (d.related_position < 0) ? d['tooltip_data']['to_me'] : d['tooltip_data']['to_remote'] ) + ' <i class="fas 
+		 			fa-caret-right"></i></span>');
 	})
 	.on('mouseout',function(d){
 		divD3.transition()

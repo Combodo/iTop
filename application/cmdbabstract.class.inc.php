@@ -321,7 +321,7 @@ EOF
 				}
 				$sLabel = htmlentities(Dict::S('Tag:Synchronized'), ENT_QUOTES, 'UTF-8');
 				$sSynchroTagId = 'synchro_icon-'.$this->GetKey();
-				$aIcons[] = "<div class=\"tag\" id=\"$sSynchroTagId\"><span class=\"object-synchronized fa fa-lock fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
+				$aIcons[] = "<div class=\"tag\" id=\"$sSynchroTagId\"><span class=\"object-synchronized fas fa-lock fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 				$sTip = addslashes($sTip);
 				$oPage->add_ready_script("$('#$sSynchroTagId').qtip( { content: '$sTip', show: 'mouseover', hide: { fixed: true }, style: { name: 'dark', tip: 'topLeft' }, position: { corner: { target: 'bottomMiddle', tooltip: 'topLeft' }} } );");
 			}
@@ -331,13 +331,13 @@ EOF
 		{
 			$sLabel = htmlentities(Dict::S('Tag:Archived'), ENT_QUOTES, 'UTF-8');
 			$sTitle = htmlentities(Dict::S('Tag:Archived+'), ENT_QUOTES, 'UTF-8');
-			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-archived fa fa-archive fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
+			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-archived fas fa-archive fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 		}
 		elseif ($this->IsObsolete())
 		{
 			$sLabel = htmlentities(Dict::S('Tag:Obsolete'), ENT_QUOTES, 'UTF-8');
 			$sTitle = htmlentities(Dict::S('Tag:Obsolete+'), ENT_QUOTES, 'UTF-8');
-			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-obsolete fa fa-eye-slash fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
+			$aIcons[] = "<div class=\"tag\" title=\"$sTitle\"><span class=\"object-obsolete fas fa-eye-slash fa-1x\">&nbsp;</span>&nbsp;$sLabel</div>";
 		}
 
 		$sObjectIcon = $this->GetIcon();

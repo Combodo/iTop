@@ -1203,7 +1203,7 @@ EOF;
 				$oExitArchive = new JSPopupMenuItem('UI:ArchiveModeOff', Dict::S('UI:ArchiveModeOff'), 'return ArchiveMode(false);');
 				$aActions[$oExitArchive->GetUID()] = $oExitArchive->GetMenuItem();
 
-				$sIcon = '<span class="fa fa-lock fa-1x"></span>';
+				$sIcon = '<span class="fas fa-lock fa-1x"></span>';
 				$this->AddApplicationMessage(Dict::S('UI:ArchiveMode:Banner'), $sIcon, Dict::S('UI:ArchiveMode:Banner+'));
 			}
 			elseif (UserRights::CanBrowseArchive())
@@ -1249,8 +1249,8 @@ EOF;
 				$sIcon =
 					<<<EOF
 <span class="fa-stack fa-sm">
-  <i class="fa fa-pencil fa-flip-horizontal fa-stack-1x"></i>
-  <i class="fa fa-ban fa-stack-2x text-danger"></i>
+  <i class="fas fa-pencil-alt fa-flip-horizontal fa-stack-1x"></i>
+  <i class="fas fa-ban fa-stack-2x text-danger"></i>
 </span>
 EOF;
 
@@ -1568,7 +1568,7 @@ EOF;
 	 */
 	public function SetMessage($sHtmlMessage)
 	{
-		$sHtmlIcon = '<span class="fa fa-comment fa-1x"></span>';
+		$sHtmlIcon = '<span class="fas fa-comment fa-1x"></span>';
 		$this->AddApplicationMessage($sHtmlMessage, $sHtmlIcon);
 	}
 

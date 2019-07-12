@@ -1898,7 +1898,8 @@ class MenuBlock extends DisplayBlock
 			if ($this->m_sStyle == 'details')
 			{
 				$sSearchAction = "window.location=\"{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}\"";
-				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), ENT_QUOTES, 'UTF-8')."\"><span class=\"search-button fa fa-search\" onclick='$sSearchAction'></span></div>";
+				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::Format('UI:SearchFor_Class',
+						MetaModel::GetName($sClass)), ENT_QUOTES, 'UTF-8')."\"><span class=\"search-button fas fa-search\" onclick='$sSearchAction'></span></div>";
 			}
 
 
@@ -1909,7 +1910,8 @@ class MenuBlock extends DisplayBlock
             }
 			if (!$oPage->IsPrintableVersion() && ($sRefreshAction!=''))
 			{
-				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::S('UI:Button:Refresh'), ENT_QUOTES, 'UTF-8')."\"><span class=\"refresh-button fa fa-refresh\" onclick=\"$sRefreshAction\"></span></div>";
+				$sHtml .= "<div class=\"actions_button icon_actions_button\" title=\"".htmlentities(Dict::S('UI:Button:Refresh'),
+						ENT_QUOTES, 'UTF-8')."\"><span class=\"refresh-button fas fa-sync\" onclick=\"$sRefreshAction\"></span></div>";
 			}
 
 

@@ -2782,7 +2782,7 @@ span.search-button, span.refresh-button {
   cursor: pointer;
 }
 #search-model {
-  width: 90%;
+  width: 85%;
 }
 .mfp-figure:after {
   background-color: #dff1ff;
@@ -2897,10 +2897,6 @@ table.listResults .originColor {
 .tooltipD3 span {
   margin: 2px;
 }
-.dataModelSchema .selfattrtxt {
-  font-family: "Font Awesome 5 Free";
-  font-weight: 400;
-}
 .data-model-viewer {
   background-color: #fff;
   margin-top: 7px !important;
@@ -2908,8 +2904,6 @@ table.listResults .originColor {
 }
 #delDataModelSearch {
   color: #e87c1e;
-  font-family: "Font Awesome 5 Free";
-  font-weight: 400;
   display: inline-block;
   font-size: 15px;
   margin-left: 1%;

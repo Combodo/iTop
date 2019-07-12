@@ -140,7 +140,7 @@ $(function()
 			var sFilterPlaceholder = (this._hasAutocompleteAllowedValues()) ? Dict.S('UI:Search:Value:Search:Placeholder') : Dict.S('UI:Search:Value:Filter:Placeholder');
 			var oFilterElem = $('<div></div>')
 				.addClass('sf_filter')
-				.append('<span class="sff_input_wrapper"><input type="text" id="' + sFilterId + '" placeholder="' + sFilterPlaceholder + '" autocomplete="off" /><span class="sff_picto sff_reset fa fa-times"></span></span>')
+				.append('<span class="sff_input_wrapper"><input type="text" id="' + sFilterId + '" placeholder="' + sFilterPlaceholder + '" autocomplete="off" /><span class="sff_picto sff_reset fas fa-times"></span></span>')
 				.appendTo(oOpContentElem);
 
 			// - Values wrapper
@@ -217,7 +217,7 @@ $(function()
 			// DOM elements
 			// - Filter
 			oFilterElem.find('.sff_input_wrapper')
-				.append('<span class="sff_picto sff_filter fa fa-filter"></span>');
+				.append('<span class="sff_picto sff_filter fas fa-filter"></span>');
 
 			// - Allowed values
 			var aSortedValues = this._sortValuesByLabel(this._getPreloadedAllowedValues());
@@ -304,7 +304,7 @@ $(function()
 
 			// - Add search dialog button
 			oFilterElem
-				.append('<button type="button" class="sff_search_dialog"><span class=" fa fa-search"></span></button>')
+				.append('<button type="button" class="sff_search_dialog"><span class=" fas fa-search"></span></button>')
 				.addClass('sf_with_buttons');
 
 			// - Prepare "selected" values area
