@@ -95,7 +95,7 @@ services:
   combodo.current_contact.photo_url:
     public: true
     class: Combodo\iTop\Portal\VariableAccessor\CombodoCurrentContactPhotoUrl
-    arguments: ['@combodo.current_user']
+    arguments: ['@combodo.current_user', '@service_container']
   # Note: This service is initialized with a UserLocal object as it needs a class that can be instantiated.
   # Anyway, it will be replaced with the real class by UserProvider in onKernelRequestEvent.
   # Note: Services relying on this one should use \User in their signature and not \UserLocal.

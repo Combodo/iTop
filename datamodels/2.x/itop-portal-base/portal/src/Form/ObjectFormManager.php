@@ -864,11 +864,11 @@ class ObjectFormManager extends FormManager
 				if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\BlobField', 'Combodo\\iTop\\Form\\Field\\ImageField')))
 				{
 					//   - Overriding attributes to display
-					if ($this->oApp !== null)
+					if ($this->oContainer !== null)
 					{
 						// Override hardcoded URLs in ormDocument pointing to back office console
-						$sDisplayUrl = $this->oApp['url_generator']->generate('p_object_document_display', array('sObjectClass' => get_class($this->oObject), 'sObjectId' => $this->oObject->GetKey(), 'sObjectField' => $sAttCode, 'cache' => 86400));
-						$sDownloadUrl = $this->oApp['url_generator']->generate('p_object_document_download', array('sObjectClass' => get_class($this->oObject), 'sObjectId' => $this->oObject->GetKey(), 'sObjectField' => $sAttCode, 'cache' => 86400));
+						$sDisplayUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', array('sObjectClass' => get_class($this->oObject), 'sObjectId' => $this->oObject->GetKey(), 'sObjectField' => $sAttCode, 'cache' => 86400));
+						$sDownloadUrl = $this->oContainer->get('url_generator')->generate('p_object_document_download', array('sObjectClass' => get_class($this->oObject), 'sObjectId' => $this->oObject->GetKey(), 'sObjectField' => $sAttCode, 'cache' => 86400));
 						/** @var \Combodo\iTop\Form\Field\BlobField $oField */
 						$oField->SetDisplayUrl($sDisplayUrl)
 							->SetDownloadUrl($sDownloadUrl);
@@ -895,14 +895,14 @@ class ObjectFormManager extends FormManager
 		}
 
 		// Checking dependencies to ensure that all needed fields are in the form
-		// (This is kind of a garbage collector for dependancies)
-		foreach ($oForm->GetDependencies() as $sImpactedFieldId => $aDependancies)
+		// (This is kind of a garbage collector for dependencies)
+		foreach ($oForm->GetDependencies() as $sImpactedFieldId => $aDependencies)
 		{
-			foreach ($aDependancies as $sDependancyFieldId)
+			foreach ($aDependencies as $sDependencyFieldId)
 			{
-				if (!$oForm->HasField($sDependancyFieldId))
+				if (!$oForm->HasField($sDependencyFieldId))
 				{
-					$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sDependancyFieldId);
+					$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sDependencyFieldId);
 					$oField = $oAttDef->MakeFormField($this->oObject);
 					$oField->SetHidden(true);
 
@@ -1145,7 +1145,7 @@ class ObjectFormManager extends FormManager
 						$oAttDef = MetaModel::GetAttributeDef($sObjectClass, $sAttCode);
 						if ($oAttDef->IsLinkSet())
 						{
-							/** @var \AttributeLinkedSet $oAttDef*/
+							/** @var \AttributeLinkedSet $oAttDef */
 
 							// Parsing JSON value
 							//
@@ -1174,7 +1174,7 @@ class ObjectFormManager extends FormManager
 									// Creating link when linkset is indirect...
 									if ($oAttDef->IsIndirect())
 									{
-										/** @var \AttributeLinkedSetIndirect $oAttDef*/
+										/** @var \AttributeLinkedSetIndirect $oAttDef */
 										$oLink = MetaModel::NewObject($sLinkedClass);
 										$oLink->Set($oAttDef->GetExtKeyToRemote(), $iObjKey);
 										$oLink->Set($oAttDef->GetExtKeyToMe(), $this->oObject->GetKey());

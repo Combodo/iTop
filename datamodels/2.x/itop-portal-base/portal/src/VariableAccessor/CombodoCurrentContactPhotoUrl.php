@@ -24,6 +24,7 @@ namespace Combodo\iTop\Portal\VariableAccessor;
 
 use Exception;
 use MetaModel;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use User;
 use UserRights;
 
@@ -42,16 +43,20 @@ class CombodoCurrentContactPhotoUrl
 	private $sCombodoPortalInstanceAbsoluteUrl;
 	/** @var string|null $sContactPhotoUrl */
 	private $sContactPhotoUrl;
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+	private $oContainer;
 
 	/**
 	 * CombodoCurrentContactPhotoUrl constructor.
 	 *
-	 * @param \User  $oUser
-	 * @param string $sCombodoPortalInstanceAbsoluteUrl
+	 * @param \User                                                     $oUser
+	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $oContainer
+	 * @param string                                                    $sCombodoPortalInstanceAbsoluteUrl
 	 */
-	public function __construct(User $oUser, $sCombodoPortalInstanceAbsoluteUrl)
+	public function __construct(User $oUser, ContainerInterface $oContainer, $sCombodoPortalInstanceAbsoluteUrl)
 	{
 		$this->oUser = $oUser;
+		$this->oContainer = $oContainer;
 		$this->sCombodoPortalInstanceAbsoluteUrl = $sCombodoPortalInstanceAbsoluteUrl;
 		$this->sContactPhotoUrl = null;
 	}
@@ -101,17 +106,19 @@ class CombodoCurrentContactPhotoUrl
 		// - Retrieving picture
 		if ($oContact)
 		{
-			if (MetaModel::IsValidAttCode(get_class($oContact), 'picture'))
+			$sPictureAttCode = 'picture';
+			if (MetaModel::IsValidAttCode(get_class($oContact), $sPictureAttCode))
 			{
 				/** @var \ormDocument $oImage */
-				$oImage = $oContact->Get('picture');
+				$oImage = $oContact->Get($sPictureAttCode);
 				if (is_object($oImage) && !$oImage->IsEmpty())
 				{
-					$sContactPhotoUrl = $oImage->GetDownloadURL(get_class($oContact), $oContact->GetKey(), 'picture');
+					// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 2.8
+					$sContactPhotoUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', array('sObjectClass' => get_class($oContact), 'sObjectId' => $oContact->GetKey(), 'sObjectField' => $sPictureAttCode, 'cache' => 86400));
 				}
 				else
 				{
-					$sContactPhotoUrl = MetaModel::GetAttributeDef(get_class($oContact), 'picture')->Get('default_image');
+					$sContactPhotoUrl = MetaModel::GetAttributeDef(get_class($oContact), $sPictureAttCode)->Get('default_image');
 				}
 			}
 		}

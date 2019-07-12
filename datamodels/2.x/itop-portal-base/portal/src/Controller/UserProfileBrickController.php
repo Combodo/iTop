@@ -22,21 +22,21 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use Combodo\iTop\Portal\Brick\UserProfileBrick;
+use Combodo\iTop\Portal\Form\PasswordFormManager;
+use Combodo\iTop\Portal\Form\PreferencesFormManager;
 use Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper;
+use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
 use Exception;
 use FileUploadException;
 use IssueLog;
+use MetaModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use utils;
-use MetaModel;
 use UserRights;
-use Symfony\Component\HttpFoundation\Request;
-use Combodo\iTop\Portal\Brick\UserProfileBrick;
-use Combodo\iTop\Portal\Form\PreferencesFormManager;
-use Combodo\iTop\Portal\Form\PasswordFormManager;
-use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
+use utils;
 
 /**
  * Class UserProfileBrickController
@@ -323,6 +323,8 @@ class UserProfileBrickController extends BrickController
 	{
 		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 		$oRequestManipulator = $this->get('request_manipulator');
+		/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
+		$oUrlGenerator = $this->get('url_generator');
 
 		$aFormData = array();
 		$sPictureAttCode = 'picture';
@@ -371,7 +373,8 @@ class UserProfileBrickController extends BrickController
 					$aFormData['error'] = $e->GetMessage();
 				}
 
-				$aFormData['picture_url'] = $oImage->GetDownloadURL(get_class($oCurContact), $oCurContact->GetKey(), $sPictureAttCode);
+				// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 2.8
+				$aFormData['picture_url'] = $oUrlGenerator->generate('p_object_document_display', array('sObjectClass' => get_class($oCurContact), 'sObjectId' => $oCurContact->GetKey(), 'sObjectField' => $sPictureAttCode, 'cache' => 86400, 't' => time()));
 				$aFormData['validation'] = array(
 					'valid' => true,
 					'messages' => array(),
