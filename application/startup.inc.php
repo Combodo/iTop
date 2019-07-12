@@ -56,10 +56,8 @@ $bBypassMaintenance = !is_null(Utils::ReadParam('maintenance', null));
 // Maintenance mode
 if (file_exists(APPROOT.'.maintenance') && !$bBypassMaintenance)
 {
-	require_once(APPROOT.'core/dict.class.inc.php');
-	$sMessage = Dict::S('UI:Error:MaintenanceMode', 'Application is currently in maintenance');
-	$sTitle = Dict::S('UI:Error:MaintenanceTitle', 'Maintenance');
-	//	throw new MaintenanceException($sMessage, $sTitle);
+	$sMessage = 'Application is currently in maintenance';
+	$sTitle = 'Maintenance';
 
 	http_response_code(503);
 	// Display message depending on the request
@@ -135,10 +133,17 @@ MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /*
 function _MaintenanceSetupPageMessage($sTitle, $sMessage)
 {
 	// Web Page
-	require_once(APPROOT."/setup/setuppage.class.inc.php");
-	$oP = new SetupPage($sTitle);
-	$oP->p("<h2>$sMessage</h2>");
-	$oP->output();
+	@include_once(APPROOT."/setup/setuppage.class.inc.php");
+	if (class_exists('SetupPage'))
+	{
+		$oP = new SetupPage($sTitle);
+		$oP->p("<h2>$sMessage</h2>");
+		$oP->output();
+	}
+	else
+	{
+		_MaintenanceTextMessage($sMessage);
+	}
 }
 
 /**
@@ -161,15 +166,25 @@ function _MaintenanceHtmlMessage($sMessage)
 
 /**
  * Use a simple JSON to display the maintenance message
+ *
+ * @param $sTitle
  * @param $sMessage
  */
 function _MaintenanceJsonMessage($sTitle, $sMessage)
 {
-	$oP = new ajax_page($sTitle);
-	$oP->add_header('Access-Control-Allow-Origin: *');
-	$oP->SetContentType('application/json');
-	$oP->add('{"code":100, "message":"'.$sMessage.'"}');
-	$oP->Output();
+	@include_once(APPROOT."/application/ajaxwebpage.class.inc.php");
+	if (class_exists('ajax_page'))
+	{
+		$oP = new ajax_page($sTitle);
+		$oP->add_header('Access-Control-Allow-Origin: *');
+		$oP->SetContentType('application/json');
+		$oP->add('{"code":100, "message":"'.$sMessage.'"}');
+		$oP->Output();
+	}
+	else
+	{
+		_MaintenanceTextMessage($sMessage);
+	}
 }
 
 /**
