@@ -1,0 +1,44 @@
+{# itop-portal-base/portal/templates/bricks/create/layout.html.twig #}
+{# Create brick base layout #}
+{% extends 'itop-portal-base/portal/templates/modal/layout.html.twig' %}
+
+{% block pModalTitle %}
+    {{ oBrick.GetTitle()|dict_s }}
+{% endblock %}
+
+{% block pModalBody %}
+	<p>{{ 'Brick:Portal:Create:ChooseType'|dict_s }}</p>
+	<ul id="{{ sBrickId }}_leaf_classes">
+        {% for aLeafClass in aLeafClasses %}
+			<li><a href="#" data-target-class="{{ aLeafClass.id }}">{{ aLeafClass.name }}</a></li>
+        {% endfor %}
+	</ul>
+
+	<script type="text/javascript">
+        $(document).ready(function(){
+            $('#{{ sBrickId }}_leaf_classes a').off('click').on('click', function(oEvent){
+                oEvent.preventDefault();
+
+                var sUrl = '{{ app['url_generator'].generate('p_object_create', {sObjectClass : '-sObjectClass-'})|raw }}';
+                var oModalElem = $(this).closest('.modal');
+                // Showing loader
+                oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
+                // Preparing target class url
+                sUrl = sUrl.replace(/-sObjectClass-/, $(this).attr('data-target-class') );
+                sUrl = AddParameterToUrl(sUrl, 'ar_token', '{{ ar_token }}');
+                // Loading form
+                oModalElem.find('.modal-content').load(sUrl, function(oData, sStatus, oXHR){
+                    if(sStatus === 'error')
+                    {
+                        // Hiding modal in case of error as the general AJAX error handler will display a message
+                        oModalElem.modal('hide');
+                    }
+                });
+            });
+        });
+	</script>
+{% endblock %}
+
+{% block pModalFooter %}
+	<button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Portal:Button:Cancel'|dict_s }}</button>
+{% endblock %}

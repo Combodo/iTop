@@ -19,11 +19,12 @@
 
 namespace Combodo\iTop\Form;
 
-use \Combodo\iTop\Renderer\FormRenderer;
+use Combodo\iTop\Renderer\FormRenderer;
 
 /**
  * Description of formmanager
  *
+ * @package Combodo\iTop\Form
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  */
 abstract class FormManager
@@ -68,6 +69,9 @@ abstract class FormManager
 		return $oFormManager;
 	}
 
+	/**
+	 * FormManager constructor.
+	 */
 	public function __construct()
 	{
 		// Overload in child class when needed

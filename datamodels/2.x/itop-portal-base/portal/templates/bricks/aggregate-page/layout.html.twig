@@ -1,0 +1,18 @@
+{# itop-portal-base/portal/templates/bricks/aggregate-page/layout.html.twig #}
+{% extends 'itop-portal-base/portal/templates/bricks/layout.html.twig' %}
+
+{% block pPageBodyClass %}{{ parent() }} page_aggregate_page_brick home{% endblock %}
+
+{% block pMainHeaderTitle %}{{ oBrick.GetTitle()|dict_s }}{% endblock %}
+
+{% block pMainContent %}
+    <section class="tiles_wrapper">
+        {% for brick in aggregatepage_bricks %}
+            {% if aTilesRendering[brick.GetId] is defined %}
+                {{ aTilesRendering[brick.GetId]|raw }}
+            {% else %}
+                {% include '' ~ brick.GetTileTemplatePath with {brick: brick} %}
+            {% endif %}
+        {% endfor %}
+    </section>
+{% endblock %}

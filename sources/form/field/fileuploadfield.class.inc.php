@@ -19,6 +19,8 @@
 
 namespace Combodo\iTop\Form\Field;
 
+use Closure;
+
 /**
  * Description of FileUploadField
  *
@@ -26,15 +28,24 @@ namespace Combodo\iTop\Form\Field;
  */
 class FileUploadField extends Field
 {
+	/** @var bool DEFAULT_ALLOW_DELETE */
 	const DEFAULT_ALLOW_DELETE = true;
 
+	/** @var string|null $sTransactionId */
 	protected $sTransactionId;
+	/** @var \DBObject|null $oObject */
 	protected $oObject;
+	/** @var string|null $sUploadEndpoint */
 	protected $sUploadEndpoint;
+	/** @var string|null $sDownloadEndpoint */
 	protected $sDownloadEndpoint;
+	/** @var bool $bAllowDelete */
 	protected $bAllowDelete;
 
-	public function __construct($sId, \Closure $onFinalizeCallback = null)
+	/**
+	 * @inheritDoc
+	 */
+	public function __construct($sId, Closure $onFinalizeCallback = null)
 	{
 		$this->sTransactionId = null;
 		$this->oObject = null;
@@ -58,7 +69,7 @@ class FileUploadField extends Field
 	/**
 	 *
 	 * @param string $sTransactionId
-	 * @return \Combodo\iTop\Form\Field\FileUploadField
+	 * @return $this
 	 */
 	public function SetTransactionId($sTransactionId)
 	{
@@ -66,44 +77,76 @@ class FileUploadField extends Field
 		return $this;
 	}
 
+	/**
+	 * @return \DBObject|null
+	 */
 	public function GetObject()
 	{
 		return $this->oObject;
 	}
 
+	/**
+	 * @param $oObject
+	 *
+	 * @return $this
+	 */
 	public function SetObject($oObject)
 	{
 		$this->oObject = $oObject;
 		return $this;
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public function GetUploadEndpoint()
 	{
 		return $this->sUploadEndpoint;
 	}
 
+	/**
+	 * @param $sUploadEndpoint
+	 *
+	 * @return $this
+	 */
 	public function SetUploadEndpoint($sUploadEndpoint)
 	{
 		$this->sUploadEndpoint = $sUploadEndpoint;
 		return $this;
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public function GetDownloadEndpoint()
 	{
 		return $this->sDownloadEndpoint;
 	}
 
+	/**
+	 * @param $sDownloadEndpoint
+	 *
+	 * @return $this
+	 */
 	public function SetDownloadEndpoint($sDownloadEndpoint)
 	{
 		$this->sDownloadEndpoint = $sDownloadEndpoint;
 		return $this;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function GetAllowDelete()
 	{
 		return $this->bAllowDelete;
 	}
 
+	/**
+	 * @param $bAllowDelete
+	 *
+	 * @return $this
+	 */
 	public function SetAllowDelete($bAllowDelete)
 	{
 		$this->bAllowDelete = (boolean) $bAllowDelete;

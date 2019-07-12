@@ -214,7 +214,7 @@ abstract class Field
 	 * Usually Called by the form when adding the field
 	 *
 	 * @param string $sFormPath
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	public function SetFormPath($sFormPath)
 	{
@@ -225,7 +225,7 @@ abstract class Field
 	/**
 	 *
 	 * @param string $sLabel
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	public function SetLabel($sLabel)
 	{
@@ -236,7 +236,7 @@ abstract class Field
 	/**
 	 *
 	 * @param boolean $bHidden
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	public function SetHidden($bHidden)
 	{
@@ -247,7 +247,7 @@ abstract class Field
 	/**
 	 *
 	 * @param boolean $bReadOnly
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	public function SetReadOnly($bReadOnly)
 	{
@@ -260,7 +260,7 @@ abstract class Field
 	 * Setting the value will automatically add/remove a MandatoryValidator to the Field
 	 *
 	 * @param boolean $bMandatory
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	public function SetMandatory($bMandatory)
 	{
@@ -291,7 +291,7 @@ abstract class Field
 	 *
 	 * @todo Implement
 	 * @param boolean $bMustChange
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	public function SetMustChange($bMustChange)
 	{
@@ -313,7 +313,7 @@ abstract class Field
 	/**
 	 *
 	 * @param array $aValidators
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	public function SetValidators($aValidators)
 	{
@@ -325,7 +325,7 @@ abstract class Field
 	 * Note : Function is protected as bValid should not be set from outside
 	 *
 	 * @param boolean $bValid
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	protected function SetValid($bValid)
 	{
@@ -337,7 +337,7 @@ abstract class Field
 	 * Note : Function is protected as aErrorMessages should not be set from outside
 	 *
 	 * @param array $aErrorMessages
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	protected function SetErrorMessages($aErrorMessages)
 	{
@@ -348,7 +348,7 @@ abstract class Field
 	/**
 	 *
 	 * @param mixed $currentValue
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	public function SetCurrentValue($currentValue)
 	{
@@ -359,7 +359,7 @@ abstract class Field
 	/**
 	 *
 	 * @param Closure $onFinalizeCallback
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	public function SetOnFinalizeCallback(Closure $onFinalizeCallback)
 	{
@@ -370,7 +370,7 @@ abstract class Field
 	/**
 	 *
 	 * @param \Combodo\iTop\Form\Validator\Validator $oValidator
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	public function AddValidator(Validator $oValidator)
 	{
@@ -381,7 +381,7 @@ abstract class Field
 	/**
 	 *
 	 * @param \Combodo\iTop\Form\Validator\Validator $oValidator
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	public function RemoveValidator(Validator $oValidator)
 	{
@@ -399,7 +399,7 @@ abstract class Field
 	 * Note : Function is protected as aErrorMessages should not be add from outside
 	 *
 	 * @param string $sErrorMessage
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	protected function AddErrorMessage($sErrorMessage)
 	{
@@ -410,7 +410,7 @@ abstract class Field
 	/**
 	 * Note : Function is protected as aErrorMessages should not be set from outside
 	 *
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @return $this
 	 */
 	protected function EmptyErrorMessages()
 	{

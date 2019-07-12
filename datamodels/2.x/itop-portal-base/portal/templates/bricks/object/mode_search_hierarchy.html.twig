@@ -1,0 +1,59 @@
+{# itop-portal-base/portal/templates/bricks/object/mode_search_hierarchy.html.twig #}
+{# Object brick hierarchy search layout #}
+
+{% set sFormId = (form.id is defined and form.id is not null) ? form.id : 'object_search_form' %}
+{% set tIsModal = (tIsModal is defined and tIsModal == true) ? true : false %}
+
+<div id="{{ sFormId }}">
+	{#<div class="form_alerts"></div>#}
+	<div class="form_fields">
+		<ul class="list-group" id="search-content-tree" data-level-id="L">
+		</ul>
+	</div>
+	<div class="form_buttons">
+		{% block pFormButtons %}
+			<div class="form_btn_regular">
+				<input class="btn btn-default form_btn_cancel" type="button" value="{{ 'Portal:Button:Cancel'|dict_s }}" data-dismiss="modal">
+				<input class="btn btn-primary form_btn_submit" type="button" value="{{ 'Portal:Button:Submit'|dict_s }}">
+			</div>
+		{% endblock %}
+	</div>
+</div>
+
+<script type="text/javascript">
+	var oRawDatas = {{ aResults.aItems|raw }};
+	// Used for form
+	var oSelectedItem = {};
+
+	// Show a loader inside the table
+	var showTableLoader = function()
+	{
+		$('#search-content-table > tbody').html('<tr><td class="datatables_overlay" colspan="100">' + $('#page_overlay').html() + '</td></tr>');
+	};
+	
+	$(document).ready(function(){
+		showTableLoader();
+
+		// Handles submit button
+		$('#{{ sFormId }} .form_buttons .form_btn_submit').off('click').on('click', function(oEvent){
+			// Extracting value(s) to be send back to the source form
+			var oData = {value: {}};
+			var sItemId = Object.keys(oSelectedItem)[0];
+			var sItemName = oSelectedItem[sItemId];
+
+			oData.value[sItemId] = sItemName;
+			
+			// Triggering value setting on the source field
+			$('[data-form-path="{{aSource.sFormPath}}"][data-field-id="{{aSource.sFieldId}}"]').triggerHandler('set_current_value', oData);
+			
+			// Closing the modal
+			{% if tIsModal is defined and tIsModal == true %}
+				$('#{{ sFormId }}').closest('.modal').modal('hide');
+			{% endif %}
+		});
+		
+		{% if tIsModal is defined and tIsModal == true %}
+			$('#{{ sFormId }}').closest('.modal').find('.modal-footer').hide();
+		{% endif %}
+	});
+</script>

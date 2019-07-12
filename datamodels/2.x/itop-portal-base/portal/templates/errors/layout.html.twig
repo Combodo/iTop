@@ -1,0 +1,64 @@
+{# errors/layout.html.twig #}
+{# Base error layout #}
+{% extends 'itop-portal-base/portal/templates/layout.html.twig' %}
+
+{% block pNavigationWrapper %}
+{% endblock %}
+
+{% block pMainWrapper %}
+	<style>
+		.well {
+			margin: 50px auto;
+			text-align: center;
+			padding: 25px;
+			min-width: 600px;
+			max-width: 1000px;
+		}
+		h1, h2, h3, p {
+			margin: 0;
+		}
+		p {
+			font-size: 17px;
+			margin-top: 25px;
+		}
+		p a.btn {
+			margin: 0 5px;
+		}
+		h1 .ion {
+			vertical-align: -5%;
+			margin-right: 5px;
+		}
+		abbr[title]{
+			border-bottom: none;
+		}
+		.traces.list_exception{
+			text-align: left;
+		}
+	</style>
+	
+	<div class="container">
+		<div class="well">
+			<h1><div class="ion ion-alert-circled"></div> {{ error_title }}</h1>
+			<p>{{ error_message }}</p>
+			<p>{{ 'Error:HTTP:GetHelp'|dict_format(constant('ITOP_APPLICATION_SHORT')) }}</p>
+			<p>
+				<a class="btn btn-default" href="#" onclick="history.back(); return false;"><span class="fa fa-arrow-left"></span> {{ 'Page:GoPreviousPage'|dict_s }}</a>
+				<a class="btn btn-default" href=""><span class="fa fa-repeat"></span> {{ 'Page:ReloadPage'|dict_s }}</a>
+				<a class="btn btn-default" href="{{ app.url_generator.generate('p_home') }}"><span class="fa fa-home"></span> {{ 'Page:GoPortalHome'|dict_s }}</a>
+			</p>
+		</div>
+
+		{% if app['kernel'].debug == true %}
+			<div class="well">
+				<ol class="traces list_exception">
+					{% for aStep in debug_trace_steps %}
+                        <li>
+							{% if aStep.function_call is not null %}at <abbr title="{{ aStep.class_fq }}">{{ aStep.function_call }}</abbr>{% endif %}
+							in <a title="{{ aStep.file_fq }}">{{ aStep.file_name }}</a> line {{ aStep.line }}
+						</li>
+					{% endfor %}
+				</ol>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

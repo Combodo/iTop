@@ -979,6 +979,9 @@ class DBObjectSearch extends DBSearch
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function Intersect(DBSearch $oFilter)
 	{
 		if ($oFilter instanceof DBUnionSearch)
