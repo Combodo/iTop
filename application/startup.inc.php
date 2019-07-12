@@ -69,6 +69,10 @@ if (file_exists(APPROOT.'.maintenance') && !$bBypassMaintenance)
 			_MaintenanceHtmlMessage($sMessage);
 			break;
 
+		case isset($_SERVER['REQUEST_URI']) && EndsWith($_SERVER['REQUEST_URI'], '/webservices/soapserver.php'):
+			_MaintenanceSoapMessage($sMessage);
+			break;
+
 		case array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER):
 		case isset($_SERVER['REQUEST_URI']) && EndsWith($_SERVER['REQUEST_URI'], '/webservices/rest.php'):
 			_MaintenanceTextMessage($sMessage);
@@ -156,6 +160,43 @@ function _MaintenanceTextMessage($sMessage)
 function _MaintenanceHtmlMessage($sMessage)
 {
 	echo '<html><body><div>'.$sMessage.'</div></body></html>';
+}
+
+/**
+ * Use a simple HTML to display the maintenance message
+ *
+ * @param $sMessage
+ *
+ * @throws \Exception
+ */
+function _MaintenanceSoapMessage($sMessage)
+{
+	echo <<<XML
+<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="urn:ITop" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/">
+   <SOAP-ENV:Body>
+      <ns1:SearchObjectsResponse>
+         <SearchObjectsReturn xsi:type="ns1:Result">
+            <status xsi:type="xsd:boolean">false</status>
+            <result SOAP-ENC:arrayType="ns1:ResultMessage[0]" xsi:type="ns1:ArrayOfResultMessage"/>
+            <errors xsi:type="ns1:ResultLog">
+               <messages SOAP-ENC:arrayType="ns1:LogMessage[1]" xsi:type="ns1:ArrayOfLogMessage">
+                  <item xsi:type="ns1:LogMessage">
+                     <text xsi:type="xsd:string">$sMessage</text>
+                  </item>
+               </messages>
+            </errors>
+            <warnings xsi:type="ns1:ResultLog">
+               <messages SOAP-ENC:arrayType="ns1:LogMessage[0]" xsi:type="ns1:ArrayOfLogMessage"/>
+            </warnings>
+            <infos xsi:type="ns1:ResultLog">
+               <messages SOAP-ENC:arrayType="ns1:LogMessage[0]" xsi:type="ns1:ArrayOfLogMessage"/>
+            </infos>
+         </SearchObjectsReturn>
+      </ns1:SearchObjectsResponse>
+   </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+XML;
+
 }
 
 /**
