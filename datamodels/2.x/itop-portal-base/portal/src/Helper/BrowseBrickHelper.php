@@ -25,6 +25,7 @@ namespace Combodo\iTop\Portal\Helper;
 
 
 use AttributeImage;
+use AttributeTagSet;
 use Combodo\iTop\Portal\Brick\BrowseBrick;
 use DBSearch;
 use Dict;
@@ -375,17 +376,37 @@ class BrowseBrickHelper
 				{
 					$oAttDef = MetaModel::GetAttributeDef(get_class($value), $aField['code']);
 
-					switch (get_class($oAttDef))
+					switch (true)
 					{
-						case 'AttributeTagSet':
+						case $oAttDef instanceof AttributeTagSet:
 							/** @var \ormTagSet $oSetValues */
 							$oSetValues = $value->Get($aField['code']);
 							$aCodes = $oSetValues->GetTags();
 							/** @var \AttributeTagSet $oAttDef */
 							$sHtmlForFieldValue = $oAttDef->GenerateViewHtmlForValues($aCodes, '', false);
 							break;
+
+						case $oAttDef instanceof AttributeImage:
+							// Todo: This should be refactored, it has been seen multiple times in the portal
+							$oOrmDoc = $value->Get($aField['code']);
+							if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
+							{
+								$sUrl = $this->oUrlGenerator->generate('p_object_document_display', array(
+									'sObjectClass' => get_class($value),
+									'sObjectId' => $value->GetKey(),
+									'sObjectField' => $aField['code'],
+									'cache' => 86400,
+								));
+							}
+							else
+							{
+								$sUrl = $oAttDef->Get('default_image');
+							}
+							$sHtmlForFieldValue = '<img src="'.$sUrl.'" />';
+							break;
+
 						default:
-							$sHtmlForFieldValue = $oAttDef->GetAsHTML($value->Get($aField['code']));
+							$sHtmlForFieldValue = $oAttDef->GetAsHTML($value->Get($aField['code']), $value);
 							break;
 					}
 
