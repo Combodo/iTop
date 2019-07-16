@@ -313,13 +313,13 @@ class Basic extends AbstractConfiguration
 		foreach (MetaModel::EnumPlugins('iPortalUIExtension') as $oExtensionInstance)
 		{
 			// Adding CSS files
-			$aImportPaths = array($oContainer->getParameter('combodo.portal.base.absolute_path').'css/');
+			$aImportPaths = array($_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/');
 			foreach ($oExtensionInstance->GetCSSFiles($oContainer) as $sCSSFile)
 			{
 				// Removing app root url as we need to pass a path on the file system (relative to app root)
 				$sCSSFilePath = str_replace(utils::GetAbsoluteUrlAppRoot(), '', $sCSSFile);
 				// Compiling SCSS file
-				$sCSSFileCompiled = $oContainer->getParameter('combodo.absolute_url').utils::GetCSSFromSASS($sCSSFilePath,
+				$sCSSFileCompiled = utils::GetAbsoluteUrlAppRoot().utils::GetCSSFromSASS($sCSSFilePath,
 						$aImportPaths);
 
 				if (!in_array($sCSSFileCompiled, $aUIExtensions['css_files']))
