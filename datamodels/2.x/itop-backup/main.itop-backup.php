@@ -161,7 +161,14 @@ class BackupExec implements iScheduledProcess
 			}
 			$sBackupFile = $this->sBackupDir.$sName;
 			$sSourceConfigFile = APPCONF.utils::GetCurrentEnvironment().'/'.ITOP_CONFIG_FILE;
-			$oBackup->CreateCompressedBackup($sBackupFile, $sSourceConfigFile);
+			try
+			{
+				$oBackup->CreateCompressedBackup($sBackupFile, $sSourceConfigFile);
+			}
+			catch (BackupException $e)
+			{
+				throw new ProcessFatalException($e->getMessage());
+			}
 		}
 		catch (Exception $e)
 		{
