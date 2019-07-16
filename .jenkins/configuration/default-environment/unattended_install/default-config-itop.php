@@ -94,10 +94,6 @@ $MySettings = array(
 
 	'default_language' => 'EN US',
 
-	// disable_attachments_download_legacy_portal: Disable attachments download from legacy portal
-	//	default: true
-	'disable_attachments_download_legacy_portal' => true,
-
 	// draft_attachments_lifetime: Lifetime (in seconds) of drafts' attachments and inline images: after this duration, the garbage collector will delete them.
 	//	default: 3600
 	'draft_attachments_lifetime' => 3600,

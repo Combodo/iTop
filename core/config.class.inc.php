@@ -1,20 +1,23 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ *
+ *
+ */
 
 
 define('ITOP_APPLICATION', 'iTop');
@@ -1116,14 +1119,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'disable_attachments_download_legacy_portal' => array(
-			'type' => 'bool',
-			'description' => 'Disable attachments download from legacy portal',
-			'default' => true,
-			'value' => true,
-			'source_of_value' => '',
-			'show_in_conf_sample' => true,
-		),
 		'secure_rest_services' => array(
 			'type' => 'bool',
 			'description' => 'When set to true, only the users with the profile "REST Services User" are allowed to use the REST web services.',
@@ -1183,6 +1178,7 @@ class Config
 	 * @return string identifier that can be used for example to name WebStorage/SessionStorage keys (they
 	 *     are related to a whole domain, and a domain can host multiple itop)
 	 *     Beware: do not expose server side information to the client !
+	 * @throws \Exception
 	 */
 	public function GetItopInstanceid()
 	{
