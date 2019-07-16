@@ -2,17 +2,6 @@
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
 	<constants>
 		<constant id="RESPONSE_TICKET_SLT_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT SLT AS slt JOIN lnkSLAToSLT AS l1 ON l1.slt_id=slt.id JOIN SLA AS sla ON l1.sla_id=sla.id JOIN lnkCustomerContractToService AS l2 ON l2.sla_id=sla.id JOIN CustomerContract AS sc ON l2.customercontract_id=sc.id WHERE slt.metric = :metric AND l2.service_id = :this->service_id AND sc.org_id = :this->org_id AND slt.request_type = :request_type AND slt.priority = :this->priority]]></constant>
-		<constant id="PORTAL_POWER_USER_PROFILE" xsi:type="string" _delta="define"><![CDATA[Portal power user]]></constant>
-		<constant id="PORTAL_SERVICECATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.status != 'obsolete']]></constant>
-		<constant id="PORTAL_SERVICE_SUBCATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT ServiceSubcategory WHERE service_id = :svc_id AND ServiceSubcategory.status != 'obsolete']]></constant>
-		<constant id="PORTAL_VALIDATE_SERVICECATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.id = :id AND s.status != 'obsolete']]></constant>
-		<constant id="PORTAL_VALIDATE_SERVICESUBCATEGORY_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT ServiceSubcategory AS Sub JOIN Service AS Svc ON Sub.service_id = Svc.id WHERE Sub.id=:id AND Sub.status != 'obsolete']]></constant>
-		<constant id="PORTAL_ALL_PARAMS" xsi:type="string" _delta="define"><![CDATA[from_service_id,org_id,caller_id,service_id,servicesubcategory_id,title,description,impact,emergency,moreinfo,caller_id,start_date,end_date,duration,impact_duration]]></constant>
-		<constant id="PORTAL_SET_TYPE_FROM" xsi:type="string" _delta="define"><![CDATA[request_type]]></constant>
-		<constant id="PORTAL_TYPE_TO_CLASS" xsi:type="string" _delta="define"><![CDATA[]]></constant>
-		<constant id="PORTAL_TICKETS_SEARCH_CRITERIA" xsi:type="string" _delta="define"><![CDATA[ref,start_date,close_date,service_id,caller_id]]></constant>
-		<constant id="PORTAL_TICKETS_SEARCH_FILTER_service_id" xsi:type="string" _delta="define"><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :org_id AND s.status != 'obsolete']]></constant>
-		<constant id="PORTAL_TICKETS_SEARCH_FILTER_caller_id" xsi:type="string" _delta="define"><![CDATA[SELECT Person WHERE org_id = :org_id]]></constant>
 	</constants>
 	<classes>
 		<class id="Ticket" _delta="define">
