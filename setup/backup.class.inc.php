@@ -302,6 +302,7 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		 * @param string $sTargetFile Path and name, without the extension
 		 * @param string|null $sSourceConfigFile Configuration file to embed into the backup, if not the current one
 		 *
+		 * @throws \BackupException if archive cannot be created
 		 * @throws \Exception
 		 */
 		public function CreateCompressedBackup($sTargetFile, $sSourceConfigFile = null)
@@ -315,7 +316,13 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 
 			$sFilesList = var_export($aFiles, true);
 			$this->LogInfo("backup: adding to archive files '$sFilesList'");
-			$oArchive->createModify($aFiles, '', $sTmpFolder);
+			$bArchiveCreationResult = $oArchive->createModify($aFiles, '', $sTmpFolder);
+			if (!$bArchiveCreationResult)
+			{
+				$sErrorMsg = 'Cannot backup : unable to create archive';
+				$this->LogError($sErrorMsg);
+				throw new BackupException($sErrorMsg);
+			}
 
 			$this->LogInfo("backup: removing tmp folder '$sTmpFolder'");
 			SetupUtils::rrmdir($sTmpFolder);
