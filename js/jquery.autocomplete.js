@@ -511,15 +511,10 @@
 		var length = 0;
 
 		function matchSubset(s, sub) {
-			if (!options.matchCase)
-				if (typeof s.normalize === 'function'){
-					s = s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-	            	sub = sub.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");					
-				}
-				else {
-					s = ie_normalize(s.toLowerCase());
-	            	sub = ie_normalize(sub.toLowerCase());										
-				}
+			if (!options.matchCase){
+				s = s.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
+                sub = sub.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
+			}
 			var i = s.indexOf(sub);
 			if (options.matchContains === "word"){
 				i = s.toLowerCase().search("\\b" + sub.toLowerCase());
@@ -527,23 +522,6 @@
 			if (i === -1) return false;
 			return i === 0 || options.matchContains;
 		};
-		
-		function ie_normalize(s)
-		{
-			//Cheap replacement for normalize on IE. Works only on a (small) subset of what's possible in unicode
-		    var r = s.toLowerCase();
-		    r = r.replace(new RegExp(/[àáâãäå]/g),"a");
-		    r = r.replace(new RegExp(/æ/g),"ae");
-		    r = r.replace(new RegExp(/ç/g),"c");
-		    r = r.replace(new RegExp(/[èéêë]/g),"e");
-		    r = r.replace(new RegExp(/[ìíîï]/g),"i");
-		    r = r.replace(new RegExp(/ñ/g),"n");                
-		    r = r.replace(new RegExp(/[òóôõö]/g),"o");
-		    r = r.replace(new RegExp(/œ/g),"oe");
-		    r = r.replace(new RegExp(/[ùúûü]/g),"u");
-		    r = r.replace(new RegExp(/[ýÿ]/g),"y");
-		    return r;			
-		}
 		
 		function add(q, value) {
 			if (length > options.cacheLength){
