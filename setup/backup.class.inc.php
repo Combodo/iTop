@@ -302,11 +302,20 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 		 * @param string $sTargetFile Path and name, without the extension
 		 * @param string|null $sSourceConfigFile Configuration file to embed into the backup, if not the current one
 		 *
+		 * @throws \CoreException if CMDBSource not initialized
 		 * @throws \BackupException if archive cannot be created
 		 * @throws \Exception
 		 */
 		public function CreateCompressedBackup($sTargetFile, $sSourceConfigFile = null)
 		{
+			$bIsCmdbSourceInitialized = CMDBSource::GetMysqli() instanceof mysqli;
+			if (!$bIsCmdbSourceInitialized)
+			{
+				$sErrorMsg = 'Cannot backup : CMDBSource not initialized !';
+				$this->LogError($sErrorMsg);
+				throw new CoreException($sErrorMsg);
+			}
+
 			$this->LogInfo("Creating backup: '$sTargetFile.tar.gz'");
 
 			$oArchive = new ITopArchiveTar($sTargetFile.'.tar.gz');
@@ -435,10 +444,9 @@ if (class_exists('ZipArchive')) // The setup must be able to start even if the "
 			$sPortOption = self::GetMysqliCliSingleOption('port', $this->iDBPort);
 			$sTlsOptions = self::GetMysqlCliTlsOptions($this->oConfig);
 
-			$sMysqldumpVersion = self::GetMysqldumpVersion($sMySQLDump);
-			$bIsMysqldumpSupportUtf8mb4 = (version_compare($sMysqldumpVersion,
-					self::MYSQL_VERSION_WITH_UTF8MB4_IN_PROGRAMS) == -1);
-			$sMysqldumpCharset = $bIsMysqldumpSupportUtf8mb4 ? 'utf8' : DEFAULT_CHARACTER_SET;
+			$sMysqlVersion = CMDBSource::GetDBVersion();
+			$bIsMysqlSupportUtf8mb4 = (version_compare($sMysqlVersion, self::MYSQL_VERSION_WITH_UTF8MB4_IN_PROGRAMS) === -1);
+			$sMysqldumpCharset = $bIsMysqlSupportUtf8mb4 ? 'utf8' : DEFAULT_CHARACTER_SET;
 
 			// Delete the file created by tempnam() so that the spawned process can write into it (Windows/IIS)
 			@unlink($sBackupFileName);
@@ -713,33 +721,6 @@ EOF;
 			}
 
 			return $sMysqldumpCommand;
-		}
-
-		/**
-		 * @param string $sMysqldumpCommand
-		 *
-		 * @return string version of the mysqldump program, as parsed from program return
-		 *
-		 * @uses mysqldump -V Sample return value : mysqldump  Ver 10.13 Distrib 5.7.19, for Win64 (x86_64)
-		 * @since 2.5 needed to check compatibility with utf8mb4 (N°1001)
-		 * @throws \BackupException
-		 */
-		private static function GetMysqldumpVersion($sMysqldumpCommand)
-		{
-			$sCommand = $sMysqldumpCommand.' -V';
-			$aOutput = array();
-			exec($sCommand, $aOutput, $iRetCode);
-
-			if ($iRetCode != 0)
-			{
-				throw new BackupException("mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and located at : $sMysqldumpCommand");
-			}
-
-			$sMysqldumpOutput = $aOutput[0];
-			$aDumpVersionMatchResults = array();
-			preg_match('/Distrib (\d+\.\d+\.\d+)/', $sMysqldumpOutput, $aDumpVersionMatchResults);
-
-			return $aDumpVersionMatchResults[1];
 		}
 	}
 }

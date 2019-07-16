@@ -447,6 +447,8 @@ class ApplicationInstaller
 		{
 			$oBackup->SetMySQLBinDir($sMySQLBinDir);
 		}
+
+		CMDBSource::InitFromConfig($oConfig);
 		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
 	}
 
