@@ -15,6 +15,9 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+require_once(APPROOT.'/core/cmdbobject.class.inc.php');
+require_once(APPROOT.'/application/utils.inc.php');
+require_once(APPROOT.'/core/contexttag.class.inc.php');
 
 
 /**
@@ -84,9 +87,6 @@ if (file_exists(APPROOT.'.maintenance') && !$bBypassMaintenance)
 	exit();
 }
 
-require_once(APPROOT.'/core/cmdbobject.class.inc.php');
-require_once(APPROOT.'/application/utils.inc.php');
-require_once(APPROOT.'/core/contexttag.class.inc.php');
 session_name('itop-'.md5(APPROOT));
 session_start();
 $sSwitchEnv = utils::ReadParam('switch_env', null);
