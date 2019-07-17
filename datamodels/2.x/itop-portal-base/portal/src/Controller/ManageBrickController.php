@@ -401,6 +401,9 @@ class ManageBrickController extends BrickController
 		// - Adding search clause if necessary
 		$this->ManageSearchValue($aData, $oQuery, $sClass, $aColumnsAttrs);
 
+		// - Transforming search sort params to OQL format
+		$aSortedParams = $this->ExtractSortParams($aColumnsAttrs);
+
 		// Preparing areas
 		// - We need to retrieve distinct values for the grouping attribute
 		// Note : Will have to be changed when we consider grouping on something else than the finalclass
@@ -522,6 +525,16 @@ class ManageBrickController extends BrickController
 						$oSet = new DBObjectSet($oQuery);
 					}
 
+					// Setting specified column sort, setting default datamodel one otherwise
+					if (!empty($aSortedParams))
+					{
+						$oSet->SetOrderBy($aSortedParams);
+					}
+					else
+					{
+						$oSet->SetOrderByClasses();
+					}
+
 					// Adding always_in_tables attributes
 					$aColumnsToLoad = array($oQuery->GetClassAlias() => $aColumnsAttrs);
 					foreach ($oQuery->GetSelectedClasses() as $sAlias => $sClassSelected)
@@ -535,9 +548,8 @@ class ManageBrickController extends BrickController
 							}
 						}
 					}
-
 					$oSet->OptimizeColumnLoad($aColumnsToLoad);
-					$oSet->SetOrderByClasses();
+
 					$oSecurityHelper->PreloadForCache($oSet->GetFilter(),
 						$aColumnsToLoad[$oQuery->GetClassAlias()] /* preloading only extkeys from the main class */);
 					$aSets[$sKey] = $oSet;
@@ -864,6 +876,36 @@ class ManageBrickController extends BrickController
 		}
 
 		$aData['sSearchValue'] = $sSearchValue;
+	}
+
+	/**
+	 * Extract sort params from request and convert them to iTop OQL format
+	 *
+	 * @param array $aColumnsAttrs
+	 *
+	 * @return array
+	 *
+	 * @since 2.7.0
+	 */
+	protected function ExtractSortParams($aColumnsAttrs = array())
+	{
+		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
+		$oRequestManipulator = $this->get('request_manipulator');
+
+		// Getting sort params
+		$aSortParams = $oRequestManipulator->ReadParam('aSortParams', array());
+		$aFormattedSortParams = array();
+
+		// - Adding possible multiple sort params on displayed columns
+		foreach ($aSortParams as $sKey => $aSortParam)
+		{
+			if (array_key_exists($aSortParam['column'], $aColumnsAttrs))
+			{
+				$aFormattedSortParams[$aColumnsAttrs[$aSortParam['column']]] = ($aSortParam['dir'] === 'asc');
+			}
+		}
+
+		return $aFormattedSortParams;
 	}
 
 	/**

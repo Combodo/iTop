@@ -101,7 +101,7 @@
                     columnsDefinition.push({
                         "width": "auto",
                         "searchable": true,
-                        "sortable": (sDataLoading === '{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') }}'),
+                        "sortable": true,
                         "title": tableProperties[key].title,
                         "defaultContent": "",
                         "type": "html",
@@ -294,8 +294,7 @@
                         "data": function (d) {
                             d.iPageNumber = Math.floor(d.start / d.length) + 1;
                             d.iListLength = d.length;
-                            d.columns = null;
-                            d.orders = null;
+                            d.aSortParams = d.order;
 
                             {% if sSearchValue is not null %}
                             // Sets default filter value
