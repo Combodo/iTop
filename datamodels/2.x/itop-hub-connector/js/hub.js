@@ -171,8 +171,7 @@ $(function()
 		},
 		_reportError: function(sMessage)
 		{
-			$('#hub-installation-progress-text').html('<span style="color:red; font-size:12pt; line-height:18pt;"><i class="fas' +
-				' fa-exclamation-triangle"></i> '+this.options.labels.rollback+'</span><br/><span style="color:#666; display:block; padding:10px;max-height:10em; overflow: auto;padding-top:0; margin-top:10px; text-align:left;">'+sMessage+'</span>');
+			$('#hub-installation-progress-text').html('<span style="color:red; font-size:12pt; line-height:18pt;"><i class="fas'+' fa-exclamation-triangle"></i> '+this.options.labels.rollback+'</span><br/><span style="color:#666; display:block; padding:10px;max-height:10em; overflow: auto;padding-top:0; margin-top:10px; text-align:left;">'+sMessage+'</span>');
 			$('#hub_start_installation').val('Go Back to iTop');
 			$('#hub_start_installation').prop('disabled', false);
 			$('#hub-installation-progress').hide();

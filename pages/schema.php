@@ -498,7 +498,7 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
 EOF
         );
         $oPage->add_ready_script(
-            <<<EOF
+            <<<JS
 
 var data = $sData;
 var dataref = $sDataReferencing;
@@ -721,11 +721,9 @@ field.filter(function(d) {
 			.style("opacity","1");
 		divD3.style("left", (d3.event.pageX - 7*d['tooltip_data']['class'].length/2) + "px");
 		divD3.style("top", (d3.event.pageY - 65) + "px");
-		divD3.html( '<div id="tooltipD3_top">' + d['tooltip_data']['class'] + '</div><span id="tooltipD3_left"> <i class="fas 
-		fa-caret-left"></i> '
+		divD3.html( '<div id="tooltipD3_top">' + d['tooltip_data']['class'] + '</div><span id="tooltipD3_left"> <i class="fas fa-caret-left"></i> '
 		 			+  ( (d.related_position < 0) ? d['tooltip_data']['to_remote'] : d['tooltip_data']['to_me'] ) +  '</span><span id="tooltipD3_right"> <br/>'
-		 			+ ( (d.related_position < 0) ? d['tooltip_data']['to_me'] : d['tooltip_data']['to_remote'] ) + ' <i class="fas 
-		 			fa-caret-right"></i></span>');
+		 			+ ( (d.related_position < 0) ? d['tooltip_data']['to_me'] : d['tooltip_data']['to_remote'] ) + ' <i class="fas fa-caret-right"></i></span>');
 	})
 	.on('mouseout',function(d){
 		divD3.transition()
@@ -762,7 +760,7 @@ field.filter(function(d) {
     .attr("xlink:href", function(d, i) { return d.icon })
 	.attr("transform", "translate(-12, -24)");
 			
-EOF
+JS
         );
     }
     catch(Exception $e)
