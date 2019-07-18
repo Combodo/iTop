@@ -294,7 +294,20 @@
                         "data": function (d) {
                             d.iPageNumber = Math.floor(d.start / d.length) + 1;
                             d.iListLength = d.length;
-                            d.aSortParams = d.order;
+
+                            // Prepare sort params (formatting them for direct use by DBObjectSet)
+                            d.aSortParams = {};
+                            for (var iSortIdx in d.order) {
+                                /* oSortedColumnData {column: index, dir: 'asc'|'desc'} */
+                                var oSortedColumnData = d.order[iSortIdx];
+                                /* sSortedColumnId (eg. 'attributes.ATT_CODE.att_code') */
+                                var sSortedColumnId = d.columns[oSortedColumnData.column].data;
+
+                                // Make proper attribute alias for OQL from column ID
+                                sSortedColumnId = sSortedColumnId.replace(/^attributes\./, '').replace(/\.att_code$/, '');
+
+                                d.aSortParams[sSortedColumnId] = (oSortedColumnData.dir === 'asc');
+                            }
 
                             {% if sSearchValue is not null %}
                             // Sets default filter value

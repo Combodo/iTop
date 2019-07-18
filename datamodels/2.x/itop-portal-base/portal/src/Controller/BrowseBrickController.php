@@ -359,9 +359,16 @@ class BrowseBrickController extends BrickController
 		}
 		$oSet->OptimizeColumnLoad($aColumnAttrs);
 
-		// Sorting objects through defined order (in DM)
-		$oSet->SetOrderByClasses();
-
+		// Setting specified column sort, setting default datamodel one otherwise
+		$aSortedParams = $this->ExtractSortParams();
+		if (!empty($aSortedParams))
+		{
+			$oSet->SetOrderBy($aSortedParams);
+		}
+		else
+		{
+			$oSet->SetOrderByClasses();
+		}
 		// Retrieving results and organizing them for templating
 		$aItems = array();
 		while ($aCurrentRow = $oSet->FetchAssoc())
@@ -422,5 +429,29 @@ class BrowseBrickController extends BrickController
 		}
 
 		return $oResponse;
+	}
+
+	/**
+	 * Extract sort params from request and convert them to iTop OQL format
+	 *
+	 * @return array
+	 *
+	 * @since 2.7.0
+	 */
+	protected function ExtractSortParams()
+	{
+		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
+		$oRequestManipulator = $this->get('request_manipulator');
+
+		// Getting sort params
+		$aSortParams = $oRequestManipulator->ReadParam('aSortParams', array());
+
+		// Converting sort direction to proper format for DBObjectSet as it only accept real booleans
+		foreach ($aSortParams as $sAttributeAlias => $sDirection)
+		{
+			$aSortParams[$sAttributeAlias] = ($sDirection === 'true');
+		}
+
+		return $aSortParams;
 	}
 }

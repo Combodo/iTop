@@ -39,7 +39,7 @@
 				aColumnsDefinition.push({
 					"width": "auto",
 					"searchable": true,
-					"sortable": (sDataLoading === '{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_FULL') }}'),
+					"sortable": true,
 					"title": oLevelsProperties[sKey].title,
 					"defaultContent": "",
 					"type": "html",
@@ -182,7 +182,7 @@
 						aColumnsDefinition.push({
 							"width": "auto",
 							"searchable": true,
-							"sortable": false,
+							"sortable": true,
 							"visible": !oLevelsProperties[sKey].fields[i].hidden,
 							"title": oLevelsProperties[sKey].fields[i].label,
 							"defaultContent": "",
@@ -252,8 +252,28 @@
 						d.iPageNumber = Math.floor(d.start / d.length)+1;
 						d.iListLength = d.length;
 						d.sDataLoading = "{{ constant('Combodo\\iTop\\Portal\\Brick\\AbstractBrick::ENUM_DATA_LOADING_LAZY') }}";
-						d.columns = null;
-						d.orders = null;
+
+						// Prepare sort params (formatting them for direct use by DBObjectSet)
+						d.aSortParams = {};
+						for (var iSortIdx in d.order) {
+							/* oSortedColumnData {column: index, dir: 'asc'|'desc'} */
+							var oSortedColumnData = d.order[iSortIdx];
+							/* sSortedColumnId (eg. 'L-1-1' for level's main column, or 'L-1-1.fields.ATTCODE' for other columns) */
+							var sSortedColumnId = d.columns[oSortedColumnData.column].data;
+
+							// Make proper attribute alias for OQL from column ID
+							// - Main level column (we have to retrieve the attcode from the level properties)
+							if (sSortedColumnId.indexOf('.fields') < 0) {
+								var sSortedAttributeAlias = sSortedColumnId+'.'+oLevelsProperties[sSortedColumnId].name_att;
+							}
+							// - Optional fields (attcode is already in the column ID, we just have to clean it)
+							else {
+								var sSortedAttributeAlias = sSortedColumnId.replace('.fields', '');
+							}
+
+							d.aSortParams[sSortedAttributeAlias] = (oSortedColumnData.dir === 'asc');
+						}
+
 
 						if (d.search.value)
 						{

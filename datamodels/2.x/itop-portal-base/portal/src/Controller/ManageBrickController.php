@@ -881,31 +881,25 @@ class ManageBrickController extends BrickController
 	/**
 	 * Extract sort params from request and convert them to iTop OQL format
 	 *
-	 * @param array $aColumnsAttrs
-	 *
 	 * @return array
 	 *
 	 * @since 2.7.0
 	 */
-	protected function ExtractSortParams($aColumnsAttrs = array())
+	protected function ExtractSortParams()
 	{
 		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 		$oRequestManipulator = $this->get('request_manipulator');
 
 		// Getting sort params
 		$aSortParams = $oRequestManipulator->ReadParam('aSortParams', array());
-		$aFormattedSortParams = array();
 
-		// - Adding possible multiple sort params on displayed columns
-		foreach ($aSortParams as $sKey => $aSortParam)
+		// Converting sort direction to proper format for DBObjectSet as it only accept real booleans
+		foreach ($aSortParams as $sAttributeAlias => $sDirection)
 		{
-			if (array_key_exists($aSortParam['column'], $aColumnsAttrs))
-			{
-				$aFormattedSortParams[$aColumnsAttrs[$aSortParam['column']]] = ($aSortParam['dir'] === 'asc');
-			}
+			$aSortParams[$sAttributeAlias] = ($sDirection === 'true');
 		}
 
-		return $aFormattedSortParams;
+		return $aSortParams;
 	}
 
 	/**
