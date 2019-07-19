@@ -384,24 +384,8 @@ class utils
 				$sName = is_null($sIndex) ? $aFileInfo['name'] : $aFileInfo['name'][$sIndex];
 
 				$doc_content = file_get_contents($sTmpName);
-				if (function_exists('finfo_file'))
-				{
-					// as of PHP 5.3 the fileinfo extension is bundled within PHP
-					// in which case we don't trust the mime type provided by the browser
-					$rInfo = @finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
-					if ($rInfo !== false)
-					{
-					   $sType = @finfo_file($rInfo, $sTmpName);
-					   if ( ($sType !== false)
-					        && is_string($sType)
-					        && (strlen($sType)>0))
-					   {
-					        $sMimeType = $sType;
-					   }
-					}
-					@finfo_close($rInfo);
-				}
-				$oDocument = new ormDocument($doc_content, $sMimeType, $sName);
+					$sMimeType = self::GetFileMimeType($sTmpName);
+					$oDocument = new ormDocument($doc_content, $sMimeType, $sName);
 				break;
 				
 				case UPLOAD_ERR_NO_FILE:
@@ -2044,5 +2028,39 @@ class utils
 	public static function IsDevelopmentEnvironment()
 	{
 		return ITOP_REVISION  === 'svn';
+	}
+
+	/**
+	 * @see https://php.net/manual/en/function.finfo-file.php
+	 *
+	 * @param string $sFilePath file full path
+	 * @param string $sDefaultMimeType
+	 *
+	 * @return string mime type, defaults to <code>application/octet-stream</code>
+	 * @uses finfo_file in FileInfo extension (bundled in PHP since version 5.3)
+	 * @since 2.7.0 N°2366
+	 */
+	public static function GetFileMimeType($sFilePath, $sDefaultMimeType = 'application/octet-stream')
+	{
+		if (!function_exists('finfo_file'))
+		{
+			return $sDefaultMimeType;
+		}
+
+		$sMimeType = $sDefaultMimeType;
+		$rInfo = @finfo_open(FILEINFO_MIME_TYPE);
+		if ($rInfo !== false)
+		{
+			$sType = @finfo_file($rInfo, $sFilePath);
+			if (($sType !== false)
+				&& is_string($sType)
+				&& ($sType !== ''))
+			{
+				$sMimeType = $sType;
+			}
+		}
+		@finfo_close($rInfo);
+
+		return $sMimeType;
 	}
 }
