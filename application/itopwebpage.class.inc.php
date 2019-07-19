@@ -77,8 +77,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet("../css/jquery.multiselect.css");
 		$this->add_linked_stylesheet("../css/magnific-popup.css");
 		$this->add_linked_stylesheet("../css/c3.min.css");
-		$this->add_linked_stylesheet("../lib/font-awesome/css/all.min.css");
-		$this->add_linked_stylesheet("../lib/font-awesome/css/v4-shims.min.css");
+		$this->add_linked_stylesheet("../css/font-awesome/css/all.min.css");
+		$this->add_linked_stylesheet("../css/font-awesome/css/v4-shims.min.css");
 
 		$this->add_linked_script('../js/jquery.layout.min.js');
 		$this->add_linked_script('../js/jquery.ba-bbq.min.js');

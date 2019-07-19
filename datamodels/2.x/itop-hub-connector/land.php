@@ -240,8 +240,8 @@ function DoInstall(WebPage $oPage)
     $oPage->add('</div>'); // module-selection-body
 
 
-	$oPage->add_linked_stylesheet('../lib/font-awesome/css/all.min.css');
-	$oPage->add_linked_stylesheet('../lib/font-awesome/css/v4-shims.min.css');
+	$oPage->add_linked_stylesheet('../css/font-awesome/css/all.min.css');
+	$oPage->add_linked_stylesheet('../css/font-awesome/css/v4-shims.min.css');
 
 
     $oPage->add('<div id="hub_installation_widget"></div>');
