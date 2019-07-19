@@ -1,0 +1,7 @@
+/**
+ This was the file containing the rules of Font Awesome v4. Kept for scripts that included it directly.
+ @deprecated 2.7.0 N°2269, use /css/font-awesome/css/all.min.css instead (Font Awesome v5)
+ */
+
+@import "all.min.css";
+@import "v4-shims.min.css";
