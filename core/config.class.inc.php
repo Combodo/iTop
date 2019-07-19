@@ -174,22 +174,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
-		'db_character_set' => array( // @deprecated to remove in 2.7 ? N°1001 utf8mb4 switch
-			'type' => 'string',
-			'description' => 'Deprecated since iTop 2.5 : now using utf8mb4',
-			'default' => 'DEPRECATED_2.5',
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		),
-		'db_collation' => array( // @deprecated to remove in 2.7 ? N°1001 utf8mb4 switch
-			'type' => 'string',
-			'description' => 'Deprecated since iTop 2.5 : now using utf8mb4_unicode_ci',
-			'default' => 'DEPRECATED_2.5',
-			'value' => '',
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		),
 		'skip_check_to_write' => array(
 			'type' => 'bool',
 			'description' => 'Disable data format and integrity checks to boost up data load (insert or update)',
