@@ -16,7 +16,7 @@ You are welcome to create pull requests on any of those subjects:
 If you want to implement a **new feature**, please [create a corresponding ticket](https://sourceforge.net/p/itop/tickets/new/) for review.   
 If you ever want to begin implementation, do so in a fork, and add a link to the corresponding commits in the ticket.
 
-For all security related subjects, please see our [security policy](SECURITY.md).
+For all **security related subjects**, please see our [security policy](SECURITY.md).
 
 All **datamodel modification** should be done in an extension. Beware that such change would 
 impact all existing customers, and could prevent them from 
@@ -41,7 +41,7 @@ If you want to use another license, you may [create an extension][wiki new ext].
 
 TL;DR:
 > **create a fork from iTop main repository,  
-> create a branch based on either release branch if present, or develop otherwise**
+> create a branch based on the develop branch**
 
 We are using the [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/) branch model. That means we have in our repo those
 main branches:
@@ -49,23 +49,33 @@ main branches:
 - develop: ongoing development version
 - release/\*: if present, that means we are working on a beta version
 - master: previous stable version
+- support/\*: maintenance branches for older versions
 
 For example, if no beta version is currently ongoing we could have:
 
 - develop containing future 2.8.0 version
 - master containing 2.7.x maintenance version
+- support/2.6 containing 2.6.x maintenance version
+- support/2.5 containing 2.5.x maintenance version
 
 In this example, when 2.8.0-beta is shipped that will become:
 
 - develop: future 2.9.0 version
 - release/2.8: 2.8.0-beta
 - master: 2.7.x maintenance version
+- support/2.6 containing 2.6.x maintenance version
+- support/2.5 containing 2.5.x maintenance version
 
 And when 2.8.0 final will be out:
 
 - develop: future 2.9.0 version
 - master: 2.8.x maintenance version
 - support/2.7 : 2.7.x maintenance version
+- support/2.6 containing 2.6.x maintenance version
+- support/2.5 containing 2.5.x maintenance version
+
+Most of the time you should based your developments on the develop branch.  
+That may be different if you want to fix a bug, please use develop anyway and ask in your PR if rebase is possible.
 
 
 ## Coding
