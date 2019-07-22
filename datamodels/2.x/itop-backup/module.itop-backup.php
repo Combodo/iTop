@@ -52,7 +52,6 @@ SetupWebPage::AddModule(
 			//'file_name_format' => '__DB__-%Y-%m-%d_%H_%M',
 			'retention_count' => 5, 
 			'enabled' => true,
-			'itop_root' => '',
 			'itop_backup_incident' => '',
 		),
 	)
