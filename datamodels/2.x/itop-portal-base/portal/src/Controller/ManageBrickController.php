@@ -275,14 +275,16 @@ class ManageBrickController extends BrickController
 		/** @var string $sPortalId */
 		$sPortalId = $this->getParameter('combodo.portal.instance.id');
 
-		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
-		$oRequestManipulator = $this->get('request_manipulator');
 		/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
 		$oUrlGenerator = $this->get('url_generator');
+		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
+		$oRequestManipulator = $this->get('request_manipulator');
 		/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
 		$oSecurityHelper = $this->get('security_helper');
 		/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 		$oScopeValidator = $this->get('scope_validator');
+		/** @var \Combodo\iTop\Portal\Helper\BrickControllerHelper */
+		$oBrickControllerHelper = $this->get('brick_controller_helper');
 		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
 		$oBrickCollection = $this->get('brick_collection');
 
@@ -402,7 +404,7 @@ class ManageBrickController extends BrickController
 		$this->ManageSearchValue($aData, $oQuery, $sClass, $aColumnsAttrs);
 
 		// - Transforming search sort params to OQL format
-		$aSortedParams = $this->ExtractSortParams($aColumnsAttrs);
+		$aSortedParams = $oBrickControllerHelper->ExtractSortParams();
 
 		// Preparing areas
 		// - We need to retrieve distinct values for the grouping attribute
@@ -876,30 +878,6 @@ class ManageBrickController extends BrickController
 		}
 
 		$aData['sSearchValue'] = $sSearchValue;
-	}
-
-	/**
-	 * Extract sort params from request and convert them to iTop OQL format
-	 *
-	 * @return array
-	 *
-	 * @since 2.7.0
-	 */
-	protected function ExtractSortParams()
-	{
-		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
-		$oRequestManipulator = $this->get('request_manipulator');
-
-		// Getting sort params
-		$aSortParams = $oRequestManipulator->ReadParam('aSortParams', array());
-
-		// Converting sort direction to proper format for DBObjectSet as it only accept real booleans
-		foreach ($aSortParams as $sAttributeAlias => $sDirection)
-		{
-			$aSortParams[$sAttributeAlias] = ($sDirection === 'true');
-		}
-
-		return $aSortParams;
 	}
 
 	/**

@@ -131,3 +131,6 @@ services:
   browse_brick:
     alias: Combodo\iTop\Portal\Helper\BrowseBrickHelper
     public: true
+  brick_controller_helper:
+    alias: Combodo\iTop\Portal\Helper\BrickControllerHelper
+    public: true
