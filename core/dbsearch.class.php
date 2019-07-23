@@ -1424,15 +1424,18 @@ abstract class DBSearch
 	}
 
 	/**
-	 * Experimental!
-	 * @todo implement the change tracking
-     *
-     * @internal
+	 * @api
 	 *
-	 * @param $bArchive
+	 * Updates archive_flag and archive_date fields in the whole class hierarchy
+	 *
+	 * @see \DBObject::DBWriteArchiveFlag()
+	 *
+	 * @param boolean $bArchive
+	 *
 	 * @throws Exception
+	 * @todo implement the change tracking
 	 */
-	function DBBulkWriteArchiveFlag($bArchive)
+	public function DBBulkWriteArchiveFlag($bArchive)
 	{
 		$sClass = $this->GetClass();
 		if (!MetaModel::IsArchivable($sClass))

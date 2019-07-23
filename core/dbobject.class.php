@@ -5092,10 +5092,21 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     *
      * @internal
      *
-	 * @param boolean $bArchive
+	 * <p>For all of the class hierarchy, sets the archive_flag field to the parameter's state.<br>
+	 * Also :
+	 * <ul>
+	 * <li>if $bArchive==false resets the archive_date flag
+	 * <li>if $bArchive==true and archive_date empty sets its value
+	 * </ul>
+	 *
+	 * <p>Can be used to fix database inconsistencies on archive_flag field.
+	 *
+	 * @see \DBSearch::DBBulkWriteArchiveFlag()
+	 *
+	 * @param boolean $bArchive if true then sets archive_flag and archive_date flags
+	 *
 	 * @throws Exception
 	 */
 	protected function DBWriteArchiveFlag($bArchive)
@@ -5141,12 +5152,10 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * @api
      *
-     * @internal
-     *
-	 * Can be called to repair the database (tables consistency)
-	 * The archive_date will be preserved
 	 * @throws Exception
+	 * @uses DBWriteArchiveFlag
 	 */
 	public function DBArchive()
 	{
@@ -5156,9 +5165,10 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * @internal
+     * @api
      *
      * @throws Exception
+     * @uses DBWriteArchiveFlag
      */
 	public function DBUnarchive()
 	{
