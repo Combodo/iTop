@@ -23,7 +23,6 @@
 namespace Combodo\iTop\Portal\Controller;
 
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
-use MetaModel;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -52,16 +51,14 @@ class CreateBrickController extends BrickController
 	 */
 	public function DisplayAction(Request $oRequest, $sBrickId)
 	{
-		/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
-		$oSecurityHelper = $this->get('security_helper');
 		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
 		$oBrickCollection = $this->get('brick_collection');
 
 		/** @var \Combodo\iTop\Portal\Brick\CreateBrick $oBrick */
 		$oBrick = $oBrickCollection->GetBrickById($sBrickId);
-		$sObjectClass = $oBrick->GetClass();
 
 		$aRouteParams = array(
+			'sBrickId' => $sBrickId,
 			'sObjectClass' => $oBrick->GetClass(),
 			'ar_token' => null,
 		);
@@ -73,45 +70,7 @@ class CreateBrickController extends BrickController
 			$aRouteParams['ar_token'] = ContextManipulatorHelper::PrepareAndEncodeRulesToken($aRules);
 		}
 
-		// Checking if the target object class is abstract or not
-		// - If is not abstract, we redirect to object creation form
-		if (!MetaModel::IsAbstract($sObjectClass))
-		{
-			// Preparing redirection route
-			// - Adding brick id to the params
-			$aRouteParams['sBrickId'] = $sBrickId;
-
-			$oResponse = $this->ForwardFromRoute('p_object_create', $aRouteParams, $oRequest->query->all());
-		}
-		// - Else, we list the leaf classes as an intermediate step
-		else
-		{
-			$aData = array(
-				'oBrick' => $oBrick,
-				'sBrickId' => $sBrickId,
-				'aLeafClasses' => array(),
-				'ar_token' => $aRouteParams['ar_token'],
-			);
-
-			$aLeafClasses = array();
-			$aChildClasses = MetaModel::EnumChildClasses($sObjectClass);
-			foreach ($aChildClasses as $sChildClass)
-			{
-				if (!MetaModel::IsAbstract($sChildClass) && $oSecurityHelper->IsActionAllowed(UR_ACTION_CREATE, $sChildClass))
-				{
-					$aLeafClasses[] = array(
-						'id' => $sChildClass,
-						'name' => MetaModel::GetName($sChildClass),
-					);
-				}
-			}
-			$aData['aLeafClasses'] = $aLeafClasses;
-
-			$oResponse = $this->render($oBrick->GetPageTemplatePath(), $aData);
-		}
-
-		return $oResponse;
+		return $this->ForwardFromRoute('p_object_create', $aRouteParams, $oRequest->query->all());
 	}
 
 }
-

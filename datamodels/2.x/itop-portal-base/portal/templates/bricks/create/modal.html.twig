@@ -3,12 +3,12 @@
 {% extends 'itop-portal-base/portal/templates/modal/layout.html.twig' %}
 
 {% block pModalTitle %}
-    {{ oBrick.GetTitle()|dict_s }}
+    {{ sPageTitle|dict_s }}
 {% endblock %}
 
 {% block pModalBody %}
 	<p>{{ 'Brick:Portal:Create:ChooseType'|dict_s }}</p>
-	<ul id="{{ sBrickId }}_leaf_classes">
+	<ul id="{{ sLeafClassesListId }}">
         {% for aLeafClass in aLeafClasses %}
 			<li><a href="#" data-target-class="{{ aLeafClass.id }}">{{ aLeafClass.name }}</a></li>
         {% endfor %}
@@ -16,7 +16,7 @@
 
 	<script type="text/javascript">
         $(document).ready(function(){
-            $('#{{ sBrickId }}_leaf_classes a').off('click').on('click', function(oEvent){
+            $('#{{ sLeafClassesListId }} a').off('click').on('click', function(oEvent){
                 oEvent.preventDefault();
 
                 var sUrl = '{{ app['url_generator'].generate('p_object_create', {sObjectClass : '-sObjectClass-'})|raw }}';

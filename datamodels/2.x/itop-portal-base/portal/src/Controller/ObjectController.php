@@ -22,34 +22,35 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use AttributeEnum;
+use AttributeFinalClass;
+use AttributeFriendlyName;
+use AttributeImage;
+use BinaryExpression;
+use Combodo\iTop\Portal\Brick\CreateBrick;
+use Combodo\iTop\Portal\Helper\ApplicationHelper;
+use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
+use DBObject;
+use DBObjectSearch;
+use DBObjectSet;
+use DBSearch;
+use Dict;
+use Exception;
+use FalseExpression;
+use FieldExpression;
+use FileUploadException;
+use IssueLog;
+use ListExpression;
+use MetaModel;
+use ScalarExpression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Exception;
-use FileUploadException;
-use utils;
-use Dict;
-use IssueLog;
-use MetaModel;
-use DBObject;
-use DBSearch;
-use DBObjectSearch;
-use FalseExpression;
-use BinaryExpression;
-use FieldExpression;
-use VariableExpression;
-use ListExpression;
-use ScalarExpression;
-use DBObjectSet;
-use AttributeEnum;
-use AttributeImage;
-use AttributeFinalClass;
-use AttributeFriendlyName;
-use UserRights;
 use URLButtonItem;
-use Combodo\iTop\Portal\Helper\ApplicationHelper;
-use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
+use UserRights;
+use utils;
+use VariableExpression;
 
 /**
  * Class ObjectController
@@ -279,55 +280,17 @@ class ObjectController extends BrickController
 	 */
 	public function CreateAction(Request $oRequest, $sObjectClass)
 	{
-		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
-		$oRequestManipulator = $this->get('request_manipulator');
-		/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oObjectFormHandler */
-		$oObjectFormHandler = $this->get('object_form_handler');
-		/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
-		$oSecurityHelper = $this->get('security_helper');
-		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
-		$oBrickCollection = $this->get('brick_collection');
-
-		// Checking security layers
-		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_CREATE, $sObjectClass))
+		$oResponse = null;
+		// Checking if the target object class is abstract or not
+		// - If is not abstract, we redirect to object creation form
+		if (!MetaModel::IsAbstract($sObjectClass))
 		{
-			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to create '.$sObjectClass.' object.');
-			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+			$oResponse = $this->DisplayCreationForm($oRequest, $sObjectClass);
 		}
-
-		$sOperation = $oRequestManipulator->ReadParam('operation', '');
-
-		$aData = array('sMode' => 'create');
-		$aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass);
-		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:Create:Title', MetaModel::GetName($sObjectClass));
-
-		// Preparing response
-		if ($oRequest->isXmlHttpRequest())
-		{
-			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
-			if (empty($sOperation))
-			{
-				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
-			}
-			else
-			{
-				$oResponse = new JsonResponse($aData);
-			}
-		}
+		// - Else, we list the leaf classes as an intermediate step
 		else
 		{
-			// Adding brick if it was passed
-			$sBrickId = $oRequestManipulator->ReadParam('sBrickId', '');
-			if (!empty($sBrickId))
-			{
-				$oBrick = $oBrickCollection->GetBrickById($sBrickId);
-				if ($oBrick !== null)
-				{
-					$aData['oBrick'] = $oBrick;
-				}
-			}
-			$aData['sPageTitle'] = $aData['form']['title'];
-			$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
+			$oResponse = $this->DisplayLeafClassesForm($sObjectClass);
 		}
 
 		return $oResponse;
@@ -1389,5 +1352,138 @@ class ObjectController extends BrickController
 		}
 
 		return $aObjectData;
+	}
+
+	/**
+	 * Displays the creation form of an instantiable class
+	 *
+	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
+	 * @param string                                    $sObjectClass
+	 *
+	 * @return \Symfony\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
+	 * @throws \ArchivedObjectException
+	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	protected function DisplayCreationForm(Request $oRequest, $sObjectClass)
+	{
+		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
+		$oRequestManipulator = $this->get('request_manipulator');
+		/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oObjectFormHandler */
+		$oObjectFormHandler = $this->get('object_form_handler');
+		/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
+		$oSecurityHelper = $this->get('security_helper');
+		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
+		$oBrickCollection = $this->get('brick_collection');
+
+		// Checking security layers
+		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_CREATE, $sObjectClass))
+		{
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to create '.$sObjectClass.' object.');
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
+
+		$sOperation = $oRequestManipulator->ReadParam('operation', '');
+
+		$aData = array('sMode' => 'create');
+		$aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass);
+		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:Create:Title', MetaModel::GetName($sObjectClass));
+
+		// Preparing response
+		if ($oRequest->isXmlHttpRequest())
+		{
+			// We have to check whether the 'operation' parameter is defined or not in order to know if the form is required via ajax (to be displayed as a modal dialog) or if it's a lifecycle call from a existing form.
+			if (empty($sOperation))
+			{
+				$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/modal.html.twig', $aData);
+			}
+			else
+			{
+				$oResponse = new JsonResponse($aData);
+			}
+		}
+		else
+		{
+			// Adding brick if it was passed
+			$sBrickId = $oRequestManipulator->ReadParam('sBrickId', '');
+			if (!empty($sBrickId))
+			{
+				$oBrick = $oBrickCollection->GetBrickById($sBrickId);
+				if ($oBrick !== null)
+				{
+					$aData['oBrick'] = $oBrick;
+				}
+			}
+			$aData['sPageTitle'] = $aData['form']['title'];
+			$oResponse = $this->render('itop-portal-base/portal/templates/bricks/object/layout.html.twig', $aData);
+		}
+
+		return $oResponse;
+	}
+
+	/**
+	 * Displays a list of leaf classes from the abstract $sObjectClass which will lead to the actual creation form.
+	 *
+	 * @param string $sObjectClass
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	protected function DisplayLeafClassesForm($sObjectClass)
+	{
+		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
+		$oRequestManipulator = $this->get('request_manipulator');
+		/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
+		$oSecurityHelper = $this->get('security_helper');
+		/** @var \Combodo\iTop\Portal\Brick\BrickCollection $oBrickCollection */
+		$oBrickCollection = $this->get('brick_collection');
+
+		$aData = array(
+			'aLeafClasses' => array(),
+			'sPageTitle' => Dict::Format('Brick:Portal:Object:Form:Create:Title', MetaModel::GetName($sObjectClass)),
+			'sLeafClassesListId' => 'leaf_classes_list_' . uniqid(),
+			'ar_token' => $oRequestManipulator->ReadParam('ar_token', ''),
+		);
+		$sTemplatePath = CreateBrick::DEFAULT_PAGE_TEMPLATE_PATH;
+
+		$sBrickId = $oRequestManipulator->ReadParam('sBrickId', '');
+		if (!empty($sBrickId))
+		{
+			$oBrick = $oBrickCollection->GetBrickById($sBrickId);
+			$sTemplatePath = $oBrick->GetPageTemplatePath();
+
+			$aData['sBrickId'] = $sBrickId;
+			$aData['oBrick'] = $oBrick;
+			$aData['sPageTitle'] = $oBrick->GetTitle();
+		}
+
+		$aLeafClasses = array();
+		$aChildClasses = MetaModel::EnumChildClasses($sObjectClass);
+		foreach ($aChildClasses as $sChildClass)
+		{
+			if (!MetaModel::IsAbstract($sChildClass) && $oSecurityHelper->IsActionAllowed(UR_ACTION_CREATE, $sChildClass))
+			{
+				$aLeafClasses[] = array(
+					'id' => $sChildClass,
+					'name' => MetaModel::GetName($sChildClass),
+				);
+			}
+		}
+		$aData['aLeafClasses'] = $aLeafClasses;
+
+		$oResponse = $this->render($sTemplatePath, $aData);
+
+		return $oResponse;
 	}
 }

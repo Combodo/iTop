@@ -194,7 +194,7 @@ class BrowseBrickHelper
 							switch ($aAction['type'])
 							{
 								case BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS:
-									// We can only make translate a dictionnary entry with a class placeholder when the action has a class tag. if it has a factory method, we don't know yet what class is going to be created
+									// We can only make translate a dictionary entry with a class placeholder when the action has a class tag. if it has a factory method, we don't know yet what class is going to be created
 									if ($aAction['factory']['type'] === BrowseBrick::ENUM_FACTORY_TYPE_CLASS)
 									{
 										$aAction['title'] = Dict::Format('Brick:Portal:Browse:Action:CreateObjectFromThis',
