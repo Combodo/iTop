@@ -5094,11 +5094,11 @@ abstract class DBObject implements iDisplay
 	/**
      * @internal
      *
-	 * <p>For all of the class hierarchy, sets the archive_flag field to the parameter's state.<br>
-	 * Also :
+	 * <p>Sets the <code>archive_flag</code> <b>For all of the class hierarchy</b><br>
+	 * Also update the <code>archive_date</code> :
 	 * <ul>
-	 * <li>if $bArchive==false resets the archive_date flag
-	 * <li>if $bArchive==true and archive_date empty sets its value
+	 * <li>if $bArchive==false  archive_date become null
+	 * <li>if $bArchive==true  && $archive_date == null archive_date take the current date
 	 * </ul>
 	 *
 	 * <p>Can be used to fix database inconsistencies on archive_flag field.
