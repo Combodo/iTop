@@ -325,10 +325,10 @@ EOF;
 		chmod($sMySQLDumpCnfFile, 0600);
 		file_put_contents($sMySQLDumpCnfFile, $sMySQLDumpCnf, LOCK_EX);
 
-		// Note: opt implicitely sets lock-tables... which cancels the benefit of single-transaction!
-		//       skip-lock-tables compensates and allows for writes during a backup
-		$sCommand = "$sMySQLDump --defaults-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
-		$sCommandDisplay = "$sMySQLDump --defaults-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
+			// Note: opt implicitely sets lock-tables... which cancels the benefit of single-transaction!
+			//       skip-lock-tables compensates and allows for writes during a backup
+			$sCommand = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=$sUser $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables 2>&1";
+			$sCommandDisplay = "$sMySQLDump --defaults-extra-file=\"$sMySQLDumpCnfFile\" --opt --skip-lock-tables --default-character-set=".$sMysqldumpCharset." --add-drop-database --single-transaction --host=$sHost $sPortOption --user=xxxxx $sTlsOptions --result-file=$sTmpFileName $sDBName $sTables";
 
 		// Now run the command for real
 		$this->LogInfo("backup: generate data file with command: $sCommandDisplay");
