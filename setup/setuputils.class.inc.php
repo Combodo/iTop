@@ -52,7 +52,7 @@ class SetupUtils
 	// -- Minimum versions (requirements : forbids installation if not met)
 	const PHP_MIN_VERSION = '5.6.0'; // 5.6 will be supported until the end of 2018 (see http://php.net/supported-versions.php)
 	const MYSQL_MIN_VERSION = '5.6.0'; // 5.6 to have fulltext on InnoDB for Tags fields (N°931)
-	const MYSQL_NOT_VALIDATED_VERSION = '8.0.0'; //Mysql 8 not validated as of iTop 2.6
+	const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0)
 
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
 	const PHP_NEXT_MIN_VERSION = ''; // no new PHP requirement for next iTop version
@@ -1245,15 +1245,21 @@ EOF
 	{
 		$sDBVendor= $oDBSource->GetDBVendor();
 		$sDBVersion = $oDBSource->GetDBVersion();
-		$bRet = false;
-		
-		if (version_compare($sDBVersion, self::MYSQL_NOT_VALIDATED_VERSION, '>=') && ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL)) 
+
+		if (
+			!empty(self::MYSQL_NOT_VALIDATED_VERSION)
+			&& ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL)
+			&& version_compare($sDBVersion, self::MYSQL_NOT_VALIDATED_VERSION, '>=')
+		)
 		{
 			$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
 				"Error: Current MySQL version is $sDBVersion. iTop doesn't yet support MySQL ".self::MYSQL_NOT_VALIDATED_VERSION." and above.");
-			$bRet = false;
+
+			return false;
 		}
-		else if (version_compare($sDBVersion, self::MYSQL_MIN_VERSION, '>='))
+
+		$bRet = false;
+		if (version_compare($sDBVersion, self::MYSQL_MIN_VERSION, '>='))
 		{
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO,
 				"Current MySQL version ($sDBVersion), greater than minimum required version (".self::MYSQL_MIN_VERSION.")");
