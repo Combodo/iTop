@@ -58,8 +58,8 @@ class DateTimeFormat
 	{
 		return array(
 				// Days
-				'd' => array('regexpr' => '(0[1-9]|[1-2][0-9]||3[0-1])', 'datepicker' => 'dd', 'excel' => 'dd', 'moment' => 'DD'), // Day of the month: 2 digits (with leading zero)
-				'j' => array('regexpr' => '([1-9]|[1-2][0-9]||3[0-1])', 'datepicker' => 'd', 'excel' => 'd', 'moment' => 'D'), // Day of the month: 1 or 2 digits (without leading zero)
+				'd' => array('regexpr' => '(0[1-9]|[1-2][0-9]|3[0-1])', 'datepicker' => 'dd', 'excel' => 'dd', 'moment' => 'DD'), // Day of the month: 2 digits (with leading zero)
+				'j' => array('regexpr' => '([1-9]|[1-2][0-9]|3[0-1])', 'datepicker' => 'd', 'excel' => 'd', 'moment' => 'D'), // Day of the month: 1 or 2 digits (without leading zero)
 				// Months
 				'm' => array('regexpr' => '(0[1-9]|1[0-2])', 'datepicker' => 'mm', 'excel' => 'MM', 'moment' => 'MM' ), // Month on 2 digits i.e. 01-12
 				'n' => array('regexpr' => '([1-9]|1[0-2])', 'datepicker' => 'm', 'excel' => 'm', 'moment' => 'M'), // Month on 1 or 2 digits 1-12
@@ -69,7 +69,7 @@ class DateTimeFormat
 				// Hours
 				'H' => array('regexpr' => '([0-1][0-9]|2[0-3])', 'datepicker' => 'HH', 'excel' => 'HH', 'moment' => 'HH'), // Hour 00..23
 				'h' => array('regexpr' => '(0[1-9]|1[0-2])', 'datepicker' => 'hh', 'excel' => 'hh', 'moment' => 'hh'), // Hour 01..12
-				'G' => array('regexpr' => '([1-9]|[1[0-9]|2[0-3])', 'datepicker' => 'H', 'excel' => 'H', 'moment' => 'H'), // Hour 0..23
+				'G' => array('regexpr' => '([0-9]|1[0-9]|2[0-3])', 'datepicker' => 'H', 'excel' => 'H', 'moment' => 'H'), // Hour 0..23
 				'g' => array('regexpr' => '([1-9]|1[0-2])', 'datepicker' => 'h', 'excel' => 'h', 'moment' => 'h'), // Hour 1..12
 				'a' => array('regexpr' => '(am|pm)', 'datepicker' => 'tt', 'excel' => 'am/pm', 'moment' => 'a'),
 				'A' => array('regexpr' => '(AM|PM)', 'datepicker' => 'TT', 'excel' => 'AM/PM', 'moment' => 'A'),
