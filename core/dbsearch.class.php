@@ -1424,8 +1424,6 @@ abstract class DBSearch
 	}
 
 	/**
-	 * @api
-	 *
 	 * Updates archive_flag and archive_date fields in the whole class hierarchy
 	 *
 	 * @see \DBObject::DBWriteArchiveFlag()

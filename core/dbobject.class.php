@@ -5152,8 +5152,6 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-	 * @api
-     *
 	 * @throws Exception
 	 * @uses DBWriteArchiveFlag
 	 */
@@ -5165,8 +5163,6 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * @api
-     *
      * @throws Exception
      * @uses DBWriteArchiveFlag
      */
