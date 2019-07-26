@@ -2759,15 +2759,6 @@ abstract class DBObject implements iDisplay
 			$oTrigger->DoActivate($this->ToArgs('this'));
 		}
 
-		// Callbacks registered with RegisterCallback
-		if (isset($this->m_aCallbacks[self::CALLBACK_AFTERINSERT]))
-		{
-			foreach ($this->m_aCallbacks[self::CALLBACK_AFTERINSERT] as $aCallBackData)
-			{
-				call_user_func_array($aCallBackData['callback'], $aCallBackData['params']);
-			}
-		}
-
 		$this->RecordObjCreation();
 
 		return $this->m_iKey;
@@ -4624,33 +4615,6 @@ abstract class DBObject implements iDisplay
 			$aValues[$sAttCode] = array('label' => MetaModel::GetLabel(get_class($this), $sAttCode), 'value' => $this->GetAsHTML($sAttCode));
 		}
 		$oPage->details($aValues);
-	}
-
-    /** @internal */
-	const CALLBACK_AFTERINSERT = 0;
-
-	/**
-	 * Register a call back that will be called when some internal event happens
-     *
-     * @internal
-	 *
-	 * @param $iType string Any of the CALLBACK_x constants
-	 * @param $callback callable Call specification like a function name, or array('<class>', '<method>') or array($object, '<method>')
-	 * @param $aParameters array Values that will be passed to the callback, after $this
-	 *
-	 * @throws \Exception
-	 */
-	public function RegisterCallback($iType, $callback, $aParameters = array())
-	{
-		$sCallBackName = '';
-		if (!is_callable($callback, false, $sCallBackName))
-		{
-			throw new Exception('Registering an unknown/protected function or wrong syntax for the call spec: '.$sCallBackName);
-		}
-		$this->m_aCallbacks[$iType][] = array(
-			'callback' => $callback,
-			'params' => $aParameters
-		);
 	}
 
     /**
