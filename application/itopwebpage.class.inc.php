@@ -238,7 +238,14 @@ EOF;
 
 		// Time picker additional options
 		$sUserLang = Dict::GetUserLanguage();
-		$sTimePickerLang = json_encode(Dict::S('INTERNAL:JQuery-DatePicker:LangCode', $sUserLang));
+		$sUserLangShort = strtolower(
+			substr($sUserLang, 0, 2)
+		);
+		// PR #40 :  we are picking correct values for specific cases in dict files
+		// some languages are using codes like zh-CN or pt-BR
+		$sTimePickerLang = json_encode(
+			Dict::S('INTERNAL:JQuery-DatePicker:LangCode', $sUserLangShort)
+		);
 		$aPickerOptions['showOn'] = '';
 		$aPickerOptions['buttonImage'] = null;
 		$aPickerOptions['timeFormat'] = $oTimeFormat->ToDatePicker();
