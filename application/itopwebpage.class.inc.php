@@ -258,7 +258,7 @@ EOF;
 			$sJSDateTimePickerOptions = substr($sJSDateTimePickerOptions, 0, -1).$aMoreJSOptions;
 		}
 		$this->add_script(
-			<<< EOF
+			<<< JS
 	function GetUserLanguage()
 	{
 		return $sTimePickerLang;
@@ -293,12 +293,12 @@ EOF;
 				});
 		});
 	}
-EOF
+JS
 		);
 
 		// Attribute set tooltip on items
 		$this->add_ready_script(
-			<<<EOF
+			<<<JS
 	$('.attribute-set-item').each(function(){
 		// Encoding only title as the content is already sanitized by the HTML attribute.
         var sLabel = $('<div/>').text($(this).attr('data-label')).html();
@@ -325,20 +325,20 @@ EOF
 	       position: { corner: { target: 'topMiddle', tooltip: 'bottomLeft' }}
 	    });
 	});
-EOF
+JS
 		);
 		// Make image attributes zoomable
 		$this->add_ready_script(
-<<<EOF
+			<<<JS
 		$('.view-image img').each(function(){
 			$(this).attr('href', $(this).attr('src'))
 		})
 		.magnificPopup({type: 'image', closeOnContentClick: true });
-EOF
+JS
 		);
 
 		$this->add_init_script(
-			<<< EOF
+			<<< JS
 	try
 	{
 		var myLayout; // a var is required because this page utilizes: myLayout.allowOverflow() method
@@ -448,11 +448,11 @@ EOF
 		// Do something with the error !
 		alert(err);
 	}
-EOF
+JS
 		);
 
 		$this->add_ready_script(
-			<<< EOF
+			<<< JS
 	
 	// Adjust initial size
 	$('.v-resizable').each( function()
@@ -613,7 +613,7 @@ EOF
 			});
 		}
 	});
-EOF
+JS
 		);
 		$this->add_ready_script(InlineImage::FixImagesWidth());
 		/*
@@ -624,7 +624,7 @@ EOF
 
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
-			<<<EOF
+			<<<JS
 //		// for JQuery history
 //		function history_callback(hash)
 //		{
@@ -694,7 +694,7 @@ EOF
 		{
 			$('.ui-layout-center, .ui-layout-north, .ui-layout-south').css({display: 'block'});
 		}
-EOF
+JS
 		);
 	}
 
