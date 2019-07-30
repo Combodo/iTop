@@ -19,7 +19,7 @@
 			<h2>
 				{% block pMainHeaderTitle %}{% endblock %}
 				{% block pMainHeaderSubtitle %}
-					{% if sBrickSubtitle is not null %}
+					{% if sBrickSubtitle is defined and sBrickSubtitle is not null %}
 						<small class="subtitle">{{ sBrickSubtitle }}</small>
 					{% endif %}
 				{% endblock %}
