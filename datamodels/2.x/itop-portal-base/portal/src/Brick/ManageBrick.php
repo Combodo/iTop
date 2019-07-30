@@ -851,6 +851,7 @@ class ManageBrick extends PortalBrick
 												$aGroup[$oGroupProperty->nodeName] = (int)$oGroupProperty->GetText(0);
 												break;
 											case 'title':
+											case 'description':
 											case 'condition':
 												$aGroup[$oGroupProperty->nodeName] = $oGroupProperty->GetText();
 												break;

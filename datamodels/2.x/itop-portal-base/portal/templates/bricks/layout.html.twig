@@ -16,7 +16,14 @@
 {% block pMainHeader %}
 	<div class="col-xs-12">
 		<div id="main-header-title">
-			<h2>{% block pMainHeaderTitle %}{% endblock %}</h2>
+			<h2>
+				{% block pMainHeaderTitle %}{% endblock %}
+				{% block pMainHeaderSubtitle %}
+					{% if sBrickSubtitle is not null %}
+						<small class="subtitle">{{ sBrickSubtitle }}</small>
+					{% endif %}
+				{% endblock %}
+			</h2>
 		</div>
 		<div id="main-header-actions">
 			{% block pMainHeaderActions %}

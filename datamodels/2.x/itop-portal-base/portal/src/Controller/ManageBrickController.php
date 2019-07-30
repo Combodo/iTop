@@ -362,6 +362,7 @@ class ManageBrickController extends BrickController
 						'value' => $aGroup['id'],
 						'label' => Dict::S($aGroup['title']),
 						'label_html' => Dict::S($aGroup['title']),
+						'description' => array_key_exists('description',$aGroup) ? Dict::S($aGroup['description']) : null,
 						'condition' => $oConditionQuery,
 						'count' => $iGroupCount,
 					);
@@ -399,6 +400,9 @@ class ManageBrickController extends BrickController
 				$oQuery = $aGroupingTabsValues[$sGroupingTab]['condition']->DeepClone();
 			}
 		}
+
+		// Retrieve the current tab description to set the page subtitle (if it exists)
+		$aData['sBrickSubtitle'] = !empty($aGroupingTabsValues[$sGroupingTab]['description']) ? $aGroupingTabsValues[$sGroupingTab]['description'] : null;
 
 		// - Adding search clause if necessary
 		$this->ManageSearchValue($aData, $oQuery, $sClass, $aColumnsAttrs);

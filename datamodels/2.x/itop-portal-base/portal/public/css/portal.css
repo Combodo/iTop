@@ -387,7 +387,7 @@ footer {
     transition: all 0.2s linear;
   }
   .home .tile:hover {
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.10);
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
   }
   .home .tile .tile_decoration {
     display: block;
@@ -513,6 +513,11 @@ footer {
 }
 #main-header-title {
   margin-bottom: 15px;
+}
+#main-header-title .subtitle {
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 20px;
 }
 #main-header-actions {
   margin-bottom: 15px;
@@ -857,7 +862,7 @@ table .group-actions {
   }
   .mosaic-item:hover, .mosaic-item:focus {
     background-color: #ea7d1e;
-    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.20);
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
   }
   .mosaic-item-text .mosaic-item-text-wrapper {
     max-height: 100px;
