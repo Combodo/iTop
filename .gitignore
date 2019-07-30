@@ -3,6 +3,9 @@
 /toolkit
 /env-*
 
+# maintenance mode (N°2240)
+/.maintenance
+
 # listing prevention in conf directory
 /conf/**
 !/conf/.htaccess
