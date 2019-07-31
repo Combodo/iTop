@@ -167,26 +167,16 @@ $(function()
 										if(bRedirectionAjax)
 										{
 											// Creating a new modal
-											var oModalElem = $('#modal-for-all').clone();
-											oModalElem.attr('id', '').appendTo('body');
-											// Loading content
-											oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-											oModalElem.find('.modal-content').load(sUrl, {
-													// Passing formmanager data to the next page, just in case it needs it (eg. when applying stimulus)
-													formmanager_class: me.options.formmanager_class,
-													formmanager_data: JSON.stringify(me.options.formmanager_data)
+											CreatePortalModal({
+												content: {
+													endpoint: sUrl,
+													data: {
+														// Passing form manager data to the next page, just in case it needs it (eg. when applying stimulus)
+														formmanager_class: me.options.formmanager_class,
+														formmanager_data: JSON.stringify(me.options.formmanager_data)
+													},
 												},
-                                                function(oData, sStatus, oXHR)
-                                                {
-                                                    if(sStatus === 'error')
-                                                    {
-                                                        // Hiding modal in case of error as the general AJAX error handler will display a message
-                                                        oModalElem.modal('hide');
-                                                    }
-                                                }
-											);
-											
-											oModalElem.modal('show');
+											});
 										}
 										else
 										{

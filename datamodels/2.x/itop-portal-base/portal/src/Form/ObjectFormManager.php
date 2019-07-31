@@ -833,7 +833,7 @@ class ObjectFormManager extends FormManager
 						if ($oField instanceof SelectObjectField)
 						{
 							// - Set if remote object can be accessed
-							if ($this->oContainer !== null && !$oAttDef->IsNull($oField->GetCurrentValue()))
+							if ($this->oContainer !== null && !$oAttDef->IsNull($oField->GetCurrentValue()) && !is_null($oField->GetSearch()))
 							{
 								$sRemoteObjectFieldClass = $oField->GetSearch()->GetClass();
 								$sRemoteObjectFieldId = $oField->GetCurrentValue();

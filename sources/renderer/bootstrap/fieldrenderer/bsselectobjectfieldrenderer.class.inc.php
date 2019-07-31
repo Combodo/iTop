@@ -385,33 +385,24 @@ EOF
 			$oOutput->AddHtml('<div class="input-group-addon" id="' . $sHierarchicalButtonId . '"><span class="fas fa-sitemap"></span></div>');
 
 			$oOutput->AddJs(
-<<<EOF
+<<<JS
 				$('#{$sHierarchicalButtonId}').off('click').on('click', function(){
 					// Creating a new modal
-					// Note : This could be better if we check for an existing modal first instead of always creating a new one
-					var oModalElem = $('#modal-for-all').clone();
-					oModalElem.attr('id', '').attr('data-source-element', '{$sHierarchicalButtonId}').appendTo('body');
-					// Resizing to small modal
-					oModalElem.find('.modal-dialog').removeClass('modal-lg').addClass('modal-sm');
-					// Loading content
-					oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-					oModalElem.find('.modal-content').load(
-						'{$sEndpoint}',
-						{
-							sFormPath: '{$this->oField->GetFormPath()}',
-							sFieldId: '{$this->oField->GetId()}'
+					CreatePortalModal({
+						attributes: {
+							'data-source-element': '{$sHierarchicalButtonId}',
 						},
-                        function(sResponseText, sStatus, oXHR){
-                            // Hiding modal in case of error as the general AJAX error handler will display a message
-                            if(sStatus === 'error')
-                            {
-                                oModalElem.modal('hide');
-                            }
-                        }
-					);
-					oModalElem.modal('show');
+						content: {
+							endpoint: '{$sEndpoint}',
+							data: {
+								sFormPath: '{$this->oField->GetFormPath()}',
+								sFieldId: '{$this->oField->GetId()}',
+							},
+						},
+						size: 'sm',
+					});
 				});
-EOF
+JS
 			);
 		}
 	}
@@ -429,43 +420,37 @@ EOF
 		$oOutput->AddHtml('<div class="input-group-addon" id="' . $sSearchButtonId . '"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>');
 
 		$oOutput->AddJs(
-<<<EOF
+<<<JS
 			$('#{$sSearchButtonId}').off('click').on('click', function(){
 				// Creating a new modal
-				var oModalElem;
+				var oOptions =
+				{
+					content: {
+						endpoint: '{$sEndpoint}',
+						data: {
+							sFormPath: '{$this->oField->GetFormPath()}',
+							sFieldId: '{$this->oField->GetId()}',
+							formmanager_class: $(this).closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_class,
+							formmanager_data: JSON.stringify($(this).closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_data),
+							current_values: $(this).closest('.portal_form_handler').portal_form_handler('getCurrentValues')
+						},
+					},
+				};
+			
 				if($('.modal[data-source-element="{$sSearchButtonId}"]').length === 0)
 				{
-					oModalElem = $('#modal-for-all').clone();
-					oModalElem.attr('id', '').attr('data-source-element', '{$sSearchButtonId}').appendTo('body');
+					oOptions['attributes'] = {'data-source-element': '{$sSearchButtonId}'};
 				}
 				else
 				{
-					oModalElem = $('.modal[data-source-element="{$sSearchButtonId}"]').first();
+					oOptions['base_modal'] = {
+						'usage': 'replace',
+						'selector': '.modal[data-source-element="{$sSearchButtonId}"]:first'
+					};
 				}
-				// Resizing to small modal
-				oModalElem.find('.modal-dialog').removeClass('modal-sm').addClass('modal-lg');
-				// Loading content
-				oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-				oModalElem.find('.modal-content').load(
-					'{$sEndpoint}',
-					{
-						sFormPath: '{$this->oField->GetFormPath()}',
-						sFieldId: '{$this->oField->GetId()}',
-						formmanager_class: $(this).closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_class,
-						formmanager_data: JSON.stringify($(this).closest('.portal_form_handler').portal_form_handler('getOptions').formmanager_data),
-						current_values: $(this).closest('.portal_form_handler').portal_form_handler('getCurrentValues')
-					},
-                    function(sResponseText, sStatus, oXHR){
-                        // Hiding modal in case of error as the general AJAX error handler will display a message
-                        if(sStatus === 'error')
-                        {
-                            oModalElem.modal('hide');
-                        }
-                    }
-				);
-				oModalElem.modal('show');
+				CreatePortalModal(oOptions);
 			});
-EOF
+JS
 		);
 	}
 

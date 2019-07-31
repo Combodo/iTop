@@ -123,7 +123,7 @@ EOF
 			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="' . $this->oField->GetGlobalId() . '" /></span>';
 			// - Output
 			$oOutput->AddJs(
-<<<EOF
+<<<JS
 				// Collapse handlers
 				// - Collapsing by default to optimize form space
 				// It would be better to be able to construct the widget as collapsed, but in this case, datatables thinks the container is very small and therefore renders the table as if it was in microbox.
@@ -239,22 +239,11 @@ EOF
 								oEvent.stopPropagation();
 								
 								// Note : This could be better if we check for an existing modal first instead of always creating a new one
-								var oModalElem = $('#modal-for-all').clone();
-								oModalElem.attr('id', '').appendTo('body');
-								// Loading content
-								oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-								oModalElem.find('.modal-content').load(
-									$(this).attr('href'),
-									{},
-			                        function(sResponseText, sStatus, oXHR){
-			                            // Hiding modal in case of error as the general AJAX error handler will display a message
-			                            if(sStatus === 'error')
-			                            {
-			                                oModalElem.modal('hide');
-			                            }
-			                        }
-								);
-								oModalElem.modal('show');
+								CreatePortalModal({
+									content: {
+										endpoint: $(this).attr('href'),
+									},
+								});
 							});
 						},
 					});
@@ -310,7 +299,7 @@ EOF
 						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
 					});
 				};
-EOF
+JS
 			);
 
 			// Additional features if in edition mode
@@ -430,7 +419,7 @@ EOF
 				$sAddButtonEndpoint = str_replace('-sMode-', 'from-attribute', $this->oField->GetSearchEndpoint());
 				// - Output
 				$oOutput->AddJs(
-	<<<EOF
+	<<<JS
 					// Handles items selection/deselection
 					// - Remove button state handler
 					var updateRemoveButtonState_{$this->oField->GetGlobalId()} = function()
@@ -495,39 +484,34 @@ EOF
 						$('#{$sTableId} tr[role="row"] > td input[data-target-object-id]').each(function(iIndex, oElem){
 							aObjectIdsToIgnore.push( $(oElem).attr('data-target-object-id') );
 						});
+						
 						// Creating a new modal
-						var oModalElem;
+						var oOptions =
+						{
+							content: {
+								endpoint: '{$sAddButtonEndpoint}',
+								data: {
+									sFormPath: '{$this->oField->GetFormPath()}',
+									sFieldId: '{$this->oField->GetId()}',
+									aObjectIdsToIgnore : aObjectIdsToIgnore
+								},
+							},
+						};
+					
 						if($('.modal[data-source-element="{$sButtonAddId}"]').length === 0)
 						{
-							oModalElem = $('#modal-for-all').clone();
-							oModalElem.attr('id', '').attr('data-source-element', '{$sButtonAddId}').appendTo('body');
+							oOptions['attributes'] = {'data-source-element': '{$sButtonAddId}'};
 						}
 						else
 						{
-							oModalElem = $('.modal[data-source-element="{$sButtonAddId}"]').first();
+							oOptions['base_modal'] = {
+								'usage': 'replace',
+								'selector': '.modal[data-source-element="{$sButtonAddId}"]:first'
+							};
 						}
-						// Resizing to small modal
-						oModalElem.find('.modal-dialog').removeClass('modal-sm').addClass('modal-lg');
-						// Loading content
-						oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-						oModalElem.find('.modal-content').load(
-							'{$sAddButtonEndpoint}',
-							{
-								sFormPath: '{$this->oField->GetFormPath()}',
-								sFieldId: '{$this->oField->GetId()}',
-								aObjectIdsToIgnore : aObjectIdsToIgnore
-							},
-							function(sResponseText, sStatus, oXHR){
-							    // Hiding modal in case of error as the general AJAX error handler will display a message
-							    if(sStatus === 'error')
-							    {
-							        oModalElem.modal('hide');
-							    }
-							}
-						);
-						oModalElem.modal('show');
+						CreatePortalModal(oOptions);
 					});
-EOF
+JS
 				);
 			}
 		}

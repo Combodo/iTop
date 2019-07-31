@@ -34,15 +34,36 @@ var CreatePortalModal = function (oOptions)
 		true,
 		{
 			id: null,           // ID of the created modal
+			attributes: {},     // HTML attributes
 			base_modal: {
-				usage: 'clone', // Either 'clone' or 'replace'
-				selector: '#modal-for-all' // Selector of the modal element used to base this one on
+				usage: 'clone',             // Either 'clone' or 'replace'
+				selector: '#modal-for-all' // Either a selector of the modal element used to base this one on or the modal element itself
 			},
-			content: '',        // Either a string or an object containing the endpoint / data
+			content: undefined, // Either a string, an object containing the endpoint / data or undefined to keep base modal content as-is
 			size: 'lg',         // Either 'xs' / 'sm' / 'md' / 'lg'
 		},
 		oOptions
 	);
+
+	// Compute modal selector
+	var oSelectorElem = null;
+	switch(typeof oOptions.base_modal.selector)
+	{
+		case 'string':
+			oSelectorElem = $(oOptions.base_modal.selector);
+			break;
+
+		case 'object':
+			oSelectorElem = oOptions.base_modal.selector;
+			break;
+
+		default:
+			if (window.console && window.console.warn)
+			{
+				console.warn('Could not open modal dialog as the select option was malformed: ', oOptions.content);
+			}
+			break;
+	}
 
 	// Get modal element by either
 	var oModalElem = null;
@@ -50,14 +71,20 @@ var CreatePortalModal = function (oOptions)
 	//   Note : This could be better if we check for an existing modal first instead of always creating a new one
 	if (oOptions.base_modal.usage === 'clone')
 	{
-		oModalElem = $(oOptions.base_modal.selector).clone();
+		oModalElem = oSelectorElem.clone();
 		oModalElem.attr('id', oOptions.id)
 			.appendTo('body');
 	}
 	// - Get an existing modal in the DOM
 	else
 	{
-		oModalElem = $(oOptions.base_modal.selector);
+		oModalElem = oSelectorElem;
+	}
+
+	// Set attributes
+	for(var sProp in oOptions.attributes)
+	{
+		oModalElem.attr(sProp, oOptions.attributes[sProp]);
 	}
 
 	// Resize to small modal
@@ -90,15 +117,21 @@ var CreatePortalModal = function (oOptions)
 			);
 			break;
 
+		case 'undefined':
+			// Do nothing, we keep the content as-is
+			break;
+
 		default:
-			if (window.console)
+			if (window.console && window.console.warn)
 			{
-				console.log('Could not open modal dialog as the content option was malformed: ', oOptions.content);
+				console.warn('Could not open modal dialog as the content option was malformed: ', oOptions.content);
 			}
 	}
 
 	// Show modal
 	oModalElem.modal('show');
+
+	return oModalElem;
 };
 
 $(document).ready(function()

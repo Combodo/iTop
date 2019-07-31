@@ -19,21 +19,21 @@
             $('#{{ sLeafClassesListId }} a').off('click').on('click', function(oEvent){
                 oEvent.preventDefault();
 
+	            // Preparing target class url
                 var sUrl = '{{ app['url_generator'].generate('p_object_create', {sObjectClass : '-sObjectClass-'})|raw }}';
-                var oModalElem = $(this).closest('.modal');
-                // Showing loader
-                oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-                // Preparing target class url
-                sUrl = sUrl.replace(/-sObjectClass-/, $(this).attr('data-target-class') );
-                sUrl = AddParameterToUrl(sUrl, 'ar_token', '{{ ar_token }}');
-                // Loading form
-                oModalElem.find('.modal-content').load(sUrl, function(oData, sStatus, oXHR){
-                    if(sStatus === 'error')
-                    {
-                        // Hiding modal in case of error as the general AJAX error handler will display a message
-                        oModalElem.modal('hide');
-                    }
-                });
+	            sUrl = sUrl.replace(/-sObjectClass-/, $(this).attr('data-target-class') );
+	            sUrl = AddParameterToUrl(sUrl, 'ar_token', '{{ ar_token }}');
+
+	            // Creating a new modal
+	            CreatePortalModal({
+		            base_modal: {
+			            usage: 'replace',
+			            selector: $(this).closest('.modal'),
+		            },
+		            content: {
+			            endpoint: sUrl,
+		            },
+	            });
             });
         });
 	</script>
