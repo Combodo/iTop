@@ -1,24 +1,28 @@
 <?php
 
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ *
+ *
+ */
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
+use ApplicationContext;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
 use ContextTag;
@@ -33,23 +37,25 @@ use MetaModel;
  * Description of BsSelectObjectFieldRenderer
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ *
+ * @property \Combodo\iTop\Form\Field\SelectObjectField $oField
  */
 class BsSelectObjectFieldRenderer extends FieldRenderer
 {
 
-    /**
-     * Returns a RenderingOutput for the FieldRenderer's Field
-     *
-     * @return \Combodo\iTop\Renderer\RenderingOutput
-     *
-     * @throws \Exception
-     * @throws \CoreException
-     * @throws \ArchivedObjectException
-     */
+	/**
+	 * Returns a RenderingOutput for the FieldRenderer's Field
+	 *
+	 * @return \Combodo\iTop\Renderer\RenderingOutput
+	 *
+	 * @throws \Exception
+	 * @throws \CoreException
+	 * @throws \ArchivedObjectException
+	 */
 	public function Render()
 	{
 		$oOutput = new RenderingOutput();
-        $oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
+		$oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
 
 		$sFieldValueClass = $this->oField->GetSearch()->GetClass();
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
@@ -61,26 +67,26 @@ class BsSelectObjectFieldRenderer extends FieldRenderer
 		// Rendering field in edition mode
 		if (!$this->oField->GetReadOnly() && !$this->oField->GetHidden())
 		{
-		    // Debug trace: This is very useful when this kind of field doesn't return the expected values.
-            if(ContextTag::Check('debug'))
-            {
-                IssueLog::Info('Form field #'.$this->oField->GetId().' OQL query: '.$this->oField->GetSearch()->ToOQL(true));
-            }
+			// Debug trace: This is very useful when this kind of field doesn't return the expected values.
+			if(ContextTag::Check('debug'))
+			{
+				IssueLog::Info('Form field #'.$this->oField->GetId().' OQL query: '.$this->oField->GetSearch()->ToOQL(true));
+			}
 
 			// Rendering field
-            // - Opening container
+			// - Opening container
 			$oOutput->AddHtml('<div class="form-group form_group_small ' . $sFieldMandatoryClass . '">');
 
 			// Label
-            $oOutput->AddHtml('<div class="form_field_label">');
+			$oOutput->AddHtml('<div class="form_field_label">');
 			if ($this->oField->GetLabel() !== '')
 			{
 				$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 			}
-            $oOutput->AddHtml('</div>');
+			$oOutput->AddHtml('</div>');
 
-            // Value
-            $oOutput->AddHtml('<div class="form_field_control">');
+			// Value
+			$oOutput->AddHtml('<div class="form_field_control">');
 			$oOutput->AddHtml('<div class="help-block"></div>');
 			// - As a select
 			// TODO : This should be changed when we do the radio button display. For now we display everything with select
@@ -154,10 +160,10 @@ EOF
 					$sAutocompleteFieldId = 's_ac_' . $this->oField->GetGlobalId();
 					$sEndpoint = str_replace('-sMode-', 'autocomplete', $this->oField->GetSearchEndpoint());
 					$sNoResultText = Dict::S('Portal:Autocomplete:NoResult');
-					
+
 					// Retrieving field value
-                    $currentValue = $this->oField->GetCurrentValue();
-                    if (!empty($currentValue))
+					$currentValue = $this->oField->GetCurrentValue();
+					if (!empty($currentValue))
 					{
 						try
 						{
@@ -177,18 +183,18 @@ EOF
 					}
 
 					// HTML for autocomplete part
-                    // - Opening input group
-                    $oOutput->AddHtml('<div class="input-group selectobject">');
-                    // - Rendering autocomplete search
-                    $oOutput->AddHtml('<input type="text" id="' . $sAutocompleteFieldId . '" name="' . $sAutocompleteFieldId . '" value="')->AddHtml($sFieldValue)->AddHtml('" data-target-id="' . $this->oField->GetGlobalId() . ' "class="form-control" />');
-                    $oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" />');
-                    // - Rendering buttons
-                    //   - Rendering hierarchy button
-                    $this->RenderHierarchicalSearch($oOutput);
-                    //   - Rendering regular search
-                    $this->RenderRegularSearch($oOutput);
-                    // - Closing input group
-                    $oOutput->AddHtml('</div>');
+					// - Opening input group
+					$oOutput->AddHtml('<div class="input-group selectobject">');
+					// - Rendering autocomplete search
+					$oOutput->AddHtml('<input type="text" id="' . $sAutocompleteFieldId . '" name="' . $sAutocompleteFieldId . '" value="')->AddHtml($sFieldValue)->AddHtml('" data-target-id="' . $this->oField->GetGlobalId() . ' "class="form-control" />');
+					$oOutput->AddHtml('<input type="hidden" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" value="' . $this->oField->GetCurrentValue() . '" />');
+					// - Rendering buttons
+					//   - Rendering hierarchy button
+					$this->RenderHierarchicalSearch($oOutput);
+					//   - Rendering regular search
+					$this->RenderRegularSearch($oOutput);
+					// - Closing input group
+					$oOutput->AddHtml('</div>');
 
 					// JS FieldChange trigger (:input are not always at the same depth)
 					// Note : Not used for that field type
@@ -309,9 +315,9 @@ EOF
 					);
 				}
 			}
-            $oOutput->AddHtml('</div>');
+			$oOutput->AddHtml('</div>');
 
-            // - Closing container
+			// - Closing container
 			$oOutput->AddHtml('</div>');
 		}
 		// ... and in read-only mode (or hidden)
@@ -322,11 +328,16 @@ EOF
 			{
 				// Note : AllowAllData set to true here instead of checking scope's flag because we are displaying a value that has been set and validated
 				$oFieldValue = MetaModel::GetObject($sFieldValueClass, $this->oField->GetCurrentValue(), true, true);
-				$sFieldValue = $oFieldValue->GetName();
+				$sFieldHtmlValue = $oFieldValue->GetName();
+				if ($this->oField->GetRemoteObjectAccessible())
+				{
+					$sFieldUrl = ApplicationContext::MakeObjectUrl($sFieldValueClass, $this->oField->GetCurrentValue());
+					$sFieldHtmlValue = '<a href="'.$sFieldUrl.'" data-toggle="itop-portal-modal">'.$sFieldHtmlValue.'</a>';
+				}
 			}
 			else
 			{
-				$sFieldValue = Dict::S('UI:UndefinedObject');
+				$sFieldHtmlValue = Dict::S('UI:UndefinedObject');
 			}
 
 			// Opening container
@@ -335,18 +346,18 @@ EOF
 			// Showing label / value only if read-only but not hidden
 			if (!$this->oField->GetHidden())
 			{
-			    // Label
-                $oOutput->AddHtml('<div class="form_field_label">');
+				// Label
+				$oOutput->AddHtml('<div class="form_field_label">');
 				if ($this->oField->GetLabel() !== '')
 				{
 					$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
 				}
-                $oOutput->AddHtml('</div>');
+				$oOutput->AddHtml('</div>');
 
-                // Value
-                $oOutput->AddHtml('<div class="form_field_control">');
-				$oOutput->AddHtml('<div class="form-control-static">' . $sFieldValue . '</div>');
-                $oOutput->AddHtml('</div>');
+				// Value
+				$oOutput->AddHtml('<div class="form_field_control">');
+				$oOutput->AddHtml('<div class="form-control-static">'.$sFieldHtmlValue.'</div>');
+				$oOutput->AddHtml('</div>');
 			}
 
 			// Adding hidden value
@@ -366,8 +377,8 @@ EOF
 	 */
 	protected function RenderHierarchicalSearch(RenderingOutput &$oOutput)
 	{
-        if ($this->oField->GetHierarchical())
-        {
+		if ($this->oField->GetHierarchical())
+		{
 			$sHierarchicalButtonId = 's_hi_' . $this->oField->GetGlobalId();
 			$sEndpoint = str_replace('-sMode-', 'hierarchy', $this->oField->GetSearchEndpoint());
 
@@ -415,7 +426,7 @@ EOF
 		$sSearchButtonId = 's_rg_' . $this->oField->GetGlobalId();
 		$sEndpoint = str_replace('-sMode-', 'from-attribute', $this->oField->GetSearchEndpoint());
 
-        $oOutput->AddHtml('<div class="input-group-addon" id="' . $sSearchButtonId . '"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>');
+		$oOutput->AddHtml('<div class="input-group-addon" id="' . $sSearchButtonId . '"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>');
 
 		$oOutput->AddJs(
 <<<EOF

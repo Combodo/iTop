@@ -19,20 +19,20 @@
 
 namespace Combodo\iTop\Form\Field;
 
-use Closure;
-use DBSearch;
-use DBObjectSet;
 use BinaryExpression;
+use Closure;
+use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
+use DBObjectSet;
+use DBSearch;
 use FieldExpression;
 use ScalarExpression;
-use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 
 /**
  * Description of SelectObjectField
  *
  * @author Romain Quetiez <romain.quetiez@combodo.com>
  */
-class SelectObjectField extends Field
+class SelectObjectField extends RemoteObjectField
 {
 	protected $oSearch;
 	protected $iMaximumComboLength;
@@ -58,24 +58,28 @@ class SelectObjectField extends Field
 	public function SetSearch(DBSearch $oSearch)
 	{
 		$this->oSearch = $oSearch;
+
 		return $this;
 	}
 
 	public function SetMaximumComboLength($iMaximumComboLength)
 	{
 		$this->iMaximumComboLength = $iMaximumComboLength;
+
 		return $this;
 	}
 
 	public function SetMinAutoCompleteChars($iMinAutoCompleteChars)
 	{
 		$this->iMinAutoCompleteChars = $iMinAutoCompleteChars;
+
 		return $this;
 	}
 
 	public function SetHierarchical($bHierarchical)
 	{
 		$this->bHierarchical = $bHierarchical;
+
 		return $this;
 	}
 
@@ -87,6 +91,7 @@ class SelectObjectField extends Field
 	public function SetSearchEndpoint($sSearchEndpoint)
 	{
 		$this->sSearchEndpoint = $sSearchEndpoint;
+
 		return $this;
 	}
 
@@ -117,12 +122,13 @@ class SelectObjectField extends Field
 		}
 
 		$this->bMandatory = $bMandatory;
+
 		return $this;
 	}
 
-    /**
-     * @return \DBSearch
-     */
+	/**
+	 * @return \DBSearch
+	 */
 	public function GetSearch()
 	{
 		return $this->oSearch;
@@ -153,14 +159,14 @@ class SelectObjectField extends Field
 		return $this->sSearchEndpoint;
 	}
 
-    /**
-     * Resets current value is not among allowed ones.
-     * By default, reset is done ONLY when the field is not read-only.
-     *
-     * @param boolean $bAlways Set to true to verify even when the field is read-only.
-     *
-     * @throws \CoreException
-     */
+	/**
+	 * Resets current value is not among allowed ones.
+	 * By default, reset is done ONLY when the field is not read-only.
+	 *
+	 * @param boolean $bAlways Set to true to verify even when the field is read-only.
+	 *
+	 * @throws \CoreException
+	 */
 	public function VerifyCurrentValue($bAlways = false)
 	{
 		if(!$this->GetReadOnly() || $bAlways)

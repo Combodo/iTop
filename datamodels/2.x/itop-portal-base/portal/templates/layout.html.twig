@@ -96,6 +96,7 @@
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/c3.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap/js/bootstrap.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/bootstrap-patches.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/bootstrap-portal-modal.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/latinise/latinise.min.js'|add_itop_version }}"></script>
 		{# Visible.js to check if an element is visible on screen #}
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-visible/js/jquery.visible.min.js'|add_itop_version }}"></script>
@@ -455,26 +456,6 @@
 			
 			$(document).ready(function(){
 				{% block pPageReadyScripts %}
-					// Hack to enable a same modal to load content from different urls
-					$('body').on('hidden.bs.modal', '.modal#modal-for-all', function () {
-						$(this).removeData('bs.modal');
-						$(this).find('.modal-content').html(GetContentLoaderTemplate());
-					});
-					// Hide tooltips when a modal is opening, otherwise it might be overlapping it
-					$('body').on('show.bs.modal', function () {
-						$(this).find('.tooltip.in').tooltip('hide');
-					});
-					// Display a error message on modal if the content could not be loaded.
-					// Note : As of now, we can't display a more detailled message based on the response because Bootstrap doesn't pass response data with the loaded event.
-					$('body').on('loaded.bs.modal', function (oEvent) {
-						var sModalContent = $(oEvent.target).find('.modal-content').html();
-						
-						if( (sModalContent === '') || (sModalContent.replace(/[\n\r\t]+/g, '') === GetContentLoaderTemplate()) )
-						{
-							$(oEvent.target).modal('hide');
-						}
-					});
-
 					// Handle AJAX errors (exceptions (500), logout (401), ...)
 					$(document).ajaxError(function(oEvent, oXHR, oSettings, sError){
 					    if(oXHR.status === 401)
