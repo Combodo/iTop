@@ -127,7 +127,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Brick:Portal:Object:Form:Create:Title' => 'New %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Updating %2$s (%1$s)',
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
-	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following information:',
+	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, complete the following information:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Saved',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Select %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Select %1$s (%2$s)',
