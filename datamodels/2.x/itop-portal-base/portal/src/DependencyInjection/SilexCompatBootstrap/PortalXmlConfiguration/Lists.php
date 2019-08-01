@@ -105,7 +105,7 @@ class Lists extends AbstractConfiguration
 			}
 		}
 		$aPortalConf = $oContainer->getParameter('combodo.portal.instance.conf');
-		$aPortalConf['lists'] = $aClassLists;
+		$aPortalConf['lists'] = $aClassesLists;
 		$oContainer->setParameter('combodo.portal.instance.conf', $aPortalConf);
 	}
 
