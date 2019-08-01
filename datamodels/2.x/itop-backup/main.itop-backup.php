@@ -91,10 +91,10 @@ class BackupExec implements iScheduledProcess
 	protected $iRetentionCount;
 
 	/**
-	 * Constructor
-	 * @param sBackupDir string Target directory, defaults to APPROOT/data/backups/auto
-	 * @param iRetentionCount int Rotation (default to the value given in the configuration file 'retentation_count') set to 0 to disable this feature	 	 
-	 */	 	
+	 * @param string $sBackupDir Target directory, defaults to APPROOT/data/backups/auto
+	 * @param int $iRetentionCount default to the value given in the configuration file 'retentation_count'<br>
+	 *      set to 0 to disable this feature
+	 */
 	public function __construct($sBackupDir = null, $iRetentionCount = null)
 	{
 		if (is_null($sBackupDir))
