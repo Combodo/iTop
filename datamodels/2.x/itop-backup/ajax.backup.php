@@ -49,7 +49,7 @@ try
 				try
 				{
 					set_time_limit(0);
-					$oBB = new BackupExec(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
+					$oBB = new BackupExecProcess(APPROOT.'data/backups/manual/', 0 /*iRetentionCount*/);
 					$sRes = $oBB->Process(time() + 36000); // 10 hours to complete should be sufficient!
 				}
 				catch (Exception $e)

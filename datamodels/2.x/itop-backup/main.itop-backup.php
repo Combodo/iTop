@@ -85,10 +85,20 @@ class DBBackupScheduled extends DBBackup
 	}
 }
 
-class BackupExec implements iScheduledProcess
+class BackupExecProcess extends AbstractScheduledProcess
 {
 	protected $sBackupDir;
 	protected $iRetentionCount;
+
+	protected function GetModuleName()
+	{
+		return 'itop-backup';
+	}
+
+	protected function GetDefaultModuleSettingTime()
+	{
+		return '23:30';
+	}
 
 	/**
 	 * @param string $sBackupDir Target directory, defaults to APPROOT/data/backups/auto
@@ -107,7 +117,7 @@ class BackupExec implements iScheduledProcess
 		}
 		if (is_null($iRetentionCount))
 		{
-			$this->iRetentionCount = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'retention_count', 5);
+			$this->iRetentionCount = MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'retention_count', 5);
 		}
 		else
 		{
@@ -151,9 +161,10 @@ class BackupExec implements iScheduledProcess
 	
 			// Do execute the backup
 			//
-			$oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
-	
-			$sBackupFileFormat = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'file_name_format', '__DB__-%Y-%m-%d_%H_%M');
+			$oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'mysql_bindir', ''));
+
+			$sBackupFileFormat = MetaModel::GetConfig()->GetModuleSetting($this->GetModuleName(), 'file_name_format',
+				'__DB__-%Y-%m-%d_%H_%M');
 			$sName = $oBackup->MakeName($sBackupFileFormat);
 			if ($sName == '')
 			{
@@ -179,101 +190,4 @@ class BackupExec implements iScheduledProcess
 		return "Created the backup: $sBackupFile";
 	}
 
-	/**
-	 *    Interpret current setting for the week days
-	 * @returns array of int (monday = 1)
-	 * @throws Exception
-	 */
-	public function InterpretWeekDays()
-	{
-		static $aWEEKDAYTON = array('monday' => 1, 'tuesday' => 2, 'wednesday' => 3, 'thursday' => 4, 'friday' => 5, 'saturday' => 6, 'sunday' => 7);
-		$aDays = array();
-		$sWeekDays = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'week_days', 'monday, tuesday, wednesday, thursday, friday');
-		if ($sWeekDays != '')
-		{
-			$aWeekDaysRaw = explode(',', $sWeekDays);
-			foreach ($aWeekDaysRaw as $sWeekDay)
-			{
-				$sWeekDay = strtolower(trim($sWeekDay));
-				if (array_key_exists($sWeekDay, $aWEEKDAYTON))
-				{
-					$aDays[] = $aWEEKDAYTON[$sWeekDay];
-				}
-				else
-				{
-					throw new Exception("'itop-backup: wrong format for setting 'week_days' (found '$sWeekDay')");
-				}
-			}
-		}
-		if (count($aDays) == 0)
-		{
-			throw new Exception("'itop-backup: missing setting 'week_days'");
-		}
-		$aDays = array_unique($aDays);   
-		sort($aDays);
-		return $aDays;
-	}
-
-	/** Gives the exact time at which the process must be run next time
-	 * @return DateTime
-	 * @throws Exception
-	 */
-	public function GetNextOccurrence()
-	{
-		$bEnabled = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'enabled', true);
-		if (!$bEnabled)
-		{
-			$oRet = new DateTime('3000-01-01');
-		}
-		else
-		{
-			// 1st - Interpret the list of days as ordered numbers (monday = 1)
-			// 
-			$aDays = $this->InterpretWeekDays();	
-	
-			// 2nd - Find the next active week day
-			//
-			$sBackupTime = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'time', '23:30');
-			if (!preg_match('/[0-2][0-9]:[0-5][0-9]/', $sBackupTime))
-			{
-				throw new Exception("'itop-backup: wrong format for setting 'time' (found '$sBackupTime')");
-			}
-			$oNow = new DateTime();
-			$iNextPos = false;
-			for ($iDay = $oNow->format('N') ; $iDay <= 7 ; $iDay++)
-			{
-				$iNextPos = array_search($iDay, $aDays);
-				if ($iNextPos !== false)
-				{
-					if (($iDay > $oNow->format('N')) || ($oNow->format('H:i') < $sBackupTime))
-					{
-						break;
-					}
-					$iNextPos = false; // necessary on sundays
-				}
-			}
-	
-			// 3rd - Compute the result
-			//
-			if ($iNextPos === false)
-			{
-				// Jump to the first day within the next week
-				$iFirstDayOfWeek = $aDays[0];
-				$iDayMove = $oNow->format('N') - $iFirstDayOfWeek;
-				$oRet = clone $oNow;
-				$oRet->modify('-'.$iDayMove.' days');
-				$oRet->modify('+1 weeks');
-			}
-			else
-			{
-				$iNextDayOfWeek = $aDays[$iNextPos];
-				$iMove = $iNextDayOfWeek - $oNow->format('N');
-				$oRet = clone $oNow;
-				$oRet->modify('+'.$iMove.' days');
-			}
-			list($sHours, $sMinutes) = explode(':', $sBackupTime);
-			$oRet->setTime((int)$sHours, (int) $sMinutes);
-		}
-		return $oRet;
-	}
 }
