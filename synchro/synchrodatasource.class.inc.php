@@ -752,6 +752,7 @@ EOF
 			}
 			elseif ($oAttribute instanceof SynchroAttLinkSet)
 			{
+				// Do nothing for now...
 			}
 			$oAttributeSet->AddItem($oAttribute);
 		}
@@ -3293,7 +3294,7 @@ class SynchroExecution
 				$aArguments['last_full_load'] = '';
 			}
 
-			$this->m_oStatLog->DBUpdate($this->m_oChange);
+			$this->m_oStatLog->DBUpdate();
 
 			$iStepCount = 0;
 			do
@@ -3388,7 +3389,7 @@ class SynchroExecution
 				$bContinue = $this->DoJob3DeleteItopObjectsAndReplicas($iMaxChunkSize, $iCurrPos);
 				break;
 		}
-		$this->m_oStatLog->DBUpdate($this->m_oChange);
+		$this->m_oStatLog->DBUpdate();
 		self::$m_oCurrentTask = null;
 
 		return $bContinue;
