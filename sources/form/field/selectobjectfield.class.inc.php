@@ -32,7 +32,7 @@ use ScalarExpression;
  *
  * @author Romain Quetiez <romain.quetiez@combodo.com>
  */
-class SelectObjectField extends RemoteObjectField
+class SelectObjectField extends Field
 {
 	protected $oSearch;
 	protected $iMaximumComboLength;
@@ -100,6 +100,7 @@ class SelectObjectField extends RemoteObjectField
 	 * Setting the value will automatically add/remove a MandatoryValidator to the Field
 	 *
 	 * @param boolean $bMandatory
+	 *
 	 * @return \Combodo\iTop\Form\Field\Field
 	 */
 	public function SetMandatory($bMandatory)
@@ -169,14 +170,15 @@ class SelectObjectField extends RemoteObjectField
 	 */
 	public function VerifyCurrentValue($bAlways = false)
 	{
-		if(!$this->GetReadOnly() || $bAlways)
+		if (!$this->GetReadOnly() || $bAlways)
 		{
 			$oValuesScope = $this->GetSearch()->DeepClone();
-			$oBinaryExp = new BinaryExpression(new FieldExpression('id', $oValuesScope->GetClassAlias()), '=', new ScalarExpression($this->currentValue));
+			$oBinaryExp = new BinaryExpression(new FieldExpression('id', $oValuesScope->GetClassAlias()), '=',
+				new ScalarExpression($this->currentValue));
 			$oValuesScope->AddConditionExpression($oBinaryExp);
 			$oValuesSet = new DBObjectSet($oValuesScope);
 
-			if($oValuesSet->Count() === 0)
+			if ($oValuesSet->Count() === 0)
 			{
 				$this->currentValue = null;
 			}

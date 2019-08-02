@@ -29,7 +29,6 @@ use CMDBSource;
 use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Form\Field\FileUploadField;
 use Combodo\iTop\Form\Field\LabelField;
-use Combodo\iTop\Form\Field\SelectObjectField;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
@@ -827,20 +826,6 @@ class ObjectFormManager extends FormManager
 					else
 					{
 						$oField->SetReadOnly(true);
-
-						// Specific operation on field
-						// - SelectObjectField
-						if ($oField instanceof SelectObjectField)
-						{
-							// - Set if remote object can be accessed
-							if ($this->oContainer !== null && !$oAttDef->IsNull($oField->GetCurrentValue()) && !is_null($oField->GetSearch()))
-							{
-								$sRemoteObjectFieldClass = $oField->GetSearch()->GetClass();
-								$sRemoteObjectFieldId = $oField->GetCurrentValue();
-								$bIsRemoteObjectReadAllowed = $this->oContainer->get('security_helper')->IsActionAllowed(UR_ACTION_READ, $sRemoteObjectFieldClass, $sRemoteObjectFieldId);
-								$oField->SetRemoteObjectAccessible($bIsRemoteObjectReadAllowed);
-							}
-						}
 					}
 				}
 

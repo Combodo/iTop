@@ -42,7 +42,6 @@ require_once APPROOT . 'sources/form/field/caselogfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/multiplechoicesfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/selectfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/multipleselectfield.class.inc.php';
-require_once APPROOT . 'sources/form/field/remoteobjectfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/selectobjectfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/checkboxfield.class.inc.php';
 require_once APPROOT . 'sources/form/field/radiofield.class.inc.php';
