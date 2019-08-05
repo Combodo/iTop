@@ -2528,6 +2528,7 @@ EOF
 					{
 						$aDimensions = null;
 						$oDoc = InlineImage::ResizeImageToFit($oDoc, $aDimensions);
+						/** @var Attachment $oAttachment */
 						$oAttachment = MetaModel::NewObject('InlineImage');
 						$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));
 						$oAttachment->Set('temp_id', $sTempId);
@@ -2577,6 +2578,7 @@ EOF
 				} else {
 					$aDimensions = null;
 					$oDoc = InlineImage::ResizeImageToFit($oDoc, $aDimensions);
+					/** @var Attachment $oAttachment */
 					$oAttachment = MetaModel::NewObject('InlineImage');
 					$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));
 					$oAttachment->Set('temp_id', $sTempId);

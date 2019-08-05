@@ -1145,6 +1145,7 @@ class ObjectController extends BrickController
 					try
 					{
 						$oDocument = utils::ReadPostedDocument($sFieldName);
+						/** @var \Attachment $oAttachment */
 						$oAttachment = MetaModel::NewObject('Attachment');
 						$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime')); // one hour...
 						$oAttachment->Set('temp_id', $sTempId);

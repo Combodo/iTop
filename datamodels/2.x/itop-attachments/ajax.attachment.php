@@ -66,6 +66,7 @@ try
 			try
 			{
 				$oDoc = utils::ReadPostedDocument('file');
+				/** @var Attachment $oAttachment */
 				$oAttachment = MetaModel::NewObject('Attachment');
 				$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime'));
 				$oAttachment->Set('temp_id', $sTempId);
@@ -73,7 +74,7 @@ try
 				$oAttachment->SetDefaultOrgId();
 				$oAttachment->Set('contents', $oDoc);
 				$iAttId = $oAttachment->DBInsert();
-				
+
 				$aResult['msg'] = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
 				$aResult['icon'] = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
 				$aResult['att_id'] = $iAttId;
