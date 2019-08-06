@@ -3254,68 +3254,71 @@ abstract class DBObject implements iDisplay
      */
 	protected function DBDeleteSingleObject()
 	{
-		if (!MetaModel::DBIsReadOnly())
+		if (MetaModel::DBIsReadOnly())
 		{
-			$this->OnDelete();
-
-			// Activate any existing trigger
-			$sClass = get_class($this);
-			$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectDelete AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
-			while ($oTrigger = $oSet->Fetch())
-			{
-				/** @var \Trigger $oTrigger */
-				$oTrigger->DoActivate($this->ToArgs('this'));
-			}
-
-			$this->RecordObjDeletion($this->m_iKey); // May cause a reload for storing history information
-			
-			foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
-			{
-				if ($oAttDef->IsHierarchicalKey())
-				{
-					// Update the left & right indexes for each hierarchical key
-					$sTable = $sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
-					/** @var \AttributeHierarchicalKey $oAttDef */
-					$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".CMDBSource::Quote($this->m_iKey);
-					$aRes = CMDBSource::QueryToArray($sSQL);
-					$iMyLeft = $aRes[0]['left'];
-					$iMyRight = $aRes[0]['right'];
-					$iDelta =$iMyRight - $iMyLeft + 1;
-					MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
-
-					// No new parent for now, insert completely at the right of the tree
-					$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
-					$aRes = CMDBSource::QueryToArray($sSQL);
-					if (count($aRes) == 0)
-					{
-						$iNewLeft = 1;
-					}
-					else
-					{
-						$iNewLeft = $aRes[0]['max']+1;
-					}
-					MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
-				}
-				elseif (!$oAttDef->LoadFromDB())
-				{
-					/** @var \AttributeCustomFields $oAttDef */
-					$oAttDef->DeleteValue($this);
-				}
-			}
-
-			foreach(MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL) as $sParentClass)
-			{
-				$this->DBDeleteSingleTable($sParentClass);
-			}
-			
-			$this->AfterDelete();
-
-			$this->m_bIsInDB = false;
-			// Fix for N°926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete
-			// objects, reported as bug N°926)
-			// Thought the key is not reset, using DBInsert or DBWrite will create an object having the same characteristics and a new ID. DBUpdate is protected
+			return;
 		}
+
+		$this->OnDelete();
+
+		// Activate any existing trigger
+		$sClass = get_class($this);
+		$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectDelete AS t WHERE t.target_class IN (:class_list)"), array(),
+			$aParams);
+		while ($oTrigger = $oSet->Fetch())
+		{
+			/** @var \Trigger $oTrigger */
+			$oTrigger->DoActivate($this->ToArgs('this'));
+		}
+
+		$this->RecordObjDeletion($this->m_iKey); // May cause a reload for storing history information
+
+		foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+		{
+			if ($oAttDef->IsHierarchicalKey())
+			{
+				// Update the left & right indexes for each hierarchical key
+				$sTable = $sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
+				/** @var \AttributeHierarchicalKey $oAttDef */
+				$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".CMDBSource::Quote($this->m_iKey);
+				$aRes = CMDBSource::QueryToArray($sSQL);
+				$iMyLeft = $aRes[0]['left'];
+				$iMyRight = $aRes[0]['right'];
+				$iDelta = $iMyRight - $iMyLeft + 1;
+				MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
+
+				// No new parent for now, insert completely at the right of the tree
+				$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
+				$aRes = CMDBSource::QueryToArray($sSQL);
+				if (count($aRes) == 0)
+				{
+					$iNewLeft = 1;
+				}
+				else
+				{
+					$iNewLeft = $aRes[0]['max'] + 1;
+				}
+				MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
+			}
+			elseif (!$oAttDef->LoadFromDB())
+			{
+				/** @var \AttributeCustomFields $oAttDef */
+				$oAttDef->DeleteValue($this);
+			}
+		}
+
+		foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL) as $sParentClass)
+		{
+			$this->DBDeleteSingleTable($sParentClass);
+		}
+
+		$this->AfterDelete();
+
+		$this->m_bIsInDB = false;
+		// Fix for N°926: do NOT reset m_iKey as it can be used to have it for reporting purposes (see the REST service to delete
+		// objects, reported as bug N°926)
+		// Thought the key is not reset, using DBInsert or DBWrite will create an object having the same characteristics and a new ID. DBUpdate is protected
 	}
 
     /**
