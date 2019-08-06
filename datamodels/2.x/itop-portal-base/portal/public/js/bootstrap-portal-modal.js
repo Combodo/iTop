@@ -97,6 +97,9 @@ var CreatePortalModal = function (oOptions)
 	{
 		case 'string':
 			oModalElem.find('.modal-content').html(oOptions.content);
+			
+			//Manually triggers bootstrap event in order to keep listeners working
+			oModalElem.trigger('loaded.bs.modal');
 			break;
 
 		case 'object':
@@ -113,6 +116,9 @@ var CreatePortalModal = function (oOptions)
 					{
 						oModalElem.modal('hide');
 					}
+					
+					//Manually triggers bootstrap event in order to keep listeners working
+					oModalElem.trigger('loaded.bs.modal');
 				}
 			);
 			break;
