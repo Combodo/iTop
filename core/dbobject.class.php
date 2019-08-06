@@ -3359,47 +3359,46 @@ abstract class DBObject implements iDisplay
 			$aIssues = $oDeletionPlan->GetIssues();
 			throw new DeleteException('Found issue(s)', array('target_class' => get_class($this), 'target_id' => $this->GetKey(), 'issues' => implode(', ', $aIssues)));	
 		}
-		else
+
+
+		// Getting and setting time limit are not symetric:
+		// www.php.net/manual/fr/function.set-time-limit.php#72305
+		$iPreviousTimeLimit = ini_get('max_execution_time');
+
+		foreach ($oDeletionPlan->ListDeletes() as $sClass => $aToDelete)
 		{
-			// Getting and setting time limit are not symetric:
-			// www.php.net/manual/fr/function.set-time-limit.php#72305
-			$iPreviousTimeLimit = ini_get('max_execution_time');
-
-			foreach ($oDeletionPlan->ListDeletes() as $sClass => $aToDelete)
+			foreach ($aToDelete as $iId => $aData)
 			{
-				foreach ($aToDelete as $iId => $aData)
+				/** @var \DBObject $oToDelete */
+				$oToDelete = $aData['to_delete'];
+				// The deletion based on a deletion plan should not be done for each oject if the deletion plan is common (Trac #457)
+				// because for each object we would try to update all the preceding ones... that are already deleted
+				// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
+				// As a temporary fix: delete only the objects that are still to be deleted...
+				if ($oToDelete->m_bIsInDB)
 				{
-					/** @var \DBObject $oToDelete */
-					$oToDelete = $aData['to_delete'];
-					// The deletion based on a deletion plan should not be done for each oject if the deletion plan is common (Trac #457)
-					// because for each object we would try to update all the preceding ones... that are already deleted
-					// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
-					// As a temporary fix: delete only the objects that are still to be deleted...
-					if ($oToDelete->m_bIsInDB)
-					{
-						set_time_limit($iLoopTimeLimit);
-						$oToDelete->DBDeleteSingleObject();
-					}
+					set_time_limit($iLoopTimeLimit);
+					$oToDelete->DBDeleteSingleObject();
 				}
 			}
-
-			foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate)
-			{
-				foreach ($aToUpdate as $iId => $aData)
-				{
-					$oToUpdate = $aData['to_reset'];
-					/** @var \DBObject $oToUpdate */
-					foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
-					{
-						$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
-						set_time_limit($iLoopTimeLimit);
-						$oToUpdate->DBUpdate();
-					}
-				}
-			}
-
-			set_time_limit($iPreviousTimeLimit);
 		}
+
+		foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate)
+		{
+			foreach ($aToUpdate as $iId => $aData)
+			{
+				$oToUpdate = $aData['to_reset'];
+				/** @var \DBObject $oToUpdate */
+				foreach ($aData['attributes'] as $sRemoteExtKey => $aRemoteAttDef)
+				{
+					$oToUpdate->Set($sRemoteExtKey, $aData['values'][$sRemoteExtKey]);
+					set_time_limit($iLoopTimeLimit);
+					$oToUpdate->DBUpdate();
+				}
+			}
+		}
+
+		set_time_limit($iPreviousTimeLimit);
 
 		return $oDeletionPlan;
 	}
