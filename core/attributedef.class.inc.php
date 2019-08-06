@@ -73,7 +73,7 @@ define('EXTKEY_ABSOLUTE', 2);
 define('DEL_MANUAL', 1);
 
 /**
- * Propagation of the deletion through an external key - ask the user to delete the referencing object
+ * Propagation of the deletion through an external key - remove linked objects if ext key has is_null_allowed=false
  *
  * @package     iTopORM
  */
