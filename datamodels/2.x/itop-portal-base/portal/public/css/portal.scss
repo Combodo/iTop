@@ -293,6 +293,25 @@ footer{
 	text-align: center;
 }
 
+/*******************/
+/* Clipboard icons */
+/*******************/
+.url-to-clipboard{
+	&.url-to-clipboard-icon {
+		opacity: 0.5;
+		cursor: pointer;
+		transition: opacity 0.2s linear;
+		&:hover {
+			opacity: 1;
+		}
+	}
+}
+// Used for clipboard's tooltip, which is not part of .url-to-clipboard element
+.url-to-clipboard-tooltip-copied {
+	color: green;
+	margin-right: 3px;
+}
+
 /**************************/
 /* MagnificPopup settings */
 /**************************/
@@ -308,7 +327,7 @@ footer{
 }
 
 /********************/
-/* Typeahed setting */
+/* Typeahead setting */
 /********************/
 .twitter-typeahead .tt-menu{
 	max-height: 200px;

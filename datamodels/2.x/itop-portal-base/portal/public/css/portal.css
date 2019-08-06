@@ -278,6 +278,21 @@ footer {
   margin: 7em 0em;
   text-align: center;
 }
+/*******************/
+/* Clipboard icons */
+/*******************/
+.url-to-clipboard.url-to-clipboard-icon {
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s linear;
+}
+.url-to-clipboard.url-to-clipboard-icon:hover {
+  opacity: 1;
+}
+.url-to-clipboard-tooltip-copied {
+  color: green;
+  margin-right: 3px;
+}
 /**************************/
 /* MagnificPopup settings */
 /**************************/
@@ -292,7 +307,7 @@ footer {
   cursor: zoom-out;
 }
 /********************/
-/* Typeahed setting */
+/* Typeahead setting */
 /********************/
 .twitter-typeahead .tt-menu {
   max-height: 200px;

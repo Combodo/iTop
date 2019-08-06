@@ -118,6 +118,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Brick:Portal:Object:Form:Message:Saved' => 'Сохранено',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Выбрать %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Выбрать %1$s (%2$s)',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
 ));
 
 // CreateBrick brick

@@ -129,6 +129,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Object:Form:Message:Saved' => 'Salvo',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Selecionar %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selecinar %1$s (%2$s)',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
 ));
 
 // CreateBrick brick

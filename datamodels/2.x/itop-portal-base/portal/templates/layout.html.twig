@@ -136,8 +136,13 @@
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field_html.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_form_field_set.js'|add_itop_version }}"></script>
-        {# UI Extensions JS, in an undefined order #}
-        {% if app['combodo.portal.instance.conf'].ui_extensions.js_files is defined %}
+		{# Clipboard helper #}
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/clipboard.min.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/clipboardwidget.js'|add_itop_version }}"></script>
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal-clipboard.js'|add_itop_version }}"></script>
+
+		{# UI Extensions JS, in an undefined order #}
+		{% if app['combodo.portal.instance.conf'].ui_extensions.js_files is defined %}
 			{% for js_file in app['combodo.portal.instance.conf'].ui_extensions.js_files %}
 				<script type="text/javascript" src="{{ js_file|add_itop_version }}"></script>
 			{% endfor %}

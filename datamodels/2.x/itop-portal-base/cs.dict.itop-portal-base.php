@@ -133,6 +133,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Brick:Portal:Object:Form:Message:Saved' => 'Uloženo',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Vybrat %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Vybrat %1$s (%2$s)',
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
 ));
 
 // CreateBrick brick

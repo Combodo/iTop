@@ -23,6 +23,7 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
+use ApplicationContext;
 use Combodo\iTop\Portal\Form\ObjectFormManager;
 use Combodo\iTop\Portal\Twig\AppExtension;
 use Combodo\iTop\Renderer\Bootstrap\BsFormRenderer;
@@ -363,7 +364,16 @@ class ObjectFormHandlerHelper
 		$aFormData['object_state'] = $oFormManager->GetObject()->GetState();
 		$aFormData['fieldset'] = $aFieldSetData;
 		$aFormData['display_mode'] = (isset($aFormProperties['properties'])) ? $aFormProperties['properties']['display_mode'] : ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
-
+		// - Set a text to be copied on title if the object is not in creation
+		if($sMode !== static::ENUM_MODE_CREATE)
+		{
+			$aFormData['title_clipboard_text'] = Dict::Format(
+				'Brick:Portal:Object:Copy:TextToCopy',
+				$aFormData['object_name'],
+				ApplicationContext::MakeObjectUrl($sObjectClass, $sObjectId)
+			);
+		}
+		
 		return $aFormData;
 	}
 
