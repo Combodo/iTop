@@ -4290,8 +4290,19 @@ abstract class DBObject implements iDisplay
 		$oGraph->ComputeRelatedObjectsUp($sRelCode, $iMaxDepth, $bEnableRedundancy);
 		return $oGraph;
 	}
-	
-	public function GetReferencingObjects($bAllowAllData = false)
+
+	/**
+	 * @internal
+	 *
+	 * @param bool $bAllowAllData
+	 *
+	 * @return array keys : attribute (AttributeDefinition), objects (set of linked objects)
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	protected function GetReferencingObjects($bAllowAllData = false)
 	{
 		$aDependentObjects = array();
 		$aRererencingMe = MetaModel::EnumReferencingClasses(get_class($this));
