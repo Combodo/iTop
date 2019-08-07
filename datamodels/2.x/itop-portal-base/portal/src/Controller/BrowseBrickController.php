@@ -410,6 +410,7 @@ class BrowseBrickController extends BrickController
 					'aItems' => json_encode($aItems),
 					'iItemsCount' => count($aItems),
 					'aLevelsProperties' => json_encode($aLevelsProperties),
+					'iDefaultLengthList' => $oBrick->GetDefaultListLength(),
 				);
 
 			// Note : To extend this brick's template, depending on what you want to do :

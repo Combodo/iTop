@@ -96,6 +96,8 @@ class BrowseBrick extends PortalBrick
 	protected $aAvailablesBrowseModes;
 	/** @var string $sDefaultBrowseMode */
 	protected $sDefaultBrowseMode;
+	/** @var int $iDefaultListLength */
+	protected $iDefaultListLength;
 
 	/**
 	 * BrowseBrick constructor.
@@ -107,6 +109,7 @@ class BrowseBrick extends PortalBrick
 		$this->aLevels = array();
 		$this->aAvailablesBrowseModes = array();
 		$this->sDefaultBrowseMode = static::DEFAULT_BROWSE_MODE;
+		$this->iDefaultListLength = static::DEFAULT_LIST_LENGTH;
 	}
 
 	/**
@@ -178,6 +181,28 @@ class BrowseBrick extends PortalBrick
 	{
 		$this->sDefaultBrowseMode = $sDefaultBrowseMode;
 
+		return $this;
+	}
+
+	/**
+	 * Returns the default lists length to display
+	 *
+	 * @return int
+	 */
+	public function GetDefaultListLength()
+	{
+		return $this->iDefaultListLength;
+	}
+
+	/**
+	 * Sets the default lists length to display
+	 *
+	 * @param int $iDefaultListLength
+	 *
+	 * @return $this
+	 */
+	public function SetDefaultListLength($iDefaultListLength) {
+		$this->iDefaultListLength = $iDefaultListLength;
 		return $this;
 	}
 
@@ -323,6 +348,18 @@ class BrowseBrick extends PortalBrick
 								break;
 						}
 					}
+					break;
+				case 'default_list_length':
+					$iNodeDefaultListLength = (int)$oBrickSubNode->GetText(static::DEFAULT_LIST_LENGTH);
+					if(!in_array($iNodeDefaultListLength, array(10, 20, 50, -1),true))
+					{
+						throw new DOMFormatException(
+							'BrowseBrick: Default list length must be contained in list length options. Expected -1/10/20/50, '.$iNodeDefaultListLength.' given.',
+							null,
+							null, $oBrickSubNode
+						);
+					}
+					$this->SetDefaultListLength($iNodeDefaultListLength);
 					break;
 			}
 		}

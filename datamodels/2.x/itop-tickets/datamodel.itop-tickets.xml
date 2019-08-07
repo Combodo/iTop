@@ -1188,6 +1188,8 @@
 						</availables>
 						<default>list</default>
 					</browse_modes>
+					<!-- Optional. Set the default number of item lists will display. -->
+					<!-- <default_list_length>20</default_list_length> -->
 					<data_loading>auto</data_loading>
 					<!-- lazy|full|auto. Let the consultant choose if the list/tree data are load progressivly at each page/level or in one-shot or if it is up to the system regarding the "lazy_loading_threshold" parameter -->
 				</brick>
@@ -1258,6 +1260,8 @@
 						</tabs>
 						<!-- Implicit grouping on y axis by finalclass -->
 					</grouping>
+					<!-- Optional. Set the default number of item lists will display. -->
+					<!-- <default_list_length>20</default_list_length> -->
 					<data_loading>full</data_loading>
 					<export>
             			<export_default_fields>true</export_default_fields>

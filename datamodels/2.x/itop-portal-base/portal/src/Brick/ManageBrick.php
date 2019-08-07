@@ -163,6 +163,8 @@ class ManageBrick extends PortalBrick
 	protected $iGroupLimit;
 	/** @var bool $bGroupShowOthers */
 	protected $bGroupShowOthers;
+	/** @var int $iDefaultListLength */
+	protected $iDefaultListLength;
 
 	/**
 	 * Returns true if the $sDisplayMode need objects details for rendering.
@@ -226,6 +228,7 @@ class ManageBrick extends PortalBrick
 		$this->sTileMode = static::DEFAULT_TILE_MODE;
 		$this->iGroupLimit = static::DEFAULT_GROUP_LIMIT;
 		$this->bGroupShowOthers = static::DEFAULT_GROUP_SHOW_OTHERS;
+		$this->iDefaultListLength = static::DEFAULT_LIST_LENGTH;
 
 		// This is hardcoded for now, we might allow area grouping on another attribute in the future
 		$this->AddGrouping('areas', array('attribute' => 'finalclass'));
@@ -440,6 +443,28 @@ class ManageBrick extends PortalBrick
 		return $this;
 	}
 
+	/**
+	 * Returns the default lists length to display
+	 * 
+	 * @return int
+	 */
+	public function GetDefaultListLength()
+	{
+		return $this->iDefaultListLength;
+	}
+
+	/**
+	 * Sets the default lists length to display
+	 * 
+	 * @param int $iDefaultListLength
+	 * 
+	 * @return $this
+	 */
+	public function SetDefaultListLength($iDefaultListLength) {
+		$this->iDefaultListLength = $iDefaultListLength;
+		return $this;
+	}
+	
 	/**
 	 * Adds a grouping.
 	 *
@@ -799,7 +824,18 @@ class ManageBrick extends PortalBrick
 
 					}
 					break;
-
+				case 'default_list_length':
+					$iNodeDefaultListLength = (int)$oBrickSubNode->GetText(static::DEFAULT_LIST_LENGTH);
+					if(!in_array($iNodeDefaultListLength, array(10, 20, 50, -1),true))
+					{
+						throw new DOMFormatException(
+							'ManageBrick : Default list length must be contained in list length options. Expected -1/10/20/50, '.$iNodeDefaultListLength.' given.',
+							null,
+							null, $oBrickSubNode
+						);
+					}
+					$this->SetDefaultListLength($iNodeDefaultListLength);
+					break;
 				case 'grouping':
 					// Tabs grouping
 					/** @var \Combodo\iTop\DesignElement $oGroupingNode */

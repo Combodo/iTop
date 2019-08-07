@@ -96,6 +96,7 @@ class ManageBrickController extends BrickController
 		$aData = $aData + array(
 				'sDisplayMode' => $sDisplayMode,
 				'bCanExport' => !empty($aExportFields),
+				'iDefaultListLength' => $oBrick->GetDefaultListLength(),
 			);
 		// Preparing response
 		if ($oRequest->isXmlHttpRequest())
