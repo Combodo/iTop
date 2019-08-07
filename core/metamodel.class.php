@@ -6883,10 +6883,11 @@ abstract class MetaModel
 	 * Instantiate a persistable object (not yet persisted)
 	 *
 	 * @api
+	 *
 	 * @param string $sClass A persistable class
 	 * @param array|null $aValues array of attcode => attribute value to preset
 	 *
-	 * @return DBObject
+	 * @return \cmdbAbstractObject
 	 * @throws \CoreException
 	 */
 	public static function NewObject($sClass, $aValues = null)
