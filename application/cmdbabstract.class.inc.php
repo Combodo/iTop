@@ -3885,6 +3885,9 @@ EOF
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	protected function DoCheckToDelete(&$oDeletionPlan)
 	{
 		parent::DoCheckToDelete($oDeletionPlan);
