@@ -821,6 +821,7 @@ EOF
 					'default' => utils::ReadParam('default', array(), '', 'raw_data'),
 					'origin' => 'console'
 				);
+				// 3rd - prefill API
 				$oObjToClone->PrefillForm('creation_from_0',$aPrefillFormParam);
 
 				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array());
