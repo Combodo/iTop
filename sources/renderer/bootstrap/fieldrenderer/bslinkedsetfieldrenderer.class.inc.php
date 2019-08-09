@@ -32,6 +32,9 @@ use Combodo\iTop\Renderer\RenderingOutput;
  * Description of BsLinkedSetFieldRenderer
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * 
+ * @property \Combodo\iTop\Form\Field\LinkedSetField $oField 
+ * 
  */
 class BsLinkedSetFieldRenderer extends FieldRenderer
 {
@@ -569,7 +572,7 @@ JS
 			);
 
 			// Target object others attributes
-            // TODO: Support for AttriubteImage, AttributeBlob
+            // TODO: Support for AttributeImage, AttributeBlob
 			foreach ($this->oField->GetAttributesToDisplay(true) as $sAttCode)
 			{
 				if ($sAttCode !== 'id')
