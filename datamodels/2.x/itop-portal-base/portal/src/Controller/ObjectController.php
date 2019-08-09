@@ -1210,7 +1210,7 @@ class ObjectController extends BrickController
 	 * @throws \OQLException
 	 * @throws \Exception
 	 */
-	public function GetInformationsAsJsonAction(Request $oRequest)
+	public function GetInformationAsJsonAction(Request $oRequest)
 	{
 		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 		$oRequestManipulator = $this->get('request_manipulator');

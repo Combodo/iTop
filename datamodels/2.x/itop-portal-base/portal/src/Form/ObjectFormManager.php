@@ -738,7 +738,7 @@ class ObjectFormManager extends FormManager
 						/** @var \Combodo\iTop\Form\Field\LinkedSetField $oField */
 						if ($this->oContainer !== null)
 						{
-							$oField->SetInformationEndpoint($this->oContainer->get('url_generator')->generate('p_object_get_informations_json'));
+							$oField->SetInformationEndpoint($this->oContainer->get('url_generator')->generate('p_object_get_information_json'));
 						}
 					}
 					// - Field that require to apply scope on its DM OQL

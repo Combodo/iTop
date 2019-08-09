@@ -65,10 +65,10 @@ p_object_search_generic:
     sHostObjectClass: ~
     sHostObjectId: ~
 
-p_object_get_informations_json:
-  path: '/object/get-informations/json'
+p_object_get_information_json:
+  path: '/object/get-information/json'
   defaults:
-    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::GetInformationsAsJsonAction'
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::GetInformationAsJsonAction'
 
 p_object_document_display:
   path: '/object/document/display/{sObjectClass}/{sObjectId}/{sObjectField}'
