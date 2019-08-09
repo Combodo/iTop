@@ -25,6 +25,8 @@ namespace Combodo\iTop\Portal\Form;
 use AttachmentPlugIn;
 use AttributeDateTime;
 use AttributeTagSet;
+use CMDBChangeOpAttachmentAdded;
+use CMDBChangeOpAttachmentRemoved;
 use CMDBSource;
 use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Form\Field\FileUploadField;
@@ -1292,6 +1294,7 @@ class ObjectFormManager extends FormManager
 	{
 		$aRemovedAttachmentsIds = (isset($aAttachmentIds['removed_attachments_ids'])) ? $aAttachmentIds['removed_attachments_ids'] : array();
 		// Not used for now. //$aActualAttachmentsIds = (isset($aAttachmentIds['actual_attachments_ids'])) ? $aAttachmentIds['actual_attachments_ids'] : array();
+		$aActions = array();
 
 		// Removing attachments from currents
 		if (!empty($aRemovedAttachmentsIds))
@@ -1304,6 +1307,7 @@ class ObjectFormManager extends FormManager
 				if (in_array($oAttachment->GetKey(), $aRemovedAttachmentsIds))
 				{
 					$oAttachment->DBDelete();
+					$aActions[] = self::GetAttachmentActionChangeOp($oAttachment, false);
 				}
 			}
 		}
@@ -1325,7 +1329,17 @@ class ObjectFormManager extends FormManager
 				$oAttachment->SetItem($this->oObject);
 				$oAttachment->Set('temp_id', '');
 				$oAttachment->DBUpdate();
+				$aActions[] = self::GetAttachmentActionChangeOp($oAttachment, true);
 			}
+		}
+		
+		// Save changes to current object history
+		// inspired from itop-attachments/main.attachments.php / RecordHistory
+		foreach ($aActions as $oChangeOp)
+		{
+			$oChangeOp->Set("objclass", get_class($this->oObject));
+			$oChangeOp->Set("objkey", $this->oObject->GetKey());
+			$oChangeOp->DBInsertNoReload();
 		}
 	}
 
@@ -1350,5 +1364,34 @@ class ObjectFormManager extends FormManager
 		{
 			$oAttachment->DBDelete();
 		}
+	}
+
+	/**
+	 * This is a temporary function until the Attachment refactoring is done. It should be remove once it's done.
+	 * It is inspired from itop-attachments/main.attachments.php / GetActionChangeOp()
+	 *
+	 * @param $oAttachment
+	 * @param bool $bCreate
+	 *
+	 * @return \CMDBChangeOpAttachmentAdded|\CMDBChangeOpAttachmentRemoved
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	private static function GetAttachmentActionChangeOp($oAttachment, $bCreate = true)
+	{
+		$oBlob = $oAttachment->Get('contents');
+		$sFileName = $oBlob->GetFileName();
+		if ($bCreate)
+		{
+			$oChangeOp = new CMDBChangeOpAttachmentAdded();
+			$oChangeOp->Set('attachment_id', $oAttachment->GetKey());
+			$oChangeOp->Set('filename', $sFileName);
+		}
+		else
+		{
+			$oChangeOp = new CMDBChangeOpAttachmentRemoved();
+			$oChangeOp->Set('filename', $sFileName);
+		}
+		return $oChangeOp;
 	}
 }
