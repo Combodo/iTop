@@ -405,9 +405,6 @@ class ManageBrickController extends BrickController
 		// Retrieve the current tab description to set the page subtitle (if it exists)
 		$aData['sBrickSubtitle'] = !empty($aGroupingTabsValues[$sGroupingTab]['description']) ? $aGroupingTabsValues[$sGroupingTab]['description'] : null;
 
-		// - Adding search clause if necessary
-		$this->ManageSearchValue($aData, $oQuery, $sClass, $aColumnsAttrs);
-
 		// - Transforming search sort params to OQL format
 		$aSortedParams = $oBrickControllerHelper->ExtractSortParams();
 
@@ -509,6 +506,9 @@ class ManageBrickController extends BrickController
 				// Checking if we have a valid query
 				if ($oQuery !== null)
 				{
+					// - Adding search clause if necessary
+					$this->ManageSearchValue($aData, $oQuery, $sKey, $aColumnsAttrs);
+					
 					// Setting query pagination if needed
 					if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_LAZY)
 					{
