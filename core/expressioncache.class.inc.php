@@ -104,7 +104,7 @@ EOF;
 	public static function GetCacheFileName()
 	{
 		$sLangName = self::GetLangName();
-		return utils::GetCachePath().'expressioncache-' . $sLangName . '.php';
+		return utils::GetCachePath().'expressioncache/expressioncache-' . $sLangName . '.php';
 	}
 
 	/**
