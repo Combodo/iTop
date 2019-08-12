@@ -22,13 +22,12 @@
 namespace Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration;
 
 use Combodo\iTop\DesignElement;
-use iPortalUIExtension;
-use Symfony\Component\DependencyInjection\Container;
-use Exception;
-use utils;
-use UserRights;
-use MetaModel;
 use DOMFormatException;
+use Exception;
+use iPortalUIExtension;
+use MetaModel;
+use Symfony\Component\DependencyInjection\Container;
+use utils;
 
 /**
  * Class Basic
@@ -55,8 +54,6 @@ class Basic extends AbstractConfiguration
 			$aPortalConf = $this->ParseGlobalProperties($aPortalConf);
 			// - Rectifying portal logo url
 			$aPortalConf = $this->AppendLogoUri($aPortalConf);
-			// - User allowed portals
-			$aPortalConf['portals'] = UserRights::GetAllowedPortals();
 
 			// - class list
 			$aPortalConf['ui_extensions'] = $this->GetUiExtensions($oContainer);
@@ -99,7 +96,6 @@ class Basic extends AbstractConfiguration
 					'opening_mode' => null,
 				),
 			),
-			'portals' => array(),
 			'forms' => array(),
 			'ui_extensions' => array(
 				'css_files' => array(),
@@ -148,7 +144,7 @@ class Basic extends AbstractConfiguration
 					$aPortalConf = $this->ParseAttachments($aPortalConf, $oPropertyNode);
 					break;
 				case 'allowed_portals':
-					$aPortalConf = $this->ParseAllowedPortals($aPortalConf, $oPropertyNode);
+					$aPortalConf = $this->ParseAllowedPortalsOptions($aPortalConf, $oPropertyNode);
 					break;
 			}
 		}
@@ -247,7 +243,7 @@ class Basic extends AbstractConfiguration
 	 *
 	 * @return array
 	 */
-	private function ParseAllowedPortals(array $aPortalConf, DesignElement $oPropertyNode)
+	private function ParseAllowedPortalsOptions(array $aPortalConf, DesignElement $oPropertyNode)
 	{
 		/** @var \MFElement $oSubNode */
 		foreach ($oPropertyNode->GetNodes('*') as $oSubNode)

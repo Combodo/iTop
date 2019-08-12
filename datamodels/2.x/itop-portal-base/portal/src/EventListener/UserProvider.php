@@ -21,14 +21,16 @@
 
 namespace Combodo\iTop\Portal\EventListener;
 
+use Dict;
 use Exception;
+use LoginWebPage;
+use ModuleDesign;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Dict;
-use LoginWebPage;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use UserRights;
-use ModuleDesign;
 
 /**
  * Class UserProvider
@@ -38,9 +40,9 @@ use ModuleDesign;
  */
 class UserProvider implements ContainerAwareInterface
 {
-    /** @var \ModuleDesign $oModuleDesign */
-    private $oModuleDesign;
-    /** @var string $sPortalId */
+	/** @var \ModuleDesign $oModuleDesign */
+	private $oModuleDesign;
+	/** @var string $sPortalId */
 	private $sPortalId;
 	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $container */
 	private $oContainer;
@@ -51,42 +53,62 @@ class UserProvider implements ContainerAwareInterface
 	 * @param \ModuleDesign $oModuleDesign
 	 * @param string        $sPortalId
 	 */
-    public function __construct(ModuleDesign $oModuleDesign, $sPortalId)
-    {
-        $this->oModuleDesign = $oModuleDesign;
-	    $this->sPortalId = $sPortalId;
-    }
+	public function __construct(ModuleDesign $oModuleDesign, $sPortalId)
+	{
+		$this->oModuleDesign = $oModuleDesign;
+		$this->sPortalId = $sPortalId;
+	}
 
 	/**
 	 * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $oGetResponseEvent
 	 *
 	 * @throws \Exception
 	 */
-    public function onKernelRequest(GetResponseEvent $oGetResponseEvent)
-    {
-        // User pre-checks
-        // Note: At this point the Exception handler is not registered, so we can't use $oApp::abort() method, hence the die().
-        // - Checking user rights and prompt if needed (401 HTTP code returned if XHR request)
-        $iExitMethod = ($oGetResponseEvent->getRequest()->isXmlHttpRequest()) ? LoginWebPage::EXIT_RETURN : LoginWebPage::EXIT_PROMPT;
-        $iLogonRes = LoginWebPage::DoLoginEx($this->sPortalId, false, $iExitMethod);
-        if( ($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0) )
-        {
-            die(Dict::S('Portal:ErrorUserLoggedOut'));
-        }
-        // - User must be associated with a Contact
-        if (UserRights::GetContactId() == 0)
-        {
-            die(Dict::S('Portal:ErrorNoContactForThisUser'));
-        }
+	public function onKernelRequest(GetResponseEvent $oGetResponseEvent)
+	{
+		// User pre-checks
+		// Note: At this point the Exception handler is not registered, so we can't use $oApp::abort() method, hence the die().
+		// - Checking user rights and prompt if needed (401 HTTP code returned if XHR request)
+		$iExitMethod = ($oGetResponseEvent->getRequest()->isXmlHttpRequest()) ? LoginWebPage::EXIT_RETURN : LoginWebPage::EXIT_PROMPT;
+		$iLogonRes = LoginWebPage::DoLoginEx($this->sPortalId, false, $iExitMethod);
+		if( ($iExitMethod === LoginWebPage::EXIT_RETURN) && ($iLogonRes != 0) )
+		{
+			die(Dict::S('Portal:ErrorUserLoggedOut'));
+		}
+		// - User must be associated with a Contact
+		if (UserRights::GetContactId() == 0)
+		{
+			die(Dict::S('Portal:ErrorNoContactForThisUser'));
+		}
 
-        // User
-        $oUser = UserRights::GetUserObject();
-        if ($oUser === null)
-        {
-            throw new Exception('Could not load connected user.');
-        }
-        $this->oContainer->set('combodo.current_user', $oUser);
-    }
+		// User
+		$oUser = UserRights::GetUserObject();
+		if ($oUser === null)
+		{
+			throw new Exception('Could not load connected user.');
+		}
+		$this->oContainer->set('combodo.current_user', $oUser);
+
+		// Allowed portals
+		$aAllowedPortals = UserRights::GetAllowedPortals();
+
+		// Checking that user is allowed this portal
+		$bAllowed = false;
+		foreach ($aAllowedPortals as $aAllowedPortal)
+		{
+			if ($aAllowedPortal['id'] === $this->sPortalId)
+			{
+				$bAllowed = true;
+				break;
+			}
+		}
+		if (!$bAllowed)
+		{
+			throw new HttpException(Response::HTTP_NOT_FOUND);
+		}
+		/** @noinspection PhpParamsInspection It's an array and it's gonna stay that way */
+		$this->oContainer->set('combodo.current_user.allowed_portals', $aAllowedPortals);
+	}
 
 	/**
 	 * Sets the container.

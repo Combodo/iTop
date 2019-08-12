@@ -217,14 +217,14 @@
 								{% if bUserConnected %}
 									<li role="separator" class="divider"></li>
                                     <li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fas fa-user fa-2x fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
-									{% for aPortal in app['combodo.portal.instance.conf'].portals %}
+									{% for aPortal in app['combodo.current_user.allowed_portals'] %}
 										{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
 											{% set sIconClass = (aPortal.id == 'backoffice') ? 'far fa-list-alt' : 'fas fa-external-link-alt' %}
 											<li><a href="{{ aPortal.url }}" target="_blank"><span class="brick_icon {{ sIconClass }} fa-2x fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
 										{% endif %}
 									{% endfor %}
 									{# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
-									{% if app['combodo.portal.instance.conf'].portals|length > 1 %}
+									{% if app['combodo.current_user.allowed_portals']|length > 1 %}
 										<li role="separator" class="divider"></li>
 									{% endif %}
 									<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fas fa-sign-out-alt fa-2x fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
@@ -256,14 +256,14 @@
 								</a>
 								<ul class="dropdown-menu user_options" aria-labelledby="user_options">
 									<li><a href="{{ app.url_generator.generate('p_user_profile_brick') }}"><span class="brick_icon fas fa-user fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil'|dict_s }}</a></li>
-									{% for aPortal in app['combodo.portal.instance.conf'].portals %}
+									{% for aPortal in app['combodo.current_user.allowed_portals'] %}
 										{% if aPortal.id != app['combodo.portal.instance.conf'].properties.id %}
 											{% set sGlyphiconClass = (aPortal.id == 'backoffice') ? 'far fa-list-alt' : 'fas fa-external-link-alt' %}
 											<li><a href="{{ aPortal.url }}" {% if app['combodo.portal.instance.conf'].properties.allowed_portals.opening_mode == 'tab' %}target="_blank"{% endif %} title="{{ aPortal.label|dict_s }}"><span class="brick_icon {{ sGlyphiconClass }} fa-lg fa-fw"></span>{{ aPortal.label|dict_s }}</a></li>
 										{% endif %}
 									{% endfor %}
 									{# We display the separator only if the user has more then 1 portal. Meaning default portal + console or several portal at least #}
-									{% if app['combodo.portal.instance.conf'].portals|length > 1 %}
+									{% if app['combodo.current_user.allowed_portals']|length > 1 %}
 										<li role="separator" class="divider"></li>
 									{% endif %}
 									<li><a href="{{ app['combodo.absolute_url'] }}pages/logoff.php"><span class="brick_icon fas fa-sign-out-alt fa-lg fa-fw"></span>{{ 'Brick:Portal:UserProfile:Navigation:Dropdown:Logout'|dict_s }}</a></li>
