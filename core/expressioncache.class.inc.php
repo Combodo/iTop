@@ -1,25 +1,34 @@
 <?php
-// Copyright (c) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-//
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
+/**
+ * Class ExpressionCache
+ */
 class ExpressionCache
 {
 
+	/**
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 *
+	 * @return mixed|null
+	 */
 	static public function GetCachedExpression($sClass, $sAttCode)
 	{
 		// read current cache
@@ -30,6 +39,7 @@ class ExpressionCache
 		$sCacheClass = self::GetCacheClassName();
 		if (class_exists($sCacheClass))
 		{
+			/** @noinspection PhpUndefinedFieldInspection The property is dynamically generated */
 			if (array_key_exists($sKey, $sCacheClass::$aCache))
 			{
 				$sVal = $sCacheClass::$aCache[$sKey];
@@ -40,6 +50,10 @@ class ExpressionCache
 	}
 
 
+	/**
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 */
 	static public function Warmup()
 	{
 		// Store current language
@@ -84,6 +98,13 @@ EOF;
 		Dict::SetUserLanguage($sUserLang);
 	}
 
+	/**
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
 	static private function GetSerializedExpression($sClass, $sAttCode)
 	{
 		$sKey = static::GetKey($sClass, $sAttCode);
@@ -92,8 +113,9 @@ EOF;
 	}
 
 	/**
-	 * @param $sClass
-	 * @param $sAttCode
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 *
 	 * @return string
 	 */
 	static private function GetKey($sClass, $sAttCode)
@@ -101,6 +123,9 @@ EOF;
 		return $sClass.'::'.$sAttCode;
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function GetCacheFileName()
 	{
 		$sLangName = self::GetLangName();
