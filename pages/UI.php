@@ -916,11 +916,11 @@ EOF
 				{
 					try
 					{
-						CMDBSource::Query('START TRANSACTION');
 						if (!empty($aErrors))
 						{
 							throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 						}
+						CMDBSource::Query('START TRANSACTION');
 						$oObj->DBUpdate();
 						CMDBSource::Query('COMMIT');
 						$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
