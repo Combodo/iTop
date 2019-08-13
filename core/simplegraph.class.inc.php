@@ -1,43 +1,20 @@
 <?php
-// Copyright (C) 2015-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * Data structures (i.e. PHP classes) to manage "graphs"
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2015-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * 
- * Example:
- * require_once('../bootstrap.inc.php');
- * require_once(APPROOT.'application/startup.inc.php');
- * require_once(APPROOT.'core/simplegraph.class.inc.php');
- * 
- * $oGraph = new SimpleGraph();
- * 
- * $oNode1 = new GraphNode($oGraph, 'Source1');
- * $oNode2 = new GraphNode($oGraph, 'Sink');
- * $oEdge1 = new GraphEdge($oGraph, 'flow1', $oNode1, $oNode2);
- * $oNode3 = new GraphNode($oGraph, 'Source2');
- * $oEdge2 = new GraphEdge($oGraph, 'flow2', $oNode3, $oNode2);
- * $oEdge2 = new GraphEdge($oGraph, 'flow3', $oNode2, $oNode3);
- * $oEdge2 = new GraphEdge($oGraph, 'flow4', $oNode1, $oNode3);
- * 
- * echo $oGraph->DumpAsHtmlImage(); // requires graphviz
- * echo $oGraph->DumpAsHtmlText();
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 /**

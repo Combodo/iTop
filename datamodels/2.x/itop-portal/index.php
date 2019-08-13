@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 /**
@@ -40,14 +38,15 @@
 );
 
 // Load current environment
-if (file_exists(__DIR__.'/../../bootstrap.inc.php'))
+if (file_exists(__DIR__.'/../../approot.inc.php'))
 {
-	require_once __DIR__.'/../../bootstrap.inc.php';   // When in env-xxxx folder
+	require_once __DIR__.'/../../approot.inc.php';   // When in env-xxxx folder
 }
 else
 {
-	require_once __DIR__.'/../../../bootstrap.inc.php';   // When in datamodels/x.x folder
+	require_once __DIR__.'/../../../approot.inc.php';   // When in datamodels/x.x folder
 }
+require_once APPROOT.'/bootstrap.inc.php';
 require_once APPROOT.'application/startup.inc.php';
 
 // Protection against setup in the following configuration : ITIL Ticket with Enhanced Portal selected but neither UserRequest or Incident. Which would crash the portal.

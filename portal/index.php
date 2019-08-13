@@ -16,11 +16,10 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
-require_once('../bootstrap.inc.php');
+require_once('../approot.inc.php');
+require_once(APPROOT.'/bootstrap.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
 try

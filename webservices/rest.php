@@ -1,67 +1,25 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * Entry point for all the REST services
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * -------------------------------------------------- 
- * Create an object
- * -------------------------------------------------- 
- * POST itop/webservices/rest.php
- * {
- * 	operation: 'object_create',
- * 	comment: 'Synchronization from blah...',
- * 	class: 'UserRequest',
- * 	results: 'id, friendlyname',
- * 	fields:
- * 	{
- * 		org_id: 'SELECT Organization WHERE name = "Demo"',
- * 		caller_id:
- * 		{
- * 			name: 'monet',
- * 			first_name: 'claude',
- * 		}
- * 		title: 'Houston, got a problem!',
- * 		description: 'The fridge is empty'
- * 		contacts_list:
- * 		[
- * 			{
- * 				role: 'pizza delivery',
- * 				contact_id:
- * 				{
- * 					finalclass: 'Person',
- * 					name: 'monet',
- * 					first_name: 'claude'
- * 				}
- * 			}
- * 		]
- * 	}
- * }
+ * This file is part of iTop.
  *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * @copyright   Copyright (C) 2010-2013 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- * @link https://www.itophub.io/wiki/page?id=2_5_0%3Aadvancedtopics%3Arest_json REST service documentation
- * @example https://www.itophub.io/wiki/page?id=2_5_0%3Aadvancedtopics%3Arest_json_playground
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
-require_once(__DIR__.'/../bootstrap.inc.php');
+require_once(__DIR__.'/../approot.inc.php');
+require_once(APPROOT.'/bootstrap.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
