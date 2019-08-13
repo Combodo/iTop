@@ -1528,7 +1528,6 @@ class utils
 		clearstatcache();
 		if (!file_exists($sCssPath) || (is_writable($sCssPath) && (filemtime($sCssPath) < filemtime($sSassPath))))
 		{
-			require_once(APPROOT.'lib/scssphp/scss.inc.php');
 			$oScss = new Compiler();
 			$oScss->setImportPaths($aImportPaths);
 			$oScss->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Expanded');
