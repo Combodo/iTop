@@ -163,7 +163,7 @@ function GetReportColor($iTotal, $iErrors)
 
 try
 {
-	require_once('../approot.inc.php');
+	require_once('../bootstrap.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 	require_once(APPROOT.'/application/csvpage.class.inc.php');

@@ -33,14 +33,14 @@ class ItopTestCase extends TestCase
 {
     protected function setUp()
 	{
-		@include_once '../approot.inc.php';
-        @include_once '../../approot.inc.php';
-		@include_once '../../../approot.inc.php';
-		@include_once '../../../../approot.inc.php';
-		@include_once '../../../../../approot.inc.php';
-		@include_once '../../../../../../approot.inc.php';
-		@include_once '../../../../../../../approot.inc.php';
-		@include_once '../../../../../../../../approot.inc.php';
+		@include_once '../bootstrap.inc.php';
+        @include_once '../../bootstrap.inc.php';
+		@include_once '../../../bootstrap.inc.php';
+		@include_once '../../../../bootstrap.inc.php';
+		@include_once '../../../../../bootstrap.inc.php';
+		@include_once '../../../../../../bootstrap.inc.php';
+		@include_once '../../../../../../../bootstrap.inc.php';
+		@include_once '../../../../../../../../bootstrap.inc.php';
 
         $this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
 

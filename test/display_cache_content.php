@@ -21,7 +21,7 @@
  * Date: 06/10/2017
  */
 
-require_once('../approot.inc.php');
+require_once('../bootstrap.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 
 

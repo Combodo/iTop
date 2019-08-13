@@ -41,7 +41,7 @@
  * 'percent': integer 0..100 the percentage of completion once the file has been loaded 
  */ 
 define('SAFE_MINIMUM_MEMORY', 64*1024*1024);
-require_once('../approot.inc.php');
+require_once('../bootstrap.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');
 require_once(APPROOT.'/setup/moduleinstaller.class.inc.php');

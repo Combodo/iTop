@@ -32,7 +32,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once('../approot.inc.php');
+require_once('../bootstrap.inc.php');
 
 // Needed to read the parameters (with sanitization)
 require_once(APPROOT.'application/utils.inc.php');

@@ -22,7 +22,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * 
  * Example:
- * require_once('../approot.inc.php');
+ * require_once('../bootstrap.inc.php');
  * require_once(APPROOT.'application/startup.inc.php');
  * require_once(APPROOT.'core/simplegraph.class.inc.php');
  * 

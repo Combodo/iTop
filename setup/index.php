@@ -23,7 +23,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once('../approot.inc.php');
+require_once('../bootstrap.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/core/config.class.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');

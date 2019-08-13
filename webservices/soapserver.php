@@ -27,7 +27,7 @@
 // Important note: if some required includes are missing, this might result
 // in the error "looks like we got no XML document"...
 
-require_once('../approot.inc.php');
+require_once('../bootstrap.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 

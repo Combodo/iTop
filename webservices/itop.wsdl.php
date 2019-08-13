@@ -43,7 +43,7 @@ else
 	header('Content-Disposition: online; filename="itop.wsdl"');
 }
 
-require_once('../approot.inc.php');
+require_once('../bootstrap.inc.php');
 require_once(APPROOT.'webservices/webservices.class.inc.php');
 require_once(APPROOT.'core/config.class.inc.php');
 require_once(APPROOT.'application/utils.inc.php');

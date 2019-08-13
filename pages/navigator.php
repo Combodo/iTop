@@ -20,7 +20,7 @@
 /**
  * Display the Flash navigator, in the whole pane
  */
-require_once('../approot.inc.php');
+require_once('../bootstrap.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
