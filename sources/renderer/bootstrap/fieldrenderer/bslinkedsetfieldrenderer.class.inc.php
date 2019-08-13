@@ -19,14 +19,14 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
-use Exception;
 use ApplicationContext;
-use IssueLog;
-use Dict;
-use MetaModel;
 use AttributeFriendlyName;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
+use Dict;
+use Exception;
+use IssueLog;
+use MetaModel;
 
 /**
  * Description of BsLinkedSetFieldRenderer
@@ -540,6 +540,7 @@ JS
      */
 	protected function PrepareItems(&$aItems, &$aItemIds)
 	{
+		/** @var \ormLinkSet $oValueSet */
 		$oValueSet = $this->oField->GetCurrentValue();
 		$oValueSet->OptimizeColumnLoad(array($this->oField->GetTargetClass() => $this->oField->GetAttributesToDisplay(true)));
 		while ($oItem = $oValueSet->Fetch())
@@ -562,6 +563,12 @@ JS
 			else
 			{
 				$oRemoteItem = $oItem;
+			}
+
+			// Skip item if not supposed to be displayed
+			if ($this->oField->IsLimitedAccessItem($oRemoteItem->GetKey()))
+			{
+				continue;
 			}
 
 			$aItemProperties = array(
@@ -615,6 +622,7 @@ JS
 			$aItems[] = $aItemProperties;
 			$aItemIds[$aItemProperties['id']] = array();
 		}
+		$oValueSet->rewind();
 	}
 
 }

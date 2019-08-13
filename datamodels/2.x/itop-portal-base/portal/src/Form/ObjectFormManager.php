@@ -835,6 +835,8 @@ class ObjectFormManager extends FormManager
 				// - LinkedSet
 				if (in_array(get_class($oField), array('Combodo\\iTop\\Form\\Field\\LinkedSetField')))
 				{
+					/** @var \Combodo\iTop\Form\Field\LinkedSetField $oField */
+					/** @var \AttributeLinkedSetIndirect $oAttDef */
 					//   - Overriding attributes to display
 					if ($this->oContainer !== null)
 					{
@@ -855,6 +857,32 @@ class ObjectFormManager extends FormManager
 							$aAttributesToDisplay[$sAttCodeToDisplay] = $oAttDefToDisplay->GetLabel();
 						}
 						$oField->SetAttributesToDisplay($aAttributesToDisplay);
+					}
+					//    - Filtering links regarding scopes
+					if ($this->oContainer !== null)
+					{
+						$aLimitedAccessItemIDs = array();
+
+						/** @var \ormLinkSet $oFieldOriginalSet */
+						$oFieldOriginalSet = $oField->GetCurrentValue();
+						while ($oLink = $oFieldOriginalSet->Fetch())
+						{
+							if ($oField->IsIndirect())
+							{
+								$iRemoteKey = $oLink->Get($oAttDef->GetExtKeyToRemote());
+							}
+							else
+							{
+								$iRemoteKey = $oLink->GetKey();
+							}
+
+							if (!$this->oContainer->get('security_helper')->IsActionAllowed(UR_ACTION_READ, $oField->GetTargetClass(), $iRemoteKey))
+							{
+								$aLimitedAccessItemIDs[] = $iRemoteKey;
+							}
+						}
+						$oFieldOriginalSet->rewind();
+						$oField->SetLimitedAccessItemIDs($aLimitedAccessItemIDs);
 					}
 					//    - Displaying as opened
 					if (array_key_exists($sAttCode, $aFieldsExtraData) && array_key_exists('opened', $aFieldsExtraData[$sAttCode]))

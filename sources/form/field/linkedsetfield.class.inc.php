@@ -33,6 +33,8 @@ class LinkedSetField extends Field
 	protected $sExtKeyToRemote;
 	protected $bIndirect;
     protected $bDisplayOpened;
+	/** @var array $aLimitedAccessItemIDs IDs of the items that are not visible or cannot be edited */
+	protected $aLimitedAccessItemIDs;
 	protected $aAttributesToDisplay;
 	protected $sSearchEndpoint;
 	protected $sInformationEndpoint;
@@ -43,6 +45,7 @@ class LinkedSetField extends Field
 		$this->sExtKeyToRemote = null;
 		$this->bIndirect = static::DEFAULT_INDIRECT;
 		$this->bDisplayOpened = static::DEFAULT_DISPLAY_OPENED;
+		$this->aLimitedAccessItemIDs = array();
 		$this->aAttributesToDisplay = array();
 		$this->sSearchEndpoint = null;
 		$this->sInformationEndpoint = null;
@@ -133,6 +136,30 @@ class LinkedSetField extends Field
     }
 
 	/**
+	 * Returns IDs of the linked items with a limited access (not visible or not editable)
+	 *
+	 * @return array
+	 */
+	public function GetLimitedAccessItemIDs()
+	{
+		return $this->aLimitedAccessItemIDs;
+	}
+
+	/**
+	 * Set the IDs of items with a limited access (not visible ot no editable)
+	 *
+	 * @param array $aLimitedAccessItemIDs
+	 *
+	 * @return $this
+	 */
+	public function SetLimitedAccessItemIDs($aLimitedAccessItemIDs)
+	{
+		$this->aLimitedAccessItemIDs = $aLimitedAccessItemIDs;
+
+		return $this;
+	}
+
+	/**
 	 * Returns a hash array of attributes to be displayed in the linkedset in the form $sAttCode => $sAttLabel
 	 *
 	 * @param boolean $bAttCodesOnly If set to true, will return only the attcodes
@@ -178,4 +205,15 @@ class LinkedSetField extends Field
 		return $this;
 	}
 
+	/**
+	 * Returns true if the remote object with $iItemID ID has limited access
+	 *
+	 * @param int $iItemID
+	 *
+	 * @return bool
+	 */
+	public function IsLimitedAccessItem($iItemID)
+	{
+		return in_array($iItemID, $this->aLimitedAccessItemIDs, false);
+	}
 }
