@@ -331,7 +331,6 @@ class EMail
 	{
 		if (($sMimeType === 'text/html') && ($sCustomStyles !== null))
 		{
-			require_once(APPROOT.'lib/emogrifier/Classes/Emogrifier.php');
 			$emogrifier = new \Pelago\Emogrifier($sBody, $sCustomStyles);
 			$sBody = $emogrifier->emogrify(); // Adds html/body tags if not already present
 		}
