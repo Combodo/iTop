@@ -591,6 +591,7 @@ JS
 					$oAttDef = MetaModel::GetAttributeDef($this->oField->GetTargetClass(), $sAttCode);
 					if ($oAttDef->IsExternalKey())
 					{
+						/** @var \AttributeExternalKey $oAttDef */
 						$aAttProperties['value'] = $oRemoteItem->Get($sAttCode . '_friendlyname');
 
 						// Checking if user can access object's external key

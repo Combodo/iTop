@@ -1,21 +1,22 @@
 <?php
 
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 namespace Combodo\iTop\Form\Field;
 
@@ -31,19 +32,31 @@ use ScalarExpression;
  * Description of SelectObjectField
  *
  * @author Romain Quetiez <romain.quetiez@combodo.com>
+ * @since 2.3.0
  */
 class SelectObjectField extends Field
 {
-	protected $oSearch;
-	protected $iMaximumComboLength;
-	protected $iMinAutoCompleteChars;
-	protected $bHierarchical;
-	protected $iControlType;
-	protected $sSearchEndpoint;
-
+	/** @var int CONTROL_SELECT */
 	const CONTROL_SELECT = 1;
+	/** @var int CONTROL_RADIO_VERTICAL */
 	const CONTROL_RADIO_VERTICAL = 2;
 
+	/** @var \DBSearch $oSearch */
+	protected $oSearch;
+	/** @var int $iMaximumComboLength */
+	protected $iMaximumComboLength;
+	/** @var int $iMinAutoCompleteChars */
+	protected $iMinAutoCompleteChars;
+	/** @var bool $bHierarchical */
+	protected $bHierarchical;
+	/** @var int $iControlType */
+	protected $iControlType;
+	/** @var string $sSearchEndpoint */
+	protected $sSearchEndpoint;
+
+	/**
+	 * @inheritDoc
+	 */
 	public function __construct($sId, Closure $onFinalizeCallback = null)
 	{
 		parent::__construct($sId, $onFinalizeCallback);
@@ -55,6 +68,11 @@ class SelectObjectField extends Field
 		$this->sSearchEndpoint = null;
 	}
 
+	/**
+	 * @param \DBSearch $oSearch
+	 *
+	 * @return $this
+	 */
 	public function SetSearch(DBSearch $oSearch)
 	{
 		$this->oSearch = $oSearch;
@@ -62,6 +80,11 @@ class SelectObjectField extends Field
 		return $this;
 	}
 
+	/**
+	 * @param int $iMaximumComboLength
+	 *
+	 * @return $this
+	 */
 	public function SetMaximumComboLength($iMaximumComboLength)
 	{
 		$this->iMaximumComboLength = $iMaximumComboLength;
@@ -69,6 +92,11 @@ class SelectObjectField extends Field
 		return $this;
 	}
 
+	/**
+	 * @param int $iMinAutoCompleteChars
+	 *
+	 * @return $this
+	 */
 	public function SetMinAutoCompleteChars($iMinAutoCompleteChars)
 	{
 		$this->iMinAutoCompleteChars = $iMinAutoCompleteChars;
@@ -76,6 +104,11 @@ class SelectObjectField extends Field
 		return $this;
 	}
 
+	/**
+	 * @param bool $bHierarchical
+	 *
+	 * @return $this
+	 */
 	public function SetHierarchical($bHierarchical)
 	{
 		$this->bHierarchical = $bHierarchical;
@@ -83,11 +116,19 @@ class SelectObjectField extends Field
 		return $this;
 	}
 
+	/**
+	 * @param int $iControlType
+	 */
 	public function SetControlType($iControlType)
 	{
 		$this->iControlType = $iControlType;
 	}
 
+	/**
+	 * @param string $sSearchEndpoint
+	 *
+	 * @return $this
+	 */
 	public function SetSearchEndpoint($sSearchEndpoint)
 	{
 		$this->sSearchEndpoint = $sSearchEndpoint;
@@ -96,12 +137,7 @@ class SelectObjectField extends Field
 	}
 
 	/**
-	 * Sets if the field is mandatory or not.
-	 * Setting the value will automatically add/remove a MandatoryValidator to the Field
-	 *
-	 * @param boolean $bMandatory
-	 *
-	 * @return \Combodo\iTop\Form\Field\Field
+	 * @inheritDoc
 	 */
 	public function SetMandatory($bMandatory)
 	{
@@ -135,33 +171,48 @@ class SelectObjectField extends Field
 		return $this->oSearch;
 	}
 
+	/**
+	 * @return int|null
+	 */
 	public function GetMaximumComboLength()
 	{
 		return $this->iMaximumComboLength;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function GetMinAutoCompleteChars()
 	{
 		return $this->iMinAutoCompleteChars;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function GetHierarchical()
 	{
 		return $this->bHierarchical;
 	}
 
+	/**
+	 * @return int
+	 */
 	public function GetControlType()
 	{
 		return $this->iControlType;
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public function GetSearchEndpoint()
 	{
 		return $this->sSearchEndpoint;
 	}
 
 	/**
-	 * Resets current value is not among allowed ones.
+	 * Resets current value if not among allowed ones.
 	 * By default, reset is done ONLY when the field is not read-only.
 	 *
 	 * @param boolean $bAlways Set to true to verify even when the field is read-only.
