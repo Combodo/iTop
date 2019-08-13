@@ -50,6 +50,14 @@ require_once(APPROOT.'application/transaction.class.inc.php');
 require_once(APPROOT.'application/Html2Text.php');
 require_once(APPROOT.'application/Html2TextException.php');
 
+require_once(APPROOT.'application/applicationextension.inc.php');
+require_once(APPROOT.'application/loginform.class.inc.php');
+require_once(APPROOT.'application/loginbasic.class.inc.php');
+require_once(APPROOT.'application/logindefault.class.inc.php');
+require_once(APPROOT.'application/loginexternal.class.inc.php');
+require_once(APPROOT.'application/loginurl.class.inc.php');
+
+
 define('ITOP_CONFIG_FILE', 'config-itop.php');
 define('ITOP_DEFAULT_CONFIG_FILE', APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE);
 
@@ -879,26 +887,7 @@ class utils
 	 */
 	static function CanLogOff()
 	{
-		$bResult = false;
-		if(isset($_SESSION['login_mode']))
-		{
-			$sLoginMode = $_SESSION['login_mode'];
-			switch($sLoginMode)
-			{
-				case 'external':
-				$bResult = false;
-				break;
-	
-				case 'form':
-				case 'basic':
-				case 'url':
-				case 'cas':
-				default:
-				$bResult = true;
-				
-			}			
-		}
-		return $bResult;
+		return (isset($_SESSION['can_logoff']) ? $_SESSION['can_logoff'] : false);
 	}
 
 	/**

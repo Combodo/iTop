@@ -30,6 +30,30 @@ require_once(APPROOT.'application/newsroomprovider.class.inc.php');
  * @api
  */
 
+interface iLoginFSMExtension
+{
+	/**
+	 * Return the list of supported login modes for this plugin
+	 *
+	 * @return array of supported login modes
+	 */
+	public function ListSupportedLoginModes();
+
+	/**
+	 * Execute action for this login state
+	 * If a page is displayed, the action must exit at this point
+	 * if LoginWebPage::LOGIN_FSM_RETURN_ERROR is returned $iErrorCode must be set
+	 * if LoginWebPage::LOGIN_FSM_RETURN_OK is returned then the login is OK and terminated
+	 * if LoginWebPage::LOGIN_FSM_RETURN_IGNORE is returned then the FSM will proceed to next plugin or state
+	 *
+	 * @param string $sLoginState (see LoginWebPage::LOGIN_STATE_...)
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
+	public function LoginAction($sLoginState, &$iErrorCode);
+}
+
 /**
  * Implement this interface to change the behavior of the GUI for some objects.
  *

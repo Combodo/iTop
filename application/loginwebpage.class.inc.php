@@ -43,7 +43,23 @@ class LoginWebPage extends NiceWebPage
 	const EXIT_CODE_MUSTBEADMIN = 4;
 	const EXIT_CODE_PORTALUSERNOTAUTHORIZED = 5;
 	const EXIT_CODE_NOTAUTHORIZED = 6;
-	
+
+	// Login FSM States
+	const LOGIN_STATE_START = 'start';                          // Entry state
+	const LOGIN_STATE_MODE_DETECTION = 'login mode detection';  // Detect which login plugin to use
+	const LOGIN_STATE_READ_CREDENTIALS = 'read credentials';    // Read the credentials
+	const LOGIN_STATE_CHECK_CREDENTIALS = 'check credentials';  // Check if the credentials are valid
+	const LOGIN_STATE_CREDENTIAL_OK = 'credentials ok';         // User provisioning
+	const LOGIN_STATE_USER_OK = 'user ok';                      // Additional check (2FA)
+	const LOGIN_STATE_CONNECTED = 'connected';                  // User connected
+	const LOGIN_STATE_SET_ERROR = 'prepare for error';	        // Internal state to trigger ERROR state
+	const LOGIN_STATE_ERROR = 'error';                          // An error occurred, next state will be NONE
+
+	// Login FSM Returns
+	const LOGIN_FSM_RETURN_OK = 0;           // End the FSM OK (connected)
+	const LOGIN_FSM_RETURN_ERROR = 1;        // Error signaled
+	const LOGIN_FSM_RETURN_CONTINUE = 2;     // Continue FSM
+
 	protected static $sHandlerClass = __class__;
 	public static function RegisterHandler($sClass)
 	{
@@ -441,7 +457,8 @@ EOF
 	{
 		// Unset all of the session variables.
 		unset($_SESSION['auth_user']);
-		unset($_SESSION['login_mode']);
+		unset($_SESSION['login_state']);
+		unset($_SESSION['can_logoff']);
 		unset($_SESSION['archive_mode']);
 		unset($_SESSION['impersonate_user']);
 		UserRights::_ResetSessionCache();
@@ -471,215 +488,228 @@ EOF
         			|\xF4[\x80-\x8F][\x80-\xBF]{2}     # plane 16
         	)+%xs', $sString);
 	}
-
 	/**
 	 * Attempt a login
-	 * 	 	
+	 *
 	 * @param int iOnExit What action to take if the user is not logged on (one of the class constants EXIT_...)
-	 * @return int One of the class constants EXIT_CODE_...
-	 */	
+	 *
+	 * @return int|void One of the class constants EXIT_CODE_...
+	 * @throws \Exception
+	 */
 	protected static function Login($iOnExit)
 	{
 		if (self::SecureConnectionRequired() && !utils::IsConnectionSecure())
 		{
 			// Non secured URL... request for a secure connection
-			throw new Exception('Secure connection required!');			
+			throw new Exception('Secure connection required!');
 		}
 
-		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
+		if (!isset($_SESSION['login_state']) || ($_SESSION['login_state'] == self::LOGIN_STATE_ERROR))
+		{
+			$_SESSION['login_state'] = self::LOGIN_STATE_START;
+		}
+		$sLoginState = $_SESSION['login_state'];
 
+		// Finite state machine loop
+		while (true)
+		{
+			try
+			{
+				$aLoginPlugins = self::GetLoginPluginList();
+				if (empty($aLoginPlugins))
+				{
+					throw new Exception("Missing login classes");
+				}
+
+				/** @var iLoginFSMExtension $oLoginFSMExtensionInstance */
+				foreach ($aLoginPlugins as $oLoginFSMExtensionInstance)
+				{
+					$iErrorCode = self::EXIT_CODE_OK;
+					$iResponse = $oLoginFSMExtensionInstance->LoginAction($sLoginState, $iErrorCode);
+					if ($iResponse == self::LOGIN_FSM_RETURN_OK)
+					{
+						return self::EXIT_CODE_OK; // login OK, exit FSM
+					}
+					if ($iResponse == self::LOGIN_FSM_RETURN_ERROR)
+					{
+						static::ResetSession();
+						if ($iOnExit == self::EXIT_RETURN)
+						{
+							return $iErrorCode; // Error, exit FSM
+						}
+						elseif ($iOnExit == self::EXIT_HTTP_401)
+						{
+							self::HTTP401Error(); // Error, exit
+						}
+						$sLoginState = self::LOGIN_STATE_SET_ERROR; // Next state will be error
+						break;
+					}
+					// The plugin has nothing to do for this state, continue to the next plugin
+				}
+
+				// Every plugin has nothing else to do in this state, go forward
+				$sLoginState = self::AdvanceLoginFSMState($sLoginState);
+				$_SESSION['login_state'] = $sLoginState;
+			}
+			catch (Exception $e)
+			{
+				IssueLog::Error($e->getTraceAsString());
+				static::ResetSession();
+				die($e->getMessage());
+			}
+		}
+	}
+
+	/**
+	 * Get plugins list ordered by config 'allowed_login_types'
+	 * Use the login mode to filter plugins
+	 *
+	 * @return array of plugins
+	 */
+	private static function GetLoginPluginList()
+	{
+		$aAllPlugins = array();
+
+		// Keep only the plugins for the current login mode
+		$sCurrentLoginMode = isset($_SESSION['login_mode']) ? $_SESSION['login_mode'] : '';
+
+		/** @var iLoginFSMExtension $oLoginFSMExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iLoginFSMExtension') as $oLoginFSMExtensionInstance)
+		{
+			$aLoginModes = $oLoginFSMExtensionInstance->ListSupportedLoginModes();
+			foreach ($aLoginModes as $sLoginMode)
+			{
+				if (empty($sCurrentLoginMode) || ($sLoginMode == 'default') || ($sLoginMode == $sCurrentLoginMode))
+				{
+					if (!isset($aAllPlugins[$sLoginMode]))
+					{
+						$aAllPlugins[$sLoginMode] = array();
+					}
+					$aAllPlugins[$sLoginMode][] = $oLoginFSMExtensionInstance;
+				}
+			}
+		}
+
+		// Order by the config list of allowed types
+		$aAllowedLoginModes = array_merge(array('default'), MetaModel::GetConfig()->GetAllowedLoginTypes());
+		$aPlugins = array();
+		foreach ($aAllowedLoginModes as $sAllowedMode)
+		{
+			if (isset($aAllPlugins[$sAllowedMode]))
+			{
+				$aPlugins = array_merge($aPlugins, $aAllPlugins[$sAllowedMode]);
+			}
+		}
+		return $aPlugins;
+	}
+
+	/**
+	 * Advance Login Finite State Machine to the next step
+	 *
+	 * @param string $sLoginState Current step
+	 *
+	 * @return string next step
+	 */
+	private static function AdvanceLoginFSMState($sLoginState)
+	{
+		switch ($sLoginState)
+		{
+			case self::LOGIN_STATE_START:
+				return self::LOGIN_STATE_MODE_DETECTION;
+
+			case self::LOGIN_STATE_MODE_DETECTION:
+				return self::LOGIN_STATE_READ_CREDENTIALS;
+
+			case self::LOGIN_STATE_READ_CREDENTIALS:
+				return self::LOGIN_STATE_CHECK_CREDENTIALS;
+
+			case self::LOGIN_STATE_CHECK_CREDENTIALS:
+				return self::LOGIN_STATE_CREDENTIAL_OK;
+
+			case self::LOGIN_STATE_CREDENTIAL_OK:
+				return self::LOGIN_STATE_USER_OK;
+
+			case self::LOGIN_STATE_USER_OK:
+				return self::LOGIN_STATE_CONNECTED;
+
+			case self::LOGIN_STATE_CONNECTED:
+			case self::LOGIN_STATE_ERROR:
+				return self::LOGIN_STATE_START;
+
+			case self::LOGIN_STATE_SET_ERROR:
+				return self::LOGIN_STATE_ERROR;
+		}
+
+		// Default reset to NONE
+		return self::LOGIN_STATE_START;
+	}
+
+	/**
+	 * Store User info in the session when connection is OK
+	 *
+	 * @param $sAuthUser
+	 * @param $sAuthentication
+	 * @param $sLoginMode
+	 *
+	 * @throws ArchivedObjectException
+	 * @throws CoreCannotSaveObjectException
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 * @throws CoreWarning
+	 * @throws MySQLException
+	 * @throws OQLException
+	 */
+	public static function OnLoginSuccess($sAuthUser, $sAuthentication, $sLoginMode)
+	{
+		// User is Ok, let's save it in the session and proceed with normal login
+		$bLoginSuccess = UserRights::Login($sAuthUser, $sAuthentication); // Login & set the user's language
+		if (!$bLoginSuccess)
+		{
+			throw new Exception("Bad user");
+		}
+		if (MetaModel::GetConfig()->Get('log_usage')) {
+			$oLog = new EventLoginUsage();
+			$oLog->Set('userinfo', UserRights::GetUser());
+			$oLog->Set('user_id', UserRights::GetUserObject()->GetKey());
+			$oLog->Set('message', 'Successful login');
+			$oLog->DBInsertNoReload();
+		}
+
+		$_SESSION['auth_user'] = $sAuthUser;
+		$_SESSION['login_mode'] = $sLoginMode;
+		UserRights::_InitSessionCache();
+	}
+
+	public static function CheckLoggedUser(&$iErrorCode)
+	{
 		if (isset($_SESSION['auth_user']))
 		{
-			//echo "User: ".$_SESSION['auth_user']."\n";
-			// Already authentified
+			// Already authenticated
 			$bRet = UserRights::Login($_SESSION['auth_user']); // Login & set the user's language
 			if ($bRet)
 			{
-				return self::EXIT_CODE_OK;
+				return self::LOGIN_FSM_RETURN_OK;
 			}
-			// The user account is no longer valid/enabled
-			 static::ResetSession();
 		}
-		
-		$index = 0;
-		$sLoginMode = '';
-		$sAuthentication = 'internal';
-		while(($sLoginMode == '') && ($index < count($aAllowedLoginTypes)))
-		{
-			$sLoginType = $aAllowedLoginTypes[$index];
-			switch($sLoginType)
-			{
-				case 'cas':
-				utils::InitCASClient();					
-				// check CAS authentication
-				if (phpCAS::isAuthenticated())
-				{
-					$sAuthUser = phpCAS::getUser();
-					$sAuthPwd = '';
-					$sLoginMode = 'cas';
-					$sAuthentication = 'external';
-				}
-				break;
-				
-				case 'form':
-				// iTop standard mode: form based authentication
-				$sAuthUser = utils::ReadPostedParam('auth_user', '', false, 'raw_data');
-				$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, false, 'raw_data');
-				if (($sAuthUser != '') && ($sAuthPwd !== null))
-				{
-					$sLoginMode = 'form';
-				}
-				break;
-				
-				case 'basic':
-				// Standard PHP authentication method, works with Apache...
-				// Case 1) Apache running in CGI mode + rewrite rules in .htaccess
-				if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION']))
-				{
-					list($sAuthUser, $sAuthPwd) = explode(':' , base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
-					$sLoginMode = 'basic';
-				}
-				else if (isset($_SERVER['PHP_AUTH_USER']))
-				{
-					$sAuthUser = $_SERVER['PHP_AUTH_USER'];
-					// Unfortunately, the RFC is not clear about the encoding...
-					// IE and FF supply the user and password encoded in ISO-8859-1 whereas Chrome provides them encoded in UTF-8
-					// So let's try to guess if it's an UTF-8 string or not... fortunately all encodings share the same ASCII base
-					if (!self::LooksLikeUTF8($sAuthUser))
-					{
-						// Does not look like and UTF-8 string, try to convert it from iso-8859-1 to UTF-8
-						// Supposed to be harmless in case of a plain ASCII string...
-						$sAuthUser = iconv('iso-8859-1', 'utf-8', $sAuthUser);
-					}
-					$sAuthPwd = $_SERVER['PHP_AUTH_PW'];
-					if (!self::LooksLikeUTF8($sAuthPwd))
-					{
-						// Does not look like and UTF-8 string, try to convert it from iso-8859-1 to UTF-8
-						// Supposed to be harmless in case of a plain ASCII string...
-						$sAuthPwd = iconv('iso-8859-1', 'utf-8', $sAuthPwd);
-					}
-					$sLoginMode = 'basic';
-				}
-				break;
+		// The user account is no longer valid/enabled
+		$iErrorCode = self::EXIT_CODE_WRONGCREDENTIALS;
 
-				case 'external':
-				// Web server supplied authentication
-				$bExternalAuth = false;
-				$sExtAuthVar = MetaModel::GetConfig()->GetExternalAuthenticationVariable(); // In which variable is the info passed ?
-				eval('$sAuthUser = isset('.$sExtAuthVar.') ? '.$sExtAuthVar.' : false;'); // Retrieve the value
-				if ($sAuthUser && (strlen($sAuthUser) > 0))
-				{
-					$sAuthPwd = ''; // No password in this case the web server already authentified the user...
-					$sLoginMode = 'external';
-					$sAuthentication = 'external';
-				}
-				break;
-
-				case 'url':
-				// Credentials passed directly in the url
-				$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
-				$sAuthPwd = utils::ReadParam('auth_pwd', null, false, 'raw_data');
-				if (($sAuthUser != '') && ($sAuthPwd !== null))
-				{
-					$sLoginMode = 'url';
-				}		
-				break;	
-			}
-			$index++;
-		}
-		//echo "\nsLoginMode: $sLoginMode (user: $sAuthUser / pwd: $sAuthPwd\n)";
-		if ($sLoginMode == '')
-		{
-			// First connection
-			$sDesiredLoginMode = utils::ReadParam('login_mode');
-			if (in_array($sDesiredLoginMode, $aAllowedLoginTypes))
-			{
-				$sLoginMode = $sDesiredLoginMode;
-			}
-			else
-			{
-				$sLoginMode = $aAllowedLoginTypes[0]; // First in the list...
-			}
-			if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER))
-			{
-				// X-Combodo-Ajax is a special header automatically added to all ajax requests
-				// Let's reply that we're currently logged-out
-				header('HTTP/1.0 401 Unauthorized');
-				exit;
-			}
-			if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
-			{
-				header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
-				header('HTTP/1.0 401 Unauthorized');
-				header('Content-type: text/html; charset=iso-8859-1');
-				exit;
-			}
-			else if($iOnExit == self::EXIT_RETURN)
-			{
-				if (($sAuthUser !== '') && ($sAuthPwd === null))
-				{
-					return self::EXIT_CODE_MISSINGPASSWORD;
-				}
-				else
-				{
-					return self::EXIT_CODE_MISSINGLOGIN;
-				}
-			}
-			else
-			{
-				$oPage = self::NewLoginWebPage();
-				$oPage->DisplayLoginForm( $sLoginMode, false /* no previous failed attempt */);
-				$oPage->output();
-				exit;
-			}
-		}
-		else
-		{
-			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $sLoginMode, $sAuthentication))
-			{
-				//echo "Check Credentials returned false for user $sAuthUser!";
-				self::ResetSession();
-				if (($iOnExit == self::EXIT_HTTP_401) || ($sLoginMode == 'basic'))
-				{
-					header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
-					header('HTTP/1.0 401 Unauthorized');
-					header('Content-type: text/html; charset=iso-8859-1');
-					exit;
-				}
-				else if($iOnExit == self::EXIT_RETURN)
-				{
-					return self::EXIT_CODE_WRONGCREDENTIALS;
-				}
-				else
-				{
-					$oPage = self::NewLoginWebPage();
-					$oPage->DisplayLoginForm( $sLoginMode, true /* failed attempt */);
-					$oPage->output();
-					exit;
-				}
-			}
-			else
-			{
-				// User is Ok, let's save it in the session and proceed with normal login
-				UserRights::Login($sAuthUser, $sAuthentication); // Login & set the user's language
-				
-				if (MetaModel::GetConfig()->Get('log_usage'))
-				{
-					$oLog = new EventLoginUsage();
-					$oLog->Set('userinfo', UserRights::GetUser());
-					$oLog->Set('user_id', UserRights::GetUserObject()->GetKey());
-					$oLog->Set('message', 'Successful login');
-					$oLog->DBInsertNoReload();
-				}
-				
-				$_SESSION['auth_user'] = $sAuthUser;
-				$_SESSION['login_mode'] = $sLoginMode;
-				UserRights::_InitSessionCache();
-			}
-		}
-		return self::EXIT_CODE_OK;
+		return self::LOGIN_FSM_RETURN_ERROR;
 	}
-	
+
+	/**
+	 * Exit with an HTTP 401 error
+	 */
+	public static function HTTP401Error()
+	{
+		header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
+		header('HTTP/1.0 401 Unauthorized');
+		header('Content-type: text/html; charset=iso-8859-1');
+		// Note: displayed when the user will click on Cancel
+		echo '<p><strong>'.Dict::S('UI:Login:Error:AccessRestricted').'</strong></p>';
+		exit;
+	}
+
 	/**
 	 * Overridable: depending on the user, head toward a dedicated portal
 	 * @param string|null $sRequestedPortalId
@@ -687,7 +717,6 @@ EOF
 	 */	 
 	protected static function ChangeLocation($sRequestedPortalId = null, $iOnExit = self::EXIT_PROMPT)
 	{
-		$fStart = microtime(true);
 		$ret = call_user_func(array(self::$sHandlerClass, 'Dispatch'), $sRequestedPortalId);
 		if ($ret === true)
 		{
@@ -709,6 +738,7 @@ EOF
 				header('Location: '.$ret);
 			}
 		}
+		return self::EXIT_CODE_OK;
 	}
 
 	/**
