@@ -1,52 +1,13 @@
 {
-	"type": "project",
 	"license": "AGPLv3",
-	"require": {
-		"php": ">=5.6.0",
-		"ext-ctype": "*",
-		"ext-iconv": "*",
-		"symfony/console": "3.4.*",
-		"symfony/dotenv": "3.4.*",
-		"symfony/framework-bundle": "3.4.*",
-		"symfony/twig-bundle": "3.4.*",
-		"symfony/yaml": "3.4.*",
-		"symfony/polyfill-php70": "1.*"
-	},
-	"require-dev": {
-		"symfony/stopwatch": "3.4.*",
-		"symfony/web-profiler-bundle": "3.4.*"
-	},
-	"config": {
-		"vendor-dir": "../../../../lib/composer-vendor",
-		"preferred-install": {
-			"*": "dist"
-		},
-		"sort-packages": true,
-		"platform": {
-			"php": "5.6.0"
-		}
-	},
 	"autoload": {
 		"psr-4": {
 			"Combodo\\iTop\\Portal\\": "src/"
-		},
-		"classmap": [
-			"../../../../core",
-			"../../../../application"
-		]
+		}
 	},
 	"autoload-dev": {
 		"psr-4": {
 			"Combodo\\iTop\\Portal\\Tests\\": "tests/"
-		}
-	},
-	"conflict": {
-		"symfony/symfony": "*"
-	},
-	"extra": {
-		"symfony": {
-			"allow-contrib": false,
-			"require": "3.4.*"
 		}
 	}
 }

@@ -26,9 +26,10 @@
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\Dotenv\Dotenv;
 
-require_once APPROOT.'/lib/composer-vendor/autoload.php';
+// Global autoloader (portal autoloader is already required through module.itop-portal-base.php)
+require_once APPROOT.'/lib/autoload.php';
 
-// Load current environment if necessary
+// Load current environment if necessary (typically from CLI as the app is not started yet)
 if (!defined('MODULESROOT'))
 {
 	if (file_exists(__DIR__.'/../../../../approot.inc.php'))

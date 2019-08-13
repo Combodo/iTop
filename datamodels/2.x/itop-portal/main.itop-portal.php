@@ -21,7 +21,8 @@
 
 use Combodo\iTop\Portal\UrlMaker\AbstractPortalUrlMaker;
 
-require_once APPROOT.'/lib/composer-vendor/autoload.php';
+// Global autoloader (portal autoloader is already required through itop-portal-base/module.itop-portal-base.php)
+require_once APPROOT.'/lib/autoload.php';
 
 /**
  * iTopPortalEditUrlMaker
