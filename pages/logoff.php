@@ -43,22 +43,23 @@ if ($operation == 'do_logoff')
 	exit;
 }
 
-if ($bPortal)
-{
-	$sUrl .= 'portal/';
-}
-else
-{
-	$sUrl .= 'pages/UI.php';
-}
 if (isset($_SESSION['auth_user']))
 {
 	$sAuthUser = $_SESSION['auth_user'];
 	UserRights::Login($sAuthUser); // Set the user's language
 }
 
-$sLoginMode = isset($_SESSION['login_mode']) ? $_SESSION['login_mode'] : '';
 LoginWebPage::ResetSession();
+
+$aPluginList = LoginWebPage::GetLoginPluginList('iLogoutExtension');
+
+/** @var iLogoutExtension $oLogoutExtension */
+foreach ($aPluginList as $oLogoutExtension)
+{
+	$oLogoutExtension->LogoutAction();
+}
+
+/*
 switch($sLoginMode)
 {
 	case 'cas':
@@ -71,13 +72,7 @@ switch($sLoginMode)
 	phpCAS::logoutWithRedirectService($sCASLogoutUrl); // Redirects to the CAS logout page
 	break;
 }
-$oPage = LoginWebPage::NewLoginWebPage();
-$oPage->no_cache();
-$oPage->DisplayLoginHeader();
-$oPage->add("<div id=\"login\">\n");
-$oPage->add("<h1>".Dict::S('UI:LogOff:ThankYou')."</h1>\n");
+*/
 
-$oPage->add("<p><a href=\"$sUrl\">".Dict::S('UI:LogOff:ClickHereToLoginAgain')."</a></p>");
-$oPage->add("</div>\n");
-$oPage->output();
-?>
+$oPage = LoginWebPage::NewLoginWebPage();
+$oPage->DisplayLogoutPage($bPortal);

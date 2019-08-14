@@ -6,82 +6,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class LoginBasic implements iLoginFSMExtension
+class LoginBasic extends AbstractLoginFSMExtension
 {
-	/**
-	 * Execute action for this login state
-	 * If a page is displayed, the action must exit at this point
-	 *
-	 * @param string $sLoginState (see LoginWebPage::LOGIN_STATE_...)
-	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
-	 *
-	 * @return int LoginWebPage::LOGIN_FSM_RETURN_...
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
-	public function LoginAction($sLoginState, &$iErrorCode)
-	{
-		switch ($sLoginState)
-		{
-			case LoginWebPage::LOGIN_STATE_MODE_DETECTION:
-				if (!isset($_SESSION['login_mode']))
-				{
-					if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION']))
-					{
-						$_SESSION['login_mode'] = 'basic';
-					}
-					elseif (isset($_SERVER['PHP_AUTH_USER']))
-					{
-						$_SESSION['login_mode'] = 'basic';
-					}
-				}
-				break;
-
-			case LoginWebPage::LOGIN_STATE_CHECK_CREDENTIALS:
-				if ($_SESSION['login_mode'] == 'basic')
-				{
-					list($sAuthUser, $sAuthPwd) = $this->GetAuthUserAndPassword();
-					if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $_SESSION['login_mode'], 'internal'))
-					{
-						$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
-						return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
-					}
-				}
-				break;
-
-			case LoginWebPage::LOGIN_STATE_CREDENTIAL_OK:
-				if ($_SESSION['login_mode'] == 'basic')
-				{
-					list($sAuthUser) = $this->GetAuthUserAndPassword();
-					LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', $_SESSION['login_mode']);
-				}
-				break;
-
-			case LoginWebPage::LOGIN_STATE_ERROR:
-				if ($_SESSION['login_mode'] == 'basic')
-				{
-					LoginWebPage::HTTP401Error();
-				}
-				break;
-
-			case LoginWebPage::LOGIN_STATE_CONNECTED:
-				if ($_SESSION['login_mode'] == 'basic')
-				{
-					$_SESSION['can_logoff'] = true;
-					return LoginWebPage::CheckLoggedUser($iErrorCode);
-				}
-				break;
-		}
-
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
-	}
-
 	/**
 	 * Return the list of supported login modes for this plugin
 	 *
@@ -90,6 +16,65 @@ class LoginBasic implements iLoginFSMExtension
 	public function ListSupportedLoginModes()
 	{
 		return array('basic');
+	}
+
+	protected function OnModeDetection(&$iErrorCode)
+	{
+		if (!isset($_SESSION['login_mode']))
+		{
+			if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION']))
+			{
+				$_SESSION['login_mode'] = 'basic';
+			}
+			elseif (isset($_SERVER['PHP_AUTH_USER']))
+			{
+				$_SESSION['login_mode'] = 'basic';
+			}
+		}
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	protected function OnCheckCredentials(&$iErrorCode)
+	{
+		if ($_SESSION['login_mode'] == 'basic')
+		{
+			list($sAuthUser, $sAuthPwd) = $this->GetAuthUserAndPassword();
+			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $_SESSION['login_mode'], 'internal'))
+			{
+				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
+				return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
+			}
+		}
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	protected function OnCredentialsOK(&$iErrorCode)
+	{
+		if ($_SESSION['login_mode'] == 'basic')
+		{
+			list($sAuthUser) = $this->GetAuthUserAndPassword();
+			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', $_SESSION['login_mode']);
+		}
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	protected function OnError(&$iErrorCode)
+	{
+		if ($_SESSION['login_mode'] == 'basic')
+		{
+			LoginWebPage::HTTP401Error();
+		}
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	protected function OnConnected(&$iErrorCode)
+	{
+		if ($_SESSION['login_mode'] == 'basic')
+		{
+			$_SESSION['can_logoff'] = true;
+			return LoginWebPage::CheckLoggedUser($iErrorCode);
+		}
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
 	}
 
 	private function GetAuthUserAndPassword()

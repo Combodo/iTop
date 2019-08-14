@@ -30,7 +30,7 @@ require_once(APPROOT.'application/newsroomprovider.class.inc.php');
  * @api
  */
 
-interface iLoginFSMExtension
+interface iLoginExtension
 {
 	/**
 	 * Return the list of supported login modes for this plugin
@@ -38,7 +38,10 @@ interface iLoginFSMExtension
 	 * @return array of supported login modes
 	 */
 	public function ListSupportedLoginModes();
+}
 
+interface iLoginFSMExtension extends iLoginExtension
+{
 	/**
 	 * Execute action for this login state
 	 * If a page is displayed, the action must exit at this point
@@ -52,6 +55,128 @@ interface iLoginFSMExtension
 	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
 	 */
 	public function LoginAction($sLoginState, &$iErrorCode);
+}
+
+abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
+{
+	public abstract function ListSupportedLoginModes();
+
+	/**
+	 * @inheritDoc
+	 */
+	public function LoginAction($sLoginState, &$iErrorCode)
+	{
+		switch ($sLoginState)
+		{
+			case LoginWebPage::LOGIN_STATE_START:
+				return $this->OnStart($iErrorCode);
+
+			case LoginWebPage::LOGIN_STATE_MODE_DETECTION:
+				return $this->OnModeDetection($iErrorCode);
+
+			case LoginWebPage::LOGIN_STATE_READ_CREDENTIALS:
+				return $this->OnReadCredentials($iErrorCode);
+
+			case LoginWebPage::LOGIN_STATE_CHECK_CREDENTIALS:
+				return $this->OnCheckCredentials($iErrorCode);
+
+			case LoginWebPage::LOGIN_STATE_CREDENTIALS_OK:
+				return $this->OnCredentialsOK($iErrorCode);
+
+			case LoginWebPage::LOGIN_STATE_USER_OK:
+				return $this->OnUsersOK($iErrorCode);
+
+			case LoginWebPage::LOGIN_STATE_CONNECTED:
+				return $this->OnConnected($iErrorCode);
+
+			case LoginWebPage::LOGIN_STATE_ERROR:
+				return $this->OnError($iErrorCode);
+		}
+
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	/**
+	 * Initialization
+	 *
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
+	protected function OnStart(&$iErrorCode)
+	{
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	/**
+	 * Detect login mode explicitly without respecting configured order (legacy mode)
+	 * In most case do nothing here
+	 *
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
+	protected function OnModeDetection(&$iErrorCode)
+	{
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	/**
+	 * Obtain the credentials either if login mode is empty or set to yours.
+	 * This step can be called multiple times by the FSM:
+	 * for example:
+	 * 1 - display login form
+	 * 2 - read the values posted by the user
+	 *
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
+	protected function OnReadCredentials(&$iErrorCode)
+	{
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	/**
+	 * Control the validity of the data provided by the user
+	 * Automatic user provisioning can be done here
+	 *
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
+	protected function OnCheckCredentials(&$iErrorCode)
+	{
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	protected function OnCredentialsOK(&$iErrorCode)
+	{
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	protected function OnUsersOK(&$iErrorCode)
+	{
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	protected function OnConnected(&$iErrorCode)
+	{
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	protected function OnError(&$iErrorCode)
+	{
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+}
+
+interface iLogoutExtension extends iLoginExtension
+{
+	/**
+	 * Execute all actions to log out properly
+	 */
+	public function LogoutAction();
 }
 
 /**

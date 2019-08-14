@@ -7,7 +7,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class LoginExternal implements iLoginFSMExtension
+class LoginExternal extends AbstractLoginFSMExtension
 {
 
 	/**
@@ -20,67 +20,50 @@ class LoginExternal implements iLoginFSMExtension
 		return array('external');
 	}
 
-	/**
-	 * Execute action for this login state
-	 * If a page is displayed, the action must exit at this point
-	 *
-	 * @param string $sLoginState (see LoginWebPage::LOGIN_STATE_...)
-	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
-	 *
-	 * @return int LoginWebPage::LOGIN_FSM_RETURN_...
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
-	public function LoginAction($sLoginState, &$iErrorCode)
+	protected function OnModeDetection(&$iErrorCode)
 	{
-		switch ($sLoginState)
+		if (!isset($_SESSION['login_mode']))
 		{
-			case LoginWebPage::LOGIN_STATE_MODE_DETECTION:
-				if (!isset($_SESSION['login_mode']))
-				{
-					$sAuthUser = $this->GetAuthUser();
-					if ($sAuthUser && (strlen($sAuthUser) > 0))
-					{
-						$_SESSION['login_mode'] = 'external';
-					}
-				}
-				break;
-
-			case LoginWebPage::LOGIN_STATE_CHECK_CREDENTIALS:
-				if ($_SESSION['login_mode'] == 'external')
-				{
-					$sAuthUser = $this->GetAuthUser();
-					if (!UserRights::CheckCredentials($sAuthUser, '', $_SESSION['login_mode'], 'external'))
-					{
-						$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
-						return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
-					}
-				}
-				break;
-
-			case LoginWebPage::LOGIN_STATE_CREDENTIAL_OK:
-				if ($_SESSION['login_mode'] == 'external')
-				{
-					$sAuthUser = $this->GetAuthUser();
-					LoginWebPage::OnLoginSuccess($sAuthUser, 'external', $_SESSION['login_mode']);
-				}
-				break;
-
-			case LoginWebPage::LOGIN_STATE_CONNECTED:
-				if ($_SESSION['login_mode'] == 'external')
-				{
-					$_SESSION['can_logoff'] = false;
-					return LoginWebPage::CheckLoggedUser($iErrorCode);
-				}
-				break;
+			$sAuthUser = $this->GetAuthUser();
+			if ($sAuthUser && (strlen($sAuthUser) > 0))
+			{
+				$_SESSION['login_mode'] = 'external';
+			}
 		}
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
 
+	protected function OnCheckCredentials(&$iErrorCode)
+	{
+		if ($_SESSION['login_mode'] == 'external')
+		{
+			$sAuthUser = $this->GetAuthUser();
+			if (!UserRights::CheckCredentials($sAuthUser, '', $_SESSION['login_mode'], 'external'))
+			{
+				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
+				return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
+			}
+		}
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	protected function OnCredentialsOK(&$iErrorCode)
+	{
+		if ($_SESSION['login_mode'] == 'external')
+		{
+			$sAuthUser = $this->GetAuthUser();
+			LoginWebPage::OnLoginSuccess($sAuthUser, 'external', $_SESSION['login_mode']);
+		}
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	protected function OnConnected(&$iErrorCode)
+	{
+		if ($_SESSION['login_mode'] == 'external')
+		{
+			$_SESSION['can_logoff'] = false;
+			return LoginWebPage::CheckLoggedUser($iErrorCode);
+		}
 		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
 	}
 

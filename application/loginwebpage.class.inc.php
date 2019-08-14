@@ -49,7 +49,7 @@ class LoginWebPage extends NiceWebPage
 	const LOGIN_STATE_MODE_DETECTION = 'login mode detection';  // Detect which login plugin to use
 	const LOGIN_STATE_READ_CREDENTIALS = 'read credentials';    // Read the credentials
 	const LOGIN_STATE_CHECK_CREDENTIALS = 'check credentials';  // Check if the credentials are valid
-	const LOGIN_STATE_CREDENTIAL_OK = 'credentials ok';         // User provisioning
+	const LOGIN_STATE_CREDENTIALS_OK = 'credentials ok';        // User provisioning
 	const LOGIN_STATE_USER_OK = 'user ok';                      // Additional check (2FA)
 	const LOGIN_STATE_CONNECTED = 'connected';                  // User connected
 	const LOGIN_STATE_SET_ERROR = 'prepare for error';	        // Internal state to trigger ERROR state
@@ -453,6 +453,28 @@ EOF
 		$this->add("</div>\n");
 	}
 
+	public function DisplayLogoutPage($bPortal)
+	{
+		$sUrl = utils::GetAbsoluteUrlAppRoot();
+		if ($bPortal)
+		{
+			$sUrl .= 'portal/';
+		}
+		else
+		{
+			$sUrl .= 'pages/UI.php';
+		}
+
+		$this->no_cache();
+		$this->DisplayLoginHeader();
+		$this->add("<div id=\"login\">\n");
+		$this->add("<h1>".Dict::S('UI:LogOff:ThankYou')."</h1>\n");
+
+		$this->add("<p><a href=\"$sUrl\">".Dict::S('UI:LogOff:ClickHereToLoginAgain')."</a></p>");
+		$this->add("</div>\n");
+		$this->output();
+	}
+
 	static function ResetSession()
 	{
 		// Unset all of the session variables.
@@ -584,34 +606,36 @@ EOF
 	 * Get plugins list ordered by config 'allowed_login_types'
 	 * Use the login mode to filter plugins
 	 *
+	 * @param string $sInterface 'iLoginFSMExtension' or 'iLogoutExtension'
+	 *
 	 * @return array of plugins
 	 */
-	private static function GetLoginPluginList()
+	public static function GetLoginPluginList($sInterface = 'iLoginFSMExtension')
 	{
 		$aAllPlugins = array();
 
 		// Keep only the plugins for the current login mode
 		$sCurrentLoginMode = isset($_SESSION['login_mode']) ? $_SESSION['login_mode'] : '';
 
-		/** @var iLoginFSMExtension $oLoginFSMExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iLoginFSMExtension') as $oLoginFSMExtensionInstance)
+		/** @var iLoginExtension $oLoginExtensionInstance */
+		foreach (MetaModel::EnumPlugins($sInterface) as $oLoginExtensionInstance)
 		{
-			$aLoginModes = $oLoginFSMExtensionInstance->ListSupportedLoginModes();
+			$aLoginModes = $oLoginExtensionInstance->ListSupportedLoginModes();
 			foreach ($aLoginModes as $sLoginMode)
 			{
-				if (empty($sCurrentLoginMode) || ($sLoginMode == 'default') || ($sLoginMode == $sCurrentLoginMode))
+				if (empty($sCurrentLoginMode) || ($sLoginMode == 'before') || ($sLoginMode == 'after') || ($sLoginMode == $sCurrentLoginMode))
 				{
 					if (!isset($aAllPlugins[$sLoginMode]))
 					{
 						$aAllPlugins[$sLoginMode] = array();
 					}
-					$aAllPlugins[$sLoginMode][] = $oLoginFSMExtensionInstance;
+					$aAllPlugins[$sLoginMode][] = $oLoginExtensionInstance;
 				}
 			}
 		}
 
 		// Order by the config list of allowed types
-		$aAllowedLoginModes = array_merge(array('default'), MetaModel::GetConfig()->GetAllowedLoginTypes());
+		$aAllowedLoginModes = array_merge(array('before'), MetaModel::GetConfig()->GetAllowedLoginTypes(), array('after'));
 		$aPlugins = array();
 		foreach ($aAllowedLoginModes as $sAllowedMode)
 		{
@@ -644,9 +668,9 @@ EOF
 				return self::LOGIN_STATE_CHECK_CREDENTIALS;
 
 			case self::LOGIN_STATE_CHECK_CREDENTIALS:
-				return self::LOGIN_STATE_CREDENTIAL_OK;
+				return self::LOGIN_STATE_CREDENTIALS_OK;
 
-			case self::LOGIN_STATE_CREDENTIAL_OK:
+			case self::LOGIN_STATE_CREDENTIALS_OK:
 				return self::LOGIN_STATE_USER_OK;
 
 			case self::LOGIN_STATE_USER_OK:
