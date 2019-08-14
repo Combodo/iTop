@@ -199,6 +199,31 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
                 0 => __DIR__ . '/..' . '/twig/twig/lib',
             ),
         ),
+        'P' => 
+        array (
+            'PEAR' => 
+            array (
+                0 => __DIR__ . '/..' . '/pear/pear_exception',
+            ),
+        ),
+        'C' => 
+        array (
+            'Console' => 
+            array (
+                0 => __DIR__ . '/..' . '/pear/console_getopt',
+            ),
+        ),
+        'A' => 
+        array (
+            'Archive_Tar' => 
+            array (
+                0 => __DIR__ . '/..' . '/pear/archive_tar',
+            ),
+        ),
+    );
+
+    public static $fallbackDirsPsr0 = array (
+        0 => __DIR__ . '/..' . '/pear/pear-core-minimal/src',
     );
 
     public static $classMap = array (
@@ -211,6 +236,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'ApplicationException' => __DIR__ . '/../..' . '/application/application.inc.php',
         'ApplicationMenu' => __DIR__ . '/../..' . '/application/menunode.class.inc.php',
         'ApplicationPopupMenuItem' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
+        'Archive_Tar' => __DIR__ . '/..' . '/pear/archive_tar/Archive/Tar.php',
         'ArchivedObjectException' => __DIR__ . '/../..' . '/core/coreexception.class.inc.php',
         'ArithmeticError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ArithmeticError.php',
         'AssertionError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/AssertionError.php',
@@ -330,6 +356,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\DesignElement' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Config' => __DIR__ . '/../..' . '/core/config.class.inc.php',
         'ConfigException' => __DIR__ . '/../..' . '/core/config.class.inc.php',
+        'Console_Getopt' => __DIR__ . '/..' . '/pear/console_getopt/Console/Getopt.php',
         'ContextTag' => __DIR__ . '/../..' . '/core/contexttag.class.inc.php',
         'CoreCannotSaveObjectException' => __DIR__ . '/../..' . '/core/coreexception.class.inc.php',
         'CoreException' => __DIR__ . '/../..' . '/core/coreexception.class.inc.php',
@@ -481,6 +508,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'OQLParserRaw' => __DIR__ . '/../..' . '/core/oql/oql-parser.php',
         'OQLParser_yyStackEntry' => __DIR__ . '/../..' . '/core/oql/oql-parser.php',
         'OQLParser_yyToken' => __DIR__ . '/../..' . '/core/oql/oql-parser.php',
+        'OS_Guess' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/OS/Guess.php',
         'ObjectDetailsTemplate' => __DIR__ . '/../..' . '/application/template.class.inc.php',
         'ObjectResult' => __DIR__ . '/../..' . '/core/restservices.class.inc.php',
         'ObjectStimulus' => __DIR__ . '/../..' . '/core/stimulus.class.inc.php',
@@ -496,6 +524,11 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'OqlUnionQuery' => __DIR__ . '/../..' . '/core/oql/oqlquery.class.inc.php',
         'PDFBulkExport' => __DIR__ . '/../..' . '/core/pdfbulkexport.class.inc.php',
         'PDFPage' => __DIR__ . '/../..' . '/application/pdfpage.class.inc.php',
+        'PEAR' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'PEAR_Error' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR.php',
+        'PEAR_ErrorStack' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/PEAR/ErrorStack.php',
+        'PEAR_Exception' => __DIR__ . '/..' . '/pear/pear_exception/PEAR/Exception.php',
+        'PEAR_ExceptionTest' => __DIR__ . '/..' . '/pear/pear_exception/tests/PEAR/ExceptionTest.php',
         'PHP_LexerGenerator' => __DIR__ . '/../..' . '/core/oql/build/PHP/LexerGenerator.php',
         'PHP_LexerGenerator_Exception' => __DIR__ . '/../..' . '/core/oql/build/PHP/LexerGenerator/Exception.php',
         'PHP_LexerGenerator_Lexer' => __DIR__ . '/../..' . '/core/oql/build/PHP/LexerGenerator/Lexer.php',
@@ -1621,6 +1654,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Symfony\\Polyfill\\Ctype\\Ctype' => __DIR__ . '/..' . '/symfony/polyfill-ctype/Ctype.php',
         'Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
         'Symfony\\Polyfill\\Php70\\Php70' => __DIR__ . '/..' . '/symfony/polyfill-php70/Php70.php',
+        'System' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/System.php',
         'TabManager' => __DIR__ . '/../..' . '/application/webpage.class.inc.php',
         'TabularBulkExport' => __DIR__ . '/../..' . '/core/tabularbulkexport.class.inc.php',
         'TagSetFieldData' => __DIR__ . '/../..' . '/core/tagsetfield.class.inc.php',
@@ -2099,6 +2133,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
             $loader->prefixLengthsPsr4 = ComposerStaticInit0018331147de7601e7552f7da8e3bb8b::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit0018331147de7601e7552f7da8e3bb8b::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit0018331147de7601e7552f7da8e3bb8b::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit0018331147de7601e7552f7da8e3bb8b::$fallbackDirsPsr0;
             $loader->classMap = ComposerStaticInit0018331147de7601e7552f7da8e3bb8b::$classMap;
 
         }, null, ClassLoader::class);
