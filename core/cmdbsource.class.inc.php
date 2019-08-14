@@ -131,6 +131,12 @@ class CMDBSource
 	protected static $m_oMysqli;
 
 	/**
+	 * @var string[] list of nested transactions saved as savepoints
+	 * @since 2.7.0 N°679
+	 */
+	protected static $m_aTransacSavepoints = array();
+
+	/**
 	 * SQL charset & collation declaration for text columns
 	 *
 	 * Using a function instead of a constant or attribute to avoid crash in the setup for older PHP versions (cannot
@@ -570,25 +576,61 @@ class CMDBSource
 	/**
 	 * @param string $sSQLQuery
 	 *
-	 * @return \mysqli_result
+	 * @return \mysqli_result|null
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 *
+	 * @since 2.7.0 N°679 handles nested transactions using {@link m_aTransacSavepoints}
+	 */
+	public static function Query($sSQLQuery)
+	{
+		if (preg_match('/^START TRANSACTION;?$/i', $sSQLQuery))
+		{
+			self::StartTransaction();
+
+			return null;
+		}
+		if (preg_match('/^COMMIT;?$/i', $sSQLQuery))
+		{
+			self::Commit();
+
+			return null;
+		}
+		if (preg_match('/^ROLLBACK;?$/i', $sSQLQuery))
+		{
+			self::Rollback();
+
+			return null;
+		}
+
+
+		return self::DBQuery($sSQLQuery);
+	}
+
+	/**
+	 * Do nothing before sending query to the DB
+	 *
+	 * @param string $sSql
+	 *
+	 * @return bool|\mysqli_result
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public static function Query($sSQLQuery)
+	private static function DBQuery($sSql)
 	{
 		$oKPI = new ExecutionKPI();
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSQLQuery);
+			$oResult = self::$m_oMysqli->query($sSql);
 		}
-		catch(mysqli_sql_exception $e)
+		catch (mysqli_sql_exception $e)
 		{
-			throw new MySQLException('Failed to issue SQL query', array('query' => $sSQLQuery, $e));
+			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
 		}
-		$oKPI->ComputeStats('Query exec (mySQL)', $sSQLQuery);
+		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
 		if ($oResult === false)
 		{
-			$aContext = array('query' => $sSQLQuery);
+			$aContext = array('query' => $sSql);
 
 			$iMySqlErrorNo = self::$m_oMysqli->errno;
 			$aMySqlHasGoneAwayErrorCodes = MySQLHasGoneAwayException::getErrorCodes();
@@ -599,8 +641,104 @@ class CMDBSource
 
 			throw new MySQLException('Failed to issue SQL query', $aContext);
 		}
-	
+
 		return $oResult;
+	}
+
+	/**
+	 * If nested transaction, then only create a savepoint that will be used by {@link Rollback}
+	 *
+	 * @see m_aTransacSavepoints
+	 * @since 2.7.0 N°679
+	 */
+	public static function StartTransaction()
+	{
+		$bHasExistingTransactions = self::HasTransactionsInStack();
+		$sNewSavepointName = self::AddTransacSavepoint($bHasExistingTransactions);
+
+		if ($bHasExistingTransactions)
+		{
+			self::DBQuery('SAVEPOINT '.$sNewSavepointName);
+		}
+		else
+		{
+			self::DBQuery('START TRANSACTION');
+		}
+	}
+
+	private static function HasTransactionsInStack()
+	{
+		return (count(self::$m_aTransacSavepoints) > 0);
+	}
+
+	/**
+	 * @see m_aTransacSavepoints
+	 *
+	 * @param bool $bHasExistingTransactions
+	 *
+	 * @return string name of the new savepoint
+	 *
+	 * @since 2.7.0 N°679
+	 */
+	private static function AddTransacSavepoint($bHasExistingTransactions)
+	{
+		$iLastSavepointIndex = $bHasExistingTransactions
+			? max(array_keys(self::$m_aTransacSavepoints))
+			: 0;
+		$iNewSavepointIndex = $iLastSavepointIndex + 1;
+		$sSavepointName = 'savepoint_'.$iNewSavepointIndex;
+		self::$m_aTransacSavepoints[$iNewSavepointIndex] = $sSavepointName;
+
+		return $sSavepointName;
+	}
+
+	/**
+	 * @see m_aTransacSavepoints
+	 * @return string name of the removed savepoint
+	 * @since 2.7.0 N°679
+	 */
+	private static function RemoveTransacSavepoint()
+	{
+		$iLastSavepointIndex = max(array_keys(self::$m_aTransacSavepoints));
+		$sLastSavePointName = self::$m_aTransacSavepoints[$iLastSavepointIndex];
+		unset(self::$m_aTransacSavepoints[$iLastSavepointIndex]); // could use array_pop but using same method as AddTransacSavepoint O:)
+
+		return $sLastSavePointName;
+	}
+
+	/**
+	 * Do not commit if is a nested transaction
+	 *
+	 * @see m_aTransacSavepoints
+	 * @since 2.7.0 N°679
+	 */
+	public static function Commit()
+	{
+		self::RemoveTransacSavepoint();
+		if (self::HasTransactionsInStack())
+		{
+			return;
+		}
+		self::DBQuery('COMMIT');
+	}
+
+	/**
+	 * If is a nested transaction, then rollback to savepoint (last transaction start sent to CMDBSource)
+	 *
+	 * @see m_aTransacSavepoints
+	 * @since 2.7.0 N°679
+	 */
+	public static function Rollback()
+	{
+		$sLastSavepointName = self::RemoveTransacSavepoint();
+		if (count(self::$m_aTransacSavepoints) > 0)
+		{
+			self::DBQuery('ROLLBACK TO SAVEPOINT '.$sLastSavepointName);
+
+			return;
+		}
+
+		self::DBQuery('ROLLBACK');
 	}
 
 	/**
