@@ -1165,6 +1165,8 @@
 													<!-- Optional tag to define if the action should be done in a modal window ("modal"), a new window ("new") or the current window ("self") -->
 													<!--<opening_target>modal</opening_target>-->
 													<icon_class>fc fc-new-request fc-1-6x fc-flip-horizontal</icon_class>
+													<!-- Optional tag to order actions -->
+													<!--<rank>1</rank>-->
 													<rules>
 														<rule id="contact-to-userrequest"/>
 														<rule id="servicesubcategory-to-userrequest"/>

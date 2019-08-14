@@ -113,6 +113,31 @@ class BrowseBrick extends PortalBrick
 	}
 
 	/**
+	 *  Compare function to sort actions by their rank attribute
+	 * 
+	 * @param array $aAction1
+	 * @param array $aAction2
+	 *
+	 * @return int
+	 */
+	public static function CompareActionsByRank($aAction1, $aAction2)
+	{
+		$bIsAction1RankSet = array_key_exists('rank', $aAction1);
+		$bIsAction2RankSet = array_key_exists('rank', $aAction2);
+
+		if($bIsAction1RankSet && $bIsAction2RankSet)
+		{
+			//If a1 == a2 return 0, if a1 > a2 return 1 else return -1 
+			return ($aAction1['rank'] === $aAction2['rank'] ? 0 : ($aAction1['rank'] > $aAction2['rank'] ? 1 : -1));
+		}
+		else
+		{
+			//If a1 == a2 == null return 0, if a2 is null and not a1 return 1 else return -1
+			return ($bIsAction1RankSet === $bIsAction2RankSet ? 0 : ($bIsAction1RankSet ? 1 : -1));
+		}
+	}
+
+	/**
 	 * Returns the brick levels
 	 *
 	 * @return array
@@ -548,6 +573,11 @@ class BrowseBrick extends PortalBrick
 									throw new DOMFormatException('BrowseBrick :  '.$sTagName.'/action/opening_target has a wrong value. "'.$aTmpAction['opening_target'].'" given, '.implode('|',
 											static::$aOpeningTargets).' expected.', null, null, $oActionOpeningTargetNode);
 								}
+								$oActionRankNode = $oActionNode->GetOptionalElement('rank');
+								if ($oActionRankNode !== null)
+								{
+									$aTmpAction['rank'] = (int)$oActionRankNode->GetText();
+								}
 								// Action rules
 								/** @var \Combodo\iTop\DesignElement $oRuleNode */
 								foreach ($oActionNode->GetNodes('./rules/rule') as $oRuleNode)
@@ -571,6 +601,7 @@ class BrowseBrick extends PortalBrick
 									null, null, $oActionNode);
 							}
 						}
+						uasort($aLevel[$sTagName], "static::CompareActionsByRank");
 					}
 					break;
 
