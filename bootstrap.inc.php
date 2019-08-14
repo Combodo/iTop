@@ -19,6 +19,6 @@
  */
 
 require_once __DIR__.'/approot.inc.php';
-$oClassLoader = require APPROOT.'/lib/autoload.php';
+require_once APPROOT.'/lib/autoload.php';
 
 // Require here files containing PHP instructions
