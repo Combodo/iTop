@@ -59,7 +59,6 @@ class LoginExternal implements iLoginFSMExtension
 					if (!UserRights::CheckCredentials($sAuthUser, '', $_SESSION['login_mode'], 'external'))
 					{
 						$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
-
 						return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
 					}
 				}

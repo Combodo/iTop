@@ -503,12 +503,22 @@ EOF
 			// Non secured URL... request for a secure connection
 			throw new Exception('Secure connection required!');
 		}
+		$bLoginDebug = MetaModel::GetConfig()->Get('login_debug');
 
 		if (!isset($_SESSION['login_state']) || ($_SESSION['login_state'] == self::LOGIN_STATE_ERROR))
 		{
 			$_SESSION['login_state'] = self::LOGIN_STATE_START;
 		}
 		$sLoginState = $_SESSION['login_state'];
+
+		$sSessionLog = '';
+		if ($bLoginDebug)
+		{
+			IssueLog::Info("---------------------------------");
+			IssueLog::Info("--> Entering Login FSM with state: [$sLoginState]");
+			$sSessionLog = session_id().' '.utils::GetSessionLog();
+			IssueLog::Info("SESSION: $sSessionLog");
+		}
 
 		// Finite state machine loop
 		while (true)
@@ -524,6 +534,16 @@ EOF
 				/** @var iLoginFSMExtension $oLoginFSMExtensionInstance */
 				foreach ($aLoginPlugins as $oLoginFSMExtensionInstance)
 				{
+					if ($bLoginDebug)
+					{
+						$sCurrSessionLog = session_id().' '.utils::GetSessionLog();
+						if ($sCurrSessionLog != $sSessionLog)
+						{
+							$sSessionLog = $sCurrSessionLog;
+							IssueLog::Info("SESSION: $sSessionLog");
+						}
+						IssueLog::Info("Login: state: [$sLoginState] call: ".get_class($oLoginFSMExtensionInstance));
+					}
 					$iErrorCode = self::EXIT_CODE_OK;
 					$iResponse = $oLoginFSMExtensionInstance->LoginAction($sLoginState, $iErrorCode);
 					if ($iResponse == self::LOGIN_FSM_RETURN_OK)

@@ -680,6 +680,15 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'login_debug' => array(
+			'type' => 'bool',
+			'description' => 'Activate the login FSM debug',
+			// examples... not used (nor 'description')
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'forgot_password' => array(
 			'type' => 'bool',
 			'description' => 'Enable the "Forgot password" feature',

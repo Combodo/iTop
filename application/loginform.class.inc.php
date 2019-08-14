@@ -75,7 +75,6 @@ class LoginForm implements iLoginFSMExtension
 					if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $_SESSION['login_mode'], 'internal'))
 					{
 						$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
-
 						return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
 					}
 				}
