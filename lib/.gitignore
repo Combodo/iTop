@@ -1,0 +1,28 @@
+# TCPDF
+/combodo/tcpdf/examples
+/combodo/tcpdf/tools
+/combodo/tcpdf/fonts
+!/combodo/tcpdf/fonts/courier*
+!/combodo/tcpdf/fonts/dejavusans*
+!/combodo/tcpdf/fonts/droidsansfallback*
+!/combodo/tcpdf/fonts/helvetica*
+!/combodo/tcpdf/fonts/symbol.php
+!/combodo/tcpdf/fonts/times*
+!/combodo/tcpdf/fonts/zapfdingbats.php
+
+# Emogrifier
+/pelago/emogrifier/.github
+/pelago/emogrifier/tests
+
+# SCSSPHP
+/scssphp/scssphp/example
+
+# SwiftMailer
+/swiftmailer/swiftmailer/.github
+/swiftmailer/swiftmailer/doc
+/swiftmailer/swiftmailer/tests
+
+# TWIG
+/twig/twig/doc
+/twig/twig/test
+/twig/twig/drupal_test.sh
