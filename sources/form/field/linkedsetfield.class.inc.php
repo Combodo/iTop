@@ -34,7 +34,9 @@ class LinkedSetField extends Field
 	const DEFAULT_INDIRECT = false;
 	/** @var bool DEFAULT_DISPLAY_OPENED */
 	const DEFAULT_DISPLAY_OPENED = false;
-
+	/** @var bool DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS */
+	const DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS = false; 
+	
 	/** @var string $sTargetClass */
 	protected $sTargetClass;
 	/** @var string $sExtKeyToRemote */
@@ -43,6 +45,8 @@ class LinkedSetField extends Field
 	protected $bIndirect;
 	/** @var bool $bDisplayOpened */
 	protected $bDisplayOpened;
+	/** @var bool $bDisplayLimitedAccessItems */
+	protected $bDisplayLimitedAccessItems;
 	/** @var array $aLimitedAccessItemIDs IDs of the items that are not visible or cannot be edited */
 	protected $aLimitedAccessItemIDs;
 	/** @var array $aAttributesToDisplay */
@@ -61,6 +65,7 @@ class LinkedSetField extends Field
 		$this->sExtKeyToRemote = null;
 		$this->bIndirect = static::DEFAULT_INDIRECT;
 		$this->bDisplayOpened = static::DEFAULT_DISPLAY_OPENED;
+		$this->bDisplayLimitedAccessItems = static::DEFAULT_DISPLAY_LIMITED_ACCESS_ITEMS;
 		$this->aLimitedAccessItemIDs = array();
 		$this->aAttributesToDisplay = array();
 		$this->sSearchEndpoint = null;
@@ -159,6 +164,30 @@ class LinkedSetField extends Field
 		return $this;
 	}
 
+	/**
+	 * Returns if the field should display limited access items
+	 *
+	 * @return boolean
+	 */
+	public function GetDisplayLimitedAccessItems()
+	{
+		return $this->bDisplayLimitedAccessItems;
+	}
+
+	/**
+	 * Sets if the field should display limited access items
+	 *
+	 * @param boolean $bDisplayLimitedAccessItems
+	 *
+	 * @return $this
+	 */
+	public function SetDisplayLimitedAccessItems($bDisplayLimitedAccessItems)
+	{
+		$this->bDisplayLimitedAccessItems = $bDisplayLimitedAccessItems;
+
+		return $this;
+	}
+	
 	/**
 	 * Returns IDs of the linked items with a limited access (not visible or not editable)
 	 *

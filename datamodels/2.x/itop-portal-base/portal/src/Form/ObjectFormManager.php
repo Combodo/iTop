@@ -490,6 +490,11 @@ class ObjectFormManager extends FormManager
 				{
 					$aFieldsExtraData[$sFieldId]['opened'] = true;
 				}
+				// Checking if field allows to ignore scope (For linked set)
+				if ($oFieldNode->hasAttribute('data-field-ignore-scopes') && ($oFieldNode->getAttribute('data-field-ignore-scopes') === 'true'))
+				{
+					$aFieldsExtraData[$sFieldId]['ignore_scopes'] = true;
+				}
 				// Checking field display mode
 				if ($oFieldNode->hasAttribute('data-field-display-mode') && $oFieldNode->getAttribute('data-field-display-mode') !== '')
 				{
@@ -888,6 +893,11 @@ class ObjectFormManager extends FormManager
 					if (array_key_exists($sAttCode, $aFieldsExtraData) && array_key_exists('opened', $aFieldsExtraData[$sAttCode]))
 					{
 						$oField->SetDisplayOpened(true);
+					}
+					//    - Displaying out of scopes items
+					if (array_key_exists($sAttCode, $aFieldsExtraData) && array_key_exists('ignore_scopes', $aFieldsExtraData[$sAttCode]))
+					{
+						$oField->SetDisplayLimitedAccessItems(true);
 					}
 				}
 				// - BlobField
