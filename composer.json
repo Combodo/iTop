@@ -14,6 +14,7 @@
     "scssphp/scssphp": "1.0.0",
     "swiftmailer/swiftmailer": "5.4.9",
     "pelago/emogrifier": "2.1.0",
+    "combodo/tcpdf": "6.3.0",
     "pear/archive_tar": "1.4.7",
 
     "symfony/console": "3.4.*",

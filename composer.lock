@@ -4,8 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "82eacefa11d0f6d6aa5b8dd1b81e8a8b",
+    "content-hash": "554231903f26fc1944cd123d64adb410",
     "packages": [
+        {
+            "name": "combodo/tcpdf",
+            "version": "6.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/combodo-itop-libs/TCPDF.git",
+                "reference": "d645f9438b757499ac4cb39c10c41ded0f9f0326"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/d645f9438b757499ac4cb39c10c41ded0f9f0326",
+                "reference": "d645f9438b757499ac4cb39c10c41ded0f9f0326",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "replace": {
+                "tecnickcom/tcpdf": "self.version"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "config",
+                    "include",
+                    "tcpdf.php",
+                    "tcpdf_parser.php",
+                    "tcpdf_import.php",
+                    "tcpdf_barcodes_1d.php",
+                    "tcpdf_barcodes_2d.php",
+                    "include/tcpdf_colors.php",
+                    "include/tcpdf_filters.php",
+                    "include/tcpdf_font_data.php",
+                    "include/tcpdf_fonts.php",
+                    "include/tcpdf_images.php",
+                    "include/tcpdf_static.php",
+                    "include/barcodes/datamatrix.php",
+                    "include/barcodes/pdf417.php",
+                    "include/barcodes/qrcode.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Combodo",
+                    "email": "contact@combodo.com"
+                }
+            ],
+            "description": "TCPDF fork adding requirements for iTop: Specific fonts.",
+            "homepage": "https://github.com/combodo-itop-libs/TCPDF",
+            "time": "2019-08-16T08:14:13+00:00"
+        },
         {
             "name": "paragonie/random_compat",
             "version": "v2.0.18",
