@@ -1,19 +1,20 @@
-// Copyright (C) 2010-2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 //iTop Field set
 //Used by itop.form_handler and itop.subform_field to list their fields
@@ -171,11 +172,15 @@ $(function()
 				this.options.is_valid = false;
 			}
 
+			// Request update on dependent fields
 			var oRequestedFields = this._getRequestedFields(oData.name);
 			if(oRequestedFields.length > 0)
 			{
 				this.element.trigger('update_fields', {form_path: this.options.form_path, requested_fields: oRequestedFields});
 			}
+
+			// Notify form that fields have been touched
+			this.element.trigger('fields_touched');
 		},
 		_onUpdateForm: function(oEvent, oData)
 		{

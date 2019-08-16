@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
 //iTop Form handler
 ;
 $(function()
@@ -29,6 +47,9 @@ $(function()
 			// Binding events
 			this.element.bind('update_fields', function(oEvent, oData){
 				me._onUpdateFields(oEvent, oData);
+			});
+			this.element.bind('fields_touched', function(oEvent){
+				me._onFieldsTouched(oEvent);
 			});
 
 			// Binding buttons
@@ -65,10 +86,15 @@ $(function()
 		{
 			this._super( key, value );
 		},
+
+		// Methods
 		getCurrentValues: function()
 		{
 			return this.options.field_set.triggerHandler('get_current_values');
 		},
+
+		// Events callback
+		// - Update fields depending on the update ones
 		_onUpdateFields: function(oEvent, oData)
 		{
 			var me = this;
@@ -109,6 +135,11 @@ $(function()
 			.fail(function(oData){ me._onUpdateFailure(oData, sFormPath); })
 			.always(function(oData){ me._onUpdateAlways(oData, sFormPath); });
 		},
+		// - Callback when some fields have been touched
+		_onFieldsTouched: function(oEvent)
+		{
+			this.element.attr('data-fields-touched', 'true');
+		},
 		// Intended for overloading in derived classes
 		_onSubmitClick: function(oEvent)
 		{
@@ -136,6 +167,8 @@ $(function()
 			this.element.find('[data-form-path="' + sFormPath + '"]').trigger('validate');
 			this._enableFormAfterLoading();
 		},
+
+		// Helpers
 		// Intended for overloading in derived classes
 		_disableFormBeforeLoading: function()
 		{
@@ -144,7 +177,13 @@ $(function()
 		_enableFormAfterLoading: function()
 		{
 		},
-		showOptions: function() // Debug helper
+		// Returns true if the form fields have been touched
+		_hasBeenTouched: function()
+		{
+			return (this.element.attr('data-fields-touched') === 'true');
+		},
+		// Debug helper
+		showOptions: function()
 		{
 			console.log(this.options);
 		}
