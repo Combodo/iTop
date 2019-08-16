@@ -77,7 +77,6 @@ class FileUploadException extends Exception
 class utils
 {
 	private static $oConfig = null;
-	private static $m_bCASClient = false;
 
 	// Parameters loaded from a file, parameters of the page/command line still have precedence
 	private static $m_aParamsFromFile = null;
@@ -904,45 +903,6 @@ class utils
 		return $sSessionLog;
 	}
 
-	/**
-	 * Initializes the CAS client
-	 */
-	 static function InitCASClient()
-	 {
-		$sCASIncludePath =  self::GetConfig()->Get('cas_include_path');
-		include_once($sCASIncludePath.'/CAS.php');
-		
-		$bCASDebug = self::GetConfig()->Get('cas_debug');
-		if ($bCASDebug)
-		{
-			phpCAS::setDebug(APPROOT.'log/error.log');
-		}
-		
-		if (!self::$m_bCASClient)
-		{
-			// Initialize phpCAS
-			$sCASVersion = self::GetConfig()->Get('cas_version');
-			$sCASHost = self::GetConfig()->Get('cas_host');
-			$iCASPort = self::GetConfig()->Get('cas_port');
-			$sCASContext = self::GetConfig()->Get('cas_context');
-			phpCAS::client($sCASVersion, $sCASHost, $iCASPort, $sCASContext, false /* session already started */);
-			self::$m_bCASClient = true;
-			$sCASCACertPath = self::GetConfig()->Get('cas_server_ca_cert_path');
-			if (empty($sCASCACertPath))
-			{
-				// If no certificate authority is provided, do not attempt to validate
-				// the server's certificate
-				// THIS SETTING IS NOT RECOMMENDED FOR PRODUCTION. 
-				// VALIDATING THE CAS SERVER IS CRUCIAL TO THE SECURITY OF THE CAS PROTOCOL! 
-				phpCAS::setNoCasServerValidation();
-			}
-			else
-			{
-				phpCAS::setCasServerCACert($sCASCACertPath);
-			}			
-		}
-	 }
-	 
 	 static function DebugBacktrace($iLimit = 5)
 	 {
 		$aFullTrace = debug_backtrace();

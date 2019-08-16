@@ -37,6 +37,20 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
 	}
 
+	protected function OnReadCredentials(&$iErrorCode)
+	{
+		// Check if proposed login mode is present and allowed
+		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
+		$sProposedLoginMode = utils::ReadParam('login_mode', '');
+		$index = array_search($sProposedLoginMode, $aAllowedLoginTypes);
+		if ($index !== false)
+		{
+			// Force login mode
+			$_SESSION['login_mode'] = $sProposedLoginMode;
+		}
+		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
 	protected function OnError(&$iErrorCode)
 	{
 		$_SESSION['login_error_count'] = (isset($_SESSION['login_error_count']) ? $_SESSION['login_error_count'] : 0) + 1;

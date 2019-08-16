@@ -129,24 +129,7 @@ class LoginWebPage extends NiceWebPage
 	{
 		switch($sLoginType)
 		{
-			case 'cas':
-			utils::InitCASClient();					
-			// force CAS authentication
-			phpCAS::forceAuthentication(); // Will redirect the user and exit since the user is not yet authenticated
-			break;
-			
-			case 'basic':
-			case 'url':
-			$this->add_header('WWW-Authenticate: Basic realm="'.Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION));
-			$this->add_header('HTTP/1.0 401 Unauthorized');
-			$this->add_header('Content-type: text/html; charset=iso-8859-1');
-			// Note: displayed when the user will click on Cancel
-			$this->add('<p><strong>'.Dict::S('UI:Login:Error:AccessRestricted').'</strong></p>');
-			break;
-			
-			case 'external':
 			case 'form':
-			default: // In case the settings get messed up...
 			$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
 			$sAuthPwd = utils::ReadParam('suggest_pwd', '', true, 'raw_data');
 	
