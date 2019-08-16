@@ -99,6 +99,15 @@ class MySQLHasGoneAwayException extends MySQLException
 	}
 }
 
+/**
+ * @see \CMDBSource::Rollback()
+ * @since 2.7.0 N°679
+ */
+class MySQLChildTransactionRollbackException extends MySQLException
+{
+
+}
+
 
 /**
  * CMDBSource
@@ -131,7 +140,7 @@ class CMDBSource
 	protected static $m_oMysqli;
 
 	/**
-	 * @var string[] list of nested transactions saved as savepoints
+	 * @var string[] unique identifier for each nested transaction level (array[0] => 1st level, array[1] => sub transaction, etc)
 	 * @since 2.7.0 N°679
 	 */
 	protected static $m_aTransacSavepoints = array();
@@ -579,6 +588,7 @@ class CMDBSource
 	 * @return \mysqli_result|null
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \CoreException
 	 *
 	 * @since 2.7.0 N°679 handles nested transactions using {@link m_aTransacSavepoints}
 	 */
@@ -608,7 +618,9 @@ class CMDBSource
 	}
 
 	/**
-	 * Do nothing before sending query to the DB
+	 * Send the query directly to the DB. **Be extra cautious with this !**
+	 *
+	 * Use {@link Query} if you're not sure.
 	 *
 	 * @param string $sSql
 	 *
@@ -616,7 +628,7 @@ class CMDBSource
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	private static function DBQuery($sSql)
+	public static function DBQuery($sSql)
 	{
 		$oKPI = new ExecutionKPI();
 		try
@@ -646,7 +658,11 @@ class CMDBSource
 	}
 
 	/**
-	 * If nested transaction, then only create a savepoint that will be used by {@link Rollback}
+	 * If nested transaction, we are not starting a new one : only one global transaction will exist.
+	 *
+	 * Indeed [the official documentation](https://dev.mysql.com/doc/refman/5.6/en/commit.html) states :
+	 *
+	 * > Beginning a transaction causes any pending transaction to be committed
 	 *
 	 * @see m_aTransacSavepoints
 	 * @since 2.7.0 N°679
@@ -654,65 +670,12 @@ class CMDBSource
 	public static function StartTransaction()
 	{
 		$bHasExistingTransactions = self::HasTransactionsInStack();
-		$sNewSavepointName = self::AddTransacSavepoint($bHasExistingTransactions);
-
-		if ($bHasExistingTransactions)
-		{
-			self::DBQuery('SAVEPOINT '.$sNewSavepointName);
-		}
-		else
+		if (!$bHasExistingTransactions)
 		{
 			self::DBQuery('START TRANSACTION');
 		}
-	}
 
-	private static function HasTransactionsInStack()
-	{
-		return (count(self::$m_aTransacSavepoints) > 0);
-	}
-
-	/**
-	 * @see m_aTransacSavepoints
-	 *
-	 * @param bool $bHasExistingTransactions
-	 *
-	 * @return string name of the new savepoint
-	 *
-	 * @since 2.7.0 N°679
-	 */
-	private static function AddTransacSavepoint($bHasExistingTransactions)
-	{
-		$iLastSavepointIndex = $bHasExistingTransactions
-			? max(array_keys(self::$m_aTransacSavepoints))
-			: 0;
-		$iNewSavepointIndex = $iLastSavepointIndex + 1;
-		$sSavepointName = 'savepoint_'.$iNewSavepointIndex;
-		self::$m_aTransacSavepoints[$iNewSavepointIndex] = $sSavepointName;
-
-		return $sSavepointName;
-	}
-
-	/**
-	 * @see m_aTransacSavepoints
-	 * @return string name of the removed savepoint
-	 * @since 2.7.0 N°679
-	 */
-	private static function RemoveLastTransacSavepoint()
-	{
-		$iLastSavepointIndex = max(array_keys(self::$m_aTransacSavepoints));
-		$sLastSavePointName = self::$m_aTransacSavepoints[$iLastSavepointIndex];
-		unset(self::$m_aTransacSavepoints[$iLastSavepointIndex]); // could use array_pop but using same method as AddTransacSavepoint O:)
-
-		return $sLastSavePointName;
-	}
-
-	/**
-	 * @see m_aTransacSavepoints
-	 * @since 2.7.0 N°679
-	 */
-	private static function RemoveAllTransacSavepoint()
-	{
-		self::$m_aTransacSavepoints = array();
+		self::AddTransactionLevel($bHasExistingTransactions);
 	}
 
 	/**
@@ -730,7 +693,8 @@ class CMDBSource
 			throw new CoreException('Trying to commit transaction whereas none have been started !');
 		}
 
-		self::RemoveLastTransacSavepoint();
+		self::RemoveLastTransactionLevel();
+
 		if (self::HasTransactionsInStack())
 		{
 			// We are in a nested transaction, the commit must be done on the highest level transaction
@@ -740,11 +704,13 @@ class CMDBSource
 	}
 
 	/**
-	 * If is a nested transaction, then rollback to savepoint (last transaction start sent to CMDBSource)
+	 * If is a nested transaction, only throws an exception. Else sends ROLLBACK to the DB.
+	 *
+	 * The parameter allows to send a ROLLBACK whatever the current transaction level is
 	 *
 	 * @see m_aTransacSavepoints
 	 *
-	 * @param bool $bForce if true then do a rollback without specifying a savepoint
+	 * @param bool $bForce if true then do a rollback even if we're not at the transaction root level
 	 *
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
@@ -755,21 +721,70 @@ class CMDBSource
 		if ($bForce)
 		{
 			self::DBQuery('ROLLBACK');
-			self::RemoveAllTransacSavepoint();
-
+			self::RemoveAllTransactionLevels();
 			return;
 		}
 
-		$sLastSavepointName = self::RemoveLastTransacSavepoint();
+		self::RemoveLastTransactionLevel();
 		if (self::HasTransactionsInStack())
 		{
-			self::DBQuery('ROLLBACK TO SAVEPOINT '.$sLastSavepointName);
-
-			return;
+			throw new MySQLChildTransactionRollbackException('A nested transaction called for a rollback', null);
 		}
 
-		// Should not happen but...
 		self::DBQuery('ROLLBACK');
+	}
+
+	/**
+	 * @see m_aTransacSavepoints
+	 * @since 2.7.0 N°679
+	 */
+	private static function HasTransactionsInStack()
+	{
+		return (count(self::$m_aTransacSavepoints) > 0);
+	}
+
+	/**
+	 * @see m_aTransacSavepoints
+	 *
+	 * @param bool $bHasExistingTransactions
+	 *
+	 * @return string name of the new savepoint
+	 *
+	 * @since 2.7.0 N°679
+	 */
+	private static function AddTransactionLevel($bHasExistingTransactions)
+	{
+		$iLastSavepointIndex = $bHasExistingTransactions
+			? max(array_keys(self::$m_aTransacSavepoints))
+			: 0;
+		$iNewSavepointIndex = $iLastSavepointIndex + 1;
+		$sSavepointName = 'savepoint_'.$iNewSavepointIndex;
+		self::$m_aTransacSavepoints[$iNewSavepointIndex] = $sSavepointName;
+
+		return $sSavepointName;
+	}
+
+	/**
+	 * @see m_aTransacSavepoints
+	 * @return string name of the removed savepoint
+	 * @since 2.7.0 N°679
+	 */
+	private static function RemoveLastTransactionLevel()
+	{
+		$iLastSavepointIndex = max(array_keys(self::$m_aTransacSavepoints));
+		$sLastSavePointName = self::$m_aTransacSavepoints[$iLastSavepointIndex];
+		unset(self::$m_aTransacSavepoints[$iLastSavepointIndex]); // could use array_pop but using same method as AddTransacSavepoint O:)
+
+		return $sLastSavePointName;
+	}
+
+	/**
+	 * @see m_aTransacSavepoints
+	 * @since 2.7.0 N°679
+	 */
+	private static function RemoveAllTransactionLevels()
+	{
+		self::$m_aTransacSavepoints = array();
 	}
 
 	/**
