@@ -2042,4 +2042,27 @@ class utils
 
 		return $sMimeType;
 	}
+
+	/**
+	 * helper to test if a string starts with another
+	 * @param $haystack
+	 * @param $needle
+	 *
+	 * @return bool
+	 */
+	public final static function StartsWith($haystack, $needle)
+	{
+		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
+	}
+
+	/**
+	 * helper to test if a string ends with another
+	 * @param $haystack
+	 * @param $needle
+	 *
+	 * @return bool
+	 */
+	public final static function EndsWith($haystack, $needle) {
+		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
+	}
 }
