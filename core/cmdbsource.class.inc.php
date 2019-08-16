@@ -697,7 +697,7 @@ class CMDBSource
 	 * @return string name of the removed savepoint
 	 * @since 2.7.0 N°679
 	 */
-	private static function RemoveTransacSavepoint()
+	private static function RemoveLastTransacSavepoint()
 	{
 		$iLastSavepointIndex = max(array_keys(self::$m_aTransacSavepoints));
 		$sLastSavePointName = self::$m_aTransacSavepoints[$iLastSavepointIndex];
@@ -707,16 +707,33 @@ class CMDBSource
 	}
 
 	/**
+	 * @see m_aTransacSavepoints
+	 * @since 2.7.0 N°679
+	 */
+	private static function RemoveAllTransacSavepoint()
+	{
+		self::$m_aTransacSavepoints = array();
+	}
+
+	/**
 	 * Do not commit if is a nested transaction
 	 *
 	 * @see m_aTransacSavepoints
+	 * @throws \CoreException if trying to commit with no transaction in stack
 	 * @since 2.7.0 N°679
 	 */
 	public static function Commit()
 	{
-		self::RemoveTransacSavepoint();
+		if (!self::HasTransactionsInStack())
+		{
+			// should not happen !
+			throw new CoreException('Trying to commit transaction whereas none have been started !');
+		}
+
+		self::RemoveLastTransacSavepoint();
 		if (self::HasTransactionsInStack())
 		{
+			// We are in a nested transaction, the commit must be done on the highest level transaction
 			return;
 		}
 		self::DBQuery('COMMIT');
@@ -726,18 +743,32 @@ class CMDBSource
 	 * If is a nested transaction, then rollback to savepoint (last transaction start sent to CMDBSource)
 	 *
 	 * @see m_aTransacSavepoints
+	 *
+	 * @param bool $bForce if true then do a rollback without specifying a savepoint
+	 *
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
 	 * @since 2.7.0 N°679
 	 */
-	public static function Rollback()
+	public static function Rollback($bForce = false)
 	{
-		$sLastSavepointName = self::RemoveTransacSavepoint();
-		if (count(self::$m_aTransacSavepoints) > 0)
+		if ($bForce)
+		{
+			self::DBQuery('ROLLBACK');
+			self::RemoveAllTransacSavepoint();
+
+			return;
+		}
+
+		$sLastSavepointName = self::RemoveLastTransacSavepoint();
+		if (self::HasTransactionsInStack())
 		{
 			self::DBQuery('ROLLBACK TO SAVEPOINT '.$sLastSavepointName);
 
 			return;
 		}
 
+		// Should not happen but...
 		self::DBQuery('ROLLBACK');
 	}
 
