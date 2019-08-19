@@ -22,7 +22,8 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
-use Exception;
+use Combodo\iTop\Portal\Brick\BrickNotFoundException;
+use IssueLog;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -76,7 +77,6 @@ class AggregatePageBrickController extends BrickController
 	 * @param array $aAggregatePageBricksConf
 	 *
 	 * @return array
-	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
 	 * @throws \Exception
 	 */
 	private function GetOrderedAggregatePageBricksObjectsById($aAggregatePageBricksConf)
@@ -87,11 +87,19 @@ class AggregatePageBrickController extends BrickController
 		$aAggregatePageBricks = array();
 		foreach ($aAggregatePageBricksConf as $sBrickId => $iBrickRank)
 		{
-			$oPortalBrick = $oBrickCollection->GetBrickById($sBrickId);
-			if (!isset($oPortalBrick))
+			try
 			{
-				throw new Exception("AggregatePageBrick : non existing brick '$sBrickId'");
+				$oPortalBrick = $oBrickCollection->GetBrickById($sBrickId);
 			}
+			catch (BrickNotFoundException $oException)
+			{
+				if ($this->get('kernel')->isDebug())
+				{
+					IssueLog::Warning('AggregatePageBrick: Could not display "'.$sBrickId.'", either wrong id or user profile not allowed');
+				}
+				continue;
+			}
+
 			$aAggregatePageBricks[] = $oPortalBrick;
 		}
 
