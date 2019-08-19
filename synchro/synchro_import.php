@@ -500,7 +500,7 @@ try
 
 		if ($bSimulate)
 		{
-			CMDBSource::Query('START TRANSACTION');
+			CMDBSource::StartTransaction();
 		}
 		$aData = $oCSVParser->ToArray();
 		$iLineCount = count($aData);
@@ -768,13 +768,13 @@ try
 	{
 		if ($bSimulate)
 		{
-			CMDBSource::Query('ROLLBACK');
+			CMDBSource::Rollback($e);
 		}
 		throw $e;
 	}
 	if ($bSimulate)
 	{
-		CMDBSource::Query('ROLLBACK');
+		CMDBSource::Rollback();
 	}
 
 	//////////////////////////////////////////////////

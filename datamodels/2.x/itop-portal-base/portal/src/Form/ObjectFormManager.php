@@ -1073,7 +1073,7 @@ class ObjectFormManager extends FormManager
 				$sObjectClass = get_class($this->oObject);
 
 				// Starting transaction
-				CMDBSource::Query('START TRANSACTION');
+				CMDBSource::StartTransaction();
 				// Forcing allowed writing on the object if necessary. This is used in some particular cases.
 				$bAllowWrite = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
 				if ($bAllowWrite)
@@ -1124,7 +1124,7 @@ class ObjectFormManager extends FormManager
 				// Removing transaction id from DB
 				// TODO : utils::RemoveTransaction($this->oForm->GetTransactionId()); ?
 				// Ending transaction with a commit as everything was fine
-				CMDBSource::Query('COMMIT');
+				CMDBSource::Commit();
 
 				// Resetting caselog fields value, otherwise the value will stay in it after submit.
 				$this->oForm->ResetCaseLogFields();
@@ -1137,7 +1137,7 @@ class ObjectFormManager extends FormManager
 			catch (Exception $e)
 			{
 				// End transaction with a rollback as something failed
-				CMDBSource::Query('ROLLBACK');
+				CMDBSource::Rollback($e);
 				$aData['valid'] = false;
 				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
 				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Rollback during submit ('.$e->getMessage().')');

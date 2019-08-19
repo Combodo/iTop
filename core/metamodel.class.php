@@ -4338,9 +4338,9 @@ abstract class MetaModel
 			{
 				try
 				{
-					CMDBSource::Query('START TRANSACTION');
+					CMDBSource::StartTransaction();
 					self::HKInitChildren($sTable, $sAttCode, $oAttDef, 0, $idx);
-					CMDBSource::Query('COMMIT');
+					CMDBSource::Commit();
 					if ($bVerbose)
 					{
 						echo "Ok, table '$sTable' successfully updated.\n";
@@ -4348,7 +4348,7 @@ abstract class MetaModel
 				}
 				catch (Exception $e)
 				{
-					CMDBSource::Query('ROLLBACK');
+					CMDBSource::Rollback($e);
 					throw new Exception("An error occured (".$e->getMessage().") while initializing the hierarchy for ($sClass, $sAttCode). The database was not modified.");
 				}
 			}

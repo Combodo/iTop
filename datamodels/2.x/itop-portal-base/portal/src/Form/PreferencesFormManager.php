@@ -22,15 +22,15 @@
 
 namespace Combodo\iTop\Portal\Form;
 
-use Exception;
-use IssueLog;
 use CMDBSource;
-use Dict;
-use UserRights;
-use Combodo\iTop\Form\FormManager;
-use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\Field\HiddenField;
 use Combodo\iTop\Form\Field\SelectField;
+use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\FormManager;
+use Dict;
+use Exception;
+use IssueLog;
+use UserRights;
 
 /**
  * Description of PreferencesFormManager
@@ -118,7 +118,7 @@ class PreferencesFormManager extends FormManager
 			try
 			{
 				// Starting transaction
-				CMDBSource::Query('START TRANSACTION');
+				CMDBSource::StartTransaction();
 				$iFieldChanged = 0;
 
 				// Updating user
@@ -141,12 +141,12 @@ class PreferencesFormManager extends FormManager
 				}
 
 				// Ending transaction with a commit as everything was fine
-				CMDBSource::Query('COMMIT');
+				CMDBSource::Commit();
 			}
 			catch (Exception $e)
 			{
 				// End transaction with a rollback as something failed
-				CMDBSource::Query('ROLLBACK');
+				CMDBSource::Rollback($e);
 				$aData['valid'] = false;
 				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
 				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Rollback during submit ('.$e->getMessage().')');

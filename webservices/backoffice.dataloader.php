@@ -104,7 +104,7 @@ try
 	
 
 	// The XMLDataLoader constructor has initialized the DB, let's start a transaction 
-	CMDBSource::Query('START TRANSACTION');
+	CMDBSource::StartTransaction();
 	
 	$oChange = MetaModel::NewObject("CMDBChange");
 	$oChange->Set("date", time());
@@ -119,13 +119,13 @@ try
 	if ($oDataLoader->EndSession(true /* strict */))
 	{
 		$iCountCreated = $oDataLoader->GetCountCreated();
-		CMDBSource::Query('COMMIT');
+		CMDBSource::Commit();
 
 		$oP->p("Data successfully written into the DB: $iCountCreated objects created");
 	}
 	else
 	{
-		CMDBSource::Query('ROLLBACK');
+		CMDBSource::Rollback();
 		$oP->p("Some issues have been encountered, changes will not be recorded, please review the source data");
 		$aErrors = $oDataLoader->GetErrors();
 		if (count($aErrors) > 0)
@@ -151,8 +151,8 @@ try
 catch(Exception $e)
 {
 	$oP->p("An error happened while loading the data: ".$e->getMessage());		
-	$oP->p("Aborting (no data written)...");		
-	CMDBSource::Query('ROLLBACK');
+	$oP->p("Aborting (no data written)...");
+	CMDBSource::Rollback($e);
 }
 
 if (function_exists('memory_get_peak_usage'))
@@ -161,4 +161,3 @@ if (function_exists('memory_get_peak_usage'))
 }
 
 $oP->Output();
-?>

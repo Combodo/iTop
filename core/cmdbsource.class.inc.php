@@ -710,13 +710,15 @@ class CMDBSource
 	 *
 	 * @see m_aTransactionLevel
 	 *
+	 * @param \Exception $e if used in a catch block, mean to pass the original exception
 	 * @param bool $bForce if true then do a rollback even if we're not at the transaction root level
 	 *
+	 * @throws \MySQLChildTransactionRollbackException
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @since 2.7.0 N°679
 	 */
-	public static function Rollback($bForce = false)
+	public static function Rollback($e = null, $bForce = false)
 	{
 		if ($bForce)
 		{
@@ -728,7 +730,7 @@ class CMDBSource
 		self::RemoveLastTransactionLevel();
 		if (self::HasTransactionsInStack())
 		{
-			throw new MySQLChildTransactionRollbackException('A nested transaction called for a rollback', null);
+			throw new MySQLChildTransactionRollbackException('A nested transaction called for a rollback', null, $e);
 		}
 
 		self::DBQuery('ROLLBACK');
