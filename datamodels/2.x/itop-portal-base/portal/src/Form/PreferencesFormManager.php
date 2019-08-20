@@ -22,15 +22,15 @@
 
 namespace Combodo\iTop\Portal\Form;
 
-use Exception;
-use IssueLog;
 use CMDBSource;
-use Dict;
-use UserRights;
-use Combodo\iTop\Form\FormManager;
-use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\Field\HiddenField;
 use Combodo\iTop\Form\Field\SelectField;
+use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\FormManager;
+use Dict;
+use Exception;
+use IssueLog;
+use UserRights;
 
 /**
  * Description of PreferencesFormManager

@@ -2700,9 +2700,13 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
+		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 		try
 		{
-			CMDBSource::Query('START TRANSACTION');
+			if ($bIsTransactionEnabled)
+			{
+				CMDBSource::Query('START TRANSACTION');
+			}
 
 			// First query built upon on the root class, because the ID must be created first
 			$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
@@ -2723,11 +2727,17 @@ abstract class DBObject implements iDisplay
 				$this->DBInsertSingleTable($sParentClass);
 			}
 
-			CMDBSource::Query('COMMIT');
+			if ($bIsTransactionEnabled)
+			{
+				CMDBSource::Query('COMMIT');
+			}
 		}
 		catch (Exception $e)
 		{
-			CMDBSource::Query('ROLLBACK');
+			if ($bIsTransactionEnabled)
+			{
+				CMDBSource::Query('ROLLBACK');
+			}
 			throw $e;
 		}
 

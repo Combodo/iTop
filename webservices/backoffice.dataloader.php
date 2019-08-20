@@ -151,7 +151,7 @@ try
 catch(Exception $e)
 {
 	$oP->p("An error happened while loading the data: ".$e->getMessage());		
-	$oP->p("Aborting (no data written)...");		
+	$oP->p("Aborting (no data written)...");
 	CMDBSource::Query('ROLLBACK');
 }
 
@@ -161,4 +161,3 @@ if (function_exists('memory_get_peak_usage'))
 }
 
 $oP->Output();
-?>
