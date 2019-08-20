@@ -436,7 +436,7 @@ EOF
 		$this->add("</div>\n");
 	}
 
-	public function DisplayLogoutPage($bPortal)
+	public function DisplayLogoutPage($bPortal, $sTitle = null)
 	{
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
 		if ($bPortal)
@@ -448,12 +448,19 @@ EOF
 			$sUrl .= 'pages/UI.php';
 		}
 
+		if (empty($sTitle))
+		{
+			$sTitle = Dict::S('UI:LogOff:ThankYou');
+		}
+
+		$sMessage = Dict::S('UI:LogOff:ClickHereToLoginAgain');
+
 		$this->no_cache();
 		$this->DisplayLoginHeader();
 		$this->add("<div id=\"login\">\n");
-		$this->add("<h1>".Dict::S('UI:LogOff:ThankYou')."</h1>\n");
+		$this->add("<h1>$sTitle</h1>\n");
 
-		$this->add("<p><a href=\"$sUrl\">".Dict::S('UI:LogOff:ClickHereToLoginAgain')."</a></p>");
+		$this->add("<p><a href=\"$sUrl\">$sMessage</a></p>");
 		$this->add("</div>\n");
 		$this->output();
 	}
