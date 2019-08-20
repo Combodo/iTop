@@ -717,28 +717,18 @@ class CMDBSource
 	 * @internal
 	 * @see m_iTransactionLevel
 	 *
-	 * @param bool $bForce if true then do a rollback even if we're not at the transaction root level
-	 *
 	 * @throws \MySQLNoTransactionException if called with no opened transaction
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @since 2.7.0 N°679
 	 */
-	private static function Rollback($bForce = false)
+	private static function Rollback()
 	{
 		if (!self::IsInsideTransaction())
 		{
 			// should not happen !
 			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
 		}
-
-		if ($bForce)
-		{
-			self::DBQuery('ROLLBACK');
-			self::RemoveAllTransactionLevels();
-			return;
-		}
-
 		self::RemoveLastTransactionLevel();
 		if (self::IsInsideTransaction())
 		{
