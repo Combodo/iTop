@@ -51,28 +51,51 @@ if (isset($_SESSION['auth_user']))
 
 LoginWebPage::ResetSession();
 
+$bLoginDebug = MetaModel::GetConfig()->Get('login_debug');
+if ($bLoginDebug)
+{
+	IssueLog::Info("---------------------------------");
+	if (isset($sAuthUser))
+	{
+		IssueLog::Info("--> Logout user: [$sAuthUser]");
+	}
+	else
+	{
+		IssueLog::Info("--> Logout");
+	}
+	$sSessionLog = session_id().' '.utils::GetSessionLog();
+	IssueLog::Info("SESSION: $sSessionLog");
+}
+
 $aPluginList = LoginWebPage::GetLoginPluginList('iLogoutExtension');
 
 /** @var iLogoutExtension $oLogoutExtension */
 foreach ($aPluginList as $oLogoutExtension)
 {
+	if ($bLoginDebug)
+	{
+		$sCurrSessionLog = session_id().' '.utils::GetSessionLog();
+		if ($sCurrSessionLog != $sSessionLog)
+		{
+			$sSessionLog = $sCurrSessionLog;
+			IssueLog::Info("SESSION: $sSessionLog");
+		}
+		IssueLog::Info("Logout call: ".get_class($oLogoutExtension));
+	}
+
 	$oLogoutExtension->LogoutAction();
 }
 
-/*
-switch($sLoginMode)
+if ($bLoginDebug)
 {
-	case 'cas':
-	$sCASLogoutUrl = MetaModel::GetConfig()->Get('cas_logout_redirect_service');
-	if (empty($sCASLogoutUrl))
+	$sCurrSessionLog = session_id().' '.utils::GetSessionLog();
+	if ($sCurrSessionLog != $sSessionLog)
 	{
-		$sCASLogoutUrl = $sUrl;
+		$sSessionLog = $sCurrSessionLog;
+		IssueLog::Info("SESSION: $sSessionLog");
 	}
-	utils::InitCASClient();					
-	phpCAS::logoutWithRedirectService($sCASLogoutUrl); // Redirects to the CAS logout page
-	break;
+	IssueLog::Info("--> Display logout page");
 }
-*/
 
 $oPage = LoginWebPage::NewLoginWebPage();
 $oPage->DisplayLogoutPage($bPortal);
