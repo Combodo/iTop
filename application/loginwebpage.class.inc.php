@@ -604,7 +604,6 @@ EOF
 	{
 		$aAllPlugins = array();
 
-		// Keep only the plugins for the current login mode
 		$sCurrentLoginMode = isset($_SESSION['login_mode']) ? $_SESSION['login_mode'] : '';
 
 		/** @var iLoginExtension $oLoginExtensionInstance */
@@ -613,7 +612,8 @@ EOF
 			$aLoginModes = $oLoginExtensionInstance->ListSupportedLoginModes();
 			foreach ($aLoginModes as $sLoginMode)
 			{
-				if (empty($sCurrentLoginMode) || ($sLoginMode == 'before') || ($sLoginMode == 'after') || ($sLoginMode == $sCurrentLoginMode))
+				// Keep only the plugins for the current login mode + before + after
+				if (empty($sCurrentLoginMode) || ($sLoginMode == $sCurrentLoginMode) || ($sLoginMode == 'before') || ($sLoginMode == 'after'))
 				{
 					if (!isset($aAllPlugins[$sLoginMode]))
 					{
@@ -624,7 +624,7 @@ EOF
 			}
 		}
 
-		// Order by the config list of allowed types
+		// Order and filter by the config list of allowed types (allowed_login_types)
 		$aAllowedLoginModes = array_merge(array('before'), MetaModel::GetConfig()->GetAllowedLoginTypes(), array('after'));
 		$aPlugins = array();
 		foreach ($aAllowedLoginModes as $sAllowedMode)
