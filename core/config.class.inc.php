@@ -174,6 +174,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'db_core_transactions_enabled' => array(
+			'type' => 'bool',
+			'description' => 'If true, CRUD transactions in iTop core will be enabled',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'skip_check_to_write' => array(
 			'type' => 'bool',
 			'description' => 'Disable data format and integrity checks to boost up data load (insert or update)',
