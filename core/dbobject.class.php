@@ -2702,7 +2702,7 @@ abstract class DBObject implements iDisplay
 
 		try
 		{
-			CMDBSource::StartTransaction();
+			CMDBSource::Query('START TRANSACTION');
 
 			// First query built upon on the root class, because the ID must be created first
 			$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
@@ -2723,11 +2723,11 @@ abstract class DBObject implements iDisplay
 				$this->DBInsertSingleTable($sParentClass);
 			}
 
-			CMDBSource::Commit();
+			CMDBSource::Query('COMMIT');
 		}
 		catch (Exception $e)
 		{
-			CMDBSource::Rollback($e);
+			CMDBSource::Query('ROLLBACK');
 			throw $e;
 		}
 

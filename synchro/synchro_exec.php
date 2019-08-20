@@ -138,7 +138,7 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 	{
 		if ($bSimulate)
 		{
-			CMDBSource::StartTransaction();
+			CMDBSource::Query('START TRANSACTION');
 		}
 		try
 		{
@@ -146,7 +146,7 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 			$oStatLog = $oSynchroExec->Process();
 			if ($bSimulate)
 			{
-				CMDBSource::Rollback();
+				CMDBSource::Query('ROLLBACK');
 			}
 			foreach ($oStatLog->GetTraces() as $sMessage)
 			{

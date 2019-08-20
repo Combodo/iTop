@@ -118,7 +118,7 @@ class PreferencesFormManager extends FormManager
 			try
 			{
 				// Starting transaction
-				CMDBSource::StartTransaction();
+				CMDBSource::Query('START TRANSACTION');
 				$iFieldChanged = 0;
 
 				// Updating user
@@ -141,12 +141,12 @@ class PreferencesFormManager extends FormManager
 				}
 
 				// Ending transaction with a commit as everything was fine
-				CMDBSource::Commit();
+				CMDBSource::Query('COMMIT');
 			}
 			catch (Exception $e)
 			{
 				// End transaction with a rollback as something failed
-				CMDBSource::Rollback($e);
+				CMDBSource::Query('ROLLBACK');
 				$aData['valid'] = false;
 				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
 				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Rollback during submit ('.$e->getMessage().')');

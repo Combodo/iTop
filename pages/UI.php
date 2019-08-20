@@ -920,9 +920,9 @@ EOF
 						{
 							throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 						}
-						CMDBSource::StartTransaction();
+						CMDBSource::Query('START TRANSACTION');
 						$oObj->DBUpdate();
-						CMDBSource::Commit();
+						CMDBSource::Query('COMMIT');
 						$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 						$sSeverity = 'ok';
 					}
@@ -930,7 +930,7 @@ EOF
 					{
 						// Found issues, explain and give the user a second chance
 						//
-						CMDBSource::Rollback($e);
+						CMDBSource::Query('ROLLBACK');
 						$bDisplayDetails = false;
 						$aIssues = $e->getIssues();
 						$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
@@ -939,15 +939,13 @@ EOF
 					}
 					catch (DeleteException $e)
 					{
+						CMDBSource::Query('ROLLBACK');
 						// Say two things:
 						// - 1) Don't be afraid nothing was modified
 						$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 						$sSeverity = 'info';
 						cmdbAbstractObject::SetSessionMessage(get_class($oObj), $oObj->GetKey(), 'UI:Class_Object_NotUpdated', $sMessage,
 							$sSeverity, 0, true /* must not exist */);
-
-						CMDBSource::Rollback($e);
-
 						// - 2) Ok, there was some trouble indeed
 						$sMessage = $e->getMessage();
 						$sSeverity = 'error';

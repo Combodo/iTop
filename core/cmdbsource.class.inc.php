@@ -100,10 +100,9 @@ class MySQLHasGoneAwayException extends MySQLException
 }
 
 /**
- * @see \CMDBSource::Rollback()
  * @since 2.7.0 N°679
  */
-class MySQLChildTransactionRollbackException extends MySQLException
+class MySQLNoTransactionException extends MySQLException
 {
 
 }
@@ -140,10 +139,10 @@ class CMDBSource
 	protected static $m_oMysqli;
 
 	/**
-	 * @var int number of level for nested transactions
+	 * @var int number of level for nested transactions : 0 if no transaction was ever opened, +1 for each 'START TRANSACTION' sent
 	 * @since 2.7.0 N°679
 	 */
-	protected static $m_aTransactionLevel = 0;
+	protected static $m_iTransactionLevel = 0;
 
 	/**
 	 * SQL charset & collation declaration for text columns
@@ -590,7 +589,7 @@ class CMDBSource
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \CoreException
 	 *
-	 * @since 2.7.0 N°679 handles nested transactions using {@link m_aTransacSavepoints}
+	 * @since 2.7.0 N°679 handles nested transactions
 	 */
 	public static function Query($sSQLQuery)
 	{
@@ -622,13 +621,17 @@ class CMDBSource
 	 *
 	 * Use {@link Query} if you're not sure.
 	 *
+	 * @internal
+	 *
 	 * @param string $sSql
 	 *
 	 * @return bool|\mysqli_result
-	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \MySQLException
+	 *
+	 * @since 2.7.0 N°679
 	 */
-	public static function DBQuery($sSql)
+	private static function DBQuery($sSql)
 	{
 		$oKPI = new ExecutionKPI();
 		try
@@ -664,12 +667,13 @@ class CMDBSource
 	 *
 	 * > Beginning a transaction causes any pending transaction to be committed
 	 *
-	 * @see m_aTransactionLevel
+	 * @internal
+	 * @see m_iTransactionLevel
 	 * @since 2.7.0 N°679
 	 */
-	public static function StartTransaction()
+	private static function StartTransaction()
 	{
-		$bHasExistingTransactions = self::HasTransactionsInStack();
+		$bHasExistingTransactions = self::IsInsideTransaction();
 		if (!$bHasExistingTransactions)
 		{
 			self::DBQuery('START TRANSACTION');
@@ -679,47 +683,55 @@ class CMDBSource
 	}
 
 	/**
-	 * Do not commit if is a nested transaction
+	 * Sends the COMMIT to the db only if we are at the root transaction level
 	 *
-	 * @see m_aTransactionLevel
-	 * @throws \CoreException if trying to commit with no transaction in stack
+	 * @internal
+	 * @see m_iTransactionLevel
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \MySQLNoTransactionException if called with no opened transaction
 	 * @since 2.7.0 N°679
 	 */
-	public static function Commit()
+	private static function Commit()
 	{
-		if (!self::HasTransactionsInStack())
+		if (!self::IsInsideTransaction())
 		{
 			// should not happen !
-			throw new CoreException('Trying to commit transaction whereas none have been started !');
+			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
 		}
 
 		self::RemoveLastTransactionLevel();
 
-		if (self::HasTransactionsInStack())
+		if (self::IsInsideTransaction())
 		{
-			// We are in a nested transaction, the commit must be done on the highest level transaction
 			return;
 		}
 		self::DBQuery('COMMIT');
 	}
 
 	/**
-	 * If is a nested transaction, only throws an exception. Else sends ROLLBACK to the DB.
+	 * Sends the ROLLBACK to the db only if we are at the root transaction level
 	 *
 	 * The parameter allows to send a ROLLBACK whatever the current transaction level is
 	 *
-	 * @see m_aTransactionLevel
+	 * @internal
+	 * @see m_iTransactionLevel
 	 *
-	 * @param \Exception $e if used in a catch block, mean to pass the original exception
 	 * @param bool $bForce if true then do a rollback even if we're not at the transaction root level
 	 *
-	 * @throws \MySQLChildTransactionRollbackException
+	 * @throws \MySQLNoTransactionException if called with no opened transaction
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @since 2.7.0 N°679
 	 */
-	public static function Rollback($e = null, $bForce = false)
+	private static function Rollback($bForce = false)
 	{
+		if (!self::IsInsideTransaction())
+		{
+			// should not happen !
+			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
+		}
+
 		if ($bForce)
 		{
 			self::DBQuery('ROLLBACK');
@@ -728,53 +740,58 @@ class CMDBSource
 		}
 
 		self::RemoveLastTransactionLevel();
-		if (self::HasTransactionsInStack())
+		if (self::IsInsideTransaction())
 		{
-			throw new MySQLChildTransactionRollbackException('A nested transaction called for a rollback', null, $e);
+			return;
 		}
 
 		self::DBQuery('ROLLBACK');
 	}
 
 	/**
-	 * @see m_aTransactionLevel
+	 * @api
+	 * @see m_iTransactionLevel
+	 * @return bool true if there is one transaction opened, false otherwise (not a single 'START TRANSACTION' sent)
 	 * @since 2.7.0 N°679
 	 */
-	private static function HasTransactionsInStack()
+	public static function IsInsideTransaction()
 	{
-		return (self::$m_aTransactionLevel > 0);
+		return (self::$m_iTransactionLevel > 0);
 	}
 
 	/**
-	 * @see m_aTransactionLevel
+	 * @internal
+	 * @see m_iTransactionLevel
 	 * @since 2.7.0 N°679
 	 */
 	private static function AddTransactionLevel()
 	{
-		++self::$m_aTransactionLevel;
+		++self::$m_iTransactionLevel;
 	}
 
 	/**
-	 * @see m_aTransactionLevel
+	 * @internal
+	 * @see m_iTransactionLevel
 	 * @since 2.7.0 N°679
 	 */
 	private static function RemoveLastTransactionLevel()
 	{
-		if (self::$m_aTransactionLevel === 0)
+		if (self::$m_iTransactionLevel === 0)
 		{
 			return;
 		}
 
-		--self::$m_aTransactionLevel;
+		--self::$m_iTransactionLevel;
 	}
 
 	/**
-	 * @see m_aTransactionLevel
+	 * @internal
+	 * @see m_iTransactionLevel
 	 * @since 2.7.0 N°679
 	 */
 	private static function RemoveAllTransactionLevels()
 	{
-		self::$m_aTransactionLevel = 0;
+		self::$m_iTransactionLevel = 0;
 	}
 
 	/**
