@@ -20,12 +20,16 @@ class Config
 	 *
 	 * @return mixed
 	 */
-	public static function Get($sName)
+	public static function Get($sName, $sDefaultValue = '')
 	{
 		$sValue = MetaModel::GetModuleSetting('authent-cas', $sName, '');
 		if (empty($sValue))
 		{
 			$sValue = MetaModel::GetConfig()->Get($sName);
+		}
+		if (empty($sValue))
+		{
+			return $sDefaultValue;
 		}
 
 		return $sValue;

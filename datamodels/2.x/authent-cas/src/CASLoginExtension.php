@@ -232,7 +232,7 @@ class CASUserProvisioning
 		$bFound =  false;
 		if (!empty($sCASMemberships))
 		{
-			$sCASMemberOfName = Config::Get('cas_memberof_attribute_name');
+			$sCASMemberOfName = Config::Get('cas_memberof_attribute_name', 'memberOf');
 			if (phpCAS::hasAttribute($sCASMemberOfName))
 			{
 				// A list of groups is specified, the user must a be member of (at least) one of them to pass
@@ -341,7 +341,7 @@ class CASUserProvisioning
 	public static function UpdateUser(User $oUser)
 	{
 		$bCASUpdateProfiles = Config::Get('cas_update_profiles');
-		$sCASMemberOfName = Config::Get('cas_memberof_attribute_name');
+		$sCASMemberOfName = Config::Get('cas_memberof_attribute_name', 'memberOf');
 		if ($bCASUpdateProfiles && (phpCAS::hasAttribute($sCASMemberOfName)))
 		{
 			$aMemberOf = phpCAS::getAttribute($sCASMemberOfName);
