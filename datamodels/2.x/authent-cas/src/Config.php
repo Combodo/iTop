@@ -22,7 +22,7 @@ class Config
 	 */
 	public static function Get($sName)
 	{
-		$sValue = MetaModel::GetModuleSetting('combodo-cas', $sName, '');
+		$sValue = MetaModel::GetModuleSetting('authent-cas', $sName, '');
 		if (empty($sValue))
 		{
 			$sValue = MetaModel::GetConfig()->Get($sName);

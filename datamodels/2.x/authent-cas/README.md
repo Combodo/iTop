@@ -48,9 +48,9 @@ To do so, set or change the following parameters in the iTop configuration file:
 'cas_version' => 'S1',
 ```
 
-## combodo-cas extension
+## authent-cas extension
 
-This extension is a quick port of the previous implementation of the the CAS SSO into iTop. For backward compatibility it retains the same parameters (which are part of the global config and not part of the *combodo-cas module* configuration).
+This extension is a quick port of the previous implementation of the the CAS SSO into iTop. For backward compatibility it retains the same parameters (which are part of the global config and not part of the *authent-cas module* configuration).
 
 The library used is still **phpCAS** (now under the Apereo umbrella and more or less maintained...) <https://github.com/apereo/phpCAS>.
 

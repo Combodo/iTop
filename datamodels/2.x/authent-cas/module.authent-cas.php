@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'combodo-cas/1.0.0',
+	'authent-cas/2.7.0',
 	array(
 		// Identification
 		//
@@ -17,13 +17,13 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 			
 		),
-		'mandatory' => false,
+		'mandatory' => true,
 		'visible' => true,
 
 		// Components
 		//
 		'datamodel' => array(
-			'model.combodo-cas.php',
+			'model.authent-cas.php',
 			'main.php'
 		),
 		'webservice' => array(
