@@ -91,7 +91,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		if ($_SESSION['login_mode'] == 'cas')
 		{
 			$sAuthUser = $_SESSION['auth_user'];
-			if (!LoginWebPage::CheckUser($sAuthUser, '', 'external'))
+			if (!LoginWebPage::CheckUser($sAuthUser))
 			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_NOTAUTHORIZED;
 				return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
