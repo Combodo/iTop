@@ -18,7 +18,6 @@ use phpCAS;
 use URP_UserProfile;
 use User;
 use UserExternal;
-use UserRights;
 use utils;
 
 /**
@@ -92,7 +91,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		if ($_SESSION['login_mode'] == 'cas')
 		{
 			$sAuthUser = $_SESSION['auth_user'];
-			if (!UserRights::CheckCredentials($sAuthUser, '', $_SESSION['login_mode'], 'external'))
+			if (!LoginWebPage::CheckUser($sAuthUser, '', 'external'))
 			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_NOTAUTHORIZED;
 				return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
@@ -184,16 +183,22 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	private function DoUserProvisioning($sLogin)
 	{
-		$aArgs = array('login' => $sLogin);
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT UserExternal WHERE login = :login"), array(), $aArgs);
-		if ($oSet->CountExceeds(0))
+		$bCASUserSynchro = Config::Get('cas_user_synchro');
+		if (!$bCASUserSynchro)
 		{
-			/** @var User $oUser */
-			$oUser = $oSet->Fetch();
-			CASUserProvisioning::UpdateUser($oUser);
 			return;
 		}
-		CASUserProvisioning::CreateUser($sLogin, '', 'cas', 'external');
+
+		$oUser = LoginWebPage::FindUser($sLogin, false);
+		if ($oUser)
+		{
+			if ($oUser->Get('status') == 'enabled')
+			{
+				CASUserProvisioning::UpdateUser($oUser);
+			}
+			return;
+		}
+		CASUserProvisioning::CreateUser($sLogin, '', 'external');
 	}
 }
 
@@ -207,11 +212,6 @@ class CASUserProvisioning
 	 * Called when no user is found in iTop for the corresponding 'name'. This method
 	 * can create/synchronize the User in iTop with an external source (such as AD/LDAP) on the fly
 	 *
-	 * @param string $sName The CAS authenticated user name
-	 * @param string $sPassword Ignored
-	 * @param string $sLoginMode The login mode used (cas|form|basic|url)
-	 * @param string $sAuthentication The authentication method used
-	 *
 	 * @return bool true if the user is a valid one, false otherwise
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
@@ -223,10 +223,9 @@ class CASUserProvisioning
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public static function CreateUser($sName, $sPassword, $sLoginMode, $sAuthentication)
+	public static function CreateUser()
 	{
 		$bOk = true;
-		if ($sLoginMode != 'cas') return false; // Must be authenticated via CAS
 
 		$sCASMemberships = Config::Get('cas_memberof');
 		$bFound =  false;
@@ -271,25 +270,15 @@ class CASUserProvisioning
 					}
 					if ($bIsMember)
 					{
-						$bCASUserSynchro = Config::Get('cas_user_synchro');
-						if ($bCASUserSynchro)
+						// If needed create a new user for this email/profile
+						$bOk = self::CreateCASUser(phpCAS::getUser(), $aMemberOf);
+						if($bOk)
 						{
-							// If needed create a new user for this email/profile
-							phpCAS::log('Info: cas_user_synchro is ON');
-							$bOk = self::CreateCASUser(phpCAS::getUser(), $aMemberOf);
-							if($bOk)
-							{
-								$bFound = true;
-							}
-							else
-							{
-								phpCAS::log("User ".phpCAS::getUser()." cannot be created in iTop. Logging off...");
-							}
+							$bFound = true;
 						}
 						else
 						{
-							phpCAS::log('Info: cas_user_synchro is OFF');
-							$bFound = true;
+							phpCAS::log("User ".phpCAS::getUser()." cannot be created in iTop. Logging off...");
 						}
 						break;
 					}
@@ -315,11 +304,10 @@ class CASUserProvisioning
 		if (!$bFound)
 		{
 			// The user is not part of the allowed groups, => log out
-			$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 			$sCASLogoutUrl = Config::Get('cas_logout_redirect_service');
 			if (empty($sCASLogoutUrl))
 			{
-				$sCASLogoutUrl = $sUrl;
+				$sCASLogoutUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
 			}
 			phpCAS::logoutWithRedirectService($sCASLogoutUrl); // Redirects to the CAS logout page
 			// Will never return !
@@ -355,21 +343,17 @@ class CASUserProvisioning
 	/**
 	 * Helper method to create a CAS based user
 	 *
-	 * @param string $sEmail
+	 * @param string $sLogin
 	 * @param array $aGroups
 	 *
 	 * @return bool true on success, false otherwise
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
-	 * @throws \CoreWarning
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
 	 */
-	protected static function CreateCASUser($sEmail, $aGroups)
+	protected static function CreateCASUser($sLogin, $aGroups)
 	{
 		if (!MetaModel::IsValidClass('URP_Profiles'))
 		{
@@ -377,15 +361,22 @@ class CASUserProvisioning
 			return false;
 		}
 
-		$oUser = MetaModel::GetObjectByName('UserExternal', $sEmail, false);
+		$oUser = MetaModel::GetObjectByName('UserExternal', $sLogin, false);
 		if ($oUser == null)
 		{
 			// Create the user, link it to a contact
-			phpCAS::log("Info: the user '$sEmail' does not exist. A new UserExternal will be created.");
+			if (phpCAS::hasAttribute('mail'))
+			{
+				$sEmail = phpCAS::getAttribute('mail');
+			}
+			else
+			{
+				$sEmail = $sLogin;
+			}
+			phpCAS::log("Info: the user '$sLogin' does not exist. A new UserExternal will be created.");
 			$oSearch = new DBObjectSearch('Person');
 			$oSearch->AddCondition('email', $sEmail);
 			$oSet = new DBObjectSet($oSearch);
-			$iContactId = 0;
 			switch($oSet->Count())
 			{
 				case 0:
@@ -404,41 +395,17 @@ class CASUserProvisioning
 			}
 
 			$oUser = new UserExternal();
-			$oUser->Set('login', $sEmail);
+			$oUser->Set('login', $sLogin);
 			$oUser->Set('contactid', $iContactId);
 			$oUser->Set('language', MetaModel::GetConfig()->GetDefaultLanguage());
 		}
 		else
 		{
-			phpCAS::log("Info: the user '$sEmail' already exists (id=".$oUser->GetKey().").");
+			phpCAS::log("Info: the user '$sLogin' already exists (id=".$oUser->GetKey().").");
 		}
 
 		// Now synchronize the profiles
-		if (!self::SetProfilesFromCAS($oUser, $aGroups))
-		{
-			return false;
-		}
-		else
-		{
-			if ($oUser->IsNew() || $oUser->IsModified())
-			{
-				/** @var \CMDBChange $oMyChange */
-				$oMyChange = MetaModel::NewObject("CMDBChange");
-				$oMyChange->Set("date", time());
-				$oMyChange->Set("userinfo", 'CAS/LDAP Synchro');
-				$oMyChange->DBInsert();
-				if ($oUser->IsNew())
-				{
-					$oUser->DBInsertTracked($oMyChange);
-				}
-				else
-				{
-					$oUser->DBUpdateTracked($oMyChange);
-				}
-			}
-
-			return true;
-		}
+		return self::SetProfilesFromCAS($oUser, $aGroups);
 	}
 
 	/**

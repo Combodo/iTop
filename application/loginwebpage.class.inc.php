@@ -361,7 +361,7 @@ EOF
 	{
 		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 		$sToken = utils::ReadParam('token', '', false, 'raw_data');
-		$sNewPwd = utils::ReadPostedParam('new_pwd', '', false, 'raw_data');
+		$sNewPwd = utils::ReadPostedParam('new_pwd', '', 'raw_data');
 
 		UserRights::Login($sAuthUser); // Set the user's language
 		$oUser = UserRights::GetUserObject();
@@ -679,7 +679,28 @@ EOF
 	}
 
 	/**
-	 * Store User info in the session when connection is OK
+	 * Login API: Check that credentials correspond to a valid user
+	 *
+	 * @param string $sName
+	 * @param string $sPassword
+	 * @param string $sAuthentication
+	 *
+	 * @return bool
+	 * @api
+	 */
+	public static function CheckUser($sName, $sPassword, $sAuthentication = 'external')
+	{
+		$oUser = self::FindUser($sName, true, ucfirst(strtolower($sAuthentication)));
+		if (is_null($oUser))
+		{
+			return false;
+		}
+
+		return $oUser->CheckCredentials($sPassword);
+	}
+
+	/**
+	 * Login API: Store User info in the session when connection is OK
 	 *
 	 * @param $sAuthUser
 	 * @param $sAuthentication
@@ -692,6 +713,7 @@ EOF
 	 * @throws CoreWarning
 	 * @throws MySQLException
 	 * @throws OQLException
+	 * @api
 	 */
 	public static function OnLoginSuccess($sAuthUser, $sAuthentication, $sLoginMode)
 	{
@@ -714,6 +736,14 @@ EOF
 		UserRights::_InitSessionCache();
 	}
 
+	/**
+	 * Login API: Check that an already logger User is still valid
+	 *
+	 * @param int $iErrorCode
+	 *
+	 * @return int LOGIN_FSM_RETURN_OK or LOGIN_FSM_RETURN_ERROR
+	 * @api
+	 */
 	public static function CheckLoggedUser(&$iErrorCode)
 	{
 		if (isset($_SESSION['auth_user']))
@@ -742,6 +772,211 @@ EOF
 		// Note: displayed when the user will click on Cancel
 		echo '<p><strong>'.Dict::S('UI:Login:Error:AccessRestricted').'</strong></p>';
 		exit;
+	}
+
+	/**
+	 * Provisioning API: Find a User
+	 *
+	 * @api
+	 *
+	 * @param bool $bMustBeValid
+	 * @param string $sType
+	 *
+	 * @param string $sLogin
+	 *
+	 * @return \User|null
+	 */
+	public static function FindUser($sLogin, $bMustBeValid = true, $sType = 'External')
+	{
+		try
+		{
+			$aArgs = array('login' => $sLogin);
+			$sUserClass = "User$sType";
+			$oSearch = DBObjectSearch::FromOQL("SELECT $sUserClass WHERE login = :login");
+			if ($bMustBeValid)
+			{
+				$oSearch->AddCondition('status', 'enabled');
+			}
+			$oSet = new DBObjectSet($oSearch, array(), $aArgs);
+			if ($oSet->CountExceeds(0))
+			{
+				/** @var User $oUser */
+				$oUser = $oSet->Fetch();
+
+				return $oUser;
+			}
+		}
+		catch (Exception $e)
+		{
+			IssueLog::Error($e->getMessage());
+		}
+		return null;
+	}
+
+	/**
+ 	 * Provisioning API: Find a Person
+	 *
+	 * @param string $sEmail
+	 *
+	 * @return \DBObject
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
+	 * @api
+	 */
+	public static function FindPerson($sEmail)
+	{
+		$oSearch = new DBObjectSearch('Person');
+		$oSearch->AddCondition('email', $sEmail);
+		$oSet = new DBObjectSet($oSearch);
+		if ($oSet->CountExceeds(1))
+		{
+			throw new Exception(Dict::S('UI:Login:Error:MultipleContactsHaveSameEmail'));
+		}
+		return $oSet->Fetch();
+	}
+
+	/**
+	 * Provisioning API: Create a person
+	 *
+	 * @param string $sFirstName
+	 * @param string $sLastName
+	 * @param string $sEmail
+	 * @param string $sOrganization
+	 * @param array $aAdditionalParams
+	 *
+	 * @return \Person
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @api
+	 */
+	public static function ProvisionPerson($sFirstName, $sLastName, $sEmail, $sOrganization, $aAdditionalParams = array())
+	{
+		/** @var Person $oPerson */
+		$oPerson = MetaModel::NewObject('Person');
+		$oPerson->Set('first_name', $sFirstName);
+		$oPerson->Set('name', $sLastName);
+		$oPerson->Set('email', $sEmail);
+		$oOrg = MetaModel::GetObjectByName('Organization', $sOrganization, false);
+		if (is_null($oOrg))
+		{
+			throw new Exception(Dict::S('UI:Login:Error:WrongOrganizationName'));
+		}
+		$oPerson->Set('org_id', $oOrg->GetKey());
+		foreach ($aAdditionalParams as $sAttCode => $sValue)
+		{
+			$oPerson->Set($sAttCode, $sValue);
+		}
+		/** @var CMDBChange $oMyChange */
+		$oMyChange = MetaModel::NewObject('CMDBChange');
+		$oMyChange->Set("date", time());
+		$sOrigin = 'External User provisioning';
+		if (isset($_SESSION['login_mode']))
+		{
+			$sOrigin .= " ({$_SESSION['login_mode']})";
+		}
+		$oMyChange->Set('userinfo', $sOrigin);
+		$oMyChange->DBInsert();
+		$oPerson->DBInsertTracked($oMyChange);
+		return $oPerson;
+	}
+
+	/**
+	 * Provisioning API: Create or update a User
+	 *
+	 * @param string $sLogin
+	 * @param Person $oPerson
+	 * @param array $aRequestedProfiles
+	 *
+	 * @return \cmdbAbstractObject|\UserExternal
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
+	 * @api
+	 */
+	public static function ProvisionUser($sLogin, $oPerson, $aRequestedProfiles)
+	{
+		if (!MetaModel::IsValidClass('URP_Profiles'))
+		{
+			IssueLog::Error("URP_Profiles is not a valid class. Automatic creation of Users is not supported in this context, sorry.");
+			return null;
+		}
+
+		/** @var UserExternal $oUser */
+		$oUser = MetaModel::GetObjectByName('UserExternal', $sLogin, false);
+		if (is_null($oUser))
+		{
+			$oUser = MetaModel::NewObject('UserExternal');
+			$oUser->Set('login', $sLogin);
+			$oUser->Set('contactid', $oPerson->GetKey());
+			$oUser->Set('language', MetaModel::GetConfig()->GetDefaultLanguage());
+		}
+
+		// read all the existing profiles
+		$oProfilesSearch = new DBObjectSearch('URP_Profiles');
+		$oProfilesSet = new DBObjectSet($oProfilesSearch);
+		$aAllProfiles = array();
+		while($oProfile = $oProfilesSet->Fetch())
+		{
+			$aAllProfiles[strtolower($oProfile->GetName())] = $oProfile->GetKey();
+		}
+
+		$aProfiles = array();
+		foreach ($aRequestedProfiles as $sRequestedProfile)
+		{
+			$sRequestedProfile = strtolower($sRequestedProfile);
+			if (isset($aAllProfiles[$sRequestedProfile]))
+			{
+				$aProfiles[] = $aAllProfiles[$sRequestedProfile];
+			}
+		}
+
+		if (empty($aProfiles))
+		{
+			throw new Exception(Dict::S('UI:Login:Error:NoValidProfiles'));
+		}
+
+		// Now synchronize the profiles
+		$oProfilesSet = DBObjectSet::FromScratch('URP_UserProfile');
+		$sOrigin = 'External User provisioning';
+		if (isset($_SESSION['login_mode']))
+		{
+			$sOrigin .= " ({$_SESSION['login_mode']})";
+		}
+		foreach($aProfiles as $iProfileId)
+		{
+			$oLink = new URP_UserProfile();
+			$oLink->Set('profileid', $iProfileId);
+			$oLink->Set('reason', $sOrigin);
+			$oProfilesSet->AddObject($oLink);
+		}
+		$oUser->Set('profile_list', $oProfilesSet);
+		if ($oUser->IsModified())
+		{
+			/** @var \CMDBChange $oMyChange */
+			$oMyChange = MetaModel::NewObject("CMDBChange");
+			$oMyChange->Set("date", time());
+			$oMyChange->Set('userinfo', $sOrigin);
+			$oMyChange->DBInsert();
+			if ($oUser->IsNew())
+			{
+				$oUser->DBInsertTracked($oMyChange);
+			}
+			else
+			{
+				$oUser->DBUpdateTracked($oMyChange);
+			}
+		}
+
+		return $oUser;
 	}
 
 	/**

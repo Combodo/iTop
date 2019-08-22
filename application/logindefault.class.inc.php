@@ -85,7 +85,7 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
 	}
 
-	protected function OnCheckCredentials(&$iErrorCode)
+	protected function OnCredentialsOk(&$iErrorCode)
 	{
 		if (!isset($_SESSION['login_mode']))
 		{
