@@ -19,8 +19,8 @@
 
 namespace Combodo\iTop\Renderer;
 
-use Dict;
 use Combodo\iTop\Form\Field\Field;
+use Dict;
 
 /**
  * Description of FieldRenderer
@@ -29,7 +29,9 @@ use Combodo\iTop\Form\Field\Field;
  */
 abstract class FieldRenderer
 {
+	/** @var \Combodo\iTop\Form\Field\Field */
 	protected $oField;
+	/** @var string */
 	protected $sEndpoint;
 
 	/**

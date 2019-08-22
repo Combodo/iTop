@@ -1404,7 +1404,7 @@ abstract class MetaModel
 	 * @param string $sClass Class name
 	 * @param string $sAttCode Attribute code
 	 *
-	 * @return AttributeDefinition the AttributeDefinition of the $sAttCode attribute of the $sClass class
+	 * @return \AttributeDefinition the AttributeDefinition of the $sAttCode attribute of the $sClass class
 	 * @throws Exception
 	 */
 	final static public function GetAttributeDef($sClass, $sAttCode)
@@ -2696,6 +2696,7 @@ abstract class MetaModel
 	 */
 	public static function GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
+		/** @var \AttributeExternalKey $oAttDef */
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
 		return $oAttDef->GetAllowedValuesAsObjectSet($aArgs, $sContains, $iAdditionalValue);
 	}
