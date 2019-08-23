@@ -54,8 +54,10 @@ require_once(APPROOT.'sources/application/search/criterionconversion/criterionto
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
-	static $iGlobalFormId = 1;
+	protected static $iGlobalFormId = 1;
 	protected $aFieldsMap;
+	/** @var array attname => currentvalue Persists changes for {@link DBUpdate} */
+	protected $m_aChanges;
 
 	/**
 	 * If true, bypass IsActionAllowedOnAttribute when writing this object
@@ -3731,6 +3733,8 @@ EOF
 
 	public function DBUpdate()
 	{
+		$this->m_aChanges = $this->ListChanges();
+
 		$res = parent::DBUpdate();
 
 		$this->SetWarningsAsSessionMessages('update');
@@ -3762,6 +3766,8 @@ EOF
 		{
 			unset($aUpdateReentrance[$sKey]);
 		}
+
+		$this->m_aChanges = array();
 
 		return $res;
 	}

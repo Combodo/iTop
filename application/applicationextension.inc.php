@@ -344,15 +344,16 @@ interface iApplicationUIExtension
 interface iApplicationObjectExtension
 {
 	/**
-	 *	Invoked to determine wether an object has been modified in memory
+	 *    Invoked to determine whether an object has been modified in memory
 	 *
 	 *	The GUI calls this verb to determine the message that will be displayed to the end-user.
 	 *	Anyhow, this API can be called in other contexts such as the CSV import tool.
 	 *	
 	 * If the extension returns false, then the framework will perform the usual evaluation.
 	 * Otherwise, the answer is definitively "yes, the object has changed".	 	 	 
-	 *	 
-	 * @param DBObject $oObject The target object
+	 *
+	 * @param \cmdbAbstractObject $oObject The target object
+	 *
 	 * @return boolean True if something has changed for the target object
 	 */	
 	public function OnIsModified($oObject);
@@ -362,8 +363,9 @@ interface iApplicationObjectExtension
 	 *	
 	 *	The GUI calls this verb and reports any issue.
 	 *	Anyhow, this API can be called in other contexts such as the CSV import tool.
-	 * 
-	 * @param DBObject $oObject The target object
+	 *
+	 * @param \cmdbAbstractObject $oObject The target object
+	 *
 	 * @return string[] A list of errors message. An error message is made of one line and it can be displayed to the end-user.
 	 */	
 	public function OnCheckToWrite($oObject);
@@ -372,21 +374,23 @@ interface iApplicationObjectExtension
 	 *	Invoked to determine wether an object can be deleted from the database
 	 *	
 	 * The GUI calls this verb and stops the deletion process if any issue is reported.
-	 * 	 
-	 * Please not that it is not possible to cascade deletion by this mean: only stopper issues can be handled. 	 
-	 * 
-	 * @param DBObject $oObject The target object
+	 *
+	 * Please not that it is not possible to cascade deletion by this mean: only stopper issues can be handled.
+	 *
+	 * @param \cmdbAbstractObject $oObject The target object
+	 *
 	 * @return string[] A list of errors message. An error message is made of one line and it can be displayed to the end-user.
 	 */	
 	public function OnCheckToDelete($oObject);
 
 	/**
-	 *	Invoked when an object is updated into the database
-	 *	
-	 * The method is called right <b>after</b> the object has been written to the database.
-	 * 
-	 * @param DBObject $oObject The target object
+	 * Invoked when an object is updated into the database. The method is called right <b>after</b> the object has been written to the database.
+	 *
+	 * Changes made to the object can be get using {@link \cmdbAbstractObject::$m_aChanges}
+	 *
+	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information once for all the changes made within the current page
+	 *
 	 * @return void
 	 */	
 	public function OnDBUpdate($oObject, $oChange = null);
@@ -395,9 +399,10 @@ interface iApplicationObjectExtension
 	 *	Invoked when an object is created into the database
 	 *	
 	 * The method is called right <b>after</b> the object has been written to the database.
-	 * 
-	 * @param DBObject $oObject The target object
+	 *
+	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information once for all the changes made within the current page
+	 *
 	 * @return void
 	 */	
 	public function OnDBInsert($oObject, $oChange = null);

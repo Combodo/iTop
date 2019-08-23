@@ -3148,11 +3148,11 @@ abstract class DBObject implements iDisplay
 			$this->DBWriteLinks();
 			$this->WriteExternalAttributes();
 
+			$this->AfterUpdate();
+
 			$this->m_bDirty = false;
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
-
-			$this->AfterUpdate();
 
 			// Reload to get the external attributes
 			if ($bHasANewExternalKeyValue)
@@ -3969,7 +3969,7 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * this method is called after the object is updated into DB.
+     * This method is called after the object is updated into DB. You can get changes by calling {@link ListChanges}.
      *
      * @overwritable-hook You can extend this method in order to provide your own logic.
      */
