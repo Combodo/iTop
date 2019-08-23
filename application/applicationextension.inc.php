@@ -392,7 +392,9 @@ interface iApplicationObjectExtension
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information once for all the changes made within the current page
 	 *
 	 * @return void
-	 */	
+	 *
+	 * @since 2.7.0 N°2293 can access object changes by calling {@link \cmdbAbstractObject::$m_aChanges}
+	 */
 	public function OnDBUpdate($oObject, $oChange = null);
 
 	/**
