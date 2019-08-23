@@ -303,11 +303,11 @@ class CMDBSource
 		$iConnectInfoCount = count($aConnectInfo);
 		if ($bUsePersistentConnection && ($iConnectInfoCount == 3))
 		{
-			$iPort = $aConnectInfo[2];
+			$iPort = (int)($aConnectInfo[2]);
 		}
 		else if (!$bUsePersistentConnection && ($iConnectInfoCount == 2))
 		{
-			$iPort = $aConnectInfo[1];
+			$iPort = (int)($aConnectInfo[1]);
 		}
 		else
 		{
