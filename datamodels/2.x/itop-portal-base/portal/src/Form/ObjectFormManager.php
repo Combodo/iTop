@@ -942,11 +942,20 @@ class ObjectFormManager extends FormManager
 			{
 				if (!$oForm->HasField($sDependencyFieldId))
 				{
-					$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sDependencyFieldId);
-					$oField = $oAttDef->MakeFormField($this->oObject);
-					$oField->SetHidden(true);
+					try
+					{
+						$oAttDef = MetaModel::GetAttributeDef(get_class($this->oObject), $sDependencyFieldId);
+						$oField = $oAttDef->MakeFormField($this->oObject);
+						$oField->SetHidden(true);
 
-					$oForm->AddField($oField);
+						$oForm->AddField($oField);
+					}
+					catch (Exception $e)
+					{
+						// Avoid blocking a form if a RequestTemplate reference a bad attribute (e.g. :this->id)
+						IssueLog::Error('May be a bad OQL (referencing :this->id) in a RequestTemplate causes the following error');
+						IssueLog::Error($e);
+					}
 				}
 			}
 		}
