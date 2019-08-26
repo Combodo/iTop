@@ -920,9 +920,8 @@ EOF
 						{
 							throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 						}
-						CMDBSource::Query('START TRANSACTION');
+						// Transactions are now handled in DBUpdate
 						$oObj->DBUpdate();
-						CMDBSource::Query('COMMIT');
 						$sMessage = Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
 						$sSeverity = 'ok';
 					}
@@ -930,7 +929,6 @@ EOF
 					{
 						// Found issues, explain and give the user a second chance
 						//
-						CMDBSource::Query('ROLLBACK');
 						$bDisplayDetails = false;
 						$aIssues = $e->getIssues();
 						$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
@@ -939,7 +937,6 @@ EOF
 					}
 					catch (DeleteException $e)
 					{
-						CMDBSource::Query('ROLLBACK');
 						// Say two things:
 						// - 1) Don't be afraid nothing was modified
 						$sMessage = Dict::Format('UI:Class_Object_NotUpdated', MetaModel::GetName(get_class($oObj)), $oObj->GetName());
