@@ -3191,6 +3191,7 @@ abstract class DBObject implements iDisplay
 				}
 
 				CMDBSource::Query('COMMIT');
+				$iNbTryRemaining = 0;
 			}
 			catch (MySQLException $e)
 			{
