@@ -509,6 +509,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:ForgotPwdForm+' => 'Vous pouvez demander à saisir un nouveau mot de passe. Vous allez recevoir un email et vous pourrez suivre les instructions.',
 	'UI:Login:ResetPassword' => 'Envoyer le message',
 	'UI:Login:ResetPwdFailed' => 'Impossible de vous faire parvenir le message: %1$s',
+	'UI:Login:SeparatorOr' => 'Ou',
 
 	'UI:ResetPwd-Error-WrongLogin' => 'le compte \'%1$s\' est inconnu.',
 	'UI:ResetPwd-Error-NotPossible' => 'les comptes "externes" ne permettent pas la saisie d\'un mot de passe dans iTop.',

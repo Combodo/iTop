@@ -7,7 +7,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class LoginForm extends AbstractLoginFSMExtension
+class LoginForm extends AbstractLoginFSMExtension implements iLoginDataExtension
 {
 	private $bForceFormOnError = false;
 
@@ -21,24 +21,12 @@ class LoginForm extends AbstractLoginFSMExtension
 		return array('form');
 	}
 
-	protected function OnModeDetection(&$iErrorCode)
-	{
-		$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
-		$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
-		if (!empty($sAuthUser) && !empty($sAuthPwd))
-		{
-			$_SESSION['login_mode'] = 'form';
-		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
-	}
-
 	protected function OnReadCredentials(&$iErrorCode)
 	{
 		if (!isset($_SESSION['login_mode']) || ($_SESSION['login_mode'] == 'form'))
 		{
 			$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
 			$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
-			$_SESSION['login_mode'] = 'form';
 			if ($this->bForceFormOnError || empty($sAuthUser) || empty($sAuthPwd))
 			{
 				if (array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER))
@@ -51,11 +39,12 @@ class LoginForm extends AbstractLoginFSMExtension
 
 				// No credentials yet, display the form
 				$oPage = LoginWebPage::NewLoginWebPage();
-				$oPage->DisplayLoginForm('form', $this->bForceFormOnError);
+				$oPage->DisplayLoginForm($this->bForceFormOnError);
 				$oPage->output();
 				$this->bForceFormOnError = false;
 				exit;
 			}
+			$_SESSION['login_mode'] = 'form';
 		}
 		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
 	}
@@ -102,5 +91,37 @@ class LoginForm extends AbstractLoginFSMExtension
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
 		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+	}
+
+	/**
+	 * @return LoginTwigData
+	 * @throws \Exception
+	 */
+	public function GetLoginData()
+	{
+
+		$aPostedVars = array('auth_user', 'auth_pwd');
+		$oLoginData = new LoginTwigData($aPostedVars);
+
+		$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
+		$sAuthPwd = utils::ReadParam('suggest_pwd', '', true, 'raw_data');
+
+		$aData = array(
+			'sAuthUser' => $sAuthUser,
+			'sAuthPwd' => $sAuthPwd,
+		);
+		$oLoginData->AddBlockData('login_input', new LoginBlockData('loginforminput.html.twig', $aData));
+		$oLoginData->AddBlockData('login_submit', new LoginBlockData('loginformsubmit.html.twig'));
+
+		$bEnableResetPassword = empty(MetaModel::GetConfig()->Get('forgot_password')) ? true : MetaModel::GetConfig()->Get('forgot_password');
+		$sResetPasswordUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=forgot_pwd';
+
+		$aData = array(
+			'bEnableResetPassword' => $bEnableResetPassword,
+			'sResetPasswordUrl' => $sResetPasswordUrl,
+		);
+		$oLoginData->AddBlockData('login_links', new LoginBlockData('loginformlinks.html.twig', $aData));
+
+		return $oLoginData;
 	}
 }

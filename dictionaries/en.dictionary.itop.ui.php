@@ -526,6 +526,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.',
 	'UI:Login:ResetPassword' => 'Send now!',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s',
+	'UI:Login:SeparatorOr' => 'Or',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.',

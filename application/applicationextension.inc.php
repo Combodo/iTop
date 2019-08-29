@@ -178,6 +178,14 @@ interface iLogoutExtension extends iLoginExtension
 	public function LogoutAction();
 }
 
+interface iLoginDataExtension extends iLoginExtension
+{
+	/**
+	 * @return LoginTwigData
+	 */
+	public function GetLoginData();
+}
+
 /**
  * Implement this interface to change the behavior of the GUI for some objects.
  *

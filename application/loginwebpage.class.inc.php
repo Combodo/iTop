@@ -24,8 +24,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT."/application/nicewebpage.class.inc.php");
-require_once(APPROOT.'/application/portaldispatcher.class.inc.php');
 /**
  * Web page used for displaying the login form
  */
@@ -91,6 +89,8 @@ class LoginWebPage extends NiceWebPage
 	public function SetStyleSheet()
 	{
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/login.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/v4-shims.min.css');
 	}
 
 	public static function SetLoginFailedMessage($sMessage)
@@ -98,23 +98,11 @@ class LoginWebPage extends NiceWebPage
 		self::$m_sLoginFailedMessage = $sMessage;
 	}
 
-	public function EnableResetPassword()
-	{
-		return MetaModel::GetConfig()->Get('forgot_password');
-	}
-
 	public function DisplayLoginHeader($bMainAppLogo = false)
 	{
-		if ($bMainAppLogo)
-		{
-			$sLogo = 'itop-logo.png';
-			$sBrandingLogo = 'main-logo.png';
-		}
-		else
-		{
-			$sLogo = 'itop-logo-external.png';
-			$sBrandingLogo = 'login-logo.png';
-		}
+		$sLogo = 'itop-logo-external.png';
+		$sBrandingLogo = 'login-logo.png';
+
 		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
 		$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/'.$sLogo.'?t='.utils::GetCacheBusterTimestamp();
@@ -125,104 +113,69 @@ class LoginWebPage extends NiceWebPage
 		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES, 'UTF-8')."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
 	}
 
-	public function DisplayLoginForm($sLoginType, $bFailedLogin = false)
+	public function DisplayLoginForm($bFailedLogin = false)
 	{
-		switch($sLoginType)
+		$oTwigContext = new LoginTwigContext();
+		$aPostedVars = array_merge(array('login_mode', 'loginop'), $oTwigContext->GetPostedVars());
+
+		$sMessage = Dict::S('UI:Login:IdentifyYourself');
+
+		// Error message
+		if ($bFailedLogin)
 		{
-			case 'form':
-			$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
-			$sAuthPwd = utils::ReadParam('suggest_pwd', '', true, 'raw_data');
-	
-			$this->DisplayLoginHeader();
-			$this->add("<div id=\"login\">\n");
-			$this->add("<h1>".Dict::S('UI:Login:Welcome')."</h1>\n");
-			if ($bFailedLogin)
+			if (self::$m_sLoginFailedMessage != '')
 			{
-				if (self::$m_sLoginFailedMessage != '')
-				{
-					$this->add("<p class=\"hilite\">".self::$m_sLoginFailedMessage."</p>\n");
-				}
-				else
-				{
-					$this->add("<p class=\"hilite\">".Dict::S('UI:Login:IncorrectLoginPassword')."</p>\n");
-				}
+				$sMessage = self::$m_sLoginFailedMessage;
 			}
 			else
 			{
-				$this->add("<p>".Dict::S('UI:Login:IdentifyYourself')."</p>\n");
+				$sMessage = Dict::S('UI:Login:IncorrectLoginPassword');
 			}
-			$this->add("<form method=\"post\">\n");
-			$this->add("<table>\n");
-			$sForgotPwd = $this->EnableResetPassword() ? $this->ForgotPwdLink() : '';
-			$this->add("<tr><td style=\"text-align:right\"><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt').":</label></td><td style=\"text-align:left\"><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"".htmlentities($sAuthUser, ENT_QUOTES, 'UTF-8')."\" /></td></tr>\n");
-			$this->add("<tr><td style=\"text-align:right\"><label for=\"pwd\">".Dict::S('UI:Login:PasswordPrompt').":</label></td><td style=\"text-align:left\"><input id=\"pwd\" type=\"password\" name=\"auth_pwd\" value=\"".htmlentities($sAuthPwd, ENT_QUOTES, 'UTF-8')."\" /></td></tr>\n");
-			$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Login')."\" /></span></td></tr>\n");
-			if (strlen($sForgotPwd) > 0)
-			{
-				$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\">$sForgotPwd</td></tr>\n");
-			}
-			$this->add("</table>\n");
-			$this->add("<input type=\"hidden\" name=\"loginop\" value=\"login\" />\n");
-
-			$this->add_ready_script('$("#user").focus();');
-						
-			// Keep the OTHER parameters posted
-			foreach($_POST as $sPostedKey => $postedValue)
-			{
-				if (!in_array($sPostedKey, array('auth_user', 'auth_pwd')))
-				{
-					if (is_array($postedValue))
-					{
-						foreach($postedValue as $sKey => $sValue)
-						{
-							$this->add("<input type=\"hidden\" name=\"".htmlentities($sPostedKey, ENT_QUOTES, 'UTF-8')."[".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."]\" value=\"".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."\" />\n");
-						}
-					}
-					else
-					{
-						$this->add("<input type=\"hidden\" name=\"".htmlentities($sPostedKey, ENT_QUOTES, 'UTF-8')."\" value=\"".htmlentities($postedValue, ENT_QUOTES, 'UTF-8')."\" />\n");
-					}
-				}	
-			}
-			
-			$this->add("</form>\n");
-			$this->add(Dict::S('UI:Login:About'));
-			$this->add("</div>\n");
-			break;
 		}
-	}
 
-	/**
-	 * Return '' to disable this feature	
-	 */	
-	public function ForgotPwdLink()
-	{
-		$sUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=forgot_pwd';
-		$sHtml = "<a href=\"$sUrl\" target=\"_blank\">".Dict::S('UI:Login:ForgotPwd')."</a>";
-		return $sHtml;
+		// Keep the OTHER parameters posted
+		$aPreviousPostedVars = array();
+		foreach($_POST as $sPostedKey => $postedValue)
+		{
+			if (!in_array($sPostedKey, $aPostedVars))
+			{
+				if (is_array($postedValue))
+				{
+					foreach($postedValue as $sKey => $sValue)
+					{
+						$sName = "{$sPostedKey}[{$sKey}]";
+						$aPreviousPostedVars[$sName] = $sValue;
+					}
+				}
+				else
+				{
+					$aPreviousPostedVars[$sPostedKey] = $postedValue;
+				}
+			}
+		}
+
+		$aVars = array(
+			'bFailedLogin' => $bFailedLogin,
+			'sMessage' => $sMessage,
+			'aPreviousPostedVars' => $aPreviousPostedVars,
+		);
+		$aVars = array_merge($aVars, $oTwigContext->GetDefaultVars());
+
+		$oTwigContext->Render($this, 'login.html.twig', $aVars);
 	}
 
 	public function DisplayForgotPwdForm($bFailedToReset = false, $sFailureReason = null)
 	{
-		$this->DisplayLoginHeader();
-		$this->add("<div id=\"login\">\n");
-		$this->add("<h1>".Dict::S('UI:Login:ForgotPwdForm')."</h1>\n");
-		$this->add("<p>".Dict::S('UI:Login:ForgotPwdForm+')."</p>\n");
-		if ($bFailedToReset)
-		{
-			$this->add("<p class=\"hilite\">".Dict::Format('UI:Login:ResetPwdFailed', htmlentities($sFailureReason, ENT_QUOTES, 'UTF-8'))."</p>\n");
-		}
 		$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
-		$this->add("<form method=\"post\">\n");
-		$this->add("<table>\n");
-		$this->add("<tr><td colspan=\"2\" class=\"center\"><label for=\"user\">".Dict::S('UI:Login:UserNamePrompt').":</label><input id=\"user\" type=\"text\" name=\"auth_user\" value=\"".htmlentities($sAuthUser, ENT_QUOTES, 'UTF-8')."\" /></td></tr>\n");
-		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"button\" onClick=\"window.close();\" value=\"".Dict::S('UI:Button:Cancel')."\" /></span>&nbsp;&nbsp;<span class=\"btn_border\"><input type=\"submit\" value=\"".Dict::S('UI:Login:ResetPassword')."\" /></span></td></tr>\n");
-		$this->add("</table>\n");
-		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"forgot_pwd_go\" />\n");
-		$this->add("</form>\n");
-		$this->add("</div>\n");
 
-		$this->add_ready_script('$("#user").focus();');
+		$oTwigContext = new LoginTwigContext();
+		$aVars = $oTwigContext->GetDefaultVars();
+		$aVars['sAuthUser'] = $sAuthUser;
+		$aVars['bFailedToReset'] = $bFailedToReset;
+		$aVars['sFailureReason'] = $sFailureReason;
+
+		$oTwigContext->Render($this, 'forgotpwdform.html.twig', $aVars);
+		$oTwigContext->Render($this, 'forgotpwdform.ready.js.twig');
 	}
 
 	protected function ForgotPwdGo()
@@ -280,16 +233,9 @@ class LoginWebPage extends NiceWebPage
 					throw new Exception(Dict::S('UI:ResetPwd-Error-Send'));
 			}
 
-			$this->DisplayLoginHeader();
-			$this->add("<div id=\"login\">\n");
-			$this->add("<h1>".Dict::S('UI:Login:ForgotPwdForm')."</h1>\n");
-			$this->add("<p>".Dict::S('UI:ResetPwd-EmailSent')."</p>");
-			$this->add("<form method=\"post\">\n");
-			$this->add("<table>\n");
-			$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><input type=\"button\" onClick=\"window.close();\" value=\"".Dict::S('UI:Button:Done')."\" /></td></tr>\n");
-			$this->add("</table>\n");
-			$this->add("</form>\n");
-			$this->add("</div\n");
+			$oTwigContext = new LoginTwigContext();
+			$aVars = $oTwigContext->GetDefaultVars();
+			$oTwigContext->Render($this, 'forgotpwdsent.html.twig', $aVars);
 		}
 		catch(Exception $e)
 		{
@@ -302,59 +248,36 @@ class LoginWebPage extends NiceWebPage
 		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 		$sToken = utils::ReadParam('token', '', false, 'raw_data');
 
-		$sAuthUserForDisplay = utils::HtmlEntities($sAuthUser);
-		$sTokenForDisplay = utils::HtmlEntities($sToken);
-
 		UserRights::Login($sAuthUser); // Set the user's language
 		$oUser = UserRights::GetUserObject();
 
-		$this->DisplayLoginHeader();
-		$this->add("<div id=\"login\">\n");
-		$this->add("<h1>".Dict::S('UI:ResetPwd-Title')."</h1>\n");
-		if ($oUser == null)
+		$oTwigContext = new LoginTwigContext();
+		$aVars = $oTwigContext->GetDefaultVars();
+
+		$aVars['sAuthUser'] = $sAuthUser;
+		$aVars['sToken'] = $sToken;
+		if (($oUser == null))
 		{
-			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUserForDisplay)."</p>\n");
+			$aVars['bNoUser'] = true;
 		}
 		else
 		{
+			$aVars['bNoUser'] = false;
 			$oEncryptedToken = $oUser->Get('reset_pwd_token');
-			
+
 			if (!$oEncryptedToken->CheckPassword($sToken))
 			{
-				$this->add("<p>".Dict::S('UI:ResetPwd-Error-InvalidToken')."</p>\n");
+				$aVars['bBadToken'] = true;
 			}
 			else
 			{
-				$sUserNameForDisplay = utils::HtmlEntities($oUser->GetFriendlyName());
-				$this->add("<p>".Dict::Format('UI:ResetPwd-Error-EnterPassword', $sUserNameForDisplay)."</p>\n");
-	
-				$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');
-				$this->add_script(
-<<<EOF
-function DoCheckPwd()
-{
-	if ($('#new_pwd').val() != $('#retype_new_pwd').val())
-	{
-		alert('$sInconsistenPwdMsg');
-		return false;
-	}
-	return true;
-}
-EOF
-				);
-				$this->add("<form method=\"post\">\n");
-				$this->add("<table>\n");
-				$this->add("<tr><td style=\"text-align:right\"><label for=\"new_pwd\">".Dict::S('UI:Login:NewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"new_pwd\" name=\"new_pwd\" value=\"\" /></td></tr>\n");
-				$this->add("<tr><td style=\"text-align:right\"><label for=\"retype_new_pwd\">".Dict::S('UI:Login:RetypeNewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"retype_new_pwd\" name=\"retype_new_pwd\" value=\"\" /></td></tr>\n");
-				$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"submit\" onClick=\"return DoCheckPwd();\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></span></td></tr>\n");
-				$this->add("</table>\n");
-				$this->add("<input type=\"hidden\" name=\"loginop\" value=\"do_reset_pwd\" />\n");
-				$this->add("<input type=\"hidden\" name=\"auth_user\" value=\"".$sAuthUserForDisplay."\" />\n");
-				$this->add("<input type=\"hidden\" name=\"token\" value=\"".$sTokenForDisplay."\" />\n");
-				$this->add("</form>\n");
-				$this->add("</div\n");
+				$aVars['bBadToken'] = false;
+				$aVars['sUserName'] = $oUser->GetFriendlyName();
 			}
 		}
+
+		$oTwigContext->Render($this, 'resetpwdform.html.twig', $aVars);
+		$oTwigContext->Render($this, 'resetpwdform.js.twig');
 	}
 
 	public function DoResetPassword()
@@ -366,102 +289,61 @@ EOF
 		UserRights::Login($sAuthUser); // Set the user's language
 		$oUser = UserRights::GetUserObject();
 
-		$this->DisplayLoginHeader();
-		$this->add("<div id=\"login\">\n");
-		$this->add("<h1>".Dict::S('UI:ResetPwd-Title')."</h1>\n");
-		if ($oUser == null)
+		$oTwigContext = new LoginTwigContext();
+		$aVars = $oTwigContext->GetDefaultVars();
+
+		$aVars['sAuthUser'] = $sAuthUser;
+		$aVars['sToken'] = $sToken;
+		if (($oUser == null))
 		{
-			$this->add("<p>".Dict::Format('UI:ResetPwd-Error-WrongLogin', $sAuthUser)."</p>\n");
+			$aVars['bNoUser'] = true;
 		}
 		else
 		{
-			$oEncryptedPassword = $oUser->Get('reset_pwd_token');
-			if (!$oEncryptedPassword->CheckPassword($sToken))
+			$aVars['bNoUser'] = false;
+			$oEncryptedToken = $oUser->Get('reset_pwd_token');
+
+			if (!$oEncryptedToken->CheckPassword($sToken))
 			{
-				$this->add("<p>".Dict::S('UI:ResetPwd-Error-InvalidToken')."</p>\n");
+				$aVars['bBadToken'] = true;
 			}
 			else
 			{
+				$aVars['bBadToken'] = false;
 				// Trash the token and change the password
 				$oUser->Set('reset_pwd_token', '');
 				$oUser->AllowWrite(true);
 				$oUser->SetPassword($sNewPwd); // Does record the change into the DB
-	
-				$this->add("<p>".Dict::S('UI:ResetPwd-Ready')."</p>");
-				$sUrl = utils::GetAbsoluteUrlAppRoot();
-				$this->add("<p><a href=\"$sUrl\">".Dict::S('UI:ResetPwd-Login')."</a></p>");
+				$aVars['sUrl'] = utils::GetAbsoluteUrlAppRoot();
 			}
-			$this->add("</div\n");
 		}
+
+		$oTwigContext->Render($this, 'resetpwddone.html.twig', $aVars);
 	}
 
 	public function DisplayChangePwdForm($bFailedLogin = false)
 	{
-		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
-
-		$sInconsistenPwdMsg = Dict::S('UI:Login:RetypePwdDoesNotMatch');
-		$this->add_script(<<<EOF
-function GoBack()
-{
-	window.history.back();
-}
-
-function DoCheckPwd()
-{
-	if ($('#new_pwd').val() != $('#retype_new_pwd').val())
-	{
-		alert('$sInconsistenPwdMsg');
-		return false;
-	}
-	return true;
-}
-EOF
-);
-		$this->DisplayLoginHeader();
-		$this->add("<div id=\"login\">\n");
-		$this->add("<h1>".Dict::S('UI:Login:ChangeYourPassword')."</h1>\n");
-		if ($bFailedLogin)
-		{
-			$this->add("<p class=\"hilite\">".Dict::S('UI:Login:IncorrectOldPassword')."</p>\n");
-		}
-		$this->add("<form method=\"post\">\n");
-		$this->add("<table>\n");
-		$this->add("<tr><td style=\"text-align:right\"><label for=\"old_pwd\">".Dict::S('UI:Login:OldPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"old_pwd\" name=\"old_pwd\" value=\"\" /></td></tr>\n");
-		$this->add("<tr><td style=\"text-align:right\"><label for=\"new_pwd\">".Dict::S('UI:Login:NewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"new_pwd\" name=\"new_pwd\" value=\"\" /></td></tr>\n");
-		$this->add("<tr><td style=\"text-align:right\"><label for=\"retype_new_pwd\">".Dict::S('UI:Login:RetypeNewPasswordPrompt').":</label></td><td style=\"text-align:left\"><input type=\"password\" id=\"retype_new_pwd\" name=\"retype_new_pwd\" value=\"\" /></td></tr>\n");
-		$this->add("<tr><td colspan=\"2\" class=\"center v-spacer\"><span class=\"btn_border\"><input type=\"button\" onClick=\"GoBack();\" value=\"".Dict::S('UI:Button:Cancel')."\" /></span>&nbsp;&nbsp;<span class=\"btn_border\"><input type=\"submit\" onClick=\"return DoCheckPwd();\" value=\"".Dict::S('UI:Button:ChangePassword')."\" /></span></td></tr>\n");
-		$this->add("</table>\n");
-		$this->add("<input type=\"hidden\" name=\"loginop\" value=\"do_change_pwd\" />\n");
-		$this->add("</form>\n");
-		$this->add("</div>\n");
+		$oTwigContext = new LoginTwigContext();
+		$aVars = $oTwigContext->GetDefaultVars();
+		$aVars['bFailedLogin'] = $bFailedLogin;
+		$oTwigContext->Render($this, 'changepwdform.js.twig');
+		$oTwigContext->Render($this, 'changepwdform.html.twig', $aVars);
 	}
 
 	public function DisplayLogoutPage($bPortal, $sTitle = null)
 	{
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
-		if ($bPortal)
-		{
-			$sUrl .= 'portal/';
-		}
-		else
-		{
-			$sUrl .= 'pages/UI.php';
-		}
-
-		if (empty($sTitle))
-		{
-			$sTitle = Dict::S('UI:LogOff:ThankYou');
-		}
-
+		$sUrl .= $bPortal ? 'portal/' : 'pages/UI.php';
+		$sTitle = empty($sTitle) ? Dict::S('UI:LogOff:ThankYou') : $sTitle;
 		$sMessage = Dict::S('UI:LogOff:ClickHereToLoginAgain');
 
-		$this->no_cache();
-		$this->DisplayLoginHeader();
-		$this->add("<div id=\"login\">\n");
-		$this->add("<h1>$sTitle</h1>\n");
+		$oTwigContext = new LoginTwigContext();
+		$aVars = $oTwigContext->GetDefaultVars();
+		$aVars['sUrl'] = $sUrl;
+		$aVars['sTitle'] = $sTitle;
+		$aVars['sMessage'] = $sMessage;
 
-		$this->add("<p><a href=\"$sUrl\">$sMessage</a></p>");
-		$this->add("</div>\n");
+		$oTwigContext->Render($this, 'logout.html.twig', $aVars);
 		$this->output();
 	}
 
@@ -532,6 +414,8 @@ EOF
 			IssueLog::Info("SESSION: $sSessionLog");
 		}
 
+		$iErrorCode = self::EXIT_CODE_OK;
+
 		// Finite state machine loop
 		while (true)
 		{
@@ -556,7 +440,6 @@ EOF
 						}
 						IssueLog::Info("Login: state: [$sLoginState] call: ".get_class($oLoginFSMExtensionInstance));
 					}
-					$iErrorCode = self::EXIT_CODE_OK;
 					$iResponse = $oLoginFSMExtensionInstance->LoginAction($sLoginState, $iErrorCode);
 					if ($iResponse == self::LOGIN_FSM_RETURN_OK)
 					{
@@ -597,14 +480,22 @@ EOF
 	 * Use the login mode to filter plugins
 	 *
 	 * @param string $sInterface 'iLoginFSMExtension' or 'iLogoutExtension'
+	 * @param bool $bFilterWithMode if false do not filter the plugin list with login mode
 	 *
 	 * @return array of plugins
 	 */
-	public static function GetLoginPluginList($sInterface = 'iLoginFSMExtension')
+	public static function GetLoginPluginList($sInterface = 'iLoginFSMExtension', $bFilterWithMode = true)
 	{
 		$aAllPlugins = array();
 
-		$sCurrentLoginMode = isset($_SESSION['login_mode']) ? $_SESSION['login_mode'] : '';
+		if ($bFilterWithMode)
+		{
+			$sCurrentLoginMode = isset($_SESSION['login_mode']) ? $_SESSION['login_mode'] : '';
+		}
+		else
+		{
+			$sCurrentLoginMode = '';
+		}
 
 		/** @var iLoginExtension $oLoginExtensionInstance */
 		foreach (MetaModel::EnumPlugins($sInterface) as $oLoginExtensionInstance)
@@ -620,6 +511,7 @@ EOF
 						$aAllPlugins[$sLoginMode] = array();
 					}
 					$aAllPlugins[$sLoginMode][] = $oLoginExtensionInstance;
+					break; // Stop here to avoid registering a plugin twice
 				}
 			}
 		}
@@ -779,6 +671,35 @@ EOF
 		echo '<p><strong>'.Dict::S('UI:Login:Error:AccessRestricted').'</strong></p>';
 		exit;
 	}
+
+	public static function SetLoginModeAndReload($sNewLoginMode)
+	{
+		if (isset($_SESSION['login_mode']) && ($_SESSION['login_mode'] == $sNewLoginMode))
+		{
+			return;
+		}
+		$_SESSION['login_mode'] = $sNewLoginMode;
+		self::HTTPReload();
+	}
+
+	public static function HTTPReload()
+	{
+		$sOriginURL = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		if (!utils::StartsWith($sOriginURL, utils::GetAbsoluteUrlAppRoot()))
+		{
+			// If the found URL does not start with the configured AppRoot URL
+			$sOriginURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
+		}
+		self::HTTPRedirect($sOriginURL);
+	}
+
+	public static function HTTPRedirect($sURL)
+	{
+		header('HTTP/1.1 307 Temporary Redirect');
+		header('Location: '.$sURL);
+		exit;
+	}
+
 
 	/**
 	 * Provisioning API: Find a User
@@ -1118,7 +1039,7 @@ EOF
 			}
 			self::ResetSession();
 			$oPage = self::NewLoginWebPage();
-			$oPage->DisplayLoginForm( $sLoginMode, false /* not a failed attempt */);
+			$oPage->DisplayLoginForm(false /* not a failed attempt */);
 			$oPage->output();
 			exit;
 		}

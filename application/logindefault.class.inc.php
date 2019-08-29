@@ -21,6 +21,7 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 
 	protected function OnStart(&$iErrorCode)
 	{
+		$iErrorCode = LoginWebPage::EXIT_CODE_OK;
 		// Check if proposed login mode is present and allowed
 		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
 		$sProposedLoginMode = utils::ReadParam('login_mode', '');
@@ -46,20 +47,8 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 		if ($index !== false)
 		{
 			// Force login mode
-			$_SESSION['login_mode'] = $sProposedLoginMode;
+			LoginWebPage::SetLoginModeAndReload($sProposedLoginMode);
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
-	}
-
-	protected function OnError(&$iErrorCode)
-	{
-		$_SESSION['login_error_count'] = (isset($_SESSION['login_error_count']) ? $_SESSION['login_error_count'] : 0) + 1;
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
-	}
-
-	protected function OnConnected(&$iErrorCode)
-	{
-		unset($_SESSION['login_error_count']);
 		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
 	}
 }
@@ -69,6 +58,8 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
  */
 class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExtension
 {
+
+
 	/**
 	 * Must be executed after the other login plugins
 	 *
@@ -81,7 +72,7 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnError(&$iErrorCode)
 	{
-		unset($_SESSION['login_mode']);
+		self::ResetLoginSession();
 		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
 	}
 
@@ -89,7 +80,8 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	{
 		if (!isset($_SESSION['login_mode']))
 		{
-			LoginWebPage::ResetSession();
+			// If no plugin validated the user, exit
+			self::ResetLoginSession();
 			exit();
 		}
 		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
@@ -100,6 +92,19 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	 */
 	public function LogoutAction()
 	{
-		unset($_SESSION['login_mode']);
+		self::ResetLoginSession();
+	}
+
+	// Hard reset of the session
+	private static function ResetLoginSession()
+	{
+		LoginWebPage::ResetSession();
+		foreach (array_keys($_SESSION) as $sKey)
+		{
+			if (utils::StartsWith($sKey, 'login_'))
+			{
+				unset($_SESSION[$sKey]);
+			}
+		}
 	}
 }

@@ -1,0 +1,18 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% extends "base.html.twig" %}
+
+{% block login_content %}
+<div id="login">
+	<h1>{{ 'UI:Login:ForgotPwdForm'|dict_s }}</h1>
+	<p>{{ 'UI:ResetPwd-EmailSent'|dict_s }}</p>
+	<form method="post">
+		<table>
+			<tr>
+				<td colspan="2" class="center v-spacer"><input type="button" onClick="window.close();" value="{{ 'UI:Button:Done'|dict_s }}"/></td>
+			</tr>
+		</table>
+	</form>
+</div>
+{% endblock %}

@@ -11,7 +11,10 @@ use AbstractLoginFSMExtension;
 use DBObjectSearch;
 use DBObjectSet;
 use Dict;
+use iLoginDataExtension;
 use iLogoutExtension;
+use LoginBlockData;
+use LoginTwigData;
 use LoginWebPage;
 use MetaModel;
 use phpCAS;
@@ -23,7 +26,7 @@ use utils;
 /**
  * Class CASLoginExtension
  */
-class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExtension
+class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExtension, iLoginDataExtension
 {
 	/**
 	 * Return the list of supported login modes for this plugin
@@ -45,24 +48,29 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 	{
 		if (!isset($_SESSION['login_mode']) || ($_SESSION['login_mode'] == 'cas'))
 		{
-			$_SESSION['login_mode'] = 'cas';
 			static::InitCASClient();
 			if (phpCAS::isAuthenticated())
 			{
+				$_SESSION['login_mode'] = 'cas';
 				$_SESSION['auth_user'] = phpCAS::getUser();
+				unset($_SESSION['login_will_redirect']);
 			}
 			else
 			{
-				if (!isset($_SESSION['cas_count']))
+				if ($_SESSION['login_mode'] == 'cas')
 				{
-					$_SESSION['cas_count'] = 1;
+					if (!isset($_SESSION['login_will_redirect']))
+					{
+						$_SESSION['login_will_redirect'] = true;
+					}
+					else
+					{
+						unset($_SESSION['login_will_redirect']);
+						$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
+						return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
+					}
 				}
-				else
-				{
-					unset($_SESSION['cas_count']);
-					$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
-					return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
-				}
+				$_SESSION['login_mode'] = 'cas';
 				phpCAS::forceAuthentication(); // Redirect to CAS and exit
 			}
 		}
@@ -110,8 +118,8 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			{
 				$oLoginWebPage = new LoginWebPage();
 				$oLoginWebPage->DisplayLogoutPage(false, Dict::S('CAS:Error:UserNotAllowed'));
+				exit();
 			}
-			exit();
 		}
 		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
 	}
@@ -169,18 +177,6 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		}
 	}
 
-	public function GetSocialButtons()
-	{
-		return array(
-			array(
-				'login_mode' => 'cas',
-				'label' => 'Sign in with CAS',
-				'tooltip' => 'Click here to authenticate yourself with the CAS server',
-				'twig' => 'cas_button.twig',
-			),
-		);
-	}
-
 	private function DoUserProvisioning($sLogin)
 	{
 		$bCASUserSynchro = Config::Get('cas_user_synchro');
@@ -199,6 +195,26 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			return;
 		}
 		CASUserProvisioning::CreateUser($sLogin, '', 'external');
+	}
+
+	/**
+	 * @return LoginTwigData
+	 */
+	public function GetLoginData()
+	{
+		$sPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/authent-cas/view';
+		$oLoginData = new LoginTwigData(array(), $sPath);
+
+		$aData = array(
+			'sLoginMode' => 'cas',
+			'sLabel' => Dict::S('CAS:Login:SignIn'),
+			'sTooltip' => Dict::S('CAS:Login:SignInTooltip'),
+		);
+		$oBlockData = new LoginBlockData('cas_sso_button.html.twig', $aData);
+
+		$oLoginData->AddBlockData('login_sso_buttons', $oBlockData);
+
+		return $oLoginData;
 	}
 }
 

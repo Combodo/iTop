@@ -1,0 +1,22 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% extends "base.html.twig" %}
+
+{% block login_content %}
+	<div id="login">
+	<h1>{{ 'UI:Login:ChangeYourPassword'|dict_s }}</h1>
+	{% if bFailedLogin %}
+		<p class="hilite">{{ 'UI:Login:IncorrectOldPassword'|dict_s }}</p>
+	{% endif %}
+	<form method="post">
+		<table>
+			<tr><td style="text-align:right"><label for="old_pwd">{{ 'UI:Login:OldPasswordPrompt'|dict_s }}:</label></td><td style="text-align:left"><input type="password" id="old_pwd" name="old_pwd" value="" /></td></tr>
+			<tr><td style="text-align:right"><label for="new_pwd">{{ 'UI:Login:NewPasswordPrompt'|dict_s }}:</label></td><td style="text-align:left"><input type="password" id="new_pwd" name="new_pwd" value="" /></td></tr>
+			<tr><td style="text-align:right"><label for="retype_new_pwd">{{ 'UI:Login:RetypeNewPasswordPrompt'|dict_s }}:</label></td><td style="text-align:left"><input type="password" id="retype_new_pwd" name="retype_new_pwd" value="" /></td></tr>
+			<tr><td colspan="2" class="center v-spacer"><span class="btn_border"><input type="button" onClick="GoBack();" value="{{ 'UI:Button:Cancel'|dict_s }}" /></span>&nbsp;&nbsp;<span class="btn_border"><input type="submit" onClick="return DoCheckPwd();" value="{{ 'UI:Button:ChangePassword'|dict_s }}" /></span></td></tr>
+			</table>
+		<input type="hidden" name="loginop" value="do_change_pwd" />
+		</form>
+	</div>
+{% endblock %}

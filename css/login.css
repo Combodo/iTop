@@ -48,14 +48,12 @@ body {
 #login table {
 	width: 100%;
 }
-
-#pwd, #user,#old_pwd, #new_pwd, #retype_new_pwd {
+#pwd, #user, #old_pwd, #new_pwd, #retype_new_pwd {
 	width: 10em;
 }
 .center {
 	text-align: center;
 }
-
 h1 {
 	color: #1C94C4;
 	font-size: 16pt;
@@ -63,3 +61,8 @@ h1 {
 .v-spacer {
 	padding-top: 1em;
 }
+.sso-button {
+	width: 100%;
+	margin-bottom: 0.5em;
+}
+

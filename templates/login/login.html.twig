@@ -1,0 +1,54 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% extends "base.html.twig" %}
+
+{% import "macros.twig" as Macro %}
+
+{% block login_content %}
+	<div id="login">
+	{% block login_title %}
+		<div id="login-title">
+			<h1>{{ 'UI:Login:Welcome'|dict_s }}</h1>
+			{% if bFailedLogin %}
+				<p class="hilite">{{ sMessage }}</p>
+			{% else %}
+				<p>{{ sMessage }}</p>
+			{% endif %}
+		</div>
+	{% endblock login_title %}
+	{% block login_form %}
+		<div id="login-form">
+			<form id="login_form" method="post">
+				<table>
+					{% block login_sso_buttons %}
+						{{ Macro.BlockData(aPluginFormData, 'login_sso_buttons', '<tr><td class="center" colspan="2">' ~ 'UI:Login:SeparatorOr'|dict_s ~ '</td></tr>') }}
+					{% endblock login_sso_buttons %}
+					{% block login_input %}
+						{{ Macro.BlockData(aPluginFormData, 'login_input') }}
+					{% endblock login_input %}
+					{% block login_submit %}
+						{{ Macro.BlockData(aPluginFormData, 'login_submit') }}
+					{% endblock login_submit %}
+					{% block login_additional_controls %}
+						{{ Macro.BlockData(aPluginFormData, 'login_additional_controls') }}
+					{% endblock login_additional_controls %}
+					{% block login_links %}
+						{{ Macro.BlockData(aPluginFormData, 'login_links') }}
+					{% endblock login_links %}
+				</table>
+				<input type="hidden" id="login_mode" name="login_mode" value="form" />
+				<input type="hidden" id="login_op" name="loginop" value="login" />
+				{% for sName, sValue in aPreviousPostedVars %}
+					<input type="hidden" name="{{ sName }}" value="{{ sValue }}" />
+				{% endfor %}
+			</form>
+		</div>
+	{% endblock login_form %}
+	</div>
+{% endblock login_content %}
+
+{% block login_footer %}
+	{{ Macro.BlockData(aPluginFormData, 'login_footer') }}
+{% endblock login_footer %}
+

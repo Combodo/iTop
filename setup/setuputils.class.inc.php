@@ -1835,6 +1835,22 @@ EOF
 	{
 		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
 	}
+
+	public final static function EnterMaintenanceMode($bCheckBackgroundTask = false)
+	{
+		@touch(APPROOT.'.maintenance');
+		if ($bCheckBackgroundTask)
+		{
+
+			// Assume database is OK but datamodel is not usable
+			$iCount = CMDBSource::QueryToScalar('SELECT COUNT(*) FROM priv_backgroundtask WHERE running=1');
+		}
+	}
+
+	public final static function ExitMaintenanceMode()
+	{
+		@unlink(APPROOT.'.maintenance');
+	}
 }
 
 /**

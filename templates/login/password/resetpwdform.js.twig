@@ -1,0 +1,12 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+function DoCheckPwd()
+{
+    if ($('#new_pwd').val() != $('#retype_new_pwd').val())
+    {
+        alert('{{ 'UI:Login:RetypePwdDoesNotMatch'|dict_s }}');
+        return false;
+    }
+    return true;
+}

@@ -117,8 +117,7 @@ class ApplicationInstaller
 		try
 		{
 			$fStart = microtime(true);
-			// Enter in maintenance mode
-			@touch(APPROOT.'.maintenance');
+			SetupUtils::EnterMaintenanceMode();
 			switch ($sStep)
 			{
 				case '':
@@ -341,15 +340,13 @@ class ApplicationInstaller
 						'percentage-completed' => 100,
 					);
 			}
-			// Exit maintenance mode
-			@unlink(APPROOT.'.maintenance');
+			SetupUtils::ExitMaintenanceMode();
 			$fDuration = round(microtime(true) - $fStart, 2);
 			SetupPage::log_info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
 		catch (Exception $e)
 		{
-			// Exit maintenance mode
-			@unlink(APPROOT.'.maintenance');
+			SetupUtils::ExitMaintenanceMode();
 
 			$aResult = array(
 				'status' => self::ERROR,
