@@ -68,7 +68,14 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginDataExtension
 	{
 		if ($_SESSION['login_mode'] == 'form')
 		{
-			$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
+			if (isset($_SESSION['auth_user']))
+			{
+				$sAuthUser = $_SESSION['auth_user'];
+			}
+			else
+			{
+				$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
+			}
 			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', $_SESSION['login_mode']);
 		}
 		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;

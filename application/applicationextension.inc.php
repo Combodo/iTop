@@ -186,6 +186,24 @@ interface iLoginDataExtension extends iLoginExtension
 	public function GetLoginData();
 }
 
+
+interface iPreferencesExtension
+{
+	/**
+	 * @param \WebPage $oPage
+	 *
+	 */
+	public function DisplayPreferences(WebPage $oPage);
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param string $sOperation
+	 *
+	 * @return bool true if the operation has been used
+	 */
+	public function ApplyPreferences(WebPage $oPage, $sOperation);
+}
+
 /**
  * Implement this interface to change the behavior of the GUI for some objects.
  *
