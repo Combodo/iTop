@@ -70,12 +70,14 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginDataExtension
 		{
 			if (isset($_SESSION['auth_user']))
 			{
+				// If FSM reenter this state (example 2FA) then the auth_user is not resubmitted
 				$sAuthUser = $_SESSION['auth_user'];
 			}
 			else
 			{
 				$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
 			}
+			// Store 'auth_user' in session for further use
 			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', $_SESSION['login_mode']);
 		}
 		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
