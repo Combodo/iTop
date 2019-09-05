@@ -18,7 +18,6 @@
 //
 
 require_once(APPROOT.'core/modulehandler.class.inc.php');
-require_once(APPROOT.'core/querybuildercontext.class.inc.php');
 require_once(APPROOT.'core/querymodifier.class.inc.php');
 require_once(APPROOT.'core/metamodelmodifier.inc.php');
 require_once(APPROOT.'core/computing.inc.php');

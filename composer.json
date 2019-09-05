@@ -50,6 +50,14 @@
     "classmap": [
       "core",
       "application"
+    ],
+    "exclude-from-classmap": [
+      "core/dbobjectsearch.class.php",
+      "core/legacy/dbobjectsearchlegacy.class.php",
+      "core/querybuildercontext.class.inc.php",
+      "core/legacy/querybuildercontextlegacy.class.inc.php",
+      "core/querybuilderexpressions.class.inc.php",
+      "core/legacy/querybuilderexpressionslegacy.class.inc.php"
     ]
   },
   "conflict": {

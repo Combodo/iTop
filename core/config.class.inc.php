@@ -1168,6 +1168,30 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'use_legacy_dbsearch' => array(
+			'type' => 'bool',
+			'description' => 'If set, DBSearch will use legacy SQL query generation',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'query_cache_enabled' => array(
+			'type' => 'bool',
+			'description' => 'If set, DBSearch will use cache for query generation',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'log_kpi_record_oql' => array(
+			'type' => 'integer',
+			'description' => '1 => Record OQL requests and parameters',
+			'default' => 0,
+			'value' => 0,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)
@@ -1225,7 +1249,6 @@ class Config
 		}
 		$this->m_aSettings[$sPropCode]['value'] = $value;
 		$this->m_aSettings[$sPropCode]['source_of_value'] = $sSourceDesc;
-
 	}
 
     /**
@@ -1822,7 +1845,6 @@ class Config
 				'log_notification' => $this->m_bLogNotification,
 				'log_issue' => $this->m_bLogIssue,
 				'log_web_service' => $this->m_bLogWebService,
-				'query_cache_enabled' => $this->m_bQueryCacheEnabled,
 				'secure_connection_required' => $this->m_bSecureConnectionRequired,
 			);
 			foreach ($aBoolValues as $sKey => $bValue)

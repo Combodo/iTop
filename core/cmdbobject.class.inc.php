@@ -59,7 +59,6 @@ require_once('sqlobjectquery.class.inc.php');
 require_once('sqlunionquery.class.inc.php');
 
 require_once('dbobject.class.php');
-require_once('dbsearch.class.php');
 require_once('dbobjectset.class.php');
 
 require_once('backgroundprocess.inc.php');

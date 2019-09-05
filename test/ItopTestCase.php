@@ -61,4 +61,10 @@ class ItopTestCase extends TestCase
 	        }
         }
     }
+
+	public function GetMicroTime()
+	{
+		list($usec, $sec) = explode(" ", microtime());
+		return ((float)$usec + (float)$sec);
+	}
 }

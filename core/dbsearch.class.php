@@ -17,8 +17,22 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 
-require_once('dbobjectsearch.class.php');
-require_once('dbunionsearch.class.php');
+$bUseLegacyDBSearch = utils::GetConfig()->Get('use_legacy_dbsearch');
+
+if ($bUseLegacyDBSearch)
+{
+	// excluded from autoload
+	require_once (APPROOT.'core/legacy/querybuilderexpressionslegacy.class.inc.php');
+	require_once (APPROOT.'core/legacy/querybuildercontextlegacy.class.inc.php');
+	require_once(APPROOT.'core/legacy/dbobjectsearchlegacy.class.php');
+}
+else
+{
+	// excluded from autoload
+	require_once (APPROOT.'core/querybuilderexpressions.class.inc.php');
+	require_once (APPROOT.'core/querybuildercontext.class.inc.php');
+	require_once(APPROOT.'core/dbobjectsearch.class.php');
+}
 
 /**
  * An object search
@@ -1037,7 +1051,7 @@ abstract class DBSearch
 			$e->addInfo('OQL', $this->ToOQL());
 			throw $e;
 		}
-		$this->AddQueryTraceSelect($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sRes);
+		$this->AddQueryTraceSelect($oSQLQuery->GetSourceOQL(), $aOrderBy, $aScalarArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sRes);
 		return $sRes;
 	}
 
@@ -1240,9 +1254,9 @@ abstract class DBSearch
      *
      * @throws MySQLException
      */
-	protected function AddQueryTraceSelect($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sSql)
+	protected function AddQueryTraceSelect($sOql, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sSql)
 	{
-		if (self::$m_bTraceQueries)
+		if (self::$m_bTraceQueries || (utils::GetConfig()->Get('log_kpi_record_oql') == 1))
 		{
 			$aQueryData = array(
 				'type' => 'select',
@@ -1255,8 +1269,25 @@ abstract class DBSearch
 				'limit_start' => $iLimitStart,
 				'is_count' => $bGetCount
 			);
-			$sOql = $this->ToOQL(true, $aArgs);
-			self::AddQueryTrace($aQueryData, $sOql, $sSql);
+			if (self::$m_bTraceQueries)
+			{
+				self::AddQueryTrace($aQueryData, $sOql, $sSql);
+			}
+			if (utils::GetConfig()->Get('log_kpi_record_oql') == 1)
+			{
+				$aQueryData['oql'] = $sOql;
+				unset($aQueryData['filter']);
+
+				$hLogFile = @fopen(APPROOT.'log/oql_records.txt', 'a');
+				if ($hLogFile !== false)
+				{
+					flock($hLogFile, LOCK_EX);
+					fwrite($hLogFile, serialize($aQueryData)."\n");
+					fflush($hLogFile);
+					flock($hLogFile, LOCK_UN);
+					fclose($hLogFile);
+				}
+			}
 		}
 	}
 

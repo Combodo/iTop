@@ -62,6 +62,7 @@ class ItopDataTestCase extends ItopTestCase
 	private $aCreatedObjects = array();
 
 	const USE_TRANSACTION = true;
+	const CREATE_TEST_ORG = true;
 
 	/**
 	 * @throws Exception
@@ -82,7 +83,10 @@ class ItopDataTestCase extends ItopTestCase
 		{
 			CMDBSource::Query('START TRANSACTION');
 		}
-		$this->CreateTestOrganization();
+		if (static::CREATE_TEST_ORG)
+		{
+			$this->CreateTestOrganization();
+		}
 	}
 
 	/**
