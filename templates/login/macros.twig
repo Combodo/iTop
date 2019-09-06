@@ -3,13 +3,12 @@
 
 {% macro BlockData(aPluginFormData, sBlockName, sText = '') %}
 	{% set bHaveBlock = 'false' %}
-	{% for oLoginData in aPluginFormData if oLoginData.GetBlockData(sBlockName) %}
-		{% set oBlockData = oLoginData.GetBlockData(sBlockName) %}
+	{% for oLoginData in aPluginFormData if (oLoginData is defined and oLoginData.GetBlockData(sBlockName)) %}
 		{% set bHaveBlock = 'true' %}
+		{% set oBlockData = oLoginData.GetBlockData(sBlockName) %}
 		{% set sTwig = oBlockData.GetTwig() %}
 		{% set aData = oBlockData.GetData() %}
-		{% set sContent = include(sTwig ? sTwig : '') %}
-		{{ sContent|raw }}
+		{% include sTwig ignore missing %}
 	{% endfor %}
 	{% if bHaveBlock == 'true' %}
 		{{ sText|raw }}

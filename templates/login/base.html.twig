@@ -1,7 +1,9 @@
 {# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
+
 {% block body %}
+	{% import "macros.twig" as Macro %}
 	{% block login_logo %}
 		<div id="login-logo">
 			<a href="{{ sIconUrl }}">
@@ -12,6 +14,23 @@
 	{% block login_content %}
 	{% endblock login_content %}
 	{% block login_footer %}
-		<div id="login-footer"></div>
+		<div id="login-footer">
+		{{ Macro.BlockData(aPluginFormData, 'login_footer') }}
+		</div>
 	{% endblock login_footer %}
 {% endblock body %}
+
+{% block script %}
+	{% import "macros.twig" as Macro %}
+	{{ Macro.BlockData(aPluginFormData, 'script') }}
+{% endblock script %}
+
+{% block ready_script %}
+	{% import "macros.twig" as Macro %}
+	{{ Macro.BlockData(aPluginFormData, 'ready_script') }}
+{% endblock ready_script %}
+
+{% block css %}
+	{% import "macros.twig" as Macro %}
+	{{ Macro.BlockData(aPluginFormData, 'css') }}
+{% endblock css %}

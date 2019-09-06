@@ -3,9 +3,8 @@
 
 {% extends "base.html.twig" %}
 
-{% import "macros.twig" as Macro %}
-
 {% block login_content %}
+	{% import "macros.twig" as Macro %}
 	<div id="login">
 	{% block login_title %}
 		<div id="login-title">
@@ -49,6 +48,11 @@
 {% endblock login_content %}
 
 {% block login_footer %}
-	{{ Macro.BlockData(aPluginFormData, 'login_footer') }}
+	<div id="login-footer">
+		{{ Macro.BlockData(aPluginFormData, 'login_footer') }}
+	</div>
 {% endblock login_footer %}
+
+
+
 

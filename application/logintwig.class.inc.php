@@ -157,34 +157,21 @@ class LoginTwigContext
 
 	public function Render(NiceWebPage $oPage, $sTwigFile, $aVars = array())
 	{
-		$sType = 'html';
+		$oTemplate = $this->GetTwig()->load($sTwigFile);
+		$oPage->add($oTemplate->renderBlock('body', $aVars));
+		$oPage->add_script($oTemplate->renderBlock('script', $aVars));
+		$oPage->add_ready_script($oTemplate->renderBlock('ready_script', $aVars));
+		$oPage->add_style($oTemplate->renderBlock('css', $aVars));
 
-		if (preg_match('/.*\.(html|ready\.js|js)\.twig/U', $sTwigFile, $matches))
+		// Render CSS links
+		foreach ($this->aPluginFormData as $oFormData)
 		{
-			$sType = $matches[1];
-		}
-
-		switch ($sType)
-		{
-			case 'html':
-				$oPage->add($this->GetTwig()->render($sTwigFile, $aVars));
-				// Render CSS links
-				foreach ($this->aPluginFormData as $oFormData)
-				{
-					/** @var \LoginTwigData $oFormData */
-					$sCSSFile = $oFormData->GetCSSFile();
-					if (!empty($sCSSFile))
-					{
-						$oPage->add_linked_stylesheet($sCSSFile);
-					}
-				}
-				break;
-			case 'js':
-				$oPage->add_script($this->GetTwig()->render($sTwigFile, $aVars));
-				break;
-			case 'ready.js':
-				$oPage->add_ready_script($this->GetTwig()->render($sTwigFile, $aVars));
-				break;
+			/** @var \LoginTwigData $oFormData */
+			$sCSSFile = $oFormData->GetCSSFile();
+			if (!empty($sCSSFile))
+			{
+				$oPage->add_linked_stylesheet($sCSSFile);
+			}
 		}
 	}
 

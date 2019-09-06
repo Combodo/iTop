@@ -175,7 +175,6 @@ class LoginWebPage extends NiceWebPage
 		$aVars['sFailureReason'] = $sFailureReason;
 
 		$oTwigContext->Render($this, 'forgotpwdform.html.twig', $aVars);
-		$oTwigContext->Render($this, 'forgotpwdform.ready.js.twig');
 	}
 
 	protected function ForgotPwdGo()
@@ -277,7 +276,6 @@ class LoginWebPage extends NiceWebPage
 		}
 
 		$oTwigContext->Render($this, 'resetpwdform.html.twig', $aVars);
-		$oTwigContext->Render($this, 'resetpwdform.js.twig');
 	}
 
 	public function DoResetPassword()
@@ -326,7 +324,6 @@ class LoginWebPage extends NiceWebPage
 		$oTwigContext = new LoginTwigContext();
 		$aVars = $oTwigContext->GetDefaultVars();
 		$aVars['bFailedLogin'] = $bFailedLogin;
-		$oTwigContext->Render($this, 'changepwdform.js.twig');
 		$oTwigContext->Render($this, 'changepwdform.html.twig', $aVars);
 	}
 
