@@ -210,9 +210,9 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			'sLabel' => Dict::S('CAS:Login:SignIn'),
 			'sTooltip' => Dict::S('CAS:Login:SignInTooltip'),
 		);
-		$oBlockData = new LoginBlockData('cas_sso_button.html.twig', $aData);
+		$oLoginData->AddBlockData('login_sso_buttons', new LoginBlockData('cas_sso_button.html.twig', $aData));
 
-		$oLoginData->AddBlockData('login_sso_buttons', $oBlockData);
+		$oLoginData->AddBlockData('css', new LoginBlockData('cas_css.css.twig'));
 
 		return $oLoginData;
 	}
