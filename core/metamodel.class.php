@@ -934,7 +934,7 @@ abstract class MetaModel
 	 * @param string $sClass Name of the class
 	 * @param string $sAttCode Code of the attributes
 	 *
-	 * @return Array List of attribute codes that depend on the given attribute, empty array if none.
+	 * @return array List of attribute codes that depend on the given attribute, empty array if none.
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
@@ -1190,7 +1190,7 @@ abstract class MetaModel
 	/**
 	 * array of ("classname" => array of attributes)
 	 *
-	 * @var \AttributeDefinition[]
+	 * @var \AttributeDefinition[][]
 	 */
 	private static $m_aAttribDefs = array();
 	/**
@@ -2200,10 +2200,10 @@ abstract class MetaModel
 					}
 				}
 			}
-			else
-			{
+			//else
+			//{
 				// Cannot take the legacy system into account... simply ignore it
-			}
+			//}
 		} // foreach class
 
 		// Perform the up/down reconciliation for the legacy definitions
@@ -4382,8 +4382,7 @@ abstract class MetaModel
 		{
 			$iChildId = $aValues['id'];
 			$iLeft = $iCurrIndex++;
-			//FIXME calling ourselves but no return statement in this method ?!!???
-			$aChildren = self::HKInitChildren($sTable, $sAttCode, $oAttDef, $iChildId, $iCurrIndex);
+			self::HKInitChildren($sTable, $sAttCode, $oAttDef, $iChildId, $iCurrIndex);
 			$iRight = $iCurrIndex++;
 			$sSQL = "UPDATE `$sTable` SET `$sLeft` = $iLeft, `$sRight` = $iRight WHERE id= $iChildId";
 			CMDBSource::Query($sSQL);
@@ -5848,10 +5847,10 @@ abstract class MetaModel
 			{
 				$sAction = $aErrorsAndFixes[$sRootClass][$sTable][$iRecordId]['Action'];
 
-				if ($sAction == 'Delete')
-				{
+				//if ($sAction == 'Delete')
+				//{
 					// No need to update, the record will be deleted!
-				}
+				//}
 
 				if ($sAction == 'Update')
 				{
@@ -6686,7 +6685,7 @@ abstract class MetaModel
 	 * @param bool $bAllowAllData if true then user rights will be bypassed - use with care!
 	 * @param null $aModifierProperties
 	 *
-	 * @return \cmdbAbstractObject null if : (the object is not found) or (archive mode disabled and object is archived and
+	 * @return \DBObject null if : (the object is not found) or (archive mode disabled and object is archived and
 	 *     $bMustBeFound=false)
 	 * @throws CoreException if no result found and $bMustBeFound=true
 	 * @throws ArchivedObjectException if archive mode disabled and result is archived and $bMustBeFound=true
@@ -6983,7 +6982,7 @@ abstract class MetaModel
 	 * Surpasses BulkDelete as it can handle abstract classes, but has the other limitation as it bypasses standard
 	 * objects handlers
 	 *
-	 * @param string $oFilter Scope of objects to wipe out
+	 * @param \DBSearch $oFilter Scope of objects to wipe out
 	 *
 	 * @return int The count of deleted objects
 	 * @throws \CoreException
