@@ -29,8 +29,13 @@ class ExpressionCache
 	 *
 	 * @return mixed|null
 	 */
-	static public function GetCachedExpression($sClass, $sAttCode)
+	public static function GetCachedExpression($sClass, $sAttCode)
 	{
+		if (!utils::GetConfig()->Get('expression_cache_enabled'))
+		{
+			return null;
+		}
+
 		// read current cache
 		@include_once (static::GetCacheFileName());
 
@@ -54,8 +59,12 @@ class ExpressionCache
 	 * @throws \CoreException
 	 * @throws \DictExceptionUnknownLanguage
 	 */
-	static public function Warmup()
+	public static function Warmup()
 	{
+		if (!utils::GetConfig()->Get('expression_cache_enabled'))
+		{
+			return;
+		}
 		// Store current language
 		$sUserLang = Dict::GetUserLanguage();
 		$aLanguages = Dict::GetLanguages();
@@ -105,7 +114,7 @@ EOF;
 	 * @return string
 	 * @throws \CoreException
 	 */
-	static private function GetSerializedExpression($sClass, $sAttCode)
+	private static function GetSerializedExpression($sClass, $sAttCode)
 	{
 		$sKey = static::GetKey($sClass, $sAttCode);
 		$oExpr = DBObjectSearch::GetPolymorphicExpression($sClass, $sAttCode);
@@ -118,7 +127,7 @@ EOF;
 	 *
 	 * @return string
 	 */
-	static private function GetKey($sClass, $sAttCode)
+	private static function GetKey($sClass, $sAttCode)
 	{
 		return $sClass.'::'.$sAttCode;
 	}

@@ -59,6 +59,7 @@ class OQLToSQLTest extends ItopDataTestCase
 	{
 		utils::GetConfig()->Set('use_legacy_dbsearch', true, 'Test');
 		utils::GetConfig()->Set('apc_cache.enabled', false, 'Test');
+		utils::GetConfig()->Set('expression_cache_enabled', false, 'Test');
 		utils::GetConfig()->Set('query_cache_enabled', false, 'Test');
 		$sConfigFile = utils::GetConfig()->GetLoadedFile();
 		@chmod($sConfigFile, 0770);
@@ -89,6 +90,7 @@ class OQLToSQLTest extends ItopDataTestCase
 		$this->assertTrue(utils::GetConfig()->Get('use_legacy_dbsearch'));
 		$this->assertFalse(utils::GetConfig()->Get('apc_cache.enabled'));
 		$this->assertFalse(utils::GetConfig()->Get('query_cache_enabled'));
+		$this->assertFalse(utils::GetConfig()->Get('expression_cache_enabled'));
 
 		$aPrevious = $this->GetPreviousTestResult($this->GetId());
 		if (is_null($aPrevious))
@@ -106,6 +108,7 @@ class OQLToSQLTest extends ItopDataTestCase
 		utils::GetConfig()->Set('use_legacy_dbsearch', false, 'test');
 		utils::GetConfig()->Set('apc_cache.enabled', false, 'test');
 		utils::GetConfig()->Set('query_cache_enabled', false, 'test');
+		utils::GetConfig()->Set('expression_cache_enabled', false, 'test');
 		$sConfigFile = utils::GetConfig()->GetLoadedFile();
 		@chmod($sConfigFile, 0770);
 		utils::GetConfig()->WriteToFile();
@@ -136,6 +139,7 @@ class OQLToSQLTest extends ItopDataTestCase
 		$this->assertFalse(utils::GetConfig()->Get('use_legacy_dbsearch'));
 		$this->assertFalse(utils::GetConfig()->Get('apc_cache.enabled'));
 		$this->assertFalse(utils::GetConfig()->Get('query_cache_enabled'));
+		$this->assertFalse(utils::GetConfig()->Get('expression_cache_enabled'));
 
 		$aResult = $this->OQLRunner($sOQL, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart);
 		$this->assertNull($aResult);

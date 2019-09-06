@@ -1184,6 +1184,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'expression_cache_enabled' => array(
+			'type' => 'bool',
+			'description' => 'If set, DBSearch will use cache for query expression generation',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'log_kpi_record_oql' => array(
 			'type' => 'integer',
 			'description' => '1 => Record OQL requests and parameters',
@@ -1451,18 +1459,18 @@ class Config
 			$sNoise = trim(ob_get_contents());
 			ob_end_clean();
 		}
+		catch(Error $e)
+		{
+			// PHP 7
+			throw new ConfigException('Error in configuration file',
+				array('file' => $sConfigFile, 'error' => $e->getMessage().' at line '.$e->getLine()));
+		}
 		catch (Exception $e)
 		{
 			// well, never reach in case of parsing error :-(
 			// will be improved in PHP 6 ?
 			throw new ConfigException('Error in configuration file',
 				array('file' => $sConfigFile, 'error' => $e->getMessage()));
-		}
-		catch(Error $e)
-		{
-		    // PHP 7
-		    throw new ConfigException('Error in configuration file',
-		        array('file' => $sConfigFile, 'error' => $e->getMessage().' at line '.$e->getLine()));
 		}
 		if (strlen($sNoise) > 0)
 		{
