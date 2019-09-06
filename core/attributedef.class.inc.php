@@ -3555,6 +3555,22 @@ class AttributeFinalClass extends AttributeString
 
 		return $aLocalizedValues;
 	}
+
+	/**
+	 * @return bool
+	 * @throws \CoreException
+	 * @since 2.7
+	 */
+	public function CopyOnAllTables()
+	{
+		$sClass = self::GetHostClass();
+		if (MetaModel::IsLeafClass($sClass))
+		{
+			// Leaf class, no finalclass
+			return false;
+		}
+		return true;
+	}
 }
 
 

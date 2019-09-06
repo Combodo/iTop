@@ -2550,7 +2550,7 @@ abstract class DBObject implements iDisplay
 	{
 		$sTable = MetaModel::DBGetTable($sTableClass);
 		// Abstract classes or classes having no specific attribute do not have an associated table
-		if ($sTable == '') return false;
+		if ($sTable == '') { return false; }
 
 		$sClass = get_class($this);
 
@@ -2570,7 +2570,10 @@ abstract class DBObject implements iDisplay
 		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef)
 		{
 			// Skip this attribute if not defined in this table
-			if (!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode)) continue;
+			if (!MetaModel::IsAttributeOrigin($sTableClass, $sAttCode) && !$oAttDef->CopyOnAllTables())
+			{
+				continue;
+			}
 			$aAttColumns = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
 			foreach($aAttColumns as $sColumn => $sValue)
 			{
@@ -2583,7 +2586,7 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		if (count($aValuesToWrite) == 0) return false;
+		if (count($aValuesToWrite) == 0) { return false; }
 
 		if (MetaModel::DBIsReadOnly())
 		{

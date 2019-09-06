@@ -1083,15 +1083,28 @@ abstract class MetaModel
 	}
 
 	/**
+	 * Get "finalclass" DB field name
 	 * @param string $sClass
 	 *
-	 * @return mixed
+	 * @return string
 	 * @throws \CoreException
 	 */
 	final static public function DBGetClassField($sClass)
 	{
 		self::_check_subclass($sClass);
+
+		// Leaf classes have no "finalclass" field.
+	    // Non Leaf classes have the same field as the root class
+		if (!self::IsLeafClass($sClass))
+		{
+			$sClass = MetaModel::GetRootClass($sClass);
+		}
 		return self::$m_aClassParams[$sClass]["db_finalclass_field"];
+	}
+
+	final public static function IsLeafClass($sClass)
+	{
+		return empty(self::$m_aChildClasses[$sClass]);
 	}
 
 	/**
@@ -1103,16 +1116,7 @@ abstract class MetaModel
 	final static public function IsStandaloneClass($sClass)
 	{
 		self::_check_subclass($sClass);
-
-		if (count(self::$m_aChildClasses[$sClass]) == 0)
-		{
-			if (count(self::$m_aParentClasses[$sClass]) == 0)
-			{
-				return true;
-			}
-		}
-
-		return false;
+		return (empty(self::$m_aChildClasses[$sClass]) && empty(self::$m_aParentClasses[$sClass]));
 	}
 
 	/**
@@ -5402,6 +5406,14 @@ abstract class MetaModel
 						else
 						{
 							$aAlterTableItems[$sTable][$sField] = "ADD $sFieldDefinition";
+							$aAdditionalRequests = self::GetAdditionalRequestAfterAlter($sClass, $sTable, $sField);
+							if (!empty($aAdditionalRequests))
+							{
+								foreach ($aAdditionalRequests as $sAdditionalRequest)
+								{
+									$aPostTableAlteration[$sTable][] = $sAdditionalRequest;
+								}
+							}
 						}
 
 						if ($bIndexNeeded)
@@ -7470,6 +7482,25 @@ abstract class MetaModel
 		return $sRet;
 	}
 
+	private static function GetAdditionalRequestAfterAlter($sClass, $sTable, $sField)
+	{
+		$aRequests = array();
+
+		// Copy finalclass fields from root class to intermediate classes
+		if ($sField == self::DBGetClassField($sClass))
+		{
+			$sRootClass = MetaModel::GetRootClass($sClass);
+			$sRootTable = self::DBGetTable($sRootClass);
+			$sKey = self::DBGetKey($sClass);
+			$sRootKey = self::DBGetKey($sRootClass);
+			$sRootField = self::DBGetClassField($sRootClass);
+			// Copy the finalclass of the root table
+			$sRequest = "UPDATE `$sTable`,`$sRootTable` SET  `$sTable`.`$sField` = `$sRootTable`.`$sRootField` WHERE `$sTable`.`$sKey` = `$sRootTable`.`$sRootKey`";
+			$aRequests[] = $sRequest;
+		}
+
+		return $aRequests;
+	}
 }
 
 
