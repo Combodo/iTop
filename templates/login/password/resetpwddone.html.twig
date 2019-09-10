@@ -4,7 +4,7 @@
 {% extends "base.html.twig" %}
 
 {% block login_content %}
-	<div id="login">
+	<div id="login-content">
 		<h1>{{ 'UI:ResetPwd-Title'|dict_s }}</h1>
 		{% if bNoUser %}
 			<p>{{ 'UI:ResetPwd-Error-WrongLogin'|dict_format(sAuthUser) }}</p>

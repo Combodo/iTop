@@ -1,19 +1,11 @@
 {# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-<tr>
-	<td class="v-spacer" style="text-align:right">
+<div>
 		<label for="user">{{ 'UI:Login:UserNamePrompt'|dict_s }}</label>
-	</td>
-	<td style="text-align:left">
 		<input id="user" type="text" name="auth_user" value="{{ aData.sAuthUser }}" />
-	</td>
-</tr>
-<tr>
-	<td style="text-align:right">
+</div>
+<div>
 		<label for="pwd">{{ 'UI:Login:PasswordPrompt'|dict_s }}</label>
-	</td>
-	<td style="text-align:left">
 		<input id="pwd" type="password" name="auth_pwd" value="{{ aData.sAuthPwd }}" />
-	</td>
-</tr>
+</div>

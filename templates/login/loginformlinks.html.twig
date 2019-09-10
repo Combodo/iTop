@@ -2,9 +2,7 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 {% if aData.bEnableResetPassword %}
-	<tr>
-		<td colspan="2" class="center v-spacer">
-			<a href="{{ aData.sResetPasswordUrl }}" target="_blank">{{ 'UI:Login:ForgotPwd'|dict_s }}</a>
-		</td>
-	</tr>
+	<div class="v-spacer">
+		<a href="{{ aData.sResetPasswordUrl }}" target="_blank">{{ 'UI:Login:ForgotPwd'|dict_s }}</a>
+	</div>
 {%  endif %}

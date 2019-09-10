@@ -545,7 +545,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:ResetPwd-Ready' => 'The password has been changed.',
 	'UI:ResetPwd-Login' => 'Click here to login...',
 
-	'UI:Login:About' => '',
+	'UI:Login:About' => 'Powered by iTop by Combodo',
 	'UI:Login:ChangeYourPassword' => 'Change Your Password',
 	'UI:Login:OldPasswordPrompt' => 'Old password',
 	'UI:Login:NewPasswordPrompt' => 'New password',

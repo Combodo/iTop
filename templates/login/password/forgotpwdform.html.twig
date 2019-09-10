@@ -4,19 +4,33 @@
 {% extends "base.html.twig" %}
 
 {% block login_content %}
-	<div id="login">
-		<h1>{{ 'UI:Login:ForgotPwdForm'|dict_s }}</h1>
-		<p>{{ 'UI:Login:ForgotPwdForm+'|dict_s }}</p>
-		{% if bFailedToReset %}
-			<p class="hilite">{{ 'UI:Login:ResetPwdFailed'|dict_format(sFailureReason) }}</p>
-		{% endif %}
-		<form method="post">
-			<table>
-				<tr><td colspan="2" class="center"><label for="user">{{ 'UI:Login:UserNamePrompt'|dict_s }}:</label><input id="user" type="text" name="auth_user" value="{{ sAuthUser }}" /></td></tr>
-				<tr><td colspan="2" class="center v-spacer"><span class="btn_border"><input type="button" onClick="window.close();" value="{{ 'UI:Button:Cancel'|dict_s }}" /></span>&nbsp;&nbsp;<span class="btn_border"><input type="submit" value="{{ 'UI:Login:ResetPassword'|dict_s }}" /></span></td></tr>
-			</table>
-			<input type="hidden" name="loginop" value="forgot_pwd_go" />
-		</form>
+	<div id="login-content">
+		<div id="login-title">
+			<h1>{{ 'UI:Login:ForgotPwdForm'|dict_s }}</h1>
+			<p>{{ 'UI:Login:ForgotPwdForm+'|dict_s }}</p>
+			{% if bFailedToReset %}
+				<p class="hilite">{{ 'UI:Login:ResetPwdFailed'|dict_format(sFailureReason) }}</p>
+			{% endif %}
+		</div>
+		<div id="login-form">
+			<form method="post">
+				<div id="login-form-content">
+					<div id="login-input">
+						<div>
+							<label for="user">{{ 'UI:Login:UserNamePrompt'|dict_s }}:</label>
+							<input id="user" type="text" name="auth_user" value="{{ sAuthUser }}" />
+						</div>
+					</div>
+					<div id="login-submit" class="forgotpwd-submit">
+						<div>
+							<input class="login-submit-secondary" type="button" onClick="window.close();" value="{{ 'UI:Button:Cancel'|dict_s }}" />
+							<input type="submit" value="{{ 'UI:Login:ResetPassword'|dict_s }}" />
+						</div>
+					</div>
+				</div>
+				<input type="hidden" name="loginop" value="forgot_pwd_go" />
+			</form>
+		</div>
 	</div>
 {% endblock %}
 

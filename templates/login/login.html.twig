@@ -5,7 +5,7 @@
 
 {% block login_content %}
 	{% import "macros.twig" as Macro %}
-	<div id="login">
+	<div id="login-content">
 	{% block login_title %}
 		<div id="login-title">
 			<h1>{{ 'UI:Login:Welcome'|dict_s }}</h1>
@@ -19,23 +19,38 @@
 	{% block login_form %}
 		<div id="login-form">
 			<form id="login_form" method="post">
-				<table>
+				<div id="login-form-content">
 					{% block login_sso_buttons %}
-						{{ Macro.BlockData(aPluginFormData, 'login_sso_buttons', '<tr><td class="center" colspan="2">' ~ 'UI:Login:SeparatorOr'|dict_s ~ '</td></tr>') }}
+						<div id="login-sso-buttons">
+							{{ Macro.BlockData(aPluginFormData, 'login_sso_buttons', '<div class="divider"><hr class="left"/>' ~ 'UI:Login:SeparatorOr'|dict_s ~ '<hr class="right"/></div>') }}
+						</div>
 					{% endblock login_sso_buttons %}
 					{% block login_input %}
-						{{ Macro.BlockData(aPluginFormData, 'login_input') }}
+						<div id="login-input">
+							{{ Macro.BlockData(aPluginFormData, 'login_input') }}
+						</div>
 					{% endblock login_input %}
 					{% block login_submit %}
-						{{ Macro.BlockData(aPluginFormData, 'login_submit') }}
+						<div id="login-submit">
+							{{ Macro.BlockData(aPluginFormData, 'login_submit') }}
+						</div>
 					{% endblock login_submit %}
 					{% block login_additional_controls %}
-						{{ Macro.BlockData(aPluginFormData, 'login_additional_controls') }}
+						<div id="login-additional-controls">
+							{{ Macro.BlockData(aPluginFormData, 'login_additional_controls') }}
+						</div>
 					{% endblock login_additional_controls %}
 					{% block login_links %}
-						{{ Macro.BlockData(aPluginFormData, 'login_links') }}
+						<div id="login-links">
+							{{ Macro.BlockData(aPluginFormData, 'login_links') }}
+						</div>
 					{% endblock login_links %}
-				</table>
+					{% block login_form_footer %}
+						<div id="login-form-footer">
+							{{ Macro.BlockData(aPluginFormData, 'login_form_footer') }}
+						</div>
+					{% endblock login_form_footer %}
+				</div>
 				<input type="hidden" id="login_mode" name="login_mode" value="form" />
 				<input type="hidden" id="login_op" name="loginop" value="login" />
 				{% for sName, sValue in aPreviousPostedVars %}

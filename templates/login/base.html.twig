@@ -4,20 +4,32 @@
 
 {% block body %}
 	{% import "macros.twig" as Macro %}
-	{% block login_logo %}
-		<div id="login-logo">
-			<a href="{{ sIconUrl }}">
-				<img title="{{ sVersionShort }}" src="{{ sDisplayIcon }}" alt="logo"/>
-			</a>
-		</div>
-	{% endblock login_logo %}
-	{% block login_content %}
-	{% endblock login_content %}
-	{% block login_footer %}
-		<div id="login-footer">
-		{{ Macro.BlockData(aPluginFormData, 'login_footer') }}
-		</div>
-	{% endblock login_footer %}
+	<div id="login-body">
+		{% block login_header %}
+			<div id="login-header">
+				{{ Macro.BlockData(aPluginFormData, 'login_header') }}
+			</div>
+		{% endblock login_header %}
+		{% block login_logo %}
+			<div id="login-logo">
+				<a href="{{ sIconUrl }}">
+					<img title="{{ sVersionShort }}" src="{{ sDisplayIcon }}" alt="logo"/>
+				</a>
+			</div>
+		{% endblock login_logo %}
+		{% block login_content %}
+		{% endblock login_content %}
+		{% block login_additional_content %}
+			<div id="login-additional-content">
+				{{ Macro.BlockData(aPluginFormData, 'login_additional_content') }}
+			</div>
+		{% endblock login_additional_content %}
+		{% block login_footer %}
+			<div id="login-footer">
+				{{ Macro.BlockData(aPluginFormData, 'login_footer') }}
+			</div>
+		{% endblock login_footer %}
+	</div>
 {% endblock body %}
 
 {% block script %}
