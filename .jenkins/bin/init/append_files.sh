@@ -10,5 +10,7 @@ mkdir -p toolkit
 rm -rf toolkit/*
 
 # fill target dirs
-curl https://www.combodo.com/documentation/iTopDataModelToolkit-2.3.zip | tar xvz --directory toolkit
+curl https://www.combodo.com/documentation/iTopDataModelToolkit-2.3.zip > toolkit.zip
+unzip toolkit.zip
+rm toolkit.zip
 cp -r .jenkins/configuration/default-environment/unattended_install/* toolkit
