@@ -855,6 +855,7 @@ input.dp-applied {
 			}
 
 			.sft_hint,
+			.sfobs_hint,
 			.sft_toggler{
 				margin-top: 4px;
 			}
@@ -884,7 +885,8 @@ input.dp-applied {
 			.sft_long{
 				display: none;
 			}
-			.sft_hint{
+			.sft_hint,
+			.sfobs_hint{
 				display: none;
 			}
 		}
@@ -902,6 +904,27 @@ input.dp-applied {
 		.sfc_fg_search{
 			display: none;
 		}
+		.sft_hint{
+			display: inline-block;
+		}
+	}
+
+
+	&:not(.hide_obsolete_data){
+		.sfobs_hint{
+			display: none;
+		}
+	}
+	&.hide_obsolete_data{
+		.sfobs_hint{
+			display: inline-block;
+		}
+	}
+	&.hide_obsolete_data.no_auto_submit{
+		.sfobs_hint{
+			margin-left: 30px;
+		}
+
 	}
 
 	.sf_title{
@@ -911,7 +934,8 @@ input.dp-applied {
 		color: #ffffff;
 		background-color: $complement-color;
 		cursor: pointer;
-		.sft_hint{
+		.sft_hint,
+		.sfobs_hint{
 			font-size: 8pt;
 			font-style: italic;
 		}
@@ -3684,3 +3708,11 @@ input:checked + .slider:before {
 	font-size: 12px;
 	margin-bottom: 0.5em;
 } 
+
+.clearboth {
+	clear: both;
+}
+
+/* font-awesome 4 to 5 BC fix */
+.pull-right { float: right; }
+.pull-left { float: left; }

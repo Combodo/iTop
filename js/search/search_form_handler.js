@@ -15,6 +15,7 @@ $(function()
 			'endpoint': null,
 			'init_opened': false,
 			'auto_submit': true,
+			'show_obsolete_data' : true,
 			'search': {
 				'base_oql': '',
 				'class_name': null,
@@ -325,6 +326,12 @@ $(function()
 			{
 				this.element.addClass('no_auto_submit');
 			}
+			// - Show obsolete data option
+			if(this.options.show_obsolete_data === false)
+			{
+				this.element.addClass('hide_obsolete_data');
+			}
+
 			// - Message area
 			this.elements.message_area = this.element.find('.sf_message');
 			this._cleanMessageArea();
