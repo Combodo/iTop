@@ -498,7 +498,7 @@ class DBUnionSearch extends DBSearch
 	{
 		if (count($this->aSearches) == 1)
 		{
-			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, $aSelectExpr);
+			return $this->aSearches[0]->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, $aSelectedClasses, $aSelectExpr);
 		}
 
 		$aSQLQueries = array();
