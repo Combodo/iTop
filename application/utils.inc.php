@@ -27,19 +27,6 @@ use ScssPhp\ScssPhp\Compiler;
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-require_once(APPROOT.'core/metamodel.class.php');
-require_once(APPROOT.'core/config.class.inc.php');
-require_once(APPROOT.'application/transaction.class.inc.php');
-require_once(APPROOT.'application/Html2Text.php');
-require_once(APPROOT.'application/Html2TextException.php');
-
-require_once(APPROOT.'application/applicationextension.inc.php');
-require_once(APPROOT.'application/loginform.class.inc.php');
-require_once(APPROOT.'application/loginbasic.class.inc.php');
-require_once(APPROOT.'application/logindefault.class.inc.php');
-require_once(APPROOT.'application/loginexternal.class.inc.php');
-require_once(APPROOT.'application/loginurl.class.inc.php');
-
 define('ITOP_CONFIG_FILE', 'config-itop.php');
 define('ITOP_DEFAULT_CONFIG_FILE', APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE);
 

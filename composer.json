@@ -57,7 +57,12 @@
       "core/querybuildercontext.class.inc.php",
       "core/legacy/querybuildercontextlegacy.class.inc.php",
       "core/querybuilderexpressions.class.inc.php",
-      "core/legacy/querybuilderexpressionslegacy.class.inc.php"
+      "core/legacy/querybuilderexpressionslegacy.class.inc.php",
+      "application/loginform.class.inc.php",
+      "application/loginbasic.class.inc.php",
+      "application/logindefault.class.inc.php",
+      "application/loginexternal.class.inc.php",
+      "application/loginurl.class.inc.php"
     ]
   },
   "conflict": {

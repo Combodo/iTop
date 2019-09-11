@@ -17,13 +17,23 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 //
 
-require_once(APPROOT.'core/modulehandler.class.inc.php');
-require_once(APPROOT.'core/querymodifier.class.inc.php');
-require_once(APPROOT.'core/metamodelmodifier.inc.php');
-require_once(APPROOT.'core/computing.inc.php');
-require_once(APPROOT.'core/relationgraph.class.inc.php');
-require_once(APPROOT.'core/apc-compat.php');
-require_once(APPROOT.'core/expressioncache.class.inc.php');
+require_once APPROOT.'core/modulehandler.class.inc.php';
+require_once APPROOT.'core/querymodifier.class.inc.php';
+require_once APPROOT.'core/metamodelmodifier.inc.php';
+require_once APPROOT.'core/computing.inc.php';
+require_once APPROOT.'core/relationgraph.class.inc.php';
+require_once APPROOT.'core/apc-compat.php';
+require_once APPROOT.'core/expressioncache.class.inc.php';
+
+
+/**
+ * We need to have all iLoginFSMExtension/iLoginDataExtension impl loaded ! Cannot use autoloader...
+ */
+require_once APPROOT.'application/loginform.class.inc.php';
+require_once APPROOT.'application/loginbasic.class.inc.php';
+require_once APPROOT.'application/logindefault.class.inc.php';
+require_once APPROOT.'application/loginexternal.class.inc.php';
+require_once APPROOT.'application/loginurl.class.inc.php';
 
 /**
  * Metamodel
