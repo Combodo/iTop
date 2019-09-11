@@ -24,11 +24,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT."setup/modulediscovery.class.inc.php");
-require_once(APPROOT.'setup/modelfactory.class.inc.php');
-require_once(APPROOT.'setup/compiler.class.inc.php');
-require_once(APPROOT.'setup/extensionsmap.class.inc.php');
-require_once(APPROOT.'core/metamodel.class.php');
+require_once APPROOT."setup/modulediscovery.class.inc.php";
+require_once APPROOT.'setup/modelfactory.class.inc.php';
+require_once APPROOT.'setup/compiler.class.inc.php';
+require_once APPROOT.'setup/extensionsmap.class.inc.php';
 
 define ('MODULE_ACTION_OPTIONAL', 1);
 define ('MODULE_ACTION_MANDATORY', 2);
@@ -111,26 +110,8 @@ class RunTimeEnvironment
 	 */    
 	public function InitDataModel($oConfig, $bModelOnly = true, $bUseCache = false)
 	{
-		require_once(APPROOT.'/core/log.class.inc.php');
-		require_once(APPROOT.'/core/kpi.class.inc.php');
-		require_once(APPROOT.'/core/coreexception.class.inc.php');
-		require_once(APPROOT.'/core/dict.class.inc.php');
-		require_once(APPROOT.'/core/attributedef.class.inc.php');
-		require_once(APPROOT.'/core/filterdef.class.inc.php');
-		require_once(APPROOT.'/core/stimulus.class.inc.php');
-		require_once(APPROOT.'/core/MyHelpers.class.inc.php');
-		require_once(APPROOT.'/core/oql/expression.class.inc.php');
-		require_once(APPROOT.'/core/cmdbsource.class.inc.php');
-		require_once(APPROOT.'/core/sqlquery.class.inc.php');
-		require_once(APPROOT.'/core/sqlobjectquery.class.inc.php');
-		require_once(APPROOT.'/core/sqlunionquery.class.inc.php');
-		require_once(APPROOT.'/core/dbobject.class.php');
-		require_once(APPROOT.'/core/dbsearch.class.php');
-		require_once(APPROOT.'/core/dbobjectset.class.php');
-		require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
-		require_once(APPROOT.'/core/userrights.class.inc.php');
-		require_once(APPROOT.'/setup/moduleinstallation.class.inc.php');
-	
+		require_once APPROOT.'/setup/moduleinstallation.class.inc.php';
+
 		$sConfigFile = $oConfig->GetLoadedFile();
 		if (strlen($sConfigFile) > 0)
 		{
@@ -243,7 +224,6 @@ class RunTimeEnvironment
 	
 		try
 		{
-			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 			CMDBSource::InitFromConfig($oConfig);
 			$aSelectInstall = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_module_install");
 		}
@@ -818,7 +798,6 @@ class RunTimeEnvironment
 		$aResult = false;
 		try
 		{
-			require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 			CMDBSource::InitFromConfig($oConfig);
 			$sSQLQuery = "SELECT * FROM ".$oConfig->Get('db_subname')."priv_module_install";
 			$aSelectInstall = CMDBSource::QueryToArray($sSQLQuery);

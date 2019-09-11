@@ -41,15 +41,50 @@ class ApplicationInstaller
 	const WARNING = 3;
 	const INFO = 4;
 
-	/** @var \PHPParameters */
+	/** @var \Parameters */
 	protected $oParams;
 	protected static $bMetaModelStarted = false;
-	
+
+	/**
+	 * @param \Parameters $oParams
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
 	public function __construct($oParams)
 	{
 		$this->oParams = $oParams;
+
+		$aParamValues = $oParams->GetParamForConfigArray();
+		$oConfig = new Config();
+		$sTargetDir = $this->GetTargetDir();
+		$oConfig->UpdateFromParams($aParamValues, $sTargetDir);
+		utils::SetConfig($oConfig);
 	}
-	
+
+	/**
+	 * @return string
+	 */
+	private function GetTargetEnv()
+	{
+		$sTargetEnvironment = $this->oParams->Get('target_env', '');
+		if ($sTargetEnvironment !== '')
+		{
+			return $sTargetEnvironment;
+		}
+
+		return 'production';
+	}
+
+	/**
+	 * @return string
+	 */
+	private function GetTargetDir()
+	{
+		$sTargetEnv = $this->GetTargetEnv();
+		return 'env-'.$sTargetEnv;
+	}
+
 	/**
 	 * Runs all the installation steps in one go and directly outputs
 	 * some information about the progress and the success of the various
@@ -180,7 +215,7 @@ class ApplicationInstaller
 					// __DB__-%Y-%m-%d
 					$sDestination = $aPreinstall['backup']['destination'];
 					$sSourceConfigFile = $aPreinstall['backup']['configuration_file'];
-					$aDBParams = $this->GetParamValues($this->oParams);
+					$aDBParams = $this->oParams->GetParamForConfigArray();
 					$oTempConfig = new Config();
 					$oTempConfig->UpdateFromParams($aDBParams);
 					$sMySQLBinDir = $this->oParams->Get('mysql_bindir', null);
@@ -199,12 +234,8 @@ class ApplicationInstaller
 					$aSelectedModules = $this->oParams->Get('selected_modules');
 					$sSourceDir = $this->oParams->Get('source_dir', 'datamodels/latest');
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
-					$sTargetEnvironment = $this->oParams->Get('target_env', '');
-					if ($sTargetEnvironment == '')
-					{
-						$sTargetEnvironment = 'production';
-					}
-					$sTargetDir = 'env-'.$sTargetEnvironment;
+					$sTargetEnvironment = $this->GetTargetEnv();
+					$sTargetDir = $this->GetTargetDir();
 					$bUseSymbolicLinks = false;
 					$aMiscOptions = $this->oParams->Get('options', array());
 					if (isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])
@@ -234,13 +265,9 @@ class ApplicationInstaller
 
 				case 'db-schema':
 					$aSelectedModules = $this->oParams->Get('selected_modules', array());
-					$sTargetEnvironment = $this->oParams->Get('target_env', '');
-					if ($sTargetEnvironment == '')
-					{
-						$sTargetEnvironment = 'production';
-					}
-					$sTargetDir = 'env-'.$sTargetEnvironment;
-					$aParamValues = $this->GetParamValues($this->oParams);
+					$sTargetEnvironment = $this->GetTargetEnv();
+					$sTargetDir = $this->GetTargetDir();
+					$aParamValues = $this->oParams->GetParamForConfigArray();
 					$bOldAddon = $this->oParams->Get('old_addon', false);
 					$sUrl = $this->oParams->Get('url', '');
 
@@ -257,13 +284,9 @@ class ApplicationInstaller
 					break;
 
 				case 'after-db-create':
-					$sTargetEnvironment = $this->oParams->Get('target_env', '');
-					if ($sTargetEnvironment == '')
-					{
-						$sTargetEnvironment = 'production';
-					}
-					$sTargetDir = 'env-'.$sTargetEnvironment;
-					$aParamValues = $this->GetParamValues($this->oParams);
+					$sTargetEnvironment = $this->GetTargetEnv();
+					$sTargetDir = $this->GetTargetDir();
+					$aParamValues = $this->oParams->GetParamForConfigArray();
 					$aAdminParams = $this->oParams->Get('admin_account');
 					$sAdminUser = $aAdminParams['user'];
 					$sAdminPwd = $aAdminParams['pwd'];
@@ -285,9 +308,9 @@ class ApplicationInstaller
 
 				case 'load-data':
 					$aSelectedModules = $this->oParams->Get('selected_modules');
-					$sTargetEnvironment = $this->oParams->Get('target_env', '');
-					$sTargetDir = 'env-'.(($sTargetEnvironment == '') ? 'production' : $sTargetEnvironment);
-					$aParamValues = $this->GetParamValues($this->oParams);
+					$sTargetEnvironment = $this->GetTargetEnv();
+					$sTargetDir = $this->GetTargetDir();
+					$aParamValues = $this->oParams->GetParamForConfigArray();
 					$bOldAddon = $this->oParams->Get('old_addon', false);
 					$bSampleData = ($this->oParams->Get('sample_data', 0) == 1);
 
@@ -304,19 +327,14 @@ class ApplicationInstaller
 					break;
 
 				case 'create-config':
-					$sTargetEnvironment = $this->oParams->Get('target_env', '');
-					if ($sTargetEnvironment == '')
-					{
-						$sTargetEnvironment = 'production';
-					}
-
-					$sTargetDir = 'env-'.$sTargetEnvironment;
+					$sTargetEnvironment = $this->GetTargetEnv();
+					$sTargetDir = $this->GetTargetDir();
 					$sPreviousConfigFile = $this->oParams->Get('previous_configuration_file', '');
 					$sDataModelVersion = $this->oParams->Get('datamodel_version', '0.0.0');
 					$bOldAddon = $this->oParams->Get('old_addon', false);
 					$aSelectedModuleCodes = $this->oParams->Get('selected_modules', array());
 					$aSelectedExtensionCodes = $this->oParams->Get('selected_extensions', array());
-					$aParamValues = $this->GetParamValues($this->oParams);
+					$aParamValues = $this->oParams->GetParamForConfigArray();
 
 					self::DoCreateConfig($sTargetDir, $sPreviousConfigFile, $sTargetEnvironment, $sDataModelVersion,
 						$bOldAddon, $aSelectedModuleCodes, $aSelectedExtensionCodes, $aParamValues);
@@ -374,33 +392,6 @@ class ApplicationInstaller
 		}
 
 		return $aResult;
-	}
-
-	/**
-	 * @param array $oParams
-	 *
-	 * @return array to use with {@see Config::UpdateFromParams}
-	 */
-	private function GetParamValues($oParams)
-	{
-		$aDBParams = $oParams->Get('database');
-		$aParamValues = array(
-			'mode' => $oParams->Get('mode'),
-			'db_server' => $aDBParams['server'],
-			'db_user' => $aDBParams['user'],
-			'db_pwd' => $aDBParams['pwd'],
-			'db_name' => $aDBParams['name'],
-			'new_db_name' => $aDBParams['name'],
-			'db_prefix' => $aDBParams['prefix'],
-			'db_tls_enabled' => $aDBParams['db_tls_enabled'],
-			'db_tls_ca' => $aDBParams['db_tls_ca'],
-			'application_path' => $oParams->Get('url', ''),
-			'language' => $oParams->Get('language', ''),
-			'graphviz_path' => $oParams->Get('graphviz_path', ''),
-			'source_dir' => $oParams->Get('source_dir', ''),
-		);
-
-		return $aParamValues;
 	}
 
 	protected static function DoCopy($aCopies)

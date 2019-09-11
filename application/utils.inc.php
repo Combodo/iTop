@@ -76,6 +76,12 @@ class FileUploadException extends Exception
  */
 class utils
 {
+	/**
+	 * Cache when getting config from disk or set externally (using {@link SetConfig})
+	 * @internal
+	 * @var Config $oConfig
+	 * @see GetConfig
+	 */
 	private static $oConfig = null;
 
 	// Parameters loaded from a file, parameters of the page/command line still have precedence
@@ -707,31 +713,58 @@ class utils
 	}
 
 	/**
-	 * @return \Config from the current environement, or if not existing from the production env, else new Config made from scratch
-	 * @uses \MetaModel::GetConfig() don't forget to add the needed <code>require_once(APPROOT.'core/metamodel.class.php');</code>
+	 * @param \Config $oConfig
+	 *
 	 */
-	static public function GetConfig()
+	public static function SetConfig(Config $oConfig)
 	{
-		if (self::$oConfig == null)
+		self::$oConfig = $oConfig;
+	}
+
+	/**
+	 * @return \Config Get object in the following order :
+	 * <ol>
+	 * <li>from {@link MetaModel::GetConfig} if loaded
+	 * <li>{@link oConfig} attribute if set
+	 * <li>from disk (current env, using {@link GetConfigFilePath}) => if loaded this will be stored in {@link oConfig} attribute
+	 * <li>from disk, env production => if loaded this will be stored in {@link oConfig} attribute
+	 * <li>default Config object
+	 * </ol>
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 *
+	 * @since 2.7.0 N°2478 always call {@link MetaModel::GetConfig} first, cache is only set when loading from disk
+	 */
+	public static function GetConfig()
+	{
+		$oMetaModelConfig = MetaModel::GetConfig();
+		if ($oMetaModelConfig !== null)
 		{
-		    self::$oConfig = MetaModel::GetConfig();
-
-		    if (self::$oConfig == null)
-		    {
-    			$sConfigFile = self::GetConfigFilePath();
-    			if (!file_exists($sConfigFile))
-    			{
-				    $sConfigFile = self::GetConfigFilePath('production');
-				    if (!file_exists($sConfigFile))
-				    {
-				    	$sConfigFile = null;
-				    }
-    			}
-
-			    self::$oConfig = new Config($sConfigFile);
-		    }
+			return $oMetaModelConfig;
 		}
-		return self::$oConfig;
+
+		if (self::$oConfig !== null)
+		{
+			return self::$oConfig;
+		}
+
+		$sCurrentEnvConfigPath = self::GetConfigFilePath();
+		if (file_exists($sCurrentEnvConfigPath))
+		{
+			$oCurrentEnvDiskConfig = new Config($sCurrentEnvConfigPath);
+			self::$oConfig = $oCurrentEnvDiskConfig;
+			return self::$oConfig;
+		}
+
+		$sProductionEnvConfigPath = self::GetConfigFilePath('production');
+		if (file_exists($sProductionEnvConfigPath))
+		{
+			$oProductionEnvDiskConfig = new Config($sProductionEnvConfigPath);
+			self::$oConfig = $oProductionEnvDiskConfig;
+			return self::$oConfig;
+		}
+
+		return new Config();
 	}
 
 	public static function InitTimeZone() {
