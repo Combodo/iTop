@@ -19,22 +19,6 @@
 
 use ScssPhp\ScssPhp\Compiler;
 
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 
 /**
@@ -43,7 +27,6 @@ use ScssPhp\ScssPhp\Compiler;
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 require_once(APPROOT.'core/metamodel.class.php');
 require_once(APPROOT.'core/config.class.inc.php');
 require_once(APPROOT.'application/transaction.class.inc.php');
@@ -56,7 +39,6 @@ require_once(APPROOT.'application/loginbasic.class.inc.php');
 require_once(APPROOT.'application/logindefault.class.inc.php');
 require_once(APPROOT.'application/loginexternal.class.inc.php');
 require_once(APPROOT.'application/loginurl.class.inc.php');
-
 
 define('ITOP_CONFIG_FILE', 'config-itop.php');
 define('ITOP_DEFAULT_CONFIG_FILE', APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE);
@@ -143,10 +125,10 @@ class utils
 
 	/**
 	 * Return the source file from which the parameter has been found,
-	 * usefull when it comes to pass user credential to a process executed
-	 * in the background	 
-	 * @param $sName Parameter name
-	 * @return The file name if any, or null
+	 * useful when it comes to pass user credential to a process executed
+	 * in the background
+	 * @param string $sName Parameter name
+	 * @return string|null The file name if any, or null
 	 */
 	public static function GetParamSourceFile($sName)
 	{
@@ -391,13 +373,16 @@ class utils
 
 		return $retValue;
 	}
-	
+
 	/**
 	 * Reads an uploaded file and turns it into an ormDocument object - Triggers an exception in case of error
-	 * @param string $sName Name of the input used from uploading the file	 
-	 * @param string $sIndex If Name is an array of posted files, then the index must be used to point out the file	 
+	 *
+	 * @param string $sName Name of the input used from uploading the file
+	 * @param string $sIndex If Name is an array of posted files, then the index must be used to point out the file
+	 *
 	 * @return ormDocument The uploaded file (can be 'empty' if nothing was uploaded)
-	 */	 	 
+	 * @throws \FileUploadException
+	 */
 	public static function  ReadPostedDocument($sName, $sIndex = null)
 	{
 		$oDocument = new ormDocument(); // an empty document
@@ -452,14 +437,17 @@ class utils
 		}
 		return $oDocument;
 	}
-	
+
 	/**
 	 * Interprets the results posted by a normal or paginated list (in multiple selection mode)
 	 *
-	 * @param $oFullSetFilter DBSearch The criteria defining the whole sets of objects being selected
+	 * @param DBSearch $oFullSetFilter The criteria defining the whole sets of objects being selected
 	 *
-	 * @return Array An array of object IDs corresponding to the objects selected in the set
-	 */	
+	 * @return array An array of object IDs corresponding to the objects selected in the set
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
 	public static function ReadMultipleSelection($oFullSetFilter)
 	{
 		$aSelectedObj = utils::ReadParam('selectObject', array());
@@ -553,11 +541,11 @@ class utils
 	}
 
 	/**
-	 * Returns a unique tmp id for the current upload based on the transaction system (db).
-	 *
 	 * Build as static::GetNewTransactionId()
 	 *
-	 * @return string
+	 * @param string $sTransactionId
+	 *
+	 * @return string unique tmp id for the current upload based on the transaction system (db). Build as static::GetNewTransactionId()
 	 */
 	public static function GetUploadTempId($sTransactionId = null)
 	{
@@ -579,7 +567,7 @@ class utils
 	 * as in php.ini, e.g. 256k, 2M, 1G etc. Into a number of bytes
 	 * @param mixed $value The value as read from php.ini
 	 * @return number
-	 */	 	  
+	 */
 	public static function ConvertToBytes( $value )
 	{
 		$iReturn = $value;
@@ -616,7 +604,7 @@ class utils
 	/**
 	 * Format a value into a more friendly format (KB, MB, GB, TB) instead a juste a Bytes amount.
 	 *
-	 * @param type $value
+	 * @param float $value
 	 * @return string
 	 */
 	public static function BytesToFriendlyFormat($value)
@@ -657,8 +645,8 @@ class utils
 	 * Example: StringToTime('01/05/11 12:03:45', '%d/%m/%y %H:%i:%s')
 	 * @param string $sDate
 	 * @param string $sFormat
-	 * @return timestamp or false if the input format is not correct
-	 */	 	  
+	 * @return string|false false if the input format is not correct, timestamp otherwise
+	 */
 	public static function StringToTime($sDate, $sFormat)
 	{
 	   // Source: http://php.net/manual/fr/function.strftime.php
@@ -700,12 +688,12 @@ class utils
 	}
 	
 	/**
-	 * Convert an old date/time format specifciation (using % placeholders)
+	 * Convert an old date/time format specification (using % placeholders)
 	 * to a format compatible with DateTime::createFromFormat
 	 * @param string $sOldDateTimeFormat
 	 * @return string
 	 */
-	static public function DateTimeFormatToPHP($sOldDateTimeFormat)
+	public static function DateTimeFormatToPHP($sOldDateTimeFormat)
 	{
 		$aSearch = array('%d', '%m', '%y', '%Y', '%H', '%i', '%s');
 		$aReplacement = array('d', 'm', 'y', 'Y', 'H', 'i', 's');
@@ -713,8 +701,8 @@ class utils
 	}
 
 	/**
+	 * Allow to set cached config. Useful when running with {@link Parameters} for example.
 	 * @param \Config $oConfig
-	 *
 	 */
 	public static function SetConfig(Config $oConfig)
 	{
@@ -789,7 +777,7 @@ class utils
      *
      * @throws \Exception
      */
-	static public function GetAbsoluteUrlAppRoot()
+	public static function GetAbsoluteUrlAppRoot()
 	{
 		static $sUrl = null;
 		if ($sUrl === null)
@@ -824,7 +812,7 @@ class utils
      *
      * @throws \Exception
      */
-    static public function GetDefaultUrlAppRoot()
+    public static function GetDefaultUrlAppRoot()
 	{
 		// Build an absolute URL to this page on this server/port
 		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
@@ -899,7 +887,7 @@ class utils
 	 * nginx set it to an empty string
 	 * Others might leave it unset (no array entry)	 
 	 */	 	
-	static public function IsConnectionSecure()
+	public static function IsConnectionSecure()
 	{
 		$bSecured = false;
 
@@ -954,10 +942,16 @@ class utils
 	 * @param string $sScript Name and relative path to the file (relative to the iTop root dir)
 	 * @param hash $aArguments Associative array of 'arg' => 'value'
 	 * @return array(iCode, array(output lines))
-	 */	 	  
-	/**
 	 */
-	static function ExecITopScript($sScriptName, $aArguments)
+	/**
+	 * @param string $sScriptName
+	 * @param array $aArguments
+	 *
+	 * @return array
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public static function ExecITopScript($sScriptName, $aArguments)
 	{
 		$aDisabled = explode(', ', ini_get('disable_functions'));
 		if (in_array('exec', $aDisabled))
@@ -1042,25 +1036,33 @@ class utils
 	}
 
 	/**
-	 * Returns a path to a folder into which any module can store cache data
+	 * @return string A path to a folder into which any module can store cache data
 	 * The corresponding folder is created or cleaned upon code compilation
-	 * @return string
 	 */
 	public static function GetCachePath()
 	{
 		return APPROOT.'data/cache-'.MetaModel::GetEnvironment().'/';
 	}
 	/**
-	 * Returns a path to a folder into which any module can store log
-	 * @return string
+	 * @return string A path to a folder into which any module can store log
 	 * @since 2.7.0
 	 */
 	public static function GetLogPath()
 	{
 		return APPROOT.'log/';
 	}
+
 	/**
 	 * Merge standard menu items with plugin provided menus items
+	 *
+	 * @param \WebPage $oPage
+	 * @param int $iMenuId
+	 * @param \DBObjectSet $param
+	 * @param array $aActions
+	 * @param string $sTableId
+	 * @param string $sDataTableId
+	 *
+	 * @throws \Exception
 	 */
 	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions, $sTableId = null, $sDataTableId = null)
 	{
@@ -1190,7 +1192,10 @@ class utils
 			}
 		}
 	}
+
 	/**
+	 * @param string $sEnvironment
+	 *
 	 * @return string target configuration file name (including full path)
 	 */
 	public static function GetConfigFilePath($sEnvironment = null)
@@ -1201,7 +1206,10 @@ class utils
 		}
 		return APPCONF.$sEnvironment.'/'.ITOP_CONFIG_FILE;
 	}
+
 	/**
+	 * @param string $sEnvironment
+	 *
 	 * @return string target configuration file name (including relative path)
 	 */
 	public static function GetConfigFilePathRelative($sEnvironment = null)
@@ -1213,10 +1221,11 @@ class utils
 		return "conf/".$sEnvironment.'/'.ITOP_CONFIG_FILE;
 	}
 
-    /**
-     * @return string the absolute URL to the modules root path
-     */                   
-	static public function GetAbsoluteUrlModulesRoot()
+	/**
+	 * @return string the absolute URL to the modules root path
+	 * @throws \Exception
+	 */
+	public static function GetAbsoluteUrlModulesRoot()
 	{
 		$sUrl = self::GetAbsoluteUrlAppRoot().'env-'.self::GetCurrentEnvironment().'/';
 		return $sUrl;
@@ -1231,17 +1240,20 @@ class utils
 	 * require_once(__DIR__.'/../../approot.inc.php');
 	 * ```
 	 *
-	 * @param string $sModule
-	 * @param string $sPage
+	 * @see GetExecPageArguments can be used to submit using the GET method (see bug in N.1108)
+	 * @see GetAbsoluteUrlExecPage
+	 *
 	 * @param string[] $aArguments
 	 * @param string $sEnvironment
 	 *
+	 * @param string $sModule
+	 * @param string $sPage
+	 *
 	 * @return string the URL to a page that will execute the requested module page, with query string values url encoded
 	 *
-	 * @see GetExecPageArguments can be used to submit using the GET method (see bug in N.1108)
-	 * @see GetAbsoluteUrlExecPage
+	 * @throws \Exception
 	 */
-	static public function GetAbsoluteUrlModulePage($sModule, $sPage, $aArguments = array(), $sEnvironment = null)
+	public static function GetAbsoluteUrlModulePage($sModule, $sPage, $aArguments = array(), $sEnvironment = null)
 	{
 		$aArgs = self::GetExecPageArguments($sModule, $sPage, $aArguments, $sEnvironment);
 		$sArgs = http_build_query($aArgs);
@@ -1258,7 +1270,7 @@ class utils
 	 * @return string[] key/value pair for the exec page query string. <b>Warning</b> : values are not url encoded !
 	 * @throws \Exception if one of the argument has a reserved name
 	 */
-	static public function GetExecPageArguments($sModule, $sPage, $aArguments = array(), $sEnvironment = null)
+	public static function GetExecPageArguments($sModule, $sPage, $aArguments = array(), $sEnvironment = null)
 	{
 		$sEnvironment = is_null($sEnvironment) ? self::GetCurrentEnvironment() : $sEnvironment;
 		$aArgs = array();
@@ -1279,18 +1291,20 @@ class utils
 
 	/**
 	 * @return string
+	 * @throws \Exception
 	 */
-	static public function GetAbsoluteUrlExecPage()
+	public static function GetAbsoluteUrlExecPage()
 	{
 		return self::GetAbsoluteUrlAppRoot().'pages/exec.php';
 	}
 
 	/**
-	 * Returns a name unique amongst the given list
 	 * @param string $sProposed The default value
-	 * @param array  $aExisting An array of existing values (strings)	 	 
+	 * @param array $aExisting An array of existing values (strings)
+	 *
+	 * @return string a unique name amongst the given list
 	 */
-	static public function MakeUniqueName($sProposed, $aExisting)
+	public static function MakeUniqueName($sProposed, $aExisting)
 	{
 		if (in_array($sProposed, $aExisting))
 		{
@@ -1312,7 +1326,7 @@ class utils
 	 * @param string $sId The ID to sanitize
 	 * @return string The sanitized ID
 	 */
-	static public function GetSafeId($sId)
+	public static function GetSafeId($sId)
 	{
 		return str_replace(array(':', '[', ']', '+', '-'), '_', $sId);
 	}
@@ -1334,7 +1348,7 @@ class utils
 	 * @return string The result of the POST request
 	 * @throws Exception with a specific error message depending on the cause
 	 */ 
-	static public function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null, $aCurlOptions = array())
+	public static function DoPostRequest($sUrl, $aData, $sOptionnalHeaders = null, &$aResponseHeaders = null, $aCurlOptions = array())
 	{
 		// $sOptionnalHeaders is a string containing additional HTTP headers that you would like to send in your request.
 	
@@ -1477,7 +1491,7 @@ class utils
 	 * @param string $sValue
 	 * @return string
 	 */
-	static public function HtmlEntities($sValue)
+	public static function HtmlEntities($sValue)
 	{
 		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
 	}
@@ -1520,7 +1534,7 @@ class utils
 	 * @param array $aImportPaths Array of absolute paths to load imports from
 	 * @return string Relative path to the CSS file (<name>.css)
 	 */
-	static public function GetCSSFromSASS($sSassRelPath, $aImportPaths = null)
+	public static function GetCSSFromSASS($sSassRelPath, $aImportPaths = null)
 	{
 		// Avoiding compilation if file is already a css file.
 		if (preg_match('/\.css(\?.*)?$/', $sSassRelPath))
@@ -1554,7 +1568,7 @@ class utils
 		return $sCssRelPath;
 	}
 	
-	static public function GetImageSize($sImageData)
+	public static function GetImageSize($sImageData)
 	{
 		if (function_exists('getimagesizefromstring')) // PHP 5.4.0 or higher
 		{
@@ -1677,7 +1691,7 @@ class utils
 	 * @param string $sPrefix
 	 * @return string
 	 */
-	static public function CreateUUID($sPrefix = '')
+	public static function CreateUUID($sPrefix = '')
 	{
 		$uid = uniqid("", true);
 		$data = $sPrefix;
@@ -1701,10 +1715,10 @@ class utils
 	/**
 	 * Returns the name of the module containing the file where the call to this function is made
 	 * or an empty string if no such module is found (or not called within a module file)
-	 * @param number $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
+	 * @param int $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
 	 * @return string
 	 */
-	static public function GetCurrentModuleName($iCallDepth = 0)
+	public static function GetCurrentModuleName($iCallDepth = 0)
 	{
 		$sCurrentModuleName = '';
 		$aCallStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
@@ -1733,7 +1747,7 @@ class utils
 	 * @param number $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
 	 * @return string
 	 */
-	static public function GetCurrentModuleDir($iCallDepth)
+	public static function GetCurrentModuleDir($iCallDepth)
 	{
 		$sCurrentModuleDir = '';
 		$aCallStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
@@ -1754,13 +1768,13 @@ class utils
 		}
 		return $sCurrentModuleDir;
 	}
-	
+
 	/**
-	 * Returns the base URL for all files in the current module from which this method is called
+	 * @return string the base URL for all files in the current module from which this method is called
 	 * or an empty string if no such module is found (or not called within a module file)
-	 * @return string
+	 * @throws \Exception
 	 */
-	static public function GetCurrentModuleUrl()
+	public static function GetCurrentModuleUrl()
 	{
 		$sDir = static::GetCurrentModuleDir(1);
 		if ( $sDir !== '')
@@ -1771,23 +1785,21 @@ class utils
 	}
 	
 	/**
-	 * Get the value of a given setting for the current module
 	 * @param string $sProperty The name of the property to retrieve
 	 * @param mixed $defaultvalue
-	 * @return mixed
+	 * @return mixed the value of a given setting for the current module
 	 */
-	static public function GetCurrentModuleSetting($sProperty, $defaultvalue = null)
+	public static function GetCurrentModuleSetting($sProperty, $defaultvalue = null)
 	{
 		$sModuleName = static::GetCurrentModuleName(1);
 		return MetaModel::GetModuleSetting($sModuleName, $sProperty, $defaultvalue);
 	}
 	
 	/**
-	 * Get the compiled version of a given module, as it was seen by the compiler
 	 * @param string $sModuleName
-	 * @return string|NULL
+	 * @return string|NULL compiled version of a given module, as it was seen by the compiler
 	 */
-	static public function GetCompiledModuleVersion($sModuleName)
+	public static function GetCompiledModuleVersion($sModuleName)
 	{
 		$aModulesInfo = GetModulesInfo();
 		if (array_key_exists($sModuleName, $aModulesInfo))
@@ -2001,10 +2013,9 @@ class utils
 	}
 	
 	/**
-	 * Return a string based on compilation time or (if not available because the datamodel has not been loaded)
+	 * @return string a string based on compilation time or (if not available because the datamodel has not been loaded)
 	 * the version of iTop. This string is useful to prevent browser side caching of content that may vary at each
-	 * (re)installation of iTop (especially during development). 
-	 * @return string
+	 * (re)installation of iTop (especially during development).
 	 */
 	public static function GetCacheBusterTimestamp()
 	{
@@ -2021,6 +2032,8 @@ class utils
 	 * @param $sClass
 	 *
 	 * @return bool
+	 * @throws \ConfigException
+	 * @throws \CoreException
 	 */
 	public static function IsHighCardinality($sClass)
 	{
@@ -2083,7 +2096,7 @@ class utils
 	 *
 	 * @return bool
 	 */
-	public final static function StartsWith($haystack, $needle)
+	final public static function StartsWith($haystack, $needle)
 	{
 		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
 	}
@@ -2095,7 +2108,7 @@ class utils
 	 *
 	 * @return bool
 	 */
-	public final static function EndsWith($haystack, $needle) {
+	final public static function EndsWith($haystack, $needle) {
 		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
 	}
 }
