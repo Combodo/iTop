@@ -6250,6 +6250,9 @@ abstract class MetaModel
 	{
 		self::$m_oConfig = $oConfiguration;
 
+		// N°2478 not necessary (MetaModel should always be called before using cache) but this is a precaution O:)
+		utils::SetConfig($oConfiguration);
+
 		// Set log ASAP
 		if (self::$m_oConfig->GetLogGlobal())
 		{

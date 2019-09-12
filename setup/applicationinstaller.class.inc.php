@@ -57,8 +57,7 @@ class ApplicationInstaller
 
 		$aParamValues = $oParams->GetParamForConfigArray();
 		$oConfig = new Config();
-		$sTargetDir = $this->GetTargetDir();
-		$oConfig->UpdateFromParams($aParamValues, $sTargetDir);
+		$oConfig->UpdateFromParams($aParamValues, null);
 		utils::SetConfig($oConfig);
 	}
 

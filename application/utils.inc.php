@@ -727,7 +727,7 @@ class utils
 		if (file_exists($sCurrentEnvConfigPath))
 		{
 			$oCurrentEnvDiskConfig = new Config($sCurrentEnvConfigPath);
-			self::$oConfig = $oCurrentEnvDiskConfig;
+			self::SetConfig($oCurrentEnvDiskConfig);
 			return self::$oConfig;
 		}
 
@@ -735,7 +735,7 @@ class utils
 		if (file_exists($sProductionEnvConfigPath))
 		{
 			$oProductionEnvDiskConfig = new Config($sProductionEnvConfigPath);
-			self::$oConfig = $oProductionEnvDiskConfig;
+			self::SetConfig($oProductionEnvDiskConfig);
 			return self::$oConfig;
 		}
 
