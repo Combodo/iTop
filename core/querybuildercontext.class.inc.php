@@ -34,7 +34,19 @@ class QueryBuilderContext
 
 	public $m_oQBExpressions;
 
-	public function __construct($oFilter, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
+	/**
+	 * QueryBuilderContext constructor.
+	 *
+	 * @param $oFilter
+	 * @param $aModifierProperties
+	 * @param array $aGroupByExpr
+	 * @param array $aSelectedClasses
+	 * @param array $aSelectExpr
+	 * @param array $aAttToLoad
+	 *
+	 * @throws \CoreException
+	 */
+	public function __construct($oFilter, $aModifierProperties, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null, $aAttToLoad = null)
 	{
 		$this->m_oRootFilter = $oFilter;
 		$this->m_oQBExpressions = new QueryBuilderExpressions($oFilter, $aGroupByExpr, $aSelectExpr);
@@ -52,6 +64,44 @@ class QueryBuilderContext
 		{
 			// For the unions, the selected classes can be upper in the hierarchy (lowest common ancestor)
 			$this->m_aSelectedClasses = $aSelectedClasses;
+		}
+
+		// Add all the attribute of interest
+		foreach ($this->m_aSelectedClasses as $sClassAlias => $sClass)
+		{
+			// default to the whole list of attributes + the very std id/finalclass
+			$this->m_oQBExpressions->AddSelect($sClassAlias.'id', new FieldExpression('id', $sClassAlias));
+			if (is_null($aAttToLoad) || !array_key_exists($sClassAlias, $aAttToLoad))
+			{
+				$sSelectedClass = $this->GetSelectedClass($sClassAlias);
+				$aAttList = MetaModel::ListAttributeDefs($sSelectedClass);
+			}
+			else
+			{
+				$aAttList = $aAttToLoad[$sClassAlias];
+			}
+			foreach ($aAttList as $sAttCode => $oAttDef)
+			{
+				if (!$oAttDef->IsScalar())
+				{
+					continue;
+				}
+				// keep because it can be used for sorting - if (!$oAttDef->LoadInObject()) continue;
+
+				if ($oAttDef->IsBasedOnOQLExpression())
+				{
+					$oExpression = new FieldExpression($sAttCode, $sClassAlias);
+					$this->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode, $oExpression);
+				}
+				else
+				{
+					foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
+					{
+						$oExpression = new FieldExpression($sAttCode.$sColId, $sClassAlias);
+						$this->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode.$sColId, $oExpression);
+					}
+				}
+			}
 		}
 	}
 

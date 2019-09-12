@@ -119,14 +119,21 @@ class QueryBuilderExpressions
 		return $aTables;
 	}
 
-	public function GetUnresolvedFields($sAlias, &$aUnresolved)
+	/**
+	 * @param $sAlias
+	 *
+	 * @return array of unresolved fields
+	 */
+	public function GetUnresolvedFields($sAlias)
 	{
+		$aUnresolved = array();
 		$this->m_oConditionExpr->GetUnresolvedFields($sAlias, $aUnresolved);
+
 		foreach ($this->m_aSelectExpr as $sColAlias => $oExpr)
 		{
 			$oExpr->GetUnresolvedFields($sAlias, $aUnresolved);
 		}
-		if ($this->m_aGroupByExpr)
+		if (!empty($this->m_aGroupByExpr))
 		{
 			foreach ($this->m_aGroupByExpr as $sColAlias => $oExpr)
 			{
@@ -137,6 +144,7 @@ class QueryBuilderExpressions
 		{
 			$oExpression->GetUnresolvedFields($sAlias, $aUnresolved);
 		}
+		return $aUnresolved;
 	}
 
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)

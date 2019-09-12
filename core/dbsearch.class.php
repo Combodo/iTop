@@ -951,7 +951,7 @@ abstract class DBSearch
 			$e->addInfo('OQL', $this->ToOQL());
 			throw $e;
 		}
-		$this->AddQueryTraceGroupBy($aArgs, $aGroupByExpr, $sRes);
+		$this->AddQueryTraceGroupBy($aArgs, $aGroupByExpr, $bExcludeNullValues, $aSelectExpr, $aOrderBy, $iLimitCount, $iLimitStart, $sRes);
 		return $sRes;
 	}
 
@@ -1282,7 +1282,7 @@ abstract class DBSearch
 				if ($hLogFile !== false)
 				{
 					flock($hLogFile, LOCK_EX);
-					fwrite($hLogFile, serialize($aQueryData)."\n");
+					fwrite($hLogFile, base64_encode(serialize($aQueryData))."\n");
 					fflush($hLogFile);
 					flock($hLogFile, LOCK_UN);
 					fclose($hLogFile);
@@ -1291,27 +1291,53 @@ abstract class DBSearch
 		}
 	}
 
-    /**
-     * @internal
-     *
-     * @param $aArgs
-     * @param $aGroupByExpr
-     * @param $sSql
-     *
-     * @throws MySQLException
-     */
-	protected function AddQueryTraceGroupBy($aArgs, $aGroupByExpr, $sSql)
+	/**
+	 * @internal
+	 *
+	 * @param $aArgs
+	 * @param $aGroupByExpr
+	 * @param $bExcludeNullValues
+	 * @param $aSelectExpr
+	 * @param $aOrderBy
+	 * @param $iLimitCount
+	 * @param $iLimitStart
+	 * @param $sSql
+	 *
+	 * @throws \MySQLException
+	 */
+	protected function AddQueryTraceGroupBy($aArgs, $aGroupByExpr, $bExcludeNullValues, $aSelectExpr, $aOrderBy, $iLimitCount, $iLimitStart, $sSql)
 	{
-		if (self::$m_bTraceQueries)
+		if (self::$m_bTraceQueries || (utils::GetConfig()->Get('log_kpi_record_oql') == 1))
 		{
 			$aQueryData = array(
 				'type' => 'group_by',
 				'filter' => $this,
+				'order_by' => $aOrderBy,
 				'args' => $aArgs,
-				'group_by_expr' => $aGroupByExpr
+				'group_by_expr' => $aGroupByExpr,
+				'exclude_null_values' => $bExcludeNullValues,
+				'select_expr' => $aSelectExpr,
+				'limit_count' => $iLimitCount,
+				'limit_start' => $iLimitStart,
 			);
 			$sOql = $this->ToOQL(true, $aArgs);
 			self::AddQueryTrace($aQueryData, $sOql, $sSql);
+			if (utils::GetConfig()->Get('log_kpi_record_oql') == 1)
+			{
+				$aQueryData['oql'] = $sOql;
+				unset($aQueryData['filter']);
+
+				$hLogFile = @fopen(APPROOT.'log/oql_group_by_records.txt', 'a');
+				if ($hLogFile !== false)
+				{
+					flock($hLogFile, LOCK_EX);
+					fwrite($hLogFile, base64_encode(serialize($aQueryData))."\n");
+					fflush($hLogFile);
+					flock($hLogFile, LOCK_UN);
+					fclose($hLogFile);
+				}
+			}
+
 		}
 	}
 
