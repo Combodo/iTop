@@ -6250,7 +6250,8 @@ abstract class MetaModel
 	{
 		self::$m_oConfig = $oConfiguration;
 
-		// N°2478 not necessary (MetaModel should always be called before using cache) but this is a precaution O:)
+		// N°2478 utils has his own private attribute
+		// @see utils::GetConfig : it always call MetaModel, but to be sure we're doing this extra copy anyway O:)
 		utils::SetConfig($oConfiguration);
 
 		// Set log ASAP
