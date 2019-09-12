@@ -178,7 +178,7 @@ EOF
 		}
 	}
 
-	function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
+	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
 		// Standard Header with name, actions menu and history block
 		//
@@ -369,7 +369,7 @@ EOF
 		);
 	}
 
-	function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
+	public function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
 	{
 		// history block (with as a tab)
 		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
@@ -380,7 +380,7 @@ EOF
 		$oBlock->Display($oPage, 'history');
 	}
 
-	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
+	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
 		$aFieldsMap = $this->GetBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
 
@@ -463,7 +463,7 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		$aRedundancySettings = $this->FindVisibleRedundancySettings();
 
@@ -700,7 +700,7 @@ EOF
 		}
 	}
 
-	function GetBareProperties(WebPage $oPage, $bEditMode, $sPrefix, $aExtraParams = array())
+	public function GetBareProperties(WebPage $oPage, $bEditMode, $sPrefix, $aExtraParams = array())
 	{
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		$sClass = get_class($this);
@@ -961,7 +961,7 @@ EOF
 		}
 	}
 
-	function DisplayPreview(WebPage $oPage)
+	public function DisplayPreview(WebPage $oPage)
 	{
 		$aDetails = array();
 		$sClass = get_class($this);
@@ -1275,12 +1275,12 @@ EOF
 		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
 
-	static function DisplaySetAsCSV(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
+	public static function DisplaySetAsCSV(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
 	{
 		$oPage->add(self::GetSetAsCSV($oSet, $aParams, $sCharset));
 	}
 
-	static function GetSetAsCSV(DBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
+	public static function GetSetAsCSV(DBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
 	{
 		$sSeparator = isset($aParams['separator']) ? $aParams['separator'] : ','; // default separator is comma
 		$sTextQualifier = isset($aParams['text_qualifier']) ? $aParams['text_qualifier'] : '"'; // default text qualifier is double quote
@@ -1409,7 +1409,7 @@ EOF
 		return $sHtml;
 	}
 
-	static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
+	public static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$oPage->add(self::GetSetAsHTMLSpreadsheet($oSet, $aParams));
 	}
@@ -1418,7 +1418,7 @@ EOF
 	 * Spreadsheet output: designed for end users doing some reporting
 	 * Then the ids are excluded and replaced by the corresponding friendlyname
 	 */
-	static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
+	public static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
 	{
 		$aFields = null;
 		if (isset($aParams['fields']) && (strlen($aParams['fields']) > 0))
@@ -1602,7 +1602,7 @@ EOF
 		return $sHtml;
 	}
 
-	static function DisplaySetAsXML(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
+	public static function DisplaySetAsXML(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$bLocalize = true;
 		if (isset($aParams['localize_values']))
@@ -2864,7 +2864,7 @@ EOF
 		return $aDetails;
 	}
 
-	static function FlattenZList($aList)
+	public static function FlattenZList($aList)
 	{
 		$aResult = array();
 		foreach($aList as $value)
