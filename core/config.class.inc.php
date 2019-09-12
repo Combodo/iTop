@@ -2056,7 +2056,7 @@ class Config
 	 * selected modules
 	 *
 	 * @param string $sModulesDir The relative path to the directory to scan for modules (typically the 'env-xxx'
-	 *     directory resulting from the compilation)
+	 *     directory resulting from the compilation). If null nothing will be done.
 	 * @param array $aSelectedModules An array of selected modules' identifiers. If null all modules found will be
 	 *     considered as installed
 	 *
@@ -2064,51 +2064,53 @@ class Config
 	 */
 	public function UpdateIncludes($sModulesDir, $aSelectedModules = null)
 	{
-		if (!is_null($sModulesDir))
+		if ($sModulesDir === null)
 		{
-			// Initialize the arrays below with default values for the application...
-			$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
-			$aAddOns = $oEmptyConfig->GetAddOns();
+			return;
+		}
 
-			$aModules = ModuleDiscovery::GetAvailableModules(array(APPROOT.$sModulesDir));
-			foreach ($aModules as $sModuleId => $aModuleInfo)
+		// Initialize the arrays below with default values for the application...
+		$oEmptyConfig = new Config('dummy_file', false); // Do NOT load any config file, just set the default values
+		$aAddOns = $oEmptyConfig->GetAddOns();
+
+		$aModules = ModuleDiscovery::GetAvailableModules(array(APPROOT.$sModulesDir));
+		foreach ($aModules as $sModuleId => $aModuleInfo)
+		{
+			list ($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+			if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules))
 			{
-				list ($sModuleName, $sModuleVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-				if (is_null($aSelectedModules) || in_array($sModuleName, $aSelectedModules))
+				if (isset($aModuleInfo['settings']))
 				{
-					if (isset($aModuleInfo['settings']))
+					list ($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
+					foreach ($aModuleInfo['settings'] as $sProperty => $value)
 					{
-						list ($sName, $sVersion) = ModuleDiscovery::GetModuleName($sModuleId);
-						foreach ($aModuleInfo['settings'] as $sProperty => $value)
+						if (isset($this->m_aModuleSettings[$sName][$sProperty]))
 						{
-							if (isset($this->m_aModuleSettings[$sName][$sProperty]))
-							{
-								// Do nothing keep the original value
-							}
-							else
-							{
-								$this->SetModuleSetting($sName, $sProperty, $value);
-							}
+							// Do nothing keep the original value
 						}
-					}
-					if (isset($aModuleInfo['installer']))
-					{
-						$sModuleInstallerClass = $aModuleInfo['installer'];
-						if (!class_exists($sModuleInstallerClass))
+						else
 						{
-							throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
+							$this->SetModuleSetting($sName, $sProperty, $value);
 						}
-						if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
-						{
-							throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
-						}
-						$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
-						call_user_func_array($aCallSpec, array($this));
 					}
 				}
+				if (isset($aModuleInfo['installer']))
+				{
+					$sModuleInstallerClass = $aModuleInfo['installer'];
+					if (!class_exists($sModuleInstallerClass))
+					{
+						throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not a PHP class - Module: ".$aModuleInfo['label']);
+					}
+					if (!is_subclass_of($sModuleInstallerClass, 'ModuleInstallerAPI'))
+					{
+						throw new Exception("Wrong installer class: '$sModuleInstallerClass' is not derived from 'ModuleInstallerAPI' - Module: ".$aModuleInfo['label']);
+					}
+					$aCallSpec = array($sModuleInstallerClass, 'BeforeWritingConfig');
+					call_user_func_array($aCallSpec, array($this));
+				}
 			}
-			$this->SetAddOns($aAddOns);
 		}
+		$this->SetAddOns($aAddOns);
 	}
 
     /**
