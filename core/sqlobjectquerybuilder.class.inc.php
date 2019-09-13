@@ -183,9 +183,6 @@ class SQLObjectQueryBuilder
 		// -> ext keys required for a friendly name
 		//
 		$aExtKeys = array(); // array of sTableClass => array of (sAttCode (keys) => array of (sAttCode (fields)=> oAttDef))
-		//
-		// Optimization: could be partially computed once for all (cached) ?
-		//
 
 		// Get all Ext keys used by the filter
 		foreach ($this->oDBObjetSearch->GetCriteria_PointingTo() as $sKeyAttCode => $aPointingTo)
@@ -416,7 +413,7 @@ class SQLObjectQueryBuilder
 			}
 		}
 
-		// Additional JOINS for Friendly names
+		// Additional JOINS for polymorphic expressions (friendlyname, obsolescenceflag...)
 		//
 		foreach ($aFNJoinAlias as $sSubClass => $sSubClassAlias)
 		{
@@ -464,14 +461,11 @@ class SQLObjectQueryBuilder
 
 		$bIsOnQueriedClass = array_key_exists($sTargetAlias, $oBuild->GetRootFilter()->GetSelectedClasses());
 
-		//self::DbgTrace("Entering: tableclass=$sTableClass, filter=".$this->oDBObjetSearch->ToOQL().", ".($bIsOnQueriedClass ? "MAIN" : "SECONDARY"));
-
 		// 1 - SELECT and UPDATE
 		//
 		// Note: no need for any values nor fields for foreign Classes (ie not the queried Class)
 		//
 		$aUpdateValues = array();
-
 
 		// 1/a - Get the key and friendly name
 		//
@@ -486,7 +480,7 @@ class SQLObjectQueryBuilder
 			$oSelectedIdField = $oIdField;
 		}
 
-		// 1/b - Get the other attributes
+		// 1/b - Prepare Update attributes
 		//
 		foreach(MetaModel::ListAttributeDefs($sTableClass) as $sAttCode=>$oAttDef)
 		{
@@ -557,7 +551,7 @@ class SQLObjectQueryBuilder
 				$aPointingTo = $this->oDBObjetSearch->GetCriteria_PointingTo($sKeyAttCode);
 				if (!array_key_exists(TREE_OPERATOR_EQUALS, $aPointingTo))
 				{
-					// The join was not explicitely defined in the filter,
+					// The join was not explicitly defined in the filter,
 					// we need to do it now
 					$sKeyClass =  $oKeyAttDef->GetTargetClass();
 					$sKeyClassAlias = $oBuild->GenerateClassAlias($sKeyClass.'_'.$sKeyAttCode, $sKeyClass);
