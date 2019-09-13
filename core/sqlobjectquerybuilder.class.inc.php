@@ -54,7 +54,11 @@ class SQLObjectQueryBuilder
 		}
 
 		$oBuild = new QueryBuilderContext($this->oDBObjetSearch, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr, $aAttToLoad);
+		$oOQLClassTreeBuilder = new OQLClassTreeBuilder($this->oDBObjetSearch, $oBuild);
+		$oOQLQuery = $oOQLClassTreeBuilder->DevelopOQLClassNode();
 
+
+		$oBuild = new QueryBuilderContext($this->oDBObjetSearch, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr, $aAttToLoad);
 		$oSQLQuery = $this->MakeSQLObjectQueryRoot($oBuild, $aAttToLoad, array(), $aGroupByExpr, $aSelectExpr);
 
 		return $oSQLQuery;
@@ -158,11 +162,13 @@ class SQLObjectQueryBuilder
 		return $oSQLQuery;
 	}
 
+
 	/**
 	 * @param \QueryBuilderContext $oBuild
 	 * @param null $aAttToLoad
 	 * @param array $aValues
-	 * @return null|SQLObjectQuery
+	 *
+	 * @return \SQLObjectQuery|null
 	 * @throws \CoreException
 	 */
 	private function MakeSQLObjectQuery($oBuild, $aAttToLoad = null, $aValues = array())

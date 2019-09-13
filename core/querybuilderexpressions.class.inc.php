@@ -122,7 +122,7 @@ class QueryBuilderExpressions
 	/**
 	 * @param $sAlias
 	 *
-	 * @return array of unresolved fields
+	 * @return \FieldExpression[] of unresolved fields
 	 */
 	public function GetUnresolvedFields($sAlias)
 	{
