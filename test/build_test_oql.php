@@ -43,19 +43,19 @@ $oOQLHandle = @fopen($sOQLFile, "r");
 if ($oOQLHandle) {
 	while (($sBuffer = fgets($oOQLHandle)) !== false) {
 		$iRead++;
-		$aRecord = unserialize($sBuffer);
+		$aRecord = unserialize(base64_decode($sBuffer));
 
 		$sOQL = $aRecord['oql'];
 
-		$sChecksum = md5($sOQL);
+		$sChecksum = md5($sOQL.serialize($aRecord['att_to_load']));
 		if (isset($aFoundOQLs[$sChecksum])) { continue; }
 		$aFoundOQLs[$sChecksum] = true;
 
 		$iCount++;
-		$sOrderBy = 'unserialize(\''.serialize($aRecord['order_by']).'\')';
-		$sArgs = 'unserialize(\''.serialize($aRecord['args']).'\')';
-		$sAttToLoad = 'unserialize(\''.serialize($aRecord['att_to_load']).'\')';
-		$sExtendedDataSpec = 'unserialize(\''.serialize($aRecord['extended_data_spec']).'\')';
+		$sOrderBy = ConvertArray($aRecord['order_by']);
+		$sArgs = ConvertArray($aRecord['args']);
+		$sAttToLoad = ConvertArray($aRecord['att_to_load']);
+		$sExtendedDataSpec = ConvertArray($aRecord['extended_data_spec']);
 		$iLimitCount = $aRecord['limit_count'];
 		$iLimitStart = $aRecord['limit_start'];
 
@@ -74,3 +74,77 @@ if ($oOQLHandle) {
 @fclose($oTestHandle);
 
 echo "File '$sTestFile' generated with $iCount entries (from $iRead captured OQL).\n";
+
+
+/// Group by
+
+
+$sOQLFile = APPROOT.'log/oql_group_by_records.txt';
+$sTestFile = APPROOT.'test/core/oql_group_by_records.php';
+
+$oTestHandle = @fopen($sTestFile, "w");
+
+@fwrite($oTestHandle, "<?php\n\n");
+
+$aFoundOQLs = array();
+$iCount = 1000;
+$iRead = 0;
+
+$oOQLHandle = @fopen($sOQLFile, "r");
+if ($oOQLHandle) {
+	while (($sBuffer = fgets($oOQLHandle)) !== false) {
+		$iRead++;
+		$aRecord = unserialize(base64_decode($sBuffer));
+
+		$sOQL = $aRecord['oql'];
+
+		$sChecksum = md5($sOQL.serialize($aRecord['group_by_expr']));
+		if (isset($aFoundOQLs[$sChecksum])) { continue; }
+		$aFoundOQLs[$sChecksum] = true;
+
+		$iCount++;
+		$sOrderBy = ConvertArray($aRecord['order_by']);
+		$sArgs = ConvertArray($aRecord['args']);
+		$sGroupByExpr = ConvertArray($aRecord['group_by_expr']);
+		$sSelectExpr = ConvertArray($aRecord['select_expr']);
+		if ($aRecord['exclude_null_values'])
+		{
+			$bExcludeNullValues = 'true';
+		}
+		else
+		{
+			$bExcludeNullValues = 'false';
+		}
+		$iLimitCount = $aRecord['limit_count'];
+		$iLimitStart = $aRecord['limit_start'];
+
+		// $sOQL, $aArgs, $aGroupByExpr, $bExcludeNullValues, $aSelectExpr, $aOrderBy, $iLimitCount, $iLimitStart
+
+		$sLine = "\$aData[\"SELECT $iCount\"] = array(\"$sOQL\", $sArgs, $sGroupByExpr, $bExcludeNullValues, $sSelectExpr, $sOrderBy, $iLimitCount, $iLimitStart);\n";
+		@fwrite($oTestHandle, $sLine);
+	}
+	if (!feof($oOQLHandle)) {
+		echo "Erreur: fgets() a échoué\n";
+	}
+	@fclose($oOQLHandle);
+}
+@fwrite($oTestHandle, "\n");
+
+@fclose($oTestHandle);
+
+echo "<br>File '$sTestFile' generated with ".($iCount-1000)." entries (from $iRead captured OQL).\n";
+
+function ConvertArray($aArray)
+{
+	if (is_null($aArray))
+	{
+		return 'null';
+	}
+
+	if (empty($aArray))
+	{
+		return 'array()';
+	}
+
+	return 'unserialize(base64_decode(\''.base64_encode(serialize($aArray)).'\'))';
+}
