@@ -505,6 +505,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'NiceWebPage' => __DIR__ . '/../..' . '/application/nicewebpage.class.inc.php',
         'OQLClassNode' => __DIR__ . '/../..' . '/core/oqlclassnode.class.inc.php',
         'OQLClassTreeBuilder' => __DIR__ . '/../..' . '/core/oqlclasstreebuilder.class.inc.php',
+        'OQLClassTreeOptimizer' => __DIR__ . '/../..' . '/core/oqlclasstreeoptimizer.class.inc.php',
         'OQLException' => __DIR__ . '/../..' . '/core/oql/oqlexception.class.inc.php',
         'OQLJoin' => __DIR__ . '/../..' . '/core/oqlclassnode.class.inc.php',
         'OQLLexer' => __DIR__ . '/../..' . '/core/oql/oql-lexer.php',

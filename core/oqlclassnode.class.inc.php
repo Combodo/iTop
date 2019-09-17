@@ -42,24 +42,24 @@ class OQLClassNode
 	}
 
 
-	public function AddInnerJoin($oOQLClassNode, $sLeftField, $sRightField)
+	public function AddInnerJoin($oOQLClassNode, $sLeftField, $sRightField, $bOutbound = true)
 	{
-		$this->AddJoin(OQLJoin::JOIN_INNER, $oOQLClassNode, $sLeftField, $sRightField);
+		$this->AddJoin(OQLJoin::JOIN_INNER, $oOQLClassNode, $sLeftField, $sRightField, $bOutbound);
 	}
 
-	public function AddLeftJoin($oOQLClassNode, $sLeftField, $sRightField)
+	public function AddLeftJoin($oOQLClassNode, $sLeftField, $sRightField, $bOutbound = true)
 	{
-		$this->AddJoin(OQLJoin::JOIN_LEFT, $oOQLClassNode, $sLeftField, $sRightField);
+		$this->AddJoin(OQLJoin::JOIN_LEFT, $oOQLClassNode, $sLeftField, $sRightField, $bOutbound);
 	}
 	
-	public function AddInnerJoinTree($oOQLClassNode, $sLeftField, $sRightField, $iOperatorCode = TREE_OPERATOR_BELOW, $bInvertOnClause = false)
+	public function AddInnerJoinTree($oOQLClassNode, $sLeftField, $sRightField, $bOutbound = true, $iOperatorCode = TREE_OPERATOR_BELOW, $bInvertOnClause = false)
 	{
-		$this->AddJoin(OQLJoin::JOIN_INNER_TREE, $oOQLClassNode, $sLeftField, $sRightField, $iOperatorCode, $bInvertOnClause);
+		$this->AddJoin(OQLJoin::JOIN_INNER_TREE, $oOQLClassNode, $sLeftField, $sRightField, $bOutbound, $iOperatorCode, $bInvertOnClause);
 	}
 
-	private function AddJoin($sJoinType, $oOQLClassNode, $sLeftField, $sRightField, $sTreeOperator = null, $bInvertOnClause = false)
+	private function AddJoin($sJoinType, $oOQLClassNode, $sLeftField, $sRightField, $bOutbound = true, $sTreeOperator = null, $bInvertOnClause = false)
 	{
-		$oOQLJoin = new OQLJoin($sJoinType, $oOQLClassNode, $sLeftField, $sRightField, $sTreeOperator, $bInvertOnClause);
+		$oOQLJoin = new OQLJoin($sJoinType, $oOQLClassNode, $sLeftField, $sRightField, $bOutbound, $sTreeOperator, $bInvertOnClause);
 		$this->aJoins[] = $oOQLJoin;
 		return $oOQLJoin;
 	}
@@ -110,6 +110,11 @@ class OQLClassNode
 		return $this->aJoins;
 	}
 
+	public function RemoveJoin($index)
+	{
+		unset($this->aJoins[$index]);
+	}
+
 }
 
 class OQLJoin
@@ -121,6 +126,8 @@ class OQLJoin
 	private $sJoinType;
 	/** @var \OQLClassNode */
 	private $oOQLClassNode;
+
+	private $bOutbound;
 	private $sLeftField;
 	private $sRightField;
 	private $sTreeOperator;
@@ -133,10 +140,11 @@ class OQLJoin
 	 * @param $oOQLClassNode
 	 * @param $sLeftField
 	 * @param $sRightField
+	 * @param bool $bOutbound
 	 * @param string $sTreeOperator
 	 * @param bool $bInvertOnClause
 	 */
-	public function __construct($sJoinType, $oOQLClassNode, $sLeftField, $sRightField, $sTreeOperator = null, $bInvertOnClause = false)
+	public function __construct($sJoinType, $oOQLClassNode, $sLeftField, $sRightField, $bOutbound = true, $sTreeOperator = null, $bInvertOnClause = false)
 	{
 		$this->sJoinType = $sJoinType;
 		$this->oOQLClassNode = $oOQLClassNode;
@@ -144,6 +152,7 @@ class OQLJoin
 		$this->sRightField = $sRightField;
 		$this->sTreeOperator = $sTreeOperator;
 		$this->bInvertOnClause = $bInvertOnClause;
+		$this->bOutbound = $bOutbound;
 	}
 
 	public function RenderDebug($sClassAlias, $sPrefix = "    ")
@@ -159,6 +168,22 @@ class OQLJoin
 		}
 
 		return $sOQL;
+	}
+
+	/**
+	 * @return \OQLClassNode
+	 */
+	public function GetOOQLClassNode()
+	{
+		return $this->oOQLClassNode;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsOutbound()
+	{
+		return $this->bOutbound;
 	}
 
 }

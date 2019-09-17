@@ -275,11 +275,11 @@ class OQLClassTreeBuilder
 
 							if ($oKeyAttDef->IsNullAllowed())
 							{
-								$this->oOQLClassNode->AddLeftJoin($oSelectExtKey, $sKeyAttCode, $sExternalKeyField);
+								$this->oOQLClassNode->AddLeftJoin($oSelectExtKey, $sKeyAttCode, $sExternalKeyField, true);
 							}
 							else
 							{
-								$this->oOQLClassNode->AddInnerJoin($oSelectExtKey, $sKeyAttCode, $sExternalKeyField);
+								$this->oOQLClassNode->AddInnerJoin($oSelectExtKey, $sKeyAttCode, $sExternalKeyField, true);
 							}
 						}
 					}
@@ -295,7 +295,7 @@ class OQLClassTreeBuilder
 						//$sExternalKeyTable = $oJoinExpr->GetParent();
 						$sExternalKeyField = $oJoinExpr->GetName();
 
-						$this->oOQLClassNode->AddInnerJoinTree($oSelectExtKey, $sKeyAttCode, $sExternalKeyField, $iOperatorCode);
+						$this->oOQLClassNode->AddInnerJoinTree($oSelectExtKey, $sKeyAttCode, $sExternalKeyField, true, $iOperatorCode);
 					}
 				}
 			}
@@ -343,12 +343,12 @@ class OQLClassTreeBuilder
 
 						if ($iOperatorCode == TREE_OPERATOR_EQUALS)
 						{
-							$this->oOQLClassNode->AddInnerJoin($oSelectForeign, $sKeyField, $sForeignKeyColumn);
+							$this->oOQLClassNode->AddInnerJoin($oSelectForeign, $sKeyField, $sForeignKeyColumn, false);
 						}
 						else
 						{
 							// Hierarchical key
-							$this->oOQLClassNode->AddInnerJoinTree($oSelectForeign, $sKeyField, $sForeignKeyColumn, $iOperatorCode, true);
+							$this->oOQLClassNode->AddInnerJoinTree($oSelectForeign, $sKeyField, $sForeignKeyColumn, false, $iOperatorCode, true);
 						}
 					}
 				}
@@ -371,7 +371,7 @@ class OQLClassTreeBuilder
 			$oSubClassFilter = new DBObjectSearch($sSubClass, $sSubClassAlias);
 			$oOQLClassTreeBuilder = new OQLClassTreeBuilder($oSubClassFilter, $this->oBuild);
 			$oSelectFN = $oOQLClassTreeBuilder->DevelopOQLClassNode();
-			$this->oOQLClassNode->AddLeftJoin($oSelectFN, $sKeyField, MetaModel::DBGetKey($sSubClass));
+			$this->oOQLClassNode->AddLeftJoin($oSelectFN, $sKeyField, MetaModel::DBGetKey($sSubClass), true);
 		}
 	}
 }

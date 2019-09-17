@@ -284,6 +284,7 @@ return array(
     'NiceWebPage' => $baseDir . '/application/nicewebpage.class.inc.php',
     'OQLClassNode' => $baseDir . '/core/oqlclassnode.class.inc.php',
     'OQLClassTreeBuilder' => $baseDir . '/core/oqlclasstreebuilder.class.inc.php',
+    'OQLClassTreeOptimizer' => $baseDir . '/core/oqlclasstreeoptimizer.class.inc.php',
     'OQLException' => $baseDir . '/core/oql/oqlexception.class.inc.php',
     'OQLJoin' => $baseDir . '/core/oqlclassnode.class.inc.php',
     'OQLLexer' => $baseDir . '/core/oql/oql-lexer.php',

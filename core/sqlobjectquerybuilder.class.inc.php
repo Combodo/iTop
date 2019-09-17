@@ -54,11 +54,6 @@ class SQLObjectQueryBuilder
 		}
 
 		$oBuild = new QueryBuilderContext($this->oDBObjetSearch, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr, $aAttToLoad);
-		$oOQLClassTreeBuilder = new OQLClassTreeBuilder($this->oDBObjetSearch, $oBuild);
-		$oOQLQuery = $oOQLClassTreeBuilder->DevelopOQLClassNode();
-
-
-		$oBuild = new QueryBuilderContext($this->oDBObjetSearch, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr, $aAttToLoad);
 		$oSQLQuery = $this->MakeSQLObjectQueryRoot($oBuild, $aAttToLoad, array(), $aGroupByExpr, $aSelectExpr);
 
 		return $oSQLQuery;
@@ -109,6 +104,15 @@ class SQLObjectQueryBuilder
 	 */
 	private function MakeSQLObjectQueryRoot($oBuild, $aAttToLoad = null, $aValues = array(), $aGroupByExpr = null, $aSelectExpr = null)
 	{
+//		$oOQLClassTreeBuilder = new OQLClassTreeBuilder($this->oDBObjetSearch, $oBuild);
+//		$oOQLClassNode = $oOQLClassTreeBuilder->DevelopOQLClassNode();
+//
+//		if ($this->bOptimizeQueries)
+//		{
+//			$oOQLClassTreeOptimizer = new OQLClassTreeOptimizer($oOQLClassNode, $oBuild);
+//			$oOQLClassTreeOptimizer->OptimizeClassTree();
+//		}
+
 		$oSQLQuery = $this->MakeSQLObjectQuery($oBuild, $aAttToLoad, $aValues);
 
 		/**
@@ -695,6 +699,19 @@ class SQLObjectQueryBuilder
 		}
 		return $oSelectBase;
 	}
+
+	/**
+	 * @param \QueryBuilderContext $oBuild
+	 * @param \OQLClassNode $oOQLClassNode
+	 * @param array $aValues
+	 * @return \SQLObjectQuery
+	 */
+//	private function MakeSQLObjectQueryNew($oBuild, $oOQLClassNode, $aValues)
+//	{
+//		$oSQLQuery = new SQLObjectQuery($sTable, $sTableAlias, array(), $bIsOnQueriedClass, $aUpdateValues, $oSelectedIdField);
+//
+//		return $oSQLQuery;
+//	}
 
 
 }
