@@ -3020,8 +3020,6 @@ abstract class DBObject implements iDisplay
 			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
 		}
 
-		$this->m_aChanges = array(); // reset attribute to avoid stack collisions
-
 		$iNbTryRemaining = 3;
 		while ($iNbTryRemaining > 0)
 		{
@@ -3034,6 +3032,7 @@ abstract class DBObject implements iDisplay
 			}
 			$aUpdateReentrance[$sKey] = true;
 
+			$this->m_aChanges = array(); // reset attribute to avoid stack collisions
 			try
 			{
 				CMDBSource::Query('START TRANSACTION');
@@ -3172,12 +3171,11 @@ abstract class DBObject implements iDisplay
 				$this->WriteExternalAttributes();
 
 				$this->m_aChanges = $this->ListChanges(); // N°2293 save changes for use in user callbacks
-
-				$this->AfterUpdate();
-
 				$this->m_bDirty = false;
 				$this->m_aTouchedAtt = array();
 				$this->m_aModifiedAtt = array();
+
+				$this->AfterUpdate();
 
 				// Reload to get the external attributes
 				if ($bHasANewExternalKeyValue)
