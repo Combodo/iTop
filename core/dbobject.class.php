@@ -134,6 +134,11 @@ abstract class DBObject implements iDisplay
 	 */
 	protected $m_aModifiedAtt = array();
 	/**
+	 * @var array attname => currentvalue Persists changes for {@link DBUpdate}
+	 * @since 2.7.0 N°2293
+	 */
+	protected $m_aChanges;
+	/**
 	 * @var array Set of Synch data related to this object
 	 * <ul>
 	 * <li>key: sourceId
@@ -3015,6 +3020,8 @@ abstract class DBObject implements iDisplay
 			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
 		}
 
+		$this->m_aChanges = array(); // reset attribute to avoid stack collisions
+
 		$iNbTryRemaining = 3;
 		while ($iNbTryRemaining > 0)
 		{
@@ -3163,6 +3170,8 @@ abstract class DBObject implements iDisplay
 
 				$this->DBWriteLinks();
 				$this->WriteExternalAttributes();
+
+				$this->m_aChanges = $this->ListChanges(); // N°2293 save changes for use in user callbacks
 
 				$this->AfterUpdate();
 
