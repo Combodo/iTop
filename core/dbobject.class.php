@@ -3590,7 +3590,7 @@ abstract class DBObject implements iDisplay
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
 		if (empty($sStateAttCode)) return array();
 
-		$sState = $this->Get(MetaModel::GetStateAttributeCode(get_class($this)));
+		$sState = $this->Get($sStateAttCode);
 		return MetaModel::EnumTransitions(get_class($this), $sState);
 	}
 
