@@ -128,12 +128,12 @@ class BrowseBrick extends PortalBrick
 		if($bIsAction1RankSet && $bIsAction2RankSet)
 		{
 			//If a1 == a2 return 0, if a1 > a2 return 1 else return -1 
-			return ($aAction1['rank'] === $aAction2['rank'] ? 0 : ($aAction1['rank'] > $aAction2['rank'] ? 1 : -1));
+			return ($aAction1['rank'] === $aAction2['rank'] ? $aAction1['default_rank'] - $aAction2['default_rank'] : $aAction1['rank'] - $aAction2['rank']);
 		}
 		else
 		{
 			//If a1 == a2 == null return 0, if a2 is null and not a1 return 1 else return -1
-			return ($bIsAction1RankSet === $bIsAction2RankSet ? 0 : ($bIsAction1RankSet ? 1 : -1));
+			return ($bIsAction1RankSet === $bIsAction2RankSet ? $aAction1['default_rank'] - $aAction2['default_rank'] : ($bIsAction1RankSet ? 1 : -1));
 		}
 	}
 
@@ -515,6 +515,7 @@ class BrowseBrick extends PortalBrick
 					if ($oLevelPropertyNode->hasChildNodes())
 					{
 						$aLevel[$sTagName] = array();
+						$iActionDefaultRank = 0;
 						/** @var \Combodo\iTop\DesignElement $oActionNode */
 						foreach ($oLevelPropertyNode->childNodes as $oActionNode)
 						{
@@ -592,7 +593,7 @@ class BrowseBrick extends PortalBrick
 											null, null, $oRuleNode);
 									}
 								}
-
+								$aTmpAction['default_rank'] = $iActionDefaultRank++;
 								$aLevel[$sTagName][$oActionNode->getAttribute('id')] = $aTmpAction;
 							}
 							else
