@@ -86,21 +86,8 @@ class QueryBuilderContext
 				{
 					continue;
 				}
-				// keep because it can be used for sorting - if (!$oAttDef->LoadInObject()) continue;
-
-				if ($oAttDef->IsBasedOnOQLExpression())
-				{
-					$oExpression = new FieldExpression($sAttCode, $sClassAlias);
-					$this->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode, $oExpression);
-				}
-				else
-				{
-					foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
-					{
-						$oExpression = new FieldExpression($sAttCode.$sColId, $sClassAlias);
-						$this->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode.$sColId, $oExpression);
-					}
-				}
+				$oExpression = new FieldExpression($sAttCode, $sClassAlias);
+				$this->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode, $oExpression);
 			}
 		}
 	}

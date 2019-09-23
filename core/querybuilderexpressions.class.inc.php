@@ -96,6 +96,16 @@ class QueryBuilderExpressions
 		array_push($this->m_aJoinFields, $oExpression);
 	}
 
+	public function AddJoinField($sName, Expression $oExpression)
+	{
+		$this->m_aJoinFields[$sName] = $oExpression;
+	}
+
+	public function GetJoinField($sName)
+	{
+		return isset($this->m_aJoinFields[$sName]) ? $this->m_aJoinFields[$sName] : null;
+	}
+
 	/**
 	 * Get tables representing the queried objects
 	 * Could be further optimized: when the first join is an outer join, then the rest can be omitted
@@ -122,9 +132,27 @@ class QueryBuilderExpressions
 	/**
 	 * @param $sAlias
 	 *
-	 * @return \FieldExpression[] of unresolved fields
+	 * @return FieldExpression[] of unresolved fields
 	 */
 	public function GetUnresolvedFields($sAlias)
+	{
+		$aUnresolved = $this->GetExpectedFields($sAlias);
+		foreach ($this->m_aJoinFields as $oExpression)
+		{
+			$oExpression->GetUnresolvedFields($sAlias, $aUnresolved);
+		}
+		return $aUnresolved;
+	}
+
+	/**
+	 * Get Expected fields from Select and Conditions
+	 * (Joins are excluded)
+	 *
+	 * @param string $sAlias
+	 *
+	 * @return FieldExpression[]
+	 */
+	public function GetExpectedFields($sAlias)
 	{
 		$aUnresolved = array();
 		$this->m_oConditionExpr->GetUnresolvedFields($sAlias, $aUnresolved);
@@ -139,10 +167,6 @@ class QueryBuilderExpressions
 			{
 				$oExpr->GetUnresolvedFields($sAlias, $aUnresolved);
 			}
-		}
-		foreach ($this->m_aJoinFields as $oExpression)
-		{
-			$oExpression->GetUnresolvedFields($sAlias, $aUnresolved);
 		}
 		return $aUnresolved;
 	}

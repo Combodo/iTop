@@ -282,6 +282,7 @@ return array(
     'NewObjectMenuNode' => $baseDir . '/application/menunode.class.inc.php',
     'NewsroomProviderBase' => $baseDir . '/application/newsroomprovider.class.inc.php',
     'NiceWebPage' => $baseDir . '/application/nicewebpage.class.inc.php',
+    'OQLActualClassTreeResolver' => $baseDir . '/core/oqlactualclasstreeresolver.class.inc.php',
     'OQLClassNode' => $baseDir . '/core/oqlclassnode.class.inc.php',
     'OQLClassTreeBuilder' => $baseDir . '/core/oqlclasstreebuilder.class.inc.php',
     'OQLClassTreeOptimizer' => $baseDir . '/core/oqlclasstreeoptimizer.class.inc.php',

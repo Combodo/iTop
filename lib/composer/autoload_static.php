@@ -503,6 +503,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'NewObjectMenuNode' => __DIR__ . '/../..' . '/application/menunode.class.inc.php',
         'NewsroomProviderBase' => __DIR__ . '/../..' . '/application/newsroomprovider.class.inc.php',
         'NiceWebPage' => __DIR__ . '/../..' . '/application/nicewebpage.class.inc.php',
+        'OQLActualClassTreeResolver' => __DIR__ . '/../..' . '/core/oqlactualclasstreeresolver.class.inc.php',
         'OQLClassNode' => __DIR__ . '/../..' . '/core/oqlclassnode.class.inc.php',
         'OQLClassTreeBuilder' => __DIR__ . '/../..' . '/core/oqlclasstreebuilder.class.inc.php',
         'OQLClassTreeOptimizer' => __DIR__ . '/../..' . '/core/oqlclasstreeoptimizer.class.inc.php',

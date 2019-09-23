@@ -29,10 +29,16 @@ class OQLClassTreeBuilder
 		$this->oDBObjetSearch = $oDBObjetSearch;
 		$this->sClass = $oDBObjetSearch->GetFirstJoinedClass();
 		$this->sClassAlias = $oDBObjetSearch->GetFirstJoinedClassAlias();
-		$this->oOQLClassNode = new OQLClassNode($this->sClass, $this->sClassAlias);
+		$this->oOQLClassNode = new OQLClassNode($oBuild, $this->sClass, $this->sClassAlias);
 	}
 
 	/**
+	 * Develop OQL.
+	 * Add joins from OQL (outgoing and incoming)
+	 * Add joins for polymorphic expressions (expressions using derived classes
+	 * instead of ancestor classes, i.e. friendly name and obsolescence flag)
+	 * Add joins for expected external keys and external fields
+	 * Behave recursively to build a tree of OQL class node
 	 *
 	 * @return \OQLClassNode
 	 * @throws \CoreException
@@ -40,12 +46,9 @@ class OQLClassTreeBuilder
 	 */
 	public function DevelopOQLClassNode()
 	{
-		// array of (attcode => fieldexpression)
-		$aExpectedAttributes = $this->oBuild->m_oQBExpressions->GetUnresolvedFields($this->sClassAlias);
-
 		$this->AddExternalKeysFromSearch();
-		$aPolymorphicJoinAlias = $this->TranslatePolymorphicExpressions($aExpectedAttributes);
-		$this->AddExpectedExternalFields($aExpectedAttributes);
+		$aPolymorphicJoinAlias = $this->TranslatePolymorphicExpressions();
+		$this->AddExpectedExternalFields();
 
 		$this->JoinClassesForExternalKeys();
 		$this->JoinClassesReferencedBy();
@@ -72,14 +75,16 @@ class OQLClassTreeBuilder
 	}
 
 	/**
-	 * @param array $aExpectedAttributes
 	 *
 	 * @return array of classes to join for polymorphic expressions
 	 *
 	 * @throws \CoreException
 	 */
-	private function TranslatePolymorphicExpressions($aExpectedAttributes)
+	private function TranslatePolymorphicExpressions()
 	{
+		// array of (attcode => fieldexpression)
+		$aExpectedAttributes = $this->oBuild->m_oQBExpressions->GetUnresolvedFields($this->sClassAlias);
+
 		$aPolymorphicJoinAlias = array(); // array of (subclass => alias)
 		foreach ($aExpectedAttributes as $sExpectedAttCode => $oExpression)
 		{
@@ -105,13 +110,19 @@ class OQLClassTreeBuilder
 						if ($oAttDef->IsExternalKey())
 						{
 							$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sAttCode);
-							$this->oOQLClassNode->AddExternalKey($sAttCode);
+							if (MetaModel::IsParentClass($sClassOfAttribute, $this->sClass))
+							{
+								$this->oOQLClassNode->AddExternalKey($sAttCode);
+							}
 						}
 						elseif ($oAttDef->IsExternalField())
 						{
 							$sKeyAttCode = $oAttDef->GetKeyAttCode();
 							$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sKeyAttCode);
-							$this->oOQLClassNode->AddExternalField($sKeyAttCode, $sAttCode, $oAttDef);
+							if (MetaModel::IsParentClass($sClassOfAttribute, $this->sClass))
+							{
+								$this->oOQLClassNode->AddExternalField($sKeyAttCode, $sAttCode, $oAttDef);
+							}
 						}
 						else
 						{
@@ -158,12 +169,13 @@ class OQLClassTreeBuilder
 	/**
 	 * Add the ext fields used in the select (external keys may be created for that)
 	 *
-	 * @param array $aExpectedAttributes
-	 *
 	 * @throws \CoreException
 	 */
-	private function AddExpectedExternalFields($aExpectedAttributes)
+	private function AddExpectedExternalFields()
 	{
+		// array of (attcode => fieldexpression)
+		$aExpectedAttributes = $this->oBuild->m_oQBExpressions->GetUnresolvedFields($this->sClassAlias);
+
 		foreach (MetaModel::ListAttributeDefs($this->sClass) as $sAttCode => $oAttDef)
 		{
 			if ($oAttDef->IsExternalField())
@@ -263,15 +275,10 @@ class OQLClassTreeBuilder
 							// Translate prior to recursing
 							//
 							$oQBContextExpressions->Translate($aTranslateNow, false);
-
-							$oQBContextExpressions->PushJoinField(new FieldExpression('id', $sKeyClassAlias));
+							$sExternalKeyField = 'id';
 
 							$oOQLClassTreeBuilder = new OQLClassTreeBuilder($oExtFilter, $this->oBuild);
 							$oSelectExtKey = $oOQLClassTreeBuilder->DevelopOQLClassNode();
-
-							$oJoinExpr = $oQBContextExpressions->PopJoinField();
-							//$sExternalKeyTable = $oJoinExpr->GetParent();
-							$sExternalKeyField = $oJoinExpr->GetName();
 
 							if ($oKeyAttDef->IsNullAllowed())
 							{
@@ -285,15 +292,11 @@ class OQLClassTreeBuilder
 					}
 					elseif (MetaModel::GetAttributeOrigin($sKeyClass, $sKeyAttCode) == $this->sClass)
 					{
-						$oQBContextExpressions->PushJoinField(new FieldExpression($sKeyAttCode, $sKeyClassAlias));
+						$sExternalKeyField = $sKeyAttCode;
 
 						$oOQLClassTreeBuilder = new OQLClassTreeBuilder($oExtFilter, $this->oBuild);
 						$oSelectExtKey = $oOQLClassTreeBuilder->DevelopOQLClassNode();
 
-						$oJoinExpr = $oQBContextExpressions->PopJoinField();
-
-						//$sExternalKeyTable = $oJoinExpr->GetParent();
-						$sExternalKeyField = $oJoinExpr->GetName();
 
 						$this->oOQLClassNode->AddInnerJoinTree($oSelectExtKey, $sKeyAttCode, $sExternalKeyField, true, $iOperatorCode);
 					}
@@ -309,7 +312,6 @@ class OQLClassTreeBuilder
 	 */
 	private function JoinClassesReferencedBy()
 	{
-		$sKeyField = MetaModel::DBGetKey($this->sClass);
 		foreach ($this->oDBObjetSearch->GetCriteria_ReferencedBy() as $sForeignClass => $aReferences)
 		{
 			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
@@ -321,7 +323,6 @@ class OQLClassTreeBuilder
 						$oForeignKeyAttDef = MetaModel::GetAttributeDef($sForeignClass, $sForeignExtKeyAttCode);
 
 						$sForeignClassAlias = $oForeignFilter->GetFirstJoinedClassAlias();
-						$this->oBuild->m_oQBExpressions->PushJoinField(new FieldExpression($sForeignExtKeyAttCode, $sForeignClassAlias));
 
 						if ($oForeignKeyAttDef instanceof AttributeObjectKey)
 						{
@@ -338,17 +339,14 @@ class OQLClassTreeBuilder
 						$oOQLClassTreeBuilder = new OQLClassTreeBuilder($oForeignFilter, $this->oBuild);
 						$oSelectForeign = $oOQLClassTreeBuilder->DevelopOQLClassNode();
 
-						$oJoinExpr = $this->oBuild->m_oQBExpressions->PopJoinField();
-						$sForeignKeyColumn = $oJoinExpr->GetName();
-
 						if ($iOperatorCode == TREE_OPERATOR_EQUALS)
 						{
-							$this->oOQLClassNode->AddInnerJoin($oSelectForeign, $sKeyField, $sForeignKeyColumn, false);
+							$this->oOQLClassNode->AddInnerJoin($oSelectForeign, 'id', $sForeignExtKeyAttCode, false);
 						}
 						else
 						{
 							// Hierarchical key
-							$this->oOQLClassNode->AddInnerJoinTree($oSelectForeign, $sKeyField, $sForeignKeyColumn, false, $iOperatorCode, true);
+							$this->oOQLClassNode->AddInnerJoinTree($oSelectForeign, 'id', $sForeignExtKeyAttCode, false, $iOperatorCode, true);
 						}
 					}
 				}
@@ -365,13 +363,12 @@ class OQLClassTreeBuilder
 	 */
 	private function JoinClassesForPolymorphicExpressions($aPolymorphicJoinAlias)
 	{
-		$sKeyField = MetaModel::DBGetKey($this->sClass);
 		foreach ($aPolymorphicJoinAlias as $sSubClass => $sSubClassAlias)
 		{
 			$oSubClassFilter = new DBObjectSearch($sSubClass, $sSubClassAlias);
 			$oOQLClassTreeBuilder = new OQLClassTreeBuilder($oSubClassFilter, $this->oBuild);
-			$oSelectFN = $oOQLClassTreeBuilder->DevelopOQLClassNode();
-			$this->oOQLClassNode->AddLeftJoin($oSelectFN, $sKeyField, MetaModel::DBGetKey($sSubClass), true);
+			$oSelectPoly = $oOQLClassTreeBuilder->DevelopOQLClassNode();
+			$this->oOQLClassNode->AddLeftJoin($oSelectPoly, 'id', 'id', true);
 		}
 	}
 }

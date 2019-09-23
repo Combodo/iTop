@@ -1533,7 +1533,7 @@ class DBObjectSearch extends DBSearch
 
 	public function MakeDeleteQuery($aArgs = array())
 	{
-		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this, self::$m_bOptimizeQueries, self::$m_bDebugQuery);
+		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
 		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectDeleteQuery();
 		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
 		$sRet = $oSQLQuery->RenderDelete($aScalarArgs);
@@ -1549,7 +1549,7 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function MakeUpdateQuery($aValues, $aArgs = array())
 	{
-		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this, self::$m_bOptimizeQueries, self::$m_bDebugQuery);
+		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
 		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectUpdateQuery($aValues);
 		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
 		$sRet = $oSQLQuery->RenderUpdate($aScalarArgs);
@@ -1708,7 +1708,7 @@ class DBObjectSearch extends DBSearch
 		if (!isset($oSQLQuery))
 		{
 			$oKPI = new ExecutionKPI();
-			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oSearch, self::$m_bOptimizeQueries, self::$m_bDebugQuery);
+			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oSearch);
 			$oSQLQuery = $oSQLObjectQueryBuilder->BuildSQLQueryStruct($aAttToLoad, $bGetCount, $aModifierProperties, $aGroupByExpr, $aSelectedClasses, $aSelectExpr);
 			$oKPI->ComputeStats('BuildSQLQueryStruct', $sOqlQuery);
 

@@ -39,28 +39,31 @@ class OQLClassTreeOptimizer
 	 */
 	private function PruneJoins($oCurrentClassNode)
 	{
-		$aExpectedAttributes = $this->oBuild->m_oQBExpressions->GetUnresolvedFields($oCurrentClassNode->GetClassAlias());
+		$aExpectedAttributes = $this->oBuild->m_oQBExpressions->GetExpectedFields($oCurrentClassNode->GetClassAlias());
 		$bCanBeRemoved = empty($aExpectedAttributes);
 
-		foreach ($oCurrentClassNode->GetJoins() as $index => $oJoin)
+		foreach ($oCurrentClassNode->GetJoins() as $sLeftKey => $aJoins)
 		{
-			if ($this->PruneJoins($oJoin->GetOOQLClassNode()))
+			foreach ($aJoins as $index => $oJoin)
 			{
-				if ($oJoin->IsOutbound())
+				if ($this->PruneJoins($oJoin->GetOOQLClassNode()))
 				{
-					// The join is not used, remove from tree
-					$oCurrentClassNode->RemoveJoin($index);
+					if ($oJoin->IsOutbound())
+					{
+						// The join is not used, remove from tree
+						$oCurrentClassNode->RemoveJoin($sLeftKey, $index);
+					}
+					else
+					{
+						// Inbound joins cannot be removed
+						$bCanBeRemoved = false;
+					}
 				}
 				else
 				{
-					// Inbound joins cannot be removed
+					// This join is used, so the current node cannot be removed
 					$bCanBeRemoved = false;
 				}
-			}
-			else
-			{
-				// This join is used, so the current node cannot be removed
-				$bCanBeRemoved = false;
 			}
 		}
 		return $bCanBeRemoved;
