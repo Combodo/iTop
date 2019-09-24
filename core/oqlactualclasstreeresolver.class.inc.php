@@ -17,6 +17,7 @@ class OQLActualClassTreeResolver
 	 *
 	 * @param OQLClassNode $oOQLClassNode
 	 * @param QueryBuilderContext $oBuild
+	 * @param array $aJoinedAliases
 	 */
 	public function __construct($oOQLClassNode, $oBuild)
 	{
@@ -27,13 +28,21 @@ class OQLActualClassTreeResolver
 	/**
 	 * Assign attributes on their original classes
 	 *
+	 * @param string $sIncomingKeyAttCode Key used for the join (entry point of the class)
+	 *
+	 * @return \OQLClassNode
 	 * @throws \CoreException
 	 */
-	public function Resolve()
+	public function Resolve($sIncomingKeyAttCode = null)
 	{
-		$sClassAlias = $this->oOQLClassNode->GetClassAlias();
-		$sClass = $this->oOQLClassNode->GetClass();
+		$sClass = $this->oOQLClassNode->GetNodeClass();
+		$sClassAlias = $this->oOQLClassNode->GetNodeClassAlias();
 		$aExpectedAttributes = $this->oBuild->m_oQBExpressions->GetUnresolvedFields($sClassAlias);
+		if (!is_null($sIncomingKeyAttCode) && !isset($aExpectedAttributes[$sIncomingKeyAttCode]))
+		{
+			// Add entry point as expected attribute
+			$aExpectedAttributes[$sIncomingKeyAttCode] = new FieldExpression($sIncomingKeyAttCode, $sClassAlias);
+		}
 		$aClasses = MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false);
 		/** @var OQLClassNode[] $aClassAndAncestorsNodes */
 		$aClassAndAncestorsNodes = array();
@@ -46,6 +55,12 @@ class OQLActualClassTreeResolver
 			}
 		}
 
+		if (empty($aClassAndAncestorsNodes))
+		{
+			throw new CoreException("Impossible to query the class $sClass");
+		}
+
+		$oBaseNode = null;
 		$aTranslateFields = array();
 		foreach ($aExpectedAttributes as $sAttCode => $oExpression)
 		{
@@ -76,19 +91,29 @@ class OQLActualClassTreeResolver
 			if ($sOriginClass != $sClass)
 			{
 				// Alias changed, set a new translation
-				$sOriginClassAlias = $oOriginClassNode->GetClassAlias();
+				$sOriginClassAlias = $oOriginClassNode->GetNodeClassAlias();
 				$aTranslateFields[$sClassAlias][$sAttCode] = new FieldExpression($sAttCode, $sOriginClassAlias);
 			}
 
 			// Add Joins corresponding to external keys
 			$this->ResolveJoins($sAttCode, $oOriginClassNode);
+
+			if ($sAttCode === $sIncomingKeyAttCode)
+			{
+				// This is the entry point of the class
+				$oBaseNode = $oOriginClassNode;
+			}
 		}
 
 		// Create joins for ancestor classes
 		/** @var \OQLClassNode $oBaseNode */
-		$oBaseNode = null;
+		$sFirstValidAncestor = null;
 		foreach ($aClassAndAncestorsNodes as $sOriginClass => $oOriginClassNode)
 		{
+			if (is_null($sFirstValidAncestor))
+			{
+				$sFirstValidAncestor = $sOriginClass;
+			}
 			if (is_null($oOriginClassNode))
 			{
 				continue;
@@ -98,19 +123,33 @@ class OQLActualClassTreeResolver
 				$oBaseNode = $oOriginClassNode;
 				continue;
 			}
-			// Add inner join
+			if ($oBaseNode === $oOriginClassNode)
+			{
+				// Don't link to itself
+				continue;
+			}
 			$oBaseNode->AddInnerJoin($oOriginClassNode, 'id', 'id');
 		}
 
 		if (is_null($oBaseNode))
 		{
-			// If no class was generated above, keep the initial one
-			return $this->oOQLClassNode;
+			// If no class was generated above, keep the first valid ancestor
+			if (is_null($sFirstValidAncestor) || ($sFirstValidAncestor == $sClass))
+			{
+				// take current node
+				$oBaseNode = $this->oOQLClassNode->CloneNode();
+			}
+			else
+			{
+				// Use the first valid class to build a default node
+				$sDefaultClassAlias = $this->oBuild->GenerateTableAlias($sClassAlias.'_'.$sFirstValidAncestor, $sClass);
+				$oBaseNode = new OQLClassNode($this->oBuild, $sFirstValidAncestor, $sDefaultClassAlias);
+			}
 		}
 
 		if (isset($aExpectedAttributes['id']) && !isset($aClassAndAncestorsNodes[$sClass]))
 		{
-			$sFirstClassAlias = $oBaseNode->GetClassAlias();
+			$sFirstClassAlias = $oBaseNode->GetNodeClassAlias();
 			$aTranslateFields[$sClassAlias]['id'] = new FieldExpression('id', $sFirstClassAlias);
 		}
 		$this->oBuild->m_oQBExpressions->Translate($aTranslateFields, false);
@@ -119,10 +158,10 @@ class OQLActualClassTreeResolver
 		$this->ResolveJoins('id', $oBaseNode);
 
 		// Add finalclass condition if not the requested class
-		if ($oBaseNode->GetClass() != $sClass)
+		if ($oBaseNode->GetNodeClass() != $sClass)
 		{
 			$sExpectedClasses = implode("', '", MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL));
-			$oInExpression = Expression::FromOQL("`".$oBaseNode->GetClassAlias()."`.finalclass IN ('$sExpectedClasses')");
+			$oInExpression = Expression::FromOQL("`".$oBaseNode->GetNodeClassAlias()."`.finalclass IN ('$sExpectedClasses')");
 			$oTrueExpression = new TrueExpression();
 			$aCoalesceAttr = array($oInExpression, $oTrueExpression);
 			$oFinalClassRestriction = new FunctionExpression("COALESCE", $aCoalesceAttr);
@@ -134,6 +173,7 @@ class OQLActualClassTreeResolver
 
 	/**
 	 * Move the joins from the selected class to the class where the external key is instantiated
+	 * The joined class is also resolved using the right key as entry point
 	 *
 	 * @param string $sAttCode (can be an external key)
 	 * @param \OQLClassNode $oOriginClassNode real class to join
@@ -149,9 +189,11 @@ class OQLActualClassTreeResolver
 		{
 			foreach ($aJoins[$sAttCode] as $oBaseOQLJoin)
 			{
+				// transfer the join from OQL class tree to actual class tree
 				$oBaseJoinedClassNode = $oBaseOQLJoin->GetOOQLClassNode();
 				$oOQLActualClassTreeResolver = new OQLActualClassTreeResolver($oBaseJoinedClassNode, $this->oBuild);
-				$oResolvedClassNode = $oOQLActualClassTreeResolver->Resolve();
+				// Use the right key to link to actual join class tree
+				$oResolvedClassNode = $oOQLActualClassTreeResolver->Resolve($oBaseOQLJoin->GetRightField());
 				$oOriginClassNode->AddOQLJoin($sAttCode, $oBaseOQLJoin->NewOQLJoinWithClassNode($oResolvedClassNode));
 			}
 		}

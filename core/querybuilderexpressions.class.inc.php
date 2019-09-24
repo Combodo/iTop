@@ -40,6 +40,7 @@ class QueryBuilderExpressions
 		$this->m_aSelectExpr = is_null($aSelectExpr) ? array() : $aSelectExpr;
 		$this->m_aGroupByExpr = $aGroupByExpr;
 		$this->m_aJoinFields = array();
+		$this->m_aJoinFields = array();
 
 		$this->m_aClassIds = array();
 		foreach ($oSearch->GetJoinedClasses() as $sClassAlias => $sClass)
@@ -189,7 +190,6 @@ class QueryBuilderExpressions
 		{
 			$this->m_aJoinFields[$index] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		}
-
 		foreach ($this->m_aClassIds as $sClass => $oExpression)
 		{
 			$this->m_aClassIds[$sClass] = $oExpression->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);

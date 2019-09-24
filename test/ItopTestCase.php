@@ -26,11 +26,14 @@ namespace Combodo\iTop\Test\UnitTest;
  */
 
 use PHPUnit\Framework\TestCase;
+use SetupUtils;
 
 define('DEBUG_UNIT_TEST', true);
 
 class ItopTestCase extends TestCase
 {
+	const TEST_LOG_DIR = 'test';
+
     protected function setUp()
 	{
 		@include_once '../approot.inc.php';
@@ -64,7 +67,34 @@ class ItopTestCase extends TestCase
 
 	public function GetMicroTime()
 	{
-		list($usec, $sec) = explode(" ", microtime());
-		return ((float)$usec + (float)$sec);
+		list($uSec, $sec) = explode(" ", microtime());
+		return ((float)$uSec + (float)$sec);
 	}
+
+	public function WriteToCsvHeader($sFilename, $aHeader)
+	{
+		$sResultFile = APPROOT.'log/'.$sFilename;
+		if (is_file($sResultFile))
+		{
+			@unlink($sResultFile);
+		}
+		SetupUtils::builddir(dirname($sResultFile));
+		file_put_contents($sResultFile, implode(';', $aHeader)."\n");
+	}
+
+	public function WriteToCsvData($sFilename, $aData)
+	{
+		$sResultFile = APPROOT.'log/'.$sFilename;
+		$file = fopen($sResultFile, 'a');
+		fputs($file, implode(';', $aData)."\n");
+		fclose($file);
+	}
+
+	public function GetTestId()
+	{
+		$sId = str_replace('"', '', $this->getName());
+		$sId = str_replace(' ', '_', $sId);
+		return $sId;
+	}
+
 }

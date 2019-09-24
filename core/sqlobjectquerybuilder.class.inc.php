@@ -190,11 +190,11 @@ class SQLObjectQueryBuilder
 	 */
 	private function MakeSQLObjectQueryNode($oBuild, $oOQLClassNode, $aValues)
 	{
-		$sClass = $oOQLClassNode->GetClass();
+		$sClass = $oOQLClassNode->GetNodeClass();
 		$sTable = MetaModel::DBGetTable($sClass);
-		$sClassAlias = $oOQLClassNode->GetClassAlias();
-		$sSelectedClassAlias = $oOQLClassNode->GetSelectedClassAlias();
-		$bIsOnQueriedClass = array_key_exists($sClassAlias, $oBuild->GetRootFilter()->GetSelectedClasses());
+		$sClassAlias = $oOQLClassNode->GetNodeClassAlias();
+		$sSelectedClassAlias = $oOQLClassNode->GetOQLClassAlias();
+		$bIsOnQueriedClass = array_key_exists($sSelectedClassAlias, $oBuild->GetRootFilter()->GetSelectedClasses());
 		$aExpectedAttributes = $oBuild->m_oQBExpressions->GetUnresolvedFields($sClassAlias);
 		$oSelectedIdField = null;
 

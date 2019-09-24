@@ -7,9 +7,10 @@
 
 class OQLClassNode
 {
-	private $sClass;
-	private $sClassAlias;
-	private $sSelectedClassAlias;
+	private $sNodeClass;
+	private $sNodeClassAlias;
+	/** @var string Class alias coming from OQL */
+	private $sOQLClassAlias;
 	/** @var OQLJoin[][] */
 	private $aJoins;
 	private $aExtKeys;
@@ -19,25 +20,35 @@ class OQLClassNode
 	 * OQLClassNode constructor.
 	 *
 	 * @param QueryBuilderContext $oBuild
-	 * @param string $sClass Current node class
+	 * @param string $sNodeClass Current node class
 	 * @param string $sClassAlias Current node class alias
-	 * @param string $sSelectedClassAlias Alias of the class requested in the filter (defaulted to $sClassAlias if null)
+	 * @param string $sOQLClassAlias Alias of the class requested in the filter (defaulted to $sClassAlias if null)
 	 */
-	public function __construct($oBuild, $sClass, $sClassAlias, $sSelectedClassAlias = null)
+	public function __construct($oBuild, $sNodeClass, $sClassAlias, $sOQLClassAlias = null)
 	{
-		$this->sClass = $sClass;
-		$this->sClassAlias = $sClassAlias;
+		$this->sNodeClass = $sNodeClass;
+		$this->sNodeClassAlias = $sClassAlias;
 		$this->aJoins = array();
 		$this->aExtKeys = array();
-		if (is_null($sSelectedClassAlias))
+		if (is_null($sOQLClassAlias))
 		{
-			$this->sSelectedClassAlias = $sClassAlias;
+			$this->sOQLClassAlias = $sClassAlias;
 		}
 		else
 		{
-			$this->sSelectedClassAlias = $sSelectedClassAlias;
+			$this->sOQLClassAlias = $sOQLClassAlias;
 		}
 		$this->oBuild = $oBuild;
+	}
+
+	/**
+	 * clone without joins
+	 *
+	 * @return \OQLClassNode
+	 */
+	public function CloneNode()
+	{
+		return new self($this->oBuild, $this->sNodeClass, $this->sNodeClassAlias, $this->sOQLClassAlias);
 	}
 
 	public function AddExternalKey($sKeyAttCode)
@@ -85,8 +96,8 @@ class OQLClassNode
 	{
 		// Record Left join field expression
 		// (right join field expression is recorded in OQLJoin)
-		$sJoinFieldName = $this->GetClassAlias().'.'.$sLeftField;
-		$this->oBuild->m_oQBExpressions->AddJoinField($sJoinFieldName, new FieldExpression($sLeftField, $this->GetClassAlias()));
+		$sJoinFieldName = $this->sNodeClassAlias.'.'.$sLeftField;
+		$this->oBuild->m_oQBExpressions->AddJoinField($sJoinFieldName, new FieldExpression($sLeftField, $this->sNodeClassAlias));
 
 		$this->aJoins[$sLeftField][] = $oOQLJoin;
 	}
@@ -97,12 +108,12 @@ class OQLClassNode
 
 	public function RenderDebug()
 	{
-		$sOQL = "SELECT `{$this->sClassAlias}` FROM `{$this->sClass}` AS `{$this->sClassAlias}`";
+		$sOQL = "SELECT `{$this->sNodeClassAlias}` FROM `{$this->sNodeClass}` AS `{$this->sNodeClassAlias}`";
 		foreach ($this->aJoins as $aJoins)
 		{
 			foreach ($aJoins as $oJoin)
 			{
-				$sOQL .= "{$oJoin->RenderDebug($this->sClassAlias)}";
+				$sOQL .= "{$oJoin->RenderDebug($this->sNodeClassAlias)}";
 			}
 		}
 
@@ -125,22 +136,22 @@ class OQLClassNode
 		return $this->aExtKeys[$sAttCode];
 	}
 
-	public function GetClass()
+	public function GetNodeClass()
 	{
-		return $this->sClass;
+		return $this->sNodeClass;
 	}
 
-	public function GetClassAlias()
+	public function GetNodeClassAlias()
 	{
-		return $this->sClassAlias;
+		return $this->sNodeClassAlias;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function GetSelectedClassAlias()
+	public function GetOQLClassAlias()
 	{
-		return $this->sSelectedClassAlias;
+		return $this->sOQLClassAlias;
 	}
 
 	public function GetJoins()
@@ -192,8 +203,8 @@ class OQLJoin
 	{
 		// Record right join field expression
 		// (left join field expression is recorded in OQLClassNode)
-		$sJoinFieldName = $oOQLClassNode->GetClassAlias().'.'.$sRightField;
-		$oBuild->m_oQBExpressions->AddJoinField($sJoinFieldName, new FieldExpression($sRightField, $oOQLClassNode->GetClassAlias()));
+		$sJoinFieldName = $oOQLClassNode->GetNodeClassAlias().'.'.$sRightField;
+		$oBuild->m_oQBExpressions->AddJoinField($sJoinFieldName, new FieldExpression($sRightField, $oOQLClassNode->GetNodeClassAlias()));
 
 		$this->sJoinType = $sJoinType;
 		$this->oOQLClassNode = $oOQLClassNode;
@@ -253,7 +264,7 @@ class OQLJoin
 				$sLeftFieldRight = $sSQLLeft.'_right';
 				$sRightFieldLeft = $sSQLRight.'_left';
 				$sRightFieldRight = $sSQLRight.'_right';
-				$sRightTableAlias = $this->oOQLClassNode->GetClassAlias();
+				$sRightTableAlias = $this->oOQLClassNode->GetNodeClassAlias();
 				$oBaseSQLQuery->AddInnerJoinTree($oJoinedSQLQuery, $sLeftFieldLeft, $sLeftFieldRight, $sRightFieldLeft, $sRightFieldRight, $sRightTableAlias, $this->sTreeOperator, $this->bInvertOnClause);
 				break;
 		}
@@ -262,15 +273,15 @@ class OQLJoin
 	public function RenderDebug($sClassAlias, $sPrefix = "    ")
 	{
 		$sType = strtoupper($this->sJoinType);
-		$sOQL = "\n{$sPrefix}{$sType} JOIN `{$this->oOQLClassNode->GetClass()}` AS `{$this->oOQLClassNode->GetClassAlias()}`";
+		$sOQL = "\n{$sPrefix}{$sType} JOIN `{$this->oOQLClassNode->GetNodeClass()}` AS `{$this->oOQLClassNode->GetNodeClassAlias()}`";
 		//$sOQL = str_pad($sOQL, 100);
-		$sOQL .= "\n{$sPrefix}  ON `{$sClassAlias}`.`{$this->sLeftField}` = `{$this->oOQLClassNode->GetClassAlias()}`.`{$this->sRightField}`";
+		$sOQL .= "\n{$sPrefix}  ON `{$sClassAlias}`.`{$this->sLeftField}` = `{$this->oOQLClassNode->GetNodeClassAlias()}`.`{$this->sRightField}`";
 		$sPrefix .= "    ";
 		foreach ($this->oOQLClassNode->GetJoins() as $aJoins)
 		{
 			foreach ($aJoins as $oJoin)
 			{
-				$sOQL .= " {$oJoin->RenderDebug($this->oOQLClassNode->GetClassAlias(), $sPrefix)}";
+				$sOQL .= " {$oJoin->RenderDebug($this->oOQLClassNode->GetNodeClassAlias(), $sPrefix)}";
 			}
 		}
 
@@ -291,6 +302,14 @@ class OQLJoin
 	public function IsOutbound()
 	{
 		return $this->bOutbound;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetRightField()
+	{
+		return $this->sRightField;
 	}
 
 }

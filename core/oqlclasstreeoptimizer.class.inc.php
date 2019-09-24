@@ -39,7 +39,7 @@ class OQLClassTreeOptimizer
 	 */
 	private function PruneJoins($oCurrentClassNode)
 	{
-		$aExpectedAttributes = $this->oBuild->m_oQBExpressions->GetExpectedFields($oCurrentClassNode->GetClassAlias());
+		$aExpectedAttributes = $this->oBuild->m_oQBExpressions->GetExpectedFields($oCurrentClassNode->GetNodeClassAlias());
 		$bCanBeRemoved = empty($aExpectedAttributes);
 
 		foreach ($oCurrentClassNode->GetJoins() as $sLeftKey => $aJoins)
