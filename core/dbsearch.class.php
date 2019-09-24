@@ -1277,6 +1277,23 @@ abstract class DBSearch
 			{
 				$aQueryData['oql'] = $sOql;
 				unset($aQueryData['filter']);
+				if (!empty($aAttToLoad))
+				{
+					$aAttToLoadNames = array();
+					foreach ($aAttToLoad as $sClass => $aAttributes)
+					{
+						$aAttToLoadNames[$sClass] = array();
+						foreach ($aAttributes as $sAttCode => $oAttDef)
+						{
+							$aAttToLoadNames[$sClass][] = $sAttCode;
+						}
+					}
+				}
+				else
+				{
+					$aAttToLoadNames = null;
+				}
+				$aQueryData['att_to_load'] = $aAttToLoadNames;
 
 				$hLogFile = @fopen(APPROOT.'log/oql_records.txt', 'a');
 				if ($hLogFile !== false)

@@ -105,8 +105,8 @@ if ($oOQLHandle) {
 		$iCount++;
 		$sOrderBy = ConvertArray($aRecord['order_by']);
 		$sArgs = ConvertArray($aRecord['args']);
-		$sGroupByExpr = ConvertArray($aRecord['group_by_expr']);
-		$sSelectExpr = ConvertArray($aRecord['select_expr']);
+		$sGroupByExpr = ConvertArray($aRecord['group_by_expr'], true);
+		$sSelectExpr = ConvertArray($aRecord['select_expr'], true);
 		if ($aRecord['exclude_null_values'])
 		{
 			$bExcludeNullValues = 'true';
@@ -134,7 +134,7 @@ if ($oOQLHandle) {
 
 echo "<br>File '$sTestFile' generated with ".($iCount-1000)." entries (from $iRead captured OQL).\n";
 
-function ConvertArray($aArray)
+function ConvertArray($aArray, $bB64Encode = false)
 {
 	if (is_null($aArray))
 	{
@@ -146,5 +146,9 @@ function ConvertArray($aArray)
 		return 'array()';
 	}
 
-	return 'unserialize(base64_decode(\''.base64_encode(serialize($aArray)).'\'))';
+	if ($bB64Encode)
+	{
+		return 'unserialize(base64_decode(\''.base64_encode(serialize($aArray)).'\'))';
+	}
+	return 'unserialize(\''.serialize($aArray).'\')';
 }

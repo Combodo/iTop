@@ -238,8 +238,31 @@ class OQLToSQLTest extends ItopDataTestCase
 	 * @throws \MissingQueryArgument
 	 * @throws \OQLException
 	 */
-	private function OQLSelectRunner($sOQL, $aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 20, $iLimitStart = 0)
+	private function OQLSelectRunner($sOQL, $aOrderBy = array(), $aArgs = array(), $aAttToLoadNames = null, $aExtendedDataSpec = null, $iLimitCount = 20, $iLimitStart = 0)
 	{
+		if (is_null($aAttToLoadNames))
+		{
+			$aAttToLoad = null;
+		}
+		else
+		{
+			$aAttToLoad = array();
+			foreach ($aAttToLoadNames as $sClass => $aAttCodes)
+			{
+				$aAttToLoad[$sClass] = array();
+				foreach ($aAttCodes as $sAttCode)
+				{
+					if (!empty($sAttCode))
+					{
+						if (MetaModel::IsValidAttCode($sClass, $sAttCode))
+						{
+							$aAttToLoad[$sClass][$sAttCode] = MetaModel::GetAttributeDef($sClass, $sAttCode);
+						}
+					}
+				}
+			}
+		}
+
 		$oSearch = DBSearch::FromOQL($sOQL);
 
 		$sSQLCount = $oSearch->MakeSelectQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, 0, 0, true);
@@ -343,12 +366,12 @@ class OQLToSQLTest extends ItopDataTestCase
 
 		$aAttToLoad150 = array(
 			'WebServer' => array(
-				'business_criticity' => MetaModel::GetAttributeDef('WebServer', 'business_criticity'),
-				'description' => MetaModel::GetAttributeDef('WebServer', 'description'),
-				'name' => MetaModel::GetAttributeDef('WebServer', 'name'),
-				'friendlyname' => MetaModel::GetAttributeDef('WebServer', 'friendlyname'),
-				'obsolescence_flag' => MetaModel::GetAttributeDef('WebServer', 'obsolescence_flag'),
-				'finalclass' => MetaModel::GetAttributeDef('WebServer', 'finalclass'),
+				'business_criticity',
+				'description',
+				'name',
+				'friendlyname',
+				'obsolescence_flag',
+				'finalclass',
 			),
 		);
 
