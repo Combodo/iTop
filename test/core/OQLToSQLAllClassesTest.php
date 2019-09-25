@@ -285,6 +285,11 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 
 		foreach ($aClasses as $sClass)
 		{
+			if ($sClass == 'AbstractResource' || $sClass == 'ResourceAdminMenu' || $sClass == 'ResourceRunQueriesMenu')
+			{
+				// These classes are pure abstract (no table in database)
+				continue;
+			}
 			$sOQL = "SELECT $sClass";
 			$aOrderBy = array();
 			if (MetaModel::IsValidAttCode($sClass, 'friendlyname'))
