@@ -13,6 +13,7 @@ define('PRECISION', 2);
 
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use DBObjectSearch;
 use DBSearch;
 use MetaModel;
 use SetupUtils;
@@ -33,6 +34,15 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 		parent::setUp();
 
 		SetupUtils::builddir(APPROOT.'log/test/OQLToSQL');
+	}
+
+	public function testEmptyAlias()
+	{
+		$oFilter = new DBObjectSearch('Organization', '');
+		$oFilter->AllowAllData();
+		$sSQL = $oFilter->MakeSelectQuery();
+		CMDBSource::Query($sSQL);
+		$this->assertTrue(true);
 	}
 
 	private function GetPreviousTestResult($sTestId)

@@ -21,18 +21,25 @@ class OQLClassNode
 	 *
 	 * @param QueryBuilderContext $oBuild
 	 * @param string $sNodeClass Current node class
-	 * @param string $sClassAlias Current node class alias
+	 * @param string $sNodeClassAlias Current node class alias
 	 * @param string $sOQLClassAlias Alias of the class requested in the filter (defaulted to $sClassAlias if null)
 	 */
-	public function __construct($oBuild, $sNodeClass, $sClassAlias, $sOQLClassAlias = null)
+	public function __construct($oBuild, $sNodeClass, $sNodeClassAlias, $sOQLClassAlias = null)
 	{
 		$this->sNodeClass = $sNodeClass;
-		$this->sNodeClassAlias = $sClassAlias;
+		if (empty($sNodeClassAlias))
+		{
+			$this->sNodeClassAlias = $oBuild->GetEmptyClassAlias();
+		}
+		else
+		{
+			$this->sNodeClassAlias = $sNodeClassAlias;
+		}
 		$this->aJoins = array();
 		$this->aExtKeys = array();
 		if (is_null($sOQLClassAlias))
 		{
-			$this->sOQLClassAlias = $sClassAlias;
+			$this->sOQLClassAlias = $this->sNodeClassAlias;
 		}
 		else
 		{

@@ -31,6 +31,7 @@ class QueryBuilderContext
 	protected $m_aModifierProperties;
 	protected $m_aSelectedClasses;
 	protected $m_aFilteredTables;
+	protected $m_sEmptyClassAlias;
 
 	public $m_oQBExpressions;
 
@@ -69,8 +70,14 @@ class QueryBuilderContext
 		// Add all the attribute of interest
 		foreach ($this->m_aSelectedClasses as $sClassAlias => $sClass)
 		{
+			$sTableAlias = $sClassAlias;
+			if (empty($sTableAlias))
+			{
+				$sTableAlias = $this->GenerateClassAlias("$sClass", $sClass);
+				$this->m_sEmptyClassAlias = $sTableAlias;
+			}
 			// default to the whole list of attributes + the very std id/finalclass
-			$this->m_oQBExpressions->AddSelect($sClassAlias.'id', new FieldExpression('id', $sClassAlias));
+			$this->m_oQBExpressions->AddSelect($sClassAlias.'id', new FieldExpression('id', $sTableAlias));
 			if (is_null($aAttToLoad) || !array_key_exists($sClassAlias, $aAttToLoad))
 			{
 				$sSelectedClass = $this->GetSelectedClass($sClassAlias);
@@ -86,7 +93,7 @@ class QueryBuilderContext
 				{
 					continue;
 				}
-				$oExpression = new FieldExpression($sAttCode, $sClassAlias);
+				$oExpression = new FieldExpression($sAttCode, $sTableAlias);
 				$this->m_oQBExpressions->AddSelect($sClassAlias.$sAttCode, $oExpression);
 			}
 		}
@@ -140,4 +147,14 @@ class QueryBuilderContext
 	{
 		return $this->m_aFilteredTables;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function GetEmptyClassAlias()
+	{
+		return $this->m_sEmptyClassAlias;
+	}
+
+
 }

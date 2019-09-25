@@ -29,6 +29,10 @@ class OQLClassTreeBuilder
 		$this->oDBObjetSearch = $oDBObjetSearch;
 		$this->sClass = $oDBObjetSearch->GetFirstJoinedClass();
 		$this->sClassAlias = $oDBObjetSearch->GetFirstJoinedClassAlias();
+		if (empty($this->sClassAlias))
+		{
+			$this->sClassAlias = $oBuild->GetEmptyClassAlias();
+		}
 		$this->oOQLClassNode = new OQLClassNode($oBuild, $this->sClass, $this->sClassAlias);
 	}
 
