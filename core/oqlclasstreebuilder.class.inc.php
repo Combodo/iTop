@@ -350,7 +350,7 @@ class OQLClassTreeBuilder
 						else
 						{
 							// Hierarchical key
-							$this->oOQLClassNode->AddInnerJoinTree($oSelectForeign, 'id', $sForeignExtKeyAttCode, false, $iOperatorCode, true);
+							$this->oOQLClassNode->AddInnerJoinTree($oSelectForeign, $sForeignExtKeyAttCode, $sForeignExtKeyAttCode, false, $iOperatorCode, true);
 						}
 					}
 				}

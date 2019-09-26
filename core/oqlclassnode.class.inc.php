@@ -281,7 +281,6 @@ class OQLJoin
 	{
 		$sType = strtoupper($this->sJoinType);
 		$sOQL = "\n{$sPrefix}{$sType} JOIN `{$this->oOQLClassNode->GetNodeClass()}` AS `{$this->oOQLClassNode->GetNodeClassAlias()}`";
-		//$sOQL = str_pad($sOQL, 100);
 		$sOQL .= "\n{$sPrefix}  ON `{$sClassAlias}`.`{$this->sLeftField}` = `{$this->oOQLClassNode->GetNodeClassAlias()}`.`{$this->sRightField}`";
 		$sPrefix .= "    ";
 		foreach ($this->oOQLClassNode->GetJoins() as $aJoins)
