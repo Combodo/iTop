@@ -182,6 +182,22 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'db_core_transactions_retry_count' => array(
+			'type' => 'integer',
+			'description' => 'Number of times the current transaction is tried',
+			'default' => 3,
+			'value' => 3,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'db_core_transactions_retry_delay_ms' => array(
+			'type' => 'integer',
+			'description' => 'Base delay in milliseconds between transaction tries',
+			'default' => 500,
+			'value' => 500,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'skip_check_to_write' => array(
 			'type' => 'bool',
 			'description' => 'Disable data format and integrity checks to boost up data load (insert or update)',

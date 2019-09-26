@@ -819,6 +819,13 @@ class CMDBSource
 		return false;
 	}
 
+	/**
+	 * @param $sSQLQuery
+	 *
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function DeleteFrom($sSQLQuery)
 	{
 		self::Query($sSQLQuery);

@@ -3019,162 +3019,238 @@ abstract class DBObject implements iDisplay
 		{
 			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
 		}
-
-		$iNbTryRemaining = 3;
-		while ($iNbTryRemaining > 0)
+		// Protect against reentrance (e.g. cascading the update of ticket logs)
+		static $aUpdateReentrance = array();
+		$sKey = get_class($this).'::'.$this->GetKey();
+		if (array_key_exists($sKey, $aUpdateReentrance))
 		{
-			// Protect against reentrance (e.g. cascading the update of ticket logs)
-			static $aUpdateReentrance = array();
-			$sKey = get_class($this).'::'.$this->GetKey();
-			if (array_key_exists($sKey, $aUpdateReentrance))
-			{
-				return false;
-			}
-			$aUpdateReentrance[$sKey] = true;
+			return false;
+		}
+		$aUpdateReentrance[$sKey] = true;
 
-			$this->m_aChanges = array(); // reset attribute to avoid stack collisions
-			try
+		$this->m_aChanges = array(); // reset attribute to avoid stack collisions
+		try
+		{
+			$this->DoComputeValues();
+			// Stop watches
+			$sState = $this->GetState();
+			if ($sState != '')
 			{
-				CMDBSource::Query('START TRANSACTION');
-				$this->DoComputeValues();
-				// Stop watches
-				$sState = $this->GetState();
-				if ($sState != '')
+				foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
 				{
-					foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+					if ($oAttDef instanceof AttributeStopWatch)
 					{
-						if ($oAttDef instanceof AttributeStopWatch)
+						if (in_array($sState, $oAttDef->GetStates()))
 						{
-							if (in_array($sState, $oAttDef->GetStates()))
-							{
-								// Compute or recompute the deadlines
-								/** @var \ormStopWatch $oSW */
-								$oSW = $this->Get($sAttCode);
-								$oSW->ComputeDeadlines($this, $oAttDef);
-								$this->Set($sAttCode, $oSW);
-							}
+							// Compute or recompute the deadlines
+							/** @var \ormStopWatch $oSW */
+							$oSW = $this->Get($sAttCode);
+							$oSW->ComputeDeadlines($this, $oAttDef);
+							$this->Set($sAttCode, $oSW);
 						}
 					}
 				}
-				$this->OnUpdate();
+			}
+			$this->OnUpdate();
 
-				$aChanges = $this->ListChanges();
-				if (count($aChanges) == 0)
+			$aChanges = $this->ListChanges();
+			if (count($aChanges) == 0)
+			{
+				// Attempting to update an unchanged object
+				unset($aUpdateReentrance[$sKey]);
+
+				return $this->m_iKey;
+			}
+
+			// Ultimate check - ensure DB integrity
+			list($bRes, $aIssues) = $this->CheckToWrite();
+			if (!$bRes)
+			{
+				throw new CoreCannotSaveObjectException(array(
+					'issues' => $aIssues,
+					'class' => get_class($this),
+					'id' => $this->GetKey()
+				));
+			}
+
+			// Save the original values (will be reset to the new values when the object get written to the DB)
+			$aOriginalValues = $this->m_aOrigValues;
+
+			// Activate any existing trigger
+			$sClass = get_class($this);
+			$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"),
+				array(), $aParams);
+			while ($oTrigger = $oSet->Fetch())
+			{
+				/** @var \Trigger $oTrigger */
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+
+			$bHasANewExternalKeyValue = false;
+			$aHierarchicalKeys = array();
+			$aDBChanges = array();
+			foreach ($aChanges as $sAttCode => $valuecurr)
+			{
+				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+				if ($oAttDef->IsExternalKey())
 				{
-					// Attempting to update an unchanged object
-					unset($aUpdateReentrance[$sKey]);
-
-					return $this->m_iKey;
+					$bHasANewExternalKeyValue = true;
 				}
-
-				// Ultimate check - ensure DB integrity
-				list($bRes, $aIssues) = $this->CheckToWrite();
-				if (!$bRes)
+				if ($oAttDef->IsBasedOnDBColumns())
 				{
-					throw new CoreCannotSaveObjectException(array(
-						'issues' => $aIssues,
-						'class' => get_class($this),
-						'id' => $this->GetKey()
-					));
+					$aDBChanges[$sAttCode] = $aChanges[$sAttCode];
 				}
-
-				// Save the original values (will be reset to the new values when the object get written to the DB)
-				$aOriginalValues = $this->m_aOrigValues;
-
-				// Activate any existing trigger
-				$sClass = get_class($this);
-				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"),
-					array(), $aParams);
-				while ($oTrigger = $oSet->Fetch())
+				if ($oAttDef->IsHierarchicalKey())
 				{
-					/** @var \Trigger $oTrigger */
-					$oTrigger->DoActivate($this->ToArgs('this'));
+					$aHierarchicalKeys[$sAttCode] = $oAttDef;
 				}
+			}
 
-				$bHasANewExternalKeyValue = false;
-				$aHierarchicalKeys = array();
-				$aDBChanges = array();
-				foreach ($aChanges as $sAttCode => $valuecurr)
+			$iTransactionRetry = 1;
+			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
+			if ($bIsTransactionEnabled)
+			{
+				$iIsTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+				$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+				$iTransactionRetry = $iIsTransactionRetryCount;
+			}
+			while ($iTransactionRetry > 0)
+			{
+				try
 				{
-					$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-					if ($oAttDef->IsExternalKey())
+					$iTransactionRetry--;
+					if ($bIsTransactionEnabled)
 					{
-						$bHasANewExternalKeyValue = true;
+						CMDBSource::Query('START TRANSACTION');
 					}
-					if ($oAttDef->IsBasedOnDBColumns())
+					if (!MetaModel::DBIsReadOnly())
 					{
-						$aDBChanges[$sAttCode] = $aChanges[$sAttCode];
-					}
-					if ($oAttDef->IsHierarchicalKey())
-					{
-						$aHierarchicalKeys[$sAttCode] = $oAttDef;
-					}
-				}
-
-				if (!MetaModel::DBIsReadOnly())
-				{
-					// Update the left & right indexes for each hierarchical key
-					foreach ($aHierarchicalKeys as $sAttCode => $oAttDef)
-					{
-						$sTable = $sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
-						$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
-						$aRes = CMDBSource::QueryToArray($sSQL);
-						$iMyLeft = $aRes[0]['left'];
-						$iMyRight = $aRes[0]['right'];
-						$iDelta = $iMyRight - $iMyLeft + 1;
-						MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
-
-						if ($aDBChanges[$sAttCode] == 0)
+						// Update the left & right indexes for each hierarchical key
+						foreach ($aHierarchicalKeys as $sAttCode => $oAttDef)
 						{
-							// No new parent, insert completely at the right of the tree
-							$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
+							$sTable = $sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
+							$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
 							$aRes = CMDBSource::QueryToArray($sSQL);
-							if (count($aRes) == 0)
+							$iMyLeft = $aRes[0]['left'];
+							$iMyRight = $aRes[0]['right'];
+							$iDelta = $iMyRight - $iMyLeft + 1;
+							MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
+
+							if ($aDBChanges[$sAttCode] == 0)
 							{
-								$iNewLeft = 1;
+								// No new parent, insert completely at the right of the tree
+								$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
+								$aRes = CMDBSource::QueryToArray($sSQL);
+								if (count($aRes) == 0)
+								{
+									$iNewLeft = 1;
+								}
+								else
+								{
+									$iNewLeft = $aRes[0]['max'] + 1;
+								}
 							}
 							else
 							{
-								$iNewLeft = $aRes[0]['max'] + 1;
+								// Insert at the right of the specified parent
+								$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` FROM `$sTable` WHERE id=".((int)$aDBChanges[$sAttCode]);
+								$iNewLeft = CMDBSource::QueryToScalar($sSQL);
+							}
+
+							MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
+
+							$aHKChanges = array();
+							$aHKChanges[$sAttCode] = $aDBChanges[$sAttCode];
+							$aHKChanges[$oAttDef->GetSQLLeft()] = $iNewLeft;
+							$aHKChanges[$oAttDef->GetSQLRight()] = $iNewLeft + $iDelta - 1;
+							$aDBChanges[$sAttCode] = $aHKChanges; // the 3 values will be stored by MakeUpdateQuery below
+						}
+
+						// Update scalar attributes
+						if (count($aDBChanges) != 0)
+						{
+							$oFilter = new DBObjectSearch(get_class($this));
+							$oFilter->AddCondition('id', $this->m_iKey, '=');
+							$oFilter->AllowAllData();
+
+							$sSQL = $oFilter->MakeUpdateQuery($aDBChanges);
+							CMDBSource::Query($sSQL);
+						}
+					}
+					$this->DBWriteLinks();
+					$this->WriteExternalAttributes();
+
+					$this->m_aChanges = $this->ListChanges(); // N°2293 save changes for use in user callbacks
+					$this->m_bDirty = false;
+					$this->m_aTouchedAtt = array();
+					$this->m_aModifiedAtt = array();
+
+					if (count($aChanges) != 0)
+					{
+						$this->RecordAttChanges($aChanges, $aOriginalValues);
+					}
+
+					if ($bIsTransactionEnabled)
+					{
+						CMDBSource::Query('COMMIT');
+					}
+					break;
+				}
+				catch (MySQLException $e)
+				{
+					if ($bIsTransactionEnabled)
+					{
+						CMDBSource::Query('ROLLBACK');
+						if ($e->getCode() == 1213)
+						{
+							// Deadlock found when trying to get lock; try restarting transaction
+							IssueLog::Error($e->getMessage());
+							if ($iTransactionRetry > 0)
+							{
+								// wait and retry
+								IssueLog::Error("Update TRANSACTION Retrying...");
+								usleep(random_int(1, 5) * 1000 * $iIsTransactionRetryDelay * ($iIsTransactionRetryCount - $iTransactionRetry));
+								continue;
+							}
+							else
+							{
+								IssueLog::Error("Update Deadlock TRANSACTION prevention failed.");
 							}
 						}
-						else
-						{
-							// Insert at the right of the specified parent
-							$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` FROM `$sTable` WHERE id=".((int)$aDBChanges[$sAttCode]);
-							$iNewLeft = CMDBSource::QueryToScalar($sSQL);
-						}
-
-						MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
-
-						$aHKChanges = array();
-						$aHKChanges[$sAttCode] = $aDBChanges[$sAttCode];
-						$aHKChanges[$oAttDef->GetSQLLeft()] = $iNewLeft;
-						$aHKChanges[$oAttDef->GetSQLRight()] = $iNewLeft + $iDelta - 1;
-						$aDBChanges[$sAttCode] = $aHKChanges; // the 3 values will be stored by MakeUpdateQuery below
 					}
-
-					// Update scalar attributes
-					if (count($aDBChanges) != 0)
-					{
-						$oFilter = new DBObjectSearch(get_class($this));
-						$oFilter->AddCondition('id', $this->m_iKey, '=');
-						$oFilter->AllowAllData();
-
-						$sSQL = $oFilter->MakeUpdateQuery($aDBChanges);
-						CMDBSource::Query($sSQL);
-					}
+					$aErrors = array($e->getMessage());
+					throw new CoreCannotSaveObjectException(array(
+						'id' => $this->GetKey(),
+						'class' => get_class($this),
+						'issues' => $aErrors
+					));
 				}
+				catch (CoreCannotSaveObjectException $e)
+				{
+					if ($bIsTransactionEnabled)
+					{
+						CMDBSource::Query('ROLLBACK');
+					}
+					throw $e;
+				}
+				catch (Exception $e)
+				{
+					if ($bIsTransactionEnabled)
+					{
+						CMDBSource::Query('ROLLBACK');
+					}
+					$aErrors = array($e->getMessage());
+					throw new CoreCannotSaveObjectException(array(
+						'id' => $this->GetKey(),
+						'class' => get_class($this),
+						'issues' => $aErrors
+					));
+				}
+			}
 
-				$this->DBWriteLinks();
-				$this->WriteExternalAttributes();
-
-				$this->m_aChanges = $this->ListChanges(); // N°2293 save changes for use in user callbacks
-				$this->m_bDirty = false;
-				$this->m_aTouchedAtt = array();
-				$this->m_aModifiedAtt = array();
-
+			try
+			{
 				$this->AfterUpdate();
 
 				// Reload to get the external attributes
@@ -3194,49 +3270,16 @@ abstract class DBObject implements iDisplay
 						}
 					}
 				}
-
-				if (count($aChanges) != 0)
-				{
-					$this->RecordAttChanges($aChanges, $aOriginalValues);
-				}
-
-				CMDBSource::Query('COMMIT');
-				$iNbTryRemaining = 0;
-			}
-			catch (MySQLException $e)
-			{
-				CMDBSource::Query('ROLLBACK');
-				if ($e->getCode() == 1213)
-				{
-					// Deadlock found when trying to get lock; try restarting transaction
-					IssueLog::Error($e->getMessage());
-					$iNbTryRemaining--;
-					if ($iNbTryRemaining > 0)
-					{
-						// wait and retry
-						IssueLog::Error("Retrying....");
-						usleep(random_int(100, 300) * 1000);
-						continue;
-					}
-				}
-				$aErrors = array($e->getMessage());
-				throw new CoreCannotSaveObjectException(array('id' => $this->GetKey(), 'class' => get_class($this), 'issues' => $aErrors));
-			}
-			catch (CoreCannotSaveObjectException $e)
-			{
-				CMDBSource::Query('ROLLBACK');
-				throw $e;
 			}
 			catch (Exception $e)
 			{
-				CMDBSource::Query('ROLLBACK');
 				$aErrors = array($e->getMessage());
 				throw new CoreCannotSaveObjectException(array('id' => $this->GetKey(), 'class' => get_class($this), 'issues' => $aErrors));
 			}
-			finally
-			{
-				unset($aUpdateReentrance[$sKey]);
-			}
+		}
+		finally
+		{
+			unset($aUpdateReentrance[$sKey]);
 		}
 
 		return $this->m_iKey;
@@ -3286,6 +3329,7 @@ abstract class DBObject implements iDisplay
      * @param string $sTableClass
      *
      * @throws CoreException
+     * @throws MySQLException
      */
 	private function DBDeleteSingleTable($sTableClass)
 	{
@@ -3365,10 +3409,57 @@ abstract class DBObject implements iDisplay
 				$oAttDef->DeleteValue($this);
 			}
 		}
-
-		foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL) as $sParentClass)
+		$iTransactionRetry = 1;
+		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
+		if ($bIsTransactionEnabled)
 		{
-			$this->DBDeleteSingleTable($sParentClass);
+			$iIsTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+			$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+			$iTransactionRetry = $iIsTransactionRetryCount;
+		}
+		while ($iTransactionRetry > 0)
+		{
+			try
+			{
+				$iTransactionRetry--;
+				if ($bIsTransactionEnabled)
+				{
+					CMDBSource::Query('START TRANSACTION');
+				}
+				foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL) as $sParentClass)
+				{
+					$this->DBDeleteSingleTable($sParentClass);
+				}
+				if ($bIsTransactionEnabled)
+				{
+					CMDBSource::Query('COMMIT');
+				}
+				break;
+			}
+			catch (MySQLException $e)
+			{
+				if ($bIsTransactionEnabled)
+				{
+					CMDBSource::Query('ROLLBACK');
+					if ($e->getCode() == 1213)
+					{
+						// Deadlock found when trying to get lock; try restarting transaction
+						IssueLog::Error($e->getMessage());
+						if ($iTransactionRetry > 0)
+						{
+							// wait and retry
+							IssueLog::Error("Delete TRANSACTION Retrying...");
+							usleep(random_int(1, 5) * 1000 * $iIsTransactionRetryDelay * ($iIsTransactionRetryCount - $iTransactionRetry));
+							continue;
+						}
+						else
+						{
+							IssueLog::Error("Delete Deadlock TRANSACTION prevention failed.");
+						}
+					}
+				}
+				throw $e;
+			}
 		}
 
 		$this->AfterDelete();
@@ -3432,7 +3523,7 @@ abstract class DBObject implements iDisplay
 			{
 				/** @var \DBObject $oToDelete */
 				$oToDelete = $aData['to_delete'];
-				// The deletion based on a deletion plan should not be done for each oject if the deletion plan is common (Trac #457)
+				// The deletion based on a deletion plan should not be done for each object if the deletion plan is common (Trac #457)
 				// because for each object we would try to update all the preceding ones... that are already deleted
 				// A better approach would be to change the API to apply the DBDelete on the deletion plan itself... just once
 				// As a temporary fix: delete only the objects that are still to be deleted...
