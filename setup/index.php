@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+$bBypassMaintenance = true; // Reset maintenance mode in case of problem
 require_once('../approot.inc.php');
 require_once(APPROOT.'/bootstrap.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
@@ -26,6 +27,7 @@ require_once(APPROOT.'/setup/wizardcontroller.class.inc.php');
 require_once(APPROOT.'/setup/wizardsteps.class.inc.php');
 
 clearstatcache(); // Make sure we know what we are doing !
+SetupUtils::ExitMaintenanceMode(false); // Reset maintenance mode in case of problem
 // Set a long (at least 4 minutes) execution time for the setup to avoid timeouts during this phase
 ini_set('max_execution_time', max(240, ini_get('max_execution_time')));
 // While running the setup it is desirable to see any error that may happen

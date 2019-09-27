@@ -566,7 +566,7 @@ try
 	{
 		// Note: testing this now in case some of the background processes forces the read-only mode for a while
 		//       in that case it is better to exit with the check on reentrance (mutex)
-		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE) || file_exists(APPROOT.'.maintenance'))
+		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
 		{
 			$oP->p("A maintenance is ongoing");
 			$oP->Output();

@@ -137,7 +137,21 @@ class ApplicationInstaller
 		
 		return ($iOverallStatus == self::OK);
 	}
-	
+
+	private function GetConfig()
+	{
+		$sTargetEnvironment = $this->GetTargetEnv();
+		$sConfigFile = APPCONF.$sTargetEnvironment.'/'.ITOP_CONFIG_FILE;
+		try
+		{
+			return new Config($sConfigFile);
+		}
+		catch (Exception $e)
+		{
+			return null;
+		}
+	}
+
 	/**
 	 * Executes the next step of the installation and reports about the progress
 	 * and the next step to perform
@@ -151,7 +165,7 @@ class ApplicationInstaller
 		try
 		{
 			$fStart = microtime(true);
-			SetupUtils::EnterMaintenanceMode();
+			SetupUtils::EnterMaintenanceMode($this->GetConfig());
 			switch ($sStep)
 			{
 				case '':
@@ -356,15 +370,11 @@ class ApplicationInstaller
 						'next-step-label' => "Unknown setup step '$sStep'.",
 						'percentage-completed' => 100,
 					);
+					break;
 			}
-			SetupUtils::ExitMaintenanceMode();
-			$fDuration = round(microtime(true) - $fStart, 2);
-			SetupPage::log_info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
 		catch (Exception $e)
 		{
-			SetupUtils::ExitMaintenanceMode();
-
 			$aResult = array(
 				'status' => self::ERROR,
 				'message' => $e->getMessage(),
@@ -388,6 +398,12 @@ class ApplicationInstaller
 				SetupPage::log("#$idx $sFile($sLine): $sVerb(...)");
 				$idx++;
 			}
+		}
+		finally
+		{
+			SetupUtils::ExitMaintenanceMode();
+			$fDuration = round(microtime(true) - $fStart, 2);
+			SetupPage::log_info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
 
 		return $aResult;
@@ -946,6 +962,11 @@ class ApplicationInstaller
 		// Ready to go !!
 		require_once(APPROOT.'core/dict.class.inc.php');
 		MetaModel::ResetCache();
+
+		// Perform final setup tasks here
+		//
+		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
+		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModuleCodes, 'AfterCreateConfig');
 	}
 }
 

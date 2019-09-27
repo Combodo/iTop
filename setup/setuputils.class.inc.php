@@ -1836,20 +1836,47 @@ EOF
 		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
 	}
 
-	public final static function EnterMaintenanceMode($bCheckBackgroundTask = false)
+	public final static function EnterMaintenanceMode($oConfig)
 	{
 		@touch(APPROOT.'.maintenance');
-		if ($bCheckBackgroundTask)
+		SetupPage::log("----> Entering maintenance mode");
+		try
 		{
-
-			// Assume database is OK but datamodel is not usable
-			$iCount = CMDBSource::QueryToScalar('SELECT COUNT(*) FROM priv_backgroundtask WHERE running=1');
+			// Wait for cron to stop
+			if (is_null($oConfig))
+			{
+				return;
+			}
+			// Use mutex to check if cron is running
+			$oMutex = new iTopMutex(
+				'cron'.$oConfig->Get('db_name').$oConfig->Get('db_subname'),
+				$oConfig->Get('db_host'),
+				$oConfig->Get('db_user'),
+				$oConfig->Get('db_pwd'),
+				$oConfig->Get('db_tls.enabled'),
+				$oConfig->Get('db_tls.ca')
+			);
+			$iCount = 1;
+			while ($oMutex->IsLocked())
+			{
+				SetupPage::log("Waiting for cron to stop ($iCount)");
+				$iCount++;
+				sleep(10);
+			}
+		}
+		catch(Exception $e)
+		{
+			// Ignore errors
 		}
 	}
 
-	public final static function ExitMaintenanceMode()
+	public final static function ExitMaintenanceMode($bLog = true)
 	{
 		@unlink(APPROOT.'.maintenance');
+		if ($bLog)
+		{
+			SetupPage::log("<---- Exiting maintenance mode");
+		}
 	}
 }
 
