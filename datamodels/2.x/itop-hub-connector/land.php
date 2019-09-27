@@ -255,7 +255,7 @@ function DoInstall(WebPage $oPage)
     $sStatusPageUrl = utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'land.php', array('operation' => 'done'));
     
     $aWidgetParams = array(
-        'self_url' => utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'ajax.php'),
+        'self_url' => utils::GetAbsoluteUrlModulePage('itop-hub-connector', 'ajax.php', array('maintenance' => true)),
         'iframe_url' => $sIframeUrl, 
         'redirect_after_completion_url' => $sStatusPageUrl,
         'mysql_bindir' => MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''),

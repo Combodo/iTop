@@ -154,6 +154,8 @@ function ReportError($sMessage, $iErrorCode, $aMoreFields = array())
 
 try
 {
+	SetupUtils::ExitMaintenanceMode(false); // Reset maintenance mode in case of problem
+
 	utils::PushArchiveMode(false);
 	
 	ini_set('max_execution_time', max(3600, ini_get('max_execution_time'))); // Under Windows SQL/backup operations are part of the PHP timeout and require extra time
@@ -307,7 +309,8 @@ try
 			unlink(APPROOT.'data/hub/compile_authent');
 			// Load the "production" config file to clone & update it
 			$oConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
-			
+			SetupUtils::EnterMaintenanceMode($oConfig);
+
 			$oRuntimeEnv->InitDataModel($oConfig, true /* model only */);
 			
 			$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation($oConfig, $oRuntimeEnv->GetBuildDir(), true);
@@ -375,6 +378,10 @@ try
 			SetupPage::log_error(get_class($e).': '.Dict::S('iTopHub:ConfigurationSafelyReverted')."\n".$e->getMessage());
 			SetupPage::log_error('Debug trace: '.$e->getTraceAsString());
 			ReportError($e->getMessage(), $e->getCode());
+		}
+		finally
+		{
+			SetupUtils::ExitMaintenanceMode();
 		}
 		break;
 		
