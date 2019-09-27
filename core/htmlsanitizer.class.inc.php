@@ -79,10 +79,13 @@ abstract class HTMLSanitizer
 
 /**
  * Dummy HTMLSanitizer which does nothing at all!
+ *
  * Can be used if HTML Sanitization is not important
  * (for example when importing "safe" data during an on-boarding)
  * and performance is at stake
  *
+ * **Warning** : this won't filter HTML inserted in iTop at all, so this is a great security issue !
+ * Also, the InlineImage objects processing won't be called.
  */
 class HTMLNullSanitizer extends HTMLSanitizer
 {
