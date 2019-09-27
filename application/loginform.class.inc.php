@@ -46,7 +46,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginDataExtension
 			}
 			$_SESSION['login_mode'] = 'form';
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnCheckCredentials(&$iErrorCode)
@@ -58,10 +58,10 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginDataExtension
 			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $_SESSION['login_mode'], 'internal'))
 			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
-				return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
+				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnCredentialsOK(&$iErrorCode)
@@ -80,7 +80,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginDataExtension
 			// Store 'auth_user' in session for further use
 			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', $_SESSION['login_mode']);
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnError(&$iErrorCode)
@@ -89,7 +89,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginDataExtension
 		{
 			$this->bForceFormOnError = true;
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnConnected(&$iErrorCode)
@@ -99,7 +99,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginDataExtension
 			$_SESSION['can_logoff'] = true;
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	/**

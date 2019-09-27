@@ -35,7 +35,7 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 		{
 			unset($_SESSION['login_mode']);
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnReadCredentials(&$iErrorCode)
@@ -49,7 +49,22 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 			// Force login mode
 			LoginWebPage::SetLoginModeAndReload($sProposedLoginMode);
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
+	}
+
+	protected function OnError(&$iErrorCode)
+	{
+		static::ResetSession();
+		$iOnExit = LoginWebPage::getIOnExit();
+		if ($iOnExit == LoginWebPage::EXIT_RETURN)
+		{
+			return LoginWebPage::LOGIN_FSM_RETURN; // Error, exit FSM
+		}
+		elseif ($iOnExit == LoginWebPage::EXIT_HTTP_401)
+		{
+			LoginWebPage::HTTP401Error(); // Error, exit
+		}
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 }
 
@@ -73,7 +88,7 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	protected function OnError(&$iErrorCode)
 	{
 		self::ResetLoginSession();
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnCredentialsOk(&$iErrorCode)
@@ -84,7 +99,7 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 			self::ResetLoginSession();
 			exit();
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	/**

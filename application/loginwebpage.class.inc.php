@@ -54,11 +54,13 @@ class LoginWebPage extends NiceWebPage
 	const LOGIN_STATE_ERROR = 'error';                          // An error occurred, next state will be NONE
 
 	// Login FSM Returns
-	const LOGIN_FSM_RETURN_OK = 0;           // End the FSM OK (connected)
-	const LOGIN_FSM_RETURN_ERROR = 1;        // Error signaled
-	const LOGIN_FSM_RETURN_CONTINUE = 2;     // Continue FSM
+	const LOGIN_FSM_RETURN = 0;           // End the FSM OK (connected)
+	const LOGIN_FSM_ERROR = 1;        // Error signaled
+	const LOGIN_FSM_CONTINUE = 2;     // Continue FSM
 
 	protected static $sHandlerClass = __class__;
+	private static $iOnExit;
+
 	public static function RegisterHandler($sClass)
 	{
 		self::$sHandlerClass = $sClass;
@@ -389,6 +391,7 @@ class LoginWebPage extends NiceWebPage
 	 */
 	protected static function Login($iOnExit)
 	{
+		self::$iOnExit = $iOnExit;
 		if (self::SecureConnectionRequired() && !utils::IsConnectionSecure())
 		{
 			// Non secured URL... request for a secure connection
@@ -438,22 +441,14 @@ class LoginWebPage extends NiceWebPage
 						IssueLog::Info("Login: state: [$sLoginState] call: ".get_class($oLoginFSMExtensionInstance));
 					}
 					$iResponse = $oLoginFSMExtensionInstance->LoginAction($sLoginState, $iErrorCode);
-					if ($iResponse == self::LOGIN_FSM_RETURN_OK)
+					if ($iResponse == self::LOGIN_FSM_RETURN)
 					{
-						return self::EXIT_CODE_OK; // login OK, exit FSM
+						return $iErrorCode; // Asked to exit FSM, generally login OK
 					}
-					if ($iResponse == self::LOGIN_FSM_RETURN_ERROR)
+					if ($iResponse == self::LOGIN_FSM_ERROR)
 					{
-						static::ResetSession();
-						if ($iOnExit == self::EXIT_RETURN)
-						{
-							return $iErrorCode; // Error, exit FSM
-						}
-						elseif ($iOnExit == self::EXIT_HTTP_401)
-						{
-							self::HTTP401Error(); // Error, exit
-						}
 						$sLoginState = self::LOGIN_STATE_SET_ERROR; // Next state will be error
+						// An error was detected, skip the other plugins turn
 						break;
 					}
 					// The plugin has nothing to do for this state, continue to the next plugin
@@ -647,13 +642,14 @@ class LoginWebPage extends NiceWebPage
 			$bRet = UserRights::Login($_SESSION['auth_user']); // Login & set the user's language
 			if ($bRet)
 			{
-				return self::LOGIN_FSM_RETURN_OK;
+				$iErrorCode = self::EXIT_CODE_OK;
+				return self::LOGIN_FSM_RETURN;
 			}
 		}
 		// The user account is no longer valid/enabled
 		$iErrorCode = self::EXIT_CODE_WRONGCREDENTIALS;
 
-		return self::LOGIN_FSM_RETURN_ERROR;
+		return self::LOGIN_FSM_ERROR;
 	}
 
 	/**
@@ -1117,4 +1113,13 @@ class LoginWebPage extends NiceWebPage
 		}
 		return false; // nothing matched !!
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public static function getIOnExit()
+	{
+		return self::$iOnExit;
+	}
+
 } // End of class

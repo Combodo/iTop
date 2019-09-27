@@ -92,7 +92,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 				return $this->OnError($iErrorCode);
 		}
 
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	/**
@@ -104,7 +104,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	 */
 	protected function OnStart(&$iErrorCode)
 	{
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	/**
@@ -117,7 +117,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	 */
 	protected function OnModeDetection(&$iErrorCode)
 	{
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	/**
@@ -133,7 +133,7 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	 */
 	protected function OnReadCredentials(&$iErrorCode)
 	{
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	/**
@@ -146,27 +146,27 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	 */
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnUsersOK(&$iErrorCode)
 	{
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnError(&$iErrorCode)
 	{
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 }
 

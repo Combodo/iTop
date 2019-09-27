@@ -31,7 +31,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 				$_SESSION['login_mode'] = 'basic';
 			}
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnCheckCredentials(&$iErrorCode)
@@ -42,10 +42,10 @@ class LoginBasic extends AbstractLoginFSMExtension
 			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $_SESSION['login_mode'], 'internal'))
 			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
-				return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
+				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnCredentialsOK(&$iErrorCode)
@@ -55,7 +55,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 			list($sAuthUser) = $this->GetAuthUserAndPassword();
 			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', $_SESSION['login_mode']);
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnError(&$iErrorCode)
@@ -64,7 +64,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 		{
 			LoginWebPage::HTTP401Error();
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnConnected(&$iErrorCode)
@@ -74,7 +74,7 @@ class LoginBasic extends AbstractLoginFSMExtension
 			$_SESSION['can_logoff'] = true;
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	private function GetAuthUserAndPassword()

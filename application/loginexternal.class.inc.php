@@ -30,7 +30,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 				$_SESSION['login_mode'] = 'external';
 			}
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnCheckCredentials(&$iErrorCode)
@@ -41,10 +41,10 @@ class LoginExternal extends AbstractLoginFSMExtension
 			if (!UserRights::CheckCredentials($sAuthUser, '', $_SESSION['login_mode'], 'external'))
 			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
-				return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
+				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnCredentialsOK(&$iErrorCode)
@@ -54,7 +54,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 			$sAuthUser = $this->GetAuthUser();
 			LoginWebPage::OnLoginSuccess($sAuthUser, 'external', $_SESSION['login_mode']);
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnConnected(&$iErrorCode)
@@ -64,7 +64,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 			$_SESSION['can_logoff'] = false;
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	/**

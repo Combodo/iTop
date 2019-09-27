@@ -41,7 +41,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 	protected function OnStart(&$iErrorCode)
 	{
 		unset($_SESSION['phpCAS']);
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnReadCredentials(&$iErrorCode)
@@ -67,14 +67,14 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 					{
 						unset($_SESSION['login_will_redirect']);
 						$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
-						return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
+						return LoginWebPage::LOGIN_FSM_ERROR;
 					}
 				}
 				$_SESSION['login_mode'] = 'cas';
 				phpCAS::forceAuthentication(); // Redirect to CAS and exit
 			}
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnCheckCredentials(&$iErrorCode)
@@ -84,14 +84,14 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			if (!isset($_SESSION['auth_user']))
 			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
-				return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
+				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
 			if (Config::Get('cas_user_synchro' ))
 			{
 				self::DoUserProvisioning($_SESSION['auth_user']);
 			}
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnCredentialsOK(&$iErrorCode)
@@ -102,11 +102,11 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			if (!LoginWebPage::CheckUser($sAuthUser))
 			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_NOTAUTHORIZED;
-				return LoginWebPage::LOGIN_FSM_RETURN_ERROR;
+				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
 			LoginWebPage::OnLoginSuccess($sAuthUser, 'external', $_SESSION['login_mode']);
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnError(&$iErrorCode)
@@ -121,7 +121,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 				exit();
 			}
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnConnected(&$iErrorCode)
@@ -131,7 +131,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			$_SESSION['can_logoff'] = true;
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
-		return LoginWebPage::LOGIN_FSM_RETURN_CONTINUE;
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	/**
