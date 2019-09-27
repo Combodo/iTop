@@ -135,37 +135,39 @@ class RunTimeEnvironment
 			$this->oExtensionsMap = new iTopExtensionsMap($this->sTargetEnv);
 		}
 	}
-	
+
 	/**
 	 * Analyzes the current installation and the possibilities
-	 * 
+	 *
 	 * @param Config $oConfig Defines the target environment (DB)
 	 * @param mixed $modulesPath Either a single string or an array of absolute paths
-	 * @param bool  $bAbortOnMissingDependency ...
-	 * @param hash $aModulesToLoad List of modules to search for, defaults to all if ommitted
-	 * @return hash Array with the following format:
+	 * @param bool $bAbortOnMissingDependency ...
+	 * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
+	 *
+	 * @return array Array with the following format:
 	 * array =>
 	 *     'iTop' => array(
 	 *         'version_db' => ... (could be empty in case of a fresh install)
 	 *         'version_code => ...
 	 *     )
 	 *     <module_name> => array(
-	 *         'version_db' => ...  
-	 *         'version_code' => ...  
+	 *         'version_db' => ...
+	 *         'version_code' => ...
 	 *         'install' => array(
 	 *             'flag' => SETUP_NEVER | SETUP_OPTIONAL | SETUP_MANDATORY
-	 *             'message' => ...  
-	 *         )   
+	 *             'message' => ...
+	 *         )
 	 *         'uninstall' => array(
 	 *             'flag' => SETUP_NEVER | SETUP_OPTIONAL | SETUP_MANDATORY
-	 *             'message' => ...  
-	 *         )   
-	 *         'label' => ...  
-	 *         'dependencies' => array(<module1>, <module2>, ...)  
+	 *             'message' => ...
+	 *         )
+	 *         'label' => ...
+	 *         'dependencies' => array(<module1>, <module2>, ...)
 	 *         'visible' => true | false
 	 *     )
 	 * )
-	 */     
+	 * @throws \Exception
+	 */
 	public function AnalyzeInstallation($oConfig, $modulesPath, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
 	{
 		$aRes = array(
@@ -342,7 +344,7 @@ class RunTimeEnvironment
 	 * Return an array with extra directories to scan for extensions/modules to install
 	 * @return string[]
 	 */
-	protected function GetExtraDirsToScan()
+	protected function GetExtraDirsToScan($aDirs = array())
 	{
 		// Do nothing, overload this method if needed
 		return array();
