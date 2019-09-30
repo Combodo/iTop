@@ -503,7 +503,7 @@ EOF
 		}
 		else if (strcasecmp($aInstalledInfo['product_name'], ITOP_APPLICATION) != 0)
 		{
-			$oPage->p("<b>Warning: The installed products seem different. Are you sure the you want to upgrade {$aInstalledInfo['product_name']} with ".ITOP_APPLICATION."?</b>");
+			$oPage->p("<b>Warning: The installed products seem different. Are you sure that you want to upgrade {$aInstalledInfo['product_name']} with ".ITOP_APPLICATION."?</b>");
 		}
 
 		$sInstalledVersion = $aInstalledInfo['product_version'];
