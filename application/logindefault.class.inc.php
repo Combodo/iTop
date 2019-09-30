@@ -51,21 +51,6 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
-
-	protected function OnError(&$iErrorCode)
-	{
-		LoginWebPage::ResetSession();
-		$iOnExit = LoginWebPage::getIOnExit();
-		if ($iOnExit == LoginWebPage::EXIT_RETURN)
-		{
-			return LoginWebPage::LOGIN_FSM_RETURN; // Error, exit FSM
-		}
-		elseif ($iOnExit == LoginWebPage::EXIT_HTTP_401)
-		{
-			LoginWebPage::HTTP401Error(); // Error, exit
-		}
-		return LoginWebPage::LOGIN_FSM_CONTINUE;
-	}
 }
 
 /**
@@ -88,6 +73,16 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	protected function OnError(&$iErrorCode)
 	{
 		self::ResetLoginSession();
+		$iOnExit = LoginWebPage::getIOnExit();
+		if ($iOnExit == LoginWebPage::EXIT_RETURN)
+		{
+			return LoginWebPage::LOGIN_FSM_RETURN; // Error, exit FSM
+		}
+		elseif ($iOnExit == LoginWebPage::EXIT_HTTP_401)
+		{
+			LoginWebPage::HTTP401Error(); // Error, exit
+		}
+		// LoginWebPage::EXIT_PROMPT
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
