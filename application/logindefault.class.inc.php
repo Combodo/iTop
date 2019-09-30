@@ -54,7 +54,7 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 
 	protected function OnError(&$iErrorCode)
 	{
-		static::ResetSession();
+		LoginWebPage::ResetSession();
 		$iOnExit = LoginWebPage::getIOnExit();
 		if ($iOnExit == LoginWebPage::EXIT_RETURN)
 		{

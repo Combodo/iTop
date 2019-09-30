@@ -346,7 +346,7 @@ class LoginWebPage extends NiceWebPage
 		$this->output();
 	}
 
-	static function ResetSession()
+	public static function ResetSession()
 	{
 		// Unset all of the session variables.
 		unset($_SESSION['auth_user']);
