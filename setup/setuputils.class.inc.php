@@ -1838,7 +1838,7 @@ EOF
 
 	public final static function EnterMaintenanceMode($oConfig)
 	{
-		@touch(APPROOT.'.maintenance');
+		@touch(MAINTENANCE_MODE_FILE);
 		SetupPage::log("----> Entering maintenance mode");
 		try
 		{
@@ -1872,7 +1872,7 @@ EOF
 
 	public final static function ExitMaintenanceMode($bLog = true)
 	{
-		@unlink(APPROOT.'.maintenance');
+		@unlink(MAINTENANCE_MODE_FILE);
 		if ($bLog)
 		{
 			SetupPage::log("<---- Exiting maintenance mode");

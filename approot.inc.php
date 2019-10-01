@@ -3,6 +3,7 @@
 define('APPROOT', dirname(__FILE__).'/');
 define('APPCONF', APPROOT.'conf/');
 define('ITOP_DEFAULT_ENV', 'production');
+define('MAINTENANCE_MODE_FILE', APPROOT.'data/.maintenance');
 
 if (function_exists('microtime'))
 {
@@ -23,7 +24,7 @@ if (!isset($bBypassMaintenance))
 	$bBypassMaintenance = isset($_REQUEST['maintenance']) ? boolval($_REQUEST['maintenance']) : false;
 }
 
-if (file_exists(APPROOT.'.maintenance') && !$bBypassMaintenance)
+if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
 {
 	$sMessage = 'Application is currently in maintenance';
 	$sTitle = 'Maintenance';
