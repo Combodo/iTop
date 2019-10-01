@@ -3194,13 +3194,15 @@ span.search-button, span.refresh-button {
 }
 .object-ref.archived {
 }
-.object-ref-icon.fa {
+
+.object-ref-icon.fas {
 	color: $highlight-color;
 	font-size: smaller;
 	vertical-align: 1px;
 	margin-right: 1px;
 }
-.object-ref-icon-disabled.fa {
+
+.object-ref-icon-disabled.fas {
 	color: $grey-color;
 	font-size: smaller;
 	margin-right: 1px;

@@ -2771,13 +2771,13 @@ span.search-button, span.refresh-button {
   margin-top: 3px;
   margin-bottom: 1px;
 }
-.object-ref-icon.fa {
+.object-ref-icon.fas {
   color: #ea7d1e;
   font-size: smaller;
   vertical-align: 1px;
   margin-right: 1px;
 }
-.object-ref-icon-disabled.fa {
+.object-ref-icon-disabled.fas {
   color: #555;
   font-size: smaller;
   margin-right: 1px;
