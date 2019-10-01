@@ -1857,11 +1857,18 @@ EOF
 				$oConfig->Get('db_tls.ca')
 			);
 			$iCount = 1;
+			$iStarted = time();
+			$iMaxDuration = $oConfig->Get('cron_max_execution_time');
+			$iTimeLimit = $iStarted + $iMaxDuration;
 			while ($oMutex->IsLocked())
 			{
 				SetupPage::log("Waiting for cron to stop ($iCount)");
 				$iCount++;
 				sleep(10);
+				if (time() > $iTimeLimit)
+				{
+					throw new Exception("Cannot enter maintenance mode");
+				}
 			}
 		}
 		catch(Exception $e)
