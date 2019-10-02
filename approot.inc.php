@@ -31,7 +31,7 @@ if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
 
 	http_response_code(503);
 	// Display message depending on the request
-	include(APPROOT.'maintenancemsg.php');
+	include(APPROOT.'application/maintenancemsg.php');
 
 	switch (true)
 	{

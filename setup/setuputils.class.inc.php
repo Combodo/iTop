@@ -1839,7 +1839,7 @@ EOF
 	public final static function EnterMaintenanceMode($oConfig)
 	{
 		@touch(MAINTENANCE_MODE_FILE);
-		SetupPage::log("----> Entering maintenance mode");
+		self::Log("----> Entering maintenance mode");
 		try
 		{
 			// Wait for cron to stop
@@ -1862,7 +1862,7 @@ EOF
 			$iTimeLimit = $iStarted + $iMaxDuration;
 			while ($oMutex->IsLocked())
 			{
-				SetupPage::log("Waiting for cron to stop ($iCount)");
+				self::Log("Waiting for cron to stop ($iCount)");
 				$iCount++;
 				sleep(10);
 				if (time() > $iTimeLimit)
@@ -1882,7 +1882,19 @@ EOF
 		@unlink(MAINTENANCE_MODE_FILE);
 		if ($bLog)
 		{
-			SetupPage::log("<---- Exiting maintenance mode");
+			self::Log("<---- Exiting maintenance mode");
+		}
+	}
+
+	private final static function Log($sText)
+	{
+		if (class_exists('SetupPage'))
+		{
+			SetupPage::log($sText);
+		}
+		else
+		{
+			IssueLog::Info($sText);
 		}
 	}
 }

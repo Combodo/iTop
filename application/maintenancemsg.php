@@ -7,6 +7,7 @@
 
 //
 // Maintenance message display functions
+// Only included by approot.inc.php
 //
 
 /**
