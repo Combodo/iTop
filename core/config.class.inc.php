@@ -388,7 +388,7 @@ class Config
 		'log_filename_builder_impl' => array(
 			'type' => 'string',
 			'description' => 'Name of the ILogFileNameBuilder to use',
-			'default' => 'DailyRotatingLogFileNameBuilder',
+			'default' => 'WeeklyRotatingLogFileNameBuilder',
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,

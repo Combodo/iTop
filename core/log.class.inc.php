@@ -90,6 +90,20 @@ class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 /**
  * @since 2.7.0 N°2518
  */
+class WeeklyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
+{
+	protected function GetFileSuffix()
+	{
+		$sWeekYear = date('o');
+		$sWeekNumber = date('W');
+
+		return $sWeekYear.'-week'.$sWeekNumber;
+	}
+}
+
+/**
+ * @since 2.7.0 N°2518
+ */
 class LogFileNameBuilderFactory
 {
 	/**
