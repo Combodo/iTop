@@ -385,6 +385,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'log_filename_builder_impl' => array(
+			'type' => 'string',
+			'description' => 'Name of the ILogFileNameBuilder to use',
+			'default' => 'DailyRotatingLogFileNameBuilder',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'log_rest_service' => array(
 			'type' => 'bool',
 			'description' => 'Log the usage of the REST/JSON service',

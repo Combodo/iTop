@@ -24,17 +24,22 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT."/application/nicewebpage.class.inc.php");
-require_once(APPROOT."setup/modulediscovery.class.inc.php");
-require_once(APPROOT."setup/runtimeenv.class.inc.php");
+require_once(APPROOT.'/application/nicewebpage.class.inc.php');
+require_once(APPROOT.'setup/modulediscovery.class.inc.php');
+require_once(APPROOT.'setup/runtimeenv.class.inc.php');
+require_once(APPROOT.'core/log.class.inc.php');
 
-define('INSTALL_LOG_FILE', APPROOT.'/log/setup.log');
+SetupLog::Enable(APPROOT.'/log/setup.log');
 
+
+/**
+ * @uses SetupLog
+ */
 class SetupPage extends NiceWebPage
 {
     public function __construct($sTitle)
     {
-        parent::__construct($sTitle);
+	    parent::__construct($sTitle);
    		$this->add_linked_script("../js/jquery.blockUI.js");
    		$this->add_linked_script("../setup/setup.js");
 	    $this->add_style(
@@ -276,32 +281,26 @@ CSS
 	
 	public static function log_error($sText)
 	{
-		self::log("Error - ".$sText);
+		SetupLog::Error($sText);
 	}
 
 	public static function log_warning($sText)
 	{
-		self::log("Warning - ".$sText);
+		SetupLog::Warning($sText);
 	}
 
 	public static function log_info($sText)
 	{
-		self::log("Info - ".$sText);
+		SetupLog::Info($sText);
 	}
 
 	public static function log_ok($sText)
 	{
-		self::log("Ok - ".$sText);
+		SetupLog::Ok($sText);
 	}
 
 	public static function log($sText)
 	{
-		$hLogFile = @fopen(INSTALL_LOG_FILE, 'a');
-		if ($hLogFile !== false)
-		{
-			$sDate = date('Y-m-d H:i:s');
-			fwrite($hLogFile, "$sDate - $sText\n");
-			fclose($hLogFile);
-		}
+		SetupLog::Ok($sText);
 	}
-} // End of class
+}

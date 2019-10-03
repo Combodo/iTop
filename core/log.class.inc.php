@@ -16,54 +16,159 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+
+/**
+ * @since 2.7.0 N째2518
+ */
+interface ILogFileNameBuilder
+{
+	public function __construct($sFileFullPath);
+
+	public function GetLogFilePath();
+}
+
+class DefaultLogFileNameBuilder implements ILogFileNameBuilder
+{
+	private $sLogFileFullPath;
+
+	public function __construct($sFileFullPath)
+	{
+		$this->sLogFileFullPath = $sFileFullPath;
+	}
+
+	public function GetLogFilePath()
+	{
+		return $this->sLogFileFullPath;
+	}
+}
+
+/**
+ * Adds a suffix to the filename
+ *
+ * @since 2.7.0 N째2518
+ */
+abstract class RotatingLogFileNameBuilder implements ILogFileNameBuilder
+{
+	protected $sFilePath;
+	protected $sFileBaseName;
+	protected $sFileExtension;
+
+	public function __construct($sFileFullPath)
+	{
+		$aPathParts = pathinfo($sFileFullPath);
+
+		$this->sFilePath = $aPathParts['dirname'];
+		$this->sFileBaseName = $aPathParts['filename'];
+		$this->sFileExtension = $aPathParts['extension'];
+	}
+
+	public function GetLogFilePath()
+	{
+		$sFileSuffix = $this->GetFileSuffix();
+
+		return $this->sFilePath
+			.'/'
+			.$this->sFileBaseName
+			.'.'.$sFileSuffix
+			.'.'.$this->sFileExtension;
+	}
+
+	abstract protected function GetFileSuffix();
+}
+
+/**
+ * @since 2.7.0 N째2518
+ */
+class DailyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
+{
+	protected function GetFileSuffix()
+	{
+		return date('Y-m-d');
+	}
+}
+
+/**
+ * @since 2.7.0 N째2518
+ */
+class LogFileNameBuilderFactory
+{
+	/**
+	 * Uses the 'log_filename_builder_impl' config parameter
+	 *
+	 * @param string $sFileFullPath
+	 *
+	 * @return \ILogFileNameBuilder
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public static function GetInstance($sFileFullPath)
+	{
+		$oConfig = utils::GetConfig();
+		$sFileNameBuilderImpl = $oConfig->Get('log_filename_builder_impl');
+		if (empty($sFileNameBuilderImpl))
+		{
+			$sFileNameBuilderImpl = 'DefaultLogFileNameBuilder';
+		}
+
+		return new $sFileNameBuilderImpl($sFileFullPath);
+	}
+}
+
+
 /**
  * File logging
  *
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @since 2.7.0 allow to rotate file (N째2518)
  */
-
 class FileLog
 {
-	protected $m_sFile = ''; // log is disabled if this is empty
+	protected $oFileNameBuilder;
 
 	/**
 	 * FileLog constructor.
 	 *
 	 * @param string $sFileName
 	 *
-	 * @since 2.7.0 allow to rotate file (N�2518)
+	 * @throws \ConfigException
+	 * @throws \CoreException
 	 */
 	public function __construct($sFileName = '')
 	{
-		$this->m_sFile = $sFileName;
+		$this->oFileNameBuilder = LogFileNameBuilderFactory::GetInstance($sFileName);
 	}
 
 	public function Error($sText)
 	{
-		$this->Write("Error | ".$sText);
+		$this->Write('Error | '.$sText);
 	}
 
 	public function Warning($sText)
 	{
-		$this->Write("Warning | ".$sText);
+		$this->Write('Warning | '.$sText);
 	}
 
 	public function Info($sText)
 	{
-		$this->Write("Info | ".$sText);
+		$this->Write('Info | '.$sText);
 	}
 
 	public function Ok($sText)
 	{
-		$this->Write("Ok | ".$sText);
+		$this->Write('Ok | '.$sText);
 	}
 
 	protected function Write($sText)
 	{
-		if (strlen($this->m_sFile) == 0) return;
+		$sLogFilePath = $this->oFileNameBuilder->GetLogFilePath();
 
-		$hLogFile = @fopen($this->m_sFile, 'a');
+		if (empty($sLogFilePath))
+		{
+			return;
+		}
+
+		$hLogFile = @fopen($sLogFilePath, 'a');
 		if ($hLogFile !== false)
 		{
 			flock($hLogFile, LOCK_EX);
