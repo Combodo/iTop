@@ -46,7 +46,7 @@ abstract class Parameters
 		return $aParamValues;
 	}
 
-	protected function Set($sCode, $value)
+	public function Set($sCode, $value)
 	{
 		$this->aData[$sCode] = $value;
 	}
