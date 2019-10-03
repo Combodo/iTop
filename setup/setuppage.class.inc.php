@@ -37,7 +37,8 @@ class SetupPage extends NiceWebPage
         parent::__construct($sTitle);
    		$this->add_linked_script("../js/jquery.blockUI.js");
    		$this->add_linked_script("../setup/setup.js");
-        $this->add_style("
+	    $this->add_style(
+		    <<<CSS
 body {
 	background-color: #eee;
 	margin: 0;
@@ -168,7 +169,8 @@ h3.clickable.open {
 	padding-left:16px;
 	cursor: hand;	
 }
-		");
+CSS
+	    );
 	}
 
 	/**

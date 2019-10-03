@@ -27,6 +27,13 @@ class FileLog
 {
 	protected $m_sFile = ''; // log is disabled if this is empty
 
+	/**
+	 * FileLog constructor.
+	 *
+	 * @param string $sFileName
+	 *
+	 * @since 2.7.0 allow to rotate file (N°2518)
+	 */
 	public function __construct($sFileName = '')
 	{
 		$this->m_sFile = $sFileName;
@@ -34,22 +41,22 @@ class FileLog
 
 	public function Error($sText)
 	{
-		self::Write("Error | ".$sText);
+		$this->Write("Error | ".$sText);
 	}
 
 	public function Warning($sText)
 	{
-		self::Write("Warning | ".$sText);
+		$this->Write("Warning | ".$sText);
 	}
 
 	public function Info($sText)
 	{
-		self::Write("Info | ".$sText);
+		$this->Write("Info | ".$sText);
 	}
 
 	public function Ok($sText)
 	{
-		self::Write("Ok | ".$sText);
+		$this->Write("Ok | ".$sText);
 	}
 
 	protected function Write($sText)
@@ -73,6 +80,7 @@ abstract class LogAPI
 {
 	public static function Enable($sTargetFile)
 	{
+		// m_oFileLog is not defined as a class attribute so that each impl will have its own
 		static::$m_oFileLog = new FileLog($sTargetFile);
 	}
 
