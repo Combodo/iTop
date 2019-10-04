@@ -5328,10 +5328,18 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Complete a new object with data from context
      *
-     * @internal
-     *
-	 * @param array $aContextParam Context used for creation form prefilling
+	 * @overwritable-hook You can extend this method in order to provide your own logic.
 	 *
+	 * @see https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Aform_prefill wiki tutorial
+	 *
+	 * @param array $aContextParam Context used for creation form prefilling. Contains those keys :
+	 * <ul>
+	 *   <li>string 'dest_class'
+	 *   <li>string 'origin' either console or portal
+	 *   <li>DBObject 'source_obj' fixed only when creating an external key object
+	 * </ul>
+	 *
+	 * @since 2.5.0 N°729
 	 */
 	public function PrefillCreationForm(&$aContextParam)
 	{
@@ -5339,24 +5347,40 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Complete an object after a state transition with data from context
-     *
-     * @internal
-     *
-	 * @param array $aContextParam Context used for creation form prefilling
 	 *
+	 * @overwritable-hook You can extend this method in order to provide your own logic.
+     *
+	 * @see https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Aform_prefill wiki tutorial
+	 *
+	 * @param array $aContextParam Context used for creation form prefilling. Contains those keys :
+	 * <ul>
+	 *   <li>array 'expected_attributes' provides display flags on attributes in the form
+	 *   <li>string 'origin' either console or portal
+	 *   <li>string 'stimulus' provide the applied stimulus
+	 * </ul>
+	 *
+	 * @since 2.5.0 N°729
 	 */
 	public function PrefillTransitionForm(&$aContextParam)
 	{
 	}
 
 	/**
-	 * Complete a filter ($aContextParam['filter']) data from context
-	 * (Called on source object)
-     *
-     * @internal
-     *
-	 * @param array $aContextParam Context used for creation form prefilling
+	 * Complete a filter data from context (Called on source object)
 	 *
+	 * @overwritable-hook You can extend this method in order to provide your own logic.
+	 *
+	 * @see https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Aform_prefill wiki tutorial
+	 *
+	 * @param array $aContextParam Context used for creation form prefilling. Contains :
+	 * <ul>
+	 *   <li>string 'dest_class'
+	 *   <li>DBObjectSearch 'filter'
+	 *   <li>string 'user' login string of the connected user
+	 *   <li>string 'origin' either 'console' or 'portal'
+	 * </ul>
+	 *
+	 * @since 2.5.0 N°729
 	 */
 	public function PrefillSearchForm(&$aContextParam)
 	{
@@ -5364,12 +5388,14 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Prefill a creation / stimulus change / search form according to context, current state of an object, stimulus.. $sOperation
-     *
-     * @internal
-     *
-	 * @param string $sOperation Operation identifier
+	 *
+	 * @internal
+	 *
 	 * @param array $aContextParam Context used for creation form prefilling
 	 *
+	 * @param string $sOperation Operation identifier
+	 *
+	 * @since 2.5.0 N°729
 	 */
 	public function PrefillForm($sOperation, &$aContextParam)
 	{
