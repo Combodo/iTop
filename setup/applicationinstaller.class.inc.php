@@ -88,9 +88,12 @@ class ApplicationInstaller
 	 * Runs all the installation steps in one go and directly outputs
 	 * some information about the progress and the success of the various
 	 * sequential steps.
+	 *
+	 * @param bool $bSwitchToMaintenance
+	 *
 	 * @return boolean True if the installation was successful, false otherwise
 	 */
-	public function ExecuteAllSteps()
+	public function ExecuteAllSteps($bSwitchToMaintenance = true)
 	{
 		$sStep = '';
 		$sStepLabel = '';
@@ -106,7 +109,7 @@ class ApplicationInstaller
 			{
 				echo "Starting the installation...\n";
 			}
-			$aRes = $this->ExecuteStep($sStep);
+			$aRes = $this->ExecuteStep($sStep, $bSwitchToMaintenance);
 			$sStep = $aRes['next-step'];
 			$sStepLabel = $aRes['next-step-label'];
 			
@@ -157,15 +160,19 @@ class ApplicationInstaller
 	 * and the next step to perform
 	 *
 	 * @param string $sStep The identifier of the step to execute
+	 * @param bool $bSwitchToMaintenance
 	 *
 	 * @return array (status => , message => , percentage-completed => , next-step => , next-step-label => )
 	 */
-	public function ExecuteStep($sStep = '')
+	public function ExecuteStep($sStep = '', $bSwitchToMaintenance= true)
 	{
 		try
 		{
 			$fStart = microtime(true);
-			SetupUtils::EnterMaintenanceMode($this->GetConfig());
+			if ($bSwitchToMaintenance)
+			{
+				SetupUtils::EnterMaintenanceMode($this->GetConfig());
+			}
 			switch ($sStep)
 			{
 				case '':
@@ -401,7 +408,10 @@ class ApplicationInstaller
 		}
 		finally
 		{
-			SetupUtils::ExitMaintenanceMode();
+			if ($bSwitchToMaintenance)
+			{
+				SetupUtils::ExitMaintenanceMode();
+			}
 			$fDuration = round(microtime(true) - $fStart, 2);
 			SetupPage::log_info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
