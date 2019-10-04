@@ -91,49 +91,57 @@ class ApplicationInstaller
 	 *
 	 * @param bool $bSwitchToMaintenance
 	 *
+	 * @param bool $bSilent
+	 *
 	 * @return boolean True if the installation was successful, false otherwise
 	 */
-	public function ExecuteAllSteps($bSwitchToMaintenance = true)
+	public function ExecuteAllSteps($bSwitchToMaintenance = true, $bVerbose = true)
 	{
 		$sStep = '';
 		$sStepLabel = '';
 		$iOverallStatus = self::OK;
 		do
 		{
-			if($sStep != '')
+			if ($bVerbose)
 			{
-				echo "$sStepLabel\n";
-				echo "Executing '$sStep'\n";
-			}
-			else
-			{
-				echo "Starting the installation...\n";
+				if ($sStep != '')
+				{
+					echo "$sStepLabel\n";
+					echo "Executing '$sStep'\n";
+				}
+				else
+				{
+					echo "Starting the installation...\n";
+				}
 			}
 			$aRes = $this->ExecuteStep($sStep, $bSwitchToMaintenance);
 			$sStep = $aRes['next-step'];
 			$sStepLabel = $aRes['next-step-label'];
-			
-			switch($aRes['status'])
+
+			if ($bVerbose)
 			{
-				case self::OK;
-				echo "Ok. ".$aRes['percentage-completed']." % done.\n";
-				break;
-				
-				case self::ERROR:
-				$iOverallStatus = self::ERROR;
-				echo "Error: ".$aRes['message']."\n";
-				break;
-				
-				case self::WARNING:
-				$iOverallStatus = self::WARNING;
-				echo "Warning: ".$aRes['message']."\n";
-				echo $aRes['percentage-completed']." % done.\n";
-				break;
-					
-				case self::INFO:
-				echo "Info: ".$aRes['message']."\n";
-				echo $aRes['percentage-completed']." % done.\n";
-				break;
+				switch ($aRes['status'])
+				{
+					case self::OK;
+						echo "Ok. ".$aRes['percentage-completed']." % done.\n";
+						break;
+
+					case self::ERROR:
+						$iOverallStatus = self::ERROR;
+						echo "Error: ".$aRes['message']."\n";
+						break;
+
+					case self::WARNING:
+						$iOverallStatus = self::WARNING;
+						echo "Warning: ".$aRes['message']."\n";
+						echo $aRes['percentage-completed']." % done.\n";
+						break;
+
+					case self::INFO:
+						echo "Info: ".$aRes['message']."\n";
+						echo $aRes['percentage-completed']." % done.\n";
+						break;
+				}
 			}
 		}
 		while(($aRes['status'] != self::ERROR) && ($aRes['next-step'] != ''));
