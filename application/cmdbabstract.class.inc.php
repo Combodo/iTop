@@ -2179,11 +2179,14 @@ EOF
 									if ((count($aAllowedValues) == 1) && ($bMandatory == 'true'))
 									{
 										// When there is only once choice, select it by default
-										$oPage->add_ready_script(
-											<<<EOF
+										if($value != $key)
+										{
+											$oPage->add_ready_script(
+												<<<EOF
 $('#$iId').attr('data-validate','dependencies');
 EOF
-										);
+											);
+										}
 										$sSelected = ' selected';
 									}
 									else
