@@ -6913,7 +6913,16 @@ class AttributeExternalField extends AttributeDefinition
 			{
 				$sFormFieldClass = $oRemoteAttDef::GetFormFieldClass();
 			}
+			/** @var \Combodo\iTop\Form\Field\Field $oFormField */
 			$oFormField = new $sFormFieldClass($this->GetCode());
+			switch ($sFormFieldClass)
+			{
+				case '\Combodo\iTop\Form\Field\SelectField':
+					$oFormField->SetChoices($oRemoteAttDef->GetAllowedValues($oObject->ToArgsForQuery()));
+					break;
+				default:
+					break;
+			}
 		}
 		parent::MakeFormField($oObject, $oFormField);
 
