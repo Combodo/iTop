@@ -57,16 +57,7 @@ class WizStepWelcome extends WizardStep
 
 	public function ProcessParams($bMoveForward = true)
 	{
-		if (!is_dir(APPROOT.'data'))
-		{
-			mkdir(APPROOT.'data');
-		}
-		if (!is_dir(APPROOT.'data/setup'))
-		{
-			mkdir(APPROOT.'data/setup');
-		}
-		$sUID = hash('sha256', rand());
-		file_put_contents(APPROOT.'data/setup/authent', $sUID);
+		$sUID = SetupUtils::CreateSetupToken();
 		$this->oWizard->SetParameter('authent', $sUID);
 		return array('class' => 'WizStepInstallOrUpgrade', 'state' => '');
 	}

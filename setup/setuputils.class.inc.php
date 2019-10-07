@@ -1886,6 +1886,40 @@ EOF
 		}
 	}
 
+	/**
+	 * Create and store Setup authentication token
+	 *
+	 * @return string token
+	 */
+	public final static function CreateSetupToken()
+	{
+		if (!is_dir(APPROOT.'data'))
+		{
+			mkdir(APPROOT.'data');
+		}
+		if (!is_dir(APPROOT.'data/setup'))
+		{
+			mkdir(APPROOT.'data/setup');
+		}
+		$sUID = hash('sha256', rand());
+		file_put_contents(APPROOT.'data/setup/authent', $sUID);
+		return $sUID;
+	}
+
+	/**
+	 * Verify Setup authentication token (from the request parameter 'authent')
+	 *
+	 * @throws \SecurityException
+	 */
+	public final static function CheckSetupToken()
+	{
+		$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
+		if (!file_exists(APPROOT.'data/setup/authent') || $sAuthent !== file_get_contents(APPROOT.'data/setup/authent'))
+		{
+			throw new SecurityException('Setup operations are not allowed outside of the setup');
+		}
+	}
+
 	private final static function Log($sText)
 	{
 		if (class_exists('SetupPage'))

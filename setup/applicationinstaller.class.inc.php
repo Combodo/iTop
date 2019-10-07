@@ -91,11 +91,13 @@ class ApplicationInstaller
 	 *
 	 * @param bool $bSwitchToMaintenance
 	 *
-	 * @param bool $bSilent
+	 * @param bool $bVerbose
+	 * @param string|null $sMessage
+	 * @param string|null $sInstallComment
 	 *
 	 * @return boolean True if the installation was successful, false otherwise
 	 */
-	public function ExecuteAllSteps($bSwitchToMaintenance = true, $bVerbose = true)
+	public function ExecuteAllSteps($bSwitchToMaintenance = true, $bVerbose = true, &$sMessage = null, $sInstallComment = null)
 	{
 		$sStep = '';
 		$sStepLabel = '';
@@ -114,10 +116,10 @@ class ApplicationInstaller
 					echo "Starting the installation...\n";
 				}
 			}
-			$aRes = $this->ExecuteStep($sStep, $bSwitchToMaintenance);
+			$aRes = $this->ExecuteStep($sStep, $bSwitchToMaintenance, $sInstallComment);
 			$sStep = $aRes['next-step'];
 			$sStepLabel = $aRes['next-step-label'];
-
+			$sMessage = $aRes['message'];
 			if ($bVerbose)
 			{
 				switch ($aRes['status'])
@@ -140,6 +142,18 @@ class ApplicationInstaller
 					case self::INFO:
 						echo "Info: ".$aRes['message']."\n";
 						echo $aRes['percentage-completed']." % done.\n";
+						break;
+				}
+			}
+			else
+			{
+				switch ($aRes['status'])
+				{
+					case self::ERROR:
+						$iOverallStatus = self::ERROR;
+						break;
+					case self::WARNING:
+						$iOverallStatus = self::WARNING;
 						break;
 				}
 			}
@@ -169,10 +183,11 @@ class ApplicationInstaller
 	 *
 	 * @param string $sStep The identifier of the step to execute
 	 * @param bool $bSwitchToMaintenance
+	 * @param string|null $sInstallComment
 	 *
 	 * @return array (status => , message => , percentage-completed => , next-step => , next-step-label => )
 	 */
-	public function ExecuteStep($sStep = '', $bSwitchToMaintenance= true)
+	public function ExecuteStep($sStep = '', $bSwitchToMaintenance= true, $sInstallComment = null)
 	{
 		try
 		{
@@ -365,7 +380,7 @@ class ApplicationInstaller
 					$aParamValues = $this->oParams->GetParamForConfigArray();
 
 					self::DoCreateConfig($sTargetDir, $sPreviousConfigFile, $sTargetEnvironment, $sDataModelVersion,
-						$bOldAddon, $aSelectedModuleCodes, $aSelectedExtensionCodes, $aParamValues);
+						$bOldAddon, $aSelectedModuleCodes, $aSelectedExtensionCodes, $aParamValues, $sInstallComment);
 
 					$aResult = array(
 						'status' => self::INFO,
@@ -906,13 +921,15 @@ class ApplicationInstaller
 	 * @param array $aSelectedExtensionCodes
 	 * @param array $aParamValues parameters array used to create config file using {@see Config::UpdateFromParams}
 	 *
+	 * @param null $sInstallComment
+	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
 	protected static function DoCreateConfig(
 		$sModulesDir, $sPreviousConfigFile, $sTargetEnvironment, $sDataModelVersion, $bOldAddon, $aSelectedModuleCodes,
-		$aSelectedExtensionCodes, $aParamValues
+		$aSelectedExtensionCodes, $aParamValues, $sInstallComment = null
 	) {
 		$aParamValues['selected_modules'] = implode(',', $aSelectedModuleCodes);
 		$sMode = $aParamValues['mode'];
@@ -953,7 +970,7 @@ class ApplicationInstaller
 		// Record which modules are installed...
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
-		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes))
+		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sInstallComment))
 		{
 			throw new Exception("Failed to record the installation information");
 		}

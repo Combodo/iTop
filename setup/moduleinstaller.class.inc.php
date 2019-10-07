@@ -143,7 +143,7 @@ abstract class ModuleInstallerAPI
 						{
 							$sColType = $aFields[0]['Type'];
 							// Note: the parsing should rely on str_getcsv (requires PHP 5.3) to cope with escaped string
-							if (preg_match("/^enum\(\'(.*)\'\)$/", $sColType, $aMatches))
+							if (preg_match("/^enum\('(.*)'\)$/", $sColType, $aMatches))
 							{
 								$aCurrentValues = explode("','", $aMatches[1]);
 							}

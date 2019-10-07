@@ -141,12 +141,7 @@ header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");    // Date in the past
 $sOperation = Utils::ReadParam('operation', '');
 try
 {
-	$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
-	if (!file_exists(APPROOT.'data/setup/authent') || $sAuthent !== file_get_contents(APPROOT.'data/setup/authent'))
-	{
-		throw new SecurityException('Setup operations are not allowed outside of the setup');
-		SetupPage::log_error("Setup operations are not allowed outside of the setup");
-	}
+	SetupUtils::CheckSetupToken();
 
 	switch($sOperation)
 	{
