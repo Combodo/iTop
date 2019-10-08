@@ -303,7 +303,7 @@ if (utils::IsModeCLI())
 }
 else
 {
-	$_SESSION['login_mode'] = 'basic';
+	$_REQUEST['login_mode'] = 'basic';
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
