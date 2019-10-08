@@ -26,7 +26,7 @@ if (!isset($bBypassMaintenance))
 
 if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
 {
-	$sMessage = 'Application is currently in maintenance';
+	$sMessage = 'This application is currently under maintenance.';
 	$sTitle = 'Maintenance';
 
 	http_response_code(503);
