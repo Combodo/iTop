@@ -73,6 +73,16 @@ abstract class ModuleInstallerAPI
     public static function AfterDataLoad(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
     {
     }
+
+	/**
+	 * Handler called at the end of the configuration creation
+	 * @param $oConfiguration Config The new configuration of the application
+	 * @param $sPreviousVersion string Previous version number of the module (empty string in case of first install)
+	 * @param $sCurrentVersion string Current version number of the module
+	 */
+	public static function AfterCreateConfig(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+	{
+	}
 	
 	/**
 	 * Helper to complete the renaming of a class
@@ -276,4 +286,5 @@ abstract class ModuleInstallerAPI
 		CMDBSource::CacheReset($sOrigTable);
 		CMDBSource::CacheReset($sDstTable);
 	}
+
 }
