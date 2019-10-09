@@ -784,9 +784,9 @@ class ManageBrickController extends BrickController
 						'label' => $aValues['label'],
 						'label_html' => $aValues['label_html'],
 					);
-					$aUrls[] = $oUrlGenerator->generate('p_manage_brick', array(
+					$aUrls[] = $oUrlGenerator->generate('p_manage_brick_display_as', array(
 						'sBrickId' => $sBrickId,
-						'sDisplayMode' => 'default',
+						'sDisplayMode' => 'list',
 						'sGroupingTab' => $aValues['value'],
 					));
 				}
