@@ -38,6 +38,15 @@ class LoginURL extends AbstractLoginFSMExtension
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	protected function OnReadCredentials(&$iErrorCode)
+	{
+		if ($_SESSION['login_mode'] == 'url')
+		{
+			$_SESSION['login_temp_auth_user'] =  utils::ReadParam('auth_user', '', false, 'raw_data');
+		}
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
+	}
+
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
 		if ($_SESSION['login_mode'] == 'url')

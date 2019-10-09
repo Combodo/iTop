@@ -583,6 +583,8 @@ class UserRights
 	protected static $m_oUser;
 	protected static $m_oRealUser;
 	protected static $m_sSelfRegisterAddOn = null;
+	/** @var array array('sName' => $sName, 'bSuccess' => $bSuccess); */
+	private static $m_sLastLoginStatus = null;
 
 	public static function SelectModule($sModuleName)
 	{
@@ -664,20 +666,26 @@ class UserRights
 			if (self::FindUser($sName, $sAuthentication, true) == null)
 			{
 				// User does not exist at all
-				return self::CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication);
+				$bCheckCredentialsAndCreateUser = self::CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication);
+				self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => $bCheckCredentialsAndCreateUser);
+				return $bCheckCredentialsAndCreateUser;
 			}
 			else
 			{
 				// User is actually disabled
+				self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => false);
 				return  false;
 			}
 		}
 
 		if (!$oUser->CheckCredentials($sPassword))
 		{
+			self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => false);
 			return false;
 		}
 		self::UpdateUser($oUser, $sLoginMode, $sAuthentication);
+		self::$m_sLastLoginStatus = array('sName' => $sName, 'bSuccess' => true);
+
 		return true;
 	}
 	
@@ -1374,6 +1382,14 @@ class UserRights
 	public static function VoidErrorHandler($iErrno, $sErrStr, $sErrFile, $iErrLine)
 	{
 		return true; // Ignore the error
+	}
+
+	/**
+	 * @return null|array The last login/result (null if none has failed) the array has this structure : array('sName' => $sName, 'bSuccess' => $bSuccess);
+	 */
+	public static function GetLastLoginStatus()
+	{
+		return self::$m_sLastLoginStatus;
 	}
 }
 

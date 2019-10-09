@@ -15,6 +15,8 @@ class LoginTwigData
 	private $aPostedVars;
 	private $sTwigLoaderPath;
 	private $sCSSFile;
+	/** @var array */
+	private $aJsFiles;
 
 	/**
 	 * LoginTwigData constructor.
@@ -22,13 +24,15 @@ class LoginTwigData
 	 * @param array $aPostedVars
 	 * @param string $sLoaderPath
 	 * @param string $sCSSFile
+	 * @param array $aJsFiles
 	 */
-	public function __construct($aPostedVars = array(), $sLoaderPath = null, $sCSSFile = null)
+	public function __construct($aPostedVars = array(), $sLoaderPath = null, $sCSSFile = null, $aJsFiles = array())
 	{
 		$this->aBlockData = array();
 		$this->aPostedVars = $aPostedVars;
 		$this->sTwigLoaderPath = $sLoaderPath;
 		$this->sCSSFile = $sCSSFile;
+		$this->aJsFiles = $aJsFiles;
 	}
 
 	/**
@@ -60,6 +64,14 @@ class LoginTwigData
 	public final function GetCSSFile()
 	{
 		return $this->sCSSFile;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function GetJsFiles()
+	{
+		return $this->aJsFiles;
 	}
 }
 
@@ -171,6 +183,12 @@ class LoginTwigContext
 			if (!empty($sCSSFile))
 			{
 				$oPage->add_linked_stylesheet($sCSSFile);
+			}
+			$aJsFiles = $oFormData->GetJsFiles();
+			foreach ($aJsFiles as $sJsFile)
+			{
+				$oPage->add_linked_script($sJsFile);
+
 			}
 		}
 	}

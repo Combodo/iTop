@@ -34,6 +34,17 @@ class LoginBasic extends AbstractLoginFSMExtension
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	protected function OnReadCredentials(&$iErrorCode)
+	{
+		if ($_SESSION['login_mode'] == 'basic')
+		{
+			list($sAuthUser, $sAuthPwd) = $this->GetAuthUserAndPassword();
+			$_SESSION['login_temp_auth_user'] =  $sAuthUser;
+		}
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
+	}
+
+
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
 		if ($_SESSION['login_mode'] == 'basic')

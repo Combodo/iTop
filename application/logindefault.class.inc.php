@@ -22,6 +22,9 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 	protected function OnStart(&$iErrorCode)
 	{
 		$iErrorCode = LoginWebPage::EXIT_CODE_OK;
+
+		unset($_SESSION['login_temp_auth_user']);
+
 		// Check if proposed login mode is present and allowed
 		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
 		$sProposedLoginMode = utils::ReadParam('login_mode', '');
@@ -103,6 +106,12 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	public function LogoutAction()
 	{
 		self::ResetLoginSession();
+	}
+
+	protected function OnConnected(&$iErrorCode)
+	{
+		unset($_SESSION['login_temp_auth_user']);
+		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	// Hard reset of the session

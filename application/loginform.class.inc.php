@@ -44,6 +44,8 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginDataExtension
 				$this->bForceFormOnError = false;
 				exit;
 			}
+
+			$_SESSION['login_temp_auth_user'] =  $sAuthUser;
 			$_SESSION['login_mode'] = 'form';
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
