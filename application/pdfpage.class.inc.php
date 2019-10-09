@@ -118,7 +118,7 @@ class PDFPage extends WebPage
 	{
 		parent::__construct($s_title);
 		define(K_PATH_FONTS, APPROOT.'lib/combodo/tcpdf/fonts');
-		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, 'UTF-8', false);
+		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, self::PAGES_CHARSET, false);
 
 		// set document information
 		$this->oPdf->SetCreator(PDF_CREATOR);
