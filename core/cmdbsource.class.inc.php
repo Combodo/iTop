@@ -425,6 +425,14 @@ class CMDBSource
 	}
 
 	/**
+	 * @return string
+	 */
+	public static function GetServerInfo()
+	{
+		return mysqli_get_server_info ( self::$m_oMysqli );
+	}
+
+	/**
 	 * Get the DB vendor between MySQL and its main forks
 	 * @return string
 	 */
