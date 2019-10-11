@@ -102,6 +102,18 @@ class SQLObjectQueryBuilder
 		return $oOQLClassNode;
 	}
 
+	/**
+	 *
+	 * @param \QueryBuilderContext $oBuild  The builder will be unusable after that
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
+	public function DebugOQLClassTree($oBuild)
+	{
+		return $this->GetOQLClassTree($oBuild)->RenderDebug();
+	}
+
 
 	/**
 	 * @param \QueryBuilderContext $oBuild
@@ -264,12 +276,8 @@ class SQLObjectQueryBuilder
 		{
 			if (!$oBuild->GetRootFilter()->GetArchiveMode())
 			{
-				$bIsOnJoinedClass = array_key_exists($sClassAlias, $oBuild->GetRootFilter()->GetJoinedClasses());
-				if ($bIsOnJoinedClass)
-				{
-					$oNotArchived = new BinaryExpression(new FieldExpressionResolved('archive_flag', $sClassAlias), '=', new ScalarExpression(0));
-					$oBuild->AddFilteredTable($sClassAlias, $oNotArchived);
-				}
+				$oNotArchived = new BinaryExpression(new FieldExpressionResolved('archive_flag', $sClassAlias), '=', new ScalarExpression(0));
+				$oBuild->AddFilteredTable($sClassAlias, $oNotArchived);
 			}
 		}
 

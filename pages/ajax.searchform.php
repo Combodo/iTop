@@ -119,7 +119,7 @@ try
 	}
 
 
-	if (isset($aListParams['debug']) || (UserRights::IsActionAllowed('ResourceRunQueriesMenu', UR_ACTION_MODIFY) == UR_ALLOWED_YES))
+	if (isset($aListParams['debug']) || UserRights::IsAdministrator())
 	{
 		$oPage->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'SearchQuery');
 		$oPage->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
