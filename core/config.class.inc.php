@@ -873,7 +873,7 @@ class Config
         ),
 		'log_kpi_duration' => array(
 			'type' => 'integer',
-			'description' => 'Level of logging for troubleshooting performance issues (1 to enable, 2 +blame callers)',
+			'description' => 'Level of logging for troubleshooting performance issues (1 to enable, 2 +blame callers) new: add "log_kpi_slow_queries" to limit the stats',
 			// examples... not used
 			'default' => 0,
 			'value' => 0,
@@ -882,9 +882,9 @@ class Config
 		),
 		'log_kpi_slow_queries' => array(
 			'type' => 'float',
-			'description' => 'Time in seconds to allow KPI logs (0 for all)',
-			'default' => 0,
-			'value' => 0,
+			'description' => 'Log only KPI duration stats lasting more than this value in seconds (0 for all)',
+			'default' => 1,
+			'value' => 1,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
