@@ -4163,6 +4163,10 @@ abstract class MetaModel
 		// Compute query modifiers properties (can be set in the search itself, by the context, etc.)
 		//
 		$aModifierProperties = array();
+		/**
+		 * @var string $sPluginClass
+		 * @var iQueryModifier $oQueryModifier
+		 */
 		foreach(MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
 		{
 			// Lowest precedence: the application context

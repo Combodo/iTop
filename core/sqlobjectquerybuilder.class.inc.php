@@ -242,6 +242,10 @@ class SQLObjectQueryBuilder
 					$oBuild->m_oQBExpressions->AddSelect($sSelectedClassAlias.$sAttCode.$sColId, new FieldExpression($sAttCode.$sColId, $sClassAlias));
 				}
 				$oFieldSQLExp = new FieldExpressionResolved($sSQLExpr, $sClassAlias);
+				/**
+				 * @var string $sPluginClass
+				 * @var iQueryModifier $oQueryModifier
+				 */
 				foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
 				{
 					$oFieldSQLExp = $oQueryModifier->GetFieldExpression($oBuild, $sClass, $sAttCode, $sColId, $oFieldSQLExp, $oBaseSQLQuery);

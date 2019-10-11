@@ -26,14 +26,15 @@ define('ENABLE_OPT', true);
  * A search over a DBObject
  *
  * This is the most common search cases, the other class representing a search is DBUnionSearch.
- * For clarity purpose, since only the constructor vary between DBObjectSearch and DBUnionSearch, all the API is documented on the common ancestor: DBSearch
- * Please refer to DBSearch's documentation
+ * For clarity purpose, since only the constructor vary between DBObjectSearch and DBUnionSearch, all the API is documented on the common
+ * ancestor: DBSearch Please refer to DBSearch's documentation
  *
- * @package     iTopORM
- * @phpdoc-tuning-exclude-inherited this tag prevent PHPdoc from displaying inherited methods. This is done in order to force the API doc. location into DBSearch only.
  * @api
  * @see DBSearch
  * @see DBUnionSearch
+ * @package     iTopORM
+ * @phpdoc-tuning-exclude-inherited this tag prevent PHPdoc from displaying inherited methods. This is done in order to force the API doc.
+ *     location into DBSearch only.
  */
 class DBObjectSearch extends DBSearch
 {
@@ -2213,6 +2214,10 @@ class DBObjectSearch extends DBSearch
 					if (array_key_exists($sAttCode.$sColId, $aExpectedAtts))
 					{
 						$oFieldSQLExp = new FieldExpressionResolved($sSQLExpr, $sTableAlias);
+						/**
+						 * @var string $sPluginClass
+						 * @var iQueryModifier $oQueryModifier
+						 */
 						foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
 						{
 							$oFieldSQLExp = $oQueryModifier->GetFieldExpression($oBuild, $sTargetClass, $sAttCode, $sColId, $oFieldSQLExp, $oSelectBase);
