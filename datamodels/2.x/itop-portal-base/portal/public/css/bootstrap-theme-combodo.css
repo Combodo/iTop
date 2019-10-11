@@ -4118,15 +4118,10 @@ button.close {
   background-color: #000;
   transition: all 0.3s linear;
 }
-.modal-backdrop.fade {
-  opacity: 0;
-  filter: alpha(opacity=0);
-}
 .modal-backdrop.in {
-  opacity: 0.5;
-  filter: alpha(opacity=50);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
 }
 .modal-header {
   padding: 15px;
