@@ -291,6 +291,10 @@ EOF
         {
             DBSearch::RecordQueryTrace();
         }
+	    if (class_exists('ExecutionKPI'))
+	    {
+		    ExecutionKPI::ReportStats();
+	    }
     }
 
     /**

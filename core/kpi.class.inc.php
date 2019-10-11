@@ -200,15 +200,12 @@ class ExecutionKPI
 
 		self::Report("<p><a href=\"#end-".md5($sExecId)."\">Next page stats</a></p>");
 
+		$fSlowQueries = MetaModel::GetConfig()->Get('log_kpi_slow_queries');
+
 		// Report operation details
 		foreach (self::$m_aStats as $sOperation => $aOpStats)
 		{
-			$sOperationHtml = '<a name="'.md5($sExecId.$sOperation).'">'.$sOperation.'</a>';
-			self::Report("<h4>$sOperationHtml</h4>");
-			self::Report("<table border=\"1\" style=\"$sTableStyle\">");
-			self::Report("<thead>");
-			self::Report("   <th>Operation details (+ blame caller if log_kpi_duration = 2)</th><th>Count</th><th>Duration</th><th>Min</th><th>Max</th>");
-			self::Report("</thead>");
+			$bDisplayHeader = true;
 			foreach ($aOpStats as $sArguments => $aEvents)
 			{
 				$sHtmlArguments = '<a name="'.md5($sExecId.$sArguments).'"><div style="white-space: pre-wrap;">'.$sArguments.'</div></a>';
@@ -248,12 +245,28 @@ class ExecutionKPI
 				$sTotalInter = round($fTotalInter, 3);
 				$sMinInter = round($fMinInter, 3);
 				$sMaxInter = round($fMaxInter, 3);
-				self::Report("<tr>");
-				self::Report("   <td>$sHtmlArguments</td><td>$iCountInter</td><td>$sTotalInter</td><td>$sMinInter</td><td>$sMaxInter</td>");
-				self::Report("</tr>");
+				if (($fTotalInter >= $fSlowQueries))
+				{
+					if ($bDisplayHeader)
+					{
+						$sOperationHtml = '<a name="'.md5($sExecId.$sOperation).'">'.$sOperation.'</a>';
+						self::Report("<h4>$sOperationHtml</h4>");
+						self::Report("<table border=\"1\" style=\"$sTableStyle\">");
+						self::Report("<thead>");
+						self::Report("   <th>Operation details (+ blame caller if log_kpi_duration = 2)</th><th>Count</th><th>Duration</th><th>Min</th><th>Max</th>");
+						self::Report("</thead>");
+						$bDisplayHeader = false;
+					}
+					self::Report("<tr>");
+					self::Report("   <td>$sHtmlArguments</td><td>$iCountInter</td><td>$sTotalInter</td><td>$sMinInter</td><td>$sMaxInter</td>");
+					self::Report("</tr>");
+				}
 			}
-			self::Report("</table>");
-			self::Report("<p><a href=\"#".md5($sExecId)."\">Back to page stats</a></p>");
+			if (!$bDisplayHeader)
+			{
+				self::Report("</table>");
+				self::Report("<p><a href=\"#".md5($sExecId)."\">Back to page stats</a></p>");
+			}
 		}
 		self::Report('<a name="end-'.md5($sExecId).'">&nbsp;</a>');
 	}

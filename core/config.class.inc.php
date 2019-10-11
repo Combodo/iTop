@@ -880,6 +880,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'log_kpi_slow_queries' => array(
+			'type' => 'float',
+			'description' => 'Time in seconds to allow KPI logs (0 for all)',
+			'default' => 0,
+			'value' => 0,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'log_kpi_memory' => array(
 			'type' => 'integer',
 			'description' => 'Level of logging for troubleshooting memory limit issues',
