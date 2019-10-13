@@ -1389,8 +1389,13 @@ class RestUtils
 		}
 		elseif (is_string($key))
 		{
-			// OQL
-			$oSearch = DBObjectSearch::FromOQL($key);
+			// return all records when the key is "*"
+			if($key == "*"){
+				$oSearch = new DBObjectSearch($sClass);
+			}else{
+				// OQL
+				$oSearch = DBObjectSearch::FromOQL($key);
+			}
 		}
 		else
 		{
