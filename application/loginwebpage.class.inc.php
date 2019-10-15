@@ -1015,22 +1015,6 @@ class LoginWebPage extends NiceWebPage
 		$sMessage = ''; // most of the operations never return, but some can return a message to be displayed
 		if ($operation == 'logoff')
 		{
-			if (isset($_SESSION['login_mode']))
-			{
-				$sLoginMode = $_SESSION['login_mode'];
-			}
-			else
-			{
-				$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
-				if (count($aAllowedLoginTypes) > 0)
-				{
-					$sLoginMode = $aAllowedLoginTypes[0];
-				}
-				else
-				{
-					$sLoginMode = 'form';
-				}
-			}
 			self::ResetSession();
 			$oPage = self::NewLoginWebPage();
 			$oPage->DisplayLoginForm(false /* not a failed attempt */);
@@ -1067,27 +1051,33 @@ class LoginWebPage extends NiceWebPage
 		}
 		else if ($operation == 'change_pwd')
 		{
-			$sAuthUser = $_SESSION['auth_user'];
-			UserRights::Login($sAuthUser); // Set the user's language
-			$oPage = self::NewLoginWebPage();
-			$oPage->DisplayChangePwdForm();
-			$oPage->output();
-			exit;
-		}
-		if ($operation == 'do_change_pwd')
-		{
-			$sAuthUser = $_SESSION['auth_user'];
-			UserRights::Login($sAuthUser); // Set the user's language
-			$sOldPwd = utils::ReadPostedParam('old_pwd', '', 'raw_data');
-			$sNewPwd = utils::ReadPostedParam('new_pwd', '', 'raw_data');
-			if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
+			if (isset($_SESSION['auth_user']))
 			{
+				$sAuthUser = $_SESSION['auth_user'];
+				UserRights::Login($sAuthUser); // Set the user's language
 				$oPage = self::NewLoginWebPage();
-				$oPage->DisplayChangePwdForm(true); // old pwd was wrong
+				$oPage->DisplayChangePwdForm();
 				$oPage->output();
 				exit;
 			}
-			$sMessage = Dict::S('UI:Login:PasswordChanged');
+		}
+		if ($operation == 'do_change_pwd')
+		{
+			if (isset($_SESSION['auth_user']))
+			{
+				$sAuthUser = $_SESSION['auth_user'];
+				UserRights::Login($sAuthUser); // Set the user's language
+				$sOldPwd = utils::ReadPostedParam('old_pwd', '', 'raw_data');
+				$sNewPwd = utils::ReadPostedParam('new_pwd', '', 'raw_data');
+				if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
+				{
+					$oPage = self::NewLoginWebPage();
+					$oPage->DisplayChangePwdForm(true); // old pwd was wrong
+					$oPage->output();
+					exit;
+				}
+				$sMessage = Dict::S('UI:Login:PasswordChanged');
+			}
 		}
 		return $sMessage;
 	}
