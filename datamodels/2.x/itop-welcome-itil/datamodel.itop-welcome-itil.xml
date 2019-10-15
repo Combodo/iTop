@@ -135,7 +135,7 @@
       <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
     <menu id="ExportMenu" xsi:type="WebPageMenuNode" _delta="define">
-      <rank>9</rank>
+      <rank>9.5</rank>
       <parent>AdminTools</parent>
       <url>$webservices/export-v2.php?interactive=1</url>
       <enable_class>ResourceAdminMenu</enable_class>
