@@ -20,7 +20,6 @@
 use ScssPhp\ScssPhp\Compiler;
 
 
-
 /**
  * Static class utils
  *
@@ -2097,5 +2096,21 @@ class utils
 	 */
 	final public static function EndsWith($haystack, $needle) {
 		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
+	}
+
+	/**
+	 * Checks that path does not contains illegal characters, like '../'
+	 *
+	 * @param string $sPath
+	 *
+	 * @return bool true if path is allowed, false otherwise
+	 *
+	 * @since 2.7.0
+	 */
+	final public static function IsAllowedPath($sPath)
+	{
+		$sPathNoDotDotPattern = "/^((?![\/\\\\]\.\.[\/\\\\]).)*$/";
+
+		return preg_match($sPathNoDotDotPattern, $sPath) == 1;
 	}
 }
