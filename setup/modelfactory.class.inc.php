@@ -995,7 +995,7 @@ class ModelFactory
 	/**
 	 * @param bool $bExcludeWorkspace
 	 *
-	 * @return array
+	 * @return MFModule[]
 	 */
 	function GetLoadedModules($bExcludeWorkspace = true)
 	{
