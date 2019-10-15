@@ -14,7 +14,7 @@ Conventional tags that you should use:
 
 ## Special instructions
 
-Some iTop specific tags where added : 
+Some iTop specific tags were added : 
  * `@api-advanced`: it means that a method is an `@api` but mark it also as "complex" to use
  * `@overwritable-hook`: used to mark a method as "designed to be extended"
  * `@extension-hook`: not used for now 
