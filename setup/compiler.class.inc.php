@@ -224,6 +224,27 @@ class MFCompiler
 		$aWebservicesFiles = array();
 		$iStart = strlen(realpath(APPROOT));
 		$sRelFinalTargetDir = substr($sFinalTargetDir, strlen(APPROOT));
+
+		$sModuleDesignHtaccessFileName = $sTempTargetDir.'/core/module_designs/.htaccess';
+		// every xml files present in here must not be publicly accessible
+		$sModuleDesignHtaccessFileContent = <<<EOF
+<Files  "*.xml">
+    Order deny,allow
+    Deny from all
+</Files>
+
+EOF;
+		SetupUtils::builddir(dirname($sModuleDesignHtaccessFileName));
+		$ret = file_put_contents($sModuleDesignHtaccessFileName, $sModuleDesignHtaccessFileContent);
+		if ($ret === false)
+		{
+			$iLen = strlen($sModuleDesignHtaccessFileContent);
+			$fFree = @disk_free_space(dirname($sModuleDesignHtaccessFileName));
+			$aErr = error_get_last();
+			throw new Exception("Failed to write '$sModuleDesignHtaccessFileName'. Last error: '{$aErr['message']}', content to write: $iLen bytes, available free space on disk: $fFree.");
+		}
+		unset($sModuleDesignHtaccessFileContent, $sModuleDesignHtaccessFileName);
+
 		foreach($aModules as $foo => $oModule)
 		{
 			$sModuleName = $oModule->GetName();
@@ -245,6 +266,38 @@ class MFCompiler
 
 				// Push the other module files
 				SetupUtils::copydir($sModuleRootDir, $sTempTargetDir.'/'.$sRelativeDir, $bUseSymbolicLinks);
+
+				$sModuleHtaccessFileName = $sTempTargetDir.'/'.$sRelativeDir.'/.htaccess';
+				if (!file_exists($sModuleHtaccessFileName))
+				{
+					// if no .htaccess is present, add a generic one prohibiting  access to potentially sensible files (ie: even if it is quite a bad practice, it may happen that a developer put a secret into the xml)
+					$sModuleHtaccessFileContent = <<<EOF
+<Files  "datamodel.*.xml">
+    Order deny,allow
+    Deny from all
+</Files>
+
+<Files  "composer.json">
+    Order deny,allow
+    Deny from all
+</Files>
+
+<Files  "composer.lock">
+    Order deny,allow
+    Deny from all
+</Files>
+
+EOF;
+					$ret = file_put_contents($sModuleHtaccessFileName, $sModuleHtaccessFileContent);
+					if ($ret === false)
+					{
+						$iLen = strlen($sModuleHtaccessFileContent);
+						$fFree = @disk_free_space(dirname($sModuleHtaccessFileName));
+						$aErr = error_get_last();
+						throw new Exception("Failed to write '$sModuleHtaccessFileName'. Last error: '{$aErr['message']}', content to write: $iLen bytes, available free space on disk: $fFree.");
+					}
+					SetupLog::Warning("Added a generic .htaccess into {$sFinalTargetDir}/{$sRelativeDir} during the compilation.");;
+				}
 			}
 			else
 			{
@@ -252,7 +305,7 @@ class MFCompiler
 				$sRealRelativeDir = '';
 			}
 			$aModulesInfo[$sModuleName] = array('root_dir' => $sRealRelativeDir, 'version' => $sModuleVersion);
-				
+
 			$sCompiledCode = '';
 
 			$oConstants = $this->oFactory->ListConstants($sModuleName);
