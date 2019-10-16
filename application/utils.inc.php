@@ -2112,12 +2112,14 @@ class utils
 	 */
 	final public static function RealPath($sPath, $sBasePath)
 	{
+		$sRealBasePath = realpath($sBasePath); // avoid problems when having '/' on Windows for example
+
 		$sFileRealPath = realpath($sPath);
 		if ($sFileRealPath === false)
 		{
 			return false;
 		}
-		if (!self::StartsWith($sFileRealPath, $sBasePath))
+		if (!self::StartsWith($sFileRealPath, $sRealBasePath))
 		{
 			return false;
 		}

@@ -179,14 +179,12 @@ EOF
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oBackup = new DBBackupScheduled();
 			$sBackupDir = APPROOT.'data/backups/';
-			if ($sBackupFilePath = utils::RealPath($sBackupDir.$sFile, $sBackupDir))
-			{
-				$oBackup->DownloadBackup($sBackupFilePath);
-			}
-			else
+			$sBackupFilePath = utils::RealPath($sBackupDir.$sFile, $sBackupDir);
+			if ($sBackupFilePath === false)
 			{
 				throw new CoreUnexpectedValue('Invalid file path');
 			}
+			$oBackup->DownloadBackup($sBackupFilePath);
 			break;
 	}
 }

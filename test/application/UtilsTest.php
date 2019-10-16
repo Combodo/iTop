@@ -83,6 +83,11 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				$sItopRootPath.'application',
 				$sItopRootPath.'application'.$sSep.'utils.inc.php',
 			],
+			'basepath containing / and \\' => [
+				$sItopRootPath.'sources/form/form.class.inc.php',
+				$sItopRootPath.'sources/form\\form.class.inc.php',
+				$sItopRootPath.'sources'.$sSep.'form'.$sSep.'form.class.inc.php',
+			],
 		];
 	}
 }
