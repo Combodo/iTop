@@ -133,9 +133,14 @@ a:hover {
 	border-radius: 0.25em;
 	width: calc(100% - 2em - 4px);
 }
+#login-input input:focus {
+	border-color: #A0AEC0;
+}
 
-#login-submit.forgotpwd-submit input {
-	width: 49%;
+#login-submit.forgotpwd-submit input,
+#login-submit.changepwd-submit input
+{
+	width: 100%;
 }
 
 #login-submit input.login-submit-secondary {

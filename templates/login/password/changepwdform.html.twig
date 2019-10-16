@@ -11,14 +11,30 @@
 		{% endif %}
 		<form method="post">
 			<div id="login-form-content">
-				<tr><td style="text-align:right"><label for="old_pwd">{{ 'UI:Login:OldPasswordPrompt'|dict_s }}:</label></td><td style="text-align:left"><input type="password" id="old_pwd" name="old_pwd" value="" /></td></tr>
-				<tr><td style="text-align:right"><label for="new_pwd">{{ 'UI:Login:NewPasswordPrompt'|dict_s }}:</label></td><td style="text-align:left"><input type="password" id="new_pwd" name="new_pwd" value="" /></td></tr>
-				<tr><td style="text-align:right"><label for="retype_new_pwd">{{ 'UI:Login:RetypeNewPasswordPrompt'|dict_s }}:</label></td><td style="text-align:left"><input type="password" id="retype_new_pwd" name="retype_new_pwd" value="" /></td></tr>
-				<tr><td colspan="2" class="center v-spacer"><span class="btn_border"><input type="button" onClick="GoBack();" value="{{ 'UI:Button:Cancel'|dict_s }}" /></span>&nbsp;&nbsp;<span class="btn_border"><input type="submit" onClick="return DoCheckPwd();" value="{{ 'UI:Button:ChangePassword'|dict_s }}" /></span></td></tr>
+				<div id="login-input">
+					<div>
+						<label for="old_pwd">{{ 'UI:Login:OldPasswordPrompt'|dict_s }}:</label>
+						<input type="password" id="old_pwd" name="old_pwd" value="" />
+					</div>
+					<div>
+						<label for="new_pwd">{{ 'UI:Login:NewPasswordPrompt'|dict_s }}:</label>
+						<input type="password" id="new_pwd" name="new_pwd" value="" />
+					</div>
+					<div>
+						<label for="retype_new_pwd">{{ 'UI:Login:RetypeNewPasswordPrompt'|dict_s }}:</label>
+						<input type="password" id="retype_new_pwd" name="retype_new_pwd" value="" />
+					</div>
+				</div>
+				<div id="login-submit" class="changepwd-submit">
+					<div>
+						<input type="submit" onClick="return DoCheckPwd();" value="{{ 'UI:Button:ChangePassword'|dict_s }}" />
+						<input class="login-submit-secondary" type="button" onClick="GoBack();" value="{{ 'UI:Button:Cancel'|dict_s }}" />
+					</div>
 				</div>
 			<input type="hidden" name="loginop" value="do_change_pwd" />
+			</div>
 		</form>
-	</div>
+		</div>
 {% endblock %}
 
 {% block script %}
