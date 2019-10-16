@@ -21,33 +21,33 @@
 
 class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 {
-    public function setUp()
-    {
-        parent::setUp();
-        require_once(APPROOT . 'application/utils.inc.php');
-    }
+	public function setUp()
+	{
+		parent::setUp();
+		require_once(APPROOT.'application/utils.inc.php');
+	}
 
-    /**
-     * @dataProvider memoryLimitDataProvider
-     */
-    public function testIsMemoryLimit($expected, $memoryLimit, $requiredMemory)
-    {
-        $this->assertSame($expected, utils::IsMemoryLimitOk($memoryLimit, $requiredMemory));
-    }
+	/**
+	 * @dataProvider memoryLimitDataProvider
+	 */
+	public function testIsMemoryLimit($expected, $memoryLimit, $requiredMemory)
+	{
+		$this->assertSame($expected, utils::IsMemoryLimitOk($memoryLimit, $requiredMemory));
+	}
 
-    /**
-     * DataProvider for testIsMemoryLimitOk
-     *
-     * @return array
-     */
-    public function memoryLimitDataProvider()
-    {
-        return [
-            [true, '-1', 1024],
-            [true, -1, 1024],
-            [true, 1024, 1024],
-            [true, 2048, 1024],
-            [false, 1024, 2048],
-        ];
-    }
+	/**
+	 * DataProvider for testIsMemoryLimitOk
+	 *
+	 * @return array
+	 */
+	public function memoryLimitDataProvider()
+	{
+		return [
+			[true, '-1', 1024],
+			[true, -1, 1024],
+			[true, 1024, 1024],
+			[true, 2048, 1024],
+			[false, 1024, 2048],
+		];
+	}
 }
