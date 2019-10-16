@@ -50,4 +50,39 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 			[false, 1024, 2048],
 		];
 	}
+
+	/**
+	 * @dataProvider realPathDataProvider
+	 */
+	public function testRealPath($sPath, $sBasePath, $expected)
+	{
+		$this->assertSame($expected, utils::RealPath($sPath, $sBasePath));
+	}
+
+	public function realPathDataProvider()
+	{
+		parent::setUp(); // if not called, APPROOT won't be defined :(
+
+		$sItopRootPath = APPROOT;
+		$sSep = DIRECTORY_SEPARATOR;
+
+		return [
+			'licence.txt' => [$sItopRootPath.'license.txt', $sItopRootPath, $sItopRootPath.'license.txt'],
+			'unexisting file' => [$sItopRootPath.'license_DOES_NOT_EXIST.txt', $sItopRootPath, false],
+			'/license.txt' => [$sItopRootPath.$sSep.'license.txt', $sItopRootPath, $sItopRootPath.'license.txt'],
+			'%2flicense.txt' => [$sItopRootPath.'%2flicense.txt', $sItopRootPath, false],
+			'../license.txt' => [$sItopRootPath.'..'.$sSep.'license.txt', $sItopRootPath, false],
+			'%2e%2e%2flicense.txt' => [$sItopRootPath.'%2e%2e%2flicense.txt', $sItopRootPath, false],
+			'application/utils.inc.php with basepath=APPROOT' => [
+				$sItopRootPath.'application/utils.inc.php',
+				$sItopRootPath,
+				$sItopRootPath.'application'.$sSep.'utils.inc.php',
+			],
+			'application/utils.inc.php with basepath=APPROOT/application' => [
+				$sItopRootPath.'application/utils.inc.php',
+				$sItopRootPath.'application',
+				$sItopRootPath.'application'.$sSep.'utils.inc.php',
+			],
+		];
+	}
 }

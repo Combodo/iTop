@@ -2099,18 +2099,29 @@ class utils
 	}
 
 	/**
-	 * Checks that path does not contains illegal characters, like '../'
+	 * @param string $sPath for example '/var/www/html/itop/data/backups/manual/itop_27-2019-10-03_15_35.tar.gz'
+	 * @param string $sBasePath for example '/var/www/html/itop/data/'
 	 *
-	 * @param string $sPath
+	 * @return bool false if path :
+	 *      * invalid
+	 *      * not allowed
+	 *      * not contained in base path
+	 *    Otherwise return the real path (see realpath())
 	 *
-	 * @return bool true if path is allowed, false otherwise
-	 *
-	 * @since 2.7.0
+	 * @since 2.7.0 N°2538
 	 */
-	final public static function IsAllowedPath($sPath)
+	final public static function RealPath($sPath, $sBasePath)
 	{
-		$sPathNoDotDotPattern = "/^((?![\/\\\\]\.\.[\/\\\\]).)*$/";
+		$sFileRealPath = realpath($sPath);
+		if ($sFileRealPath === false)
+		{
+			return false;
+		}
+		if (!self::StartsWith($sFileRealPath, $sBasePath))
+		{
+			return false;
+		}
 
-		return preg_match($sPathNoDotDotPattern, $sPath) == 1;
+		return $sFileRealPath;
 	}
 }
