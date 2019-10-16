@@ -31,11 +31,14 @@ use CMDBSource;
 use Contact;
 use DBObject;
 use DBObjectSet;
+use DBSearch;
 use Exception;
 use Farm;
 use FunctionalCI;
 use Hypervisor;
 use lnkContactToFunctionalCI;
+use lnkContactToTicket;
+use lnkFunctionalCIToTicket;
 use MetaModel;
 use Person;
 use Server;
@@ -72,9 +75,8 @@ class ItopDataTestCase extends ItopTestCase
 		parent::setUp();
 		//require_once(APPROOT.'/application/startup.inc.php');
 
-		require_once(APPROOT.'/core/cmdbobject.class.inc.php');
-		require_once(APPROOT.'/application/utils.inc.php');
-		require_once(APPROOT.'/core/contexttag.class.inc.php');
+		require_once(APPROOT.'application/utils.inc.php');
+
 		$sEnv = 'production';
 		$sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
 		MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
@@ -269,7 +271,7 @@ class ItopDataTestCase extends ItopTestCase
 
 	private function RemoveObjects($sClass, $sOQL)
 	{
-		$oFilter = \DBSearch::FromOQL($sOQL);
+		$oFilter = DBSearch::FromOQL($sOQL);
 		$aRes = $oFilter->ToDataArray(array('id'));
 		foreach ($aRes as $aRow)
 		{
@@ -510,7 +512,7 @@ class ItopDataTestCase extends ItopTestCase
 			));
 		}
 
-		/** @var FAQ $oFaq */
+		/** @var \FAQ $oFaq */
 		$oFaq = $this->createObject('FAQ', array(
 			'category_id' => $oFaqCategory->GetKey(),
 			'title' => 'FAQ_phpunit',
@@ -577,11 +579,12 @@ class ItopDataTestCase extends ItopTestCase
 	 * @param Ticket $oTicket
 	 * @param string $sImpactCode
 	 *
+	 * @return array
 	 * @throws Exception
 	 */
 	protected function AddCIToTicket($oCI, $oTicket, $sImpactCode)
 	{
-		$oNewLink = new \lnkFunctionalCIToTicket();
+		$oNewLink = new lnkFunctionalCIToTicket();
 		$oNewLink->Set('functionalci_id', $oCI->GetKey());
 		$oNewLink->Set('impact_code', $sImpactCode);
 		$oCIs = $oTicket->Get('functionalcis_list');
@@ -630,11 +633,12 @@ class ItopDataTestCase extends ItopTestCase
 	 * @param string $sRoleCode
 	 * @param array $aParams
 	 *
+	 * @return array
 	 * @throws Exception
 	 */
 	protected function AddContactToTicket($oContact, $oTicket, $sRoleCode, $aParams = array())
 	{
-		$oNewLink = new \lnkContactToTicket();
+		$oNewLink = new lnkContactToTicket();
 		$oNewLink->Set('contact_id', $oContact->GetKey());
 		$oNewLink->Set('role_code', $sRoleCode);
 		foreach ($aParams as $sAttCode => $oValue)

@@ -1556,7 +1556,19 @@ class DBObjectSearch extends DBSearch
 		return $sRet;
 	}
 
-	// ENTRY POINT API à conserver
+
+	/**
+	 * Get an SQLObjectQuery from the search. This SQLObjectQuery can be rendered as a select, select group by, update or delete
+	 *
+	 * @param array $aAttToLoad array of 'attCode'  => AttributeDefinition
+	 * @param bool $bGetCount true for count requests
+	 * @param null array $aGroupByExpr array of 'field name' => FieldOQLExpression
+	 * @param null array $aSelectedClasses
+	 * @param null array $aSelectExpr array of 'attCode' => Expression
+	 *
+	 * @return array|mixed|\SQLObjectQuery|null
+	 * @throws \CoreException
+	 */
 	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
 	{
 		// Hide objects that are not visible to the current user

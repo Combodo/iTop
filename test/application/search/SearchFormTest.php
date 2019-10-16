@@ -27,6 +27,11 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
 use Exception;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class SearchFormTest extends ItopDataTestCase
 {
 

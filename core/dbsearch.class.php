@@ -1240,77 +1240,70 @@ abstract class DBSearch
 		self::$m_bOptimizeQueries = $bEnabled;
 	}
 
-    /**
-     * @internal
-     *
-     * @param $aOrderBy
-     * @param $aArgs
-     * @param $aAttToLoad
-     * @param $aExtendedDataSpec
-     * @param $iLimitCount
-     * @param $iLimitStart
-     * @param $bGetCount
-     * @param $sSql
-     *
-     * @throws MySQLException
-     */
+	/**
+	 * @param $sOql
+	 * @param $aOrderBy
+	 * @param $aArgs
+	 * @param $aAttToLoad
+	 * @param $aExtendedDataSpec
+	 * @param $iLimitCount
+	 * @param $iLimitStart
+	 * @param $bGetCount
+	 * @param $sSql
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @internal
+	 *
+	 */
 	protected function AddQueryTraceSelect($sOql, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart, $bGetCount, $sSql)
 	{
-		if (self::$m_bTraceQueries || (utils::GetConfig()->Get('log_kpi_record_oql') == 1))
+		if (self::$m_bTraceQueries)
 		{
 			$aQueryData = array(
 				'type' => 'select',
-				'filter' => $this,
 				'order_by' => $aOrderBy,
-				'args' => $aArgs,
 				'att_to_load' => $aAttToLoad,
-				'extended_data_spec' => $aExtendedDataSpec,
 				'limit_count' => $iLimitCount,
 				'limit_start' => $iLimitStart,
 				'is_count' => $bGetCount
 			);
-			if (self::$m_bTraceQueries)
+
+			DBSearch::EnableQueryTrace(false);
+			$aQueryData['oql'] = $this->ToOQL(true, $aArgs);
+			DBSearch::EnableQueryTrace(true);
+
+			if (!empty($aAttToLoad))
 			{
-				self::AddQueryTrace($aQueryData, $sOql, $sSql);
-			}
-			if (utils::GetConfig()->Get('log_kpi_record_oql') == 1)
-			{
-				$aQueryData['oql'] = $sOql;
-				unset($aQueryData['filter']);
-				if (!empty($aAttToLoad))
+				$aAttToLoadNames = array();
+				foreach ($aAttToLoad as $sClass => $aAttributes)
 				{
-					$aAttToLoadNames = array();
-					foreach ($aAttToLoad as $sClass => $aAttributes)
+					$aAttToLoadNames[$sClass] = array();
+					foreach ($aAttributes as $sAttCode => $oAttDef)
 					{
-						$aAttToLoadNames[$sClass] = array();
-						foreach ($aAttributes as $sAttCode => $oAttDef)
-						{
-							$aAttToLoadNames[$sClass][] = $sAttCode;
-						}
+						$aAttToLoadNames[$sClass][] = $sAttCode;
 					}
 				}
-				else
-				{
-					$aAttToLoadNames = null;
-				}
-				$aQueryData['att_to_load'] = $aAttToLoadNames;
+			}
+			else
+			{
+				$aAttToLoadNames = null;
+			}
+			$aQueryData['att_to_load'] = $aAttToLoadNames;
 
-				$hLogFile = @fopen(APPROOT.'log/oql_records.txt', 'a');
-				if ($hLogFile !== false)
-				{
-					flock($hLogFile, LOCK_EX);
-					fwrite($hLogFile, base64_encode(serialize($aQueryData))."\n");
-					fflush($hLogFile);
-					flock($hLogFile, LOCK_UN);
-					fclose($hLogFile);
-				}
+			$hLogFile = @fopen(APPROOT.'log/oql_records.txt', 'a');
+			if ($hLogFile !== false)
+			{
+				flock($hLogFile,LOCK_EX);
+				fwrite($hLogFile,serialize($aQueryData)."\n");
+				fflush($hLogFile);
+				flock($hLogFile,LOCK_UN);
+				fclose($hLogFile);
 			}
 		}
 	}
 
 	/**
-	 * @internal
-	 *
 	 * @param $aArgs
 	 * @param $aGroupByExpr
 	 * @param $bExcludeNullValues
@@ -1320,41 +1313,39 @@ abstract class DBSearch
 	 * @param $iLimitStart
 	 * @param $sSql
 	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
 	 * @throws \MySQLException
+	 * @internal
+	 *
 	 */
 	protected function AddQueryTraceGroupBy($aArgs, $aGroupByExpr, $bExcludeNullValues, $aSelectExpr, $aOrderBy, $iLimitCount, $iLimitStart, $sSql)
 	{
-		if (self::$m_bTraceQueries || (utils::GetConfig()->Get('log_kpi_record_oql') == 1))
+		if (self::$m_bTraceQueries)
 		{
 			$aQueryData = array(
 				'type' => 'group_by',
-				'filter' => $this,
 				'order_by' => $aOrderBy,
-				'args' => $aArgs,
 				'group_by_expr' => $aGroupByExpr,
 				'exclude_null_values' => $bExcludeNullValues,
 				'select_expr' => $aSelectExpr,
 				'limit_count' => $iLimitCount,
 				'limit_start' => $iLimitStart,
 			);
-			$sOql = $this->ToOQL(true, $aArgs);
-			self::AddQueryTrace($aQueryData, $sOql, $sSql);
-			if (utils::GetConfig()->Get('log_kpi_record_oql') == 1)
+
+			$aQueryData['oql'] = $this->ToOQL(true, $aArgs);
+			$aQueryData['group_by_expr'] = Expression::ConvertArrayToOQL($aQueryData['group_by_expr'], $aArgs);
+			$aQueryData['select_expr'] = Expression::ConvertArrayToOQL($aQueryData['select_expr'], $aArgs);
+
+			$hLogFile = @fopen(APPROOT.'log/oql_group_by_records.txt', 'a');
+			if ($hLogFile !== false)
 			{
-				$aQueryData['oql'] = $sOql;
-				unset($aQueryData['filter']);
-
-				$hLogFile = @fopen(APPROOT.'log/oql_group_by_records.txt', 'a');
-				if ($hLogFile !== false)
-				{
-					flock($hLogFile, LOCK_EX);
-					fwrite($hLogFile, base64_encode(serialize($aQueryData))."\n");
-					fflush($hLogFile);
-					flock($hLogFile, LOCK_UN);
-					fclose($hLogFile);
-				}
+				flock($hLogFile,LOCK_EX);
+				fwrite($hLogFile,serialize($aQueryData)."\n");
+				fflush($hLogFile);
+				flock($hLogFile,LOCK_UN);
+				fclose($hLogFile);
 			}
-
 		}
 	}
 

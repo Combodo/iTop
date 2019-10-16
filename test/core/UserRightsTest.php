@@ -27,9 +27,13 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use PHPUnit\Framework\TestCase;
 use UserRights;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class UserRightsTest extends ItopDataTestCase
 {
 

@@ -29,6 +29,7 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use CoreException;
 use Exception;
 use ormTagSet;
 
@@ -110,7 +111,7 @@ class ormTagSetTest extends ItopDataTestCase
 		{
 			$oTagSet->SetValues(array('tag1', 'tag2', 'tag3', 'tag4'));
 		}
-		catch (\CoreException $e)
+		catch (CoreException $e)
 		{
 			$this->debug('Awaited: '.$e->getMessage());
 			throw $e;

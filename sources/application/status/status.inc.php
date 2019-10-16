@@ -2,6 +2,10 @@
 
 namespace Combodo\iTop\Application\Status;
 
+use Config;
+use Exception;
+use MetaModel;
+
 define('STATUS_ERROR', 'ERROR');
 define('STATUS_RUNNING', 'RUNNING');
 
@@ -22,9 +26,10 @@ function StatusGetAppRoot($sAppRootFilename = 'approot.inc.php')
         */
         if (!file_exists($sAppRootFile) || !is_readable($sAppRootFile)) 
         {
-            throw new \Exception($sAppRootFilename . ' is not readable');
+            throw new Exception($sAppRootFilename . ' is not readable');
         }
-        require_once($sAppRootFile);
+        @require_once($sAppRootFile);
+        @require_once(APPROOT.'bootstrap.inc.php');
 }
 
 /**
@@ -46,7 +51,7 @@ function StatusCheckConfigFile($sConfigFilename = 'config-itop.php')
          */  
         if (!file_exists($sConfigFile) || !is_readable($sConfigFile)) 
         {
-                throw new \Exception($sConfigFilename . ' is not readable');
+                throw new Exception($sConfigFilename . ' is not readable');
         }
 }
 
@@ -60,7 +65,7 @@ function StatusCheckConfigFile($sConfigFilename = 'config-itop.php')
  * @throws \DictExceptionUnknownLanguage
  * @throws \MySQLException
  */
-function StatusStartup(\Config $oConfig = null)
+function StatusStartup(Config $oConfig = null)
 {
         StatusCheckConfigFile();
         
@@ -71,5 +76,5 @@ function StatusStartup(\Config $oConfig = null)
         $soConfigFile = (null === $oConfig) ? ITOP_DEFAULT_CONFIG_FILE  : $oConfig;
         
         //Check if application could be started
-        \MetaModel::Startup($soConfigFile, true /* $bModelOnly */);
+        MetaModel::Startup($soConfigFile, true /* $bModelOnly */);
 }

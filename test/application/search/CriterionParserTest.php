@@ -31,12 +31,13 @@ namespace Combodo\iTop\Test\UnitTest\Application\Search;
 use Combodo\iTop\Application\Search\CriterionParser;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
-
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class CriterionParserTest extends ItopDataTestCase
 {
-	/**
-	 * @throws Exception
-	 */
 	protected function setUp()
 	{
 		parent::setUp();

@@ -4,6 +4,8 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use CoreUnexpectedValue;
+use MetaModel;
 
 /**
  * Class UniquenessConstraintTest
@@ -12,7 +14,11 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  *
  * @package Combodo\iTop\Test\UnitTest\Core
  */
-class UniquenessConstraintTest extends ItopTestCase
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */class UniquenessConstraintTest extends ItopTestCase
 {
 	protected function setUp()
 	{
@@ -34,9 +40,9 @@ class UniquenessConstraintTest extends ItopTestCase
 		$bRuleValidResult = true;
 		try
 		{
-			\MetaModel::CheckUniquenessRuleValidity($aRuleProperties, $bIsRuleOverride);
+			MetaModel::CheckUniquenessRuleValidity($aRuleProperties, $bIsRuleOverride);
 		}
-		catch (\CoreUnexpectedValue $e)
+		catch (CoreUnexpectedValue $e)
 		{
 			$bRuleValidResult = false;
 		}

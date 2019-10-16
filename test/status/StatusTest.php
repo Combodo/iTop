@@ -10,7 +10,9 @@ namespace Combodo\iTop\Test\UnitTest\Status;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
- * 
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
  */
 class StatusTest extends ItopTestCase {
 

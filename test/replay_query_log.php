@@ -261,7 +261,7 @@ case 'zoom':
 	{
 		$aExplain = CMDBSource::ExplainQuery($oQuery->sSql);
 		$oP->add("<h4>Explain</h4>\n");
-		$oP->add("<table border=\"1\">\n");
+		$oP->add("<table style=\"border=1px;\">\n");
 		foreach ($aExplain as $aRow)
 		{
 			$oP->add("   <tr>\n");
@@ -274,7 +274,7 @@ case 'zoom':
 	if (count($oQuery->aRows))
 	{
 		$oP->add("<h4>Values</h4>\n");
-		$oP->add("<table border=\"1\">\n");
+		$oP->add("<table style=\"border=1px;\">\n");
 		foreach ($oQuery->aRows as $iRow => $aRow)
 		{
 			$oP->add("   <tr>\n");

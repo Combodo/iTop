@@ -2,12 +2,6 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
-@include_once '../approot.inc.php';
-@include_once '../../approot.inc.php';
-@include_once '../../../approot.inc.php';
-@include_once '../../../../approot.inc.php';
-require_once(APPROOT.'bootstrap.inc.php');
-require_once(APPROOT.'application/startup.inc.php');
 
 define('PRECISION', 2);
 
@@ -32,6 +26,7 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 	public function setUp()
 	{
 		parent::setUp();
+		require_once(APPROOT.'application/startup.inc.php');
 
 		SetupUtils::builddir(APPROOT.'log/test/OQLToSQL');
 	}
@@ -114,7 +109,7 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 		$aPrevious = $this->GetPreviousTestResult($this->GetId());
 		if (is_null($aPrevious))
 		{
-			$aResult = $this->OQLSelectRunner($sOQL, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart);
+ 			$aResult = $this->OQLSelectRunner($sOQL, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart);
 			// no test yet, just save
 			$this->SaveTestResult($this->GetId(), $aResult);
 			$this->debug("Test result saved");
@@ -284,8 +279,13 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 		return null;
 	}
 
+	static $aPureAbstractClasses = ['AbstractResource', 'ResourceAdminMenu', 'ResourceRunQueriesMenu', 'ResourceItopIntegrityMenu'];
+
 	public function OQLSelectProvider()
 	{
+		parent::setUp();
+		require_once(APPROOT.'application/startup.inc.php');
+
 		$aData = array();
 
 		// $sOQL, $aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 20, $iLimitStart = 0
@@ -295,7 +295,7 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 
 		foreach ($aClasses as $sClass)
 		{
-			if ($sClass == 'AbstractResource' || $sClass == 'ResourceAdminMenu' || $sClass == 'ResourceRunQueriesMenu')
+			if (in_array($sClass, self::$aPureAbstractClasses))
 			{
 				// These classes are pure abstract (no table in database)
 				continue;

@@ -4,7 +4,13 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
+use DBBackup;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class DBBackupTest extends ItopTestCase
 {
 	protected function setUp()
@@ -20,16 +26,16 @@ class DBBackupTest extends ItopTestCase
 		$oConfig = new Config();
 		$oConfig->Set('db_tls.enabled', false);
 
-		$sCliArgsNoTls = \DBBackup::GetMysqlCliTlsOptions($oConfig);
+		$sCliArgsNoTls = DBBackup::GetMysqlCliTlsOptions($oConfig);
 		$this->assertEmpty($sCliArgsNoTls);
 
 		$oConfig->Set('db_tls.enabled', true);
-		$sCliArgsMinCfg = \DBBackup::GetMysqlCliTlsOptions($oConfig);
+		$sCliArgsMinCfg = DBBackup::GetMysqlCliTlsOptions($oConfig);
 		$this->assertEquals(' --ssl', $sCliArgsMinCfg);
 
 		$sTestCa = 'my_test_ca';
 		$oConfig->Set('db_tls.ca', $sTestCa);
-		$sCliArgsCapathCfg = \DBBackup::GetMysqlCliTlsOptions($oConfig);
+		$sCliArgsCapathCfg = DBBackup::GetMysqlCliTlsOptions($oConfig);
 		$this->assertEquals(' --ssl --ssl-ca="'.$sTestCa.'"', $sCliArgsCapathCfg);
 	}
 }

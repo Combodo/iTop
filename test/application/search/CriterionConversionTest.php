@@ -39,6 +39,11 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
 use DBSearch;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class CriterionConversionTest extends ItopDataTestCase
 {
 	/**

@@ -11,6 +11,9 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use DBObjectSearch;
+use Exception;
+use OqlInterpreter;
 
 /**
  * @runTestsInSeparateProcesses
@@ -29,7 +32,7 @@ class OQLTest extends ItopDataTestCase
     public function testGoodQueryParser($sQuery)
     {
         $this->debug($sQuery);
-        $oOql = new \OqlInterpreter($sQuery);
+        $oOql = new OqlInterpreter($sQuery);
         $oQuery = $oOql->ParseQuery();
         static::assertInstanceOf('OqlQuery', $oQuery);
     }
@@ -126,13 +129,13 @@ class OQLTest extends ItopDataTestCase
     public function testBadQueryParser($sQuery, $sExpectedExceptionClass)
     {
         $this->debug($sQuery);
-        $oOql = new \OqlInterpreter($sQuery);
+        $oOql = new OqlInterpreter($sQuery);
         $sExceptionClass = '';
         try
         {
             $oOql->ParseQuery();
         }
-        catch (\Exception $e)
+        catch (Exception $e)
         {
             $sExceptionClass = get_class($e);
         }
@@ -168,7 +171,7 @@ class OQLTest extends ItopDataTestCase
     public function testTypeErrorQueryParser($sQuery)
     {
         $this->debug($sQuery);
-        $oOql = new \OqlInterpreter($sQuery);
+        $oOql = new OqlInterpreter($sQuery);
         $oOql->ParseQuery();
     }
 
@@ -195,10 +198,10 @@ class OQLTest extends ItopDataTestCase
         $sExceptionClass = '';
         try
         {
-            $oSearch = \DBObjectSearch::FromOQL($sQuery);
+            $oSearch = DBObjectSearch::FromOQL($sQuery);
             static::assertInstanceOf('DBObjectSearch', $oSearch);
         }
-        catch (\Exception $e)
+        catch (Exception $e)
         {
             $sExceptionClass = get_class($e);
         }

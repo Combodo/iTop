@@ -12,10 +12,11 @@ namespace Combodo\iTop\Test\UnitTest\Status;
  * Date: 25/01/2019
  */
 
+use Config;
+use PHPUnit\Framework\TestCase;
 use function Combodo\iTop\Application\Status\StatusCheckConfigFile;
 use function Combodo\iTop\Application\Status\StatusGetAppRoot;
 use function Combodo\iTop\Application\Status\StatusStartup;
-use PHPUnit\Framework\TestCase;
 
 if (!defined('DEBUG_UNIT_TEST')) {
     define('DEBUG_UNIT_TEST', true);
@@ -98,7 +99,7 @@ class StatusIncTest extends TestCase {
         require_once(APPROOT . '/application/utils.inc.php');
         require_once(APPROOT . '/core/contexttag.class.inc.php');
 
-        $oConfigWrong = new \Config(ITOP_DEFAULT_CONFIG_FILE);
+        $oConfigWrong = new Config(ITOP_DEFAULT_CONFIG_FILE);
         $oConfigWrong->Set('db_pwd', $oConfigWrong->Get('db_pwd') . '_unittest');
 
         StatusStartup($oConfigWrong);

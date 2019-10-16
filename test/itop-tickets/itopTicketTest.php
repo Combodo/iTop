@@ -745,7 +745,7 @@ class ItopTicketTest extends ItopDataTestCase
      *        +====>Person2
      * </pre>
      *
-     * @throws ArchivedObjectException
+     * @throws \ArchivedObjectException
      * @throws Exception
      */
     public function testUpdateImpactedItems_Redundancy_two_tickets()
@@ -849,7 +849,7 @@ class ItopTicketTest extends ItopDataTestCase
      *        +====>Person2
      * </pre>
      *
-     * @throws ArchivedObjectException
+     * @throws \ArchivedObjectException
      * @throws Exception
      */
     public function testUpdateImpactedItems_Redundancy_two_tickets2()

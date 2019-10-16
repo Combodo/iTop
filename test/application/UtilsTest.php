@@ -19,6 +19,11 @@
  *
  */
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 {
 	public function setUp()

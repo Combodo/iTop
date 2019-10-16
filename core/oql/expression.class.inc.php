@@ -47,6 +47,29 @@ abstract class Expression
 	 */
 	abstract public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
 
+	public final static function ConvertArrayToOQL($aExpressions, $aArgs)
+	{
+		$aRet = array();
+		foreach ($aExpressions as $sName => $oExpression)
+		{
+			/** @var Expression $oExpression */
+			$aRet[$sName] = $oExpression->RenderExpression(false, $aArgs);
+		}
+		return $aRet;
+	}
+
+	public final static function ConvertArrayFromOQL($aExpressions)
+	{
+		$aRet = array();
+		foreach ($aExpressions as $sName => $sConditionExpr)
+		{
+			/** @var Expression $oExpression */
+			$aRet[$sName] = Expression::FromOQL($sConditionExpr);
+		}
+		return $aRet;
+	}
+
+
 	/**
 	 * recursive rendering
 	 *
