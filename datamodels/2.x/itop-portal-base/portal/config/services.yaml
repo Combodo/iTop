@@ -67,11 +67,13 @@ services:
   # Tag services without defining them (see https://symfony.com/doc/current/service_container/tags.html#autoconfiguring-tags)
   _instanceof:
     Combodo\iTop\Portal\EventListener\UserProvider:
-      tags: [{ name: 'kernel.event_listener',  event: 'kernel.request'  }]
+      tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 500 }]
       calls:
         - [setContainer, ['@service_container']]
     Combodo\iTop\Portal\EventListener\ApplicationContextSetUrlMakerClass:
-      tags: [{ name: 'kernel.event_listener',  event: 'kernel.request'  }]
+      tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 400 }]
+    Combodo\iTop\Portal\EventListener\ApplicationContextSetPluginPropertyClass:
+      tags: [{ name: 'kernel.event_listener',  event: 'kernel.request', priority: 300 }]
 
   # Add more service definitions when explicit configuration is needed
   # Please note that last definitions always *replace* previous ones
