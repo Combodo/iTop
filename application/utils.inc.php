@@ -2147,22 +2147,4 @@ class utils
 		$sLocalPath = str_replace(DIRECTORY_SEPARATOR, '/', $sLocalPath);
 		return $sLocalPath;
 	}
-
-	/**
-	 * return absolute path of an existing file localed in iTop
-	 *
-	 * @param string $sPath relative iTop path
-	 *
-	 * @return string|false absolute path
-	 */
-	public static function AbsolutePath($sPath)
-	{
-		$sRootPath = realpath(APPROOT);
-		$sFullPath = realpath($sRootPath.DIRECTORY_SEPARATOR.$sPath);
-		if (($sFullPath === false) || !self::StartsWith($sFullPath, $sRootPath))
-		{
-			return false;
-		}
-		return $sFullPath;
-	}
 }
