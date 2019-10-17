@@ -111,10 +111,6 @@ try
 		$oFilter = DBObjectSearch::unserialize($sExpression);
 		$sExpression = $oFilter->ToOQL();
 	}
-	else
-	{
-		// leave $sExpression as is
-	}
 
 	$oFilter = null;
 	$aArgs = array();
@@ -154,10 +150,7 @@ try
 				}
 			}
 			$oFilter->SetInternalParams($aArgs);
-		}
-		elseif ($sSyntaxError)
-		{
-			// Query arguments taken from the page args
+			$aRealArgs = $aArgs;
 		}
 	}
 
@@ -222,6 +215,56 @@ EOF
 		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'runQuery');
 		$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
 		$oP->p(Dict::S('UI:RunQuery:SerializedFilter').htmlentities($oFilter->serialize(), ENT_QUOTES, 'UTF-8'));
+
+
+		$aModifierProperties = MetaModel::MakeModifierProperties($oFilter);
+
+		// Avoid adding all the fields for counts or "group by" requests
+		$aCountAttToLoad = array();
+		$sMainClass = null;
+		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
+		{
+			$aCountAttToLoad[$sClassAlias] = array();
+			if (empty($sMainClass))
+			{
+				$sMainClass = $sClass;
+			}
+		}
+
+		$aOrderBy = MetaModel::GetOrderByDefault($sMainClass);
+
+		if ($oFilter instanceof DBObjectSearch)
+		{
+			// OQL Developed for Count
+			$oP->p('');
+			$oP->p(Dict::S('UI:RunQuery:DevelopedOQLCount'));
+			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
+			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
+			$oP->p('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>');
+		}
+		
+		// SQL Count
+		$oP->p('');
+		$oP->p(Dict::S('UI:RunQuery:ResultSQLCount'));
+		$sSQL = $oFilter->MakeSelectQuery(array(), $aRealArgs, $aCountAttToLoad, null, 0, 0, true);
+		$oP->p("<pre>$sSQL</pre>");
+
+		if ($oFilter instanceof DBObjectSearch)
+		{
+			// OQL Developed
+			$oP->p('');
+			$oP->p(Dict::S('UI:RunQuery:DevelopedOQL'));
+			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
+			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
+			$oP->p('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>');
+		}
+
+		// SQL
+		$oP->p('');
+		$oP->p(Dict::S('UI:RunQuery:ResultSQL'));
+		$sSQL = $oFilter->MakeSelectQuery($aOrderBy, $aRealArgs, null, null, 0, 0, false);
+		$oP->p("<pre>$sSQL</pre>");
+
 		$oP->EndCollapsibleSection();
 	}
 	elseif ($sSyntaxError)
@@ -266,4 +309,4 @@ catch(Exception $e)
 }
 
 $oP->output();
-?>
+

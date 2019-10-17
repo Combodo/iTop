@@ -455,8 +455,9 @@ class DBUnionSearch extends DBSearch
 
 	/**
 	 * Returns a new DBUnionSearch object where duplicates queries have been removed based on their OQLs
-	 * 
+	 *
 	 * @return \DBUnionSearch
+	 * @throws \CoreException
 	 */
 	public function RemoveDuplicateQueries()
 	{

@@ -116,7 +116,7 @@ class SQLUnionQuery extends SQLQuery
 		{
 			$sSelects = '('.implode(" $sLimit)$sLineSep UNION$sLineSep(", $aSelects)." $sLimit)";
 			$sFrom = "($sLineSep$sSelects$sLineSep) as __selects__";
-			$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep 1 $sLineSep FROM $sFrom$sLineSep) AS _union_tatooine_";
+			$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep 1 $sLineSep FROM $sFrom$sLineSep) AS _union_alderaan_";
 		}
 		else
 		{

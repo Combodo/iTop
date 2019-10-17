@@ -961,7 +961,7 @@ abstract class DBSearch
      *
      * @internal
      *
-	 * @param array|hash $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
 	 * @param array $aArgs
 	 * @param null $aAttToLoad
 	 * @param null $aExtendedDataSpec
@@ -1038,8 +1038,8 @@ abstract class DBSearch
 		}
 		try
 		{
-			$bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
-			$sRes = $oSQLQuery->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, $bBeautifulSQL);
+			// $bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
+			$sRes = $oSQLQuery->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, true);
 			if ($sClassAlias == '_itop_')
 			{
 				IssueLog::Info('SQL Query (_itop_): '.$sRes);
