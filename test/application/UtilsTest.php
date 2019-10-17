@@ -23,6 +23,7 @@
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
+ * @covers utils
  */
 class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 {
@@ -58,6 +59,7 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 
 	/**
 	 * @dataProvider realPathDataProvider
+	 * @covers       utils::RealPath()
 	 */
 	public function testRealPath($sPath, $sBasePath, $expected)
 	{
@@ -68,30 +70,30 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	{
 		parent::setUp(); // if not called, APPROOT won't be defined :(
 
-		$sItopRootPath = APPROOT;
 		$sSep = DIRECTORY_SEPARATOR;
+		$sItopRootRealPath = realpath(APPROOT).$sSep;
 
 		return [
-			'licence.txt' => [$sItopRootPath.'license.txt', $sItopRootPath, $sItopRootPath.'license.txt'],
-			'unexisting file' => [$sItopRootPath.'license_DOES_NOT_EXIST.txt', $sItopRootPath, false],
-			'/license.txt' => [$sItopRootPath.$sSep.'license.txt', $sItopRootPath, $sItopRootPath.'license.txt'],
-			'%2flicense.txt' => [$sItopRootPath.'%2flicense.txt', $sItopRootPath, false],
-			'../license.txt' => [$sItopRootPath.'..'.$sSep.'license.txt', $sItopRootPath, false],
-			'%2e%2e%2flicense.txt' => [$sItopRootPath.'%2e%2e%2flicense.txt', $sItopRootPath, false],
+			'licence.txt' => [APPROOT.'license.txt', APPROOT, $sItopRootRealPath.'license.txt'],
+			'unexisting file' => [APPROOT.'license_DOES_NOT_EXIST.txt', APPROOT, false],
+			'/license.txt' => [APPROOT.$sSep.'license.txt', APPROOT, $sItopRootRealPath.'license.txt'],
+			'%2flicense.txt' => [APPROOT.'%2flicense.txt', APPROOT, false],
+			'../license.txt' => [APPROOT.'..'.$sSep.'license.txt', APPROOT, false],
+			'%2e%2e%2flicense.txt' => [APPROOT.'%2e%2e%2flicense.txt', APPROOT, false],
 			'application/utils.inc.php with basepath=APPROOT' => [
-				$sItopRootPath.'application/utils.inc.php',
-				$sItopRootPath,
-				$sItopRootPath.'application'.$sSep.'utils.inc.php',
+				APPROOT.'application/utils.inc.php',
+				APPROOT,
+				$sItopRootRealPath.'application'.$sSep.'utils.inc.php',
 			],
 			'application/utils.inc.php with basepath=APPROOT/application' => [
-				$sItopRootPath.'application/utils.inc.php',
-				$sItopRootPath.'application',
-				$sItopRootPath.'application'.$sSep.'utils.inc.php',
+				APPROOT.'application/utils.inc.php',
+				APPROOT.'application',
+				$sItopRootRealPath.'application'.$sSep.'utils.inc.php',
 			],
 			'basepath containing / and \\' => [
-				$sItopRootPath.'sources/form/form.class.inc.php',
-				$sItopRootPath.'sources/form\\form.class.inc.php',
-				$sItopRootPath.'sources'.$sSep.'form'.$sSep.'form.class.inc.php',
+				APPROOT.'sources/form/form.class.inc.php',
+				APPROOT.'sources/form\\form.class.inc.php',
+				$sItopRootRealPath.'sources'.$sSep.'form'.$sSep.'form.class.inc.php',
 			],
 		];
 	}
