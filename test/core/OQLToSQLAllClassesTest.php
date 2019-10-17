@@ -302,6 +302,17 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 			}
 			$sOQL = "SELECT $sClass";
 			$aOrderBy = MetaModel::GetOrderByDefault($sClass);
+			if (empty($aOrderBy))
+			{
+				// No friendly name
+				foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+				{
+					if ($oAttDef->IsDirectField())
+					{
+						$aOrderBy[$sClass.'.'.$sAttCode] = true;
+					}
+				}
+			}
 			$aData[$sOQL] = array($sOQL, $aOrderBy, array(), null, null, 10, 0);
 		}
 
