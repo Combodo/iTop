@@ -145,11 +145,11 @@ a:hover {
 
 #login-submit input.login-submit-secondary {
 	background-color: #e0e0e0;
-	color: #333a4bf5;
+	color: #333a4b;
 }
 
 #login-submit input {
-	background-color: #333a4bf5;
+	background-color: #333a4b;
 	padding: 0.1em 1em;
 	border-radius: 0.25em;
 	width: 100%;
