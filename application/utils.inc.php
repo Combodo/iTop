@@ -2126,4 +2126,43 @@ class utils
 
 		return $sFileRealPath;
 	}
+
+	/**
+	 * Returns the local path relative to the iTop installation of an existing file
+	 * Dir separator is changed to '/' for consistency among the different OS
+	 *
+	 * @param string $sPath absolute path
+	 *
+	 * @return false|string
+	 */
+	final public static function LocalPath($sPath)
+	{
+		$sRootPath = realpath(APPROOT);
+		$sFullPath = realpath($sPath);
+		if (($sFullPath === false) || !self::StartsWith($sFullPath, $sRootPath))
+		{
+			return false;
+		}
+		$sLocalPath = substr($sFullPath, strlen($sRootPath.DIRECTORY_SEPARATOR));
+		$sLocalPath = str_replace(DIRECTORY_SEPARATOR, '/', $sLocalPath);
+		return $sLocalPath;
+	}
+
+	/**
+	 * return absolute path of an existing file localed in iTop
+	 *
+	 * @param string $sPath relative iTop path
+	 *
+	 * @return string|false absolute path
+	 */
+	public static function AbsolutePath($sPath)
+	{
+		$sRootPath = realpath(APPROOT);
+		$sFullPath = realpath($sRootPath.DIRECTORY_SEPARATOR.$sPath);
+		if (($sFullPath === false) || !self::StartsWith($sFullPath, $sRootPath))
+		{
+			return false;
+		}
+		return $sFullPath;
+	}
 }
