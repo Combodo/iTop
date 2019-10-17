@@ -101,10 +101,10 @@ ApplicationMenu::CheckMenuIdEnabled('ConfigEditor');
 
 $oP = new iTopWebPage(Dict::S('config-edit-title'));
 $oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
-$oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/ace.js');
-$oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/mode-php.js');
-$oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/theme-eclipse.js');
-$oP->add_linked_script(utils::GetCurrentModuleUrl().'/js/ext-searchbox.js');
+$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/ace/ace.js');
+$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/ace/mode-php.js');
+$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/ace/theme-eclipse.js');
+$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/ace/ext-searchbox.js');
 
 try
 {
