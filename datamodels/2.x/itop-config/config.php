@@ -211,7 +211,7 @@ try
 	
 		$sConfirmCancel = addslashes(Dict::S('config-confirm-cancel'));
 		$oP->add_script(
-			<<<'EOF'
+			<<<'JS'
 var EditorUtils = (function() {
 	var STORAGE_RANGE_KEY = 'cfgEditorRange';
 	var STORAGE_LINE_KEY = 'cfgEditorFirstline';
@@ -281,10 +281,10 @@ var EditorUtils = (function() {
 		updateConfigEditorButtonState : updateConfigEditorButtonState
 	};
 })();
-EOF
+JS
 		);
 		$oP->add_ready_script(
-	        <<<'EOF'
+			<<<'JS'
 var editor = ace.edit("new_config");
 
 var $configurationSource = $('input[name="new_config"]');
@@ -324,7 +324,7 @@ $editorForm.submit(function() {
 
 EditorUtils.restoreEditorDisplay(editor);
 editor.focus();
-EOF
+JS
         );
 
 		$oP->add_script(
