@@ -205,6 +205,11 @@ class OQLToSQLTest extends ItopDataTestCase
 		}
 
 		$oSearch = DBSearch::FromOQL($sOQL);
+		$sClass = $oSearch->GetClass();
+		if (empty($aOrderBy))
+		{
+			$aOrderBy = MetaModel::GetOrderByDefault($sClass);
+		}
 
 		$sSQLCount = $oSearch->MakeSelectQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, 0, 0, true);
 		$fStart = $this->GetMicroTime();

@@ -301,11 +301,7 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 				continue;
 			}
 			$sOQL = "SELECT $sClass";
-			$aOrderBy = array();
-			if (MetaModel::IsValidAttCode($sClass, 'friendlyname'))
-			{
-				$aOrderBy["$sClass.friendlyname"] = true;
-			}
+			$aOrderBy = MetaModel::GetOrderByDefault($sClass);
 			$aData[$sOQL] = array($sOQL, $aOrderBy, array(), null, null, 10, 0);
 		}
 
