@@ -233,7 +233,7 @@ EOF
 
 		$aOrderBy = MetaModel::GetOrderByDefault($sMainClass);
 
-		if ($oFilter instanceof DBObjectSearch)
+		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch'))
 		{
 			// OQL Developed for Count
 			$oP->p('');
@@ -249,7 +249,7 @@ EOF
 		$sSQL = $oFilter->MakeSelectQuery(array(), $aRealArgs, $aCountAttToLoad, null, 0, 0, true);
 		$oP->p("<pre>$sSQL</pre>");
 
-		if ($oFilter instanceof DBObjectSearch)
+		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch'))
 		{
 			// OQL Developed
 			$oP->p('');
