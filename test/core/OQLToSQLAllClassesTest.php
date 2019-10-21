@@ -303,14 +303,7 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 			$sOQL = "SELECT $sClass";
 
 			// Compute Order by
-			$aOrderBy = array();
-			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				if ($oAttDef->IsDirectField())
-				{
-					$aOrderBy[$sClass.'.'.$sAttCode] = true;
-				}
-			}
+			$aOrderBy = array($sClass.'.id' => true);
 			$aData[$sOQL] = array($sOQL, $aOrderBy, array(), null, null, 10, 0);
 		}
 
