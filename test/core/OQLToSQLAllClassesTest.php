@@ -301,16 +301,14 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 				continue;
 			}
 			$sOQL = "SELECT $sClass";
-			$aOrderBy = MetaModel::GetOrderByDefault($sClass);
-			if (empty($aOrderBy))
+
+			// Compute Order by
+			$aOrderBy = array();
+			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 			{
-				// No friendly name
-				foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
+				if ($oAttDef->IsDirectField())
 				{
-					if ($oAttDef->IsDirectField())
-					{
-						$aOrderBy[$sClass.'.'.$sAttCode] = true;
-					}
+					$aOrderBy[$sClass.'.'.$sAttCode] = true;
 				}
 			}
 			$aData[$sOQL] = array($sOQL, $aOrderBy, array(), null, null, 10, 0);
