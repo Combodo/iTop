@@ -992,7 +992,7 @@ class ApplicationInstaller
 		$oConfig->WriteToFile($sConfigFile);
 			
 		// try to make the final config file read-only
-		@chmod($sConfigFile, 0444); // Read-only for owner and group, nothing for others
+		@chmod($sConfigFile, 0440); // Read-only for owner and group, nothing for others
 
 		// Ready to go !!
 		require_once(APPROOT.'core/dict.class.inc.php');
