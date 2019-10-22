@@ -119,7 +119,7 @@ class LogFileNameBuilderFactory
 	{
 		$oConfig = utils::GetConfig();
 		$sFileNameBuilderImpl = $oConfig->Get('log_filename_builder_impl');
-		if (empty($sFileNameBuilderImpl))
+		if (empty($sFileNameBuilderImpl) || !class_exists($sFileNameBuilderImpl))
 		{
 			$sFileNameBuilderImpl = 'DefaultLogFileNameBuilder';
 		}
