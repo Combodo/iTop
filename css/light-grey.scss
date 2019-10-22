@@ -3715,11 +3715,6 @@ input:checked + .slider:before {
 	clear: both;
 }
 
-.ui-resizable-handle.ui-resizable-s {
-	background-image: url("../images/banner-bkg.png");
-	height: 15px;
-}
-
 /* font-awesome 4 to 5 BC fix */
 .pull-right { float: right; }
 .pull-left { float: left; }
