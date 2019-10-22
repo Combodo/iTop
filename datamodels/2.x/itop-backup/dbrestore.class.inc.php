@@ -186,7 +186,7 @@ class DBRestore extends DBBackup
 		$sConfigFile = APPROOT.'conf/'.$sEnvironment.'/config-itop.php';
 		@chmod($sConfigFile, 0770); // Allow overwriting the file
 		rename($sDataDir.'/config-itop.php', $sConfigFile);
-		@chmod($sConfigFile, 0444); // Read-only
+		@chmod($sConfigFile, 0440); // Read-only
 
 		try
 		{

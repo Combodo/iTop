@@ -176,7 +176,7 @@ try
                         $oTempConfig = new Config($sTmpFile, true);
                         $oTempConfig->WriteToFile($sConfigFile);
                         @unlink($sTmpFile);
-                        @chmod($sConfigFile, 0444); // Read-only
+                        @chmod($sConfigFile, 0440); // Read-only
 
 	                    if (DBPasswordInNewConfigIsOk($sConfig))
 	                    {
