@@ -70,14 +70,14 @@ define('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|external|basic');
 define('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
 define('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random generated key later (if possible)
 define('DEFAULT_ENCRYPTION_LIB', 'Mcrypt'); // We'll define the best encryption available later
+
 /**
  * Config
  * configuration data (this class cannot not be localized, because it is responsible for loading the dictionaries)
  *
- * @package     iTopORM
- *
  * @see \MetaModel::GetConfig() to get the config, if the metamodel was already loaded
  * @see utils::GetConfig() to load config from the current env, if metamodel is not loaded
+ * @package     iTopORM
  */
 class Config
 {
@@ -347,8 +347,8 @@ class Config
 			'type' => 'string',
 			'description' => 'Font used when generating a PDF file',
 			'default' => 'DejaVuSans', // DejaVuSans is a UTF-8 Unicode font, embedded in the TCPPDF lib we're using
-										// Standard PDF fonts like helvetica or times newroman are NOT Unicode
-										// A new DroidSansFallback can be used to improve CJK support (se PR #49)
+			// Standard PDF fonts like helvetica or times newroman are NOT Unicode
+			// A new DroidSansFallback can be used to improve CJK support (se PR #49)
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
@@ -588,7 +588,7 @@ class Config
 				'Asia/Istanbul',
 				'Asia/Singapore',
 				'Africa/Casablanca',
-				'Australia/Sydney'
+				'Australia/Sydney',
 			),
 			'default' => 'Europe/Paris',
 			'value' => 'Europe/Paris',
@@ -831,46 +831,46 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		),
-        'email_validation_pattern' => array(
-            'type' => 'string',
-            'description' => 'Regular expression to validate/detect the format of an eMail address',
-            'default' => "[a-zA-Z0-9._&'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}",
-            'value' => '',
-            'source_of_value' => '',
-            'show_in_conf_sample' => true,
-        ),
-        'email_decoration_class' => array(
-            'type' => 'string',
-            'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-envelope" will put a mail icon.',
-            'default' => 'fas fa-envelope',
-            'value' => '',
-            'source_of_value' => '',
-            'show_in_conf_sample' => false,
-        ),
-        'phone_number_validation_pattern' => array(
-            'type' => 'string',
-            'description' => 'Regular expression to validate/detect the format of a phone number',
-            'default' => "[0-9.\-\ \+\(\)]+",
-            'value' => '',
-            'source_of_value' => '',
-            'show_in_conf_sample' => false,
-        ),
-        'phone_number_url_pattern' => array(
-            'type' => 'string',
-            'description' => 'Format for phone number url, use %1$s as a placeholder for the value. eg. "tel:%1$s" for regular phone applications or "callto:%1$s" for Skype. Default is "tel:%1$s".',
-            'default' => 'tel:%1$s',
-            'value' => '',
-            'source_of_value' => '',
-            'show_in_conf_sample' => false,
-        ),
-        'phone_number_decoration_class' => array(
-            'type' => 'string',
-            'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-phone" will put a phone icon.',
-            'default' => 'fas fa-phone',
-            'value' => '',
-            'source_of_value' => '',
-            'show_in_conf_sample' => false,
-        ),
+		'email_validation_pattern' => array(
+			'type' => 'string',
+			'description' => 'Regular expression to validate/detect the format of an eMail address',
+			'default' => "[a-zA-Z0-9._&'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z0-9-]{2,}",
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
+		),
+		'email_decoration_class' => array(
+			'type' => 'string',
+			'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-envelope" will put a mail icon.',
+			'default' => 'fas fa-envelope',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'phone_number_validation_pattern' => array(
+			'type' => 'string',
+			'description' => 'Regular expression to validate/detect the format of a phone number',
+			'default' => "[0-9.\-\ \+\(\)]+",
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'phone_number_url_pattern' => array(
+			'type' => 'string',
+			'description' => 'Format for phone number url, use %1$s as a placeholder for the value. eg. "tel:%1$s" for regular phone applications or "callto:%1$s" for Skype. Default is "tel:%1$s".',
+			'default' => 'tel:%1$s',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
+		'phone_number_decoration_class' => array(
+			'type' => 'string',
+			'description' => 'CSS class(es) to use as decoration for the HTML rendering of the attribute. eg. "fas fa-phone" will put a phone icon.',
+			'default' => 'fas fa-phone',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'log_kpi_duration' => array(
 			'type' => 'integer',
 			'description' => 'Level of logging for troubleshooting performance issues (1 to enable, 2 +blame callers) new: add "log_kpi_slow_queries" to limit the stats',
@@ -1291,15 +1291,15 @@ class Config
 		$this->m_aSettings[$sPropCode]['source_of_value'] = $sSourceDesc;
 	}
 
-    /**
-     * @param string $sPropCode
-     *
-     * @return mixed
-     */
-    public function Get($sPropCode)
-    {
-        return $this->m_aSettings[$sPropCode]['value'];
-    }
+	/**
+	 * @param string $sPropCode
+	 *
+	 * @return mixed
+	 */
+	public function Get($sPropCode)
+	{
+		return $this->m_aSettings[$sPropCode]['value'];
+	}
 
 	/**
 	 * Event log options (see LOG_... definition)
@@ -1371,16 +1371,16 @@ class Config
 	 */
 	protected $m_aCharsets;
 
-    /**
-     * Config constructor.
-     *
-     * @param string|null $sConfigFile
-     * @param bool $bLoadConfig
-     *
-     * @throws \ConfigException
-     * @throws \CoreException
-     */
-    public function __construct($sConfigFile = null, $bLoadConfig = true)
+	/**
+	 * Config constructor.
+	 *
+	 * @param string|null $sConfigFile
+	 * @param bool $bLoadConfig
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public function __construct($sConfigFile = null, $bLoadConfig = true)
 	{
 		$this->m_sFile = $sConfigFile;
 		if (is_null($sConfigFile))
@@ -1416,7 +1416,7 @@ class Config
 		//define default encryption params according to php install
 		$aEncryptParams = SimpleCrypt::GetNewDefaultParams();
 		$this->m_sEncryptionLibrary = isset($aEncryptParams['lib']) ? $aEncryptParams['lib'] : DEFAULT_ENCRYPTION_LIB;
-		$this->m_sEncryptionKey= isset($aEncryptParams['key']) ? $aEncryptParams['key'] : DEFAULT_ENCRYPTION_KEY;
+		$this->m_sEncryptionKey = isset($aEncryptParams['key']) ? $aEncryptParams['key'] : DEFAULT_ENCRYPTION_KEY;
 
 		$this->m_aModuleSettings = array();
 
@@ -1442,13 +1442,13 @@ class Config
 		 */
 	}
 
-    /**
-     * @param string $sPurpose
-     * @param string $sFileName
-     *
-     * @throws \ConfigException
-     */
-    protected function CheckFile($sPurpose, $sFileName)
+	/**
+	 * @param string $sPurpose
+	 * @param string $sFileName
+	 *
+	 * @throws \ConfigException
+	 */
+	protected function CheckFile($sPurpose, $sFileName)
 	{
 		if (!file_exists($sFileName))
 		{
@@ -1491,7 +1491,7 @@ class Config
 			$sNoise = trim(ob_get_contents());
 			ob_end_clean();
 		}
-		catch(Error $e)
+		catch (Error $e)
 		{
 			// PHP 7
 			throw new ConfigException('Error in configuration file',
@@ -1575,12 +1575,14 @@ class Config
 	}
 
 	/**
-	 * @param string $sModule
+	 * @see \MetaModel::GetModuleParameter()
+	 *
 	 * @param string $sProperty
 	 * @param mixed $defaultvalue
 	 *
+	 * @param string $sModule
+	 *
 	 * @return mixed|null if present, value defined in the configuration file, if not module parameter from XML
-	 * @see \MetaModel::GetModuleParameter()
 	 */
 	public function GetModuleSetting($sModule, $sProperty, $defaultvalue = null)
 	{
@@ -1593,16 +1595,18 @@ class Config
 		return $this->GetModuleParameter($sModule, $sProperty, $defaultvalue);
 	}
 
-    /**
-     * @param string $sModule
-     * @param string $sProperty
-     * @param mixed $defaultvalue
-     *
-     * @return mixed|null parameter value defined in the XML
-     * @see \MetaModel::GetModuleSetting() to get from the configuration file first
-     * @link https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Axml_reference#modules_parameters
-     */
-    public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
+	/**
+	 * @see \MetaModel::GetModuleSetting() to get from the configuration file first
+	 *
+	 * @param string $sProperty
+	 * @param mixed $defaultvalue
+	 *
+	 * @param string $sModule
+	 *
+	 * @return mixed|null parameter value defined in the XML
+	 * @link https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Axml_reference#modules_parameters
+	 */
+	public function GetModuleParameter($sModule, $sProperty, $defaultvalue = null)
 	{
 		$ret = $defaultvalue;
 		if (class_exists('ModulesXMLParameters'))
@@ -1848,16 +1852,16 @@ class Config
 		return $aSettings;
 	}
 
-    /**
-     * Write the configuration to a file (php format) that can be reloaded later
-     * By default write to the same file that was specified when constructing the object
-     *
-     * @param string $sFileName string Name of the file to write to (emtpy to write to the same file)
-     *
-     * @return boolean True otherwise throws an Exception
+	/**
+	 * Write the configuration to a file (php format) that can be reloaded later
+	 * By default write to the same file that was specified when constructing the object
 	 *
-     * @throws \ConfigException
-     */
+	 * @param string $sFileName string Name of the file to write to (emtpy to write to the same file)
+	 *
+	 * @return boolean True otherwise throws an Exception
+	 *
+	 * @throws \ConfigException
+	 */
 	public function WriteToFile($sFileName = '')
 	{
 		if (empty($sFileName))
@@ -2004,16 +2008,16 @@ class Config
 		}
 	}
 
-    /**
-     * Helper function to initialize a configuration from the page arguments
-     *
-     * @param array $aParamValues
-     * @param string|null $sModulesDir
-     * @param bool $bPreserveModuleSettings
-     *
-     * @throws \Exception
-     * @throws \CoreException
-     */
+	/**
+	 * Helper function to initialize a configuration from the page arguments
+	 *
+	 * @param array $aParamValues
+	 * @param string|null $sModulesDir
+	 * @param bool $bPreserveModuleSettings
+	 *
+	 * @throws \Exception
+	 * @throws \CoreException
+	 */
 	public function UpdateFromParams($aParamValues, $sModulesDir = null, $bPreserveModuleSettings = false)
 	{
 		if (isset($aParamValues['application_path']))
@@ -2048,7 +2052,7 @@ class Config
 			$this->Set('db_name', $sDBName);
 			$this->Set('db_subname', $aParamValues['db_prefix']);
 
-			$bDbTlsEnabled = (bool) $aParamValues['db_tls_enabled'];
+			$bDbTlsEnabled = (bool)$aParamValues['db_tls_enabled'];
 			if ($bDbTlsEnabled)
 			{
 				$this->Set('db_tls.enabled', $bDbTlsEnabled, 'UpdateFromParams');
@@ -2059,9 +2063,12 @@ class Config
 				$this->Set('db_tls.enabled', $bDbTlsEnabled, null);
 			}
 			$sDbTlsCa = $bDbTlsEnabled ? $aParamValues['db_tls_ca'] : null;
-			if (isset($sDbTlsCa) && !empty($sDbTlsCa)) {
+			if (isset($sDbTlsCa) && !empty($sDbTlsCa))
+			{
 				$this->Set('db_tls.ca', $sDbTlsCa, 'UpdateFromParams');
-			} else {
+			}
+			else
+			{
 				// empty parameter : we don't want it in the file
 				$this->Set('db_tls.ca', null, null);
 			}
@@ -2145,13 +2152,13 @@ class Config
 		$this->SetAddOns($aAddOns);
 	}
 
-    /**
-     * Helper: for an array of string, change the prefix when found
-     *
-     * @param array $aStrings
-     * @param string $sSearchPrefix
-     * @param string $sNewPrefix
-     */
+	/**
+	 * Helper: for an array of string, change the prefix when found
+	 *
+	 * @param array $aStrings
+	 * @param string $sSearchPrefix
+	 * @param string $sNewPrefix
+	 */
 	protected static function ChangePrefix(&$aStrings, $sSearchPrefix, $sNewPrefix)
 	{
 		foreach ($aStrings as &$sFile)
@@ -2163,13 +2170,13 @@ class Config
 		}
 	}
 
-    /**
-     * Obsolete: kept only for backward compatibility of the Toolkit
-     * Quick and dirty way to clone a config file into another environment
-     *
-     * @param string $sSourceEnv
-     * @param string $sTargetEnv
-     */
+	/**
+	 * Obsolete: kept only for backward compatibility of the Toolkit
+	 * Quick and dirty way to clone a config file into another environment
+	 *
+	 * @param string $sSourceEnv
+	 * @param string $sTargetEnv
+	 */
 	public function ChangeModulesPath($sSourceEnv, $sTargetEnv)
 	{
 		// Now does nothing since the includes are built into the environment itself
