@@ -2000,7 +2000,12 @@ class Config
 			fwrite($hFile, ");\n");
 			fwrite($hFile, '?'.'>'); // Avoid perturbing the syntax highlighting !
 
-			return fclose($hFile);
+			$bReturn = fclose($hFile);
+
+			MetaModel::LoadConfig($this);
+			FileLog::RenameLegacyLogFiles();
+
+			return $bReturn;
 		}
 		else
 		{

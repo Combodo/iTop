@@ -153,6 +153,52 @@ class FileLog
 		$this->oFileNameBuilder = LogFileNameBuilderFactory::GetInstance($sFileName);
 	}
 
+	/**
+	 * Since 2.7.0 with the 'log_filename_builder_impl' param the logs will output to different files name
+	 * As now by default iTop will use {@link WeeklyRotatingLogFileNameBuilder} (rotation each week), to avoid confusion, we're renaming
+	 * the legacy error.log / setup.log.
+	 *
+	 * @since 2.7.0 N°2518
+	 * @uses utils::GetConfig() the config must be persisted !
+	 */
+	public static function RenameLegacyLogFiles()
+	{
+		$oConfig = utils::GetConfig();
+		IssueLog::Enable(APPROOT.'log/error.log'); // refresh log file used
+		$sLogFileNameParam = $oConfig->Get('log_filename_builder_impl');
+		$aConfigValuesNoRotation = array('', 'DefaultLogFileNameBuilder');
+
+		$bIsLogRotationActivated = (!in_array($sLogFileNameParam, $aConfigValuesNoRotation, true));
+		if (!$bIsLogRotationActivated)
+		{
+			return;
+		}
+
+		IssueLog::Warning("Log name builder set to '$sLogFileNameParam', renaming legacy log files");
+		$aLogFilesToRename = array(
+			'log/setup.log' => 'log/setup.LEGACY.log',
+			'log/error.log' => 'log/error.LEGACY.log',
+		);
+		foreach ($aLogFilesToRename as $sLogCurrentName => $sLogNewName)
+		{
+			$sSource = APPROOT.$sLogCurrentName;
+			if (!file_exists($sSource))
+			{
+				IssueLog::Info("Log file '$sLogCurrentName' does not exists, skipping");
+				continue;
+			}
+
+			$sDestination = APPROOT.$sLogNewName;
+			$bResult = rename($sSource, $sDestination);
+			if (!$bResult)
+			{
+				IssueLog::Error("Log file '$sLogCurrentName' cannot be renamed to '$sLogNewName'");
+				continue;
+			}
+			IssueLog::Info("Log file '$sLogCurrentName' renamed to '$sLogNewName'");
+		}
+	}
+
 	public function Error($sText)
 	{
 		$this->Write('Error | '.$sText);
