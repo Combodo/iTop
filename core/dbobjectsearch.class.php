@@ -622,7 +622,7 @@ class DBObjectSearch extends DBSearch
 		{
 			if (!$oAttDef->IsScalar()) continue;
 			if ($oAttDef->IsExternalKey()) continue;
-			if ($oAttDef instanceof AttributePassword) continue;
+			if (!$oAttDef->IsSearchable()) continue;
 			$aFullTextFields[] = new FieldExpression($sAttCode, $this->GetClassAlias());
 		}
 		$oTextFields = new CharConcatWSExpression(' ', $aFullTextFields);
