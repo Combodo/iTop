@@ -615,8 +615,8 @@ class ModelFactory
 	
 				if (!$oTargetParentNode)
 				{
-					echo "Dumping target doc - looking for '$sParentId'<br/>\n";
-					$this->oDOMDocument->firstChild->Dump();
+					// echo "Dumping target doc - looking for '$sParentId'<br/>\n";
+					// $this->oDOMDocument->firstChild->Dump();
 					$sPath = MFDocument::GetItopNodePath($oSourceNode);
 					$iLine = $oSourceNode->getLineNo();
 					throw new MFException($sPath.' at line '.$iLine.": parent class '$sParentId' could not be found", MFException::PARENT_NOT_FOUND, $iLine, $sPath, $sParentId);
@@ -633,8 +633,8 @@ class ModelFactory
 					}
 					else
 					{
-						echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
-						$this->oDOMDocument->firstChild->Dump();
+						// echo "Dumping target doc - looking for '".$oSourceNode->getAttribute('id')."'<br/>\n";
+						// $this->oDOMDocument->firstChild->Dump();
 						$sPath = MFDocument::GetItopNodePath($oSourceNode);
 						$iLine = $oSourceNode->getLineNo();
 						throw new MFException($sPath.' at line '.$iLine.": could not be found", MFException::NOT_FOUND, $iLine, $sPath);
@@ -1078,13 +1078,17 @@ class ModelFactory
 	
 	/**
 	 * Check if the class specified by the given name already exists in the loaded DOM
+	 *
 	 * @param string $sClassName The node corresponding to the class to load
-	 * @throws Exception
+	 * @param bool $bIncludeMetas Look for $sClassName also in meta declaration (PHP classes) if not found in XML classes
+	 *
+	 * @throws \Exception
+	 *
 	 * @return bool True if the class exists, false otherwise
 	 */
-	protected function ClassNameExists($sClassName)
+	protected function ClassNameExists($sClassName, $bIncludeMetas = false)
 	{
-		return !is_null($this->GetClass($sClassName));
+		return !is_null($this->GetClass($sClassName, $bIncludeMetas));
 	}
 
 	/**
@@ -1190,14 +1194,22 @@ EOF
 	{
 		return $this->GetNodes("/itop_design/classes//class[@id][@_created_in='$sModuleName']");
 	}
-		
+
 	/**
 	 * List all classes from the DOM
-	 * @throws Exception
+	 *
+	 * @param bool $bIncludeMetas Also look for meta declaration (PHP classes) in addition to XML classes
+	 *
+	 * @return \DOMNodeList
 	 */
-	public function ListAllClasses()
+	public function ListAllClasses($bIncludeMetas = false)
 	{
-		return $this->GetNodes("/itop_design/classes//class[@id]");
+		$sXPath = "/itop_design/classes//class[@id]";
+		if($bIncludeMetas === true)
+		{
+			$sXPath .= "|/itop_design/meta/classes/class[@id]";
+		}
+		return $this->GetNodes($sXPath);
 	}
 	
 	/**
@@ -1210,13 +1222,22 @@ EOF
 	}
 
 	/**
-	 * @param $sClassName
+	 * @param string $sClassName
+	 * @param bool $bIncludeMetas Look for $sClassName also in meta declaration (PHP classes) if not found in XML classes
 	 *
-	 * @return \DOMElement
+	 * @return null|\DOMElement
 	 */
-	public function GetClass($sClassName)
+	public function GetClass($sClassName, $bIncludeMetas = false)
 	{
+		// Check if class among XML classes
 		$oClassNode = $this->GetNodes("/itop_design/classes//class[@id='$sClassName']")->item(0);
+
+		// If not, check if class among exposed meta classes (PHP classes)
+		if(is_null($oClassNode) && ($bIncludeMetas === true))
+		{
+			$oClassNode = $this->GetNodes("/itop_design/meta/classes/class[@id='$sClassName']")->item(0);
+		}
+
 		return $oClassNode;
 	}
 
@@ -1764,6 +1785,7 @@ EOF;
 /**
  * MFElement: helper to read/change the DOM
  * @package ModelFactory
+ * @property \MFDocument $ownerDocument This is only here for type hinting as iTop replaces \DOMDocument with \MFDocument
  */
 class MFElement extends Combodo\iTop\DesignElement
 {
@@ -2286,8 +2308,8 @@ class MFElement extends Combodo\iTop\DesignElement
 		{
 			if ($bMustExist)
 			{
-				echo "Dumping parent node<br/>\n";
-				$oContainer->Dump();
+				//echo "Dumping parent node<br/>\n";
+				//$oContainer->Dump();
 				throw new Exception(MFDocument::GetItopNodePath($this).' at line '.$this->getLineNo().": could not be found");
 			}
 			if (!$bIfExists)
@@ -2358,6 +2380,7 @@ class MFElement extends Combodo\iTop\DesignElement
 				case 'added':
 				case 'replaced':
 				case 'needed':
+				case 'forced':
 				// marked as added or modified, just reset the flag
 				$oNode->removeAttribute('_alteration');
 				break;

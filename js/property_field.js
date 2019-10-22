@@ -256,14 +256,14 @@ $(function()
 				if (oWidget && oWidget._is_visible())
 				{
 					var oVal = oWidget._get_committed_value();
-					oData[oVal.name] = oVal.value;
+					oData[oVal.name] = me._get_value_for_post(oVal.value);
 				}
 			});
-			oPostedData = this.options.submit_parameters;
+			var oPostedData = this.options.submit_parameters;
 			oPostedData.params = oData;
 			oPostedData.params.updated = [ $('#'+this.options.field_id, this.element).attr('name') ]; // only one field updated in this case
 			oPostedData.params.previous_values = {};
-			oPostedData.params.previous_values[oPostedData.params.updated] = this.previous_value; // pass also the previous value(s)		
+			oPostedData.params.previous_values[$('#'+this.options.field_id, this.element).attr('name')] = me._get_value_for_post(this.previous_value); // pass also the previous value(s)
 			$.post(this.options.submit_to, oPostedData, function(data)
 			{
 				$('#prop_submit_result').html(data);
@@ -293,6 +293,14 @@ $(function()
 				oWidget = element.data('itopSelector_property_field');
 			}
 			return oWidget;
+		},
+		_get_value_for_post: function(value)
+		{
+			if ((typeof value == "object") && (Object.keys(value).length === 0))
+			{
+				return "";
+			}
+			return value;
 		}
 	});
 });
