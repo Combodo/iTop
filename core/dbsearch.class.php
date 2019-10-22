@@ -1087,18 +1087,21 @@ abstract class DBSearch
 		$oSearch = $this;
 		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered())
 		{
-			$oVisibleObjects = UserRights::GetSelectFilter($this->GetClass(), $this->GetModifierProperties('UserRightsGetSelectFilter'));
-			if ($oVisibleObjects === false)
+			foreach ($this->GetSelectedClasses() as $sClass)
 			{
-				// Make sure this is a valid search object, saying NO for all
-				$oVisibleObjects = DBObjectSearch::FromEmptySet($this->GetClass());
-			}
-			if (is_object($oVisibleObjects))
-			{
-				$oVisibleObjects->AllowAllData();
-				$oSearch = $this->Intersect($oVisibleObjects);
-				/** @var DBSearch $oSearch */
-				$oSearch->SetDataFiltered();
+				$oVisibleObjects = UserRights::GetSelectFilter($sClass, $this->GetModifierProperties('UserRightsGetSelectFilter'));
+				if ($oVisibleObjects === false)
+				{
+					// Make sure this is a valid search object, saying NO for all
+					$oVisibleObjects = DBObjectSearch::FromEmptySet($sClass);
+				}
+				if (is_object($oVisibleObjects))
+				{
+					$oVisibleObjects->AllowAllData();
+					$oSearch = $this->Intersect($oVisibleObjects);
+					/** @var DBSearch $oSearch */
+					$oSearch->SetDataFiltered();
+				}
 			}
 		}
 		$oSQLQuery = $oSearch->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
