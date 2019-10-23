@@ -34,6 +34,7 @@ use Exception;
  */
 class SearchFormTest extends ItopDataTestCase
 {
+	const CREATE_TEST_ORG = true;
 
 	/**
 	 * @throws Exception

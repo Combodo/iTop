@@ -47,6 +47,7 @@ use FunctionExpression;
  */
 class DBSearchTest extends ItopDataTestCase
 {
+	const CREATE_TEST_ORG = true;
 
 	/**
 	 * @throws \Exception

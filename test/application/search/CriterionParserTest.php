@@ -29,19 +29,20 @@
 namespace Combodo\iTop\Test\UnitTest\Application\Search;
 
 use Combodo\iTop\Application\Search\CriterionParser;
-use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class CriterionParserTest extends ItopDataTestCase
+class CriterionParserTest extends ItopTestCase
 {
 	protected function setUp()
 	{
 		parent::setUp();
 
+		require_once(APPROOT."application/startup.inc.php");
 		require_once(APPROOT."sources/application/search/criterionparser.class.inc.php");
 	}
 

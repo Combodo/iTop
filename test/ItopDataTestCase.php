@@ -65,7 +65,7 @@ class ItopDataTestCase extends ItopTestCase
 	private $aCreatedObjects = array();
 
 	const USE_TRANSACTION = true;
-	const CREATE_TEST_ORG = true;
+	const CREATE_TEST_ORG = false;
 
 	/**
 	 * @throws Exception

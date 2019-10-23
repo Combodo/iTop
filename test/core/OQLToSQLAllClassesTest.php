@@ -21,7 +21,6 @@ use utils;
 class OQLToSQLAllCLassesTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
-	const CREATE_TEST_ORG = false;
 
 	public function setUp()
 	{

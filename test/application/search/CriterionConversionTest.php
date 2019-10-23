@@ -37,7 +37,9 @@ use Combodo\iTop\Application\Search\CriterionParser;
 use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
+use DBObjectSet;
 use DBSearch;
+use Dict;
 
 /**
  * @runTestsInSeparateProcesses
@@ -46,6 +48,8 @@ use DBSearch;
  */
 class CriterionConversionTest extends ItopDataTestCase
 {
+	const CREATE_TEST_ORG = true;
+
 	/**
 	 * @throws \Exception
 	 */
@@ -186,7 +190,7 @@ class CriterionConversionTest extends ItopDataTestCase
 		$oSearchForm = new SearchForm();
 		/** @var \DBObjectSearch $oSearch */
 		$oSearch = DBSearch::FromOQL("SELECT Contact");
-		$aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
+		$aFields = $oSearchForm->GetFields(new DBObjectSet($oSearch));
 		$aRes = CriterionToSearchForm::Convert($aCriterion, $aFields, $oSearch->GetJoinedClasses());
 		$this->debug($aRes);
 		$this->assertEquals($sExpectedOperator, $aRes[0]['operator']);
@@ -634,12 +638,12 @@ class CriterionConversionTest extends ItopDataTestCase
         $this->debug($sOQL);
 
 
-        \Dict::SetUserLanguage($sLanguageCode);
+        Dict::SetUserLanguage($sLanguageCode);
 
 
         $oSearchForm = new SearchForm();
-        $oSearch = \DBSearch::FromOQL($sOQL);
-        $aFields = $oSearchForm->GetFields(new \DBObjectSet($oSearch));
+        $oSearch = DBSearch::FromOQL($sOQL);
+        $aFields = $oSearchForm->GetFields(new DBObjectSet($oSearch));
         /** @var \DBObjectSearch $oSearch */
         $aCriterion = $oSearchForm->GetCriterion($oSearch, $aFields);
 
@@ -648,7 +652,7 @@ class CriterionConversionTest extends ItopDataTestCase
         $aNewCriterion = array();
         foreach($aAndCriterion as $aCriteria)
         {
-            if ($aCriteria['widget'] != \AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
+            if ($aCriteria['widget'] != AttributeDefinition::SEARCH_WIDGET_TYPE_RAW)
             {
                 unset($aCriteria['oql']);
                 foreach($aFields as $aCatFields)

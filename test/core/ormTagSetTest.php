@@ -44,6 +44,7 @@ define('MAX_TAGS', 12);
  */
 class ormTagSetTest extends ItopDataTestCase
 {
+	const CREATE_TEST_ORG = true;
 
 	/**
 	 * @throws Exception

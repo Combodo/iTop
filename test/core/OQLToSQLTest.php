@@ -20,7 +20,6 @@ use utils;
 class OQLToSQLTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
-	const CREATE_TEST_ORG = false;
 	const TEST_CSV_RESULT = 'OQLToSQLTest.csv';
 
 	public function setUp()

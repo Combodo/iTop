@@ -17,8 +17,6 @@ use DBSearch;
  */
 class DBSearchIntersectTest extends ItopDataTestCase
 {
-	const CREATE_TEST_ORG = false;
-
 	protected function setUp()
 	{
 		parent::setUp();
