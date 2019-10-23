@@ -178,12 +178,12 @@ interface iLogoutExtension extends iLoginExtension
 	public function LogoutAction();
 }
 
-interface iLoginDataExtension extends iLoginExtension
+interface iLoginUIExtension extends iLoginExtension
 {
 	/**
 	 * @return LoginTwigData
 	 */
-	public function GetLoginData();
+	public function GetTwigBlockData();
 }
 
 

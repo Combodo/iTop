@@ -27,7 +27,7 @@ require_once APPROOT.'core/expressioncache.class.inc.php';
 
 
 /**
- * We need to have all iLoginFSMExtension/iLoginDataExtension impl loaded ! Cannot use autoloader...
+ * We need to have all iLoginFSMExtension/iLoginUIExtension impl loaded ! Cannot use autoloader...
  */
 require_once APPROOT.'application/loginform.class.inc.php';
 require_once APPROOT.'application/loginbasic.class.inc.php';
@@ -2794,7 +2794,7 @@ abstract class MetaModel
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginDataExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider');
+		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginUIExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider');
 		foreach($aInterfaces as $sInterface)
 		{
 			self::$m_aExtensionClasses[$sInterface] = array();

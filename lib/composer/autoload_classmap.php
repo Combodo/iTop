@@ -1893,7 +1893,7 @@ return array(
     'iDBObjectSetIterator' => $baseDir . '/core/dbobjectiterator.php',
     'iDBObjectURLMaker' => $baseDir . '/application/applicationcontext.class.inc.php',
     'iDisplay' => $baseDir . '/core/dbobject.class.php',
-    'iLoginDataExtension' => $baseDir . '/application/applicationextension.inc.php',
+    'iLoginUIExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iLoginExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iLoginFSMExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iLogoutExtension' => $baseDir . '/application/applicationextension.inc.php',

@@ -112,14 +112,14 @@ class LoginTwigContext
 
 	public function __construct()
 	{
-		$this->aLoginPluginList = LoginWebPage::GetLoginPluginList('iLoginDataExtension', false);
+		$this->aLoginPluginList = LoginWebPage::GetLoginPluginList('iLoginUIExtension', false);
 		$this->aPluginFormData = array();
 		$aTwigLoaders = array();
 		$this->aPostedVars = array();
 		foreach ($this->aLoginPluginList as $oLoginPlugin)
 		{
-			/** @var \iLoginDataExtension $oLoginPlugin */
-			$oLoginData = $oLoginPlugin->GetLoginData();
+			/** @var \iLoginUIExtension $oLoginPlugin */
+			$oLoginData = $oLoginPlugin->GetTwigBlockData();
 			$this->aPluginFormData[] = $oLoginData;
 			$sTwigLoaderPath = $oLoginData->GetTwigLoaderPath();
 			if ($sTwigLoaderPath != null)

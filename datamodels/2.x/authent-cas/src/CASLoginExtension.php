@@ -11,7 +11,7 @@ use AbstractLoginFSMExtension;
 use DBObjectSearch;
 use DBObjectSet;
 use Dict;
-use iLoginDataExtension;
+use iLoginUIExtension;
 use iLogoutExtension;
 use LoginBlockData;
 use LoginTwigData;
@@ -26,7 +26,7 @@ use utils;
 /**
  * Class CASLoginExtension
  */
-class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExtension, iLoginDataExtension
+class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExtension, iLoginUIExtension
 {
 	/**
 	 * Return the list of supported login modes for this plugin
@@ -200,7 +200,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 	/**
 	 * @return LoginTwigData
 	 */
-	public function GetLoginData()
+	public function GetTwigBlockData()
 	{
 		$sPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/authent-cas/view';
 		$oLoginData = new LoginTwigData(array(), $sPath);

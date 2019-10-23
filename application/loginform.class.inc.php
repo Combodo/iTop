@@ -7,7 +7,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class LoginForm extends AbstractLoginFSMExtension implements iLoginDataExtension
+class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 {
 	private $bForceFormOnError = false;
 
@@ -108,7 +108,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginDataExtension
 	 * @return LoginTwigData
 	 * @throws \Exception
 	 */
-	public function GetLoginData()
+	public function GetTwigBlockData()
 	{
 
 		$aPostedVars = array('auth_user', 'auth_pwd');
