@@ -383,6 +383,16 @@ class DBUnionSearch extends DBSearch
 		}
 	}
 
+	public function Filter($sClassAlias, DBSearch $oFilter)
+	{
+		$aSearches = array();
+		foreach ($this->aSearches as $oSearch)
+		{
+			$aSearches[] = $oSearch->Filter($sClassAlias, $oFilter);
+		}
+		return new DBUnionSearch($aSearches);
+	}
+
 	public function Intersect(DBSearch $oFilter)
 	{
 		$aSearches = array();

@@ -433,11 +433,27 @@ abstract class DBSearch
 	 */
 	abstract public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null);
 
-    /**
+	/**
+	 * Filter this search with another search.
+	 * Initial search is unmodified.
+	 * The difference with Intersect, is that an alias can be provided,
+	 * the filtered class does not need to be the first joined class,
+	 * it can be any class of the search.
+	 *
+	 * @param string $sClassAlias class being filtered
+	 * @param DBSearch $oFilter Filter to apply
+	 *
+	 * @return DBSearch The filtered search
+	 * @throws \CoreException
+	 */
+	abstract public function Filter($sClassAlias, DBSearch $oFilter);
+
+	/**
      * Filter the result
      *
      * The filter is performed by returning only the values in common with the given $oFilter
      * The impact on the resulting query performance/viability can be significant.
+     * Only the first joined class can be filtered.
      *
      * @internal
      *
@@ -1087,7 +1103,7 @@ abstract class DBSearch
 		$oSearch = $this;
 		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered())
 		{
-			foreach ($this->GetSelectedClasses() as $sClass)
+			foreach ($this->GetSelectedClasses() as $sClassAlias => $sClass)
 			{
 				$oVisibleObjects = UserRights::GetSelectFilter($sClass, $this->GetModifierProperties('UserRightsGetSelectFilter'));
 				if ($oVisibleObjects === false)
@@ -1098,7 +1114,7 @@ abstract class DBSearch
 				if (is_object($oVisibleObjects))
 				{
 					$oVisibleObjects->AllowAllData();
-					$oSearch = $this->Intersect($oVisibleObjects);
+					$oSearch = $this->Filter($sClassAlias, $oVisibleObjects);
 					/** @var DBSearch $oSearch */
 					$oSearch->SetDataFiltered();
 				}

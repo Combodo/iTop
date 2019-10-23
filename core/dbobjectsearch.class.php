@@ -873,6 +873,15 @@ class DBObjectSearch extends DBSearch
 		return $res;
 	}
 
+	/**
+	 * @param \DBObjectSearch $oFilter
+	 * @param string $sExtKeyAttCode
+	 * @param array $aClassAliases
+	 * @param array $aAliasTranslation
+	 * @param int $iOperatorCode
+	 *
+	 * @throws \CoreException
+	 */
 	protected function AddCondition_PointingTo_InNameSpace(DBObjectSearch $oFilter, $sExtKeyAttCode, &$aClassAliases, &$aAliasTranslation, $iOperatorCode)
 	{
 		// Find the node on which the new tree must be attached (most of the time it is "this")
@@ -883,6 +892,7 @@ class DBObjectSearch extends DBSearch
 		{
 			foreach ($oReceivingFilter->m_aPointingTo[$sExtKeyAttCode][$iOperatorCode] as $oExisting)
 			{
+				/** @var DBObjectSearch $oExisting */
 				if ($oExisting->GetClass() == $oFilter->GetClass())
 				{
 					$oExisting->MergeWith_InNamespace($oFilter, $oExisting->m_aClasses, $aAliasTranslation);
@@ -953,7 +963,7 @@ class DBObjectSearch extends DBSearch
 		$this->RecomputeClassList($this->m_aClasses);
 	}
 
-	protected function AddCondition_ReferencedBy_InNameSpace(DBSearch $oFilter, $sForeignExtKeyAttCode, &$aClassAliases, &$aAliasTranslation, $iOperatorCode)
+	protected function AddCondition_ReferencedBy_InNameSpace(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, &$aClassAliases, &$aAliasTranslation, $iOperatorCode)
 	{
 		$sForeignClass = $oFilter->GetClass();
 
@@ -981,9 +991,114 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
+	 * Filter this search with another search.
+	 * Initial search is unmodified.
+	 * The difference with Intersect, is that an alias can be provided,
+	 * the filtered class does not need to be the first joined class.
+	 *
+	 * @param string $sClassAlias class being filtered
+	 * @param DBSearch $oFilter Filter to apply
+	 *
+	 * @return DBSearch The filtered search
+	 * @throws \CoreException
+	 */
+	public function Filter($sClassAlias, DBSearch $oFilter)
+	{
+		// If the conditions are the correct ones for Intersect
+		if (($this->GetFirstJoinedClassAlias() == $sClassAlias))
+		{
+			return $this->Intersect($oFilter);
+		}
+
+		/** @var \DBObjectSearch $oFilteredSearch */
+		$oFilteredSearch = $this->DeepClone();
+		$oFilterExpression = self::FilterSubClass($oFilteredSearch, $sClassAlias, $oFilter, $this->m_aClasses);
+		if ($oFilterExpression === false)
+		{
+			throw new CoreException("Limitation: cannot filter search");
+		}
+
+		$oFilteredSearch->AddConditionExpression($oFilterExpression);
+
+		return $oFilteredSearch;
+	}
+
+	/**
+	 * Filter "in place" the search (filtered part is replaced in the initial search)
+	 *
+	 * @param DBObjectSearch $oSearch Search to filter, modified with the given filter
+	 * @param string $sClassAlias class to filter
+	 * @param \DBSearch $oFilter Filter to apply
+	 *
+	 * @return \Expression|false
+	 * @throws \CoreException
+	 */
+	private static function FilterSubClass(DBObjectSearch &$oSearch, $sClassAlias, DBSearch $oFilter, $aRootClasses)
+	{
+		if (($oSearch->GetFirstJoinedClassAlias() == $sClassAlias))
+		{
+			$oSearch->ResetCondition();
+			$oSearch = $oSearch->IntersectSubClass($oFilter, $aRootClasses);
+			return $oSearch->GetCriteria();
+		}
+
+		/** @var Expression $oFilterExpression */
+		// Search in the filter tree where is the correct DBSearch
+		foreach ($oSearch->m_aPointingTo as $sExtKey => $aPointingTo)
+		{
+			foreach ($aPointingTo as $iOperatorCode => $aFilters)
+			{
+				foreach ($aFilters as $index => $oExtFilter)
+				{
+					$oFilterExpression = self::FilterSubClass($oExtFilter, $sClassAlias, $oFilter, $aRootClasses);
+					if ($oFilterExpression !== false)
+					{
+						$oSearch->m_aPointingTo[$sExtKey][$iOperatorCode][$index] = $oExtFilter;
+						return $oFilterExpression;
+					}
+				}
+			}
+		}
+
+		foreach($oSearch->m_aReferencedBy as $sForeignClass => $aReferences)
+		{
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
+			{
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
+				{
+					foreach ($aFilters as $index => $oForeignFilter)
+					{
+						$oFilterExpression = self::FilterSubClass($oForeignFilter, $sClassAlias, $oFilter, $aRootClasses);
+						if ($oFilterExpression !== false)
+						{
+							$oSearch->m_aReferencedBy[$sForeignClass][$sForeignExtKeyAttCode][$iOperatorCode][$index] = $oForeignFilter;
+							return $oFilterExpression;
+						}
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * @inheritDoc
+	 * @throws \CoreException
 	 */
 	public function Intersect(DBSearch $oFilter)
+	{
+		return $this->IntersectSubClass($oFilter, $this->m_aClasses);
+	}
+
+	/**
+	 * @param \DBSearch $oFilter
+	 * @param array $aRootClasses classes of the root search (for aliases)
+	 *
+	 * @return \DBUnionSearch|mixed
+	 * @throws \CoreException
+	 */
+	protected function IntersectSubClass(DBSearch $oFilter, $aRootClasses)
 	{
 		if ($oFilter instanceof DBUnionSearch)
 		{
@@ -999,15 +1114,12 @@ class DBObjectSearch extends DBSearch
 		foreach ($aFilters as $oRightFilter)
 		{
 			// Limitation: the queried class must be the first declared class
-			if ($this->GetFirstJoinedClassAlias() != $this->GetClassAlias())
-			{
-				throw new CoreException("Limitation: cannot merge two queries if the queried class ({$this->GetClass()} AS {$this->GetClassAlias()}) is not the first joined class ({$this->GetFirstJoinedClass()} AS {$this->GetFirstJoinedClassAlias()})");
-			}
 			if ($oRightFilter->GetFirstJoinedClassAlias() != $oRightFilter->GetClassAlias())
 			{
 				throw new CoreException("Limitation: cannot merge two queries if the queried class ({$oRightFilter->GetClass()} AS {$oRightFilter->GetClassAlias()}) is not the first joined class ({$oRightFilter->GetFirstJoinedClass()} AS {$oRightFilter->GetFirstJoinedClassAlias()})");
 			}
 
+			/** @var \DBObjectSearch $oLeftFilter */
 			$oLeftFilter = $this->DeepClone();
 			$oRightFilter = $oRightFilter->DeepClone();
 
@@ -1017,14 +1129,14 @@ class DBObjectSearch extends DBSearch
 				$oLeftFilter->AllowAllData();
 			}
 
-			if ($oLeftFilter->GetClass() != $oRightFilter->GetClass())
+			if ($oLeftFilter->GetFirstJoinedClass() != $oRightFilter->GetClass())
 			{
-				if (MetaModel::IsParentClass($oLeftFilter->GetClass(), $oRightFilter->GetClass()))
+				if (MetaModel::IsParentClass($oLeftFilter->GetFirstJoinedClass(), $oRightFilter->GetClass()))
 				{
 					// Specialize $oLeftFilter
-					$oLeftFilter->ChangeClass($oRightFilter->GetClass());
+					$oLeftFilter->ChangeClass($oRightFilter->GetClass(), $oLeftFilter->GetFirstJoinedClassAlias());
 				}
-				elseif (MetaModel::IsParentClass($oRightFilter->GetClass(), $oLeftFilter->GetClass()))
+				elseif (MetaModel::IsParentClass($oRightFilter->GetFirstJoinedClass(), $oLeftFilter->GetClass()))
 				{
 					// Specialize $oRightFilter
 					$oRightFilter->ChangeClass($oLeftFilter->GetClass());
@@ -1036,7 +1148,7 @@ class DBObjectSearch extends DBSearch
 			}
 
 			$aAliasTranslation = array();
-			$oLeftFilter->MergeWith_InNamespace($oRightFilter, $oLeftFilter->m_aClasses, $aAliasTranslation);
+			$oLeftFilter->MergeWith_InNamespace($oRightFilter, $aRootClasses, $aAliasTranslation);
 			$oLeftFilter->TransferConditionExpression($oRightFilter, $aAliasTranslation);
 			$aSearches[] = $oLeftFilter;
 		}
@@ -1051,15 +1163,22 @@ class DBObjectSearch extends DBSearch
 		}
 	}
 
+	/**
+	 * @param DBObjectSearch $oFilter
+	 * @param array $aClassAliases
+	 * @param array $aAliasTranslation
+	 *
+	 * @throws CoreException
+	 */
 	protected function MergeWith_InNamespace($oFilter, &$aClassAliases, &$aAliasTranslation)
 	{
-		if ($this->GetClass() != $oFilter->GetClass())
+		if ($this->GetFirstJoinedClass() != $oFilter->GetClass())
 		{
-			throw new CoreException("Attempting to merge a filter of class '{$this->GetClass()}' with a filter of class '{$oFilter->GetClass()}'");
+			throw new CoreException("Attempting to merge a filter of class '{$this->GetFirstJoinedClass()}' with a filter of class '{$oFilter->GetClass()}'");
 		}
 
 		// Translate search condition into our aliasing scheme
-		$aAliasTranslation[$oFilter->GetClassAlias()]['*'] = $this->GetClassAlias(); 
+		$aAliasTranslation[$oFilter->GetClassAlias()]['*'] = $this->GetFirstJoinedClassAlias();
 
 		foreach($oFilter->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
 		{
