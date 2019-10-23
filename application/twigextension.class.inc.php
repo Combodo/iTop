@@ -122,5 +122,19 @@ class TwigExtension
 			$oConfig = MetaModel::GetConfig();
 			return $oConfig->Get($sParamName);
 		}));
+
+		// Function to get the URL of a static page in a module
+		// Usage in twig: {{ get_static_page_module_url('itop-my-module', 'path-to-my-page') }}
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_static_page_module_url', function($sModuleName, $sPage)
+		{
+			return utils::GetAbsoluteUrlModulesRoot().$sModuleName.'/'.$sPage;
+		}));
+
+		// Function to get the URL of a php page in a module
+		// Usage in twig: {{ get_page_module_url('itop-my-module', 'path-to-my-my-page.php') }}
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_page_module_url', function($sModuleName, $sPage)
+		{
+			return utils::GetAbsoluteUrlModulePage($sModuleName, $sPage);
+		}));
 	}
 }
