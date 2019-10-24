@@ -206,6 +206,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'q' => array(),
 		'hr' => array('style'),
 		'pre' => array(),
+		'center' => array(),
 	);
 
 	protected static $aAttrsWhiteList = array(
