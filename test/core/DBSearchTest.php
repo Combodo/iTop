@@ -29,7 +29,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use CoreOqlMultipleResultsFoundException;
+use CoreOqlMultipleResultsForbiddenException;
 use DBSearch;
 use Exception;
 use Expression;
@@ -525,7 +525,7 @@ class DBSearchTest extends ItopDataTestCase
 	 *
 	 * @param string $sOql query to test
 	 * @param bool $bMustHaveOneResultMax arg passed to the tested function
-	 * @param int $iReturn 0 if should return null, 1 if should return object, -1 if should throw
+	 * @param int $sReturn
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -534,7 +534,7 @@ class DBSearchTest extends ItopDataTestCase
 	 *
 	 * @covers       DBSearch::GetFirstResult()
 	 */
-	public function testGetFirstResult($sOql, $bMustHaveOneResultMax, $iReturn)
+	public function testGetFirstResult($sOql, $bMustHaveOneResultMax, $sReturn)
 	{
 		$oSearch = DBSearch::FromOQL($sOql);
 
@@ -543,21 +543,21 @@ class DBSearchTest extends ItopDataTestCase
 		{
 			$oFirstResult = $oSearch->GetFirstResult($bMustHaveOneResultMax);
 		}
-		catch (CoreOqlMultipleResultsFoundException $e)
+		catch (CoreOqlMultipleResultsForbiddenException $e)
 		{
 			$oFirstResult = null;
 			$bHasThrownException = true;
 		}
 
-		switch ($iReturn)
+		switch ($sReturn)
 		{
-			case -1:
+			case 'exception':
 				self::assertEquals(true, $bHasThrownException, 'Exception raised');
 				break;
-			case 0:
+			case 'null':
 				self::assertNull($oFirstResult, 'Null returned');
 				break;
-			case 1:
+			case 'object':
 				self::assertInternalType('object', $oFirstResult, 'Object returned');
 				break;
 		}
@@ -569,22 +569,27 @@ class DBSearchTest extends ItopDataTestCase
 			'One result' => array(
 				'SELECT Person WHERE id = 1',
 				false,
-				1,
+				'object',
 			),
 			'Multiple results, no exception' => array(
 				'SELECT Person',
 				false,
-				1,
+				'object',
 			),
 			'Multiple results, with exception' => array(
 				'SELECT Person',
 				true,
-				-1,
+				'exception',
+			),
+			'Multiple results with "WHERE 1", with exception' => array(
+				'SELECT Person WHERE 1',
+				true,
+				'exception',
 			),
 			'No result' => array(
 				'SELECT Person WHERE id = -1',
 				true,
-				0,
+				'null',
 			),
 		);
 	}

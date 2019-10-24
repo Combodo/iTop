@@ -1077,16 +1077,16 @@ abstract class DBSearch
 	 * @param array $aSearchParams
 	 *
 	 * @return null|\DBObject query result
-	 * @throws \CoreOqlMultipleResultsFoundException if multiple results found and parameter enforce the check
+	 * @throws \CoreOqlMultipleResultsForbiddenException if multiple results found and parameter enforce the check
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
 	public function GetFirstResult($bMustHaveOneResultMax = true, $aOrderBy = array(), $aSearchParams = array())
 	{
-		$oSet = new DBObjectSet($this, array(), $aSearchParams);
+		$oSet = new DBObjectSet($this, array(), $aSearchParams, null, 2);
 		$oFirstResult = $oSet->Fetch();
-		if ($oFirstResult === null)
+		if ($oFirstResult === null) // useless but here for readability ;)
 		{
 			return null;
 		}
@@ -1094,9 +1094,10 @@ abstract class DBSearch
 		if ($bMustHaveOneResultMax)
 		{
 			$oSecondResult = $oSet->Fetch();
-			if ($oSecondResult != null)
+			if ($oSecondResult !== null)
 			{
-				throw new CoreOqlMultipleResultsFoundException('TODO');
+				throw new CoreOqlMultipleResultsForbiddenException(
+					'Search returned multiple results, this is forbidden. Query was: '.$this->ToOQL());
 			}
 		}
 

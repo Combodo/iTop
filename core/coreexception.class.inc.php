@@ -188,7 +188,7 @@ class CoreOqlException extends CoreException
 
 }
 
-class CoreOqlMultipleResultsFoundException extends CoreOqlException
+class CoreOqlMultipleResultsForbiddenException extends CoreOqlException
 {
 
 }

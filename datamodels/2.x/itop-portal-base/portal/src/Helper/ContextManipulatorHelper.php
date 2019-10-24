@@ -22,19 +22,22 @@
 
 namespace Combodo\iTop\Portal\Helper;
 
-use ModuleDesign;
+use BinaryExpression;
 use Combodo\iTop\Portal\Brick\BrickCollection;
-use Exception;
-use DOMNodeList;
-use DOMFormatException;
-use Symfony\Component\Routing\RouterInterface;
-use UserRights;
+use CoreOqlMultipleResultsForbiddenException;
+use CoreUnexpectedValue;
 use DBObject;
 use DBSearch;
-use DBObjectSet;
-use BinaryExpression;
+use DOMFormatException;
+use DOMNodeList;
+use Exception;
 use FieldExpression;
+use IssueLog;
+use ModuleDesign;
 use ScalarExpression;
+use Symfony\Component\Routing\RouterInterface;
+use TrueExpression;
+use UserRights;
 
 /**
  * Class ContextManipulatorHelper
@@ -342,6 +345,15 @@ class ContextManipulatorHelper
 						}
 					}
 
+					$oSearchRootCondition = $oSearch->GetCriteria();
+					if (($oSearchRootCondition === null) || ($oSearchRootCondition instanceof TrueExpression))
+					{
+						// N°2555 : disallow searches without any condition
+						$sErrMsg = "Portal query was stopped: action_rule '$sId' searches for '$sSearchClass' without any condition is forbidden";
+						IssueLog::Error($sErrMsg);
+						throw new CoreUnexpectedValue($sErrMsg);
+					}
+
 					// Checking for silos
 					$oScopeSearch = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sSearchClass,
 						UR_ACTION_READ);
@@ -351,27 +363,34 @@ class ContextManipulatorHelper
 					}
 
 					// Retrieving source object(s) and applying rules
-					$oSet = new DBObjectSet($oSearch, array(), $aSearchParams);
-					while ($oSourceObject = $oSet->Fetch())
+					try
 					{
-						// Changing behaviour to remove usage of ObjectCopier as its now being integrated in the core
-						// Old code : iTopObjectCopier::PrepareObject($aRule, $oObject, $oSourceObject);
-						// Presets
-						if (isset($aRule['preset']) && !empty($aRule['preset']))
-						{
-							$oObject->ExecActions($aRule['preset'], array('source' => $oSourceObject));
-						}
-						// Retrofits
-						if (isset($aRule['retrofit']) && !empty($aRule['retrofit']))
-						{
-							$oSourceObject->ExecActions($aRule['retrofit'], array('source' => $oObject));
-						}
+						$oSourceObject = $oSearch->GetFirstResult(true, array(), $aSearchParams);
+					}
+					catch (CoreOqlMultipleResultsForbiddenException $e)
+					{
+						// N°2555 : disallow searches returning more than 1 result
+						$sErrMsg = "Portal query was stopped: action_rule '$sId' gives more than 1 '$sSearchClass' result";
+						IssueLog::Error($sErrMsg);
+						throw new CoreUnexpectedValue($sErrMsg);
+					}
+					if ($oSourceObject === null)
+					{
+						continue;
+					}
+					// Presets
+					if (isset($aRule['preset']) && !empty($aRule['preset']))
+					{
+						$oObject->ExecActions($aRule['preset'], array('source' => $oSourceObject));
+					}
+					// Retrofits
+					if (isset($aRule['retrofit']) && !empty($aRule['retrofit']))
+					{
+						$oSourceObject->ExecActions($aRule['retrofit'], array('source' => $oObject));
 					}
 				}
 				else
 				{
-					// Changing behaviour to remove usage of ObjectCopier as its now being integrated in the core
-					// Old code : iTopObjectCopier::PrepareObject($aRule, $oObject, $oObject);
 					// Presets
 					if (isset($aRule['preset']) && !empty($aRule['preset']))
 					{
