@@ -1071,6 +1071,38 @@ abstract class DBSearch
 		return $sRes;
 	}
 
+	/**
+	 * @param bool $bMustHaveOneResultMax if true will throw a CoreOqlMultipleResultsFound if multiple results
+	 * @param array $aOrderBy
+	 * @param array $aSearchParams
+	 *
+	 * @return null|\DBObject query result
+	 * @throws \CoreOqlMultipleResultsFoundException if multiple results found and parameter enforce the check
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	public function GetFirstResult($bMustHaveOneResultMax = true, $aOrderBy = array(), $aSearchParams = array())
+	{
+		$oSet = new DBObjectSet($this, array(), $aSearchParams);
+		$oFirstResult = $oSet->Fetch();
+		if ($oFirstResult === null)
+		{
+			return null;
+		}
+
+		if ($bMustHaveOneResultMax)
+		{
+			$oSecondResult = $oSet->Fetch();
+			if ($oSecondResult != null)
+			{
+				throw new CoreOqlMultipleResultsFoundException('TODO');
+			}
+		}
+
+		return $oFirstResult;
+	}
+
     /**
      * @internal
      * @return mixed

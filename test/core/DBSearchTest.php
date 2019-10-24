@@ -29,6 +29,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use CoreOqlMultipleResultsFoundException;
 use DBSearch;
 use Exception;
 use Expression;
@@ -519,4 +520,72 @@ class DBSearchTest extends ItopDataTestCase
 		self::assertEquals(1, count($aRes));
 	}
 
+	/**
+	 * @dataProvider GetFirstResultProvider
+	 *
+	 * @param string $sOql query to test
+	 * @param bool $bMustHaveOneResultMax arg passed to the tested function
+	 * @param int $iReturn 0 if should return null, 1 if should return object, -1 if should throw
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 *
+	 * @covers       DBSearch::GetFirstResult()
+	 */
+	public function testGetFirstResult($sOql, $bMustHaveOneResultMax, $iReturn)
+	{
+		$oSearch = DBSearch::FromOQL($sOql);
+
+		$bHasThrownException = false;
+		try
+		{
+			$oFirstResult = $oSearch->GetFirstResult($bMustHaveOneResultMax);
+		}
+		catch (CoreOqlMultipleResultsFoundException $e)
+		{
+			$oFirstResult = null;
+			$bHasThrownException = true;
+		}
+
+		switch ($iReturn)
+		{
+			case -1:
+				self::assertEquals(true, $bHasThrownException, 'Exception raised');
+				break;
+			case 0:
+				self::assertNull($oFirstResult, 'Null returned');
+				break;
+			case 1:
+				self::assertInternalType('object', $oFirstResult, 'Object returned');
+				break;
+		}
+	}
+
+	public function GetFirstResultProvider()
+	{
+		return array(
+			'One result' => array(
+				'SELECT Person WHERE id = 1',
+				false,
+				1,
+			),
+			'Multiple results, no exception' => array(
+				'SELECT Person',
+				false,
+				1,
+			),
+			'Multiple results, with exception' => array(
+				'SELECT Person',
+				true,
+				-1,
+			),
+			'No result' => array(
+				'SELECT Person WHERE id = -1',
+				true,
+				0,
+			),
+		);
+	}
 }

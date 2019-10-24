@@ -183,6 +183,16 @@ class CoreCannotSaveObjectException extends CoreException
 	}
 }
 
+class CoreOqlException extends CoreException
+{
+
+}
+
+class CoreOqlMultipleResultsFoundException extends CoreOqlException
+{
+
+}
+
 class CoreWarning extends CoreException
 {
 }
