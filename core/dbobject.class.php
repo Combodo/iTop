@@ -2735,6 +2735,11 @@ abstract class DBObject implements iDisplay
 				$this->DBInsertSingleTable($sParentClass);
 			}
 
+			$this->OnObjectKeyReady();
+
+			$this->DBWriteLinks();
+			$this->WriteExternalAttributes();
+
 			if ($bIsTransactionEnabled)
 			{
 				CMDBSource::Query('COMMIT');
@@ -2748,11 +2753,6 @@ abstract class DBObject implements iDisplay
 			}
 			throw $e;
 		}
-
-		$this->OnObjectKeyReady();
-
-        $this->DBWriteLinks();
-		$this->WriteExternalAttributes();
 
 		$this->m_bIsInDB = true;
 		$this->m_bDirty = false;
