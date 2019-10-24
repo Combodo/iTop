@@ -1430,7 +1430,7 @@ class DesignerIconSelectionField extends DesignerFormField
 		$sPostUploadTo = ($this->sUploadUrl == null) ? 'null' : "'{$this->sUploadUrl}'";
 		if (!$this->IsReadOnly())
 		{
-			$sDefaultValue = ($this->defaultValue !== '') ? : $this->aAllowedValues[$idx]['value'];
+			$sDefaultValue = ($this->defaultValue !== '') ? $this->defaultValue : $this->aAllowedValues[$idx]['value'];
 			$sValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$sDefaultValue}\"/>";
 			$oP->add_ready_script(
 <<<EOF
