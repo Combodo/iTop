@@ -494,6 +494,7 @@ class LoginWebPage extends NiceWebPage
 		foreach (MetaModel::EnumPlugins($sInterface) as $oLoginExtensionInstance)
 		{
 			$aLoginModes = $oLoginExtensionInstance->ListSupportedLoginModes();
+			$aLoginModes = (is_array($aLoginModes) ? $aLoginModes : array());
 			foreach ($aLoginModes as $sLoginMode)
 			{
 				// Keep only the plugins for the current login mode + before + after
