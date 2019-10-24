@@ -183,11 +183,25 @@ class CoreCannotSaveObjectException extends CoreException
 	}
 }
 
+/**
+ * @since 2.7.0 N°2555
+ */
+class CorePortalInvalidActionRuleException extends CoreException
+{
+
+}
+
+/**
+ * @since 2.7.0 N°2555
+ */
 class CoreOqlException extends CoreException
 {
 
 }
 
+/**
+ * @since 2.7.0 N°2555
+ */
 class CoreOqlMultipleResultsForbiddenException extends CoreOqlException
 {
 

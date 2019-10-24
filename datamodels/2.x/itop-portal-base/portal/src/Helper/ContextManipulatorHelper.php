@@ -25,7 +25,7 @@ namespace Combodo\iTop\Portal\Helper;
 use BinaryExpression;
 use Combodo\iTop\Portal\Brick\BrickCollection;
 use CoreOqlMultipleResultsForbiddenException;
-use CoreUnexpectedValue;
+use CorePortalInvalidActionRuleException;
 use DBObject;
 use DBSearch;
 use DOMFormatException;
@@ -279,6 +279,7 @@ class ContextManipulatorHelper
 	 * @throws \Exception
 	 * @throws \CoreException
 	 * @throws \OQLException
+	 * @throws \CorePortalInvalidActionRuleException N°2555 if action_rule query return more than 1 result (we should only have 1 source object)
 	 */
 	public function PrepareObject(array $aData, DBObject &$oObject)
 	{
@@ -351,7 +352,7 @@ class ContextManipulatorHelper
 						// N°2555 : disallow searches without any condition
 						$sErrMsg = "Portal query was stopped: action_rule '$sId' searches for '$sSearchClass' without any condition is forbidden";
 						IssueLog::Error($sErrMsg);
-						throw new CoreUnexpectedValue($sErrMsg);
+						throw new CorePortalInvalidActionRuleException($sErrMsg);
 					}
 
 					// Checking for silos
@@ -372,7 +373,7 @@ class ContextManipulatorHelper
 						// N°2555 : disallow searches returning more than 1 result
 						$sErrMsg = "Portal query was stopped: action_rule '$sId' gives more than 1 '$sSearchClass' result";
 						IssueLog::Error($sErrMsg);
-						throw new CoreUnexpectedValue($sErrMsg);
+						throw new CorePortalInvalidActionRuleException($sErrMsg);
 					}
 					if ($oSourceObject === null)
 					{
