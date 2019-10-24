@@ -168,7 +168,9 @@ EOF
 						$oOutput->AddJs(
 <<<EOF
 							$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, {language: '$sEditorLanguage', contentsLanguage: '$sEditorLanguage', extraPlugins: 'codesnippet'});
+							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, {language: '$sEditorLanguage', contentsLanguage: '$sEditorLanguage', extraPlugins: 'codesnippet'}).editor.on("change", function(){
+                                	$('#{$this->oField->GetGlobalId()}').trigger("change");
+                              });
 EOF
 						);
 						if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null))

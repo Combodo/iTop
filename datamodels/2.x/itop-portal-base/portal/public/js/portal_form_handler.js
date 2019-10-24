@@ -63,6 +63,13 @@ $(function()
 		{
 			this._super( key, value );
 		},
+		// - Callback when some fields have been touched
+		_onFieldsTouched: function(oEvent)
+		{
+			this._super(oEvent);
+			$('body').trigger('register_blocker.portal.itop', {'sBlockerId': this.element.attr('id'), 'sTargetElemSelector': '#' + this.element.closest('.modal').attr('id'), 'oTargetElemSelector': '#' + this.element.closest('.modal').attr('id'), 'sEventName': 'hide.bs.modal'});
+			$('body').trigger('register_blocker.portal.itop', {'sBlockerId': this.element.attr('id'), 'sTargetElemSelector': 'document', 'oTargetElemSelector': document, 'sEventName': 'beforeunload'});
+		},
 		// Overload from parent class
 		_onSubmitClick: function(oEvent)
 		{
@@ -153,6 +160,9 @@ $(function()
 							// If everything is okay, we close the form and reload it.
 							if(oValidation.valid)
 							{
+								
+								$('body').trigger('unregister_blocker.portal.itop', {'sBlockerId': me.element.attr('id')});
+								
 								if(me.options.is_modal)
 								{
 									me.element.closest('.modal').modal('hide');
@@ -248,6 +258,7 @@ $(function()
 			if(me.options.field_set.field_set('option', 'touched_fields').length > 0)
 			{
 				me._disableFormBeforeLoading();
+				$('body').trigger('unregister_blocker.portal.itop', {'sBlockerId': me.element.attr('id')});
 				$.post(
 					me.options.endpoint,
 					{

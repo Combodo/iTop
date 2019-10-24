@@ -123,6 +123,9 @@
 		{# Typeahead files for autocomplete #}
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/typeahead/js/typeahead.bundle.min.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/handlebars/js/handlebars.min-768ddbd.js'|add_itop_version }}"></script>
+
+		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_leave_handler.js'|add_itop_version }}"></script>
+
 		{# Selectize for sets #}
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/selectize.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.itop-set-widget.js'|add_itop_version }}"></script>
@@ -489,6 +492,9 @@
                             ShowErrorDialog();
                         }
 					});
+					
+					// Initialize confirmation message handler when a form with touched fields is closed
+					$('body').portal_leave_handler({'message': '{{ 'Portal:Form:Close:Warning'|dict_s }}'});
 				{% endblock %}
 			});
 		</script>
