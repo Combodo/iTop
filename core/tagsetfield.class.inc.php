@@ -383,6 +383,7 @@ abstract class TagSetFieldData extends cmdbAbstractObject
 		if (!isset(self::$m_aAllowedValues[$sTagDataClass]))
 		{
 			$oSearch = new DBObjectSearch($sTagDataClass);
+			$oSearch->NoContextParameters();
 			$oSearch->AddCondition('obj_class', $sClass);
 			$oSearch->AddCondition('obj_attcode', $sAttCode);
 			$oSet = new DBObjectSet($oSearch);
