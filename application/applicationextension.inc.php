@@ -181,9 +181,9 @@ interface iLogoutExtension extends iLoginExtension
 interface iLoginUIExtension extends iLoginExtension
 {
 	/**
-	 * @return LoginTwigData
+	 * @return LoginTwigContext
 	 */
-	public function GetTwigBlockData();
+	public function GetTwigContext();
 }
 
 

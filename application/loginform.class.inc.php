@@ -105,14 +105,14 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	}
 
 	/**
-	 * @return LoginTwigData
+	 * @return LoginTwigContext
 	 * @throws \Exception
 	 */
-	public function GetTwigBlockData()
+	public function GetTwigContext()
 	{
-
-		$aPostedVars = array('auth_user', 'auth_pwd');
-		$oLoginData = new LoginTwigData($aPostedVars);
+		$oLoginContext = new LoginTwigContext();
+		$oLoginContext->AddPostedVar('auth_user');
+		$oLoginContext->AddPostedVar('auth_pwd');
 
 		$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
 		$sAuthPwd = utils::ReadParam('suggest_pwd', '', true, 'raw_data');
@@ -121,9 +121,9 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 			'sAuthUser' => $sAuthUser,
 			'sAuthPwd' => $sAuthPwd,
 		);
-		$oLoginData->AddBlockData('login_input', new LoginBlockData('loginforminput.html.twig', $aData));
-		$oLoginData->AddBlockData('login_submit', new LoginBlockData('loginformsubmit.html.twig'));
-		$oLoginData->AddBlockData('login_form_footer', new LoginBlockData('loginformfooter.html.twig'));
+		$oLoginContext->AddBlockExtension('login_input', new LoginBlockExtension('loginforminput.html.twig', $aData));
+		$oLoginContext->AddBlockExtension('login_submit', new LoginBlockExtension('loginformsubmit.html.twig'));
+		$oLoginContext->AddBlockExtension('login_form_footer', new LoginBlockExtension('loginformfooter.html.twig'));
 
 		$bEnableResetPassword = empty(MetaModel::GetConfig()->Get('forgot_password')) ? true : MetaModel::GetConfig()->Get('forgot_password');
 		$sResetPasswordUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=forgot_pwd';
@@ -132,8 +132,8 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 			'bEnableResetPassword' => $bEnableResetPassword,
 			'sResetPasswordUrl' => $sResetPasswordUrl,
 		);
-		$oLoginData->AddBlockData('login_links', new LoginBlockData('loginformlinks.html.twig', $aData));
+		$oLoginContext->AddBlockExtension('login_links', new LoginBlockExtension('loginformlinks.html.twig', $aData));
 
-		return $oLoginData;
+		return $oLoginContext;
 	}
 }

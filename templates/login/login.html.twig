@@ -22,32 +22,32 @@
 				<div id="login-form-content">
 					{% block login_sso_buttons %}
 						<div id="login-sso-buttons">
-							{{ Macro.BlockData(aPluginFormData, 'login_sso_buttons', '<div class="divider"><hr class="left"/>' ~ 'UI:Login:SeparatorOr'|dict_s ~ '<hr class="right"/></div>') }}
+							{{ Macro.BlockExtension(aPluginFormData, 'login_sso_buttons', '<div class="divider"><hr class="left"/>' ~ 'UI:Login:SeparatorOr'|dict_s ~ '<hr class="right"/></div>') }}
 						</div>
 					{% endblock login_sso_buttons %}
 					{% block login_input %}
 						<div id="login-input">
-							{{ Macro.BlockData(aPluginFormData, 'login_input') }}
+							{{ Macro.BlockExtension(aPluginFormData, 'login_input') }}
 						</div>
 					{% endblock login_input %}
 					{% block login_submit %}
 						<div id="login-submit">
-							{{ Macro.BlockData(aPluginFormData, 'login_submit') }}
+							{{ Macro.BlockExtension(aPluginFormData, 'login_submit') }}
 						</div>
 					{% endblock login_submit %}
 					{% block login_additional_controls %}
 						<div id="login-additional-controls">
-							{{ Macro.BlockData(aPluginFormData, 'login_additional_controls') }}
+							{{ Macro.BlockExtension(aPluginFormData, 'login_additional_controls') }}
 						</div>
 					{% endblock login_additional_controls %}
 					{% block login_links %}
 						<div id="login-links">
-							{{ Macro.BlockData(aPluginFormData, 'login_links') }}
+							{{ Macro.BlockExtension(aPluginFormData, 'login_links') }}
 						</div>
 					{% endblock login_links %}
 					{% block login_form_footer %}
 						<div id="login-form-footer">
-							{{ Macro.BlockData(aPluginFormData, 'login_form_footer') }}
+							{{ Macro.BlockExtension(aPluginFormData, 'login_form_footer') }}
 						</div>
 					{% endblock login_form_footer %}
 				</div>
@@ -64,7 +64,7 @@
 
 {% block login_footer %}
 	<div id="login-footer">
-		{{ Macro.BlockData(aPluginFormData, 'login_footer') }}
+		{{ Macro.BlockExtension(aPluginFormData, 'login_footer') }}
 	</div>
 {% endblock login_footer %}
 

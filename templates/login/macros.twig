@@ -1,13 +1,13 @@
 {# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
-{% macro BlockData(aPluginFormData, sBlockName, sText = '') %}
+{% macro BlockExtension(aPluginFormData, sBlockName, sText = '') %}
 	{% set bHaveBlock = 'false' %}
-	{% for oLoginData in aPluginFormData if (oLoginData is defined and oLoginData.GetBlockData(sBlockName)) %}
+	{% for oLoginData in aPluginFormData if (oLoginData is defined and oLoginData.GetBlockExtension(sBlockName)) %}
 		{% set bHaveBlock = 'true' %}
-		{% set oBlockData = oLoginData.GetBlockData(sBlockName) %}
-		{% set sTwig = oBlockData.GetTwig() %}
-		{% set aData = oBlockData.GetData() %}
+		{% set oBlockExtension = oLoginData.GetBlockExtension(sBlockName) %}
+		{% set sTwig = oBlockExtension.GetTwig() %}
+		{% set aData = oBlockExtension.GetData() %}
 		{% include sTwig ignore missing %}
 	{% endfor %}
 	{% if bHaveBlock == 'true' %}

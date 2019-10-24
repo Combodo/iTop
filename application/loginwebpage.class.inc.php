@@ -118,7 +118,7 @@ class LoginWebPage extends NiceWebPage
 
 	public function DisplayLoginForm($bFailedLogin = false)
 	{
-		$oTwigContext = new LoginTwigContext();
+		$oTwigContext = new LoginTwigRenderer();
 		$aPostedVars = array_merge(array('login_mode', 'loginop'), $oTwigContext->GetPostedVars());
 
 		$sMessage = Dict::S('UI:Login:IdentifyYourself');
@@ -171,7 +171,7 @@ class LoginWebPage extends NiceWebPage
 	{
 		$sAuthUser = utils::ReadParam('auth_user', '', true, 'raw_data');
 
-		$oTwigContext = new LoginTwigContext();
+		$oTwigContext = new LoginTwigRenderer();
 		$aVars = $oTwigContext->GetDefaultVars();
 		$aVars['sAuthUser'] = $sAuthUser;
 		$aVars['bFailedToReset'] = $bFailedToReset;
@@ -235,7 +235,7 @@ class LoginWebPage extends NiceWebPage
 					throw new Exception(Dict::S('UI:ResetPwd-Error-Send'));
 			}
 
-			$oTwigContext = new LoginTwigContext();
+			$oTwigContext = new LoginTwigRenderer();
 			$aVars = $oTwigContext->GetDefaultVars();
 			$oTwigContext->Render($this, 'forgotpwdsent.html.twig', $aVars);
 		}
@@ -253,7 +253,7 @@ class LoginWebPage extends NiceWebPage
 		UserRights::Login($sAuthUser); // Set the user's language
 		$oUser = UserRights::GetUserObject();
 
-		$oTwigContext = new LoginTwigContext();
+		$oTwigContext = new LoginTwigRenderer();
 		$aVars = $oTwigContext->GetDefaultVars();
 
 		$aVars['sAuthUser'] = $sAuthUser;
@@ -290,7 +290,7 @@ class LoginWebPage extends NiceWebPage
 		UserRights::Login($sAuthUser); // Set the user's language
 		$oUser = UserRights::GetUserObject();
 
-		$oTwigContext = new LoginTwigContext();
+		$oTwigContext = new LoginTwigRenderer();
 		$aVars = $oTwigContext->GetDefaultVars();
 
 		$aVars['sAuthUser'] = $sAuthUser;
@@ -324,7 +324,7 @@ class LoginWebPage extends NiceWebPage
 
 	public function DisplayChangePwdForm($bFailedLogin = false)
 	{
-		$oTwigContext = new LoginTwigContext();
+		$oTwigContext = new LoginTwigRenderer();
 		$aVars = $oTwigContext->GetDefaultVars();
 		$aVars['bFailedLogin'] = $bFailedLogin;
 		$oTwigContext->Render($this, 'changepwdform.html.twig', $aVars);
@@ -337,7 +337,7 @@ class LoginWebPage extends NiceWebPage
 		$sTitle = empty($sTitle) ? Dict::S('UI:LogOff:ThankYou') : $sTitle;
 		$sMessage = Dict::S('UI:LogOff:ClickHereToLoginAgain');
 
-		$oTwigContext = new LoginTwigContext();
+		$oTwigContext = new LoginTwigRenderer();
 		$aVars = $oTwigContext->GetDefaultVars();
 		$aVars['sUrl'] = $sUrl;
 		$aVars['sTitle'] = $sTitle;

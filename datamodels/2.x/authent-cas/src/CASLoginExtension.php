@@ -13,8 +13,8 @@ use DBObjectSet;
 use Dict;
 use iLoginUIExtension;
 use iLogoutExtension;
-use LoginBlockData;
-use LoginTwigData;
+use LoginBlockExtension;
+use LoginTwigContext;
 use LoginWebPage;
 use MetaModel;
 use phpCAS;
@@ -198,23 +198,21 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 	}
 
 	/**
-	 * @return LoginTwigData
+	 * @return LoginTwigContext
 	 */
-	public function GetTwigBlockData()
+	public function GetTwigContext()
 	{
-		$sPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/authent-cas/view';
-		$oLoginData = new LoginTwigData(array(), $sPath);
+		$oLoginContext = new LoginTwigContext();
+		$oLoginContext->SetLoaderPath(APPROOT.'env-'.utils::GetCurrentEnvironment().'/authent-cas/view');
 
 		$aData = array(
 			'sLoginMode' => 'cas',
 			'sLabel' => Dict::S('CAS:Login:SignIn'),
 			'sTooltip' => Dict::S('CAS:Login:SignInTooltip'),
 		);
-		$oLoginData->AddBlockData('login_sso_buttons', new LoginBlockData('cas_sso_button.html.twig', $aData));
+		$oLoginContext->AddBlockExtension('login_sso_buttons', new LoginBlockExtension('cas_sso_button.html.twig', $aData));
 
-		$oLoginData->AddBlockData('css', new LoginBlockData('cas_css.css.twig'));
-
-		return $oLoginData;
+		return $oLoginContext;
 	}
 }
 

@@ -7,7 +7,7 @@
 	<div id="login-body">
 		{% block login_header %}
 			<div id="login-header">
-				{{ Macro.BlockData(aPluginFormData, 'login_header') }}
+				{{ Macro.BlockExtension(aPluginFormData, 'login_header') }}
 			</div>
 		{% endblock login_header %}
 		{% block login_logo %}
@@ -17,16 +17,18 @@
 				</a>
 			</div>
 		{% endblock login_logo %}
-		{% block login_content %}
-		{% endblock login_content %}
-		{% block login_additional_content %}
-			<div id="login-additional-content">
-				{{ Macro.BlockData(aPluginFormData, 'login_additional_content') }}
-			</div>
-		{% endblock login_additional_content %}
+		{% block login_content_outer %}
+			{% block login_content %}
+			{% endblock login_content %}
+			{% block login_additional_content %}
+				<div id="login-additional-content">
+					{{ Macro.BlockExtension(aPluginFormData, 'login_additional_content') }}
+				</div>
+			{% endblock login_additional_content %}
+		{% endblock login_content_outer %}
 		{% block login_footer %}
 			<div id="login-footer">
-				{{ Macro.BlockData(aPluginFormData, 'login_footer') }}
+				{{ Macro.BlockExtension(aPluginFormData, 'login_footer') }}
 			</div>
 		{% endblock login_footer %}
 	</div>
@@ -34,15 +36,15 @@
 
 {% block script %}
 	{% import "macros.twig" as Macro %}
-	{{ Macro.BlockData(aPluginFormData, 'script') }}
+	{{ Macro.BlockExtension(aPluginFormData, 'script') }}
 {% endblock script %}
 
 {% block ready_script %}
 	{% import "macros.twig" as Macro %}
-	{{ Macro.BlockData(aPluginFormData, 'ready_script') }}
+	{{ Macro.BlockExtension(aPluginFormData, 'ready_script') }}
 {% endblock ready_script %}
 
 {% block css %}
 	{% import "macros.twig" as Macro %}
-	{{ Macro.BlockData(aPluginFormData, 'css') }}
+	{{ Macro.BlockExtension(aPluginFormData, 'css') }}
 {% endblock css %}

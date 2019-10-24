@@ -9,61 +9,130 @@
 
 use Combodo\iTop\TwigExtension;
 
-class LoginTwigData
+/**
+ * Twig context for modules extending the login screen
+ * Class LoginTwigContext
+ */
+class LoginTwigContext
 {
-	private $aBlockData;
+	/** @var array */
+	private $aBlockExtension;
+	/** @var array */
 	private $aPostedVars;
+	/** @var string  */
 	private $sTwigLoaderPath;
-	private $sCSSFile;
+	/** @var array */
+	private $aCSSFiles;
 	/** @var array */
 	private $aJsFiles;
+	private $sTwigNameSpace;
 
 	/**
-	 * LoginTwigData constructor.
+	 * Build a context to display the twig files used
+	 * to extend the login screens
 	 *
-	 * @param array $aPostedVars
-	 * @param string $sLoaderPath
-	 * @param string $sCSSFile
-	 * @param array $aJsFiles
+	 * LoginTwigContext constructor.
+	 * @api
 	 */
-	public function __construct($aPostedVars = array(), $sLoaderPath = null, $sCSSFile = null, $aJsFiles = array())
+	public function __construct()
 	{
-		$this->aBlockData = array();
-		$this->aPostedVars = $aPostedVars;
-		$this->sTwigLoaderPath = $sLoaderPath;
-		$this->sCSSFile = $sCSSFile;
-		$this->aJsFiles = $aJsFiles;
+		$this->aBlockExtension = array();
+		$this->aPostedVars = array();
+		$this->sTwigLoaderPath = null;
+		$this->aCSSFiles = array();
+		$this->aJsFiles = array();
+		$this->sTwigNameSpace = null;
+	}
+
+	/**
+	 * Set the absolute path on disk of the folder containing the twig templates
+	 *
+	 * @param string $sPath absolute path of twig templates directory
+	 * @api
+	 */
+	public function SetLoaderPath($sPath)
+	{
+		$this->sTwigLoaderPath = $sPath;
+	}
+
+	/**
+	 * Add a Twig block extension
+	 *
+	 * @param string $sBlockName
+	 * @param LoginBlockExtension $oBlockExtension
+	 */
+	public function AddBlockExtension($sBlockName, $oBlockExtension)
+	{
+		$this->aBlockExtension[$sBlockName] = $oBlockExtension;
+	}
+
+	/**
+	 * Add a variable intended to be posted on URL (and managed) by the module.
+	 * Declaring the posted variables will prevent the core engine to manipulate these variables.
+	 *
+	 * @param string $sPostedVar Name of the posted variable
+	 * @api
+	 */
+	public function AddPostedVar($sPostedVar)
+	{
+		$this->aPostedVars[] = $sPostedVar;
+	}
+
+	/**
+	 * Add the URL of a CSS file to link to the login screen
+	 *
+	 * @param string $sFile URL of the CSS file to link
+	 * @api
+	 */
+	public function AddCSSFile($sFile)
+	{
+		$this->aCSSFiles[] = $sFile;
+	}
+
+	/**
+	 * Add the URL of a javascript file to link to the login screen
+	 * @param string $sFile URL of the javascript file to link
+	 * @api
+	 */
+	public function AddJsFile($sFile)
+	{
+		$this->aJsFiles[] = $sFile;
 	}
 
 	/**
 	 * @param string $sBlockName
-	 * @param LoginBlockData $oBlockData
+	 *
+	 * @return \LoginBlockExtension
 	 */
-	public final function AddBlockData($sBlockName, $oBlockData)
+	public function GetBlockExtension($sBlockName)
 	{
-		$this->aBlockData[$sBlockName] = $oBlockData;
+		/** @var LoginBlockExtension $oBlockExtension */
+		$oBlockExtension = isset($this->aBlockExtension[$sBlockName]) ? $this->aBlockExtension[$sBlockName] : null;
+		return $oBlockExtension;
 	}
 
-	public final function GetBlockData($sBlockName)
-	{
-		/** @var LoginBlockData $oBlockData */
-		$oBlockData = isset($this->aBlockData[$sBlockName]) ? $this->aBlockData[$sBlockName] : null;
-		return $oBlockData;
-	}
-
-	public final function GetPostedVars()
+	/**
+	 * @return array
+	 */
+	public function GetPostedVars()
 	{
 		return $this->aPostedVars;
 	}
 
-	public final function GetTwigLoaderPath()
+	/**
+	 * @return string
+	 */
+	public function GetTwigLoaderPath()
 	{
 		return $this->sTwigLoaderPath;
 	}
 
-	public final function GetCSSFile()
+	/**
+	 * @return array
+	 */
+	public function GetCSSFiles()
 	{
-		return $this->sCSSFile;
+		return $this->aCSSFiles;
 	}
 
 	/**
@@ -73,18 +142,33 @@ class LoginTwigData
 	{
 		return $this->aJsFiles;
 	}
+
 }
 
-class LoginBlockData
+/**
+ * Twig block description for login screen extension
+ * The login screen can be extended by adding twig templates
+ * to specific blocks of the login screens
+ *
+ * Class LoginBlockExtension
+ */
+class LoginBlockExtension
 {
 	private $sTwig;
 	private $aData;
 
 	/**
-	 * LoginBlockData constructor.
+	 * Create a new twig extension block
+	 * The given twig template can be HTML, CSS or JavaScript.
+	 * CSS goes to the block named 'css' and is inline in the page.
+	 * JavaScript goes to the blocks named 'script' or 'ready_script' and are inline in the page.
+	 * HTML goes to everywhere else
 	 *
-	 * @param string $sTwig
-	 * @param array $aData
+	 * LoginBlockExtension constructor.
+	 *
+	 * @param string $sTwig name of the twig file relative to the path given to the LoginTwigContext
+	 * @param array $aData Data given to the twig template (into the variable {{ aData }})
+	 * @api
 	 */
 	public function __construct($sTwig, $aData = array())
 	{
@@ -92,18 +176,22 @@ class LoginBlockData
 		$this->aData = $aData;
 	}
 
-	public final function GetTwig()
+	public function GetTwig()
 	{
 		return $this->sTwig;
 	}
 
-	public final function GetData()
+	public function GetData()
 	{
 		return $this->aData;
 	}
 }
 
-class LoginTwigContext
+/**
+ * Used by LoginWebPage to display the login screen
+ * Class LoginTwigRenderer
+ */
+class LoginTwigRenderer
 {
 	private $aLoginPluginList;
 	private $aPluginFormData;
@@ -119,14 +207,20 @@ class LoginTwigContext
 		foreach ($this->aLoginPluginList as $oLoginPlugin)
 		{
 			/** @var \iLoginUIExtension $oLoginPlugin */
-			$oLoginData = $oLoginPlugin->GetTwigBlockData();
-			$this->aPluginFormData[] = $oLoginData;
-			$sTwigLoaderPath = $oLoginData->GetTwigLoaderPath();
+			$oLoginContext = $oLoginPlugin->GetTwigContext();
+			if (is_null($oLoginContext))
+			{
+				continue;
+			}
+			$this->aPluginFormData[] = $oLoginContext;
+			$sTwigLoaderPath = $oLoginContext->GetTwigLoaderPath();
 			if ($sTwigLoaderPath != null)
 			{
-				$aTwigLoaders[] = new Twig_Loader_Filesystem($sTwigLoaderPath);
+				$oExtensionLoader = new Twig_Loader_Filesystem();
+				$oExtensionLoader->setPaths($sTwigLoaderPath);
+				$aTwigLoaders[] = $oExtensionLoader;
 			}
-			$this->aPostedVars = array_merge($this->aPostedVars, $oLoginData->GetPostedVars());
+			$this->aPostedVars = array_merge($this->aPostedVars, $oLoginContext->GetPostedVars());
 		}
 
 		$oCoreLoader = new Twig_Loader_Filesystem(array(), APPROOT.'templates');
@@ -178,9 +272,9 @@ class LoginTwigContext
 		// Render CSS links
 		foreach ($this->aPluginFormData as $oFormData)
 		{
-			/** @var \LoginTwigData $oFormData */
-			$sCSSFile = $oFormData->GetCSSFile();
-			if (!empty($sCSSFile))
+			/** @var \LoginTwigContext $oFormData */
+			$aCSSFiles = $oFormData->GetCSSFiles();
+			foreach ($aCSSFiles as $sCSSFile)
 			{
 				$oPage->add_linked_stylesheet($sCSSFile);
 			}

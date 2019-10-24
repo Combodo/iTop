@@ -2167,4 +2167,9 @@ class utils
 		}
 		return $sFullPath;
 	}
+
+	public static function GetAbsoluteModulePath($sModule)
+	{
+		return APPROOT.'env-'.utils::GetCurrentEnvironment().'/'.$sModule.'/';
+	}
 }
