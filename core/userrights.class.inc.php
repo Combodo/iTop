@@ -168,7 +168,7 @@ abstract class User extends cmdbAbstractObject
 	{
 		$aParams = array
 		(
-			"category" => "core,grant_by_profile",
+			"category" => "core,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "login",
 			"state_attcode" => "",
@@ -1005,7 +1005,7 @@ class UserRights
 		try
 		{
 			// Check Bug 1436 for details
-			if (MetaModel::HasCategory($sClass, 'bizmodel'))
+			if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'silo'))
 			{
 				return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
 			}
