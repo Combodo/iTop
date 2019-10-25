@@ -121,18 +121,17 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 			'sAuthUser' => $sAuthUser,
 			'sAuthPwd' => $sAuthPwd,
 		);
-		$oLoginContext->AddBlockExtension('login_input', new LoginBlockExtension('loginforminput.html.twig', $aData));
-		$oLoginContext->AddBlockExtension('login_submit', new LoginBlockExtension('loginformsubmit.html.twig'));
-		$oLoginContext->AddBlockExtension('login_form_footer', new LoginBlockExtension('loginformfooter.html.twig'));
+		$oLoginContext->AddBlockExtension('login_input', new LoginBlockExtension('extensionblock/loginforminput.html.twig', $aData));
+		$oLoginContext->AddBlockExtension('login_submit', new LoginBlockExtension('extensionblock/loginformsubmit.html.twig'));
+		$oLoginContext->AddBlockExtension('login_form_footer', new LoginBlockExtension('extensionblock/loginformfooter.html.twig'));
 
 		$bEnableResetPassword = empty(MetaModel::GetConfig()->Get('forgot_password')) ? true : MetaModel::GetConfig()->Get('forgot_password');
 		$sResetPasswordUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/UI.php?loginop=forgot_pwd';
-
 		$aData = array(
 			'bEnableResetPassword' => $bEnableResetPassword,
 			'sResetPasswordUrl' => $sResetPasswordUrl,
 		);
-		$oLoginContext->AddBlockExtension('login_links', new LoginBlockExtension('loginformlinks.html.twig', $aData));
+		$oLoginContext->AddBlockExtension('login_links', new LoginBlockExtension('extensionblock/loginformlinks.html.twig', $aData));
 
 		return $oLoginContext;
 	}

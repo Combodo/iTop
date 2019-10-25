@@ -4,11 +4,6 @@ html,body {
 	height: 100%;
 }
 
-#login-title {
-	width: 70%;
-	margin-left: 15%;
-}
-
 h1 {
 	color: #1C94C4;
 	font-size: 16pt;
@@ -24,6 +19,11 @@ a {
 a:hover {
 	text-decoration: underline;
 	color: #ea7d1e;
+}
+
+#login-title {
+	width: 70%;
+	margin-left: 15%;
 }
 
 #login-body {
@@ -133,6 +133,7 @@ a:hover {
 	border-radius: 0.25em;
 	width: calc(100% - 2em - 4px);
 }
+
 #login-input input:focus {
 	border-color: #A0AEC0;
 }
@@ -159,7 +160,6 @@ a:hover {
 	margin-top: 10px;
 	cursor: pointer;
 }
-
 
 .center {
 	text-align: center;
