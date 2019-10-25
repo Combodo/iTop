@@ -38,6 +38,7 @@ use ScalarExpression;
 use Symfony\Component\Routing\RouterInterface;
 use TrueExpression;
 use UserRights;
+use const UR_ACTION_READ;
 
 /**
  * Class ContextManipulatorHelper
@@ -257,9 +258,9 @@ class ContextManipulatorHelper
 	}
 
 	/**
-	 * Prepare the $oObject passed as a reference with the $aData
-	 *
-	 * $aData must be of the form :
+	 * @param array $aData contains 2 keys : 'rules' for rules id, 'sources' for context objects (class / id pair).
+	 * Example :
+	 * <code>
 	 * array(
 	 *   'rules' => array(
 	 *     'rule-id-1',
@@ -272,132 +273,165 @@ class ContextManipulatorHelper
 	 *     ...
 	 *   )
 	 * )
-	 *
-	 * @param array     $aData
-	 * @param \DBObject $oObject
+	 * </code>
+	 * @param \DBObject $oObject destination object
 	 *
 	 * @throws \Exception
 	 * @throws \CoreException
 	 * @throws \OQLException
-	 * @throws \CorePortalInvalidActionRuleException N°2555 if action_rule query return more than 1 result (we should only have 1 source object)
+	 * @throws \CorePortalInvalidActionRuleException N°2555 if at least 1 action_rule cannot be executed
 	 */
-	public function PrepareObject(array $aData, DBObject &$oObject)
+	public function PrepareObject(array $aData, DBObject $oObject)
 	{
 		if (isset($aData['rules']) && isset($aData['sources']))
 		{
 			$aRules = $aData['rules'];
 			$aSources = $aData['sources'];
-
-			foreach ($aRules as $sId)
+			$aActionRulesErrors = array();
+			foreach ($aRules as $sRuleId)
 			{
-				// Retrieveing current rule
-				$aRule = $this->GetRule($sId);
-
-				// Retrieving source object if needed
-				if ($aRule['source_oql'] !== null)
+				try
 				{
-					// Preparing query to retrieve source object(s)
-					$oSearch = DBSearch::FromOQL($aRule['source_oql']);
-					$sSearchClass = $oSearch->GetClass();
-					$aSearchParams = $oSearch->GetInternalParams();
+					$this->PrepareAndExecActionRule($sRuleId, $aSources, $oObject);
+				}
+				catch (CorePortalInvalidActionRuleException $e)
+				{
+					$aActionRulesErrors[$sRuleId] = $e->getMessage();
+				}
+			}
+			if (!empty($aActionRulesErrors))
+			{
+				$sDestinationObjectDesc = '';
+				$sDestinationObjectDesc .= get_class($oObject);
+				$sDestinationObjectDesc .= '['.$oObject->GetKey().']';
+				throw new CorePortalInvalidActionRuleException('Some action rules were not executed',
+					$aActionRulesErrors,
+					'destination object: '.$sDestinationObjectDesc);
+			}
+		}
+	}
 
-					if (array_key_exists($sSearchClass, $aSources))
+	/**
+	 * @param string $sRuleId
+	 *
+	 * @param array $aSources context objects (class / id pairs)
+	 * @param \DBObject $oDestinationObject
+	 *
+	 * @throws \CoreException
+	 * @throws \CorePortalInvalidActionRuleException N°2555 thrown if action rules gets more than 1 object
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
+	 */
+	private function PrepareAndExecActionRule($sRuleId, $aSources, DBObject $oDestinationObject)
+	{
+		// Retrieveing current rule
+		$aRule = $this->GetRule($sRuleId);
+
+		// Retrieving source object if needed
+		if ($aRule['source_oql'] !== null)
+		{
+			// Preparing query to retrieve source object(s)
+			$oSearch = DBSearch::FromOQL($aRule['source_oql']);
+			$sSearchClass = $oSearch->GetClass();
+			$aSearchParams = $oSearch->GetInternalParams();
+
+			if (array_key_exists($sSearchClass, $aSources))
+			{
+				$sourceId = $aSources[$sSearchClass];
+
+				if (array_key_exists('id', $oSearch->GetQueryParams()))
+				{
+					if (is_array($sourceId))
 					{
-						$sourceId = $aSources[$sSearchClass];
-
-						if (array_key_exists('id', $oSearch->GetQueryParams()))
-						{
-							if (is_array($sourceId))
-							{
-								throw new Exception('Context creator : ":id" parameter in rule "'.$sId.'" cannot be an array (This is a limitation of DBSearch)');
-							}
-
-							$aSearchParams['id'] = $sourceId;
-						}
-						else
-						{
-							if (!is_array($sourceId))
-							{
-								$sourceId = array($sourceId);
-							}
-
-							$iLoopMax = count($sourceId);
-							$oFullBinExpr = null;
-							for ($i = 0; $i < $iLoopMax; $i++)
-							{
-								// - Building full search expression
-								$oBinExpr = new BinaryExpression(new FieldExpression('id', $oSearch->GetClassAlias()), '=',
-									new ScalarExpression($sourceId[$i]));
-								if ($i === 0)
-								{
-									$oFullBinExpr = $oBinExpr;
-								}
-								else
-								{
-									$oFullBinExpr = new BinaryExpression($oFullBinExpr, 'OR', $oBinExpr);
-								}
-
-								// - Adding it to the query when complete
-								if ($i === ($iLoopMax - 1))
-								{
-									$oSearch->AddConditionExpression($oFullBinExpr);
-								}
-							}
-						}
+						throw new Exception('Context creator : ":id" parameter in rule "'.$sRuleId.'" cannot be an array (This is a limitation of DBSearch)');
 					}
 
-					$oSearchRootCondition = $oSearch->GetCriteria();
-					if (($oSearchRootCondition === null) || ($oSearchRootCondition instanceof TrueExpression))
-					{
-						// N°2555 : disallow searches without any condition
-						$sErrMsg = "Portal query was stopped: action_rule '$sId' searches for '$sSearchClass' without any condition is forbidden";
-						IssueLog::Error($sErrMsg);
-						throw new CorePortalInvalidActionRuleException($sErrMsg);
-					}
-
-					// Checking for silos
-					$oScopeSearch = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sSearchClass,
-						UR_ACTION_READ);
-					if ($oScopeSearch->IsAllDataAllowed())
-					{
-						$oSearch->AllowAllData();
-					}
-
-					// Retrieving source object(s) and applying rules
-					try
-					{
-						$oSourceObject = $oSearch->GetFirstResult(true, array(), $aSearchParams);
-					}
-					catch (CoreOqlMultipleResultsForbiddenException $e)
-					{
-						// N°2555 : disallow searches returning more than 1 result
-						$sErrMsg = "Portal query was stopped: action_rule '$sId' gives more than 1 '$sSearchClass' result";
-						IssueLog::Error($sErrMsg);
-						throw new CorePortalInvalidActionRuleException($sErrMsg);
-					}
-					if ($oSourceObject === null)
-					{
-						continue;
-					}
-					// Presets
-					if (isset($aRule['preset']) && !empty($aRule['preset']))
-					{
-						$oObject->ExecActions($aRule['preset'], array('source' => $oSourceObject));
-					}
-					// Retrofits
-					if (isset($aRule['retrofit']) && !empty($aRule['retrofit']))
-					{
-						$oSourceObject->ExecActions($aRule['retrofit'], array('source' => $oObject));
-					}
+					$aSearchParams['id'] = $sourceId;
 				}
 				else
 				{
-					// Presets
-					if (isset($aRule['preset']) && !empty($aRule['preset']))
+					if (!is_array($sourceId))
 					{
-						$oObject->ExecActions($aRule['preset'], array('source' => $oObject));
+						$sourceId = array($sourceId);
+					}
+
+					$iLoopMax = count($sourceId);
+					$oFullBinExpr = null;
+					for ($i = 0; $i < $iLoopMax; $i++)
+					{
+						// - Building full search expression
+						$oBinExpr = new BinaryExpression(new FieldExpression('id', $oSearch->GetClassAlias()), '=',
+							new ScalarExpression($sourceId[$i]));
+						if ($i === 0)
+						{
+							$oFullBinExpr = $oBinExpr;
+						}
+						else
+						{
+							$oFullBinExpr = new BinaryExpression($oFullBinExpr, 'OR', $oBinExpr);
+						}
+
+						// - Adding it to the query when complete
+						if ($i === ($iLoopMax - 1))
+						{
+							$oSearch->AddConditionExpression($oFullBinExpr);
+						}
 					}
 				}
+			}
+
+			$oSearchRootCondition = $oSearch->GetCriteria();
+			if (($oSearchRootCondition === null) || ($oSearchRootCondition instanceof TrueExpression))
+			{
+				// N°2555 : disallow searches without any condition
+				$sErrMsg = "Portal query was stopped: action_rule '$sRuleId' searches for '$sSearchClass' without any condition is forbidden";
+				IssueLog::Error($sErrMsg);
+				throw new CorePortalInvalidActionRuleException($sErrMsg);
+			}
+
+			// Checking for silos
+			$oScopeSearch = $this->oScopeValidator->GetScopeFilterForProfiles(UserRights::ListProfiles(), $sSearchClass,
+				UR_ACTION_READ);
+			if ($oScopeSearch->IsAllDataAllowed())
+			{
+				$oSearch->AllowAllData();
+			}
+
+			// Retrieving source object(s) and applying rules
+			try
+			{
+				$oSourceObject = $oSearch->GetFirstResult(true, array(), $aSearchParams);
+			}
+			catch (CoreOqlMultipleResultsForbiddenException $e)
+			{
+				// N°2555 : disallow searches returning more than 1 result
+				$sErrMsg = "Portal query was stopped: action_rule '$sRuleId' gives more than 1 '$sSearchClass' result";
+				IssueLog::Error($sErrMsg);
+				throw new CorePortalInvalidActionRuleException($sErrMsg);
+			}
+			if ($oSourceObject === null)
+			{
+				return;
+			}
+			// Presets
+			if (isset($aRule['preset']) && !empty($aRule['preset']))
+			{
+				$oDestinationObject->ExecActions($aRule['preset'], array('source' => $oSourceObject));
+			}
+			// Retrofits
+			if (isset($aRule['retrofit']) && !empty($aRule['retrofit']))
+			{
+				$oSourceObject->ExecActions($aRule['retrofit'], array('source' => $oDestinationObject));
+			}
+		}
+		else
+		{
+			// Presets
+			if (isset($aRule['preset']) && !empty($aRule['preset']))
+			{
+				$oDestinationObject->ExecActions($aRule['preset'], array('source' => $oDestinationObject));
 			}
 		}
 	}
@@ -538,5 +572,4 @@ class ContextManipulatorHelper
 	{
 		return json_decode(base64_decode($sToken), true);
 	}
-
 }
