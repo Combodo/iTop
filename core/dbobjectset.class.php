@@ -89,7 +89,8 @@ class DBObjectSet implements iDBObjectSetIterator
      * @api
 	 * 
 	 * @param DBSearch $oFilter The search filter defining the objects which are part of the set (multiple columns/objects per row are supported)
-	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
+	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending (true for ASC, false, for DESC)
+	 *    Example : array('name' => true, 'id' => false)
 	 * @param array $aArgs Values to substitute for the search/query parameters (if any). Format: param_name => value
 	 * @param array $aExtendedDataSpec
 	 * @param int $iLimitCount Maximum number of rows to load (i.e. equivalent to MySQL's LIMIT start, count)
