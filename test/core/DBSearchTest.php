@@ -593,4 +593,67 @@ class DBSearchTest extends ItopDataTestCase
 			),
 		);
 	}
+
+	/**
+	 * @throws Exception
+	 */
+	public function testSanity_GroupFunction_In_WherePart()
+	{
+		$sExceptionClass = '';
+		$oSearch = DBSearch::FromOQL("SELECT FiberChannelInterface AS FCI");
+		self::assertNotNull($oSearch);
+
+		try
+		{
+			$oExpr1 = Expression::FromOQL('AVC(FCI.name)');
+			//$aGroupBy = array('group1' => $oExpr1);
+			//$oSearch->MakeGroupByQuery(array(), $aGroupBy, false, array(), array());
+		}
+		catch (Exception $e)
+		{
+			$sExceptionClass = get_class($e);
+		}
+
+		static::assertEquals('OQLParserException', $sExceptionClass);
+	}
+
+	public function testSanity_GroupFunction_In_GroupByPart()
+	{
+		$sExceptionClass = '';
+		try
+		{
+			$oSearch = DBSearch::FromOQL("SELECT FiberChannelInterface AS FCI WHERE COUNT(FCI.name) = AVC(FCI.name)");
+			//$oSearch->MakeGroupByQuery(array(), array(), false, array(), array());
+		}
+		catch (Exception $e)
+		{
+			$sExceptionClass = get_class($e);
+		}
+
+		static::assertEquals('OQLParserException', $sExceptionClass);
+	}
+
+	public function testSanity_UnknownGroupFunction_In_SelectPart()
+	{
+		$sExceptionClass = '';
+		try
+		{
+			$oTimeExpr = Expression::FromOQL('FCI.speed');
+			$oWrongExpr = new FunctionExpression('GABUZOMEU', array($oTimeExpr));
+			// Alias => Expression
+			$aFunctions = array(
+				'_itop_wrong_' => $oWrongExpr,
+			);
+			$oSearch = DBSearch::FromOQL("SELECT FiberChannelInterface AS FCI");
+			$oSearch->MakeGroupByQuery(array(), array(), false, $aFunctions, array());
+		}
+		catch (Exception $e)
+		{
+			$sExceptionClass = get_class($e);
+		}
+
+		//later on it should raise an exception...
+		static::assertEquals('', $sExceptionClass);
+	}
+
 }
