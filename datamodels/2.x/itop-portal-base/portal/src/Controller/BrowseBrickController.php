@@ -132,9 +132,25 @@ class BrowseBrickController extends BrickController
 				if ($i < $iLoopMax)
 				{
 					$aRealiasingMap = array();
-					$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->Join($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'],
-						DBSearch::JOIN_REFERENCED_BY, $aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att'],
-						TREE_OPERATOR_EQUALS, $aRealiasingMap);
+					$oParentAtt = MetaModel::GetAttributeDef($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search']->GetClass(), $aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att']);
+					// If we work on a n:n link
+					if($oParentAtt instanceof \AttributeLinkedSetIndirect)
+					{
+						// Create a DBSearch from Link class
+						$oSubSearch = new \DBObjectSearch($oParentAtt->GetLinkedClass());
+						// Join it to the bottom query
+						$oSubSearch = $oSubSearch->Join($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'],
+							DBSearch::JOIN_POINTING_TO, $oParentAtt->GetExtKeyToMe(), TREE_OPERATOR_EQUALS, $aRealiasingMap);
+						// Join our Link class + bottom query to the up query
+						$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] ->Join($oSubSearch, DBSearch::JOIN_REFERENCED_BY,
+							$oParentAtt->GetExtKeyToRemote(), TREE_OPERATOR_EQUALS, $aRealiasingMap);
+					}
+					else
+					{
+						$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search'] = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->Join($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'],
+							DBSearch::JOIN_REFERENCED_BY, $aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att'],
+							TREE_OPERATOR_EQUALS, $aRealiasingMap);
+					}
 					foreach ($aLevelsPropertiesKeys as $sLevelAlias)
 					{
 						if (array_key_exists($sLevelAlias, $aRealiasingMap))
