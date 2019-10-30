@@ -472,7 +472,7 @@ abstract class DBSearch
      *
      * @param DBSearch   $oFilter        The join is performed against $oFilter selected class
      * @param integer    $iDirection     can be either DBSearch::JOIN_POINTING_TO or DBSearch::JOIN_REFERENCED_BY
-     * @param string     $sExtKeyAttCode The join is performed against $sExtKeyAttCode wetheir it is compared aginst the current DBSearch or $oFilter depend of $iDirection
+     * @param string     $sExtKeyAttCode The join is performed against $sExtKeyAttCode whether it is compared against the current DBSearch or $oFilter depend of $iDirection
      * @param integer    $iOperatorCode  See DBSearch::AddCondition_PointingTo()
      * @param array|null $aRealiasingMap Map of aliases from the attached query, that could have been renamed by the optimization process
      *
