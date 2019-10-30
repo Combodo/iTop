@@ -419,7 +419,7 @@ interface iApplicationObjectExtension
 	 * Invoked when an object is updated into the database. The method is called right <b>after</b> the object has been written to the
 	 * database.
 	 *
-	 * Changes made to the object can be get using {@link \cmdbAbstractObject::$m_aChanges}
+	 * Changes made to the object can be get using {@link $oObject::$m_aChanges}. Do not call {@link \DBObject::ListChanges} for this purpose !
 	 *
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
@@ -427,7 +427,7 @@ interface iApplicationObjectExtension
 	 *
 	 * @return void
 	 *
-	 * @since 2.7.0 N°2293 can access object changes by calling {@link \cmdbAbstractObject::$m_aChanges}
+	 * @since 2.7.0 N°2293 can access object changes by calling {@link $oObject::$m_aChanges}
 	 */
 	public function OnDBUpdate($oObject, $oChange = null);
 

@@ -4108,11 +4108,13 @@ abstract class DBObject implements iDisplay
 	}
 
     /**
-     * This method is called after the object is updated into DB. You can get changes by calling {@link ListChanges}.
+     * This method is called after the object is updated into DB. You can get changes using @link m_aChanges}.
+     *
+     * Warning : do not use {@link ListChanges} as it will return an empty array.
      *
      * @overwritable-hook You can extend this method in order to provide your own logic.
      *
-     * @since 2.7.0 N°2293 can access object changes by calling {@link ListChanges}
+     * @since 2.7.0 N°2293 can access object changes using {@link m_aChanges}
      */
 	protected function AfterUpdate()
 	{
