@@ -203,12 +203,10 @@
     public function DBInsertNoReload()
     {
           $oMutex = new iTopMutex('ticket_insert');
-          $oMutex->Lock();
-          $iNextId = MetaModel::GetNextKey(get_class($this));
+          $iNextId = ItopCounter::IncClass(get_class($this));
           $sRef = $this->MakeTicketRef($iNextId);
           $this->SetIfNull('ref', $sRef);
           $iKey = parent::DBInsertNoReload();
-          $oMutex->Unlock();
           return $iKey;
     }
         ]]></code>

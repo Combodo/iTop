@@ -46,11 +46,13 @@ final class ItopCounter
 	public static function Inc($sCounterName, $oNewObjectValueProvider = null)
 	{
 		$sSelfClassName = self::class;
-		$oiTopMutex = new iTopMutex("$sSelfClassName-$sCounterName");
+		$sMutexKeyName = "{$sSelfClassName}-{$sCounterName}";
+		$oiTopMutex = new iTopMutex($sMutexKeyName);
 		$oiTopMutex->Lock();
 
-		$oFilter = DBObjectSearch::FromOQL('SELECT KeyValueStore WHERE key_name=:key_name', array(
-			'key_name' => $sCounterName,
+		$oFilter = DBObjectSearch::FromOQL('SELECT KeyValueStore WHERE key_name=:key_name AND namespace=:namespace', array(
+			'key_name'  => $sCounterName,
+			'namespace' => $sSelfClassName,
 		));
 		$oCounter = $oFilter->GetFirstResult();
 		if (is_null($oCounter))
@@ -64,8 +66,9 @@ final class ItopCounter
 				$iComputedValue = 0;
 			}
 			$oCounter = MetaModel::NewObject('KeyValueStore', array(
-				'key_name' => $sCounterName,
-				'value' => $iComputedValue,
+				'key_name'  => $sCounterName,
+				'value'     => $iComputedValue,
+				'namespace' => $sSelfClassName,
 			));
 		}
 
@@ -83,6 +86,8 @@ final class ItopCounter
 	/**
 	 * handle a counter for the root class of given $sLeafClass.
 	 * If no counter exist initialize it with the `max(id) + 1`
+	 *
+	 *
 	 *
 	 * @param $sLeafClass
 	 *
@@ -136,24 +141,29 @@ class KeyValueStore extends DBObject
 			'indexes' => array (
 				array (
 					0 => 'key_name',
+					1 => 'namespace',
 				),
 			),);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeString("namespace", array("allowed_values"=>null, "sql"=>'namespace', "default_value"=>null, "is_null_allowed"=>true, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeString("key_name", array("allowed_values"=>null, "sql"=>'key_name', "default_value"=>'', "is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
 		MetaModel::Init_AddAttribute(new AttributeString("value", array("allowed_values"=>null, "sql"=>'value', "default_value"=>'0', "is_null_allowed"=>false, "depends_on"=>array(), "always_load_in_tables"=>false)));
 
 		MetaModel::Init_SetZListItems('details', array (
 			0 => 'key_name',
 			1 => 'value',
+			2 => 'namespace',
 		));
 		MetaModel::Init_SetZListItems('standard_search', array (
 			0 => 'key_name',
 			1 => 'value',
+			2 => 'namespace',
 		));
 		MetaModel::Init_SetZListItems('list', array (
 			0 => 'key_name',
 			1 => 'value',
+			2 => 'namespace',
 		));
 		;
 	}
