@@ -793,6 +793,9 @@ class CMDBSource
 	}
 
 	/**
+	 *
+	 * @deprecated 2.7.0 N°1627 use ItopCounter insted
+	 *
 	 * @param string $sTable
 	 *
 	 * @return int

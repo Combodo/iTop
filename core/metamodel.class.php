@@ -6935,6 +6935,8 @@ abstract class MetaModel
 	}
 
 	/**
+	 * @deprecated 2.7.0 N°1627, use ItopCounter::incRootClass($sClass) instead
+	 *
 	 * @param string $sClass
 	 *
 	 * @return int
@@ -6942,10 +6944,7 @@ abstract class MetaModel
 	 */
 	public static function GetNextKey($sClass)
 	{
-		$sRootClass = MetaModel::GetRootClass($sClass);
-		$sRootTable = MetaModel::DBGetTable($sRootClass);
-
-		return CMDBSource::GetNextInsertId($sRootTable);
+		return ItopCounter::IncClass($sClass);
 	}
 
 	/**

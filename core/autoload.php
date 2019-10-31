@@ -33,6 +33,7 @@ MetaModel::IncludeModule('core/tagsetfield.class.inc.php');
 MetaModel::IncludeModule('synchro/synchrodatasource.class.inc.php');
 MetaModel::IncludeModule('core/backgroundtask.class.inc.php');
 MetaModel::IncludeModule('core/inlineimage.class.inc.php');
+MetaModel::IncludeModule('core/counter.class.inc.php');
 
 MetaModel::IncludeModule('webservices/webservices.basic.php');
 
