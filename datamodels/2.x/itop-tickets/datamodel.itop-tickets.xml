@@ -202,7 +202,6 @@
 					<code><![CDATA[
     public function DBInsertNoReload()
     {
-          $oMutex = new iTopMutex('ticket_insert');
           $iNextId = ItopCounter::IncClass(get_class($this));
           $sRef = $this->MakeTicketRef($iNextId);
           $this->SetIfNull('ref', $sRef);
