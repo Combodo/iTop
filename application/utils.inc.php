@@ -2172,4 +2172,14 @@ class utils
 	{
 		return APPROOT.'env-'.utils::GetCurrentEnvironment().'/'.$sModule.'/';
 	}
+
+	public static function GetCurrentUserName()
+	{
+		if (function_exists('posix_getpwuid'))
+		{
+			return posix_getpwuid(posix_geteuid())['name'];
+		}
+
+		return getenv('username');
+	}
 }

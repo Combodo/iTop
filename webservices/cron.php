@@ -92,7 +92,7 @@ function RunTask($oProcess, BackgroundTask $oTask, $oStartDate, $iTimeLimit)
 		// Record (when starting) that this task was started, just in case it crashes during the execution
 		$oTask->Set('latest_run_date', $oDateStarted->format('Y-m-d H:i:s'));
 		// Record the current user running the cron
-		$oTask->Set('system_user', getenv("username"));
+		$oTask->Set('system_user', utils::GetCurrentUserName());
 		$oTask->DBUpdate();
 		$sMessage = $oProcess->Process($iTimeLimit);
 	}
