@@ -1821,7 +1821,7 @@ catch(CoreException $e)
 			}
 		}
 
-		IssueLog::Error($e->getMessage());
+		IssueLog::Error('UI.php operation='.$operation.', error='.$e->getMessage()."\n".$e->getTraceAsString());
 	}
 
 	// For debugging only
