@@ -82,7 +82,9 @@ class ObjectFormManager extends FormManager
 	protected $aFormProperties;
 	/** @var array $aCallbackUrls */
 	protected $aCallbackUrls = array();
-
+	/** @var boolean $bIsSubmittable */
+	protected $bIsSubmittable = true;
+	
 	/**
 	 * Creates an instance of \Combodo\iTop\Portal\Form\ObjectFormManager from JSON data that must contain at least :
 	 * - formobject_class : The class of the object that is being edited/viewed
@@ -227,7 +229,29 @@ class ObjectFormManager extends FormManager
 
 		return $this;
 	}
+	
+	/**
+	 *
+	 * @return string
+	 */
+	public function GetIsSubmittable()
+	{
+		return $this->bIsSubmittable;
+	}
 
+	/**
+	 *
+	 * @param boolean $bIsSubmittable
+	 *
+	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 */
+	public function SetIsSubmittable($bIsSubmittable)
+	{
+		$this->bIsSubmittable = $bIsSubmittable;
+
+		return $this;
+	}
+	
 	/**
 	 *
 	 * @return string
@@ -460,6 +484,12 @@ class ObjectFormManager extends FormManager
 						$aFieldsDMOnlyAttCodes[] = $sFieldId;
 					}
 					continue;
+				}
+				
+				// If a form can't be submitted to update an object, we have no reason to allow fields to be editable
+				if (!$this->GetIsSubmittable())
+				{
+					$sFieldFlags .= ' read_only';
 				}
 
 				// Otherwise we proceed as usual
