@@ -841,7 +841,7 @@ class utils
 
 		$sCurrentScript = realpath($_SERVER['SCRIPT_FILENAME']);
 		$sCurrentScript = str_replace('\\', '/', $sCurrentScript); // canonical path
-		$sAppRoot = str_replace('\\', '/', realpath(APPROOT)); // canonical path
+		$sAppRoot       = str_replace('\\', '/', realpath(APPROOT)).'/'; // canonical path with the trailing '/' appended
 		$sCurrentRelativePath = str_replace($sAppRoot, '', $sCurrentScript);
 	
 		$sAppRootPos = strpos($sAbsoluteUrl, $sCurrentRelativePath);
