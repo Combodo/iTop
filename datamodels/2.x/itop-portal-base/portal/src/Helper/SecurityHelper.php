@@ -69,7 +69,7 @@ class SecurityHelper
 
 
 	/**
-	 * Returns true if the current user is allowed to do the $sAction on an $sObjectClass object (with optionnal $sObjectId id)
+	 * Returns true if the current user is allowed to do the $sAction on an $sObjectClass object (with optional $sObjectId id)
 	 * Checks are:
 	 * - Has a scope query for the $sObjectClass / $sAction
 	 * - Optionally, if $sObjectId provided: Is object within scope for $sObjectClass / $sObjectId / $sAction

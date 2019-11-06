@@ -232,7 +232,7 @@ class ScopeValidatorHelper
 		// Iterating on profiles to retrieving the different OQLs parts
 		foreach ($aProfiles as $sProfile)
 		{
-			// Retrieving matrix informtions
+			// Retrieving matrix information
 			$iProfileId = $this->GetProfileIdFromProfileName($sProfile);
 			$sMode = ($iAction === UR_ACTION_READ) ? static::ENUM_MODE_READ : static::ENUM_MODE_WRITE;
 
@@ -257,7 +257,7 @@ class ScopeValidatorHelper
 			}
 		}
 
-		// Building the real OQL from all the parts from the differents profiles
+		// Building the real OQL from all the parts from the different profiles
 		for ($i = 0; $i < count($aAllowSearches); $i++)
 		{
 			foreach ($aRestrictSearches as $oRestrictSearch)
@@ -358,7 +358,7 @@ class ScopeValidatorHelper
 		$iProfileId = null;
 
 		// We try to find the profile from its name in order to retrieve it's id
-		// - If the regular UserRights addon is installed we check the profiles array
+		// - If the regular UserRights add-on is installed we check the profiles array
 		if (class_exists('ProfilesConfig'))
 		{
 			if (defined($sProfile) && in_array($sProfile, ProfilesConfig::GetProfilesValues()))
@@ -377,7 +377,7 @@ class ScopeValidatorHelper
 				}
 			}
 		}
-		// - Else, we can't find the id from the name as we don't know the used UserRights addon. It has to be a constant
+		// - Else, we can't find the id from the name as we don't know the used UserRights add-on. It has to be a constant
 		else
 		{
 			throw new Exception('Scope validator : Unknown UserRights addon, scope\'s profile must be a constant');
