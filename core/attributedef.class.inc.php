@@ -2769,7 +2769,7 @@ class AttributeDecimal extends AttributeDBField
 
 		if (!is_null($value) && ($value !== ''))
 		{
-			$value = sprintf("%01.".$this->Get('decimals')."f", $value);
+			$value = sprintf("%01.".$this->Get('decimals')."F", $value);
 		}
 		return $value; // null or string
 	}
