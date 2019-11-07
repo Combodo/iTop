@@ -189,6 +189,7 @@ class ApplicationInstaller
 		try
 		{
 			$fStart = microtime(true);
+			SetupPage::log_info("##### STEP {$sStep} start");
 			$this->EnterReadOnlyMode();
 			switch ($sStep)
 			{
