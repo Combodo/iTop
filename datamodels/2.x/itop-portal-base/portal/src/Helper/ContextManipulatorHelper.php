@@ -24,9 +24,9 @@ namespace Combodo\iTop\Portal\Helper;
 
 use BinaryExpression;
 use Combodo\iTop\Portal\Brick\BrickCollection;
-use CoreOqlMultipleResultsForbiddenException;
 use CorePortalInvalidActionRuleException;
 use DBObject;
+use DBObjectSet;
 use DBSearch;
 use DOMFormatException;
 use DOMNodeList;
@@ -400,30 +400,19 @@ class ContextManipulatorHelper
 			}
 
 			// Retrieving source object(s) and applying rules
-			try
+			$oSet = new DBObjectSet($oSearch, array(), $aSearchParams);
+			while ($oSourceObject = $oSet->Fetch()) // we need a loop for certain preset verbs like add_to_list, see N°2555
 			{
-				$oSourceObject = $oSearch->GetFirstResult(true, array(), $aSearchParams);
-			}
-			catch (CoreOqlMultipleResultsForbiddenException $e)
-			{
-				// N°2555 : disallow searches returning more than 1 result
-				$sErrMsg = "Portal query was stopped: action_rule '$sRuleId' gives more than 1 '$sSearchClass' result";
-				IssueLog::Error($sErrMsg);
-				throw new CorePortalInvalidActionRuleException($sErrMsg);
-			}
-			if ($oSourceObject === null)
-			{
-				return;
-			}
-			// Presets
-			if (isset($aRule['preset']) && !empty($aRule['preset']))
-			{
-				$oDestinationObject->ExecActions($aRule['preset'], array('source' => $oSourceObject));
-			}
-			// Retrofits
-			if (isset($aRule['retrofit']) && !empty($aRule['retrofit']))
-			{
-				$oSourceObject->ExecActions($aRule['retrofit'], array('source' => $oDestinationObject));
+				// Presets
+				if (isset($aRule['preset']) && !empty($aRule['preset']))
+				{
+					$oDestinationObject->ExecActions($aRule['preset'], array('source' => $oSourceObject));
+				}
+				// Retrofits
+				if (isset($aRule['retrofit']) && !empty($aRule['retrofit']))
+				{
+					$oSourceObject->ExecActions($aRule['retrofit'], array('source' => $oDestinationObject));
+				}
 			}
 		}
 		else
