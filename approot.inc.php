@@ -33,6 +33,7 @@ if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
 	http_response_code(503);
 	// Display message depending on the request
 	include(APPROOT.'application/maintenancemsg.php');
+	$sSAPIName = strtoupper(trim(php_sapi_name()));
 
 	switch (true)
 	{
@@ -40,6 +41,7 @@ if (file_exists(MAINTENANCE_MODE_FILE) && !$bBypassMaintenance)
 			_MaintenanceHtmlMessage($sMessage);
 			break;
 
+		case $sSAPIName == 'CLI':
 		case array_key_exists('HTTP_X_COMBODO_AJAX', $_SERVER):
 		case isset($_SERVER['REQUEST_URI']) && EndsWith($_SERVER['REQUEST_URI'], '/webservices/soapserver.php'):
 		case isset($_SERVER['REQUEST_URI']) && EndsWith($_SERVER['REQUEST_URI'], '/webservices/rest.php'):

@@ -284,7 +284,8 @@ CSS
 
 	public function output()
 	{
-		$this->s_content = "<div id=\"header\"><h1><a href=\"http://www.combodo.com/itop\" target=\"_blank\"><img title=\"iTop by Combodo\" src=\"../images/itop-logo.png?t=".utils::GetCacheBusterTimestamp()."\"></a>&nbsp;".htmlentities($this->s_title,
+		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/itop-logo.png';
+		$this->s_content = "<div id=\"header\"><h1><a href=\"http://www.combodo.com/itop\" target=\"_blank\"><img title=\"iTop by Combodo\" alt=\" \" src=\"{$sLogo}?t=".utils::GetCacheBusterTimestamp()."\"></a>&nbsp;".htmlentities($this->s_title,
 				ENT_QUOTES, self::PAGES_CHARSET)."</h1>\n</div><div id=\"setup\">{$this->s_content}\n</div>\n";
 
 		return parent::output();

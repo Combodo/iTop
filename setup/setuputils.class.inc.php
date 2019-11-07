@@ -1902,7 +1902,7 @@ EOF
 			);
 			$iCount = 1;
 			$iStarted = time();
-			$iMaxDuration = $oConfig->Get('cron_max_execution_time') + 1;
+			$iMaxDuration = $oConfig->Get('cron_max_execution_time');
 			$iTimeLimit = $iStarted + $iMaxDuration;
 			while ($oMutex->IsLocked())
 			{
@@ -1911,7 +1911,7 @@ EOF
 				sleep(1);
 				if (time() > $iTimeLimit)
 				{
-					throw new Exception("Cannot enter $sMode mode");
+					throw new Exception("Cannot enter $sMode mode, consider stopping the cron temporarily");
 				}
 			}
 		} catch (Exception $e)

@@ -174,9 +174,8 @@ function CronExec($oP, $aProcesses, $bVerbose)
 	$oSearch = new DBObjectSearch('BackgroundTask');
 	/** @var DBObjectSet $oTasks */
 	$oTasks = new DBObjectSet($oSearch);
-	while (
-		/** @var BackgroundTask $oTask */
-	$oTask = $oTasks->Fetch())
+	/** @var BackgroundTask $oTask */
+	while ($oTask = $oTasks->Fetch())
 	{
 		$sTaskClass = $oTask->Get('class_name');
 		// The BackgroundTask can point to a non existing class : this could happen for example if an extension has been removed
@@ -220,18 +219,26 @@ function CronExec($oP, $aProcesses, $bVerbose)
 	$oSearch = new DBObjectSearch('BackgroundTask');
 	while (time() < $iTimeLimit)
 	{
+		// Maintenance or ReadOnly mode
+		if (file_exists(MAINTENANCE_MODE_FILE) || !MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
+		{
+			$oP->p("Maintenance detected, exiting");
+			return;
+		}
+
 		$oTasks = new DBObjectSet($oSearch);
 		$aTasks = array();
 		while ($oTask = $oTasks->Fetch())
 		{
 			$aTasks[$oTask->Get('class_name')] = $oTask;
 		}
-		
+
 		$oNow = new DateTime();
 		ReorderProcesses($aProcesses, $aTasks, $oNow, $bVerbose, $oP);
-		
+
 		foreach ($aProcesses as $oProcess)
 		{
+
 			$sTaskClass = get_class($oProcess);
 			if (!array_key_exists($sTaskClass, $aTasks))
 			{
@@ -272,13 +279,11 @@ function CronExec($oP, $aProcesses, $bVerbose)
 				try
 				{
 					$sMessage = RunTask($oProcess, $aTasks[$sTaskClass], $oNow, $iTimeLimit);
-				}
-				catch (MySQLHasGoneAwayException $e)
+				} catch (MySQLHasGoneAwayException $e)
 				{
 					$oP->p("ERROR : 'MySQL has gone away' thrown when processing $sTaskClass  (error_code=".$e->getCode().")");
 					exit(EXIT_CODE_FATAL);
-				}
-				catch (ProcessFatalException $e)
+				} catch (ProcessFatalException $e)
 				{
 					$oP->p("ERROR : an exception was thrown when processing '$sTaskClass' (".$e->getInfoLog().")");
 					IssueLog::Error("Cron.php error : an exception was thrown when processing '$sTaskClass' (".$e->getInfoLog().')');
@@ -307,12 +312,6 @@ function CronExec($oP, $aProcesses, $bVerbose)
 			$oP->p("Sleeping");
 		}
 		sleep($iCronSleep);
-		// Maintenance mode
-		if (file_exists(MAINTENANCE_MODE_FILE))
-		{
-			$oP->p("Maintenance mode detected");
-			return;
-		}
 	}
 	if ($bVerbose)
 	{
@@ -350,10 +349,15 @@ function DisplayStatus($oP)
  *       In case the task crashes AND the previous task was very quick (less than 1 second)
  *       both tasks will have the same last_run_date. In this case it is important NOT to start again
  *       by the task that just crashed.
+ *
  * @param iProcess[] $aProcesses
  * @param BackgroundTask[] $aTasks
  * @param DateTime $oNow
+ * @param $bVerbose
  * @param Page $oP
+ *
+ * @throws \ArchivedObjectException
+ * @throws \CoreException
  */
 function ReorderProcesses(&$aProcesses, $aTasks, $oNow, $bVerbose, &$oP)
 {
@@ -564,24 +568,21 @@ try
 {
 	$oConfig = utils::GetConfig();
 	$oMutex = new iTopMutex('cron');
-	if ($oMutex->TryLock())
+	if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
 	{
-		// Note: testing this now in case some of the background processes forces the read-only mode for a while
-		//       in that case it is better to exit with the check on reentrance (mutex)
-		if (!MetaModel::DBHasAccess(ACCESS_ADMIN_WRITE))
-		{
-			$oP->p("A maintenance is ongoing");
-			$oP->Output();
-			$oMutex->Unlock();
-			exit(EXIT_CODE_ERROR);
-		}
-
-		CronExec($oP, $aProcesses, $bVerbose);
+		$oP->p("A maintenance is ongoing");
 	}
 	else
 	{
-		// Exit silently
-		$oP->p("Already running...");
+		if ($oMutex->TryLock())
+		{
+			CronExec($oP, $aProcesses, $bVerbose);
+		}
+		else
+		{
+			// Exit silently
+			$oP->p("Already running...");
+		}
 	}
 }
 catch (Exception $e)
