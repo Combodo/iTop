@@ -939,7 +939,7 @@ class SetupUtils
 		//-- TLS params (N°1260)
 		$sTlsEnabledChecked = $bTlsEnabled ? ' checked' : '';
 		$sTlsCaDisabled = $bTlsEnabled ? '' : ' disabled';
-		$oPage->add('<tbody id="tls_options">');
+		$oPage->add('<tbody id="tls_options" class="collapsable-options">');
 		$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 6em; font-weight: normal; color: #696969"><img style="vertical-align:bottom" id="db_tls_img">Use TLS encrypted connection</label></th></tr>');
 		$oPage->add('<tr style="display:none"><td colspan="3" style="background-color: #f9e0df; padding: 1em; border: 1px solid #950303; color: #950303;">Before configuring MySQL with TLS encryption, read the documentation <a href="https://wiki.openitop.org/doku.php?id=2_5_0:install:php_and_mysql_tls" target="_blank">on Combodo\'s Wiki</a></td></tr>');
 		$oPage->add('<tr style="display:none"><td colspan="3"><label><input id="db_tls_enabled" type="checkbox"'.$sTlsEnabledChecked.' name="db_tls_enabled" value="1"> Encrypted connection enabled</label></td></tr>');
@@ -969,44 +969,53 @@ class SetupUtils
 		else
 		{
 			$oPage->add('<tr><td>Database Name:</td><td id="db_name_container"><input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
-			$oPage->add('<tr><td>Use a prefix for the tables:</td><td><input id="db_prefix" type="text" name="db_prefix" value="'.htmlentities($sDBPrefix, ENT_QUOTES, 'UTF-8').'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></td></tr>');
+			$oPage->add('</tbody>');
+			$oPage->add('<tbody id="prefix_option" class="collapsable-options">');
+			$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 6em; font-weight: normal; color: #696969"><img style="vertical-align:bottom">Use shared database</label></th></tr>');
+			$oPage->add('<tr style="display:none"><td>Use a prefix for the tables:</td><td><input id="db_prefix" type="text" name="db_prefix" value="'.htmlentities($sDBPrefix,
+					ENT_QUOTES, 'UTF-8').'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></td></tr>');
+			$oPage->add('</tbody>');
 		}
 		$oPage->add('</table>');
 		$oPage->add('</fieldset>');
 		$oPage->add('<tr><td colspan="2"><span id="table_info">&nbsp;</span></td></tr>');
 		$oPage->add('</td></tr>');
 
-		// TLS checkbox toggle
-		$oPage->add_script(<<<'EOF'
-function toggleTlsOptions() {
-	$("tbody#tls_options>tr").not("tr:first-child").toggle();
-	updateTlsImage();
+		// Sub options toggle (TLS, prefix)
+		$oPage->add_script(<<<'JS'
+function toggleCollapsableOptions($tbody) {
+	$tbody.find("tr").not("tr:first-child").toggle();
+	updateCollapsableImage($tbody);
 }
-function updateTlsImage() {
-	$dbTlsImg = $("img#db_tls_img");
+function updateCollapsableImage($tbody) {
+	$collapsableImg = $tbody.find("tr:first-child>th>label>img");
+	console.debug("img", $collapsableImg, $tbody);
 	imgPath = "../images/";
-	dbImgUrl = ($("tbody#tls_options>tr:nth-child(2)>td:visible").length > 0) 
+	imgUrl = ($tbody.find("tr:nth-child(2)>td:visible").length > 0) 
 		? "minus.gif"
 		: "plus.gif";
-	$dbTlsImg.attr("src", imgPath+dbImgUrl);
+	$collapsableImg.attr("src", imgPath+imgUrl);
 }
-EOF
+JS
 		);
 		if ($bTlsEnabled)
 		{
-			$oPage->add_ready_script('toggleTlsOptions();');
+			$oPage->add_ready_script('toggleCollapsableOptions($("tbody#tls_options"));');
 		}
 		$oPage->add_ready_script(
-			<<<EOF
-$("tbody#tls_options>tr>th>label").click(function() {
-	toggleTlsOptions();
+			<<<'JS'
+$("tbody.collapsable-options>tr>th>label").click(function() {
+	var $tbody = $(this).closest("tbody");
+	toggleCollapsableOptions($tbody);
 });
 $("#db_tls_enabled").click(function() {
 	var bTlsEnabled = $("#db_tls_enabled").is(":checked");
 	$("#db_tls_ca").prop("disabled", !bTlsEnabled);
 });
-updateTlsImage();
-EOF
+$("tbody.collapsable-options").each(function() {
+	updateCollapsableImage($(this));
+})
+JS
 		);
 
 		$oPage->add_script(
