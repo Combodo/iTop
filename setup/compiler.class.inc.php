@@ -110,13 +110,23 @@ class MFCompiler
 	{
 		$sFinalTargetDir = $sTargetDir;
 		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
+		$sConfigFilePath = utils::GetConfigFilePath($this->sEnvironment);
+		if (is_file($sConfigFilePath))
+		{
+			$oConfig = new Config($sConfigFilePath);
+		}
+		else
+		{
+			$oConfig = null;
+		}
 		if ($bUseSymbolicLinks || $bSkipTempDir)
 		{
 			// Skip the creation of a temporary dictionary, not compatible with symbolic links
 			$sTempTargetDir = $sFinalTargetDir;
 			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
 			{
-				SetupUtils::EnterMaintenanceMode(new Config(utils::GetConfigFilePath($this->sEnvironment)));
+
+				SetupUtils::EnterMaintenanceMode($oConfig);
 			}
 		}
 		else
@@ -147,7 +157,7 @@ class MFCompiler
 			// Move the results to the target directory
 			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
 			{
-				SetupUtils::EnterMaintenanceMode(new Config(utils::GetConfigFilePath($this->sEnvironment)));
+				SetupUtils::EnterMaintenanceMode($oConfig);
 			}
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
 		}
