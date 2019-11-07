@@ -4,6 +4,7 @@ define('APPROOT', dirname(__FILE__).'/');
 define('APPCONF', APPROOT.'conf/');
 define('ITOP_DEFAULT_ENV', 'production');
 define('MAINTENANCE_MODE_FILE', APPROOT.'data/.maintenance');
+define('READONLY_MODE_FILE', APPROOT.'data/.readonly');
 
 if (function_exists('microtime'))
 {

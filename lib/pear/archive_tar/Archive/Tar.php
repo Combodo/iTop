@@ -1189,6 +1189,11 @@ class Archive_Tar extends PEAR
                             $p_add_dir,
                             $p_remove_dir
                         );
+
+                        if (!$v_result)
+                        {
+                        	return false;
+                        }
                     }
                 }
 
@@ -1211,6 +1216,7 @@ class Archive_Tar extends PEAR
      */
     public function _addFile($p_filename, &$p_header, $p_add_dir, $p_remove_dir, $v_stored_filename = null)
     {
+	    $this->_error('Adding file:'.$p_filename);
         if (!$this->_file) {
             $this->_error('Invalid file descriptor');
             return false;

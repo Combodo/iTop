@@ -1546,6 +1546,11 @@ class Config
 			}
 		}
 
+		if (file_exists(READONLY_MODE_FILE))
+		{
+			$this->Set('access_mode', ACCESS_READONLY, READONLY_MODE_FILE);
+		}
+
 		$this->m_bLogGlobal = isset($MySettings['log_global']) ? (bool)trim($MySettings['log_global']) : DEFAULT_LOG_GLOBAL;
 		$this->m_bLogNotification = isset($MySettings['log_notification']) ? (bool)trim($MySettings['log_notification']) : DEFAULT_LOG_NOTIFICATION;
 		$this->m_bLogIssue = isset($MySettings['log_issue']) ? (bool)trim($MySettings['log_issue']) : DEFAULT_LOG_ISSUE;

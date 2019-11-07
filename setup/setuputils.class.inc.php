@@ -1836,10 +1836,54 @@ EOF
 		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
 	}
 
-	public final static function EnterMaintenanceMode($oConfig)
+	public static function EnterMaintenanceMode($oConfig)
 	{
 		@touch(MAINTENANCE_MODE_FILE);
 		self::Log("----> Entering maintenance mode");
+		self::WaitCronTermination($oConfig, "maintenance");
+	}
+
+	public static function ExitMaintenanceMode($bLog = true)
+	{
+		@unlink(MAINTENANCE_MODE_FILE);
+		if ($bLog)
+		{
+			self::Log("<---- Exiting maintenance mode");
+		}
+	}
+
+	public static function IsInMaintenanceMode()
+	{
+		return file_exists(MAINTENANCE_MODE_FILE);
+	}
+
+	public static function EnterReadOnlyMode($oConfig)
+	{
+		@touch(READONLY_MODE_FILE);
+		self::Log("----> Entering read only mode");
+		self::WaitCronTermination($oConfig, "read only");
+	}
+
+	public static function ExitReadOnlyMode($bLog = true)
+	{
+		@unlink(READONLY_MODE_FILE);
+		if ($bLog)
+		{
+			self::Log("<---- Exiting read only mode");
+		}
+	}
+
+	public static function IsInReadOnlyMode()
+	{
+		return file_exists(READONLY_MODE_FILE);
+	}
+
+	/**
+	 * @param Config $oConfig
+	 * @param string $sMode
+	 */
+	private static function WaitCronTermination($oConfig, $sMode)
+	{
 		try
 		{
 			// Wait for cron to stop
@@ -1858,31 +1902,21 @@ EOF
 			);
 			$iCount = 1;
 			$iStarted = time();
-			$iMaxDuration = $oConfig->Get('cron_max_execution_time');
+			$iMaxDuration = $oConfig->Get('cron_max_execution_time') + 1;
 			$iTimeLimit = $iStarted + $iMaxDuration;
 			while ($oMutex->IsLocked())
 			{
 				self::Log("Waiting for cron to stop ($iCount)");
 				$iCount++;
-				sleep(10);
+				sleep(1);
 				if (time() > $iTimeLimit)
 				{
-					throw new Exception("Cannot enter maintenance mode");
+					throw new Exception("Cannot enter $sMode mode");
 				}
 			}
-		}
-		catch(Exception $e)
+		} catch (Exception $e)
 		{
 			// Ignore errors
-		}
-	}
-
-	public final static function ExitMaintenanceMode($bLog = true)
-	{
-		@unlink(MAINTENANCE_MODE_FILE);
-		if ($bLog)
-		{
-			self::Log("<---- Exiting maintenance mode");
 		}
 	}
 

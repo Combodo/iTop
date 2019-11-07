@@ -5087,7 +5087,7 @@ abstract class MetaModel
 	}
 
 	/**
-	 * Determines wether the target DB is frozen or not
+	 * Determines whether the target DB is frozen or not
 	 *
 	 * @return bool
 	 */

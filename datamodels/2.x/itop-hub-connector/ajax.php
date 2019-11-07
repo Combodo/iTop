@@ -309,7 +309,7 @@ try
 			unlink(APPROOT.'data/hub/compile_authent');
 			// Load the "production" config file to clone & update it
 			$oConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
-			SetupUtils::EnterMaintenanceMode($oConfig);
+			SetupUtils::EnterReadOnlyMode($oConfig);
 
 			$oRuntimeEnv->InitDataModel($oConfig, true /* model only */);
 			
@@ -381,7 +381,7 @@ try
 		}
 		finally
 		{
-			SetupUtils::ExitMaintenanceMode();
+			SetupUtils::ExitReadOnlyMode();
 		}
 		break;
 		

@@ -192,10 +192,7 @@ class ApplicationInstaller
 		try
 		{
 			$fStart = microtime(true);
-			if ($bSwitchToMaintenance)
-			{
-				SetupUtils::EnterMaintenanceMode($this->GetConfig());
-			}
+			$this->EnterReadOnlyMode();
 			switch ($sStep)
 			{
 				case '':
@@ -389,6 +386,7 @@ class ApplicationInstaller
 						'next-step-label' => 'Completed',
 						'percentage-completed' => 100,
 					);
+					$this->ExitReadOnlyMode();
 					break;
 
 
@@ -431,16 +429,43 @@ class ApplicationInstaller
 		}
 		finally
 		{
-			if ($bSwitchToMaintenance)
-			{
-				SetupUtils::ExitMaintenanceMode();
-			}
 			$fDuration = round(microtime(true) - $fStart, 2);
 			SetupPage::log_info("##### STEP {$sStep} duration: {$fDuration}s");
 		}
 
 		return $aResult;
 	}
+
+	private function EnterReadOnlyMode()
+	{
+		if ($this->GetTargetEnv() != 'production')
+		{
+			return;
+		}
+
+		if (SetupUtils::IsInReadOnlyMode())
+		{
+			return;
+		}
+
+		SetupUtils::EnterReadOnlyMode($this->GetConfig());
+	}
+
+	private function ExitReadOnlyMode()
+	{
+		if ($this->GetTargetEnv() != 'production')
+		{
+			return;
+		}
+
+		if (!SetupUtils::IsInReadOnlyMode())
+		{
+			return;
+		}
+
+		SetupUtils::ExitReadOnlyMode();
+	}
+
 
 	protected static function DoCopy($aCopies)
 	{
