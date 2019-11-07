@@ -2133,14 +2133,14 @@ class utils
 	 * Returns the local path relative to the iTop installation of an existing file
 	 * Dir separator is changed to '/' for consistency among the different OS
 	 *
-	 * @param string $sPath absolute path
+	 * @param string $sAbsolutePath absolute path
 	 *
 	 * @return false|string
 	 */
-	final public static function LocalPath($sPath)
+	final public static function LocalPath($sAbsolutePath)
 	{
 		$sRootPath = realpath(APPROOT);
-		$sFullPath = realpath($sPath);
+		$sFullPath = realpath($sAbsolutePath);
 		if (($sFullPath === false) || !self::StartsWith($sFullPath, $sRootPath))
 		{
 			return false;
