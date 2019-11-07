@@ -58,10 +58,13 @@ class MFCompiler
 	protected $sMainPHPCode; // Code that goes into core/main.php
 	protected $aSnippets;
 	protected $aRelations;
+	protected $sEnvironment;
 
-	public function __construct($oModelFactory)
+	public function __construct($oModelFactory, $sEnvironment)
 	{
 		$this->oFactory = $oModelFactory;
+		$this->sEnvironment = $sEnvironment;
+
 		$this->oFactory->ApplyChanges();
 
 		$this->aLog = array();
@@ -106,10 +109,15 @@ class MFCompiler
 	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = false, $bSkipTempDir = false)
 	{
 		$sFinalTargetDir = $sTargetDir;
+		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
 		if ($bUseSymbolicLinks || $bSkipTempDir)
 		{
 			// Skip the creation of a temporary dictionary, not compatible with symbolic links
 			$sTempTargetDir = $sFinalTargetDir;
+			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
+			{
+				SetupUtils::EnterMaintenanceMode(new Config(utils::GetConfigFilePath($this->sEnvironment)));
+			}
 		}
 		else
 		{
@@ -137,9 +145,17 @@ class MFCompiler
 		if ($sTempTargetDir != $sFinalTargetDir)
 		{
 			// Move the results to the target directory
+			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
+			{
+				SetupUtils::EnterMaintenanceMode(new Config(utils::GetConfigFilePath($this->sEnvironment)));
+			}
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
 		}
-		
+		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
+		{
+			SetupUtils::ExitMaintenanceMode();
+		}
+
 		// Reset the opcache since otherwise the PHP "model" files may still be cached !!
 		// In case of bad luck (this happens **sometimes** - see N. 550), we may analyze the database structure
 		// with the previous datamodel still loaded (in opcode cache) and thus fail to create the new fields

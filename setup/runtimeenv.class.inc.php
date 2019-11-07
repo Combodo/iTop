@@ -525,7 +525,7 @@ class RunTimeEnvironment
 		$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
 		self::MakeDirSafe($sTargetDir);
 		$bSkipTempDir = ($this->sFinalEnv != $this->sTargetEnv); // No need for a temporary directory if sTargetEnv is already a temporary directory
-		$oMFCompiler = new MFCompiler($oFactory);
+		$oMFCompiler = new MFCompiler($oFactory, $this->sFinalEnv);
 		$oMFCompiler->Compile($sTargetDir, null, $bUseSymLinks, $bSkipTempDir);
 
 		$sCacheDir = APPROOT.'data/cache-'.$this->sTargetEnv;

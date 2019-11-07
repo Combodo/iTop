@@ -89,15 +89,13 @@ class ApplicationInstaller
 	 * some information about the progress and the success of the various
 	 * sequential steps.
 	 *
-	 * @param bool $bSwitchToMaintenance
-	 *
 	 * @param bool $bVerbose
 	 * @param string|null $sMessage
 	 * @param string|null $sInstallComment
 	 *
 	 * @return boolean True if the installation was successful, false otherwise
 	 */
-	public function ExecuteAllSteps($bSwitchToMaintenance = true, $bVerbose = true, &$sMessage = null, $sInstallComment = null)
+	public function ExecuteAllSteps($bVerbose = true, &$sMessage = null, $sInstallComment = null)
 	{
 		$sStep = '';
 		$sStepLabel = '';
@@ -116,7 +114,7 @@ class ApplicationInstaller
 					echo "Starting the installation...\n";
 				}
 			}
-			$aRes = $this->ExecuteStep($sStep, $bSwitchToMaintenance, $sInstallComment);
+			$aRes = $this->ExecuteStep($sStep, $sInstallComment);
 			$sStep = $aRes['next-step'];
 			$sStepLabel = $aRes['next-step-label'];
 			$sMessage = $aRes['message'];
@@ -182,12 +180,11 @@ class ApplicationInstaller
 	 * and the next step to perform
 	 *
 	 * @param string $sStep The identifier of the step to execute
-	 * @param bool $bSwitchToMaintenance
 	 * @param string|null $sInstallComment
 	 *
 	 * @return array (status => , message => , percentage-completed => , next-step => , next-step-label => )
 	 */
-	public function ExecuteStep($sStep = '', $bSwitchToMaintenance= true, $sInstallComment = null)
+	public function ExecuteStep($sStep = '', $sInstallComment = null)
 	{
 		try
 		{
@@ -604,7 +601,7 @@ class ApplicationInstaller
 			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$sEnvironment.'-with-delta.xml');
 		}
 
-		$oMFCompiler = new MFCompiler($oFactory);
+		$oMFCompiler = new MFCompiler($oFactory, $sEnvironment);
 		$oMFCompiler->Compile($sTargetPath, null, $bUseSymbolicLinks);
 		//$aCompilerLog = $oMFCompiler->GetLog();
 		//SetupPage::log_info(implode("\n", $aCompilerLog));
@@ -981,7 +978,8 @@ class ApplicationInstaller
 			// the default value on upgrade differs from the default value at first install
 			$oConfig->Set('tracking_level_linked_set_default', LINKSET_TRACKING_NONE, 'first_install');
 		}
-		
+
+		$oConfig->Set('access_mode', ACCESS_FULL);
 		// Final config update: add the modules
 		$oConfig->UpdateFromParams($aParamValues, $sModulesDir, $bPreserveModuleSettings);
 		if ($bOldAddon)
