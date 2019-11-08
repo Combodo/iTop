@@ -332,7 +332,6 @@ function DisplayNavigatorGroupTab($oP)
  *
  ***********************************************************************************/
 require_once('../approot.inc.php');
-require_once(APPROOT.'/bootstrap.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');

@@ -18,7 +18,6 @@
  */
 
 require_once('../approot.inc.php');
-require_once(APPROOT.'/bootstrap.inc.php');
 
 // Needed to read the parameters (with sanitization)
 require_once(APPROOT.'application/utils.inc.php');

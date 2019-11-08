@@ -19,7 +19,6 @@
  */
 
 require_once('../approot.inc.php');
-require_once(APPROOT.'/bootstrap.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
 try

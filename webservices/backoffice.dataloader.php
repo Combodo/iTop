@@ -25,7 +25,6 @@
 define('SAFE_MINIMUM_MEMORY', 256*1024*1024);
 
 require_once('../approot.inc.php');
-require_once(APPROOT.'/bootstrap.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');

@@ -15,6 +15,9 @@ else
 	$fItopStarted = 1000 * time();
 }
 
+require_once APPROOT.'bootstrap.inc.php';
+
+
 //
 // Maintenance mode
 //

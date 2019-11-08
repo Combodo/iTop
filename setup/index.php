@@ -19,7 +19,6 @@
 
 $bBypassMaintenance = true; // Reset maintenance mode in case of problem
 require_once('../approot.inc.php');
-require_once(APPROOT.'/bootstrap.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/core/config.class.inc.php');
 require_once(APPROOT.'/setup/setuppage.class.inc.php');

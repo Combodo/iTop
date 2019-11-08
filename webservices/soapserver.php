@@ -21,7 +21,6 @@
 // in the error "looks like we got no XML document"...
 
 require_once('../approot.inc.php');
-require_once(APPROOT.'/bootstrap.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 

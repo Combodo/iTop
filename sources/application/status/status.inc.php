@@ -29,7 +29,6 @@ function StatusGetAppRoot($sAppRootFilename = 'approot.inc.php')
             throw new Exception($sAppRootFilename . ' is not readable');
         }
         @require_once($sAppRootFile);
-        @require_once(APPROOT.'bootstrap.inc.php');
 }
 
 /**

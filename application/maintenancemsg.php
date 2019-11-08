@@ -18,7 +18,6 @@
 function _MaintenanceSetupPageMessage($sTitle, $sMessage)
 {
 	// Web Page
-	@include_once(APPROOT.'bootstrap.inc.php');
 	@include_once(APPROOT.'setup/setuppage.class.inc.php');
 	if (class_exists('SetupPage'))
 	{
@@ -58,7 +57,6 @@ function _MaintenanceHtmlMessage($sMessage)
  */
 function _MaintenanceJsonMessage($sTitle, $sMessage)
 {
-	@include_once(APPROOT.'bootstrap.inc.php');
 	@include_once(APPROOT."/application/ajaxwebpage.class.inc.php");
 	if (class_exists('ajax_page'))
 	{

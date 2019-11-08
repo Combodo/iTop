@@ -21,7 +21,6 @@ try
 {
 	ini_set('memory_limit', '256M');
 	require_once('../approot.inc.php');
-	require_once(APPROOT.'/bootstrap.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');

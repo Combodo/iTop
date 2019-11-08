@@ -29,7 +29,6 @@ if (!defined('APPROOT'))
 		require_once __DIR__.'/../../../approot.inc.php';   // When in datamodels/x.x folder
 	}
 }
-require_once(APPROOT.'/bootstrap.inc.php');
 require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'application/webpage.class.inc.php');
 require_once(APPROOT.'application/csvpage.class.inc.php');
