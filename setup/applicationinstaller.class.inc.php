@@ -1021,11 +1021,6 @@ class ApplicationInstaller
 		// Ready to go !!
 		require_once(APPROOT.'core/dict.class.inc.php');
 		MetaModel::ResetCache();
-
-		// Perform final setup tasks here
-		//
-		$aAvailableModules = $oProductionEnv->AnalyzeInstallation(MetaModel::GetConfig(), APPROOT.$sModulesDir);
-		$oProductionEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModuleCodes, 'AfterCreateConfig');
 	}
 }
 

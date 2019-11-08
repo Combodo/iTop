@@ -330,7 +330,6 @@ try
 			
 			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'BeforeDatabaseCreation');
 			
-			// Now I assume that there is a DB for this environment...
 			$oRuntimeEnv->CreateDatabaseStructure($oConfig, 'upgrade');
 			
 			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseCreation');
@@ -340,7 +339,9 @@ try
 			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDatabaseSetup');
 			
 			$oRuntimeEnv->LoadData($aAvailableModules, $aSelectedModules, false /* no sample data*/);
-			
+
+			$oRuntimeEnv->CallInstallerHandlers($aAvailableModules, $aSelectedModules, 'AfterDataLoad');
+
 			// Record the installation so that the "about box" knows about the installed modules
 			$sDataModelVersion = $oRuntimeEnv->GetCurrentDataModelVersion();
 			
