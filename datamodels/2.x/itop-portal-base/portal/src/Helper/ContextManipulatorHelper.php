@@ -326,7 +326,7 @@ class ContextManipulatorHelper
 	 */
 	private function PrepareAndExecActionRule($sRuleId, $aSources, DBObject $oDestinationObject)
 	{
-		// Retrieveing current rule
+		// Retrieving current rule
 		$aRule = $this->GetRule($sRuleId);
 
 		// Retrieving source object if needed
@@ -453,7 +453,7 @@ class ContextManipulatorHelper
 		{
 			foreach ($aData['rules'] as $sId)
 			{
-				// Retrieveing current rule
+				// Retrieving current rule
 				$aRule = $this->GetRule($sId);
 
 				// For each type of callbacks, we check if there is a rule to apply
@@ -493,7 +493,7 @@ class ContextManipulatorHelper
 	}
 
 	/**
-	 * Prepares the rules as an array of rules and source objects so it can be tokenised
+	 * Prepares the rules as an array of rules and source objects so it can be tokenized
 	 *
 	 * @param array $aRules
 	 * @param array $aObjects
@@ -546,7 +546,7 @@ class ContextManipulatorHelper
 		// Preparing rules before making a token
 		$aTokenRules = static::PrepareRulesForToken($aRules, $aObjects);
 
-		// Returning tokenised data
+		// Returning tokenized data
 		return static::EncodeRulesToken($aTokenRules);
 	}
 

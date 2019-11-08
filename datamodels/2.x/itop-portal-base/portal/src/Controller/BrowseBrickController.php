@@ -74,7 +74,7 @@ class BrowseBrickController extends BrickController
 		/** @var \Combodo\iTop\Portal\Brick\BrowseBrick $oBrick */
 		$oBrick = $this->get('brick_collection')->getBrickById($sBrickId);
 
-		// Getting availables browse modes
+		// Getting available browse modes
 		$aBrowseModes = $oBrick->GetAvailablesBrowseModes();
 		$aBrowseButtons = array_keys($aBrowseModes);
 		// Getting current browse mode (First from router parameter, then default brick value)
@@ -291,7 +291,7 @@ class BrowseBrickController extends BrickController
 					$sLevelAlias = $oRequestManipulator->ReadParam('sLevelAlias', '');
 					$sNodeId = $oRequestManipulator->ReadParam('sNodeId', '');
 
-					// If no values for those parameters, we might be loading page in lazy mode for the first time, therefore the URL doesn't have those informations.
+					// If no values for those parameters, we might be loading page in lazy mode for the first time, therefore the URL doesn't have those information.
 					if (empty($sLevelAlias))
 					{
 						reset($aLevelsProperties);
@@ -434,7 +434,7 @@ class BrowseBrickController extends BrickController
 			//	 - Create a template and specify it in the brick configuration
 			// b) Add a new browse mode :
 			//	 - Create a template for that browse mode,
-			//	 - Add the mode to those availables in the brick configuration,
+			//	 - Add the mode to those available in the brick configuration,
 			//	 - Create a router and add a route for the new browse mode
 			if ($oBrick->GetPageTemplatePath() !== null)
 			{

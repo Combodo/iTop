@@ -365,7 +365,7 @@ class LifecycleValidatorHelper
 		$iProfileId = null;
 
 		// We try to find the profile from its name in order to retrieve it's id
-		// - If the regular UserRights addon is installed we check the profiles array
+		// - If the regular UserRights add-on is installed we check the profiles array
 		if (class_exists('ProfilesConfig'))
 		{
 			if (defined($sProfile) && in_array($sProfile, ProfilesConfig::GetProfilesValues()))
@@ -384,7 +384,7 @@ class LifecycleValidatorHelper
 				}
 			}
 		}
-		// - Else, we can't find the id from the name as we don't know the used UserRights addon. It has to be a constant
+		// - Else, we can't find the id from the name as we don't know the used UserRights add-on. It has to be a constant
 		else
 		{
 			throw new Exception('Lifecycle validator : Unknown UserRights addon, lifecycle\'s profile must be a constant');

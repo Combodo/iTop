@@ -1063,7 +1063,7 @@ class ObjectFormManager extends FormManager
 		// Also, it would require the field to know the transaction id which it doesn't as of today.
 		InlineImage::OnFormCancel(utils::GetUploadTempId($this->oForm->GetTransactionId()));
 		// Then clean attachments
-		// TODO : This has to be refactored when the function from itop-attachent has been migrated into the core
+		// TODO : This has to be refactored when the function from itop-attachments has been migrated into the core
 		$this->CancelAttachments();
 	}
 
@@ -1134,7 +1134,7 @@ class ObjectFormManager extends FormManager
 				// Finalizing images link to object, otherwise it will be cleaned by the GC
 				InlineImage::FinalizeInlineImages($this->oObject);
 				// Finalizing attachments link to object
-				// TODO : This has to be refactored when the function from itop-attachent has been migrated into the core
+				// TODO : This has to be refactored when the function from itop-attachments has been migrated into the core
 				if (isset($aArgs['attachmentIds']))
 				{
 					$this->FinalizeAttachments($aArgs['attachmentIds']);

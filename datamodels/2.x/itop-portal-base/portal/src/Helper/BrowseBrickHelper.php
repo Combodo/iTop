@@ -288,7 +288,7 @@ class BrowseBrickHelper
 	}
 
 	/**
-	 * Takes $aCurrentRow as a flat array and transform it in another flat array (not objects) with only the necessary informations
+	 * Takes $aCurrentRow as a flat array and transform it in another flat array (not objects) with only the necessary information
 	 *
 	 * eg:
 	 * - $aCurrentRow : array('L-1' => ObjectClass1, 'L-1-1' => ObjectClass2, 'L-1-1-1' => ObjectClass3)
@@ -419,7 +419,7 @@ class BrowseBrickHelper
 	}
 
 	/**
-	 * Takes $aCurrentRow as a flat array to recursvily convert and insert it into a tree array $aItems.
+	 * Takes $aCurrentRow as a flat array to recursively convert and insert it into a tree array $aItems.
 	 * This is used to build a tree array from a DBObjectSet retrieved with FetchAssoc().
 	 *
 	 * eg:
