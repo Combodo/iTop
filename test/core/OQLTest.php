@@ -44,6 +44,35 @@ class OQLTest extends ItopDataTestCase
 		@chmod($sConfigFile, 0444); // Read-only
 	}
 
+	/**
+	 * @dataProvider NestedQueryProvider
+	 *
+	 * @param $sQuery
+	 *
+	 * @throws \OQLException
+	 */
+	public function testGoodNestedQueryQueryParser($sQuery)
+	{
+		$this->debug($sQuery);
+		$oOql = new OqlInterpreter($sQuery);
+		$oQuery = $oOql->ParseQuery();
+		static::assertInstanceOf('OqlQuery', $oQuery);
+	}
+
+	public function NestedQueryProvider()
+	{
+		return array(
+			array('SELECT toto WHERE id NOT IN (aaa,2,3)'),
+			array('SELECT toto WHERE id IN (SELECT titi)'),
+			array('SELECT toto WHERE a=1'),
+			array('SELECT toto WHERE id IN (SELECT titi WHERE a=1)'),
+			array('SELECT toto WHERE id IN (SELECT titi AS ti JOIN toto AS to ON to.a=ti.b)'),
+			array('SELECT toto WHERE id IN (SELECT titi AS ti JOIN toto AS to ON to.a=ti.b WHERE to.a=1)'),
+			array('SELECT toto WHERE id NOT IN (SELECT titi)'),
+		);
+	}
+
+
     /**
      * @dataProvider GoodQueryProvider
      * @depends testOQLSetup
