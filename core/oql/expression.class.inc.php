@@ -27,6 +27,17 @@ class MissingQueryArgument extends CoreException
  */
 abstract class Expression
 {
+	public const OPERATOR_BINARY = 'binary';
+	public const OPERATOR_BOOLEAN = 'boolean_binary';
+	public const OPERATOR_FIELD = 'field';
+	public const OPERATOR_FUNCTION = 'function';
+	public const OPERATOR_INTERVAL = 'interval';
+	public const OPERATOR_LIST = 'list';
+	public const OPERATOR_SCALAR = 'scalar';
+	public const OPERATOR_UNARY = 'unary';
+	public const OPERATOR_VARIABLE = 'variable';
+
+
 	/**
 	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects)
 	 **/
@@ -97,6 +108,15 @@ abstract class Expression
 	 * @throws \MissingQueryArgument
 	 */
 	abstract public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false);
+
+	/**
+	 * Recursively renders the expression as a structure (array) suitable for a JSON export
+	 *
+	 * @param mixed[string] $aArgs
+	 * @param boolean $bRetrofitParams
+	 * @return mixed[string]
+	 */
+	abstract public function ToJSON(&$aArgs = null, $bRetrofitParams = false);
 
 	/**
 	 * @param DBObjectSearch $oSearch
@@ -277,6 +297,12 @@ class SQLExpression extends Expression
 		return $this->m_sSQL;
 	}
 
+	// recursive rendering
+	public function toJSON(&$aArgs = null, $bRetrofitParams = false)
+	{
+		return  null; // TODO should we throw an Exception ??
+	}
+
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
@@ -411,6 +437,31 @@ class BinaryExpression extends Expression
 		$sLeft = $this->GetLeftExpr()->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		$sRight = $this->GetRightExpr()->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		return "($sLeft $sOperator $sRight)";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see Expression::ToJSON()
+	 */
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
+	{
+		if (($this->GetOperator() == 'AND') || ($this->GetOperator() == 'OR'))
+		{
+			return array(
+				'type' => static::OPERATOR_BOOLEAN,
+				'operator' =>  $this->GetOperator(),
+				'left' =>  $this->GetLeftExpr()->ToJSON($aArgs, $bRetrofitParams),
+				'right' => $this->GetRightExpr()->ToJSON($aArgs, $bRetrofitParams),
+				'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
+			);
+		}
+		return array(
+			'type' => static::OPERATOR_BINARY,
+			'operator' =>  $this->GetOperator(),
+			'left' =>  $this->GetLeftExpr()->ToJSON($aArgs, $bRetrofitParams),
+			'right' => $this->GetRightExpr()->ToJSON($aArgs, $bRetrofitParams),
+			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
+		);
 	}
 
 	public function Browse(Closure $callback)
@@ -789,6 +840,19 @@ class UnaryExpression extends Expression
 		return CMDBSource::Quote($this->m_value);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see Expression::ToJSON()
+	 */
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
+	{
+		return array(
+			'type' => static::OPERATOR_UNARY,
+			'value' => $this->m_value,
+			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
+		);
+	}
+
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
@@ -907,6 +971,19 @@ class ScalarExpression extends UnaryExpression
 			$sRet = CMDBSource::Quote($this->m_value);
 		}
 		return $sRet;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see Expression::ToJSON()
+	 */
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
+	{
+		return array(
+			'type' => static::OPERATOR_SCALAR,
+			'value' => $this->m_value,
+			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
+		);
 	}
 
 	public function GetAsScalar($aArgs)
@@ -1155,6 +1232,21 @@ class FieldExpression extends UnaryExpression
 			return "`{$this->m_sName}`";
 		}
 		return "`{$this->m_sParent}`.`{$this->m_sName}`";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see Expression::ToJSON()
+	 */
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
+	{
+		return array(
+			'type' => static::OPERATOR_FIELD,
+			'value' => $this->m_value,
+			'alias' => $this->m_sParent,
+			'field' => $this->m_sName,
+			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
+		);
 	}
 
 	public function GetAttDef($aClasses = array())
@@ -1546,6 +1638,19 @@ class VariableExpression extends UnaryExpression
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see Expression::ToJSON()
+	 */
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
+	{
+		return array(
+			'type' => static::OPERATOR_VARIABLE,
+			'value' => $this->m_value,
+			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
+		);
+	}
+
 	public function RenameParam($sOldName, $sNewName)
 	{
 		if ($this->m_sName == $sOldName)
@@ -1643,6 +1748,24 @@ class ListExpression extends Expression
 			$aRes[] = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		}
 		return '('.implode(', ', $aRes).')';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see Expression::ToJSON()
+	 */
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
+	{
+		$aFields = array();
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$aFields[] = $oExpr->ToJSON($aArgs, $bRetrofitParams);
+		}
+		return array(
+			'type' => static::OPERATOR_LIST,
+			'fields' => $aFields,
+			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
+		);
 	}
 
 	public function Browse(Closure $callback)
@@ -1796,6 +1919,26 @@ class FunctionExpression extends Expression
 			$aRes[] = $oExpr->RenderExpression($bForSQL, $aArgs, $bRetrofitParams);
 		}
 		return $this->m_sVerb.'('.implode(', ', $aRes).')';
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see Expression::ToJSON()
+	 */
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
+	{
+		$aFields = array();
+		foreach ($this->m_aArgs as $oExpr)
+		{
+			$aFields[] = $oExpr->ToJSON($aArgs, $bRetrofitParams);
+		}
+
+		return array(
+			'type' => static::OPERATOR_FUNCTION,
+			'operator' => $this->m_sVerb,
+			'fields' => $aFields,
+			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
+		);
 	}
 
 	public function Browse(Closure $callback)
@@ -2093,6 +2236,20 @@ class IntervalExpression extends Expression
 		return 'INTERVAL '.$this->m_oValue->RenderExpression($bForSQL, $aArgs, $bRetrofitParams).' '.$this->m_sUnit;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see Expression::ToJSON()
+	 */
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
+	{
+		return array(
+			'type' => static::OPERATOR_INTERVAL,
+			'unit' => $this->m_sUnit,
+			'expression' => $this->m_oValue->ToJSON($aArgs, $bRetrofitParams),
+			'oql' => $this->RenderExpression(false, $aArgs, $bRetrofitParams),
+		);
+	}
+
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
@@ -2190,6 +2347,25 @@ class CharConcatExpression extends Expression
 			$aRes[] = "COALESCE($sCol, '')";
 		}
 		return "CAST(CONCAT(".implode(', ', $aRes).") AS CHAR)";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see Expression::ToJSON()
+	 */
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
+	{
+		$aFields = array();
+		foreach ($this->m_aExpressions as $oExpr)
+		{
+			$aFields[] = $oExpr->RenderExpression($aArgs, $bRetrofitParams);
+		}
+
+		return array(
+			'type' => static::OPERATOR_FUNCTION,
+			'operator' => 'concat',
+			'fields' => $aFields,
+		);
 	}
 
 	public function Browse(Closure $callback)

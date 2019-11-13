@@ -464,6 +464,20 @@ class DBUnionSearch extends DBSearch
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * @see DBSearch::ToJSON()
+	 */
+	public function ToJSON()
+	{
+		$sRet = array('unions' => array());
+		foreach ($this->aSearches as $oSearch)
+		{
+			$sRet['unions'][] = $oSearch->ToJSON();
+		}
+		return $sRet;
+	}
+
+	/**
 	 * Returns a new DBUnionSearch object where duplicates queries have been removed based on their OQLs
 	 *
 	 * @return \DBUnionSearch

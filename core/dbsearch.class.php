@@ -699,6 +699,15 @@ abstract class DBSearch
      */
     abstract public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false);
 
+    /**
+     * Export the DBSearch as a structure (array of arrays...) suitable for a conversion to JSON
+     *
+     * @internal
+     *
+     * @return mixed[string]
+     */
+    abstract public function ToJSON();
+
 	static protected $m_aOQLQueries = array();
 
     /**
@@ -734,12 +743,13 @@ abstract class DBSearch
      *
 	 * @param string $sQuery The OQL to convert to a DBSearch
 	 * @param mixed[string]  $aParams array of <mixed> params index by <string> name
+	 * @param ModelReflection|null $oMetaModel The MetaModel to use when checking the consistency of the OQL
      *
 	 * @return DBObjectSearch|DBUnionSearch
      *
 	 * @throws OQLException
 	 */
-	static public function FromOQL($sQuery, $aParams = null)
+	static public function FromOQL($sQuery, $aParams = null, ModelReflection $oMetaModel=null)
 	{
 		if (empty($sQuery))
 		{
@@ -781,7 +791,10 @@ abstract class DBSearch
 			$oOql = new OqlInterpreter($sQuery);
 			$oOqlQuery = $oOql->ParseQuery();
 	
-			$oMetaModel = new ModelReflectionRuntime();
+			if ($oMetaModel === null)
+			{
+				$oMetaModel = new ModelReflectionRuntime();
+			}
 			$oOqlQuery->Check($oMetaModel, $sQuery); // Exceptions thrown in case of issue
 	
 			$oResultFilter = $oOqlQuery->ToDBSearch($sQuery);

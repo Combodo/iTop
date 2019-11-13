@@ -1524,6 +1524,80 @@ class DBObjectSearch extends DBSearch
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see DBSearch::ToJSON()
+	 */
+	public function ToJSON()
+	{
+		$aRet = array('selects' => array(), 'joins' => array(), 'where' => array());
+
+		$aParams = array_merge($this->m_aParams);
+		$aParams = MetaModel::PrepareQueryArguments($aParams);
+
+		foreach ($this->m_aSelectedClasses as $sAlias => $sClass)
+		{
+			$aRet['selects'][] = array('class' => $sClass, 'alias' => $sAlias);
+		}
+		$this->JoinsToJSON($aRet);
+
+		$aRet['condition'] = $this->m_oSearchCondition->ToJSON($aParams, true);
+		return $aRet;
+	}
+
+	/**
+	 * Export the JOIN operations to a structure (array of arrays) suitable for JSON export
+	 *
+	 * @internal
+	 *
+	 * @param mixed[string] $aRet
+	 * @return void
+	 */
+	protected function JoinsToJSON(&$aRet)
+	{
+		foreach($this->m_aPointingTo as $sExtKey => $aPointingTo)
+		{
+			foreach($aPointingTo as $iOperatorCode => $aFilter)
+			{
+				$sOperator = $this->OperatorCodeToOQL($iOperatorCode);
+				foreach($aFilter as $oFilter)
+				{
+					$aRet['joins'][] = array(
+						'src' => $this->GetFirstJoinedClass(),
+						'src_alias' => $this->GetFirstJoinedClassAlias(),
+						'target' => $oFilter->GetFirstJoinedClass(),
+						'target_alias' => $oFilter->GetFirstJoinedClassAlias(),
+						'foreign_key' => $sExtKey,
+						'operator' => $sOperator,
+					);
+					$oFilter->JoinsToJSON($aRet);
+				}
+			}
+		}
+		foreach($this->m_aReferencedBy as $aReferences)
+		{
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
+			{
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
+				{
+					$sOperator = $this->OperatorCodeToOQL($iOperatorCode);
+					foreach ($aFilters as $oForeignFilter)
+					{
+						$aRet['joins'][] = array(
+							'src' => $oForeignFilter->GetFirstJoinedClass(),
+							'src_alias' => $oForeignFilter->GetFirstJoinedClassAlias(),
+							'target' => $this->GetFirstJoinedClass(),
+							'target_alias' => $this->GetFirstJoinedClassAlias(),
+							'foreign_key' => $sForeignExtKeyAttCode,
+							'operator' => $sOperator,
+						);
+						$oForeignFilter->JoinsToJSON($aRet);
+					}
+				}
+			}
+		}
+	}
+
 	public function InitFromOqlQuery(OqlQuery $oOqlQuery, $sQuery)
 	{
 		$oModelReflection = new ModelReflectionRuntime();
