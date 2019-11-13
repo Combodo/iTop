@@ -410,6 +410,7 @@ class LoginWebPage extends NiceWebPage
 		if ($bLoginDebug)
 		{
 			IssueLog::Info("---------------------------------");
+			IssueLog::Info($_SERVER['REQUEST_URI']);
 			IssueLog::Info("--> Entering Login FSM with state: [$sLoginState]");
 			$sSessionLog = session_id().' '.utils::GetSessionLog();
 			IssueLog::Info("SESSION: $sSessionLog");
