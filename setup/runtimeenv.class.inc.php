@@ -327,6 +327,11 @@ class RunTimeEnvironment
 	}
 
 
+	/**
+	 * @param Config $oConfig
+	 *
+	 * @throws \Exception
+	 */
 	public function WriteConfigFileSafe($oConfig)
 	{
 		self::MakeDirSafe(APPCONF);

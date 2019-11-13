@@ -2007,7 +2007,7 @@ class Config
 
 			$bReturn = fclose($hFile);
 
-			MetaModel::LoadConfig($this);
+			utils::SetConfig($this);
 			FileLog::RenameLegacyLogFiles();
 
 			return $bReturn;
