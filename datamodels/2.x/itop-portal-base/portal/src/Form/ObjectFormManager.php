@@ -485,12 +485,6 @@ class ObjectFormManager extends FormManager
 					}
 					continue;
 				}
-				
-				// If a form can't be submitted to update an object, we have no reason to allow fields to be editable
-				if (!$this->GetIsSubmittable())
-				{
-					$sFieldFlags .= ' read_only';
-				}
 
 				// Otherwise we proceed as usual
 				foreach (explode(' ', $sFieldFlags) as $sFieldFlag)
@@ -681,7 +675,8 @@ class ObjectFormManager extends FormManager
 			// Failsafe for AttributeType that would not have MakeFormField and therefore could not be used in a form
 			if ($oField !== null)
 			{
-				if ($this->sMode !== static::ENUM_MODE_VIEW)
+				// If a form is in edit mode and can't be submitted to update an object (only transitions available), we have no reason to allow fields to be editable
+				if ($this->sMode !== static::ENUM_MODE_VIEW && $this->GetIsSubmittable())
 				{
 					// Field dependencies
 					$aFieldDependencies = $oAttDef->GetPrerequisiteAttributes();
