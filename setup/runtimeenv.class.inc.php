@@ -684,8 +684,9 @@ class RunTimeEnvironment
 	public function RecordInstallation(Config $oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sShortComment = null)
 	{
 		// Have it work fine even if the DB has been set in read-only mode for the users
-		$iPrevAccessMode = $oConfig->Get('access_mode');
-		$oConfig->Set('access_mode', ACCESS_FULL);
+		$iPrevAccessMode = MetaModel::GetConfig()->Get('access_mode');
+		MetaModel::GetConfig()->Set('access_mode', ACCESS_FULL);
+		//$oConfig->Set('access_mode', ACCESS_FULL);
 
 		if (CMDBSource::DBName() == '')
 		{		
@@ -789,7 +790,7 @@ class RunTimeEnvironment
 		}
 
 		// Restore the previous access mode
-		$oConfig->Set('access_mode', $iPrevAccessMode);
+		MetaModel::GetConfig()->Set('access_mode', $iPrevAccessMode);
 
 		// Database is created, installation has been tracked into it
 		return true;	
