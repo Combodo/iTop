@@ -6324,6 +6324,11 @@ abstract class MetaModel
 		//         classes have to be derived from cmdbabstract (to be editable in the UI)
 		require_once(APPROOT.'/application/cmdbabstract.class.inc.php');
 
+		if (!defined('MODULESROOT'))
+		{
+			define('MODULESROOT', APPROOT.'env-'.self::$m_sEnvironment.'/');
+		}
+
 		require_once(APPROOT.'core/autoload.php');
 		require_once(APPROOT.'env-'.self::$m_sEnvironment.'/autoload.php');
 
