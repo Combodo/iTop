@@ -540,10 +540,26 @@ class ApplicationInstaller
 			$aDirsToScan[] = $sExtraPath;
 		}
 		$sTargetPath = APPROOT.$sTargetDir;
+
 		if (!is_dir($sSourcePath))
 		{
 			throw new Exception("Failed to find the source directory '$sSourcePath', please check the rights of the web server");
-		}		
+		}
+		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
+		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
+		{
+			$sConfigFilePath = utils::GetConfigFilePath($sEnvironment);
+			if (is_file($sConfigFilePath))
+			{
+				$oConfig = new Config($sConfigFilePath);
+			}
+			else
+			{
+				$oConfig = null;
+			}
+			SetupUtils::EnterMaintenanceMode($oConfig);
+		}
+
 		if (!is_dir($sTargetPath))
 		{
 			if (!mkdir($sTargetPath))
@@ -630,6 +646,10 @@ class ApplicationInstaller
 		{
 			$sIntanceUUID = utils::CreateUUID('filesystem');
 			file_put_contents($sInstanceUUIDFile, $sIntanceUUID);
+		}
+		if (($sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
+		{
+			SetupUtils::ExitMaintenanceMode();
 		}
 	}
 
