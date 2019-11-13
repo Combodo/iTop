@@ -1122,7 +1122,7 @@ class UserRights
 		{
 			if ($iActionCode == UR_ACTION_MODIFY) return UR_ALLOWED_NO;
 			if ($iActionCode == UR_ACTION_DELETE) return UR_ALLOWED_NO;
-			if ($iActionCode == UR_ACTION_BULK_MODIFY) return falUR_ALLOWED_NOse;
+			if ($iActionCode == UR_ACTION_BULK_MODIFY) return UR_ALLOWED_NO;
 			if ($iActionCode == UR_ACTION_BULK_DELETE) return UR_ALLOWED_NO;
 		}
 
