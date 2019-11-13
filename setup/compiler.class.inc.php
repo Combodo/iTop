@@ -119,15 +119,15 @@ class MFCompiler
 		{
 			$oConfig = null;
 		}
+		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
+		{
+
+			SetupUtils::EnterMaintenanceMode($oConfig);
+		}
 		if ($bUseSymbolicLinks || $bSkipTempDir)
 		{
 			// Skip the creation of a temporary dictionary, not compatible with symbolic links
 			$sTempTargetDir = $sFinalTargetDir;
-			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
-			{
-
-				SetupUtils::EnterMaintenanceMode($oConfig);
-			}
 		}
 		else
 		{
@@ -155,10 +155,6 @@ class MFCompiler
 		if ($sTempTargetDir != $sFinalTargetDir)
 		{
 			// Move the results to the target directory
-			if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
-			{
-				SetupUtils::EnterMaintenanceMode($oConfig);
-			}
 			SetupUtils::movedir($sTempTargetDir, $sFinalTargetDir);
 		}
 		if (($this->sEnvironment == 'production') && !$bIsAlreadyInMaintenanceMode)
