@@ -966,7 +966,7 @@ class SetupUtils
 			$oPage->add('<td id="db_name_container"><input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
 			$oPage->add('</tbody>');
 			$oPage->add('<tbody id="prefix_option" class="collapsable-options">');
-			$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 6em; font-weight: normal; color: #696969"><img style="vertical-align:bottom">Use shared database</label></th></tr>');
+			$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 0.4em; font-weight: normal; color: #696969"><img style="vertical-align:bottom">Use shared database</label></th></tr>');
 			$oPage->add('<tr style="display:none"><td>Use a prefix for the tables:</td><td><input id="db_prefix" type="text" name="db_prefix" value="'.htmlentities($sDBPrefix,
 					ENT_QUOTES, 'UTF-8').'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></td></tr>');
 			$oPage->add('</tbody>');
@@ -976,7 +976,7 @@ class SetupUtils
 			$oPage->add('<tr><td>Database Name:</td><td id="db_name_container"><input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
 			$oPage->add('</tbody>');
 			$oPage->add('<tbody id="prefix_option" class="collapsable-options">');
-			$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 6em; font-weight: normal; color: #696969"><img style="vertical-align:bottom">Use shared database</label></th></tr>');
+			$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 0.4em; font-weight: normal; color: #696969"><img style="vertical-align:bottom">Use shared database</label></th></tr>');
 			$oPage->add('<tr style="display:none"><td>Use a prefix for the tables:</td><td><input id="db_prefix" type="text" name="db_prefix" value="'.htmlentities($sDBPrefix,
 					ENT_QUOTES, 'UTF-8').'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></td></tr>');
 			$oPage->add('</tbody>');
