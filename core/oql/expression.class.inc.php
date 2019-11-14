@@ -27,15 +27,15 @@ class MissingQueryArgument extends CoreException
  */
 abstract class Expression
 {
-	public const OPERATOR_BINARY = 'binary';
-	public const OPERATOR_BOOLEAN = 'boolean_binary';
-	public const OPERATOR_FIELD = 'field';
-	public const OPERATOR_FUNCTION = 'function';
-	public const OPERATOR_INTERVAL = 'interval';
-	public const OPERATOR_LIST = 'list';
-	public const OPERATOR_SCALAR = 'scalar';
-	public const OPERATOR_UNARY = 'unary';
-	public const OPERATOR_VARIABLE = 'variable';
+	const OPERATOR_BINARY = 'binary';
+	const OPERATOR_BOOLEAN = 'boolean_binary';
+	const OPERATOR_FIELD = 'field';
+	const OPERATOR_FUNCTION = 'function';
+	const OPERATOR_INTERVAL = 'interval';
+	const OPERATOR_LIST = 'list';
+	const OPERATOR_SCALAR = 'scalar';
+	const OPERATOR_UNARY = 'unary';
+	const OPERATOR_VARIABLE = 'variable';
 
 
 	/**

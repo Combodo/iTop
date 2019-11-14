@@ -52,7 +52,12 @@ class DBObjectSearch extends DBSearch
 	protected $m_bAllowAllData = false;
 	protected $m_bDataFiltered = false;
 
-    /**
+	public function ToJSON()
+	{
+		return '{}';
+	}
+
+	/**
      * DBObjectSearch constructor.
      *
      * @api
