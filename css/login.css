@@ -138,6 +138,26 @@ a:hover {
 	border-color: #A0AEC0;
 }
 
+#login-additional-controls > div {
+	text-align: left;
+	margin-top: 10px;
+}
+
+#login-additional-controls input {
+	background-color: #fff;
+	height: 2em;
+	padding: 0.1em 1em;
+	border: solid 2px #DDD;
+	border-radius: 0.25em;
+	width: calc(100% - 2em - 4px);
+}
+
+#login-additional-controls input:focus {
+	border-color: #A0AEC0;
+}
+
+
+
 #login-submit.forgotpwd-submit input,
 #login-submit.changepwd-submit input
 {
