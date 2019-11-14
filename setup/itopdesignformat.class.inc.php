@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014-2017 Combodo SARL
+// Copyright (C) 2014-2019 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,10 +16,14 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+define('ITOP_DESIGN_LATEST_VERSION', '1.7'); // iTop >= 2.7.0
+
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version
  * The datamodel is supplied as a loaded DOMDocument and modified in-place.
- * 
+ *
+ * To test migration methods check {@link \Combodo\iTop\Test\UnitTest\Setup\TestForITopDesignFormatClass}
+ *
  * Usage:
  * 
  * $oDocument = new DOMDocument();
@@ -34,9 +38,6 @@
  *     echo "Error, failed to upgrade the format, reason(s):\n".implode("\n", $oFormat->GetErrors());
  * }
  */
-
-define('ITOP_DESIGN_LATEST_VERSION', '1.7'); // iTop >= 2.7.0
- 
 class iTopDesignFormat
 {
 	protected static $aVersions = array(
