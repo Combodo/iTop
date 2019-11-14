@@ -79,6 +79,12 @@ class iTopDesignFormat
 		'1.6' => array(
 			'previous' => '1.5',
 			'go_to_previous' => 'From16To15',
+			'next' => '1.7',
+			'go_to_next' => 'From16To17',
+		),
+		'1.7' => array(
+			'previous' => '1.6',
+			'go_to_previous' => 'From17To16',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -663,6 +669,26 @@ class iTopDesignFormat
 		//
 		$sPath = "/itop_design/classes/class/properties/uniqueness_rules";
 		$this->RemoveNodeFromXPath($sPath);
+	}
+
+	/**
+	 * @param $oFactory
+	 *
+	 * @return void (Errors are logged)
+	 */
+	protected function From16To17($oFactory)
+	{
+		// nothing changed !
+	}
+
+	/**
+	 * @param $oFactory
+	 *
+	 * @return void (Errors are logged)
+	 */
+	protected function From17To16($oFactory)
+	{
+		// nothing changed !
 	}
 
 	private function RemoveNodeFromXPath($sPath)
