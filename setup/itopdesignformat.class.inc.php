@@ -120,7 +120,7 @@ class iTopDesignFormat
 	{
 		$this->aLog[] = array(
 			'severity' => 'Error',
-			'msg' => $sMessage
+			'msg' => $sMessage,
 		);
 		$this->bStatus = false;
 	}
@@ -133,7 +133,7 @@ class iTopDesignFormat
 	{
 		$this->aLog[] = array(
 			'severity' => 'Warning',
-			'msg' => $sMessage
+			'msg' => $sMessage,
 		);
 	}
 
@@ -145,7 +145,7 @@ class iTopDesignFormat
 	{
 		$this->aLog[] = array(
 			'severity' => 'Info',
-			'msg' => $sMessage
+			'msg' => $sMessage,
 		);
 	}
 
@@ -207,7 +207,9 @@ class iTopDesignFormat
 	 * Test the conversion without altering the DOM
 	 * 	 
 	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
-	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
+	 *     whole data model)
+	 *
 	 * @return bool True on success	 
 	 */
 	public function CheckConvert($sTargetVersion = ITOP_DESIGN_LATEST_VERSION, $oFactory = null)
@@ -222,7 +224,9 @@ class iTopDesignFormat
 	 * For now only the conversion from version 1.0 to 1.1 is supported.
 	 * 	 
 	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
-	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
+	 *     whole data model)
+	 *
 	 * @return bool True on success, False if errors have been encountered (still the DOM may be altered!)
 	 */
 	public function Convert($sTargetVersion = ITOP_DESIGN_LATEST_VERSION, $oFactory = null)
@@ -264,7 +268,8 @@ class iTopDesignFormat
 	 * 	 
 	 * @param string $sFrom The source format version
 	 * @param string $sTo The desired format version
-	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the whole data model)
+	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
+	 *     whole data model)
 	 */
 	protected function DoConvert($sFrom, $sTo, $oFactory = null)
 	{
@@ -688,7 +693,11 @@ class iTopDesignFormat
 	 */
 	protected function From17To16($oFactory)
 	{
-		// nothing changed !
+		$oXPath = new DOMXPath($this->oDocument);
+
+		// -- 1283 : remove "in_new_window" option for WebPageMenuNode
+		$sPath = "/itop_design/menus/menu[@xsi:type='WebPageMenuNode']/in_new_window";
+		$this->RemoveNodeFromXPath($sPath);
 	}
 
 	private function RemoveNodeFromXPath($sPath)
