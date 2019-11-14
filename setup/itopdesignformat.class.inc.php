@@ -35,7 +35,7 @@
  * }
  */
 
-define('ITOP_DESIGN_LATEST_VERSION', '1.6'); // iTop >= 2.6.0
+define('ITOP_DESIGN_LATEST_VERSION', '1.7'); // iTop >= 2.7.0
  
 class iTopDesignFormat
 {
