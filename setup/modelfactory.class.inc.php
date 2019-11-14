@@ -2431,7 +2431,8 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 			$oRootNode->setAttribute('version', ITOP_DESIGN_LATEST_VERSION);
 			$this->appendChild($oRootNode);
 		}
-		return parent::saveXML($node);
+
+		return parent::saveXML($node, $options);
 	}
 
 	/**
