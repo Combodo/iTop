@@ -85,7 +85,7 @@ class DBBackupScheduled extends DBBackup
 	}
 }
 
-class BackupExec extends AbstractScheduledProcess
+class BackupExec extends AbstractWeeklyScheduledProcess
 {
 	protected $sBackupDir;
 	protected $iRetentionCount;

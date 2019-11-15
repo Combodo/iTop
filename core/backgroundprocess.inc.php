@@ -56,7 +56,7 @@ interface iBackgroundProcess extends iProcess
  * interface iScheduledProcess
  * A variant of process that must be called at specific times
  *
- * @see \AbstractScheduledProcess for a bootstrap implementation
+ * @see \AbstractWeeklyScheduledProcess for a bootstrap implementation
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @copyright   Copyright (C) 2013 Combodo SARL
  */
@@ -84,7 +84,7 @@ interface iScheduledProcess extends iProcess
  *
  * @since 2.7.0
  */
-abstract class AbstractScheduledProcess implements iScheduledProcess
+abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 {
 	// param have default names/values but can be overriden
 	const MODULE_SETTING_ENABLED = 'enabled';
