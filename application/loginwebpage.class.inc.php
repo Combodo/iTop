@@ -785,6 +785,7 @@ class LoginWebPage extends NiceWebPage
 		$oPerson = null;
 		try
 		{
+			/** @var Person $oPerson */
 			$oPerson = MetaModel::NewObject('Person');
 			$oPerson->Set('first_name', $sFirstName);
 			$oPerson->Set('name', $sLastName);
@@ -808,8 +809,8 @@ class LoginWebPage extends NiceWebPage
 				$sOrigin .= " ({$_SESSION['login_mode']})";
 			}
 			$oMyChange->Set('userinfo', $sOrigin);
-			$oMyChange->DBInsert();
-			$oPerson->DBInsertTracked($oMyChange);
+			$oPerson::SetCurrentChange($oMyChange);
+			$oPerson->DBInsert();
 		}
 		catch (Exception $e)
 		{
@@ -891,19 +892,7 @@ class LoginWebPage extends NiceWebPage
 			$oUser->Set('profile_list', $oProfilesSet);
 			if ($oUser->IsModified())
 			{
-				/** @var \CMDBChange $oMyChange */
-				$oMyChange = MetaModel::NewObject("CMDBChange");
-				$oMyChange->Set("date", time());
-				$oMyChange->Set('userinfo', $sOrigin);
-				$oMyChange->DBInsert();
-				if ($oUser->IsNew())
-				{
-					$oUser->DBInsertTracked($oMyChange);
-				}
-				else
-				{
-					$oUser->DBUpdateTracked($oMyChange);
-				}
+				$oUser->DBWrite();
 			}
 		}
 		catch (Exception $e)

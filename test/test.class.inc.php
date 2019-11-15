@@ -434,31 +434,11 @@ abstract class TestBizModel extends TestHandler
 	}
 	protected function ObjectToDB($oNew, $bReload = false)
 	{
-//		list($bRes, $aIssues) = $oNew->CheckToWrite();
-//		if (!$bRes)
-//		{
-//			throw new CoreException('Could not create object, unexpected values', array('issues' => $aIssues));
-//		}
 		if ($oNew instanceof CMDBObject)
 		{
-			if (!isset($this->m_oChange))
-			{
-				 new CMDBChange();
-				$oMyChange = MetaModel::NewObject("CMDBChange");
-				$oMyChange->Set("date", time());
-				$oMyChange->Set("userinfo", "Someone doing some tests");
-				$iChangeId = $oMyChange->DBInsertNoReload();
-				$this->m_oChange = $oMyChange; 
-			}
 			$oChange = $this->GetCurrentChange();
-			if ($bReload)
-			{
-				$iId = $oNew->DBInsertTracked($oChange);
-			}
-			else
-			{
-				$iId = $oNew->DBInsertTrackedNoReload($oChange);
-			}
+			$oNew::SetCurrentChange($oChange);
+			$oNew->DBWrite();
 		}
 		else
 		{
@@ -476,15 +456,7 @@ abstract class TestBizModel extends TestHandler
 
   	protected function UpdateObjectInDB($oObject)
 	{
-   	if ($oObject instanceof CMDBObject)
-		{
-			$oChange = $this->GetCurrentChange();
-			$oObject->DBUpdateTracked($oChange);
-		}
-		else
-		{
-			$oObject->DBUpdate();
-		}
+		$oObject->DBUpdate();
 	}
 	protected function ResetDB()
 	{

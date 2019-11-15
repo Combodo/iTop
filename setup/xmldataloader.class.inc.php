@@ -396,10 +396,14 @@ class XMLDataLoader
 	 
 	protected function ResolveExternalKeys()
 	{
+		/**
+		 * @var string $sClass
+		 * @var \CMDBObject[] $oObjList
+		 */
 		foreach($this->m_aObjectsCache as $sClass => $oObjList)
 		{
 			foreach($oObjList as $oTargetObj)
-			{	
+			{
 				$bChanged = false;
 				$sClass = get_class($oTargetObj);
 				foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode=>$oAttDef)
@@ -432,12 +436,9 @@ class XMLDataLoader
 					{
 						if (is_subclass_of($oTargetObj, 'CMDBObject'))
 						{
-					        $oTargetObj->DBUpdateTracked($this->m_oChange);
+							$oTargetObj::SetCurrentChange($this->m_oChange);
 						}
-						else
-						{
-					        $oTargetObj->DBUpdate();
-						}
+						$oTargetObj->DBUpdate();
 					}
 					catch(Exception $e)
 					{

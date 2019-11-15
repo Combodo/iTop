@@ -337,6 +337,7 @@ class TestMyBizModel extends TestBizModel
 	function test_setattribute()
 	{
 		echo "<h4>Set attribute and update</h4>";
+		/** @var cmdbTeam $team */
 		$team = MetaModel::GetObject("cmdbTeam", "2");
 		$team->Set("headcount", rand(1,1000));
 		$team->Set("email", "Luis ".rand(9,250));
@@ -347,10 +348,9 @@ class TestMyBizModel extends TestBizModel
 		$oMyChange = MetaModel::NewObject("CMDBChange");
 		$oMyChange->Set("date", time());
 		$oMyChange->Set("userinfo", "test_setattribute / Made by robot #".rand(1,100));
-		$iChangeId = $oMyChange->DBInsert();
-	
 		//DBSearch::StartDebugQuery();
-		$team->DBUpdateTracked($oMyChange);
+		$team::SetCurrentChange($oMyChange);
+		$team->DBUpdate();
 		//DBSearch::StopDebugQuery();
 	
 		echo "<h4>Check the modified team</h4>";
@@ -359,11 +359,6 @@ class TestMyBizModel extends TestBizModel
 	}
 	function test_newobject()
 	{
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$oMyChange->Set("userinfo", "test_newobject / Made by robot #".rand(1,100));
-		$iChangeId = $oMyChange->DBInsert();
-	
 		echo "<h4>Create a new object (team)</h4>";
 		$oNewTeam = MetaModel::NewObject("cmdbTeam");
 		$oNewTeam->Set("name", "ekip2choc #".rand(1000, 2000));
@@ -371,11 +366,11 @@ class TestMyBizModel extends TestBizModel
 		$oNewTeam->Set("email", null);
 		$oNewTeam->Set("owner", "ITOP");
 		$oNewTeam->Set("headcount", "0".rand(38000, 38999)); // should be reset to an int value
-		$iId = $oNewTeam->DBInsertTracked($oMyChange);
+		$iId = $oNewTeam->DBInsert();
 		echo "Created new team: $iId</br>";
 		echo "<h4>Delete team #$iId</h4>";
 		$oTeam = MetaModel::GetObject("cmdbTeam", $iId);
-		$oTeam->DBDeleteTracked($oMyChange);
+		$oTeam->DBDelete();
 		echo "Deleted team: $iId</br>";
 		self::DumpVariable($oTeam);
 	}
@@ -409,26 +404,27 @@ class TestMyBizModel extends TestBizModel
 	
 	function test_changetracking()
 	{
-		echo "<h4>Create a change</h4>";
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$oMyChange->Set("userinfo", "Made by robot #".rand(1,100));
-		$iChangeId = $oMyChange->DBInsert();
-		echo "Created new change: $iChangeId</br>";
+		echo '<h4>Create a change</h4>';
+		/** @var CMDBChange $oMyChange * */
+		$oMyChange = MetaModel::NewObject('CMDBChange');
+		$oMyChange->Set('date', time());
+		$oMyChange->Set('userinfo', 'Made by robot #'.rand(1, 100));
 		self::DumpVariable($oMyChange);
-	
-		echo "<h4>Create a new object (team)</h4>";
-		$oNewTeam = MetaModel::NewObject("cmdbTeam");
-		$oNewTeam->Set("name", "ekip2choc #".rand(1000, 2000));
-		$oNewTeam->Set("email", "machin".rand(1,100)."@tnut.com");
-		$oNewTeam->Set("email", null);
-		$oNewTeam->Set("owner", "ITOP");
-		$oNewTeam->Set("headcount", "0".rand(38000, 38999)); // should be reset to an int value
-		$iId = $oNewTeam->DBInsertTracked($oMyChange);
+
+		echo '<h4>Create a new object (team)</h4>';
+		$oNewTeam = MetaModel::NewObject('cmdbTeam');
+		$oNewTeam->Set('name', 'ekip2choc #'.rand(1000, 2000));
+		$oNewTeam->Set('email', 'machin'.rand(1, 100).'@tnut.com');
+		$oNewTeam->Set('email', null);
+		$oNewTeam->Set('owner', 'ITOP');
+		$oNewTeam->Set('headcount', '0'.rand(38000, 38999)); // should be reset to an int value
+		$oNewTeam::SetCurrentChange($oMyChange);
+		$iId = $oNewTeam->DBInsert();
 		echo "Created new team: $iId</br>";
 		echo "<h4>Delete team #$iId</h4>";
-		$oTeam = MetaModel::GetObject("cmdbTeam", $iId);
-		$oTeam->DBDeleteTracked($oMyChange);
+		$oTeam = MetaModel::GetObject('cmdbTeam', $iId);
+		$oTeam::SetCurrentChange($oMyChange);
+		$oTeam->DBDelete();
 		echo "Deleted team: $iId</br>";
 		self::DumpVariable($oTeam);
 	}
@@ -535,7 +531,8 @@ class TestMyBizModel extends TestBizModel
 		$oMyChange->Set("date", time());
 		$oMyChange->Set("userinfo", "test_linkedset / Made by robot #".rand(1,100));
 		$iChangeId = $oMyChange->DBInsert();
-		$oObj->DBUpdateTracked($oMyChange);
+		$oObj::SetCurrentChange($oMyChange);
+		$oObj->DBUpdate();
 		$oObj = MetaModel::GetObject("cmdbContact", 18);
 	
 		echo "<h5>After the write</h5>\n";

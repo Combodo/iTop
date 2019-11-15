@@ -726,12 +726,13 @@ class BulkChange
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_Issue(Dict::Format('UI:CSVReport-Row-Issue-MissingExtKey', $sMissingKeys));
 			return $oTargetObj;
 		}
-	
-		// Optionaly record the results
+
+		// Optionally record the results
 		//
 		if ($oChange)
 		{
-			$newID = $oTargetObj->DBInsertTrackedNoReload($oChange);
+			$oTargetObj::SetCurrentChange($oChange);
+			$newID = $oTargetObj->DBInsert();
 			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
 			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
 			$aResult[$iRow]["id"] = new CellStatus_Void($newID);
@@ -744,7 +745,20 @@ class BulkChange
 		}
 		return $oTargetObj;
 	}
-	
+
+	/**
+	 * @param array $aResult
+	 * @param int $iRow
+	 * @param \CMDBObject $oTargetObj
+	 * @param array $aRowData
+	 * @param \CMDBChange $oChange
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	protected function UpdateObject(&$aResult, $iRow, $oTargetObj, $aRowData, CMDBChange $oChange = null)
 	{
 		$aResult[$iRow] = $this->PrepareObject($oTargetObj, $aRowData, $aErrors);
@@ -772,7 +786,8 @@ class BulkChange
 			{
 				try
 				{
-					$oTargetObj->DBUpdateTracked($oChange);
+					$oTargetObj::SetCurrentChange($oChange);
+					$oTargetObj->DBUpdate();
 				}
 				catch(CoreException $e)
 				{
@@ -786,6 +801,14 @@ class BulkChange
 		}
 	}
 
+	/**
+	 * @param array $aResult
+	 * @param int $iRow
+	 * @param \CMDBObject $oTargetObj
+	 * @param \CMDBChange $oChange
+	 *
+	 * @throws \BulkChangeException
+	 */
 	protected function UpdateMissingObject(&$aResult, $iRow, $oTargetObj, CMDBChange $oChange = null)
 	{
 		$aResult[$iRow] = $this->PrepareMissingObject($oTargetObj, $aErrors);
@@ -813,7 +836,7 @@ class BulkChange
 			{
 				try
 				{
-					$oTargetObj->DBUpdateTracked($oChange);
+					$oTargetObj->DBUpdate();
 				}
 				catch(CoreException $e)
 				{

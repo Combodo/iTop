@@ -516,6 +516,21 @@ abstract class WebServicesBase
 		return $aItemsNotFound;
 	}
 
+	/**
+	 * @param \CMDBObject $oTargetObj
+	 * @param string $sResultLabel
+	 * @param \CMDBChange $oChange
+	 * @param \WebServiceResult $oRes
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \SecurityException
+	 */
 	protected function MyObjectInsert($oTargetObj, $sResultLabel, $oChange, &$oRes)
 	{
 		if ($oRes->IsOk())
@@ -523,7 +538,8 @@ abstract class WebServicesBase
 			list($bRes, $aIssues) = $oTargetObj->CheckToWrite();
 			if ($bRes)
 			{
-				$iId = $oTargetObj->DBInsertTrackedNoReload($oChange);
+				$oTargetObj::SetCurrentChange($oChange);
+				$iId = $oTargetObj->DBInsertNoReload();
 				$oRes->LogInfo("Created object ".get_class($oTargetObj)."::$iId");
 				$oRes->AddResultObject($sResultLabel, $oTargetObj);
 			}

@@ -593,25 +593,12 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		$oChange = MetaModel::NewObject("CMDBChange");
 		$oChange->Set("date", time());
 		$oChange->Set("userinfo", "Initialization");
-		$iChangeId = $oChange->DBInsert();
 
 		$oOrg = new Organization();
 		$oOrg->Set('name', 'My Company/Department');
 		$oOrg->Set('code', 'SOMECODE');
-//		$oOrg->Set('status', 'implementation');
-		//$oOrg->Set('parent_id', xxx);
-		$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange, true /* skip strong security */);
-
-		// Location : optional
-		//$oLocation = new bizLocation();
-		//$oLocation->Set('name', 'MyOffice');
-		//$oLocation->Set('status', 'implementation');
-		//$oLocation->Set('org_id', $iOrgId);
-		//$oLocation->Set('severity', 'high');
-		//$oLocation->Set('address', 'my building in my city');
-		//$oLocation->Set('country', 'my country');
-		//$oLocation->Set('parent_location_id', xxx);
-		//$iLocationId = $oLocation->DBInsertNoReload();
+		$oOrg::SetCurrentChange($oChange);
+		$iOrgId = $oOrg->DBInsertNoReload();
 
 		$oContact = new Person();
 		$oContact->Set('name', 'My last name');
@@ -619,24 +606,24 @@ class UserRightsProjection extends UserRightsAddOnAPI
 		//$oContact->Set('status', 'available');
 		$oContact->Set('org_id', $iOrgId);
 		$oContact->Set('email', 'my.email@foo.org');
-		//$oContact->Set('phone', '');
-		//$oContact->Set('location_id', $iLocationId);
-		//$oContact->Set('employee_number', '');
-		$iContactId = $oContact->DBInsertTrackedNoReload($oChange, true /* skip security */);
+		$oContact::SetCurrentChange($oChange);
+		$iContactId = $oContact->DBInsertNoReload();
 		
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('contactid', $iContactId);
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
-		$iUserId = $oUser->DBInsertTrackedNoReload($oChange, true /* skip security */);
+		$oUser::SetCurrentChange($oChange);
+		$iUserId = $oUser->DBInsertNoReload();
 		
 		// Add this user to the very specific 'admin' profile
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('userid', $iUserId);
 		$oUserProfile->Set('profileid', ADMIN_PROFILE_ID);
 		$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
-		$oUserProfile->DBInsertTrackedNoReload($oChange, true /* skip security */);
+		$oUserProfile::SetCurrentChange($oChange);
+		$oUserProfile->DBInsertNoReload();
 		return true;
 	}
 

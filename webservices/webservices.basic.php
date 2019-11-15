@@ -175,8 +175,7 @@ class BasicServices extends WebServicesBase
 			$oMyChange = MetaModel::NewObject("CMDBChange");
 			$oMyChange->Set("date", time());
 			$oMyChange->Set("userinfo", "Administrator");
-			$iChangeId = $oMyChange->DBInsertNoReload();
-	
+
 			$oNewTicket = MetaModel::NewObject($sClass);
 			$this->MyObjectSetScalar('title', 'title', $sTitle, $oNewTicket, $oRes);
 			$this->MyObjectSetScalar('description', 'description', $sDescription, $oNewTicket, $oRes);

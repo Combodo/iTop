@@ -437,8 +437,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	{
 		CMDBObject::SetTrackInfo('Initialization');
 
-		$oChange = CMDBObject::GetCurrentChange();
-
 		$iContactId = 0;
 		// Support drastic data model changes: no organization class (or not writable)!
 		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization'))
@@ -446,7 +444,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			$oOrg = new Organization();
 			$oOrg->Set('name', 'My Company/Department');
 			$oOrg->Set('code', 'SOMECODE');
-			$iOrgId = $oOrg->DBInsertTrackedNoReload($oChange, true /* skip security */);
+			$iOrgId = $oOrg->DBInsertNoReload();
 
 			// Support drastic data model changes: no Person class  (or not writable)!
 			if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person'))
@@ -463,7 +461,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 					$oContact->Set('phone', '+00 000 000 000');
 				}
 				$oContact->Set('email', 'my.email@foo.org');
-				$iContactId = $oContact->DBInsertTrackedNoReload($oChange, true /* skip security */);
+				$iContactId = $oContact->DBInsertNoReload();
 			}
 		}
 
@@ -482,14 +480,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		if (is_object($oAdminProfile))
 		{
 			$oUserProfile = new URP_UserProfile();
-			//$oUserProfile->Set('userid', $iUserId);
 			$oUserProfile->Set('profileid', $oAdminProfile->GetKey());
 			$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
-			//$oUserProfile->DBInsertTrackedNoReload($oChange, true /* skip security */);
 			$oSet = DBObjectSet::FromObject($oUserProfile);
 			$oUser->Set('profile_list', $oSet);
 		}
-		$iUserId = $oUser->DBInsertTrackedNoReload($oChange, true /* skip security */);
+		$iUserId = $oUser->DBInsertNoReload();
 		return true;
 	}
 

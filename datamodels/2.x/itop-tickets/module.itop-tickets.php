@@ -63,9 +63,9 @@ class TicketsInstaller extends ModuleInstallerAPI
 					$oChange = new CMDBChange;
 					$oChange->Set("date", time());
 					$oChange->Set("userinfo", "Uninstallation");
-					$oChange->DBInsert();
 				}
-				$oTrigger->DBDeleteTracked($oChange);
+				$oTrigger::SetCurrentChange($oChange);
+				$oTrigger->DBDelete();
 			}
 		}
 	}

@@ -510,19 +510,7 @@ class CASUserProvisioning
 		phpCAS::log("Info: the user '".$oUser->GetName()."' (id=".$oUser->GetKey().") now has the following profiles: '".implode("', '", $aProfiles)."'.");
 		if ($oUser->IsModified())
 		{
-			/** @var \CMDBChange $oMyChange */
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$oMyChange->Set("userinfo", 'CAS/LDAP Synchro');
-			$oMyChange->DBInsert();
-			if ($oUser->IsNew())
-			{
-				$oUser->DBInsertTracked($oMyChange);
-			}
-			else
-			{
-				$oUser->DBUpdateTracked($oMyChange);
-			}
+			$oUser->DBWrite();
 		}
 
 		return true;

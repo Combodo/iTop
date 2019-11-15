@@ -4453,7 +4453,7 @@ EOF
 			}
 			else
 			{
-				$oObj->DBDeleteTracked(CMDBObject::GetCurrentChange(), null, $oDeletionPlan);
+				$oObj->DBDelete();
 			}
 		}
 

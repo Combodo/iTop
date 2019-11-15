@@ -39,13 +39,13 @@ class BenchmarkDataCreation
 
 	var $m_aStatsByClass = array();
 
+	/** @var \CMDBChange $m_oChange */
 	var $m_oChange;
 	public function __construct()
 	{
 		$this->m_oChange = MetaModel::NewObject("CMDBChange");
 		$this->m_oChange->Set("date", time());
 		$this->m_oChange->Set("userinfo", "Benchmark setup");
-		$iChangeId = $this->m_oChange->DBInsertNoReload();
 	}
 
 	public function PlanStructure($iPlannedContacts, $iPlannedContracts)
@@ -147,7 +147,8 @@ class BenchmarkDataCreation
 			$oMyObject->Set($sProp, $value);
 		}
 
-		$iId = $oMyObject->DBInsertTrackedNoReload($this->m_oChange, true /* skip security */);
+		$oMyObject::SetCurrentChange($this->m_oChange);
+		$iId = $oMyObject->DBInsertNoReload();
 
 		$sClassId = "$sClass ($sClassDesc)";
 		$this->m_aCreatedByDesc[$sClassId][] = $iId;

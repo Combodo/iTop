@@ -88,8 +88,8 @@ function CreateTicket($sSenderEmail, $sSubject, $sBody)
 			$oMyChange->Set("date", time());
 			$sUserString = $oContact->GetName().', submitted by email';
 			$oMyChange->Set("userinfo", $sUserString);
-			$iChangeId = $oMyChange->DBInsert();
-			$oTicket->DBInsertTracked($oMyChange);
+			$oTicket::SetCurrentChange($oMyChange);
+			$oTicket->DBInsert();
 		}
 		else
 		{

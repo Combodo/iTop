@@ -2474,10 +2474,10 @@ class SynchroReplica extends DBObject implements iDisplay
 	/**
 	 * Updates the destination object with the Extended data found in the synchro_data_XXXX table
 	 *
-	 * @param $oDestObj
+	 * @param \CMDBObject $oDestObj
 	 * @param string[] $aAttributes
-	 * @param $oChange
-	 * @param $oStatLog
+	 * @param \CMDBChange $oChange
+	 * @param \SynchroLog $oStatLog
 	 * @param string $sStatsCode
 	 * @param string $sStatsCodeError
 	 *
@@ -2514,7 +2514,8 @@ class SynchroReplica extends DBObject implements iDisplay
 			// Really modified ?
 			if ($oDestObj->IsModified())
 			{
-				$oDestObj->DBUpdateTracked($oChange);
+				$oDestObj::SetCurrentChange($oChange);
+				$oDestObj->DBUpdate();
 				$bModified = true;
 				$oStatLog->AddTrace('Updated object - Values: {'.implode(', ', $aValueTrace).'}', $this);
 				if (($sStatsCode != '') && (MetaModel::IsValidAttCode(get_class($oStatLog), $sStatsCode.'_updated')))
@@ -2553,7 +2554,8 @@ class SynchroReplica extends DBObject implements iDisplay
 	 * @param $oChange
 	 * @param $oStatLog
 	 *
-	 * @return bool Whether or not the object was created
+	 * @return bool true if the object was created
+	 * @throws \CoreException
 	 */
 	protected function CreateObjectFromReplica($sClass, $aAttributes, $oChange, &$oStatLog)
 	{
@@ -2571,7 +2573,8 @@ class SynchroReplica extends DBObject implements iDisplay
 					$aValueTrace[] = "$sAttCode: $value";
 				}
 			}
-			$iNew = $oDestObj->DBInsertTracked($oChange);
+			$oDestObj::SetCurrentChange($oChange);
+			$iNew = $oDestObj->DBInsert();
 
 			$this->Set('dest_id', $oDestObj->GetKey());
 			$this->Set('dest_class', get_class($oDestObj));
@@ -2612,6 +2615,7 @@ class SynchroReplica extends DBObject implements iDisplay
 			}
 			else
 			{
+				/** @var \CMDBObject $oDestObj */
 				$oDestObj = MetaModel::GetObject($this->Get('dest_class'), $this->Get('dest_id'));
 				foreach ($aValues as $sAttCode => $value)
 				{
@@ -2622,7 +2626,8 @@ class SynchroReplica extends DBObject implements iDisplay
 					$oDestObj->Set($sAttCode, $value);
 				}
 				$this->Set('info_last_modified', date(AttributeDateTime::GetSQLFormat()));
-				$oDestObj->DBUpdateTracked($oChange);
+				$oDestObj::SetCurrentChange($oChange);
+				$oDestObj->DBUpdate();
 				$oStatLog->AddTrace('Replica marked as obsolete', $this);
 				$oStatLog->Inc('stats_nb_obj_obsoleted');
 			}
@@ -2639,6 +2644,15 @@ class SynchroReplica extends DBObject implements iDisplay
 	 *
 	 * @param CMDBChange $oChange
 	 * @param SynchroLog $oStatLog
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function DeleteDestObject($oChange, &$oStatLog)
 	{
@@ -2650,9 +2664,9 @@ class SynchroReplica extends DBObject implements iDisplay
 				$oCheckDeletionPlan = new DeletionPlan();
 				if ($oDestObj->CheckToDelete($oCheckDeletionPlan))
 				{
-					$oActualDeletionPlan = new DeletionPlan();
-					$oDestObj->DBDeleteTracked($oChange, null, $oActualDeletionPlan);
-					$this->DBDeleteTracked($oChange);
+					$oDestObj::SetCurrentChange($oChange);
+					$oDestObj->DBDelete();
+					$this->DBDelete();
 					$oStatLog->Inc('stats_nb_obj_deleted');
 				}
 				else
@@ -2665,13 +2679,13 @@ class SynchroReplica extends DBObject implements iDisplay
 			{
 				$this->SetLastError('Unable to delete the destination object: ', $e);
 				$this->Set('status', 'obsolete');
-				$this->DBUpdateTracked($oChange);
+				$this->DBUpdate();
 				$oStatLog->Inc('stats_nb_obj_deleted_errors');
 			}
 		}
 		else
 		{
-			$this->DBDeleteTracked($oChange);
+			$this->DBDelete();
 			$oStatLog->Inc('stats_nb_replica_disappeared_no_action');
 		}
 	}
@@ -3021,7 +3035,7 @@ class SynchroExecution
 		$this->m_iCountAllReplicas = $oSetTotal->Count();
 		$this->m_oStatLog->Set('stats_nb_replica_total', $this->m_iCountAllReplicas);
 
-		$this->m_oStatLog->DBInsertTracked($this->m_oChange);
+		$this->m_oStatLog->DBInsert();
 		$sLastFullLoad = ($this->m_bIsImportPhaseDateKnown) ? $this->m_oImportPhaseStartDate->format('Y-m-d H:i:s') : 'not specified';
 		$this->m_oStatLog->AddTrace("###### STARTING SYNCHRONIZATION ##### Total: {$this->m_iCountAllReplicas} replica(s). Last full load: '$sLastFullLoad' ");
 		$sSql = 'SELECT NOW();';
@@ -3190,7 +3204,7 @@ class SynchroExecution
 
 			$this->m_oStatLog->Set('end_date', time());
 			$this->m_oStatLog->Set('status', 'completed');
-			$this->m_oStatLog->DBUpdateTracked($this->m_oChange);
+			$this->m_oStatLog->DBUpdate();
 
 			$iErrors = $this->m_oStatLog->GetErrorCount();
 			if ($iErrors > 0)
@@ -3234,7 +3248,7 @@ class SynchroExecution
 			$this->m_oStatLog->Set('end_date', time());
 			$this->m_oStatLog->Set('status', 'error');
 			$this->m_oStatLog->Set('last_error', $e->getMessage());
-			$this->m_oStatLog->DBDeleteTracked($this->m_oChange);
+			$this->m_oStatLog->DBDelete();
 			$this->m_oDataSource->SendNotification('fatal error',
 				'<p>The synchronization could not start: \''.$e->getMessage().'\'</p><p>Please check its configuration</p>');
 		}
@@ -3244,7 +3258,7 @@ class SynchroExecution
 			$this->m_oStatLog->Set('end_date', time());
 			$this->m_oStatLog->Set('status', 'error');
 			$this->m_oStatLog->Set('last_error', $e->getMessage());
-			$this->m_oStatLog->DBUpdateTracked($this->m_oChange);
+			$this->m_oStatLog->DBUpdate();
 			$this->m_oDataSource->SendNotification('exception',
 				'<p>The synchronization has been interrupted: \''.$e->getMessage().'\'</p><p>Please contact the application support team</p>');
 		}
@@ -3491,7 +3505,7 @@ class SynchroExecution
 								$oReplica->Set('status', 'obsolete');
 							}
 						}
-						$oReplica->DBUpdateTracked($this->m_oChange);
+					$oReplica->DBUpdate();
 						break;
 
 					case 'delete':
@@ -3591,7 +3605,7 @@ class SynchroExecution
 			$oReplica->Synchro($this->m_oDataSource, $this->m_aReconciliationKeys, $this->m_aAttributes, $this->m_oChange,
 				$this->m_oStatLog);
 			$this->m_oStatLog->AddTrace("Updating replica id=$iLastReplicaProcessed.");
-			$oReplica->DBUpdateTracked($this->m_oChange);
+			$oReplica->DBUpdate();
 		}
 
 		if ($iMaxReplica)

@@ -590,9 +590,8 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							if($oObj->IsModified())
 							{
 								CMDBObject::SetTrackInfo("Automatic - threshold triggered");
-					
-								$oMyChange = CMDBObject::GetCurrentChange();
-								$oObj->DBUpdateTracked($oMyChange);
+
+								$oObj->DBUpdate();
 							}
 
 							// Activate any existing trigger

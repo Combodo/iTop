@@ -128,13 +128,14 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
 
 		// Create a change to record the history of the User object
+		/** @var \CMDBChange $oChange */
 		$oChange = MetaModel::NewObject("CMDBChange");
 		$oChange->Set("date", time());
 		$oChange->Set("userinfo", "Initialization");
-		$iChangeId = $oChange->DBInsert();
 
 		// Now record the admin user object
-		$iUserId = $oUser->DBInsertTrackedNoReload($oChange, true /* skip security */);
+		$oUser::SetCurrentChange($oChange);
+		$iUserId = $oUser->DBInsertNoReload();
 		$this->SetupUser($iUserId, true);
 		return true;
 	}

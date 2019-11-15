@@ -2925,16 +2925,13 @@ abstract class DBObject implements iDisplay
     /**
      * @internal
      *
+     * @deprecated 2.7.0 N°2361 simply use {@link DBInsert} instead, that will automatically create and persist a CMDBChange object.
+     *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
+     *
      * @param CMDBChange $oChange
      *
      * @return int|null
-     * @throws ArchivedObjectException
-     * @throws CoreCannotSaveObjectException
      * @throws CoreException
-     * @throws CoreUnexpectedValue
-     * @throws CoreWarning
-     * @throws MySQLException
-     * @throws OQLException
      */
 	public function DBInsertTracked(CMDBChange $oChange)
 	{
@@ -2944,6 +2941,9 @@ abstract class DBObject implements iDisplay
 
     /**
      * @internal
+     *
+     * @deprecated 2.7.0 N°2361 simply use {@link DBInsertNoReload} instead, that will automatically create and persist a CMDBChange object.
+     *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
      *
      * @param CMDBChange $oChange
      *
@@ -3289,6 +3289,9 @@ abstract class DBObject implements iDisplay
      *
      * @internal
      *
+     * @deprecated 2.7.0 N°2361 simply use {@link DBUpdate} instead, that will automatically create and persist a CMDBChange object.
+     *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
+     *
      * @param CMDBChange $oChange
      *
      * @return int
@@ -3558,9 +3561,12 @@ abstract class DBObject implements iDisplay
     /**
      * @internal
      *
+     * @deprecated 2.7.0 N°2361 simply use {@link DBDelete} instead.
+     *    If you need to persist your own, call {@link CMDBObject::SetCurrentChange} before.
+     *
      * @param CMDBChange $oChange
-     * @param null       $bSkipStrongSecurity
-     * @param null       $oDeletionPlan
+     * @param boolean $bSkipStrongSecurity
+     * @param \DeletionPlan $oDeletionPlan
      *
      * @throws ArchivedObjectException
      * @throws CoreCannotSaveObjectException
