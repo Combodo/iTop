@@ -528,6 +528,10 @@ $aProcesses = array();
 foreach (get_declared_classes() as $sPHPClass)
 {
 	$oRefClass = new ReflectionClass($sPHPClass);
+	if ($oRefClass->isAbstract())
+	{
+		continue;
+	}
 	$oExtensionInstance = null;
 	if ($oRefClass->implementsInterface('iProcess'))
 	{
