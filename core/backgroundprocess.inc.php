@@ -183,9 +183,9 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 		$sProcessTime = MetaModel::GetConfig()->GetModuleSetting(
 			$this->GetModuleName(),
 			static::MODULE_SETTING_TIME,
-			static::DEFAULT_MODULE_SETTING_TIME
+			static::GetDefaultModuleSettingTime()
 		);
-		if (!preg_match('/[0-2][0-9]:[0-5][0-9]/', $sProcessTime))
+		if (!preg_match('/[0-2]\d:[0-5]\d/', $sProcessTime))
 		{
 			throw new ProcessInvalidConfigException($this->GetModuleName().": wrong format for setting '".static::MODULE_SETTING_TIME."' (found '$sProcessTime')");
 		}
