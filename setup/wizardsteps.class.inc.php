@@ -2099,7 +2099,7 @@ class WizStepSummary extends WizardStep
 	public function Display(WebPage $oPage)
 	{
 		$oPage->add_style(
-<<<EOF
+			<<<CSS
 #params_summary {
 	height: 200px;
 	overflow: auto;
@@ -2140,7 +2140,7 @@ class WizStepSummary extends WizardStep
 #installation_progress {
 	display: none;
 }
-EOF
+CSS
 		);
 
 		$aInstallParams = $this->BuildConfig();
@@ -2261,7 +2261,7 @@ EOF
 		}
 
 		$oPage->add_ready_script(
-<<<EOF
+			<<<JS
 	$("#params_summary div").addClass('closed');
 	$("#params_summary .title").click(function() { $(this).parent().toggleClass('closed'); } );
 	$("#btn_next").bind("click.install", function(event) {
@@ -2270,7 +2270,7 @@ EOF
 			$(this).prop('disabled', true);	 event.preventDefault(); ExecuteStep("");
 	});
 	$("#wiz_form").data("installation_status", "not started")
-EOF
+JS
 		);
 	}
 
