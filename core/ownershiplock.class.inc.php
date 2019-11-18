@@ -180,7 +180,7 @@ class iTopOwnershipLock
 	{
 		if ($this->IsTokenValid())
 		{
-			return MetaModel::GetObject('User', $this->oToken->Get('user_id'), false);
+			return MetaModel::GetObject('User', $this->oToken->Get('user_id'), false, true);
 		}
 		return null;
 	}
