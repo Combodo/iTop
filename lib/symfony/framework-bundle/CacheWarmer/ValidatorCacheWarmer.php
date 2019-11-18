@@ -33,9 +33,8 @@ class ValidatorCacheWarmer extends AbstractPhpFileCacheWarmer
     private $validatorBuilder;
 
     /**
-     * @param ValidatorBuilderInterface $validatorBuilder
-     * @param string                    $phpArrayFile     The PHP file where metadata are cached
-     * @param CacheItemPoolInterface    $fallbackPool     The pool where runtime-discovered metadata are cached
+     * @param string                 $phpArrayFile The PHP file where metadata are cached
+     * @param CacheItemPoolInterface $fallbackPool The pool where runtime-discovered metadata are cached
      */
     public function __construct(ValidatorBuilderInterface $validatorBuilder, $phpArrayFile, CacheItemPoolInterface $fallbackPool)
     {
@@ -61,10 +60,10 @@ class ValidatorCacheWarmer extends AbstractPhpFileCacheWarmer
                     if ($metadataFactory->hasMetadataFor($mappedClass)) {
                         $metadataFactory->getMetadataFor($mappedClass);
                     }
-                } catch (\ReflectionException $e) {
-                    // ignore failing reflection
                 } catch (AnnotationException $e) {
                     // ignore failing annotations
+                } catch (\Exception $e) {
+                    $this->ignoreAutoloadException($mappedClass, $e);
                 }
             }
         }

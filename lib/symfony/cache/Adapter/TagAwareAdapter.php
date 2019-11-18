@@ -42,7 +42,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, PruneableInterface, R
         $this->tags = $tagsPool ?: $itemsPool;
         $this->knownTagVersionsTtl = $knownTagVersionsTtl;
         $this->createCacheItem = \Closure::bind(
-            function ($key, $value, CacheItem $protoItem) {
+            static function ($key, $value, CacheItem $protoItem) {
                 $item = new CacheItem();
                 $item->key = $key;
                 $item->value = $value;
@@ -56,7 +56,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, PruneableInterface, R
             CacheItem::class
         );
         $this->setCacheItemTags = \Closure::bind(
-            function (CacheItem $item, $key, array &$itemTags) {
+            static function (CacheItem $item, $key, array &$itemTags) {
                 if (!$item->isHit) {
                     return $item;
                 }
@@ -76,7 +76,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, PruneableInterface, R
             CacheItem::class
         );
         $this->getTagsByKey = \Closure::bind(
-            function ($deferred) {
+            static function ($deferred) {
                 $tagsByKey = [];
                 foreach ($deferred as $key => $item) {
                     $tagsByKey[$key] = $item->tags;
@@ -88,7 +88,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, PruneableInterface, R
             CacheItem::class
         );
         $this->invalidateTags = \Closure::bind(
-            function (AdapterInterface $tagsAdapter, array $tags) {
+            static function (AdapterInterface $tagsAdapter, array $tags) {
                 foreach ($tags as $v) {
                     $v->defaultLifetime = 0;
                     $v->expiry = null;
@@ -156,7 +156,14 @@ class TagAwareAdapter implements TagAwareAdapterInterface, PruneableInterface, R
         if (!$this->pool->hasItem($key)) {
             return false;
         }
-        if (!$itemTags = $this->pool->getItem(static::TAGS_PREFIX.$key)->get()) {
+
+        $itemTags = $this->pool->getItem(static::TAGS_PREFIX.$key);
+
+        if (!$itemTags->isHit()) {
+            return false;
+        }
+
+        if (!$itemTags = $itemTags->get()) {
             return true;
         }
 
@@ -177,6 +184,8 @@ class TagAwareAdapter implements TagAwareAdapterInterface, PruneableInterface, R
         foreach ($this->getItems([$key]) as $item) {
             return $item;
         }
+
+        return null;
     }
 
     /**
@@ -273,6 +282,16 @@ class TagAwareAdapter implements TagAwareAdapterInterface, PruneableInterface, R
         return $this->invalidateTags([]);
     }
 
+    public function __sleep()
+    {
+        throw new \BadMethodCallException('Cannot serialize '.__CLASS__);
+    }
+
+    public function __wakeup()
+    {
+        throw new \BadMethodCallException('Cannot unserialize '.__CLASS__);
+    }
+
     public function __destruct()
     {
         $this->commit();
@@ -294,7 +313,10 @@ class TagAwareAdapter implements TagAwareAdapterInterface, PruneableInterface, R
             }
 
             unset($tagKeys[$key]);
-            $itemTags[$key] = $item->get() ?: [];
+
+            if ($item->isHit()) {
+                $itemTags[$key] = $item->get() ?: [];
+            }
 
             if (!$tagKeys) {
                 $tagVersions = $this->getTagVersions($itemTags);
@@ -348,7 +370,7 @@ class TagAwareAdapter implements TagAwareAdapterInterface, PruneableInterface, R
                 continue;
             }
             $version -= $this->knownTagVersions[$tag][1];
-            if ((0 !== $version && 1 !== $version) || $this->knownTagVersionsTtl > $now - $this->knownTagVersions[$tag][0]) {
+            if ((0 !== $version && 1 !== $version) || $now - $this->knownTagVersions[$tag][0] >= $this->knownTagVersionsTtl) {
                 // reuse previously fetched tag versions up to the ttl, unless we are storing items or a potential miss arises
                 $fetchTagVersions = true;
             } else {

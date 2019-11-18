@@ -796,7 +796,7 @@ class Definition
     /**
      * Gets the configurator to call after the service is fully initialized.
      *
-     * @return callable|null The PHP callable to call
+     * @return callable|array|null
      */
     public function getConfigurator()
     {
@@ -935,8 +935,6 @@ class Definition
      * Bindings map $named or FQCN arguments to values that should be
      * injected in the matching parameters (of the constructor, of methods
      * called and of controller actions).
-     *
-     * @param array $bindings
      *
      * @return $this
      */

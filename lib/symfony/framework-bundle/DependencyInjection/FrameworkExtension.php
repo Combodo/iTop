@@ -234,7 +234,7 @@ class FrameworkExtension extends Extension
 
         if ($this->isConfigEnabled($container, $config['session'])) {
             if (!\extension_loaded('session')) {
-                throw new LogicException('Session support cannot be enabled as the session extension is not installed. See https://www.php.net/session.installation for instructions.');
+                throw new LogicException('Session support cannot be enabled as the session extension is not installed. See https://php.net/session.installation for instructions.');
             }
 
             $this->sessionConfigEnabled = true;
@@ -877,20 +877,11 @@ class FrameworkExtension extends Extension
 
         // session handler (the internal callback registered with PHP session management)
         if (null === $config['handler_id']) {
-            // If the user set a save_path without using a non-default \SessionHandler, it will silently be ignored
-            if (isset($config['save_path'])) {
-                throw new LogicException('Session save path is ignored without a handler service');
-            }
-
             // Set the handler class to be null
             $container->getDefinition('session.storage.native')->replaceArgument(1, null);
             $container->getDefinition('session.storage.php_bridge')->replaceArgument(0, null);
         } else {
             $container->setAlias('session.handler', $config['handler_id'])->setPrivate(true);
-        }
-
-        if (!isset($config['save_path'])) {
-            $config['save_path'] = ini_get('session.save_path');
         }
 
         $container->setParameter('session.save_path', $config['save_path']);
@@ -1051,8 +1042,6 @@ class FrameworkExtension extends Extension
         $container->getDefinition('assets.path_package')->setPrivate(true);
         $container->getDefinition('assets.url_package')->setPrivate(true);
         $container->getDefinition('assets.static_version_strategy')->setPrivate(true);
-
-        $defaultVersion = null;
 
         if ($config['version_strategy']) {
             $defaultVersion = new Reference($config['version_strategy']);
@@ -1752,9 +1741,7 @@ class FrameworkExtension extends Extension
     }
 
     /**
-     * Returns the base path for the XSD files.
-     *
-     * @return string The XSD base path
+     * {@inheritdoc}
      */
     public function getXsdValidationBasePath()
     {

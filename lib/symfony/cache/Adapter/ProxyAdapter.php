@@ -31,9 +31,8 @@ class ProxyAdapter implements AdapterInterface, PruneableInterface, ResettableIn
     private $poolHash;
 
     /**
-     * @param CacheItemPoolInterface $pool
-     * @param string                 $namespace
-     * @param int                    $defaultLifetime
+     * @param string $namespace
+     * @param int    $defaultLifetime
      */
     public function __construct(CacheItemPoolInterface $pool, $namespace = '', $defaultLifetime = 0)
     {
@@ -42,7 +41,7 @@ class ProxyAdapter implements AdapterInterface, PruneableInterface, ResettableIn
         $this->namespace = '' === $namespace ? '' : CacheItem::validateKey($namespace);
         $this->namespaceLen = \strlen($namespace);
         $this->createCacheItem = \Closure::bind(
-            function ($key, $innerItem) use ($defaultLifetime, $poolHash) {
+            static function ($key, $innerItem) use ($defaultLifetime, $poolHash) {
                 $item = new CacheItem();
                 $item->key = $key;
                 $item->defaultLifetime = $defaultLifetime;

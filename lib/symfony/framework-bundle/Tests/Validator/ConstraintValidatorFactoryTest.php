@@ -59,11 +59,9 @@ class ConstraintValidatorFactoryTest extends TestCase
         $this->assertSame($validator, $factory->getInstance(new ConstraintAliasStub()));
     }
 
-    /**
-     * @expectedException \Symfony\Component\Validator\Exception\ValidatorException
-     */
     public function testGetInstanceInvalidValidatorClass()
     {
+        $this->expectException('Symfony\Component\Validator\Exception\ValidatorException');
         $constraint = $this->getMockBuilder('Symfony\\Component\\Validator\\Constraint')->getMock();
         $constraint
             ->expects($this->exactly(2))

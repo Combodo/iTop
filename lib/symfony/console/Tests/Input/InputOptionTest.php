@@ -24,12 +24,10 @@ class InputOptionTest extends TestCase
         $this->assertEquals('foo', $option->getName(), '__construct() removes the leading -- of the option name');
     }
 
-    /**
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage Impossible to have an option mode VALUE_IS_ARRAY if the option does not accept a value.
-     */
     public function testArrayModeWithoutValue()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Impossible to have an option mode VALUE_IS_ARRAY if the option does not accept a value.');
         new InputOption('foo', 'f', InputOption::VALUE_IS_ARRAY);
     }
 
@@ -78,12 +76,8 @@ class InputOptionTest extends TestCase
      */
     public function testInvalidModes($mode)
     {
-        if (method_exists($this, 'expectException')) {
-            $this->expectException('InvalidArgumentException');
-            $this->expectExceptionMessage(sprintf('Option mode "%s" is not valid.', $mode));
-        } else {
-            $this->setExpectedException('InvalidArgumentException', sprintf('Option mode "%s" is not valid.', $mode));
-        }
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage(sprintf('Option mode "%s" is not valid.', $mode));
 
         new InputOption('foo', 'f', $mode);
     }
@@ -96,27 +90,21 @@ class InputOptionTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testEmptyNameIsInvalid()
     {
+        $this->expectException('InvalidArgumentException');
         new InputOption('');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testDoubleDashNameIsInvalid()
     {
+        $this->expectException('InvalidArgumentException');
         new InputOption('--');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testSingleDashOptionIsInvalid()
     {
+        $this->expectException('InvalidArgumentException');
         new InputOption('foo', '-');
     }
 
@@ -165,22 +153,18 @@ class InputOptionTest extends TestCase
         $this->assertEquals([1, 2], $option->getDefault(), '->setDefault() changes the default value');
     }
 
-    /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage Cannot set a default value when using InputOption::VALUE_NONE mode.
-     */
     public function testDefaultValueWithValueNoneMode()
     {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('Cannot set a default value when using InputOption::VALUE_NONE mode.');
         $option = new InputOption('foo', 'f', InputOption::VALUE_NONE);
         $option->setDefault('default');
     }
 
-    /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage A default value for an array option must be an array.
-     */
     public function testDefaultValueWithIsArrayMode()
     {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('A default value for an array option must be an array.');
         $option = new InputOption('foo', 'f', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY);
         $option->setDefault('default');
     }

@@ -40,8 +40,8 @@ class Command
     private $aliases = [];
     private $definition;
     private $hidden = false;
-    private $help;
-    private $description;
+    private $help = '';
+    private $description = '';
     private $ignoreValidationErrors = false;
     private $applicationDefinitionMerged = false;
     private $applicationDefinitionMergedWithArgs = false;
@@ -105,7 +105,7 @@ class Command
     /**
      * Gets the helper set.
      *
-     * @return HelperSet A HelperSet instance
+     * @return HelperSet|null A HelperSet instance
      */
     public function getHelperSet()
     {
@@ -115,7 +115,7 @@ class Command
     /**
      * Gets the application instance for this command.
      *
-     * @return Application An Application instance
+     * @return Application|null An Application instance
      */
     public function getApplication()
     {
@@ -278,7 +278,7 @@ class Command
             $r = new \ReflectionFunction($code);
             if (null === $r->getClosureThis()) {
                 if (\PHP_VERSION_ID < 70000) {
-                    // Bug in PHP5: https://bugs.php.net/bug.php?id=64761
+                    // Bug in PHP5: https://bugs.php.net/64761
                     // This means that we cannot bind static closures and therefore we must
                     // ignore any errors here.  There is no way to test if the closure is
                     // bindable.
@@ -347,6 +347,10 @@ class Command
      */
     public function getDefinition()
     {
+        if (null === $this->definition) {
+            throw new LogicException(sprintf('Command class "%s" is not correctly initialized. You probably forgot to call the parent constructor.', \get_class($this)));
+        }
+
         return $this->definition;
     }
 
@@ -449,7 +453,7 @@ class Command
     /**
      * Returns the command name.
      *
-     * @return string The command name
+     * @return string|null
      */
     public function getName()
     {

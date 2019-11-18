@@ -68,7 +68,7 @@ class AppVariable
     /**
      * Returns the current user.
      *
-     * @return mixed
+     * @return object|null
      *
      * @see TokenInterface::getUser()
      */
@@ -79,13 +79,12 @@ class AppVariable
         }
 
         if (!$token = $tokenStorage->getToken()) {
-            return;
+            return null;
         }
 
         $user = $token->getUser();
-        if (\is_object($user)) {
-            return $user;
-        }
+
+        return \is_object($user) ? $user : null;
     }
 
     /**
@@ -113,9 +112,7 @@ class AppVariable
             throw new \RuntimeException('The "app.session" variable is not available.');
         }
 
-        if ($request = $this->getRequest()) {
-            return $request->getSession();
-        }
+        return ($request = $this->getRequest()) ? $request->getSession() : null;
     }
 
     /**

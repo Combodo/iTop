@@ -65,12 +65,12 @@ class Profiler
     /**
      * Loads the Profile for the given Response.
      *
-     * @return Profile|false A Profile instance
+     * @return Profile|null A Profile instance
      */
     public function loadProfileFromResponse(Response $response)
     {
         if (!$token = $response->headers->get('X-Debug-Token')) {
-            return false;
+            return null;
         }
 
         return $this->loadProfile($token);
@@ -81,7 +81,7 @@ class Profiler
      *
      * @param string $token A token
      *
-     * @return Profile A Profile instance
+     * @return Profile|null A Profile instance
      */
     public function loadProfile($token)
     {
@@ -130,7 +130,7 @@ class Profiler
      *
      * @return array An array of tokens
      *
-     * @see http://php.net/manual/en/datetime.formats.php for the supported date/time formats
+     * @see https://php.net/datetime.formats for the supported date/time formats
      */
     public function find($ip, $url, $limit, $method, $start, $end, $statusCode = null)
     {
@@ -145,7 +145,7 @@ class Profiler
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
         if (false === $this->enabled) {
-            return;
+            return null;
         }
 
         $profile = new Profile(substr(hash('sha256', uniqid(mt_rand(), true)), 0, 6));
@@ -248,16 +248,19 @@ class Profiler
         return $this->collectors[$name];
     }
 
+    /**
+     * @return int|null
+     */
     private function getTimestamp($value)
     {
         if (null === $value || '' == $value) {
-            return;
+            return null;
         }
 
         try {
             $value = new \DateTime(is_numeric($value) ? '@'.$value : $value);
         } catch (\Exception $e) {
-            return;
+            return null;
         }
 
         return $value->getTimestamp();

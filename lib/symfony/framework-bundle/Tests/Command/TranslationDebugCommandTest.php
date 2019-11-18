@@ -94,11 +94,9 @@ class TranslationDebugCommandTest extends TestCase
         $this->assertRegExp('/unused/', $tester->getDisplay());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testDebugInvalidDirectory()
     {
+        $this->expectException('InvalidArgumentException');
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
         $kernel->expects($this->once())
             ->method('getBundle')
@@ -241,7 +239,7 @@ class TranslationDebugCommandTest extends TestCase
         $tester = new CommandTester($application->find('debug:translation'));
         $tester->execute(['locale' => 'en']);
 
-        $this->assertContains('No defined or extracted', $tester->getDisplay());
+        $this->assertStringContainsString('No defined or extracted', $tester->getDisplay());
     }
 
     private function getBundle($path)

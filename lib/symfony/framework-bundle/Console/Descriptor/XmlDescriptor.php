@@ -98,7 +98,9 @@ class XmlDescriptor extends Descriptor
         $dom->appendChild($dom->importNode($this->getContainerAliasDocument($alias, isset($options['id']) ? $options['id'] : null)->childNodes->item(0), true));
 
         if (!$builder) {
-            return $this->writeDocument($dom);
+            $this->writeDocument($dom);
+
+            return;
         }
 
         $dom->appendChild($dom->importNode($this->getContainerDefinitionDocument($builder->getDefinition((string) $alias), (string) $alias)->childNodes->item(0), true));
@@ -132,8 +134,6 @@ class XmlDescriptor extends Descriptor
 
     /**
      * Writes DOM document.
-     *
-     * @return \DOMDocument|string
      */
     private function writeDocument(\DOMDocument $dom)
     {
@@ -158,7 +158,6 @@ class XmlDescriptor extends Descriptor
     }
 
     /**
-     * @param Route       $route
      * @param string|null $name
      *
      * @return \DOMDocument
@@ -244,8 +243,7 @@ class XmlDescriptor extends Descriptor
     }
 
     /**
-     * @param ContainerBuilder $builder
-     * @param bool             $showPrivate
+     * @param bool $showPrivate
      *
      * @return \DOMDocument
      */
@@ -268,10 +266,9 @@ class XmlDescriptor extends Descriptor
     }
 
     /**
-     * @param mixed                 $service
-     * @param string                $id
-     * @param ContainerBuilder|null $builder
-     * @param bool                  $showArguments
+     * @param mixed  $service
+     * @param string $id
+     * @param bool   $showArguments
      *
      * @return \DOMDocument
      */
@@ -296,11 +293,10 @@ class XmlDescriptor extends Descriptor
     }
 
     /**
-     * @param ContainerBuilder $builder
-     * @param string|null      $tag
-     * @param bool             $showPrivate
-     * @param bool             $showArguments
-     * @param callable         $filter
+     * @param string|null $tag
+     * @param bool        $showPrivate
+     * @param bool        $showArguments
+     * @param callable    $filter
      *
      * @return \DOMDocument
      */
@@ -330,7 +326,6 @@ class XmlDescriptor extends Descriptor
     }
 
     /**
-     * @param Definition  $definition
      * @param string|null $id
      * @param bool        $omitTags
      *
@@ -454,7 +449,6 @@ class XmlDescriptor extends Descriptor
     }
 
     /**
-     * @param Alias       $alias
      * @param string|null $id
      *
      * @return \DOMDocument
@@ -492,8 +486,7 @@ class XmlDescriptor extends Descriptor
     }
 
     /**
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param string|null              $event
+     * @param string|null $event
      *
      * @return \DOMDocument
      */

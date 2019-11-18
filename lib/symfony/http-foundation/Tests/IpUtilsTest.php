@@ -73,11 +73,11 @@ class IpUtilsTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
      * @requires extension sockets
      */
     public function testAnIpv6WithOptionDisabledIpv6()
     {
+        $this->expectException('RuntimeException');
         if (\defined('AF_INET6')) {
             $this->markTestSkipped('Only works when PHP is compiled with the option "disable-ipv6".');
         }

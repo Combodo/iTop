@@ -124,12 +124,10 @@ class FormPassTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage extended-type attribute, none was configured for the "my.type_extension" service
-     */
     public function testAddTaggedFormTypeExtensionWithoutExtendedTypeAttribute()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('extended-type attribute, none was configured for the "my.type_extension" service');
         $container = new ContainerBuilder();
         $container->addCompilerPass(new FormPass());
 

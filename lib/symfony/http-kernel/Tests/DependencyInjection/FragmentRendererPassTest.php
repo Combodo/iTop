@@ -25,11 +25,10 @@ class FragmentRendererPassTest extends TestCase
     /**
      * Tests that content rendering not implementing FragmentRendererInterface
      * triggers an exception.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testContentRendererWithoutInterface()
     {
+        $this->expectException('InvalidArgumentException');
         $builder = new ContainerBuilder();
         $fragmentHandlerDefinition = $builder->register('fragment.handler');
         $builder->register('my_content_renderer', 'Symfony\Component\DependencyInjection\Definition')

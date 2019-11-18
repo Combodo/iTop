@@ -142,7 +142,9 @@ class JsonDescriptor extends Descriptor
     protected function describeContainerAlias(Alias $alias, array $options = [], ContainerBuilder $builder = null)
     {
         if (!$builder) {
-            return $this->writeData($this->getContainerAliasData($alias), $options);
+            $this->writeData($this->getContainerAliasData($alias), $options);
+
+            return;
         }
 
         $this->writeData(
@@ -179,8 +181,6 @@ class JsonDescriptor extends Descriptor
 
     /**
      * Writes data as json.
-     *
-     * @return array|string
      */
     private function writeData(array $data, array $options)
     {
@@ -209,8 +209,7 @@ class JsonDescriptor extends Descriptor
     }
 
     /**
-     * @param Definition $definition
-     * @param bool       $omitTags
+     * @param bool $omitTags
      *
      * @return array
      */
@@ -287,8 +286,7 @@ class JsonDescriptor extends Descriptor
     }
 
     /**
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param string|null              $event
+     * @param string|null $event
      *
      * @return array
      */
@@ -320,7 +318,6 @@ class JsonDescriptor extends Descriptor
 
     /**
      * @param callable $callable
-     * @param array    $options
      *
      * @return array
      */

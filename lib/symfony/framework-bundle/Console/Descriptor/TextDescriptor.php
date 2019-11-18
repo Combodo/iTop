@@ -369,7 +369,7 @@ class TextDescriptor extends Descriptor
             return;
         }
 
-        return $this->describeContainerDefinition($builder->getDefinition((string) $alias), array_merge($options, ['id' => (string) $alias]));
+        $this->describeContainerDefinition($builder->getDefinition((string) $alias), array_merge($options, ['id' => (string) $alias]));
     }
 
     /**
@@ -425,7 +425,6 @@ class TextDescriptor extends Descriptor
         $tableHeaders = ['Order', 'Callable', 'Priority'];
         $tableRows = [];
 
-        $order = 1;
         foreach ($eventListeners as $order => $listener) {
             $tableRows[] = [sprintf('#%d', $order + 1), $this->formatCallable($listener), $eventDispatcher->getListenerPriority($event, $listener)];
         }
@@ -434,8 +433,6 @@ class TextDescriptor extends Descriptor
     }
 
     /**
-     * @param array $config
-     *
      * @return string
      */
     private function formatRouterConfig(array $config)
@@ -494,7 +491,6 @@ class TextDescriptor extends Descriptor
 
     /**
      * @param string $content
-     * @param array  $options
      */
     private function writeText($content, array $options = [])
     {

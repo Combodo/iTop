@@ -21,7 +21,7 @@ class FilesystemTestCase extends TestCase
     protected $longPathNamesWindows = [];
 
     /**
-     * @var \Symfony\Component\Filesystem\Filesystem
+     * @var Filesystem
      */
     protected $filesystem = null;
 
@@ -110,9 +110,8 @@ class FilesystemTestCase extends TestCase
         $this->markAsSkippedIfPosixIsMissing();
 
         $infos = stat($filepath);
-        if ($datas = posix_getpwuid($infos['uid'])) {
-            return $datas['name'];
-        }
+
+        return ($datas = posix_getpwuid($infos['uid'])) ? $datas['name'] : null;
     }
 
     protected function getFileGroup($filepath)
@@ -144,7 +143,7 @@ class FilesystemTestCase extends TestCase
             $this->markTestSkipped('symlink requires "Create symbolic links" privilege on Windows');
         }
 
-        // https://bugs.php.net/bug.php?id=69473
+        // https://bugs.php.net/69473
         if ($relative && '\\' === \DIRECTORY_SEPARATOR && 1 === PHP_ZTS) {
             $this->markTestSkipped('symlink does not support relative paths on thread safe Windows PHP versions');
         }

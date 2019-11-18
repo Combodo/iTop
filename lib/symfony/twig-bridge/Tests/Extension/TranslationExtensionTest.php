@@ -45,31 +45,25 @@ class TranslationExtensionTest extends TestCase
         $this->assertEquals($expected, $this->getTemplate($template)->render($variables));
     }
 
-    /**
-     * @expectedException        \Twig\Error\SyntaxError
-     * @expectedExceptionMessage Unexpected token. Twig was looking for the "with", "from", or "into" keyword in "index" at line 3.
-     */
     public function testTransUnknownKeyword()
     {
-        $output = $this->getTemplate("{% trans \n\nfoo %}{% endtrans %}")->render();
+        $this->expectException('Twig\Error\SyntaxError');
+        $this->expectExceptionMessage('Unexpected token. Twig was looking for the "with", "from", or "into" keyword in "index" at line 3.');
+        $this->getTemplate("{% trans \n\nfoo %}{% endtrans %}")->render();
     }
 
-    /**
-     * @expectedException        \Twig\Error\SyntaxError
-     * @expectedExceptionMessage A message inside a trans tag must be a simple text in "index" at line 2.
-     */
     public function testTransComplexBody()
     {
-        $output = $this->getTemplate("{% trans %}\n{{ 1 + 2 }}{% endtrans %}")->render();
+        $this->expectException('Twig\Error\SyntaxError');
+        $this->expectExceptionMessage('A message inside a trans tag must be a simple text in "index" at line 2.');
+        $this->getTemplate("{% trans %}\n{{ 1 + 2 }}{% endtrans %}")->render();
     }
 
-    /**
-     * @expectedException        \Twig\Error\SyntaxError
-     * @expectedExceptionMessage A message inside a transchoice tag must be a simple text in "index" at line 2.
-     */
     public function testTransChoiceComplexBody()
     {
-        $output = $this->getTemplate("{% transchoice count %}\n{{ 1 + 2 }}{% endtranschoice %}")->render();
+        $this->expectException('Twig\Error\SyntaxError');
+        $this->expectExceptionMessage('A message inside a transchoice tag must be a simple text in "index" at line 2.');
+        $this->getTemplate("{% transchoice count %}\n{{ 1 + 2 }}{% endtranschoice %}")->render();
     }
 
     public function getTransTests()

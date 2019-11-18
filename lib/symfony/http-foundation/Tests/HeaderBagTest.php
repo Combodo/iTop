@@ -48,13 +48,18 @@ class HeaderBagTest extends TestCase
         $this->assertInstanceOf('DateTime', $headerDate);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
+    public function testGetDateNull()
+    {
+        $bag = new HeaderBag(['foo' => null]);
+        $headerDate = $bag->getDate('foo');
+        $this->assertNull($headerDate);
+    }
+
     public function testGetDateException()
     {
+        $this->expectException('RuntimeException');
         $bag = new HeaderBag(['foo' => 'Tue']);
-        $headerDate = $bag->getDate('foo');
+        $bag->getDate('foo');
     }
 
     public function testGetCacheControlHeader()
@@ -98,6 +103,9 @@ class HeaderBagTest extends TestCase
         $bag->set('foo', 'bor', false);
         $this->assertEquals('bar', $bag->get('foo'), '->get return first value');
         $this->assertEquals(['bar', 'bor'], $bag->get('foo', 'nope', false), '->get return all values as array');
+
+        $bag->set('baz', null);
+        $this->assertNull($bag->get('baz', 'nope'), '->get return null although different default value is given');
     }
 
     public function testSetAssociativeArray()

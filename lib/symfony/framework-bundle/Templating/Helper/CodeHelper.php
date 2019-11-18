@@ -110,7 +110,7 @@ class CodeHelper extends Helper
      * @param string $file A file path
      * @param int    $line The selected line number
      *
-     * @return string An HTML string
+     * @return string|null An HTML string
      */
     public function fileExcerpt($file, $line)
     {
@@ -120,12 +120,12 @@ class CodeHelper extends Helper
 
                 // Check if the file is an application/octet-stream (eg. Phar file) because highlight_file cannot parse these files
                 if ('application/octet-stream' === $finfo->file($file, FILEINFO_MIME_TYPE)) {
-                    return;
+                    return '';
                 }
             }
 
             // highlight_file could throw warnings
-            // see https://bugs.php.net/bug.php?id=25725
+            // see https://bugs.php.net/25725
             $code = @highlight_file($file, true);
             // remove main code/span tags
             $code = preg_replace('#^<code.*?>\s*<span.*?>(.*)</span>\s*</code>#s', '\\1', $code);
@@ -138,6 +138,8 @@ class CodeHelper extends Helper
 
             return '<ol start="'.max($line - 3, 1).'">'.implode("\n", $lines).'</ol>';
         }
+
+        return null;
     }
 
     /**

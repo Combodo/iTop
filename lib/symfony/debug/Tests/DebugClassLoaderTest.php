@@ -59,12 +59,10 @@ class DebugClassLoaderTest extends TestCase
         $this->fail('DebugClassLoader did not register');
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage boo
-     */
     public function testThrowingClass()
     {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('boo');
         try {
             class_exists(__NAMESPACE__.'\Fixtures\Throwing');
             $this->fail('Exception expected');
@@ -139,21 +137,17 @@ class DebugClassLoaderTest extends TestCase
         }
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Case mismatch between loaded and declared class names
-     */
     public function testNameCaseMismatch()
     {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Case mismatch between loaded and declared class names');
         class_exists(__NAMESPACE__.'\TestingCaseMismatch', true);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Case mismatch between class and real file names
-     */
     public function testFileCaseMismatch()
     {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Case mismatch between class and real file names');
         if (!file_exists(__DIR__.'/Fixtures/CaseMismatch.php')) {
             $this->markTestSkipped('Can only be run on case insensitive filesystems');
         }
@@ -161,12 +155,10 @@ class DebugClassLoaderTest extends TestCase
         class_exists(__NAMESPACE__.'\Fixtures\CaseMismatch', true);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Case mismatch between loaded and declared class names
-     */
     public function testPsr4CaseMismatch()
     {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('Case mismatch between loaded and declared class names');
         class_exists(__NAMESPACE__.'\Fixtures\Psr4CaseMismatch', true);
     }
 
@@ -447,5 +439,7 @@ class ClassLoader
         } elseif ('Test\\'.__NAMESPACE__.'\UseTraitWithInternalMethod' === $class) {
             eval('namespace Test\\'.__NAMESPACE__.'; class UseTraitWithInternalMethod { use \\'.__NAMESPACE__.'\Fixtures\TraitWithInternalMethod; }');
         }
+
+        return null;
     }
 }

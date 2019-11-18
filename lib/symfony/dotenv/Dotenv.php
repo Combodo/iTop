@@ -38,8 +38,7 @@ final class Dotenv
     /**
      * Loads one or several .env files.
      *
-     * @param string    $path  A file to load
-     * @param ...string $paths A list of additional files to load
+     * @param string $path A file to load
      *
      * @throws FormatException when a file has a syntax error
      * @throws PathException   when a file does not exist or is not readable
@@ -184,29 +183,24 @@ final class Dotenv
             throw $this->createFormatException('Whitespace are not supported before the value');
         }
 
+        $loadedVars = array_flip(explode(',', isset($_SERVER['SYMFONY_DOTENV_VARS']) ? $_SERVER['SYMFONY_DOTENV_VARS'] : (isset($_ENV['SYMFONY_DOTENV_VARS']) ? $_ENV['SYMFONY_DOTENV_VARS'] : '')));
+        unset($loadedVars['']);
         $v = '';
 
         do {
             if ("'" === $this->data[$this->cursor]) {
-                $value = '';
-                ++$this->cursor;
+                $len = 0;
 
-                while ("\n" !== $this->data[$this->cursor]) {
-                    if ("'" === $this->data[$this->cursor]) {
-                        break;
-                    }
-                    $value .= $this->data[$this->cursor];
-                    ++$this->cursor;
+                do {
+                    if ($this->cursor + ++$len === $this->end) {
+                        $this->cursor += $len;
 
-                    if ($this->cursor === $this->end) {
                         throw $this->createFormatException('Missing quote to end the value');
                     }
-                }
-                if ("\n" === $this->data[$this->cursor]) {
-                    throw $this->createFormatException('Missing quote to end the value');
-                }
-                ++$this->cursor;
-                $v .= $value;
+                } while ("'" !== $this->data[$this->cursor + $len]);
+
+                $v .= substr($this->data, 1 + $this->cursor, $len - 1);
+                $this->cursor += 1 + $len;
             } elseif ('"' === $this->data[$this->cursor]) {
                 $value = '';
                 ++$this->cursor;
@@ -225,8 +219,8 @@ final class Dotenv
                 ++$this->cursor;
                 $value = str_replace(['\\"', '\r', '\n'], ['"', "\r", "\n"], $value);
                 $resolvedValue = $value;
-                $resolvedValue = $this->resolveVariables($resolvedValue);
-                $resolvedValue = $this->resolveCommands($resolvedValue);
+                $resolvedValue = $this->resolveVariables($resolvedValue, $loadedVars);
+                $resolvedValue = $this->resolveCommands($resolvedValue, $loadedVars);
                 $resolvedValue = str_replace('\\\\', '\\', $resolvedValue);
                 $v .= $resolvedValue;
             } else {
@@ -248,8 +242,8 @@ final class Dotenv
                 }
                 $value = rtrim($value);
                 $resolvedValue = $value;
-                $resolvedValue = $this->resolveVariables($resolvedValue);
-                $resolvedValue = $this->resolveCommands($resolvedValue);
+                $resolvedValue = $this->resolveVariables($resolvedValue, $loadedVars);
+                $resolvedValue = $this->resolveCommands($resolvedValue, $loadedVars);
                 $resolvedValue = str_replace('\\\\', '\\', $resolvedValue);
 
                 if ($resolvedValue === $value && preg_match('/\s+/', $value)) {
@@ -302,7 +296,7 @@ final class Dotenv
         }
     }
 
-    private function resolveCommands($value)
+    private function resolveCommands($value, $loadedVars)
     {
         if (false === strpos($value, '$')) {
             return $value;
@@ -318,7 +312,7 @@ final class Dotenv
             )
         /x';
 
-        return preg_replace_callback($regex, function ($matches) {
+        return preg_replace_callback($regex, function ($matches) use ($loadedVars) {
             if ('\\' === $matches[1]) {
                 return substr($matches[0], 1);
             }
@@ -333,7 +327,15 @@ final class Dotenv
 
             $process = new Process('echo '.$matches[0]);
             $process->inheritEnvironmentVariables(true);
-            $process->setEnv($this->values);
+
+            $env = [];
+            foreach ($this->values as $name => $value) {
+                if (isset($loadedVars[$name]) || (!isset($_ENV[$name]) && !(isset($_SERVER[$name]) && 0 !== strpos($name, 'HTTP_')))) {
+                    $env[$name] = $value;
+                }
+            }
+            $process->setEnv($env);
+
             try {
                 $process->mustRun();
             } catch (ProcessException $e) {
@@ -344,7 +346,7 @@ final class Dotenv
         }, $value);
     }
 
-    private function resolveVariables($value)
+    private function resolveVariables($value, array $loadedVars)
     {
         if (false === strpos($value, '$')) {
             return $value;
@@ -360,7 +362,7 @@ final class Dotenv
             (?P<closing_brace>\})?             # optional closing brace
         /x';
 
-        $value = preg_replace_callback($regex, function ($matches) {
+        $value = preg_replace_callback($regex, function ($matches) use ($loadedVars) {
             // odd number of backslashes means the $ character is escaped
             if (1 === \strlen($matches['backslashes']) % 2) {
                 return substr($matches[0], 1);
@@ -376,14 +378,16 @@ final class Dotenv
             }
 
             $name = $matches['name'];
-            if (isset($this->values[$name])) {
+            if (isset($loadedVars[$name]) && isset($this->values[$name])) {
                 $value = $this->values[$name];
-            } elseif (isset($_SERVER[$name]) && 0 !== strpos($name, 'HTTP_')) {
-                $value = $_SERVER[$name];
             } elseif (isset($_ENV[$name])) {
                 $value = $_ENV[$name];
+            } elseif (isset($_SERVER[$name]) && 0 !== strpos($name, 'HTTP_')) {
+                $value = $_SERVER[$name];
+            } elseif (isset($this->values[$name])) {
+                $value = $this->values[$name];
             } else {
-                $value = (string) getenv($name);
+                $value = '';
             }
 
             if (!$matches['opening_brace'] && isset($matches['closing_brace'])) {

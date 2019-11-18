@@ -15,6 +15,8 @@ use Symfony\Bundle\WebProfilerBundle\Profiler\TemplateManager;
 use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 use Twig\Environment;
+use Twig\Loader\LoaderInterface;
+use Twig\Loader\SourceContextLoaderInterface;
 
 /**
  * Test for TemplateManager class.
@@ -53,11 +55,9 @@ class TemplateManagerTest extends TestCase
         $this->templateManager = new TemplateManager($profiler, $twigEnvironment, $templates);
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
     public function testGetNameOfInvalidTemplate()
     {
+        $this->expectException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
         $this->templateManager->getName(new Profile('token'), 'notexistingpanel');
     }
 
@@ -126,11 +126,16 @@ class TemplateManagerTest extends TestCase
             ->method('loadTemplate')
             ->willReturn('loadedTemplate');
 
-        if (interface_exists('Twig\Loader\SourceContextLoaderInterface')) {
-            $loader = $this->getMockBuilder('Twig\Loader\SourceContextLoaderInterface')->getMock();
+        if (Environment::MAJOR_VERSION > 1) {
+            $loader = $this->createMock(LoaderInterface::class);
+            $loader
+                ->expects($this->any())
+                ->method('exists')
+                ->willReturn(true);
         } else {
-            $loader = $this->getMockBuilder('Twig\Loader\LoaderInterface')->getMock();
+            $loader = $this->createMock(SourceContextLoaderInterface::class);
         }
+
         $this->twigEnvironment->expects($this->any())->method('getLoader')->willReturn($loader);
 
         return $this->twigEnvironment;

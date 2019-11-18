@@ -22,11 +22,10 @@ class RegisterListenersPassTest extends TestCase
     /**
      * Tests that event subscribers not implementing EventSubscriberInterface
      * trigger an exception.
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testEventSubscriberWithoutInterface()
     {
+        $this->expectException('InvalidArgumentException');
         $builder = new ContainerBuilder();
         $builder->register('event_dispatcher');
         $builder->register('my_event_subscriber', 'stdClass')
@@ -38,10 +37,6 @@ class RegisterListenersPassTest extends TestCase
 
     public function testValidEventSubscriber()
     {
-        $services = [
-            'my_event_subscriber' => [0 => []],
-        ];
-
         $builder = new ContainerBuilder();
         $eventDispatcherDefinition = $builder->register('event_dispatcher');
         $builder->register('my_event_subscriber', 'Symfony\Component\EventDispatcher\Tests\DependencyInjection\SubscriberService')
@@ -63,12 +58,10 @@ class RegisterListenersPassTest extends TestCase
         $this->assertEquals($expectedCalls, $eventDispatcherDefinition->getMethodCalls());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The service "foo" tagged "kernel.event_listener" must not be abstract.
-     */
     public function testAbstractEventListener()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('The service "foo" tagged "kernel.event_listener" must not be abstract.');
         $container = new ContainerBuilder();
         $container->register('foo', 'stdClass')->setAbstract(true)->addTag('kernel.event_listener', []);
         $container->register('event_dispatcher', 'stdClass');
@@ -77,12 +70,10 @@ class RegisterListenersPassTest extends TestCase
         $registerListenersPass->process($container);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The service "foo" tagged "kernel.event_subscriber" must not be abstract.
-     */
     public function testAbstractEventSubscriber()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('The service "foo" tagged "kernel.event_subscriber" must not be abstract.');
         $container = new ContainerBuilder();
         $container->register('foo', 'stdClass')->setAbstract(true)->addTag('kernel.event_subscriber', []);
         $container->register('event_dispatcher', 'stdClass');
@@ -128,12 +119,10 @@ class RegisterListenersPassTest extends TestCase
         $this->assertTrue($container->getDefinition('foo')->hasTag('container.hot_path'));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage You have requested a non-existent parameter "subscriber.class"
-     */
     public function testEventSubscriberUnresolvableClassName()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('You have requested a non-existent parameter "subscriber.class"');
         $container = new ContainerBuilder();
         $container->register('foo', '%subscriber.class%')->addTag('kernel.event_subscriber', []);
         $container->register('event_dispatcher', 'stdClass');

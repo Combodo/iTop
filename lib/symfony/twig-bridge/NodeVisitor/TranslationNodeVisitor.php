@@ -97,6 +97,8 @@ class TranslationNodeVisitor extends AbstractNodeVisitor
 
     /**
      * {@inheritdoc}
+     *
+     * @return int
      */
     public function getPriority()
     {
@@ -104,8 +106,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor
     }
 
     /**
-     * @param Node $arguments
-     * @param int  $index
+     * @param int $index
      *
      * @return string|null
      */
@@ -116,7 +117,7 @@ class TranslationNodeVisitor extends AbstractNodeVisitor
         } elseif ($arguments->hasNode($index)) {
             $argument = $arguments->getNode($index);
         } else {
-            return;
+            return null;
         }
 
         return $this->getReadDomainFromNode($argument);

@@ -69,12 +69,8 @@ class DefinitionTest extends TestCase
 
         $def = new Definition('stdClass');
 
-        if (method_exists($this, 'expectException')) {
-            $this->expectException('InvalidArgumentException');
-            $this->expectExceptionMessage('The decorated service inner name for "foo" must be different than the service name itself.');
-        } else {
-            $this->setExpectedException('InvalidArgumentException', 'The decorated service inner name for "foo" must be different than the service name itself.');
-        }
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('The decorated service inner name for "foo" must be different than the service name itself.');
 
         $def->setDecoratedService('foo', 'foo');
     }
@@ -101,12 +97,10 @@ class DefinitionTest extends TestCase
         $this->assertEquals([['foo', ['foo']]], $def->getMethodCalls(), '->removeMethodCall() removes a method to call');
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Method name cannot be empty.
-     */
     public function testExceptionOnEmptyMethodCall()
     {
+        $this->expectException('Symfony\Component\DependencyInjection\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Method name cannot be empty.');
         $def = new Definition('stdClass');
         $def->addMethodCall('');
     }
@@ -169,10 +163,10 @@ class DefinitionTest extends TestCase
 
     /**
      * @dataProvider invalidDeprecationMessageProvider
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
      */
     public function testSetDeprecatedWithInvalidDeprecationTemplate($message)
     {
+        $this->expectException('Symfony\Component\DependencyInjection\Exception\InvalidArgumentException');
         $def = new Definition('stdClass');
         $def->setDeprecated(false, $message);
     }
@@ -254,35 +248,29 @@ class DefinitionTest extends TestCase
         $this->assertSame(['foo', 'bar'], $def->getArguments());
     }
 
-    /**
-     * @expectedException \OutOfBoundsException
-     */
     public function testGetArgumentShouldCheckBounds()
     {
+        $this->expectException('OutOfBoundsException');
         $def = new Definition('stdClass');
 
         $def->addArgument('foo');
         $def->getArgument(1);
     }
 
-    /**
-     * @expectedException \OutOfBoundsException
-     * @expectedExceptionMessage The index "1" is not in the range [0, 0].
-     */
     public function testReplaceArgumentShouldCheckBounds()
     {
+        $this->expectException('OutOfBoundsException');
+        $this->expectExceptionMessage('The index "1" is not in the range [0, 0].');
         $def = new Definition('stdClass');
 
         $def->addArgument('foo');
         $def->replaceArgument(1, 'bar');
     }
 
-    /**
-     * @expectedException \OutOfBoundsException
-     * @expectedExceptionMessage Cannot replace arguments if none have been configured yet.
-     */
     public function testReplaceArgumentWithoutExistingArgumentsShouldCheckBounds()
     {
+        $this->expectException('OutOfBoundsException');
+        $this->expectExceptionMessage('Cannot replace arguments if none have been configured yet.');
         $def = new Definition('stdClass');
         $def->replaceArgument(0, 'bar');
     }

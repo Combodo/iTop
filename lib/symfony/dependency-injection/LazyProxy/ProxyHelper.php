@@ -37,7 +37,7 @@ class ProxyHelper
             $type = method_exists($r, 'getReturnType') ? $r->getReturnType() : null;
         }
         if (!$type) {
-            return;
+            return null;
         }
         if (!\is_string($type)) {
             $name = $type instanceof \ReflectionNamedType ? $type->getName() : $type->__toString();
@@ -53,13 +53,12 @@ class ProxyHelper
             return $prefix.$name;
         }
         if (!$r instanceof \ReflectionMethod) {
-            return;
+            return null;
         }
         if ('self' === $lcName) {
             return $prefix.$r->getDeclaringClass()->name;
         }
-        if ($parent = $r->getDeclaringClass()->getParentClass()) {
-            return $prefix.$parent->name;
-        }
+
+        return ($parent = $r->getDeclaringClass()->getParentClass()) ? $prefix.$parent->name : null;
     }
 }

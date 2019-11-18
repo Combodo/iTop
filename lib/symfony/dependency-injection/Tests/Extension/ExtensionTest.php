@@ -34,12 +34,10 @@ class ExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @expectedExceptionMessage The config array has no 'enabled' key.
-     */
     public function testIsConfigEnabledOnNonEnableableConfig()
     {
+        $this->expectException('Symfony\Component\DependencyInjection\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The config array has no \'enabled\' key.');
         $extension = new EnableableExtension();
 
         $extension->isConfigEnabled(new ContainerBuilder(), []);

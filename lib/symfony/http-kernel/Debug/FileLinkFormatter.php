@@ -102,14 +102,16 @@ class FileLinkFormatter implements \Serializable
             $request = $this->requestStack->getMasterRequest();
             if ($request instanceof Request) {
                 if ($this->urlFormat instanceof \Closure && !$this->urlFormat = \call_user_func($this->urlFormat)) {
-                    return;
+                    return null;
                 }
 
                 return [
-                    $request->getSchemeAndHttpHost().$request->getBasePath().$this->urlFormat,
+                    $request->getSchemeAndHttpHost().$this->urlFormat,
                     $this->baseDir.\DIRECTORY_SEPARATOR, '',
                 ];
             }
         }
+
+        return null;
     }
 }

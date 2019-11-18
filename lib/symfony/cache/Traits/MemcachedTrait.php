@@ -26,7 +26,7 @@ trait MemcachedTrait
         'persistent_id' => null,
         'username' => null,
         'password' => null,
-        'serializer' => 'php',
+        \Memcached::OPT_SERIALIZER => \Memcached::SERIALIZER_PHP,
     ];
 
     private $client;
@@ -249,6 +249,7 @@ trait MemcachedTrait
         foreach ($this->checkResultCode($this->getClient()->deleteMulti($encodedIds)) as $result) {
             if (\Memcached::RES_SUCCESS !== $result && \Memcached::RES_NOTFOUND !== $result) {
                 $ok = false;
+                break;
             }
         }
 

@@ -49,21 +49,37 @@ abstract class BaseNode implements NodeInterface
         $this->parent = $parent;
     }
 
+    /**
+     * @param string $key
+     */
     public function setAttribute($key, $value)
     {
         $this->attributes[$key] = $value;
     }
 
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
     public function getAttribute($key, $default = null)
     {
         return isset($this->attributes[$key]) ? $this->attributes[$key] : $default;
     }
 
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
     public function hasAttribute($key)
     {
         return isset($this->attributes[$key]);
     }
 
+    /**
+     * @return array
+     */
     public function getAttributes()
     {
         return $this->attributes;
@@ -74,6 +90,9 @@ abstract class BaseNode implements NodeInterface
         $this->attributes = $attributes;
     }
 
+    /**
+     * @param string $key
+     */
     public function removeAttribute($key)
     {
         unset($this->attributes[$key]);
@@ -92,7 +111,7 @@ abstract class BaseNode implements NodeInterface
     /**
      * Returns info message.
      *
-     * @return string The info text
+     * @return string|null The info text
      */
     public function getInfo()
     {
@@ -112,7 +131,7 @@ abstract class BaseNode implements NodeInterface
     /**
      * Retrieves the example configuration for this node.
      *
-     * @return string|array The example
+     * @return string|array|null The example
      */
     public function getExample()
     {
@@ -280,9 +299,9 @@ abstract class BaseNode implements NodeInterface
     /**
      * Normalizes the value before any other normalization is applied.
      *
-     * @param $value
+     * @param mixed $value
      *
-     * @return The normalized array value
+     * @return mixed The normalized array value
      */
     protected function preNormalize($value)
     {

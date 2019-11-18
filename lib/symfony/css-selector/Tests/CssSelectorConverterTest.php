@@ -35,12 +35,10 @@ class CssSelectorConverterTest extends TestCase
         $this->assertEquals('descendant-or-self::H1', $converter->toXPath('H1'));
     }
 
-    /**
-     * @expectedException \Symfony\Component\CssSelector\Exception\ParseException
-     * @expectedExceptionMessage Expected identifier, but <eof at 3> found.
-     */
     public function testParseExceptions()
     {
+        $this->expectException('Symfony\Component\CssSelector\Exception\ParseException');
+        $this->expectExceptionMessage('Expected identifier, but <eof at 3> found.');
         $converter = new CssSelectorConverter();
         $converter->toXPath('h1:');
     }

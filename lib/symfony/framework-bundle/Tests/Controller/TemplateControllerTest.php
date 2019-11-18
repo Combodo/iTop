@@ -77,12 +77,10 @@ class TemplateControllerTest extends TestCase
         $this->assertEquals('bar', $controller->templateAction('mytemplate')->getContent());
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage You can not use the TemplateController if the Templating Component or the Twig Bundle are not available.
-     */
     public function testNoTwigNorTemplating()
     {
+        $this->expectException('LogicException');
+        $this->expectExceptionMessage('You can not use the TemplateController if the Templating Component or the Twig Bundle are not available.');
         $controller = new TemplateController();
 
         $controller->templateAction('mytemplate')->getContent();

@@ -1,5 +1,7 @@
 language: php
 
+dist: trusty
+
 sudo: false
 
 cache:
@@ -7,8 +9,11 @@ cache:
         - vendor
         - $HOME/.composer/cache/files
 
+
 env:
-    - TWIG_EXT=no
+    global:
+        - TWIG_EXT=no
+        - SYMFONY_PHPUNIT_REMOVE_RETURN_TYPEHINT=1
 
 before_install:
     - phpenv config-rm xdebug.ini || return 0
@@ -25,9 +30,6 @@ script: ./vendor/bin/simple-phpunit
 jobs:
     fast_finish: true
     include:
-        - php: 5.4
-        - php: 5.4
-          env: TWIG_EXT=yes
         - php: 5.5
         - php: 5.5
           env: TWIG_EXT=yes

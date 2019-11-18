@@ -78,12 +78,8 @@ class ParameterBagTest extends TestCase
             'fiz' => ['bar' => ['boo' => 12]],
         ]);
 
-        if (method_exists($this, 'expectException')) {
-            $this->expectException(ParameterNotFoundException::class);
-            $this->expectExceptionMessage($exceptionMessage);
-        } else {
-            $this->setExpectedException(ParameterNotFoundException::class, $exceptionMessage);
-        }
+        $this->expectException(ParameterNotFoundException::class);
+        $this->expectExceptionMessage($exceptionMessage);
 
         $bag->get($parameterKey);
     }

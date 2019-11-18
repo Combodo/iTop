@@ -41,11 +41,11 @@ class ObjectRouteLoaderTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider getBadResourceStrings
      */
     public function testExceptionWithoutSyntax($resourceString)
     {
+        $this->expectException('InvalidArgumentException');
         $loader = new ObjectRouteLoaderForTest();
         $loader->load($resourceString);
     }
@@ -59,31 +59,25 @@ class ObjectRouteLoaderTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testExceptionOnNoObjectReturned()
     {
+        $this->expectException('LogicException');
         $loader = new ObjectRouteLoaderForTest();
         $loader->loaderMap = ['my_service' => 'NOT_AN_OBJECT'];
         $loader->load('my_service:method');
     }
 
-    /**
-     * @expectedException \BadMethodCallException
-     */
     public function testExceptionOnBadMethod()
     {
+        $this->expectException('BadMethodCallException');
         $loader = new ObjectRouteLoaderForTest();
         $loader->loaderMap = ['my_service' => new \stdClass()];
         $loader->load('my_service:method');
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testExceptionOnMethodNotReturningCollection()
     {
+        $this->expectException('LogicException');
         $service = $this->getMockBuilder('stdClass')
             ->setMethods(['loadRoutes'])
             ->getMock();

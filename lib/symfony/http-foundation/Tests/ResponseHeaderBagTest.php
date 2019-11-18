@@ -240,21 +240,17 @@ class ResponseHeaderBagTest extends TestCase
         $this->assertEquals([], $bag->getCookies());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testGetCookiesWithInvalidArgument()
     {
+        $this->expectException('InvalidArgumentException');
         $bag = new ResponseHeaderBag();
 
         $bag->getCookies('invalid_argument');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testMakeDispositionInvalidDisposition()
     {
+        $this->expectException('InvalidArgumentException');
         $headers = new ResponseHeaderBag();
 
         $headers->makeDisposition('invalid', 'foo.html');
@@ -298,10 +294,10 @@ class ResponseHeaderBagTest extends TestCase
 
     /**
      * @dataProvider provideMakeDispositionFail
-     * @expectedException \InvalidArgumentException
      */
     public function testMakeDispositionFail($disposition, $filename)
     {
+        $this->expectException('InvalidArgumentException');
         $headers = new ResponseHeaderBag();
 
         $headers->makeDisposition($disposition, $filename);

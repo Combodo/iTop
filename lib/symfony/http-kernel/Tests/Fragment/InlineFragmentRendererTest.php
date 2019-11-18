@@ -111,11 +111,9 @@ class InlineFragmentRendererTest extends TestCase
         Request::setTrustedProxies([], -1);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testRenderExceptionNoIgnoreErrors()
     {
+        $this->expectException('RuntimeException');
         $dispatcher = $this->getMockBuilder('Symfony\Component\EventDispatcher\EventDispatcherInterface')->getMock();
         $dispatcher->expects($this->never())->method('dispatch');
 

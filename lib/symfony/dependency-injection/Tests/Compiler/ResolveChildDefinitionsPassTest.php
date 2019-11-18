@@ -390,7 +390,7 @@ class ResolveChildDefinitionsPassTest extends TestCase
             ->setBindings(['a' => '1', 'b' => '2'])
         ;
 
-        $child = $container->setDefinition('child', new ChildDefinition('parent'))
+        $container->setDefinition('child', new ChildDefinition('parent'))
             ->setBindings(['b' => 'B', 'c' => 'C'])
         ;
 
@@ -432,12 +432,10 @@ class ResolveChildDefinitionsPassTest extends TestCase
         $pass->process($container);
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException
-     * @expectedExceptionMessageRegExp /^Circular reference detected for service "c", path: "c -> b -> a -> c"./
-     */
     public function testProcessDetectsChildDefinitionIndirectCircularReference()
     {
+        $this->expectException('Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException');
+        $this->expectExceptionMessageRegExp('/^Circular reference detected for service "c", path: "c -> b -> a -> c"./');
         $container = new ContainerBuilder();
 
         $container->register('a');

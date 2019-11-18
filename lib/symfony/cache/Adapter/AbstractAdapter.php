@@ -49,7 +49,7 @@ abstract class AbstractAdapter implements AdapterInterface, LoggerAwareInterface
             throw new InvalidArgumentException(sprintf('Namespace must be %d chars max, %d given ("%s")', $this->maxIdLength - 24, \strlen($namespace), $namespace));
         }
         $this->createCacheItem = \Closure::bind(
-            function ($key, $value, $isHit) use ($defaultLifetime) {
+            static function ($key, $value, $isHit) use ($defaultLifetime) {
                 $item = new CacheItem();
                 $item->key = $key;
                 $item->value = $value;
@@ -63,7 +63,7 @@ abstract class AbstractAdapter implements AdapterInterface, LoggerAwareInterface
         );
         $getId = function ($key) { return $this->getId((string) $key); };
         $this->mergeByLifetime = \Closure::bind(
-            function ($deferred, $namespace, &$expiredIds) use ($getId) {
+            static function ($deferred, $namespace, &$expiredIds) use ($getId) {
                 $byLifetime = [];
                 $now = time();
                 $expiredIds = [];
@@ -86,11 +86,10 @@ abstract class AbstractAdapter implements AdapterInterface, LoggerAwareInterface
     }
 
     /**
-     * @param string               $namespace
-     * @param int                  $defaultLifetime
-     * @param string               $version
-     * @param string               $directory
-     * @param LoggerInterface|null $logger
+     * @param string $namespace
+     * @param int    $defaultLifetime
+     * @param string $version
+     * @param string $directory
      *
      * @return AdapterInterface
      */
@@ -274,6 +273,16 @@ abstract class AbstractAdapter implements AdapterInterface, LoggerAwareInterface
         }
 
         return $ok;
+    }
+
+    public function __sleep()
+    {
+        throw new \BadMethodCallException('Cannot serialize '.__CLASS__);
+    }
+
+    public function __wakeup()
+    {
+        throw new \BadMethodCallException('Cannot unserialize '.__CLASS__);
     }
 
     public function __destruct()

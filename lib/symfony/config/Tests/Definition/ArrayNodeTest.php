@@ -18,21 +18,17 @@ use Symfony\Component\Config\Definition\ScalarNode;
 
 class ArrayNodeTest extends TestCase
 {
-    /**
-     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidTypeException
-     */
     public function testNormalizeThrowsExceptionWhenFalseIsNotAllowed()
     {
+        $this->expectException('Symfony\Component\Config\Definition\Exception\InvalidTypeException');
         $node = new ArrayNode('root');
         $node->normalize(false);
     }
 
-    /**
-     * @expectedException        \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
-     * @expectedExceptionMessage Unrecognized option "foo" under "root"
-     */
     public function testExceptionThrownOnUnrecognizedChild()
     {
+        $this->expectException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
+        $this->expectExceptionMessage('Unrecognized option "foo" under "root"');
         $node = new ArrayNode('root');
         $node->normalize(['foo' => 'bar']);
     }
@@ -55,12 +51,8 @@ class ArrayNodeTest extends TestCase
     public function testIgnoreAndRemoveBehaviors($ignore, $remove, $expected, $message = '')
     {
         if ($expected instanceof \Exception) {
-            if (method_exists($this, 'expectException')) {
-                $this->expectException(\get_class($expected));
-                $this->expectExceptionMessage($expected->getMessage());
-            } else {
-                $this->setExpectedException(\get_class($expected), $expected->getMessage());
-            }
+            $this->expectException(\get_class($expected));
+            $this->expectExceptionMessage($expected->getMessage());
         }
         $node = new ArrayNode('root');
         $node->setIgnoreExtraKeys($ignore, $remove);
@@ -180,24 +172,20 @@ class ArrayNodeTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Child nodes must be named.
-     */
     public function testAddChildEmptyName()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Child nodes must be named.');
         $node = new ArrayNode('root');
 
         $childNode = new ArrayNode('');
         $node->addChild($childNode);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage A child node named "foo" already exists.
-     */
     public function testAddChildNameAlreadyExists()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('A child node named "foo" already exists.');
         $node = new ArrayNode('root');
 
         $childNode = new ArrayNode('foo');
@@ -207,12 +195,10 @@ class ArrayNodeTest extends TestCase
         $node->addChild($childNodeWithSameName);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage The node at path "foo" has no default value.
-     */
     public function testGetDefaultValueWithoutDefaultValue()
     {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('The node at path "foo" has no default value.');
         $node = new ArrayNode('foo');
         $node->getDefaultValue();
     }

@@ -84,11 +84,9 @@ class RouterListenerTest extends TestCase
         return new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testInvalidMatcher()
     {
+        $this->expectException('InvalidArgumentException');
         new RouterListener(new \stdClass(), $this->requestStack);
     }
 
@@ -206,14 +204,12 @@ class RouterListenerTest extends TestCase
         $request = Request::create('http://localhost/');
         $response = $kernel->handle($request);
         $this->assertSame(404, $response->getStatusCode());
-        $this->assertContains('Welcome', $response->getContent());
+        $this->assertStringContainsString('Welcome', $response->getContent());
     }
 
-    /**
-     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
-     */
     public function testRequestWithBadHost()
     {
+        $this->expectException('Symfony\Component\HttpKernel\Exception\BadRequestHttpException');
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\HttpKernelInterface')->getMock();
         $request = Request::create('http://bad host %22/');
         $event = new GetResponseEvent($kernel, $request, HttpKernelInterface::MASTER_REQUEST);

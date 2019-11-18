@@ -60,11 +60,9 @@ class ResolveNamedArgumentsPassTest extends TestCase
         $this->assertSame([0 => '123'], $definition->getArguments());
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
-     */
     public function testClassNull()
     {
+        $this->expectException('Symfony\Component\DependencyInjection\Exception\RuntimeException');
         $container = new ContainerBuilder();
 
         $definition = $container->register(NamedArgumentsDummy::class);
@@ -74,11 +72,9 @@ class ResolveNamedArgumentsPassTest extends TestCase
         $pass->process($container);
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
-     */
     public function testClassNotExist()
     {
+        $this->expectException('Symfony\Component\DependencyInjection\Exception\RuntimeException');
         $container = new ContainerBuilder();
 
         $definition = $container->register(NotExist::class, NotExist::class);
@@ -88,11 +84,9 @@ class ResolveNamedArgumentsPassTest extends TestCase
         $pass->process($container);
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\RuntimeException
-     */
     public function testClassNoConstructor()
     {
+        $this->expectException('Symfony\Component\DependencyInjection\Exception\RuntimeException');
         $container = new ContainerBuilder();
 
         $definition = $container->register(NoConstructor::class, NoConstructor::class);
@@ -102,12 +96,10 @@ class ResolveNamedArgumentsPassTest extends TestCase
         $pass->process($container);
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid service "Symfony\Component\DependencyInjection\Tests\Fixtures\NamedArgumentsDummy": method "__construct()" has no argument named "$notFound". Check your service definition.
-     */
     public function testArgumentNotFound()
     {
+        $this->expectException('Symfony\Component\DependencyInjection\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid service "Symfony\Component\DependencyInjection\Tests\Fixtures\NamedArgumentsDummy": method "__construct()" has no argument named "$notFound". Check your service definition.');
         $container = new ContainerBuilder();
 
         $definition = $container->register(NamedArgumentsDummy::class, NamedArgumentsDummy::class);
@@ -117,12 +109,10 @@ class ResolveNamedArgumentsPassTest extends TestCase
         $pass->process($container);
     }
 
-    /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Invalid service "Symfony\Component\DependencyInjection\Tests\Fixtures\TestDefinition1": method "Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummyWithoutReturnTypes::createTestDefinition1()" has no argument named "$notFound". Check your service definition.
-     */
     public function testCorrectMethodReportedInException()
     {
+        $this->expectException('Symfony\Component\DependencyInjection\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid service "Symfony\Component\DependencyInjection\Tests\Fixtures\TestDefinition1": method "Symfony\Component\DependencyInjection\Tests\Fixtures\FactoryDummyWithoutReturnTypes::createTestDefinition1()" has no argument named "$notFound". Check your service definition.');
         $container = new ContainerBuilder();
 
         $container->register(FactoryDummyWithoutReturnTypes::class, FactoryDummyWithoutReturnTypes::class);

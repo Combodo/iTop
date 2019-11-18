@@ -12,6 +12,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
         '32dcc8afd4335739640db7d200c1971d' => __DIR__ . '/..' . '/symfony/polyfill-apcu/bootstrap.php',
+        'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         '2c102faa651ef8ea5874edb585946bce' => __DIR__ . '/..' . '/swiftmailer/swiftmailer/lib/swift_required.php',
     );
@@ -23,7 +24,9 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Util\\' => 22,
             'Symfony\\Polyfill\\Php70\\' => 23,
+            'Symfony\\Polyfill\\Php56\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Polyfill\\Apcu\\' => 22,
@@ -65,9 +68,17 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
         ),
+        'Symfony\\Polyfill\\Util\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-util',
+        ),
         'Symfony\\Polyfill\\Php70\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php70',
+        ),
+        'Symfony\\Polyfill\\Php56\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php56',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
@@ -229,6 +240,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
     public static $classMap = array (
         'AbstractLoginFSMExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'AbstractPortalUIExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
+        'AbstractWeeklyScheduledProcess' => __DIR__ . '/../..' . '/core/backgroundprocess.inc.php',
         'Action' => __DIR__ . '/../..' . '/core/action.class.inc.php',
         'ActionChecker' => __DIR__ . '/../..' . '/core/userrights.class.inc.php',
         'ActionEmail' => __DIR__ . '/../..' . '/core/action.class.inc.php',
@@ -585,6 +597,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'PrintableDataTable' => __DIR__ . '/../..' . '/application/datatable.class.inc.php',
         'ProcessException' => __DIR__ . '/../..' . '/core/backgroundprocess.inc.php',
         'ProcessFatalException' => __DIR__ . '/../..' . '/core/backgroundprocess.inc.php',
+        'ProcessInvalidConfigException' => __DIR__ . '/../..' . '/core/backgroundprocess.inc.php',
         'Psr\\Cache\\CacheException' => __DIR__ . '/..' . '/psr/cache/src/CacheException.php',
         'Psr\\Cache\\CacheItemInterface' => __DIR__ . '/..' . '/psr/cache/src/CacheItemInterface.php',
         'Psr\\Cache\\CacheItemPoolInterface' => __DIR__ . '/..' . '/psr/cache/src/CacheItemPoolInterface.php',
@@ -842,7 +855,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Symfony\\Bundle\\FrameworkBundle\\Templating\\TemplateNameParser' => __DIR__ . '/..' . '/symfony/framework-bundle/Templating/TemplateNameParser.php',
         'Symfony\\Bundle\\FrameworkBundle\\Templating\\TemplateReference' => __DIR__ . '/..' . '/symfony/framework-bundle/Templating/TemplateReference.php',
         'Symfony\\Bundle\\FrameworkBundle\\Templating\\TimedPhpEngine' => __DIR__ . '/..' . '/symfony/framework-bundle/Templating/TimedPhpEngine.php',
-        'Symfony\\Bundle\\FrameworkBundle\\Test\\KernelShutdownOnTearDownTrait' => __DIR__ . '/..' . '/symfony/framework-bundle/Test/KernelShutdownOnTearDownTrait.php',
+        'Symfony\\Bundle\\FrameworkBundle\\Test\\ForwardCompatTestTrait' => __DIR__ . '/..' . '/symfony/framework-bundle/Test/ForwardCompatTestTrait.php',
         'Symfony\\Bundle\\FrameworkBundle\\Test\\KernelTestCase' => __DIR__ . '/..' . '/symfony/framework-bundle/Test/KernelTestCase.php',
         'Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase' => __DIR__ . '/..' . '/symfony/framework-bundle/Test/WebTestCase.php',
         'Symfony\\Bundle\\FrameworkBundle\\Translation\\PhpExtractor' => __DIR__ . '/..' . '/symfony/framework-bundle/Translation/PhpExtractor.php',
@@ -1674,7 +1687,16 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Symfony\\Polyfill\\Apcu\\Apcu' => __DIR__ . '/..' . '/symfony/polyfill-apcu/Apcu.php',
         'Symfony\\Polyfill\\Ctype\\Ctype' => __DIR__ . '/..' . '/symfony/polyfill-ctype/Ctype.php',
         'Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
+        'Symfony\\Polyfill\\Php56\\Php56' => __DIR__ . '/..' . '/symfony/polyfill-php56/Php56.php',
         'Symfony\\Polyfill\\Php70\\Php70' => __DIR__ . '/..' . '/symfony/polyfill-php70/Php70.php',
+        'Symfony\\Polyfill\\Util\\Binary' => __DIR__ . '/..' . '/symfony/polyfill-util/Binary.php',
+        'Symfony\\Polyfill\\Util\\BinaryNoFuncOverload' => __DIR__ . '/..' . '/symfony/polyfill-util/BinaryNoFuncOverload.php',
+        'Symfony\\Polyfill\\Util\\BinaryOnFuncOverload' => __DIR__ . '/..' . '/symfony/polyfill-util/BinaryOnFuncOverload.php',
+        'Symfony\\Polyfill\\Util\\TestListener' => __DIR__ . '/..' . '/symfony/polyfill-util/TestListener.php',
+        'Symfony\\Polyfill\\Util\\TestListenerForV5' => __DIR__ . '/..' . '/symfony/polyfill-util/TestListenerForV5.php',
+        'Symfony\\Polyfill\\Util\\TestListenerForV6' => __DIR__ . '/..' . '/symfony/polyfill-util/TestListenerForV6.php',
+        'Symfony\\Polyfill\\Util\\TestListenerForV7' => __DIR__ . '/..' . '/symfony/polyfill-util/TestListenerForV7.php',
+        'Symfony\\Polyfill\\Util\\TestListenerTrait' => __DIR__ . '/..' . '/symfony/polyfill-util/TestListenerTrait.php',
         'System' => __DIR__ . '/..' . '/pear/pear-core-minimal/src/System.php',
         'TCPDF' => __DIR__ . '/..' . '/combodo/tcpdf/tcpdf.php',
         'TCPDF2DBarcode' => __DIR__ . '/..' . '/combodo/tcpdf/tcpdf_barcodes_2d.php',
