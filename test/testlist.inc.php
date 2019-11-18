@@ -285,10 +285,8 @@ class TestMyBizModel extends TestBizModel
 		echo "<h4>Enum links</h4>";
 		self::DumpVariable(MetaModel::EnumReferencedClasses("cmdbTeam"));
 		self::DumpVariable(MetaModel::EnumReferencingClasses("Organization"));
-	
-		self::DumpVariable(MetaModel::EnumLinkingClasses());
-		self::DumpVariable(MetaModel::EnumLinkingClasses("cmdbContact"));
-		self::DumpVariable(MetaModel::EnumLinkingClasses("cmdWorkshop"));
+
+		self::DumpVariable(MetaModel::GetLinkClasses());
 		self::DumpVariable(MetaModel::GetLinkLabel("Liens_entre_contacts_et_workshop", "toworkshop"));
 	}
 	

@@ -7077,7 +7077,7 @@ abstract class MetaModel
 
 		if ($bSkipLinkingClasses)
 		{
-			$aLinksClasses = self::EnumLinksClasses();
+			$aLinksClasses = array_keys(self::GetLinkClasses());
 		}
 
 		// 1-N links (referencing my class), array of sClass => array of sAttcode
@@ -7115,12 +7115,12 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
+	 * @deprecated 2.5.0 It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
 	 * The only difference with EnumLinkingClasses is the output format
 	 *
+	 * @see MetaModel::GetLinkClasses
 	 * @return string[] classes having at least two external keys (thus too many classes as compared to GetLinkClasses)
 	 *
-	 * @see MetaModel::GetLinkClasses
 	 */
 	public static function EnumLinksClasses()
 	{
@@ -7149,15 +7149,16 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
+	 * @deprecated 2.5.0 It is not recommended to use this function: call {@link MetaModel::GetLinkClasses} instead !
 	 * The only difference with EnumLinksClasses is the output format
 	 *
-	 * @param string $sClass
+	 * @see MetaModel::GetLinkClasses
+	 *
+	 *@param string $sClass
 	 *
 	 * @return string[] classes having at least two external keys (thus too many classes as compared to GetLinkClasses)
 	 * @throws \CoreException
 	 *
-	 * @see MetaModel::GetLinkClasses
 	 */
 	public static function EnumLinkingClasses($sClass = "")
 	{
@@ -7206,7 +7207,7 @@ abstract class MetaModel
 	 * actually an N-N relation because it is based on the decision made by the
 	 * designer the data model
 	 *
-	 * @return array external key code => target class
+	 * @return array (target class => (external key code => target class))
 	 * @throws \CoreException
 	 */
 	public static function GetLinkClasses()
