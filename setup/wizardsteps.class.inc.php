@@ -18,8 +18,32 @@
 
 /**
  * All the steps of the iTop installation wizard
+ *
  * @copyright   Copyright (C) 2010-2017 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ *
+ * Steps order (can be retrieved using \WizardController::DumpStructure) :
+ *
+ * START :
+ * - WizStepWelcome
+ * - WizStepInstallOrUpgrade : choose INSTALL or UPGRADE
+ *
+ * INSTALL :
+ * - WizStepLicense
+ * - WizStepDBParams
+ * - WizStepAdminAccount
+ * - WizStepMiscParams
+ * - COMMON
+ *
+ * UPGRADE :
+ * - WizStepDetectedInfo
+ * - WizStepUpgradeMiscParams / WizStepLicense2 => WizStepUpgradeMiscParams
+ * - COMMON
+ *
+ * COMMON :
+ * - WizStepModulesChoice (multiple times)
+ * - WizStepSummary
+ * - WizStepDone
  */
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -30,7 +54,7 @@ require_once(APPROOT.'core/mutex.class.inc.php');
 require_once(APPROOT.'setup/extensionsmap.class.inc.php');
 
 /**
- * First step of the iTop Installation Wizard: Welcome screen
+ * First step of the iTop Installation Wizard: Welcome screen, requirements
  */
 class WizStepWelcome extends WizardStep
 {
