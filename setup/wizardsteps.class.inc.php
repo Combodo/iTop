@@ -24,26 +24,21 @@
  *
  * Steps order (can be retrieved using \WizardController::DumpStructure) :
  *
- * START :
- * - WizStepWelcome
- * - WizStepInstallOrUpgrade : choose INSTALL or UPGRADE
- *
- * INSTALL :
- * - WizStepLicense
- * - WizStepDBParams
- * - WizStepAdminAccount
- * - WizStepMiscParams
- * - COMMON
- *
- * UPGRADE :
- * - WizStepDetectedInfo
- * - WizStepUpgradeMiscParams / WizStepLicense2 => WizStepUpgradeMiscParams
- * - COMMON
- *
- * COMMON :
- * - WizStepModulesChoice (multiple times)
- * - WizStepSummary
- * - WizStepDone
+ * WizStepWelcome
+ * WizStepInstallOrUpgrade
+ *    +             +
+ *    |             |
+ *    v             +----->
+ * WizStepLicense          WizStepDetectedInfo
+ * WizStepDBParams           +              +
+ * WizStepAdminAccount       |              |
+ * WizStepMiscParams         v              +------>
+ *    +                    WizStepLicense2 +--> WizStepUpgradeMiscParams
+ *    |                                            +
+ *    +--->    <-----------------------------------+
+ * WizStepModulesChoice
+ * WizStepSummary
+ * WizStepDone
  */
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
