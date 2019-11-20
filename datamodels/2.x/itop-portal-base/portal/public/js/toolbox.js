@@ -187,14 +187,28 @@ var CombodoPortalToolbox = {
 			// Call callback on success
 			if(callbackOnSuccess !== undefined)
 			{
-				window[callbackOnSuccess](oResponse);
+				if(typeof callbackOnSuccess === 'string')
+				{
+					window[callbackOnSuccess](oResponse);
+				}
+				else if(typeof callbackOnSuccess === 'function')
+				{
+					callbackOnSuccess(oResponse);
+				}
 			}
 		});
 
 		// Call callback while waiting for response
 		if(callbackOnPending !== undefined)
 		{
-			window[callbackOnPending]();
+			if(typeof callbackOnPending === 'string')
+			{
+				window[callbackOnPending](oResponse);
+			}
+			else if(typeof callbackOnPending === 'function')
+			{
+				callbackOnPending(oResponse);
+			}
 		}
 	}
 };
