@@ -142,7 +142,7 @@ class RunTimeEnvironment
 	 * @param Config $oConfig Defines the target environment (DB)
 	 * @param mixed $modulesPath Either a single string or an array of absolute paths
 	 * @param bool $bAbortOnMissingDependency ...
-	 * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
+	 * @param array $aModulesToLoad List of modules to search for, defaults to all if omitted
 	 *
 	 * @return array Array with the following format:
 	 * array =>

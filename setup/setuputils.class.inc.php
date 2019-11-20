@@ -1466,7 +1466,8 @@ EOF
 	 * @param $oWizard
 	 * @param bool $bAbortOnMissingDependency ...
 	 * @param array $aModulesToLoad List of modules to search for, defaults to all if ommitted
-	 * @return hash
+	 *
+	 * @return array
 	 * @throws Exception
 	 */
 	public static function AnalyzeInstallation($oWizard, $bAbortOnMissingDependency = false, $aModulesToLoad = null)
@@ -1555,6 +1556,59 @@ EOF
 
 		$oProductionEnv = new RunTimeEnvironment();
 		return $oProductionEnv->GetApplicationVersion($oConfig);
+	}
+
+	/**
+	 * @param array $aModules List of available module codes
+	 *
+	 * @return bool true if we are in a iTop product package (professional, essential, ...)
+	 * @since 2.7.0 N°2533
+	 */
+	public static function IsProductVersion($aModules)
+	{
+		return array_key_exists('itsm-designer-connector', $aModules);
+	}
+
+	/**
+	 * @param array $aModules Available modules with code as key and metadata array as values
+	 *    Same structure as the one returned by {@link \RunTimeEnvironment::AnalyzeInstallation}
+	 * @param string $sExtensionsDir In the setup, get value with the 'extensions_dir' parameter
+	 *
+	 * @return string Error message if has manually installed modules, empty string otherwise
+	 *
+	 * @since 2.7.0 N°2533
+	 */
+	public static function CheckManualInstallDirEmpty($aModules, $sExtensionsDir = 'extensions')
+	{
+		if (!static::IsProductVersion($aModules))
+		{
+			return '';
+		}
+
+		$sManualInstallModulesFullPath = APPROOT.$sExtensionsDir.DIRECTORY_SEPARATOR;
+		$aManualInstallModules = array_filter($aModules,
+			static function ($v, $k) use ($sManualInstallModulesFullPath) {
+				if (!isset($v['root_dir'])) // avoid index undefined for the _Root_ entry
+				{
+					return false;
+				}
+				// calling realpath to avoid problems with dir separator (almost everywhere we are adding '/' instead of DIRECTORY_SEPARATOR)
+				$return = utils::RealPath($v['root_dir'], $sManualInstallModulesFullPath);
+				if ($return === false)
+				{
+					return false;
+				}
+
+				return true;
+			},
+			ARRAY_FILTER_USE_BOTH);
+
+		if (empty($aManualInstallModules))
+		{
+			return '';
+		}
+
+		return "Some modules are present in the '$sExtensionsDir' directory, this is not allowed when using ".ITOP_APPLICATION;
 	}
 
 	/**

@@ -1272,6 +1272,7 @@ class WizStepModulesChoice extends WizardStep
 		if ($sConfigPath !== null) // only called if the config file exists : we are updating a previous installation !
 		{
 			$oConfig = new Config($sConfigPath);
+			utils::SetConfig($oConfig);
 			$this->bChoicesFromDatabase = $this->oExtensionsMap->LoadChoicesFromDatabase($oConfig);
 		}
 	}
@@ -1339,9 +1340,14 @@ class WizStepModulesChoice extends WizardStep
 		$this->DisplayStep($oPage);
 	}
 
+	/**
+	 * @param \SetupPage $oPage
+	 *
+	 * @throws \Exception
+	 */
 	protected function DisplayStep($oPage)
 	{
-		// Sanity check (not stopper, to let developpers go further...)
+		// Sanity check (not stopper, to let developers go further...)
 		try
 		{
 			SetupUtils::AnalyzeInstallation($this->oWizard, true);
@@ -1357,6 +1363,15 @@ class WizStepModulesChoice extends WizardStep
 		$oPage->add_style("div.choice a { text-decoration:none; font-weight: bold; color: #1C94C4 }");
 		$oPage->add_style("div.description { margin-left: 2em; }");
 		$oPage->add_style(".choice-disabled { color: #999; }");
+
+		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
+		$sManualInstallError = SetupUtils::CheckManualInstallDirEmpty($aModules,
+			$this->oWizard->GetParameter('extensions_dir', 'extensions'));
+		if ($sManualInstallError !== '')
+		{
+			$oPage->warning($sManualInstallError);
+		}
+
 		$oPage->add('<table class="module-selection-banner"><tr>');
 		$sBannerPath = isset($aStepInfo['banner']) ? $aStepInfo['banner'] : '';
 		if (!empty($sBannerPath))
@@ -1380,12 +1395,7 @@ class WizStepModulesChoice extends WizardStep
 		$oPage->add('</tr></table>');
 
 		// Build the default choices
-		$aDefaults = array();
-		$aModules = SetupUtils::AnalyzeInstallation($this->oWizard);
 		$aDefaults = $this->GetDefaults($aStepInfo, $aModules);
-		//echo "<pre>aStepInfo:\n ".print_r($aStepInfo, true)."</pre>";
-		//echo "<pre>aDefaults:\n ".print_r($aDefaults, true)."</pre>";
-
 		$index = $this->GetStepIndex();
 
 		// retrieve the saved selection
