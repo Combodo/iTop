@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Helper;
@@ -81,9 +79,7 @@ class ContextManipulatorHelper
 	 *
 	 * @throws \DOMFormatException
 	 */
-	public function __construct(
-		ModuleDesign $oModuleDesign, RouterInterface $oRouter, BrickCollection $oBrickCollection, ScopeValidatorHelper $oScopeValidator
-	) {
+	public function __construct(ModuleDesign $oModuleDesign, RouterInterface $oRouter, BrickCollection $oBrickCollection, ScopeValidatorHelper $oScopeValidator) {
 		$this->aRules = array();
 		$this->oRouter = $oRouter;
 		$this->oBrickCollection = $oBrickCollection;
@@ -93,7 +89,7 @@ class ContextManipulatorHelper
 	}
 
 	/**
-	 * Initializes the ScopeValidator by generating and caching the scopes compilation in the $this->sCachePath.$this->sFilename file.
+	 * Initializes the ContextManipulatorHelper by caching action rules in memory.
 	 *
 	 * @param \DOMNodeList $oNodes
 	 *
@@ -433,6 +429,9 @@ class ContextManipulatorHelper
 	 *     'submit' => 'http://localhost/',
 	 *     'cancel' => null
 	 * );
+	 *
+	 * @since 2.3.0
+	 * @deprecated 2.7.0 N°1192 Use navigation rules for form callbacks
 	 *
 	 * @param array     $aData
 	 * @param \DBObject $oObject
