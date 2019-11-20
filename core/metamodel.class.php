@@ -5514,7 +5514,7 @@ abstract class MetaModel
 						//
 						$bToBeChanged = false;
 						$sActualFieldSpec = CMDBSource::GetFieldSpec($sTable, $sField);
-						if (strcasecmp($sDBFieldSpec, $sActualFieldSpec) != 0)
+						if (!CMDBSource::IsSameFieldTypes($sDBFieldSpec, $sActualFieldSpec))
 						{
 							$bToBeChanged = true;
 							$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' has a wrong type: found '$sActualFieldSpec' while expecting '$sDBFieldSpec'";

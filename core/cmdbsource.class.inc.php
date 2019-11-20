@@ -590,6 +590,24 @@ class CMDBSource
 	}
 
 	/**
+	 * MariaDB returns "'value'" for enum, while MySQL returns "value" (without the surrounding single quotes)
+	 *
+	 * @param string $sValue
+	 *
+	 * @return string without the surrounding quotes
+	 * @since 2.7.0 N°2490
+	 */
+	private static function RemoveSurroundingQuotes($sValue)
+	{
+		if (utils::StartsWith($sValue, '\'') && utils::EndsWith($sValue, '\''))
+		{
+			$sValue = substr($sValue, 1, -1);
+		}
+
+		return $sValue;
+	}
+
+	/**
 	 * @param string $sSQLQuery
 	 *
 	 * @return \mysqli_result|null
@@ -1114,6 +1132,78 @@ class CMDBSource
 	}
 
 	/**
+	 * There may have some differences between DB : for example in MySQL 5.7 we have "INT", while in MariaDB >= 10.2 you get "int DEFAULT 'NULL'"
+	 *
+	 * We still do a case sensitive comparison for enum values !
+	 *
+	 * A better solution would be to generate SQL field definitions ({@link GetFieldSpec} method) based on the DB used... But for
+	 * now (N°2490 / SF #1756 / PR #91) we did implement this simpler solution
+	 *
+	 * @param string $sItopGeneratedFieldType
+	 * @param string $sDbFieldType
+	 *
+	 * @return bool true if same type and options (case sensitive comparison only for type options), false otherwise
+	 * @since 2.7.0 N°2490
+	 */
+	public static function IsSameFieldTypes($sItopGeneratedFieldType, $sDbFieldType)
+	{
+		list($sItopFieldDataType, $sItopFieldTypeOptions, $sItopFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sItopGeneratedFieldType);
+		list($sDbFieldDataType, $sDbFieldTypeOptions, $sDbFieldOtherOptions) = static::GetFieldDataTypeAndOptions($sDbFieldType);
+
+		if (strcasecmp($sItopFieldDataType, $sDbFieldDataType) !== 0)
+		{
+			return false;
+		}
+
+		if (strcmp($sItopFieldTypeOptions, $sDbFieldTypeOptions) !== 0)
+		{
+			// case sensitive comp as we need to check case for enum possible values for example
+			return false;
+		}
+
+		// remove the default value NULL added by MariadDB
+		$sMariaDbDefaultNull = ' DEFAULT \'NULL\'';
+		if (utils::EndsWith($sDbFieldOtherOptions, $sMariaDbDefaultNull))
+		{
+			$sDbFieldOtherOptions = substr($sDbFieldOtherOptions, 0, -strlen($sMariaDbDefaultNull));
+		}
+		// remove quotes around default values (always present in MariaDB)
+		if (preg_match('/ DEFAULT \'([^\']+)\'$/', $sDbFieldOtherOptions, $aMatches) === 1)
+		{
+			if (($sItopFieldDataType !== 'ENUM') && is_numeric($aMatches[1]))
+			{
+				$sDbFieldOtherOptions = substr($sDbFieldOtherOptions, 0, -(strlen($aMatches[1]) + 2))
+					.$aMatches[1];
+			}
+		}
+		if (strcasecmp($sItopFieldOtherOptions, $sDbFieldOtherOptions) !== 0)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param string $sCompleteFieldType sql field type, for example 'VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 0'
+	 *
+	 * @return string[] consisting of 3 items :
+	 *      1. data type : for example 'VARCHAR'
+	 *      2. type value : for example '255'
+	 *      3. other options : for example ' CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 0'
+	 */
+	private static function GetFieldDataTypeAndOptions($sCompleteFieldType)
+	{
+		preg_match('/^([a-zA-Z]+)(\(([^\)]+)\))?( .+)?$/', $sCompleteFieldType, $aMatches);
+
+		$sDataType = $aMatches[1];
+		$sTypeOptions = isset($aMatches[2]) ? $aMatches[3] : '';
+		$sOtherOptions = isset($aMatches[4]) ? $aMatches[4] : '';
+
+		return array($sDataType, $sTypeOptions, $sOtherOptions);
+	}
+
+	/**
 	 * @param string $sTable
 	 * @param string $sField
 	 *
@@ -1164,7 +1254,8 @@ class CMDBSource
 		}
 		elseif (is_string($aFieldData["Default"]) == 'string')
 		{
-			$sRet .= ' DEFAULT '.self::Quote($aFieldData["Default"]);
+			$sDefaultValue = static::RemoveSurroundingQuotes($aFieldData["Default"]);
+			$sRet .= ' DEFAULT '.self::Quote($sDefaultValue);
 		}
 
 		return $sRet;
