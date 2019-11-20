@@ -37,6 +37,21 @@ $(document).ready(function()
 		$(this).find('.modal-content').html(GetContentLoaderTemplate());
 	});
 
+	/*
+	 * Hack (ugly) for some corner cases where we have not find the root cause yet.
+	 *
+	 * Follows the hack in "bootstrap-patches.js" as it not always enough.
+	 *
+	 * Problem seems to happen when several modals are opened / closed during a workflow,
+	 * typically with the global request extension (During creation).
+	 */
+	setInterval(function(){
+		if($('.modal.in').length > 0)
+		{
+			oBodyElem.addClass('modal-open');
+		}
+	}, 1000);
+
 	// Hide tooltips when a modal is opening, otherwise it might be overlapping it
 	oBodyElem.on('show.bs.modal', function ()
 	{
