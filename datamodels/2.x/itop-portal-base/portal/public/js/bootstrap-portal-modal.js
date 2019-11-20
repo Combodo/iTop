@@ -16,11 +16,21 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+/**
+ * General events manager for BS modals
+ * This file has a DIFFERENT purpose than the "bootstrap-patches.js"
+ *
+ * @since 2.7.0
+ */
 $(document).ready(function()
 {
 	var oBodyElem = $('body');
 
-	// Hack to enable a same modal to load content from different urls
+	/*
+	 * Hack to enable a same modal to load content from different urls
+	 *
+	 * Without it, content from the previous modal is visible while new content is being fetched from the server
+	 */
 	oBodyElem.on('hidden.bs.modal', '.modal#modal-for-all', function ()
 	{
 		$(this).removeData('bs.modal');
@@ -33,8 +43,11 @@ $(document).ready(function()
 		$(this).find('.tooltip.in').tooltip('hide');
 	});
 
-	// Display a error message on modal if the content could not be loaded.
-	// Note : As of now, we can't display a more detailled message based on the response because Bootstrap doesn't pass response data with the loaded event.
+	/*
+	 * Display a error message on modal if the content could not be loaded.
+	 *
+	 * Note : As of now, we can't display a more detailed message based on the response because Bootstrap doesn't pass response data with the loaded event.
+	 */
 	oBodyElem.on('loaded.bs.modal', function (oEvent)
 	{
 		var sModalContent = $(oEvent.target).find('.modal-content').html();

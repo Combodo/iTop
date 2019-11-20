@@ -14,8 +14,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 /*
@@ -25,7 +23,7 @@
  * @since 2.6.2
  */
 
-//N°2166: Fix a bootstrap/CKeditor incompatibility with their respective modals (source: https://stackoverflow.com/a/31679096)
+// N°2166: Fix a bootstrap/CKeditor incompatibility with their respective modals (source: https://stackoverflow.com/a/31679096)
 $.fn.modal.Constructor.prototype.enforceFocus = function() {
 	$( document )
 		.off( 'focusin.bs.modal' ) // guard against infinite focus loop
