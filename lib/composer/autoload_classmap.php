@@ -258,6 +258,7 @@ return array(
     'IntervalOqlExpression' => $baseDir . '/core/oql/oqlquery.class.inc.php',
     'Introspection' => $baseDir . '/core/introspection.class.inc.php',
     'InvalidConfigParamException' => $baseDir . '/core/coreexception.class.inc.php',
+    'InvalidPasswordAttributeOneWayPassword' => $baseDir . '/core/coreexception.class.inc.php',
     'IssueLog' => $baseDir . '/core/log.class.inc.php',
     'ItopCounter' => $baseDir . '/core/counter.class.inc.php',
     'JSButtonItem' => $baseDir . '/application/applicationextension.inc.php',

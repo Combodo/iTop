@@ -40,4 +40,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserLocal+' => 'User authentified by iTop',
 	'Class:UserLocal/Attribute:password' => 'Password',
 	'Class:UserLocal/Attribute:password+' => 'user authentication string',
+
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex/validation_failed' => 'The password does not respect the policy',
 ));

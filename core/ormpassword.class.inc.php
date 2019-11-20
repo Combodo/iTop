@@ -35,7 +35,7 @@ class ormPassword
 {
 	protected $m_sHashed;
 	protected $m_sSalt;
-	
+
 	/**
 	 * Constructor, initializes the password from the encrypted values
 	 */
@@ -53,7 +53,7 @@ class ormPassword
 	{
 		$this->m_sHashed = password_hash($sClearTextPassword, PASSWORD_DEFAULT);
 	}
-	
+
 	/**
 	 * Print the password: displays some stars
 	 * @return string

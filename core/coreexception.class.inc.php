@@ -237,3 +237,13 @@ class ArchivedObjectException extends CoreException
 class InvalidConfigParamException extends CoreException
 {
 }
+
+
+/**
+ * Throwned when the password is not valid
+ *
+ * @since 2.7.0
+ */
+class InvalidPasswordAttributeOneWayPassword extends CoreException
+{
+}

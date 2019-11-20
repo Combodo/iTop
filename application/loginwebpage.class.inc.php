@@ -322,11 +322,12 @@ class LoginWebPage extends NiceWebPage
 		$oTwigContext->Render($this, 'resetpwddone.html.twig', $aVars);
 	}
 
-	public function DisplayChangePwdForm($bFailedLogin = false)
+	public function DisplayChangePwdForm($bFailedLogin = false, $sIssue = null)
 	{
 		$oTwigContext = new LoginTwigRenderer();
 		$aVars = $oTwigContext->GetDefaultVars();
 		$aVars['bFailedLogin'] = $bFailedLogin;
+		$aVars['sIssue'] = $sIssue;
 		$oTwigContext->Render($this, 'changepwdform.html.twig', $aVars);
 	}
 
@@ -1060,10 +1061,21 @@ class LoginWebPage extends NiceWebPage
 				UserRights::Login($sAuthUser); // Set the user's language
 				$sOldPwd = utils::ReadPostedParam('old_pwd', '', 'raw_data');
 				$sNewPwd = utils::ReadPostedParam('new_pwd', '', 'raw_data');
-				if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
+
+				try
+				{
+					if (UserRights::CanChangePassword() && ((!UserRights::CheckCredentials($sAuthUser, $sOldPwd)) || (!UserRights::ChangePassword($sOldPwd, $sNewPwd))))
+					{
+						$oPage = self::NewLoginWebPage();
+						$oPage->DisplayChangePwdForm(true); // old pwd was wrong
+						$oPage->output();
+						exit;
+					}
+				}
+				catch (CoreCannotSaveObjectException $e)
 				{
 					$oPage = self::NewLoginWebPage();
-					$oPage->DisplayChangePwdForm(true); // old pwd was wrong
+					$oPage->DisplayChangePwdForm(true, $e->getIssue()); // password policy was not met.
 					$oPage->output();
 					exit;
 				}

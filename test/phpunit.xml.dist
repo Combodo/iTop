@@ -56,6 +56,9 @@
         <testsuite name="Status">
             <directory>status</directory>
         </testsuite>
+        <testsuite name="CoreExtensions">
+            <directory>coreExtensions</directory>
+        </testsuite>
     </testsuites>
 
     <!-- Code coverage white list -->

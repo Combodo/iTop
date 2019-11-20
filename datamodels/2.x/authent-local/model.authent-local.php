@@ -26,8 +26,48 @@
  */
 
 
+class UserLocalPasswordValidity
+{
+	/** @var bool */
+	protected $m_bPasswordValidity;
+	/** @var string|null */
+	protected $m_sPasswordValidityMessage;
+
+	/**
+	 * UserLocalPasswordValidity constructor.
+	 *
+	 * @param bool $m_bPasswordValidity
+	 * @param string $m_sPasswordValidityMessage
+	 */
+	public function __construct($m_bPasswordValidity, $m_sPasswordValidityMessage = null)
+	{
+		$this->m_bPasswordValidity = $m_bPasswordValidity;
+		$this->m_sPasswordValidityMessage = $m_sPasswordValidityMessage;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isPasswordValid()
+	{
+		return $this->m_bPasswordValidity;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getPasswordValidityMessage()
+	{
+		return $this->m_sPasswordValidityMessage;
+	}
+}
+
 class UserLocal extends UserInternal
 {
+	/** @var UserLocalPasswordValidity|null */
+	protected $m_oPasswordValidity = null;
+
 	public static function Init()
 	{
 		$aParams = array
@@ -82,13 +122,14 @@ class UserLocal extends UserInternal
 
 	public function ChangePassword($sOldPassword, $sNewPassword)
 	{
-		$oPassword = $this->Get('password'); // ormPassword object
+		/** @var \ormPassword $oPassword */
+		$oPassword = $this->Get('password');
 		// Cannot compare directly the values since they are hashed, so
 		// Let's ask the password to compare the hashed values
 		if ($oPassword->CheckPassword($sOldPassword))
 		{
 			$this->SetPassword($sNewPassword);
-			return true;
+			return $this->IsPasswordValid();
 		}
 		return false;
 	}
@@ -100,6 +141,92 @@ class UserLocal extends UserInternal
 	{
 		$this->Set('password', $sNewPassword);
 		$this->DBUpdate();
+	}
+
+	public function Set($sAttCode, $value)
+	{
+		$result = parent::Set($sAttCode, $value);
+
+		if ('password' == $sAttCode)
+		{
+			$this->ValidatePassword($value);
+		}
+
+		return $result;
+	}
+
+	public function IsPasswordValid()
+	{
+		return (isset($this->m_oPasswordValidity)) && ($this->m_oPasswordValidity->isPasswordValid());
+	}
+
+	/**
+	 * set the $m_oPasswordValidity
+	 *
+	 * @param string $proposedValue
+	 * @param \Config|null $config
+	 *
+	 * @return void
+	 */
+	public function ValidatePassword($proposedValue, $config = null)
+	{
+		if (null == $config)
+		{
+			$config =  MetaModel::GetConfig();
+		}
+
+		$aPasswordValidationClasses = $config->GetModuleSetting('authent-local', 'password_validation.classes');
+		if (empty($aPasswordValidationClasses))
+		{
+			$aPasswordValidationClasses = array();
+		}
+
+		$sUserPasswordPolicyRegexPattern = $config->GetModuleSetting('authent-local', 'password_validation.pattern');
+		if ($sUserPasswordPolicyRegexPattern)
+		{
+			if (array_key_exists('UserPasswordPolicyRegex', $aPasswordValidationClasses))
+			{
+				$this->m_oPasswordValidity = new UserLocalPasswordValidity(
+					false,
+					"Invalid configuration: 'UserPasswordPolicyRegex' was defined twice (once into UserLocal.password_validation_advanced, once into UserLocal.password_validation)."
+				);
+				return;
+			}
+
+			$aPasswordValidationClasses['UserPasswordPolicyRegex'] = array('pattern' => $sUserPasswordPolicyRegexPattern);
+		}
+
+		foreach ($aPasswordValidationClasses as $sClass => $aOptions)
+		{
+			if (!is_subclass_of($sClass, 'UserLocalPasswordValidator'))
+			{
+				$this->m_oPasswordValidity = new UserLocalPasswordValidity(
+					false,
+					"Invalid configuration: '{$sClass}' must implements ".UserLocalPasswordValidator::class
+				);
+				return;
+			}
+
+			/** @var \UserLocalPasswordValidator */
+			$oInstance = new $sClass();
+
+			$this->m_oPasswordValidity = $oInstance->ValidatePassword($proposedValue, $aOptions, $this);
+
+			if (!$this->m_oPasswordValidity->isPasswordValid())
+			{
+				return;
+			}
+		}
+	}
+
+	public function DoCheckToWrite()
+	{
+		if (! $this->IsPasswordValid())
+		{
+			$this->m_aCheckIssues[] = $this->m_oPasswordValidity->getPasswordValidityMessage();
+		}
+
+		parent::DoCheckToWrite();
 	}
 
 	/**
@@ -126,6 +253,75 @@ class UserLocal extends UserInternal
 			}
 		}
 		return $iFlags;
+	}
+}
+
+
+
+interface UserLocalPasswordValidator
+{
+	public function __construct();
+
+	/**
+	 * @param string $proposedValue
+	 * @param array $aOptions
+	 * @param UserLocal $oUserLocal
+	 *
+	 * @return UserLocalPasswordValidity
+	 */
+	public function ValidatePassword($proposedValue, $aOptions, UserLocal $oUserLocal);
+}
+
+class UserPasswordPolicyRegex implements UserLocalPasswordValidator
+{
+	public function __construct()
+	{
+	}
+
+	/**
+	 * @param string $proposedValue
+	 * @param array $aOptions
+	 * @param UserLocal $oUserLocal
+	 *
+	 * @return UserLocalPasswordValidity
+	 */
+	public function ValidatePassword($proposedValue, $aOptions, UserLocal $oUserLocal)
+	{
+
+		if (! array_key_exists('pattern', $aOptions) )
+		{
+			return new UserLocalPasswordValidity(
+				false,
+				"Invalid configuration: key 'pattern' is mandatory"
+			);
+		}
+
+		$sPattern = $aOptions['pattern'];
+		if ('' == $sPattern)
+		{
+			return new UserLocalPasswordValidity(true);
+		}
+
+		$isMatched = preg_match("/{$sPattern}/", $proposedValue);
+		if ($isMatched === false)
+		{
+			return new UserLocalPasswordValidity(
+				false,
+				'Unknown error : Failed to check the password, please verify the password\'s Data Model.'
+			);
+		}
+
+		if ($isMatched === 1)
+		{
+			return new UserLocalPasswordValidity(true);
+		}
+
+		$sMessage = Dict::S('Error:UserLocalPasswordValidator:UserPasswordPolicyRegex/validation_failed');
+
+		return new UserLocalPasswordValidity(
+			false,
+			$sMessage
+		);
 	}
 }
 

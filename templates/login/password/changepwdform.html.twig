@@ -7,7 +7,11 @@
 	<div id="login-content">
 		<h1>{{ 'UI:Login:ChangeYourPassword'|dict_s }}</h1>
 		{% if bFailedLogin %}
-			<p class="hilite">{{ 'UI:Login:IncorrectOldPassword'|dict_s }}</p>
+			{% if sIssue is not null %}
+				<p class="hilite">{{ sIssue|raw }}</p>
+			{% else %}
+				<p class="hilite">{{ 'UI:Login:IncorrectOldPassword'|dict_s }}</p>
+			{% endif %}
 		{% endif %}
 		<form method="post">
 			<div id="login-form-content">
