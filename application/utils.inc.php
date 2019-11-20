@@ -2192,4 +2192,17 @@ class utils
 
 		return getenv('username');
 	}
+
+	/**
+	 * Transform a snake_case $sInput into a CamelCase string
+	 *
+	 * @since 2.7.0
+	 * @param string $sInput
+	 *
+	 * @return string
+	 */
+	public static function ToCamelCase($sInput)
+	{
+		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
+	}
 }
