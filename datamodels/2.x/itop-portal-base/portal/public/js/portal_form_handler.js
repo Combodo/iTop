@@ -195,7 +195,7 @@ $(function()
 										if(bRedirectionAjax)
 										{
 											// Creating a new modal
-											CreatePortalModal({
+											CombodoPortalToolbox.OpenModal({
 												content: {
 													endpoint: sUrl,
 													data: {

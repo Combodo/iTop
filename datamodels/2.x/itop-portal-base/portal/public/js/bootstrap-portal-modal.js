@@ -14,131 +14,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
-
-/**
- * Creates a Bootstrap modal dialog from a base modal element (template or reusable one) and loads the content while displaying a nice loader.
- *
- * Technical: We made this to work around the base modal interactions as it was not possible to define a loader, nor to clone the base modal natively.
- *
- * @param oOptions
- * @constructor
- * @since 2.7.0
- */
-var CreatePortalModal = function (oOptions)
-{
-	// Set default options
-	oOptions = $.extend(
-		true,
-		{
-			id: null,           // ID of the created modal
-			attributes: {},     // HTML attributes
-			base_modal: {
-				usage: 'clone',             // Either 'clone' or 'replace'
-				selector: '#modal-for-all' // Either a selector of the modal element used to base this one on or the modal element itself
-			},
-			content: undefined, // Either a string, an object containing the endpoint / data or undefined to keep base modal content as-is
-			size: 'lg',         // Either 'xs' / 'sm' / 'md' / 'lg'
-		},
-		oOptions
-	);
-
-	// Compute modal selector
-	var oSelectorElem = null;
-	switch(typeof oOptions.base_modal.selector)
-	{
-		case 'string':
-			oSelectorElem = $(oOptions.base_modal.selector);
-			break;
-
-		case 'object':
-			oSelectorElem = oOptions.base_modal.selector;
-			break;
-
-		default:
-			if (window.console && window.console.warn)
-			{
-				console.warn('Could not open modal dialog as the select option was malformed: ', oOptions.content);
-			}
-			break;
-	}
-
-	// Get modal element by either
-	var oModalElem = null;
-	// - Create a new modal from template
-	//   Note : This could be better if we check for an existing modal first instead of always creating a new one
-	if (oOptions.base_modal.usage === 'clone')
-	{
-		oModalElem = oSelectorElem.clone();
-		oModalElem.attr('id', oOptions.id)
-			.appendTo('body');
-	}
-	// - Get an existing modal in the DOM
-	else
-	{
-		oModalElem = oSelectorElem;
-	}
-
-	// Set attributes
-	for(var sProp in oOptions.attributes)
-	{
-		oModalElem.attr(sProp, oOptions.attributes[sProp]);
-	}
-
-	// Resize to small modal
-	oModalElem.find('.modal-dialog')
-		.removeClass('modal-lg')
-		.addClass('modal-' + oOptions.size);
-
-	// Load content
-	switch (typeof oOptions.content)
-	{
-		case 'string':
-			oModalElem.find('.modal-content').html(oOptions.content);
-			
-			//Manually triggers bootstrap event in order to keep listeners working
-			oModalElem.trigger('loaded.bs.modal');
-			break;
-
-		case 'object':
-			// Put loader while fetching content
-			oModalElem.find('.modal-content').html($('#page_overlay .overlay_content').html());
-			// Fetch content in background
-			oModalElem.find('.modal-content').load(
-				oOptions.content.endpoint,
-				oOptions.content.data || {},
-				function (sResponseText, sStatus)
-				{
-					// Hiding modal in case of error as the general AJAX error handler will display a message
-					if (sStatus === 'error')
-					{
-						oModalElem.modal('hide');
-					}
-					
-					//Manually triggers bootstrap event in order to keep listeners working
-					oModalElem.trigger('loaded.bs.modal');
-				}
-			);
-			break;
-
-		case 'undefined':
-			// Do nothing, we keep the content as-is
-			break;
-
-		default:
-			if (window.console && window.console.warn)
-			{
-				console.warn('Could not open modal dialog as the content option was malformed: ', oOptions.content);
-			}
-	}
-
-	// Show modal
-	oModalElem.modal('show');
-
-	return oModalElem;
-};
 
 $(document).ready(function()
 {
@@ -196,6 +72,6 @@ $(document).ready(function()
 			};
 		}
 
-		CreatePortalModal(oOptions);
+		CombodoPortalToolbox.OpenModal(oOptions);
 	});
 });

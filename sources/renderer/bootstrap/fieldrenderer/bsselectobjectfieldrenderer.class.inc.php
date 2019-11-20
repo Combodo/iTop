@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
@@ -388,7 +386,7 @@ EOF
 <<<JS
 				$('#{$sHierarchicalButtonId}').off('click').on('click', function(){
 					// Creating a new modal
-					CreatePortalModal({
+					CombodoPortalToolbox.OpenModal({
 						attributes: {
 							'data-source-element': '{$sHierarchicalButtonId}',
 						},
@@ -448,7 +446,7 @@ JS
 						'selector': '.modal[data-source-element="{$sSearchButtonId}"]:first'
 					};
 				}
-				CreatePortalModal(oOptions);
+				CombodoPortalToolbox.OpenModal(oOptions);
 			});
 JS
 		);
