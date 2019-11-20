@@ -3,9 +3,9 @@
 
 <div>
 		<label for="user">{{ 'UI:Login:UserNamePrompt'|dict_s }}</label>
-		<input id="user" type="text" name="auth_user" value="{{ aData.sAuthUser }}" />
+		<input id="user" type="text" name="auth_user" tabindex="1" value="{{ aData.sAuthUser }}" />
 </div>
 <div>
 		<label for="pwd">{{ 'UI:Login:PasswordPrompt'|dict_s }}</label>
-		<input id="pwd" type="password" name="auth_pwd" autocomplete="off" value="{{ aData.sAuthPwd }}" />
+		<input id="pwd" type="password" name="auth_pwd" tabindex="2" autocomplete="off" value="{{ aData.sAuthPwd }}" />
 </div>
