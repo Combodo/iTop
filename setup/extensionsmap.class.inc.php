@@ -345,6 +345,10 @@ class iTopExtensionsMap
 							$oExtension->bVisible = $bVisible;
 							$this->AddExtension($oExtension);							
 						}
+
+						closedir($hDir);
+
+						return true; // we found a module, no more digging necessary !
 					}
 				}
 			}
