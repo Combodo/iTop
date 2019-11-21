@@ -262,8 +262,6 @@ class iTopExtensionsMap
 		    {
 		        // We're not recursing, let's add the directory to the list of scanned dirs 
 		        $this->aScannedDirs[] = $sSearchDir;
-
-			    return true;
 		    }
 			$sExtensionId = null;
 			$aSubDirectories = array();
