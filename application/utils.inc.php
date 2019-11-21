@@ -2097,6 +2097,11 @@ class utils
 	 * @return bool
 	 */
 	final public static function EndsWith($haystack, $needle) {
+		if (strlen($needle) > strlen($haystack))
+		{
+			return false;
+		}
+		
 		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
 	}
 

@@ -33,6 +33,11 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 		require_once(APPROOT.'application/utils.inc.php');
 	}
 
+	public function testEndsWith()
+	{
+		$this->assertFalse(utils::EndsWith('a', 'bbbb'));
+	}
+
 	/**
 	 * @dataProvider memoryLimitDataProvider
 	 */
