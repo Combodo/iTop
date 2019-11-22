@@ -247,6 +247,9 @@ $MySettings = array(
  *
  */
 $MyModuleSettings = array(
+	'authent-local' => array (
+		'password_validation.pattern' => '',
+	),
 	'itop-attachments' => array (
 		'allowed_classes' => array (
 			0 => 'Ticket',
