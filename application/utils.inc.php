@@ -2086,6 +2086,11 @@ class utils
 	 */
 	final public static function StartsWith($haystack, $needle)
 	{
+		if (strlen($needle) > strlen($haystack))
+		{
+			return false;
+		}
+
 		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
 	}
 
