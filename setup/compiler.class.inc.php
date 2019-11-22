@@ -1852,29 +1852,33 @@ EOF
 		// ZLists
 		//
 		$aListRef = array(
-			'details' => 'details',
-			'standard_search' => 'search',
-			'default_search' => 'default_search',
-			'list' => 'list',
+			'search' => 'standard_search',
 		);
-	
+		
 		$oPresentation = $oClass->GetUniqueElement('presentation');
 		$sZlists = '';
-		foreach ($aListRef as $sListCode => $sListTag)
+		/** @var DOMElement $oListNode */
+		foreach ($oPresentation->GetNodes('/*/items/parent::*') as $oListNode)
 		{
-			$oListNode = $oPresentation->GetOptionalElement($sListTag);
-			if ($oListNode)
+			$sListTag = $oListNode->tagName();
+			if (isset($aListRef[$sListTag]))
 			{
-				$aAttributes = $oListNode->GetNodeAsArrayOfItems();
-				if(!is_array($aAttributes))
-				{
-					$aAttributes = array();
-				}
-				$this->ArrayOfItemsToZList($aAttributes);
-		
-				$sZAttributes = var_export($aAttributes, true);
-				$sZlists .= "		MetaModel::Init_SetZListItems('$sListCode', $sZAttributes);\n";
+				$sListCode = $aListRef[$sListTag];
 			}
+			else
+			{
+				$sListCode = $sListTag;
+			}
+			
+			$aAttributes = $oListNode->GetNodeAsArrayOfItems();
+			if (!is_array($aAttributes))
+			{
+				$aAttributes = array();
+			}
+			$this->ArrayOfItemsToZList($aAttributes);
+	
+			$sZAttributes = var_export($aAttributes, true);
+			$sZlists .= "		MetaModel::Init_SetZListItems('$sListCode', $sZAttributes);\n";
 		}
 	
 		// Methods
