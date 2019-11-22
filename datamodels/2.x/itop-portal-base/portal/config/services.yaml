@@ -121,6 +121,9 @@ services:
   context_manipulator:
     alias: Combodo\iTop\Portal\Helper\ContextManipulatorHelper
     public: true
+  navigation_rule_helper:
+    alias: Combodo\iTop\Portal\Helper\NavigationRuleHelper
+    public: true
   lifecycle_validator:
     alias: Combodo\iTop\Portal\Helper\LifecycleValidatorHelper
     public: true

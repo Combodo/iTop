@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 
@@ -63,6 +61,8 @@ class ObjectFormHandlerHelper
 	private $oRequestManipulator;
 	/** @var \Combodo\iTop\Portal\Helper\ContextManipulatorHelper */
 	private $oContextManipulator;
+	/** @var \Combodo\iTop\Portal\Helper\NavigationRuleHelper */
+	private $oNavigationRuleHelper;
 	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper */
 	private $oScopeValidator;
 	/** @var \Combodo\iTop\Portal\Helper\SecurityHelper */
@@ -81,20 +81,22 @@ class ObjectFormHandlerHelper
 	/**
 	 * ObjectFormHandlerHelper constructor.
 	 *
-	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper       $oRequestManipulator
-	 * @param \Combodo\iTop\Portal\Helper\ContextManipulatorHelper       $oContextManipulator
-	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper           $oScopeValidator
-	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper                 $oSecurityHelper
+	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator
+	 * @param \Combodo\iTop\Portal\Helper\ContextManipulatorHelper $oContextManipulator
+	 * @param \Combodo\iTop\Portal\Helper\NavigationRuleHelper $oNavigationRuleHelper
+	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator
+	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper
 	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $oUrlGenerator
-	 * @param array                                                      $aCombodoPortalInstanceConf
-	 * @param string                                                     $sPortalId
-	 * @param \Combodo\iTop\Portal\Twig\AppExtension                     $oAppExtension
-	 * @param \Symfony\Component\DependencyInjection\ContainerInterface  $oContainer
+	 * @param array $aCombodoPortalInstanceConf
+	 * @param string $sPortalId
+	 * @param \Combodo\iTop\Portal\Twig\AppExtension $oAppExtension
+	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $oContainer
 	 */
-	public function __construct(RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, $aCombodoPortalInstanceConf, $sPortalId, AppExtension $oAppExtension, ContainerInterface $oContainer)
+	public function __construct(RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, NavigationRuleHelper $oNavigationRuleHelper, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, $aCombodoPortalInstanceConf, $sPortalId, AppExtension $oAppExtension, ContainerInterface $oContainer)
 	{
 		$this->oRequestManipulator = $oRequestManipulator;
 		$this->oContextManipulator = $oContextManipulator;
+		$this->oNavigationRuleHelper = $oNavigationRuleHelper;
 		$this->oScopeValidator = $oScopeValidator;
 		$this->oSecurityHelper = $oSecurityHelper;
 		$this->oUrlGenerator = $oUrlGenerator;
@@ -222,10 +224,13 @@ class ObjectFormHandlerHelper
 				$oObject->PrefillForm('state_change', $aPrefillFormParam);
 			}
 
-			// Preparing callback urls
-			$aCallbackUrls = $this->oContextManipulator->GetCallbackUrls($aActionRules, $oObject, $bModal);
-			$aFormData['submit_callback'] = $aCallbackUrls['submit'];
-			$aFormData['cancel_callback'] = $aCallbackUrls['cancel'];
+			// Preparing navigation rules
+			$aNavigationRules = $this->oNavigationRuleHelper->PrepareRulesForForm($aFormProperties, $oObject, $bModal);
+			$aFormData['submit_rule'] = $aNavigationRules['submit'];
+			$aFormData['cancel_rule'] = $aNavigationRules['cancel'];
+			/** @deprecated We keep the "xxx_callback" name to keep compatibility with extensions using the portal_form_handler.js widget but they will be removed in a future version. */
+			$aFormData['submit_callback'] = $aNavigationRules['submit']['url'];
+			$aFormData['cancel_callback'] = $aNavigationRules['cancel']['url'];
 
 			// Preparing renderer
 			// Note : We might need to distinguish form & renderer endpoints
@@ -292,23 +297,16 @@ class ObjectFormHandlerHelper
 					);
 					if ($aFormData['validation']['valid'] === true)
 					{
-						// Note : We don't use $sObjectId there as it can be null if we are creating a new one. Instead we use the id from the created object once it has been seralized
+						// Note : We don't use $sObjectId there as it can be null if we are creating a new one. Instead we use the id from the created object once it has been serialized
 						// Check if stimulus has to be applied
 						$sStimulusCode = $this->oRequestManipulator->ReadParam('stimulus_code', '');
 						if (!empty($sStimulusCode))
 						{
 							$aFormData['validation']['redirection'] = array(
 								'url' => $this->oUrlGenerator->generate('p_object_apply_stimulus', array('sObjectClass' => $sObjectClass, 'sObjectId' => $oFormManager->GetObject()->GetKey(), 'sStimulusCode' => $sStimulusCode)),
-								'ajax' => true,
+								'modal' => true,
 							);
 						}
-						// Otherwise, we show the object if there is no default
-//						else
-//						{
-//							$aFormData['validation']['redirection'] = array(
-//								'alternative_url' => $this->oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $oFormManager->GetObject()->GetKey()))
-//							);
-//						}
 					}
 					break;
 
@@ -409,5 +407,20 @@ class ObjectFormHandlerHelper
 		}
 
 		return $oTwig->render($sId, $aData);
+	}
+
+	/**
+	 * Return an array of the available modes for a form.
+	 *
+	 * @since 2.7.0
+	 * @return array
+	 */
+	public static function GetAllowedModes()
+	{
+		return array(
+			static::ENUM_MODE_VIEW,
+			static::ENUM_MODE_EDIT,
+			static::ENUM_MODE_CREATE,
+		);
 	}
 }

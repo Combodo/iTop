@@ -76,8 +76,8 @@
 			field_set: oFieldSet_{{ sFormIdSanitized }},
 			submit_btn_selector: $('#{{ sFormId }}').parent().find('.form_btn_submit, .form_btn_transition'),
 			cancel_btn_selector: $('#{{ sFormId }}').parent().find('.form_btn_cancel'),
-			submit_url: {% if form.submit_callback is not null %}"{{ form.submit_callback|raw }}"{% else %}null{% endif %},
-			cancel_url: {% if form.cancel_callback is not null %}"{{ form.cancel_callback|raw }}"{% else %}null{% endif %},
+			{% if form.submit_rule is not null %}submit_rule: {{ form.submit_rule|json_encode|raw }}{% endif %},
+			{% if form.cancel_rule is not null %}cancel_rule: {{ form.cancel_rule|json_encode|raw }}{% endif %},
 			endpoint: "{{ form.renderer.GetEndpoint()|raw }}",
 			is_modal: {% if tIsModal == true %}true{% else %}false{% endif %}
 		});

@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Helper;
@@ -374,6 +372,10 @@ class ApplicationHelper
 			'properties' => array(
 				'display_mode' => static::FORM_DEFAULT_DISPLAY_MODE,
 				'always_show_submit' => static::FORM_DEFAULT_ALWAYS_SHOW_SUBMIT,
+				'navigation_rules' => array(
+					'submit' => null,
+					'cancel' => null,
+				),
 			),
 			'fields' => array(),
 			'layout' => array(

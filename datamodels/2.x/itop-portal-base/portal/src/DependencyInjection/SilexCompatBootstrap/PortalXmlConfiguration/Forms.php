@@ -15,12 +15,11 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration;
 
+use Combodo\iTop\Portal\Helper\NavigationRuleHelper;
 use Symfony\Component\DependencyInjection\Container;
 use DOMFormatException;
 use Exception;
@@ -66,7 +65,19 @@ class Forms extends AbstractConfiguration
 					$aFormProperties = array(
 						'display_mode' => ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE,
 						'always_show_submit' => ApplicationHelper::FORM_DEFAULT_ALWAYS_SHOW_SUBMIT,
+						'navigation_rules' => array(
+							'submit' => array(
+								NavigationRuleHelper::ENUM_ORIGIN_PAGE => null,
+								NavigationRuleHelper::ENUM_ORIGIN_MODAL => null,
+							),
+							'cancel' => array(
+								NavigationRuleHelper::ENUM_ORIGIN_PAGE => null,
+								NavigationRuleHelper::ENUM_ORIGIN_MODAL => null,
+							),
+						),
 					);
+
+					$aAllowedNavRulesButtonCodes = array_keys($aFormProperties['navigation_rules']);
 					if ($oFormNode->GetOptionalElement('properties') !== null)
 					{
 						/** @var \MFElement $oPropertyNode */
@@ -77,9 +88,48 @@ class Forms extends AbstractConfiguration
 								case 'display_mode':
 									$aFormProperties['display_mode'] = $oPropertyNode->GetText(ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE);
 									break;
+
 								case 'always_show_submit':
 									$aFormProperties['always_show_submit'] = ($oPropertyNode->GetText('false') === 'true') ? true : false;
 									break;
+
+								case 'navigation_rules':
+									/** @var \MFElement $oNavRuleButtonNode */
+									foreach($oPropertyNode->childNodes as $oNavRuleButtonNode)
+									{
+										$sNavRuleButtonCode = $oNavRuleButtonNode->nodeName;
+										if(!in_array($sNavRuleButtonCode, $aAllowedNavRulesButtonCodes))
+										{
+											throw new DOMFormatException('navigation_rules tag must only contain '.implode('|', $aAllowedNavRulesButtonCodes).' tags, "'.$sNavRuleButtonCode.'" given.', null, null, $oPropertyNode);
+										}
+
+										/** @var \MFElement $oNavRuleOriginNode */
+										foreach($oNavRuleButtonNode->childNodes as $oNavRuleOriginNode)
+										{
+											$sNavRuleOrigin = $oNavRuleOriginNode->nodeName;
+											if(!in_array($sNavRuleOrigin, NavigationRuleHelper::GetAllowedOrigins()))
+											{
+												throw new DOMFormatException($sNavRuleButtonCode. ' tag must only contain '.implode('|', NavigationRuleHelper::GetAllowedOrigins()).' tags, "'.$sNavRuleOrigin.'" given.', null, null, $oPropertyNode);
+											}
+
+											$sNavRuleId = $oNavRuleOriginNode->GetText();
+											// Note: We don't check is rule exists as it would introduce a dependency to the NavigationRuleHelper service.
+											// Maybe we will consider it later.
+											if(empty($sNavRuleId))
+											{
+												throw new DOMFormatException($sNavRuleButtonCode.' tag cannot be empty.', null, null, $oPropertyNode);
+											}
+
+											$aFormProperties['navigation_rules'][$sNavRuleButtonCode][$sNavRuleOrigin] = $sNavRuleId;
+										}
+
+										// Set modal rule as the same as default is not present.
+										// We preset it so we don't have to make checks elsewhere in the code when using it.
+										if(empty($aFormProperties['navigation_rules'][$sNavRuleButtonCode][NavigationRuleHelper::ENUM_ORIGIN_MODAL]))
+										{
+											$aFormProperties['navigation_rules'][$sNavRuleButtonCode][NavigationRuleHelper::ENUM_ORIGIN_MODAL] = $aFormProperties['navigation_rules'][$sNavRuleButtonCode][NavigationRuleHelper::ENUM_ORIGIN_PAGE];
+										}
+									}
 							}
 						}
 					}
@@ -98,7 +148,7 @@ class Forms extends AbstractConfiguration
 							}
 							else
 							{
-								throw new DOMFormatException('Mode tag must have an id attribute', null, null,
+								throw new DOMFormatException('mode tag must have an id attribute', null, null,
 									$oFormNode);
 							}
 
