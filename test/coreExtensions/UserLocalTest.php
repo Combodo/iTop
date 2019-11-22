@@ -26,6 +26,10 @@ class UserLocalTest extends ItopTestCase
 
 	/**
 	 * @dataProvider ProviderValidatePassword
+	 *
+	 * @runTestsInSeparateProcesses
+	 * @preserveGlobalState disabled
+	 * @backupGlobals disabled
 	 */
 	public function testValidatePassword($aValueMap, $sPassword, $bExpectedCheckStatus, $expectedCheckIssues = null)
 	{
