@@ -157,7 +157,7 @@ class UserLocal extends UserInternal
 
 	public function IsPasswordValid()
 	{
-		return (isset($this->m_oPasswordValidity)) && ($this->m_oPasswordValidity->isPasswordValid());
+		return (empty($this->m_oPasswordValidity)) || ($this->m_oPasswordValidity->isPasswordValid());
 	}
 
 	/**

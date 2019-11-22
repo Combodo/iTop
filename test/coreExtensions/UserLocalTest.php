@@ -73,6 +73,13 @@ class UserLocalTest extends ItopTestCase
 				'password' => 'foo',
 				'expectedCheckStatus' => false,
 			),
+			'noPattern' => array(
+				'valueMap' => array(
+					array('authent-local', 'password_validation.pattern', null, '')
+				),
+				'password' => 'foo',
+				'expectedCheckStatus' => true,
+			),
 			'validClass' => array(
 				'valueMap' => array(
 					array(
