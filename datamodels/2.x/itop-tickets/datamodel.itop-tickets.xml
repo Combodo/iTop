@@ -1372,6 +1372,13 @@
 				</form>
 				<form id="ticket-create">
 					<class>Ticket</class>
+					<properties>
+						<navigation_rules>
+							<submit>
+								<default>go-to-open-requests</default>
+							</submit>
+						</navigation_rules>
+					</properties>
 					<fields />
 					<twig>
 						<div class="row">
@@ -1413,10 +1420,14 @@
 				<form id="ticket-edit">
 					<class>Ticket</class>
 					<properties>
-						<!--Display mode of the form fields. "cosy" for a regular labels over values layout; "compact" for a side-by-side layout with input aligned; "dense" for a side-by-side layout with input filling all available space. You can also use a custom css class that will be used on the form as "form_xxx", as well as on the fields as "form_field_xxx".-->
+						<!-- Optional, display mode of the form fields. "cosy" for a regular labels over values layout; "compact" for a side-by-side
+						layout with input aligned; "dense" for a side-by-side layout with input filling all available space. You can also use a custom css class that will be used on the form as "form_xxx", as well as on the fields as "form_field_xxx".-->
 						<!--<display_mode>cosy</display_mode>-->
-						<!-- When set to false, submit button is hidden when transitions are available on the object (in creation and edit mode). Default is false. -->
+						<!-- Optional, when set to false, submit button is hidden when transitions are available on the object (in creation and edit
+						mode). Default is false. -->
 						<!--<always_show_submit>false</always_show_submit>-->
+						<!-- Optional, navigation rules to define where to go when clicking on the submit/cancel buttons of the form -->
+						<!-- <navigation_rules / -->
 					</properties>
 					<fields></fields>
 					<twig>
@@ -1674,14 +1685,14 @@
 					<!-- <filter>:this->caller_id_friendlyname</filter> -->
 				</navigation_rule>
 				<!-- Open a browse brick -->
-				<!-- <navigation_rule id="go-to-services" xsi:type="go-to-browse-brick"> -->
-					<!-- Mandatory, ID of the BrowseBrick to go to -->
-					<!-- <id>services</id> -->
-					<!-- Optional, must be an ID of the available browse modes of the brick (//brick/browse_modes/availables/mode) -->
-				  <!-- <browse_mode>tree</browse_mode> -->
-					<!-- Optional, a string to preset as filter in the brick. ":this->XXX" can be used for the current object -->
-					<!-- <filter>computer</filter> -->
-				<!-- </navigation_rule> -->
+				<navigation_rule id="go-to-services" xsi:type="go-to-browse-brick">
+				 <!-- Mandatory, ID of the BrowseBrick to go to -->
+				 <id>services</id>
+				 <!-- Optional, must be an ID of the available browse modes of the brick (//brick/browse_modes/availables/mode) -->
+				 <!-- <browse_mode>tree</browse_mode> -->
+				 <!-- Optional, a string to preset as filter in the brick. ":this->XXX" can be used for the current object -->
+				 <!-- <filter>computer</filter> -->
+				</navigation_rule>
 				<!-- Open a brick, developer method -->
 				<!-- <navigation_rule id="go-to-open-requests-alternate-way" xsi:type="go-to-brick"> -->
 					<!-- <route> -->

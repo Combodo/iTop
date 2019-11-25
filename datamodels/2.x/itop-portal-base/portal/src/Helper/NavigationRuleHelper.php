@@ -22,6 +22,7 @@ namespace Combodo\iTop\Portal\Helper;
 
 use Combodo\iTop\DesignElement;
 use Combodo\iTop\Portal\Brick\BrickCollection;
+use Combodo\iTop\Portal\Brick\BrowseBrick;
 use Combodo\iTop\Portal\Brick\ManageBrick;
 use DBObject;
 use DBObjectSet;
@@ -454,10 +455,10 @@ class NavigationRuleHelper
 	 */
 	protected function LoadGoToManageBrickRuleFromXML(DesignElement $oRuleNode)
 	{
-		$sRuleId = $oRuleNode->getAttribute('id');
 		// Default values
 		$aRule = $this->GetDefaultGoToBrickRuleDefinition();
 		$aRule['properties']['route']['id'] = 'p_manage_brick_display_as';
+		$aRule['properties']['route']['params']['sDisplayMode'] = ManageBrick::DEFAULT_DISPLAY_MODE;
 
 		// Rule parameters to automatically map to the route parameters
 		$aParamsMapping = array(
@@ -489,10 +490,10 @@ class NavigationRuleHelper
 	 */
 	protected function LoadGoToBrowseBrickRuleFromXML(DesignElement $oRuleNode)
 	{
-		$sRuleId = $oRuleNode->getAttribute('id');
 		// Default values
 		$aRule = $this->GetDefaultGoToBrickRuleDefinition();
 		$aRule['properties']['route']['id'] = 'p_browse_brick_mode';
+		$aRule['properties']['route']['params']['sBrowseMode'] = BrowseBrick::DEFAULT_BROWSE_MODE;
 
 		// Rule parameters to automatically map to the route parameters
 		$aParamsMapping = array(
