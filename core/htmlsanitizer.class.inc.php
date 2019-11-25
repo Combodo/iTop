@@ -272,6 +272,8 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		// Unfortunately, DOMDocument::loadHTML does not take the tag namespaces into account (once loaded there is no way to know if the tag did have a namespace)
 		// therefore we have to do the transformation upfront
 		$sHTML = preg_replace('@<o:p>(\s|&nbsp;)*</o:p>@', '<br>', $sHTML);
+		// Replace badly encoded non breaking space
+		$sHTML = preg_replace('~\xc2\xa0~', '&nbsp;', $sHTML);
 
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
 		
