@@ -1657,11 +1657,48 @@
 					</submit>
 				</action_rule>
 			</action_rules>
-		</module_design>
-	</module_designs>
-	<module_parameters>
-		<parameters id="itop-portal" _delta="define">
-			<lazy_loading_threshold>500</lazy_loading_threshold><!-- Will be placed in the conf/<env>/config-itop.php file under the itop-portal module's settings  -->
+			<navigation_rules>
+				<!-- Close form (either the modal or the whole page) -->
+				<navigation_rule id="close-form" xsi:type="close" />
+				<!-- Go to the homepage -->
+				<navigation_rule id="go-to-homepage" xsi:type="go-to-homepage" />
+				<!-- Open a manage brick (simple method) -->
+				<navigation_rule id="go-to-open-requests" xsi:type="go-to-manage-brick">
+					<!-- Mandatory, ID of the ManageBrick to go to -->
+					<id>ongoing-tickets-for-portal-user</id>
+					<!-- Optional, must be an ID of the available display modes of the brick (//brick/display_modes/availables/mode) -->
+					<!-- <display_mode>list</mode> -->
+					<!-- Optional, must be an ID of the grouping tab of the brick (//brick/grouping/tabs/groups/group)-->
+					<!-- <grouping_tab>resolved</grouping_tab> -->
+					<!-- Optional, a string to preset as filter in the brick. ":this->XXX" can be used for the current object -->
+					<!-- <filter>:this->caller_id_friendlyname</filter> -->
+				</navigation_rule>
+				<!-- Open a browse brick -->
+				<!-- <navigation_rule id="go-to-services" xsi:type="go-to-browse-brick"> -->
+					<!-- Mandatory, ID of the BrowseBrick to go to -->
+					<!-- <id>services</id> -->
+					<!-- Optional, must be an ID of the available browse modes of the brick (//brick/browse_modes/availables/mode) -->
+				  <!-- <browse_mode>tree</browse_mode> -->
+					<!-- Optional, a string to preset as filter in the brick. ":this->XXX" can be used for the current object -->
+					<!-- <filter>computer</filter> -->
+				<!-- </navigation_rule> -->
+				<!-- Open a brick, developer method -->
+				<!-- <navigation_rule id="go-to-open-requests-alternate-way" xsi:type="go-to-brick"> -->
+					<!-- <route> -->
+						<!-- <id>p_manage_brick_display_as</id> -->
+						<!-- <params> -->
+							<!-- <param id="sBrickId">ongoing-tickets-for-portal-user</param> -->
+							<!-- <param id="sDisplayMode">pie-chart</param> -->
+							<!-- <param id="sGroupingTab">resolved</param> -->
+							<!-- </params> -->
+					<!-- </route> -->
+				<!-- </navigation_rule> -->
+</navigation_rules>
+</module_design>
+</module_designs>
+<module_parameters>
+<parameters id="itop-portal" _delta="define">
+<lazy_loading_threshold>500</lazy_loading_threshold><!-- Will be placed in the conf/<env>/config-itop.php file under the itop-portal module's settings  -->
 		</parameters>
 	</module_parameters>
 </itop_design>
