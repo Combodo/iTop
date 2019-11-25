@@ -177,5 +177,52 @@ class UserLocalTest extends ItopTestCase
 		);
 	}
 
+
+	/**
+	 * @dataProvider ProviderPasswordRenewal
+	 *
+	 */
+	public function testPasswordRenewal($aUserLocalValues, $oExpectedBefore, $oExpectedAfter)
+	{
+		/** @var UserLocal $oUserLocal */
+		$oUserLocal = \MetaModel::NewObject('UserLocal', $aUserLocalValues);
+		/** @var \ormLinkSet $oProfileSet */
+		$oProfileSet = $oUserLocal->Get('profile_list');
+
+		$oProfileSet->AddItem(
+			\MetaModel::NewObject('URP_UserProfile', array('profileid' => 1))
+		);
+
+		$this->assertEquals($oExpectedBefore, $oUserLocal->Get('password_renewed_date'));
+
+		$oUserLocal->Set('password', 'foo');
+
+		$this->assertEquals($oExpectedAfter, $oUserLocal->Get('password_renewed_date'));
+	}
+
+	public function ProviderPasswordRenewal()
+	{
+		$sNow = date(\AttributeDate::GetInternalFormat());
+		$sYesterday = date(\AttributeDate::GetInternalFormat(), strtotime('-1 day'));
+		$sTomorrow = date(\AttributeDate::GetInternalFormat(), strtotime('+1 day'));
+
+		return array(
+			'nominal case' => array(
+				'aUserLocalValues' =>  array('login' => 'john'),
+				'oExpectedBefore' => null,
+				'oExpectedAfter' => $sNow,
+			),
+			'date initiated' => array(
+				'aUserLocalValues' =>  array('login' => 'john', 'password_renewed_date' => $sYesterday),
+				'oExpectedBefore' => $sYesterday,
+				'oExpectedAfter' => $sNow,
+			),
+			'date initiated in the future' => array(
+				'aUserLocalValues' =>  array('login' => 'john', 'password_renewed_date' => $sTomorrow),
+				'oExpectedBefore' => $sTomorrow,
+				'oExpectedAfter' => $sNow,
+			),
+		);
+	}
 }
 

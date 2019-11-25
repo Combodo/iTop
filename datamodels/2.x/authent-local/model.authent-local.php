@@ -65,6 +65,10 @@ class UserLocalPasswordValidity
 
 class UserLocal extends UserInternal
 {
+	const EXPIRE_CAN   = 'can_expire';
+	const EXPIRE_NEVER = 'never_expire';
+	const EXPIRE_FORCE = 'force_expire';
+
 	/** @var UserLocalPasswordValidity|null */
 	protected $m_oPasswordValidity = null;
 
@@ -86,6 +90,10 @@ class UserLocal extends UserInternal
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("password", array("allowed_values"=>null, "sql"=>"pwd", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
+
+		$sExpireEnum = implode(',', array(self::EXPIRE_CAN, self::EXPIRE_NEVER, self::EXPIRE_FORCE));
+		MetaModel::Init_AddAttribute(new AttributeEnum("expiration", array("allowed_values"=>new ValueSetEnum($sExpireEnum), "sql"=>"expiration", "default_value"=>'never_expire', "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("password_renewed_date", array("allowed_values"=>null, "sql"=>"password_renewed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'password', 'language', 'status', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
@@ -149,6 +157,8 @@ class UserLocal extends UserInternal
 
 		if ('password' == $sAttCode)
 		{
+			$sNow = date(\AttributeDate::GetInternalFormat());
+			$this->Set('password_renewed_date', $sNow);
 			$this->ValidatePassword($value);
 		}
 
