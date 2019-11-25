@@ -157,60 +157,41 @@ class UserLocal extends UserInternal
 
 	public function IsPasswordValid()
 	{
+		if (ContextTag::Check('Setup'))
+		{
+			// during the setup, the admin account can have whatever password you want ...
+			return true;
+		}
+
 		return (empty($this->m_oPasswordValidity)) || ($this->m_oPasswordValidity->isPasswordValid());
 	}
 
+
+
 	/**
-	 * set the $m_oPasswordValidity
+	 * set the $m_oPasswordValidity based on UserLocalPasswordValidator instances vote.
 	 *
 	 * @param string $proposedValue
-	 * @param \Config|null $config
+	 * @param Config|null $config internal use (unit tests)
+	 * @param null|UserLocalPasswordValidator[] $aValidatorCollection internal use (unit tests)
 	 *
 	 * @return void
 	 */
-	public function ValidatePassword($proposedValue, $config = null)
+	public function ValidatePassword($proposedValue, $config = null, $aValidatorCollection = null)
 	{
 		if (null == $config)
 		{
 			$config =  MetaModel::GetConfig();
 		}
 
-		$aPasswordValidationClasses = $config->GetModuleSetting('authent-local', 'password_validation.classes');
-		if (empty($aPasswordValidationClasses))
+		if (null == $aValidatorCollection)
 		{
-			$aPasswordValidationClasses = array();
+			$aValidatorCollection = MetaModel::EnumPlugins('iModuleExtension', 'UserLocalPasswordValidator');
 		}
 
-		$sUserPasswordPolicyRegexPattern = $config->GetModuleSetting('authent-local', 'password_validation.pattern');
-		if ($sUserPasswordPolicyRegexPattern)
+		foreach ($aValidatorCollection as $oUserLocalPasswordValidator)
 		{
-			if (array_key_exists('UserPasswordPolicyRegex', $aPasswordValidationClasses))
-			{
-				$this->m_oPasswordValidity = new UserLocalPasswordValidity(
-					false,
-					"Invalid configuration: 'UserPasswordPolicyRegex' was defined twice (once into UserLocal.password_validation_advanced, once into UserLocal.password_validation)."
-				);
-				return;
-			}
-
-			$aPasswordValidationClasses['UserPasswordPolicyRegex'] = array('pattern' => $sUserPasswordPolicyRegexPattern);
-		}
-
-		foreach ($aPasswordValidationClasses as $sClass => $aOptions)
-		{
-			if (!is_subclass_of($sClass, 'UserLocalPasswordValidator'))
-			{
-				$this->m_oPasswordValidity = new UserLocalPasswordValidity(
-					false,
-					"Invalid configuration: '{$sClass}' must implements ".UserLocalPasswordValidator::class
-				);
-				return;
-			}
-
-			/** @var \UserLocalPasswordValidator */
-			$oInstance = new $sClass();
-
-			$this->m_oPasswordValidity = $oInstance->ValidatePassword($proposedValue, $aOptions, $this);
+			$this->m_oPasswordValidity = $oUserLocalPasswordValidator->ValidatePassword($proposedValue, $this, $config);
 
 			if (!$this->m_oPasswordValidity->isPasswordValid())
 			{
@@ -258,18 +239,16 @@ class UserLocal extends UserInternal
 
 
 
-interface UserLocalPasswordValidator
+interface UserLocalPasswordValidator extends iModuleExtension
 {
-	public function __construct();
-
 	/**
 	 * @param string $proposedValue
-	 * @param array $aOptions
 	 * @param UserLocal $oUserLocal
+	 * @param Config $config
 	 *
 	 * @return UserLocalPasswordValidity
 	 */
-	public function ValidatePassword($proposedValue, $aOptions, UserLocal $oUserLocal);
+	public function ValidatePassword($proposedValue, UserLocal $oUserLocal, $config);
 }
 
 class UserPasswordPolicyRegex implements UserLocalPasswordValidator
@@ -280,34 +259,27 @@ class UserPasswordPolicyRegex implements UserLocalPasswordValidator
 
 	/**
 	 * @param string $proposedValue
-	 * @param array $aOptions
 	 * @param UserLocal $oUserLocal
+	 * @param Config $config
 	 *
 	 * @return UserLocalPasswordValidity
 	 */
-	public function ValidatePassword($proposedValue, $aOptions, UserLocal $oUserLocal)
+	public function ValidatePassword($proposedValue, UserLocal $oUserLocal, $config)
 	{
+		$sPattern = $config->GetModuleSetting('authent-local', 'password_validation.pattern');
 
-		if (! array_key_exists('pattern', $aOptions) )
-		{
-			return new UserLocalPasswordValidity(
-				false,
-				"Invalid configuration: key 'pattern' is mandatory"
-			);
-		}
-
-		$sPattern = $aOptions['pattern'];
 		if ('' == $sPattern)
 		{
 			return new UserLocalPasswordValidity(true);
 		}
 
 		$isMatched = preg_match("/{$sPattern}/", $proposedValue);
+
 		if ($isMatched === false)
 		{
 			return new UserLocalPasswordValidity(
 				false,
-				'Unknown error : Failed to check the password, please verify the password\'s Data Model.'
+				'Unknown error : Failed to check the password.'
 			);
 		}
 
@@ -324,4 +296,3 @@ class UserPasswordPolicyRegex implements UserLocalPasswordValidator
 		);
 	}
 }
-

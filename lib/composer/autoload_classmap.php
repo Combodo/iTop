@@ -1921,6 +1921,7 @@ return array(
     'iLoginUIExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iLogoutExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iMetricComputer' => $baseDir . '/core/computing.inc.php',
+    'iModuleExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iNewsroomProvider' => $baseDir . '/application/newsroomprovider.class.inc.php',
     'iOnClassInitialization' => $baseDir . '/core/metamodelmodifier.inc.php',
     'iPageUIExtension' => $baseDir . '/application/applicationextension.inc.php',

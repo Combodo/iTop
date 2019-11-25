@@ -1528,3 +1528,16 @@ class RestUtils
 		return $oObject;
 	}
 }
+
+
+/**
+ * Helpers for modules extensibility, with discover performed by the MetaModel.
+ *
+ *
+ * @api
+ * @package     Extensibility
+ */
+interface iModuleExtension
+{
+	public function __construct();
+}

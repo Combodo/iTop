@@ -2153,6 +2153,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'iLoginUIExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iLogoutExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iMetricComputer' => __DIR__ . '/../..' . '/core/computing.inc.php',
+        'iModuleExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iNewsroomProvider' => __DIR__ . '/../..' . '/application/newsroomprovider.class.inc.php',
         'iOnClassInitialization' => __DIR__ . '/../..' . '/core/metamodelmodifier.inc.php',
         'iPageUIExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',

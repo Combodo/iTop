@@ -2794,7 +2794,7 @@ abstract class MetaModel
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginUIExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider');
+		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginUIExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider', 'iModuleExtension');
 		foreach($aInterfaces as $sInterface)
 		{
 			self::$m_aExtensionClasses[$sInterface] = array();
@@ -7346,19 +7346,31 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sInterface
+	 * @param string|null $sFilterInstanceOf [optional] if given, only instance of this string will be returned
 	 *
 	 * @return array classes=>instance implementing the given interface
 	 */
-	public static function EnumPlugins($sInterface)
+	public static function EnumPlugins($sInterface, $sFilterInstanceOf = null)
 	{
-		if (array_key_exists($sInterface, self::$m_aExtensionClasses))
-		{
-			return self::$m_aExtensionClasses[$sInterface];
-		}
-		else
+		if (!array_key_exists($sInterface, self::$m_aExtensionClasses))
 		{
 			return array();
 		}
+
+		if (is_null($sFilterInstanceOf))
+		{
+			return self::$m_aExtensionClasses[$sInterface];
+		}
+
+		$fFilterCallback = function ($instance) use ($sFilterInstanceOf)
+		{
+			return $instance instanceof $sFilterInstanceOf;
+		};
+
+		return array_filter(
+			self::$m_aExtensionClasses[$sInterface],
+			$fFilterCallback
+		);
 	}
 
 	/**

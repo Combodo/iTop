@@ -685,6 +685,7 @@ class ApplicationInstaller
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model only
+		$oContextTag = new ContextTag('Setup');
 
 		// Migrate columns
 		self::MoveColumns($sDBPrefix);
@@ -877,6 +878,7 @@ class ApplicationInstaller
 
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
+		$oContextTag = new ContextTag('Setup');
 		self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously 
 		
 		// Perform here additional DB setup... profiles, etc...
@@ -943,6 +945,8 @@ class ApplicationInstaller
 		if (!self::$bMetaModelStarted)
 		{
 			$oProductionEnv->InitDataModel($oConfig, false);  // load data model and connect to the database
+			$oContextTag = new ContextTag('Setup');
+
 			self::$bMetaModelStarted = true; // No need to reload the final MetaModel in case the installer runs synchronously
 		} 
 		
@@ -1014,6 +1018,8 @@ class ApplicationInstaller
 		// Record which modules are installed...
 		$oProductionEnv = new RunTimeEnvironment($sTargetEnvironment);
 		$oProductionEnv->InitDataModel($oConfig, true);  // load data model and connect to the database
+		$oContextTag = new ContextTag('Setup');
+
 		if (!$oProductionEnv->RecordInstallation($oConfig, $sDataModelVersion, $aSelectedModuleCodes, $aSelectedExtensionCodes, $sInstallComment))
 		{
 			throw new Exception("Failed to record the installation information");

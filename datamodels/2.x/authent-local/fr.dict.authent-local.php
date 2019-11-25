@@ -25,5 +25,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserLocal/Attribute:password' => 'Mot de passe',
 	'Class:UserLocal/Attribute:password+' => '',
 
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex/validation_failed' => 'Le mot de passe ne respecte pas la politique de mot de passe.',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex/validation_failed' => 'Le mot de passe doit contenir au moins 8 caractères, avec minuscule, majuscule, nombre et caractère spécial.',
 ));

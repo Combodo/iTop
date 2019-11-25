@@ -41,5 +41,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:UserLocal/Attribute:password' => 'Password',
 	'Class:UserLocal/Attribute:password+' => 'user authentication string',
 
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex/validation_failed' => 'The password does not respect the policy',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex/validation_failed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.',
 ));

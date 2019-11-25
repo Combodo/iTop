@@ -1,6 +1,8 @@
 <?php
-class UserLocalPasswordPolicyMock implements \UserLocalPasswordValidator
+class UserLocalPasswordPolicyMockValid implements \UserLocalPasswordValidator
 {
+	const CHECK_STATUS = true;
+	const MESSAGE = null;
 
 	public function __construct()
 	{
@@ -8,21 +10,28 @@ class UserLocalPasswordPolicyMock implements \UserLocalPasswordValidator
 
 	/**
 	 * @param string $proposedValue
-	 * @param array $aOptions
 	 * @param UserLocal $oUserLocal
+	 * @param $config
 	 *
 	 * @return UserLocalPasswordValidity
 	 */
-	public function ValidatePassword($proposedValue, $aOptions, UserLocal $oUserLocal)
+	public function ValidatePassword($proposedValue, UserLocal $oUserLocal, $config)
 	{
-		$message = (isset($aOptions['sCheckIssues'])) ? $aOptions['sCheckIssues'] : 'UserLocalPasswordPolicyMock error message';
-
-		return new UserLocalPasswordValidity($aOptions['bCheckStatus'], $message);
+		return new UserLocalPasswordValidity(static::CHECK_STATUS, static::MESSAGE);
 	}
 }
 
-class UserLocalPasswordPolicyMockBis extends UserLocalPasswordPolicyMock
+class UserLocalPasswordPolicyMockNotValid extends UserLocalPasswordPolicyMockValid
 {
+	const CHECK_STATUS = false;
+	const MESSAGE = 'UserLocalPasswordPolicyMockNotValid';
+}
 
+class UserLocalPasswordPolicyMockValidBis extends UserLocalPasswordPolicyMockValid
+{
+}
 
+class UserLocalPasswordPolicyMockNotValidBis extends UserLocalPasswordPolicyMockNotValid
+{
+	const MESSAGE = 'UserLocalPasswordPolicyMockNotValidBis';
 }
