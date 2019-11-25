@@ -81,7 +81,7 @@ class Forms extends AbstractConfiguration
 					if ($oFormNode->GetOptionalElement('properties') !== null)
 					{
 						/** @var \MFElement $oPropertyNode */
-						foreach ($oFormNode->GetOptionalElement('properties')->childNodes as $oPropertyNode)
+						foreach ($oFormNode->GetOptionalElement('properties')->GetNodes('*') as $oPropertyNode)
 						{
 							switch ($oPropertyNode->nodeName)
 							{
@@ -95,7 +95,7 @@ class Forms extends AbstractConfiguration
 
 								case 'navigation_rules':
 									/** @var \MFElement $oNavRuleButtonNode */
-									foreach($oPropertyNode->childNodes as $oNavRuleButtonNode)
+									foreach($oPropertyNode->GetNodes('*') as $oNavRuleButtonNode)
 									{
 										$sNavRuleButtonCode = $oNavRuleButtonNode->nodeName;
 										if(!in_array($sNavRuleButtonCode, $aAllowedNavRulesButtonCodes))
@@ -104,7 +104,7 @@ class Forms extends AbstractConfiguration
 										}
 
 										/** @var \MFElement $oNavRuleOriginNode */
-										foreach($oNavRuleButtonNode->childNodes as $oNavRuleOriginNode)
+										foreach($oNavRuleButtonNode->GetNodes('*') as $oNavRuleOriginNode)
 										{
 											$sNavRuleOrigin = $oNavRuleOriginNode->nodeName;
 											if(!in_array($sNavRuleOrigin, NavigationRuleHelper::GetAllowedOrigins()))

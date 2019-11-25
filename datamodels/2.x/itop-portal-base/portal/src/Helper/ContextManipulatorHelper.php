@@ -125,7 +125,7 @@ class ContextManipulatorHelper
 
 			// Iterating over the rule's nodes
 			/** @var \Combodo\iTop\DesignElement $oSubNode */
-			foreach ($oRuleNode->childNodes as $oSubNode)
+			foreach ($oRuleNode->GetNodes('*') as $oSubNode)
 			{
 				$sSubNodeName = $oSubNode->nodeName;
 				switch ($sSubNodeName)
@@ -142,7 +142,7 @@ class ContextManipulatorHelper
 					case 'presets':
 					case 'retrofits':
 						/** @var \Combodo\iTop\DesignElement $oActionNode */
-						foreach ($oSubNode->childNodes as $oActionNode)
+						foreach ($oSubNode->GetNodes('*') as $oActionNode)
 						{
 							// Note : Caution, the index of $aRule is now $oActionNode->nodeName instead of $sSubNodeName, as we want to match iTopObjectCopier specs like told previously
 							if (in_array($oActionNode->nodeName, array('preset', 'retrofit')))

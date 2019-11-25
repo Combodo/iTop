@@ -344,7 +344,7 @@ class NavigationRuleHelper
 		);
 
 		/** @var \Combodo\iTop\DesignElement $oPropNode */
-		foreach($oRuleNode->childNodes as $oPropNode)
+		foreach($oRuleNode->GetNodes('*') as $oPropNode)
 		{
 			switch($oPropNode->nodeName)
 			{
@@ -395,7 +395,7 @@ class NavigationRuleHelper
 		$aRule = $this->GetDefaultGoToBrickRuleDefinition();
 
 		/** @var \Combodo\iTop\DesignElement $oPropNode */
-		foreach($oRuleNode->childNodes as $oPropNode)
+		foreach($oRuleNode->GetNodes('*') as $oPropNode)
 		{
 			switch($oPropNode->nodeName)
 			{
@@ -403,7 +403,7 @@ class NavigationRuleHelper
 					/** @var array $aRouteProperties Route ID and parameters */
 					$aRouteProperties = array();
 					/** @var DesignElement $oRoutePropNode */
-					foreach($oPropNode->childNodes as $oRoutePropNode)
+					foreach($oPropNode->GetNodes('*') as $oRoutePropNode)
 					{
 						switch($oRoutePropNode->nodeName)
 						{
@@ -413,7 +413,7 @@ class NavigationRuleHelper
 
 							case 'params':
 								/** @var DesignElement $oRouteParamNode */
-								foreach($oRoutePropNode->childNodes as $oRouteParamNode)
+								foreach($oRoutePropNode->GetNodes('*') as $oRouteParamNode)
 								{
 									$sRouteParamId = $oRouteParamNode->getAttribute('id');
 									$sRouteParamValue = $oRouteParamNode->GetText();
@@ -468,7 +468,7 @@ class NavigationRuleHelper
 		);
 
 		/** @var \Combodo\iTop\DesignElement $oPropNode */
-		foreach($oRuleNode->childNodes as $oPropNode)
+		foreach($oRuleNode->GetNodes('*') as $oPropNode)
 		{
 			$sRouteParamId = (array_key_exists($oPropNode->nodeName, $aParamsMapping)) ? $aParamsMapping[$oPropNode->nodeName] : $oPropNode->nodeName;
 			$aRule['properties']['route']['params'][$sRouteParamId] = $oPropNode->GetText();
@@ -502,7 +502,7 @@ class NavigationRuleHelper
 		);
 
 		/** @var \Combodo\iTop\DesignElement $oPropNode */
-		foreach($oRuleNode->childNodes as $oPropNode)
+		foreach($oRuleNode->GetNodes('*') as $oPropNode)
 		{
 			$sRouteParamId = (array_key_exists($oPropNode->nodeName, $aParamsMapping)) ? $aParamsMapping[$oPropNode->nodeName] : $oPropNode->nodeName;
 			$aRule['properties']['route']['params'][$sRouteParamId] = $oPropNode->GetText();

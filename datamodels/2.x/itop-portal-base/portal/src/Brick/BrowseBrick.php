@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Brick;
@@ -326,7 +324,7 @@ class BrowseBrick extends PortalBrick
 			{
 				case 'levels':
 					/** @var \Combodo\iTop\DesignElement $oLevelNode */
-					foreach ($oBrickSubNode->childNodes as $oLevelNode)
+					foreach ($oBrickSubNode->GetNodes('*') as $oLevelNode)
 					{
 						if ($oLevelNode->nodeName === 'level')
 						{
@@ -336,17 +334,17 @@ class BrowseBrick extends PortalBrick
 					break;
 				case 'browse_modes':
 					/** @var \Combodo\iTop\DesignElement $oBrowseModeNode */
-					foreach ($oBrickSubNode->childNodes as $oBrowseModeNode)
+					foreach ($oBrickSubNode->GetNodes('*') as $oBrowseModeNode)
 					{
 						switch ($oBrowseModeNode->nodeName)
 						{
 							case 'availables':
 								/** @var \Combodo\iTop\DesignElement $oModeNode */
-								foreach ($oBrowseModeNode->childNodes as $oModeNode)
+								foreach ($oBrowseModeNode->GetNodes('*') as $oModeNode)
 								{
 									if (!$oModeNode->hasAttribute('id'))
 									{
-										throw new DOMFormatException('BrowseBrick : Browse mode must have a unique ID attribute', null,
+										throw new DOMFormatException('BrowseBrick: Browse mode must have a unique ID attribute', null,
 											null, $oModeNode);
 									}
 
@@ -443,7 +441,7 @@ class BrowseBrick extends PortalBrick
 		}
 		// Getting level properties
 		/** @var \Combodo\iTop\DesignElement $oLevelPropertyNode */
-		foreach ($oMDElement->childNodes as $oLevelPropertyNode)
+		foreach ($oMDElement->GetNodes('*') as $oLevelPropertyNode)
 		{
 			switch ($oLevelPropertyNode->nodeName)
 			{
@@ -488,7 +486,7 @@ class BrowseBrick extends PortalBrick
 					{
 						$aLevel[$sTagName] = array();
 						/** @var \Combodo\iTop\DesignElement $oFieldNode */
-						foreach ($oLevelPropertyNode->childNodes as $oFieldNode)
+						foreach ($oLevelPropertyNode->GetNodes('*') as $oFieldNode)
 						{
 							if ($oFieldNode->hasAttribute('id') && $oFieldNode->getAttribute('id') !== '')
 							{
@@ -517,7 +515,7 @@ class BrowseBrick extends PortalBrick
 						$aLevel[$sTagName] = array();
 						$iActionDefaultRank = 0;
 						/** @var \Combodo\iTop\DesignElement $oActionNode */
-						foreach ($oLevelPropertyNode->childNodes as $oActionNode)
+						foreach ($oLevelPropertyNode->GetNodes('*') as $oActionNode)
 						{
 							if ($oActionNode->hasAttribute('id') && $oActionNode->getAttribute('id') !== '')
 							{
@@ -607,7 +605,7 @@ class BrowseBrick extends PortalBrick
 					break;
 
 				case 'levels':
-					foreach ($oLevelPropertyNode->childNodes as $oSubLevelNode)
+					foreach ($oLevelPropertyNode->GetNodes('*') as $oSubLevelNode)
 					{
 						if ($oSubLevelNode->nodeName === 'level')
 						{

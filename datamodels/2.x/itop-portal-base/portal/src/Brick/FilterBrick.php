@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Brick;
@@ -208,7 +206,7 @@ class FilterBrick extends PortalBrick
 			{
 				case 'target_brick':
 					/** @var \Combodo\iTop\DesignElement $oTargetBrickNode */
-					foreach ($oBrickSubNode->childNodes as $oTargetBrickNode)
+					foreach ($oBrickSubNode->GetNodes('*') as $oTargetBrickNode)
 					{
 						switch ($oTargetBrickNode->nodeName)
 						{

@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Brick;
@@ -749,7 +747,7 @@ class ManageBrick extends PortalBrick
 						{
 							case 'availables';
 								/** @var \Combodo\iTop\DesignElement $oModeNode */
-								foreach ($oDisplayNode->childNodes as $oModeNode)
+								foreach ($oDisplayNode->GetNodes('*') as $oModeNode)
 								{
 									if (!$oModeNode->hasAttribute('id'))
 									{
@@ -879,7 +877,7 @@ class ManageBrick extends PortalBrick
 									$aGroup = array();
 									$aGroup['id'] = $sGroupId; // We don't put the group id as the $aGroups key because the array will be sorted later in AddGrouping, which replace array keys by integer ordered keys
 									/** @var \Combodo\iTop\DesignElement $oGroupProperty */
-									foreach ($oGroupNode->childNodes as $oGroupProperty)
+									foreach ($oGroupNode->GetNodes('*') as $oGroupProperty)
 									{
 										switch ($oGroupProperty->nodeName)
 										{

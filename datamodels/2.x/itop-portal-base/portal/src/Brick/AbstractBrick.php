@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Brick;
@@ -636,7 +634,7 @@ abstract class AbstractBrick
 					break;
 				case 'security':
 					/** @var \Combodo\iTop\DesignElement $oSecurityNode */
-					foreach ($oBrickSubNode->childNodes as $oSecurityNode)
+					foreach ($oBrickSubNode->GetNodes('*') as $oSecurityNode)
 					{
 						if ($oSecurityNode->nodeType === XML_TEXT_NODE && $oSecurityNode->GetText() === '')
 						{
