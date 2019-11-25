@@ -654,7 +654,7 @@ class BulkChange
 		return $aResults;
 	}
 
-	
+
 	protected function CreateObject(&$aResult, $iRow, $aRowData, CMDBChange $oChange = null)
 	{
 		$oTargetObj = MetaModel::NewObject($this->m_sClass);
@@ -731,18 +731,17 @@ class BulkChange
 		//
 		if ($oChange)
 		{
-			$oTargetObj::SetCurrentChange($oChange);
 			$newID = $oTargetObj->DBInsert();
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
-			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
-			$aResult[$iRow]["id"] = new CellStatus_Void($newID);
 		}
 		else
 		{
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
-			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
-			$aResult[$iRow]["id"] = new CellStatus_Void(0);
+			$newID = 0;
 		}
+
+		$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
+		$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
+		$aResult[$iRow]["id"] = new CellStatus_Void($newID);
+
 		return $oTargetObj;
 	}
 
@@ -786,7 +785,6 @@ class BulkChange
 			{
 				try
 				{
-					$oTargetObj::SetCurrentChange($oChange);
 					$oTargetObj->DBUpdate();
 				}
 				catch(CoreException $e)
@@ -852,6 +850,11 @@ class BulkChange
 	
 	public function Process(CMDBChange $oChange = null)
 	{
+		if ($oChange)
+		{
+			CMDBObject::SetCurrentChange($oChange);
+		}
+
 		// Note: $oChange can be null, in which case the aim is to check what would be done
 
 		// Debug...

@@ -434,22 +434,13 @@ abstract class TestBizModel extends TestHandler
 	}
 	protected function ObjectToDB($oNew, $bReload = false)
 	{
-		if ($oNew instanceof CMDBObject)
+		if ($bReload)
 		{
-			$oChange = $this->GetCurrentChange();
-			$oNew::SetCurrentChange($oChange);
-			$oNew->DBWrite();
+			$iId = $oNew->DBInsert();
 		}
 		else
 		{
-			if ($bReload)
-			{
-				$iId = $oNew->DBInsert();
-			}
-			else
-			{
-				$iId = $oNew->DBInsertNoReload();
-			}
+			$iId = $oNew->DBInsertNoReload();
 		}
 		return $iId;
 	}

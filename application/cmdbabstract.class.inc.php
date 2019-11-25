@@ -4433,7 +4433,7 @@ EOF
 	 *
 	 * @param \WebPage $oP
 	 * @param $sClass
-	 * @param $aObjects
+	 * @param \DBObject[] $aObjects
 	 * @param $bPreview
 	 * @param $sCustomOperation
 	 * @param array $aContextData
@@ -4453,7 +4453,7 @@ EOF
 			}
 			else
 			{
-				$oObj->DBDelete();
+				$oObj->DBDelete($oDeletionPlan);
 			}
 		}
 

@@ -8,6 +8,7 @@
 namespace Combodo\iTop\Cas;
 
 use AbstractLoginFSMExtension;
+use CMDBObject;
 use DBObjectSearch;
 use DBObjectSet;
 use Dict;
@@ -185,6 +186,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 			return;
 		}
 
+		CMDBObject::SetTrackInfo('CAS/LDAP Synchro');
 		$oUser = LoginWebPage::FindUser($sLogin, false);
 		if ($oUser)
 		{

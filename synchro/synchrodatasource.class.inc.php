@@ -3001,6 +3001,7 @@ class SynchroExecution
 		$this->m_oChange->Set('userinfo', $sUserString.' '.Dict::S('Core:SyncDataExchangeComment'));
 		$this->m_oChange->Set('origin', 'synchro-data-source');
 		$this->m_oChange->DBInsert();
+		CMDBObject::SetCurrentChange($oChange);
 
 		// Start logging this execution (stats + protection against reentrance)
 		//
@@ -3377,6 +3378,7 @@ class SynchroExecution
 		self::$m_oCurrentTask = $this->m_oDataSource;
 		$this->m_oStatLog = $oLog;
 		$this->m_oChange = $oChange;
+		CMDBObject::SetCurrentChange($oChange);
 
 		// Prepare internal structures (not the first pass)
 		$this->PrepareProcessing(false);

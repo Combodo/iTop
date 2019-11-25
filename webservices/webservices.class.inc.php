@@ -519,7 +519,6 @@ abstract class WebServicesBase
 	/**
 	 * @param \CMDBObject $oTargetObj
 	 * @param string $sResultLabel
-	 * @param \CMDBChange $oChange
 	 * @param \WebServiceResult $oRes
 	 *
 	 * @throws \ArchivedObjectException
@@ -531,14 +530,13 @@ abstract class WebServicesBase
 	 * @throws \OQLException
 	 * @throws \SecurityException
 	 */
-	protected function MyObjectInsert($oTargetObj, $sResultLabel, $oChange, &$oRes)
+	protected function MyObjectInsert($oTargetObj, $sResultLabel, &$oRes)
 	{
 		if ($oRes->IsOk())
 		{
 			list($bRes, $aIssues) = $oTargetObj->CheckToWrite();
 			if ($bRes)
 			{
-				$oTargetObj::SetCurrentChange($oChange);
 				$iId = $oTargetObj->DBInsertNoReload();
 				$oRes->LogInfo("Created object ".get_class($oTargetObj)."::$iId");
 				$oRes->AddResultObject($sResultLabel, $oTargetObj);

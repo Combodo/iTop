@@ -786,7 +786,13 @@ class LoginWebPage extends NiceWebPage
 		$oPerson = null;
 		try
 		{
-			/** @var Person $oPerson */
+			$sOrigin = 'External User provisioning';
+			if (isset($_SESSION['login_mode']))
+			{
+				$sOrigin .= " ({$_SESSION['login_mode']})";
+			}
+			CMDBObject::SetTrackOrigin($sOrigin);
+
 			$oPerson = MetaModel::NewObject('Person');
 			$oPerson->Set('first_name', $sFirstName);
 			$oPerson->Set('name', $sLastName);
@@ -801,16 +807,6 @@ class LoginWebPage extends NiceWebPage
 			{
 				$oPerson->Set($sAttCode, $sValue);
 			}
-			/** @var CMDBChange $oMyChange */
-			$oMyChange = MetaModel::NewObject('CMDBChange');
-			$oMyChange->Set("date", time());
-			$sOrigin = 'External User provisioning';
-			if (isset($_SESSION['login_mode']))
-			{
-				$sOrigin .= " ({$_SESSION['login_mode']})";
-			}
-			$oMyChange->Set('userinfo', $sOrigin);
-			$oPerson::SetCurrentChange($oMyChange);
 			$oPerson->DBInsert();
 		}
 		catch (Exception $e)

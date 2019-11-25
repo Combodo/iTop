@@ -121,20 +121,14 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
 		// Maybe we should check that no other user with userid == 0 exists
+		CMDBObject::SetTrackInfo('Initialization');
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
 		$oUser->Set('contactid', 1); // one is for root !
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
 
-		// Create a change to record the history of the User object
-		/** @var \CMDBChange $oChange */
-		$oChange = MetaModel::NewObject("CMDBChange");
-		$oChange->Set("date", time());
-		$oChange->Set("userinfo", "Initialization");
-
 		// Now record the admin user object
-		$oUser::SetCurrentChange($oChange);
 		$iUserId = $oUser->DBInsertNoReload();
 		$this->SetupUser($iUserId, true);
 		return true;

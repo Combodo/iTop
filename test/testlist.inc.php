@@ -342,12 +342,9 @@ class TestMyBizModel extends TestBizModel
 		self::DumpVariable($team->ListChanges());
 		echo "New headcount = {$team->Get("headcount")}</br>\n";
 		echo "Computed name = {$team->Get("name")}</br>\n";
-	
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$oMyChange->Set("userinfo", "test_setattribute / Made by robot #".rand(1,100));
+
+		CMDBObject::SetTrackInfo('test_setattribute / Made by robot #'.rand(1, 100));
 		//DBSearch::StartDebugQuery();
-		$team::SetCurrentChange($oMyChange);
 		$team->DBUpdate();
 		//DBSearch::StopDebugQuery();
 	
@@ -524,12 +521,8 @@ class TestMyBizModel extends TestBizModel
 		echo "<h5>New workshops</h5>\n";
 		$oSetWorkshopsCurr = $oObj->Get("myworkshops");
 		$this->show_list($oSetWorkshopsCurr);
-	
-		$oMyChange = MetaModel::NewObject("CMDBChange");
-		$oMyChange->Set("date", time());
-		$oMyChange->Set("userinfo", "test_linkedset / Made by robot #".rand(1,100));
-		$iChangeId = $oMyChange->DBInsert();
-		$oObj::SetCurrentChange($oMyChange);
+
+		CMDBObject::SetTrackInfo('test_linkedset / Made by robot #'.rand(1, 100));
 		$oObj->DBUpdate();
 		$oObj = MetaModel::GetObject("cmdbContact", 18);
 	
