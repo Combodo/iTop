@@ -39,8 +39,11 @@ class UserLocalTest extends ItopTestCase
 	/**
 	 * @dataProvider ProviderValidatePassword
 	 *
+	 * @runTestsInSeparateProcesses
+	 * @preserveGlobalState disabled
+	 * @backupGlobals disabled
 	 */
-	public function testValidatePassword($sPassword, $aValidatorCollection, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null)
+	public function testValidatePassword($sPassword, $aValidatorNames, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null)
 	{
 		$configMock = $this->createMock(\Config::class);
 
@@ -57,6 +60,12 @@ class UserLocalTest extends ItopTestCase
 			\MetaModel::NewObject('URP_UserProfile', array('profileid' => 1))
 		);
 
+		$aValidatorCollection = array();
+		foreach ($aValidatorNames as $class)
+		{
+			$aValidatorCollection[] = new $class();
+		}
+
 		$oUserLocal->ValidatePassword($sPassword, $configMock, $aValidatorCollection);
 
 		list($bCheckStatus, $aCheckIssues, $aSecurityIssues) =  $oUserLocal->CheckToWrite();
@@ -71,23 +80,11 @@ class UserLocalTest extends ItopTestCase
 
 	public function ProviderValidatePassword()
 	{
-		parent::setUp();
-		require_once (APPROOT.'env-production/authent-local/model.authent-local.php');
-		require_once (APPROOT.'test/coreExtensions/UserLocalTest/UserLocalPasswordPolicyMock.php');
-
-		$oUserPasswordPolicyRegex = new UserPasswordPolicyRegex();
-
-		$oUserLocalPasswordPolicyMockValid = new UserLocalPasswordPolicyMockValid();
-		$oUserLocalPasswordPolicyMockNotValid = new UserLocalPasswordPolicyMockNotValid();
-		$oUserLocalPasswordPolicyMockValidBis = new UserLocalPasswordPolicyMockValidBis();
-		$oUserLocalPasswordPolicyMockNotValidBis = new UserLocalPasswordPolicyMockNotValidBis();
-
-
 		return array(
 			'validPattern' => array(
 				'password' => 'foo',
 				'aValidatorCollection' => array(
-					$oUserPasswordPolicyRegex,
+					'UserPasswordPolicyRegex',
 				),
 				'valueMap' => array(
 					array('authent-local', 'password_validation.pattern', null, '.{1,10}')
@@ -97,7 +94,7 @@ class UserLocalTest extends ItopTestCase
 			'notValidPattern' => array(
 				'password' => 'foo',
 				'aValidatorCollection' => array(
-					$oUserPasswordPolicyRegex,
+					'UserPasswordPolicyRegex',
 				),
 				'valueMap' => array(
 					array('authent-local', 'password_validation.pattern', null, '.{6,10}')
@@ -107,7 +104,7 @@ class UserLocalTest extends ItopTestCase
 			'noPattern' => array(
 				'password' => 'foo',
 				'aValidatorCollection' => array(
-					$oUserPasswordPolicyRegex,
+					'UserPasswordPolicyRegex',
 				),
 				'valueMap' => array(
 					array('authent-local', 'password_validation.pattern', null, '')
@@ -117,7 +114,7 @@ class UserLocalTest extends ItopTestCase
 			'validClass' => array(
 				'password' => 'foo',
 				'aValidatorCollection' => array(
-					$oUserLocalPasswordPolicyMockValid,
+					'UserLocalPasswordPolicyMockValid',
 				),
 				'valueMap' => array(),
 				'expectedCheckStatus' => true,
@@ -125,7 +122,7 @@ class UserLocalTest extends ItopTestCase
 			'notValidClass' => array(
 				'password' => 'foo',
 				'aValidatorCollection' => array(
-					$oUserLocalPasswordPolicyMockNotValid,
+					'UserLocalPasswordPolicyMockNotValid',
 				),
 				'valueMap' => array(),
 				'expectedCheckStatus' => false,
@@ -134,8 +131,8 @@ class UserLocalTest extends ItopTestCase
 			'validation_composition_10' => array(
 				'password' => 'foo',
 				'aValidatorCollection' => array(
-					$oUserLocalPasswordPolicyMockValid,
-					$oUserLocalPasswordPolicyMockNotValid,
+					'UserLocalPasswordPolicyMockValid',
+					'UserLocalPasswordPolicyMockNotValid',
 				),
 				'valueMap' => array(),
 				'expectedCheckStatus' => false,
@@ -146,8 +143,8 @@ class UserLocalTest extends ItopTestCase
 			'validation_composition_01' => array(
 				'password' => 'foo',
 				'aValidatorCollection' => array(
-					$oUserLocalPasswordPolicyMockNotValid,
-					$oUserLocalPasswordPolicyMockValid,
+					'UserLocalPasswordPolicyMockNotValid',
+					'UserLocalPasswordPolicyMockValid',
 				),
 				'valueMap' => array(),
 				'expectedCheckStatus' => false,
@@ -157,8 +154,8 @@ class UserLocalTest extends ItopTestCase
 			'validation_composition_11' => array(
 				'password' => 'foo',
 				'aValidatorCollection' => array(
-					$oUserLocalPasswordPolicyMockValid,
-					$oUserLocalPasswordPolicyMockValidBis,
+					'UserLocalPasswordPolicyMockValid',
+					'UserLocalPasswordPolicyMockValidBis',
 				),
 				'valueMap' => array(),
 				'expectedCheckStatus' => true,
@@ -166,8 +163,8 @@ class UserLocalTest extends ItopTestCase
 			'validation_composition_00' => array(
 				'password' => 'foo',
 				'aValidatorCollection' => array(
-					$oUserLocalPasswordPolicyMockNotValid,
-					$oUserLocalPasswordPolicyMockNotValidBis,
+					'UserLocalPasswordPolicyMockNotValid',
+					'UserLocalPasswordPolicyMockNotValidBis',
 				),
 				'valueMap' => array(),
 				'expectedCheckStatus' => false,
@@ -182,8 +179,17 @@ class UserLocalTest extends ItopTestCase
 	 * @dataProvider ProviderPasswordRenewal
 	 *
 	 */
-	public function testPasswordRenewal($aUserLocalValues, $oExpectedBefore, $oExpectedAfter)
+	public function testPasswordRenewal($sBefore, $sExpectedAfter)
 	{
+		$oBefore = is_null($sBefore) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sBefore));
+		$oExpectedAfter = is_null($sExpectedAfter) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sExpectedAfter));
+
+		$aUserLocalValues = array('login' => 'john');
+		if (!is_null($oBefore))
+		{
+			$aUserLocalValues['password_renewed_date'] = $oBefore;
+		}
+
 		/** @var UserLocal $oUserLocal */
 		$oUserLocal = \MetaModel::NewObject('UserLocal', $aUserLocalValues);
 		/** @var \ormLinkSet $oProfileSet */
@@ -193,7 +199,7 @@ class UserLocalTest extends ItopTestCase
 			\MetaModel::NewObject('URP_UserProfile', array('profileid' => 1))
 		);
 
-		$this->assertEquals($oExpectedBefore, $oUserLocal->Get('password_renewed_date'));
+		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'));
 
 		$oUserLocal->Set('password', 'foo');
 
@@ -202,25 +208,18 @@ class UserLocalTest extends ItopTestCase
 
 	public function ProviderPasswordRenewal()
 	{
-		$sNow = date(\AttributeDate::GetInternalFormat());
-		$sYesterday = date(\AttributeDate::GetInternalFormat(), strtotime('-1 day'));
-		$sTomorrow = date(\AttributeDate::GetInternalFormat(), strtotime('+1 day'));
-
 		return array(
 			'nominal case' => array(
-				'aUserLocalValues' =>  array('login' => 'john'),
 				'oExpectedBefore' => null,
-				'oExpectedAfter' => $sNow,
+				'oExpectedAfter' => 'now',
 			),
 			'date initiated' => array(
-				'aUserLocalValues' =>  array('login' => 'john', 'password_renewed_date' => $sYesterday),
-				'oExpectedBefore' => $sYesterday,
-				'oExpectedAfter' => $sNow,
+				'oBefore' => '-1 day',
+				'oExpectedAfter' => 'now',
 			),
 			'date initiated in the future' => array(
-				'aUserLocalValues' =>  array('login' => 'john', 'password_renewed_date' => $sTomorrow),
-				'oExpectedBefore' => $sTomorrow,
-				'oExpectedAfter' => $sNow,
+				'oBefore' => '+1 day',
+				'oExpectedAfter' => 'now',
 			),
 		);
 	}
