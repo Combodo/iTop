@@ -7200,12 +7200,12 @@ abstract class MetaModel
 	}
 
 	/**
-	 * This function has two siblings that will be soon deprecated:
-	 * {@link MetaModel::EnumLinkingClasses} and {@link MetaModel::EnumLinkClasses}
-	 *
 	 * Using GetLinkClasses is the recommended way to determine if a class is
 	 * actually an N-N relation because it is based on the decision made by the
 	 * designer the data model
+	 *
+	 * This function has two siblings that will be soon deprecated:
+	 * {@link MetaModel::EnumLinkingClasses} and {@link MetaModel::EnumLinkClasses}
 	 *
 	 * @return array (target class => (external key code => target class))
 	 * @throws \CoreException
