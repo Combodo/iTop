@@ -17,6 +17,13 @@ use UserLocalPasswordPolicyMockValidBis;
 use UserLocalPasswordValidity;
 use UserPasswordPolicyRegex;
 
+/**
+ * test class for UserLocal class
+ *
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class UserLocalTest extends ItopTestCase
 {
 
@@ -32,9 +39,6 @@ class UserLocalTest extends ItopTestCase
 	/**
 	 * @dataProvider ProviderValidatePassword
 	 *
-	 * @runTestsInSeparateProcesses
-	 * @preserveGlobalState disabled
-	 * @backupGlobals disabled
 	 */
 	public function testValidatePassword($sPassword, $aValidatorCollection, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null)
 	{
