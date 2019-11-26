@@ -80,7 +80,7 @@ $MySettings = array(
 
 	'db_host' => '',
 
-	'db_name' => 'itop_ci_main',
+	'db_name' => 'itop_ci',
 
 	'db_pwd' => 'IKnowYouSeeMeInJenkinsConf',
 
