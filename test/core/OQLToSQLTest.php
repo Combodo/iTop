@@ -294,6 +294,16 @@ class OQLToSQLTest extends ItopDataTestCase
 		return null;
 	}
 
+	private function OQLSelectProviderStaticTTO()
+	{
+		$aAttToLoadTTO = array('UserRequest' => array('tto'));
+		$aData =  array(
+			"SELECT UserRequest TTO" => array("SELECT UserRequest FROM UserRequest AS UserRequest WHERE tto_laststart AND tto_75_triggered = 0 AND tto_75_deadline < '2010-06-26 12:08:59'", array(), array(), $aAttToLoadTTO, null, null, 3, 0),
+		);
+
+		return $aData;
+	}
+
 
 	private function OQLSelectProviderStatic()
 	{
@@ -899,7 +909,8 @@ class OQLToSQLTest extends ItopDataTestCase
 
 	public function OQLSelectProvider()
 	{
-		$aData = $this->OQLSelectProviderStatic();
+		$aData = $this->OQLSelectProviderStaticTTO();
+		$aData = array_merge($aData,$this->OQLSelectProviderStatic());
 
 		// Dynamic entries
 		@include ('oql_records.php');
