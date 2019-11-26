@@ -314,7 +314,16 @@ class BrowseBrickController extends BrickController
 									$oQuery = $aLevelsProperties[$aLevelProperties['levels'][0]]['search'];
 									if (!empty($sNodeId))
 									{
-										$oQuery->AddCondition($aLevelsProperties[$aLevelProperties['levels'][0]]['parent_att'], $sNodeId);
+										$sParentAttCode = $aLevelsProperties[$aLevelProperties['levels'][0]]['parent_att'];
+										$oParentAtt = MetaModel::GetAttributeDef($oQuery->GetClass(), $sParentAttCode);
+										if($oParentAtt instanceof \AttributeLinkedSetIndirect)
+										{
+											$oQuery->AddConditionAdvanced($sParentAttCode.'->'.$oParentAtt->GetExtKeyToRemote(), $sNodeId);
+										}
+										else
+										{
+											$oQuery->AddCondition($sParentAttCode, $sNodeId);
+										}
 									}
 									$bFoundLevel = true;
 									break;
