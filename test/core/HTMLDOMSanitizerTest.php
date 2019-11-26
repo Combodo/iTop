@@ -5,6 +5,11 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use HTMLDOMSanitizer;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class HTMLDOMSanitizerTest extends ItopTestCase
 {
 
