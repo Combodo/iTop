@@ -1658,7 +1658,7 @@ class SynchroAttLinkSet extends SynchroAttribute
 		MetaModel::Init_AddAttribute(new AttributeString('attribute_qualifier', array(
 			'allowed_values' => null,
 			'sql' => 'attribute_qualifier',
-			'default_value' => '',
+			'default_value' => '\'',
 			'is_null_allowed' => true,
 			'depends_on' => array(),
 		)));
