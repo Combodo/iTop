@@ -62,6 +62,8 @@ class OQLTest extends ItopDataTestCase
 	public function NestedQueryProvider()
 	{
 		return array(
+			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE  `UserRequest`.org_id IN (SELECT id FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = \'3\'))'),
+			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE `Organization`.`id`=`UserRequest`.`org_id`))'),
 			array('SELECT toto WHERE id NOT IN (aaa,2,3)'),
 			array('SELECT toto WHERE id IN (SELECT titi)'),
 			array('SELECT toto WHERE a=1'),

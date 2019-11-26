@@ -252,6 +252,10 @@ abstract class Expression
 		);
 	}
 
+	public function GetCriteria()
+	{
+	 return $this;
+	}
 	/**
 	 * Split binary expression on given operator
 	 *
@@ -395,7 +399,7 @@ class BinaryExpression extends Expression
 		{
 			throw new CoreException('Expecting an Expression object on the right hand', array('found_class' => get_class($oRightExpr)));
 		}
-		if ((($sOperator == "IN") || ($sOperator == "NOT IN")) && !($oRightExpr instanceof ListExpression))
+		if ((($sOperator == "IN") || ($sOperator == "NOT IN")) && !($oRightExpr instanceof ListExpression || $oRightExpr instanceof NestedQueryExpression))
 		{
 			throw new CoreException("Expecting a List Expression object on the right hand for operator $sOperator",
 				array('found_class' => get_class($oRightExpr)));
@@ -503,7 +507,12 @@ class BinaryExpression extends Expression
 		$oRight = $this->GetRightExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		return new BinaryExpression($oLeft, $this->GetOperator(), $oRight);
 	}
-
+	public function GetCriteria()
+	{
+		$oLeft = $this->GetLeftExpr()->GetCriteria();
+		$oRight = $this->GetRightExpr()->GetCriteria();
+		return new BinaryExpression($oLeft, $this->GetOperator(), $oRight);
+	}
 	public function ListRequiredFields()
 	{
 		$aLeft = $this->GetLeftExpr()->ListRequiredFields();
@@ -1882,7 +1891,108 @@ class ListExpression extends Expression
 	}
 }
 
+class NestedQueryExpression extends Expression
+{
+	protected $m_oNestedQuery;
 
+	/*$m_oNestedQuery is an DBSearch object*/
+	public function __construct($oNestedQuery)
+	{
+		$this->m_oNestedQuery = $oNestedQuery;
+	}
+	public static function FromOQLObjectQuery($oObjQuery)//$oNestedQuery as OQLObjectQuery
+	{
+		$aExpressions = $oObjQuery->ToDBSearch("");
+		return new NestedQueryExpression($aExpressions);
+	}
+
+	public function IsTrue()
+	{
+		// return true if we are certain that it will be true
+		return false;
+	}
+	public function GetNestedQuery()
+	{
+		return $this->m_oNestedQuery;
+	}
+
+	// recursive rendering
+	/*TODO modif en cours*/
+	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
+	{
+		if ($bForSQL)
+		{
+			return  '('.$this->m_oNestedQuery->GetRootFilter()->MakeSelectQuery().')';
+		}
+		else{
+			return '('.$this->m_oNestedQuery->ToOQL(false, null, false).')';
+		}
+	}
+	/*TODO*/
+	public function Browse(Closure $callback)
+	{
+		$callback($this);
+		foreach ($this->m_oCondition as $oExpr)
+		{
+			$oExpr->Browse($callback);
+		}
+	}
+	/**/
+	public function ApplyParameters($aArgs)
+	{
+		$this->m_oNestedQuery->ApplyParameters($aArgs);
+	}
+	/**/
+	public function GetUnresolvedFields($sAlias, &$aUnresolved)
+	{
+		$this->m_oNestedQuery->m_oQBExpressions->GetUnresolvedFields($sAlias, $aUnresolved);
+	}
+	/**/
+	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
+	{
+		// Check and prepare the select information
+		$this->m_oNestedQuery->m_oQBExpressions-> Translate($aTranslationData, $bMatchAll , $bMarkFieldsAsResolved );
+		return clone $this;
+
+	}
+	/*TODO*/
+	public function ListRequiredFields()
+	{
+		$aRes = array();
+		foreach ($this->m_oNestedQuery->getCondition() as $oExpr)
+		{
+			$aRes = array_merge($aRes, $oExpr->ListRequiredFields());
+		}
+		return $aRes;
+	}
+	/*TODO */
+	public function CollectUsedParents(&$aTable)
+	{
+
+	}
+
+	public function ListConstantFields()
+	{
+		return $this->m_oNestedQuery->ListConstantFields();
+	}
+
+	public function RenameParam($sOldName, $sNewName)
+	{
+		$this->m_oNestedQuery->RenameParam($sOldName, $sNewName);
+	}
+
+	public function RenameAlias($sOldName, $sNewName)
+	{
+		$this->m_oNestedQuery->RenameAlias($sOldName, $sNewName);
+	}
+	/*TODO return QueryBuiderContext*/
+	public function GetCriteria()
+	{
+		//transform oNestedQuery to object QueryBuilderContext
+		$queryBuilderContext=new QueryBuilderContext($this->m_oNestedQuery, null, null, null, null);
+		return new NestedQueryExpression($queryBuilderContext);
+	}
+}
 class FunctionExpression extends Expression
 {
 	protected $m_sVerb;

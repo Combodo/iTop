@@ -188,6 +188,28 @@ class ScalarOqlExpression extends ScalarExpression implements CheckableExpressio
 	}
 }
 
+class NestedQueryOqlExpression extends NestedQueryExpression implements CheckableExpression{
+
+	/*Here $m_oNestedQuery is an OQLObjectQuery*/
+	public function __construct($oNestedQuery)
+	{
+		//OQLObjectQuery
+		$this->m_oNestedQuery = $oNestedQuery;
+		$this->m_sQuery="";
+	}
+	/**
+	 * Recursively check the validity of the expression with regard to the data model
+	 * and the query in which it is used
+	 *
+	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 * @throws OqlNormalizeException
+	 */
+	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
+	{
+		$this->m_oNestedQuery-> Check($oModelReflection, "", $aAliases);
+	}
+}
+
 class FieldOqlExpression extends FieldExpression implements CheckableExpression
 {
 	protected $m_oParent;
@@ -399,7 +421,7 @@ class OqlObjectQuery extends OqlQuery
 	 * @param ModelReflection $oModelReflection MetaModel to consider	 	
 	 * @throws OqlNormalizeException
 	 */	 	
-	public function Check(ModelReflection $oModelReflection, $sSourceQuery)
+	public function Check(ModelReflection $oModelReflection, $sSourceQuery, $aParentAliases = array())
 	{
 		$sClass = $this->GetClass($oModelReflection);
 		$sClassAlias = $this->GetClassAlias();
@@ -409,7 +431,7 @@ class OqlObjectQuery extends OqlQuery
 			throw new UnknownClassOqlException($sSourceQuery, $this->GetClassDetails(), $oModelReflection->GetClasses());
 		}
 
-		$aAliases = array($sClassAlias => $sClass);
+		$aAliases = array_merge(array($sClassAlias => $sClass),$aParentAliases);
 
 		$aJoinSpecs = $this->GetJoins();
 		if (is_array($aJoinSpecs))
