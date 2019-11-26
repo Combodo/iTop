@@ -364,7 +364,7 @@ class ObjectFormHandlerHelper
 		$aFormData['fieldset'] = $aFieldSetData;
 		$aFormData['display_mode'] = (isset($aFormProperties['properties'])) ? $aFormProperties['properties']['display_mode'] : ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
 		// - Set a text to be copied on title if the object is not in creation
-		if($sMode !== static::ENUM_MODE_CREATE)
+		if($sMode !== static::ENUM_MODE_CREATE && !empty($sObjectId))
 		{
 			$aFormData['title_clipboard_text'] = Dict::Format(
 				'Brick:Portal:Object:Copy:TextToCopy',
