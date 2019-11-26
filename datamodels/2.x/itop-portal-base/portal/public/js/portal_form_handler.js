@@ -26,6 +26,7 @@ $(function()
 	$.widget( 'itop.portal_form_handler', $.itop.form_handler,
 	{
 		options: {
+			base_url: null,     // Base URL of the application
 			submit_url: null,   // Deprecated. We kept those properties to preserve compatibility with extensions
 			cancel_url: null,   // but you should start using xxx_rule.url as soon as possible.
 			submit_rule: {
@@ -359,7 +360,12 @@ $(function()
 			}
 			else
 			{
+				// Try to close the window
 				window.close();
+
+				// In some browser (eg. Firefox 70), window won't close if it has NOT been open by JS. In that case, we try to redirect to homepage as a fallback.
+				var sHomepageUrl = (this.options.base_url !== null) ? this.options.base_url : $('#sidebar .menu .brick_menu_item:first a').attr('href')
+				window.location.href = sHomepageUrl;
 			}
 		},
 		submit: function(oEvent)

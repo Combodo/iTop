@@ -76,6 +76,7 @@
 			field_set: oFieldSet_{{ sFormIdSanitized }},
 			submit_btn_selector: $('#{{ sFormId }}').parent().find('.form_btn_submit, .form_btn_transition'),
 			cancel_btn_selector: $('#{{ sFormId }}').parent().find('.form_btn_cancel'),
+			base_url: "{{ app['combodo.absolute_url'] }}",
 			{% if form.submit_rule is not null %}submit_rule: {{ form.submit_rule|json_encode|raw }}{% endif %},
 			{% if form.cancel_rule is not null %}cancel_rule: {{ form.cancel_rule|json_encode|raw }}{% endif %},
 			endpoint: "{{ form.renderer.GetEndpoint()|raw }}",
