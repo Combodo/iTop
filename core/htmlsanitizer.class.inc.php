@@ -241,6 +241,8 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 
 	public function __construct()
 	{
+		parent::__construct();
+
 		// Building href validation pattern from url and email validation patterns as the patterns are not used the same way in HTML content than in standard attributes value.
 		// eg. "foo@bar.com" vs "mailto:foo@bar.com?subject=Title&body=Hello%20world"
 		if (!array_key_exists('href', self::$aAttrsWhiteList))
@@ -273,7 +275,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		// therefore we have to do the transformation upfront
 		$sHTML = preg_replace('@<o:p>(\s|&nbsp;)*</o:p>@', '<br>', $sHTML);
 		// Replace badly encoded non breaking space
-		$sHTML = preg_replace('~\xc2\xa0~', '&nbsp;', $sHTML);
+		$sHTML = preg_replace('~\xc2\xa0~', ' ', $sHTML);
 
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
 		
