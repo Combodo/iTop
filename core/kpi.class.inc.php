@@ -356,11 +356,11 @@ class ExecutionKPI
 		}
 	}
 
-	const HtmlReportFile = 'log/kpi.html';
+	const HTML_REPORT_FILE = 'log/kpi.html';
 
 	static protected function Report($sText)
 	{
-		file_put_contents(APPROOT.self::HtmlReportFile, "$sText\n", FILE_APPEND | LOCK_EX);
+		file_put_contents(APPROOT.self::HTML_REPORT_FILE, "$sText\n", FILE_APPEND | LOCK_EX);
 	}
 
 	static protected function MemStr($iMemory)
