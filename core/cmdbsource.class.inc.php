@@ -1168,14 +1168,19 @@ class CMDBSource
 			$sDbFieldOtherOptions = substr($sDbFieldOtherOptions, 0, -strlen($sMariaDbDefaultNull));
 		}
 		// remove quotes around default values (always present in MariaDB)
-		if (preg_match('/ DEFAULT \'([^\']+)\'$/', $sDbFieldOtherOptions, $aMatches) === 1)
-		{
-			if (($sItopFieldDataType !== 'ENUM') && is_numeric($aMatches[1]))
-			{
-				$sDbFieldOtherOptions = substr($sDbFieldOtherOptions, 0, -(strlen($aMatches[1]) + 2))
-					.$aMatches[1];
-			}
-		}
+		$sDbFieldOtherOptions = preg_replace_callback(
+			'/( DEFAULT )\'([^\']+)\'/',
+			function ($aMatches) use ($sItopFieldDataType) {
+				// ENUM default values should keep quotes, but all other numeric values don't have quotes
+				if (is_numeric($aMatches[2]) && ($sItopFieldDataType !== 'ENUM'))
+				{
+					return $aMatches[1].$aMatches[2];
+				}
+
+				return $aMatches[0];
+			},
+			$sDbFieldOtherOptions);
+
 		if (strcasecmp($sItopFieldOtherOptions, $sDbFieldOtherOptions) !== 0)
 		{
 			return false;
