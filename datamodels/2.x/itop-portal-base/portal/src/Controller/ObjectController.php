@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Controller;
@@ -1245,7 +1243,7 @@ class ObjectController extends BrickController
 			$oSearch->AllowAllData();
 		}
 		$oSet = new DBObjectSet($oSearch, array(), $aParams);
-		$oSet->OptimizeColumnLoad($aObjectAttCodes);
+		$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => $aObjectAttCodes));
 
 		// Retrieving objects
 		while ($oObject = $oSet->Fetch())

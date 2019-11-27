@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Controller;
@@ -384,6 +382,7 @@ class BrowseBrickController extends BrickController
 				$aColumnAttrs[$sTmpClassAlias] = $aTmpColumnAttrs;
 			}
 		}
+		// Note: $aColumnAttrs already contains array of aliases => attcodes
 		$oSet->OptimizeColumnLoad($aColumnAttrs);
 
 		// Setting specified column sort, setting default datamodel one otherwise

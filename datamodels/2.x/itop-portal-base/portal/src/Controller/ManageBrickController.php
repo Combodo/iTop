@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Controller;
@@ -491,7 +489,7 @@ class ManageBrickController extends BrickController
 				// - Check how many records there is.
 				// - Update $sDataLoading with its new value regarding the number of record and the threshold
 				$oCountSet = new DBObjectSet($oQuery);
-				$oCountSet->OptimizeColumnLoad(array());
+				$oCountSet->OptimizeColumnLoad(array($oQuery->GetClassAlias() => array()));
 				$fThreshold = (float)MetaModel::GetModuleSetting($sPortalId,
 					'lazy_loading_threshold');
 				$sDataLoading = ($oCountSet->Count() > $fThreshold) ? AbstractBrick::ENUM_DATA_LOADING_LAZY : AbstractBrick::ENUM_DATA_LOADING_FULL;
@@ -555,6 +553,7 @@ class ManageBrickController extends BrickController
 							}
 						}
 					}
+					// Note: $aColumnToLoad already contains array of aliases => attcodes
 					$oSet->OptimizeColumnLoad($aColumnsToLoad);
 
 					$oSecurityHelper->PreloadForCache($oSet->GetFilter(),
