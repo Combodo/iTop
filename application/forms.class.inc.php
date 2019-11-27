@@ -1493,6 +1493,7 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 			$sAvailableIcons .= '   static $sKey = '.var_export($sKey, true).';'.PHP_EOL;
 			$sAvailableIcons .= '   static $aIconFiles = '.var_export($aFiles, true).';'.PHP_EOL;
 			$sAvailableIcons .= '}'.PHP_EOL;
+			SetupUtils::builddir(dirname($sCacheFile));
 			file_put_contents($sCacheFile, $sAvailableIcons, LOCK_EX);
 		}
 		return $aFiles;
