@@ -25,5 +25,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserLocal/Attribute:password' => 'Mot de passe',
 	'Class:UserLocal/Attribute:password+' => '',
 
+	'Class:UserLocal/Attribute:expiration' => 'Validité du mot de passe',
+	'Class:UserLocal/Attribute:expiration+' => 'Statut du mot de passe (nécessite une extension pour avoir un effet)',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'à durée limitée',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'à validité permanente',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'à changer',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:password_renewed_date' => 'Mot de passe changé le',
+	'Class:UserLocal/Attribute:password_renewed_date+' => 'Dernière date à laquelle le mot de passe a été changé',
+
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex/validation_failed' => 'Le mot de passe doit contenir au moins 8 caractères, avec minuscule, majuscule, nombre et caractère spécial.',
 ));
