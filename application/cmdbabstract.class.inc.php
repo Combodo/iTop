@@ -1,28 +1,20 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Abstract class that implements some common and useful methods for displaying
- * the objects
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 define('OBJECT_PROPERTIES_TAB', 'ObjectProperties');
@@ -3957,10 +3949,11 @@ EOF
 					{
 						$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
 						$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
-						$sTip .= "<div class='synchro-source'>";
-						$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
-						$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
+						$sTip .= "<div class=\"synchro-source\">";
+						$sTip .= "<div class=\"synchro-source-title\">Synchronized with {$aRow['name']}</div>";
+						$sTip .= "<div class=\"synchro-source-description\">$sDescription</div>";
 					}
+					$sTip = addslashes($sTip);
 					$oPage->add_ready_script("$('#synchro_$sInputId').qtip( { content: '$sTip', show: 'mouseover', hide: 'mouseout', style: { name: 'dark', tip: 'leftTop' }, position: { corner: { target: 'rightMiddle', tooltip: 'leftTop' }} } );");
 				}
 
