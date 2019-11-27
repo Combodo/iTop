@@ -12,8 +12,10 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
+use DBSearch;
 use Exception;
 use OqlInterpreter;
+use utils;
 
 /**
  * @runTestsInSeparateProcesses
@@ -22,8 +24,29 @@ use OqlInterpreter;
  */
 class OQLTest extends ItopDataTestCase
 {
+	const USE_TRANSACTION = false;
+
+	/**
+	 * @doesNotPerformAssertions
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 */
+	public function testOQLSetup()
+	{
+		utils::GetConfig()->Set('use_legacy_dbsearch', false, 'test');
+		utils::GetConfig()->Set('apc_cache.enabled', false, 'test');
+		utils::GetConfig()->Set('query_cache_enabled', false, 'test');
+		utils::GetConfig()->Set('expression_cache_enabled', false, 'test');
+		$sConfigFile = utils::GetConfig()->GetLoadedFile();
+		@chmod($sConfigFile, 0770);
+		utils::GetConfig()->WriteToFile();
+		@chmod($sConfigFile, 0444); // Read-only
+	}
+
     /**
      * @dataProvider GoodQueryProvider
+     * @depends testOQLSetup
      *
      * @param $sQuery
      *
@@ -121,6 +144,7 @@ class OQLTest extends ItopDataTestCase
 
     /**
      * @dataProvider BadQueryProvider
+     * @depends testOQLSetup
      *
      * @param $sQuery
      * @param $sExpectedExceptionClass
@@ -161,6 +185,7 @@ class OQLTest extends ItopDataTestCase
 
     /**
      * @dataProvider TypeErrorQueryProvider
+     * @depends testOQLSetup
      *
      * @param $sQuery
      *
@@ -185,6 +210,7 @@ class OQLTest extends ItopDataTestCase
 
     /**
      * Needs actual datamodel
+     * @depends testOQLSetup
      *
      * @dataProvider QueryNormalizationProvider
      *
@@ -269,4 +295,67 @@ class OQLTest extends ItopDataTestCase
            array('SELECT UserRequest AS r JOIN Attachment AS a ON a.item_id = r.id', ''),
         );
     }
+
+
+	/**
+	 * @depends testOQLSetup
+	 * @dataProvider OQLIntersectProvider
+	 *
+	 * Needs specific datamodel from unit-test-specific module
+	 * for lnkGRTypeToServiceSubcategory and GRType classes
+	 *
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function testOQLIntersect($sOQL1, $sOQL2, $sOQLIntersect)
+	{
+		// Check that legacy mode is not set
+		$this->assertFalse(utils::GetConfig()->Get('use_legacy_dbsearch'));
+		$this->assertFalse(utils::GetConfig()->Get('apc_cache.enabled'));
+		$this->assertFalse(utils::GetConfig()->Get('query_cache_enabled'));
+		$this->assertFalse(utils::GetConfig()->Get('expression_cache_enabled'));
+
+		$oSearch1 = DBSearch::FromOQL($sOQL1);
+		$oSearch2 = DBSearch::FromOQL($sOQL2);
+		$oSearchI = $oSearch1->Intersect($oSearch2);
+
+		$sOQLResult = $oSearchI->ToOQL();
+		//$this->debug($sOQLResult);
+
+		self::assertEquals($sOQLIntersect, $sOQLResult);
+	}
+
+	public function OQLIntersectProvider()
+	{
+		return array(
+			// Wrong result:
+			/*
+			SELECT `SSC`
+				FROM ServiceSubcategory AS `SSC`
+				JOIN Service AS `S` ON `SSC`.service_id = `S`.id
+				JOIN lnkCustomerContractToService AS `l1` ON `l1`.service_id = `S`.id
+				JOIN CustomerContract AS `cc` ON `l1`.customercontract_id = `cc`.id
+				JOIN lnkGRTypeToServiceSubcategory AS `l1` ON `l1`.servicesubcategory_id = `SSC`.id
+				JOIN GRType AS `GRT` ON `l1`.grtype_id = `GRT`.id
+				WHERE ((`GRT`.`id` = :grtype_id) AND ((`cc`.`org_id` = :current_contact->org_id) AND (`SSC`.`status` != 'obsolete')))
+			*/
+// Needs specific data model from unit-test-specific module for lnkGRTypeToServiceSubcategory and GRType classes
+//			'ServiceSubcategory' => array(
+//				"SELECT ServiceSubcategory AS SSC JOIN lnkGRTypeToServiceSubcategory AS l1 ON l1.servicesubcategory_id = SSC.id JOIN GRType AS GRT ON l1.grtype_id = GRT.id JOIN Service AS S ON SSC.service_id = S.id WHERE GRT.id = :grtype_id",
+//				"SELECT ServiceSubcategory AS ssc JOIN Service AS s ON ssc.service_id=s.id JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND ssc.status != 'obsolete'",
+//				"SELECT `SSC` FROM ServiceSubcategory AS `SSC` JOIN Service AS `S` ON `SSC`.service_id = `S`.id JOIN lnkCustomerContractToService AS `l11` ON `l11`.service_id = `S`.id JOIN CustomerContract AS `cc` ON `l11`.customercontract_id = `cc`.id JOIN lnkGRTypeToServiceSubcategory AS `l1` ON `l1`.servicesubcategory_id = `SSC`.id JOIN GRType AS `GRT` ON `l1`.grtype_id = `GRT`.id WHERE ((`GRT`.`id` = :grtype_id) AND ((`cc`.`org_id` = :current_contact->org_id) AND (`SSC`.`status` != 'obsolete')))"
+//			),
+			'Person' => array(
+				"SELECT P FROM Person AS P JOIN lnkPersonToTeam AS l1 ON l1.person_id = P.id JOIN Team AS T ON l1.team_id = T.id WHERE T.id = 3",
+				"SELECT p FROM Person AS p JOIN Person AS mgr ON p.manager_id = mgr.id JOIN lnkContactToTicket AS l1 ON l1.contact_id = mgr.id JOIN Ticket AS T ON l1.ticket_id = T.id WHERE T.id = 4 AND p.id = 3",
+				"SELECT `P` FROM Person AS `P` JOIN Person AS `mgr` ON `P`.manager_id = `mgr`.id JOIN lnkContactToTicket AS `l11` ON `l11`.contact_id = `mgr`.id JOIN Ticket AS `T1` ON `l11`.ticket_id = `T1`.id JOIN lnkPersonToTeam AS `l1` ON `l1`.person_id = `P`.id JOIN Team AS `T` ON `l1`.team_id = `T`.id WHERE ((`T`.`id` = 3) AND ((`T1`.`id` = 4) AND (`P`.`id` = 3)))"
+			),
+			'Person2' => array(
+				"SELECT P FROM Person AS P JOIN lnkPersonToTeam AS l1 ON l1.person_id = P.id JOIN Team AS T ON l1.team_id = T.id JOIN Person AS MGR ON P.manager_id = MGR.id WHERE T.id = 3",
+				"SELECT p FROM Person AS p JOIN Person AS mgr ON p.manager_id = mgr.id JOIN lnkContactToTicket AS l1 ON l1.contact_id = mgr.id JOIN Ticket AS T ON l1.ticket_id = T.id WHERE T.id = 4 AND p.id = 3",
+				"SELECT `P` FROM Person AS `P` JOIN Person AS `MGR` ON `P`.manager_id = `MGR`.id JOIN lnkContactToTicket AS `l11` ON `l11`.contact_id = `MGR`.id JOIN Ticket AS `T1` ON `l11`.ticket_id = `T1`.id JOIN lnkPersonToTeam AS `l1` ON `l1`.person_id = `P`.id JOIN Team AS `T` ON `l1`.team_id = `T`.id WHERE ((`T`.`id` = 3) AND ((`T1`.`id` = 4) AND (`P`.`id` = 3)))"
+			),
+		);
+	}
+
 }
