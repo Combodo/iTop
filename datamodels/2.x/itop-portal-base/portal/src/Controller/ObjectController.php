@@ -370,6 +370,8 @@ class ObjectController extends BrickController
 		$oRequestManipulator = $this->get('request_manipulator');
 		/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
 		$oUrlGenerator = $this->get('url_generator');
+		/** @var \Combodo\iTop\Portal\Helper\NavigationRuleHelper $oNavigationRuleHelper */
+		$oNavigationRuleHelper = $this->get('navigation_rule_helper');
 		/** @var \Combodo\iTop\Portal\Helper\ObjectFormHandlerHelper $oObjectFormHandler */
 		$oObjectFormHandler = $this->get('object_form_handler');
 		/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
@@ -431,9 +433,6 @@ class ObjectController extends BrickController
 		$aData = array('sMode' => 'apply_stimulus');
 		$aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId, $aFormProperties);
 		$aData['form']['title'] = Dict::Format('Brick:Portal:Object:Form:Stimulus:Title');
-		$aData['form']['validation']['redirection'] = array(
-			'url' => $oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId)),
-		);
 
 		// TODO : This is a ugly patch to avoid showing a modal with a readonly form to the user as it would prevent user from finishing the transition.
 		// Instead, we apply the stimulus directly here and then go to the edited object.
@@ -450,12 +449,16 @@ class ObjectController extends BrickController
 				$aData = array('sMode' => 'apply_stimulus');
 				$aData['form'] = $oObjectFormHandler->HandleForm($oSubRequest, $aData['sMode'], $sObjectClass, $sObjectId,
 					$aFormProperties);
+
+				// Reload the object to make sure we have it in a clean state
+				$oObject->Reload(true);
+				$aNavigationRules = $oNavigationRuleHelper->PrepareRulesForForm($aFormProperties, $oObject, true);
+
 				// Redefining the array to be as simple as possible :
 				$aData = array(
 					'redirection' =>
 						array(
-							'url' => $oUrlGenerator->generate('p_object_edit',
-								array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId)),
+							'url' => $aNavigationRules['submit']['url'],
 						),
 				);
 			}

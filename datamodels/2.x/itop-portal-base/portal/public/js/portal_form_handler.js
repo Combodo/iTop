@@ -181,7 +181,7 @@ $(function()
 								$('body').trigger('unregister_blocker.portal.itop', {'sBlockerId': me.element.attr('id')});
 
 								// Checking if we have to redirect to another page
-								// Typically this happens when applying a stimulus, we redirect to transition form
+								// Typically this happens when applying a stimulus, we redirect to the transition form
 								if(oValidation.redirection !== undefined)
 								{
 									var oRedirection = oValidation.redirection;
