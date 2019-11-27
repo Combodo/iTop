@@ -63,6 +63,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 * @param string $sClassAlias
 	 * @param array $aAttToLoad
 	 * @param array $aExtendedDataSpec
+	 *
+	 * @throws \CoreException
 	 */
 	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
@@ -83,6 +85,13 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 		return 'UI.php';
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \DBObject $oObj
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 */
 	public static function ReloadAndDisplay($oPage, $oObj, $aParams)
 	{
 		$oAppContext = new ApplicationContext();
@@ -135,7 +144,7 @@ EOF
 	}
 
 	/**
-	 * Set a message diplayed to the end-user next time this object will be displayed
+	 * Set a message displayed to the end-user next time this object will be displayed
 	 * Messages are uniquely identified so that plugins can override standard messages (the final work is given to the
 	 * last plugin to set the message for a given message id) In practice, standard messages are recorded at the end
 	 * but they will not overwrite existing messages
@@ -168,6 +177,17 @@ EOF
 		}
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
 	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
 		// Standard Header with name, actions menu and history block
@@ -359,6 +379,16 @@ EOF
 		);
 	}
 
+	/**
+	 * Display history tab of an object
+	 *
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param int $iLimitCount
+	 * @param int $iLimitStart
+	 *
+	 * @throws \CoreException
+	 */
 	public function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
 	{
 		// history block (with as a tab)
@@ -370,6 +400,17 @@ EOF
 		$oBlock->Display($oPage, 'history');
 	}
 
+	/**
+	 * Display properties tab of an object
+	 *
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param string $sPrefix
+	 * @param array $aExtraParams
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 */
 	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
 		$aFieldsMap = $this->GetBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
@@ -452,6 +493,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
@@ -690,6 +732,21 @@ EOF
 		}
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param bool $bEditMode
+	 * @param string $sPrefix
+	 * @param array $aExtraParams
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
+	 */
 	public function GetBareProperties(WebPage $oPage, $bEditMode, $sPrefix, $aExtraParams = array())
 	{
 		$sStateAttCode = MetaModel::GetStateAttributeCode(get_class($this));
@@ -951,6 +1008,13 @@ EOF
 		}
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
 	public function DisplayPreview(WebPage $oPage)
 	{
 		$aDetails = array();
@@ -966,6 +1030,14 @@ EOF
 		$oPage->details($aDetails);
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @throws \ApplicationException
+	 * @throws \CoreException
+	 */
 	public static function DisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oPage->add(self::GetDisplaySet($oPage, $oSet, $aExtraParams));
@@ -1008,16 +1080,18 @@ EOF
 	/**
 	 * Get the HTML fragment corresponding to the display of a table representing a set of objects
 	 *
-	 * @param WebPage $oPage The page object is used for out-of-band information (mostly scripts) output
+	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
+	 *
 	 * @param CMDBObjectSet The set of objects to display
 	 * @param array $aExtraParams Some extra configuration parameters to tweak the behavior of the display
+	 *
+	 * @param WebPage $oPage The page object is used for out-of-band information (mostly scripts) output
 	 *
 	 * @return String The HTML fragment representing the table of objects. <b>Warning</b> : no JS added to handled
 	 *     pagination or table sorting !
 	 *
+	 * @throws \CoreException*@throws \Exception
 	 * @throws \ApplicationException
-	 * @throws \CoreException
-	 * @see DisplayBlock to get a similar table but with the JS for pagination & sorting
 	 */
 	public static function GetDisplaySet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
@@ -1165,6 +1239,18 @@ EOF
 		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 		if (empty($aExtraParams['currentId']))
@@ -1265,11 +1351,36 @@ EOF
 		return $oDataTable->Display($oPage, $oSettings, $bDisplayMenu, $sSelectMode, $bViewLink, $aExtraParams);
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aParams
+	 * @param string $sCharset
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function DisplaySetAsCSV(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
 	{
 		$oPage->add(self::GetSetAsCSV($oSet, $aParams, $sCharset));
 	}
 
+	/**
+	 * @param \DBObjectSet $oSet
+	 * @param array $aParams
+	 * @param string $sCharset
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
+	 */
 	public static function GetSetAsCSV(DBObjectSet $oSet, $aParams = array(), $sCharset = 'UTF-8')
 	{
 		$sSeparator = isset($aParams['separator']) ? $aParams['separator'] : ','; // default separator is comma
@@ -1399,6 +1510,13 @@ EOF
 		return $sHtml;
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 */
 	public static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$oPage->add(self::GetSetAsHTMLSpreadsheet($oSet, $aParams));
@@ -1407,6 +1525,17 @@ EOF
 	/**
 	 * Spreadsheet output: designed for end users doing some reporting
 	 * Then the ids are excluded and replaced by the corresponding friendlyname
+	 *
+	 * @param \DBObjectSet $oSet
+	 * @param array $aParams
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
 	 */
 	public static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
 	{
@@ -1592,6 +1721,17 @@ EOF
 		return $sHtml;
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aParams
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function DisplaySetAsXML(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
 		$bLocalize = true;
@@ -1659,6 +1799,14 @@ EOF
 		$oPage->add("</Set>\n");
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \CMDBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
 	public static function DisplaySearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
 
@@ -2607,6 +2755,20 @@ EOF
 		return $oObj->DisplayModifyForm($oPage, $aExtraParams);
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param string $sStimulus
+	 * @param null $aPrefillFormParam
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null)
 	{
 		$sClass = get_class($this);
@@ -3913,6 +4075,20 @@ EOF
 
 	/**
 	 * Special display where the case log uses the whole "screen" at the bottom of the "Properties" tab
+	 *
+	 * @param \WebPage $oPage
+	 * @param string $sAttCode
+	 * @param string $sComment
+	 * @param string $sPrefix
+	 * @param bool $bEditMode
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function DisplayCaseLog(WebPage $oPage, $sAttCode, $sComment = '', $sPrefix = '', $bEditMode = false)
 	{
@@ -4302,6 +4478,20 @@ EOF
 
 	/**
 	 * Process the reply made from a form built with DisplayBulkModifyForm
+	 *
+	 * @param \WebPage $oP
+	 * @param string $sClass
+	 * @param array $aSelectedObj
+	 * @param string $sCustomOperation
+	 * @param bool $bPreview
+	 * @param string $sCancelUrl
+	 * @param array $aContextData
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \OQLException
 	 */
 	public static function DoBulkModify($oP, $sClass, $aSelectedObj, $sCustomOperation, $bPreview, $sCancelUrl, $aContextData = array())
 	{
@@ -4433,6 +4623,7 @@ EOF
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
 	public static function DeleteObjects(WebPage $oP, $sClass, $aObjects, $bPreview, $sCustomOperation, $aContextData = array())
 	{
@@ -4728,6 +4919,8 @@ EOF
 	/**
 	 * Find redundancy settings that can be viewed and modified in a tab
 	 * Settings are distributed to the corresponding link set attribute so as to be shown in the relevant tab
+	 *
+	 * @throws \Exception
 	 */
 	protected function FindVisibleRedundancySettings()
 	{
