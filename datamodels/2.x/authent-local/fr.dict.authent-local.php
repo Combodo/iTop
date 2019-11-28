@@ -36,5 +36,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Mot de passe changé le',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Dernière date à laquelle le mot de passe a été changé',
 
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex/validation_failed' => 'Le mot de passe doit contenir au moins 8 caractères, avec minuscule, majuscule, nombre et caractère spécial.',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Le mot de passe doit contenir au moins 8 caractères, avec minuscule, majuscule, nombre et caractère spécial.',
 ));

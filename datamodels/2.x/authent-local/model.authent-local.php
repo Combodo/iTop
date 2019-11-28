@@ -298,7 +298,7 @@ class UserPasswordPolicyRegex implements UserLocalPasswordValidator
 			return new UserLocalPasswordValidity(true);
 		}
 
-		$sMessage = Dict::S('Error:UserLocalPasswordValidator:UserPasswordPolicyRegex/validation_failed');
+		$sMessage = Dict::S('Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed');
 
 		return new UserLocalPasswordValidity(
 			false,
