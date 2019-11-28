@@ -2003,6 +2003,8 @@ abstract class DBObject implements iDisplay
 				continue;
 			}
 
+			// No iTopMutex so there might be concurrent access !
+			// But the necessary lock would have a high performance cost :(
 			$bHasDuplicates = $this->HasObjectsInDbForUniquenessRule($sUniquenessRuleId, $aUniquenessRuleProperties);
 			if ($bHasDuplicates)
 			{
