@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Class iTopWebPage
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT."/application/nicewebpage.class.inc.php");
@@ -46,6 +39,14 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	protected $sBreadCrumbEntryIcon;
 	protected $oCtx;
 
+	/**
+	 * iTopWebPage constructor.
+	 *
+	 * @param string $sTitle
+	 * @param bool $bPrintable
+	 *
+	 * @throws \Exception
+	 */
 	public function __construct($sTitle, $bPrintable = false)
 	{
 		parent::__construct($sTitle, $bPrintable);
@@ -150,6 +151,9 @@ EOF
 		}
 	}
 
+	/**
+	 * @return bool
+	 */
 	protected function IsMenuPaneVisible()
 	{
 		$bLeftPaneOpen = true;
@@ -172,6 +176,9 @@ EOF
 		return $bLeftPaneOpen;
 	}
 
+	/**
+	 *
+	 */
 	protected function PrepareLayout()
 	{
 		if (MetaModel::GetConfig()->Get('demo_mode'))
@@ -736,11 +743,22 @@ JS
 		$this->sBreadCrumbEntryIcon = null;
 	}
 
+	/**
+	 * @param string $sHtml
+	 */
 	public function AddToMenu($sHtml)
 	{
 		$this->m_sMenu .= $sHtml;
 	}
 
+	/**
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	public function GetSiloSelectionForm()
 	{
 		// List of visible Organizations
@@ -801,6 +819,9 @@ JS
 		return $sHtml;
 	}
 
+	/**
+	 * @throws \DictExceptionMissingString
+	 */
 	public function DisplayMenu()
 	{
 		// Display the menu
@@ -839,43 +860,43 @@ JS
 					'ttl' => $oProvider->GetTTL(),
 				);
 			}
-		}
-		if (count($aProviderParams) > 0)
-		{
-			$sImageUrl= '../images/newsroom_menu.png';
-			$sPlaceholderImageUrl= '../images/newsroom-message.svg';
-			$aParams = array(
-				'image_url' => $sImageUrl,
-				'placeholder_image_url' => $sPlaceholderImageUrl,
-				'cache_uuid' => 'itop-newsroom-'.UserRights::GetUserId().'-'.md5(APPROOT),
-				'providers' => $aProviderParams,
-				'display_limit' => (int)appUserPreferences::GetPref('newsroom_display_size', 7),
-				'labels' => array(
-					'no_message' => Dict::S('UI:Newsroom:NoNewMessage'),
-					'mark_all_as_read' => Dict::S('UI:Newsroom:MarkAllAsRead'),
-					'view_all' => Dict::S('UI:Newsroom:ViewAllMessages'),
-				),
-			);
-			$sParams = json_encode($aParams);
-			$this->add_ready_script(
-<<<EOF
-	$('#top-left-newsroom-cell').newsroom_menu($sParams);
+			}
+
+			// Show newsroom only if there are some providers
+			if (count($aProviderParams) > 0)
+			{
+				$sImageUrl= '../images/newsroom_menu.png';
+				$sPlaceholderImageUrl= '../images/newsroom-message.svg';
+				$aParams = array(
+					'image_url' => $sImageUrl,
+					'placeholder_image_url' => $sPlaceholderImageUrl,
+					'cache_uuid' => 'itop-newsroom-'.UserRights::GetUserId().'-'.md5(APPROOT),
+					'providers' => $aProviderParams,
+					'display_limit' => (int)appUserPreferences::GetPref('newsroom_display_size', 7),
+					'labels' => array(
+						'no_message' => Dict::S('UI:Newsroom:NoNewMessage'),
+						'mark_all_as_read' => Dict::S('UI:Newsroom:MarkAllAsRead'),
+						'view_all' => Dict::S('UI:Newsroom:ViewAllMessages'),
+					),
+				);
+				$sParams = json_encode($aParams);
+				$this->add_ready_script(
+	<<<EOF
+		$('#top-left-newsroom-cell').newsroom_menu($sParams);
 EOF
-			);
-			$sNewsroomInitialImage = '<img style="opacity:0.4" src="../images/newsroom_menu.png">';
+				);
+				$sNewsroomInitialImage = '<img style="opacity:0.4" src="../images/newsroom_menu.png">';
+			}
 		}
-		else
-		{
-			// No newsroom menu at all
-		}
-	}
-	// else no newsroom menu
-	return $sNewsroomInitialImage;
+		// else no newsroom menu
+		return $sNewsroomInitialImage;
 	}
 
 
 	/**
 	 * Outputs (via some echo) the complete HTML page by assembling all its elements
+	 *
+	 * @throws \Exception
 	 */
 	public function output()
 	{
@@ -1442,21 +1463,46 @@ EOF;
 		ExecutionKPI::ReportStats();
 	}
 
+	/**
+	 * @param string $sTabContainer
+	 * @param string $sPrefix
+	 *
+	 * @return mixed|void
+	 * @throws \Exception
+	 */
 	public function AddTabContainer($sTabContainer, $sPrefix = '')
 	{
 		$this->add($this->m_oTabs->AddTabContainer($sTabContainer, $sPrefix));
 	}
 
+	/**
+	 * @param string $sTabContainer
+	 * @param string $sTabLabel
+	 * @param string $sHtml
+	 *
+	 * @return mixed|void
+	 * @throws \Exception
+	 */
 	public function AddToTab($sTabContainer, $sTabLabel, $sHtml)
 	{
 		$this->add($this->m_oTabs->AddToTab($sTabContainer, $sTabLabel, $sHtml));
 	}
 
+	/**
+	 * @param string $sTabContainer
+	 *
+	 * @return mixed|string
+	 */
 	public function SetCurrentTabContainer($sTabContainer = '')
 	{
 		return $this->m_oTabs->SetCurrentTabContainer($sTabContainer);
 	}
 
+	/**
+	 * @param string $sTabLabel
+	 *
+	 * @return mixed|string
+	 */
 	public function SetCurrentTab($sTabLabel = '')
 	{
 		return $this->m_oTabs->SetCurrentTab($sTabLabel);
@@ -1481,11 +1527,20 @@ EOF;
 		$this->add($this->m_oTabs->AddAjaxTab($sTabLabel, $sUrl, $bCache));
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetCurrentTab()
 	{
 		return $this->m_oTabs->GetCurrentTab();
 	}
 
+	/**
+	 * @param string $sTabLabel
+	 * @param string|null $sTabContainer
+	 *
+	 * @return mixed|void
+	 */
 	public function RemoveTab($sTabLabel, $sTabContainer = null)
 	{
 		$this->m_oTabs->RemoveTab($sTabLabel, $sTabContainer);
@@ -1493,6 +1548,9 @@ EOF;
 
 	/**
 	 * Finds the tab whose title matches a given pattern
+	 *
+	 * @param string $sPattern
+	 * @param string|null $sTabContainer
 	 *
 	 * @return mixed The name of the tab as a string or false if not found
 	 */
@@ -1506,12 +1564,21 @@ EOF;
 	 * DOES NOT WORK: apparently in the *old* version of jquery
 	 * that we are using this is not supported... TO DO upgrade
 	 * the whole jquery bundle...
+	 *
+	 * @param string $sTabContainer
+	 * @param string $sTabLabel
 	 */
 	public function SelectTab($sTabContainer, $sTabLabel)
 	{
 		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabLabel));
 	}
 
+	/**
+	 * @param string $sHtml
+	 *
+	 * @return mixed|void
+	 * @throws \Exception
+	 */
 	public function add($sHtml)
 	{
 		if (($this->m_oTabs->GetCurrentTabContainer() != '') && ($this->m_oTabs->GetCurrentTab() != ''))
@@ -1577,6 +1644,8 @@ EOF;
 
 	/**
 	 * Set the message to be displayed in the 'app-banner' section at the top of the page
+	 *
+	 * @param string $sHtmlMessage
 	 */
 	public function SetMessage($sHtmlMessage)
 	{
@@ -1586,6 +1655,10 @@ EOF;
 
 	/**
 	 * Add message to be displayed in the 'app-banner' section at the top of the page
+	 *
+	 * @param string $sHtmlMessage
+	 * @param string|null $sHtmlIcon
+	 * @param string|null $sTip
 	 */
 	public function AddApplicationMessage($sHtmlMessage, $sHtmlIcon = null, $sTip = null)
 	{
@@ -1606,6 +1679,7 @@ EOF;
 	 * @param string $sContent
 	 * @param string $sCssClasses CSS classes to add to the container
 	 *
+	 * @throws \Exception
 	 * @since 2.6
 	 */
 	public function AddHeaderMessage($sContent, $sCssClasses = 'message_info')
@@ -1618,6 +1692,8 @@ EOF
 
 	/**
 	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
+	 *
+	 * @param string $sScript
 	 *
 	 * @return void
 	 */

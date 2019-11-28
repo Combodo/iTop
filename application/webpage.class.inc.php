@@ -1198,11 +1198,9 @@ class TabManager
 	}
 
 	/**
-	 * @param string $sHtml
-	 *
 	 * @return int
 	 */
-	public function GetCurrentTabLength($sHtml)
+	public function GetCurrentTabLength()
 	{
 		$iLength = isset($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html']) ? strlen($this->m_aTabs[$this->m_sCurrentTabContainer]['tabs'][$this->m_sCurrentTab]['html']) : 0;
 
