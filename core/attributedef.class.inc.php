@@ -1,29 +1,21 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Typology for the attributes
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
-
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
@@ -7321,6 +7313,7 @@ class AttributeBlob extends AttributeDefinition
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
+		/** @var $oFormField \Combodo\iTop\Form\Field\BlobField */
 		if ($oFormField === null)
 		{
 			$sFormFieldClass = static::GetFormFieldClass();
@@ -7330,12 +7323,23 @@ class AttributeBlob extends AttributeDefinition
 		// Note: As of today we want this field to always be read-only
 		$oFormField->SetReadOnly(true);
 
-		// Generating urls
-		$value = $oObject->Get($this->GetCode());
-		$oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
-		$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
-
+		// Calling parent before so current value is set, then proceed
 		parent::MakeFormField($oObject, $oFormField);
+
+		// Setting current value correctly as the default method returns an empty string when there is no file yet.
+		/** @var \ormDocument $value */
+		$value = $oObject->Get($this->GetCode());
+		if(!is_object($value))
+		{
+			$oFormField->SetCurrentValue(new ormDocument());
+		}
+
+		// Generating urls
+		if(is_object($value) && !$value->IsEmpty())
+		{
+			$oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+			$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+		}
 
 		return $oFormField;
 	}
