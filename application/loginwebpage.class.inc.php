@@ -245,7 +245,7 @@ class LoginWebPage extends NiceWebPage
 		}
 	}
 
-	public function DisplayResetPwdForm()
+	public function DisplayResetPwdForm($sErrorMessage = null)
 	{
 		$sAuthUser = utils::ReadParam('auth_user', '', false, 'raw_data');
 		$sToken = utils::ReadParam('token', '', false, 'raw_data');
@@ -258,6 +258,8 @@ class LoginWebPage extends NiceWebPage
 
 		$aVars['sAuthUser'] = $sAuthUser;
 		$aVars['sToken'] = $sToken;
+		$aVars['sErrorMessage'] = $sErrorMessage;
+
 		if (($oUser == null))
 		{
 			$aVars['bNoUser'] = true;
@@ -288,6 +290,7 @@ class LoginWebPage extends NiceWebPage
 		$sNewPwd = utils::ReadPostedParam('new_pwd', '', 'raw_data');
 
 		UserRights::Login($sAuthUser); // Set the user's language
+		/** @var \UserLocal $oUser */
 		$oUser = UserRights::GetUserObject();
 
 		$oTwigContext = new LoginTwigRenderer();
@@ -1032,8 +1035,17 @@ class LoginWebPage extends NiceWebPage
 		}
 		else if ($operation == 'do_reset_pwd')
 		{
-			$oPage = self::NewLoginWebPage();
-			$oPage->DoResetPassword();
+
+			try {
+				$oPage = self::NewLoginWebPage();
+				$oPage->DoResetPassword();
+			}
+			catch (CoreCannotSaveObjectException $e)
+			{
+				$oPage = self::NewLoginWebPage();
+				$oPage->DisplayResetPwdForm($e->getIssue());
+			}
+
 			$oPage->output();
 			exit;
 		}

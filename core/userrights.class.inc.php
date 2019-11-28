@@ -837,6 +837,7 @@ class UserRights
 		}
 	}
 
+	/** User */
 	public static function GetUserObject()
 	{
 		if (is_null(self::$m_oUser))
