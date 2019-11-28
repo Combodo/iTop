@@ -1434,9 +1434,12 @@ EOF;
 		{
 			if ($this->GetOutputFormat() == 'pdf' && $this->IsOutputFormatAvailable('pdf'))
 			{
+				// Note: Apparently this was a demand from ITOMIG a while back, so it's not "dead code" per say.
+				// The last trace we got is in R-007989. Do not remove this without checking before with the concerned parties if it is still used!
 				if (@is_readable(APPROOT.'lib/MPDF/mpdf.php'))
 				{
 					require_once(APPROOT.'lib/MPDF/mpdf.php');
+					/** @noinspection PhpUndefinedClassInspection Check above comment */
 					$oMPDF = new mPDF('c');
 					$oMPDF->mirroMargins = false;
 					if ($this->a_base['href'] != '')
