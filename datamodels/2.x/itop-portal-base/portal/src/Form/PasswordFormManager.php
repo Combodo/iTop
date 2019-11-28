@@ -146,19 +146,29 @@ class PasswordFormManager extends FormManager
 							}
 							else
 							{
-								if (!UserRights::ChangePassword($sOldPassword, $sNewPassword))
+								try {
+									if (!UserRights::ChangePassword($sOldPassword, $sNewPassword))
+									{
+										$aData['valid'] = false;
+										$aData['messages']['error'] += array(
+											'confirm_password' => array(
+												Dict::Format('Brick:Portal:UserProfile:Password:CantChangeForUnknownReason',
+													ITOP_APPLICATION_SHORT),
+											),
+										);
+									}
+									else
+									{
+										$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
+									}
+								}
+								catch (\CoreCannotSaveObjectException $e)
 								{
 									$aData['valid'] = false;
 									$aData['messages']['error'] += array(
-										'confirm_password' => array(
-											Dict::Format('Brick:Portal:UserProfile:Password:CantChangeForUnknownReason',
-												ITOP_APPLICATION_SHORT),
-										),
+										'new_password' => $e->getIssues(),
+										'confirm_password' => array(),
 									);
-								}
-								else
-								{
-									$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
 								}
 							}
 						}
