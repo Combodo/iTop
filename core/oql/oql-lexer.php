@@ -179,6 +179,7 @@ class OQLLexerRaw
                 '/\G(0x[0-9a-fA-F]+)/ ',
                 '/\G([0-9]+)/ ',
                 '/\G\"([^\\\\\"]|\\\\\"|\\\\\\\\)*\"|'.chr(94).chr(39).'([^\\\\'.chr(39).']|\\\\'.chr(39).'|\\\\\\\\)*'.chr(39).'/ ',
+                '/\GNULL/ ',
                 '/\G([_a-zA-Z][_a-zA-Z0-9]*|`[^`]+`)/ ',
                 '/\G:([_a-zA-Z][_a-zA-Z0-9]*->[_a-zA-Z][_a-zA-Z0-9]*|[_a-zA-Z][_a-zA-Z0-9]*)/ ',
                 '/\G\\./ ',
@@ -637,14 +638,19 @@ class OQLLexerRaw
     function yy_r1_72($yy_subpatterns)
     {
 
-	$this->token = OQLParser::NAME;
+    $this->token = OQLParser::NULL_VAL;
     }
     function yy_r1_73($yy_subpatterns)
     {
 
-	$this->token = OQLParser::VARNAME;
+	$this->token = OQLParser::NAME;
     }
     function yy_r1_74($yy_subpatterns)
+    {
+
+	$this->token = OQLParser::VARNAME;
+    }
+    function yy_r1_75($yy_subpatterns)
     {
 
 	$this->token = OQLParser::DOT;

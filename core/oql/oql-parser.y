@@ -159,9 +159,11 @@ interval_unit(A) ::= F_YEAR(X). { A = X; }
 
 scalar(A) ::= num_scalar(X). { A = X; }
 scalar(A) ::= str_scalar(X). { A = X; }
+scalar(A) ::= null_scalar(X). { A = X; }
 
 num_scalar(A) ::= num_value(X). { A = new ScalarOqlExpression(X); }
 str_scalar(A) ::= str_value(X). { A = new ScalarOqlExpression(X); }
+null_scalar(A) ::= NULL_VAL. { A = new ScalarOqlExpression(null); }
 
 field_id(A) ::= name(X). { A = new FieldOqlExpression(X); }
 field_id(A) ::= class_name(X) DOT name(Y). { A = new FieldOqlExpression(Y, X); }
