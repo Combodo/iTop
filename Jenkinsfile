@@ -1,5 +1,8 @@
 pipeline {
   agent any
+    parameters {
+        string(name: 'RUN_NON_REG_TESTS', defaultValue: '0', description: 'Do You want to run legacy OQL regression tests?')
+    }
   stages {
 
     stage('init') {
@@ -36,7 +39,7 @@ pipeline {
       parallel {
         stage('phpunit') {
           steps {
-            sh './.jenkins/bin/tests/phpunit.sh'
+            sh './.jenkins/bin/tests/phpunit.sh ${params.RUN_NON_REG_TESTS}'
           }
         }
       }
