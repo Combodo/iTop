@@ -10,17 +10,15 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 
-use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DBObjectSearch;
-use Exception;
-use OqlInterpreter;
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class OQLParserTest extends ItopDataTestCase
+class OQLParserTest extends ItopTestCase
 {
 	/**
 	 * @dataProvider NestedQueryProvider
