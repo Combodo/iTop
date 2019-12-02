@@ -576,11 +576,6 @@ class CMDBSource
 			return $aRes;
 		}
 
-		// Stripslashes
-		if (get_magic_quotes_gpc())
-		{
-			$value = stripslashes($value);
-		}
 		// Quote if not a number or a numeric string
 		if ($bAlways || is_string($value))
 		{
