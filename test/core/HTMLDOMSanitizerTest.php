@@ -12,97 +12,178 @@ use HTMLDOMSanitizer;
  */
 class HTMLDOMSanitizerTest extends ItopTestCase
 {
+	const INPUT_DIRECTORY = 'sanitizer/input';
+	const OUTPUT_DIRECTORY = 'sanitizer/output';
 
 	/**
 	 * @dataProvider DoSanitizeProvider
+	 *
+	 * @param string $sFileToTest filename
 	 */
-	public function testDoSanitize($sHTML)
+	public function testDoSanitize($sFileToTest)
 	{
+		$sInputHtml = $this->ReadTestFile($sFileToTest, self::INPUT_DIRECTORY);
+		$sOutputHtml = $this->ReadTestFile($sFileToTest, self::OUTPUT_DIRECTORY);
+		$sOutputHtml = $this->RemoveNewLines($sOutputHtml);
+
 		$oSanitizer = new HTMLDOMSanitizer();
-		$sRes = $oSanitizer->DoSanitize($sHTML);
+		$sRes = $oSanitizer->DoSanitize($sInputHtml);
 
 		$this->debug($sRes);
-		$this->assertEquals('<div>
-<p><span>Test mit nur Unterschrift</span></p>
-<p><span>Kein bild</span></p>
-<p><span> </span></p>
-<p><span> </span></p>
-<p><b><span style=\'font-size:10.0pt;font-family:"Arial",sans-serif;color:black\'>Christel Dedman</span></b><span></span></p>
-<p><b><span style=\'font-size:10.0pt;font-family:"Arial",sans-serif;color:black\'> </span></b><span></span></p>
-<p><b><span style=\'font-size:10.0pt;font-family:"Arial",sans-serif;color:black\'>Financial Reporting Manager | G4S International Logistics (Germany) GmbH</span></b></p>
-<p><b><span style=\'font-size:10.0pt;font-family:"Arial",sans-serif;color:black\'> </span></b></p>
-<p><span> </span></p>
-<p><span style=\'font-size:10.0pt;font-family:"Arial",sans-serif;color:black\'>Rathenaustrasse 53, 63263 Neu </span></p>
-</div>', $sRes);
+		$this->assertEquals($sOutputHtml, $sRes);
+	}
+
+	private function ReadTestFile($sFileToTest, $sFolderName)
+	{
+		$sCurrentPath = __DIR__;
+
+		return file_get_contents($sCurrentPath.DIRECTORY_SEPARATOR
+			.$sFolderName.DIRECTORY_SEPARATOR
+			.$sFileToTest);
+	}
+
+	private function RemoveNewLines($sText)
+	{
+		$sText = str_replace("\r\n", "\n", $sText);
+		$sText = str_replace("\r", "\n", $sText);
+		$sText = str_replace("\n", '', $sText);
+
+		return $sText;
 	}
 
 	public function DoSanitizeProvider()
 	{
 		return array(
-			array(<<< EOF
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii"><meta name="Generator" content="Microsoft Word 15 (filtered medium)"><style><!--
-/* Font Definitions */
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
-/* Style Definitions */
-p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0cm;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri",sans-serif;
-	mso-fareast-language:EN-US;}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:#0563C1;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:#954F72;
-	text-decoration:underline;}
-p.msonormal0, li.msonormal0, div.msonormal0
-	{mso-style-name:msonormal;
-	mso-margin-top-alt:auto;
-	margin-right:0cm;
-	mso-margin-bottom-alt:auto;
-	margin-left:0cm;
-	font-size:12.0pt;
-	font-family:"Times New Roman",serif;}
-span.EmailStyle18
-	{mso-style-type:personal;
-	font-family:"Calibri",sans-serif;
-	color:windowtext;}
-span.EmailStyle19
-	{mso-style-type:personal;
-	font-family:"Calibri",sans-serif;
-	color:#1F497D;}
-span.EmailStyle20
-	{mso-style-type:personal;
-	font-family:"Calibri",sans-serif;
-	color:#1F497D;}
-span.EmailStyle21
-	{mso-style-type:personal-compose;
-	font-family:"Calibri",sans-serif;
-	color:windowtext;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	font-size:10.0pt;}
-@page WordSection1
-	{size:612.0pt 792.0pt;
-	margin:72.0pt 72.0pt 72.0pt 72.0pt;}
-div.WordSection1
-	{page:WordSection1;}
---></style></head><body lang="EN-GB" link="#0563C1" vlink="#954F72"><div class="WordSection1"><p class="MsoNormal"><span lang="DE">Test mit nur Unterschrift</span></p><p class="MsoNormal"><span lang="DE">Kein bild</span></p><p class="MsoNormal"><span lang="DE"> </span></p><p class="MsoNormal"><span lang="DE"> </span></p><p class="MsoNormal"><b><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif;color:black">Christel Dedman</span></b><span lang="EN-US"></span></p><p class="MsoNormal"><b><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif;color:black"> </span></b><span lang="EN-US"></span></p><p class="MsoNormal"><b><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif;color:black">Financial Reporting Manager | G4S International Logistics (Germany) GmbH</span></b></p><p class="MsoNormal"><b><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif;color:black"> </span></b></p><p class="MsoNormal"><span lang="EN-US"> </span></p><p class="MsoNormal"><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif;color:black">Rathenaustrasse 53, 63263 Neu – Isenburg, Office Tel: +49 (0) 6102 / 4393 623 | Fax: +49 (0) 6102 / 4393 619 | Mobile: +49 (0) 172 / 5687367</span><span lang="EN-US"></span></p><p class="MsoNormal" style="mso-margin-top-alt:auto;mso-margin-bottom-alt:auto"><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif;color:black">Email:</span><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif">  </span><a href="mailto:christel.dedman@g4si.com"><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif">christel.dedman@g4si.com</span></a><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif">  <b>|</b>  <span style="color:black">Web site</span>:  </span><a href="http://www.g4si.com/" target="_blank"><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif">www.g4si.com</span></a><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif"> / </span><a href="http://www.g4s.com/"><span lang="EN-US" style="font-size:10.0pt;font-family:&quot;Arial&quot;,sans-serif">www.g4s.com</span></a><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif"></span></p><p class="MsoNormal" style="margin-bottom:12.0pt"><span lang="EN-US" style="font-size:9.0pt;font-family:&quot;Arial&quot;,sans-serif;color:black">Disclaimer: G4S International Logistics (G4Si) is a division of the G4S plc group of companies. This communication contains information which may be confidential, personal and/or privileged. It is for the exclusive use of the intended recipient(s).<br>If you are not the intended recipient(s), please note that any distribution, forwarding, copying or use of this communication or the information in it is strictly prohibited. Any personal views expressed in this e-mail are those of the individual sender and G4Si does not endorse or accept responsibility for them. Prior to taking any action based upon this e-mail message, you should seek appropriate confirmation of its authenticity.</span><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;Times New Roman&quot;,serif;color:black"></span></p><p class="MsoNormal"> </p></div></body></html>
-
-<br>
-<div><font size="1"><font face="Verdana" color="green" style="line-height:21px;background-color:rgb(255,255,255)"><br></font></font></div><font size="1"><font face="Verdana" color="green" style="line-height:21px;background-color:rgb(255,255,255)">Please consider the environment before printing this email.</font><font face="Verdana" color="gray" style="line-height:21px;background-color:rgb(255,255,255)"><br>******************************<wbr>******************************<wbr>*********<br>This communication may contain information which is confidential, personal and/or privileged. It is for the exclusive use of the intended recipient(s).<br>If you are not the intended recipient(s), please note that any distribution, forwarding, copying or use of this communication or the information in it is strictly prohibited. If you have received it in error please contact the sender immediately by return e-mail. Please then delete the e-mail and any copies of it and do not use or disclose its contents to any person.<br>Any personal views expressed in this e-mail are those of the individual sender and the company does not endorse or accept responsibility for them. Prior to taking any action based upon this e-mail message, you should seek appropriate confirmation of its authenticity.<br>This message has been checked for viruses on behalf of the company.<br>******************************<wbr>******************************<wbr>*********</font><font face="Verdana" color="gray" style="line-height:21px;background-color:rgb(255,255,255)"><br><br></font></font>
-EOF
+			array(
+				'utf-8_wrong_character_email_truncated.txt',
 			),
 		);
 	}
 
 
+	/**
+	 * @dataProvider WhiteListProvider
+	 *
+	 * @param string $sHtmlToTest HTML content
+	 */
+	public function testDoSanitizeWhiteList($sHtmlToTest)
+	{
+		$oSanitizer = new HTMLDOMSanitizer();
+		$sRes = $oSanitizer->DoSanitize($sHtmlToTest);
+
+		$this->debug($sRes);
+		$this->assertEquals($sHtmlToTest, $sRes);
+	}
+
+	public function WhiteListProvider()
+	{
+		// This is a copy of \HTMLDOMSanitizer::$aTagsWhiteList
+		// should stay a copy as we want to check we're not removing something by mistake as it was done with the CENTER tag (N°2558)
+		$aTagsWhiteList = array(
+			// we don't test HTML and BODY as the parser removes them if context isn't appropriate
+			'a' => array('href', 'name', 'style', 'target', 'title'),
+			'p' => array('style'),
+			'blockquote' => array('style'),
+			'br' => array(),
+			'span' => array('style'),
+			'div' => array('style'),
+			'b' => array(),
+			'i' => array(),
+			'u' => array(),
+			'em' => array(),
+			'strong' => array(),
+			'img' => array('src', 'style', 'alt', 'title'),
+			'ul' => array('style'),
+			'ol' => array('style'),
+			'li' => array('style'),
+			'h1' => array('style'),
+			'h2' => array('style'),
+			'h3' => array('style'),
+			'h4' => array('style'),
+			'nav' => array('style'),
+			'section' => array('style'),
+			'code' => array('style'),
+			'table' => array('style', 'width', 'summary', 'align', 'border', 'cellpadding', 'cellspacing'),
+			'thead' => array('style'),
+			'tbody' => array('style'),
+			'tr' => array('style', 'colspan', 'rowspan'),
+			'td' => array('style', 'colspan', 'rowspan'),
+			'th' => array('style', 'colspan', 'rowspan'),
+			'fieldset' => array('style'),
+			'legend' => array('style'),
+			'font' => array('face', 'color', 'style', 'size'),
+			'big' => array(),
+			'small' => array(),
+			'tt' => array(),
+			'kbd' => array(),
+			'samp' => array(),
+			'var' => array(),
+			'del' => array(),
+			's' => array(), // strikethrough
+			'ins' => array(),
+			'cite' => array(),
+			'q' => array(),
+			'hr' => array('style'),
+			'pre' => array(),
+			'center' => array(),
+		);
+		$aTestCaseArray = array();
+
+		$sInputText = $this->ReadTestFile('whitelist_test.html', self::INPUT_DIRECTORY);
+		foreach ($aTagsWhiteList as $sTag => $aTagAttributes)
+		{
+			$sTestCaseText = $sInputText;
+			$sStartTag = "<$sTag";
+			$iAttrCounter = 0;
+			foreach ($aTagAttributes as $sTagAttribute)
+			{
+				$sStartTag .= $this->GetTagAttributeValue($sTagAttribute, $iAttrCounter);
+				$iAttrCounter++;
+			}
+			$sStartTag .= '>';
+			$sTestCaseText = str_replace('##START_TAG##', $sStartTag, $sTestCaseText);
+
+			$sClosingTag = $this->IsClosingTag($sTag) ? "</$sTag>" : '';
+			$sTestCaseText = str_replace('##END_TAG##', $sClosingTag, $sTestCaseText);
+
+			$aTestCaseArray[$sTag] = array($sTestCaseText);
+		}
+
+		return $aTestCaseArray;
+	}
+
+	/**
+	 * Generates an appropriate value for the given attribute, or use the counter if needed.
+	 * This is necessary as most of the attributes with empty or inappropriate values (like a numeric for a href) are removed by the parser
+	 *
+	 * @param string $sTagAttribute
+	 * @param int $iAttributeCounter
+	 *
+	 * @return string attribute value
+	 */
+	private function GetTagAttributeValue($sTagAttribute, $iAttributeCounter)
+	{
+		$sTagAttrValue = ' '.$sTagAttribute.'="';
+		if (in_array($sTagAttribute, array('href', 'src')))
+		{
+			return $sTagAttrValue.'http://www.combodo.com"';
+		}
+
+		if ($sTagAttribute === 'style')
+		{
+			return $sTagAttrValue.'color: black"';
+		}
+
+		return $sTagAttrValue.$iAttributeCounter.'"';
+	}
+
+	private function IsClosingTag($sTag)
+	{
+		if (in_array($sTag, array('br', 'img', 'hr')))
+		{
+			return false;
+		}
+
+		return true;
+	}
 }
