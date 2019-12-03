@@ -17,7 +17,7 @@ use utils;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class OQLToSQLTest extends ItopDataTestCase
+class OQLToSQLNestedSelectTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
 	const TEST_CSV_RESULT = 'OQLToSQLTest.csv';
@@ -29,8 +29,6 @@ class OQLToSQLTest extends ItopDataTestCase
 
 		SetupUtils::builddir(APPROOT.'log/test/OQLToSQL');
 	}
-
-
 
 	/**
 	 * @doesNotPerformAssertions
@@ -143,15 +141,8 @@ class OQLToSQLTest extends ItopDataTestCase
 
 		$sSQL = $oSearch->MakeSelectQuery($aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart);
 		$fStart = $this->GetMicroTime();
-		$aRow = $this->GetArrayResult($sSQL);
+		$this->GetArrayResult($sSQL);
 		$fDataDuration = $this->GetMicroTime() - $fStart;
-		if (is_null($aRow))
-		{
-			$aRow = array();
-		}
-		// Store only to the 10 first entries
-		$aRow = array_slice($aRow, 0, 10);
-
 		$iJoinData = count(explode(' JOIN ', $sSQL)) - 1;
 
 		$aResult = array(
@@ -175,64 +166,19 @@ class OQLToSQLTest extends ItopDataTestCase
 
 	private function OQLSelectProviderStatic()
 	{
-		$aArgs = array(
-			'ActionEmail_finalclass' => 'ActionEmail',
-			'UserInternal_status' => 'active',
-			'current_contact_id' => '2',
-			'id' => 3,
-			'login' => 'admin',
-			'menu_code' => 'WelcomeMenuPage',
-			'name' => 'database_uuid',
-			'this->brand_id' => '1',
-			'this->finalclass' => 'NetworkDevice',
-			'this->id' => 3,
-			'this->location_id' => 2,
-			'this->org_id' => 3,
-			'this->osfamily_id' => '6',
-			'this->osversion_id' => '8',
-			'this->rack_id' => '3',
-			'this->request_type' => 'incident',
-			'this->service_id' => '1',
-			'user_id' => '5',
-			'userid' => '5',
-		);
-
-		$aAttToLoad150 = array(
-			'WebServer' => array(
-				'business_criticity',
-				'description',
-				'name',
-				'friendlyname',
-				'obsolescence_flag',
-				'finalclass',
-			),
-		);
-
-		$aData =  array(
-			"SELECT UserRequest 112" =>array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.org_id IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))'),
-			"SELECT UserRequest 113" => array("SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE  `UserRequest`.org_id IN (SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = '3'))", array('UserRequest.friendlyname' => true), $aArgs),
-			"SELECT UserRequest 111" => array("SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE  `UserRequest`.org_id IN (1,2,3)", array('UserRequest.friendlyname' => true), $aArgs),
+		return array(
+			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))'),
+			"SELECT UserRequest 112" => array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.org_id IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))'),
+			"SELECT UserRequest 113" => array("SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE  `UserRequest`.org_id IN (SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = '3'))", array('UserRequest.friendlyname' => true)),
+			"SELECT UserRequest 111" => array("SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE  `UserRequest`.org_id IN (1,2,3)", array('UserRequest.friendlyname' => true)),
 			);
-
-
-		return $aData;
 	}
 
 	public function OQLSelectProvider()
 	{
-		$aData = $this->OQLSelectProviderStatic();
-
-
-		return $aData;
+		return $this->OQLSelectProviderStatic();
 	}
 
-	private function GetId()
-	{
-		$sId = str_replace('"', '', $this->getName());
-		$sId = str_replace('Legacy', '', $sId);
-		$sId = str_replace(' ', '_', $sId);
-		return $sId;
-	}
 
 	/**
 	 * @param $sSQL

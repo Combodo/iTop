@@ -337,7 +337,7 @@ class DBObjectSearch extends DBSearch
 		$this->m_aParams = array_merge($this->m_aParams, $oFilter->m_aParams);
 	}
 
-	protected function RenameParam($sOldName, $sNewName)
+	public function RenameParam($sOldName, $sNewName)
 	{
 		$this->m_oSearchCondition->RenameParam($sOldName, $sNewName);
 		foreach($this->m_aPointingTo as $sExtKeyAttCode=>$aPointingTo)
@@ -1517,6 +1517,10 @@ class DBObjectSearch extends DBSearch
 		elseif ($oExpression instanceof IntervalOqlExpression)
 		{
 			return new IntervalExpression($oExpression->GetValue(), $oExpression->GetUnit());
+		}
+		elseif ($oExpression instanceof NestedQueryOqlExpression)
+		{
+			return NestedQueryExpression::FromOQLObjectQuery($oExpression->GetOQLObjectQuery());
 		}
 		else
 		{

@@ -188,25 +188,40 @@ class ScalarOqlExpression extends ScalarExpression implements CheckableExpressio
 	}
 }
 
-class NestedQueryOqlExpression extends NestedQueryExpression implements CheckableExpression{
+class NestedQueryOqlExpression extends NestedQueryExpression implements CheckableExpression
+{
+	/** @var OQLObjectQuery */
+	private $m_oOQLObjectQuery;
 
-	/*Here $m_oNestedQuery is an OQLObjectQuery*/
-	public function __construct($oNestedQuery)
+	/**
+	 * NestedQueryOqlExpression constructor.
+	 *
+	 * @param OQLObjectQuery $oOQLObjectQuery
+	 */
+	public function __construct($oOQLObjectQuery )
 	{
-		//OQLObjectQuery
-		$this->m_oNestedQuery = $oNestedQuery;
-		$this->m_sQuery="";
+		parent::__construct(null);
+		$this->m_oOQLObjectQuery = $oOQLObjectQuery;
 	}
+
 	/**
 	 * Recursively check the validity of the expression with regard to the data model
 	 * and the query in which it is used
 	 *
 	 * @param ModelReflection $oModelReflection MetaModel to consider
-	 * @throws OqlNormalizeException
+	 * @param array $aAliases
+	 * @param string $sSourceQuery
+	 *
+	 * @throws \OqlNormalizeException
 	 */
 	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
 	{
-		$this->m_oNestedQuery-> Check($oModelReflection, "", $aAliases);
+		$this->m_oOQLObjectQuery->Check($oModelReflection, "", $aAliases);
+	}
+
+	public function GetOQLObjectQuery()
+	{
+		return $this->m_oOQLObjectQuery;
 	}
 }
 
@@ -589,6 +604,7 @@ class OqlUnionQuery extends OqlQuery
 
 	public function __construct(OqlObjectQuery $oLeftQuery, OqlQuery $oRightQueryOrUnion)
 	{
+		parent::__construct();
 		$this->aQueries[] = $oLeftQuery;
 		if ($oRightQueryOrUnion instanceof OqlUnionQuery)
 		{
@@ -659,6 +675,7 @@ class OqlUnionQuery extends OqlQuery
 		}
 		foreach ($aColumnToClasses as $iColumn => $aClasses)
 		{
+			$sRootClass = null;
 			foreach ($aClasses as $iQuery => $aData)
 			{
 				if ($iQuery == 0)
@@ -730,10 +747,6 @@ class OqlUnionQuery extends OqlQuery
 			{
 				// first loop
 				$sAncestor = $sClass;
-			}
-			elseif ($sClass == $sAncestor)
-			{
-				// remains the same
 			}
 			elseif ($oModelReflection->GetRootClass($sClass) != $oModelReflection->GetRootClass($sAncestor))
 			{

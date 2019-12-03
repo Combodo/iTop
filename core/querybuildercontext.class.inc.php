@@ -33,6 +33,7 @@ class QueryBuilderContext
 	protected $m_aFilteredTables;
 	protected $m_sEmptyClassAlias;
 
+	/** @var \QueryBuilderExpressions */
 	public $m_oQBExpressions;
 
 	/**

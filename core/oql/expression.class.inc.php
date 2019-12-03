@@ -119,13 +119,14 @@ abstract class Expression
 	abstract public function ToJSON(&$aArgs = null, $bRetrofitParams = false);
 
 	/**
-	 * @param DBObjectSearch $oSearch
+	 * @param DBSearch $oSearch
 	 * @param array $aArgs
 	 * @param AttributeDefinition $oAttDef
 	 *
 	 * @param array $aCtx
 	 *
 	 * @return array parameters for the search form
+	 * @throws \MissingQueryArgument
 	 */
 	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
@@ -252,10 +253,6 @@ abstract class Expression
 		);
 	}
 
-	public function GetCriteria()
-	{
-	 return $this;
-	}
 	/**
 	 * Split binary expression on given operator
 	 *
@@ -1893,6 +1890,7 @@ class ListExpression extends Expression
 
 class NestedQueryExpression extends Expression
 {
+	/** @var DBSearch */
 	protected $m_oNestedQuery;
 
 	/*$m_oNestedQuery is an DBSearch object*/
@@ -1900,10 +1898,16 @@ class NestedQueryExpression extends Expression
 	{
 		$this->m_oNestedQuery = $oNestedQuery;
 	}
-	public static function FromOQLObjectQuery($oObjQuery)//$oNestedQuery as OQLObjectQuery
+
+	/**
+	 * @param OQLObjectQuery $oObjQuery
+	 *
+	 * @return \NestedQueryExpression
+	 */
+	public static function FromOQLObjectQuery($oObjQuery)
 	{
-		$aExpressions = $oObjQuery->ToDBSearch("");
-		return new NestedQueryExpression($aExpressions);
+		$oExpressions = $oObjQuery->ToDBSearch("");
+		return new NestedQueryExpression($oExpressions);
 	}
 
 	public function IsTrue()
@@ -1917,14 +1921,28 @@ class NestedQueryExpression extends Expression
 	}
 
 	// recursive rendering
-	/*TODO modif en cours*/
+	/**
+	 * @param bool $bForSQL
+	 * @param null $aArgs
+	 * @param bool $bRetrofitParams
+	 *
+	 * @return array|string
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 */
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		if ($bForSQL)
 		{
-			return  '('.$this->m_oNestedQuery->GetRootFilter()->MakeSelectQuery().')';
+			$aAttToLoad = array();
+			foreach ($this->m_oNestedQuery->GetSelectedClasses() as $sClassAlias => $sClass)
+			{
+				$aAttToLoad[$sClassAlias] = array();
+			}
+			return  '('.$this->m_oNestedQuery->MakeSelectQuery(array(), $aArgs, $aAttToLoad).')';
 		}
-		else{
+		else
+		{
 			return '('.$this->m_oNestedQuery->ToOQL(false, null, false).')';
 		}
 	}
@@ -1932,10 +1950,6 @@ class NestedQueryExpression extends Expression
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
-		foreach ($this->m_oCondition as $oExpr)
-		{
-			$oExpr->Browse($callback);
-		}
 	}
 	/**/
 	public function ApplyParameters($aArgs)
@@ -1945,15 +1959,15 @@ class NestedQueryExpression extends Expression
 	/**/
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
-		$this->m_oNestedQuery->m_oQBExpressions->GetUnresolvedFields($sAlias, $aUnresolved);
 	}
 	/**/
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		// Check and prepare the select information
-		$this->m_oNestedQuery->m_oQBExpressions-> Translate($aTranslationData, $bMatchAll , $bMarkFieldsAsResolved );
+		$oExpression = $this->m_oNestedQuery->GetCriteria()->Translate($aTranslationData, $bMatchAll , $bMarkFieldsAsResolved );
+		$this->m_oNestedQuery->ResetCondition();
+		$this->m_oNestedQuery->AddConditionExpression($oExpression);
 		return clone $this;
-
 	}
 	/*TODO*/
 	public function ListRequiredFields()
@@ -1985,14 +1999,16 @@ class NestedQueryExpression extends Expression
 	{
 		$this->m_oNestedQuery->RenameAlias($sOldName, $sNewName);
 	}
-	/*TODO return QueryBuiderContext*/
-	public function GetCriteria()
+
+	/**
+	 * @inheritDoc
+	 */
+	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
-		//transform oNestedQuery to object QueryBuilderContext
-		$queryBuilderContext=new QueryBuilderContext($this->m_oNestedQuery, null, null, null, null);
-		return new NestedQueryExpression($queryBuilderContext);
+		// TODO: Implement ToJSON() method.
 	}
 }
+
 class FunctionExpression extends Expression
 {
 	protected $m_sVerb;

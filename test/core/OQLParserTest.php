@@ -10,6 +10,7 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DBObjectSearch;
 
@@ -18,8 +19,10 @@ use DBObjectSearch;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class OQLParserTest extends ItopTestCase
+class OQLParserTest extends ItopDataTestCase
 {
+	const USE_TRANSACTION = false;
+
 	/**
 	 * @dataProvider NestedQueryProvider
 	 *
@@ -39,6 +42,7 @@ class OQLParserTest extends ItopTestCase
 	public function NestedQueryProvider()
 	{
 		return array(
+			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))'),
 			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))'),
 			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE 1))'),
 			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.`org_id` NOT IN (SELECT `Organization` FROM Organization AS `Organization` WHERE 1))'),
