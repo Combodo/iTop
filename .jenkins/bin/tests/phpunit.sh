@@ -17,5 +17,6 @@ if [ $# -ge 2 -a "x$2" == "xtrue" ]
 then
   echo php vendor/bin/phpunit  --log-junit ../var/test/phpunit-log.junit.xml --teamcity
 else
-  echo php vendor/bin/phpunit  --log-junit ../var/test/phpunit-log.junit.xml --exclude-group OQL --teamcity
+  echo php vendor/bin/phpunit  --log-junit ../var/test/phpunit-log.junit.xml --teamcity
+  #echo php vendor/bin/phpunit  --log-junit ../var/test/phpunit-log.junit.xml --exclude-group OQL --teamcity
 fi
