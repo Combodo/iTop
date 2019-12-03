@@ -2,6 +2,8 @@
 
 set -x
 
+
+
 whoami
 pwd
 ls

@@ -53,6 +53,9 @@
         <testsuite name="Application">
             <directory>application</directory>
         </testsuite>
+        <testsuite name="OQL">
+            <directory>OQL</directory>
+        </testsuite>
         <testsuite name="Status">
             <directory>status</directory>
         </testsuite>
