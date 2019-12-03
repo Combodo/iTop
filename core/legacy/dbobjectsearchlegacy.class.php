@@ -296,6 +296,16 @@ class DBObjectSearch extends DBSearch
 		return $bFound;
 	}
 
+
+	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
+	{
+	}
+
+	public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
+	{
+	}
+
+
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
 	{
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
@@ -2572,4 +2582,6 @@ class DBObjectSearch extends DBSearch
 		}
 		return $oExpression;
 	}
+
+
 }
