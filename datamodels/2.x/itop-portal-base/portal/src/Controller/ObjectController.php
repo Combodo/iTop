@@ -1231,12 +1231,6 @@ class ObjectController extends BrickController
 			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Invalid request data, some information are missing');
 		}
 
-		// Checking that id is in the AttCodes
-		if (!in_array('id', $aObjectAttCodes))
-		{
-			$aObjectAttCodes = array_merge(array('id'), $aObjectAttCodes);
-		}
-
 		// Building the search
 		$bIgnoreSilos = $oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass);
 		$aParams = array('objects_id' => $aObjectIds);
@@ -1247,6 +1241,13 @@ class ObjectController extends BrickController
 		}
 		$oSet = new DBObjectSet($oSearch, array(), $aParams);
 		$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => $aObjectAttCodes));
+
+		// Checking that id is in the AttCodes
+		// Note: We do that AFTER the array is used in OptimizeColumnLoad() because the function doesn't support this anymore.
+		if (!in_array('id', $aObjectAttCodes))
+		{
+			$aObjectAttCodes = array_merge(array('id'), $aObjectAttCodes);
+		}
 
 		// Retrieving objects
 		while ($oObject = $oSet->Fetch())
