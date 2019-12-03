@@ -128,10 +128,12 @@ expression_prio4(A) ::= expression_prio4(X) operator4(Y) expression_prio3(Z). { 
 list(A) ::= PAR_OPEN list_items(X) PAR_CLOSE. {
 	A = new ListOqlExpression(X);
 }
-//added for IN (SELECT..)
 list(A) ::= PAR_OPEN query(X) PAR_CLOSE. {
 	A = new NestedQueryOqlExpression(X);
- }
+}
+list(A) ::= PAR_OPEN union(X) PAR_CLOSE. {
+	A = new NestedQueryOqlExpression(X);
+}
 
 list_items(A) ::= expression_prio4(X). {
 	A = array(X);

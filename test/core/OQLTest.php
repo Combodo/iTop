@@ -69,6 +69,22 @@ class OQLTest extends ItopDataTestCase
 			array('SELECT toto WHERE id IN (SELECT titi AS ti JOIN toto AS to ON to.a=ti.b)'),
 			array('SELECT toto WHERE id IN (SELECT titi AS ti JOIN toto AS to ON to.a=ti.b WHERE to.a=1)'),
 			array('SELECT toto WHERE id NOT IN (SELECT titi)'),
+			array("SELECT User AS U JOIN Person AS P ON U.contactid = P.id
+WHERE U.status='enabled' AND U.id NOT IN (
+  SELECT User AS U
+    JOIN Person AS P ON U.contactid=P.id
+    JOIN URP_UserOrg AS L ON L.userid = U.id
+    WHERE U.status='enabled' AND L.allowed_org_id = P.org_id
+  UNION SELECT User AS U
+    WHERE U.status='enabled' AND U.id NOT IN (
+      SELECT User AS U
+      JOIN URP_UserOrg AS L ON L.userid = U.id
+      WHERE U.status='enabled'
+  )
+)"),
+			array("SELECT UserRequest AS Ur WHERE Ur.id NOT IN (SELECT UserRequest AS Ur JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = Ur.id)"),
+			array("SELECT Ticket AS T WHERE T. finalclass IN ('userrequest' , 'change') AND T.id  NOT IN (SELECT UserRequest AS Ur JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = Ur.id  UNION SELECT Change AS C JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = C.id)"),
+			array("SELECT PhysicalDevice WHERE status='production' AND id NOT IN (SELECT PhysicalDevice AS p JOIN lnkFunctionalCIToProviderContract AS l ON l.functionalci_id=p.id)"),
 		);
 	}
 

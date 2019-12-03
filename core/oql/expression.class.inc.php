@@ -1946,20 +1946,24 @@ class NestedQueryExpression extends Expression
 			return '('.$this->m_oNestedQuery->ToOQL(false, null, false).')';
 		}
 	}
+
 	/*TODO*/
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
 	}
+
 	/**/
 	public function ApplyParameters($aArgs)
 	{
 		$this->m_oNestedQuery->ApplyParameters($aArgs);
 	}
+
 	/**/
 	public function GetUnresolvedFields($sAlias, &$aUnresolved)
 	{
 	}
+
 	/**/
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
@@ -1969,6 +1973,7 @@ class NestedQueryExpression extends Expression
 		$this->m_oNestedQuery->AddConditionExpression($oExpression);
 		return clone $this;
 	}
+
 	/*TODO*/
 	public function ListRequiredFields()
 	{
@@ -1979,6 +1984,7 @@ class NestedQueryExpression extends Expression
 		}
 		return $aRes;
 	}
+
 	/*TODO */
 	public function CollectUsedParents(&$aTable)
 	{
