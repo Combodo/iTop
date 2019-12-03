@@ -614,7 +614,7 @@ class NavigationRuleHelper
 					{
 						$oSearch = DBSearch::FromOQL($aRuleDef['properties']['oql']);
 						$oSet = new DBObjectSet($oSearch, array(), array('this' => $oCurrentObject));
-						$oSet->OptimizeColumnLoad(array($oSearch => array()));
+						$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
 						$oTargetObject = $oSet->Fetch();
 					}
 					// - Build URL
