@@ -24,6 +24,7 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 	{
 		$sInputHtml = $this->ReadTestFile($sFileToTest, self::INPUT_DIRECTORY);
 		$sOutputHtml = $this->ReadTestFile($sFileToTest, self::OUTPUT_DIRECTORY);
+<<<<<<< HEAD
 
 		$oSanitizer = new HTMLDOMSanitizer();
 		$sRes = $oSanitizer->DoSanitize($sInputHtml);
@@ -35,6 +36,12 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 		// So we're removing new lines on both sides :/
 		$sOutputHtml = $this->RemoveNewLines($sOutputHtml);
 		$sRes = $this->RemoveNewLines($sRes);
+=======
+		$sOutputHtml = $this->RemoveNewLines($sOutputHtml);
+
+		$oSanitizer = new HTMLDOMSanitizer();
+		$sRes = $oSanitizer->DoSanitize($sInputHtml);
+>>>>>>> speedup_jenkins
 
 		$this->debug($sRes);
 		$this->assertEquals($sOutputHtml, $sRes);
@@ -78,6 +85,7 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 		$oSanitizer = new HTMLDOMSanitizer();
 		$sRes = $oSanitizer->DoSanitize($sHtmlToTest);
 
+<<<<<<< HEAD
 		// Removing newlines as the parser gives different results depending on the PHP version
 		// Didn't manage to get it right :
 		// - no php.ini difference
@@ -86,6 +94,9 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 		$sHtmlToTest = $this->RemoveNewLines($sHtmlToTest);
 		$sRes = $this->RemoveNewLines($sRes);
 
+=======
+		$this->debug($sRes);
+>>>>>>> speedup_jenkins
 		$this->assertEquals($sHtmlToTest, $sRes);
 	}
 
