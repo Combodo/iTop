@@ -29,6 +29,14 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 		$oSanitizer = new HTMLDOMSanitizer();
 		$sRes = $oSanitizer->DoSanitize($sInputHtml);
 
+		// Removing newlines as the parser gives different results depending on the PHP version
+		// Didn't manage to get it right :
+		// - no php.ini difference
+		// - playing with the parser preserveWhitespace/formatOutput parser options didn't help
+		// So we're removing new lines on both sides :/
+		$sOutputHtml = $this->RemoveNewLines($sOutputHtml);
+		$sRes = $this->RemoveNewLines($sRes);
+
 		$this->debug($sRes);
 		$this->assertEquals($sOutputHtml, $sRes);
 	}
@@ -70,6 +78,14 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 	{
 		$oSanitizer = new HTMLDOMSanitizer();
 		$sRes = $oSanitizer->DoSanitize($sHtmlToTest);
+
+		// Removing newlines as the parser gives different results depending on the PHP version
+		// Didn't manage to get it right :
+		// - no php.ini difference
+		// - playing with the parser preserveWhitespace/formatOutput parser options didn't help
+		// So we're removing new lines on both sides :/
+		$sHtmlToTest = $this->RemoveNewLines($sHtmlToTest);
+		$sRes = $this->RemoveNewLines($sRes);
 
 		$this->debug($sRes);
 		$this->assertEquals($sHtmlToTest, $sRes);
@@ -187,3 +203,4 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 		return true;
 	}
 }
+
