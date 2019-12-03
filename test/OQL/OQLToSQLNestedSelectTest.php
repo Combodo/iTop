@@ -167,10 +167,14 @@ class OQLToSQLNestedSelectTest extends ItopDataTestCase
 	private function OQLSelectProviderStatic()
 	{
 		return array(
-			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))'),
-			"SELECT UserRequest 112" => array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.org_id IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))'),
-			"SELECT UserRequest 113" => array("SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE  `UserRequest`.org_id IN (SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = '3'))", array('UserRequest.friendlyname' => true)),
-			"SELECT UserRequest 111" => array("SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE  `UserRequest`.org_id IN (1,2,3)", array('UserRequest.friendlyname' => true)),
+			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))',),
+			array('SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE (`UserRequest`.org_id IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))'),
+			array("SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE  `UserRequest`.org_id IN (SELECT `Organization` FROM Organization AS `Organization` JOIN Organization AS `Organization1` ON `Organization`.parent_id BELOW `Organization1`.id WHERE (`Organization1`.`id` = '3'))"),
+			array("SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE  `UserRequest`.org_id IN (1,2,3)"),
+			array("SELECT User AS U JOIN Person AS P ON U.contactid = P.id WHERE U.status='enabled' AND U.id NOT IN (SELECT User AS U JOIN Person AS P ON U.contactid=P.id JOIN URP_UserOrg AS L ON L.userid = U.id WHERE U.status='enabled' AND L.allowed_org_id = P.org_id UNION SELECT User AS U WHERE U.status='enabled' AND U.id NOT IN (SELECT User AS U JOIN URP_UserOrg AS L ON L.userid = U.id WHERE U.status='enabled'))"),
+			array("SELECT UserRequest AS Ur WHERE Ur.id NOT IN (SELECT UserRequest AS Ur JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = Ur.id)"),
+			array("SELECT Ticket AS T WHERE T. finalclass IN ('userrequest' , 'change') AND T.id  NOT IN (SELECT UserRequest AS Ur JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = Ur.id  UNION SELECT Change AS C JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = C.id)"),
+			array("SELECT PhysicalDevice WHERE status='production' AND id NOT IN (SELECT PhysicalDevice AS p JOIN lnkFunctionalCIToProviderContract AS l ON l.functionalci_id=p.id)"),
 			);
 	}
 

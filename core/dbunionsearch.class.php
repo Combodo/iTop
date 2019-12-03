@@ -258,6 +258,24 @@ class DBUnionSearch extends DBSearch
 		return $bRet;
 	}
 
+	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation);
+		}
+	}
+
+	public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->TranslateConditions($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+		}
+	}
+
+
+
 	public function IsAny()
 	{
 		$bIsAny = true;
@@ -675,6 +693,8 @@ class DBUnionSearch extends DBSearch
 			$oSearch->SetDataFiltered();
 		}
 	}
+
+
 
 	public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true)
 	{

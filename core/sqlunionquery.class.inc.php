@@ -114,7 +114,7 @@ class SQLUnionQuery extends SQLQuery
 
 		if ($bGetCount)
 		{
-			$sSelects = '('.implode(" $sLimit)$sLineSep UNION$sLineSep(", $aSelects)." $sLimit)";
+			$sSelects = '('.implode(" $sLimit $sLineSep UNION$sLineSep ", $aSelects)." $sLimit)";
 			$sFrom = "($sLineSep$sSelects$sLineSep) as __selects__";
 			$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep 1 $sLineSep FROM $sFrom$sLineSep) AS _union_alderaan_";
 		}
@@ -124,11 +124,11 @@ class SQLUnionQuery extends SQLQuery
 			if (!empty($sOrderBy))
 			{
 				$sOrderBy = "ORDER BY $sOrderBy$sLineSep $sLimit";
-				$sSQL = '('.implode(")$sLineSep UNION$sLineSep (", $aSelects).')'.$sLineSep.$sOrderBy;
+				$sSQL = '('.implode(" $sLineSep UNION$sLineSep ", $aSelects).')'.$sLineSep.$sOrderBy;
 			}
 			else
 			{
-				$sSQL = '('.implode(" $sLimit)$sLineSep UNION$sLineSep (", $aSelects)." $sLimit)";
+				$sSQL = '('.implode(" $sLimit $sLineSep UNION$sLineSep ", $aSelects)." $sLimit)";
 			}
 		}
 		return $sSQL;

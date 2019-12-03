@@ -699,6 +699,26 @@ class DBObjectSearch extends DBSearch
 		}
 	}
 
+	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
+	{
+		// Recurse in nested queries
+		$this->GetCriteria()->Browse(function($oNode) use ($aClassAliases, $aAliasTranslation) {
+			if ($oNode instanceof NestedQueryExpression)
+			{
+				$oNestedQuery = $oNode->GetNestedQuery();
+				$oNestedQuery->RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation);
+			}
+		});
+		$this->AddToNameSpace($aClassAliases, $aAliasTranslation);
+		$this->TranslateConditions($aAliasTranslation, false, false);
+	}
+
+	public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
+	{
+		$oExpression = $this->GetCriteria()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
+		$this->ResetCondition();
+		$this->AddConditionExpression($oExpression);
+	}
 
 	// Browse the tree nodes recursively
 	//

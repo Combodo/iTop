@@ -50,6 +50,7 @@ class OQLClassTreeBuilder
 	 */
 	public function DevelopOQLClassNode()
 	{
+		$this->TranslateNestedRequests();
 		$this->AddExternalKeysFromSearch();
 		$aPolymorphicJoinAlias = $this->TranslatePolymorphicExpressions();
 		$this->AddExpectedExternalFields();
@@ -374,5 +375,20 @@ class OQLClassTreeBuilder
 			$oSelectPoly = $oOQLClassTreeBuilder->DevelopOQLClassNode();
 			$this->oOQLClassNode->AddLeftJoin($oSelectPoly, 'id', 'id', true);
 		}
+	}
+
+	/**
+	 * Rename class aliases of nested requests to avoid collision with main request
+	 */
+	private function TranslateNestedRequests()
+	{
+		$this->oDBObjetSearch->GetCriteria()->Browse(function($oNode) {
+			if ($oNode instanceof NestedQueryExpression)
+			{
+				$oNestedQuery = $oNode->GetNestedQuery();
+				$aClassAliases = $this->oDBObjetSearch->GetJoinedClasses();
+				$oNestedQuery->RenameAliasesInNameSpace($aClassAliases);
+			}
+		});
 	}
 }

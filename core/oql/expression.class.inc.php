@@ -504,12 +504,7 @@ class BinaryExpression extends Expression
 		$oRight = $this->GetRightExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
 		return new BinaryExpression($oLeft, $this->GetOperator(), $oRight);
 	}
-	public function GetCriteria()
-	{
-		$oLeft = $this->GetLeftExpr()->GetCriteria();
-		$oRight = $this->GetRightExpr()->GetCriteria();
-		return new BinaryExpression($oLeft, $this->GetOperator(), $oRight);
-	}
+	
 	public function ListRequiredFields()
 	{
 		$aLeft = $this->GetLeftExpr()->ListRequiredFields();
@@ -1968,27 +1963,17 @@ class NestedQueryExpression extends Expression
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		// Check and prepare the select information
-		$oExpression = $this->m_oNestedQuery->GetCriteria()->Translate($aTranslationData, $bMatchAll , $bMarkFieldsAsResolved );
-		$this->m_oNestedQuery->ResetCondition();
-		$this->m_oNestedQuery->AddConditionExpression($oExpression);
+		$this->m_oNestedQuery->TranslateConditions($aTranslationData, $bMatchAll , $bMarkFieldsAsResolved );
 		return clone $this;
 	}
 
-	/*TODO*/
 	public function ListRequiredFields()
 	{
-		$aRes = array();
-		foreach ($this->m_oNestedQuery->getCondition() as $oExpr)
-		{
-			$aRes = array_merge($aRes, $oExpr->ListRequiredFields());
-		}
-		return $aRes;
+		return array();
 	}
 
-	/*TODO */
 	public function CollectUsedParents(&$aTable)
 	{
-
 	}
 
 	public function ListConstantFields()

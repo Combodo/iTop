@@ -271,6 +271,10 @@ abstract class DBSearch
 	 */
 	abstract public function RenameAlias($sOldName, $sNewName);
 
+	abstract public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array());
+
+	abstract public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
+
     /**
      * @internal
      * @return mixed
