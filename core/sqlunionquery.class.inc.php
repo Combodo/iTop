@@ -124,11 +124,11 @@ class SQLUnionQuery extends SQLQuery
 			if (!empty($sOrderBy))
 			{
 				$sOrderBy = "ORDER BY $sOrderBy$sLineSep $sLimit";
-				$sSQL = '('.implode(" $sLineSep UNION$sLineSep ", $aSelects).')'.$sLineSep.$sOrderBy;
+				$sSQL = implode(" $sLineSep UNION$sLineSep ", $aSelects).$sLineSep.$sOrderBy;
 			}
 			else
 			{
-				$sSQL = '('.implode(" $sLimit $sLineSep UNION$sLineSep ", $aSelects)." $sLimit)";
+				$sSQL = implode(" $sLimit $sLineSep UNION$sLineSep ", $aSelects)." $sLimit";
 			}
 		}
 		return $sSQL;
