@@ -1635,6 +1635,13 @@ class DBObjectSearch extends DBSearch
 		}
 	}
 
+	/**
+	 * @param \OqlQuery $oOqlQuery
+	 * @param string $sQuery
+	 *
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public function InitFromOqlQuery(OqlQuery $oOqlQuery, $sQuery)
 	{
 		$oModelReflection = new ModelReflectionRuntime();
@@ -1751,6 +1758,10 @@ class DBObjectSearch extends DBSearch
 		foreach ($oOqlQuery->GetSelectedClasses() as $oClassDetails)
 		{
 			$sClassToSelect = $oClassDetails->GetValue();
+			if (!array_key_exists($sClassToSelect, $aAliases))
+			{
+				throw new CoreException("$sClassToSelect is not a valid alias");
+			}
 			$this->m_aSelectedClasses[$sClassToSelect] = $aAliases[$sClassToSelect];
 		}
 		$this->m_aClasses = $aAliases;
