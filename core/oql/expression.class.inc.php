@@ -166,6 +166,10 @@ abstract class Expression
 		return true;
 	}
 
+	/**
+	 * @return string
+	 * @throws \MissingQueryArgument
+	 */
 	public function serialize()
 	{
 		return base64_encode($this->RenderExpression(false));
@@ -184,7 +188,9 @@ abstract class Expression
 
 	/**
 	 * @param $sConditionExpr
+	 *
 	 * @return Expression
+	 * @throws \OQLException
 	 */
 	static public function FromOQL($sConditionExpr)
 	{
@@ -202,13 +208,14 @@ abstract class Expression
 
 	static public function FromSQL($sSQL)
 	{
-		$oSql = new SQLExpression($sSQL);
-		return $oSql;
+		return new SQLExpression($sSQL);
 	}
 
 	/**
 	 * @param Expression $oExpr
+	 *
 	 * @return Expression
+	 * @throws \CoreException
 	 */
 	public function LogAnd(Expression $oExpr)
 	{
@@ -219,7 +226,9 @@ abstract class Expression
 
 	/**
 	 * @param Expression $oExpr
+	 *
 	 * @return Expression
+	 * @throws \CoreException
 	 */
 	public function LogOr(Expression $oExpr)
 	{
@@ -243,6 +252,15 @@ abstract class Expression
 		return $sDefault;
 	}
 
+	/**
+	 * @param $oSearch
+	 * @param array $aArgs
+	 * @param bool $bRetrofitParams
+	 * @param \AttributeDefinition $oAttDef
+	 *
+	 * @return array
+	 * @throws \MissingQueryArgument
+	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
 		return array(
@@ -442,6 +460,7 @@ class BinaryExpression extends Expression
 
 	/**
 	 * {@inheritDoc}
+	 * @throws \MissingQueryArgument
 	 * @see Expression::ToJSON()
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
@@ -472,6 +491,12 @@ class BinaryExpression extends Expression
 		$this->m_oRightExpr->Browse($callback);
 	}
 
+	/**
+	 * @param $aArgs
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 */
 	public function ApplyParameters($aArgs)
 	{
 		if ($this->m_oLeftExpr instanceof VariableExpression)
@@ -498,6 +523,14 @@ class BinaryExpression extends Expression
 		$this->GetRightExpr()->GetUnresolvedFields($sAlias, $aUnresolved);
 	}
 
+	/**
+	 * @param array $aTranslationData
+	 * @param bool $bMatchAll
+	 * @param bool $bMarkFieldsAsResolved
+	 *
+	 * @return \BinaryExpression|\Expression
+	 * @throws \CoreException
+	 */
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		$oLeft = $this->GetLeftExpr()->Translate($aTranslationData, $bMatchAll, $bMarkFieldsAsResolved);
@@ -573,6 +606,18 @@ class BinaryExpression extends Expression
 	}
 
 	// recursive rendering
+
+	/**
+	 * @param \DBSearch $oSearch
+	 * @param null $aArgs
+	 * @param null $oAttDef
+	 * @param array $aCtx
+	 *
+	 * @return array|string
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 */
 	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
 		$bReverseOperator = false;
@@ -653,6 +698,8 @@ class BinaryExpression extends Expression
 	 * @param null $oAttDef
 	 *
 	 * @return array
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
 	 * @throws \MissingQueryArgument
 	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
@@ -843,6 +890,7 @@ class UnaryExpression extends Expression
 
 	/**
 	 * {@inheritDoc}
+	 * @throws \MissingQueryArgument
 	 * @see Expression::ToJSON()
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
@@ -900,6 +948,13 @@ class UnaryExpression extends Expression
 
 class ScalarExpression extends UnaryExpression
 {
+	/**
+	 * ScalarExpression constructor.
+	 *
+	 * @param $value
+	 *
+	 * @throws \CoreException
+	 */
 	public function __construct($value)
 	{
 		if (!is_scalar($value) && !is_null($value) && (!$value instanceof OqlHexValue))
@@ -987,11 +1042,25 @@ class ScalarExpression extends UnaryExpression
 		);
 	}
 
+	/**
+	 * @param $aArgs
+	 *
+	 * @return \ScalarExpression
+	 */
 	public function GetAsScalar($aArgs)
 	{
 		return clone $this;
 	}
 
+	/**
+	 * @param $oSearch
+	 * @param array $aArgs
+	 * @param bool $bRetrofitParams
+	 * @param \AttributeDefinition $oAttDef
+	 *
+	 * @return array
+	 * @throws \MissingQueryArgument
+	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
 		$aCriterion = array();
@@ -1200,6 +1269,7 @@ class FieldExpression extends UnaryExpression
 	 * @return array|string
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
 	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
@@ -1250,6 +1320,13 @@ class FieldExpression extends UnaryExpression
 		);
 	}
 
+	/**
+	 * @param array $aClasses
+	 *
+	 * @return \AttributeDefinition|\AttributeInteger|null
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
 	public function GetAttDef($aClasses = array())
 	{
 		if (!empty($this->m_sParent))
@@ -1306,6 +1383,14 @@ class FieldExpression extends UnaryExpression
 		}
 	}
 
+	/**
+	 * @param array $aTranslationData
+	 * @param bool $bMatchAll
+	 * @param bool $bMarkFieldsAsResolved
+	 *
+	 * @return \Expression|\FieldExpression|\FieldExpressionResolved|mixed|\UnaryExpression
+	 * @throws \CoreException
+	 */
 	public function Translate($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
 	{
 		if (!array_key_exists($this->m_sParent, $aTranslationData))
@@ -1349,6 +1434,7 @@ class FieldExpression extends UnaryExpression
 	 *
 	 * @return string label
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
@@ -1424,6 +1510,7 @@ class FieldExpression extends UnaryExpression
 	 * @param AttributeDefinition $oAttDef
 	 *
 	 * @return array
+	 * @throws \CoreException
 	 */
 	public function GetCriterion($oSearch, &$aArgs = null, $bRetrofitParams = false, $oAttDef = null)
 	{
@@ -1532,6 +1619,16 @@ class VariableExpression extends UnaryExpression
 		return $this->m_sName;
 	}
 
+	/**
+	 * @param \DBSearch $oSearch
+	 * @param null $aArgs
+	 * @param null $oAttDef
+	 * @param array $aCtx
+	 *
+	 * @return array|mixed|string
+	 * @throws \MissingQueryArgument
+	 * @throws \Exception
+	 */
 	public function Display($oSearch, &$aArgs = null, $oAttDef = null, &$aCtx = array())
 	{
 		$sValue = $this->m_value;
@@ -1579,7 +1676,8 @@ class VariableExpression extends UnaryExpression
 					$oObj = MetaModel::GetObject($sTarget, $sValue);
 
 					return $oObj->Get("friendlyname");
-				} catch (CoreException $e)
+				}
+				catch (CoreException $e)
 				{
 				}
 			}
@@ -1660,6 +1758,14 @@ class VariableExpression extends UnaryExpression
 		}
 	}
 
+	/**
+	 * @param $aArgs
+	 *
+	 * @return \ListExpression|\ScalarExpression|null
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \Exception
+	 */
 	public function GetAsScalar($aArgs)
 	{
 		$oRet = null;
@@ -1719,6 +1825,12 @@ class ListExpression extends Expression
 		$this->m_aExpressions = $aExpressions;
 	}
 
+	/**
+	 * @param $aScalars
+	 *
+	 * @return \ListExpression
+	 * @throws \CoreException
+	 */
 	public static function FromScalars($aScalars)
 	{
 		$aExpressions = array();
@@ -1741,6 +1853,14 @@ class ListExpression extends Expression
 	}
 
 	// recursive rendering
+
+	/**
+	 * @param bool $bForSQL
+	 * @param null $aArgs
+	 * @param bool $bRetrofitParams
+	 *
+	 * @return array|string
+	 */
 	public function RenderExpression($bForSQL = false, &$aArgs = null, $bRetrofitParams = false)
 	{
 		$aRes = array();
@@ -1778,6 +1898,12 @@ class ListExpression extends Expression
 		}
 	}
 
+	/**
+	 * @param $aArgs
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 */
 	public function ApplyParameters($aArgs)
 	{
 		foreach ($this->m_aExpressions as $idx => $oExpr)
@@ -1942,7 +2068,6 @@ class NestedQueryExpression extends Expression
 		}
 	}
 
-	/*TODO*/
 	public function Browse(Closure $callback)
 	{
 		$callback($this);
@@ -1996,7 +2121,7 @@ class NestedQueryExpression extends Expression
 	 */
 	public function ToJSON(&$aArgs = null, $bRetrofitParams = false)
 	{
-		// TODO: Implement ToJSON() method.
+		return $this->m_oNestedQuery->ToJSON();
 	}
 }
 
