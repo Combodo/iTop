@@ -171,7 +171,7 @@ class MFCompiler
 			// Zend opcode cache
 			opcache_reset();
 		}
-		else if (function_exists('apc_clear_cache'))
+		if (function_exists('apc_clear_cache'))
 		{
 			// old style APC
 			apc_clear_cache();
