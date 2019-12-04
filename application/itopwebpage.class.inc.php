@@ -1130,7 +1130,7 @@ EOF
 		{
 			$sBodyClass = 'printable-version';
 		}
-		$sHtml .= "<body class=\"$sBodyClass\">\n";
+		$sHtml .= "<body class=\"$sBodyClass\" data-gui-type=\"backoffice\">\n";
 		if ($this->IsPrintableVersion())
 		{
 			$sHtml .= "<div class=\"explain-printable not-printable\">";

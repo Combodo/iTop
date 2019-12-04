@@ -1,27 +1,20 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Construction and display of the application's main menu
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT.'/application/utils.inc.php');
@@ -217,7 +210,7 @@ class ApplicationMenu
 		{
 			if (!self::CanDisplayMenu($aMenu)) { continue; }
 			$oMenuNode = self::GetMenuNode($aMenu['index']);
-			$oPage->AddToMenu('<h3 id="'.utils::GetSafeId('AccordionMenu_'.$oMenuNode->GetMenuID()).'">'.$oMenuNode->GetTitle().'</h3>');
+			$oPage->AddToMenu('<h3 id="'.utils::GetSafeId('AccordionMenu_'.$oMenuNode->GetMenuID()).'" class="navigation-menu-group" data-menu-id="'.$oMenuNode->GetMenuId().'">'.$oMenuNode->GetTitle().'</h3>');
 			$oPage->AddToMenu('<div>');
 			$oPage->AddToMenu('<ul>');
 			$aChildren = self::GetChildren($aMenu['index']);
@@ -289,9 +282,13 @@ EOF
 			if ($oMenu->IsEnabled())
 			{
 				$aChildren = self::GetChildren($index);
-				$sCSSClass = (count($aChildren) > 0) ? ' class="submenu"' : '';
+				$aCSSClasses = array('navigation-menu-item');
+				if (count($aChildren) > 0)
+				{
+					$aCSSClasses[] = 'submenu';
+				}
 				$sHyperlink = $oMenu->GetHyperlink($aExtraParams);
-				$sItemHtml = '<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" '.$sCSSClass.'>';
+				$sItemHtml = '<li id="'.utils::GetSafeId('AccordionMenu_'.$oMenu->GetMenuID()).'" class="'.implode(' ', $aCSSClasses).'" data-menu-id="'.$oMenu->GetMenuID().'">';
 				if ($sHyperlink != '')
 				{
 					$sLinkTarget = '';

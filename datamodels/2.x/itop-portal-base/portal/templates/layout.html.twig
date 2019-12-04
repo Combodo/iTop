@@ -158,7 +158,7 @@
 		</script>
 	{% endblock %}
 </head>
-<body class="{% block pPageBodyClass %}{% endblock %}">
+<body class="{% block pPageBodyClass %}{% endblock %}" data-gui-type="portal">
 	{% block pPageBodyWrapper %}
 		{% block pEnvBannerWrapper %}
 			{% if app['combodo.current_environment'] != 'production' %}

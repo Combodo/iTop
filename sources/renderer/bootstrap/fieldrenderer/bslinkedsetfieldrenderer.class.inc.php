@@ -22,8 +22,6 @@ namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use ApplicationContext;
 use AttributeFriendlyName;
-use Combodo\iTop\Renderer\FieldRenderer;
-use Combodo\iTop\Renderer\RenderingOutput;
 use Dict;
 use Exception;
 use IssueLog;
@@ -37,19 +35,14 @@ use MetaModel;
  * @property \Combodo\iTop\Form\Field\LinkedSetField $oField 
  * 
  */
-class BsLinkedSetFieldRenderer extends FieldRenderer
+class BsLinkedSetFieldRenderer extends BsFieldRenderer
 {
     /**
-     * Returns a RenderingOutput for the FieldRenderer's Field
-     *
-     * @return \Combodo\iTop\Renderer\RenderingOutput
-     *
-     * @throws \CoreException
+     * @inheritDoc
      */
 	public function Render()
 	{
-	    $oOutput = new RenderingOutput();
-        $oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
+	    $oOutput = parent::Render();
 
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';
 		// Vars to build the table

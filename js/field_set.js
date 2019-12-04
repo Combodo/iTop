@@ -276,6 +276,14 @@ $(function()
 			{
 				oFieldContainer.html(oField.html);
 			}
+			// HTML metadata
+			if( (oField.html_metadata !== undefined) && (Object.keys(oField.html_metadata).length > 0) )
+			{
+				for(var i in oField.html_metadata)
+				{
+					oFieldContainer.attr('data-' + i, oField.html_metadata[i]);
+				}
+			}
 			// JS files
 			if( (oField.js_files !== undefined) && (oField.js_files.length > 0) )
 			{

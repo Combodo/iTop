@@ -504,12 +504,15 @@ class WebPage implements Page
 	 */
 	public function GetDetails($aFields)
 	{
-		$sHtml = "<div class=\"details\" id='search-widget-results-outer'>\n";
+		$sHtml = "<div class=\"details\">\n";
 		foreach ($aFields as $aAttrib)
 		{
-			$sDataAttCode = isset($aAttrib['attcode']) ? "data-attcode=\"{$aAttrib['attcode']}\"" : '';
 			$sLayout = isset($aAttrib['layout']) ? $aAttrib['layout'] : 'small';
-			$sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttCode>\n";
+			$sDataAttributeCode = isset($aAttrib['attcode']) ? 'data-attribute-code="'.$aAttrib['attcode'].'"' : '';
+			$sDataAttributeType = isset($aAttrib['atttype']) ? 'data-attribute-type="'.$aAttrib['atttype'].'"' : '';
+			$sDataValueRaw = isset($aAttrib['value_raw']) ? 'data-value-raw="'.$aAttrib['value_raw'].'"' : '';
+
+			$sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataValueRaw>\n";
 			$sHtml .= "<div class=\"field_label label\">{$aAttrib['label']}</div>\n";
 
 			$sHtml .= "<div class=\"field_data\">\n";
@@ -943,8 +946,9 @@ class WebPage implements Page
 		$sHtml = '';
 		if (!$this->IsPrintableVersion())
 		{
-			foreach ($aActions as $aAction)
+			foreach ($aActions as $sActionId => $aAction)
 			{
+				$sDataActionId = 'data-action-id="'.$sActionId.'"';
 				$sClass = isset($aAction['css_classes']) ? 'class="'.implode(' ', $aAction['css_classes']).'"' : '';
 				$sOnClick = isset($aAction['onclick']) ? 'onclick="'.htmlspecialchars($aAction['onclick'], ENT_QUOTES,
 						"UTF-8").'"' : '';
@@ -953,21 +957,21 @@ class WebPage implements Page
 				{
 					if ($sPrevUrl != '') // Don't output consecutively two separators...
 					{
-						$sHtml .= "<li>{$aAction['label']}</li>";
+						$sHtml .= "<li $sDataActionId>{$aAction['label']}</li>";
 					}
 					$sPrevUrl = '';
 				}
 				else
 				{
-					$sHtml .= "<li><a $sTarget href=\"{$aAction['url']}\" $sClass $sOnClick>{$aAction['label']}</a></li>";
+					$sHtml .= "<li $sDataActionId><a $sTarget href=\"{$aAction['url']}\" $sClass $sOnClick>{$aAction['label']}</a></li>";
 					$sPrevUrl = $aAction['url'];
 				}
 			}
 			$sHtml .= "</ul></li></ul></div>";
-			foreach (array_reverse($aFavoriteActions) as $aAction)
+			foreach (array_reverse($aFavoriteActions) as $sActionId => $aAction)
 			{
 				$sTarget = isset($aAction['target']) ? " target=\"{$aAction['target']}\"" : "";
-				$sHtml .= "<div class=\"actions_button\"><a $sTarget href='{$aAction['url']}'>{$aAction['label']}</a></div>";
+				$sHtml .= "<div class=\"actions_button\" data-action-id=\"$sActionId\"><a $sTarget href='{$aAction['url']}'>{$aAction['label']}</a></div>";
 			}
 		}
 

@@ -43,8 +43,20 @@ require_once(APPROOT.'sources/application/search/criterionconversionabstract.cla
 require_once(APPROOT.'sources/application/search/criterionconversion/criteriontooql.class.inc.php');
 require_once(APPROOT.'sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
 
+/**
+ * Class cmdbAbstractObject
+ */
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
+	/** @var string ENUM_OBJECT_MODE_VIEW */
+	const ENUM_OBJECT_MODE_VIEW = 'view';
+	/** @var string ENUM_OBJECT_MODE_EDIT */
+	const ENUM_OBJECT_MODE_EDIT = 'edit';
+	/** @var string ENUM_OBJECT_MODE_CREATE */
+	const ENUM_OBJECT_MODE_CREATE = 'create';
+	/** @var string ENUM_OBJECT_MODE_STIMULUS */
+	const ENUM_OBJECT_MODE_STIMULUS = 'stimulus';
+
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	protected static $iGlobalFormId = 1;
 	protected $aFieldsMap;
@@ -819,6 +831,9 @@ EOF
 					}
 					foreach($aFields as $sAttCode)
 					{
+						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+						$sAttDefClass = get_class($oAttDef);
+
 						if ($bEditMode)
 						{
 							$sComments = isset($aFieldsComments[$sAttCode]) ? $aFieldsComments[$sAttCode] : '';
@@ -829,7 +844,6 @@ EOF
 								// the caller may override some flags if needed
 								$iFlags = $iFlags | $aExtraFlags[$sAttCode];
 							}
-							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 							if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard))
 							{
 								$sInputId = $this->m_iFormId.'_'.$sAttCode;
@@ -844,7 +858,6 @@ EOF
 											'value' => $sHTMLValue,
 											'comments' => $sComments,
 											'infos' => $sInfos,
-											'attcode' => $sAttCode,
 										);
 									}
 									else
@@ -891,7 +904,6 @@ EOF
 											'value' => $sHTMLValue,
 											'comments' => $sComments,
 											'infos' => $sInfos,
-											'attcode' => $sAttCode,
 										);
 									}
 								}
@@ -902,29 +914,14 @@ EOF
 										'value' => "<span id=\"field_{$sInputId}\">".$this->GetAsHTML($sAttCode)."</span>",
 										'comments' => $sComments,
 										'infos' => $sInfos,
-										'attcode' => $sAttCode,
 									);
 									$aFieldsMap[$sAttCode] = $sInputId;
-								}
-
-								// Checking how the field should be rendered
-								// Note: For view mode, this is done in cmdbAbstractObject::GetFieldAsHtml()
-								// Note 2: Shouldn't this be a property of the AttDef instead an array that we have to maintain?
-								if (in_array($oAttDef->GetEditClass(),
-									array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
-								{
-									$val['layout'] = 'large';
-								}
-								else
-								{
-									$val['layout'] = 'small';
 								}
 							}
 							else
 							{
 								$val = null; // Skip this field
 							}
-
 						}
 						else
 						{
@@ -934,6 +931,26 @@ EOF
 
 						if ($val != null)
 						{
+							// Add extra data for markup generation
+							// - Attribute code and AttributeDef. class
+							$val['attcode'] = $sAttCode;
+							$val['atttype'] = $sAttDefClass;
+
+							// - How the field should be rendered
+							$val['layout'] = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
+
+							// - For simple fields, we get the raw (stored) value as well
+							$bExcludeRawValue = false;
+							foreach (static::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+							{
+								if (is_a($sAttDefClass, $sAttDefClassToExclude, true))
+								{
+									$bExcludeRawValue = true;
+									break;
+								}
+							}
+							$val['value_raw'] = ($bExcludeRawValue === false) ? $this->Get($sAttCode) : '';
+
 							// The field is visible, add it to the current column
 							$aDetails[$sTab][$sColIndex][] = $val;
 							$iInputId++;
@@ -974,17 +991,21 @@ EOF
 	 */
 	public function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
-		$sTemplate = Utils::ReadFromFile(MetaModel::GetDisplayTemplate(get_class($this)));
+		$sClass = get_class($this);
+		$iKey = $this->GetKey();
+		$sMode = static::ENUM_OBJECT_MODE_VIEW;
+
+		$sTemplate = Utils::ReadFromFile(MetaModel::GetDisplayTemplate($sClass));
 		if (!empty($sTemplate))
 		{
 			$oTemplate = new DisplayTemplate($sTemplate);
 			// Note: to preserve backward compatibility with home-made templates, the placeholder '$pkey$' has been preserved
 			//       but the preferred method is to use '$id$'
 			$oTemplate->Render($oPage, array(
-				'class_name' => MetaModel::GetName(get_class($this)),
-				'class' => get_class($this),
-				'pkey' => $this->GetKey(),
-				'id' => $this->GetKey(),
+				'class_name' => MetaModel::GetName($sClass),
+				'class' => $sClass,
+				'pkey' => $iKey,
+				'id' => $iKey,
 				'name' => $this->GetName(),
 			));
 		}
@@ -992,7 +1013,11 @@ EOF
 		{
 			// Object's details
 			// template not found display the object using the *old style*
-			$oPage->add('<div id="search-widget-results-outer">');
+			$oPage->add(<<<HTML
+<!-- Beginning of object-details -->
+<div id="search-widget-results-outer" class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
+HTML
+			);
 			$this->DisplayBareHeader($oPage, $bEditMode);
 			/** @var \iTopWebPage $oPage */
 			$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
@@ -1003,8 +1028,11 @@ EOF
 			//$oPage->SetCurrentTab(Dict::S('UI:HistoryTab'));
 			//$this->DisplayBareHistory($oPage, $bEditMode);
 			$oPage->AddAjaxTab(Dict::S('UI:HistoryTab'),
-				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.get_class($this).'&id='.$this->GetKey());
-			$oPage->add('</div>');
+				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=history&class='.$sClass.'&id='.$iKey);
+			$oPage->add(<<<HTML
+</div><!-- End of object-details -->
+HTML
+			);
 		}
 	}
 
@@ -2399,15 +2427,31 @@ EOF
 		$oPage->add_dict_entry('UI:ValueMustBeChanged');
 		$oPage->add_dict_entry('UI:ValueInvalidFormat');
 
+		// Note: In 2.8, remove the data-attcode attribute (either because it's has been moved to .field_container in 2.7 or even better because the admin. console has been reworked)
 		return "<div id=\"field_{$iId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">{$sHTMLValue}</div></div>";
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param array $aExtraParams
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
 	{
 		$sOwnershipToken = null;
 		$iKey = $this->GetKey();
 		$sClass = get_class($this);
-		if ($iKey > 0)
+		$sMode = ($iKey > 0) ? static::ENUM_OBJECT_MODE_EDIT : static::ENUM_OBJECT_MODE_CREATE;
+
+		if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
 		{
 			// The concurrent access lock makes sense only for already existing objects
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
@@ -2442,13 +2486,22 @@ EOF
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container'])
 		{
 			$sClassLabel = MetaModel::GetName($sClass);
+			$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
+				$this->GetName());
+
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
 				$sClassLabel)); // Set title will take care of the encoding
-			$oPage->add("<div class=\"page_header\">\n");
-			$oPage->add("<h1>".$this->GetIcon()."&nbsp;".Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
-					$this->GetName())."</h1>\n");
-			$oPage->add("</div>\n");
-			$oPage->add("<div class=\"wizContainer\">\n");
+
+			$oPage->add(<<<HTML
+<!-- Beginning of object-details -->
+<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
+	<div class="page_header">
+		<h1>{$this->GetIcon()} $sHeaderTitle</h1>
+	</div>
+	<!-- Beginning of wizContainer -->
+	<div class="wizContainer">
+HTML
+			);
 		}
 		self::$iGlobalFormId++;
 		$this->aFieldsMap = array();
@@ -2475,7 +2528,7 @@ EOF
 		}
 		else
 		{
-			if ($iKey > 0)
+			if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
 			{
 				$sApplyButton = Dict::S('UI:Button:Apply');
 			}
@@ -2491,7 +2544,7 @@ EOF
 		}
 		else
 		{
-			if ($iKey > 0)
+			if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
 			{
 				$sOperation = 'apply_modify';
 			}
@@ -2500,7 +2553,7 @@ EOF
 				$sOperation = 'apply_new';
 			}
 		}
-		if ($iKey > 0)
+		if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
 		{
 			// The object already exists in the database, it's a modification
 			$sButtons = "<input id=\"{$sPrefix}_id\" type=\"hidden\" name=\"id\" value=\"$iKey\">\n";
@@ -2597,7 +2650,7 @@ EOF
 		{
 			$aFieldsMap = array();
 		}
-		if ($iKey > 0)
+		if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
 		{
 			$aFieldsMap['id'] = $sPrefix.'_id';
 		}
@@ -2638,7 +2691,12 @@ EOF
 
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container'])
 		{
-			$oPage->add("</div>\n");
+			// Close wizContainer and object-details
+			$oPage->add(<<<HTML
+	</div><!-- End of wizContainer -->
+</div><!-- End of object-details -->
+HTML
+			);
 		}
 
 		$iFieldsCount = count($aFieldsMap);
@@ -2689,6 +2747,20 @@ EOF
 		}
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param string $sClass
+	 * @param null $oObjectToClone
+	 * @param array $aArgs
+	 * @param array $aExtraParams
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
 	public static function DisplayCreationForm(WebPage $oPage, $sClass, $oObjectToClone = null, $aArgs = array(), $aExtraParams = array())
 	{
 		$sClass = ($oObjectToClone == null) ? $sClass : get_class($oObjectToClone);
@@ -2773,6 +2845,8 @@ EOF
 	{
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
+		$sMode = static::ENUM_OBJECT_MODE_STIMULUS;
+
 		$aTransitions = $this->EnumTransitions();
 		$aStimuli = MetaModel::EnumStimuli($sClass);
 		if (!isset($aTransitions[$sStimulus]))
@@ -2781,6 +2855,7 @@ EOF
 			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus,
 				$this->GetName(), $this->GetStateLabel()));
 		}
+
 		// Check for concurrent access lock
 		$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
 		$sOwnershipToken = null;
@@ -2803,12 +2878,22 @@ EOF
 		}
 		$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
 		$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
-		$oPage->add("<div class=\"page_header\">\n");
-		$oPage->add("<h1>$sActionLabel - <span class=\"hilite\">{$this->GetName()}</span></h1>\n");
-		$oPage->set_title($sActionLabel);
-		$oPage->add("</div>\n");
-		$oPage->add("<h1>$sActionDetails</h1>\n");
+
+		// Get info on current state
+		$sCurrentState = $this->GetState();
 		$sTargetState = $aTransitions[$sStimulus]['target_state'];
+
+		$oPage->set_title($sActionLabel);
+		$oPage->add(<<<HTML
+<!-- Beginning of object-details -->
+<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
+	<div class="page_header">
+		<h1>$sActionLabel - <span class="hilite">{$this->GetName()}</span></h1>
+	</div>
+	<h1>$sActionDetails</h1>
+HTML
+		);
+
 		$aExpectedAttributes = $this->GetTransitionAttributes($sStimulus /*, current state*/);
 		if ($aPrefillFormParam != null)
 		{
@@ -2923,7 +3008,11 @@ EOF
 		$oPage->add("<button type=\"button\" class=\"action cancel\" onClick=\"BackToDetails('$sClass', ".$this->GetKey().", '', '$sOwnershipToken')\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
 		$oPage->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
 		$oPage->add("</form>\n");
-		$oPage->add("</div>\n");
+		$oPage->add(<<<HTML
+	</div>
+</div><!-- End of object-details -->
+HTML
+		);
 		if ($sButtonsPosition != 'top')
 		{
 			// bottom or both: Displays the ticket details AFTER the actions
@@ -3081,20 +3170,7 @@ EOF
 				'label' => '<span title="'.MetaModel::GetDescription($sClass,
 						$sAttCode).'">'.MetaModel::GetLabel($sClass, $sAttCode).'</span>',
 				'value' => $sDisplayValue,
-				'attcode' => $sAttCode,
 			);
-
-			// Checking how the field should be rendered
-			// Note: For edit mode, this is done in self::GetBareProperties()
-			// Note 2: Shouldn't this be a AttDef property instead of an array to maintain?
-			if (in_array($oAttDef->GetEditClass(), array('Text', 'HTML', 'CaseLog', 'CustomFields', 'OQLExpression')))
-			{
-				$retVal['layout'] = 'large';
-			}
-			else
-			{
-				$retVal['layout'] = 'small';
-			}
 		}
 
 		return $retVal;
@@ -4992,6 +5068,42 @@ EOF
 			}, 'json');
 		}, $iInterval);
 EOF
+		);
+	}
+
+	/**
+	 * Return an array of AttributeDefinition EditClass that should be rendered as large field in the UI
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 */
+	protected static function GetAttEditClassesToRenderAsLargeField(){
+		return array(
+			'CaseLog',
+			'CustomFields',
+			'HTML',
+			'OQLExpression',
+			'Text',
+		);
+	}
+
+	/**
+	 * Return an array of AttributeDefinition classes that should be excluded from the markup metadata when priting raw value (typically large values)
+	 * This markup is mostly aimed at CSS/JS hooks for extensions and Behat tests
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 */
+	protected static function GetAttDefClassesToExcludeFromMarkupMetadataRawValue(){
+		return array(
+			'AttributeBlob',
+			'AttributeCustomFields',
+			'AttributeDashboard',
+			'AttributeLinkedSet',
+			'AttributeStopWatch',
+			'AttributeSubItem',
+			'AttributeTable',
+			'AttributeText'
 		);
 	}
 }

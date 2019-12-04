@@ -1022,6 +1022,14 @@ abstract class AttributeDefinition
 			$oFormField->AddValidator(new \Combodo\iTop\Form\Validator\Validator($this->GetValidationPattern()));
 		}
 
+		// Metadata
+		$oFormField->AddMetadata('attribute-code', $this->GetCode());
+		$oFormField->AddMetadata('attribute-type', get_class($this));
+		if($this::IsScalar())
+		{
+			$oFormField->AddMetadata('value-raw', $oObject->Get($this->GetCode()));
+		}
+
 		return $oFormField;
 	}
 

@@ -21,7 +21,6 @@
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use ApplicationContext;
-use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
 use ContextTag;
 use CoreException;
@@ -38,22 +37,15 @@ use MetaModel;
  *
  * @property \Combodo\iTop\Form\Field\SelectObjectField $oField
  */
-class BsSelectObjectFieldRenderer extends FieldRenderer
+class BsSelectObjectFieldRenderer extends BsFieldRenderer
 {
 
 	/**
-	 * Returns a RenderingOutput for the FieldRenderer's Field
-	 *
-	 * @return \Combodo\iTop\Renderer\RenderingOutput
-	 *
-	 * @throws \Exception
-	 * @throws \CoreException
-	 * @throws \ArchivedObjectException
+	 * @inheritDoc
 	 */
 	public function Render()
 	{
-		$oOutput = new RenderingOutput();
-		$oOutput->AddCssClass('form_field_' . $this->oField->GetDisplayMode());
+		$oOutput = parent::Render();
 
 		$sFieldValueClass = $this->oField->GetSearch()->GetClass();
 		$sFieldMandatoryClass = ($this->oField->GetMandatory()) ? 'form_mandatory' : '';

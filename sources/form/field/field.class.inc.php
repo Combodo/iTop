@@ -1,21 +1,22 @@
 <?php
 
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 namespace Combodo\iTop\Form\Field;
 
@@ -36,6 +37,7 @@ abstract class Field
     const ENUM_DISPLAY_MODE_DENSE = 'dense';        // Label and value side by side, closely
 
 	const DEFAULT_LABEL = '';
+	const DEFAULT_METADATA = array();
 	const DEFAULT_HIDDEN = false;
 	const DEFAULT_READ_ONLY = false;
 	const DEFAULT_MANDATORY = false;
@@ -46,6 +48,7 @@ abstract class Field
 	protected $sGlobalId;
 	protected $sFormPath;
 	protected $sLabel;
+	protected $aMetadata;
 	protected $bHidden;
 	protected $bReadOnly;
 	protected $bMandatory;
@@ -68,6 +71,7 @@ abstract class Field
 		// No space in such an id, that could be used as a DOM node id
 		$this->sGlobalId = 'field_' . str_replace(' ', '_', $sId) . '_' . uniqid();
 		$this->sLabel = static::DEFAULT_LABEL;
+		$this->aMetadata = static::DEFAULT_METADATA;
 		$this->bHidden = static::DEFAULT_HIDDEN;
 		$this->bReadOnly = static::DEFAULT_READ_ONLY;
 		$this->bMandatory = static::DEFAULT_MANDATORY;
@@ -115,6 +119,17 @@ abstract class Field
 	public function GetLabel()
 	{
 		return $this->sLabel;
+	}
+
+	/**
+	 * Return an array of $sName => $sValue metadata.
+	 *
+	 * @return array
+	 * @since 2.7.0
+	 */
+	public function GetMetadata()
+	{
+		return $this->aMetadata;
 	}
 
 	/**
@@ -230,6 +245,20 @@ abstract class Field
 	public function SetLabel($sLabel)
 	{
 		$this->sLabel = $sLabel;
+		return $this;
+	}
+
+	/**
+	 * Must be an array of $sName => $sValue metadata.
+	 *
+	 * @param array $aMetadata
+	 *
+	 * @return $this
+	 * @since 2.7.0
+	 */
+	public function SetMetadata($aMetadata)
+	{
+		$this->aMetadata = $aMetadata;
 		return $this;
 	}
 
@@ -364,6 +393,21 @@ abstract class Field
 	public function SetOnFinalizeCallback(Closure $onFinalizeCallback)
 	{
 		$this->onFinalizeCallback = $onFinalizeCallback;
+		return $this;
+	}
+
+	/**
+	 * Add a metadata to the field. If the metadata $sName already exists, it will be overwritten.
+	 *
+	 * @param string $sName
+	 * @param string $sValue
+	 *
+	 * @return $this;
+	 * @since 2.7.0
+	 */
+	public function AddMetadata($sName, $sValue)
+	{
+		$this->aMetadata[$sName] = $sValue;
 		return $this;
 	}
 
