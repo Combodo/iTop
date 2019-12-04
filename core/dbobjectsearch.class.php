@@ -699,16 +699,27 @@ class DBObjectSearch extends DBSearch
 		}
 	}
 
-	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
+	/**
+	 * Rename aliases of nested queries to avoid duplicates with main query
+	 *
+	 * @param array $aClassAliases array of alias => class for the main query
+	 * @param array $aAliasTranslation translation table of main query to apply to nested queries
+	 */
+	public function RenameNestedQueriesAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
 	{
-		// Recurse in nested queries
-		$this->GetCriteria()->Browse(function($oNode) use ($aClassAliases, $aAliasTranslation) {
+		$this->GetCriteria()->Browse(function ($oNode) use ($aClassAliases, $aAliasTranslation) {
 			if ($oNode instanceof NestedQueryExpression)
 			{
 				$oNestedQuery = $oNode->GetNestedQuery();
 				$oNestedQuery->RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation);
 			}
 		});
+	}
+
+	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
+	{
+		// Recurse in nested queries
+		$this->RenameNestedQueriesAliasesInNameSpace($aClassAliases, $aAliasTranslation);
 		$this->AddToNameSpace($aClassAliases, $aAliasTranslation);
 		$this->TranslateConditions($aAliasTranslation, false, false);
 	}
@@ -1168,7 +1179,9 @@ class DBObjectSearch extends DBSearch
 			}
 
 			$aAliasTranslation = array();
+			$oLeftFilter->RenameNestedQueriesAliasesInNameSpace($aRootClasses, $aAliasTranslation);
 			$oLeftFilter->MergeWith_InNamespace($oRightFilter, $aRootClasses, $aAliasTranslation);
+			$oRightFilter->RenameNestedQueriesAliasesInNameSpace($aRootClasses, $aAliasTranslation);
 			$oLeftFilter->TransferConditionExpression($oRightFilter, $aAliasTranslation);
 			$aSearches[] = $oLeftFilter;
 		}

@@ -17,6 +17,8 @@ use DBSearch;
  */
 class DBSearchIntersectTest extends ItopDataTestCase
 {
+	const USE_TRANSACTION = false;
+
 	protected function setUp()
 	{
 		parent::setUp();
@@ -132,13 +134,24 @@ class DBSearchIntersectTest extends ItopDataTestCase
 		$oRightSearch = DBSearch::FromOQL($sRightSelect);
 
 		$oResultSearch = $oLeftSearch->Intersect($oRightSearch);
+		$sOQLResult = $oResultSearch->ToOQL();
 		CMDBSource::TestQuery($oResultSearch->MakeSelectQuery());
-		$this->assertEquals($sResult, $oResultSearch->ToOQL());
+		$this->assertEquals($sResult, $sOQLResult);
 	}
 
 	public function IntersectProvider()
 	{
 		$aTests = array();
+
+		$aTests['Nested selects 2'] = array(
+			'left' => "SELECT `U` FROM UserRequest AS `U` WHERE U.agent_id = 3",
+			'right' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))",
+			'result' => "SELECT `U` FROM UserRequest AS `U` JOIN Person AS `P` ON `U`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE ((`U`.`agent_id` = 3) AND (`U`.`org_id` IN (SELECT `Organization1` FROM Organization AS `Organization1` WHERE (`Organization1`.`id` = `U`.`org_id`))))");
+
+		$aTests['Nested selects'] = array(
+			'left' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE (`UserRequest`.`org_id` IN (SELECT `Organization` FROM Organization AS `Organization` WHERE (`Organization`.`id` = `UserRequest`.`org_id`)))",
+			'right' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` WHERE UserRequest.agent_id = 3",
+			'result' => "SELECT `UserRequest` FROM UserRequest AS `UserRequest` JOIN Person AS `P` ON `UserRequest`.agent_id = `P`.id JOIN Organization AS `Organization` ON `P`.org_id = `Organization`.id WHERE ((`UserRequest`.`org_id` IN (SELECT `Organization1` FROM Organization AS `Organization1` WHERE (`Organization1`.`id` = `UserRequest`.`org_id`))) AND (`UserRequest`.`agent_id` = 3))");
 
 		$aTests['Multiple selected classes inverted'] = array(
 			'left' => "SELECT `L`, `P` FROM Person AS `P` JOIN Location AS `L` ON `P`.location_id = `L`.id WHERE 1",

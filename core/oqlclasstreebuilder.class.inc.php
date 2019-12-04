@@ -382,13 +382,7 @@ class OQLClassTreeBuilder
 	 */
 	private function TranslateNestedRequests()
 	{
-		$this->oDBObjetSearch->GetCriteria()->Browse(function($oNode) {
-			if ($oNode instanceof NestedQueryExpression)
-			{
-				$oNestedQuery = $oNode->GetNestedQuery();
-				$aClassAliases = $this->oDBObjetSearch->GetJoinedClasses();
-				$oNestedQuery->RenameAliasesInNameSpace($aClassAliases);
-			}
-		});
+		$aClassAliases = $this->oDBObjetSearch->GetJoinedClasses();
+		$this->oDBObjetSearch->RenameNestedQueriesAliasesInNameSpace($aClassAliases);
 	}
 }

@@ -495,6 +495,7 @@ class OQLToSQLTest extends ItopDataTestCase
 			"SELECT t 143" => array("SELECT `t` FROM TriggerOnObjectUpdate AS `t` WHERE (`t`.`target_class` IN ('appUserPreferences'))", array('t.friendlyname' => true), $aArgs),
 		);
 
+		$aData["SELECT UNION 1"] = array("SELECT `User` FROM User AS `User` WHERE 1 UNION SELECT `User` FROM User AS `User` WHERE (`User`.`id` = 3)", array(), array(), null, array(), 0, 0);
 		$aData["SELECT 1"] = array("SELECT `UserInternal` FROM UserInternal AS `UserInternal` WHERE ((`UserInternal`.`login` = 'admin') AND (`UserInternal`.`status` = 'enabled'))", unserialize('a:1:{s:12:"friendlyname";b:1;}'), array(), null, array(), 0, 0);
 		$aData["SELECT 2"] = array("SELECT `Contact` FROM Contact AS `Contact` WHERE (`Contact`.`id` = '987654321')", array(), array(), null, array(), 0, 0);
 		$aData["SELECT 3"] = array("SELECT `Organization` FROM Organization AS `Organization` WHERE 1", array(), array(), null, array(), 4, 0);
