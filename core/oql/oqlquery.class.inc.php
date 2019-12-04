@@ -200,7 +200,7 @@ class NestedQueryOqlExpression extends NestedQueryExpression implements Checkabl
 	 */
 	public function __construct($oOQLObjectQuery )
 	{
-		parent::__construct(null);
+		parent::__construct($oOQLObjectQuery->ToDBSearch(""));
 		$this->m_oOQLObjectQuery = $oOQLObjectQuery;
 	}
 
