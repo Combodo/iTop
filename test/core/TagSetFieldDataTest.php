@@ -119,17 +119,8 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		$oObjWithTagSet->DBWrite();
 
 		// Try to delete the tag, must complain !
-		try
-		{
-			$oTagData->DBDelete();
-		} catch (DeleteException $e)
-		{
-			static::assertTrue(true);
-
-			return;
-		}
-		// Should not pass here
-		static::assertFalse(true);
+		$this->expectException(DeleteException::class);
+		$oTagData->DBDelete();
 	}
 
 	/**
@@ -217,19 +208,9 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		$oObjWithTagSet->DBWrite();
 
 		// Try to change the code of the tag, must complain !
-		try
-		{
-			$oTagData->Set('code', 'tag1');
-			$oTagData->DBWrite();
-
-		} catch (CoreException $e)
-		{
-			static::assertTrue(true);
-
-			return;
-		}
-		// Should not pass here
-		static::assertFalse(true);
+		$oTagData->Set('code', 'tag1');
+		$this->expectException(CoreException::class);
+		$oTagData->DBWrite();
 	}
 
 	/**
