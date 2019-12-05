@@ -69,6 +69,7 @@ class OQLTest extends ItopDataTestCase
 			array("SELECT UserRequest AS Ur WHERE Ur.id NOT IN (SELECT UserRequest AS Ur JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = Ur.id)"),
 			array("SELECT Ticket AS T WHERE T. finalclass IN ('userrequest' , 'change') AND T.id  NOT IN (SELECT UserRequest AS Ur JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = Ur.id  UNION SELECT Change AS C JOIN lnkFunctionalCIToTicket AS lnk ON lnk.ticket_id = C.id)"),
 			array("SELECT PhysicalDevice WHERE status='production' AND id NOT IN (SELECT PhysicalDevice AS p JOIN lnkFunctionalCIToProviderContract AS l ON l.functionalci_id=p.id)"),
+			array("SELECT Team WHERE id NOT IN (SELECT Team AS t JOIN lnkPersonToTeam AS l ON l.team_id=t.id WHERE 1)"),
 		);
 	}
 
@@ -417,6 +418,10 @@ class OQLTest extends ItopDataTestCase
 			array("SELECT `T` FROM Ticket AS `T` WHERE ((`T`.`finalclass` IN ('userrequest', 'change')) AND (`T`.`id` NOT IN (SELECT `Ur` FROM UserRequest AS `Ur` JOIN lnkFunctionalCIToTicket AS `lnk` ON `lnk`.ticket_id = `Ur`.id WHERE 1 UNION SELECT `C` FROM Change AS `C` JOIN lnkFunctionalCIToTicket AS `lnk` ON `lnk`.ticket_id = `C`.id WHERE 1)))"),
 			array("SELECT `PhysicalDevice` FROM PhysicalDevice AS `PhysicalDevice` WHERE ((`PhysicalDevice`.`status` = 'production') AND (`PhysicalDevice`.`id` NOT IN (SELECT `p` FROM PhysicalDevice AS `p` JOIN lnkFunctionalCIToProviderContract AS `l` ON `l`.functionalci_id = `p`.id WHERE 1)))"),
 			array("SELECT `U` FROM User AS `U` JOIN Person AS `P` ON `U`.contactid = `P`.id WHERE ((`U`.`status` = 'enabled') AND (`U`.`id` NOT IN (SELECT `U` FROM User AS `U` JOIN Person AS `P` ON `U`.contactid = `P`.id JOIN URP_UserOrg AS `L` ON `L`.userid = `U`.id WHERE ((`U1`.`status` = 'enabled') AND (`L`.`allowed_org_id` = `P`.`org_id`)) UNION SELECT `U` FROM User AS `U` WHERE ((`U`.`status` = 'enabled') AND (`U`.`id` NOT IN (SELECT `U` FROM User AS `U` JOIN URP_UserOrg AS `L` ON `L`.userid = `U`.id WHERE (`U`.`status` = 'enabled')))))))", "OqlNormalizeException"),
+			array("SELECT Team WHERE id NOT IN (SELECT Team AS t JOIN lnkPersonToTeam AS l ON l.team_id=t.id WHERE 1)"),
+			array("SELECT UserRequest WHERE id NOT IN (SELECT UserRequest AS u JOIN lnkFunctionalCIToTicket AS l ON l.ticket_id=u.id JOIN PhysicalDevice AS f ON l.functionalci_id=f.id WHERE f.status='production')"),
+			array("SELECT UserRequest WHERE id NOT IN (SELECT UserRequest AS u JOIN lnkFunctionalCIToTicket AS l ON l.ticket_id=u.id JOIN PhysicalDevice AS f ON l.functionalci_id=f.id WHERE f.status='production' UNION SELECT UserRequest AS u JOIN lnkFunctionalCIToTicket AS l ON l.ticket_id=u.id JOIN ApplicationSolution AS f ON l.functionalci_id=f.id WHERE f.status='active')"),
+			array("SELECT Person WHERE status='active' AND id NOT IN (SELECT Person AS p JOIN User AS u ON u.contactid=p.id WHERE u.status='enabled')"),
 		);
 	}
 
