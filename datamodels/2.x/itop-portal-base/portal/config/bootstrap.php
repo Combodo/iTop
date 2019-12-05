@@ -147,10 +147,6 @@ if (empty($_ENV['PORTAL_ID']))
 	exit;
 }
 
-// Stacking context tag so it knows we are in the portal
-$oContext = new ContextTag('GUI:Portal');
-$oContext2 = new ContextTag('Portal:' . $_ENV['PORTAL_ID']);
-
 // Env. vars to be used in templates and others
 $_ENV['COMBODO_CURRENT_ENVIRONMENT'] = utils::GetCurrentEnvironment();
 $_ENV['COMBODO_ABSOLUTE_URL'] = utils::GetAbsoluteUrlAppRoot();
