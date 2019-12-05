@@ -12,10 +12,13 @@
 			{% elseif bBadToken and sErrorMessage is null %}
 				<p>{{ 'UI:ResetPwd-Error-InvalidToken'|dict_s }}</p>
 			{% else %}
+				{% if sUserName is not empty %}
+					<p>{{ 'UI:ResetPwd-Error-EnterPassword'|dict_format(sUserName) }}</p>
+				{% endif %}
+
 				{% if sErrorMessage is not null %}
 					<p class="hilite">{{ sErrorMessage|raw }}</p>
 				{% endif %}
-				<p>{{ 'UI:ResetPwd-Error-EnterPassword'|dict_format(sUserName) }}</p>
 			</div>
 			<div id="login-form">
 					<form method="post">

@@ -267,6 +267,7 @@ class LoginWebPage extends NiceWebPage
 		else
 		{
 			$aVars['bNoUser'] = false;
+			$aVars['sUserName'] = $oUser->GetFriendlyName();
 			$oEncryptedToken = $oUser->Get('reset_pwd_token');
 
 			if (!$oEncryptedToken->CheckPassword($sToken))
@@ -276,7 +277,6 @@ class LoginWebPage extends NiceWebPage
 			else
 			{
 				$aVars['bBadToken'] = false;
-				$aVars['sUserName'] = $oUser->GetFriendlyName();
 			}
 		}
 
