@@ -683,6 +683,11 @@ class SetupUtils
 	 */
 	public static function builddir($dir)
 	{
+		if (empty($dir))
+		{
+			// avoid infinite loops :/
+			return;
+		}
 		if (!is_dir($dir))
 		{
 			$parent = dirname($dir);
