@@ -1427,7 +1427,11 @@
 						mode). Default is false. -->
 						<!--<always_show_submit>false</always_show_submit>-->
 						<!-- Optional, navigation rules to define where to go when clicking on the submit/cancel buttons of the form -->
-						<!-- <navigation_rules / -->
+						<navigation_rules>
+              <submit>
+                <default>go-to-open-requests</default>
+              </submit>
+            </navigation_rules>
 					</properties>
 					<fields></fields>
 					<twig>
@@ -1485,6 +1489,13 @@
 				</form>
 				<form id="ticket-reopen">
 					<class>Ticket</class>
+					<properties>
+						<navigation_rules>
+              <submit>
+                <default>go-to-open-requests</default>
+              </submit>
+            </navigation_rules>
+					</properties>
 					<fields />
 					<twig>
 						<div>
@@ -1503,6 +1514,13 @@
 				</form>
 				<form id="ticket-apply-stimulus">
 					<class>Ticket</class>
+					<properties>
+						<navigation_rules>
+              <submit>
+                <default>go-to-open-requests</default>
+              </submit>
+            </navigation_rules>
+					</properties>
 					<fields />
 					<twig />
 					<modes>

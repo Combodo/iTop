@@ -70,11 +70,11 @@ class NavigationRuleHelper
 	/** @var string DEFAULT_RULE_SUBMIT_PAGE */
 	const DEFAULT_RULE_SUBMIT_PAGE = self::ENUM_RULE_GO_TO_OBJECT;
 	/** @var string DEFAULT_RULE_SUBMIT_MODAL */
-	const DEFAULT_RULE_SUBMIT_MODAL = self::DEFAULT_RULE_SUBMIT_PAGE;
+	const DEFAULT_RULE_SUBMIT_MODAL = self::ENUM_RULE_CLOSE;
 	/** @var string DEFAULT_RULE_CANCEL_PAGE */
 	const DEFAULT_RULE_CANCEL_PAGE = self::ENUM_RULE_CLOSE;
 	/** @var string DEFAULT_RULE_CANCEL_MODAL */
-	const DEFAULT_RULE_CANCEL_MODAL = self::DEFAULT_RULE_CANCEL_PAGE;
+	const DEFAULT_RULE_CANCEL_MODAL = self::ENUM_RULE_CLOSE;
 
 	// Rule go-to-object properties
 	/** @var string DEFAULT_RULE_GO_TO_OBJECT_PROP_MODE */
@@ -230,6 +230,19 @@ class NavigationRuleHelper
 	//-------------------------
 	// Default rules definition
 	//-------------------------
+
+	/**
+	 * Return the default definition of a rule based on the $sType (close, go-to-homepage, go-to-brick, ...)
+	 *
+	 * @param string $sRuleType
+	 *
+	 * @return array
+	 */
+	public function GetDefaultRuleDefinitionFromType($sRuleType)
+	{
+		$sRuleFunctionName = 'GetDefault'.utils::ToCamelCase($sRuleType).'RuleDefinition';
+		return $this->$sRuleFunctionName();
+	}
 
 	/**
 	 * Return the default definition of the "Close" rule
@@ -570,13 +583,14 @@ class NavigationRuleHelper
 				switch($sButtonCode)
 				{
 					case 'submit':
-						$aRuleDef = $this->GetDefaultGoToObjectRuleDefinition();
+						$sDefaultRuleType = ($bIsCurrentFormInModal) ? static::DEFAULT_RULE_SUBMIT_MODAL : static::DEFAULT_RULE_SUBMIT_PAGE;
 						break;
 
 					case 'cancel':
-						$aRuleDef = $this->GetDefaultCloseRuleDefinition();
+						$sDefaultRuleType = ($bIsCurrentFormInModal) ? static::DEFAULT_RULE_CANCEL_MODAL : static::DEFAULT_RULE_CANCEL_PAGE;
 						break;
 				}
+				$aRuleDef = $this->GetDefaultRuleDefinitionFromType($sDefaultRuleType);
 			}
 			// - Specified rule
 			else

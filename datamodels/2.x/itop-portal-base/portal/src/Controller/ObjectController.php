@@ -38,6 +38,7 @@ use FalseExpression;
 use FieldExpression;
 use FileUploadException;
 use IssueLog;
+use JSButtonItem;
 use ListExpression;
 use MetaModel;
 use ScalarExpression;
@@ -45,7 +46,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use URLButtonItem;
 use UserRights;
 use utils;
 use VariableExpression;
@@ -129,13 +129,14 @@ class ObjectController extends BrickController
 		// Add an edit button if user is allowed
 		if ($oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId))
 		{
-			$oModifyButton = new URLButtonItem(
+			$sModifyUrl = $oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId));
+			$oModifyButton = new JSButtonItem(
 				'modify_object',
 				Dict::S('UI:Menu:Modify'),
-				$oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId))
+				'CombodoPortalToolbox.OpenUrlInModal("'.$sModifyUrl.'");'
 			);
 			// Putting this one first
-			$aData['form']['buttons']['links'][] = $oModifyButton->GetMenuItem();
+			$aData['form']['buttons']['actions'][] = $oModifyButton->GetMenuItem() + array('js_files' => $oModifyButton->GetLinkedScripts());
 		}
 
 		// Preparing response
