@@ -194,7 +194,7 @@ class ApplicationMenu
 
 	/**
 	 * Entry point to display the whole menu into the web page, used by iTopWebPage
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param $aExtraParams
 	 * @throws DictExceptionMissingString
 	 */
@@ -263,7 +263,7 @@ EOF
 
 	/**
 	 * Handles the display of the sub-menus (called recursively if necessary)
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param array $aMenus
 	 * @param array $aExtraParams
 	 * @param int $iActiveMenu
@@ -296,7 +296,9 @@ EOF
 					{
 						$sLinkTarget .= ' target="_blank"';
 					}
-					$sItemHtml .= '<a href="'.$oMenu->GetHyperlink($aExtraParams).'"'.$sLinkTarget.'>'.$oMenu->GetTitle().'</a>';
+					$sURL = '"'.$oMenu->GetHyperlink($aExtraParams).'"'.$sLinkTarget;
+					$sTitle = $oMenu->GetTitle();
+					$sItemHtml .= "<a href={$sURL}>{$sTitle}</a>";
 				}
 				else
 				{

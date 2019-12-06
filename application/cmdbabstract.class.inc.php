@@ -464,7 +464,7 @@ EOF
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param $sAttCode
 	 *
 	 * @throws \Exception
@@ -1858,7 +1858,7 @@ HTML
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 * @param \AttributeDefinition $oAttDef
@@ -2028,12 +2028,12 @@ EOF
 				case 'CaseLog':
 					$aStyles = array();
 					$sStyle = '';
-					$sWidth = $oAttDef->GetWidth('width', '');
+					$sWidth = $oAttDef->GetWidth();
 					if (!empty($sWidth))
 					{
 						$aStyles[] = 'width:'.$sWidth;
 					}
-					$sHeight = $oAttDef->GetHeight('height', '');
+					$sHeight = $oAttDef->GetHeight();
 					if (!empty($sHeight))
 					{
 						$aStyles[] = 'height:'.$sHeight;

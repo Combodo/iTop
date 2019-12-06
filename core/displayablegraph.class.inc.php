@@ -265,7 +265,7 @@ class DisplayableNode extends GraphNode
 	/**
 	 * Retrieves the list of neighbour nodes, in the given direction: 'up' or 'down'
 	 * @param bool $bDirectionDown
-	 * @return multitype:NULL
+	 * @return mixed|NULL
 	 */
 	protected function GetNextNodes($bDirectionDown = true)
 	{
@@ -1418,16 +1418,24 @@ class DisplayableGraph extends SimpleGraph
 		}
 		return $aContextDefs;
 	}
-	
+
 	/**
 	 * Display the graph inside the given page, with the "filter" drawer above it
+	 *
 	 * @param WebPage $oP
-	 * @param hash $aResults
+	 * @param array $aResults
 	 * @param string $sRelation
 	 * @param ApplicationContext $oAppContext
 	 * @param array $aExcludedObjects
+	 * @param string $sObjClass
+	 * @param int $iObjKey
+	 * @param string $sContextKey
+	 * @param array $aContextParams
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
 	 */
-	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects = array(), $sObjClass = null, $iObjKey = null, $sContextKey, $aContextParams = array())
+	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array())
 	{	
 		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
 		$aExcludedByClass = array();

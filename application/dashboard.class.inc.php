@@ -53,6 +53,7 @@ abstract class Dashboard
 	/**
 	 * @param $sXml
 	 *
+	 * @throws \DOMException
 	 * @throws \Exception
 	 */
 	public function FromXml($sXml)
@@ -64,7 +65,10 @@ abstract class Dashboard
 		restore_error_handler();
 		$this->FromDOMDocument($oDoc);
 	}
-	
+
+	/**
+	 * @param \DOMDocument $oDoc
+	 */
 	public function FromDOMDocument(DOMDocument $oDoc)
 	{
 		$this->oDOMNode = $oDoc->getElementsByTagName('dashboard')->item(0);
@@ -449,7 +453,7 @@ EOF
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 * @param bool $bCanEdit
@@ -713,7 +717,7 @@ class RuntimeDashboard extends Dashboard
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams (class and id of the current object
 	 *
@@ -977,7 +981,7 @@ EOF
 
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 *
 	 * @param array $aExtraParams
 	 *

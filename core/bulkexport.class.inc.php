@@ -171,6 +171,7 @@ abstract class BulkExport
 			$oRefClass = new ReflectionClass($sPHPClass);
 			if ($oRefClass->isSubclassOf('BulkExport') && !$oRefClass->isAbstract())
 			{
+				/** @var BulkExport $oBulkExporter */
 				$oBulkExporter = new $sPHPClass();
 				if ($oBulkExporter->IsFormatSupported($sFormatCode, $oSearch))
 				{
@@ -190,7 +191,7 @@ abstract class BulkExport
      *
      * @param int $iPersistentToken The identifier of the BulkExportResult object storing the information
      *
-     * @return iBulkExport|null
+     * @return BulkExport|null
      * @throws ArchivedObjectException
      * @throws CoreException
      * @throws ReflectionException
