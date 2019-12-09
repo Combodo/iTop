@@ -7528,9 +7528,12 @@ abstract class MetaModel
 			$sKey = self::DBGetKey($sClass);
 			$sRootKey = self::DBGetKey($sRootClass);
 			$sRootField = self::DBGetClassField($sRootClass);
-			// Copy the finalclass of the root table
-			$sRequest = "UPDATE `$sTable`,`$sRootTable` SET  `$sTable`.`$sField` = `$sRootTable`.`$sRootField` WHERE `$sTable`.`$sKey` = `$sRootTable`.`$sRootKey`";
-			$aRequests[] = $sRequest;
+			if ($sTable != $sRootTable)
+			{
+				// Copy the finalclass of the root table
+				$sRequest = "UPDATE `$sTable`,`$sRootTable` SET  `$sTable`.`$sField` = `$sRootTable`.`$sRootField` WHERE `$sTable`.`$sKey` = `$sRootTable`.`$sRootKey`";
+				$aRequests[] = $sRequest;
+			}
 		}
 
 		return $aRequests;
