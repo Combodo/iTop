@@ -16,6 +16,8 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Symfony\Component\DependencyInjection\Container;
+
 require_once(APPROOT.'application/newsroomprovider.class.inc.php');
 
 /**
@@ -864,65 +866,65 @@ interface iPortalUIExtension
 	/**
 	 * Returns an array of CSS file urls
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return array
 	 */
-	public function GetCSSFiles(\Silex\Application $oApp);
+	public function GetCSSFiles(Container $oContainer);
 
 	/**
 	 * Returns inline (raw) CSS
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
 	 */
-	public function GetCSSInline(\Silex\Application $oApp);
+	public function GetCSSInline(Container $oContainer);
 
 	/**
 	 * Returns an array of JS file urls
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return array
 	 */
-	public function GetJSFiles(\Silex\Application $oApp);
+	public function GetJSFiles(Container $oContainer);
 
 	/**
 	 * Returns raw JS code
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
 	 */
-	public function GetJSInline(\Silex\Application $oApp);
+	public function GetJSInline(Container $oContainer);
 
 	/**
 	 * Returns raw HTML code to put at the end of the <body> tag
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
 	 */
-	public function GetBodyHTML(\Silex\Application $oApp);
+	public function GetBodyHTML(Container $oContainer);
 
 	/**
 	 * Returns raw HTML code to put at the end of the #main-wrapper element
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
 	 */
-	public function GetMainContentHTML(\Silex\Application $oApp);
+	public function GetMainContentHTML(Container $oContainer);
 
 	/**
 	 * Returns raw HTML code to put at the end of the #topbar and #sidebar elements
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
 	 */
-	public function GetNavigationMenuHTML(\Silex\Application $oApp);
+	public function GetNavigationMenuHTML(Container $oContainer);
 }
 
 /**
@@ -933,7 +935,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetCSSFiles(\Silex\Application $oApp)
+	public function GetCSSFiles(Container $oContainer)
 	{
 		return array();
 	}
@@ -941,7 +943,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetCSSInline(\Silex\Application $oApp)
+	public function GetCSSInline(Container $oContainer)
 	{
 		return null;
 	}
@@ -949,7 +951,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetJSFiles(\Silex\Application $oApp)
+	public function GetJSFiles(Container $oContainer)
 	{
 		return array();
 	}
@@ -957,7 +959,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetJSInline(\Silex\Application $oApp)
+	public function GetJSInline(Container $oContainer)
 	{
 		return null;
 	}
@@ -965,7 +967,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetBodyHTML(\Silex\Application $oApp)
+	public function GetBodyHTML(Container $oContainer)
 	{
 		return null;
 	}
@@ -973,7 +975,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetMainContentHTML(\Silex\Application $oApp)
+	public function GetMainContentHTML(Container $oContainer)
 	{
 		return null;
 	}
@@ -981,7 +983,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetNavigationMenuHTML(\Silex\Application $oApp)
+	public function GetNavigationMenuHTML(Container $oContainer)
 	{
 		return null;
 	}
