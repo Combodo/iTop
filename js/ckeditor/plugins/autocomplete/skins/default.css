@@ -1,0 +1,51 @@
+/*
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+.cke_autocomplete_panel
+{
+	position: absolute;
+	display: none;
+	box-sizing: border-box;
+	width: 200px;
+	max-height: 300px;
+	overflow: auto;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	background: #FFF;
+	border: 1px solid #b6b6b6;
+	border-bottom-color: #999;
+	border-radius: 3px;
+	font: 12px Arial, Helvetica, Tahoma, Verdana, Sans-Serif;
+}
+.cke_autocomplete_opened
+{
+	display: block;
+}
+.cke_autocomplete_panel > li
+{
+	padding: 5px;
+}
+.cke_autocomplete_panel > li:hover
+{
+	cursor: pointer;
+}
+.cke_autocomplete_selected, .cke_autocomplete_panel > li:hover
+{
+	background-color: #EFF0EF;
+}

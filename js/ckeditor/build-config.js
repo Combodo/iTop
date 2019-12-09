@@ -1,6 +1,19 @@
-﻿/**
- * @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
- * For licensing, see LICENSE.md or https://ckeditor.com/license
+﻿/*
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 /**
@@ -13,10 +26,10 @@
  * (1) https://ckeditor.com/cke4/builder
  *     Visit online builder to build CKEditor from scratch.
  *
- * (2) https://ckeditor.com/cke4/builder/89a06079afffa0a1d17633ad92d938eb
+ * (2) https://ckeditor.com/cke4/builder/300274e4a17716c9eba05206734cd435
  *     Visit online builder to build CKEditor, starting with the same setup as before.
  *
- * (3) https://ckeditor.com/cke4/builder/download/89a06079afffa0a1d17633ad92d938eb
+ * (3) https://ckeditor.com/cke4/builder/download/300274e4a17716c9eba05206734cd435
  *     Straight download link to the latest version of CKEditor (Optimized) with the same setup as before.
  *
  * NOTE:
@@ -78,8 +91,10 @@ var CKBUILDER_CONFIG = {
 		'list' : 1,
 		'magicline' : 1,
 		'maximize' : 1,
+		'mentions' : 1,
 		'pastefromword' : 1,
 		'pastetext' : 1,
+		'pastetools' : 1,
 		'removeformat' : 1,
 		'resize' : 1,
 		'scayt' : 1,

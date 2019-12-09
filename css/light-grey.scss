@@ -1080,7 +1080,7 @@ input.dp-applied {
 				vertical-align: top;
 				border: $search-criteria-box-border;
 				border-radius: $search-criteria-box-radius;
-				box-shadow: $box-shadow-regular;
+				box-shadow: $box-shadow-lightest;
 			}
 			.sfc_form_group,
 			.sfm_content{
@@ -3836,6 +3836,37 @@ input:checked + .slider:before {
 	font-size: 12px;
 	margin-bottom: 0.5em;
 } 
+
+/* Mentions in caselogs */
+/* Note: Mind the "ul", it allows us to have a more precise rule than the original plugin's CSS so we can override it */
+ul.cke_autocomplete_panel{
+	border: none;
+	border-radius: 0;
+	box-shadow: $box-shadow-regular;
+
+	.mentions_item{
+		display: flex;
+		justify-content: left;
+		align-items: center;
+
+		> [role="image"]{
+			width: 25px;
+			height: 25px;
+			background-position: center center;
+			background-size: 100%;
+			border-radius: 100%;
+			margin-right: 0.5rem;
+			background-color: $mentions-item-image-bg-color;
+			border: $mentions-item-image-border;
+		}
+		> [role="friendlyname"]{
+			color: #3a3a3a;
+			font-size: 0.75rem;
+			font-weight: bold;
+		}
+	}
+}
+
 
 .clearboth {
 	clear: both;

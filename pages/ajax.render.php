@@ -2784,6 +2784,45 @@ EOF
 			$oPage->add("</fieldset></div>");
 			break;
 
+		case 'cke_mentions':
+			$oPage->SetContentType('application/json');
+			$sTargetClass = utils::ReadParam('target_class', '', false, 'class');
+			$sNeedle = utils::ReadParam('needle', '', false, 'raw_data');
+
+			// Check parameters
+			if($sTargetClass === '')
+			{
+				throw new Exception('Invalid parameters, target_class must be specified.');
+			}
+
+			$aMatches = array();
+			if ($sNeedle !== '')
+			{
+				$sObjectPictureAttCode = 'picture';
+
+				$oSearch = DBObjectSearch::FromOQL("SELECT $sTargetClass WHERE friendlyname LIKE :needle");
+				$oSet = new DBObjectSet($oSearch, array(), array('needle' => "%$sNeedle%"));
+				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
+				$oSet->SetLimit(5);
+				// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
+				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
+
+				while($oObject = $oSet->Fetch())
+				{
+					$iObjectId = $oObject->GetKey();
+					/** @var \ormDocument $oImage */
+					$oImage = $oObject->Get($sObjectPictureAttCode);
+					$aMatches[] = array(
+						'id' => $iObjectId,
+						'friendlyname' => $oObject->Get('friendlyname'),
+						'picture_url' => $oImage->GetDisplayURL($sTargetClass, $iObjectId, $sObjectPictureAttCode),
+					);
+				}
+			}
+
+			$oPage->add(json_encode($aMatches));
+			break;
+
 		case 'custom_fields_update':
 			$oPage->SetContentType('application/json');
 			$sAttCode = utils::ReadParam('attcode', '');

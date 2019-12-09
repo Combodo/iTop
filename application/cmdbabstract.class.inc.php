@@ -2077,8 +2077,28 @@ EOF
 					$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
 					$aConfig['language'] = $sLanguage;
 					$aConfig['contentsLanguage'] = $sLanguage;
-					$aConfig['extraPlugins'] = 'disabler,codesnippet';
+					$aConfig['extraPlugins'] = 'disabler, codesnippet, mentions';
 					$aConfig['placeholder'] = Dict::S('UI:CaseLogTypeYourTextHere');
+					// - Mentions
+					$sMentionsEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&target_class=Person&needle={encodedQuery}';
+					$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=Person&id={id}';
+					$sMentionItemTemplate = <<<HTML
+<li class="mentions_item" data-id="{id}"><span role="image" style="background-image: url('{picture_url}');"></span><span role="friendlyname">{friendlyname}</span></li>
+HTML;
+					$sMentionOutputTemplate = <<<HTML
+<a href="$sMentionItemUrl">{friendlyname}</a>
+HTML;
+					$aConfig['mentions'] = array(
+						array(
+							'feed' => $sMentionsEndpoint,
+							'marker' => '@',
+							'minChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
+							'itemTemplate' => $sMentionItemTemplate,
+							'outputTemplate' => $sMentionOutputTemplate,
+							'throttle' => 500,
+						),
+					);
+					// - Final config
 					$sConfigJS = json_encode($aConfig);
 
 					$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit

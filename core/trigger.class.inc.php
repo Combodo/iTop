@@ -1,30 +1,21 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Persistent class Trigger and derived
- * User defined triggers, that may be used in conjunction with user defined actions
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
-
 
 /**
  * A user defined trigger, to customize the application
@@ -527,6 +518,68 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 		}
 	}
 
+}
+
+/**
+ * Class TriggerOnObjectMention
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 2.7.0
+ */
+class TriggerOnObjectMention extends TriggerOnObject
+{
+	/**
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "grant_by_profile,core/cmdb,application",
+			"key_type" => "autoincrement",
+			"name_attcode" => "description",
+			"state_attcode" => "",
+			"reconc_keys" => array('description'),
+			"db_table" => "priv_trigger_onobjmention",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
+	}
+
+//	public function IsTargetObject($iObjectId, $aChanges = array())
+//	{
+//		if (!parent::IsTargetObject($iObjectId, $aChanges))
+//		{
+//			return false;
+//		}
+//
+//		// Check the attribute
+//		$oAttCodeSet = $this->Get('target_attcodes');
+//		$aAttCodes = $oAttCodeSet->GetValues();
+//		if (empty($aAttCodes))
+//		{
+//			return true;
+//		}
+//
+//		foreach($aAttCodes as $sAttCode)
+//		{
+//			if (array_key_exists($sAttCode, $aChanges))
+//			{
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 }
 
 /**

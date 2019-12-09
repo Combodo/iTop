@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2010-2019 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 /**
  * All objects to be displayed in the application (either as a list or as details)
@@ -3079,6 +3080,7 @@ abstract class DBObject implements iDisplay
 			$aOriginalValues = $this->m_aOrigValues;
 
 			// Activate any existing trigger
+			// - TriggerOnObjectUpdate
 			$sClass = get_class($this);
 			$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
 			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"),
@@ -3087,6 +3089,65 @@ abstract class DBObject implements iDisplay
 			{
 				/** @var \Trigger $oTrigger */
 				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+			// - TriggerOnObjectMention
+			//   1 - Check if any caselog updated
+			$aUpdatedLogAttCodes = array();
+			foreach($aChanges as $sAttCode => $value)
+			{
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+				if($oAttDef instanceof AttributeCaseLog)
+				{
+					$aUpdatedLogAttCodes[] = $sAttCode;
+				}
+			}
+			//   2 - Find mentioned objects
+			$aMentionedObjects = array();
+			foreach($aUpdatedLogAttCodes as $sAttCode)
+			{
+				/** @var \ormCaseLog $oUpdatedCaseLog */
+				$oUpdatedCaseLog = $this->Get($sAttCode);
+				$aMentionMatches = array();
+				// Note: As the sanitizer removes data-* attributes from the hyperlink, we can't use the following (simpler) regexp: '/<a\s*([^>]*)data-object-class="([^"]*)"\s*data-object-id="([^"]*)">/i'
+				// If we change the sanitizer, we might want to use this regexp as it's easier to read
+				$sAppRootUrlForRegExp = addcslashes(utils::GetAbsoluteUrlAppRoot(), '/&');
+				preg_match_all("/\[([^\]]*)\]\({$sAppRootUrlForRegExp}[^\)]*\&class=([^\)\&]*)\&id=([\d]*)[^\)]*\)/i", $oUpdatedCaseLog->GetModifiedEntry(), $aMentionMatches);
+
+				foreach($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch)
+				{
+					$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
+					$sMatchedId = $aMentionMatches[3][$iMatchIdx];
+
+					// Prepare array for matched class if not already present
+					if(!array_key_exists($sMatchedClass, $aMentionedObjects))
+					{
+						$aMentionedObjects[$sMatchedClass] = array();
+					}
+					// Add matched ID if not already there
+					if(!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass]))
+					{
+						$aMentionedObjects[$sMatchedClass][] = $sMatchedId;
+					}
+				}
+			}
+			//   3 - Trigger for those objects
+			foreach($aMentionedObjects as $sMentionedClass => $aMentionedIds)
+			{
+				foreach($aMentionedIds as $sMentionedId)
+				{
+					/** @var \DBObject $oMentionedObject */
+					$oMentionedObject = MetaModel::GetObject($sMentionedClass, $sMentionedId);
+					$aTriggerArgs = $this->ToArgs('this') + array('mentioned->object()' => $oMentionedObject);
+
+					$aParams = array('class_list' => MetaModel::EnumParentClasses($sMentionedClass, ENUM_PARENT_CLASSES_ALL));
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"),
+						array(), $aParams);
+					while ($oTrigger = $oSet->Fetch())
+					{
+						/** @var \Trigger $oTrigger */
+						$oTrigger->DoActivate($aTriggerArgs);
+					}
+				}
 			}
 
 			$bHasANewExternalKeyValue = false;
