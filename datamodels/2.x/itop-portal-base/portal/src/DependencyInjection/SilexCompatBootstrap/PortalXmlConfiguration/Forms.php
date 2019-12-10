@@ -50,266 +50,263 @@ class Forms extends AbstractConfiguration
 			try
 			{
 				// Parsing form id
+				$sFormId = $oFormNode->getAttribute('id');
 				if ($oFormNode->getAttribute('id') === '')
 				{
 					throw new DOMFormatException('form tag must have an id attribute', null, null, $oFormNode);
 				}
 
 				// Parsing form object class
-				if ($oFormNode->GetUniqueElement('class')->GetText() !== null)
+				if ($oFormNode->GetUniqueElement('class')->GetText() === null)
 				{
-					// Parsing class
-					$sFormClass = $oFormNode->GetUniqueElement('class')->GetText();
+					throw new DOMFormatException('Class tag must be defined', null, null, $oFormNode);
+				}
 
-					// Parsing properties
-					$aFormProperties = array(
-						'display_mode' => ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE,
-						'always_show_submit' => ApplicationHelper::FORM_DEFAULT_ALWAYS_SHOW_SUBMIT,
-						'navigation_rules' => array(
-							'submit' => array(
-								NavigationRuleHelper::ENUM_ORIGIN_PAGE => null,
-								NavigationRuleHelper::ENUM_ORIGIN_MODAL => null,
-							),
-							'cancel' => array(
-								NavigationRuleHelper::ENUM_ORIGIN_PAGE => null,
-								NavigationRuleHelper::ENUM_ORIGIN_MODAL => null,
-							),
+				// Parsing class
+				$sFormClass = $oFormNode->GetUniqueElement('class')->GetText();
+
+				// Parsing properties
+				$aFormProperties = array(
+					'display_mode' => ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE,
+					'always_show_submit' => ApplicationHelper::FORM_DEFAULT_ALWAYS_SHOW_SUBMIT,
+					'navigation_rules' => array(
+						'submit' => array(
+							NavigationRuleHelper::ENUM_ORIGIN_PAGE => null,
+							NavigationRuleHelper::ENUM_ORIGIN_MODAL => null,
 						),
-					);
+						'cancel' => array(
+							NavigationRuleHelper::ENUM_ORIGIN_PAGE => null,
+							NavigationRuleHelper::ENUM_ORIGIN_MODAL => null,
+						),
+					),
+				);
 
-					$aAllowedNavRulesButtonCodes = array_keys($aFormProperties['navigation_rules']);
-					if ($oFormNode->GetOptionalElement('properties') !== null)
+				$aAllowedNavRulesButtonCodes = array_keys($aFormProperties['navigation_rules']);
+				if ($oFormNode->GetOptionalElement('properties') !== null)
+				{
+					/** @var \MFElement $oPropertyNode */
+					foreach ($oFormNode->GetOptionalElement('properties')->GetNodes('*') as $oPropertyNode)
 					{
-						/** @var \MFElement $oPropertyNode */
-						foreach ($oFormNode->GetOptionalElement('properties')->GetNodes('*') as $oPropertyNode)
+						switch ($oPropertyNode->nodeName)
 						{
-							switch ($oPropertyNode->nodeName)
-							{
-								case 'display_mode':
-									$aFormProperties['display_mode'] = $oPropertyNode->GetText(ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE);
-									break;
+							case 'display_mode':
+								$aFormProperties['display_mode'] = $oPropertyNode->GetText(ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE);
+								break;
 
-								case 'always_show_submit':
-									$aFormProperties['always_show_submit'] = ($oPropertyNode->GetText('false') === 'true') ? true : false;
-									break;
+							case 'always_show_submit':
+								$aFormProperties['always_show_submit'] = ($oPropertyNode->GetText('false') === 'true') ? true : false;
+								break;
 
-								case 'navigation_rules':
-									/** @var \MFElement $oNavRuleButtonNode */
-									foreach($oPropertyNode->GetNodes('*') as $oNavRuleButtonNode)
+							case 'navigation_rules':
+								/** @var \MFElement $oNavRuleButtonNode */
+								foreach($oPropertyNode->GetNodes('*') as $oNavRuleButtonNode)
+								{
+									$sNavRuleButtonCode = $oNavRuleButtonNode->nodeName;
+									if(!in_array($sNavRuleButtonCode, $aAllowedNavRulesButtonCodes))
 									{
-										$sNavRuleButtonCode = $oNavRuleButtonNode->nodeName;
-										if(!in_array($sNavRuleButtonCode, $aAllowedNavRulesButtonCodes))
+										throw new DOMFormatException('navigation_rules tag must only contain '.implode('|', $aAllowedNavRulesButtonCodes).' tags, "'.$sNavRuleButtonCode.'" given.', null, null, $oPropertyNode);
+									}
+
+									/** @var \MFElement $oNavRuleOriginNode */
+									foreach($oNavRuleButtonNode->GetNodes('*') as $oNavRuleOriginNode)
+									{
+										$sNavRuleOrigin = $oNavRuleOriginNode->nodeName;
+										if(!in_array($sNavRuleOrigin, NavigationRuleHelper::GetAllowedOrigins()))
 										{
-											throw new DOMFormatException('navigation_rules tag must only contain '.implode('|', $aAllowedNavRulesButtonCodes).' tags, "'.$sNavRuleButtonCode.'" given.', null, null, $oPropertyNode);
+											throw new DOMFormatException($sNavRuleButtonCode. ' tag must only contain '.implode('|', NavigationRuleHelper::GetAllowedOrigins()).' tags, "'.$sNavRuleOrigin.'" given.', null, null, $oPropertyNode);
 										}
 
-										/** @var \MFElement $oNavRuleOriginNode */
-										foreach($oNavRuleButtonNode->GetNodes('*') as $oNavRuleOriginNode)
+										$sNavRuleId = $oNavRuleOriginNode->GetText();
+										// Note: We don't check is rule exists as it would introduce a dependency to the NavigationRuleHelper service.
+										// Maybe we will consider it later.
+										if(empty($sNavRuleId))
 										{
-											$sNavRuleOrigin = $oNavRuleOriginNode->nodeName;
-											if(!in_array($sNavRuleOrigin, NavigationRuleHelper::GetAllowedOrigins()))
-											{
-												throw new DOMFormatException($sNavRuleButtonCode. ' tag must only contain '.implode('|', NavigationRuleHelper::GetAllowedOrigins()).' tags, "'.$sNavRuleOrigin.'" given.', null, null, $oPropertyNode);
-											}
-
-											$sNavRuleId = $oNavRuleOriginNode->GetText();
-											// Note: We don't check is rule exists as it would introduce a dependency to the NavigationRuleHelper service.
-											// Maybe we will consider it later.
-											if(empty($sNavRuleId))
-											{
-												throw new DOMFormatException($sNavRuleButtonCode.' tag cannot be empty.', null, null, $oPropertyNode);
-											}
-
-											$aFormProperties['navigation_rules'][$sNavRuleButtonCode][$sNavRuleOrigin] = $sNavRuleId;
+											throw new DOMFormatException($sNavRuleButtonCode.' tag cannot be empty.', null, null, $oPropertyNode);
 										}
 
-										// Set modal rule as the same as default is not present.
-										// We preset it so we don't have to make checks elsewhere in the code when using it.
-										if(empty($aFormProperties['navigation_rules'][$sNavRuleButtonCode][NavigationRuleHelper::ENUM_ORIGIN_MODAL]))
-										{
-											$aFormProperties['navigation_rules'][$sNavRuleButtonCode][NavigationRuleHelper::ENUM_ORIGIN_MODAL] = $aFormProperties['navigation_rules'][$sNavRuleButtonCode][NavigationRuleHelper::ENUM_ORIGIN_PAGE];
-										}
+										$aFormProperties['navigation_rules'][$sNavRuleButtonCode][$sNavRuleOrigin] = $sNavRuleId;
 									}
-							}
-						}
-					}
 
-					// Parsing available modes for that form (view, edit, create, apply_stimulus)
-					$aFormStimuli = array();
-					if (($oFormNode->GetOptionalElement('modes') !== null) && ($oFormNode->GetOptionalElement('modes')->GetNodes('mode')->length > 0))
-					{
-						$aModes = array();
-						/** @var \MFElement $oModeNode */
-						foreach ($oFormNode->GetOptionalElement('modes')->GetNodes('mode') as $oModeNode)
-						{
-							if ($oModeNode->getAttribute('id') !== '')
-							{
-								$aModes[] = $oModeNode->getAttribute('id');
-							}
-							else
-							{
-								throw new DOMFormatException('mode tag must have an id attribute', null, null,
-									$oFormNode);
-							}
-
-							// If apply_stimulus mode, checking if stimuli are defined
-							if ($oModeNode->getAttribute('id') === 'apply_stimulus')
-							{
-								$oStimuliNode = $oModeNode->GetOptionalElement('stimuli');
-								// if stimuli are defined, we overwrite the form that could have been set by the generic form
-								if ($oStimuliNode !== null)
-								{
-									/** @var \MFElement $oStimulusNode */
-									foreach ($oStimuliNode->GetNodes('stimulus') as $oStimulusNode)
+									// Set modal rule as the same as default is not present.
+									// We preset it so we don't have to make checks elsewhere in the code when using it.
+									if(empty($aFormProperties['navigation_rules'][$sNavRuleButtonCode][NavigationRuleHelper::ENUM_ORIGIN_MODAL]))
 									{
-										$sStimulusCode = $oStimulusNode->getAttribute('id');
-
-										// Removing default form is present (in case the default forms were parsed before the current one (from current or parent class))
-										if (isset($aForms[$sFormClass]['apply_stimulus'][$sStimulusCode]))
-										{
-											unset($aForms[$sFormClass]['apply_stimulus'][$sStimulusCode]);
-										}
-
-										$aFormStimuli[] = $oStimulusNode->getAttribute('id');
+										$aFormProperties['navigation_rules'][$sNavRuleButtonCode][NavigationRuleHelper::ENUM_ORIGIN_MODAL] = $aFormProperties['navigation_rules'][$sNavRuleButtonCode][NavigationRuleHelper::ENUM_ORIGIN_PAGE];
 									}
 								}
-							}
 						}
 					}
-					else
-					{
-						// If no mode was specified, we set it all but stimuli as it would have no sense that every transition forms
-						// have as many fields displayed as a regular edit form for example.
-						$aModes = array('view', 'edit', 'create');
-					}
+				}
 
-					// Parsing fields
-					$aFields = array(
-						'id' => $oFormNode->getAttribute('id'),
-						'type' => null,
-						'properties' => $aFormProperties,
-						'fields' => null,
-						'layout' => null,
-					);
-					// ... either enumerated fields ...
-					if ($oFormNode->GetOptionalElement('fields') !== null)
+				// Parsing available modes for that form (view, edit, create, apply_stimulus)
+				$aFormStimuli = array();
+				if (($oFormNode->GetOptionalElement('modes') !== null) && ($oFormNode->GetOptionalElement('modes')->GetNodes('mode')->length > 0))
+				{
+					$aModes = array();
+					/** @var \MFElement $oModeNode */
+					foreach ($oFormNode->GetOptionalElement('modes')->GetNodes('mode') as $oModeNode)
 					{
-						$aFields['type'] = 'custom_list';
-						$aFields['fields'] = array();
-
-						/** @var \MFElement $oFieldNode */
-						foreach ($oFormNode->GetOptionalElement('fields')->GetNodes('field') as $oFieldNode)
+						$sModeId = $oModeNode->getAttribute('id');
+						if ($sModeId === '')
 						{
-							$sFieldId = $oFieldNode->getAttribute('id');
-							if ($sFieldId !== '')
-							{
-								$aField = array();
-								// Parsing field options like read_only, hidden and mandatory
-								if ($oFieldNode->GetOptionalElement('read_only'))
-								{
-									$aField['readonly'] = ($oFieldNode->GetOptionalElement('read_only')->GetText('true') === 'true') ? true : false;
-								}
-								if ($oFieldNode->GetOptionalElement('mandatory'))
-								{
-									$aField['mandatory'] = ($oFieldNode->GetOptionalElement('mandatory')->GetText('true') === 'true') ? true : false;
-								}
-								if ($oFieldNode->GetOptionalElement('hidden'))
-								{
-									$aField['hidden'] = ($oFieldNode->GetOptionalElement('hidden')->GetText('true') === 'true') ? true : false;
-								}
-
-								$aFields['fields'][$sFieldId] = $aField;
-							}
-							else
-							{
-								throw new DOMFormatException('Field tag must have an id attribute', null, null,
-									$oFormNode);
-							}
+							throw new DOMFormatException('mode tag must have an id attribute', null, null,
+								$oFormNode);
 						}
-					}
-					// ... or the default zlist
-					else
-					{
-						$aFields['type'] = 'zlist';
-						$aFields['fields'] = 'details';
-					}
+						$aModes[] = $sModeId;
 
-					// Parsing presentation
-					if ($oFormNode->GetOptionalElement('twig') !== null)
-					{
-						// Extracting the twig template and removing the first and last lines (twig tags)
-						$sXml = $this->GetModuleDesign()->saveXML($oFormNode->GetOptionalElement('twig'));
-						$sXml = preg_replace('/^.+\n/', '', $sXml);
-						$sXml = preg_replace('/\n.+$/', '', $sXml);
-
-						$aFields['layout'] = array(
-							'type' => (preg_match('/\{\{|\{\#|\{\%/', $sXml) === 1) ? 'twig' : 'xhtml',
-							'content' => $sXml,
-						);
-					}
-
-					// Adding form for each class / mode
-					foreach ($aModes as $sMode)
-					{
-						// Initializing current class if necessary
-						if (!isset($aForms[$sFormClass]))
+						// If apply_stimulus mode, checking if stimuli are defined
+						if ($sModeId === 'apply_stimulus')
 						{
-							$aForms[$sFormClass] = array();
-						}
-
-						if ($sMode === 'apply_stimulus')
-						{
-							// Iterating over current class and child classes to fill stimuli forms
-							foreach (MetaModel::EnumChildClasses($sFormClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
+							$oStimuliNode = $oModeNode->GetOptionalElement('stimuli');
+							// if stimuli are defined, we overwrite the form that could have been set by the generic form
+							if ($oStimuliNode !== null)
 							{
-								// Initializing child class if necessary
-								if (!isset($aForms[$sChildClass][$sMode]))
+								/** @var \MFElement $oStimulusNode */
+								foreach ($oStimuliNode->GetNodes('stimulus') as $oStimulusNode)
 								{
-									$aForms[$sChildClass][$sMode] = array();
-								}
+									$sStimulusCode = $oStimulusNode->getAttribute('id');
 
-								// If stimuli are implicitly defined (empty tag), we define all those that have not already been by other forms.
-								$aChildStimuli = $aFormStimuli;
-								if (empty($aChildStimuli))
-								{
-									// Stimuli already declared
-									$aDeclaredStimuli = array();
-									if (array_key_exists($sChildClass, $aForms) && array_key_exists('apply_stimulus',
-											$aForms[$sChildClass]))
+									// Removing default form is present (in case the default forms were parsed before the current one (from current or parent class))
+									if (isset($aForms[$sFormClass]['apply_stimulus'][$sStimulusCode]))
 									{
-										$aDeclaredStimuli = array_keys($aForms[$sChildClass]['apply_stimulus']);
+										unset($aForms[$sFormClass]['apply_stimulus'][$sStimulusCode]);
 									}
-									// All stimuli
-									$aDatamodelStimuli = array_keys(MetaModel::EnumStimuli($sChildClass));
-									// Missing stimuli
-									$aChildStimuli = array_diff($aDatamodelStimuli, $aDeclaredStimuli);
-								}
 
-								foreach ($aChildStimuli as $sFormStimulus)
-								{
-									// Setting form if not defined OR if it was defined by a parent (abstract) class
-									if (!isset($aForms[$sChildClass][$sMode][$sFormStimulus]) || !empty($aFormStimuli))
-									{
-										$aForms[$sChildClass][$sMode][$sFormStimulus] = $aFields;
-										$aForms[$sChildClass][$sMode][$sFormStimulus]['id'] = 'apply_stimulus-'.$sChildClass.'-'.$sFormStimulus;
-									}
+									$aFormStimuli[] = $oStimulusNode->getAttribute('id');
 								}
 							}
-						}
-						elseif (!isset($aForms[$sFormClass][$sMode]))
-						{
-							$aForms[$sFormClass][$sMode] = $aFields;
-						}
-						else
-						{
-							throw new DOMFormatException('There is already a form for the class "'.$sFormClass.'" in "'.$sMode.'"',
-								null, null, $oFormNode);
 						}
 					}
 				}
 				else
 				{
-					throw new DOMFormatException('Class tag must be defined', null, null, $oFormNode);
+					// If no mode was specified, we set it all but stimuli as it would have no sense that every transition forms
+					// have as many fields displayed as a regular edit form for example.
+					$aModes = array('view', 'edit', 'create');
+				}
+
+				// Parsing fields
+				$aFields = array(
+					'id' => $sFormId,
+					'type' => null,
+					'properties' => $aFormProperties,
+					'fields' => null,
+					'layout' => null,
+				);
+				// ... either enumerated fields ...
+				if ($oFormNode->GetOptionalElement('fields') !== null)
+				{
+					$aFields['type'] = 'custom_list';
+					$aFields['fields'] = array();
+
+					/** @var \MFElement $oFieldNode */
+					foreach ($oFormNode->GetOptionalElement('fields')->GetNodes('field') as $oFieldNode)
+					{
+						$sFieldId = $oFieldNode->getAttribute('id');
+						if ($sFieldId !== '')
+						{
+							$aField = array();
+							// Parsing field options like read_only, hidden and mandatory
+							if ($oFieldNode->GetOptionalElement('read_only'))
+							{
+								$aField['readonly'] = ($oFieldNode->GetOptionalElement('read_only')->GetText('true') === 'true') ? true : false;
+							}
+							if ($oFieldNode->GetOptionalElement('mandatory'))
+							{
+								$aField['mandatory'] = ($oFieldNode->GetOptionalElement('mandatory')->GetText('true') === 'true') ? true : false;
+							}
+							if ($oFieldNode->GetOptionalElement('hidden'))
+							{
+								$aField['hidden'] = ($oFieldNode->GetOptionalElement('hidden')->GetText('true') === 'true') ? true : false;
+							}
+
+							$aFields['fields'][$sFieldId] = $aField;
+						}
+						else
+						{
+							throw new DOMFormatException('Field tag must have an id attribute', null, null,
+								$oFormNode);
+						}
+					}
+				}
+				// ... or the default zlist
+				else
+				{
+					$aFields['type'] = 'zlist';
+					$aFields['fields'] = 'details';
+				}
+
+				// Parsing presentation
+				if ($oFormNode->GetOptionalElement('twig') !== null)
+				{
+					// Extracting the twig template and removing the first and last lines (twig tags)
+					$sXml = $this->GetModuleDesign()->saveXML($oFormNode->GetOptionalElement('twig'));
+					$sXml = preg_replace('/^.+\n/', '', $sXml);
+					$sXml = preg_replace('/\n.+$/', '', $sXml);
+
+					$aFields['layout'] = array(
+						'type' => (preg_match('/\{\{|\{\#|\{\%/', $sXml) === 1) ? 'twig' : 'xhtml',
+						'content' => $sXml,
+					);
+				}
+
+				// Adding form for each class / mode
+				foreach ($aModes as $sMode)
+				{
+					// Initializing current class if necessary
+					if (!isset($aForms[$sFormClass]))
+					{
+						$aForms[$sFormClass] = array();
+					}
+
+					if ($sMode === 'apply_stimulus')
+					{
+						// Iterating over current class and child classes to fill stimuli forms
+						foreach (MetaModel::EnumChildClasses($sFormClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
+						{
+							// Initializing child class if necessary
+							if (!isset($aForms[$sChildClass][$sMode]))
+							{
+								$aForms[$sChildClass][$sMode] = array();
+							}
+
+							// If stimuli are implicitly defined (empty tag), we define all those that have not already been by other forms.
+							$aChildStimuli = $aFormStimuli;
+							if (empty($aChildStimuli))
+							{
+								// Stimuli already declared
+								$aDeclaredStimuli = array();
+								if (array_key_exists($sChildClass, $aForms) && array_key_exists('apply_stimulus',
+										$aForms[$sChildClass]))
+								{
+									$aDeclaredStimuli = array_keys($aForms[$sChildClass]['apply_stimulus']);
+								}
+								// All stimuli
+								$aDatamodelStimuli = array_keys(MetaModel::EnumStimuli($sChildClass));
+								// Missing stimuli
+								$aChildStimuli = array_diff($aDatamodelStimuli, $aDeclaredStimuli);
+							}
+
+							foreach ($aChildStimuli as $sFormStimulus)
+							{
+								// Setting form if not defined OR if it was defined by a parent (abstract) class
+								if (!isset($aForms[$sChildClass][$sMode][$sFormStimulus]) || !empty($aFormStimuli))
+								{
+									$aForms[$sChildClass][$sMode][$sFormStimulus] = $aFields;
+									$aForms[$sChildClass][$sMode][$sFormStimulus]['id'] = 'apply_stimulus-'.$sChildClass.'-'.$sFormStimulus;
+								}
+							}
+						}
+					}
+					elseif (!isset($aForms[$sFormClass][$sMode]))
+					{
+						$aForms[$sFormClass][$sMode] = $aFields;
+					}
+					else
+					{
+						throw new DOMFormatException('There is already a form for the class "'.$sFormClass.'" in "'.$sMode.'"',
+							null, null, $oFormNode);
+					}
 				}
 			}
 			catch (DOMFormatException $e)
