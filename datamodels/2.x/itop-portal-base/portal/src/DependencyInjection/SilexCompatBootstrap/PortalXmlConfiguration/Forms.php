@@ -158,7 +158,7 @@ class Forms extends AbstractConfiguration
 						if ($sModeId === 'apply_stimulus')
 						{
 							$oStimuliNode = $oModeNode->GetOptionalElement('stimuli');
-							// if stimuli are defined, we overwrite the form that could have been set by the generic form
+							// If stimuli are defined, we overwrite the form that could have been set by the generic form
 							if ($oStimuliNode !== null)
 							{
 								/** @var \MFElement $oStimulusNode */
@@ -166,7 +166,7 @@ class Forms extends AbstractConfiguration
 								{
 									$sStimulusCode = $oStimulusNode->getAttribute('id');
 
-									// Removing default form is present (in case the default forms were parsed before the current one (from current or parent class))
+									// Removing default form if present (in case the default forms were parsed before the current one (from current or parent class))
 									if (isset($aForms[$sFormClass]['apply_stimulus'][$sStimulusCode]))
 									{
 										unset($aForms[$sFormClass]['apply_stimulus'][$sStimulusCode]);
@@ -187,6 +187,7 @@ class Forms extends AbstractConfiguration
 
 				// Parsing fields
 				$aFields = array(
+					'_brought_by' => $sFormClass,
 					'id' => $sFormId,
 					'type' => null,
 					'properties' => $aFormProperties,
@@ -259,9 +260,10 @@ class Forms extends AbstractConfiguration
 						$aForms[$sFormClass] = array();
 					}
 
+					// For stimuli we need to fill the matrix as only some stimuli might have been given
 					if ($sMode === 'apply_stimulus')
 					{
-						// Iterating over current class and child classes to fill stimuli forms
+						// Iterating over current class and child classes
 						foreach (MetaModel::EnumChildClasses($sFormClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
 						{
 							// Initializing child class if necessary
@@ -270,30 +272,48 @@ class Forms extends AbstractConfiguration
 								$aForms[$sChildClass][$sMode] = array();
 							}
 
-							// If stimuli are implicitly defined (empty tag), we define all those that have not already been by other forms.
-							$aChildStimuli = $aFormStimuli;
-							if (empty($aChildStimuli))
+							// If no explicit stimulus defined in this form, than it's the generic stimulus form
+							// we need to find which stimulus are missing
+							if(empty($aFormStimuli))
 							{
-								// Stimuli already declared
-								$aDeclaredStimuli = array();
-								if (array_key_exists($sChildClass, $aForms) && array_key_exists('apply_stimulus',
-										$aForms[$sChildClass]))
+								$aExistingStimuli = array();
+								// Keep only stimuli brought by the class itself
+								foreach($aForms[$sChildClass][$sMode] as $sExistingStimulus => $aExistingForm)
 								{
-									$aDeclaredStimuli = array_keys($aForms[$sChildClass]['apply_stimulus']);
+									if(!in_array($aExistingForm['_brought_by'], MetaModel::EnumParentClasses($sFormClass, ENUM_PARENT_CLASSES_EXCLUDELEAF)))
+									{
+										//continue;
+										$aExistingStimuli[] = $sExistingStimulus;
+									}
 								}
-								// All stimuli
 								$aDatamodelStimuli = array_keys(MetaModel::EnumStimuli($sChildClass));
-								// Missing stimuli
-								$aChildStimuli = array_diff($aDatamodelStimuli, $aDeclaredStimuli);
+								$aMissingStimulusForms = array_diff($aDatamodelStimuli, $aExistingStimuli);
+							}
+							// Otherwise, we process only the ones for this form
+							else
+							{
+								$aMissingStimulusForms = $aFormStimuli;
 							}
 
-							foreach ($aChildStimuli as $sFormStimulus)
+							// Retrieve missing stimuli of the child class to fill the matrix
+							foreach ($aMissingStimulusForms as $sDatamodelStimulus)
 							{
-								// Setting form if not defined OR if it was defined by a parent (abstract) class
-								if (!isset($aForms[$sChildClass][$sMode][$sFormStimulus]) || !empty($aFormStimuli))
+								// Check some facts about the target form
+								$bFormExists = isset($aForms[$sChildClass][$sMode][$sDatamodelStimulus]);
+								$bWasFormBroughtByParent = $bFormExists && in_array($aForms[$sChildClass][$sMode][$sDatamodelStimulus]['_brought_by'], MetaModel::EnumParentClasses($sFormClass, ENUM_PARENT_CLASSES_EXCLUDELEAF));
+
+								// Check if we need to overwrite (form created by parent)
+								$bOverwriteNecessary = false;
+								if($bWasFormBroughtByParent || in_array($sDatamodelStimulus, $aFormStimuli))
 								{
-									$aForms[$sChildClass][$sMode][$sFormStimulus] = $aFields;
-									$aForms[$sChildClass][$sMode][$sFormStimulus]['id'] = 'apply_stimulus-'.$sChildClass.'-'.$sFormStimulus;
+									$bOverwriteNecessary = true;
+								}
+
+								// Setting form if not defined OR if it was defined by a parent (abstract) class
+								if (!$bFormExists || $bOverwriteNecessary)
+								{
+									$aForms[$sChildClass][$sMode][$sDatamodelStimulus] = $aFields;
+									$aForms[$sChildClass][$sMode][$sDatamodelStimulus]['id'] = 'apply_stimulus-'.$sChildClass.'-'.$sDatamodelStimulus;
 								}
 							}
 						}
