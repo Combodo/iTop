@@ -67,6 +67,10 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 * @var bool
 	 */
 	protected $bAllowWrite;
+	/**
+	 * @var bool
+	 */
+	protected $bAllowDelete;
 
 	/**
 	 * Constructor from a row of data (as a hash 'attcode' => value)
@@ -82,6 +86,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	{
 		parent::__construct($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 		$this->bAllowWrite = false;
+		$this->bAllowDelete = false;
 	}
 
 	/**
@@ -4079,6 +4084,16 @@ EOF
 	}
 
 	/**
+	 * Bypass the check of the user rights when deleting this object
+	 *
+	 * @param bool $bAllow True to bypass the checks, false to restore the default behavior
+	 */
+	public function AllowDelete($bAllow = true)
+	{
+		$this->bAllowDelete = $bAllow;
+	}
+
+	/**
 	 * @inheritdoc
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -4150,13 +4165,16 @@ EOF
 
 		// User rights
 		//
-		$bDeleteAllowed = UserRights::IsActionAllowed(get_class($this), UR_ACTION_DELETE,
-			DBObjectSet::FromObject($this));
-		if (!$bDeleteAllowed)
+		if (! $this->bAllowDelete)
 		{
-			// Security issue
-			$this->m_bSecurityIssue = true;
-			$this->m_aDeleteIssues[] = Dict::S('UI:Delete:NotAllowedToDelete');
+			$bDeleteAllowed = UserRights::IsActionAllowed(get_class($this), UR_ACTION_DELETE, DBObjectSet::FromObject($this));
+
+			if (!$bDeleteAllowed)
+			{
+				// Security issue
+				$this->m_bSecurityIssue = true;
+				$this->m_aDeleteIssues[] = Dict::S('UI:Delete:NotAllowedToDelete');
+			}
 		}
 	}
 
