@@ -629,10 +629,12 @@ class utils
 	}
 
 	/**
-	 * Helper function to convert a string to a date, given a format specification. It replaces strtotime which does not allow for specifying a date in a french format (for instance)
-	 * Example: StringToTime('01/05/11 12:03:45', '%d/%m/%y %H:%i:%s')
+	 * Helper function to convert a string to a date, given a format specification. It replaces strtotime which does not allow for
+	 * specifying a date in a french format (for instance) Example: StringToTime('01/05/11 12:03:45', '%d/%m/%y %H:%i:%s')
+	 *
 	 * @param string $sDate
 	 * @param string $sFormat
+	 *
 	 * @return string|false false if the input format is not correct, timestamp otherwise
 	 */
 	public static function StringToTime($sDate, $sFormat)
@@ -792,13 +794,14 @@ class utils
 		return $sUrl;
 	}
 
-    /**
-     * Builds an root url from the server's variables.
-     * For most usages, when an root url is needed, use utils::GetAbsoluteUrlAppRoot() instead as uses this only as a fallback when the app_root_url conf parameter is not defined.
-     *
-     * @return string
-     *
-     * @throws \Exception
+	/**
+	 * Builds an root url from the server's variables.
+	 * For most usages, when an root url is needed, use utils::GetAbsoluteUrlAppRoot() instead as uses this only as a fallback when the
+	 * app_root_url conf parameter is not defined.
+	 *
+	 * @return string
+	 *
+	 * @throws \Exception
      */
     public static function GetDefaultUrlAppRoot()
 	{
@@ -1146,16 +1149,17 @@ class utils
 				break;
 
 			default:
-			// Unknown type of menu, do nothing
-			$aResult = array();
+				// Unknown type of menu, do nothing
+				$aResult = array();
 		}
-		foreach($aResult as $oMenuItem)
+		foreach ($aResult as $oMenuItem)
 		{
 			$aActions[$oMenuItem->GetUID()] = $oMenuItem->GetMenuItem();
 		}
 
 		// Invoke the plugins
 		//
+		/** @var \iPopupMenuExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
 		{
 			if (is_object($param) && !($param instanceof DBObject))
@@ -1892,17 +1896,17 @@ class utils
 				'doc' => 'application/msword',
 				'dot' => 'application/msword',
 				'xls' => 'application/vnd.ms-excel',
-				'ppt' => 'application/vnd.ms-powerpoint',
-				'vsd' => 'application/x-visio',
-				'vdx' => 'application/visio.drawing',
-				'odt' => 'application/vnd.oasis.opendocument.text',
-				'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-				'odp' => 'application/vnd.oasis.opendocument.presentation',
-				'zip' => 'application/zip',
-				'txt' => 'text/plain',
-				'htm' => 'text/html',
-				'html' => 'text/html',
-				'exe' => 'application/octet-stream'
+			'ppt' => 'application/vnd.ms-powerpoint',
+			'vsd' => 'application/x-visio',
+			'vdx' => 'application/visio.drawing',
+			'odt' => 'application/vnd.oasis.opendocument.text',
+			'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+			'odp' => 'application/vnd.oasis.opendocument.presentation',
+			'zip' => 'application/zip',
+			'txt' => 'text/plain',
+			'htm' => 'text/html',
+			'html' => 'text/html',
+			'exe' => 'application/octet-stream',
 		);
 	
 		$sData = null;
