@@ -1070,8 +1070,9 @@ EOF
 		$oP->DisableBreadCrumb();
 		$sClass = utils::ReadPostedParam('class', '', 'class');
 		$sClassLabel = MetaModel::GetName($sClass);
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
+		$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
 		$aErrors = array();
+		$aWarnings = array();
 		if ( empty($sClass) ) // TO DO: check that the class name is valid !
 		{
 			throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
@@ -1092,6 +1093,11 @@ EOF
 				$sTargetState = utils::ReadPostedParam('obj_state', '');
 				if ($sTargetState != '')
 				{
+					$sOrigState = utils::ReadPostedParam('obj_state_orig', '');
+					if ($sTargetState != $sOrigState)
+					{
+						$aWarnings[] = 'State changed';
+					}
 					$oObj->Set($sStateAttCode, $sTargetState);
 				}
 			}
@@ -1104,7 +1110,7 @@ EOF
 
 			try
 			{
-				if (!empty($aErrors))
+				if (!empty($aErrors) || !empty($aWarnings))
 				{
 					throw new CoreCannotSaveObjectException(array('id' => $oObj->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 				}
@@ -1140,7 +1146,15 @@ EOF
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
 				$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', $sClassLabel)."</h1>\n");
 				$oP->add("<div class=\"wizContainer\">\n");
-				$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
+				if (!empty($aIssues))
+				{
+					$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
+				}
+				if (!empty($aWarnings))
+				{
+					$sWarnings = implode(', ', $aWarnings);
+					$oP->AddHeaderMessage($sWarnings, 'message_info');
+				}
 				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
 				$oP->add("</div>\n");
 			}

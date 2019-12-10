@@ -2443,6 +2443,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function DisplayModifyForm(WebPage $oPage, $aExtraParams = array())
 	{
@@ -2615,7 +2616,17 @@ HTML
 							$sStateCode).'</option>';
 				}
 				$sStatesSelection .= '</select>';
-				$oPage->add_ready_script("$('.state_select_{$this->m_iFormId}').change( function() { oWizardHelper$sPrefix.ReloadObjectCreationForm('form_{$this->m_iFormId}', $(this).val()); } );");
+				$sStatesSelection .= '<input type="hidden" id="obj_state_orig" name="obj_state_orig" value="'.$this->GetState().'"/>';
+				$oPage->add_ready_script(<<<JAVASCRIPT
+$('.state_select_{$this->m_iFormId}').change( function() {
+	if ($('#obj_state_orig').val() != $(this).val()) {
+		$('.state_select_{$this->m_iFormId}').val($(this).val());
+		$('#form_{$this->m_iFormId}').data('force_submit', true);
+		$('#form_{$this->m_iFormId}').submit();
+	}
+});
+JAVASCRIPT
+			);
 			}
 		}
 
