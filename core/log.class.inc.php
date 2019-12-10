@@ -358,25 +358,31 @@ abstract class LogAPI
 	private static function GetMinLogLevel($sChannel)
 	{
 		$oConfig = \MetaModel::GetConfig();
-		if (! $oConfig instanceof Config)
+		if (!$oConfig instanceof Config)
 		{
 			return self::LEVEL_OK;
 		}
 
-		$sMinLogLevel = $oConfig->Get('min_log_level');
-		if (! is_array($sMinLogLevel))
+		$sLogLevelMin = $oConfig->Get('log_level_min');
+
+		if (empty($sLogLevelMin))
 		{
-			return $sMinLogLevel;
+			return self::LEVEL_OK;
 		}
 
-		if (isset($sMinLogLevel[$sChannel]))
+		if (!is_array($sLogLevelMin))
 		{
-			return $sMinLogLevel[$sChannel];
+			return $sLogLevelMin;
 		}
 
-		if (isset($sMinLogLevel[static::CHANNEL_DEFAULT]))
+		if (isset($sLogLevelMin[$sChannel]))
 		{
-			return $sMinLogLevel[$sChannel];
+			return $sLogLevelMin[$sChannel];
+		}
+
+		if (isset($sLogLevelMin[static::CHANNEL_DEFAULT]))
+		{
+			return $sLogLevelMin[$sChannel];
 		}
 
 		return self::LEVEL_OK;

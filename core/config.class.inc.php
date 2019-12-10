@@ -99,11 +99,11 @@ class Config
 	 * @since 2.7.0 export_pdf_font param
 	 */
 	protected $m_aSettings = array(
-		'min_log_level' => array(
+		'log_level_min' => array(
 			'type' => 'array',
-			'description' => 'min log level',
-			'default' => 'Ok',
-			'value' => 'Ok',
+			'description' => 'Optional min log level per channel',
+			'default' => '',
+			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
