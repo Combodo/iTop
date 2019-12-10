@@ -201,41 +201,34 @@ class FileLog
 
 	public function Error($sText, $sChannel = '', $aContext = array())
 	{
-		$sLevel   = str_pad(__FUNCTION__, 7).' | ';
-		$sChannel = empty($sChannel) ? '' : " | $sChannel";
-		$this->Write("{$sLevel}{$sText}{$sChannel}", $aContext);
+		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
 	public function Warning($sText, $sChannel = '', $aContext = array())
 	{
-		$sLevel   = str_pad(__FUNCTION__, 7).' | ';
-		$sChannel = empty($sChannel) ? '' : " | $sChannel";
-		$this->Write("{$sLevel}{$sText}{$sChannel}", $aContext);
+		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
 	public function Info($sText, $sChannel = '', $aContext = array())
 	{
-		$sLevel   = str_pad(__FUNCTION__, 7).' | ';
-		$sChannel = empty($sChannel) ? '' : " | $sChannel";
-		$this->Write("{$sLevel}{$sText}{$sChannel}", $aContext);
+		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
 	public function Ok($sText, $sChannel = '', $aContext = array())
 	{
-		$sLevel   = str_pad(__FUNCTION__, 7).' | ';
-		$sChannel = empty($sChannel) ? '' : " | $sChannel";
-		$this->Write("{$sLevel}{$sText}{$sChannel}", $aContext);
+		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
 	public function Debug($sText, $sChannel = '', $aContext = array())
 	{
-		$sLevel   = str_pad(__FUNCTION__, 7).' | ';
-		$sChannel = empty($sChannel) ? '' : " | $sChannel";
-		$this->Write("{$sLevel}{$sText}{$sChannel}", $aContext);
+		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
-	protected function Write($sText, $aContext = array())
+	protected function Write($sText, $sLevel = '', $sChannel = '', $aContext = array())
 	{
+		$sTextPrefix = empty($sLevel) ? '' : (str_pad($sLevel, 7).' | ');
+		$sTextSuffix = empty($sChannel) ? '' : " | $sChannel";
+		$sText = "{$sTextPrefix}{$sText}{$sTextSuffix}";
 		$sLogFilePath = $this->oFileNameBuilder->GetLogFilePath();
 
 		if (empty($sLogFilePath))
