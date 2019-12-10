@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Form;
@@ -956,7 +954,12 @@ class ObjectFormManager extends FormManager
 				$oField->SetDisplayMode($aFieldsExtraData[$sAttCode]['display_mode']);
 			}
 
-			$oForm->AddField($oField);
+			// Do not add hidden fields as they are of no use, if one is necessary because another depends on it, it will be automatically added.
+			// Note: We do this at the end because during the process an hidden field could have become writable if mandatory and empty for example.
+			if($oField->GetHidden() === false)
+			{
+				$oForm->AddField($oField);
+			}
 		}
 
 		// Checking dependencies to ensure that all needed fields are in the form
