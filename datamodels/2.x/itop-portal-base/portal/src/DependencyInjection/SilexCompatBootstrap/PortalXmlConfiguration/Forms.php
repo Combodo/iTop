@@ -245,7 +245,7 @@ class Forms extends AbstractConfiguration
 					$sXml = preg_replace('/\n.+$/', '', $sXml);
 
 					$aFields['layout'] = array(
-						'type' => (preg_match('/\{\{|\{\#|\{\%/', $sXml) === 1) ? 'twig' : 'xhtml',
+						'type' => (preg_match('/{{|{#|{%/', $sXml) === 1) ? 'twig' : 'xhtml',
 						'content' => $sXml,
 					);
 				}
