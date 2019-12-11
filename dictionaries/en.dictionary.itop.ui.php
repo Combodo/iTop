@@ -900,9 +900,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link between %1$s and %2$s',
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link between %1$s and %2$s',
 
-	'Menu:AdminTools' => 'Admin tools', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => 'Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administration tools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Tools accessible only to users having the administrator profile', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => 'Change Management',

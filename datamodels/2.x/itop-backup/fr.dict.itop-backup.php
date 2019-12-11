@@ -10,8 +10,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'bkp-backup-running' => 'Une sauvegarde est en cours. Veuillez patienter...',
 	'bkp-restore-running' => 'Une restauration des données est en cours. Veuillez patienter...',
 
-	'Menu:BackupStatus' => 'Sauvegarde automatique',
-	'bkp-status-title' => 'Sauvegarde automatique',
+	'Menu:BackupStatus' => 'Sauvegardes',
+	'bkp-status-title' => 'Sauvegardes',
 	'bkp-status-checks' => 'Réglages et vérifications',
 	'bkp-mysqldump-ok' => 'mysqldump est installé: %1$s',
 	'bkp-mysqldump-notfound' => 'mysqldump n\'a pas été trouvé: %1$s - Veuillez vous assurer que les outils mysql sont installés et qu\'ils sont accessibles en ligne de commande, ou bien éditez le fichier de configuration pour en donner le chemin via mysql_bindir.',

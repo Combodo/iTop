@@ -15,5 +15,10 @@
     <menu id="AdminTools" xsi:type="MenuGroup" _delta="define">
       <rank>80</rank>
     </menu>
+    <menu id="System" xsi:type="MenuGroup" _delta="define">
+      <rank>100</rank>
+      <enable_class>ResourceSystemMenu</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+    </menu>
   </menus>
 </itop_design>

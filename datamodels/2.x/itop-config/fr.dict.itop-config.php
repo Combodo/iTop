@@ -7,7 +7,7 @@
  */
 Dict::Add('FR FR', 'French', 'Français', array(
 
-	'Menu:ConfigEditor' => 'Configuration',
+	'Menu:ConfigEditor' => 'Configuration Générale',
 	'config-edit-title' => 'Editeur du Fichier de Configuration',
 	'config-edit-intro' => 'Attention: une configuration incorrecte peut rendre iTop inopérant pour tous les utilisateurs!',
 	'config-apply' => 'Enregistrer',

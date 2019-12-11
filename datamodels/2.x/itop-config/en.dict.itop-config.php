@@ -23,7 +23,7 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 
-	'Menu:ConfigEditor' => 'Configuration',
+	'Menu:ConfigEditor' => 'General Configuration',
 	'config-edit-title' => 'Configuration File Editor',
 	'config-edit-intro' => 'Be very cautious when editing the configuration file.',
 	'config-apply' => 'Apply',

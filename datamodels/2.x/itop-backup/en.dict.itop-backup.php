@@ -26,8 +26,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'bkp-backup-running' => 'A backup is running. Please wait...',
 	'bkp-restore-running' => 'A restore is running. Please wait...',
 
-	'Menu:BackupStatus' => 'Scheduled Backups',
-	'bkp-status-title' => 'Scheduled Backups',
+	'Menu:BackupStatus' => 'Backups',
+	'bkp-status-title' => 'Backups',
 	'bkp-status-checks' => 'Settings and checks',
 	'bkp-mysqldump-ok' => 'mysqldump is present: %1$s',
 	'bkp-mysqldump-notfound' => 'mysqldump could not be found: %1$s - Please make sure it is installed and in the path, or edit the configuration file to tune mysql_bindir.',

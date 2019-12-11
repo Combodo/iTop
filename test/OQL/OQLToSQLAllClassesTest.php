@@ -278,7 +278,7 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 		return null;
 	}
 
-	static $aPureAbstractClasses = ['AbstractResource', 'ResourceAdminMenu', 'ResourceRunQueriesMenu', 'ResourceItopIntegrityMenu'];
+	static $aPureAbstractClasses = ['AbstractResource', 'ResourceAdminMenu', 'ResourceRunQueriesMenu', 'ResourceSystemMenu'];
 
 	public function OQLSelectProvider()
 	{
