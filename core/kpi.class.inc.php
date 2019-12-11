@@ -198,7 +198,7 @@ class ExecutionKPI
 
 		self::Report("</div>");
 
-		self::Report("<p><a href=\"#end-".md5($sExecId)."\">Next page stats</a></p>");
+		self::Report("<p><a class=\"kpi-next-page-button\" href=\"#end-".md5($sExecId)."\">Next page stats</a></p>");
 
 		$fSlowQueries = MetaModel::GetConfig()->Get('log_kpi_slow_queries');
 
