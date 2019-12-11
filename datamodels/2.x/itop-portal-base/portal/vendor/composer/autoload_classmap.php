@@ -63,6 +63,7 @@ return array(
     'Combodo\\iTop\\Portal\\Helper\\RequestManipulatorHelper' => $baseDir . '/src/Helper/RequestManipulatorHelper.php',
     'Combodo\\iTop\\Portal\\Helper\\ScopeValidatorHelper' => $baseDir . '/src/Helper/ScopeValidatorHelper.php',
     'Combodo\\iTop\\Portal\\Helper\\SecurityHelper' => $baseDir . '/src/Helper/SecurityHelper.php',
+    'Combodo\\iTop\\Portal\\Helper\\UIExtensionsHelper' => $baseDir . '/src/Helper/UIExtensionsHelper.php',
     'Combodo\\iTop\\Portal\\Kernel' => $baseDir . '/src/Kernel.php',
     'Combodo\\iTop\\Portal\\Routing\\ItopExtensionsExtraRoutes' => $baseDir . '/src/Routing/ItopExtensionsExtraRoutes.php',
     'Combodo\\iTop\\Portal\\Routing\\UrlGenerator' => $baseDir . '/src/Routing/UrlGenerator.php',

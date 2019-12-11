@@ -124,6 +124,9 @@ services:
   navigation_rule_helper:
     alias: Combodo\iTop\Portal\Helper\NavigationRuleHelper
     public: true
+  ui_extensions_helper:
+    alias: Combodo\iTop\Portal\Helper\UIExtensionsHelper
+    public: true
   lifecycle_validator:
     alias: Combodo\iTop\Portal\Helper\LifecycleValidatorHelper
     public: true

@@ -83,6 +83,7 @@ class ComposerStaticInitdf408f3f8ea034d298269cdf7647358b
         'Combodo\\iTop\\Portal\\Helper\\RequestManipulatorHelper' => __DIR__ . '/../..' . '/src/Helper/RequestManipulatorHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\ScopeValidatorHelper' => __DIR__ . '/../..' . '/src/Helper/ScopeValidatorHelper.php',
         'Combodo\\iTop\\Portal\\Helper\\SecurityHelper' => __DIR__ . '/../..' . '/src/Helper/SecurityHelper.php',
+        'Combodo\\iTop\\Portal\\Helper\\UIExtensionsHelper' => __DIR__ . '/../..' . '/src/Helper/UIExtensionsHelper.php',
         'Combodo\\iTop\\Portal\\Kernel' => __DIR__ . '/../..' . '/src/Kernel.php',
         'Combodo\\iTop\\Portal\\Routing\\ItopExtensionsExtraRoutes' => __DIR__ . '/../..' . '/src/Routing/ItopExtensionsExtraRoutes.php',
         'Combodo\\iTop\\Portal\\Routing\\UrlGenerator' => __DIR__ . '/../..' . '/src/Routing/UrlGenerator.php',

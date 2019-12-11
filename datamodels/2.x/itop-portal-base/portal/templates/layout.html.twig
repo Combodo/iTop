@@ -54,8 +54,8 @@
 		{# - Portal adjustments for BS theme #}
 		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.portal|add_itop_version }}" rel="stylesheet" id="css_portal">
 		{# UI Extensions CSS, in an undefined order #}
-        {% if app['combodo.portal.instance.conf'].ui_extensions.css_files is defined %}
-            {% for css_file in app['combodo.portal.instance.conf'].ui_extensions.css_files %}
+        {% if app['ui_extensions_helper'].css_files is defined %}
+            {% for css_file in app['ui_extensions_helper'].css_files %}
 				<link href="{{ css_file|add_itop_version }}" rel="stylesheet">
             {% endfor %}
         {% endif %}
@@ -73,9 +73,9 @@
 
 	{% block pStyleinline %}
         {# UI Extensions inline CSS #}
-        {% if app['combodo.portal.instance.conf'].ui_extensions.css_inline is not null %}
+        {% if app['ui_extensions_helper'].css_inline is not null %}
 			<style>
-				{{ app['combodo.portal.instance.conf'].ui_extensions.css_inline|raw }}
+				{{ app['ui_extensions_helper'].css_inline|raw }}
 			</style>
         {% endif %}
 	{% endblock %}
@@ -146,8 +146,8 @@
 		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal-clipboard.js'|add_itop_version }}"></script>
 
 		{# UI Extensions JS, in an undefined order #}
-		{% if app['combodo.portal.instance.conf'].ui_extensions.js_files is defined %}
-			{% for js_file in app['combodo.portal.instance.conf'].ui_extensions.js_files %}
+		{% if app['ui_extensions_helper'].js_files is defined %}
+			{% for js_file in app['ui_extensions_helper'].js_files %}
 				<script type="text/javascript" src="{{ js_file|add_itop_version }}"></script>
 			{% endfor %}
         {% endif %}
@@ -237,8 +237,8 @@
 						</div>
 
                         {% block pPageUIExtensionNavigationMenuTopbar %}
-                            {% if app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')] is defined %}
-                                {{ app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')]|raw }}
+                            {% if app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')] is defined %}
+                                {{ app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')]|raw }}
                             {% endif %}
                         {% endblock %}
 					</div>
@@ -299,8 +299,8 @@
 					</div>
 
                     {% block pPageUIExtensionNavigationMenuSidebar %}
-                        {% if app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')] is defined %}
-                            {{ app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')]|raw }}
+                        {% if app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')] is defined %}
+                            {{ app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU')]|raw }}
                         {% endif %}
                     {% endblock %}
 
@@ -349,8 +349,8 @@
 			</div>
 
 			{% block pPageUIExtensionMainContent %}
-                {% if app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT')] is defined %}
-                    {{ app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT')]|raw }}
+                {% if app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT')] is defined %}
+                    {{ app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT')]|raw }}
                 {% endif %}
 			{% endblock %}
 		</div>
@@ -400,8 +400,8 @@
 		{% endblock %}
 
 		{% block pPageUIExtensionBody %}
-			{% if app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY')] is defined %}
-				{{ app['combodo.portal.instance.conf'].ui_extensions.html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY')]|raw }}
+			{% if app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY')] is defined %}
+				{{ app['ui_extensions_helper'].html[constant('iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY')]|raw }}
 			{% endif %}
 		{% endblock %}
 	{% endblock %}
@@ -503,9 +503,9 @@
 
 	{% block pPageExtensionsScripts %}
         {# UI Extensions inline JS #}
-        {% if app['combodo.portal.instance.conf'].ui_extensions.js_inline is not null %}
+        {% if app['ui_extensions_helper'].js_inline is not null %}
 			<script type="text/javascript">
-				{{ app['combodo.portal.instance.conf'].ui_extensions.js_inline|raw }}
+				{{ app['ui_extensions_helper'].js_inline|raw }}
 			</script>
         {% endif %}
 	{% endblock %}
