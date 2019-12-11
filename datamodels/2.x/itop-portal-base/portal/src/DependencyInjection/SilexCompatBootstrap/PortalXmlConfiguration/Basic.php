@@ -64,6 +64,7 @@ class Basic extends AbstractConfiguration
 	 * Returns an array containing the initial portal configuration with all default values
 	 *
 	 * @return array
+	 * @throws \Exception
 	 */
 	private function GetInitialPortalConf()
 	{
