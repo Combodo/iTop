@@ -35,9 +35,9 @@ use utils;
  */
 class BsFileUploadFieldRenderer extends BsFieldRenderer
 {
-    /**
-     * @inheritDoc
-     */
+	/**
+	 * @inheritDoc
+	 */
 	public function Render()
 	{
 		$oOutput = parent::Render();
@@ -52,15 +52,16 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		$oOutput->AddHtml('<div class="form-group">');
 
 		// Label
-        $oOutput->AddHtml('<div class="form_field_label">');
-        if ($this->oField->GetLabel() !== '')
+		$oOutput->AddHtml('<div class="form_field_label">');
+		if ($this->oField->GetLabel() !== '')
 		{
-			$oOutput->AddHtml('<label for="' . $this->oField->GetGlobalId() . '" class="control-label">')->AddHtml($this->oField->GetLabel(), true)->AddHtml('</label>');
+			$oOutput->AddHtml('<label for="'.$this->oField->GetGlobalId().'" class="control-label">')->AddHtml($this->oField->GetLabel(),
+				true)->AddHtml('</label>');
 		}
-        $oOutput->AddHtml('</div>');
+		$oOutput->AddHtml('</div>');
 
-        // Value
-        $oOutput->AddHtml('<div class="form_field_control">');
+		// Value
+		$oOutput->AddHtml('<div class="form_field_control">');
 		// - Field feedback
 		$oOutput->AddHtml('<div class="help-block"></div>');
 		// Starting files container
@@ -73,16 +74,16 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		// Removing upload input if in read only
 		// TODO : Add max upload size when itop attachment has been refactored
 		if (!$this->oField->GetReadOnly())
-        {
-			$oOutput->AddHtml('<div class="upload_container row">' . Dict::S('Attachments:AddAttachment') . '<input type="file" id="' . $this->oField->GetGlobalId() . '" name="' . $this->oField->GetId() . '" /><span class="loader glyphicon glyphicon-refresh"></span>' . InlineImage::GetMaxUpload() . '</div>');
+		{
+			$oOutput->AddHtml('<div class="upload_container row">'.Dict::S('Attachments:AddAttachment').'<input type="file" id="'.$this->oField->GetGlobalId().'" name="'.$this->oField->GetId().'" /><span class="loader glyphicon glyphicon-refresh"></span>'.InlineImage::GetMaxUpload().'</div>');
 		}
 		// Ending files container
-        $oOutput->AddHtml('</div>');
-        $oOutput->AddHtml('</div>');
+		$oOutput->AddHtml('</div>');
+		$oOutput->AddHtml('</div>');
 
 		// Ending field container
 		$oOutput->AddHtml('</div>');
-		
+
 		// JS for file upload
 		$iMaxUploadInBytes = AttachmentPlugIn::GetMaxUploadSize();
 		$sMaxUploadLabel = AttachmentPlugIn::GetMaxUpload();
@@ -90,7 +91,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		$sFileTooBigLabelForJS = addslashes($sFileTooBigLabel);
 		// Note : This is based on itop-attachement/main.attachments.php
 		$oOutput->AddJs(
-<<<EOF
+			<<<EOF
 			var RemoveAttachment = function(sAttId)
 			{
 				$('#attachment_' + sAttId).attr('name', 'removed_attachments[]');
@@ -242,14 +243,14 @@ EOF
 		return $oOutput;
 	}
 
-    /**
-     *
-     * @param \Combodo\iTop\Renderer\RenderingOutput $oOutput
-     *
-     * @throws \Exception
-     * @throws \CoreException
-     * @throws \OQLException
-     */
+	/**
+	 *
+	 * @param \Combodo\iTop\Renderer\RenderingOutput $oOutput
+	 *
+	 * @throws \Exception
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
 	protected function PrepareExistingFiles(RenderingOutput &$oOutput)
 	{
 		$sObjectClass = get_class($this->oField->GetObject());
@@ -272,12 +273,12 @@ EOF
 				$iAttId = $oAttachment->GetKey();
 				$oDoc = $oAttachment->Get('contents');
 				$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
-				$sIcon = utils::GetAbsoluteUrlAppRoot() . 'env-' . utils::GetCurrentEnvironment() . '/itop-attachments/icons/image.png';
+				$sIcon = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/itop-attachments/icons/image.png';
 				$sPreview = $oDoc->IsPreviewAvailable() ? 'true' : 'false';
 				$sDownloadLink = str_replace('-sAttachmentId-', $iAttId, $this->oField->GetDownloadEndpoint());
 
 				$oOutput->Addhtml(
-<<<EOF
+					<<<EOF
 				<div class="attachment col-xs-6 col-sm-3 col-md-2" id="display_attachment_{$iAttId}">
 					<a data-preview="{$sPreview}" href="{$sDownloadLink}" target="_blank" title="{$sFileName}" >
 						<div class="attachment_icon"><img src="{$sIcon}"></div>
