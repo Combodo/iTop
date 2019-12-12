@@ -31,7 +31,6 @@ class LogAPITest extends ItopTestCase
 
 
 	/**
-	/**
 	 * @dataProvider LogApiProvider
 	 * @test
 	 * @backupGlobals disabled
@@ -57,7 +56,6 @@ class LogAPITest extends ItopTestCase
 	}
 
 	/**
-	/** TODISCUSS
 	 * @test
 	 * @backupGlobals disabled
 	 */
@@ -71,12 +69,11 @@ class LogAPITest extends ItopTestCase
 	}
 
 	/**
-	/**
-	 * @dataProvider LogWithChannelLogLevelApiProvider
+	 * @dataProvider LogWarningWithASpecificChannelProvider
 	 * @test
 	 * @backupGlobals disabled
 	 */
-	public function TestLogWithChannelLogLevelApi($expectedCallNb, $sExpectedLevel, $ConfigReturnedObject, $bExceptionRaised=false)
+	public function TestLogWarningWithASpecificChannel($expectedCallNb, $sExpectedLevel, $ConfigReturnedObject, $bExceptionRaised=false)
 	{
 		$this->oMetaModelConfig
 			->method("Get")
@@ -96,7 +93,7 @@ class LogAPITest extends ItopTestCase
 				$this->fail("raised should have been raised");
 			}
 		}
-		catch(Exception $e)
+		catch(\Exception $e)
 		{
 			if (!$bExceptionRaised)
 			{
@@ -105,15 +102,59 @@ class LogAPITest extends ItopTestCase
 		}
 	}
 
-	public function LogWithChannelLogLevelApiProvider()
+	public function LogWarningWithASpecificChannelProvider()
 	{
 		return [
-			[ 0, "Ok", ''],
-			[ 0, "Ok", 'TotoLevel'],
-			[ 0, "Ok", array()],
-			[ 0, "Ok", ["GaBuZoMeuChannel" => "TotoLevel"], true],
-			[ 1, "Error", ["GaBuZoMeuChannel" => "Error"]],
-			[ 0, "Info", ["GaBuZoMeuChannel" => "Info"]],
+			"empty config" => [ 0, "Ok", ''],
+			"Default Unknown Level" => [ 0, "Ok", 'TotoLevel', true],
+			"Info as Default Level" => [ 1 , "Warning", 'Info'],
+			"Error as Default Level" => [ 0, "Warning", 'Error'],
+			"Empty array" => [ 0, "Ok", array()],
+			"Channel configured on an undefined level" => [ 0, "Ok", ["GaBuZoMeuChannel" => "TotoLevel"], true],
+			"Channel defined with Error" => [ 0, "Warning", ["GaBuZoMeuChannel" => "Error"]],
+			"Channel defined with Info" => [ 1, "Warning", ["GaBuZoMeuChannel" => "Info"]],
+		];
+	}
+
+	/**
+	 * @dataProvider LogOkWithASpecificChannel
+	 * @test
+	 * @backupGlobals disabled
+	 */
+	public function TestLogOkWithASpecificChannel($expectedCallNb, $sExpectedLevel, $ConfigReturnedObject, $bExceptionRaised=false)
+	{
+		$this->oMetaModelConfig
+			->method("Get")
+			->with('log_level_min')
+			->willReturn($ConfigReturnedObject);
+
+		\IssueLog::MockStaticObjects($this->mockFileLog, $this->oMetaModelConfig);
+
+		$this->mockFileLog->expects($this->exactly($expectedCallNb))
+			->method($sExpectedLevel)
+			->with("log msg", "GaBuZoMeuChannel");
+
+		try{
+			\IssueLog::Ok("log msg", "GaBuZoMeuChannel");
+			if ($bExceptionRaised)
+			{
+				$this->fail("raised should have been raised");
+			}
+		}
+		catch(\Exception $e)
+		{
+			if (!$bExceptionRaised)
+			{
+				$this->fail("raised should NOT have been raised");
+			}
+		}
+	}
+
+	public function LogOkWithASpecificChannel()
+	{
+		return [
+			"empty config" => [ 1, "Ok", ''],
+			"Empty array" => [ 1, "Ok", array()],
 		];
 	}
 

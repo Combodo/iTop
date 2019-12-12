@@ -365,7 +365,7 @@ abstract class LogAPI
 	 */
 	private static function GetMinLogLevel($sChannel)
 	{
-		$oConfig = (static::$m_oMockMetaModelConfig === null) ? static::$m_oMockMetaModelConfig :  \MetaModel::GetConfig();
+		$oConfig = (static::$m_oMockMetaModelConfig !== null) ? static::$m_oMockMetaModelConfig :  \MetaModel::GetConfig();
 		if (!$oConfig instanceof Config)
 		{
 			return self::LEVEL_OK;
