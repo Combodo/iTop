@@ -99,6 +99,14 @@ class Config
 	 * @since 2.7.0 export_pdf_font param
 	 */
 	protected $m_aSettings = array(
+		'log_level_min' => array(
+			'type' => 'array',
+			'description' => 'Optional min log level per channel',
+			'default' => '',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'app_env_label' => array(
 			'type' => 'string',
 			'description' => 'Label displayed to describe the current application environment, defaults to the environment name (e.g. "production")',
