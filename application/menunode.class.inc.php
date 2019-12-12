@@ -277,6 +277,10 @@ EOF
 		usort($aMenus, array('ApplicationMenu', 'CompareOnRank'));
 		foreach($aMenus as $aMenu)
 		{
+			if (!self::CanDisplayMenu($aMenu))
+			{
+				continue;
+			}
 			$index = $aMenu['index'];
 			$oMenu = self::GetMenuNode($index);
 			if ($oMenu->IsEnabled())
@@ -606,7 +610,9 @@ abstract class MenuNode
 
 	/**
 	 * @param $aExtraParams
+	 *
 	 * @return string
+	 * @throws \Exception
 	 */
 	public function GetHyperlink($aExtraParams)
 	{
