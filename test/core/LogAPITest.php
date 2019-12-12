@@ -54,20 +54,7 @@ class LogAPITest extends ItopTestCase
 			[  array(), "log msg", '' , "Error", "log msg"], // Bruno?
 		];
 	}
-
-	/**
-	 * @test
-	 * @backupGlobals disabled
-	 */
-	public function TestUnknownLevel()
-	{
-		$this->mockFileLog->expects($this->exactly(1))
-			->method("Error")
-			->with("invalid log level 'TotoLevel'");
-
-		\IssueLog::Log('TotoLevel', "log msg");
-	}
-
+	
 	/**
 	 * @dataProvider LogWarningWithASpecificChannelProvider
 	 * @test
