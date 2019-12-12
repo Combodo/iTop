@@ -271,6 +271,8 @@ abstract class LogAPI
 //	const LEVEL_ALERT       = 'Alert';
 //	const LEVEL_EMERGENCY   = 'Emergency';
 
+	protected static $m_oMockMetaModelConfig = null;
+
 	protected static $aLevelsPriority = array(
 		self::LEVEL_DEBUG   => 100,
 		self::LEVEL_OK      => 150,
@@ -283,6 +285,12 @@ abstract class LogAPI
 	{
 		// m_oFileLog is not defined as a class attribute so that each impl will have its own
 		static::$m_oFileLog = new FileLog($sTargetFile);
+	}
+
+	public static function MockStaticObjects($oFileLog, $oMetaModelConfig=null)
+	{
+		static::$m_oFileLog = $oFileLog;
+		static::$m_oMockMetaModelConfig = $oMetaModelConfig;
 	}
 
 	public static function Error($sMessage, $sChannel = null, $aContext = array())
@@ -357,7 +365,7 @@ abstract class LogAPI
 	 */
 	private static function GetMinLogLevel($sChannel)
 	{
-		$oConfig = \MetaModel::GetConfig();
+		$oConfig = (static::$m_oMockMetaModelConfig === null) ? static::$m_oMockMetaModelConfig :  \MetaModel::GetConfig();
 		if (!$oConfig instanceof Config)
 		{
 			return self::LEVEL_OK;
