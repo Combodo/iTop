@@ -1880,11 +1880,11 @@ class MenuBlock extends DisplayBlock
 		{
 			if (count($aFavoriteActions) > 0)
 			{
-				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:OtherActions')."\n<ul>\n";
+				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:OtherActions')."<i class=\"fas fa-caret-down\"></i>"."\n<ul>\n";
 			}
 			else
 			{
-				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."\n<ul>\n";
+				$sHtml .= "<div class=\"itop_popup actions_menu\"><ul>\n<li>".Dict::S('UI:Menu:Actions')."<i class=\"fas fa-caret-down\"></i>"."\n<ul>\n";
 			}
 
 			$sHtml .= $oPage->RenderPopupMenuItems($aActions, $aFavoriteActions);

@@ -988,7 +988,7 @@ class SearchMenuNode extends MenuNode
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
-		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', utils::GetAbsoluteUrlAppRoot().'images/search.png');
+		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png');
 
 		$oSearch = new DBObjectSearch($this->sClass);
 		$aParams = array_merge(array('table_id' => 'Menu_'.utils::GetSafeId($this->GetMenuId())), $aExtraParams);

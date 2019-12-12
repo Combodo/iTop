@@ -1240,6 +1240,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'backoffice_default_theme' => array(
+			'type' => 'string',
+			'description' => 'Default theme used for '.ITOP_APPLICATION_SHORT.'\'s console',
+			'default' => 'light-grey',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 	);
 
 	public function IsProperty($sPropCode)

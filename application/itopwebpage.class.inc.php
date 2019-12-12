@@ -837,6 +837,8 @@ JS
 	protected function InitNewsroom()
 	{
 		$sNewsroomInitialImage = '';
+		$aProviderParams = array();
+
 		if (MetaModel::GetConfig()->Get('newsroom_enabled') !== false)
 	 	{
 			$oUser = UserRights::GetUserObject();
@@ -844,49 +846,47 @@ JS
 			 * @var iNewsroomProvider[] $aProviders
 			 */
 			$aProviders = MetaModel::EnumPlugins('iNewsroomProvider');
-			$aProviderParams = array();
 			foreach($aProviders as $oProvider)
 			{
 				$oProvider->SetConfig(MetaModel::GetConfig());
-				$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider), true);
-			if ($bProviderEnabled && $oProvider->IsApplicable($oUser))
-			{
-				$aProviderParams[] = array(
-					'label' => $oProvider->GetLabel(),
-					'fetch_url' => $oProvider->GetFetchURL(),
-					'view_all_url' => $oProvider->GetViewAllURL(),
-					'mark_all_as_read_url' => $oProvider->GetMarkAllAsReadURL(),
-					'placeholders' => $oProvider->GetPlaceholders(),
-					'ttl' => $oProvider->GetTTL(),
-				);
+				$bProviderEnabled = appUserPreferences::GetPref('newsroom_provider_'.get_class($oProvider),true);
+				if ($bProviderEnabled && $oProvider->IsApplicable($oUser))
+				{
+					$aProviderParams[] = array(
+						'label' => $oProvider->GetLabel(),
+						'fetch_url' => $oProvider->GetFetchURL(),
+						'view_all_url' => $oProvider->GetViewAllURL(),
+						'mark_all_as_read_url' => $oProvider->GetMarkAllAsReadURL(),
+						'placeholders' => $oProvider->GetPlaceholders(),
+						'ttl' => $oProvider->GetTTL(),
+					);
+				}
 			}
-			}
-
-			// Show newsroom only if there are some providers
-			if (count($aProviderParams) > 0)
-			{
-				$sImageUrl= '../images/newsroom_menu.png';
-				$sPlaceholderImageUrl= '../images/newsroom-message.svg';
-				$aParams = array(
-					'image_url' => $sImageUrl,
-					'placeholder_image_url' => $sPlaceholderImageUrl,
-					'cache_uuid' => 'itop-newsroom-'.UserRights::GetUserId().'-'.md5(APPROOT),
-					'providers' => $aProviderParams,
-					'display_limit' => (int)appUserPreferences::GetPref('newsroom_display_size', 7),
-					'labels' => array(
-						'no_message' => Dict::S('UI:Newsroom:NoNewMessage'),
-						'mark_all_as_read' => Dict::S('UI:Newsroom:MarkAllAsRead'),
-						'view_all' => Dict::S('UI:Newsroom:ViewAllMessages'),
-					),
-				);
-				$sParams = json_encode($aParams);
-				$this->add_ready_script(
-	<<<EOF
-		$('#top-left-newsroom-cell').newsroom_menu($sParams);
+		}
+		// Show newsroom only if there are some providers
+		if (count($aProviderParams) > 0)
+		{
+			$sImageUrl= 'fas fa-comment-dots';
+			$sPlaceholderImageUrl= 'far fa-envelope';
+			$aParams = array(
+				'image_icon' => $sImageUrl,
+				'placeholder_image_icon' => $sPlaceholderImageUrl,
+				'cache_uuid' => 'itop-newsroom-'.UserRights::GetUserId().'-'.md5(APPROOT),
+				'providers' => $aProviderParams,
+				'display_limit' => (int)appUserPreferences::GetPref('newsroom_display_size', 7),
+				'labels' => array(
+					'no_message' => Dict::S('UI:Newsroom:NoNewMessage'),
+					'mark_all_as_read' => Dict::S('UI:Newsroom:MarkAllAsRead'),
+					'view_all' => Dict::S('UI:Newsroom:ViewAllMessages'),
+				),
+			);
+			$sParams = json_encode($aParams);
+			$this->add_ready_script(
+<<<EOF
+	$('#top-left-newsroom-cell').newsroom_menu($sParams);
 EOF
-				);
-				$sNewsroomInitialImage = '<img style="opacity:0.4" src="../images/newsroom_menu.png">';
-			}
+			);
+			$sNewsroomInitialImage = '<i style="opacity:0.4" class="top-right-icon fas fa-comment-dots"></i>';
 		}
 		// else no newsroom menu
 		return $sNewsroomInitialImage;
@@ -1203,7 +1203,7 @@ EOF;
 			{
 				$sLogonMessage = Dict::Format('UI:LoggedAsMessage', $sUserName);
 			}
-			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><img src=\"../images/on-off-menu.png\"><ul>";
+			$sLogOffMenu = "<span id=\"logOffBtn\"><ul><li><i class=\"top-right-icon icon-additional-arrow fas fa-power-off\"></i><ul>";
 			$sLogOffMenu .= "<li><span>$sLogonMessage</span></li>\n";
 			$aActions = array();
 
@@ -1365,10 +1365,10 @@ EOF;
 			$sHtml .= ' <table id="top-bar-table">';
 			$sHtml .= ' <tr>';
 			$sHtml .= ' <td id="open-left-pane"  class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'" onclick="$(\'body\').layout().open(\'west\');">';
-			$sHtml .= ' <img src="../images/menu.png">';
+			$sHtml .= ' <i class="fas fa-bars"></i>';
 			$sHtml .= ' </td>';
 			$sHtml .= ' <td id="go-home" class="menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
-			$sHtml .= ' <a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><img src="../images/home.png"></a>';
+			$sHtml .= ' <a href="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php"><i class="fas fa-home"></i></a>';
 			$sHtml .= ' </td>';
 			$sHtml .= ' <td class="top-bar-spacer menu-pane-exclusive" style="'.$GoHomeInitialStyle.'">';
 			$sHtml .= ' </td>';
@@ -1378,8 +1378,8 @@ EOF;
 			$sHtml .= ' <td id="top-bar-table-search">';
 			$sHtml .= '		<div id="global-search"><form action="'.utils::GetAbsoluteUrlAppRoot().'pages/UI.php">';
 			$sHtml .= '		<table id="top-left-buttons-area"><tr>';
-			$sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sDefaultPlaceHolder.'" value="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"><input type="hidden" name="operation" value="full_text"/></div></div></td>';
-			$sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank"><img title="'.Dict::S('UI:Help').'" src="../images/help.png?t='.utils::GetCacheBusterTimestamp().'"/></td>';
+			$sHtml .= '			<td id="top-left-global-search-cell"><div id="global-search-area"><input id="global-search-input" type="text" name="text" placeholder="'.$sDefaultPlaceHolder.'" value="'.$sText.'"></input><div '.$sOnClick.' id="global-search-image"><i class="top-right-icon fa-flip-horizontal fas fa-search"></i><input type="hidden" name="operation" value="full_text"/></div></div></td>';
+			$sHtml .= '     	<td id="top-left-help-cell"><a id="help-link" href="'.$sOnlineHelpUrl.'" target="_blank" title="'.Dict::S('UI:Help').'"><i class="top-right-icon fas fa-question-circle"></i></a></td>';
 			$sHtml .= '		<td id="top-left-newsroom-cell">'.$sNewsRoomInitialImage.'</td>';
 			$sHtml .= '     	<td id="top-left-logoff-cell">'.self::FilterXSS($sLogOffMenu).'</td>';
 			$sHtml .= '     </tr></table></form></div>';

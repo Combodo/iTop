@@ -1,35 +1,4 @@
-/*!
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
-
-@import 'css-variables.scss';
-
-$hilight-color: $highlight-color;
-$summary-details-background: $grey-color;
-$main-header-background: $frame-background-color;
-$table-even-background: $frame-background-color;
-$popup-menu-highlight-color: $highlight-color;
-$popup-menu-text-color: #000;
-$popup-menu-background-color: #fff;
-$popup-menu-text-higlight-color: #fff;
-$breadcrumb-color: #555;
-$breadcrumb-text-color: #fff;
-$breadcrumb-highlight-color: $highlight-color;
-$breadcrumb-text-highlight-color: #fff;
+//@import 'css-variables.scss';
 
 /* CSS Document */
 body {
@@ -96,7 +65,7 @@ label {
 }
 
 .hilite, .hilite a, .hilite a:visited {
-    color: $hilight-color;
+    color: $highlight-color;
     text-decoration: none;
 }
 table.datatable {
@@ -114,7 +83,7 @@ table.listResults {
 	border-bottom: 3px solid #e6e6e1;  
 	border-right: 3px solid #e6e6e1;
 	width: 100%;
-	background-color: #fff;
+	background-color: $white;
 }
 
 table.listResults td {
@@ -172,7 +141,7 @@ table.listResults > tbody > tr:hover > * {
 
 	  &.compat {
 		// Browser not supporting FileReader
-		background-image: url("ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png");
+		background-image: url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=" + $version);
 		img {
 		  opacity: 0.3;
 		}
@@ -198,7 +167,7 @@ table.listResults > tbody > tr:hover > * {
 		opacity: 0.3;
 	  }
 	  .ui-icon {
-		background-image: url("ui-lightness/images/ui-icons_ffffff_256x240.png");
+		background-image: url($approot-relative + "css/ui-lightness/images/ui-icons_ffffff_256x240.png?v=" + $version);
 	  }
 	}
   }
@@ -212,7 +181,7 @@ table.listResults > tbody > tr:hover > * {
 .details .view-image {
   text-align: center;
   padding: 2px;
-  border: 2px solid #DDDDDD;
+  border: 2px solid $gray-lighter;
   border-radius: 6px;
 
   img {
@@ -247,11 +216,11 @@ tr.even td, .wizContainer tr.even td {
 } 
 tr.red_even td, .wizContainer tr.red_even td {
 	background-color: #f97e75;
-	color: #fff;
+	color: $white;
 }
 tr.red td, .wizContainer tr.red td {
 	background-color: #f9a397;
-	color: #fff;
+	color: $white;
 }
 tr.orange_even td, .wizContainer tr.orange_even td {
 	background-color: #f4d07a;
@@ -288,15 +257,29 @@ th.header {
 }
 
 th.headerSortUp {
-	background-image: url(../images/asc.gif);
 	text-decoration: underline;
 	cursor: pointer;
+	padding-right: 5px;
+	&::after {
+		text-align: right;
+		content: '\f0d7';
+		font-family: 'FontAwesome';
+		color: $complement-color;
+		float: right;
+	}
 }
 
 th.headerSortDown {
-	background-image: url(../images/desc.gif);
 	text-decoration: underline;
 	cursor: pointer;
+	padding-right: 5px;
+	&::after {
+		text-align: right;
+		content: '\f0d8';
+		font-family: 'FontAwesome';
+		color: $complement-color;
+		float: right;
+	}
 }
 
 td {
@@ -319,7 +302,7 @@ td.label {
 td.label span {
     font-family: Tahoma, Verdana, Arial, Helvetica;
     font-size: 12px;
-    color: #000000;
+    color: $text-color;
     padding: 5px;
     padding-right: 10px;	
     font-weight:bold;
@@ -377,10 +360,10 @@ legend.transparent {
 }
 .cke_reset_all *:hover {
 	text-decoration: none;
-	color: #000;
+	color: $text-color;
 }
 table.cke_dialog_contents a.cke_dialog_ui_button_ok {
-    color: #000;
+    color: $text-color;
     border-color: $highlight-color;
     background: $highlight-color;
 }
@@ -389,7 +372,7 @@ table.cke_dialog_contents a.cke_dialog_ui_button_ok {
 }
 td a.no-arrow, td a.no-arrow:visited, .SearchDrawer a.no-arrow, .SearchDrawer a.no-arrow:visited {
 	text-decoration:none;
-	color:#000000;
+	color: $text-color;
 	padding-left:0px;
 	background: inherit;
 }
@@ -419,7 +402,7 @@ td a:visited{
 a.small_action {
     font-family: Tahoma, Verdana, Arial, Helvetica;
     font-size: 8pt;
-    color: #000000;
+    color: $text-color;
 	text-decoration:none;
 }
 .display_block {
@@ -432,10 +415,10 @@ a.small_action {
 	padding-left: 5px;
 	padding-top: 2px;
 	padding-bottom: 2px;
-	background: $highlight-color url(../images/actions_left.png?v=#{$version}) no-repeat left;
+	background: $highlight-color;
 }
 .actions_details span{
-	background: url(../images/actions_right.png?v=#{$version}) no-repeat right;
+	background: url($approot-relative + "images/actions_right.png?v=" + $version) no-repeat right;
 	color: #fff;
 	font-weight: bold;
 	padding-top: 2px;
@@ -452,15 +435,15 @@ a.small_action {
 }
 
 input.textSearch {
-	border:1px solid #000;
+	border:1px solid $gray-base;
 	font-family:Tahoma,Verdana, Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	color:#000000;
+	color: $text-color;
 }
 
 .ac_input {
 	border: 1px solid #7f9db9;
-	background: #fff url(../images/ac-background.gif) no-repeat right;
+	background: #fff url($approot-relative + "images/ac-background.gif?v=" + $version) no-repeat right;
 }
 /* By Rom */
 .csvimport_createobj {
@@ -477,17 +460,17 @@ input.textSearch {
     background-color:#EEEEEE;
 }
 .csvimport_ok {
-    color: #000000;
+    color: $text-color;
     background-color:#BBFFBB;
 }
 .csvimport_reconkey {
     font-style: italic;
     color: #888888;
-    background-color:#FFFFFF;
+    background-color: $white;
 }
 .csvimport_extreconkey {
     color: #888888;
-    background-color:#FFFFFF;
+    background-color: $white;
 }
 #accordion {
 	display:none;
@@ -520,7 +503,7 @@ input.textSearch {
     noborder-top: 1px solid #8b8b8b;
     padding: 4px 0px 0px 16px;   	
 	font-size:8pt;
-    background: url(../images/green-square.gif) no-repeat bottom left;
+    background: url($approot-relative + "images/green-square.gif?v=" + $version) no-repeat bottom left;
     color:#83b217;
     font-weight:bold;
 	text-decoration:none;
@@ -544,34 +527,52 @@ div.ui-accordion-content {
 	margin-top: 0;
 }
 
-.ui-accordion-content li { 
-	color:$grey-color;
-	text-decoration:none;
+.ui-accordion-content li {
+	color: $grey-color;
+	text-decoration: none;
 	margin: 0;
 	padding: 0px 0pt 0px 16px;
 	font-size: 9pt;
-    background: url(../images/mini-arrow-orange.gif) no-repeat top left;
-    font-weight:normal;
-    border: 0;
+	font-weight: normal;
+	border: 0;
+	::before {
+		color: $highlight-color;
+		content: '\f0da';
+		font-family: 'FontAwesome';
+		margin-right: 6px;
+		font-size: 10px;
+	}
 }
 
-a.CollapsibleLabel, td a.CollapsibleLabel { 
+td a.CollapsibleLabel, a.CollapsibleLabel{ 
 	margin: 0;
 	padding: 0px 0pt 0px 16px;
 	font-size:8pt;
 	text-decoration:none;
 	color:$grey-color;
-    background: url(../images/mini-arrow-orange.gif) no-repeat left;
+}
+td a.CollapsibleLabel::before, a.CollapsibleLabel::before{
+	color: $highlight-color;
+	content: '\f0da';
+	font-family: 'FontAwesome';
+	margin-right: 6px;
+	font-size: 10px;
 }
 
-/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
-a.CollapsibleLabel.open,  td a.CollapsibleLabel.open { 
+	/* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
+td a.CollapsibleLabel.open, a.CollapsibleLabel.open{ 
 	margin: 0;
 	padding: 0px 0pt 0px 16px;
 	font-size:8pt;
 	text-decoration:none;
 	color: $highlight-color;
-    background: url(../images/mini-arrow-orange-open.gif) no-repeat left;
+}
+td a.CollapsibleLabel.open::before, a.CollapsibleLabel.open::before {
+	color: $highlight-color;
+	content: '\f0d7';
+	font-family: 'FontAwesome';
+	margin-right: 6px;
+	font-size: 10px;
 }
 
 .page_header {
@@ -583,12 +584,12 @@ a.CollapsibleLabel.open,  td a.CollapsibleLabel.open {
 	margin-top: -8px;
 }
 
-.notreeview li { background: url(../images/tv-item.gif) 0 0 no-repeat; }
-.notreeview .collapsable { background-image: url(../images/tv-collapsable.gif); }
-.notreeview .expandable { background-image: url(../images/tv-expandable.gif); }
-.notreeview .last { background-image: url(../images/tv-item-last.gif); }
-.notreeview .lastCollapsable { background-image: url(../images/tv-collapsable-last.gif); }
-.notreeview .lastExpandable { background-image: url(../images/tv-expandable-last.gif); }
+.notreeview li { background: url($approot-relative + "images/tv-item.gif?v=" + $version) 0 0 no-repeat; }
+.notreeview .collapsable { background-image: url($approot-relative + "images/tv-collapsable.gif?v=" + $version); }
+.notreeview .expandable { background-image: url($approot-relative + "images/tv-expandable.gif?v=" + $version); }
+.notreeview .last { background-image: url($approot-relative + "images/tv-item-last.gif?v=" + $version); }
+.notreeview .lastCollapsable { background-image: url($approot-relative + "images/tv-collapsable-last.gif?v=" + $version); }
+.notreeview .lastExpandable { background-image: url($approot-relative + "images/tv-expandable-last.gif?v=" + $version); }
 
 #OrganizationSelection {
     padding:5px 0px 16px 20px;
@@ -613,7 +614,7 @@ div.actions_menu > ul {
 	display:block;
 	nowidth:70px; /* Nasty work-around for IE... en attendant mieux */
 	padding-left: 5px;
-	background: $highlight-color url(../images/actions_left.png?v=#{$version}) no-repeat top left;
+	background: $highlight-color;
 	cursor: pointer;
 	margin: 0;
 }
@@ -624,14 +625,18 @@ div.actions_menu > ul > li {
 	font-size: 11px;
 	font-family: Tahoma,sans-serif;
 	height: 17px;
-	padding-right: 16px;
+	padding-right: 10px;
 	padding-left: 4px;
-	background: url(../images/actions_right.png?v=#{$version}) no-repeat top right transparent;
 	font-weight: bold;
 	color: $popup-menu-text-higlight-color;
 	vertical-align: middle;
 	margin: 0;
 }
+
+div.actions_menu > ul > li > i {
+	margin-left: 5px;
+}
+
 #logOffBtn > ul > li {
 	list-style: none;
 	vertical-align: middle;
@@ -675,8 +680,32 @@ div.actions_menu > ul > li {
 }
 
 .menucontainer div.toolkit_menu {
+	background: $highlight-color;
 	margin-left: 10px;
+	> ul > li 
+	{
+		float: left;
+		list-style: none;
+		font-size: 11px;
+		font-family: Tahoma, sans-serif;
+		height: 19px;
+		padding-right: 4px;
+		padding-left: 6px;
+		font-weight: bold;
+		color:#fff;
+		vertical-align: middle;
+		line-height: 17px;
+		margin: 0;
+		> i:nth-child(1) {
+			font-size: 13px;
+			padding-top: 3px;
+		}
+		> i:nth-child(2) {
+			margin-left: 5px;
+		}
+	}
 }
+
 
 .itop_popup li a:hover, #logOffBtn li a:hover {
 	background: #1A4473;
@@ -750,31 +779,31 @@ hr.menu-separator {
 
 .red {
 	background-color: #ff6000;
-	color: #000;
+	color: $text-color;
 }
 
 th.red {
-	background: url(../images/red-header.gif) bottom left repeat-x;
-	color: #000;
+	background: url($approot-relative + "images/red-header.gif?v=" + $version) bottom left repeat-x;
+	color: $text-color;
 }
 
 .green {
 	background-color: #00cc00;
-	color: #000;
+	color: $text-color;
 }
 th.green {
-	background: url(../images/green-header.gif) bottom left repeat-x;
-	color: #000;
+	background: url($approot-relative + "images/green-header.gif?v=" + $version) bottom left repeat-x;
+	color: $text-color;
 }
 
 .orange {
 	background-color: #ffde00;
-	color: #000;
+	color: $text-color;
 }
 
 th.orange {
-	background: url(../images/orange-header.gif) bottom left repeat-x;
-	color: #000;
+	background: url($approot-relative + "images/orange-header.gif?v=" + $version) bottom left repeat-x;
+	color: $text-color;
 }
 
 /* For Date Picker: Creates a little calendar icon
@@ -789,7 +818,7 @@ td a.dp-choose-date, a.dp-choose-date, td a.dp-choose-date:hover, a.dp-choose-da
 	display: block;
 	text-indent: -2000px;
 	overflow: hidden;
-	background: url(../images/calendar.png?v=#{$version}) no-repeat; 
+	background: url($approot-relative + "images/calendar.png?v=" + $version) no-repeat; 
 }
 td a.dp-choose-date.dp-disabled, a.dp-choose-date.dp-disabled {
 	background-position: 0 -20px;
@@ -949,7 +978,7 @@ input.dp-applied {
 		transition: opacity 0.3s, background-color 0.3s, color 0.3s linear;
 		padding: 8px 10px;
 		margin: 0;
-		color: #ffffff;
+		color: $white;
 		background-color: $complement-color;
 		cursor: pointer;
 		.sft_hint,
@@ -1629,22 +1658,22 @@ input.dp-applied {
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.odd td.truncated, table.listResults tr td.truncated, .wizContainer table.listResults tr.odd td.truncated, .wizContainer table.listResults tr td.truncated {
-	background: url(../images/truncated.png?v=#{$version}) bottom  repeat-x;
+	background: url($approot-relative + "images/truncated.png?v=" + $version) bottom  repeat-x;
 }
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.even td.truncated, .wizContainer table.listResults  tr.even td.truncated {
-	background: #f9f9f1 url(../images/truncated.png?v=#{$version}) bottom  repeat-x;
+	background: #f9f9f1 url($approot-relative + "images/truncated.png?v=" + $version) bottom  repeat-x;
 }
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.even td.hover.truncated, .wizContainer table.listResults  tr.even td.hover.truncated {
-	background: #fdf5d0 url(../images/truncated.png?v=#{$version}) bottom  repeat-x;
+	background: #fdf5d0 url($approot-relative + "images/truncated.png?v=" + $version) bottom  repeat-x;
 }
 
 /* Beware: IE6 does not support multiple selector with multiple classes, only the last class is used */
 table.listResults tr.odd td.hover.truncated,  table.listResults tr td.hover.truncated, .wizContainer table.listResults  tr.odd td.hover.truncated, .wizContainer table.listResults  tr td.hover.truncated {
-	background: #fdf5d0 url(../images/truncated.png?v=#{$version}) bottom  repeat-x;
+	background: #fdf5d0 url($approot-relative + "images/truncated.png?v=" + $version) bottom  repeat-x;
 }
 
 table.listResults.truncated {
@@ -1658,7 +1687,7 @@ tr.csv_row0 td {
 	padding-left:10px;
 	padding-right:10px;
 	background: #fff;
-	border-left: #000 1px solid;
+	border-left: $gray-base 1px solid;
 	
 }
 tr.csv_row1 td {
@@ -1667,7 +1696,7 @@ tr.csv_row1 td {
 	padding-left:10px;
 	padding-right:10px;
 	background: #f9f9f1;
-	border-left: #000 1px solid;
+	border-left: $gray-base 1px solid;
 	
 }
 tr.csv_row1 th, tr.csv_row0 th {
@@ -1675,13 +1704,13 @@ tr.csv_row1 th, tr.csv_row0 th {
 	padding-bottom:5px;
 	padding-left:10px;
 	padding-right:10px;
-	border-left: #000 1px solid;
+	border-left: $gray-base 1px solid;
 	
 }
 
 td.cell_modified {
 	font-weight: bold;
-	color: #000;
+	color: $text-color;
 }
 
 td.cell_error {
@@ -1759,7 +1788,7 @@ div#logo {
 div#logo div {
 	height: 88px;
 	width: 244px;
-	background: url(../images/itop-logo-2.png?v=#{$version}) left no-repeat;
+	background: url($approot-relative + "images/itop-logo-2.png?v=" + $version) left no-repeat;
 }
 #left-pane .ui-layout-north {
 	overflow: hidden;
@@ -1857,16 +1886,29 @@ div#logo div {
 }
 #global-search-image {
 	vertical-align: middle;
-	background: url(../images/search.png?v=#{$version}) center center no-repeat;
 	display:inline-block;
 	width: 28px;
 	height: 30px;
-	margin-left: -8px;
+	margin-left: -4px;
 	cursor: pointer;
+	line-height: 39px;
+	> i {
+		font-size: 22px;
+	}
 }
-#help-link img {
+.top-right-icon{
 	padding: 0;
 	border: 0;
+	color: $highlight-color;
+	text-decoration: none;
+	font-size: 20px;
+}
+.icon-additional-arrow::after{
+	font-family: "FontAwesome";
+	content: "\f0dd";
+	color: $highlight-color;
+	font-size: 11px;
+	margin-left: 2px;
 }
 #help-link {
 	padding: 0;
@@ -1881,12 +1923,27 @@ div.icon {
 	margin: 2px;
 	float: right;
 }
+.mini_button {
+	background-color: $highlight-color;
+	border:0;
+	cursor:pointer;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	display: inline-block;
+	vertical-align: middle;
+	> i {
+		color: $white;
+		font-size: 11px;
+	}
+}
 span.ui-icon {
 	float:left;
 	margin:0 2px;
 }
 .ui-layout-button-pin-down {
-	background: url(../images/splitter-bkg.png?v=#{$version}) transparent;
+	background: url($approot-relative + "images/splitter-bkg.png?v=" + $version) transparent;
 	width: 16px;
 	background-position: -144px -144px;
 }
@@ -1962,7 +2019,8 @@ span.form_validation {
 	width:100px;
 }
 .synoptics tr.synoptics_header td {
-	color:#000; font-size:1em;
+	color: $text-color;
+	font-size:1em;
 	vertical-align:middle;
 	text-align:center;
 }
@@ -2023,13 +2081,13 @@ span.form_validation {
 .caselog_header {
 	padding:3px;
 	border-top:1px solid #fff;
-	background: #ddd url(../images/plus.gif) left no-repeat;
+	background: #ddd url($approot-relative + "images/plus.gif?v=" + $version) left no-repeat;
 	padding-left: 16px;
 	cursor: pointer;
 	width:100%;
 }
 .caselog_header.open {
-	background: #ddd url(../images/minus.gif) left no-repeat;
+	background: #ddd url($approot-relative + "images/minus.gif?v=" + $version) left no-repeat;
 }
 .caselog_entry,
 .caselog_entry_html {
@@ -2127,7 +2185,7 @@ fieldset .details>.field_container {
 			padding-right: 10px;
 
 			> label,span {
-				color: #000000;
+				color: $text-color;
 				font-weight:bold;
 			}
 		}
@@ -2230,7 +2288,7 @@ fieldset .details>.field_container {
 									height: 15px;
 									border: 1px #A6A6A6 solid;
 									cursor: pointer;
-									background-image: url('../images/full-screen.png');
+									background-image: url($approot-relative + "images/full-screen.png?v=" + $version);
 									background-repeat: no-repeat;
 									background-position: center center;
 									background-size: 98%;
@@ -2371,7 +2429,7 @@ fieldset .details>.field_container {
 			height: 15px;
 			border: 1px #A6A6A6 solid;
 			cursor: pointer;
-			background-image: url('../images/full-screen.png');
+			background-image: url($approot-relative + "images/full-screen.png?v=" + $version);
 			background-repeat: no-repeat;
 			background-position: center center;
 			background-size: 98%;
@@ -2416,7 +2474,7 @@ fieldset .details>.field_container {
 	padding-right: 30px;
 	text-align: left;
 
-	*{
+	*:not(i){
 		box-sizing: border-box;
 		vertical-align: middle;
 	}
@@ -2447,7 +2505,7 @@ fieldset .details>.field_container {
 	}
 }
 .ac_dlg_loading {
-	background: white url('../images/indicator.gif') right center no-repeat;
+	background: white url($approot-relative + "images/indicator.gif?v=" + $version) right center no-repeat;
 }
 table.pagination {
 	display:inline-block;
@@ -2483,7 +2541,7 @@ img.prev, img.first, img.next, img.last {
 }
 div.actions_button {
 	float:right;
-	background: $highlight-color url("../images/actions_left.png?v=#{$version}") no-repeat scroll left top;
+	background: $highlight-color;
 	padding-left: 5px;
 	margin-top: 0;
 	margin-right: 10px;
@@ -2492,7 +2550,7 @@ div.actions_button {
 }
 
 div.actions_button a, .actions_button a:hover, .actions_button a:visited {
-	background: $highlight-color  url(../images/actions_bkg.png?v=#{$version}) no-repeat scroll right top;
+	background: $highlight-color;
 	color:#fff;
 	padding-right: 8px;
 	cursor:pointer;
@@ -2516,10 +2574,10 @@ select#org_id {
 	cursor: not-allowed;
 }
 .dragHover {
-	background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=#{$version});
+	background: url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v="+ $version);
 }
 .edit_mode .dashlet {
-	background: url(./ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=#{$version});
+	background: url($approot-relative + "css/ui-lightness/images/ui-bg_diagonals-thick_20_666666_40x40.png?v=" + $version);
 	padding: 5px;
 	margin:0;
 	position:relative;
@@ -2562,7 +2620,7 @@ table.prop_table {
 	top: 0;
 	right: 0;
 	z-index: 10;
-	background: transparent url(../images/delete.png?v=#{$version}) no-repeat center;
+	background: transparent url($approot-relative + "images/delete.png?v=" + $version) no-repeat center;
 }
 td.prop_value {
 	text-align: left;
@@ -2716,19 +2774,19 @@ a.summary,  a.summary:hover {
 	display: block;
 	padding: 5px 12px;
 	text-decoration: none;
-	color: #000;
+	color: $text-color;
 	font-weight: bold;
 	text-align: left;
 	white-space: nowrap;
-	background: #fff;
+	background: $white;
 }
 #DashboardMenu li span {
 	display: block;
 	padding: 5px 12px;
 	text-decoration: none;
-	color: #000;
+	color: $text-color;
 	white-space: nowrap;
-	background: #fff;
+	background: $white;
 }
 #DashboardMenu li {
 	list-style: none;
@@ -2739,8 +2797,8 @@ a.summary,  a.summary:hover {
 
 #DashboardMenu ul > li > ul
 {	
-	border: 1px solid black;
-	background: #fff;
+	border: 1px solid $gray-base;
+	background: $white;
 }
 	
 #DashboardMenu li > ul
@@ -2748,7 +2806,7 @@ a.summary,  a.summary:hover {
 	padding: 0;
 	position: absolute;
 	display: none;
-	border-top: 1px solid white;
+	border-top: 1px solid $white;
 	z-index: 1500;
 }
 #DashboardMenu li ul li a:hover{
@@ -2776,19 +2834,19 @@ a.summary,  a.summary:hover {
 	height: 12px;
 }
 .sort_none {
-	background: url(../images/bg.gif) no-repeat center;
+	background: url($approot-relative + "images/bg.gif?v=" + $version) no-repeat center;
 }
 .sort_asc {
-	background: url(../images/desc.gif) no-repeat center;
+	background: url($approot-relative + "images/desc.gif?v=" + $version) no-repeat center;
 }
 .sort_desc {
-	background: url(../images/asc.gif) no-repeat center;
+	background: url($approot-relative + "images/asc.gif?v=" + $version) no-repeat center;
 }
 .sort_hidden {
 	display: none;
 }
 .sortable_field_list > li.selected {
-	background: #F6A828;
+	background: $highlight-color;
 }
 .itop-deleted-object {
 	text-decoration: line-through;
@@ -2796,7 +2854,7 @@ a.summary,  a.summary:hover {
 .header_message {
 	padding: 1em;
 	font-size: 10pt;
-	background: #fff;
+	background: $white;
 	border: 1px solid #999;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -2805,23 +2863,23 @@ a.summary,  a.summary:hover {
 }
 .message_info {
 	border: 1px solid #993;
-	background: url(../images/info-mini.png?v=#{$version}) 1em 1em no-repeat #ffc;
+	background: url($approot-relative + "images/info-mini.png?v=" + $version) 1em 1em no-repeat #ffc;
 	padding-left: 3em;
 }
 .message_ok {
 	border: 1px solid #393;
-	background: url(../images/ok.png?v=#{$version}) 1em 1em no-repeat #cfc;
+	background: url($approot-relative + "images/ok.png?v=" + $version) 1em 1em no-repeat #cfc;
 	padding-left: 3em;
 }
 .message_warning {
 	border: 1px solid #ec9800;
-	background: url(../images/error.png?v=#{$version}) 1em 1em no-repeat #ffd78d;
-	color: #000;
+	background: url($approot-relative + "images/error.png?v=" + $version) 1em 1em no-repeat #ffd78d;
+	color: $text-color;
 	padding-left: 3em;
 }
 .message_error {
 	border: 1px solid #933;
-	background: url(../images/error.png?v=#{$version}) 1em 1em no-repeat #fcc;
+	background: url($approot-relative + "images/error.png?v=" + $version) 1em 1em no-repeat #fcc;
 	padding-left: 3em;
 }
 .fg-menu a img {
@@ -2836,7 +2894,7 @@ div.ui-dialog-header {
 	background: #fcc;
 }
 .simple-graph, .graph_config {
-	background: #fff;
+	background: $white;
 }
 .graph_config {
 	padding: 0.25em;
@@ -2944,7 +3002,7 @@ table.export_parameters td {
 div.explain-printable {
 	border: 5px solid $complement-color;
 	background: $complement-light;
-	color: #000;
+	color: $text-color;
 	padding: 10px;
 	margin: 0;
 	font-size: 12px;
@@ -2955,19 +3013,19 @@ div.explain-printable {
 }
 #hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter span {
 	padding-left: 20px;
-	background: url(../images/eye-open-555.png?v=#{$version}) 2px center no-repeat;
+	background: url($approot-relative + "images/eye-open-555.png?v=" + $version) 2px center no-repeat;
 }
 
 #hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter.strikethrough span {
 	text-decoration: line-through;
-	background: url(../images/eye-closed-555.png?v=#{$version}) 2px center no-repeat;
+	background: url($approot-relative + "images/eye-closed-555.png?v=" + $version) 2px center no-repeat;
 }
 .printable-version legend {
 	padding-left: 26px;
-	background: $complement-color url(../images/eye-open-fff.png?v=#{$version}) 8px center no-repeat;
+	background: $complement-color url($approot-relative + "images/eye-open-fff.png?v=" + $version) 8px center no-repeat;
 }
 .printable-version .strikethrough legend {
-	background: $complement-color url(../images/eye-closed-fff.png?v=#{$version}) 8px center no-repeat;
+	background: $complement-color url($approot-relative + "images/eye-closed-fff.png?v=" + $version) 8px center no-repeat;
 }
 .printable-version fieldset.strikethrough span {
 	display: none;
@@ -2986,7 +3044,7 @@ span.search-button, span.refresh-button {
 	width: 21px;
 	height: 18px;
 	cursor: pointer;
-	color: #FFFFFF;
+	color: $white;
 	text-align: center;
 	padding-top: 3px;
 	font-size: 10px;
@@ -3040,7 +3098,7 @@ span.search-button, span.refresh-button {
 	cursor: pointer;
 	width: 16px;
 	height: 16px;
-	background-image: url(ui-lightness/images/ui-icons_222222_256x240.png);
+	background-image: url($approot-relative + "css/ui-lightness/images/ui-icons_222222_256x240.png?v=" + $version);
 	background-position: -16px -192px;
 }
 .history_entry_truncated .history_truncated_toggler {
@@ -3059,6 +3117,10 @@ span.search-button, span.refresh-button {
 	text-align: center;
 	width: $top-button-width !important;
 	cursor: pointer;
+	i {
+      font-size: 20px;
+	  color: $highlight-color;
+	}
   }
   #go-home {
 	text-align: center;
@@ -3073,8 +3135,11 @@ span.search-button, span.refresh-button {
 
 	  // Make the whole cell clickable
 	  display: inline-block;
-	  line-height: $top-button-heigth;
 	  width: 100%;
+	  i {
+		font-size: 20px;
+	    color: $highlight-color;
+	  }
 	}
   }
   .top-bar-spacer{
@@ -3137,7 +3202,7 @@ span.search-button, span.refresh-button {
 	  &::after{
 		content:'';
 		position: absolute;
-		background-image: url(../images/breadcrumb-separator.png?v=#{$version});
+		background-image: url($approot-relative + "images/breadcrumb-separator.png?v=" + $version);
 		background-repeat: no-repeat;
 		width: 8px;
 		height: 16px;
@@ -3243,7 +3308,7 @@ span.search-button, span.refresh-button {
 	background-color: $grey-color;
 	padding:3px;
 	font-size:10px;
-	color:#fff;
+	color: $white;
     border-radius: 4px;
 }
 
@@ -3271,21 +3336,21 @@ span.search-button, span.refresh-button {
 }
 
 .qtip-content a, .qtip-content a:visited{
-	color : #1c94c4;
+	color : $complement-color;
 	text-decoration: none;
 }
 .qtip-content a:hover, .qtip-content a:active{
-	color : #e87c1e;
+	color : $highlight-color;
 	text-decoration: none;
 }
 
 .data-model-viewer a, .data-model-viewer a:visited {
-	color : #1c94c4;
+	color : $complement-color;
 	text-decoration : none;
 }
 
 .data-model-viewer a:hover {
-	color: #e87c1e;
+	color: $highlight-color;
 	text-decoration: none;
 }
 
@@ -3312,7 +3377,7 @@ table.listResults .originColor{
     width: 100%
 }
 #dataModelHeader{
-	background-color: white;
+	background-color: $white;
 }
 
 #dataModelSplitPane  #tabbedContent_0{
@@ -3332,7 +3397,7 @@ table.listResults .originColor{
 	margin-left: 15px !important;
 }
 #dataModelSplitPane .ui-layout-resizer :hover{
-	background: #E87C1E;
+	background: $highlight-color;
 }
 #dataModelSplitPane .ui-layout-resizer-west{
 	border-left : 1px solid #BBB;
@@ -3348,7 +3413,7 @@ table.listResults .originColor{
 	width:10px !important;
 }
 #dataModelSplitPane .ui-layout-toggler:hover{
-	background: #E87C1E;
+	background: $highlight-color;
 }
 .dataModelSchema g {
 	cursor: pointer;
@@ -3388,13 +3453,13 @@ table.listResults .originColor{
 }
 
 .data-model-viewer{
-	background-color: #FFF;
+	background-color: $white;
 	margin-top:7px !important;
 	margin-left: 15px !important;
 }
 
 #delDataModelSearch {
-	color: #E87C1E;
+	color: $highlight-color;
 	display:inline-block;
 	font-size:15px;
 	margin-left:1%;
@@ -3611,7 +3676,7 @@ input:checked + .slider:before {
 }
 #newsroom_menu > ul > li > ul > li {
 	display: block;
-	border-bottom: 1px #ddd solid;
+	border-bottom: 1px $gray-lighter solid;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	text-align: left;
@@ -3640,8 +3705,8 @@ input:checked + .slider:before {
 }
 #newsroom_menu_counter_container {
 	position:relative;
-	top:-26px;
-	left:4px;
+	top:-23px;
+	left:3px;
 }
 #newsroom_menu_counter {
 	display:inline-block;
@@ -3693,7 +3758,7 @@ input:checked + .slider:before {
 }
 #newsroom_show_all_submenu > ul > li > ul > li {
 	display: block;
-	border-bottom: 1px #ddd solid;
+	border-bottom: 1px $gray-lighter solid;
 	padding-left: 5px;
 	padding-top: 4px;
 	padding-bottom: 6px;
@@ -3705,7 +3770,7 @@ input:checked + .slider:before {
 }
 #newsroom_show_all_submenu li ul {
 	width: 200px;
-	color:#000;
+	color:$text-color;
 }
 .no-padding {
 	padding: 0 !important;

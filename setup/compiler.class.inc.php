@@ -2642,6 +2642,62 @@ EOF;
 			copy($sSourceFile, $sTargetFile);
 		}
 	}
+	/**
+	 * @param $oBrandingNode
+	 * @param $sTempTargetDir
+	 * @param $sFinalTargetDir
+	 *
+	 * @throws \Exception
+	 */
+	protected function CompileThemes($oBrandingNode, $sTempTargetDir, $sFinalTargetDir)
+	{
+		$oThemeNodes = $oBrandingNode->GetNodes('themes/theme'); 
+		$sThemesDir = $sTempTargetDir.'/branding/themes/';
+		if(!is_dir($sThemesDir))
+		{
+			SetupUtils::builddir($sThemesDir);
+		}
+		foreach($oThemeNodes as $oTheme)
+		{
+			$sThemeId = $oTheme->getAttribute('id');
+			$sThemeDir = $sTempTargetDir.'/branding/themes/'.$sThemeId;
+
+			if(!is_dir($sThemesDir.$sThemeId))
+			{
+				SetupUtils::builddir($sThemesDir.$sThemeId);
+			}
+			
+			$oVariables = $oTheme->GetNodes('variables/variable');
+			$oImports = $oTheme->GetNodes('imports/import');
+			$oStylesheets = $oTheme->GetNodes('stylesheets/stylesheet');
+			
+			$aThemeParameters = array(
+				'variables' => array(),
+				'imports' => array(),
+				'stylesheets' => array(),
+			);
+			// json array
+			$sVariablesContent = '';
+			foreach($oVariables as $oVariable)
+			{
+				$sVariableId = $oVariable->getAttribute('id');
+				$aThemeParameters['variables'][$sVariableId] = $oVariable->GetText();
+			}
+
+			foreach($oImports as $oImport)
+			{
+				$sImportId = $oImport->getAttribute('id');
+				$aThemeParameters['imports'][$sImportId] = $oImport->GetText();
+			}
+			
+			foreach($oStylesheets as $oStylesheet)
+			{
+				$sStylesheetId = $oStylesheet->getAttribute('id');
+				$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
+			}
+			file_put_contents($sThemeDir.'/theme-parameters.json', json_encode($aThemeParameters));
+		}
+	}
 
 	/**
 	 * @param $oBrandingNode
@@ -2669,6 +2725,9 @@ EOF;
 			{
 				SetupUtils::rrmdir($sTempTargetDir.'/branding/images');
 			}
+			
+			// Compile themes 
+			$this->CompileThemes($oBrandingNode, $sTempTargetDir, $sFinalTargetDir);
 		}
 	}
 

@@ -46,8 +46,7 @@ class NiceWebPage extends WebPage
 		{
 			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
 		}
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/ui-lightness/jquery-ui-1.11.4.custom.css');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.11.4.custom.min.js');
+	    $this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-1.11.4.custom.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
 		// table sorting
@@ -124,7 +123,8 @@ class NiceWebPage extends WebPage
 	$("table.listResults").tableHover(); // hover tables
 EOF
 		);
-		$this->add_saas("css/light-grey.scss");
+	    $sCssThemeUrl = ThemeHandler::GetTheme();
+		$this->add_linked_stylesheet($sCssThemeUrl);
 
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
      	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);

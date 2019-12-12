@@ -699,6 +699,10 @@ class iTopDesignFormat
 		// -- 1283 : remove "in_new_window" option for WebPageMenuNode
 		$sPath = "/itop_design/menus/menu[@xsi:type='WebPageMenuNode']/in_new_window";
 		$this->RemoveNodeFromXPath($sPath);
+		
+		// -- 2314 : remove "themes" nodes
+		$sPath = "/itop_design/branding/themes";
+		$this->RemoveNodeFromXPath($sPath);
 	}
 
 	private function RemoveNodeFromXPath($sPath)
