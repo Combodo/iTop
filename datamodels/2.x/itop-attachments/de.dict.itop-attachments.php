@@ -37,6 +37,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Attachments:NoAttachment' => 'Kein Attachment. ',
 	'Attachments:PreviewNotAvailable' => 'Vorschau für diesen Attachment-Typ nicht verfügbar.',
 	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
+	'Attachments:Render:Icons' => 'Display as icons~~',
+	'Attachments:Render:Table' => 'Display as list~~',
 ));
 
 //
