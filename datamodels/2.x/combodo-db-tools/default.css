@@ -1,0 +1,18 @@
+.db-tools-tab-content .dbt-lostattachments .dbt-steps .dbt-step {
+  margin-top: 30px;
+  /* This is to avoid long exception message on restore errors */
+}
+.db-tools-tab-content .dbt-lostattachments .dbt-steps .dbt-step .dbt-step-description {
+  padding: 0;
+  margin: 0px 0px 5px 0px;
+}
+.db-tools-tab-content .dbt-lostattachments .dbt-steps .dbt-step .dbt-step-number {
+  margin-right: 0.3em;
+}
+.db-tools-tab-content .dbt-lostattachments .dbt-steps .dbt-step .listResults tr > *:first-child {
+  text-align: center;
+}
+.db-tools-tab-content .dbt-lostattachments .dbt-steps .dbt-step .message_error {
+  max-height: 150px;
+  overflow-y: auto;
+}
