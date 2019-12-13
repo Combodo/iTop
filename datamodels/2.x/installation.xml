@@ -16,7 +16,10 @@
             <module>itop-profiles-itil</module>
             <module>itop-welcome-itil</module>
             <module>itop-tickets</module>
-            <module>itop-hub-connector</module>
+            <module>itop-files-information</module>
+            <module>itop-twig-base</module>
+            <module>combodo-db-tools</module>
+            <module>itop-core-update</module>
           </modules>
           <mandatory>true</mandatory>
         </choice>

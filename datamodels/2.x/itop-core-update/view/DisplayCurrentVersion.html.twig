@@ -1,0 +1,10 @@
+{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% set sVersion = 'UI:iTopVersion:Long'|dict_format(constant('ITOP_APPLICATION'), constant('ITOP_VERSION'), constant('ITOP_REVISION'), constant('ITOP_BUILD_DATE')) %}
+<div class="details">
+    <div class="field_container field_small">
+        <div class="field_label label"><span title="">{{ 'iTopUpdate:UI:CurrentVersion'|dict_s }}</span></div>
+        <div class="field_data"><div class="field_value">{{ sVersion }}</div></div>
+    </div>
+</div>
