@@ -1,3 +1,21 @@
+/*!
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
 // Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
 $version: "v2.7.0-dev";
 $approot-relative: "../../../../../"; // relative to env-***/branding/themes/***/main.css
@@ -29,7 +47,14 @@ $complement-light: #d6e8ef !default;
 $frame-background-color: $gray-extra-light !default;
 $text-color: #000 !default;
 $box-radius: 0px !default;
-$box-shadow-regular: 0 1px 1px rgba(0, 0, 0, 0.15) !default;
+
+$box-shadow-lightest: 0 1px 1px rgba(0, 0, 0, 0.15) !default;
+$box-shadow-lighter: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24) !default;
+$box-shadow-light: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22) !default;
+$box-shadow-regular: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23) !default;
+$box-shadow-strong: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23) !default;
+$box-shadow-stronger: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22) !default;
+$box-shadow-strongest: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22) !default;
 
 $hyperlink-color: $complement-color !default;
 $hyperlink-text-decoration: none !default;
@@ -51,6 +76,11 @@ $search-add-criteria-box-hover-color: $gray-extra-light !default;
 $search-button-box-color: $combodo-orange !default;
 $search-button-box-bg-color: $white !default;
 $search-button-box-bg-hover-color: $gray-extra-light !default;
+
+///////////
+// Mentions
+$mentions-item-image-bg-color: #E8E8E8 !default;
+$mentions-item-image-border: 1px solid #CACACA !default;
 
 // Console elements
 $summary-details-background: $grey-color !default; 
