@@ -42,140 +42,7 @@ class SetupPage extends NiceWebPage
 		parent::__construct($sTitle);
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../setup/setup.js");
-		$this->add_style(
-			<<<CSS
-body {
-	background-color: #eee;
-	margin: 0;
-	padding: 0;
-	font-size: 10pt;
-	overflow-y: auto;
-}
-#header {
-	width: 600px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 50px;
-	padding: 20px;
-	background: #f6f6f1;
-	height: 54px;
-	border-top: 1px solid #000;
-	border-left: 1px solid #000;
-	border-right: 1px solid #000;
-}
-#header img {
-	border: 0;
-	vertical-align: middle;
-	margin-right: 20px;
-}
-#header h1 {
-	vertical-align: middle;
-	height: 54px;
-	noline-height: 54px;
-	margin: 0;
-}
-#setup {
-	width: 600px;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 20px;
-	background-color: #fff;
-	border-left: 1px solid #000;
-	border-right: 1px solid #000;
-	border-bottom: 1px solid #000;
-}
-.center {
-	text-align: center;
-}
-
-h1 {
-	color: #555555;
-	font-size: 16pt;
-}
-h2 {
-	color: #000;
-	font-size: 14pt;
-}
-h3 {
-	color: #1C94C4;
-	font-size: 12pt;
-	font-weight: bold;
-}
-.next {
-	width: 100%;
-	text-align: right;
-}
-.v-spacer {
-	padding-top: 1em;
-}
-button {
-	margin-top: 1em;
-	padding-left: 1em;
-	padding-right: 1em;
-}
-p.info {
-	padding-left: 50px;
-	background: url(../images/info-mid.png) no-repeat left -5px;
-	min-height: 48px;
-}
-p.ok {
-	padding-left: 50px;
-	background: url(../images/clean-mid.png) no-repeat left -8px;
-	min-height: 48px;
-}
-p.warning {
-	padding-left: 50px;
-	background: url(../images/messagebox_warning-mid.png) no-repeat left -5px;
-	min-height: 48px;
-}
-p.error {
-	padding-left: 50px;
-	background: url(../images/stop-mid.png) no-repeat left -5px;
-	min-height: 48px;
-}
-td.label {
-	text-align: left;
-}
-label.read-only {
-	color: #666;
-	cursor: text;
-}
-td.input {
-	text-align: left;
-}
-table.formTable {
-	border: 0;
-	cellpadding: 2px;
-	cellspacing: 0;
-}
-.wizlabel, .wizinput {
-	color: #000;
-	font-size: 10pt;
-}
-.wizhelp {
-	color: #333;
-	font-size: 8pt;
-}
-#progress { 
-    border:1px solid #000000; 
-    width: 180px; 
-    height: 20px; 
-    line-height: 20px; 
-    text-align: center;
-    margin: 5px;
-}
-h3.clickable {
-	background: url(../images/plus.gif) no-repeat left;
-	padding-left:16px;
-	cursor: hand;	
-}
-h3.clickable.open {
-	background: url(../images/minus.gif) no-repeat left;
-	padding-left:16px;
-	cursor: hand;	
-}
-CSS
-		);
+		$this->add_linked_stylesheet("../css/setup.css");
 	}
 
 	/**
@@ -314,5 +181,10 @@ CSS
 	public static function log($sText)
 	{
 		SetupLog::Ok($sText);
+	}
+
+	protected function LoadTheme()
+	{
+		// Do nothing
 	}
 }

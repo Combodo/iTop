@@ -123,8 +123,7 @@ class NiceWebPage extends WebPage
 	$("table.listResults").tableHover(); // hover tables
 EOF
 		);
-	    $sCssThemeUrl = ThemeHandler::GetTheme();
-		$this->add_linked_stylesheet($sCssThemeUrl);
+	    $this->LoadTheme();
 
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
      	$sAbsURLAppRoot = addslashes($this->m_sRootUrl);
@@ -257,6 +256,10 @@ EOF
 		}
 		parent::output();
 	}
-}
 
-?>
+	protected function LoadTheme()
+	{
+		$sCssThemeUrl = ThemeHandler::GetTheme();
+		$this->add_linked_stylesheet($sCssThemeUrl);
+	}
+}
