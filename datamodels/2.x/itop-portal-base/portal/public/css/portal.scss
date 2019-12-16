@@ -1194,21 +1194,35 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 .fileupload_field_content > div{
 	margin-bottom: 15px;
 }
-.attachments_container .attachment {
-	height: 95px;
-	overflow-x: hidden;
-	text-align: center;
-}
-.attachments_container .attachment:hover {
-	background-color: #e0e0e0;
-}
-.attachments_container .attachment .attachment_name{
-	overflow-x: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-.attachments_container .attachment .btn{
-	margin-top: 3px;
+.attachments_container {
+	.attachmentsList {
+		& thead > tr > th {
+			text-align: center;
+		}
+
+		& tbody > tr > td {
+			text-align: center;
+		}
+	}
+
+	.attachment {
+		height: 95px;
+		overflow-x: hidden;
+
+		.attachment_name {
+			overflow-x: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.btn {
+			margin-top: 3px;
+		}
+
+		&hover {
+			background-color: #e0e0e0;
+		}
+	}
 }
 .upload_container input{
 	display: inline;

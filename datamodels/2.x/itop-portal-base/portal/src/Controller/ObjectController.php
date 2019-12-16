@@ -1152,6 +1152,8 @@ class ObjectController extends BrickController
 						$oAttachment->Set('expire', time() + MetaModel::GetConfig()->Get('draft_attachments_lifetime')); // one hour...
 						$oAttachment->Set('temp_id', $sTempId);
 						$oAttachment->Set('item_class', $sObjectClass);
+						$oAttachment->Set('creation_date', time());
+						$oAttachment->Set('user_id', UserRights::GetUserObject());
 						$oAttachment->SetDefaultOrgId();
 						$oAttachment->Set('contents', $oDocument);
 						$iAttId = $oAttachment->DBInsert();
@@ -1162,6 +1164,10 @@ class ObjectController extends BrickController
 						$aData['icon'] = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/itop-attachments/icons/image.png';
 						$aData['att_id'] = $iAttId;
 						$aData['preview'] = $oDocument->IsPreviewAvailable() ? 'true' : 'false';
+						$aData['file_size'] = $oDocument->GetFormatedSize();
+						$aData['creation_date'] = $oAttachment->Get('creation_date');
+						$aData['user_id_friendlyname'] = $oAttachment->Get('user_id_friendlyname');
+						$aData['file_type'] = $oDocument->GetMimeType();
 					}
 					catch (FileUploadException $e)
 					{

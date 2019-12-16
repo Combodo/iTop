@@ -16,10 +16,20 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+/**
+ * Attachments rendering for iTop console.
+ *
+ * For the user portal, see \Combodo\iTop\Renderer\Bootstrap\FieldRenderer\BsFileUploadFieldRenderer
+ */
+
+
 define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_document&class=Attachment&field=contents&id=');
 define('ATTACHMENTS_RENDERER', 'TableDetailsAttachmentsRenderer');
 
 
+/**
+ * For now this factory is just a helper to instanciate the renderer
+ */
 class AttachmentsRendererFactory
 {
 	/**
@@ -320,21 +330,32 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 			return;
 		}
 
-		$this->oPage->add('<table class="listResults attachmentsList">'.PHP_EOL);
-		$this->oPage->add('<thead>'.PHP_EOL);
-		$this->oPage->add('  <th>'.Dict::S('Attachments:File:Thumbnail').'</th>'.PHP_EOL);
-		$this->oPage->add('  <th>'.Dict::S('Attachments:File:Name').'</th>'.PHP_EOL);
-		$this->oPage->add('  <th>'.Dict::S('Attachments:File:Size').'</th>'.PHP_EOL);
-		$this->oPage->add('  <th>'.Dict::S('Attachments:File:Date').'</th>'.PHP_EOL);
-		$this->oPage->add('  <th>'.Dict::S('Attachments:File:Creator').'</th>'.PHP_EOL);
-		$this->oPage->add('  <th>'.Dict::S('Attachments:File:MimeType').'</th>'.PHP_EOL);
+
+		$sThumbnail = Dict::S('Attachments:File:Thumbnail');
+		$sFileName = Dict::S('Attachments:File:Name');
+		$sFileSize = Dict::S('Attachments:File:Size');
+		$sFileDate = Dict::S('Attachments:File:Date');
+		$sFileCreator = Dict::S('Attachments:File:Creator');
+		$sFileType = Dict::S('Attachments:File:MimeType');
+		$sDeleteColumn = '';
 		if ($bWithDeleteButton)
 		{
-			$this->oPage->add('  <th></th>'.PHP_EOL);
+			$sDeleteColumn = '<th></th>';
 		}
-		$this->oPage->add('</thead>'.PHP_EOL);
-		$this->oPage->add('<tbody>'.PHP_EOL);
-
+		$this->oPage->add(<<<HTML
+<table class="listResults attachmentsList">
+	<thead>
+		<th>$sThumbnail</th>
+		<th>$sFileName</th>
+		<th>$sFileSize</th>
+		<th>$sFileDate</th>
+		<th>$sFileCreator</th>
+		<th>$sFileType</th>
+		$sDeleteColumn
+	</thead>
+<tbody>
+HTML
+		);
 
 		$iMaxWidth = MetaModel::GetModuleSetting('itop-attachments', 'preview_max_width', 290);
 		$sPreviewNotAvailable = addslashes(Dict::S('Attachments:PreviewNotAvailable'));

@@ -1111,13 +1111,15 @@ table .group-actions {
 .fileupload_field_content > div {
   margin-bottom: 15px;
 }
+.attachments_container .attachmentsList thead > tr > th {
+  text-align: center;
+}
+.attachments_container .attachmentsList tbody > tr > td {
+  text-align: center;
+}
 .attachments_container .attachment {
   height: 95px;
   overflow-x: hidden;
-  text-align: center;
-}
-.attachments_container .attachment:hover {
-  background-color: #e0e0e0;
 }
 .attachments_container .attachment .attachment_name {
   overflow-x: hidden;
@@ -1126,6 +1128,9 @@ table .group-actions {
 }
 .attachments_container .attachment .btn {
   margin-top: 3px;
+}
+.attachments_container .attachmenthover {
+  background-color: #e0e0e0;
 }
 .upload_container input {
   display: inline;
