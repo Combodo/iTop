@@ -671,31 +671,7 @@ class WebPage implements Page
 		echo "<title>".htmlentities($this->s_title, ENT_QUOTES, 'UTF-8')."</title>\n";
 		echo $this->get_base_tag();
 
-		$this->output_dict_entries();
-
-		foreach ($this->a_linked_scripts as $s_script)
-		{
-			// Make sure that the URL to the script contains the application's version number
-			// so that the new script do NOT get reloaded from the cache when the application is upgraded
-			if (strpos($s_script, '?') === false)
-			{
-				$s_script .= "?t=".utils::GetCacheBusterTimestamp();
-			}
-			else
-			{
-				$s_script .= "&t=".utils::GetCacheBusterTimestamp();
-			}
-			echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
-		}
-		if (count($this->a_scripts) > 0)
-		{
-			echo "<script type=\"text/javascript\">\n";
-			foreach ($this->a_scripts as $s_script)
-			{
-				echo "$s_script\n";
-			}
-			echo "</script>\n";
-		}
+		// First put stylesheets so they can be loaded before browser interprets JS files, otherwise visual glitch can occur.
 		foreach ($this->a_linked_stylesheets as $a_stylesheet)
 		{
 			if (strpos($a_stylesheet['link'], '?') === false)
@@ -717,6 +693,7 @@ class WebPage implements Page
 			}
 		}
 
+		// Then inline styles
 		if (count($this->a_styles) > 0)
 		{
 			echo "<style>\n";
@@ -726,10 +703,43 @@ class WebPage implements Page
 			}
 			echo "</style>\n";
 		}
+
+		// Favicon
 		if (class_exists('MetaModel') && MetaModel::GetConfig())
 		{
 			echo "<link rel=\"shortcut icon\" href=\"".utils::GetAbsoluteUrlAppRoot()."images/favicon.ico?t=".utils::GetCacheBusterTimestamp()."\" />\n";
 		}
+
+		// Dict entries for JS
+		$this->output_dict_entries();
+
+		// JS files
+		foreach ($this->a_linked_scripts as $s_script)
+		{
+			// Make sure that the URL to the script contains the application's version number
+			// so that the new script do NOT get reloaded from the cache when the application is upgraded
+			if (strpos($s_script, '?') === false)
+			{
+				$s_script .= "?t=".utils::GetCacheBusterTimestamp();
+			}
+			else
+			{
+				$s_script .= "&t=".utils::GetCacheBusterTimestamp();
+			}
+			echo "<script type=\"text/javascript\" src=\"$s_script\"></script>\n";
+		}
+
+		// JS inline scripts
+		if (count($this->a_scripts) > 0)
+		{
+			echo "<script type=\"text/javascript\">\n";
+			foreach ($this->a_scripts as $s_script)
+			{
+				echo "$s_script\n";
+			}
+			echo "</script>\n";
+		}
+
 		echo "</head>\n";
 		echo "<body>\n";
 		echo self::FilterXSS($this->s_content);
