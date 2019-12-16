@@ -272,10 +272,10 @@ EOF
 		{
 			$sWrongWord = $e->GetWrongWord();
 			$aSuggestedWords = $e->GetSuggestions();
-			if (count($aSuggestedWords) > 0)
+			if (is_countable($aSuggestedWords) && count($aSuggestedWords) > 0)
 			{
 				$sSuggestedWord = OqlException::FindClosestString($sWrongWord, $aSuggestedWords);
-		
+
 				if (strlen($sSuggestedWord) > 0)
 				{
 					$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->GetIssue().' <em>'.$sWrongWord).'</em></b>');
