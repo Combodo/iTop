@@ -326,6 +326,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$this->oPage->add('  <th>'.Dict::S('Attachments:File:Name').'</th>'.PHP_EOL);
 		$this->oPage->add('  <th>'.Dict::S('Attachments:File:Size').'</th>'.PHP_EOL);
 		$this->oPage->add('  <th>'.Dict::S('Attachments:File:Date').'</th>'.PHP_EOL);
+		$this->oPage->add('  <th>'.Dict::S('Attachments:File:Creator').'</th>'.PHP_EOL);
 		$this->oPage->add('  <th>'.Dict::S('Attachments:File:MimeType').'</th>'.PHP_EOL);
 		if ($bWithDeleteButton)
 		{
@@ -424,7 +425,19 @@ CSS
 		$sTrId = $this->GetAttachmentContainerId($iAttachmentId);
 		$sAttachmentMeta = $this->GetAttachmentHiddenInput($iAttachmentId, $bIsDeletedAttachment);
 		$sFileSize = $oDoc->GetFormatedSize();
-		$sAttachmentDate = array_key_exists($iAttachmentId, $aAttachmentsDate) ? $aAttachmentsDate[$iAttachmentId] : 'N/A';
+		$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
+		$sAttachmentDate = '';
+		if (!$bIsTempAttachment)
+		{
+			$sAttachmentDate = $oAttachment->Get('creation_date');
+			if (empty($sAttachmentDate) && array_key_exists($iAttachmentId, $aAttachmentsDate))
+			{
+				$sAttachmentDate = $aAttachmentsDate[$iAttachmentId];
+			}
+		}
+
+		$sAttachmentCreator = $oAttachment->Get('contact_id_friendlyname');
+
 		$sFileType = $oDoc->GetMimeType();
 
 		$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
@@ -451,6 +464,7 @@ CSS
 	  <td><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass">$sFileName</a>$sAttachmentMeta</td>
 	  <td>$sFileSize</td>
 	  <td>$sAttachmentDate</td>
+	  <td>$sAttachmentCreator</td>
 	  <td>$sFileType</td>
 	  $sDeleteColumn
 	</tr>

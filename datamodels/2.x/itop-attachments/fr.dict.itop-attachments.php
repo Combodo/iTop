@@ -60,3 +60,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Attachment/Attribute:contents' => 'Contenu',
 	'Class:Attachment/Attribute:contents+' => '',
 ));
+
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Attachments:File:Thumbnail' => 'Icône',
+	'Attachments:File:Name' => 'Nom du fichier',
+	'Attachments:File:Date' => 'Date de chargement',
+	'Attachments:File:Creator' => 'Chargé par',
+	'Attachments:File:Size' => 'Taille',
+	'Attachments:File:MimeType' => 'Type',
+));

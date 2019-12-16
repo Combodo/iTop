@@ -65,7 +65,8 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Attachments:File:Thumbnail' => 'Icon',
 	'Attachments:File:Name' => 'File name',
-	'Attachments:File:Date' => 'Date added',
+	'Attachments:File:Date' => 'Upload date',
+	'Attachments:File:Creator' => 'Uploaded by',
 	'Attachments:File:Size' => 'Size',
 	'Attachments:File:MimeType' => 'Type',
 ));
