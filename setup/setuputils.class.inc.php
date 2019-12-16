@@ -958,7 +958,7 @@ class SetupUtils
 		$oPage->add('</fieldset>');
 		$oPage->add('</td></tr>');
 
-		$oPage->add('<tr><td colspan="2"><span id="db_info" style="display:inline-block; height:1.5em; margin-left:10px;"></span></td></tr>');
+		$oPage->add('<tr><td colspan="2"><div id="db_info"></div></td></tr>');
 
 		$oPage->add('<tr><td colspan="2">');
 		$oPage->add('<fieldset><legend>Database</legend>');
@@ -1340,8 +1340,12 @@ EOF
 		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
 		if ($bIsWindows && (preg_match('@([%!"])@',$sDBPwd) > 0))
 		{
-			// Unsuported Password, warn the user
-			$oPage->add_ready_script('$("#db_info").html("<img src=\'../images/error.png\'/>&nbsp;On Windows, the backup won\'t work because database password contains %, ! or &quot; character");');
+			// Unsupported Password, warn the user
+			$oPage->add_ready_script(
+<<<JS
+$("#db_info").html('<div class="message message-error"><span class="message-title">Error:</span>On Windows, the backup won\'t work because database password contains %, ! or &quot; character</div>');
+JS
+			);
 		}
 		else
 		{
@@ -1356,7 +1360,11 @@ EOF
 			{
 				// Connection failed, disable the "Next" button
 				$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
-				$oPage->add_ready_script('$("#db_info").html("<img src=\'../images/error.png\'/>&nbsp;No connection to the database...");');
+				$oPage->add_ready_script(
+					<<<JS
+$("#db_info").html('<div class="message message-error"><span class="message-title">Error:</span>No connection to the database</div>');
+JS
+			);
 			}
 			else
 			{
@@ -1378,27 +1386,45 @@ EOF
 				}
 				if (count($aErrors) > 0)
 				{
+					$sErrorsToDisplay = utils::HtmlEntities(implode('<br/>', $aErrors));
 					$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
-					$oPage->add_ready_script('$("#db_info").html(\'<img src="../images/validation_error.png"/>&nbsp;<b>Error:</b> '.htmlentities(implode('<br/>', $aErrors), ENT_QUOTES, 'UTF-8').'\');');
+					$oPage->add_ready_script(
+<<<JS
+$("#db_info").html('<div class="message message-error"><span class="message-title">Error:</span>$sErrorsToDisplay</div>');
+JS
+					);
 				}
 				else
 				{
 					if (count($aWarnings) > 0)
 					{
+						$sWarningsToDisplay = utils::HtmlEntities(implode('<br/>', $aWarnings));
 						$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
-						$oPage->add_ready_script('$("#db_info").html(\'<img src="../images/error.png"/>&nbsp;<b>Warning:</b> '.htmlentities(implode('<br/>', $aWarnings), ENT_QUOTES, 'UTF-8').'\');');
+						$oPage->add_ready_script(
+							<<<JS
+$("#db_info").html('<div class="message message-warning"><span class="message-title">Warning:</span>$sWarningsToDisplay</div>');
+JS
+						);
 					}
 					else
 					{
 						$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
-						$oPage->add_ready_script('$("#db_info").html(\'<img src="../images/validation_ok.png"/>&nbsp;Database server connection Ok.\');');
+						$oPage->add_ready_script(
+							<<<JS
+$("#db_info").html('<div class="message message-valid"><span class="message-title">Success:</span>Database server connection ok.</div>');
+JS
+						);
 					}
 				}
 
 				if ($checks['databases'] == null)
 				{
 					$sDBNameInput = '<input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span>';
-					$oPage->add_ready_script('$("#table_info").html(\'<img src="../images/error.png"/>&nbsp;Not enough rights to enumerate the databases\');');
+					$oPage->add_ready_script(
+<<<JS
+$("#table_info").html('<div class="message message-error"><span class="message-title">Error:</span>Not enough rights to enumerate the databases</div>');
+JS
+					);
 				}
 				else
 				{

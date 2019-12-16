@@ -42,7 +42,7 @@ class SetupPage extends NiceWebPage
 		parent::__construct($sTitle);
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../setup/setup.js");
-		$this->add_linked_stylesheet("../css/setup.css");
+		$this->add_saas("css/setup.scss");
 	}
 
 	/**
@@ -77,19 +77,19 @@ class SetupPage extends NiceWebPage
 
 	public function ok($sText)
 	{
-		$this->add("<p class=\"ok\">$sText</p>\n");
+		$this->add("<div class=\"message message-valid\"><span class=\"message-title\">Success:</span>$sText</div>");
 		$this->log_ok($sText);
 	}
 
 	public function warning($sText)
 	{
-		$this->add("<p class=\"warning\">$sText</p>\n");
+		$this->add("<div class=\"message message-warning\"><span class=\"message-title\">Warning:</span>$sText</div>");
 		$this->log_warning($sText);
 	}
 
 	public function error($sText)
 	{
-		$this->add("<p class=\"error\">$sText</p>\n");
+		$this->add("<div class=\"message message-error\"><span class=\"message-title\">Error:</span>$sText</div>");
 		$this->log_error($sText);
 	}
 

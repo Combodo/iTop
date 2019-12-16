@@ -126,24 +126,25 @@ EOF
 		if (count($aErrors)> 0)
 		{
 			$sStyle = 'style="max-height:196px;overflow:auto;"';
-			$sImage = "stop-mid.png";
 			$sTitle = count($aErrors).' Error(s), '.count($aWarnings).' Warning(s).';
+			$sH2Class = 'text-error';
 		}
 		else if (count($aWarnings)> 0)
 		{
 			$sTitle = count($aWarnings).' Warning(s) '.$sToggleButtons;
-			$sImage = "messagebox_warning-mid.png";
+			$sH2Class = 'text-warning';
 		}
 		else
 		{
 			$sTitle = 'Ok. '.$sToggleButtons;
-			$sImage = "clean-mid.png";
+			$sH2Class = 'text-valid';
 		}
-		$oPage->add('<h2>Prerequisites validation: ');
-		$oPage->add("<img style=\"vertical-align:middle;\" src=\"../images/$sImage\"> ");
-		$oPage->add($sTitle);
-		$oPage->add('</h2>');
-		$oPage->add('<div id="details" '.$sStyle.'>');
+		$oPage->add(
+<<<HTML
+		<h2>Prerequisites validation: <span class="$sH2Class">$sTitle</span></h2>
+		<div id="details" $sStyle>
+HTML
+		);
 		foreach($aErrors as $sText)
 		{
 			$oPage->error($sText);
@@ -285,11 +286,11 @@ class WizStepInstallOrUpgrade extends WizardStep
 			if ($oCheck->iSeverity == CheckResult::ERROR)
 			{
 				$bCanBackup = false;
-				$sMySQLDumpMessage .= '<img src="../images/error.png"/>&nbsp;<b> Warning:</b> '.$oCheck->sLabel;
+				$sMySQLDumpMessage .= '<div class="message message-error"><span class="message-title">Error:</span>'.$oCheck->sLabel.'</div>';
 			}
 			else
 			{
-				$sMySQLDumpMessage .= '<img src="../images/validation_ok.png"/> '.$oCheck->sLabel.' ';
+				$sMySQLDumpMessage .= '<div class="message message-valid"><span class="message-title">Success:</span>'.$oCheck->sLabel.'</div>';
 			}
 		}
 		$sChecked = ($bCanBackup && $bDBBackup) ? ' checked ' : '';
@@ -622,10 +623,17 @@ EOF
 			{
 				// No changes detected... or no way to tell because of the lack of a manifest or previous source dir
 				// Use the "compatible" datamodel as-is.
-				$oPage->p("<img src=\"../images/validation_ok.png\"/>&nbsp;The datamodel will be upgraded from version $sInstalledDataModelVersion to version $sUpgradeDMVersion.");
-				$oPage->add('<input type="hidden" name="upgrade_type" value="use-compatible">');
-				$oPage->add('<input type="hidden" name="datamodel_path" value="'.htmlentities($sCompatibleDMDir, ENT_QUOTES, 'UTF-8').'">');
-				$oPage->add('<input type="hidden" name="datamodel_version" value="'.htmlentities($sUpgradeDMVersion, ENT_QUOTES, 'UTF-8').'">');
+				$sCompatibleDMDirToDisplay = utils::HtmlEntities($sCompatibleDMDir);
+				$sUpgradeDMVersionToDisplay = utils::HtmlEntities($sUpgradeDMVersion); 
+				$oPage->add(
+<<<HTML
+<div class="message message-valid">The datamodel will be upgraded from version $sInstalledDataModelVersion to version $sUpgradeDMVersion.</div>
+<input type="hidden" name="upgrade_type" value="use-compatible">
+<input type="hidden" name="datamodel_path" value="$sCompatibleDMDirToDisplay">
+<input type="hidden" name="datamodel_version" value="$sUpgradeDMVersionToDisplay">
+HTML
+				);
+
 			}
 
 			// Check if there are "extensions" to preserve and if it's possible
@@ -641,7 +649,7 @@ EOF
 						$oPage->p("Cannot copy the extensions from '$sPreviousVersionDir/extensions' to '".APPROOT."extensions' due to the following access rights issue(s):");
 						foreach($aErrors as $sDir => $oCheckResult)
 						{
-							$oPage->p('<img src="../images/error.png"/>&nbsp;'.$oCheckResult->sLabel);
+							$oPage->add('<div class="message message-error"><span class="message-title">Error:</span>'.$oCheckResult->sLabel.'</div>');
 						}
 					}
 					else
@@ -1053,7 +1061,7 @@ EOF
 			{
 				case CheckResult::INFO:
 				$sStatus = 'ok';
-				$sMessage = json_encode('<img src="../images/validation_ok.png">&nbsp;'.$oCheck->sLabel);
+				$sMessage = json_encode('<div class="message message-valid">'.$oCheck->sLabel.'</div>');
 
 				break;
 
@@ -1061,7 +1069,7 @@ EOF
 				case CheckResult::ERROR:
 				case CheckResult::WARNING:
 				$sStatus = 'ko';
-				$sMessage = json_encode('<img src="../images/error.png">&nbsp;'.$oCheck->sLabel);
+				$sMessage = json_encode('<div class="message message-error">'.$oCheck->sLabel.'</div>');
 
 			}
 			$oPage->add_ready_script(
@@ -1180,7 +1188,7 @@ EOF
 			{
 				case CheckResult::INFO:
 				$sStatus = 'ok';
-				$sMessage = json_encode('<img src="../images/validation_ok.png">&nbsp;'.$oCheck->sLabel);
+				$sMessage = json_encode('<div class="message message-valid">'.$oCheck->sLabel.'</div>');
 
 				break;
 
@@ -1188,7 +1196,7 @@ EOF
 				case CheckResult::ERROR:
 				case CheckResult::WARNING:
 				$sStatus = 'ko';
-				$sMessage = json_encode('<img src="../images/error.png">&nbsp;'.$oCheck->sLabel);
+				$sMessage = json_encode('<div class="message message-error">'.$oCheck->sLabel.'</div>');
 
 			}
 			$oPage->add_ready_script(
@@ -2433,7 +2441,7 @@ JS
 	$("#wiz_form").data("installation_status", "running");
 	WizardUpdateButtons();
 	$('#setup_msg').html('$sMessage');
-	$('#progress').progression( {Current:{$aRes['percentage-completed']}, Maximum: 100, aBackgroundImg: GetAbsoluteUrlAppRoot()+'setup/orange-progress.gif', aTextColor: '#000000'} );
+	$('#progress').progression( {Current:{$aRes['percentage-completed']}, Maximum: 100, aBackground: '#FBD38D', aTextColor: '#000000'} );
 	
 	//$("#percentage").html('{$aRes['percentage-completed']} % completed<br/>{$aRes['next-step-label']}');
 	ExecuteStep('{$aRes['next-step']}');
@@ -2446,7 +2454,7 @@ EOF
 			$oPage->add_ready_script(
 <<<EOF
 	$("#wiz_form").data("installation_status", "completed");
-	$('#progress').progression( {Current:100, Maximum: 100, aBackgroundImg: GetAbsoluteUrlAppRoot()+'setup/orange-progress.gif', aTextColor: '#000000'} );
+	$('#progress').progression( {Current:100, Maximum: 100, aBackground: '#FBD38D', aTextColor: '#000000'} );
 	WizardUpdateButtons();
 	$("#btn_next").unbind("click.install");
 	$("#btn_next").click();
