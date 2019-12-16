@@ -1,3 +1,25 @@
+/*
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* Helpers classes */
+.center {
+  text-align: center;
+}
 body {
   background-color: #eee;
   color: #1a202c;
@@ -6,6 +28,19 @@ body {
   font-size: 10pt;
   font-family: Tahoma, Verdana, Arial, Helvetica;
   overflow-y: auto;
+}
+h1 {
+  color: #555;
+  font-size: 16pt;
+}
+h2 {
+  color: #1a202c;
+  font-size: 14pt;
+}
+h3 {
+  color: #1c94c4;
+  font-size: 12pt;
+  font-weight: bold;
 }
 a {
   color: #1c94c4;
@@ -44,22 +79,6 @@ a:hover {
   background-color: #fff;
   border: 3px solid #cbd2d9;
   border-top: none;
-}
-.center {
-  text-align: center;
-}
-h1 {
-  color: #555;
-  font-size: 16pt;
-}
-h2 {
-  color: #1a202c;
-  font-size: 14pt;
-}
-h3 {
-  color: #1c94c4;
-  font-size: 12pt;
-  font-weight: bold;
 }
 .next {
   width: 100%;
@@ -180,15 +199,17 @@ h3.clickable.open {
 fieldset {
   border: none;
   padding: 0;
-  margin: 0;
+  margin: 30px 0 0 0;
 }
 fieldset > legend {
-  font-size: 12pt;
   margin-top: 25px;
   margin-bottom: 7px;
-  width: 100%;
-  border-bottom: 1px solid #718096;
   padding-bottom: 7px;
+  width: 100%;
+  color: #3c3c3c;
+  font-size: 12pt;
+  font-weight: bold;
+  border-bottom: 1px solid #d2d2d2;
 }
 #details > .message {
   margin-bottom: 6px;
