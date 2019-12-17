@@ -24,9 +24,9 @@ short and long options.</description>
   <active>no</active>
  </helper>
 
- <date>2019-02-06</date>
+ <date>2019-11-20</date>
  <version>
-  <release>1.4.2</release>
+  <release>1.4.3</release>
   <api>1.4.0</api>
  </version>
  <stability>
@@ -36,7 +36,8 @@ short and long options.</description>
  <license uri="http://opensource.org/licenses/bsd-license.php">BSD-2-Clause</license>
 
  <notes>
-* Remove use of each(), which is removed in PHP 8
+* PR #4:  Fix PHP 7.4 deprecation: array/string curly braces access
+* PR #5:  fix phplint warnings
  </notes>
 
  <contents>
@@ -74,6 +75,23 @@ short and long options.</description>
  <phprelease />
 
  <changelog>
+
+  <release>
+    <date>2019-11-20</date>
+    <version>
+     <release>1.4.3</release>
+     <api>1.4.0</api>
+    </version>
+    <stability>
+     <release>stable</release>
+     <api>stable</api>
+    </stability>
+    <license uri="http://opensource.org/licenses/bsd-license.php">BSD-2-Clause</license>
+    <notes>
+    * PR #4:  Fix PHP 7.4 deprecation: array/string curly braces access
+    * PR #5:  fix phplint warnings
+    </notes>
+  </release>
 
   <release>
     <date>2019-02-06</date>

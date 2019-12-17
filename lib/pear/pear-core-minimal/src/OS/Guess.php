@@ -195,9 +195,22 @@ class OS_Guess
         }
         $major = $minor = 0;
         include_once "System.php";
+
+        if (@is_link('/lib64/libc.so.6')) {
+            // Let's try reading the libc.so.6 symlink
+            if (preg_match('/^libc-(.*)\.so$/', basename(readlink('/lib64/libc.so.6')), $matches)) {
+                list($major, $minor) = explode('.', $matches[1]);
+            }
+        } else if (@is_link('/lib/libc.so.6')) {
+            // Let's try reading the libc.so.6 symlink
+            if (preg_match('/^libc-(.*)\.so$/', basename(readlink('/lib/libc.so.6')), $matches)) {
+                list($major, $minor) = explode('.', $matches[1]);
+            }
+        }
         // Use glibc's <features.h> header file to
         // get major and minor version number:
-        if (@file_exists('/usr/include/features.h') &&
+        if (!($major && $minor) &&
+              @file_exists('/usr/include/features.h') &&
               @is_readable('/usr/include/features.h')) {
             if (!@file_exists('/usr/bin/cpp') || !@is_executable('/usr/bin/cpp')) {
                 $features_file = fopen('/usr/include/features.h', 'rb');
@@ -240,7 +253,7 @@ class OS_Guess
             fclose($fp);
             $cpp = popen("/usr/bin/cpp $tmpfile", "r");
             while ($line = fgets($cpp, 1024)) {
-                if ($line{0} == '#' || trim($line) == '') {
+                if ($line[0] == '#' || trim($line) == '') {
                     continue;
                 }
 
@@ -251,13 +264,6 @@ class OS_Guess
             pclose($cpp);
             unlink($tmpfile);
         } // features.h
-
-        if (!($major && $minor) && @is_link('/lib/libc.so.6')) {
-            // Let's try reading the libc.so.6 symlink
-            if (preg_match('/^libc-(.*)\.so$/', basename(readlink('/lib/libc.so.6')), $matches)) {
-                list($major, $minor) = explode('.', $matches[1]);
-            }
-        }
 
         if (!($major && $minor)) {
             return $glibc = '';
