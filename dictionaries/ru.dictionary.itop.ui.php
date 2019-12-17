@@ -87,6 +87,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Персона',
 	'Class:User/Attribute:contactid+' => 'Персона из списка контактов',
+	'Class:User/Attribute:org_id' => 'Организация',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Фамилия',
 	'Class:User/Attribute:last_name+' => 'Фамилия соответсвующего контакта',
 	'Class:User/Attribute:first_name' => 'Имя',
@@ -433,6 +435,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Ошибка: недействительный стимул "%1$s" на объекте %2$s в состоянии "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Ошибка: недопустимый файл дашборда',
 	'UI:Error:InvalidDashboard' => 'Ошибка: недопустимый дашборд',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Количество',
 	'UI:GroupBy:Count+' => 'Количество элементов',
@@ -499,6 +503,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Login:ForgotPwdForm+' => 'Введите свой логин для входа в систему и нажмите "Отправить". iTop отправит email с инструкциями по восстановлению пароля на ваш электронный адрес.',
 	'UI:Login:ResetPassword' => 'Отправить',
 	'UI:Login:ResetPwdFailed' => 'Не удалось отправить email: %1$s',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => 'учетная запись с логином "%1$s" не найдена.',
 	'UI:ResetPwd-Error-NotPossible' => 'восстановление пароля для внешних учётных записей недоступно.',
@@ -535,6 +540,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:Login' => 'Войти',
 	'UI:Login:Error:AccessRestricted' => 'Доступ к iTop ограничен. Пожалуйста, свяжитесь с администратором iTop.',
 	'UI:Login:Error:AccessAdmin' => 'Доступ ограничен для лиц с административными привилегиями. Пожалуйста, свяжитесь с администратором iTop.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- выбрать один --',
 	'UI:CSVImport:MappingNotApplicable' => '-- игнорировать это поле --',
 	'UI:CSVImport:NoData' => 'Пустой набор данных..., пожалуйста введите что-нибудь!',
@@ -662,6 +670,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:RunQuery:MoreInfo' => 'Подробная информация о запросе: ',
 	'UI:RunQuery:DevelopedQuery' => 'Переработанное выражение запроса: ',
 	'UI:RunQuery:SerializedFilter' => 'Сериализованные фильты: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Ошибка при выполнении запроса: %1$s',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries~~',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. <br/>Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
@@ -865,6 +877,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:AdminTools' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей, имеющих профиль администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Управление изменениями',
 	'UI:ChangeManagementMenu+' => 'Управление изменениями',
@@ -1410,6 +1423,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	// Search form
 	'UI:Search:Toggle' => 'Развернуть / Свернуть',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Автоматический запуск поиска отключен для данного класса',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Добавьте критерии поиска или нажмите кнопку поиска, чтобы просмотреть объекты.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Добавить критерий',
 	// - Add new criteria button

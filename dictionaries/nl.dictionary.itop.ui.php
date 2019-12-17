@@ -114,6 +114,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Contact',
 	'Class:User/Attribute:contactid+' => 'Contactpersoon',
+	'Class:User/Attribute:org_id' => 'Organisatie',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Achternaam',
 	'Class:User/Attribute:last_name+' => 'Naam van het overeenkomende contact',
 	'Class:User/Attribute:first_name' => 'Voornaam',
@@ -528,6 +530,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop kan je een e-mail sturen waarin de instructies voor het resetten van jouw account staan.',
 	'UI:Login:ResetPassword' => 'Stuur nu!',
 	'UI:Login:ResetPwdFailed' => 'E-mail sturen mislukt: %1$s',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is geen geldige login',
 	'UI:ResetPwd-Error-NotPossible' => 'externe accounts staan het resetten van het wachtwoord niet toe.',
@@ -564,6 +567,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Button:Login' => 'Enter iTop',
 	'UI:Login:Error:AccessRestricted' => 'Geen toegang tot iTop. Neem contact op met een iTop-beheerder.',
 	'UI:Login:Error:AccessAdmin' => 'Alleen toegankelijk voor mensen met beheerdersrechten. Neem contact op met een iTop-beheerder',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- Selecteer --',
 	'UI:CSVImport:MappingNotApplicable' => '-- Negeer dit veld --',
 	'UI:CSVImport:NoData' => 'Lege data set..., voeg data toe',
@@ -691,6 +697,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:RunQuery:MoreInfo' => 'Meer informatie over de query: ',
 	'UI:RunQuery:DevelopedQuery' => 'Herschreven query-expressie: ',
 	'UI:RunQuery:SerializedFilter' => 'Serialized filter: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Er trad een fout op tijdens het uitvoeren van deze query: %1$s',
 	'UI:Query:UrlForExcel' => 'URL om te gebruiken voor MS Excel-webqueries',
 	'UI:Query:UrlV1' => 'De lijst van velden is leeg gelaten. De pagina <em>export-V2.php</em> kan niet aangeroepen worden zonder deze informatie.Daarom verwijst de onderstaande link naar de oude export-pagina: <em>export.php</em>. Deze verouderde versie heeft enkele beperkingen: de lijst van geëxporteerde velden kan verschillen afhankelijk van het gekozen export-formaat en het datamodel van iTop. Als je wil dat de lijst van geëxporteerde kolommen hetzelfde blijft over lange tijd, dan moet je een waarde opgeven voor het attribuut "Velden" en de pagina <em>export-V2.php</em> gebruiken.',
@@ -894,6 +904,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:AdminTools' => 'Administratietools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administratietools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Tools die alleen toegankelijk zijn voor gebruikers met een beheerdersprofiel', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => 'Change Management',
@@ -1438,6 +1449,7 @@ Indien gekoppeld aan een Trigger, wordt aan elke actie een "orde" nummer gegeven
 	// Search form
 	'UI:Search:Toggle' => 'Inklappen / uitklappen',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Direct zoeken werd uitgeschakeld voor deze klasse.',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Voeg enkele criteria toe in het zoekveld of klik op de zoekknop om objecten te zien.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Voeg nieuw criterium toe',
 	// - Add new criteria button

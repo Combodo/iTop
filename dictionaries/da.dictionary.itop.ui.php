@@ -97,6 +97,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'kontakt (person)',
 	'Class:User/Attribute:contactid+' => 'Personlige oplysninger og virksomheds data',
+	'Class:User/Attribute:org_id' => 'Organisation',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Efternavn',
 	'Class:User/Attribute:last_name+' => 'Kontaktens efternavn',
 	'Class:User/Attribute:first_name' => 'Fornavn',
@@ -443,6 +445,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Fejl: ikke lovlig påvirkning "%1$s" på objekt %2$s i tilstand "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Antal',
 	'UI:GroupBy:Count+' => 'Antal af elementer',
@@ -509,6 +513,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -545,6 +550,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Button:Login' => 'Enter iTop',
 	'UI:Login:Error:AccessRestricted' => 'iTop adgang er begrænset. Venligst, kontakt en iTop administrator.',
 	'UI:Login:Error:AccessAdmin' => 'Adgang er begrænset til administratorer. Venligst, kontakt en iTop administrator.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- Vælg venligst --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignorer dette felt --',
 	'UI:CSVImport:NoData' => 'Tomt data sæt..., venligst angiv nogle data!',
@@ -672,6 +680,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:RunQuery:MoreInfo' => 'Mere information om forespørgslen: ',
 	'UI:RunQuery:DevelopedQuery' => 'Videreudviklet forespørgselsudtryk: ',
 	'UI:RunQuery:SerializedFilter' => 'Serielt filter: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Der opstod en fejl under afviklingen af forespøgrslen: %1$s',
 	'UI:Query:UrlForExcel' => 'URL til brug for MS-Excel web forespøgrsler',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -875,6 +887,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:AdminTools' => 'Admin værktøjer', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
 	'UI:ChangeManagementMenu+' => '',
@@ -1420,6 +1433,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button

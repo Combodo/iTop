@@ -108,6 +108,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Contato (pessoa)',
 	'Class:User/Attribute:contactid+' => 'Dados pessoais a partir dos dados do negócio',
+	'Class:User/Attribute:org_id' => 'Organização',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Último nome',
 	'Class:User/Attribute:last_name+' => 'Nome do contato correspondente',
 	'Class:User/Attribute:first_name' => 'Primeiro nome',
@@ -454,6 +456,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erro: invalid stimulus "%1$s" on object %2$s in state "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Erro: arquivo de painel inválido',
 	'UI:Error:InvalidDashboard' => 'Erro: painel inválido',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Número',
 	'UI:GroupBy:Count+' => 'Número de elementos',
@@ -520,6 +524,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop pode enviar um e-mail em que você vai encontrar instruções para seguir para redefinir sua conta.',
 	'UI:Login:ResetPassword' => 'Enviar agora',
 	'UI:Login:ResetPwdFailed' => 'Falha para enviar email: %1$s',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' não é um login válido',
 	'UI:ResetPwd-Error-NotPossible' => 'conta externa não é permitida alteração de senha.',
@@ -556,6 +561,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Button:Login' => 'Entrar iTop',
 	'UI:Login:Error:AccessRestricted' => 'Acesso restrito. Por favor, contacte o administrador.',
 	'UI:Login:Error:AccessAdmin' => 'Acesso restrito somente para privilégios administrativo. Por favor, contacte o administrador.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- selecione um --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignore este campo --',
 	'UI:CSVImport:NoData' => 'Nenhum data configurado..., por favor providencie alguns dados!',
@@ -683,6 +691,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:RunQuery:MoreInfo' => 'Mais informações sobre a consulta: ',
 	'UI:RunQuery:DevelopedQuery' => 'Redevelopped query expression: ',
 	'UI:RunQuery:SerializedFilter' => 'Filtro serializado: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Ocorreu um erro ao executar a consulta: %1$s',
 	'UI:Query:UrlForExcel' => 'URL a ser usada para consultas web MS-Excel',
 	'UI:Query:UrlV1' => 'A lista de campos não foi especificada. A página <em>export-V2.php</em> não pode ser chamada sem essa informação. Portanto, o URL sugerido abaixo aponta para a página herdada: <em>export.php</em>. Essa versão herdada da exportação tem a seguinte limitação: a lista de campos exportados pode variar dependendo do formato de saída e do modelo de dados do iTop. Se você quiser garantir que a lista de colunas exportadas permaneça estável a longo prazo, então você deve especificar um valor para o atributo "Fields" e usar a página <em>export-V2.php</em>.',
@@ -886,6 +898,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:AdminTools' => 'Ferramentas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Ferramentas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Ferramentas acessíveis apenas para usuários com o perfil do administrador', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Gerenciamento Mudanças',
 	'UI:ChangeManagementMenu+' => 'Gerenciamento Mudanças',
@@ -1431,6 +1444,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// Search form
 	'UI:Search:Toggle' => 'Minimizar / Expandir',
 	'UI:Search:AutoSubmit:DisabledHint' => 'O envio automático foi desativado para esta classe',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Adicione algum critério na caixa de pesquisa ou clique no botão de pesquisa para visualizar os objetos.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Adicionar novos critérios',
 	// - Add new criteria button

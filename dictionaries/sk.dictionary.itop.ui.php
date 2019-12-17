@@ -94,6 +94,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Kontakt (osoba)',
 	'Class:User/Attribute:contactid+' => '',
+	'Class:User/Attribute:org_id' => 'Organizácia',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'Priezvisko',
 	'Class:User/Attribute:last_name+' => '',
 	'Class:User/Attribute:first_name' => 'Krstné meno',
@@ -441,6 +443,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Chyba: neplatný podnet "%1$s" na objekt %2$s v stave "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Počet',
 	'UI:GroupBy:Count+' => '',
@@ -507,6 +511,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -543,6 +548,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Button:Login' => 'Vstup do iTop',
 	'UI:Login:Error:AccessRestricted' => 'Prístup do iTopu je obmedzený. Kontaktujte prosím iTop administrátora.',
 	'UI:Login:Error:AccessAdmin' => 'Prístup je vyhradený len pre ľudí, ktorí majú oprávnenia od administrátora. Kontaktujte prosím iTop administrátora.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- vyberte jeden --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignorujte toto pole --',
 	'UI:CSVImport:NoData' => 'Prázdny dátový súbor..., prosím poskytnite nejaké dáta!',
@@ -670,6 +678,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:RunQuery:MoreInfo' => 'Viac informácií o dopyte: ',
 	'UI:RunQuery:DevelopedQuery' => 'Dopyt rozvinutého výrazu: ',
 	'UI:RunQuery:SerializedFilter' => 'Serializovaný filter: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Vyskytla sa chyba počas dopytu: %1$s',
 	'UI:Query:UrlForExcel' => 'URL pre použitie MS-Excel webového dopytu',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -873,6 +885,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:AdminTools' => 'Administrátorské pomôcky', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Pomôcky prístupné iba užívateľom majúcim administrátorský profil', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Manažment zmien',
 	'UI:ChangeManagementMenu+' => '',
@@ -1420,6 +1433,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button

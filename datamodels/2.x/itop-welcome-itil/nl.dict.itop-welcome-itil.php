@@ -54,6 +54,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:UserAccountsMenu+' => 'Gebruikersaccounts',
 	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts',
 	'Menu:MyShortcuts' => 'Mijn snelkoppelingen',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:Configuration' => 'Configuration~~',
 ));
 
 //
@@ -81,4 +84,13 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

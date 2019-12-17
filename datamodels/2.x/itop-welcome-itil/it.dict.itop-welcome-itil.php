@@ -53,6 +53,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:UserAccountsMenu+' => '',
 	'Menu:UserAccountsMenu:Title' => 'Account utente',
 	'Menu:MyShortcuts' => 'Le mie scorciatoie',
+	'Menu:UserManagement' => 'Gestione utenti',
+	'Menu:Queries' => 'Interrogazioni',
+	'Menu:Configuration' => 'configurazione',
 ));
 
 //
@@ -80,4 +83,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

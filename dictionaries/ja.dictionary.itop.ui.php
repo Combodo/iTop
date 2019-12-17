@@ -95,6 +95,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => '連絡先(人物)',
 	'Class:User/Attribute:contactid+' => 'ビジネスデータから抽出した個人の詳細',
+	'Class:User/Attribute:org_id' => '組織',
+	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
 	'Class:User/Attribute:last_name' => 'ラストネーム',
 	'Class:User/Attribute:last_name+' => '対応する連絡先の名前',
 	'Class:User/Attribute:first_name' => 'ファーストネーム',
@@ -441,6 +443,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'エラー：状態"%3$s"のオブジェクト%2$s上の無効なスティミュラス"%1$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'カウント',
 	'UI:GroupBy:Count+' => '要素数',
@@ -507,6 +511,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' is not a valid login~~',
 	'UI:ResetPwd-Error-NotPossible' => 'external accounts do not allow password reset.~~',
@@ -543,6 +548,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Button:Login' => 'iTopへ入る',
 	'UI:Login:Error:AccessRestricted' => 'iTopへのアクセスは制限されています。iTop管理者に問い合わせしてください。',
 	'UI:Login:Error:AccessAdmin' => '管理者権限をもつユーザにアクセスが制限されています。iTop管理者に問い合わせしてください。',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- 選択ください --',
 	'UI:CSVImport:MappingNotApplicable' => '--このフィールドを無視する --',
 	'UI:CSVImport:NoData' => '空のデータセット..., データを提供してください。',
@@ -670,6 +678,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:RunQuery:MoreInfo' => 'クエリに関する追加情報',
 	'UI:RunQuery:DevelopedQuery' => 'クエリ式の再開発',
 	'UI:RunQuery:SerializedFilter' => 'シリアライズされたフィルタ：',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'クエリ: %1$s 実行時にエラーが発生しました',
 	'UI:Query:UrlForExcel' => 'MS-Excel Webクエリに使用するURL',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
@@ -873,6 +885,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:AdminTools' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System~~',
 
 	'UI:ChangeManagementMenu' => '変更管理',
 	'UI:ChangeManagementMenu+' => '変更管理',
@@ -1418,6 +1431,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button

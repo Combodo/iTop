@@ -39,8 +39,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachment:Max_Ko' => '(Maximale bestandsgrootte: %1$s kB)',
 	'Attachments:NoAttachment' => 'Geen bijlage. ',
 	'Attachments:PreviewNotAvailable' => 'Een voorbeeld is niet beschikbaar voor dit type bijlage.',
-	'Class:Attachment' => 'Bijlage',
-	'Class:Attachment+' => '',
 	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
 ));
 
@@ -49,8 +47,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:Attachment' => 'Attachment~~',
-	'Class:Attachment+' => '~~',
+	'Class:Attachment' => 'Bijlage',
+	'Class:Attachment+' => '',
 	'Class:Attachment/Attribute:expire' => 'Expire~~',
 	'Class:Attachment/Attribute:expire+' => '~~',
 	'Class:Attachment/Attribute:temp_id' => 'Temporary id~~',

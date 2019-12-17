@@ -110,6 +110,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:User/Attribute:finalclass+' => '',
 	'Class:User/Attribute:contactid' => 'Kontakt (osoba)',
 	'Class:User/Attribute:contactid+' => 'Osobní údaje',
+	'Class:User/Attribute:org_id' => 'Organizace',
+	'Class:User/Attribute:org_id+' => 'Přístupná organizace',
 	'Class:User/Attribute:last_name' => 'Příjmení',
 	'Class:User/Attribute:last_name+' => '',
 	'Class:User/Attribute:first_name' => 'Jméno',
@@ -456,6 +458,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Chyba: neplatná operace "%1$s" na objektu %2$s ve stavu "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
+	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
+	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 
 	'UI:GroupBy:Count' => 'Množství',
 	'UI:GroupBy:Count+' => 'Množství prvků',
@@ -522,6 +526,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop vám může zaslat instrukce pro obnovení vašeho hesla.',
 	'UI:Login:ResetPassword' => 'Zaslat nyní!',
 	'UI:Login:ResetPwdFailed' => 'Chyba při odesílání emailu: %1$s',
+	'UI:Login:SeparatorOr' => 'Or~~',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' není platné uživatelské jméno',
 	'UI:ResetPwd-Error-NotPossible' => 'obnova hesla u externích účtů není možná.',
@@ -558,6 +563,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Button:Login' => 'Přihlásit',
 	'UI:Login:Error:AccessRestricted' => 'Přístup je omezen. Kontaktujte administrátora.',
 	'UI:Login:Error:AccessAdmin' => 'Přístup vyhrazen osobám s administrátorskými právy. Kontaktujte administrátora.',
+	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
+	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
 	'UI:CSVImport:MappingSelectOne' => '-- zvolte jednu z možností --',
 	'UI:CSVImport:MappingNotApplicable' => '-- ignorovat --',
 	'UI:CSVImport:NoData' => 'Žádná data!',
@@ -685,6 +693,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:RunQuery:MoreInfo' => 'Více informací o dotazu: ',
 	'UI:RunQuery:DevelopedQuery' => 'Rekonstruovaný dotaz: ',
 	'UI:RunQuery:SerializedFilter' => 'Serializovaný filtr: ',
+	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
+	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
+	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
+	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Nastala chyba při provádění dotazu: %1$s',
 	'UI:Query:UrlForExcel' => 'URL pro MS-Excel web queries',
 	'UI:Query:UrlV1' => 'Nebyl specifikován seznam sloupců k exportu. Bez této informace nemůže stránka <em>export-V2.php</em> provést export. Pro export všech polí použijte stránku <em>export.php</em>. Pokud však chcete udržet konzistenci v delším časovém horzontu, použijte stávající stránku a specifikujte paramter "fields".',
@@ -888,6 +900,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:AdminTools' => 'Administrace', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Nástroje pro administraci', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Nástroje přístupné pouze uživatelům, kteří mají potřbná oprávnění', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:System' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Řízení změn',
 	'UI:ChangeManagementMenu+' => 'Řízení změn',
@@ -1431,6 +1444,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button

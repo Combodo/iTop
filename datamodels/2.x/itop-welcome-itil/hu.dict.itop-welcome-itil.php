@@ -53,6 +53,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:UserAccountsMenu+' => '',
 	'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok',
 	'Menu:MyShortcuts' => 'My Shortcuts~~',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:Configuration' => 'Configuration~~',
 ));
 
 //
@@ -80,4 +83,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

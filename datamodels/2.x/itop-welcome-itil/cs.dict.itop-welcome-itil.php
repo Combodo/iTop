@@ -57,6 +57,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:UserAccountsMenu+' => 'Uživatelské účty',
 	'Menu:UserAccountsMenu:Title' => 'Uživatelské účty',
 	'Menu:MyShortcuts' => 'Mé odkazy',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:Configuration' => 'Configuration~~',
 ));
 
 //
@@ -84,4 +87,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

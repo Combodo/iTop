@@ -54,6 +54,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:UserAccountsMenu+' => '',
 	'Menu:UserAccountsMenu:Title' => 'Užívateľské účty',
 	'Menu:MyShortcuts' => 'Moje skratky',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:Configuration' => 'Configuration~~',
 ));
 
 //
@@ -81,4 +84,13 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));
