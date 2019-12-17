@@ -278,10 +278,11 @@ th.headerSortUp {
 	text-decoration: underline;
 	cursor: pointer;
 	padding-right: 5px;
+	
 	&::after {
+		font-family: "Font Awesome 5 Free";
 		text-align: right;
 		content: '\f0d7';
-		font-family: 'FontAwesome';
 		color: $complement-color;
 		float: right;
 	}
@@ -291,10 +292,11 @@ th.headerSortDown {
 	text-decoration: underline;
 	cursor: pointer;
 	padding-right: 5px;
+	
 	&::after {
+		font-family: "Font Awesome 5 Free";
 		text-align: right;
 		content: '\f0d8';
-		font-family: 'FontAwesome';
 		color: $complement-color;
 		float: right;
 	}
@@ -553,10 +555,12 @@ div.ui-accordion-content {
 	font-size: 9pt;
 	font-weight: normal;
 	border: 0;
+	
 	::before {
+		font-family: "Font Awesome 5 Free";
+		content: "\f0da";
 		color: $highlight-color;
-		content: '\f0da';
-		font-family: 'FontAwesome';
+		font-weight: 900;
 		margin-right: 6px;
 		font-size: 10px;
 	}
@@ -570,9 +574,10 @@ td a.CollapsibleLabel, a.CollapsibleLabel{
 	color:$grey-color;
 }
 td a.CollapsibleLabel::before, a.CollapsibleLabel::before{
+	font-family: "Font Awesome 5 Free";
 	color: $highlight-color;
-	content: '\f0da';
-	font-family: 'FontAwesome';
+	content: "\f0dd";
+	font-weight: 900;
 	margin-right: 6px;
 	font-size: 10px;
 }
@@ -586,9 +591,9 @@ td a.CollapsibleLabel.open, a.CollapsibleLabel.open{
 	color: $highlight-color;
 }
 td a.CollapsibleLabel.open::before, a.CollapsibleLabel.open::before {
+	font-family: "Font Awesome 5 Free";
 	color: $highlight-color;
 	content: '\f0d7';
-	font-family: 'FontAwesome';
 	margin-right: 6px;
 	font-size: 10px;
 }
@@ -1922,7 +1927,7 @@ div#logo div {
 	font-size: 20px;
 }
 .icon-additional-arrow::after{
-	font-family: "FontAwesome";
+	font-family: "Font Awesome 5 Free";
 	content: "\f0dd";
 	color: $highlight-color;
 	font-size: 11px;
