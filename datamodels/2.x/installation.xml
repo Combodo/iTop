@@ -20,6 +20,7 @@
             <module>itop-twig-base</module>
             <module>combodo-db-tools</module>
             <module>itop-core-update</module>
+            <module>itop-hub-connector</module>
           </modules>
           <mandatory>true</mandatory>
         </choice>
