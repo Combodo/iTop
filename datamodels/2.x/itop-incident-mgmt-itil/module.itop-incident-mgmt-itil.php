@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-incident-mgmt-itil/2.6.2',
+	'itop-incident-mgmt-itil/2.7.0',
 	array(
 		// Identification
 		//
