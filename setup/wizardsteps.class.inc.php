@@ -1,44 +1,20 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * All the steps of the iTop installation wizard
+ * Copyright (C) 2013-2019 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
  *
- * Steps order (can be retrieved using \WizardController::DumpStructure) :
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * WizStepWelcome
- * WizStepInstallOrUpgrade
- *    +             +
- *    |             |
- *    v             +----->
- * WizStepLicense          WizStepDetectedInfo
- * WizStepDBParams           +              +
- * WizStepAdminAccount       |              |
- * WizStepMiscParams         v              +------>
- *    +                    WizStepLicense2 +--> WizStepUpgradeMiscParams
- *    |                                            +
- *    +--->    <-----------------------------------+
- * WizStepModulesChoice
- * WizStepSummary
- * WizStepDone
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -2441,7 +2417,7 @@ JS
 	$("#wiz_form").data("installation_status", "running");
 	WizardUpdateButtons();
 	$('#setup_msg').html('$sMessage');
-	$('#progress').progression( {Current:{$aRes['percentage-completed']}, Maximum: 100, aBackground: '#FBD38D', aTextColor: '#000000'} );
+	$('#progress').progression( {Current:{$aRes['percentage-completed']}, Maximum: 100} );
 	
 	//$("#percentage").html('{$aRes['percentage-completed']} % completed<br/>{$aRes['next-step-label']}');
 	ExecuteStep('{$aRes['next-step']}');
@@ -2454,7 +2430,7 @@ EOF
 			$oPage->add_ready_script(
 <<<EOF
 	$("#wiz_form").data("installation_status", "completed");
-	$('#progress').progression( {Current:100, Maximum: 100, aBackground: '#FBD38D', aTextColor: '#000000'} );
+	$('#progress').progression( {Current:100, Maximum: 100} );
 	WizardUpdateButtons();
 	$("#btn_next").unbind("click.install");
 	$("#btn_next").click();

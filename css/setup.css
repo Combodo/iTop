@@ -15,11 +15,20 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 /* Helpers classes */
 .center {
   text-align: center;
 }
+/* Animations */
+@keyframes progress_bar_color_ongoing {
+  from {
+    background-color: #fbd38d;
+  }
+  to {
+    background-color: #f4c56e;
+  }
+}
+/* Theme */
 body {
   background-color: #eee;
   color: #1a202c;
@@ -147,10 +156,16 @@ table.formTable {
   background-color: #edf2f7 !important;
 }
 #progress .progress {
-  transition: background-color 0.2s ease-in-out;
+  color: #000 !important;
+  /* !important to overload jQuery UI style */
+  background-color: #fbd38d !important;
+  /* !important to overload jQuery UI style */
+  animation: progress_bar_color_ongoing 0.8s infinite alternate;
 }
 #progress .progress.progress-error {
   background-color: #e53e3e !important;
+  /* !important to overload jQuery UI style */
+  animation: none;
 }
 h3.clickable {
   background: url(../images/plus.gif) no-repeat left;

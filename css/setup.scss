@@ -28,25 +28,38 @@ $link-hover-color: #EA7D1E !default;
 // Messages to the user
 $message-default-border-color: #4A5568 !default;
 $message-default-text-color: #1A202C !default;
-$message-default-background-color: #F7FAFC !default;
+$message-default-bg-color: #F7FAFC !default;
 
 $message-valid-border-color: #48BB78 !default;
 $message-valid-text-color: #276749 !default;
-$message-valid-background-color: #F0FFF4 !default;
+$message-valid-bg-color: #F0FFF4 !default;
 
 $message-warning-border-color: #ED8936 !default;
 $message-warning-text-color: #C05621 !default;
-$message-warning-background-color: #FFFAF0 !default;
+$message-warning-bg-color: #FFFAF0 !default;
 
 $message-error-border-color: #E53E3E !default;
 $message-error-text-color: #C53030 !default;
-$message-error-background-color: #FFF5F5 !default;
+$message-error-bg-color: #FFF5F5 !default;
+
+// Compilation progress bar
+$progress-bar-color: #000000 !default;
+$progress-bar-ongoing-1-bg-color: #FBD38D !default;
+$progress-bar-ongoing-2-bg-color: #F4C56E !default;
+$progress-bar-error-bg-color: #E53E3E !default;
 
 /* Helpers classes */
 .center {
 	text-align: center;
 }
 
+/* Animations */
+@keyframes progress_bar_color_ongoing {
+	from { background-color: $progress-bar-ongoing-1-bg-color; }
+	to { background-color: $progress-bar-ongoing-2-bg-color; }
+}
+
+/* Theme */
 body {
     background-color: #eee;
     color: $default-font-color;
@@ -179,9 +192,13 @@ table.formTable {
     background-color: #EDF2F7 !important;
     
     .progress{
-        transition: background-color 0.2s ease-in-out;
+		color: $progress-bar-color !important; /* !important to overload jQuery UI style */
+		background-color: $progress-bar-ongoing-1-bg-color !important; /* !important to overload jQuery UI style */
+		animation: progress_bar_color_ongoing 0.8s infinite alternate;
+
         &.progress-error{
-            background-color: #E53E3E !important;
+            background-color: $progress-bar-error-bg-color !important; /* !important to overload jQuery UI style */
+			animation: none;
         }
     }
 }
@@ -197,23 +214,23 @@ h3.clickable.open {
 }
 .message{
     color: $message-default-text-color;
-    background-color: $message-default-background-color;
+    background-color: $message-default-bg-color;
     border-left: 4px solid $message-default-border-color;
     padding: 10px;
 
     &.message-valid{
         color: $message-valid-text-color;
-        background-color: $message-valid-background-color;
+        background-color: $message-valid-bg-color;
         border-color: $message-valid-border-color;
     }
     &.message-warning{
         color: $message-warning-text-color;
-        background-color: $message-warning-background-color;
+        background-color: $message-warning-bg-color;
         border-color: $message-warning-border-color;
     }
     &.message-error{
         color: $message-error-text-color;
-        background-color: $message-error-background-color;
+        background-color: $message-error-bg-color;
         border-color: $message-error-border-color;
     }
     >.message-title {
