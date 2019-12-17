@@ -55,17 +55,39 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		// Starting field container
 		$oOutput->AddHtml('<div class="form-group">');
 
+		$sCollapseTogglerIconVisibleClass = 'glyphicon-menu-down';
+		$sCollapseTogglerIconHiddenClass = 'glyphicon-menu-down collapsed';
+		$sCollapseTogglerClass = 'form_linkedset_toggler';
+		$sCollapseTogglerId = $sCollapseTogglerClass . '_' . $this->oField->GetGlobalId();
+		$sFieldWrapperId = 'form_upload_wrapper_' . $this->oField->GetGlobalId();
+
+		// if opened
+//		$sCollapseTogglerExpanded = 'true';
+//		$sCollapseTogglerIconClass = $sCollapseTogglerIconVisibleClass;
+//		$sCollapseJSInitState = 'true';
+
+		// if collapsed
+		$sCollapseTogglerClass .= ' collapsed';
+		$sCollapseTogglerExpanded = 'false';
+		$sCollapseTogglerIconClass = $sCollapseTogglerIconHiddenClass;
+		$sCollapseJSInitState = 'false';
+
 		// Label
 		$oOutput->AddHtml('<div class="form_field_label">');
 		if ($this->oField->GetLabel() !== '')
 		{
-			$oOutput->AddHtml('<label for="'.$this->oField->GetGlobalId().'" class="control-label">')->AddHtml($this->oField->GetLabel(),
-				true)->AddHtml('</label>');
+			$oOutput
+				->AddHtml('<label for="'.$this->oField->GetGlobalId().'" class="control-label">')
+				->AddHtml('<a id="' . $sCollapseTogglerId . '" class="' . $sCollapseTogglerClass . '" data-toggle="collapse" href="#' . $sFieldWrapperId . '" aria-expanded="' . $sCollapseTogglerExpanded . '" aria-controls="' . $sFieldWrapperId . '">')
+				->AddHtml($this->oField->GetLabel(),true)
+				->AddHtml('<span class="glyphicon ' . $sCollapseTogglerIconClass . '"></>')
+				->AddHtml('</a>')
+				->AddHtml('</label>');
 		}
 		$oOutput->AddHtml('</div>');
 
 		// Value
-		$oOutput->AddHtml('<div class="form_field_control">');
+		$oOutput->AddHtml('<div class="form_field_control form_upload_wrapper collapse" id="'.$sFieldWrapperId.'">');
 		// - Field feedback
 		$oOutput->AddHtml('<div class="help-block"></div>');
 		// Starting files container
@@ -74,6 +96,52 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 		$oOutput->AddHtml('<div class="attachments_container row">');
 		$this->PrepareExistingFiles($oOutput, $bIsDeleteAllowed);
 		$oOutput->Addhtml('</div>');
+
+		$sAttachmentTableId = $this->GetAttachmentsTableId();
+		$sNoAttachmentLabel = json_encode(Dict::S('Attachments:NoAttachment'));
+		$oOutput->AddJs(
+			<<<JS
+// Collapse handlers
+// - Collapsing by default to optimize form space
+// It would be better to be able to construct the widget as collapsed, but in this case, datatables thinks the container is very small and therefore renders the table as if it was in microbox.
+$('#{$sFieldWrapperId}').collapse({toggle: {$sCollapseJSInitState}});
+// - Change toggle icon class
+$('#{$sFieldWrapperId}')
+	.on('shown.bs.collapse', function(){
+		// Creating the table if null (first expand). If we create it on start, it will be displayed as if it was in a micro screen due to the div being "display: none;"
+		if(oTable_{$this->oField->GetGlobalId()} === undefined)
+		{
+			buildTable_{$this->oField->GetGlobalId()}();
+ 		}
+	})
+	.on('show.bs.collapse', function(){
+		$('#{$sCollapseTogglerId} > span.glyphicon').removeClass('{$sCollapseTogglerIconHiddenClass}').addClass('{$sCollapseTogglerIconVisibleClass}');
+	})
+	.on('hide.bs.collapse', function(){
+		$('#{$sCollapseTogglerId} > span.glyphicon').removeClass('{$sCollapseTogglerIconVisibleClass}').addClass('{$sCollapseTogglerIconHiddenClass}');
+	});
+
+var oTable_{$this->oField->GetGlobalId()};
+
+
+// Build datatable
+var buildTable_{$this->oField->GetGlobalId()} = function()
+{
+	oTable_{$this->oField->GetGlobalId()} = $("table#$sAttachmentTableId").DataTable( {
+		"dom": "t",
+	    "order": [[3, "asc"]],
+	    "columnDefs": [
+	        { targets: [5], orderable: false},
+	        { targets: '_all', orderable: true }
+	    ],
+	    "language": {
+			"infoEmpty": $sNoAttachmentLabel,
+			"zeroRecords": $sNoAttachmentLabel
+		}
+	} );
+}
+JS
+		);
 
 		// Removing upload input if in read only
 		// TODO : Add max upload size when itop attachment has been refactored
@@ -107,6 +175,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 			'{{sAttachmentCreator}}',
 			$bIsDeleteAllowed
 		));
+		$sAttachmentTableId = $this->GetAttachmentsTableId();
 		$oOutput->AddJs(
 			<<<JS
 			var attachmentRowTemplate = $sAttachmentTableRowTemplate;
@@ -151,7 +220,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 							sAttachmentRow = sAttachmentRow.replace(re, value.replace);
 						});
 						
-						$(this).closest('.fileupload_field_content').find('.attachments_container table.attachmentsList>tbody').append(sAttachmentRow);
+						$(this).closest('.fileupload_field_content').find('.attachments_container table#$sAttachmentTableId>tbody').append(sAttachmentRow);
 						// Preview tooltip
 						if(data.result.preview){
 							$('#display_attachment_'+data.result.att_id +' a.trigger-preview').tooltip({
@@ -203,7 +272,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 
 
 			// Preview tooltip
-			$('table.attachmentsList>tbody>tr>td a.trigger-preview').each(function(iIndex, oElem){
+			$('table#$sAttachmentTableId>tbody>tr>td a.trigger-preview').each(function(iIndex, oElem){
 				$(oElem).parent().tooltip({
 					container: 'body',
 					html: true,
@@ -211,7 +280,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 				});
 			});
 			// Remove button handler
-			$('.attachments_container table.attachmentsList>tbody>tr>td :button').click(function(oEvent){
+			$('.attachments_container table#$sAttachmentTableId>tbody>tr>td :button').click(function(oEvent){
 				oEvent.preventDefault();
 				RemoveAttachment($(this).closest('.attachment').find(':input[name="attachments[]"]').val());
 			});
@@ -276,6 +345,8 @@ JS
 	 */
 	protected function PrepareExistingFiles(RenderingOutput $oOutput, $bIsDeleteAllowed)
 	{
+		$sAttachmentTableId = $this->GetAttachmentsTableId();
+
 		$sObjectClass = get_class($this->oField->GetObject());
 		$sDeleteBtn = Dict::S('Portal:Button:Delete');
 
@@ -298,14 +369,14 @@ JS
 			$sTitleFileCreator = Dict::S('Attachments:File:Creator');
 			$sTitleFileType = Dict::S('Attachments:File:MimeType');
 			$oOutput->Addhtml(<<<HTML
-<table class="table table-striped attachmentsList">
+<table id="$sAttachmentTableId" class="attachments-list table table-striped responsive">
 	<thead>
 		<th>$sTitleThumbnail</th>
-		<th>$sTitleFileName</th>
+		<th data-priority="1">$sTitleFileName</th>
 		<th>$sTitleFileSize</th>
 		<th>$sTitleFileDate</th>
 		<th>$sTitleFileCreator</th>
-		<th></th>
+		<th data-priority="1"></th>
 	</thead>
 <tbody>
 HTML
@@ -407,5 +478,16 @@ HTML
 	  <td>$sDeleteButton</td>
 	</tr>
 HTML;
+	}
+
+	/**
+	 * @return string
+	 */
+	protected function GetAttachmentsTableId()
+	{
+		$sFormFieldId = $this->oField->GetGlobalId();
+		$sAttachmentTableId = 'attachments-'.$sFormFieldId;
+
+		return $sAttachmentTableId;
 	}
 }

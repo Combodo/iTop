@@ -1006,7 +1006,8 @@ class ObjectFormManager extends FormManager
 			// Adding attachment field
 			if ($bClassAllowed)
 			{
-				$oField = new FileUploadField('attachments_for_form_'.$oForm->GetId());
+				// set id to a unique key - avoid collisions with another attribute that could exist with the name 'attachments'
+				$oField = new FileUploadField('attachments_plugin');
 				$oField->SetLabel(Dict::S('Portal:Attachments'))
 					->SetUploadEndpoint($this->oContainer->get('url_generator')->generate('p_object_attachment_add'))
 					->SetDownloadEndpoint($this->oContainer->get('url_generator')->generate('p_object_attachment_download',

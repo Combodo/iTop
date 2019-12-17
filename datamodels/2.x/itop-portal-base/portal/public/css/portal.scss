@@ -1142,31 +1142,34 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	margin: 10px;
 	overflow-x: auto;
 }
-/* LinkedSet*/
-.form_linkedset_toggler,
-.form_linkedset_toggler:hover,
-.form_linkedset_toggler:focus{
-	text-decoration: none;
-	color: inherit;
+/* collapsable sections*/
+.form_linkedset_toggler, .form_upload_toggler {
+
+	&, &:hover, &:focus {
+		text-decoration: none;
+		color: inherit;
+	}
+
+	& > .text {
+		margin-left: 0.4em;
+	}
+	&  > .text:before {
+		content: "(";
+	}
+	& > .text:after {
+		content: ")";
+	}
+	& > .glyphicon{
+		margin-left: 0.5em;
+		font-size: 0.85em;
+		color: $combodo-orange;
+		transition: transform 0.2s linear;
+	}
+	& > .glyphicon.collapsed{
+		transform: rotateZ(-90deg);
+	}
 }
-.form_linkedset_toggler > .text{
-	margin-left: 0.4em;
-}
-.form_linkedset_toggler > .text:before{
-	content: "(";
-}
-.form_linkedset_toggler > .text:after{
-	content: ")";
-}
-.form_linkedset_toggler > .glyphicon{
-	margin-left: 0.5em;
-	font-size: 0.85em;
-	color: $combodo-orange;
-	transition: transform 0.2s linear;
-}
-.form_linkedset_toggler > .glyphicon.collapsed{
-	transform: rotateZ(-90deg);
-}
+
 /* - DataTables : Loader */
 .form_linkedset_wrapper .datatables_overlay{
 	padding: 8px !important;
@@ -1195,12 +1198,13 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 	margin-bottom: 15px;
 }
 .attachments_container {
-	.attachmentsList {
+	.attachments-list {
 		& thead > tr > th {
 			text-align: center;
 		}
 
 		& tbody > tr > td {
+			padding: 0.5rem 8px;
 			text-align: left;
 			vertical-align: middle;
 

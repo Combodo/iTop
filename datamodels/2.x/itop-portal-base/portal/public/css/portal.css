@@ -1061,27 +1061,27 @@ table .group-actions {
   margin: 10px;
   overflow-x: auto;
 }
-/* LinkedSet*/
-.form_linkedset_toggler, .form_linkedset_toggler:hover, .form_linkedset_toggler:focus {
+/* collapsable sections*/
+.form_linkedset_toggler, .form_upload_toggler, .form_linkedset_toggler:hover, .form_upload_toggler:hover, .form_linkedset_toggler:focus, .form_upload_toggler:focus {
   text-decoration: none;
   color: inherit;
 }
-.form_linkedset_toggler > .text {
+.form_linkedset_toggler > .text, .form_upload_toggler > .text {
   margin-left: 0.4em;
 }
-.form_linkedset_toggler > .text:before {
+.form_linkedset_toggler > .text:before, .form_upload_toggler > .text:before {
   content: "(";
 }
-.form_linkedset_toggler > .text:after {
+.form_linkedset_toggler > .text:after, .form_upload_toggler > .text:after {
   content: ")";
 }
-.form_linkedset_toggler > .glyphicon {
+.form_linkedset_toggler > .glyphicon, .form_upload_toggler > .glyphicon {
   margin-left: 0.5em;
   font-size: 0.85em;
   color: #ea7d1e;
   transition: transform 0.2s linear;
 }
-.form_linkedset_toggler > .glyphicon.collapsed {
+.form_linkedset_toggler > .glyphicon.collapsed, .form_upload_toggler > .glyphicon.collapsed {
   transform: rotateZ(-90deg);
 }
 /* - DataTables : Loader */
@@ -1111,17 +1111,18 @@ table .group-actions {
 .fileupload_field_content > div {
   margin-bottom: 15px;
 }
-.attachments_container .attachmentsList thead > tr > th {
+.attachments_container .attachments-list thead > tr > th {
   text-align: center;
 }
-.attachments_container .attachmentsList tbody > tr > td {
+.attachments_container .attachments-list tbody > tr > td {
+  padding: 0.5rem 8px;
   text-align: left;
   vertical-align: middle;
 }
-.attachments_container .attachmentsList tbody > tr > td:first-child {
+.attachments_container .attachments-list tbody > tr > td:first-child {
   text-align: center;
 }
-.attachments_container .attachmentsList tbody > tr > td:nth-child(3) {
+.attachments_container .attachments-list tbody > tr > td:nth-child(3) {
   text-align: right;
 }
 .attachments_container .attachment {
