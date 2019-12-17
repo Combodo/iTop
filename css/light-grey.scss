@@ -556,7 +556,7 @@ div.ui-accordion-content {
 	font-weight: normal;
 	border: 0;
 	
-	::before {
+	&::before {
 		font-family: "Font Awesome 5 Free";
 		content: "\f0da";
 		color: $highlight-color;
