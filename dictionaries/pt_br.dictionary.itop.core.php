@@ -22,10 +22,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'INTERNAL:JQuery-DatePicker:LangCode' => 'pt-BR',
-));
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:DeletedObjectLabel' => '%1s (excluído)',
 	'Core:DeletedObjectTip' => 'O objeto foi excluído em %1$s (%2$s)',
 
@@ -1040,4 +1036,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Aula final',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+ 'INTERNAL:JQuery-DatePicker:LangCode' => 'pt-BR',
 ));
