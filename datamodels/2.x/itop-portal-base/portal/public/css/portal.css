@@ -1121,6 +1121,9 @@ table .group-actions {
 .attachments_container .attachmentsList tbody > tr > td:first-child {
   text-align: center;
 }
+.attachments_container .attachmentsList tbody > tr > td:nth-child(3) {
+  text-align: right;
+}
 .attachments_container .attachment {
   height: 4em;
 }

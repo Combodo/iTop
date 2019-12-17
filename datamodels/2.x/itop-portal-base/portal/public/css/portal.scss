@@ -1207,6 +1207,9 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 			&:first-child {
 				text-align: center;
 			}
+			&:nth-child(3) {
+				text-align: right;
+			}
 		}
 	}
 

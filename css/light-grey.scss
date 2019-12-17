@@ -3850,3 +3850,8 @@ input:checked + .slider:before {
 .pull-right { float: right; }
 .pull-left { float: left; }
 
+
+table.attachmentsList tr>td:nth-child(3) {
+	text-align: right;
+	padding-right: 0.5em;
+}
