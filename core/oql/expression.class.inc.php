@@ -1446,7 +1446,7 @@ class FieldExpression extends UnaryExpression
 
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		// Set a default value for the general case
-		$sRes = $oAttDef->GetAsHtml($sValue);
+		$sRes = null;
 
 		// Exceptions...
 		if ($oAttDef->IsExternalKey())
@@ -1471,6 +1471,10 @@ class FieldExpression extends UnaryExpression
 			{
 				$sRes = Dict::S('UI:UndefinedObject');
 			}
+		}
+		if(is_null($sRes))
+		{
+			$sRes = $oAttDef->GetAsHtml($sValue);
 		}
 		return $sRes;
 	}
