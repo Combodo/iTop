@@ -250,7 +250,6 @@ class FileLog
 				$sContext = var_export($aContext, true);
 				fwrite($hLogFile, "$sDate | $sText\n$sContext\n");
 			}
-			fwrite($hLogFile, "$sDate | $sText\n");
 			fflush($hLogFile);
 			flock($hLogFile, LOCK_UN);
 			fclose($hLogFile);
