@@ -105,7 +105,6 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 			'{{sFileSize}}',
 			'{{sAttachmentDate}}',
 			'{{sAttachmentCreator}}',
-			'{{sFileType}}',
 			$bIsDeleteAllowed
 		));
 		$oOutput->AddJs(
@@ -131,7 +130,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 					{
 						var iAttId = data.result.att_id,
 							sDownloadLink = '{$this->oField->GetDownloadEndpoint()}'.replace(/-sAttachmentId-/, iAttId),
-							sIconClass = (data.result.preview == 'true') ? ' preview' : '',
+							sIconClass = (data.result.preview == 'true') ? 'trigger-preview' : '',
 							sAttachmentMeta = '<input id="attachment_'+iAttId+'" type="hidden" name="attachments[]" value="'+iAttId+'"/>';
 
 						var replaces = [
@@ -145,7 +144,6 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 							{search: "{{sFileSize}}", replace:data.result.file_size },
 							{search: "{{sAttachmentDate}}", replace:data.result.creation_date },
 							{search: "{{sAttachmentCreator}}", replace:data.result.contact_id_friendlyname },
-							{search: "{{sFileType}}", replace:data.result.file_type }
 						];
 						var sAttachmentRow = attachmentRowTemplate;
 						$.each(replaces, function(indexInArray, value ) {
@@ -160,7 +158,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 								container: 'body',
 								html: true,
 								title: function(){ 
-									return '<div style="width: 350px; height: 300px;"><img src="'+sDownloadLink+'" style="max-width: 100%; max-height: 100%;" /></div>'; 
+									return '<div class="attachment-tooltip"><img src="'+sDownloadLink+'"></div>'; 
 								}
 							});
 						}
@@ -209,7 +207,7 @@ class BsFileUploadFieldRenderer extends BsFieldRenderer
 				$(oElem).parent().tooltip({
 					container: 'body',
 					html: true,
-					title: function(){ return '<div style="width: 350px; height: 300px;"><img src="'+$(oElem).attr('href')+'" style="max-width: 100%; max-height: 100%;" /></div>'; }
+					title: function(){ return '<div class="attachment-tooltip"><img src="'+$(oElem).attr('href')+'"></div>'; }
 				});
 			});
 			// Remove button handler
@@ -307,7 +305,6 @@ JS
 		<th>$sTitleFileSize</th>
 		<th>$sTitleFileDate</th>
 		<th>$sTitleFileCreator</th>
-		<th>$sTitleFileType</th>
 		<th></th>
 	</thead>
 <tbody>
@@ -333,7 +330,7 @@ HTML
 				$sIconClass = '';
 				if ($oDoc->IsPreviewAvailable())
 				{
-					$sIconClass = ' preview';
+					$sIconClass = 'trigger-preview';
 					if ($oDoc->GetSize() <= AbstractAttachmentsRenderer::MAX_SIZE_FOR_PREVIEW)
 					{
 						$sAttachmentThumbUrl = $sDocDownloadUrl;
@@ -341,7 +338,6 @@ HTML
 				}
 
 				$sFileSize = $oDoc->GetFormattedSize();
-				$sFileType = $oDoc->GetMimeType();
 
 				$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
 				$sAttachmentDate = '';
@@ -363,7 +359,6 @@ HTML
 					$sFileSize,
 					$sAttachmentDate,
 					$sAttachmentCreator,
-					$sFileType,
 					$bIsDeleteAllowed
 				));
 			}
@@ -387,30 +382,28 @@ HTML
 	 * @param $sFileSize
 	 * @param $sAttachmentDate
 	 * @param $sAttachmentCreator
-	 * @param $sFileType
 	 * @param $bIsDeleteAllowed
 	 *
 	 * @return string
 	 */
 	protected static function GetAttachmentTableRow(
 		$iAttId, $sLineStyle, $sDocDownloadUrl, $sIconClass, $sAttachmentThumbUrl, $sFileName, $sAttachmentMeta, $sFileSize,
-		$sAttachmentDate, $sAttachmentCreator, $sFileType, $bIsDeleteAllowed
+		$sAttachmentDate, $sAttachmentCreator, $bIsDeleteAllowed
 	) {
 		$sDeleteButton = '';
 		if ($bIsDeleteAllowed)
 		{
 			$sDeleteBtnLabel = Dict::S('Portal:Button:Delete');
-			$sDeleteButton = '<input id="btn_remove_'.$iAttId.'" type="button" class="btn btn-xs btn-danger" value="'.$sDeleteBtnLabel.'">';
+			$sDeleteButton = '<input id="btn_remove_'.$iAttId.'" type="button" class="btn btn-xs btn-primary" value="'.$sDeleteBtnLabel.'">';
 		}
 
 		return <<<HTML
 	<tr id="display_attachment_{$iAttId}" class="attachment" $sLineStyle>
-	  <td><a href="$sDocDownloadUrl" target="_blank" class="trigger-preview $sIconClass"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
-	  <td><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass">$sFileName</a>$sAttachmentMeta</td>
+	  <td><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
+	  <td><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
 	  <td>$sFileSize</td>
 	  <td>$sAttachmentDate</td>
 	  <td>$sAttachmentCreator</td>
-	  <td>$sFileType</td>
 	  <td>$sDeleteButton</td>
 	</tr>
 HTML;

@@ -1115,11 +1115,14 @@ table .group-actions {
   text-align: center;
 }
 .attachments_container .attachmentsList tbody > tr > td {
+  text-align: left;
+  vertical-align: middle;
+}
+.attachments_container .attachmentsList tbody > tr > td:first-child {
   text-align: center;
 }
 .attachments_container .attachment {
-  height: 95px;
-  overflow-x: hidden;
+  height: 4em;
 }
 .attachments_container .attachment .attachment_name {
   overflow-x: hidden;
@@ -1129,8 +1132,16 @@ table .group-actions {
 .attachments_container .attachment .btn {
   margin-top: 3px;
 }
-.attachments_container .attachmenthover {
+.attachments_container .attachment:hover {
   background-color: #e0e0e0;
+}
+.attachment-tooltip {
+  width: 350px;
+  height: 300px;
+}
+.attachment-tooltip img {
+  max-width: 100%;
+  max-height: 100%;
 }
 .upload_container input {
   display: inline;
