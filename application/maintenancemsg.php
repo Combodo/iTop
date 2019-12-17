@@ -1,7 +1,20 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2019 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * Copyright (C) 2013-2019 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
 
@@ -22,7 +35,14 @@ function _MaintenanceSetupPageMessage($sTitle, $sMessage)
 	if (class_exists('SetupPage'))
 	{
 		$oP = new SetupPage($sTitle);
-		$oP->p("<h2>$sMessage</h2>");
+		$oP->p("<h2 class=\"center\">$sMessage</h2>");
+		$oP->add_ready_script(
+<<<JS
+// Reload in 30s to check if maintenance is over
+setTimeout(function(){ window.location.reload(); }, 30000);
+JS
+
+		);
 		$oP->output();
 	}
 	else
