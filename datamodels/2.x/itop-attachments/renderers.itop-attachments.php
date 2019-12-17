@@ -445,7 +445,7 @@ CSS
 		$sFileName = utils::HtmlEntities($oDoc->GetFileName());
 		$sTrId = $this->GetAttachmentContainerId($iAttachmentId);
 		$sAttachmentMeta = $this->GetAttachmentHiddenInput($iAttachmentId, $bIsDeletedAttachment);
-		$sFileSize = $oDoc->GetFormatedSize();
+		$sFileSize = $oDoc->GetFormattedSize();
 		$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
 		$sAttachmentDate = '';
 		if (!$bIsTempAttachment)

@@ -314,6 +314,7 @@ JS
 HTML
 			);
 
+			/** @var Attachment $oAttachment */
 			while ($oAttachment = $oSet->Fetch())
 			{
 				$iAttId = $oAttachment->GetKey();
@@ -322,6 +323,7 @@ HTML
 
 				$sAttachmentMeta = '<input id="attachment_'.$iAttId.'" type="hidden" name="attachments[]" value="'.$iAttId.'">';
 
+				/** @var \ormDocument $oDoc */
 				$oDoc = $oAttachment->Get('contents');
 				$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
 
@@ -338,7 +340,7 @@ HTML
 					}
 				}
 
-				$sFileSize = $oDoc->GetFormatedSize();
+				$sFileSize = $oDoc->GetFormattedSize();
 				$sFileType = $oDoc->GetMimeType();
 
 				$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);

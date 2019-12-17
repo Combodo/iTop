@@ -1164,7 +1164,7 @@ class ObjectController extends BrickController
 						$aData['icon'] = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/itop-attachments/icons/image.png';
 						$aData['att_id'] = $iAttId;
 						$aData['preview'] = $oDocument->IsPreviewAvailable() ? 'true' : 'false';
-						$aData['file_size'] = $oDocument->GetFormatedSize();
+						$aData['file_size'] = $oDocument->GetFormattedSize();
 						$aData['creation_date'] = $oAttachment->Get('creation_date');
 						$aData['user_id_friendlyname'] = $oAttachment->Get('user_id_friendlyname');
 						$aData['file_type'] = $oDocument->GetMimeType();

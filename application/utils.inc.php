@@ -591,18 +591,21 @@ class utils
 	 * Format a value into a more friendly format (KB, MB, GB, TB) instead a juste a Bytes amount.
 	 *
 	 * @param float $value
+	 * @param int $iPrecision
+	 *
 	 * @return string
 	 */
-	public static function BytesToFriendlyFormat($value)
+	public static function BytesToFriendlyFormat($value, $iPrecision = 0)
 	{
 		$sReturn = '';
-		$iPrecision = 0;
 		// Kilobytes
 		if ($value >= 1024)
 		{
 			$sReturn = 'K';
 			$value = $value / 1024;
-			$iPrecision = 1;
+			if ($iPrecision === 0) {
+				$iPrecision = 1;
+			}
 		}
 		// Megabytes
 		if ($value >= 1024)

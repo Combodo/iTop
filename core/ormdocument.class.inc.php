@@ -85,18 +85,16 @@ class ormDocument
 		return strlen($this->m_data);
 	}
 
-	public function GetFormatedSize($precision = 2)
+	/**
+	 * @param int $precision
+	 *
+	 * @return string
+	 * @uses utils::BytesToFriendlyFormat()
+	 */
+	public function GetFormattedSize($precision = 2)
 	{
 		$bytes = $this->GetSize();
-		$units = array('B', 'KB', 'MB', 'GB', 'TB');
-
-		$bytes = max($bytes, 0);
-		$pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-		$pow = min($pow, count($units) - 1);
-
-		$bytes /= pow(1024, $pow);
-
-		return round($bytes, $precision).' '.$units[$pow];
+		return utils::BytesToFriendlyFormat($bytes, $precision);
 	}
 	public function GetData()
 	{
