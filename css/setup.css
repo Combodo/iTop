@@ -74,6 +74,10 @@ a {
 a:hover {
   color: #ea7d1e;
 }
+label {
+	cursor: pointer;
+}
+
 #header {
   width: 600px;
   margin-left: auto;
