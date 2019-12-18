@@ -184,7 +184,7 @@ class FileLog
 			$sSource = APPROOT.$sLogCurrentName;
 			if (!file_exists($sSource))
 			{
-				IssueLog::Info("Log file '$sLogCurrentName' does not exists, skipping");
+				IssueLog::Debug("Log file '$sLogCurrentName' (legacy) does not exists, renaming skipped");
 				continue;
 			}
 
@@ -192,10 +192,10 @@ class FileLog
 			$bResult = rename($sSource, $sDestination);
 			if (!$bResult)
 			{
-				IssueLog::Error("Log file '$sLogCurrentName' cannot be renamed to '$sLogNewName'");
+				IssueLog::Error("Log file '$sLogCurrentName' (legacy) cannot be renamed to '$sLogNewName'");
 				continue;
 			}
-			IssueLog::Info("Log file '$sLogCurrentName' renamed to '$sLogNewName'");
+			IssueLog::Info("Log file '$sLogCurrentName' (legacy) renamed to '$sLogNewName'");
 		}
 	}
 
