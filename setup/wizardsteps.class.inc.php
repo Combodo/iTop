@@ -17,6 +17,28 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+/**
+ * All the steps of the iTop installation wizard
+ *
+ * Steps order (can be retrieved using \WizardController::DumpStructure) :
+ *
+ * WizStepWelcome
+ * WizStepInstallOrUpgrade
+ *    +             +
+ *    |             |
+ *    v             +----->
+ * WizStepLicense          WizStepDetectedInfo
+ * WizStepDBParams           +              +
+ * WizStepAdminAccount       |              |
+ * WizStepMiscParams         v              +------>
+ *    +                    WizStepLicense2 +--> WizStepUpgradeMiscParams
+ *    |                                            +
+ *    +--->    <-----------------------------------+
+ * WizStepModulesChoice
+ * WizStepSummary
+ * WizStepDone
+ */
+
 require_once(APPROOT.'setup/setuputils.class.inc.php');
 require_once(APPROOT.'setup/parameters.class.inc.php');
 require_once(APPROOT.'setup/applicationinstaller.class.inc.php');
