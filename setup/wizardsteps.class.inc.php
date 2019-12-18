@@ -139,7 +139,7 @@ EOF
 		}
 		$oPage->add(
 <<<HTML
-		<h2>Prerequisites validation: <span class="$sH2Class">$sTitle</span></h2>
+		<h2 class="message">Prerequisites validation: <span class="$sH2Class">$sTitle</span></h2>
 		<div id="details" $sStyle>
 HTML
 		);
