@@ -385,13 +385,6 @@ JS
 		{
 			$this->oPage->add_script($this->GetDeleteAttachmentJs());
 		}
-		$this->oPage->add_style(
-			<<<CSS
-table.attachmentsList>tbody>tr>td:first-child {
-	text-align: center;
-}
-CSS
-		);
 
 		$bIsEven = false;
 		$aAttachmentsDate = AttachmentsHelper::GetAttachmentsDateAddedFromDb($this->sObjClass, $this->iObjKey);

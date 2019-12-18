@@ -3851,7 +3851,14 @@ input:checked + .slider:before {
 .pull-left { float: left; }
 
 
-table.attachmentsList tr>td:nth-child(3) {
-	text-align: right;
-	padding-right: 0.5em;
+table.attachmentsList {
+	&>tbody{
+		&>tr>td:first-child {
+			text-align: center;
+		}
+		&>tr>td:nth-child(3) {
+			text-align: right;
+			padding-right: 0.5em;
+		}
+	}
 }
