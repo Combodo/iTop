@@ -25,7 +25,23 @@
     background-color: #fbd38d;
   }
   to {
-    background-color: #f4c56e;
+    background-color: #feebc8;
+  }
+}
+@-webkit-keyframes bg-pan-left {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes bg-pan-left {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
 /* Theme */
@@ -158,9 +174,11 @@ table.formTable {
 #progress .progress {
   color: #000 !important;
   /* !important to overload jQuery UI style */
-  background-color: #fbd38d !important;
+  background-image: linear-gradient(270deg, #fbd38d 50%, #feebc8 55%, #fbd38d 80%) !important;
   /* !important to overload jQuery UI style */
-  animation: progress_bar_color_ongoing 0.8s infinite alternate;
+  animation: bg-pan-left 3s infinite both;
+  background-size: 600% 100%;
+  border-radius: inherit;
 }
 #progress .progress.progress-error {
   background-color: #e53e3e !important;
