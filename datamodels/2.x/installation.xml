@@ -17,7 +17,6 @@
             <module>itop-welcome-itil</module>
             <module>itop-tickets</module>
             <module>itop-files-information</module>
-            <module>itop-twig-base</module>
             <module>combodo-db-tools</module>
             <module>itop-core-update</module>
             <module>itop-hub-connector</module>

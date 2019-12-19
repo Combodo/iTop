@@ -4,11 +4,11 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\TwigBase\Controller;
+namespace Combodo\iTop\Application\TwigBase\Controller;
 
 use ajax_page;
 use ApplicationMenu;
-use Combodo\iTop\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Dict;
 use Exception;
 use IssueLog;
@@ -40,6 +40,7 @@ abstract class Controller
 	private $m_sMenuId = null;
 	/** @var string */
 	private $m_sDefaultOperation = 'Default';
+	private $m_aDefaultParams;
 	private $m_aLinkedScripts;
 	private $m_aLinkedStylesheets;
 	private $m_aAjaxTabs;
@@ -47,13 +48,50 @@ abstract class Controller
 
 	public function __construct()
 	{
-		$sModulePath = dirname(dirname($this->getDir()));
-		$this->m_sModule = basename($sModulePath);
-		$oTwig = TwigHelper::GetTwigEnvironment($sModulePath.'/view');
-		$this->m_oTwig = $oTwig;
 		$this->m_aLinkedScripts = array();
 		$this->m_aLinkedStylesheets = array();
 		$this->m_aAjaxTabs = array();
+		$this->m_aDefaultParams = array();
+	}
+
+	/**
+	 * Initialize the Controller from a module
+	 */
+	public function InitFromModule()
+	{
+		$sModulePath = dirname(dirname($this->getDir()));
+		$this->SetModuleName(basename($sModulePath));
+		$this->SetViewPath($sModulePath.'/view');
+		try
+		{
+			$this->m_aDefaultParams = array('sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php'));
+		}
+		catch (Exception $e)
+		{
+			IssueLog::Error($e->getMessage());
+		}
+	}
+
+	/**
+	 * Indicates the path of the view directory (containing the twig templates)
+	 *
+	 * @param string $sViewPath
+	 */
+	public function SetViewPath($sViewPath)
+	{
+		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath);
+		$this->m_oTwig = $oTwig;
+	}
+
+	/**
+	 * Set the name of the current module
+	 * Used to name operations see Controller::GetOperationTitle()
+	 *
+	 * @param string $sModule Name of the module
+	 */
+	public function SetModuleName($sModule)
+	{
+		$this->m_sModule = $sModule;
 	}
 
 	private function getDir()
@@ -129,10 +167,7 @@ abstract class Controller
 	 */
 	private function GetDefaultParameters()
 	{
-		$aParams = array();
-		$aParams['sIndexURL'] = utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php');
-
-		return $aParams;
+		return $this->m_aDefaultParams;
 	}
 
 	/**
@@ -380,6 +415,10 @@ abstract class Controller
 
 	private function RenderTemplate($aParams, $sName, $sTemplateFileExtension)
 	{
+		if (empty($this->m_oTwig))
+		{
+			return 'Not initialized. Call Controller::InitFromModule() or Controller::SetViewPath() before any display';
+		}
 		try
 		{
 			return $this->m_oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
@@ -422,7 +461,7 @@ abstract class Controller
 	 */
 	public function GetOperationTitle()
 	{
-		return Dict::S($this->m_sModule.':UI:'.$this->m_sOperation);
+		return Dict::S($this->m_sModule.'/Operation:'.$this->m_sOperation.'/Title');
 	}
 
 	/**

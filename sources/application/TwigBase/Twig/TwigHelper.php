@@ -4,12 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\TwigBase\Twig;
+namespace Combodo\iTop\Application\TwigBase\Twig;
 
 use Twig_Environment;
 use Twig_Loader_Filesystem;
-
-@include_once(APPROOT.'/lib/silex/vendor/autoload.php');
 
 
 class TwigHelper

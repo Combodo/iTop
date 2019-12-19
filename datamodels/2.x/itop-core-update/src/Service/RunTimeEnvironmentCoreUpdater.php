@@ -12,9 +12,36 @@ require_once(APPROOT."setup/runtimeenv.class.inc.php");
 use Config;
 use Exception;
 use RunTimeEnvironment;
+use SetupUtils;
 
 class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 {
+	/**
+	 * Constructor
+	 *
+	 * @param string $sEnvironment
+	 * @param bool $bAutoCommit
+	 *
+	 * @throws \Exception
+	 */
+	public function __construct($sEnvironment = 'production', $bAutoCommit = true)
+	{
+		parent::__construct($sEnvironment, $bAutoCommit);
+
+		if ($sEnvironment != $this->sTargetEnv)
+		{
+			if (is_dir(APPROOT.'/env-'.$this->sTargetEnv))
+			{
+				SetupUtils::rrmdir(APPROOT.'/env-'.$this->sTargetEnv);
+			}
+			if (is_dir(APPROOT.'/data/'.$this->sTargetEnv.'-modules'))
+			{
+				SetupUtils::rrmdir(APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+			}
+			SetupUtils::copydir(APPROOT.'/data/'.$sEnvironment.'-modules', APPROOT.'/data/'.$this->sTargetEnv.'-modules');
+		}
+	}
+
 	public function CheckDirectories($sTargetEnv)
 	{
 		$sTargetDir = APPROOT.'env-'.$sTargetEnv;

@@ -20,7 +20,6 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-twig-base/1.0.0',
             'itop-files-information/1.0.0',
             'combodo-db-tools/1.0.8',
 		),

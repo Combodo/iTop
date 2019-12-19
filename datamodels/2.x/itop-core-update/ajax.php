@@ -8,8 +8,20 @@ namespace Combodo\iTop\CoreUpdate;
 
 use Combodo\iTop\CoreUpdate\Controller\AjaxController;
 use ContextTag;
+use MetaModel;
+use utils;
 
-require_once(APPROOT.'application/startup.inc.php');
+if (!defined('MODULESROOT'))
+{
+	define('MODULESROOT', APPROOT.'env-production/');
+}
+
+require_once(MODULESROOT.'itop-core-update/src/Service/RunTimeEnvironmentCoreUpdater.php');
+require_once(MODULESROOT.'itop-core-update/src/Service/CoreUpdater.php');
+require_once(MODULESROOT.'itop-core-update/src/Controller/AjaxController.php');
+
+MetaModel::LoadConfig(utils::GetConfig());
+
 new ContextTag('Setup');
 
 $oUpdateController = new AjaxController();

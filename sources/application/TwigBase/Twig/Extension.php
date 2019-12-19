@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace Combodo\iTop\TwigBase\Twig;
+namespace Combodo\iTop\Application\TwigBase\Twig;
 
 
 use AttributeDateTime;

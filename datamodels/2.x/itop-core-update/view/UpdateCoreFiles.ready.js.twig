@@ -57,7 +57,7 @@ function GetAjaxRequest(sOperation)
     return oAjaxRequest;
 }
 
-{% set aSteps = ['EnterMaintenance', 'Backup', 'FilesArchive', 'CopyFiles', 'Compile', 'ExitMaintenance', 'UpdateDone'] %}
+{% set aSteps = ['EnterMaintenance', 'Backup', 'FilesArchive', 'CopyFiles', 'CheckCompile', 'Compile', 'UpdateDatabase', 'ExitMaintenance', 'UpdateDone'] %}
 
 aStepsName = [];
 
@@ -75,7 +75,7 @@ var sFilesArchiveStep;
 sFilesArchiveStep = "FilesArchive";
 {% endif %}
 
-var aStepsAjaxOperation = ["EnterMaintenance", sBackupStep, sFilesArchiveStep, "CopyFiles", "Compile", "ExitMaintenance", null];
+var aStepsAjaxOperation = ["EnterMaintenance", sBackupStep, sFilesArchiveStep, "CopyFiles", "CheckCompile", "Compile", "UpdateDatabase", "ExitMaintenance", null];
 
 var iNextStep = 0;
 function ExecNextStep() {

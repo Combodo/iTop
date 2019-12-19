@@ -49,7 +49,8 @@
   "autoload": {
     "classmap": [
       "core",
-      "application"
+      "application",
+      "sources/application"
     ],
     "exclude-from-classmap": [
       "core/dbobjectsearch.class.php",
