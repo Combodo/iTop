@@ -224,6 +224,12 @@ class FileLog
 		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
 	}
 
+	public function Trace($sText, $sChannel = '', $aContext = array())
+	{
+		$this->Write($sText, __FUNCTION__, $sChannel, $aContext);
+	}
+
+
 	protected function Write($sText, $sLevel = '', $sChannel = '', $aContext = array())
 	{
 		$sTextPrefix = empty($sLevel) ? '' : (str_pad($sLevel, 7).' | ');
@@ -261,24 +267,23 @@ abstract class LogAPI
 {
 	const CHANNEL_DEFAULT   = '';
 
-	const LEVEL_DEBUG       = 'Debug';
-	const LEVEL_OK          = 'Ok';
-	const LEVEL_INFO        = 'Info';
-	const LEVEL_WARNING     = 'Warning';
 	const LEVEL_ERROR       = 'Error';
-//	const LEVEL_CRITICAL    = 'Critical';
-//	const LEVEL_ALERT       = 'Alert';
-//	const LEVEL_EMERGENCY   = 'Emergency';
-
-	protected static $m_oMockMetaModelConfig = null;
+	const LEVEL_WARNING     = 'Warning';
+	const LEVEL_INFO        = 'Info';
+	const LEVEL_OK          = 'Ok';
+	const LEVEL_DEBUG       = 'Debug';
+	const LEVEL_TRACE       = 'Trace';
 
 	protected static $aLevelsPriority = array(
-		self::LEVEL_DEBUG   => 100,
-		self::LEVEL_OK      => 150,
-		self::LEVEL_INFO    => 200,
-		self::LEVEL_WARNING => 300,
 		self::LEVEL_ERROR   => 400,
+		self::LEVEL_WARNING => 300,
+		self::LEVEL_INFO    => 200,
+		self::LEVEL_OK      => 200,
+		self::LEVEL_DEBUG   => 100,
+		self::LEVEL_TRACE   =>  50,
 	);
+
+	protected static $m_oMockMetaModelConfig = null;
 
 	public static function Enable($sTargetFile)
 	{
@@ -315,6 +320,11 @@ abstract class LogAPI
 	public static function Debug($sMessage, $sChannel = null, $aContext = array())
 	{
 		static::Log(self::LEVEL_DEBUG, $sMessage, $sChannel, $aContext);
+	}
+
+	public static function Trace($sMessage, $sChannel = null, $aContext = array())
+	{
+		static::Log(self::LEVEL_TRACE, $sMessage, $sChannel, $aContext);
 	}
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
